@@ -1,0 +1,43 @@
+
+#banner img {
+    float: right;
+    /*background: transparent url("../images/banner-250.png") no-repeat;
+    height: 200px;*/
+}
+
+#header {
+    border-bottom: 2px solid #ff4500 ;
+}
+
+#header h1 {
+    margin: 0 0 0 20px;
+}
+
+#header form {
+    margin-bottom: 2px;
+}
+
+#banner-image {
+    margin: 10px 20px 10px 0;
+}
+
+.no-left-margin {
+    margin-left: 0 !important;
+}
+
+#map {
+    width: 465px;
+    height: 450px;
+}
+
+#project-list {
+    margin-left: 24px;
+    width: 300px;
+}
+
+.accordion-body {
+    background-color: white;
+}
+.accordion-heading {
+    /*color: #456e9c;*/
+}
