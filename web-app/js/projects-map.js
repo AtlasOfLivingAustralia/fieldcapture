@@ -2,8 +2,9 @@
 * Handles the front page map that shows all projects.
 */
 
-$(window).load(function () {
-    // create the map and draw initial objects
+function initMap (featureSelector, initCallback, siteData) {
+    var map;
+    // create the map
     $("#map").gmap3({
         map: {
             options: {
@@ -16,29 +17,167 @@ $(window).load(function () {
                 }
             },
             callback: function () {
-                var map = $("#map").gmap3("get");
-                // initialise map overlays
-                projectOverlays.init(map);
-                // enable zoom by dragging while holding shift
-                map.enableKeyDragZoom();
+                map = $("#map").gmap3("get");
+                //google.maps.event.addListenerOnce(map, 'idle', function () {
+                    // initialise sites representation on the map
+                    sites.init(map, featureSelector, siteData);
+                    // enable zoom by dragging while holding shift
+                    map.enableKeyDragZoom();
+                    // execute callback
+                    initCallback.call();
+                //});
             }
         }
     });
+
+}
+
+function initMapForProjects() {
     // wire accordion to map
     $('.accordion-group').on('show', function () {
-        projectOverlays.highlightRegion($(this).attr('data-region'));
+        sites.highlightSite($(this).attr('data-pid'));
     });
     $('.accordion-group').on('hide', function () {
-        projectOverlays.unHighlightRegion($(this).attr('data-region'));
+        sites.unHighlightSite($(this).attr('data-pid'));
     });
-});
+}
 
-var projectOverlays = {
+function initMapForSites() {
+    $('li.siteInstance a').hover(
+        function () {
+            sites.highlightMarker(sites.markers[$(this).html()]);
+        },
+        function () {
+            sites.unHighlightMarker(sites.markers[$(this).html()]);
+        }
+    );
+}
+
+var sites = {
+    map: null,  // initialised after the map is created
+    list: {}, // all the sites that have non-marker geometry
+    markers: {},
+    markersAdded: false,
+    init: function (map, featureSelector, siteData) {
+        var pid, lat, lng, name, that = this, boundsListener;
+        this.map = map;
+
+        // add features
+        $.each(siteData, function (i, site) {
+            if (site.location) {
+                $.each(site.location, function (k,location) {
+                    if (location.type === 'locationTypePoint') {
+                        that.addSiteAsPoint(location.data.decimalLatitude, location.data.decimalLongitude, site.name);
+                    } else if (location.type === 'locationTypePid') {
+                        that.addSiteAsGeoJson(location.data.pid);
+                    }
+                });
+            }
+        });
+        /*$(featureSelector).each(function () {
+            pid = $(this).attr('data-pid');
+            lat = $(this).attr('data-latitude');
+            lng = $(this).attr('data-longitude');
+            name = $(this).find('a').html();
+            if (pid) {
+                that.addSiteAsGeoJson(pid);
+            } else if (lat && lng) {
+                that.addSiteAsPoint(lat, lng, name);
+            }
+        });*/
+
+        // adjust zoom to show features if more than 1 added
+        if (this.markersAdded) {
+            this.map.fitBounds(this.featureBounds);  // this happens asynchronously so need to wait for bounds to change
+            // to sanity-check the zoom level
+            boundsListener = google.maps.event.addListener(this.map, 'bounds_changed', function(event) {
+                if (this.getZoom() > 9){
+                    this.setZoom(9);
+                }
+                google.maps.event.removeListener(boundsListener);
+            });
+        }
+    },
+    featureBounds: new google.maps.LatLngBounds(),
+    addSiteAsPoint: function (lat, lng, name) {
+        var mk;
+        if (lat == 0 && lng == 0) { return }
+        var pt = new google.maps.LatLng(lat, lng);
+        mk = new google.maps.Marker({
+            map: this.map,
+            position: pt,
+            //icon: 'http://collections.ala.org.au/images/map/orange-dot.png',
+            title: name
+        });
+        this.markers[name] = mk;
+        this.markersAdded = true;
+        this.featureBounds.extend(pt);
+    },
+    addSiteAsGeoJson: function (pid) {
+        var coords, geom = [], points, that = this;
+        $.ajax({
+            url: 'http://spatial.ala.org.au/ws/shape/geojson/' + pid,
+            dataType: 'jsonp',
+            success: function (data) {
+                if (data === undefined) { return; }  // pid doesn't exist
+                coords = data.coordinates;
+                $.each(coords, function(j, polygon) {
+                    points = [];
+                    $.each(polygon[0], function(i, point) {
+                        points.push(new google.maps.LatLng(point[1],point[0]));
+                    });
+                    geom.push(points);
+                });
+                that.list[pid] = new google.maps.Polygon({
+                    strokeColor:'#202020',
+                    fillColor:'#eeeeee',
+                    fillOpacity: 0.5,
+                    strokeWeight: 1,
+                    paths: geom,
+                    map: that.map
+                });
+            }
+        });
+    },
+    highlightMarker: function (marker) {
+        if (marker !== undefined) {
+            marker.setOptions({icon: 'http://collections.ala.org.au/images/map/orange-dot.png'});
+        }
+    },
+    unHighlightMarker: function (marker) {
+        if (marker !== undefined) {
+            marker.setOptions({icon: null});
+        }
+    },
+    highlightSite: function (pid) {
+        var geom = this.list[pid];
+        if (geom) {
+            geom.setOptions({
+                strokeColor:'#BC2B03',
+                fillColor:'#DF4A21'
+            });
+        }
+    },
+    unHighlightSite: function (pid) {
+        var geom = this.list[pid];
+        if (geom) {
+            geom.setOptions({
+                strokeColor:'#202020',
+                fillColor:'#eeeeee'
+            });
+        }
+    },
+    markerClicked: function (event) {
+
+    }
+};
+
+/*var projectOverlays = {
     map: null,  // initialised after the map is created
     list: {}, // all the project overlays
     init: function (map) {
         this.map = map;
-        this.addRegion('ger_border_ranges');
+        //this.addRegion('ger_border_ranges');
         this.addRegion('ger_slopes_to_summit');
         this.addRegion('ger_kosciuszko_to_coast');
     },
@@ -64,16 +203,17 @@ var projectOverlays = {
     createOverlay: function (name, highlight) {
         //
         var layerParams = [
-                "format=image/png",
-                "layers=ALA:" + name,
-                highlight ? "sld=" + fcConfig.sldPolgonHighlightUrl : "sld=" + fcConfig.sldPolgonDefaultUrl,
-                "styles="//polygon"
-            ];
+            "format=image/png",
+            "layers=ALA:" + name,
+            highlight ? "sld=" + fcConfig.sldPolgonHighlightUrl : "sld=" + fcConfig.sldPolgonDefaultUrl,
+            "styles="//polygon"
+        ];
         return new WMSTileLayer(name,
-                fcConfig.spatialWmsUrl,
-                layerParams,
-                function () {},
-                0.6);
+            fcConfig.spatialWmsUrl,
+            layerParams,
+            function () {},
+            0.6);
     }
 
-};
+};*/
+
