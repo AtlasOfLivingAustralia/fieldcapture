@@ -9,13 +9,13 @@ class ProjectController {
 
     def index(String id) {
         def project = projectService.get(id)
-        if (project) {
-            project.sites.sort {it.name}
+        if (!project || project.error) {
+            forward(action: 'list', model: [error: project.error])
+        } else {
+            project.sites?.sort {it.name}
             //todo: ensure there are no control chars (\r\n etc) in the json as
             //todo:     this will break the client-side parser
             [project: project, json: (project.sites as JSON).toString()]
-        } else {
-            forward(action: 'list', model: [error: 'no such id'])
         }
     }
 
