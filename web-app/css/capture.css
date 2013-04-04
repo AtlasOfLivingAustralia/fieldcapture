@@ -30,6 +30,11 @@
     height: 450px;
 }
 
+#smallMap {
+    width: 250px;
+    height: 250px;
+}
+
 #project-list {
     margin-left: 24px;
     width: 300px;
@@ -38,6 +43,38 @@
 .accordion-body {
     background-color: white;
 }
+
 .accordion-heading {
     /*color: #456e9c;*/
+}
+
+li.siteInstance {
+    min-width: 150px;
+}
+
+li.siteInstance i {
+    opacity: 0.5;
+}
+
+li.siteInstance i:hover {
+    opacity: 1;
+}
+
+li.siteInstance a:hover {
+    cursor: pointer;
+}
+
+div.metadata {
+    padding-top: 15px;;
+    color: grey;
+    font-size: 0.9em;
+}
+
+div.under-rule {
+    border-bottom: 1px solid #eeeeee ;
+}
+
+/* debug */
+.debug div {
+    padding-bottom: 10px;;
 }
