@@ -28,6 +28,10 @@ class ProjectService {
         webService.doPost(grailsApplication.config.ecodata.baseUrl + 'project/' + id, body)
     }
 
+    def delete(id) {
+        webService.doDelete(grailsApplication.config.ecodata.baseUrl + 'project/' + id)
+    }
+
     def enrichTestData() {
         def p = projects['Bushbids'.encodeAsMD5()]
         if (p) {p.project_description = dummyProjects[0].project_description}
