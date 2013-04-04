@@ -34,6 +34,14 @@
             <r:img dir="images" file="banner2.jpg" alt="banner" class="img-rounded"/>
         </div>
 
+        <g:if test="${error}">
+            <div class="row-fluid">
+                <div class="alert alert-error">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <span>${error}</span>
+                </div>
+            </div>
+        </g:if>
 
         <div class="span2 well no-left-margin" id="sidebar">
             <r:img dir="images" file="survey_clipboard2.png"/>
