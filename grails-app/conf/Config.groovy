@@ -114,19 +114,20 @@ environments {
         //grails.serverURL = "http://${grails.hostname}:8087/" + grails.app.context
         grails.serverURL = "http://localhost:8087/fieldcapture"
         baseServer = "http://localhost:8087/fieldcapture"
-
         ecodata.baseUrl = 'http://localhost:8080/ecodata/ws/'
     }
     test {
         grails.logging.jul.usebridge = true
-        grails.hostname = "ala-testweb1.vm.csiro.au"
+        grails.hostname = "ala-testweb1.ala.org.au"
         serverName = "http://${grails.hostname}:8080"
         grails.app.context = "fieldcapture"
         grails.serverURL = serverName + "/" + grails.app.context
+        ecodata.baseUrl = 'http://localhost:8080/ecodata/ws/'
     }
     production {
         grails.logging.jul.usebridge = false
-        grails.serverURL = "http://fieldcapture.ala.org.au2"
+        grails.serverURL = "http://fieldcapture.ala.org.au"
+        ecodata.baseUrl = 'http://ecodata.ala.org.au/ws/'
     }
 }
 
