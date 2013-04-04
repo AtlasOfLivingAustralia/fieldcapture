@@ -111,7 +111,11 @@ environments {
         //grails.hostname = "192.168.0.15"
         serverName = "http://${grails.hostname}:8087"
         grails.app.context = "fieldcapture"
-        grails.serverURL = "http://${grails.hostname}:8087/" + grails.app.context
+        //grails.serverURL = "http://${grails.hostname}:8087/" + grails.app.context
+        grails.serverURL = "http://localhost:8087/fieldcapture"
+        baseServer = "http://localhost:8087/fieldcapture"
+
+        ecodata.baseUrl = 'http://localhost:8080/ecodata/ws/'
     }
     test {
         grails.logging.jul.usebridge = true
