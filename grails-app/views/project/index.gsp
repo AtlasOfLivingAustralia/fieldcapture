@@ -7,6 +7,7 @@
     <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&language=en"></script>
     <r:script disposition="head">
     var fcConfig = {
+        baseUrl: "http://localhost:8087/fieldcapture",
         spatialBaseUrl: "${grailsApplication.config.spatial.baseURL}",
         spatialWmsCacheUrl: "${grailsApplication.config.spatial.wms.cache.url}",
         spatialWmsUrl: "${grailsApplication.config.spatial.wms.url}",
@@ -87,7 +88,7 @@
                 this.sites = ko.mapping.fromJS(siteData);
                 this.removeSite = function () {
                    var that = this,
-                       url = baseUrl + '/site/ajaxDelete/' + this.siteId();
+                       url = fcConfig.baseUrl + '/site/ajaxDelete/' + this.siteId();
                     $.get(url, function (data) {
                         if (data.status === 'deleted') {
                             self.sites.remove(that);
@@ -95,7 +96,7 @@
                     });
                 };
                 this.open = function () {
-                    document.location.href = baseUrl + '/site/index/' + this.siteId();
+                    document.location.href = fcConfig.baseUrl + '/site/index/' + this.siteId();
                 };
                 this.highlight = function () {
                     sites.highlightMarker(sites.markers[this.name()]);
@@ -119,11 +120,10 @@
             ko. applyBindings(viewModel);
         });
 
-        var baseUrl = "${grailsApplication.config.grails.serverURL}";
         $('.xsiteInstance button.close').click(function () {
             var siteInstance = $(this).parent(),
                 siteId = siteInstance.attr('id'),
-                url = baseUrl + '/site/ajaxDelete/' + siteId;
+                url = fcConfig.baseUrl + '/site/ajaxDelete/' + siteId;
             $.get(url, function (data) {
                 if (data.status === 'deleted') {
                     siteInstance.remove();
