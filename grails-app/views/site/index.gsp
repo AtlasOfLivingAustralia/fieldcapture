@@ -146,6 +146,9 @@
                         style: 'DEFAULT'
                     }
                 }),
+                // default overlay options
+                overlayOptions: {strokeColor:'#BC2B03',fillColor:'#DF4A21',fillOpacity: 0.3,strokeWeight: 1,
+                    clickable:false,zIndex: 1,editable: false},
                 // keep count of locations as we load them so we know when we've finished
                 locationsLoaded: 0,
                 // keep a running bounds for loaded locations so we can zoom when all are loaded
@@ -168,7 +171,7 @@
                                         new google.maps.Polygon({
                                             paths: paths,
                                             map: self.map
-                                        });
+                                        }).setOptions(self.overlayOptions);
                                         // flatten arrays to array of points
                                         points = [].concat.apply([], paths);
                                         // extend bounds by each point
