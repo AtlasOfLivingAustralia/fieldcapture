@@ -3,7 +3,7 @@
   <component name="FacetManager">
     <facet type="Spring" name="Spring">
       <configuration>
-        <fileset id="Grails" name="Grails" removed="false">
+        <fileset id="fileset" name="Spring Application Context" removed="false">
           <file>file://$MODULE_DIR$/web-app/WEB-INF/applicationContext.xml</file>
         </fileset>
       </configuration>
@@ -19,10 +19,7 @@
     </facet>
     <facet type="hibernate" name="Hibernate">
       <configuration>
-        <datasource-map>
-          <unit-entry name="Gorm" />
-          <unit-entry name="sessionFactory" />
-        </datasource-map>
+        <datasource-map />
       </configuration>
     </facet>
   </component>
@@ -43,24 +40,25 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="grails-2.2.1" level="application" />
     <orderEntry type="module-library" exported="">
       <library name="Grails User Library (FieldCapture)">
         <CLASSES>
           <root url="file://$MODULE_DIR$/lib" />
           <root url="jar://$USER_HOME$/.grails/ivy-cache/au.org.ala/ala-cas-client/jars/ala-cas-client-1.0-SNAPSHOT.jar!/" />
-          <root url="jar://$USER_HOME$/.grails/ivy-cache/commons-logging/commons-logging/jars/commons-logging-1.1.jar!/" />
-          <root url="jar://$USER_HOME$/.grails/ivy-cache/org.jasig.cas/cas-client-core/jars/cas-client-core-3.1.10.jar!/" />
           <root url="jar://$USER_HOME$/.grails/ivy-cache/net.sf.opencsv/opencsv/jars/opencsv-2.3.jar!/" />
-          <root url="jar://$USER_HOME$/.grails/ivy-cache/javax.servlet/servlet-api/jars/servlet-api-2.3.jar!/" />
+          <root url="jar://$USER_HOME$/.grails/ivy-cache/org.jasig.cas/cas-client-core/jars/cas-client-core-3.1.10.jar!/" />
+          <root url="jar://$USER_HOME$/.grails/ivy-cache/commons-httpclient/commons-httpclient/jars/commons-httpclient-3.1.jar!/" />
+          <root url="jar://$USER_HOME$/.grails/ivy-cache/org.jasig.cas.client/cas-client-core/jars/cas-client-core-3.1.11.jar!/" />
+          <root url="jar://$USER_HOME$/.grails/ivy-cache/commons-logging/commons-logging/jars/commons-logging-1.1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
         <jarDirectory url="file://$MODULE_DIR$/lib" recursive="false" />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="grails-2.2.1" level="application" />
-    <orderEntry type="library" name="grails-2.2.1" level="application" />
     <orderEntry type="module" module-name="FieldCapture-grailsPlugins" />
+    <orderEntry type="library" name="grails-2.2.1" level="application" />
   </component>
 </module>
 
