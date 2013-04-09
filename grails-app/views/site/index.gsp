@@ -5,7 +5,7 @@
   <meta name="layout" content="main"/>
   <title>${site?.name} | Field Capture</title>
   <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&language=en"></script>
-  <r:require module="knockout"/>
+  <r:require modules="knockout,mapWithFeatures"/>
 </head>
 <body>
     <ul class="breadcrumb">
@@ -49,11 +49,11 @@
                 </thead>
                 <tbody data-bind="foreach: activities">
                     <tr>
-                        <td><a data-bind="attr: {href: '${grailsApplication.config.baseServer}/activity/index/' + activityId}"><i class="icon-eye-open" title="View"></i></a>
-                            <a data-bind="attr: {href: '${grailsApplication.config.baseServer}/activity/edit/' + activityId}"><i class="icon-edit" title="Edit"></i></a>
+                        <td><a data-bind="attr: {href: '${createLink(controller: "activity", action: "index")}' + '/' + activityId}"><i class="icon-eye-open" title="View"></i></a>
+                            <a data-bind="attr: {href: '${createLink(controller: "activity", action: "edit")}' + '/' + activityId}"><i class="icon-edit" title="Edit"></i></a>
                             <i data-bind="click: $root.deleteActivity" class="icon-trash" title="Delete"></i>
                         </td>
-                        <td><a data-bind="text: activityId, attr: {href: '${grailsApplication.config.baseServer}/activity/index/' + activityId}"> </a></td>
+                        <td><a data-bind="text: activityId, attr: {href: '${createLink(controller: "activity", action: "index")}' + '/' + activityId}"> </a></td>
                         <td data-bind="text: startDate"></td>
                         <td data-bind="text: endDate"></td>
                         <td data-bind="text: types.length"></td>
@@ -77,6 +77,7 @@
         <div style="display: none">
             <div>Site : ${site}</div>
             <div>Activities : ${site.activities}</div>
+            <div>Map features : ${mapFeatures}</div>
         </div>
     </div>
     </div>
@@ -116,7 +117,7 @@
                         'json');
                 };
                 self.newActivity = function () {
-                    document.location.href = "${grailsApplication.config.baseServer}/activity/create/${site.siteId}";
+                    document.location.href = "${createLink(controller: 'activity', action: 'create', id: site.siteId)}";
                 };
             }
 
@@ -128,106 +129,13 @@
 
             ko.applyBindings(viewModel);
 
-            // map
-            var locationMap = {
-                // locations from the model
-                locations: ${site.location},
-                // the google map
-                map: new google.maps.Map(document.getElementById('smallMap'), {
-                    //width: 250,
-                    //height: 250,
-                    zoom: 3,
-                    center: new google.maps.LatLng(-28.5, 133.5),
-                    panControl: false,
-                    streetViewControl: false,
-                    mapTypeControl: false,
-                    mapTypeId: google.maps.MapTypeId.TERRAIN,
-                    zoomControlOptions: {
-                        style: 'DEFAULT'
-                    }
-                }),
-                // default overlay options
-                overlayOptions: {strokeColor:'#BC2B03',fillColor:'#DF4A21',fillOpacity: 0.3,strokeWeight: 1,
-                    clickable:false,zIndex: 1,editable: false},
-                // keep count of locations as we load them so we know when we've finished
-                locationsLoaded: 0,
-                // keep a running bounds for loaded locations so we can zoom when all are loaded
-                featureBounds: new google.maps.LatLngBounds(),
-                // load the site locations
-                load: function () {
-                    var self = this;
-                    $.each(self.locations, function (i,loc) {
-                        if (loc.type === 'locationTypePoint') {
-                            var ll = new google.maps.LatLng(Number(loc.data.decimalLatitude), Number(loc.data.decimalLongitude));
-                            new google.maps.Marker({map: self.map, position: ll});
-                            self.featureBounds.extend(ll);
-                            self.locationLoaded();
-                        } else if (loc.type === 'locationTypePid') {
-                            $.ajax("${grailsApplication.config.baseServer}/proxy/geojsonFromPid?pid=" + loc.data.pid, {
-                                success: function(data) {
-                                    var paths, points;
-                                    if (data.type === 'Polygon') {
-                                        paths = geojsonToPaths(data.coordinates);
-                                        new google.maps.Polygon({
-                                            paths: paths,
-                                            map: self.map
-                                        }).setOptions(self.overlayOptions);
-                                        // flatten arrays to array of points
-                                        points = [].concat.apply([], paths);
-                                        // extend bounds by each point
-                                        $.each(points, function (i,obj) {self.featureBounds.extend(obj);});
-                                        self.locationLoaded();
-                                    }
-                                },
-                                dataType: 'json'}
-                            );
-                        } else {
-                            // count the location as loaded even if we didn't
-                            self.locationLoaded();
-                        }
-                    });
+            init_map_with_features({
+                    baseUrl: "${grailsApplication.config.grails.serverURL}",
+                    mapContainer: "smallMap"
                 },
-                // increments the count of loaded locations - zooms map when all are loaded
-                locationLoaded: function () {
-                    this.locationsLoaded++;
-                    if (this.locationsLoaded === this.locations.length) {
-                        // all loaded
-                        this.allLocationsLoaded()
-                    }
-                },
-                // zoom map to show features - but not higher than zoom = 12
-                allLocationsLoaded: function () {
-                    this.map.fitBounds(this.featureBounds);  // this happens asynchronously so need to wait for bounds to change
-                    // to sanity-check the zoom level
-                    boundsListener = google.maps.event.addListener(this.map, 'bounds_changed', function(event) {
-                        if (this.getZoom() > 12){
-                            this.setZoom(12);
-                        }
-                        google.maps.event.removeListener(boundsListener);
-                    });
-                }
-            }.load();
+                $.parseJSON('${mapFeatures}')
+            );
         });
-
-        function geojsonToPaths(obj) {
-            return gjToLatLngs(obj);
-        }
-
-        function gjToLatLngs(arr) {
-            var i, len = arr.length;
-            for (i = 0; i < len; i++) {
-                if (isCoord(arr[i])) {
-                    arr[i] = new google.maps.LatLng(arr[i][1],arr[i][0]);
-                } else if ($.isArray(arr[[i]])){
-                    arr[i] = gjToLatLngs(arr[i]);
-                }
-            }
-            return arr;
-        }
-
-        function isCoord(arr) {
-            return arr.length === 2 && !isNaN(arr[0]) && !isNaN(arr[1]);
-        }
 
     </r:script>
 </body>
