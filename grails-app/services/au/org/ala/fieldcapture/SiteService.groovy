@@ -1,8 +1,12 @@
 package au.org.ala.fieldcapture
 
+import grails.converters.JSON
+import org.codehaus.groovy.grails.web.mapping.LinkGenerator
+
 class SiteService {
 
     def webService, grailsApplication
+    LinkGenerator grailsLinkGenerator
 
     static testSites = [:]
     static projects = [:]
@@ -36,6 +40,33 @@ class SiteService {
 
     def delete(id) {
         webService.doDelete(grailsApplication.config.ecodata.baseUrl + 'site/' + id)
+    }
+
+    static locationTypes = [locationTypePoint: 'point', locationTypePolygon: 'polygon', locationTypePid: 'pid']
+    /**
+     * Returns json that describes in a generic fashion the features to be placed on a map that
+     * will represent the site's locations.
+     *
+     * @param site
+     */
+    def getMapFeatures(site) {
+        def featuresMap = [zoomToBounds: true, zoomLimit: 12, features: []]
+        site.location.each { loc ->
+            def location = [type: locationTypes[loc.type], name: loc.name]
+            switch (location.type) {
+                case 'point':
+                    location.latitude = loc.data.decimalLatitude
+                    location.longitude = loc.data.decimalLongitude
+                    break
+                case 'pid':
+                    location.polygonUrl = grailsLinkGenerator.link(
+                            controller: 'proxy', action: 'geojsonFromPid',
+                            params: [pid: loc.data.pid]
+                    )
+            }
+            featuresMap.features << location
+        }
+        return featuresMap as JSON
     }
 
     static metaModel() {
