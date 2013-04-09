@@ -8,8 +8,9 @@ class ProxyController {
 
     def geojsonFromPid(String pid) {
         log.debug "requesting pid ${pid}"
-        def resp = webService.get("http://spatial-dev.ala.org.au/layers-service/getgeojson?id=${pid}")
+        def resp = webService.get(grailsApplication.config.spatialLayerServices.baseUrl +
+                "getgeojson?id=${pid}")
         //log.debug resp
-        render resp
+        render resp as String
     }
 }
