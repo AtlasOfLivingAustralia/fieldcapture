@@ -7,7 +7,8 @@
     <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&language=en"></script>
     <r:script disposition="head">
     var fcConfig = {
-        baseUrl: "http://localhost:8087/fieldcapture",
+        siteDeleteUrl: "${createLink(controller: 'site', action: 'ajaxDelete')}",
+        siteViewUrl: "${createLink(controller: 'site', action: 'index')}",
         spatialBaseUrl: "${grailsApplication.config.spatial.baseURL}",
         spatialWmsCacheUrl: "${grailsApplication.config.spatial.wms.cache.url}",
         spatialWmsUrl: "${grailsApplication.config.spatial.wms.url}",
@@ -88,7 +89,7 @@
                 this.sites = ko.mapping.fromJS(siteData);
                 this.removeSite = function () {
                    var that = this,
-                       url = fcConfig.baseUrl + '/site/ajaxDelete/' + this.siteId();
+                       url = fcConfig.siteDeleteUrl + '/' + this.siteId();
                     $.get(url, function (data) {
                         if (data.status === 'deleted') {
                             self.sites.remove(that);
@@ -96,7 +97,7 @@
                     });
                 };
                 this.open = function () {
-                    document.location.href = fcConfig.baseUrl + '/site/index/' + this.siteId();
+                    document.location.href = fcConfig.siteViewUrl + '/' + this.siteId();
                 };
                 this.highlight = function () {
                     sites.highlightMarker(sites.markers[this.name()]);
@@ -120,16 +121,6 @@
             ko. applyBindings(viewModel);
         });
 
-        $('.xsiteInstance button.close').click(function () {
-            var siteInstance = $(this).parent(),
-                siteId = siteInstance.attr('id'),
-                url = fcConfig.baseUrl + '/site/ajaxDelete/' + siteId;
-            $.get(url, function (data) {
-                if (data.status === 'deleted') {
-                    siteInstance.remove();
-                }
-            });
-        });
     </r:script>
 </body>
 </html>
