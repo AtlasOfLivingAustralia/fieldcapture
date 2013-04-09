@@ -15,7 +15,7 @@ class SiteController {
         //log.debug(id)
         def site = siteService.get(id)
         if (site) {
-            [site: site]
+            [site: site, mapFeatures: siteService.getMapFeatures(site)]
         } else {
             //forward(action: 'list', model: [error: 'no such id'])
             render 'no such site'
@@ -148,5 +148,15 @@ class SiteController {
 
     def stripBlankElements(list) {
         list.findAll {it}
+    }
+
+    // debug only
+    def features(String id) {
+        def site = siteService.get(id)
+        if (site) {
+            render siteService.getMapFeatures(site)
+        } else {
+            render 'no such site'
+        }
     }
 }
