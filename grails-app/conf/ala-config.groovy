@@ -13,13 +13,16 @@ security.cas.logoutUrl = 'https://auth.ala.org.au/cas/logout'
 security.cas.casServerUrlPrefix = 'https://auth.ala.org.au/cas'
 security.cas.bypass = false
 
-appContext = grails.util.Metadata.current.'app.name'
+//appContext = grails.util.Metadata.current.'app.name'
 headerAndFooter.baseURL = 'http://www2.ala.org.au/commonui'
 ala.baseURL = "http://www.ala.org.au"
 bie.baseURL = "http://bie.ala.org.au"
 bie.searchPath = "/search"
 grails.project.groupId = "au.org.ala" // change this to alter the default package name and Maven publishing destination
 
+//println "ALA-CONFIG: grails.serverURL is ${grails.serverURL}"
+
+/*
 environments {
     development {
         grails.logging.jul.usebridge = true
@@ -45,4 +48,4 @@ environments {
         security.cas.contextPath = ""
         log4j.appender.'errors.File'="/var/log/tomcat6/foo-stacktrace.log"
     }
-}
+}*/

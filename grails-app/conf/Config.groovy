@@ -104,32 +104,53 @@ if (!sld.polgon.highlight.url) {
     sld.polgon.highlight.url = "http://fish.ala.org.au/data/fc-highlight.sld"
 }
 
+spatialLayerServices.baseUrl = "http://spatial-dev.ala.org.au/layers-service/"
+
 environments {
     development {
         grails.logging.jul.usebridge = true
-        grails.hostname = "devt.ala.org.au"
-        //grails.hostname = "192.168.0.15"
-        serverName = "http://${grails.hostname}:8087"
-        grails.app.context = "fieldcapture"
-        //grails.serverURL = "http://${grails.hostname}:8087/" + grails.app.context
-        grails.serverURL = "http://localhost:8087/fieldcapture"
-        baseServer = "http://localhost:8087/fieldcapture"
+        server.port = "8087"
+        grails.app.context = "/"
+        grails.host = "http://devt.ala.org.au"
+        serverName = "${grails.host}:${server.port}"
+
+        security.cas.appServerName = serverName
+        security.cas.contextPath = grails.app.context
         ecodata.baseUrl = 'http://localhost:8080/ecodata/ws/'
     }
     test {
         grails.logging.jul.usebridge = true
-        grails.hostname = "ala-testweb1.ala.org.au"
-        serverName = "http://${grails.hostname}:8080"
-        grails.app.context = "fieldcapture"
-        grails.serverURL = serverName + "/" + grails.app.context
+        server.port = "8080"
+        grails.app.context = "/fieldcapture"
+        grails.host = "http://ala-testweb1.ala.org.au"
+        serverName = "${grails.host}:${server.port}"
+
+        security.cas.appServerName = serverName
+        security.cas.contextPath = "/" + grails.app.context
         ecodata.baseUrl = 'http://localhost:8080/ecodata/ws/'
+    }
+    nectar {
+        grails.logging.jul.usebridge = true
+        server.port = "8080"
+        grails.app.context = "/fieldcapture"
+        grails.host = "http://115.146.94.201"
+        serverName = "${grails.host}:${server.port}"
+
+        security.cas.appServerName = serverName
+        security.cas.contextPath = "/" + grails.app.context
+        ecodata.baseUrl = 'http://115.146.94.201:8080/ecodata/ws/'
     }
     production {
         grails.logging.jul.usebridge = false
-        grails.serverURL = "http://fieldcapture.ala.org.au"
+        grails.app.context = "/"
+
+        security.cas.appServerName = grails.serverURL
+        security.cas.contextPath = ""
         ecodata.baseUrl = 'http://ecodata.ala.org.au/ws/'
     }
 }
+
+//println "grails.serverURL is ${grails.serverURL}"
 
 // log4j configuration
 log4j = {
@@ -149,6 +170,16 @@ log4j = {
                         file: "/var/log/tomcat6/fieldcapture-stacktrace.log"
             }
             test {
+                rollingFile name: "fieldcaptureLog",
+                        maxFileSize: 104857600,
+                        file: "/var/log/tomcat6/fieldcapture.log",
+                        threshold: org.apache.log4j.Level.INFO,
+                        layout: pattern(conversionPattern: "%d %-5p [%c{1}]  %m%n")
+                rollingFile name: "stacktrace",
+                        maxFileSize: 104857600,
+                        file: "/var/log/tomcat6/fieldcapture-stacktrace.log"
+            }
+            nectar {
                 rollingFile name: "fieldcaptureLog",
                         maxFileSize: 104857600,
                         file: "/var/log/tomcat6/fieldcapture.log",
