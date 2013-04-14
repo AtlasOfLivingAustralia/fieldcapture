@@ -7,3 +7,7 @@ if (typeof jQuery !== 'undefined') {
 		});
 	})(jQuery);
 }
+$('#debug').click(function () {
+    $(this).next().toggle();
+});
+
