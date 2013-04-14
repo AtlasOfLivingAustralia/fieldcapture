@@ -4,7 +4,7 @@ import grails.converters.JSON
 
 class ActivityController {
 
-    def activityService, siteService
+    def activityService, siteService, metadataService
 
     static ignore = ['action','controller','id']
 
@@ -13,24 +13,20 @@ class ActivityController {
         if (!activity || activity.error) {
             forward(action: 'list', model: [error: activity.error])
         } else {
-            // this will be driven by the meta-model
-            // just hard wire for now
-            ['startDate','endDate'].each { activity[it] = toSimpleDate activity[it] }
             //todo: ensure there are no control chars (\r\n etc) in the json as
             //todo:     this will break the client-side parser
             def site = siteService.get(activity.siteId)
-            [activity: activity, site: site, json: (activity.types as JSON).toString()]
+            [activity: activity, site: site]
         }
     }
 
     def edit(String id) {
         def activity = activityService.get(id)
         if (activity) {
-            // this will be driven by the meta-model
-            // just hard wire for now
-            ['startDate','endDate'].each { activity[it] = toSimpleDate activity[it] }
             def site = siteService.get(activity.siteId)
-            [activity: activity, site: site, json: (activity as JSON).toString()]
+            log.debug site
+            [activity: activity, site: site, json: (activity as JSON).toString(),
+                activityTypes: metadataService.activityTypesList() as JSON]
         } else {
             forward(action: 'list', model: [error: 'no such id'])
         }
@@ -61,22 +57,24 @@ class ActivityController {
                 values[k] = v //reMarshallRepeatingObjects(v);
             }
         }
-        // this will be driven by the meta-model
-        // just hard wire for now
-        ['startDate','endDate'].each { values[it] = fromSimpleDate values[it] }
         log.debug (values as JSON).toString()
         log.debug "id=${id} class=${id.getClass()}"
         def result = activityService.update(id, (values as JSON).toString())
-        println "result is " + result
-        println "json result is " + (result as JSON)
-        render result.resp as JSON
+        log.debug "result is " + result
+        if (result.error) {
+            render result as JSON
+        } else {
+            println "json result is " + (result as JSON)
+            render result.resp as JSON
+        }
     }
 
     def create(String id) {
         def site = siteService.get(id)
         if (site) {
             render view: 'edit', model:
-                    [site: site, activity: [activityId: '', siteId: id]]
+                    [site: site, activity: [activityId: '', siteId: id],
+                     activityTypes: metadataService.activityTypesList() as JSON]
         } else {
             forward(action: 'list', model: [error: 'no such site'])
         }
@@ -94,14 +92,5 @@ class ActivityController {
         // will show a list of activities
         // but for now just go home
         forward(controller: 'home')
-    }
-
-    def toSimpleDate = { value ->
-        log.debug value
-        activityService.convertToSimpleDate(value)
-    }
-
-    def fromSimpleDate = { value ->
-        activityService.convertFromSimpleDate(value)
     }
 }
