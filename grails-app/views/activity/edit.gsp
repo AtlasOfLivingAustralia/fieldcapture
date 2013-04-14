@@ -26,6 +26,7 @@
     }
     .no-border { border-top: none !important; }
     </style>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jstimezonedetect/1.0.4/jstz.min.js"></script>
     <r:require module="knockout"/>
 </head>
 <body>
@@ -33,8 +34,10 @@
     <li><g:link controller="home">Home</g:link> <span class="divider">/</span></li>
     <li><g:link controller="project" id="${site.projectId}">${site.projectName}</g:link> <span class="divider">/</span></li>
     <li><g:link controller="site" id="${site.siteId}">${site.name}</g:link> <span class="divider">/</span></li>
-    <g:if test="${activity.activityId}">
-        <li><g:link controller="activity" id="${activity.activityId}">${activity.activityId}</g:link> <span class="divider">/</span></li>
+    <g:if test="${activity.label}">
+        <li><g:link controller="activity" id="${activity.activityId}">${activity.type}
+            <span data-bind="text: startDate.formattedDate"></span>/<span data-bind="text: endDate.formattedDate"></span>
+        </g:link><span class="divider">/</span></li>
         <li class="active">Edit</li>
     </g:if>
     <g:else>
@@ -42,13 +45,20 @@
     </g:else>
 </ul>
 <div class="container-fluid">
-    <div class="row-fluid span12" style="padding-bottom: 15px;">
+    <div class="row-fluid span12">
         <h2><div class="span6">
             Project: <g:link controller="project" action="index" id="${site.projectId}">${site.projectName}</g:link>
         </div>
         <div class="span6">
             Site: <g:link controller="site" action="index" id="${site.siteId}">${site.name}</g:link>
         </div></h2>
+    </div>
+    <div class="row-fluid span12" style="padding-bottom: 15px;">
+        <h2>
+            <div class="span12">Activity: <span data-bind="text:type"></span>
+                <span data-bind="text:startDate.formattedDate"></span>/<span data-bind="text:endDate.formattedDate"></span>
+            </div>
+        </h2>
     </div>
 
     <bs:form action="update" inline="true">
@@ -62,17 +72,28 @@
         </div>
 
         <div class="row-fluid span12">
+            <label for="type">Type of activity</label>
+            <select data-bind="foreach: $root.availableTypes, value: type" id="type">
+                <optgroup data-bind="attr: {label: name}, foreach: list">
+                    <option data-bind="text: name"></option>
+                </optgroup>
+            </select>
+
+            %{--<select data-bind="value: type, options: availableTypes, optionsText: 'name'" id="type"></select>--}%
+        </div>
+
+        <div class="row-fluid span12">
             <div class="span4">
                 <label for="startDate">Start date
                 <fc:iconHelp title="Start date">Date the activity was started.</fc:iconHelp>
                 </label>
-                <input data-bind="value:startDate" id="startDate" type="text" class="span12"/>
+                <input data-bind="value:startDate.formattedDate" id="startDate" type="text" class="span12"/>
             </div>
             <div class="span4">
                 <label for="endDate">End date
                 <fc:iconHelp title="End date">Date the activity finished.</fc:iconHelp>
                 </label>
-                <input data-bind="value:endDate" id="endDate" type="text" class="span12"/>
+                <input data-bind="value:endDate.formattedDate" id="endDate" type="text" class="span12"/>
             </div>
         </div>
 
@@ -104,9 +125,10 @@
     <hr />
     <div class="debug">
         <h2>Debug</h2>
-        <div>Site : ${site}</div>
-        <div>Activity : ${activity}</div>
-        <div>Types : ${json}</div>
+        <pre data-bind="text: ko.toJSON($root, null, 2)"></pre>
+        <pre>Site : ${site}</pre>
+        <pre>Activity : ${activity}</pre>
+        <pre>Available types : ${activityTypes}</pre>
         %{--<div data-bind="text: ko.toJSON($root)"></div>--}%
     </div>
 </div>
@@ -125,32 +147,35 @@
         return parent === undefined ? '' : (parent[prop] === undefined ? '' : parent[prop]);
     }
 
-    var modelData = $.parseJSON('${json}');
-
     $(function(){
         //$('.dropdown-toggle').dropdown();
         $('.helphover').popover({animation: true, trigger:'hover'});
 
         $('#cancel').click(function () {
-            document.location.href = "${createLink(action: 'index', id: site.siteId)}";
+            document.location.href = "${createLink(action: 'index', id: activity.activityId)}";
         });
 
         function ViewModel () {
             var self = this;
             self.description = ko.observable("${activity.description}");
             self.notes = ko.observable("${activity.notes}");
-            self.startDate = ko.observable("${activity.startDate}");
-            self.endDate = ko.observable("${activity.endDate}");
+            self.startDate = ko.observable("${activity.startDate}").extend({simpleDate: false});
+            self.endDate = ko.observable("${activity.endDate}").extend({simpleDate: false});
             self.censusMethod = ko.observable("${activity.censusMethod}");
             self.methodAccuracy = ko.observable("${activity.methodAccuracy}");
             self.collector = ko.observable("${activity.collector}");
             self.fieldNotes = ko.observable("${activity.fieldNotes}");
-            self.types = ko.observableArray(${activity.types});
-            self.siteId = "${activity.siteId}";
+            self.type = ko.observable("${activity.type}");
+            self.siteId = ko.observable("${activity.siteId}");
+            self.dateCreated = ko.observable("${activity.dateCreated}").extend({simpleDate: true});
+            self.lastUpdated = ko.observable("${activity.lastUpdated}").extend({simpleDate: true});
+            self.availableTypes = ${activityTypes};
 
             self.save = function () {
                 var jsData = ko.toJS(self);
-                var json = ko.toJSON(self);
+                // availableTypes is metadata so don't send it back in the model
+                delete jsData.availableTypes;
+                var json = JSON.stringify(jsData);
                 $.ajax({
                     url: "${createLink(action: 'ajaxUpdate', id: activity.activityId)}",
                     type: 'POST',
