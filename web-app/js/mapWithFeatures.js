@@ -32,13 +32,31 @@
     map = {
         // the google map object
         map: null,
-        // the DOM container to draw the map in
+        // the DOM container to draw the map in - can be overridden in init options
         containerId: "map-canvas",
+        // whether to zoom to bounds when all features are loaded
         zoomToBounds: true,
+        // maximum zoom
         zoomLimit: 12,
-        features: [],
-        init: function (features) {
+        // whether to highlight features on hover
+        highlightOnHover: false,
+        // the generalised features as passed in
+        features: {},
+        // the created map features (points, polys, etc) indexed by an id
+        featureIndex: {},
+        // a n incremented counter used as id if no id exists in the feature description
+        currentId: 0,
+        // init map and load features
+        init: function (options, features) {
+            var self = this;
             this.features = features;
+            // handle options
+            if (options.mapContainer) {
+                this.containerId = options.mapContainer;
+            }
+            if (features.highlightOnHover) {
+                this.highlightOnHover = features.highlightOnHover;
+            }
             this.map = new google.maps.Map(document.getElementById(this.containerId), {
                 zoom: 3,
                 center: new google.maps.LatLng(-28.5, 133.5),
@@ -52,36 +70,39 @@
             });
             if (features.zoomToBounds) { this.zoomToBounds = features.zoomToBounds}
             if (features.zoomLimit) { this.zoomLimit = features.zoomLimit}
-            this.load(features);
+            this.load(features.features);
+            return this;
         },
+        // loads the features
         load: function (features) {
-            var self = this;
-            $.each(features.features, function (i,loc) {
+            var self = this, f;
+            $.each(features, function (i,loc) {
                 if (loc.type === 'point') {
                     var ll = new google.maps.LatLng(Number(loc.latitude), Number(loc.longitude));
-                    new google.maps.Marker({
+                    f = new google.maps.Marker({
                         map: self.map,
                         position: ll,
                         title: loc.name
                     });
                     self.featureBounds.extend(ll);
-                    self.locationLoaded();
+                    self.addFeature(f, loc);
                 } else if (loc.type === 'pid') {
                     $.ajax(loc.polygonUrl, {
                             success: function(data) {
                                 var paths, points;
                                 if (data.type === 'Polygon') {
                                     paths = geojsonToPaths(data.coordinates);
-                                    new google.maps.Polygon({
+                                    f = new google.maps.Polygon({
                                         paths: paths,
                                         map: self.map,
                                         title: loc.name
-                                    }).setOptions(self.overlayOptions);
+                                    });
+                                    f.setOptions(self.overlayOptions);
                                     // flatten arrays to array of points
                                     points = [].concat.apply([], paths);
                                     // extend bounds by each point
                                     $.each(points, function (i,obj) {self.featureBounds.extend(obj);});
-                                    self.locationLoaded();
+                                    self.addFeature(f, loc);
                                 }
                             },
                             dataType: 'json'}
@@ -91,6 +112,29 @@
                     self.locationLoaded();
                 }
             });
+        },
+        addFeature: function (f, loc) {
+            var self = this;
+            if (this.highlightOnHover) {
+                google.maps.event.addListener(f, 'mouseover', function () {
+                    self.highlightFeature(this);
+                });
+                google.maps.event.addListener(f, 'mouseout', function () {
+                    self.unHighlightFeature(this);
+                });
+            }
+            this.indexFeature(f, loc);
+            this.locationLoaded();
+        },
+        indexFeature: function (f, loc) {
+            var id;
+            if (loc.id === undefined) {
+                id = this.currentId++;
+            } else {
+                id = loc.id;
+            }
+            if (this.featureIndex[id] === undefined) { this.featureIndex[id] = []; }
+            this.featureIndex[id].push(f);
         },
         // default overlay options
         overlayOptions: {strokeColor:'#BC2B03',fillColor:'#DF4A21',fillOpacity: 0.3,strokeWeight: 1,
@@ -120,6 +164,44 @@
                     google.maps.event.removeListener(boundsListener);
                 });
             }
+        },
+        //
+        highlightFeatureById: function (id) {
+            var self = this;
+            $.each(this.featureIndex[id], function (i,f) {
+                self.highlightFeature(f);
+            });
+        },
+        //
+        unHighlightFeatureById: function (id) {
+            var self = this;
+            $.each(this.featureIndex[id], function (i,f) {
+                self.unHighlightFeature(f);
+            });
+        },
+        //
+        highlightFeature: function (f) {
+            if (!f) { return; }
+            if (f instanceof google.maps.Marker) {
+                f.setOptions({icon: 'http://collections.ala.org.au/images/map/orange-dot.png'});
+            } else if (f instanceof google.maps.Polygon) {
+                f.setOptions({
+                    strokeColor:'#BC2B03',
+                    fillColor:'#DF4A21'
+                });
+            }
+        },
+        //
+        unHighlightFeature: function (f) {
+            if (!f) { return; }
+            if (f instanceof google.maps.Marker) {
+                f.setOptions({icon: null});
+            } else if (f instanceof google.maps.Polygon) {
+                f.setOptions({
+                    strokeColor:'#202020',
+                    fillColor:'#eeeeee'
+                });
+            }
         }
     };
 
@@ -127,21 +209,11 @@
      * Initialises everything including the map.
      *
      * @param options object specifier with the following members:
-     * - server: url of the server the app is running on
-     * - spatialService:
      * - mapContainer: id of the html element to hold the map
+     * @param features: js representation of the generalised description of features
      */
     function init (options, features) {
-        config.baseUrl = options.server;
-        //config.spatialServiceUrl = options.spatialService;
-
-        /*****************************************\
-         | Create map
-         \*****************************************/
-        if (options.mapContainer) {
-            map.containerId = options.mapContainer;
-        }
-        map.init(features);
+        return map.init(options, features);
     }
 
     // expose these methods to the global scope
