@@ -16,7 +16,7 @@
         sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}"
     }
     </r:script>
-    <r:require modules="gmap3,projectsMap,knockout"/>
+    <r:require modules="gmap3,mapWithFeatures,knockout"/>
 </head>
 <body>
 <ul class="breadcrumb">
@@ -25,16 +25,14 @@
 </ul>
 <div class="container-fluid">
     <div class="row-fluid">
-        <div class="pull-left">
-            <h1>${project?.name}</h1>
-        </div>
-        <div class="pull-right">
-            <g:link action="edit" id="${project.projectId}" class="btn" style="margin-top:20px;">Edit project</g:link>
-        </div>
-    </div>
-    <div class="row-fluid">
-        <div class="row-fluid span12">
-            <p class="well well-small">${project.description}</p>
+        <div class="page-header span12">
+            <div class="clearfix">
+                <h1 class="pull-left">${project?.name}</h1>
+                <g:link action="edit" id="${project.projectId}" class="btn pull-right title-edit">Edit project</g:link>
+            </div>
+            <div class="row-fluid span12">
+                <p class="well well-small">${project.description}</p>
+            </div>
         </div>
     </div>
     <div class="row-fluid span12">
@@ -78,11 +76,24 @@
             <div id="map"></div>
         </div>
     </div>
+
+    <hr />
+    <div class="debug">
+        <h3 id="debug">Debug</h3>
+        <div style="display: none">
+            <div>project : ${project}</div>
+            <div>Map features : ${mapFeatures}</div>
+        </div>
+    </div>
 </div>
     <r:script>
         $(window).load(function () {
             var json = $.parseJSON('${json}');
-            initMap('li.siteInstance', initMapForSites, json);
+            var map = init_map_with_features({
+                    mapContainer: "map"
+                },
+                $.parseJSON('${mapFeatures}')
+            );
 
             function SitesViewModel(siteData) {
                 var self = this;
@@ -100,10 +111,10 @@
                     document.location.href = fcConfig.siteViewUrl + '/' + this.siteId();
                 };
                 this.highlight = function () {
-                    sites.highlightMarker(sites.markers[this.name()]);
+                    map.highlightFeatureById(this.name());
                 };
                 this.unhighlight = function () {
-                    sites.unHighlightMarker(sites.markers[this.name()]);
+                    map.unHighlightFeatureById(this.name());
                 };
                 this.removeAllSites = function () {
                     self.notImplemented();
