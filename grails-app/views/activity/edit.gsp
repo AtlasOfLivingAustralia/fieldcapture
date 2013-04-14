@@ -34,7 +34,7 @@
     <li><g:link controller="home">Home</g:link> <span class="divider">/</span></li>
     <li><g:link controller="project" id="${site.projectId}">${site.projectName}</g:link> <span class="divider">/</span></li>
     <li><g:link controller="site" id="${site.siteId}">${site.name}</g:link> <span class="divider">/</span></li>
-    <g:if test="${activity.label}">
+    <g:if test="${activity.type}">
         <li><g:link controller="activity" id="${activity.activityId}">${activity.type}
             <span data-bind="text: startDate.formattedDate"></span>/<span data-bind="text: endDate.formattedDate"></span>
         </g:link><span class="divider">/</span></li>
