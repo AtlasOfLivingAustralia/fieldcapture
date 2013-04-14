@@ -1,63 +1,78 @@
-var isodatePattern = /\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ/,
-    simpleDatePattern = /\d\d-\d\d-\d\d\d\d/;
+/*
+This Knockout extender allows UTC ISODates to be displayed and edited as simple dates in the form
+dd-MM-yyyy and with local timezone adjustment. Hours and minutes can optionally be shown and edited.
 
-function convertToSimpleDate(isoDate) {
-    //var date = new Date(isoDate);
-    //alert(date.toString() + ' ' + date.toUTCString() + ' ' + date.toLocaleString());
-    //var test = date.toLocaleString();
-    if (isoDate && isodatePattern.test(isoDate)) {
-        return isoDate.substr(8,2) + '-' +  isoDate.substr(5,2) +  '-' + isoDate.substr(0,4);
+The date values in the ViewModel are maintained as UTC dates in ISO format (ISO8601 without milliseconds).
+
+The extender adds a 'formattedDate' property to the observable. It is this property that should be bound
+to an element, eg
+
+    <input data-bind="value: myDate.formattedDate" type=...../>
+
+The date is defined in the view model like this:
+
+    self.myDate = ko.observable("${myDate}").extend({simpleDate: false});
+
+The boolean indicates whether to show the time as well.
+
+*/
+
+Date.prototype.toISOStringNoMillis = function() {
+    function pad(n) { return n < 10 ? '0' + n : n }
+    return this.getUTCFullYear() + '-'
+        + pad(this.getUTCMonth() + 1) + '-'
+        + pad(this.getUTCDate()) + 'T'
+        + pad(this.getUTCHours()) + ':'
+        + pad(this.getUTCMinutes()) + ':'
+        + pad(this.getUTCSeconds()) + 'Z';
+};
+
+function convertToSimpleDate(isoDate, includeTime) {
+    if (!isoDate) { return ''}
+    var date = new Date(isoDate), strDate;
+    strDate = pad(date.getDate(),2) + '-' + pad(date.getMonth() + 1,2) + '-' + date.getFullYear();
+    if (includeTime) {
+        strDate = strDate + ' ' + pad(date.getHours(),2) + ':' + pad(date.getMinutes(),2);
     }
-    return isoDate;
-    //return test;
+    return strDate;
 }
 
 function convertFromSimpleDate(date) {
-    if (date && simpleDatePattern.test(date)) {
-        return date.substr(6,4) + '-' + date.substr(3,2) + '-' + date.substr(0, 2) + 'T00:00:00Z';
-    }
-    return date;
+    if (!date || date.length < 10) { return '' }
+    var year = date.substr(6,4),
+        month = Number(date.substr(3,2))- 1,
+        day = date.substr(0,2),
+        hours = date.length > 12 ? date.substr(11,2) : 0,
+        minutes = date.length > 15 ? date.substr(14,2) : 0;
+    return new Date(year, month, day, hours, minutes).toISOStringNoMillis();
 }
 
-ko.bindingHandlers.simpleDate = {
-    init: function(element, valueAccessor) {
-        var underlyingObservable = valueAccessor();
-
-        var interceptor = ko.computed({
+(function() {
+    ko.extenders.simpleDate = function (target, includeTime) {
+        target.formattedDate = ko.computed({
             read: function () {
-                return convertToSimpleDate(underlyingObservable());
+                return convertToSimpleDate(target(), includeTime);
             },
 
             write: function (newValue) {
-                var current = underlyingObservable(),
-                    valueToWrite = convertFromSimpleDate(newValue);
+                if (newValue) {
+                    var current = target(),
+                        valueToWrite = newValue.charAt(newValue.length - 1) === 'Z' ?
+                            newValue : convertFromSimpleDate(newValue);
 
-                if (valueToWrite !== current) {
-                    underlyingObservable(valueToWrite);
-                } else {
-                    if (newValue !== current.toString())
-                        underlyingObservable.valueHasMutated();
+                    if (valueToWrite !== current) {
+                        target(valueToWrite);
+                    } else {
+                        if (newValue !== current.toString())
+                            //target.notifySubscribers(valueToWrite);
+                            target.valueHasMutated();
+                    }
                 }
             }
         });
 
-        ko.applyBindingsToNode(element, { value: interceptor });
-    }
-};
+        target.formattedDate(target());
 
-function getLocalOffset() {
-    var offset = new Date().getTimezoneOffset();
-    offset = ((offset<0? '+':'-')+ // Note the reversed sign!
-        pad(parseInt(Math.abs(offset/60)), 2)+
-        pad(Math.abs(offset%60), 2));
-    return offset;
-}
-
-function pad(number, length){
-    var str = "" + number
-    while (str.length < length) {
-        str = '0'+str
-    }
-    return str
-}
-
+        return target;
+    };
+}());
