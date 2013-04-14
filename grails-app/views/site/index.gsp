@@ -19,7 +19,7 @@
             <div class="under-rule">
                 <div class="clearfix">
                     <h1 class="pull-left">${site?.name}</h1>
-                    <g:link style="margin-top:15px;" action="edit" id="${site.siteId}" class="btn pull-right">Edit site</g:link>
+                    <g:link action="edit" id="${site.siteId}" class="btn pull-right title-edit">Edit site</g:link>
                 </div>
                 <div class="clearfix">
                     <p class="well well-small">${site.description}</p>
@@ -45,7 +45,7 @@
             <h3 style="border-bottom: #eeeeee solid 1px;">Activities</h3>
             <table class="table">
                 <thead>
-                    <tr><td></td><td>Activity id</td><td>Start date</td><td>End date</td><td>Types</td></tr>
+                    <tr><td></td><td>Activity id</td><td>Start date</td><td>End date</td><td>Type</td></tr>
                 </thead>
                 <tbody data-bind="foreach: activities">
                     <tr>
@@ -56,7 +56,7 @@
                         <td><a data-bind="text: activityId, attr: {href: '${createLink(controller: "activity", action: "index")}' + '/' + activityId}"> </a></td>
                         <td data-bind="text: startDate"></td>
                         <td data-bind="text: endDate"></td>
-                        <td data-bind="text: types.length"></td>
+                        <td data-bind="text: type"></td>
                     </tr>
                 </tbody>
             </table>
@@ -82,9 +82,6 @@
     </div>
     </div>
     <r:script>
-        $('#debug').click(function () {
-            $(this).next().toggle();
-        });
 
         var isodatePattern = /\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ/,
             activitiesObject = ${site.activities};
@@ -130,7 +127,6 @@
             ko.applyBindings(viewModel);
 
             init_map_with_features({
-                    baseUrl: "${grailsApplication.config.grails.serverURL}",
                     mapContainer: "smallMap"
                 },
                 $.parseJSON('${mapFeatures}')
