@@ -74,6 +74,10 @@ div.under-rule {
     border-bottom: 1px solid #eeeeee ;
 }
 
+a.title-edit {
+    margin-top: 15px;
+}
+
 /* debug */
 .debug div {
     padding-bottom: 10px;;
