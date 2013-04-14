@@ -15,7 +15,7 @@ class ProjectController {
             project.sites?.sort {it.name}
             //todo: ensure there are no control chars (\r\n etc) in the json as
             //todo:     this will break the client-side parser
-            [project: project, json: (project.sites as JSON).toString()]
+            [project: project, json: (project.sites as JSON).toString(), mapFeatures: projectService.getMapFeatures(project)]
         }
     }
 
