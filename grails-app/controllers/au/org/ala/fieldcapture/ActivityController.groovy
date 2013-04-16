@@ -26,7 +26,7 @@ class ActivityController {
             def site = siteService.get(activity.siteId)
             log.debug site
             [activity: activity, site: site, json: (activity as JSON).toString(),
-                activityTypes: metadataService.activityTypesList() as JSON]
+                activityTypes: metadataService.activityTypesList()]
         } else {
             forward(action: 'list', model: [error: 'no such id'])
         }
@@ -73,8 +73,8 @@ class ActivityController {
         def site = siteService.get(id)
         if (site) {
             render view: 'edit', model:
-                    [site: site, activity: [activityId: '', siteId: id],
-                     activityTypes: metadataService.activityTypesList() as JSON]
+                    [site: site, activity: [activityId: '', siteId: id], create: true,
+                     activityTypes: metadataService.activityTypesList()]
         } else {
             forward(action: 'list', model: [error: 'no such site'])
         }
