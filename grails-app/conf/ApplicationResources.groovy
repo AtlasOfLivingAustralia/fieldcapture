@@ -23,4 +23,15 @@ modules = {
         resource url:'js/knockout.mapping-latest.js'
         resource url:'js/knockout-dates.js'
     }
+
+    jqueryValidationEngine {
+        resource url: 'js/jquery.validationEngine.js'
+        resource url: 'js/jquery.validationEngine-en.js'
+        resource url: 'css/validationEngine.jquery.css'
+    }
+
+    datepicker {
+        resource url: 'js/bootstrap-datepicker.js'
+        resource url: '/css/datepicker.css'
+    }
 }
