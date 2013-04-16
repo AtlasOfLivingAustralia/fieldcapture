@@ -89,9 +89,9 @@
                 } else if (loc.type === 'pid') {
                     $.ajax(loc.polygonUrl, {
                             success: function(data) {
-                                var paths, points;
-                                if (data.type === 'Polygon') {
-                                    paths = geojsonToPaths(data.coordinates);
+                                var paths, points, gj = data.geojson;
+                                if (gj.type === 'Polygon') {
+                                    paths = geojsonToPaths(gj.coordinates);
                                     f = new google.maps.Polygon({
                                         paths: paths,
                                         map: self.map,
