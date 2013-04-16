@@ -104,7 +104,7 @@ if (!sld.polgon.highlight.url) {
     sld.polgon.highlight.url = "http://fish.ala.org.au/data/fc-highlight.sld"
 }
 
-spatialLayerServices.baseUrl = "http://spatial-dev.ala.org.au/layers-service/"
+spatialLayerServices.baseUrl = "http://spatial-dev.ala.org.au/ws/"
 
 environments {
     development {
