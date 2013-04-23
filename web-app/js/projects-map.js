@@ -106,7 +106,6 @@ var sites = {
         mk = new google.maps.Marker({
             map: this.map,
             position: pt,
-            //icon: 'http://collections.ala.org.au/images/map/orange-dot.png',
             title: name
         });
         this.markers[name] = mk;
@@ -116,8 +115,8 @@ var sites = {
     addSiteAsGeoJson: function (pid) {
         var coords, geom = [], points, that = this;
         $.ajax({
-            url: 'http://spatial.ala.org.au/ws/shape/geojson/' + pid,
-            dataType: 'jsonp',
+            url: 'http://devt.ala.org.au:8087/proxy/geojsonFromPid?pid=' + pid,
+            dataType: 'json',
             success: function (data) {
                 if (data === undefined) { return; }  // pid doesn't exist
                 coords = data.coordinates;
