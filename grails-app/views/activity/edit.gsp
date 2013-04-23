@@ -137,14 +137,16 @@
     </bs:form>
 
     <hr />
-    <div class="debug" id="debug">
-        <h2>Debug</h2>
-        <pre data-bind="text: ko.toJSON($root, null, 2)"></pre>
-        <pre>Formatted dates: <span data-bind="text:startDate.formattedDate"></span> - <span data-bind="text:endDate.formattedDate"></span></pre>
-        <pre>Site : ${site}</pre>
-        <pre>Activity : ${activity}</pre>
-        <pre>Available types : ${activityTypes}</pre>
-        %{--<div data-bind="text: ko.toJSON($root)"></div>--}%
+    <div class="debug">
+        <h3 id="debug">Debug</h3>
+        <div style="display:none">
+            <pre data-bind="text: ko.toJSON($root, null, 2)"></pre>
+            <pre>Formatted dates: <span data-bind="text:startDate.formattedDate"></span> - <span data-bind="text:endDate.formattedDate"></span></pre>
+            <pre>Site : ${site}</pre>
+            <pre>Activity : ${activity}</pre>
+            <pre>Available types : ${activityTypes}</pre>
+            %{--<div data-bind="text: ko.toJSON($root)"></div>--}%
+        </div>
     </div>
 </div>
 
