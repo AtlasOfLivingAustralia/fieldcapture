@@ -78,6 +78,16 @@ a.title-edit {
     margin-top: 15px;
 }
 
+/* grid table */
+table.grid {
+    width: 100%;
+    border-color: #c5c5c5;
+}
+
+table.grid thead, table.grid tfoot {
+    background-color: #f5f5f5;
+}
+
 /* debug */
 .debug div {
     padding-bottom: 10px;;
