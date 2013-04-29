@@ -120,13 +120,14 @@
 
             // this will be called from the save method to remove transient properties
             self.removeBeforeSave = function (jsData) {
-                //delete jsData.selectedRow;
+// add code to remove any transients added by the dynamic tags
+<md:jsRemoveBeforeSave model="${model}"/>
                 delete jsData.activityType;
                 delete jsData.transients;
                 return jsData;
             };
             self.save = function () {
-                if ($('#validation-container').validationEngine('validate')) {
+                if ($('#form').validationEngine('validate')) {
                     var jsData = ko.toJS(self);
                     // get rid of any transient observables
                     jsData = self.removeBeforeSave(jsData);
