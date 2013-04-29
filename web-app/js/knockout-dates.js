@@ -259,3 +259,39 @@ ko.protectedObservable = function(initialValue) {
     return result;
 };
 
+ko.bindingHandlers.clickToEdit = {
+    init: function(element, valueAccessor) {
+        var observable = valueAccessor(),
+            link = document.createElement("a"),
+            input = document.createElement("input");
+
+        // add any classes specified for the link element
+        $(link).addClass($(element).attr('data-link-class'));
+        // add any classes specified for the input element
+        $(input).addClass($(element).attr('data-input-class'));
+
+        element.appendChild(link);
+        element.appendChild(input);
+
+        observable.editing = ko.observable(false);
+
+        ko.applyBindingsToNode(link, {
+            text: ko.computed(function() {
+                // todo: style default text as grey
+                return ko.utils.unwrapObservable(observable) !== "" ? observable() : 'Click to enter';
+            }),
+            visible: ko.computed(function() {
+                return !observable.editing();
+            }),
+            click: observable.editing.bind(null, true)
+        });
+
+        ko.applyBindingsToNode(input, {
+            value: observable,
+            visible: observable.editing,
+            hasfocus: observable.editing
+        });
+    }
+};
+
+
