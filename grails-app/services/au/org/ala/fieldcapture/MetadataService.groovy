@@ -1,6 +1,25 @@
 package au.org.ala.fieldcapture
 
+import grails.converters.JSON
+
 class MetadataService {
+
+    def grailsApplication
+
+    def getDataModel(name) {
+        String filename = (grailsApplication.config.app.external.model.dir as String) + name + '/dataModel.json'
+        //log.debug filename
+        def jsonStr = new File(filename).text
+        JSON.parse(jsonStr)
+    }
+
+    def getModelNameFromType(type) {
+        //log.debug "Getting model name for ${type}"
+        switch (type) {
+            case "DECCW vegetation assessment": return "weedAbundanceAndThreatScore"
+            default: return ""
+        }
+    }
 
     def activityTypesList() {
         activityTypesNoKey

@@ -4,7 +4,7 @@ import grails.converters.JSON
 
 class OutputController {
 
-    def outputService, activityService, siteService
+    def outputService, activityService, siteService, metadataService
 
     static ignore = ['action','controller','id']
 
@@ -15,7 +15,9 @@ class OutputController {
         } else {
             def activity = activityService.get(output.activityId)
             def site = siteService.get(activity.siteId)
-            [output: output, activity: activity, site: site]
+            def modelName = metadataService.getModelNameFromType(activity.type)
+            [output: output, activity: activity, site: site,
+                 model: metadataService.getDataModel(modelName)]
         }
     }
 
@@ -26,7 +28,9 @@ class OutputController {
         } else {
             def activity = activityService.get(output.activityId)
             def site = siteService.get(activity.siteId)
-            [output: output, activity: activity, site: site]
+            def modelName = metadataService.getModelNameFromType(activity.type)
+            [output: output, activity: activity, site: site,
+                    model: metadataService.getDataModel(modelName)]
         }
     }
 

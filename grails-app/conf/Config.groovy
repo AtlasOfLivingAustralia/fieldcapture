@@ -106,6 +106,8 @@ if (!sld.polgon.highlight.url) {
 
 spatialLayerServices.baseUrl = "http://spatial-dev.ala.org.au/ws/"
 
+app.external.model.dir = "/data/${appName}/models/"
+
 environments {
     development {
         grails.logging.jul.usebridge = true
