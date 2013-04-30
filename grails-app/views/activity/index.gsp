@@ -61,7 +61,7 @@
                 </tr>
                 </tbody>
             </table>
-            <button data-bind="click: newOutput" type="button" class="btn">Add an output</button>
+            <button data-bind="click:newOutput" type="button" class="btn">Add an output</button>
         </div>
     </div>
     <div class="row-fluid">
@@ -120,6 +120,32 @@
             };
             self.enterData = function () {
                 document.location.href = "${createLink(action: 'addData', id: activity.activityId)}"
+            };
+            self.newOutput = function () {
+                var d = {
+                    activityId: "${activity.activityId}"
+                };
+                $.ajax({
+                    url: '${createLink(controller: 'output', action: "ajaxUpdate")}',
+                    type: 'POST',
+                    data: JSON.stringify(d),
+                    contentType: 'application/json',
+                    success: function (data) {
+                        if (data.error) {
+                            alert(data.detail + ' \n' + data.error);
+                        } else {
+                            var newOutput = {
+                                outputId: data.outputId,
+                                activityId: data.activityId
+                            };
+                            self.outputs.push(newOutput);
+                        }
+                    },
+                    error: function (data) {
+                        var status = data.status
+                        alert('An unhandled error occurred: ' + data.status);
+                    }
+                });
             }
         }
         var viewModel = new ViewModel();
