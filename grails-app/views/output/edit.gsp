@@ -162,7 +162,7 @@
         }
 
         var viewModel = new ViewModel();
-        viewModel.loadData(${output.data});
+        viewModel.loadData(${output.data ?: '{}'});
 
         ko.applyBindings(viewModel);
 
