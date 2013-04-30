@@ -16,6 +16,7 @@ class MetadataService {
     def getModelNameFromType(type) {
         //log.debug "Getting model name for ${type}"
         switch (type) {
+            case "Feral animal assessment": return "feralAnimalAbundanceScore"
             case "DECCW vegetation assessment": return "weedAbundanceAndThreatScore"
             default: return ""
         }
@@ -66,7 +67,8 @@ class MetadataService {
 
     static activityTypes = [
             [name:'Site condition survey', key: 'scs', list: [
-                    [key:'', name:'DECCW vegetation assessment']
+                    [key:'', name:'DECCW vegetation assessment'],
+                    [key:'', name:'Feral animal assessment']
             ]],
             [name:'Biological survey', key: 'bs', list: [
                     [key:'birdSurvey', name:'Bird survey'],
@@ -88,7 +90,8 @@ class MetadataService {
 
     static activityTypesNoKey = [
             [name:'Site condition survey', list: [
-                    [name:'DECCW vegetation assessment']
+                    [name:'DECCW vegetation assessment'],
+                    [name:'Feral animal assessment']
             ]],
             [name:'Biological survey', list: [
                     [name:'Bird survey'],
