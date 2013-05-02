@@ -21,6 +21,9 @@ function orFalse(v) {
 function orZero(v) {
     return v === undefined ? 0 : v;
 }
+function orEmptyArray(v) {
+    return v === undefined ? [] : v;
+}
 
 // returns blank string if the object or the specified property is undefined, else the value
 function exists(parent, prop) {
