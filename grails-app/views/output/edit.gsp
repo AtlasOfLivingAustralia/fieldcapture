@@ -86,6 +86,8 @@
 
 <r:script>
 
+    var outputData = ${output.data ?: '{}'};
+
     $(function(){
 
         $('input').live('focus', function () {
