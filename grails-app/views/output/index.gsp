@@ -4,7 +4,7 @@
 <head>
     <meta name="layout" content="main"/>
     <title>Edit | ${activity.activityId ?: 'new'} | ${site.name} | ${site.projectName} | Field Capture</title>
-    <md:modelStyles model="${model}"/>
+<md:modelStyles model="${model}"/>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jstimezonedetect/1.0.4/jstz.min.js"></script>
     <r:require modules="knockout,jqueryValidationEngine,datepicker"/>
 </head>
@@ -41,12 +41,12 @@
     </div>
 
     <div class="row-fluid span12">
-        <span class="span3">Assessment date: <span data-bind="text:assessmentDate.formattedDate"></span></span>
-        <span class="span3">Assessor: <span data-bind="text:collector"></span></span>
+        <span class="span3"><span class="label preLabel">Assessment date:</span><span data-bind="text:assessmentDate.formattedDate"></span></span>
+        <span class="span3"><span class="label preLabel">Assessor:</span><span data-bind="text:collector"></span></span>
     </div>
 
-    <!-- add the dynamic components -->
-    <md:modelView model="${model}"/>
+<!-- add the dynamic components -->
+<md:modelView model="${model}"/>
 
     <div class="row-fluid span12">
         <button type="button" class="btn"
@@ -71,20 +71,22 @@
 
 <r:script>
 
+    var outputData = ${output.data ?: '{}'};
+
     $(function(){
 
-// add any object declarations for the dynamic part of the model
+        // add any object declarations for the dynamic part of the model
 <md:jsModelObjects model="${model}"/>
 
         function ViewModel () {
             var self = this;
             self.data = {};
 
-// add the properties for the dynamic part of the model
+            // add the properties for the dynamic part of the model
 <md:jsViewModel model="${model}"/>
 
-            // add props that are standard for all outputs
-            self.assessmentDate = ko.observable("${output.assessmentDate}").extend({simpleDate: false});
+        // add props that are standard for all outputs
+        self.assessmentDate = ko.observable("${output.assessmentDate}").extend({simpleDate: false});
             self.collector = ko.observable("${output.collector}")/*.extend({ required: true })*/;
             self.activityId = ko.observable("${activity.activityId}");
             self.activityType = ko.observable("${activity.type}");
@@ -92,13 +94,13 @@
             self.activityEndDate = ko.observable("${activity.endDate}").extend({simpleDate: false});
 
             self.loadData = function (data) {
-// load data for the dynamic part of the model
+                // load data for the dynamic part of the model
 <md:jsLoadModel model="${model}"/>
             }
         }
 
         var viewModel = new ViewModel();
-        viewModel.loadData(${output.data});
+        viewModel.loadData(outputData);
 
         ko.applyBindings(viewModel);
 
