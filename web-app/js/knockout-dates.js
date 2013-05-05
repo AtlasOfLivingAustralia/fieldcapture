@@ -294,4 +294,86 @@ ko.bindingHandlers.clickToEdit = {
     }
 };
 
+ko.bindingHandlers.ticks = {
+    init: function(element, valueAccessor) {
+        var observable = valueAccessor(),
+            $parent = $(element).parent(),
+            $buttons,
+            $widget = $('<div class="tick-controls btn-group btn-group-vertical"></div>');
+
+        $parent.css('padding','4px');
+        $widget.append($('<button class="up btn btn-mini"><i class="icon-chevron-up"></i></button>'));
+        $widget.append($('<button class="down btn btn-mini"><i class="icon-chevron-down"></i></button>'));
+        $parent.append($widget);
+        $buttons = $parent.find('button');
+
+        $buttons.hide();
+
+        ko.utils.registerEventHandler($parent, "mouseover", function() {
+            $buttons.show();
+        });
+
+        ko.utils.registerEventHandler($parent, "mouseout", function() {
+            $buttons.hide();
+        });
+
+        ko.utils.registerEventHandler($buttons, "click", function() {
+            var isUp = $(this).hasClass('up'),
+                value = Number(observable());
+            if (isNaN(value)) { value = 0; }
+
+            if (isUp) {
+                observable("" + (value + 1));
+            } else {
+                if (value > 0) {
+                    observable("" + (value - 1));
+                }
+            }
+            return false;
+        });
+
+        /*ko.utils.registerEventHandler($buttons.find('.down'), "click", function() {
+            observable(Number(observable()) - 1);
+            return false;
+        });*/
+
+        /*observable.editing = ko.observable(false);
+
+        ko.applyBindingsToNode(upBtn, {
+            text: ko.computed(function() {
+                // todo: style default text as grey
+                return ko.utils.unwrapObservable(observable) !== "" ? observable() : 'Click to enter';
+            }),
+            visible: ko.computed(function() {
+                return !observable.editing();
+            }),
+            click: observable.editing.bind(null, true)
+        });*/
+
+        /*ko.applyBindingsToNode(input, {
+            value: observable,
+            visible: observable.editing,
+            hasfocus: observable.editing
+        });*/
+    },
+    update: function(element, valueAccessor) {
+        var observable = valueAccessor(), value,
+            tick = '<i class="icon-ok"></i>', ticks = "";
+        if (observable) {
+            value = Number(ko.utils.unwrapObservable(observable));
+            if (isNaN(value)) {
+                $(element).html("");
+            } else {
+                //$(element).html(value);
+                $(element).empty();
+                for (i=0; i < value; i++) {
+                    ticks += tick;
+                }
+                $(element).html(ticks);
+            }
+            //$(element).html(ko.utils.unwrapObservable(observable));
+        }
+    }
+};
+
 

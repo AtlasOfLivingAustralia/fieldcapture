@@ -116,6 +116,28 @@ table.dyn thead th {text-align: center}
 
 .center {text-align: center}
 
+/* tick widgets */
+td.tick {
+    padding: 4px;
+}
+
+.tick-controls {
+    float: right;
+}
+
+.tick-controls .btn {
+    position: relative;
+    width: 20px;
+    height: 14px;
+    top: 2px;
+    padding: 0 0 4px 1px;
+}
+
+.tick-controls i[class^="icon-"] {
+    margin-top: -4px;
+    opacity: 0.5;
+}
+
 /* debug */
 .debug div {
     padding-bottom: 10px;;
