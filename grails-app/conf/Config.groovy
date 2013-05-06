@@ -119,6 +119,7 @@ environments {
         security.cas.appServerName = serverName
         security.cas.contextPath = grails.app.context
         ecodata.baseUrl = 'http://localhost:8080/ecodata/ws/'
+        app.external.model.dir = "/devt/FieldCapture/models/"
     }
     test {
         grails.logging.jul.usebridge = true
