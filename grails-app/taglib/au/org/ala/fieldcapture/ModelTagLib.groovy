@@ -114,6 +114,7 @@ class ModelTagLib {
         def result = ""
         if (!databindAttrs) { databindAttrs = new Databindings()}
         if (!at) { at = new AttributeMap()}
+        def validate = validationAttribute(model, editable)
         def toEdit = editable && !model.computed && !model.noEdit
         def matrix = model.type + '-' + (toEdit ? 'edit' : 'view')
         def source = (context ? context + '.' : '') + model.source
@@ -133,12 +134,12 @@ class ModelTagLib {
             case 'text-edit':
                 at.addClass getInputSize(model.width)
                 databindAttrs.add 'value', source
-                result += "<input${at.toString()} data-bind='${databindAttrs.toString()}' type='text' class='input-small'/>"
+                result += "<input${at.toString()} data-bind='${databindAttrs.toString()}'${validate} type='text' class='input-small'/>"
                 break
             case 'number-edit':
                 at.add 'style','text-align:center'
                 databindAttrs.add 'value', source
-                result += "<input${at.toString()} data-bind='${databindAttrs.toString()}' type='text' class='input-mini'/>"
+                result += "<input${at.toString()} data-bind='${databindAttrs.toString()}'${validate} type='text' class='input-mini'/>"
                 break
             case 'boolean-view':
                 databindAttrs.add 'visible', source
@@ -146,7 +147,7 @@ class ModelTagLib {
                 break
             case 'boolean-edit':
                 databindAttrs.add 'checked', source
-                result += "<input${at.toString()} data-bind='${databindAttrs.toString()}' type='checkbox' class='checkbox'/>"
+                result += "<input${at.toString()} data-bind='${databindAttrs.toString()}'${validate} type='checkbox' class='checkbox'/>"
                 break
             case 'textarea-view':
                 databindAttrs.add 'text', source
@@ -157,6 +158,32 @@ class ModelTagLib {
             result += "<span class='postLabel'>${model.postLabel}</span>"
         }
         return result
+    }
+
+    // -------- validation declarations --------------------
+    def validationAttribute(model, edit) {
+        if (!edit) { return ""}  // don't bother if the user can't change it
+        if (!model.validate) { return ""} // no criteria
+        // collect the validation criteria
+        def criteria = model.validate.tokenize(',')
+        criteria = criteria.collect { it.trim() }
+        def values = []
+        criteria.each {
+            switch (it) {
+                case 'required':
+                    values << it
+                    break
+                case 'number':
+                    values << 'custom[number]'
+                    break
+                case it.startsWith('min:'):
+                    values << it
+                    break
+                default:
+                    values << it
+            }
+        }
+        return " data-validation-engine='validate[${values.join(',')}]'"
     }
 
     // convenience method for the above
