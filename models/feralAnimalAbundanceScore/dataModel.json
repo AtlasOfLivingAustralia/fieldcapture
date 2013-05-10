@@ -5,6 +5,8 @@
     {"name":"areaSurveyedInHectares","dataType":"number"},
     {"name":"mainSoilType","dataType":"text"},
     {"name":"mainTrees","dataType":"text"},
+    {"name":"activeSignsOtherRowDetail","dataType":"text"},
+    {"name":"activeSignsOtherColumnDetail","dataType":"text"},
     {"name":"activeSigns","dataType":"matrix","columnValues":"animals","rowValues":"signs",
         "columns": [
             {"name":"fox","dataType":"number"},
@@ -26,7 +28,6 @@
             {"name":"scratchings","dataType":"number"},
             {"name":"damage","dataType":"number"},
             {"name":"other","dataType":"number"},
-            {"name":"otherDetails","dataType":"text"},
             {"name":"total","dataType":"number","computed":{"dependents":["live","tracks","dung","furOrFeathers","warren",
                 "den","soil","scratchings","damage","other"],"operation":"sum"}},
             {"name":"abundanceRating","dataType":"number","computed":{"dependents":["total","$areaSurveyedInHectares"],"operation":"divide"}}
@@ -42,10 +43,10 @@
     {
         "type":"row",
         "items":[
-            {"type":"number","source":"timeSpentSurveying","preLabel":"Time spent surveying:","postLabel":"Hrs"},
+            {"type":"number","source":"timeSpentSurveying","preLabel":"Time spent surveying:","postLabel":"Hrs","width":"10%"},
             {"type":"number","source":"areaSurveyedInHectares","preLabel":"Approx. Area surveyed:","postLabel":"ha"},
-            {"type":"number","source":"mainSoilType","preLabel":"Main soil type:"},
-            {"type":"number","source":"mainTrees","preLabel":"Main trees:"}
+            {"type":"text","source":"mainSoilType","preLabel":"Main soil type:","width":"25%"},
+            {"type":"text","source":"mainTrees","preLabel":"Main trees:","width":"25%"}
         ]
     },
     {
@@ -59,7 +60,8 @@
             {"title":"Hare","source":"hare","width":"10%"},
             {"title":"Goat","source":"goat","width":"10%"},
             {"title":"Deer","source":"deer","width":"10%"},
-            {"title":"Other","source":"other", "headingType":"text","width":"10%"}
+            {"title":"Other","source":"other","width":"10%","pleaseSpecify":
+                {"source":"$activeSignsOtherColumnDetail","dataType":"text","output":"concatenate"}}
         ],
         "rows": [
             {"title":"Live Animal","source":"live"},
@@ -72,7 +74,7 @@
             {"title":"Scratchings on Trees","source":"scratchings"},
             {"title":"Rubbing / Grazing Damage","source":"damage"},
             {"title":"Other","source":"other","pleaseSpecify":
-                {"source":"otherDetails","dataType":"text","output":"concatenate"}},
+                {"source":"$activeSignsOtherRowDetail","dataType":"text","output":"concatenate"}},
             {"title":"Total","source":"total", "strong":"true"},
             {"title":"Abundance Rating","source":"abundanceRating", "strong":"true"}
         ],
@@ -90,7 +92,7 @@
     {
         "type":"row",
         "items":[
-            {"type":"textarea","source":"comments"}
+            {"type":"textarea","source":"comments","preLabel":"Comment/Descriptions:","css":"span12"}
         ]
     },
     {
