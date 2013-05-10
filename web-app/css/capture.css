@@ -103,6 +103,10 @@ table.dyn input[type="text"] {margin-bottom: 0}
 table.dyn tfoot .value {font-weight: bold}
 table.dyn thead th {text-align: center}
 
+.percent:after {
+    content: "%"
+}
+
 .heavy-border {
     padding: 10px;
     margin: 0 10px;
