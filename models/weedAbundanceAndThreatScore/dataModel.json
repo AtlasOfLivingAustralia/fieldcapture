@@ -11,7 +11,7 @@
             {"name":"abundanceAndThreatScore","dataType":"number",
                 "computed":{"dependents":["coverRating","invasiveThreatCategory"],"operation":"times"}}
         ],
-        "rows": "user-added"
+        "userAddedRows":"true","todo":"//move to view model"
     },
     {"name":"totalAreaCovered","dataType":"text","primaryResult":"true"},
     {"name":"totalAbundanceAndThreatScore","dataType":"number","primaryResult":"true",
@@ -25,9 +25,10 @@
 ],
 "viewModel":[
     {
-        "type":"tableWithEditableRows",
+        "type":"table",
+        "editableRows":"true",
         "source":"weedAbundanceAndThreatScore",
-        "addRows":"allowed",
+        "userAddedRows":"true",
         "columns": [
             {"title":"Weed name","source":"name","width":"25%"},
             {"title":"Unknown if weed or native","source":"isUnknownIfWeed","width":"8%"},
