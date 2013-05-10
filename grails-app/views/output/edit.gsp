@@ -55,7 +55,7 @@
             </div>
             <div class="span4">
                 <label for="collector">Collector</label>
-                <input data-bind="value: collector" id="collector" type="text"
+                <input data-bind="value: collector,valueUpdate:'afterkeydown'" id="collector" type="text"
                        data-validation-engine="validate[required]"/>
             </div>
         </div>
@@ -114,6 +114,7 @@
             self.activityType = ko.observable("${activity.type}");
             self.data = {};
             self.transients = {};
+            self.transients.dummy = ko.observable();
             self.transients.activityStartDate = ko.observable("${activity.startDate}").extend({simpleDate: false});
             self.transients.activityEndDate = ko.observable("${activity.endDate}").extend({simpleDate: false});
 
@@ -160,6 +161,8 @@
             self.loadData = function (data) {
 // load dynamic data
 <md:jsLoadModel model="${model}"/>
+
+            self.transients.dummy.notifySubscribers();
             };
         }
 
