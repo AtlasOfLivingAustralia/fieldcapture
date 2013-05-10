@@ -13,6 +13,10 @@ class MetadataService {
         JSON.parse(jsonStr)
     }
 
+    def getModelName(output, type) {
+        return output.template ?: getModelNameFromType(type)
+    }
+
     def getModelNameFromType(type) {
         //log.debug "Getting model name for ${type}"
         switch (type) {
