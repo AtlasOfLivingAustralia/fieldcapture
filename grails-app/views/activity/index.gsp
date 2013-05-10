@@ -90,8 +90,8 @@
     <div class="debug">
         <h3 id="debug">Debug</h3>
         <div style="display: none">
-            <div>Outputs : ${activity.outputs}</div>
-            <div>Activities : ${site.activities}</div>
+            <pre data-bind="text: ko.toJSON($root, null, 2)"></pre>
+            <div>Activity : ${activity}</div>
             <div>Site : ${site}</div>
         </div>
     </div>
