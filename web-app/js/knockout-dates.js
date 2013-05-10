@@ -259,11 +259,17 @@ ko.protectedObservable = function(initialValue) {
     return result;
 };
 
+/*
+This binding allows text values to be displayed as simple text that can be clicked to access
+ an input control for in-place editing.
+ */
 ko.bindingHandlers.clickToEdit = {
     init: function(element, valueAccessor) {
         var observable = valueAccessor(),
             link = document.createElement("a"),
-            input = document.createElement("input");
+            input = document.createElement("input"),
+            userPrompt = $(element).attr('data-prompt'),
+            prompt = userPrompt || 'Click to edit';
 
         // add any classes specified for the link element
         $(link).addClass($(element).attr('data-link-class'));
@@ -273,12 +279,13 @@ ko.bindingHandlers.clickToEdit = {
         element.appendChild(link);
         element.appendChild(input);
 
+
         observable.editing = ko.observable(false);
 
         ko.applyBindingsToNode(link, {
             text: ko.computed(function() {
                 // todo: style default text as grey
-                return ko.utils.unwrapObservable(observable) !== "" ? observable() : 'Click to enter';
+                return ko.utils.unwrapObservable(observable) !== "" ? observable() : prompt;
             }),
             visible: ko.computed(function() {
                 return !observable.editing();
@@ -294,6 +301,10 @@ ko.bindingHandlers.clickToEdit = {
     }
 };
 
+/*
+This binding allows small non-negative integers in the model to be displayed as a number of ticks
+ and edited by spinner buttons.
+ */
 ko.bindingHandlers.ticks = {
     init: function(element, valueAccessor) {
         var observable = valueAccessor(),
@@ -331,30 +342,6 @@ ko.bindingHandlers.ticks = {
             }
             return false;
         });
-
-        /*ko.utils.registerEventHandler($buttons.find('.down'), "click", function() {
-            observable(Number(observable()) - 1);
-            return false;
-        });*/
-
-        /*observable.editing = ko.observable(false);
-
-        ko.applyBindingsToNode(upBtn, {
-            text: ko.computed(function() {
-                // todo: style default text as grey
-                return ko.utils.unwrapObservable(observable) !== "" ? observable() : 'Click to enter';
-            }),
-            visible: ko.computed(function() {
-                return !observable.editing();
-            }),
-            click: observable.editing.bind(null, true)
-        });*/
-
-        /*ko.applyBindingsToNode(input, {
-            value: observable,
-            visible: observable.editing,
-            hasfocus: observable.editing
-        });*/
     },
     update: function(element, valueAccessor) {
         var observable = valueAccessor(), value,
@@ -371,7 +358,6 @@ ko.bindingHandlers.ticks = {
                 }
                 $(element).html(ticks);
             }
-            //$(element).html(ko.utils.unwrapObservable(observable));
         }
     }
 };
