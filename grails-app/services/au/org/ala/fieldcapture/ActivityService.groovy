@@ -29,7 +29,7 @@ class ActivityService {
                 o.data.each { k, v ->
                     // todo: using the prefix 'total' as a marker
                     // todo: will need to use the data meta-model
-                    if (k.size() > 4 && k[0..4] == 'total') {
+                    if (k.startsWith('total')) {
                         it.scores << new JSONObject([name: k, score: v])
                     }
                 }
