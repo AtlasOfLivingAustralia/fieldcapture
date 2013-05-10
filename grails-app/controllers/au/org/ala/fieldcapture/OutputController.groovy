@@ -15,7 +15,7 @@ class OutputController {
         } else {
             def activity = activityService.get(output.activityId)
             def site = siteService.get(activity.siteId)
-            def modelName = metadataService.getModelNameFromType(activity.type)
+            def modelName = metadataService.getModelName(output, activity.type)
             [output: output, activity: activity, site: site,
                  model: metadataService.getDataModel(modelName)]
         }
@@ -28,7 +28,7 @@ class OutputController {
         } else {
             def activity = activityService.get(output.activityId)
             def site = siteService.get(activity.siteId)
-            def modelName = metadataService.getModelNameFromType(activity.type)
+            def modelName = metadataService.getModelName(output, activity.type)
             [output: output, activity: activity, site: site,
                     model: metadataService.getDataModel(modelName)]
         }
@@ -62,9 +62,19 @@ class OutputController {
         if (result.error) {
             render result as JSON
         } else {
-            println "json result is " + (result as JSON)
+            //println "json result is " + (result as JSON)
             render result.resp as JSON
         }
+    }
+
+    def verifyTest1() {
+        def t1 = new Databindings()
+        render "ok"
+    }
+
+    def verifyTest2() {
+        def t1 = new AttributeMap()
+        render "ok"
     }
 
 }
