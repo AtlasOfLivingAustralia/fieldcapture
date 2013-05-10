@@ -1,7 +1,6 @@
 package au.org.ala.fieldcapture
 
-import au.org.ala.fieldcapture.AttributeMap
-import au.org.ala.fieldcapture.Databindings
+import org.codehaus.groovy.grails.web.json.JSONArray
 
 /**
  * Generates web page content for metadata-driven dynamic data entry and display.
@@ -16,46 +15,6 @@ class ModelTagLib {
     private final static String SPACE = " ";
     private final static String EQUALS = "=";
 
-    /*------------ STYLES for dynamic content -------------*/
-    // adds a style block for the dynamic components
-    def modelStyles = { attrs ->
-        attrs.model?.viewModel?.each { mod ->
-            switch (mod.type) {
-                case 'grid':
-                case 'tableWithEditableRows':
-                    tableStyle(attrs, mod, out)
-            }
-        }
-    }
-
-    def tableStyle(attrs, model, out ) {
-        def edit = attrs.edit
-        def tableClass = model.source
-
-        out << '<style type="text/css">\n'
-        model.columns.eachWithIndex { col, i ->
-
-            def width = col.width ? "width:${col.width};" : ""
-            def textAlign = model.type == 'grid' ? '' : getTextAlign(attrs, col, model.source)
-            if (width || textAlign) {
-                out << INDENT*2 << "table.${tableClass} td:nth-child(${i+1}) {${width}${textAlign}}\n"
-            }
-        }
-        // add extra column for edit buttons
-        if (edit && model.addRows) {
-            out << INDENT*2 << "table.${tableClass} td:last-child {width:20%;text-align:center;}\n"
-        }
-        out << INDENT << "</style>"
-    }
-
-    def getTextAlign(attrs, col, context) {
-        //println "col=${col}"
-        //println "type=${getType(attrs, col.source, context)}"
-        // check for explicit first
-        if (col.textAlign) return "text-align:${col.textAlign};"
-        return (getType(attrs, col.source, context) in ['boolean','number']) ? "text-align:center;" : ""
-    }
-
     /*---------------------------------------------------*/
     /*------------ HTML for dynamic content -------------*/
     /*---------------------------------------------------*/
@@ -68,7 +27,7 @@ class ModelTagLib {
     def modelView = { attrs ->
         attrs.model?.viewModel?.eachWithIndex { mod, index ->
             switch (mod.type) {
-                case 'tableWithEditableRows':
+                case 'table':
                     attrs.ter = mod
                     ter attrs, mod, out, index
                     break
@@ -76,7 +35,7 @@ class ModelTagLib {
                     grid attrs, mod, out
                     break
                 case 'row':
-                    row(mod, out)
+                    row attrs, mod, out
                     break
             }
         }
@@ -137,6 +96,7 @@ class ModelTagLib {
                 result += "<input${at.toString()} data-bind='${databindAttrs.toString()}'${validate} type='text' class='input-small'/>"
                 break
             case 'number-edit':
+                at.addClass getInputSize(model.width)
                 at.add 'style','text-align:center'
                 databindAttrs.add 'value', source
                 result += "<input${at.toString()} data-bind='${databindAttrs.toString()}'${validate} type='text' class='input-mini'/>"
@@ -153,6 +113,15 @@ class ModelTagLib {
                 databindAttrs.add 'text', source
                 result += "<span${at.toString()} data-bind='${databindAttrs.toString()}'></span>"
                 break
+            case 'textarea-edit':
+                databindAttrs.add 'value', source
+                result += "<textarea${at.toString()} data-bind='${databindAttrs.toString()}'></textarea>"
+                break
+            case 'simpleDate-view':
+            case 'simpleDate-edit':
+                databindAttrs.add 'datepicker', source + '.date'
+                result += "<input${at.toString()} data-bind='${databindAttrs.toString()}'${validate} type='text' class='input-small'/>"
+                break
         }
         if (model.postLabel) {
             result += "<span class='postLabel'>${model.postLabel}</span>"
@@ -160,35 +129,9 @@ class ModelTagLib {
         return result
     }
 
-    // -------- validation declarations --------------------
-    def validationAttribute(model, edit) {
-        if (!edit) { return ""}  // don't bother if the user can't change it
-        if (!model.validate) { return ""} // no criteria
-        // collect the validation criteria
-        def criteria = model.validate.tokenize(',')
-        criteria = criteria.collect { it.trim() }
-        def values = []
-        criteria.each {
-            switch (it) {
-                case 'required':
-                    values << it
-                    break
-                case 'number':
-                    values << 'custom[number]'
-                    break
-                case it.startsWith('min:'):
-                    values << it
-                    break
-                default:
-                    values << it
-            }
-        }
-        return " data-validation-engine='validate[${values.join(',')}]'"
-    }
-
     // convenience method for the above
-    def dataTag(model, context, editable, attrs) {
-        dataTag(model, context, editable, attrs, null)
+    def dataTag(model, context, editable, at) {
+        dataTag(model, context, editable, at, null)
     }
 
     // convenience method for the above
@@ -210,7 +153,36 @@ class ModelTagLib {
         }
     }
 
-    def row(model, out) {
+    // -------- validation declarations --------------------
+    def validationAttribute(model, edit) {
+        //log.debug "checking validation for ${model}, edit = ${edit}"
+        if (!edit) { return ""}  // don't bother if the user can't change it
+        if (!model.validate) { return ""} // no criteria
+        // collect the validation criteria
+        def criteria = model.validate.tokenize(',')
+        criteria = criteria.collect { it.trim() }
+        def values = []
+        criteria.each {
+            switch (it) {
+                case 'required':
+                    values << it
+                    break
+                case 'number':
+                    values << 'custom[number]'
+                    break
+                case it.startsWith('min:'):
+                    values << it
+                    break
+                default:
+                    values << it
+            }
+        }
+        //log.debug " data-validation-engine='validate[${values.join(',')}]'"
+        return " data-validation-engine='validate[${values.join(',')}]'"
+    }
+
+    // row model
+    def row(attrs, model, out) {
         out << "<div class=\"row-fluid span12 space-after\">\n"
         if (model.align == 'right') {
             out << "<div class=\"pull-right\">\n"
@@ -219,10 +191,16 @@ class ModelTagLib {
         model.items.each { it ->
             AttributeMap at = new AttributeMap()
             at.addClass(it.css)
-            at.addSpan("span${span}")
-            out << "<span${at.toString()}>"
-            out << INDENT << dataTag(it, 'data', false)
-            out << "</span>"
+            // inject computed from data model
+            it.computed = it.computed ?: getComputed(attrs, it.source, '')
+            if (it.type == 'textarea') {
+                out << INDENT << dataTag(it, 'data', attrs.edit, at)
+            } else {
+                at.addSpan("span${span}")
+                out << "<span${at.toString()}>"
+                out << INDENT << dataTag(it, 'data', attrs.edit)
+                out << "</span>"
+            }
         }
         if (model.align == 'right') {
             out << "</div>\n"
@@ -239,7 +217,7 @@ class ModelTagLib {
         } else {
             gridBodyView attrs, model, out
         }
-        footerView attrs, model, out
+        footer attrs, model, out
         out << INDENT*3 << "</table>\n"
         out << INDENT*2 << "</div>\n"
     }
@@ -247,7 +225,19 @@ class ModelTagLib {
     def gridHeader(attrs, model, out) {
         out << INDENT*4 << "<thead><tr>"
         model.columns.each { col ->
-            out << "<th>" + col.title + "</th>"
+            out << "<th>"
+            out << col.title
+            if (col.pleaseSpecify) {
+                def ref = col.pleaseSpecify.source
+                // $ means top-level of data
+                if (ref.startsWith('$')) { ref = 'data.' + ref[1..-1] }
+                if (attrs.edit) {
+                    out << " (<span data-bind='clickToEdit:${ref}' data-input-class='input-mini' data-prompt='specify'></span>)"
+                } else {
+                    out << " (<span data-bind='text:${ref}'></span>)"
+                }
+            }
+            out << "</th>"
         }
         out << '\n' << INDENT*4 << "</tr></thead>\n"
     }
@@ -255,12 +245,26 @@ class ModelTagLib {
     def gridBodyEdit(attrs, model, out) {
         out << INDENT*4 << "<tbody>\n"
         model.rows.eachWithIndex { row, rowIndex ->
-            def isComputed = getComputed(attrs, row.source, 'activeSigns')
-            //println isComputed
+
+            // >>> output the row heading cell
             AttributeMap at = new AttributeMap()
-            at.addClass('shaded')
-            if (row.strong) { at.addClass('strong')}
-            out << INDENT*5 << "<tr>" << "<td${at.toString()}>" << row.title << "</td>" << "\n"
+            at.addClass('shaded')  // shade the row heading
+            if (row.strong) { at.addClass('strong') } // bold the heading if so specified
+            // row and td tags
+            out << INDENT*5 << "<tr>" << "<td${at.toString()}>"
+            out << row.title
+            if (row.pleaseSpecify) { //handles any requirement to allow the user to specify the row heading
+                def ref = row.pleaseSpecify.source
+                // $ means top-level of data
+                if (ref.startsWith('$')) { ref = 'data.' + ref[1..-1] }
+                out << " (<span data-bind='clickToEdit:${ref}' data-input-class='input-small' data-prompt='specify'></span>)"
+            }
+            // close td
+            out << "</td>" << "\n"
+
+            // find out if the cells in this row are computed
+            def isComputed = getComputed(attrs, row.source, model.source)
+            // >>> output each cell in the row
             model.columns[1..-1].eachWithIndex { col, colIndex ->
                 out << INDENT*5 << "<td>"
                 if (isComputed) {
@@ -271,6 +275,7 @@ class ModelTagLib {
                 }
                 out << "</td>" << "\n"
             }
+
             out << INDENT*5 << "</tr>\n"
         }
         out << INDENT*4 << "</tr></tbody>\n"
@@ -279,22 +284,33 @@ class ModelTagLib {
     def gridBodyView(attrs, model, out) {
         out << INDENT*4 << "<tbody>\n"
         model.rows.eachWithIndex { row, rowIndex ->
+
+            // >>> output the row heading cell
             AttributeMap at = new AttributeMap()
             at.addClass('shaded')
             if (row.strong) { at.addClass('strong')}
-            out << INDENT*5 << "<tr>" << "<td${at.toString()}>" << row.title << "</td>" << "\n"
+            // row and td tags
+            out << INDENT*5 << "<tr>" << "<td${at.toString()}>"
+            out << row.title
+            if (row.pleaseSpecify) { //handles any requirement to allow the user to specify the row heading
+                def ref = row.pleaseSpecify.source
+                // $ means top-level of data
+                if (ref.startsWith('$')) { ref = 'data.' + ref[1..-1] }
+                out << " (<span data-bind='text:${ref}'></span>)"
+            }
+            // close td
+            out << "</td>" << "\n"
+
+            // >>> output each cell in the row
             model.columns[1..-1].eachWithIndex { col, colIndex ->
                 out << INDENT*5 << "<td>" <<
                     "<span data-bind='text:data.${model.source}.get(${rowIndex},${colIndex})'></span>" <<
                     "</td>" << "\n"
             }
+
             out << INDENT*5 << "</tr>\n"
         }
         out << INDENT*4 << "</tr></tbody>\n"
-    }
-
-    def gridFooterView(attrs, model, out) {
-
     }
 
     def ter(attrs, model, out, index) {
@@ -306,7 +322,7 @@ class ModelTagLib {
         } else {
             terBodyView attrs, out, index
         }
-        footerView attrs, model, out
+        footer attrs, model, out
         out << INDENT*3 << "</table>\n"
         out << INDENT*2 << "</div>\n"
     }
@@ -317,7 +333,7 @@ class ModelTagLib {
         ter.columns.eachWithIndex { col, i ->
             out << "<th>" + col.title + "</th>"
         }
-        if (attrs.edit && ter.addRows) {
+        if (attrs.edit && ter.editableRows) {
             out << "<th></th>"
         }
         out << '\n' << INDENT*4 << "</tr></thead>\n"
@@ -336,45 +352,81 @@ class ModelTagLib {
     def terBodyEdit (attrs, out, index) {
         def ter = attrs.ter
 
-        // body element
-        out << INDENT*4 << "<tbody data-bind=\"template:{name:templateToUse, foreach: data.${ter.source}}\"></tbody>\n"
-
-        // view template
-        out << INDENT*4 << "<script id=\"viewTmpl\" type=\"text/html\"><tr>\n"
-        ter.columns.eachWithIndex { col, i ->
-            col.type = col.type ?: getType(attrs, col.source, ter.source)
-            out << INDENT*5 << "<td>" << dataTag(col, '', false) << "</td>" << "\n"
+        // body elements for main rows
+        def templateName = ter.editableRows ? 'templateToUse' : "'viewTmpl'"
+        out << INDENT*4 << "<tbody data-bind=\"template:{name:${templateName}, foreach: data.${ter.source}}\"></tbody>\n"
+        if (ter.editableRows) {
+            // write the view template
+            tableViewTemplate(attrs, ter, false, out)
+            // write the edit template
+            tableEditTemplate(attrs, ter, out)
+        } else {
+            // write the view template
+            tableViewTemplate(attrs, ter, attrs.edit, out)
         }
-        if (ter.addRows) {
+
+        // body elements for additional rows (usually summary rows)
+        if (ter.rows) {
+            out << INDENT*4 << "<tbody>\n"
+            ter.rows.each { tot ->
+                def at = new AttributeMap()
+                if (tot.showPercentSymbol) { at.addClass('percent') }
+                out << INDENT*4 << "<tr>\n"
+                ter.columns.eachWithIndex { col, i ->
+                    if (i == 0) {
+                        out << INDENT*4 << "<td>${tot.title}</td>\n"
+                    } else {
+                        // assume they are all computed for now
+                        out << INDENT*5 << "<td>" <<
+                          "<span${at.toString()} data-bind='text:data.frequencyTotals().${col.source}.${tot.source}'></span>" <<
+                          "</td>" << "\n"
+                    }
+                }
+                out << INDENT*4 << "</tr>\n"
+            }
+            out << INDENT*4 << "</tbody>\n"
+        }
+    }
+
+    def tableViewTemplate(attrs, model, edit, out) {
+        out << INDENT*4 << "<script id=\"viewTmpl\" type=\"text/html\"><tr>\n"
+        model.columns.eachWithIndex { col, i ->
+            col.type = col.type ?: getType(attrs, col.source, model.source)
+            //log.debug "col = ${col}"
+            out << INDENT*5 << "<td>" << dataTag(col, '', edit) << "</td>" << "\n"
+        }
+        if (model.editableRows) {
             out << INDENT*5 << "<td>\n"
             out << INDENT*6 << "<a class='btn btn-mini' data-bind='click:\$root.editRow' href='#' title='edit'><i class='icon-edit'></i> Edit</a>\n"
             out << INDENT*6 << "<a class='btn btn-mini' data-bind='click:\$root.removeRow' href='#' title='remove'><i class='icon-trash'></i> Remove</a>\n"
             out << INDENT*5 << "</td>\n"
         }
         out << INDENT*4 << "</tr></script>\n"
+    }
 
-        // edit template
+    def tableEditTemplate(attrs, model, out) {
         out << INDENT*4 << "<script id=\"editTmpl\" type=\"text/html\"><tr>\n"
-        ter.columns.eachWithIndex { col, i ->
+        model.columns.eachWithIndex { col, i ->
             // mechanism for additional data binding clauses
             def bindAttrs = new Databindings()
             if (i == 0) {bindAttrs.add 'hasFocus', 'isSelected'}
             // inject type from data model
-            col.type = col.type ?: getType(attrs, col.source, ter.source)
+            col.type = col.type ?: getType(attrs, col.source, model.source)
             // inject computed from data model
-            col.computed = col.computed ?: getComputed(attrs, col.source, ter.source)
+            col.computed = col.computed ?: getComputed(attrs, col.source, model.source)
             out << INDENT*5 << "<td>" << dataTag(col, '', true, null, bindAttrs) << "</td>" << "\n"
         }
-        if (ter.addRows) {
-            out << INDENT*5 << "<td>\n"
-            out << INDENT*6 << "<a class='btn btn-success btn-mini' data-bind='click:\$root.accept' href='#' title='save'>Update</a>\n"
-            out << INDENT*6 << "<a class='btn btn-mini' data-bind='click:\$root.cancel' href='#' title='cancel'>Cancel</a>\n"
-            out << INDENT*5 << "</td>\n"
-        }
+        out << INDENT*5 << "<td>\n"
+        out << INDENT*6 << "<a class='btn btn-success btn-mini' data-bind='click:\$root.accept' href='#' title='save'>Update</a>\n"
+        out << INDENT*6 << "<a class='btn btn-mini' data-bind='click:\$root.cancel' href='#' title='cancel'>Cancel</a>\n"
+        out << INDENT*5 << "</td>\n"
         out << INDENT*4 << "</tr></script>\n"
     }
 
-    def footerView(attrs, model, out) {
+    /**
+     * Common footer output for both tables and grids.
+     */
+    def footer(attrs, model, out) {
         def colCount = 0
         out << INDENT*4 << "<tfoot>\n"
         model.footer.rows.each { row ->
@@ -393,13 +445,13 @@ class ModelTagLib {
                 col.computed = col.computed ?: getComputed(attrs, col.source, '')
                 out << INDENT*5 << "<td${colspan}>" << dataTag(col, 'data', attrs.edit, attributes) << "</td>" << "\n"
             }
-            if (attrs.edit && model.addRows) {
+            if (attrs.edit && model.editableRows) {
                 out << INDENT*5 << "<td></td>\n"  // to balance the extra column for actions
                 colCount++
             }
             out << INDENT*4 << "</tr>\n"
         }
-        if (attrs.edit && model.addRows) {
+        if (attrs.edit && model.userAddedRows) {
             out << INDENT*4 << """<tr><td colspan="${colCount}" style="text-align:left;">
                         <button type="button" class="btn btn-small" data-bind="click:addRow">
                         <i class="icon-plus"></i> Add a row</button>
@@ -408,17 +460,17 @@ class ModelTagLib {
         out << INDENT*4 << "</tfoot>\n"
     }
 
-    /*------------ methods to look up attributes in the data model from the view model -------------*/
+    /*------------ methods to look up attributes in the data model -------------*/
 
-    def getType(attrs, name, context) {
+    static String getType(attrs, name, context) {
         getAttribute(attrs, name, context, 'dataType')
     }
 
-    def getComputed(attrs, name, context) {
+    static String getComputed(attrs, name, context) {
         getAttribute(attrs, name, context, 'computed')
     }
 
-    def getAttribute(attrs, name, context, attribute) {
+    static String getAttribute(attrs, name, context, attribute) {
         //println "getting ${attribute} for ${name} in ${context}"
         def dataModel = attrs.model.dataModel
         def level = dataModel.find {it.name == context}
@@ -439,321 +491,5 @@ class ModelTagLib {
         return target ? target[attribute] : null
     }
 
-    /*------------ JAVASCRIPT for dynamic content -------------*/
-
-    def jsModelObjects = { attrs ->
-        attrs.model?.dataModel?.each { mod ->
-            if (mod.dataType == 'list') {
-                repeatingModel(attrs, mod, out)
-            }
-            else if (mod.dataType == 'matrix') {
-                matrixModel attrs, mod, out
-            }
-        }
-    }
-
-    def jsViewModel = { attrs ->
-        attrs.model?.dataModel?.each { mod ->
-            if (mod.dataType == 'list') {
-                listViewModel(attrs, mod, out)
-            }
-            else if (mod.dataType == 'matrix') {
-                matrixViewModel(attrs, mod, out)
-            }
-            else if (mod.computed) {
-                computedViewModel(mod, out)
-            }
-            else if (mod.dataType == 'text') {
-                textViewModel(mod, out)
-            }
-            else if (mod.dataType == 'number') {
-                numberViewModel(mod, out)
-            }
-        }
-    }
-
-    /**
-     * This js is inserted into the 'loadData()' function of the view model.
-     *
-     * It loads the existing values (or default values) into the model.
-     */
-    def jsLoadModel = { attrs ->
-        attrs.model?.dataModel?.each { mod ->
-            if (mod.dataType == 'list') {
-                out << INDENT*4 << "self.load${mod.name}(data.${mod.name});\n"
-            }
-            else if (mod.dataType == 'matrix') {
-                //out << INDENT*4 << "self.load${mod.name.capitalize()}(data.${mod.name});\n"
-            }
-            else if (mod.dataType == 'text' && !mod.computed) {
-                out << INDENT*4 << "self.data['${mod.name}'](orBlank(data['${mod.name}']));\n"
-            }
-            else if (mod.dataType == 'number' && !mod.computed) {
-                out << INDENT*4 << "self.data['${mod.name}'](orZero(data['${mod.name}']));\n"
-            }
-        }
-    }
-
-    def jsRemoveBeforeSave = { attrs ->
-        if (attrs.model?.viewModel?.any({ it.dataType == 'tableWithEditableRows'})) {
-            out << INDENT*4 << "delete jsData.selectedRow;\n"
-        }
-    }
-
-    def computedViewModel(model, out) {
-        out << "\n" << INDENT*3 << "self.data.${model.name} = ko.computed(function () {\n"
-        if (model.computed.dependents.fromList) {
-            out << INDENT*4 << "var total = 0;\n"
-            out << INDENT*4 << "for(var i = 0; i < self.data.${model.computed.dependents.fromList}().length; i++) {\n"
-            out << INDENT*5 << "var value = self.data.${model.computed.dependents.fromList}()[i].${model.computed.dependents.source}();\n"
-            out << INDENT*6 << "total = total ${operators[model.computed.operation]} value; \n"
-            out << INDENT*4 << "}\n"
-            out << INDENT*4 << "return total;\n"
-        }
-        else if (model.computed.dependents.fromMatrix) {
-            out << INDENT*4 << "var total = 0;\n"
-            out << INDENT*4 << "var grid = self.data.${model.computed.dependents.fromMatrix};\n"
-            // iterate columns and get value from model.computed.dependents.row
-            out << INDENT*4 << "\$.each(grid, function (i,obj) {\n"
-            out << INDENT*5 << "total = total ${operators[model.computed.operation]} obj.${model.computed.dependents.row}();\n"
-            out << INDENT*4 << "});\n"
-            out << INDENT*4 << "return total;\n"
-        }
-        out << INDENT*3 << "});\n"
-    }
-
-    def makeRowModelName(name) {
-        def rowModelName = "${name}Row"
-        return rowModelName[0].toUpperCase() + rowModelName.substring(1)
-    }
-
-    /**
-     * Creates a js array that holds the row keys in the correct order, eg,
-     * var <modelName>Rows = ['row1key','row2key']
-     */
-    def matrixModel(attrs, model, out) {
-        out << INDENT*2 << "var ${model.name}Rows = [";
-        def rows = []
-        model.rows.each {
-            rows << "'${it.name}'"
-        }
-        out << rows.join(',')
-        out << "];\n"
-        out << INDENT*2 << "var ${model.name}Columns = [";
-        def cols = []
-        model.columns.each {
-            cols << "'${it.name}'"
-        }
-        out << cols.join(',')
-        out << "];\n"
-    }
-
-    def matrixViewModel(attrs, model, out) {
-        out << """
-            self.data.${model.name} = [];//ko.observable([]);
-            self.data.${model.name}.init = function (data, columns, rows) {
-                var that = this, column;
-                if (!data) data = [];
-                \$.each(columns, function (i, col) {
-                    column = {};
-                    column.name = col;
-"""
-        model.rows.eachWithIndex { row, rowIdx ->
-            if (!row.computed) {
-                def value = "data[i] ? data[i].${row.name} : 0"
-                switch (row.dataType) {
-                    case 'number': value = "data[i] ? orZero(${value}) : '0'"; break
-                    case 'text': value = "data[i] ? orBlank(${value}) : ''"; break
-                    case 'boolean': value = "data[i] ? orFalse(${value}) : 'false'"; break
-                }
-                out << INDENT*5 << "column.${row.name} = ko.observable(${value});\n"
-            }
-        }
-        // add observables to array before declaring the computed observables
-        out << INDENT*5 << "that.push(column);\n"
-        model.rows.eachWithIndex { row, rowIdx ->
-            if (row.computed) {
-                computedObservable(row, 'column', 'that[i]', out)
-            }
-        }
-
-        out << """
-                });
-            };
-            self.data.${model.name}.init(outputData.${model.name}, ${model.name}Columns, ${model.name}Rows);
-            self.data.${model.name}.get = function (row,col) {
-                var value = this[col][${model.name}Rows[row]];
-"""
-        if (attrs.edit) {
-            out << INDENT*4 << "return value;\n"
-        } else {
-            out << INDENT*4 << "return (value() == 0) ? '' : value;\n"
-        }
-        out << """
-            };
-            self.load${model.name.capitalize()} = function (data) {
-                self.data.${model.name}.init(data, ${model.name}Columns, ${model.name}Rows);
-            };
-"""
-    }
-
-    def repeatingModel(attrs, model, out) {
-        def edit = attrs.edit as boolean
-        out << INDENT*2 << "var ${makeRowModelName(model.name)} = function (data) {\n"
-        out << INDENT*3 << "var self = this;\n"
-        out << INDENT*3 << "if (!data) data = {};\n"
-        model.columns.each { col ->
-            if (col.computed) {
-                switch (col.dataType) {
-                    case 'number':
-                        computedObservable(col, 'self', 'self', out)
-                        break;
-                }
-            }
-            else {
-                switch (col.dataType) {
-                    case 'text':
-                        out << INDENT*3 << "this['${col.name}'] = ko.protectedObservable(orBlank(data['${col.name}']));\n"
-                        break;
-                    case 'number':
-                        out << INDENT*3 << "this['${col.name}'] = ko.protectedObservable(orZero(data['${col.name}']));\n"
-                        break;
-                    case 'boolean':
-                        out << INDENT*3 << "this['${col.name}'] = ko.protectedObservable(orFalse(data['${col.name}']));\n"
-                        break;
-                }
-            }
-        }
-        if (edit) {
-            out << INDENT*3 << "this.isSelected = ko.observable(true);\n"
-            out << """
-            this.commit = function () {
-                self.doAction('commit');
-            };
-            this.reset = function () {
-                self.doAction('reset');
-            };
-            this.doAction = function (action) {
-                var prop, item;
-                for (prop in self) {
-                    if (self.hasOwnProperty(prop)) {
-                        item = self[prop];
-                        if (ko.isObservable(item) && item[action]) {
-                           item[action]();
-                        }
-                    }
-                }
-            };
-            this.isNew = false;
-            this.toJSON = function () {
-                var js = ko.toJS(this);
-                delete js.isSelected;
-                delete js.isNew;
-                return js;
-            };
-"""
-        }
-        out << INDENT*2 << "};\n"
-    }
-
-    /*
-
-     */
-    def textViewModel(model, out) {
-        out << "\n" << INDENT*3 << "self.data.${model.name} = ko.observable();\n"
-    }
-
-    def numberViewModel(model, out) {
-        out << "\n" << INDENT*3 << "self.data.${model.name} = ko.observable();\n"
-    }
-
-    def computedObservable(model, propertyContext, dependantContext, out) {
-        out << INDENT*5 << "${propertyContext}.${model.name} = ko.computed(function () {\n"
-        // must be at least one dependant
-        def numbers = []
-        def checkNumberness = []
-        model.computed.dependents.each {
-            def ref = it
-            def path = dependantContext
-            if (ref.startsWith('$')) {
-                ref = ref[1..-1]
-                path = "self.data"
-            }
-            numbers << "Number(${path}.${ref}())"
-            checkNumberness << "isNaN(Number(${path}.${ref}()))"
-        }
-        out << INDENT*6 << "if (" + checkNumberness.join(' || ') + ") { return 0; }\n"
-        if (model.computed.operation == 'divide') {
-            // can't divide by zero
-            out << INDENT*6 << "if (${numbers[-1]} === 0) { return 0; }\n"
-        }
-        out << INDENT*6 << "return " + numbers.join(" ${operators[model.computed.operation]} ") + ";\n"
-        out << INDENT*5 << "});\n"
-    }
-
-    def listViewModel(attrs, model, out) {
-        def rowModelName = makeRowModelName(model.name)
-        def defaultRows = []
-        model.defaultRows?.each{
-            defaultRows << INDENT*5 + "self.data.${model.name}.push(new ${rowModelName}(${it.toString()}));"
-        }
-        def insertDefaultModel = defaultRows.join('\n')
-
-        out << """
-            self.data.${model.name} = ko.observableArray([]);
-            self.selectedRow = ko.observable();
-            self.load${model.name} = function (data) {
-                if (data === undefined) {
-                    ${insertDefaultModel}
-                } else {
-                    \$.each(data, function (i, obj) {
-                        self.data.${model.name}.push(new ${rowModelName}(obj));
-                    });
-                }
-            };
-"""
-        if (attrs.edit) {
-            out << """
-            self.addRow = function () {
-                var newRow = new ${rowModelName}();
-                newRow.isNew = true;
-                self.data.${model.name}.push(newRow);
-                self.editRow(newRow);
-            };
-            self.removeRow = function (row) {
-                self.data.${model.name}.remove(row);
-                self.selectedRow(null);
-            };
-            self.templateToUse = function (row) {
-                return self.selectedRow() === row ? 'editTmpl' : 'viewTmpl';
-            };
-            self.editRow = function (row) {
-                self.selectedRow(row);
-                row.isSelected(true);
-            };
-            self.accept = function (row) {
-                // todo: validation
-                row.commit();
-                self.selectedRow(null);
-                row.isSelected(false);
-                row.isNew = false;
-            };
-            self.cancel = function (row) {
-                if (row.isNew) {
-                    self.removeRow(row);
-                } else {
-                    row.reset();
-                    self.selectedRow(null);
-                    row.isSelected(false);
-                }
-            };
-"""
-        }
-    }
-
-    /*
-            self.data.totalAreaCovered = ko.observable("${output.data?.totalAreaCovered}");
-        }
- */
 }
 
