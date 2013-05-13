@@ -28,36 +28,16 @@ class ModelTagLib {
         attrs.model?.viewModel?.eachWithIndex { mod, index ->
             switch (mod.type) {
                 case 'table':
-                    attrs.ter = mod
-                    ter attrs, mod, out, index
+                    table out, attrs, mod, index
                     break
                 case 'grid':
-                    grid attrs, mod, out
+                    grid out, attrs, mod
                     break
                 case 'row':
-                    row attrs, mod, out
+                    row out, attrs, mod
                     break
             }
         }
-    }
-
-    /**
-     * Generates the 'data-bind' attribute based on model properties.
-     * @param model of the data element
-     * @param context the dot notation path to the data
-     * @param editable if the html element is an input
-     * @return the data binding
-     */
-    def dataBinding(model, context, editable) {
-        if (model.type == 'literal') return ""
-        def action
-        if (model.type == 'boolean') {
-            action = editable ? 'checkbox' : 'visible'
-        } else {
-            action = editable ? 'value' : 'text'
-        }
-        def source = (context ? context + '.' : '') + model.source
-        return " data-bind=\"${action}:${source}\""
     }
 
     /**
@@ -182,7 +162,7 @@ class ModelTagLib {
     }
 
     // row model
-    def row(attrs, model, out) {
+    def row(out, attrs, model) {
         out << "<div class=\"row-fluid span12 space-after\">\n"
         if (model.align == 'right') {
             out << "<div class=\"pull-right\">\n"
@@ -208,21 +188,21 @@ class ModelTagLib {
         out << "</div>\n"
     }
 
-    def grid(attrs, model, out) {
+    def grid(out, attrs, model) {
         out << "<div class=\"row-fluid span12\">\n"
         out << INDENT*3 << "<table class=\"table table-bordered dyn ${model.source}\">\n"
-        gridHeader attrs, model, out
+        gridHeader out, attrs, model
         if (attrs.edit) {
-            gridBodyEdit attrs, model, out
+            gridBodyEdit out, attrs, model
         } else {
-            gridBodyView attrs, model, out
+            gridBodyView out, attrs, model
         }
-        footer attrs, model, out
+        footer out, attrs, model
         out << INDENT*3 << "</table>\n"
         out << INDENT*2 << "</div>\n"
     }
 
-    def gridHeader(attrs, model, out) {
+    def gridHeader(out, attrs, model) {
         out << INDENT*4 << "<thead><tr>"
         model.columns.each { col ->
             out << "<th>"
@@ -242,7 +222,7 @@ class ModelTagLib {
         out << '\n' << INDENT*4 << "</tr></thead>\n"
     }
 
-    def gridBodyEdit(attrs, model, out) {
+    def gridBodyEdit(out, attrs, model) {
         out << INDENT*4 << "<tbody>\n"
         model.rows.eachWithIndex { row, rowIndex ->
 
@@ -281,7 +261,7 @@ class ModelTagLib {
         out << INDENT*4 << "</tr></tbody>\n"
     }
 
-    def gridBodyView(attrs, model, out) {
+    def gridBodyView(out, attrs, model) {
         out << INDENT*4 << "<tbody>\n"
         model.rows.eachWithIndex { row, rowIndex ->
 
@@ -313,66 +293,67 @@ class ModelTagLib {
         out << INDENT*4 << "</tr></tbody>\n"
     }
 
-    def ter(attrs, model, out, index) {
+    def table(out, attrs, model, index) {
         out << "<div class=\"row-fluid span12\">\n"
         out << INDENT*3 << "<table class=\"table table-bordered dyn ${model.source}\">\n"
-        terHeader attrs, out, index
-        if (attrs.edit) {
-            terBodyEdit attrs, out, index
-        } else {
-            terBodyView attrs, out, index
-        }
-        footer attrs, model, out
+        tableHeader out, attrs, model
+        tableBodyEdit out, attrs, model
+        footer out, attrs, model
         out << INDENT*3 << "</table>\n"
         out << INDENT*2 << "</div>\n"
     }
 
-    def terHeader(attrs, out, index) {
-        def ter = attrs.ter
+    def tableHeader(out, attrs, table) {
         out << INDENT*4 << "<thead><tr>"
-        ter.columns.eachWithIndex { col, i ->
+        table.columns.eachWithIndex { col, i ->
             out << "<th>" + col.title + "</th>"
         }
-        if (attrs.edit && ter.editableRows) {
+        if (attrs.edit) {
             out << "<th></th>"
         }
         out << '\n' << INDENT*4 << "</tr></thead>\n"
     }
 
-    def terBodyView (attrs, out, index) {
-        def ter = attrs.ter
-        out << INDENT*4 << "<tbody data-bind=\"foreach: data.${ter.source}\"><tr>\n"
-        ter.columns.eachWithIndex { col, i ->
-            col.type = col.type ?: getType(attrs, col.source, ter.source)
+    def tableBodyView (out, attrs, table) {
+        out << INDENT*4 << "<tbody data-bind=\"foreach: data.${table.source}\"><tr>\n"
+        table.columns.eachWithIndex { col, i ->
+            col.type = col.type ?: getType(attrs, col.source, table.source)
             out << INDENT*5 << "<td>" << dataTag(col, '', false) << "</td>" << "\n"
         }
         out << INDENT*4 << "</tr></tbody>\n"
     }
 
-    def terBodyEdit (attrs, out, index) {
-        def ter = attrs.ter
-
+    def tableBodyEdit (out, attrs, table) {
         // body elements for main rows
-        def templateName = ter.editableRows ? 'templateToUse' : "'viewTmpl'"
-        out << INDENT*4 << "<tbody data-bind=\"template:{name:${templateName}, foreach: data.${ter.source}}\"></tbody>\n"
-        if (ter.editableRows) {
-            // write the view template
-            tableViewTemplate(attrs, ter, false, out)
-            // write the edit template
-            tableEditTemplate(attrs, ter, out)
+        if (attrs.edit) {
+            def templateName = table.editableRows ? 'templateToUse' : "'viewTmpl'"
+            out << INDENT*4 << "<tbody data-bind=\"template:{name:${templateName}, foreach: data.${table.source}}\"></tbody>\n"
+            if (table.editableRows) {
+                // write the view template
+                tableViewTemplate(out, attrs, table, false)
+                // write the edit template
+                tableEditTemplate(out, attrs, table)
+            } else {
+                // write the view template
+                tableViewTemplate(out, attrs, table, attrs.edit)
+            }
         } else {
-            // write the view template
-            tableViewTemplate(attrs, ter, attrs.edit, out)
+            out << INDENT*4 << "<tbody data-bind=\"foreach: data.${table.source}\"><tr>\n"
+            table.columns.eachWithIndex { col, i ->
+                col.type = col.type ?: getType(attrs, col.source, table.source)
+                out << INDENT*5 << "<td>" << dataTag(col, '', false) << "</td>" << "\n"
+            }
+            out << INDENT*4 << "</tr></tbody>\n"
         }
 
         // body elements for additional rows (usually summary rows)
-        if (ter.rows) {
+        if (table.rows) {
             out << INDENT*4 << "<tbody>\n"
-            ter.rows.each { tot ->
+            table.rows.each { tot ->
                 def at = new AttributeMap()
                 if (tot.showPercentSymbol) { at.addClass('percent') }
                 out << INDENT*4 << "<tr>\n"
-                ter.columns.eachWithIndex { col, i ->
+                table.columns.eachWithIndex { col, i ->
                     if (i == 0) {
                         out << INDENT*4 << "<td>${tot.title}</td>\n"
                     } else {
@@ -382,13 +363,16 @@ class ModelTagLib {
                           "</td>" << "\n"
                     }
                 }
+                if (attrs.edit) {
+                    out << INDENT*5 << "<td></td>\n"
+                }
                 out << INDENT*4 << "</tr>\n"
             }
             out << INDENT*4 << "</tbody>\n"
         }
     }
 
-    def tableViewTemplate(attrs, model, edit, out) {
+    def tableViewTemplate(out, attrs, model, edit) {
         out << INDENT*4 << "<script id=\"viewTmpl\" type=\"text/html\"><tr>\n"
         model.columns.eachWithIndex { col, i ->
             col.type = col.type ?: getType(attrs, col.source, model.source)
@@ -396,15 +380,19 @@ class ModelTagLib {
             out << INDENT*5 << "<td>" << dataTag(col, '', edit) << "</td>" << "\n"
         }
         if (model.editableRows) {
-            out << INDENT*5 << "<td>\n"
-            out << INDENT*6 << "<a class='btn btn-mini' data-bind='click:\$root.editRow' href='#' title='edit'><i class='icon-edit'></i> Edit</a>\n"
-            out << INDENT*6 << "<a class='btn btn-mini' data-bind='click:\$root.removeRow' href='#' title='remove'><i class='icon-trash'></i> Remove</a>\n"
-            out << INDENT*5 << "</td>\n"
+                out << INDENT*5 << "<td>\n"
+                out << INDENT*6 << "<a class='btn btn-mini' data-bind='click:\$root.editRow' href='#' title='edit'><i class='icon-edit'></i> Edit</a>\n"
+                out << INDENT*6 << "<a class='btn btn-mini' data-bind='click:\$root.removeRow' href='#' title='remove'><i class='icon-trash'></i> Remove</a>\n"
+                out << INDENT*5 << "</td>\n"
+        } else {
+            if (edit) {
+                out << INDENT*5 << "<td><i data-bind='click:\$root.removeRow' class='icon-remove'></i></td>\n"
+            }
         }
         out << INDENT*4 << "</tr></script>\n"
     }
 
-    def tableEditTemplate(attrs, model, out) {
+    def tableEditTemplate(out, attrs, model) {
         out << INDENT*4 << "<script id=\"editTmpl\" type=\"text/html\"><tr>\n"
         model.columns.eachWithIndex { col, i ->
             // mechanism for additional data binding clauses
@@ -426,7 +414,7 @@ class ModelTagLib {
     /**
      * Common footer output for both tables and grids.
      */
-    def footer(attrs, model, out) {
+    def footer(out, attrs, model) {
         def colCount = 0
         out << INDENT*4 << "<tfoot>\n"
         model.footer.rows.each { row ->
@@ -445,7 +433,7 @@ class ModelTagLib {
                 col.computed = col.computed ?: getComputed(attrs, col.source, '')
                 out << INDENT*5 << "<td${colspan}>" << dataTag(col, 'data', attrs.edit, attributes) << "</td>" << "\n"
             }
-            if (attrs.edit && model.editableRows) {
+            if (model.type == 'table' && attrs.edit) {
                 out << INDENT*5 << "<td></td>\n"  // to balance the extra column for actions
                 colCount++
             }
