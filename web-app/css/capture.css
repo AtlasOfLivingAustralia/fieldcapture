@@ -142,6 +142,15 @@ td.tick {
     opacity: 0.5;
 }
 
+.table i[class^="icon-remove"] {
+    opacity: 0.6;
+    cursor: pointer;
+}
+
+.table i[class^="icon-remove"]:hover {
+    opacity: 1;
+}
+
 /* debug */
 .debug div {
     padding-bottom: 10px;;

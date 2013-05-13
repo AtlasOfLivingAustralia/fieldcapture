@@ -34,9 +34,15 @@ class ModelCSSTagLib {
                 out << INDENT*2 << "table.${tableClass} td:nth-child(${i+1}) {${width}${textAlign}}\n"
             }
         }
-        // add extra column for edit buttons
-        if (edit && model.editableRows) {
-            out << INDENT*2 << "table.${tableClass} td:last-child {width:20%;text-align:center;}\n"
+        // add extra column for editing buttons
+        if (edit) {
+            if (model.editableRows) {
+                // add extra column for editing buttons
+                out << INDENT*2 << "table.${tableClass} td:last-child {width:30%;text-align:center;}\n"
+            } else {
+                // add column for delete buttons
+                out << INDENT*2 << "table.${tableClass} td:last-child {width:4%;text-align:center;}\n"
+            }
         }
         out << INDENT << "</style>"
     }
