@@ -30,7 +30,8 @@
             {"name":"other","dataType":"number"},
             {"name":"total","dataType":"number","computed":{"dependents":["live","tracks","dung","furOrFeathers","warren",
                 "den","soil","scratchings","damage","other"],"operation":"sum"}},
-            {"name":"abundanceRating","dataType":"number","computed":{"dependents":["total","$areaSurveyedInHectares"],"operation":"divide"}}
+            {"name":"abundanceRating","dataType":"number","computed":{"dependents":["total","$areaSurveyedInHectares"],
+                "operation":"divide","rounding":"2"}}
 
         ]
     },
