@@ -131,7 +131,7 @@ class ModelJSTagLib {
             out << INDENT*4 << "var total = 0;\n"
             out << INDENT*4 << "for(var i = 0; i < ${dependantContext}.${model.computed.dependents.fromList}().length; i++) {\n"
             out << INDENT*5 << "var value = ${dependantContext}.${model.computed.dependents.fromList}()[i].${model.computed.dependents.source}();\n"
-            out << INDENT*6 << "total = total ${operators[model.computed.operation]} value; \n"
+            out << INDENT*6 << "total = total ${operators[model.computed.operation]} Number(value); \n"
             out << INDENT*4 << "}\n"
             out << INDENT*4 << "return total;\n"
         }
@@ -140,7 +140,7 @@ class ModelJSTagLib {
             out << INDENT*4 << "var grid = ${dependantContext}.${model.computed.dependents.fromMatrix};\n"
             // iterate columns and get value from model.computed.dependents.row
             out << INDENT*4 << "\$.each(grid, function (i,obj) {\n"
-            out << INDENT*5 << "total = total ${operators[model.computed.operation]} obj.${model.computed.dependents.row}();\n"
+            out << INDENT*5 << "total = total ${operators[model.computed.operation]} Number(obj.${model.computed.dependents.row}());\n"
             out << INDENT*4 << "});\n"
             out << INDENT*4 << "return total;\n"
         }
@@ -352,7 +352,11 @@ class ModelJSTagLib {
             // can't divide by zero
             out << INDENT*6 << "if (${numbers[-1]} === 0) { return 0; }\n"
         }
-        out << INDENT*6 << "return " + numbers.join(" ${operators[model.computed.operation]} ") + ";\n"
+        def expression = numbers.join(" ${operators[model.computed.operation]} ")
+        if (model.computed.rounding) {
+            expression = "neat_number(${expression},${model.computed.rounding})"
+        }
+        out << INDENT*6 << "return " + expression + ";\n"
         out << INDENT*5 << "});\n"
     }
 
