@@ -81,6 +81,8 @@
         function ViewModel () {
             var self = this;
             self.data = {};
+            self.transients = {};
+            self.transients.dummy = ko.observable('');
 
             // add the properties for the dynamic part of the model
 <md:jsViewModel model="${model}"/>
@@ -96,15 +98,18 @@
             self.loadData = function (data) {
                 // load data for the dynamic part of the model
 <md:jsLoadModel model="${model}"/>
-            }
+
+            self.transients.dummy.notifySubscribers();
+
+            };
         }
 
-        var viewModel = new ViewModel();
-        viewModel.loadData(outputData);
+var viewModel = new ViewModel();
+viewModel.loadData(outputData);
 
-        ko.applyBindings(viewModel);
+ko.applyBindings(viewModel);
 
-    });
+});
 
 </r:script>
 </body>
