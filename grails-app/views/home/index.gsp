@@ -15,7 +15,7 @@
         sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}"
     }
   </r:script>
-  <r:require modules="gmap3,projectsMap"/>
+  <r:require modules="gmap3,projectsMap, knockout"/>
 </head>
 <body>
     <div class="row-fluid">
@@ -42,54 +42,167 @@
                 </div>
             </div>
         </g:if>
+    </div>
 
-        <div class="span2 well no-left-margin" id="sidebar">
-            <r:img dir="images" file="survey_clipboard2.png"/>
-            <h3>New</h3>
-            <ul class="unstyled">
-                <li>list of</li>
-                <li>the latest</li>
-                <li>projects</li>
-            </ul>
-            <h3>Active</h3>
-            <ul class="unstyled">
-                <li>list of</li>
-                <li>the active</li>
-                <li>projects</li>
-            </ul>
-        </div>
+    <div class="row-fluid space-after">
+        <a class="btn" href="#">Add a project</a>
+        <a class="btn" href="#">Add a site</a>
+        <a class="btn" href="#">Add an activity</a>
+        <a class="btn" href="#">Add an assessment</a>
+    </div>
 
-        <div class="span10">
+    <div class="row-fluid">
+
+        <div class="span4 well list-box">
             <h2>Projects</h2>
-            <div class="span7 no-left-margin" id="map-container">
-                <div id="map" class="gmap"></div>
-            </div>
-            <div class="span3 well well-small" id="project-list">
-                <h3>All projects</h3>
-                <div class="accordion" id="project-accordion">
-                <g:each in="${projects}" var="p">
-                    <div class="accordion-group" data-pid="${p.sitePid}" data-latitude="${p.latitude}" data-longitude="${p.longitude}">
-                        <div class="accordion-heading">
-                            <a class="accordion-heading" data-toggle="collapse" href="#accord-${p.projectId}"
-                               data-parent="#project-accordion">${p.name}</a>
-                        </div>
-                        <div id="accord-${p.projectId}" class="accordion-body collapse">
-                            <div class="accordion-inner">
-                                <g:link controller="project" id="${p.projectId}" class="pull-right">Go to project</g:link><br>
-                                ${p.description ?: 'no description'}
-                            </div>
-                        </div>
-                    </div>
-
-                </g:each>
+            <span id="project-filter-warning" class="label filter-label label-warning"
+                  style="display:none;">Filtered</span>
+            <div class="control-group">
+                <div class="input-append">
+                    <g:textField class="filterinput input-medium" data-target="project"
+                         title="Type a few characters to restrict the list." name="projects"
+                         placeholder="filter"/>
+                    <button type="button" class="btn clearFilterBtn"
+                         title="clear"><i class="icon-remove"></i></button>
                 </div>
             </div>
+            <div><ul id="projectList">
+                <g:each in="${projects}" var="p">
+                    <li>
+                        <g:link controller="project" action="index" id="${p.projectId}">${p.name}</g:link>
+                    </li>
+                </g:each>
+            </ul></div>
+        </div>
+
+        <div class="span4 well list-box">
+            <h2>Sites</h2>
+            <span id="site-filter-warning" class="label filter-label label-warning"
+                style="display:none;"
+                %{--data-bind="visible:isSitesFiltered,valueUpdate:'afterkeyup'"--}%>Filtered</span>
+            <div class="control-group">
+                <div class="input-append">
+                    <g:textField class="filterinput input-medium" data-target="site"
+                        title="Type a few characters to restrict the list." name="sites"
+                        placeholder="filter"/>
+                    <button type="button" class="btn clearFilterBtn"
+                        title="clear"><i class="icon-remove"></i></button>
+                </div>
+            </div>
+            <div>
+                <ul id="siteList"
+                    %{--data-bind="template: {foreach:filteredSites,
+                                          beforeRemove: hideElement,
+                                          afterAdd: showElement}"--}%>
+                    %{--<li>
+                        <a data-bind="text: name, attr: {href:'${createLink(controller: "site", action: "index")}' + '/' + siteId}"></a>
+                    </li>--}%
+                    <g:each in="${sites}" var="p">
+                        <li>
+                            <g:link controller="site" action="index" id="${p.siteId}">${p.name}</g:link>
+                        </li>
+                    </g:each>
+                </ul>
+            </div>
+        </div>
+
+        <div class="span4 well list-box">
+            <h2>Activities</h2>
+            <span id="activity-filter-warning" class="label filter-label label-warning"
+                  style="display:none;">Filtered</span>
+            <div class="control-group">
+                <div class="input-append">
+                    <g:textField class="filterinput input-medium" data-target="activity"
+                                 title="Type a few characters to restrict the list." name="activities"
+                                 placeholder="filter"/>
+                    <button type="button" class="btn clearFilterBtn"
+                            title="clear"><i class="icon-remove"></i></button>
+                </div>
+            </div>
+            <div><ul id="activityList">
+                <g:each in="${activities}" var="p">
+                    <li>
+                        <g:link controller="activity" action="index" id="${p.activityId}">${p.name}</g:link>
+                    </li>
+                </g:each>
+            </ul></div>
+        </div>
+
+        <hr />
+    <div class="debug">
+        <h3 id="debug">Debug</h3>
+        <div style="display: none">
+            <pre data-bind="text: ko.toJSON($root, null, 2)"></pre>
+            <div>Projects : ${projects}</div>
+            <div>Sites : ${sites}</div>
         </div>
     </div>
+
 <r:script>
     $(window).load(function () {
-        initMap('div.accordion-group', initMapForProjects);
+        $('.filterinput').keyup(function() {
+            var a = $(this).val(),
+                target = $(this).attr('data-target'),
+                $target = $('#' + target + 'List li');
+            if (a.length > 1) {
+                // this finds all links in the list that contain the input,
+                // and hide the ones not containing the input while showing the ones that do
+                var containing = $target.filter(function () {
+                    var regex = new RegExp('\\b' + a, 'i');
+                    return regex.test($('a', this).text());
+                }).slideDown();
+                $target.not(containing).slideUp();
+                $('#' + target + '-filter-warning').show();
+            } else {
+                $('#' + target + '-filter-warning').hide();
+                $target.slideDown();
+            }
+            return false;
+        });
+        $('.clearFilterBtn').click(function () {
+            var $filterInput = $(this).prev(),
+                target = $filterInput.attr('data-target');
+            $filterInput.val('');
+            $('#' + target + '-filter-warning').hide();
+            $('#' + target + "List li").slideDown();
+        });
     });
+
+    /* This implementation of list filtering is not used but is left for reference.
+       The jQuery implementation is quicker and cleaner in this case. This may
+       not be true if the data model is needed for other purposes.
+    var data = {};
+    data.sites = /$/{sites};
+
+    function ViewModel (data) {
+        var self = this;
+        self.sitesFilter = ko.observable("");
+        self.sites = ko.observableArray(data.sites);
+        self.isSitesFiltered = ko.observable(false);
+        // Animation callbacks for the lists
+        self.showElement = function(elem) { if (elem.nodeType === 1) $(elem).hide().slideDown() };
+        self.hideElement = function(elem) { if (elem.nodeType === 1) $(elem).slideUp(function() { $(elem).remove(); }) };
+
+        self.filteredSites = ko.computed(function () {
+            var filter = self.sitesFilter().toLowerCase();
+            var regex = new RegExp('\\b' + filter, 'i');
+            if (!filter || filter.length === 1) {
+                self.isSitesFiltered(false);
+                return self.sites();
+            } else {
+                self.isSitesFiltered(true);
+                return ko.utils.arrayFilter(self.sites(), function (item) {
+                    return regex.test(item.name);
+                })
+            }
+        });
+        self.clearSiteFilter = function () {
+            self.sitesFilter("");
+        }
+    }
+    var viewModel = new ViewModel(data);
+    ko.applyBindings(viewModel);*/
+
 </r:script>
 </body>
 </html>

@@ -142,13 +142,34 @@ td.tick {
     opacity: 0.5;
 }
 
-.table i[class^="icon-remove"] {
+i[class^="icon-remove"] {
     opacity: 0.6;
     cursor: pointer;
 }
 
-.table i[class^="icon-remove"]:hover {
+i[class^="icon-remove"]:hover {
     opacity: 1;
+}
+
+/* list bos with filter */
+.list-box {
+    height:600px;
+    overflow: auto;
+}
+
+.list-box ul {
+    list-style:none;
+    margin-left:0;
+}
+
+.list-box h2 {
+    display: inline;
+}
+
+.list-box .filter-label {
+    position: relative;
+    top: -5px;
+    margin-left: 12px;
 }
 
 /* debug */
