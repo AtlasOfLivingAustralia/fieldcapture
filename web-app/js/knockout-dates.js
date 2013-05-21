@@ -42,7 +42,7 @@ The custom binding listens for changes via the datepicker as well as direct edit
             + pad(this.getUTCSeconds()) + 'Z';
     };
 
-    // Use native IDO date parsing or shim for old browsers (IE8)
+    // Use native ISO date parsing or shim for old browsers (IE8)
     var D= new Date('2011-06-02T09:34:29+02:00');
     if(!D || +D!== 1307000069000){
         Date.fromISO= function(s){
