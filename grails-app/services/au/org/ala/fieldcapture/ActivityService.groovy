@@ -10,9 +10,28 @@ class ActivityService {
 
     def webService, grailsApplication, outputService
 
+    def getCommonService() {
+        grailsApplication.mainContext.commonService
+    }
+
     def list() {
         def resp = webService.getJson(grailsApplication.config.ecodata.baseUrl + 'activity/')
-        resp.list
+        // inject constructed name
+        def acts = resp.list.collect {
+            def date = commonService.simpleDateLocalTime(it.startDate) ?:
+                    commonService.simpleDateLocalTime(it.endDate)
+            /*def dates = []
+            if (it.startDate) {
+                dates << commonService.simpleDateLocalTime(it.startDate)
+            }
+            if (it.endDate) {
+                dates << commonService.simpleDateLocalTime(it.endDate)
+            }
+            def dateRange = dates.join('-')*/
+            it.name = it.type + (date ? ' ' + date : '')
+            it
+        }
+        acts
     }
 
     def get(id) {
