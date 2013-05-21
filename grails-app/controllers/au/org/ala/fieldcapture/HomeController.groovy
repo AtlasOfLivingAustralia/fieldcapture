@@ -2,11 +2,9 @@ package au.org.ala.fieldcapture
 
 class HomeController {
 
-    def projectService, siteService
+    def projectService, siteService, activityService
 
     def index() {
-        //siteService.loadTestSites()
-        def projects = projectService.list()
-        [projects: projects]
+        [projects: projectService.list(), sites: siteService.list(), activities: activityService.list()]
     }
 }
