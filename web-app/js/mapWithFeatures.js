@@ -167,17 +167,23 @@
         },
         //
         highlightFeatureById: function (id) {
-            var self = this;
-            $.each(this.featureIndex[id], function (i,f) {
-                self.highlightFeature(f);
-            });
+            var self = this,
+                features = this.featureIndex[id];
+            if (features) {
+                $.each(this.featureIndex[id], function (i,f) {
+                    self.highlightFeature(f);
+                });
+            }
         },
         //
         unHighlightFeatureById: function (id) {
-            var self = this;
-            $.each(this.featureIndex[id], function (i,f) {
-                self.unHighlightFeature(f);
-            });
+            var self = this,
+                features = this.featureIndex[id];
+            if (features) {
+                $.each(this.featureIndex[id], function (i,f) {
+                    self.unHighlightFeature(f);
+                });
+            }
         },
         //
         highlightFeature: function (f) {
