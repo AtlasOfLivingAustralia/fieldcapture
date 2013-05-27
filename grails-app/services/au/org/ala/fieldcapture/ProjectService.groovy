@@ -5,10 +5,9 @@ import org.codehaus.groovy.grails.web.mapping.LinkGenerator
 
 class ProjectService {
 
-    def webService, grailsApplication
+    def webService, grailsApplication, siteService, activityService
     LinkGenerator grailsLinkGenerator
 
-    def siteService  // temporary coupling for test data
     def projects
 
     def map() {
@@ -28,42 +27,41 @@ class ProjectService {
         webService.getJson(grailsApplication.config.ecodata.baseUrl + 'project/' + id)
     }
 
+    def getRich(id) {
+        webService.getJson(grailsApplication.config.ecodata.baseUrl + 'project/' + id + '?view=rich')
+    }
+
+    def getActivities(project) {
+        def list = []
+        project.sites.each { site ->
+            siteService.get(site.siteId)?.activities?.each { act ->
+                list << activityService.constructName(act)
+            }
+        }
+        list
+    }
+
     def update(id, body) {
         webService.doPost(grailsApplication.config.ecodata.baseUrl + 'project/' + id, body)
     }
 
+    /**
+     * This does a 'soft' delete. The record is marked as inactive but not removed from the DB.
+     * @param id the record to delete
+     * @return the returned status
+     */
     def delete(id) {
         webService.doDelete(grailsApplication.config.ecodata.baseUrl + 'project/' + id)
     }
 
-    // todo: move this defn to a common place
-    static locationTypes = [locationTypePoint: 'point', locationTypePolygon: 'polygon', locationTypePid: 'pid']
     /**
-     * Returns json that describes in a generic fashion the features to be placed on a map that
-     * will represent the site's locations.
-     *
-     * @param project
+     * This does a 'hard' delete. The record is removed from the DB.
+     * @param id the record to destroy
+     * @return the returned status
      */
-    def getMapFeatures(project) {
-        def featuresMap = [zoomToBounds: true, zoomLimit: 12, highlightOnHover: true, features: []]
-        project.sites.each { site ->
-            site.location.each { loc ->
-                def location = [type: locationTypes[loc.type], name: site.name + ' - ' + loc.name, id: site.name]
-                switch (location.type) {
-                    case 'point':
-                        location.latitude = loc.data.decimalLatitude
-                        location.longitude = loc.data.decimalLongitude
-                        break
-                    case 'pid':
-                        location.polygonUrl = grailsLinkGenerator.link(
-                                controller: 'proxy', action: 'geojsonFromPid',
-                                params: [pid: loc.data.pid]
-                        )
-                }
-                featuresMap.features << location
-            }
-        }
-        return featuresMap as JSON
+    def destroy(id) {
+        webService.doDelete(grailsApplication.config.ecodata.baseUrl + 'project/' + id +
+            '?destroy=true')
     }
 
     def enrichTestData() {
