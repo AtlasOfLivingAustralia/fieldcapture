@@ -2,6 +2,8 @@ modules = {
     application {
         resource url:'js/application.js'
         resource url: 'css/capture.css'
+        resource url: 'js/jquery.shorten.js'
+        resource url: 'js/bootbox.min.js'
     }
 
     gmap3 {
