@@ -5,6 +5,11 @@ class HomeController {
     def projectService, siteService, activityService
 
     def index() {
-        [projects: projectService.list(), sites: siteService.list(), activities: activityService.list()]
+        [
+                projects: projectService.list(),
+                sites: siteService.list(),
+                activities: activityService.list(),
+                assessments: activityService.assessments()
+        ]
     }
 }

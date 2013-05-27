@@ -30,9 +30,6 @@
                 </div>
             </form>
         </div>
-        <div class="span12" id="banner-image">
-            <r:img dir="images" file="banner2.jpg" alt="banner" class="img-rounded"/>
-        </div>
 
         <g:if test="${error}">
             <div class="row-fluid">
@@ -44,11 +41,11 @@
         </g:if>
     </div>
 
-    <div class="row-fluid space-after">
-        <a class="btn" href="#">Add a project</a>
-        <a class="btn" href="#">Add a site</a>
-        <a class="btn" href="#">Add an activity</a>
-        <a class="btn" href="#">Add an assessment</a>
+    <div class="row-fluid large-space-after large-space-before button-set">
+        <g:link controller="project" action="create" class="btn btn-large"><r:img dir="images/icons" file="project.png"/> Add a project</g:link>
+        <g:link controller="site" action="create" class="btn btn-large" href="#"><r:img dir="images/icons" file="site.png"/> Add a site</g:link>
+        <g:link controller="activity" action="create" class="btn btn-large" href="#"><r:img dir="images/icons" file="activity.png"/> Add an activity</g:link>
+        <g:link controller="assessment" action="create" class="btn btn-large" href="#"><r:img dir="images/icons" file="assessment.png"/> Add an assessment</g:link>
     </div>
 
     <div class="row-fluid">
@@ -66,7 +63,7 @@
                          title="clear"><i class="icon-remove"></i></button>
                 </div>
             </div>
-            <div><ul id="projectList">
+            <div class="scroll-list"><ul id="projectList">
                 <g:each in="${projects}" var="p">
                     <li>
                         <g:link controller="project" action="index" id="${p.projectId}">${p.name}</g:link>
@@ -89,7 +86,7 @@
                         title="clear"><i class="icon-remove"></i></button>
                 </div>
             </div>
-            <div>
+            <div class="scroll-list">
                 <ul id="siteList"
                     %{--data-bind="template: {foreach:filteredSites,
                                           beforeRemove: hideElement,
@@ -106,26 +103,50 @@
             </div>
         </div>
 
-        <div class="span4 well list-box">
-            <h2>Activities</h2>
-            <span id="activity-filter-warning" class="label filter-label label-warning"
-                  style="display:none;">Filtered</span>
-            <div class="control-group">
-                <div class="input-append">
-                    <g:textField class="filterinput input-medium" data-target="activity"
-                                 title="Type a few characters to restrict the list." name="activities"
-                                 placeholder="filter"/>
-                    <button type="button" class="btn clearFilterBtn"
-                            title="clear"><i class="icon-remove"></i></button>
+        <div class="span4">
+            <div class="well list-box" style="height:300px;">
+                <h2>Activities</h2>
+                <span id="activity-filter-warning" class="label filter-label label-warning"
+                      style="display:none;">Filtered</span>
+                <div class="control-group">
+                    <div class="input-append">
+                        <g:textField class="filterinput input-medium" data-target="activity"
+                                     title="Type a few characters to restrict the list." name="activities"
+                                     placeholder="filter"/>
+                        <button type="button" class="btn clearFilterBtn"
+                                title="clear"><i class="icon-remove"></i></button>
+                    </div>
                 </div>
+                <div class="scroll-list" style="height:170px;"><ul id="activityList">
+                    <g:each in="${activities}" var="p">
+                        <li>
+                            <g:link controller="activity" action="index" id="${p.activityId}">${p.name}</g:link>
+                        </li>
+                    </g:each>
+                </ul></div>
             </div>
-            <div><ul id="activityList">
-                <g:each in="${activities}" var="p">
-                    <li>
-                        <g:link controller="activity" action="index" id="${p.activityId}">${p.name}</g:link>
-                    </li>
-                </g:each>
-            </ul></div>
+
+            <div class="well list-box" style="height:300px;">
+                <h2>Assessments</h2>
+                <span id="assessment-filter-warning" class="label filter-label label-warning"
+                      style="display:none;">Filtered</span>
+                <div class="control-group">
+                    <div class="input-append">
+                        <g:textField class="filterinput input-medium" data-target="assessment"
+                                     title="Type a few characters to restrict the list." name="assessments"
+                                     placeholder="filter"/>
+                        <button type="button" class="btn clearFilterBtn"
+                                title="clear"><i class="icon-remove"></i></button>
+                    </div>
+                </div>
+                <div class="scroll-list" style="height:170px;"><ul id="assessmentList">
+                    <g:each in="${assessments}" var="p">
+                        <li>
+                            <g:link controller="activity" action="index" id="${p.assessmentId}">${p.name}</g:link>
+                        </li>
+                    </g:each>
+                </ul></div>
+            </div>
         </div>
 
         <hr />

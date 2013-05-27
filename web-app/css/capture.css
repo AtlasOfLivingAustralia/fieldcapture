@@ -85,8 +85,9 @@ div.under-rule {
     border-bottom: 1px solid #eeeeee ;
 }
 
-a.title-edit {
+a.title-btn {
     margin-top: 15px;
+    margin-left: 5px;
 }
 
 /* tables */
@@ -116,6 +117,18 @@ table.dyn thead th {text-align: center}
 
 .space-after {
     margin-bottom: 10px;
+}
+
+.space-before {
+    margin-top: 10px;
+}
+
+.large-space-after {
+    margin-bottom: 20px;
+}
+
+.large-space-before {
+    margin-top: 20px;
 }
 
 .center {text-align: center}
@@ -151,10 +164,17 @@ i[class^="icon-remove"]:hover {
     opacity: 1;
 }
 
+.button-set a {
+    margin-left: 20px;
+}
+
+.button-set a:first-child {
+    margin-left: 0;
+}
+
 /* list bos with filter */
 .list-box {
-    height:600px;
-    overflow: auto;
+    height:700px;
 }
 
 .list-box ul {
@@ -172,6 +192,11 @@ i[class^="icon-remove"]:hover {
     margin-left: 12px;
 }
 
+.scroll-list {
+    height: 570px;
+    overflow: auto;
+    margin-right: -19px;
+}
 /* debug */
 .debug div {
     padding-bottom: 10px;;
