@@ -14,24 +14,32 @@ class ActivityService {
         grailsApplication.mainContext.commonService
     }
 
+    def constructName = { act ->
+        def date = commonService.simpleDateLocalTime(act.startDate) ?:
+            commonService.simpleDateLocalTime(act.endDate)
+        def dates = []
+        if (act.startDate) {
+            dates << commonService.simpleDateLocalTime(act.startDate)
+        }
+        if (act.endDate) {
+            dates << commonService.simpleDateLocalTime(act.endDate)
+        }
+        def dateRange = dates.join('-')
+
+        act.name = act.type + (dateRange ? ' ' + dateRange : '')
+        act
+    }
+
     def list() {
         def resp = webService.getJson(grailsApplication.config.ecodata.baseUrl + 'activity/')
         // inject constructed name
-        def acts = resp.list.collect {
-            def date = commonService.simpleDateLocalTime(it.startDate) ?:
-                    commonService.simpleDateLocalTime(it.endDate)
-            /*def dates = []
-            if (it.startDate) {
-                dates << commonService.simpleDateLocalTime(it.startDate)
-            }
-            if (it.endDate) {
-                dates << commonService.simpleDateLocalTime(it.endDate)
-            }
-            def dateRange = dates.join('-')*/
-            it.name = it.type + (date ? ' ' + date : '')
-            it
-        }
-        acts
+        resp.list.collect(constructName)
+    }
+
+    def assessments() {
+        def resp = webService.getJson(grailsApplication.config.ecodata.baseUrl + 'assessment/')
+        // inject constructed name
+        resp.list.collect(constructName)
     }
 
     def get(id) {
