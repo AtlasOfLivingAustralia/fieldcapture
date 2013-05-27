@@ -4,7 +4,7 @@ import grails.converters.JSON
 
 class MetadataService {
 
-    def grailsApplication
+    def grailsApplication, webService, cacheService
 
     def getDataModel(name) {
         String filename = (grailsApplication.config.app.external.model.dir as String) + name + '/dataModel.json'
@@ -32,6 +32,16 @@ class MetadataService {
 
     def outputTypesList() {
         outputTypes
+    }
+
+    def getInstitutionName(uid) {
+        return uid ? institutionList().find({ it.uid == uid })?.name : ''
+    }
+
+    def institutionList() {
+        return cacheService.get('institutions',{
+            webService.getJson(grailsApplication.config.collectory.baseURL + '/ws/institution')
+        })
     }
 
     static outputTypes = [
