@@ -154,16 +154,6 @@
 
 <r:script>
 
-    // returns blank string if the property is undefined, else the value
-    function orBlank(v) {
-        return v === undefined ? '' : v;
-    }
-
-    // returns blank string if the object or the specified property is undefined, else the value
-    function exists(parent, prop) {
-        return parent === undefined ? '' : (parent[prop] === undefined ? '' : parent[prop]);
-    }
-
     $(function(){
 
         $('#validation-container').validationEngine('attach', {scroll: false});
