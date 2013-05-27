@@ -99,8 +99,7 @@
     {
         "type":"row",
         "items":[
-            {"type":"literal","source":"","css":"span4"},
-            {"type":"literal","source":"Your Feral Animal Abundance Score","css":"heavy-border span4"},
+            {"type":"literal","source":"Your Feral Animal Abundance Score","css":"heavy-border span4 offset4"},
             {"type":"number","source":"totalFeralAnimalAbundanceScore","css":"heavy-border span1"}
         ]
     }
