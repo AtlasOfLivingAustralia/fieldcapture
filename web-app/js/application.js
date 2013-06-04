@@ -10,6 +10,13 @@ if (typeof jQuery !== 'undefined') {
 $('#debug').click(function () {
     $(this).next().toggle();
 });
+$('.expandable-debug').each(function() {
+    var headings = $(this).find('h1,h2,h3,h4,h5');
+    $(this).find('div,pre,ul').hide();
+    headings.click(function () {
+        $(this).next().toggle();
+    });
+});
 
 // returns blank string if the property is undefined, else the value
 function orBlank(v) {
