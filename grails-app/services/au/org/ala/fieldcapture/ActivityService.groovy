@@ -8,7 +8,7 @@ import java.util.regex.Pattern
 
 class ActivityService {
 
-    def webService, grailsApplication, outputService
+    def webService, grailsApplication, outputService, metadataService
 
     def getCommonService() {
         grailsApplication.mainContext.commonService
@@ -73,37 +73,56 @@ class ActivityService {
         webService.doDelete(grailsApplication.config.ecodata.baseUrl + 'activity/' + id)
     }
 
-    /*def convertToSimpleDate(value) {
-        def pattern = ~/\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ/
-        if (value instanceof String && pattern.matcher(value).matches()) {
-            return "${value[8..9]}-${value[5..6]}-${value[0..3]}"
+    /**
+     * Returns a detailed list of all activities associated with a project.
+     *
+     * Activities can be directly linked to a project, or more commonly, linked
+     * via a site that is associated with the project.
+     *
+     * Main output scores are also included. As is the meta-model for the activity.
+     *
+     * @param id of the project
+     */
+    def activitiesForProject(String id) {
+        def list = webService.getJson(grailsApplication.config.ecodata.baseUrl + 'activitiesForProject/' + id)?.list
+        // inject the metadata model for each activity
+        list.each {
+            it.model = metadataService.getActivityModel(it.type)
         }
-        return value
+        list
     }
 
-    def convertFromSimpleDate(value) {
-        def pattern = ~/\d\d-\d\d-\d\d\d\d/
-        if (value instanceof String && pattern.matcher(value).matches()) {
-            return "${value[6..9]}-${value[3..4]}-${value[0..1]}T00:00:00Z"
+        /*def convertToSimpleDate(value) {
+            def pattern = ~/\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ/
+            if (value instanceof String && pattern.matcher(value).matches()) {
+                return "${value[8..9]}-${value[5..6]}-${value[0..3]}"
+            }
+            return value
         }
-        return value
-    }
 
-    def convertToSimpleDates(map) {
-        def pattern = ~/\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ/
-        // top level only for now
-        map.each {entry ->
-            entry.value = convertToSimpleDate(entry.value)
+        def convertFromSimpleDate(value) {
+            def pattern = ~/\d\d-\d\d-\d\d\d\d/
+            if (value instanceof String && pattern.matcher(value).matches()) {
+                return "${value[6..9]}-${value[3..4]}-${value[0..1]}T00:00:00Z"
+            }
+            return value
         }
-        map
-    }
 
-    def convertFromSimpleDates(map) {
-        def pattern = ~/\d\d-\d\d-\d\d\d\d/
-        // top level only for now
-        map.each {entry ->
-            entry.value = convertFromSimpleDate(entry.value)
+        def convertToSimpleDates(map) {
+            def pattern = ~/\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ/
+            // top level only for now
+            map.each {entry ->
+                entry.value = convertToSimpleDate(entry.value)
+            }
+            map
         }
-        map
-    }*/
+
+        def convertFromSimpleDates(map) {
+            def pattern = ~/\d\d-\d\d-\d\d\d\d/
+            // top level only for now
+            map.each {entry ->
+                entry.value = convertFromSimpleDate(entry.value)
+            }
+            map
+        }*/
 }
