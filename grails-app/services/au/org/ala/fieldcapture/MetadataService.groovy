@@ -6,11 +6,26 @@ class MetadataService {
 
     def grailsApplication, webService, cacheService
 
+    def activitiesModel() {
+        return cacheService.get('activity-model',{
+            String filename = (grailsApplication.config.app.external.model.dir as String) + 'activities-model.json'
+            JSON.parse(new File(filename).text)
+        })
+    }
+
+    def getActivityModel(name) {
+        return activitiesModel().activities.find { it.name == name }
+    }
+
+    def getMainScoresForActivity(name) {
+        return activitiesModel().find({ it.name = name })?.outputs?.collect { it.scoreName }
+    }
+
     def getDataModel(name) {
-        String filename = (grailsApplication.config.app.external.model.dir as String) + name + '/dataModel.json'
-        //log.debug filename
-        def jsonStr = new File(filename).text
-        JSON.parse(jsonStr)
+        return cacheService.get(name + '-model',{
+            String filename = (grailsApplication.config.app.external.model.dir as String) + name + '/dataModel.json'
+            JSON.parse(new File(filename).text)
+        })
     }
 
     def getModelName(output, type) {
@@ -19,11 +34,7 @@ class MetadataService {
 
     def getModelNameFromType(type) {
         //log.debug "Getting model name for ${type}"
-        switch (type) {
-            case "Feral animal assessment": return "feralAnimalAbundanceScore"
-            case "DECCW vegetation assessment": return "weedAbundanceAndThreatScore"
-            default: return ""
-        }
+        return activitiesModel().find({it.name == type})?.template
     }
 
     def activityTypesList() {
