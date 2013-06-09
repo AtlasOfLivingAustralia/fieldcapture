@@ -31,16 +31,12 @@
 <body>
     <ul class="breadcrumb">
         <li><g:link controller="home">Home</g:link> <span class="divider">/</span></li>
-        <li><g:link controller="project" action="index" id="${site.projectId}">${site.projectName}</g:link><span class="divider">/</span></li>
         <li><g:link controller="site" action="index" id="${site.siteId}">
             <span data-bind="text: name">${site.name}</span>
         </g:link><span class="divider">/</span></li>
         <li class="active">Edit</li>
     </ul>
     <div class="container-fluid">
-        <div class="span12">
-            <h2>Project: <g:link controller="project" action="index" id="${site.projectId}">${site.projectName}</g:link></h2>
-        </div>
         <bs:form action="update" inline="true">
         <div class="row-fluid span12">
             <g:hiddenField name="id" value="${site.siteId}"/>
@@ -79,17 +75,32 @@
             </div>
         </div>
 
+        <div class="row-fluid span12">
+            <h2 class="inline">Projects</h2>
+            <ul style="list-style: none;margin:13px 0;">
+                <g:each in="${site.projects}" var="p" status="count">
+                    <li>
+                        <g:link controller="project" action="index" id="${p}">${p}</g:link>
+                        <g:if test="${count < site.projects.size() - 1}">, </g:if>
+                    </li>
+                </g:each>
+            </ul>
+            <select class="span5" data-bind="options:projectList, optionsText:'name', value:projects,
+                optionsCaption:'Associate this site with a project..',optionsValue:'projectId'"></select>
+
+        </div>
+
         <div class="span12">
-            <legend>Activities</legend>
+            <h2>Activities</h2>
             <p>Activities can be edited on the site page - <g:link controller="site" action="index" id="${site.siteId}">
                 <span data-bind="text: name">${site.name}</span>
             </g:link></p>
         </div>
 
         <div class="span12">
-            <legend>Locations <fc:iconHelp title="Location of the site">The location of the site can be represented one or more points or polygons.
+            <h2>Locations <fc:iconHelp title="Location of the site">The location of the site can be represented one or more points or polygons.
                  KML, WKT and shape files are supported for uploading polygons. As are PID's of existing features in the Atlas Spatial Portal.</fc:iconHelp>
-            </legend>
+            </h2>
             <table class="table">
                 <caption>You can have any number of points and areas to describe the locations of this site.</caption>
                 <thead><tr><td>name</td><td>type</td><td>values</td></tr></thead>
@@ -118,8 +129,14 @@
         </bs:form>
 
         <hr />
-        <h2>Debug</h2>
-        <div data-bind="text: ko.toJSON($root)"></div>
+        <div class="debug">
+            <h3 id="debug">Debug</h3>
+            <div style="display: none">
+                Model: <pre data-bind="text: ko.toJSON($root)"></pre>
+                Site : <pre>Site : ${site}</pre>
+            </div>
+        </div>
+
     </div>
 
 <!-- templates -->
@@ -161,7 +178,8 @@
         return parent === undefined ? '' : (parent[prop] === undefined ? '' : parent[prop]);
     }
 
-    var siteData = $.parseJSON('${json}');
+    var siteData = $.parseJSON('${json}'),
+        projectList = ${projectList};
 
     $(function(){
         //$('.dropdown-toggle').dropdown();
@@ -230,6 +248,8 @@
             self.area = ko.observable("${site.area}");
             self.description = ko.observable("${site.description}");
             self.notes = ko.observable("${site.notes}");
+            self.projects = ko.observableArray(${site.projects});
+            self.projectList = projectList;
             self.location = ko.observableArray([]);
             self.loadLocations = function () {
                 var data;
