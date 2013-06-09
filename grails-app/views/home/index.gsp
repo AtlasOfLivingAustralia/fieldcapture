@@ -15,9 +15,10 @@
         sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}"
     }
   </r:script>
-  <r:require modules="gmap3,projectsMap, knockout"/>
+  <r:require modules="knockout"/>
 </head>
 <body>
+    <div id="wrapper" class="container-fluid">
     <div class="row-fluid">
         <div class="span12" id="header">
             <h1 class="pull-left">Field Capture</h1>
@@ -31,11 +32,11 @@
             </form>
         </div>
 
-        <g:if test="${error}">
+        <g:if test="${flash.error}">
             <div class="row-fluid">
                 <div class="alert alert-error">
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    <span>${error}</span>
+                    <span>${flash.error}</span>
                 </div>
             </div>
         </g:if>
@@ -97,6 +98,8 @@
                     <g:each in="${sites}" var="p">
                         <li>
                             <g:link controller="site" action="index" id="${p.siteId}">${p.name}</g:link>
+                            <g:if test="${p.nrm}">${p.nrm}</g:if>
+                            <g:if test="${p.state}"> - <fc:initialiseState>${p.state}</fc:initialiseState></g:if>
                         </li>
                     </g:each>
                 </ul>
@@ -142,21 +145,28 @@
                 <div class="scroll-list" style="height:170px;"><ul id="assessmentList">
                     <g:each in="${assessments}" var="p">
                         <li>
-                            <g:link controller="activity" action="index" id="${p.assessmentId}">${p.name}</g:link>
+                            <g:link controller="activity" action="index" id="">${p.name}</g:link>
                         </li>
                     </g:each>
                 </ul></div>
             </div>
         </div>
+    </div>
 
-        <hr />
-    <div class="debug">
-        <h3 id="debug">Debug</h3>
-        <div style="display: none">
-            <pre data-bind="text: ko.toJSON($root, null, 2)"></pre>
-            <div>Projects : ${projects}</div>
-            <div>Sites : ${sites}</div>
+    <hr />
+    <div class="expandable-debug">
+        <h3>Debug</h3>
+        <div>
+            <!--h4>KO model</h4>
+            <pre data-bind="text:ko.toJSON($root,null,2)"></pre-->
+            <h4>Activities</h4>
+            <pre>${activities}</pre>
+            <h4>Sites</h4>
+            <pre>${sites}</pre>
+            <h4>Projects</h4>
+            <pre>${projects}</pre>
         </div>
+    </div>
     </div>
 
 <r:script>
@@ -189,6 +199,14 @@
         });
     });
 
+    function initialiseState(state) {
+        var words = state.split(' '),
+            initials = '';
+        for(var i=0; i < words.length; i++) {
+            initials += words[i][1]
+        }
+        return initials;
+    }
     /* This implementation of list filtering is not used but is left for reference.
        The jQuery implementation is quicker and cleaner in this case. This may
        not be true if the data model is needed for other purposes.
