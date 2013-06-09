@@ -1,5 +1,7 @@
 package au.org.ala.fieldcapture
 
+import groovy.xml.MarkupBuilder
+
 import static org.github.bootstrap.Attribute.outputAttributes
 
 class FCTagLib {
@@ -71,6 +73,70 @@ class FCTagLib {
         out <<
         """<a href="#" class="helphover" data-original-title="${attrs.title}"
  data-content="${body()}" ><i class="icon-question-sign"></i></a>"""
+    }
+
+    def initialiseState = { attrs, body ->
+        switch (body()) {
+            case 'Queensland': out << 'QLD'; break
+            case 'Victoria': out << 'VIC'; break
+            default:
+                def words = body().tokenize(' ')
+                out << words.collect({it[0]}).join()
+        }
+    }
+
+    /**
+     * @attr active
+     */
+    def navbar = { attrs ->
+
+        def mb = new MarkupBuilder(out)
+
+        mb.ul(class:'nav') {
+            li(class:attrs.active == 'home' ? 'active' : '') {
+                a(href:createLink(uri: '/')) {
+                    i(class:"icon-home") {
+                        mkp.yieldUnescaped("&nbsp;")
+                    }
+                    mkp.yieldUnescaped("&nbsp")
+                    mkp.yield(message(code:'default.home.label', default: 'Home'))}
+            }
+            li(class:attrs.active == 'about' ? 'active' : '') {
+                a(href:createLink(controller: 'about')) {
+                    i(class:"icon-question-sign") {
+                        mkp.yieldUnescaped("&nbsp;")
+                    }
+                    mkp.yieldUnescaped("&nbsp")
+                    mkp.yield(message(code:'default.about.label', default: 'About'))
+                }
+            }
+        }
+
+    }
+
+    def navSeparator = { attrs, body ->
+        out << "&nbsp;&#187;&nbsp;"
+    }
+
+    /**
+     * @attr active
+     * @attr title
+     * @attr href
+     */
+    def breadcrumbItem = { attrs, body ->
+        def active = attrs.active
+        if (!active) {
+            active = attrs.title
+        }
+        def current = pageProperty(name:'page.pageTitle')?.toString()
+
+        def mb = new MarkupBuilder(out)
+        mb.li(class: active == current ? 'active' : '') {
+            a(href:attrs.href) {
+                i(class:'icon-chevron-right') { mkp.yieldUnescaped('&nbsp;')}
+                mkp.yield(attrs.title)
+            }
+        }
     }
 
 }
