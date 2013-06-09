@@ -1,0 +1,9 @@
+{"activities":[
+{"name":"DECCW vegetation assessment","outputs":["Weed Abundance & Threat Score"]},
+{"name":"Feral animal assessment","outputs":["Feral Animal Abundance Score","Feral Animal Frequency Score"]}
+],
+"outputs":[
+    {"name":"Weed Abundance & Threat Score","template":"weedAbundanceAndThreatScore","scoreName":"totalWeedAbundanceAndThreatScore"},
+    {"name":"Feral Animal Abundance Score","template":"feralAnimalAbundanceScore","scoreName":"totalFeralAnimalAbundanceScore"},
+    {"name":"Feral Animal Frequency Score","template":"feralAnimalFrequencyScore","scoreName":"totalFeralAnimalFrequencyScore"}
+]}
