@@ -11,7 +11,8 @@ class ActivityController {
     def index(String id) {
         def activity = activityService.get(id)
         if (!activity || activity.error) {
-            forward(action: 'list', model: [error: activity.error])
+            flash.error = activity.error
+            redirect(controller: 'home')
         } else {
             //todo: ensure there are no control chars (\r\n etc) in the json as
             //todo:     this will break the client-side parser
@@ -91,6 +92,7 @@ class ActivityController {
     def list() {
         // will show a list of activities
         // but for now just go home
-        forward(controller: 'home')
+        log.debug('redirecting to home')
+        redirect(controller: 'home')
     }
 }
