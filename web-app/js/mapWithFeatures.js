@@ -64,6 +64,7 @@
                 streetViewControl: false,
                 mapTypeControl: false,
                 mapTypeId: google.maps.MapTypeId.TERRAIN,
+                scrollwheel: options.scrollwheel,
                 zoomControlOptions: {
                     style: 'DEFAULT'
                 }
