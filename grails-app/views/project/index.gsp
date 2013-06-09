@@ -20,47 +20,32 @@
     <r:require modules="gmap3,mapWithFeatures,knockout"/>
 </head>
 <body>
-<ul class="breadcrumb">
-    <li><g:link controller="home">Home</g:link> <span class="divider">/</span></li>
-    <li class="active">${project.name}</li>
-</ul>
 <div class="container-fluid">
+
+    <legend>
+        <table style="width: 100%">
+            <tr>
+                <td>Project<fc:navSeparator/>${project.name}</td>
+            </tr>
+        </table>
+    </legend>
+
     <div class="row-fluid">
         <div class="row-fluid">
             <div class="clearfix">
                 <h1 class="pull-left">${project?.name}</h1>
-                <g:link data-bb="confirm" action="delete" id="${project.projectId}" class="btn pull-right title-btn">Delete project</g:link>
                 <g:link action="edit" id="${project.projectId}" class="btn pull-right title-btn">Edit project</g:link>
             </div>
             <div>
-                <p class="well well-small more" %{--style="height:93px;overflow:auto";--}%>${project.description}</p>
+                <a href="${grailsApplication.config.collectory.baseURL +
+                        'public/show/' + project.organisation}">${organisationName}</a>
+            </div>
+            <div>
+                <p class="well well-small more">${project.description}</p>
             </div>
         </div>
     </div>
-    <div class="row-fluid space-after">
-        <span class="span3">
-            <span class="label preLabel">External Id:</span> <span data-bind="text:externalId"></span>
-        </span>
-        <span class="span3">
-            <span class="label preLabel">Manager:</span> <span data-bind="text:manager"></span>
-        </span>
-        <span class="span6">
-            <span class="label preLabel">Organisation:</span>
-            <a href="${grailsApplication.config.collectory.baseURL +
-                    'public/show/' + project.organisation}">${organisationName}</a>
-        </span>
-    </div>
-    <div class="row-fluid">
-        <span class="span3">
-            <span class="label preLabel">Grant Id:</span> <span data-bind="text:grantId"></span>
-        </span>
-        <span class="span3">
-            <span class="label preLabel">Planned start date:</span> <span data-bind="text:plannedStartDate.formattedDate"></span>
-        </span>
-        <span class="span6">
-            <span class="label preLabel">Planned end date:</span> <span data-bind="text:plannedEndDate.formattedDate"></span>
-        </span>
-    </div>
+
     <div class="row-fluid">
         <div class="pull-left">
             <h2>Activities</h2>
@@ -70,50 +55,55 @@
         </div>
     </div>
     <div class="row-fluid">
-        <div class="span12">
-            <table class="table table-condensed">
-                <thead>
-                    <tr><th>Site</th><th>Collector</th><th>Type - dates</th></tr>
-                </thead>
-                <tbody data-bind="foreach: activities"><tr>
-                    <td><span data-bind="siteName:$data"></span></td>
+        <table class="table table-condensed" id="activities">
+            <thead>
+                <tr><th></th><th>Type</th><th>From</th><th>To</th><th>Site</th></tr>
+            </thead>
+            <tbody data-bind="foreach:activities">
+                <tr data-bind="attr:{href:'#'+activityId}" data-toggle="collapse" class="accordion-toggle">
                     <td>
-                        <span data-bind="text:collector"></span>
+                        <div>
+                            <a><i class="icon-plus" title="expand"></i></a>
+                        </div>
                     </td>
-                    <td>
-                        <a data-bind="text: name, click: $root.openActivity"></a>
-                        <button data-bind="click: $root.notImplemented" type="button" class="close" title="delete">&times;</button>
+                    <td><span data-bind="text:type"></span></td>
+                    <td><span data-bind="text:startDate.formattedDate"></span></td>
+                    <td><span data-bind="text:endDate.formattedDate"></span></td>
+                    <td><a data-bind="siteName:siteId, click: $root.openSite"></a></td>
+                </tr>
+                <tr class="hidden-row">
+                    <td></td>
+                    <td colspan="5">
+                        <div class="collapse" data-bind="attr: {id:activityId}">
+                            <ul class="unstyled">
+                                <!-- ko foreach:outputs -->
+                                <li>
+                                    <div class="row-fluid">
+                                    <span class="span1 offset1">
+                                        <a data-bind="attr: {href: '${createLink(controller: "output", action: "index")}' + '/' + outputId}"><i class="icon-eye-open" title="View data"></i></a>
+                                        <a data-bind="attr: {href: '${createLink(controller: "output", action: "edit")}' + '/' + outputId}"><i class="icon-edit" title="Add/Edit data"></i></a>
+                                        <i data-bind="click: $root.deleteOutput" class="icon-trash" title="Clear all data"></i>
+                                    </span>
+                                    <span class="span4"><span data-bind="text:name"></span></span>
+                                    <span class="span3">Score = <b><span data-bind="firstValue:scores"></span></b></span>
+                                    </div>
+                                </li>
+                                <!-- /ko -->
+                                <!-- ko foreachMissingOutput:metaModel.outputs -->
+                                <li>
+                                    <span class="span1 offset1">
+                                        <a data-bind="attr: {href: '${createLink(controller: "output", action: "edit")}' + '/'}"><i class="icon-edit" title="Add data"></i></a>
+                                    </span>
+                                    <span class="span4" data-bind="text:$data"></span>
+                                    <span class="span4">Not assessed yet.</span>
+                                </li>
+                                <!-- /ko -->
+                            </ul>
+                        </div>
                     </td>
-                </tr></tbody>
-            </table>
-        </div>
-    </div>
-    <div class="row-fluid">
-        <div class="pull-left">
-            <h2>Assessments</h2>
-        </div>
-        <div class="pull-right" style="margin-top: 30px;">
-            <button data-bind="click: $root.notImplemented" type="button" class="btn">Add new assessment</button>
-        </div>
-    </div>
-    <div class="row-fluid">
-        <div class="span12">
-            <table class="table table-condensed">
-                <thead>
-                    <tr><th>Site</th><th>Assessor</th><th>Type - dates</th></tr>
-                </thead>
-                <tbody data-bind="foreach: assessments"><tr>
-                    <td><span data-bind="siteName:$data"></span></td>
-                    <td>
-                        <span data-bind="text:collector"></span>
-                    </td>
-                    <td>
-                        <a data-bind="text: name, click: $root.openActivity"></a>
-                        <button data-bind="click: $root.notImplemented" type="button" class="close" title="delete">&times;</button>
-                    </td>
-                </tr></tbody>
-            </table>
-        </div>
+                </tr>
+            </tbody>
+        </table>
     </div>
     <div class="row-fluid">
         <div class="pull-left">
@@ -126,7 +116,7 @@
         </div>
     </div>
     <div class="row-fluid">
-        <div class="span5">
+        <div class="span5" id="sites-scroller">
             <ul class="unstyled inline" data-bind="foreach: sites">
                 <li class="siteInstance" data-bind="event: {mouseover: $root.highlight, mouseout: $root.unhighlight}">
                     <a data-bind="text: name, click: $root.openSite"></a>
@@ -140,13 +130,17 @@
     </div>
 
     <hr />
-    <div class="debug">
-        <h3 id="debug">Debug</h3>
-        <div style="display: none">
-            <pre data-bind="text: 'activities: ' + ko.toJSON(activities, null, 2)"></pre>
-            <pre data-bind="text: 'assessments: ' + ko.toJSON(assessments, null, 2)"></pre>
-            <pre>sites : ${json}</pre>
-            <pre>project : ${project}</pre>
+    <div class="expandable-debug">
+        <h3>Debug</h3>
+        <div>
+            <h4>KO model</h4>
+            <pre data-bind="text:ko.toJSON($root,null,2)"></pre>
+            <h4>Activities</h4>
+            <pre data-bind="text:ko.toJSON(activities,null,2)"></pre>
+            <h4>Sites</h4>
+            <pre>${json}</pre>
+            <h4>Project</h4>
+            <pre>${project}</pre>
             %{--<pre>Map features : ${mapFeatures}</pre>--}%
         </div>
     </div>
@@ -155,7 +149,8 @@
         $(window).load(function () {
             var json = $.parseJSON('${json}');
             var map = init_map_with_features({
-                    mapContainer: "map"
+                    mapContainer: "map",
+                    scrollwheel: false
                 },
                 $.parseJSON('${mapFeatures}')
             );
@@ -177,22 +172,82 @@
                     });
                 }
             });
+            // change toggle icon when expanding and collapsing
+            $('#activities').
+            on('show', 'div.collapse', function() {
+                $(this).parents('tr').prev().find('td:first-child i').
+                    removeClass('icon-plus').addClass('icon-minus');
+            }).
+            on('hide', 'div.collapse', function() {
+                $(this).parents('tr').prev().find('td:first-child i').
+                    removeClass('icon-minus').addClass('icon-plus');
+            });
+
+            ko.bindingHandlers.firstValue = {
+                init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+                    var scores = ko.utils.unwrapObservable(valueAccessor()),
+                        score = '';
+
+                    for (var key in scores) {
+                        if (scores.hasOwnProperty(key)) {
+                            score = scores[key];
+                        }
+                    }
+                    $(element).html(score);
+                }
+            };
+
+            ko.bindingHandlers.foreachMissingOutput = {
+                transformObject: function (obj, bindingContext) {
+                    var parent = bindingContext.$data,
+                        outputs = parent.outputs();
+                    $.each(outputs, function (i, o) {
+                        var i = obj.indexOf(o.name);
+                        if (i > -1) {
+                            obj.splice(i,1);
+                        }
+                    });
+                    return obj;
+                },
+                init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+                    var value = ko.utils.unwrapObservable(valueAccessor()),
+                        newValue = ko.bindingHandlers.foreachMissingOutput.transformObject(value, bindingContext);
+                    ko.applyBindingsToNode(element, { foreach: newValue });
+                    return { controlsDescendantBindings: true };
+                }
+            };
+            ko.virtualElements.allowedBindings.foreachMissingOutput = true;
+
+            ko.bindingHandlers.foreachprop = {
+                transformObject: function (obj) {
+                    var properties = [];
+                    for (var key in obj) {
+                        if (obj.hasOwnProperty(key)) {
+                            properties.push({ key: key, value: obj[key] });
+                        }
+                    }
+                    return properties;
+                },
+                init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+                    var value = ko.utils.unwrapObservable(valueAccessor()),
+                        properties = ko.bindingHandlers.foreachprop.transformObject(value);
+                    ko.applyBindingsToNode(element, { foreach: properties });
+                    return { controlsDescendantBindings: true };
+                }
+            };
 
             ko.bindingHandlers.siteName =  {
                 init: function(element, valueAccessor, allBindingsAccessor, model, bindingContext) {
-                    var activity = ko.utils.unwrapObservable(valueAccessor()),
-                        siteId, site,
+                    var siteId = ko.utils.unwrapObservable(valueAccessor()),
+                        site,
                         sites = bindingContext.$root.sites();
-                    if (activity) {
-                        siteId = activity.siteId();
-                        if (siteId) {
-                            site = $.grep(sites, function(obj, i) {
-                                return (obj.siteId() === siteId);
-                            });
-                            if (site.length > 0) {
-                                $(element).html(site[0].name());
-                                return;
-                            }
+                    if (siteId) {
+                        site = $.grep(sites, function(obj, i) {
+                            return (obj.siteId() === siteId);
+                        });
+                        if (site.length > 0) {
+                            $(element).html(site[0].name());
+                            return;
                         }
                     }
                     $(element).html('no site');
@@ -201,6 +256,32 @@
 
             function ViewModel(project, sites, activities, assessments) {
                 var self = this;
+                this.loadActivities = function (activities) {
+                    var acts = ko.observableArray([]);
+                    $.each(activities, function (i, act) {
+                        var activity = {
+                            activityId: act.activityId,
+                            siteId: act.siteId,
+                            type: act.type,
+                            startDate: ko.observable(act.startDate).extend({simpleDate:false}),
+                            endDate: ko.observable(act.endDate).extend({simpleDate:false}),
+                            outputs: ko.observableArray([]),
+                            collector: act.collector,
+                            metaModel: act.model
+                        };
+                        $.each(act.outputs, function (j, out) {
+                            activity.outputs.push({
+                                outputId: out.outputId,
+                                name: out.name,
+                                collector: out.collector,
+                                assessmentDate: out.assessmentDate,
+                                scores: out.scores
+                            });
+                        });
+                        acts.push(activity);
+                    });
+                    return acts;
+                };
                 self.name = ko.observable(project.name);
                 self.description = ko.observable(project.description);
                 self.externalId = ko.observable(project.externalId);
@@ -209,8 +290,7 @@
                 self.plannedStartDate = ko.observable(project.plannedStartDate).extend({simpleDate: false});
                 self.plannedEndDate = ko.observable(project.plannedEndDate).extend({simpleDate: false});
                 self.organisation = ko.observable(project.organisation);
-                self.activities = ko.mapping.fromJS(activities);
-                self.assessments = ko.mapping.fromJS(assessments);
+                self.activities = self.loadActivities(activities);
                 this.sites = ko.mapping.fromJS(sites);
                 this.removeSite = function () {
                    var that = this,
@@ -222,7 +302,8 @@
                     });
                 };
                 this.openSite = function () {
-                    document.location.href = fcConfig.siteViewUrl + '/' + this.siteId();
+                    var site = ko.toJS(this);
+                    document.location.href = fcConfig.siteViewUrl + '/' + site.siteId;
                 };
                 this.openActivity = function () {
                     document.location.href = fcConfig.activityViewUrl + '/' + this.activityId();
@@ -244,7 +325,7 @@
                 };
             }
 
-            var viewModel = new ViewModel(${project},json,${activities},${assessments});
+            var viewModel = new ViewModel(${project},json,${activities ?: []},${assessments ?: []});
 
             ko. applyBindings(viewModel);
         });
