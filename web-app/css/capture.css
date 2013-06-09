@@ -1,15 +1,61 @@
+/* All lines marked with /*FIXED FOOTER/ are part of the css to fix the footer to the bottom
+   of the visible page. This only affects pages with short content.
+*/
+
+html {
+    height: 100%; /*FIXED FOOTER*/
+}
+
+body {
+    padding-top: 60px;
+    padding-bottom: 90px;
+    height: 100%; /*FIXED FOOTER*/
+}
+
+#fixed-footer-wrapper {  /*FIXED FOOTER*/
+    min-height: 100%;
+    height: auto !important; /* for IE6 */
+    height: 100%;            /* for IE6 */
+    margin: 0 auto -497px;
+}
+
+footer, .push {
+    height: 497px; /*FIXED FOOTER*/
+}
+
+footer {
+    width: 100%;
+    background-color: #efefef;
+}
+
+footer img {
+    max-width: inherit;
+}
+
+#buttonBar .btn {
+    margin-top: 0px;
+}
+
 .strong {
     font-weight: bold;
+}
+
+.inline {
+    display: inline;
+}
+
+.btn-link {
+    color: #456e9c;
+}
+
+.discreet {
+    color: #333;
 }
 
 #banner img {
     float: right;
     /*background: transparent url("../images/banner-250.png") no-repeat;
     height: 200px;*/
-}
-
-#header {
-    border-bottom: 2px solid #ff4500 ;
 }
 
 #header h1 {
@@ -49,6 +95,11 @@
 #project-list {
     margin-left: 24px;
     width: 300px;
+}
+
+#sites-scroller {
+    overflow: auto;
+    height: 600px;
 }
 
 .accordion-body {
@@ -103,6 +154,11 @@ table.dyn thead, table.dyn tfoot, td.shaded {
 table.dyn input[type="text"] {margin-bottom: 0}
 table.dyn tfoot .value {font-weight: bold}
 table.dyn thead th {text-align: center}
+
+tr.hidden-row td {
+    border: none;
+    padding: 0;
+}
 
 .percent:after {
     content: "%"
@@ -172,7 +228,7 @@ i[class^="icon-remove"]:hover {
     margin-left: 0;
 }
 
-/* list bos with filter */
+/* list box with filter */
 .list-box {
     height:700px;
 }
