@@ -5,14 +5,41 @@ import org.codehaus.groovy.grails.web.mapping.LinkGenerator
 
 class SiteService {
 
-    def webService, grailsApplication
+    def webService, grailsApplication, commonService, cacheService
     LinkGenerator grailsLinkGenerator
-
-    static testSites = [:]
-    static projects = [:]
 
     def list() {
         webService.getJson(grailsApplication.config.ecodata.baseUrl + 'site/').list
+    }
+
+    def injectLocationMetadata(List sites) {
+        sites.each { site ->
+            injectLocationMetadata(site)
+        }
+        sites
+    }
+
+    def injectLocationMetadata(Object site) {
+        def loc = getFirstPointLocation(site)
+        if (loc && loc.data?.decimalLatitude && loc.data?.decimalLongitude) {
+            site << getLocationMetadataForPoint(loc.data.decimalLatitude, loc.data.decimalLongitude)
+        }
+        site
+    }
+
+    def getFirstPointLocation(site) {
+        site.location?.find {
+            it.type == 'locationTypePoint'
+        }
+    }
+
+    def getLocationMetadataForPoint(lat, lng) {
+        cacheService.get(lat + ',' + lng, {
+            def url = 'http://spatial.ala.org.au/ws/intersect/cl22,cl916/-29.911/132.769'
+            def features = webService.getJson(url)
+            [state: features.find({it.field == 'cl22'})?.value,
+             nrm: features.find({it.field == 'cl916'})?.value]
+        })
     }
 
     def getSitesFromIdList(ids) {
@@ -23,15 +50,9 @@ class SiteService {
         result
     }
 
-    def getTestProjects() {
-        if (!testSites) {
-            loadTestSites()
-        }
-        return projects
-    }
-
-    def get(id) {
-        webService.getJson(grailsApplication.config.ecodata.baseUrl + 'site/' + id)
+    def get(id, Map urlParams = [:]) {
+        webService.getJson(grailsApplication.config.ecodata.baseUrl + 'site/' + id +
+                commonService.buildUrlParamsFromMap(urlParams))
     }
 
     def update(id, body) {
@@ -106,78 +127,5 @@ class SiteService {
             ]
     }
 
-    static metaView() {
-        return [domain: 'site',
-                fields: [
-                    [field:'siteName', label:'Site name', style:'title'],
-                    [field:'externalId', label:'External Id', help:'to do'],
-                    [field:'type', label:'Type'],
-                    [field:'area', label:'Area (decimal hectares)', help:'to do'],
-                    [field:'description', label:'Description'],
-                    [field:'notes', label:'Notes'],
-                    [field:'decimalLatitude', label:'Latitude']
-                    // etc
-                ]]
-    }
 
-    static dummySites = [
-           [site_id: 1,
-            site_external_id: '',
-            site_name: 'ASH-MACC-A - 2',
-            site_type: '',
-            site_creation_date: '',
-            site_description: '',
-            site_habitat: '',
-            site_polygon: '',
-            site_latitude: '',
-            site_longitude: '',
-            site_uncertainty: '',
-            site_precision: '',
-            datum: '',
-            site_area: '',
-            site_recording_method: '',
-            site_land_tenure: '',
-            site_protection_mechanism: '',
-            site_activities: '',
-            activity_description: '',
-            media_id: '',
-            media_type: '',
-            site_notes: ''
-           ]
-    ]
-
-    def loadTestSites() {
-        testSites = [:]
-        projects = [:]
-        def testFile = new File('/data/fieldcapture/site-test-data.csv')
-        testFile.eachCsvLine { tokens ->
-            def site = [site_name: tokens[4],
-                    site_id: tokens[4].encodeAsMD5(), // base on name for now
-                    organisation_name: tokens[1],
-                    project_name: tokens[2],
-                    latitude: tokens[10],
-                    longitude: tokens[9],
-                    site_notes: tokens[13],
-                    site_comments: tokens[15]
-            ]
-            if (site.site_name != 'SITE_NAME' && site.site_name != 'Site Name') {
-                testSites.put site.site_id, site
-                def projectId = site.project_name.encodeAsMD5()
-                if (!projects.containsKey(projectId)) {
-                    projects.put projectId, [project_name: site.project_name,
-                            project_id: projectId, project_sites: []]
-                }
-                if (site.project_name != '') {
-                    projects[projectId].project_sites << site.site_id
-                    projects[projectId].latitude = site.latitude
-                    projects[projectId].longitude = site.longitude
-                }
-            }
-        }
-        //testSites.each { println it }
-        println testSites.size() + " sites"
-        println projects.size() + " projects"
-
-
-    }
 }

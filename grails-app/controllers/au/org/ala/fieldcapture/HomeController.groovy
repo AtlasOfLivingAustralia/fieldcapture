@@ -6,10 +6,10 @@ class HomeController {
 
     def index() {
         [
-                projects: projectService.list(),
-                sites: siteService.list(),
-                activities: activityService.list(),
-                assessments: activityService.assessments()
+            projects: projectService.list(),
+            sites: siteService.injectLocationMetadata(siteService.list()),
+            activities: activityService.list(),
+            assessments: activityService.assessments()
         ]
     }
 }

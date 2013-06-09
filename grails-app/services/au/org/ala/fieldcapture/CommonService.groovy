@@ -10,6 +10,15 @@ class CommonService {
 
     LinkGenerator grailsLinkGenerator
 
+    def buildUrlParamsFromMap(map) {
+        if (!map) return ''
+        def params = '?'
+        map.eachWithIndex { k,v,i ->
+            params += (i?'&':'') + k + '=' + v
+        }
+        params
+    }
+
     def simpleDateLocalTime(String dateStr) {
         if (!dateStr) { return '' }
         def cal = DatatypeConverter.parseDateTime(dateStr)

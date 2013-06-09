@@ -18,8 +18,9 @@ class ProjectService {
         projects
     }
 
-    def list() {
-        def resp = webService.getJson(grailsApplication.config.ecodata.baseUrl + 'project/')
+    def list(brief = false) {
+        def params = brief ? '?brief=true' : ''
+        def resp = webService.getJson(grailsApplication.config.ecodata.baseUrl + 'project/' + params)
         resp.list
     }
 

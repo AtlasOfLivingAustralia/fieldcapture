@@ -1,7 +1,5 @@
 package au.org.ala.fieldcapture
 
-
-
 import grails.test.mixin.*
 import org.junit.*
 
@@ -11,7 +9,9 @@ import org.junit.*
 @TestFor(CommonService)
 class CommonServiceTests {
 
-    void testSomething() {
-        fail "Implement me"
+    void testBuildUrlParamsFromMap() {
+        assertEquals '',service.buildUrlParamsFromMap([:])
+        assertEquals '?key=value',service.buildUrlParamsFromMap([key:'value'])
+        assertEquals '?key1=value1&key2=value2',service.buildUrlParamsFromMap([key1:'value1',key2:'value2'])
     }
 }
