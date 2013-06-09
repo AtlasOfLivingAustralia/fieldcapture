@@ -10,7 +10,6 @@
 <body>
     <ul class="breadcrumb">
         <li><g:link controller="home">Home</g:link> <span class="divider">/</span></li>
-        <li><g:link controller="project" action="index" id="${site.projectId}">${site.projectName}</g:link><span class="divider">/</span></li>
         <li class="active">${site.name}</li>
     </ul>
     <div class="container-fluid">
@@ -24,6 +23,17 @@
                 <div class="clearfix">
                     <p class="well well-small">${site.description}</p>
                 </div>
+            </div>
+            <div>
+                <span class="span2">Projects:</span>
+                <ul style="list-style: none;margin:13px 0;">
+                    <g:each in="${site.projects}" var="p" status="count">
+                        <li>
+                            <g:link controller="project" action="index" id="${p.projectId}">${p.name}</g:link>
+                            <g:if test="${count < site.projects.size() - 1}">, </g:if>
+                        </li>
+                    </g:each>
+                </ul>
             </div>
             <div>
                 <span class="span4">External Id: ${site.externalId}</span>
@@ -84,7 +94,7 @@
     <r:script>
 
         var isodatePattern = /\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ/,
-            activitiesObject = ${site.activities};
+            activitiesObject = ${site.activities + site.assessments};
 
         function toSimpleDate(isoDate) {
             if (isoDate && isodatePattern.test(isoDate)) {
@@ -98,6 +108,7 @@
                 var self = this;
                 self.activities = ko.observableArray([]);
                 self.loadActivity = function (act) {
+                    if (!act) { return }
                     act.startDate = toSimpleDate(act.startDate);
                     act.endDate = toSimpleDate(act.endDate);
                     self.activities.push(act);
