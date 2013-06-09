@@ -25,10 +25,10 @@ class CacheService {
     def get(String key, Closure source, int maxAgeInDays = 1) {
         def cached = cache[key]
         if (cached && cached.resp && !(new Date().after(cached.time + maxAgeInDays))) {
-            println "using cache for " + key
+            //println "using cache for " + key
             return cached.resp
         }
-        println "retrieving " + key
+        //println "retrieving " + key
         def results = source.call()
         cache.put key, [resp: results, time: new Date()]
         return results
