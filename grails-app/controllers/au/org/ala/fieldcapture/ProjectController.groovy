@@ -4,7 +4,7 @@ import grails.converters.JSON
 
 class ProjectController {
 
-    def projectService, siteService, metadataService, commonService
+    def projectService, siteService, metadataService, commonService, activityService
     static defaultAction = "index"
     static ignore = ['action','controller','id']
 
@@ -14,16 +14,14 @@ class ProjectController {
             forward(action: 'list', model: [error: project.error])
         } else {
             project.sites?.sort {it.name}
+            //log.debug activityService.activitiesForProject(id)
             //todo: ensure there are no control chars (\r\n etc) in the json as
             //todo:     this will break the client-side parser
             [project: project,
-                    json: (project.sites as JSON).toString(),
-                    activities: projectService.getActivities(project).findAll {!it.assessment},
-                    assessments: projectService.getActivities(project).findAll {it.assessment},
-                    //activities: project.activities.findAll {!it.assessment},
-                    //assessments: project.activities.findAll {it.assessment},
-                    mapFeatures: commonService.getMapFeatures(project),
-                    organisationName: metadataService.getInstitutionName(project.organisation)]
+             json: (project.sites as JSON).toString(),
+             activities: activityService.activitiesForProject(id),
+             mapFeatures: commonService.getMapFeatures(project),
+             organisationName: metadataService.getInstitutionName(project.organisation)]
         }
     }
 
