@@ -5,7 +5,7 @@ import org.codehaus.groovy.grails.web.json.JSONArray
 
 class SiteController {
 
-    def siteService
+    def siteService, projectService
 
     static defaultAction = "index"
 
@@ -15,6 +15,7 @@ class SiteController {
         //log.debug(id)
         def site = siteService.get(id)
         if (site) {
+            //siteService.injectLocationMetadata(site)
             [site: site, mapFeatures: siteService.getMapFeatures(site)]
         } else {
             //forward(action: 'list', model: [error: 'no such id'])
@@ -23,13 +24,14 @@ class SiteController {
     }
 
     def edit(String id) {
-        def site = siteService.get(id)
+        def site = siteService.get(id, [raw:'true'])
         if (site) {
             if (site.shapePid && !(site.shapePid instanceof JSONArray)) {
                 log.debug "converting to array"
                 site.shapePid = [site.shapePid] as JSONArray
             }
-            [site: site, json: (site as JSON).toString(), meta: siteService.metaModel()]
+            [site: site, json: (site as JSON).toString(), meta: siteService.metaModel(),
+                projectList: projectService.list(true)]
         } else {
             render 'no such site'
         }
