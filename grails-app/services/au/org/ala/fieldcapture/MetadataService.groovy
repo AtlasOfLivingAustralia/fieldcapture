@@ -28,13 +28,14 @@ class MetadataService {
         })
     }
 
-    def getModelName(output, type) {
-        return output.template ?: getModelNameFromType(type)
+    def getModelName(outputName) {
+        return activitiesModel().outputs.find({it.name == outputName})?.template
     }
 
     def getModelNameFromType(type) {
-        //log.debug "Getting model name for ${type}"
-        return activitiesModel().find({it.name == type})?.template
+        log.debug "Getting model name for ${type}"
+        log.debug activitiesModel()
+        return activitiesModel().activities.find({it.name == type})?.template
     }
 
     def activityTypesList() {
