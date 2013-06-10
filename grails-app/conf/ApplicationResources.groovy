@@ -53,4 +53,7 @@ modules = {
         resource url: '/bootstrap/css/bootstrap-responsive.min.css'
     }
 
+    amplify {
+        resource url: '/js/amplify.min.js'
+    }
 }
