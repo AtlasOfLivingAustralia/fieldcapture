@@ -17,7 +17,7 @@
         sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}"
     }
     </r:script>
-    <r:require modules="gmap3,mapWithFeatures,knockout"/>
+    <r:require modules="gmap3,mapWithFeatures,knockout,amplify"/>
 </head>
 <body>
 <div class="container-fluid">
@@ -59,7 +59,7 @@
             <thead>
                 <tr><th></th><th>Type</th><th>From</th><th>To</th><th>Site</th></tr>
             </thead>
-            <tbody data-bind="foreach:activities">
+            <tbody data-bind="foreach:activities" id="activityList">
                 <tr data-bind="attr:{href:'#'+activityId}" data-toggle="collapse" class="accordion-toggle">
                     <td>
                         <div>
@@ -75,29 +75,20 @@
                     <td></td>
                     <td colspan="5">
                         <div class="collapse" data-bind="attr: {id:activityId}">
-                            <ul class="unstyled">
-                                <!-- ko foreach:outputs -->
+                            <ul class="unstyled well well-small"
+                                data-bind="foreachModelOutput:metaModel.outputs">
                                 <li>
                                     <div class="row-fluid">
-                                    <span class="span1 offset1">
-                                        <a data-bind="attr: {href: '${createLink(controller: "output", action: "index")}' + '/' + outputId}"><i class="icon-eye-open" title="View data"></i></a>
-                                        <a data-bind="attr: {href: '${createLink(controller: "output", action: "edit")}' + '/' + outputId}"><i class="icon-edit" title="Add/Edit data"></i></a>
-                                        <i data-bind="click: $root.deleteOutput" class="icon-trash" title="Clear all data"></i>
-                                    </span>
-                                    <span class="span4"><span data-bind="text:name"></span></span>
-                                    <span class="span3">Score = <b><span data-bind="firstValue:scores"></span></b></span>
+                                        <span class="span4" data-bind="text:name"></span>
+                                        <span class="span3" data-bind="text:score"></span>
+                                        <span class="span1 offset1">
+                                            <a data-bind="attr: {href: '${createLink(controller: "output", action: "edit")}' + '/' + outputId}">
+                                                <i data-bind="attr: {title: outputId == '' ? 'Add data' : 'Edit data'}" class="icon-edit"></i>
+                                            </a>
+                                        </span>
                                     </div>
                                 </li>
-                                <!-- /ko -->
-                                <!-- ko foreachMissingOutput:metaModel.outputs -->
-                                <li>
-                                    <span class="span1 offset1">
-                                        <a data-bind="attr: {href: '${createLink(controller: "output", action: "edit")}' + '/'}"><i class="icon-edit" title="Add data"></i></a>
-                                    </span>
-                                    <span class="span4" data-bind="text:$data"></span>
-                                    <span class="span4">Not assessed yet.</span>
-                                </li>
-                                <!-- /ko -->
+
                             </ul>
                         </div>
                     </td>
@@ -172,7 +163,7 @@
                     });
                 }
             });
-            // change toggle icon when expanding and collapsing
+            // change toggle icon when expanding and collapsing and track open state
             $('#activities').
             on('show', 'div.collapse', function() {
                 $(this).parents('tr').prev().find('td:first-child i').
@@ -181,43 +172,70 @@
             on('hide', 'div.collapse', function() {
                 $(this).parents('tr').prev().find('td:first-child i').
                     removeClass('icon-minus').addClass('icon-plus');
+            }).
+            on('shown', 'div.collapse', function() {
+                trackState();
+            }).
+            on('hidden', 'div.collapse', function() {
+                trackState();
             });
 
-            ko.bindingHandlers.firstValue = {
-                init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
-                    var scores = ko.utils.unwrapObservable(valueAccessor()),
-                        score = '';
+            function trackState () {
+                var $leaves = $('#activityList div.collapse'),
+                    state = [];
+                $.each($leaves, function (i, leaf) {
+                    state.push($(leaf).hasClass('in'));
+                });
+                amplify.store.sessionStorage('output-accordion-state',state);
+            }
 
-                    for (var key in scores) {
-                        if (scores.hasOwnProperty(key)) {
-                            score = scores[key];
-                        }
+            function readState () {
+                var hidden = $('#activityList div.collapse'),
+                    state = amplify.store.sessionStorage('output-accordion-state');
+                $.each(hidden, function (i, leaf) {
+                    if (state !== undefined && i < state.length && state[i]) {
+                        $(leaf).collapse('show');
                     }
-                    $(element).html(score);
-                }
-            };
+                });
+            }
 
-            ko.bindingHandlers.foreachMissingOutput = {
-                transformObject: function (obj, bindingContext) {
-                    var parent = bindingContext.$data,
-                        outputs = parent.outputs();
-                    $.each(outputs, function (i, o) {
-                        var i = obj.indexOf(o.name);
-                        if (i > -1) {
-                            obj.splice(i,1);
-                        }
-                    });
-                    return obj;
-                },
+            //iterates over the outputs specified in the meta-model and builds a temp object for
+            // each containing the name, and the score and id of any matching outputs in the data
+            ko.bindingHandlers.foreachModelOutput = {
                 init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
-                    var value = ko.utils.unwrapObservable(valueAccessor()),
-                        newValue = ko.bindingHandlers.foreachMissingOutput.transformObject(value, bindingContext);
-                    ko.applyBindingsToNode(element, { foreach: newValue });
+                    var metaOutputs = ko.utils.unwrapObservable(valueAccessor()),
+                        activity = bindingContext.$data,
+                        transformedOutputs = [];
+
+                    $.each(metaOutputs, function (i, name) {
+                        var score = "Not assessed yet.",
+                            outputId = '';
+
+                        // search for corresponding outputs in the data
+                        $.each(activity.outputs(), function (i,output) {
+                            if (output.name === name) {
+                                outputId = output.outputId;
+                                // the data structure allows for multiple scores per output
+                                // not clear yet if this is required but for now just assume one
+                                for (var key in output.scores) {
+                                    if (output.scores.hasOwnProperty(key)) {
+                                        score = output.scores[key];
+                                    }
+                                }
+                            }
+                        });
+
+                        // build the array that we will actually iterate over in the inner template
+                        transformedOutputs.push({name: name, score: score, outputId: outputId});
+                    });
+
+                    // re-cast the binding to iterate over our new array
+                    ko.applyBindingsToNode(element, { foreach: transformedOutputs });
                     return { controlsDescendantBindings: true };
                 }
             };
-            ko.virtualElements.allowedBindings.foreachMissingOutput = true;
 
+            // todo: not used here but is handy so should go into the common custom ko bindings
             ko.bindingHandlers.foreachprop = {
                 transformObject: function (obj) {
                     var properties = [];
@@ -236,6 +254,7 @@
                 }
             };
 
+            // not used but left for reference
             ko.bindingHandlers.siteName =  {
                 init: function(element, valueAccessor, allBindingsAccessor, model, bindingContext) {
                     var siteId = ko.utils.unwrapObservable(valueAccessor()),
@@ -328,6 +347,8 @@
             var viewModel = new ViewModel(${project},json,${activities ?: []},${assessments ?: []});
 
             ko. applyBindings(viewModel);
+
+            readState();
         });
 
     </r:script>
