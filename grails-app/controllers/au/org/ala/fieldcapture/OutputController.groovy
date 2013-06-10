@@ -15,7 +15,7 @@ class OutputController {
         } else {
             def activity = activityService.get(output.activityId)
             def site = siteService.get(activity.siteId)
-            def modelName = metadataService.getModelName(output, activity.type)
+            def modelName = metadataService.getModelName(output.name)
             [output: output, activity: activity, site: site,
                  model: metadataService.getDataModel(modelName)]
         }
@@ -28,7 +28,7 @@ class OutputController {
         } else {
             def activity = activityService.get(output.activityId)
             def site = siteService.get(activity.siteId)
-            def modelName = metadataService.getModelName(output, activity.type)
+            def modelName = metadataService.getModelName(output.name)
             [output: output, activity: activity, site: site,
                     model: metadataService.getDataModel(modelName)]
         }
