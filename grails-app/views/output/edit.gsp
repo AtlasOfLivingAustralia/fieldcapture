@@ -108,6 +108,7 @@
 
         function ViewModel () {
             var self = this;
+            self.name = "${output.name}";
             self.assessmentDate = ko.observable("${output.assessmentDate}").extend({simpleDate: false});
             self.collector = ko.observable("${output.collector}")/*.extend({ required: true })*/;
             self.activityId = ko.observable("${activity.activityId}");
