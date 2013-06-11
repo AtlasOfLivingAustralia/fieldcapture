@@ -24,6 +24,11 @@ if(System.getenv(ENV_NAME) && new File(System.getenv(ENV_NAME)).exists()) {
 }
 println "(*) grails.config.locations = ${grails.config.locations}"
 
+/******************************************************************************\
+ *  RELOADABLE CONFIG
+ \******************************************************************************/
+reloadable.cfgs = ["file:/data/${appName}/config/${appName}-config.properties"]
+
 grails.project.groupId = "au.org.ala." + appName // change this to alter the default package name and Maven publishing destination
 grails.mime.file.extensions = true // enables the parsing of file extensions from URLs into the request format
 grails.mime.use.accept.header = false
@@ -130,6 +135,7 @@ environments {
         grails.app.context = "/fieldcapture"
         grails.host = "http://ala-testweb1.ala.org.au"
         serverName = "${grails.host}:${server.port}"
+        grails.serverURL = serverName + grails.app.context
 
         security.cas.appServerName = serverName
         security.cas.contextPath = "/" + grails.app.context
@@ -141,6 +147,7 @@ environments {
         grails.app.context = "/fieldcapture"
         grails.host = "http://115.146.94.201"
         serverName = "${grails.host}:${server.port}"
+        grails.serverURL = serverName + grails.app.context
 
         security.cas.appServerName = serverName
         security.cas.contextPath = "/" + grails.app.context
@@ -149,6 +156,7 @@ environments {
     production {
         grails.logging.jul.usebridge = false
         grails.app.context = "/"
+        grails.serverURL = "http://capture.ala.org.au"
 
         security.cas.appServerName = grails.serverURL
         security.cas.contextPath = ""

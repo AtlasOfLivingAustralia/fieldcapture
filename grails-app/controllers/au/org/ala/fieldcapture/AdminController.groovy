@@ -30,14 +30,13 @@ class AdminController {
     def reloadConfig = {
         // reload system config
         def resolver = new PathMatchingResourcePatternResolver()
-        List resources = resolver.getResource(grailsApplication.config.grails.config.locations)
-        if (!resources) {
+        def resource = resolver.getResource(grailsApplication.config.reloadable.cfgs[0])
+        if (!resource) {
             def warning = "No external config to reload. grailsApplication.config.grails.config.locations is empty."
             println warning
             flash.message = warning
             render warning
         } else {
-            def resource = resources[0]
             def stream = null
 
             try {
