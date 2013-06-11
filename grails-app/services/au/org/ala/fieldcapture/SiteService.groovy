@@ -35,7 +35,7 @@ class SiteService {
 
     def getLocationMetadataForPoint(lat, lng) {
         cacheService.get(lat + ',' + lng, {
-            def url = 'http://spatial.ala.org.au/ws/intersect/cl22,cl916/-29.911/132.769'
+            def url = "http://spatial.ala.org.au/ws/intersect/cl22,cl916/${lat}/${lng}"
             def features = webService.getJson(url)
             [state: features.find({it.field == 'cl22'})?.value,
              nrm: features.find({it.field == 'cl916'})?.value]
