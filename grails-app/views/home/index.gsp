@@ -122,9 +122,11 @@
                 </div>
                 <div class="scroll-list" style="height:170px;"><ul id="activityList">
                     <g:each in="${activities}" var="p">
-                        <li>
-                            <g:link controller="activity" action="index" id="${p.activityId}">${p.name}</g:link>
-                        </li>
+                        <g:if test="${!p.assessment}">
+                            <li>
+                                <g:link controller="activity" action="index" id="${p.activityId}">${p.name}</g:link>
+                            </li>
+                        </g:if>
                     </g:each>
                 </ul></div>
             </div>
@@ -144,9 +146,11 @@
                 </div>
                 <div class="scroll-list" style="height:170px;"><ul id="assessmentList">
                     <g:each in="${assessments}" var="p">
-                        <li>
-                            <g:link controller="activity" action="index" id="">${p.name}</g:link>
-                        </li>
+                        <g:if test="${p.assessment}">
+                            <li>
+                                <g:link controller="activity" action="index" id="${p.activityId}">${p.name}</g:link>
+                            </li>
+                        </g:if>
                     </g:each>
                 </ul></div>
             </div>
