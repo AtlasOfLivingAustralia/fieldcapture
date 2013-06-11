@@ -34,6 +34,16 @@ class OutputController {
         }
     }
 
+    def create(String activityId, String outputName) {
+        def output = [activityId: activityId, name: outputName]
+        def activity = activityService.get(output.activityId)
+        def site = siteService.get(activity.siteId)
+        def modelName = metadataService.getModelName(output.name)
+        render view: 'edit', model:
+            [output: output, activity: activity, site: site,
+                model: metadataService.getDataModel(modelName)]
+    }
+
     /**
      * Updates existing or creates new output.
      *
@@ -44,7 +54,7 @@ class OutputController {
      */
     def ajaxUpdate(String id) {
         def postBody = request.JSON
-        if (!id) { id = ''}
+        if (!id || id == 'null') { id = ''}
         println "Body: " + postBody
         println "Params:"
         params.each { println it }
