@@ -82,7 +82,7 @@
                                         <span class="span4" data-bind="text:name"></span>
                                         <span class="span3" data-bind="text:score"></span>
                                         <span class="span1 offset1">
-                                            <a data-bind="attr: {href: '${createLink(controller: "output", action: "edit")}' + '/' + outputId}">
+                                            <a data-bind="attr: {href:editLink}">
                                                 <i data-bind="attr: {title: outputId == '' ? 'Add data' : 'Edit data'}" class="icon-edit"></i>
                                             </a>
                                         </span>
@@ -209,7 +209,8 @@
 
                     $.each(metaOutputs, function (i, name) {
                         var score = "Not assessed yet.",
-                            outputId = '';
+                            outputId = '',
+                            editLink = "${grailsApplication.config.grails.serverURL}/output/";
 
                         // search for corresponding outputs in the data
                         $.each(activity.outputs(), function (i,output) {
@@ -225,8 +226,16 @@
                             }
                         });
 
+                        if (outputId) {
+                            // build edit link
+                            editLink += 'edit/' + outputId;
+                        } else {
+                            // build create link
+                            editLink += 'create?activityId=' + activity.activityId + '&outputName=' + name;
+                        }
                         // build the array that we will actually iterate over in the inner template
-                        transformedOutputs.push({name: name, score: score, outputId: outputId});
+                        transformedOutputs.push({name: name, score: score, outputId: outputId,
+                            editLink: editLink});
                     });
 
                     // re-cast the binding to iterate over our new array
