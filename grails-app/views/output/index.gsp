@@ -9,35 +9,31 @@
     <r:require modules="knockout,jqueryValidationEngine,datepicker"/>
 </head>
 <body>
-<ul class="breadcrumb">
-    <li><g:link controller="home">Home</g:link> <span class="divider">/</span></li>
-    <li><g:link controller="project" id="${site.projectId}">${site.projectName}</g:link> <span class="divider">/</span></li>
-    <li><g:link controller="site" id="${site.siteId}">${site.name}</g:link> <span class="divider">/</span></li>
-    <g:if test="${create}">
-        <li class="active">Create new ouput</li>
-    </g:if>
-    <g:else>
-        <li><g:link controller="activity" id="${activity.activityId}">${activity.type}
-            <span data-bind="text:activityStartDate.formattedDate"></span>-<span data-bind="text:activityEndDate.formattedDate"></span>
-        </g:link><span class="divider">/</span></li>
-        <li class="active">Output</li>
-    </g:else>
-</ul>
 <div class="container-fluid">
-    <div class="row-fluid span12">
-        <h2><div class="span6">
-            Project: <g:link controller="project" action="index" id="${site.projectId}">${site.projectName}</g:link>
+    <legend>
+        <table style="width: 100%">
+            <tr>
+                <td><g:link class="discreet" action="index">Outputs</g:link><fc:navSeparator/>
+                    <g:if test="${create}">create</g:if>
+                    <g:else>
+                        <span data-bind="text:activityType"></span>
+                        <span data-bind="text:activityStartDate.formattedDate"></span>/<span data-bind="text:activityEndDate.formattedDate"></span>
+                    </g:else>
+                </td>
+                <td style="text-align: right"><span></span></td>
+            </tr>
+        </table>
+    </legend>
+    <div class="row-fluid title-block">
+        <div class="span6 title-attribute">
+            <h2>Project: </h2>
+            <g:each in="${projects}" var="p">
+                <g:link controller="project" action="index" id="${p.projectId}">${p.name}</g:link>
+            </g:each>
         </div>
-            <div class="span6">
-                Site: <g:link controller="site" action="index" id="${site.siteId}">${site.name}</g:link>
-            </div></h2>
-    </div>
-    <div class="row-fluid span12" style="padding-bottom: 15px;">
-        <h2>
-            <div class="span12">Activity: <span data-bind="text:activityType"></span>
-                <span data-bind="text:activityStartDate.formattedDate"></span>/<span data-bind="text:activityEndDate.formattedDate"></span>
-            </div>
-        </h2>
+        <div class="span6 title-attribute">
+            <h2>Site: </h2><g:link controller="site" action="index" id="${site.siteId}">${site.name}</g:link>
+        </div>
     </div>
 
     <div class="row-fluid span12">
@@ -55,18 +51,20 @@
     </div>
 
     <hr />
-    <div class="debug row-fluid">
-        <h3 id="debug">Debug</h3>
-        <div style="display:none">
-            <pre data-bind="text: ko.toJSON($root, null, 2)"></pre>
-            <pre>Data model : ${model.dataModel}</pre>
-            <pre>View model : ${model.viewModel}</pre>
-            <pre>Output : ${output}</pre>
-            <pre>Site : ${site}</pre>
-            <pre>Activity : ${activity}</pre>
+    <div class="expandable-debug">
+        <h3>Debug</h3>
+        <div>
+            <h4>KO model</h4>
+            <pre data-bind="text:ko.toJSON($root,null,2)"></pre>
+            <h4>Activity</h4>
+            <pre>${activity}</pre>
+            <h4>Site</h4>
+            <pre>${site}</pre>
+            <h4>Projects</h4>
+            <pre>${projects}</pre>
+            %{--<pre>Map features : ${mapFeatures}</pre>--}%
         </div>
     </div>
-
 </div>
 
 <r:script>
