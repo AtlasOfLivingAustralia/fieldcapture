@@ -163,7 +163,7 @@ class ModelTagLib {
 
     // row model
     def row(out, attrs, model) {
-        out << "<div class=\"row-fluid span12 space-after\">\n"
+        out << "<div class=\"row-fluid space-after\">\n"
         if (model.align == 'right') {
             out << "<div class=\"pull-right\">\n"
         }
@@ -189,7 +189,7 @@ class ModelTagLib {
     }
 
     def grid(out, attrs, model) {
-        out << "<div class=\"row-fluid span12\">\n"
+        out << "<div class=\"row-fluid\">\n"
         out << INDENT*3 << "<table class=\"table table-bordered dyn ${model.source}\">\n"
         gridHeader out, attrs, model
         if (attrs.edit) {
@@ -294,7 +294,7 @@ class ModelTagLib {
     }
 
     def table(out, attrs, model, index) {
-        out << "<div class=\"row-fluid span12\">\n"
+        out << "<div class=\"row-fluid\">\n"
         out << INDENT*3 << "<table class=\"table table-bordered dyn ${model.source}\">\n"
         tableHeader out, attrs, model
         tableBodyEdit out, attrs, model
