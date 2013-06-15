@@ -4,7 +4,7 @@ import grails.converters.JSON
 
 class ActivityController {
 
-    def activityService, siteService, metadataService
+    def activityService, siteService, projectService, metadataService
 
     static ignore = ['action','controller','id']
 
@@ -31,6 +31,18 @@ class ActivityController {
         } else {
             forward(action: 'list', model: [error: 'no such id'])
         }
+    }
+
+    def create(String siteId, String projectId) {
+        def site = siteId ? siteService.get(siteId) : [:]
+        def project = projectId ? projectService.get(projectId) : [:]
+        def activity = [activityId: '']
+        if (site) { activity << [siteId: site.siteId] }
+        if (project) { activity << [projectId: project.projectId] }
+        render view: 'edit', model:
+                [site: site, project: project, activity: activity, create: true,
+                 activityTypes: metadataService.activityTypesList(),
+                 returnTo: params.returnTo]
     }
 
     /**
@@ -67,17 +79,6 @@ class ActivityController {
         } else {
             println "json result is " + (result as JSON)
             render result.resp as JSON
-        }
-    }
-
-    def create(String id) {
-        def site = siteService.get(id)
-        if (site) {
-            render view: 'edit', model:
-                    [site: site, activity: [activityId: '', siteId: id], create: true,
-                     activityTypes: metadataService.activityTypesList()]
-        } else {
-            forward(action: 'list', model: [error: 'no such site'])
         }
     }
 
