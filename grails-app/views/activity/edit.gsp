@@ -30,39 +30,27 @@
     <r:require modules="knockout,jqueryValidationEngine,datepicker"/>
 </head>
 <body>
-<ul class="breadcrumb">
-    <li><g:link controller="home">Home</g:link> <span class="divider">/</span></li>
-    <li><g:link controller="project" id="${site.projectId}">${site.projectName}</g:link> <span class="divider">/</span></li>
-    <li><g:link controller="site" id="${site.siteId}">${site.name}</g:link> <span class="divider">/</span></li>
-    <g:if test="${create}">
-        <li class="active">Create new activity</li>
-    </g:if>
-    <g:else>
-        <li><g:link controller="activity" id="${activity.activityId}">${activity.type}
-            <span data-bind="text: startDate.formattedDate"></span>/<span data-bind="text: endDate.formattedDate"></span>
-        </g:link><span class="divider">/</span></li>
-        <li class="active">Edit</li>
-    </g:else>
-</ul>
 <div class="container-fluid validationEngineContainer" id="validation-container">
-    <div class="row-fluid span12">
-        <h2><div class="span6">
-            Project: <g:link controller="project" action="index" id="${site.projectId}">${site.projectName}</g:link>
+    <legend>
+        <table style="width: 100%">
+            <tr>
+                <td><g:link class="discreet" controller="home" action="index">Activities</g:link><fc:navSeparator/>create</td>
+                <td style="text-align: right"><span><button id="btnDeleteAll" class="btn btn-danger btn-small"><i class="icon-remove icon-white"></i>&nbsp;Delete activity</button></span></td>
+            </tr>
+        </table>
+    </legend>
+
+    <div class="row-fluid">
+        <div class="span6 title-attribute">
+            <h2 class="inline">Project: </h2><g:link controller="project" action="index" id="${project.projectId}">${project.name}</g:link>
         </div>
-        <div class="span6">
-            Site: <g:link controller="site" action="index" id="${site.siteId}">${site.name}</g:link>
-        </div></h2>
-    </div>
-    <div class="row-fluid span12" style="padding-bottom: 15px;">
-        <h2>
-            <div class="span12">Activity: <span data-bind="text:type"></span>
-                <span data-bind="text:startDate.formattedDate"></span>/<span data-bind="text:endDate.formattedDate"></span>
-            </div>
-        </h2>
+        <div class="span6 title-attribute">
+            <h2>Site: </h2><g:link controller="site" action="index" id="${site.siteId}">${site.name}</g:link>
+        </div>
     </div>
 
     <bs:form action="update" inline="true">
-        <div class="row-fluid span12">
+        <div class="row-fluid">
             <div class="span6">
                 <fc:textArea data-bind="value: description" id="description" label="Description" class="span12" rows="3" cols="50"/>
             </div>
@@ -71,7 +59,7 @@
             </div>
         </div>
 
-        <div class="row-fluid span12 control-group">
+        <div class="row-fluid control-group">
             <label for="type">Type of activity</label>
             <select data-bind="value: type" id="type" data-validation-engine="validate[required]">
                 <g:each in="${activityTypes}" var="t" status="i">
@@ -88,7 +76,7 @@
             %{--<select data-bind="value: type, options: availableTypes, optionsText: 'name'" id="type"></select>--}%
         </div>
 
-        <div class="row-fluid span12">
+        <div class="row-fluid">
             <div class="span4 control-group">
                 <label for="startDate">Start date
                 <fc:iconHelp title="Start date">Date the activity was started.</fc:iconHelp>
@@ -111,7 +99,7 @@
             </div>
         </div>
 
-        <div class="row-fluid span12">
+        <div class="row-fluid">
             <div class="span4">
                 <label for="censusMethod">Census method</label>
                 <input data-bind="value: censusMethod" id="censusMethod" type="text" class="span12"/>
@@ -126,26 +114,29 @@
             </div>
         </div>
 
-        <div class="row-fluid span12">
+        <div class="row-fluid">
             <fc:textArea data-bind="value: fieldNotes" id="fieldNotes" label="Field notes" class="span12" rows="3" cols="50"/>
         </div>
 
-        <div class="form-actions span12">
+        <div class="form-actions">
             <button type="button" data-bind="click: save" class="btn btn-primary">Save changes</button>
             <button type="button" id="cancel" class="btn">Cancel</button>
         </div>
     </bs:form>
 
     <hr />
-    <div class="debug">
-        <h3 id="debug">Debug</h3>
-        <div style="display:none">
-            <pre data-bind="text: ko.toJSON($root, null, 2)"></pre>
-            <pre>Formatted dates: <span data-bind="text:startDate.formattedDate"></span> - <span data-bind="text:endDate.formattedDate"></span></pre>
-            <pre>Site : ${site}</pre>
-            <pre>Activity : ${activity}</pre>
-            <pre>Available types : ${activityTypes}</pre>
-            %{--<div data-bind="text: ko.toJSON($root)"></div>--}%
+    <div class="expandable-debug">
+        <h3>Debug</h3>
+        <div>
+            <h4>KO model</h4>
+            <pre data-bind="text:ko.toJSON($root,null,2)"></pre>
+            <h4>Activity</h4>
+            <pre>${activity}</pre>
+            <h4>Site</h4>
+            <pre>${site}</pre>
+            <h4>Project</h4>
+            <pre>${project}</pre>
+            %{--<pre>Map features : ${mapFeatures}</pre>--}%
         </div>
     </div>
 </div>
@@ -154,6 +145,7 @@
 
 <r:script>
 
+    var returnTo = "${grailsApplication.config.grails.serverURL + '/' + returnTo}";
     $(function(){
 
         $('#validation-container').validationEngine('attach', {scroll: false});
@@ -161,8 +153,7 @@
         $('.helphover').popover({animation: true, trigger:'hover'});
 
         $('#cancel').click(function () {
-            document.location.href = "${create ? createLink(controller: 'site', action: 'index', id: site.siteId) :
-                createLink(action: 'index', id: activity.activityId)}";
+            document.location.href = returnTo;
         });
 
         //ko.validation.init();
@@ -179,6 +170,7 @@
             self.fieldNotes = ko.observable("${activity.fieldNotes}");
             self.type = ko.observable("${activity.type}");
             self.siteId = ko.observable("${activity.siteId}");
+            self.projectId = ko.observable("${activity.projectId}");
 
             self.save = function () {
                 if ($('#validation-container').validationEngine('validate')) {
@@ -193,12 +185,7 @@
                             if (data.error) {
                                 alert(data.detail + ' \n' + data.error);
                             } else {
-                                var activityId = "${activity.activityId}" || data.activityId;
-                                if (data.message === 'created') {
-                                    document.location.href = "${createLink(controller: 'site', action: 'index', id: "${site.siteId}")}";
-                                } else {
-                                    document.location.href = "${createLink(action: 'index')}/" + activityId;
-                                }
+                                document.location.href = returnTo;
                             }
                         },
                         error: function (data) {
