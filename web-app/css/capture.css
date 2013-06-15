@@ -48,8 +48,29 @@ footer img {
     color: #456e9c;
 }
 
+.no-link {
+    cursor: default;
+    color: #333;
+}
+
 .discreet {
     color: #333;
+}
+
+.title-attribute h2 {
+    font-size: 25px;
+    line-height: 1.5em;
+    font-weight: 300;
+    display: inline;
+}
+
+.title-attribute a {
+    color: #333;
+    font-size: 25px;
+}
+
+.title-block {
+    padding-bottom: 15px;
 }
 
 #banner img {
