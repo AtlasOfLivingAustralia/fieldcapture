@@ -393,6 +393,9 @@ class ModelJSTagLib {
                 self.data.${model.name}.remove(row);
                 ${editableRows ? "self.selectedRow(null);" : ""}
             };
+            self.rowCount = function () {
+                return self.data.${model.name}().length;
+            };
 """
             if (editableRows) {
                 out << """
