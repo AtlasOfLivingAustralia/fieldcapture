@@ -9,40 +9,36 @@
     <r:require modules="knockout,jqueryValidationEngine,datepicker"/>
 </head>
 <body>
-<ul class="breadcrumb">
-    <li><g:link controller="home">Home</g:link> <span class="divider">/</span></li>
-    <li><g:link controller="project" id="${site.projectId}">${site.projectName}</g:link> <span class="divider">/</span></li>
-    <li><g:link controller="site" id="${site.siteId}">${site.name}</g:link> <span class="divider">/</span></li>
-    <g:if test="${create}">
-        <li class="active">Create new activity</li>
-    </g:if>
-    <g:else>
-        <li><g:link controller="activity" id="${activity.activityId}">${activity.type}
-            <span data-bind="text:transients.activityStartDate.formattedDate"></span>-<span data-bind="text:transients.activityEndDate.formattedDate"></span>
-        </g:link><span class="divider">/</span></li>
-        <li class="active">Edit</li>
-    </g:else>
-</ul>
 <div class="container-fluid">
-    <div class="row-fluid span12">
-        <h2><div class="span6">
-            Project: <g:link controller="project" action="index" id="${site.projectId}">${site.projectName}</g:link>
+    <legend>
+        <table style="width: 100%">
+            <tr>
+                <td><g:link class="discreet" action="index">Outputs</g:link><fc:navSeparator/>
+                <g:if test="${create}">create</g:if>
+                <g:else>
+                    <span data-bind="text:activityType"></span>
+                    <span data-bind="text:transients.activityStartDate.formattedDate"></span>/<span data-bind="text:transients.activityEndDate.formattedDate"></span>
+                </g:else>
+                </td>
+                <td style="text-align: right"><span><button data-bind="click:deleteAll" class="btn btn-danger btn-small">
+                    <i class="icon-remove icon-white"></i>&nbsp;Delete output</button></span></td>
+            </tr>
+        </table>
+    </legend>
+    <div class="row-fluid title-block">
+        <div class="span6 title-attribute">
+            <h2>Project: </h2>
+            <g:each in="${projects}" var="p">
+                <g:link controller="project" action="index" id="${p.projectId}">${p.name}</g:link>
+            </g:each>
         </div>
-        <div class="span6">
-            Site: <g:link controller="site" action="index" id="${site.siteId}">${site.name}</g:link>
-        </div></h2>
-    </div>
-    <div class="row-fluid span12" style="padding-bottom: 15px;">
-        <h2>
-            <div class="span12">Activity: <span data-bind="text:activityType"></span>
-                <span data-bind="text:transients.activityStartDate.formattedDate"></span>/<span data-bind="text:transients.activityEndDate.formattedDate"></span>
-            </div>
-        </h2>
+        <div class="span6 title-attribute">
+            <h2>Site: </h2><g:link controller="site" action="index" id="${site.siteId}">${site.name}</g:link>
+        </div>
     </div>
 
     <form id="form">
-
-        <div class="row-fluid span12">
+        <div class="row-fluid">
             <div class="span4 control-group">
                 <label for="assessmentDate">Assessment date
                 <fc:iconHelp title="Start date">Date the data was collected.</fc:iconHelp>
@@ -63,30 +59,35 @@
 <!-- add the dynamic components -->
 <md:modelView model="${model}" edit="true"/>
 
-        <div class="form-actions span12">
+        <div class="form-actions">
             <button type="button" data-bind="click: save" class="btn btn-primary">Save changes</button>
             <button type="button" id="cancel" class="btn">Cancel</button>
         </div>
     </form>
 
     <hr />
-    <div class="debug row-fluid">
-        <h3 id="debug">Debug</h3>
-        <div style="display:none">
-            <pre data-bind="text: ko.toJSON($root, null, 2)"></pre>
-            <pre>Output : ${output}</pre>
-            <pre>Site : ${site}</pre>
-            <pre>Activity : ${activity}</pre>
+    <div class="expandable-debug">
+        <h3>Debug</h3>
+        <div>
+            <h4>KO model</h4>
+            <pre data-bind="text:ko.toJSON($root,null,2)"></pre>
+            <h4>Activity</h4>
+            <pre>${activity}</pre>
+            <h4>Site</h4>
+            <pre>${site}</pre>
+            <h4>Projects</h4>
+            <pre>${projects}</pre>
+            %{--<pre>Map features : ${mapFeatures}</pre>--}%
         </div>
     </div>
-
 </div>
 
 <!-- templates -->
 
 <r:script>
 
-    var outputData = ${output.data ?: '{}'};
+    var outputData = ${output.data ?: '{}'},
+        returnTo = "${grailsApplication.config.grails.serverURL + '/' + returnTo}";
 
     $(function(){
 
@@ -99,8 +100,7 @@
         $('.helphover').popover({animation: true, trigger:'hover'});
 
         $('#cancel').click(function () {
-            document.location.href = "${create ? createLink(controller: 'site', action: 'index', id: site.siteId) :
-                createLink(action: 'index', id: activity.activityId)}";
+            document.location.href = returnTo;
         });
 
 // load dynamic models - usually objects in a list
@@ -113,6 +113,10 @@
             self.collector = ko.observable("${output.collector}")/*.extend({ required: true })*/;
             self.activityId = ko.observable("${activity.activityId}");
             self.activityType = ko.observable("${activity.type}");
+            self.deleteAll = function () {
+                document.location.href = "${createLink(action:'delete',id:output.outputId,
+                    params:[returnTo:grailsApplication.config.grails.serverURL + '/' + returnTo])}";
+            };
             self.data = {};
             self.transients = {};
             self.transients.dummy = ko.observable();
@@ -145,8 +149,7 @@
                             if (data.error) {
                                 alert(data.detail + ' \n' + data.error);
                             } else {
-                                var outputId = "${output.outputId}" || data.outputId;
-                                document.location.href = "${createLink(controller: 'activity', action: 'index', id: "${activity.activityId}")}";
+                                document.location.href = returnTo;
                             }
                         },
                         error: function (data) {
@@ -163,6 +166,10 @@
 // load dynamic data
 <md:jsLoadModel model="${model}"/>
 
+            // if there is no data in tables then add an empty row for the user to add data
+            if (typeof self.addRow === 'function' && self.rowCount() === 0) {
+                self.addRow();
+            }
             self.transients.dummy.notifySubscribers();
             };
         }
