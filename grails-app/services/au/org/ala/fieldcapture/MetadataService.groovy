@@ -21,6 +21,11 @@ class MetadataService {
         return activitiesModel().find({ it.name = name })?.outputs?.collect { it.scoreName }
     }
 
+    def getDataModelFromOutputName(outputName) {
+        def activityName = getActivityModelName(outputName)
+        return activityName ? getDataModel(activityName) : null
+    }
+
     def getDataModel(name) {
         return cacheService.get(name + '-model',{
             String filename = (grailsApplication.config.app.external.model.dir as String) + name + '/dataModel.json'
@@ -28,7 +33,7 @@ class MetadataService {
         })
     }
 
-    def getModelName(outputName) {
+    def getActivityModelName(outputName) {
         return activitiesModel().outputs.find({it.name == outputName})?.template
     }
 
