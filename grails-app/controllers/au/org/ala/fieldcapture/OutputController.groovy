@@ -4,20 +4,29 @@ import grails.converters.JSON
 
 class OutputController {
 
-    def outputService, activityService, siteService, metadataService
+    def outputService, activityService, siteService, metadataService, projectService
 
     static ignore = ['action','controller','id']
+
+    private Map fatten(output) {
+        def map = [activity: activityService.get(output.activityId)]
+        map.projects = map.activity.projectId ? [projectService.get(map.activity.projectId)] : []
+        map.site = map.activity.siteId ? siteService.get(map.activity.siteId) : [:]
+        if (!map.projects && map.site) {
+            map.projects = map.site.projects
+        }
+        map.model = metadataService.getDataModelFromOutputName(output.name)
+        map
+    }
 
     def index(String id) {
         def output = outputService.get(id)
         if (!output || output.error) {
             forward(action: 'list', model: [error: output.error])
         } else {
-            def activity = activityService.get(output.activityId)
-            def site = siteService.get(activity.siteId)
-            def modelName = metadataService.getModelName(output.name)
-            [output: output, activity: activity, site: site,
-                 model: metadataService.getDataModel(modelName)]
+            def fat = fatten output
+            [output: output, activity: fat.activity, site: fat.site, projects: fat.projects,
+                    model: fat.model, returnTo: params.returnTo]
         }
     }
 
@@ -26,22 +35,19 @@ class OutputController {
         if (!output || output.error) {
             forward(action: 'list', model: [error: output.error])
         } else {
-            def activity = activityService.get(output.activityId)
-            def site = siteService.get(activity.siteId)
-            def modelName = metadataService.getModelName(output.name)
-            [output: output, activity: activity, site: site,
-                    model: metadataService.getDataModel(modelName)]
+            def fat = fatten output
+            log.debug(fat.projects)
+            [output: output, activity: fat.activity, site: fat.site, projects: fat.projects,
+             model: fat.model, returnTo: params.returnTo]
         }
     }
 
     def create(String activityId, String outputName) {
         def output = [activityId: activityId, name: outputName]
-        def activity = activityService.get(output.activityId)
-        def site = siteService.get(activity.siteId)
-        def modelName = metadataService.getModelName(output.name)
+        def fat = fatten output
         render view: 'edit', model:
-            [output: output, activity: activity, site: site,
-                model: metadataService.getDataModel(modelName)]
+                [output: output, activity: fat.activity, site: fat.site, projects: fat.projects,
+                 model: fat.model, returnTo: params.returnTo]
     }
 
     /**
@@ -74,6 +80,16 @@ class OutputController {
         } else {
             //println "json result is " + (result as JSON)
             render result.resp as JSON
+        }
+    }
+
+    def delete(String id) {
+        outputService.delete(id);
+        if (params.returnTo) {
+            redirect url: grailsApplication.config.grails.serverURL + '/' +
+                    params.returnTo
+        } else {
+            redirect controller: 'home'
         }
     }
 
