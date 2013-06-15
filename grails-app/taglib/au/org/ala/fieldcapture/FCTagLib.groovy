@@ -79,6 +79,7 @@ class FCTagLib {
         switch (body()) {
             case 'Queensland': out << 'QLD'; break
             case 'Victoria': out << 'VIC'; break
+            case 'Tasmania': out << 'TAS'; break
             default:
                 def words = body().tokenize(' ')
                 out << words.collect({it[0]}).join()
