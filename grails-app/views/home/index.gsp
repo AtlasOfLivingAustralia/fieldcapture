@@ -44,9 +44,9 @@
 
     <div class="row-fluid large-space-after large-space-before button-set">
         <g:link controller="project" action="create" class="btn btn-large"><r:img dir="images/icons" file="project.png"/> Add a project</g:link>
-        <g:link controller="site" action="create" class="btn btn-large" href="#"><r:img dir="images/icons" file="site.png"/> Add a site</g:link>
-        <g:link controller="activity" action="create" class="btn btn-large" href="#"><r:img dir="images/icons" file="activity.png"/> Add an activity</g:link>
-        <g:link controller="assessment" action="create" class="btn btn-large" href="#"><r:img dir="images/icons" file="assessment.png"/> Add an assessment</g:link>
+        <g:link controller="site" action="create" class="btn btn-large"><r:img dir="images/icons" file="site.png"/> Add a site</g:link>
+        <g:link controller="activity" action="create" class="btn btn-large"><r:img dir="images/icons" file="activity.png"/> Add an activity</g:link>
+        <g:link controller="assessment" action="create" class="btn btn-large"><r:img dir="images/icons" file="assessment.png"/> Add an assessment</g:link>
     </div>
 
     <div class="row-fluid">
