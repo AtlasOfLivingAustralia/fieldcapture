@@ -10,6 +10,7 @@
         siteDeleteUrl: "${createLink(controller: 'site', action: 'ajaxDelete')}",
         siteViewUrl: "${createLink(controller: 'site', action: 'index')}",
         activityViewUrl: "${createLink(controller: 'activity', action: 'index')}",
+        activityCreateUrl: "${createLink(controller: 'activity', action: 'create')}",
         spatialBaseUrl: "${grailsApplication.config.spatial.baseURL}",
         spatialWmsCacheUrl: "${grailsApplication.config.spatial.wms.cache.url}",
         spatialWmsUrl: "${grailsApplication.config.spatial.wms.url}",
@@ -46,77 +47,89 @@
         </div>
     </div>
 
-    <div class="row-fluid">
-        <div class="pull-left">
-            <h2>Activities</h2>
-        </div>
-        <div class="pull-right" style="margin-top: 30px;">
-            <button data-bind="click: $root.notImplemented" type="button" class="btn">Add new activity</button>
-        </div>
-    </div>
-    <div class="row-fluid">
-        <table class="table table-condensed" id="activities">
-            <thead>
-                <tr><th></th><th>Type</th><th>From</th><th>To</th><th>Site</th></tr>
-            </thead>
-            <tbody data-bind="foreach:activities" id="activityList">
-                <tr data-bind="attr:{href:'#'+activityId}" data-toggle="collapse" class="accordion-toggle">
-                    <td>
-                        <div>
-                            <a><i class="icon-plus" title="expand"></i></a>
-                        </div>
-                    </td>
-                    <td><span data-bind="text:type"></span></td>
-                    <td><span data-bind="text:startDate.formattedDate"></span></td>
-                    <td><span data-bind="text:endDate.formattedDate"></span></td>
-                    <td><a data-bind="siteName:siteId, click: $root.openSite"></a></td>
-                </tr>
-                <tr class="hidden-row">
-                    <td></td>
-                    <td colspan="5">
-                        <div class="collapse" data-bind="attr: {id:activityId}">
-                            <ul class="unstyled well well-small"
-                                data-bind="foreachModelOutput:metaModel.outputs">
-                                <li>
-                                    <div class="row-fluid">
-                                        <span class="span4" data-bind="text:name"></span>
-                                        <span class="span3" data-bind="text:score"></span>
-                                        <span class="span1 offset1">
-                                            <a data-bind="attr: {href:editLink}">
-                                                <i data-bind="attr: {title: outputId == '' ? 'Add data' : 'Edit data'}" class="icon-edit"></i>
-                                            </a>
-                                        </span>
-                                    </div>
-                                </li>
+    <!-- content tabs -->
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#activity" data-toggle="tab">Activities</a></li>
+        <li><a href="#site" id="site-tab" data-toggle="tab">Sites</a></li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane active" id="activity">
+            <div class="row-fluid">
+                <div class="pull-left">
+                    <h2>Activities</h2>
+                </div>
+                <div class="pull-right" style="margin-top: 30px;">
+                    <button data-bind="click: $root.newActivity" type="button" class="btn">Add new activity</button>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <table class="table table-condensed" id="activities">
+                    <thead>
+                    <tr><th></th><th>Type</th><th>From</th><th>To</th><th>Site</th></tr>
+                    </thead>
+                    <tbody data-bind="foreach:activities" id="activityList">
+                    <tr data-bind="attr:{href:'#'+activityId}" data-toggle="collapse" class="accordion-toggle">
+                        <td>
+                            <div>
+                                <a><i class="icon-plus" title="expand"></i></a>
+                            </div>
+                        </td>
+                        <td><span data-bind="text:type"></span></td>
+                        <td><span data-bind="text:startDate.formattedDate"></span></td>
+                        <td><span data-bind="text:endDate.formattedDate"></span></td>
+                        <td><a data-bind="siteName:siteId,click:$root.openSite"></a></td>
+                    </tr>
+                    <tr class="hidden-row">
+                        <td></td>
+                        <td colspan="5">
+                            <div class="collapse" data-bind="attr: {id:activityId}">
+                                <ul class="unstyled well well-small"
+                                    data-bind="foreachModelOutput:metaModel.outputs">
+                                    <li>
+                                        <div class="row-fluid">
+                                            <span class="span4" data-bind="text:name"></span>
+                                            <span class="span3" data-bind="text:score"></span>
+                                            <span class="span1 offset1">
+                                                <a data-bind="attr: {href:editLink}">
+                                                    <i data-bind="attr: {title: outputId == '' ? 'Add data' : 'Edit data'}" class="icon-edit"></i>
+                                                </a>
+                                            </span>
+                                        </div>
+                                    </li>
 
-                            </ul>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="row-fluid">
-        <div class="pull-left">
-            <h2>Sites</h2>
-            <div class="span12">There are <span data-bind="text: sites().length"></span> sites.</div>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-        <div class="pull-right" style="margin-top: 30px;">
-            <button data-bind="click: $root.addSite" type="button" class="btn">Add new site</button>
-            <button data-bind="click: $root.removeAllSites" type="button" class="btn">Delete all sites</button>
-        </div>
-    </div>
-    <div class="row-fluid">
-        <div class="span5" id="sites-scroller">
-            <ul class="unstyled inline" data-bind="foreach: sites">
-                <li class="siteInstance" data-bind="event: {mouseover: $root.highlight, mouseout: $root.unhighlight}">
-                    <a data-bind="text: name, click: $root.openSite"></a>
-                    <button data-bind="click: $root.removeSite" type="button" class="close" title="delete">&times;</button>
-                </li>
-            </ul>
-        </div>
-        <div class="span7">
-            <div id="map"></div>
+
+        <div class="tab-pane" id="site">
+            <div class="row-fluid">
+                <div class="pull-left">
+                    <h2>Sites</h2>
+                    <div class="span12">There are <span data-bind="text: sites().length"></span> sites.</div>
+                </div>
+                <div class="pull-right" style="margin-top: 30px;">
+                    <button data-bind="click: $root.addSite" type="button" class="btn">Add new site</button>
+                    <button data-bind="click: $root.removeAllSites" type="button" class="btn">Delete all sites</button>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div class="span5" id="sites-scroller">
+                    <ul class="unstyled inline" data-bind="foreach: sites">
+                        <li class="siteInstance" data-bind="event: {mouseover: $root.highlight, mouseout: $root.unhighlight}">
+                            <a data-bind="text: name, click: $root.openSite"></a>
+                            <button data-bind="click: $root.removeSite" type="button" class="close" title="delete">&times;</button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="span7">
+                    <div id="map"></div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -138,13 +151,8 @@
 </div>
     <r:script>
         $(window).load(function () {
-            var json = $.parseJSON('${json}');
-            var map = init_map_with_features({
-                    mapContainer: "map",
-                    scrollwheel: false
-                },
-                $.parseJSON('${mapFeatures}')
-            );
+            var json = $.parseJSON('${json}'),
+                map;
             // setup 'read more' for long text
             $('.more').shorten({
                 moreText: 'read more',
@@ -180,6 +188,25 @@
                 trackState();
             });
 
+            // retain tab state for future re-visits
+            $('a[data-toggle="tab"]').on('shown', function (e) {
+                var tab = e.currentTarget.hash;
+                amplify.store('project-tab-state', tab);
+                // only init map when the tab is first shown
+                if (tab === '#site' && map === undefined) {
+                    map = init_map_with_features({
+                            mapContainer: "map",
+                            scrollwheel: false
+                        },
+                        $.parseJSON('${mapFeatures}')
+                    );
+                }
+            });
+            // re-establish the previous tab state
+            if (amplify.store('project-tab-state') === '#site') {
+                $('#site-tab').tab('show');
+            }
+
             function trackState () {
                 var $leaves = $('#activityList div.collapse'),
                     state = [];
@@ -203,6 +230,11 @@
             // each containing the name, and the score and id of any matching outputs in the data
             ko.bindingHandlers.foreachModelOutput = {
                 init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+                    if (valueAccessor() === undefined) {
+                        var dummyRow = {name: 'No model was found for this activity', score: '', outputId: '', editLink:''};
+                        ko.applyBindingsToNode(element, { foreach: [dummyRow] });
+                        return { controlsDescendantBindings: true };
+                    }
                     var metaOutputs = ko.utils.unwrapObservable(valueAccessor()),
                         activity = bindingContext.$data,
                         transformedOutputs = [];
@@ -228,10 +260,13 @@
 
                         if (outputId) {
                             // build edit link
-                            editLink += 'edit/' + outputId;
+                            editLink += 'edit/' + outputId +
+                             "?returnTo=project/index/${project.projectId}";
                         } else {
                             // build create link
-                            editLink += 'create?activityId=' + activity.activityId + '&outputName=' + name;
+                            editLink += 'create?activityId=' + activity.activityId +
+                             '&outputName=' + encodeURIComponent(name) +
+                             "&returnTo=project/index/${project.projectId}";
                         }
                         // build the array that we will actually iterate over in the inner template
                         transformedOutputs.push({name: name, score: score, outputId: outputId,
@@ -263,7 +298,7 @@
                 }
             };
 
-            // not used but left for reference
+            // uses siteId to look up site name from the list of sites
             ko.bindingHandlers.siteName =  {
                 init: function(element, valueAccessor, allBindingsAccessor, model, bindingContext) {
                     var siteId = ko.utils.unwrapObservable(valueAccessor()),
@@ -278,7 +313,8 @@
                             return;
                         }
                     }
-                    $(element).html('no site');
+                    // no site so remove the link and replace with plain text
+                    $(element).parent().empty().html('no site');
                 }
             };
 
@@ -295,7 +331,7 @@
                             endDate: ko.observable(act.endDate).extend({simpleDate:false}),
                             outputs: ko.observableArray([]),
                             collector: act.collector,
-                            metaModel: act.model
+                            metaModel: act.model || {}
                         };
                         $.each(act.outputs, function (j, out) {
                             activity.outputs.push({
@@ -331,7 +367,9 @@
                 };
                 this.openSite = function () {
                     var site = ko.toJS(this);
-                    document.location.href = fcConfig.siteViewUrl + '/' + site.siteId;
+                    if (site.siteId !== '') {
+                        document.location.href = fcConfig.siteViewUrl + '/' + site.siteId;
+                    }
                 };
                 this.openActivity = function () {
                     document.location.href = fcConfig.activityViewUrl + '/' + this.activityId();
@@ -347,6 +385,10 @@
                 };
                 this.addSite = function () {
                     self.notImplemented();
+                };
+                self.newActivity = function () {
+                    document.location.href = fcConfig.activityCreateUrl +
+                    "?projectId=${project.projectId}&returnTo=project/index/${project.projectId}";
                 };
                 self.notImplemented = function () {
                     alert("Not implemented yet.")
