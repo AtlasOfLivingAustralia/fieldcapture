@@ -209,6 +209,31 @@
                     fillColor:'#eeeeee'
                 });
             }
+        },
+        hideFeatureById: function (id) {
+            var self = this,
+                features = this.featureIndex[id];
+            if (features) {
+                $.each(this.featureIndex[id], function (i,f) {
+                    f.setVisible(false);
+                });
+            }
+        },
+        showFeatureById: function (id) {
+            var self = this,
+                features = this.featureIndex[id];
+            if (features) {
+                $.each(this.featureIndex[id], function (i,f) {
+                    f.setVisible(true);
+                });
+            }
+        },
+        showAllfeatures: function () {
+            $.each(this.featureIndex, function (i, obj) {
+                $.each(obj, function (j, f) {
+                    f.setVisible(true);
+                });
+            });
         }
     };
 
