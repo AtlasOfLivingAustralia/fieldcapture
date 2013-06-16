@@ -88,6 +88,20 @@ class SiteController {
         render result as JSON
     }
 
+    def locationLookup(String id) {
+        def md = [:]
+        def site = siteService.get(id)
+        if (!site || site.error) {
+            md = [error: 'no such site']
+        } else {
+            md = siteService.getLocationMetadata(site)
+            if (!md) {
+                md = [error: 'no metadata found']
+            }
+        }
+        render md as JSON
+    }
+
     /**
      * Re-marshalls a map of arrays to an array of maps.
      *
