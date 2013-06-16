@@ -117,15 +117,40 @@
                     <button data-bind="click: $root.removeAllSites" type="button" class="btn">Delete all sites</button>
                 </div>
             </div>
+
             <div class="row-fluid">
-                <div class="span5" id="sites-scroller">
+                <div class="span4 well list-box">
+                    <div class="control-group">
+                        <div class="input-append">
+                            <g:textField class="filterinput input-medium" data-target="site"
+                                         title="Type a few characters to restrict the list." name="sites"
+                                         placeholder="filter"/>
+                            <button type="button" class="btn clearFilterBtn"
+                                    title="clear"><i class="icon-remove"></i></button>
+                        </div>
+                        <span id="site-filter-warning" class="label filter-label label-warning"
+                              style="display:none;margin-left:4px;"
+                              data-bind="visible:isSitesFiltered,valueUpdate:'afterkeyup'">Filtered</span>
+                    </div>
+                    <div class="scroll-list">
+                        <ul id="siteList"
+                            data-bind="template: {foreach:filteredSites},
+                                              beforeRemove: hideElement,
+                                              afterAdd: showElement">
+                            <li data-bind="event: {mouseover: $root.highlight, mouseout: $root.unhighlight}">
+                                <a data-bind="text: name, attr: {href:'${createLink(controller: "site", action: "index")}' + '/' + siteId}"></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                 %{--<div class="span5" id="sites-scroller">
                     <ul class="unstyled inline" data-bind="foreach: sites">
                         <li class="siteInstance" data-bind="event: {mouseover: $root.highlight, mouseout: $root.unhighlight}">
                             <a data-bind="text: name, click: $root.openSite"></a>
                             <button data-bind="click: $root.removeSite" type="button" class="close" title="delete">&times;</button>
                         </li>
                     </ul>
-                </div>
+                </div>--}%
                 <div class="span7">
                     <div id="map"></div>
                 </div>
@@ -145,6 +170,8 @@
             <pre>${json}</pre>
             <h4>Project</h4>
             <pre>${project}</pre>
+            <h4>Features</h4>
+            <pre>${mapFeatures}</pre>
             %{--<pre>Map features : ${mapFeatures}</pre>--}%
         </div>
     </div>
@@ -225,6 +252,42 @@
                     }
                 });
             }
+
+            // bind filters
+            $('.filterinput').keyup(function() {
+                var a = $(this).val(),
+                    target = $(this).attr('data-target'),
+                    $target = $('#' + target + 'List li');
+                if (a.length > 1) {
+                    // this finds all links in the list that contain the input,
+                    // and hide the ones not containing the input while showing the ones that do
+                    var containing = $target.filter(function () {
+                        var regex = new RegExp('\\b' + a, 'i');
+                        return regex.test($('a', this).text());
+                    }).slideDown();
+                    containing.each(function () {
+                        map.showFeatureById($(this).find('a').html());
+                    });
+                    $target.not(containing).slideUp();
+                    $target.not(containing).each(function () {
+                        map.hideFeatureById($(this).find('a').html());
+                    });
+                    $('#' + target + '-filter-warning').show();
+                } else {
+                    $('#' + target + '-filter-warning').hide();
+                    $target.slideDown();
+                    map.showAllfeatures();
+                }
+                return false;
+            });
+            $('.clearFilterBtn').click(function () {
+                var $filterInput = $(this).prev(),
+                    target = $filterInput.attr('data-target');
+                $filterInput.val('');
+                $('#' + target + '-filter-warning').hide();
+                $('#' + target + "List li").slideDown();
+                map.showAllfeatures();
+            });
 
             //iterates over the outputs specified in the meta-model and builds a temp object for
             // each containing the name, and the score and id of any matching outputs in the data
@@ -355,7 +418,28 @@
                 self.plannedEndDate = ko.observable(project.plannedEndDate).extend({simpleDate: false});
                 self.organisation = ko.observable(project.organisation);
                 self.activities = self.loadActivities(activities);
-                this.sites = ko.mapping.fromJS(sites);
+                self.sites = ko.mapping.fromJS(sites);
+                self.sitesFilter = ko.observable("");
+                self.isSitesFiltered = ko.observable(false);
+                // Animation callbacks for the lists
+                self.showElement = function(elem) { if (elem.nodeType === 1) $(elem).hide().slideDown() };
+                self.hideElement = function(elem) { if (elem.nodeType === 1) $(elem).slideUp(function() { $(elem).remove(); }) };
+                self.filteredSites = ko.computed(function () {
+                    var filter = self.sitesFilter().toLowerCase();
+                    var regex = new RegExp('\\b' + filter, 'i');
+                    if (!filter || filter.length === 1) {
+                        self.isSitesFiltered(false);
+                        return self.sites();
+                    } else {
+                        self.isSitesFiltered(true);
+                        return ko.utils.arrayFilter(self.sites(), function (item) {
+                            return regex.test(item.name);
+                        })
+                    }
+                });
+                self.clearSiteFilter = function () {
+                    self.sitesFilter("");
+                };
                 this.removeSite = function () {
                    var that = this,
                        url = fcConfig.siteDeleteUrl + '/' + this.siteId();
