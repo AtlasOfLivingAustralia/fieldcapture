@@ -265,17 +265,23 @@
                         var regex = new RegExp('\\b' + a, 'i');
                         return regex.test($('a', this).text());
                     }).slideDown();
+                    // make sure filtered-in sites are visible
                     containing.each(function () {
                         map.showFeatureById($(this).find('a').html());
                     });
                     $target.not(containing).slideUp();
+                    // make sure filtered-out sites are hidden
                     $target.not(containing).each(function () {
                         map.hideFeatureById($(this).find('a').html());
                     });
+                    // show 'filtered' icon
                     $('#' + target + '-filter-warning').show();
                 } else {
+                    // hide 'filtered' icon
                     $('#' + target + '-filter-warning').hide();
+                    // show all sites
                     $target.slideDown();
+                    // show all markers
                     map.showAllfeatures();
                 }
                 return false;
