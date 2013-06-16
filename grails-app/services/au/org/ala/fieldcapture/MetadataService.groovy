@@ -61,6 +61,15 @@ class MetadataService {
         })
     }
 
+    def getLocationMetadataForPoint(lat, lng) {
+        cacheService.get("spatial-point-${lat}-${lng}", {
+            def url = grailsApplication.config.spatial.baseURL + "ws/intersect/cl22,cl916/${lat}/${lng}"
+            def features = webService.getJson(url)
+            [state: features.find({it.field == 'cl22'})?.value,
+                    nrm: features.find({it.field == 'cl916'})?.value]
+        })
+    }
+
     static outputTypes = [
             [name: 'Fence erected', unit: 'Km', dataType: 'Decimal'],
             [name: 'Vegetation units planted', unit: 'No.', dataType: 'Int'],

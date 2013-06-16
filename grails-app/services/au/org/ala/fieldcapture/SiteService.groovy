@@ -5,11 +5,21 @@ import org.codehaus.groovy.grails.web.mapping.LinkGenerator
 
 class SiteService {
 
-    def webService, grailsApplication, commonService, cacheService
+    def webService, grailsApplication, commonService, cacheService, metadataService
     LinkGenerator grailsLinkGenerator
 
     def list() {
         webService.getJson(grailsApplication.config.ecodata.baseUrl + 'site/').list
+    }
+
+    def getLocationMetadata(site) {
+        log.debug site
+        def loc = getFirstPointLocation(site)
+        log.debug "loc = " + loc
+        if (loc && loc.data?.decimalLatitude && loc.data?.decimalLongitude) {
+            return metadataService.getLocationMetadataForPoint(loc.data.decimalLatitude, loc.data.decimalLongitude)
+        }
+        return null
     }
 
     def injectLocationMetadata(List sites) {
@@ -22,7 +32,7 @@ class SiteService {
     def injectLocationMetadata(Object site) {
         def loc = getFirstPointLocation(site)
         if (loc && loc.data?.decimalLatitude && loc.data?.decimalLongitude) {
-            site << getLocationMetadataForPoint(loc.data.decimalLatitude, loc.data.decimalLongitude)
+            site << metadataService.getLocationMetadataForPoint(loc.data.decimalLatitude, loc.data.decimalLongitude)
         }
         site
     }
@@ -31,15 +41,6 @@ class SiteService {
         site.location?.find {
             it.type == 'locationTypePoint'
         }
-    }
-
-    def getLocationMetadataForPoint(lat, lng) {
-        cacheService.get(lat + ',' + lng, {
-            def url = "http://spatial.ala.org.au/ws/intersect/cl22,cl916/${lat}/${lng}"
-            def features = webService.getJson(url)
-            [state: features.find({it.field == 'cl22'})?.value,
-             nrm: features.find({it.field == 'cl916'})?.value]
-        })
     }
 
     def getSitesFromIdList(ids) {
