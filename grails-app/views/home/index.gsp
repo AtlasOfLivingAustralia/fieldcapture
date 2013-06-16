@@ -97,7 +97,7 @@
                     </li>--}%
                     <g:each in="${sites}" var="p">
                         <li>
-                            <g:link controller="site" action="index" id="${p.siteId}">${p.name}</g:link>
+                            <g:link controller="site" action="index" id="${p.siteId}" data-id="${p.siteId}">${p.name}</g:link>
                             <g:if test="${p.nrm}">${p.nrm}</g:if>
                             <g:if test="${p.state}"> - <fc:initialiseState>${p.state}</fc:initialiseState></g:if>
                         </li>
@@ -175,6 +175,8 @@
 
 <r:script>
     $(window).load(function () {
+
+        // bind filters
         $('.filterinput').keyup(function() {
             var a = $(this).val(),
                 target = $(this).attr('data-target'),
@@ -201,15 +203,32 @@
             $('#' + target + '-filter-warning').hide();
             $('#' + target + "List li").slideDown();
         });
+
+        // asynch loading of state information
+        $('#siteList a').each(function (i, site) {
+            var id = $(site).data('id');
+            $.getJSON("${createLink(controller: 'site', action: 'locationLookup')}/" + id, function (data) {
+                if (data.error) {
+                    console.log(data.error);
+                } else {
+                    $(site).append(' (' + initialiseState(data.state) + ')');
+                }
+            });
+        });
     });
 
     function initialiseState(state) {
-        var words = state.split(' '),
-            initials = '';
-        for(var i=0; i < words.length; i++) {
-            initials += words[i][1]
+        switch (state) {
+            case 'Queensland': return 'QLD'; break;
+            case 'Victoria': return 'VIC'; break;
+            case 'Tasmania': return 'TAS'; break;
+            default:
+                var words = state.split(' '), initials = '';
+                for(var i=0; i < words.length; i++) {
+                    initials += words[i][0]
+                }
+                return initials;
         }
-        return initials;
     }
     /* This implementation of list filtering is not used but is left for reference.
        The jQuery implementation is quicker and cleaner in this case. This may
