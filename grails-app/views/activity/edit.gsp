@@ -145,7 +145,7 @@
 
 <r:script>
 
-    var returnTo = "${grailsApplication.config.grails.serverURL + '/' + returnTo}";
+    var returnTo = "${grailsApplication.config.grails.serverURL}/${returnTo}";
     $(function(){
 
         $('#validation-container').validationEngine('attach', {scroll: false});
