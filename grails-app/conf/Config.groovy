@@ -120,9 +120,10 @@ environments {
     development {
         grails.logging.jul.usebridge = true
         server.port = "8087"
-        grails.app.context = "/"
+        grails.app.context = ""
         grails.host = "http://devt.ala.org.au"
         serverName = "${grails.host}:${server.port}"
+        grails.serverURL = serverName + grails.app.context
 
         security.cas.appServerName = serverName
         security.cas.contextPath = grails.app.context
