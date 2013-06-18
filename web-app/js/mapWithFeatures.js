@@ -34,6 +34,8 @@
         map: null,
         // the DOM container to draw the map in - can be overridden in init options
         containerId: "map-canvas",
+        // geocoder instance for address lookups
+        geocoder: null,
         // whether to zoom to bounds when all features are loaded
         zoomToBounds: true,
         // maximum zoom
@@ -234,6 +236,23 @@
                     f.setVisible(true);
                 });
             });
+        },
+        getAddressById: function (id, callback) {
+            var self = this,
+                features = this.featureIndex[id];
+            if (features) {
+                $.each(this.featureIndex[id], function (i,f) {
+                    if (f instanceof google.maps.Marker) {
+                        if (!self.geocoder) { self.geocoder = new google.maps.Geocoder() }
+                        self.geocoder.geocode({location: f.getPosition()},
+                            function (results, status) {
+                                if (status == google.maps.GeocoderStatus.OK) {
+                                    callback(results[0].formatted_address);
+                                }
+                            });
+                    }
+                });
+            }
         }
     };
 
@@ -271,4 +290,18 @@ function gjToLatLngs(arr) {
 
 function isCoord(arr) {
     return arr.length === 2 && !isNaN(arr[0]) && !isNaN(arr[1]);
+}
+
+function initialiseState(state) {
+    switch (state) {
+        case 'Queensland': return 'QLD'; break;
+        case 'Victoria': return 'VIC'; break;
+        case 'Tasmania': return 'TAS'; break;
+        default:
+            var words = state.split(' '), initials = '';
+            for(var i=0; i < words.length; i++) {
+                initials += words[i][0]
+            }
+            return initials;
+    }
 }
