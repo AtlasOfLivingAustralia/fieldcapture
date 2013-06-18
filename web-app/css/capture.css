@@ -103,6 +103,15 @@ footer img {
     margin-left: 4px;
 }
 
+.big-tabs .active a {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.big-tabs a {
+    font-size: 24px;
+}
+
 #map {
     width: 465px;
     height: 450px;
