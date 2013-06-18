@@ -7,16 +7,19 @@
     <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&language=en"></script>
     <r:script disposition="head">
     var fcConfig = {
+        serverUrl: "${grailsApplication.config.grails.serverURL}",
         siteDeleteUrl: "${createLink(controller: 'site', action: 'ajaxDelete')}",
         siteViewUrl: "${createLink(controller: 'site', action: 'index')}",
-        activityViewUrl: "${createLink(controller: 'activity', action: 'index')}",
+        activityEditUrl: "${createLink(controller: 'activity', action: 'edit')}",
         activityCreateUrl: "${createLink(controller: 'activity', action: 'create')}",
         spatialBaseUrl: "${grailsApplication.config.spatial.baseURL}",
         spatialWmsCacheUrl: "${grailsApplication.config.spatial.wms.cache.url}",
         spatialWmsUrl: "${grailsApplication.config.spatial.wms.url}",
         sldPolgonDefaultUrl: "${grailsApplication.config.sld.polgon.default.url}",
         sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}"
-    }
+        },
+        returnTo = "project/index/${project.projectId}";
+
     </r:script>
     <r:require modules="gmap3,mapWithFeatures,knockout,amplify"/>
 </head>
@@ -26,7 +29,7 @@
     <legend>
         <table style="width: 100%">
             <tr>
-                <td>Project<fc:navSeparator/>${project.name}</td>
+                <td><g:link class="discreet" controller="home" action="index">Home</g:link><fc:navSeparator/>Project<fc:navSeparator/>${project.name}</td>
             </tr>
         </table>
     </legend>
@@ -48,17 +51,17 @@
     </div>
 
     <!-- content tabs -->
-    <ul class="nav nav-tabs">
+    <ul class="nav nav-tabs big-tabs">
         <li class="active"><a href="#activity" data-toggle="tab">Activities</a></li>
         <li><a href="#site" id="site-tab" data-toggle="tab">Sites</a></li>
     </ul>
     <div class="tab-content">
+        <!-- ACTIVITIES -->
         <div class="tab-pane active" id="activity">
             <div class="row-fluid">
-                <div class="pull-left">
-                    <h2>Activities</h2>
-                </div>
-                <div class="pull-right" style="margin-top: 30px;">
+                <div class="pull-right">
+                    <button data-bind="click: $root.expandActivities" type="button" class="btn btn-link">Expand all</button>
+                    <button data-bind="click: $root.collapseActivities" type="button" class="btn btn-link">Collapse all</button>
                     <button data-bind="click: $root.newActivity" type="button" class="btn">Add new activity</button>
                 </div>
             </div>
@@ -83,8 +86,8 @@
                         <td></td>
                         <td colspan="5">
                             <div class="collapse" data-bind="attr: {id:activityId}">
-                                <ul class="unstyled well well-small"
-                                    data-bind="foreachModelOutput:metaModel.outputs">
+                                <ul class="unstyled well well-small">
+                                    <!-- ko foreachModelOutput:metaModel.outputs -->
                                     <li>
                                         <div class="row-fluid">
                                             <span class="span4" data-bind="text:name"></span>
@@ -96,7 +99,9 @@
                                             </span>
                                         </div>
                                     </li>
-
+                                    <!-- /ko -->
+                                    <li><button type="button" class="btn btn-link" style="padding:0" data-bind="click:edit">
+                                        Edit activity</button></li>
                                 </ul>
                             </div>
                         </td>
@@ -107,12 +112,9 @@
         </div>
 
         <div class="tab-pane" id="site">
+            <!-- SITES -->
             <div class="row-fluid">
-                <div class="pull-left">
-                    <h2>Sites</h2>
-                    <div class="span12">There are <span data-bind="text: sites().length"></span> sites.</div>
-                </div>
-                <div class="pull-right" style="margin-top: 30px;">
+                <div class="pull-right">
                     <button data-bind="click: $root.addSite" type="button" class="btn">Add new site</button>
                     <button data-bind="click: $root.removeAllSites" type="button" class="btn">Delete all sites</button>
                 </div>
@@ -123,9 +125,10 @@
                     <div class="control-group">
                         <div class="input-append">
                             <g:textField class="filterinput input-medium" data-target="site"
+                                         data-bind="event: {keyup:filterChanged}"
                                          title="Type a few characters to restrict the list." name="sites"
                                          placeholder="filter"/>
-                            <button type="button" class="btn clearFilterBtn"
+                            <button type="button" class="btn" data-bind="click:clearFilter"
                                     title="clear"><i class="icon-remove"></i></button>
                         </div>
                         <span id="site-filter-warning" class="label filter-label label-warning"
@@ -134,11 +137,13 @@
                     </div>
                     <div class="scroll-list">
                         <ul id="siteList"
-                            data-bind="template: {foreach:filteredSites},
+                            data-bind="template: {foreach:sites},
                                               beforeRemove: hideElement,
                                               afterAdd: showElement">
                             <li data-bind="event: {mouseover: $root.highlight, mouseout: $root.unhighlight}">
-                                <a data-bind="text: name, attr: {href:'${createLink(controller: "site", action: "index")}' + '/' + siteId}"></a>
+                                <a data-bind="text:name, attr: {href:'${createLink(controller: "site", action: "index")}' + '/' + siteId}"></a>
+                                <span data-bind="text:state"></span><br>
+                                <span data-bind="text:address" style="font-size:11px;color:#666;"></span>
                             </li>
                         </ul>
                     </div>
@@ -172,7 +177,6 @@
             <pre>${project}</pre>
             <h4>Features</h4>
             <pre>${mapFeatures}</pre>
-            %{--<pre>Map features : ${mapFeatures}</pre>--}%
         </div>
     </div>
 </div>
@@ -198,156 +202,6 @@
                     });
                 }
             });
-            // change toggle icon when expanding and collapsing and track open state
-            $('#activities').
-            on('show', 'div.collapse', function() {
-                $(this).parents('tr').prev().find('td:first-child i').
-                    removeClass('icon-plus').addClass('icon-minus');
-            }).
-            on('hide', 'div.collapse', function() {
-                $(this).parents('tr').prev().find('td:first-child i').
-                    removeClass('icon-minus').addClass('icon-plus');
-            }).
-            on('shown', 'div.collapse', function() {
-                trackState();
-            }).
-            on('hidden', 'div.collapse', function() {
-                trackState();
-            });
-
-            // retain tab state for future re-visits
-            $('a[data-toggle="tab"]').on('shown', function (e) {
-                var tab = e.currentTarget.hash;
-                amplify.store('project-tab-state', tab);
-                // only init map when the tab is first shown
-                if (tab === '#site' && map === undefined) {
-                    map = init_map_with_features({
-                            mapContainer: "map",
-                            scrollwheel: false
-                        },
-                        $.parseJSON('${mapFeatures}')
-                    );
-                }
-            });
-            // re-establish the previous tab state
-            if (amplify.store('project-tab-state') === '#site') {
-                $('#site-tab').tab('show');
-            }
-
-            function trackState () {
-                var $leaves = $('#activityList div.collapse'),
-                    state = [];
-                $.each($leaves, function (i, leaf) {
-                    state.push($(leaf).hasClass('in'));
-                });
-                amplify.store.sessionStorage('output-accordion-state',state);
-            }
-
-            function readState () {
-                var hidden = $('#activityList div.collapse'),
-                    state = amplify.store.sessionStorage('output-accordion-state');
-                $.each(hidden, function (i, leaf) {
-                    if (state !== undefined && i < state.length && state[i]) {
-                        $(leaf).collapse('show');
-                    }
-                });
-            }
-
-            // bind filters
-            $('.filterinput').keyup(function() {
-                var a = $(this).val(),
-                    target = $(this).attr('data-target'),
-                    $target = $('#' + target + 'List li');
-                if (a.length > 1) {
-                    // this finds all links in the list that contain the input,
-                    // and hide the ones not containing the input while showing the ones that do
-                    var containing = $target.filter(function () {
-                        var regex = new RegExp('\\b' + a, 'i');
-                        return regex.test($('a', this).text());
-                    }).slideDown();
-                    // make sure filtered-in sites are visible
-                    containing.each(function () {
-                        map.showFeatureById($(this).find('a').html());
-                    });
-                    $target.not(containing).slideUp();
-                    // make sure filtered-out sites are hidden
-                    $target.not(containing).each(function () {
-                        map.hideFeatureById($(this).find('a').html());
-                    });
-                    // show 'filtered' icon
-                    $('#' + target + '-filter-warning').show();
-                } else {
-                    // hide 'filtered' icon
-                    $('#' + target + '-filter-warning').hide();
-                    // show all sites
-                    $target.slideDown();
-                    // show all markers
-                    map.showAllfeatures();
-                }
-                return false;
-            });
-            $('.clearFilterBtn').click(function () {
-                var $filterInput = $(this).prev(),
-                    target = $filterInput.attr('data-target');
-                $filterInput.val('');
-                $('#' + target + '-filter-warning').hide();
-                $('#' + target + "List li").slideDown();
-                map.showAllfeatures();
-            });
-
-            //iterates over the outputs specified in the meta-model and builds a temp object for
-            // each containing the name, and the score and id of any matching outputs in the data
-            ko.bindingHandlers.foreachModelOutput = {
-                init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
-                    if (valueAccessor() === undefined) {
-                        var dummyRow = {name: 'No model was found for this activity', score: '', outputId: '', editLink:''};
-                        ko.applyBindingsToNode(element, { foreach: [dummyRow] });
-                        return { controlsDescendantBindings: true };
-                    }
-                    var metaOutputs = ko.utils.unwrapObservable(valueAccessor()),
-                        activity = bindingContext.$data,
-                        transformedOutputs = [];
-
-                    $.each(metaOutputs, function (i, name) {
-                        var score = "Not assessed yet.",
-                            outputId = '',
-                            editLink = "${grailsApplication.config.grails.serverURL}/output/";
-
-                        // search for corresponding outputs in the data
-                        $.each(activity.outputs(), function (i,output) {
-                            if (output.name === name) {
-                                outputId = output.outputId;
-                                // the data structure allows for multiple scores per output
-                                // not clear yet if this is required but for now just assume one
-                                for (var key in output.scores) {
-                                    if (output.scores.hasOwnProperty(key)) {
-                                        score = output.scores[key];
-                                    }
-                                }
-                            }
-                        });
-
-                        if (outputId) {
-                            // build edit link
-                            editLink += 'edit/' + outputId +
-                             "?returnTo=project/index/${project.projectId}";
-                        } else {
-                            // build create link
-                            editLink += 'create?activityId=' + activity.activityId +
-                             '&outputName=' + encodeURIComponent(name) +
-                             "&returnTo=project/index/${project.projectId}";
-                        }
-                        // build the array that we will actually iterate over in the inner template
-                        transformedOutputs.push({name: name, score: score, outputId: outputId,
-                            editLink: editLink});
-                    });
-
-                    // re-cast the binding to iterate over our new array
-                    ko.applyBindingsToNode(element, { foreach: transformedOutputs });
-                    return { controlsDescendantBindings: true };
-                }
-            };
-
             // todo: not used here but is handy so should go into the common custom ko bindings
             ko.bindingHandlers.foreachprop = {
                 transformObject: function (obj) {
@@ -372,10 +226,10 @@
                 init: function(element, valueAccessor, allBindingsAccessor, model, bindingContext) {
                     var siteId = ko.utils.unwrapObservable(valueAccessor()),
                         site,
-                        sites = bindingContext.$root.sites();
+                        sites = bindingContext.$root.sites;
                     if (siteId) {
                         site = $.grep(sites, function(obj, i) {
-                            return (obj.siteId() === siteId);
+                            return (obj.siteId === siteId);
                         });
                         if (site.length > 0) {
                             $(element).html(site[0].name());
@@ -385,6 +239,29 @@
                     // no site so remove the link and replace with plain text
                     $(element).parent().empty().html('no site');
                 }
+            };
+
+            var Site = function (site) {
+                var self = this;
+                this.name = ko.observable(site.name);
+                this.siteId = site.siteId;
+                this.state = ko.observable('');
+                this.nrm = ko.observable('');
+                this.address = ko.observable("");
+                this.setAddress = function (address) {
+                    if (address.indexOf(', Australia') === address.length - 11) {
+                        address = address.substr(0, address.length - 11);
+                    }
+                    self.address(address);
+                };
+                /*$.getJSON("${createLink(controller: 'site', action: 'locationLookup')}/" + site.siteId, function (data) {
+                    if (data.error) {
+                        //console.log(data.error);
+                    } else {
+                        self.state(' (' + initialiseState(data.state) + ')');
+                        self.nrm(' (' + data.nrm + ')');
+                    }
+                });*/
             };
 
             function ViewModel(project, sites, activities, assessments) {
@@ -400,7 +277,11 @@
                             endDate: ko.observable(act.endDate).extend({simpleDate:false}),
                             outputs: ko.observableArray([]),
                             collector: act.collector,
-                            metaModel: act.model || {}
+                            metaModel: act.model || {},
+                            edit: function () {
+                                document.location.href = fcConfig.activityEditUrl + '/' + this.activityId +
+                                    "?returnTo=project/index/${project.projectId}";
+                            }
                         };
                         $.each(act.outputs, function (j, out) {
                             activity.outputs.push({
@@ -423,32 +304,66 @@
                 self.plannedStartDate = ko.observable(project.plannedStartDate).extend({simpleDate: false});
                 self.plannedEndDate = ko.observable(project.plannedEndDate).extend({simpleDate: false});
                 self.organisation = ko.observable(project.organisation);
+                self.mapLoaded = ko.observable(false);
                 self.activities = self.loadActivities(activities);
-                self.sites = ko.mapping.fromJS(sites);
+                self.sites = $.map(sites, function (obj,i) {return new Site(obj)});
                 self.sitesFilter = ko.observable("");
                 self.isSitesFiltered = ko.observable(false);
                 // Animation callbacks for the lists
                 self.showElement = function(elem) { if (elem.nodeType === 1) $(elem).hide().slideDown() };
                 self.hideElement = function(elem) { if (elem.nodeType === 1) $(elem).slideUp(function() { $(elem).remove(); }) };
-                self.filteredSites = ko.computed(function () {
-                    var filter = self.sitesFilter().toLowerCase();
-                    var regex = new RegExp('\\b' + filter, 'i');
-                    if (!filter || filter.length === 1) {
-                        self.isSitesFiltered(false);
-                        return self.sites();
-                    } else {
-                        self.isSitesFiltered(true);
-                        return ko.utils.arrayFilter(self.sites(), function (item) {
-                            return regex.test(item.name);
-                        })
-                    }
-                });
                 self.clearSiteFilter = function () {
                     self.sitesFilter("");
                 };
+                self.filterChanged = function (model, event) {
+                    var element = event.target,
+                        a = $(element).val(),
+                        target = $(element).attr('data-target'),
+                        $target = $('#' + target + 'List li'),
+                        regex = new RegExp('\\b' + a, 'i');
+                    if (a.length > 1) {
+                        /*ko.utils.arrayForEach(self.sites, function (site) {
+                            site.visible = regex.test(site.name());
+                        });*/
+                        // this finds all links in the list that contain the input,
+                        // and hides the ones not containing the input
+                        var containing = $target.filter(function () {
+                            //var regex = new RegExp('\\b' + a, 'i');
+                            return regex.test($('a', this).text());
+                        }).slideDown();
+                        // make sure filtered-in sites are visible
+                        containing.each(function () {
+                            map.showFeatureById($(this).find('a').html());
+                        });
+                        $target.not(containing).slideUp();
+                        // make sure filtered-out sites are hidden
+                        $target.not(containing).each(function () {
+                            map.hideFeatureById($(this).find('a').html());
+                        });
+                        // show 'filtered' icon
+                        $('#' + target + '-filter-warning').show();
+                    } else {
+                        // hide 'filtered' icon
+                        $('#' + target + '-filter-warning').hide();
+                        // show all sites
+                        $target.slideDown();
+                        // show all markers
+                        map.showAllfeatures();
+                    }
+                    return true;
+                };
+                self.clearFilter = function (model, event) {
+                    var element = event.currentTarget,
+                        $filterInput = $(element).prev(),
+                        target = $filterInput.attr('data-target');
+                    $filterInput.val('');
+                    $('#' + target + '-filter-warning').hide();
+                    $('#' + target + "List li").slideDown();
+                    map.showAllfeatures();
+                };
                 this.removeSite = function () {
                    var that = this,
-                       url = fcConfig.siteDeleteUrl + '/' + this.siteId();
+                       url = fcConfig.siteDeleteUrl + '/' + this.siteId;
                     $.get(url, function (data) {
                         if (data.status === 'deleted') {
                             self.sites.remove(that);
@@ -460,9 +375,6 @@
                     if (site.siteId !== '') {
                         document.location.href = fcConfig.siteViewUrl + '/' + site.siteId;
                     }
-                };
-                this.openActivity = function () {
-                    document.location.href = fcConfig.activityViewUrl + '/' + this.activityId();
                 };
                 this.highlight = function () {
                     map.highlightFeatureById(this.name());
@@ -483,6 +395,19 @@
                 self.notImplemented = function () {
                     alert("Not implemented yet.")
                 };
+                self.triggerGeocoding = function () {
+                    ko.utils.arrayForEach(self.sites, function (site) {
+                        if (map) {
+                            map.getAddressById(site.name(), site.setAddress);
+                        }
+                    });
+                };
+                self.expandActivities = function () {
+                    $('#activityList div.collapse').collapse('show');
+                };
+                self.collapseActivities = function () {
+                    $('#activityList div.collapse').collapse('hide');
+                }
             }
 
             var viewModel = new ViewModel(${project},json,${activities ?: []},${assessments ?: []});
@@ -490,6 +415,28 @@
             ko. applyBindings(viewModel);
 
             readState();
+
+            // retain tab state for future re-visits
+            $('a[data-toggle="tab"]').on('shown', function (e) {
+                var tab = e.currentTarget.hash;
+                amplify.store('project-tab-state', tab);
+                // only init map when the tab is first shown
+                if (tab === '#site' && map === undefined) {
+                    map = init_map_with_features({
+                            mapContainer: "map",
+                            scrollwheel: false
+                        },
+                        $.parseJSON('${mapFeatures}')
+                    );
+                    // set trigger for site reverse geocoding
+                    viewModel.triggerGeocoding();
+                }
+            });
+            // re-establish the previous tab state
+            if (amplify.store('project-tab-state') === '#site') {
+                $('#site-tab').tab('show');
+            }
+
         });
 
     </r:script>

@@ -5,7 +5,7 @@ import org.codehaus.groovy.grails.web.json.JSONArray
 
 class SiteController {
 
-    def siteService, projectService
+    def siteService, projectService, activityService, metadataService
 
     static defaultAction = "index"
 
@@ -13,10 +13,16 @@ class SiteController {
 
     def index(String id) {
         //log.debug(id)
-        def site = siteService.get(id)
+        def site = siteService.get(id, [view: 'scores'])
         if (site) {
+            // inject the metadata model for each activity
+            site.activities.each {
+                it.model = metadataService.getActivityModel(it.type)
+            }
             //siteService.injectLocationMetadata(site)
-            [site: site, mapFeatures: siteService.getMapFeatures(site)]
+            [site: site,
+             //activities: activityService.activitiesForProject(id),
+             mapFeatures: siteService.getMapFeatures(site)]
         } else {
             //forward(action: 'list', model: [error: 'no such id'])
             render 'no such site'
