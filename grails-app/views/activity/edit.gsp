@@ -34,15 +34,21 @@
     <legend>
         <table style="width: 100%">
             <tr>
-                <td><g:link class="discreet" controller="home" action="index">Activities</g:link><fc:navSeparator/>create</td>
+                <td><g:link class="discreet" controller="home" action="index">Home</g:link><fc:navSeparator/>Activities<fc:navSeparator/>
+                    <span data-bind="text:type"></span>
+                    <span data-bind="text:startDate.formattedDate"></span>/<span data-bind="text:endDate.formattedDate"></span>
+                </td>
                 <td style="text-align: right"><span><button id="btnDeleteAll" class="btn btn-danger btn-small"><i class="icon-remove icon-white"></i>&nbsp;Delete activity</button></span></td>
             </tr>
         </table>
     </legend>
 
-    <div class="row-fluid">
+    <div class="row-fluid title-block">
         <div class="span6 title-attribute">
-            <h2 class="inline">Project: </h2><g:link controller="project" action="index" id="${project.projectId}">${project.name}</g:link>
+            <h2>Project: </h2>
+            <g:each in="${projects}" var="p">
+                <g:link controller="project" action="index" id="${p.projectId}">${p.name}</g:link>
+            </g:each>
         </div>
         <div class="span6 title-attribute">
             <h2>Site: </h2><g:link controller="site" action="index" id="${site.siteId}">${site.name}</g:link>
@@ -61,7 +67,7 @@
 
         <div class="row-fluid control-group">
             <label for="type">Type of activity</label>
-            <select data-bind="value: type" id="type" data-validation-engine="validate[required]">
+            <select data-bind="value: type" id="type" data-validation-engine="validate[required]" class="input-xlarge">
                 <g:each in="${activityTypes}" var="t" status="i">
                     <g:if test="${i == 0 && create}">
                         <option></option>
@@ -83,7 +89,7 @@
                 </label>
                 <div class="input-append">
                     <input data-bind="datepicker:startDate.date" id="startDate" type="text" size="16"
-                       data-validation-engine="validate[required]"/>
+                       data-validation-engine="validate[required]" class="input-xlarge"/>
                     <span class="add-on open-datepicker"><i class="icon-th"></i></span>
                 </div>
             </div>
@@ -93,7 +99,7 @@
                 </label>
                 <div class="input-append">
                     <input data-bind="datepicker:endDate.date" id="endDate" type="text" size="16"
-                       data-validation-engine="validate[required]"/>
+                       data-validation-engine="validate[required]" class="input-xlarge"/>
                     <span class="add-on open-datepicker"><i class="icon-th"></i></span>
                 </div>
             </div>
@@ -134,8 +140,8 @@
             <pre>${activity}</pre>
             <h4>Site</h4>
             <pre>${site}</pre>
-            <h4>Project</h4>
-            <pre>${project}</pre>
+            <h4>Projects</h4>
+            <pre>${projects}</pre>
             %{--<pre>Map features : ${mapFeatures}</pre>--}%
         </div>
     </div>
