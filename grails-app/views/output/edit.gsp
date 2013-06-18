@@ -13,11 +13,11 @@
     <legend>
         <table style="width: 100%">
             <tr>
-                <td><g:link class="discreet" action="index">Outputs</g:link><fc:navSeparator/>
+                <td><g:link class="discreet" controller="home" action="index">Home</g:link><fc:navSeparator/>Data entry<fc:navSeparator/>
                 <g:if test="${create}">create</g:if>
                 <g:else>
-                    <span data-bind="text:activityType"></span>
-                    <span data-bind="text:transients.activityStartDate.formattedDate"></span>/<span data-bind="text:transients.activityEndDate.formattedDate"></span>
+                    <span data-bind="text:name"></span>
+                    <span data-bind="text:assessmentDate.formattedDate"></span>
                 </g:else>
                 </td>
                 <td style="text-align: right"><span><button data-bind="click:deleteAll" class="btn btn-danger btn-small">
