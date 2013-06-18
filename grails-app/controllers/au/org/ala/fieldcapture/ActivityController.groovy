@@ -8,6 +8,17 @@ class ActivityController {
 
     static ignore = ['action','controller','id']
 
+    private Map fatten(activity) {
+        def map = [:]
+        map.projects = activity.projectId ? [projectService.get(activity.projectId)] : []
+        map.site = activity.siteId ? siteService.get(activity.siteId) : [:]
+        if (!map.projects && map.site) {
+            map.projects = map.site.projects
+        }
+        //map.model = metadataService.getDataModelFromOutputName(output.name)
+        map
+    }
+
     def index(String id) {
         def activity = activityService.get(id)
         if (!activity || activity.error) {
@@ -24,10 +35,9 @@ class ActivityController {
     def edit(String id) {
         def activity = activityService.get(id)
         if (activity) {
-            def site = siteService.get(activity.siteId)
-            log.debug site
-            [activity: activity, site: site, json: (activity as JSON).toString(),
-                activityTypes: metadataService.activityTypesList()]
+            def fat = fatten activity
+            [activity: activity, site: fat.site, projects: fat.projects,
+                activityTypes: metadataService.activityTypesList(), returnTo: params.returnTo]
         } else {
             forward(action: 'list', model: [error: 'no such id'])
         }
