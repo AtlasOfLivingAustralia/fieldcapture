@@ -40,7 +40,7 @@
         <legend>
             <table style="width: 100%">
                 <tr>
-                    <td><g:link class="discreet" action="index">Administration</g:link><fc:navSeparator/><g:pageProperty name="page.pageTitle"/></td>
+                    <td><g:link class="discreet" controller="home" action="index">Home</g:link><fc:navSeparator/><g:link class="discreet" action="index">Administration</g:link><fc:navSeparator/><g:pageProperty name="page.pageTitle"/></td>
                     <td style="text-align: right"><span><g:pageProperty name="page.adminButtonBar"/></span></td>
                 </tr>
             </table>
