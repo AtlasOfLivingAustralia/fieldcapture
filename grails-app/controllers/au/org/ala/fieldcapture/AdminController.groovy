@@ -5,11 +5,15 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 
 class AdminController {
 
-    def cacheService
+    def cacheService, metadataService
 
     def index() {}
     def tools() {}
     def users() {}
+    def metadata() {
+        [activitiesMetadata: metadataService.activitiesModel()]
+    }
+
     def settings() {
         def settings = [
             [key:'app.external.model.dir', value: grailsApplication.config.app.external.model.dir,

@@ -57,4 +57,8 @@ modules = {
     amplify {
         resource url: '/js/amplify.min.js'
     }
+
+    vkbeautify {
+        resource 'js/vkbeautify.0.99.00.beta.js'
+    }
 }

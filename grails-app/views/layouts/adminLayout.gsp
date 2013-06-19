@@ -52,6 +52,7 @@
                     <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'users')}" title="Users" />
                     <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'tools')}" title="Tools" />
                     <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'settings')}" title="Settings" />
+                    <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'metadata')}" title="Metadata" />
                 </ul>
             </div>
 
