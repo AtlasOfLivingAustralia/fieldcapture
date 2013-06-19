@@ -1,5 +1,6 @@
 package au.org.ala.fieldcapture
 
+import grails.converters.JSON
 import grails.util.Environment
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 
@@ -96,5 +97,13 @@ class AdminController {
         cacheService.clear()
         flash.message = "Metadata cache cleared."
         render 'done'
+    }
+
+    def updateActivitiesModel() {
+        def model = request.JSON
+        log.debug model
+        metadataService.updateActivitiesModel(model.toString())
+        def result = model
+        render result
     }
 }
