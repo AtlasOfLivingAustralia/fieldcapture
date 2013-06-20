@@ -13,9 +13,9 @@ class SiteService {
     }
 
     def getLocationMetadata(site) {
-        log.debug site
+        //log.debug site
         def loc = getFirstPointLocation(site)
-        log.debug "loc = " + loc
+        //log.debug "loc = " + loc
         if (loc && loc.data?.decimalLatitude && loc.data?.decimalLongitude) {
             return metadataService.getLocationMetadataForPoint(loc.data.decimalLatitude, loc.data.decimalLongitude)
         }
