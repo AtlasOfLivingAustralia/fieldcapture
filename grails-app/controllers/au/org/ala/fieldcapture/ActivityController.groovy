@@ -8,15 +8,15 @@ class ActivityController {
 
     static ignore = ['action','controller','id']
 
-    private Map fatten(activity) {
-        def map = [:]
-        map.projects = activity.projectId ? [projectService.get(activity.projectId)] : []
-        map.site = activity.siteId ? siteService.get(activity.siteId) : [:]
-        if (!map.projects && map.site) {
-            map.projects = map.site.projects
+    private Map fatten(model) {
+        model.projects = model.activity.projectId ? [projectService.get(model.activity.projectId)] : null
+        model.site = model.activity.siteId ? siteService.get(model.activity.siteId) : null
+        if (!model.projects && model.site) {
+            model.projects = model.site.projects
         }
+        model.sites = siteService.list().collect({[name:it.name,siteId:it.siteId]})
         //map.model = metadataService.getDataModelFromOutputName(output.name)
-        map
+        model
     }
 
     def index(String id) {
@@ -27,32 +27,28 @@ class ActivityController {
         } else {
             //todo: ensure there are no control chars (\r\n etc) in the json as
             //todo:     this will break the client-side parser
-            def site = siteService.get(activity.siteId)
-            [activity: activity, site: site]
+            def model = fatten([activity: activity, returnTo: params.returnTo])
+            log.debug model
+            model
         }
     }
 
     def edit(String id) {
         def activity = activityService.get(id)
         if (activity) {
-            def fat = fatten activity
-            [activity: activity, site: fat.site, projects: fat.projects,
-                activityTypes: metadataService.activityTypesList(), returnTo: params.returnTo]
+            def model = fatten([activity: activity, returnTo: params.returnTo])
+            model.activityTypes = metadataService.activityTypesList()
+            model
         } else {
             forward(action: 'list', model: [error: 'no such id'])
         }
     }
 
     def create(String siteId, String projectId) {
-        def site = siteId ? siteService.get(siteId) : [:]
-        def project = projectId ? projectService.get(projectId) : [:]
-        def activity = [activityId: '']
-        if (site) { activity << [siteId: site.siteId] }
-        if (project) { activity << [projectId: project.projectId] }
-        render view: 'edit', model:
-                [site: site, project: project, activity: activity, create: true,
-                 activityTypes: metadataService.activityTypesList(),
-                 returnTo: params.returnTo]
+        def activity = [activityId: "", siteId: siteId, projectId: projectId]
+        def model = fatten([activity: activity, returnTo: params.returnTo, create: true,
+                activityTypes: metadataService.activityTypesList()])
+        render view: 'edit', model: model
     }
 
     /**
@@ -89,6 +85,16 @@ class ActivityController {
         } else {
             println "json result is " + (result as JSON)
             render result.resp as JSON
+        }
+    }
+
+    def delete(String id) {
+        log.debug "deleting ${id}"
+        def respCode = activityService.delete(id)
+        if (params.returnTo) {
+            redirect(url: params.returnTo)
+        } else {
+            redirect(controller: 'home')
         }
     }
 
