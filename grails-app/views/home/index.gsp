@@ -67,7 +67,7 @@
             <div class="scroll-list"><ul id="projectList">
                 <g:each in="${projects}" var="p">
                     <li>
-                        <g:link controller="project" action="index" id="${p.projectId}">${p.name}</g:link>
+                        <g:link controller="project" action="index" id="${p.projectId}" params="[returnTo:'']">${p.name}</g:link>
                     </li>
                 </g:each>
             </ul></div>
@@ -97,7 +97,7 @@
                     </li>--}%
                     <g:each in="${sites}" var="p">
                         <li>
-                            <g:link controller="site" action="index" id="${p.siteId}" data-id="${p.siteId}">${p.name}</g:link>
+                            <g:link controller="site" action="index" id="${p.siteId}" data-id="${p.siteId}" params="[returnTo:'']">${p.name}</g:link>
                             <g:if test="${p.nrm}">${p.nrm}</g:if>
                             <g:if test="${p.state}"> - <fc:initialiseState>${p.state}</fc:initialiseState></g:if>
                         </li>
@@ -124,7 +124,7 @@
                     <g:each in="${activities}" var="p">
                         <g:if test="${!p.assessment}">
                             <li>
-                                <g:link controller="activity" action="index" id="${p.activityId}">${p.name}</g:link>
+                                <g:link controller="activity" action="index" id="${p.activityId}" params="[returnTo:'']">${p.name}</g:link>
                             </li>
                         </g:if>
                     </g:each>
@@ -148,7 +148,7 @@
                     <g:each in="${assessments}" var="p">
                         <g:if test="${p.assessment}">
                             <li>
-                                <g:link controller="activity" action="index" id="${p.activityId}">${p.name}</g:link>
+                                <g:link controller="activity" action="index" id="${p.activityId}" params="[returnTo:'']">${p.name}</g:link>
                             </li>
                         </g:if>
                     </g:each>
