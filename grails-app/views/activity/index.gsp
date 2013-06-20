@@ -3,14 +3,14 @@
 <html>
 <head>
     <meta name="layout" content="main"/>
-    <title>${activity?.activityId}| ${site.name} | ${site.projectName} | Field Capture</title>
+    <title>${activity?.activityId}| ${site?.name} | ${site?.projectName} | Field Capture</title>
     <r:require module="knockout"/>
 </head>
 <body>
 <ul class="breadcrumb">
     <li><g:link controller="home">Home</g:link> <span class="divider">/</span></li>
-    <li><g:link controller="project" id="${site.projectId}">${site.projectName}</g:link> <span class="divider">/</span></li>
-    <li><g:link controller="site" id="${site.siteId}">${site.name}</g:link> <span class="divider">/</span></li>
+    <li><g:link controller="project" id="${site?.projectId}">${site?.projectName}</g:link> <span class="divider">/</span></li>
+    <li><g:link controller="site" id="${site?.siteId}">${site?.name}</g:link> <span class="divider">/</span></li>
     <li class="active">${activity.type}
         <span data-bind="text:startDate.formattedDate"></span>/<span data-bind="text:endDate.formattedDate"></span>
     </li>
@@ -19,8 +19,8 @@
     <div class="row-fluid">
         <div class="under-rule span12">
             <div class="clearfix">
-                <h1 class="pull-left">${site.projectName}: ${site.name}</h1>
-                <g:link action="edit" id="${activity.activityId}" class="btn pull-right title-edit">Edit activity</g:link>
+                <h1 class="pull-left">${site?.projectName}: ${site?.name}</h1>
+                <g:link action="edit" id="${activity.activityId}" params="${[returnTo:returnTo]}" class="btn pull-right title-edit">Edit activity</g:link>
             </div>
 
             <h2>Activity: ${activity.type}
