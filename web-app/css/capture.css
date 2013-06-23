@@ -64,9 +64,16 @@ footer img {
     display: inline;
 }
 
+.title-attribute h3 {
+    font-size: 21px;
+    line-height: 1.3em;
+    font-weight: 300;
+    display: inline;
+}
+
 .title-attribute a {
     color: #333;
-    font-size: 25px;
+    font-size: 20px;
 }
 
 .title-block {

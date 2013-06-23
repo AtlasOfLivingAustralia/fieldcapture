@@ -12,6 +12,10 @@ class SiteService {
         webService.getJson(grailsApplication.config.ecodata.baseUrl + 'site/').list
     }
 
+    def projectsForSite(siteId) {
+        get(siteId)?.projects
+    }
+
     def getLocationMetadata(site) {
         //log.debug site
         def loc = getFirstPointLocation(site)

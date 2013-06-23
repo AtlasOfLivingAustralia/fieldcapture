@@ -51,21 +51,25 @@
         </table>
     </legend>
 
-    <div class="row-fluid title-block">
+    <div class="row-fluid title-block well input-block-level">
+        <div class="space-after"><span>An activity is usually associated with a site. Less commonly, the activity may just be
+        linked to a project (usually planning activities). Select either a site or a project below. When a site is
+        selected, the project or projects associated with that site will be shown.</span></div>
         <div class="span6 title-attribute">
-            <h2>Project: </h2>
-            <g:each in="${projects}" var="p">
-                <g:link controller="project" action="index" id="${p.projectId}">${p.name}</g:link>
-            </g:each>
-        </div>
-        <div class="span6 title-attribute">
-            <g:if test="${site}">
-                <h2>Site: </h2><g:link controller="site" action="index" id="${site.siteId}">${site.name}</g:link>
-            </g:if>
-            <g:else>
-                <h2>Select site:</h2>
+            <div class="">
+                <h2>Site:</h2>
                 <select data-bind="options:transients.sites,optionsText:'name',optionsValue:'siteId',value:siteId,optionsCaption:'Choose a site...'"></select>
-            </g:else>
+            </div>
+            <div class="">
+                <h3>Site projects:</h3>
+                <!-- ko foreach:transients.projects -->
+                    <a data-bind="text:name"></a>
+                <!-- /ko -->
+            </div>
+        </div>
+        <div class="span5 title-attribute">
+            <h2>Project: </h2>
+            <select data-bind="options:transients.sites,optionsText:'name',optionsValue:'siteId',value:siteId,optionsCaption:'Choose a site...',disabled:true"></select>
         </div>
     </div>
 
@@ -179,7 +183,15 @@
             document.location.href = returnTo;
         });
 
-        function ViewModel (act, sites) {
+        function getProjectsForSite(siteId) {
+            if (siteId) {
+                return $.getJSON("${grailsApplication.config.grails.serverURL}/site/projectsForSite/" + siteId);
+            } else {
+                return [];
+            }
+        }
+
+        function ViewModel (act, sites, site) {
             var self = this;
             self.description = ko.observable(act.description);
             self.notes = ko.observable(act.notes);
@@ -194,6 +206,10 @@
             self.projectId = ko.observable(act.projectId);
             self.transients = {};
             self.transients.sites = sites;
+            self.transients.site = site;
+            self.transients.projects = ko.computed(function () {
+                return getProjectsForSite(self.siteId());
+            }).extend({async: []});
             self.save = function () {
                 if ($('#validation-container').validationEngine('validate')) {
                     var jsData = ko.toJS(self);
@@ -231,7 +247,10 @@
             };
         }
 
-        var viewModel = new ViewModel(${(activity as JSON).toString()}, ${(sites as JSON).toString()});
+        var viewModel = new ViewModel(
+            ${(activity as JSON).toString()},
+            ${(sites as JSON).toString()},
+            ${site});
         ko.applyBindings(viewModel);
 
     });
