@@ -1,7 +1,4 @@
 package au.org.ala.fieldcapture
-
-import org.codehaus.groovy.grails.web.json.JSONArray
-
 /**
  * Generates web page content for metadata-driven dynamic data entry and display.
  */
@@ -101,6 +98,20 @@ class ModelTagLib {
             case 'simpleDate-edit':
                 databindAttrs.add 'datepicker', source + '.date'
                 result += "<input${at.toString()} data-bind='${databindAttrs.toString()}'${validate} type='text' class='input-small'/>"
+                break
+            case 'selectOne-view':
+            case 'selectMany-view':
+                databindAttrs.add 'text',source
+                result += "<span${at.toString()} data-bind='${databindAttrs.toString()}'></span>"
+                break
+            case 'selectOne-edit':
+            case 'selectMany-edit':
+                databindAttrs.add 'value', source
+                // Select one or many view types require that the data model has defined a set of valid options
+                // to select from.
+                databindAttrs.add 'options', 'transients.'+model.source+'Constraints'
+
+                result += "<select${at.toString()} data-bind='${databindAttrs.toString()}'></select>"
                 break
         }
         if (model.postLabel) {
@@ -477,6 +488,23 @@ class ModelTagLib {
         }
         //println "found ${attribute} = ${target ? target[attribute] : null}"
         return target ? target[attribute] : null
+    }
+
+    def getAttribute(model, name) {
+        def target = null
+        model.each( {
+            if (it.name == name) {
+                target = it
+                return target
+            }
+            else if (it?.dataType == 'list') {
+                target = getAttribute(it.columns, name)
+                if (target) {
+                    return target
+                }
+            }
+        })
+        return target
     }
 
 }

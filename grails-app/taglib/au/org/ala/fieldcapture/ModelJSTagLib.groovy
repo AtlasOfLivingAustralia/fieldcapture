@@ -276,6 +276,7 @@ class ModelJSTagLib {
                         out << INDENT*3 << "this.${col.name} = ko.${observable}(orFalse(data['${col.name}']));\n"
                         break;
                 }
+                modelConstraints(col, out)
             }
         }
         if (edit && editableRows) {
@@ -326,10 +327,12 @@ class ModelJSTagLib {
 
     def textViewModel(model, out) {
         out << "\n" << INDENT*3 << "self.data.${model.name} = ko.observable();\n"
+        modelConstraints(model, out)
     }
 
     def numberViewModel(model, out) {
         out << "\n" << INDENT*3 << "self.data.${model.name} = ko.observable();\n"
+        modelConstraints(model, out)
     }
 
     def computedObservable(model, propertyContext, dependantContext, out) {
@@ -424,6 +427,13 @@ class ModelJSTagLib {
             };
 """
             }
+        }
+    }
+
+    def modelConstraints(model, out) {
+        if (model.constraints) {
+            def stringifiedOptions = "["+ model.constraints.join(",")+"]"
+            out << INDENT*3 << "self.transients.${model.name}Constraints = ${stringifiedOptions};\n"
         }
     }
 
