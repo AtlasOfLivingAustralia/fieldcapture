@@ -3,7 +3,7 @@
 <html>
 <head>
   <meta name="layout" content="main"/>
-  <title>${site?.name} | Sites | Field Capture</title>
+  <title> ${create ? 'New' : ('Edit | ' + site?.name)} | Sites | Field Capture</title>
   <style type="text/css">
     legend {
         border: none;
@@ -26,20 +26,25 @@
     }
     .no-border { border-top: none !important; }
   </style>
-  <r:require module="knockout"/>
+  <r:require modules="knockout, amplify"/>
 </head>
 <body>
     <ul class="breadcrumb">
         <li><g:link controller="home">Home</g:link> <span class="divider">/</span></li>
-        <li><g:link controller="site" action="index" id="${site.siteId}">
-            <span data-bind="text: name">${site.name}</span>
-        </g:link><span class="divider">/</span></li>
-        <li class="active">Edit</li>
+        <g:if test="${create}">
+            <li class="active">Create</li>
+        </g:if>
+        <g:else>
+            <li><g:link controller="site" action="index" id="${site?.siteId}">
+                <span data-bind="text: name">${site?.name}</span>
+            </g:link><span class="divider">/</span></li>
+            <li class="active">Edit</li>
+        </g:else>
     </ul>
     <div class="container-fluid">
         <bs:form action="update" inline="true">
         <div class="row-fluid span12">
-            <g:hiddenField name="id" value="${site.siteId}"/>
+            <g:hiddenField name="id" value="${site?.siteId}"/>
             <div class="">
                 <label for="name">Site name</label>
                 <h1>
@@ -75,28 +80,6 @@
             </div>
         </div>
 
-        <div class="row-fluid span12">
-            <h2 class="inline">Projects</h2>
-            <ul style="list-style: none;margin:13px 0;">
-                <g:each in="${site.projects}" var="p" status="count">
-                    <li>
-                        <g:link controller="project" action="index" id="${p}">${p}</g:link>
-                        <g:if test="${count < site.projects.size() - 1}">, </g:if>
-                    </li>
-                </g:each>
-            </ul>
-            <select class="span5" data-bind="options:projectList, optionsText:'name', value:projects,
-                optionsCaption:'Associate this site with a project..',optionsValue:'projectId'"></select>
-
-        </div>
-
-        <div class="span12">
-            <h2>Activities</h2>
-            <p>Activities can be edited on the site page - <g:link controller="site" action="index" id="${site.siteId}">
-                <span data-bind="text: name">${site.name}</span>
-            </g:link></p>
-        </div>
-
         <div class="span12">
             <h2>Locations <fc:iconHelp title="Location of the site">The location of the site can be represented one or more points or polygons.
                  KML, WKT and shape files are supported for uploading polygons. As are PID's of existing features in the Atlas Spatial Portal.</fc:iconHelp>
@@ -107,8 +90,8 @@
                 <tbody data-bind="foreach: location">
                     <tr>
                         <td><input type="text" data-bind="value:name" class="input-small"/><br>
-                        <td><g:select data-bind="value: type"  from="['choose a location type','point','known shape','upload a shape']" name='shit'
-                                      keys="['locationTypeNone','locationTypePoint','locationTypePid','locationTypeUpload']"/></td>
+                        <td><g:select data-bind="value: type"  from="['choose a location type','point','known shape','upload a shape','draw a shape']" name='shit'
+                                      keys="['locationTypeNone','locationTypePoint','locationTypePid','locationTypeUpload','locationTypeDrawn']"/></td>
                         <td rowspan="2"><div class="span12">
                             <div data-bind="template: {name: updateModel(), data: data}"></div>
                         </div></td>
@@ -149,7 +132,6 @@
         <fc:textField data-bind="value:decimalLatitude" outerClass="span3" label="Latitude"/>
         <fc:textField data-bind="value:decimalLongitude" outerClass="span3" label="Longitude"/>
     </div>
-
     <div class="row-fluid controls-row">
         <fc:textField data-bind="value:uncertainty, enable: hasCoordinate()" outerClass="span2" label="Uncertainty"/>
         <fc:textField data-bind="value:precision, enable: hasCoordinate()" outerClass="span2" label="Precision"/>
@@ -166,7 +148,56 @@
     <span>Not implemented yet</span>
 </script>
 
+<script type="text/html" id="locationTypeDrawn">
+    <a href="javascript:drawSite();">Draw the location</a><br/>
+    <div class="row-fluid controls-row">
+        <fc:textField data-bind="value:decimalLatitude" outerClass="span2" label="Latitude:"/>
+        <fc:textField data-bind="value:decimalLongitude" outerClass="span2" label="Longitude:"/>
+        <fc:textField data-bind="value:radius" outerClass="span2" label="Radius:"/>
+    </div>
+    <div class="row-fluid controls-row">
+        <fc:textField data-bind="value:wkt" class="input-large" label="WKT:"/>
+    </div>
+</script>
+
 <r:script>
+
+    // server side generated paths & properties
+    var SERVER_CONF = {
+        sitePageUrl : "${createLink(action: 'index', id: site?.siteId)}",
+        homePageUrl : "${createLink(controller: 'home', action: 'index')}",
+        drawSiteUrl : "${createLink(controller: 'site', action: 'draw')}",
+        projectList : ${projectList?:'[]'},
+        ajaxUpdateUrl: "${createLink(action: 'ajaxUpdate', id: site?.siteId)}",
+        siteData: $.parseJSON('${json}')
+    };
+
+    var savedSiteData = {
+        id: "${site?.id}",
+        externalId : "${site?.externalId}",
+        type : "${site?.type}",
+        area : "${site?.area}",
+        description : "${site?.description}",
+        notes : "${site?.notes}",
+        projects : ${site?.projects?:'[]'}
+    };
+
+    var viewModel = null;
+
+    function drawSite(){
+        //alert("drawSite called  " + viewModel);
+        amplify.store("savedViewData", {
+            id: viewModel.id(),
+            name: viewModel.name(),
+            externalId : viewModel.externalId(),
+            type : viewModel.type(),
+            area : viewModel.area(),
+            description : viewModel.description(),
+            notes : viewModel.notes(),
+            projects : viewModel.projects()
+        });
+        document.location.href = SERVER_CONF.drawSiteUrl + '?returnTo=' + document.location.href;
+    }
 
     // returns blank string if the property is undefined, else the value
     function orBlank(v) {
@@ -178,22 +209,26 @@
         return parent === undefined ? '' : (parent[prop] === undefined ? '' : parent[prop]);
     }
 
-    var siteData = $.parseJSON('${json}'),
-        projectList = ${projectList};
-
     $(function(){
-        //$('.dropdown-toggle').dropdown();
+
         $('.helphover').popover({animation: true, trigger:'hover'});
 
         $('#cancel').click(function () {
-            document.location.href = "${createLink(action: 'index', id: site.siteId)}";
+            if(viewModel.saved()){
+                document.location.href = SERVER_CONF.sitePageUrl;
+            } else {
+                document.location.href = SERVER_CONF.homePageUrl;
+            }
         });
 
-        ko.bindingHandlers.switchModel = {
-            update: function (element, valueAccessor) {
-                alert(ko.toJSON(valueAccessor()));
-                ko.bindingHandlers.value.update(element, valueAccessor);
-            }
+        var DrawnLocation = function (l) {
+            console.log("Adding location.....");
+            console.log(l);
+            this.type = 'locationTypeDrawn';
+            this.radius = ko.observable(exists(l,'radius'));
+            this.decimalLatitude = ko.observable(exists(l,'decimalLatitude'));
+            this.decimalLongitude = ko.observable(exists(l,'decimalLongitude'));
+            this.wkt = ko.observable(exists(l,'wkt'));
         };
 
         var PidLocation = function (l) {
@@ -214,16 +249,16 @@
             this.precision = ko.observable(exists(l,'precision'));
             this.datum = ko.observable(exists(l,'datum'));
             this.hasCoordinate = function () {
-                return self.decimalLatitude() !== '' && self.decimalLongitude() !== ''
+                return self.decimalLatitude() !== '' && self.decimalLongitude() !== '';
             }
         };
 
         var Location = function (id, name, type, data) {
             var self = this;
-            this.name = ko.observable(name);
             this.id = id;
-            this.type = ko.observable(type);
             this.data = data;
+            this.name = ko.observable(name);
+            this.type = ko.observable(type);
             this.updateModel = function (event) {
                 var trev = event;
                 var lType = self.type();
@@ -233,6 +268,7 @@
                         case 'locationTypePoint': self.data = new PointLocation(); break;
                         case 'locationTypePid': self.data = new PidLocation(); break;
                         case 'locationTypeUpload': self.data = new UploadLocation(); break;
+                        case 'locationTypeDrawn': self.data = new DrawnLocation(); break;
                         default: self.data = {type: 'locationTypeNone'}
                     }
                 }
@@ -240,36 +276,45 @@
             }
         };
 
-        function SiteViewModel () {
+        function SiteViewModel (siteData) {
             var self = this;
-            self.name = ko.observable("${site?.name}");
-            self.externalId = ko.observable("${site.externalId}");
-            self.type = ko.observable("${site.type}");
-            self.area = ko.observable("${site.area}");
-            self.description = ko.observable("${site.description}");
-            self.notes = ko.observable("${site.notes}");
-            self.projects = ko.observableArray(${site.projects});
-            self.projectList = projectList;
+            self.id = ko.observable(siteData.id);
+            self.name = ko.observable(siteData.name);
+            self.externalId = ko.observable(siteData.externalId);
+            self.type = ko.observable(siteData.type);
+            self.area = ko.observable(siteData.area);
+            self.description = ko.observable(siteData.description);
+            self.notes = ko.observable(siteData.notes);
+            self.projects = ko.observableArray(siteData.projects);
+            self.projectList = SERVER_CONF.projectList;
             self.location = ko.observableArray([]);
+            self.saved = function(){
+                return self.id() != '';
+            };
             self.loadLocations = function () {
                 var data;
-                $.each(siteData.location, function (i, loc) {
-                    switch (loc.type) {
-                        case 'locationTypePoint': data = new PointLocation(loc.data); break;
-                        case 'locationTypePid': data = new PidLocation(loc.data); break;
-                        default: data = {id: 1};
-                    }
-                    var temp = new Location(loc.id, loc.name, loc.type, data);
-                    self.location.push(temp);
-                    var temp2 = self.location();
-                    var x = 1;
-                });
+                if(SERVER_CONF.siteData != null && SERVER_CONF.siteData.location != NaN){
+                    $.each(SERVER_CONF.siteData.location, function (i, loc) {
+                        switch (loc.type) {
+                            case 'locationTypePoint': data = new PointLocation(loc.data); break;
+                            case 'locationTypePid': data = new PidLocation(loc.data); break;
+                            case 'locationTypeDrawn': data = new DrawnLocation(loc.data); break;
+                            default: data = {id: 1};
+                        }
+                        var temp = new Location(loc.id, loc.name, loc.type, data);
+                        self.location.push(temp);
+                    });
+                }
+            };
+            self.addDrawnLocation = function(drawnShape){
+                self.location.push(new Location('1', 'Drawn shape', 'locationTypeDrawn', new DrawnLocation(drawnShape)));
             };
             self.addLocation = function (id, name, type, loc) {
                 var data;
                 switch (type) {
                     case 'locationTypePoint': data = new PointLocation(loc); break;
                     case 'locationTypePid': data = new PidLocation(loc); break;
+                    case 'locationTypeDrawn': data = new DrawnLocation(loc); break;
                     default: data = {id: 1};
                 }
                 var temp = new Location(id, name, type, data);
@@ -286,12 +331,16 @@
                 var jsData = ko.toJS(self);
                 var json = ko.toJSON(self);
                 $.ajax({
-                    url: "${createLink(action: 'ajaxUpdate', id: site.siteId)}",
+                    url: SERVER_CONF.ajaxUpdateUrl,
                     type: 'POST',
                     data: json,
                     contentType: 'application/json',
                     success: function (data) {
-                        document.location.href = "${createLink(action: 'index', id: site.siteId)}";
+                        if(data.status == 'created'){
+                            document.location.href = SERVER_CONF.sitePageUrl + '/' + data.id;
+                        } else {
+                            document.location.href = SERVER_CONF.sitePageUrl;
+                        }
                     },
                     error: function (data) {
                         alert(data);
@@ -301,22 +350,30 @@
             self.notImplemented = function () {
                 alert("Not implemented yet.")
             };
-            /*self.location.subscribe(function (newValue) {
-                alert(newValue);
-            });*/
         }
 
-        var viewModel = new SiteViewModel();
+        ko.bindingHandlers.switchModel = {
+            update: function (element, valueAccessor) {
+                ko.bindingHandlers.value.update(element, valueAccessor);
+            }
+        };
+
+        //retrieve serialised model
+        var savedViewData = amplify.store("savedViewData");
+        if(savedViewData !== undefined){
+            viewModel = new SiteViewModel(savedViewData);
+        } else {
+            viewModel = new SiteViewModel(savedSiteData);
+        }
 
         ko.applyBindings(viewModel);
 
         viewModel.loadLocations();
 
-        var dump = ko.toJS(viewModel);
-        var dumpJson = ko.toJSON(viewModel);
-
+        //any passed back from drawing tool
+        var drawnShape = amplify.store("drawnShape");
+        viewModel.addDrawnLocation(drawnShape);
     });
-
 </r:script>
 </body>
 </html>

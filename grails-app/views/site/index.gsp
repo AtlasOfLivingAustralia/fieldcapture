@@ -38,9 +38,11 @@
                     <h1 class="pull-left">${site?.name}</h1>
                     <g:link action="edit" id="${site.siteId}" class="btn pull-right title-edit">Edit site</g:link>
                 </div>
-                <div class="clearfix">
-                    <p class="well well-small">${site.description}</p>
-                </div>
+                <g:if test="${site.description}">
+                    <div class="clearfix">
+                        <p class="well well-small">${site.description}</p>
+                    </div>
+                </g:if>
             </div>
             <div>
                 <span class="span2">Projects:</span>

@@ -13,4 +13,8 @@ class HomeController {
             assessments: activityService.assessments()
         ]
     }
+
+    def about() {
+
+    }
 }

@@ -5,7 +5,9 @@
     <title>${create ? 'New' : ('Edit | ' + project?.name)} | Projects | Field Capture</title>
     <r:require modules="knockout,jqueryValidationEngine,datepicker"/>
 </head>
-<body class="validation-container">
+<body>
+    <div class="container-fluid validationEngineContainer" id="validation-container">
+
     <ul class="breadcrumb">
         <li><g:link controller="home">Home</g:link> <span class="divider">/</span></li>
         <g:if test="${create}">
@@ -102,7 +104,7 @@
             <pre>${project}</pre>
         </div>
     </div>
-
+</div>
 <r:script>
 
     $(function(){

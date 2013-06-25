@@ -2,6 +2,7 @@ package au.org.ala.fieldcapture
 
 import grails.converters.JSON
 import org.codehaus.groovy.grails.web.json.JSONArray
+import org.codehaus.groovy.grails.plugins.web.taglib.ApplicationTagLib
 
 class SiteController {
 
@@ -10,6 +11,14 @@ class SiteController {
     static defaultAction = "index"
 
     static ignore = ['action','controller','id']
+
+    def create(){
+        render view: 'edit', model: [create:true]
+    }
+
+    def draw(){
+        //any setup required ?
+    }
 
     def index(String id) {
         //log.debug(id)
@@ -55,6 +64,9 @@ class SiteController {
     }
 
     def update(String id) {
+
+        log.debug("Updating site: " + id)
+
         //params.each { println it }
         //todo: need to detect 'cleared' values which will be missing from the params
         def values = [:]
@@ -89,8 +101,15 @@ class SiteController {
             }
         }
         log.debug (values as JSON).toString()
-        siteService.update(id, (values as JSON).toString())
-        def result = [status: 'updated']
+        def result = []
+        if(id){
+            siteService.update(id, (values as JSON).toString())
+            result = [status: 'updated']
+        } else {
+            def resp = siteService.create((values as JSON).toString())
+            result = [status: 'created', id:resp.resp.siteId]
+        }
+
         render result as JSON
     }
 

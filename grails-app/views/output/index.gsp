@@ -4,9 +4,8 @@
 <head>
     <meta name="layout" content="main"/>
     <title>Edit | ${activity.activityId ?: 'new'} | ${site.name} | ${site.projectName} | Field Capture</title>
-<md:modelStyles model="${model}"/>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jstimezonedetect/1.0.4/jstz.min.js"></script>
-    <r:require modules="knockout,jqueryValidationEngine,datepicker"/>
+    <md:modelStyles model="${model}"/>
+    <r:require modules="jstimezonedetect,knockout,jqueryValidationEngine,datepicker"/>
 </head>
 <body>
 <div class="container-fluid">

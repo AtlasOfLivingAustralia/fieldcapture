@@ -7,6 +7,7 @@ class SiteService {
 
     def webService, grailsApplication, commonService, cacheService, metadataService
     LinkGenerator grailsLinkGenerator
+    static locationTypes = [locationTypePoint: 'point', locationTypePolygon: 'polygon', locationTypePid: 'pid']
 
     def list() {
         webService.getJson(grailsApplication.config.ecodata.baseUrl + 'site/').list
@@ -60,6 +61,10 @@ class SiteService {
                 commonService.buildUrlParamsFromMap(urlParams))
     }
 
+    def create(body){
+        webService.doPost(grailsApplication.config.ecodata.baseUrl + 'site/', body)
+    }
+
     def update(id, body) {
         webService.doPost(grailsApplication.config.ecodata.baseUrl + 'site/' + id, body)
     }
@@ -68,7 +73,6 @@ class SiteService {
         webService.doDelete(grailsApplication.config.ecodata.baseUrl + 'site/' + id)
     }
 
-    static locationTypes = [locationTypePoint: 'point', locationTypePolygon: 'polygon', locationTypePid: 'pid']
     /**
      * Returns json that describes in a generic fashion the features to be placed on a map that
      * will represent the site's locations.
@@ -131,6 +135,4 @@ class SiteService {
                 ]
             ]
     }
-
-
 }
