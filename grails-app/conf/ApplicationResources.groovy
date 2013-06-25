@@ -61,4 +61,17 @@ modules = {
     vkbeautify {
         resource 'js/vkbeautify.0.99.00.beta.js'
     }
+
+    jstimezonedetect {
+        resource 'js/jstz.min.js'
+    }
+
+    jquery_ui {
+        resource 'js/jquery-ui-1.8.19.custom.min.js'
+    }
+
+    drawmap {
+        resource 'js/keydragzoom.js'
+        resource 'js/selection-map.js'
+    }
 }
