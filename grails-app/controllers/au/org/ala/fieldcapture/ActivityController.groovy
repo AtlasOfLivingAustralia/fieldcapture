@@ -15,6 +15,7 @@ class ActivityController {
             model.projects = model.site.projects
         }
         model.sites = siteService.list().collect({[name:it.name,siteId:it.siteId]})
+        model.projects = projectService.list().collect({[name:it.name,projectId:it.projectId]})
         //map.model = metadataService.getDataModelFromOutputName(output.name)
         model
     }
