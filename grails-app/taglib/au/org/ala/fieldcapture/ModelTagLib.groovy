@@ -108,7 +108,7 @@ class ModelTagLib {
                 // to select from.
                 databindAttrs.add 'options', 'transients.'+model.source+'Constraints'
 
-                result += "<select${at.toString()} data-bind='${databindAttrs.toString()}'></select>"
+                result += "<select${at.toString()} data-bind='${databindAttrs.toString()}'${validate}></select>"
                 break
             case 'selectMany-edit':
                 labelClasses += 'checkbox-list-label '
@@ -118,7 +118,7 @@ class ModelTagLib {
                 result += """
                     <ul class="checkbox-list" data-bind="foreach: ${constraints}">
                         <li>
-                            <input type="checkbox" data-bind="${databindAttrs.toString()}"/> <span data-bind="text:\$data"></span>
+                            <input type="checkbox" name="${source}" data-bind="${databindAttrs.toString()}"${validate}/> <span data-bind="text:\$data"></span>
                         </li>
                     </ul>
                 """
@@ -169,7 +169,12 @@ class ModelTagLib {
         criteria.each {
             switch (it) {
                 case 'required':
-                    values << it
+                    if (model.type == 'selectMany') {
+                        values << 'minCheckbox[1]'
+                    }
+                    else {
+                        values << it
+                    }
                     break
                 case 'number':
                     values << 'custom[number]'
