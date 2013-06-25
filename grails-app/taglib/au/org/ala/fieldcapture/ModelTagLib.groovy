@@ -54,9 +54,7 @@ class ModelTagLib {
         def toEdit = editable && !model.computed && !model.noEdit
         def matrix = model.type + '-' + (toEdit ? 'edit' : 'view')
         def source = (context ? context + '.' : '') + model.source
-        if (model.preLabel) {
-            result = "<span class='label preLabel'>${model.preLabel}</span>"
-        }
+        def labelClasses = ''
         switch (matrix) {
             case 'literal-edit':
             case 'literal-view':
@@ -105,7 +103,6 @@ class ModelTagLib {
                 result += "<span${at.toString()} data-bind='${databindAttrs.toString()}'></span>"
                 break
             case 'selectOne-edit':
-            case 'selectMany-edit':
                 databindAttrs.add 'value', source
                 // Select one or many view types require that the data model has defined a set of valid options
                 // to select from.
@@ -113,6 +110,22 @@ class ModelTagLib {
 
                 result += "<select${at.toString()} data-bind='${databindAttrs.toString()}'></select>"
                 break
+            case 'selectMany-edit':
+                labelClasses += 'checkbox-list-label '
+                def constraints = 'transients.'+model.source+'Constraints'
+                databindAttrs.add 'value', '\$data'
+                databindAttrs.add 'checked', "\$root.${source}"
+                result += """
+                    <ul class="checkbox-list" data-bind="foreach: ${constraints}">
+                        <li>
+                            <input type="checkbox" data-bind="${databindAttrs.toString()}"/> <span data-bind="text:\$data"></span>
+                        </li>
+                    </ul>
+                """
+                break
+        }
+        if (model.preLabel) {
+            result = "<span class='${labelClasses}label preLabel'>${model.preLabel}</span>" + result
         }
         if (model.postLabel) {
             result += "<span class='postLabel'>${model.postLabel}</span>"

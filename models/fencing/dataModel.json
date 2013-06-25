@@ -5,7 +5,7 @@
             {"name":"fenceType","dataType":"text", "constraints":["Post & Wire", "Post & Rail", "Post & Netting", "Cyclone", "Solid Sheet", "Other"]},
             {"name":"lengthOfFence","dataType":"number", "primaryResult":"true"},
             {"name":"fenceCost","dataType":"number"},
-            {"name":"purposeOfFence","dataType":"text"}
+            {"name":"purposeOfFence","dataType":"stringList", "constraints":["Cattle exclusion", "Sheep or goat exclusion", "Kangaroo and wallaby exclusion", "Rabbit and hare exclusion", "Wombat exclusion", "Wild dog exclusion", "Other"]}
 
 ],
 "viewModel":[

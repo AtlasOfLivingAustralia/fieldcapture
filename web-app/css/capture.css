@@ -290,6 +290,20 @@ i[class^="icon-remove"]:hover {
     overflow: auto;
     margin-right: -19px;
 }
+
+.checkbox-list {
+    list-style-type: none;
+    display: inline-block;
+    margin-left: 0px;
+}
+.checkbox-list input[type=checkbox] {
+    margin-bottom: 6px;
+}
+.checkbox-list-label.label  {
+    vertical-align: top;
+    margin-top: 1em;
+}
+
 /* debug */
 .debug div {
     padding-bottom: 10px;;

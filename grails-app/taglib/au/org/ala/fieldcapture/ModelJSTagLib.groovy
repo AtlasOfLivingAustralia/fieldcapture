@@ -42,6 +42,9 @@ class ModelJSTagLib {
             else if (mod.dataType == 'number') {
                 numberViewModel(mod, out)
             }
+            else if (mod.dataType == 'stringList') {
+                stringListModel(mod, out)
+            }
         }
     }
 
@@ -64,6 +67,9 @@ class ModelJSTagLib {
             }
             else if (mod.dataType == 'number' && !mod.computed) {
                 out << INDENT*4 << "self.data['${mod.name}'](orZero(data['${mod.name}']));\n"
+            }
+            else if (mod.dataType == 'stringList' && !mod.computed) {
+                out << INDENT*4 << "self.load${mod.name}(data['${mod.name}']);\n"
             }
         }
     }
@@ -428,6 +434,20 @@ class ModelJSTagLib {
 """
             }
         }
+    }
+
+    def stringListModel(model, out) {
+        out << INDENT*4 << "self.data.${model.name}=ko.observableArray([]);\n"
+        modelConstraints(model, out)
+        out << INDENT*4 << """
+        self.load${model.name} = function (data) {
+            if (data !== undefined) {
+                \$.each(data, function (i, obj) {
+                    self.data.${model.name}.push(obj);
+                });
+        }};
+        """
+
     }
 
     def modelConstraints(model, out) {
