@@ -30,7 +30,7 @@ class FCTagLib {
                 classes = 'span12'
             }
         }
-        log.debug "data-bind = " + attrs['data-bind']
+        log.trace "data-bind = " + attrs['data-bind']
         //def dataBind = attrs.remove('data-bind')
 
         //out << "<div class='controls'>"
