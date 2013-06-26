@@ -6,19 +6,19 @@
   <title>${site?.name} | Field Capture</title>
   <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&language=en"></script>
     <r:script disposition="head">
-    var fcConfig = {
-        serverUrl: "${grailsApplication.config.grails.serverURL}",
-        siteDeleteUrl: "${createLink(controller: 'site', action: 'ajaxDelete')}",
-        siteViewUrl: "${createLink(controller: 'site', action: 'index')}",
-        activityEditUrl: "${createLink(controller: 'activity', action: 'edit')}",
-        activityCreateUrl: "${createLink(controller: 'activity', action: 'create')}",
-        spatialBaseUrl: "${grailsApplication.config.spatial.baseURL}",
-        spatialWmsCacheUrl: "${grailsApplication.config.spatial.wms.cache.url}",
-        spatialWmsUrl: "${grailsApplication.config.spatial.wms.url}",
-        sldPolgonDefaultUrl: "${grailsApplication.config.sld.polgon.default.url}",
-        sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}"
-        },
-        returnTo = "site/index/${site.siteId}";
+        var fcConfig = {
+            serverUrl: "${grailsApplication.config.grails.serverURL}",
+            siteDeleteUrl: "${createLink(controller: 'site', action: 'ajaxDelete')}",
+            siteViewUrl: "${createLink(controller: 'site', action: 'index')}",
+            activityEditUrl: "${createLink(controller: 'activity', action: 'edit')}",
+            activityCreateUrl: "${createLink(controller: 'activity', action: 'create')}",
+            spatialBaseUrl: "${grailsApplication.config.spatial.baseURL}",
+            spatialWmsCacheUrl: "${grailsApplication.config.spatial.wms.cache.url}",
+            spatialWmsUrl: "${grailsApplication.config.spatial.wms.url}",
+            sldPolgonDefaultUrl: "${grailsApplication.config.sld.polgon.default.url}",
+            sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}"
+            },
+            returnTo = "site/index/${site.siteId}";
     </r:script>
   <r:require modules="knockout,mapWithFeatures,amplify"/>
 </head>
@@ -62,11 +62,12 @@
             </div>
             <div>
                 <span class="span12">Notes: ${site.notes}</span>
-                %{--<span class="span3">${site.location?.size()} locations.</span>--}%
             </div>
         </div>
-        <div class="span3"><!-- right block of header -->
-            <div id="smallMap"></div>
+        <div class="span3">
+            <div id="smallMap">
+
+            </div>
         </div>
     </div>
 
@@ -135,18 +136,17 @@
 
     <hr />
         <div class="expandable-debug">
-            <h3>Debug</h3>
+            <h3><a href="javascript:void(0);">Debug</a></h3>
             <div>
-                <h4>KO model</h4>
+                <h4><a href="javascript:void(0);">KO model</a></h4>
                 <pre data-bind="text:ko.toJSON($root,null,2)"></pre>
-                <h4>Activities</h4>
-                %{--<pre data-bind="text:ko.toJSON(activities,null,2)"></pre>--}%
+                <h4><a href="javascript:void(0);">Activities</a></h4>
                 <pre>${site.activities}</pre>
-                <h4>Site</h4>
+                <h4><a href="javascript:void(0);">Site</a></h4>
                 <pre>${site}</pre>
-                <h4>Projects</h4>
+                <h4><a href="javascript:void(0);">Projects</a></h4>
                 <pre>${projects}</pre>
-                <h4>Features</h4>
+                <h4><a href="javascript:void(0);">Features</a></h4>
                 <pre>${mapFeatures}</pre>
             </div>
         </div>

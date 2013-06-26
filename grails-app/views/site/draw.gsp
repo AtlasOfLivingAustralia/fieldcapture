@@ -46,9 +46,9 @@
         </g:if>
         <g:else>
             <li>
-                <g:link controller="site" action="index" id="${site?.siteId}">
-                    <span data-bind="text: name">${site?.name?:'New site'}</span>
-                </g:link>
+                <a href="${params.returnTo?:createLink([controller:'home',action:'index'])}">
+                    <span>${site?.name?:'New site'}</span>
+                </a>
                 <span class="divider">/</span>
             </li>
             <li class="active">Draw location</li>
@@ -149,10 +149,12 @@
         self.decimalLongitude = lon;
     }
 
-    function Polygon (wkt) {
+    //supply wkt and coordinates for now
+    function Polygon (wkt, geojson) {
         var self = this;
         self.type = 'polygon';
         self.wkt = wkt;
+        self.geojson = geojson;
     }
 
     $(function () {
@@ -174,7 +176,7 @@
 
         $('#useLocation').click(function(){
            console.log('Storing drawn shape....');
-            console.log(drawnShape);
+           console.log(drawnShape);
            amplify.store("drawnShape",drawnShape);
            document.location.href = "${params.returnTo}";
         });
@@ -311,7 +313,7 @@
                     }
                     // set hidden inputs
                     $('#wkt').val(polygonToWkt(path));
-                    drawnShape = new Polygon(polygonToWkt(path));
+                    drawnShape = new Polygon(polygonToWkt(path), polygonToGeoJson(path));
                     break;
             }
         }
@@ -330,6 +332,28 @@
                 swLng + " " + swLat;
 
         return wkt + "))";
+    }
+
+    /**
+     * Returns a GeoJson coordinate array for the polygon
+     */
+    function polygonToGeoJson(path){
+        var firstPoint = path.getAt(0),
+                points = [];
+        path.forEach(function (obj, i) {
+            points.push("[" + obj.lng() + "," + obj.lat() + "]");
+        });
+
+        // a polygon array from the drawingManager will not have a closing point
+        // but one that has been drawn from a wkt will have - so only add closing
+        // point if the first and last don't match
+        if (!firstPoint.equals(path.getAt(path.length -1))) {
+            // add first points at end
+            points.push("[" + firstPoint.lng() + "," + firstPoint.lat() + "]");
+        }
+        var geoJson =  "[" + points.join(',') + "]";
+        console.log("GEOJSON: " + geoJson);
+        return geoJson;
     }
 
     function polygonToWkt(path) {

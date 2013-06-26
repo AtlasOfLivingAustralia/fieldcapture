@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&language=en"></script>
   <meta name="layout" content="main"/>
   <title> ${create ? 'New' : ('Edit | ' + site?.name)} | Sites | Field Capture</title>
   <style type="text/css">
@@ -26,7 +27,7 @@
     }
     .no-border { border-top: none !important; }
   </style>
-  <r:require modules="knockout, amplify"/>
+  <r:require modules="knockout, amplify, mapWithFeatures"/>
 </head>
 <body>
     <ul class="breadcrumb">
@@ -43,83 +44,87 @@
     </ul>
     <div class="container-fluid">
         <bs:form action="update" inline="true">
-        <div class="row-fluid span12">
-            <g:hiddenField name="id" value="${site?.siteId}"/>
-            <div class="">
-                <label for="name">Site name</label>
-                <h1>
-                    <input data-bind="value: name" class="span12" id="name" type="text" value="${site?.name}" placeholder="Enter a name for the new site"/>
-                </h1>
+            <div class="row-fluid span12">
+                <g:hiddenField name="id" value="${site?.siteId}"/>
+                <div class="">
+                    <label for="name">Site name</label>
+                    <h1>
+                        <input data-bind="value: name" class="span12" id="name" type="text" value="${site?.name}" placeholder="Enter a name for the new site"/>
+                    </h1>
+                </div>
             </div>
-        </div>
 
-        <div class="row-fluid span12">
-            <div class="span4">
-                <label for="externalId">External Id
-                    <fc:iconHelp title="External id">Identifier code for the site - used in external documents.</fc:iconHelp>
-                </label>
-                <input data-bind="value:externalId" id="externalId" type="text" class="span12"/>
+            <div class="row-fluid span12">
+                <div class="span4">
+                    <label for="externalId">External Id
+                        <fc:iconHelp title="External id">Identifier code for the site - used in external documents.</fc:iconHelp>
+                    </label>
+                    <input data-bind="value:externalId" id="externalId" type="text" class="span12"/>
+                </div>
+                <div class="span4">
+                    <label for="type">Type</label>
+                    <input data-bind="value: type" id="type" type="text" class="span12"/>
+                </div>
+                <div class="span4">
+                    <label for="area">Area (decimal hectares)
+                        <fc:iconHelp title="Area of site">The area in decimal hectares (4dp) enclosed within the boundary of the shape file.</fc:iconHelp></label>
+                    <input data-bind="value: area" id="area" type="text" class="span12"/>
+                </div>
             </div>
-            <div class="span4">
-                <label for="type">Type</label>
-                <input data-bind="value: type" id="type" type="text" class="span12"/>
-            </div>
-            <div class="span4">
-                <label for="area">Area (decimal hectares)
-                    <fc:iconHelp title="Area of site">The area in decimal hectares (4dp) enclosed within the boundary of the shape file.</fc:iconHelp></label>
-                <input data-bind="value: area" id="area" type="text" class="span12"/>
-            </div>
-        </div>
 
-        <div class="row-fluid span12">
-            <div class="span6">
-                <fc:textArea data-bind="value: description" id="description" label="Description" class="span12" rows="3" cols="50"/>
+            <div class="row-fluid span12">
+                <div class="span6">
+                    <fc:textArea data-bind="value: description" id="description" label="Description" class="span12" rows="3" cols="50"/>
+                </div>
+                <div class="span6">
+                    <fc:textArea data-bind="value: notes" id="notes" label="Notes" class="span12" rows="3" cols="50"/>
+                </div>
             </div>
-            <div class="span6">
-                <fc:textArea data-bind="value: notes" id="notes" label="Notes" class="span12" rows="3" cols="50"/>
+
+            <div class="span12">
+                <h2>Locations <fc:iconHelp title="Location of the site">The location of the site can be represented one or more points or polygons.
+                     KML, WKT and shape files are supported for uploading polygons. As are PID's of existing features in the Atlas Spatial Portal.</fc:iconHelp>
+                </h2>
+                <table class="table">
+                    <caption>You can have any number of points and areas to describe the locations of this site.</caption>
+                    <thead><tr><td>name</td><td>type</td><td>values</td></tr></thead>
+                    <tbody data-bind="foreach: location">
+                        <tr>
+                            <td><input type="text" data-bind="value:name" class="input-small"/></td>
+                            <td>
+                                <g:select data-bind="value: type"  from="['choose a location type','point','known shape','upload a shape','draw a shape']" name='shit'
+                                          keys="['locationTypeNone','locationTypePoint','locationTypePid','locationTypeUpload','locationTypeDrawn']"/>
+                            </td>
+                            <td rowspan="2">
+                                <div class="span12">
+                                    <div data-bind="template: {name: updateModel(), data: data,  afterRender: myPostProcessingLogic}"></div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr><td colspan="2" class="no-border">
+                            <button data-bind="click: $root.removeLocation" type="button" class="btn btn-link">Remove</button>
+                            <button data-bind="click: $root.notImplemented, visible: type() != 'locationTypeNone'" type="button" class="btn btn-link">Show this on a map</button>
+                        </td></tr>
+                    </tbody>
+                </table>
+                <button type="button" class="btn" data-bind="click:addEmptyLocation">Add another location</button>
             </div>
-        </div>
 
-        <div class="span12">
-            <h2>Locations <fc:iconHelp title="Location of the site">The location of the site can be represented one or more points or polygons.
-                 KML, WKT and shape files are supported for uploading polygons. As are PID's of existing features in the Atlas Spatial Portal.</fc:iconHelp>
-            </h2>
-            <table class="table">
-                <caption>You can have any number of points and areas to describe the locations of this site.</caption>
-                <thead><tr><td>name</td><td>type</td><td>values</td></tr></thead>
-                <tbody data-bind="foreach: location">
-                    <tr>
-                        <td><input type="text" data-bind="value:name" class="input-small"/><br>
-                        <td><g:select data-bind="value: type"  from="['choose a location type','point','known shape','upload a shape','draw a shape']" name='shit'
-                                      keys="['locationTypeNone','locationTypePoint','locationTypePid','locationTypeUpload','locationTypeDrawn']"/></td>
-                        <td rowspan="2"><div class="span12">
-                            <div data-bind="template: {name: updateModel(), data: data}"></div>
-                        </div></td>
-                    </tr>
-                    <tr><td colspan="2" class="no-border">
-                        <button data-bind="click: $root.removeLocation" type="button" class="btn btn-link">Remove</button>
-                        <button data-bind="click: $root.notImplemented, visible: type() != 'locationTypeNone'" type="button" class="btn btn-link">Show this on a map</button>
-                    </td></tr>
-                </tbody>
-            </table>
-            <button type="button" class="btn" data-bind="click:addEmptyLocation">Add another location</button>
-        </div>
-
-        <div class="form-actions span12">
-            <button type="button" data-bind="click: save" class="btn btn-primary">Save changes</button>
-            <button type="button" id="cancel" class="btn">Cancel</button>
-        </div>
+            <div class="form-actions span12">
+                <button type="button" data-bind="click: save" class="btn btn-primary">Save changes</button>
+                <button type="button" id="cancel" class="btn">Cancel</button>
+            </div>
         </bs:form>
 
-        <hr />
+    </div>
+    <div class="container-fluid">
         <div class="debug">
-            <h3 id="debug">Debug</h3>
+            <h3 id="debug"><a href="javascript:void(0);">Debug</a></h3>
             <div style="display: none">
                 Model: <pre data-bind="text: ko.toJSON($root)"></pre>
                 Site : <pre>Site : ${site}</pre>
             </div>
         </div>
-
     </div>
 
 <!-- templates -->
@@ -149,14 +154,22 @@
 </script>
 
 <script type="text/html" id="locationTypeDrawn">
-    <a href="javascript:drawSite();">Draw the location</a><br/>
-    <div class="row-fluid controls-row">
-        <fc:textField data-bind="value:decimalLatitude" outerClass="span2" label="Latitude:"/>
-        <fc:textField data-bind="value:decimalLongitude" outerClass="span2" label="Longitude:"/>
-        <fc:textField data-bind="value:radius" outerClass="span2" label="Radius:"/>
-    </div>
-    <div class="row-fluid controls-row">
-        <fc:textField data-bind="value:wkt" class="input-large" label="WKT:"/>
+    <div class="drawLocationDiv">
+        <div class="row-fluid controls-row">
+            <div>
+                <a href="javascript:drawSite();">Draw the location</a><br/>
+                <div class="row-fluid controls-row circleProperties">
+                    <fc:textField data-bind="value:decimalLatitude" outerClass="span2" label="Latitude:"/>
+                    <fc:textField data-bind="value:decimalLongitude" outerClass="span2" label="Longitude:"/>
+                    <fc:textField data-bind="value:radius" outerClass="span2" label="Radius:"/>
+                </div>
+                <div class="row-fluid controls-row polygonProperties">
+                    <fc:textArea  cols="80" rows="4" data-bind="value:wkt" class="input-large " label="Well Known Text (WKT):"/>
+                    <fc:textArea  cols="80" rows="4" data-bind="value:geojson" class="input-large " label="GeoJson :"/>
+                </div>
+            </div>
+            <div class="smallMap" style="width:300px;height:300px;"></div>
+        </div>
     </div>
 </script>
 
@@ -164,12 +177,19 @@
 
     // server side generated paths & properties
     var SERVER_CONF = {
+        <g:if test="${site}">
+        pageUrl : "${grailsApplication.config.grails.serverURL}${createLink(controller:'site', action:'edit', id: site?.siteId, params:[checkForState:true])}",
+        </g:if>
+        <g:else>
+        pageUrl : "${grailsApplication.config.grails.serverURL}${createLink(controller:'site', action:'create', params:[checkForState:true])}",
+        </g:else>
         sitePageUrl : "${createLink(action: 'index', id: site?.siteId)}",
         homePageUrl : "${createLink(controller: 'home', action: 'index')}",
         drawSiteUrl : "${createLink(controller: 'site', action: 'draw')}",
         projectList : ${projectList?:'[]'},
         ajaxUpdateUrl: "${createLink(action: 'ajaxUpdate', id: site?.siteId)}",
-        siteData: $.parseJSON('${json}')
+        siteData: $.parseJSON('${json}'),
+        checkForState: ${params.checkForState?:'false'}
     };
 
     var savedSiteData = {
@@ -185,7 +205,6 @@
     var viewModel = null;
 
     function drawSite(){
-        //alert("drawSite called  " + viewModel);
         amplify.store("savedViewData", {
             id: viewModel.id(),
             name: viewModel.name(),
@@ -196,7 +215,7 @@
             notes : viewModel.notes(),
             projects : viewModel.projects()
         });
-        document.location.href = SERVER_CONF.drawSiteUrl + '?returnTo=' + document.location.href;
+        document.location.href = SERVER_CONF.drawSiteUrl + '?returnTo=' + SERVER_CONF.pageUrl;
     }
 
     // returns blank string if the property is undefined, else the value
@@ -207,6 +226,16 @@
     // returns blank string if the object or the specified property is undefined, else the value
     function exists(parent, prop) {
         return parent === undefined ? '' : (parent[prop] === undefined ? '' : parent[prop]);
+    }
+
+    function makeid(){
+        var text = "";
+        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+        for( var i=0; i < 10; i++ )
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+        return text;
     }
 
     $(function(){
@@ -222,18 +251,28 @@
         });
 
         var DrawnLocation = function (l) {
-            console.log("Adding location.....");
-            console.log(l);
+            console.log("Adding drawn location.....");
             this.type = 'locationTypeDrawn';
+            console.log('WKT =  ' + exists(l,'wkt'));
+            if(exists(l,'wkt') != ''){
+               //we have a polygon
+               this.shapeType = 'polygon';
+            } else {
+               //we have a circle
+               this.shapeType = 'circle';
+            }
+
             this.radius = ko.observable(exists(l,'radius'));
             this.decimalLatitude = ko.observable(exists(l,'decimalLatitude'));
             this.decimalLongitude = ko.observable(exists(l,'decimalLongitude'));
             this.wkt = ko.observable(exists(l,'wkt'));
+            this.geojson = ko.observable(exists(l,'geojson'));
         };
 
         var PidLocation = function (l) {
             this.pid = ko.observable(exists(l,'pid'));
             this.type = 'locationTypePid';
+            this.shapeType = 'pid';
         };
 
         var UploadLocation = function (l) {
@@ -243,6 +282,7 @@
         var PointLocation = function (l) {
             var self = this;
             this.type = 'locationTypePoint';
+            this.shapeType = 'point';
             this.decimalLatitude = ko.observable(exists(l,'decimalLatitude'));
             this.decimalLongitude = ko.observable(exists(l,'decimalLongitude'));
             this.uncertainty = ko.observable(exists(l,'uncertainty'));
@@ -257,6 +297,7 @@
             var self = this;
             this.id = id;
             this.data = data;
+            this.shapeType = '';
             this.name = ko.observable(name);
             this.type = ko.observable(type);
             this.updateModel = function (event) {
@@ -273,6 +314,52 @@
                     }
                 }
                 return self.type();
+            }
+
+            this.myPostProcessingLogic = function(elements) {
+                console.log(elements);
+                var $drawLocationDiv = $(elements[1]);
+                var $smallMapDiv = $drawLocationDiv.find('.smallMap');
+                console.log($smallMapDiv);
+                //initialise a map
+                var mapId = makeid();
+                $smallMapDiv.attr('id',mapId);
+                var mapOptions;
+                if(self.data != null && self.data.shapeType != ''){
+                    console.log("The shape type = " + self.data.shapeType);
+                    if(self.data.shapeType == 'polygon'){
+                        console.log("GEOJSON returned: " + self.data.geojson());
+                        mapOptions = {
+                            "zoomToBounds":false,"zoomLimit":12,"highlightOnHover":true,
+                            "features":
+                            [
+                                {
+                                    "type":"polygon", "name":"ASH-MACC-A - 1 - centre", "id":"ASH-MACC-A - 1",
+                                    coordinates:$.parseJSON(self.data.geojson())
+                                }
+                            ]
+                        };
+                        $drawLocationDiv.find('.circleProperties').css('display','none');
+
+                    } else if(self.data.shapeType == 'circle'){
+
+                        console.log("Using radius: " + self.data.radius() + ", lat: " + self.data.decimalLatitude() + ", lon: " + self.data.decimalLatitude());
+                        mapOptions = {
+                            "zoomToBounds":false,"zoomLimit":12,"highlightOnHover":true,
+                            "features":[
+                                {"type":"circle","name":"ASH-MACC-A - 1 - centre","id":"ASH-MACC-A - 1",
+                                  radius: self.data.radius(),
+                                  decimalLatitude: self.data.decimalLatitude(),
+                                  decimalLongitude: self.data.decimalLongitude()
+                                /*radius: 2500,
+                                decimalLatitude:-37.14, decimalLongitude:149.1*/
+                                }
+                            ]
+                        };
+                        $drawLocationDiv.find('.polygonProperties').css('display','none');
+                    }
+                    init_map_with_features({mapContainer: mapId}, mapOptions);
+                }
             }
         };
 
@@ -360,7 +447,7 @@
 
         //retrieve serialised model
         var savedViewData = amplify.store("savedViewData");
-        if(savedViewData !== undefined){
+        if(SERVER_CONF.checkForState && savedViewData !== undefined){
             viewModel = new SiteViewModel(savedViewData);
         } else {
             viewModel = new SiteViewModel(savedSiteData);
@@ -371,8 +458,13 @@
         viewModel.loadLocations();
 
         //any passed back from drawing tool
-        var drawnShape = amplify.store("drawnShape");
-        viewModel.addDrawnLocation(drawnShape);
+        if(SERVER_CONF.checkForState){
+            var drawnShape = amplify.store("drawnShape");
+            console.log('Loading the amplify stored shape....');
+            console.log(drawnShape);
+            console.log("GeoJson returned from amplify:  " + drawnShape.geojson);
+            viewModel.addDrawnLocation(drawnShape);
+        }
     });
 </r:script>
 </body>

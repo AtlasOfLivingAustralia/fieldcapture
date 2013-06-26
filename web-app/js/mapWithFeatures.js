@@ -89,9 +89,37 @@
                     });
                     self.featureBounds.extend(ll);
                     self.addFeature(f, loc);
+                } else if (loc.type === 'circle') {
+                   f = new google.maps.Circle({
+                      center: new google.maps.LatLng(loc.decimalLatitude, loc.decimalLongitude),
+                      radius: loc.radius,
+                      map: self.map,
+                      editable: false
+                   });
+                    //set the extend of the map
+                   self.featureBounds.extend(f.getBounds().getNorthEast());
+                   self.featureBounds.extend(f.getBounds().getSouthWest());
+                   self.addFeature(f, loc);
+                } else if (loc.type === 'polygon') {
+                    var paths, points;
+                    var coordinates = loc.coordinates;
+                    var paths = geojsonToPaths(coordinates);
+                    f = new google.maps.Polygon({
+                        paths: paths,
+                        map: self.map,
+                        title: 'polygon name',
+                        editable: false
+                    });
+                    f.setOptions(self.overlayOptions);
+                    // flatten arrays to array of points
+                    points = [].concat.apply([], paths);
+                    // extend bounds by each point
+                    $.each(points, function (i,obj) {self.featureBounds.extend(obj);});
+                    self.addFeature(f, loc);
                 } else if (loc.type === 'pid') {
                     $.ajax(loc.polygonUrl, {
                             success: function(data) {
+                                console.log(data);
                                 var paths, points, gj = data.geojson;
                                 if (gj.type === 'Polygon') {
                                     paths = geojsonToPaths(gj.coordinates);
@@ -141,7 +169,7 @@
         },
         // default overlay options
         overlayOptions: {strokeColor:'#BC2B03',fillColor:'#DF4A21',fillOpacity: 0.3,strokeWeight: 1,
-            zIndex: 1},
+            zIndex: 1, editable:false},
         // keep count of locations as we load them so we know when we've finished
         locationsLoaded: 0,
         // keep a running bounds for loaded locations so we can zoom when all are loaded

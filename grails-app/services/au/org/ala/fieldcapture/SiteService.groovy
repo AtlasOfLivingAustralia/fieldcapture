@@ -5,9 +5,9 @@ import org.codehaus.groovy.grails.web.mapping.LinkGenerator
 
 class SiteService {
 
-    def webService, grailsApplication, commonService, cacheService, metadataService
+    def webService, grailsApplication, commonService, metadataService
     LinkGenerator grailsLinkGenerator
-    static locationTypes = [locationTypePoint: 'point', locationTypePolygon: 'polygon', locationTypePid: 'pid']
+    static locationTypes = [locationTypePoint: 'point', locationTypePolygon: 'polygon', locationTypeCircle: 'circle', locationTypePid: 'pid']
 
     def list() {
         webService.getJson(grailsApplication.config.ecodata.baseUrl + 'site/').list
@@ -89,14 +89,22 @@ class SiteService {
                     location.longitude = loc.data.decimalLongitude
                     break
                 case 'pid':
+                    //retrieve from spatial portal services
                     location.polygonUrl = grailsLinkGenerator.link(
                             controller: 'proxy', action: 'geojsonFromPid',
                             params: [pid: loc.data.pid]
                     )
+                case 'polygon' :
+                    location.wkt = loc.data.wkt
+                    location.coordinates = loc.data.coordinates
+                case 'circle' :
+                    location.decimalLatitude = loc.data.decimalLatitude
+                    location.decimalLongitude = loc.data.decimalLongitude
+                    location.radius = loc.data.radius
             }
             featuresMap.features << location
         }
-        return featuresMap as JSON
+        featuresMap as JSON
     }
 
     static metaModel() {
@@ -128,6 +136,12 @@ class SiteService {
                                         [name:'UploadLocation', type:'list', itemType:[
                                                 [name:'shape', type: 'text'],
                                                 [name:'pid', type: 'text']
+                                        ]],
+                                        [name:'DrawnLocation', type:'list', itemType:[
+                                                [name:'decimalLatitude', type:'latLng'],
+                                                [name:'decimalLongitude', type:'latLng'],
+                                                [name:'radius', type:'text'],
+                                                [name:'wkt', type:'text']
                                         ]]
                                 ]]
                             ]

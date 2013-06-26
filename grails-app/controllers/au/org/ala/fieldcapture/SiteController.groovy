@@ -45,8 +45,9 @@ class SiteController {
                 log.debug "converting to array"
                 site.shapePid = [site.shapePid] as JSONArray
             }
-            [site: site, json: (site as JSON).toString(), meta: siteService.metaModel(),
-                projectList: projectService.list(true)]
+            [site: site, json: (site as JSON).toString(), meta: siteService.metaModel()
+//                    ,projectList: projectService.list(true)
+            ]
         } else {
             render 'no such site'
         }

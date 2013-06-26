@@ -43,8 +43,9 @@ map = {
     // externally set callback for when shapes are drawn
     currentShapeCallback: function () {},
     // default overlay options
-    overlayOptions: {strokeColor:'#BC2B03',fillColor:'#DF4A21',fillOpacity: 0.5,strokeWeight: 2,
-        clickable: false,zIndex: 1,editable: false},
+    overlayOptions: {
+//        strokeColor:'#BC2B03',fillColor:'#DF4A21',fillOpacity: 0.5,strokeWeight: 2,
+        clickable: false, zIndex: 1, editable: true},
     // the default bounds for the map
     initialBounds: new google.maps.LatLngBounds(
             new google.maps.LatLng(-41.5, 114),
@@ -134,7 +135,6 @@ map = {
     showArea: function (type, arg1, arg2, arg3) {
         this.clearShapes();
         switch (type) {
-            case 'locality':
             case 'circle':
                 var lat = Number(arg1),
                     lng = Number(arg2),
@@ -176,16 +176,6 @@ map = {
                 this.shapes[0] = poly;
                 // simulate drawingManager drawn event
                 this.currentShapeCallback(type, google.maps.drawing.OverlayType.POLYGON, poly);
-                break;
-            case 'imcra':
-                var params = [
-                    "FORMAT=image/png8",
-                    "LAYERS=ALA:Objects",
-                    "viewparams=s:" + arg1,
-                    "STYLES=polygon"
-                ],
-                ov = new WMSTileLayer('imcraLayer', config.spatialWmsUrl, params, null, 0.5);
-                this.gmap.overlayMapTypes.setAt(0, ov);
                 break;
         }
     },
