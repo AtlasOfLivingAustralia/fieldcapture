@@ -1,15 +1,33 @@
 {"activities": [
     {
         "name": "DECCW vegetation assessment",
-        "outputs": ["Weed Abundance & Threat Score"]
+        "outputs": ["Weed Abundance & Threat Score"],
+        "type": "Assessment"
     },
     {
         "name": "Feral animal assessment",
-        "outputs": ["Feral Animal Abundance Score", "Feral Animal Frequency Score"]
+        "outputs": ["Feral Animal Abundance Score", "Feral Animal Frequency Score"],
+        "type": "Assessment"
     },
     {
         "name": "Revegetation",
-        "outputs": ["Fencing", "Participant Information"]
+        "outputs": ["Fencing", "Participant Information"],
+        "type": "Activity"
+    },
+    {
+        "name":"Weed management",
+        "type":"Activity",
+        "outputs":["hectaresTreated","lengthRoadsideCleared","lengthRiparianAreaCleared"]
+    },
+    {
+        "name":"Pest management",
+        "type":"Activity",
+        "outputs":["hectaresTreated","hectaresProtected","kilometersFencing"]
+    },
+    {
+        "name":"Grazing management",
+        "type":"Activity",
+        "outputs":["hectaresManaged","lengthOfRiparianAreaProtected"]
     }
 ], "outputs": [
     {

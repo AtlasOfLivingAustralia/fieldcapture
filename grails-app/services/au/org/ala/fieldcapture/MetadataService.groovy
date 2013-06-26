@@ -52,7 +52,14 @@ class MetadataService {
     }
 
     def activityTypesList() {
-        activityTypesNoKey
+        cacheService.get('activitiesSelectList', {
+            def acts = activitiesModel().activities
+            [
+                [name:'Activities', list: acts.findAll({it.type == 'Activity'}).collect {[name:it.name]}],
+                [name:'Assessments', list: acts.findAll({it.type == 'Assessment'}).collect {[name:it.name]}]
+            ]
+
+        })
     }
 
     def outputTypesList() {
@@ -155,6 +162,7 @@ class MetadataService {
                     [name:'Species observation'],
                     [name:'Weed control'],
                     [name:'Pest control'],
+                    [name:'Revegetation'],
                     [name:'Planting']
             ]]
     ]
