@@ -4,7 +4,6 @@
     <head>
         <meta name="layout" content="adminLayout"/>
         <title>Metadata - Admin - Data capture - Atlas of Living Australia</title>
-        <r:require module="vkbeautify"/>
     </head>
 
     <body>
