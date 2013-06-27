@@ -3,11 +3,11 @@ modules = {
         dependsOn 'jquery'
         resource url: "${grailsApplication.config.ala.baseURL?:'http://www.ala.org.au'}/wp-content/themes/ala2011/images/favicon.ico", attrs:[type:'ico'], disposition: 'head'
         resource url: [dir:'js', file:'html5.js', plugin: "ala-web-theme"], wrapper: { s -> "<!--[if lt IE 9]>$s<![endif]-->" }, disposition: 'head'
-        resource url:'js/application.js'
+        resource url: 'js/vkbeautify.0.99.00.beta.js'
+        resource url: 'js/application.js'
         resource url: 'css/capture.css'
         resource url: 'js/jquery.shorten.js'
         resource url: 'js/bootbox.min.js'
-        resource 'js/vkbeautify.0.99.00.beta.js'
     }
 
     gmap3 {
