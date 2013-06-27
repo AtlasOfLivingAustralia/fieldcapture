@@ -177,6 +177,7 @@
         //retrieve the current shape if exists
         var currentDrawnShape = amplify.store("currentDrawnShape");
         console.log('Retrieved shape: ' + currentDrawnShape);
+        console.log(currentDrawnShape);
         if(currentDrawnShape !== undefined){
             if(currentDrawnShape.shapeType == 'polygon'){
                 console.log('Redrawing polygon');

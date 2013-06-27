@@ -33,19 +33,43 @@
     </legend>
     <div class="row-fluid space-after">
         <div class="span9"><!-- left block of header -->
-            <div class="under-rule">
+            <div >
                 <div class="clearfix">
                     <h1 class="pull-left">${site?.name}</h1>
-                    <g:link action="edit" id="${site.siteId}" class="btn pull-right title-edit">Edit site</g:link>
+                    <g:link style="margin-bottom: 20px;" action="edit" id="${site.siteId}" class="btn pull-left title-edit">Edit site</g:link>
                 </div>
                 <g:if test="${site.description}">
-                    <div class="clearfix">
-                        <p class="well well-small">${site.description}</p>
+                    <div class="clearfix well well-small">
+                        <p>${site.description}</p>
                     </div>
                 </g:if>
             </div>
             <div>
-                <span class="span2">Projects:</span>
+                <span class="span4">
+                    <span class="label">External Id:</span> ${site.externalId?:'Not specified'}
+                </span>
+                <span class="span4">
+                    <span class="label">Type:</span> ${site.type?:'Not specified'}
+                </span>
+                <span class="span4">
+                    <span class="label">Area:</span>
+                    <g:if test="${site.area}">
+                        ${site.area} decimal hectares
+                    </g:if>
+                    <g:else>
+                        Not specified
+                    </g:else>
+                </span>
+            </div>
+            <div>
+                <span class="span12">
+                    <span class="label">Notes:</span>
+                    ${site.notes}</span>
+            </div>
+
+            <g:if test="${site.projects}">
+            <div>
+                <span class="span2"><span class="label">Projects:</span></span>
                 <ul style="list-style: none;margin:13px 0;">
                     <g:each in="${site.projects}" var="p" status="count">
                         <li>
@@ -55,83 +79,80 @@
                     </g:each>
                 </ul>
             </div>
-            <div>
-                <span class="span4">External Id: ${site.externalId}</span>
-                <span class="span4">Type: ${site.type}</span>
-                <span class="span4">Area: ${site.area}</span>
-            </div>
-            <div>
-                <span class="span12">Notes: ${site.notes}</span>
-            </div>
+            </g:if>
+
         </div>
         <div class="span3">
             <div id="smallMap">
-
             </div>
         </div>
     </div>
 
-    <div class="row-fluid">
-        <!-- ACTIVITIES -->
-        <div class="tab-pane active" id="activity">
-            <div class="row-fluid">
-                <div class="pull-right">
-                    <button data-bind="click: $root.expandActivities" type="button" class="btn btn-link">Expand all</button>
-                    <button data-bind="click: $root.collapseActivities" type="button" class="btn btn-link">Collapse all</button>
-                    <button data-bind="click: $root.newActivity" type="button" class="btn">Add new activity</button>
+    <g:if test="${site.activities}">
+        <div class="row-fluid">
+            <!-- ACTIVITIES -->
+            <div class="tab-pane active" id="activity">
+                <div class="row-fluid">
+                    <div class="pull-right">
+                        <button data-bind="click: $root.expandActivities" type="button" class="btn btn-link">Expand all</button>
+                        <button data-bind="click: $root.collapseActivities" type="button" class="btn btn-link">Collapse all</button>
+                        <button data-bind="click: $root.newActivity" type="button" class="btn">Add new activity</button>
+                    </div>
+                </div>
+                <div class="row-fluid">
+                    <table class="table table-condensed" id="activities">
+                        <thead>
+                        <tr><th></th><th>Type</th><th>From</th><th>To</th><th>Project</th></tr>
+                        </thead>
+                        <tbody data-bind="foreach:activities" id="activityList">
+                        <tr data-bind="attr:{href:'#'+activityId}" data-toggle="collapse" class="accordion-toggle">
+                            <td>
+                                <div>
+                                    <a><i class="icon-plus" title="expand"></i></a>
+                                </div>
+                            </td>
+                            <td><span data-bind="text:type"></span></td>
+                            <td><span data-bind="text:startDate.formattedDate"></span></td>
+                            <td><span data-bind="text:endDate.formattedDate"></span></td>
+                            <td><span data-bind="projectName:$data"></span></td>
+                        </tr>
+                        <tr class="hidden-row">
+                            <td></td>
+                            <td colspan="5">
+                                <div class="collapse" data-bind="attr: {id:activityId}">
+                                    <ul class="unstyled well well-small">
+                                        <!-- ko foreachModelOutput:metaModel.outputs -->
+                                        <li>
+                                            <div class="row-fluid">
+                                                <span class="span4" data-bind="text:name"></span>
+                                                <span class="span3" data-bind="text:score"></span>
+                                                <span class="span1 offset1">
+                                                    <a data-bind="attr: {href:editLink}">
+                                                        <i data-bind="attr: {title: outputId == '' ? 'Add data' : 'Edit data'}" class="icon-edit"></i>
+                                                    </a>
+                                                </span>
+                                            </div>
+                                        </li>
+                                        <!-- /ko -->
+                                        <li><button type="button" class="btn btn-link" style="padding:0" data-bind="click:edit">
+                                            Edit activity</button></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            <div class="row-fluid">
-                <table class="table table-condensed" id="activities">
-                    <thead>
-                    <tr><th></th><th>Type</th><th>From</th><th>To</th><th>Project</th></tr>
-                    </thead>
-                    <tbody data-bind="foreach:activities" id="activityList">
-                    <tr data-bind="attr:{href:'#'+activityId}" data-toggle="collapse" class="accordion-toggle">
-                        <td>
-                            <div>
-                                <a><i class="icon-plus" title="expand"></i></a>
-                            </div>
-                        </td>
-                        <td><span data-bind="text:type"></span></td>
-                        <td><span data-bind="text:startDate.formattedDate"></span></td>
-                        <td><span data-bind="text:endDate.formattedDate"></span></td>
-                        <td><span data-bind="projectName:$data"></span></td>
-                    </tr>
-                    <tr class="hidden-row">
-                        <td></td>
-                        <td colspan="5">
-                            <div class="collapse" data-bind="attr: {id:activityId}">
-                                <ul class="unstyled well well-small">
-                                    <!-- ko foreachModelOutput:metaModel.outputs -->
-                                    <li>
-                                        <div class="row-fluid">
-                                            <span class="span4" data-bind="text:name"></span>
-                                            <span class="span3" data-bind="text:score"></span>
-                                            <span class="span1 offset1">
-                                                <a data-bind="attr: {href:editLink}">
-                                                    <i data-bind="attr: {title: outputId == '' ? 'Add data' : 'Edit data'}" class="icon-edit"></i>
-                                                </a>
-                                            </span>
-                                        </div>
-                                    </li>
-                                    <!-- /ko -->
-                                    <li><button type="button" class="btn btn-link" style="padding:0" data-bind="click:edit">
-                                        Edit activity</button></li>
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
         </div>
-    </div>
+    </g:if>
 
     <div class="row-fluid">
         <div class="span12 metadata">
-            <span class="span6">Created: ${site.dateCreated}</span>
-            <span class="span6">Last updated: ${site.lastUpdated}</span>
+            <span class="span6">
+                <p><span class="label">Created:</span> ${site.dateCreated}</p>
+                <p><span class="label">Last updated:</span> ${site.lastUpdated}</p>
+            </span>
         </div>
     </div>
 
@@ -277,7 +298,8 @@
             }
 
             init_map_with_features({
-                    mapContainer: "smallMap"
+                    mapContainer: "smallMap",
+                    zoomLimit:15
                 },
                 $.parseJSON('${mapFeatures}')
             );

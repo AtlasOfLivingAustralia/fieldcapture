@@ -20,6 +20,9 @@
     "use strict";
 /*jslint browser: true, vars: false, white: false, maxerr: 50, indent: 4 */
 /*global google, $, WMSTileLayer */
+if (typeof console == "undefined") {
+    this.console = {log: function() {}};
+}
 
 var
     // represents the map and its associated properties and events

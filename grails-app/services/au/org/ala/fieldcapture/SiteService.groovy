@@ -80,7 +80,7 @@ class SiteService {
      * @param site
      */
     def getMapFeatures(site) {
-        def featuresMap = [zoomToBounds: true, zoomLimit: 12, highlightOnHover: true, features: []]
+        def featuresMap = [zoomToBounds: true, zoomLimit: 15, highlightOnHover: true, features: []]
         site.location.each { loc ->
             def matchedLocType = locationTypes[loc.type]
             def location = [type: matchedLocType, name: loc.name]

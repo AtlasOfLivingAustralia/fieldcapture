@@ -18,6 +18,7 @@ class SiteController {
 
     def draw(){
         //any setup required ?
+        println("Set up drawing tool...");
     }
 
     def index(String id) {

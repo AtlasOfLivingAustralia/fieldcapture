@@ -30,13 +30,11 @@
                 </form>
             </div>
         </div>
-        <div class="row-fluid">
-            <div class="span12" id="aboutDescription">
-               <p>
-                   This tool was developed by the Atlas of Living Australia in 2013 in conjunction with
-                   the Department of Sustainability, Environment, Water, Population and Communities.
-               </p>
-             </div>
+        <div class="well" id="aboutDescription">
+           <p>
+               This tool was developed by the Atlas of Living Australia in 2013 in conjunction with
+               the Department of Sustainability, Environment, Water, Population and Communities.
+           </p>
         </div>
     </div>
 </body>
