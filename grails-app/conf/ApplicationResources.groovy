@@ -50,7 +50,7 @@ modules = {
     }
 
     app_bootstrap_responsive {
-        dependsOn 'app_bootstrap'
+        dependsOn 'bootstrap'
         resource url: '/bootstrap/css/bootstrap-responsive.min.css'
     }
 
