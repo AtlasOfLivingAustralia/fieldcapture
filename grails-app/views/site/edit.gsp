@@ -123,6 +123,14 @@
             </div>
         </bs:form>
 
+        <hr />
+        <div class="expandable-debug">
+            <h3>Debug</h3>
+            <div>
+                <h4>KO model</h4>
+                <pre data-bind="text:ko.toJSON($root,null,2)"></pre>
+                <h4>Site</h4>
+                <pre>${site}</pre>
     </div>
     <div class="container-fluid">
         <div class="debug">
