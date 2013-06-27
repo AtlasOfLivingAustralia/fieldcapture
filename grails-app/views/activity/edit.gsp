@@ -30,7 +30,7 @@
     .no-border { border-top: none !important; }
     </style>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jstimezonedetect/1.0.4/jstz.min.js"></script>
-    <r:require modules="knockout,jqueryValidationEngine,datepicker,vkbeautify"/>
+    <r:require modules="knockout,jqueryValidationEngine,datepicker"/>
 </head>
 <body>
 <div class="container-fluid validationEngineContainer" id="validation-container">
@@ -158,11 +158,11 @@
             <h4>Activity</h4>
             <pre>${activity}</pre>
             <h4>Site</h4>
-            <pre class="pretty">${site}</pre>
+            <pre>${site}</pre>
             <h4>Sites</h4>
-            <pre class="pretty">${(sites as JSON).toString()}</pre>
+            <pre>${(sites as JSON).toString()}</pre>
             <h4>Projects</h4>
-            <pre class="pretty">${(projects as JSON).toString()}</pre>
+            <pre>${(projects as JSON).toString()}</pre>
             %{--<pre>Map features : ${mapFeatures}</pre>--}%
         </div>
     </div>

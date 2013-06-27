@@ -7,6 +7,7 @@ modules = {
         resource url: 'css/capture.css'
         resource url: 'js/jquery.shorten.js'
         resource url: 'js/bootbox.min.js'
+        resource 'js/vkbeautify.0.99.00.beta.js'
     }
 
     gmap3 {
@@ -56,10 +57,6 @@ modules = {
 
     amplify {
         resource url: '/js/amplify.min.js'
-    }
-
-    vkbeautify {
-        resource 'js/vkbeautify.0.99.00.beta.js'
     }
 
     jstimezonedetect {

@@ -20,7 +20,7 @@
             },
             returnTo = "site/index/${site.siteId}";
     </r:script>
-  <r:require modules="knockout,mapWithFeatures,amplify,vkbeautify"/>
+  <r:require modules="knockout,mapWithFeatures,amplify"/>
 </head>
 <body>
     <div class="container-fluid">
@@ -142,13 +142,13 @@
             <h4>KO model</h4>
             <pre data-bind="text:ko.toJSON($root,null,2)"></pre>
             <h4>Activities</h4>
-            <pre class="pretty">${site.activities}</pre>
+            <pre>${site.activities}</pre>
             <h4>Site</h4>
-            <pre class="pretty">${site}</pre>
+            <pre>${site}</pre>
             <h4>Projects</h4>
-            <pre class="pretty">${projects}</pre>
+            <pre>${projects}</pre>
             <h4>Features</h4>
-            <pre class="pretty">${mapFeatures}</pre>
+            <pre>${mapFeatures}</pre>
         </div>
     </div>
     </div>

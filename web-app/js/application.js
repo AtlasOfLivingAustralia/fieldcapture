@@ -24,9 +24,9 @@ $('.expandable-debug').each(function() {
             function () { $(this).css('text-decoration','underline') },
             function () { $(this).css('text-decoration','none') }
         );
-    // prettyprint sections with class pretty
+    // pretty print sections with class pretty
     if (vkbeautify && typeof vkbeautify.json === 'function') {
-        $(this).find('.pretty').each(function() {
+        $(this).find('pre').each(function() {
             var value = $(this).html();
             if (value !== '') {
                 try {
