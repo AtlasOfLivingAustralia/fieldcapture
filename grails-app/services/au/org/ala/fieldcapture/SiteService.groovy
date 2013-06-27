@@ -7,7 +7,7 @@ class SiteService {
 
     def webService, grailsApplication, commonService, metadataService
     LinkGenerator grailsLinkGenerator
-    static locationTypes = [locationTypePoint: 'point', locationTypePolygon: 'polygon', locationTypeCircle: 'circle', locationTypePid: 'pid']
+    static locationTypes = [locationTypePoint: 'point', locationTypeDrawn: 'drawn', locationTypePid: 'pid']
 
     def list() {
         webService.getJson(grailsApplication.config.ecodata.baseUrl + 'site/').list
@@ -82,7 +82,8 @@ class SiteService {
     def getMapFeatures(site) {
         def featuresMap = [zoomToBounds: true, zoomLimit: 12, highlightOnHover: true, features: []]
         site.location.each { loc ->
-            def location = [type: locationTypes[loc.type], name: loc.name]
+            def matchedLocType = locationTypes[loc.type]
+            def location = [type: matchedLocType, name: loc.name]
             switch (location.type) {
                 case 'point':
                     location.latitude = loc.data.decimalLatitude
@@ -94,13 +95,25 @@ class SiteService {
                             controller: 'proxy', action: 'geojsonFromPid',
                             params: [pid: loc.data.pid]
                     )
-                case 'polygon' :
-                    location.wkt = loc.data.wkt
-                    location.coordinates = loc.data.coordinates
-                case 'circle' :
-                    location.decimalLatitude = loc.data.decimalLatitude
-                    location.decimalLongitude = loc.data.decimalLongitude
-                    location.radius = loc.data.radius
+                case 'drawn' :
+                    if(loc.data.shapeType =='polygon'){
+                        location.type = 'polygon'
+                        location.wkt = loc.data.wkt
+                        location.geojson = loc.data.geojson
+                    } else if(loc.data.shapeType =='circle'){
+                        location.type = 'circle'
+                        location.decimalLatitude = loc.data.decimalLatitude
+                        location.decimalLongitude = loc.data.decimalLongitude
+                        location.radius = loc.data.radius
+                    } else if(loc.data.shapeType =='rectangle'){
+                        location.type = 'rectangle'
+                        location.minLat = loc.data.minLat
+                        location.minLon = loc.data.minLon
+                        location.maxLat = loc.data.maxLat
+                        location.maxLon = loc.data.maxLon
+                    } else {
+                        log.error('Unrecognised shapeType retrieved from DB')
+                    }
             }
             featuresMap.features << location
         }

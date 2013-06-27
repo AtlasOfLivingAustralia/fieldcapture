@@ -123,14 +123,6 @@
             </div>
         </bs:form>
 
-        <hr />
-        <div class="expandable-debug">
-            <h3>Debug</h3>
-            <div>
-                <h4>KO model</h4>
-                <pre data-bind="text:ko.toJSON($root,null,2)"></pre>
-                <h4>Site</h4>
-                <pre>${site}</pre>
     </div>
     <div class="container-fluid">
         <div class="debug">
@@ -171,12 +163,20 @@
 <script type="text/html" id="locationTypeDrawn">
 <div class="drawLocationDiv row-fluid">
     <div class="span6">
-        <a href="javascript:drawSite();">Draw the location</a><br/>
-        %{--<div class="row-fluid controls-row gazGroup">--}%
-            %{--<fc:textField data-bind="value:area" outerClass="span2" label="Approx area:"/>--}%
-            %{--<fc:textField data-bind="value:state" outerClass="span2" label="State:"/>--}%
-            %{--<fc:textField data-bind="value:lga" outerClass="span2" label="LGA:"/>--}%
-        %{--</div>--}%
+        %{--<a href="javascript:drawSite();">Draw the location</a><br/>--}%
+
+        <button class="btn" data-bind="click: drawSiteClick">Draw the location</button>
+
+        <div class="row-fluid controls-row">
+            <fc:textField data-bind="value:shapeType" outerClass="span2" label="ShapeType:"/>
+        </div>
+
+        <div class="row-fluid controls-row propertyGroup">
+            <fc:textField data-bind="value:area" outerClass="span2" label="Area:"/>
+            <fc:textField data-bind="value:state" outerClass="span2" label="State:"/>
+            <fc:textField data-bind="value:lga" outerClass="span2" label="LGA:"/>
+        </div>
+
         <div class="row-fluid controls-row circleProperties propertyGroup">
             <fc:textField data-bind="value:decimalLatitude" outerClass="span2" label="Latitude:"/>
             <fc:textField data-bind="value:decimalLongitude" outerClass="span2" label="Longitude:"/>
@@ -195,7 +195,7 @@
             <fc:textField data-bind="value:maxLon" outerClass="span2" label="maxLon:"/>
         </div>
     </div>
-    <div class="smallMap span6" style="width:200px;height:200px;"></div>
+    <div class="smallMap span6" style="width:400px;height:200px;"></div>
 </div>
 </script>
 
@@ -232,17 +232,8 @@
     var viewModel = null;
 
     function drawSite(){
-        amplify.store("savedViewData", {
-            id: viewModel.id(),
-            name: viewModel.name(),
-            externalId : viewModel.externalId(),
-            type : viewModel.type(),
-            area : viewModel.area(),
-            description : viewModel.description(),
-            notes : viewModel.notes(),
-            projects : viewModel.projects()
-        });
-        document.location.href = SERVER_CONF.drawSiteUrl + '?returnTo=' + SERVER_CONF.pageUrl;
+
+
     }
 
     // returns blank string if the property is undefined, else the value
@@ -258,10 +249,8 @@
     function makeid(){
         var text = "";
         var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-        for( var i=0; i < 10; i++ )
+        for(var i=0; i < 10; i++)
             text += possible.charAt(Math.floor(Math.random() * possible.length));
-
         return text;
     }
 
@@ -278,20 +267,27 @@
         });
 
         var DrawnLocation = function (l) {
+            this.type = 'locationTypeDrawn';
 
             console.log("Adding drawn location.....");
-            this.type = 'locationTypeDrawn';
             console.log('WKT =  ' + exists(l,'wkt'));
+
             if(exists(l,'wkt') != ''){
                //we have a polygon
-               this.shapeType = 'polygon';
+               this.shapeType = ko.observable('polygon');
             } else if(exists(l,'minLat') != ''){
                //we have a rectangle
-               this.shapeType = 'rectangle';
+               this.shapeType = ko.observable('rectangle');
             } else if(exists(l,'radius') != ''){
                //we have a circle
-               this.shapeType = 'circle';
+               this.shapeType = ko.observable('circle');
+            } else {
+               this.shapeType = ko.observable('');
             }
+
+            this.area = ko.observable('');
+            this.lga = ko.observable('');
+            this.state = ko.observable('');
 
             //rectangle
             this.minLat = ko.observable(exists(l,'minLat'));
@@ -308,9 +304,41 @@
             this.wkt = ko.observable(exists(l,'wkt'));
             this.geojson = ko.observable(exists(l,'geojson'));
 
-            %{--this.area = ko.observable('123km');--}%
-            %{--this.state = ko.observable('New South Wales');--}%
-            %{--this.lga = ko.observable('Curtin');--}%
+            //function for starting draw tool
+            this.drawSiteClick = function(){
+                console.log('Draw site click....');
+                //which element has been selected?
+                amplify.store("savedViewData", {
+                    id: viewModel.id(),
+                    name: viewModel.name(),
+                    externalId : viewModel.externalId(),
+                    type : viewModel.type(),
+                    area : viewModel.area(),
+                    description : viewModel.description(),
+                    notes : viewModel.notes(),
+                    projects : viewModel.projects()
+                });
+
+                //create a pass through object to initialise state
+                amplify.store("currentDrawnShape",{
+                   shapeType: this.shapeType(),
+                   area: this.area(),
+                   lga: this.lga(),
+                   state: this.state(),
+                   minLat: this.minLat(),
+                   minLon: this.minLon(),
+                   maxLat: this.maxLat(),
+                   maxLon: this.maxLon(),
+                   radius: this.radius(),
+                   decimalLatitude: this.decimalLatitude(),
+                   decimalLongitude: this.decimalLongitude(),
+                   wkt: this.wkt(),
+                   geojson: this.geojson()
+                });
+
+                console.log('Draw site click....' + this.shapeType());
+                document.location.href = SERVER_CONF.drawSiteUrl + '?returnTo=' + SERVER_CONF.pageUrl;
+            }
         };
 
         var PidLocation = function (l) {
@@ -341,8 +369,6 @@
             var self = this;
             this.id = id;
             this.data = data;
-
-            this.shapeType = '';
             this.name = ko.observable(name);
             this.type = ko.observable(type);
             this.updateModel = function (event) {
@@ -360,7 +386,6 @@
                 }
                 return self.type();
             }
-
             this.myPostProcessingLogic = function(elements) {
                 console.log(elements);
                 var $drawLocationDiv = $(elements[1]);
@@ -370,52 +395,58 @@
                 var mapId = makeid();
                 $smallMapDiv.attr('id',mapId);
                 var mapOptions;
-                if(self.data != null && self.data.shapeType != ''){
-                    console.log("The shape type = " + self.data.shapeType);
+                if(self.data != null && self.data.shapeType() != ''){
+                    console.log("The shape type = " + self.data.shapeType());
                     $drawLocationDiv.find('.propertyGroup').css('display','none');
 
-                    if(self.data.shapeType == 'polygon'){
+                    if(self.data.shapeType() == 'polygon'){
 
                         console.log("GEOJSON returned: " + self.data.geojson());
                         mapOptions = {
-                            "zoomToBounds":false,"zoomLimit":12,"highlightOnHover":true,
-                            "features":
-                            [
-                                {
-                                    "type":"polygon", "name":"ASH-MACC-A - 1 - centre", "id":"ASH-MACC-A - 1",
-                                    coordinates:$.parseJSON(self.data.geojson())
-                                }
-                            ]
+                            zoomToBounds:false,
+                            zoomLimit:16,
+                            highlightOnHover:true,
+                            features:[{
+                                type:"polygon",
+                                name:"ASH-MACC-A - 1 - centre",
+                                id:"ASH-MACC-A - 1",
+                                geojson:self.data.geojson()
+                            }]
                         };
                         $drawLocationDiv.find('.polygonProperties').css('display','block');
                         init_map_with_features({mapContainer: mapId}, mapOptions);
-                    } else if(self.data.shapeType == 'circle'){
+                    } else if(self.data.shapeType() == 'circle'){
 
                         console.log("Using radius: " + self.data.radius() + ", lat: " + self.data.decimalLatitude() + ", lon: " + self.data.decimalLatitude());
                         mapOptions = {
-                            "zoomToBounds":false,"zoomLimit":12,"highlightOnHover":true,
-                            "features":[
-                                {"type":"circle","name":"ASH-MACC-A - 1 - centre","id":"ASH-MACC-A - 1",
-                                  radius: self.data.radius(),
-                                  decimalLatitude: self.data.decimalLatitude(),
-                                  decimalLongitude: self.data.decimalLongitude()
-                                }
-                            ]
+                            zoomToBounds:false,
+                            zoomLimit:16,
+                            highlightOnHover:true,
+                            features:[{
+                                type:"circle",
+                                name:"ASH-MACC-A - 1 - centre",
+                                id:"ASH-MACC-A - 1",
+                                radius: self.data.radius(),
+                                decimalLatitude: self.data.decimalLatitude(),
+                                decimalLongitude: self.data.decimalLongitude()
+                            }]
                         };
                         $drawLocationDiv.find('.circleProperties').css('display','block');
                         init_map_with_features({mapContainer: mapId}, mapOptions);
-                    } else if(self.data.shapeType == 'rectangle'){
-
+                    } else if(self.data.shapeType() == 'rectangle'){
                         mapOptions = {
-                            "zoomToBounds":false,"zoomLimit":12,"highlightOnHover":true,
-                            "features":[
-                                {"type":"rectangle","name":"ASH-MACC-A - 1 - centre","id":"ASH-MACC-A - 1",
-                                  minLat: self.data.minLat(),
-                                  minLon: self.data.minLon(),
-                                  maxLat: self.data.maxLat(),
-                                  maxLon: self.data.maxLon()
-                                }
-                            ]
+                            zoomToBounds:false,
+                            zoomLimit:16,
+                            highlightOnHover:true,
+                            features:[{
+                                type:"rectangle",
+                                name:"ASH-MACC-A - 1 - centre",
+                                id:"ASH-MACC-A - 1",
+                                minLat: self.data.minLat(),
+                                minLon: self.data.minLon(),
+                                maxLat: self.data.maxLat(),
+                                maxLon: self.data.maxLon()
+                            }]
                         };
                         $drawLocationDiv.find('.rectangleProperties').css('display','block');
                         init_map_with_features({mapContainer: mapId}, mapOptions);
@@ -523,7 +554,7 @@
             var drawnShape = amplify.store("drawnShape");
             console.log('Loading the amplify stored shape....');
             console.log(drawnShape);
-            console.log("GeoJson returned from amplify:  " + drawnShape.geojson);
+            console.log("GeoJson returned from amplify:  " + drawnShape);
             viewModel.addDrawnLocation(drawnShape);
         }
     });

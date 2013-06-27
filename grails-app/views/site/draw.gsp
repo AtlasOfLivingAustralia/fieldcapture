@@ -9,13 +9,6 @@
         border: none;
         margin-bottom: 5px;
     }
-    .popover {
-        border-width: 2px;
-    }
-    .popover-content {
-        font-size: 14px;
-        line-height: 20px;
-    }
     h1 input[type="text"] {
         color: #333a3f;
         font-size: 28px;
@@ -24,15 +17,12 @@
         font-family: Arial, Helvetica, sans-serif;
         height: 42px;
     }
-    .no-border { border-top: none !important; }
     #map-canvas img {
         max-width: none;
     }
-
     #drawnArea ul {
         list-style: none;
     }
-
   </style>
   <r:require modules="knockout,jquery_ui,amplify"/>
   <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&libraries=drawing"></script>
@@ -141,30 +131,6 @@
 
     var drawnShape = null;
 
-    function Circle (lat,lon,radius) {
-        var self = this;
-        self.type = 'circle';
-        self.radius = radius;
-        self.decimalLatitude = lat;
-        self.decimalLongitude = lon;
-    }
-
-    //supply wkt and coordinates for now
-    function Polygon (wkt, geojson) {
-        var self = this;
-        self.type = 'polygon';
-        self.wkt = wkt;
-        self.geojson = geojson;
-    }
-
-    function Rectangle (minLat,minLon,maxLat,maxLon) {
-        var self = this;
-        self.minLat = minLat;
-        self.minLon = minLon;
-        self.maxLat = maxLat;
-        self.maxLon = maxLon;
-    }
-
     $(function () {
         // create map and controls
         init_map({
@@ -176,6 +142,9 @@
 
         // this sets the function to call when the user draws a shape
         setCurrentShapeCallback(shapeDrawn);
+
+        //render the shape that is store if it exists
+        renderSavedShape();
 
         // set search criteria and results from any stored data
         if (window.sessionStorage) {
@@ -202,31 +171,34 @@
 
         // wire show query toggle
         $('#drawnArea > div').css('display','none');
-
-        // wire simple/advanced toggle and set initial state
-        var advanced = window.sessionStorage ? window.sessionStorage.getItem('advancedSearch') : false;
     });
 
-    function setPageValues(){
-
-//        // user-drawn polygon or rectangle
-//        if (queryParams.wkt) {
-//            showOnMap('wkt', queryParams.wkt);
-//        }
-//
-//        // user-drawn circle
-//        if (queryParams.lat && queryParams.lon && queryParams.radius) {
-//            showOnMap('circle', queryParams.lat, queryParams.lon, queryParams.radius);
-//        }
-//
-//        var radius = window.sessionStorage.getItem('radius');
-//        if (radius) {
-//            locationWidgets.setRadius(radius);
-//        }
+    function renderSavedShape(){
+        //retrieve the current shape if exists
+        var currentDrawnShape = amplify.store("currentDrawnShape");
+        console.log('Retrieved shape: ' + currentDrawnShape);
+        if(currentDrawnShape !== undefined){
+            if(currentDrawnShape.shapeType == 'polygon'){
+                console.log('Redrawing polygon');
+                showOnMap('wkt', currentDrawnShape.wkt);
+            } else if(currentDrawnShape.shapeType == 'circle'){
+                console.log('Redrawing circle');
+                showOnMap('circle', currentDrawnShape.decimalLatitude,currentDrawnShape.decimalLongitude,currentDrawnShape.radius);
+            } else if(currentDrawnShape.shapeType == 'rectangle'){
+                console.log('Redrawing rectangle');
+                var bounds = new google.maps.LatLngBounds(
+                                new google.maps.LatLng(currentDrawnShape.minLat,currentDrawnShape.minLon),
+                                new google.maps.LatLng(currentDrawnShape.maxLat,currentDrawnShape.maxLon)
+                );
+                //render on the map
+                showOnMap('rectangle', bounds);
+            }
+        }
     }
 
-    function clearSessionData(){
-    }
+    function setPageValues(){}
+
+    function clearSessionData(){}
 
     function clearData() {
         $('#drawnArea > div').css('display','none');

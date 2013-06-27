@@ -80,6 +80,7 @@
         load: function (features) {
             var self = this, f;
             $.each(features, function (i,loc) {
+                console.log('Loading feature with type:' + loc.type);
                 if (loc.type === 'point') {
                     var ll = new google.maps.LatLng(Number(loc.latitude), Number(loc.longitude));
                     f = new google.maps.Marker({
@@ -114,8 +115,7 @@
                    self.addFeature(f, loc);
                 } else if (loc.type === 'polygon') {
                     var paths, points;
-                    var coordinates = loc.coordinates;
-                    var paths = geojsonToPaths(coordinates);
+                    var paths = geojsonToPaths($.parseJSON(loc.geojson));
                     f = new google.maps.Polygon({
                         paths: paths,
                         map: self.map,

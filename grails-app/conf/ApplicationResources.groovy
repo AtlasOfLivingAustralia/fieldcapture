@@ -21,6 +21,7 @@ modules = {
     }
 
     mapWithFeatures {
+        resource 'js/shapes.js'
         resource url: 'js/mapWithFeatures.js'
     }
 
@@ -68,6 +69,8 @@ modules = {
     }
 
     drawmap {
+        defaultBundle true
+        resource 'js/shapes.js'
         resource 'js/keydragzoom.js'
         resource 'js/selection-map.js'
     }
