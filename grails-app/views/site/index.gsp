@@ -20,7 +20,7 @@
             },
             returnTo = "site/index/${site.siteId}";
     </r:script>
-  <r:require modules="knockout,mapWithFeatures,amplify"/>
+  <r:require modules="knockout,mapWithFeatures,amplify,vkbeautify"/>
 </head>
 <body>
     <div class="container-fluid">
@@ -126,6 +126,7 @@
                 </table>
             </div>
         </div>
+    </div>
 
     <div class="row-fluid">
         <div class="span12 metadata">
@@ -134,22 +135,22 @@
         </div>
     </div>
 
-    <hr />
-        <div class="expandable-debug">
-            <h3><a href="javascript:void(0);">Debug</a></h3>
-            <div>
-                <h4><a href="javascript:void(0);">KO model</a></h4>
-                <pre data-bind="text:ko.toJSON($root,null,2)"></pre>
-                <h4><a href="javascript:void(0);">Activities</a></h4>
-                <pre>${site.activities}</pre>
-                <h4><a href="javascript:void(0);">Site</a></h4>
-                <pre>${site}</pre>
-                <h4><a href="javascript:void(0);">Projects</a></h4>
-                <pre>${projects}</pre>
-                <h4><a href="javascript:void(0);">Features</a></h4>
-                <pre>${mapFeatures}</pre>
-            </div>
+    <div class="expandable-debug">
+        <hr />
+        <h3>Debug</h3>
+        <div>
+            <h4>KO model</h4>
+            <pre data-bind="text:ko.toJSON($root,null,2)"></pre>
+            <h4>Activities</h4>
+            <pre class="pretty">${site.activities}</pre>
+            <h4>Site</h4>
+            <pre class="pretty">${site}</pre>
+            <h4>Projects</h4>
+            <pre class="pretty">${projects}</pre>
+            <h4>Features</h4>
+            <pre class="pretty">${mapFeatures}</pre>
         </div>
+    </div>
     </div>
     <r:script>
 
