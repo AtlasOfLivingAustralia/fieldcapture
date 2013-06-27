@@ -20,7 +20,7 @@
                 <tr>
                     <th><span style="font-size: large">Activities model</span>
                         <span id="viewModeBtns" class="pull-right">
-                            <button id="btnEdit" data-target="activitiesMetadata" class="btn btn-small btn-info">Edit</button>
+                            <button disabled title="Temporarily disabled" id="btnEdit" data-target="activitiesMetadata" class="btn btn-small btn-info">Edit</button>
                         </span>
                         <span id="editModeBtns" style="display:none;" class="pull-right">
                             <button id="btnSave" class="btn btn-small btn-success">Save</button>
