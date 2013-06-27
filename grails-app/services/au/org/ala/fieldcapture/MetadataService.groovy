@@ -8,8 +8,8 @@ class MetadataService {
 
     def activitiesModel() {
         return cacheService.get('activity-model',{
-            String filename = (grailsApplication.config.app.external.model.dir as String) + 'activities-model.json'
-            JSON.parse(new File(filename).text)
+            webService.getJson(grailsApplication.config.ecodata.baseUrl +
+                'metadata/activitiesModel')
         })
     }
 
@@ -36,8 +36,8 @@ class MetadataService {
 
     def getDataModel(name) {
         return cacheService.get(name + '-model',{
-            String filename = (grailsApplication.config.app.external.model.dir as String) + name + '/dataModel.json'
-            JSON.parse(new File(filename).text)
+            webService.getJson(grailsApplication.config.ecodata.baseUrl +
+                    "metadata/dataModel/${name}")
         })
     }
 
