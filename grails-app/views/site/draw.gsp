@@ -157,6 +157,14 @@
         self.geojson = geojson;
     }
 
+    function Rectangle (minLat,minLon,maxLat,maxLon) {
+        var self = this;
+        self.minLat = minLat;
+        self.minLon = minLon;
+        self.maxLat = maxLat;
+        self.maxLon = maxLon;
+    }
+
     $(function () {
         // create map and controls
         init_map({
@@ -270,7 +278,7 @@
                     $('#rectangleArea').css('display','block');
                     // set hidden inputs
                     $('#wkt').val(rectToWkt(sw, ne));
-                    drawnShape = new Polygon(rectToWkt(sw, ne));
+                    drawnShape = new Rectangle(sw.lat(),sw.lng(),ne.lat(),ne.lng());
                     break;
                 case google.maps.drawing.OverlayType.POLYGON:
                     /*

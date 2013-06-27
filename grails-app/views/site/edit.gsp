@@ -44,17 +44,19 @@
     </ul>
     <div class="container-fluid">
         <bs:form action="update" inline="true">
-            <div class="row-fluid span12">
+
+            <div class="row-fluid">
                 <g:hiddenField name="id" value="${site?.siteId}"/>
-                <div class="">
+                <div>
                     <label for="name">Site name</label>
                     <h1>
-                        <input data-bind="value: name" class="span12" id="name" type="text" value="${site?.name}" placeholder="Enter a name for the new site"/>
+                        <input data-bind="value: name" class="span12" id="name" type="text" value="${site?.name}"
+                               placeholder="Enter a name for the new site"/>
                     </h1>
                 </div>
             </div>
 
-            <div class="row-fluid span12">
+            <div class="row-fluid">
                 <div class="span4">
                     <label for="externalId">External Id
                         <fc:iconHelp title="External id">Identifier code for the site - used in external documents.</fc:iconHelp>
@@ -72,7 +74,7 @@
                 </div>
             </div>
 
-            <div class="row-fluid span12">
+            <div class="row-fluid">
                 <div class="span6">
                     <fc:textArea data-bind="value: description" id="description" label="Description" class="span12" rows="3" cols="50"/>
                 </div>
@@ -81,38 +83,43 @@
                 </div>
             </div>
 
-            <div class="span12">
+            <div class="row-fluid">
                 <h2>Locations <fc:iconHelp title="Location of the site">The location of the site can be represented one or more points or polygons.
                      KML, WKT and shape files are supported for uploading polygons. As are PID's of existing features in the Atlas Spatial Portal.</fc:iconHelp>
                 </h2>
                 <table class="table">
                     <caption>You can have any number of points and areas to describe the locations of this site.</caption>
-                    <thead><tr><td>name</td><td>type</td><td>values</td></tr></thead>
+                    <thead>
+                        <th class="span1">name</th><th class="span1">type</th><th class="span10">values</th>
+                    </thead>
                     <tbody data-bind="foreach: location">
                         <tr>
-                            <td><input type="text" data-bind="value:name" class="input-small"/></td>
+                            <td>
+                                <input type="text" data-bind="value:name" class="input-small"/>
+                            </td>
                             <td>
                                 <g:select data-bind="value: type"  from="['choose a location type','point','known shape','upload a shape','draw a shape']" name='shit'
                                           keys="['locationTypeNone','locationTypePoint','locationTypePid','locationTypeUpload','locationTypeDrawn']"/>
                             </td>
-                            <td rowspan="2">
-                                <div class="span12">
-                                    <div data-bind="template: {name: updateModel(), data: data,  afterRender: myPostProcessingLogic}"></div>
-                                </div>
+                            <td>
+                                <div data-bind="template: {name: updateModel(), data: data,  afterRender: myPostProcessingLogic}"></div>
                             </td>
                         </tr>
-                        <tr><td colspan="2" class="no-border">
-                            <button data-bind="click: $root.removeLocation" type="button" class="btn btn-link">Remove</button>
-                            <button data-bind="click: $root.notImplemented, visible: type() != 'locationTypeNone'" type="button" class="btn btn-link">Show this on a map</button>
-                        </td></tr>
+                        <tr>
+                            <td colspan="2" class="no-border">
+                                <button data-bind="click: $root.removeLocation" type="button" class="btn btn-link">Remove</button>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
                 <button type="button" class="btn" data-bind="click:addEmptyLocation">Add another location</button>
             </div>
 
-            <div class="form-actions span12">
-                <button type="button" data-bind="click: save" class="btn btn-primary">Save changes</button>
-                <button type="button" id="cancel" class="btn">Cancel</button>
+            <div class="row-fluid">
+                <div class="form-actions span12">
+                    <button type="button" data-bind="click: save" class="btn btn-primary">Save changes</button>
+                    <button type="button" id="cancel" class="btn">Cancel</button>
+                </div>
             </div>
         </bs:form>
 
@@ -154,23 +161,34 @@
 </script>
 
 <script type="text/html" id="locationTypeDrawn">
-    <div class="drawLocationDiv">
-        <div class="row-fluid controls-row">
-            <div>
-                <a href="javascript:drawSite();">Draw the location</a><br/>
-                <div class="row-fluid controls-row circleProperties">
-                    <fc:textField data-bind="value:decimalLatitude" outerClass="span2" label="Latitude:"/>
-                    <fc:textField data-bind="value:decimalLongitude" outerClass="span2" label="Longitude:"/>
-                    <fc:textField data-bind="value:radius" outerClass="span2" label="Radius:"/>
-                </div>
-                <div class="row-fluid controls-row polygonProperties">
-                    <fc:textArea  cols="80" rows="4" data-bind="value:wkt" class="input-large " label="Well Known Text (WKT):"/>
-                    <fc:textArea  cols="80" rows="4" data-bind="value:geojson" class="input-large " label="GeoJson :"/>
-                </div>
-            </div>
-            <div class="smallMap" style="width:300px;height:300px;"></div>
+<div class="drawLocationDiv row-fluid">
+    <div class="span6">
+        <a href="javascript:drawSite();">Draw the location</a><br/>
+        %{--<div class="row-fluid controls-row gazGroup">--}%
+            %{--<fc:textField data-bind="value:area" outerClass="span2" label="Approx area:"/>--}%
+            %{--<fc:textField data-bind="value:state" outerClass="span2" label="State:"/>--}%
+            %{--<fc:textField data-bind="value:lga" outerClass="span2" label="LGA:"/>--}%
+        %{--</div>--}%
+        <div class="row-fluid controls-row circleProperties propertyGroup">
+            <fc:textField data-bind="value:decimalLatitude" outerClass="span2" label="Latitude:"/>
+            <fc:textField data-bind="value:decimalLongitude" outerClass="span2" label="Longitude:"/>
+            <fc:textField data-bind="value:radius" outerClass="span2" label="Radius:"/>
+        </div>
+        <div class="row-fluid controls-row polygonProperties propertyGroup">
+            <fc:textArea cols="80" rows="4" data-bind="value:wkt" class="input-large " label="Well Known Text (WKT):"/>
+            <span style="display:none;">
+                <fc:textArea cols="80" rows="4" data-bind="value:geojson" class="input-large" label="GeoJson :"/>
+            </span>
+        </div>
+        <div class="row-fluid controls-row rectangleProperties propertyGroup">
+            <fc:textField data-bind="value:minLat" outerClass="span2" label="minLat:"/>
+            <fc:textField data-bind="value:minLon" outerClass="span2" label="minLon:"/>
+            <fc:textField data-bind="value:maxLat" outerClass="span2" label="maxLat:"/>
+            <fc:textField data-bind="value:maxLon" outerClass="span2" label="maxLon:"/>
         </div>
     </div>
+    <div class="smallMap span6" style="width:200px;height:200px;"></div>
+</div>
 </script>
 
 <r:script>
@@ -194,6 +212,7 @@
 
     var savedSiteData = {
         id: "${site?.id}",
+        name : "${site?.name}",
         externalId : "${site?.externalId}",
         type : "${site?.type}",
         area : "${site?.area}",
@@ -251,22 +270,39 @@
         });
 
         var DrawnLocation = function (l) {
+
             console.log("Adding drawn location.....");
             this.type = 'locationTypeDrawn';
             console.log('WKT =  ' + exists(l,'wkt'));
             if(exists(l,'wkt') != ''){
                //we have a polygon
                this.shapeType = 'polygon';
-            } else {
+            } else if(exists(l,'minLat') != ''){
+               //we have a rectangle
+               this.shapeType = 'rectangle';
+            } else if(exists(l,'radius') != ''){
                //we have a circle
                this.shapeType = 'circle';
             }
 
+            //rectangle
+            this.minLat = ko.observable(exists(l,'minLat'));
+            this.minLon = ko.observable(exists(l,'minLon'));
+            this.maxLat = ko.observable(exists(l,'maxLat'));
+            this.maxLon = ko.observable(exists(l,'maxLon'));
+
+            //radius
             this.radius = ko.observable(exists(l,'radius'));
             this.decimalLatitude = ko.observable(exists(l,'decimalLatitude'));
             this.decimalLongitude = ko.observable(exists(l,'decimalLongitude'));
+
+            //polygon
             this.wkt = ko.observable(exists(l,'wkt'));
             this.geojson = ko.observable(exists(l,'geojson'));
+
+            %{--this.area = ko.observable('123km');--}%
+            %{--this.state = ko.observable('New South Wales');--}%
+            %{--this.lga = ko.observable('Curtin');--}%
         };
 
         var PidLocation = function (l) {
@@ -297,6 +333,7 @@
             var self = this;
             this.id = id;
             this.data = data;
+
             this.shapeType = '';
             this.name = ko.observable(name);
             this.type = ko.observable(type);
@@ -327,7 +364,10 @@
                 var mapOptions;
                 if(self.data != null && self.data.shapeType != ''){
                     console.log("The shape type = " + self.data.shapeType);
+                    $drawLocationDiv.find('.propertyGroup').css('display','none');
+
                     if(self.data.shapeType == 'polygon'){
+
                         console.log("GEOJSON returned: " + self.data.geojson());
                         mapOptions = {
                             "zoomToBounds":false,"zoomLimit":12,"highlightOnHover":true,
@@ -339,8 +379,8 @@
                                 }
                             ]
                         };
-                        $drawLocationDiv.find('.circleProperties').css('display','none');
-
+                        $drawLocationDiv.find('.polygonProperties').css('display','block');
+                        init_map_with_features({mapContainer: mapId}, mapOptions);
                     } else if(self.data.shapeType == 'circle'){
 
                         console.log("Using radius: " + self.data.radius() + ", lat: " + self.data.decimalLatitude() + ", lon: " + self.data.decimalLatitude());
@@ -351,14 +391,27 @@
                                   radius: self.data.radius(),
                                   decimalLatitude: self.data.decimalLatitude(),
                                   decimalLongitude: self.data.decimalLongitude()
-                                /*radius: 2500,
-                                decimalLatitude:-37.14, decimalLongitude:149.1*/
                                 }
                             ]
                         };
-                        $drawLocationDiv.find('.polygonProperties').css('display','none');
+                        $drawLocationDiv.find('.circleProperties').css('display','block');
+                        init_map_with_features({mapContainer: mapId}, mapOptions);
+                    } else if(self.data.shapeType == 'rectangle'){
+
+                        mapOptions = {
+                            "zoomToBounds":false,"zoomLimit":12,"highlightOnHover":true,
+                            "features":[
+                                {"type":"rectangle","name":"ASH-MACC-A - 1 - centre","id":"ASH-MACC-A - 1",
+                                  minLat: self.data.minLat(),
+                                  minLon: self.data.minLon(),
+                                  maxLat: self.data.maxLat(),
+                                  maxLon: self.data.maxLon()
+                                }
+                            ]
+                        };
+                        $drawLocationDiv.find('.rectangleProperties').css('display','block');
+                        init_map_with_features({mapContainer: mapId}, mapOptions);
                     }
-                    init_map_with_features({mapContainer: mapId}, mapOptions);
                 }
             }
         };

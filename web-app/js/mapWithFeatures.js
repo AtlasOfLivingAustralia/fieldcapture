@@ -100,6 +100,18 @@
                    self.featureBounds.extend(f.getBounds().getNorthEast());
                    self.featureBounds.extend(f.getBounds().getSouthWest());
                    self.addFeature(f, loc);
+                } else if (loc.type === 'rectangle') {
+                   f = new google.maps.Rectangle({
+                      bounds: new google.maps.LatLngBounds(
+                          new google.maps.LatLng(loc.minLat, loc.minLon),
+                          new google.maps.LatLng(loc.maxLat, loc.maxLon)),
+                      map: self.map,
+                      editable: false
+                   });
+                   //set the extend of the map
+                   self.featureBounds.extend(f.getBounds().getNorthEast());
+                   self.featureBounds.extend(f.getBounds().getSouthWest());
+                   self.addFeature(f, loc);
                 } else if (loc.type === 'polygon') {
                     var paths, points;
                     var coordinates = loc.coordinates;
