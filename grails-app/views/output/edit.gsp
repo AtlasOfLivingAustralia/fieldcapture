@@ -55,8 +55,8 @@
             </div>
         </div>
 
-<!-- add the dynamic components -->
-<md:modelView model="${model}" edit="true"/>
+        <!-- add the dynamic components -->
+        <md:modelView model="${model}" edit="true"/>
 
         <div class="form-actions">
             <button type="button" data-bind="click: save" class="btn btn-primary">Save changes</button>
