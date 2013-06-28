@@ -79,7 +79,7 @@ class ActivityController {
         }
         log.debug (values as JSON).toString()
         log.debug "id=${id} class=${id.getClass()}"
-        def result = activityService.update(id, (values as JSON).toString())
+        def result = activityService.update(id, values)
         log.debug "result is " + result
         if (result.error) {
             render result as JSON

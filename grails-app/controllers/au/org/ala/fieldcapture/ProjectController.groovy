@@ -61,7 +61,7 @@ class ProjectController {
         }
         log.debug (values as JSON).toString()
         log.debug "id=${id} class=${id.getClass()}"
-        def result = projectService.update(id, (values as JSON).toString())
+        def result = projectService.update(id, values)
         log.debug "result is " + result
         if (result.error) {
             render result as JSON
@@ -73,7 +73,7 @@ class ProjectController {
 
     def update(String id) {
         //params.each { println it }
-        projectService.update(id, (params as JSON).toString())
+        projectService.update(id, params)
         chain action: 'index', id: id
     }
 

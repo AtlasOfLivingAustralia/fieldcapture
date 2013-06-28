@@ -82,7 +82,7 @@ class SiteController {
             }
         }
         //log.debug (values as JSON).toString()
-        siteService.update(id, (values as JSON).toString())
+        siteService.update(id, values)
         chain(action: 'index', id:  id)
     }
 
@@ -105,10 +105,10 @@ class SiteController {
         log.debug (values as JSON).toString()
         def result = []
         if(id){
-            siteService.update(id, (values as JSON).toString())
+            siteService.update(id, values)
             result = [status: 'updated']
         } else {
-            def resp = siteService.create((values as JSON).toString())
+            def resp = siteService.create(values)
             result = [status: 'created', id:resp.resp.siteId]
         }
 
@@ -131,7 +131,7 @@ class SiteController {
 
     def projectsForSite(String id) {
         def projects = siteService.projectsForSite(id) ?: []
-        log.debug projects
+        //log.debug projects
         render projects as JSON
     }
 

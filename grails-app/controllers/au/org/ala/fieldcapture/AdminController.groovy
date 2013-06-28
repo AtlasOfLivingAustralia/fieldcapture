@@ -68,7 +68,7 @@ class AdminController {
                         }
                         res += "</ul>"
                     }
-                    else {
+                    else if (key != 'api_key') { // never reveal the api key
                         res += "<li>${key} = ${value}</li>"
                     }
                 }

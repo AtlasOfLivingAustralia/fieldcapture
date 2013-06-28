@@ -73,7 +73,7 @@ class OutputController {
         }
         log.debug (values as JSON).toString()
         log.debug "id=${id} class=${id.getClass()}"
-        def result = outputService.update(id, (values as JSON).toString())
+        def result = outputService.update(id, values)
         log.debug "result is " + result
         if (result.error) {
             render result as JSON

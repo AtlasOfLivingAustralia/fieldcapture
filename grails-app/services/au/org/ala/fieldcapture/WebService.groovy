@@ -5,6 +5,8 @@ import org.codehaus.groovy.grails.web.converters.exceptions.ConverterException
 
 class WebService {
 
+    def grailsApplication
+
     def get(String url) {
         def conn = new URL(url).openConnection()
         try {
@@ -46,14 +48,15 @@ class WebService {
         }
     }
 
-    def doPost(String url, String postBody) {
+    def doPost(String url, Map postBody) {
+        postBody.api_key = grailsApplication.config.api_key
         def resp = ""
         def conn = new URL(url).openConnection()
         try {
             conn.setDoOutput(true)
             conn.setRequestProperty("Content-Type", "application/json");
             OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream())
-            wr.write(postBody)
+            wr.write((postBody as JSON).toString())
             wr.flush()
             resp = conn.inputStream.text
             wr.close()
@@ -71,6 +74,7 @@ class WebService {
     }
 
     def doDelete(String url) {
+        url += (url.indexOf('?') == -1 ? '?' : '&') + "api_key=${grailsApplication.config.api_key}"
         def conn = new URL(url).openConnection()
         try {
             conn.setRequestMethod("DELETE")
