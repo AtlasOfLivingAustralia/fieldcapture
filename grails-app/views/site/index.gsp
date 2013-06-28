@@ -36,7 +36,7 @@
             <div >
                 <div class="clearfix">
                     <h1 class="pull-left">${site?.name}</h1>
-                    <g:link style="margin-bottom: 20px;" action="edit" id="${site.siteId}" class="btn pull-right title-edit">Edit site</g:link>
+                    <g:link  action="edit" id="${site.siteId}" class="btn pull-right title-edit">Edit site</g:link>
                 </div>
                 <g:if test="${site.description}">
                     <div class="clearfix well well-small">
@@ -44,7 +44,7 @@
                     </div>
                 </g:if>
             </div>
-            <div>
+            <div style="margin-top: 20px;">
                 <span class="span4">
                     <span class="label">External Id:</span> ${site.externalId?:'Not specified'}
                 </span>
