@@ -25,7 +25,7 @@
     }
   </style>
   <r:require modules="knockout,jquery_ui,amplify"/>
-  <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&libraries=drawing"></script>
+  <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&libraries=drawing,geometry"></script>
   <r:require modules="drawmap"/>
 </head>
 <body>
@@ -101,6 +101,7 @@
                         </a>
                     </li>
                 </ul>
+
                 <div id="drawnAreaInfo" style="margin-top:20px;margin-left:0px;padding-left:0px;">
                     <ul style="list-style: none;margin-left:0px;padding-left:0px;">
                         <li>
@@ -109,18 +110,19 @@
                         </li>
                         <li>
                             <span class="label">Name</span>
-                            <span id="name">Not calculated</span>
+                            <span id="name">Not specified</span>
                         </li>
                         <li>
                             <span class="label">State</span>
-                            <span id="state">Not calculated</span>
+                            <span id="state">Not specified</span>
                         </li>
                         <li>
                             <span class="label">Locality</span>
-                            <span id="locality">Not calculated</span>
+                            <span id="locality">Not specified</span>
                         </li>
                     </ul>
                 </div>
+
                 <a id="useLocation" href="javascript:void(0);" class="btn btn-primary disabled">Use location</a>
                 <a href="${params.returnTo?:createLink([controller:'home',action:'index'])}" class="btn">Cancel</a>
 
@@ -269,6 +271,8 @@
                     console.log("circle radius: " + shape.getRadius());
                     drawnShape = new Circle(center.lat(), center.lng(),shape.getRadius());
                     amplify.store("drawnShape", drawnShape);
+
+                    $('#calculatedArea').html(((3.14 * shape.getRadius() * shape.getRadius())/1000)/1000);
                     //calculate the area
                     break;
                 case google.maps.drawing.OverlayType.RECTANGLE:
@@ -285,6 +289,19 @@
                     $('#wkt').val(rectToWkt(sw, ne));
                     drawnShape = new Rectangle(sw.lat(),sw.lng(),ne.lat(),ne.lng());
                     amplify.store("drawnShape", drawnShape);
+
+
+                    //calculate the area
+                    var mvcArray = new google.maps.MVCArray();
+                    mvcArray.push(new google.maps.LatLng(sw.lat(), sw.lng()));
+                    mvcArray.push(new google.maps.LatLng(ne.lat(), sw.lng()));
+                    mvcArray.push(new google.maps.LatLng(ne.lat(), ne.lng()));
+                    mvcArray.push(new google.maps.LatLng(sw.lat(), ne.lng()));
+                    mvcArray.push(new google.maps.LatLng(sw.lat(), sw.lng()));
+
+                    var calculatedArea = google.maps.geometry.spherical.computeArea(mvcArray);
+                    $('#calculatedArea').html(((calculatedArea)/1000)/1000);
+
                     break;
                 case google.maps.drawing.OverlayType.POLYGON:
                     /*
@@ -340,11 +357,8 @@
                     amplify.store("drawnShape", drawnShape);
 
                     //calculate the area
-                    var calculatedArea = null;
-                    //google.maps.geometry.spherical.computeArea(yourPolygon.getPath());
-                    //calculate the center
-
-
+                    var calculatedArea = google.maps.geometry.spherical.computeArea(path);
+                    $('#calculatedArea').html(((calculatedArea)/1000)/1000);
                     break;
             }
         }
