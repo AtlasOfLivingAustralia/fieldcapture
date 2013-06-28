@@ -105,12 +105,52 @@ map = {
             that.gmap.setOptions({scrollwheel: false});
         });
 
-        // when the user has drawn something
+        // when the user has drawn an overlay
         google.maps.event.addListener(this.drawingManager, 'overlaycomplete', function (e) {
+            console.log('overlaycomplete fired....');
             that.clearShapes();
             that.shapes[0] = e.overlay;
             that.currentShapeCallback('user-drawn', e.type, e.overlay);
             that.gmap.setOptions({scrollwheel: false});
+
+            if(e.type == 'polygon'){
+                var poly = e.overlay;
+                google.maps.event.addListener(poly, 'mouseup', function() {
+                    console.log('poly clicked - ' + poly);
+                    that.shapes[0] = poly;
+                    that.currentShapeBounds = that.getPolygonBounds(poly);
+                    console.log('current bounds - ' + this.currentShapeBounds);
+                    that.currentShapeCallback('polygon', google.maps.drawing.OverlayType.POLYGON, poly);
+                });
+            }
+
+            if(e.type == 'circle'){
+                // when the user has drawn a circle
+                var circle = e.overlay;
+                google.maps.event.addListener(circle, 'radius_changed', function () {
+                    console.log('radius changed - ' + circle);
+                    that.shapes[0] = circle;
+                    that.currentShapeBounds = circle.getBounds();
+                    that.currentShapeCallback('circle', google.maps.drawing.OverlayType.CIRCLE, circle);
+                });
+
+                google.maps.event.addListener(circle, 'center_changed', function () {
+                    console.log('center changed - ' + circle);
+                    that.shapes[0] = circle;
+                    that.currentShapeBounds = circle.getBounds();
+                    that.currentShapeCallback('circle', google.maps.drawing.OverlayType.CIRCLE, circle);
+                });
+            }
+
+            if(e.type == 'rectangle'){
+                var rect = e.overlay;
+                google.maps.event.addListener(rect, 'bounds_changed', function () {
+                    console.log('bounds_changed - ' + rect);
+                    that.shapes[0] = rect;
+                    that.currentShapeBounds = rect.getBounds();
+                    that.currentShapeCallback('rectangle', google.maps.drawing.OverlayType.RECTANGLE, rect);
+                });
+            }
         });
     },
     clearShapes: function () {
@@ -136,7 +176,9 @@ map = {
     },
     // draw an externally supplied area on the map
     showArea: function (type, arg1, arg2, arg3) {
+        console.log('Show area called...');
         this.clearShapes();
+        var that = this;
         switch (type) {
             case 'circle':
                 var lat = Number(arg1),
@@ -147,6 +189,8 @@ map = {
                     radius = Number(arg3);
                     circle = new google.maps.Circle({
                         center: center,
+                        editable:true,
+                        draggable:true,
                         radius: radius,
                         map: this.gmap
                     });
@@ -155,6 +199,16 @@ map = {
                     // simulate drawingManager drawn event
                     this.currentShapeCallback(type, google.maps.drawing.OverlayType.CIRCLE, circle);
                 }
+
+                google.maps.event.addListener(circle, 'radius_changed', function() {
+                    that.currentShapeBounds = that.shapes[0].getBounds();
+                    that.currentShapeCallback(type, google.maps.drawing.OverlayType.CIRCLE, that.shapes[0]);
+                });
+                google.maps.event.addListener(circle, 'center_changed', function() {
+                    that.currentShapeBounds = that.shapes[0].getBounds();
+                    that.currentShapeCallback(type, google.maps.drawing.OverlayType.CIRCLE, that.shapes[0]);
+                });
+
                 this.currentShapeBounds = circle.getBounds();
                 return circle;
             case 'wkt':
@@ -170,6 +224,11 @@ map = {
                 // simulate drawingManager drawn event
                 this.currentShapeCallback(type, google.maps.drawing.OverlayType.RECTANGLE, rect);
                 this.currentShapeBounds = rect.getBounds();
+                google.maps.event.addListener(rect, 'bounds_changed', function() {
+                    console.log('[SHOWAREA] rect clicked - ' + that.shapes[0]);
+                    that.currentShapeBounds = that.shapes[0].getBounds();
+                    that.currentShapeCallback(type, google.maps.drawing.OverlayType.RECTANGLE, that.shapes[0]);
+                });
                 return rect;
             case 'polygon':
                 var poly = new google.maps.Polygon({
@@ -181,11 +240,48 @@ map = {
                 // simulate drawingManager drawn event
                 this.currentShapeCallback(type, google.maps.drawing.OverlayType.POLYGON, poly);
                 //calculate bounds
-                var bounds = new google.maps.LatLngBounds();
-                poly.getPath().forEach(function (obj, i) { bounds.extend(obj);});
-                this.currentShapeBounds = bounds;
+                this.currentShapeBounds = this.getPolygonBounds(poly);
+
+                var thePath = poly.getPath();
+
+                google.maps.event.addListener(thePath, 'set_at', function() {
+                    var bounds = new google.maps.LatLngBounds();
+                    thePath.forEach(function (obj, i) { bounds.extend(obj);});
+                    that.currentShapeBounds = bounds;
+                    console.log('set_at called');
+
+                    that.currentShapeCallback(type, google.maps.drawing.OverlayType.POLYGON, poly);
+                });
+
+                google.maps.event.addListener(thePath, 'insert_at', function() {
+                    var bounds = new google.maps.LatLngBounds();
+                    thePath.forEach(function (obj, i) { bounds.extend(obj);});
+                    that.currentShapeBounds = bounds;
+                    console.log('insert_at called');
+                    that.currentShapeCallback(type, google.maps.drawing.OverlayType.POLYGON, poly);
+                });
+
+
+//                google.maps.event.addListener(poly, 'mouseup', function(e) {
+//
+//                    console.log('[SHOWAREA] poly mouseup - ' + that.shapes[0]);
+//
+//                    that.currentShapeBounds = that.getPolygonBounds(that.shapes[0]);
+//
+//                    console.log('[SHOWAREA] current bounds - ' + that.currentShapeBounds);
+//
+//                    that.currentShapeCallback(type, google.maps.drawing.OverlayType.POLYGON, poly);
+//                });
+
+
+
                 return poly;
         }
+    },
+    getPolygonBounds : function(poly){
+        var bounds = new google.maps.LatLngBounds();
+        poly.getPath().forEach(function (obj, i) { bounds.extend(obj);});
+        return bounds;
     },
     zoomToShapeBounds : function(){
       this.gmap.fitBounds(this.currentShapeBounds);
@@ -398,12 +494,17 @@ function setCurrentShapeCallback(callback) {
     map.setCurrentShapeCallback(callback);
 }
 
+function getCurrentShape() {
+    return map.shapes[0];
+}
+
 // expose these methods to the global scope
 windows.init_map = init;
 windows.showOnMap = showOnMap;
 windows.zoomToShapeBounds = zoomToShapeBounds;
 windows.updateMap = updateMap;
 windows.clearMap = clearShapes;
+windows.getCurrentShape = getCurrentShape;
 windows.setCurrentShapeCallback = setCurrentShapeCallback;
 
 }(this));

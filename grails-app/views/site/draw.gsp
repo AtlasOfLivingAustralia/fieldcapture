@@ -121,6 +121,9 @@
                         </li>
                     </ul>
                 </div>
+                <a id="useLocation" href="javascript:void(0);" class="btn btn-primary disabled">Use location</a>
+                <a href="${params.returnTo?:createLink([controller:'home',action:'index'])}" class="btn">Cancel</a>
+
                 <div id="drawnArea">
                     <div id="circleArea">
                         <span class="drawnAreaName">Circle</span><br/>
@@ -148,8 +151,6 @@
                         </ul>
                     </div>
                 </div>
-                <a id="useLocation" href="javascript:void(0);" class="btn btn-primary disabled">Use location</a>
-                <a href="${params.returnTo?:createLink([controller:'home',action:'index'])}" class="btn">Cancel</a>
             </div>
           </div>
       </div>
@@ -178,9 +179,9 @@
         }
 
         $('#useLocation').click(function(){
-           console.log('Storing drawn shape....');
-           console.log(drawnShape);
-           amplify.store("drawnShape",drawnShape);
+
+           var currentShape = getCurrentShape();
+           shapeDrawn('user-drawn', currentShape.type, currentShape);
            document.location.href = "${params.returnTo}";
         });
 
@@ -241,9 +242,9 @@
     }
 
     function shapeDrawn(source, type, shape) {
-        console.log("shape drawn: " + type);
+        console.log("[DRAW.GSP] shapeDrawn called: " + type);
         if (source === 'clear') {
-            shapeDrawn = null;
+            drawnShape = null;
             clearData();
             clearSessionData('drawnShapes');
             $('#useLocation').addClass("disabled");
@@ -267,10 +268,8 @@
                     console.log("circle lng: " + center.lng());
                     console.log("circle radius: " + shape.getRadius());
                     drawnShape = new Circle(center.lat(), center.lng(),shape.getRadius());
-
+                    amplify.store("drawnShape", drawnShape);
                     //calculate the area
-
-
                     break;
                 case google.maps.drawing.OverlayType.RECTANGLE:
                     var bounds = shape.getBounds(),
@@ -285,6 +284,7 @@
                     // set hidden inputs
                     $('#wkt').val(rectToWkt(sw, ne));
                     drawnShape = new Rectangle(sw.lat(),sw.lng(),ne.lat(),ne.lng());
+                    amplify.store("drawnShape", drawnShape);
                     break;
                 case google.maps.drawing.OverlayType.POLYGON:
                     /*
@@ -293,11 +293,20 @@
                      * (num coords = num vertices + 1). So we need to check whether the last coord is the same as the
                      * first and if so ignore it.
                      */
-                    var path = shape.getPath(),
+                    var path,
                             $lat = null,
                             $ul = $('#polygonArea ul'),
                             realLength = 0,
-                            isRect = representsRectangle(path);
+                            isRect;
+
+                    if(shape.getPath()){
+                        path = shape.getPath();
+                    } else {
+                        path = shape;
+                    }
+
+                    isRect = representsRectangle(path);
+
                     // set coord display
                     if (isRect) {
                         $('#swLat').val(round(path.getAt(0).lat()));
@@ -328,6 +337,14 @@
                     // set hidden inputs
                     $('#wkt').val(polygonToWkt(path));
                     drawnShape = new Polygon(polygonToWkt(path), polygonToGeoJson(path));
+                    amplify.store("drawnShape", drawnShape);
+
+                    //calculate the area
+                    var calculatedArea = null;
+                    //google.maps.geometry.spherical.computeArea(yourPolygon.getPath());
+                    //calculate the center
+
+
                     break;
             }
         }
