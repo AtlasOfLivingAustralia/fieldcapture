@@ -105,14 +105,16 @@
                                 <div data-bind="template: {name: updateModel(), data: data,  afterRender: myPostProcessingLogic}"></div>
                             </td>
                         </tr>
-                        <tr>
+                        <tr >
                             <td colspan="2" class="no-border">
                                 <button data-bind="click: $root.removeLocation" type="button" class="btn btn-link">Remove</button>
                             </td>
                         </tr>
                     </tbody>
                 </table>
-                <button type="button" class="btn" data-bind="click:addEmptyLocation">Add another location</button>
+                <span>
+                    <button type="button" class="btn" data-bind="click:addEmptyLocation">Add location</button>
+                </span>
             </div>
 
             <div class="row-fluid">
@@ -391,15 +393,12 @@
                 //initialise a map
                 var mapId = makeid();
                 $smallMapDiv.attr('id',mapId);
-                var mapOptions;
                 if(self.data != null && self.data.shapeType() != ''){
                     console.log("The shape type = " + self.data.shapeType());
                     $drawLocationDiv.find('.propertyGroup').css('display','none');
 
                     if(self.data.shapeType() == 'polygon'){
-
-                        console.log("GEOJSON returned: " + self.data.geojson());
-                        mapOptions = {
+                        var mapOptions = {
                             zoomToBounds:true,
                             zoomLimit:16,
                             highlightOnHover:true,
@@ -414,8 +413,8 @@
                         init_map_with_features({mapContainer: mapId}, mapOptions);
                     } else if(self.data.shapeType() == 'circle'){
 
-                        console.log("Using radius: " + self.data.radius() + ", lat: " + self.data.decimalLatitude() + ", lon: " + self.data.decimalLatitude());
-                        mapOptions = {
+                        //console.log("Using radius: " + self.data.radius() + ", lat: " + self.data.decimalLatitude() + ", lon: " + self.data.decimalLatitude());
+                        var mapOptions = {
                             zoomToBounds:true,
                             zoomLimit:16,
                             highlightOnHover:true,
@@ -431,7 +430,7 @@
                         $drawLocationDiv.find('.circleProperties').css('display','block');
                         init_map_with_features({mapContainer: mapId}, mapOptions);
                     } else if(self.data.shapeType() == 'rectangle'){
-                        mapOptions = {
+                        var mapOptions = {
                             zoomToBounds:true,
                             zoomLimit:16,
                             highlightOnHover:true,

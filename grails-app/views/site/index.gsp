@@ -36,7 +36,7 @@
             <div >
                 <div class="clearfix">
                     <h1 class="pull-left">${site?.name}</h1>
-                    <g:link style="margin-bottom: 20px;" action="edit" id="${site.siteId}" class="btn pull-left title-edit">Edit site</g:link>
+                    <g:link style="margin-bottom: 20px;" action="edit" id="${site.siteId}" class="btn pull-right title-edit">Edit site</g:link>
                 </div>
                 <g:if test="${site.description}">
                     <div class="clearfix well well-small">
@@ -292,6 +292,7 @@
                     viewModel.triggerGeocoding();
                 }
             });
+
             // re-establish the previous tab state
             if (amplify.store('project-tab-state') === '#site') {
                 $('#site-tab').tab('show');
@@ -299,11 +300,11 @@
 
             init_map_with_features({
                     mapContainer: "smallMap",
-                    zoomLimit:15
+                    zoomToBounds:true,
+                    zoomLimit:16
                 },
                 $.parseJSON('${mapFeatures}')
             );
-
         });
 
     </r:script>

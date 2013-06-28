@@ -71,8 +71,10 @@
                     style: 'DEFAULT'
                 }
             });
-            if (features.zoomToBounds) { this.zoomToBounds = features.zoomToBounds}
-            if (features.zoomLimit) { this.zoomLimit = features.zoomLimit}
+            console.log('[init] ZoomToBounds: ' + features.zoomToBounds);
+            console.log('[init] ZoomLimit: ' + features.zoomLimit);
+            if (features.zoomToBounds) { this.zoomToBounds = features.zoomToBounds; }
+            if (features.zoomLimit) { this.zoomLimit = features.zoomLimit; }
             this.load(features.features);
             return this;
         },
@@ -130,31 +132,32 @@
                     self.addFeature(f, loc);
                 } else if (loc.type === 'pid') {
                     $.ajax(loc.polygonUrl, {
-                            success: function(data) {
-                                console.log(data);
-                                var paths, points, gj = data.geojson;
-                                if (gj.type === 'Polygon') {
-                                    paths = geojsonToPaths(gj.coordinates);
-                                    f = new google.maps.Polygon({
-                                        paths: paths,
-                                        map: self.map,
-                                        title: loc.name
-                                    });
-                                    f.setOptions(self.overlayOptions);
-                                    // flatten arrays to array of points
-                                    points = [].concat.apply([], paths);
-                                    // extend bounds by each point
-                                    $.each(points, function (i,obj) {self.featureBounds.extend(obj);});
-                                    self.addFeature(f, loc);
-                                }
-                            },
-                            dataType: 'json'}
+                        success: function(data) {
+                            console.log(data);
+                            var paths, points, gj = data.geojson;
+                            if (gj.type === 'Polygon') {
+                                paths = geojsonToPaths(gj.coordinates);
+                                f = new google.maps.Polygon({
+                                    paths: paths,
+                                    map: self.map,
+                                    title: loc.name
+                                });
+                                f.setOptions(self.overlayOptions);
+                                // flatten arrays to array of points
+                                points = [].concat.apply([], paths);
+                                // extend bounds by each point
+                                $.each(points, function (i,obj) {self.featureBounds.extend(obj);});
+                                self.addFeature(f, loc);
+                            }
+                        },
+                        dataType: 'json'}
                     );
                 } else {
                     // count the location as loaded even if we didn't
                     self.locationLoaded();
                 }
             });
+            self.allLocationsLoaded();
         },
         addFeature: function (f, loc) {
             var self = this;
@@ -191,17 +194,19 @@
             this.locationsLoaded++;
             if (this.locationsLoaded === this.features.features.length) {
                 // all loaded
-                this.allLocationsLoaded()
+                this.allLocationsLoaded();
             }
         },
         // zoom map to show features - but not higher than zoom = 12
         allLocationsLoaded: function () {
             var self = this;
+            console.log('All locations loaded - this.zoomToBounds - ' + this.zoomToBounds + " - zoom limit - " + self.zoomLimit);
             if (this.zoomToBounds) {
+                console.log(this.featureBounds);
                 this.map.fitBounds(this.featureBounds);  // this happens asynchronously so need to wait for bounds to change
                 // to sanity-check the zoom level
                 var boundsListener = google.maps.event.addListener(this.map, 'bounds_changed', function(event) {
-                    if (this.getZoom() > self.zoomLimit){
+                    if (this.getZoom() >= self.zoomLimit){
                         this.setZoom(self.zoomLimit);
                     }
                     google.maps.event.removeListener(boundsListener);

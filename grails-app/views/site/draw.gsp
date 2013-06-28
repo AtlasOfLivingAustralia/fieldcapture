@@ -94,6 +94,12 @@
                         <span class="drawButtonLabel">Reset</span>
                         </a>
                     </li>
+                    %{--<li id="zoomToExtent" title="Zoom and centre on Australia.">--}%
+                        %{--<a href="javascript:void(0);" class="btn draw-tool-btn">--}%
+                        %{--<img src="${resource(dir:'bootstrap/img',file:'reset.png')}" alt="zoom to extent of feature"/>--}%
+                        %{--<span class="drawButtonLabel">Zoom</span>--}%
+                        %{--</a>--}%
+                    %{--</li>--}%
                 </ul>
                 <div id="drawnArea">
                     <div id="circleArea">
@@ -178,23 +184,38 @@
         var currentDrawnShape = amplify.store("currentDrawnShape");
         console.log('Retrieved shape: ' + currentDrawnShape);
         console.log(currentDrawnShape);
+
+        var shapeBounds;
+
         if(currentDrawnShape !== undefined){
             if(currentDrawnShape.shapeType == 'polygon'){
                 console.log('Redrawing polygon');
-                showOnMap('wkt', currentDrawnShape.wkt);
+                showOnMapAndZoom('wkt', currentDrawnShape.wkt);
+
+                //get the shape bounds...
+
+
             } else if(currentDrawnShape.shapeType == 'circle'){
                 console.log('Redrawing circle');
-                showOnMap('circle', currentDrawnShape.decimalLatitude,currentDrawnShape.decimalLongitude,currentDrawnShape.radius);
+                showOnMapAndZoom('circle', currentDrawnShape.decimalLatitude,currentDrawnShape.decimalLongitude,currentDrawnShape.radius);
+
+                //get the shape bounds
+
+
+
             } else if(currentDrawnShape.shapeType == 'rectangle'){
                 console.log('Redrawing rectangle');
-                var bounds = new google.maps.LatLngBounds(
+                shapeBounds = new google.maps.LatLngBounds(
                                 new google.maps.LatLng(currentDrawnShape.minLat,currentDrawnShape.minLon),
                                 new google.maps.LatLng(currentDrawnShape.maxLat,currentDrawnShape.maxLon)
                 );
                 //render on the map
-                showOnMap('rectangle', bounds);
+                showOnMapAndZoom('rectangle', shapeBounds);
             }
         }
+
+
+
     }
 
     function setPageValues(){}

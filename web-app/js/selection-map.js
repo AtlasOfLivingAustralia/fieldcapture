@@ -155,11 +155,10 @@ map = {
                     // simulate drawingManager drawn event
                     this.currentShapeCallback(type, google.maps.drawing.OverlayType.CIRCLE, circle);
                 }
-                break;
+                return circle;
             case 'wkt':
                 var paths = wktToArray(arg1);
-                this.showArea('polygon', paths);
-                break;
+                return this.showArea('polygon', paths);
             case 'rectangle':
                 var rect = new google.maps.Rectangle({
                     bounds: arg1,
@@ -169,7 +168,7 @@ map = {
                 rect.setOptions(this.overlayOptions);
                 // simulate drawingManager drawn event
                 this.currentShapeCallback(type, google.maps.drawing.OverlayType.RECTANGLE, rect);
-                break;
+                return rect;
             case 'polygon':
                 var poly = new google.maps.Polygon({
                     paths: arg1,
@@ -179,7 +178,7 @@ map = {
                 this.shapes[0] = poly;
                 // simulate drawingManager drawn event
                 this.currentShapeCallback(type, google.maps.drawing.OverlayType.POLYGON, poly);
-                break;
+                return poly;
         }
     },
     changeArea: function (type, arg1, arg2, arg3) {
@@ -375,6 +374,20 @@ function showOnMap(arg1, arg2, arg3, arg4) {
         map.showArea(arg1, arg2, arg3, arg4);
     }
 }
+
+function showOnMapAndZoom(arg1, arg2, arg3, arg4) {
+    var object = map.showArea(arg1, arg2, arg3, arg4);
+    if(object.getBounds){
+        map.gmap.fitBounds(object.getBounds());
+    } else if(object.getPaths){
+        var bounds = new google.maps.LatLngBounds();
+        object.getPath().forEach(function (obj, i) {
+            bounds.extend(obj);
+        });
+        map.gmap.fitBounds(bounds);
+    }
+}
+
 function updateMap(arg1, arg2, arg3, arg4) {
     map.changeArea(arg1, arg2, arg3, arg4);
 }
@@ -388,6 +401,7 @@ function setCurrentShapeCallback(callback) {
     // expose these methods to the global scope
     windows.init_map = init;
     windows.showOnMap = showOnMap;
+    windows.showOnMapAndZoom = showOnMapAndZoom;
     windows.updateMap = updateMap;
     windows.clearMap = clearShapes;
     windows.setCurrentShapeCallback = setCurrentShapeCallback;
