@@ -94,13 +94,33 @@
                         <span class="drawButtonLabel">Reset</span>
                         </a>
                     </li>
-                    %{--<li id="zoomToExtent" title="Zoom and centre on Australia.">--}%
-                        %{--<a href="javascript:void(0);" class="btn draw-tool-btn">--}%
-                        %{--<img src="${resource(dir:'bootstrap/img',file:'reset.png')}" alt="zoom to extent of feature"/>--}%
-                        %{--<span class="drawButtonLabel">Zoom</span>--}%
-                        %{--</a>--}%
-                    %{--</li>--}%
+                    <li id="zoomToExtent" title="Zoom and centre on Australia.">
+                        <a href="javascript:zoomToShapeBounds();" class="btn draw-tool-btn">
+                        <img src="${resource(dir:'bootstrap/img',file:'reset.png')}" alt="zoom to extent of feature"/>
+                        <span class="drawButtonLabel">Zoom</span>
+                        </a>
+                    </li>
                 </ul>
+                <div id="drawnAreaInfo" style="margin-top:20px;margin-left:0px;padding-left:0px;">
+                    <ul style="list-style: none;margin-left:0px;padding-left:0px;">
+                        <li>
+                            <span class="label">Area (km&sup2;)</span>
+                            <span id="calculatedArea">Not calculated</span>
+                        </li>
+                        <li>
+                            <span class="label">Name</span>
+                            <span id="name">Not calculated</span>
+                        </li>
+                        <li>
+                            <span class="label">State</span>
+                            <span id="state">Not calculated</span>
+                        </li>
+                        <li>
+                            <span class="label">Locality</span>
+                            <span id="locality">Not calculated</span>
+                        </li>
+                    </ul>
+                </div>
                 <div id="drawnArea">
                     <div id="circleArea">
                         <span class="drawnAreaName">Circle</span><br/>
@@ -185,37 +205,26 @@
         console.log('Retrieved shape: ' + currentDrawnShape);
         console.log(currentDrawnShape);
 
-        var shapeBounds;
-
         if(currentDrawnShape !== undefined){
             if(currentDrawnShape.shapeType == 'polygon'){
                 console.log('Redrawing polygon');
-                showOnMapAndZoom('wkt', currentDrawnShape.wkt);
-
-                //get the shape bounds...
-
-
+                showOnMap('wkt', currentDrawnShape.wkt);
+                zoomToShapeBounds();
             } else if(currentDrawnShape.shapeType == 'circle'){
                 console.log('Redrawing circle');
-                showOnMapAndZoom('circle', currentDrawnShape.decimalLatitude,currentDrawnShape.decimalLongitude,currentDrawnShape.radius);
-
-                //get the shape bounds
-
-
-
+                showOnMap('circle', currentDrawnShape.decimalLatitude,currentDrawnShape.decimalLongitude,currentDrawnShape.radius);
+                zoomToShapeBounds();
             } else if(currentDrawnShape.shapeType == 'rectangle'){
                 console.log('Redrawing rectangle');
-                shapeBounds = new google.maps.LatLngBounds(
+                var shapeBounds = new google.maps.LatLngBounds(
                                 new google.maps.LatLng(currentDrawnShape.minLat,currentDrawnShape.minLon),
                                 new google.maps.LatLng(currentDrawnShape.maxLat,currentDrawnShape.maxLon)
                 );
                 //render on the map
-                showOnMapAndZoom('rectangle', shapeBounds);
+                showOnMap('rectangle', shapeBounds);
+                zoomToShapeBounds();
             }
         }
-
-
-
     }
 
     function setPageValues(){}
@@ -258,7 +267,10 @@
                     console.log("circle lng: " + center.lng());
                     console.log("circle radius: " + shape.getRadius());
                     drawnShape = new Circle(center.lat(), center.lng(),shape.getRadius());
-                    /*}*/
+
+                    //calculate the area
+
+
                     break;
                 case google.maps.drawing.OverlayType.RECTANGLE:
                     var bounds = shape.getBounds(),

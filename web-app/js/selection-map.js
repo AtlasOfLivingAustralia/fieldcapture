@@ -43,12 +43,12 @@ map = {
     mode: 'pointer',
     // list of user-drawn shapes
     shapes: [],
+    //the bounds of the current shape
+    currentShapeBounds: null,
     // externally set callback for when shapes are drawn
     currentShapeCallback: function () {},
     // default overlay options
-    overlayOptions: {
-//        strokeColor:'#BC2B03',fillColor:'#DF4A21',fillOpacity: 0.5,strokeWeight: 2,
-        clickable: false, zIndex: 1, editable: true},
+    overlayOptions: {clickable: false, zIndex: 1, editable: true},
     // the default bounds for the map
     initialBounds: new google.maps.LatLngBounds(
             new google.maps.LatLng(-41.5, 114),
@@ -155,6 +155,7 @@ map = {
                     // simulate drawingManager drawn event
                     this.currentShapeCallback(type, google.maps.drawing.OverlayType.CIRCLE, circle);
                 }
+                this.currentShapeBounds = circle.getBounds();
                 return circle;
             case 'wkt':
                 var paths = wktToArray(arg1);
@@ -168,6 +169,7 @@ map = {
                 rect.setOptions(this.overlayOptions);
                 // simulate drawingManager drawn event
                 this.currentShapeCallback(type, google.maps.drawing.OverlayType.RECTANGLE, rect);
+                this.currentShapeBounds = rect.getBounds();
                 return rect;
             case 'polygon':
                 var poly = new google.maps.Polygon({
@@ -178,8 +180,15 @@ map = {
                 this.shapes[0] = poly;
                 // simulate drawingManager drawn event
                 this.currentShapeCallback(type, google.maps.drawing.OverlayType.POLYGON, poly);
+                //calculate bounds
+                var bounds = new google.maps.LatLngBounds();
+                poly.getPath().forEach(function (obj, i) { bounds.extend(obj);});
+                this.currentShapeBounds = bounds;
                 return poly;
         }
+    },
+    zoomToShapeBounds : function(){
+      this.gmap.fitBounds(this.currentShapeBounds);
     },
     changeArea: function (type, arg1, arg2, arg3) {
         switch (type) {
@@ -375,17 +384,8 @@ function showOnMap(arg1, arg2, arg3, arg4) {
     }
 }
 
-function showOnMapAndZoom(arg1, arg2, arg3, arg4) {
-    var object = map.showArea(arg1, arg2, arg3, arg4);
-    if(object.getBounds){
-        map.gmap.fitBounds(object.getBounds());
-    } else if(object.getPaths){
-        var bounds = new google.maps.LatLngBounds();
-        object.getPath().forEach(function (obj, i) {
-            bounds.extend(obj);
-        });
-        map.gmap.fitBounds(bounds);
-    }
+function zoomToShapeBounds(){
+    map.zoomToShapeBounds();
 }
 
 function updateMap(arg1, arg2, arg3, arg4) {
@@ -398,13 +398,13 @@ function setCurrentShapeCallback(callback) {
     map.setCurrentShapeCallback(callback);
 }
 
-    // expose these methods to the global scope
-    windows.init_map = init;
-    windows.showOnMap = showOnMap;
-    windows.showOnMapAndZoom = showOnMapAndZoom;
-    windows.updateMap = updateMap;
-    windows.clearMap = clearShapes;
-    windows.setCurrentShapeCallback = setCurrentShapeCallback;
+// expose these methods to the global scope
+windows.init_map = init;
+windows.showOnMap = showOnMap;
+windows.zoomToShapeBounds = zoomToShapeBounds;
+windows.updateMap = updateMap;
+windows.clearMap = clearShapes;
+windows.setCurrentShapeCallback = setCurrentShapeCallback;
 
 }(this));
 
