@@ -58,7 +58,7 @@
     <div class="tab-content">
         <!-- ACTIVITIES -->
         <div class="tab-pane active" id="activity">
-            <div class="row-fluid">
+            <div class="row-fluid space-after">
                 <div class="pull-right">
                     <button data-bind="click: $root.expandActivities" type="button" class="btn btn-link">Expand all</button>
                     <button data-bind="click: $root.collapseActivities" type="button" class="btn btn-link">Collapse all</button>
@@ -113,7 +113,7 @@
 
         <div class="tab-pane" id="site">
             <!-- SITES -->
-            <div class="row-fluid">
+            <div class="row-fluid space-after">
                 <div class="pull-right">
                     <button data-bind="click: $root.addSite" type="button" class="btn">Add new site</button>
                     <button data-bind="click: $root.removeAllSites" type="button" class="btn">Delete all sites</button>
