@@ -36,7 +36,7 @@
             <div >
                 <div class="clearfix">
                     <h1 class="pull-left">${site?.name}</h1>
-                    <g:link  action="edit" id="${site.siteId}" class="btn pull-right title-edit">Edit site</g:link>
+                    <g:link style="margin-bottom:10px;" action="edit" id="${site.siteId}" class="btn pull-right title-edit">Edit site</g:link>
                 </div>
                 <g:if test="${site.description}">
                     <div class="clearfix well well-small">

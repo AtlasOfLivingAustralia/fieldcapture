@@ -117,6 +117,10 @@
                             <span id="state">Not specified</span>
                         </li>
                         <li>
+                            <span class="label">Local Gov. Area</span>
+                            <span id="lga">Not specified</span>
+                        </li>
+                        <li>
                             <span class="label">Locality</span>
                             <span id="locality">Not specified</span>
                         </li>
@@ -243,6 +247,33 @@
         $('#circleRadius').val("");
     }
 
+    function setGazInfo(lat,lng){
+        //do the google geocode lookup
+        $.get("http://maps.googleapis.com/maps/api/geocode/json?latlng="+ lat + "," + lng + "&sensor=true", function(data) {
+            if(data.results.length != 0){
+                $('#locality').html(data.results[0].formatted_address);
+            }
+        });
+        $.ajax({
+            url:"http://spatial.ala.org.au/ws/intersect/cl22/"+lat+"/"+lng,
+            dataType:"jsonp"
+        })
+        .done(function(data) {
+          if(data.length > 0){
+              $('#state').html(data[0].value);
+          }
+        });
+        $.ajax({
+            url:"http://spatial.ala.org.au/ws/intersect/cl959/"+lat+"/"+lng,
+            dataType:"jsonp"
+        })
+        .done(function(data) {
+          if(data.length > 0){
+              $('#lga').html(data[0].value);
+          }
+        });
+    }
+
     function shapeDrawn(source, type, shape) {
         console.log("[DRAW.GSP] shapeDrawn called: " + type);
         if (source === 'clear') {
@@ -274,6 +305,7 @@
 
                     $('#calculatedArea').html(((3.14 * shape.getRadius() * shape.getRadius())/1000)/1000);
                     //calculate the area
+                    setGazInfo(center.lat(), center.lng());
                     break;
                 case google.maps.drawing.OverlayType.RECTANGLE:
                     var bounds = shape.getBounds(),
@@ -301,7 +333,7 @@
 
                     var calculatedArea = google.maps.geometry.spherical.computeArea(mvcArray);
                     $('#calculatedArea').html(((calculatedArea)/1000)/1000);
-
+                    setGazInfo((sw.lat() + ne.lat())/2, (sw.lng() + ne.lng())/2);
                     break;
                 case google.maps.drawing.OverlayType.POLYGON:
                     /*
@@ -359,6 +391,24 @@
                     //calculate the area
                     var calculatedArea = google.maps.geometry.spherical.computeArea(path);
                     $('#calculatedArea').html(((calculatedArea)/1000)/1000);
+
+                    //get the centre point of a polygon ??
+                    var minLat=90,
+                            minLng=180,
+                            maxLat=-90,
+                            maxLng=-180;
+
+                    $.each(path, function(i){
+                      //console.log(path.getAt(i));
+                      var coord = path.getAt(i);
+                      if(coord.lat()>maxLat) maxLat = coord.lat();
+                      if(coord.lat()<minLat) minLat = coord.lat();
+                      if(coord.lng()>maxLng) maxLng = coord.lng();
+                      if(coord.lng()<minLng) minLng = coord.lng();
+                    });
+                    var centerX = minLng + ((maxLng - minLng) / 2);
+                    var centerY = minLat + ((maxLat - minLat) / 2);
+                    setGazInfo(centerY, centerX);
                     break;
             }
         }
