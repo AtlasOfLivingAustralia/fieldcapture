@@ -84,7 +84,7 @@
             </div>
 
             <div class="row-fluid">
-                <h2>Locations <fc:iconHelp title="Location of the site">The location of the site can be represented one or more points or polygons.
+                <h2>Extent of site<fc:iconHelp title="Extent of the site">The extent of the site can be represented by a polygon, radius or point.
                      KML, WKT and shape files are supported for uploading polygons. As are PID's of existing features in the Atlas Spatial Portal.</fc:iconHelp>
                 </h2>
                 <table class="table">
@@ -167,10 +167,10 @@
     <div class="span6">
         %{--<a href="javascript:drawSite();">Draw the location</a><br/>--}%
 
-        <button class="btn" data-bind="click: drawSiteClick">Draw the location</button>
+        <button class="btn" style="margin-bottom:20px;" data-bind="click: drawSiteClick">Draw the location</button>
 
         <div class="row-fluid controls-row">
-            <fc:textField data-bind="value:shapeType" outerClass="span2" label="ShapeType:"/>
+            <fc:textField data-bind="value:shapeType" outerClass="span4" class="input-large" label="ShapeType:"/>
         </div>
 
         <div class="row-fluid controls-row propertyGroup">
@@ -196,6 +196,17 @@
             <fc:textField data-bind="value:maxLat" outerClass="span2" label="maxLat:"/>
             <fc:textField data-bind="value:maxLon" outerClass="span2" label="maxLon:"/>
         </div>
+
+        <div class="row-fluid controls-row gazProperties">
+            <fc:textField data-bind="value:state" outerClass="span4" label="State:"/>
+            <fc:textField data-bind="value:lga" outerClass="span4" label="LGA:"/>
+            <fc:textField data-bind="value:locality" outerClass="span4" label="Locality:"/>
+        </div>
+
+        <div class="row-fluid controls-row dimProperties">
+            <fc:textField data-bind="value:area" outerClass="span4" label="Area:"/>
+        </div>
+
     </div>
     <div class="smallMap span6" style="width:400px;height:200px;"></div>
 </div>
@@ -263,7 +274,7 @@
             }
         });
 
-        var DrawnLocation = function (l) {
+        var DrawnLocation = function (l,g) {
             this.type = 'locationTypeDrawn';
 
             console.log("Adding drawn location.....");
@@ -282,9 +293,10 @@
                this.shapeType = ko.observable('');
             }
 
-            this.area = ko.observable('');
-            this.lga = ko.observable('');
-            this.state = ko.observable('');
+            this.area = ko.observable(exists(l,'area'));
+            this.lga = ko.observable(exists(g,'lga'));
+            this.state = ko.observable(exists(g,'state'));
+            this.locality = ko.observable(exists(g,'locality'));
 
             //rectangle
             this.minLat = ko.observable(exists(l,'minLat'));
@@ -481,8 +493,8 @@
                     });
                 }
             };
-            self.addDrawnLocation = function(drawnShape){
-                self.location.push(new Location('1', 'Drawn shape', 'locationTypeDrawn', new DrawnLocation(drawnShape)));
+            self.addDrawnLocation = function(drawnShape, gazInfo){
+                self.location.push(new Location('1', 'Drawn shape', 'locationTypeDrawn', new DrawnLocation(drawnShape, gazInfo)));
             };
             self.addLocation = function (id, name, type, loc) {
                 var data;
@@ -550,12 +562,14 @@
 
         //any passed back from drawing tool
         if(SERVER_CONF.checkForState){
-            var drawnShape = amplify.store("drawnShape");
             viewModel.removeAllLocations(); //remove all for now, until we support multiple
             console.log('Loading the amplify stored shape....');
             console.log(drawnShape);
             console.log("GeoJson returned from amplify:  " + drawnShape);
-            viewModel.addDrawnLocation(drawnShape);
+            var drawnShape = amplify.store("drawnShape");
+            var gazInfo  = amplify.store("gazInfo");
+            console.log("Retrieving gazinfo")
+            viewModel.addDrawnLocation(drawnShape,gazInfo);
         }
     });
 </r:script>

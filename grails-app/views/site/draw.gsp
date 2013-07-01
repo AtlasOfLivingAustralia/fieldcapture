@@ -163,6 +163,7 @@
 <script>
 
     var drawnShape = null;
+    var gazInfo = null;
 
     $(function () {
         // create map and controls
@@ -185,9 +186,9 @@
         }
 
         $('#useLocation').click(function(){
-
            var currentShape = getCurrentShape();
            shapeDrawn('user-drawn', currentShape.type, currentShape);
+           amplify.store("gazInfo", gazInfo);
            document.location.href = "${params.returnTo}";
         });
 
@@ -247,31 +248,54 @@
         $('#circleRadius').val("");
     }
 
-    function setGazInfo(lat,lng){
-        //do the google geocode lookup
-        $.get("http://maps.googleapis.com/maps/api/geocode/json?latlng="+ lat + "," + lng + "&sensor=true", function(data) {
-            if(data.results.length != 0){
-                $('#locality').html(data.results[0].formatted_address);
-            }
-        });
+    function getGazInfo(lat,lng){
+        gazInfo = new GazInfo();
+
+        //state
         $.ajax({
-            url:"http://spatial.ala.org.au/ws/intersect/cl22/"+lat+"/"+lng,
-            dataType:"jsonp"
+            url: "http://spatial.ala.org.au/ws/intersect/cl22/"+lat+"/"+lng,
+            dataType: "jsonp",
+            async: false
         })
         .done(function(data) {
           if(data.length > 0){
-              $('#state').html(data[0].value);
+              gazInfo.state = data[0].value;
           }
+          renderGazInfo();
         });
+
+        //do the google geocode lookup
+        $.ajax({
+            url: "http://maps.googleapis.com/maps/api/geocode/json?latlng="+ lat + "," + lng + "&sensor=true",
+            async: false
+        })
+        .done(function(data) {
+            if(data.results.length != 0){
+              gazInfo.locality = data.results[0].formatted_address;
+            }
+            renderGazInfo();
+        });
+
+        //
         $.ajax({
             url:"http://spatial.ala.org.au/ws/intersect/cl959/"+lat+"/"+lng,
-            dataType:"jsonp"
+            dataType:"jsonp",
+            async:false
         })
         .done(function(data) {
           if(data.length > 0){
-              $('#lga').html(data[0].value);
+              gazInfo.lga = data[0].value;
           }
+          renderGazInfo();
         });
+    }
+
+    function renderGazInfo(){
+       console.log(gazInfo);
+
+       $('#locality').html(gazInfo.locality !== undefined ? gazInfo.locality : 'Not available');
+       $('#state').html(gazInfo.state !== undefined ? gazInfo.state: 'Not available');
+       $('#lga').html(gazInfo.lga !== undefined ? gazInfo.lga : 'Not available');
     }
 
     function shapeDrawn(source, type, shape) {
@@ -300,12 +324,16 @@
                     console.log("circle lat: " + center.lat());
                     console.log("circle lng: " + center.lng());
                     console.log("circle radius: " + shape.getRadius());
-                    drawnShape = new Circle(center.lat(), center.lng(),shape.getRadius());
-                    amplify.store("drawnShape", drawnShape);
 
-                    $('#calculatedArea').html(((3.14 * shape.getRadius() * shape.getRadius())/1000)/1000);
+                    var calcAreaKm = ((3.14 * shape.getRadius() * shape.getRadius())/1000)/1000;
+                    $('#calculatedArea').html(calcAreaKm);
                     //calculate the area
-                    setGazInfo(center.lat(), center.lng());
+                    var gazInfo = getGazInfo(center.lat(), center.lng());
+                    renderGazInfo(gazInfo);
+
+                    drawnShape = new Circle(center.lat(), center.lng(), shape.getRadius(), calcAreaKm);
+                    amplify.store("drawnShape", drawnShape);
+                    amplify.store("gazInfo", gazInfo);
                     break;
                 case google.maps.drawing.OverlayType.RECTANGLE:
                     var bounds = shape.getBounds(),
@@ -319,9 +347,6 @@
                     $('#rectangleArea').css('display','block');
                     // set hidden inputs
                     $('#wkt').val(rectToWkt(sw, ne));
-                    drawnShape = new Rectangle(sw.lat(),sw.lng(),ne.lat(),ne.lng());
-                    amplify.store("drawnShape", drawnShape);
-
 
                     //calculate the area
                     var mvcArray = new google.maps.MVCArray();
@@ -332,8 +357,18 @@
                     mvcArray.push(new google.maps.LatLng(sw.lat(), sw.lng()));
 
                     var calculatedArea = google.maps.geometry.spherical.computeArea(mvcArray);
-                    $('#calculatedArea').html(((calculatedArea)/1000)/1000);
-                    setGazInfo((sw.lat() + ne.lat())/2, (sw.lng() + ne.lng())/2);
+                    var calcAreaKm = ((calculatedArea)/1000)/1000;
+                    $('#calculatedArea').html(calcAreaKm);
+
+                    var centreY = (sw.lat() + ne.lat())/2;
+                    var centreX =  (sw.lng() + ne.lng())/2;
+                    var gazInfo = getGazInfo(centreY, centreX);
+
+                    renderGazInfo(gazInfo);
+
+                    drawnShape = new Rectangle(sw.lat(),sw.lng(),ne.lat(),ne.lng(),calcAreaKm,centreY,centreX);
+                    amplify.store("drawnShape", drawnShape);
+                    amplify.store("gazInfo", gazInfo);
                     break;
                 case google.maps.drawing.OverlayType.POLYGON:
                     /*
@@ -385,12 +420,12 @@
                     }
                     // set hidden inputs
                     $('#wkt').val(polygonToWkt(path));
-                    drawnShape = new Polygon(polygonToWkt(path), polygonToGeoJson(path));
-                    amplify.store("drawnShape", drawnShape);
 
                     //calculate the area
-                    var calculatedArea = google.maps.geometry.spherical.computeArea(path);
-                    $('#calculatedArea').html(((calculatedArea)/1000)/1000);
+                    var calculatedAreaInSqM = google.maps.geometry.spherical.computeArea(path);
+                    var calcAreaKm = ((calculatedAreaInSqM)/1000)/1000;
+
+                    $('#calculatedArea').html(calcAreaKm);
 
                     //get the centre point of a polygon ??
                     var minLat=90,
@@ -408,7 +443,12 @@
                     });
                     var centerX = minLng + ((maxLng - minLng) / 2);
                     var centerY = minLat + ((maxLat - minLat) / 2);
-                    setGazInfo(centerY, centerX);
+                    var gazInfo = getGazInfo(centerY, centerX);
+                    renderGazInfo(gazInfo);
+
+                    drawnShape = new Polygon(polygonToWkt(path), polygonToGeoJson(path),calcAreaKm, centerY, centerX);
+                    amplify.store("drawnShape", drawnShape);
+                    amplify.store("gazInfo", gazInfo);
                     break;
             }
         }
