@@ -5,7 +5,7 @@
     <meta name="layout" content="main"/>
     <title>Edit | ${activity.activityId ?: 'new'} | ${site.name} | ${site.projectName} | Field Capture</title>
     <md:modelStyles model="${model}" edit="true"/>
-    <r:require modules="jstimezonedetect,knockout,jqueryValidationEngine,datepicker"/>
+    <r:require modules="jstimezonedetect,knockout,jqueryValidationEngine,datepicker,jQueryImageUpload"/>
 </head>
 <body>
 <div class="container-fluid">
@@ -82,7 +82,6 @@
 </div>
 
 <!-- templates -->
-
 <r:script>
 
     var outputData = ${output.data ?: '{}'},

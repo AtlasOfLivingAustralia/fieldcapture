@@ -123,6 +123,12 @@ class ModelTagLib {
                     </ul>
                 """
                 break
+            case 'image-view':
+                break;
+            case 'image-edit':
+                databindAttrs.add 'fileUpload', source
+                result += g.render(template: 'fileUploadTemplate', model: [databindAttrs:databindAttrs.toString()])
+                break;
         }
         if (model.preLabel) {
             result = "<span class='${labelClasses}label preLabel'>${model.preLabel}</span>" + result

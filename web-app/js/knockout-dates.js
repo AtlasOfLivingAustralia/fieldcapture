@@ -397,3 +397,57 @@ ko.extenders.async = function(computedDeferred, initialValue) {
     return plainObservable;
 };
 
+ko.bindingHandlers.fileUpload = {
+    init: function(element, valueAccessor) {
+
+        var Image = function(props) {
+            this.name = props.name;
+            this.size = props.size;
+            this.url = props.url;
+            this.thumbnail_url = props.thumbnail_url;
+
+        };
+
+        var observable = valueAccessor();  // Expected to be a ko.observableArray.
+        // The upload URL is specified using the data-url attribute to allow it to be easily pulled from the
+        // application configuration.
+        $(element).fileupload({
+            autoUpload: true,
+            completed: function(e, data) {
+                $.each(data.result, function(index, obj) {
+                    observable.push(new Image(obj));
+                });
+            },
+            destroyed: function(e, data) {
+                var images = observable();
+                // We rely on the template rendering the filename into the delete button so we can identify which
+                // object has been deleted.
+                var filename = $(e.currentTarget).attr('data-filename');
+                $.each(images, function(index, obj) {
+                    if (obj.name === filename) {
+                       observable.remove(obj);
+                       return false;
+                    }
+                });
+            }
+        });
+
+        // Enable iframe cross-domain access via redirect option:
+        $(element).fileupload(
+            'option',
+            'redirect',
+            window.location.href.replace(
+                /\/[^\/]*$/,
+                '/cors/result.html?%s'
+            )
+        );
+
+        // Render the existing model items - we are currently storing all of the metadata needed by the
+        // jquery-file-upload plugin in the model but we should probably only store the core data and decorate
+        // it in the templating code (e.g. the delete URL and HTTP method).
+        $(element).fileupload('option', 'done').call(element, '', {result:observable()});
+
+
+    }
+
+};

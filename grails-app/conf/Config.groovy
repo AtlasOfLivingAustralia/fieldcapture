@@ -115,6 +115,7 @@ if (!sld.polgon.highlight.url) {
 spatialLayerServices.baseUrl = "http://spatial-dev.ala.org.au/ws/"
 
 app.external.model.dir = "/data/${appName}/models/"
+upload.images.path = "/data/${appName}/images/"
 
 environments {
     development {
@@ -128,6 +129,8 @@ environments {
         security.cas.contextPath = grails.app.context
         ecodata.baseUrl = 'http://localhost:8080/ecodata/ws/'
         app.external.model.dir = "/devt/FieldCapture/models/"
+
+        upload.images.url = grails.serverURL+'/image/'
     }
     test {
         grails.logging.jul.usebridge = true
@@ -140,6 +143,7 @@ environments {
         security.cas.appServerName = serverName
         security.cas.contextPath = "/" + grails.app.context
         ecodata.baseUrl = 'http://localhost:8080/ecodata/ws/'
+        upload.images.url = grails.serverURL+'/image/'
     }
     nectar {
         grails.logging.jul.usebridge = true
@@ -152,6 +156,7 @@ environments {
         security.cas.appServerName = serverName
         security.cas.contextPath = "/" + grails.app.context
         ecodata.baseUrl = 'http://115.146.94.201:8080/ecodata/ws/'
+        upload.images.url = grails.serverURL+'/image/'
     }
     production {
         grails.logging.jul.usebridge = false
@@ -161,7 +166,9 @@ environments {
         security.cas.appServerName = grails.serverURL
         security.cas.contextPath = ""
         ecodata.baseUrl = 'http://ecodata.ala.org.au/ws/'
+        upload.images.url = grails.serverURL+'/image/'
     }
+
 }
 
 //println "grails.serverURL is ${grails.serverURL}"
