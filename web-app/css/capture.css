@@ -336,3 +336,11 @@ i[class^="icon-remove"]:hover {
 .table caption {
     text-align: left;
 }
+
+th.sort {
+    cursor: pointer;
+}
+
+th.sort i {
+    margin-left: 10px;
+}

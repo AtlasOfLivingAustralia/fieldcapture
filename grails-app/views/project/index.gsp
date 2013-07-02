@@ -68,14 +68,18 @@
             <div class="row-fluid">
                 <table class="table table-condensed" id="activities">
                     <thead>
-                    <tr><th></th><th>Type</th><th>From</th><th>To</th><th>Site</th></tr>
+                    <tr>
+                        <th></th>
+                        <th class="sort" data-bind="sortIcon:'',click:sortBy" data-column="type">Type</th>
+                        <th class="sort" data-bind="sortIcon:'',click:sortBy" data-column="startDate">From</th>
+                        <th class="sort" data-bind="sortIcon:'',click:sortBy" data-column="endDate">To</th>
+                        <th class="sort" data-bind="sortIcon:'',click:sortBy" data-column="siteId">Site</th>
+                    </tr>
                     </thead>
                     <tbody data-bind="foreach:activities" id="activityList">
                     <tr data-bind="attr:{href:'#'+activityId}" data-toggle="collapse" class="accordion-toggle">
                         <td>
-                            <div>
-                                <a><i class="icon-plus" title="expand"></i></a>
-                            </div>
+                            <div><a><i class="icon-plus" title="expand"></i></a></div>
                         </td>
                         <td><span data-bind="text:type"></span></td>
                         <td><span data-bind="text:startDate.formattedDate"></span></td>
@@ -92,16 +96,17 @@
                                         <div class="row-fluid">
                                             <span class="span4" data-bind="text:name"></span>
                                             <span class="span3" data-bind="text:score"></span>
-                                            <span class="span1 offset1">
+                                            <span class="span2 offset1">
                                                 <a data-bind="attr: {href:editLink}">
+                                                    <span data-bind="text: outputId == '' ? 'Add data' : 'Edit data'"></span>
                                                     <i data-bind="attr: {title: outputId == '' ? 'Add data' : 'Edit data'}" class="icon-edit"></i>
                                                 </a>
                                             </span>
                                         </div>
                                     </li>
                                     <!-- /ko -->
-                                    <li><button type="button" class="btn btn-link" style="padding:0" data-bind="click:edit">
-                                        Edit activity</button></li>
+                                    %{--<li><button type="button" class="btn btn-link" style="padding:0" data-bind="click:edit">
+                                        Edit activity</button></li>--}%
                                 </ul>
                             </div>
                         </td>
@@ -221,23 +226,34 @@
                 }
             };
 
+            //
+            ko.bindingHandlers.sortIcon = {
+                update: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+                    var $element = $(element),
+                        name = $element.data('column'),
+                        $icon = $element.find('i'),
+                        className = "icon-blank";
+                    if (viewModel.activitiesSortBy() === name) {
+                        className = viewModel.activitiesSortOrder() === 'desc' ? 'icon-chevron-down' : 'icon-chevron-up';
+                    }
+                    if ($icon.length === 0) {
+                        $icon = $("<i class='icon-blank'></i>").appendTo($element);
+                    }
+                    $icon.removeClass().addClass(className);
+                }
+            };
+
             // uses siteId to look up site name from the list of sites
             ko.bindingHandlers.siteName =  {
                 init: function(element, valueAccessor, allBindingsAccessor, model, bindingContext) {
                     var siteId = ko.utils.unwrapObservable(valueAccessor()),
-                        site,
-                        sites = bindingContext.$root.sites;
-                    if (siteId) {
-                        site = $.grep(sites, function(obj, i) {
-                            return (obj.siteId === siteId);
-                        });
-                        if (site.length > 0) {
-                            $(element).html(site[0].name());
-                            return;
-                        }
+                        siteName = bindingContext.$root.getSiteName(siteId);
+                    if (siteName === '') {
+                        // no site so remove the link and replace with plain text
+                        $(element).parent().empty().html('no site');
+                    } else {
+                        $(element).html(siteName);
                     }
-                    // no site so remove the link and replace with plain text
-                    $(element).parent().empty().html('no site');
                 }
             };
 
@@ -306,9 +322,46 @@
                 self.organisation = ko.observable(project.organisation);
                 self.mapLoaded = ko.observable(false);
                 self.activities = self.loadActivities(activities);
+                self.activitiesSortBy = ko.observable("");
+                self.activitiesSortOrder = ko.observable("");
+                self.sortActivities = function () {
+                    var field = self.activitiesSortBy(),
+                        order = self.activitiesSortOrder();
+                    self.activities.sort(function (left, right) {
+                        var l = ko.utils.unwrapObservable(left[field]),
+                            r = ko.utils.unwrapObservable(right[field]);
+                        if (field === 'siteId') {
+                            l = self.getSiteName(l);
+                            r = self.getSiteName(r);
+                        }
+                        return l == r ? 0 : (l < r ? -1 : 1);
+                    });
+                    if (order === 'desc') {
+                        self.activities.reverse();
+                    }
+                };
+                self.sortBy = function (data, event) {
+                    var element = event.currentTarget;
+                    state = $(element).find('i').hasClass('icon-chevron-up');
+                    self.activitiesSortOrder(state ? 'desc' : 'asc');
+                    self.activitiesSortBy($(element).data('column'));
+                    self.sortActivities();
+                };
                 self.sites = $.map(sites, function (obj,i) {return new Site(obj)});
                 self.sitesFilter = ko.observable("");
                 self.isSitesFiltered = ko.observable(false);
+                self.getSiteName = function (siteId) {
+                    var site;
+                    if (siteId !== undefined && siteId !== '') {
+                        site = $.grep(self.sites, function(obj, i) {
+                                return (obj.siteId === siteId);
+                        });
+                        if (site.length > 0) {
+                             return site[0].name();
+                        }
+                    }
+                    return '';
+                };
                 // Animation callbacks for the lists
                 self.showElement = function(elem) { if (elem.nodeType === 1) $(elem).hide().slideDown() };
                 self.hideElement = function(elem) { if (elem.nodeType === 1) $(elem).slideUp(function() { $(elem).remove(); }) };
