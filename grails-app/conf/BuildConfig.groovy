@@ -29,10 +29,22 @@ grails.project.dependency.resolution = {
         mavenRepo "http://maven.ala.org.au/repository/"
 
     }
+    def seleniumVersion = "2.21.0"
+    def metadataExctractorVersion = "2.6.2"
+    def imgscalrVersion = "4.2"
     dependencies {
-        // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
+        // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes e.g.
 
-        // runtime 'mysql:mysql-connector-java:5.1.20'
+        compile "com.drewnoakes:metadata-extractor:${metadataExctractorVersion}"
+        compile "org.imgscalr:imgscalr-lib:${imgscalrVersion}"
+        // runtime 'mysql:mysql-connector-java:5.1.22'
+        test "org.spockframework:spock-grails-support:0.7-groovy-2.0"
+        test "org.gebish:geb-spock:0.9.0"
+        test("org.seleniumhq.selenium:selenium-htmlunit-driver:$seleniumVersion") {
+            exclude "xml-apis"
+        }
+        test("org.seleniumhq.selenium:selenium-chrome-driver:$seleniumVersion")
+        test("org.seleniumhq.selenium:selenium-firefox-driver:$seleniumVersion")
     }
 
     plugins {
@@ -45,5 +57,10 @@ grails.project.dependency.resolution = {
         build ":tomcat:$grailsVersion"
 
         compile ':cache:1.0.1'
+
+        test ":geb:0.9.0"
+        test (":spock:0.7") {
+            exclude "spock-grails-support"
+        }
     }
 }
