@@ -84,38 +84,64 @@
             </div>
 
             <div class="row-fluid">
-                <h2>Extent of site<fc:iconHelp title="Extent of the site">The extent of the site can be represented by a polygon, radius or point.
-                     KML, WKT and shape files are supported for uploading polygons. As are PID's of existing features in the Atlas Spatial Portal.</fc:iconHelp>
+                <h2>Extent of site
+                    <fc:iconHelp title="Extent of the site">The extent of the site can be represented by
+                    a polygon, radius or point. KML, WKT and shape files are supported for uploading polygons.
+                    As are PID's of existing features in the Atlas Spatial Portal.</fc:iconHelp>
                 </h2>
-                <table class="table">
-                    <caption>You can have any number of points and areas to describe the locations of this site.</caption>
-                    <thead>
-                        <th class="span1">name</th><th class="span1">type</th><th class="span10">values</th>
-                    </thead>
-                    <tbody data-bind="foreach: location">
-                        <tr>
-                            <td>
-                                <input type="text" data-bind="value:name" class="input-small"/>
-                            </td>
-                            <td>
-                                <g:select data-bind="value: type"  from="['choose a location type','point','known shape','upload a shape','draw a shape']" name='shit'
-                                          keys="['locationTypeNone','locationTypePoint','locationTypePid','locationTypeUpload','locationTypeDrawn']"/>
-                            </td>
-                            <td>
-                                <div data-bind="template: {name: updateModel(), data: data,  afterRender: myPostProcessingLogic}"></div>
-                            </td>
-                        </tr>
-                        <tr >
-                            <td colspan="2" class="no-border">
-                                <button data-bind="click: $root.removeLocation" type="button" class="btn btn-link">Remove</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <span>
-                    <button type="button" class="btn" data-bind="click:addEmptyLocation">Add location</button>
-                </span>
+                <div class="span2">
+                    %{--<g:select data-bind="value: extent.type"--}%
+                              %{--from="['choose a location type','point','known shape','upload a shape','draw a shape']"--}%
+                              %{--name='extentType'--}%
+                              %{--keys="['locationTypeNone','locationTypePoint','locationTypePid','locationTypeUpload','locationTypeDrawn']"/>--}%
+
+
+                <select data-bind="options:[{text:'Choose type...',key:'locationTypeNone'},{text:'point',key:'locationTypePoint'},{text:'known shape',key:'locationTypePid'},{text:'upload a shape',key:'locationTypeUpload'},{text:'draw a shape',key:'locationTypeDrawn'}],
+                    optionsText:'text',
+                    optionsValue: 'key',
+                    value: extent().type"></select>
+
+
+                </div>
+
+
+                <div class="span10" data-bind="template: { name:updateExtent(), data: extent().data }"></div>
             </div>
+
+
+            %{--<div class="row-fluid">--}%
+                %{--<h2>Locations<fc:iconHelp title="Locations">The extent of the site can be represented by a polygon, radius or point.--}%
+                     %{--KML, WKT and shape files are supported for uploading polygons. As are PID's of existing features in the Atlas Spatial Portal.</fc:iconHelp>--}%
+                %{--</h2>--}%
+                %{--<table class="table">--}%
+                    %{--<caption>You can have any number of points and areas to describe the locations of this site.</caption>--}%
+                    %{--<thead>--}%
+                        %{--<th class="span1">name</th><th class="span1">type</th><th class="span10">values</th>--}%
+                    %{--</thead>--}%
+                    %{--<tbody data-bind="foreach: location">--}%
+                        %{--<tr>--}%
+                            %{--<td>--}%
+                                %{--<input type="text" data-bind="value:name" class="input-small"/>--}%
+                            %{--</td>--}%
+                            %{--<td>--}%
+                                %{--<g:select data-bind="value: type"  from="['choose a location type','point','known shape','upload a shape','draw a shape']" name='shit'--}%
+                                          %{--keys="['locationTypeNone','locationTypePoint','locationTypePid','locationTypeUpload','locationTypeDrawn']"/>--}%
+                            %{--</td>--}%
+                            %{--<td>--}%
+                                %{--<div data-bind="template: {name: updateModel(), data: data,  afterRender: myPostProcessingLogic}"></div>--}%
+                            %{--</td>--}%
+                        %{--</tr>--}%
+                        %{--<tr >--}%
+                            %{--<td colspan="2" class="no-border">--}%
+                                %{--<button data-bind="click: $root.removeLocation" type="button" class="btn btn-link">Remove</button>--}%
+                            %{--</td>--}%
+                        %{--</tr>--}%
+                    %{--</tbody>--}%
+                %{--</table>--}%
+                %{--<span>--}%
+                    %{--<button type="button" class="btn" data-bind="click:addEmptyLocation">Add location</button>--}%
+                %{--</span>--}%
+            %{--</div>--}%
 
             <div class="row-fluid">
                 <div class="form-actions span12">
@@ -124,7 +150,6 @@
                 </div>
             </div>
         </bs:form>
-
     </div>
     <div class="container-fluid">
         <div class="debug">
@@ -165,7 +190,6 @@
 <script type="text/html" id="locationTypeDrawn">
 <div class="drawLocationDiv row-fluid">
     <div class="span6">
-        %{--<a href="javascript:drawSite();">Draw the location</a><br/>--}%
 
         <button class="btn" style="margin-bottom:20px;" data-bind="click: drawSiteClick">Draw the location</button>
 
@@ -217,10 +241,10 @@
     // server side generated paths & properties
     var SERVER_CONF = {
         <g:if test="${site}">
-        pageUrl : "${grailsApplication.config.grails.serverURL}${createLink(controller:'site', action:'edit', id: site?.siteId, params:[checkForState:true])}",
+        pageUrl : "${createLink(controller:'site', action:'edit', id: site?.siteId, params:[checkForState:true])}",
         </g:if>
         <g:else>
-        pageUrl : "${grailsApplication.config.grails.serverURL}${createLink(controller:'site', action:'create', params:[checkForState:true])}",
+        pageUrl : "${createLink(controller:'site', action:'create', params:[checkForState:true])}",
         </g:else>
         sitePageUrl : "${createLink(action: 'index', id: site?.siteId)}",
         homePageUrl : "${createLink(controller: 'home', action: 'index')}",
@@ -236,6 +260,7 @@
         name : "${site?.name}",
         externalId : "${site?.externalId}",
         type : "${site?.type}",
+        extent: ${site?.extent ?: [:]},
         area : "${site?.area}",
         description : "${site?.description}",
         notes : "${site?.notes}",
@@ -396,7 +421,7 @@
                     }
                 }
                 return self.type();
-            }
+            };
             this.myPostProcessingLogic = function(elements) {
                 console.log(elements);
                 var $drawLocationDiv = $(elements[1]);
@@ -474,9 +499,42 @@
             self.notes = ko.observable(siteData.notes);
             self.projects = ko.observableArray(siteData.projects);
             self.projectList = SERVER_CONF.projectList;
+            self.extent = ko.observable();
             self.location = ko.observableArray([]);
             self.saved = function(){
                 return self.id() != '';
+            };
+            self.loadExtent = function(){
+                var data;
+                if(SERVER_CONF.siteData != null && SERVER_CONF.siteData.extent != null) {
+                    var extent = SERVER_CONF.siteData.extent;
+                    switch (extent.type) {
+                        case 'locationTypePoint': data = new PointLocation(extent.data); break;
+                        case 'locationTypePid': data = new PidLocation(extent.data); break;
+                        case 'locationTypeDrawn': data = new DrawnLocation(extent.data); break;
+                        default: data = {id: 1};
+                    }
+                    self.extent(new Location(extent.id, extent.name, extent.type, data));
+                } else {
+                    console.log('Initialising dummy extent....');
+                    self.extent(new Location('extent', '', 'locationTypeNone', null));
+                }
+            };
+            self.updateExtent = function(event){
+                %{--console.log('Updating the extent');--}%
+                console.log('Type: ' + self.extent().type());
+
+                if (self.extent().data === null || self.extent().data.type !== self.extent().type()) {
+                    // data model needs to change
+                    switch (self.extent().type()) {
+                        case 'locationTypePoint': self.extent().data = new PointLocation(); break;
+                        case 'locationTypePid': self.extent().data = new PidLocation(); break;
+                        case 'locationTypeUpload': self.extent().data = new UploadLocation(); break;
+                        case 'locationTypeDrawn': self.extent().data = new DrawnLocation(); break;
+                        default: self.extent(new Location('extent', '', 'locationTypeNone', null));
+                    }
+                }
+                return self.extent().type();
             };
             self.loadLocations = function () {
                 var data;
@@ -494,7 +552,7 @@
                 }
             };
             self.addDrawnLocation = function(drawnShape, gazInfo){
-                self.location.push(new Location('1', 'Drawn shape', 'locationTypeDrawn', new DrawnLocation(drawnShape, gazInfo)));
+                self.extent(new Location('1', 'Drawn shape', 'locationTypeDrawn', new DrawnLocation(drawnShape, gazInfo)));
             };
             self.addLocation = function (id, name, type, loc) {
                 var data;
@@ -556,18 +614,22 @@
             viewModel = new SiteViewModel(savedSiteData);
         }
 
+        viewModel.loadExtent();
+
         ko.applyBindings(viewModel);
 
-        viewModel.loadLocations();
+        //viewModel.loadLocations();
+
+
 
         //any passed back from drawing tool
         if(SERVER_CONF.checkForState){
+            var drawnShape = amplify.store("drawnShape");
+            var gazInfo  = amplify.store("gazInfo");
             viewModel.removeAllLocations(); //remove all for now, until we support multiple
             console.log('Loading the amplify stored shape....');
             console.log(drawnShape);
             console.log("GeoJson returned from amplify:  " + drawnShape);
-            var drawnShape = amplify.store("drawnShape");
-            var gazInfo  = amplify.store("gazInfo");
             console.log("Retrieving gazinfo")
             viewModel.addDrawnLocation(drawnShape,gazInfo);
         }
