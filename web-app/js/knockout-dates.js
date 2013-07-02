@@ -407,30 +407,46 @@ ko.bindingHandlers.fileUpload = {
             this.thumbnail_url = props.thumbnail_url;
 
         };
-
-        var observable = valueAccessor();  // Expected to be a ko.observableArray.
-        // The upload URL is specified using the data-url attribute to allow it to be easily pulled from the
-        // application configuration.
-        $(element).fileupload({
-            autoUpload: true,
-            completed: function(e, data) {
+        var addCallbacks = function() {
+            // The upload URL is specified using the data-url attribute to allow it to be easily pulled from the
+            // application configuration.
+            $(element).fileupload('option', 'completed', function(e, data) {
                 $.each(data.result, function(index, obj) {
+                    console.log('Adding '+obj.name+' to model');
                     observable.push(new Image(obj));
                 });
-            },
-            destroyed: function(e, data) {
+            });
+            $(element).fileupload('option', 'destroyed', function(e, data) {
                 var images = observable();
                 // We rely on the template rendering the filename into the delete button so we can identify which
                 // object has been deleted.
                 var filename = $(e.currentTarget).attr('data-filename');
                 $.each(images, function(index, obj) {
                     if (obj.name === filename) {
-                       observable.remove(obj);
-                       return false;
+                        observable.remove(obj);
+                        return false;
                     }
                 });
-            }
-        });
+            });
+
+        };
+
+        var observable = valueAccessor();  // Expected to be a ko.observableArray.
+
+        $(element).fileupload({autoUpload:true});
+
+        if (observable().length > 0) {
+            // Render the existing model items - we are currently storing all of the metadata needed by the
+            // jquery-file-upload plugin in the model but we should probably only store the core data and decorate
+            // it in the templating code (e.g. the delete URL and HTTP method).
+            $(element).fileupload('option', 'completed', function(e, data) {
+                addCallbacks();
+            });
+            $(element).fileupload('option', 'done').call(element, '', {result:observable()});
+        }
+        else {
+            addCallbacks();
+        }
 
         // Enable iframe cross-domain access via redirect option:
         $(element).fileupload(
@@ -441,12 +457,6 @@ ko.bindingHandlers.fileUpload = {
                 '/cors/result.html?%s'
             )
         );
-
-        // Render the existing model items - we are currently storing all of the metadata needed by the
-        // jquery-file-upload plugin in the model but we should probably only store the core data and decorate
-        // it in the templating code (e.g. the delete URL and HTTP method).
-        $(element).fileupload('option', 'done').call(element, '', {result:observable()});
-
 
     }
 
