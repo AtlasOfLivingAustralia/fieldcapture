@@ -94,9 +94,9 @@
                         <span class="drawButtonLabel">Reset</span>
                         </a>
                     </li>
-                    <li id="zoomToExtent" title="Zoom and centre on Australia.">
+                    <li id="zoomToExtent" title="Zoom to extent of drawn shape.">
                         <a href="javascript:zoomToShapeBounds();" class="btn draw-tool-btn">
-                        <img src="${resource(dir:'bootstrap/img',file:'reset.png')}" alt="zoom to extent of feature"/>
+                        <img src="${resource(dir:'bootstrap/img',file:'glyphicons_186_move.png')}" alt="zoom to extent of drawn shape"/>
                         <span class="drawButtonLabel">Zoom</span>
                         </a>
                     </li>
