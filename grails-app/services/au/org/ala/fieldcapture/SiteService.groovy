@@ -73,6 +73,53 @@ class SiteService {
         webService.doDelete(grailsApplication.config.ecodata.baseUrl + 'site/' + id)
     }
 
+//    /**
+//     * Returns json that describes in a generic fashion the features to be placed on a map that
+//     * will represent the site's locations.
+//     *
+//     * @param site
+//     */
+//    def getMapFeatures(site) {
+//        def featuresMap = [zoomToBounds: true, zoomLimit: 15, highlightOnHover: true, features: []]
+//        site.location.each { loc ->
+//            def matchedLocType = locationTypes[loc.type]
+//            def location = [type: matchedLocType, name: loc.name]
+//            switch (location.type) {
+//                case 'point':
+//                    location.latitude = loc.data.decimalLatitude
+//                    location.longitude = loc.data.decimalLongitude
+//                    break
+//                case 'pid':
+//                    //retrieve from spatial portal services
+//                    location.polygonUrl = grailsLinkGenerator.link(
+//                            controller: 'proxy', action: 'geojsonFromPid',
+//                            params: [pid: loc.data.pid]
+//                    )
+//                case 'drawn' :
+//                    if(loc.data.shapeType =='polygon'){
+//                        location.type = 'polygon'
+//                        location.wkt = loc.data.wkt
+//                        location.geojson = loc.data.geojson
+//                    } else if(loc.data.shapeType =='circle'){
+//                        location.type = 'circle'
+//                        location.decimalLatitude = loc.data.decimalLatitude
+//                        location.decimalLongitude = loc.data.decimalLongitude
+//                        location.radius = loc.data.radius
+//                    } else if(loc.data.shapeType =='rectangle'){
+//                        location.type = 'rectangle'
+//                        location.minLat = loc.data.minLat
+//                        location.minLon = loc.data.minLon
+//                        location.maxLat = loc.data.maxLat
+//                        location.maxLon = loc.data.maxLon
+//                    } else {
+//                        log.error('Unrecognised shapeType retrieved from DB')
+//                    }
+//            }
+//            featuresMap.features << location
+//        }
+//        featuresMap as JSON
+//    }
+
     /**
      * Returns json that describes in a generic fashion the features to be placed on a map that
      * will represent the site's locations.
@@ -81,40 +128,39 @@ class SiteService {
      */
     def getMapFeatures(site) {
         def featuresMap = [zoomToBounds: true, zoomLimit: 15, highlightOnHover: true, features: []]
-        site.location.each { loc ->
-            def matchedLocType = locationTypes[loc.type]
-            def location = [type: matchedLocType, name: loc.name]
-            switch (location.type) {
-                case 'point':
-                    location.latitude = loc.data.decimalLatitude
-                    location.longitude = loc.data.decimalLongitude
-                    break
-                case 'pid':
-                    //retrieve from spatial portal services
-                    location.polygonUrl = grailsLinkGenerator.link(
-                            controller: 'proxy', action: 'geojsonFromPid',
-                            params: [pid: loc.data.pid]
-                    )
-                case 'drawn' :
-                    if(loc.data.shapeType =='polygon'){
-                        location.type = 'polygon'
-                        location.wkt = loc.data.wkt
-                        location.geojson = loc.data.geojson
-                    } else if(loc.data.shapeType =='circle'){
-                        location.type = 'circle'
-                        location.decimalLatitude = loc.data.decimalLatitude
-                        location.decimalLongitude = loc.data.decimalLongitude
-                        location.radius = loc.data.radius
-                    } else if(loc.data.shapeType =='rectangle'){
-                        location.type = 'rectangle'
-                        location.minLat = loc.data.minLat
-                        location.minLon = loc.data.minLon
-                        location.maxLat = loc.data.maxLat
-                        location.maxLon = loc.data.maxLon
-                    } else {
-                        log.error('Unrecognised shapeType retrieved from DB')
-                    }
-            }
+        def loc = site.extent
+        def matchedLocType = locationTypes[loc.type]
+        def location = [type: matchedLocType, name: loc.name]
+        switch (location.type) {
+            case 'point':
+                location.latitude = loc.data.decimalLatitude
+                location.longitude = loc.data.decimalLongitude
+                break
+            case 'pid':
+                //retrieve from spatial portal services
+                location.polygonUrl = grailsLinkGenerator.link(
+                        controller: 'proxy', action: 'geojsonFromPid',
+                        params: [pid: loc.data.pid]
+                )
+            case 'drawn' :
+                if(loc.data.shapeType =='polygon'){
+                    location.type = 'polygon'
+                    location.wkt = loc.data.wkt
+                    location.geojson = loc.data.geojson
+                } else if(loc.data.shapeType =='circle'){
+                    location.type = 'circle'
+                    location.decimalLatitude = loc.data.decimalLatitude
+                    location.decimalLongitude = loc.data.decimalLongitude
+                    location.radius = loc.data.radius
+                } else if(loc.data.shapeType =='rectangle'){
+                    location.type = 'rectangle'
+                    location.minLat = loc.data.minLat
+                    location.minLon = loc.data.minLon
+                    location.maxLat = loc.data.maxLat
+                    location.maxLon = loc.data.maxLon
+                } else {
+                    log.error('Unrecognised shapeType retrieved from DB')
+                }
             featuresMap.features << location
         }
         featuresMap as JSON

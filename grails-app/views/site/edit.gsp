@@ -90,22 +90,12 @@
                     As are PID's of existing features in the Atlas Spatial Portal.</fc:iconHelp>
                 </h2>
                 <div class="span2">
-                    %{--<g:select data-bind="value: extent.type"--}%
-                              %{--from="['choose a location type','point','known shape','upload a shape','draw a shape']"--}%
-                              %{--name='extentType'--}%
-                              %{--keys="['locationTypeNone','locationTypePoint','locationTypePid','locationTypeUpload','locationTypeDrawn']"/>--}%
-
-
-                <select data-bind="options:[{text:'Choose type...',key:'locationTypeNone'},{text:'point',key:'locationTypePoint'},{text:'known shape',key:'locationTypePid'},{text:'upload a shape',key:'locationTypeUpload'},{text:'draw a shape',key:'locationTypeDrawn'}],
-                    optionsText:'text',
-                    optionsValue: 'key',
-                    value: extent().type"></select>
-
-
+                    <g:select data-bind="value: extent().type"
+                              from="['choose a location type','point','known shape','upload a shape','draw a shape']"
+                              name='extentType'
+                              keys="['locationTypeNone','locationTypePoint','locationTypePid','locationTypeUpload','locationTypeDrawn']"/>
                 </div>
-
-
-                <div class="span10" data-bind="template: { name:updateExtent(), data: extent().data }"></div>
+                <div class="span10" data-bind="template: { name: updateExtent(), data: extent().data }"></div>
             </div>
 
 
@@ -241,10 +231,10 @@
     // server side generated paths & properties
     var SERVER_CONF = {
         <g:if test="${site}">
-        pageUrl : "${createLink(controller:'site', action:'edit', id: site?.siteId, params:[checkForState:true])}",
+        pageUrl : "${grailsApplication.config.grails.serverURL}${createLink(controller:'site', action:'edit', id: site?.siteId, params:[checkForState:true])}",
         </g:if>
         <g:else>
-        pageUrl : "${createLink(controller:'site', action:'create', params:[checkForState:true])}",
+        pageUrl : "${grailsApplication.config.grails.serverURL}${createLink(controller:'site', action:'create', params:[checkForState:true])}",
         </g:else>
         sitePageUrl : "${createLink(action: 'index', id: site?.siteId)}",
         homePageUrl : "${createLink(controller: 'home', action: 'index')}",
@@ -303,6 +293,8 @@
             this.type = 'locationTypeDrawn';
 
             console.log("Adding drawn location.....");
+            console.log(l);
+            console.log(g);
             console.log('WKT =  ' + exists(l,'wkt'));
 
             if(exists(l,'wkt') != ''){
@@ -408,6 +400,7 @@
             this.name = ko.observable(name);
             this.type = ko.observable(type);
             this.updateModel = function (event) {
+                console.log("############### Update model called.....");
                 var trev = event;
                 var lType = self.type();
                 var modelType = self.data ? self.data.type : 'locationTypeNone';
@@ -490,6 +483,8 @@
 
         function SiteViewModel (siteData) {
             var self = this;
+            self.projectList = SERVER_CONF.projectList;
+
             self.id = ko.observable(siteData.id);
             self.name = ko.observable(siteData.name);
             self.externalId = ko.observable(siteData.externalId);
@@ -498,7 +493,7 @@
             self.description = ko.observable(siteData.description);
             self.notes = ko.observable(siteData.notes);
             self.projects = ko.observableArray(siteData.projects);
-            self.projectList = SERVER_CONF.projectList;
+//            self.extent = ko.observable(new Location('extent', '', 'locationTypeNone', null));
             self.extent = ko.observable();
             self.location = ko.observableArray([]);
             self.saved = function(){
@@ -521,18 +516,13 @@
                 }
             };
             self.updateExtent = function(event){
-                %{--console.log('Updating the extent');--}%
-                console.log('Type: ' + self.extent().type());
-
-                if (self.extent().data === null || self.extent().data.type !== self.extent().type()) {
-                    // data model needs to change
-                    switch (self.extent().type()) {
-                        case 'locationTypePoint': self.extent().data = new PointLocation(); break;
-                        case 'locationTypePid': self.extent().data = new PidLocation(); break;
-                        case 'locationTypeUpload': self.extent().data = new UploadLocation(); break;
-                        case 'locationTypeDrawn': self.extent().data = new DrawnLocation(); break;
-                        default: self.extent(new Location('extent', '', 'locationTypeNone', null));
-                    }
+                console.log('Updating the extent: ' + self.extent().type());
+                switch (self.extent().type()) {
+                    case 'locationTypePoint':  self.extent().data = new PointLocation(); break;
+                    case 'locationTypePid':    self.extent().data = new PidLocation(); break;
+                    case 'locationTypeUpload': self.extent().data = new UploadLocation(); break;
+                    case 'locationTypeDrawn':  self.extent().data = new DrawnLocation(self.drawnShape,self.gazInfo); break;
+                    default: self.extent(new Location('extent', '', 'locationTypeNone', null));
                 }
                 return self.extent().type();
             };
@@ -554,6 +544,10 @@
             self.addDrawnLocation = function(drawnShape, gazInfo){
                 self.extent(new Location('1', 'Drawn shape', 'locationTypeDrawn', new DrawnLocation(drawnShape, gazInfo)));
             };
+            self.setExtent = function(drawnShape, gazInfo){
+                console.log('Setting the extent...');
+                self.extent(new Location('1', 'Drawn shape', 'locationTypeDrawn', new DrawnLocation(drawnShape, gazInfo)));
+            };
             self.addLocation = function (id, name, type, loc) {
                 var data;
                 switch (type) {
@@ -567,7 +561,7 @@
                 var temp2 = ko.mapping.toJS(self.location);
             };
             self.addEmptyLocation = function () {
-                this.location.push(new Location('', '', 'locationTypeNone', null));
+                self.location.push(new Location('', '', 'locationTypeNone', null));
             };
             self.removeLocation = function (location) {
                 self.location.remove(location);
@@ -620,18 +614,17 @@
 
         //viewModel.loadLocations();
 
-
-
         //any passed back from drawing tool
         if(SERVER_CONF.checkForState){
+            viewModel.removeAllLocations(); //remove all for now, until we support multiple
             var drawnShape = amplify.store("drawnShape");
             var gazInfo  = amplify.store("gazInfo");
-            viewModel.removeAllLocations(); //remove all for now, until we support multiple
-            console.log('Loading the amplify stored shape....');
+            console.log("Retrieving drawnShape & gazinfo")
             console.log(drawnShape);
-            console.log("GeoJson returned from amplify:  " + drawnShape);
-            console.log("Retrieving gazinfo")
-            viewModel.addDrawnLocation(drawnShape,gazInfo);
+            console.log(gazInfo);
+            viewModel.drawnShape = drawnShape;
+            viewModel.gazInfo = gazInfo;
+            viewModel.setExtent(drawnShape,gazInfo);
         }
     });
 </r:script>
