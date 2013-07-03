@@ -312,13 +312,13 @@
             }
 
             var mapFeatures = $.parseJSON('${mapFeatures}');
-            if(mapFeatures !=null && mapFeatures.feature !==undefined && mapFeatures.features.length>0){
+            if(mapFeatures !=null && mapFeatures.features !== undefined && mapFeatures.features.length >0){
                 init_map_with_features({
                         mapContainer: "smallMap",
                         zoomToBounds:true,
                         zoomLimit:16
                     },
-                    $.parseJSON('${mapFeatures}')
+                    mapFeatures
                 );
             }
         });

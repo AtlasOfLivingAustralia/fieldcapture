@@ -101,39 +101,6 @@
                 </div>
             </div>
 
-            %{--<div class="row-fluid">--}%
-                %{--<h2>Locations<fc:iconHelp title="Locations">The extent of the site can be represented by a polygon, radius or point.--}%
-                     %{--KML, WKT and shape files are supported for uploading polygons. As are PID's of existing features in the Atlas Spatial Portal.</fc:iconHelp>--}%
-                %{--</h2>--}%
-                %{--<table class="table">--}%
-                    %{--<caption>You can have any number of points and areas to describe the locations of this site.</caption>--}%
-                    %{--<thead>--}%
-                        %{--<th class="span1">name</th><th class="span1">type</th><th class="span10">values</th>--}%
-                    %{--</thead>--}%
-                    %{--<tbody data-bind="foreach: location">--}%
-                        %{--<tr>--}%
-                            %{--<td>--}%
-                                %{--<input type="text" data-bind="value:name" class="input-small"/>--}%
-                            %{--</td>--}%
-                            %{--<td>--}%
-                                %{--<g:select data-bind="value: type"  from="['choose a location type','point','known shape','upload a shape','draw a shape']" name='shit'--}%
-                                          %{--keys="['locationTypeNone','locationTypePoint','locationTypePid','locationTypeUpload','locationTypeDrawn']"/>--}%
-                            %{--</td>--}%
-                            %{--<td>--}%
-                                %{--<div data-bind="template: {name: updateModel(), data: data,  afterRender: myPostProcessingLogic}"></div>--}%
-                            %{--</td>--}%
-                        %{--</tr>--}%
-                        %{--<tr >--}%
-                            %{--<td colspan="2" class="no-border">--}%
-                                %{--<button data-bind="click: $root.removeLocation" type="button" class="btn btn-link">Remove</button>--}%
-                            %{--</td>--}%
-                        %{--</tr>--}%
-                    %{--</tbody>--}%
-                %{--</table>--}%
-                %{--<span>--}%
-                    %{--<button type="button" class="btn" data-bind="click:addEmptyLocation">Add location</button>--}%
-                %{--</span>--}%
-            %{--</div>--}%
 
             <div class="row-fluid">
                 <div class="form-actions span12">
@@ -151,7 +118,7 @@
                 <h4>KO model</h4>
                 <pre data-bind="text:ko.toJSON($root,null,2)"></pre>
                 <h4>Activities</h4>
-                <pre>${site.activities}</pre>
+                <pre>${site?.activities}</pre>
                 <h4>Site</h4>
                 <pre>${site}</pre>
                 <h4>Projects</h4>
@@ -180,6 +147,11 @@
 </script>
 
 <script type="text/html" id="locationTypePid">
+
+    <g:select from="['Australian states', 'Local Gov. Area', 'IMCRA', 'IBRA']"
+              name='layerName'
+              keys="['cl22','cl23','cl23', 'cl23']"/>
+
     <fc:textField data-bind="value:pid" class="input-small" label="Pid:"/>
 </script>
 
@@ -267,7 +239,7 @@
         name : "${site?.name}",
         externalId : "${site?.externalId}",
         type : "${site?.type}",
-        extent: ${site?.extent ?: 'null'},
+        extent: ${site?.extent?:'null'},
         area : "${site?.area}",
         description : "${site?.description}",
         notes : "${site?.notes}",
@@ -285,7 +257,11 @@
     function exists(parent, prop) {
         if(parent === undefined)
             return '';
+        if(parent == null)
+            return '';
         if(parent[prop] === undefined)
+            return '';
+        if(parent[prop] == null)
             return '';
         if(ko.isObservable(parent[prop])){
             return parent[prop]();
@@ -541,7 +517,7 @@
             self.loadExtent = function(){
                 console.log('Loading the extent.....');
                 var geometry;
-                if(SERVER_CONF.siteData.extent != null) {
+                if(SERVER_CONF.siteData !=null && SERVER_CONF.siteData.extent != null) {
                     var extent = SERVER_CONF.siteData.extent;
                     console.log('Loading the extent type.....' + extent.type);
                     switch (extent.type) {
@@ -560,12 +536,10 @@
             self.updateExtent = function(event){
                 console.log('Updating the extent: ' + self.extent().type());
                 switch (self.extent().type()) {
-                    case 'locationTypePoint':  self.extent().geometry = new PointLocation(); break;
-                    case 'locationTypePid':    self.extent().geometry = new PidLocation(); break;
+                    case 'locationTypePoint':  self.extent().geometry = new PointLocation(self.extent().geometry); break;
+                    case 'locationTypePid':    self.extent().geometry = new PidLocation(self.extent().geometry); break;
                     case 'locationTypeUpload': self.extent().geometry = new UploadLocation(); break;
-                    case 'locationTypeDrawn':
-                        //do we check for newly drawn object, or use the saved object
-                        self.extent().geometry = new DrawnLocation(self.extent().geometry); break;
+                    case 'locationTypeDrawn':  self.extent().geometry = new DrawnLocation(self.extent().geometry); break;
                     default: self.extent(new Location('extent', '', 'locationTypeNone', null));
                 }
                 return self.extent().type();

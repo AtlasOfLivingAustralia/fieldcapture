@@ -131,10 +131,13 @@ class SiteService {
         def loc = site.extent
         def matchedLocType = locationTypes[loc.type]
         def location = [type: matchedLocType, name: loc.name]
+
         switch (location.type) {
             case 'point':
+                location.type = 'point'
                 location.latitude = loc.geometry.decimalLatitude
                 location.longitude = loc.geometry.decimalLongitude
+                location.uncertainty = loc.geometry.uncertainty
                 break
             case 'pid':
                 //retrieve from spatial portal services
@@ -142,6 +145,7 @@ class SiteService {
                         controller: 'proxy', action: 'geojsonFromPid',
                         params: [pid: loc.geometry.pid]
                 )
+                break
             case 'drawn' :
                 if(loc.geometry.shapeType =='polygon'){
                     location.type = 'polygon'
@@ -161,8 +165,8 @@ class SiteService {
                 } else {
                     log.error('Unrecognised shapeType retrieved from DB')
                 }
-            featuresMap.features << location
         }
+        featuresMap.features << location
         featuresMap as JSON
     }
 
