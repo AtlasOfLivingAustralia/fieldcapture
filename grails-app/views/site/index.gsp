@@ -53,14 +53,29 @@
                 </span>
                 <span class="span4">
                     <span class="label">Area:</span>
-                    <g:if test="${site.area}">
-                        ${site.area} decimal hectares
+                    <g:if test="${site.extent.geometry.area}">
+                        ${site.extent.geometry.area} square km
                     </g:if>
                     <g:else>
                         Not specified
                     </g:else>
                 </span>
             </div>
+
+            <g:if test="${site.extent.geometry}">
+            <div style="margin-top: 20px;">
+                <span class="span4">
+                    <span class="label">State/territory:</span> ${site.extent.geometry.state?:'Not specified'}
+                </span>
+                <span class="span4">
+                    <span class="label">Local government area:</span> ${site.extent.geometry.lga?:'Not specified'}
+                </span>
+                <span class="span4">
+                    <span class="label">Locality:</span> ${site.extent.geometry.locality?:'Not specified'}
+                </span>
+            </div>
+            </g:if>
+
             <div>
                 <span class="span12">
                     <span class="label">Notes:</span>
@@ -282,14 +297,12 @@
                 amplify.store('project-tab-state', tab);
                 // only init map when the tab is first shown
                 if (tab === '#site' && map === undefined) {
-                    map = init_map_with_features({
+                    init_map_with_features({
                             mapContainer: "map",
                             scrollwheel: false
                         },
                         $.parseJSON('${mapFeatures}')
                     );
-                    // set trigger for site reverse geocoding
-                    viewModel.triggerGeocoding();
                 }
             });
 
@@ -298,13 +311,16 @@
                 $('#site-tab').tab('show');
             }
 
-            init_map_with_features({
-                    mapContainer: "smallMap",
-                    zoomToBounds:true,
-                    zoomLimit:16
-                },
-                $.parseJSON('${mapFeatures}')
-            );
+            var mapFeatures = $.parseJSON('${mapFeatures}');
+            if(mapFeatures !=null && mapFeatures.feature !==undefined && mapFeatures.features.length>0){
+                init_map_with_features({
+                        mapContainer: "smallMap",
+                        zoomToBounds:true,
+                        zoomLimit:16
+                    },
+                    $.parseJSON('${mapFeatures}')
+                );
+            }
         });
 
     </r:script>

@@ -21,8 +21,8 @@ class SiteService {
         //log.debug site
         def loc = getFirstPointLocation(site)
         //log.debug "loc = " + loc
-        if (loc && loc.data?.decimalLatitude && loc.data?.decimalLongitude) {
-            return metadataService.getLocationMetadataForPoint(loc.data.decimalLatitude, loc.data.decimalLongitude)
+        if (loc && loc.geometry?.decimalLatitude && loc.geometry?.decimalLongitude) {
+            return metadataService.getLocationMetadataForPoint(loc.geometry.decimalLatitude, loc.geometry.decimalLongitude)
         }
         return null
     }
@@ -36,8 +36,8 @@ class SiteService {
 
     def injectLocationMetadata(Object site) {
         def loc = getFirstPointLocation(site)
-        if (loc && loc.data?.decimalLatitude && loc.data?.decimalLongitude) {
-            site << metadataService.getLocationMetadataForPoint(loc.data.decimalLatitude, loc.data.decimalLongitude)
+        if (loc && loc.geometry?.decimalLatitude && loc.geometry?.decimalLongitude) {
+            site << metadataService.getLocationMetadataForPoint(loc.geometry.decimalLatitude, loc.geometry.decimalLongitude)
         }
         site
     }
@@ -133,31 +133,31 @@ class SiteService {
         def location = [type: matchedLocType, name: loc.name]
         switch (location.type) {
             case 'point':
-                location.latitude = loc.data.decimalLatitude
-                location.longitude = loc.data.decimalLongitude
+                location.latitude = loc.geometry.decimalLatitude
+                location.longitude = loc.geometry.decimalLongitude
                 break
             case 'pid':
                 //retrieve from spatial portal services
                 location.polygonUrl = grailsLinkGenerator.link(
                         controller: 'proxy', action: 'geojsonFromPid',
-                        params: [pid: loc.data.pid]
+                        params: [pid: loc.geometry.pid]
                 )
             case 'drawn' :
-                if(loc.data.shapeType =='polygon'){
+                if(loc.geometry.shapeType =='polygon'){
                     location.type = 'polygon'
-                    location.wkt = loc.data.wkt
-                    location.geojson = loc.data.geojson
-                } else if(loc.data.shapeType =='circle'){
+                    location.wkt = loc.geometry.wkt
+                    location.geojson = loc.geometry.geojson
+                } else if(loc.geometry.shapeType =='circle'){
                     location.type = 'circle'
-                    location.decimalLatitude = loc.data.decimalLatitude
-                    location.decimalLongitude = loc.data.decimalLongitude
-                    location.radius = loc.data.radius
-                } else if(loc.data.shapeType =='rectangle'){
+                    location.decimalLatitude = loc.geometry.decimalLatitude
+                    location.decimalLongitude = loc.geometry.decimalLongitude
+                    location.radius = loc.geometry.radius
+                } else if(loc.geometry.shapeType =='rectangle'){
                     location.type = 'rectangle'
-                    location.minLat = loc.data.minLat
-                    location.minLon = loc.data.minLon
-                    location.maxLat = loc.data.maxLat
-                    location.maxLon = loc.data.maxLon
+                    location.minLat = loc.geometry.minLat
+                    location.minLon = loc.geometry.minLon
+                    location.maxLat = loc.geometry.maxLat
+                    location.maxLon = loc.geometry.maxLon
                 } else {
                     log.error('Unrecognised shapeType retrieved from DB')
                 }
@@ -175,6 +175,36 @@ class SiteService {
                         [name:'area', type:'text'],
                         [name:'description', type:'text'],
                         [name:'notes', type:'text'],
+                        [name:'extent', type:'Location', itemModel: [
+                                [name:'name', type: 'text'],
+                                [name:'type', type:'list', itemType:'text', listValues:[
+                                        'locationTypeNone','locationTypePoint','locationTypePid','locationTypeUpload',
+                                ]],
+                                [name:'geometry', type:'list', itemType:[
+                                        [name:'NoneLocation', type:'null'],
+                                        [name:'PointLocation', type:'list', itemType:[
+                                                [name:'decimalLatitude', type:'latLng'],
+                                                [name:'decimalLongitude', type:'latLng'],
+                                                [name:'uncertainty', type:'text'],
+                                                [name:'precision', type:'text'],
+                                                [name:'datum', type:'text']
+                                        ]],
+                                        [name:'PidLocation', type:'list', itemType:[
+                                                [name:'pid', type: 'text']
+                                        ]],
+                                        [name:'UploadLocation', type:'list', itemType:[
+                                                [name:'shape', type: 'text'],
+                                                [name:'pid', type: 'text']
+                                        ]],
+                                        [name:'DrawnLocation', type:'list', itemType:[
+                                                [name:'decimalLatitude', type:'latLng'],
+                                                [name:'decimalLongitude', type:'latLng'],
+                                                [name:'radius', type:'text'],
+                                                [name:'wkt', type:'text']
+                                        ]]
+                                ]]
+                            ]
+                        ],
                         [name:'location', type:'list', itemType: 'Location', itemModel: [
                                 [name:'name', type: 'text'],
                                 [name:'type', type:'list', itemType:'text', listValues:[

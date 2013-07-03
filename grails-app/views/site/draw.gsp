@@ -186,9 +186,12 @@
         }
 
         $('#useLocation').click(function(){
-           var currentShape = getCurrentShape();
-           shapeDrawn('user-drawn', currentShape.type, currentShape);
-           amplify.store("gazInfo", gazInfo);
+//           var currentShape = getCurrentShape();
+//           shapeDrawn('user-drawn', currentShape.type, currentShape);
+           drawnShape.lga = gazInfo.lga;
+           drawnShape.state = gazInfo.state;
+           drawnShape.locality = gazInfo.locality;
+           amplify.store("drawnShape", drawnShape);
            document.location.href = "${params.returnTo}";
         });
 
@@ -248,7 +251,7 @@
         $('#circleRadius').val("");
     }
 
-    function getGazInfo(lat,lng){
+    function refreshGazInfo(lat,lng){
         gazInfo = new GazInfo();
 
         //state
@@ -291,8 +294,6 @@
     }
 
     function renderGazInfo(){
-       console.log(gazInfo);
-
        $('#locality').html(gazInfo.locality !== undefined ? gazInfo.locality : 'Not available');
        $('#state').html(gazInfo.state !== undefined ? gazInfo.state: 'Not available');
        $('#lga').html(gazInfo.lga !== undefined ? gazInfo.lga : 'Not available');
@@ -328,12 +329,11 @@
                     var calcAreaKm = ((3.14 * shape.getRadius() * shape.getRadius())/1000)/1000;
                     $('#calculatedArea').html(calcAreaKm);
                     //calculate the area
-                    var gazInfo = getGazInfo(center.lat(), center.lng());
+                    refreshGazInfo(center.lat(), center.lng());
                     renderGazInfo(gazInfo);
 
                     drawnShape = new Circle(center.lat(), center.lng(), shape.getRadius(), calcAreaKm);
-                    amplify.store("drawnShape", drawnShape);
-                    amplify.store("gazInfo", gazInfo);
+
                     break;
                 case google.maps.drawing.OverlayType.RECTANGLE:
                     var bounds = shape.getBounds(),
@@ -362,13 +362,15 @@
 
                     var centreY = (sw.lat() + ne.lat())/2;
                     var centreX =  (sw.lng() + ne.lng())/2;
-                    var gazInfo = getGazInfo(centreY, centreX);
 
+                    refreshGazInfo(centreY, centreX);
                     renderGazInfo(gazInfo);
 
                     drawnShape = new Rectangle(sw.lat(),sw.lng(),ne.lat(),ne.lng(),calcAreaKm,centreY,centreX);
+                    drawnShape.lga = gazInfo.lga;
+                    drawnShape.state = gazInfo.state;
+                    drawnShape.locality = gazInfo.locality;
                     amplify.store("drawnShape", drawnShape);
-                    amplify.store("gazInfo", gazInfo);
                     break;
                 case google.maps.drawing.OverlayType.POLYGON:
                     /*
@@ -443,12 +445,14 @@
                     });
                     var centerX = minLng + ((maxLng - minLng) / 2);
                     var centerY = minLat + ((maxLat - minLat) / 2);
-                    var gazInfo = getGazInfo(centerY, centerX);
+                    refreshGazInfo(centerY, centerX);
                     renderGazInfo(gazInfo);
 
                     drawnShape = new Polygon(polygonToWkt(path), polygonToGeoJson(path),calcAreaKm, centerY, centerX);
+                    drawnShape.lga = gazInfo.lga;
+                    drawnShape.state = gazInfo.state;
+                    drawnShape.locality = gazInfo.locality;
                     amplify.store("drawnShape", drawnShape);
-                    amplify.store("gazInfo", gazInfo);
                     break;
             }
         }

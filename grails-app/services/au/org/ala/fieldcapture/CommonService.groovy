@@ -41,13 +41,13 @@ class CommonService {
                 def location = [type: locationTypes[loc.type], name: site.name + ' - ' + loc.name, id: site.name]
                 switch (location.type) {
                     case 'point':
-                        location.latitude = loc.data.decimalLatitude
-                        location.longitude = loc.data.decimalLongitude
+                        location.latitude = loc.geometry.decimalLatitude
+                        location.longitude = loc.geometry.decimalLongitude
                         break
                     case 'pid':
                         location.polygonUrl = grailsLinkGenerator.link(
                                 controller: 'proxy', action: 'geojsonFromPid',
-                                params: [pid: loc.data.pid]
+                                params: [pid: loc.geometry.pid]
                         )
                 }
                 featuresMap.features << location

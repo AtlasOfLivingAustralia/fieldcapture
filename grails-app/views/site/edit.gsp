@@ -83,21 +83,23 @@
                 </div>
             </div>
 
+
+            <h2>Extent of site
+                <fc:iconHelp title="Extent of the site">The extent of the site can be represented by
+                a polygon, radius or point. KML, WKT and shape files are supported for uploading polygons.
+                As are PID's of existing features in the Atlas Spatial Portal.</fc:iconHelp>
+            </h2>
             <div class="row-fluid">
-                <h2>Extent of site
-                    <fc:iconHelp title="Extent of the site">The extent of the site can be represented by
-                    a polygon, radius or point. KML, WKT and shape files are supported for uploading polygons.
-                    As are PID's of existing features in the Atlas Spatial Portal.</fc:iconHelp>
-                </h2>
-                <div class="span2">
+                <div class="span3">
                     <g:select data-bind="value: extent().type"
                               from="['choose a location type','point','known shape','upload a shape','draw a shape']"
                               name='extentType'
                               keys="['locationTypeNone','locationTypePoint','locationTypePid','locationTypeUpload','locationTypeDrawn']"/>
                 </div>
-                <div class="span10" data-bind="template: { name: updateExtent(), data: extent().data }"></div>
+                <div class="span9">
+                    <div data-bind="template: { name: updateExtent(), data: extent().geometry, afterRender: extent().myPostProcessingLogic}"></div>
+                </div>
             </div>
-
 
             %{--<div class="row-fluid">--}%
                 %{--<h2>Locations<fc:iconHelp title="Locations">The extent of the site can be represented by a polygon, radius or point.--}%
@@ -142,18 +144,27 @@
         </bs:form>
     </div>
     <div class="container-fluid">
-        <div class="debug">
-            <h3 id="debug"><a href="javascript:void(0);">Debug</a></h3>
-            <div style="display: none">
-                Model: <pre data-bind="text: ko.toJSON($root)"></pre>
-                Site : <pre>Site : ${site}</pre>
+        <div class="expandable-debug">
+            <hr />
+            <h3>Debug</h3>
+            <div>
+                <h4>KO model</h4>
+                <pre data-bind="text:ko.toJSON($root,null,2)"></pre>
+                <h4>Activities</h4>
+                <pre>${site.activities}</pre>
+                <h4>Site</h4>
+                <pre>${site}</pre>
+                <h4>Projects</h4>
+                <pre>${projects}</pre>
+                <h4>Features</h4>
+                <pre>${mapFeatures}</pre>
             </div>
         </div>
     </div>
 
 <!-- templates -->
 <script type="text/html" id="locationTypeNone">
-    <span>Choose a type</span>
+    %{--<span>Choose a type</span>--}%
 </script>
 
 <script type="text/html" id="locationTypePoint">
@@ -179,50 +190,56 @@
 
 <script type="text/html" id="locationTypeDrawn">
 <div class="drawLocationDiv row-fluid">
-    <div class="span6">
+    <div class="span4">
 
         <button class="btn" style="margin-bottom:20px;" data-bind="click: drawSiteClick">Draw the location</button>
 
         <div class="row-fluid controls-row">
-            <fc:textField data-bind="value:shapeType" outerClass="span4" class="input-large" label="ShapeType:"/>
+            <span class="label">ShapeType</span> <span data-bind="text:shapeType"></span>
         </div>
-
-        <div class="row-fluid controls-row propertyGroup">
-            <fc:textField data-bind="value:area" outerClass="span2" label="Area:"/>
-            <fc:textField data-bind="value:state" outerClass="span2" label="State:"/>
-            <fc:textField data-bind="value:lga" outerClass="span2" label="LGA:"/>
-        </div>
-
-        <div class="row-fluid controls-row circleProperties propertyGroup">
-            <fc:textField data-bind="value:decimalLatitude" outerClass="span2" label="Latitude:"/>
-            <fc:textField data-bind="value:decimalLongitude" outerClass="span2" label="Longitude:"/>
-            <fc:textField data-bind="value:radius" outerClass="span2" label="Radius:"/>
-        </div>
-        <div class="row-fluid controls-row polygonProperties propertyGroup">
-            <fc:textArea cols="80" rows="4" data-bind="value:wkt" class="input-large " label="Well Known Text (WKT):"/>
-            <span style="display:none;">
-                <fc:textArea cols="80" rows="4" data-bind="value:geojson" class="input-large" label="GeoJson :"/>
-            </span>
-        </div>
-        <div class="row-fluid controls-row rectangleProperties propertyGroup">
-            <fc:textField data-bind="value:minLat" outerClass="span2" label="minLat:"/>
-            <fc:textField data-bind="value:minLon" outerClass="span2" label="minLon:"/>
-            <fc:textField data-bind="value:maxLat" outerClass="span2" label="maxLat:"/>
-            <fc:textField data-bind="value:maxLon" outerClass="span2" label="maxLon:"/>
+        <div class="row-fluid controls-row">
+            <span class="label">Area (km&sup2;)</span> <span data-bind="text:area"></span>
         </div>
 
         <div class="row-fluid controls-row gazProperties">
-            <fc:textField data-bind="value:state" outerClass="span4" label="State:"/>
-            <fc:textField data-bind="value:lga" outerClass="span4" label="LGA:"/>
-            <fc:textField data-bind="value:locality" outerClass="span4" label="Locality:"/>
+            <span class="label">State/territory</span> <span data-bind="text:state"></span>
         </div>
 
-        <div class="row-fluid controls-row dimProperties">
-            <fc:textField data-bind="value:area" outerClass="span4" label="Area:"/>
+        <div class="row-fluid controls-row gazProperties">
+            <span class="label">Local Gov. Area</span> <span data-bind="text:lga"></span>
+        </div>
+
+        <div class="row-fluid controls-row gazProperties">
+            <span class="label">Locality</span> <span data-bind="text:locality"></span>
+        </div>
+
+        <div class="row-fluid controls-row circleProperties propertyGroup">
+            <span class="label">Latitude</span> <span data-bind="text:decimalLatitude"></span>
+            <span class="label">Longitude</span> <span data-bind="text:decimalLongitude"></span>
+        </div>
+        <div class="row-fluid controls-row circleProperties propertyGroup">
+            <span class="label">Radius (m)</span> <span data-bind="text:radius"></span>
+        </div>
+
+        <div class="row-fluid controls-row polygonProperties propertyGroup">
+            <span class="label">Well Known Text (WKT)</span>
+            <span data-bind="text:wkt"></span>
+
+            <span style="display:none;">
+                <span class="label">GeoJSON</span> <span data-bind="text:geojson"></span>
+            </span>
+        </div>
+        <div class="row-fluid controls-row rectangleProperties propertyGroup">
+            <span class="label">Latitude (SW)</span> <span data-bind="text:minLat"></span>
+            <span class="label">Longitude (SW)</span> <span data-bind="text:minLon"></span>
+        </div>
+        <div class="row-fluid controls-row rectangleProperties propertyGroup">
+            <span class="label">Latitude (NE)</span> <span data-bind="text:maxLat"></span>
+            <span class="label">Longitude (NE)</span> <span data-bind="text:maxLon"></span>
         </div>
 
     </div>
-    <div class="smallMap span6" style="width:400px;height:200px;"></div>
+    <div class="smallMap span8" style="width:400px;height:200px;"></div>
 </div>
 </script>
 
@@ -250,7 +267,7 @@
         name : "${site?.name}",
         externalId : "${site?.externalId}",
         type : "${site?.type}",
-        extent: ${site?.extent ?: [:]},
+        extent: ${site?.extent ?: 'null'},
         area : "${site?.area}",
         description : "${site?.description}",
         notes : "${site?.notes}",
@@ -266,7 +283,14 @@
 
     // returns blank string if the object or the specified property is undefined, else the value
     function exists(parent, prop) {
-        return parent === undefined ? '' : (parent[prop] === undefined ? '' : parent[prop]);
+        if(parent === undefined)
+            return '';
+        if(parent[prop] === undefined)
+            return '';
+        if(ko.isObservable(parent[prop])){
+            return parent[prop]();
+        }
+        return parent[prop];
     }
 
     function makeid(){
@@ -289,12 +313,11 @@
             }
         });
 
-        var DrawnLocation = function (l,g) {
+        var DrawnLocation = function (l) {
             this.type = 'locationTypeDrawn';
 
             console.log("Adding drawn location.....");
             console.log(l);
-            console.log(g);
             console.log('WKT =  ' + exists(l,'wkt'));
 
             if(exists(l,'wkt') != ''){
@@ -311,9 +334,9 @@
             }
 
             this.area = ko.observable(exists(l,'area'));
-            this.lga = ko.observable(exists(g,'lga'));
-            this.state = ko.observable(exists(g,'state'));
-            this.locality = ko.observable(exists(g,'locality'));
+            this.lga = ko.observable(exists(l,'lga'));
+            this.state = ko.observable(exists(l,'state'));
+            this.locality = ko.observable(exists(l,'locality'));
 
             //rectangle
             this.minLat = ko.observable(exists(l,'minLat'));
@@ -372,17 +395,18 @@
         var PidLocation = function (l) {
             this.pid = ko.observable(exists(l,'pid'));
             this.type = 'locationTypePid';
-            this.shapeType = 'pid';
+            this.shapeType = ko.observable('pid');
         };
 
         var UploadLocation = function (l) {
             this.type = 'locationTypeUpload';
+            this.shapeType = ko.observable('upload');
         };
 
         var PointLocation = function (l) {
             var self = this;
             this.type = 'locationTypePoint';
-            this.shapeType = 'point';
+            this.shapeType = ko.observable('point');
             this.decimalLatitude = ko.observable(exists(l,'decimalLatitude'));
             this.decimalLongitude = ko.observable(exists(l,'decimalLongitude'));
             this.uncertainty = ko.observable(exists(l,'uncertainty'));
@@ -393,24 +417,34 @@
             }
         };
 
-        var Location = function (id, name, type, data) {
+        var Location = function (id, name, type, geometry) {
             var self = this;
             this.id = id;
-            this.data = data;
+            this.geometry = geometry;
             this.name = ko.observable(name);
             this.type = ko.observable(type);
+            this.toJSON = function(){
+                var js = ko.toJS(this);
+                //clean up the geometry
+                for(var propt in js.geometry){
+                   if(js.geometry[propt] == undefined || js.geometry[propt] == NaN || js.geometry[propt] == ""){
+                        delete js.geometry[propt];
+                   }
+                }
+                return js;
+            }
             this.updateModel = function (event) {
                 console.log("############### Update model called.....");
                 var trev = event;
-                var lType = self.type();
-                var modelType = self.data ? self.data.type : 'locationTypeNone';
+                var lType = self.geometry();
+                var modelType = self.geometry ? self.geometry.type : 'locationTypeNone';
                 if (modelType !== self.type()) {
                     switch (self.type()) {
-                        case 'locationTypePoint': self.data = new PointLocation(); break;
-                        case 'locationTypePid': self.data = new PidLocation(); break;
-                        case 'locationTypeUpload': self.data = new UploadLocation(); break;
-                        case 'locationTypeDrawn': self.data = new DrawnLocation(); break;
-                        default: self.data = {type: 'locationTypeNone'}
+                        case 'locationTypePoint': self.geometry = new PointLocation(); break;
+                        case 'locationTypePid': self.geometry = new PidLocation(); break;
+                        case 'locationTypeUpload': self.geometry = new UploadLocation(); break;
+                        case 'locationTypeDrawn': self.geometry = new DrawnLocation(); break;
+                        default: self.geometry = {type: 'locationTypeNone'}
                     }
                 }
                 return self.type();
@@ -423,25 +457,25 @@
                 //initialise a map
                 var mapId = makeid();
                 $smallMapDiv.attr('id',mapId);
-                if(self.data != null && self.data.shapeType() != ''){
-                    console.log("The shape type = " + self.data.shapeType());
+                if(self.geometry != null && self.geometry.shapeType() != ''){
+                    console.log("The shape type = " + self.geometry.shapeType());
                     $drawLocationDiv.find('.propertyGroup').css('display','none');
 
-                    if(self.data.shapeType() == 'polygon'){
+                    if(self.geometry.shapeType() == 'polygon'){
                         var mapOptions = {
                             zoomToBounds:true,
                             zoomLimit:16,
                             highlightOnHover:true,
                             features:[{
-                                type:"polygon",
+                                type:self.geometry.shapeType(),
                                 name:"ASH-MACC-A - 1 - centre",
                                 id:"ASH-MACC-A - 1",
-                                geojson:self.data.geojson()
+                                geojson:self.geometry.geojson()
                             }]
                         };
                         $drawLocationDiv.find('.polygonProperties').css('display','block');
                         init_map_with_features({mapContainer: mapId}, mapOptions);
-                    } else if(self.data.shapeType() == 'circle'){
+                    } else if(self.geometry.shapeType() == 'circle'){
 
                         //console.log("Using radius: " + self.data.radius() + ", lat: " + self.data.decimalLatitude() + ", lon: " + self.data.decimalLatitude());
                         var mapOptions = {
@@ -449,29 +483,29 @@
                             zoomLimit:16,
                             highlightOnHover:true,
                             features:[{
-                                type:"circle",
+                                type:self.geometry.shapeType(),
                                 name:"ASH-MACC-A - 1 - centre",
                                 id:"ASH-MACC-A - 1",
-                                radius: self.data.radius(),
-                                decimalLatitude: self.data.decimalLatitude(),
-                                decimalLongitude: self.data.decimalLongitude()
+                                radius: self.geometry.radius(),
+                                decimalLatitude: self.geometry.decimalLatitude(),
+                                decimalLongitude: self.geometry.decimalLongitude()
                             }]
                         };
                         $drawLocationDiv.find('.circleProperties').css('display','block');
                         init_map_with_features({mapContainer: mapId}, mapOptions);
-                    } else if(self.data.shapeType() == 'rectangle'){
+                    } else if(self.geometry.shapeType() == 'rectangle'){
                         var mapOptions = {
                             zoomToBounds:true,
                             zoomLimit:16,
                             highlightOnHover:true,
                             features:[{
-                                type:"rectangle",
+                                type:self.geometry.shapeType(),
                                 name:"ASH-MACC-A - 1 - centre",
                                 id:"ASH-MACC-A - 1",
-                                minLat: self.data.minLat(),
-                                minLon: self.data.minLon(),
-                                maxLat: self.data.maxLat(),
-                                maxLon: self.data.maxLon()
+                                minLat: self.geometry.minLat(),
+                                minLon: self.geometry.minLon(),
+                                maxLat: self.geometry.maxLat(),
+                                maxLon: self.geometry.maxLon()
                             }]
                         };
                         $drawLocationDiv.find('.rectangleProperties').css('display','block');
@@ -484,7 +518,6 @@
         function SiteViewModel (siteData) {
             var self = this;
             self.projectList = SERVER_CONF.projectList;
-
             self.id = ko.observable(siteData.id);
             self.name = ko.observable(siteData.name);
             self.externalId = ko.observable(siteData.externalId);
@@ -493,23 +526,32 @@
             self.description = ko.observable(siteData.description);
             self.notes = ko.observable(siteData.notes);
             self.projects = ko.observableArray(siteData.projects);
-//            self.extent = ko.observable(new Location('extent', '', 'locationTypeNone', null));
             self.extent = ko.observable();
             self.location = ko.observableArray([]);
             self.saved = function(){
                 return self.id() != '';
             };
+            self.toJSON = function(){
+                console.log('toJSON on SiteViewModel')
+                var js = ko.toJS(self);
+                delete js.gazInfo;
+                delete js.drawnShape;
+                return js;
+            }
             self.loadExtent = function(){
-                var data;
-                if(SERVER_CONF.siteData != null && SERVER_CONF.siteData.extent != null) {
+                console.log('Loading the extent.....');
+                var geometry;
+                if(SERVER_CONF.siteData.extent != null) {
                     var extent = SERVER_CONF.siteData.extent;
+                    console.log('Loading the extent type.....' + extent.type);
                     switch (extent.type) {
-                        case 'locationTypePoint': data = new PointLocation(extent.data); break;
-                        case 'locationTypePid': data = new PidLocation(extent.data); break;
-                        case 'locationTypeDrawn': data = new DrawnLocation(extent.data); break;
-                        default: data = {id: 1};
+                        case 'locationTypePoint': geometry = new PointLocation(extent.geometry); break;
+                        case 'locationTypePid': geometry = new PidLocation(extent.geometry); break;
+                        case 'locationTypeDrawn': geometry = new DrawnLocation(extent.geometry); break;
+                        default: geometry = {id: 1};
                     }
-                    self.extent(new Location(extent.id, extent.name, extent.type, data));
+                    console.log('Setting the extent .....' + extent);
+                    self.extent(new Location(extent.id, extent.name, extent.type, geometry));
                 } else {
                     console.log('Initialising dummy extent....');
                     self.extent(new Location('extent', '', 'locationTypeNone', null));
@@ -518,25 +560,27 @@
             self.updateExtent = function(event){
                 console.log('Updating the extent: ' + self.extent().type());
                 switch (self.extent().type()) {
-                    case 'locationTypePoint':  self.extent().data = new PointLocation(); break;
-                    case 'locationTypePid':    self.extent().data = new PidLocation(); break;
-                    case 'locationTypeUpload': self.extent().data = new UploadLocation(); break;
-                    case 'locationTypeDrawn':  self.extent().data = new DrawnLocation(self.drawnShape,self.gazInfo); break;
+                    case 'locationTypePoint':  self.extent().geometry = new PointLocation(); break;
+                    case 'locationTypePid':    self.extent().geometry = new PidLocation(); break;
+                    case 'locationTypeUpload': self.extent().geometry = new UploadLocation(); break;
+                    case 'locationTypeDrawn':
+                        //do we check for newly drawn object, or use the saved object
+                        self.extent().geometry = new DrawnLocation(self.extent().geometry); break;
                     default: self.extent(new Location('extent', '', 'locationTypeNone', null));
                 }
                 return self.extent().type();
             };
             self.loadLocations = function () {
-                var data;
+                var geometry;
                 if(SERVER_CONF.siteData != null && SERVER_CONF.siteData.location != NaN){
                     $.each(SERVER_CONF.siteData.location, function (i, loc) {
                         switch (loc.type) {
-                            case 'locationTypePoint': data = new PointLocation(loc.data); break;
-                            case 'locationTypePid': data = new PidLocation(loc.data); break;
-                            case 'locationTypeDrawn': data = new DrawnLocation(loc.data); break;
+                            case 'locationTypePoint': geometry = new PointLocation(loc.geometry); break;
+                            case 'locationTypePid': geometry = new PidLocation(loc.geometry); break;
+                            case 'locationTypeDrawn': geometry = new DrawnLocation(loc.geometry); break;
                             default: data = {id: 1};
                         }
-                        var temp = new Location(loc.id, loc.name, loc.type, data);
+                        var temp = new Location(loc.id, loc.name, loc.type, geometry);
                         self.location.push(temp);
                     });
                 }
@@ -549,14 +593,14 @@
                 self.extent(new Location('1', 'Drawn shape', 'locationTypeDrawn', new DrawnLocation(drawnShape, gazInfo)));
             };
             self.addLocation = function (id, name, type, loc) {
-                var data;
+                var geometry;
                 switch (type) {
-                    case 'locationTypePoint': data = new PointLocation(loc); break;
-                    case 'locationTypePid': data = new PidLocation(loc); break;
-                    case 'locationTypeDrawn': data = new DrawnLocation(loc); break;
-                    default: data = {id: 1};
+                    case 'locationTypePoint': geometry = new PointLocation(loc); break;
+                    case 'locationTypePid': geometry = new PidLocation(loc); break;
+                    case 'locationTypeDrawn': geometry = new DrawnLocation(loc); break;
+                    default: geometry = {id: 1};
                 }
-                var temp = new Location(id, name, type, data);
+                var temp = new Location(id, name, type, geometry);
                 self.location.push(temp);
                 var temp2 = ko.mapping.toJS(self.location);
             };
@@ -570,7 +614,6 @@
                 self.location.removeAll();
             };
             self.save = function () {
-                var jsData = ko.toJS(self);
                 var json = ko.toJSON(self);
                 $.ajax({
                     url: SERVER_CONF.ajaxUpdateUrl,
@@ -585,7 +628,7 @@
                         }
                     },
                     error: function (data) {
-                        alert(data);
+                        alert('There was a problem saving this site');
                     }
                 });
             };
@@ -612,8 +655,6 @@
 
         ko.applyBindings(viewModel);
 
-        //viewModel.loadLocations();
-
         //any passed back from drawing tool
         if(SERVER_CONF.checkForState){
             viewModel.removeAllLocations(); //remove all for now, until we support multiple
@@ -622,9 +663,8 @@
             console.log("Retrieving drawnShape & gazinfo")
             console.log(drawnShape);
             console.log(gazInfo);
-            viewModel.drawnShape = drawnShape;
-            viewModel.gazInfo = gazInfo;
-            viewModel.setExtent(drawnShape,gazInfo);
+            var newExtent = new Location('1', 'Extent', 'locationTypeDrawn', new DrawnLocation(drawnShape));
+            viewModel.extent(newExtent);
         }
     });
 </r:script>
