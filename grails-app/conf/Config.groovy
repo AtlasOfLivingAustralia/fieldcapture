@@ -7,6 +7,10 @@ def default_config = "/data/${appName}/config/${appName}-config.properties"
 if(!grails.config.locations || !(grails.config.locations instanceof List)) {
     grails.config.locations = []
 }
+
+// add ala skin conf (needed for version >= 0.1.10)
+grails.config.locations.add("classpath:ala-config.groovy")
+
 if(System.getenv(ENV_NAME) && new File(System.getenv(ENV_NAME)).exists()) {
     println "Including configuration file specified in environment: " + System.getenv(ENV_NAME);
     grails.config.locations = ["file:" + System.getenv(ENV_NAME)]
@@ -121,7 +125,7 @@ environments {
     development {
         grails.logging.jul.usebridge = true
         server.port = "8087"
-        grails.host = "http://devt.ala.org.au"
+        grails.host = "http://dev.ala.org.au"
         serverName = "${grails.host}:${server.port}"
         grails.serverURL = serverName + "/fieldcapture"
 

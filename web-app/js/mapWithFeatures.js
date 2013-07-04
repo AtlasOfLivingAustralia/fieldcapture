@@ -23,7 +23,7 @@
 
     var
     // represents the map and its associated properties and events
-        map,
+        map, prevMarker,
 
     //  Urls are injected from config
         config = {};
@@ -80,9 +80,14 @@
         },
         // loads the features
         load: function (features) {
-            var self = this, f;
+            var self = this, f, p, iw;
+
+            if (!iw) {
+                iw = new google.maps.InfoWindow({maxWidth: 360});
+            }
+
             $.each(features, function (i,loc) {
-                console.log('Loading feature with type:' + loc.type);
+                console.log('Loading feature with type:' + loc.type + "|" + loc.latitude);
                 if (loc.type === 'point') {
                     var ll = new google.maps.LatLng(Number(loc.latitude), Number(loc.longitude));
                     f = new google.maps.Marker({
@@ -92,6 +97,16 @@
                     });
                     self.featureBounds.extend(ll);
                     self.addFeature(f, loc);
+                } else if (loc.type === 'dot') {
+                    var ll = new google.maps.LatLng(Number(loc.latitude), Number(loc.longitude));
+                    f = new google.maps.Marker({
+                        map: self.map,
+                        position: ll,
+                        title: loc.name,
+                        icon: "https://maps.gstatic.com/intl/en_us/mapfiles/markers2/measle_blue.png" // red: measle.png
+                    });
+                    self.featureBounds.extend(ll);
+                    self.addFeature(f, loc, iw);
                 } else if (loc.type === 'circle') {
                    f = new google.maps.Circle({
                       center: new google.maps.LatLng(loc.decimalLatitude, loc.decimalLongitude),
@@ -102,7 +117,7 @@
                     //set the extend of the map
                    self.featureBounds.extend(f.getBounds().getNorthEast());
                    self.featureBounds.extend(f.getBounds().getSouthWest());
-                   self.addFeature(f, loc);
+                   self.addFeature(f, loc, iw);
                 } else if (loc.type === 'rectangle') {
                    f = new google.maps.Rectangle({
                       bounds: new google.maps.LatLngBounds(
@@ -114,7 +129,7 @@
                    //set the extend of the map
                    self.featureBounds.extend(f.getBounds().getNorthEast());
                    self.featureBounds.extend(f.getBounds().getSouthWest());
-                   self.addFeature(f, loc);
+                   self.addFeature(f, loc, iw);
                 } else if (loc.type === 'polygon') {
                     var paths, points;
                     var paths = geojsonToPaths($.parseJSON(loc.geojson));
@@ -129,7 +144,7 @@
                     points = [].concat.apply([], paths);
                     // extend bounds by each point
                     $.each(points, function (i,obj) {self.featureBounds.extend(obj);});
-                    self.addFeature(f, loc);
+                    self.addFeature(f, loc, iw);
                 } else if (loc.type === 'pid') {
                     $.ajax(loc.polygonUrl, {
                         success: function(data) {
@@ -147,7 +162,7 @@
                                 points = [].concat.apply([], paths);
                                 // extend bounds by each point
                                 $.each(points, function (i,obj) {self.featureBounds.extend(obj);});
-                                self.addFeature(f, loc);
+                                self.addFeature(f, loc, iw);
                             }
                         },
                         dataType: 'json'}
@@ -159,7 +174,7 @@
             });
             self.allLocationsLoaded();
         },
-        addFeature: function (f, loc) {
+        addFeature: function (f, loc, iw) {
             var self = this;
             if (this.highlightOnHover) {
                 google.maps.event.addListener(f, 'mouseover', function () {
@@ -167,6 +182,23 @@
                 });
                 google.maps.event.addListener(f, 'mouseout', function () {
                     self.unHighlightFeature(this);
+                });
+            }
+            if (loc.popup && iw) {
+                // add infoWindow popu
+                google.maps.event.addListener(f, 'click', function(event) {
+                    if (prevMarker) {
+                        prevMarker.setIcon("https://maps.gstatic.com/intl/en_us/mapfiles/markers2/measle_blue.png");
+                    }
+                    iw.setContent(loc.popup);
+                    iw.open(self.map, f);
+                    f.setIcon("http://www.google.com/intl/en_us/mapfiles/ms/micons/red-dot.png");
+                    prevMarker = f;
+                });
+
+                google.maps.event.addListener(iw, 'closeclick', function(){
+                    // catch the close infoWindow event
+                    if (prevMarker) prevMarker.setIcon("https://maps.gstatic.com/intl/en_us/mapfiles/markers2/measle_blue.png");
                 });
             }
             this.indexFeature(f, loc);
@@ -257,6 +289,53 @@
                 });
             }
         },
+        animateFeatureById: function (id) {
+            var self = this,
+                features = this.featureIndex[id];
+            if (features) {
+                $.each(this.featureIndex[id], function (i,f) {
+                    self.animateFeature(f);
+                });
+            }
+        },
+        unAnimateFeatureById: function (id) {
+            var self = this,
+                features = this.featureIndex[id];
+            if (features) {
+                $.each(this.featureIndex[id], function (i,f) {
+                    self.unAnimateFeature(f);
+                });
+            }
+        },
+        animateFeature: function (f) {
+            if (!f) { return; }
+            if (f instanceof google.maps.Marker) {
+                //f.setOptions({icon: 'http://collections.ala.org.au/images/map/orange-dot.png'});
+                //iw.setContent(loc.popup);
+                //iw.open(self.map, f);
+                f.setIcon("http://www.google.com/intl/en_us/mapfiles/ms/micons/red-dot.png");
+            }
+        },
+        unAnimateFeature: function (f) {
+            if (!f) { return; }
+            if (f instanceof google.maps.Marker) {
+                //f.setOptions({icon: 'http://collections.ala.org.au/images/map/orange-dot.png'});
+                //iw.setContent(loc.popup);
+                //iw.close(self.map, f);
+                f.setIcon("https://maps.gstatic.com/intl/en_us/mapfiles/markers2/measle_blue.png");
+            }
+        },
+        getExtentByFeatureId: function(id) {
+            var features = this.featureIndex[id];
+            //console.log("features", id, features);
+            if (features) {
+                var bounds = new google.maps.LatLngBounds();
+                $.each(features, function (i,f) {
+                    bounds.extend(f.position);
+                });
+                return bounds;
+            }
+        },
         hideFeatureById: function (id) {
             var self = this,
                 features = this.featureIndex[id];
@@ -314,6 +393,7 @@
 
     // expose these methods to the global scope
     windows.init_map_with_features = init;
+    windows.alaMap = map;
 
 }(this));
 

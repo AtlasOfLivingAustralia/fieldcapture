@@ -50,7 +50,7 @@ grails.project.dependency.resolution = {
     plugins {
         runtime ":jquery:1.8.0"
         runtime ":resources:1.1.6"
-        runtime ":ala-web-theme:0.1.8"
+        runtime ":ala-web-theme:0.1.10"
         runtime ":csv:0.3.1"
         //runtime ":lesscss-resources:1.3.1"
 

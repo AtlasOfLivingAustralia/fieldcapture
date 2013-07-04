@@ -3,7 +3,7 @@
  *
  * Edit this file to suit your app's dev/test/prod environments
  */
-
+println("ala-config.groovy loading...")
 security.cas.casServerName = 'https://auth.ala.org.au'
 security.cas.uriFilterPattern = "/testAuth.*" // pattern for pages that require authentication
 security.cas.uriExclusionFilterPattern = '/images.*,/css.*,/js.*,/less.*'

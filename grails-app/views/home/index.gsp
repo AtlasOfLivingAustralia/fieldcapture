@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE HTML>
-<html>
+<html xmlns="http://www.w3.org/1999/html">
 <head>
   <meta name="layout" content="main"/>
   <title>Field Capture</title>
@@ -15,19 +15,17 @@
         sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}"
     }
   </r:script>
-  <r:require modules="knockout"/>
+  <r:require modules="knockout,mapWithFeatures"/>
 </head>
 <body>
     <div id="wrapper" class="container-fluid">
-    <div class="row-fluid">
+    <div class="row-fluid large-space-after">
         <div class="span12" id="header">
             <h1 class="pull-left">Field Capture</h1>
-            <form action="search" class="form-search pull-right">
-                <div class="control-group">
-                    <div class="controls">
-                        <g:textField class="search-query input-medium" name="search"/>
-                        <button type="submit" class="btn">Search</button>
-                    </div>
+            <form action="search" class="form-horizontal pull-right" style="padding-top:5px;">
+                <div class="input-append">
+                    <g:textField class="input-large" name="search"/>
+                    <button class="btn" type="submit">Search</button>
                 </div>
             </form>
         </div>
@@ -42,122 +40,67 @@
         </g:if>
     </div>
 
-    <div class="row-fluid large-space-after large-space-before button-set">
+    <div class="hide row-fluid large-space-after large-space-before button-set">
         <g:link controller="project" action="create" class="btn btn-large"><r:img dir="images/icons" file="project.png"/> Add a project</g:link>
         <g:link controller="site" action="create" class="btn btn-large"><r:img dir="images/icons" file="site.png"/> Add a site</g:link>
         <g:link controller="activity" action="create" class="btn btn-large"><r:img dir="images/icons" file="activity.png"/> Add an activity</g:link>
         <g:link controller="assessment" action="create" class="btn btn-large"><r:img dir="images/icons" file="assessment.png"/> Add an assessment</g:link>
     </div>
 
-    <div class="row-fluid">
+    <div class="row-fluid ">
+        <div class="span7 well well-small map-box">
+            <div id="map" style="width: 100%; height: 100%;"></div>
+        </div>
 
-        <div class="span4 well list-box">
-            <h2>Projects</h2>
-            <span id="project-filter-warning" class="label filter-label label-warning"
-                  style="display:none;">Filtered</span>
-            <div class="control-group">
+        <div class="span5 well list-box">
+            <h3 class="pull-left">Projects</h3>
+            <span id="project-filter-warning" class="label filter-label label-warning hide pull-left">Filtered</span>
+            <div class="control-group pull-right">
                 <div class="input-append">
                     <g:textField class="filterinput input-medium" data-target="project"
-                         title="Type a few characters to restrict the list." name="projects"
-                         placeholder="filter"/>
+                                 title="Type a few characters to restrict the list." name="projects"
+                                 placeholder="filter"/>
                     <button type="button" class="btn clearFilterBtn"
-                         title="clear"><i class="icon-remove"></i></button>
+                            title="clear"><i class="icon-remove"></i></button>
                 </div>
             </div>
-            <div class="scroll-list"><ul id="projectList">
-                <g:each in="${projects}" var="p">
-                    <li>
-                        <g:link controller="project" action="index" id="${p.projectId}" params="[returnTo:'']">${p.name}</g:link>
-                    </li>
-                </g:each>
-            </ul></div>
-        </div>
-
-        <div class="span4 well list-box">
-            <h2>Sites</h2>
-            <span id="site-filter-warning" class="label filter-label label-warning"
-                style="display:none;"
-                %{--data-bind="visible:isSitesFiltered,valueUpdate:'afterkeyup'"--}%>Filtered</span>
-            <div class="control-group">
-                <div class="input-append">
-                    <g:textField class="filterinput input-medium" data-target="site"
-                        title="Type a few characters to restrict the list." name="sites"
-                        placeholder="filter"/>
-                    <button type="button" class="btn clearFilterBtn"
-                        title="clear"><i class="icon-remove"></i></button>
-                </div>
-            </div>
-            <div class="scroll-list">
-                <ul id="siteList"
-                    %{--data-bind="template: {foreach:filteredSites,
-                                          beforeRemove: hideElement,
-                                          afterAdd: showElement}"--}%>
-                    %{--<li>
-                        <a data-bind="text: name, attr: {href:'${createLink(controller: "site", action: "index")}' + '/' + siteId}"></a>
-                    </li>--}%
-                    <g:each in="${sites}" var="p">
-                        <li>
-                            <g:link controller="site" action="index" id="${p.siteId}" data-id="${p.siteId}" params="[returnTo:'']">${p.name}</g:link>
-                            <g:if test="${p.nrm}">${p.nrm}</g:if>
-                            <g:if test="${p.state}"> - <fc:initialiseState>${p.state}</fc:initialiseState></g:if>
-                        </li>
+            <div class="scroll-list" id="projectList">
+                <div class="accordion" id="accordion2">
+                    <g:each in="${projects}" var="p" status="i">
+                        <div class="accordion-group">
+                            <div class="accordion-heading">
+                                <a class="accordion-toggle projectHighlight" data-id="${p.id}" data-toggle="collapse" data-parent="#accordion2" href="#collapse${i}">
+                                    ${p.name}
+                                </a>
+                            </div>
+                            <div id="collapse${i}" class="accordion-body collapse">
+                                <div class="accordion-inner projectInfoWindow">
+                                    <div>
+                                        <i class="icon-home"></i>
+                                        <g:link controller="project" action="index" id="${p.projectId}" params="[returnTo:'']">Project Home Page</g:link>
+                                    </div>
+                                    <div>
+                                        <i class="icon-globe"></i>
+                                        <a href="#" data-id="${p.id}" class="zoom-in btn btn-mini"><i class="icon-zoom-in"></i> Zoom map in</a>
+                                        <a href="#" data-id="${p.id}" class="zoom-out btn btn-mini"><i class="icon-zoom-out"></i> Zoom map out</a>
+                                    </div>
+                                    <div>
+                                        <i class="icon-user"></i> ${p.organisationName}
+                                    </div>
+                                    <div>
+                                        <i class="icon-info-sign"></i> ${p.description}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </g:each>
-                </ul>
-            </div>
-        </div>
-
-        <div class="span4">
-            <div class="well list-box" style="height:300px;">
-                <h2>Activities</h2>
-                <span id="activity-filter-warning" class="label filter-label label-warning"
-                      style="display:none;">Filtered</span>
-                <div class="control-group">
-                    <div class="input-append">
-                        <g:textField class="filterinput input-medium" data-target="activity"
-                                     title="Type a few characters to restrict the list." name="activities"
-                                     placeholder="filter"/>
-                        <button type="button" class="btn clearFilterBtn"
-                                title="clear"><i class="icon-remove"></i></button>
-                    </div>
                 </div>
-                <div class="scroll-list" style="height:170px;"><ul id="activityList">
-                    <g:each in="${activities}" var="p">
-                        <g:if test="${!p.assessment}">
-                            <li>
-                                <g:link controller="activity" action="index" id="${p.activityId}" params="[returnTo:'']">${p.name}</g:link>
-                            </li>
-                        </g:if>
-                    </g:each>
-                </ul></div>
             </div>
-
-            <div class="well list-box" style="height:300px;">
-                <h2>Assessments</h2>
-                <span id="assessment-filter-warning" class="label filter-label label-warning"
-                      style="display:none;">Filtered</span>
-                <div class="control-group">
-                    <div class="input-append">
-                        <g:textField class="filterinput input-medium" data-target="assessment"
-                                     title="Type a few characters to restrict the list." name="assessments"
-                                     placeholder="filter"/>
-                        <button type="button" class="btn clearFilterBtn"
-                                title="clear"><i class="icon-remove"></i></button>
-                    </div>
-                </div>
-                <div class="scroll-list" style="height:170px;"><ul id="assessmentList">
-                    <g:each in="${assessments}" var="p">
-                        <g:if test="${p.assessment}">
-                            <li>
-                                <g:link controller="activity" action="index" id="${p.activityId}" params="[returnTo:'']">${p.name}</g:link>
-                            </li>
-                        </g:if>
-                    </g:each>
-                </ul></div>
-            </div>
-        </div>
-    </div>
+        </div><!-- /.span6.well -->
+    </div><!-- /.row-fluid -->
 
     <hr />
+    <g:link controller="home" action="advanced">Advanced home page</g:link>
     <div class="expandable-debug">
         <h3>Debug</h3>
         <div>
@@ -180,7 +123,7 @@
         $('.filterinput').keyup(function() {
             var a = $(this).val(),
                 target = $(this).attr('data-target'),
-                $target = $('#' + target + 'List li');
+                $target = $('#' + target + 'List .accordion-group');
             if (a.length > 1) {
                 // this finds all links in the list that contain the input,
                 // and hide the ones not containing the input while showing the ones that do
@@ -201,8 +144,35 @@
                 target = $filterInput.attr('data-target');
             $filterInput.val('');
             $('#' + target + '-filter-warning').hide();
-            $('#' + target + "List li").slideDown();
+            $('#' + target + "List .accordion-group").slideDown();
         });
+
+        // highglight icon on map when project name is clicked
+        var prevFeatureId;
+        $(".projectHighlight").click(function(el) {
+            //console.log("projectHighlight", $(this).data("id"), alaMap.featureIndex);
+            var fId = $(this).data("id");
+            if (prevFeatureId) alaMap.unAnimateFeatureById(prevFeatureId);
+            alaMap.animateFeatureById(fId);
+            prevFeatureId = fId;
+        });
+
+        // zoom in/out to project points via +/- buttons
+        var initCentre, initZoom;
+        $("a.zoom-in").click(function(el) {
+            if (!initCentre && !initZoom) {
+                initCentre = alaMap.map.getCenter();
+                initZoom = alaMap.map.getZoom();
+            }
+            var projectId = $(this).data("id");
+            var bounds = alaMap.getExtentByFeatureId(projectId);
+            alaMap.map.fitBounds(bounds);
+        });
+        $("a.zoom-out").click(function(el) {
+            alaMap.map.setCenter(initCentre);
+            alaMap.map.setZoom(initZoom);
+        });
+
 
         // asynch loading of state information
         $('#siteList a').each(function (i, site) {
@@ -215,6 +185,61 @@
                 }
             });
         });
+
+        // Set-up data for map
+        var features = [];
+        var projects = ${projects ?: [:]};
+        $.each(projects, function(i,el) {
+            //console.log(i, "project: ", el.id, el.name, el.sites);
+            var linkPrefix = "${createLink(controller:'project')}/";
+
+            if (el.sites && el.sites.length > 0) {
+                $.each(el.sites, function(j, s) {
+                    console.log("s", s, j);
+                    if (s.location && s.location.length > 0 && s.location[0].data && s.location[0].data.decimalLatitude) {
+                        var point = {
+                            type: "dot",
+                            id: el.id,
+                            name: el.name,
+                            popup: "<div class='projectInfoWindow'><div><i class='icon-home'></i> <a href='" +
+                                    linkPrefix + el.projectId + "'>" + el.name + "</a></div><div><i class='icon-user'></i> " +
+                                    el.organisationName + "</div></div>",
+                            latitude: s.location[0].data.decimalLatitude,
+                            longitude: s.location[0].data.decimalLongitude
+                        }
+                        features.push(point);
+                    }
+                });
+            }
+
+//            if (el.sites[0] && el.sites[0].location && el.sites[0].location[0].data.decimalLatitude) {
+//                //console.log("location.data", el.sites[0].location[0].data);
+//                point.latitude = el.sites[0].location[0].data.decimalLatitude;
+//                point.longitude = el.sites[0].location[0].data.decimalLongitude;
+//                features.push(point);
+//            }
+
+        });
+
+        console.log("total points: " + features.length);
+
+        var mapData = {
+            "zoomToBounds": true,
+            "zoomLimit": 12,
+            "highlightOnHover": false,
+            "features": features
+        }
+
+        //console.log("mapData", mapData);
+
+        init_map_with_features({
+                mapContainer: "map",
+                zoomToBounds:true,
+                scrollwheel: false,
+                zoomLimit:16
+            },
+            mapData
+        );
     });
 
     function initialiseState(state) {

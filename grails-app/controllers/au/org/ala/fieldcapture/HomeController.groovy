@@ -4,6 +4,9 @@ class HomeController {
 
     def projectService, siteService, activityService
 
+    def advanced() {
+        index();
+    }
     def index() {
         [
             projects: projectService.list(),

@@ -266,13 +266,13 @@ i[class^="icon-remove"]:hover {
 }
 
 /* list box with filter */
-.list-box {
-    height:700px;
+.list-box, .map-box {
+    height:640px;
 }
 
 .list-box ul {
-    list-style:none;
-    margin-left:0;
+    list-style: disc;
+    margin-left:18px;
 }
 
 .list-box h2 {
@@ -286,9 +286,9 @@ i[class^="icon-remove"]:hover {
 }
 
 .scroll-list {
-    height: 570px;
+    height: 550px;
     overflow: auto;
-    margin-right: -19px;
+    margin-right: -20px;
 }
 
 .checkbox-list {
@@ -337,6 +337,31 @@ i[class^="icon-remove"]:hover {
     text-align: left;
 }
 
+/* Wells */
+.well h2, .well h3 {
+    margin-top: 0;
+}
+
+img[src*="gstatic.com/"], img[src*="googleapis.com/"]  {
+    max-width: 99999px;
+}
+
+.projectInfoWindow > div {
+    padding-left:20px;
+    text-indent:-20px;
+}
+
+.projectInfoWindow > div a.btn {
+    text-indent:0;
+}
+
+.accordion-heading {
+    background-color: white;
+}
+
+.list-box .input-append, .list-box .control-group, .list-box h3  {
+    margin-bottom: 5px;
+}
 th.sort {
     cursor: pointer;
 }
