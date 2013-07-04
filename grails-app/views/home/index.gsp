@@ -49,7 +49,7 @@
 
     <div class="row-fluid ">
         <div class="span6 well well-small map-box">
-            <div id="map" style="width: 100%; height: 100%; margin:10px;"></div>
+            <div id="map" style="width: 100%; height: 100%;"></div>
         </div>
 
         <div class="span6 well list-box">
