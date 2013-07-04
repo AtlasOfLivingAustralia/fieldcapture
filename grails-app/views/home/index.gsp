@@ -184,7 +184,8 @@
 
         // zoom in/out to project points via +/- buttons
         var initCentre, initZoom;
-        $("a.zoom-in").click(function(el) {
+        //$("a.zoom-in").click(function(el) {
+        $('#accordion2').on("click", "a.zoom-in",function(el) {
             if (!initCentre && !initZoom) {
                 initCentre = alaMap.map.getCenter();
                 initZoom = alaMap.map.getZoom();
@@ -193,7 +194,8 @@
             var bounds = alaMap.getExtentByFeatureId(projectId);
             alaMap.map.fitBounds(bounds);
         });
-        $("a.zoom-out").click(function(el) {
+        //$("a.zoom-out").click(function(el) {
+        $('#accordion2').on("click", "a.zoom-out",function(el) {
             alaMap.map.setCenter(initCentre);
             alaMap.map.setZoom(initZoom);
         });
