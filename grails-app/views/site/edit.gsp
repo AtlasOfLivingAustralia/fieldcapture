@@ -147,17 +147,29 @@
 </script>
 
 <script type="text/html" id="locationTypePid">
-
-    <g:select from="['Australian states', 'Local Gov. Area', 'IMCRA', 'IBRA']"
-              name='layerName'
-              keys="['cl22','cl23','cl23', 'cl23']"/>
-
-    <fc:textField data-bind="value:pid" class="input-small" label="Pid:"/>
+    <select data-bind="options: layers,
+        optionsCaption:'Choose...',
+        optionsText:'name', value: chosenLayer, event: { change: refreshObjectList }"></select>
+    <select data-bind="options: layerObjects,
+        optionsCaption:'Choose...',
+        optionsText:'name', value: layerObject, event: { change: updateSelectedPid }"></select>
+    <div class="row-fluid controls-row">
+        <span class="label">PID</span> <span data-bind="text:pid"></span>
+        <span class="label">Name</span> <span data-bind="text:name"></span>
+    </div>
+    <div class="row-fluid controls-row">
+        <span class="label">LayerID</span> <span data-bind="text:fid"></span>
+    </div>
+    <div class="row-fluid controls-row">
+        <span class="label">Layer</span> <span data-bind="text:layerName"></span>
+    </div>
 </script>
 
 <script type="text/html" id="locationTypeUpload">
-    <fc:textField  class="input-small" label="File:"/>
-    <span>Not implemented yet</span>
+    <g:uploadForm action="upload">
+        <input type="file" name="myFile" />
+        <input type="submit" />
+    </g:uploadForm>
 </script>
 
 <script type="text/html" id="locationTypeDrawn">
@@ -369,9 +381,43 @@
         };
 
         var PidLocation = function (l) {
+            var self = this;
             this.pid = ko.observable(exists(l,'pid'));
+            this.name = ko.observable(exists(l,'name'));
+            this.fid = ko.observable(exists(l,'fid'));
+            this.layerName = ko.observable(exists(l,'layerName'));
             this.type = 'locationTypePid';
             this.shapeType = ko.observable('pid');
+            this.chosenLayer = ko.observable();
+            this.layerObject = ko.observable();
+            this.layerObjects = ko.observable([]);
+            this.layers = [{id:'cl22',name:'Australian states'},{id:'cl23', name:'LGA'},{id:'cl21', name:'IBRA'}];
+            self.updateSelectedPid = function(){
+                self.pid(self.layerObject().pid)
+                self.fid(self.layerObject().fid)
+                self.name(self.layerObject().name)
+                self.layerName(self.layerObject().fieldname)
+            }
+            self.refreshObjectList = function(){
+                self.layerObjects([]);
+                if(self.chosenLayer() !== undefined){
+                    $.ajax({
+                        url: 'http://spatial.ala.org.au/ws/objects/' + this.chosenLayer().id,
+                        dataType:'jsonp'
+                    }).done(function(data) {
+                        self.layerObjects(data);
+                    });
+                }
+            }
+            self.toJSON = function(){
+                console.log('toJSON on SiteViewModel')
+                var js = ko.toJS(self);
+                delete js.layers;
+                delete js.layerObjects;
+                delete js.layerObject;
+                delete js.chosenLayer;
+                return js;
+            }
         };
 
         var UploadLocation = function (l) {
