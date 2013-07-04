@@ -81,7 +81,6 @@ modules = {
     }
 
     jQueryImageUpload {
-        defaultBundle false
         dependsOn 'jquery_ui'
         resource url: 'bootstrap/css/bootstrap-responsive.min.css'
         resource url: 'bootstrap/css/bootstrap-image-gallery.min.css'

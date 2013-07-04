@@ -14,7 +14,7 @@ class ModelJSTagLib {
 
     def jsModelObjects = { attrs ->
         attrs.model?.dataModel?.each { model ->
-            if (model.dataType == 'list') {
+            if (model.dataType in ['list', 'photoPoints']) {
                 repeatingModel(attrs, model, out)
                 totalsModel attrs, model, out
             }
@@ -26,7 +26,7 @@ class ModelJSTagLib {
 
     def jsViewModel = { attrs ->
         attrs.model?.dataModel?.each { mod ->
-            if (mod.dataType == 'list') {
+            if (mod.dataType  == 'list') {
                 listViewModel(attrs, mod, out)
                 columnTotalsModel out, attrs, mod
             }
@@ -47,6 +47,9 @@ class ModelJSTagLib {
             }
             else if (mod.dataType == 'image') {
                 imageModel(mod, out)
+            }
+            else if (mod.dataType == 'photoPoints') {
+                photoPointModel(attrs, mod, out)
             }
         }
     }
@@ -71,7 +74,7 @@ class ModelJSTagLib {
             else if (mod.dataType == 'number' && !mod.computed) {
                 out << INDENT*4 << "self.data['${mod.name}'](orZero(data['${mod.name}']));\n"
             }
-            else if (mod.dataType == 'stringList' || mod.dataType == 'image' && !mod.computed) {
+            else if (mod.dataType in ['stringList', 'image', 'photoPoints'] && !mod.computed) {
                 out << INDENT*4 << "self.load${mod.name}(data['${mod.name}']);\n"
             }
         }
@@ -94,7 +97,7 @@ class ModelJSTagLib {
     }
 
     def jsRemoveBeforeSave = { attrs ->
-        if (attrs.model?.viewModel?.any({ it.dataType == 'tableWithEditableRows'})) {
+        if (attrs.model?.viewModel?.any({ it.dataType == 'tableWithEditableRows' || it.type == 'photoPoints'})) {
             out << INDENT*4 << "delete jsData.selectedRow;\n"
         }
     }
@@ -284,6 +287,9 @@ class ModelJSTagLib {
                     case 'boolean':
                         out << INDENT*3 << "this.${col.name} = ko.${observable}(orFalse(data['${col.name}']));\n"
                         break;
+                    case 'embeddedImage':
+                        out << INDENT*3 << "this.${col.name} = ko.${observable}(orBlank(data['${col.name}']));\n"
+                        break;
                 }
                 modelConstraints(col, out)
             }
@@ -384,6 +390,10 @@ class ModelJSTagLib {
         out << """
             self.data.${model.name} = ko.observableArray([]);
             self.selectedRow = ko.observable();
+        """
+        if (model.dataType != 'photoPoints') {
+            out << """
+
             self.load${model.name} = function (data) {
                 if (data === undefined) {
                     ${insertDefaultModel}
@@ -394,6 +404,7 @@ class ModelJSTagLib {
                 }
             };
 """
+        }
         if (attrs.edit) {
             out << """
             self.addRow = function () {
@@ -460,6 +471,56 @@ class ModelJSTagLib {
     def imageModel(model, out) {
         out << INDENT*4 << "self.data.${model.name}=ko.observableArray([]);\n"
         populateList(model, out)
+    }
+
+    def photoPointModel(attrs, model, out) {
+        listViewModel(attrs, model, out)
+
+        out << """
+        var PhotoPoint = function(data) {
+            this.id = data.id;
+            this.lat = data.lat;
+            this.lon = data.lon;
+            this.bearing = data.bearing;
+            this.description = data.description;
+        };
+        if (self.site === undefined) {
+            self.site = {};
+            self.site.photoPoints = [];
+
+            self.site.photoPoints.push(new PhotoPoint({id:"test", lat:152, lon:-32, bearing:180, description:"Test photopoint"}));
+        }
+        self.loadphotoPoints = function(data) {
+            var photoPointById = function(id, data) {
+                var photoPoint;
+                if (data !== undefined) {
+                    \$.each(data, function(index, obj) {
+                        if (obj.id === id) {
+                            photoPoint = obj;
+                            return false;
+                        }
+                    });
+                }
+                return photoPoint;
+            };
+            if (self.site !== undefined && self.site.photoPoints !== undefined) {
+                \$.each(self.site.photoPoints, function(index, obj) {
+                    var photoPoint = photoPointById(obj.id, data);
+                    if (photoPoint === undefined) {
+                        photoPoint = {comment:"", photo:""};
+                    }
+                    var row = new PhotoPointsRow(photoPoint);
+                    \$.extend(row, obj);
+
+                    self.data.photoPoints.push(row);
+                });
+            }
+        };
+
+        self.removePhotoPoint = function(photoPoint) {
+           self.data.${model.name}.remove(photoPoint);
+        };
+        """
     }
 
     def modelConstraints(model, out) {

@@ -81,6 +81,11 @@
     </div>
 </div>
 
+<%-- JavaScript / knockout templates  --%>
+<g:each in="${templates}" var="template">
+    <g:render template="${template}"/>
+</g:each>
+
 <!-- templates -->
 <r:script>
 

@@ -33,6 +33,9 @@ class ModelTagLib {
                 case 'row':
                     row out, attrs, mod
                     break
+                case 'photoPoints':
+                    photoPoints out, attrs, mod, index
+                    break
             }
         }
     }
@@ -124,10 +127,22 @@ class ModelTagLib {
                 """
                 break
             case 'image-view':
+                databindAttrs.add "attr",  '{src: '+source+'.thumbnail_url}'
+                result += "<img data-bind='${databindAttrs.toString()}'></img>"
                 break;
             case 'image-edit':
+                addTemplate('fileUploadTemplate')
                 databindAttrs.add 'fileUpload', source
-                result += g.render(template: 'fileUploadTemplate', model: [databindAttrs:databindAttrs.toString()])
+                result += g.render(template: 'imageDataTypeTemplate', model: [databindAttrs:databindAttrs.toString()])
+                break;
+            case 'embeddedImage-edit':
+                addTemplate('fileUploadTemplate')
+                databindAttrs.add 'fileUpload', source
+                result += g.render(template: 'imageDataTypeTemplate', model: [databindAttrs:databindAttrs.toString()])
+                break;
+            case 'embeddedImage-view':
+                databindAttrs.add "attr",  '{src: '+source+'().thumbnail_url}'
+                result += "<img data-bind='${databindAttrs.toString()}'></img>"
                 break;
         }
         if (model.preLabel) {
@@ -430,6 +445,7 @@ class ModelTagLib {
     def tableEditTemplate(out, attrs, model) {
         out << INDENT*4 << "<script id=\"editTmpl\" type=\"text/html\"><tr>\n"
         model.columns.eachWithIndex { col, i ->
+            def edit = !col['readOnly'];
             // mechanism for additional data binding clauses
             def bindAttrs = new Databindings()
             if (i == 0) {bindAttrs.add 'hasFocus', 'isSelected'}
@@ -437,7 +453,7 @@ class ModelTagLib {
             col.type = col.type ?: getType(attrs, col.source, model.source)
             // inject computed from data model
             col.computed = col.computed ?: getComputed(attrs, col.source, model.source)
-            out << INDENT*5 << "<td>" << dataTag(col, '', true, null, bindAttrs) << "</td>" << "\n"
+            out << INDENT*5 << "<td>" << dataTag(col, '', edit, null, bindAttrs) << "</td>" << "\n"
         }
         out << INDENT*5 << "<td>\n"
         out << INDENT*6 << "<a class='btn btn-success btn-mini' data-bind='click:\$root.accept' href='#' title='save'>Update</a>\n"
@@ -483,6 +499,19 @@ class ModelTagLib {
         out << INDENT*4 << "</tfoot>\n"
     }
 
+    def photoPoints(out, attrs, model, index) {
+        table out, attrs, model, index
+    }
+
+    def addTemplate(name) {
+        def templates = pageScope.getVariable("templates");
+        if (!templates) {
+            templates = []
+            pageScope.setVariable("templates", templates);
+        }
+        templates.add(name)
+    }
+
     /*------------ methods to look up attributes in the data model -------------*/
 
     static String getType(attrs, name, context) {
@@ -500,7 +529,7 @@ class ModelTagLib {
         level = level ?: dataModel
         //println "level = ${level}"
         def target
-        if (level.dataType in ['list','matrix']) {
+        if (level.dataType in ['list','matrix', 'photoPoints']) {
             target = level.columns.find {it.name == name}
             if (!target) {
                 target = level.rows.find {it.name == name}

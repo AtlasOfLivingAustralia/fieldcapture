@@ -1,18 +1,3 @@
-<div id="fileupload"  data-url="<g:createLink controller='image' action='upload'/>" data-bind="${databindAttrs}" class="fileupload-buttonbar">
-
-    <!-- The fileinput-button span is used to style the file input field as button -->
-    <span class="btn btn-success fileinput-button">
-        <i class="icon-plus icon-white"></i>
-        <input type="file" name="files" multiple />
-        <img src="${resource(dir:'images/icons',file:'add-image-4.png')}"/><br/>
-        <span>Add images</span>
-
-    </button>
-    </span>
-    <table><tbody class="files"></tbody></table>
-    <span class=".existingImages"></span>
-</div>
-
 <!-- The template to display files available for upload -->
 <script id="template-upload" type="text/x-tmpl">
     {% for (var i=0, file; file=o.files[i]; i++) { %}
