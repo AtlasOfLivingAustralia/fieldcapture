@@ -15,7 +15,7 @@
         sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}"
     }
   </r:script>
-  <r:require modules="knockout,mapWithFeatures"/>
+  <r:require modules="knockout,mapWithFeatures,jquery_bootstrap_datatable"/>
 </head>
 <body>
     <div id="wrapper" class="container-fluid">
@@ -48,14 +48,14 @@
     </div>
 
     <div class="row-fluid ">
-        <div class="span7 well well-small map-box">
-            <div id="map" style="width: 100%; height: 100%;"></div>
+        <div class="span6 well well-small map-box">
+            <div id="map" style="width: 100%; height: 100%; margin:10px;"></div>
         </div>
 
-        <div class="span5 well list-box">
+        <div class="span6 well list-box">
             <h3 class="pull-left">Projects</h3>
             <span id="project-filter-warning" class="label filter-label label-warning hide pull-left">Filtered</span>
-            <div class="control-group pull-right">
+            <div class="control-group pull-right dataTables_filter">
                 <div class="input-append">
                     <g:textField class="filterinput input-medium" data-target="project"
                                  title="Type a few characters to restrict the list." name="projects"
@@ -65,8 +65,11 @@
                 </div>
             </div>
             <div class="scroll-list" id="projectList">
-                <div class="accordion" id="accordion2">
+                <table class="accordion" id="accordion2">
+                    <thead class="hide"><tr><th>Project</th></tr></thead>
+                    <tbody>
                     <g:each in="${projects}" var="p" status="i">
+                        <tr><td>
                         <div class="accordion-group">
                             <div class="accordion-heading">
                                 <a class="accordion-toggle projectHighlight" data-id="${p.id}" data-toggle="collapse" data-parent="#accordion2" href="#collapse${i}">
@@ -93,14 +96,17 @@
                                 </div>
                             </div>
                         </div>
+                        </td></tr>
                     </g:each>
-                </div>
+                    </tbody>
+                </table>
             </div>
         </div><!-- /.span6.well -->
     </div><!-- /.row-fluid -->
 
     <hr />
     <g:link controller="home" action="advanced">Advanced home page</g:link>
+    <button id="testBtn" class="btn">test filter</button>
     <div class="expandable-debug">
         <h3>Debug</h3>
         <div>
@@ -117,39 +123,58 @@
     </div>
 
 <r:script>
+
     $(window).load(function () {
+
+        // setup dataTable for projects list
+        var oTable = $('#accordion2').dataTable( {
+            "bFilter": true,
+            "bLengthChange": false,
+            "bInfo": false,
+            "bSort": false,
+            "iDisplayLength": 15,
+            "sPaginationType": "bootstrap"
+        } );
 
         // bind filters
         $('.filterinput').keyup(function() {
             var a = $(this).val(),
                 target = $(this).attr('data-target'),
                 $target = $('#' + target + 'List .accordion-group');
+
             if (a.length > 1) {
                 // this finds all links in the list that contain the input,
                 // and hide the ones not containing the input while showing the ones that do
-                var containing = $target.filter(function () {
-                    var regex = new RegExp('\\b' + a, 'i');
-                    return regex.test($('a', this).text());
-                }).slideDown();
-                $target.not(containing).slideUp();
+//                var containing = $target.filter(function () {
+//                    var regex = new RegExp('\\b' + a, 'i');
+//                    return regex.test($('a', this).text());
+//                }).slideDown();
+//                $target.not(containing).slideUp();
+                //console.log("filtering for ", a );
+                oTable.fnFilter('');
+                oTable.fnFilter( a );
                 $('#' + target + '-filter-warning').show();
             } else {
                 $('#' + target + '-filter-warning').hide();
-                $target.slideDown();
+//                $target.slideDown();
+                oTable.fnFilter('');
             }
             return false;
         });
+
         $('.clearFilterBtn').click(function () {
             var $filterInput = $(this).prev(),
                 target = $filterInput.attr('data-target');
+            oTable.fnFilter('');
             $filterInput.val('');
             $('#' + target + '-filter-warning').hide();
-            $('#' + target + "List .accordion-group").slideDown();
+            //$('#' + target + "List .accordion-group").slideDown();
         });
 
         // highglight icon on map when project name is clicked
         var prevFeatureId;
-        $(".projectHighlight").click(function(el) {
+        //$(".projectHighlight").on("click",function(el) {
+        $('#accordion2').on("click", ".projectHighlight",function(el) {
             //console.log("projectHighlight", $(this).data("id"), alaMap.featureIndex);
             var fId = $(this).data("id");
             if (prevFeatureId) alaMap.unAnimateFeatureById(prevFeatureId);
@@ -173,7 +198,6 @@
             alaMap.map.setZoom(initZoom);
         });
 
-
         // asynch loading of state information
         $('#siteList a').each(function (i, site) {
             var id = $(site).data('id');
@@ -195,7 +219,7 @@
 
             if (el.sites && el.sites.length > 0) {
                 $.each(el.sites, function(j, s) {
-                    console.log("s", s, j);
+                    //console.log("s", s, j);
                     if (s.location && s.location.length > 0 && s.location[0].data && s.location[0].data.decimalLatitude) {
                         var point = {
                             type: "dot",
@@ -211,17 +235,7 @@
                     }
                 });
             }
-
-//            if (el.sites[0] && el.sites[0].location && el.sites[0].location[0].data.decimalLatitude) {
-//                //console.log("location.data", el.sites[0].location[0].data);
-//                point.latitude = el.sites[0].location[0].data.decimalLatitude;
-//                point.longitude = el.sites[0].location[0].data.decimalLongitude;
-//                features.push(point);
-//            }
-
         });
-
-        console.log("total points: " + features.length);
 
         var mapData = {
             "zoomToBounds": true,
@@ -229,8 +243,6 @@
             "highlightOnHover": false,
             "features": features
         }
-
-        //console.log("mapData", mapData);
 
         init_map_with_features({
                 mapContainer: "map",

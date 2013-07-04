@@ -68,6 +68,11 @@ modules = {
         resource 'js/jquery-ui-1.8.19.custom.min.js'
     }
 
+    jquery_bootstrap_datatable {
+        resource 'js/jquery.dataTables.js'
+        resource 'js/jquery.dataTables.bootstrap.js'
+    }
+
     drawmap {
         defaultBundle true
         resource 'js/shapes.js'

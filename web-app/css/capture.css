@@ -267,9 +267,11 @@ i[class^="icon-remove"]:hover {
 
 /* list box with filter */
 .list-box, .map-box {
+    /*height:640px;*/
+}
+.map-box {
     height:640px;
 }
-
 .list-box ul {
     list-style: disc;
     margin-left:18px;
@@ -286,9 +288,9 @@ i[class^="icon-remove"]:hover {
 }
 
 .scroll-list {
-    height: 550px;
-    overflow: auto;
-    margin-right: -20px;
+    /*height: 550px;*/
+    /*overflow: auto;*/
+    /*margin-right: -20px;*/
 }
 
 .checkbox-list {
@@ -368,4 +370,27 @@ th.sort {
 
 th.sort i {
     margin-left: 10px;
+}
+
+#accordion2  .accordion-group {
+    margin-bottom: -1px;
+}
+
+#accordion2 .accordion-heading .accordion-toggle {
+    padding: 6px 10px;
+}
+
+#projectList .pagination {
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 0;
+}
+
+#projectList .accordion {
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+#accordion2_filter label {
+    display: none;
 }
