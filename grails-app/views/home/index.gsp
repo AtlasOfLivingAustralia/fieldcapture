@@ -22,12 +22,12 @@
     <div class="row-fluid large-space-after">
         <div class="span12" id="header">
             <h1 class="pull-left">Field Capture</h1>
-            <form action="search" class="form-horizontal pull-right" style="padding-top:5px;">
+            <g:form controller="search" method="GET" class="form-horizontal pull-right" style="padding-top:5px;">
                 <div class="input-append">
                     <g:textField class="input-large" name="search"/>
                     <button class="btn" type="submit">Search</button>
                 </div>
-            </form>
+            </g:form>
         </div>
 
         <g:if test="${flash.error}">
@@ -80,7 +80,7 @@
                                 <div class="accordion-inner projectInfoWindow">
                                     <div>
                                         <i class="icon-home"></i>
-                                        <g:link controller="project" action="index" id="${p.projectId}" params="[returnTo:'']">Project Home Page</g:link>
+                                        <g:link controller="project" action="index" id="${p.projectId}" params="[returnTo:'']">Project Page</g:link>
                                     </div>
                                     <div>
                                         <i class="icon-globe"></i>
@@ -106,7 +106,6 @@
 
     <hr />
     <g:link controller="home" action="advanced">Advanced home page</g:link>
-    <button id="testBtn" class="btn">test filter</button>
     <div class="expandable-debug">
         <h3>Debug</h3>
         <div>
@@ -133,7 +132,13 @@
             "bInfo": false,
             "bSort": false,
             "iDisplayLength": 15,
-            "sPaginationType": "bootstrap"
+            "sPaginationType": "bootstrap",
+            "oLanguage": {
+                "oPaginate": {
+                    "sNext": "▶",
+                    "sPrevious": "◀"
+                }
+            }
         } );
 
         // bind filters
@@ -217,7 +222,8 @@
         var projects = ${projects ?: [:]};
         $.each(projects, function(i,el) {
             //console.log(i, "project: ", el.id, el.name, el.sites);
-            var linkPrefix = "${createLink(controller:'project')}/";
+            var projectLinkPrefix = "${createLink(controller:'project')}/";
+            var siteLinkPrefix = "${createLink(controller:'site')}/";
 
             if (el.sites && el.sites.length > 0) {
                 $.each(el.sites, function(j, s) {
@@ -228,8 +234,9 @@
                             id: el.id,
                             name: el.name,
                             popup: "<div class='projectInfoWindow'><div><i class='icon-home'></i> <a href='" +
-                                    linkPrefix + el.projectId + "'>" + el.name + "</a></div><div><i class='icon-user'></i> " +
-                                    el.organisationName + "</div></div>",
+                                    projectLinkPrefix + el.projectId + "'>" + el.name + "</a></div><div><i class='icon-user'></i> " +
+                                    el.organisationName + "</div><div><i class='icon-map-marker'></i> Site: <a href='" +
+                                    siteLinkPrefix + s.siteId + "'>" + s.name + "</a></div>",
                             latitude: s.location[0].data.decimalLatitude,
                             longitude: s.location[0].data.decimalLongitude
                         }

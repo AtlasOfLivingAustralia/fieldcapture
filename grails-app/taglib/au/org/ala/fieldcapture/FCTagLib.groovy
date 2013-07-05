@@ -140,4 +140,27 @@ class FCTagLib {
         }
     }
 
+    /**
+     * Output search counts in the form of:
+     *
+     * "1 to 10 of 133"
+     *
+     * @attr offset
+     * @attr max
+     * @attr total
+     */
+    def searchResultsCounts = { attrs, body ->
+        def first = (attrs.offset?.toInteger()?:0) + 1
+        def last = (attrs.offset?.toInteger()?:0) + attrs.max?.toInteger()?:10
+        def total = attrs.total?.toInteger()
+        def highest = (total > last) ? last : total
+
+        if (total > 0) {
+            out << "Showing " + first + " to " + highest + " of " + total + " for "
+        } else {
+            out << "No records found for "
+        }
+
+    }
+
 }
