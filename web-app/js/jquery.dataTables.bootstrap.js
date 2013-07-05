@@ -45,8 +45,8 @@ $.extend( $.fn.dataTableExt.oPagination, {
 
             $(nPaging).addClass('pagination').append(
                 '<ul>'+
-                    '<li class="prev disabled"><a href="#">&larr; '+oLang.sPrevious+'</a></li>'+
-                    '<li class="next disabled"><a href="#">'+oLang.sNext+' &rarr; </a></li>'+
+                    '<li class="prev disabled"><a href="#">'+oLang.sPrevious+'</a></li>'+
+                    '<li class="next disabled"><a href="#">'+oLang.sNext+'</a></li>'+
                     '</ul>'
             );
             var els = $('a', nPaging);
@@ -55,7 +55,7 @@ $.extend( $.fn.dataTableExt.oPagination, {
         },
 
         "fnUpdate": function ( oSettings, fnDraw ) {
-            var iListLength = 5;
+            var iListLength = 6;
             var oPaging = oSettings.oInstance.fnPagingInfo();
             var an = oSettings.aanFeatures.p;
             var i, j, sClass, iStart, iEnd, iHalf=Math.floor(iListLength/2);
