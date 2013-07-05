@@ -98,8 +98,12 @@
 
         </div>
         <div class="span3">
-            <div id="smallMap">
-            </div>
+            <div id="smallMap"></div>
+            <g:if test="${site?.extent?.geometry?.pid}">
+                <div style="margin-top:20px;">
+                    <a href="http://spatial-dev.ala.org.au/ws/shape/shp/${site.extent.geometry.pid}" class="btn btn-info">Download ShapeFile</a>
+                </div>
+            </g:if>
         </div>
     </div>
 

@@ -7,7 +7,6 @@ class SiteService {
 
     def webService, grailsApplication, commonService, metadataService
     LinkGenerator grailsLinkGenerator
-    static locationTypes = [locationTypePoint: 'point', locationTypeDrawn: 'drawn', locationTypePid: 'pid']
 
     def list() {
         webService.getJson(grailsApplication.config.ecodata.baseUrl + 'site/').list
@@ -69,6 +68,12 @@ class SiteService {
         webService.doPost(grailsApplication.config.ecodata.baseUrl + 'site/' + id, body)
     }
 
+    def persistSiteExtent(name, geometry) {
+        def body = [geojson: geometry, name: name, description:'my description', user_id: '34']
+        def resp = webService.doPost("http://spatial-dev.ala.org.au/ws/shape/upload/geojson", body)
+        println resp
+    }
+
     def delete(id) {
         webService.doDelete(grailsApplication.config.ecodata.baseUrl + 'site/' + id)
     }
@@ -128,46 +133,27 @@ class SiteService {
      */
     def getMapFeatures(site) {
         def featuresMap = [zoomToBounds: true, zoomLimit: 15, highlightOnHover: true, features: []]
-        def loc = site.extent
-        def matchedLocType = locationTypes[loc.type]
-        def location = [type: matchedLocType, name: loc.name]
-
-        switch (location.type) {
+        switch (site.extent.source) {
             case 'point':
-                location.type = 'point'
-                location.latitude = loc.geometry.decimalLatitude
-                location.longitude = loc.geometry.decimalLongitude
-                location.uncertainty = loc.geometry.uncertainty
+                featuresMap.features << site.extent.geometry
                 break
             case 'pid':
                 //retrieve from spatial portal services
-                location.polygonUrl = grailsLinkGenerator.link(
+                site.extent.geometry.polygonUrl = grailsLinkGenerator.link(
                         controller: 'proxy', action: 'geojsonFromPid',
-                        params: [pid: loc.geometry.pid]
+                        params: [pid: site.extent.geometry.pid]
                 )
+                featuresMap.features << site.extent.geometry
                 break
             case 'drawn' :
-                if(loc.geometry.shapeType =='polygon'){
-                    location.type = 'polygon'
-                    location.wkt = loc.geometry.wkt
-                    location.geojson = loc.geometry.geojson
-                } else if(loc.geometry.shapeType =='circle'){
-                    location.type = 'circle'
-                    location.decimalLatitude = loc.geometry.decimalLatitude
-                    location.decimalLongitude = loc.geometry.decimalLongitude
-                    location.radius = loc.geometry.radius
-                } else if(loc.geometry.shapeType =='rectangle'){
-                    location.type = 'rectangle'
-                    location.minLat = loc.geometry.minLat
-                    location.minLon = loc.geometry.minLon
-                    location.maxLat = loc.geometry.maxLat
-                    location.maxLon = loc.geometry.maxLon
-                } else {
-                    log.error('Unrecognised shapeType retrieved from DB')
-                }
+                featuresMap.features << site.extent.geometry
         }
-        featuresMap.features << location
-        featuresMap as JSON
+
+        def asJSON = featuresMap as JSON
+
+        println asJSON
+
+        asJSON
     }
 
     static metaModel() {

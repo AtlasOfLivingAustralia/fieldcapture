@@ -66,9 +66,12 @@
                 </div>
             </div>
             <div class="row-fluid">
+                <p data-bind="visible: activities.length == 0">
+                    This project current has not activities listed.
+                </p>
                 <table class="table table-condensed" id="activities">
                     <thead>
-                    <tr>
+                    <tr data-bind="visible: activities.length > 0">
                         <th></th>
                         <th class="sort" data-bind="sortIcon:'',click:sortBy" data-column="type">Type</th>
                         <th class="sort" data-bind="sortIcon:'',click:sortBy" data-column="startDate">From</th>
@@ -125,7 +128,10 @@
                 </div>
             </div>
 
-            <div class="row-fluid">
+            <div data-bind="visible: sites.length == 0">
+               <p>No sites are currently associated with this project.</p>
+            </div>
+            <div class="row-fluid"  data-bind="visible: sites.length > 0">
                 <div class="span4 well list-box">
                     <div class="control-group">
                         <div class="input-append">

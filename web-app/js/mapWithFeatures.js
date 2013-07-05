@@ -88,8 +88,8 @@
 
             $.each(features, function (i,loc) {
                 console.log('Loading feature with type:' + loc.type + "|" + loc.latitude);
-                if (loc.type === 'point') {
-                    var ll = new google.maps.LatLng(Number(loc.latitude), Number(loc.longitude));
+                if (loc.type === 'Point') {
+                    var ll = new google.maps.LatLng(Number(loc.coordinates[1]), Number(loc.coordinates[0]));
                     f = new google.maps.Marker({
                         map: self.map,
                         position: ll,
@@ -107,9 +107,9 @@
                     });
                     self.featureBounds.extend(ll);
                     self.addFeature(f, loc, iw);
-                } else if (loc.type === 'circle') {
+                } else if (loc.type === 'Circle') {
                    f = new google.maps.Circle({
-                      center: new google.maps.LatLng(loc.decimalLatitude, loc.decimalLongitude),
+                      center: new google.maps.LatLng(loc.coordinates[1], loc.coordinates[0]),
                       radius: loc.radius,
                       map: self.map,
                       editable: false
@@ -118,21 +118,9 @@
                    self.featureBounds.extend(f.getBounds().getNorthEast());
                    self.featureBounds.extend(f.getBounds().getSouthWest());
                    self.addFeature(f, loc, iw);
-                } else if (loc.type === 'rectangle') {
-                   f = new google.maps.Rectangle({
-                      bounds: new google.maps.LatLngBounds(
-                          new google.maps.LatLng(loc.minLat, loc.minLon),
-                          new google.maps.LatLng(loc.maxLat, loc.maxLon)),
-                      map: self.map,
-                      editable: false
-                   });
-                   //set the extend of the map
-                   self.featureBounds.extend(f.getBounds().getNorthEast());
-                   self.featureBounds.extend(f.getBounds().getSouthWest());
-                   self.addFeature(f, loc, iw);
-                } else if (loc.type === 'polygon') {
-                    var paths, points;
-                    var paths = geojsonToPaths($.parseJSON(loc.geojson));
+                } else if (loc.type === 'Polygon') {
+                    var points;
+                    var paths = geojsonToPaths(loc.coordinates[0]);
                     f = new google.maps.Polygon({
                         paths: paths,
                         map: self.map,

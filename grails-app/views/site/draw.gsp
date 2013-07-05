@@ -124,6 +124,10 @@
                             <span class="label">Locality</span>
                             <span id="locality">Not specified</span>
                         </li>
+                        <li>
+                            <span class="label">GeoJSON</span>
+                            <span id="geojson">Not specified</span>
+                        </li>
                     </ul>
                 </div>
 
@@ -186,8 +190,6 @@
         }
 
         $('#useLocation').click(function(){
-//           var currentShape = getCurrentShape();
-//           shapeDrawn('user-drawn', currentShape.type, currentShape);
            drawnShape.lga = gazInfo.lga;
            drawnShape.state = gazInfo.state;
            drawnShape.locality = gazInfo.locality;
@@ -212,20 +214,20 @@
 
     function renderSavedShape(){
         //retrieve the current shape if exists
-        var currentDrawnShape = amplify.store("currentDrawnShape");
+        var currentDrawnShape = amplify.store("drawnShape");
         console.log('Retrieved shape: ' + currentDrawnShape);
         console.log(currentDrawnShape);
 
         if(currentDrawnShape !== undefined){
-            if(currentDrawnShape.shapeType == 'polygon'){
+            if(currentDrawnShape.type == 'Polygon'){
                 console.log('Redrawing polygon');
-                showOnMap('wkt', currentDrawnShape.wkt);
+                showOnMap('polygon', geoJsonToPath(currentDrawnShape));
                 zoomToShapeBounds();
-            } else if(currentDrawnShape.shapeType == 'circle'){
+            } else if(currentDrawnShape.type == 'Circle'){
                 console.log('Redrawing circle');
                 showOnMap('circle', currentDrawnShape.decimalLatitude,currentDrawnShape.decimalLongitude,currentDrawnShape.radius);
                 zoomToShapeBounds();
-            } else if(currentDrawnShape.shapeType == 'rectangle'){
+            } else if(currentDrawnShape.type == 'Rectangle'){
                 console.log('Redrawing rectangle');
                 var shapeBounds = new google.maps.LatLngBounds(
                                 new google.maps.LatLng(currentDrawnShape.minLat,currentDrawnShape.minLon),
@@ -330,9 +332,15 @@
                     $('#calculatedArea').html(calcAreaKm);
                     //calculate the area
                     refreshGazInfo(center.lat(), center.lng());
-                    renderGazInfo(gazInfo);
 
-                    drawnShape = new Circle(center.lat(), center.lng(), shape.getRadius(), calcAreaKm);
+                    drawnShape = {
+                        type:'Circle',
+                        userDrawn: 'Circle',
+                        coordinates:[center.lng(), center.lat()],
+                        centre: [center.lng(), center.lat()],
+                        radius:shape.getRadius(),
+                        areaKmSq:calcAreaKm
+                    };
 
                     break;
                 case google.maps.drawing.OverlayType.RECTANGLE:
@@ -345,8 +353,6 @@
                     $('#neLat').val(round(ne.lat()));
                     $('#neLon').val(round(ne.lng()));
                     $('#rectangleArea').css('display','block');
-                    // set hidden inputs
-                    $('#wkt').val(rectToWkt(sw, ne));
 
                     //calculate the area
                     var mvcArray = new google.maps.MVCArray();
@@ -364,13 +370,20 @@
                     var centreX =  (sw.lng() + ne.lng())/2;
 
                     refreshGazInfo(centreY, centreX);
-                    renderGazInfo(gazInfo);
-
-                    drawnShape = new Rectangle(sw.lat(),sw.lng(),ne.lat(),ne.lng(),calcAreaKm,centreY,centreX);
-                    drawnShape.lga = gazInfo.lga;
-                    drawnShape.state = gazInfo.state;
-                    drawnShape.locality = gazInfo.locality;
-                    amplify.store("drawnShape", drawnShape);
+                    drawnShape = {
+                        type: 'Polygon',
+                        userDrawn: 'Rectangle',
+                        coordinates:[[
+                            [sw.lng(),sw.lat()],
+                            [sw.lng(),ne.lat()],
+                            [ne.lng(),ne.lat()],
+                            [ne.lng(),sw.lat()],
+                            [ne.lng(),sw.lat()]
+                        ]],
+                        bbox:[sw.lat(),sw.lng(),ne.lat(),ne.lng()],
+                        areaKmSq:calcAreaKm,
+                        centre: [centreX,centreY]
+                    }
                     break;
                 case google.maps.drawing.OverlayType.POLYGON:
                     /*
@@ -420,8 +433,6 @@
                         }
                         $('#polygonArea').css('display','block');
                     }
-                    // set hidden inputs
-                    $('#wkt').val(polygonToWkt(path));
 
                     //calculate the area
                     var calculatedAreaInSqM = google.maps.geometry.spherical.computeArea(path);
@@ -443,34 +454,34 @@
                       if(coord.lng()>maxLng) maxLng = coord.lng();
                       if(coord.lng()<minLng) minLng = coord.lng();
                     });
-                    var centerX = minLng + ((maxLng - minLng) / 2);
-                    var centerY = minLat + ((maxLat - minLat) / 2);
-                    refreshGazInfo(centerY, centerX);
-                    renderGazInfo(gazInfo);
+                    var centreX = minLng + ((maxLng - minLng) / 2);
+                    var centreY = minLat + ((maxLat - minLat) / 2);
+                    refreshGazInfo(centreY, centreX);
 
-                    drawnShape = new Polygon(polygonToWkt(path), polygonToGeoJson(path),calcAreaKm, centerY, centerX);
-                    drawnShape.lga = gazInfo.lga;
-                    drawnShape.state = gazInfo.state;
-                    drawnShape.locality = gazInfo.locality;
-                    amplify.store("drawnShape", drawnShape);
+                    drawnShape = {
+                        type:'Polygon',
+                        userDrawn: 'Polygon',
+                        coordinates: polygonToGeoJson(path),
+                        areaKmSq: calcAreaKm,
+                        centre: [centreX,centreY]
+                    };
+
+                    $('#geojson').html(JSON.stringify(drawnShape));
+
+                    console.log(drawnShape);
                     break;
             }
         }
     }
 
-    function rectToWkt(sw, ne) {
-        var swLat = sw.lat(),
-                swLng = sw.lng(),
-                neLat = ne.lat(),
-                neLng = ne.lng(),
-                wkt = "POLYGON((";
-        wkt += swLng + " " + swLat + ',' +
-                swLng + " " + neLat + ',' +
-                neLng + " " + neLat + ',' +
-                neLng + " " + swLat + ',' +
-                swLng + " " + swLat;
-
-        return wkt + "))";
+    function geoJsonToPath(geojson){
+        var coords = geojson.coordinates[0];
+        var path = [];
+        for(var i = 0; i<coords.length; i++){
+            console.log(coords[i][1]+" : "+ coords[i][0]);
+            path.push(new google.maps.LatLng(coords[i][1],coords[i][0]));
+        }
+        return path;
     }
 
     /**
@@ -480,38 +491,18 @@
         var firstPoint = path.getAt(0),
                 points = [];
         path.forEach(function (obj, i) {
-            points.push("[" + obj.lng() + "," + obj.lat() + "]");
-        });
-
-        // a polygon array from the drawingManager will not have a closing point
-        // but one that has been drawn from a wkt will have - so only add closing
-        // point if the first and last don't match
-        if (!firstPoint.equals(path.getAt(path.length -1))) {
-            // add first points at end
-            points.push("[" + firstPoint.lng() + "," + firstPoint.lat() + "]");
-        }
-        var geoJson =  "[" + points.join(',') + "]";
-        console.log("GEOJSON: " + geoJson);
-        return geoJson;
-    }
-
-    function polygonToWkt(path) {
-        var wkt = "POLYGON((",
-                firstPoint = path.getAt(0),
-                points = [];
-        path.forEach(function (obj, i) {
-            points.push(obj.lng() + " " + obj.lat());
+            points.push([obj.lng(),obj.lat()]);
         });
         // a polygon array from the drawingManager will not have a closing point
         // but one that has been drawn from a wkt will have - so only add closing
         // point if the first and last don't match
         if (!firstPoint.equals(path.getAt(path.length -1))) {
             // add first points at end
-            points.push(firstPoint.lng() + " " + firstPoint.lat());
+            points.push([firstPoint.lng(),firstPoint.lat()]);
         }
-        wkt += points.join(',') + "))";
-        //console.log(wkt);
-        return wkt;
+        var coordinates =  [points];
+        console.log(coordinates);
+        return coordinates;
     }
 
     function round(number, places) {
