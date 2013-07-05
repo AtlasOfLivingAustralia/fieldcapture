@@ -254,7 +254,7 @@
     }
 
     function refreshGazInfo(lat,lng){
-        gazInfo = new GazInfo();
+        gazInfo = {};
 
         //state
         $.ajax({
