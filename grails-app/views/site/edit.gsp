@@ -32,9 +32,12 @@
 <body>
     <ul class="breadcrumb">
         <li><g:link controller="home">Home</g:link> <span class="divider">/</span></li>
-        <g:if test="${create}">
-            <li class="active">Create</li>
+        <g:if test="${project}">
+            <li class="active">Create new site for ${project?.name}</li>
         </g:if>
+        <g:elseif test="${create}">
+            <li class="active">Create</li>
+        </g:elseif>
         <g:else>
             <li><g:link controller="site" action="index" id="${site?.siteId}">
                 <span data-bind="text: name">${site?.name}</span>
@@ -48,6 +51,10 @@
             <div class="row-fluid">
                 <g:hiddenField name="id" value="${site?.siteId}"/>
                 <div>
+                    <label for="name">Project name</label>
+                    <h1>
+                        <g:link controller="project" action="index" id="${project?.projectId}">${project?.name}</g:link>
+                    </h1>
                     <label for="name">Site name</label>
                     <h1>
                         <input data-bind="value: name" class="span12" id="name" type="text" value="${site?.name}"
@@ -83,21 +90,23 @@
                 </div>
             </div>
 
-
             <h2>Extent of site
                 <fc:iconHelp title="Extent of the site">The extent of the site can be represented by
                 a polygon, radius or point. KML, WKT and shape files are supported for uploading polygons.
                 As are PID's of existing features in the Atlas Spatial Portal.</fc:iconHelp>
             </h2>
             <div class="row-fluid">
-                <div class="span3">
-                    <g:select data-bind="value: extent().source"
+                <div class="span2">
+                    <g:select class="input-medium" data-bind="value: extent().source"
                               name='extentSource'
-                              from="['choose a location type','point','known shape','upload a shape','draw a shape']"
+                              from="['choose type','point','known shape','upload a shape','draw a shape']"
                               keys="['none','point','pid','upload','drawn']"/>
                 </div>
-                <div class="span9">
+                <div class="span4">
                     <div data-bind="template: { name: updateExtent(), data: extent(), afterRender: extent().renderMap}"></div>
+                </div>
+                <div class="span6">
+                    <div id="mapForExtent" class="smallMap span6" style="width:100%;height:250px;"></div>
                 </div>
             </div>
 
@@ -135,58 +144,58 @@
 
 <script type="text/html" id="point">
 <div class="drawLocationDiv row-fluid">
-    <div class="span6">
+    <div class="span12">
         <div class="row-fluid controls-row">
-            <fc:textField data-bind="value:geometry().decimalLatitude" outerClass="span3" label="Latitude"/>
-            <fc:textField data-bind="value:geometry().decimalLongitude" outerClass="span3" label="Longitude"/>
+            <fc:textField data-bind="value:geometry().decimalLatitude" outerClass="span6" label="Latitude"/>
+            <fc:textField data-bind="value:geometry().decimalLongitude" outerClass="span6" label="Longitude"/>
         </div>
         <div class="row-fluid controls-row">
-            <fc:textField data-bind="value:geometry().uncertainty, enable: hasCoordinate()" outerClass="span2" label="Uncertainty"/>
-            <fc:textField data-bind="value:geometry().precision, enable: hasCoordinate()" outerClass="span2" label="Precision"/>
-            <fc:textField data-bind="value:geometry().datum, enable: hasCoordinate()" outerClass="span2" label="Datum" placeholder="e.g. WGS84"/>
+            <fc:textField data-bind="value:geometry().uncertainty, enable: hasCoordinate()" outerClass="span4" label="Uncertainty"/>
+            <fc:textField data-bind="value:geometry().precision, enable: hasCoordinate()" outerClass="span4" label="Precision"/>
+            <fc:textField data-bind="value:geometry().datum, enable: hasCoordinate()" outerClass="span4" label="Datum" placeholder="e.g. WGS84"/>
         </div>
     </div>
-    <div class="smallMap span6" style="width:400px;height:200px;"></div>
 </div>
 </script>
 
 <script type="text/html" id="pid">
-<div class="drawLocationDiv row-fluid">
-    <select data-bind="options: layers,
-        optionsCaption:'Choose a layer...',
-        optionsText:'name', value: chosenLayer, event: { change: refreshObjectList }"></select>
-    <select data-bind="options: layerObjects,
-        optionsCaption:'Choose shape ...',
-        optionsText:'name', value: layerObject, event: { change: updateSelectedPid }"></select>
-
-    <h3>Current selected shape</h3>
-    <div class="row-fluid controls-row">
-        <span class="label">PID</span> <span data-bind="text:geometry().pid"></span>
-        <span class="label">Name</span> <span data-bind="text:geometry().name"></span>
+<div id="pidLocationDiv" class="drawLocationDiv row-fluid">
+    <div class="span5">
+        <select data-bind="options: layers,
+            optionsCaption:'Choose a layer...',
+            optionsText:'name', value: chosenLayer, event: { change: refreshObjectList }"></select>
+        <select data-bind="options: layerObjects,
+            optionsCaption:'Choose shape ...',
+            optionsText:'name', value: layerObject, event: { change: updateSelectedPid }"></select>
+        <div class="row-fluid controls-row">
+            <span class="label">PID</span> <span data-bind="text:geometry().pid"></span>
+            <span class="label">Name</span> <span data-bind="text:geometry().name"></span>
+        </div>
+        <div class="row-fluid controls-row">
+            <span class="label">LayerID</span> <span data-bind="text:geometry().fid"></span>
+        </div>
+        <div class="row-fluid controls-row">
+            <span class="label">Layer</span> <span data-bind="text:geometry().layerName"></span>
+        </div>
+        <div class="row-fluid controls-row">
+            <span class="label">Area (km&sup2;)</span> <span data-bind="text:geometry().area"></span>
+        </div>
     </div>
-    <div class="row-fluid controls-row">
-        <span class="label">LayerID</span> <span data-bind="text:geometry().fid"></span>
-    </div>
-    <div class="row-fluid controls-row">
-        <span class="label">Layer</span> <span data-bind="text:geometry().layerName"></span>
-    </div>
-    <div class="row-fluid controls-row">
-        <span class="label">Area</span> <span data-bind="text:geometry().area"></span>
-    </div>
-    <div class="smallMap" style="width:500px;height:300px;"></div>
+    %{--<div class="smallMap span8" style="width:500px;height:300px;"></div>--}%
 </div>
 </script>
 
 <script type="text/html" id="upload">
-    <g:uploadForm action="upload">
-        <input type="file" name="myFile" value="Choose Shape file"/>
-        <input type="submit" class="btn" />
-    </g:uploadForm>
+    <h3> Not implemented - waiting on web services...</h3>
+    %{--<g:uploadForm action="upload">--}%
+        %{--<input type="file" name="myFile" value="Choose Shape file"/>--}%
+        %{--<input type="submit" class="btn" />--}%
+    %{--</g:uploadForm>--}%
 </script>
 
 <script type="text/html" id="drawn">
-<div class="drawLocationDiv row-fluid">
-    <div class="span4">
+<div id="drawnLocationDiv" class="drawLocationDiv row-fluid">
+    <div class="span12">
 
         <button class="btn" style="margin-bottom:20px;" data-bind="click: drawSiteClick">Draw the location</button>
 
@@ -229,7 +238,7 @@
         </div>
 
     </div>
-    <div class="smallMap span8" style="width:500px;height:300px;"></div>
+    %{--<div class="smallMap span8" style="width:500px;height:300px;"></div>--}%
 </div>
 </script>
 
@@ -237,16 +246,25 @@
 
     // server side generated paths & properties
     var SERVER_CONF = {
-        <g:if test="${site}">
-        pageUrl : "${grailsApplication.config.grails.serverURL}${createLink(controller:'site', action:'edit', id: site?.siteId, params:[checkForState:true])}",
+        <g:if test="${project}">
+        pageUrl : "${grailsApplication.config.grails.serverURL}${createLink(controller:'site', action:'createForProject', params:[projectId:project.projectId,checkForState:true])}",
+        projectUrl : "${grailsApplication.config.grails.serverURL}${createLink(controller:'project', action:'index', id:project.projectId)}",
         </g:if>
+        <g:elseif test="${site}">
+        pageUrl : "${grailsApplication.config.grails.serverURL}${createLink(controller:'site', action:'edit', id: site?.siteId, params:[checkForState:true])}",
+        </g:elseif>
         <g:else>
         pageUrl : "${grailsApplication.config.grails.serverURL}${createLink(controller:'site', action:'create', params:[checkForState:true])}",
         </g:else>
         sitePageUrl : "${createLink(action: 'index', id: site?.siteId)}",
         homePageUrl : "${createLink(controller: 'home', action: 'index')}",
         drawSiteUrl : "${createLink(controller: 'site', action: 'draw')}",
+        <g:if test="${project}">
+        projectList : ['${project.projectId}'],
+        </g:if>
+        <g:else>
         projectList : ${projectList?:'[]'},
+        </g:else>
         ajaxUpdateUrl: "${createLink(action: 'ajaxUpdate', id: site?.siteId)}",
         siteData: $.parseJSON('${json}'),
         checkForState: ${params.checkForState?:'false'}
@@ -261,7 +279,12 @@
         area : "${site?.area}",
         description : "${site?.description}",
         notes : "${site?.notes}",
+        <g:if test="${project}">
+        projects : ['${project.projectId}'],
+        </g:if>
+        <g:else>
         projects : ${site?.projects?:'[]'}
+        </g:else>
     };
 
     var viewModel = null;
@@ -333,16 +356,11 @@
                 } else {
                     amplify.store("drawnShape", null);
                 }
-                document.location.href = SERVER_CONF.drawSiteUrl + '?returnTo=' + SERVER_CONF.pageUrl;
+                document.location.href = SERVER_CONF.drawSiteUrl + '?returnTo=' + encodeURIComponent(SERVER_CONF.pageUrl);
             }
             self.renderMap = function(elements){
-                console.log("######## Rendering map for DrawnLocation......");
-                console.log("######## Rendering map -  geometry - " + JSON.stringify(self.geometry()));
+                console.log("######## Rendering map for DrawnLocation ......" + $(elements[1]).attr('id'));
                 var $drawLocationDiv = $(elements[1]);
-                var $smallMapDiv = $drawLocationDiv.find('.smallMap');
-                //initialise a map
-                var mapId = makeid();
-                $smallMapDiv.attr('id',mapId);
                 if(self.geometry() != null && self.geometry().type != ''){
                     console.log("The shape type = " + self.geometry().type);
                     $drawLocationDiv.find('.propertyGroup').css('display','none');
@@ -361,7 +379,7 @@
                     }
 
                     console.log("######## Before init_map_with_features -  geometry - " + JSON.stringify(self.geometry()));
-                    init_map_with_features({mapContainer: mapId}, mapOptions);
+                    init_map_with_features({mapContainer: 'mapForExtent'}, mapOptions);
                     console.log("######## After init_map_with_features -  geometry - " + JSON.stringify(self.geometry()));
                 }
             }
@@ -383,26 +401,21 @@
             this.layerObject = ko.observable();
             this.layerObjects = ko.observable([]);
             this.layers = [{id:'cl22',name:'Australian states'},{id:'cl23', name:'LGA'},{id:'cl21', name:'IBRA'}];
-            self.renderMap = function(elements){
-                %{--console.log("Render map on PidLocation called...")--}%
-                %{--var $drawLocationDiv = $(elements[1]);--}%
-                %{--var $smallMapDiv = $drawLocationDiv.find('.smallMap');--}%
-                %{--//initialise a map--}%
-                %{--var mapId = makeid();--}%
-                %{--$smallMapDiv.attr('id',mapId);--}%
-                %{--if(self.pid != null ){--}%
-                    %{--console.log("Rendering PID: " + self.pid());--}%
-                    %{--var mapOptions = {--}%
-                        %{--zoomToBounds:true,--}%
-                        %{--zoomLimit:16,--}%
-                        %{--highlightOnHover:true,--}%
-                        %{--features:[{--}%
-                            %{--type:'pid',--}%
-                            %{--polygonUrl:'http://localhost:8087/fieldcapture/proxy/geojsonFromPid?pid=3742609' //+ self.pid()--}%
-                        %{--}]--}%
-                    %{--};--}%
-                    %{--init_map_with_features({mapContainer: mapId}, mapOptions);--}%
-                %{--}--}%
+            self.renderMap = function(){
+                console.log("Render map on PidLocation called..." + self.geometry().pid())
+                if(self.geometry().pid() != null && self.geometry().pid() != '' ){
+                    console.log("Rendering PID: " + self.geometry().pid());
+                    var mapOptions = {
+                        zoomToBounds:true,
+                        zoomLimit:16,
+                        highlightOnHover:true,
+                        features:[{
+                            type:'pid',
+                            polygonUrl:'http://localhost:8087/fieldcapture/proxy/geojsonFromPid?pid=' + self.geometry().pid()
+                        }]
+                    };
+                    init_map_with_features({mapContainer: 'mapForExtent'}, mapOptions);
+                }
             }
             self.updateSelectedPid = function(elements){
                 if(self.layerObject() !== undefined){
@@ -410,9 +423,11 @@
                     self.geometry().fid(self.layerObject().fid)
                     self.geometry().name(self.layerObject().name)
                     self.geometry().layerName(self.layerObject().fieldname)
-                    if(self.layerObject().area !== undefined){
-                        self.geometry.area(self.layerObject().area)
+                    if(self.layerObject().area_km !== undefined){
+                        console.log("Selected shape area: " + self.layerObject().area_km);
+                        self.geometry().area(self.layerObject().area_km)
                     }
+                    self.renderMap();
                 }
             }
             self.refreshObjectList = function(){
@@ -427,7 +442,7 @@
                 }
             }
             self.toJSON = function(){
-                console.log('toJSON on PidLocation')
+                //console.log('toJSON on PidLocation')
                 var js = ko.toJS(self);
                 delete js.layers;
                 delete js.layerObjects;
@@ -592,7 +607,12 @@
                     contentType: 'application/json',
                     success: function (data) {
                         if(data.status == 'created'){
+                            <g:if test="${project}">
+                            document.location.href = SERVER_CONF.projectUrl;
+                            </g:if>
+                            <g:else>
                             document.location.href = SERVER_CONF.sitePageUrl + '/' + data.id;
+                            </g:else>
                         } else {
                             document.location.href = SERVER_CONF.sitePageUrl;
                         }

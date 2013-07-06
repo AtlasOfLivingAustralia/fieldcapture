@@ -137,6 +137,7 @@
                     console.log("Loading polygon: " + loc.polygonUrl)
                     $.ajax(loc.polygonUrl, {
                         success: function(geojson) {
+                            console.log('Retrieved the GEOJSON for polygonURL....');
                             console.log(geojson);
                             var paths, points, gj = geojson;
 

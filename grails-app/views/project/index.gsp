@@ -12,6 +12,7 @@
         siteViewUrl: "${createLink(controller: 'site', action: 'index')}",
         activityEditUrl: "${createLink(controller: 'activity', action: 'edit')}",
         activityCreateUrl: "${createLink(controller: 'activity', action: 'create')}",
+        siteCreateUrl: "${createLink(controller: 'site', action: 'createForProject', params: [projectId:project.projectId])}",
         spatialBaseUrl: "${grailsApplication.config.spatial.baseURL}",
         spatialWmsCacheUrl: "${grailsApplication.config.spatial.wms.cache.url}",
         spatialWmsUrl: "${grailsApplication.config.spatial.wms.url}",
@@ -124,10 +125,10 @@
             <div class="row-fluid space-after">
                 <div class="pull-right">
                     <button data-bind="click: $root.addSite" type="button" class="btn">Add new site</button>
+                    <button data-bind="click: $root.addExistingSite" type="button" class="btn">Add existing site</button>
                     <button data-bind="click: $root.removeAllSites" type="button" class="btn">Delete all sites</button>
                 </div>
             </div>
-
             <div data-bind="visible: sites.length == 0">
                <p>No sites are currently associated with this project.</p>
             </div>
@@ -445,6 +446,9 @@
                     self.notImplemented();
                 };
                 this.addSite = function () {
+                     document.location.href = fcConfig.siteCreateUrl;
+                };
+                this.addExistingSite = function () {
                     self.notImplemented();
                 };
                 self.newActivity = function () {

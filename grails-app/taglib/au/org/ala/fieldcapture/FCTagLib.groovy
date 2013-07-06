@@ -111,6 +111,15 @@ class FCTagLib {
                     mkp.yield(message(code:'default.about.label', default: 'About'))
                 }
             }
+            li(class:attrs.active == 'advanced' ? 'active' : '') {
+                a(href:createLink(controller: 'home', action:'advanced')) {
+                    i(class:"icon-cog") {
+                        mkp.yieldUnescaped("&nbsp;")
+                    }
+                    mkp.yieldUnescaped("&nbsp")
+                    mkp.yield(message(code:'default.about.label', default: 'Advanced'))
+                }
+            }
         }
 
     }

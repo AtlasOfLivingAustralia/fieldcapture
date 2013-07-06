@@ -16,6 +16,11 @@ class SiteController {
         render view: 'edit', model: [create:true]
     }
 
+    def createForProject(){
+        def project = projectService.getRich(params.projectId)
+        render view: 'edit', model: [create:true, project:project]
+    }
+
     def draw(){
         //any setup required ?
         println("Set up drawing tool...");
