@@ -87,7 +87,8 @@ footer img {
 }
 
 #header h1 {
-    margin: 0 0 0 20px;
+    /*margin: 0 0 0 20px;*/
+    margin: 0 0 0 0;
 }
 
 #header form {

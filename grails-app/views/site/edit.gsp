@@ -411,7 +411,7 @@
                         highlightOnHover:true,
                         features:[{
                             type:'pid',
-                            polygonUrl:'http://localhost:8087/fieldcapture/proxy/geojsonFromPid?pid=' + self.geometry().pid()
+                            polygonUrl:'${createLink(controller:'proxy',action:'geojsonFromPid')}?pid=' + self.geometry().pid()
                         }]
                     };
                     init_map_with_features({mapContainer: 'mapForExtent'}, mapOptions);

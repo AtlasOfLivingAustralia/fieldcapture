@@ -125,13 +125,6 @@
 
         <div class="tab-pane" id="site">
             <!-- SITES -->
-            <div class="row-fluid space-after">
-                <div class="pull-right">
-                    <button data-bind="click: $root.addSite" type="button" class="btn">Add new site</button>
-                    <button data-bind="click: $root.addExistingSite" type="button" class="btn">Add existing site</button>
-                    <button data-bind="click: $root.removeAllSites" type="button" class="btn">Delete all sites</button>
-                </div>
-            </div>
             <div data-bind="visible: sites.length == 0">
                <p>No sites are currently associated with this project.</p>
             </div>
@@ -171,8 +164,15 @@
                         </li>
                     </ul>
                 </div>--}%
-                <div class="span7">
-                    <div id="map"></div>
+                <div class="span6">
+                    <div id="map" style="width:100%"></div>
+                </div>
+                <div class="span2">
+                    <div class="btn-group btn-group-vertical">
+                        <button data-bind="click: $root.addSite" type="button" class="btn pull-right">Add new site</button>
+                        <button data-bind="click: $root.addExistingSite" type="button" class="btn pull-right">Add existing site</button>
+                        <button data-bind="click: $root.removeAllSites" type="button" class="btn pull-right">Delete all sites</button>
+                    </div>
                 </div>
             </div>
         </div>
