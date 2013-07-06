@@ -35,7 +35,7 @@
         </div>
     </div>
 
-    <div class="row-fluid span12">
+    <div class="row-fluid ">
         <span class="span3"><span class="label preLabel">Assessment date:</span><span data-bind="text:assessmentDate.formattedDate"></span></span>
         <span class="span3"><span class="label preLabel">Assessor:</span><span data-bind="text:collector"></span></span>
     </div>
@@ -43,7 +43,7 @@
 <!-- add the dynamic components -->
 <md:modelView model="${model}"/>
 
-    <div class="row-fluid span12">
+    <div class="row-fluid">
         <button type="button" class="btn"
                 onclick="document.location.href='${createLink(action:"edit", id:"${output.outputId}")}'"
         >Edit this data</button>

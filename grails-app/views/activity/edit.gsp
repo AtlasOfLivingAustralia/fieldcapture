@@ -61,7 +61,7 @@
                 <h2>Site:</h2>
                 <select data-bind="options:transients.sites,optionsText:'name',optionsValue:'siteId',value:siteId,optionsCaption:'Choose a site...'"></select>
             </div>
-            <div class="">
+            <div>
                 <h3>Site projects:</h3>
                 <!-- ko foreach:transients.site.projects -->
                     <a data-bind="text:name,attr:{'href':'${createLink(controller:'project',action:'index')}/' + projectId}"></a>
@@ -172,7 +172,7 @@
 
 <r:script>
 
-    var returnTo = "${grailsApplication.config.grails.serverURL}/${returnTo}";
+    var returnTo = "${grailsApplication.config.grails.serverURL}${returnTo}";
 
     $(function(){
 
@@ -186,7 +186,7 @@
 
         function getProjectsForSite(siteId) {
             if (siteId) {
-                return $.getJSON("${grailsApplication.config.grails.serverURL}/site/projectsForSite/" + siteId);
+                return $.getJSON("${createLink(controller:'site', action:'projectsForSite')}/" + siteId);
             } else {
                 return [];
             }

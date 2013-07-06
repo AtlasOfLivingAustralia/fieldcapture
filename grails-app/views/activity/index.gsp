@@ -19,7 +19,7 @@
     <div class="row-fluid">
         <div class="under-rule span12">
             <div class="clearfix">
-                <h1 class="pull-left">${site?.projectName}: ${site?.name}</h1>
+                <h1 class="pull-left">${project?.name ? project.name +':' : ''} ${site?.name}</h1>
                 <g:link action="edit" id="${activity.activityId}" params="${[returnTo:returnTo]}" class="btn pull-right title-edit">Edit activity</g:link>
             </div>
 
@@ -28,13 +28,11 @@
             <p class="well well-small">${activity.description}</p>
         </div>
     </div>
+    <h3>Type</h3>
     <div class="row-fluid">
-        <div class="span12">
-            <h3>Type</h3>
-            <span class="span5">Type: ${activity.type}</span>
-            <span class="span3">Starts: <span data-bind="text:startDate.formattedDate"></span></span>
-            <span class="span3">Ends: <span data-bind="text:endDate.formattedDate"></span></span>
-        </div>
+        <span class="span6"><span class="label">Type:</span> ${activity.type}</span>
+        <span class="span3"><span class="label">Starts:</span> <span data-bind="text:startDate.formattedDate"></span></span>
+        <span class="span3"><span class="label">Ends:</span> <span data-bind="text:endDate.formattedDate"></span></span>
     </div>
     <div class="row-fluid">
         <div class="span12">
@@ -64,25 +62,27 @@
             <button data-bind="click:newOutput" type="button" class="btn">Add an output</button>
         </div>
     </div>
+    <h3>Method</h3>
     <div class="row-fluid">
-        <div class="span12">
-            <h3>Method</h3>
-            <span class="span3">Census method: ${activity.censusMethod}</span>
-            <span class="span3">Method accuracy: ${activity.methodAccuracy}</span>
-            <span class="span3">Collector: ${activity.collector}</span>
-        </div>
+        <span class="span4"><span class="label">Census method:</span> ${activity.censusMethod}</span>
+        <span class="span4"><span class="label">Method accuracy:</span> ${activity.methodAccuracy}</span>
+        <span class="span4"><span class="label">Collector:</span> ${activity.collector}</span>
     </div>
     <div class="row-fluid">
         <div class="span12">
             <h3>Notes</h3>
-            <span class="span6">Notes: ${activity.notes}</span>
+            <span class="label">Notes:</span> ${activity.notes}
         </div>
     </div>
 
     <div class="row-fluid">
         <div class="span12 metadata">
-            <span class="span6">Created: <span data-bind="text:dateCreated.formattedDate"></span></span>
-            <span class="span6">Last updated: <span data-bind="text:lastUpdated.formattedDate"></span></span>
+            <span class="label">Created:</span> <span data-bind="text:dateCreated.formattedDate"></span>
+        </div>
+    </div>
+    <div class="row-fluid">
+        <div class="span12 metadata">
+            <span class="label">Last updated:</span> <span data-bind="text:lastUpdated.formattedDate"></span>
         </div>
     </div>
 

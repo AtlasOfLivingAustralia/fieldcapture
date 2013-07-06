@@ -41,10 +41,13 @@
                 <h1 class="pull-left">${project?.name}</h1>
                 <g:link action="edit" id="${project.projectId}" class="btn pull-right title-btn">Edit project</g:link>
             </div>
-            <div>
-                <a href="${grailsApplication.config.collectory.baseURL +
-                        'public/show/' + project.organisation}">${organisationName}</a>
-            </div>
+            <g:if test="${organisationName}">
+                <div class="clearfix" style="padding-bottom:10px;">
+                    <h4><a href="${grailsApplication.config.collectory.baseURL +
+                            'public/show/' + project.organisation}">${organisationName}</a>
+                    </h4>
+                </div>
+            </g:if>
             <div>
                 <p class="well well-small more">${project.description}</p>
             </div>
@@ -303,7 +306,7 @@
                             metaModel: act.model || {},
                             edit: function () {
                                 document.location.href = fcConfig.activityEditUrl + '/' + this.activityId +
-                                    "?returnTo=project/index/${project.projectId}";
+                                    "?returnTo=${createLink(controller:'project', action='index', id:project.projectId)}";
                             }
                         };
                         $.each(act.outputs, function (j, out) {
@@ -453,7 +456,7 @@
                 };
                 self.newActivity = function () {
                     document.location.href = fcConfig.activityCreateUrl +
-                    "?projectId=${project.projectId}&returnTo=project/index/${project.projectId}";
+                    "?projectId=${project.projectId}&returnTo=${createLink(controller:'project', action:'index', id:project.projectId)}";
                 };
                 self.notImplemented = function () {
                     alert("Not implemented yet.")
