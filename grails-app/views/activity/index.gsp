@@ -37,7 +37,10 @@
     <div class="row-fluid">
         <div class="span12">
             <h3 style="border-bottom: #eeeeee solid 1px;">Outputs</h3>
-            <table class="table">
+            <div data-bind="visible: outputs.length==0">
+                <p>Currently no outputs.</p>
+            </div>
+            <table class="table" data-bind="visible: outputs.length>0">
                 <thead>
                 <tr><td></td><td>Output id</td><td>Output Scores</td>
                     <td>Assessment date</td><td>Collector</td></tr>
