@@ -48,9 +48,11 @@
                     </h4>
                 </div>
             </g:if>
+            <g:if test="${project.description}">
             <div>
                 <p class="well well-small more">${project.description}</p>
             </div>
+            </g:if>
         </div>
     </div>
 

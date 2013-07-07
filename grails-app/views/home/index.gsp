@@ -87,12 +87,16 @@
                                         <a href="#" data-id="${p.id}" class="zoom-in btn btn-mini"><i class="icon-zoom-in"></i> Zoom map in</a>
                                         <a href="#" data-id="${p.id}" class="zoom-out btn btn-mini"><i class="icon-zoom-out"></i> Zoom map out</a>
                                     </div>
+                                    <g:if test="${p.organisationName}">
                                     <div>
                                         <i class="icon-user"></i> ${p.organisationName}
                                     </div>
+                                    </g:if>
+                                    <g:if test="${p.description}">
                                     <div>
                                         <i class="icon-info-sign"></i> ${p.description}
                                     </div>
+                                    </g:if>
                                 </div>
                             </div>
                         </div>
@@ -230,10 +234,7 @@
                             type: "dot",
                             id: el.id,
                             name: el.name,
-                            popup: "<div class='projectInfoWindow'><div><i class='icon-home'></i> <a href='" +
-                                    projectLinkPrefix + el.projectId + "'>" + el.name + "</a></div><div><i class='icon-user'></i> " +
-                                    el.organisationName + "</div><div><i class='icon-map-marker'></i> Site: <a href='" +
-                                    siteLinkPrefix + s.siteId + "'>" + s.name + "</a></div>",
+                            popup: generatePopup(projectLinkPrefix,el.projectId,el.name,el.organisationName,siteLinkPrefix,s.siteId, s.name),
                             latitude: s.extent.geometry.centre[1],
                             longitude: s.extent.geometry.centre[0]
                         }
@@ -242,6 +243,16 @@
                 });
             }
         });
+
+        function generatePopup(projectLinkPrefix, projectId, projectName, orgName, siteLinkPrefix, siteId, siteName){
+           var html = "<div class='projectInfoWindow'><div><i class='icon-home'></i> <a href='" +
+                                    projectLinkPrefix + projectId + "'>" +projectName + "</a></div>";
+           if(orgName !== undefined && orgName != ''){
+               html += "<div><i class='icon-user'></i> Org name:" +orgName + "</div>";
+           }
+           html+= "<div><i class='icon-map-marker'></i> Site: <a href='" +siteLinkPrefix + siteId + "'>" + siteName + "</a></div>";
+           return html;
+        }
 
         var mapData = {
             "zoomToBounds": true,

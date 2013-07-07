@@ -46,13 +46,13 @@
             </div>
             <div style="margin-top: 20px;">
                 <span class="span4">
-                    <span class="label">External Id:</span> ${site.externalId?:'Not specified'}
+                    <span class="label label-info">External Id:</span> ${site.externalId?:'Not specified'}
                 </span>
                 <span class="span4">
-                    <span class="label">Type:</span> ${site.type?:'Not specified'}
+                    <span class="label label-info">Type:</span> ${site.type?:'Not specified'}
                 </span>
                 <span class="span4">
-                    <span class="label">Area:</span>
+                    <span class="label label-info">Area:</span>
                     <g:if test="${site.extent.geometry.area}">
                         ${site.extent.geometry.area} square km
                     </g:if>
@@ -65,26 +65,26 @@
             <g:if test="${site.extent.geometry}">
             <div style="margin-top: 20px;">
                 <span class="span4">
-                    <span class="label">State/territory:</span> ${site.extent.geometry.state?:'Not specified'}
+                    <span class="label label-success">State/territory:</span> ${site.extent.geometry.state?:'Not specified'}
                 </span>
                 <span class="span4">
-                    <span class="label">Local government area:</span> ${site.extent.geometry.lga?:'Not specified'}
+                    <span class="label label-success">Local government area:</span> ${site.extent.geometry.lga?:'Not specified'}
                 </span>
                 <span class="span4">
-                    <span class="label">Locality:</span> ${site.extent.geometry.locality?:'Not specified'}
+                    <span class="label label-success">Locality:</span> ${site.extent.geometry.locality?:'Not specified'}
                 </span>
             </div>
             </g:if>
 
             <div>
                 <span class="span12">
-                    <span class="label">Notes:</span>
+                    <span class="label label-info">Notes:</span>
                     ${site.notes}</span>
             </div>
 
             <g:if test="${site.projects}">
             <div>
-                <span class="span2"><span class="label">Projects:</span></span>
+                <span class="span2"><span class="label  label-info">Projects:</span></span>
                 <ul style="list-style: none;margin:13px 0;">
                     <g:each in="${site.projects}" var="p" status="count">
                         <li>

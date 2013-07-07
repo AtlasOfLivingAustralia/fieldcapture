@@ -51,10 +51,12 @@
             <div class="row-fluid">
                 <g:hiddenField name="id" value="${site?.siteId}"/>
                 <div>
+                    <g:if test="${project}">
                     <label for="name">Project name</label>
                     <h1>
                         <g:link controller="project" action="index" id="${project?.projectId}">${project?.name}</g:link>
                     </h1>
+                    </g:if>
                     <label for="name">Site name</label>
                     <h1>
                         <input data-bind="value: name" class="span12" id="name" type="text" value="${site?.name}"
@@ -169,16 +171,16 @@
             optionsText:'name', value: layerObject, event: { change: updateSelectedPid }"></select>
         <div class="row-fluid controls-row">
             <span class="label">PID</span> <span data-bind="text:geometry().pid"></span>
-            <span class="label">Name</span> <span data-bind="text:geometry().name"></span>
+            <span class="label label-success">Name</span> <span data-bind="text:geometry().name"></span>
         </div>
         <div class="row-fluid controls-row">
             <span class="label">LayerID</span> <span data-bind="text:geometry().fid"></span>
         </div>
         <div class="row-fluid controls-row">
-            <span class="label">Layer</span> <span data-bind="text:geometry().layerName"></span>
+            <span class="label label-success">Layer</span> <span data-bind="text:geometry().layerName"></span>
         </div>
         <div class="row-fluid controls-row">
-            <span class="label">Area (km&sup2;)</span> <span data-bind="text:geometry().area"></span>
+            <span class="label label-success">Area (km&sup2;)</span> <span data-bind="text:geometry().area"></span>
         </div>
     </div>
     %{--<div class="smallMap span8" style="width:500px;height:300px;"></div>--}%
@@ -200,41 +202,41 @@
         <button class="btn" style="margin-bottom:20px;" data-bind="click: drawSiteClick">Draw the location</button>
 
         <div class="row-fluid controls-row">
-            <span class="label">Type</span> <span data-bind="text:geometry().type"></span>
+            <span class="label label-success">Type</span> <span data-bind="text:geometry().type"></span>
         </div>
         <div class="row-fluid controls-row">
-            <span class="label">Area (km&sup2;)</span> <span data-bind="text:geometry().areaKmSq"></span>
+            <span class="label label-success">Area (km&sup2;)</span> <span data-bind="text:geometry().areaKmSq"></span>
         </div>
 
         <div class="row-fluid controls-row gazProperties">
-            <span class="label">State/territory</span> <span data-bind="text:geometry().state"></span>
+            <span class="label label-success">State/territory</span> <span data-bind="text:geometry().state"></span>
         </div>
 
         <div class="row-fluid controls-row gazProperties">
-            <span class="label">Local Gov. Area</span> <span data-bind="text:geometry().lga"></span>
+            <span class="label label-success">Local Gov. Area</span> <span data-bind="text:geometry().lga"></span>
         </div>
 
         <div class="row-fluid controls-row gazProperties">
-            <span class="label">Locality</span> <span data-bind="text:geometry().locality"></span>
+            <span class="label label-success">Locality</span> <span data-bind="text:geometry().locality"></span>
         </div>
 
         <div style="display:none;" class="row-fluid controls-row">
-            <span class="label">Center</span> <span data-bind="text:geometry().centre"></span>
+            <span class="label label-success">Center</span> <span data-bind="text:geometry().centre"></span>
         </div>
         <div class="row-fluid controls-row circleProperties propertyGroup">
-            <span class="label">Radius (m)</span> <span data-bind="text:geometry().radius"></span>
+            <span class="label label-success">Radius (m)</span> <span data-bind="text:geometry().radius"></span>
         </div>
 
         <div style="display:none;" class="row-fluid controls-row  propertyGroup">
             <span class="label">GeoJSON</span> <span data-bind="text:ko.toJSON(geometry())"></span>
         </div>
         <div class="row-fluid controls-row rectangleProperties propertyGroup">
-            <span class="label">Latitude (SW)</span> <span data-bind="text:geometry().minLat"></span>
-            <span class="label">Longitude (SW)</span> <span data-bind="text:geometry().minLon"></span>
+            <span class="label label-success">Latitude (SW)</span> <span data-bind="text:geometry().minLat"></span>
+            <span class="label label-success">Longitude (SW)</span> <span data-bind="text:geometry().minLon"></span>
         </div>
         <div class="row-fluid controls-row rectangleProperties propertyGroup">
-            <span class="label">Latitude (NE)</span> <span data-bind="text:geometry().maxLat"></span>
-            <span class="label">Longitude (NE)</span> <span data-bind="text:geometry().maxLon"></span>
+            <span class="label label-success">Latitude (NE)</span> <span data-bind="text:geometry().maxLat"></span>
+            <span class="label label-success">Longitude (NE)</span> <span data-bind="text:geometry().maxLon"></span>
         </div>
 
     </div>
