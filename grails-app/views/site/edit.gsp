@@ -200,7 +200,7 @@
     <div class="span12">
 
         <button class="btn" style="margin-bottom:20px;" data-bind="click: drawSiteClick">Draw the location</button>
-
+        <div data-bind="visible: geometry().type !==undefined">
         <div class="row-fluid controls-row">
             <span class="label label-success">Type</span> <span data-bind="text:geometry().type"></span>
         </div>
@@ -238,7 +238,7 @@
             <span class="label label-success">Latitude (NE)</span> <span data-bind="text:geometry().maxLat"></span>
             <span class="label label-success">Longitude (NE)</span> <span data-bind="text:geometry().maxLon"></span>
         </div>
-
+        </div>
     </div>
     %{--<div class="smallMap span8" style="width:500px;height:300px;"></div>--}%
 </div>
@@ -249,14 +249,14 @@
     // server side generated paths & properties
     var SERVER_CONF = {
         <g:if test="${project}">
-        pageUrl : "${grailsApplication.config.grails.serverURL}${createLink(controller:'site', action:'createForProject', params:[projectId:project.projectId,checkForState:true])}",
-        projectUrl : "${grailsApplication.config.grails.serverURL}${createLink(controller:'project', action:'index', id:project.projectId)}",
+        pageUrl : "${grailsApplication.config.grails.serverName}${createLink(controller:'site', action:'createForProject', params:[projectId:project.projectId,checkForState:true])}",
+        projectUrl : "${grailsApplication.config.grails.serverName}${createLink(controller:'project', action:'index', id:project.projectId)}",
         </g:if>
         <g:elseif test="${site}">
-        pageUrl : "${grailsApplication.config.grails.serverURL}${createLink(controller:'site', action:'edit', id: site?.siteId, params:[checkForState:true])}",
+        pageUrl : "${grailsApplication.config.grails.serverName}${createLink(controller:'site', action:'edit', id: site?.siteId, params:[checkForState:true])}",
         </g:elseif>
         <g:else>
-        pageUrl : "${grailsApplication.config.grails.serverURL}${createLink(controller:'site', action:'create', params:[checkForState:true])}",
+        pageUrl : "${grailsApplication.config.grails.serverName}${createLink(controller:'site', action:'create', params:[checkForState:true])}",
         </g:else>
         sitePageUrl : "${createLink(action: 'index', id: site?.siteId)}",
         homePageUrl : "${createLink(controller: 'home', action: 'index')}",
@@ -363,7 +363,7 @@
             self.renderMap = function(elements){
                 console.log("######## Rendering map for DrawnLocation ......" + $(elements[1]).attr('id'));
                 var $drawLocationDiv = $(elements[1]);
-                if(self.geometry() != null && self.geometry().type != ''){
+                if(self.geometry() != null && self.geometry().centre !== undefined){
                     console.log("The shape type = " + self.geometry().type);
                     $drawLocationDiv.find('.propertyGroup').css('display','none');
                     //clone the object to avoid side affects with mapping

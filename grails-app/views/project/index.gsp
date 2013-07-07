@@ -43,7 +43,9 @@
             </div>
             <g:if test="${organisationName}">
                 <div class="clearfix" style="padding-bottom:10px;">
-                    <h4><a href="${grailsApplication.config.collectory.baseURL +
+                    <h4>
+                        Supported by:
+                        <a href="${grailsApplication.config.collectory.baseURL +
                             'public/show/' + project.organisation}">${organisationName}</a>
                     </h4>
                 </div>
@@ -66,8 +68,10 @@
         <div class="tab-pane active" id="activity">
             <div class="row-fluid space-after">
                 <div class="pull-right">
-                    <button data-bind="click: $root.expandActivities" type="button" class="btn btn-link">Expand all</button>
-                    <button data-bind="click: $root.collapseActivities" type="button" class="btn btn-link">Collapse all</button>
+                    <div data-bind="visible: activities.length>0">
+                        <button data-bind="click: $root.expandActivities" type="button" class="btn btn-link">Expand all</button>
+                        <button data-bind="click: $root.collapseActivities" type="button" class="btn btn-link">Collapse all</button>
+                    </div>
                     <button data-bind="click: $root.newActivity" type="button" class="btn">Add new activity</button>
                 </div>
             </div>
@@ -129,7 +133,12 @@
             <!-- SITES -->
             <div data-bind="visible: sites.length == 0">
                <p>No sites are currently associated with this project.</p>
-            </div>
+                <div class="btn-group btn-group-horizontal pull-right">
+                    <button data-bind="click: $root.addSite" type="button" class="btn">Add new site</button>
+                    <button data-bind="click: $root.addExistingSite" type="button" class="btn">Add existing site</button>
+                </div>
+             </div>
+
             <div class="row-fluid"  data-bind="visible: sites.length > 0">
                 <div class="span4 well list-box">
                     <div class="control-group">
