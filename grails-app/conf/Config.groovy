@@ -125,16 +125,15 @@ environments {
     development {
         grails.logging.jul.usebridge = true
         server.port = "8087"
-        grails.host = "http://dev.ala.org.au"
+        grails.app.context = "/fieldcapture"
+        grails.host = "http://localhost"
         serverName = "${grails.host}:${server.port}"
-        grails.serverURL = serverName + "/fieldcapture"
+        grails.serverURL = serverName + grails.app.context
 
         security.cas.appServerName = serverName
         security.cas.contextPath = grails.app.context
         ecodata.baseUrl = 'http://localhost:8080/ecodata/ws/'
-        app.external.model.dir = "/devt/FieldCapture/models/"
-
-        upload.images.url = grails.serverURL+'/image/'
+        app.external.model.dir = "/data/fieldcapture/models/"
     }
     test {
         grails.logging.jul.usebridge = true
@@ -151,15 +150,15 @@ environments {
     }
     nectar {
         grails.logging.jul.usebridge = true
-        server.port = "8080"
-        grails.app.context = "/fieldcapture"
-        grails.host = "http://115.146.94.201"
-        serverName = "${grails.host}:${server.port}"
+        server.port = "80"
+        grails.app.context = "/"
+        grails.host = "http://fieldcapture-dev.ala.org.au"
+        serverName = "${grails.host}"
         grails.serverURL = serverName + grails.app.context
 
         security.cas.appServerName = serverName
         security.cas.contextPath = "/" + grails.app.context
-        ecodata.baseUrl = 'http://115.146.94.201:8080/ecodata/ws/'
+        ecodata.baseUrl = 'http://ecodata-dev.ala.org.au/ws/'
         upload.images.url = grails.serverURL+'/image/'
     }
     production {
@@ -172,7 +171,6 @@ environments {
         ecodata.baseUrl = 'http://ecodata.ala.org.au/ws/'
         upload.images.url = grails.serverURL+'/image/'
     }
-
 }
 
 //println "grails.serverURL is ${grails.serverURL}"
