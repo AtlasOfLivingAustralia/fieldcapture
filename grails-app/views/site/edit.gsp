@@ -27,7 +27,7 @@
     }
     .no-border { border-top: none !important; }
   </style>
-  <r:require modules="knockout, amplify, mapWithFeatures"/>
+  <r:require modules="knockout, jqueryValidationEngine, amplify, mapWithFeatures"/>
 </head>
 <body>
     <ul class="breadcrumb">
@@ -45,25 +45,27 @@
             <li class="active">Edit</li>
         </g:else>
     </ul>
-    <div class="container-fluid">
+    <div class="container-fluid validationEngineContainer" id="validation-container">
         <bs:form action="update" inline="true">
 
             <div class="row-fluid">
                 <g:hiddenField name="id" value="${site?.siteId}"/>
                 <div>
-                    <g:if test="${project}">
-                    <label for="name">Project name</label>
-                    <h1>
-                        <g:link controller="project" action="index" id="${project?.projectId}">${project?.name}</g:link>
-                    </h1>
-                    </g:if>
                     <label for="name">Site name</label>
                     <h1>
-                        <input data-bind="value: name" class="span12" id="name" type="text" value="${site?.name}"
+                        <input data-bind="value: name" data-validation-engine="validate[required]"
+                               class="span8" id="name" type="text" value="${site?.name}"
                                placeholder="Enter a name for the new site"/>
                     </h1>
                 </div>
             </div>
+                <g:if test="${project}">
+                <div class="row-fluid" style="padding-bottom:15px;">
+                    <span>Project name:</span>
+                    <g:link controller="project" action="index" id="${project?.projectId}">${project?.name}</g:link>
+                </div>
+                </g:if>
+
 
             <div class="row-fluid">
                 <div class="span4">
@@ -321,6 +323,8 @@
     }
 
     $(function(){
+
+        $('#validation-container').validationEngine('attach', {scroll: false});
 
         $('.helphover').popover({animation: true, trigger:'hover'});
 
@@ -601,28 +605,30 @@
                 %{--self.location.removeAll();--}%
             %{--};--}%
             self.save = function () {
-                var json = ko.toJSON(self);
-                $.ajax({
-                    url: SERVER_CONF.ajaxUpdateUrl,
-                    type: 'POST',
-                    data: json,
-                    contentType: 'application/json',
-                    success: function (data) {
-                        if(data.status == 'created'){
-                            <g:if test="${project}">
-                            document.location.href = SERVER_CONF.projectUrl;
-                            </g:if>
-                            <g:else>
-                            document.location.href = SERVER_CONF.sitePageUrl + '/' + data.id;
-                            </g:else>
-                        } else {
-                            document.location.href = SERVER_CONF.sitePageUrl;
+                if ($('#validation-container').validationEngine('validate')) {
+                    var json = ko.toJSON(self);
+                    $.ajax({
+                        url: SERVER_CONF.ajaxUpdateUrl,
+                        type: 'POST',
+                        data: json,
+                        contentType: 'application/json',
+                        success: function (data) {
+                            if(data.status == 'created'){
+                                <g:if test="${project}">
+                                document.location.href = SERVER_CONF.projectUrl;
+                                </g:if>
+                                <g:else>
+                                document.location.href = SERVER_CONF.sitePageUrl + '/' + data.id;
+                                </g:else>
+                            } else {
+                                document.location.href = SERVER_CONF.sitePageUrl;
+                            }
+                        },
+                        error: function (data) {
+                            alert('There was a problem saving this site');
                         }
-                    },
-                    error: function (data) {
-                        alert('There was a problem saving this site');
-                    }
-                });
+                    });
+                }
             };
             self.notImplemented = function () {
                 alert("Not implemented yet.")

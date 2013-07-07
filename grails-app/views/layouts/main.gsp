@@ -23,14 +23,14 @@
         <div class="navbar-inner">
 
             <div class="container-fluid">
-                <a class="brand">Data capture prototype</a>
+                <a class="brand hidden-tablet hidden-phone">Data capture prototype</a>
 
                 <div class="nav-collapse collapse">
                     <div class="navbar-text pull-right">
                         <span id="buttonBar">
-                            mark.woolston@csiro.au&nbsp;<button class="btn btn-small" id="btnLogout"><i class="icon-off"></i>&nbsp;Logout</button>
-                            <button class="btn btn-small btn-info" id="btnProfile"><i class="icon-user icon-white"></i>&nbsp;My Profile</button>
-                            <button class="btn btn-warning btn-small" id="btnAdministration"><i class="icon-cog icon-white"></i>&nbsp;Administration</button>
+                            mark.woolston@csiro.au&nbsp;<button class="btn btn-small" id="btnLogout"><i class="icon-off"></i><span class="hidden-tablet hidden-phone">&nbsp;Logout</span></button>
+                            <button class="btn btn-small btn-info" id="btnProfile"><i class="icon-user icon-white"></i><span class="hidden-tablet hidden-phone">&nbsp;My Profile</span></button>
+                            <button class="btn btn-warning btn-small" id="btnAdministration"><i class="icon-cog icon-white"></i><span class="hidden-tablet  hidden-phone">&nbsp;Administration</span></button>
                             <g:pageProperty name="page.buttonBar"/>
                         </span>
                     </div>
@@ -43,7 +43,7 @@
     <g:layoutBody />
     <div class="push"></div>
   </div>
-  <hf:footer/>
+  %{--<hf:footer/>--}%
 <script type="text/javascript">
     var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
     document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));

@@ -53,7 +53,7 @@
                 </span>
                 <span class="span4">
                     <span class="label label-info">Area:</span>
-                    <g:if test="${site.extent.geometry.area}">
+                    <g:if test="${site?.extent?.geometry?.area}">
                         ${site.extent.geometry.area} square km
                     </g:if>
                     <g:else>
