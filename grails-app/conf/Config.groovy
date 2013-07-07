@@ -125,15 +125,16 @@ environments {
     development {
         grails.logging.jul.usebridge = true
         server.port = "8087"
-        grails.app.context = "/fieldcapture"
-        grails.host = "http://localhost"
+        grails.host = "http://dev.ala.org.au"
         serverName = "${grails.host}:${server.port}"
-        grails.serverURL = serverName + grails.app.context
+        grails.serverURL = serverName + "/fieldcapture"
 
         security.cas.appServerName = serverName
         security.cas.contextPath = grails.app.context
         ecodata.baseUrl = 'http://localhost:8080/ecodata/ws/'
-        app.external.model.dir = "/data/fieldcapture/models/"
+        app.external.model.dir = "/devt/FieldCapture/models/"
+
+        upload.images.url = grails.serverURL+'/image/'
     }
     test {
         grails.logging.jul.usebridge = true
