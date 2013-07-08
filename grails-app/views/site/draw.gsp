@@ -225,7 +225,7 @@
                 zoomToShapeBounds();
             } else if(currentDrawnShape.type == 'Circle'){
                 console.log('Redrawing circle');
-                showOnMap('circle', currentDrawnShape.decimalLatitude,currentDrawnShape.decimalLongitude,currentDrawnShape.radius);
+                showOnMap('circle', currentDrawnShape.coordinates[1],currentDrawnShape.coordinates[0],currentDrawnShape.radius);
                 zoomToShapeBounds();
             } else if(currentDrawnShape.type == 'Rectangle'){
                 console.log('Redrawing rectangle');

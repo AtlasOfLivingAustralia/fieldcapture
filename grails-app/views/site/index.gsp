@@ -114,8 +114,8 @@
             <div class="tab-pane active" id="activity">
                 <div class="row-fluid">
                     <div class="pull-right">
-                        <button data-bind="click: $root.expandActivities" type="button" class="btn btn-link">Expand all</button>
-                        <button data-bind="click: $root.collapseActivities" type="button" class="btn btn-link">Collapse all</button>
+                        <button data-bind="click: $root.expandActivities, visible: activities().length > 0" type="button" class="btn">Expand all</button>
+                        <button data-bind="click: $root.collapseActivities, visible: activities().length > 0" type="button" class="btn">Collapse all</button>
                         <button data-bind="click: $root.newActivity" type="button" class="btn">Add new activity</button>
                     </div>
                 </div>
