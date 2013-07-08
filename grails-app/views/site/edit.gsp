@@ -76,7 +76,13 @@
                 </div>
                 <div class="span4">
                     <label for="type">Type</label>
-                    <input data-bind="value: type" id="type" type="text" class="span12"/>
+                    %{--<input data-bind="value: type" id="type" type="text" class="span12"/>--}%
+                    <g:select id="type"
+                              data-bind="value: type"
+                              class="span12"
+                              name='type'
+                              from="['choose site type','Pastoral','Industrial','Urban','Coastal', 'Reserve', 'Private land']"
+                              keys="['none','Pastoral','Industrial','Urban','Coastal','Reserve', 'Private land']"/>
                 </div>
                 <div class="span4">
                     <label for="area">Area (decimal hectares)
@@ -201,7 +207,7 @@
 <div id="drawnLocationDiv" class="drawLocationDiv row-fluid">
     <div class="span12">
 
-        <button class="btn" style="margin-bottom:20px;" data-bind="click: drawSiteClick">Draw the location</button>
+        <button class="btn" style="margin-bottom:20px;" data-bind="click: drawSiteClick">Draw the location <i class="icon-circle-arrow-right"></i></button>
         <div data-bind="visible: geometry().type !==undefined">
         <div class="row-fluid controls-row">
             <span class="label label-success">Type</span> <span data-bind="text:geometry().type"></span>

@@ -12,6 +12,10 @@ class SiteController {
 
     static ignore = ['action','controller','id']
 
+    def select(){
+        render view: 'select', model: [sites:siteService.list()]
+    }
+
     def create(){
         render view: 'edit', model: [create:true]
     }
