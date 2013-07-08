@@ -17,9 +17,9 @@ class AdminController {
 
     def settings() {
         def settings = [
-            [key:'app.external.model.dir', value: grailsApplication.config.app.external.model.dir,
-            comment: 'location of the application meta-models such as the list of activities and ' +
-                    'the output data models']
+//            [key:'app.external.model.dir', value: grailsApplication.config.app.external.model.dir,
+//            comment: 'location of the application meta-models such as the list of activities and ' +
+//                    'the output data models']
         ]
         def config = grailsApplication.config.flatten()
         ['ecodata.baseUrl','grails.serverURL','grails.config.locations','biocache.baseURL',

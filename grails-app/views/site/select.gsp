@@ -28,13 +28,13 @@
         <div class="row-fluid">
             <div class="well span4">
                 <table class="table">
-                    <thead>
+                    <thead style="display:none;">
                         <th>Site name</th>
                     </thead>
                     <g:each in="${sites}" var="site">
                     <tr>
                         <td>
-                           <b> ${site.name?:'No name supplied'} </b>
+                           <strong> ${site.name?:'No name supplied'} </strong>
                         <br/>
                         <span class="label label-success">${site.extent?.geometry?.state}</span>
                         <span class="label label-success">${site.extent?.geometry?.lga}</span>

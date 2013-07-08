@@ -172,7 +172,7 @@
 
 <r:script>
 
-    var returnTo = "${grailsApplication.config.grails.serverURL}${returnTo}";
+    var returnTo = "${returnTo}";
 
     $(function(){
 

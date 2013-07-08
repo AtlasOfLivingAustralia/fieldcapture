@@ -12,19 +12,21 @@ if(!grails.config.locations || !(grails.config.locations instanceof List)) {
 grails.config.locations.add("classpath:ala-config.groovy")
 
 if(System.getenv(ENV_NAME) && new File(System.getenv(ENV_NAME)).exists()) {
-    println "Including configuration file specified in environment: " + System.getenv(ENV_NAME);
-    grails.config.locations.add "file:" + System.getenv(ENV_NAME)
+    println "[Fieldcapture] Including configuration file specified in environment: " + System.getenv(ENV_NAME);
+    grails.config.locations = ["file:" + System.getenv(ENV_NAME)]
 } else if(System.getProperty(ENV_NAME) && new File(System.getProperty(ENV_NAME)).exists()) {
-    println "Including configuration file specified on command line: " + System.getProperty(ENV_NAME);
-    grails.config.locations.add "file:" + System.getProperty(ENV_NAME)
+    println "[Fieldcapture] Including configuration file specified on command line: " + System.getProperty(ENV_NAME);
+    grails.config.locations = ["file:" + System.getProperty(ENV_NAME)]
 } else if(new File(default_config).exists()) {
-    println "Including default configuration file: " + default_config;
-    grails.config.locations.add "file:" + default_config
+    println "[Fieldcapture] Including default configuration file: " + default_config;
+    def loc = ["file:" + default_config]
+    println "[Fieldcapture] >> loc = " + loc
+    grails.config.locations = loc
+    println "[Fieldcapture] grails.config.locations = " + grails.config.locations
 } else {
-    println "No external configuration file defined."
+    println "[Fieldcapture] No external configuration file defined."
 }
-
-println "(*) grails.config.locations = ${grails.config.locations}"
+println "[Fieldcapture] (*) grails.config.locations = ${grails.config.locations}"
 
 /******************************************************************************\
  *  RELOADABLE CONFIG
@@ -116,21 +118,19 @@ if (!sld.polgon.highlight.url) {
 
 spatialLayerServices.baseUrl = "http://spatial-dev.ala.org.au/ws/"
 
-app.external.model.dir = "/data/${appName}/models/"
 upload.images.path = "/data/${appName}/images/"
 
 environments {
     development {
         grails.logging.jul.usebridge = true
         server.port = "8087"
-        grails.host = "http://dev.ala.org.au"
+        grails.host = "http://devt.ala.org.au"
         serverName = "${grails.host}:${server.port}"
         grails.serverURL = serverName + "/fieldcapture"
 
         security.cas.appServerName = serverName
         security.cas.contextPath = grails.app.context
         ecodata.baseUrl = 'http://localhost:8080/ecodata/ws/'
-        app.external.model.dir = "/devt/FieldCapture/models/"
 
         upload.images.url = grails.serverURL+'/image/'
     }
