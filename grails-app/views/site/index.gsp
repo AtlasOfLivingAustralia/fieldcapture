@@ -18,7 +18,7 @@
             sldPolgonDefaultUrl: "${grailsApplication.config.sld.polgon.default.url}",
             sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}"
             },
-            returnTo = "site/index/${site.siteId}";
+            returnTo = "${createLink(controller:'site', action:'index', id:site.siteId)}";
     </r:script>
   <r:require modules="knockout,mapWithFeatures,amplify"/>
 </head>
