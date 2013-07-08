@@ -24,7 +24,7 @@
             <h1 class="pull-left">Field Capture</h1>
             <g:form controller="search" method="GET" class="form-horizontal pull-right" style="padding-top:5px;">
                 <div class="input-append">
-                    <g:textField class="input-large" name="search"/>
+                    <g:textField class="input-large" name="query"/>
                     <button class="btn" type="submit">Search</button>
                 </div>
             </g:form>
