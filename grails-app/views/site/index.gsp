@@ -108,6 +108,7 @@
     </div>
 
     <g:if test="${site.activities}">
+        <h2>Activities at this site</h2>
         <div class="row-fluid">
             <!-- ACTIVITIES -->
             <div class="tab-pane active" id="activity">
