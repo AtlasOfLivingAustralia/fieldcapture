@@ -13,19 +13,17 @@ grails.config.locations.add("classpath:ala-config.groovy")
 
 if(System.getenv(ENV_NAME) && new File(System.getenv(ENV_NAME)).exists()) {
     println "Including configuration file specified in environment: " + System.getenv(ENV_NAME);
-    grails.config.locations = ["file:" + System.getenv(ENV_NAME)]
+    grails.config.locations.add "file:" + System.getenv(ENV_NAME)
 } else if(System.getProperty(ENV_NAME) && new File(System.getProperty(ENV_NAME)).exists()) {
     println "Including configuration file specified on command line: " + System.getProperty(ENV_NAME);
-    grails.config.locations = ["file:" + System.getProperty(ENV_NAME)]
+    grails.config.locations.add "file:" + System.getProperty(ENV_NAME)
 } else if(new File(default_config).exists()) {
     println "Including default configuration file: " + default_config;
-    def loc = ["file:" + default_config]
-    println ">> loc = " + loc
-    grails.config.locations = loc
-    println "grails.config.locations = " + grails.config.locations
+    grails.config.locations.add "file:" + default_config
 } else {
     println "No external configuration file defined."
 }
+
 println "(*) grails.config.locations = ${grails.config.locations}"
 
 /******************************************************************************\
