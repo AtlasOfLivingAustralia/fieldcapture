@@ -13,7 +13,7 @@
         activityEditUrl: "${createLink(controller: 'activity', action: 'edit')}",
         activityCreateUrl: "${createLink(controller: 'activity', action: 'create')}",
         siteCreateUrl: "${createLink(controller: 'site', action: 'createForProject', params: [projectId:project.projectId])}",
-        siteSelectUrl: "${createLink(controller: 'site', action: 'select')}?returnTo=${createLink(controller: 'project', action: 'index', id: project.projectId)}",
+        siteSelectUrl: "${createLink(controller: 'site', action: 'select', params:[projectId:project.projectId])}&returnTo=${createLink(controller: 'project', action: 'index', id: project.projectId)}",
         spatialBaseUrl: "${grailsApplication.config.spatial.baseURL}",
         spatialWmsCacheUrl: "${grailsApplication.config.spatial.wms.cache.url}",
         spatialWmsUrl: "${grailsApplication.config.spatial.wms.url}",

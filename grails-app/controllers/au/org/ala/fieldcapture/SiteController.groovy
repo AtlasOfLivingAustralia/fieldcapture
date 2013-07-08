@@ -13,7 +13,7 @@ class SiteController {
     static ignore = ['action','controller','id']
 
     def select(){
-        render view: 'select', model: [sites:siteService.list()]
+        render view: 'select', model: [sites:siteService.list(), project:projectService.get(params.projectId)]
     }
 
     def create(){
@@ -93,6 +93,30 @@ class SiteController {
         //log.debug (values as JSON).toString()
         siteService.update(id, values)
         chain(action: 'index', id:  id)
+    }
+
+    def ajaxUpdateProjects() {
+        def postBody = request.JSON
+        println "Body: " + postBody
+        println "Params:"
+        params.each { println it }
+        //todo: need to detect 'cleared' values which will be missing from the params - implement _destroy
+        def values = [:]
+        // filter params to remove:
+        //  1. keys in the ignore list; &
+        //  2. keys with dot notation - the controller will automatically marshall these into maps &
+        //  3. keys in nested maps with dot notation
+        postBody.each { k, v ->
+            if (!(k in ignore)) {
+                values[k] = v //reMarshallRepeatingObjects(v);
+            }
+        }
+        log.debug (values as JSON).toString()
+
+        siteService.updateProjectAssociations(values)
+        def result = [status: 'updated']
+
+        render result as JSON
     }
 
     def ajaxUpdate(String id) {

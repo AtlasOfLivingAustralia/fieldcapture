@@ -178,11 +178,11 @@
             optionsCaption:'Choose shape ...',
             optionsText:'name', value: layerObject, event: { change: updateSelectedPid }"></select>
         <div class="row-fluid controls-row">
-            <span class="label">PID</span> <span data-bind="text:geometry().pid"></span>
+            <span class="label label-success">PID</span> <span data-bind="text:geometry().pid"></span>
             <span class="label label-success">Name</span> <span data-bind="text:geometry().name"></span>
         </div>
         <div class="row-fluid controls-row">
-            <span class="label">LayerID</span> <span data-bind="text:geometry().fid"></span>
+            <span class="label label-success">LayerID</span> <span data-bind="text:geometry().fid"></span>
         </div>
         <div class="row-fluid controls-row">
             <span class="label label-success">Layer</span> <span data-bind="text:geometry().layerName"></span>

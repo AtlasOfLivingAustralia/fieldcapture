@@ -63,12 +63,12 @@ class WebService {
             return [resp: JSON.parse(resp)]
         } catch (SocketTimeoutException e) {
             def error = [error: "Timed out calling web service. URL= ${url}."]
-            log.error error
+            log.error(error, e)
             return error
         } catch (Exception e) {
             def error = [error: "Failed calling web service. ${e.getMessage()} URL= ${url}.",
                          detail: conn.errorStream.text]
-            log.error error
+            log.error(error, e)
             return error
         }
     }

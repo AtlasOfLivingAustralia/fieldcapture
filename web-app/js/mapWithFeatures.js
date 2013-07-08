@@ -48,6 +48,13 @@
         featureIndex: {},
         // a n incremented counter used as id if no id exists in the feature description
         currentId: 0,
+        // default overlay options
+        overlayOptions: {strokeColor:'#BC2B03',fillColor:'#DF4A21',fillOpacity: 0.3,strokeWeight: 1,
+            zIndex: 1, editable:false},
+        // keep count of locations as we load them so we know when we've finished
+        locationsLoaded: 0,
+        // keep a running bounds for loaded locations so we can zoom when all are loaded
+        featureBounds: new google.maps.LatLngBounds(),
         // init map and load features
         init: function (options, features) {
             var self = this;
@@ -75,11 +82,18 @@
             console.log('[init] ZoomLimit: ' + features.zoomLimit);
             if (features.zoomToBounds) { this.zoomToBounds = features.zoomToBounds; }
             if (features.zoomLimit) { this.zoomLimit = features.zoomLimit; }
-            this.load(features.features);
+            if(features.features !== undefined){
+                this.load(features.features);
+            }
             return this;
         },
         // loads the features
         load: function (features) {
+
+            if(features ===undefined || features.length == 0){
+                return;
+            }
+
             var self = this, f, p, iw;
 
             if (!iw) {
@@ -222,13 +236,6 @@
             if (this.featureIndex[id] === undefined) { this.featureIndex[id] = []; }
             this.featureIndex[id].push(f);
         },
-        // default overlay options
-        overlayOptions: {strokeColor:'#BC2B03',fillColor:'#DF4A21',fillOpacity: 0.3,strokeWeight: 1,
-            zIndex: 1, editable:false},
-        // keep count of locations as we load them so we know when we've finished
-        locationsLoaded: 0,
-        // keep a running bounds for loaded locations so we can zoom when all are loaded
-        featureBounds: new google.maps.LatLngBounds(),
         // increments the count of loaded locations - zooms map when all are loaded
         locationLoaded: function () {
             this.locationsLoaded++;

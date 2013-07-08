@@ -97,7 +97,7 @@
                 </li>--}%
                     <g:each in="${sites}" var="p">
                         <li>
-                            <g:link controller="site" action="index" id="${p.siteId}" data-id="${p.siteId}" params="[returnTo:'']">${p.name}</g:link>
+                            <g:link controller="site" action="index" id="${p.siteId}" data-id="${p.siteId}" params="[returnTo:'']">${p.name?:'No name specified'}</g:link>
                             <g:if test="${p.nrm}">${p.nrm}</g:if>
                             <g:if test="${p.state}"> - <fc:initialiseState>${p.state}</fc:initialiseState></g:if>
                         </li>
