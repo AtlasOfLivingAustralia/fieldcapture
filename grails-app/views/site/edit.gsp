@@ -59,14 +59,12 @@
                     </h1>
                 </div>
             </div>
-                <g:if test="${project}">
-                <div class="row-fluid" style="padding-bottom:15px;">
-                    <span>Project name:</span>
-                    <g:link controller="project" action="index" id="${project?.projectId}">${project?.name}</g:link>
-                </div>
-                </g:if>
-
-
+            <g:if test="${project}">
+            <div class="row-fluid" style="padding-bottom:15px;">
+                <span>Project name:</span>
+                <g:link controller="project" action="index" id="${project?.projectId}">${project?.name}</g:link>
+            </div>
+            </g:if>
             <div class="row-fluid">
                 <div class="span4">
                     <label for="externalId">External Id
@@ -120,6 +118,24 @@
                 </div>
             </div>
 
+            <h2>Points of interest
+                <fc:iconHelp title="Points of interest">You can specify any number of points
+                of interest with a site. Points of interest may include photo points
+                or the locations of previous survey work.</fc:iconHelp>
+            </h2>
+            <div class="row-fluid" id="pointsOfInterest" >
+                <div class="span6" data-bind="foreach: poi">
+                    <div class="well well-small">
+                        <div data-bind="template: { name: 'poi'}" ></div>
+                        <button type="button" class="btn btn-danger" style="margin-bottom:20px;" data-bind="click: $parent.removePOI">Remove</button>
+                    </div>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <button type="button" data-bind="click: addPOI, visible: poi.length == 0" class="btn">Add a POI</button>
+                <button type="button" data-bind="click: addPOI, visible: poi.length > 0" class="btn">Add another POI</button>
+            </div>
+
             <div class="row-fluid">
                 <div class="form-actions span12">
                     <button type="button" data-bind="click: save" class="btn btn-primary">Save changes</button>
@@ -158,6 +174,36 @@
         <div class="row-fluid controls-row">
             <fc:textField data-bind="value:geometry().decimalLatitude" outerClass="span6" label="Latitude"/>
             <fc:textField data-bind="value:geometry().decimalLongitude" outerClass="span6" label="Longitude"/>
+        </div>
+        <div class="row-fluid controls-row">
+            <fc:textField data-bind="value:geometry().uncertainty, enable: hasCoordinate()" outerClass="span4" label="Uncertainty"/>
+            <fc:textField data-bind="value:geometry().precision, enable: hasCoordinate()" outerClass="span4" label="Precision"/>
+            <fc:textField data-bind="value:geometry().datum, enable: hasCoordinate()" outerClass="span4" label="Datum" placeholder="e.g. WGS84"/>
+        </div>
+    </div>
+</div>
+</script>
+
+<script type="text/html" id="poi">
+<div class="drawLocationDiv row-fluid">
+    <div class="span12">
+        <div class="row-fluid controls-row">
+            <fc:textField data-bind="value:name" outerClass="span6" label="Name"/>
+        </div>
+        <div class="row-fluid controls-row">
+            <fc:textArea data-bind="value:description" outerClass="span12" class="span12" label="Description"/>
+        </div>
+        <div class="row-fluid controls-row">
+            <label for="type">Point type</label>
+            <g:select data-bind="value: type"
+                      name='type'
+                      from="['choose type','photopoint', 'location of previous surveys', 'other']"
+                      keys="['none','point','photopoint', 'survey', 'other']"/>
+        </div>
+        <div class="row-fluid controls-row">
+            <fc:textField data-bind="value:geometry().decimalLatitude" outerClass="span4" label="Latitude"/>
+            <fc:textField data-bind="value:geometry().decimalLongitude" outerClass="span4" label="Longitude"/>
+            <fc:textField data-bind="value:geometry().bearing" outerClass="span4" label="Bearing (degrees)"/>
         </div>
         <div class="row-fluid controls-row">
             <fc:textField data-bind="value:geometry().uncertainty, enable: hasCoordinate()" outerClass="span4" label="Uncertainty"/>
@@ -266,15 +312,15 @@
         <g:else>
         pageUrl : "${grailsApplication.config.grails.serverName}${createLink(controller:'site', action:'create', params:[checkForState:true])}",
         </g:else>
-        sitePageUrl : "${createLink(action: 'index', id: site?.siteId)}",
-        homePageUrl : "${createLink(controller: 'home', action: 'index')}",
-        drawSiteUrl : "${createLink(controller: 'site', action: 'draw')}",
         <g:if test="${project}">
         projectList : ['${project.projectId}'],
         </g:if>
         <g:else>
         projectList : ${projectList?:'[]'},
         </g:else>
+        sitePageUrl : "${createLink(action: 'index', id: site?.siteId)}",
+        homePageUrl : "${createLink(controller: 'home', action: 'index')}",
+        drawSiteUrl : "${createLink(controller: 'site', action: 'draw')}",
         ajaxUpdateUrl: "${createLink(action: 'ajaxUpdate', id: site?.siteId)}",
         siteData: $.parseJSON('${json}'),
         checkForState: ${params.checkForState?:'false'}
@@ -286,6 +332,7 @@
         externalId : "${site?.externalId}",
         type : "${site?.type}",
         extent: ${site?.extent?:'null'},
+        poi: ${site?.poi?:'[]'},
         area : "${site?.area}",
         description : "${site?.description}",
         notes : "${site?.notes}",
@@ -505,6 +552,38 @@
             }
         };
 
+        var POI = function (l) {
+            var self = this;
+            self.name = ko.observable(exists(l,'name'));
+            self.type = ko.observable(exists(l,'type'));
+            self.description = ko.observable(exists(l,'description'));
+            self.geometry = ko.observable({
+               type: "Point",
+               decimalLatitude: ko.observable(exists(l,'decimalLatitude')),
+               decimalLongitude: ko.observable(exists(l,'decimalLongitude')),
+               uncertainty: ko.observable(exists(l,'uncertainty')),
+               precision: ko.observable(exists(l,'precision')),
+               datum: ko.observable(exists(l,'datum')),
+               bearing: ko.observable(exists(l,'bearing'))
+            });
+            self.hasCoordinate = function () {
+                return self.geometry().decimalLatitude() !== undefined
+                    && self.geometry().decimalLatitude() !== ''
+                    && self.geometry().decimalLongitude() !== undefined
+                    && self.geometry().decimalLongitude() !== '';
+            }
+            self.toJSON = function(){
+                var js = ko.toJS(self);
+                if(js.geometry.decimalLatitude !== undefined
+                    && js.geometry.decimalLatitude !== ''
+                    && js.geometry.decimalLongitude !== undefined
+                    && js.geometry.decimalLongitude !== ''){
+                    js.geometry.coordinates = [js.geometry.decimalLongitude, js.geometry.decimalLatitude]
+                }
+                return js;
+            }
+        };
+
         function SiteViewModel (siteData) {
             var self = this;
             self.projectList = SERVER_CONF.projectList;
@@ -517,7 +596,13 @@
             self.notes = ko.observable(siteData.notes);
             self.projects = ko.observableArray(siteData.projects);
             self.extent = ko.observable(new EmptyLocation());
-            self.location = ko.observableArray([]);
+            self.poi = ko.observableArray([]);
+            self.addPOI = function(){
+                self.poi.push(new POI());
+            }
+            self.removePOI = function(){
+                self.poi.remove(this);
+            }
             self.saved = function(){
                 return self.id() != '';
             };
@@ -571,24 +656,16 @@
                 }
                 return self.extent().source();
             };
-            %{--self.loadLocations = function () {--}%
-                %{--var geometry;--}%
-                %{--if(SERVER_CONF.siteData != null && SERVER_CONF.siteData.location != NaN){--}%
-                    %{--$.each(SERVER_CONF.siteData.location, function (i, loc) {--}%
-                        %{--switch (loc.type) {--}%
-                            %{--case 'locationTypePoint': geometry = new PointLocation(loc.geometry); break;--}%
-                            %{--case 'locationTypePid': geometry = new PidLocation(loc.geometry); break;--}%
-                            %{--case 'locationTypeDrawn': geometry = new DrawnLocation(loc.geometry); break;--}%
-                            %{--default: data = {id: 1};--}%
-                        %{--}--}%
-                        %{--var temp = new Location(loc.id, loc.name, loc.type, geometry);--}%
-                        %{--self.location.push(temp);--}%
-                    %{--});--}%
-                %{--}--}%
-            %{--};--}%
-            %{--self.addDrawnLocation = function(drawnShape, gazInfo){--}%
-                %{--self.extent(new Location('1', 'Drawn shape', 'locationTypeDrawn', new DrawnLocation(drawnShape, gazInfo)));--}%
-            %{--};--}%
+            self.loadPOI = function () {
+                if(SERVER_CONF.siteData != null && SERVER_CONF.siteData.poi != NaN && SERVER_CONF.siteData.poi !== undefined){
+                    $.each(SERVER_CONF.siteData.poi, function (i, poi) {
+                        self.poi.push(new POI(poi));
+                    });
+                }
+            };
+            self.addDrawnLocation = function(drawnShape, gazInfo){
+                self.extent(new Location('1', 'Drawn shape', 'locationTypeDrawn', new DrawnLocation(drawnShape, gazInfo)));
+            };
             self.addLocation = function (id, name, type, loc) {
                 var geometry;
                 switch (type) {
@@ -601,18 +678,9 @@
                 self.location.push(temp);
                 var temp2 = ko.mapping.toJS(self.location);
             };
-            %{--self.addEmptyLocation = function () {--}%
-                %{--self.location.push(new Location('', '', 'locationTypeNone', null));--}%
-            %{--};--}%
-            %{--self.removeLocation = function (location) {--}%
-                %{--self.location.remove(location);--}%
-            %{--};--}%
-            %{--self.removeAllLocations = function (location) {--}%
-                %{--self.location.removeAll();--}%
-            %{--};--}%
             self.save = function () {
                 if ($('#validation-container').validationEngine('validate')) {
-                    var json = ko.toJSON(self);
+                        var json = ko.toJSON(self);
                     $.ajax({
                         url: SERVER_CONF.ajaxUpdateUrl,
                         type: 'POST',
@@ -656,6 +724,7 @@
         }
 
         viewModel.loadExtent();
+        viewModel.loadPOI();
 
         ko.applyBindings(viewModel);
 

@@ -106,6 +106,16 @@
             </g:if>
         </div>
     </div>
+    <g:if test="${site.poi}">
+        <h2>Points of interest at this site</h2>
+        <div class="row-fluid">
+              <ul>
+              <g:each in="${site.poi}" var="poi">
+                <li>${poi.name}</li>
+              </g:each>
+              </ul>
+        </div>
+    </g:if>
 
     <g:if test="${site.activities}">
         <h2>Activities at this site</h2>
