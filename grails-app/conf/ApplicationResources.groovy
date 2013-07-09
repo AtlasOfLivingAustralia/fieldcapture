@@ -38,8 +38,8 @@ modules = {
     }
 
     datepicker {
-        resource url: 'js/bootstrap-datepicker.js'
-        resource url: '/css/datepicker.css'
+        resource url: 'bootstrap-datepicker/js/bootstrap-datepicker.js'
+        resource url: 'bootstrap-datepicker/css/datepicker.css'
     }
 
     app_bootstrap {
