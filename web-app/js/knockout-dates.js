@@ -137,6 +137,11 @@ function stringToDate(date) {
 }
 
 (function() {
+
+    // This extends an observable that holds a UTC ISODate. It creates properties that hold:
+    //  a JS Date object - useful with datepicker; and
+    //  a simple formatted date of the form dd-mm-yyyy useful for display.
+    // The formatted date will include hh:MM if the includeTime argument is true
     ko.extenders.simpleDate = function (target, includeTime) {
         target.date = ko.computed({
             read: function () {
@@ -181,15 +186,30 @@ function stringToDate(date) {
     };
 
     /* Custom binding for Bootstrap datepicker */
+    // This binds an element and a model observable to the bootstrap datepicker.
+    // The element can be an input or container such as span, div, td.
+    // The datepicker is 2-way bound to the model. An input element will be updated automatically,
+    //  other elements may need an explicit text binding to the formatted model date (see
+    //  clickToPickDate for an example of a simple element).
     ko.bindingHandlers.datepicker = {
         init: function(element, valueAccessor, allBindingsAccessor) {
+            // set current date into the element
+            var $element = $(element),
+                initialDate = ko.utils.unwrapObservable(valueAccessor()),
+                initialDateStr = convertToSimpleDate(initialDate);
+            if ($element.is('input')) {
+                $element.val(initialDateStr);
+            } else {
+                $element.data('date', initialDateStr);
+            }
+
             //initialize datepicker with some optional options
-            $(element).datepicker({format: 'dd-mm-yyyy', autoclose: true});
+            $element.datepicker({format: 'dd-mm-yyyy', autoclose: true});
 
             // if the parent container holds any element with the class 'open-datepicker'
             // then add a hook to do so
-            $(element).parent().find('.open-datepicker').click(function () {
-                $(element).datepicker('show');
+            $element.parent().find('.open-datepicker').click(function () {
+                $element.datepicker('show');
             });
 
             //when a user changes the date via the datepicker, update the view model
@@ -214,7 +234,7 @@ function stringToDate(date) {
             if (widget) {
                 widget.date = ko.utils.unwrapObservable(valueAccessor());
                 if (!isNaN(widget.date)) {
-                    widget.setDate( widget.date);
+                    widget.setDate(widget.date);
                 }
             }
         }
@@ -257,6 +277,38 @@ ko.protectedObservable = function(initialValue) {
     };
 
     return result;
+};
+
+// This binding allows dates to be displayed as simple text that can be clicked to access
+//  a date picker for in-place editing.
+// A user prompt appears if the model has no value. this can be customised.
+// A calendar icon is added after the bound element as a visual indicator that the date can be edited.
+// A computed 'hasChanged' property provides an observable isDirty flag for external save/revert mechanisms.
+// The 'datepicker' binding is applied to the element to integrate the bootstrap datepicker.
+// NOTE you can use the datepicker binding directly if you have an input as your predefined element.
+ko.bindingHandlers.clickToPickDate = {
+    init: function(element, valueAccessor, allBindingsAccessor, viewModel) {
+        var observable = valueAccessor(),
+            userPrompt = $(element).attr('data-prompt'),
+            prompt = userPrompt || 'Click to edit',
+            icon = $('<i class="icon-calendar open-datepicker" title="Click to change date"></i>');
+
+        observable.originalValue = observable.date();
+        observable.hasChanged = ko.computed(function () {
+            //console.log("original: " + observable.originalValue + " current: " + observable.date());
+            return observable.originalValue.getTime() != observable.date().getTime();
+        });
+
+        $(element).parent().append(icon);
+
+        ko.applyBindingsToNode(element, {
+            text: ko.computed(function() {
+                // todo: style default text as grey
+                return ko.utils.unwrapObservable(observable) !== "" ? observable.formattedDate() : prompt;
+            }),
+            datepicker: observable.date
+        });
+    }
 };
 
 /*
