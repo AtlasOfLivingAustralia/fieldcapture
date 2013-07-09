@@ -35,7 +35,7 @@ class CommonService {
     def getMapFeatures(project) {
         def featuresMap = [zoomToBounds: true, zoomLimit: 12, highlightOnHover: true, features: []]
         project.sites.each { site ->
-            featuresMap.features << site.extent.geometry
+            featuresMap.features << site.extent?.geometry
         }
         return featuresMap as JSON
     }
