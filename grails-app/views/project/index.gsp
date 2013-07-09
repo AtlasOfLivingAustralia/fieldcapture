@@ -12,6 +12,8 @@
         siteViewUrl: "${createLink(controller: 'site', action: 'index')}",
         activityEditUrl: "${createLink(controller: 'activity', action: 'edit')}",
         activityCreateUrl: "${createLink(controller: 'activity', action: 'create')}",
+        activityUpdateUrl: "${createLink(controller: 'activity', action: 'ajaxUpdate')}",
+        activityDeleteUrl: "${createLink(controller: 'activity', action: 'ajaxDelete')}",
         siteCreateUrl: "${createLink(controller: 'site', action: 'createForProject', params: [projectId:project.projectId])}",
         siteSelectUrl: "${createLink(controller: 'site', action: 'select', params:[projectId:project.projectId])}&returnTo=${createLink(controller: 'project', action: 'index', id: project.projectId)}",
         spatialBaseUrl: "${grailsApplication.config.spatial.baseURL}",
@@ -99,10 +101,14 @@
                             <td><span data-bind="clickToPickDate:startDate"></span></td>
                             <td><span data-bind="clickToPickDate:endDate"></span></td>
                             <td><a data-bind="siteName:siteId,click:$root.openSite"></a></td>
-                            <td style="width:86px;"><span data-bind="visible:(endDate.hasChanged() || startDate.hasChanged())" class="btn-group">
-                                <button data-bind="click:save" type="button" class="btn btn-mini btn-success">Save</button>
-                                <button data-bind="click:revert" type="button" class="btn btn-mini btn-warning">Cancel</button>
-                            </span></td>
+                            <td style="width:86px;">
+                                <span data-bind="visible:(endDate.hasChanged() || startDate.hasChanged())" class="btn-group">
+                                    <button data-bind="click:save" type="button" class="btn btn-mini btn-success">Save</button>
+                                    <button data-bind="click:revert" type="button" class="btn btn-mini btn-warning">Cancel</button>
+                                </span>
+                                <i data-bind="click:del, visible:!(endDate.hasChanged() || startDate.hasChanged())"
+                                   class="icon-remove pull-right" title="Delete activity"></i>
+                            </td>
                         </tr>
                         <tr class="hidden-row">
                             <td></td>
@@ -123,8 +129,6 @@
                                             </div>
                                         </li>
                                         <!-- /ko -->
-                                        %{--<li><button type="button" class="btn btn-link" style="padding:0" data-bind="click:edit">
-                                            Edit activity</button></li>--}%
                                     </ul>
                                 </div>
                             </td>
@@ -333,7 +337,7 @@
                                     act.endDate = this.endDate();
                                 }
                                 $.ajax({
-                                    url: "${createLink(controller: 'activity', action: 'ajaxUpdate')}/" + this.activityId,
+                                    url: fcConfig.activityUpdateUrl + "/" + this.activityId,
                                     type: 'POST',
                                     data: ko.toJSON(act),
                                     contentType: 'application/json',
@@ -347,6 +351,22 @@
                                     error: function (data) {
                                         var status = data.status;
                                         alert('An unhandled error occurred: ' + data.status);
+                                    }
+                                });
+                            },
+                            del: function () {
+                                var self = this;
+                                // confirm first
+                                bootbox.confirm("Delete this activity? Are you sure?", function(result) {
+                                    if (result) {
+                                        $.getJSON(fcConfig.activityDeleteUrl + '/' + self.activityId,
+                                            function (data) {
+                                                if (data.code < 400) {
+                                                    document.location.href = "${createLink(controller:'project', action:'index', id:project.projectId)}";
+                                                } else {
+                                                    alert("Failed to delete activity - error " + data.code);
+                                                }
+                                            });
                                     }
                                 });
                             }
