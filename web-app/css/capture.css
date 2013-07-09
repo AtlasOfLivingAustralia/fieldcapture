@@ -373,6 +373,12 @@ th.sort i {
     margin-left: 10px;
 }
 
+i.open-datepicker {
+    margin-left:6px;
+    opacity:0.6;
+    cursor:pointer;
+}
+
 #accordion2  .accordion-group {
     margin-bottom: -1px;
 }

@@ -23,7 +23,7 @@
         returnTo = "project/index/${project.projectId}";
 
     </r:script>
-    <r:require modules="gmap3,mapWithFeatures,knockout,amplify"/>
+    <r:require modules="gmap3,mapWithFeatures,knockout,datepicker,amplify"/>
 </head>
 <body>
 <div class="container-fluid">
@@ -84,17 +84,25 @@
                         <th class="sort" data-bind="sortIcon:'',click:sortBy" data-column="startDate">From</th>
                         <th class="sort" data-bind="sortIcon:'',click:sortBy" data-column="endDate">To</th>
                         <th class="sort" data-bind="sortIcon:'',click:sortBy" data-column="siteId">Site</th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody data-bind="foreach:activities" id="activityList">
-                        <tr data-bind="attr:{href:'#'+activityId}" data-toggle="collapse" class="accordion-toggle">
-                            <td>
+                        <tr>
+                            <!-- first 2 td elements toggle the accordion -->
+                            <td data-bind="attr:{href:'#'+activityId}" data-toggle="collapse" class="accordion-toggle">
                                 <div><a><i class="icon-plus" title="expand"></i></a></div>
                             </td>
-                            <td><span data-bind="text:type"></span></td>
-                            <td><span data-bind="text:startDate.formattedDate"></span></td>
-                            <td><span data-bind="text:endDate.formattedDate"></span></td>
+                            <td data-bind="attr:{href:'#'+activityId}" data-toggle="collapse" class="accordion-toggle">
+                                <span data-bind="text:type"></span>
+                            </td>
+                            <td><span data-bind="clickToPickDate:startDate"></span></td>
+                            <td><span data-bind="clickToPickDate:endDate"></span></td>
                             <td><a data-bind="siteName:siteId,click:$root.openSite"></a></td>
+                            <td style="width:86px;"><span data-bind="visible:(endDate.hasChanged() || startDate.hasChanged())" class="btn-group">
+                                <button data-bind="click:save" type="button" class="btn btn-mini btn-success">Save</button>
+                                <button data-bind="click:revert" type="button" class="btn btn-mini btn-warning">Cancel</button>
+                            </span></td>
                         </tr>
                         <tr class="hidden-row">
                             <td></td>
@@ -312,9 +320,35 @@
                             outputs: ko.observableArray([]),
                             collector: act.collector,
                             metaModel: act.model || {},
-                            edit: function () {
-                                document.location.href = fcConfig.activityEditUrl + '/' + this.activityId +
-                                    "?returnTo=${createLink(controller:'project', action='index', id:project.projectId)}";
+                            revert: function () {
+                                this.startDate.date(this.startDate.originalValue);
+                                this.endDate.date(this.endDate.originalValue);
+                            },
+                            save: function () {
+                                var act = {activityId: this.activityId};
+                                if (this.startDate.hasChanged()) {
+                                    act.startDate = this.startDate();
+                                }
+                                if (this.endDate.hasChanged()) {
+                                    act.endDate = this.endDate();
+                                }
+                                $.ajax({
+                                    url: "${createLink(controller: 'activity', action: 'ajaxUpdate')}/" + this.activityId,
+                                    type: 'POST',
+                                    data: ko.toJSON(act),
+                                    contentType: 'application/json',
+                                    success: function (data) {
+                                        if (data.error) {
+                                            alert(data.detail + ' \n' + data.error);
+                                        } else {
+                                            document.location.href = "${createLink(controller:'project', action:'index', id:project.projectId)}";
+                                        }
+                                    },
+                                    error: function (data) {
+                                        var status = data.status;
+                                        alert('An unhandled error occurred: ' + data.status);
+                                    }
+                                });
                             }
                         };
                         $.each(act.outputs, function (j, out) {
