@@ -104,36 +104,42 @@
                 As are PID's of existing features in the Atlas Spatial Portal.</fc:iconHelp>
             </h2>
             <div class="row-fluid">
-                <div class="span2">
-                    <g:select class="input-medium" data-bind="value: extent().source"
-                              name='extentSource'
-                              from="['choose type','point','known shape','upload a shape','draw a shape']"
-                              keys="['none','point','pid','upload','drawn']"/>
-                </div>
-                <div class="span4">
-                    <div data-bind="template: { name: updateExtent(), data: extent(), afterRender: extent().renderMap}"></div>
-                </div>
-                <div class="span6">
-                    <div id="mapForExtent" class="smallMap span6" style="width:100%;height:250px;"></div>
-                </div>
-            </div>
 
-            <h2>Points of interest
-                <fc:iconHelp title="Points of interest">You can specify any number of points
-                of interest with a site. Points of interest may include photo points
-                or the locations of previous survey work.</fc:iconHelp>
-            </h2>
-            <div class="row-fluid" id="pointsOfInterest" >
-                <div class="span6" data-bind="foreach: poi">
+                <div class="span6">
+                    <div id="mapForExtent" class="smallMap span6" style="width:100%;height:600px;"></div>
+                </div>
+
+                <div class="span6">
+                    <div class="row-fluid control-group form-horizontal">
+                        <h4>Define extent using:
+                        <g:select class="input-medium" data-bind="value: extent().source"
+                                  name='extentSource'
+                                  from="['choose type','point','known shape','upload a shape','draw a shape']"
+                                  keys="['none','point','pid','upload','drawn']"/>
+                        </h4>
+                    </div>
+
                     <div class="well well-small">
-                        <div data-bind="template: { name: 'poi'}" ></div>
-                        <button type="button" class="btn btn-danger" style="margin-bottom:20px;" data-bind="click: $parent.removePOI">Remove</button>
+                        <div data-bind="template: { name: updateExtent(), data: extent(), afterRender: extent().renderMap}"></div>
+                        <h4>Points of interest
+                            <fc:iconHelp title="Points of interest">You can specify any number of points
+                            of interest with a site. Points of interest may include photo points
+                            or the locations of previous survey work.</fc:iconHelp>
+                        </h4>
+                        <div class="row-fluid" id="pointsOfInterest" >
+                            <div class="span12" data-bind="foreach: poi">
+                                <div>
+                                    <div data-bind="template: { name: 'poi'}" ></div>
+                                    <button type="button" class="btn btn-danger" style="margin-bottom:20px;" data-bind="click: $parent.removePOI">Remove</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row-fluid">
+                            <button type="button" data-bind="click: addPOI, visible: poi.length == 0" class="btn">Add a POI</button>
+                            <button type="button" data-bind="click: addPOI, visible: poi.length > 0" class="btn">Add another POI</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="row-fluid">
-                <button type="button" data-bind="click: addPOI, visible: poi.length == 0" class="btn">Add a POI</button>
-                <button type="button" data-bind="click: addPOI, visible: poi.length > 0" class="btn">Add another POI</button>
             </div>
 
             <div class="row-fluid">
