@@ -90,7 +90,7 @@
 <r:script>
 
     var outputData = ${output.data ?: '{}'},
-        returnTo = "${grailsApplication.config.grails.serverURL + '/' + returnTo}";
+        returnTo = "${returnTo}";
 
     $(function(){
 
