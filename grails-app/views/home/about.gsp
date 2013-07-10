@@ -2,7 +2,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-  <meta name="layout" content="main"/>
+  <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
   <title>About | Field Capture</title>
   <r:script disposition="head">
     var fcConfig = {

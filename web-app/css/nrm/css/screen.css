@@ -27,8 +27,8 @@ Font sizes:
 */
 
 body {
-    margin: none;
-    background: #C2CD8D; /*url(../images/bg_page.png);*/
+    /*margin: ;*/
+    background: #f7F4EA; /*url(../images/bg_page.png);*/
     color: #393124;
     font: 0.75em/1.6em "Helvetica Neue", Arial, sans-serif;
 }
@@ -103,11 +103,15 @@ ul.horizontal li {
 
 /*ul { padding: 0 0 0 14px; }*/
 
-#header .navbar {
+#dcNav {
+    background: #C2CD8D;
+}
+
+#dcNav .navbar {
     margin-bottom: 0px;
 }
 
-#header .navbar .brand {
+#dcNav .navbar .brand {
     display: block;
     float: left;
     padding: 10px 20px 10px;
@@ -115,22 +119,34 @@ ul.horizontal li {
     font-size: 20px;
     font-weight: 200;
     color: #444;
-    text-shadow: 0 1px 0 #fff;
+    text-shadow: none;
 }
 
-#header .navbar .nav>li>a {
+#dcNav .navbar .nav>li>a {
     float: none;
     padding: 10px 15px 10px;
     color: #444;
     font-size: 14px;
     text-decoration: none;
-    text-shadow: 0 1px 0 #fff;
+    text-shadow: none;
 }
 
 /* Top level layout */
 
 #body-wrapper {
-    background: url(../images/bg_page_top_slice.png) repeat-x 0px -50px;
+    /*background: #C2CD8D url(../images/bg_page_top_slice.png) repeat-x 0px -50px;*/
+}
+
+@media (max-width: 767px) {
+    #body-wrapper {
+        margin-left: -20px;
+        margin-right: -20px;
+    }
+
+    #header, #content, #footer-wrapper {
+        margin-left: 20px;
+        margin-right: 20px;
+    }
 }
 
 #content, #footer {
@@ -138,10 +154,12 @@ ul.horizontal li {
     /*padding: 0 17px;*/
 }
 
-#header {
-    position: relative;
+#body-wrapper > #header {
+    /*position: relative;*/
     /*width: 994px;*/
-    height: 70px;
+    /*height: 70px;*/
+    background: url(../images/bg_page_top_slice.png) repeat-x 0px -50px;
+    /*background-color: #C2CD8D;*/
     /*padding-top: 10px;*/
     /*background: url(../images/bg_header_slice.png) repeat-x 53px 100%;*/
     margin: 0 auto;
@@ -150,7 +168,7 @@ ul.horizontal li {
 .navbar {
     /*background: url(../images/bg_header_slice.png) repeat-x 0px 100%;*/
     /*opacity: 0.8;*/
-    background: #C2CD8D;
+    margin-bottom: 0;
 }
 
 #content {
@@ -159,7 +177,7 @@ ul.horizontal li {
     /*width: 960px;*/
     /*margin: 0 auto;*/
     /*padding: 0 70px;*/
-    padding-top: 20px; /* ALA additon */
+    padding-top: 10px; /* ALA additon */
     padding-bottom: 20px; /* ALA additon */
 }
 
@@ -194,7 +212,7 @@ ul.horizontal li {
 }
 
 #header .page-tools, #header form.search {
-    float: right;
+    /*float: right;*/
 }
 
 #header .navX {

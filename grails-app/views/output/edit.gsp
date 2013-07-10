@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="layout" content="main"/>
+    <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
     <title>Edit | ${activity.activityId ?: 'new'} | ${site.name} | ${site.projectName} | Field Capture</title>
     <md:modelStyles model="${model}" edit="true"/>
     <r:require modules="jstimezonedetect,knockout,jqueryValidationEngine,datepicker,jQueryImageUpload"/>

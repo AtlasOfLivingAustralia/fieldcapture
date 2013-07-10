@@ -1,0 +1,156 @@
+// App-specific variables
+@backgroundColour: #f7F4EA;
+
+
+// Scaffolding
+// -------------------------------
+@bodyBackground: @backgroundColour;
+@textColor: #393124;
+@linkColor: #39641A;
+@linkColorHover: darken(@linkColor, 8%);
+
+@wellBackground: #EBE6DC;
+@heroUnitBackground: #C2CD8D;
+@btnBackground: lighten(@wellBackground, 10%);
+@btnBackgroundHighlight: @wellBackground;
+@tableBackgroundHover: @wellBackground;
+
+// Overrides for Bootstrap
+// -------------------------------
+
+h1 { font-size: @baseFontSize * 2.00; }
+h2 { font-size: @baseFontSize * 1.75; }
+h3 { font-size: @baseFontSize * 1.50; }
+h4 { font-size: @baseFontSize * 1.25; }
+
+.breadcrumb {
+    background-color: inherit;
+    margin: 0 0 20px 0;
+    padding: 0;
+    > li {
+        > .divider {
+            color: @textColor;
+        }
+    }
+    > .active {
+        color: @textColor;
+    }
+}
+
+form {
+    margin: 0;
+}
+
+/* Grails generated overrides */
+
+.custom-sprite (@offset) {
+    content: " ";
+    padding-left: 5px;
+    background: url("@{iconSpritePath}");
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    line-height: 14px;
+    vertical-align: text-top;
+    margin-top: 1px;
+    background-position: @offset;
+}
+
+div.nav { // Grails nav bar
+    ul {
+        .breadcrumb;
+        li {
+            a {
+                margin-right: 20px;
+                &.home:before {
+                    .custom-sprite (0 -24px);
+                }
+                &.create:before {
+                    .custom-sprite (0 -72px);
+                }
+                &.list:before {
+                    .custom-sprite (-360px -48px);
+                }
+            }
+        }
+    }
+}
+
+// skip to content links not needed in our app
+.skip {
+    display: none;
+}
+
+// scaffold generated tables
+.scaffold-list table {
+    .table;
+    .table-striped;
+    .table-bordered;
+    .table-hover;
+}
+
+// Adapted from grails CSS
+.property-list {
+    margin: 0.6em 1.25em 0 1.25em;
+    padding: 0.3em 1.8em 1.25em;
+    position: relative;
+    zoom: 1;
+    border: none;
+
+    .fieldcontain {
+        list-style: none;
+        overflow: hidden;
+        zoom: 1;
+        margin-top: 1em;
+        .property-label {
+            float: left;
+            text-align: right;
+            width: 25%;
+        }
+        .property-value {
+            display: block;
+            margin-left: 27%;
+        }
+    }
+}
+
+#main-content {
+    margin-bottom: 20px;
+}
+
+div.ac_results {
+    margin-left:10px;
+    margin-right: -20px;
+}
+
+.content, #content {
+    // form buttons
+    .edit, .delete, .save {
+        .btn;
+    }
+    // pagination
+    div.pagination {
+        width: 100%;
+        text-align: center;
+        .btn-group;
+        span, a {
+            .btn;
+            .btn-small;
+            margin-right: 5px;
+            &.currentStep {
+                .disabled;
+                .btn-inverse;
+            }
+            &.nextLink:after {
+                font-size: 16px;
+                content: "\00bb";
+                padding-left: 5px;
+            }
+            &.prevLink:before {
+                font-size: 16px;
+                content: "\00ab";
+                padding-right: 5px;
+            }
+        }
+    }
+}

@@ -52,7 +52,7 @@ grails.project.dependency.resolution = {
         runtime ":resources:1.1.6"
         runtime ":ala-web-theme:0.1.10"
         runtime ":csv:0.3.1"
-        //runtime ":lesscss-resources:1.3.1"
+        runtime ":lesscss-resources:1.3.3"
 
         build ":tomcat:$grailsVersion"
 

@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="layout" content="main"/>
+    <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
     <title>
         <g:if test="create">Create | Activity</g:if>
         <g:else>Edit | ${activity.type}</g:else>

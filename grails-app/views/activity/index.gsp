@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="layout" content="main"/>
+    <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
     <title>${activity?.activityId}| ${site?.name} | ${site?.projectName} | Field Capture</title>
     <r:require module="knockout"/>
 </head>

@@ -3,7 +3,7 @@
 <html>
 <head>
   <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&language=en"></script>
-  <meta name="layout" content="main"/>
+  <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
   <title> ${create ? 'New' : ('Edit | ' + site?.name)} | Sites | Field Capture</title>
   <style type="text/css">
     legend {

@@ -39,8 +39,8 @@
                         <r:img dir="css/nrm/images" file="gr_logo_wide.png" alt="Caring for our Country" />
                     </a>
                 </div>
-                <div class="span6 pull-right">
-                    <g:form controller="search" method="GET" class="search">
+                <div class="span6 hidden-phone">
+                    <g:form controller="search" method="GET" class="search pull-right">
                         <p>
                             <input type="text" name="query" id="keywords">
                             <input type="hidden" name="collection" value="agencies">
@@ -52,9 +52,10 @@
                 </div>
             </div>
         </div>
-
+    </div><!-- /#header -->
+    <div id="dcNav" class="clearfix">
         <div class="navbar container-fluid">
-            <a class="brand hidden-tablet hidden-phone">Data capture prototype</a>
+            <a class="brand hidden-tablet hidden-phone">MERI Data capture prototype</a>
             <div class="nav-collapse collapse">
                 <div class="navbar-text pull-right">
                     <span id="buttonBar">
@@ -65,7 +66,7 @@
                     </span>
                 </div>
                 <fc:navbar active="${pageProperty(name: 'page.topLevelNav')}"/>
-            %{--<ul class="horizontal">--}%
+                %{--<ul class="horizontal">--}%
                 %{--<li class="home first"><a id="pn-1" href="/index.html" class="">Home</a></li>--}%
                 %{--<li class="major" id="pn-funding"><a id="pn-2" href="/funding/index.html" class="">Funding</a></li>--}%
                 %{--<li class="major no-mega current" id="pn-projects"><a id="pn-3" href="/projects/index.html" class="">Projects</a></li>--}%
@@ -73,9 +74,10 @@
                 %{--<li class="major" id="pn-resources"><a id="pn-5" href="/resources/index.html" class="">Resources</a></li>--}%
                 %{--<li class="major no-mega" id="pn-news"><a id="pn-6" href="/news/index.html" class="">News &amp; media</a></li>--}%
                 %{--<li class="major last hover" id="pn-contact"><a id="pn-7" href="/contact/index.html" class="">Contact</a></li>--}%
-            %{--</ul>--}%
+                %{--</ul>--}%
+            </div>
         </div><!-- /.nav -->
-    </div><!-- /#header -->
+    </div>
 
     <div id="content" class="clearfix">
         <g:layoutBody />

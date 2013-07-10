@@ -21,8 +21,13 @@ modules = {
     }
 
     nrmSkin {
-        dependsOn 'application, app_bootstrap_responsive'
+        dependsOn 'application'
         //resource url: 'http://www.nrm.gov.au/css/screen.css'
+        resource url: '/bootstrap/js/bootstrap.min.js'
+        // LESS resources are processed into CSS automatically, but to trigger build you need to touch/edit the parent less file
+        // TODO: pull this out to its own bundle for use by other "skins"
+        resource url: '/bootstrap/less/bootstrap.less',attrs:[rel: "stylesheet/less", type:'css'], bundle:'bundle_nrmSkin'
+        resource url: '/bootstrap/less/responsive.less',attrs:[rel: "stylesheet/less", type:'css'], bundle:'bundle_nrmSkin'
         resource url: 'css/nrm/css/screen.css'//, linkOverride: 'http://www.nrm.gov.au/css/screen.css'
     }
 
