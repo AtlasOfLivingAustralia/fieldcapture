@@ -10,13 +10,6 @@
         border: none;
         margin-bottom: 5px;
     }
-    .popover {
-        border-width: 2px;
-    }
-    .popover-content {
-        font-size: 14px;
-        line-height: 20px;
-    }
     h1 input[type="text"] {
         color: #333a3f;
         font-size: 28px;
@@ -27,7 +20,9 @@
     }
     .no-border { border-top: none !important; }
   </style>
-  <r:require modules="knockout, jqueryValidationEngine, amplify, mapWithFeatures"/>
+  <r:require modules="knockout, jqueryValidationEngine, amplify"/>
+  <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&libraries=drawing,geometry"></script>
+  <r:require modules="drawmap"/>
 </head>
 <body>
     <ul class="breadcrumb">
@@ -110,17 +105,74 @@
                 </div>
 
                 <div class="span6">
-                    <div class="row-fluid control-group form-horizontal">
-                        <h4>Define extent using:
-                        <g:select class="input-medium" data-bind="value: extent().source"
-                                  name='extentSource'
-                                  from="['choose type','point','known shape','upload a shape','draw a shape']"
-                                  keys="['none','point','pid','upload','drawn']"/>
-                        </h4>
-                    </div>
 
                     <div class="well well-small">
-                        <div data-bind="template: { name: updateExtent(), data: extent(), afterRender: extent().renderMap}"></div>
+
+                        <div>
+                            <h4>Define extent using:
+                            <g:select class="input-medium" data-bind="value: extent().source"
+                                      name='extentSource'
+                                      from="['choose type','point','known shape','upload a shape','draw a shape']"
+                                      keys="['none','point','pid','upload','drawn']"/>
+                            </h4>
+                        </div>
+
+                        <div id="map-controls" data-bind="visible: extent().source() == 'drawn' ">
+                            <ul id="control-buttons">
+                                <li class="active" id="pointer" title="Drag to move. Double click or use the zoom control to zoom.">
+                                    <a href="javascript:void(0);" class="btn active draw-tool-btn">
+                                    %{--<img src="${resource(dir:'bootstrap/img',file:'pointer.png')}" alt="pointer"/>--}%
+                                    <img src="${resource(dir:'bootstrap/img',file:'glyphicons_347_hand_up.png')}" alt="center and radius"/>
+                                    <span class="drawButtonLabel">Move & zoom</span>
+                                    </a>
+                                </li>
+                                <li id="circle" title="Click at centre and drag the desired radius. Values can be adjusted in the boxes.">
+                                    <a href="javascript:void(0);" class="btn draw-tool-btn">
+                                    %{--<img src="${resource(dir:'images/map',file:'circle.png')}" alt="center and radius"/>--}%
+                                    <img src="${resource(dir:'bootstrap/img',file:'glyphicons_095_vector_path_circle.png')}" alt="center and radius"/>
+                                    <span class="drawButtonLabel">Draw circle</span>
+                                    </a>
+                                </li>
+                                <li id="rectangle" title="Click and drag a rectangle.">
+                                    <a href="javascript:void(0);" class="btn draw-tool-btn">
+                                    %{--<img src="${resource(dir:'images/map',file:'rectangle.png')}" alt="rectangle"/>--}%
+                                    <img src="${resource(dir:'bootstrap/img',file:'glyphicons_094_vector_path_square.png')}" alt="rectangle"/>
+                                    <span class="drawButtonLabel">Draw rect</span>
+                                    </a>
+                                </li>
+                                <li id="polygon" title="Click any number of times to draw a polygon. Double click to close the polygon.">
+                                    <a href="javascript:void(0);" class="btn draw-tool-btn">
+                                    %{--<img src="${resource(dir:'images/map',file:'polygon.png')}" alt="polygon"/>--}%
+                                    <img src="${resource(dir:'bootstrap/img',file:'glyphicons_096_vector_path_polygon.png')}" alt="polygon"/>
+                                    <span class="drawButtonLabel">Draw polygon</span>
+                                    </a>
+                                </li>
+                                <li id="clear" title="Clear the region from the map.">
+                                    <a href="javascript:void(0);" class="btn draw-tool-btn">
+                                    %{--<img src="${resource(dir:'images/map',file:'clear.png')}" alt="clear"/>--}%
+                                    <img src="${resource(dir:'bootstrap/img',file:'glyphicons_016_bin.png')}" alt="clear"/>
+                                    <span class="drawButtonLabel">Clear</span>
+                                    </a>
+                                </li>
+                                <li id="reset" title="Zoom and centre on Australia.">
+                                    <a href="javascript:void(0);" class="btn draw-tool-btn">
+                                    <img src="${resource(dir:'bootstrap/img',file:'reset.png')}" alt="reset map"/>
+                                    <span class="drawButtonLabel">Reset</span>
+                                    </a>
+                                </li>
+                                <li id="zoomToExtent" title="Zoom to extent of drawn shape.">
+                                    <a href="javascript:zoomToShapeBounds();" class="btn draw-tool-btn">
+                                    <img src="${resource(dir:'bootstrap/img',file:'glyphicons_186_move.png')}" alt="zoom to extent of drawn shape"/>
+                                    <span class="drawButtonLabel">Zoom</span>
+                                    </a>
+                                </li>
+                            </ul>
+                         </div>
+
+                         <div style="padding-top:10px;" data-bind="template: { name: updateExtent(), data: extent(), afterRender: extent().renderMap}"></div>
+                        </div>
+
+                    <div class="well well-small">
                         <h4>Points of interest
                             <fc:iconHelp title="Points of interest">You can specify any number of points
                             of interest with a site. Points of interest may include photo points
@@ -132,6 +184,7 @@
                                     <div data-bind="template: { name: 'poi'}" ></div>
                                     <button type="button" class="btn btn-danger" style="margin-bottom:20px;" data-bind="click: $parent.removePOI">Remove</button>
                                 </div>
+                                <hr/>
                             </div>
                         </div>
                         <div class="row-fluid">
@@ -197,7 +250,7 @@
             <fc:textField data-bind="value:name" outerClass="span6" label="Name"/>
         </div>
         <div class="row-fluid controls-row">
-            <fc:textArea data-bind="value:description" outerClass="span12" class="span12" label="Description"/>
+            <fc:textArea rows="2" data-bind="value:description" outerClass="span12" class="span12" label="Description"/>
         </div>
         <div class="row-fluid controls-row">
             <label for="type">Point type</label>
@@ -211,7 +264,7 @@
             <fc:textField data-bind="value:geometry().decimalLongitude" outerClass="span4" label="Longitude"/>
             <fc:textField data-bind="value:geometry().bearing" outerClass="span4" label="Bearing (degrees)"/>
         </div>
-        <div class="row-fluid controls-row">
+        <div class="row-fluid controls-row" style="display:none;">
             <fc:textField data-bind="value:geometry().uncertainty, enable: hasCoordinate()" outerClass="span4" label="Uncertainty"/>
             <fc:textField data-bind="value:geometry().precision, enable: hasCoordinate()" outerClass="span4" label="Precision"/>
             <fc:textField data-bind="value:geometry().datum, enable: hasCoordinate()" outerClass="span4" label="Datum" placeholder="e.g. WGS84"/>
@@ -229,11 +282,13 @@
         <select data-bind="options: layerObjects,
             optionsCaption:'Choose shape ...',
             optionsText:'name', value: layerObject, event: { change: updateSelectedPid }"></select>
-        <div class="row-fluid controls-row">
+        <div class="row-fluid controls-row" style="display:none;">
             <span class="label label-success">PID</span> <span data-bind="text:geometry().pid"></span>
-            <span class="label label-success">Name</span> <span data-bind="text:geometry().name"></span>
         </div>
         <div class="row-fluid controls-row">
+            <span class="label label-success">Name</span> <span data-bind="text:geometry().name"></span>
+        </div>
+        <div class="row-fluid controls-row" style="display:none;">
             <span class="label label-success">LayerID</span> <span data-bind="text:geometry().fid"></span>
         </div>
         <div class="row-fluid controls-row">
@@ -243,25 +298,18 @@
             <span class="label label-success">Area (km&sup2;)</span> <span data-bind="text:geometry().area"></span>
         </div>
     </div>
-    %{--<div class="smallMap span8" style="width:500px;height:300px;"></div>--}%
 </div>
 </script>
 
 <script type="text/html" id="upload">
     <h3> Not implemented - waiting on web services...</h3>
-    %{--<g:uploadForm action="upload">--}%
-        %{--<input type="file" name="myFile" value="Choose Shape file"/>--}%
-        %{--<input type="submit" class="btn" />--}%
-    %{--</g:uploadForm>--}%
 </script>
 
 <script type="text/html" id="drawn">
 <div id="drawnLocationDiv" class="drawLocationDiv row-fluid">
     <div class="span12">
 
-        <button class="btn" style="margin-bottom:20px;" data-bind="click: drawSiteClick">Draw the location <i class="icon-circle-arrow-right"></i></button>
-        <div data-bind="visible: geometry().type !==undefined">
-        <div class="row-fluid controls-row">
+        <div class="row-fluid controls-row" style="display:none;">
             <span class="label label-success">Type</span> <span data-bind="text:geometry().type"></span>
         </div>
         <div class="row-fluid controls-row">
@@ -290,6 +338,7 @@
         <div style="display:none;" class="row-fluid controls-row  propertyGroup">
             <span class="label">GeoJSON</span> <span data-bind="text:ko.toJSON(geometry())"></span>
         </div>
+
         <div class="row-fluid controls-row rectangleProperties propertyGroup">
             <span class="label label-success">Latitude (SW)</span> <span data-bind="text:geometry().minLat"></span>
             <span class="label label-success">Longitude (SW)</span> <span data-bind="text:geometry().minLon"></span>
@@ -298,14 +347,13 @@
             <span class="label label-success">Latitude (NE)</span> <span data-bind="text:geometry().maxLat"></span>
             <span class="label label-success">Longitude (NE)</span> <span data-bind="text:geometry().maxLon"></span>
         </div>
-        </div>
     </div>
     %{--<div class="smallMap span8" style="width:500px;height:300px;"></div>--}%
 </div>
 </script>
 
 <r:script>
-
+    var viewModel = null;
     // server side generated paths & properties
     var SERVER_CONF = {
         <g:if test="${project}">
@@ -350,8 +398,6 @@
         </g:else>
     };
 
-    var viewModel = null;
-
     // returns blank string if the property is undefined, else the value
     function orBlank(v) {
         return v === undefined ? '' : v;
@@ -381,6 +427,57 @@
         return text;
     }
 
+    function refreshGazInfo(){
+
+        if(viewModel.extent().geometry().centre == undefined){
+            return;
+        }
+
+        var lat = viewModel.extent().geometry().centre()[1];
+        var lng = viewModel.extent().geometry().centre()[0];
+
+        //state
+        $.ajax({
+            url: "http://spatial.ala.org.au/ws/intersect/cl22/"+lat+"/"+lng,
+            dataType: "jsonp",
+            async: false
+        })
+        .done(function(data) {
+          if(data.length > 0){
+              console.log('Setting state - ' + data[0].value);
+              viewModel.extent().geometry().state(data[0].value);
+          } else {
+            console.log('Unable to retrieve the state - ' + data);
+          }
+        });
+
+        //do the google geocode lookup
+        $.ajax({
+            url: "http://maps.googleapis.com/maps/api/geocode/json?latlng="+ lat + "," + lng + "&sensor=true",
+            async: false
+        })
+        .done(function(data) {
+            if(data.results.length > 0){
+              console.log('Setting locality - ' + data.results[0].formatted_address);
+              viewModel.extent().geometry().locality(data.results[0].formatted_address);
+            }
+        });
+
+        //
+        $.ajax({
+            url:"http://spatial.ala.org.au/ws/intersect/cl959/"+lat+"/"+lng,
+            dataType:"jsonp",
+            async:false
+        })
+        .done(function(data) {
+          if(data.length > 0){
+              console.log('Setting lga - ' + data[0].value);
+              viewModel.extent().geometry().lga(data[0].value);
+          }
+        });
+    }
+
+
     $(function(){
 
         $('#validation-container').validationEngine('attach', {scroll: false});
@@ -398,54 +495,37 @@
         var DrawnLocation = function (l) {
             var self = this;
             self.source = ko.observable('drawn');
-            console.log("Setting geometry - " + JSON.stringify(l));
-            self.geometry = ko.observable(l);
-            console.log("Set geometry - " + JSON.stringify(self.geometry()));
-            //function for starting draw tool
-            self.drawSiteClick = function(){
-                //which element has been selected?
-                amplify.store("savedViewData", {
-                    id: viewModel.id(),
-                    name: viewModel.name(),
-                    externalId : viewModel.externalId(),
-                    type : viewModel.type(),
-                    area : viewModel.area(),
-                    description : viewModel.description(),
-                    notes : viewModel.notes(),
-                    projects : viewModel.projects()
-                });
-
-                //create a pass through object to initialise state
-                if(self.geometry !== undefined && self.geometry() !== undefined){
-                    amplify.store("drawnShape", self.geometry());
-                } else {
-                    amplify.store("drawnShape", null);
-                }
-                document.location.href = SERVER_CONF.drawSiteUrl + '?returnTo=' + encodeURIComponent(SERVER_CONF.pageUrl);
-            }
+            self.geometry = ko.observable({
+                type: ko.observable(exists(l,'type')),
+                centre: ko.observable(exists(l,'centre')),
+                radius: ko.observable(exists(l,'radius')),
+                lga: ko.observable(exists(l,'lga')),
+                state: ko.observable(exists(l,'state')),
+                locality: ko.observable(exists(l,'locality')),
+                areaKmSq: ko.observable(exists(l,'areaKmSq')),
+                coordinates: ko.observable(exists(l,'coordinates'))
+            });
+            self.updateGeom = function(l){
+                self.geometry().type(exists(l,'type')),
+                self.geometry().centre(exists(l,'centre')),
+                self.geometry().lga(exists(l,'lga')),
+                self.geometry().radius(exists(l,'radius')),
+                self.geometry().state(exists(l,'state')),
+                self.geometry().locality(exists(l,'locality')),
+                self.geometry().areaKmSq(exists(l,'areaKmSq')),
+                self.geometry().coordinates(exists(l,'coordinates'))
+            };
             self.renderMap = function(elements){
-                console.log("######## Rendering map for DrawnLocation ......" + $(elements[1]).attr('id'));
+                console.log('Rendering map called...');
                 var $drawLocationDiv = $(elements[1]);
                 if(self.geometry() != null && self.geometry().centre !== undefined){
-                    console.log("The shape type = " + self.geometry().type);
                     $drawLocationDiv.find('.propertyGroup').css('display','none');
                     //clone the object to avoid side affects with mapping
-                    var geometryToRender = jQuery.extend(true, {}, self.geometry());
-                    var mapOptions = {
-                        zoomToBounds:true,
-                        zoomLimit:16,
-                        highlightOnHover:true,
-                        features:[geometryToRender]
-                    };
                     switch (self.geometry().type) {
                         case 'Polygon': $drawLocationDiv.find('.polygonProperties').css('display','block'); break;
                         case 'Circle': $drawLocationDiv.find('.circleProperties').css('display','block'); break;
                         case 'Rectangle': $drawLocationDiv.find('.rectangleProperties').css('display','block'); break;
                     }
-
-                    console.log("######## Before init_map_with_features -  geometry - " + JSON.stringify(self.geometry()));
-                    init_map_with_features({mapContainer: 'mapForExtent'}, mapOptions);
-                    console.log("######## After init_map_with_features -  geometry - " + JSON.stringify(self.geometry()));
                 }
             }
         };
@@ -466,20 +546,21 @@
             this.layerObject = ko.observable();
             this.layerObjects = ko.observable([]);
             this.layers = [{id:'cl22',name:'Australian states'},{id:'cl23', name:'LGA'},{id:'cl21', name:'IBRA'}];
+            self.updateGeom = function(l){
+                %{--self.geometry().type(exists(l,'type')),--}%
+                %{--self.geometry().centre(exists(l,'centre')),--}%
+                %{--self.geometry().lga(exists(l,'lga')),--}%
+                %{--self.geometry().state(exists(l,'state')),--}%
+                %{--self.geometry().locality(exists(l,'locality')),--}%
+                %{--self.geometry().areaKmSq(exists(l,'areaKmSq')),--}%
+                %{--self.geometry().coordinates(exists(l,'coordinates'))--}%
+            };
             self.renderMap = function(){
                 console.log("Render map on PidLocation called..." + self.geometry().pid())
                 if(self.geometry().pid() != null && self.geometry().pid() != '' ){
                     console.log("Rendering PID: " + self.geometry().pid());
-                    var mapOptions = {
-                        zoomToBounds:true,
-                        zoomLimit:16,
-                        highlightOnHover:true,
-                        features:[{
-                            type:'pid',
-                            polygonUrl:'${createLink(controller:'proxy',action:'geojsonFromPid')}?pid=' + self.geometry().pid()
-                        }]
-                    };
-                    init_map_with_features({mapContainer: 'mapForExtent'}, mapOptions);
+                    clearObjectsAndShapes();
+                    showObjectOnMap(self.geometry().pid());
                 }
             }
             self.updateSelectedPid = function(elements){
@@ -540,10 +621,11 @@
                datum: ko.observable(exists(l,'datum'))
             });
             self.hasCoordinate = function () {
-                return self.geometry().decimalLatitude() !== undefined
+                var hasCoordinate = self.geometry().decimalLatitude() !== undefined
                     && self.geometry().decimalLatitude() !== ''
                     && self.geometry().decimalLongitude() !== undefined
                     && self.geometry().decimalLongitude() !== '';
+                return hasCoordinate;
             }
             self.toJSON = function(){
                 var js = ko.toJS(self);
@@ -562,21 +644,32 @@
             var self = this;
             self.name = ko.observable(exists(l,'name'));
             self.type = ko.observable(exists(l,'type'));
+
+            var storedGeom;
+            if(l !== undefined){
+                storedGeom = l.geometry;
+            }
+
             self.description = ko.observable(exists(l,'description'));
             self.geometry = ko.observable({
                type: "Point",
-               decimalLatitude: ko.observable(exists(l,'decimalLatitude')),
-               decimalLongitude: ko.observable(exists(l,'decimalLongitude')),
-               uncertainty: ko.observable(exists(l,'uncertainty')),
-               precision: ko.observable(exists(l,'precision')),
-               datum: ko.observable(exists(l,'datum')),
-               bearing: ko.observable(exists(l,'bearing'))
+               decimalLatitude: ko.observable(exists(storedGeom,'decimalLatitude')),
+               decimalLongitude: ko.observable(exists(storedGeom,'decimalLongitude')),
+               uncertainty: ko.observable(exists(storedGeom,'uncertainty')),
+               precision: ko.observable(exists(storedGeom,'precision')),
+               datum: ko.observable(exists(storedGeom,'datum')),
+               bearing: ko.observable(exists(storedGeom,'bearing'))
             });
             self.hasCoordinate = function () {
-                return self.geometry().decimalLatitude() !== undefined
+                var hasCoordinate = self.geometry().decimalLatitude() !== undefined
                     && self.geometry().decimalLatitude() !== ''
                     && self.geometry().decimalLongitude() !== undefined
                     && self.geometry().decimalLongitude() !== '';
+                if(hasCoordinate){
+                    //removeMarkers();
+                   viewModel.renderPOIs();
+                }
+                return hasCoordinate;
             }
             self.toJSON = function(){
                 var js = ko.toJS(self);
@@ -603,11 +696,20 @@
             self.projects = ko.observableArray(siteData.projects);
             self.extent = ko.observable(new EmptyLocation());
             self.poi = ko.observableArray([]);
+            self.renderPOIs = function(){
+                console.log('Rendering the POIs now');
+                removeMarkers();
+                for(var i=0; i<self.poi().length; i++){
+                    console.log('Rendering the POI: ' + self.poi()[i].geometry().decimalLatitude() +':'+ self.poi()[i].geometry().decimalLongitude());
+                    addMarker(self.poi()[i].geometry().decimalLatitude(), self.poi()[i].geometry().decimalLongitude(), self.poi()[i].name())
+                }
+            }
             self.addPOI = function(){
                 self.poi.push(new POI());
             }
             self.removePOI = function(){
                 self.poi.remove(this);
+                self.renderPOIs();
             }
             self.saved = function(){
                 return self.id() != '';
@@ -635,6 +737,9 @@
                     self.extent(new EmptyLocation());
                 }
             };
+            self.setDrawnExtent = function(geometry){
+                self.extent(new DrawnLocation(geometry));
+            }
             self.updateExtent = function(event){
                 console.log('Updating the extent: ' + self.extent().source());
                 switch (self.extent().source()) {
@@ -648,15 +753,8 @@
                     case 'pid':    self.extent(new PidLocation({})); break;
                     case 'upload': self.extent(new UploadLocation({})); break;
                     case 'drawn':
-                        if(!SERVER_CONF.checkForState){
-                            if(SERVER_CONF.siteData !=null && SERVER_CONF.siteData.extent != null) {
-                               self.extent(new DrawnLocation(SERVER_CONF.siteData.extent.geometry));
-                            } else {
-                                self.extent(new DrawnLocation({}));
-                            }
-                        } else {
-                            self.extent(new DrawnLocation(amplify.store("drawnShape")))
-                        }
+                        //breaks the edits....
+                        self.extent(new DrawnLocation({}));
                         break;
                     default: self.extent(new EmptyLocation());
                 }
@@ -722,25 +820,298 @@
         };
 
         //retrieve serialised model
-        var savedViewData = amplify.store("savedViewData");
-        if(SERVER_CONF.checkForState && savedViewData !== undefined){
-            viewModel = new SiteViewModel(savedViewData);
-        } else {
-            viewModel = new SiteViewModel(savedSiteData);
-        }
-
+        viewModel = new SiteViewModel(savedSiteData);
         viewModel.loadExtent();
         viewModel.loadPOI();
-
         ko.applyBindings(viewModel);
 
-        //any passed back from drawing tool
-        if(SERVER_CONF.checkForState){
-            var drawnShape = amplify.store("drawnShape");
-            console.log("[INIT - check state] Retrieving drawnShape in GEOJSON")
-            viewModel.extent(new DrawnLocation(drawnShape));
+        init_map({
+            spatialService: 'http://spatial.ala.org.au/layers-service',
+            spatialWms: 'http://spatial.ala.org.au/geoserver/ALA/wms?',
+            spatialCache: 'http://spatial.ala.org.au/geoserver/gwc/service/wms?',
+            mapContainer: 'mapForExtent'
+        });
+
+        //render POIs
+        viewModel.renderPOIs();
+
+        // this sets the function to call when the user draws a shape
+        setCurrentShapeCallback(shapeDrawn);
+
+        //render the shape that is store if it exists
+        if(SERVER_CONF.siteData != null && SERVER_CONF.siteData.extent != undefined && SERVER_CONF.siteData.extent.geometry != null){
+            renderSavedShape(SERVER_CONF.siteData.extent.geometry );
         }
     });
+
+    var DRAW_TOOL = {
+        drawnShape : null
+    }
+
+    function renderSavedShape(currentDrawnShape){
+        //retrieve the current shape if exists
+        %{--var currentDrawnShape = viewModel.extent().geometry();--}%
+        %{--console.log('Retrieved shape: ' + currentDrawnShape);--}%
+        console.log(currentDrawnShape);
+
+        if(currentDrawnShape !== undefined){
+            if(currentDrawnShape.type == 'Polygon'){
+                console.log('Redrawing polygon');
+                showOnMap('polygon', geoJsonToPath(currentDrawnShape));
+                zoomToShapeBounds();
+            } else if(currentDrawnShape.type == 'Circle'){
+                console.log('Redrawing circle');
+                showOnMap('circle', currentDrawnShape.coordinates[1],currentDrawnShape.coordinates[0],currentDrawnShape.radius);
+                //zoomToShapeBounds();
+            } else if(currentDrawnShape.type == 'Rectangle'){
+                console.log('Redrawing rectangle');
+                var shapeBounds = new google.maps.LatLngBounds(
+                    new google.maps.LatLng(currentDrawnShape.minLat,currentDrawnShape.minLon),
+                    new google.maps.LatLng(currentDrawnShape.maxLat,currentDrawnShape.maxLon)
+                );
+                //render on the map
+                showOnMap('rectangle', shapeBounds);
+                zoomToShapeBounds();
+            }
+        }
+    }
+
+    function setPageValues(){}
+
+    function clearSessionData(){}
+
+    function clearData() {
+        $('#drawnArea > div').css('display','none');
+        $('#drawnArea input').val("");
+        $('#wkt').val("");
+        $('#circleLat').val("");
+        $('#circleLon').val("");
+        $('#circleRadius').val("");
+    }
+
+    function shapeDrawn(source, type, shape) {
+        console.log("[shapeDrawn] shapeDrawn called: " + type);
+        if (source === 'clear') {
+            DRAW_TOOL.drawnShape = null;
+            clearData();
+            clearSessionData('drawnShapes');
+            $('#useLocation').addClass("disabled");
+        } else {
+            $('#useLocation').removeClass("disabled");
+            switch (type) {
+                case google.maps.drawing.OverlayType.CIRCLE:
+                    /*// don't show or set circle props if source is a locality
+                     if (source === "user-drawn") {*/
+                    var center = shape.getCenter();
+                    // set coord display
+                    $('#circLat').val(round(center.lat()));
+                    $('#circLon').val(round(center.lng()));
+                    $('#circRadius').val(round(shape.getRadius()/1000,2) + "km");
+                    $('#circleArea').css('display','block');
+                    // set hidden inputs
+                    $('#circleLat').val(center.lat());
+                    $('#circleLon').val(center.lng());
+                    $('#circleRadius').val(shape.getRadius());
+                    console.log("circle lat: " + center.lat());
+                    console.log("circle lng: " + center.lng());
+                    console.log("circle radius: " + shape.getRadius());
+
+                    var calcAreaKm = ((3.14 * shape.getRadius() * shape.getRadius())/1000)/1000;
+                    $('#calculatedArea').html(calcAreaKm);
+                    //calculate the area
+                    DRAW_TOOL.drawnShape = {
+                        type:'Circle',
+                        userDrawn: 'Circle',
+                        coordinates:[center.lng(), center.lat()],
+                        centre: [center.lng(), center.lat()],
+                        radius: shape.getRadius(),
+                        areaKmSq:calcAreaKm
+                    };
+                    break;
+                case google.maps.drawing.OverlayType.RECTANGLE:
+                    var bounds = shape.getBounds(),
+                            sw = bounds.getSouthWest(),
+                            ne = bounds.getNorthEast();
+                    // set coord display
+                    $('#swLat').val(round(sw.lat()));
+                    $('#swLon').val(round(sw.lng()));
+                    $('#neLat').val(round(ne.lat()));
+                    $('#neLon').val(round(ne.lng()));
+                    $('#rectangleArea').css('display','block');
+
+                    //calculate the area
+                    var mvcArray = new google.maps.MVCArray();
+                    mvcArray.push(new google.maps.LatLng(sw.lat(), sw.lng()));
+                    mvcArray.push(new google.maps.LatLng(ne.lat(), sw.lng()));
+                    mvcArray.push(new google.maps.LatLng(ne.lat(), ne.lng()));
+                    mvcArray.push(new google.maps.LatLng(sw.lat(), ne.lng()));
+                    mvcArray.push(new google.maps.LatLng(sw.lat(), sw.lng()));
+
+                    var calculatedArea = google.maps.geometry.spherical.computeArea(mvcArray);
+                    var calcAreaKm = ((calculatedArea)/1000)/1000;
+                    $('#calculatedArea').html(calcAreaKm);
+
+                    var centreY = (sw.lat() + ne.lat())/2;
+                    var centreX =  (sw.lng() + ne.lng())/2;
+
+                    DRAW_TOOL.drawnShape = {
+                        type: 'Polygon',
+                        userDrawn: 'Rectangle',
+                        coordinates:[[
+                            [sw.lng(),sw.lat()],
+                            [sw.lng(),ne.lat()],
+                            [ne.lng(),ne.lat()],
+                            [ne.lng(),sw.lat()],
+                            [ne.lng(),sw.lat()]
+                        ]],
+                        bbox:[sw.lat(),sw.lng(),ne.lat(),ne.lng()],
+                        areaKmSq:calcAreaKm,
+                        centre: [centreX,centreY]
+                    }
+                    break;
+                case google.maps.drawing.OverlayType.POLYGON:
+                    /*
+                     * Note that the path received from the drawing manager does not end by repeating the starting
+                     * point (number coords = number vertices). However the path derived from a WKT does repeat
+                     * (num coords = num vertices + 1). So we need to check whether the last coord is the same as the
+                     * first and if so ignore it.
+                     */
+                    var path,
+                            $lat = null,
+                            $ul = $('#polygonArea ul'),
+                            realLength = 0,
+                            isRect;
+
+                    if(shape.getPath()){
+                        path = shape.getPath();
+                    } else {
+                        path = shape;
+                    }
+
+                    isRect = representsRectangle(path);
+
+                    // set coord display
+                    if (isRect) {
+                        $('#swLat').val(round(path.getAt(0).lat()));
+                        $('#swLon').val(round(path.getAt(0).lng()));
+                        $('#neLat').val(round(path.getAt(2).lat()));
+                        $('#neLon').val(round(path.getAt(2).lng()));
+                        $('#rectangleArea').css('display','block');
+                    } else {
+                        $ul.find('li').remove();
+                        realLength = path.getLength();
+                        if (path.getAt(0).equals(path.getAt(path.length - 1))) {
+                            realLength = realLength - 1;
+                        }
+                        for (i = 0; i < realLength; i++) {
+                            // check whether widget exists
+                            $lat = $('#lat' + i);
+                            if ($lat.length === 0) {
+                                // doesn't so create it
+                                $lat = $('<li><input type="text" id="lat' + i +
+                                        '"/><input type="text" id="lon' + i + '"/></li>')
+                                        .appendTo($ul);
+                            }
+                            $('#lat' + i).val(round(path.getAt(i).lat()));
+                            $('#lon' + i).val(round(path.getAt(i).lng()));
+                        }
+                        $('#polygonArea').css('display','block');
+                    }
+
+                    //calculate the area
+                    var calculatedAreaInSqM = google.maps.geometry.spherical.computeArea(path);
+                    var calcAreaKm = ((calculatedAreaInSqM)/1000)/1000;
+
+                    $('#calculatedArea').html(calcAreaKm);
+
+                    //get the centre point of a polygon ??
+                    var minLat=90,
+                            minLng=180,
+                            maxLat=-90,
+                            maxLng=-180;
+
+                    $.each(path, function(i){
+                      //console.log(path.getAt(i));
+                      var coord = path.getAt(i);
+                      if(coord.lat()>maxLat) maxLat = coord.lat();
+                      if(coord.lat()<minLat) minLat = coord.lat();
+                      if(coord.lng()>maxLng) maxLng = coord.lng();
+                      if(coord.lng()<minLng) minLng = coord.lng();
+                    });
+                    var centreX = minLng + ((maxLng - minLng) / 2);
+                    var centreY = minLat + ((maxLat - minLat) / 2);
+
+                    DRAW_TOOL.drawnShape = {
+                        type:'Polygon',
+                        userDrawn: 'Polygon',
+                        coordinates: polygonToGeoJson(path),
+                        areaKmSq: calcAreaKm,
+                        centre: [centreX,centreY]
+                    };
+                    break;
+            }
+        }
+        //set the drawn shape
+        if(DRAW_TOOL.drawnShape != null){
+            // alert('setting drawn shape...');
+            amplify.store("drawnShape", DRAW_TOOL.drawnShape);
+            viewModel.extent().updateGeom(DRAW_TOOL.drawnShape);
+            refreshGazInfo();
+        }
+    }
+
+    function geoJsonToPath(geojson){
+        var coords = geojson.coordinates[0];
+        return coordArrayToPath(geojson.coordinates[0]);
+    }
+
+    function coordArrayToPath(coords){
+        var path = [];
+        for(var i = 0; i<coords.length; i++){
+            console.log(coords[i][1]+" : "+ coords[i][0]);
+            path.push(new google.maps.LatLng(coords[i][1],coords[i][0]));
+        }
+        return path;
+    }
+
+    /**
+     * Returns a GeoJson coordinate array for the polygon
+     */
+    function polygonToGeoJson(path){
+        var firstPoint = path.getAt(0),
+                points = [];
+        path.forEach(function (obj, i) {
+            points.push([obj.lng(),obj.lat()]);
+        });
+        // a polygon array from the drawingManager will not have a closing point
+        // but one that has been drawn from a wkt will have - so only add closing
+        // point if the first and last don't match
+        if (!firstPoint.equals(path.getAt(path.length -1))) {
+            // add first points at end
+            points.push([firstPoint.lng(),firstPoint.lat()]);
+        }
+        var coordinates =  [points];
+        console.log(coordinates);
+        return coordinates;
+    }
+
+    function round(number, places) {
+        var p = places || 4;
+        return places === 0 ? number.toFixed() : number.toFixed(p);
+    }
+
+    function representsRectangle(path) {
+        // must have 5 points
+        if (path.getLength() !== 5) { return false; }
+        var arr = path.getArray();
+        if ($.isArray(arr[0])) { return false; }  // must be multipolygon (array of arrays)
+        if (arr[0].lng() != arr[1].lng()) { return false; }
+        if (arr[2].lng() != arr[3].lng()) { return false; }
+        if (arr[0].lat() != arr[3].lat()) { return false; }
+        if (arr[1].lat() != arr[2].lat()) { return false; }
+        return true
+    }
 </r:script>
+
 </body>
 </html>
