@@ -25,7 +25,7 @@
   <r:require modules="drawmap"/>
 </head>
 <body>
-    <div class="container-fluid">
+    <div class="container-fluid validationEngineContainer" id="validation-container">
         <ul class="breadcrumb">
             <li><g:link controller="home">Home</g:link> <span class="divider">/</span></li>
             <g:if test="${project}">
@@ -41,9 +41,7 @@
                 <li class="active">Edit</li>
             </g:else>
         </ul>
-    </div>
 
-    <div class="container-fluid validationEngineContainer" id="validation-container">
         <bs:form action="update" inline="true">
 
             <div class="row-fluid">
@@ -549,7 +547,7 @@
             this.chosenLayer = ko.observable();
             this.layerObject = ko.observable();
             this.layerObjects = ko.observable([]);
-            this.layers = [{id:'cl22',name:'Australian states'},{id:'cl23', name:'LGA'},{id:'cl21', name:'IBRA', id:'cl916', name:'NRM'}];
+            this.layers = [{id:'cl22',name:'Australian states'},{id:'cl23', name:'LGA'},{id:'cl21', name:'IBRA'}];
             self.updateGeom = function(l){
                 %{--self.geometry().type(exists(l,'type')),--}%
                 %{--self.geometry().centre(exists(l,'centre')),--}%
