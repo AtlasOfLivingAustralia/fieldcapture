@@ -2,7 +2,7 @@
 <!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/html">
 <head>
-  <meta name="layout" content="main"/>
+  <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
   <title>Field Capture</title>
   <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&language=en"></script>
   <r:script disposition="head">
@@ -20,9 +20,9 @@
 <body>
     <div id="wrapper" class="container-fluid">
     <div class="row-fluid large-space-after">
-        <div class="span12" id="header">
+        <div class="span12" id="heading">
             <h1 class="pull-left">Field Capture</h1>
-            <g:form controller="search" method="GET" class="form-horizontal pull-right" style="padding-top:5px;">
+            <g:form controller="search" method="GET" class="hide form-horizontal pull-right" style="padding-top:5px;">
                 <div class="input-append">
                     <g:textField class="input-large" name="query"/>
                     <button class="btn" type="submit">Search</button>
@@ -38,13 +38,6 @@
                 </div>
             </div>
         </g:if>
-    </div>
-
-    <div class="hide row-fluid large-space-after large-space-before button-set">
-        <g:link controller="project" action="create" class="btn btn-large"><r:img dir="images/icons" file="project.png"/> Add a project</g:link>
-        <g:link controller="site" action="create" class="btn btn-large"><r:img dir="images/icons" file="site.png"/> Add a site</g:link>
-        <g:link controller="activity" action="create" class="btn btn-large"><r:img dir="images/icons" file="activity.png"/> Add an activity</g:link>
-        <g:link controller="assessment" action="create" class="btn btn-large"><r:img dir="images/icons" file="assessment.png"/> Add an assessment</g:link>
     </div>
 
     <div class="row-fluid ">
@@ -64,7 +57,7 @@
                             title="clear"><i class="icon-remove"></i></button>
                 </div>
             </div>
-            <div class="scroll-list" id="projectList">
+            <div class="scroll-list clearfix" id="projectList">
                 <table class="accordion" id="accordion2">
                     <thead class="hide"><tr><th>Project</th></tr></thead>
                     <tbody>

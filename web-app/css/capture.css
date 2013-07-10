@@ -2,35 +2,6 @@
    of the visible page. This only affects pages with short content.
 */
 
-html {
-    height: 100%; /*FIXED FOOTER*/
-}
-
-body {
-    padding-top: 60px;
-    padding-bottom: 90px;
-    height: 100%; /*FIXED FOOTER*/
-}
-
-#fixed-footer-wrapper {  /*FIXED FOOTER*/
-    min-height: 100%;
-    height: auto !important; /* for IE6 */
-    height: 100%;            /* for IE6 */
-    margin: 0 auto -497px;
-}
-
-footer, .push {
-    height: 497px; /*FIXED FOOTER*/
-}
-
-footer {
-    width: 100%;
-    background-color: #efefef;
-}
-
-footer img {
-    max-width: inherit;
-}
 
 #buttonBar .btn {
     margin-top: 0px;
@@ -80,11 +51,11 @@ footer img {
     padding-bottom: 15px;
 }
 
-#banner img {
-    float: right;
-    /*background: transparent url("../images/banner-250.png") no-repeat;
-    height: 200px;*/
-}
+/*#banner img {*/
+    /*float: right;*/
+    /*background: transparent url("../images/banner-250.png") no-repeat;*/
+    /*height: 200px;*/
+/*}*/
 
 #header h1 {
     /*margin: 0 0 0 20px;*/
@@ -95,9 +66,9 @@ footer img {
     margin-bottom: 2px;
 }
 
-#banner-image {
-    margin: 10px 20px 10px 0;
-}
+/*#banner-image {*/
+    /*margin: 10px 20px 10px 0;*/
+/*}*/
 
 .no-left-margin {
     margin-left: 0 !important;

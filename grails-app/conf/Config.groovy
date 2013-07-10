@@ -125,7 +125,7 @@ environments {
         grails.host = "http://devt.ala.org.au"
         serverName = "${grails.host}:${server.port}"
         grails.serverURL = serverName + "/fieldcapture"
-
+        layout.skin = "nrm"
         security.cas.appServerName = serverName
         security.cas.contextPath = grails.app.context
         ecodata.baseUrl = 'http://localhost:8080/ecodata/ws/'

@@ -10,6 +10,22 @@ modules = {
         resource url: 'js/bootbox.min.js'
     }
 
+    bootstrap {
+        // override declaration in ala-web-theme plugin
+        dependsOn 'app_bootstrap_responsive'
+    }
+
+    defaultSkin {
+        dependsOn 'application'
+        resource url: 'css/default.skin.css'
+    }
+
+    nrmSkin {
+        dependsOn 'application, app_bootstrap_responsive'
+        //resource url: 'http://www.nrm.gov.au/css/screen.css'
+        resource url: 'css/nrm/css/screen.css'//, linkOverride: 'http://www.nrm.gov.au/css/screen.css'
+    }
+
     gmap3 {
         resource url: 'js/gmap3.min.js'
     }
@@ -51,8 +67,8 @@ modules = {
     }
 
     app_bootstrap_responsive {
-        dependsOn 'bootstrap'
-        resource url: '/bootstrap/css/bootstrap-responsive.min.css'
+        dependsOn 'app_bootstrap'
+        resource url: '/bootstrap/css/bootstrap-responsive.min.css', attrs:[media:'screen']
     }
 
     amplify {
@@ -80,7 +96,7 @@ modules = {
 
     jQueryImageUpload {
         dependsOn 'jquery_ui'
-        resource url: 'bootstrap/css/bootstrap-responsive.min.css'
+        resource url: 'bootstrap/css/bootstrap-responsive.min.css', attrs:[media:'screen']
         resource url: 'bootstrap/css/bootstrap-image-gallery.min.css'
         resource url: 'bootstrap/css/bootstrap-ie6.min.css',
                 wrapper: { s -> "<!--[if lt IE 7]>$s<![endif]-->" }
