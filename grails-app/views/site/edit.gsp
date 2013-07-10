@@ -3,7 +3,7 @@
 <html>
 <head>
   <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&language=en"></script>
-  <meta name="layout" content="${grailsApplication.config.layout.skin?:'main"/>
+  <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
   <title> ${create ? 'New' : ('Edit | ' + site?.name)} | Sites | Field Capture</title>
   <style type="text/css">
     legend {
@@ -546,7 +546,7 @@
             this.chosenLayer = ko.observable();
             this.layerObject = ko.observable();
             this.layerObjects = ko.observable([]);
-            this.layers = [{id:'cl22',name:'Australian states'},{id:'cl23', name:'LGA'},{id:'cl21', name:'IBRA'}];
+            this.layers = [{id:'cl22',name:'Australian states'},{id:'cl23', name:'LGA'},{id:'cl21', name:'IBRA', id:'cl916', name:'NRM'}];
             self.updateGeom = function(l){
                 %{--self.geometry().type(exists(l,'type')),--}%
                 %{--self.geometry().centre(exists(l,'centre')),--}%
