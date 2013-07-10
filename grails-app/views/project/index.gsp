@@ -22,7 +22,7 @@
         sldPolgonDefaultUrl: "${grailsApplication.config.sld.polgon.default.url}",
         sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}"
         },
-        returnTo = "project/index/${project.projectId}";
+        returnTo = window.location.href;
 
     </r:script>
     <r:require modules="gmap3,mapWithFeatures,knockout,datepicker,amplify"/>
@@ -69,73 +69,8 @@
     <div class="tab-content">
         <!-- ACTIVITIES -->
         <div class="tab-pane active" id="activity">
-            <div class="row-fluid space-after">
-                <div class="pull-right">
-                    <button data-bind="click: $root.expandActivities, visible: activities().length > 0" type="button" class="btn">Expand all</button>
-                    <button data-bind="click: $root.collapseActivities, visible: activities().length > 0" type="button" class="btn">Collapse all</button>
-                    <button data-bind="click: $root.newActivity" type="button" class="btn">Add new activity</button>
-                </div>
-                <p data-bind="visible: activities().length == 0">
-                    This project current has not activities listed.
-                </p>
-                <table class="table table-condensed" id="activities">
-                    <thead>
-                    <tr data-bind="visible: activities().length > 0">
-                        <th></th>
-                        <th class="sort" data-bind="sortIcon:'',click:sortBy" data-column="type">Type</th>
-                        <th class="sort" data-bind="sortIcon:'',click:sortBy" data-column="startDate">From</th>
-                        <th class="sort" data-bind="sortIcon:'',click:sortBy" data-column="endDate">To</th>
-                        <th class="sort" data-bind="sortIcon:'',click:sortBy" data-column="siteId">Site</th>
-                        <th></th>
-                    </tr>
-                    </thead>
-                    <tbody data-bind="foreach:activities" id="activityList">
-                        <tr>
-                            <!-- first 2 td elements toggle the accordion -->
-                            <td data-bind="attr:{href:'#'+activityId}" data-toggle="collapse" class="accordion-toggle">
-                                <div><a><i class="icon-plus" title="expand"></i></a></div>
-                            </td>
-                            <td data-bind="attr:{href:'#'+activityId}" data-toggle="collapse" class="accordion-toggle">
-                                <span data-bind="text:type"></span>
-                            </td>
-                            <td><span data-bind="clickToPickDate:startDate"></span></td>
-                            <td><span data-bind="clickToPickDate:endDate"></span></td>
-                            <td><a data-bind="siteName:siteId,click:$root.openSite"></a></td>
-                            <td style="width:86px;">
-                                <span data-bind="visible:(endDate.hasChanged() || startDate.hasChanged())" class="btn-group">
-                                    <button data-bind="click:save" type="button" class="btn btn-mini btn-success">Save</button>
-                                    <button data-bind="click:revert" type="button" class="btn btn-mini btn-warning">Cancel</button>
-                                </span>
-                                <i data-bind="click:del, visible:!(endDate.hasChanged() || startDate.hasChanged())"
-                                   class="icon-remove pull-right" title="Delete activity"></i>
-                            </td>
-                        </tr>
-                        <tr class="hidden-row">
-                            <td></td>
-                            <td colspan="5">
-                                <div class="collapse" data-bind="attr: {id:activityId}">
-                                    <ul class="unstyled well well-small">
-                                        <!-- ko foreachModelOutput:metaModel.outputs -->
-                                        <li>
-                                            <div class="row-fluid">
-                                                <span class="span4" data-bind="text:name"></span>
-                                                <span class="span3" data-bind="text:score"></span>
-                                                <span class="span2 offset1">
-                                                    <a data-bind="attr: {href:editLink}">
-                                                        <span data-bind="text: outputId == '' ? 'Add data' : 'Edit data'"></span>
-                                                        <i data-bind="attr: {title: outputId == '' ? 'Add data' : 'Edit data'}" class="icon-edit"></i>
-                                                    </a>
-                                                </span>
-                                            </div>
-                                        </li>
-                                        <!-- /ko -->
-                                    </ul>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            <g:render template="/shared/activitiesTable"
+                      model="[activities:activities ?: [], sites:project.sites ?: [], showSites:true]"/>
         </div>
 
         <div class="tab-pane" id="site">
@@ -205,9 +140,9 @@
             <h4>KO model</h4>
             <pre data-bind="text:ko.toJSON($root,null,2)"></pre>
             <h4>Activities</h4>
-            <pre data-bind="text:ko.toJSON(activities,null,2)"></pre>
+            <pre>${activities}</pre>
             <h4>Sites</h4>
-            <pre>${json}</pre>
+            <pre>${project.sites}</pre>
             <h4>Project</h4>
             <pre>${project}</pre>
             <h4>Features</h4>
@@ -217,8 +152,7 @@
 </div>
     <r:script>
         $(window).load(function () {
-            var json = $.parseJSON('${json}'),
-                map;
+            var map;
             // setup 'read more' for long text
             $('.more').shorten({
                 moreText: 'read more',
@@ -237,55 +171,6 @@
                     });
                 }
             });
-            // todo: not used here but is handy so should go into the common custom ko bindings
-            ko.bindingHandlers.foreachprop = {
-                transformObject: function (obj) {
-                    var properties = [];
-                    for (var key in obj) {
-                        if (obj.hasOwnProperty(key)) {
-                            properties.push({ key: key, value: obj[key] });
-                        }
-                    }
-                    return properties;
-                },
-                init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
-                    var value = ko.utils.unwrapObservable(valueAccessor()),
-                        properties = ko.bindingHandlers.foreachprop.transformObject(value);
-                    ko.applyBindingsToNode(element, { foreach: properties });
-                    return { controlsDescendantBindings: true };
-                }
-            };
-
-            //
-            ko.bindingHandlers.sortIcon = {
-                update: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
-                    var $element = $(element),
-                        name = $element.data('column'),
-                        $icon = $element.find('i'),
-                        className = "icon-blank";
-                    if (viewModel.activitiesSortBy() === name) {
-                        className = viewModel.activitiesSortOrder() === 'desc' ? 'icon-chevron-down' : 'icon-chevron-up';
-                    }
-                    if ($icon.length === 0) {
-                        $icon = $("<i class='icon-blank'></i>").appendTo($element);
-                    }
-                    $icon.removeClass().addClass(className);
-                }
-            };
-
-            // uses siteId to look up site name from the list of sites
-            ko.bindingHandlers.siteName =  {
-                init: function(element, valueAccessor, allBindingsAccessor, model, bindingContext) {
-                    var siteId = ko.utils.unwrapObservable(valueAccessor()),
-                        siteName = bindingContext.$root.getSiteName(siteId);
-                    if (siteName === '') {
-                        // no site so remove the link and replace with plain text
-                        $(element).parent().empty().html('no site');
-                    } else {
-                        $(element).html(siteName);
-                    }
-                }
-            };
 
             var Site = function (site) {
                 var self = this;
@@ -300,90 +185,10 @@
                     }
                     self.address(address);
                 };
-                /*$.getJSON("${createLink(controller: 'site', action: 'locationLookup')}/" + site.siteId, function (data) {
-                    if (data.error) {
-                        //console.log(data.error);
-                    } else {
-                        self.state(' (' + initialiseState(data.state) + ')');
-                        self.nrm(' (' + data.nrm + ')');
-                    }
-                });*/
             };
 
-            function ViewModel(project, sites, activities, assessments) {
+            function ViewModel(project, sites, activities) {
                 var self = this;
-                this.loadActivities = function (activities) {
-                    var acts = ko.observableArray([]);
-                    $.each(activities, function (i, act) {
-                        var activity = {
-                            activityId: act.activityId,
-                            siteId: act.siteId,
-                            type: act.type,
-                            startDate: ko.observable(act.startDate).extend({simpleDate:false}),
-                            endDate: ko.observable(act.endDate).extend({simpleDate:false}),
-                            outputs: ko.observableArray([]),
-                            collector: act.collector,
-                            metaModel: act.model || {},
-                            revert: function () {
-                                this.startDate.date(this.startDate.originalValue);
-                                this.endDate.date(this.endDate.originalValue);
-                            },
-                            save: function () {
-                                var act = {activityId: this.activityId};
-                                if (this.startDate.hasChanged()) {
-                                    act.startDate = this.startDate();
-                                }
-                                if (this.endDate.hasChanged()) {
-                                    act.endDate = this.endDate();
-                                }
-                                $.ajax({
-                                    url: fcConfig.activityUpdateUrl + "/" + this.activityId,
-                                    type: 'POST',
-                                    data: ko.toJSON(act),
-                                    contentType: 'application/json',
-                                    success: function (data) {
-                                        if (data.error) {
-                                            alert(data.detail + ' \n' + data.error);
-                                        } else {
-                                            document.location.href = "${createLink(controller:'project', action:'index', id:project.projectId)}";
-                                        }
-                                    },
-                                    error: function (data) {
-                                        var status = data.status;
-                                        alert('An unhandled error occurred: ' + data.status);
-                                    }
-                                });
-                            },
-                            del: function () {
-                                var self = this;
-                                // confirm first
-                                bootbox.confirm("Delete this activity? Are you sure?", function(result) {
-                                    if (result) {
-                                        $.getJSON(fcConfig.activityDeleteUrl + '/' + self.activityId,
-                                            function (data) {
-                                                if (data.code < 400) {
-                                                    document.location.href = "${createLink(controller:'project', action:'index', id:project.projectId)}";
-                                                } else {
-                                                    alert("Failed to delete activity - error " + data.code);
-                                                }
-                                            });
-                                    }
-                                });
-                            }
-                        };
-                        $.each(act.outputs, function (j, out) {
-                            activity.outputs.push({
-                                outputId: out.outputId,
-                                name: out.name,
-                                collector: out.collector,
-                                assessmentDate: out.assessmentDate,
-                                scores: out.scores
-                            });
-                        });
-                        acts.push(activity);
-                    });
-                    return acts;
-                };
                 self.name = ko.observable(project.name);
                 self.description = ko.observable(project.description);
                 self.externalId = ko.observable(project.externalId);
@@ -393,32 +198,6 @@
                 self.plannedEndDate = ko.observable(project.plannedEndDate).extend({simpleDate: false});
                 self.organisation = ko.observable(project.organisation);
                 self.mapLoaded = ko.observable(false);
-                self.activities = self.loadActivities(activities);
-                self.activitiesSortBy = ko.observable("");
-                self.activitiesSortOrder = ko.observable("");
-                self.sortActivities = function () {
-                    var field = self.activitiesSortBy(),
-                        order = self.activitiesSortOrder();
-                    self.activities.sort(function (left, right) {
-                        var l = ko.utils.unwrapObservable(left[field]),
-                            r = ko.utils.unwrapObservable(right[field]);
-                        if (field === 'siteId') {
-                            l = self.getSiteName(l);
-                            r = self.getSiteName(r);
-                        }
-                        return l == r ? 0 : (l < r ? -1 : 1);
-                    });
-                    if (order === 'desc') {
-                        self.activities.reverse();
-                    }
-                };
-                self.sortBy = function (data, event) {
-                    var element = event.currentTarget;
-                    state = $(element).find('i').hasClass('icon-chevron-up');
-                    self.activitiesSortOrder(state ? 'desc' : 'asc');
-                    self.activitiesSortBy($(element).data('column'));
-                    self.sortActivities();
-                };
                 self.sites = $.map(sites, function (obj,i) {return new Site(obj)});
                 self.sitesFilter = ko.observable("");
                 self.isSitesFiltered = ko.observable(false);
@@ -495,12 +274,6 @@
                         }
                     });
                 };
-                this.openSite = function () {
-                    var site = ko.toJS(this);
-                    if (site.siteId !== '') {
-                        document.location.href = fcConfig.siteViewUrl + '/' + site.siteId;
-                    }
-                };
                 this.highlight = function () {
                     map.highlightFeatureById(this.name());
                 };
@@ -516,10 +289,6 @@
                 this.addExistingSite = function () {
                     document.location.href = fcConfig.siteSelectUrl;
                 };
-                self.newActivity = function () {
-                    document.location.href = fcConfig.activityCreateUrl +
-                    "?projectId=${project.projectId}&returnTo=${createLink(controller:'project', action:'index', id:project.projectId)}";
-                };
                 self.notImplemented = function () {
                     alert("Not implemented yet.")
                 };
@@ -530,19 +299,10 @@
                         }
                     });
                 };
-                self.expandActivities = function () {
-                    $('#activityList div.collapse').collapse('show');
-                };
-                self.collapseActivities = function () {
-                    $('#activityList div.collapse').collapse('hide');
-                }
             }
 
-            var viewModel = new ViewModel(${project},json,${activities ?: []},${assessments ?: []});
-
-            ko. applyBindings(viewModel);
-
-            readState();
+            var viewModel = new ViewModel(${project},${project.sites},${activities ?: []});
+            ko.applyBindings(viewModel);
 
             // retain tab state for future re-visits
             $('a[data-toggle="tab"]').on('shown', function (e) {

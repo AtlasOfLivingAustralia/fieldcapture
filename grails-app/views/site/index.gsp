@@ -122,57 +122,8 @@
         <div class="row-fluid">
             <!-- ACTIVITIES -->
             <div class="tab-pane active" id="activity">
-                <div class="row-fluid">
-                    <div class="pull-right">
-                        <button data-bind="click: $root.expandActivities, visible: activities().length > 0" type="button" class="btn">Expand all</button>
-                        <button data-bind="click: $root.collapseActivities, visible: activities().length > 0" type="button" class="btn">Collapse all</button>
-                        <button data-bind="click: $root.newActivity" type="button" class="btn">Add new activity</button>
-                    </div>
-                </div>
-                <div class="row-fluid">
-                    <table class="table table-condensed" id="activities">
-                        <thead>
-                        <tr><th></th><th>Type</th><th>From</th><th>To</th><th>Project</th></tr>
-                        </thead>
-                        <tbody data-bind="foreach:activities" id="activityList">
-                        <tr data-bind="attr:{href:'#'+activityId}" data-toggle="collapse" class="accordion-toggle">
-                            <td>
-                                <div>
-                                    <a><i class="icon-plus" title="expand"></i></a>
-                                </div>
-                            </td>
-                            <td><span data-bind="text:type"></span></td>
-                            <td><span data-bind="text:startDate.formattedDate"></span></td>
-                            <td><span data-bind="text:endDate.formattedDate"></span></td>
-                            <td><span data-bind="projectName:$data"></span></td>
-                        </tr>
-                        <tr class="hidden-row">
-                            <td></td>
-                            <td colspan="5">
-                                <div class="collapse" data-bind="attr: {id:activityId}">
-                                    <ul class="unstyled well well-small">
-                                        <!-- ko foreachModelOutput:metaModel.outputs -->
-                                        <li>
-                                            <div class="row-fluid">
-                                                <span class="span4" data-bind="text:name"></span>
-                                                <span class="span3" data-bind="text:score"></span>
-                                                <span class="span1 offset1">
-                                                    <a data-bind="attr: {href:editLink}">
-                                                        <i data-bind="attr: {title: outputId == '' ? 'Add data' : 'Edit data'}" class="icon-edit"></i>
-                                                    </a>
-                                                </span>
-                                            </div>
-                                        </li>
-                                        <!-- /ko -->
-                                        <li><button type="button" class="btn btn-link" style="padding:0" data-bind="click:edit">
-                                            Edit activity</button></li>
-                                    </ul>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <g:render template="/shared/activitiesTable"
+                          model="[activities:site.activities ?: [], sites:[], showSites:false]"/>
             </div>
         </div>
     </g:if>
