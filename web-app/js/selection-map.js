@@ -285,6 +285,7 @@ map = {
     }
 };
 
+
 //Define custom WMS tiled layer
 var PIDLayer = function(pid){
     return new google.maps.ImageMapType({
@@ -601,11 +602,16 @@ function removeMarkers(){
     markersArray = [];
 }
 
-function clearObjectsAndShapes(){
+function clearObjects(){
     //clear objects
-    if(map.gmap.overlayMapTypes.length>0){
+    if(map.gmap !=null && map.gmap.overlayMapTypes && map.gmap.overlayMapTypes.length>0){
         map.gmap.overlayMapTypes.removeAt(0);
     }
+}
+
+function clearObjectsAndShapes(){
+    //clear objects
+    clearObjects();
     //clear shapes
     map.clearShapes();
 }
@@ -616,6 +622,25 @@ function showObjectOnMap(pid){
         map.gmap.overlayMapTypes.removeAt(0);
     }
     map.gmap.overlayMapTypes.push(pidLayer);
+
+    $.ajax({
+        url:'http://spatial.ala.org.au/ws/object/' + pid,
+        dataType:'jsonp'
+    }).done(function(data) {
+        console.log('Retrieving metadata for object.....')
+        //set map bounds
+        //POLYGON((148.761582 -35.92208,
+        // 148.761582 -35.1119459999999,
+        // 150.772781 -35.1119459999999,
+        // 150.772781 -35.92208,
+        // 148.761582 -35.92208))
+       var coords = data.bbox.replace(/POLYGON/g,"").replace(/[\\(|\\)]/g, "");
+       var pointArray = coords.split(",");
+       map.gmap.fitBounds(new google.maps.LatLngBounds(
+            new google.maps.LatLng(pointArray[1].split(" ")[1],pointArray[1].split(" ")[0]),
+            new google.maps.LatLng(pointArray[3].split(" ")[1],pointArray[3].split(" ")[0])
+       ));
+    });
 }
 
 function zoomToShapeBounds(){
@@ -642,6 +667,7 @@ windows.showOnMap = showOnMap;
 windows.addMarker = addMarker;
 windows.removeMarkers = removeMarkers;
 windows.showObjectOnMap = showObjectOnMap;
+windows.clearObjects = clearObjects;
 windows.clearObjectsAndShapes = clearObjectsAndShapes;
 windows.zoomToShapeBounds = zoomToShapeBounds;
 windows.updateMap = updateMap;

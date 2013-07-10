@@ -3,7 +3,7 @@
 <html>
 <head>
   <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&language=en"></script>
-  <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
+  <meta name="layout" content="${grailsApplication.config.layout.skin?:'main"/>
   <title> ${create ? 'New' : ('Edit | ' + site?.name)} | Sites | Field Capture</title>
   <style type="text/css">
     legend {
@@ -275,7 +275,7 @@
 
 <script type="text/html" id="pid">
 <div id="pidLocationDiv" class="drawLocationDiv row-fluid">
-    <div class="span5">
+    <div class="span12">
         <select data-bind="options: layers,
             optionsCaption:'Choose a layer...',
             optionsText:'name', value: chosenLayer, event: { change: refreshObjectList }"></select>
@@ -517,6 +517,7 @@
             };
             self.renderMap = function(elements){
                 console.log('Rendering map called...');
+                clearObjects();
                 var $drawLocationDiv = $(elements[1]);
                 if(self.geometry() != null && self.geometry().centre !== undefined){
                     $drawLocationDiv.find('.propertyGroup').css('display','none');
@@ -556,7 +557,7 @@
                 %{--self.geometry().coordinates(exists(l,'coordinates'))--}%
             };
             self.renderMap = function(){
-                console.log("Render map on PidLocation called..." + self.geometry().pid())
+                console.log("Render map on PidLocation called...with PID id:" + self.geometry().pid())
                 if(self.geometry().pid() != null && self.geometry().pid() != '' ){
                     console.log("Rendering PID: " + self.geometry().pid());
                     clearObjectsAndShapes();
@@ -580,7 +581,7 @@
                 self.layerObjects([]);
                 if(self.chosenLayer() !== undefined){
                     $.ajax({
-                        url: '${grailsApplication.config.spatialLayerServices.baseUrl}/objects/' + this.chosenLayer().id,
+                        url: 'http://spatial.ala.org.au/ws/objects/' + this.chosenLayer().id,
                         dataType:'jsonp'
                     }).done(function(data) {
                         self.layerObjects(data);
@@ -724,10 +725,10 @@
                 var geometry;
                 if(SERVER_CONF.siteData !=null && SERVER_CONF.siteData.extent != null) {
                     var extent = SERVER_CONF.siteData.extent;
-                    console.log('Loading the extent type.....' + extent.type);
+                    console.log('Loading the extent type.....' + extent.source);
                     switch (extent.source) {
                         case 'point':   self.extent(new PointLocation(extent.geometry)); break;
-                        case 'pid':     self.extent(new PidLocation(extent)); break;
+                        case 'pid':     self.extent(new PidLocation(extent.geometry)); break;
                         case 'upload':  self.extent(new UploadLocation()); break;
                         case 'drawn':   self.extent(new DrawnLocation(extent.geometry)); break;
                     }
@@ -840,7 +841,7 @@
 
         //render the shape that is store if it exists
         if(SERVER_CONF.siteData != null && SERVER_CONF.siteData.extent != undefined && SERVER_CONF.siteData.extent.geometry != null){
-            renderSavedShape(SERVER_CONF.siteData.extent.geometry );
+            renderSavedShape(SERVER_CONF.siteData.extent.geometry);
         }
     });
 
@@ -872,6 +873,9 @@
                 //render on the map
                 showOnMap('rectangle', shapeBounds);
                 zoomToShapeBounds();
+            } else if(currentDrawnShape.type == 'pid'){
+                console.log('Loading the PID');
+                showObjectOnMap(currentDrawnShape.pid);
             }
         }
     }
