@@ -138,6 +138,15 @@ function stringToDate(date) {
 
 (function() {
 
+    // Binding to exclude the contained html from the current binding context.
+    // Used when you want to bind a section of html to a different viewModel.
+    ko.bindingHandlers.stopBinding = {
+        init: function() {
+            return { controlsDescendantBindings: true };
+        }
+    };
+    ko.virtualElements.allowedBindings.stopBinding = true;
+
     // This extends an observable that holds a UTC ISODate. It creates properties that hold:
     //  a JS Date object - useful with datepicker; and
     //  a simple formatted date of the form dd-mm-yyyy useful for display.
@@ -526,4 +535,51 @@ ko.bindingHandlers.fileUpload = {
 
     }
 
+};
+
+// A handy binding to iterate over the properties of an object.
+ko.bindingHandlers.foreachprop = {
+    transformObject: function (obj) {
+        var properties = [];
+        for (var key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                properties.push({ key: key, value: obj[key] });
+            }
+        }
+        return properties;
+    },
+    init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+        var value = ko.utils.unwrapObservable(valueAccessor()),
+            properties = ko.bindingHandlers.foreachprop.transformObject(value);
+        ko.applyBindingsToNode(element, { foreach: properties });
+        return { controlsDescendantBindings: true };
+    }
+};
+
+// Compares this column to the current sort parameters and displays the appropriate sort icons.
+// If this is the column that the model is currently sorted by, then shows an up or down icon
+//  depending on the current sort order.
+// Usage example: <th data-bind="sortIcon:sortParamsObject,click:sortBy" data-column="type">Type</th>
+// The sortIcon binding takes an object or observable that contains a 'by' property and an 'order' property.
+// The data-column attr defines the model value that the column holds. This is compared to the
+//  current sort by value to see if this is the active column.
+ko.bindingHandlers.sortIcon = {
+    update: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+        var $element = $(element),
+            name = $element.data('column'),
+            $icon = $element.find('i'),
+            className = "icon-blank",
+            sortParams = ko.utils.unwrapObservable(valueAccessor());
+        // see if this is the active sort column
+        if (sortParams.by() === name) {
+            // and if so, choose an icon based on sort order
+            className = sortParams.order() === 'desc' ? 'icon-chevron-down' : 'icon-chevron-up';
+        }
+        // insert the icon markup if it doesn't exist
+        if ($icon.length === 0) {
+            $icon = $("<i class='icon-blank'></i>").appendTo($element);
+        }
+        // set the computed class
+        $icon.removeClass('icon-chevron-down').removeClass('icon-chevron-up').removeClass('icon-blank').addClass(className);
+    }
 };
