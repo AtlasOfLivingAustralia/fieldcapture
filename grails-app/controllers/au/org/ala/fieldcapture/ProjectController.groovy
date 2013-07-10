@@ -9,7 +9,7 @@ class ProjectController {
     static ignore = ['action','controller','id']
 
     def index(String id) {
-        def project = projectService.getRich(id)
+        def project = projectService.get(id, 'brief')
         if (!project || project.error) {
             forward(action: 'list', model: [error: project.error])
         } else {
@@ -18,7 +18,6 @@ class ProjectController {
             //todo: ensure there are no control chars (\r\n etc) in the json as
             //todo:     this will break the client-side parser
             [project: project,
-             json: (project.sites as JSON).toString(),
              activities: activityService.activitiesForProject(id),
              mapFeatures: commonService.getMapFeatures(project),
              organisationName: metadataService.getInstitutionName(project.organisation)]

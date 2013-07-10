@@ -24,12 +24,13 @@ class ProjectService {
         resp.list
     }
 
-    def get(id) {
-        webService.getJson(grailsApplication.config.ecodata.baseUrl + 'project/' + id)
+    def get(id, levelOfDetail = "") {
+        def lod = levelOfDetail ? "?view=${levelOfDetail}" : ''
+        webService.getJson(grailsApplication.config.ecodata.baseUrl + 'project/' + id + lod)
     }
 
     def getRich(id) {
-        webService.getJson(grailsApplication.config.ecodata.baseUrl + 'project/' + id + '?view=rich')
+        get(id, 'rich')
     }
 
     def getActivities(project) {
