@@ -12,6 +12,8 @@ class ModelTagLib {
     private final static String SPACE = " ";
     private final static String EQUALS = "=";
 
+    private final static int LAYOUT_COLUMNS = 12 // Bootstrap scaffolding uses a 12 column layout.
+
     /*---------------------------------------------------*/
     /*------------ HTML for dynamic content -------------*/
     /*---------------------------------------------------*/
@@ -31,7 +33,8 @@ class ModelTagLib {
                     grid out, attrs, mod
                     break
                 case 'row':
-                    row out, attrs, mod
+                    def span = LAYOUT_COLUMNS
+                    row out, attrs, mod, span
                     break
                 case 'photoPoints':
                     photoPoints out, attrs, mod, index
@@ -49,15 +52,15 @@ class ModelTagLib {
      * @param databindAttrs additional clauses to add to the data binding
      * @return the markup
      */
-    def dataTag(model, context, editable, at, databindAttrs) {
+    def dataTag(model, context, editable, at, databindAttrs, labelAttributes) {
         def result = ""
         if (!databindAttrs) { databindAttrs = new Databindings()}
         if (!at) { at = new AttributeMap()}
+        if (!labelAttributes) { labelAttributes = new AttributeMap()}
         def validate = validationAttribute(model, editable)
         def toEdit = editable && !model.computed && !model.noEdit
         def matrix = model.type + '-' + (toEdit ? 'edit' : 'view')
         def source = (context ? context + '.' : '') + model.source
-        def labelClasses = ''
         switch (matrix) {
             case 'literal-edit':
             case 'literal-view':
@@ -114,7 +117,7 @@ class ModelTagLib {
                 result += "<select${at.toString()} data-bind='${databindAttrs.toString()}'${validate}></select>"
                 break
             case 'selectMany-edit':
-                labelClasses += 'checkbox-list-label '
+                labelAttributes.addClass 'checkbox-list-label '
                 def constraints = 'transients.'+model.source+'Constraints'
                 databindAttrs.add 'value', '\$data'
                 databindAttrs.add 'checked', "\$root.${source}"
@@ -146,22 +149,24 @@ class ModelTagLib {
                 break;
         }
         if (model.preLabel) {
-            result = "<span class='${labelClasses}label preLabel'>${model.preLabel}</span>" + result
+            labelAttributes.addClass 'label preLabel'
+            result = "<span${labelAttributes.toString()}>${model.preLabel}</span>" + result
         }
         if (model.postLabel) {
-            result += "<span class='postLabel'>${model.postLabel}</span>"
+            labelAttributes.addClass 'postLabel'
+            result += "<span${labelAttributes.toString()}>${model.postLabel}</span>"
         }
         return result
     }
 
     // convenience method for the above
     def dataTag(model, context, editable, at) {
-        dataTag(model, context, editable, at, null)
+        dataTag(model, context, editable, at, null, null)
     }
 
     // convenience method for the above
     def dataTag(model, context, editable) {
-        dataTag(model, context, editable, null, null)
+        dataTag(model, context, editable, null, null, null)
     }
 
     def getInputSize(width) {
@@ -212,30 +217,53 @@ class ModelTagLib {
     }
 
     // row model
-    def row(out, attrs, model) {
+    def row(out, attrs, model, parentSpan) {
         out << "<div class=\"row-fluid space-after\">\n"
         if (model.align == 'right') {
             out << "<div class=\"pull-right\">\n"
         }
-        def span = 12 / model.items.size()
-        model.items.each { it ->
-            AttributeMap at = new AttributeMap()
-            at.addClass(it.css)
-            // inject computed from data model
-            it.computed = it.computed ?: getComputed(attrs, it.source, '')
-            if (it.type == 'textarea') {
-                out << INDENT << dataTag(it, 'data', attrs.edit, at)
-            } else {
-                at.addSpan("span${span}")
-                out << "<span${at.toString()}>"
-                out << INDENT << dataTag(it, 'data', attrs.edit)
-                out << "</span>"
-            }
-        }
+        items(out, attrs, model, parentSpan, 'row')
         if (model.align == 'right') {
             out << "</div>\n"
         }
         out << "</div>\n"
+    }
+
+    def items(out, attrs, model, parentSpan, context) {
+
+        def span = context == 'row'? (int)(parentSpan / model.items.size()) : LAYOUT_COLUMNS
+
+        model.items.each { it ->
+            AttributeMap at = new AttributeMap()
+            at.addClass(it.css)
+            // inject computed from data model
+
+            it.computed = it.computed ?: getComputed(attrs, it.source, '')
+            if (it.type == 'col') {
+                out << "<div class=\"span${span}\">\n"
+                items(out, attrs, it, span, 'col')
+                out << "</div>"
+            } else {
+                // Wrap data elements in rows to reset the bootstrap indentation on subsequent spans to save the
+                // model definition from needing to do so.
+                def labelAttributes = new AttributeMap()
+                if (context == 'col') {
+                    out << "<div class=\"row-fluid\">"
+                    labelAttributes.addClass 'span4'
+                }
+                if (it.type == 'textarea') {
+                    out << INDENT << dataTag(it, 'data', attrs.edit, at, null, labelAttributes)
+                } else {
+                    at.addSpan("span${span}")
+                    out << "<span${at.toString()}>"
+                    out << INDENT << dataTag(it, 'data', attrs.edit, null, null, labelAttributes)
+                    out << "</span>"
+                }
+                if (context == 'col') {
+                    out << "</div>"
+                }
+            }
+        }
     }
 
     def grid(out, attrs, model) {
@@ -453,7 +481,7 @@ class ModelTagLib {
             col.type = col.type ?: getType(attrs, col.source, model.source)
             // inject computed from data model
             col.computed = col.computed ?: getComputed(attrs, col.source, model.source)
-            out << INDENT*5 << "<td>" << dataTag(col, '', edit, null, bindAttrs) << "</td>" << "\n"
+            out << INDENT*5 << "<td>" << dataTag(col, '', edit, null, bindAttrs, null) << "</td>" << "\n"
         }
         out << INDENT*5 << "<td>\n"
         out << INDENT*6 << "<a class='btn btn-success btn-mini' data-bind='click:\$root.accept' href='#' title='save'>Update</a>\n"

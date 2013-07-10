@@ -18,17 +18,29 @@
     "userAddedRows":"false"}
 ],
 "viewModel":[
+    {   "type":"row",
+        "items": [
+            {
+                "type":"col",
+                "items": [
+                    {"type":"selectOne","source":"activityPurpose","preLabel":"Activity purpose:", "validate":"required"},
+                    {"type":"number","source":"activityDuration","preLabel":"Activity duration (Hrs)", "validate":"required,min[0]"},
+                    {"type":"selectOne","source":"revegetationType","preLabel":"Revegetation type:"},
+                    {"type":"selectMany","source":"adjacentUse","preLabel":"Adjacent use:"}
+                ]
+            },
+            {
+                "type":"col",
+                "items": [
+                    {"type":"selectOne","source":"connectivityIndex","preLabel":"Connectivity index:"},
+                    {"type":"selectMany","source":"environmentalBenefits","preLabel":"Environmental benefits:"}
+                ]
+            }
+        ]
+    },
     {
         "type":"row",
-        "items": [
-            {"type":"selectOne","source":"activityPurpose","preLabel":"Activity purpose:", "validate":"required"},
-            {"type":"number","source":"activityDuration","preLabel":"Activity duration (Hrs)", "validate":"required,min[0]"},
-            {"type":"selectOne","source":"revegetationType","preLabel":"Revegetation type:"},
-            {"type":"selectMany","source":"adjacentUse","preLabel":"Adjacent use:"},
-            {"type":"selectOne","source":"connectivityIndex","preLabel":"Connectivity index:"},
-            {"type":"selectMany","source":"environmentalBenefits","preLabel":"Environmental benefits:"},
-            {"type":"image", "source":"photoOfActivity", "preLabel":"Photo of activity (NB. This is not a photo point)"},
-        ]
+        "items": [{"type":"image", "source":"photoOfActivity", "preLabel":"Photo of activity (NB. This is not a photo point)"}]
     },
     {
         "type":"photoPoints", "source":"photoPoints", "preLabel":"Photo points at the time of the activity",
