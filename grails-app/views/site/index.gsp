@@ -32,7 +32,7 @@
         </table>
     </legend>
     <div class="row-fluid space-after">
-        <div class="span9"><!-- left block of header -->
+        <div class="span8"><!-- left block of header -->
             <div >
                 <div class="clearfix">
                     <h1 class="pull-left">${site?.name}</h1>
@@ -97,8 +97,8 @@
             </g:if>
 
         </div>
-        <div class="span3">
-            <div id="smallMap"></div>
+        <div class="span4">
+            <div id="smallMap" style="width:100%"></div>
             <g:if test="${site?.extent?.geometry?.pid}">
                 <div style="margin-top:20px;">
                     <a href="http://spatial-dev.ala.org.au/ws/shape/shp/${site.extent.geometry.pid}" class="btn btn-info">Download ShapeFile</a>

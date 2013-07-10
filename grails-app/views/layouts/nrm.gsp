@@ -55,7 +55,7 @@
     </div><!-- /#header -->
     <div id="dcNav" class="clearfix">
         <div class="navbar container-fluid">
-            <a class="brand hidden-tablet hidden-phone">MERI Data capture prototype</a>
+            <a class="brand hidden-tablet hidden-phone">MERI data capture prototype</a>
             <div class="nav-collapse collapse">
                 <div class="navbar-text pull-right">
                     <span id="buttonBar">

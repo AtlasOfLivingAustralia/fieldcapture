@@ -19,35 +19,30 @@
 </head>
 <body>
 <div id="wrapper" class="container-fluid">
-    <div class="row-fluid">
-        <div class="span12" id="header">
-            <h1 class="pull-left">Field Capture</h1>
-            <form action="search" class="form-search pull-right">
-                <div class="control-group">
-                    <div class="controls">
-                        <g:textField class="search-query input-medium" name="search"/>
-                        <button type="submit" class="btn">Search</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-
-        <g:if test="${flash.error}">
-            <div class="row-fluid">
-                <div class="alert alert-error">
-                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    <span>${flash.error}</span>
-                </div>
-            </div>
-        </g:if>
-    </div>
 
     <div class="row-fluid large-space-after large-space-before button-set">
-        <g:link controller="project" action="create" class="btn btn-large"><r:img dir="images/icons" file="project.png"/> Add a project</g:link>
-        <g:link controller="site" action="create" class="btn btn-large"><r:img dir="images/icons" file="site.png"/> Add a site</g:link>
-        <g:link controller="activity" action="create" class="btn btn-large"><r:img dir="images/icons" file="activity.png"/> Add an activity</g:link>
-        <g:link controller="assessment" action="create" class="btn btn-large"><r:img dir="images/icons" file="assessment.png"/> Add an assessment</g:link>
+        <g:link controller="project" action="create" class="btn btn-medium"><r:img dir="images/icons" file="project.png"/> Add a project</g:link>
+        <g:link controller="site" action="create" class="btn btn-medium"><r:img dir="images/icons" file="site.png"/> Add a site</g:link>
+        <g:link controller="activity" action="create" class="btn btn-medium"><r:img dir="images/icons" file="activity.png"/> Add an activity</g:link>
+        <g:link controller="assessment" action="create" class="btn btn-medium"><r:img dir="images/icons" file="assessment.png"/> Add an assessment</g:link>
+        <form action="search" class="form-search pull-right">
+            <div class="control-group">
+                <div class="controls">
+                    <g:textField class="search-query input-medium" name="search"/>
+                    <button type="submit" class="btn">Search</button>
+                </div>
+            </div>
+        </form>
     </div>
+
+    <g:if test="${flash.error}">
+        <div class="row-fluid">
+            <div class="alert alert-error">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <span>${flash.error}</span>
+            </div>
+        </div>
+    </g:if>
 
     <div class="row-fluid">
 
@@ -158,6 +153,7 @@
     </div>
 
     <hr />
+
     <div class="expandable-debug">
         <h3>Debug</h3>
         <div>
