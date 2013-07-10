@@ -42,7 +42,7 @@
                 <div class="span6 hidden-phone">
                     <g:form controller="search" method="GET" class="search pull-right">
                         <p>
-                            <input type="text" name="query" id="keywords">
+                            <input type="text" name="query" id="keywords" value="${params.query}">
                             <input type="hidden" name="collection" value="agencies">
                             <input type="hidden" name="profile" value="nrm_env">
                             <input type="hidden" name="form" value="simple">

@@ -25,21 +25,24 @@
   <r:require modules="drawmap"/>
 </head>
 <body>
-    <ul class="breadcrumb">
-        <li><g:link controller="home">Home</g:link> <span class="divider">/</span></li>
-        <g:if test="${project}">
-            <li class="active">Create new site for ${project?.name}</li>
-        </g:if>
-        <g:elseif test="${create}">
-            <li class="active">Create</li>
-        </g:elseif>
-        <g:else>
-            <li><g:link controller="site" action="index" id="${site?.siteId}">
-                <span data-bind="text: name">${site?.name}</span>
-            </g:link><span class="divider">/</span></li>
-            <li class="active">Edit</li>
-        </g:else>
-    </ul>
+    <div class="container-fluid">
+        <ul class="breadcrumb">
+            <li><g:link controller="home">Home</g:link> <span class="divider">/</span></li>
+            <g:if test="${project}">
+                <li class="active">Create new site for ${project?.name}</li>
+            </g:if>
+            <g:elseif test="${create}">
+                <li class="active">Create</li>
+            </g:elseif>
+            <g:else>
+                <li><g:link controller="site" action="index" id="${site?.siteId}">
+                    <span data-bind="text: name">${site?.name}</span>
+                </g:link><span class="divider">/</span></li>
+                <li class="active">Edit</li>
+            </g:else>
+        </ul>
+    </div>
+
     <div class="container-fluid validationEngineContainer" id="validation-container">
         <bs:form action="update" inline="true">
 

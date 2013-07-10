@@ -14,10 +14,10 @@
 </head>
 <body>
 <div id="wrapper" class="container-fluid">
-    <div class="row-fluid large-space-after">
+    <div class="row-fluid">
         <div class="span12" id="header">
-            <h1 class="pull-left">Field Capture</h1>
-            <g:form controller="search" method="GET" class="form-horizontal pull-right" style="padding-top:5px;">
+            <h1 class="pull-left">Search Results</h1>
+            <g:form controller="search" method="GET" class="hide form-horizontal pull-right" style="padding-top:5px;">
                 <div class="input-append">
                     <g:textField class="input-large" name="query" value="${params.query}"/>
                     <button class="btn" type="submit">Search</button>
