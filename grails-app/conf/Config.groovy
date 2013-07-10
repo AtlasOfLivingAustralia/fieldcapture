@@ -152,7 +152,7 @@ environments {
         grails.host = "http://fieldcapture-dev.ala.org.au"
         serverName = "${grails.host}"
         grails.serverURL = serverName + grails.app.context
-
+        layout.skin = "nrm"
         security.cas.appServerName = serverName
         security.cas.contextPath = "/" + grails.app.context
         ecodata.baseUrl = 'http://ecodata-dev.ala.org.au/ws/'
