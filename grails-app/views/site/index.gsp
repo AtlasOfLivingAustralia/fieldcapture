@@ -264,6 +264,9 @@
                 // only init map when the tab is first shown
                 if (tab === '#site' && map === undefined) {
                     init_map_with_features({
+                            spatialServiceUrl: '${grailsApplication.config.spatial.layersUrl}',
+                            spatialWmsUrl: '${grailsApplication.config.spatial.geoserverUrl}/ALA/wms?',
+                            spatialCacheUrl: '${grailsApplication.config.spatial.geoserverUrl}/gwc/service/wms?',
                             mapContainer: "map",
                             scrollwheel: false
                         },

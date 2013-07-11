@@ -148,47 +148,36 @@
                     $.each(points, function (i,obj) {self.featureBounds.extend(obj);});
                     self.addFeature(f, loc, iw);
                 } else if (loc.type === 'pid') {
-                    console.log("Loading polygon: " + loc.polygonUrl)
-                    $.ajax(loc.polygonUrl, {
-                        success: function(geojson) {
-                            console.log('Retrieved the GEOJSON for polygonURL....');
-                            console.log(geojson);
-                            var paths, points, gj = geojson;
+                    //load the overlay instead
+                    var pid = loc.pid;
+                    console.log('Loading PID: ' + pid);
+                    f = new PIDLayer(pid,256,256);
+                    map.map.overlayMapTypes.push(f);
 
-                            if (gj.type === 'Polygon') {
-                                paths = geojsonToPaths(gj.coordinates);
-                                f = new google.maps.Polygon({
-                                    paths: paths,
-                                    map: self.map,
-                                    title: loc.name
-                                });
-                                f.setOptions(self.overlayOptions);
-                                // flatten arrays to array of points
-                                points = [].concat.apply([], paths);
-                                // extend bounds by each point
-                                $.each(points, function (i,obj) {self.featureBounds.extend(obj);});
-                                self.addFeature(f, loc);
-                            } else if(gj.type === 'MultiPolygon'){
-                               var arrayOfCoordArrays = gj.coordinates;
-                               for(var i=0; i<arrayOfCoordArrays.length; i++){
-                                   var coordinates = arrayOfCoordArrays[i];
-                                    var paths = geojsonToPaths(coordinates);
-                                    var f = new google.maps.Polygon({
-                                        paths: paths,
-                                        map: self.map,
-                                        title: loc.name
-                                    });
-                                    f.setOptions(self.overlayOptions);
-                                    // flatten arrays to array of points
-                                    var points = [].concat.apply([], paths);
-                                    // extend bounds by each point
-                                    $.each(points, function (i,point) {self.featureBounds.extend(point);});
-                                    self.addFeature(f, loc);
-                               }
-                            }
-                        },
-                        dataType: 'json'}
-                    );
+                    $.ajax({
+                        url: 'http://spatial-dev.ala.org.au/layers-service/object/' + pid,
+                        dataType:'jsonp'
+                    }).done(function(data) {
+                       console.log('Retrieving metadata for object.....');
+                       var coords = data.bbox.replace(/POLYGON/g,"").replace(/[\\(|\\)]/g, "");
+                       var pointArray = coords.split(",");
+                       var shpBounds = new google.maps.LatLngBounds(
+                            new google.maps.LatLng(pointArray[1].split(" ")[1],pointArray[1].split(" ")[0]),
+                            new google.maps.LatLng(pointArray[3].split(" ")[1],pointArray[3].split(" ")[0])
+                       );
+
+                       //map.map.fitBounds(map.map.getBounds().union(shpBounds));
+                       //map.map.fitBounds(shpBounds);
+                       console.log("Latlng bounds: " + self.featureBounds.getNorthEast());
+                       console.log("Latlng bounds: " + self.featureBounds.getCenter());
+                       if(self.featureBounds.getCenter().lat() == 0){
+                         self.featureBounds = shpBounds;
+                       } else {
+                           console.log("Bounds union");
+                           self.featureBounds.union(shpBounds);
+                       }
+                       self.addFeature(f, loc);
+                    });
                 } else {
                     // count the location as loaded even if we didn't
                     self.locationLoaded();
@@ -252,12 +241,12 @@
                 console.log(this.featureBounds);
                 this.map.fitBounds(this.featureBounds);  // this happens asynchronously so need to wait for bounds to change
                 // to sanity-check the zoom level
-                var boundsListener = google.maps.event.addListener(this.map, 'bounds_changed', function(event) {
-                    if (this.getZoom() >= self.zoomLimit){
-                        this.setZoom(self.zoomLimit);
-                    }
-                    google.maps.event.removeListener(boundsListener);
-                });
+//                var boundsListener = google.maps.event.addListener(this.map, 'bounds_changed', function(event) {
+//                    if (this.getZoom() >= self.zoomLimit){
+//                        this.setZoom(self.zoomLimit);
+//                    }
+//                    google.maps.event.removeListener(boundsListener);
+//                });
             }
         },
         //

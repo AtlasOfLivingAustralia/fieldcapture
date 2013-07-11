@@ -42,6 +42,7 @@ modules = {
     }
 
     mapWithFeatures {
+        resource url: 'js/wms.js'
         resource url: 'js/mapWithFeatures.js'
     }
 
@@ -96,6 +97,7 @@ modules = {
     drawmap {
         defaultBundle true
         resource 'js/keydragzoom.js'
+        resource 'js/wms.js'
         resource 'js/selection-map.js'
     }
 

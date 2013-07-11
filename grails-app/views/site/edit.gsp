@@ -384,7 +384,10 @@
         drawSiteUrl : "${createLink(controller: 'site', action: 'draw')}",
         ajaxUpdateUrl: "${createLink(action: 'ajaxUpdate', id: site?.siteId)}",
         siteData: $.parseJSON('${json}'),
-        checkForState: ${params.checkForState?:'false'}
+        checkForState: ${params.checkForState?:'false'},
+        spatialService: '${grailsApplication.config.spatial.layersUrl}',
+        spatialWms: '${grailsApplication.config.spatial.geoserverUrl}/ALA/wms?',
+        spatialCache: '${grailsApplication.config.spatial.geoserverUrl}/gwc/service/wms?'
     };
 
     var savedSiteData = {
@@ -445,7 +448,7 @@
 
         //state
         $.ajax({
-            url: "http://spatial.ala.org.au/ws/intersect/cl22/"+lat+"/"+lng,
+            url: SERVER_CONF.spatialService + "/intersect/cl22/"+lat+"/"+lng,
             dataType: "jsonp",
             async: false
         })
@@ -472,7 +475,7 @@
 
         //
         $.ajax({
-            url:"http://spatial.ala.org.au/ws/intersect/cl959/"+lat+"/"+lng,
+            url: SERVER_CONF.spatialService + "/intersect/cl959/"+lat+"/"+lng,
             dataType:"jsonp",
             async:false
         })
@@ -875,9 +878,9 @@
         ko.applyBindings(viewModel);
 
         init_map({
-            spatialService: 'http://spatial.ala.org.au/layers-service',
-            spatialWms: 'http://spatial.ala.org.au/geoserver/ALA/wms?',
-            spatialCache: 'http://spatial.ala.org.au/geoserver/gwc/service/wms?',
+            spatialService: SERVER_CONF.spatialService,
+            spatialWms: SERVER_CONF.spatialWms,
+            spatialCache: SERVER_CONF.spatialCache,
             mapContainer: 'mapForExtent'
         });
 

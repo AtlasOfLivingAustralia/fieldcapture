@@ -215,3 +215,50 @@ function getWMSTileUrl(coord, zoom, baseurl, customParams)
     return urlResult;
 }
 
+//Define custom WMS tiled layer
+function PIDLayer(pid){
+    return new google.maps.ImageMapType({
+        getTileUrl: function(coord, zoom){
+             var wmsParams = [
+                "format=image/png",
+                "layers=ALA:Objects",
+                "REQUEST=GetMap",
+                "SERVICE=WMS",
+                "VERSION=1.1.0",
+                "BGCOLOR=0xFFFFFF",
+                "TRANSPARENT=TRUE",
+                "SRS=EPSG:900913", // 3395?
+                "WIDTH=256",
+                "HEIGHT=256",
+                "viewparams=s:" + pid
+                ];
+
+            var lULP = new google.maps.Point(coord.x*256,(coord.y+1)*256);
+            var lLRP = new google.maps.Point((coord.x+1)*256,coord.y*256);
+
+            var projectionMap = new MercatorProjection();
+
+            var lULg = projectionMap.fromDivPixelToSphericalMercator(lULP, zoom);
+            var lLRg  = projectionMap.fromDivPixelToSphericalMercator(lLRP, zoom);
+
+            var lUL_Latitude = lULg.y;
+            var lUL_Longitude = lULg.x;
+            var lLR_Latitude = lLRg.y;
+            var lLR_Longitude = lLRg.x;
+            //GJ: there is a bug when crossing the -180 longitude border (tile does not render) - this check seems to fix it
+            if (lLR_Longitude < lUL_Longitude){
+                lLR_Longitude = Math.abs(lLR_Longitude);
+            }
+            var urlResult = "http://spatial.ala.org.au/geoserver/wms/reflect?" + wmsParams.join("&") + "&bbox=" + lUL_Longitude + "," + lUL_Latitude + "," + lLR_Longitude + "," + lLR_Latitude;
+
+            return urlResult;
+        },
+        tileSize: new google.maps.Size(256, 256),
+        minZoom: 1,
+        maxZoom: 16,
+        opacity: 0.5,
+        isPng: true
+    });
+}
+
+
