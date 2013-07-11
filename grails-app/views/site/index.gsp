@@ -24,13 +24,13 @@
 </head>
 <body>
     <div class="container-fluid">
-    <legend>
-        <table style="width: 100%">
-            <tr>
-                <td><g:link class="discreet" controller="home" action="index">Home</g:link><fc:navSeparator/>Site<fc:navSeparator/>${site.name}</td>
-            </tr>
-        </table>
-    </legend>
+    <ul class="breadcrumb">
+        <li>
+            <g:link controller="home">Home</g:link> <span class="divider">/</span>
+        </li>
+        <li class="active"><g:link controller="home" action="advanced">Sites</g:link> <span class="divider">/</span></li>
+        <li class="active">${site.name}</li>
+    </ul>
     <div class="row-fluid space-after">
         <div class="span8"><!-- left block of header -->
             <div >
@@ -101,7 +101,7 @@
             <div id="smallMap" style="width:100%"></div>
             <g:if test="${site?.extent?.geometry?.pid}">
                 <div style="margin-top:20px;">
-                    <a href="http://spatial-dev.ala.org.au/ws/shape/shp/${site.extent.geometry.pid}" class="btn btn-info">Download ShapeFile</a>
+                    <a href="http://spatial-dev.ala.org.au/ws/shape/shp/${site.extent.geometry.pid}" class="btn">Download ShapeFile</a>
                 </div>
             </g:if>
         </div>

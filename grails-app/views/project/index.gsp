@@ -30,13 +30,13 @@
 <body>
 <div class="container-fluid">
 
-    <legend>
-        <table style="width: 100%">
-            <tr>
-                <td><g:link class="discreet" controller="home" action="index">Home</g:link><fc:navSeparator/>Project<fc:navSeparator/>${project.name}</td>
-            </tr>
-        </table>
-    </legend>
+    <ul class="breadcrumb">
+        <li>
+            <g:link controller="home">Home</g:link> <span class="divider">/</span>
+        </li>
+        <li class="active">Projects <span class="divider">/</span></li>
+        <li class="active">${project.name}</li>
+    </ul>
 
     <div class="row-fluid">
         <div class="row-fluid">

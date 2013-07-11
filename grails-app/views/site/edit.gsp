@@ -28,6 +28,7 @@
     <div class="container-fluid validationEngineContainer" id="validation-container">
         <ul class="breadcrumb">
             <li><g:link controller="home">Home</g:link> <span class="divider">/</span></li>
+            <li><g:link controller="home" action="advanced">Sites</g:link><span class="divider">/</span></li>
             <g:if test="${project}">
                 <li class="active">Create new site for ${project?.name}</li>
             </g:if>
@@ -277,11 +278,16 @@
 <script type="text/html" id="pid">
 <div id="pidLocationDiv" class="drawLocationDiv row-fluid">
     <div class="span12">
-        <select data-bind="options: layers,
+        <select data-bind="
+            options: layers(),
             optionsCaption:'Choose a layer...',
-            optionsText:'name', value: chosenLayer, event: { change: refreshObjectList }"></select>
-        <select data-bind="options: layerObjects,
+            optionsValue: 'id',
+            optionsText:'name',
+            value: chosenLayer,
+            event: { change: refreshObjectList }"></select>
+        <select data-bind="options: layerObjects, disable: layerObjects().length == 0,
             optionsCaption:'Choose shape ...',
+            optionsValue: 'pid',
             optionsText:'name', value: layerObject, event: { change: updateSelectedPid }"></select>
         <div class="row-fluid controls-row" style="display:none;">
             <span class="label label-success">PID</span> <span data-bind="text:geometry().pid"></span>
@@ -534,9 +540,9 @@
 
         var PidLocation = function (l) {
             var self = this;
-            this.source = ko.observable('pid');
+            self.source = ko.observable('pid');
             self.geometry = ko.observable({
-                type :"pid",
+                type : "pid",
                 pid : ko.observable(exists(l,'pid')),
                 name : ko.observable(exists(l,'name')),
                 fid : ko.observable(exists(l,'fid')),
@@ -544,18 +550,34 @@
                 area : ko.observable(exists(l,'area')),
                 centre:[]
             });
-            this.chosenLayer = ko.observable();
-            this.layerObject = ko.observable();
-            this.layerObjects = ko.observable([]);
-            this.layers = [{id:'cl22',name:'Australian states'},{id:'cl23', name:'LGA'},{id:'cl21', name:'IBRA'}];
+            self.refreshObjectList = function(){
+                console.log('Refreshing the layer object list for ' + self.chosenLayer());
+                self.layerObjects([]);
+                if(self.chosenLayer() !== undefined){
+                    $.ajax({
+                        url: 'http://spatial.ala.org.au/ws/objects/' + this.chosenLayer(),
+                        dataType:'jsonp'
+                    }).done(function(data) {
+                        self.layerObjects(data);
+                        console.log('Refresh complete. Objects:' + data.length);
+                    });
+                } else {
+                    console.log('Refreshing the layer object list - no layer currently selected...');
+                }
+            }
+            //TODO load this from config
+            self.layers = ko.observable([
+                {id:'cl916', name:'NRM'},
+                {id:'cl1048', name:'IBRA 7 Regions'},
+                {id:'cl1049', name:'IBRA 7 Subregions'},
+                {id:'cl22',name:'Australian states'},
+                {id:'cl959', name:'Local Gov. Areas'}
+            ]);
+            self.chosenLayer = ko.observable(exists(l,'fid'));
+            self.layerObjects = ko.observable([]);
+            self.layerObject = ko.observable(exists(l,'pid'));
             self.updateGeom = function(l){
-                %{--self.geometry().type(exists(l,'type')),--}%
-                %{--self.geometry().centre(exists(l,'centre')),--}%
-                %{--self.geometry().lga(exists(l,'lga')),--}%
-                %{--self.geometry().state(exists(l,'state')),--}%
-                %{--self.geometry().locality(exists(l,'locality')),--}%
-                %{--self.geometry().areaKmSq(exists(l,'areaKmSq')),--}%
-                %{--self.geometry().coordinates(exists(l,'coordinates'))--}%
+                //to be added
             };
             self.renderMap = function(){
                 console.log("Render map on PidLocation called...with PID id:" + self.geometry().pid())
@@ -565,32 +587,46 @@
                     showObjectOnMap(self.geometry().pid());
                 }
             }
-            self.updateSelectedPid = function(elements){
-                if(self.layerObject() !== undefined){
-                    self.geometry().pid(self.layerObject().pid)
-                    self.geometry().fid(self.layerObject().fid)
-                    self.geometry().name(self.layerObject().name)
-                    self.geometry().layerName(self.layerObject().fieldname)
-                    if(self.layerObject().area_km !== undefined){
-                        console.log("Selected shape area: " + self.layerObject().area_km);
-                        self.geometry().area(self.layerObject().area_km)
-                    }
-                    self.renderMap();
-                }
-            }
-            self.refreshObjectList = function(){
+            self.setCurrentPID = function(){
+                self.refreshObjectList();
+                console.log('Refreshing the layer object list for ' + self.chosenLayer());
                 self.layerObjects([]);
                 if(self.chosenLayer() !== undefined){
                     $.ajax({
-                        url: 'http://spatial.ala.org.au/ws/objects/' + this.chosenLayer().id,
+                        url: 'http://spatial.ala.org.au/ws/objects/' + this.chosenLayer(),
                         dataType:'jsonp'
                     }).done(function(data) {
                         self.layerObjects(data);
+                        console.log('Refresh complete. Objects:' + data.length);
+                        self.layerObject(self.geometry().pid())
+                    });
+                } else {
+                    console.log('Refreshing the layer object list - no layer currently selected...');
+                }
+            }
+            self.updateSelectedPid = function(elements){
+                if(self.layerObject() !== undefined){
+                    self.geometry().pid(self.layerObject())
+                    self.geometry().fid(self.chosenLayer())
+
+                    //additional metadata required from service layer
+                    $.ajax({
+                        url: 'http://spatial.ala.org.au/ws/object/' + self.layerObject(),
+                        dataType:'jsonp'
+                    }).done(function(data) {
+                        console.log('Retrieving details of ' + self.layerObject());
+                        self.layerObject(self.geometry().pid())
+                        self.geometry().name(data.name)
+                        self.geometry().layerName(data.fieldname)
+                        if(data.area_km !== undefined){
+                            console.log("Selected shape area: " + data.area_km);
+                            self.geometry().area(data.area_km)
+                        }
+                        self.renderMap();
                     });
                 }
             }
             self.toJSON = function(){
-                //console.log('toJSON on PidLocation')
                 var js = ko.toJS(self);
                 delete js.layers;
                 delete js.layerObjects;
@@ -604,11 +640,13 @@
         var EmptyLocation = function () {
             this.source = ko.observable('none');
             this.geometry = ko.observable();
+            self.renderMap = function(){}
         };
 
         var UploadLocation = function (l) {
             this.source = ko.observable('upload');
             this.geometry = ko.observable();
+            self.renderMap = function(){}
         };
 
         var PointLocation = function (l) {
@@ -628,6 +666,9 @@
                     && self.geometry().decimalLongitude() !== undefined
                     && self.geometry().decimalLongitude() !== '';
                 return hasCoordinate;
+            }
+            self.renderMap = function(){
+
             }
             self.toJSON = function(){
                 var js = ko.toJS(self);
@@ -726,7 +767,8 @@
                 var geometry;
                 if(SERVER_CONF.siteData !=null && SERVER_CONF.siteData.extent != null) {
                     var extent = SERVER_CONF.siteData.extent;
-                    console.log('Loading the extent type.....' + extent.source);
+                    console.log('Loading the extent source.....' + extent.source);
+                    console.log(extent.geometry);
                     switch (extent.source) {
                         case 'point':   self.extent(new PointLocation(extent.geometry)); break;
                         case 'pid':     self.extent(new PidLocation(extent.geometry)); break;
@@ -752,7 +794,13 @@
                             self.extent(new PointLocation({}));
                         }
                         break;
-                    case 'pid':    self.extent(new PidLocation({})); break;
+                    case 'pid':
+                        if(SERVER_CONF.siteData !=null && SERVER_CONF.siteData.extent != null) {
+                           self.extent(new PidLocation(SERVER_CONF.siteData.extent.geometry));
+                        } else {
+                           self.extent(new PidLocation({}));
+                        }
+                        break;
                     case 'upload': self.extent(new UploadLocation({})); break;
                     case 'drawn':
                         //breaks the edits....
@@ -823,8 +871,7 @@
 
         //retrieve serialised model
         viewModel = new SiteViewModel(savedSiteData);
-        viewModel.loadExtent();
-        viewModel.loadPOI();
+
         ko.applyBindings(viewModel);
 
         init_map({
@@ -833,6 +880,9 @@
             spatialCache: 'http://spatial.ala.org.au/geoserver/gwc/service/wms?',
             mapContainer: 'mapForExtent'
         });
+
+        viewModel.loadExtent();
+        viewModel.loadPOI();
 
         //render POIs
         viewModel.renderPOIs();
@@ -875,8 +925,9 @@
                 showOnMap('rectangle', shapeBounds);
                 zoomToShapeBounds();
             } else if(currentDrawnShape.type == 'pid'){
-                console.log('Loading the PID');
+                console.log('Loading the PID...' + currentDrawnShape.pid);
                 showObjectOnMap(currentDrawnShape.pid);
+                viewModel.extent().setCurrentPID();
             }
         }
     }
