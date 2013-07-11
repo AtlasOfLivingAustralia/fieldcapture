@@ -107,7 +107,7 @@
         });
 
 // load dynamic models - usually objects in a list
-<md:jsModelObjects model="${model}" edit="true"/>
+<md:jsModelObjects model="${model}" site="${site}" edit="true"/>
 
         function ViewModel () {
             var self = this;

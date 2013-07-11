@@ -22,6 +22,7 @@ class ModelJSTagLib {
                 matrixModel attrs, model, out
             }
         }
+        out << INDENT*2 << "var site = ${attrs.site.toString()};"
     }
 
     def jsViewModel = { attrs ->
@@ -477,25 +478,21 @@ class ModelJSTagLib {
         listViewModel(attrs, model, out)
 
         out << """
+
         var PhotoPoint = function(data) {
-            this.id = data.id;
-            this.lat = data.lat;
-            this.lon = data.lon;
-            this.bearing = data.bearing;
+            this.name = data.name;
+            this.lat = data.geometry.decimalLatitude;
+            this.lon = data.geometry.decimalLongitude;
+            this.bearing = data.geometry.bearing;
             this.description = data.description;
         };
-        if (self.site === undefined) {
-            self.site = {};
-            self.site.photoPoints = [];
 
-            self.site.photoPoints.push(new PhotoPoint({id:"test", lat:152, lon:-32, bearing:180, description:"Test photopoint"}));
-        }
         self.loadphotoPoints = function(data) {
-            var photoPointById = function(id, data) {
+            var photoPointByName = function(name, data) {
                 var photoPoint;
                 if (data !== undefined) {
                     \$.each(data, function(index, obj) {
-                        if (obj.id === id) {
+                        if (obj.name === name) {
                             photoPoint = obj;
                             return false;
                         }
@@ -503,14 +500,15 @@ class ModelJSTagLib {
                 }
                 return photoPoint;
             };
-            if (self.site !== undefined && self.site.photoPoints !== undefined) {
-                \$.each(self.site.photoPoints, function(index, obj) {
-                    var photoPoint = photoPointById(obj.id, data);
-                    if (photoPoint === undefined) {
-                        photoPoint = {comment:"", photo:""};
+            if (site !== undefined && site.poi !== undefined) {
+                \$.each(site.poi, function(index, obj) {
+                    var photoPoint = new PhotoPoint(obj);
+                    var photoPointData = photoPointByName(obj.name, data);
+                    if (photoPointData === undefined) {
+                        photoPointData = {comment:"", photo:""};
                     }
-                    var row = new PhotoPointsRow(photoPoint);
-                    \$.extend(row, obj);
+                    var row = new PhotoPointsRow(photoPointData);
+                    \$.extend(row, photoPoint);
 
                     self.data.photoPoints.push(row);
                 });

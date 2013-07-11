@@ -11,7 +11,7 @@
     {"name":"photoOfActivity", "dataType":"image"},
     {"name":"photoPoints", "dataType":"photoPoints",
      "columns": [
-         {"name": "id", "dataType":"text"},
+         {"name":"name", "dataType":"text"},
          {"name":"photo", "dataType":"embeddedImage"},
          {"name":"comment", "dataType":"text"}
      ],
@@ -48,7 +48,7 @@
         "source":"photoPoints",
         "userAddedRows":false,
         "columns": [
-            {"title":"Photo point ID", "type":"text", "source":"id", "readOnly":"true"},
+            {"title":"Photo point ID", "type":"text", "source":"name", "readOnly":"true"},
             {"title":"Latitude", "type":"text", "source":"lat", "readOnly":"true"},
             {"title":"Longitude", "type":"text", "source":"lon", "readOnly":"true"},
             {"title":"Bearing", "type":"text", "source":"bearing", "readOnly":"true"},
