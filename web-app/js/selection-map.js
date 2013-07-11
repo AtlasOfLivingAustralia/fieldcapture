@@ -115,6 +115,7 @@ map = {
 
             if(e.type == 'polygon'){
                 var poly = e.overlay;
+                that.currentShapeBounds = that.getPolygonBounds(poly);
                 google.maps.event.addListener(poly, 'mouseup', function() {
                     console.log('poly clicked - ' + poly);
                     that.shapes[0] = poly;
@@ -127,6 +128,7 @@ map = {
             if(e.type == 'circle'){
                 // when the user has drawn a circle
                 var circle = e.overlay;
+                that.currentShapeBounds = circle.getBounds();
                 google.maps.event.addListener(circle, 'radius_changed', function () {
                     console.log('radius changed - ' + circle);
                     that.shapes[0] = circle;
@@ -144,6 +146,7 @@ map = {
 
             if(e.type == 'rectangle'){
                 var rect = e.overlay;
+                that.currentShapeBounds = rect.getBounds();
                 google.maps.event.addListener(rect, 'bounds_changed', function () {
                     console.log('bounds_changed - ' + rect);
                     that.shapes[0] = rect;

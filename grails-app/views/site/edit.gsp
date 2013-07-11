@@ -233,8 +233,8 @@
 <div class="drawLocationDiv row-fluid">
     <div class="span12">
         <div class="row-fluid controls-row">
-            <fc:textField data-bind="value:geometry().decimalLatitude" outerClass="span6" label="Latitude"/>
-            <fc:textField data-bind="value:geometry().decimalLongitude" outerClass="span6" label="Longitude"/>
+            <fc:textField data-bind="value:geometry().decimalLatitude, event: { change: renderMap }" outerClass="span6" label="Latitude"/>
+            <fc:textField data-bind="value:geometry().decimalLongitude, event: { change: renderMap }" outerClass="span6" label="Longitude"/>
         </div>
         <div class="row-fluid controls-row">
             <fc:textField data-bind="value:geometry().uncertainty, enable: hasCoordinate()" outerClass="span4" label="Uncertainty"/>
@@ -671,7 +671,14 @@
                 return hasCoordinate;
             }
             self.renderMap = function(){
-
+                if(self.hasCoordinate()){
+//                    //removeMarkers();
+                    console.log('Rendering the point');
+                    addMarker(self.geometry().decimalLatitude(), self.geometry().decimalLongitude(), 'Extent of site');
+                }
+//                } else {
+//                    removeMarkers();
+//                }
             }
             self.toJSON = function(){
                 var js = ko.toJS(self);
@@ -917,7 +924,7 @@
             } else if(currentDrawnShape.type == 'Circle'){
                 console.log('Redrawing circle');
                 showOnMap('circle', currentDrawnShape.coordinates[1],currentDrawnShape.coordinates[0],currentDrawnShape.radius);
-                //zoomToShapeBounds();
+                zoomToShapeBounds();
             } else if(currentDrawnShape.type == 'Rectangle'){
                 console.log('Redrawing rectangle');
                 var shapeBounds = new google.maps.LatLngBounds(

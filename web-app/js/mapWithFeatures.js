@@ -153,7 +153,6 @@
                     console.log('Loading PID: ' + pid);
                     f = new PIDLayer(pid,256,256);
                     map.map.overlayMapTypes.push(f);
-
                     $.ajax({
                         url: 'http://spatial-dev.ala.org.au/layers-service/object/' + pid,
                         dataType:'jsonp'
@@ -161,21 +160,8 @@
                        console.log('Retrieving metadata for object.....');
                        var coords = data.bbox.replace(/POLYGON/g,"").replace(/[\\(|\\)]/g, "");
                        var pointArray = coords.split(",");
-                       var shpBounds = new google.maps.LatLngBounds(
-                            new google.maps.LatLng(pointArray[1].split(" ")[1],pointArray[1].split(" ")[0]),
-                            new google.maps.LatLng(pointArray[3].split(" ")[1],pointArray[3].split(" ")[0])
-                       );
-
-                       //map.map.fitBounds(map.map.getBounds().union(shpBounds));
-                       //map.map.fitBounds(shpBounds);
-                       console.log("Latlng bounds: " + self.featureBounds.getNorthEast());
-                       console.log("Latlng bounds: " + self.featureBounds.getCenter());
-                       if(self.featureBounds.getCenter().lat() == 0){
-                         self.featureBounds = shpBounds;
-                       } else {
-                           console.log("Bounds union");
-                           self.featureBounds.union(shpBounds);
-                       }
+                       self.featureBounds.extend(new google.maps.LatLng(pointArray[1].split(" ")[1],pointArray[1].split(" ")[0]));
+                       self.featureBounds.extend(new google.maps.LatLng(pointArray[3].split(" ")[1],pointArray[3].split(" ")[0]));
                        self.addFeature(f, loc);
                     });
                 } else {

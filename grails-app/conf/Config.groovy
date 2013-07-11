@@ -114,7 +114,13 @@ if (!sld.polgon.highlight.url) {
     sld.polgon.highlight.url = "http://fish.ala.org.au/data/fc-highlight.sld"
 }
 
-spatialLayerServices.baseUrl = "http://spatial-dev.ala.org.au/ws/"
+
+spatial.baseUrl = "http://spatial-dev.ala.org.au"
+spatial.layersUrl = spatial.baseUrl + "/layers-service"
+spatial.geoserverUrl = spatial.baseUrl + "/geoserver"
+
+
+
 
 upload.images.path = "/data/${appName}/images/"
 
