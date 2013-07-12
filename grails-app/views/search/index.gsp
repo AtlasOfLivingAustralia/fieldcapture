@@ -59,21 +59,30 @@
             <g:if test="${results.totalRecords > 0}">
                 <table class="table table-bordered table-condensed table-striped">
                     <thead>
-                    <tr><th>Type</th><th>Name</th><th>Date created</th></tr>
+                    <tr><th>Type</th><th>Details</th><th>Date created</th></tr>
                     </thead>
                     <tbody>
                     <g:each var="r" in="${results.results}">
                         <tr>
                             <td><g:message code="label.${r.class}" default="${r.class}"/></td>
                             <td>
-                                <g:set var="div"><i class="icon-minus"></i></g:set>
-                                <g:if test="${r.class=~/Site/ && r.name}">${r.name} ${div} ${r.description}</g:if>
-                                <g:elseif test="${r.class=~/Activity/ && !r.name && r.description}">${r.description} ${div} ${r.type}</g:elseif>
-                                <g:elseif test="${r.name}">${r.name}</g:elseif>
-                                <g:elseif test="${r.description}">${r.description}</g:elseif>
-                                <g:else>${r.type}</g:else>
+                                <g:if test="${r.class=~/Project/}">
+                                    <g:link controller="project" id="${r.projectId}">${r.name}</g:link>
+                                </g:if>
+                                <g:if test="${r.class=~/Site/}">
+                                    <g:link controller="site" id="${r.siteId}">${r.name}</g:link>
+                                </g:if>
+                                <g:elseif test="${r.class=~/Activity/}">
+                                    <g:link controller="activity" id="${r.activityId}">${r.name?:r.type}</g:link>
+                                </g:elseif>
+                                <g:else>
+                                    ${r.type}
+                                </g:else>
+                                <g:if test="${r.description}">
+                                    &mdash; ${r.description}
+                                </g:if>
                             </td>
-                            <td>${r.dateCreated}</td>
+                            <td><fc:formatDateString date="${r.dateCreated}"/></td>
                         </tr>
                     </g:each>
                     </tbody>

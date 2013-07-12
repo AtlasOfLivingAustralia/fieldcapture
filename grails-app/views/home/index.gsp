@@ -75,11 +75,15 @@
                                         <i class="icon-home"></i>
                                         <g:link controller="project" action="index" id="${p.projectId}" params="[returnTo:'']">Project Page</g:link>
                                     </div>
-                                    <div>
-                                        <i class="icon-globe"></i>
-                                        <a href="#" data-id="${p.id}" class="zoom-in btn btn-mini"><i class="icon-zoom-in"></i> Zoom map in</a>
-                                        <a href="#" data-id="${p.id}" class="zoom-out btn btn-mini"><i class="icon-zoom-out"></i> Zoom map out</a>
-                                    </div>
+                                    <g:if test="${p.sites.size() > 0}">
+                                        <div>
+                                            <i class="icon-globe"></i>
+                                            <a href="#" data-id="${p.id}" class="zoom-in btnX btn-mini"><i
+                                                    class="icon-zoom-in"></i> Zoom map in</a>
+                                            <a href="#" data-id="${p.id}" class="zoom-out btnX btn-mini"><i
+                                                    class="icon-zoom-out"></i> Zoom map out</a>
+                                        </div>
+                                    </g:if>
                                     <g:if test="${p.organisationName}">
                                         <div>
                                             <i class="icon-user"></i> ${p.organisationName}
@@ -91,36 +95,6 @@
                                         </div>
                                     </g:if>
                                 </div>
-                                %{-- <div class="accordion-group">
-                                    <div class="accordion-heading">
-                                        <a class="accordion-toggle projectHighlight" data-id="${p.id}" data-toggle="collapse" data-parent="#accordion2" href="#collapse${i}">
-                                            ${p.name}
-                                        </a>
-                                    </div>
-                                    <div id="collapse${i}" class="accordion-body collapse">
-                                        <div class="accordion-inner projectInfoWindow">
-                                            <div>
-                                                <i class="icon-home"></i>
-                                                <g:link controller="project" action="index" id="${p.projectId}" params="[returnTo:'']">Project Page</g:link>
-                                            </div>
-                                            <div>
-                                                <i class="icon-globe"></i>
-                                                <a href="#" data-id="${p.id}" class="zoom-in btn btn-mini"><i class="icon-zoom-in"></i> Zoom map in</a>
-                                                <a href="#" data-id="${p.id}" class="zoom-out btn btn-mini"><i class="icon-zoom-out"></i> Zoom map out</a>
-                                            </div>
-                                            <g:if test="${p.organisationName}">
-                                            <div>
-                                                <i class="icon-user"></i> ${p.organisationName}
-                                            </div>
-                                            </g:if>
-                                            <g:if test="${p.description}">
-                                            <div>
-                                                <i class="icon-info-sign"></i> ${p.description}
-                                            </div>
-                                            </g:if>
-                                        </div>
-                                    </div>
-                                </div> --}%
                             </td>
                             <td>
                                 <fc:formatDateString date="${p.lastUpdated}"/>
@@ -220,7 +194,7 @@
                 $("#proj_" + prevFeatureId).slideUp();
                 alaMap.unAnimateFeatureById(prevFeatureId);
             } else {
-                $("#proj_" + fId).slideUp();
+                $("#proj_" + fId).slideToggle();
                 alaMap.unAnimateFeatureById(fId);
             }
             prevFeatureId = fId;
