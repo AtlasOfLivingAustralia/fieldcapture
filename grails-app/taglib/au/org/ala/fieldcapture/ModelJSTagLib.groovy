@@ -390,7 +390,7 @@ class ModelJSTagLib {
 
         out << """
             self.data.${model.name} = ko.observableArray([]);
-            self.selectedRow = ko.observable();
+            self.selected${model.name}Row = ko.observable();
         """
         if (model.dataType != 'photoPoints') {
             out << """
@@ -408,41 +408,41 @@ class ModelJSTagLib {
         }
         if (attrs.edit) {
             out << """
-            self.addRow = function () {
+            self.add${model.name}Row = function () {
                 var newRow = new ${rowModelName}();
                 self.data.${model.name}.push(newRow);
-                ${editableRows ? "newRow.isNew = true; self.editRow(newRow);" : ""}
+                ${editableRows ? "newRow.isNew = true; self.edit${model.name}Row(newRow);" : ""}
             };
-            self.removeRow = function (row) {
+            self.remove${model.name}Row = function (row) {
                 self.data.${model.name}.remove(row);
-                ${editableRows ? "self.selectedRow(null);" : ""}
+                ${editableRows ? "self.selected${model.name}Row(null);" : ""}
             };
-            self.rowCount = function () {
+            self.${model.name}rowCount = function () {
                 return self.data.${model.name}().length;
             };
 """
             if (editableRows) {
                 out << """
-            self.templateToUse = function (row) {
-                return self.selectedRow() === row ? 'editTmpl' : 'viewTmpl';
+            self.${model.name}templateToUse = function (row) {
+                return self.selected${model.name}Row() === row ? '${model.name}editTmpl' : '${model.name}viewTmpl';
             };
-            self.editRow = function (row) {
-                self.selectedRow(row);
+            self.edit${model.name}Row = function (row) {
+                self.selected${model.name}Row(row);
                 row.isSelected(true);
             };
-            self.accept = function (row) {
+            self.accept${model.name} = function (row) {
                 // todo: validation
                 row.commit();
-                self.selectedRow(null);
+                self.selected${model.name}Row(null);
                 row.isSelected(false);
                 row.isNew = false;
             };
-            self.cancel = function (row) {
+            self.cancel${model.name} = function (row) {
                 if (row.isNew) {
-                    self.removeRow(row);
+                    self.remove${model.name}Row(row);
                 } else {
                     row.reset();
-                    self.selectedRow(null);
+                    self.selected${model.name}Row(null);
                     row.isSelected(false);
                 }
             };
