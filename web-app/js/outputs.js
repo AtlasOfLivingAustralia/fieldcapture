@@ -61,12 +61,12 @@ ko.virtualElements.allowedBindings.foreachModelOutput = true;
 // handle activity accordion
 $('#activities').
     on('show', 'div.collapse', function() {
-        $(this).parents('tr').prev().find('td:first-child i').
-            removeClass('icon-plus').addClass('icon-minus');
+        $(this).parents('tr').prev().find('td:first-child a').empty()
+            .html("&#9660;").attr('title','hide').parent('a').tooltip();
     }).
     on('hide', 'div.collapse', function() {
-        $(this).parents('tr').prev().find('td:first-child i').
-            removeClass('icon-minus').addClass('icon-plus');
+        $(this).parents('tr').prev().find('td:first-child a').empty()
+            .html("&#9658;").attr('title','expand');
     }).
     on('shown', 'div.collapse', function() {
         trackState();

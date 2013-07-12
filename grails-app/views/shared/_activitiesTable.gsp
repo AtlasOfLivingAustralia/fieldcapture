@@ -14,7 +14,7 @@
     <table class="table table-condensed" id="activities">
         <thead>
         <tr data-bind="visible: activities().length > 0">
-            <th></th>
+            <th width="2%"></th>
             <th class="sort" data-bind="sortIcon:activitiesSort,click:sortBy" data-column="type">Type</th>
             <th class="sort" data-bind="sortIcon:activitiesSort,click:sortBy" data-column="startDate">From</th>
             <th class="sort" data-bind="sortIcon:activitiesSort,click:sortBy" data-column="endDate">To</th>
@@ -28,7 +28,7 @@
         <tr>
             <!-- first 2 td elements toggle the accordion -->
             <td data-bind="attr:{href:'#'+activityId}" data-toggle="collapse" class="accordion-toggle">
-                <div><a><i class="icon-plus" title="expand"></i></a></div>
+                <div><a>&#9658;</a></div>
             </td>
             <td data-bind="attr:{href:'#'+activityId}" data-toggle="collapse" class="accordion-toggle">
                 <span data-bind="text:type"></span>
