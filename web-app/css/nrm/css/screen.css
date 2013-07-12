@@ -28,7 +28,7 @@ Font sizes:
 
 body {
     /*margin: ;*/
-    background: #f7F4EA; /*url(../images/bg_page.png);*/
+    /*background: #f7F4EA; *//*url(../images/bg_page.png);*/
     color: #393124;
     font: 0.75em/1.6em "Helvetica Neue", Arial, sans-serif;
 }
@@ -175,7 +175,7 @@ ul.horizontal li {
 
 #content {
     /*background: url(../images/bg_content.png) repeat 0px 0;*/
-    background-color: #f7F4EA;
+    /*background-color: #f7F4EA;*/
     /*width: 960px;*/
     /*margin: 0 auto;*/
     /*padding: 0 70px;*/
@@ -1861,7 +1861,6 @@ h2.target { font-size: 1.9em; margin-top: 10px; }
     padding: 0 7px;
     margin-bottom: 10px;
     border: none;
-    /*background: url(../images/placeholder/bg_search_l2.png);*/
 }
 
 ul.content-list {
