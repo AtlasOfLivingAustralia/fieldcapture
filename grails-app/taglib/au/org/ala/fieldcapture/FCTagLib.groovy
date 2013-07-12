@@ -152,7 +152,8 @@ class FCTagLib {
     /**
      * Output search counts in the form of:
      *
-     * "1 to 10 of 133"
+     * "Showing 1 to 10 of 133 for "
+     * TODO: encode words as i18n props
      *
      * @attr offset
      * @attr max
@@ -169,7 +170,25 @@ class FCTagLib {
         } else {
             out << "No records found for "
         }
+    }
 
+    /**
+     * Tag to simplify formatting a date from string
+     *
+     * <g:formatDate date="${Date.parse("yyyy-MM-dd'T'HH:mm:ss'Z'" , dateString)}" format="yyyy-MM-dd"/>
+     *
+     * @attr format
+     * @attr date
+     * @attr inputFormat optional
+     *
+     */
+    def formatDateString = { attrs, body ->
+        def inputFormat = attrs.inputFormat?:"yyyy-MM-dd'T'HH:mm:ss'Z'"
+        def formattedDate = g.formatDate(
+                date: Date.parse(inputFormat, attrs.date),
+                format: attrs.format?:"yyyy-MM-dd"
+        )
+        out << formattedDate
     }
 
 }
