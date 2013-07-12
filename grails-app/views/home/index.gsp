@@ -58,19 +58,19 @@
                 </div>
             </div>
             <div class="scroll-list clearfix" id="projectList">
-                <table class="accordion" id="accordion2">
-                    <thead class="hide"><tr><th>Project</th></tr></thead>
+                <table class="table table-bordered table-hover" id="projectTable">
+                    <thead>
+                        <tr>
+                            <th width="85%">Name</th>
+                            <th width="15%">Last&nbsp;updated&nbsp;</th>
+                        </tr>
+                    </thead>
                     <tbody>
                     <g:each in="${projects}" var="p" status="i">
-                        <tr><td>
-                        <div class="accordion-group">
-                            <div class="accordion-heading">
-                                <a class="accordion-toggle projectHighlight" data-id="${p.id}" data-toggle="collapse" data-parent="#accordion2" href="#collapse${i}">
-                                    ${p.name}
-                                </a>
-                            </div>
-                            <div id="collapse${i}" class="accordion-body collapse">
-                                <div class="accordion-inner projectInfoWindow">
+                        <tr>
+                            <td>
+                                <a href="#" class="projectTitle" data-id="${p.id}">${p.name}</a>
+                                <div class="hide projectInfo" id="proj_${p.id}">
                                     <div>
                                         <i class="icon-home"></i>
                                         <g:link controller="project" action="index" id="${p.projectId}" params="[returnTo:'']">Project Page</g:link>
@@ -81,19 +81,51 @@
                                         <a href="#" data-id="${p.id}" class="zoom-out btn btn-mini"><i class="icon-zoom-out"></i> Zoom map out</a>
                                     </div>
                                     <g:if test="${p.organisationName}">
-                                    <div>
-                                        <i class="icon-user"></i> ${p.organisationName}
-                                    </div>
+                                        <div>
+                                            <i class="icon-user"></i> ${p.organisationName}
+                                        </div>
                                     </g:if>
                                     <g:if test="${p.description}">
-                                    <div>
-                                        <i class="icon-info-sign"></i> ${p.description}
-                                    </div>
+                                        <div>
+                                            <i class="icon-info-sign"></i> ${p.description}
+                                        </div>
                                     </g:if>
                                 </div>
-                            </div>
-                        </div>
-                        </td></tr>
+                                %{-- <div class="accordion-group">
+                                    <div class="accordion-heading">
+                                        <a class="accordion-toggle projectHighlight" data-id="${p.id}" data-toggle="collapse" data-parent="#accordion2" href="#collapse${i}">
+                                            ${p.name}
+                                        </a>
+                                    </div>
+                                    <div id="collapse${i}" class="accordion-body collapse">
+                                        <div class="accordion-inner projectInfoWindow">
+                                            <div>
+                                                <i class="icon-home"></i>
+                                                <g:link controller="project" action="index" id="${p.projectId}" params="[returnTo:'']">Project Page</g:link>
+                                            </div>
+                                            <div>
+                                                <i class="icon-globe"></i>
+                                                <a href="#" data-id="${p.id}" class="zoom-in btn btn-mini"><i class="icon-zoom-in"></i> Zoom map in</a>
+                                                <a href="#" data-id="${p.id}" class="zoom-out btn btn-mini"><i class="icon-zoom-out"></i> Zoom map out</a>
+                                            </div>
+                                            <g:if test="${p.organisationName}">
+                                            <div>
+                                                <i class="icon-user"></i> ${p.organisationName}
+                                            </div>
+                                            </g:if>
+                                            <g:if test="${p.description}">
+                                            <div>
+                                                <i class="icon-info-sign"></i> ${p.description}
+                                            </div>
+                                            </g:if>
+                                        </div>
+                                    </div>
+                                </div> --}%
+                            </td>
+                            <td>
+                                <fc:formatDateString date="${p.lastUpdated}"/>
+                            </td>
+                        </tr>
                     </g:each>
                     </tbody>
                 </table>
@@ -120,18 +152,21 @@
     $(window).load(function () {
 
         // setup dataTable for projects list
-        var oTable = $('#accordion2').dataTable( {
+        var oTable = $('#projectTable').dataTable( {
             "bFilter": true,
             "bLengthChange": false,
             "bInfo": false,
-            "bSort": false,
+            "bSort": true,
+            "aaSorting": [[1,'desc']],
             "iDisplayLength": 15,
             "sPaginationType": "bootstrap",
+            //"sDom": "<'row'<'span8'l><'span8'f>r>t<'row'<'span8'i><'span8'p>>",
             "oLanguage": {
                 "oPaginate": {
                     "sNext": "▶",
                     "sPrevious": "◀"
-                }
+                },
+                "sLengthMenu": "_MENU_ records per page"
             }
         } );
 
@@ -170,21 +205,30 @@
             //$('#' + target + "List .accordion-group").slideDown();
         });
 
-        // highglight icon on map when project name is clicked
-        var prevFeatureId;
-        //$(".projectHighlight").on("click",function(el) {
-        $('#accordion2').on("click", ".projectHighlight",function(el) {
+        // highlight icon on map when project name is clicked
+        var prevFeatureId ;
+        $('#projectTable').on("click", ".projectTitle", function(el) {
             //console.log("projectHighlight", $(this).data("id"), alaMap.featureIndex);
             var fId = $(this).data("id");
-            if (prevFeatureId) alaMap.unAnimateFeatureById(prevFeatureId);
+            //if (prevFeatureId) alaMap.unAnimateFeatureById(prevFeatureId);
             alaMap.animateFeatureById(fId);
+            //console.log("toggle", prevFeatureId, fId);
+            if (!prevFeatureId) {
+                $("#proj_" + fId).slideToggle();
+            } else if (prevFeatureId != fId) {
+                $("#proj_" + fId).slideToggle();
+                $("#proj_" + prevFeatureId).slideUp();
+                alaMap.unAnimateFeatureById(prevFeatureId);
+            } else {
+                $("#proj_" + fId).slideUp();
+                alaMap.unAnimateFeatureById(fId);
+            }
             prevFeatureId = fId;
         });
 
         // zoom in/out to project points via +/- buttons
         var initCentre, initZoom;
-        //$("a.zoom-in").click(function(el) {
-        $('#accordion2').on("click", "a.zoom-in",function(el) {
+        $('#projectTable').on("click", "a.zoom-in",function(el) {
             if (!initCentre && !initZoom) {
                 initCentre = alaMap.map.getCenter();
                 initZoom = alaMap.map.getZoom();
@@ -193,8 +237,7 @@
             var bounds = alaMap.getExtentByFeatureId(projectId);
             alaMap.map.fitBounds(bounds);
         });
-        //$("a.zoom-out").click(function(el) {
-        $('#accordion2').on("click", "a.zoom-out",function(el) {
+        $('#projectTable').on("click", "a.zoom-out",function(el) {
             alaMap.map.setCenter(initCentre);
             alaMap.map.setZoom(initZoom);
         });

@@ -1,5 +1,6 @@
 // App-specific variables
 @backgroundColour: #f7F4EA;
+@tableHeaderBackground: #DAE0B9;
 
 // Scaffolding
 // -------------------------------
@@ -14,6 +15,7 @@
 @btnBackground: lighten(@wellBackground, 5%);
 @btnBackgroundHighlight: @wellBackground;
 @tableBackgroundHover: @wellBackground;
+@tableBackgroundAccent: lighten(@wellBackground, 5%);
 
 // Overrides for Bootstrap
 // -------------------------------
@@ -88,6 +90,17 @@ div.nav { // Grails nav bar
     .table-bordered;
     .table-hover;
 }
+
+// Home page project table
+#projectTable td {
+    background-color: lighten(@wellBackground, 6%);
+}
+table .header {cursor:pointer;}
+table .header:after{content:" ";float:right;margin-top:7px;border-width:0 4px 4px;border-style:solid;border-color:#000 transparent;visibility:hidden;}
+table .headerSortUp,table .headerSortDown{background-color:darken(@tableHeaderBackground, 10%);text-shadow:0 1px 1px rgba(255, 255, 255, 0.75);}
+table .header:hover:after{visibility:visible;}
+table .headerSortDown:after,table .headerSortDown:hover:after{visibility:visible;filter:alpha(opacity=60);-khtml-opacity:0.6;-moz-opacity:0.6;opacity:0.6;}
+table .headerSortUp:after{border-bottom:none;border-left:4px solid transparent;border-right:4px solid transparent;border-top:4px solid #000;visibility:visible;-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none;filter:alpha(opacity=60);-khtml-opacity:0.6;-moz-opacity:0.6;opacity:0.6;}
 
 // Adapted from grails CSS
 .property-list {
