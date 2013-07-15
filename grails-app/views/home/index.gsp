@@ -2,10 +2,10 @@
 <!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/html">
 <head>
-  <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
-  <title>Field Capture</title>
-  <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&language=en"></script>
-  <r:script disposition="head">
+    <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
+    <title>Field Capture</title>
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&language=en"></script>
+    <r:script disposition="head">
     var fcConfig = {
         baseUrl: "${grailsApplication.config.grails.serverURL}",
         spatialBaseUrl: "${grailsApplication.config.spatial.baseURL}",
@@ -14,11 +14,11 @@
         sldPolgonDefaultUrl: "${grailsApplication.config.sld.polgon.default.url}",
         sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}"
     }
-  </r:script>
-  <r:require modules="knockout,mapWithFeatures,jquery_bootstrap_datatable"/>
+    </r:script>
+    <r:require modules="knockout,mapWithFeatures,jquery_bootstrap_datatable"/>
 </head>
 <body>
-    <div id="wrapper" class="container-fluid">
+<div id="wrapper" class="container-fluid">
     <div class="row-fluid large-space-after hide">
         <div class="span12" id="heading">
             <h1 class="pull-left">Field Capture</h1>
@@ -40,7 +40,7 @@
         </g:if>
     </div>
 
-    <div class="row-fluid ">
+    <div class="row-fluid large-space-before">
         <div class="span6 well well-small map-box">
             <div id="map" style="width: 100%; height: 100%;"></div>
         </div>
@@ -60,28 +60,28 @@
             <div class="scroll-list clearfix" id="projectList">
                 <table class="table table-bordered table-hover" id="projectTable">
                     <thead>
-                        <tr>
-                            <th width="85%">Name</th>
-                            <th width="15%">Last&nbsp;updated&nbsp;</th>
-                        </tr>
+                    <tr>
+                        <th width="85%">Name</th>
+                        <th width="15%">Last&nbsp;updated&nbsp;</th>
+                    </tr>
                     </thead>
                     <tbody>
                     <g:each in="${projects}" var="p" status="i">
                         <tr>
                             <td>
-                                <a href="#" class="projectTitle" data-id="${p.id}">${p.name}</a>
+                                <a href="#" class="projectTitle" data-id="${p.id}" title="click to show/hide details">${p.name}</a>
                                 <div class="hide projectInfo" id="proj_${p.id}">
                                     <div>
                                         <i class="icon-home"></i>
-                                        <g:link controller="project" action="index" id="${p.projectId}" params="[returnTo:'']">Project Page</g:link>
+                                        <g:link controller="project" action="index" id="${p.projectId}">View project page</g:link>
                                     </div>
                                     <g:if test="${p.sites.size() > 0}">
                                         <div>
-                                            <i class="icon-globe"></i>
-                                            <a href="#" data-id="${p.id}" class="zoom-in btnX btn-mini"><i
-                                                    class="icon-zoom-in"></i> Zoom map in</a>
-                                            <a href="#" data-id="${p.id}" class="zoom-out btnX btn-mini"><i
-                                                    class="icon-zoom-out"></i> Zoom map out</a>
+                                            <i class="icon-map-marker"></i>
+                                            Sites: <a href="#" data-id="${p.id}" class="zoom-in btnX btn-miniX"><i
+                                                    class="icon-plus-sign"></i> zoom in</a>
+                                            <a href="#" data-id="${p.id}" class="zoom-out btnX btn-miniX"><i
+                                                    class="icon-minus-sign"></i> zoom out</a>
                                         </div>
                                     </g:if>
                                     <g:if test="${p.organisationName}">
@@ -119,7 +119,7 @@
             <pre>${projects}</pre>
         </div>
     </div>
-    </div>
+</div>
 
 <r:script>
 
@@ -137,8 +137,8 @@
             //"sDom": "<'row'<'span8'l><'span8'f>r>t<'row'<'span8'i><'span8'p>>",
             "oLanguage": {
                 "oPaginate": {
-                    "sNext": "▶",
-                    "sPrevious": "◀"
+                    "sNext": "&#9658;",
+                    "sPrevious": "&#9668;"
                 },
                 "sLengthMenu": "_MENU_ records per page"
             }
@@ -186,6 +186,7 @@
             var fId = $(this).data("id");
             //if (prevFeatureId) alaMap.unAnimateFeatureById(prevFeatureId);
             alaMap.animateFeatureById(fId);
+            $(this).tooltip('hide');
             //console.log("toggle", prevFeatureId, fId);
             if (!prevFeatureId) {
                 $("#proj_" + fId).slideToggle();
@@ -252,6 +253,13 @@
                     }
                 });
             }
+        });
+
+        // Tooltip
+        $('.projectTitle').tooltip({
+            placement: "right",
+            container: "#projectTable",
+            delay: 400
         });
 
         function generatePopup(projectLinkPrefix, projectId, projectName, orgName, siteLinkPrefix, siteId, siteName){

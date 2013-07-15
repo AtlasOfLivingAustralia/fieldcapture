@@ -196,6 +196,11 @@
 </div><!-- /#body-wrapper -->
 
 <r:script>
+    // Prevent console.log() killing IE
+    if (typeof console == "undefined") {
+        this.console = {log: function() {}};
+    }
+
     $(window).load(function() {
         $("#toggleFluid").click(function(el){
             var fluidNo = $('div.container-fluid').length;
@@ -208,6 +213,8 @@
             }
         });
     });
+
+
 </r:script>
 
 <r:layoutResources/>

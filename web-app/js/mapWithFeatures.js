@@ -55,6 +55,10 @@
         locationsLoaded: 0,
         // keep a running bounds for loaded locations so we can zoom when all are loaded
         featureBounds: new google.maps.LatLngBounds(),
+        // URL to small dot icon
+        smallDotIcon: "https://maps.gstatic.com/intl/en_us/mapfiles/markers2/measle.png", // blue: measle_blue.png
+        // URL to red google marker icon
+        redMarkerIcon: "http://www.google.com/intl/en_us/mapfiles/ms/micons/red-dot.png",
         // init map and load features
         init: function (options, features) {
             var self = this;
@@ -117,7 +121,7 @@
                         map: self.map,
                         position: ll,
                         title: loc.name,
-                        icon: "https://maps.gstatic.com/intl/en_us/mapfiles/markers2/measle_blue.png" // red: measle.png
+                        icon: map.smallDotIcon
                     });
                     self.featureBounds.extend(ll);
                     self.addFeature(f, loc, iw);
@@ -185,17 +189,18 @@
                 // add infoWindow popu
                 google.maps.event.addListener(f, 'click', function(event) {
                     if (prevMarker) {
-                        prevMarker.setIcon("https://maps.gstatic.com/intl/en_us/mapfiles/markers2/measle_blue.png");
+                        prevMarker.setIcon(map.smallDotIcon);
                     }
                     iw.setContent(loc.popup);
                     iw.open(self.map, f);
-                    f.setIcon("http://www.google.com/intl/en_us/mapfiles/ms/micons/red-dot.png");
+                    console.log("f", f)
+                    f.setIcon(map.redMarkerIcon);
                     prevMarker = f;
                 });
 
                 google.maps.event.addListener(iw, 'closeclick', function(){
                     // catch the close infoWindow event
-                    if (prevMarker) prevMarker.setIcon("https://maps.gstatic.com/intl/en_us/mapfiles/markers2/measle_blue.png");
+                    if (prevMarker) prevMarker.setIcon(map.smallDotIcon);
                 });
             }
             this.indexFeature(f, loc);
@@ -300,19 +305,13 @@
         animateFeature: function (f) {
             if (!f) { return; }
             if (f instanceof google.maps.Marker) {
-                //f.setOptions({icon: 'http://collections.ala.org.au/images/map/orange-dot.png'});
-                //iw.setContent(loc.popup);
-                //iw.open(self.map, f);
-                f.setIcon("http://www.google.com/intl/en_us/mapfiles/ms/micons/red-dot.png");
+                f.setIcon(map.redMarkerIcon);
             }
         },
         unAnimateFeature: function (f) {
             if (!f) { return; }
             if (f instanceof google.maps.Marker) {
-                //f.setOptions({icon: 'http://collections.ala.org.au/images/map/orange-dot.png'});
-                //iw.setContent(loc.popup);
-                //iw.close(self.map, f);
-                f.setIcon("https://maps.gstatic.com/intl/en_us/mapfiles/markers2/measle_blue.png");
+                f.setIcon(map.smallDotIcon);
             }
         },
         getExtentByFeatureId: function(id) {
