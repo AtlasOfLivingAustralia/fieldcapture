@@ -82,11 +82,13 @@ function isValidDate(d) {
 }
 
 function convertToSimpleDate(isoDate, includeTime) {
-    if (!isoDate || !isValidDate(isoDate)) { return ''}
+    if (!isoDate) { return ''}
     var date = isoDate, strDate;
     if (typeof isoDate === 'string') {
         date = Date.fromISO(isoDate);
     }
+    if (!isValidDate(date)) { return '' }
+    strDate = pad(date.getDate(),2) + '-' + pad(date.getMonth() + 1,2) + '-' + date.getFullYear();
     strDate = pad(date.getDate(),2) + '-' + pad(date.getMonth() + 1,2) + '-' + date.getFullYear();
     if (includeTime) {
         strDate = strDate + ' ' + pad(date.getHours(),2) + ':' + pad(date.getMinutes(),2);
