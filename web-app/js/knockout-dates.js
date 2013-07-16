@@ -75,8 +75,14 @@ The custom binding listens for changes via the datepicker as well as direct edit
     }
 })();
 
+function isValidDate(d) {
+    if ( Object.prototype.toString.call(d) !== "[object Date]" )
+        return false;
+    return !isNaN(d.getTime());
+}
+
 function convertToSimpleDate(isoDate, includeTime) {
-    if (!isoDate) { return ''}
+    if (!isoDate || !isValidDate(isoDate)) { return ''}
     var date = isoDate, strDate;
     if (typeof isoDate === 'string') {
         date = Date.fromISO(isoDate);
