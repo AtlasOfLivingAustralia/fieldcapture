@@ -52,25 +52,34 @@
     </legend>
 
     <div class="row-fluid title-block well input-block-level">
-        <div class="space-after"><span>An activity is usually associated with a site. Less commonly, the activity may just be
-        linked to a project (usually planning activities). Select either a site or a project below. When a site is
-        selected, the project or projects associated with that site will be shown.</span></div>
+        <div class="space-after"><span>An activity is usually associated with a site and a project. Less commonly, the activity may just be
+        linked to a project (usually planning activities).</span></div>
         <div class="span6 title-attribute">
             <span class="pull-right" style="padding:10px 20px 0 0;">OR</span>
             <div class="">
                 <h2>Site:</h2>
-                <select data-bind="options:transients.sites,optionsText:'name',optionsValue:'siteId',value:siteId,optionsCaption:'Choose a site...'"></select>
+                <g:if test="${site}">
+                    <h2>${site.name}</h2>
+                </g:if>
+                <g:else>
+                    <select data-bind="options:transients.sites,optionsText:'name',optionsValue:'siteId',value:siteId,optionsCaption:'Choose a site...'"></select>
+                </g:else>
             </div>
-            <div>
+            %{--<div>
                 <h3>Site projects:</h3>
                 <!-- ko foreach:transients.site.projects -->
                     <a data-bind="text:name,attr:{'href':'${createLink(controller:'project',action:'index')}/' + projectId}"></a>
                 <!-- /ko -->
-            </div>
+            </div>--}%
         </div>
         <div class="span5 title-attribute">
             <h2>Project: </h2>
-            <select data-bind="options:transients.projects,optionsText:'name',optionsValue:'projectId',value:projectId,optionsCaption:'Choose a project...',disabled:true"></select>
+            <g:if test="${project}">
+                <h2>${project.name}</h2>
+            </g:if>
+            <g:else>
+                <select data-bind="options:transients.projects,optionsText:'name',optionsValue:'projectId',value:projectId,optionsCaption:'Choose a project...',disabled:true"></select>
+            </g:else>
         </div>
     </div>
 
@@ -161,6 +170,8 @@
             <pre>${site}</pre>
             <h4>Sites</h4>
             <pre>${(sites as JSON).toString()}</pre>
+            <h4>Project</h4>
+            <pre>${project}</pre>
             <h4>Projects</h4>
             <pre>${(projects as JSON).toString()}</pre>
             %{--<pre>Map features : ${mapFeatures}</pre>--}%
@@ -192,7 +203,7 @@
             }
         }
 
-        function ViewModel (act, sites, projects, site) {
+        function ViewModel (act, sites, projects, site, project) {
             var self = this;
             self.description = ko.observable(act.description);
             self.notes = ko.observable(act.notes);
@@ -206,12 +217,13 @@
             self.siteId = ko.observable(act.siteId);
             self.projectId = ko.observable(act.projectId);
             self.transients = {};
-            self.transients.sites = sites;
-            self.transients.projects = projects;
             self.transients.site = site;
-            self.transients.site.projects = ko.computed(function () {
+            self.transients.project = project;
+            self.transients.sites = project ? project.sites : sites;
+            self.transients.projects = site ? site.projects : projects;
+            /*self.transients.site.projects = ko.computed(function () {
                 return getProjectsForSite(self.siteId());
-            }).extend({async: []});
+            }).extend({async: []});*/
             self.save = function () {
                 if ($('#validation-container').validationEngine('validate')) {
                     var jsData = ko.toJS(self);
@@ -251,9 +263,10 @@
 
         var viewModel = new ViewModel(
             ${(activity as JSON).toString()},
-            ${(sites as JSON).toString()},
+            ${((sites ?: []) as JSON).toString()},
             ${((projects ?: []) as JSON).toString()},
-            ${site ?: [:]});
+            ${site ?: 'null'},
+            ${project ?: 'null'});
         ko.applyBindings(viewModel);
 
     });

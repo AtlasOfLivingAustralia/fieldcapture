@@ -16,6 +16,10 @@ class SiteService {
         get(siteId)?.projects
     }
 
+    def sitesForProject(projectId) {
+        webService.getJson(grailsApplication.config.ecodata.baseUrl + 'sitesForProject/' + projectId).list
+    }
+
     def getLocationMetadata(site) {
         //log.debug site
         def loc = getFirstPointLocation(site)
@@ -90,7 +94,7 @@ class SiteService {
      */
     def getMapFeatures(site) {
         def featuresMap = [zoomToBounds: true, zoomLimit: 15, highlightOnHover: true, features: []]
-        switch (site.extent.source) {
+        switch (site.extent?.source) {
             case 'point':
                 featuresMap.features << site.extent.geometry
                 break
