@@ -62,7 +62,7 @@
                 </span>
             </div>
 
-            <g:if test="${site.extent.geometry}">
+            <g:if test="${site.extent?.geometry}">
             <div style="margin-top: 20px;">
                 <span class="span4">
                     <span class="label label-success">State/territory:</span> ${site.extent.geometry.state?:'Not specified'}
