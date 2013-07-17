@@ -380,3 +380,17 @@ a.projectTitle:hover {
 .projectInfo {
     padding-left: 15px;
 }
+
+ul.sortableList {
+    margin-left: 0;
+}
+
+.sortableList li {
+    list-style: none;
+    border:  1px solid black;
+    background-color: #f6f4ef;
+    margin: 3px 0;
+    width: 200px;
+    text-align: center;
+    border-radius: 5px;
+}

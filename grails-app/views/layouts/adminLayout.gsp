@@ -1,4 +1,4 @@
-<g:applyLayout name="main">
+<g:applyLayout name="nrm">
     <head>
         <style type="text/css">
 
@@ -53,6 +53,7 @@
                     <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'tools')}" title="Tools" />
                     <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'settings')}" title="Settings" />
                     <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'metadata')}" title="Metadata" />
+                    <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'activityModel')}" title="Activity model" />
                 </ul>
             </div>
 

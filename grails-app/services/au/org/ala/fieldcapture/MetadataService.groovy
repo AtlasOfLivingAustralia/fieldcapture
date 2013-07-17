@@ -13,13 +13,12 @@ class MetadataService {
         })
     }
 
-//    def updateActivitiesModel(model) {
-//        String filename = (grailsApplication.config.app.external.model.dir as String) + 'activities-model.json'
-//        def f = new File(filename)
-//        f.renameTo( new File(filename + '.bak'))
-//        f.write(model)
-//        cacheService.clear('activity-model')
-//    }
+    def updateActivitiesModel(model) {
+        def result = webService.doPost(grailsApplication.config.ecodata.baseUrl +
+                'metadata/updateActivitiesModel', [model: model])
+        cacheService.clear('activity-model')
+        result
+    }
 
     def getActivityModel(name) {
         return activitiesModel().activities.find { it.name == name }
