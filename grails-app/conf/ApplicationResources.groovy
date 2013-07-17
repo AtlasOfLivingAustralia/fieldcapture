@@ -53,6 +53,11 @@ modules = {
         resource url:'js/outputs.js'
     }
 
+    knockout_sortable {
+        dependsOn 'knockout'
+        resource url:'js/knockout-sortable.min.js'
+    }
+
     jqueryValidationEngine {
         resource url: 'js/jquery.validationEngine.js'
         resource url: 'js/jquery.validationEngine-en.js'
@@ -86,7 +91,8 @@ modules = {
     }
 
     jquery_ui {
-        resource 'js/jquery-ui-1.8.19.custom.min.js'
+        resource 'js/jquery-ui-1.9.2.custom.min.js'
+        resource 'css/smoothness/jquery-ui-1.9.2.custom.min.css'
     }
 
     jquery_bootstrap_datatable {
