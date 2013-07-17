@@ -67,7 +67,7 @@ class WebService {
             return error
         } catch (Exception e) {
             def error = [error: "Failed calling web service. ${e.getMessage()} URL= ${url}.",
-                         detail: conn.errorStream.text]
+                         detail: conn.errorStream?.text]
             log.error(error, e)
             return error
         }
