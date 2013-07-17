@@ -194,14 +194,28 @@
 
     </div>
 </div><!-- /#body-wrapper -->
-
 <r:script>
     // Prevent console.log() killing IE
     if (typeof console == "undefined") {
         this.console = {log: function() {}};
     }
 
-    $(window).load(function() {
+    $(document).ready(function (e) {
+
+        $.ajaxSetup({ cache: false });
+
+        $("#btnLogout").click(function (e) {
+            window.location = "${createLink(controller: 'logout', action:'index')}";
+        });
+
+        $("#btnAdministration").click(function (e) {
+            window.location = "${createLink(controller: 'admin')}";
+        });
+
+        $("#btnProfile").click(function (e) {
+            window.location = "${createLink(controller: 'userProfile')}";
+        });
+
         $("#toggleFluid").click(function(el){
             var fluidNo = $('div.container-fluid').length;
             var fixNo = $('div.container').length;

@@ -372,3 +372,11 @@ i.open-datepicker {
 #projectTable_filter  {
     display: none;
 }
+
+a.projectTitle:hover {
+    text-decoration: none;
+}
+
+.projectInfo {
+    padding-left: 15px;
+}

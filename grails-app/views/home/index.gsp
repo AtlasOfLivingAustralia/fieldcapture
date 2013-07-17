@@ -69,7 +69,9 @@
                     <g:each in="${projects}" var="p" status="i">
                         <tr>
                             <td>
-                                <a href="#" class="projectTitle" data-id="${p.id}" title="click to show/hide details">${p.name}</a>
+                                <a href="#" class="projectTitle" data-id="${p.id}" title="click to show/hide details">
+                                    <span class="showHideCaret">&#9658;</span> ${p.name}</a>
+                                %{--<g:link controller="project" action="index" id="${p.projectId}"><i class="icon-share-alt"></i></g:link>--}%
                                 <div class="hide projectInfo" id="proj_${p.id}">
                                     <div>
                                         <i class="icon-home"></i>
