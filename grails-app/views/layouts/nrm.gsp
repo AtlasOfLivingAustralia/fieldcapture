@@ -180,7 +180,9 @@
 
             <div class="container-fluid">
                 <p>Caring for our Country is an Australian Government initiative jointly administered by the Australian Government<br>
-                    <a href="http://www.daff.gov.au/">Department of Agriculture, Fisheries and Forestry</a> and the <a href="http://www.environment.gov.au/index.html">Department of Sustainability, Environment, Water, Population and Communities</a><br>
+                    <a href="http://www.daff.gov.au/">Department of Agriculture, Fisheries and Forestry</a> and the <a href="http://www.environment.gov.au/index.html">Department of Sustainability, Environment, Water, Population and Communities</a><br/>
+                    This site is a prototype  developed by the Atlas of Living Australia in 2013.
+                    Report issues to <a href="mailto:support@ala.org.au">support@ala.org.au</a>
                     %{--Last updated: Tuesday, 29-Nov-2011 19:58:28 EST--}%
                 </p>
             </div>
@@ -194,28 +196,14 @@
 
     </div>
 </div><!-- /#body-wrapper -->
+
 <r:script>
     // Prevent console.log() killing IE
     if (typeof console == "undefined") {
         this.console = {log: function() {}};
     }
 
-    $(document).ready(function (e) {
-
-        $.ajaxSetup({ cache: false });
-
-        $("#btnLogout").click(function (e) {
-            window.location = "${createLink(controller: 'logout', action:'index')}";
-        });
-
-        $("#btnAdministration").click(function (e) {
-            window.location = "${createLink(controller: 'admin')}";
-        });
-
-        $("#btnProfile").click(function (e) {
-            window.location = "${createLink(controller: 'userProfile')}";
-        });
-
+    $(window).load(function() {
         $("#toggleFluid").click(function(el){
             var fluidNo = $('div.container-fluid').length;
             var fixNo = $('div.container').length;
