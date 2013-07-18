@@ -217,6 +217,29 @@ map = {
             case 'wkt':
                 var paths = wktToArray(arg1);
                 return this.showArea('polygon', paths);
+            case 'point':
+                var infowindow = new google.maps.InfoWindow({
+                    content: '<span class="siteMarkerPopup">' + arg3 +'</span>'
+                });
+
+                var position = new google.maps.LatLng(arg1,arg2);
+                var marker = new google.maps.Marker({
+                    position: position,
+                    title:arg3,
+                    draggable:false,
+                    map:map.gmap
+                });
+                google.maps.event.addListener(marker, 'click', function() {
+                    infowindow.open(map.gmap, marker);
+                });
+                this.shapes[0] = marker;
+
+                this.currentShapeBounds = new google.maps.LatLngBounds(
+                    new google.maps.LatLng(position.lat() - 0.01, position.lng() - 0.01),
+                    new google.maps.LatLng(position.lat() + 0.01, position.lng() + 0.01)
+                );
+
+                return marker;
             case 'rectangle':
                 var rect = new google.maps.Rectangle({
                     bounds: arg1,
@@ -468,9 +491,14 @@ function showOnMap(arg1, arg2, arg3, arg4) {
     }
 }
 
+function getMapCentre(){
+    var centre = map.gmap.getCenter();
+    return [centre.lng(), centre.lat()];
+}
+
 var markersArray = [];
 
-function addMarker(lat, lng){
+function addMarker(lat, lng, name, dragEvent){
 
   var infowindow = new google.maps.InfoWindow({
       content: '<span class="poiMarkerPopup">' + name +'</span>'
@@ -479,13 +507,24 @@ function addMarker(lat, lng){
   var marker = new google.maps.Marker({
       position: new google.maps.LatLng(lat,lng),
       title:name,
+      draggable:true,
       map:map.gmap
   });
+
+  marker.setIcon('http://maps.google.com/mapfiles/marker_yellow.png');
 
   google.maps.event.addListener(marker, 'click', function() {
       infowindow.open(map.gmap, marker);
   });
 
+  //dragEvent
+  google.maps.event.addListener(
+    marker,
+    'dragend',
+    function(event) {
+        dragEvent(event.latLng.lat(),event.latLng.lng());
+    }
+  );
   markersArray.push(marker);
 }
 
@@ -558,8 +597,13 @@ function getCurrentShape() {
     return map.shapes[0];
 }
 
+function showSatellite(){
+    map.gmap.setMapTypeId(google.maps.MapTypeId.SATELLITE);
+}
+
 // expose these methods to the global scope
 windows.init_map = init;
+windows.getMapCentre = getMapCentre;
 windows.showOnMap = showOnMap;
 windows.addMarker = addMarker;
 windows.removeMarkers = removeMarkers;
@@ -568,6 +612,7 @@ windows.clearObjects = clearObjects;
 windows.clearObjectsAndShapes = clearObjectsAndShapes;
 windows.zoomToShapeBounds = zoomToShapeBounds;
 windows.updateMap = updateMap;
+windows.showSatellite = showSatellite;
 windows.clearMap = clearShapes;
 windows.getCurrentShape = getCurrentShape;
 windows.setCurrentShapeCallback = setCurrentShapeCallback;

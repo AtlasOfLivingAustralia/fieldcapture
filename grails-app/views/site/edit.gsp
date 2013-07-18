@@ -672,13 +672,12 @@
             }
             self.renderMap = function(){
                 if(self.hasCoordinate()){
-//                    //removeMarkers();
                     console.log('Rendering the point');
-                    addMarker(self.geometry().decimalLatitude(), self.geometry().decimalLongitude(), 'Extent of site');
+                    //addMarker(self.geometry().decimalLatitude(), self.geometry().decimalLongitude(), 'Extent of site');
+                    showOnMap('point', self.geometry().decimalLatitude(), self.geometry().decimalLongitude(),'Extent of site');
+                    zoomToShapeBounds();
+                    showSatellite();
                 }
-//                } else {
-//                    removeMarkers();
-//                }
             }
             self.toJSON = function(){
                 var js = ko.toJS(self);
@@ -702,7 +701,11 @@
             if(l !== undefined){
                 storedGeom = l.geometry;
             }
-
+            self.dragEvent = function(lat,lng){
+                console.log("New lat lng " + lat + ", " + lng);
+                self.geometry().decimalLatitude(lat);
+                self.geometry().decimalLongitude(lng);
+            }
             self.description = ko.observable(exists(l,'description'));
             self.geometry = ko.observable({
                type: "Point",
@@ -750,15 +753,19 @@
             self.extent = ko.observable(new EmptyLocation());
             self.poi = ko.observableArray([]);
             self.renderPOIs = function(){
-                console.log('Rendering the POIs now');
+               // console.log('Rendering the POIs now');
                 removeMarkers();
                 for(var i=0; i<self.poi().length; i++){
-                    console.log('Rendering the POI: ' + self.poi()[i].geometry().decimalLatitude() +':'+ self.poi()[i].geometry().decimalLongitude());
-                    addMarker(self.poi()[i].geometry().decimalLatitude(), self.poi()[i].geometry().decimalLongitude(), self.poi()[i].name())
+                    //console.log('Rendering the POI: ' + self.poi()[i].geometry().decimalLatitude() +':'+ self.poi()[i].geometry().decimalLongitude());
+                    addMarker(self.poi()[i].geometry().decimalLatitude(), self.poi()[i].geometry().decimalLongitude(), self.poi()[i].name(), self.poi()[i].dragEvent)
                 }
             }
             self.addPOI = function(){
-                self.poi.push(new POI());
+                //get the center of the map
+                var lngLat = getMapCentre();
+                var randomBit = (self.poi().length + 1) /1000;
+                self.poi.push(new POI({name:'Point of interest #' + (self.poi().length + 1) , geometry:{decimalLongitude:lngLat[0] - (0.001+randomBit),decimalLatitude:lngLat[1] - (0.001+randomBit)}}));
+                self.renderPOIs();
             }
             self.removePOI = function(){
                 self.poi.remove(this);
@@ -844,7 +851,7 @@
             };
             self.save = function () {
                 if ($('#validation-container').validationEngine('validate')) {
-                        var json = ko.toJSON(self);
+                    var json = ko.toJSON(self);
                     $.ajax({
                         url: SERVER_CONF.ajaxUpdateUrl,
                         type: 'POST',
@@ -938,6 +945,12 @@
                 console.log('Loading the PID...' + currentDrawnShape.pid);
                 showObjectOnMap(currentDrawnShape.pid);
                 viewModel.extent().setCurrentPID();
+            } else if(currentDrawnShape.type == 'Point'){
+                console.log('Loading the point...' + currentDrawnShape.pid);
+                showOnMap('point', currentDrawnShape.decimalLatitude, currentDrawnShape.decimalLongitude,'site name');
+                zoomToShapeBounds();
+                showSatellite();
+                //addMarker(currentDrawnShape.decimalLatitude,currentDrawnShape.decimalLongitude);
             }
         }
     }

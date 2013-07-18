@@ -71,6 +71,11 @@
                     <span class="label label-success">Local government area:</span> ${site.extent.geometry.lga?:'Not specified'}
                 </span>
                 <span class="span4">
+                    <span class="label label-success">NRM:</span> ${site.extent.geometry.nrm?:'Not specified'}
+                </span>
+            </div>
+            <div style="margin-top: 20px;">
+                <span class="span12">
                     <span class="label label-success">Locality:</span> ${site.extent.geometry.locality?:'Not specified'}
                 </span>
             </div>
