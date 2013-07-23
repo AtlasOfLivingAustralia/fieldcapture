@@ -43,8 +43,6 @@
     </div>
 </div>
 
-<span data-bind="text:selectedActivity() ? selectedActivity().name() : 'none'"></span>
-
 <div class="expandable-debug clearfix">
     <hr />
     <h3>Debug</h3>
