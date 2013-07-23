@@ -53,10 +53,14 @@
                 <div class="collapse" data-bind="attr: {id:activityId}">
                     <ul class="unstyled well well-small">
                         <!-- ko foreachModelOutput:metaModel.outputs -->
-                        <li>
+                        <li class="output-summary">
                             <div class="row-fluid">
                                 <span class="span4" data-bind="text:name"></span>
-                                <span class="span3" data-bind="text:score"></span>
+                                <span class="span5">
+                                    <ul data-bind="foreachprop:scores">
+                                        <li data-bind="text:key + ' = ' + value"></li>
+                                    </ul>
+                                </span>
                                 <span class="span2 offset1">
                                     <a data-bind="attr: {href:editLink}">
                                         <span data-bind="text: outputId == '' ? 'Add data' : 'Edit data'"></span>

@@ -5,7 +5,7 @@
  */
 
 //iterates over the outputs specified in the meta-model and builds a temp object for
-// each containing the name, and the score and id of any matching outputs in the data
+// each containing the name, and the scores and id of any matching outputs in the data
 ko.bindingHandlers.foreachModelOutput = {
     init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
         if (valueAccessor() === undefined) {
@@ -13,26 +13,21 @@ ko.bindingHandlers.foreachModelOutput = {
             ko.applyBindingsToNode(element, { foreach: [dummyRow] });
             return { controlsDescendantBindings: true };
         }
-        var metaOutputs = ko.utils.unwrapObservable(valueAccessor()),
-            activity = bindingContext.$data,
-            transformedOutputs = [];
+        var metaOutputs = ko.utils.unwrapObservable(valueAccessor()),// list of String names of outputs
+            activity = bindingContext.$data,// activity data
+            transformedOutputs = [];//created list of temp objects
 
-        $.each(metaOutputs, function (i, name) {
-            var score = "Not assessed yet.",
+        $.each(metaOutputs, function (i, name) { // for each output name
+            var scores = {},
                 outputId = '',
                 editLink = fcConfig.serverUrl + "/output/";
 
             // search for corresponding outputs in the data
-            $.each(activity.outputs(), function (i,output) {
+            $.each(activity.outputs(), function (i,output) { // iterate output data in the activity to
+                                                             // find any matching the meta-model name
                 if (output.name === name) {
                     outputId = output.outputId;
-                    // the data structure allows for multiple scores per output
-                    // not clear yet if this is required but for now just assume one
-                    for (var key in output.scores) {
-                        if (output.scores.hasOwnProperty(key)) {
-                            score = output.scores[key];
-                        }
-                    }
+                    scores = output.scores;
                 }
             });
 
@@ -47,7 +42,7 @@ ko.bindingHandlers.foreachModelOutput = {
                     "&returnTo=" + returnTo;
             }
             // build the array that we will actually iterate over in the inner template
-            transformedOutputs.push({name: name, score: score, outputId: outputId,
+            transformedOutputs.push({name: name, scores: scores, outputId: outputId,
                 editLink: editLink});
         });
 

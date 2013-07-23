@@ -408,3 +408,17 @@ ul.sortableList {
     text-align: left;
     padding-left: 4px;
 }
+
+li.output-summary {
+    border-top: solid 1px #DAE0B9;
+    margin-bottom: 8px;
+    padding-top: 2px;
+}
+
+li.output-summary:first-child {
+    border-top: none;
+}
+
+li.output-summary:last-child {
+    margin-bottom: 0;
+}
