@@ -96,7 +96,9 @@ class AdminController {
     }
 
     def clearMetadataCache() {
-        // clear any cached external config
+        if (params.clearEcodataCache) {
+            metadataService.clearEcodataCache()
+        }
         cacheService.clear()
         flash.message = "Metadata cache cleared."
         render 'done'

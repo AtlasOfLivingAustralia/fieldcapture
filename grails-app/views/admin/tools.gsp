@@ -20,7 +20,10 @@
 
                 $("#btnClearMetadataCache").click(function(e) {
                     e.preventDefault();
-                    $.ajax("${createLink(controller: 'admin', action:'clearMetadataCache')}").done(function(result) {
+                    var clearEcodataCache = $('#clearEcodataCache').is(':checked'),
+                        url = "${createLink(controller: 'admin', action:'clearMetadataCache')}" +
+                            (clearEcodataCache ? "?clearEcodataCache=true" : "");
+                    $.ajax(url).done(function(result) {
                         document.location.reload();
                     }).fail(function (result) {
                         alert(result);
@@ -52,6 +55,7 @@
                 <tr>
                     <td>
                         <button id="btnClearMetadataCache" class="btn btn-small btn-info">Clear&nbsp;Metadata&nbsp;Cache</button>
+                        <label class="checkbox" style="padding-top:5px;"><input type="checkbox" id="clearEcodataCache">Also clear ecodata cache</label>
                     </td>
                     <td>
                         Removes all cached values for metadata requests and causes the metadata to be requested
