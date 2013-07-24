@@ -101,6 +101,7 @@
             this.toJSON = function() {
                 var js = ko.toJS(this);
                 delete js.expanded;
+                delete js.editing;
                 return js;
             }
         };
@@ -134,7 +135,8 @@
             this.toJSON = function() {
                 var js = ko.toJS(this);
                 delete js.expanded;
-                delete js.scores;  // for now
+                delete js.isReferenced;
+                delete js.scores;  // for now??
                 return js;
             }
         };
