@@ -422,3 +422,8 @@ li.output-summary:first-child {
 li.output-summary:last-child {
     margin-bottom: 0;
 }
+}
+
+#facetsCol ul.pageType {
+    list-style: none;
+}

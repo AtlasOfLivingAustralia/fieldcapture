@@ -69,7 +69,7 @@
                     <g:each in="${projects}" var="p" status="i">
                         <tr>
                             <td>
-                                <a href="#" class="projectTitle" data-id="${p.id}" title="click to show/hide details">
+                                <a href="#" class="projectTitle" id="a_${p.id}" data-id="${p.id}" title="click to show/hide details">
                                     <span class="showHideCaret">&#9658;</span> ${p.name}</a>
                                 %{--<g:link controller="project" action="index" id="${p.projectId}"><i class="icon-share-alt"></i></g:link>--}%
                                 <div class="hide projectInfo" id="proj_${p.id}">
@@ -182,22 +182,36 @@
         });
 
         // highlight icon on map when project name is clicked
-        var prevFeatureId ;
+        var prevFeatureId;
         $('#projectTable').on("click", ".projectTitle", function(el) {
             //console.log("projectHighlight", $(this).data("id"), alaMap.featureIndex);
+            var thisEl = this;
             var fId = $(this).data("id");
             //if (prevFeatureId) alaMap.unAnimateFeatureById(prevFeatureId);
             alaMap.animateFeatureById(fId);
-            $(this).tooltip('hide');
+            $(thisEl).tooltip('hide');
             //console.log("toggle", prevFeatureId, fId);
             if (!prevFeatureId) {
-                $("#proj_" + fId).slideToggle();
+                $("#proj_" + fId).slideToggle(function() {
+                    $(thisEl).find(".showHideCaret").html("&#9660;");
+                });
             } else if (prevFeatureId != fId) {
-                $("#proj_" + fId).slideToggle();
-                $("#proj_" + prevFeatureId).slideUp();
+                $("#proj_" + fId).slideToggle(function() {
+                    $(thisEl).find(".showHideCaret").html("&#9660;");
+                });
+                $("#proj_" + prevFeatureId).slideUp(function() {
+                    $("#a_" + prevFeatureId).find(".showHideCaret").html("&#9658;");
+                });
                 alaMap.unAnimateFeatureById(prevFeatureId);
             } else {
-                $("#proj_" + fId).slideToggle();
+                $("#proj_" + fId).slideToggle(function() {
+                    if ($("#proj_" + fId).is(':visible')) {
+                        $(thisEl).find(".showHideCaret").html("&#9660;");
+                    } else {
+                        $(thisEl).find(".showHideCaret").html("&#9658;");
+                    }
+                });
+
                 alaMap.unAnimateFeatureById(fId);
             }
             prevFeatureId = fId;

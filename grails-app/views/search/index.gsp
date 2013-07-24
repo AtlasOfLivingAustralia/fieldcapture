@@ -55,31 +55,43 @@
             </div>
         </div>
         <div id="content" class="row-fluid ">
-            <div class="span3 well well-small">
+            <div id="facetsCol" class="span3 well well-small">
                 <h2>Filter results</h2>
                 <g:set var="facets" value="${results.facets}"/>
+                <h4>Page</h4>
+                <!-- ${facets['class']} -->
+                <ul class="pageType">
+                    <g:each var="t" in="${facets['class'].terms}">
+                        <g:set var="fqLink" value="${request.queryString}"/>
+                    %{--<g:set var="fqLink" value="${params.collect { k,v -> "${k.encodeAsURL()}=${v.encodeAsURL()}" }.join('&')}"/>--}%
+                        <li><a href="?${fqLink}&fq=class:${t.term}"><g:message code="label.${t.term}" default="${t.term}"/></a> (${t.count})</li>
+                    </g:each>
+                </ul>
                 <g:each var="f" in="${facets}">
-                    <h4>${f.key}</h4>
-                    <ul>
-                        <g:each var="t" in="${f.value?.terms}">
-                            <g:set var="fqLink" value="${request.queryString}"/>
-                        %{--<g:set var="fqLink" value="${params.collect { k,v -> "${k.encodeAsURL()}=${v.encodeAsURL()}" }.join('&')}"/>--}%
-                            <li><a href="?${fqLink}&fq=${f.key.encodeAsURL()}:${t.term}">${t.term.encodeAsURL()}</a> (${t.count})</li>
-                        </g:each>
-                    </ul>
+                    <g:if test="${f.key != 'class' && f.value?.terms?.length() > 0}">
+                        <h4>${f.key}</h4>
+                        <ul class="facetValues">
+                            <g:each var="t" in="${f.value?.terms}">
+                                <g:set var="fqLink" value="${request.queryString}"/>
+                            %{--<g:set var="fqLink" value="${params.collect { k,v -> "${k.encodeAsURL()}=${v.encodeAsURL()}" }.join('&')}"/>--}%
+                                <li><a href="?${fqLink}&fq=${f.key.encodeAsURL()}Facet:${t.term}">${t.term?.replace("_"," ")}</a> (${t.count})
+                                </li>
+                            </g:each>
+                        </ul>
+                    </g:if>
                 </g:each>
             </div>
             <div class="span9">
                 <g:if test="${results.hits?.total > 0}">
                     <table class="table table-bordered table-condensed table-striped">
                         <thead>
-                        <tr><th>Type</th><th>Details</th><th>Date created</th></tr>
+                        <tr><th>Page</th><th>Details</th><th>Date created</th></tr>
                         </thead>
                         <tbody>
                         <g:each var="r" in="${results.hits.hits}">
                             <g:set var="hit" value="${r._source}"/>
                             <tr>
-                                <td><g:message code="label.${hit.class}" default="${hit.class}"/></td>
+                                <td><g:message code="label.${hit.class.toLowerCase()}" default="${hit.class}"/></td>
                                 <td>
                                     <g:if test="${hit.class=~/Project/}">
                                         <g:link controller="project" id="${hit.projectId}">${hit.name}</g:link>
