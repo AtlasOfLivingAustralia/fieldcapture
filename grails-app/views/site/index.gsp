@@ -105,8 +105,9 @@
         <div class="span4">
             <div id="smallMap" style="width:100%"></div>
             <g:if test="${site?.extent?.geometry?.pid}">
-                <div style="margin-top:20px;">
+                <div style="margin-top:20px;" class="pull-right">
                     <a href="http://spatial-dev.ala.org.au/ws/shape/shp/${site.extent.geometry.pid}" class="btn">Download ShapeFile</a>
+                    <a href="http://spatial-dev.ala.org.au/?pid=${site.extent.geometry.pid}" class="btn">View in Spatial Portal</a>
                 </div>
             </g:if>
         </div>

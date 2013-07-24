@@ -73,9 +73,19 @@ class SiteService {
     }
 
     def persistSiteExtent(name, geometry) {
-        def body = [geojson: geometry, name: name, description:'my description', user_id: '34']
-        def resp = webService.doPost("http://spatial-dev.ala.org.au/ws/shape/upload/geojson", body)
+
+        def resp = null
+        if(geometry?.type == 'Circle'){
+           def body = [name: "test", description: "my description", user_id: "1551", api_key: "b3f3c932-ba88-4ad5-b429-f947475024af"]
+           def url = "http://spatial-dev.ala.org.au/layers-service/shape/upload/pointradius/" +
+                    geometry?.coordinates[1] + '/' + geometry?.coordinates[0] + '/' + (geometry?.radius / 1000)
+           resp = webService.doPost(url, body)
+        } else if (geometry?.type == 'Polygon'){
+           def body = [geojson: geometry, name: name, description:'my description', user_id: '1551', api_key: "b3f3c932-ba88-4ad5-b429-f947475024af"]
+           resp = webService.doPost("http://spatial-dev.ala.org.au/ws/shape/upload/geojson", body)
+        }
         println resp
+        resp
     }
 
     def delete(id) {

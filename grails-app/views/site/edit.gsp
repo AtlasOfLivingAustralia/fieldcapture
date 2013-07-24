@@ -242,6 +242,18 @@
             <fc:textField data-bind="value:geometry().datum, enable: hasCoordinate()" outerClass="span4" label="Datum" placeholder="e.g. WGS84"/>
         </div>
     </div>
+    <div class="row-fluid controls-row gazProperties">
+        <span class="label label-success">State/territory</span> <span data-bind="text:geometry().state"></span>
+    </div>
+    <div class="row-fluid controls-row gazProperties">
+        <span class="label label-success">Local Gov. Area</span> <span data-bind="text:geometry().lga"></span>
+    </div>
+    <div class="row-fluid controls-row gazProperties">
+        <span class="label label-success">NRM</span> <span data-bind="text:geometry().nrm"></span>
+    </div>
+    <div class="row-fluid controls-row gazProperties">
+        <span class="label label-success">Locality</span> <span data-bind="text:geometry().locality"></span>
+    </div>
 </div>
 </script>
 
@@ -329,6 +341,10 @@
 
         <div class="row-fluid controls-row gazProperties">
             <span class="label label-success">Local Gov. Area</span> <span data-bind="text:geometry().lga"></span>
+        </div>
+
+        <div class="row-fluid controls-row gazProperties">
+            <span class="label label-success">NRM</span> <span data-bind="text:geometry().nrm"></span>
         </div>
 
         <div class="row-fluid controls-row gazProperties">
@@ -485,8 +501,19 @@
               viewModel.extent().geometry().lga(data[0].value);
           }
         });
-    }
 
+        $.ajax({
+            url: SERVER_CONF.spatialService + "/intersect/cl916/"+lat+"/"+lng,
+            dataType:"jsonp",
+            async:false
+        })
+        .done(function(data) {
+          if(data.length > 0){
+              console.log('Setting nrm - ' + data[0].value);
+              viewModel.extent().geometry().nrm(data[0].value);
+          }
+        });
+    }
 
     $(function(){
 
@@ -512,6 +539,7 @@
                 lga: ko.observable(exists(l,'lga')),
                 state: ko.observable(exists(l,'state')),
                 locality: ko.observable(exists(l,'locality')),
+                nrm: ko.observable(exists(l,'nrm')),
                 areaKmSq: ko.observable(exists(l,'areaKmSq')),
                 coordinates: ko.observable(exists(l,'coordinates'))
             });
@@ -519,6 +547,7 @@
                 self.geometry().type(exists(l,'type')),
                 self.geometry().centre(exists(l,'centre')),
                 self.geometry().lga(exists(l,'lga')),
+                self.geometry().nrm(exists(l,'nrm')),
                 self.geometry().radius(exists(l,'radius')),
                 self.geometry().state(exists(l,'state')),
                 self.geometry().locality(exists(l,'locality')),
@@ -551,6 +580,10 @@
                 fid : ko.observable(exists(l,'fid')),
                 layerName : ko.observable(exists(l,'layerName')),
                 area : ko.observable(exists(l,'area')),
+                nrm: ko.observable(exists(l,'nrm')),
+                state: ko.observable(exists(l,'state')),
+                lga: ko.observable(exists(l,'lga')),
+                locality: ko.observable(exists(l,'locality')),
                 centre:[]
             });
             self.refreshObjectList = function(){
@@ -661,7 +694,11 @@
                decimalLongitude: ko.observable(exists(l,'decimalLongitude')),
                uncertainty: ko.observable(exists(l,'uncertainty')),
                precision: ko.observable(exists(l,'precision')),
-               datum: ko.observable(exists(l,'datum'))
+               datum: ko.observable(exists(l,'datum')),
+               nrm: ko.observable(exists(l,'nrm')),
+               state: ko.observable(exists(l,'state')),
+               lga: ko.observable(exists(l,'lga')),
+               locality: ko.observable(exists(l,'locality'))
             });
             self.hasCoordinate = function () {
                 var hasCoordinate = self.geometry().decimalLatitude() !== undefined

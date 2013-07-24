@@ -49,7 +49,10 @@ class WebService {
     }
 
     def doPost(String url, Map postBody) {
-        postBody.api_key = grailsApplication.config.api_key
+        if(!postBody.api_key){
+            postBody.api_key = grailsApplication.config.api_key
+        }
+
         def resp = ""
         def conn = new URL(url).openConnection()
         try {
