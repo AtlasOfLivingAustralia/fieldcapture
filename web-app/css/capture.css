@@ -427,3 +427,6 @@ li.output-summary:last-child {
 #facetsCol ul.pageType {
     list-style: none;
 }
+.clickable {
+    cursor: pointer;
+}

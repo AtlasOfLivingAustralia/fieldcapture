@@ -15,33 +15,49 @@
 </content>
 <div class="row-fluid span10">
     <div class="span4">
-        <h2>Activities</h2>%{--<span data-bind=""><i class="icon-plus"></i> Add new</span>--}%
+        <h2>Activities</h2>
         <ul data-bind="sortable:activities" class="sortableList container">
-            <li data-bind="click:toggle" class="item">
-                <span data-bind="text:name"></span>
+            <li class="item">
+                <div data-bind="click:toggle"><span data-bind="text:name"></span></div>
+                <div data-bind="visible:expanded" class="details clearfix" style="display:none;">
+                    <div data-bind="template: {name: displayMode}"></div>
+                </div>
+            </li>
+        </ul>
+        <span data-bind="click:addActivity" class="clickable"><i class="icon-plus"></i> Add new</span>
+    </div>
+    <div class="span4 pull-right">
+        <h2>Outputs</h2>
+        <ul data-bind="sortable:outputs" class="sortableList">
+            <li data-bind="css:{referenced: isReferenced}" class="item">
+                <div data-bind="click:toggle"><span data-bind="text:name"></span></div>
                 <div data-bind="visible:expanded" class="details" style="display:none;">
-                    <div>Type: <span data-bind="text:type"></span></div>
-                    <div>Outputs: <ul data-bind="foreach:outputs">
+                    <div>Template: <span data-bind="text:template"></span></div>
+                    <div>Score names: <ul data-bind="foreach:scoreNames">
                         <li data-bind="text:$data"></li>
                     </ul></div>
                 </div>
             </li>
         </ul>
     </div>
-    <div class="span4 pull-right">
-        <h2>Outputs</h2>
-        <ul data-bind="sortable:outputs" class="sortableList">
-            <li data-bind="click:toggle,css:{referenced: isReferenced}" class="item">
-                <span data-bind="text:name"></span>
-                <div data-bind="visible:expanded" class="details" style="display:none;">
-                    <div>Template: <span data-bind="text:template"></span></div>
-                    <div>Score name: <span data-bind="text:scoreName"></span></div>
-                    <div>Hot: <span data-bind="text:isReferenced"></span></div>
-                </div>
-            </li>
-        </ul>
-    </div>
 </div>
+
+<script id="viewActivityTmpl" type="text/html">
+    <div>Type: <span data-bind="text:type"></span></div>
+    <div>Outputs: <ul data-bind="foreach:outputs">
+        <li data-bind="text:$data"></li>
+    </ul></div>
+    <button data-bind="click:edit" type="button" class="btn btn-mini pull-right">Edit</button>
+</script>
+
+<script id="editActivityTmpl" type="text/html">
+    <div style="margin-top:4px"><span class="span2">Name:</span> <input type="text" class="input-large" data-bind="value:name"></div>
+    <div><span class="span2">Type:</span> <select data-bind="options:['Activity','Assessment'],value:type"></select></div>
+    <div>Outputs: <ul data-bind="foreach:outputs">
+        <li data-bind="text:$data"></li>
+    </ul></div>
+    <button data-bind="click:done" type="button" class="btn btn-mini pull-right">Done</button>
+</script>
 
 <div class="expandable-debug clearfix">
     <hr />
@@ -76,6 +92,12 @@
                     self.expanded(false);
                 }
             };
+            this.editing = ko.observable(false);
+            this.edit = function () { self.editing(true) };
+            this.done = function () { self.editing(false) };
+            this.displayMode = function () {
+                return self.editing() ? 'editActivityTmpl' : 'viewActivityTmpl';
+            };
             this.toJSON = function() {
                 var js = ko.toJS(this);
                 delete js.expanded;
@@ -87,7 +109,7 @@
             var self = this;
             this.name = ko.observable(out.name);
             this.template = ko.observable(out.template);
-            this.scoreName = ko.observable(out.scoreName);
+            this.scoreNames = ko.observable(out.scoreNames);
             this.scores = ko.observableArray(out.scores);
             this.expanded = ko.observable(false);
             this.toggle = function (data, event) {
@@ -126,6 +148,12 @@
             this.outputs = ko.observableArray($.map(model.outputs, function (obj, i) {
                 return new OutputModel(obj, self);
             }));
+            this.addActivity = function () {
+                var act = new ActivityModel({name: 'new activity', type: 'Activity'});
+                self.activities.push(act);
+                act.expanded(true);
+                act.editing(true);
+            };
             this.revert = function () {
                 document.location.reload();
             };
