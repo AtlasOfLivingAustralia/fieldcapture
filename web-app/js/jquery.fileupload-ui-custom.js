@@ -606,7 +606,7 @@
                     this._cancelHandler
                 )
                 .delegate(
-                    '.delete button',
+                    'button.delete-image',  // CG - changed the selector as the default clashed witb our main stylesheet
                     'click.' + this.options.namespace,
                     eventData,
                     this._deleteHandler
@@ -620,7 +620,7 @@
             options.filesContainer
                 .undelegate('.start button', 'click.' + options.namespace)
                 .undelegate('.cancel button', 'click.' + options.namespace)
-                .undelegate('.delete button', 'click.' + options.namespace);
+                .undelegate('button.delete-image', 'click.' + options.namespace); // CG - changed the selector as the default clashed witb our main stylesheet
             parentWidget.prototype._destroyEventHandlers.call(this);
         },
 

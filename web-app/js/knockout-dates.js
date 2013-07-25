@@ -525,7 +525,8 @@ ko.bindingHandlers.fileUpload = {
             $(element).fileupload('option', 'completed', function(e, data) {
                 addCallbacks();
             });
-            $(element).fileupload('option', 'done').call(element, '', {result:value});
+            var data = isArray ? {result:value} : {result:[value]};
+            $(element).fileupload('option', 'done').call(element, '', data);
         }
         else {
             addCallbacks();
@@ -589,5 +590,19 @@ ko.bindingHandlers.sortIcon = {
         }
         // set the computed class
         $icon.removeClass('icon-chevron-down').removeClass('icon-chevron-up').removeClass('icon-blank').addClass(className);
+    }
+};
+
+
+ko.bindingHandlers.autocomplete = {
+    init: function (element, params) {
+        var param = params();
+
+        $(element).autocomplete(ko.utils.unwrapObservable(param.url), ko.utils.unwrapObservable(param.options)).result(ko.utils.unwrapObservable(param.result));
+    },
+    update: function (element, params) {
+        var param = params();
+
+        $(element).setOptions(ko.utils.unwrapObservable(param.options)).result(ko.utils.unwrapObservable(param.result));
     }
 };
