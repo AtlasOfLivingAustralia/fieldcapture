@@ -1,7 +1,5 @@
 package au.org.ala.fieldcapture
 
-import grails.converters.JSON
-
 class ProxyController {
 
     def webService
@@ -12,5 +10,13 @@ class ProxyController {
         def resp = webService.get(shpUrl)
         //log.debug resp
         render resp as String
+    }
+
+    def speciesLists() {
+        render webService.get("http://lists.ala.org.au/ws/speciesList")
+    }
+
+    def speciesList() {
+        render webService.get("http://lists.ala.org.au/ws/speciesList?druid=${params.druid}")
     }
 }
