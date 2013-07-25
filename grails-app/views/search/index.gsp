@@ -64,12 +64,12 @@
                     <g:each var="t" in="${facets['class'].terms}">
                         <g:set var="fqLink" value="${request.queryString}"/>
                     %{--<g:set var="fqLink" value="${params.collect { k,v -> "${k.encodeAsURL()}=${v.encodeAsURL()}" }.join('&')}"/>--}%
-                        <li><a href="?${fqLink}&fq=class:${t.term}"><g:message code="label.${t.term}" default="${t.term}"/></a> (${t.count})</li>
+                        <li><a href="?${fqLink}&fq=class:${t.term}"><g:message code="label.${t.term?.toLowerCase()}" default="${t.term}"/></a> (${t.count})</li>
                     </g:each>
                 </ul>
                 <g:each var="f" in="${facets}">
                     <g:if test="${f.key != 'class' && f.value?.terms?.length() > 0}">
-                        <h4>${f.key}</h4>
+                        <h4>${f.key?.capitalize()}</h4>
                         <ul class="facetValues">
                             <g:each var="t" in="${f.value?.terms}">
                                 <g:set var="fqLink" value="${request.queryString}"/>
@@ -90,6 +90,7 @@
                         <tbody>
                         <g:each var="r" in="${results.hits.hits}">
                             <g:set var="hit" value="${r._source}"/>
+                            <g:set var="highlights" value="${r.highlight?._all}"/>
                             <tr>
                                 <td><g:message code="label.${hit.class.toLowerCase()}" default="${hit.class}"/></td>
                                 <td>
@@ -105,8 +106,8 @@
                                     <g:else>
                                         ${hit.type}
                                     </g:else>
-                                    <g:if test="${hit.description}">
-                                        &mdash; ${hit.description}
+                                    <g:if test="${highlights}">
+                                        &mdash; ${highlights?.join("; ")?.replace("\\/","/")}
                                     </g:if>
                                 </td>
                                 <td><fc:formatDateString date="${hit.dateCreated}" inputFormat="yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"/></td>

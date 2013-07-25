@@ -14,7 +14,8 @@ class CommonService {
         if (!map) return ''
         def params = '?'
         map.eachWithIndex { k,v,i ->
-            params += (i?'&':'') + k + '=' + v
+            def vL = [v].flatten().findAll { it != null } // String[] and String both converted to List
+            params += (i?'&':'') + k + '=' + vL.collect { URLEncoder.encode(String.valueOf(it), "UTF-8") }.join("&${k}=")
         }
         params
     }
