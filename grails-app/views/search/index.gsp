@@ -58,11 +58,26 @@
             <div id="facetsCol" class="span3 well well-small">
                 <h2>Filter results</h2>
                 <g:set var="facets" value="${results.facets}"/>
+                <g:set var="fqLink" value="${request.queryString.replaceFirst(/offset\=\d+/,"offset=0")}"/>
+                <g:if test="${params.fq}">
+                    <h4>Current filters</h4>
+                    <ul>
+                        <g:if test="${params.fq instanceof String[]}">
+                            <g:each var="f" in="${params.fq}">
+                                <g:set var="fqBits" value="${f?.tokenize(':')}"/>
+                                <li>${fqBits[0]}: ${fqBits[1]} <a href="?${fqLink.replaceFirst(/\&fq\=[a-z A-Z:.]*/,'')}" class="btn btn-inverse btn-mini"><i class="icon-white icon-remove"></i></a></li>
+                            </g:each>
+                        </g:if>
+                        <g:else>
+                            <g:set var="fqBits" value="${params.fq?.tokenize(':')}"/>
+                            <li>${fqBits[0]}: ${fqBits[1]} <a href="?${fqLink.replaceFirst(/\&fq\=[a-z A-Z:.]*/,'')}" class="btn btn-inverse btn-mini"><i class="icon-white icon-remove"></i></a></li>
+                        </g:else>
+                    </ul>
+                </g:if>
                 <h4>Page</h4>
                 <!-- ${facets['class']} -->
                 <ul class="pageType">
                     <g:each var="t" in="${facets['class'].terms}">
-                        <g:set var="fqLink" value="${request.queryString}"/>
                     %{--<g:set var="fqLink" value="${params.collect { k,v -> "${k.encodeAsURL()}=${v.encodeAsURL()}" }.join('&')}"/>--}%
                         <li><a href="?${fqLink}&fq=class:${t.term}"><g:message code="label.${t.term?.toLowerCase()}" default="${t.term}"/></a> (${t.count})</li>
                     </g:each>
@@ -72,7 +87,6 @@
                         <h4>${f.key?.capitalize()}</h4>
                         <ul class="facetValues">
                             <g:each var="t" in="${f.value?.terms}">
-                                <g:set var="fqLink" value="${request.queryString}"/>
                             %{--<g:set var="fqLink" value="${params.collect { k,v -> "${k.encodeAsURL()}=${v.encodeAsURL()}" }.join('&')}"/>--}%
                                 <li><a href="?${fqLink}&fq=${f.key.encodeAsURL()}Facet:${t.term}">${t.term?.replace("_"," ")}</a> (${t.count})
                                 </li>
