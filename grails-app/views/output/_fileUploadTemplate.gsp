@@ -42,18 +42,17 @@
         <td class="preview">{% if (file.thumbnail_url) { %}
             <a href="{%=file.url%}" title="{%=file.name%}" rel="gallery" download="{%=file.name%}"><img src="{%=file.thumbnail_url%}"></a>
             {% } %}</td>
-        <td class="name">
+        <td class="name" colspan="2">
             <a href="{%=file.url%}" title="{%=file.name%}" rel="{%=file.thumbnail_url&&'gallery'%}" download="{%=file.name%}">{%=file.name%}</a>
         </td>
         <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
-        <td colspan="2"></td>
+
         {% } %}
-        <td class="delete">
-            <button class="btn btn-danger" data-type="DELETE" data-url="${grailsApplication.config.upload.images.url}" data-filename="{%=file.name%}">
-                <i class="icon-trash icon-white"></i>
+        <td>
+            <button class="delete-image btn btn-mini" data-type="DELETE" data-url="${grailsApplication.config.upload.images.url}" data-filename="{%=file.name%}">
+                <i class="icon-trash"></i>
                 <span>{%=locale.fileupload.destroy%}</span>
             </button>
-            <input type="checkbox" name="delete" value="1">
         </td>
     </tr>
     {% } %}
