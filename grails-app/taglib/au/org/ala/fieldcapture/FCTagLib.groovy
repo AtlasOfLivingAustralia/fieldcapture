@@ -1,12 +1,14 @@
 package au.org.ala.fieldcapture
 
 import groovy.xml.MarkupBuilder
+import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
 
 import static org.github.bootstrap.Attribute.outputAttributes
 
 class FCTagLib {
 
     static namespace = "fc"
+    def commonService
 
     def textField = { attrs ->
         def outerClass = attrs.remove 'outerClass'
@@ -178,7 +180,7 @@ class FCTagLib {
      * <g:formatDate date="${Date.parse("yyyy-MM-dd'T'HH:mm:ss'Z'" , dateString)}" format="yyyy-MM-dd"/>
      *
      * @attr format
-     * @attr date
+     * @attr date REQUIRED
      * @attr inputFormat optional
      *
      */
@@ -189,6 +191,52 @@ class FCTagLib {
                 format: attrs.format?:"yyyy-MM-dd"
         )
         out << formattedDate
+    }
+
+    /**
+     * Generate query string from params map, with optional requiredParams (comma separated)
+     * list of params to include and optional excludeParam param string to remove/exclude from
+     * the query string.
+     *
+     * @attr params REQUIRED
+     * @attr requiredParams
+     * @attr excludeParam
+     */
+    def formatParams = { attrs, body ->
+        def outputParams = new GrailsParameterMap([:], request)
+        def params = attrs.params
+        def requiredList = attrs.requiredParams?.tokenize(",").collect { it.toLowerCase().trim() }
+        log.debug "requiredList = ${requiredList}"
+        log.debug "excludeParam = ${attrs.excludeParam}"
+        //log.debug "params.class.name = ${params.getClass().name}"
+        params.each { k,v ->
+            def vL = [v].flatten().findAll { it != null } // String[] and String both converted to List
+            def includeThis = false
+
+            // check if param name is needed
+            if (!(requiredList && !requiredList.contains(k))) {
+                log.debug "${k} inc"
+                includeThis = true
+            } else {
+                log.debug "${k} inc"
+            }
+
+            log.debug "pre: ${vL} => ${vL.getClass().name}"
+            // check against the excludeParams
+            def vL2 = vL.findAll { it ->
+                it != attrs.excludeParam
+            }
+            log.debug "post: ${vL2}"
+
+            if (includeThis && vL2) {
+                outputParams.put(k, vL2)
+            }
+        }
+
+        log.debug "inputParams = ${params}"
+        log.debug "outputParams = ${outputParams}"
+
+        out << commonService.buildUrlParamsFromMap(outputParams)
     }
 
 }
