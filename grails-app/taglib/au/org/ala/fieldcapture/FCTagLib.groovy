@@ -206,35 +206,25 @@ class FCTagLib {
         def outputParams = new GrailsParameterMap([:], request)
         def params = attrs.params
         def requiredList = attrs.requiredParams?.tokenize(",").collect { it.toLowerCase().trim() }
-        log.debug "requiredList = ${requiredList}"
-        log.debug "excludeParam = ${attrs.excludeParam}"
-        //log.debug "params.class.name = ${params.getClass().name}"
+
         params.each { k,v ->
             def vL = [v].flatten().findAll { it != null } // String[] and String both converted to List
             def includeThis = false
 
             // check if param name is needed
             if (!(requiredList && !requiredList.contains(k))) {
-                log.debug "${k} inc"
                 includeThis = true
-            } else {
-                log.debug "${k} inc"
             }
 
-            log.debug "pre: ${vL} => ${vL.getClass().name}"
             // check against the excludeParams
             def vL2 = vL.findAll { it ->
                 it != attrs.excludeParam
             }
-            log.debug "post: ${vL2}"
 
             if (includeThis && vL2) {
                 outputParams.put(k, vL2)
             }
         }
-
-        log.debug "inputParams = ${params}"
-        log.debug "outputParams = ${outputParams}"
 
         out << commonService.buildUrlParamsFromMap(outputParams)
     }
