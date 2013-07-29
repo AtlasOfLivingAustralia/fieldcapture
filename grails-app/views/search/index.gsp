@@ -90,7 +90,8 @@
                         <h4>${f.key?.capitalize()}</h4>
                         <ul class="facetValues">
                             <g:each var="t" in="${f.value?.terms}">
-                                <li><a href="${fqLink}&fq=${f.key.encodeAsURL()}Facet:${t.term}">${t.term?.replace("_"," ")}</a> (${t.count})
+                                <li><a href="${fqLink}&fq=${f.key.encodeAsURL()}Facet:${t.term}"><g:message code="label.${t.term}"
+                                        default="${t.term}"/></a> (${t.count})
                                 </li>
                             </g:each>
                         </ul>
