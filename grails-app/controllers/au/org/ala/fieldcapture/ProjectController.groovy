@@ -86,4 +86,9 @@ class ProjectController {
         // but for now just go home
         forward(controller: 'home')
     }
+
+    def species(String id) {
+        def project = projectService.get(id, 'brief')
+        render view:'/species/select', model: [project:project]
+    }
 }
