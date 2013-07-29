@@ -132,25 +132,46 @@ class ModelTagLib {
             case 'image-view':
                 databindAttrs.add "attr",  '{src: '+source+'.thumbnail_url}'
                 result += "<img data-bind='${databindAttrs.toString()}'></img>"
-                break;
+                break
             case 'image-edit':
                 addTemplate('fileUploadTemplate')
                 databindAttrs.add 'fileUpload', source
-                result += g.render(template: 'imageDataTypeTemplate', model: [databindAttrs:databindAttrs.toString()])
-                break;
+                result += g.render(template: 'imageDataTypeTemplate', model: [databindAttrs:databindAttrs.toString(), source:source])
+                break
             case 'embeddedImage-edit':
                 addTemplate('fileUploadTemplate')
                 databindAttrs.add 'fileUpload', source
-                result += g.render(template: 'imageDataTypeTemplate', model: [databindAttrs:databindAttrs.toString()])
-                break;
+                result += g.render(template: 'imageDataTypeTemplate', model: [databindAttrs:databindAttrs.toString(), source:source])
+                break
             case 'embeddedImage-view':
                 databindAttrs.add "attr",  '{src: '+source+'().thumbnail_url}'
                 result += "<img data-bind='${databindAttrs.toString()}'></img>"
-                break;
+                break
+            case 'autocomplete-edit':
+                def link = g.createLink(controller: 'search', action:'species')
+                databindAttrs.add "autocomplete", "{url:'${link}', options: speciesAutocompleteParams, result:speciesSelected}"
+                result += """<span><div><select name="list" data-bind="visible: availableLists.length, value:listId, options:availableLists, optionsText: 'listName', optionsValue: 'listId'"></select></div>"""
+                result += "<input type=\"text\" data-bind=\"${databindAttrs.toString()}\"/></span>"
+                break
+            case 'autocomplete-view':
+                databindAttrs.add 'text', source+'().scientificName'
+                result += "<span${at.toString()} data-bind='${databindAttrs.toString()}'></span>"
+                break
+            case 'photopoint-view':
+            case 'photopoint-edit':
+                result +="""
+                <div><b><span data-bind="text:name"/></b></div>
+                <div>Lat:<span data-bind="text:lat"/></div>
+                <div>Lon:<span data-bind="text:lon"/></div>
+                <div>Bearing:<span data-bind="text:bearing"/></div>
+                """
+                break
+
+
         }
         if (model.preLabel) {
-            labelAttributes.addClass 'label preLabel'
-            result = "<span${labelAttributes.toString()}>${model.preLabel}</span>" + result
+            //labelAttributes.addClass 'label preLabel'
+            result = "<span${labelAttributes.toString()}><label>${model.preLabel}</label></span>" + result
         }
         if (model.postLabel) {
             labelAttributes.addClass 'postLabel'

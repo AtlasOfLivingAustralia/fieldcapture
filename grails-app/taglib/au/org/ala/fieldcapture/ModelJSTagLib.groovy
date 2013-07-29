@@ -22,7 +22,48 @@ class ModelJSTagLib {
                 matrixModel attrs, model, out
             }
         }
-        out << INDENT*2 << "var site = ${attrs.site.toString()};"
+        def modelContainsSpecies = true;
+        if (modelContainsSpecies) {
+            out << INDENT*2 << """
+            var Species = function(data) {
+                var self = this;
+                if (!data) data = {};
+                this.guid = data.guid;
+                this.scientificName = data.name;
+                this.listId = data.listId;
+            };
+
+            var speciesAutoCompleteOptions = function() {
+                return {
+                extraParams: {limit: 100},
+                dataType: 'json',
+                parse: function(data) {
+                    var rows = new Array();
+                    data = data.autoCompleteList;
+                    for(var i=0; i<data.length; i++){
+                        rows[i] = {
+                            data:data[i],
+                            value: data[i].guid,
+                            result: data[i].name
+                        };
+                    }
+                    return rows;
+                },
+                matchSubset: false,
+                formatItem: function(row, i, n) {
+                    return row.name;
+                },
+                cacheLength: 10,
+                minChars: 3,
+                scroll: false,
+                max: 10,
+                selectFirst: false
+                };
+            };\n"""
+        }
+        out << INDENT*2 << "var site = ${attrs.site.toString()};\n"
+
+        out << INDENT*2 << "var speciesLists = ${attrs.speciesLists.toString()};\n"
     }
 
     def jsViewModel = { attrs ->
@@ -51,6 +92,9 @@ class ModelJSTagLib {
             }
             else if (mod.dataType == 'photoPoints') {
                 photoPointModel(attrs, mod, out)
+            }
+            else if (mod.dataType == 'species') {
+                speciesModel(attrs, mod, out)
             }
         }
     }
@@ -98,9 +142,11 @@ class ModelJSTagLib {
     }
 
     def jsRemoveBeforeSave = { attrs ->
-        if (attrs.model?.viewModel?.any({ it.dataType == 'tableWithEditableRows' || it.type == 'photoPoints'})) {
-            out << INDENT*4 << "delete jsData.selectedRow;\n"
-        }
+        attrs.model?.viewModel?.each({
+            if (it.dataType == 'tableWithEditableRows' || it.type == 'photoPoints' || it.type == 'table') {
+                out << INDENT*4 << "delete jsData.selected${it.source}Row;\n"
+            }
+        })
     }
 
     def computedViewModel(out, attrs, model, propertyContext, dependantContext) {
@@ -291,6 +337,11 @@ class ModelJSTagLib {
                     case 'embeddedImage':
                         out << INDENT*3 << "this.${col.name} = ko.${observable}(orBlank(data['${col.name}']));\n"
                         break;
+                    case 'species':
+                        out << INDENT*3 << "this.${col.name} = ko.${observable}(orBlank(data['${col.name}']));\n"
+                        speciesModel attrs, model, out
+                        break
+
                 }
                 modelConstraints(col, out)
             }
@@ -477,48 +528,24 @@ class ModelJSTagLib {
     def photoPointModel(attrs, model, out) {
         listViewModel(attrs, model, out)
 
+        out << g.render(template:"photoPointTemplate", model:[model:model]);
+    }
+
+    def speciesModel(attrs, mod, out) {
+
         out << """
+        self.listId = ko.observable();
+        self.availableLists = speciesLists;
+        self.speciesAutocompleteParams = ko.computed(function() {
+            var options = speciesAutoCompleteOptions();
+            options.extraParams.druid = self.listId();
+            return options;
+        });
+        self.speciesSelected = function(event, data) {
+            data.listId = self.listId();
+            self.species(new Species(data));
+        }\n"""
 
-        var PhotoPoint = function(data) {
-            this.name = data.name;
-            this.lat = data.geometry.decimalLatitude;
-            this.lon = data.geometry.decimalLongitude;
-            this.bearing = data.geometry.bearing;
-            this.description = data.description;
-        };
-
-        self.loadphotoPoints = function(data) {
-            var photoPointByName = function(name, data) {
-                var photoPoint;
-                if (data !== undefined) {
-                    \$.each(data, function(index, obj) {
-                        if (obj.name === name) {
-                            photoPoint = obj;
-                            return false;
-                        }
-                    });
-                }
-                return photoPoint;
-            };
-            if (site !== undefined && site.poi !== undefined) {
-                \$.each(site.poi, function(index, obj) {
-                    var photoPoint = new PhotoPoint(obj);
-                    var photoPointData = photoPointByName(obj.name, data);
-                    if (photoPointData === undefined) {
-                        photoPointData = {comment:"", photo:""};
-                    }
-                    var row = new PhotoPointsRow(photoPointData);
-                    \$.extend(row, photoPoint);
-
-                    self.data.photoPoints.push(row);
-                });
-            }
-        };
-
-        self.removePhotoPoint = function(photoPoint) {
-           self.data.${model.name}.remove(photoPoint);
-        };
-        """
     }
 
     def modelConstraints(model, out) {

@@ -16,6 +16,7 @@ class ModelCSSTagLib {
             switch (mod.type) {
                 case 'grid':
                 case 'table':
+                case 'photoPoints':
                     tableStyle(attrs, mod, out)
             }
         }
@@ -38,7 +39,7 @@ class ModelCSSTagLib {
         if (edit) {
             if (model.editableRows) {
                 // add extra column for editing buttons
-                out << INDENT*2 << "table.${tableClass} td:last-child {width:30%;text-align:center;}\n"
+                out << INDENT*2 << "table.${tableClass} td:last-child {width:15%;text-align:center;}\n"
             } else {
                 // add column for delete buttons
                 out << INDENT*2 << "table.${tableClass} td:last-child {width:4%;text-align:center;}\n"

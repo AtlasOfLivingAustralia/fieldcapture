@@ -35,8 +35,7 @@
     <tr class="template-download fade">
         {% if (file.error) { %}
         <td></td>
-        <td class="name"><span>{%=file.name%}</span></td>
-        <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
+        <td><div class="name">{%=file.name%}</div><div class="size">{%=o.formatFileSize(file.size)%}</div></td>
         <td class="error" colspan="2"><span class="label label-important">{%=locale.fileupload.error%}</span> {%=locale.fileupload.errors[file.error] || file.error%}</td>
         {% } else { %}
         <td class="preview">{% if (file.thumbnail_url) { %}
@@ -44,8 +43,8 @@
             {% } %}</td>
         <td class="name" colspan="2">
             <a href="{%=file.url%}" title="{%=file.name%}" rel="{%=file.thumbnail_url&&'gallery'%}" download="{%=file.name%}">{%=file.name%}</a>
+            <div class="size">{%=o.formatFileSize(file.size)%}</div>
         </td>
-        <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
 
         {% } %}
         <td>

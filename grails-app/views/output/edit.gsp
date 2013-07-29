@@ -5,7 +5,9 @@
     <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
     <title>Edit | ${activity.activityId ?: 'new'} | ${site.name} | ${site.projectName} | Field Capture</title>
     <md:modelStyles model="${model}" edit="true"/>
+
     <r:require modules="jstimezonedetect,knockout,jqueryValidationEngine,datepicker,jQueryImageUpload"/>
+
 </head>
 <body>
 <div class="container-fluid">
@@ -107,7 +109,7 @@
         });
 
 // load dynamic models - usually objects in a list
-<md:jsModelObjects model="${model}" site="${site}" edit="true"/>
+<md:jsModelObjects model="${model}" site="${site}" speciesLists="${speciesLists}" edit="true"/>
 
         function ViewModel () {
             var self = this;

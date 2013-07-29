@@ -4,12 +4,9 @@
 <!-- ko stopBinding: true -->
 <div class="row-fluid" id="species-container">
 <div class="row-fluid">
-    <div class="span12">
-        <h3>Species of Interest</h3>
-        <p class="well">Species lists can be selected to be used by this project when species information is required to be supplied as a part of activity reporting.
+    <div class="clearfix"><h3 class="pull-left">Species of Interest</h3><a class="btn pull-right title-btn">Add Species Lists</a></div>
+    <p class="well">Species lists can be selected to be used by this project when species information is required to be supplied as a part of activity reporting.
         Lists are created and managed using the <a href="http://lists.ala.org.au">ALA list tool</a></p>
-
-    </div>
 </div>
 
 <div class="row-fluid" data-bind="visible: speciesLists().length">
