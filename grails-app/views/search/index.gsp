@@ -25,22 +25,15 @@
             </g:form>
         </div>
     </div>
-    <g:if test="${flash.error}">
+    <g:if test="${flash.error || results.error}">
+        <g:set var="error" value="${flash.error?:results.error}"/>
         <div class="row-fluid">
-            <div class="alert alert-error">
+            <div class="alert alert-error large-space-before">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
-                <span>${flash.error}</span>
+                <span>Error: ${error}</span>
             </div>
         </div>
     </g:if>
-    <g:elseif test="${results.error}">
-        <div class="row-fluid">
-            <div class="alert alert-error large-space-before">
-                %{--<button type="button" class="close" data-dismiss="alert">&times;</button>--}%
-                <span>Error: ${results.error}</span>
-            </div>
-        </div>
-    </g:elseif>
     <g:elseif test="${results.hits?.total?:0 > 0}">
         <div class="row-fluid ">
             <div class="span9">
