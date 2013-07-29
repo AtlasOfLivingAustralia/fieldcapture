@@ -22,7 +22,7 @@
     <div class="row-fluid" data-bind="visible: speciesLists().length">
         <div class="span12">
             <h3>Project Species Lists</h3>
-            <table class="dyn table-striped">
+            <table class="table-striped">
                 <thead>
                 <tr> <th>Species List Name</th><th>Species Count</th><th>Used for</th><th></th>
                 </thead>
