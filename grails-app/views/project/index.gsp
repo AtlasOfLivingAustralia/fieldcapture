@@ -328,8 +328,9 @@
                 }
             });
             // re-establish the previous tab state
-            if (amplify.store('project-tab-state') === '#site') {
-                $('#site-tab').tab('show');
+            var storedTab = amplify.store('project-tab-state');
+            if (storedTab !== '') {
+                $(storedTab + '-tab').tab('show');
             }
 
         });
