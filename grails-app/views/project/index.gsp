@@ -134,7 +134,7 @@
         </div>
         <div class="tab-pane" id="species">
             <!-- SPECIES -->
-            <g:render template="species" model="[projject:project]"/>
+            <g:render template="/species/species" model="[projject:project]"/>
         </div>
 
     </div>
