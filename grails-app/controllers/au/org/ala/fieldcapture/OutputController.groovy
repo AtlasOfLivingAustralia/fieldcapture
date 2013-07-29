@@ -1,6 +1,7 @@
 package au.org.ala.fieldcapture
 
 import grails.converters.JSON
+import org.codehaus.groovy.grails.web.json.JSONArray
 
 class OutputController {
 
@@ -15,6 +16,16 @@ class OutputController {
         if (!map.projects && map.site) {
             map.projects = map.site.projects
         }
+        // Add the species lists that are relevant to this activity.
+        map.speciesLists = new JSONArray()
+        map.projects?.each {
+            it.speciesLists?.each { list ->
+                if (list.purpose == map.activity.type) {
+                    map.speciesLists.add(list)
+                }
+            }
+        }
+
         map.model = metadataService.getDataModelFromOutputName(output.name)
         map
     }
@@ -26,7 +37,7 @@ class OutputController {
         } else {
             def fat = fatten output
             [output: output, activity: fat.activity, site: fat.site, projects: fat.projects,
-                    model: fat.model, returnTo: params.returnTo]
+                    model: fat.model, speciesLists: fat.speciesLists, returnTo: params.returnTo]
         }
     }
 
@@ -38,7 +49,7 @@ class OutputController {
             def fat = fatten output
             log.debug(fat.projects)
             [output: output, activity: fat.activity, site: fat.site, projects: fat.projects,
-             model: fat.model, returnTo: params.returnTo]
+             model: fat.model, speciesLists: fat.speciesLists, returnTo: params.returnTo]
         }
     }
 
@@ -47,7 +58,7 @@ class OutputController {
         def fat = fatten output
         render view: 'edit', model:
                 [output: output, activity: fat.activity, site: fat.site, projects: fat.projects,
-                 model: fat.model, returnTo: params.returnTo]
+                 model: fat.model, speciesLists: fat.speciesLists, returnTo: params.returnTo]
     }
 
     /**

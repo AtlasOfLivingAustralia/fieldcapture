@@ -65,6 +65,7 @@
     <ul class="nav nav-tabs big-tabs">
         <li class="active"><a href="#activity" data-toggle="tab">Activities</a></li>
         <li><a href="#site" id="site-tab" data-toggle="tab">Sites</a></li>
+        <li><a href="#species" id="species-tab" data-toggle="tab">Species</a></li>
     </ul>
     <div class="tab-content">
         <!-- ACTIVITIES -->
@@ -131,7 +132,13 @@
                 </div>
             </div>
         </div>
+        <div class="tab-pane" id="species">
+            <!-- SPECIES -->
+            <g:render template="species" model="[projject:project]"/>
+        </div>
+
     </div>
+
 
     <hr />
     <div class="expandable-debug">
