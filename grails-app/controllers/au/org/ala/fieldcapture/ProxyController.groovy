@@ -19,4 +19,11 @@ class ProxyController {
     def speciesList() {
         render webService.get("http://lists.ala.org.au/ws/speciesList?druid=${params.druid}")
     }
+
+    def documentUpdate(String id) {
+        def body = request.JSON
+        //log.debug "body = ${body}"
+        def url = grailsApplication.config.ecodata.baseUrl + "document/" + id
+        render webService.doPost(url, body)
+    }
 }

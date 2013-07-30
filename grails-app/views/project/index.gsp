@@ -42,34 +42,49 @@
         <div class="row-fluid">
             <div class="clearfix">
                 <h1 class="pull-left">${project?.name}</h1>
-                <g:link action="edit" id="${project.projectId}" class="btn pull-right title-btn">Edit project</g:link>
+                <g:link action="edit" id="${project.projectId}" class="btn pull-right title-btn">Change project details</g:link>
             </div>
-            <g:if test="${organisationName}">
-                <div class="clearfix" style="padding-bottom:10px;">
-                    <h4>
-                        Supported by:
-                        <a href="${grailsApplication.config.collectory.baseURL +
-                            'public/show/' + project.organisation}">${organisationName}</a>
-                    </h4>
-                </div>
-            </g:if>
-            <g:if test="${project.description}">
-            <div>
-                <p class="well well-small more">${project.description}</p>
-            </div>
-            </g:if>
         </div>
     </div>
 
     <!-- content tabs -->
     <ul class="nav nav-tabs big-tabs">
-        <li class="active"><a href="#activity" data-toggle="tab">Activities</a></li>
+        <li class="active"><a href="#overview" id="overview-tab" data-toggle="tab">Overview</a></li>
+        <li><a href="#activity" id="activity-tab" data-toggle="tab">Activities</a></li>
         <li><a href="#site" id="site-tab" data-toggle="tab">Sites</a></li>
         <li><a href="#species" id="species-tab" data-toggle="tab">Species</a></li>
     </ul>
     <div class="tab-content">
-        <!-- ACTIVITIES -->
-        <div class="tab-pane active" id="activity">
+        <div class="tab-pane active" id="overview">
+            <!-- OVERVIEW -->
+            <div class="row-fluid">
+                <g:if test="${organisationName}">
+                    <div class="clearfix" style="padding-bottom:10px;">
+                        <h4>
+                            Supported by:
+                            <a href="${grailsApplication.config.collectory.baseURL +
+                                    'public/show/' + project.organisation}">${organisationName}</a>
+                        </h4>
+                    </div>
+                </g:if>
+                <g:if test="${project.description}">
+                    <div>
+                        <p class="well well-small more">${project.description}</p>
+                    </div>
+                </g:if>
+                <g:if test="${project.documents}">
+                    <g:set var="image" value="${project.documents[0]}"/>
+                    <div class="thumbnail with-caption">
+                        <img class="img-rounded" src="${image?.url}"/>
+                        <p class="caption">${image?.name}</p>
+                        <p class="attribution"><small>${image?.attribution}</small></p>
+                    </div>
+                </g:if>
+            </div>
+        </div>
+
+        <div class="tab-pane" id="activity">
+            <!-- ACTIVITIES -->
             <g:render template="/shared/activitiesTable"
                       model="[activities:activities ?: [], sites:project.sites ?: [], showSites:true]"/>
         </div>
@@ -139,7 +154,6 @@
 
     </div>
 
-
     <hr />
     <div class="expandable-debug">
         <h3>Debug</h3>
@@ -163,7 +177,7 @@
             // setup 'read more' for long text
             $('.more').shorten({
                 moreText: 'read more',
-                showChars: '270'
+                showChars: '1000'
             });
             // setup confirm modals for deletions
             $(document).on("click", "a[data-bb]", function(e) {

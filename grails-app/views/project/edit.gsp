@@ -49,19 +49,19 @@
     </div>
     <div class="row-fluid">
         <div class="control-group span4">
-            <label class="control-label">Project manager</label>
+            <label class="control-label" for="manager">Project manager</label>
             <div class="controls">
                 <g:textField class="" name="manager" data-bind="value:manager"/>
             </div>
         </div>
         <div class="control-group span4">
-            <label class="control-label">External id</label>
+            <label class="control-label" for="externalId">External id</label>
             <div class="controls">
                 <g:textField class="" name="externalId" data-bind="value:externalId"/>
             </div>
         </div>
         <div class="control-group span4">
-            <label class="control-label">Grant id</label>
+            <label class="control-label" for="grantId">Grant id</label>
             <div class="controls">
                 <g:textField class="" name="grantId" data-bind="value:grantId"/>
             </div>
@@ -91,19 +91,49 @@
         </div>
     </div>
 
+    <!-- ko stopBinding: true -->
+    <div class="well" id="projectImageContainer">
+        <label>Project Image</label>
+        <div class="row-fluid">
+            <div class="control-group span4">
+                <label for="imageFilename">File name</label>
+                <input type="text" data-bind="value:filename" id="imageFilename"/>
+            </div>
+            <div class="control-group span4">
+                <label for="imageCaption">Caption</label>
+                <input type="text" data-bind="value:name" id="imageCaption"/>
+            </div>
+            <div class="control-group span4">
+                <label for="imageAttribution">Attribution</label>
+                <input type="text" data-bind="value:attribution" id="imageAttribution"/>
+            </div>
+        </div>
+        <div class="expandable-debug">
+            <h3>Debug</h3>
+            <div>
+                <h4>project image model</h4>
+                <pre data-bind="text:ko.toJSON($root,null,2)"></pre>
+            </div>
+        </div>
+    </div>
+    <!-- /ko -->
+
     <div class="form-actions">
         <button type="button" data-bind="click: save" class="btn btn-primary">Save changes</button>
         <button type="button" id="cancel" class="btn">Cancel</button>
     </div>
 
     <hr />
-    <div class="debug">
-        <h3 id="debug">Debug</h3>
-        <div style="display:none">
-            <pre data-bind="text: ko.toJSON($root, null, 2)"></pre>
+    <div class="expandable-debug">
+        <h3>Debug</h3>
+        <div>
+            <h4>KO model</h4>
+            <pre data-bind="text:ko.toJSON($root,null,2)"></pre>
+            <h4>Project</h4>
             <pre>${project}</pre>
         </div>
     </div>
+
 </div>
 <r:script>
 
@@ -119,6 +149,48 @@
         });
 
         var organisations = ${institutions};
+
+        /* This section is a separate view model to modularise image handling */
+        function ImageViewModel (img, type, role) {
+            var self = this;
+            this.filename = ko.observable(img ? img.filename : '');
+            this.name = ko.observable(img ? img.name : '');
+            this.attribution = ko.observable(img ? img.attribution : '');
+            this.type = img.type || type;
+            this.role = img.role || role;
+            this.documentId = img ? img.documentId : '';
+            this.projectId = "${project?.projectId}";
+            this.siteId = "${site?.siteId}";
+            this.activityId = "${activity?.activityId}";
+            this.outputId = "${output?.outputId}";
+            this.save = function () {
+                $.ajax({
+                    url: "${createLink(controller: 'proxy', action: 'documentUpdate')}/" + self.documentId,
+                    type: 'POST',
+                    data: ko.toJSON(self),
+                    contentType: 'application/json',
+                    success: function (data) {
+                        if (data.error) {
+                            alert(data.detail + ' \n' + data.error);
+                        }
+                    },
+                    error: function (data) {
+                        var status = data.status;
+                        alert('An unhandled error occurred: ' + data.status);
+                    }
+                });
+            }
+        }
+
+        var imageViewModel, docs = ${project?.documents ?: []}, image;
+        $.each(docs, function (i, doc) {
+            if (doc.type === 'image' && doc.role === 'primary') {
+                image = doc;
+            }
+        });
+        imageViewModel = new ImageViewModel(image, 'image', 'primary');
+        ko.applyBindings(imageViewModel, document.getElementById('projectImageContainer'));
+        /* END of section to modularise image handling */
 
         function ViewModel (data) {
             var self = this;
@@ -136,6 +208,9 @@
                 return jsData;
             };
             self.save = function () {
+                // save any changes to the image metadata
+                imageViewModel.save();
+
                 //if ($('.validation-container').validationEngine('validate')) {
                     var jsData = ko.toJS(self);
                     var json = JSON.stringify(self.removeTransients(jsData));
