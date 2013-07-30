@@ -150,22 +150,26 @@
 
         var organisations = ${institutions};
 
-        /* This section is a separate view model to modularise image handling */
-        function ImageViewModel (img, type, role) {
+        /* This section is a separate view model to modularise image handling.
+         *  The block of view code (html) must be expunged from the main model using the
+         *  "stopBinding: true" syntax.
+         *  This model must be bound to an element inside that block.
+         *  @param image is an object representing an existing image or default values
+         *  @param owner is an object with key and values properties - these are used to associate the
+         *      image with an entity eg. key='projectId', value=<id>
+         */
+        function ImageViewModel (img, owner, updateUrl) {
             var self = this;
             this.filename = ko.observable(img ? img.filename : '');
             this.name = ko.observable(img ? img.name : '');
             this.attribution = ko.observable(img ? img.attribution : '');
-            this.type = img.type || type;
-            this.role = img.role || role;
+            this.type = img.type || 'image';
+            this.role = img.role;
             this.documentId = img ? img.documentId : '';
-            this.projectId = "${project?.projectId}";
-            this.siteId = "${site?.siteId}";
-            this.activityId = "${activity?.activityId}";
-            this.outputId = "${output?.outputId}";
+            this[owner.key] = owner.value;
             this.save = function () {
                 $.ajax({
-                    url: "${createLink(controller: 'proxy', action: 'documentUpdate')}/" + self.documentId,
+                    url: updateUrl + self.documentId,
                     type: 'POST',
                     data: ko.toJSON(self),
                     contentType: 'application/json',
@@ -182,13 +186,22 @@
             }
         }
 
-        var imageViewModel, docs = ${project?.documents ?: []}, image;
+        // find an image with the right properties in the available 'documents'
+        var docs = ${project?.documents ?: []},
+            image = {type: 'image', role: 'primary'};
         $.each(docs, function (i, doc) {
             if (doc.type === 'image' && doc.role === 'primary') {
                 image = doc;
             }
         });
-        imageViewModel = new ImageViewModel(image, 'image', 'primary');
+
+        // create the model
+        var imageViewModel = new ImageViewModel(
+            image,
+            {key: 'projectid', value: "${project.projectId}"},
+            "${createLink(controller: 'proxy', action: 'documentUpdate')}/");
+
+        // bind the model
         ko.applyBindings(imageViewModel, document.getElementById('projectImageContainer'));
         /* END of section to modularise image handling */
 
