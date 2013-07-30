@@ -78,152 +78,154 @@
     </table>
 </div>
 <r:script>
-                $(window).load(function () {
-                    function ActivitiesViewModel(activities, sites) {
-                        var self = this;
-                        this.loadActivities = function (activities) {
-                            var acts = ko.observableArray([]);
-                            $.each(activities, function (i, act) {
-                                var activity = {
-                                    activityId: act.activityId,
-                                    siteId: act.siteId,
-                                    siteName: self.lookupSiteName(act.siteId),
-                                    type: act.type,
-                                    startDate: ko.observable(act.startDate).extend({simpleDate:false}),
-                                    endDate: ko.observable(act.endDate).extend({simpleDate:false}),
-                                    outputs: ko.observableArray([]),
-                                    collector: act.collector,
-                                    metaModel: act.model || {},
-                                    revert: function () {
-                                        this.startDate.date(this.startDate.originalValue);
-                                        this.endDate.date(this.endDate.originalValue);
-                                    },
-                                    save: function () {
-                                        var act = {activityId: this.activityId};
-                                        if (this.startDate.hasChanged()) {
-                                            act.startDate = this.startDate();
-                                        }
-                                        if (this.endDate.hasChanged()) {
-                                            act.endDate = this.endDate();
-                                        }
-                                        $.ajax({
-                                            url: fcConfig.activityUpdateUrl + "/" + this.activityId,
-                                            type: 'POST',
-                                            data: ko.toJSON(act),
-                                            contentType: 'application/json',
-                                            success: function (data) {
-                                                if (data.error) {
-                                                    alert(data.detail + ' \n' + data.error);
-                                                } else {
-                                                    document.location.reload();
-                                                }
-                                            },
-                                            error: function (data) {
-                                                var status = data.status;
-                                                alert('An unhandled error occurred: ' + data.status);
-                                            }
-                                        });
-                                    },
-                                    del: function () {
-                                        var self = this;
-                                        // confirm first
-                                        bootbox.confirm("Delete this activity? Are you sure?", function(result) {
-                                            if (result) {
-                                                $.getJSON(fcConfig.activityDeleteUrl + '/' + self.activityId,
-                                                    function (data) {
-                                                        if (data.code < 400) {
-                                                            document.location.reload();
-                                                        } else {
-                                                            alert("Failed to delete activity - error " + data.code);
-                                                        }
-                                                    });
-                                            }
-                                        });
+    $(window).load(function () {
+        function ActivitiesViewModel(activities, sites) {
+            var self = this;
+            this.loadActivities = function (activities) {
+                var acts = ko.observableArray([]);
+                $.each(activities, function (i, act) {
+                    var activity = {
+                        activityId: act.activityId,
+                        siteId: act.siteId,
+                        siteName: self.lookupSiteName(act.siteId),
+                        type: act.type,
+                        startDate: ko.observable(act.startDate).extend({simpleDate:false}),
+                        endDate: ko.observable(act.endDate).extend({simpleDate:false}),
+                        outputs: ko.observableArray([]),
+                        collector: act.collector,
+                        metaModel: act.model || {},
+                        revert: function () {
+                            this.startDate.date(this.startDate.originalValue);
+                            this.endDate.date(this.endDate.originalValue);
+                        },
+                        save: function () {
+                            var act = {activityId: this.activityId};
+                            if (this.startDate.hasChanged()) {
+                                act.startDate = this.startDate();
+                            }
+                            if (this.endDate.hasChanged()) {
+                                act.endDate = this.endDate();
+                            }
+                            $.ajax({
+                                url: fcConfig.activityUpdateUrl + "/" + this.activityId,
+                                type: 'POST',
+                                data: ko.toJSON(act),
+                                contentType: 'application/json',
+                                success: function (data) {
+                                    if (data.error) {
+                                        alert(data.detail + ' \n' + data.error);
+                                    } else {
+                                        document.location.reload();
                                     }
-                                };
-                                $.each(act.outputs, function (j, out) {
-                                    activity.outputs.push({
-                                        outputId: out.outputId,
-                                        name: out.name,
-                                        collector: out.collector,
-                                        assessmentDate: out.assessmentDate,
-                                        scores: out.scores
-                                    });
-                                });
-                                acts.push(activity);
-                            });
-                            return acts;
-                        };
-                        self.lookupSiteName = function (siteId) {
-                            var site;
-                            if (siteId !== undefined && siteId !== '') {
-                                site = $.grep(sites, function(obj, i) {
-                                        return (obj.siteId === siteId);
-                                });
-                                if (site.length > 0) {
-                                     return site[0].name;
+                                },
+                                error: function (data) {
+                                    var status = data.status;
+                                    alert('An unhandled error occurred: ' + data.status);
                                 }
-                            }
-                            return '';
-                        };
-                        self.activities = self.loadActivities(activities);
-                        self.activitiesSort = {};
-                        self.activitiesSort.by = ko.observable("");
-                        self.activitiesSort.order = ko.observable("");
-                        self.sortActivities = function () {
-                            var field = self.activitiesSort.by(),
-                                order = self.activitiesSort.order();
-                            self.activities.sort(function (left, right) {
-                                var l = ko.utils.unwrapObservable(left[field]),
-                                    r = ko.utils.unwrapObservable(right[field]);
-                                if (field === 'siteId') {
-                                    l = self.getSiteName(l);
-                                    r = self.getSiteName(r);
-                                }
-                                return l == r ? 0 : (l < r ? -1 : 1);
                             });
-                            if (order === 'desc') {
-                                self.activities.reverse();
-                            }
-                        };
-                        self.sortBy = function (data, event) {
-                            var element = event.currentTarget;
-                            state = $(element).find('i').hasClass('icon-chevron-up');
-                            self.activitiesSort.order(state ? 'desc' : 'asc');
-                            self.activitiesSort.by($(element).data('column'));
-                            self.sortActivities();
-                        };
-                        self.newActivity = function () {
-                            var context = '',
-                                projectId = "${project?.projectId}",
-                                siteId = "${site?.siteId}",
-                                returnTo = '?returnTo=' + document.location.href;
-                            if (projectId) {
-                                context = '&projectId=' + projectId;
-                            } else if (siteId) {
-                                context = '&siteId=' + siteId;
-                            }
-                            document.location.href = fcConfig.activityCreateUrl + returnTo + context;
-                        };
-                        self.expandActivities = function () {
-                            $('#activityList div.collapse').collapse('show');
-                        };
-                        self.collapseActivities = function () {
-                            $('#activityList div.collapse').collapse('hide');
-                        };
-                        self.openSite = function () {
-                            var siteId = this.siteId;
-                            if (siteId !== '') {
-                                document.location.href = fcConfig.siteViewUrl + '/' + siteId;
-                            }
-                        };
-                    }
-
-                    var activitiesViewModel = new ActivitiesViewModel(${activities ?: []}, ${sites ?: []});
-                    ko.applyBindings(activitiesViewModel, document.getElementById('activityListContainer'));
-
-                    readState();
-
+                        },
+                        del: function () {
+                            var self = this;
+                            // confirm first
+                            bootbox.confirm("Delete this activity? Are you sure?", function(result) {
+                                if (result) {
+                                    $.getJSON(fcConfig.activityDeleteUrl + '/' + self.activityId,
+                                        function (data) {
+                                            if (data.code < 400) {
+                                                document.location.reload();
+                                            } else {
+                                                alert("Failed to delete activity - error " + data.code);
+                                            }
+                                        });
+                                }
+                            });
+                        }
+                    };
+                    $.each(act.outputs, function (j, out) {
+                        activity.outputs.push({
+                            outputId: out.outputId,
+                            name: out.name,
+                            collector: out.collector,
+                            assessmentDate: out.assessmentDate,
+                            scores: out.scores
+                        });
+                    });
+                    acts.push(activity);
                 });
+                return acts;
+            };
+            self.lookupSiteName = function (siteId) {
+                var site;
+                if (siteId !== undefined && siteId !== '') {
+                    site = $.grep(sites, function(obj, i) {
+                            return (obj.siteId === siteId);
+                    });
+                    if (site.length > 0) {
+                         return site[0].name;
+                    }
+                }
+                return '';
+            };
+            self.activities = self.loadActivities(activities);
+            self.activitiesSort = {};
+            self.activitiesSort.by = ko.observable("");
+            self.activitiesSort.order = ko.observable("");
+            self.sortActivities = function () {
+                var field = self.activitiesSort.by(),
+                    order = self.activitiesSort.order();
+                self.activities.sort(function (left, right) {
+                    var l = ko.utils.unwrapObservable(left[field]),
+                        r = ko.utils.unwrapObservable(right[field]);
+                    if (field === 'siteId') {
+                        l = self.getSiteName(l);
+                        r = self.getSiteName(r);
+                    }
+                    return l == r ? 0 : (l < r ? -1 : 1);
+                });
+                if (order === 'desc') {
+                    self.activities.reverse();
+                }
+            };
+            self.sortBy = function (data, event) {
+                var element = event.currentTarget;
+                state = $(element).find('i').hasClass('icon-chevron-up');
+                self.activitiesSort.order(state ? 'desc' : 'asc');
+                self.activitiesSort.by($(element).data('column'));
+                self.sortActivities();
+            };
+            self.newActivity = function () {
+                var context = '',
+                    projectId = "${project?.projectId}",
+                    siteId = "${site?.siteId}",
+                    returnTo = '?returnTo=' + document.location.href;
+                if (projectId) {
+                    context = '&projectId=' + projectId;
+                } else if (siteId) {
+                    context = '&siteId=' + siteId;
+                }
+                document.location.href = fcConfig.activityCreateUrl + returnTo + context;
+            };
+            self.expandActivities = function () {
+                $('#activityList div.collapse').collapse('show');
+            };
+            self.collapseActivities = function () {
+                $('#activityList div.collapse').collapse('hide');
+            };
+            self.openSite = function () {
+                var siteId = this.siteId;
+                if (siteId !== '') {
+                    document.location.href = fcConfig.siteViewUrl + '/' + siteId;
+                }
+            };
+        }
+
+        var activitiesViewModel = new ActivitiesViewModel(${activities ?: []}, ${sites ?: []});
+        ko.applyBindings(activitiesViewModel, document.getElementById('activityListContainer'));
+    });
+
+    function initialiseActivityTab() {
+        readState();
+    }
+
 </r:script>
 <!-- /ko -->

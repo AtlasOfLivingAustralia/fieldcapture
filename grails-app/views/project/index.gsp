@@ -326,6 +326,8 @@
             ko.applyBindings(viewModel);
 
             // retain tab state for future re-visits
+            // and handle tab-specific initialisations
+            var activitiesTabInitialised = false;
             $('a[data-toggle="tab"]').on('shown', function (e) {
                 var tab = e.currentTarget.hash;
                 amplify.store('project-tab-state', tab);
@@ -340,10 +342,16 @@
                     // set trigger for site reverse geocoding
                     viewModel.triggerGeocoding();
                 }
+                //
+                if (tab === '#activity' && !activitiesTabInitialised) {
+                    initialiseActivityTab();
+                }
             });
             // re-establish the previous tab state
             var storedTab = amplify.store('project-tab-state');
-            if (storedTab !== '') {
+            if (storedTab === '') {
+                $('#overview-tab').tab('show');
+            } else {
                 $(storedTab + '-tab').tab('show');
             }
 
