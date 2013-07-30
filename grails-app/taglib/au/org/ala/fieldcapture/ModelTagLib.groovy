@@ -239,7 +239,8 @@ class ModelTagLib {
 
     // row model
     def row(out, attrs, model, parentSpan) {
-        out << "<div class=\"row-fluid space-after\">\n"
+        def extraClassAttrs = model.class ?: ""
+        out << "<div class=\"row-fluid space-after ${extraClassAttrs}\">\n"
         if (model.align == 'right') {
             out << "<div class=\"pull-right\">\n"
         }
@@ -289,7 +290,7 @@ class ModelTagLib {
 
     def grid(out, attrs, model) {
         out << "<div class=\"row-fluid\">\n"
-        out << INDENT*3 << "<table class=\"table table-bordered dyn ${model.source}\">\n"
+        out << INDENT*3 << "<table class=\"table table-bordered ${model.source}\">\n"
         gridHeader out, attrs, model
         if (attrs.edit) {
             gridBodyEdit out, attrs, model
@@ -393,8 +394,9 @@ class ModelTagLib {
     }
 
     def table(out, attrs, model, index) {
-        out << "<div class=\"row-fluid\">\n"
-        out << INDENT*3 << "<table class=\"table table-bordered dyn ${model.source}\">\n"
+        def extraClassAttrs = model.class ?: ""
+        out << "<div class=\"row-fluid ${extraClassAttrs}\">\n"
+        out << INDENT*3 << "<table class=\"table table-bordered ${model.source}\">\n"
         tableHeader out, attrs, model
         tableBodyEdit out, attrs, model
         footer out, attrs, model
