@@ -517,6 +517,7 @@ class ModelTagLib {
      * Common footer output for both tables and grids.
      */
     def footer(out, attrs, model) {
+
         def colCount = 0
         out << INDENT*4 << "<tfoot>\n"
         model.footer.rows.each { row ->

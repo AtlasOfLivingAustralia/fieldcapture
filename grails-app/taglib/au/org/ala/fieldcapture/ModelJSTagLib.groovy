@@ -550,8 +550,9 @@ class ModelJSTagLib {
 
     def modelConstraints(model, out) {
         if (model.constraints) {
+
             def stringifiedOptions = "["+ model.constraints.join(",")+"]"
-            out << INDENT*3 << "self.transients.${model.name}Constraints = ${stringifiedOptions};\n"
+            out << INDENT*3 << "if (!self.transients) self.transients = {}; self.transients.${model.name}Constraints = ${stringifiedOptions};\n"
         }
     }
 
