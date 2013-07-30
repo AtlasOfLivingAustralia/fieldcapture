@@ -229,4 +229,26 @@ class FCTagLib {
         out << commonService.buildUrlParamsFromMap(outputParams)
     }
 
+    /**
+     * Output appropriate class names for CSS display of sorted column and sort direction
+     *
+     * @attr params REQUIRED
+     * @attr field REQUIRED
+     */
+    def getSortCssClasses = { attrs, body ->
+        def params = attrs.params
+        def thisField = attrs.field
+        def output = "header"
+
+        if (thisField == params.sort) {
+            if (params.order == "DESC") {
+                output += " headerSortUp"
+            } else {
+                output += " headerSortDown"
+            }
+        }
+
+        out << output
+    }
+
 }

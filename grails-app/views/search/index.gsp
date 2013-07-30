@@ -67,7 +67,7 @@
                         <g:set var="fqList" value="${[params.fq].flatten().findAll { it != null }}"/>
                         <g:each var="f" in="${fqList}">
                             <g:set var="fqBits" value="${f?.tokenize(':')}"/>
-                            <li><g:message code="label.${fqBits[0]}" default="${fqBits[0]}"/>: <g:message code="label.${fqBits[1].toLowerCase()}" default="${fqBits[1]}"/>
+                            <li><g:message code="label.${fqBits[0]}" default="${fqBits[0]}"/>: <g:message code="label.${fqBits[1]}" default="${fqBits[1]}"/>
                                 <a href="<fc:formatParams params="${params}" requiredParams="${reqParams}" excludeParam="${f}"/>" class="btn btn-inverse btn-mini">
                                     <i class="icon-white icon-remove"></i></a>
                             </li>
@@ -75,11 +75,11 @@
                     </ul>
                 </g:if>
                 <g:if test="${facets['class']}">
-                    <h4>Page</h4>
+                    <h4><g:message code="label.class" default="Page"/></h4>
                     <!-- ${facets['class']} -->
                     <ul class="pageType">
                         <g:each var="t" in="${facets['class'].terms}">
-                            <li><a href="${fqLink}&fq=class:${t.term}"><g:message code="label.${t.term?.toLowerCase()}"
+                            <li><a href="${fqLink}&fq=class:${t.term}"><g:message code="label.${t.term}"
                                                                                   default="${t.term}"/></a> (${t.count})
                             </li>
                         </g:each>
@@ -87,10 +87,10 @@
                 </g:if>
                 <g:each var="f" in="${facets}">
                     <g:if test="${f.key != 'class' && f.value?.terms?.length() > 0}">
-                        <h4>${f.key?.capitalize()}</h4>
+                        <h4><g:message code="label.${f.key}" default="${f.key?.capitalize()}"/></h4>
                         <ul class="facetValues">
                             <g:each var="t" in="${f.value?.terms}">
-                                <li><a href="${fqLink}&fq=${f.key.encodeAsURL()}Facet:${t.term}"><g:message code="label.${t.term}"
+                                <li><a href="${fqLink}&fq=${f.key.encodeAsURL()}:${t.term}"><g:message code="label.${t.term}"
                                         default="${t.term}"/></a> (${t.count})
                                 </li>
                             </g:each>
@@ -102,14 +102,27 @@
                 <g:if test="${results.hits?.total > 0}">
                     <table class="table table-bordered table-condensed table-striped">
                         <thead>
-                        <tr><th>Page</th><th>Details</th><th>Date created</th></tr>
+                        <tr>
+                            <th class="<fc:getSortCssClasses params="${params}" field="class"/>">
+                                <g:set var="baseParams"><fc:formatParams params="${params}" requiredParams="query,fq,max" excludeParam="sort"/></g:set>
+                                <a href="${baseParams}&sort=class&order=${params.order=="DESC"?"ASC":"DESC"}" title="Sort by page type">Page</a>
+                            </th>
+                            <th class="<fc:getSortCssClasses params="${params}" field="nameSort"/>">
+                                <g:set var="baseParams"><fc:formatParams params="${params}" requiredParams="query,fq,max" excludeParam="sort"/></g:set>
+                                <a href="${baseParams}&sort=nameSort&order=${params.order=="DESC"?"ASC":"DESC"}" title="Sort by name">Details</a>
+                            </th>
+                            <th class="<fc:getSortCssClasses params="${params}" field="lastUpdated"/>">
+                                <g:set var="baseParams"><fc:formatParams params="${params}" requiredParams="query,fq,max" excludeParam="sort"/></g:set>
+                                <a href="${baseParams}&sort=lastUpdated&order=${params.order=="DESC"?"ASC":"DESC"}" title="Sort by date updated">Date updated</a>
+                            </th>
+                        </tr>
                         </thead>
                         <tbody>
                         <g:each var="r" in="${results.hits.hits}">
                             <g:set var="hit" value="${r._source}"/>
                             <g:set var="highlights" value="${r.highlight?._all}"/>
                             <tr>
-                                <td><g:message code="label.${hit.class.toLowerCase()}" default="${hit.class}"/></td>
+                                <td><g:message code="label.${hit.class}" default="${hit.class}"/></td>
                                 <td>
                                     <g:if test="${hit.class=~/Project/}">
                                         <g:link controller="project" id="${hit.projectId}">${hit.name}</g:link>
@@ -127,7 +140,7 @@
                                         &mdash; ${highlights?.join("; ")?.replace("\\/","/")}
                                     </g:if>
                                 </td>
-                                <td><fc:formatDateString date="${hit.dateCreated}" inputFormat="yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"/></td>
+                                <td><fc:formatDateString date="${hit.lastUpdated}" inputFormat="yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"/></td>
                             </tr>
                         </g:each>
                         </tbody>
