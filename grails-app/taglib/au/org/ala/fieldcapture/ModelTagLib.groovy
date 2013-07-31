@@ -149,8 +149,8 @@ class ModelTagLib {
                 break
             case 'autocomplete-edit':
                 def link = g.createLink(controller: 'search', action:'species')
-                databindAttrs.add "autocomplete", "{url:'${link}', options: speciesAutocompleteParams, result:speciesSelected}"
-                result += """<span><div><select name="list" data-bind="visible: availableLists.length, value:listId, options:availableLists, optionsText: 'listName', optionsValue: 'listId'"></select></div>"""
+                databindAttrs.add "autocomplete", "{url:'${link}', options: transients.speciesAutocompleteParams, result:speciesSelected}"
+                result += """<span><div><select name="list" data-bind="visible: transients.availableLists.length, value:listId, options:transients.availableLists, optionsText: 'listName', optionsValue: 'listId'"></select></div>"""
                 result += "<input type=\"text\" data-bind=\"${databindAttrs.toString()}\"/></span>"
                 break
             case 'autocomplete-view':

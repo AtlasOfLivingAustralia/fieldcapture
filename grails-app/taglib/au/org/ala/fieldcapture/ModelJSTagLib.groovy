@@ -312,6 +312,7 @@ class ModelJSTagLib {
         out << INDENT*2 << "var ${makeRowModelName(model.name)} = function (data) {\n"
         out << INDENT*3 << "var self = this;\n"
         out << INDENT*3 << "if (!data) data = {};\n"
+        out << INDENT*3 << "self.transients = {};\n"
         model.columns.each { col ->
             if (col.computed) {
                 switch (col.dataType) {
@@ -371,6 +372,7 @@ class ModelJSTagLib {
                 var js = ko.toJS(this);
                 delete js.isSelected;
                 delete js.isNew;
+                delete js.transients;
                 return js;
             };
 """
@@ -534,17 +536,17 @@ class ModelJSTagLib {
     def speciesModel(attrs, mod, out) {
 
         out << """
-        self.listId = ko.observable();
-        self.availableLists = speciesLists;
-        self.speciesAutocompleteParams = ko.computed(function() {
-            var options = speciesAutoCompleteOptions();
-            options.extraParams.druid = self.listId();
-            return options;
-        });
-        self.speciesSelected = function(event, data) {
-            data.listId = self.listId();
-            self.species(new Species(data));
-        }\n"""
+            self.listId = ko.observable();
+            self.transients.availableLists = speciesLists;
+            self.transients.speciesAutocompleteParams = ko.computed(function() {
+                var options = speciesAutoCompleteOptions();
+                options.extraParams.druid = self.listId();
+                return options;
+            });
+           self.speciesSelected = function(event, data) {
+                data.listId = self.listId();
+                self.species(new Species(data));
+           }\n"""
 
     }
 
@@ -552,7 +554,7 @@ class ModelJSTagLib {
         if (model.constraints) {
 
             def stringifiedOptions = "["+ model.constraints.join(",")+"]"
-            out << INDENT*3 << "if (!self.transients) self.transients = {}; self.transients.${model.name}Constraints = ${stringifiedOptions};\n"
+            out << INDENT*3 << "self.transients.${model.name}Constraints = ${stringifiedOptions};\n"
         }
     }
 
