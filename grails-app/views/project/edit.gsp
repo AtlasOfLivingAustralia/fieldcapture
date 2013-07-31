@@ -98,6 +98,15 @@
             <div class="control-group span4">
                 <label for="imageFilename">File name</label>
                 <input type="text" data-bind="value:filename" id="imageFilename"/>
+                %{--<div class="control-group span4">
+                    <div class="fileupload fileupload-new" data-provides="fileupload">
+                        <div class="fileupload-preview thumbnail" style="width: 200px; height: 150px;"></div>
+                        <div>
+                            <span class="btn btn-file"><span class="fileupload-new">Select image</span><span class="fileupload-exists">Change</span><input type="file" /></span>
+                            <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+                        </div>
+                    </div>
+                </div>--}%
             </div>
             <div class="control-group span4">
                 <label for="imageCaption">Caption</label>
@@ -198,7 +207,7 @@
         // create the model
         var imageViewModel = new ImageViewModel(
             image,
-            {key: 'projectid', value: "${project.projectId}"},
+            {key: 'projectId', value: "${project.projectId}"},
             "${createLink(controller: 'proxy', action: 'documentUpdate')}/");
 
         // bind the model
