@@ -49,6 +49,7 @@
         <div class="row-fluid">
             <div class="span3">
                 <ul class="nav nav-list nav-stacked nav-tabs">
+                    <fc:breadcrumbItem href="${createLink(controller: 'home', action:'advanced')}" title="Manage Projects, Sites & Activities"/>
                     <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'users')}" title="Users" />
                     <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'tools')}" title="Tools" />
                     <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'settings')}" title="Settings" />

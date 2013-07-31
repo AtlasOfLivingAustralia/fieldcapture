@@ -60,8 +60,9 @@
                 <div class="navbar-text pull-right">
                     <span id="buttonBar">
                         mark.woolston@csiro.au&nbsp;<button class="btn btn-small" id="btnLogout"><i class="icon-off"></i><span class="hidden-tablet hidden-phone">&nbsp;Logout</span></button>
-                        <button class="btn btn-small btn-info" id="btnProfile"><i class="icon-user icon-white"></i><span class="hidden-tablet hidden-phone">&nbsp;My Profile</span></button>
+               x         <button class="btn btn-small btn-info" id="btnProfile"><i class="icon-user icon-white"></i><span class="hidden-tablet hidden-phone">&nbsp;My Profile</span></button>
                         <button class="btn btn-warning btn-small" id="btnAdministration"><i class="icon-cog icon-white"></i><span class="hidden-tablet  hidden-phone">&nbsp;Administration</span></button>
+
                         <g:pageProperty name="page.buttonBar"/>
                     </span>
                 </div>
@@ -212,6 +213,9 @@
 
         $("#btnAdministration").click(function (e) {
             window.location = "${createLink(controller: 'admin')}";
+        });
+        $('#btnDashboard').click(function(e) {
+            window.location = "${createLink(controller: 'report')}"
         });
 
         $("#btnProfile").click(function (e) {

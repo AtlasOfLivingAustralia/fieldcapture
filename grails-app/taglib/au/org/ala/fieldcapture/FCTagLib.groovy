@@ -113,13 +113,13 @@ class FCTagLib {
                     mkp.yield(message(code:'default.about.label', default: 'About'))
                 }
             }
-            li(class:attrs.active == 'advanced' ? 'active' : '') {
-                a(href:createLink(controller: 'home', action:'advanced')) {
-                    i(class:"icon-cog") {
+            li(class:attrs.active == 'dashboard' ? 'active' : '') {
+                a(href:createLink(controller: 'report', action:'dashboard')) {
+                    i(class:"icon-signal") {
                         mkp.yieldUnescaped("&nbsp;")
                     }
                     mkp.yieldUnescaped("&nbsp")
-                    mkp.yield(message(code:'default.about.label', default: 'Advanced'))
+                    mkp.yield(message(code:'default.about.label', default: 'Dashboard'))
                 }
             }
         }
