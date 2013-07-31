@@ -8,7 +8,9 @@ import static org.github.bootstrap.Attribute.outputAttributes
 class FCTagLib {
 
     static namespace = "fc"
+
     def commonService
+    def userService
 
     def textField = { attrs ->
         def outerClass = attrs.remove 'outerClass'
@@ -249,6 +251,13 @@ class FCTagLib {
         }
 
         out << output
+    }
+
+    def currentUserDisplayName = { attrs, body ->
+        def mb = new MarkupBuilder(out)
+        mb.span(class:'username') {
+            mkp.yield(userService.currentUserDisplayName)
+        }
     }
 
 }
