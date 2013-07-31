@@ -450,3 +450,9 @@ li.output-summary:last-child {
     display: inline-block;
     color: #999;
 }
+
+span.progress-label {
+    position:relative;
+    top:21px;
+    padding-right:4px;
+}

@@ -53,6 +53,7 @@
         <li><a href="#activity" id="activity-tab" data-toggle="tab">Activities</a></li>
         <li><a href="#site" id="site-tab" data-toggle="tab">Sites</a></li>
         <li><a href="#species" id="species-tab" data-toggle="tab">Species</a></li>
+        <li><a href="#dashboard" id="dashboard-tab" data-toggle="tab">Dashboard</a></li>
     </ul>
     <div class="tab-content">
         <div class="tab-pane active" id="overview">
@@ -147,11 +148,59 @@
                 </div>
             </div>
         </div>
+
         <div class="tab-pane" id="species">
             <!-- SPECIES -->
-            <g:render template="/species/species" model="[projject:project]"/>
+            <g:render template="/species/species" model="[project:project]"/>
         </div>
 
+        <div class="tab-pane" id="dashboard">
+            <!-- DASHBOARD -->
+            <h2 style="font-weight:normal;margin-top:0;">Totals across all activities under this project.</h2>
+            <div class="row-fluid">
+                <div class="span4 well">
+                    <h3>Participation</h3>
+                    <strong>Total participation</strong><span class="pull-right progress-label">83</span>
+                    <div class="progress progress-danger active">
+                        <div class="bar" style="width: 83%;"></div>
+                    </div>
+                    <strong>Indigenous participation</strong><span class="pull-right progress-label">40</span>
+                    <div class="progress progress-info active">
+                        <div class="bar" style="width: 40%;"></div>
+                    </div>
+                    <strong>Volunteers</strong><span class="pull-right progress-label">62</span>
+                    <div class="progress progress-success active">
+                        <div class="bar" style="width: 62%;"></div>
+                    </div>
+                </div>
+                <div class="span4 well">
+                    <h3>Fencing</h3>
+                    <strong>Total length</strong><span class="pull-right progress-label">4.5km</span>
+                    <div class="progress progress-danger active">
+                        <div class="bar" style="width: 50%;"></div>
+                    </div>
+                    <strong>Total cost</strong><span class="pull-right progress-label">$40,000</span>
+                    <div class="progress progress-info active">
+                        <div class="bar" style="width: 18%;"></div>
+                    </div>
+                </div>
+                <div class="span4 well">
+                    <h3>Weed management</h3>
+                    <strong>Hectares treated</strong><span class="pull-right progress-label">6.3</span>
+                    <div class="progress progress-danger active">
+                        <div class="bar" style="width: 50%;"></div>
+                    </div>
+                    <strong>Length of roadside cleared</strong><span class="pull-right progress-label">14km</span>
+                    <div class="progress progress-info active">
+                        <div class="bar" style="width: 28%;"></div>
+                    </div>
+                    <strong>Length of riparian area cleared</strong><span class="pull-right progress-label">4km</span>
+                    <div class="progress progress-info active">
+                        <div class="bar" style="width: 8%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <hr />
