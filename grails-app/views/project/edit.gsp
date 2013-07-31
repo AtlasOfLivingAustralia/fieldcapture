@@ -177,8 +177,9 @@
             this.documentId = img ? img.documentId : '';
             this[owner.key] = owner.value;
             this.save = function () {
+                var url = updateUrl + (self.documentId ? '/' + self.documentId : '');
                 $.ajax({
-                    url: updateUrl + self.documentId,
+                    url: url,
                     type: 'POST',
                     data: ko.toJSON(self),
                     contentType: 'application/json',
@@ -197,7 +198,7 @@
 
         // find an image with the right properties in the available 'documents'
         var docs = ${project?.documents ?: []},
-            image = {type: 'image', role: 'primary'};
+            image = {type: 'image', role: 'primary', documentId: ''};
         $.each(docs, function (i, doc) {
             if (doc.type === 'image' && doc.role === 'primary') {
                 image = doc;
@@ -208,7 +209,7 @@
         var imageViewModel = new ImageViewModel(
             image,
             {key: 'projectId', value: "${project.projectId}"},
-            "${createLink(controller: 'proxy', action: 'documentUpdate')}/");
+            "${createLink(controller: 'proxy', action: 'documentUpdate')}");
 
         // bind the model
         ko.applyBindings(imageViewModel, document.getElementById('projectImageContainer'));

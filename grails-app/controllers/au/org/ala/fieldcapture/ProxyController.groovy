@@ -23,7 +23,7 @@ class ProxyController {
     def documentUpdate(String id) {
         def body = request.JSON
         //log.debug "body = ${body}"
-        def url = grailsApplication.config.ecodata.baseUrl + "document/" + id
+        def url = grailsApplication.config.ecodata.baseUrl + "document" + (id ? "/" + id : '')
         render webService.doPost(url, body)
     }
 }
