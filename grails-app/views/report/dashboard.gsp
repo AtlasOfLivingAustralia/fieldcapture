@@ -20,7 +20,6 @@
     <r:require modules="knockout"/>
     <script src="http://maps.google.com/maps/api/js?key=AIzaSyDAqE0sOMHNienA0zFIUMlY53ztEDiv0d8&sensor=false"
             type="text/javascript"></script>
-    <g:javascript src="dashboard.js"></g:javascript>
 
     <style type="text/css">
     .chart {
@@ -97,5 +96,75 @@
     <div id="pestsByCategory"></div>
 </div>
 </div>
+<script type="text/javascript">
+function createViewModel() {
+    var ViewModel = function () {
+
+        var data;
+        var dataTable;
+
+        this.projectData = function() {
+
+            var summaryData = google.visualization.data.group(dataTable, [stateColumn],
+            [
+            {column: projectIdColumn, aggregation: google.visualization.data.count, type: 'number', label: 'Number of Projects'},
+            {column: totalParticipantsColumn, aggregation: google.visualization.data.sum, type: 'number', label: 'Total Participants'}
+            ]);
+
+            return summaryData;
+        };
+
+        this.plantingData = function() {
+            var plantingData = new google.visualization.DataView(dataTable);
+            plantingData.setColumns([stateColumn,
+                {calc: sumOfColumns([t1PlantsColumn, t2PlantsColumn]), type: 'number', label: "Plants Planted"}]);
+            var summaryData = google.visualization.data.group(plantingData, [0],
+            [
+                {column: 1, aggregation: google.visualization.data.sum, type: 'number', label: 'Plants Planted'}
+            ]);
+
+            return summaryData;
+        }
+
+        this.loadReport = function() {
+            var params = $.param({attributes:defaultAttributes});
+            jQuery.getJSON('${createLink(controller:'report', action:'summaryReport')}?'+params, function (results) {
+                data = results;
+                dataTable = google.visualization.arrayToDataTable(data, false);
+
+                buildCharts(plantingData(data), themeData(data), engagementData(dataTable), fencingData(dataTable));
+                initMap(data);
+            });
+
+            jQuery.getJSON('${createLink(controller:'report', action:'speciesReport')}',function(results) {
+                addSpeciesCharts(results);
+            });
+
+        };
+        var Project = function (rowIndex) {
+            this.name = '';
+            this.code = '';
+            this.description = '';
+            this.organisation = '';
+            if (rowIndex) {
+                this.code = data[rowIndex][2];
+                this.organisation = data[rowIndex][5];
+                this.name = data[rowIndex][3];
+                this.description = data[rowIndex][7];
+            }
+        }
+        this.selectedProject = ko.observable(new Project());
+        this.selectProject = function (index) {
+            this.selectedProject(new Project(index));
+        }
+    }
+    viewModel = new ViewModel();
+    viewModel.loadReport();
+    ko.applyBindings(viewModel);
+}
+</script>
+<script type="text/javascript" src="${request.contextPath}/js/dashboard.js"></script>
 </body>
+
+
 </html>
