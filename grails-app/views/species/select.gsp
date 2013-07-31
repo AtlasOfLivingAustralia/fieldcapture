@@ -133,7 +133,7 @@ $(window).load(function(){
             $('#speciesLists').delegate('button', 'click', function(event) {
                 self.addSpeciesList(event);
             });
-            $.get('/fieldcapture/proxy/speciesLists', {}, function(data) {
+            $.get('${createLink(controller:'proxy', action:'speciesLists')}', {}, function(data) {
                 self.availableLists = data.lists;
                 $('#speciesLists').dataTable({
                     "aaData": self.availableLists,
