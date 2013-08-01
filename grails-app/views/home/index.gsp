@@ -94,6 +94,7 @@
                     </div>
                 </div>
             </div>
+            %{-- template for jQuery DOM injection --}%
             <table id="projectRowTempl" class="hide">
                 <tr>
                     <td class="td1">
@@ -104,7 +105,6 @@
                                 <i class="icon-home"></i>
                                 <a href="">View project page</a>
                             </div>
-
                             <div class="sitesLine">
                                 <i class="icon-map-marker"></i>
                                 Sites: <a href="#" data-id="$id" class="zoom-in btnX btn-miniX"><i
@@ -112,20 +112,15 @@
                                 <a href="#" data-id="$id" class="zoom-out btnX btn-miniX"><i
                                         class="icon-minus-sign"></i> zoom out</a>
                             </div>
-
                             <div class="orgLine">
                                 <i class="icon-user"></i>
                             </div>
-
                             <div class="descLine">
                                 <i class="icon-info-sign"></i>
                             </div>
-
                         </div>
                     </td>
-                    <td class="td2">
-                        $date
-                    </td>
+                    <td class="td2">$date</td>
                 </tr>
             </table>
 
@@ -321,7 +316,7 @@
     function generateMap(facetFilters) {
         var url = "${createLink(action:'geoService')}";
 
-        if (facetFilters) {
+        if (facetFilters && facetFilters.length > 0) {
             url += "?fq=" + facetFilters.join("&fq=");
         }
 
@@ -361,11 +356,16 @@
                         }
                     });
 
-                    // convert projectIdMap to a list and add to global var
-                    projectListIds = []; // clear the list
-                    for (var id in projectIdMap) {
-                        projectListIds.push(id);
+                    if (facetFilters && facetFilters.length > 0) {
+                        // convert projectIdMap to a list and add to global var
+                        projectListIds = []; // clear the list
+                        for (var id in projectIdMap) {
+                            projectListIds.push(id);
+                        }
+                    } else {
+                        projectListIds = []; // clear the list
                     }
+
                     updateProjectTable();
                     //console.log("features count", features.length);
                 }
@@ -436,26 +436,34 @@
         var offset = $('#projectTable').data("offset");
         var params = "sort="+sort+"&order="+order+"&offset="+offset;
 
-        if (projectListIds) {
+        if (projectListIds.length > 0) {
             params += "&ids=" + projectListIds.join(",");
+        } else {
+            params += "&query=class:au.org.ala.ecodata.Project";
         }
         if (facetFilters) {
             params += "&fq=" + facetFilters.join("&fq=");
         }
 
-        $.post(url, params, function(data) {
+        $.post(url, params, function(data1) {
             //console.log("getJSON data", data);
+            var data
+            if (data1.resp) {
+                data = data1.resp;
+            } else if (data1.hits) {
+                data = data1;
+            }
             if (data.error) {
                 console.error("Error: " + data.error);
             } else {
-                var total = data.resp.hits.total;
+                var total = data.hits.total;
                 $('#projectTable').data("total", total);
                 $('#paginateTable').show();
                 if (total == 0) {
                     $('#paginationInfo').html("Nothing found");
 
                 } else {
-                    var max = data.resp.hits.hits.length
+                    var max = data.hits.hits.length
                     $('#paginationInfo').html((offset+1)+" to "+(offset+max) + " of "+total);
                     if (offset == 0) {
                         $('#paginateTable .prev').addClass("disabled");
@@ -485,7 +493,7 @@
     */
     function populateTable(data) {
         //console.log("populateTable", data);
-        $.each(data.resp.hits.hits, function(i, el) {
+        $.each(data.hits.hits, function(i, el) {
             //console.log(i, "el", el);
             var id = el._id;
             var src = el._source

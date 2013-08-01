@@ -62,6 +62,9 @@ class SearchService {
             params.facets = "stateFacet,nrmFacet,lgaFacet"
             def url = grailsApplication.config.ecodata.baseUrl + 'search/elasticPost'
             webService.doPost(url, params)
+        } else if (params.query) {
+            def url = elasticBaseUrl + commonService.buildUrlParamsFromMap(params)
+            webService.getJson(url)
         } else {
             [error: "required param ids not provided"]
         }
