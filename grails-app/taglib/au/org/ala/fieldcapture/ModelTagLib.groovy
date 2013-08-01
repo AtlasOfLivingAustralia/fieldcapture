@@ -45,6 +45,7 @@ class ModelTagLib {
 
     /**
      * Generates an element to display or edit a value.
+     * @parma attrs the attributes passed to the tag library.  Used to access site id.
      * @param model of the data element
      * @param context the dot notation path to the data
      * @param editable if the html element is an input
@@ -52,7 +53,7 @@ class ModelTagLib {
      * @param databindAttrs additional clauses to add to the data binding
      * @return the markup
      */
-    def dataTag(model, context, editable, at, databindAttrs, labelAttributes) {
+    def dataTag(attrs, model, context, editable, at, databindAttrs, labelAttributes) {
         def result = ""
         if (!databindAttrs) { databindAttrs = new Databindings()}
         if (!at) { at = new AttributeMap()}
@@ -166,7 +167,11 @@ class ModelTagLib {
                 <div>Bearing:<span data-bind="text:bearing"/></div>
                 """
                 break
-
+            case 'link-view':
+            case 'link-edit':
+                println specialProperties(attrs, model.properties)
+                result+="<a href=\""+g.createLink(specialProperties(attrs, model.properties))+"\">${model.source}</a>"
+                break
 
         }
         if (model.preLabel) {
@@ -181,13 +186,13 @@ class ModelTagLib {
     }
 
     // convenience method for the above
-    def dataTag(model, context, editable, at) {
-        dataTag(model, context, editable, at, null, null)
+    def dataTag(attrs, model, context, editable, at) {
+        dataTag(attrs, model, context, editable, at, null, null)
     }
 
     // convenience method for the above
-    def dataTag(model, context, editable) {
-        dataTag(model, context, editable, null, null, null)
+    def dataTag(attrs, model, context, editable) {
+        dataTag(attrs, model, context, editable, null, null, null)
     }
 
     def getInputSize(width) {
@@ -201,6 +206,17 @@ class ModelTagLib {
             case 21..30: return 'input-medium'
             case 31..40: return 'input-large'
             default: return 'input-small'
+        }
+    }
+
+    def specialProperties(attrs, properties) {
+        return properties.collectEntries { entry ->
+            switch (entry.getValue()) {
+                case "#siteId":
+                    entry.setValue(attrs?.site?.siteId)
+                default:
+                    return entry
+            }
         }
     }
 
@@ -240,7 +256,9 @@ class ModelTagLib {
     // row model
     def row(out, attrs, model, parentSpan) {
         def extraClassAttrs = model.class ?: ""
-        out << "<div class=\"row-fluid space-after ${extraClassAttrs}\">\n"
+        def databindAttrs = model.visibility ? "data-bind=\"visible:${model.visibility}\"" : ""
+
+        out << "<div class=\"row-fluid space-after ${extraClassAttrs}\" ${databindAttrs}>\n"
         if (model.align == 'right') {
             out << "<div class=\"pull-right\">\n"
         }
@@ -274,11 +292,11 @@ class ModelTagLib {
                     labelAttributes.addClass 'span4'
                 }
                 if (it.type == 'textarea') {
-                    out << INDENT << dataTag(it, 'data', attrs.edit, at, null, labelAttributes)
+                    out << INDENT << dataTag(attrs, it, 'data', attrs.edit, at, null, labelAttributes)
                 } else {
                     at.addSpan("span${span}")
                     out << "<span${at.toString()}>"
-                    out << INDENT << dataTag(it, 'data', attrs.edit, null, null, labelAttributes)
+                    out << INDENT << dataTag(attrs, it, 'data', attrs.edit, null, null, labelAttributes)
                     out << "</span>"
                 }
                 if (context == 'col') {
@@ -419,7 +437,7 @@ class ModelTagLib {
         out << INDENT*4 << "<tbody data-bind=\"foreach: data.${table.source}\"><tr>\n"
         table.columns.eachWithIndex { col, i ->
             col.type = col.type ?: getType(attrs, col.source, table.source)
-            out << INDENT*5 << "<td>" << dataTag(col, '', false) << "</td>" << "\n"
+            out << INDENT*5 << "<td>" << dataTag(attrs, col, '', false) << "</td>" << "\n"
         }
         out << INDENT*4 << "</tr></tbody>\n"
     }
@@ -442,7 +460,7 @@ class ModelTagLib {
             out << INDENT*4 << "<tbody data-bind=\"foreach: data.${table.source}\"><tr>\n"
             table.columns.eachWithIndex { col, i ->
                 col.type = col.type ?: getType(attrs, col.source, table.source)
-                out << INDENT*5 << "<td>" << dataTag(col, '', false) << "</td>" << "\n"
+                out << INDENT*5 << "<td>" << dataTag(attrs, col, '', false) << "</td>" << "\n"
             }
             out << INDENT*4 << "</tr></tbody>\n"
         }
@@ -478,7 +496,7 @@ class ModelTagLib {
         model.columns.eachWithIndex { col, i ->
             col.type = col.type ?: getType(attrs, col.source, model.source)
             //log.debug "col = ${col}"
-            out << INDENT*5 << "<td>" << dataTag(col, '', edit) << "</td>" << "\n"
+            out << INDENT*5 << "<td>" << dataTag(attrs, col, '', edit) << "</td>" << "\n"
         }
         if (model.editableRows) {
                 out << INDENT*5 << "<td>\n"
@@ -504,7 +522,7 @@ class ModelTagLib {
             col.type = col.type ?: getType(attrs, col.source, model.source)
             // inject computed from data model
             col.computed = col.computed ?: getComputed(attrs, col.source, model.source)
-            out << INDENT*5 << "<td>" << dataTag(col, '', edit, null, bindAttrs, null) << "</td>" << "\n"
+            out << INDENT*5 << "<td>" << dataTag(attrs, col, '', edit, null, bindAttrs, null) << "</td>" << "\n"
         }
         out << INDENT*5 << "<td>\n"
         out << INDENT*6 << "<a class='btn btn-success btn-mini' data-bind='click:\$root.accept${model.source}' href='#' title='save'>Update</a>\n"
@@ -534,7 +552,7 @@ class ModelTagLib {
                 col.type = col.type ?: getType(attrs, col.source, '')
                 // inject computed from data model
                 col.computed = col.computed ?: getComputed(attrs, col.source, '')
-                out << INDENT*5 << "<td${colspan}>" << dataTag(col, 'data', attrs.edit, attributes) << "</td>" << "\n"
+                out << INDENT*5 << "<td${colspan}>" << dataTag(attrs, col, 'data', attrs.edit, attributes) << "</td>" << "\n"
             }
             if (model.type == 'table' && attrs.edit) {
                 out << INDENT*5 << "<td></td>\n"  // to balance the extra column for actions
