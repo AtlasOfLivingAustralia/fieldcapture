@@ -116,7 +116,7 @@
                 <fc:iconHelp title="Start date">Date the activity was started.</fc:iconHelp>
                 </label>
                 <div class="input-append">
-                    <input data-bind="datepicker:startDate.date" id="startDate" type="text" size="16"
+                    <input data-bind="datepicker:startDate.date" name="startDate" id="startDate" type="text" size="16"
                        data-validation-engine="validate[required]" class="input-xlarge"/>
                     <span class="add-on open-datepicker"><i class="icon-th"></i></span>
                 </div>
@@ -127,7 +127,7 @@
                 </label>
                 <div class="input-append">
                     <input data-bind="datepicker:endDate.date" id="endDate" type="text" size="16"
-                       data-validation-engine="validate[required]" class="input-xlarge"/>
+                       data-validation-engine="validate[future[startDate]]" class="input-xlarge"/>
                     <span class="add-on open-datepicker"><i class="icon-th"></i></span>
                 </div>
             </div>

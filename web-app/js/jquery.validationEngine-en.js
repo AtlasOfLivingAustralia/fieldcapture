@@ -55,7 +55,7 @@
                 },
                 "future": {
                     "regex": "none",
-                    "alertText": "* Date past "
+                    "alertText": "* Date must be after "  // CG changed.
                 },	
                 "maxCheckbox": {
                     "regex": "none",
