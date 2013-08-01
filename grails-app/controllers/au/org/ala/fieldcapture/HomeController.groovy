@@ -18,7 +18,7 @@ class HomeController {
     def index() {
         [
             //projects: projectService.list(),
-            projects: searchService.allProjects(params),
+            //projects: searchService.allProjects(params),
 //            sites: siteService.list(),
 //            //sites: siteService.injectLocationMetadata(siteService.list()),
 //            activities: activityService.list(),

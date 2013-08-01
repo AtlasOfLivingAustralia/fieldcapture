@@ -341,7 +341,7 @@
                     $.each(geoPoints.hits.hits, function(j, h) {
                         var s = h["_source"];
                         //console.log("s", s, j);
-                        if (s.location && s.location.lat && s.location.lon) {
+                        if (s.geo && s.geo.lat && s.geo.lon) {
                             var projectId = s.projects[0] ? s.projects[0].projectId : null
                             var projectName = s.projects[0] ? s.projects[0].name : null
                             var point = {
@@ -349,12 +349,12 @@
                                 id: projectId ? projectId : s.id,
                                 name: projectName ? projectName :s.name,
                                 popup: generatePopup(projectLinkPrefix,projectId,projectName,s.organisationName,siteLinkPrefix,s.siteId, s.name),
-                                latitude: s.location.lat,
-                                longitude: s.location.lon
+                                latitude: s.geo.lat,
+                                longitude: s.geo.lon
                             }
                             //console.log("point", point);
                             features.push(point);
-                            bounds.extend(new google.maps.LatLng(s.location.lat,s.location.lon));
+                            bounds.extend(new google.maps.LatLng(s.geo.lat,s.geo.lon));
                             if (projectId) {
                                 projectIdMap[projectId] = true;
                             }
