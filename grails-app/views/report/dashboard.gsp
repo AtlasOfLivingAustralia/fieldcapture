@@ -10,7 +10,7 @@
 <html>
 <head>
     <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
-    <title>Field Capture | Dashboard</title>
+    <title>Dashboard | Field Capture</title>
 
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script src="http://dev.openlayers.org/releases/OpenLayers-2.12/OpenLayers.js" type="text/javascript"></script>

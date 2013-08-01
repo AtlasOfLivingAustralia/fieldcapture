@@ -36,6 +36,8 @@ class HomeController {
     }
 
     def about() {
+    }
 
+    def myProfile() {
     }
 }

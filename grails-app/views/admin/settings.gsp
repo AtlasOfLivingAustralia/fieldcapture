@@ -3,7 +3,7 @@
 <html>
     <head>
         <meta name="layout" content="adminLayout"/>
-        <title>Settings - Admin - Data capture - Atlas of Living Australia</title>
+        <title>Settings | Admin | Data capture | Atlas of Living Australia</title>
     </head>
 
     <body>

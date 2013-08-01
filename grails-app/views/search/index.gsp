@@ -10,7 +10,7 @@
 <html>
 <head>
     <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
-    <title>Search Results</title>
+    <title>Search Results | Field Capture</title>
 </head>
 <body>
 <div id="wrapper" class="container-fluid">

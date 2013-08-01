@@ -28,7 +28,7 @@
     <div class="container-fluid validationEngineContainer" id="validation-container">
         <ul class="breadcrumb">
             <li><g:link controller="home">Home</g:link> <span class="divider">/</span></li>
-            <li><g:link controller="home" action="advanced">Sites</g:link><span class="divider">/</span></li>
+            <li>Sites<span class="divider">/</span></li>
             <g:if test="${project}">
                 <li class="active">Create new site for ${project?.name}</li>
             </g:if>

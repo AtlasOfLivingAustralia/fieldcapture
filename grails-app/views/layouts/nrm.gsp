@@ -60,7 +60,7 @@
                 <div class="navbar-text pull-right">
                     <span id="buttonBar">
                         <fc:currentUserDisplayName />&nbsp;<button class="btn btn-small" id="btnLogout"><i class="icon-off"></i><span class="hidden-tablet hidden-phone">&nbsp;Logout</span></button>
-                        <button class="btn btn-small btn-info" id="btnProfile"><i class="icon-user icon-white"></i><span class="hidden-tablet hidden-phone">&nbsp;My Profile</span></button>
+                        <button class="btn btn-small btn-info" id="btnProfile"><i class="icon-user icon-white"></i><span class="hidden-tablet hidden-phone">&nbsp;My profile</span></button>
                         <button class="btn btn-warning btn-small" id="btnAdministration"><i class="icon-cog icon-white"></i><span class="hidden-tablet  hidden-phone">&nbsp;Administration</span></button>
 
                         <g:pageProperty name="page.buttonBar"/>
@@ -86,18 +86,6 @@
 
     <div id="footer">
         <div id="footer-wrapper">
-            %{--<div class="stay-connected">--}%
-                %{--<h2>Stay connected</h2>--}%
-                %{--<ul class="horizontal">--}%
-
-                    %{--<li class="email"> <a href="/news/subscribe.html">Subscribe to receive<br>--}%
-                        %{--email alerts</a> </li>--}%
-                    %{--<li class="facebook"> <a href="http://www.facebook.com/CaringforourCountry">Join us on Facebook</a> </li>--}%
-                    %{--<li class="twitter"> <a href="http://twitter.com/#!/C4oC">Follow us on Twitter</a> </li>--}%
-                    %{--<li class="rss"> <a href="/news/news.xml">Subscribe to RSS</a><br>--}%
-                        %{--<a class="what" href="/news/rss.html">(what is RSS?)</a></li>--}%
-                %{--</ul>--}%
-            %{--</div>--}%
 
             %{--<div class="footer-nav">--}%
                 %{--<div>--}%
@@ -191,7 +179,17 @@
                 <div class="large-space-before">
                     <button class="btn btn-mini" id="toggleFluid">toggle fixed/fluid width</button>
                     <div class="large-space-before">&copy; 2013 <a href="/about/copyright.html">Commonwealth of Australia</a></div>
-                </div>
+                    <div class="stay-connected pull-right">
+                        <h2 style="display:none;">Stay connected</h2>
+                        <ul class="horizontal">
+                            <li class="email"> <a href="http://www.nrm.gov.au/news/subscribe.html">Subscribe to receive<br>
+                                email alerts</a> </li>
+                            <li class="facebook"> <a href="http://www.facebook.com/CaringforourCountry">Join us on Facebook</a> </li>
+                            <li class="twitter"> <a href="http://twitter.com/#!/C4oC">Follow us on Twitter</a> </li>
+                            <li class="rss"> <a href="http://www.nrm.gov.au/news/news.xml">Subscribe to RSS</a><br>
+                                <a class="what" href="http://www.nrm.gov.au/news/rss.html">(what is RSS?)</a></li>
+                        </ul>
+                    </div>
             </div>
         </div>
 
@@ -219,7 +217,7 @@
         });
 
         $("#btnProfile").click(function (e) {
-            window.location = "${createLink(controller: 'userProfile')}";
+            window.location = "${createLink(controller: 'myProfile')}";
         });
 
         $("#toggleFluid").click(function(el){

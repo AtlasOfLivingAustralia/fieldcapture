@@ -13,6 +13,7 @@ class UrlMappings {
 
 		"/"(controller: 'home', action: 'index')
 		"/about"(controller: 'home', action: 'about')
+    "/myProfile"(controller: 'home', action: 'myProfile')
 		"500"(view:'/error')
 	}
 }

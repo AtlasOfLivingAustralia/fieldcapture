@@ -23,9 +23,7 @@
     <meta name="description" content="Atlas of Living Australia"/>
     <meta name="author" content="Atlas of Living Australia">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title><g:layoutTitle /></title>
-
     <r:require modules="application, defaultSkin, app_bootstrap, app_bootstrap_responsive"/>
     <r:layoutResources/>
     <g:layoutHead />
@@ -44,7 +42,7 @@
                     <div class="navbar-text pull-right">
                         <span id="buttonBar">
                             <fc:currentUserDisplayName/>&nbsp;<button class="btn btn-small" id="btnLogout"><i class="icon-off"></i><span class="hidden-tablet hidden-phone">&nbsp;Logout</span></button>
-                            <button class="btn btn-small btn-info" id="btnProfile"><i class="icon-user icon-white"></i><span class="hidden-tablet hidden-phone">&nbsp;My Profile</span></button>
+                            <button class="btn btn-small btn-info" id="btnProfile"><i class="icon-user icon-white"></i><span class="hidden-tablet hidden-phone">&nbsp;My profile</span></button>
                             <button class="btn btn-warning btn-small" id="btnAdministration"><i class="icon-cog icon-white"></i><span class="hidden-tablet  hidden-phone">&nbsp;Administration</span></button>
                             <g:pageProperty name="page.buttonBar"/>
                         </span>
@@ -89,7 +87,7 @@
         });
 
         $("#btnProfile").click(function (e) {
-            window.location = "${createLink(controller: 'userProfile')}";
+            window.location = "${createLink(controller: 'myProfile')}";
         });
 
     });

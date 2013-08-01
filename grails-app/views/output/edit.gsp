@@ -5,27 +5,28 @@
     <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
     <title>Edit | ${activity.activityId ?: 'new'} | ${site.name} | ${site.projectName} | Field Capture</title>
     <md:modelStyles model="${model}" edit="true"/>
-
     <r:require modules="jstimezonedetect,knockout,jqueryValidationEngine,datepicker,jQueryImageUpload"/>
-
 </head>
 <body>
 <div class="container-fluid">
-    <legend>
-        <table style="width: 100%">
-            <tr>
-                <td><g:link class="discreet" controller="home" action="index">Home</g:link><fc:navSeparator/>Data entry<fc:navSeparator/>
-                <g:if test="${create}">create</g:if>
-                <g:else>
-                    <span data-bind="text:name"></span>
-                    <span data-bind="text:assessmentDate.formattedDate"></span>
-                </g:else>
-                </td>
-                <td style="text-align: right"><span><button data-bind="click:deleteAll" class="btn btn-danger btn-small">
-                    <i class="icon-remove icon-white"></i>&nbsp;Delete output</button></span></td>
-            </tr>
-        </table>
-    </legend>
+
+    <ul class="breadcrumb">
+        <li><g:link controller="home">Home</g:link> <span class="divider">/</span></li>
+        <li>Data entry<span class="divider">/</span></li>
+        <g:if test="${project}">
+            <li class="active">Create new site for ${project?.name}</li>
+        </g:if>
+        <g:elseif test="${create}">
+            <li class="active">Create</li>
+        </g:elseif>
+        <g:else>
+            <li>
+                <span data-bind="text:name"></span>
+                <span data-bind="text:assessmentDate.formattedDate"></span>
+            </li>
+        </g:else>
+    </ul>
+
     <div class="row-fluid title-block">
         <div class="span6 title-attribute">
             <h2>Project: </h2>

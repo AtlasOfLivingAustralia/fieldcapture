@@ -34,22 +34,23 @@
 </head>
 <body>
 <div class="container-fluid validationEngineContainer" id="validation-container">
-    <legend>
-        <table style="width: 100%">
-            <tr>
-                <td><g:link class="discreet" controller="home" action="index">Home</g:link><fc:navSeparator/>Activities<fc:navSeparator/>
-                <g:if test="${create}">create</g:if>
-                <g:else>
-                    <span data-bind="text:type"></span>
-                    <span data-bind="text:startDate.formattedDate"></span>/<span data-bind="text:endDate.formattedDate"></span>
-                </g:else>
-                </td>
-                <g:if test="${!create}">
-                    <td style="text-align: right"><span><button data-bind="click:removeActivity" id="btnDeleteAll" class="btn btn-danger btn-small"><i class="icon-remove icon-white"></i>&nbsp;Delete activity</button></span></td>
-                </g:if>
-            </tr>
-        </table>
-    </legend>
+
+  <ul class="breadcrumb">
+        <li><g:link controller="home">Home</g:link> <span class="divider">/</span></li>
+        <li>Activities<span class="divider">/</span></li>
+        <g:if test="${project}">
+            <li class="active">Create new activity</li>
+        </g:if>
+        <g:elseif test="${create}">
+            <li class="active">Create</li>
+        </g:elseif>
+        <g:else>
+            <li class="active">
+                <span data-bind="text:type"></span>
+                <span data-bind="text:startDate.formattedDate"></span>/<span data-bind="text:endDate.formattedDate"></span>
+            </li>
+        </g:else>
+    </ul>
 
     <div class="row-fluid title-block well input-block-level">
         <div class="space-after"><span>An activity is usually associated with a site and a project. Less commonly, the activity may just be
