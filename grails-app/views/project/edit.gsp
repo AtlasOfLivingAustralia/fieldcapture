@@ -208,7 +208,7 @@
         // create the model
         var imageViewModel = new ImageViewModel(
             image,
-            {key: 'projectId', value: "${project.projectId}"},
+            {key: 'projectId', value: "${project?.projectId}"},
             "${createLink(controller: 'proxy', action: 'documentUpdate')}");
 
         // bind the model
