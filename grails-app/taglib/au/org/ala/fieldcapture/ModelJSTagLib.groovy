@@ -22,7 +22,7 @@ class ModelJSTagLib {
                 matrixModel attrs, model, out
             }
         }
-        def modelContainsSpecies = true;
+        def modelContainsSpecies = true
         if (modelContainsSpecies) {
             out << INDENT*2 << """
             var Species = function(data) {
@@ -61,8 +61,11 @@ class ModelJSTagLib {
                 };
             };\n"""
         }
-        out << INDENT*2 << "var site = ${attrs.site.toString()};\n"
-
+        def site = "{}"
+        if (attrs.site.size() > 0) {
+            site = attrs.site.toString()
+        }
+        out << INDENT*2 << "var site = ${site};\n"
         out << INDENT*2 << "var speciesLists = ${attrs.speciesLists.toString()};\n"
     }
 
