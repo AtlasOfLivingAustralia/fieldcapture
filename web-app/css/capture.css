@@ -242,7 +242,15 @@ i[class^="icon-remove"]:hover {
     /*height:640px;*/
 }
 .map-box {
-    height:580px;
+    height:540px;
+}
+.facetBtns {
+    max-height: 70px;
+    overflow-y: auto;
+    line-height: 2em;
+    margin: 5px 0;
+    padding: 2px 5px 5px 5px;
+    background-color: #f6f4ef;
 }
 .list-box ul {
     list-style: disc;

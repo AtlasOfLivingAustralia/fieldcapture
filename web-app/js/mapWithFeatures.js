@@ -82,8 +82,8 @@
                     style: 'DEFAULT'
                 }
             });
-            console.log('[init] ZoomToBounds: ' + features.zoomToBounds);
-            console.log('[init] ZoomLimit: ' + features.zoomLimit);
+            //console.log('[init] ZoomToBounds: ' + features.zoomToBounds);
+            //console.log('[init] ZoomLimit: ' + features.zoomLimit);
             if (features.zoomToBounds) { this.zoomToBounds = features.zoomToBounds; }
             if (features.zoomLimit) { this.zoomLimit = features.zoomLimit; }
             if(features.features !== undefined){
@@ -105,7 +105,7 @@
             }
 
             $.each(features, function (i,loc) {
-                console.log('Loading feature with type:' + loc.type + "|" + loc.latitude);
+                //console.log('Loading feature with type:' + loc.type + "|" + loc.latitude);
                 if (loc.type === 'Point') {
                     var ll = new google.maps.LatLng(Number(loc.coordinates[1]), Number(loc.coordinates[0]));
                     f = new google.maps.Marker({
@@ -132,7 +132,8 @@
                       map: self.map,
                       editable: false
                    });
-                    //set the extend of the map
+                   //set the extend of the map
+                   //console.log("f.getBounds()",f.getBounds());
                    self.featureBounds.extend(f.getBounds().getNorthEast());
                    self.featureBounds.extend(f.getBounds().getSouthWest());
                    self.addFeature(f, loc, iw);
@@ -154,14 +155,14 @@
                 } else if (loc.type === 'pid') {
                     //load the overlay instead
                     var pid = loc.pid;
-                    console.log('Loading PID: ' + pid);
+                    //console.log('Loading PID: ' + pid);
                     f = new PIDLayer(pid,256,256);
                     map.map.overlayMapTypes.push(f);
                     $.ajax({
                         url: 'http://spatial-dev.ala.org.au/layers-service/object/' + pid,
                         dataType:'jsonp'
                     }).done(function(data) {
-                       console.log('Retrieving metadata for object.....');
+                       //console.log('Retrieving metadata for object.....');
                        var coords = data.bbox.replace(/POLYGON/g,"").replace(/[\\(|\\)]/g, "");
                        var pointArray = coords.split(",");
                        self.featureBounds.extend(new google.maps.LatLng(pointArray[1].split(" ")[1],pointArray[1].split(" ")[0]));
@@ -193,7 +194,7 @@
                     }
                     iw.setContent(loc.popup);
                     iw.open(self.map, f);
-                    console.log("f", f)
+                    //console.log("f", f)
                     f.setIcon(map.redMarkerIcon);
                     prevMarker = f;
                 });
@@ -227,9 +228,9 @@
         // zoom map to show features - but not higher than zoom = 12
         allLocationsLoaded: function () {
             var self = this;
-            console.log('All locations loaded - this.zoomToBounds - ' + this.zoomToBounds + " - zoom limit - " + self.zoomLimit);
+            //console.log('All locations loaded - this.zoomToBounds - ' + this.zoomToBounds + " - zoom limit - " + self.zoomLimit);
             if (this.zoomToBounds) {
-                console.log(this.featureBounds);
+                //console.log(this.featureBounds);
                 this.map.fitBounds(this.featureBounds);  // this happens asynchronously so need to wait for bounds to change
                 // to sanity-check the zoom level
 //                var boundsListener = google.maps.event.addListener(this.map, 'bounds_changed', function(event) {

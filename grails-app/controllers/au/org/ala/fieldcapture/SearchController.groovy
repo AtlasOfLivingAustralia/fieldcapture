@@ -4,28 +4,15 @@ import grails.converters.JSON
 import groovy.json.JsonSlurper
 
 class SearchController {
-    def webService
-    def commonService
+    def searchService
 
-    def indexOld(String query) {
-        params.offset = params.offset?:0
-        params.max = params.max?:10
-        def url = grailsApplication.config.ecodata.baseUrl + 'search' + commonService.buildUrlParamsFromMap(params)
-        log.debug "url = " + url
-        def resp = webService.getJson(url)
-        log.debug "response = " + resp
-        [results: resp]
-    }
-
+    /**
+     * Main search page that takes its input from the search bar in the header
+     * @param query
+     * @return resp
+     */
     def index(String query) {
-        params.offset = params.offset?:0
-        params.max = params.max?:10
-        params.query = params.query?:"*:*"
-        def url = grailsApplication.config.ecodata.baseUrl + 'search/elastic' + commonService.buildUrlParamsFromMap(params)
-        log.debug "url = " + url
-        def resp = webService.getJson(url)
-        log.debug "response = " + resp
-        [results: resp]
+        [results: searchService.fulltextSearch(params)]
     }
 
     /**

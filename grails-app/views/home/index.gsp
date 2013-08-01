@@ -15,7 +15,7 @@
         sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}"
     }
     </r:script>
-    <r:require modules="knockout,mapWithFeatures,jquery_bootstrap_datatable"/>
+    <r:require modules="knockout,mapWithFeatures,jquery_bootstrap_datatable,js_iso8601"/>
 </head>
 <body>
 <div id="wrapper" class="container-fluid">
@@ -41,71 +41,94 @@
     </div>
 
     <div class="row-fluid large-space-before">
-        <div class="span6 well well-small map-box">
-            <div id="map" style="width: 100%; height: 100%;"></div>
-        </div>
-
-        <div class="span6 well list-box">
-            <h3 class="pull-left">Projects</h3>
-            <span id="project-filter-warning" class="label filter-label label-warning hide pull-left">Filtered</span>
-            <div class="control-group pull-right dataTables_filter">
-                <div class="input-append">
-                    <g:textField class="filterinput input-medium" data-target="project"
-                                 title="Type a few characters to restrict the list." name="projects"
-                                 placeholder="filter"/>
-                    <button type="button" class="btn clearFilterBtn"
-                            title="clear"><i class="icon-remove"></i></button>
-                </div>
+        <div class="span6 well well-small ">
+            %{--<h3 class="">Sites</h3>--}%
+            <div class="map-box">
+                <div id="map" style="width: 100%; height: 100%;"></div>
             </div>
+            <div class="facetBtns">
+                <button class="btn btn-info btn-mini facetBtn" data-facet="stateFacet" data-value="">All States (${geoPoints.hits.total})</button>
+                <g:each var="t" in="${geoPoints.facets?.stateFacet?.terms}">
+                    <g:if test="${t.term}">
+                        <button class="btn btn-mini facetBtn" data-facet="stateFacet"
+                                data-value="${t.term}">${t.term} (${t.count})</button>
+                    </g:if>
+                </g:each>
+            </div>
+            <div class="facetBtns">
+                <button class="btn btn-info btn-mini facetBtn" data-facet="nrmFacet" data-value="">All NRMs (${geoPoints.hits.total})</button>
+                <g:each var="t" in="${geoPoints.facets?.nrmFacet?.terms}">
+                    <g:if test="${t.term}">
+                        <button class="btn btn-mini facetBtn" data-facet="nrmFacet"
+                                data-value="${t.term}">${t.term} (${t.count})</button>
+                    </g:if>
+                </g:each>
+            </div>
+        </div>
+        <div class="span6 well well-small list-box">
+            %{--<h3 class="pull-left">Projects</h3>--}%
             <div class="scroll-list clearfix" id="projectList">
-                <table class="table table-bordered table-hover" id="projectTable">
+                <table class="table table-bordered table-hover" id="projectTable" data-sort="lastUpdated" data-order="DESC" data-offset="0" data-max="10">
                     <thead>
                     <tr>
-                        <th width="85%">Name</th>
-                        <th width="15%">Last&nbsp;updated&nbsp;</th>
+                        <th width="85%" data-sort="nameSort" data-order="ASC" class="header">Project name</th>
+                        <th width="15%" data-sort="lastUpdated"  data-order="DESC" class="header headerSortUp">Last&nbsp;updated&nbsp;</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <g:each in="${projects}" var="p" status="i">
-                        <tr>
-                            <td>
-                                <a href="#" class="projectTitle" id="a_${p.id}" data-id="${p.id}" title="click to show/hide details">
-                                    <span class="showHideCaret">&#9658;</span> ${p.name}</a>
-                                %{--<g:link controller="project" action="index" id="${p.projectId}"><i class="icon-share-alt"></i></g:link>--}%
-                                <div class="hide projectInfo" id="proj_${p.id}">
-                                    <div>
-                                        <i class="icon-home"></i>
-                                        <g:link controller="project" action="index" id="${p.projectId}">View project page</g:link>
-                                    </div>
-                                    <g:if test="${p.sites.size() > 0}">
-                                        <div>
-                                            <i class="icon-map-marker"></i>
-                                            Sites: <a href="#" data-id="${p.id}" class="zoom-in btnX btn-miniX"><i
-                                                    class="icon-plus-sign"></i> zoom in</a>
-                                            <a href="#" data-id="${p.id}" class="zoom-out btnX btn-miniX"><i
-                                                    class="icon-minus-sign"></i> zoom out</a>
-                                        </div>
-                                    </g:if>
-                                    <g:if test="${p.organisationName}">
-                                        <div>
-                                            <i class="icon-user"></i> ${p.organisationName}
-                                        </div>
-                                    </g:if>
-                                    <g:if test="${p.description}">
-                                        <div>
-                                            <i class="icon-info-sign"></i> ${p.description}
-                                        </div>
-                                    </g:if>
-                                </div>
-                            </td>
-                            <td>
-                                <fc:formatDateString date="${p.lastUpdated}"/>
-                            </td>
-                        </tr>
-                    </g:each>
                     </tbody>
                 </table>
+                <div id="paginateTable" class="hide" style="text-align:center;">
+                    <span id="paginationInfo" style="display:inline-block;float:left;margin-top:4px;"></span>
+                    <button class="btn btn-small prev"><i class="icon-chevron-left"></i> previous</button>
+                    <button class="btn btn-small next">next <i class="icon-chevron-right"></i></button>
+                    <span id="project-filter-warning" class="label filter-label label-warning hide pull-left">Filtered</span>
+                    <div class="control-group pull-right dataTables_filter">
+                        <div class="input-append">
+                            <g:textField class="filterinput input-medium" data-target="project"
+                                         title="Type a few characters to restrict the list." name="projects"
+                                         placeholder="filter"/>
+                            <button type="button" class="btn clearFilterBtn"
+                                    title="clear"><i class="icon-remove"></i></button>
+                        </div>
+                    </div>
+                </div>
             </div>
+            <table id="projectRowTempl" class="hide">
+                <tr>
+                    <td class="td1">
+                        <a href="#" class="projectTitle" id="a_" data-id="" title="click to show/hide details">
+                            <span class="showHideCaret">&#9658;</span> <span class="projectTitleName">$name</span></a>
+                        <div class="hide projectInfo" id="proj_$id">
+                            <div class="homeLine">
+                                <i class="icon-home"></i>
+                                <a href="">View project page</a>
+                            </div>
+
+                            <div class="sitesLine">
+                                <i class="icon-map-marker"></i>
+                                Sites: <a href="#" data-id="$id" class="zoom-in btnX btn-miniX"><i
+                                    class="icon-plus-sign"></i> zoom in</a>
+                                <a href="#" data-id="$id" class="zoom-out btnX btn-miniX"><i
+                                        class="icon-minus-sign"></i> zoom out</a>
+                            </div>
+
+                            <div class="orgLine">
+                                <i class="icon-user"></i>
+                            </div>
+
+                            <div class="descLine">
+                                <i class="icon-info-sign"></i>
+                            </div>
+
+                        </div>
+                    </td>
+                    <td class="td2">
+                        $date
+                    </td>
+                </tr>
+            </table>
+
         </div><!-- /.span6.well -->
     </div><!-- /.row-fluid -->
     <div class="expandable-debug">
@@ -119,72 +142,64 @@
             <pre>${sites}</pre>
             <h4>Projects</h4>
             <pre>${projects}</pre>
+            <h4>GeoPoints</h4>
+            <pre>${geoPoints}</pre>
         </div>
     </div>
 </div>
 
 <r:script>
+    var projectListIds = []; // list of strings
 
     $(window).load(function () {
-
-        // setup dataTable for projects list
-        var oTable = $('#projectTable').dataTable( {
-            "bFilter": true,
-            "bLengthChange": false,
-            "bInfo": false,
-            "bSort": true,
-            "aaSorting": [[1,'desc']],
-            "iDisplayLength": 15,
-            "sPaginationType": "bootstrap",
-            //"sDom": "<'row'<'span8'l><'span8'f>r>t<'row'<'span8'i><'span8'p>>",
-            "oLanguage": {
-                "oPaginate": {
-                    "sNext": "&#9658;",
-                    "sPrevious": "&#9668;"
-                },
-                "sLengthMenu": "_MENU_ records per page"
-            }
-        } );
+        var delay = (function(){
+            var timer = 0;
+            return function(callback, ms){
+                clearTimeout (timer);
+                timer = setTimeout(callback, ms);
+            };
+        })();
 
         // bind filters
         $('.filterinput').keyup(function() {
+            //console.log("filter keyup");
             var a = $(this).val(),
-                target = $(this).attr('data-target'),
-                $target = $('#' + target + 'List .accordion-group');
+                target = $(this).attr('data-target');
+
+            var qList;
 
             if (a.length > 1) {
-                // this finds all links in the list that contain the input,
-                // and hide the ones not containing the input while showing the ones that do
-//                var containing = $target.filter(function () {
-//                    var regex = new RegExp('\\b' + a, 'i');
-//                    return regex.test($('a', this).text());
-//                }).slideDown();
-//                $target.not(containing).slideUp();
-                //console.log("filtering for ", a );
-                oTable.fnFilter('');
-                oTable.fnFilter( a );
                 $('#' + target + '-filter-warning').show();
+                var qList = [ "_all:" +  a ]
             } else {
                 $('#' + target + '-filter-warning').hide();
-//                $target.slideDown();
-                oTable.fnFilter('');
+                qList = null;
             }
+
+            delay(function(){
+                //console.log('Time elapsed!');
+                $("#projectTable").data("offset", 0);
+                updateProjectTable( qList );
+            }, 1000 );
+
             return false;
         });
 
         $('.clearFilterBtn').click(function () {
             var $filterInput = $(this).prev(),
                 target = $filterInput.attr('data-target');
-            oTable.fnFilter('');
-            $filterInput.val('');
+            //console.log("clear button");
             $('#' + target + '-filter-warning').hide();
-            //$('#' + target + "List .accordion-group").slideDown();
+            $filterInput.val('');
+            $("#projectTable").data("offset", 0);
+            updateProjectTable();
         });
 
         // highlight icon on map when project name is clicked
         var prevFeatureId;
         $('#projectTable').on("click", ".projectTitle", function(el) {
             //console.log("projectHighlight", $(this).data("id"), alaMap.featureIndex);
+            el.preventDefault();
             var thisEl = this;
             var fId = $(this).data("id");
             //if (prevFeatureId) alaMap.unAnimateFeatureById(prevFeatureId);
@@ -192,26 +207,30 @@
             $(thisEl).tooltip('hide');
             //console.log("toggle", prevFeatureId, fId);
             if (!prevFeatureId) {
-                $("#proj_" + fId).slideToggle(function() {
-                    $(thisEl).find(".showHideCaret").html("&#9660;");
-                });
+                $("#proj_" + fId).slideToggle();
+                $(thisEl).find(".showHideCaret").html("&#9660;");
             } else if (prevFeatureId != fId) {
-                $("#proj_" + fId).slideToggle(function() {
+                if ($("#proj_" + prevFeatureId).is(":visible")) {
+                    // hide prev selected, show this
+                    $("#proj_" + prevFeatureId).slideUp();
+                    $("#a_" + prevFeatureId).find(".showHideCaret").html("&#9658; up");
+                    $("#proj_" + fId).slideDown();
+                    $("#a_" + fId).find(".showHideCaret").html("&#9660;");
+                } else {
+                    //show this, hide others
+                    $("#proj_" + fId).slideToggle();
                     $(thisEl).find(".showHideCaret").html("&#9660;");
-                });
-                $("#proj_" + prevFeatureId).slideUp(function() {
+                    $("#proj_" + prevFeatureId).slideUp();
                     $("#a_" + prevFeatureId).find(".showHideCaret").html("&#9658;");
-                });
+                }
                 alaMap.unAnimateFeatureById(prevFeatureId);
             } else {
-                $("#proj_" + fId).slideToggle(function() {
-                    if ($("#proj_" + fId).is(':visible')) {
-                        $(thisEl).find(".showHideCaret").html("&#9660;");
-                    } else {
-                        $(thisEl).find(".showHideCaret").html("&#9658;");
-                    }
-                });
-
+                $("#proj_" + fId).slideToggle();
+                if ($("#proj_" + fId).is(':visible')) {
+                    $(thisEl).find(".showHideCaret").html("&#9658;");
+                } else {
+                    $(thisEl).find(".showHideCaret").html("&#9660;");
+                }
                 alaMap.unAnimateFeatureById(fId);
             }
             prevFeatureId = fId;
@@ -220,6 +239,7 @@
         // zoom in/out to project points via +/- buttons
         var initCentre, initZoom;
         $('#projectTable').on("click", "a.zoom-in",function(el) {
+            el.preventDefault();
             if (!initCentre && !initZoom) {
                 initCentre = alaMap.map.getCenter();
                 initZoom = alaMap.map.getZoom();
@@ -229,81 +249,166 @@
             alaMap.map.fitBounds(bounds);
         });
         $('#projectTable').on("click", "a.zoom-out",function(el) {
+            el.preventDefault();
             alaMap.map.setCenter(initCentre);
             alaMap.map.setZoom(initZoom);
         });
 
-        // asynch loading of state information
-        $('#siteList a').each(function (i, site) {
-            var id = $(site).data('id');
-            $.getJSON("${createLink(controller: 'site', action: 'locationLookup')}/" + id, function (data) {
-                if (data.error) {
-                    console.log(data.error);
-                } else {
-                    $(site).append(' (' + initialiseState(data.state) + ')');
-                }
-            });
-        });
+        // initial loading of map
+        generateMap();
 
-        // Set-up data for map
-        var features = [];
-        var projects = ${projects ?: [:]};
-        $.each(projects, function(i,el) {
-            //console.log(i, "project: ", el.id, el.name, el.sites);
-            var projectLinkPrefix = "${createLink(controller:'project')}/";
-            var siteLinkPrefix = "${createLink(controller:'site')}/";
-
-            if (el.sites && el.sites.length > 0) {
-                $.each(el.sites, function(j, s) {
-                    //console.log("s", s, j);
-                    if (s.extent !=null && s.extent.geometry !== undefined && s.extent.geometry.centre!==undefined && s.extent.geometry.centre.length==2) {
-                        var point = {
-                            type: "dot",
-                            id: el.id,
-                            name: el.name,
-                            popup: generatePopup(projectLinkPrefix,el.projectId,el.name,el.organisationName,siteLinkPrefix,s.siteId, s.name),
-                            latitude: s.extent.geometry.centre[1],
-                            longitude: s.extent.geometry.centre[0]
-                        }
-                        features.push(point);
-                    }
-                });
-            }
-        });
-
-        // Tooltip
+        // Tooltips
         $('.projectTitle').tooltip({
             placement: "right",
             container: "#projectTable",
             delay: 400
         });
 
-        function generatePopup(projectLinkPrefix, projectId, projectName, orgName, siteLinkPrefix, siteId, siteName){
-           var html = "<div class='projectInfoWindow'><div><i class='icon-home'></i> <a href='" +
-                                    projectLinkPrefix + projectId + "'>" +projectName + "</a></div>";
-           if(orgName !== undefined && orgName != ''){
-               html += "<div><i class='icon-user'></i> Org name:" +orgName + "</div>";
-           }
-           html+= "<div><i class='icon-map-marker'></i> Site: <a href='" +siteLinkPrefix + siteId + "'>" + siteName + "</a></div>";
-           return html;
-        }
+        // sorting project table
+        $("#projectTable .header").click(function(el) {
+            var sort = $(this).data("sort");
+            var order = $(this).data("order");
+            var prevSort =  $("#projectTable").data("sort");
+            var newOrder = (prevSort != sort) ? order : ((order == "ASC") ? "DESC" :"ASC");
+            // update new data attrs in table
+            $("#projectTable").data("sort", sort);
+            $("#projectTable").data("order", newOrder); // toggle
+            $("#projectTable").data("offset", 0); // always start at page 1
+            $(this).data("order", newOrder);
+            // update CSS classes
+            $("#projectTable .header").removeClass("headerSortDown").removeClass("headerSortUp"); // remove all sort classes first
+            $(this).addClass((newOrder == "ASC") ? "headerSortDown" : "headerSortUp");
+            // $(this).removeClass((newOrder == "ASC") ? "headerSortUp" : "headerSortDown");
+            updateProjectTable();
+        });
 
-        var mapData = {
-            "zoomToBounds": true,
-            "zoomLimit": 12,
-            "highlightOnHover": false,
-            "features": features
-        }
+        // facet buttons
+        $(".facetBtn").click(function(el) {
+            var facetList = [];
+            var facet = $(this).data("facet");
+            var facetVal = $(this).data("value");
+            var prevFacet =  $("#projectTable").data("facetName");
+            // store values in table
+            $("#projectTable").data("facetName",facet);
+            $("#projectTable").data("facetValue",facetVal);
+            if (facetVal.length > 1) {
+                facetList.push(facet + ":" + facetVal);
+            }
+            $("#projectTable").data("offset", 0);
+            generateMap(facetList);
+            // change button class to indicate this facet is active
+            if (facet != prevFacet) {
+                // different facet group selected - reset prev
+                $(".facetBtn[data-facet='" + prevFacet + "']").removeClass("btn-info");
+                $(".facetBtn[data-value='']").addClass("btn-info");
+            }
+            $(".facetBtn[data-facet='" + facet + "']").removeClass("btn-info");
+            $(this).addClass("btn-info");
+        });
 
-        init_map_with_features({
-                mapContainer: "map",
-                zoomToBounds:true,
-                scrollwheel: false,
-                zoomLimit:16
-            },
-            mapData
-        );
+        // next/prev buttons in project list table
+        $("#paginateTable .btn").not(".clearFilterBtn").click(function(el) {
+            //var prevOrNext = (this).hasClass("next") ? "next" : "prev";
+            var offset = $("#projectTable").data("offset");
+            var max = $("#projectTable").data("max");
+            var newOffset = $(this).hasClass("next") ? (offset + max) : (offset - max);
+            $("#projectTable").data("offset", newOffset);
+            //console.log("offset", offset, newOffset, $("#projectTable").data("offset"));
+            updateProjectTable();
+        });
     });
+
+    function generateMap(facetFilters) {
+        var url = "${createLink(action:'geoService')}";
+
+        if (facetFilters) {
+            url += "?fq=" + facetFilters.join("&fq=");
+        }
+
+        $.getJSON(url, function(data) {
+            //console.log("getJSON data", data);
+            var features = [];
+            var projectIdMap = {};
+            var bounds = new google.maps.LatLngBounds();
+            var geoPoints = data;
+
+            if (geoPoints.hits) {
+                //console.log("geoPoints: ", geoPoints);
+                var projectLinkPrefix = "${createLink(controller:'project')}/";
+                var siteLinkPrefix = "${createLink(controller:'site')}/";
+
+                if (geoPoints.hits.total > 0) {
+                    $.each(geoPoints.hits.hits, function(j, h) {
+                        var s = h["_source"];
+                        //console.log("s", s, j);
+                        if (s.location && s.location.lat && s.location.lon) {
+                            var projectId = s.projects[0] ? s.projects[0].projectId : null
+                            var projectName = s.projects[0] ? s.projects[0].name : null
+                            var point = {
+                                type: "dot",
+                                id: projectId ? projectId : s.id,
+                                name: projectName ? projectName :s.name,
+                                popup: generatePopup(projectLinkPrefix,projectId,projectName,s.organisationName,siteLinkPrefix,s.siteId, s.name),
+                                latitude: s.location.lat,
+                                longitude: s.location.lon
+                            }
+                            //console.log("point", point);
+                            features.push(point);
+                            bounds.extend(new google.maps.LatLng(s.location.lat,s.location.lon));
+                            if (projectId) {
+                                projectIdMap[projectId] = true;
+                            }
+                        }
+                    });
+
+                    // convert projectIdMap to a list and add to global var
+                    projectListIds = []; // clear the list
+                    for (var id in projectIdMap) {
+                        projectListIds.push(id);
+                    }
+                    updateProjectTable();
+                    //console.log("features count", features.length);
+                }
+            }
+
+            var mapData = {
+                "zoomToBounds": true,
+                "zoomLimit": 12,
+                "highlightOnHover": false,
+                "features": features
+            }
+
+            init_map_with_features({
+                    mapContainer: "map",
+                    zoomToBounds:true,
+                    scrollwheel: false,
+                    zoomLimit:16
+                },
+                mapData
+            );
+
+            alaMap.map.fitBounds(bounds);
+
+        }).error(function (request, status, error) {
+            console.error("AJAX error", status, error);
+        });
+    }
+
+    function generatePopup(projectLinkPrefix, projectId, projectName, orgName, siteLinkPrefix, siteId, siteName){
+        var html = "<div class='projectInfoWindow'>";
+
+        if (projectId && projectName) {
+            html += "<div><i class='icon-home'></i> <a href='" +
+                        projectLinkPrefix + projectId + "'>" +projectName + "</a></div>";
+        }
+
+        if(orgName !== undefined && orgName != ''){
+            html += "<div><i class='icon-user'></i> Org name:" +orgName + "</div>";
+        }
+
+        html+= "<div><i class='icon-map-marker'></i> Site: <a href='" +siteLinkPrefix + siteId + "'>" + siteName + "</a></div>";
+        return html;
+    }
 
     function initialiseState(state) {
         switch (state) {
@@ -318,6 +423,101 @@
                 return initials;
         }
     }
+
+    /**
+    * Dynamically update the project list table via AJAX
+    *
+    * @param facetFilters (an array)
+    */
+    function updateProjectTable(facetFilters) {
+        var url = "${createLink(action:'getProjectsForIds')}"; //?sort=lastUpdated&order=DESC";
+        var sort = $('#projectTable').data("sort");
+        var order = $('#projectTable').data("order");
+        var offset = $('#projectTable').data("offset");
+        var params = "sort="+sort+"&order="+order+"&offset="+offset;
+
+        if (projectListIds) {
+            params += "&ids=" + projectListIds.join(",");
+        }
+        if (facetFilters) {
+            params += "&fq=" + facetFilters.join("&fq=");
+        }
+
+        $.post(url, params, function(data) {
+            //console.log("getJSON data", data);
+            if (data.error) {
+                console.error("Error: " + data.error);
+            } else {
+                var total = data.resp.hits.total;
+                $('#projectTable').data("total", total);
+                $('#paginateTable').show();
+                if (total == 0) {
+                    $('#paginationInfo').html("Nothing found");
+
+                } else {
+                    var max = data.resp.hits.hits.length
+                    $('#paginationInfo').html((offset+1)+" to "+(offset+max) + " of "+total);
+                    if (offset == 0) {
+                        $('#paginateTable .prev').addClass("disabled");
+                    } else {
+                        $('#paginateTable .prev').removeClass("disabled");
+                    }
+                    if (offset >= (total - 10) ) {
+                        $('#paginateTable .next').addClass("disabled");
+                    } else {
+                        $('#paginateTable .next').removeClass("disabled");
+                    }
+                }
+
+                $('#projectTable tbody').empty();
+                populateTable(data);
+            }
+        }).error(function (request, status, error) {
+            //console.error("AJAX error", status, error);
+            $('#paginationInfo').html("AJAX error:" + status + " - " + error);
+        });
+    }
+
+    /**
+    * Update the project table DOM using a plain HTML template (cloned)
+    *
+    * @param data
+    */
+    function populateTable(data) {
+        //console.log("populateTable", data);
+        $.each(data.resp.hits.hits, function(i, el) {
+            //console.log(i, "el", el);
+            var id = el._id;
+            var src = el._source
+            var $tr = $('#projectRowTempl tr').clone(); // template
+            $tr.find('.td1 > a').attr("id", "a_" + id).data("id", id);
+            $tr.find('.td1 .projectTitleName').text(src.name); // projectTitleName
+            $tr.find('.projectInfo').attr("id", "proj_" + id);
+            $tr.find('.homeLine a').attr("href", "${createLink(controller: 'project')}/" + id);
+            $tr.find('a.zoom-in').data("id", id);
+            $tr.find('a.zoom-out').data("id", id);
+            $tr.find('.orgLine').append(src.organisationName);
+            $tr.find('.descLine').append(src.description);
+            $tr.find('.td2').text(formatDate(Date.parse(src.lastUpdated))); // relies on the js_iso8601 resource
+            //console.log("appending row", $tr);
+            $('#projectTable tbody').append($tr);
+        });
+    }
+
+    /**
+    * Format a date given an Unix time number (output of Date.parse)
+    *
+    * @param t
+    * @returns {string}
+    */
+    function formatDate(t) {
+        var d = new Date(t);
+        var yyyy = d.getFullYear().toString();
+        var mm = (d.getMonth()+1).toString(); // getMonth() is zero-based
+        var dd  = d.getDate().toString();
+        return yyyy + "-" + (mm[1]?mm:"0"+mm[0]) + "-" + (dd[1]?dd:"0"+dd[0]);
+    }
+
     /* This implementation of list filtering is not used but is left for reference.
        The jQuery implementation is quicker and cleaner in this case. This may
        not be true if the data model is needed for other purposes.

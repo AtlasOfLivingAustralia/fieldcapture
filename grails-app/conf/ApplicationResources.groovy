@@ -90,6 +90,10 @@ modules = {
         resource 'js/jstz.min.js'
     }
 
+    js_iso8601 {
+        resource 'js/js-iso8601.min.js'
+    }
+
     jquery_ui {
         resource 'js/jquery-ui-1.9.2.custom.min.js'
         resource 'css/smoothness/jquery-ui-1.9.2.custom.min.css'
