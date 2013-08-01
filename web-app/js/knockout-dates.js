@@ -313,7 +313,9 @@ ko.bindingHandlers.clickToPickDate = {
         observable.originalValue = observable.date();
         observable.hasChanged = ko.computed(function () {
             //console.log("original: " + observable.originalValue + " current: " + observable.date());
-            return observable.originalValue.getTime() != observable.date().getTime();
+            var original = observable.originalValue.getTime();
+            var current = observable.date().getTime();
+            return (original != current) && (!isNaN(original) || !isNaN(current));
         });
 
         $(element).parent().append(icon);
