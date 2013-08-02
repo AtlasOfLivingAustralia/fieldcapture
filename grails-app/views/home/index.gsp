@@ -29,103 +29,115 @@
                 </div>
             </g:form>
         </div>
-
-        <g:if test="${flash.error}">
-            <div class="row-fluid">
-                <div class="alert alert-error">
-                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    <span>${flash.error}</span>
-                </div>
-            </div>
-        </g:if>
     </div>
 
-    <div class="row-fluid large-space-before">
-        <div class="span6 well well-small ">
-            %{--<h3 class="">Sites</h3>--}%
-            <div class="map-box">
-                <div id="map" style="width: 100%; height: 100%;"></div>
-            </div>
-            <div class="facetBtns">
-                <button class="btn btn-info btn-mini facetBtn" data-facet="stateFacet" data-value="">All States (${geoPoints.hits.total})</button>
-                <g:each var="t" in="${geoPoints.facets?.stateFacet?.terms}">
-                    <g:if test="${t.term}">
-                        <button class="btn btn-mini facetBtn" data-facet="stateFacet"
-                                data-value="${t.term}">${t.term} (${t.count})</button>
-                    </g:if>
-                </g:each>
-            </div>
-            <div class="facetBtns">
-                <button class="btn btn-info btn-mini facetBtn" data-facet="nrmFacet" data-value="">All NRMs (${geoPoints.hits.total})</button>
-                <g:each var="t" in="${geoPoints.facets?.nrmFacet?.terms}">
-                    <g:if test="${t.term}">
-                        <button class="btn btn-mini facetBtn" data-facet="nrmFacet"
-                                data-value="${t.term}">${t.term} (${t.count})</button>
-                    </g:if>
-                </g:each>
+    <g:if test="${flash.error || geoPoints.error}">
+        <g:set var="error" value="${flash.error?:geoPoints.error}"/>
+        <div class="row-fluid">
+            <div class="alert alert-error large-space-before">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <span>Error: ${error}</span>
             </div>
         </div>
-        <div class="span6 well well-small list-box">
-            %{--<h3 class="pull-left">Projects</h3>--}%
-            <div class="scroll-list clearfix" id="projectList">
-                <table class="table table-bordered table-hover" id="projectTable" data-sort="lastUpdated" data-order="DESC" data-offset="0" data-max="10">
-                    <thead>
-                    <tr>
-                        <th width="85%" data-sort="nameSort" data-order="ASC" class="header">Project name</th>
-                        <th width="15%" data-sort="lastUpdated"  data-order="DESC" class="header headerSortUp">Last&nbsp;updated&nbsp;</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-                <div id="paginateTable" class="hide" style="text-align:center;">
-                    <span id="paginationInfo" style="display:inline-block;float:left;margin-top:4px;"></span>
-                    <button class="btn btn-small prev"><i class="icon-chevron-left"></i> previous</button>
-                    <button class="btn btn-small next">next <i class="icon-chevron-right"></i></button>
-                    <span id="project-filter-warning" class="label filter-label label-warning hide pull-left">Filtered</span>
-                    <div class="control-group pull-right dataTables_filter">
-                        <div class="input-append">
-                            <g:textField class="filterinput input-medium" data-target="project"
-                                         title="Type a few characters to restrict the list." name="projects"
-                                         placeholder="filter"/>
-                            <button type="button" class="btn clearFilterBtn"
-                                    title="clear"><i class="icon-remove"></i></button>
+    </g:if>
+    <g:elseif test="${geoPoints.hits?.total?:0 > 0}">
+        <div class="row-fluid large-space-before">
+            <div class="span6 well well-small ">
+                %{--<h3 class="">Sites</h3>--}%
+                <div class="map-box">
+                    <div id="map" style="width: 100%; height: 100%;"></div>
+                </div>
+                <div class="facetBtns">
+                    <button class="btn btn-info btn-mini facetBtn" data-facet="stateFacet" data-value="">All States (${geoPoints.hits.total})</button>
+                    <g:each var="t" in="${geoPoints.facets?.stateFacet?.terms}">
+                        <g:if test="${t.term}">
+                            <button class="btn btn-mini facetBtn" data-facet="stateFacet"
+                                    data-value="${t.term}">${t.term} (${t.count})</button>
+                        </g:if>
+                    </g:each>
+                </div>
+                <div class="facetBtns">
+                    <button class="btn btn-info btn-mini facetBtn" data-facet="nrmFacet" data-value="">All NRMs (${geoPoints.hits.total})</button>
+                    <g:each var="t" in="${geoPoints.facets?.nrmFacet?.terms}">
+                        <g:if test="${t.term}">
+                            <button class="btn btn-mini facetBtn" data-facet="nrmFacet"
+                                    data-value="${t.term}">${t.term} (${t.count})</button>
+                        </g:if>
+                    </g:each>
+                </div>
+            </div>
+            <div class="span6 well well-small list-box">
+                %{--<h3 class="pull-left">Projects</h3>--}%
+                <div class="scroll-list clearfix" id="projectList">
+                    <table class="table table-bordered table-hover" id="projectTable" data-sort="lastUpdated" data-order="DESC" data-offset="0" data-max="10">
+                        <thead>
+                        <tr>
+                            <th width="85%" data-sort="nameSort" data-order="ASC" class="header">Project name</th>
+                            <th width="15%" data-sort="lastUpdated"  data-order="DESC" class="header headerSortUp">Last&nbsp;updated&nbsp;</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <div id="paginateTable" class="hide" style="text-align:center;">
+                        <span id="paginationInfo" style="display:inline-block;float:left;margin-top:4px;"></span>
+                        <button class="btn btn-small prev"><i class="icon-chevron-left"></i> previous</button>
+                        <button class="btn btn-small next">next <i class="icon-chevron-right"></i></button>
+                        <span id="project-filter-warning" class="label filter-label label-warning hide pull-left">Filtered</span>
+                        <div class="control-group pull-right dataTables_filter">
+                            <div class="input-append">
+                                <g:textField class="filterinput input-medium" data-target="project"
+                                             title="Type a few characters to restrict the list." name="projects"
+                                             placeholder="filter"/>
+                                <button type="button" class="btn clearFilterBtn"
+                                        title="clear"><i class="icon-remove"></i></button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            %{-- template for jQuery DOM injection --}%
-            <table id="projectRowTempl" class="hide">
-                <tr>
-                    <td class="td1">
-                        <a href="#" class="projectTitle" id="a_" data-id="" title="click to show/hide details">
-                            <span class="showHideCaret">&#9658;</span> <span class="projectTitleName">$name</span></a>
-                        <div class="hide projectInfo" id="proj_$id">
-                            <div class="homeLine">
-                                <i class="icon-home"></i>
-                                <a href="">View project page</a>
+                %{-- template for jQuery DOM injection --}%
+                <table id="projectRowTempl" class="hide">
+                    <tr>
+                        <td class="td1">
+                            <a href="#" class="projectTitle" id="a_" data-id="" title="click to show/hide details">
+                                <span class="showHideCaret">&#9658;</span> <span class="projectTitleName">$name</span></a>
+                            <div class="hide projectInfo" id="proj_$id">
+                                <div class="homeLine">
+                                    <i class="icon-home"></i>
+                                    <a href="">View project page</a>
+                                </div>
+                                <div class="sitesLine">
+                                    <i class="icon-map-marker"></i>
+                                    Sites: <a href="#" data-id="$id" class="zoom-in btnX btn-miniX"><i
+                                        class="icon-plus-sign"></i> zoom in</a>
+                                    <a href="#" data-id="$id" class="zoom-out btnX btn-miniX"><i
+                                            class="icon-minus-sign"></i> zoom out</a>
+                                </div>
+                                <div class="orgLine">
+                                    <i class="icon-user"></i>
+                                </div>
+                                <div class="descLine">
+                                    <i class="icon-info-sign"></i>
+                                </div>
                             </div>
-                            <div class="sitesLine">
-                                <i class="icon-map-marker"></i>
-                                Sites: <a href="#" data-id="$id" class="zoom-in btnX btn-miniX"><i
-                                    class="icon-plus-sign"></i> zoom in</a>
-                                <a href="#" data-id="$id" class="zoom-out btnX btn-miniX"><i
-                                        class="icon-minus-sign"></i> zoom out</a>
-                            </div>
-                            <div class="orgLine">
-                                <i class="icon-user"></i>
-                            </div>
-                            <div class="descLine">
-                                <i class="icon-info-sign"></i>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="td2">$date</td>
-                </tr>
-            </table>
+                        </td>
+                        <td class="td2">$date</td>
+                    </tr>
+                </table>
 
-        </div><!-- /.span6.well -->
-    </div><!-- /.row-fluid -->
+            </div><!-- /.span6.well -->
+        </div><!-- /.row-fluid -->
+    </g:elseif>
+    <g:else>
+        <div class="row-fluid ">
+            <div class="span12">
+                <div class="alert alert-error large-space-before">
+                    Error: search index returned 0 results
+                </div>
+            </div>
+        </div>
+    </g:else>
+
     <div class="expandable-debug">
         <h3>Debug</h3>
         <div>
