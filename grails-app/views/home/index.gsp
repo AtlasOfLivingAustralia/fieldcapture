@@ -208,7 +208,7 @@
                 if ($("#proj_" + prevFeatureId).is(":visible")) {
                     // hide prev selected, show this
                     $("#proj_" + prevFeatureId).slideUp();
-                    $("#a_" + prevFeatureId).find(".showHideCaret").html("&#9658; up");
+                    $("#a_" + prevFeatureId).find(".showHideCaret").html("&#9658;");
                     $("#proj_" + fId).slideDown();
                     $("#a_" + fId).find(".showHideCaret").html("&#9660;");
                 } else {
