@@ -464,3 +464,7 @@ span.progress-label {
     top:21px;
     padding-right:4px;
 }
+
+.showHideCaret {
+    font-size: 11px;
+}
