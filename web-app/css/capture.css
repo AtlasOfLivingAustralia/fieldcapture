@@ -245,7 +245,7 @@ i[class^="icon-remove"]:hover {
     height:540px;
 }
 .facetBtns {
-    max-height: 70px;
+    max-height: 198px;
     overflow-y: auto;
     line-height: 2em;
     margin: 5px 0;
@@ -467,4 +467,23 @@ span.progress-label {
 
 .showHideCaret {
     font-size: 11px;
+}
+
+.tab-content {
+    border-bottom: 1px solid #DDD;
+    border-right: 1px solid #DDD;
+    border-left: 1px solid #DDD;
+    padding: 15px;
+}
+
+ul.nav-tabs {
+    margin-bottom: 0;
+}
+
+.nav-tabs li a {
+    background-color: #f0f0e8;
+    border: 1px solid #ddd;
+    margin-right: 4px;
+    padding-top: 6px;
+    padding-bottom: 6px;
 }

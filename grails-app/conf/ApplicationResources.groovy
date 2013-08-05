@@ -5,7 +5,6 @@ modules = {
         resource url: [dir:'js', file:'html5.js', plugin: "ala-web-theme"], wrapper: { s -> "<!--[if lt IE 9]>$s<![endif]-->" }, disposition: 'head'
         resource url: 'js/vkbeautify.0.99.00.beta.js'
         resource url: 'js/application.js'
-        resource url: 'css/capture.css'
         resource url: 'js/jquery.shorten.js'
         resource url: 'js/bootbox.min.js'
     }
@@ -29,6 +28,7 @@ modules = {
         resource url: '/bootstrap/less/bootstrap.less',attrs:[rel: "stylesheet/less", type:'css'], bundle:'bundle_nrmSkin'
         resource url: '/bootstrap/less/responsive.less',attrs:[rel: "stylesheet/less", type:'css'], bundle:'bundle_nrmSkin'
         resource url: 'css/nrm/css/screen.css'//, linkOverride: 'http://www.nrm.gov.au/css/screen.css'
+        resource url: 'css/capture.css'
     }
 
     gmap3 {

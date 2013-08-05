@@ -28,7 +28,8 @@ class SearchService {
 
     def allGeoPoints(params) {
         params.max = 9999
-        params.maxFacets = 100
+        params.flimit = 999
+        params.fsort = "term"
         params.offset = 0
         params.query = "geo.lat:*"
         params.facets = "stateFacet,nrmFacet,lgaFacet"
@@ -39,10 +40,11 @@ class SearchService {
 
     def allProjects(params) {
         //params.max = 9999
-        params.maxFacets = 100
+        params.flimit = 999
+        params.fsort = "term"
         //params.offset = 0
-        params.query = "class:au.org.ala.ecodata.Project"
-        //params.facets = ""
+        params.query = "docType:project"
+        params.facets = ""
         def url = elasticBaseUrl + commonService.buildUrlParamsFromMap(params)
         webService.getJson(url)
     }

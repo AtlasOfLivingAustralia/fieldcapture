@@ -16,14 +16,13 @@ class HomeController {
         ]
     }
     def index() {
+        [ geoPoints: searchService.allGeoPoints(params) ]
+    }
+
+    def tabbed() {
         [
-            //projects: projectService.list(),
-            //projects: searchService.allProjects(params),
-//            sites: siteService.list(),
-//            //sites: siteService.injectLocationMetadata(siteService.list()),
-//            activities: activityService.list(),
-//            assessments: activityService.assessments(),
-            geoPoints: searchService.allGeoPoints(params)
+            results: searchService.allGeoPoints(params),
+            projects: searchService.allProjects(params)
         ]
     }
 
