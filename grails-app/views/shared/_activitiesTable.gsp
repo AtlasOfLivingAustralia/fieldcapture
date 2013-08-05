@@ -55,7 +55,8 @@
                         <!-- ko foreachModelOutput:metaModel.outputs -->
                         <li class="output-summary">
                             <div class="row-fluid">
-                                <span class="span4" data-bind="text:name"></span>
+                                <span class="span4">
+                                    <a data-bind="text:name, attr: {href:editLink}"></a></span>
                                 <span class="span5">
                                     <ul data-bind="foreachprop:scores">
                                         <li data-bind="text:key + ' = ' + value"></li>
