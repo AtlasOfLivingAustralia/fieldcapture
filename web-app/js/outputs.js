@@ -9,7 +9,7 @@
 ko.bindingHandlers.foreachModelOutput = {
     init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
         if (valueAccessor() === undefined) {
-            var dummyRow = {name: 'No model was found for this activity', score: '', outputId: '', editLink:''};
+            var dummyRow = {name: 'No model was found for this activity', scores: [], outputId: '', editLink:''};
             ko.applyBindingsToNode(element, { foreach: [dummyRow] });
             return { controlsDescendantBindings: true };
         }
