@@ -19,15 +19,12 @@
 </head>
 <body>
 <div id="wrapper" class="container-fluid">
-    <div class="row-fluid large-space-after hide">
+    <div class="row-fluid">
         <div class="span12" id="heading">
-            <h1 class="pull-left">Field Capture</h1>
-            <g:form controller="search" method="GET" class=" form-horizontal pull-right" style="padding-top:5px;">
-                <div class="input-append">
-                    <g:textField class="input-large" name="query"/>
-                    <button class="btn" type="submit">Search</button>
-                </div>
-            </g:form>
+            <h1 class="pull-left">Monitoring, Evaluation, Reporting and Improvement (MERI) Data Capture Tool&nbsp;<span
+                    class="label label-info" style="position:relative;top:-15px;">Beta</span></h1>
+
+            <p class="clearfix lead">Note: the MERI data capture tool is currently a prototype and contains some mock data</p>
         </div>
     </div>
 
@@ -43,77 +40,64 @@
     <g:elseif test="${results?.hits?.total?:0 > 0}">
         <div id="content" class="row-fluid ">
             <div id="facetsCol" class="span4 well well-small">
+                <g:set var="reqParams" value="sort,order,max,fq"/>
                 <h2>Filter results</h2>
-                <g:each var="f" in="${results.facets}">
-                    <g:if test="${f.key != 'class' && f.value?.terms?.length() > 0}">
-                        <h4><g:message code="label.${f.key}" default="${f.key?.capitalize()}"/></h4>
+                <g:if test="${params.fq}">
+                    <h4>Current filters</h4>
+                    <ul>
+                        <%-- convert either Object and Object[] to a list, in case there are multiple params with same name --%>
+                        <g:set var="fqList" value="${[params.fq].flatten().findAll { it != null }}"/>
+                        <g:each var="f" in="${fqList}">
+                            <g:set var="fqBits" value="${f?.tokenize(':')}"/>
+                            <g:set var="newUrl"><fc:formatParams params="${params}" requiredParams="${reqParams}" excludeParam="${f}"/></g:set>
+                            <li><g:message code="label.${fqBits[0]}" default="${fqBits[0]}"/>: <g:message code="label.${fqBits[1]}" default="${fqBits[1]}"/>
+                                <a href="${newUrl?:"?"}" class="btn btn-inverse btn-mini tooltips" title="remove filter">
+                                    <i class="icon-white icon-remove"></i></a>
+                            </li>
+                        </g:each>
+                    </ul>
+                </g:if>
+                <g:set var="baseUrl"><fc:formatParams params="${params}" requiredParams="${reqParams}"/></g:set>
+                <g:set var="fqLink" value="${baseUrl?:"?"}"/>
+                <!-- fqLink = ${fqLink} -->
+                <g:each var="fn" in="${facetsList}">
+                    <g:set var="f" value="${results.facets.get(fn)}"/>
+                    <g:set var="max" value="${5}"/>
+                    <g:if test="${fn != 'class' && f?.terms?.size() > 0}">
+                        <g:set var="fName"><g:message code="label.${fn}" default="${fn?.capitalize()}"/></g:set>
+                        <h4>${fName}</h4>
                         <ul class="facetValues">
-                            <g:each var="t" in="${f.value?.terms}">
-                                <li><a href="${fqLink}&fq=${f.key.encodeAsURL()}:${t.term}"><g:message code="label.${t.term}"
-                                                                                                       default="${t.term}"/></a> (${t.count})
-                                </li>
+                            <g:each var="t" in="${f.terms}" status="i">
+                                <g:if test="${i < max}">
+                                    <li><a href="${fqLink}&fq=${fn.encodeAsURL()}:${t.term}"><g:message
+                                            code="label.${t.term}" default="${t.term}"/></a> (${t.count})
+                                    </li>
+                                </g:if>
                             </g:each>
                         </ul>
+                        <g:if test="${f?.terms?.size() > max}">
+                            <a href="#${fName}Modal" role="button" class="moreFacets tooltips" data-toggle="modal" title="View full list of values"><i class="icon-hand-right"></i> choose more...</a>
+                            <div id="${fName}Modal" class="modal hide fade">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h3>Filter by ${fName}</h3>
+                                </div>
+                                <div class="modal-body">
+                                    <ul class="facetValues">
+                                        <g:each var="t" in="${f.terms}">
+                                            <li><a href="${fqLink}&fq=${fn.encodeAsURL()}:${t.term}"><g:message
+                                                    code="label.${t.term}" default="${t.term}"/></a> (${t.count})
+                                            </li>
+                                        </g:each>
+                                    </ul>
+                                </div>
+                                <div class="modal-footer">
+                                    <a href="#" class="btn" data-dismiss="modal">Close</a>
+                                </div>
+                            </div>
+                        </g:if>
                     </g:if>
                 </g:each>
-                <g:each var="f" in="${projects.facets}">
-                    <g:if test="${f.key != 'class' && f.value?.terms?.length() > 0}">
-                        <h4><g:message code="label.${f.key}" default="${f.key?.capitalize()}"/></h4>
-                        <ul class="facetValues">
-                            <g:each var="t" in="${f.value?.terms}">
-                                <li><a href="${fqLink}&fq=${f.key.encodeAsURL()}:${t.term}"><g:message code="label.${t.term}"
-                                                                                                       default="${t.term}"/></a> (${t.count})
-                                </li>
-                            </g:each>
-                        </ul>
-                    </g:if>
-                </g:each>
-
-                %{--<g:if test="${results.facets?.stateFacet}">--}%
-                    %{--<div class="facetBtns">--}%
-                        %{--<button class="btn btn-info btn-mini facetBtn" data-facet="stateFacet" data-value="">All States (${results.hits.total})</button>--}%
-                        %{--<g:each var="t" in="${results.facets?.stateFacet?.terms}">--}%
-                            %{--<g:if test="${t.term}">--}%
-                                %{--<button class="btn btn-mini facetBtn" data-facet="stateFacet"--}%
-                                        %{--data-value="${t.term}">${t.term} (${t.count})</button>--}%
-                            %{--</g:if>--}%
-                        %{--</g:each>--}%
-                    %{--</div>--}%
-                %{--</g:if>--}%
-                %{--<g:if test="${results.facets?.nrmFacet}">--}%
-                    %{--<div class="facetBtns">--}%
-                        %{--<button class="btn btn-info btn-mini facetBtn" data-facet="nrmFacet" data-value="">All NRMs (${results.hits.total})</button>--}%
-                        %{--<g:each var="t" in="${results.facets?.nrmFacet?.terms}">--}%
-                            %{--<g:if test="${t.term}">--}%
-                                %{--<button class="btn btn-mini facetBtn" data-facet="nrmFacet"--}%
-                                        %{--data-value="${t.term}">${t.term} (${t.count})</button>--}%
-                            %{--</g:if>--}%
-                        %{--</g:each>--}%
-                    %{--</div>--}%
-                %{--</g:if>--}%
-                %{--<g:if test="${results.facets?.lgaFacet}">--}%
-                    %{--<div class="facetBtns">--}%
-                        %{--<button class="btn btn-info btn-mini facetBtn" data-facet="lgaFacet" data-value="">All LGAs (${results.hits.total})</button>--}%
-                        %{--<g:each var="t" in="${results.facets?.lgaFacet?.terms}">--}%
-                            %{--<g:if test="${t.term}">--}%
-                                %{--<button class="btn btn-mini facetBtn" data-facet="lgaFacet"--}%
-                                        %{--data-value="${t.term}">${t.term} (${t.count})</button>--}%
-                            %{--</g:if>--}%
-                        %{--</g:each>--}%
-                    %{--</div>--}%
-                %{--</g:if>--}%
-
-                %{--<g:if test="${projects.facets?.organisationFacet}">--}%
-                    %{--<div class="facetBtns projectBtns">--}%
-                        %{--<button class="btn btn-info btn-mini facetBtn" data-facet="organisationFacet" data-value="">All organisations (${projects.hits.total})</button>--}%
-                        %{--<g:each var="t" in="${projects.facets?.organisationFacet?.terms}">--}%
-                            %{--<g:if test="${t.term}">--}%
-                                %{--<button class="btn btn-mini facetBtn" data-facet="organisationFacet"--}%
-                                        %{--data-value="${t.term}">${t.term} (${t.count})</button>--}%
-                            %{--</g:if>--}%
-                        %{--</g:each>--}%
-                    %{--</div>--}%
-                %{--</g:if>--}%
             </div>
             <div class="span8">
 
@@ -335,6 +319,8 @@
             container: "#projectTable",
             delay: 400
         });
+        $('.tooltips').tooltip({placement: "right"});
+
 
         // sorting project table
         $("#projectTable .header").click(function(el) {
@@ -403,11 +389,16 @@
     });
 
     function generateMap() {
-        var url = "${createLink(action:'geoService')}";
+        var url = "${createLink(action:'geoService')}?max=999";
 
         if (facetList && facetList.length > 0) {
-            url += "?fq=" + facetList.join("&fq=");
+            url += "&fq=" + facetList.join("&fq=");
         }
+
+        <g:if test="${params.fq}">
+            <g:set var="fqList" value="${[params.fq].flatten()}"/>
+            url += "&fq=${fqList.join('&fq=')}";
+        </g:if>
 
         $.getJSON(url, function(data) {
             //console.log("getJSON data", data);
@@ -420,14 +411,14 @@
                 //console.log("geoPoints: ", geoPoints);
                 var projectLinkPrefix = "${createLink(controller:'project')}/";
                 var siteLinkPrefix = "${createLink(controller:'site')}/";
-
+                console.log("total", geoPoints.hits.total);
                 if (geoPoints.hits.total > 0) {
                     $.each(geoPoints.hits.hits, function(j, h) {
                         var s = h["_source"];
                         //console.log("s", s, j);
                         if (s.geo && s.geo.lat && s.geo.lon) {
-                            var projectId = s.projects[0] ? s.projects[0].projectId : null
-                            var projectName = s.projects[0] ? s.projects[0].name : null
+                            var projectId = (s.projects && s.projects.length > 0) ? s.projects[0].projectId : s.projectId
+                            var projectName = (s.projects && s.projects.length > 0) ? s.projects[0].name : s.name
                             var point = {
                                 type: "dot",
                                 id: projectId ? projectId : s.id,
@@ -492,7 +483,7 @@
         }
 
         if(orgName !== undefined && orgName != ''){
-            html += "<div><i class='icon-user'></i> Org name:" +orgName + "</div>";
+            html += "<div><i class='icon-user'></i> Org: " +orgName + "</div>";
         }
 
         html+= "<div><i class='icon-map-marker'></i> Site: <a href='" +siteLinkPrefix + siteId + "'>" + siteName + "</a></div>";
@@ -519,7 +510,7 @@
     * @param facetFilters (an array)
     */
     function updateProjectTable(facetFilters) {
-        var url = "${createLink(action:'getProjectsForIds')}"; //?sort=lastUpdated&order=DESC";
+        var url = "${createLink(action:'geoService')}"; //?sort=lastUpdated&order=DESC";
         var sort = $('#projectTable').data("sort");
         var order = $('#projectTable').data("order");
         var offset = $('#projectTable').data("offset");
@@ -533,6 +524,11 @@
         if (facetFilters) {
             params += "&fq=" + facetFilters.join("&fq=");
         }
+
+        <g:if test="${params.fq}">
+            <g:set var="fqList" value="${[params.fq].flatten()}"/>
+            params += "&fq=${fqList.join('&fq=')}";
+        </g:if>
 
         $.post(url, params, function(data1) {
             //console.log("getJSON data", data);

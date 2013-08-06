@@ -1,6 +1,7 @@
 package au.org.ala.fieldcapture
 
 import grails.converters.JSON
+import groovy.json.JsonSlurper
 
 import javax.annotation.PostConstruct
 
@@ -22,6 +23,7 @@ class SearchService {
         params.max = params.max?:10
         params.query = params.query?:"*:*"
         params.highlight = params.highlight?:true
+        params.flimit = 999
         def url = elasticBaseUrl + commonService.buildUrlParamsFromMap(params)
         webService.getJson(url)
     }
@@ -44,9 +46,25 @@ class SearchService {
         params.fsort = "term"
         //params.offset = 0
         params.query = "docType:project"
-        params.facets = ""
-        def url = elasticBaseUrl + commonService.buildUrlParamsFromMap(params)
+        params.facets = "statesFacet,lgasFacet,nrmsFacet,organisationFacet"
+        //def url = elasticBaseUrl + commonService.buildUrlParamsFromMap(params)
+        def url = grailsApplication.config.ecodata.baseUrl + 'search/elasticHome' + commonService.buildUrlParamsFromMap(params)
+        log.debug "url = $url"
         webService.getJson(url)
+    }
+
+    def HomePageFacets(params) {
+        params.flimit = 999
+        params.fsort = "term"
+        //params.offset = 0
+        params.query = "docType:project"
+        params.facets = params.facets ? params.facets : "statesFacet,lgasFacet,nrmsFacet,organisationFacet"
+        //def url = elasticBaseUrl + commonService.buildUrlParamsFromMap(params)
+        def url = grailsApplication.config.ecodata.baseUrl + 'search/elasticHome' + commonService.buildUrlParamsFromMap(params)
+        log.debug "url = $url"
+        def Jsonstring = webService.get(url)
+        def JsonObj = new JsonSlurper().parseText( Jsonstring )
+        JsonObj
     }
 
     def getProjectsForIds(params) {

@@ -223,6 +223,8 @@ class FCTagLib {
                 it != attrs.excludeParam
             }
 
+            log.debug "$k - includeThis = $includeThis || vL2 = $vL2"
+
             if (includeThis && vL2) {
                 outputParams.put(k, vL2)
             }

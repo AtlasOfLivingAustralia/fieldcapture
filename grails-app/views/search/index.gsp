@@ -58,6 +58,7 @@
             <div id="facetsCol" class="span3 well well-small">
                 <h2>Filter results</h2>
                 <g:set var="facets" value="${results.facets}"/>
+                <g:set var="max" value="${5}"/>
                 <g:set var="reqParams" value="sort,order,max,fq,query"/>
                 <g:set var="fqLink"><fc:formatParams params="${params}" requiredParams="${reqParams}"/></g:set>
                 <g:if test="${params.fq}">
@@ -87,14 +88,38 @@
                 </g:if>
                 <g:each var="f" in="${facets}">
                     <g:if test="${f.key != 'class' && f.value?.terms?.length() > 0}">
-                        <h4><g:message code="label.${f.key}" default="${f.key?.capitalize()}"/></h4>
+                        <g:set var="fName"><g:message code="label.${f.key}" default="${f.key?.capitalize()}"/></g:set>
+                        <h4>${fName}</h4>
                         <ul class="facetValues">
-                            <g:each var="t" in="${f.value?.terms}">
-                                <li><a href="${fqLink}&fq=${f.key.encodeAsURL()}:${t.term}"><g:message code="label.${t.term}"
-                                        default="${t.term}"/></a> (${t.count})
-                                </li>
+                            <g:each var="t" in="${f.value?.terms}" status="i">
+                                <g:if test="${i < max}">
+                                    <li><a href="${fqLink}&fq=${f.key.encodeAsURL()}:${t.term}"><g:message code="label.${t.term}"
+                                            default="${t.term}"/></a> (${t.count})
+                                    </li>
+                                </g:if>
                             </g:each>
                         </ul>
+                        <g:if test="${f.value?.terms?.size() > max}">
+                            <a href="#${fName}Modal" role="button" class="moreFacets tooltips" data-toggle="modal" title="View full list of values"><i class="icon-hand-right"></i> choose more...</a>
+                            <div id="${fName}Modal" class="modal hide fade">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h3>Filter by ${fName}</h3>
+                                </div>
+                                <div class="modal-body">
+                                    <ul class="facetValues">
+                                        <g:each var="t" in="${f.value?.terms}">
+                                            <li><a href="${fqLink}&fq=${f.key.encodeAsURL()}:${t.term}"><g:message
+                                                    code="label.${t.term}" default="${t.term}"/></a> (${t.count})
+                                            </li>
+                                        </g:each>
+                                    </ul>
+                                </div>
+                                <div class="modal-footer">
+                                    <a href="#" class="btn" data-dismiss="modal">Close</a>
+                                </div>
+                            </div>
+                        </g:if>
                     </g:if>
                 </g:each>
             </div>
@@ -140,7 +165,7 @@
                                         &mdash; ${highlights?.join("; ")?.replace("\\/","/")}
                                     </g:if>
                                 </td>
-                                <td><fc:formatDateString date="${hit.lastUpdated}" inputFormat="yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"/></td>
+                                <td><fc:formatDateString date="${hit.lastUpdated}" inputFormat="yyyy-MM-dd'T'HH:mm:ss'Z'"/></td>
                             </tr>
                         </g:each>
                         </tbody>

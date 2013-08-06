@@ -16,18 +16,18 @@ class HomeController {
         ]
     }
     def index() {
-        [ geoPoints: searchService.allGeoPoints(params) ]
+        params.facets = "organisationFacet,statesFacet,nrmsFacet,lgasFacet"
+        def resp = searchService.HomePageFacets(params)
+        render view: "tabbed", model: [facetsList: params.facets.tokenize(","),
+                results: resp]
     }
 
     def tabbed() {
-        [
-            results: searchService.allGeoPoints(params),
-            projects: searchService.allProjects(params)
-        ]
+        render view: "index", model: [ geoPoints: searchService.allGeoPoints(params) ]
     }
 
     def geoService() {
-        render searchService.allGeoPoints(params) as JSON
+        render searchService.allProjects(params) as JSON
     }
 
     def getProjectsForIds() {
