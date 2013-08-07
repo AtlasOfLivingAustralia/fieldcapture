@@ -100,13 +100,17 @@
                                 <div class="modal-body">
                                     <ul class="facetValues">
                                         <g:each var="t" in="${f.terms}">
-                                            <li><a href="${fqLink}&fq=${fn.encodeAsURL()}:${t.term}"><g:message
-                                                    code="label.${t.term}" default="${t.term}"/></a> (${t.count})
+                                            <li data-sortalpha="${t.term.toLowerCase()}" data-sortcount="${t.count}"><a href="${fqLink}&fq=${fn.encodeAsURL()}:${t.term}"><g:message
+                                                    code="label.${t.term}" default="${t.term}"/></a> (<span class="fcount">${t.count}</span>)
                                             </li>
                                         </g:each>
                                     </ul>
                                 </div>
                                 <div class="modal-footer">
+                                    <div class="pull-left hide">
+                                        <button class="btn btn-small sortAlpha"><i class="icon-filter"></i> Sort by alphabetic</button>
+                                        <button class="btn btn-small sortCount"><i class="icon-filter"></i> Sort by count</button>
+                                    </div>
                                     <a href="#" class="btn" data-dismiss="modal">Close</a>
                                 </div>
                             </div>
@@ -127,6 +131,9 @@
                     <div class="tab-pane active" id="mapView">
                         <div class="map-box">
                             <div id="map" style="width: 100%; height: 100%;"></div>
+                        </div>
+                        <div>
+                            <span id="numberOfProjects">${results?.hits?.total?:0 > 0}</span> projects with <span id="numberOfSites">[calculating]</span> sites
                         </div>
                     </div>
 
@@ -401,7 +408,44 @@
                 generateMap();
             }
         });
+
+        // sort facets in popups by term
+        $(".sortAlpha").toggle(function(el) {
+            var $list = $(this).closest(".modal").find(".facetValues");
+            sortList($list, "sortalpha", ">");
+        }, function(el) {
+            var $list = $(this).closest(".modal").find(".facetValues");
+            sortList($list, "sortalpha", "<");
+        });
+        // sort facets in popups by count
+        $(".sortCount").toggle(function(el) {
+            var $list = $(this).closest(".modal").find(".facetValues");
+            sortList($list, "sortcount", "<");
+        }, function(el) {
+            var $list = $(this).closest(".modal").find(".facetValues");
+            sortList($list, "sortcount", ">");
+        });
     });
+
+    /**
+    * Sort a list by its li elements using the data-foo (dataEl) attribute of the li element
+    *
+    * @param $list
+    * @param dataEl
+    * @param op
+    */
+    function sortList($list, dataEl, op) {
+        //console.log("args",$list, dataEl, op);
+        $list.find("li").sort(function(a, b) {
+            var comp;
+            if (op == ">") {
+                comp =  ($(a).data(dataEl)) > ($(b).data(dataEl));
+            } else {
+                comp =  ($(a).data(dataEl)) < ($(b).data(dataEl));
+            }
+            return comp;
+        }).appendTo($list);
+    }
 
     function generateMap() {
         var url = "${createLink(action:'geoService')}?max=999";
@@ -426,7 +470,8 @@
                 //console.log("geoPoints: ", geoPoints);
                 var projectLinkPrefix = "${createLink(controller:'project')}/";
                 var siteLinkPrefix = "${createLink(controller:'site')}/";
-                console.log("total", geoPoints.hits.total);
+                //console.log("total", geoPoints.hits.total);
+                $("#numberOfSites").html(geoPoints.hits.total);
                 if (geoPoints.hits.total > 0) {
                     $.each(geoPoints.hits.hits, function(j, h) {
                         var s = h["_source"];
@@ -451,6 +496,8 @@
                                 }
                             });
                         }
+
+                        $("#numberOfSites").html(features.length);
                     });
 
                     if (facetList && facetList.length > 0) {
@@ -559,6 +606,7 @@
                 console.error("Error: " + data.error);
             } else {
                 var total = data.hits.total;
+                $("numberOfProjects").html(total);
                 $('#projectTable').data("total", total);
                 $('#paginateTable').show();
                 if (total == 0) {
