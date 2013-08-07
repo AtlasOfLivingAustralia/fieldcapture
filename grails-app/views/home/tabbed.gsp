@@ -21,10 +21,22 @@
 <div id="wrapper" class="container-fluid">
     <div class="row-fluid">
         <div class="span12" id="heading">
-            <h1 class="pull-left">Monitoring, Evaluation, Reporting and Improvement (MERI) Data Capture Tool&nbsp;<span
+            <h1 class="pull-left">Monitoring, Evaluation, Reporting and Improvement Tool (MERIT)&nbsp;<span
                     class="label label-info" style="position:relative;top:-15px;">Beta</span></h1>
-
-            <p class="clearfix lead">Note: the MERI data capture tool is currently a prototype and contains some mock data</p>
+        </div>
+    </div>
+    <div class="row-fluid large-space-after">
+        <div class="span6">
+            The Online MERI Tool is being developed in collaboration with the Atlas of
+            Living Australia, and will soon be available for Biodiversity Fund and Caring for our Country
+            funding recipients to report on their projects. It is anticipated that the tool will be available
+            for funding recipients to use later in 2013.
+        </div>
+        <div class="span6">
+            This tool aims to enhance the reporting process by allowing funding recipients to record
+            and upload data about the progress of their projects on a continual basis and submit reports
+            online. It will also enable information sharing within and across NRM communities and the broader
+            public. <span class="hide">This functionality has not been possible previously.</span>
         </div>
     </div>
 
