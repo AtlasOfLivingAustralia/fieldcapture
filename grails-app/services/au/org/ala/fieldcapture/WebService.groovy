@@ -19,7 +19,7 @@ class WebService {
             return error
         } catch (Exception e) {
             def error = [error: "Failed calling web service. ${e.getClass()} ${e.getMessage()} URL= ${url}.",
-                         detail: conn.errorStream.text]
+                         detail: conn.errorStream?.text]
             log.error error
             return error
         }
@@ -48,7 +48,7 @@ class WebService {
         }catch (Exception e) {
             log.info "Exception class = ${e.getClass().name} - ${e.getMessage()}"
             def error = [error: "Failed to get json from web service. ${e.getClass()} ${e.getMessage()} URL= ${url}.",
-                         detail: conn.errorStream.text]
+                         detail: conn.errorStream?.text]
             log.error error
             return error
         }
