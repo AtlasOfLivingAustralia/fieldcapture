@@ -19,12 +19,10 @@
 </head>
 <body>
 <div id="wrapper" class="container-fluid">
-    <div class="row-fluid">
+    <div class="row-fluid large-space-after hide">
         <div class="span12" id="heading">
-            <h1 class="pull-left">Monitoring, Evaluation, Reporting and Improvement (MERI) Data Capture Tool&nbsp;<span
-                    class="label label-info" style="position:relative;top:-15px;">Beta</span></h1>
-
-            <p class="clearfix lead">Note: the MERI data capture tool is currently a prototype and contains some mock data</p>
+            <h1 class="pull-left">Monitoring, Evaluation, Reporting and Improvement (MERI) Field Capture Tool <span class="label label-info">Beta/span></h1>
+            <p class="lead"></p>
         </div>
     </div>
 
@@ -42,21 +40,26 @@
             <div id="facetsCol" class="span4 well well-small">
                 <g:set var="reqParams" value="sort,order,max,fq"/>
                 <h2>Filter results</h2>
+
                 <g:if test="${params.fq}">
-                    <h4>Current filters</h4>
-                    <ul>
+                    <div class="currentFilters">
+                        <h4>Current filters</h4>
+                        <ul>
                         <%-- convert either Object and Object[] to a list, in case there are multiple params with same name --%>
-                        <g:set var="fqList" value="${[params.fq].flatten().findAll { it != null }}"/>
-                        <g:each var="f" in="${fqList}">
-                            <g:set var="fqBits" value="${f?.tokenize(':')}"/>
+                            <g:set var="fqList" value="${[params.fq].flatten().findAll { it != null }}"/>
+                            <g:each var="f" in="${fqList}">
+                                <g:set var="fqBits" value="${f?.tokenize(':')}"/>
                             <g:set var="newUrl"><fc:formatParams params="${params}" requiredParams="${reqParams}" excludeParam="${f}"/></g:set>
                             <li><g:message code="label.${fqBits[0]}" default="${fqBits[0]}"/>: <g:message code="label.${fqBits[1]}" default="${fqBits[1]}"/>
                                 <a href="${newUrl?:"?"}" class="btn btn-inverse btn-mini tooltips" title="remove filter">
-                                    <i class="icon-white icon-remove"></i></a>
-                            </li>
-                        </g:each>
-                    </ul>
+                                        <i class="icon-white icon-remove"></i></a>
+                                </li>
+                            </g:each>
+                        </ul>
+                    </div>
                 </g:if>
+
+                %{--<g:each var="f" in="${results.facets}">--}%
                 <g:set var="baseUrl"><fc:formatParams params="${params}" requiredParams="${reqParams}"/></g:set>
                 <g:set var="fqLink" value="${baseUrl?:"?"}"/>
                 <!-- fqLink = ${fqLink} -->
@@ -76,8 +79,8 @@
                             </g:each>
                         </ul>
                         <g:if test="${f?.terms?.size() > max}">
-                            <a href="#${fName}Modal" role="button" class="moreFacets tooltips" data-toggle="modal" title="View full list of values"><i class="icon-hand-right"></i> choose more...</a>
-                            <div id="${fName}Modal" class="modal hide fade">
+                            <a href="#${fn}Modal" role="button" class="moreFacets tooltips" data-toggle="modal" title="View full list of values"><i class="icon-hand-right"></i> choose more...</a>
+                            <div id="${fn}Modal" class="modal hide fade">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                                     <h3>Filter by ${fName}</h3>
@@ -415,24 +418,26 @@
                 if (geoPoints.hits.total > 0) {
                     $.each(geoPoints.hits.hits, function(j, h) {
                         var s = h["_source"];
+                        var projectId = s.projectId
+                        var projectName = s.name
                         //console.log("s", s, j);
-                        if (s.geo && s.geo.lat && s.geo.lon) {
-                            var projectId = (s.projects && s.projects.length > 0) ? s.projects[0].projectId : s.projectId
-                            var projectName = (s.projects && s.projects.length > 0) ? s.projects[0].name : s.name
-                            var point = {
-                                type: "dot",
-                                id: projectId ? projectId : s.id,
-                                name: projectName ? projectName :s.name,
-                                popup: generatePopup(projectLinkPrefix,projectId,projectName,s.organisationName,siteLinkPrefix,s.siteId, s.name),
-                                latitude: s.geo.lat,
-                                longitude: s.geo.lon
-                            }
-                            //console.log("point", point);
-                            features.push(point);
-                            bounds.extend(new google.maps.LatLng(s.geo.lat,s.geo.lon));
-                            if (projectId) {
-                                projectIdMap[projectId] = true;
-                            }
+                        if (s.geo && s.geo.length > 0) {
+                            $.each(s.geo, function(k, el) {
+                                var point = {
+                                    type: "dot",
+                                    id: projectId,
+                                    name: projectName,
+                                    popup: generatePopup(projectLinkPrefix,projectId,projectName,s.organisationName,siteLinkPrefix,el.siteId, el.siteName),
+                                    latitude: el.loc.lat,
+                                    longitude: el.loc.lon
+                                }
+                                //console.log("point", point);
+                                features.push(point);
+                                bounds.extend(new google.maps.LatLng(el.loc.lat,el.loc.lon));
+                                if (projectId) {
+                                    projectIdMap[projectId] = true;
+                                }
+                            });
                         }
                     });
 
@@ -483,7 +488,7 @@
         }
 
         if(orgName !== undefined && orgName != ''){
-            html += "<div><i class='icon-user'></i> Org: " +orgName + "</div>";
+            html += "<div><i class='icon-user'></i> Org name: " +orgName + "</div>";
         }
 
         html+= "<div><i class='icon-map-marker'></i> Site: <a href='" +siteLinkPrefix + siteId + "'>" + siteName + "</a></div>";

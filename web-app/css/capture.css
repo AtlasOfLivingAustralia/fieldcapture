@@ -480,14 +480,18 @@ ul.nav-tabs {
     margin-bottom: 0;
 }
 
-.nav-tabs li a {
+.nav-tabs li a, .nav-tabs li a:hover {
     background-color: #f0f0e8;
     border: 1px solid #ddd;
     margin-right: 4px;
-    padding-top: 6px;
-    padding-bottom: 6px;
+    /*padding-top: 6px;*/
+    /*padding-bottom: 6px;*/
     font-weight: bold;
     font-size: 15px;
+}
+
+.nav-tabs li a:hover {
+    background-color: #E3E3DB;
 }
 
 ul.facetValues {
@@ -497,4 +501,14 @@ ul.facetValues {
 .moreFacets {
     display: inline-block;
     margin-left: 7px;
+}
+
+.currentFilters {
+    background-color: #faf8f1;
+    padding: 1px 5px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    margin-left: -3px;
+    margin-right: -3px;
 }
