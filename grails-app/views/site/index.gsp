@@ -261,8 +261,6 @@
 
             ko. applyBindings(viewModel);
 
-            readState();
-
             // retain tab state for future re-visits
             $('a[data-toggle="tab"]').on('shown', function (e) {
                 var tab = e.currentTarget.hash;

@@ -28,7 +28,7 @@
         <tr>
             <!-- first 2 td elements toggle the accordion -->
             <td data-bind="attr:{href:'#'+activityId}" data-toggle="collapse" class="accordion-toggle">
-                <div><a>&#9658;</a></div>
+                <div><a data-bind="text:toggleState()"></a></div>
             </td>
             <td data-bind="attr:{href:'#'+activityId}" data-toggle="collapse" class="accordion-toggle">
                 <span data-bind="text:type"></span>
@@ -50,7 +50,7 @@
         <tr class="hidden-row">
             <td></td>
             <td colspan="5">
-                <div class="collapse" data-bind="attr: {id:activityId}">
+                <div class="collapse" data-bind="attr: {id:activityId}, css: {in:isInitiallyOpen()}">
                     <ul class="unstyled well well-small">
                         <!-- ko foreachModelOutput:metaModel.outputs -->
                         <li class="output-summary">
@@ -58,7 +58,7 @@
                                 <span class="span4">
                                     <a data-bind="text:name, attr: {href:editLink}"></a></span>
                                 <span class="span5">
-                                    <ul data-bind="foreachprop:scores">
+                                    <ul data-bind="foreach:scores">
                                         <li data-bind="text:key + ' = ' + value"></li>
                                     </ul>
                                 </span>
@@ -80,6 +80,7 @@
 </div>
 <r:script>
     $(window).load(function () {
+        var collapseState = amplify.store.sessionStorage('output-accordion-state');
         function ActivitiesViewModel(activities, sites) {
             var self = this;
             this.loadActivities = function (activities) {
@@ -95,6 +96,12 @@
                         outputs: ko.observableArray([]),
                         collector: act.collector,
                         metaModel: act.model || {},
+                        isInitiallyOpen: function () {
+                            return ($.inArray(this.activityId, collapseState) > -1);
+                        },
+                        toggleState: function () {
+                            return this.isInitiallyOpen() ? "\u25BC" : "\u25BA";
+                        },
                         revert: function () {
                             this.startDate.date(this.startDate.originalValue);
                             this.endDate.date(this.endDate.originalValue);
@@ -207,10 +214,20 @@
                 document.location.href = fcConfig.activityCreateUrl + returnTo + context;
             };
             self.expandActivities = function () {
-                $('#activityList div.collapse').collapse('show');
+                // the check is required as 'show' seems to act like a toggle and the collapse code
+                // does not always know the correct state
+                $('#activityList div.collapse').each(function() {
+                    if (!$(this).hasClass('in')) {
+                        $(this).collapse('show');
+                    }
+                });
             };
             self.collapseActivities = function () {
-                $('#activityList div.collapse').collapse('hide');
+                $('#activityList div.collapse').each(function() {
+                    if ($(this).hasClass('in')) {
+                        $(this).collapse('hide');
+                    }
+                });
             };
             self.openSite = function () {
                 var siteId = this.siteId;
@@ -223,10 +240,6 @@
         var activitiesViewModel = new ActivitiesViewModel(${activities ?: []}, ${sites ?: []});
         ko.applyBindings(activitiesViewModel, document.getElementById('activityListContainer'));
     });
-
-    function initialiseActivityTab() {
-        readState();
-    }
 
 </r:script>
 <!-- /ko -->

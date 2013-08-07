@@ -18,7 +18,7 @@ ko.bindingHandlers.foreachModelOutput = {
             transformedOutputs = [];//created list of temp objects
 
         $.each(metaOutputs, function (i, name) { // for each output name
-            var scores = {},
+            var scores = [],
                 outputId = '',
                 editLink = fcConfig.serverUrl + "/output/";
 
@@ -27,7 +27,9 @@ ko.bindingHandlers.foreachModelOutput = {
                                                              // find any matching the meta-model name
                 if (output.name === name) {
                     outputId = output.outputId;
-                    scores = output.scores;
+                    $.each(output.scores, function (k, v) {
+                        scores.push({key: k, value: v});
+                    });
                 }
             });
 
@@ -74,16 +76,22 @@ function trackState () {
     var $leaves = $('#activityList div.collapse'),
         state = [];
     $.each($leaves, function (i, leaf) {
-        state.push($(leaf).hasClass('in'));
+        if ($(leaf).hasClass('in')) {
+            state.push($(leaf).attr('id'));
+        }
     });
+    console.log('state stored = ' + state);
     amplify.store.sessionStorage('output-accordion-state',state);
 }
 
 function readState () {
-    var hidden = $('#activityList div.collapse'),
-        state = amplify.store.sessionStorage('output-accordion-state');
-    $.each(hidden, function (i, leaf) {
-        if (state !== undefined && i < state.length && state[i]) {
+    var $leaves = $('#activityList div.collapse'),
+        state = amplify.store.sessionStorage('output-accordion-state'),
+        id;
+    console.log('state retrieved = ' + state);
+    $.each($leaves, function (i, leaf) {
+        id = $(leaf).attr('id');
+        if (($.inArray(id, state) > -1)) {
             $(leaf).collapse('show');
         }
     });

@@ -159,32 +159,6 @@
             <h2 style="font-weight:normal;margin-top:0;">Totals across all activities under this project.</h2>
             <div class="row-fluid">
                 <div class="span4 well">
-                    <h3>Participation</h3>
-                    <strong>Total participation</strong><span class="pull-right progress-label">83</span>
-                    <div class="progress progress-danger active">
-                        <div class="bar" style="width: 83%;"></div>
-                    </div>
-                    <strong>Indigenous participation</strong><span class="pull-right progress-label">40</span>
-                    <div class="progress progress-info active">
-                        <div class="bar" style="width: 40%;"></div>
-                    </div>
-                    <strong>Volunteers</strong><span class="pull-right progress-label">62</span>
-                    <div class="progress progress-success active">
-                        <div class="bar" style="width: 62%;"></div>
-                    </div>
-                </div>
-                <div class="span4 well">
-                    <h3>Fencing</h3>
-                    <strong>Total length</strong><span class="pull-right progress-label">4.5km</span>
-                    <div class="progress progress-danger active">
-                        <div class="bar" style="width: 50%;"></div>
-                    </div>
-                    <strong>Total cost</strong><span class="pull-right progress-label">$40,000</span>
-                    <div class="progress progress-info active">
-                        <div class="bar" style="width: 18%;"></div>
-                    </div>
-                </div>
-                <div class="span4 well">
                     <h3>Weed management</h3>
                     <strong>Hectares treated</strong><span class="pull-right progress-label">6.3</span>
                     <div class="progress progress-danger active">
@@ -197,6 +171,46 @@
                     <strong>Length of riparian area cleared</strong><span class="pull-right progress-label">4km</span>
                     <div class="progress progress-info active">
                         <div class="bar" style="width: 8%;"></div>
+                    </div>
+                    <strong>Invasive flora</strong>
+                    <ul>
+                        <li>Ornamental Rubbervine (<i>Cryptostegia madagascariensis</i>)</li>
+                        <li>Rubber Bush (<i>Calotropis procera</i>)</li>
+                        <li>Snakeweed (<i>Stachytarpheta</i> spp)</li>
+                        <li>Caltrop (<i>Tribulus</i> spp)</li>
+                    </ul>
+                </div>
+                <div class="span4 well">
+                    <h3>Participation</h3>
+                    <strong>Indigenous engagement</strong><span class="pull-right progress-label">2</span>
+                    <div class="progress progress-danger active">
+                        <div class="bar" style="width: 17%;"></div>
+                    </div>
+                    <strong>Indigenous participation</strong><span class="pull-right progress-label">12</span>
+                    <div class="progress progress-info active">
+                        <div class="bar" style="width: 100%;"></div>
+                    </div>
+                    <strong>Volunteers</strong><span class="pull-right progress-label">10</span>
+                    <div class="progress progress-success active">
+                        <div class="bar" style="width: 83.3%;"></div>
+                    </div>
+                </div>
+                <div class="span4 well">
+                    <h3>Theme 3 - managing threats to biodiversity</h3>
+                    <strong>Hectares (proposed = 9680)</strong><span class="pull-right progress-label">1232</span>
+                    <div class="progress progress-danger active">
+                        <div class="bar" style="width: 13%;"></div>
+                    </div>
+                </div>
+                <div class="span4 well">
+                    <h3>Fencing</h3>
+                    <strong>Total length</strong><span class="pull-right progress-label">4.5km</span>
+                    <div class="progress progress-danger active">
+                        <div class="bar" style="width: 50%;"></div>
+                    </div>
+                    <strong>Total cost</strong><span class="pull-right progress-label">$40,000</span>
+                    <div class="progress progress-info active">
+                        <div class="bar" style="width: 18%;"></div>
                     </div>
                 </div>
             </div>
@@ -390,10 +404,6 @@
                     );
                     // set trigger for site reverse geocoding
                     viewModel.triggerGeocoding();
-                }
-                //
-                if (tab === '#activity' && !activitiesTabInitialised) {
-                    initialiseActivityTab();
                 }
             });
             // re-establish the previous tab state
