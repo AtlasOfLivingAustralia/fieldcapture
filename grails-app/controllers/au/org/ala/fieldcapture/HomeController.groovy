@@ -16,7 +16,7 @@ class HomeController {
         ]
     }
     def index() {
-        params.facets = "organisationFacet,statesFacet,nrmsFacet,lgasFacet"
+        params.facets = "fundingSourceFacet,reportingThemesFacet,organisationFacet,statesFacet,nrmsFacet,lgasFacet"
         def resp = searchService.HomePageFacets(params)
         render view: "tabbed", model: [facetsList: params.facets.tokenize(","),
                 results: resp]

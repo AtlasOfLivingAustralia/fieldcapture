@@ -19,10 +19,12 @@
 </head>
 <body>
 <div id="wrapper" class="container-fluid">
-    <div class="row-fluid large-space-after hide">
+    <div class="row-fluid">
         <div class="span12" id="heading">
-            <h1 class="pull-left">Monitoring, Evaluation, Reporting and Improvement (MERI) Field Capture Tool <span class="label label-info">Beta/span></h1>
-            <p class="lead"></p>
+            <h1 class="pull-left">Monitoring, Evaluation, Reporting and Improvement (MERI) Data Capture Tool&nbsp;<span
+                    class="label label-info" style="position:relative;top:-15px;">Beta</span></h1>
+
+            <p class="clearfix lead">Note: the MERI data capture tool is currently a prototype and contains some mock data</p>
         </div>
     </div>
 
@@ -58,8 +60,6 @@
                         </ul>
                     </div>
                 </g:if>
-
-                %{--<g:each var="f" in="${results.facets}">--}%
                 <g:set var="baseUrl"><fc:formatParams params="${params}" requiredParams="${reqParams}"/></g:set>
                 <g:set var="fqLink" value="${baseUrl?:"?"}"/>
                 <!-- fqLink = ${fqLink} -->
