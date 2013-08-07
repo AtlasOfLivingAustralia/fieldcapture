@@ -62,54 +62,48 @@
                 <g:set var="reqParams" value="sort,order,max,fq,query"/>
                 <g:set var="fqLink"><fc:formatParams params="${params}" requiredParams="${reqParams}"/></g:set>
                 <g:if test="${params.fq}">
-                    <h4>Current filters</h4>
-                    <ul>
+                    <div class="currentFilters">
+                        <h4>Current filters</h4>
+                        <ul>
                         <%-- convert either Object and Object[] to a list, in case there are multiple params with same name --%>
-                        <g:set var="fqList" value="${[params.fq].flatten().findAll { it != null }}"/>
-                        <g:each var="f" in="${fqList}">
-                            <g:set var="fqBits" value="${f?.tokenize(':')}"/>
-                            <li><g:message code="label.${fqBits[0]}" default="${fqBits[0]}"/>: <g:message code="label.${fqBits[1]}" default="${fqBits[1]}"/>
-                                <a href="<fc:formatParams params="${params}" requiredParams="${reqParams}" excludeParam="${f}"/>" class="btn btn-inverse btn-mini">
-                                    <i class="icon-white icon-remove"></i></a>
-                            </li>
-                        </g:each>
-                    </ul>
+                            <g:set var="fqList" value="${[params.fq].flatten().findAll { it != null }}"/>
+                            <g:each var="f" in="${fqList}">
+                                <g:set var="fqBits" value="${f?.tokenize(':')}"/>
+                                <g:set var="newUrl"><fc:formatParams params="${params}" requiredParams="${reqParams}" excludeParam="${f}"/></g:set>
+                                <li><g:message code="label.${fqBits[0]}" default="${fqBits[0]}"/>: <g:message code="label.${fqBits[1]}" default="${fqBits[1]}"/>
+                                    <a href="${newUrl?:"?"}" class="btn btn-inverse btn-mini tooltips" title="remove filter">
+                                        <i class="icon-white icon-remove"></i></a>
+                                </li>
+                            </g:each>
+                        </ul>
+                    </div>
                 </g:if>
-                <g:if test="${facets['class']}">
-                    <h4><g:message code="label.class" default="Page"/></h4>
-                    <!-- ${facets['class']} -->
-                    <ul class="pageType">
-                        <g:each var="t" in="${facets['class'].terms}">
-                            <li><a href="${fqLink}&fq=class:${t.term}"><g:message code="label.${t.term}"
-                                                                                  default="${t.term}"/></a> (${t.count})
-                            </li>
-                        </g:each>
-                    </ul>
-                </g:if>
-                <g:each var="f" in="${facets}">
-                    <g:if test="${f.key != 'class' && f.value?.terms?.length() > 0}">
-                        <g:set var="fName"><g:message code="label.${f.key}" default="${f.key?.capitalize()}"/></g:set>
+                <g:each var="fn" in="${facetsList}">
+                    <g:set var="f" value="${results.facets.get(fn)}"/>
+                    <g:set var="max" value="${5}"/>
+                    <g:if test="${f?.terms?.size() > 0}">
+                        <g:set var="fName"><g:message code="label.${fn}" default="${fn?.capitalize()}"/></g:set>
                         <h4>${fName}</h4>
                         <ul class="facetValues">
-                            <g:each var="t" in="${f.value?.terms}" status="i">
+                            <g:each var="t" in="${f.terms}" status="i">
                                 <g:if test="${i < max}">
-                                    <li><a href="${fqLink}&fq=${f.key.encodeAsURL()}:${t.term}"><g:message code="label.${t.term}"
-                                            default="${t.term}"/></a> (${t.count})
+                                    <li><a href="${fqLink}&fq=${fn.encodeAsURL()}:${t.term}"><g:message
+                                            code="label.${t.term}" default="${t.term}"/></a> (${t.count})
                                     </li>
                                 </g:if>
                             </g:each>
                         </ul>
-                        <g:if test="${f.value?.terms?.size() > max}">
-                            <a href="#${fName}Modal" role="button" class="moreFacets tooltips" data-toggle="modal" title="View full list of values"><i class="icon-hand-right"></i> choose more...</a>
-                            <div id="${fName}Modal" class="modal hide fade">
+                        <g:if test="${f?.terms?.size() > max}">
+                            <a href="#${fn}Modal" role="button" class="moreFacets tooltips" data-toggle="modal" title="View full list of values"><i class="icon-hand-right"></i> choose more...</a>
+                            <div id="${fn}Modal" class="modal hide fade">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                                     <h3>Filter by ${fName}</h3>
                                 </div>
                                 <div class="modal-body">
                                     <ul class="facetValues">
-                                        <g:each var="t" in="${f.value?.terms}">
-                                            <li><a href="${fqLink}&fq=${f.key.encodeAsURL()}:${t.term}"><g:message
+                                        <g:each var="t" in="${f.terms}">
+                                            <li><a href="${fqLink}&fq=${fn.encodeAsURL()}:${t.term}"><g:message
                                                     code="label.${t.term}" default="${t.term}"/></a> (${t.count})
                                             </li>
                                         </g:each>
@@ -186,5 +180,10 @@
     </g:else>
 
 </div>
+<r:script>
+    $(window).load(function () {
+        $('.tooltips').tooltip({placement: "right"});
+    });
+</r:script>
 </body>
 </html>
