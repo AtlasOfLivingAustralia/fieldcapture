@@ -70,7 +70,11 @@ class MetadataService {
     }
 
     def getInstitutionName(uid) {
-        return uid ? institutionList().find({ it.uid == uid })?.name : ''
+        def institutions = institutionList()
+        if (institutions.error) {
+            return uid
+        }
+        return uid ? institutions.find({ it.uid == uid })?.name : ''
     }
 
     def institutionList() {
