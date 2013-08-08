@@ -512,3 +512,11 @@ ul.facetValues {
     margin-left: -3px;
     margin-right: -3px;
 }
+
+.icon-flipped180 {
+    -webkit-transform:rotate(180deg);
+    -moz-transform:rotate(180deg);
+    -o-transform:rotate(180deg);
+    /* filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=2.0); */
+    -ms-transform:rotate(180deg);
+}

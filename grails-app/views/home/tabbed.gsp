@@ -100,14 +100,14 @@
                                 <div class="modal-body">
                                     <ul class="facetValues">
                                         <g:each var="t" in="${f.terms}">
-                                            <li data-sortalpha="${t.term.toLowerCase()}" data-sortcount="${t.count}"><a href="${fqLink}&fq=${fn.encodeAsURL()}:${t.term}"><g:message
+                                            <li data-sortalpha="${t.term.toLowerCase().trim()}" data-sortcount="${t.count}"><a href="${fqLink}&fq=${fn.encodeAsURL()}:${t.term}"><g:message
                                                     code="label.${t.term}" default="${t.term}"/></a> (<span class="fcount">${t.count}</span>)
                                             </li>
                                         </g:each>
                                     </ul>
                                 </div>
                                 <div class="modal-footer">
-                                    <div class="pull-left hide">
+                                    <div class="pull-left">
                                         <button class="btn btn-small sortAlpha"><i class="icon-filter"></i> Sort by alphabetic</button>
                                         <button class="btn btn-small sortCount"><i class="icon-filter"></i> Sort by count</button>
                                     </div>
@@ -413,17 +413,21 @@
         $(".sortAlpha").toggle(function(el) {
             var $list = $(this).closest(".modal").find(".facetValues");
             sortList($list, "sortalpha", ">");
+            $(this).find("i").removeClass("icon-flipped180");
         }, function(el) {
             var $list = $(this).closest(".modal").find(".facetValues");
             sortList($list, "sortalpha", "<");
+            $(this).find("i").addClass("icon-flipped180");
         });
         // sort facets in popups by count
         $(".sortCount").toggle(function(el) {
             var $list = $(this).closest(".modal").find(".facetValues");
             sortList($list, "sortcount", "<");
+            $(this).find("i").removeClass("icon-flipped180");
         }, function(el) {
             var $list = $(this).closest(".modal").find(".facetValues");
             sortList($list, "sortcount", ">");
+            $(this).find("i").addClass("icon-flipped180");
         });
     });
 
@@ -439,9 +443,9 @@
         $list.find("li").sort(function(a, b) {
             var comp;
             if (op == ">") {
-                comp =  ($(a).data(dataEl)) > ($(b).data(dataEl));
+                comp =  ($(a).data(dataEl)) > ($(b).data(dataEl)) ? 1 : -1;
             } else {
-                comp =  ($(a).data(dataEl)) < ($(b).data(dataEl));
+                comp =  ($(a).data(dataEl)) < ($(b).data(dataEl)) ? 1 : -1;
             }
             return comp;
         }).appendTo($list);
