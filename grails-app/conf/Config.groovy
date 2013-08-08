@@ -118,12 +118,13 @@ if (!lists.baseURL) {
     lists.baseURL = "http://lists.ala.org.au"
 }
 
+if (!bie.baseURL) {
+    bie.baseURL = "http://bie.ala.org.au"
+}
 
 spatial.baseUrl = "http://spatial-dev.ala.org.au"
 spatial.layersUrl = spatial.baseUrl + "/layers-service"
 spatial.geoserverUrl = spatial.baseUrl + "/geoserver"
-
-
 
 
 upload.images.path = "/data/${appName}/images/"

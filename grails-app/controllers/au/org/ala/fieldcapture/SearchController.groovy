@@ -4,7 +4,7 @@ import grails.converters.JSON
 import groovy.json.JsonSlurper
 
 class SearchController {
-    def searchService
+    def searchService, webService
 
     /**
      * Main search page that takes its input from the search bar in the header
@@ -33,7 +33,7 @@ class SearchController {
             render filterSpeciesList(q, listId)
         }
         else {
-            render webService.get("http://bie.ala.org.au/search/auto.jsonp?q=${q}&limit=${limit}")
+            render webService.get("${grailsApplication.config.bie.baseURL}/search/auto.jsonp?q=${q}&limit=${limit}")
         }
 
     }
@@ -46,7 +46,7 @@ class SearchController {
      * @return a JSON formatted String of the form {"autoCompleteList":[{...results...}]}
      */
     private String filterSpeciesList(String query, String listId) {
-        def listContents = new JsonSlurper().parseText(webService.get("http://lists.ala.org.au/ws/speciesListItems/${listId}"))
+        def listContents = new JsonSlurper().parseText(webService.get("${grailsApplication.config.lists.baseURL}/ws/speciesListItems/${listId}"))
 
         def filtered = listContents.findResults({it.name?.toLowerCase().contains(query.toLowerCase()) ? [id: it.id, name: it.name, matchedNames:[it.name], guid:it.lsid]: null})
 
