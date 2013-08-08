@@ -19,29 +19,20 @@
 </head>
 <body>
 <div id="wrapper" class="container-fluid">
-    <div class="row-fluid">
+    <div class="row-fluid large-space-after hide">
         <div class="span12" id="heading">
-            <h1 class="pull-left">Monitoring, Evaluation, Reporting and Improvement Tool (MERIT)&nbsp;<span
-                    class="label label-info" style="position:relative;top:-15px;">Beta</span></h1>
-        </div>
-    </div>
-    <div class="row-fluid large-space-after">
-        <div class="span6">
-            The Online MERI Tool is being developed in collaboration with the Atlas of
-            Living Australia, and will soon be available for Biodiversity Fund and Caring for our Country
-            funding recipients to report on their projects. It is anticipated that the tool will be available
-            for funding recipients to use later in 2013.
-        </div>
-        <div class="span6">
-            This tool aims to enhance the reporting process by allowing funding recipients to record
-            and upload data about the progress of their projects on a continual basis and submit reports
-            online. It will also enable information sharing within and across NRM communities and the broader
-            public. <span class="hide">This functionality has not been possible previously.</span>
+            <h1 class="pull-left">Field Capture</h1>
+            <g:form controller="search" method="GET" class=" form-horizontal pull-right" style="padding-top:5px;">
+                <div class="input-append">
+                    <g:textField class="input-large" name="query"/>
+                    <button class="btn" type="submit">Search</button>
+                </div>
+            </g:form>
         </div>
     </div>
 
-    <g:if test="${flash.error || results.error}">
-        <g:set var="error" value="${flash.error?:results.error}"/>
+    <g:if test="${flash.error || geoPoints.error}">
+        <g:set var="error" value="${flash.error?:geoPoints.error}"/>
         <div class="row-fluid">
             <div class="alert alert-error large-space-before">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -49,157 +40,93 @@
             </div>
         </div>
     </g:if>
-    <g:elseif test="${results?.hits?.total?:0 > 0}">
-        <div id="content" class="row-fluid ">
-            <div id="facetsCol" class="span4 well well-small">
-                <g:set var="reqParams" value="sort,order,max,fq"/>
-                <h2>Filter results</h2>
-
-                <g:if test="${params.fq}">
-                    <div class="currentFilters">
-                        <h4>Current filters</h4>
-                        <ul>
-                        <%-- convert either Object and Object[] to a list, in case there are multiple params with same name --%>
-                            <g:set var="fqList" value="${[params.fq].flatten().findAll { it != null }}"/>
-                            <g:each var="f" in="${fqList}">
-                                <g:set var="fqBits" value="${f?.tokenize(':')}"/>
-                            <g:set var="newUrl"><fc:formatParams params="${params}" requiredParams="${reqParams}" excludeParam="${f}"/></g:set>
-                            <li><g:message code="label.${fqBits[0]}" default="${fqBits[0]}"/>: <g:message code="label.${fqBits[1]}" default="${fqBits[1]}"/>
-                                <a href="${newUrl?:"?"}" class="btn btn-inverse btn-mini tooltips" title="remove filter">
-                                        <i class="icon-white icon-remove"></i></a>
-                                </li>
-                            </g:each>
-                        </ul>
-                    </div>
-                </g:if>
-                <g:set var="baseUrl"><fc:formatParams params="${params}" requiredParams="${reqParams}"/></g:set>
-                <g:set var="fqLink" value="${baseUrl?:"?"}"/>
-                <!-- fqLink = ${fqLink} -->
-                <g:each var="fn" in="${facetsList}">
-                    <g:set var="f" value="${results.facets.get(fn)}"/>
-                    <g:set var="max" value="${5}"/>
-                    <g:if test="${fn != 'class' && f?.terms?.size() > 0}">
-                        <g:set var="fName"><g:message code="label.${fn}" default="${fn?.capitalize()}"/></g:set>
-                        <h4>${fName}</h4>
-                        <ul class="facetValues">
-                            <g:each var="t" in="${f.terms}" status="i">
-                                <g:if test="${i < max}">
-                                    <li><a href="${fqLink}&fq=${fn.encodeAsURL()}:${t.term}"><g:message
-                                            code="label.${t.term}" default="${t.term}"/></a> (${t.count})
-                                    </li>
-                                </g:if>
-                            </g:each>
-                        </ul>
-                        <g:if test="${f?.terms?.size() > max}">
-                            <a href="#${fn}Modal" role="button" class="moreFacets tooltips" data-toggle="modal" title="View full list of values"><i class="icon-hand-right"></i> choose more...</a>
-                            <div id="${fn}Modal" class="modal hide fade">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                    <h3>Filter by ${fName}</h3>
-                                </div>
-                                <div class="modal-body">
-                                    <ul class="facetValues">
-                                        <g:each var="t" in="${f.terms}">
-                                            <li data-sortalpha="${t.term.toLowerCase().trim()}" data-sortcount="${t.count}"><a href="${fqLink}&fq=${fn.encodeAsURL()}:${t.term}"><g:message
-                                                    code="label.${t.term}" default="${t.term}"/></a> (<span class="fcount">${t.count}</span>)
-                                            </li>
-                                        </g:each>
-                                    </ul>
-                                </div>
-                                <div class="modal-footer">
-                                    <div class="pull-left">
-                                        <button class="btn btn-small sortAlpha"><i class="icon-filter"></i> Sort by alphabetic</button>
-                                        <button class="btn btn-small sortCount"><i class="icon-filter"></i> Sort by count</button>
-                                    </div>
-                                    <a href="#" class="btn" data-dismiss="modal">Close</a>
-                                </div>
-                            </div>
+    <g:elseif test="${geoPoints.hits?.total?:0 > 0}">
+        <div class="row-fluid large-space-before">
+            <div class="span6 well well-small ">
+                %{--<h3 class="">Sites</h3>--}%
+                <div class="map-box">
+                    <div id="map" style="width: 100%; height: 100%;"></div>
+                </div>
+                <div class="facetBtns">
+                    <button class="btn btn-info btn-mini facetBtn" data-facet="stateFacet" data-value="">All States (${geoPoints.hits.total})</button>
+                    <g:each var="t" in="${geoPoints.facets?.stateFacet?.terms}">
+                        <g:if test="${t.term}">
+                            <button class="btn btn-mini facetBtn" data-facet="stateFacet"
+                                    data-value="${t.term}">${t.term} (${t.count})</button>
                         </g:if>
-                    </g:if>
-                </g:each>
-            </div>
-            <div class="span8">
-
-                <div class="tabbable">
-                    <ul class="nav nav-tabs" data-tabs="tabs">
-                        <li class="active"><a id="t2" href="#mapView" data-toggle="tab">Map</a></li>
-                        <li class=""><a id="t1" href="#projectsView" data-toggle="tab">Projects</a></li>
-                    </ul>
+                    </g:each>
                 </div>
-
-                <div class="tab-content clearfix">
-                    <div class="tab-pane active" id="mapView">
-                        <div class="map-box">
-                            <div id="map" style="width: 100%; height: 100%;"></div>
-                        </div>
-                        <div>
-                            <span id="numberOfProjects">${results?.hits?.total?:0 > 0}</span> projects with <span id="numberOfSites">[calculating]</span> sites
-                        </div>
-                    </div>
-
-                    <div class="tab-pane " id="projectsView">
-                        <div class="scroll-list clearfix" id="projectList">
-                            <table class="table table-bordered table-hover" id="projectTable" data-sort="lastUpdated" data-order="DESC" data-offset="0" data-max="10">
-                                <thead>
-                                <tr>
-                                    <th width="85%" data-sort="nameSort" data-order="ASC" class="header">Project name</th>
-                                    <th width="15%" data-sort="lastUpdated"  data-order="DESC" class="header headerSortUp">Last&nbsp;updated&nbsp;</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                            <div id="paginateTable" class="hide" style="text-align:center;">
-                                <span id="paginationInfo" style="display:inline-block;float:left;margin-top:4px;"></span>
-                                <div class="btn-group">
-                                    <button class="btn btn-small prev"><i class="icon-chevron-left"></i> previous</button>
-                                    <button class="btn btn-small next">next <i class="icon-chevron-right"></i></button>
-                                </div>
-                                <span id="project-filter-warning" class="label filter-label label-warning hide pull-left">Filtered</span>
-                                <div class="control-group pull-right dataTables_filter">
-                                    <div class="input-append">
-                                        <g:textField class="filterinput input-medium" data-target="project"
-                                                     title="Type a few characters to restrict the list." name="projects"
-                                                     placeholder="filter"/>
-                                        <button type="button" class="btn clearFilterBtn"
-                                                title="clear"><i class="icon-remove"></i></button>
-                                    </div>
-                                </div>
+                <div class="facetBtns">
+                    <button class="btn btn-info btn-mini facetBtn" data-facet="nrmFacet" data-value="">All NRMs (${geoPoints.hits.total})</button>
+                    <g:each var="t" in="${geoPoints.facets?.nrmFacet?.terms}">
+                        <g:if test="${t.term}">
+                            <button class="btn btn-mini facetBtn" data-facet="nrmFacet"
+                                    data-value="${t.term}">${t.term} (${t.count})</button>
+                        </g:if>
+                    </g:each>
+                </div>
+            </div>
+            <div class="span6 well well-small list-box">
+                %{--<h3 class="pull-left">Projects</h3>--}%
+                <div class="scroll-list clearfix" id="projectList">
+                    <table class="table table-bordered table-hover" id="projectTable" data-sort="lastUpdated" data-order="DESC" data-offset="0" data-max="10">
+                        <thead>
+                        <tr>
+                            <th width="85%" data-sort="nameSort" data-order="ASC" class="header">Project name</th>
+                            <th width="15%" data-sort="lastUpdated"  data-order="DESC" class="header headerSortUp">Last&nbsp;updated&nbsp;</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <div id="paginateTable" class="hide" style="text-align:center;">
+                        <span id="paginationInfo" style="display:inline-block;float:left;margin-top:4px;"></span>
+                        <button class="btn btn-small prev"><i class="icon-chevron-left"></i> previous</button>
+                        <button class="btn btn-small next">next <i class="icon-chevron-right"></i></button>
+                        <span id="project-filter-warning" class="label filter-label label-warning hide pull-left">Filtered</span>
+                        <div class="control-group pull-right dataTables_filter">
+                            <div class="input-append">
+                                <g:textField class="filterinput input-medium" data-target="project"
+                                             title="Type a few characters to restrict the list." name="projects"
+                                             placeholder="filter"/>
+                                <button type="button" class="btn clearFilterBtn"
+                                        title="clear"><i class="icon-remove"></i></button>
                             </div>
                         </div>
-                        %{-- template for jQuery DOM injection --}%
-                        <table id="projectRowTempl" class="hide">
-                            <tr>
-                                <td class="td1">
-                                    <a href="#" class="projectTitle" id="a_" data-id="" title="click to show/hide details">
-                                        <span class="showHideCaret">&#9658;</span> <span class="projectTitleName">$name</span></a>
-                                    <div class="hide projectInfo" id="proj_$id">
-                                        <div class="homeLine">
-                                            <i class="icon-home"></i>
-                                            <a href="">View project page</a>
-                                        </div>
-                                        <div class="sitesLine">
-                                            <i class="icon-map-marker"></i>
-                                            Sites: <a href="#" data-id="$id" class="zoom-in btnX btn-miniX"><i
-                                                class="icon-plus-sign"></i> zoom in</a>
-                                            <a href="#" data-id="$id" class="zoom-out btnX btn-miniX"><i
-                                                    class="icon-minus-sign"></i> zoom out</a>
-                                        </div>
-                                        <div class="orgLine">
-                                            <i class="icon-user"></i>
-                                        </div>
-                                        <div class="descLine">
-                                            <i class="icon-info-sign"></i>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="td2">$date</td>
-                            </tr>
-                        </table>
                     </div>
                 </div>
-            </div>
-        </div>
+                %{-- template for jQuery DOM injection --}%
+                <table id="projectRowTempl" class="hide">
+                    <tr>
+                        <td class="td1">
+                            <a href="#" class="projectTitle" id="a_" data-id="" title="click to show/hide details">
+                                <span class="showHideCaret">&#9658;</span> <span class="projectTitleName">$name</span></a>
+                            <div class="hide projectInfo" id="proj_$id">
+                                <div class="homeLine">
+                                    <i class="icon-home"></i>
+                                    <a href="">View project page</a>
+                                </div>
+                                <div class="sitesLine">
+                                    <i class="icon-map-marker"></i>
+                                    Sites: <a href="#" data-id="$id" class="zoom-in btnX btn-miniX"><i
+                                        class="icon-plus-sign"></i> zoom in</a>
+                                    <a href="#" data-id="$id" class="zoom-out btnX btn-miniX"><i
+                                            class="icon-minus-sign"></i> zoom out</a>
+                                </div>
+                                <div class="orgLine">
+                                    <i class="icon-user"></i>
+                                </div>
+                                <div class="descLine">
+                                    <i class="icon-info-sign"></i>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="td2">$date</td>
+                    </tr>
+                </table>
+
+            </div><!-- /.span6.well -->
+        </div><!-- /.row-fluid -->
     </g:elseif>
     <g:else>
         <div class="row-fluid ">
@@ -216,18 +143,20 @@
         <div>
             <!--h4>KO model</h4>
             <pre data-bind="text:ko.toJSON($root,null,2)"></pre-->
-            <h4>Results</h4>
-            <pre>${results}</pre>
-            <h4>GeoPoints</h4>
-            <pre>${geoPoints}</pre>
+            <h4>Activities</h4>
+            <pre>${activities}</pre>
+            <h4>Sites</h4>
+            <pre>${sites}</pre>
             <h4>Projects</h4>
             <pre>${projects}</pre>
+            <h4>GeoPoints</h4>
+            <pre>${geoPoints}</pre>
         </div>
     </div>
 </div>
 
 <r:script>
-    var projectListIds = [], facetList = [], mapDataHasChanged = false; // globals
+    var projectListIds = []; // list of strings
 
     $(window).load(function () {
         var delay = (function(){
@@ -238,7 +167,7 @@
             };
         })();
 
-        // project list filter
+        // bind filters
         $('.filterinput').keyup(function() {
             //console.log("filter keyup");
             var a = $(this).val(),
@@ -341,8 +270,6 @@
             container: "#projectTable",
             delay: 400
         });
-        $('.tooltips').tooltip({placement: "right"});
-
 
         // sorting project table
         $("#projectTable .header").click(function(el) {
@@ -364,7 +291,7 @@
 
         // facet buttons
         $(".facetBtn").click(function(el) {
-            facetList = []; // reset global var
+            var facetList = [];
             var facet = $(this).data("facet");
             var facetVal = $(this).data("value");
             var prevFacet =  $("#projectTable").data("facetName");
@@ -375,8 +302,7 @@
                 facetList.push(facet + ":" + facetVal);
             }
             $("#projectTable").data("offset", 0);
-            mapDataHasChanged = true;
-            generateMap();
+            generateMap(facetList);
             // change button class to indicate this facet is active
             if (facet != prevFacet) {
                 // different facet group selected - reset prev
@@ -400,68 +326,14 @@
                 updateProjectTable();
             }
         });
-
-        // trigger Google maps tofire when maps tab is loaded
-        $('.nav-tabs a[href="#mapView"]').on('shown', function(){
-            if (mapDataHasChanged) {
-                mapDataHasChanged = false;
-                generateMap();
-            }
-        });
-
-        // sort facets in popups by term
-        $(".sortAlpha").toggle(function(el) {
-            var $list = $(this).closest(".modal").find(".facetValues");
-            sortList($list, "sortalpha", ">");
-            $(this).find("i").removeClass("icon-flipped180");
-        }, function(el) {
-            var $list = $(this).closest(".modal").find(".facetValues");
-            sortList($list, "sortalpha", "<");
-            $(this).find("i").addClass("icon-flipped180");
-        });
-        // sort facets in popups by count
-        $(".sortCount").toggle(function(el) {
-            var $list = $(this).closest(".modal").find(".facetValues");
-            sortList($list, "sortcount", "<");
-            $(this).find("i").removeClass("icon-flipped180");
-        }, function(el) {
-            var $list = $(this).closest(".modal").find(".facetValues");
-            sortList($list, "sortcount", ">");
-            $(this).find("i").addClass("icon-flipped180");
-        });
     });
 
-    /**
-    * Sort a list by its li elements using the data-foo (dataEl) attribute of the li element
-    *
-    * @param $list
-    * @param dataEl
-    * @param op
-    */
-    function sortList($list, dataEl, op) {
-        //console.log("args",$list, dataEl, op);
-        $list.find("li").sort(function(a, b) {
-            var comp;
-            if (op == ">") {
-                comp =  ($(a).data(dataEl)) > ($(b).data(dataEl)) ? 1 : -1;
-            } else {
-                comp =  ($(a).data(dataEl)) < ($(b).data(dataEl)) ? 1 : -1;
-            }
-            return comp;
-        }).appendTo($list);
-    }
+    function generateMap(facetFilters) {
+        var url = "${createLink(action:'geoService')}";
 
-    function generateMap() {
-        var url = "${createLink(action:'geoService')}?max=999";
-
-        if (facetList && facetList.length > 0) {
-            url += "&fq=" + facetList.join("&fq=");
+        if (facetFilters && facetFilters.length > 0) {
+            url += "?fq=" + facetFilters.join("&fq=");
         }
-
-        <g:if test="${params.fq}">
-            <g:set var="fqList" value="${[params.fq].flatten()}"/>
-            url += "&fq=${fqList.join('&fq=')}";
-        </g:if>
 
         $.getJSON(url, function(data) {
             //console.log("getJSON data", data);
@@ -474,8 +346,7 @@
                 //console.log("geoPoints: ", geoPoints);
                 var projectLinkPrefix = "${createLink(controller:'project')}/";
                 var siteLinkPrefix = "${createLink(controller:'site')}/";
-                //console.log("total", geoPoints.hits.total);
-                $("#numberOfSites").html(geoPoints.hits.total);
+
                 if (geoPoints.hits.total > 0) {
                     $.each(geoPoints.hits.hits, function(j, h) {
                         var s = h["_source"];
@@ -500,11 +371,9 @@
                                 }
                             });
                         }
-
-                        $("#numberOfSites").html(features.length);
                     });
 
-                    if (facetList && facetList.length > 0) {
+                    if (facetFilters && facetFilters.length > 0) {
                         // convert projectIdMap to a list and add to global var
                         projectListIds = []; // clear the list
                         for (var id in projectIdMap) {
@@ -551,7 +420,7 @@
         }
 
         if(orgName !== undefined && orgName != ''){
-            html += "<div><i class='icon-user'></i> Org name: " +orgName + "</div>";
+            html += "<div><i class='icon-user'></i> Org name:" +orgName + "</div>";
         }
 
         html+= "<div><i class='icon-map-marker'></i> Site: <a href='" +siteLinkPrefix + siteId + "'>" + siteName + "</a></div>";
@@ -578,7 +447,7 @@
     * @param facetFilters (an array)
     */
     function updateProjectTable(facetFilters) {
-        var url = "${createLink(action:'geoService')}"; //?sort=lastUpdated&order=DESC";
+        var url = "${createLink(action:'getProjectsForIds')}"; //?sort=lastUpdated&order=DESC";
         var sort = $('#projectTable').data("sort");
         var order = $('#projectTable').data("order");
         var offset = $('#projectTable').data("offset");
@@ -593,11 +462,6 @@
             params += "&fq=" + facetFilters.join("&fq=");
         }
 
-        <g:if test="${params.fq}">
-            <g:set var="fqList" value="${[params.fq].flatten()}"/>
-            params += "&fq=${fqList.join('&fq=')}";
-        </g:if>
-
         $.post(url, params, function(data1) {
             //console.log("getJSON data", data);
             var data
@@ -610,7 +474,6 @@
                 console.error("Error: " + data.error);
             } else {
                 var total = data.hits.total;
-                $("numberOfProjects").html(total);
                 $('#projectTable').data("total", total);
                 $('#paginateTable').show();
                 if (total == 0) {

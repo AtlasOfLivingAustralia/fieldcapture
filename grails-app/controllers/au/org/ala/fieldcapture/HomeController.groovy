@@ -18,15 +18,16 @@ class HomeController {
     def index() {
         params.facets = "fundingSourceFacet,reportingThemesFacet,organisationFacet,statesFacet,nrmsFacet,lgasFacet"
         def resp = searchService.HomePageFacets(params)
-        render view: "tabbed", model: [facetsList: params.facets.tokenize(","),
-                results: resp]
+        [ facetsList: params.facets.tokenize(","),
+          results: resp ]
     }
 
     def tabbed() {
-        render view: "index", model: [ geoPoints: searchService.allGeoPoints(params) ]
+        [ geoPoints: searchService.allGeoPoints(params) ]
     }
 
     def geoService() {
+        params.max = 9999
         render searchService.allProjects(params) as JSON
     }
 

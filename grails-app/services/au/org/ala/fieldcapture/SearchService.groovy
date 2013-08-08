@@ -33,7 +33,7 @@ class SearchService {
         params.flimit = 999
         params.fsort = "term"
         params.offset = 0
-        params.query = "geo.lat:*"
+        params.query = "geo.loc.lat:*"
         params.facets = "stateFacet,nrmFacet,lgaFacet"
         def url = elasticBaseUrl + commonService.buildUrlParamsFromMap(params)
         log.debug "allGeoPoints - $url with $params"
