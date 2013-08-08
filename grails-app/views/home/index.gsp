@@ -27,8 +27,9 @@
 </div>
 <div class="row-fluid large-space-after">
     <div class="span6">
-        The Online MERI Tool is being developed in collaboration with the Atlas of
-        Living Australia, and will soon be available for Biodiversity Fund and Caring for our Country
+        The Online MERI Tool is being developed in collaboration with the <a href="http://www.ala.org.au/"
+        title="ALA home page (new window)" target="_blank">Atlas of Living Australia</a>,
+        and will soon be available for Biodiversity Fund and Caring for our Country
         funding recipients to report on their projects. It is anticipated that the tool will be available
         for funding recipients to use later in 2013.
     </div>
