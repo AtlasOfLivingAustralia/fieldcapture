@@ -27,7 +27,7 @@ class HomeController {
     }
 
     def geoService() {
-        params.max = 9999
+        params.max = params.max?:9999
         render searchService.allProjects(params) as JSON
     }
 

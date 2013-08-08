@@ -249,7 +249,7 @@
 
             if (a.length > 1) {
                 $('#' + target + '-filter-warning').show();
-                var qList = [ "_all:" +  a ]
+                var qList = [ "_all:" +  a.toLowerCase() ]
             } else {
                 $('#' + target + '-filter-warning').hide();
                 qList = null;
@@ -459,21 +459,21 @@
             url += "&fq=" + facetList.join("&fq=");
         }
 
-<g:if test="${params.fq}">
-    <g:set var="fqList" value="${[params.fq].flatten()}"/>
-    url += "&fq=${fqList.join('&fq=')}";
-</g:if>
+        <g:if test="${params.fq}">
+            <g:set var="fqList" value="${[params.fq].flatten()}"/>
+            url += "&fq=${fqList.join('&fq=')}";
+        </g:if>
 
-$.getJSON(url, function(data) {
-    //console.log("getJSON data", data);
-    var features = [];
-    var projectIdMap = {};
-    var bounds = new google.maps.LatLngBounds();
-    var geoPoints = data;
+        $.getJSON(url, function(data) {
+            //console.log("getJSON data", data);
+            var features = [];
+            var projectIdMap = {};
+            var bounds = new google.maps.LatLngBounds();
+            var geoPoints = data;
 
-    if (geoPoints.hits) {
-        //console.log("geoPoints: ", geoPoints);
-        var projectLinkPrefix = "${createLink(controller:'project')}/";
+            if (geoPoints.hits) {
+                //console.log("geoPoints: ", geoPoints);
+                var projectLinkPrefix = "${createLink(controller:'project')}/";
                 var siteLinkPrefix = "${createLink(controller:'site')}/";
                 //console.log("total", geoPoints.hits.total);
                 $("#numberOfSites").html(geoPoints.hits.total);
@@ -583,7 +583,7 @@ $.getJSON(url, function(data) {
         var sort = $('#projectTable').data("sort");
         var order = $('#projectTable').data("order");
         var offset = $('#projectTable').data("offset");
-        var params = "sort="+sort+"&order="+order+"&offset="+offset;
+        var params = "max=10&sort="+sort+"&order="+order+"&offset="+offset;
 
         if (projectListIds.length > 0) {
             params += "&ids=" + projectListIds.join(",");
@@ -594,69 +594,69 @@ $.getJSON(url, function(data) {
             params += "&fq=" + facetFilters.join("&fq=");
         }
 
-<g:if test="${params.fq}">
-    <g:set var="fqList" value="${[params.fq].flatten()}"/>
-    params += "&fq=${fqList.join('&fq=')}";
-</g:if>
+        <g:if test="${params.fq}">
+            <g:set var="fqList" value="${[params.fq].flatten()}"/>
+            params += "&fq=${fqList.join('&fq=')}";
+        </g:if>
 
-$.post(url, params, function(data1) {
-    //console.log("getJSON data", data);
-    var data
-    if (data1.resp) {
-        data = data1.resp;
-    } else if (data1.hits) {
-        data = data1;
-    }
-    if (data.error) {
-        console.error("Error: " + data.error);
-    } else {
-        var total = data.hits.total;
-        $("numberOfProjects").html(total);
-        $('#projectTable').data("total", total);
-        $('#paginateTable').show();
-        if (total == 0) {
-            $('#paginationInfo').html("Nothing found");
-
-        } else {
-            var max = data.hits.hits.length
-            $('#paginationInfo').html((offset+1)+" to "+(offset+max) + " of "+total);
-            if (offset == 0) {
-                $('#paginateTable .prev').addClass("disabled");
-            } else {
-                $('#paginateTable .prev').removeClass("disabled");
+        $.post(url, params, function(data1) {
+            //console.log("getJSON data", data);
+            var data
+            if (data1.resp) {
+                data = data1.resp;
+            } else if (data1.hits) {
+                data = data1;
             }
-            if (offset >= (total - 10) ) {
-                $('#paginateTable .next').addClass("disabled");
+            if (data.error) {
+                console.error("Error: " + data.error);
             } else {
-                $('#paginateTable .next').removeClass("disabled");
+                var total = data.hits.total;
+                $("numberOfProjects").html(total);
+                $('#projectTable').data("total", total);
+                $('#paginateTable').show();
+                if (total == 0) {
+                    $('#paginationInfo').html("Nothing found");
+
+                } else {
+                    var max = data.hits.hits.length
+                    $('#paginationInfo').html((offset+1)+" to "+(offset+max) + " of "+total);
+                    if (offset == 0) {
+                        $('#paginateTable .prev').addClass("disabled");
+                    } else {
+                        $('#paginateTable .prev').removeClass("disabled");
+                    }
+                    if (offset >= (total - 10) ) {
+                        $('#paginateTable .next').addClass("disabled");
+                    } else {
+                        $('#paginateTable .next').removeClass("disabled");
+                    }
+                }
+
+                $('#projectTable tbody').empty();
+                populateTable(data);
             }
-        }
-
-        $('#projectTable tbody').empty();
-        populateTable(data);
+        }).error(function (request, status, error) {
+            //console.error("AJAX error", status, error);
+            $('#paginationInfo').html("AJAX error:" + status + " - " + error);
+        });
     }
-}).error(function (request, status, error) {
-    //console.error("AJAX error", status, error);
-    $('#paginationInfo').html("AJAX error:" + status + " - " + error);
-});
-}
 
-/**
-* Update the project table DOM using a plain HTML template (cloned)
-*
-* @param data
-*/
-function populateTable(data) {
-//console.log("populateTable", data);
-$.each(data.hits.hits, function(i, el) {
-    //console.log(i, "el", el);
-    var id = el._id;
-    var src = el._source
-    var $tr = $('#projectRowTempl tr').clone(); // template
-    $tr.find('.td1 > a').attr("id", "a_" + id).data("id", id);
-    $tr.find('.td1 .projectTitleName').text(src.name); // projectTitleName
-    $tr.find('.projectInfo').attr("id", "proj_" + id);
-    $tr.find('.homeLine a').attr("href", "${createLink(controller: 'project')}/" + id);
+    /**
+    * Update the project table DOM using a plain HTML template (cloned)
+    *
+    * @param data
+    */
+    function populateTable(data) {
+        //console.log("populateTable", data);
+        $.each(data.hits.hits, function(i, el) {
+            //console.log(i, "el", el);
+            var id = el._id;
+            var src = el._source
+            var $tr = $('#projectRowTempl tr').clone(); // template
+            $tr.find('.td1 > a').attr("id", "a_" + id).data("id", id);
+            $tr.find('.td1 .projectTitleName').text(src.name); // projectTitleName
+            $tr.find('.projectInfo').attr("id", "proj_" + id);
+            $tr.find('.homeLine a').attr("href", "${createLink(controller: 'project')}/" + id);
             $tr.find('a.zoom-in').data("id", id);
             $tr.find('a.zoom-out').data("id", id);
             $tr.find('.orgLine').append(src.organisationName);
