@@ -30,7 +30,7 @@ class AuthService {
         [
                 userId:attr?.userid?.toString(),
                 email: attr?.email?.toString()?.toLowerCase(),
-                userDisplayName: (attr?.firstname?:"" + " " +attr?.lastname?:"").trim()
+                userDisplayName: "${attr?.firstname?:""} ${attr?.lastname?:""}".trim()
         ]
     }
 

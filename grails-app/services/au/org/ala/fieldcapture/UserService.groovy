@@ -1,7 +1,7 @@
 package au.org.ala.fieldcapture
 
 class UserService {
-    def authService, webService
+    def authService
 
     def getCurrentUserDisplayName() {
         // TODO: replace with real user name
@@ -18,6 +18,7 @@ class UserService {
         }
 
         log.debug "userDetails = ${userDetails}"
+        userDetails
     }
 
 }

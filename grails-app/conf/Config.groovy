@@ -137,6 +137,8 @@ security.cas.bypass = false
 
 upload.images.path = "/data/${appName}/images/"
 
+println "grails.app.context = ${grails.app.context}"
+
 environments {
     development {
         grails.logging.jul.usebridge = true
@@ -146,7 +148,7 @@ environments {
         grails.serverURL = serverName + "/fieldcapture"
         layout.skin = "nrm"
         security.cas.appServerName = serverName
-        security.cas.contextPath = grails.app.context
+        security.cas.contextPath = "/" + appName
         ecodata.baseUrl = 'http://localhost:8080/ecodata/ws/'
 
         upload.images.url = grails.serverURL+'/image/'
@@ -249,8 +251,8 @@ log4j = {
                     'grails.app.services.au.org.ala.fieldcapture',
                     'grails.app.taglib.au.org.ala.fieldcapture',
                     'grails.app.conf.au.org.ala.fieldcapture',
-                    'grails.app.filters.au.org.ala.fieldcapture'/*,
-                    'au.org.ala.cas.client'*/
+                    'grails.app.filters.au.org.ala.fieldcapture',
+                    'au.org.ala.cas.client'
             ]
         }
     }

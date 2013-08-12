@@ -31,7 +31,13 @@
     <g:else>
         <div class="row-fluid ">
             <div class="span12">
-                User Info: ${user}
+
+                <dl class="dl-horizontal">
+                    <g:each var="it" in="${user.keySet()}">
+                        <dt>${it}</dt>
+                        <dd>${user[it]}</dd>
+                    </g:each>
+                </dl>
             </div>
         </div>
     </g:else>
