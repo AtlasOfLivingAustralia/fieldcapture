@@ -112,7 +112,10 @@
             this.expanded = ko.observable(false);
             this.toggle = function (data, event) {
                 if (!self.expanded()) {
-                    $.each(viewModel.activities(), function (i, obj) {obj.expanded(false)});
+                    $.each(viewModel.activities(), function (i, obj) {
+                        obj.expanded(false); // close all
+                        obj.done(); // exit editing mode
+                    });
                     self.expanded(true);
                     model.selectedActivity(self);
                 } else {
@@ -153,14 +156,13 @@
             this.scoreNames = ko.observableArray($.map(out.scoreNames || [], function (obj,i) {
                 return new ScoreModel(obj);
             }));
-            /*$.each(out.scoreNames || [], function (i, name) {
-                self.scoreNames.push(ko.observable(name));
-            });*/
-            //this.scores = ko.observableArray(out.scores);
             this.expanded = ko.observable(false);
             this.toggle = function (data, event) {
                 if (!self.expanded()) {
-                    $.each(viewModel.outputs(), function (i, obj) {obj.expanded(false)});
+                    $.each(viewModel.outputs(), function (i, obj) {
+                        obj.expanded(false); // close all
+                        obj.done(); // exit editing mode
+                    });
                     self.expanded(true);
                 } else {
                     self.expanded(false);
