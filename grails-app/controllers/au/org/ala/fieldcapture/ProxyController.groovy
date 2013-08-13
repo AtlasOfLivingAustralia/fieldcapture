@@ -13,11 +13,11 @@ class ProxyController {
     }
 
     def speciesLists() {
-        render webService.get("${grailsApplication.config.lists.baseUrl}/ws/speciesList")
+        render webService.get("${grailsApplication.config.lists.baseURL}/ws/speciesList")
     }
 
     def speciesList() {
-        render webService.get("${grailsApplication.config.lists.baseUrl}/ws/speciesList?druid=${params.druid}")
+        render webService.get("${grailsApplication.config.lists.baseURL}/ws/speciesList?druid=${params.druid}")
     }
 
     def documentUpdate(String id) {
