@@ -356,7 +356,8 @@ ko.bindingHandlers.clickToEdit = {
         ko.applyBindingsToNode(link, {
             text: ko.computed(function() {
                 // todo: style default text as grey
-                return ko.utils.unwrapObservable(observable) !== "" ? observable() : prompt;
+                var value = ko.utils.unwrapObservable(observable);
+                return value !== "" ? value : prompt;
             }),
             visible: ko.computed(function() {
                 return !observable.editing();
