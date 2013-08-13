@@ -77,6 +77,8 @@
                     </div>
                 </g:if>
 
+                <div class="pull-right"><g:pageProperty name="page.adminButtonBar"/></div>
+
                 <g:layoutBody/>
 
             </div>

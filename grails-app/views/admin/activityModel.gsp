@@ -16,7 +16,7 @@
 <div class="row-fluid span10">
     <div class="span4">
         <h2>Activities</h2>
-        <ul data-bind="sortable:activities" class="sortableList container">
+        <ul data-bind="sortable:{data:activities}" class="sortableList container">
             <li class="item">
                 <div data-bind="click:toggle"><span data-bind="text:name"></span></div>
                 <div data-bind="visible:expanded" class="details clearfix" style="display:none;">
@@ -30,15 +30,16 @@
         <h2>Outputs</h2>
         <ul data-bind="sortable:outputs" class="sortableList">
             <li data-bind="css:{referenced: isReferenced}" class="item">
-                <div data-bind="click:toggle"><span data-bind="text:name"></span></div>
-                <div data-bind="visible:expanded" class="details" style="display:none;">
-                    <div>Template: <span data-bind="text:template"></span></div>
-                    <div>Score names: <ul data-bind="foreach:scoreNames">
-                        <li data-bind="text:$data"></li>
-                    </ul></div>
+                <div data-bind="click:toggle">
+                    <span data-bind="click:addToCurrentActivity, clickBubble:false, visible:isAddable" class="add-arrow clickable" title="Add output to current activity"><i class="icon-arrow-left"></i></span>
+                    <span data-bind="text:name"></span>
+                </div>
+                <div data-bind="visible:expanded" class="details clearfix" style="display:none;">
+                    <div data-bind="template: {name: displayMode}"></div>
                 </div>
             </li>
         </ul>
+        <span data-bind="click:addOutput" class="clickable"><i class="icon-plus"></i> Add new</span>
     </div>
 </div>
 
@@ -47,15 +48,41 @@
     <div>Outputs: <ul data-bind="foreach:outputs">
         <li data-bind="text:$data"></li>
     </ul></div>
+    <button data-bind="click:$root.removeActivity" type="button" class="btn btn-mini pull-right">Remove</button>
     <button data-bind="click:edit" type="button" class="btn btn-mini pull-right">Edit</button>
 </script>
 
 <script id="editActivityTmpl" type="text/html">
     <div style="margin-top:4px"><span class="span2">Name:</span> <input type="text" class="input-large" data-bind="value:name"></div>
     <div><span class="span2">Type:</span> <select data-bind="options:['Activity','Assessment'],value:type"></select></div>
-    <div>Outputs: <ul data-bind="foreach:outputs">
-        <li data-bind="text:$data"></li>
+    <div>Outputs: <ul data-bind="sortable:{data:outputs}" class="output-drop-target sortableList small">
+        <li>
+            <span data-bind="text:$data"></span>
+            <span class="pull-right"><i data-bind="click:$parent.removeOutput" class="icon-remove"></i></span>
+        </li>
     </ul></div>
+    <button data-bind="click:done" type="button" class="btn btn-mini pull-right">Done</button>
+</script>
+
+<script id="viewOutputTmpl" type="text/html">
+    <div>Template: <span data-bind="text:template"></span></div>
+    <div>Score names: <ul data-bind="foreach:scoreNames">
+        <li data-bind="text:name"></li>
+    </ul></div>
+    <button data-bind="click:$root.removeOutput" type="button" class="btn btn-mini pull-right">Remove</button>
+    <button data-bind="click:edit" type="button" class="btn btn-mini pull-right">Edit</button>
+</script>
+
+<script id="editOutputTmpl" type="text/html">
+    <div style="margin-top:4px"><span class="span2">Name:</span> <input type="text" class="input-large" data-bind="value:name"></div>
+    <div><span class="span2">Template:</span> <input type="text" class="input-large" data-bind="value:template"></div>
+    <div>Score names: <ul data-bind="sortable:{data:scoreNames}" class="sortableList small">
+        <li>
+            <span data-bind="clickToEdit:name"></span>
+            <span class="pull-right"><i data-bind="click:$parent.removeScore" class="icon-remove"></i></span>
+        </li>
+    </ul><span data-bind="click:addScoreName" class="clickable"><i class="icon-plus"></i> Add new</span>
+    </div>
     <button data-bind="click:done" type="button" class="btn btn-mini pull-right">Done</button>
 </script>
 
@@ -81,7 +108,7 @@
             var self = this;
             this.name = ko.observable(act.name);
             this.type = ko.observable(act.type);
-            this.outputs = ko.observableArray(act.outputs);
+            this.outputs = ko.observableArray(act.outputs || []);
             this.expanded = ko.observable(false);
             this.toggle = function (data, event) {
                 if (!self.expanded()) {
@@ -90,6 +117,7 @@
                     model.selectedActivity(self);
                 } else {
                     self.expanded(false);
+                    model.selectedActivity(undefined);
                 }
             };
             this.editing = ko.observable(false);
@@ -97,6 +125,9 @@
             this.done = function () { self.editing(false) };
             this.displayMode = function () {
                 return self.editing() ? 'editActivityTmpl' : 'viewActivityTmpl';
+            };
+            this.removeOutput = function (data) {
+                self.outputs.remove(data);
             };
             this.toJSON = function() {
                 var js = ko.toJS(this);
@@ -106,12 +137,25 @@
             }
         };
 
+        var ScoreModel = function (scoreName) {
+            var self = this;
+            this.name = ko.observable(scoreName);
+            this.toJSON = function() {
+                return self.name();
+            }
+        };
+
         var OutputModel = function (out, model) {
             var self = this;
             this.name = ko.observable(out.name);
             this.template = ko.observable(out.template);
-            this.scoreNames = ko.observable(out.scoreNames);
-            this.scores = ko.observableArray(out.scores);
+            this.scoreNames = ko.observableArray($.map(out.scoreNames || [], function (obj,i) {
+                return new ScoreModel(obj);
+            }));
+            /*$.each(out.scoreNames || [], function (i, name) {
+                self.scoreNames.push(ko.observable(name));
+            });*/
+            //this.scores = ko.observableArray(out.scores);
             this.expanded = ko.observable(false);
             this.toggle = function (data, event) {
                 if (!self.expanded()) {
@@ -120,6 +164,18 @@
                 } else {
                     self.expanded(false);
                 }
+            };
+            this.editing = ko.observable(false);
+            this.edit = function () { self.editing(true) };
+            this.done = function () { self.editing(false) };
+            this.displayMode = function () {
+                return self.editing() ? 'editOutputTmpl' : 'viewOutputTmpl';
+            };
+            this.addScoreName = function () {
+                self.scoreNames.push(new ScoreModel('new score'));
+            };
+            this.removeScoreName = function (data) {
+                self.scoreNames.remove(data);
             };
             this.isReferenced = ko.computed(function () {
                 var current = model.selectedActivity(),
@@ -132,10 +188,21 @@
                 });
                 return referenced;
             });
+            this.isAddable = ko.computed(function () {
+                if (model.selectedActivity() === undefined) {
+                    return false;
+                }
+                return !self.isReferenced();
+            });
+            this.addToCurrentActivity = function (data) {
+                model.selectedActivity().outputs.push(data.name());
+            };
             this.toJSON = function() {
                 var js = ko.toJS(this);
                 delete js.expanded;
+                delete js.editing;
                 delete js.isReferenced;
+                delete js.isAddable;
                 delete js.scores;  // for now??
                 return js;
             }
@@ -151,10 +218,22 @@
                 return new OutputModel(obj, self);
             }));
             this.addActivity = function () {
-                var act = new ActivityModel({name: 'new activity', type: 'Activity'});
+                var act = new ActivityModel({name: 'new activity', type: 'Activity'}, self);
                 self.activities.push(act);
                 act.expanded(true);
                 act.editing(true);
+            };
+            this.removeActivity = function () {
+                self.activities.remove(this);
+            };
+            this.addOutput = function () {
+                var out = new OutputModel({name: 'new output'}, self);
+                self.outputs.push(out);
+                out.expanded(true);
+                out.editing(true);
+            };
+            this.removeOutput = function () {
+                self.outputs.remove(this);
             };
             this.revert = function () {
                 document.location.reload();
