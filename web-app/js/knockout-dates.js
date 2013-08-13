@@ -599,12 +599,60 @@ ko.bindingHandlers.sortIcon = {
 ko.bindingHandlers.autocomplete = {
     init: function (element, params) {
         var param = params();
+        var url = ko.utils.unwrapObservable(param.url);
+        var options = ko.utils.unwrapObservable(param.options);
+        options.source = function(request, response) {
+            $(element).addClass("ac_loading");
+            $.ajax({
+                url: url,
+                dataType:'json',
+                data: {
+                    q:request.term
+                },
+                success: function(data) {
+                    var items = $.map(data.autoCompleteList, function(item) {
+                        return {
+                            label:item.name,
+                            value: item.name,
+                            source: item
+                        }
+                    });
+                    items = [{label:"Missing or unidentified species", value:request.term, source: {listId:'unmatched', name: request.term}}].concat(items);
+                    response(items);
 
-        $(element).autocomplete(ko.utils.unwrapObservable(param.url), ko.utils.unwrapObservable(param.options)).result(ko.utils.unwrapObservable(param.result));
+                },
+                complete: function() {
+                    $(element).removeClass("ac_loading");
+                }
+            });
+        };
+        options.select = function(event, ui) {
+            ko.utils.unwrapObservable(param.result)(event, ui.item.source);
+        };
+
+        $(element).autocomplete(options).data("ui-autocomplete");
+        //._renderItem = function(ul, item) {
+//            console.log(item);
+//            var value = '';
+//            if (item) {
+//                value = "<li>"+item['label']+"</li>";
+//            }
+//            //console.log(item.name);
+//            return $(ul).append(value);
+//        };
     },
-    update: function (element, params) {
-        var param = params();
+    update: function (element, params, allBindingsAccessor, bindingContext) {
 
-        $(element).setOptions(ko.utils.unwrapObservable(param.options)).result(ko.utils.unwrapObservable(param.result));
+        $(element).val(bindingContext.name());
+        if (bindingContext.transients.editing()) {
+            setTimeout(function() {
+
+                $(element).select();
+                $(element).focus();
+                $(element).autocomplete("search");
+
+            }, 250);
+        };
+
     }
 };

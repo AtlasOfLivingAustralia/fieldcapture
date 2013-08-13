@@ -149,14 +149,16 @@ class ModelTagLib {
                 result += "<img data-bind='${databindAttrs.toString()}'></img>"
                 break
             case 'autocomplete-edit':
+                def newAttrs = new Databindings()
                 def link = g.createLink(controller: 'search', action:'species')
-                databindAttrs.add "autocomplete", "{url:'${link}', options: transients.speciesAutocompleteParams, result:speciesSelected}"
-                result += """<span><div><select name="list" data-bind="visible: transients.availableLists.length, value:listId, options:transients.availableLists, optionsText: 'listName', optionsValue: 'listId'"></select></div>"""
-                result += "<input type=\"text\" data-bind=\"${databindAttrs.toString()}\"/></span>"
+                newAttrs.add "autocomplete", "{url:'${link}', options: transients.speciesAutocompleteParams, result:speciesSelected}"
+                newAttrs.add "visible", "transients.editing()"
+                result += g.render(template: 'speciesTemplate', model:[source:source, databindAttrs: newAttrs.toString()])
                 break
             case 'autocomplete-view':
-                databindAttrs.add 'text', source+'().scientificName'
-                result += "<span${at.toString()} data-bind='${databindAttrs.toString()}'></span>"
+                databindAttrs.add 'text', 'name'
+
+                result += "<span data-bind=\"with: ${source}\"><span${at.toString()} data-bind='${databindAttrs.toString()}'></span></span>"
                 break
             case 'photopoint-view':
             case 'photopoint-edit':

@@ -22,45 +22,9 @@ class ModelJSTagLib {
                 matrixModel attrs, model, out
             }
         }
-        def modelContainsSpecies = true
-        if (modelContainsSpecies) {
-            out << INDENT*2 << """
-            var Species = function(data) {
-                var self = this;
-                if (!data) data = {};
-                this.guid = data.guid;
-                this.scientificName = data.name;
-                this.listId = data.listId;
-            };
+        // TODO only necessary if the model has a field of type species.
+        out << g.render(template:'speciesViewModel')
 
-            var speciesAutoCompleteOptions = function() {
-                return {
-                extraParams: {limit: 100},
-                dataType: 'json',
-                parse: function(data) {
-                    var rows = new Array();
-                    data = data.autoCompleteList;
-                    for(var i=0; i<data.length; i++){
-                        rows[i] = {
-                            data:data[i],
-                            value: data[i].guid,
-                            result: data[i].name
-                        };
-                    }
-                    return rows;
-                },
-                matchSubset: false,
-                formatItem: function(row, i, n) {
-                    return row.name;
-                },
-                cacheLength: 10,
-                minChars: 3,
-                scroll: false,
-                max: 10,
-                selectFirst: false
-                };
-            };\n"""
-        }
         def site = "{}"
         if (attrs.site.size() > 0) {
             site = attrs.site.toString()
@@ -124,6 +88,9 @@ class ModelJSTagLib {
             }
             else if (mod.dataType in ['stringList', 'image', 'photoPoints'] && !mod.computed) {
                 out << INDENT*4 << "self.load${mod.name}(data['${mod.name}']);\n"
+            }
+            else if (mod.dataType == 'species') {
+                out << INDENT*4 << "self.data['${mod.name}'].loadData(data['${mod.name}']);\n"
             }
         }
     }
@@ -342,8 +309,7 @@ class ModelJSTagLib {
                         out << INDENT*3 << "this.${col.name} = ko.${observable}(orBlank(data['${col.name}']));\n"
                         break;
                     case 'species':
-                        out << INDENT*3 << "this.${col.name} = ko.${observable}(orBlank(data['${col.name}']));\n"
-                        speciesModel attrs, model, out
+                        out << INDENT*3 << "this.${col.name} =  new SpeciesViewModel(data['${col.name}']);\n"
                         break
 
                 }
@@ -372,11 +338,7 @@ class ModelJSTagLib {
             };
             this.isNew = false;
             this.toJSON = function () {
-                var js = ko.toJS(this);
-                delete js.isSelected;
-                delete js.isNew;
-                delete js.transients;
-                return js;
+                return ko.mapping.toJS(this, {'ignore':['transients', 'isNew', 'isSelected']});
             };
 """
         }
@@ -536,21 +498,8 @@ class ModelJSTagLib {
         out << g.render(template:"photoPointTemplate", model:[model:model]);
     }
 
-    def speciesModel(attrs, mod, out) {
-
-        out << """
-            self.listId = ko.observable();
-            self.transients.availableLists = speciesLists;
-            self.transients.speciesAutocompleteParams = ko.computed(function() {
-                var options = speciesAutoCompleteOptions();
-                options.extraParams.druid = self.listId();
-                return options;
-            });
-           self.speciesSelected = function(event, data) {
-                data.listId = self.listId();
-                self.species(new Species(data));
-           }\n"""
-
+    def speciesModel(attrs, model, out) {
+        out << INDENT*3 << "self.data.${model.name} = new SpeciesViewModel();\n"
     }
 
     def modelConstraints(model, out) {
