@@ -53,8 +53,8 @@
 </script>
 
 <script id="editActivityTmpl" type="text/html">
-    <div style="margin-top:4px"><span class="span2">Name:</span> <input type="text" class="input-large" data-bind="value:name"></div>
-    <div><span class="span2">Type:</span> <select data-bind="options:['Activity','Assessment'],value:type"></select></div>
+    <div style="margin-top:4px"><span class="span2">Name:</span> <input type="text" class="input-large pull-right" data-bind="value:name"></div>
+    <div class="clearfix"><span class="span2">Type:</span> <select data-bind="options:['Activity','Assessment'],value:type" class="pull-right"></select></div>
     <div>Outputs: <ul data-bind="sortable:{data:outputs}" class="output-drop-target sortableList small">
         <li>
             <span data-bind="text:$data"></span>
@@ -74,8 +74,8 @@
 </script>
 
 <script id="editOutputTmpl" type="text/html">
-    <div style="margin-top:4px"><span class="span2">Name:</span> <input type="text" class="input-large" data-bind="value:name"></div>
-    <div><span class="span2">Template:</span> <input type="text" class="input-large" data-bind="value:template"></div>
+    <div style="margin-top:4px"><span class="span3">Name:</span> <input type="text" class="input pull-right" data-bind="value:name"></div>
+    <div class="clearfix"><span class="span3">Template:</span> <input type="text" class="input pull-right" data-bind="value:template"></div>
     <div>Score names: <ul data-bind="sortable:{data:scoreNames}" class="sortableList small">
         <li>
             <span data-bind="clickToEdit:name"></span>
@@ -117,6 +117,7 @@
                     model.selectedActivity(self);
                 } else {
                     self.expanded(false);
+                    self.done(); // in case we were editing
                     model.selectedActivity(undefined);
                 }
             };
@@ -163,6 +164,7 @@
                     self.expanded(true);
                 } else {
                     self.expanded(false);
+                    self.done(); // in case we were editing
                 }
             };
             this.editing = ko.observable(false);
