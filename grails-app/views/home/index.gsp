@@ -109,7 +109,7 @@
                             </div>
                             <div class="modal-footer">
                                 <div class="pull-left">
-                                    <button class="btn btn-small sortAlpha"><i class="icon-filter"></i> Sort by alphabetic</button>
+                                    <button class="btn btn-small sortAlpha"><i class="icon-filter"></i> Sort by name</button>
                                     <button class="btn btn-small sortCount"><i class="icon-filter"></i> Sort by count</button>
                                 </div>
                                 <a href="#" class="btn" data-dismiss="modal">Close</a>
