@@ -137,8 +137,6 @@ security.cas.bypass = false
 
 upload.images.path = "/data/${appName}/images/"
 
-println "grails.app.context = ${grails.app.context}"
-
 environments {
     development {
         grails.logging.jul.usebridge = true

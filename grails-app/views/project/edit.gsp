@@ -212,7 +212,7 @@
             "${createLink(controller: 'proxy', action: 'documentUpdate')}");
 
         // bind the model
-        ko.applyBindings(imageViewModel, document.getElementById('projectImageContainer'));
+        //ko.applyBindings(imageViewModel, document.getElementById('projectImageContainer'));
         /* END of section to modularise image handling */
 
         function ViewModel (data) {

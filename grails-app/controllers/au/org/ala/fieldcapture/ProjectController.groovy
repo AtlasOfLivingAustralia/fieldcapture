@@ -58,7 +58,7 @@ class ProjectController {
                 values[k] = v
             }
         }
-        log.debug (values as JSON).toString()
+        log.debug "json=" + (values as JSON).toString()
         log.debug "id=${id} class=${id.getClass()}"
         def result = projectService.update(id, values)
         log.debug "result is " + result
