@@ -68,20 +68,24 @@
     </form>
 
     <hr />
-    <div class="expandable-debug">
-        <h3>Debug</h3>
-        <div>
-            <h4>KO model</h4>
-            <pre data-bind="text:ko.toJSON($root,null,2)"></pre>
-            <h4>Activity</h4>
-            <pre>${activity}</pre>
-            <h4>Site</h4>
-            <pre>${site}</pre>
-            <h4>Projects</h4>
-            <pre>${projects}</pre>
-            %{--<pre>Map features : ${mapFeatures}</pre>--}%
+
+    <g:if env="development">
+        <div class="expandable-debug">
+            <h3>Debug</h3>
+            <div>
+                <h4>KO model</h4>
+                <pre data-bind="text:ko.toJSON($root.data,null,2)"></pre>
+                <h4>Activity</h4>
+                <pre>${activity}</pre>
+                <h4>Site</h4>
+                <pre>${site}</pre>
+                <h4>Projects</h4>
+                <pre>${projects}</pre>
+                %{--<pre>Map features : ${mapFeatures}</pre>--}%
+            </div>
         </div>
-    </div>
+    </g:if>
+
 </div>
 
 <%-- JavaScript / knockout templates  --%>
@@ -96,10 +100,6 @@
         returnTo = "${returnTo}";
 
     $(function(){
-
-        $('input').live('focus', function () {
-            console.log('got focus');
-        });
 
         $('#form').validationEngine('attach', {scroll: false});
 
