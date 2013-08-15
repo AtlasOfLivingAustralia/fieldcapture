@@ -28,13 +28,21 @@ class SearchController {
             limit = 10;
         }
 
+        // Try the project species list first.
         def listId = params.druid
         if (listId) {
-            render filterSpeciesList(q, listId)
+            def results = filterSpeciesList(q, listId)
+            if (results.count) {
+                render results as JSON
+                return
+            }
         }
-        else {
-            render webService.get("${grailsApplication.config.bie.baseURL}/search/auto.jsonp?q=${q}&limit=${limit}")
-        }
+
+        // If that fails, fall back to the ALA
+        def encodedQuery = URLEncoder.encode(q, "UTF-8")
+        def url = "${grailsApplication.config.bie.baseURL}/search/auto.jsonp?q=${encodedQuery}&limit=${limit}&idxType=TAXON"
+        render webService.get(url)
+
 
     }
 
@@ -45,15 +53,16 @@ class SearchController {
      * @param listId the id of the list to search.
      * @return a JSON formatted String of the form {"autoCompleteList":[{...results...}]}
      */
-    private String filterSpeciesList(String query, String listId) {
+    private def filterSpeciesList(String query, String listId) {
         def listContents = new JsonSlurper().parseText(webService.get("${grailsApplication.config.lists.baseURL}/ws/speciesListItems/${listId}"))
 
-        def filtered = listContents.findResults({it.name?.toLowerCase().contains(query.toLowerCase()) ? [id: it.id, name: it.name, matchedNames:[it.name], guid:it.lsid]: null})
+        def filtered = listContents.findResults({it.name?.toLowerCase().contains(query.toLowerCase()) ? [id: it.id, listId: listId, name: it.name, scientificNameMatches:[it.name], guid:it.lsid]: null})
 
         def results = [:];
         results.autoCompleteList = filtered
+        results.count = filtered.size()
 
-        return results as JSON
+        return results
     }
 
 }

@@ -151,7 +151,8 @@ class ModelTagLib {
             case 'autocomplete-edit':
                 def newAttrs = new Databindings()
                 def link = g.createLink(controller: 'search', action:'species')
-                newAttrs.add "autocomplete", "{url:'${link}', options: transients.speciesAutocompleteParams, result:speciesSelected}"
+                newAttrs.add "hasfocus", "transients.focused"
+                newAttrs.add "autocomplete", "{url:'${link}', render: renderItem, listId: list, result:speciesSelected}"
                 newAttrs.add "visible", "transients.editing()"
                 result += g.render(template: 'speciesTemplate', model:[source:source, databindAttrs: newAttrs.toString()])
                 break

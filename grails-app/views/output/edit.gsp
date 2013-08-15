@@ -118,7 +118,6 @@
             self.assessmentDate = ko.observable("${output.assessmentDate}").extend({simpleDate: false});
             self.collector = ko.observable("${output.collector}")/*.extend({ required: true })*/;
             self.activityId = ko.observable("${activity.activityId}");
-            self.site = site;
             self.activityType = ko.observable("${activity.type}");
             self.deleteAll = function () {
                 document.location.href = "${createLink(action:'delete',id:output.outputId,

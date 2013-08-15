@@ -47,7 +47,6 @@ class OutputController {
             forward(action: 'list', model: [error: output.error])
         } else {
             def fat = fatten output
-            log.debug(fat.projects)
             [output: output, activity: fat.activity, site: fat.site, projects: fat.projects,
              model: fat.model, speciesLists: fat.speciesLists, returnTo: params.returnTo]
         }

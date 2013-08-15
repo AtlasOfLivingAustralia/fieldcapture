@@ -601,15 +601,19 @@ ko.bindingHandlers.autocomplete = {
     init: function (element, params) {
         var param = params();
         var url = ko.utils.unwrapObservable(param.url);
-        var options = ko.utils.unwrapObservable(param.options);
+        var list = ko.utils.unwrapObservable(param.listId);
+
+        var options = {};
         options.source = function(request, response) {
             $(element).addClass("ac_loading");
+            var data = {q:request.term};
+            if (list) {
+                $.extend(data, {druid: list});
+            }
             $.ajax({
                 url: url,
                 dataType:'json',
-                data: {
-                    q:request.term
-                },
+                data: data,
                 success: function(data) {
                     var items = $.map(data.autoCompleteList, function(item) {
                         return {
@@ -631,29 +635,14 @@ ko.bindingHandlers.autocomplete = {
             ko.utils.unwrapObservable(param.result)(event, ui.item.source);
         };
 
-        $(element).autocomplete(options).data("ui-autocomplete");
-        //._renderItem = function(ul, item) {
-//            console.log(item);
-//            var value = '';
-//            if (item) {
-//                value = "<li>"+item['label']+"</li>";
-//            }
-//            //console.log(item.name);
-//            return $(ul).append(value);
-//        };
-    },
-    update: function (element, params, allBindingsAccessor, bindingContext) {
+        var render = ko.utils.unwrapObservable(param.render);
+        if (render) {
 
-        $(element).val(bindingContext.name());
-        if (bindingContext.transients.editing()) {
-            setTimeout(function() {
+            $(element).autocomplete(options).data("ui-autocomplete")._renderItem = function(ul, item) {
+                var result = $('<li></li>').html(render(item.source));
+                return result.appendTo(ul);
 
-                $(element).select();
-                $(element).focus();
-                $(element).autocomplete("search");
-
-            }, 250);
-        };
-
+            };
+        }
     }
 };
