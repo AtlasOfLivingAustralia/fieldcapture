@@ -30,7 +30,21 @@
                 <tr>
                     <td data-bind="text:listName"></td>
                     <td data-bind="text:itemCount"></td>
-                    <td><select data-bind="value:purpose, options:$root.activities"/></td>
+                    <td>
+                    <select data-bind="value:purpose">
+                        <option></option>
+                    <g:each in="${activityTypes}" var="t" status="i">
+                        <g:if test="${i == 0 && create}">
+                            <option></option>
+                        </g:if>
+                        <optgroup label="${t.name}">
+                        <g:each in="${t.list}" var="opt">
+                            <option>${opt.name}</option>
+                        </g:each>
+                        </optgroup>
+                    </g:each>
+                    </select>
+                    </td>
                     <td width="10%"><a class="btn btn-mini" data-bind="click:$root.removeSpeciesList" href="#" title="edit"><i class="icon-edit"></i> Remove</a></td>
                 </tr>
                 </tbody>
@@ -45,7 +59,7 @@
 
     <div class="form-actions">
         <button type="button" data-bind="click: save" class="btn btn-primary">Save changes</button>
-        <button type="button" id="cancel" class="btn">Cancel</button>
+        <button type="button" id="cancel" data-bind="click:cancel" class="btn">Cancel</button>
     </div>
 
 
@@ -87,7 +101,6 @@
 <r:script>
 $(window).load(function(){
 
-
     var SpeciesList = function(data) {
         this.listId = data.dataResourceUid;
         this.listName = data.listName;
@@ -101,8 +114,10 @@ $(window).load(function(){
         self.speciesLists = ko.observableArray(data.speciesLists !== undefined ? data.speciesLists : []);
 
         self.availableLists = [];
-        self.activities = ['Revegetation', 'Ferral animal assessment'];
 
+        self.cancel = function() {
+            document.location.href = '<g:createLink controller="project" action="index" id="${project.projectId}"/>';
+        }
         self.addSpeciesList = function(event) {
             var uid = $(event.currentTarget).data('listuid');
             $.each(self.availableLists, function(index, list) {

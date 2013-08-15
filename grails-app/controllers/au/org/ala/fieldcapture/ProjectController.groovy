@@ -89,6 +89,7 @@ class ProjectController {
 
     def species(String id) {
         def project = projectService.get(id, 'brief')
-        render view:'/species/select', model: [project:project]
+        def activityTypes = metadataService.activityTypesList();
+        render view:'/species/select', model: [project:project, activityTypes:activityTypes]
     }
 }
