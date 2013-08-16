@@ -32,6 +32,8 @@ class ModelTagLib {
                 case 'grid':
                     grid out, attrs, mod
                     break
+                case 'section':
+                    section out, attrs, mod
                 case 'row':
                     def span = LAYOUT_COLUMNS
                     row out, attrs, mod, span
@@ -172,8 +174,14 @@ class ModelTagLib {
                 break
             case 'link-view':
             case 'link-edit':
-                println specialProperties(attrs, model.properties)
                 result+="<a href=\""+g.createLink(specialProperties(attrs, model.properties))+"\">${model.source}</a>"
+                break
+            case 'date-view':
+                result += "<span data-bind=\"text:${source}.formattedDate\"></span>"
+                break
+            case 'date-edit':
+                result +="<div class=\"input-append\"><input data-bind=\"datepicker:${source}.date\" type=\"text\" size=\"12\"${validate}/>"
+                result +="<span class=\"add-on open-datepicker\"><i class=\"icon-th\"></i></span></div>"
                 break
 
         }
@@ -254,6 +262,26 @@ class ModelTagLib {
         }
         //log.debug " data-validation-engine='validate[${values.join(',')}]'"
         return " data-validation-engine='validate[${values.join(',')}]'"
+    }
+
+    // form section
+    def section(out, attrs, model) {
+
+        if (model.title) {
+            out << "<h4>${model.title}</h4>"
+        }
+        out << "<div class=\"row-fluid space-after output-section\">\n"
+
+        model.items.each {
+            if (it.type == 'row') {
+                row (out, attrs, it, LAYOUT_COLUMNS)
+            }
+            else {
+                log.warn("Unsupported nested type in section: "+it)
+            }
+        }
+        out << "</div>"
+
     }
 
     // row model

@@ -63,6 +63,9 @@ class ModelJSTagLib {
             else if (mod.dataType == 'species') {
                 speciesModel(attrs, mod, out)
             }
+            else if (mod.dataType == 'date') {
+                dateViewModel(mod, out)
+            }
         }
     }
 
@@ -80,7 +83,7 @@ class ModelJSTagLib {
             else if (mod.dataType == 'matrix') {
                 //out << INDENT*4 << "self.load${mod.name.capitalize()}(data.${mod.name});\n"
             }
-            else if (mod.dataType == 'text' && !mod.computed) {
+            else if ((mod.dataType == 'text' || mod.dataType == 'date') && !mod.computed) {
                 out << INDENT*4 << "self.data['${mod.name}'](orBlank(data['${mod.name}']));\n"
             }
             else if (mod.dataType == 'number' && !mod.computed) {
@@ -152,6 +155,9 @@ class ModelJSTagLib {
                 return neat_number(percent, ${rounding});
 """
             }
+        }
+        else if (model.computed.operation == 'difference') {
+            out << INDENT*4 << "return ${dependantContext}.${model.computed.dependents[0]}() - ${dependantContext}.${model.computed.dependents[1]}();\n"
         }
         else if (model.computed.operation == "lookup") {
             computedByNumberRangeLookupFunction out, attrs, model, "self.${model.computed.dependents[0]}"
@@ -294,6 +300,7 @@ class ModelJSTagLib {
             else {
                 switch (col.dataType) {
                     case 'simpleDate':
+                    case 'date':
                         out << INDENT*3 << "this.${col.name} = ko.${observable}(orBlank(data['${col.name}'])).extend({simpleDate: false});\n"
                         break;
                     case 'text':
@@ -367,6 +374,10 @@ class ModelJSTagLib {
     def numberViewModel(model, out) {
         out << "\n" << INDENT*3 << "self.data.${model.name} = ko.observable();\n"
         modelConstraints(model, out)
+    }
+
+    def dateViewModel(model, out) {
+        out << "\n" << INDENT*3 << "self.data.${model.name} = ko.observable().extend({simpleDate: false});\n"
     }
 
     def computedObservable(model, propertyContext, dependantContext, out) {
