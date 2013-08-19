@@ -33,11 +33,20 @@ class MetadataService {
         return activityName ? getDataModel(activityName) : null
     }
 
-    def getDataModel(name) {
-        return cacheService.get(name + '-model',{
+    def getDataModel(template) {
+        return cacheService.get(template + '-model',{
             webService.getJson(grailsApplication.config.ecodata.baseUrl +
-                    "metadata/dataModel/${name}")
+                    "metadata/dataModel/${template}")
         })
+    }
+
+    def updateOutputDataModel(model, template) {
+        log.debug "updating template ${template}"
+        //log.debug "model class is ${model.getClass()}"
+        def result = webService.doPost(grailsApplication.config.ecodata.baseUrl +
+                'metadata/updateOutputDataModel/' + template, [model: model])
+        cacheService.clear(template + '-model')
+        result
     }
 
     def getActivityModelName(outputName) {

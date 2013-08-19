@@ -1,5 +1,6 @@
 <g:applyLayout name="nrm">
     <head>
+        <title><g:layoutTitle /></title>
         <style type="text/css">
 
         .icon-chevron-right {
@@ -31,7 +32,6 @@
             padding: 0 14px;
         }
 
-
         </style>
     </head>
 
@@ -55,8 +55,10 @@
                     <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'users')}" title="Users" />
                     <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'tools')}" title="Tools" />
                     <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'settings')}" title="Settings" />
-                    <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'metadata')}" title="Metadata" />
+                    <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'metadata')}" title="Raw activity model" />
                     <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'activityModel')}" title="Activity model" />
+                    <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'rawOutputModels')}" title="Raw output models" />
+                    <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'outputModels')}" title="Output models" />
                 </ul>
             </div>
 

@@ -11,11 +11,54 @@ class AdminController {
     def index() {}
     def tools() {}
     def users() {}
+
     def metadata() {
         [activitiesMetadata: metadataService.activitiesModel()]
     }
+
     def activityModel() {
         [activitiesModel: metadataService.activitiesModel()]
+    }
+
+    def updateActivitiesModel() {
+        def model = request.JSON
+        log.debug model
+        metadataService.updateActivitiesModel(model)
+        flash.message = "Activity model updated."
+        def result = model
+        render result
+    }
+
+    def outputModels() {
+        def model = [activitiesModel: metadataService.activitiesModel()]
+        if (params.open) {
+            model.open = params.open
+        }
+        model
+    }
+
+    def rawOutputModels() {
+        def model = [activitiesModel: metadataService.activitiesModel()]
+        if (params.open) {
+            model.open = params.open
+        }
+        model
+    }
+
+    def getOutputDataModel(String id) {
+        log.debug(id)
+        def model = metadataService.getDataModel(id)
+        render model as JSON
+    }
+
+    def updateOutputDataModel(String id) {
+        def model = request.JSON
+        log.debug "template = ${id} model = ${model}"
+        log.debug "model class is ${model.getClass()}"
+        metadataService.updateOutputDataModel(model, id)
+        flash.message = "Output data model updated."
+        def result = model
+        render result
     }
 
     def settings() {
@@ -104,12 +147,4 @@ class AdminController {
         render 'done'
     }
 
-    def updateActivitiesModel() {
-        def model = request.JSON
-        log.debug model
-        metadataService.updateActivitiesModel(model)
-        flash.message = "Activity model updated."
-        def result = model
-        render result
-    }
 }
