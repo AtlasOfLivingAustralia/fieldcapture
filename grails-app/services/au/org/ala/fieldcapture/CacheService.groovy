@@ -13,6 +13,7 @@ class CacheService {
 
     def grailsApplication
     static cache = [:]
+    private static final Object LOCK_1 = new Object() {};
 
     /**
      * Returns the cached results for the specified key if available and fresh
@@ -25,12 +26,22 @@ class CacheService {
     def get(String key, Closure source, int maxAgeInDays = 1) {
         def cached = cache[key]
         if (cached && cached.resp && !(new Date().after(cached.time + maxAgeInDays))) {
-            //println "using cache for " + key
+            //log.debug "using cache for " + key
             return cached.resp
         }
-        //println "retrieving " + key
-        def results = source.call()
-        cache.put key, [resp: results, time: new Date()]
+        //log.debug "retrieving " + key
+        def results
+        try {
+            results = source.call()
+            // only cache if there is no error returned
+            if (!results.error) {
+                synchronized (LOCK_1) {
+                    cache.put key, [resp: results, time: new Date()]
+                }
+            }
+        } catch (Exception e) {
+            results = [error: e.message]
+        }
         return results
     }
 
