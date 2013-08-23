@@ -268,29 +268,29 @@ function pad(number, length){
 }
 
 //wrapper for an observable that protects value until committed
+// CG - Changed the way the protected observable works from value doesn't change until commit to
+// value changes as edits are made with rollback.  This was to enable cross field dependencies in a table
+// row - using a temp variable meant observers were not notified of changes until commit.
 ko.protectedObservable = function(initialValue) {
     //private variables
-    var _temp = initialValue;
-    var _actual = ko.observable(initialValue);
+    var _current = ko.observable(initialValue);
+    var _committed = initialValue;
 
     var result = ko.dependentObservable({
-        read: _actual,
+        read: _current,
         write: function(newValue) {
-            _temp = newValue;
+           _current(newValue);
         }
     });
 
     //commit the temporary value to our observable, if it is different
     result.commit = function() {
-        if (_temp !== _actual()) {
-            _actual(_temp);
-        }
+        _committed = _current();
     };
 
     //notify subscribers to update their value with the original
     result.reset = function() {
-        _actual.valueHasMutated();
-        _temp = _actual();
+        _current(_committed);
     };
 
     return result;
