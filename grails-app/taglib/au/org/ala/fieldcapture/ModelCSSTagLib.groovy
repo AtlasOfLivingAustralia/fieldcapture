@@ -12,12 +12,21 @@ class ModelCSSTagLib {
     /*------------ STYLES for dynamic content -------------*/
     // adds a style block for the dynamic components
     def modelStyles = { attrs ->
-        attrs.model?.viewModel?.each { mod ->
+        viewModelStyles(attrs, out, attrs.model?.viewModel)
+    }
+
+    def viewModelStyles(attrs, out, items) {
+        items.each { mod ->
             switch (mod.type) {
                 case 'grid':
                 case 'table':
                 case 'photoPoints':
                     tableStyle(attrs, mod, out)
+                    break
+                case 'section':
+                case 'row':
+                    viewModelStyles(attrs, out, mod.items)
+                    break
             }
         }
     }
@@ -27,19 +36,23 @@ class ModelCSSTagLib {
         def tableClass = model.source
 
         out << '<style type="text/css">\n'
+        if (model.allowHeaderWrap) {
+            out << INDENT*2 << "table.${tableClass} th {white-space:normal;}\n"
+        }
         model.columns.eachWithIndex { col, i ->
 
             def width = col.width ? "width:${col.width};" : ""
             def textAlign = model.type == 'grid' ? '' : getTextAlign(attrs, col, model.source)
             if (width || textAlign) {
                 out << INDENT*2 << "table.${tableClass} td:nth-child(${i+1}) {${width}${textAlign}}\n"
+                //out << INDENT*2 << "table.${tableClass} th:nth-child(${i+1}) {${width}${textAlign}}\n"
             }
         }
         // add extra column for editing buttons
         if (edit) {
             if (model.editableRows) {
                 // add extra column for editing buttons
-                out << INDENT*2 << "table.${tableClass} td:last-child {width:15%;text-align:center;}\n"
+                out << INDENT*2 << "table.${tableClass} td:last-child {width:5%;min-width:70px;text-align:center;}\n"
             } else {
                 // add column for delete buttons
                 out << INDENT*2 << "table.${tableClass} td:last-child {width:4%;text-align:center;}\n"

@@ -2228,7 +2228,8 @@ span.new {
 /* Output styling
 --------------------------------------------------------*/
 .output-section { background-color: #ebe6dc;}
-.output-section > [class^=span] {padding:10px;}
+.output-section > [class^=span] {padding:7px;}
+.output-section > [class^=row] {padding:7px;}
 .output-section > table {border:10px #ebe6dc solid; background-color: #faf8f1;}
 /* Override the 220px wide select elements nested in tables */
 table select {

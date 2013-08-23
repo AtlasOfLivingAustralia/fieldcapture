@@ -1,4 +1,7 @@
 package au.org.ala.fieldcapture
+
+import grails.converters.JSON
+
 /**
  * Generates web page content for metadata-driven dynamic data entry and display.
  */
@@ -24,7 +27,12 @@ class ModelTagLib {
      * @attrs edit if true the html will support the editing of values
      */
     def modelView = { attrs ->
-        attrs.model?.viewModel?.eachWithIndex { mod, index ->
+        viewModelItems(attrs, out, attrs.model?.viewModel)
+    }
+
+    def viewModelItems(attrs, out, items) {
+
+        items?.eachWithIndex { mod, index ->
             switch (mod.type) {
                 case 'table':
                     table out, attrs, mod, index
@@ -40,6 +48,9 @@ class ModelTagLib {
                     break
                 case 'photoPoints':
                     photoPoints out, attrs, mod, index
+                    break
+                case 'template':
+                    out << g.render(template:mod.source)
                     break
             }
         }
@@ -58,6 +69,12 @@ class ModelTagLib {
     def dataTag(attrs, model, context, editable, at, databindAttrs, labelAttributes) {
         def result = ""
         if (!databindAttrs) { databindAttrs = new Databindings()}
+        if (model.visibility) {
+            databindAttrs.add "visible", evalDependency(model.visibility)
+        }
+        if (model.enabled) {
+            databindAttrs.add "enable", evalDependency(model.enabled)
+        }
         if (!at) { at = new AttributeMap()}
         if (!labelAttributes) { labelAttributes = new AttributeMap()}
         def validate = validationAttribute(model, editable)
@@ -113,11 +130,26 @@ class ModelTagLib {
                 break
             case 'selectOne-edit':
                 databindAttrs.add 'value', source
-                // Select one or many view types require that the data model has defined a set of valid options
-                // to select from.
-                databindAttrs.add 'options', 'transients.'+model.source+'Constraints'
 
-                result += "<select${at.toString()} data-bind='${databindAttrs.toString()}'${validate}></select>"
+                if (model.optionsSource) {
+                    databindAttrs.add 'options', model.optionsSource.options
+                    if (model.optionsSource.optionsText) {
+                        databindAttrs.add 'optionsText', "\""+model.optionsSource.optionsText+"\""
+                    }
+                    if (model.optionsSource.optionsValue) {
+                        databindAttrs.add 'optionsValue', "\""+model.optionsSource.optionsValue+"\""
+                    }
+                }
+                else if (!model.options) {
+                    // Select one or many view types require that the data model has defined a set of valid options
+                    // to select from.
+                    databindAttrs.add 'options', 'transients.'+model.source+'Constraints'
+                }
+                result += "<select${at.toString()} data-bind='${databindAttrs.toString()}'${validate}>"
+                model.options?.each{
+                    result += "<option>"+it+"</option>"
+                }
+                result += "</select>"
                 break
             case 'selectMany-edit':
                 labelAttributes.addClass 'checkbox-list-label '
@@ -196,6 +228,18 @@ class ModelTagLib {
         return result
     }
 
+    def evalDependency(dependency) {
+        if (dependency.source) {
+            if (dependency.values) {
+                return "jQuery.inArray(${dependency.source}(), ${dependency.values as JSON}) >= 0"
+            }
+            else if (dependency.value) {
+                return "${depedency.source}() === ${dependency.value}"
+            }
+            return "${dependency.source}()"
+        }
+    }
+
     // convenience method for the above
     def dataTag(attrs, model, context, editable, at) {
         dataTag(attrs, model, context, editable, at, null, null)
@@ -272,16 +316,9 @@ class ModelTagLib {
         }
         out << "<div class=\"row-fluid space-after output-section\">\n"
 
-        model.items.each {
-            if (it.type == 'row') {
-                row (out, attrs, it, LAYOUT_COLUMNS)
-            }
-            else {
-                log.warn("Unsupported nested type in section: "+it)
-            }
-        }
-        out << "</div>"
+        viewModelItems(attrs, out, model.items)
 
+        out << "</div>"
     }
 
     // row model
@@ -449,6 +486,7 @@ class ModelTagLib {
         tableHeader out, attrs, model
         tableBodyEdit out, attrs, model
         footer out, attrs, model
+
         out << INDENT*3 << "</table>\n"
         out << INDENT*2 << "</div>\n"
     }
@@ -569,7 +607,7 @@ class ModelTagLib {
 
         def colCount = 0
         out << INDENT*4 << "<tfoot>\n"
-        model.footer.rows.each { row ->
+        model.footer?.rows.each { row ->
             colCount = 0
             out << INDENT*4 << "<tr>\n"
             row.columns.eachWithIndex { col, i ->
