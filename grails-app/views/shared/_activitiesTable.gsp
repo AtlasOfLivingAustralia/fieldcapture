@@ -19,7 +19,7 @@
             <th class="sort" data-bind="sortIcon:activitiesSort,click:sortBy" data-column="startDate">From</th>
             <th class="sort" data-bind="sortIcon:activitiesSort,click:sortBy" data-column="endDate">To</th>
             <g:if test="${showSites}">
-                <th class="sort" data-bind="sortIcon:activitiesSort,click:sortBy" data-column="siteId">Site</th>
+                <th class="sort" data-bind="sortIcon:activitiesSort,click:sortBy" data-column="siteName">Site</th>
             </g:if>
             <th></th>
         </tr>
@@ -184,10 +184,6 @@
                 self.activities.sort(function (left, right) {
                     var l = ko.utils.unwrapObservable(left[field]),
                         r = ko.utils.unwrapObservable(right[field]);
-                    if (field === 'siteId') {
-                        l = self.getSiteName(l);
-                        r = self.getSiteName(r);
-                    }
                     return l == r ? 0 : (l < r ? -1 : 1);
                 });
                 if (order === 'desc') {
