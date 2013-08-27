@@ -22,7 +22,7 @@
         sldPolgonDefaultUrl: "${grailsApplication.config.sld.polgon.default.url}",
         sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}"
         },
-        returnTo = window.location.href;
+        here = window.location.href;
 
     </r:script>
     <r:require modules="gmap3,mapWithFeatures,knockout,datepicker,amplify"/>
@@ -86,7 +86,7 @@
 
         <div class="tab-pane" id="activity">
             <!-- ACTIVITIES -->
-            <g:render template="/shared/activitiesTable"
+            <g:render template="/shared/activitiesList"
                       model="[activities:activities ?: [], sites:project.sites ?: [], showSites:true]"/>
         </div>
 

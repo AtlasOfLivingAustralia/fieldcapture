@@ -1,44 +1,44 @@
 <%@ page import="grails.converters.JSON; org.codehaus.groovy.grails.web.json.JSONArray" contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/html">
+<html>
 <head>
     <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
-    <title>Edit | ${activity.type} | Field Capture</title>
+    <title>Create | Activity | Field Capture</title>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jstimezonedetect/1.0.4/jstz.min.js"></script>
-    <r:script disposition="head">
-    var fcConfig = {
-        serverUrl: "${grailsApplication.config.grails.serverURL}",
-        activityUpdateUrl: "${createLink(controller: 'activity', action: 'ajaxUpdate')}",
-        activityDeleteUrl: "${createLink(controller: 'activity', action: 'ajaxDelete')}",
-        projectViewUrl: "${createLink(controller: 'project', action: 'index')}/",
-        siteViewUrl: "${createLink(controller: 'site', action: 'index')}/"
-        },
-        here = document.location.href;
-    </r:script>
     <r:require modules="knockout,jqueryValidationEngine,datepicker"/>
 </head>
 <body>
 <div class="container-fluid validationEngineContainer" id="validation-container">
-  <div id="koActivityMainBlock">
-      <ul class="breadcrumb">
+    <div id="koActivityMainBlock">
+        <ul class="breadcrumb">
             <li><g:link controller="home">Home</g:link> <span class="divider">/</span></li>
             <li>Activities<span class="divider">/</span></li>
-            <li class="active">
-                <span data-bind="text:type"></span>
-                <span data-bind="text:startDate.formattedDate"></span>/<span data-bind="text:endDate.formattedDate"></span>
-            </li>
+                <li class="active">Create new activity</li>
         </ul>
 
-        <div class="row-fluid title-block well well-small input-block-level">
-            <div class="span12 title-attribute">
-                <h1 data-bind="click:goToProject" class="clickable">${project.name}</h1>
-                <g:if test="${site}">
-                    <h2 data-bind="click:goToSite" class="clickable">Site: ${site.name}</h2>
+        <div class="row-fluid title-block well input-block-level">
+            <div class="space-after"><span>An activity is usually associated with a site and a project. Less commonly, the activity may just be
+            linked to a project (usually planning activities).</span></div>
+            <div class="span6 title-attribute">
+                <span class="pull-right" style="padding:10px 20px 0 0;">${create ? 'OR' : ''}</span>
+                <div class="">
+                    <h2>Site:</h2>
+                    <g:if test="${site}">
+                        <h2>${site.name}</h2>
+                    </g:if>
+                    <g:else>
+                        <select data-bind="options:transients.sites,optionsText:'name',optionsValue:'siteId',value:siteId,optionsCaption:'Choose a site...'"></select>
+                    </g:else>
+                </div>
+            </div>
+            <div class="span5 title-attribute">
+                <h2>Project: </h2>
+                <g:if test="${project}">
+                    <h2>${project.name}</h2>
                 </g:if>
                 <g:else>
-                    <select data-bind="options:transients.sites,optionsText:'name',optionsValue:'siteId',value:siteId,optionsCaption:'Choose a site...'"></select>
+                    <select data-bind="options:transients.projects,optionsText:'name',optionsValue:'projectId',value:projectId,optionsCaption:'Choose a project...',disabled:true"></select>
                 </g:else>
-                <h3>Activity: <span data-bind="text:type"></span></h3>
             </div>
         </div>
 
@@ -50,6 +50,23 @@
                 <div class="span6">
                     <fc:textArea data-bind="value: notes" id="notes" label="Notes" class="span12" rows="3" cols="50"/>
                 </div>
+            </div>
+
+            <div class="row-fluid control-group">
+                <label for="type">Type of activity</label>
+                <select data-bind="value: type" id="type" data-validation-engine="validate[required]" class="input-xlarge">
+                    <g:each in="${activityTypes}" var="t" status="i">
+                        <g:if test="${i == 0 && create}">
+                            <option></option>
+                        </g:if>
+                        <optgroup label="${t.name}">
+                            <g:each in="${t.list}" var="opt">
+                                <option>${opt.name}</option>
+                            </g:each>
+                        </optgroup>
+                    </g:each>
+                </select>
+                %{--<select data-bind="value: type, options: availableTypes, optionsText: 'name'" id="type"></select>--}%
             </div>
 
             <div class="row-fluid">
@@ -79,41 +96,34 @@
                 </div>
             </div>
 
-            <div class="well well-small">
-                <ul class="unstyled" data-bind="foreach:metaModel.outputs">
-                    <li class="row-fluid">
-                        <span class="span4" data-bind="text:$data"></span>
-                        <span class="span4"><a data-bind="editOutput:$data">Add data</a></span>
-                    </li>
-                </ul>
-            </div>
-
             <div class="form-actions">
                 <button type="button" data-bind="click: save" class="btn btn-primary">Save changes</button>
                 <button type="button" id="cancel" class="btn">Cancel</button>
             </div>
         </bs:form>
-
-      <div class="expandable-debug">
-          <hr />
-          <h3>Debug</h3>
-          <div>
-              <h4>KO model</h4>
-              <pre data-bind="text:ko.toJSON($root,null,2)"></pre>
-              <h4>Activity</h4>
-              <pre>${activity}</pre>
-              <h4>Site</h4>
-              <pre>${site}</pre>
-              <h4>Sites</h4>
-              <pre>${(sites as JSON).toString()}</pre>
-              <h4>Project</h4>
-              <pre>${project}</pre>
-              <h4>Activity model</h4>
-              <pre>${metaModel}</pre>
-          </div>
-      </div>
     </div>
 
+    <div class="expandable-debug">
+        <hr />
+        <h3>Debug</h3>
+        <div>
+            <h4>KO model</h4>
+            <pre data-bind="text:ko.toJSON($root,null,2)"></pre>
+            <h4>Activity</h4>
+            <pre>${activity}</pre>
+            <h4>Activity types</h4>
+            <pre>${activityTypes}</pre>
+            <h4>Site</h4>
+            <pre>${site}</pre>
+            <h4>Sites</h4>
+            <pre>${(sites as JSON).toString()}</pre>
+            <h4>Project</h4>
+            <pre>${project}</pre>
+            <h4>Projects</h4>
+            <pre>${(projects as JSON).toString()}</pre>
+            %{--<pre>Map features : ${mapFeatures}</pre>--}%
+        </div>
+    </div>
 </div>
 
 <!-- templates -->
@@ -132,67 +142,35 @@
             document.location.href = returnTo;
         });
 
-        ko.bindingHandlers.editOutput = {
-            init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
-                var outputName = ko.utils.unwrapObservable(valueAccessor()),
-                    activity = bindingContext.$root,
-                    outputId;
-
-                // search for corresponding outputs in the activity data
-                $.each(activity.outputs, function (i,output) { // iterate output data in the activity to
-                                                                  // find any matching the meta-model name
-                    if (output.name === outputName) {
-                        outputId = output.outputId;
-                        %{--$.each(output.scores, function (k, v) {
-                            scores.push({key: k, value: v});
-                        });--}%
-                    }
-                });
-                if (outputId) {
-                    // build edit link
-                    $(element).html('Edit data');
-                    $(element).attr('href', fcConfig.serverUrl + "/output/edit/" + outputId +
-                        "?returnTo=" + here);
-                } else {
-                    // build create link
-                    $(element).attr('href', fcConfig.serverUrl + '/output/create?activityId=' + activity.activityId +
-                        '&outputName=' + encodeURIComponent(outputName) +
-                        "&returnTo=" + here);
-                }
+        function getProjectsForSite(siteId) {
+            if (siteId) {
+                return $.getJSON("${createLink(controller:'site', action:'projectsForSite')}/" + siteId);
+            } else {
+                return [];
             }
-        };
+        }
 
-        function ViewModel (act, site, project, metaModel) {
+        function ViewModel (act, sites, projects, site, project) {
             var self = this;
-            self.activityId = act.activityId;
             self.description = ko.observable(act.description);
             self.notes = ko.observable(act.notes);
             self.startDate = ko.observable(act.startDate).extend({simpleDate: false});
             self.endDate = ko.observable(act.endDate).extend({simpleDate: false});
             self.censusMethod = ko.observable(act.censusMethod);
             self.methodAccuracy = ko.observable(act.methodAccuracy);
-            self.collector = ko.observable(act.collector);
+            self.collector = ko.observable(act.collector)/*.extend({ required: true })*/;
             self.fieldNotes = ko.observable(act.fieldNotes);
             self.type = ko.observable(act.type);
             self.siteId = ko.observable(act.siteId);
-            self.projectId = act.projectId;
-            self.metaModel = metaModel || {};
-            self.outputs = act.outputs;
+            self.projectId = ko.observable(act.projectId);
             self.transients = {};
             self.transients.site = site;
             self.transients.project = project;
             self.transients.sites = project ? project.sites : sites;
             self.transients.projects = site ? site.projects : projects;
-            self.goToProject = function () {
-                if (self.projectId) {
-                    document.location.href = fcConfig.projectViewUrl + self.projectId;
-                }
-            };
-            self.goToSite = function () {
-                if (self.siteId()) {
-                    document.location.href = fcConfig.siteViewUrl + self.siteId();
-                }
-            };
+            /*self.transients.site.projects = ko.computed(function () {
+                return getProjectsForSite(self.siteId());
+            }).extend({async: []});*/
             self.save = function () {
                 if ($('#validation-container').validationEngine('validate')) {
                     var jsData = ko.toJS(self);
@@ -232,9 +210,10 @@
 
         var viewModel = new ViewModel(
             ${(activity as JSON).toString()},
+            ${((sites ?: []) as JSON).toString()},
+            ${((projects ?: []) as JSON).toString()},
             ${site ?: 'null'},
-            ${project ?: 'null'},
-            ${metaModel});
+            ${project ?: 'null'});
         ko.applyBindings(viewModel,document.getElementById('koActivityMainBlock'));
 
     });

@@ -29,13 +29,13 @@
 
     <div class="row-fluid title-block">
         <div class="span6 title-attribute">
-            <h2>Project: </h2>
+            <h2 class="inline">Project: </h2>
             <g:each in="${projects}" var="p">
                 <g:link controller="project" action="index" id="${p.projectId}">${p.name}</g:link>
             </g:each>
         </div>
         <div class="span6 title-attribute">
-            <h2>Site: </h2><g:link controller="site" action="index" id="${site.siteId}">${site.name}</g:link>
+            <h2 class="inline">Site: </h2><g:link controller="site" action="index" id="${site.siteId}">${site.name}</g:link>
         </div>
     </div>
 

@@ -18,7 +18,7 @@
             sldPolgonDefaultUrl: "${grailsApplication.config.sld.polgon.default.url}",
             sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}"
             },
-            returnTo = "${createLink(controller:'site', action:'index', id:site.siteId)}";
+            here = "${createLink(controller:'site', action:'index', id:site.siteId)}";
     </r:script>
   <r:require modules="knockout,mapWithFeatures,amplify"/>
 </head>
@@ -128,7 +128,7 @@
         <div class="row-fluid">
             <!-- ACTIVITIES -->
             <div class="tab-pane active" id="activity">
-                <g:render template="/shared/activitiesTable"
+                <g:render template="/shared/activitiesList"
                           model="[activities:site.activities ?: [], sites:[], showSites:false]"/>
             </div>
         </div>
@@ -216,7 +216,7 @@
                             metaModel: act.model || {},
                             edit: function () {
                                 document.location.href = fcConfig.activityEditUrl + '/' + this.activityId +
-                                    "?returnTo=" + returnTo;
+                                    "?returnTo=" + here;
                             }
                         };
                         $.each(act.outputs, function (j, out) {
@@ -244,7 +244,7 @@
                 self.hideElement = function(elem) { if (elem.nodeType === 1) $(elem).slideUp(function() { $(elem).remove(); }) };
                 self.newActivity = function () {
                     document.location.href = fcConfig.activityCreateUrl +
-                    "?siteId=${site.siteId}&returnTo=" + returnTo;
+                    "?siteId=${site.siteId}&returnTo=" + here;
                 };
                 self.notImplemented = function () {
                     alert("Not implemented yet.")

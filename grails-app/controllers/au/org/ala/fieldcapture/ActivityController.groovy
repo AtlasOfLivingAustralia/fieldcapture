@@ -45,9 +45,9 @@ class ActivityController {
         def activity = activityService.get(id)
         if (activity) {
             def model = [activity: activity, returnTo: params.returnTo]
-            model.activityTypes = metadataService.activityTypesList()
+            model.metaModel = metadataService.getActivityModel(activity.type)
             model.site = model.activity.siteId ? siteService.get(model.activity.siteId) : null
-            model.project = model.activity.projectId ? [projectService.get(model.activity.projectId)] : null
+            model.project = model.activity.projectId ? projectService.get(model.activity.projectId) : null
             model
         } else {
             forward(action: 'list', model: [error: 'no such id'])
@@ -78,8 +78,7 @@ class ActivityController {
             model.sites = siteService.list().collect({[name:it.name,siteId:it.siteId]})
             model.projects = projectService.list().collect({[name:it.name,projectId:it.projectId]})
         }
-
-        render view: 'edit', model: model
+        model
     }
 
     /**
