@@ -92,18 +92,20 @@ class ActivityController {
     def ajaxUpdate(String id) {
         def postBody = request.JSON
         if (!id) { id = ''}
-        println "Body: " + postBody
-        println "Params:"
-        params.each { println it }
+        log.debug "Body: " + postBody
+        log.debug "Params:"
+        params.each { log.debug it }
+
+        // remove outputs for now - once output exiting with the activity page is working we
+        //  will need to save these separately
+        postBody.remove('outputs')
+
         def siteId = params.siteId
         def values = [:]
-        // filter params to remove:
-        //  1. keys in the ignore list; &
-        //  2. keys with dot notation - the controller will automatically marshall these into maps &
-        //  3. keys in nested maps with dot notation
+        // filter params to remove keys in the ignore list
         postBody.each { k, v ->
             if (!(k in ignore)) {
-                values[k] = v //reMarshallRepeatingObjects(v);
+                values[k] = v
             }
         }
         log.debug (values as JSON).toString()

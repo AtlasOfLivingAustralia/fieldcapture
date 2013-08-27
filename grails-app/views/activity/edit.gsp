@@ -42,57 +42,50 @@
             </div>
         </div>
 
-        <bs:form action="update" inline="true">
-            <div class="row-fluid">
-                <div class="span6">
-                    <fc:textArea data-bind="value: description" id="description" label="Description" class="span12" rows="3" cols="50"/>
-                </div>
-                <div class="span6">
-                    <fc:textArea data-bind="value: notes" id="notes" label="Notes" class="span12" rows="3" cols="50"/>
-                </div>
+        <div class="row-fluid">
+            <div class="span6">
+                <fc:textArea data-bind="value: description" id="description" label="Description" class="span12" rows="3" cols="50"/>
             </div>
+            <div class="span6">
+                <fc:textArea data-bind="value: notes" id="notes" label="Notes" class="span12" rows="3" cols="50"/>
+            </div>
+        </div>
 
-            <div class="row-fluid">
-                <div class="span4 control-group">
-                    <label for="startDate">Start date
-                    <fc:iconHelp title="Start date">Date the activity was started.</fc:iconHelp>
-                    </label>
-                    <div class="input-append">
-                        <input data-bind="datepicker:startDate.date" name="startDate" id="startDate" type="text" size="16"
-                           data-validation-engine="validate[required]" class="input-xlarge"/>
-                        <span class="add-on open-datepicker"><i class="icon-th"></i></span>
-                    </div>
-                </div>
-                <div class="span4">
-                    <label for="endDate">End date
-                    <fc:iconHelp title="End date">Date the activity finished.</fc:iconHelp>
-                    </label>
-                    <div class="input-append">
-                        <input data-bind="datepicker:endDate.date" id="endDate" type="text" size="16"
-                           data-validation-engine="validate[future[startDate]]" class="input-xlarge"/>
-                        <span class="add-on open-datepicker"><i class="icon-th"></i></span>
-                    </div>
-                </div>
-                <div class="span4">
-                    <label for="censusMethod">Method</label>
-                    <input data-bind="value: censusMethod" id="censusMethod" type="text" class="span12"/>
+        <div class="row-fluid">
+            <div class="span4 control-group">
+                <label for="startDate">Start date
+                <fc:iconHelp title="Start date">Date the activity was started.</fc:iconHelp>
+                </label>
+                <div class="input-append">
+                    <input data-bind="datepicker:startDate.date" name="startDate" id="startDate" type="text" size="16"
+                       data-validation-engine="validate[required]" class="input-xlarge"/>
+                    <span class="add-on open-datepicker"><i class="icon-th"></i></span>
                 </div>
             </div>
+            <div class="span4">
+                <label for="endDate">End date
+                <fc:iconHelp title="End date">Date the activity finished.</fc:iconHelp>
+                </label>
+                <div class="input-append">
+                    <input data-bind="datepicker:endDate.date" id="endDate" type="text" size="16"
+                       data-validation-engine="validate[future[startDate]]" class="input-xlarge"/>
+                    <span class="add-on open-datepicker"><i class="icon-th"></i></span>
+                </div>
+            </div>
+            <div class="span4">
+                <label for="censusMethod">Method</label>
+                <input data-bind="value: censusMethod" id="censusMethod" type="text" class="span12"/>
+            </div>
+        </div>
 
-            <div class="well well-small">
-                <ul class="unstyled" data-bind="foreach:metaModel.outputs">
-                    <li class="row-fluid">
-                        <span class="span4" data-bind="text:$data"></span>
-                        <span class="span4"><a data-bind="editOutput:$data">Add data</a></span>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="form-actions">
-                <button type="button" data-bind="click: save" class="btn btn-primary">Save changes</button>
-                <button type="button" id="cancel" class="btn">Cancel</button>
-            </div>
-        </bs:form>
+        <div class="well well-small">
+            <ul class="unstyled" data-bind="foreach:transients.metaModel.outputs">
+                <li class="row-fluid">
+                    <span class="span4" data-bind="text:$data"></span>
+                    <span class="span4"><a data-bind="editOutput:$data">Add data</a></span>
+                </li>
+            </ul>
+        </div>
 
       <div class="expandable-debug">
           <hr />
@@ -114,6 +107,17 @@
       </div>
     </div>
 
+    <g:each in="${metaModel.outputs}" var="outputName">
+        <div class="output-block">
+            <div>${outputName}</div>
+        </div>
+    </g:each>
+
+    <div class="form-actions">
+        <button type="button" id="save" class="btn btn-primary">Save changes</button>
+        <button type="button" id="cancel" class="btn">Cancel</button>
+    </div>
+
 </div>
 
 <!-- templates -->
@@ -127,6 +131,10 @@
         $('#validation-container').validationEngine('attach', {scroll: false});
 
         $('.helphover').popover({animation: true, trigger:'hover'});
+
+        $('#save').click(function () {
+            viewModel.save();
+        });
 
         $('#cancel').click(function () {
             document.location.href = returnTo;
@@ -176,13 +184,11 @@
             self.type = ko.observable(act.type);
             self.siteId = ko.observable(act.siteId);
             self.projectId = act.projectId;
-            self.metaModel = metaModel || {};
             self.outputs = act.outputs;
             self.transients = {};
             self.transients.site = site;
             self.transients.project = project;
-            self.transients.sites = project ? project.sites : sites;
-            self.transients.projects = site ? site.projects : projects;
+            self.transients.metaModel = metaModel || {};
             self.goToProject = function () {
                 if (self.projectId) {
                     document.location.href = fcConfig.projectViewUrl + self.projectId;
