@@ -35,7 +35,7 @@ class ModelTagLib {
         items?.eachWithIndex { mod, index ->
             switch (mod.type) {
                 case 'table':
-                    table out, attrs, mod, index
+                    table out, attrs, mod
                     break
                 case 'grid':
                     grid out, attrs, mod
@@ -108,7 +108,7 @@ class ModelTagLib {
                 break
             case 'boolean-edit':
                 databindAttrs.add 'checked', source
-                result += "<input${at.toString()} data-bind='${databindAttrs.toString()}'${validate} type='checkbox' class='checkbox'/>"
+                result += "<input${at.toString()} name='${source}' data-bind='${databindAttrs.toString()}'${validate} type='checkbox' class='checkbox'/>"
                 break
             case 'textarea-view':
                 databindAttrs.add 'text', source
@@ -351,6 +351,9 @@ class ModelTagLib {
                 out << "<div class=\"span${span}\">\n"
                 items(out, attrs, it, span, 'col')
                 out << "</div>"
+            }
+            else if (it.type == 'table') {
+                table out, attrs, it
             } else {
                 // Wrap data elements in rows to reset the bootstrap indentation on subsequent spans to save the
                 // model definition from needing to do so.
@@ -479,7 +482,7 @@ class ModelTagLib {
         out << INDENT*4 << "</tr></tbody>\n"
     }
 
-    def table(out, attrs, model, index) {
+    def table(out, attrs, model) {
         def extraClassAttrs = model.class ?: ""
         out << "<div class=\"row-fluid ${extraClassAttrs}\">\n"
         out << INDENT*3 << "<table class=\"table table-bordered ${model.source}\">\n"

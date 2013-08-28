@@ -5,7 +5,7 @@ class ModelJSTagLib {
     static namespace = "md"
 
     private final static INDENT = "    "
-    private final static operators = ['sum':'+', 'times':'*', 'divide':'/']
+    private final static operators = ['sum':'+', 'times':'*', 'divide':'/','difference':'-']
     private final static String QUOTE = "\"";
     private final static String SPACE = " ";
     private final static String EQUALS = "=";
@@ -164,11 +164,26 @@ class ModelJSTagLib {
         }
         else if (model.computed.dependents.fromList) {
             out << INDENT*4 << "var total = 0;\n"
+            if (model.computed.operation == 'average') {
+                out << INDENT*4 << "var count = 0;\n"
+
+            }
             out << INDENT*4 << "for(var i = 0; i < ${dependantContext}.${model.computed.dependents.fromList}().length; i++) {\n"
             out << INDENT*5 << "var value = ${dependantContext}.${model.computed.dependents.fromList}()[i].${model.computed.dependents.source}();\n"
-            out << INDENT*6 << "total = total ${operators[model.computed.operation]} Number(value); \n"
-            out << INDENT*4 << "}\n"
-            out << INDENT*4 << "return total;\n"
+            if (model.computed.operation != 'average') {
+                out << INDENT*6 << "total = total ${operators[model.computed.operation]} Number(value); \n"
+                out << INDENT*4 << "}\n"
+                out << INDENT*4 << "return total;\n"
+            }
+            else {
+                out << INDENT*6 << "if (!isNaN(parseFloat(value))) {\n"
+                out << INDENT*8 << "total = total + Number(value);\n"
+                out << INDENT*8 << "count++;\n"
+                out << INDENT*6 << "}\n"
+                out << INDENT*4 << "}\n"
+                out << INDENT*4 << "return count > 0 ? total/count : 0;\n"
+            }
+
         }
         else if (model.computed.dependents.fromMatrix) {
             out << INDENT*4 << "var total = 0;\n"

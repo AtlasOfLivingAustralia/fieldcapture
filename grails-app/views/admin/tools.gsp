@@ -55,7 +55,7 @@
                 <tr>
                     <td>
                         <button id="btnClearMetadataCache" class="btn btn-small btn-info">Clear&nbsp;Metadata&nbsp;Cache</button>
-                        <label class="checkbox" style="padding-top:5px;"><input type="checkbox" id="clearEcodataCache">Also clear ecodata cache</label>
+                        <label class="checkbox" style="padding-top:5px;"><input type="checkbox" id="clearEcodataCache" checked="checked">Also clear ecodata cache</label>
                     </td>
                     <td>
                         Removes all cached values for metadata requests and causes the metadata to be requested
