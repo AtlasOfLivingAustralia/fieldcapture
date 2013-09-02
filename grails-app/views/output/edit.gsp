@@ -114,6 +114,7 @@
 
         function ViewModel () {
             var self = this;
+
             self.name = "${output.name}";
             self.assessmentDate = ko.observable("${output.assessmentDate}").extend({simpleDate: false});
             self.collector = ko.observable("${output.collector}")/*.extend({ required: true })*/;
@@ -125,6 +126,7 @@
             };
             self.data = {};
             self.transients = {};
+            self.transients.site = site;
             self.transients.dummy = ko.observable();
             self.transients.activityStartDate = ko.observable("${activity.startDate}").extend({simpleDate: false});
             self.transients.activityEndDate = ko.observable("${activity.endDate}").extend({simpleDate: false});

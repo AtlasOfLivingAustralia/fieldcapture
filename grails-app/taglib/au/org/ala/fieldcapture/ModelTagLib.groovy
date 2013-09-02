@@ -642,7 +642,7 @@ class ModelTagLib {
     }
 
     def photoPoints(out, attrs, model, index) {
-        table out, attrs, model, index
+        table out, attrs, model
     }
 
     def addTemplate(name) {
