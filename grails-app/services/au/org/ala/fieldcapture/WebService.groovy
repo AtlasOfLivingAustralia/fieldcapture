@@ -1,17 +1,34 @@
+/*
+ * Copyright (C) 2013 Atlas of Living Australia
+ * All Rights Reserved.
+ *
+ * The contents of this file are subject to the Mozilla Public
+ * License Version 1.1 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of
+ * the License at http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS
+ * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * rights and limitations under the License.
+ */
+
 package au.org.ala.fieldcapture
 
 import grails.converters.JSON
 import org.codehaus.groovy.grails.web.converters.exceptions.ConverterException
+import org.codehaus.groovy.grails.web.util.WebUtils
 
 class WebService {
 
-    def grailsApplication
+    def grailsApplication, userService
 
     def get(String url) {
         def conn = new URL(url).openConnection()
         try {
             conn.setConnectTimeout(10000)
             conn.setReadTimeout(50000)
+            conn.setRequestProperty("ALA-userId", getUserId())
             return conn.content.text
         } catch (SocketTimeoutException e) {
             def error = [error: "Timed out calling web service. URL= ${url}."]
@@ -30,6 +47,7 @@ class WebService {
         try {
             conn.setConnectTimeout(10000)
             conn.setReadTimeout(50000)
+            conn.setRequestProperty("ALA-userId", getUserId())
             def json = conn.content.text
             return JSON.parse(json)
         } catch (ConverterException e) {
@@ -58,12 +76,14 @@ class WebService {
         if(!postBody.api_key){
             postBody.api_key = grailsApplication.config.api_key
         }
-
+        //def webUtils = WebUtils.retrieveGrailsWebRequest()
+        //def userDetails = webUtils.getCurrentRequest().getAttribute("ecodata.request.user.details") // TODO get from UserDetails or config
         def resp = ""
         def conn = new URL(url).openConnection()
         try {
             conn.setDoOutput(true)
             conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestProperty("ALA-userId", getUserId())
             OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream())
             wr.write((postBody as JSON).toString())
             wr.flush()
@@ -87,6 +107,7 @@ class WebService {
         def conn = new URL(url).openConnection()
         try {
             conn.setRequestMethod("DELETE")
+            conn.setRequestProperty("ALA-userId", getUserId())
             return conn.getResponseCode()
         } catch(Exception e){
             println e.message
@@ -96,5 +117,9 @@ class WebService {
                 conn.disconnect()
             }
         }
+    }
+
+    private getUserId() {
+        userService.getUser()?.userId
     }
 }

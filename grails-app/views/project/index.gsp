@@ -42,7 +42,11 @@
         <div class="row-fluid">
             <div class="clearfix">
                 <h1 class="pull-left">${project?.name}</h1>
-                <g:link action="edit" id="${project.projectId}" class="btn pull-right title-btn">Change project details</g:link>
+                <div class="pull-right">
+                    <button class="btn" id="starBtn"><i class="icon-star-empty"></i> Star</button>
+                    <g:link action="edit" id="${project.projectId}" class="btn">Change project details</g:link>
+                </div>
+
             </div>
         </div>
     </div>
@@ -413,6 +417,16 @@
             } else {
                 $(storedTab + '-tab').tab('show');
             }
+
+            // check if project is starred
+            var isStared = false;
+            $.getJSON().error().done().
+
+            // Star button click event
+            $("#starBtn").click(function(e) {
+                e.preventDefault();
+
+            });
 
         });
 

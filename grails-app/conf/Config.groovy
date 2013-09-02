@@ -127,7 +127,7 @@ spatial.layersUrl = spatial.baseUrl + "/layers-service"
 spatial.geoserverUrl = spatial.baseUrl + "/geoserver"
 
 security.cas.casServerName = 'https://auth.ala.org.au'
-security.cas.uriFilterPattern = "/user/.*" // pattern for pages that require authentication
+security.cas.uriFilterPattern = "/user/.*,/project/.*" // pattern for pages that require authentication
 security.cas.uriExclusionFilterPattern = '/images.*,/css.*,/js.*,/less.*'
 security.cas.authenticateOnlyIfLoggedInPattern = "" // pattern for pages that can optionally display info about the logged-in user
 security.cas.loginUrl = 'https://auth.ala.org.au/cas/login'

@@ -39,5 +39,6 @@ class HomeController {
     }
 
     def myProfile() {
+        redirect(controller: 'user')
     }
 }

@@ -39,6 +39,44 @@
                     </g:each>
                 </dl>
             </div>
+            <g:if test="${recentProjects}">
+                <h4>Recently editted projects</h4>
+                <table class="table table-striped table-bordered table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Project</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <g:each var="p" in="${recentProjects}">
+                            <tr>
+                                <td><g:link controller="project" id="${p.entity.projectId}">${p.entity?.name}</g:link></td>
+                                <td><fc:formatDateString date="${p.date}" inputFormat="yyyy-MM-dd'T'HH:mm:ss'Z'"/></td>
+                            </tr>
+                        </g:each>
+                    </tbody>
+                </table>
+            </g:if>
+            <g:if test="${memberProjects}">
+                <h4>Membership projects</h4>
+                <table class="table table-striped table-bordered table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Project</th>
+                            <th>Member level</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <g:each var="p" in="${memberProjects}">
+                            <tr>
+                                <td><g:link controller="project" id="${p.project?.projectId}">${p.project?.name}</g:link></td>
+                                <td>${p.accessLevel?.name}</td>
+                            </tr>
+                        </g:each>
+                    </tbody>
+                </table>
+            </g:if>
         </div>
     </g:else>
 
