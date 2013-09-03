@@ -26,10 +26,7 @@ class ModelJSTagLib {
         out << g.render(template:'/output/speciesViewModel')
         out << INDENT*2 << "var speciesLists = ${attrs.speciesLists.toString()};\n"
 
-        def site = "{}"
-        if (attrs.site.size() > 0) {
-            site = attrs.site.toString()
-        }
+        def site = attrs.site ? attrs.site.toString() : "{}"
         out << INDENT*2 << "var site = ${site};\n"
     }
 
