@@ -109,7 +109,7 @@ class ModelJSTagLib {
         def objectName = name.capitalize() + "Row"
         model.columns.each { col ->
             if (!col.noTotal) {
-                out << INDENT*4 << "self.data.${name}().${col.name} = new ${objectName}('${col.name}');\n"
+                out << INDENT*4 << "self.data.${name}().${col.name} = new ${objectName}('${col.name}', self);\n"
             }
         }
     }
@@ -382,11 +382,11 @@ class ModelJSTagLib {
     def totalsModel(attrs, model, out) {
         if (!model.columnTotals) { return }
         out << """
-        var ${model.columnTotals.name.capitalize()}Row = function (name) {
+        var ${model.columnTotals.name.capitalize()}Row = function (name, context) {
             var self = this;
 """
         model.columnTotals.rows.each { row ->
-            computedViewModel(out, attrs, row, 'this', "${attrs.viewModelInstance ?: 'viewModel'}.data", model.columnTotals)
+            computedViewModel(out, attrs, row, 'this', "context.data", model.columnTotals)
         }
         out << """
         };
