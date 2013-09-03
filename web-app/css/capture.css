@@ -534,3 +534,11 @@ ul.facetValues {
     /* filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=2.0); */
     -ms-transform:rotate(180deg);
 }
+
+div.output-block {
+    border: #999 solid thin;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    margin: 10px 0;
+    padding: 0 5px;
+}

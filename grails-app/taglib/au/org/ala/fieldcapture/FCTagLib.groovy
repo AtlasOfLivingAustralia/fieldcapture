@@ -262,4 +262,8 @@ class FCTagLib {
         }
     }
 
+    def toSingleWord = { attrs, body ->
+        def name = attrs.name ?: body()
+        out << name.replaceAll(' ','_')
+    }
 }

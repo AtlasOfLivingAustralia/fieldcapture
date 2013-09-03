@@ -23,7 +23,7 @@ class ModelJSTagLib {
             }
         }
         // TODO only necessary if the model has a field of type species.
-        out << g.render(template:'speciesViewModel')
+        out << g.render(template:'/output/speciesViewModel')
 
         def site = "{}"
         if (attrs.site.size() > 0) {
@@ -126,12 +126,11 @@ class ModelJSTagLib {
         computedViewModel(out, attrs, model, propertyContext, dependantContext, null)
     }
     def computedViewModel(out, attrs, model, propertyContext, dependantContext, parentModel) {
-        //log.debug "computedViewModel = ${model}"
         out << "\n" << INDENT*3 << "${propertyContext}.${model.name} = ko.computed(function () {\n"
         if (model.computed.dependents == "all") {
             out <<
                     """                var total = 0, value;
-                \$.each(viewModel.data.${parentModel.source}(), function(i, obj) {
+                \$.each(${dependantContext}.${parentModel.source}(), function(i, obj) {
                     value = obj[name]();
                     if (isNaN(value)) {
                         total = total + (value ? 1 : 0)
@@ -387,7 +386,7 @@ class ModelJSTagLib {
             var self = this;
 """
         model.columnTotals.rows.each { row ->
-            computedViewModel(out, attrs, row, 'this', 'viewModel.data', model.columnTotals)
+            computedViewModel(out, attrs, row, 'this', "${attrs.viewModelInstance ?: 'viewModel'}.data", model.columnTotals)
         }
         out << """
         };
@@ -534,7 +533,7 @@ class ModelJSTagLib {
     def photoPointModel(attrs, model, out) {
         listViewModel(attrs, model, out)
 
-        out << g.render(template:"photoPointTemplate", model:[model:model]);
+        out << g.render(template:"/output/photoPointTemplate", model:[model:model]);
     }
 
     def speciesModel(attrs, model, out) {

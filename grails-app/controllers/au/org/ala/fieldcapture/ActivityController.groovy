@@ -1,6 +1,7 @@
 package au.org.ala.fieldcapture
 
 import grails.converters.JSON
+import org.codehaus.groovy.grails.web.json.JSONArray
 
 class ActivityController {
 
@@ -44,9 +45,23 @@ class ActivityController {
     def edit(String id) {
         def activity = activityService.get(id)
         if (activity) {
+            // pass the activity
             def model = [activity: activity, returnTo: params.returnTo]
+            // the activity meta-model
             model.metaModel = metadataService.getActivityModel(activity.type)
+            // the array of output models
+            model.outputModels = model.metaModel?.outputs?.collectEntries {
+                [ it, metadataService.getDataModelFromOutputName(it)] }
+            // Add the species lists that are relevant to this activity.
+            model.speciesLists = new JSONArray()
+            model.project?.speciesLists?.each { list ->
+                if (list.purpose == activity.type) {
+                    model.speciesLists.add(list)
+                }
+            }
+            // the site
             model.site = model.activity.siteId ? siteService.get(model.activity.siteId) : null
+            // the project
             model.project = model.activity.projectId ? projectService.get(model.activity.projectId) : null
             model
         } else {

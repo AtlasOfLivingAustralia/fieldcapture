@@ -15,7 +15,7 @@
         },
         here = document.location.href;
     </r:script>
-    <r:require modules="knockout,jqueryValidationEngine,datepicker"/>
+    <r:require modules="knockout,jqueryValidationEngine,datepicker,jQueryImageUpload"/>
 </head>
 <body>
 <div class="container-fluid validationEngineContainer" id="validation-container">
@@ -31,9 +31,9 @@
 
         <div class="row-fluid title-block well well-small input-block-level">
             <div class="span12 title-attribute">
-                <h1 data-bind="click:goToProject" class="clickable">${project.name}</h1>
+                <h1><span data-bind="click:goToProject" class="clickable">${project?.name ?: 'no project defined!!'}</span></h1>
                 <g:if test="${site}">
-                    <h2 data-bind="click:goToSite" class="clickable">Site: ${site.name}</h2>
+                    <h2><span data-bind="click:goToSite" class="clickable">Site: ${site.name}</span></h2>
                 </g:if>
                 <g:else>
                     <select data-bind="options:transients.sites,optionsText:'name',optionsValue:'siteId',value:siteId,optionsCaption:'Choose a site...'"></select>
@@ -79,12 +79,29 @@
         </div>
 
         <div class="well well-small">
-            <ul class="unstyled" data-bind="foreach:transients.metaModel.outputs">
+            <h4>Old-style edit pages (while we transition to one-page editing)</h4>
+            <ul class="unstyled">
+                <g:each in="${metaModel?.outputs}" var="output">
+                    <g:set var="data" value="${activity.outputs.find({it.name == output})}"/>
+                    <li class="row-fluid">
+                        <span class="span4">${output}</span>
+                        <g:if test="${data}">
+                            <span class="span4"><a type="button" class="btn"
+                             href="${createLink(controller: 'output', action:'edit', id: data.outputId)}">Edit data</a></span>
+                        </g:if>
+                        <g:else>
+                            <span class="span4"><a type="button" class="btn"
+                             href="${createLink(controller: 'output', action:'create')}?activityId=${activity.activityId}&outputName=${output}">Add data</a></span>
+                        </g:else>
+                    </li>
+                </g:each>
+            </ul>
+            %{--<ul class="unstyled" data-bind="foreach:transients.metaModel.outputs">
                 <li class="row-fluid">
                     <span class="span4" data-bind="text:$data"></span>
                     <span class="span4"><a data-bind="editOutput:$data">Add data</a></span>
                 </li>
-            </ul>
+            </ul>--}%
         </div>
 
       <div class="expandable-debug">
@@ -103,13 +120,109 @@
               <pre>${project}</pre>
               <h4>Activity model</h4>
               <pre>${metaModel}</pre>
+              <h4>Output models</h4>
+              <pre>${outputModels}</pre>
           </div>
       </div>
     </div>
 
-    <g:each in="${metaModel.outputs}" var="outputName">
-        <div class="output-block">
-            <div>${outputName}</div>
+    <g:each in="${metaModel?.outputs}" var="outputName">
+        <g:set var="blockId" value="${fc.toSingleWord([name: outputName])}"/>
+        <g:set var="model" value="${outputModels[outputName]}"/>
+        <g:set var="output" value="${activity.outputs.find {it.name == outputName}}"/>
+        <g:if test="${!output}">
+            <g:set var="output" value="[activityId: activity.activityId, name: outputName]"/>
+        </g:if>
+        <div class="output-block" id="ko${blockId}">
+            <h3>${outputName}</h3>
+            <!-- add the dynamic components -->
+            <md:modelView model="${model}" site="${site}" edit="true"/>
+    <r:script>
+        $(function(){
+
+            var viewModelName = "${blockId}ViewModel",
+                viewModelInstance = viewModelName + "Instance",
+                output = {name: 'test', assessmentDate: '', collector: ''};
+
+            // load dynamic models - usually objects in a list
+            <md:jsModelObjects model="${model}" site="${site}" speciesLists="${speciesLists}" edit="true" viewModelInstance="${blockId}ViewModelInstance"/>
+
+            this[viewModelName] = function () {
+                var self = this;
+                self.name = "${output.name}";
+                self.assessmentDate = ko.observable("${output.assessmentDate}").extend({simpleDate: false});
+                self.collector = ko.observable("${output.collector}")/*.extend({ required: true })*/;
+                self.activityId = ko.observable("${activity.activityId}");
+                self.activityType = ko.observable("${activity.type}");
+                self.deleteAll = function () {
+                    document.location.href = "${createLink(action:'delete',id:output.outputId,
+                        params:[returnTo:grailsApplication.config.grails.serverURL + '/' + returnTo])}";
+                };
+                self.data = {};
+                self.transients = {};
+                self.transients.dummy = ko.observable();
+                self.transients.activityStartDate = ko.observable("${activity.startDate}").extend({simpleDate: false});
+                self.transients.activityEndDate = ko.observable("${activity.endDate}").extend({simpleDate: false});
+
+                // add declarations for dynamic data
+                <md:jsViewModel model="${model}" edit="true" viewModelInstance="${blockId}ViewModelInstance"/>
+
+                // this will be called from the save method to remove transient properties
+                self.removeBeforeSave = function (jsData) {
+                    // add code to remove any transients added by the dynamic tags
+                    <md:jsRemoveBeforeSave model="${model}"/>
+                    delete jsData.activityType;
+                    delete jsData.transients;
+                    return jsData;
+                };
+                self.save = function () {
+                    if ($('#form').validationEngine('validate')) {
+                        var jsData = ko.toJS(self);
+                        // get rid of any transient observables
+                        jsData = self.removeBeforeSave(jsData);
+                        var json = JSON.stringify(jsData);
+                        $.ajax({
+                            url: '${createLink(action: "ajaxUpdate", id: "${output.outputId}")}',
+                            type: 'POST',
+                            data: json,
+                            contentType: 'application/json',
+                            success: function (data) {
+                                if (data.error) {
+                                    alert(data.detail + ' \n' + data.error);
+                                } else {
+                                    document.location.href = returnTo;
+                                }
+                            },
+                            error: function (data) {
+                                var status = data.status
+                                alert('An unhandled error occurred: ' + data.status);
+                            }
+                        });
+                    }
+                };
+                self.notImplemented = function () {
+                    alert("Not implemented yet.")
+                };
+                self.loadData = function (data) {
+                    // load dynamic data
+                    <md:jsLoadModel model="${model}"/>
+
+                    // if there is no data in tables then add an empty row for the user to add data
+                    if (typeof self.addRow === 'function' && self.rowCount() === 0) {
+                        self.addRow();
+                    }
+                    self.transients.dummy.notifySubscribers();
+                    };
+                };
+
+                window[viewModelInstance] = new this[viewModelName]();
+                window[viewModelInstance].loadData(${output.data ?: '{}'});
+
+            ko.applyBindings(window[viewModelInstance], document.getElementById("ko${blockId}"));
+
+        });
+
+            </r:script>
         </div>
     </g:each>
 
@@ -140,6 +253,30 @@
             document.location.href = returnTo;
         });
 
+        $('.edit-btn').click(function () {
+            var data = ${activity.outputs},
+                outputName = $(this).parent().previous().html(),
+                outputId;
+            // search for corresponding outputs in the activity data
+            $.each(data, function (i,output) { // iterate output data in the activity to
+                                               // find any matching the meta-model name
+                if (output.name === outputName) {
+                    outputId = output.outputId;
+                }
+            });
+            if (outputId) {
+                // build edit link
+                document.location.href = fcConfig.serverUrl + "/output/edit/" + outputId +
+                    "?returnTo=" + here;
+            } else {
+                // build create link
+                document.location.href = fcConfig.serverUrl + "/output/create?activityId=${activity.activityId}" +
+                    '&outputName=' + encodeURIComponent(outputName) +
+                    "&returnTo=" + here;
+            }
+
+        });
+
         ko.bindingHandlers.editOutput = {
             init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
                 var outputName = ko.utils.unwrapObservable(valueAccessor()),
@@ -151,9 +288,6 @@
                                                                   // find any matching the meta-model name
                     if (output.name === outputName) {
                         outputId = output.outputId;
-                        %{--$.each(output.scores, function (k, v) {
-                            scores.push({key: k, value: v});
-                        });--}%
                     }
                 });
                 if (outputId) {
@@ -240,7 +374,7 @@
             ${(activity as JSON).toString()},
             ${site ?: 'null'},
             ${project ?: 'null'},
-            ${metaModel});
+            ${metaModel ?: 'null'});
         ko.applyBindings(viewModel,document.getElementById('koActivityMainBlock'));
 
     });

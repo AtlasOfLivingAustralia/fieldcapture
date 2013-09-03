@@ -171,12 +171,12 @@ class ModelTagLib {
             case 'image-edit':
                 addTemplate('fileUploadTemplate')
                 databindAttrs.add 'fileUpload', source
-                result += g.render(template: 'imageDataTypeTemplate', model: [databindAttrs:databindAttrs.toString(), source:source])
+                result += g.render(template: '/output/imageDataTypeTemplate', model: [databindAttrs:databindAttrs.toString(), source:source])
                 break
             case 'embeddedImage-edit':
                 addTemplate('fileUploadTemplate')
                 databindAttrs.add 'fileUpload', source
-                result += g.render(template: 'imageDataTypeTemplate', model: [databindAttrs:databindAttrs.toString(), source:source])
+                result += g.render(template: '/output/imageDataTypeTemplate', model: [databindAttrs:databindAttrs.toString(), source:source])
                 break
             case 'embeddedImage-view':
                 databindAttrs.add "attr",  '{src: '+source+'().thumbnail_url}'
@@ -188,7 +188,7 @@ class ModelTagLib {
                 newAttrs.add "hasfocus", "transients.focused"
                 newAttrs.add "autocomplete", "{url:'${link}', render: renderItem, listId: list, result:speciesSelected}"
                 newAttrs.add "visible", "transients.editing()"
-                result += g.render(template: 'speciesTemplate', model:[source:source, databindAttrs: newAttrs.toString()])
+                result += g.render(template: '/output/speciesTemplate', model:[source:source, databindAttrs: newAttrs.toString()])
                 break
             case 'autocomplete-view':
                 databindAttrs.add 'text', 'name'
