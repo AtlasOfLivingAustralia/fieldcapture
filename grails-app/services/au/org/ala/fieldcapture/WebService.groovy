@@ -14,21 +14,21 @@
  */
 
 package au.org.ala.fieldcapture
-
 import grails.converters.JSON
 import org.codehaus.groovy.grails.web.converters.exceptions.ConverterException
-import org.codehaus.groovy.grails.web.util.WebUtils
 
 class WebService {
 
     def grailsApplication, userService
 
-    def get(String url) {
+    def get(String url, boolean includeUserId) {
         def conn = new URL(url).openConnection()
         try {
             conn.setConnectTimeout(10000)
             conn.setReadTimeout(50000)
-            conn.setRequestProperty("ALA-userId", getUserId())
+            if (includeUserId) {
+                conn.setRequestProperty("ALA-userId", getUserId())
+            }
             return conn.content.text
         } catch (SocketTimeoutException e) {
             def error = [error: "Timed out calling web service. URL= ${url}."]
@@ -40,6 +40,10 @@ class WebService {
             log.error error
             return error
         }
+    }
+
+    def get(String url) {
+        return get(url, true)
     }
 
     def getJson(String url) {

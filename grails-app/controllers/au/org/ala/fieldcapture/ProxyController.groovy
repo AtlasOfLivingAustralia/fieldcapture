@@ -7,17 +7,17 @@ class ProxyController {
     def geojsonFromPid(String pid) {
         def shpUrl = grailsApplication.config.spatialLayerServices.baseUrl + "shape/geojson/${pid}"
         log.debug "requesting pid ${pid} URL: ${shpUrl}"
-        def resp = webService.get(shpUrl)
+        def resp = webService.get(shpUrl, false)
         //log.debug resp
         render resp as String
     }
 
     def speciesLists() {
-        render webService.get("${grailsApplication.config.lists.baseURL}/ws/speciesList")
+        render webService.get("${grailsApplication.config.lists.baseURL}/ws/speciesList", false)
     }
 
     def speciesList() {
-        render webService.get("${grailsApplication.config.lists.baseURL}/ws/speciesList?druid=${params.druid}")
+        render webService.get("${grailsApplication.config.lists.baseURL}/ws/speciesList?druid=${params.druid}", false)
     }
 
     def documentUpdate(String id) {

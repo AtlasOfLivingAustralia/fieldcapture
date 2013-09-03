@@ -41,7 +41,7 @@ class SearchController {
         // If that fails, fall back to the ALA
         def encodedQuery = URLEncoder.encode(q, "UTF-8")
         def url = "${grailsApplication.config.bie.baseURL}/search/auto.jsonp?q=${encodedQuery}&limit=${limit}&idxType=TAXON"
-        render webService.get(url)
+        render webService.get(url, false)
 
 
     }
@@ -54,7 +54,7 @@ class SearchController {
      * @return a JSON formatted String of the form {"autoCompleteList":[{...results...}]}
      */
     private def filterSpeciesList(String query, String listId) {
-        def listContents = new JsonSlurper().parseText(webService.get("${grailsApplication.config.lists.baseURL}/ws/speciesListItems/${listId}"))
+        def listContents = new JsonSlurper().parseText(webService.get("${grailsApplication.config.lists.baseURL}/ws/speciesListItems/${listId}", false))
 
         def filtered = listContents.findResults({it.name?.toLowerCase().contains(query.toLowerCase()) ? [id: it.id, listId: listId, name: it.name, scientificNameMatches:[it.name], guid:it.lsid]: null})
 
