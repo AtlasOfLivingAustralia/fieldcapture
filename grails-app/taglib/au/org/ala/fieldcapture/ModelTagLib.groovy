@@ -14,6 +14,7 @@ class ModelTagLib {
     private final static String QUOTE = "\"";
     private final static String SPACE = " ";
     private final static String EQUALS = "=";
+    private final static String DEFERRED_TEMPLATES_KEY = "deferredTemplates"
 
     private final static int LAYOUT_COLUMNS = 12 // Bootstrap scaffolding uses a 12 column layout.
 
@@ -28,6 +29,8 @@ class ModelTagLib {
      */
     def modelView = { attrs ->
         viewModelItems(attrs, out, attrs.model?.viewModel)
+
+        renderDeferredTemplates out
     }
 
     def viewModelItems(attrs, out, items) {
@@ -169,12 +172,12 @@ class ModelTagLib {
                 result += "<img data-bind='${databindAttrs.toString()}'></img>"
                 break
             case 'image-edit':
-                addTemplate('fileUploadTemplate')
+                addDeferredTemplate('/output/fileUploadTemplate')
                 databindAttrs.add 'fileUpload', source
                 result += g.render(template: '/output/imageDataTypeTemplate', model: [databindAttrs:databindAttrs.toString(), source:source])
                 break
             case 'embeddedImage-edit':
-                addTemplate('fileUploadTemplate')
+                addDeferredTemplate('/output/fileUploadTemplate')
                 databindAttrs.add 'fileUpload', source
                 result += g.render(template: '/output/imageDataTypeTemplate', model: [databindAttrs:databindAttrs.toString(), source:source])
                 break
@@ -645,13 +648,24 @@ class ModelTagLib {
         table out, attrs, model
     }
 
-    def addTemplate(name) {
-        def templates = pageScope.getVariable("templates");
+    def addDeferredTemplate(name) {
+        def templates = pageScope.getVariable(DEFERRED_TEMPLATES_KEY);
         if (!templates) {
             templates = []
-            pageScope.setVariable("templates", templates);
+            pageScope.setVariable(DEFERRED_TEMPLATES_KEY, templates);
         }
         templates.add(name)
+    }
+
+    def renderDeferredTemplates(out) {
+
+        // some templates need to be rendered after the rest of the view code as it was causing problems when they were
+        // embedded inside table view/edit templates. (as happened if an image type was included in a table row).
+        def templates = pageScope.getVariable(DEFERRED_TEMPLATES_KEY)
+        templates?.each {
+            out << g.render(template: it)
+        }
+        pageScope.setVariable(DEFERRED_TEMPLATES_KEY, null)
     }
 
     /*------------ methods to look up attributes in the data model -------------*/

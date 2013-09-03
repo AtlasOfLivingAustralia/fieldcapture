@@ -24,13 +24,13 @@ class ModelJSTagLib {
         }
         // TODO only necessary if the model has a field of type species.
         out << g.render(template:'/output/speciesViewModel')
+        out << INDENT*2 << "var speciesLists = ${attrs.speciesLists.toString()};\n"
 
         def site = "{}"
         if (attrs.site.size() > 0) {
             site = attrs.site.toString()
         }
         out << INDENT*2 << "var site = ${site};\n"
-        out << INDENT*2 << "var speciesLists = ${attrs.speciesLists.toString()};\n"
     }
 
     def jsViewModel = { attrs ->
@@ -67,6 +67,7 @@ class ModelJSTagLib {
                 dateViewModel(mod, out)
             }
         }
+        out << INDENT*2 << "self.transients.site = site"
     }
 
     /**
