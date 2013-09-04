@@ -14,6 +14,7 @@
         <thead>
         <tr data-bind="visible: activities().length > 0">
             <th width="2%"></th>
+            <th width="2%"></th>
             <th class="sort" data-bind="sortIcon:activitiesSort,click:sortBy" data-column="type">Type</th>
             <th width="40%" class="sort" data-bind="sortIcon:activitiesSort,click:sortBy" data-column="description">Description</th>
             <th class="sort" data-bind="sortIcon:activitiesSort,click:sortBy" data-column="startDate">From</th>
@@ -27,7 +28,10 @@
         <tbody data-bind="foreach:activities" id="activityList">
         <tr>
             <td data-bind="click:editActivity" class="clickable">
-                <i class="icon-edit"></i>
+                <i class="icon-edit" title="Edit Activity"></i>
+            </td>
+            <td data-bind="click:printActivity" class="clickable">
+                <i class="icon-print" title="View a printable version of this Activity" />
             </td>
             <td>
                 <span data-bind="text:type"></span>
@@ -68,6 +72,9 @@
                         editActivity: function () {
                             document.location.href = fcConfig.activityEditUrl + "/" + this.activityId +
                                 "?returnTo=" + here;
+                        },
+                        printActivity: function() {
+                            open(fcConfig.activityPrintUrl + "/" + this.activityId, "fieldDataPrintWindow");
                         },
                         del: function () {
                             var self = this;

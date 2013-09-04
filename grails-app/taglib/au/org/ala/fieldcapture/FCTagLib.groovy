@@ -70,6 +70,51 @@ class FCTagLib {
     }
 
     /**
+     * @attr name
+     * @attr targetField
+     * @attr printable
+     */
+    def datePicker = { attrs ->
+        /**
+            <input data-bind="datepicker:startDate.date" name="startDate" id="startDate" type="text" size="16"
+                data-validation-engine="validate[required]" class="input-xlarge"/>
+            <span class="add-on open-datepicker"><i class="icon-th"></i></span>
+         */
+
+        def mb = new MarkupBuilder(out)
+
+        def inputAttrs = [
+            "data-bind":"datepicker:${attrs.targetField}",
+            name:"${attrs.name}",
+            id:"${attrs.id ?: attrs.name}",
+            type:'text',
+            size:'16',
+            class:'input-xlarge'
+        ]
+
+        def ignoreList = ['name', 'id']
+        attrs.each {
+            if (!ignoreList.contains(it.key)) {
+                inputAttrs[it.key] = it.value
+            }
+        }
+
+        if (attrs.required) {
+            inputAttrs["data-validation-engine"] = "validate[required]"
+        }
+
+        mb.input(inputAttrs) {
+        }
+        if (!attrs.printable) {
+            mb.span(class:'add-on open-datepicker') {
+                mb.i(class:'icon-th') {
+                    mkp.yieldUnescaped("&nbsp;")
+                }
+            }
+        }
+    }
+
+    /**
      * attr title
      * body content
      */

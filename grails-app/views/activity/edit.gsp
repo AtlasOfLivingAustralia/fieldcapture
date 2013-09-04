@@ -2,8 +2,15 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/html">
 <head>
-    <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
-    <title>Edit | ${activity.type} | Field Capture</title>
+    <g:if test="${printView}">
+        <meta name="layout" content="nrmPrint"/>
+        <title>Print | ${activity.type} | Field Capture</title>
+    </g:if>
+    <g:else>
+        <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
+        <title>Edit | ${activity.type} | Field Capture</title>
+    </g:else>
+
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jstimezonedetect/1.0.4/jstz.min.js"></script>
     <r:script disposition="head">
     var fcConfig = {
@@ -20,14 +27,16 @@
 <body>
 <div class="container-fluid validationEngineContainer" id="validation-container">
   <div id="koActivityMainBlock">
-      <ul class="breadcrumb">
-            <li><g:link controller="home">Home</g:link> <span class="divider">/</span></li>
-            <li>Activities<span class="divider">/</span></li>
-            <li class="active">
-                <span data-bind="text:type"></span>
-                <span data-bind="text:startDate.formattedDate"></span>/<span data-bind="text:endDate.formattedDate"></span>
-            </li>
-        </ul>
+      <g:if test="${!printView}">
+          <ul class="breadcrumb">
+                <li><g:link controller="home">Home</g:link> <span class="divider">/</span></li>
+                <li>Activities<span class="divider">/</span></li>
+                <li class="active">
+                    <span data-bind="text:type"></span>
+                    <span data-bind="text:startDate.formattedDate"></span>/<span data-bind="text:endDate.formattedDate"></span>
+                </li>
+          </ul>
+      </g:if>
 
         <div class="row-fluid title-block well well-small input-block-level">
             <div class="span12 title-attribute">
@@ -44,10 +53,10 @@
 
         <div class="row-fluid">
             <div class="span6">
-                <fc:textArea data-bind="value: description" id="description" label="Description" class="span12" rows="3" cols="50"/>
+                <fc:textArea data-bind="value: description" id="description" label="Description" class="span12" rows="3" />
             </div>
             <div class="span6">
-                <fc:textArea data-bind="value: notes" id="notes" label="Notes" class="span12" rows="3" cols="50"/>
+                <fc:textArea data-bind="value: notes" id="notes" label="Notes" class="span12" rows="3" />
             </div>
         </div>
 
@@ -57,9 +66,7 @@
                 <fc:iconHelp title="Start date">Date the activity was started.</fc:iconHelp>
                 </label>
                 <div class="input-append">
-                    <input data-bind="datepicker:startDate.date" name="startDate" id="startDate" type="text" size="16"
-                       data-validation-engine="validate[required]" class="input-xlarge"/>
-                    <span class="add-on open-datepicker"><i class="icon-th"></i></span>
+                    <fc:datePicker targetField="startDate.date" name="startDate" data-validation-engine="validate[required]" printable="${printView}"/>
                 </div>
             </div>
             <div class="span4">
@@ -67,9 +74,7 @@
                 <fc:iconHelp title="End date">Date the activity finished.</fc:iconHelp>
                 </label>
                 <div class="input-append">
-                    <input data-bind="datepicker:endDate.date" id="endDate" type="text" size="16"
-                       data-validation-engine="validate[future[startDate]]" class="input-xlarge"/>
-                    <span class="add-on open-datepicker"><i class="icon-th"></i></span>
+                    <fc:datePicker targetField="endDate.date" name="endDate" data-validation-engine="validate[future[startDate]]" printable="${printView}" />
                 </div>
             </div>
             <div class="span4">
@@ -78,52 +83,54 @@
             </div>
         </div>
 
-        <div class="well well-small">
-            <h4>Old-style edit pages (while we transition to one-page editing)</h4>
-            <ul class="unstyled">
-                <g:each in="${metaModel?.outputs}" var="output">
-                    <g:set var="data" value="${activity.outputs.find({it.name == output})}"/>
-                    <li class="row-fluid">
-                        <span class="span4">${output}</span>
-                        <g:if test="${data}">
-                            <span class="span4"><a type="button" class="btn"
-                             href="${createLink(controller: 'output', action:'edit', id: data.outputId)}">Edit data</a></span>
-                        </g:if>
-                        <g:else>
-                            <span class="span4"><a type="button" class="btn"
-                             href="${createLink(controller: 'output', action:'create')}?activityId=${activity.activityId}&outputName=${output}">Add data</a></span>
-                        </g:else>
-                    </li>
-                </g:each>
-            </ul>
+        <g:if test="${!printView}">
+            <div class="well well-small">
+                <h4>Old-style edit pages (while we transition to one-page editing)</h4>
+                <ul class="unstyled">
+                    <g:each in="${metaModel?.outputs}" var="output">
+                        <g:set var="data" value="${activity.outputs.find({it.name == output})}"/>
+                        <li class="row-fluid">
+                            <span class="span4">${output}</span>
+                            <g:if test="${data}">
+                                <span class="span4"><a type="button" class="btn"
+                                 href="${createLink(controller: 'output', action:'edit', id: data.outputId)}">Edit data</a></span>
+                            </g:if>
+                            <g:else>
+                                <span class="span4"><a type="button" class="btn"
+                                 href="${createLink(controller: 'output', action:'create')}?activityId=${activity.activityId}&outputName=${output}">Add data</a></span>
+                            </g:else>
+                        </li>
+                    </g:each>
+                </ul>
             %{--<ul class="unstyled" data-bind="foreach:transients.metaModel.outputs">
                 <li class="row-fluid">
                     <span class="span4" data-bind="text:$data"></span>
                     <span class="span4"><a data-bind="editOutput:$data">Add data</a></span>
                 </li>
             </ul>--}%
-        </div>
+            </div>
 
-      <div class="expandable-debug">
-          <hr />
-          <h3>Debug</h3>
-          <div>
-              <h4>KO model</h4>
-              <pre data-bind="text:ko.toJSON($root,null,2)"></pre>
-              <h4>Activity</h4>
-              <pre>${activity}</pre>
-              <h4>Site</h4>
-              <pre>${site}</pre>
-              <h4>Sites</h4>
-              <pre>${(sites as JSON).toString()}</pre>
-              <h4>Project</h4>
-              <pre>${project}</pre>
-              <h4>Activity model</h4>
-              <pre>${metaModel}</pre>
-              <h4>Output models</h4>
-              <pre>${outputModels}</pre>
+          <div class="expandable-debug">
+              <hr />
+              <h3>Debug</h3>
+              <div>
+                  <h4>KO model</h4>
+                  <pre data-bind="text:ko.toJSON($root,null,2)"></pre>
+                  <h4>Activity</h4>
+                  <pre>${activity}</pre>
+                  <h4>Site</h4>
+                  <pre>${site}</pre>
+                  <h4>Sites</h4>
+                  <pre>${(sites as JSON).toString()}</pre>
+                  <h4>Project</h4>
+                  <pre>${project}</pre>
+                  <h4>Activity model</h4>
+                  <pre>${metaModel}</pre>
+                  <h4>Output models</h4>
+                  <pre>${outputModels}</pre>
+              </div>
           </div>
-      </div>
+        </g:if>
     </div>
 
     <g:each in="${metaModel?.outputs}" var="outputName">

@@ -11,6 +11,7 @@
         siteDeleteUrl: "${createLink(controller: 'site', action: 'ajaxDelete')}",
         siteViewUrl: "${createLink(controller: 'site', action: 'index')}",
         activityEditUrl: "${createLink(controller: 'activity', action: 'edit')}",
+        activityPrintUrl: "${createLink(controller: 'activity', action: 'print')}",
         activityCreateUrl: "${createLink(controller: 'activity', action: 'create')}",
         activityUpdateUrl: "${createLink(controller: 'activity', action: 'ajaxUpdate')}",
         activityDeleteUrl: "${createLink(controller: 'activity', action: 'ajaxDelete')}",
