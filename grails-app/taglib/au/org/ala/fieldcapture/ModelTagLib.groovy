@@ -133,26 +133,11 @@ class ModelTagLib {
                 break
             case 'selectOne-edit':
                 databindAttrs.add 'value', source
+                // Select one or many view types require that the data model has defined a set of valid options
+                // to select from.
+                databindAttrs.add 'options', 'transients.'+model.source+'Constraints'
 
-                if (model.optionsSource) {
-                    databindAttrs.add 'options', model.optionsSource.options
-                    if (model.optionsSource.optionsText) {
-                        databindAttrs.add 'optionsText', "\""+model.optionsSource.optionsText+"\""
-                    }
-                    if (model.optionsSource.optionsValue) {
-                        databindAttrs.add 'optionsValue', "\""+model.optionsSource.optionsValue+"\""
-                    }
-                }
-                else if (!model.options) {
-                    // Select one or many view types require that the data model has defined a set of valid options
-                    // to select from.
-                    databindAttrs.add 'options', 'transients.'+model.source+'Constraints'
-                }
-                result += "<select${at.toString()} data-bind='${databindAttrs.toString()}'${validate}>"
-                model.options?.each{
-                    result += "<option>"+it+"</option>"
-                }
-                result += "</select>"
+                result += "<select${at.toString()} data-bind='${databindAttrs.toString()}'${validate}></select>"
                 break
             case 'selectMany-edit':
                 labelAttributes.addClass 'checkbox-list-label '
