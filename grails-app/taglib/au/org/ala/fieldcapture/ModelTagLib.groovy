@@ -136,6 +136,7 @@ class ModelTagLib {
                 // Select one or many view types require that the data model has defined a set of valid options
                 // to select from.
                 databindAttrs.add 'options', 'transients.'+model.source+'Constraints'
+                databindAttrs.add 'optionsCaption', '"Please select"'
 
                 result += "<select${at.toString()} data-bind='${databindAttrs.toString()}'${validate}></select>"
                 break

@@ -646,3 +646,20 @@ ko.bindingHandlers.autocomplete = {
         }
     }
 };
+
+ko.dirtyFlag = function(root, isInitiallyDirty) {
+    var result = function() {};
+    var _initialState = ko.observable(ko.toJSON(root));
+    var _isInitiallyDirty = ko.observable(isInitiallyDirty);
+
+    result.isDirty = ko.dependentObservable(function() {
+        return _isInitiallyDirty() || _initialState() !== ko.toJSON(root);
+    });
+
+    result.reset = function() {
+        _initialState(ko.toJSON(root));
+        _isInitiallyDirty(false);
+    };
+
+    return result;
+};

@@ -47,7 +47,7 @@
                 <g:else>
                     <select data-bind="options:transients.sites,optionsText:'name',optionsValue:'siteId',value:siteId,optionsCaption:'Choose a site...'"></select>
                 </g:else>
-                <h3>Activity: <span data-bind="text:type"></span></h3>
+                <h3>Activity: <span data-bind="text:type"></span><i class="icon-star" data-bind="visible:dirtyFlag.isDirty" title="Has been modified"></i></h3>
             </div>
         </div>
 
@@ -108,7 +108,7 @@
                     <span class="span4"><a data-bind="editOutput:$data">Add data</a></span>
                 </li>
             </ul>--}%
-            </div>
+        </div>
 
           <div class="expandable-debug">
               <hr />
@@ -141,7 +141,7 @@
             <g:set var="output" value="[activityId: activity.activityId, name: outputName]"/>
         </g:if>
         <div class="output-block" id="ko${blockId}">
-            <h3>${outputName}</h3>
+            <h3>${outputName} <i class="icon-star" data-bind="visible:dirtyFlag.isDirty" title="Has been modified"></i></h3>
             <!-- add the dynamic components -->
             <md:modelView model="${model}" site="${site}" edit="true"/>
     <r:script>
@@ -189,7 +189,7 @@
                         jsData = self.removeBeforeSave(jsData);
                         var json = JSON.stringify(jsData);
                         $.ajax({
-                            url: '${createLink(action: "ajaxUpdate", id: "${output.outputId}")}',
+                            url: '${createLink(controller:'output', action: "ajaxUpdate", id: "${output.outputId}")}',
                             type: 'POST',
                             data: json,
                             contentType: 'application/json',
@@ -219,13 +219,26 @@
                         self.addRow();
                     }
                     self.transients.dummy.notifySubscribers();
-                    };
                 };
+            };
 
-                window[viewModelInstance] = new this[viewModelName]();
-                window[viewModelInstance].loadData(${output.data ?: '{}'});
+            window[viewModelInstance] = new this[viewModelName]();
+            window[viewModelInstance].loadData(${output.data ?: '{}'});
+
+            // dirtyFlag must be defined after data is loaded
+            window[viewModelInstance].dirtyFlag = ko.dirtyFlag(window[viewModelInstance], false);
 
             ko.applyBindings(window[viewModelInstance], document.getElementById("ko${blockId}"));
+
+            // this resets the baseline for detecting changes to the model
+            // - shouldn't be required if everything behaves itself but acts as a backup for
+            //   any binding effects
+            // - note that it is not foolproof as applying the bindings happens asynchronously and there
+            //   is no easy way to detect its completion
+            window[viewModelInstance].dirtyFlag.reset();
+
+            master.register(viewModelInstance, window[viewModelInstance].save,
+             window[viewModelInstance].dirtyFlag.isDirty, window[viewModelInstance].dirtyFlag.reset);
 
         });
 
@@ -235,6 +248,7 @@
 
     <div class="form-actions">
         <button type="button" id="save" class="btn btn-primary">Save changes</button>
+        %{--<button type="button" id="reset" class="btn">Reset</button>--}%
         <button type="button" id="cancel" class="btn">Cancel</button>
     </div>
 
@@ -246,6 +260,42 @@
 
     var returnTo = "${returnTo}";
 
+    /* Master controller for page */
+    var master = {
+        subscribers: [],
+        register: function (modelInstance, saveMethod, isDirtyMethod, resetMethod) {
+            this.subscribers.push({
+                model: modelInstance,
+                save: saveMethod,
+                isDirty: isDirtyMethod,
+                reset: resetMethod
+            });
+        },
+        isDirty: function () {
+            var dirty = false,
+                self = this;
+            $.each(this.subscribers, function(i, obj) {
+                dirty = dirty || obj.isDirty();
+            });
+            return dirty;
+        },
+        save: function () {
+            $.each(this.subscribers, function(i, obj) {
+                if (obj.isDirty()) {
+                    //alert("Saving " + obj.model);
+                    obj.save();
+                }
+            });
+        },
+        reset: function () {
+            $.each(this.subscribers, function(i, obj) {
+                if (obj.isDirty()) {
+                    obj.reset();
+                }
+            });
+        }
+    };
+
     $(function(){
 
         $('#validation-container').validationEngine('attach', {scroll: false});
@@ -253,11 +303,15 @@
         $('.helphover').popover({animation: true, trigger:'hover'});
 
         $('#save').click(function () {
-            viewModel.save();
+            master.save();
         });
 
         $('#cancel').click(function () {
             document.location.href = returnTo;
+        });
+
+        $('#reset').click(function () {
+            master.reset();
         });
 
         $('.edit-btn').click(function () {
@@ -375,14 +429,19 @@
             self.notImplemented = function () {
                 alert("Not implemented yet.")
             };
+            self.dirtyFlag = ko.dirtyFlag(self, false);
         }
+
 
         var viewModel = new ViewModel(
             ${(activity as JSON).toString()},
             ${site ?: 'null'},
             ${project ?: 'null'},
             ${metaModel ?: 'null'});
+
         ko.applyBindings(viewModel,document.getElementById('koActivityMainBlock'));
+
+        master.register('viewModel', viewModel.save, viewModel.dirtyFlag.isDirty, viewModel.dirtyFlag.reset);
 
     });
 
