@@ -118,7 +118,9 @@ class ActivityController {
     def create(String siteId, String projectId) {
         def activity = [activityId: "", siteId: siteId, projectId: projectId]
         def model = [activity: activity, returnTo: params.returnTo, create: true,
-                activityTypes: metadataService.activityTypesList()]
+                activityTypes: metadataService.activityTypesList(),
+                activityScores: metadataService.activityScores(),
+                projectStages:projectStages()]
         model.project = projectId ? projectService.get(projectId) : null
         model.site = siteId ? siteService.get(siteId) : null
         if (!model.project && !model.site) {
@@ -190,5 +192,9 @@ class ActivityController {
         // but for now just go home
         log.debug('redirecting to home')
         redirect(controller: 'home')
+    }
+
+    def projectStages() {
+        return ["Stage 1", "Stage 2", "Stage 3", "Stage 4", "Stage 5", "Stage 6", "Stage 7", "Stage 8", "Stage 9", "Stage 10"]
     }
 }

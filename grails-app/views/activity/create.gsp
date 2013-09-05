@@ -53,46 +53,131 @@
             </div>
 
             <div class="row-fluid control-group">
-                <label for="type">Type of activity</label>
-                <select data-bind="value: type" id="type" data-validation-engine="validate[required]" class="input-xlarge">
-                    <g:each in="${activityTypes}" var="t" status="i">
-                        <g:if test="${i == 0 && create}">
-                            <option></option>
-                        </g:if>
-                        <optgroup label="${t.name}">
-                            <g:each in="${t.list}" var="opt">
-                                <option>${opt.name}</option>
-                            </g:each>
-                        </optgroup>
-                    </g:each>
-                </select>
-                %{--<select data-bind="value: type, options: availableTypes, optionsText: 'name'" id="type"></select>--}%
-            </div>
-
-            <div class="row-fluid">
-                <div class="span4 control-group">
-                    <label for="startDate">Start date
-                    <fc:iconHelp title="Start date">Date the activity was started.</fc:iconHelp>
-                    </label>
-                    <div class="input-append">
-                        <input data-bind="datepicker:startDate.date" name="startDate" id="startDate" type="text" size="16"
-                           data-validation-engine="validate[required]" class="input-xlarge"/>
-                        <span class="add-on open-datepicker"><i class="icon-th"></i></span>
-                    </div>
-                </div>
                 <div class="span4">
-                    <label for="endDate">End date
-                    <fc:iconHelp title="End date">Date the activity finished.</fc:iconHelp>
-                    </label>
-                    <div class="input-append">
-                        <input data-bind="datepicker:endDate.date" id="endDate" type="text" size="16"
-                           data-validation-engine="validate[future[startDate]]" class="input-xlarge"/>
-                        <span class="add-on open-datepicker"><i class="icon-th"></i></span>
-                    </div>
+                    <label for="type">Type of activity</label>
+                    <select data-bind="value: type" id="type" data-validation-engine="validate[required]" class="input-xlarge">
+                        <g:each in="${activityTypes}" var="t" status="i">
+                            <g:if test="${i == 0 && create}">
+                                <option></option>
+                            </g:if>
+                            <optgroup label="${t.name}">
+                                <g:each in="${t.list}" var="opt">
+                                    <option>${opt.name}</option>
+                                </g:each>
+                            </optgroup>
+                        </g:each>
+                    </select>
                 </div>
                 <div class="span4">
                     <label for="censusMethod">Method</label>
-                    <input data-bind="value: censusMethod" id="censusMethod" type="text" class="span12"/>
+                    <input data-bind="value: censusMethod" id="censusMethod" type="text" class="span8"/>
+                </div>
+                <div class="span4">
+                    <label for="planning">Is this activity being entered for planning purposes?</label>
+                    <label class="radio-inline"><input type="radio" id="planning" name="planning" value="planned" data-bind="checked: progress" data-validation-engine="validate[required]"/> Yes</label>
+                    <label class="radio"><input class="radio" type="radio" name="planning" value="started" data-bind="checked: progress" data-validation-engine="validate[required]"/> No</label>
+
+                </div>
+                %{--<select data-bind="value: type, options: availableTypes, optionsText: 'name'" id="type"></select>--}%
+            </div>
+
+            <div data-bind="visible: progress() === 'planned'">
+                <div class="row-fluid">
+                    <h3>Planning information</h3>
+                </div>
+                <div class="row-fluid">
+                    <div class="span4 control-group">
+                        <label for="plannedStartDate">Planned start date
+                        <fc:iconHelp title="Planned start date">Start date of the time range in which the activity will be undertaken.</fc:iconHelp>
+                        </label>
+                        <div class="input-append">
+                            <input data-bind="datepicker:plannedStartDate.date" name="startDate" id="plannedStartDate" type="text" size="16"
+                                   data-validation-engine="validate[required]" class="input-xlarge"/>
+                            <span class="add-on open-datepicker"><i class="icon-th"></i></span>
+                        </div>
+                    </div>
+                    <div class="span4">
+                        <label for="plannedEndDate">Planned end date
+                        <fc:iconHelp title="Planned end date">End date of the time range in which the activity will be undertaken.</fc:iconHelp>
+                        </label>
+                        <div class="input-append">
+                            <input data-bind="datepicker:plannedEndDate.date" id="plannedEndDate" type="text" size="16"
+                                   data-validation-engine="validate[future[startDate]]" class="input-xlarge"/>
+                            <span class="add-on open-datepicker"><i class="icon-th"></i></span>
+                        </div>
+                    </div>
+                    <div class="span4">
+                        <label for="projectStage">Project stage
+                        <fc:iconHelp title="Project stage">If the project is taking a staged approach to implementation, this identifies which project stage the activity in planned for.</fc:iconHelp>
+                        </label>
+                        <select id="projectStage" data-bind="value:projectStage">
+                            <option value="">None</option>
+                            <g:each in="${projectStages}">
+                                <option value="${it}">${it}</option>
+                            </g:each>
+                        </select>
+                    </div>
+                </div>
+                <div class="row-fluid">
+                    <h4>Activity output measures</h4>
+                    <p>The activity output measures describe the intended output from this activity.  For example, a revegetation activity may
+                    plan to plant x seeds over an area of y hectares and protect the seedlings with z kilometres of fence.
+                    </p>
+                </div>
+                <div data-bind="visible:type()" class="row-fluid">
+                    <div class="span6">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr><td width="45%">Output measure</td><td width="40%">Expected output value</td><td width="15%"></td></tr>
+                        </thead>
+                        <tbody data-bind="foreach: targets">
+                            <tr>
+                                <td><select data-bind="value:scoreName, options:transients.scoreNames" data-validation-engine="validate[required]"></select></td>
+                                <td><input type="text" data-bind="value:target" data-validation-engine="validate[required]"/></td>
+                                <td>
+                                    <a class="btn btn-mini" data-bind="click:$root.removeTarget" href="#" title="remove"><i class="icon-trash"></i> Remove</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr><td colspan="2"><button type="button" class="btn" data-bind="click:addTarget">Add output measure</button></td></tr>
+                        </tfoot>
+                    </table>
+                    </div>
+
+                </div>
+                <div data-bind="visible:!type()" class="row-fluid">
+                    <p>Activity output measures will become available for selection once the activity type has been selected.</p>
+                </div>
+            </div>
+
+
+            <div data-bind="visible: progress() === 'started'">
+                <div class="row-fluid">
+                    <h3>Implementation dates</h3>
+                </div>
+                <div class="row-fluid">
+                    <div class="span4 control-group">
+                        <label for="startDate">Start date
+                        <fc:iconHelp title="Start date">Date the activity was started.</fc:iconHelp>
+                        </label>
+                        <div class="input-append">
+                            <input data-bind="datepicker:startDate.date" name="startDate" id="startDate" type="text" size="16"
+                                   data-validation-engine="validate[required]" class="input-xlarge"/>
+                            <span class="add-on open-datepicker"><i class="icon-th"></i></span>
+                        </div>
+                    </div>
+                    <div class="span4">
+                        <label for="endDate">End date
+                        <fc:iconHelp title="End date">Date the activity finished.</fc:iconHelp>
+                        </label>
+                        <div class="input-append">
+                            <input data-bind="datepicker:endDate.date" id="endDate" type="text" size="16"
+                                   data-validation-engine="validate[future[startDate]]" class="input-xlarge"/>
+                            <span class="add-on open-datepicker"><i class="icon-th"></i></span>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
@@ -150,17 +235,44 @@
             }
         }
 
-        function ViewModel (act, sites, projects, site, project) {
+        function TargetRow(activityType, activityScores) {
             var self = this;
+            self.scoreName = ko.observable();
+            self.target = ko.observable();
+
+            self.transients = {};
+            self.transients.scoreNames = ko.computed(function() {
+                return activityScores[activityType()];
+            });
+        }
+
+        function ViewModel (act, sites, projects, site, project, activityScores) {
+            var self = this;
+
+            self.confirmActivityTypeChange = function() {
+                if (self.targets().length) {
+                    return window.confirm("Changing the activity type will invalidate the output measures.  Continue?");
+                }
+                return true;
+            };
+
+            self.removeAllTargets = function() {
+                self.targets([]);
+            };
+
             self.description = ko.observable(act.description);
             self.notes = ko.observable(act.notes);
+            self.type = ko.vetoableObservable(act.type, self.confirmActivityTypeChange, self.removeAllTargets);
             self.startDate = ko.observable(act.startDate).extend({simpleDate: false});
             self.endDate = ko.observable(act.endDate).extend({simpleDate: false});
+            self.plannedStartDate = ko.observable(act.plannedStartDate).extend({simpleDate: false});
+            self.plannedEndDate = ko.observable(act.plannedEndDate).extend({simpleDate: false});
+            self.targets = ko.observableArray();
+            self.progress = ko.observable();
             self.censusMethod = ko.observable(act.censusMethod);
             self.methodAccuracy = ko.observable(act.methodAccuracy);
             self.collector = ko.observable(act.collector)/*.extend({ required: true })*/;
             self.fieldNotes = ko.observable(act.fieldNotes);
-            self.type = ko.observable(act.type);
             self.siteId = ko.observable(act.siteId);
             self.projectId = ko.observable(act.projectId);
             self.transients = {};
@@ -171,10 +283,17 @@
             /*self.transients.site.projects = ko.computed(function () {
                 return getProjectsForSite(self.siteId());
             }).extend({async: []});*/
+
+
+            self.addTarget = function() {
+                self.targets.push(new TargetRow(self.type, activityScores));
+            };
+            self.removeTarget = function (row) {
+                self.targets.remove(row);
+            }
             self.save = function () {
                 if ($('#validation-container').validationEngine('validate')) {
-                    var jsData = ko.toJS(self);
-                    delete jsData.transients;
+                    var jsData = ko.mapping.toJS(self, {'ignore':['transients']});
                     var json = JSON.stringify(jsData);
                     $.ajax({
                         url: "${createLink(action: 'ajaxUpdate', id: activity.activityId)}",
@@ -213,7 +332,8 @@
             ${((sites ?: []) as JSON).toString()},
             ${((projects ?: []) as JSON).toString()},
             ${site ?: 'null'},
-            ${project ?: 'null'});
+            ${project ?: 'null'},
+            ${(activityScores as JSON).toString()} );
         ko.applyBindings(viewModel,document.getElementById('koActivityMainBlock'));
 
     });

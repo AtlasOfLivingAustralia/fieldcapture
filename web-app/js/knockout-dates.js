@@ -663,3 +663,38 @@ ko.dirtyFlag = function(root, isInitiallyDirty) {
 
     return result;
 };
+
+ko.vetoableObservable = function(initialValue, vetoCheck, noVetoCallback, vetoCallback) {
+    //private variables
+    var _current = ko.observable(initialValue);
+
+    var vetoFunction = typeof (vetoCheck) === 'function' ? vetoCheck : function() {
+        return window.confirm(vetoCheck);
+    };
+    var result = ko.dependentObservable({
+        read: _current,
+        write: function(newValue) {
+
+            // The equality check is treating undefined as equal to an empty string to prevent
+            // the initial population of the value with an empty select option from triggering the veto.
+            if (_current() !== newValue && (_current() !== undefined || newValue !== '')) {
+
+                if (vetoFunction()) {
+                    _current(newValue);
+                    if (noVetoCallback !== undefined) {
+                        noVetoCallback();
+                    }
+                }
+                else {
+                    _current.notifySubscribers();
+                    if (vetoCallback !== undefined) {
+                        vetoCallback();
+                    }
+                }
+            }
+
+        }
+    });
+
+    return result;
+};

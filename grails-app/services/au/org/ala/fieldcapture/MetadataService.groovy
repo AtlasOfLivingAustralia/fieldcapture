@@ -1,7 +1,5 @@
 package au.org.ala.fieldcapture
 
-import grails.converters.JSON
-
 class MetadataService {
 
     def grailsApplication, webService, cacheService
@@ -68,6 +66,24 @@ class MetadataService {
             ]
 
         })
+    }
+
+    def activityScores() {
+        def activityScores = [:]
+        def activitiesModel = activitiesModel()
+        activitiesModel.activities.each { activity ->
+            def scores = []
+            activityScores[activity.name] = scores
+            activity.outputs.each { outputName ->
+                def matchedOutput = activitiesModel.outputs.find {
+                    output -> outputName == output.name
+                }
+                if (matchedOutput && matchedOutput.scoreNames) {
+                    scores.addAll matchedOutput?.scoreNames
+                }
+            }
+        }
+        return activityScores
     }
 
     def clearEcodataCache() {
