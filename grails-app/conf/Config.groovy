@@ -148,7 +148,6 @@ environments {
         security.cas.appServerName = serverName
         security.cas.contextPath = "/" + appName
         ecodata.baseUrl = 'http://localhost:8080/ecodata/ws/'
-
         upload.images.url = grails.serverURL+'/image/'
     }
     test {
@@ -174,7 +173,7 @@ environments {
         layout.skin = "nrm"
         security.cas.appServerName = serverName
         security.cas.contextPath = "/" + grails.app.context
-        ecodata.baseUrl = 'http://ecodata-dev.ala.org.au/ws/'
+        ecodata.baseUrl = 'http://ecodata-dev.ala.org.au:8080/ws/'
         upload.images.url = grails.serverURL+'/image/'
     }
     production {
