@@ -17,6 +17,7 @@
         activityDeleteUrl: "${createLink(controller: 'activity', action: 'ajaxDelete')}",
         siteCreateUrl: "${createLink(controller: 'site', action: 'createForProject', params: [projectId:project.projectId])}",
         siteSelectUrl: "${createLink(controller: 'site', action: 'select', params:[projectId:project.projectId])}&returnTo=${createLink(controller: 'project', action: 'index', id: project.projectId)}",
+        starProject: "${createLink(controller: 'project', action: 'starProject')}",
         spatialBaseUrl: "${grailsApplication.config.spatial.baseURL}",
         spatialWmsCacheUrl: "${grailsApplication.config.spatial.wms.cache.url}",
         spatialWmsUrl: "${grailsApplication.config.spatial.wms.url}",
@@ -44,7 +45,13 @@
             <div class="clearfix">
                 <h1 class="pull-left">${project?.name}</h1>
                 <div class="pull-right">
-                    <button class="btn" id="starBtn"><i class="icon-star-empty"></i> Star</button>
+                    <g:set var="disabled">${(!user) ? "disabled='disabled' title='login required'" : ''}</g:set>
+                    <g:if test="${isProjectStarredByUser}">
+                        <button class="btn" id="starBtn"><i class="icon-star"></i> <span>Remove from favourites</span></button>
+                    </g:if>
+                    <g:else>
+                        <button class="btn" id="starBtn" ${disabled}><i class="icon-star-empty"></i> <span>Add to favourites</span></button>
+                    </g:else>
                     <g:link action="edit" id="${project.projectId}" class="btn">Change project details</g:link>
                 </div>
 
@@ -419,14 +426,41 @@
                 $(storedTab + '-tab').tab('show');
             }
 
-            // check if project is starred
-            var isStared = false;
-            $.getJSON().error().done().
+           /**
+            * Star/Unstar project for user - send AJAX and update UI
+            *
+            * @param Boolean isProjectStarredByUser
+            */
+            function toggleStarred(isProjectStarredByUser) {
+                var basUrl = fcConfig.starProject;
+                var query = "?userId=${user?.userId}&projectId=${project?.projectId}"
+                if (isProjectStarredByUser) {
+                    // remove star
+                    $.getJSON(basUrl + "/remove" + query, function(data) {
+                        if (data.error) {
+                            alert(data.error);
+                        } else {
+                            $("#starBtn i").removeClass("icon-star").addClass("icon-star-empty");
+                            $("#starBtn span").text("Add to favourites");
+                        }
+                    }).fail(function(j,t,e){ alert(t + ":" + e);}).done();
+                } else {
+                    // add star
+                    $.getJSON(basUrl + "/add" + query, function(data) {
+                        if (data.error) {
+                            alert(data.error);
+                        } else {
+                            $("#starBtn i").removeClass("icon-star-empty").addClass("icon-star");
+                            $("#starBtn span").text("Remove from favourites");
+                        }
+                    }).fail(function(j,t,e){ alert(t + ":" + e);}).done();
+                }
+            }
 
             // Star button click event
             $("#starBtn").click(function(e) {
-                e.preventDefault();
-
+                var isStarred = ($("#starBtn i").attr("class") == "icon-star");
+                toggleStarred(isStarred);
             });
 
         });

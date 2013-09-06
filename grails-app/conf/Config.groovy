@@ -127,7 +127,7 @@ spatial.layersUrl = spatial.baseUrl + "/layers-service"
 spatial.geoserverUrl = spatial.baseUrl + "/geoserver"
 
 security.cas.casServerName = 'https://auth.ala.org.au'
-security.cas.uriFilterPattern = "/user/.*,/project/.*" // pattern for pages that require authentication
+security.cas.uriFilterPattern = "/user/.*,/site/.*,/project/.*,/activity/.*,/output/.*,/image/.*,/admin/.*" // pattern for pages that require authentication
 security.cas.uriExclusionFilterPattern = '/images.*,/css.*,/js.*,/less.*'
 security.cas.authenticateOnlyIfLoggedInPattern = "" // pattern for pages that can optionally display info about the logged-in user
 security.cas.loginUrl = 'https://auth.ala.org.au/cas/login'
@@ -136,6 +136,7 @@ security.cas.casServerUrlPrefix = 'https://auth.ala.org.au/cas'
 security.cas.bypass = false
 
 upload.images.path = "/data/${appName}/images/"
+app.http.header.userId = "X-ALA-userId"
 
 environments {
     development {

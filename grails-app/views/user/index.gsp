@@ -16,7 +16,7 @@
 <div id="wrapper" class="container-fluid">
     <div class="row-fluid">
         <div class="span12" id="header">
-            <h1 class="pull-left">User Dashboard</h1>
+            <h1 class="pull-left">User Dashboard - ${user.userDisplayName}</h1>
         </div>
     </div>
     <g:if test="${flash.error || user?.error}">
@@ -30,53 +30,53 @@
     </g:if>
     <g:else>
         <div class="row-fluid ">
-            <div class="span12">
-
-                <dl class="dl-horizontal">
-                    <g:each var="it" in="${user.keySet()}">
-                        <dt>${it}</dt>
-                        <dd>${user[it]}</dd>
-                    </g:each>
-                </dl>
-            </div>
-            <g:if test="${recentProjects}">
-                <h4>Recently editted projects</h4>
-                <table class="table table-striped table-bordered table-condensed">
-                    <thead>
+            <div class="span8">
+                <g:if test="${recentProjects}">
+                    <h4>Recently editted pages</h4>
+                    <table class="table table-striped table-bordered table-condensed">
+                        <thead>
                         <tr>
-                            <th>Project</th>
+                            <th>Page</th>
+                            <th>Name</th>
                             <th>Date</th>
                         </tr>
-                    </thead>
-                    <tbody>
+                        </thead>
+                        <tbody>
                         <g:each var="p" in="${recentProjects}">
                             <tr>
-                                <td><g:link controller="project" id="${p.entity.projectId}">${p.entity?.name}</g:link></td>
+                                <td><g:message code="label.${p.entityType}" default="${p.entityType}"/></td>
+                                <td><g:link controller="${fc.getControllerNameFromEntityType(entityType: p.entityType)}" id="${p.entityId}">${p.entity?.name?:p.entity?.type}</g:link></td>
                                 <td><fc:formatDateString date="${p.date}" inputFormat="yyyy-MM-dd'T'HH:mm:ss'Z'"/></td>
                             </tr>
                         </g:each>
-                    </tbody>
-                </table>
-            </g:if>
-            <g:if test="${memberProjects}">
-                <h4>Membership projects</h4>
-                <table class="table table-striped table-bordered table-condensed">
-                    <thead>
-                        <tr>
-                            <th>Project</th>
-                            <th>Member level</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+                        </tbody>
+                    </table>
+                </g:if>
+            </div>
+            <div class="span4">
+                <h4>Membership</h4>
+                <g:if test="${memberProjects}">
+                    <ul>
                         <g:each var="p" in="${memberProjects}">
-                            <tr>
-                                <td><g:link controller="project" id="${p.project?.projectId}">${p.project?.name}</g:link></td>
-                                <td>${p.accessLevel?.name}</td>
-                            </tr>
+                            <li><g:link controller="project" id="${p.project?.projectId}">${p.project?.name}</g:link> (${p.accessLevel?.name})</li>
                         </g:each>
-                    </tbody>
-                </table>
-            </g:if>
+                    </ul>
+                </g:if>
+                <g:else>
+                    [ You are not a member of any projects ]
+                </g:else>
+                <h4>Favourites</h4>
+                <g:if test="${starredProjects}">
+                    <ul>
+                        <g:each var="p" in="${starredProjects}">
+                            <li><g:link controller="project" id="${p.projectId}">${p.name}</g:link></li>
+                        </g:each>
+                    </ul>
+                </g:if>
+                <g:else>
+                    [ No favourites set ]
+                </g:else>
+            </div>
         </div>
     </g:else>
 

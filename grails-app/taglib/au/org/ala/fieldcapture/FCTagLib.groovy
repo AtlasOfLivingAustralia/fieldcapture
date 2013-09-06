@@ -241,6 +241,24 @@ class FCTagLib {
     }
 
     /**
+     * Given an entityType (e.g. au.org.ala.ecodata.Activity) output its controller name
+     * for use in a g:link taglib.
+     *
+     * @attr entityType REQUIRED
+     */
+    def getControllerNameFromEntityType = { attrs, body ->
+        def entityType = attrs.entityType
+        def bits = entityType.tokenize(".")
+        log.debug "entityType = $entityType || bits = $bits"
+        def controllerName
+
+        if (bits.size() > 2) {
+            controllerName = bits[-1].toLowerCase()
+        }
+        out << controllerName?:entityType
+    }
+
+    /**
      * Generate query string from params map, with optional requiredParams (comma separated)
      * list of params to include and optional excludeParam param string to remove/exclude from
      * the query string.

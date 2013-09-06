@@ -140,7 +140,7 @@ class SiteController {
         //if its a drawn shape, save and get a PID
         if(values?.extent?.source == 'drawn'){
            def shapePid = siteService.persistSiteExtent(values.name, values.extent.geometry)
-           values.extent.geometry.pid = shapePid.resp.id
+           values.extent.geometry.pid = shapePid.resp?.id
         }
 
         def result = []

@@ -4,12 +4,13 @@ import grails.converters.JSON
 
 class ProjectController {
 
-    def projectService, siteService, metadataService, commonService, activityService
+    def projectService, siteService, metadataService, commonService, activityService, userService
     static defaultAction = "index"
     static ignore = ['action','controller','id']
 
     def index(String id) {
         def project = projectService.get(id, 'brief')
+        def user = userService.getUser()
         if (!project || project.error) {
             forward(action: 'list', model: [error: project.error])
         } else {
@@ -20,7 +21,9 @@ class ProjectController {
             [project: project,
              activities: activityService.activitiesForProject(id),
              mapFeatures: commonService.getMapFeatures(project),
-             organisationName: metadataService.getInstitutionName(project.organisation)]
+             organisationName: metadataService.getInstitutionName(project.organisation),
+             isProjectStarredByUser: userService.isProjectStarredByUser(user?.userId?:"0", project.projectId)?.isProjectStarredByUser,
+             user: user]
         }
     }
 
@@ -91,5 +94,29 @@ class ProjectController {
         def project = projectService.get(id, 'brief')
         def activityTypes = metadataService.activityTypesList();
         render view:'/species/select', model: [project:project, activityTypes:activityTypes]
+    }
+
+    /**
+     * Star or unstar a project for a user
+     * Action is determined by the URI endpoint, either: /add | /remove
+     *
+     * @return
+     */
+    def starProject() {
+        String act = params.id?.toLowerCase() // rest path starProject/add or starProject/remove
+        String userId = params.userId
+        String projectId = params.projectId
+
+        if (act && userId && projectId) {
+            if (act == "add") {
+                render userService.addStarProjectForUser(userId, projectId) as JSON
+            } else if (act == "remove") {
+                render userService.removeStarProjectForUser(userId, projectId) as JSON
+            } else {
+                render status:400, text: 'Required endpoint (path) must be one of: add | remove'
+            }
+        } else {
+            render status:400, text: 'Required params not provided: userId, projectId'
+        }
     }
 }

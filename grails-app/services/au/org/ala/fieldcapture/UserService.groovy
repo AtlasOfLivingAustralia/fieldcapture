@@ -16,7 +16,8 @@ class UserService {
     }
 
     def getUser() {
-        authService.userDetails()
+        def u = authService.userDetails()
+        (u?.userId) ? u : null
     }
 
     def getRecentProjectsForUserId(userId) {
@@ -29,8 +30,23 @@ class UserService {
         webService.getJson(url)
     }
 
+    def getStarredProjectsForUserId(userId) {
+        def url = grailsApplication.config.ecodata.baseUrl + "permissions/getStarredProjectsForUserId/${userId}"
+        webService.getJson(url)
+    }
+
     def isProjectStarredByUser(String userId, String projectId) {
-        def url = grailsApplication.config.ecodata.baseUrl + "permissions/isProjectStarredByUser?userId${userId}&projectId=${projectId}"
+        def url = grailsApplication.config.ecodata.baseUrl + "permissions/isProjectStarredByUser?userId=${userId}&projectId=${projectId}"
+        webService.getJson(url)
+    }
+
+    def addStarProjectForUser(String userId, String projectId) {
+        def url = grailsApplication.config.ecodata.baseUrl + "permissions/addStarProjectForUser?userId=${userId}&projectId=${projectId}"
+        webService.getJson(url)
+    }
+
+    def removeStarProjectForUser(String userId, String projectId) {
+        def url = grailsApplication.config.ecodata.baseUrl + "permissions/removeStarProjectForUser?userId=${userId}&projectId=${projectId}"
         webService.getJson(url)
     }
 }

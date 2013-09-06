@@ -26,8 +26,8 @@ class WebService {
         try {
             conn.setConnectTimeout(10000)
             conn.setReadTimeout(50000)
-            if (includeUserId) {
-                conn.setRequestProperty("ALA-userId", getUserId())
+            if (includeUserId && getUserId()) {
+                conn.setRequestProperty(grailsApplication.config.app.http.header.userId, getUserId())
             }
             return conn.content.text
         } catch (SocketTimeoutException e) {
@@ -52,7 +52,9 @@ class WebService {
         try {
             conn.setConnectTimeout(10000)
             conn.setReadTimeout(50000)
-            conn.setRequestProperty("ALA-userId", getUserId())
+            if (getUserId()) {
+                conn.setRequestProperty(grailsApplication.config.app.http.header.userId, getUserId())
+            }
             def json = conn.content.text
             return JSON.parse(json)
         } catch (ConverterException e) {
@@ -82,14 +84,15 @@ class WebService {
         if(!postBody.api_key){
             postBody.api_key = grailsApplication.config.api_key
         }
-        //def webUtils = WebUtils.retrieveGrailsWebRequest()
-        //def userDetails = webUtils.getCurrentRequest().getAttribute("ecodata.request.user.details") // TODO get from UserDetails or config
+
         def resp = ""
         def conn = new URL(url).openConnection()
         try {
             conn.setDoOutput(true)
             conn.setRequestProperty("Content-Type", "application/json");
-            conn.setRequestProperty("ALA-userId", getUserId())
+            if (getUserId()) {
+                conn.setRequestProperty(grailsApplication.config.app.http.header.userId, getUserId())
+            }
             OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream())
             wr.write((postBody as JSON).toString())
             wr.flush()
@@ -114,7 +117,9 @@ class WebService {
         def conn = new URL(url).openConnection()
         try {
             conn.setRequestMethod("DELETE")
-            conn.setRequestProperty("ALA-userId", getUserId())
+            if (getUserId()) {
+                conn.setRequestProperty(grailsApplication.config.app.http.header.userId, getUserId())
+            }
             return conn.getResponseCode()
         } catch(Exception e){
             println e.message
