@@ -11,10 +11,10 @@ class UserController {
     def index() {
         def user = userService.getUser()
         log.debug('Viewing my dashboard :  ' + user)
-        def recentProjects = userService.getRecentProjectsForUserId(user.userId)
+        def recentEdits = userService.getRecentEditsForUserId(user.userId)
         def memberProjects = userService.getProjectsForUserId(user.userId)
         def starredProjects = userService.getStarredProjectsForUserId(user.userId)
-        [user: user, recentProjects: recentProjects, memberProjects: memberProjects, starredProjects: starredProjects]
+        [user: user, recentEdits: recentEdits, memberProjects: memberProjects, starredProjects: starredProjects]
     }
 
     // webservices

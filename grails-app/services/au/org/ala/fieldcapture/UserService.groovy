@@ -20,8 +20,8 @@ class UserService {
         (u?.userId) ? u : null
     }
 
-    def getRecentProjectsForUserId(userId) {
-        def url = auditBaseUrl + "/getRecentProjectsForUserId/${userId}"
+    def getRecentEditsForUserId(userId) {
+        def url = auditBaseUrl + "/getRecentEditsForUserId/${userId}"
         webService.getJson(url)
     }
 

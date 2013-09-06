@@ -31,8 +31,8 @@
     <g:else>
         <div class="row-fluid ">
             <div class="span8">
-                <g:if test="${recentProjects}">
-                    <h4>Recently editted pages</h4>
+                <g:if test="${recentEdits}">
+                    <h4>Pages recently editted by you</h4>
                     <table class="table table-striped table-bordered table-condensed">
                         <thead>
                         <tr>
@@ -42,7 +42,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <g:each var="p" in="${recentProjects}">
+                        <g:each var="p" in="${recentEdits}">
                             <tr>
                                 <td><g:message code="label.${p.entityType}" default="${p.entityType}"/></td>
                                 <td><g:link controller="${fc.getControllerNameFromEntityType(entityType: p.entityType)}" id="${p.entityId}">${p.entity?.name?:p.entity?.type}</g:link></td>
