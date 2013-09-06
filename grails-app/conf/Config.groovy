@@ -127,9 +127,9 @@ spatial.layersUrl = spatial.baseUrl + "/layers-service"
 spatial.geoserverUrl = spatial.baseUrl + "/geoserver"
 
 security.cas.casServerName = 'https://auth.ala.org.au'
-security.cas.uriFilterPattern = "/user/.*,/site/.*,/project/.*,/activity/.*,/output/.*,/image/.*,/admin/.*" // pattern for pages that require authentication
+security.cas.uriFilterPattern = "/user/.*,/site/(?!index).*,/project/(?!index).*,/activity/(?!index).*,/output/(?!index).*,/image/(?!index).*,/admin/.*" // pattern for pages that require authentication
 security.cas.uriExclusionFilterPattern = '/images.*,/css.*,/js.*,/less.*'
-security.cas.authenticateOnlyIfLoggedInPattern = "" // pattern for pages that can optionally display info about the logged-in user
+security.cas.authenticateOnlyIfLoggedInPattern = "/project/index.*,/site/index.*,/activity/index.*,/output/index.*" // pattern for pages that can optionally display info about the logged-in user
 security.cas.loginUrl = 'https://auth.ala.org.au/cas/login'
 security.cas.logoutUrl = 'https://auth.ala.org.au/cas/logout'
 security.cas.casServerUrlPrefix = 'https://auth.ala.org.au/cas'
@@ -264,7 +264,7 @@ log4j = {
             'grails.app.filters.au.org.ala.fieldcapture'
     ]
 
-    debug 'grails.app.controllers.au.org.ala','ala'
+    debug 'grails.app.controllers.au.org.ala','ala','au.org.ala.cas.client'
 
     error  'org.codehaus.groovy.grails.web.servlet',        // controllers
            'org.codehaus.groovy.grails.web.pages',          // GSP
