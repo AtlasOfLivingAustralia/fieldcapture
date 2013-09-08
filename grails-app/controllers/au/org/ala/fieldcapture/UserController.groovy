@@ -10,11 +10,15 @@ class UserController {
 
     def index() {
         def user = userService.getUser()
-        log.debug('Viewing my dashboard :  ' + user)
-        def recentEdits = userService.getRecentEditsForUserId(user.userId)
-        def memberProjects = userService.getProjectsForUserId(user.userId)
-        def starredProjects = userService.getStarredProjectsForUserId(user.userId)
-        [user: user, recentEdits: recentEdits, memberProjects: memberProjects, starredProjects: starredProjects]
+        if (!user) {
+            [error: "Logged in user not found (user = null)"]
+        } else {
+            log.debug('Viewing my dashboard :  ' + user)
+            def recentEdits = userService.getRecentEditsForUserId(user.userId)
+            def memberProjects = userService.getProjectsForUserId(user.userId)
+            def starredProjects = userService.getStarredProjectsForUserId(user.userId)
+            [user: user, recentEdits: recentEdits, memberProjects: memberProjects, starredProjects: starredProjects]
+        }
     }
 
     // webservices

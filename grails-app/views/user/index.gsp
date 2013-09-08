@@ -19,7 +19,7 @@
             <h1 class="pull-left">User Dashboard - ${user.userDisplayName}</h1>
         </div>
     </div>
-    <g:if test="${flash.error || user?.error}">
+    <g:if test="${flash.error || error}">
         <g:set var="error" value="${flash.error?:user?.error}"/>
         <div class="row-fluid">
             <div class="alert alert-error large-space-before">
