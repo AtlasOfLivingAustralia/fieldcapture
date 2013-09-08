@@ -173,7 +173,7 @@ environments {
         grails.serverURL = serverName + grails.app.context
         layout.skin = "nrm"
         security.cas.appServerName = serverName
-        security.cas.contextPath = "/" + grails.app.context
+        security.cas.contextPath = ""
         ecodata.baseUrl = 'http://ecodata-dev.ala.org.au:8080/ws/'
         upload.images.url = grails.serverURL+'/image/'
     }
