@@ -74,6 +74,7 @@ class FCTagLib {
      * @attr name
      * @attr targetField
      * @attr printable
+     * @attr size optionally overrides the bootstrap size class for the input
      */
     def datePicker = { attrs ->
         /**
@@ -90,7 +91,7 @@ class FCTagLib {
             id:"${attrs.id ?: attrs.name}",
             type:'text',
             size:'16',
-            class:'input-xlarge'
+            class: attrs.size ?: 'input-xlarge'
         ]
 
         def ignoreList = ['name', 'id']

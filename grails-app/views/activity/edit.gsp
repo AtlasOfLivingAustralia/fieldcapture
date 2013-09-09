@@ -11,6 +11,7 @@
         <title>Edit | ${activity.type} | Field Capture</title>
     </g:else>
 
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&language=en"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jstimezonedetect/1.0.4/jstz.min.js"></script>
     <r:script disposition="head">
     var fcConfig = {
@@ -22,7 +23,7 @@
         },
         here = document.location.href;
     </r:script>
-    <r:require modules="knockout,jqueryValidationEngine,datepicker,jQueryImageUpload"/>
+    <r:require modules="knockout,jqueryValidationEngine,datepicker,jQueryImageUpload,mapWithFeatures"/>
 </head>
 <body>
 <div class="container-fluid validationEngineContainer" id="validation-container">
@@ -45,63 +46,73 @@
                     <h2><span data-bind="click:goToSite" class="clickable">Site: ${site.name}</span></h2>
                 </g:if>
                 <g:else>
-                    <select data-bind="options:transients.sites,optionsText:'name',optionsValue:'siteId',value:siteId,optionsCaption:'Choose a site...'"></select>
+                    <select data-bind="options:transients.project.sites,optionsText:'name',optionsValue:'siteId',value:siteId,optionsCaption:'Choose a site...'"></select>
+                    Leave blank if this activity is not associated with a specific site.
                 </g:else>
                 <h3>Activity: <span data-bind="text:type"></span><i class="icon-star" data-bind="visible:dirtyFlag.isDirty" title="Has been modified"></i></h3>
             </div>
         </div>
 
 
-        <!-- Common activity fields -->
         <div class="row-fluid">
-            <div class="span6">
-                <fc:textArea data-bind="value: description" id="description" label="Description" class="span12" rows="3" />
-            </div>
-            <div class="span6">
-                <fc:textArea data-bind="value: notes" id="notes" label="Notes" class="span12" rows="3" />
-            </div>
-        </div>
+            <div class="${mapFeatures.toString() != '{}' ? 'span9' : 'span12'}">
+                <!-- Common activity fields -->
+                <div class="row-fluid">
+                    <div class="span6">
+                        <fc:textArea data-bind="value: description" id="description" label="Description" class="span12" rows="3" />
+                    </div>
+                    <div class="span6">
+                        <fc:textArea data-bind="value: notes" id="notes" label="Notes" class="span12" rows="3" />
+                    </div>
+                </div>
 
-        <div class="row-fluid">
-            <div class="span4 control-group">
-                <label for="startDate">Activity start date
-                <fc:iconHelp title="Start date">Date the activity was started.</fc:iconHelp>
-                </label>
-                <div class="input-append">
-                    <fc:datePicker targetField="startDate.date" name="startDate" data-validation-engine="validate[required]" printable="${printView}"/>
+                <div class="row-fluid">
+                    <div class="span4 control-group">
+                        <label for="startDate">Activity start date
+                        <fc:iconHelp title="Start date">Date the activity was started.</fc:iconHelp>
+                        </label>
+                        <div class="input-append">
+                            <fc:datePicker targetField="startDate.date" name="startDate" data-validation-engine="validate[required]" size="input-medium" printable="${printView}"/>
+                        </div>
+                    </div>
+                    <div class="span4">
+                        <label for="endDate">Activity end date
+                        <fc:iconHelp title="End date">Date the activity finished.</fc:iconHelp>
+                        </label>
+                        <div class="input-append">
+                            <fc:datePicker targetField="endDate.date" name="endDate" data-validation-engine="validate[future[startDate]]" size="input-medium" printable="${printView}" />
+                        </div>
+                    </div>
+                    <div class="span4">
+                        <label for="purpose">Purpose of event</label>
+                        <input data-bind="value: eventPurpose" id="purpose" type="text" class="span12"/>
+                    </div>
+                </div>
+
+                <div class="row-fluid">
+                    <div class="span4 control-group">
+                        <label for="startDate">Associated program
+                        <fc:iconHelp title="Associated program">Some help with examples.</fc:iconHelp>
+                        </label>
+                        <input data-bind="value: associatedProgram" type="text" class="span12" data-validation-engine="validate[required]"/>
+                    </div>
+                    <div class="span4">
+                        <label for="endDate">Sub-program
+                        <fc:iconHelp title="Sub-program">Some help with examples.</fc:iconHelp>
+                        </label>
+                        <input data-bind="value: associatedSubProgram" type="text" class="span12" data-validation-engine="validate[required]"/>
+                    </div>
+                    <div class="span4">
+                        <label>Stage of project</label>
+                        <input data-bind="value: projectStage" type="text" class="span12" data-validation-engine="validate[required]"/>
+                    </div>
                 </div>
             </div>
-            <div class="span4">
-                <label for="endDate">Activity end date
-                <fc:iconHelp title="End date">Date the activity finished.</fc:iconHelp>
-                </label>
-                <div class="input-append">
-                    <fc:datePicker targetField="endDate.date" name="endDate" data-validation-engine="validate[future[startDate]]" printable="${printView}" />
+            <g:if test="${mapFeatures.toString() != '{}'}">
+                <div class="span3">
+                    <div id="smallMap" style="width:100%"></div>
                 </div>
-            </div>
-            <div class="span4">
-                <label for="purpose">Purpose of event</label>
-                <input data-bind="value: eventPurpose" id="purpose" type="text" class="span12"/>
-            </div>
-        </div>
-
-        <div class="row-fluid">
-            <div class="span4 control-group">
-                <label for="startDate">Associated program
-                <fc:iconHelp title="Associated program">Some help with examples.</fc:iconHelp>
-                </label>
-                <input data-bind="value: associatedProgram" type="text" class="span12" data-validation-engine="validate[required]"/>
-            </div>
-            <div class="span4">
-                <label for="endDate">Sub-program
-                <fc:iconHelp title="Sub-program">Some help with examples.</fc:iconHelp>
-                </label>
-                <input data-bind="value: associatedSubProgram" type="text" class="span12" data-validation-engine="validate[required]"/>
-            </div>
-            <div class="span4">
-                <label>Stage of project</label>
-                <input data-bind="value: projectStage" type="text" class="span12" data-validation-engine="validate[required]"/>
-            </div>
+            </g:if>
         </div>
 
         <g:if test="${!printView}">
@@ -123,6 +134,8 @@
                   <pre>${metaModel}</pre>
                   <h4>Output models</h4>
                   <pre>${outputModels}</pre>
+                  <h4>Map features</h4>
+                  <pre>${mapFeatures.toString()}</pre>
               </div>
           </div>
         </g:if>
@@ -466,6 +479,17 @@
         ko.applyBindings(viewModel,document.getElementById('koActivityMainBlock'));
 
         master.register('viewModel', viewModel.save, viewModel.dirtyFlag.isDirty, viewModel.dirtyFlag.reset);
+
+        var mapFeatures = $.parseJSON('${mapFeatures}');
+        if(mapFeatures !=null && mapFeatures.features !== undefined && mapFeatures.features.length >0){
+            init_map_with_features({
+                    mapContainer: "smallMap",
+                    zoomToBounds:true,
+                    zoomLimit:16
+                },
+                mapFeatures
+            );
+        }
 
     });
 

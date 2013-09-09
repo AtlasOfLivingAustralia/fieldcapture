@@ -96,6 +96,8 @@ class SiteService {
      * Returns json that describes in a generic fashion the features to be placed on a map that
      * will represent the site's locations.
      *
+     * If no extent is defined, returns an empty JSON object.
+     *
      * @param site
      */
     def getMapFeatures(site) {
@@ -114,11 +116,14 @@ class SiteService {
                 break
             case 'drawn' :
                 featuresMap.features << site.extent.geometry
+                break
+            default:
+                featuresMap = [:]
         }
 
         def asJSON = featuresMap as JSON
 
-        println asJSON
+        log.debug asJSON
 
         asJSON
     }

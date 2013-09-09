@@ -63,6 +63,7 @@ class ActivityController {
             model.site = model.activity.siteId ? siteService.get(model.activity.siteId) : null
             // the project
             model.project = model.activity.projectId ? projectService.get(model.activity.projectId) : null
+            model.mapFeatures = model.site ? siteService.getMapFeatures(model.site) : "{}"
             model
         } else {
             forward(action: 'list', model: [error: 'no such id'])
