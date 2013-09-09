@@ -51,6 +51,8 @@
             </div>
         </div>
 
+
+        <!-- Common activity fields -->
         <div class="row-fluid">
             <div class="span6">
                 <fc:textArea data-bind="value: description" id="description" label="Description" class="span12" rows="3" />
@@ -62,7 +64,7 @@
 
         <div class="row-fluid">
             <div class="span4 control-group">
-                <label for="startDate">Start date
+                <label for="startDate">Activity start date
                 <fc:iconHelp title="Start date">Date the activity was started.</fc:iconHelp>
                 </label>
                 <div class="input-append">
@@ -70,7 +72,7 @@
                 </div>
             </div>
             <div class="span4">
-                <label for="endDate">End date
+                <label for="endDate">Activity end date
                 <fc:iconHelp title="End date">Date the activity finished.</fc:iconHelp>
                 </label>
                 <div class="input-append">
@@ -78,38 +80,31 @@
                 </div>
             </div>
             <div class="span4">
-                <label for="censusMethod">Method</label>
-                <input data-bind="value: censusMethod" id="censusMethod" type="text" class="span12"/>
+                <label for="purpose">Purpose of event</label>
+                <input data-bind="value: eventPurpose" id="purpose" type="text" class="span12"/>
+            </div>
+        </div>
+
+        <div class="row-fluid">
+            <div class="span4 control-group">
+                <label for="startDate">Associated program
+                <fc:iconHelp title="Associated program">Some help with examples.</fc:iconHelp>
+                </label>
+                <input data-bind="value: associatedProgram" type="text" class="span12" data-validation-engine="validate[required]"/>
+            </div>
+            <div class="span4">
+                <label for="endDate">Sub-program
+                <fc:iconHelp title="Sub-program">Some help with examples.</fc:iconHelp>
+                </label>
+                <input data-bind="value: associatedSubProgram" type="text" class="span12" data-validation-engine="validate[required]"/>
+            </div>
+            <div class="span4">
+                <label>Stage of project</label>
+                <input data-bind="value: projectStage" type="text" class="span12" data-validation-engine="validate[required]"/>
             </div>
         </div>
 
         <g:if test="${!printView}">
-            <div class="well well-small">
-                <h4>Old-style edit pages (while we transition to one-page editing)</h4>
-                <ul class="unstyled">
-                    <g:each in="${metaModel?.outputs}" var="output">
-                        <g:set var="data" value="${activity.outputs.find({it.name == output})}"/>
-                        <li class="row-fluid">
-                            <span class="span4">${output}</span>
-                            <g:if test="${data}">
-                                <span class="span4"><a type="button" class="btn"
-                                 href="${createLink(controller: 'output', action:'edit', id: data.outputId)}">Edit data</a></span>
-                            </g:if>
-                            <g:else>
-                                <span class="span4"><a type="button" class="btn"
-                                 href="${createLink(controller: 'output', action:'create')}?activityId=${activity.activityId}&outputName=${output}">Add data</a></span>
-                            </g:else>
-                        </li>
-                    </g:each>
-                </ul>
-            %{--<ul class="unstyled" data-bind="foreach:transients.metaModel.outputs">
-                <li class="row-fluid">
-                    <span class="span4" data-bind="text:$data"></span>
-                    <span class="span4"><a data-bind="editOutput:$data">Add data</a></span>
-                </li>
-            </ul>--}%
-        </div>
-
           <div class="expandable-debug">
               <hr />
               <h3>Debug</h3>
@@ -246,6 +241,34 @@
         </div>
     </g:each>
 
+    <g:if test="${!printView}">
+        <div class="well well-small">
+            <h4>Old-style edit pages (while we transition to one-page editing)</h4>
+            <ul class="unstyled">
+                <g:each in="${metaModel?.outputs}" var="output">
+                    <g:set var="data" value="${activity.outputs.find({it.name == output})}"/>
+                    <li class="row-fluid">
+                        <span class="span4">${output}</span>
+                        <g:if test="${data}">
+                            <span class="span4"><a type="button" class="btn"
+                                                   href="${createLink(controller: 'output', action:'edit', id: data.outputId)}">Edit data</a></span>
+                        </g:if>
+                        <g:else>
+                            <span class="span4"><a type="button" class="btn"
+                                                   href="${createLink(controller: 'output', action:'create')}?activityId=${activity.activityId}&outputName=${output}">Add data</a></span>
+                        </g:else>
+                    </li>
+                </g:each>
+            </ul>
+            %{--<ul class="unstyled" data-bind="foreach:transients.metaModel.outputs">
+                <li class="row-fluid">
+                    <span class="span4" data-bind="text:$data"></span>
+                    <span class="span4"><a data-bind="editOutput:$data">Add data</a></span>
+                </li>
+            </ul>--}%
+        </div>
+    </g:if>
+
     <div class="form-actions">
         <button type="button" id="save" class="btn btn-primary">Save changes</button>
         %{--<button type="button" id="reset" class="btn">Reset</button>--}%
@@ -372,10 +395,11 @@
             self.notes = ko.observable(act.notes);
             self.startDate = ko.observable(act.startDate).extend({simpleDate: false});
             self.endDate = ko.observable(act.endDate).extend({simpleDate: false});
-            self.censusMethod = ko.observable(act.censusMethod);
-            self.methodAccuracy = ko.observable(act.methodAccuracy);
-            self.collector = ko.observable(act.collector);
+            self.eventPurpose = ko.observable(act.eventPurpose);
             self.fieldNotes = ko.observable(act.fieldNotes);
+            self.associatedProgram = ko.observable(act.associatedProgram);
+            self.associatedSubProgram = ko.observable(act.associatedSubProgram);
+            self.projectStage = ko.observable(act.projectStage);
             self.type = ko.observable(act.type);
             self.siteId = ko.observable(act.siteId);
             self.projectId = act.projectId;
