@@ -1,5 +1,6 @@
 package au.org.ala.fieldcapture
 
+import au.org.ala.cas.util.AuthenticationCookieUtils
 import groovy.xml.MarkupBuilder
 import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
 
@@ -323,6 +324,49 @@ class FCTagLib {
         mb.span(class:'username') {
             mkp.yield(userService.currentUserDisplayName)
         }
+    }
+
+    /**
+     *
+     * @attr logoutUrl
+     * @attr loginReturnToUrl
+     * @attr logoutReturnToUrl
+     * @attr casLoginUrl
+     * @attr casLogoutUrl
+     * @attr cssClass
+     */
+    def loginLogoutButton = { attrs, body ->
+        def serverUrl = grailsApplication.config.grails.serverURL
+        def requestUri = removeContext(serverUrl) + request.forwardURI
+        def logoutUrl = attrs.logoutUrl ?: serverUrl + "/session/logout"
+        def loginReturnToUrl = attrs.loginReturnToUrl ?: requestUri
+        def logoutReturnToUrl = attrs.logoutReturnToUrl ?: requestUri
+        def casLoginUrl = attrs.casLoginUrl ?: grailsApplication.config.security.cas.loginUrl ?: "https://auth.ala.org.au/cas/login"
+        def casLogoutUrl = attrs.casLogoutUrl ?: grailsApplication.config.security.cas.logoutUrl ?: "https://auth.ala.org.au/cas/logout"
+
+        if ((attrs.ignoreCookie != "true" &&
+                AuthenticationCookieUtils.cookieExists(request, AuthenticationCookieUtils.ALA_AUTH_COOKIE)) ||
+                request.userPrincipal) {
+            return "<a href='${logoutUrl}" +
+                    "?casUrl=${casLogoutUrl}" +
+                    "&appUrl=${logoutReturnToUrl}' " +
+                    "class='${attrs.cssClass?:"btn"}'>Logout</a>"
+        } else {
+            // currently logged out
+            return "<a href='${casLoginUrl}?service=${loginReturnToUrl}' class='${attrs.cssClass}'><span>Log in</span></a>"
+        }
+    }
+
+    /**
+     * Remove the context path and params from the url.
+     * @param urlString
+     * @return
+     */
+    private String removeContext(urlString) {
+        def url = urlString.toURL()
+        def protocol = url.protocol != -1 ? url.protocol + "://" : ""
+        def port = url.port != -1 ? ":" + url.port : ""
+        return protocol + url.host + port
     }
 
     def toSingleWord = { attrs, body ->
