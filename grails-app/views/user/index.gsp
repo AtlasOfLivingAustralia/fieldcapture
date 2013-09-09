@@ -31,8 +31,8 @@
     <g:else>
         <div class="row-fluid ">
             <div class="span8">
+                <h4>Pages recently edited by you</h4>
                 <g:if test="${recentEdits}">
-                    <h4>Pages recently editted by you</h4>
                     <table class="table table-striped table-bordered table-condensed">
                         <thead>
                         <tr>
@@ -52,9 +52,12 @@
                         </tbody>
                     </table>
                 </g:if>
+                <g:else>
+                    [ No edits found in audit log ]
+                </g:else>
             </div>
             <div class="span4">
-                <h4>Membership</h4>
+                <h4>Active Projects</h4>
                 <g:if test="${memberProjects}">
                     <ul>
                         <g:each var="p" in="${memberProjects}">
@@ -65,7 +68,7 @@
                 <g:else>
                     [ You are not a member of any projects ]
                 </g:else>
-                <h4>Favourites</h4>
+                <h4>Favourite Projects</h4>
                 <g:if test="${starredProjects}">
                     <ul>
                         <g:each var="p" in="${starredProjects}">
