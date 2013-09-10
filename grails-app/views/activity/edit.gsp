@@ -49,7 +49,7 @@
                     <select data-bind="options:transients.project.sites,optionsText:'name',optionsValue:'siteId',value:siteId,optionsCaption:'Choose a site...'"></select>
                     Leave blank if this activity is not associated with a specific site.
                 </g:else>
-                <h3>Activity: <span data-bind="text:type"></span><i class="icon-star" data-bind="visible:dirtyFlag.isDirty" title="Has been modified"></i></h3>
+                <h3 data-bind="css:{modified:dirtyFlag.isDirty},attr:{title:'Has been modified'}">Activity: <span data-bind="text:type"></span><i class="icon-asterisk modified-icon" data-bind="visible:dirtyFlag.isDirty" title="Has been modified"></i></h3>
             </div>
         </div>
 
@@ -149,7 +149,7 @@
             <g:set var="output" value="[activityId: activity.activityId, name: outputName]"/>
         </g:if>
         <div class="output-block" id="ko${blockId}">
-            <h3>${outputName} <i class="icon-star" data-bind="visible:dirtyFlag.isDirty" title="Has been modified"></i></h3>
+            <h3 data-bind="css:{modified:dirtyFlag.isDirty},attr:{title:'Has been modified'}">${outputName}<i class="icon-asterisk modified-icon" data-bind="visible:dirtyFlag.isDirty" title="Has been modified" style="display: none;"></i></h3>
             <!-- add the dynamic components -->
             <md:modelView model="${model}" site="${site}" edit="true"/>
     <r:script>

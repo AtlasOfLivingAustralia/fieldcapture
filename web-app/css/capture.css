@@ -542,3 +542,12 @@ div.output-block {
     margin: 10px 0;
     padding: 0 5px;
 }
+
+h3.modified {
+    color: #396419;
+}
+
+i.modified-icon {
+    opacity: 0.7;
+    ;
+}
