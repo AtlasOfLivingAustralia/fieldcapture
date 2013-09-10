@@ -27,7 +27,7 @@ class ActivityController {
     }*/
 
     def index(String id) {
-        def activity = activityService.get(id)
+        /*def activity = activityService.get(id)
         if (!activity || activity.error) {
             flash.error = activity.error
             redirect(controller: 'home')
@@ -39,7 +39,8 @@ class ActivityController {
             model.project = model.activity.projectId ? [projectService.get(model.activity.projectId)] : null
             log.debug model
             model
-        }
+        }*/
+        redirect action:'edit', id: id
     }
 
     def edit(String id) {
