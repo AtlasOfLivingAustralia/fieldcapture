@@ -6,11 +6,27 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 
 class AdminController {
 
-    def cacheService, metadataService
+    def cacheService, metadataService, authService, projectService
 
     def index() {}
     def tools() {}
-    def users() {}
+    def users() {
+        def user = authService.userDetails()
+        def userList = authService.getAllUserNameList()
+        def projects = projectService.list(true)
+        log.debug "userInRole(\"ROLE_USER\") = ${authService.userInRole("ROLE_USER")}"
+        log.debug "userInRole(\"ROLE_ADMIN\") = ${authService.userInRole("ROLE_ADMIN")}"
+        log.debug "userInRole(\"ROLE_FOO\") = ${authService.userInRole("ROLE_FOO")}"
+
+        if (user && (authService.userInRole("ROLE_ADMIN") || authService.userInRole("ROLE_FC_ADMIN") ) && userList && projects) {
+            [ userNamesList: userList, projects: projects, user: user]
+        } else {
+            flash.message = "Permission denied - user: ${user} does not have access to this page."
+            redirect(action: "index")
+        }
+
+    }
+
 
     def metadata() {
         [activitiesMetadata: metadataService.activitiesModel()]

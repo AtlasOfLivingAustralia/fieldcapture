@@ -328,6 +328,7 @@ class FCTagLib {
     }
 
     /**
+     * FC version of loginlogout taglib from ala-web-theme. Adds icon and button to link
      *
      * @attr logoutUrl
      * @attr loginReturnToUrl
@@ -344,17 +345,25 @@ class FCTagLib {
         def logoutReturnToUrl = attrs.logoutReturnToUrl ?: requestUri
         def casLoginUrl = attrs.casLoginUrl ?: grailsApplication.config.security.cas.loginUrl ?: "https://auth.ala.org.au/cas/login"
         def casLogoutUrl = attrs.casLogoutUrl ?: grailsApplication.config.security.cas.logoutUrl ?: "https://auth.ala.org.au/cas/logout"
+        def output
 
         if ((attrs.ignoreCookie != "true" &&
                 AuthenticationCookieUtils.cookieExists(request, AuthenticationCookieUtils.ALA_AUTH_COOKIE)) ||
                 request.userPrincipal) {
-            return "<a href='${logoutUrl}" +
+            output = "<a href='${logoutUrl}" +
                     "?casUrl=${casLogoutUrl}" +
                     "&appUrl=${logoutReturnToUrl}' " +
-                    "class='${attrs.cssClass?:"btn"}'>Logout</a>"
+                    "class='${attrs.cssClass?:"btn"}'><i class='icon-off'></i> Logout</a>"
         } else {
             // currently logged out
-            return "<a href='${casLoginUrl}?service=${loginReturnToUrl}' class='${attrs.cssClass}'><span>Log in</span></a>"
+            output =  "<a href='${casLoginUrl}?service=${loginReturnToUrl}' class='${attrs.cssClass}'><span><i class='icon-off'></i> Log in</span></a>"
+        }
+        out << output
+    }
+
+    def userIsLoggedIn = { attr ->
+        if (AuthenticationCookieUtils.cookieExists(request, AuthenticationCookieUtils.ALA_AUTH_COOKIE)) {
+            out << true
         }
     }
 

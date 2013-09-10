@@ -94,6 +94,12 @@ modules = {
         resource url: '/bootstrap/css/bootstrap-responsive.min.css', attrs:[media:'screen']
     }
 
+    bootstrap_combo {
+        dependsOn 'app_bootstrap'
+        resource url: '/js/bootstrap-combobox.js'
+        resource url: '/css/bootstrap-combobox.css'
+    }
+
     amplify {
         resource url: '/js/amplify.min.js'
     }

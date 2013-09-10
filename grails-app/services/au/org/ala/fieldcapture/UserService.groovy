@@ -21,7 +21,7 @@ class UserService {
     }
 
     def getRecentEditsForUserId(userId) {
-        def url = auditBaseUrl + "/getRecentEditsForUserId/${userId}"
+            def url = auditBaseUrl + "/getRecentEditsForUserId/${userId}"
         webService.getJson(url)
     }
 
@@ -47,6 +47,11 @@ class UserService {
 
     def removeStarProjectForUser(String userId, String projectId) {
         def url = grailsApplication.config.ecodata.baseUrl + "permissions/removeStarProjectForUser?userId=${userId}&projectId=${projectId}"
+        webService.getJson(url)
+    }
+
+    def addUserAsRoleToProject(String userId, String projectId, String role) {
+        def url = grailsApplication.config.ecodata.baseUrl + "permissions/addUserAsRoleToProject?userId=${userId}&projectId=${projectId}&role=${role}"
         webService.getJson(url)
     }
 }
