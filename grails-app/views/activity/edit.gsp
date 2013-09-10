@@ -254,34 +254,6 @@
         </div>
     </g:each>
 
-    <g:if test="${!printView}">
-        <div class="well well-small">
-            <h4>Old-style edit pages (while we transition to one-page editing)</h4>
-            <ul class="unstyled">
-                <g:each in="${metaModel?.outputs}" var="output">
-                    <g:set var="data" value="${activity.outputs.find({it.name == output})}"/>
-                    <li class="row-fluid">
-                        <span class="span4">${output}</span>
-                        <g:if test="${data}">
-                            <span class="span4"><a type="button" class="btn"
-                                                   href="${createLink(controller: 'output', action:'edit', id: data.outputId)}">Edit data</a></span>
-                        </g:if>
-                        <g:else>
-                            <span class="span4"><a type="button" class="btn"
-                                                   href="${createLink(controller: 'output', action:'create')}?activityId=${activity.activityId}&outputName=${output}">Add data</a></span>
-                        </g:else>
-                    </li>
-                </g:each>
-            </ul>
-            %{--<ul class="unstyled" data-bind="foreach:transients.metaModel.outputs">
-                <li class="row-fluid">
-                    <span class="span4" data-bind="text:$data"></span>
-                    <span class="span4"><a data-bind="editOutput:$data">Add data</a></span>
-                </li>
-            </ul>--}%
-        </div>
-    </g:if>
-
     <div class="form-actions">
         <button type="button" id="save" class="btn btn-primary">Save changes</button>
         %{--<button type="button" id="reset" class="btn">Reset</button>--}%

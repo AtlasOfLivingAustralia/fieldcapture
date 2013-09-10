@@ -3,11 +3,39 @@ package au.org.ala.fieldcapture
 import grails.converters.JSON
 import org.codehaus.groovy.grails.web.json.JSONArray
 
+/**
+ * As of 10/9/2013 the editing of outputs is done only on the activity edit page.
+ *
+ * So direct requests to show or edit outputs (such as following links from audit logs)
+ * are redirected to the activity controller.
+ */
 class OutputController {
 
     def outputService, activityService, siteService, metadataService, projectService
 
     static ignore = ['action','controller','id']
+
+    def index(String id) {
+        def output = outputService.get(id)
+        if (!output || output.error) {
+            flash.errorMessage = "Output with id = ${id} does not exist."
+            redirect(controller: 'home', model: [error: output.error])
+        } else {
+            redirect controller: 'activity', action: 'edit', id: output.activityId
+        }
+    }
+
+    def edit(String id) {
+        def output = outputService.get(id)
+        if (!output || output.error) {
+            flash.errorMessage = "Output with id = ${id} does not exist."
+            redirect(controller: 'home', model: [error: output.error])
+        } else {
+            redirect controller: 'activity', action: 'edit', id: output.activityId
+        }
+    }
+
+    /* Old output editing:
 
     private Map fatten(output) {
         def map = [activity: activityService.get(output.activityId)]
@@ -58,7 +86,7 @@ class OutputController {
         render view: 'edit', model:
                 [output: output, activity: fat.activity, site: fat.site, projects: fat.projects,
                  model: fat.model, speciesLists: fat.speciesLists, returnTo: params.returnTo]
-    }
+    }*/
 
     /**
      * Updates existing or creates new output.
