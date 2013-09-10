@@ -19,6 +19,25 @@
 </head>
 <body>
 <div id="wrapper" class="container-fluid">
+
+<div class="row-fluid">
+    <g:if test="${flash.errorMessage}">
+        <div class="container-fluid">
+            <div class="alert alert-error">
+                ${flash.errorMessage}
+            </div>
+        </div>
+    </g:if>
+
+    <g:if test="${flash.message}">
+        <div class="container-fluid">
+            <div class="alert alert-info">
+                ${flash.message}
+            </div>
+        </div>
+    </g:if>
+</div>
+
 <div class="row-fluid">
     <div class="span12" id="heading">
         <h1 class="pull-left">Monitoring, Evaluation, Reporting and Improvement Tool (MERIT)&nbsp;<span
