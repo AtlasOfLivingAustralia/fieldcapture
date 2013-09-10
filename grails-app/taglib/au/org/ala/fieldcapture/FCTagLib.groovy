@@ -251,7 +251,7 @@ class FCTagLib {
     def getControllerNameFromEntityType = { attrs, body ->
         def entityType = attrs.entityType
         def bits = entityType.tokenize(".")
-        log.debug "entityType = $entityType || bits = $bits"
+        //log.debug "entityType = $entityType || bits = $bits"
         def controllerName
 
         if (bits.size() > 2) {
