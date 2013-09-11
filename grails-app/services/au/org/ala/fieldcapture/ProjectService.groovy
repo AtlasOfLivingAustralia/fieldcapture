@@ -213,4 +213,9 @@ class ProjectService {
         webService.getJson(url)
     }
 
+    def isUserAdminForProject(userId, projectId) {
+        def url = grailsApplication.config.ecodata.baseUrl + "permissions/isUserAdminForProject?projectId=${projectId}&userId=${userId}"
+        webService.getJson(url)?.userIsEditor
+    }
+
 }

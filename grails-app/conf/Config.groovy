@@ -134,10 +134,11 @@ security.cas.loginUrl = 'https://auth.ala.org.au/cas/login'
 security.cas.logoutUrl = 'https://auth.ala.org.au/cas/logout'
 security.cas.casServerUrlPrefix = 'https://auth.ala.org.au/cas'
 security.cas.bypass = false
+security.cas.adminRole = "ROLE_ADMIN" // TODO change to ROLE_FC_ADMIN or equiv. (NdR)
 
 upload.images.path = "/data/${appName}/images/"
 app.http.header.userId = "X-ALA-userId"
-security.cas.adminRole = "ROLE_ADMIN" // TODO change to ROLE_FC_ADMIN or equiv.
+app.accessLevel.roles = ["admin","editor"] // TODO this should come from ecodata and be cached (NdR)
 
 environments {
     development {

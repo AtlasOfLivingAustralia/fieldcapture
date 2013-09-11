@@ -14,6 +14,9 @@ class ProjectController {
         if (user && authService.userInRole(grailsApplication.config.security.cas.adminRole)) {
             user["isAdmin"] = true
             user["userNamesList"] = authService.getAllUserNameList()
+        } else if (user && projectService.isUserAdminForProject(user.userId, id)) {
+            user["isAdmin"] = true
+            user["userNamesList"] = authService.getAllUserNameList()
         }
         if (!project || project.error) {
             forward(action: 'list', model: [error: project.error])

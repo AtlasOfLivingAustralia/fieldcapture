@@ -11,6 +11,17 @@ class UserService {
         auditBaseUrl = grailsApplication.config.ecodata.baseUrl + 'audit'
     }
 
+    UserDetails getUserForUserId(String userId) {
+        Map<String, au.org.ala.web.UserDetails> um = authService.getAllUserNameMap()
+        au.org.ala.web.UserDetails ud = null;
+
+        if (um && um.containsKey(userId)) {
+            ud = um.get(userId)
+        }
+
+        return ud
+    }
+
     def getCurrentUserDisplayName() {
         getUser()?.userDisplayName?:"" //?:"mark.woolston@csiro.au"
     }
