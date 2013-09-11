@@ -41,6 +41,18 @@ class UserController {
         }
     }
 
+    def removeUserWithRole() {
+        String userId = params.userId
+        String role = params.role
+        String projectId = params.projectId
+
+        if (projectId && role && userId) {
+            render userService.removeUserWithRole(projectId, userId, role) as JSON
+        } else {
+            render status:400, text: 'Required params not provided: userId, projectId, role'
+        }
+    }
+
     def viewPermissionsForUserId() {
         String userId = params.userId
 

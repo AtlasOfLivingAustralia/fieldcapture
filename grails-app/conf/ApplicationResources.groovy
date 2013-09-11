@@ -84,7 +84,7 @@ modules = {
     app_bootstrap {
         dependsOn 'application'
         resource url: '/bootstrap/js/bootstrap.min.js'
-        resource url: '/bootstrap/css/bootstrap.min.css'
+        resource url: '/bootstrap/css/bootstrap.css'
         resource url: '/bootstrap/img/glyphicons-halflings-white.png'
         resource url: '/bootstrap/img/glyphicons-halflings.png'
     }

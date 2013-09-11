@@ -17,7 +17,10 @@
         activityDeleteUrl: "${createLink(controller: 'activity', action: 'ajaxDelete')}",
         siteCreateUrl: "${createLink(controller: 'site', action: 'createForProject', params: [projectId:project.projectId])}",
         siteSelectUrl: "${createLink(controller: 'site', action: 'select', params:[projectId:project.projectId])}&returnTo=${createLink(controller: 'project', action: 'index', id: project.projectId)}",
-        starProject: "${createLink(controller: 'project', action: 'starProject')}",
+        starProjectUrl: "${createLink(controller: 'project', action: 'starProject')}",
+        addUserRoleUrl: "${createLink(controller: 'user', action: 'addUserAsRoleToProject')}",
+        removeUserWithRoleUrl: "${createLink(controller: 'user', action: 'removeUserWithRole')}",
+        projectMembersUrl: "${createLink(controller: 'project', action: 'getMembersForProjectId')}",
         spatialBaseUrl: "${grailsApplication.config.spatial.baseURL}",
         spatialWmsCacheUrl: "${grailsApplication.config.spatial.wms.cache.url}",
         spatialWmsUrl: "${grailsApplication.config.spatial.wms.url}",
@@ -27,7 +30,7 @@
         here = window.location.href;
 
     </r:script>
-    <r:require modules="gmap3,mapWithFeatures,knockout,datepicker,amplify"/>
+    <r:require modules="gmap3,mapWithFeatures,knockout,datepicker,amplify,bootstrap_combo"/>
 </head>
 <body>
 <div class="container-fluid">
@@ -54,7 +57,6 @@
                     </g:else>
                     <g:link action="edit" id="${project.projectId}" class="btn">Change project details</g:link>
                 </div>
-
             </div>
         </div>
     </div>
@@ -66,6 +68,7 @@
         <li><a href="#site" id="site-tab" data-toggle="tab">Sites</a></li>
         <li><a href="#species" id="species-tab" data-toggle="tab">Species</a></li>
         <li><a href="#dashboard" id="dashboard-tab" data-toggle="tab">Dashboard</a></li>
+        <g:if test="${user?.isAdmin}"><li><a href="#admin" id="admin-tab" data-toggle="tab">Admin</a></li></g:if>
     </ul>
     <div class="tab-content">
         <div class="tab-pane active" id="overview">
@@ -227,6 +230,31 @@
                 </div>
             </div>
         </div>
+        <g:if test="${user?.isAdmin}">
+            <div class="tab-pane" id="admin">
+            <!-- ADMIN -->
+                <h3>Project Access</h3>
+                <form class="form-inline" id="userAccessForm">
+                    Add user <g:select name="userId" data-bind="value: userId" class="input-xlarge combobox" from="${user?.userNamesList}" optionValue="${{it.displayName + " <" + it.userName +">"}}" optionKey="userId" noSelection="['':'start typing a user name']"/>
+                    with role <g:select name="role" data-bind="value: role" from="${["admin","approver","editor"]}" noSelection="['':'-- select a permission level --']"/>
+                    <button data-bind="click: $root.addUserAsRole" class="btn btn-primary">Add</button>
+                    <g:img dir="images" file="spinner.gif" id="spinner" class="hide"/>
+                </form>
+                <h4>Project Members</h4>
+                <table class="table table-condensed table-striped" id="projectMembersTable" style="max-width: 600px;">
+                    <thead><tr><th width="5%">Remove</th><th width="10%">User Id</th><th>User Name</th><th>Role</th></tr></thead>
+                    <tbody class="membersTbody">
+                        <tr class="hide">
+                            <td class="clickable"><i class="icon-remove tooltips" title="remove this user and role combination"></i></td>
+                            <td class="memUserId"></td>
+                            <td class="memUserName"></td>
+                            <td class="memUserRole"></td>
+                        </tr>
+                        <tr id="spinnerRow"><td colspan="4">loading data... <g:img dir="images" file="spinner.gif" id="spinner2"/></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </g:if>
     </div>
 
     <hr />
@@ -426,44 +454,135 @@
                 $(storedTab + '-tab').tab('show');
             }
 
-           /**
-            * Star/Unstar project for user - send AJAX and update UI
-            *
-            * @param Boolean isProjectStarredByUser
-            */
-            function toggleStarred(isProjectStarredByUser) {
-                var basUrl = fcConfig.starProject;
-                var query = "?userId=${user?.userId}&projectId=${project?.projectId}"
-                if (isProjectStarredByUser) {
-                    // remove star
-                    $.getJSON(basUrl + "/remove" + query, function(data) {
-                        if (data.error) {
-                            alert(data.error);
-                        } else {
-                            $("#starBtn i").removeClass("icon-star").addClass("icon-star-empty");
-                            $("#starBtn span").text("Add to favourites");
-                        }
-                    }).fail(function(j,t,e){ alert(t + ":" + e);}).done();
-                } else {
-                    // add star
-                    $.getJSON(basUrl + "/add" + query, function(data) {
-                        if (data.error) {
-                            alert(data.error);
-                        } else {
-                            $("#starBtn i").removeClass("icon-star-empty").addClass("icon-star");
-                            $("#starBtn span").text("Remove from favourites");
-                        }
-                    }).fail(function(j,t,e){ alert(t + ":" + e);}).done();
-                }
-            }
-
             // Star button click event
             $("#starBtn").click(function(e) {
                 var isStarred = ($("#starBtn i").attr("class") == "icon-star");
                 toggleStarred(isStarred);
             });
 
-        });
+           /**
+            * KO view model for admin tab - add user as role to this project
+            *
+            * @param project
+            * @constructor
+            */
+            function UserAccessViewModel(project) {
+                var self = this;
+                self.userId = ko.observable("userId");
+                self.role = ko.observable("role");
+                self.projectId = project.projectId;
+                self.addUserAsRole = function() {
+                    if (this.userId() && this.role() && this.projectId) {
+                        $("#spinner").show();
+                        $.ajax({
+                            url: fcConfig.addUserRoleUrl,
+                            data: { userId: $("#userId").val(), role: $("#role").val(), projectId: "${project.projectId}" }
+                        })
+                        .done(function(result) { alert("success"); })
+                        .fail(function(jqXHR, textStatus, errorThrown) { alert(jqXHR.responseText); })
+                        .always(function(result) { $("#spinner").hide(); $("#userAccessForm")[0].reset(); });
+                    } else {
+                        alert("All fields are required, please try again");
+                    }
+                };
+            }
+
+            ko.applyBindings(new UserAccessViewModel(${project}), document.getElementById('admin'));
+
+            // click event on the "remove" button on Project Members table
+            $('.membersTbody').on("click", "td.clickable", function(e) {
+                if (confirm('Are you sure you want to remove this user/role?')) {
+                    var userId = $(this).data("userid");
+                    var role = $(this).data("role");
+
+                    if (userId && role) {
+                        $.ajax( {
+                            url: fcConfig.removeUserWithRoleUrl,
+                            data: {userId: userId, role: role, projectId: "${project.projectId}" }
+                        })
+                        .done(function(result) { alert("User was removed"); })
+                        .fail(function(jqXHR, textStatus, errorThrown) { alert(jqXHR.responseText); })
+                        .always(function(result) {
+                            $("#spinner").hide();
+                            loadProjectMembers(); // reload table
+                        });
+                    } else {
+                        alert("Error: required params not provided: userId & role");
+                    }
+                }
+            });
+
+            // load initial list of project members
+            loadProjectMembers();
+
+            // combobox init
+            $(".combobox").combobox();
+
+            // BS tooltip
+            $('.tooltips').tooltip();
+
+        });// end window.load
+
+       /**
+        * Star/Unstar project for user - send AJAX and update UI
+        *
+        * @param Boolean isProjectStarredByUser
+        */
+        function toggleStarred(isProjectStarredByUser) {
+            var basUrl = fcConfig.starProjectUrl;
+            var query = "?userId=${user?.userId}&projectId=${project?.projectId}"
+            if (isProjectStarredByUser) {
+                // remove star
+                $.getJSON(basUrl + "/remove" + query, function(data) {
+                    if (data.error) {
+                        alert(data.error);
+                    } else {
+                        $("#starBtn i").removeClass("icon-star").addClass("icon-star-empty");
+                        $("#starBtn span").text("Add to favourites");
+                    }
+                }).fail(function(j,t,e){ alert(t + ":" + e);}).done();
+            } else {
+                // add star
+                $.getJSON(basUrl + "/add" + query, function(data) {
+                    if (data.error) {
+                        alert(data.error);
+                    } else {
+                        $("#starBtn i").removeClass("icon-star-empty").addClass("icon-star");
+                        $("#starBtn span").text("Remove from favourites");
+                    }
+                }).fail(function(j,t,e){ alert(t + ":" + e);}).done();
+            }
+        }
+
+       /**
+        * This populates the "Project Members" table via an AJAX call
+        * It uses the jQuery clone pattern to generate HTML using a plain
+        * HTML template, found in the table itself.
+        * See: http://stackoverflow.com/a/1091493/249327
+        */
+        function loadProjectMembers() {
+            $("#spinnerRow").show();
+            $('.membersTbody tr.cloned').remove();
+            $.ajax({
+                url: fcConfig.projectMembersUrl + "/${project.projectId}"
+            })
+            .done(function(data) {
+                //alert("Done data = " + data);
+                $.each(data, function(i, el) {
+                    var $clone = $('.membersTbody tr.hide').clone();
+                    $clone.removeClass("hide");
+                    $clone.addClass("cloned");
+                    $clone.find('.clickable').data("userid", el.userId);
+                    $clone.find('.clickable').data("role", el.role);
+                    $clone.find('.memUserId').text(el.userId);
+                    $clone.find('.memUserName').text(el.displayName);
+                    $clone.find('.memUserRole').text(el.role);
+                    $('.membersTbody').append($clone);
+                });
+             })
+            .fail(function(jqXHR, textStatus, errorThrown) { alert(jqXHR.responseText); })
+            .always(function() { $("#spinnerRow").hide(); });
+        }
 
     </r:script>
 </body>

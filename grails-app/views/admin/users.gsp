@@ -49,8 +49,9 @@
             var namesArray = [];
             <g:each var="it" in="${userNamesList}" status="s">namesArray[${s}] = "${it.userId} -- ${it.displayName?.toLowerCase()} -- ${it.userName?.toLowerCase()}";</g:each>
 
-            $(".combobox").combobox();
-
+            $(".combobox").combobox({
+                //template: '<div class="combobox-container"><input type="hidden" /><input type="text" autocomplete="off" /><span class="add-on btn" data-dropdown="dropdown"><span class="caret"/><span class="combobox-clear"><i class="icon-remove"/></span></span></div>'
+            });
             $('.tooltips').tooltip();
         }); // end document.ready
 
@@ -60,11 +61,12 @@
          * @param data
          */
         function formatPermissionData(data) {
-            var html = "<ul>";
+            var html = "<table class='table table-bordered table-striped table-condensed'>";
+            html += "<thead><tr><th>Project</th><th>Role</th></tr></thead><tbody>";
             $.each(data, function(i, el) {
-                html += "<li>Project name: <b>" + el.project.name + "</b><br>Project Id: " + el.project.projectId  + "<br>Role: " + el.accessLevel.name + "</li>";
+                html += "<tr><td><a href='${createLink(controller: "project")}/" + el.project.projectId + "'>" + el.project.name + "</a></td><td>" + el.accessLevel.name + "</td></tr>";
             });
-            html += "</ul>";
+            html += "</tbody></table>";
             return html;
         }
     </script>
@@ -115,7 +117,7 @@
                 </div>
             </div>
         </form>
-        <div class="well well-small" id="userPermissionsOutput">
+        <div class="span8" id="userPermissionsOutput">
 
         </div>
     </div>

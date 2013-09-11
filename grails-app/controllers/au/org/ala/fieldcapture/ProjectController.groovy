@@ -4,13 +4,17 @@ import grails.converters.JSON
 
 class ProjectController {
 
-    def projectService, siteService, metadataService, commonService, activityService, userService
+    def projectService, siteService, metadataService, commonService, activityService, userService, authService
     static defaultAction = "index"
     static ignore = ['action','controller','id']
 
     def index(String id) {
         def project = projectService.get(id, 'brief')
         def user = userService.getUser()
+        if (user && authService.userInRole(grailsApplication.config.security.cas.adminRole)) {
+            user["isAdmin"] = true
+            user["userNamesList"] = authService.getAllUserNameList()
+        }
         if (!project || project.error) {
             forward(action: 'list', model: [error: project.error])
         } else {
@@ -119,4 +123,16 @@ class ProjectController {
             render status:400, text: 'Required params not provided: userId, projectId'
         }
     }
+
+    def getMembersForProjectId() {
+        String projectId = params.id
+
+        if (projectId) {
+            render projectService.getMembersForProjectId(projectId) as JSON
+        } else {
+            render status:400, text: 'Required params not provided:  projectId'
+        }
+    }
+
+
 }

@@ -137,6 +137,7 @@ security.cas.bypass = false
 
 upload.images.path = "/data/${appName}/images/"
 app.http.header.userId = "X-ALA-userId"
+security.cas.adminRole = "ROLE_ADMIN" // TODO change to ROLE_FC_ADMIN or equiv.
 
 environments {
     development {

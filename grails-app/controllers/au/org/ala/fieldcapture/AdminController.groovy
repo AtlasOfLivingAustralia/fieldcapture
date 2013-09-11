@@ -18,7 +18,7 @@ class AdminController {
         log.debug "userInRole(\"ROLE_ADMIN\") = ${authService.userInRole("ROLE_ADMIN")}"
         log.debug "userInRole(\"ROLE_FOO\") = ${authService.userInRole("ROLE_FOO")}"
 
-        if (user && (authService.userInRole("ROLE_ADMIN") || authService.userInRole("ROLE_FC_ADMIN") ) && userList && projects) {
+        if (user && authService.userInRole(grailsApplication.config.security.cas.adminRole) && userList && projects) {
             [ userNamesList: userList, projects: projects, user: user]
         } else {
             flash.message = "Permission denied - user: ${user} does not have access to this page."

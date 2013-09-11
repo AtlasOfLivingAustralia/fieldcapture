@@ -54,4 +54,9 @@ class UserService {
         def url = grailsApplication.config.ecodata.baseUrl + "permissions/addUserAsRoleToProject?userId=${userId}&projectId=${projectId}&role=${role}"
         webService.getJson(url)
     }
+
+    def removeUserWithRole(projectId, userId, role) {
+        def url = grailsApplication.config.ecodata.baseUrl + "permissions/removeUserWithRoleFromProject?projectId=${projectId}&userId=${userId}&role=${role}"
+        webService.getJson(url)
+    }
 }
