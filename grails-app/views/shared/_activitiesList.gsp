@@ -16,7 +16,7 @@
             <th width="2%"></th>
             <th width="2%"></th>
             <th class="sort" data-bind="sortIcon:activitiesSort,click:sortBy" data-column="type">Type</th>
-            <th width="40%" class="sort" data-bind="sortIcon:activitiesSort,click:sortBy" data-column="description">Description</th>
+            <th width="30%" class="sort" data-bind="sortIcon:activitiesSort,click:sortBy" data-column="description">Description</th>
             <th class="sort" data-bind="sortIcon:activitiesSort,click:sortBy" data-column="startDate">From</th>
             <th class="sort" data-bind="sortIcon:activitiesSort,click:sortBy" data-column="endDate">To</th>
             <g:if test="${showSites}">
