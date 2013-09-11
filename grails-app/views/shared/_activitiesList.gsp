@@ -22,6 +22,7 @@
             <g:if test="${showSites}">
                 <th class="sort" data-bind="sortIcon:activitiesSort,click:sortBy" data-column="siteName">Site</th>
             </g:if>
+            <th class="status" data-bind="sortIcon:activitiesSort,click:sortBy" data-column="progress">Status</th>
             <th width="1%"></th>
         </tr>
         </thead>
@@ -39,11 +40,12 @@
             <td>
                 <span data-bind="text:description"></span>
             </td>
-            <td><span data-bind="text:startDate.formattedDate"></span></td>
-            <td><span data-bind="text:endDate.formattedDate"></span></td>
+            <td><span data-bind="text:startDateForDisplay"></span></td>
+            <td><span data-bind="text:endDateForDisplay"></span></td>
             <g:if test="${showSites}">
                 <td><a data-bind="text:siteName,click:$parent.openSite"></a></td>
             </g:if>
+            <td><span data-bind="text:progress"></span></td>
             <td>
                 <i data-bind="click:del" class="icon-remove pull-right" title="Delete activity"></i>
             </td>
@@ -66,6 +68,14 @@
                         description: act.description,
                         startDate: ko.observable(act.startDate).extend({simpleDate:false}),
                         endDate: ko.observable(act.endDate).extend({simpleDate:false}),
+                        plannedStartDate: ko.observable(act.plannedStartDate).extend({simpleDate:false}),
+                        plannedEndDate: ko.observable(act.plannedEndDate).extend({simpleDate:false}),
+                        progress: ko.computed(function() {
+                            if (!act.progress) {
+                                return 'Started';
+                            }
+                            return act.progress.charAt(0).toUpperCase() + act.progress.slice(1);
+                        }),
                         outputs: ko.observableArray([]),
                         collector: act.collector,
                         metaModel: act.model || {},
@@ -93,6 +103,20 @@
                             });
                         }
                     };
+                    activity.startDateForDisplay = ko.computed(function() {
+                            var self = activity;
+                            if (self.progress() === 'Planned') {
+                                return self.plannedStartDate.formattedDate();
+                            }
+                            return self.startDate.formattedDate();
+                        }),
+                    activity.endDateForDisplay = ko.computed(function() {
+                            var self = activity;
+                            if (self.progress() === 'Planned') {
+                                return self.plannedEndDate.formattedDate();
+                            }
+                            return self.endDate.formattedDate();
+                        }),
                     $.each(act.outputs, function (j, out) {
                         activity.outputs.push({
                             outputId: out.outputId,
