@@ -115,7 +115,7 @@
             </g:if>
         </div>
 
-        <g:if test="${!printView}">
+        <g:if env="development" test="${!printView}">
           <div class="expandable-debug">
               <hr />
               <h3>Debug</h3>

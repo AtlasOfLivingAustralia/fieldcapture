@@ -61,7 +61,7 @@ class ActivityController {
                 }
             }
             // the site
-            model.site = model.activity.siteId ? siteService.get(model.activity.siteId) : null
+            model.site = model.activity.siteId ? siteService.get(model.activity.siteId, [view:'brief']) : null
             // the project
             model.project = model.activity.projectId ? projectService.get(model.activity.projectId) : null
             model.mapFeatures = model.site ? siteService.getMapFeatures(model.site) : "{}"
