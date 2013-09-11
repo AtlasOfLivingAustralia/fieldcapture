@@ -351,14 +351,12 @@ class ModelTagLib {
                     out << "<div class=\"row-fluid\">"
                     labelAttributes.addClass 'span4'
                 }
-                if (it.type == 'textarea') {
-                    out << INDENT << dataTag(attrs, it, 'data', attrs.edit, at, null, labelAttributes)
-                } else {
-                    at.addSpan("span${span}")
-                    out << "<span${at.toString()}>"
-                    out << INDENT << dataTag(attrs, it, 'data', attrs.edit, null, null, labelAttributes)
-                    out << "</span>"
-                }
+
+                at.addSpan("span${span}")
+                out << "<span${at.toString()}>"
+                out << INDENT << dataTag(attrs, it, 'data', attrs.edit, null, null, labelAttributes)
+                out << "</span>"
+
                 if (context == 'col') {
                     out << "</div>"
                 }
