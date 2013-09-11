@@ -95,7 +95,6 @@ modules = {
     }
 
     bootstrap_combo {
-        dependsOn 'app_bootstrap'
         resource url: '/js/bootstrap-combobox.js'
         resource url: '/css/bootstrap-combobox.css'
     }
