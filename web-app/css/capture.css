@@ -551,3 +551,9 @@ i.modified-icon {
     opacity: 0.7;
     ;
 }
+
+.input-append .last {
+    -webkit-border-radius: 0 4px 4px 0;
+    -moz-border-radius: 0 4px 4px 0;
+    border-radius: 0 4px 4px 0;
+}

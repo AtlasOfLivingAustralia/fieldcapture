@@ -70,4 +70,10 @@ class UserService {
         def url = grailsApplication.config.ecodata.baseUrl + "permissions/removeUserWithRoleFromProject?projectId=${projectId}&userId=${userId}&role=${role}"
         webService.getJson(url)
     }
+
+    def checkEmailExists(String email) {
+        def userList = authService.allUserNameList
+        def match = userList.find { it.userName?.toLowerCase() == email.toLowerCase() }
+        return match?.userId?:""
+    }
 }

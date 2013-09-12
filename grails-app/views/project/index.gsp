@@ -30,7 +30,7 @@
         here = window.location.href;
 
     </r:script>
-    <r:require modules="gmap3,mapWithFeatures,knockout,datepicker,amplify,bootstrap_combo"/>
+    <r:require modules="gmap3,mapWithFeatures,knockout,datepicker,amplify"/>
 </head>
 <body>
 <div class="container-fluid">
@@ -235,13 +235,21 @@
             <!-- ADMIN -->
                 <h3>Project Access</h3>
                 <form class="form-inline" id="userAccessForm">
-                    Add user <g:select name="userId" data-bind="value: userId" class="input-xlarge combobox" from="${user?.userNamesList}" optionValue="${{it.displayName + " <" + it.userName +">"}}" optionKey="userId" noSelection="['':'start typing a user name']"/>
+                    Add user&nbsp;
+                    %{--<g:select name="userId" data-bind="value: userId" class="input-xlarge combobox" from="${user?.userNamesList}" optionValue="${{it.displayName + " <" + it.userName +">"}}" optionKey="userId" noSelection="['':'start typing a user name']"/>--}%
+                    <div class="input-append">
+                        <input class="input-xlarge" id="emailAddress" placeholder="enter a user's email address" type="text"/>
+                        <input id="userId" type="hidden" value=""/>
+                        <button id="checkEmail" class="btn btn-inverse tooltips last" type="button" title="check email address"><i class="icon-search icon-white"></i></button>
+                        <button id="checkEmailYes" class="hide btn btn-success tooltips last" type="button" title="email address was found"><i class="icon-ok icon-white"></i></button>
+                        <button id="checkEmailNo" class="hide btn btn-danger tooltips" type="button" title="email address was NOT found"><i class="icon-remove icon-white"></i></button>
+                    </div>
                     with role <g:select name="role" data-bind="value: role" from="${grailsApplication.config.app.accessLevel.roles}" noSelection="['':'-- select a role --']"/>
                     <button data-bind="click: $root.addUserAsRole" class="btn btn-primary">Add</button>
                     <g:img dir="images" file="spinner.gif" id="spinner1" class="hide"/>
                 </form>
                 <h4>Project Members</h4>
-                <table class="table table-condensed table-striped" id="projectMembersTable" style="max-width: 600px;">
+                <table class="table table-condensed" id="projectMembersTable" style="max-width: 600px;">
                     <thead><tr><th width="10%">User&nbsp;Id</th><th>User&nbsp;Name</th><th width="15%">Role</th><th width="5%">&nbsp;</th><th width="5%">&nbsp;</th></tr></thead>
                     <tbody class="membersTbody">
                         <tr class="hide">
@@ -461,9 +469,6 @@
                 toggleStarred(isStarred);
             });
 
-            // combobox init
-            $(".combobox").combobox();
-
             // BS tooltip
             $('.tooltips').tooltip();
 
@@ -535,25 +540,18 @@
 
                 // click event on the "remove" button on Project Members table
                 $('.membersTbody').on("click", "td.memRemoveRole", function(e) {
-                    if (confirm('Are you sure you want to remove this user/role?')) {
-                        var userId = $(this).data("userid");
-                        var role = $(this).data("role");
-
-                        if (userId && role) {
-                            $.ajax( {
-                                url: fcConfig.removeUserWithRoleUrl,
-                                data: {userId: userId, role: role, projectId: "${project.projectId}" }
-                            })
-                            .done(function(result) { alert("User was removed"); })
-                            .fail(function(jqXHR, textStatus, errorThrown) { alert(jqXHR.responseText); })
-                            .always(function(result) {
-                                $("#spinner1").hide();
-                                loadProjectMembers(); // reload table
-                            });
-                        } else {
-                            alert("Error: required params not provided: userId & role");
+                    var $this = this;
+                    var userId = $($this).data("userid");
+                    var role = $($this).data("role");
+                    bootbox.confirm("Are you sure you want to remove this user's access?", function(result) {
+                        if (result) {
+                            if (userId && role) {
+                                modifyUserRole(userId, role);
+                            } else {
+                                alert("Error: required params not provided: userId & role");
+                            }
                         }
-                    }
+                    });
                 });
 
                 $('.membersTbody').on("click", "td.memEditRole", function(e) {
@@ -564,6 +562,43 @@
                         $(this).parent().find("span").fadeIn();
                         $(this).parent().find("select").hide();
                     }
+                });
+
+                // email address check
+                $("#checkEmail").click(function(e) {
+                    var email = $("#emailAddress").val();
+                    if (email) {
+                        $.get("${g.createLink(controller:'user',action:'checkEmailExists')}?email=" + email, function(data) {
+                            if (data && /^\d+$/.test(data)) { // data should be a number
+                                $("#userId").val(data);
+                                $("#checkEmail").hide();
+                                $("#checkEmailNo").hide();
+                                $("#checkEmailYes").show();
+                            } else {
+                                $("#userId").val("");
+                                $("#checkEmail").hide();
+                                $("#checkEmailNo").show();
+                                $("#checkEmailYes").hide();
+                            }
+                        });
+                    } else {
+                        $("#emailAddress").focus();
+                    }
+                });
+
+                $("#emailAddress").keyup(function() {
+                    if (!$("#checkEmail").is("visible")) {
+                        $("#userId").val("");
+                        $("#checkEmail").show();
+                        $("#checkEmailNo").hide();
+                        $("#checkEmailYes").hide();
+                    }
+                });
+
+                $("#admin").on("change", ".memUserRole select", function() {
+                    var userId = $(this).parent().find('.clickable').data('userId');
+                    var role = $(this).parent().find('.clickable').data('role');
+                    modifyUserRole(userId, role);
                 });
 
                 // load initial list of project members
@@ -600,6 +635,19 @@
                  })
                 .fail(function(jqXHR, textStatus, errorThrown) { alert(jqXHR.responseText); })
                 .always(function() { $("#spinnerRow").hide(); });
+            }
+
+            function modifyUserRole(userId, role) {
+                $.ajax( {
+                    url: fcConfig.removeUserWithRoleUrl,
+                    data: {userId: userId, role: role, projectId: "${project.projectId}" }
+                })
+                .done(function(result) {  })
+                .fail(function(jqXHR, textStatus, errorThrown) { alert(jqXHR.responseText); })
+                .always(function(result) {
+                    $("#spinner1").hide();
+                    loadProjectMembers(); // reload table
+                });
             }
 
         </r:script>

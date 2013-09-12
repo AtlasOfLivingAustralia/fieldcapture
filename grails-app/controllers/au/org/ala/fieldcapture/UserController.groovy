@@ -65,4 +65,19 @@ class UserController {
         }
     }
 
+    /**
+     * Check if an email address exists in AUTH and return the userId (number) if true,
+     * otherwise return an empty String
+     *
+     * @return userId
+     */
+    def checkEmailExists() {
+        String email = params.email
+
+        if (email) {
+            render userService.checkEmailExists(email)
+        } else {
+            render status:400, text: 'Required param not provided: email'
+        }
+    }
 }
