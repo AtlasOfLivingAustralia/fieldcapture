@@ -6,7 +6,7 @@ import grails.converters.JSON
  * Controller to display User page (My Profile) as well as some webservices
  */
 class UserController {
-    def userService, authService
+    def userService, authService, projectService
 
     def index() {
         def user = userService.getUser()
@@ -32,10 +32,12 @@ class UserController {
         String userId = params.userId
         String projectId = params.projectId
         String role = params.role
-        def user = authService.userDetails()
+        //def user = authService.userDetails()
 
-        if (user && (authService.userInRole("ROLE_ADMIN") || authService.userInRole("ROLE_FC_ADMIN")) && userId && projectId && role) {
+        if (projectService.isUserAdminForProject(userId, projectId) && userId && projectId && role) {
             render userService.addUserAsRoleToProject(userId, projectId, role) as JSON
+        } else if (userId && projectId && role) {
+            render status:403, text: 'Permission denied'
         } else {
             render status:400, text: 'Required params not provided: userId, role, projectId'
         }
