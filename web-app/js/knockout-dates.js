@@ -664,6 +664,23 @@ ko.dirtyFlag = function(root, isInitiallyDirty) {
     return result;
 };
 
+
+/**
+ * A vetoableObservable is an observable that provides a mechanism to prevent changes to its value under certain
+ * conditions.  When a change is notified, the vetoCheck function is executed - if it returns false the change is
+ * disallowed and the vetoCallback function is invoked.  Otherwise the change is allowed and the noVetoCallback
+ * function is invoked.
+ * The only current example of it's use is when the type of an activity is changed, it
+ * can potentially invalidate any target score values that have been supplied by the user - hence the user is
+ * asked if they wish to proceed, and if so, the targets can be removed.
+ * @param initialValue the initial value for the observable.
+ * @param vetoCheck a function or string that will be invoked when the value of the vetoableObservable changes.  Returning
+ * false from this function will disallow the change.  If a string is supplied, it is used as the question text
+ * for a window.confirm function.
+ * @param noVetoCallback this callback will be invoked when a change to the vetoableObservable is allowed.
+ * @param vetoCallback this callback will be invoked when a change to the vetoableObservable is disallowed (has been vetoed).
+ * @returns {*}
+ */
 ko.vetoableObservable = function(initialValue, vetoCheck, noVetoCallback, vetoCallback) {
     //private variables
     var _current = ko.observable(initialValue);

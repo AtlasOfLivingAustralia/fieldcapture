@@ -228,6 +228,17 @@
                         <div class="bar" style="width: 18%;"></div>
                     </div>
                 </div>
+
+                <g:each in="${metrics}" var="grouping">
+                    <g:each var="score" in="${grouping.scores}">
+                    <div class="span4 well">
+                        <h3>${score.score} ${grouping.groupName}</h3>
+                        <g:each var="group" in="${score.values}">
+                            <strong>${group.groupValue}</strong>:${group.aggregatedResult}
+                        </g:each>
+                    </div>
+                    </g:each>
+                </g:each>
             </div>
         </div>
         <g:if test="${user?.isAdmin}">

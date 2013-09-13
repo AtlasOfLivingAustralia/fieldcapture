@@ -1,6 +1,5 @@
 package au.org.ala.fieldcapture
 
-import grails.converters.JSON
 import org.codehaus.groovy.grails.web.mapping.LinkGenerator
 
 class ProjectService {
@@ -64,6 +63,10 @@ class ProjectService {
     def destroy(id) {
         webService.doDelete(grailsApplication.config.ecodata.baseUrl + 'project/' + id +
             '?destroy=true')
+    }
+
+    def summary(id) {
+        webService.getJson(grailsApplication.config.ecodata.baseUrl + 'project/projectMetrics/'+id)
     }
 
     def enrichTestData() {

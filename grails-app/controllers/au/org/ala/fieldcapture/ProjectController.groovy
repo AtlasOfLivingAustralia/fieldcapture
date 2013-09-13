@@ -4,7 +4,7 @@ import grails.converters.JSON
 
 class ProjectController {
 
-    def projectService, siteService, metadataService, commonService, activityService, userService, authService
+    def projectService, siteService, metadataService, commonService, activityService, userService, webService, authService
     static defaultAction = "index"
     static ignore = ['action','controller','id']
 
@@ -30,7 +30,8 @@ class ProjectController {
              mapFeatures: commonService.getMapFeatures(project),
              organisationName: metadataService.getInstitutionName(project.organisation),
              isProjectStarredByUser: userService.isProjectStarredByUser(user?.userId?:"0", project.projectId)?.isProjectStarredByUser,
-             user: user]
+             user: user,
+             metrics: projectService.summary(id)]
         }
     }
 
