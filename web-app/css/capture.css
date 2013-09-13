@@ -557,3 +557,14 @@ i.modified-icon {
     -moz-border-radius: 0 4px 4px 0;
     border-radius: 0 4px 4px 0;
 }
+
+td.memUserRole select {
+    margin-bottom:0;
+    height: 24px;
+    font-size: 12px;
+    line-height: 18px;
+}
+
+a.btn-primary {
+    color: white;
+}

@@ -30,7 +30,7 @@
         here = window.location.href;
 
     </r:script>
-    <r:require modules="gmap3,mapWithFeatures,knockout,datepicker,amplify"/>
+    <r:require modules="gmap3,mapWithFeatures,knockout,datepicker,amplify,jqueryValidationEngine"/>
 </head>
 <body>
 <div class="container-fluid">
@@ -237,31 +237,36 @@
                 <form class="form-inline" id="userAccessForm">
                     Add user&nbsp;
                     %{--<g:select name="userId" data-bind="value: userId" class="input-xlarge combobox" from="${user?.userNamesList}" optionValue="${{it.displayName + " <" + it.userName +">"}}" optionKey="userId" noSelection="['':'start typing a user name']"/>--}%
-                    <div class="input-append">
-                        <input class="input-xlarge" id="emailAddress" placeholder="enter a user's email address" type="text"/>
-                        <input id="userId" type="hidden" value=""/>
-                        <button id="checkEmail" class="btn btn-inverse tooltips last" type="button" title="check email address"><i class="icon-search icon-white"></i></button>
-                        <button id="checkEmailYes" class="hide btn btn-success tooltips last" type="button" title="email address was found"><i class="icon-ok icon-white"></i></button>
-                        <button id="checkEmailNo" class="hide btn btn-danger tooltips" type="button" title="email address was NOT found"><i class="icon-remove icon-white"></i></button>
-                    </div>
-                    with role <g:select name="role" data-bind="value: role" from="${grailsApplication.config.app.accessLevel.roles}" noSelection="['':'-- select a role --']"/>
-                    <button data-bind="click: $root.addUserAsRole" class="btn btn-primary">Add</button>
-                    <g:img dir="images" file="spinner.gif" id="spinner1" class="hide"/>
+                    <input class="input-xlarge validate[required,custom[email]]" id="emailAddress" placeholder="enter a user's email address" type="text"/>
+                    with role <g:select name="role" id="addUserRole" class="validate[required]" data-errormessage-value-missing="Role is required!"
+                                        from="${grailsApplication.config.app.accessLevel.roles}" noSelection="['':'-- select a role --']"/>
+                    <button id="addUserRoleBtn" class="btn btn-primary">Add</button>
+                    <g:img dir="images" file="spinner.gif" id="spinner1" class="hide spinner"/>
                 </form>
                 <h4>Project Members</h4>
-                <table class="table table-condensed" id="projectMembersTable" style="max-width: 600px;">
-                    <thead><tr><th width="10%">User&nbsp;Id</th><th>User&nbsp;Name</th><th width="15%">Role</th><th width="5%">&nbsp;</th><th width="5%">&nbsp;</th></tr></thead>
-                    <tbody class="membersTbody">
-                        <tr class="hide">
-                            <td class="memUserId"></td>
-                            <td class="memUserName"></td>
-                            <td class="memUserRole"><span>&nbsp;</span><g:select class="hide" name="memberRole" from="${grailsApplication.config.app.accessLevel.roles}" style="margin-bottom:0;height: 20px;font-size: 12px;line-height: 20px;"/></td>
-                            <td class="clickable memEditRole"><i class="icon-edit tooltips" title="edit this user and role combination"></i></td>
-                            <td class="clickable memRemoveRole"><i class="icon-remove tooltips" title="remove this user and role combination"></i></td>
-                        </tr>
-                        <tr id="spinnerRow"><td colspan="4">loading data... <g:img dir="images" file="spinner.gif" id="spinner2"/></td></tr>
-                    </tbody>
-                </table>
+                <div class="row-fluid">
+                    <div class="span6">
+                        <table class="table table-condensed" id="projectMembersTable" style="">
+                            <thead><tr><th width="10%">User&nbsp;Id</th><th>User&nbsp;Name</th><th width="15%">Role</th><th width="5%">&nbsp;</th><th width="5%">&nbsp;</th></tr></thead>
+                            <tbody class="membersTbody">
+                            <tr class="hide">
+                                <td class="memUserId"></td>
+                                <td class="memUserName"></td>
+                                <td class="memUserRole"><span>&nbsp;</span><g:select class="hide" name="memberRole" from="${grailsApplication.config.app.accessLevel.roles}"/></td>
+                                <td class="clickable memEditRole"><i class="icon-edit tooltips" title="edit this user and role combination"></i></td>
+                                <td class="clickable memRemoveRole"><i class="icon-remove tooltips" title="remove this user and role combination"></i></td>
+                            </tr>
+                            <tr id="spinnerRow"><td colspan="4">loading data... <g:img dir="images" file="spinner.gif" id="spinner2" class="spinner"/></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="span3">
+                        <div id="formStatus" class="hide alert alert-success">
+                            <button class="close" onclick="$('.alert').hide();" href="#">×</button>
+                            <span></span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </g:if>
     </div>
@@ -509,44 +514,45 @@
         <r:script>
             // Admin JS code only exposed to admin users
             $(window).load(function () {
-               /**
-                * KO view model for admin tab - add user as role to this project
-                *
-                * @param project
-                * @constructor
-                */
-                function UserAccessViewModel(project) {
-                    var self = this;
-                    self.userId = ko.observable("userId");
-                    self.role = ko.observable("role");
-                    self.projectId = project.projectId;
-                    self.addUserAsRole = function() {
-                        if (this.userId() && this.role() && this.projectId) {
-                            $("#spinner1").show();
-                            $.ajax({
-                                url: fcConfig.addUserRoleUrl,
-                                data: { userId: $("#userId").val(), role: $("#role").val(), projectId: "${project.projectId}" }
-                            })
-                            .done(function(result) { alert("success"); loadProjectMembers(); })
-                            .fail(function(jqXHR, textStatus, errorThrown) { alert(jqXHR.responseText); })
-                            .always(function(result) { $("#spinner1").hide(); $("#userAccessForm")[0].reset(); });
-                        } else {
-                            alert("All fields are required, please try again");
-                        }
-                    };
-                }
+                //$('#userAccessForm').validationEngine();
+                // Click event on "add" button to add new user to project
+                $('#addUserRoleBtn').click(function(e) {
+                    e.preventDefault();
+                    var email = $('#emailAddress').val();
+                    var role = $('#addUserRole').val();
 
-                ko.applyBindings(new UserAccessViewModel(${project}), document.getElementById('admin'));
+                    if ($('#userAccessForm').validationEngine('validate')) {
+                        $("#spinner1").show();
+                        var userId;
+                        if (email) {
+                            $.get("${g.createLink(controller:'user',action:'checkEmailExists')}?email=" + email, function(data) {
+                                if (data && /^\d+$/.test(data)) {
+                                    userId = data;
+                                    addUserWithRole(userId, role, "${project.projectId}");
+                                } else {
+                                    var registerUrl = "http://auth.ala.org.au/emmet/selfRegister.html";
+                                    bootbox.alert("The email address did not match a registered user. This may because: " +
+                                             "<ul><li>the email address is incorrect</li>" +
+                                             "<li>the user is not registered - see the <a href='" + registerUrl + "' target='_blank'>sign-up page</a>. </li></ul>"
+                                    );
+                                }
+                            })
+                            .fail(function(jqXHR, textStatus, errorThrown) { alert(jqXHR.responseText); })
+                            .always(function() { $(".spinner").hide(); });;
+                        }
+
+                    }
+                });
 
                 // click event on the "remove" button on Project Members table
                 $('.membersTbody').on("click", "td.memRemoveRole", function(e) {
                     var $this = this;
-                    var userId = $($this).data("userid");
-                    var role = $($this).data("role");
+                    var userId = $($this).parent().data("userid");
+                    var role = $($this).parent().data("role");
                     bootbox.confirm("Are you sure you want to remove this user's access?", function(result) {
                         if (result) {
                             if (userId && role) {
-                                modifyUserRole(userId, role);
+                                removeUserRole(userId, role);
                             } else {
                                 alert("Error: required params not provided: userId & role");
                             }
@@ -554,6 +560,7 @@
                     });
                 });
 
+                // hide/show the role select for editting role
                 $('.membersTbody').on("click", "td.memEditRole", function(e) {
                     if ($(this).parent().find("span").is(':visible')) {
                         $(this).parent().find("span").hide();
@@ -564,41 +571,18 @@
                     }
                 });
 
-                // email address check
-                $("#checkEmail").click(function(e) {
-                    var email = $("#emailAddress").val();
-                    if (email) {
-                        $.get("${g.createLink(controller:'user',action:'checkEmailExists')}?email=" + email, function(data) {
-                            if (data && /^\d+$/.test(data)) { // data should be a number
-                                $("#userId").val(data);
-                                $("#checkEmail").hide();
-                                $("#checkEmailNo").hide();
-                                $("#checkEmailYes").show();
-                            } else {
-                                $("#userId").val("");
-                                $("#checkEmail").hide();
-                                $("#checkEmailNo").show();
-                                $("#checkEmailYes").hide();
-                            }
-                        });
-                    } else {
-                        $("#emailAddress").focus();
-                    }
-                });
-
-                $("#emailAddress").keyup(function() {
-                    if (!$("#checkEmail").is("visible")) {
-                        $("#userId").val("");
-                        $("#checkEmail").show();
-                        $("#checkEmailNo").hide();
-                        $("#checkEmailYes").hide();
-                    }
-                });
-
-                $("#admin").on("change", ".memUserRole select", function() {
-                    var userId = $(this).parent().find('.clickable').data('userId');
-                    var role = $(this).parent().find('.clickable').data('role');
-                    modifyUserRole(userId, role);
+                // detect change on "role" select in table
+                $('.membersTbody').on("change", ".memUserRole select", function() {
+                    var role = $(this).val();
+                    var currentRole = $(this).siblings('span').text();
+                    var userId = $(this).attr('id'); // Couldn't get $(el).data('userId') to work for some reason
+                    bootbox.confirm("Are you sure you want to change this user's access from " + currentRole + " to " + role + "?", function(result) {
+                        if (result) {
+                            addUserWithRole(userId, role, "${project.projectId}");
+                        } else {
+                            loadProjectMembers(); // reload table
+                        }
+                    });
                 });
 
                 // load initial list of project members
@@ -624,11 +608,12 @@
                         var $clone = $('.membersTbody tr.hide').clone();
                         $clone.removeClass("hide");
                         $clone.addClass("cloned");
-                        $clone.find('.clickable').data("userid", el.userId);
-                        $clone.find('.clickable').data("role", el.role);
+                        $clone.data("userid", el.userId);
+                        $clone.data("role", el.role);
                         $clone.find('.memUserId').text(el.userId);
                         $clone.find('.memUserName').text(el.displayName);
                         $clone.find('.memUserRole select').val(el.role);
+                        $clone.find('.memUserRole select').attr("id", el.userId);
                         $clone.find('.memUserRole span').text(el.role);
                         $('.membersTbody').append($clone);
                     });
@@ -637,12 +622,47 @@
                 .always(function() { $("#spinnerRow").hide(); });
             }
 
-            function modifyUserRole(userId, role) {
+           /**
+            * Add a user with given role to the current project
+            *
+            * @param userId
+            * @param role
+            * @param projectId
+            */
+            function addUserWithRole(userId, role, projectId) {
+                //console.log("addUserWithRole",userId, role, projectId);
+                if (userId && role) {
+                    $.ajax({
+                        url: fcConfig.addUserRoleUrl,
+                        data: { userId: userId, role: role, projectId: projectId }
+                    })
+                    .done(function(result) { updateStatusMessage("user was added with role " + role); loadProjectMembers(); })
+                    .fail(function(jqXHR, textStatus, errorThrown) { alert(jqXHR.responseText); })
+                    .always(function(result) { $(".spinner").hide(); $("#userAccessForm")[0].reset(); });
+                } else {
+                    alert("Required fields are: userId and role.");
+                    $('.spinner').hide();
+                }
+            }
+
+            function updateStatusMessage(msg) {
+                $('#formStatus span').text(''); // clear previous message
+                $('#formStatus span').text(msg).parent().fadeIn();
+            }
+
+
+           /**
+            * Modify a user's role
+            *
+            * @param userId
+            * @param role
+            */
+            function removeUserRole(userId, role) {
                 $.ajax( {
                     url: fcConfig.removeUserWithRoleUrl,
                     data: {userId: userId, role: role, projectId: "${project.projectId}" }
                 })
-                .done(function(result) {  })
+                .done(function(result) { updateStatusMessage("user was removed."); })
                 .fail(function(jqXHR, textStatus, errorThrown) { alert(jqXHR.responseText); })
                 .always(function(result) {
                     $("#spinner1").hide();
