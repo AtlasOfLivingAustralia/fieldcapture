@@ -26,13 +26,17 @@ class UserService {
         getUser()?.userDisplayName?:"" //?:"mark.woolston@csiro.au"
     }
 
+    def getCurrentUserId() {
+        getUser()?.userId?:""
+    }
+
     def getUser() {
         def u = authService.userDetails()
         (u?.userId) ? u : null
     }
 
     def getRecentEditsForUserId(userId) {
-            def url = auditBaseUrl + "/getRecentEditsForUserId/${userId}"
+        def url = auditBaseUrl + "/getRecentEditsForUserId/${userId}"
         webService.getJson(url)
     }
 

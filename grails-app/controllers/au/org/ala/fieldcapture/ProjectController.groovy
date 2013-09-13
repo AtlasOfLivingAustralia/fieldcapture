@@ -10,18 +10,20 @@ class ProjectController {
 
     def index(String id) {
         def project = projectService.get(id, 'brief')
-        def user = userService.getUser()
-        if (user && authService.userInRole(grailsApplication.config.security.cas.adminRole)) {
-            user["isAdmin"] = true
-            user["userNamesList"] = authService.getAllUserNameList()
-        } else if (user && projectService.isUserAdminForProject(user.userId, id)) {
-            user["isAdmin"] = true
-            user["userNamesList"] = authService.getAllUserNameList()
-        }
+
         if (!project || project.error) {
             forward(action: 'list', model: [error: project.error])
         } else {
             project.sites?.sort {it.name}
+            def user = userService.getUser()
+            if (user && projectService.isUserAdminForProject(user.userId, id)) {
+                // add admin tab to page
+                user["isAdmin"] = true
+                user["isEditor"] = true
+                user["userNamesList"] = authService.getAllUserNameList()
+            } else if (user && projectService.canUserEditProject(user.userId, id)) {
+                user["isEditor"] = true // use this for KO to allow editing of activities, etc ??
+            }
             //log.debug activityService.activitiesForProject(id)
             //todo: ensure there are no control chars (\r\n etc) in the json as
             //todo:     this will break the client-side parser
@@ -36,6 +38,11 @@ class ProjectController {
     }
 
     def edit(String id) {
+        def userId = userService.getCurrentUserId()
+        if (!projectService.canUserEditProject(userId, id)) {
+            flash.message = 'User does not have permission to edit project'
+            redirect(action: 'index', id: id)
+        }
         def project = projectService.get(id)
         if (project) {
             [project: project, institutions: metadataService.institutionList()]

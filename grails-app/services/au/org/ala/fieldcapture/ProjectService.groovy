@@ -4,7 +4,7 @@ import org.codehaus.groovy.grails.web.mapping.LinkGenerator
 
 class ProjectService {
 
-    def webService, grailsApplication, siteService, activityService
+    def webService, grailsApplication, siteService, activityService, authService
     LinkGenerator grailsLinkGenerator
 
     def projects
@@ -211,14 +211,59 @@ class ProjectService {
 
     def bushbidsDescription = "Within the South Australian Murray-Darling Basin the northern Murray Plains and the southern parts of the Rangelands contain a concentration of remnant native woodlands on private land that are not well represented in conservation parks and reserves. The Woodland BushBids project will be implemented across this area. The eastern section of the Woodland BushBids project area contains large areas of woodland and mallee woodland where habitat quality could be improved through management. The western section contains smaller areas of priority woodland types in a largely cleared landscape. Protection and enhancement of native vegetation is necessary for the conservation of vegetation corridors through the region as well as management of woodland types such as Black Oak Woodlands. Management of native vegetation will also assist the protection of threatened species such as the Carpet Python, Regent Parrot, Bush Stone Curlew and the endangered Hopbush, Dodonea subglandulifera and will provide habitat for significant species such as the Southern Hairy Nosed Wombat. Woodland BushBids will assist landholders to provide management services to protect and enhance native vegetation quality."
 
+    /**
+     * Get the list of users (members) who have any level of permission for the requested projectId
+     *
+     * @param projectId
+     * @return
+     */
     def getMembersForProjectId(projectId) {
         def url = grailsApplication.config.ecodata.baseUrl + "permissions/getMembersForProject/${projectId}"
         webService.getJson(url)
     }
 
+    /**
+     * Does the current user have permission to administer the requested projectId?
+     * Checks for the ADMIN role in CAS and then checks the UserPermission
+     * lookup in ecodata.
+     *
+     * @param userId
+     * @param projectId
+     * @return boolean
+     */
     def isUserAdminForProject(userId, projectId) {
-        def url = grailsApplication.config.ecodata.baseUrl + "permissions/isUserAdminForProject?projectId=${projectId}&userId=${userId}"
-        webService.getJson(url)?.userIsEditor
+        def userIsEditor
+
+        if (authService.userInRole(grailsApplication.config.security.cas.adminRole)) {
+            userIsEditor = true
+        } else {
+            def url = grailsApplication.config.ecodata.baseUrl + "permissions/isUserAdminForProject?projectId=${projectId}&userId=${userId}"
+            userIsEditor = webService.getJson(url)?.userIsEditor
+        }
+
+        userIsEditor
+    }
+
+    /**
+     * Does the current user have permission to edit the requested projectId?
+     * Checks for the ADMIN role in CAS and then checks the UserPermission
+     * lookup in ecodata.
+     *
+     * @param userId
+     * @param projectId
+     * @return boolean
+     */
+    def canUserEditProject(userId, projectId) {
+        def userCanEdit
+
+        if (authService.userInRole(grailsApplication.config.security.cas.adminRole)) {
+            userCanEdit = true
+        } else {
+            def url = grailsApplication.config.ecodata.baseUrl + "permissions/canUserEditProject?projectId=${projectId}&userId=${userId}"
+            userCanEdit = webService.getJson(url)?.userCanEdit?:false
+        }
+
+        userCanEdit
     }
 
 }

@@ -47,6 +47,14 @@
         <div class="row-fluid">
             <div class="clearfix">
                 <h1 class="pull-left">${project?.name}</h1>
+                <g:if test="${flash.errorMessage || flash.message}">
+                    <div class="span5">
+                        <div class="alert alert-error">
+                            <button class="close" onclick="$('.alert').fadeOut();" href="#">×</button>
+                            ${flash.errorMessage?:flash.message}
+                        </div>
+                    </div>
+                </g:if>
                 <div class="pull-right">
                     <g:set var="disabled">${(!user) ? "disabled='disabled' title='login required'" : ''}</g:set>
                     <g:if test="${isProjectStarredByUser}">
@@ -246,7 +254,7 @@
             <!-- ADMIN -->
                 <h3>Project Access</h3>
                 <form class="form-inline" id="userAccessForm">
-                    Add user&nbsp;
+                    Add user (email address)&nbsp;
                     %{--<g:select name="userId" data-bind="value: userId" class="input-xlarge combobox" from="${user?.userNamesList}" optionValue="${{it.displayName + " <" + it.userName +">"}}" optionKey="userId" noSelection="['':'start typing a user name']"/>--}%
                     <input class="input-xlarge validate[required,custom[email]]" id="emailAddress" placeholder="enter a user's email address" type="text"/>
                     with role <g:select name="role" id="addUserRole" class="validate[required]" data-errormessage-value-missing="Role is required!"
@@ -273,7 +281,7 @@
                     </div>
                     <div class="span3">
                         <div id="formStatus" class="hide alert alert-success">
-                            <button class="close" onclick="$('.alert').hide();" href="#">×</button>
+                            <button class="close" onclick="$('.alert').fadeOut();" href="#">×</button>
                             <span></span>
                         </div>
                     </div>
@@ -336,7 +344,7 @@
                 };
             };
 
-            function ViewModel(project, sites, activities) {
+            function ViewModel(project, sites, activities, isUserEditor) {
                 var self = this;
                 self.name = ko.observable(project.name);
                 self.description = ko.observable(project.description);
@@ -350,6 +358,7 @@
                 self.sites = $.map(sites, function (obj,i) {return new Site(obj)});
                 self.sitesFilter = ko.observable("");
                 self.isSitesFiltered = ko.observable(false);
+                self.isUserEditor = ko.observable(isUserEditor);
                 self.getSiteName = function (siteId) {
                     var site;
                     if (siteId !== undefined && siteId !== '') {
@@ -450,7 +459,7 @@
                 };
             }
 
-            var viewModel = new ViewModel(${project},${project.sites},${activities ?: []});
+            var viewModel = new ViewModel(${project},${project.sites},${activities ?: []},${user.isEditor?:false});
             ko.applyBindings(viewModel);
 
             // retain tab state for future re-visits
