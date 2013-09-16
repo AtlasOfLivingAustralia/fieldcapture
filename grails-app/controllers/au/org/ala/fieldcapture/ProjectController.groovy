@@ -37,12 +37,8 @@ class ProjectController {
         }
     }
 
+    @PreAuthorise
     def edit(String id) {
-        def userId = userService.getCurrentUserId()
-        if (!projectService.canUserEditProject(userId, id)) {
-            flash.message = 'User does not have permission to edit project'
-            redirect(action: 'index', id: id)
-        }
         def project = projectService.get(id)
         if (project) {
             [project: project, institutions: metadataService.institutionList()]
@@ -51,6 +47,7 @@ class ProjectController {
         }
     }
 
+    @PreAuthorise(accessLevel = 'admin')
     def create() {
         render view: 'edit', model: [create:true, institutions: metadataService.institutionList()]
     }
@@ -63,6 +60,7 @@ class ProjectController {
      * @param id projectId
      * @return
      */
+    @PreAuthorise
     def ajaxUpdate(String id) {
         def postBody = request.JSON
         if (!id) { id = ''}
@@ -88,12 +86,14 @@ class ProjectController {
         }
     }
 
+    @PreAuthorise
     def update(String id) {
         //params.each { println it }
         projectService.update(id, params)
         chain action: 'index', id: id
     }
 
+    @PreAuthorise(accessLevel = 'admin')
     def delete(String id) {
         projectService.delete(id)
         forward(controller: 'home')
@@ -144,6 +144,4 @@ class ProjectController {
             render status:400, text: 'Required params not provided:  projectId'
         }
     }
-
-
 }

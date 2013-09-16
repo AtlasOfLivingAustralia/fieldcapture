@@ -117,6 +117,7 @@ class ActivityController {
      * @param projectId may be null
      * @return
      */
+    @PreAuthorise(projectIdParam = 'projectId')
     def create(String siteId, String projectId) {
         def activity = [activityId: "", siteId: siteId, projectId: projectId]
         def model = [activity: activity, returnTo: params.returnTo, create: true,
