@@ -31,11 +31,11 @@
       <g:if test="${!printView}">
           <ul class="breadcrumb">
                 <li><g:link controller="home">Home</g:link> <span class="divider">/</span></li>
-                <li>Activities<span class="divider">/</span></li>
-                <li class="active">
-                    <span data-bind="text:type"></span>
-                    <span data-bind="text:startDate.formattedDate"></span>/<span data-bind="text:endDate.formattedDate"></span>
-                </li>
+              <li><a data-bind="click:goToProject" class="clickable">Project</a> <span class="divider">/</span></li>
+              <li class="active">
+                  <span data-bind="text:type"></span>
+                  <span data-bind="text:startDate.formattedDate"></span><span data-bind="visible:endDate">/</span><span data-bind="text:endDate.formattedDate"></span>
+              </li>
           </ul>
       </g:if>
 
