@@ -459,7 +459,7 @@
                 };
             }
 
-            var viewModel = new ViewModel(${project},${project.sites},${activities ?: []},${user.isEditor?:false});
+            var viewModel = new ViewModel(${project},${project.sites},${activities ?: []},${user?.isEditor?:false});
             ko.applyBindings(viewModel);
 
             // retain tab state for future re-visits
