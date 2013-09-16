@@ -10,13 +10,17 @@ class AdminController {
 
     def index() {}
     def tools() {}
+
+    /**
+     * Admin page for checking or modifying user/project roles, requires CAS admin role
+     * for access (see Config.groovy "security.cas.adminRole" for actual role)
+     *
+     * @return
+     */
     def users() {
         def user = authService.userDetails()
         def userList = authService.getAllUserNameList()
         def projects = projectService.list(true)
-        log.debug "userInRole(\"ROLE_USER\") = ${authService.userInRole("ROLE_USER")}"
-        log.debug "userInRole(\"ROLE_ADMIN\") = ${authService.userInRole("ROLE_ADMIN")}"
-        log.debug "userInRole(\"ROLE_FOO\") = ${authService.userInRole("ROLE_FOO")}"
 
         if (user && authService.userInRole(grailsApplication.config.security.cas.adminRole) && userList && projects) {
             [ userNamesList: userList, projects: projects, user: user]
@@ -24,9 +28,7 @@ class AdminController {
             flash.message = "Permission denied - user: ${user} does not have access to this page."
             redirect(action: "index")
         }
-
     }
-
 
     def metadata() {
         [activitiesMetadata: metadataService.activitiesModel()]
