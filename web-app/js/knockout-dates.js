@@ -254,6 +254,8 @@ function stringToDate(date) {
                     widget.setDate(widget.date);
                 }
             }
+            $(element).trigger('blur');  // This is to trigger revalidation of the date field to remove existing validation errors.
+
         }
     };
 
