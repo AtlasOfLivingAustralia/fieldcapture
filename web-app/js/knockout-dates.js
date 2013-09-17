@@ -242,6 +242,7 @@ function stringToDate(date) {
                 var value = valueAccessor();
                 if (ko.isObservable(value)) {
                     value(stringToDate(element.value));
+                    $(element).trigger('blur');  // This is to trigger revalidation of the date field to remove existing validation errors.
                 }
             });
         },
@@ -249,12 +250,13 @@ function stringToDate(date) {
             var widget = $(element).data("datepicker");
             //when the view model is updated, update the widget
             if (widget) {
-                widget.date = ko.utils.unwrapObservable(valueAccessor());
+                var date = ko.utils.unwrapObservable(valueAccessor());
+                widget.date = date;
                 if (!isNaN(widget.date)) {
                     widget.setDate(widget.date);
                 }
             }
-            $(element).trigger('blur');  // This is to trigger revalidation of the date field to remove existing validation errors.
+
 
         }
     };
