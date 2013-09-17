@@ -84,7 +84,7 @@
             <div class="control-group">
                 <label class="control-label" for="role">Permission level</label>
                 <div class="controls">
-                    <g:select name="role" id="role" from="${grailsApplication.config.app.accessLevel.roles}" noSelection="['':'-- select a permission level --']"/>
+                    <g:select name="role" id="role" from="${roles}"  noSelection="['':'-- select a permission level --']"/>
                 </div>
             </div>
             <div class="control-group">

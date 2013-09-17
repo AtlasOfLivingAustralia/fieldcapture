@@ -258,7 +258,7 @@
                     %{--<g:select name="userId" data-bind="value: userId" class="input-xlarge combobox" from="${user?.userNamesList}" optionValue="${{it.displayName + " <" + it.userName +">"}}" optionKey="userId" noSelection="['':'start typing a user name']"/>--}%
                     <input class="input-xlarge validate[required,custom[email]]" id="emailAddress" placeholder="enter a user's email address" type="text"/>
                     with role <g:select name="role" id="addUserRole" class="validate[required]" data-errormessage-value-missing="Role is required!"
-                                        from="${grailsApplication.config.app.accessLevel.roles}" noSelection="['':'-- select a role --']"/>
+                                        from="${roles}" noSelection="['':'-- select a role --']"/>
                     <button id="addUserRoleBtn" class="btn btn-primary">Add</button>
                     <g:img dir="images" file="spinner.gif" id="spinner1" class="hide spinner"/>
                 </form>
@@ -271,7 +271,7 @@
                             <tr class="hide">
                                 <td class="memUserId"></td>
                                 <td class="memUserName"></td>
-                                <td class="memUserRole"><span>&nbsp;</span><g:select class="hide" name="memberRole" from="${grailsApplication.config.app.accessLevel.roles}"/></td>
+                                <td class="memUserRole"><span>&nbsp;</span><g:select class="hide" name="memberRole" from="${roles}"/></td>
                                 <td class="clickable memEditRole"><i class="icon-edit tooltips" title="edit this user and role combination"></i></td>
                                 <td class="clickable memRemoveRole"><i class="icon-remove tooltips" title="remove this user and role combination"></i></td>
                             </tr>

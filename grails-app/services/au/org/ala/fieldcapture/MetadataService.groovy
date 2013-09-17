@@ -108,6 +108,13 @@ class MetadataService {
         })
     }
 
+    def getAccessLevels() {
+        return cacheService.get('accessLevels',{
+            webService.getJson(grailsApplication.config.ecodata.baseUrl +
+                    "permissions/getAllAccessLevels")
+        })
+    }
+
     def getLocationMetadataForPoint(lat, lng) {
         cacheService.get("spatial-point-${lat}-${lng}", {
             def url = grailsApplication.config.spatial.baseURL + "ws/intersect/cl22,cl916/${lat}/${lng}"

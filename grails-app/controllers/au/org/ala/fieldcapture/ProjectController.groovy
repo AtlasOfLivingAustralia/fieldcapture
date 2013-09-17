@@ -10,6 +10,7 @@ class ProjectController {
 
     def index(String id) {
         def project = projectService.get(id, 'brief')
+        def roles = metadataService.getAccessLevels().collect { it.name }
 
         if (!project || project.error) {
             forward(action: 'list', model: [error: project.error])
@@ -33,6 +34,7 @@ class ProjectController {
              organisationName: metadataService.getInstitutionName(project.organisation),
              isProjectStarredByUser: userService.isProjectStarredByUser(user?.userId?:"0", project.projectId)?.isProjectStarredByUser,
              user: user,
+             roles: roles,
              metrics: projectService.summary(id)]
         }
     }
