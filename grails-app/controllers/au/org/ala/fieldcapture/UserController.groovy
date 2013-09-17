@@ -8,6 +8,11 @@ import grails.converters.JSON
 class UserController {
     def userService, authService, projectService
 
+    /**
+     * Default view for user controller - show user dashboard page.
+     *
+     * @return
+     */
     def index() {
         def user = userService.getUser()
         if (!user) {
@@ -24,7 +29,7 @@ class UserController {
     // webservices
 
     /**
-     *
+     * Add userId with role to requested projectId
      *
      * @return
      */
@@ -43,6 +48,11 @@ class UserController {
         }
     }
 
+    /**
+     * Remove userId with role from requested projectId
+     *
+     * @return
+     */
     def removeUserWithRole() {
         String userId = params.userId
         String role = params.role
@@ -55,6 +65,11 @@ class UserController {
         }
     }
 
+    /**
+     * Get a list of projects and roles for a given userId
+     *
+     * @return
+     */
     def viewPermissionsForUserId() {
         String userId = params.userId
 
