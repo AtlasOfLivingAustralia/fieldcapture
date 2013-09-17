@@ -260,7 +260,7 @@ class ProjectService {
             userCanEdit = true
         } else {
             def url = grailsApplication.config.ecodata.baseUrl + "permissions/canUserEditProject?projectId=${projectId}&userId=${userId}"
-            userCanEdit = webService.getJson(url)?.userCanEdit?:false
+            userCanEdit = webService.getJson(url)?.userIsEditor?:false
         }
 
         userCanEdit
