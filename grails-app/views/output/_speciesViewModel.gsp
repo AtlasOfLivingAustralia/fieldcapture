@@ -1,4 +1,8 @@
-var SpeciesViewModel = function(data) {
+/**
+ * Manages the species data type in the output model.
+ * Allows species information to be searched for and displayed.
+ */
+var SpeciesViewModel = function(data, parentRow) {
 
     var self = this;
     self.guid = ko.observable();
@@ -7,9 +11,8 @@ var SpeciesViewModel = function(data) {
     self.transients = {};
     self.transients.speciesInformation = ko.observable();
     self.transients.availableLists = speciesLists;
-    self.transients.editing = ko.observable();
     self.transients.focused = ko.observable();
-
+    self.transients.editing = ko.observable();
 
     self.speciesSelected = function(event, data) {
         if (!data.listId) {
@@ -115,5 +118,24 @@ var SpeciesViewModel = function(data) {
             self.transients.editing(false);
         }
     });
+
+    // The editing behaviour of a species data type needs to be coordinated with the table row editing
+    // if that row supports single row editing.  We check for this by the existence of the isSelected
+    // field (note that it is a knockout observable so we are checking for it's definition, not it's value)
+    if (parentRow && parentRow.isSelected) {
+
+        parentRow.isSelected.subscribe(function(value) {
+            console.log("Change "+value);
+            if (value) {
+                self.edit();
+            }
+            else {
+                self.transients.editing(false);
+            }
+        });
+
+    }
+
+
 
 };

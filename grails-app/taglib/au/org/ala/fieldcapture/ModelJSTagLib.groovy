@@ -319,6 +319,36 @@ class ModelJSTagLib {
         out << INDENT*3 << "var self = this;\n"
         out << INDENT*3 << "if (!data) data = {};\n"
         out << INDENT*3 << "self.transients = {};\n"
+
+        if (edit && editableRows) {
+            // This observable is subscribed to by the SpeciesViewModel (so as to
+            // allow editing to be controlled at the table row level) so needs to
+            // be declared before any model data fields / observables.
+            out << INDENT*3 << "this.isSelected = ko.observable(false);\n"
+            out << """
+            this.commit = function () {
+                self.doAction('commit');
+            };
+            this.reset = function () {
+                self.doAction('reset');
+            };
+            this.doAction = function (action) {
+                var prop, item;
+                for (prop in self) {
+                    if (self.hasOwnProperty(prop)) {
+                        item = self[prop];
+                        if (ko.isObservable(item) && item[action]) {
+                           item[action]();
+                        }
+                    }
+                }
+            };
+            this.isNew = false;
+            this.toJSON = function () {
+                return ko.mapping.toJS(this, {'ignore':['transients', 'isNew', 'isSelected']});
+            };
+"""
+        }
         model.columns.each { col ->
             if (col.computed) {
                 switch (col.dataType) {
@@ -346,39 +376,14 @@ class ModelJSTagLib {
                         out << INDENT*3 << "this.${col.name} = ko.${observable}(orBlank(data['${col.name}']));\n"
                         break;
                     case 'species':
-                        out << INDENT*3 << "this.${col.name} =  new SpeciesViewModel(data['${col.name}']);\n"
+                        out << INDENT*3 << "this.${col.name} =  new SpeciesViewModel(data['${col.name}'], this);\n"
                         break
 
                 }
                 modelConstraints(col, out)
             }
         }
-        if (edit && editableRows) {
-            out << INDENT*3 << "this.isSelected = ko.observable(true);\n"
-            out << """
-            this.commit = function () {
-                self.doAction('commit');
-            };
-            this.reset = function () {
-                self.doAction('reset');
-            };
-            this.doAction = function (action) {
-                var prop, item;
-                for (prop in self) {
-                    if (self.hasOwnProperty(prop)) {
-                        item = self[prop];
-                        if (ko.isObservable(item) && item[action]) {
-                           item[action]();
-                        }
-                    }
-                }
-            };
-            this.isNew = false;
-            this.toJSON = function () {
-                return ko.mapping.toJS(this, {'ignore':['transients', 'isNew', 'isSelected']});
-            };
-"""
-        }
+
         out << INDENT*2 << "};\n"
     }
 
