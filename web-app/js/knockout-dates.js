@@ -651,17 +651,36 @@ ko.bindingHandlers.autocomplete = {
     }
 };
 
+/**
+ * Creates a flag that indicates whether the model has been modified.
+ *
+ * Compares the model to its initial state each time an observable changes. Uses the model's
+ * modelAsJSON method if it is defined else uses ko.toJSON.
+ *
+ * @param root the model to watch
+ * @param isInitiallyDirty
+ * @returns an object (function) with the methods 'isDirty' and 'reset'
+ */
 ko.dirtyFlag = function(root, isInitiallyDirty) {
     var result = function() {};
-    var _initialState = ko.observable(ko.toJSON(root));
     var _isInitiallyDirty = ko.observable(isInitiallyDirty);
+    // this allows for models that do not have a modelAsJSON method
+    var getRepresentation = function () {
+        return (typeof root.modelAsJSON === 'function') ? root.modelAsJSON() : ko.toJSON(root);
+    };
+    var _initialState = ko.observable(getRepresentation());
 
     result.isDirty = ko.dependentObservable(function() {
-        return _isInitiallyDirty() || _initialState() !== ko.toJSON(root);
+        var dirty = _isInitiallyDirty() || _initialState() !== getRepresentation();
+        /*if (dirty) {
+            console.log('Initial: ' + _initialState());
+            console.log('Actual: ' + getRepresentation());
+        }*/
+        return dirty;
     });
 
     result.reset = function() {
-        _initialState(ko.toJSON(root));
+        _initialState(getRepresentation());
         _isInitiallyDirty(false);
     };
 

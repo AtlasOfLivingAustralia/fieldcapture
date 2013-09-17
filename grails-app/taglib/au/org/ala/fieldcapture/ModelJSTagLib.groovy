@@ -64,7 +64,7 @@ class ModelJSTagLib {
                 dateViewModel(mod, out)
             }
         }
-        out << INDENT*2 << "self.transients.site = site"
+        out << INDENT*3 << "self.transients.site = site;"
     }
 
     /**
@@ -82,7 +82,12 @@ class ModelJSTagLib {
                 //out << INDENT*4 << "self.load${mod.name.capitalize()}(data.${mod.name});\n"
             }
             else if ((mod.dataType == 'text' || mod.dataType == 'date') && !mod.computed) {
-                out << INDENT*4 << "self.data['${mod.name}'](orBlank(data['${mod.name}']));\n"
+                // MEW: Removed the 'orBlank' wrapper on the initial data which means missing data will be
+                // 'undefined'. This works better with dropdowns as the default value is undefined and
+                // therefore no data change occurs when the model is bound.
+                out << INDENT*4 << "self.data['${mod.name}'](data['${mod.name}']);\n"
+                // This seemed to work ok for plain text too but if it causes an issue, just add an
+                // 'if (mode.constraints)' condition and return plain text to use orBlank.
             }
             else if (mod.dataType == 'number' && !mod.computed) {
                 out << INDENT*4 << "self.data['${mod.name}'](orZero(data['${mod.name}']));\n"

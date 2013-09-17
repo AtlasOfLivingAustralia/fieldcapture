@@ -31,11 +31,11 @@
       <g:if test="${!printView}">
           <ul class="breadcrumb">
                 <li><g:link controller="home">Home</g:link> <span class="divider">/</span></li>
-              <li><a data-bind="click:goToProject" class="clickable">Project</a> <span class="divider">/</span></li>
-              <li class="active">
-                  <span data-bind="text:type"></span>
-                  <span data-bind="text:startDate.formattedDate"></span><span data-bind="visible:endDate">/</span><span data-bind="text:endDate.formattedDate"></span>
-              </li>
+                <li><a data-bind="click:goToProject" class="clickable">Project</a> <span class="divider">/</span></li>
+                <li class="active">
+                    <span data-bind="text:type"></span>
+                    <span data-bind="text:startDate.formattedDate"></span><span data-bind="visible:endDate">/</span><span data-bind="text:endDate.formattedDate"></span>
+                </li>
           </ul>
       </g:if>
 
@@ -121,7 +121,7 @@
               <h3>Debug</h3>
               <div>
                   <h4>KO model</h4>
-                  <pre data-bind="text:ko.toJSON($root,null,2)"></pre>
+                  <pre data-bind="text:ko.toJSON($root.modelForSaving(),null,2)"></pre>
                   <h4>Activity</h4>
                   <pre>${activity}</pre>
                   <h4>Site</h4>
@@ -146,7 +146,7 @@
         <g:set var="model" value="${outputModels[outputName]}"/>
         <g:set var="output" value="${activity.outputs.find {it.name == outputName}}"/>
         <g:if test="${!output}">
-            <g:set var="output" value="[activityId: activity.activityId, name: outputName]"/>
+            <g:set var="output" value="[name: outputName]"/>
         </g:if>
         <div class="output-block" id="ko${blockId}">
             <h3 data-bind="css:{modified:dirtyFlag.isDirty},attr:{title:'Has been modified'}">${outputName}<i class="icon-asterisk modified-icon" data-bind="visible:dirtyFlag.isDirty" title="Has been modified" style="display: none;"></i></h3>
@@ -156,8 +156,7 @@
         $(function(){
 
             var viewModelName = "${blockId}ViewModel",
-                viewModelInstance = viewModelName + "Instance",
-                output = {name: 'test', assessmentDate: '', collector: ''};
+                viewModelInstance = viewModelName + "Instance";
 
             // load dynamic models - usually objects in a list
             <md:jsModelObjects model="${model}" site="${site}" speciesLists="${speciesLists}" edit="true" viewModelInstance="${blockId}ViewModelInstance"/>
@@ -165,24 +164,15 @@
             this[viewModelName] = function () {
                 var self = this;
                 self.name = "${output.name}";
-                self.assessmentDate = ko.observable("${output.assessmentDate}").extend({simpleDate: false});
-                self.collector = ko.observable("${output.collector}")/*.extend({ required: true })*/;
-                self.activityId = ko.observable("${activity.activityId}");
-                self.activityType = ko.observable("${activity.type}");
-                self.deleteAll = function () {
-                    document.location.href = "${createLink(action:'delete',id:output.outputId,
-                        params:[returnTo:grailsApplication.config.grails.serverURL + '/' + returnTo])}";
-                };
+                self.outputId = "${output.outputId}";
                 self.data = {};
                 self.transients = {};
                 self.transients.dummy = ko.observable();
-                self.transients.activityStartDate = ko.observable("${activity.startDate}").extend({simpleDate: false});
-                self.transients.activityEndDate = ko.observable("${activity.endDate}").extend({simpleDate: false});
 
                 // add declarations for dynamic data
                 <md:jsViewModel model="${model}" edit="true" viewModelInstance="${blockId}ViewModelInstance"/>
 
-                // this will be called from the save method to remove transient properties
+                // this will be called when generating a savable model to remove transient properties
                 self.removeBeforeSave = function (jsData) {
                     // add code to remove any transients added by the dynamic tags
                     <md:jsRemoveBeforeSave model="${model}"/>
@@ -190,34 +180,22 @@
                     delete jsData.transients;
                     return jsData;
                 };
-                self.save = function () {
-                    if ($('#form').validationEngine('validate')) {
-                        var jsData = ko.toJS(self);
-                        // get rid of any transient observables
-                        jsData = self.removeBeforeSave(jsData);
-                        var json = JSON.stringify(jsData);
-                        $.ajax({
-                            url: '${createLink(controller:'output', action: "ajaxUpdate", id: "${output.outputId}")}',
-                            type: 'POST',
-                            data: json,
-                            contentType: 'application/json',
-                            success: function (data) {
-                                if (data.error) {
-                                    alert(data.detail + ' \n' + data.error);
-                                } else {
-                                    document.location.href = returnTo;
-                                }
-                            },
-                            error: function (data) {
-                                var status = data.status
-                                alert('An unhandled error occurred: ' + data.status);
-                            }
-                        });
-                    }
+
+                // this returns a JS object ready for saving
+                self.modelForSaving = function () {
+                    // get model as a plain javascript object
+                    var jsData = ko.toJS(self);
+                    // get rid of any transient observables
+                    return self.removeBeforeSave(jsData);
                 };
-                self.notImplemented = function () {
-                    alert("Not implemented yet.")
+
+                // this is a version of toJSON that just returns the model as it will be saved
+                // it is used for detecting when the model is modified (in a way that should invoke a save)
+                // the ko.toJSON conversion is preserved so we can use it to view the active model for debugging
+                self.modelAsJSON = function () {
+                    return JSON.stringify(self.modelForSaving());
                 };
+
                 self.loadData = function (data) {
                     // load dynamic data
                     <md:jsLoadModel model="${model}"/>
@@ -240,12 +218,13 @@
 
             // this resets the baseline for detecting changes to the model
             // - shouldn't be required if everything behaves itself but acts as a backup for
-            //   any binding effects
+            //   any binding side-effects
             // - note that it is not foolproof as applying the bindings happens asynchronously and there
             //   is no easy way to detect its completion
             window[viewModelInstance].dirtyFlag.reset();
 
-            master.register(viewModelInstance, window[viewModelInstance].save,
+            // register with the master controller so this model can participate in the save cycle
+            master.register(viewModelInstance, window[viewModelInstance].modelForSaving,
              window[viewModelInstance].dirtyFlag.isDirty, window[viewModelInstance].dirtyFlag.reset);
 
         });
@@ -256,7 +235,6 @@
 
     <div class="form-actions">
         <button type="button" id="save" class="btn btn-primary">Save changes</button>
-        %{--<button type="button" id="reset" class="btn">Reset</button>--}%
         <button type="button" id="cancel" class="btn">Cancel</button>
     </div>
 
@@ -268,41 +246,90 @@
 
     var returnTo = "${returnTo}";
 
-    /* Master controller for page */
-    var master = {
-        subscribers: [],
-        register: function (modelInstance, saveMethod, isDirtyMethod, resetMethod) {
+    /* Master controller for page. This handles saving each model as required. */
+    var Master = function () {
+        var self = this;
+        this.subscribers = [];
+        // client models register their name and methods to participate in saving
+        self.register = function (modelInstanceName, getMethod, isDirtyMethod, resetMethod) {
             this.subscribers.push({
-                model: modelInstance,
-                save: saveMethod,
+                model: modelInstanceName,
+                get: getMethod,
                 isDirty: isDirtyMethod,
                 reset: resetMethod
             });
-        },
-        isDirty: function () {
-            var dirty = false,
-                self = this;
+        };
+        // master isDirty flag for the whole page - can control button enabling
+        this.isDirty  = function () {
+            var dirty = false;
             $.each(this.subscribers, function(i, obj) {
                 dirty = dirty || obj.isDirty();
             });
             return dirty;
-        },
-        save: function () {
-            $.each(this.subscribers, function(i, obj) {
-                if (obj.isDirty()) {
-                    //alert("Saving " + obj.model);
-                    obj.save();
+        };
+        /**
+         * Makes an ajax call to save any sections that have been modified. This includes the activity
+         * itself and each output.
+         *
+         * Modified outputs are injected as a list into the activity object. If there is nothing to save
+         * in the activity itself, then the root is an object that is empty except for the outputs list.
+         *
+         * NOTE that the model for each section must register itself to be included in this save.
+         *
+         * Validates the entire page before saving.
+         */
+        this.save = function () {
+            var activityData, outputs = [];
+            if ($('#validation-container').validationEngine('validate')) {
+                $.each(this.subscribers, function(i, obj) {
+                    if (obj.isDirty()) {
+                        if (obj.model === 'activityModel') {
+                            activityData = obj.get();
+                        } else {
+                            outputs.push(obj.get());
+                        }
+                    }
+                });
+                if (outputs.length === 0 && activityData === undefined) {
+                    alert("Nothing to save.");
+                    return;
                 }
-            });
-        },
-        reset: function () {
+                if (activityData === undefined) { activityData = {}}
+                activityData.outputs = outputs;
+                $.ajax({
+                    url: "${createLink(action: 'ajaxUpdate', id: activity.activityId)}",
+                    type: 'POST',
+                    data: JSON.stringify(activityData),
+                    contentType: 'application/json',
+                    success: function (data) {
+                        if (data.error) {
+                            alert(data.detail + ' \n' + data.error);
+                        } else {
+                            self.reset();
+                            self.saved();
+                        }
+                    },
+                    error: function (data) {
+                        var status = data.status;
+                        alert('An unhandled error occurred: ' + data.status);
+                    }
+                });
+            }
+
+        };
+        this.saved = function () {
+            document.location.href = returnTo;
+        };
+        this.reset = function () {
             $.each(this.subscribers, function(i, obj) {
                 if (obj.isDirty()) {
                     obj.reset();
                 }
             });
-        }
+        };
     };
+
+    var master = new Master();
 
     $(function(){
 
@@ -388,7 +415,6 @@
             self.type = ko.observable(act.type);
             self.siteId = ko.observable(act.siteId);
             self.projectId = act.projectId;
-            self.outputs = act.outputs;
             self.transients = {};
             self.transients.site = site;
             self.transients.project = project;
@@ -403,29 +429,17 @@
                     document.location.href = fcConfig.siteViewUrl + self.siteId();
                 }
             };
-            self.save = function () {
-                if ($('#validation-container').validationEngine('validate')) {
-                    var jsData = ko.toJS(self);
-                    delete jsData.transients;
-                    var json = JSON.stringify(jsData);
-                    $.ajax({
-                        url: "${createLink(action: 'ajaxUpdate', id: activity.activityId)}",
-                        type: 'POST',
-                        data: json,
-                        contentType: 'application/json',
-                        success: function (data) {
-                            if (data.error) {
-                                alert(data.detail + ' \n' + data.error);
-                            } else {
-                                document.location.href = returnTo;
-                            }
-                        },
-                        error: function (data) {
-                            var status = data.status;
-                            alert('An unhandled error occurred: ' + data.status);
-                        }
-                    });
-                }
+            self.modelForSaving = function () {
+                // get model as a plain javascript object
+                var jsData = ko.toJS(self);
+                delete jsData.transients;
+                return jsData;
+            };
+            self.modelAsJSON = function () {
+                return JSON.stringify(self.modelForSaving());
+            };
+
+            self.save = function (callback, key) {
             };
             self.removeActivity = function () {
                 bootbox.confirm("Delete this entire activity? Are you sure?", function(result) {
@@ -450,7 +464,7 @@
 
         ko.applyBindings(viewModel,document.getElementById('koActivityMainBlock'));
 
-        master.register('viewModel', viewModel.save, viewModel.dirtyFlag.isDirty, viewModel.dirtyFlag.reset);
+        master.register('activityModel', viewModel.modelForSaving, viewModel.dirtyFlag.isDirty, viewModel.dirtyFlag.reset);
 
         var mapFeatures = $.parseJSON('${mapFeatures}');
         if(mapFeatures !=null && mapFeatures.features !== undefined && mapFeatures.features.length >0){

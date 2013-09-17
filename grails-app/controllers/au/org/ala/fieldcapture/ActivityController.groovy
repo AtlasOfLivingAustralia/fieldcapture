@@ -136,38 +136,37 @@ class ActivityController {
     /**
      * Updates existing or creates new activity.
      *
-     * If id is blank, a new activity will be created and added to the site
+     * Also updates/creates any outputs that are passed in the 'outputs' property of the activity.
+     * For updates, the activity itself is optional, ie the payload may simply be a list of outputs
+     * to update/create.
      *
-     * @param id activityId
+     * If id is blank, a new activity will be created and added to the site. Outputs are ignored
+     * in this case.
+     *
+     * @param id activityId - may be null or blank
      * @return
      */
     def ajaxUpdate(String id) {
         def postBody = request.JSON
         if (!id) { id = ''}
-        log.debug "Body: " + postBody
-        log.debug "Params:"
-        params.each { log.debug it }
+        //log.debug "Body: " + postBody
+        //log.debug "Params:"
+        //params.each { log.debug it }
 
-        // remove outputs for now - once output exiting with the activity page is working we
-        //  will need to save these separately
-        postBody.remove('outputs')
-
-        def siteId = params.siteId
         def values = [:]
-        // filter params to remove keys in the ignore list
+        // filter params to remove keys in the ignore list - MEW don't know if this is required
         postBody.each { k, v ->
             if (!(k in ignore)) {
                 values[k] = v
             }
         }
-        log.debug (values as JSON).toString()
-        log.debug "id=${id} class=${id.getClass()}"
+        //log.debug (values as JSON).toString()
         def result = activityService.update(id, values)
-        log.debug "result is " + result
+        //log.debug "result is " + result
         if (result.error) {
             render result as JSON
         } else {
-            println "json result is " + (result as JSON)
+            //log.debug "json result is " + (result as JSON)
             render result.resp as JSON
         }
     }
