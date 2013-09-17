@@ -201,9 +201,9 @@
                                     <div class="sitesLine">
                                         <i class="icon-map-marker"></i>
                                         Sites: <a href="#" data-id="$id" class="zoom-in btnX btn-miniX"><i
-                                            class="icon-plus-sign"></i> zoom in</a>
-                                        <a href="#" data-id="$id" class="zoom-out btnX btn-miniX"><i
-                                                class="icon-minus-sign"></i> zoom out</a>
+                                            class="icon-plus-sign"></i> show on map</a>
+                                        <!--<a href="#" data-id="$id" class="zoom-out btnX btn-miniX"><i
+                                                class="icon-minus-sign"></i> zoom out</a> -->
                                     </div>
                                     <div class="orgLine">
                                         <i class="icon-user"></i>
@@ -345,11 +345,14 @@
             var projectId = $(this).data("id");
             var bounds = alaMap.getExtentByFeatureId(projectId);
             alaMap.map.fitBounds(bounds);
+            $('#t2').tab('show');
+
         });
         $('#projectTable').on("click", "a.zoom-out",function(el) {
             el.preventDefault();
             alaMap.map.setCenter(initCentre);
             alaMap.map.setZoom(initZoom);
+            $('#t2').tab('show');
         });
 
         // initial loading of map
