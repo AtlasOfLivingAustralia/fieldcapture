@@ -15,8 +15,8 @@ class AclFilterFilters {
                 Class controllerClass = controller?.clazz
                 def method = controllerClass.getMethod(actionName?:"index", [] as Class[])
 
-                if (method.isAnnotationPresent(PreAuthorise)) {
-                    PreAuthorise pa = method.getAnnotation(PreAuthorise)
+                if (controllerClass.isAnnotationPresent(PreAuthorise) || method.isAnnotationPresent(PreAuthorise)) {
+                    PreAuthorise pa = method.getAnnotation(PreAuthorise)?:controllerClass.getAnnotation(PreAuthorise)
                     def userId = userService.getCurrentUserId()
                     def accessLevel = pa.accessLevel()
                     def projectId = params[pa.projectIdParam()]
@@ -28,9 +28,9 @@ class AclFilterFilters {
                     def errorMsg
 
                     if (accessLevel.toLowerCase() == 'admin' && !projectService.isUserAdminForProject(userId, projectId)) {
-                        errorMsg = 'User does not have ADMIN permission for project'
+                        errorMsg = "Access denied: User does not have <b>admin</b> permission ${projectId?'for project':''}"
                     } else if (accessLevel.toLowerCase() == 'editor' && !projectService.canUserEditProject(userId, projectId)) {
-                        errorMsg = 'User does not have EDIT permission for project'
+                        errorMsg = "Access denied: User does not have <b>editor</b> permission ${projectId?'for project':''}"
                     }
 
                     if (errorMsg) {

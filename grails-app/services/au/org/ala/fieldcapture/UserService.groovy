@@ -35,6 +35,10 @@ class UserService {
         (u?.userId) ? u : null
     }
 
+    def userInRole(role) {
+        authService.userInRole(role)
+    }
+
     def getRecentEditsForUserId(userId) {
         def url = auditBaseUrl + "/getRecentEditsForUserId/${userId}"
         webService.getJson(url)

@@ -63,7 +63,9 @@
                         %{--<button class="btn btn-small" id="btnLogout"><i class="icon-off"></i><span class="hidden-tablet hidden-phone">&nbsp;Logout</span></button>--}%
                         <g:if test="${fc.userIsLoggedIn()}">
                             <button class="btn btn-small btn-info" id="btnProfile"><i class="icon-user icon-white"></i><span class="hidden-tablet hidden-phone">&nbsp;My profile</span></button>
-                            <button class="btn btn-warning btn-small" id="btnAdministration"><i class="icon-cog icon-white"></i><span class="hidden-tablet  hidden-phone">&nbsp;Administration</span></button>
+                            <g:if test="${fc.userInRole(role: grailsApplication.config.security.cas.adminRole)}">
+                                <button class="btn btn-warning btn-small" id="btnAdministration"><i class="icon-cog icon-white"></i><span class="hidden-tablet  hidden-phone">&nbsp;Administration</span></button>
+                            </g:if>
                         </g:if>
                         <g:pageProperty name="page.buttonBar"/>
                     </span>

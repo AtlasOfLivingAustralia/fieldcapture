@@ -4,10 +4,10 @@ import grails.converters.JSON
 import grails.util.Environment
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 
+@PreAuthorise(accessLevel = 'admin')
 class AdminController {
 
     def cacheService, metadataService, authService, projectService
-
     def index() {}
     def tools() {}
 
