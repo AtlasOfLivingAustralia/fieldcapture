@@ -23,10 +23,10 @@ class AdminController {
         def projects = projectService.list(true)
         def roles = metadataService.getAccessLevels().collect { it.name }
 
-        if (user && authService.userInRole(grailsApplication.config.security.cas.adminRole) && userList && projects) {
+        if (user && userList && projects) {
             [ userNamesList: userList, projects: projects, user: user, roles: roles]
         } else {
-            flash.message = "Permission denied - user: ${user} does not have access to this page."
+            flash.message = "Error: ${!user?'Logged-in user could not be determined ':' '}${!userList?'List of all users not found ':' '}${!projects?'List of all projects not found ':''}"
             redirect(action: "index")
         }
     }

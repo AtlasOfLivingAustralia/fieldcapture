@@ -30,8 +30,9 @@
     </g:if>
 
     <g:if test="${flash.message}">
-        <div class="container-fluid">
-            <div class="alert alert-info">
+        <div class="row-fluid">
+            <div class="span6 alert alert-info" style="margin-bottom:0;">
+                <button class="close" onclick="$('.alert').fadeOut();" href="#">×</button>
                 ${flash.message}
             </div>
         </div>
