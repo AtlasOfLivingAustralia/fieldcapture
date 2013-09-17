@@ -302,8 +302,16 @@
                     data: JSON.stringify(activityData),
                     contentType: 'application/json',
                     success: function (data) {
-                        if (data.error) {
-                            alert(data.detail + ' \n' + data.error);
+                        var errorText = "";
+                        if (data.errors) {
+                            errorText = "<span class='label label-important'>Important</span><h4>There was an error while trying to save your changes.</h4>";
+                            $.each(data.errors, function (i, error) {
+                                errorText += "<p>Saving <b>" +
+                                 (error.name === 'activity' ? 'the activity context' : error.name) +
+                                 "</b> threw the following error:<br><blockquote>" + error.error + "</blockquote></p>";
+                            });
+                            errorText += "<p>Any other changes should have been saved.</p>";
+                            bootbox.alert(errorText);
                         } else {
                             self.reset();
                             self.saved();
