@@ -19,12 +19,12 @@ class AdminController {
      */
     def users() {
         def user = authService.userDetails()
-        def userList = authService.getAllUserNameList()
+        //def userList = authService.getAllUserNameList()
         def projects = projectService.list(true)
         def roles = metadataService.getAccessLevels().collect { it.name }
 
-        if (user && userList && projects) {
-            [ userNamesList: userList, projects: projects, user: user, roles: roles]
+        if (user && projects) {
+            [ projects: projects, user: user, roles: roles]
         } else {
             flash.message = "Error: ${!user?'Logged-in user could not be determined ':' '}${!userList?'List of all users not found ':' '}${!projects?'List of all projects not found ':''}"
             redirect(action: "index")
