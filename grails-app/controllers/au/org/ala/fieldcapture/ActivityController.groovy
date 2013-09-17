@@ -47,7 +47,7 @@ class ActivityController {
         def activity = activityService.get(id)
         if (activity) {
             // pass the activity
-            def model = [activity: activity, returnTo: params.returnTo]
+            def model = [activity: activity, returnTo: params.returnTo, projectStages:projectStages()]
             // the activity meta-model
             model.metaModel = metadataService.getActivityModel(activity.type)
             // the array of output models

@@ -50,6 +50,7 @@
                     Leave blank if this activity is not associated with a specific site.
                 </g:else>
                 <h3 data-bind="css:{modified:dirtyFlag.isDirty},attr:{title:'Has been modified'}">Activity: <span data-bind="text:type"></span><i class="icon-asterisk modified-icon" data-bind="visible:dirtyFlag.isDirty" title="Has been modified"></i></h3>
+                <h4><span data-bind="text:associatedProgram"></span> <span data-bind="text:associatedSubProgram"></span></h4>
             </div>
         </div>
 
@@ -67,44 +68,39 @@
                 </div>
 
                 <div class="row-fluid">
-                    <div class="span4 control-group">
+                    <div class="span6">
                         <label for="startDate">Activity start date
                         <fc:iconHelp title="Start date">Date the activity was started.</fc:iconHelp>
                         </label>
                         <div class="input-append">
-                            <fc:datePicker targetField="startDate.date" name="startDate" data-validation-engine="validate[required]" size="input-medium" printable="${printView}"/>
+                            <fc:datePicker targetField="startDate.date" name="startDate" data-validation-engine="validate[required]" printable="${printView}"/>
                         </div>
                     </div>
-                    <div class="span4">
+                    <div class="span6">
                         <label for="endDate">Activity end date
                         <fc:iconHelp title="End date">Date the activity finished.</fc:iconHelp>
                         </label>
                         <div class="input-append">
-                            <fc:datePicker targetField="endDate.date" name="endDate" data-validation-engine="validate[future[startDate]]" size="input-medium" printable="${printView}" />
+                            <fc:datePicker targetField="endDate.date" name="endDate" data-validation-engine="validate[future[startDate]]" printable="${printView}" />
                         </div>
-                    </div>
-                    <div class="span4">
-                        <label for="purpose">Purpose of event</label>
-                        <input data-bind="value: eventPurpose" id="purpose" type="text" class="span12"/>
                     </div>
                 </div>
 
                 <div class="row-fluid">
-                    <div class="span4 control-group">
-                        <label for="startDate">Associated program
-                        <fc:iconHelp title="Associated program">Some help with examples.</fc:iconHelp>
-                        </label>
-                        <input data-bind="value: associatedProgram" type="text" class="span12" data-validation-engine="validate[required]"/>
+                    <div class="span6">
+                        <label for="purpose">Purpose of event</label>
+                        <input data-bind="value: eventPurpose" id="purpose" type="text" class="span12"/>
                     </div>
-                    <div class="span4">
-                        <label for="endDate">Sub-program
-                        <fc:iconHelp title="Sub-program">Some help with examples.</fc:iconHelp>
+                    <div class="span6">
+                        <label for="projectStage">Project stage
+                        <fc:iconHelp title="Project stage">If the project is taking a staged approach to implementation, this identifies which project stage the activity in planned for.</fc:iconHelp>
                         </label>
-                        <input data-bind="value: associatedSubProgram" type="text" class="span12" data-validation-engine="validate[required]"/>
-                    </div>
-                    <div class="span4">
-                        <label>Stage of project</label>
-                        <input data-bind="value: projectStage" type="text" class="span12" data-validation-engine="validate[required]"/>
+                        <select id="projectStage" data-bind="value:projectStage" class="input-xlarge">
+                            <option value="">None</option>
+                            <g:each in="${projectStages}">
+                                <option value="${it}">${it}</option>
+                            </g:each>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -413,8 +409,8 @@
             self.activityId = act.activityId;
             self.description = ko.observable(act.description);
             self.notes = ko.observable(act.notes);
-            self.startDate = ko.observable(act.startDate).extend({simpleDate: false});
-            self.endDate = ko.observable(act.endDate).extend({simpleDate: false});
+            self.startDate = ko.observable(act.startDate || act.plannedStartDate).extend({simpleDate: false});
+            self.endDate = ko.observable(act.endDate || act.plannedEndDate).extend({simpleDate: false});
             self.eventPurpose = ko.observable(act.eventPurpose);
             self.fieldNotes = ko.observable(act.fieldNotes);
             self.associatedProgram = ko.observable(act.associatedProgram);
