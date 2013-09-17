@@ -1,7 +1,9 @@
 package au.org.ala.fieldcapture
 
 /**
- * Grails Filter to check for controller methods annotated with <code>@PreAuthorised</code>
+ * Grails Filter to check for controller methods annotated with <code>@{@link PreAuthorise}</code>
+ *
+ * @see au.org.ala.fieldcapture.PreAuthorise
  */
 class AclFilterFilters {
     def userService, projectService
