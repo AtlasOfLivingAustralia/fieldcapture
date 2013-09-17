@@ -74,7 +74,6 @@
         <li class="active"><a href="#overview" id="overview-tab" data-toggle="tab">Overview</a></li>
         <li><a href="#activity" id="activity-tab" data-toggle="tab">Activities</a></li>
         <li><a href="#site" id="site-tab" data-toggle="tab">Sites</a></li>
-        <li><a href="#species" id="species-tab" data-toggle="tab">Species</a></li>
         <li><a href="#dashboard" id="dashboard-tab" data-toggle="tab">Dashboard</a></li>
         <g:if test="${user?.isAdmin}"><li><a href="#admin" id="admin-tab" data-toggle="tab">Admin</a></li></g:if>
     </ul>
@@ -172,11 +171,6 @@
             </div>
         </div>
 
-        <div class="tab-pane" id="species">
-            <!-- SPECIES -->
-            <g:render template="/species/species" model="[project:project]"/>
-        </div>
-
         <div class="tab-pane" id="dashboard">
             <!-- DASHBOARD -->
             <h2 style="font-weight:normal;margin-top:0;">Totals across all activities under this project.</h2>
@@ -252,39 +246,45 @@
         <g:if test="${user?.isAdmin}">
             <div class="tab-pane" id="admin">
             <!-- ADMIN -->
-                <h3>Project Access</h3>
-                <form class="form-inline" id="userAccessForm">
-                    Add user (email address)&nbsp;
-                    %{--<g:select name="userId" data-bind="value: userId" class="input-xlarge combobox" from="${user?.userNamesList}" optionValue="${{it.displayName + " <" + it.userName +">"}}" optionKey="userId" noSelection="['':'start typing a user name']"/>--}%
-                    <input class="input-xlarge validate[required,custom[email]]" id="emailAddress" placeholder="enter a user's email address" type="text"/>
-                    with role <g:select name="role" id="addUserRole" class="validate[required]" data-errormessage-value-missing="Role is required!"
-                                        from="${roles}" noSelection="['':'-- select a role --']"/>
-                    <button id="addUserRoleBtn" class="btn btn-primary">Add</button>
-                    <g:img dir="images" file="spinner.gif" id="spinner1" class="hide spinner"/>
-                </form>
-                <h4>Project Members</h4>
-                <div class="row-fluid">
-                    <div class="span6">
-                        <table class="table table-condensed" id="projectMembersTable" style="">
-                            <thead><tr><th width="10%">User&nbsp;Id</th><th>User&nbsp;Name</th><th width="15%">Role</th><th width="5%">&nbsp;</th><th width="5%">&nbsp;</th></tr></thead>
-                            <tbody class="membersTbody">
-                            <tr class="hide">
-                                <td class="memUserId"></td>
-                                <td class="memUserName"></td>
-                                <td class="memUserRole"><span>&nbsp;</span><g:select class="hide" name="memberRole" from="${roles}"/></td>
-                                <td class="clickable memEditRole"><i class="icon-edit tooltips" title="edit this user and role combination"></i></td>
-                                <td class="clickable memRemoveRole"><i class="icon-remove tooltips" title="remove this user and role combination"></i></td>
-                            </tr>
-                            <tr id="spinnerRow"><td colspan="4">loading data... <g:img dir="images" file="spinner.gif" id="spinner2" class="spinner"/></td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="span3">
-                        <div id="formStatus" class="hide alert alert-success">
-                            <button class="close" onclick="$('.alert').fadeOut();" href="#">×</button>
-                            <span></span>
+                <div class="admin-section">
+                    <h3>Project Access</h3>
+                    <form class="form-inline" id="userAccessForm">
+                        Add user (email address)&nbsp;
+                        %{--<g:select name="userId" data-bind="value: userId" class="input-xlarge combobox" from="${user?.userNamesList}" optionValue="${{it.displayName + " <" + it.userName +">"}}" optionKey="userId" noSelection="['':'start typing a user name']"/>--}%
+                        <input class="input-xlarge validate[required,custom[email]]" id="emailAddress" placeholder="enter a user's email address" type="text"/>
+                        with role <g:select name="role" id="addUserRole" class="validate[required]" data-errormessage-value-missing="Role is required!"
+                                            from="${roles}" noSelection="['':'-- select a role --']"/>
+                        <button id="addUserRoleBtn" class="btn btn-primary">Add</button>
+                        <g:img dir="images" file="spinner.gif" id="spinner1" class="hide spinner"/>
+                    </form>
+                    <h4>Project Members</h4>
+                    <div class="row-fluid">
+                        <div class="span6">
+                            <table class="table table-condensed" id="projectMembersTable" style="">
+                                <thead><tr><th width="10%">User&nbsp;Id</th><th>User&nbsp;Name</th><th width="15%">Role</th><th width="5%">&nbsp;</th><th width="5%">&nbsp;</th></tr></thead>
+                                <tbody class="membersTbody">
+                                <tr class="hide">
+                                    <td class="memUserId"></td>
+                                    <td class="memUserName"></td>
+                                    <td class="memUserRole"><span>&nbsp;</span><g:select class="hide" name="memberRole" from="${roles}"/></td>
+                                    <td class="clickable memEditRole"><i class="icon-edit tooltips" title="edit this user and role combination"></i></td>
+                                    <td class="clickable memRemoveRole"><i class="icon-remove tooltips" title="remove this user and role combination"></i></td>
+                                </tr>
+                                <tr id="spinnerRow"><td colspan="4">loading data... <g:img dir="images" file="spinner.gif" id="spinner2" class="spinner"/></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="span3">
+                            <div id="formStatus" class="hide alert alert-success">
+                                <button class="close" onclick="$('.alert').fadeOut();" href="#">×</button>
+                                <span></span>
+                            </div>
                         </div>
                     </div>
+                </div>
+                <!-- SPECIES -->
+                <div class="admin-section">
+                    <g:render template="/species/species" model="[project:project]"/>
                 </div>
             </div>
         </g:if>

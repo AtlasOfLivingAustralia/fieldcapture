@@ -543,6 +543,14 @@ div.output-block {
     padding: 0 5px;
 }
 
+div.admin-section {
+    border: #999 solid thin;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    margin: 10px 0;
+    padding: 5px;
+}
+
 h3.modified {
     color: #396419;
 }
