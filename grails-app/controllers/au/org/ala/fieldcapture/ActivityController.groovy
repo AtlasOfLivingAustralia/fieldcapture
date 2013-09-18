@@ -5,7 +5,7 @@ import org.codehaus.groovy.grails.web.json.JSONArray
 
 class ActivityController {
 
-    def activityService, siteService, projectService, metadataService
+    def activityService, siteService, projectService, metadataService, userService
 
     static ignore = ['action','controller','id']
 
@@ -46,6 +46,11 @@ class ActivityController {
     def edit(String id) {
         def activity = activityService.get(id)
         if (activity) {
+            // permissions check
+            if (!projectService.canUserEditProject(userService.getCurrentUserId(), activity.projectId)) {
+                flash.message = "Access denied: User does not have <b>editor</b> permission for projectId ${activity.projectId}"
+                redirect(controller:'project', action:'index', id: activity.projectId)
+            }
             // pass the activity
             def model = [activity: activity, returnTo: params.returnTo, projectStages:projectStages()]
             // the activity meta-model
@@ -160,9 +165,22 @@ class ActivityController {
                 values[k] = v
             }
         }
-        //log.debug (values as JSON).toString()
-        def result = activityService.update(id, values)
+        log.debug (values as JSON).toString()
+
+        def result = [:]
+        // check user has permissions to edit/update site - user must have 'editor' access to
+        // ALL linked projects to proceed.
+        if (!projectService.canUserEditProject(userService.getCurrentUserId(), values.projectId)) {
+            flash.message = "Error: access denied: User does not have <b>editor</b> permission for projectId ${values.projectId}"
+            result = [error: flash.message]
+            //render result as JSON
+        }
+
+        if (!result) {
+            result = activityService.update(id, values)
+        }
         //log.debug "result is " + result
+
         if (result.error) {
             render result as JSON
         } else {

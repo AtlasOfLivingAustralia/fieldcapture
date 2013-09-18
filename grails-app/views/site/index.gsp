@@ -33,7 +33,15 @@
     </ul>
     <div class="row-fluid space-after">
         <div class="span8"><!-- left block of header -->
-            <div >
+            <g:if test="${flash.errorMessage || flash.message}">
+                <div>
+                    <div class="alert alert-error">
+                        <button class="close" onclick="$('.alert').fadeOut();" href="#">×</button>
+                        ${flash.errorMessage?:flash.message}
+                    </div>
+                </div>
+            </g:if>
+            <div>
                 <div class="clearfix">
                     <h1 class="pull-left">${site?.name}</h1>
                     <g:link style="margin-bottom:10px;" action="edit" id="${site.siteId}" class="btn pull-right title-edit">Edit site</g:link>

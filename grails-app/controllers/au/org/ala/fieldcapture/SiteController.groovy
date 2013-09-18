@@ -6,13 +6,18 @@ import org.codehaus.groovy.grails.plugins.web.taglib.ApplicationTagLib
 
 class SiteController {
 
-    def siteService, projectService, activityService, metadataService
+    def siteService, projectService, activityService, metadataService, userService
 
     static defaultAction = "index"
 
     static ignore = ['action','controller','id']
 
     def select(){
+        // permissions check
+        if (!projectService.canUserEditProject(userService.getCurrentUserId(), params.projectId)) {
+            flash.message = "Access denied: User does not have <b>editor</b> permission for projectId ${params.projectId}"
+            redirect(controller:'project', action:'index', id: params.projectId)
+        }
         render view: 'select', model: [sites:siteService.list(), project:projectService.get(params.projectId)]
     }
 
@@ -22,6 +27,11 @@ class SiteController {
 
     def createForProject(){
         def project = projectService.getRich(params.projectId)
+        // permissions check
+        if (!projectService.canUserEditProject(userService.getCurrentUserId(), params.projectId)) {
+            flash.message = "Access denied: User does not have <b>editor</b> permission for projectId ${params.projectId}"
+            redirect(controller:'project', action:'index', id: params.projectId)
+        }
         render view: 'edit', model: [create:true, project:project]
     }
 
@@ -51,6 +61,16 @@ class SiteController {
     def edit(String id) {
         def site = siteService.get(id, [raw:'true'])
         if (site) {
+            // check user has persmissions to edit - user must have edit access to
+            // ALL linked projects to proceed.
+            String userId = userService.getCurrentUserId()
+            site.projects?.each { projectId ->
+                if (!projectService.canUserEditProject(userId, projectId)) {
+                    flash.message = "Access denied: User does not have <b>editor</b> permission for projectId ${projectId}"
+                    redirect(action:'index',id: id)
+                }
+            }
+
             if (site.shapePid && !(site.shapePid instanceof JSONArray)) {
                 log.debug "converting to array"
                 site.shapePid = [site.shapePid] as JSONArray
@@ -111,7 +131,7 @@ class SiteController {
                 values[k] = v //reMarshallRepeatingObjects(v);
             }
         }
-        log.debug (values as JSON).toString()
+        log.debug "values: " + (values as JSON).toString()
 
         siteService.updateProjectAssociations(values)
         def result = [status: 'updated']
@@ -143,13 +163,26 @@ class SiteController {
            values.extent.geometry.pid = shapePid.resp?.id
         }
 
-        def result = []
-        if(id){
-            siteService.update(id, values)
-            result = [status: 'updated']
-        } else {
-            def resp = siteService.create(values)
-            result = [status: 'created', id:resp.resp.siteId]
+        def result = [:]
+        // check user has persmissions to edit/update site - user must have 'editor' access to
+        // ALL linked projects to proceed.
+        String userId = userService.getCurrentUserId()
+        values.projects?.each { projectId ->
+            if (!projectService.canUserEditProject(userId, projectId)) {
+                flash.message = "Error: access denied: User does not have <b>editor</b> permission for projectId ${projectId}"
+                result = [status: 'error']
+                //render result as JSON
+            }
+        }
+
+        if (!result) {
+            if (id) {
+                siteService.update(id, values)
+                result = [status: 'updated']
+            } else {
+                def resp = siteService.create(values)
+                result = [status: 'created', id:resp.resp.siteId]
+            }
         }
 
         render result as JSON
