@@ -425,6 +425,12 @@ ul.sortableList {
     padding-left: 4px;
 }
 
+.sortableList input.name-edit {
+    margin-bottom: 3px;
+    height:10px;
+    background-color: #C2CD8D;
+}
+
 .add-arrow {
     float:left;
     position: relative;

@@ -59,6 +59,7 @@
                     <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'activityModel')}" title="Activity model" />
                     <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'rawOutputModels')}" title="Raw output models" />
                     <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'outputModels')}" title="Output models" />
+                    <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'programsModel')}" title="Programs model" />
                 </ul>
             </div>
 

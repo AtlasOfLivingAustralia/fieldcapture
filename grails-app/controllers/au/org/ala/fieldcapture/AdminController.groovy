@@ -39,11 +39,24 @@ class AdminController {
         [activitiesModel: metadataService.activitiesModel()]
     }
 
+    def programsModel() {
+        [programsModel: metadataService.programsModel()]
+    }
+
     def updateActivitiesModel() {
         def model = request.JSON
         log.debug model
         metadataService.updateActivitiesModel(model)
         flash.message = "Activity model updated."
+        def result = model
+        render result
+    }
+
+    def updateProgramsModel() {
+        def model = request.JSON
+        log.debug model
+        metadataService.updateProgramsModel(model)
+        flash.message = "Programs model updated."
         def result = model
         render result
     }
