@@ -35,7 +35,7 @@
             <div class="control-group span5">
                 <label class="control-label">Organisation</label>
                 <select class="input-xlarge"
-                    data-bind="options:organisations, optionsText:'name', optionsValue:'uid', value:organisation, optionsCaption: 'Choose...'"></select>
+                    data-bind="options:transients.organisations, optionsText:'name', optionsValue:'uid', value:organisation, optionsCaption: 'Choose...'"></select>
             </div>
         </div>
     </div>
@@ -69,7 +69,15 @@
     </div>
 
     <div class="row-fluid">
-        <div class="span4 control-group">
+        <div class="span4">
+            <label class="control-label">Program name</label>
+            <select data-bind="value:associatedProgram,options:transients.programs,optionsCaption: 'Choose...'"></select>
+        </div>
+        <div class="span4">
+            <label class="control-label">Sub-program name</label>
+            <select data-bind="value:associatedSubProgram,options:transients.subprogramsToDisplay,optionsCaption: 'Choose...'"></select>
+        </div>
+        %{--<div class="span4 control-group">
             <label for="startDate">Start date
             <fc:iconHelp title="Start date">Date the activity was started.</fc:iconHelp>
             </label>
@@ -88,7 +96,7 @@
                        data-validation-engine="validate[required]"/>
                 <span class="add-on open-datepicker"><i class="icon-th"></i></span>
             </div>
-        </div>
+        </div>--}%
     </div>
 
     <!-- ko stopBinding: true -->
@@ -209,10 +217,11 @@
         var imageViewModel = new ImageViewModel(
             image,
             {key: 'projectId', value: "${project?.projectId}"},
-            "${createLink(controller: 'proxy', action: 'documentUpdate')}");
+            "${createLink(controller: 'proxy', action: 'documentUpdate')}"
+        );
 
         // bind the model
-        //ko.applyBindings(imageViewModel, document.getElementById('projectImageContainer'));
+        ko.applyBindings(imageViewModel, document.getElementById('projectImageContainer'));
         /* END of section to modularise image handling */
 
         function ViewModel (data) {
@@ -222,12 +231,27 @@
             self.externalId = ko.observable(data.externalId);
             self.grantId = ko.observable(data.grantId);
             self.manager = ko.observable(data.manager);
+            self.associatedProgram = ko.observable(); // don't initialise yet
+            self.associatedSubProgram = ko.observable(data.associatedSubProgram);
             self.plannedStartDate = ko.observable(data.plannedStartDate).extend({simpleDate: false});
             self.plannedEndDate = ko.observable(data.plannedEndDate).extend({simpleDate: false});
             self.organisation = ko.observable(data.organisation);
-            self.organisations = organisations;
+            self.transients = {};
+            self.transients.organisations = organisations;
+            self.transients.programs = [];
+            self.transients.subprograms = {};
+            self.transients.subprogramsToDisplay = ko.computed(function () {
+                return self.transients.subprograms[self.associatedProgram()];
+            });
+            self.loadPrograms = function (programsModel) {
+                $.each(programsModel.programs, function (i, program) {
+                    self.transients.programs.push(program.name);
+                    self.transients.subprograms[program.name] = program.subprograms;
+                });
+                self.associatedProgram(data.associatedProgram); // to trigger the computation of sub-programs
+            };
             self.removeTransients = function (jsData) {
-                delete jsData.organisations;
+                delete jsData.transients;
                 return jsData;
             };
             self.save = function () {
@@ -265,6 +289,7 @@
         }
 
         var viewModel = new ViewModel(${project ?: [:]});
+        viewModel.loadPrograms(${programs});
         ko.applyBindings(viewModel);
 
     });

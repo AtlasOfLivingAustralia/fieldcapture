@@ -50,7 +50,7 @@
                     Leave blank if this activity is not associated with a specific site.
                 </g:else>
                 <h3 data-bind="css:{modified:dirtyFlag.isDirty},attr:{title:'Has been modified'}">Activity: <span data-bind="text:type"></span><i class="icon-asterisk modified-icon" data-bind="visible:dirtyFlag.isDirty" title="Has been modified"></i></h3>
-                <h4><span data-bind="text:associatedProgram"></span> <span data-bind="text:associatedSubProgram"></span></h4>
+                <h4><span>${project.associatedProgram}</span> <span>${project.associatedSubProgram}</span></h4>
             </div>
         </div>
 
@@ -415,7 +415,7 @@
             self.fieldNotes = ko.observable(act.fieldNotes);
             self.associatedProgram = ko.observable(act.associatedProgram);
             self.associatedSubProgram = ko.observable(act.associatedSubProgram);
-            self.projectStage = ko.observable(act.projectStage);
+            self.projectStage = ko.observable(act.projectStage || "");
             self.type = ko.observable(act.type);
             self.siteId = ko.observable(act.siteId);
             self.projectId = act.projectId;

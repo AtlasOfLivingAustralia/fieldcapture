@@ -45,7 +45,9 @@ class ProjectController {
     def edit(String id) {
         def project = projectService.get(id)
         if (project) {
-            [project: project, institutions: metadataService.institutionList()]
+            [project: project,
+             institutions: metadataService.institutionList(),
+             programs: metadataService.programsModel()]
         } else {
             forward(action: 'list', model: [error: 'no such id'])
         }

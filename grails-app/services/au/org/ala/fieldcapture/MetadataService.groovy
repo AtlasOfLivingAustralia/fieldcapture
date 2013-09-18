@@ -18,6 +18,20 @@ class MetadataService {
         result
     }
 
+    def programsModel() {
+        return cacheService.get('programs-model',{
+            webService.getJson(grailsApplication.config.ecodata.baseUrl +
+                'metadata/programsModel')
+        })
+    }
+
+    def updateProgramsModel(model) {
+        def result = webService.doPost(grailsApplication.config.ecodata.baseUrl +
+                'metadata/updateProgramsModel', [model: model])
+        cacheService.clear('programs-model')
+        result
+    }
+
     def getActivityModel(name) {
         return activitiesModel().activities.find { it.name == name }
     }
