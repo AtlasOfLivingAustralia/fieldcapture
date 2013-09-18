@@ -15,7 +15,7 @@
         sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}"
     }
     </r:script>
-    <r:require modules="knockout,mapWithFeatures,jquery_bootstrap_datatable,js_iso8601"/>
+    <r:require modules="knockout,mapWithFeatures,jquery_bootstrap_datatable,js_iso8601,amplify"/>
 </head>
 <body>
 <div id="wrapper" class="container-fluid">
@@ -143,8 +143,8 @@
 
             <div class="tabbable">
                 <ul class="nav nav-tabs" data-tabs="tabs">
-                    <li class="active"><a id="t2" href="#mapView" data-toggle="tab">Map</a></li>
-                    <li class=""><a id="t1" href="#projectsView" data-toggle="tab">Projects</a></li>
+                    <li class="active"><a id="mapView-tab" href="#mapView" data-toggle="tab">Map</a></li>
+                    <li class=""><a id="projectsView-tab" href="#projectsView" data-toggle="tab">Projects</a></li>
                 </ul>
             </div>
 
@@ -258,6 +258,27 @@
                 timer = setTimeout(callback, ms);
             };
         })();
+
+        // retain tab state for future re-visits
+        $('a[data-toggle="tab"]').on('shown', function (e) {
+            var tab = e.currentTarget.hash;
+            amplify.store('project-tab-state', tab);
+            if (tab === '#mapView' && mapDataHasChanged) {
+                mapDataHasChanged = false;
+                generateMap();
+            }
+        });
+        // re-establish the previous tab state
+        var storedTab = amplify.store('project-tab-state');
+
+        if (storedTab === '') {
+            $('#map-tab').tab('show');
+        } else {
+            $(storedTab + '-tab').tab('show');
+            if (storedTab == '#projectsView') {
+                mapDataHasChanged = true;
+            }
+        }
 
         // project list filter
         $('.filterinput').keyup(function() {
@@ -426,12 +447,12 @@
         });
 
         // trigger Google maps tofire when maps tab is loaded
-        $('.nav-tabs a[href="#mapView"]').on('shown', function(){
-            if (mapDataHasChanged) {
-                mapDataHasChanged = false;
-                generateMap();
-            }
-        });
+//        $('.nav-tabs a[href="#mapView"]').on('shown', function(){
+//            if (mapDataHasChanged) {
+//                mapDataHasChanged = false;
+//                generateMap();
+//            }
+//        });
 
         // sort facets in popups by term
         $(".sortAlpha").toggle(function(el) {
