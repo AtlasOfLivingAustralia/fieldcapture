@@ -82,7 +82,7 @@
             <!-- OVERVIEW -->
             <div class="row-fluid">
                 <g:if test="${organisationName}">
-                    <div class="clearfix" style="padding-bottom:10px;">
+                    <div class="clearfix" >
                         <h4>
                             Supported by:
                             <a href="${grailsApplication.config.collectory.baseURL +
@@ -90,6 +90,15 @@
                         </h4>
                     </div>
                 </g:if>
+                <g:if test="${project.plannedStartDate}">
+                    <div>
+                        <h5>
+                            Project activities will be undertaken from <span data-bind="text:plannedStartDate.formattedDate"></span>
+                            <g:if test="${project.plannedEndDate}">to <span data-bind="text:plannedStartDate.formattedDate"></span> </g:if>
+                        </h5>
+                    </div>
+                </g:if>
+
                 <g:if test="${project.description}">
                     <div>
                         <p class="well well-small more">${project.description}</p>

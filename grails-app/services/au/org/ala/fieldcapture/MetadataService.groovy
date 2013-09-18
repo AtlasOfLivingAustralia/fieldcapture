@@ -68,7 +68,11 @@ class MetadataService {
         })
     }
 
-    def activityScores() {
+    /**
+     * Returns a Map with key: activityName and value: <list of score names for that activity>
+     * Used to support the nomination of project output targets for various activity types.
+     */
+    def getActivityScoresByActivity() {
         def activityScores = [:]
         def activitiesModel = activitiesModel()
         activitiesModel.activities.each { activity ->
@@ -96,9 +100,7 @@ class MetadataService {
 
     def getInstitutionName(uid) {
         def institutions = institutionList()
-        if (institutions.error) {
-            return uid
-        }
+        // The result of the service call will be a JSONArray if it's successful
         return uid ? institutions.find({ it.uid == uid })?.name : ''
     }
 

@@ -31,7 +31,9 @@ class ProjectController {
             [project: project,
              activities: activityService.activitiesForProject(id),
              mapFeatures: commonService.getMapFeatures(project),
-             organisationName: metadataService.getInstitutionName(project.organisation),
+             // TODO The test data we have loaded has an organisationName but no corresponding collectory entry.
+             // Remove the organisationName default after this is tidied up.
+             organisationName: metadataService.getInstitutionName(project.organisation) ?: project.organisationName,
              isProjectStarredByUser: userService.isProjectStarredByUser(user?.userId?:"0", project.projectId)?.isProjectStarredByUser,
              user: user,
              roles: roles,
