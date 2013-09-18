@@ -181,8 +181,9 @@ class ModelTagLib {
                 break
             case 'autocomplete-view':
                 databindAttrs.add 'text', 'name'
-
-                result += "<span data-bind=\"with: ${source}\"><span${at.toString()} data-bind='${databindAttrs.toString()}'></span></span>"
+                result += """<span data-bind="with: ${source}"><span${at.toString()} data-bind='${databindAttrs.toString()}'></span>
+                            <a href="#" data-bind="popover: {title: name, content: transients.speciesInformation}"><i class="icon-info-sign"></i></a>
+                            </span>"""
                 break
             case 'photopoint-view':
             case 'photopoint-edit':

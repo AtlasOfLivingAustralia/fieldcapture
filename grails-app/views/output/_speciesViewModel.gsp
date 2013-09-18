@@ -86,11 +86,12 @@ var SpeciesViewModel = function(data, parentRow) {
                     var profileInfo = "<a href='${grailsApplication.config.bie.baseURL}/species/urn:lsid:biodiversity.org.au:afd.taxon:b49d8b75-eac1-4e52-8729-3311b02098ad' target='_blank'>";
                     var imageUrl = data.taxonConcept.smallImageUrl;
                     if (imageUrl) {
-                        profileInfo += "<img title='Click to show profile' class='taxon-image ui-corner-all' src='"+imageUrl+"'></a>";
+                        profileInfo += "<img title='Click to show profile' class='taxon-image ui-corner-all' src='"+imageUrl+"'>";
                     }
                     else {
                         profileInfo += "No profile image available";
                     }
+                    profileInfo += "</a>";
                     self.transients.speciesInformation(profileInfo);
                 }
             });
@@ -125,7 +126,6 @@ var SpeciesViewModel = function(data, parentRow) {
     if (parentRow && parentRow.isSelected) {
 
         parentRow.isSelected.subscribe(function(value) {
-            console.log("Change "+value);
             if (value) {
                 self.edit();
             }

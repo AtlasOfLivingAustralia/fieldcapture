@@ -738,3 +738,33 @@ ko.vetoableObservable = function(initialValue, vetoCheck, noVetoCallback, vetoCa
 
     return result;
 };
+
+/**
+ * Attaches a bootstrap popover to the bound element.  The details for the popover should be supplied as the
+ * value of this binding.
+ * e.g.  <a href="#" data-bind="popover: {title:"Popover title", content:"Popover content"}>My link with popover</a>
+ *
+ * The content and title must be supplied, other popover options have defaults.
+ *
+ */
+ko.bindingHandlers.popover = {
+    update: function(element, valueAccessor) {
+        var options = ko.utils.unwrapObservable(valueAccessor());
+
+        var combinedOptions = ko.utils.extend({}, ko.bindingHandlers.popover.defaultOptions);
+        ko.utils.extend(combinedOptions, options);
+
+        $(element).popover(combinedOptions);
+
+        ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
+            $(element).popover("destroy");
+        });
+    },
+
+    defaultOptions: {
+        placement: "right",
+        animation: true,
+        html: true,
+        trigger: "hover"
+    }
+};
