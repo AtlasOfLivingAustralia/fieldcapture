@@ -514,6 +514,13 @@ ul.nav-tabs {
     background-color: #E3E3DB;
 }
 
+.icon-chevron-right {
+    float: right;
+    margin-top: 2px;
+    margin-right: -6px;
+    opacity: .25;
+}
+
 ul.facetValues {
     margin-bottom: 0px;
 }

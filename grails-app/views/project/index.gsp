@@ -266,45 +266,49 @@
         <g:if test="${user?.isAdmin}">
             <div class="tab-pane" id="admin">
             <!-- ADMIN -->
-                <div class="admin-section">
-                    <h3>Project Access</h3>
-                    <form class="form-inline" id="userAccessForm">
-                        Add user (email address)&nbsp;
-                        %{--<g:select name="userId" data-bind="value: userId" class="input-xlarge combobox" from="${user?.userNamesList}" optionValue="${{it.displayName + " <" + it.userName +">"}}" optionKey="userId" noSelection="['':'start typing a user name']"/>--}%
-                        <input class="input-xlarge validate[required,custom[email]]" id="emailAddress" placeholder="enter a user's email address" type="text"/>
-                        with role <g:select name="role" id="addUserRole" class="validate[required]" data-errormessage-value-missing="Role is required!"
-                                            from="${roles}" noSelection="['':'-- select a role --']"/>
-                        <button id="addUserRoleBtn" class="btn btn-primary">Add</button>
-                        <g:img dir="images" file="spinner.gif" id="spinner1" class="hide spinner"/>
-                    </form>
-                    <h4>Project Members</h4>
-                    <div class="row-fluid">
-                        <div class="span6">
-                            <table class="table table-condensed" id="projectMembersTable" style="">
-                                <thead><tr><th width="10%">User&nbsp;Id</th><th>User&nbsp;Name</th><th width="15%">Role</th><th width="5%">&nbsp;</th><th width="5%">&nbsp;</th></tr></thead>
-                                <tbody class="membersTbody">
-                                <tr class="hide">
-                                    <td class="memUserId"></td>
-                                    <td class="memUserName"></td>
-                                    <td class="memUserRole"><span>&nbsp;</span><g:select class="hide" name="memberRole" from="${roles}"/></td>
-                                    <td class="clickable memEditRole"><i class="icon-edit tooltips" title="edit this user and role combination"></i></td>
-                                    <td class="clickable memRemoveRole"><i class="icon-remove tooltips" title="remove this user and role combination"></i></td>
-                                </tr>
-                                <tr id="spinnerRow"><td colspan="4">loading data... <g:img dir="images" file="spinner.gif" id="spinner2" class="spinner"/></td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="span3">
-                            <div id="formStatus" class="hide alert alert-success">
-                                <button class="close" onclick="$('.alert').fadeOut();" href="#">×</button>
-                                <span></span>
+                <div class="row-fluid">
+                    <div class="span3 large-space-before">
+                        <ul class="nav nav-list nav-tabs nav-stacked ">
+                            <li><a href="#permissions"><i class="icon-chevron-right"></i> Project access</a></li>
+                            <li><a href="#species"><i class="icon-chevron-right"></i> Species of interest</a></li>
+                        </ul>
+                    </div>
+                    <div class="span9">
+                        <div class="admin-sectionZ">
+                            <a name="permissions"></a>
+                            <g:render template="/admin/addPermissions" model="[projectId:project.projectId]"/>
+                            <h4>Project Members</h4>
+                            <div class="row-fluid">
+                                <div class="span6">
+                                    <table class="table table-condensed" id="projectMembersTable" style="">
+                                        <thead><tr><th width="10%">User&nbsp;Id</th><th>User&nbsp;Name</th><th width="15%">Role</th><th width="5%">&nbsp;</th><th width="5%">&nbsp;</th></tr></thead>
+                                        <tbody class="membersTbody">
+                                        <tr class="hide">
+                                            <td class="memUserId"></td>
+                                            <td class="memUserName"></td>
+                                            <td class="memUserRole"><span>&nbsp;</span><g:select class="hide" name="memberRole" from="${roles}"/></td>
+                                            <td class="clickable memEditRole"><i class="icon-edit tooltips" title="edit this user and role combination"></i></td>
+                                            <td class="clickable memRemoveRole"><i class="icon-remove tooltips" title="remove this user and role combination"></i></td>
+                                        </tr>
+                                        <tr id="spinnerRow"><td colspan="4">loading data... <g:img dir="images" file="spinner.gif" id="spinner2" class="spinner"/></td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="span5">
+                                    <div id="formStatus" class="hide alert alert-success">
+                                        <button class="close" onclick="$('.alert').fadeOut();" href="#">×</button>
+                                        <span></span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                        <!-- SPECIES -->
+                        <div class="border-divider large-space-before">&nbsp;</div>
+                        <div class="admin-sectionZ large-space-after">
+                            <a name="species"></a>
+                            <g:render template="/species/species" model="[project:project]"/>
+                        </div>
                     </div>
-                </div>
-                <!-- SPECIES -->
-                <div class="admin-section">
-                    <g:render template="/species/species" model="[project:project]"/>
                 </div>
             </div>
         </g:if>
@@ -554,35 +558,6 @@
         <r:script>
             // Admin JS code only exposed to admin users
             $(window).load(function () {
-                //$('#userAccessForm').validationEngine();
-                // Click event on "add" button to add new user to project
-                $('#addUserRoleBtn').click(function(e) {
-                    e.preventDefault();
-                    var email = $('#emailAddress').val();
-                    var role = $('#addUserRole').val();
-
-                    if ($('#userAccessForm').validationEngine('validate')) {
-                        $("#spinner1").show();
-                        var userId;
-                        if (email) {
-                            $.get("${g.createLink(controller:'user',action:'checkEmailExists')}?email=" + email, function(data) {
-                                if (data && /^\d+$/.test(data)) {
-                                    userId = data;
-                                    addUserWithRole(userId, role, "${project.projectId}");
-                                } else {
-                                    var registerUrl = "http://auth.ala.org.au/emmet/selfRegister.html";
-                                    bootbox.alert("The email address did not match a registered user. This may because: " +
-                                             "<ul><li>the email address is incorrect</li>" +
-                                             "<li>the user is not registered - see the <a href='" + registerUrl + "' target='_blank'>sign-up page</a>. </li></ul>"
-                                    );
-                                }
-                            })
-                            .fail(function(jqXHR, textStatus, errorThrown) { alert(jqXHR.responseText); })
-                            .always(function() { $(".spinner").hide(); });;
-                        }
-
-                    }
-                });
 
                 // click event on the "remove" button on Project Members table
                 $('.membersTbody').on("click", "td.memRemoveRole", function(e) {
@@ -662,30 +637,7 @@
                 .always(function() { $("#spinnerRow").hide(); });
             }
 
-           /**
-            * Add a user with given role to the current project
-            *
-            * @param userId
-            * @param role
-            * @param projectId
-            */
-            function addUserWithRole(userId, role, projectId) {
-                //console.log("addUserWithRole",userId, role, projectId);
-                if (userId && role) {
-                    $.ajax({
-                        url: fcConfig.addUserRoleUrl,
-                        data: { userId: userId, role: role, projectId: projectId }
-                    })
-                    .done(function(result) { updateStatusMessage("user was added with role " + role); loadProjectMembers(); })
-                    .fail(function(jqXHR, textStatus, errorThrown) { alert(jqXHR.responseText); })
-                    .always(function(result) { $(".spinner").hide(); $("#userAccessForm")[0].reset(); });
-                } else {
-                    alert("Required fields are: userId and role.");
-                    $('.spinner').hide();
-                }
-            }
-
-            function updateStatusMessage(msg) {
+            function updateStatusMessage2(msg) {
                 $('#formStatus span').text(''); // clear previous message
                 $('#formStatus span').text(msg).parent().fadeIn();
             }
@@ -702,7 +654,7 @@
                     url: fcConfig.removeUserWithRoleUrl,
                     data: {userId: userId, role: role, projectId: "${project.projectId}" }
                 })
-                .done(function(result) { updateStatusMessage("user was removed."); })
+                .done(function(result) { updateStatusMessage2("user was removed."); })
                 .fail(function(jqXHR, textStatus, errorThrown) { alert(jqXHR.responseText); })
                 .always(function(result) {
                     $("#spinner1").hide();
