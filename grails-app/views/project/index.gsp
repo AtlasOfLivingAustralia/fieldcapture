@@ -90,6 +90,17 @@
                         </h4>
                     </div>
                 </g:if>
+                <g:if test="${project.associatedProgram}">
+                    <div class="clearfix" >
+                        <h4>
+                            Funded by:
+                            <span>${project.associatedProgram?.encodeAsHTML()}</span>
+                            <g:if test="${project.associatedSubProgram}">
+                                <span>${project.associatedSubProgram?.encodeAsHTML()}</span>
+                            </g:if>
+                        </h4>
+                    </div>
+                </g:if>
                 <g:if test="${project.plannedStartDate}">
                     <div>
                         <h5>
