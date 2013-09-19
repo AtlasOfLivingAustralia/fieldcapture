@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
-    <title>${create ? 'New' : ('Edit | ' + project?.name)} | Projects | Field Capture</title>
+    <title>${create ? 'New' : ('Edit | ' + project?.name?.encodeAsHTML())} | Projects | Field Capture</title>
     <r:require modules="knockout,jqueryValidationEngine,datepicker"/>
 </head>
 <body>
@@ -14,7 +14,7 @@
             <li class="active">Create new project</li>
         </g:if>
         <g:else>
-            <li><g:link controller="project" action="index" id="${project.projectId}">${project.name}</g:link> <span class="divider">/</span></li>
+            <li><g:link controller="project" action="index" id="${project.projectId}">${project.name?.encodeAsHTML()}</g:link> <span class="divider">/</span></li>
             <li class="active">Edit</li>
         </g:else>
     </ul>
@@ -147,7 +147,7 @@
             <h4>KO model</h4>
             <pre data-bind="text:ko.toJSON($root,null,2)"></pre>
             <h4>Project</h4>
-            <pre>${project}</pre>
+            <pre>${project.encodeAsHTML()}</pre>
         </div>
     </div>
 

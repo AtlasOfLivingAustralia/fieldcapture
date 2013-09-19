@@ -4,7 +4,7 @@
 <head>
   <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&language=en"></script>
   <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
-  <title> ${create ? 'New' : ('Edit | ' + site?.name)} | Sites | Field Capture</title>
+  <title> ${create ? 'New' : ('Edit | ' + site?.name?.encodeAsHTML())} | Sites | Field Capture</title>
   <style type="text/css">
     legend {
         border: none;
@@ -30,14 +30,14 @@
             <li><g:link controller="home">Home</g:link> <span class="divider">/</span></li>
             <li>Sites<span class="divider">/</span></li>
             <g:if test="${project}">
-                <li class="active">Create new site for ${project?.name}</li>
+                <li class="active">Create new site for ${project?.name?.encodeAsHTML()}</li>
             </g:if>
             <g:elseif test="${create}">
                 <li class="active">Create</li>
             </g:elseif>
             <g:else>
                 <li><g:link controller="site" action="index" id="${site?.siteId}">
-                    <span data-bind="text: name">${site?.name}</span>
+                    <span data-bind="text: name">${site?.name?.encodeAsHTML()}</span>
                 </g:link><span class="divider">/</span></li>
                 <li class="active">Edit</li>
             </g:else>
@@ -51,7 +51,7 @@
                     <label for="name">Site name</label>
                     <h1>
                         <input data-bind="value: name" data-validation-engine="validate[required]"
-                               class="span8" id="name" type="text" value="${site?.name}"
+                               class="span8" id="name" type="text" value="${site?.name?.encodeAsHTML()}"
                                placeholder="Enter a name for the new site"/>
                     </h1>
                 </div>
@@ -59,7 +59,7 @@
             <g:if test="${project}">
             <div class="row-fluid" style="padding-bottom:15px;">
                 <span>Project name:</span>
-                <g:link controller="project" action="index" id="${project?.projectId}">${project?.name}</g:link>
+                <g:link controller="project" action="index" id="${project?.projectId}">${project?.name?.encodeAsHTML()}</g:link>
             </div>
             </g:if>
             <div class="row-fluid">
@@ -213,11 +213,11 @@
                 <h4>KO model</h4>
                 <pre data-bind="text:ko.toJSON($root,null,2)"></pre>
                 <h4>Activities</h4>
-                <pre>${site?.activities}</pre>
+                <pre>${site?.activities?.encodeAsHTML()}</pre>
                 <h4>Site</h4>
-                <pre>${site}</pre>
+                <pre>${site?.encodeAsHTML()}</pre>
                 <h4>Projects</h4>
-                <pre>${projects}</pre>
+                <pre>${projects?.encodeAsHTML()}</pre>
                 <h4>Features</h4>
                 <pre>${mapFeatures}</pre>
             </div>

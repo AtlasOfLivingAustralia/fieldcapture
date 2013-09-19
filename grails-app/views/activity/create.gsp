@@ -24,7 +24,7 @@
                 <div class="">
                     <h2>Site:</h2>
                     <g:if test="${site}">
-                        <h2>${site.name}</h2>
+                        <h2>${site.name?.encodeAsHTML()}</h2>
                     </g:if>
                     <g:else>
                         <select data-bind="options:transients.sites,optionsText:'name',optionsValue:'siteId',value:siteId,optionsCaption:'Choose a site...'"></select>
@@ -34,7 +34,7 @@
             <div class="span5 title-attribute">
                 <h2>Project: </h2>
                 <g:if test="${project}">
-                    <h2>${project.name}</h2>
+                    <h2>${project.name?.encodeAsHTML()}</h2>
                 </g:if>
                 <g:else>
                     <select data-bind="options:transients.projects,optionsText:'name',optionsValue:'projectId',value:projectId,optionsCaption:'Choose a project...',disabled:true"></select>
@@ -186,28 +186,30 @@
                 <button type="button" id="cancel" class="btn">Cancel</button>
             </div>
         </bs:form>
-    </div>
 
-    <div class="expandable-debug">
-        <hr />
-        <h3>Debug</h3>
-        <div>
-            <h4>KO model</h4>
-            <pre data-bind="text:ko.toJSON($root,null,2)"></pre>
-            <h4>Activity</h4>
-            <pre>${activity}</pre>
-            <h4>Activity types</h4>
-            <pre>${activityTypes}</pre>
-            <h4>Site</h4>
-            <pre>${site}</pre>
-            <h4>Sites</h4>
-            <pre>${(sites as JSON).toString()}</pre>
-            <h4>Project</h4>
-            <pre>${project}</pre>
-            <h4>Projects</h4>
-            <pre>${(projects as JSON).toString()}</pre>
-            %{--<pre>Map features : ${mapFeatures}</pre>--}%
-        </div>
+        <g:if env="development">
+            <div class="expandable-debug">
+                <hr />
+                <h3>Debug</h3>
+                <div>
+                    <h4>KO model</h4>
+                    <pre data-bind="text:ko.toJSON($root,null,2)"></pre>
+                    <h4>Activity</h4>
+                    <pre>${activity}</pre>
+                    <h4>Activity types</h4>
+                    <pre>${activityTypes}</pre>
+                    <h4>Site</h4>
+                    <pre>${site?.encodeAsHTML()}</pre>
+                    <h4>Sites</h4>
+                    <pre>${(sites as JSON).toString()}</pre>
+                    <h4>Project</h4>
+                    <pre>${project.encodeAsHTML()}</pre>
+                    <h4>Projects</h4>
+                    <pre>${(projects as JSON).toString()}</pre>
+                    %{--<pre>Map features : ${mapFeatures}</pre>--}%
+                </div>
+            </div>
+        </g:if>
     </div>
 </div>
 

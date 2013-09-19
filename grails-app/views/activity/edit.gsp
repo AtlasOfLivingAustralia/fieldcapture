@@ -41,16 +41,16 @@
 
         <div class="row-fluid title-block well well-small input-block-level">
             <div class="span12 title-attribute">
-                <h1><span data-bind="click:goToProject" class="clickable">${project?.name ?: 'no project defined!!'}</span></h1>
+                <h1><span data-bind="click:goToProject" class="clickable">${project?.name?.encodeAsHTML() ?: 'no project defined!!'}</span></h1>
                 <g:if test="${site}">
-                    <h2><span data-bind="click:goToSite" class="clickable">Site: ${site.name}</span></h2>
+                    <h2><span data-bind="click:goToSite" class="clickable">Site: ${site.name?.encodeAsHTML()}</span></h2>
                 </g:if>
                 <g:else>
                     <select data-bind="options:transients.project.sites,optionsText:'name',optionsValue:'siteId',value:siteId,optionsCaption:'Choose a site...'"></select>
                     Leave blank if this activity is not associated with a specific site.
                 </g:else>
                 <h3 data-bind="css:{modified:dirtyFlag.isDirty},attr:{title:'Has been modified'}">Activity: <span data-bind="text:type"></span><i class="icon-asterisk modified-icon" data-bind="visible:dirtyFlag.isDirty" title="Has been modified"></i></h3>
-                <h4><span>${project.associatedProgram}</span> <span>${project.associatedSubProgram}</span></h4>
+                <h4><span>${project.associatedProgram?.encodeAsHTML()}</span> <span>${project.associatedSubProgram?.encodeAsHTML()}</span></h4>
             </div>
         </div>
 
@@ -119,13 +119,13 @@
                   <h4>KO model</h4>
                   <pre data-bind="text:ko.toJSON($root.modelForSaving(),null,2)"></pre>
                   <h4>Activity</h4>
-                  <pre>${activity}</pre>
+                  <pre>${activity?.encodeAsHTML()}</pre>
                   <h4>Site</h4>
-                  <pre>${site}</pre>
+                  <pre>${site?.encodeAsHTML()}</pre>
                   <h4>Sites</h4>
                   <pre>${(sites as JSON).toString()}</pre>
                   <h4>Project</h4>
-                  <pre>${project}</pre>
+                  <pre>${project?.encodeAsHTML()}</pre>
                   <h4>Activity model</h4>
                   <pre>${metaModel}</pre>
                   <h4>Output models</h4>

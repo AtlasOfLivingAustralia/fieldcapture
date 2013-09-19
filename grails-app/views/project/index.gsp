@@ -3,7 +3,7 @@
 <html>
 <head>
   <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
-  <title>${project?.name} | Project | Field Capture</title>
+  <title>${project?.name.encodeAsHTML()} | Project | Field Capture</title>
     <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&language=en"></script>
     <r:script disposition="head">
     var fcConfig = {
@@ -40,13 +40,13 @@
             <g:link controller="home">Home</g:link> <span class="divider">/</span>
         </li>
         <li class="active">Projects <span class="divider">/</span></li>
-        <li class="active">${project.name}</li>
+        <li class="active">${project.name?.encodeAsHTML()}</li>
     </ul>
 
     <div class="row-fluid">
         <div class="row-fluid">
             <div class="clearfix">
-                <h1 class="pull-left">${project?.name}</h1>
+                <h1 class="pull-left">${project?.name?.encodeAsHTML()}</h1>
                 <g:if test="${flash.errorMessage || flash.message}">
                     <div class="span5">
                         <div class="alert alert-error">
@@ -86,7 +86,7 @@
                         <h4>
                             Supported by:
                             <a href="${grailsApplication.config.collectory.baseURL +
-                                    'public/show/' + project.organisation}">${organisationName}</a>
+                                    'public/show/' + project.organisation}">${organisationName?.encodeAsHTML()}</a>
                         </h4>
                     </div>
                 </g:if>
@@ -99,17 +99,17 @@
                     </div>
                 </g:if>
 
-                <g:if test="${project.description}">
+                <g:if test="${project.description?.encodeAsHTML()}">
                     <div>
-                        <p class="well well-small more">${project.description}</p>
+                        <p class="well well-small more">${project.description?.encodeAsHTML()}</p>
                     </div>
                 </g:if>
                 <g:if test="${project.documents}">
                     <g:set var="image" value="${project.documents[0]}"/>
                     <div class="thumbnail with-caption">
                         <img class="img-rounded" src="${image?.url}"/>
-                        <p class="caption">${image?.name}</p>
-                        <p class="attribution"><small>${image?.attribution}</small></p>
+                        <p class="caption">${image?.name?.encodeAsHTML()}</p>
+                        <p class="attribution"><small>${image?.attribution?.encodeAsHTML()}</small></p>
                     </div>
                 </g:if>
             </div>
@@ -306,11 +306,11 @@
             <h4>KO model</h4>
             <pre data-bind="text:ko.toJSON($root,null,2)"></pre>
             <h4>Activities</h4>
-            <pre>${activities}</pre>
+            <pre>${activities?.encodeAsHTML()}</pre>
             <h4>Sites</h4>
-            <pre>${project.sites}</pre>
+            <pre>${project.sites?.encodeAsHTML()}</pre>
             <h4>Project</h4>
-            <pre>${project}</pre>
+            <pre>${project?.encodeAsHTML()}</pre>
             <h4>Features</h4>
             <pre>${mapFeatures}</pre>
         </div>

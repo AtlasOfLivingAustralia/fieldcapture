@@ -3,7 +3,7 @@
 <html>
 <head>
   <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
-  <title>${site?.name} | Field Capture</title>
+  <title>${site?.name?.encodeAsHTML()} | Field Capture</title>
   <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&language=en"></script>
     <r:script disposition="head">
         var fcConfig = {
@@ -29,7 +29,7 @@
             <g:link controller="home">Home</g:link> <span class="divider">/</span>
         </li>
         <li class="active"><g:link controller="home" action="advanced">Sites</g:link> <span class="divider">/</span></li>
-        <li class="active">${site.name}</li>
+        <li class="active">${site.name?.encodeAsHTML()}</li>
     </ul>
     <div class="row-fluid space-after">
         <div class="span8"><!-- left block of header -->
@@ -43,12 +43,12 @@
             </g:if>
             <div>
                 <div class="clearfix">
-                    <h1 class="pull-left">${site?.name}</h1>
+                    <h1 class="pull-left">${site?.name?.encodeAsHTML()}</h1>
                     <g:link style="margin-bottom:10px;" action="edit" id="${site.siteId}" class="btn pull-right title-edit">Edit site</g:link>
                 </div>
-                <g:if test="${site.description}">
+                <g:if test="${site.description?.encodeAsHTML()}">
                     <div class="clearfix well well-small">
-                        <p>${site.description}</p>
+                        <p>${site.description?.encodeAsHTML()}</p>
                     </div>
                 </g:if>
             </div>
@@ -92,7 +92,7 @@
             <div>
                 <span class="span12">
                     <span class="label label-info">Notes:</span>
-                    ${site.notes}</span>
+                    ${site.notes?.encodeAsHTML()}</span>
             </div>
 
             <g:if test="${site.projects}">
@@ -101,7 +101,7 @@
                 <ul style="list-style: none;margin:13px 0;">
                     <g:each in="${site.projects}" var="p" status="count">
                         <li>
-                            <g:link controller="project" action="index" id="${p.projectId}">${p.name}</g:link>
+                            <g:link controller="project" action="index" id="${p.projectId}">${p.name?.encodeAsHTML()}</g:link>
                             <g:if test="${count < site.projects.size() - 1}">, </g:if>
                         </li>
                     </g:each>
@@ -125,7 +125,7 @@
         <div class="row-fluid">
               <ul>
               <g:each in="${site.poi}" var="poi">
-                <li>${poi.name}</li>
+                <li>${poi.name?.encodeAsHTML()}</li>
               </g:each>
               </ul>
         </div>
@@ -158,11 +158,11 @@
             <h4>KO model</h4>
             <pre data-bind="text:ko.toJSON($root,null,2)"></pre>
             <h4>Activities</h4>
-            <pre>${site.activities}</pre>
+            <pre>${site.activities?.encodeAsHTML()}</pre>
             <h4>Site</h4>
             <pre>${site}</pre>
             <h4>Projects</h4>
-            <pre>${projects}</pre>
+            <pre>${projects?.encodeAsHTML()}</pre>
             <h4>Features</h4>
             <pre>${mapFeatures}</pre>
         </div>
