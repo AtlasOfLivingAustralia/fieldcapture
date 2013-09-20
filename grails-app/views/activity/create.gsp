@@ -68,12 +68,9 @@
                         </g:each>
                     </select>
                 </div>
+
                 <div class="span4">
-                    <label for="censusMethod">Method</label>
-                    <input data-bind="value: censusMethod" id="censusMethod" type="text" class="span8"/>
-                </div>
-                <div class="span4">
-                    <label for="planning">Is this activity being entered for planning purposes?</label>
+                    <span><label for="planning">Is this activity being entered for planning purposes? <fc:iconHelp title="Planning">Select yes if you are entering details of a planned activity that has not yet been carried out.  For example, if you are inputting your MERI Plan.</fc:iconHelp></label></span>
                     <label class="radio-inline"><input type="radio" id="planning" name="planning" value="planned" data-bind="checked: progress" data-validation-engine="validate[required]"/> Yes</label>
                     <label class="radio"><input class="radio" type="radio" name="planning" value="started" data-bind="checked: progress" data-validation-engine="validate[required]"/> No</label>
 
@@ -306,7 +303,14 @@
                             if (data.error) {
                                 alert(data.detail + ' \n' + data.error);
                             } else {
-                                document.location.href = returnTo;
+                                // Redirect to the edit page for a new started activity, otherwise go back to
+                                // where you came from (the project or site activity list most likely).
+                                if (self.progress() != 'planned') {
+                                    document.location.href = "${createLink(action: 'edit')}"+'/'+data.activityId+'?returnTo='+returnTo;
+                                }
+                                else {
+                                    document.location.href = returnTo;
+                                }
                             }
                         },
                         error: function (data) {
