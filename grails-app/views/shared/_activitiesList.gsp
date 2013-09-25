@@ -32,7 +32,7 @@
                 <i class="icon-remove" title="Delete activity" data-bind="click:del"></i>
             </td>
             <td>
-                <span data-bind="text:type"></span>
+                <span data-bind="text:type,click:editActivity" class="clickable"></span>
             </td>
             <td>
                 <span data-bind="text:description"></span>
