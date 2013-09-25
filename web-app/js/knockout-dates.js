@@ -343,8 +343,10 @@ ko.bindingHandlers.clickToEdit = {
         var observable = valueAccessor(),
             link = document.createElement("a"),
             input = document.createElement("input"),
+            dblclick = $(element).attr('data-edit-on-dblclick'),
             userPrompt = $(element).attr('data-prompt'),
-            prompt = userPrompt || 'Click to edit';
+            prompt = userPrompt || (dblclick ? 'Double-click to edit' : 'Click to edit'),
+            linkBindings;
 
         // add any classes specified for the link element
         $(link).addClass($(element).attr('data-link-class'));
@@ -354,10 +356,13 @@ ko.bindingHandlers.clickToEdit = {
         element.appendChild(link);
         element.appendChild(input);
 
-
         observable.editing = ko.observable(false);
+        observable.stopEditing = function () {
+            $(input).blur();
+            observable.editing(false)
+        };
 
-        ko.applyBindingsToNode(link, {
+        linkBindings = {
             text: ko.computed(function() {
                 // todo: style default text as grey
                 var value = ko.utils.unwrapObservable(observable);
@@ -365,14 +370,29 @@ ko.bindingHandlers.clickToEdit = {
             }),
             visible: ko.computed(function() {
                 return !observable.editing();
-            }),
-            click: observable.editing.bind(null, true)
-        });
+            })
+        };
+
+        // bind to either the click or dblclick event
+        if (dblclick) {
+            linkBindings.event = { dblclick: observable.editing.bind(null, true) };
+        } else {
+            linkBindings.click = observable.editing.bind(null, true);
+        }
+
+        ko.applyBindingsToNode(link, linkBindings);
 
         ko.applyBindingsToNode(input, {
             value: observable,
             visible: observable.editing,
             hasfocus: observable.editing
+        });
+
+        // quit editing on enter key
+        $(input).keydown(function(e) {
+            if (e.which === 13) {
+                observable.stopEditing();
+            }
         });
     }
 };
