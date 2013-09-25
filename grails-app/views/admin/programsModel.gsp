@@ -4,7 +4,7 @@
 <head>
     <meta name="layout" content="adminLayout"/>
     <title>Programs model - Admin - Data capture - Atlas of Living Australia</title>
-    <r:require modules="knockout,jquery_ui,knockout_sortable"/>
+    <r:require modules="knockout,jquery_ui,knockout_sortable,jqueryValidationEngine"/>
 </head>
 
 <body>
@@ -14,48 +14,52 @@
     <button type="button" data-bind="click:revert" class="btn">Cancel</button>
 </content>
 <div class="row-fluid span10">
-    <p class="span12">This list controls the programs, sub-programs and themes that can be associated
+    <p class="span12">These lists control the programs, sub-programs and themes that can be associated
     with projects and activities.</p>
+    <p><b>Click</b> an item to select it and show its properties. <b>Double-click</b> to edit a name.
+    <b>Drag</b> to rearrange the order of items.</p>
 </div>
-<div class="row-fluid span10">
-    <div class="span6">
+<form id="validation-container">
+<div class="row-fluid">
+    <div class="span4">
         <h2>Programs</h2>
-        <ul data-bind="sortable:{data:programs}" class="sortableList container">
-            <li class="item">
-                <div data-bind="click:toggle"><span data-bind="text:name"></span></div>
-                <div data-bind="visible:expanded" class="details clearfix" style="display:none;">
-                    <div data-bind="template: {name: displayMode}"></div>
+        <ul data-bind="sortable:{data:programs}" class="sortableList">
+            <li class="item" data-bind="css:{referenced:isSelected}">
+                <div data-bind="click:select">
+                    <span data-bind="clickToEdit:name" data-edit-on-dblclick="true" data-input-class="auto-width"></span>%{--<span data-bind="visible:!name()">new</span>--}%
+                    <span class="pull-right" data-bind="visible:isSelected"><i data-bind="click:$parent.removeProgram" class="icon-remove"></i></span>
                 </div>
             </li>
         </ul>
-        <span data-bind="click:addProgram" class="clickable"><i class="icon-plus"></i> Add new</span>
+        <span data-bind="click:addProgram" class="clickable"><i class="icon-plus"></i> Add another</span>
+    </div>
+    <div class="span4">
+        <h2>Sub-programs</h2>
+        <ul data-bind="sortable:{data:transients.displayedSubprograms}" class="sortableList">
+            <li class="item" data-bind="css:{referenced:isSelected}">
+                <div data-bind="click:select">
+                    <span data-bind="clickToEdit:name" data-edit-on-dblclick="true" data-input-class="auto-width"></span>
+                    <span class="pull-right" data-bind="visible:isSelected"><i data-bind="click:$parent.removeSubprogram" class="icon-remove"></i></span>
+                </div>
+            </li>
+        </ul>
+        <span data-bind="click:addSubprogram, visible:transients.selectedProgram()" class="clickable"><i class="icon-plus"></i> Add another</span>
+    </div>
+    <div class="span4">
+        <h2>Themes</h2>
+        <ul data-bind="sortable:{data:transients.displayedThemes}" class="sortableList">
+            <li class="item" data-bind="css:{referenced:isSelected}">
+                <div data-bind="click:select">
+                    <span data-bind="clickToEdit:name" data-edit-on-dblclick="true" data-input-class="auto-width"></span>
+                    <span class="pull-right" data-bind="visible:isSelected"><i data-bind="click:$parent.removeTheme" class="icon-remove"></i></span>
+                </div>
+            </li>
+        </ul>
+        <span data-bind="click:addTheme, visible:transients.selectedSubprogram()" class="clickable"><i class="icon-plus"></i> Add another</span>
     </div>
 </div>
 
-<script id="viewProgramTmpl" type="text/html">
-    <div>Sub-programs: <ul data-bind="foreach:subprograms">
-        <li data-bind="text:$data"></li>
-    </ul></div>
-    <button data-bind="click:$root.removeProgram" type="button" class="btn btn-mini pull-right">Remove</button>
-    <button data-bind="click:edit" type="button" class="btn btn-mini pull-right">Edit</button>
-</script>
-
-<script id="editProgramTmpl" type="text/html">
-    <div style="margin-top:4px"><span class="span2">Name:</span>
-        <input type="text" class="input-large pull-right" data-bind="value:name" style="margin-bottom:0;">
-    </div>
-    <div class="clearfix">
-        <span>Sub-programs:</span>
-        <ul data-bind="sortable:{data:subprograms}" class="output-drop-target sortableList small">
-            <li>
-                <input type="text" class="name-edit" data-bind="value:$parent.subprograms()[$index()]">
-                <span class="pull-right"><i data-bind="click:$parent.removeSubprogram" class="icon-remove"></i></span>
-            </li>
-        </ul>
-        <span data-bind="click:addSubprogram" class="clickable"><i class="icon-plus"></i> Add new</span>
-    </div>
-    <button data-bind="click:done" type="button" class="btn btn-mini pull-right">Done</button>
-</script>
+</form>
 
 <div class="expandable-debug clearfix">
     <hr />
@@ -73,71 +77,119 @@
 <r:script>
     $(function(){
 
+        $('#validationContainer').validationEngine();
+
         var ProgramModel = function (prg, model) {
             var self = this;
             this.name = ko.observable(prg.name);
 
-            // NOTE that because this is an array of simple strings we cannot just use the 'value:$data'
-            // binding when iterating. We need to use 'value:$parent.subprograms()[$index()]'
             this.subprograms = ko.observableArray($.map(prg.subprograms, function (obj) {
-                return ko.observable(obj);
+                return new SubprogramModel(obj, model);
             }));
 
-            this.expanded = ko.observable(false);
-            this.toggle = function (data, event) {
-                if (!self.expanded()) {
-                    $.each(viewModel.programs(), function (i, obj) {
-                        obj.expanded(false); // close all
-                        obj.done(); // exit editing mode
-                    });
-                    self.expanded(true);
-                    model.selectedProgram(self);
-                } else {
-                    self.expanded(false);
-                    self.done(); // in case we were editing
-                    model.selectedProgram(undefined);
-                }
+            this.select = function () {
+                model.transients.selectedProgram(this);
+                model.transients.selectedSubprogram(undefined);
             };
-            this.editing = ko.observable(false);
-            this.edit = function () { self.editing(true) };
-            this.done = function () { self.editing(false) };
-            this.displayMode = function () {
-                return self.editing() ? 'editProgramTmpl' : 'viewProgramTmpl';
-            };
-            this.addSubprogram = function (data) {
-                self.subprograms.push("new");
-            };
-            this.removeSubprogram = function (data) {
-                self.subprograms.remove(function(item) { return ko.utils.unwrapObservable(item) === data });
-            };
+            this.isSelected = ko.computed(function () {
+                return self === model.transients.selectedProgram();
+            });
             this.toJSON = function() {
                 var js = ko.toJS(this);
-                delete js.expanded;
-                delete js.editing;
+                delete js.isSelected;
+                return js;
+            }
+        };
+
+        var SubprogramModel = function (prg, model) {
+            var self = this;
+            this.name = ko.observable(prg.name);
+
+            this.themes = ko.observableArray($.map(prg.themes, function (obj) {
+                return new ThemeModel(obj, model);
+            }));
+
+            this.select = function () {
+                model.transients.selectedSubprogram(this);
+            };
+            this.isSelected = ko.computed(function () {
+                return self === model.transients.selectedSubprogram();
+            });
+            this.toJSON = function() {
+                var js = ko.toJS(this);
+                delete js.isSelected;
+                return js;
+            }
+        };
+
+        var ThemeModel = function (theme, model) {
+            var self = this;
+            this.name = ko.observable(theme.name);
+
+            this.select = function () {
+                model.transients.selectedTheme(this);
+            };
+
+            this.isSelected = ko.computed(function () {
+                return self === model.transients.selectedTheme();
+            });
+            this.toJSON = function() {
+                var js = ko.toJS(this);
+                delete js.isSelected;
                 return js;
             }
         };
 
         var ViewModel = function (model) {
             var self = this;
+            this.transients = {};
+            this.transients.selectedProgram = ko.observable();
+            this.transients.selectedSubprogram = ko.observable();
+            this.transients.selectedTheme = ko.observable();
+
             this.programs = ko.observableArray($.map(model.programs, function (obj, i) {
                 return new ProgramModel(obj, self);
             }));
-            this.selectedProgram = ko.observable();
-            this.addProgram = function () {
-                var act = new ProgramModel({name: 'new program', subprograms: []}, self);
+
+            this.transients.displayedSubprograms = ko.computed(function () {
+                return (self.transients.selectedProgram() !== undefined) ?
+                    self.transients.selectedProgram().subprograms() : [];
+            });
+            this.transients.displayedThemes = ko.computed(function () {
+                if (self.transients.selectedProgram() === undefined) { return [] }
+                if (self.transients.selectedSubprogram() === undefined) { return [] }
+                return self.transients.selectedSubprogram().themes();
+            });
+            this.addProgram = function (item, event) {
+                var act = new ProgramModel({name: "", subprograms: []}, self);
                 self.programs.push(act);
-                act.expanded(true);
-                act.editing(true);
+                act.name.editing(true);
+            };
+            this.addSubprogram = function (item, event) {
+                var newSub = new SubprogramModel({name:"", themes:[]}, self);
+                self.transients.selectedProgram().subprograms.push(newSub);
+                newSub.name.editing(true);
+            };
+            this.addTheme = function (item, event) {
+                var newTheme = new ThemeModel({name:""}, self);
+                self.transients.selectedSubprogram().themes.push(newTheme);
+                newTheme.name.editing(true);
             };
             this.removeProgram = function () {
                 self.programs.remove(this);
+            };
+            this.removeSubprogram = function () {
+                self.transients.selectedProgram().subprograms.remove(this);
+            };
+            this.removeTheme = function () {
+                self.transients.selectedSubprogram().themes.remove(this);
             };
             this.revert = function () {
                 document.location.reload();
             };
             this.save = function () {
                 var model = ko.toJS(self);
+                delete model.transients;
                 $.ajax("${createLink(action: 'updateProgramsModel')}", {
                     type: 'POST',
                     data: vkbeautify.json(model,2),

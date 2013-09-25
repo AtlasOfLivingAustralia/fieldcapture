@@ -13,10 +13,10 @@
     <button type="button" data-bind="click:save" class="btn btn-success">Save</button>
     <button type="button" data-bind="click:revert" class="btn">Cancel</button>
 </content>
-<div class="row-fluid span10">
-    <div class="span4">
+<div class="row-fluid clearfix">
+    <div class="span5">
         <h2>Activities</h2>
-        <ul data-bind="sortable:{data:activities}" class="sortableList container">
+        <ul data-bind="sortable:{data:activities}" class="sortableList">
             <li class="item">
                 <div data-bind="click:toggle"><span data-bind="text:name"></span></div>
                 <div data-bind="visible:expanded" class="details clearfix" style="display:none;">
@@ -26,7 +26,7 @@
         </ul>
         <span data-bind="click:addActivity" class="clickable"><i class="icon-plus"></i> Add new</span>
     </div>
-    <div class="span4 pull-right">
+    <div class="span5 pull-right">
         <h2>Outputs</h2>
         <ul data-bind="sortable:outputs" class="sortableList">
             <li data-bind="css:{referenced: isReferenced}" class="item">

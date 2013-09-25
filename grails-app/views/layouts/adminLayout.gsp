@@ -61,6 +61,7 @@
                     <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'outputModels')}" title="Output models" />
                     <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'programsModel')}" title="Programs model" />
                 </ul>
+                <div style="text-align: center; margin-top: 30px;"><g:pageProperty name="page.adminButtonBar"/></div>
             </div>
 
             <div class="span9">
@@ -79,8 +80,6 @@
                         </div>
                     </div>
                 </g:if>
-
-                <div class="pull-right"><g:pageProperty name="page.adminButtonBar"/></div>
 
                 <g:layoutBody/>
 

@@ -399,7 +399,7 @@ ul.sortableList {
     border:  1px solid black;
     background-color: #f6f4ef;
     margin: 3px 0;
-    width: 300px;
+    padding: 0 4px;
     text-align: center;
     border-radius: 5px;
 }
@@ -409,7 +409,6 @@ ul.sortableList {
     background-color: #C2CD8D;
     margin: 3px 0;
     padding: 0 4px;
-    width: 280px;
     text-align: center;
     border-radius: 5px;
 }
@@ -588,4 +587,8 @@ td.memUserRole select {
 
 a.btn-primary {
     color: white;
+}
+
+.auto-width {
+    width: auto;
 }
