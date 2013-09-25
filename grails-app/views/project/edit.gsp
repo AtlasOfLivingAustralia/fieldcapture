@@ -71,15 +71,19 @@
     <div class="row-fluid">
         <div class="span4">
             <label class="control-label">Program name</label>
-            <select data-bind="value:associatedProgram,options:transients.programs,optionsCaption: 'Choose...'"></select>
+            <select data-bind="value:associatedProgram,options:transients.programs,optionsCaption: 'Choose...'"
+                    data-validation-engine="validate[required]"></select>
         </div>
         <div class="span4">
             <label class="control-label">Sub-program name</label>
             <select data-bind="value:associatedSubProgram,options:transients.subprogramsToDisplay,optionsCaption: 'Choose...'"></select>
         </div>
-        %{--<div class="span4 control-group">
-            <label for="startDate">Start date
-            <fc:iconHelp title="Start date">Date the activity was started.</fc:iconHelp>
+    </div>
+
+    <div class="row-fluid">
+        <div class="span4 control-group">
+            <label for="startDate">Planned start date
+            <fc:iconHelp title="Start date">Date the project is intended to commence.</fc:iconHelp>
             </label>
             <div class="input-append">
                 <input data-bind="datepicker:plannedStartDate.date" id="startDate" type="text" size="16"
@@ -88,15 +92,14 @@
             </div>
         </div>
         <div class="span4">
-            <label for="endDate">End date
-            <fc:iconHelp title="End date">Date the activity finished.</fc:iconHelp>
+            <label for="endDate">Planned end date
+            <fc:iconHelp title="End date">Date the project is intended to finish.</fc:iconHelp>
             </label>
             <div class="input-append">
-                <input data-bind="datepicker:plannedEndDate.date" id="endDate" type="text" size="16"
-                       data-validation-engine="validate[required]"/>
+                <input data-bind="datepicker:plannedEndDate.date" id="endDate" type="text" size="16"/>
                 <span class="add-on open-datepicker"><i class="icon-th"></i></span>
             </div>
-        </div>--}%
+        </div>
     </div>
 
     <!-- ko stopBinding: true -->
@@ -156,7 +159,7 @@
 
     $(function(){
 
-        //$('.validation-container').validationEngine('attach', {scroll: false});
+        $('#validation-container').validationEngine();
 
         $('.helphover').popover({animation: true, trigger:'hover'});
 
@@ -246,7 +249,7 @@
             self.loadPrograms = function (programsModel) {
                 $.each(programsModel.programs, function (i, program) {
                     self.transients.programs.push(program.name);
-                    self.transients.subprograms[program.name] = program.subprograms;
+                    self.transients.subprograms[program.name] = $.map(program.subprograms,function (obj, i){return obj.name});
                 });
                 self.associatedProgram(data.associatedProgram); // to trigger the computation of sub-programs
             };
@@ -258,7 +261,7 @@
                 // save any changes to the image metadata
                 imageViewModel.save();
 
-                //if ($('.validation-container').validationEngine('validate')) {
+                if ($('#validation-container').validationEngine('validate')) {
                     var jsData = ko.toJS(self);
                     var json = JSON.stringify(self.removeTransients(jsData));
                     var id = "${project?.projectId ? '/' + project.projectId : ''}";
@@ -284,7 +287,7 @@
                             alert('An unhandled error occurred: ' + data.status);
                         }
                     });
-                //}
+                }
             }
         }
 
