@@ -218,13 +218,20 @@ td.tick {
     opacity: 0.5;
 }
 
-i[class^="icon-remove"] {
-    opacity: 0.6;
+i[class^="icon-"] {
     cursor: pointer;
 }
 
-i[class^="icon-remove"]:hover {
+li.item i[class^="icon-"] {
+    opacity: 0.6;
+}
+
+li.item i[class^="icon-"]:hover {
     opacity: 1;
+}
+
+.no-pointer {
+    cursor: default !important;
 }
 
 .button-set a {

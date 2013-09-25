@@ -6,15 +6,14 @@
     <div class="pull-right space-after">
         <button data-bind="click:newActivity" type="button" class="btn">Add new activity</button>
     </div>
-    <p data-bind="visible: activities().length > 0">Click column titles to sort. Click <i class="icon-edit"></i> edit button to enter activity data.</p>
+    <p data-bind="visible: activities().length > 0">Click column titles to sort. Click <i class="icon-edit no-pointer"></i> edit button to enter activity data.</p>
     <p data-bind="visible: activities().length == 0">
         This project currently has no activities listed.
     </p>
     <table class="table table-condensed" id="activities">
         <thead>
         <tr data-bind="visible: activities().length > 0">
-            <th width="2%"></th>
-            <th width="2%"></th>
+            <th width="52px"></th>
             <th class="sort" data-bind="sortIcon:activitiesSort,click:sortBy" data-column="type">Type</th>
             <th width="30%" class="sort" data-bind="sortIcon:activitiesSort,click:sortBy" data-column="description">Description</th>
             <th class="sort" data-bind="sortIcon:activitiesSort,click:sortBy" data-column="startDate">From</th>
@@ -23,16 +22,14 @@
                 <th class="sort" data-bind="sortIcon:activitiesSort,click:sortBy" data-column="siteName">Site</th>
             </g:if>
             <th class="status" data-bind="sortIcon:activitiesSort,click:sortBy" data-column="progress">Status</th>
-            <th width="1%"></th>
         </tr>
         </thead>
         <tbody data-bind="foreach:activities" id="activityList">
         <tr>
-            <td data-bind="click:editActivity" class="clickable">
-                <i class="icon-edit" title="Edit Activity"></i>
-            </td>
-            <td data-bind="click:printActivity" class="clickable">
-                <i class="icon-print" title="View a printable version of this Activity" />
+            <td>
+                <i class="icon-edit" title="Edit Activity" data-bind="click:editActivity"></i>
+                <i class="icon-print" title="View a printable version of this Activity" data-bind="click:printActivity"></i>
+                <i class="icon-remove" title="Delete activity" data-bind="click:del"></i>
             </td>
             <td>
                 <span data-bind="text:type"></span>
@@ -46,9 +43,6 @@
                 <td><a data-bind="text:siteName,click:$parent.openSite"></a></td>
             </g:if>
             <td><span data-bind="text:progress"></span></td>
-            <td>
-                <i data-bind="click:del" class="icon-remove pull-right" title="Delete activity"></i>
-            </td>
         </tr>
         </tbody>
     </table>
