@@ -70,6 +70,7 @@ class ActivityController {
                 }
             }
             model.mapFeatures = model.site ? siteService.getMapFeatures(model.site) : "{}"
+            model.themes = metadataService.getThemesForProject(model.project)
             model
         } else {
             forward(action: 'list', model: [error: 'no such id'])

@@ -32,6 +32,17 @@ class MetadataService {
         result
     }
 
+    def getThemesForProject(project) {
+        def programMD = programsModel().programs.find { it.name == project.associatedProgram }
+        if (programMD) {
+            def subprogramMD = programMD.subprograms.find {it.name == project.associatedSubProgram }
+            if (subprogramMD) {
+                return subprogramMD.themes
+            }
+        }
+        return []
+    }
+
     def getActivityModel(name) {
         return activitiesModel().activities.find { it.name == name }
     }

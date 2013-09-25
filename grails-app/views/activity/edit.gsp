@@ -103,6 +103,21 @@
                         </select>
                     </div>
                 </div>
+
+                <div class="row-fluid">
+                    <div class="span6">
+                        <label for="purpose">Major theme</label>
+                        <select data-bind="value:mainTheme, options:transients.themes, optionsCaption:'Choose..'" class="input-xlarge">
+                        </select>
+                    </div>
+                    <div class="span6">
+                        <label for="projectStage">Activity progress
+                        <fc:iconHelp title="Activity progress">Planned means no work has yet been done. Started means some work has been done. Done means no more work remains for this activity.</fc:iconHelp>
+                        </label>
+                        <select data-bind="value:progress, options:transients.activityProgressValues" class="input-xlarge">
+                        </select>
+                    </div>
+                </div>
             </div>
             <g:if test="${mapFeatures.toString() != '{}'}">
                 <div class="span3">
@@ -130,6 +145,8 @@
                   <pre>${metaModel}</pre>
                   <h4>Output models</h4>
                   <pre>${outputModels}</pre>
+                  <h4>Themes</h4>
+                  <pre>${themes.toString()}</pre>
                   <h4>Map features</h4>
                   <pre>${mapFeatures.toString()}</pre>
               </div>
@@ -416,6 +433,8 @@
             self.associatedProgram = ko.observable(act.associatedProgram);
             self.associatedSubProgram = ko.observable(act.associatedSubProgram);
             self.projectStage = ko.observable(act.projectStage || "");
+            self.progress = ko.observable(act.progress || 'started');
+            self.mainTheme = ko.observable(act.mainTheme);
             self.type = ko.observable(act.type);
             self.siteId = ko.observable(act.siteId);
             self.projectId = act.projectId;
@@ -423,6 +442,8 @@
             self.transients.site = site;
             self.transients.project = project;
             self.transients.metaModel = metaModel || {};
+            self.transients.activityProgressValues = ['planned','started','finished'];
+            self.transients.themes = $.map(${themes}, function (obj, i) { return obj.name });
             self.goToProject = function () {
                 if (self.projectId) {
                     document.location.href = fcConfig.projectViewUrl + self.projectId;
