@@ -195,72 +195,39 @@
             <!-- DASHBOARD -->
             <h2 style="font-weight:normal;margin-top:0;">Totals across all activities under this project.</h2>
             <div class="row-fluid">
-                <div class="span4 well">
-                    <h3>Weed management</h3>
-                    <strong>Hectares treated</strong><span class="pull-right progress-label">6.3</span>
-                    <div class="progress progress-danger active">
-                        <div class="bar" style="width: 50%;"></div>
-                    </div>
-                    <strong>Length of roadside cleared</strong><span class="pull-right progress-label">14km</span>
-                    <div class="progress progress-info active">
-                        <div class="bar" style="width: 28%;"></div>
-                    </div>
-                    <strong>Length of riparian area cleared</strong><span class="pull-right progress-label">4km</span>
-                    <div class="progress progress-info active">
-                        <div class="bar" style="width: 8%;"></div>
-                    </div>
-                    <strong>Invasive flora</strong>
-                    <ul>
-                        <li>Ornamental Rubbervine (<i>Cryptostegia madagascariensis</i>)</li>
-                        <li>Rubber Bush (<i>Calotropis procera</i>)</li>
-                        <li>Snakeweed (<i>Stachytarpheta</i> spp)</li>
-                        <li>Caltrop (<i>Tribulus</i> spp)</li>
-                    </ul>
-                </div>
-                <div class="span4 well">
-                    <h3>Participation</h3>
-                    <strong>Indigenous engagement</strong><span class="pull-right progress-label">2</span>
-                    <div class="progress progress-danger active">
-                        <div class="bar" style="width: 17%;"></div>
-                    </div>
-                    <strong>Indigenous participation</strong><span class="pull-right progress-label">12</span>
-                    <div class="progress progress-info active">
-                        <div class="bar" style="width: 100%;"></div>
-                    </div>
-                    <strong>Volunteers</strong><span class="pull-right progress-label">10</span>
-                    <div class="progress progress-success active">
-                        <div class="bar" style="width: 83.3%;"></div>
-                    </div>
-                </div>
-                <div class="span4 well">
-                    <h3>Theme 3 - managing threats to biodiversity</h3>
-                    <strong>Hectares (proposed = 9680)</strong><span class="pull-right progress-label">1232</span>
-                    <div class="progress progress-danger active">
-                        <div class="bar" style="width: 13%;"></div>
-                    </div>
-                </div>
-                <div class="span4 well">
-                    <h3>Fencing</h3>
-                    <strong>Total length</strong><span class="pull-right progress-label">4.5km</span>
-                    <div class="progress progress-danger active">
-                        <div class="bar" style="width: 50%;"></div>
-                    </div>
-                    <strong>Total cost</strong><span class="pull-right progress-label">$40,000</span>
-                    <div class="progress progress-info active">
-                        <div class="bar" style="width: 18%;"></div>
-                    </div>
-                </div>
+                <div class="span4">
+                <g:if test="${metrics}">
+                    <g:set var="count" value="${metrics.size()}"/>
 
-                <%-- <g:each in="${metrics}" var="grouping">
-                    <g:each var="score" in="${grouping.scores}">
-                    <div class="span4 well">
-                        <h3>${score.score} ${grouping.groupName}</h3>
-                        <g:each var="group" in="${score.values}">
-                            <strong>${group.groupValue}</strong>:${group.aggregatedResult}
-                        </g:each>
-                    </div>
+                    <g:each in="${metrics?.entrySet()}" var="metric" status="i">
+
+                        %{--This is to stack the output metrics in three columns, the ceil biases uneven amounts to the left--}%
+                        <g:if test="${i == Math.ceil(count/3) || i == Math.ceil(count/3*2)}">
+                            </div>
+                            <div class="span4">
+                        </g:if>
+                        <div class="well">
+                            <h3>${metric.key}</h3>
+                            <g:each in="${metric.value}" var="score">
+                                <g:if test="${score['target']}">
+                                    <strong>${score.scoreLabel}</strong><span class="pull-right progress-label">${score.aggregatedResult}</span>
+                                    <g:set var="percentComplete" value="${(score.aggregatedResult/score.target)*100}"/>
+                                    <div class="progress progress-info active">
+                                        <div class="bar" style="width: ${percentComplete}%;"></div>
+                                    </div>
+
+                                </g:if>
+                                <g:else>
+                                    <div>${score.scoreLabel} : ${score.aggregatedResult}</div>
+                                </g:else>
+                            </g:each>
+                        </div>
                     </g:each>
-                </g:each> --%>
+                </g:if>
+                <g:else>
+                    No activities or output targets have been defined for this project.
+                </g:else>
+                </div>
             </div>
         </div>
         <g:if test="${user?.isAdmin}">

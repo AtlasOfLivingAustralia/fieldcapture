@@ -65,8 +65,18 @@ class ProjectService {
             '?destroy=true')
     }
 
-    def summary(id) {
-        webService.getJson(grailsApplication.config.ecodata.baseUrl + 'project/projectMetrics/'+id)
+    /**
+     * Retrieves a summary of project metrics (including planned output targets)
+     * and groups them by output type.
+     * @param id the id of the project to get summary information for.
+     * @return TODO document this structure.
+     */
+    def summary(String id) {
+        def scores = webService.getJson(grailsApplication.config.ecodata.baseUrl + 'project/projectMetrics/' + id)
+
+        def scoresByOutput = scores.grep{ it.target || it.count || it.values }.groupBy { it.outputLabel}
+
+        scoresByOutput
     }
 
     def enrichTestData() {
