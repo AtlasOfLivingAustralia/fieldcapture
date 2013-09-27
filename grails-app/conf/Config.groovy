@@ -179,6 +179,19 @@ environments {
         ecodata.baseUrl = 'http://ecodata-dev.ala.org.au:8080/ws/'
         upload.images.url = grails.serverURL+'/image/'
     }
+    nectartest {
+        grails.logging.jul.usebridge = true
+        server.port = "80"
+        grails.app.context = "/"
+        grails.host = "http://fieldcapture-test.ala.org.au"
+        serverName = "${grails.host}"
+        grails.serverURL = serverName + grails.app.context
+        layout.skin = "nrm"
+        security.cas.appServerName = serverName
+        security.cas.contextPath = ""
+        ecodata.baseUrl = 'http://ecodata-test.ala.org.au:8080/ws/'
+        upload.images.url = grails.serverURL+'/image/'
+    }
     production {
         grails.logging.jul.usebridge = false
         grails.app.context = "/"
