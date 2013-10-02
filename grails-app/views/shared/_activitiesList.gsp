@@ -98,19 +98,13 @@
                         }
                     };
                     activity.startDateForDisplay = ko.computed(function() {
-                            var self = activity;
-                            if (self.progress() === 'Planned') {
-                                return self.plannedStartDate.formattedDate();
-                            }
-                            return self.startDate.formattedDate();
-                        }),
+                        return (activity.progress() === 'Planned') ?
+                            activity.plannedStartDate.formattedDate() : activity.startDate.formattedDate();
+                    });
                     activity.endDateForDisplay = ko.computed(function() {
-                            var self = activity;
-                            if (self.progress() === 'Planned') {
-                                return self.plannedEndDate.formattedDate();
-                            }
-                            return self.endDate.formattedDate();
-                        }),
+                        return (activity.progress() === 'Planned') ?
+                            activity.plannedEndDate.formattedDate() : activity.endDate.formattedDate();
+                    });
                     $.each(act.outputs, function (j, out) {
                         activity.outputs.push({
                             outputId: out.outputId,
