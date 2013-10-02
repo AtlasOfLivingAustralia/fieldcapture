@@ -30,7 +30,7 @@
         here = window.location.href;
 
     </r:script>
-    <r:require modules="gmap3,mapWithFeatures,knockout,datepicker,amplify,jqueryValidationEngine"/>
+    <r:require modules="gmap3,mapWithFeatures,knockout,datepicker,amplify,jqueryValidationEngine,fuelux"/>
 </head>
 <body>
 <div class="container-fluid">
@@ -72,6 +72,7 @@
     <!-- content tabs -->
     <ul class="nav nav-tabs big-tabs">
         <li class="active"><a href="#overview" id="overview-tab" data-toggle="tab">Overview</a></li>
+        <li><a href="#plan" id="plan-tab" data-toggle="tab">Plans & Reports</a></li>
         <li><a href="#activity" id="activity-tab" data-toggle="tab">Activities</a></li>
         <li><a href="#site" id="site-tab" data-toggle="tab">Sites</a></li>
         <li><a href="#dashboard" id="dashboard-tab" data-toggle="tab">Dashboard</a></li>
@@ -124,6 +125,12 @@
                     </div>
                 </g:if>
             </div>
+        </div>
+
+        <div class="tab-pane" id="plan">
+            <!-- PLANS -->
+            <g:render template="/shared/plan"
+                      model="[activities:activities ?: [], sites:project.sites ?: [], showSites:true]"/>
         </div>
 
         <div class="tab-pane" id="activity">
@@ -493,7 +500,7 @@
        /**
         * Star/Unstar project for user - send AJAX and update UI
         *
-        * @param Boolean isProjectStarredByUser
+        * @param boolean isProjectStarredByUser
         */
         function toggleStarred(isProjectStarredByUser) {
             var basUrl = fcConfig.starProjectUrl;
