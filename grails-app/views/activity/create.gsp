@@ -266,6 +266,7 @@
             self.endDate = ko.observable(act.endDate).extend({simpleDate: false});
             self.plannedStartDate = ko.observable(act.plannedStartDate).extend({simpleDate: false});
             self.plannedEndDate = ko.observable(act.plannedEndDate).extend({simpleDate: false});
+            self.projectStage = ko.observable();
             self.targets = ko.observableArray();
             self.progress = ko.observable();
             self.censusMethod = ko.observable(act.censusMethod);
@@ -289,7 +290,7 @@
             };
             self.removeTarget = function (row) {
                 self.targets.remove(row);
-            }
+            };
             self.save = function () {
                 if ($('#validation-container').validationEngine('validate')) {
                     var jsData = ko.mapping.toJS(self, {'ignore':['transients']});
