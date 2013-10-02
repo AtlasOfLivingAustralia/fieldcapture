@@ -10,18 +10,20 @@ class ReportController {
     def speciesReport() {
         response.setContentType('text/json')
 
-        render cacheService.get('speciesReport',{
-            webService.get('http://meri-test.ala.org.au/bdrs-core/meri/report/49/render.htm')
+        def cached = cacheService.get('speciesReport',{
+            [result: webService.get('http://meri-test.ala.org.au/bdrs-core/meri/report/49/render.htm', false)]
         })
+        render cached.result
     }
 
     def summaryReport() {
         response.setContentType('text/json')
 
-        render cacheService.get('summaryReport', {
+        def cached = cacheService.get('summaryReport', {
             def originalParams = request.queryString
-            webService.get('http://meri-test.ala.org.au/bdrs-core/meri/report/48/render.htm?'+originalParams)
+            [result: webService.get('http://meri-test.ala.org.au/bdrs-core/meri/report/48/render.htm?'+originalParams, false)]
         })
+        render cached.result
     }
 
 }
