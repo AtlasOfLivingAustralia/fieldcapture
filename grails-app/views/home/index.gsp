@@ -173,8 +173,8 @@
                         <div id="paginateTable" class="hide" style="text-align:center;">
                             <span id="paginationInfo" style="display:inline-block;float:left;margin-top:4px;"></span>
                             <div class="btn-group">
-                                <button class="btn btn-small prev"><i class="icon-chevron-left"></i> previous</button>
-                                <button class="btn btn-small next">next <i class="icon-chevron-right"></i></button>
+                                <button class="btn btn-small prev"><i class="icon-chevron-left"></i>&nbsp;previous</button>
+                                <button class="btn btn-small next">next&nbsp;<i class="icon-chevron-right"></i></button>
                             </div>
                             <span id="project-filter-warning" class="label filter-label label-warning hide pull-left">Filtered</span>
                             <div class="control-group pull-right dataTables_filter">

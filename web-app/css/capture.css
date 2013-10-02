@@ -520,7 +520,7 @@ ul.nav-tabs {
     background-color: #E3E3DB;
 }
 
-.icon-chevron-right {
+.nav-stacked .icon-chevron-right {
     float: right;
     margin-top: 2px;
     margin-right: -6px;
