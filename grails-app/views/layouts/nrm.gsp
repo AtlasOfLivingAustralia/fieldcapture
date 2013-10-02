@@ -59,7 +59,6 @@
             <div class="nav-collapse collapse">
                 <div class="navbar-text pull-right">
                     <span id="buttonBar">
-                        <div class="btn-group"><fc:loginLogoutButton logoutUrl="${createLink(controller:'logout', action:'logout')}"/></div>
                         <g:if test="${fc.userIsLoggedIn()}">
                             <div class="btn-group">
                                 <button class="btn btn-small btn-primary" id="btnProfile" title="profile page">
@@ -78,6 +77,7 @@
                                 </div>
                             </g:if>
                         </g:if>
+                        <div class="btn-group"><fc:loginLogoutButton logoutUrl="${createLink(controller:'logout', action:'logout')}"/></div>
                         <g:pageProperty name="page.buttonBar"/>
                     </span>
                 </div>
