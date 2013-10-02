@@ -59,27 +59,29 @@
             <div class="nav-collapse collapse">
                 <div class="navbar-text pull-right">
                     <span id="buttonBar">
-                        <fc:currentUserDisplayName />&nbsp;<fc:loginLogoutButton cssClass="btn btn-small" logoutUrl="${createLink(controller:'logout', action:'logout')}"/>
-                        %{--<button class="btn btn-small" id="btnLogout"><i class="icon-off"></i><span class="hidden-tablet hidden-phone">&nbsp;Logout</span></button>--}%
+                        <div class="btn-group"><fc:loginLogoutButton logoutUrl="${createLink(controller:'logout', action:'logout')}"/></div>
                         <g:if test="${fc.userIsLoggedIn()}">
-                            <button class="btn btn-small btn-info" id="btnProfile"><i class="icon-user icon-white"></i><span class="hidden-tablet hidden-phone">&nbsp;My profile</span></button>
+                            <div class="btn-group">
+                                <button class="btn btn-small btn-primary" id="btnProfile" title="profile page">
+                                    <i class="icon-user icon-white"></i><span class="hidden-tablet hidden-phone">&nbsp;<fc:currentUserDisplayName />&nbsp;&nbsp;</span>
+                                </button>
+                                <button class="btn btn-small btn-primary dropdown-toggle" data-toggle="dropdown">
+                                    <!--<i class="icon-star icon-white"></i>--> My projects&nbsp;&nbsp;<span class="caret"></span>
+                                </button>
+                                <div class="dropdown-menu pull-right" style="top:32px;word-wrap:normal;white-space:normal;max-width:240px;padding:0 10px 10px 10px;font-size:13px;">
+                                    <fc:userProjectList />
+                                </div>
+                            </div>
                             <g:if test="${fc.userInRole(role: grailsApplication.config.security.cas.adminRole)}">
-                                <button class="btn btn-warning btn-small" id="btnAdministration"><i class="icon-cog icon-white"></i><span class="hidden-tablet  hidden-phone">&nbsp;Administration</span></button>
+                                <div class="btn-group">
+                                    <button class="btn btn-warning btn-small" id="btnAdministration"><i class="icon-cog icon-white"></i><span class="hidden-tablet  hidden-phone">&nbsp;Administration</span></button>
+                                </div>
                             </g:if>
                         </g:if>
                         <g:pageProperty name="page.buttonBar"/>
                     </span>
                 </div>
                 <fc:navbar active="${pageProperty(name: 'page.topLevelNav')}"/>
-                %{--<ul class="horizontal">--}%
-                %{--<li class="home first"><a id="pn-1" href="/index.html" class="">Home</a></li>--}%
-                %{--<li class="major" id="pn-funding"><a id="pn-2" href="/funding/index.html" class="">Funding</a></li>--}%
-                %{--<li class="major no-mega current" id="pn-projects"><a id="pn-3" href="/projects/index.html" class="">Projects</a></li>--}%
-                %{--<li class="major" id="pn-about"><a id="pn-4" href="/about/index.html" class="">About</a></li>--}%
-                %{--<li class="major" id="pn-resources"><a id="pn-5" href="/resources/index.html" class="">Resources</a></li>--}%
-                %{--<li class="major no-mega" id="pn-news"><a id="pn-6" href="/news/index.html" class="">News &amp; media</a></li>--}%
-                %{--<li class="major last hover" id="pn-contact"><a id="pn-7" href="/contact/index.html" class="">Contact</a></li>--}%
-                %{--</ul>--}%
             </div>
         </div><!-- /.nav -->
     </div>
@@ -90,87 +92,6 @@
 
     <div id="footer">
         <div id="footer-wrapper">
-
-            %{--<div class="footer-nav">--}%
-                %{--<div>--}%
-                    %{--<h3><a href="/funding/index.html">Funding options</a></h3>--}%
-                    %{--<ul class="link-list">--}%
-                        %{--<li>--}%
-                            %{--<a href="/funding/environment/index.html">Sustainable Environment</a>--}%
-                        %{--</li>--}%
-                        %{--<li>--}%
-                            %{--<a href="/funding/agriculture/index.html">Sustainable Agriculture</a></li>--}%
-                        %{--<li><a href="/funding/reef-rescue/index.html">Reef Rescue</a></li>--}%
-                        %{--<li>--}%
-                            %{--<a href="/funding/regional/index.html">Regional Delivery</a></li>--}%
-                    %{--</ul>--}%
-                %{--</div>--}%
-                %{--<div>--}%
-                    %{--<h3><a href="/funding/meri/index.html">Reporting</a></h3>--}%
-                    %{--<ul class="link-list">--}%
-                        %{--<li>--}%
-                            %{--<a href="/funding/meri/index.html">Monitoring, Evaluation, Reporting and Improvement (MERI) strategy</a></li>--}%
-                    %{--</ul>                    %{--<h3><a href="/funding/meri/index.html">Reporting</a></h3>--}%
-                    %{--<ul class="link-list">--}%
-                        %{--<li>--}%
-                            %{--<a href="/funding/meri/index.html">Monitoring, Evaluation, Reporting and Improvement (MERI) strategy</a></li>--}%
-                    %{--</ul>--}%
-                %{--</div>--}%
-                %{--<div>--}%
-                    %{--<h3><a href="/funding/approved/index.html">Approved grants</a></h3>--}%
-                    %{--<ul class="link-list">--}%
-                        %{--<li>--}%
-                            %{--<a href="/funding/approved/2012-13/index.html">2012-13 approved grants</a>--}%
-                        %{--</li>--}%
-                        %{--<li>--}%
-                            %{--<a href="/funding/approved/2011-12/index.html">2011-12 approved grants</a>--}%
-                        %{--</li>--}%
-                        %{--<li>--}%
-                            %{--<a href="/funding/approved/2010-11/index.html">2010-11 approved grants</a>--}%
-                        %{--</li>--}%
-                        %{--<li>--}%
-                            %{--<a href="/funding/approved/2009-10/index.html">2009-10 approved grants</a>--}%
-                        %{--</li>--}%
-                    %{--</ul>--}%
-                %{--</div>--}%
-                %{--<div>--}%
-                    %{--<h3><a href="/resources/index.html">Key documents</a></h3>--}%
-                    %{--<ul class="link-list">--}%
-                        %{--<li><a href="/about/caring/prospectus.html" target="_blank">One Land - Many Stories: Prospectus of Investment</a></li>--}%
-                        %{--<li><a href="/about/caring/agriculture.html">Sustainable Agriculture stream: strategic  directions 2013-2018</a></li>--}%
-                        %{--<li>--}%
-                            %{--<a href="/resources/index.html#outline">Caring for our Country: An Outline for the Future: 2013-18</a></li>--}%
-                    %{--</ul>--}%
-                %{--</div>--}%
-
-                %{--<div class="last">--}%
-                    %{--<h3><a href="/about/key-investments/index.html">Key investments</a></h3>--}%
-                    %{--<ul class="link-list">--}%
-                        %{--<li><a href="/about/key-investments/indigenous.html">Indigenous projects</a></li>--}%
-                        %{--<li><a href="/about/key-investments/landcare.html">Landcare and Sustainable Farm Practices</a></li>--}%
-                        %{--<li><a href="/about/key-investments/reef-rescue.html">Reef rescue</a></li>--}%
-                        %{--<li><a href="/about/key-investments/nrs.html">National Reserve System</a></li>--}%
-                        %{--<li><a href="/about/key-investments/other.html">Other significant projects</a></li>--}%
-                    %{--</ul>--}%
-                %{--</div>--}%
-            %{--</div>--}%
-
-            %{--<div class="nav-copyright">--}%
-                %{--<div class="nav">--}%
-                    %{--<ul class="horizontal">--}%
-                        %{--<li><strong>Key&nbsp;&nbsp;</strong></li>--}%
-                        %{--<li><span class="external" title="External link">&nbsp;</span>&nbsp;Links to another website&nbsp;&nbsp;</li>--}%
-                        %{--<li><span class="popup" title="Opens in a new browser window">&nbsp;</span> Opens a pop-up window&nbsp;&nbsp;</li>--}%
-                        %{--<li><a href="/contact/index.html">Contact us</a></li>--}%
-                        %{--<li><a href="/about/disclaimer.html">Disclaimer</a></li>--}%
-                        %{--<li><a href="/about/privacy.html">Privacy</a></li>--}%
-                        %{--<li><a href="/about/accessibility.html">Accessibility</a></li>--}%
-                        %{--<li><a href="http://www.environment.gov.au/foi/index.html">FOI<span class="external" title="External link">&nbsp;</span></a></li>--}%
-                    %{--</ul>--}%
-                %{--</div>--}%
-                %{--<p class="contentinfo">© 2013 <a href="/about/copyright.html">Commonwealth of Australia</a></p>--}%
-            %{--</div>--}%
-
             <div class="container-fluid">
                 <p>Caring for our Country is an Australian Government initiative jointly administered by the Australian Government<br>
                     <a href="http://www.daff.gov.au/">Department of Agriculture, Fisheries and Forestry</a> and the <a href="http://www.environment.gov.au/index.html">Department of Sustainability, Environment, Water, Population and Communities</a><br/>

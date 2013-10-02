@@ -345,6 +345,7 @@ class FCTagLib {
         def logoutReturnToUrl = attrs.logoutReturnToUrl ?: requestUri
         def casLoginUrl = attrs.casLoginUrl ?: grailsApplication.config.security.cas.loginUrl ?: "https://auth.ala.org.au/cas/login"
         def casLogoutUrl = attrs.casLogoutUrl ?: grailsApplication.config.security.cas.logoutUrl ?: "https://auth.ala.org.au/cas/logout"
+        def cssClass = attrs.cssClass?:"btn btn-small btn-inverse"
         def output
 
         if ((attrs.ignoreCookie != "true" &&
@@ -353,10 +354,10 @@ class FCTagLib {
             output = "<a href='${logoutUrl}" +
                     "?casUrl=${casLogoutUrl}" +
                     "&appUrl=${logoutReturnToUrl}' " +
-                    "class='${attrs.cssClass?:"btn"}'><i class='icon-off'></i> Logout</a>"
+                    "class='${cssClass}' style='color:white;'><i class='icon-off icon-white'></i> Logout</a>"
         } else {
             // currently logged out
-            output =  "<a href='${casLoginUrl}?service=${loginReturnToUrl}' class='${attrs.cssClass}'><span><i class='icon-off'></i> Log in</span></a>"
+            output =  "<a href='${casLoginUrl}?service=${loginReturnToUrl}' class='${cssClass}' style='color:white;'><span><i class='icon-off icon-white'></i> Log in</span></a>"
         }
         out << output
     }
@@ -375,6 +376,50 @@ class FCTagLib {
     def userInRole = { attrs ->
         if (userService.userInRole(attrs.role)) {
             out << true
+        }
+    }
+
+    /**
+     * Build HTML for drop down menu for "My projects"
+     */
+    def userProjectList = { attrs ->
+        def user = userService.user
+        def maxItems = 10
+        log.debug "user = ${user}"
+        def mb = new MarkupBuilder(out)
+        if (user) {
+            def memberProjects = userService.getProjectsForUserId(user.userId)
+            mb.div() {
+                b() {mkp.yield("Active projects ${(memberProjects.size() > maxItems) ? '(showing top '+ maxItems + ')' : ''}")}
+            }
+            mb.ul(style:'margin-bottom:0;') {
+                memberProjects.eachWithIndex { p, i ->
+                    if (i < maxItems) {
+                        li() {
+                            a(href: g.createLink(controller: 'project', id: p.project?.projectId)) {
+                                mkp.yield(p.project?.name)
+                            }
+                        }
+                    }
+                }
+            }
+            def starredProjects = userService.getStarredProjectsForUserId(user.userId)
+            mb.div() {
+                b() {mkp.yield("Favourite projects ${(starredProjects.size() > maxItems) ? '(showing top '+ maxItems + ')' : ''}")}
+            }
+            mb.ul(style:'margin-bottom:0;') {
+                starredProjects.eachWithIndex { p, i ->
+                    if (i < maxItems) {
+                        li() {
+                            a(href: g.createLink(controller: 'project', id: p.projectId)) {
+                                mkp.yield(p.name?:'error')
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            mb.div() {mkp.yield("Error: User not found")}
         }
     }
 
