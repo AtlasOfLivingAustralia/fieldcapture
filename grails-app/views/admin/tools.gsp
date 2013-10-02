@@ -30,6 +30,41 @@
                     });
                 });
 
+                $("#btnLoadProjectData").click(function(e) {
+                    e.preventDefault();
+
+                    // HTML 5 only...
+                    %{--var data = new FormData();--}%
+                    %{--data.append('projectData', $('#fileSelector')[0].files[0]);--}%
+
+                    %{--$.ajax({--}%
+                    %{--url: "${createLink(controller: 'project', action:'loadProjectData')}",--}%
+                    %{--done: function(result) {--}%
+                    %{--document.location.reload();--}%
+                    %{--},--}%
+                    %{--error: function (result) {--}%
+                    %{--var error = JSON.parse(result.responseText)--}%
+                    %{--alert(error.error);--}%
+                    %{--},--}%
+                    %{--type:"POST",--}%
+                    %{--processData: false,--}%
+                    %{--contentType: false,--}%
+                    %{--cache: false,--}%
+                    %{--data: data--}%
+                    %{--});--}%
+                    $('form.loadProjectData').submit();
+                });
+
+                $("#projectData").change(function() {
+                    if ($("#projectData").val()) {
+                        $("#btnLoadProjectData").removeAttr("disabled");
+                    }
+                    else {
+                        $("#btnLoadProjectData").attr("disabled", "disabled");
+                    }
+
+                }).trigger('change');
+
             });
 
         </script>
@@ -60,6 +95,14 @@
                     <td>
                         Removes all cached values for metadata requests and causes the metadata to be requested
                         from the source at the next attempt to use the metadata.
+                    </td>
+                </tr>
+                <tr>
+                    <td><button disabled id="btnLoadProjectData" class="btn btn-small btn-info" title="Load project data">Load Projects from CSV</button>
+                    </td>
+                    <td>
+                        Loads (or reloads) project information from a csv file.
+                        <p><g:uploadForm class="loadProjectData" controller="admin" action="importProjectData"><input id="projectData" type="file" accept="text/csv" name="projectData"/><input type="checkbox" name="importWithErrors">Force import (even with validation errors)</g:uploadForm></p>
                     </td>
                 </tr>
 

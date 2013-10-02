@@ -16,6 +16,25 @@ class SiteService {
         get(siteId)?.projects
     }
 
+    /**
+     * Creates a site extent object from a supplied latitude and longitude in the correct format, and populates the facet metadata for the extent.
+     * @param lat the latitude of the point.
+     * @param lon the longitude of the point.
+     * @return a Map containing the site extent in the correct format (see the metaModel())
+     */
+    def siteExtentFromPoint(lat, lon) {
+
+        def extent = [:].withDefault{[:]}
+        extent.source = 'point'
+        extent.geometry.type = 'Point'
+        extent.geometry.decimalLatitude = lat
+        extent.geometry.decimalLongitude = lon
+        extent.geometry.coordinates = [lon, lat]
+        extent.geometry.centre = [lon, lat]
+        extent.geometry << metadataService.getLocationMetadataForPoint(lat, lon)
+        extent
+    }
+
     def getLocationMetadata(site) {
         //log.debug site
         def loc = getFirstPointLocation(site)

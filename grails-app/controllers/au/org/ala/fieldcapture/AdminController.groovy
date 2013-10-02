@@ -3,11 +3,12 @@ package au.org.ala.fieldcapture
 import grails.converters.JSON
 import grails.util.Environment
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
+import org.springframework.web.multipart.MultipartHttpServletRequest
 
 @PreAuthorise(accessLevel = 'admin')
 class AdminController {
 
-    def cacheService, metadataService, authService, projectService
+    def cacheService, metadataService, authService, projectService, importService
     def index() {}
     def tools() {}
 
@@ -177,6 +178,40 @@ class AdminController {
         cacheService.clear()
         flash.message = "Metadata cache cleared."
         render 'done'
+    }
+
+    /**
+     * Accepts a CSV file (as a multipart file upload) and validates and loads project, site & institution data from it.
+     * @return an error message if the CSV file is invalid, otherwise writes a CSV file describing any validation
+     * errors that were encountered.
+     */
+    def importProjectData() {
+
+        if (request instanceof MultipartHttpServletRequest) {
+            def file = request.getFile('projectData')
+
+            if (file) {
+
+                def results = importService.importProjectsByCsv(file.inputStream, params.importWithErrors)
+
+                if (results.error) {
+                    render contentType: 'text/json', status:400, text:"""{"error":"${results.error}"}"""
+                }
+
+                // The validation results are current returned as a CSV file so that it can easily be sent back to
+                // be corrected at the source.  It's not great usability at the moment.
+                response.setContentType("text/csv")
+                PrintWriter pw = new PrintWriter(response.outputStream)
+                results.validationErrors.each {
+                    pw.println('"'+it.join('","')+'"')
+                }
+                pw.flush()
+                return null
+            }
+        }
+        render contentType: 'text/json', status:400, text:'{"error":"No file supplied"}'
+
+
     }
 
 }
