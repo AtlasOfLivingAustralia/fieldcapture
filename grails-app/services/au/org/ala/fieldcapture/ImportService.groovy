@@ -11,6 +11,8 @@ class ImportService {
     static int INSTITUTION_DIFFERENCE_THRESHOLD = 4
     public static final List CSV_HEADERS = ['Grant ID', 'Grant Name', 'Grant Description', 'Grant Status', 'Grantee Full Name', 'Application Location Desc', 'Original Approved Amount', 'Round Name']
 
+    private static final String PROJECTS_CACHE_KEY = 'ImportService-AllProjects'
+
     /** The current format location data is supplied in */
     def locationRegExp = /lat. = ([\-0-9\.]*)\nlong. = ([\-0-9\.]*)\nLocation Description = (.*)lat\. =.*/
 
@@ -31,6 +33,9 @@ class ImportService {
         def results = [success:false, validationErrors:[]]
 
         def projectsCreated = 0, projectsUpdated = 0, sitesCreated = 0, sitesUpdated = 0
+
+        // Clear the cache before importing to ensure we get fresh data. (in particular because I keep dropping the database)
+        cacheService.clear(PROJECTS_CACHE_KEY)
 
         String[] csvLine = csvReader.readNext();
         while (csvLine) {
@@ -63,6 +68,8 @@ class ImportService {
         results.sitesCreated = sitesCreated
         results.sitesUpdated = sitesUpdated
 
+        // Clear the cache again to free up memory and also in case old project data has been cached.
+        cacheService.clear()
         println results
         return results
 
@@ -126,8 +133,6 @@ class ImportService {
 
     def importProject(project) {
 
-        // Cache projects temporarily to avoid this query.
-        def allProjects = projectService.list(true)
 
         def status = [:]
 
@@ -135,7 +140,7 @@ class ImportService {
         def site = project.remove('site')
 
         // The grant id or external id should probably be the key instead of the name.
-        def p = findProjectByName(allProjects, project.name)
+        def p = findProjectByName(project.name)
         if (p) {
             project.projectId = p.projectId
             status.project = 'updated'
@@ -185,9 +190,10 @@ class ImportService {
 
     }
 
-    def findProjectByName(projects, name) {
-        return projects.find{it.name?.equalsIgnoreCase(name)}
-
+    def findProjectByName(name) {
+        // Cache projects temporarily to avoid this query.
+        def allProjects = cacheService.get(PROJECTS_CACHE_KEY) { projectService.list(true) }
+        return allProjects.find{it.name?.equalsIgnoreCase(name)}
     }
 
     def findProjectSiteByDescription(project, description) {
