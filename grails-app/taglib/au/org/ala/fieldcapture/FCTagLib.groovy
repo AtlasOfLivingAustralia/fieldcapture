@@ -411,7 +411,7 @@ class FCTagLib {
                         listItem(p.project)
                         j++
                     }
-                }
+                }?:mkp.yield("[No active projects]")
             }
             if (memberProjects.size() >= maxItems) {
                 maxItemsLink()
@@ -419,16 +419,14 @@ class FCTagLib {
             }
             // Starred projects
             def starredProjects = userService.getStarredProjectsForUserId(user.userId)
-            mb.div(class:'listHeading') {
-                mkp.yield("Favourite projects ${(starredProjects.size() > maxItems) ? '(showing top '+ maxItems + ')' : ''}")
-            }
+            mb.div(class:'listHeading') { mkp.yield("Favourite projects") }
             mb.ul {
                 starredProjects.eachWithIndex { p, i ->
                     if (j < maxItems) {
                         listItem(p)
                         j++
                     }
-                }
+                }?:mkp.yield("[No starred projects]")
             }
             //if (j == maxItems) {
             if (memberProjects.size() + starredProjects.size() > maxItems) {
