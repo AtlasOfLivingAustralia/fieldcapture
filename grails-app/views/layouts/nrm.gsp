@@ -62,18 +62,18 @@
                         <g:if test="${fc.userIsLoggedIn()}">
                             <div class="btn-group">
                                 <button class="btn btn-small btn-primary" id="btnProfile" title="profile page">
-                                    <i class="icon-user icon-white"></i><span class="hidden-tablet hidden-phone">&nbsp;<fc:currentUserDisplayName />&nbsp;&nbsp;</span>
+                                    <i class="icon-user icon-white"></i><span class="hidden-tablet hidden-phone">&nbsp;<fc:currentUserDisplayName /></span>
                                 </button>
                                 <button class="btn btn-small btn-primary dropdown-toggle" data-toggle="dropdown">
                                     <!--<i class="icon-star icon-white"></i>--> My projects&nbsp;&nbsp;<span class="caret"></span>
                                 </button>
-                                <div class="dropdown-menu pull-right" style="top:32px;word-wrap:normal;white-space:normal;max-width:240px;padding:0 10px 10px 10px;font-size:13px;">
+                                <div class="dropdown-menu pull-right">
                                     <fc:userProjectList />
                                 </div>
                             </div>
                             <g:if test="${fc.userInRole(role: grailsApplication.config.security.cas.adminRole)}">
                                 <div class="btn-group">
-                                    <button class="btn btn-warning btn-small" id="btnAdministration"><i class="icon-cog icon-white"></i><span class="hidden-tablet  hidden-phone">&nbsp;Administration</span></button>
+                                    <button class="btn btn-warning btn-small" id="btnAdministration"><i class="icon-cog icon-white"></i><span class="hidden-tablet hidden-phone">&nbsp;Administration</span></button>
                                 </div>
                             </g:if>
                         </g:if>

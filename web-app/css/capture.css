@@ -527,6 +527,32 @@ ul.nav-tabs {
     opacity: .25;
 }
 
+.navbar .dropdown-menu {
+    top: 32px;
+    word-wrap: normal;
+    white-space: normal;
+    max-width: 240px;
+    padding: 10px;
+    font-size: 13px;
+    line-height: 1.1em;
+}
+
+.navbar .dropdown-menu ul {
+    margin-bottom: 5px;
+    margin-left: 16px;
+}
+
+.navbar .dropdown-menu ul li span {
+    margin-left: -4px;
+}
+
+.dropdown-menu .listHeading {
+    color: #393124;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
 ul.facetValues {
     margin-bottom: 0px;
 }

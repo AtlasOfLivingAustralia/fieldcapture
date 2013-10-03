@@ -380,46 +380,62 @@ class FCTagLib {
     }
 
     /**
-     * Build HTML for drop down menu for "My projects"
+     * Build HTML for drop down menu "My projects"
      */
     def userProjectList = { attrs ->
         def user = userService.user
-        def maxItems = 10
-        log.debug "user = ${user}"
+        def maxItems = 10 // total for both list combined
         def mb = new MarkupBuilder(out)
+        // common code as closures
+        def maxItemsLink = {
+            mb.p {
+                a(href: g.createLink(controller: "user"), "[showing top ${maxItems} - see full list]")
+            }
+        }
+        def listItem = { p ->
+            mb.li {
+                span {
+                    a(href: g.createLink(controller: 'project', id: p.projectId), p.name)
+                }
+            }
+        }
+
         if (user) {
+            def j = 0 // keeps track of item count for both lists
+            // Active projects
             def memberProjects = userService.getProjectsForUserId(user.userId)
-            mb.div() {
-                b() {mkp.yield("Active projects ${(memberProjects.size() > maxItems) ? '(showing top '+ maxItems + ')' : ''}")}
-            }
-            mb.ul(style:'margin-bottom:0;') {
+            mb.div(class:'listHeading') { mkp.yield("Active projects") }
+            mb.ul {
                 memberProjects.eachWithIndex { p, i ->
-                    if (i < maxItems) {
-                        li() {
-                            a(href: g.createLink(controller: 'project', id: p.project?.projectId)) {
-                                mkp.yield(p.project?.name)
-                            }
-                        }
+                    if (j < maxItems) {
+                        listItem(p.project)
+                        j++
                     }
                 }
             }
+            if (memberProjects.size() >= maxItems) {
+                maxItemsLink()
+                return // don't show starred projects as we've exceeded limit
+            }
+            // Starred projects
             def starredProjects = userService.getStarredProjectsForUserId(user.userId)
-            mb.div() {
-                b() {mkp.yield("Favourite projects ${(starredProjects.size() > maxItems) ? '(showing top '+ maxItems + ')' : ''}")}
+            mb.div(class:'listHeading') {
+                mkp.yield("Favourite projects ${(starredProjects.size() > maxItems) ? '(showing top '+ maxItems + ')' : ''}")
             }
-            mb.ul(style:'margin-bottom:0;') {
+            mb.ul {
                 starredProjects.eachWithIndex { p, i ->
-                    if (i < maxItems) {
-                        li() {
-                            a(href: g.createLink(controller: 'project', id: p.projectId)) {
-                                mkp.yield(p.name?:'error')
-                            }
-                        }
+                    if (j < maxItems) {
+                        listItem(p)
+                        j++
                     }
                 }
+            }
+            //if (j == maxItems) {
+            if (memberProjects.size() + starredProjects.size() > maxItems) {
+                maxItemsLink()
             }
         } else {
-            mb.div() {mkp.yield("Error: User not found")}
+            mb.div { mkp.yield("Error: User not found") }
         }
     }
 
