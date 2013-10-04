@@ -102,6 +102,13 @@
                         </h4>
                     </div>
                 </g:if>
+                <g:if test="${project.funding}">
+                    <div class="clearfix" >
+                        <h4>
+                            Funded amount: <g:formatNumber number="${project.funding as java.math.BigDecimal}" type="currency" currencyCode="AUD" currencySymbol="\$"/>
+                        </h4>
+                    </div>
+                </g:if>
                 <g:if test="${project.plannedStartDate}">
                     <div>
                         <h5>
