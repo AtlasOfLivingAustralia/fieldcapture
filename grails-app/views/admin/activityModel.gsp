@@ -66,8 +66,8 @@
 
 <script id="viewOutputTmpl" type="text/html">
     <div>Template: <span data-bind="text:template"></span></div>
-    <div>Score names: <ul data-bind="foreach:scoreNames">
-        <li data-bind="text:name"></li>
+    <div>Score names: <ul data-bind="foreach:scores">
+        <li><span data-bind="text:label"></span>, <span data-bind="text:aggregationType"></span></li>
     </ul></div>
     <button data-bind="click:$root.removeOutput" type="button" class="btn btn-mini pull-right">Remove</button>
     <button data-bind="click:edit" type="button" class="btn btn-mini pull-right">Edit</button>
@@ -76,12 +76,29 @@
 <script id="editOutputTmpl" type="text/html">
     <div style="margin-top:4px"><span class="span3">Name:</span> <input type="text" class="input pull-right" data-bind="value:name"></div>
     <div class="clearfix"><span class="span3">Template:</span> <input type="text" class="input pull-right" data-bind="value:template"></div>
-    <div>Score names: <ul data-bind="sortable:{data:scoreNames}" class="sortableList small">
+    <div>Scores: <ul data-bind="sortable:{data:scores}" class="sortableList small">
         <li>
-            <span data-bind="clickToEdit:name"></span>
-            <span class="pull-right"><i data-bind="click:$parent.removeScore" class="icon-remove"></i></span>
+            <div style="text-align:left;">
+            Name: <input type="text" data-bind="value:name"/>
+            </div>
+            <div style="text-align:left;">
+            Label: <input type="text" data-bind="value:label"/>
+            </div>
+            <div style="text-align:left;">
+            Units: <input type="text" data-bind="value:units"/>
+            </div>
+            <div style="text-align:left;">
+            Aggregation:
+            <select data-bind="value:aggregationType">
+                <option value="SUM">summed</option>
+                <option value="COUNT">counted</option>
+                <option value="AVERAGE">averaged</option>
+                <option value="HISTOGRAM">count by value</option>
+                <option value="SET">list of distinct values</option>
+            </select>
+            </div>
         </li>
-    </ul><span data-bind="click:addScoreName" class="clickable"><i class="icon-plus"></i> Add new</span>
+    </ul><span data-bind="click:addScore" class="clickable"><i class="icon-plus"></i> Add new</span>
     </div>
     <button data-bind="click:done" type="button" class="btn btn-mini pull-right">Done</button>
 </script>
@@ -141,21 +158,41 @@
             }
         };
 
-        var ScoreModel = function (scoreName) {
+        var ScoreModel = function (score) {
             var self = this;
-            this.name = ko.observable(scoreName);
-            this.toJSON = function() {
-                return self.name();
-            }
+            self.name = ko.observable(score.name);
+            self.label = ko.observable(score.label)
+            self.units = ko.observable(score.units)
+            self.aggregationType = ko.observable(score.aggregationType)
+
         };
 
         var OutputModel = function (out, model) {
             var self = this;
             this.name = ko.observable(out.name);
             this.template = ko.observable(out.template);
-            this.scoreNames = ko.observableArray($.map(out.scoreNames || [], function (obj,i) {
+            this.scores = ko.observableArray($.map(out.scores || [], function (obj,i) {
                 return new ScoreModel(obj);
             }));
+            this.scoreNames = ko.observableArray(out.scoreNames);
+
+            // TODO - this is a temporary measure to convert score names into scores
+            // Should be removed (along with the score names) when the conversion is complete.
+            if (out.scoreNames) {
+                $.each(out.scoreNames, function(i, name) {
+                    var matchedScore = null;
+                    $.each(self.scores(), function(j, score) {
+                        if (score.name === name) {
+                            matchedScore = score;
+                            return false;
+                        }
+                    });
+                    if (!matchedScore) {
+                        self.scores.push(new ScoreModel({name:name, units:'', label:name, aggregationType:'SET'}))
+                    }
+                });
+            }
+
             this.expanded = ko.observable(false);
             this.toggle = function (data, event) {
                 if (!self.expanded()) {
@@ -175,11 +212,11 @@
             this.displayMode = function () {
                 return self.editing() ? 'editOutputTmpl' : 'viewOutputTmpl';
             };
-            this.addScoreName = function () {
-                self.scoreNames.push(new ScoreModel('new score'));
+            this.addScore = function () {
+                self.scores.push(new ScoreModel('new score'));
             };
-            this.removeScoreName = function (data) {
-                self.scoreNames.remove(data);
+            this.removeScore = function (data) {
+                self.scores.remove(data);
             };
             this.isReferenced = ko.computed(function () {
                 var current = model.selectedActivity(),
@@ -207,7 +244,7 @@
                 delete js.editing;
                 delete js.isReferenced;
                 delete js.isAddable;
-                delete js.scores;  // for now??
+
                 return js;
             }
         };
