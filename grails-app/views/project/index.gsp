@@ -78,7 +78,7 @@
         <li><a href="#dashboard" id="dashboard-tab" data-toggle="tab">Dashboard</a></li>
         <g:if test="${user?.isAdmin}"><li><a href="#admin" id="admin-tab" data-toggle="tab">Admin</a></li></g:if>
     </ul>
-    <div class="tab-content">
+    <div class="tab-content" style="overflow:visible;">
         <div class="tab-pane active" id="overview">
             <!-- OVERVIEW -->
             <div class="row-fluid">

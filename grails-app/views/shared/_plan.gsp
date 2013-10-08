@@ -67,7 +67,20 @@
             <g:if test="${showSites}">
                 <td><a data-bind="text:siteName,click:$parent.openSite"></a></td>
             </g:if>
-            <td><span data-bind="text:progress"></span></td>
+            <td><div class="btn-group">
+                <button type="button" class="btn btn-small dropdown-toggle" data-toggle="dropdown"
+                        data-bind="css: {'btn-warning':progress()=='planned','btn-success':progress()=='started','btn-info':progress()=='finished','btn-inverse':progress()=='finalised'}"
+                        style="line-height:16px;min-width:80px;text-align:left;">
+                    <span data-bind="text: progress"></span> <span class="caret pull-right" style="margin-top:6px;"></span>
+                </button>
+                <ul class="dropdown-menu" data-bind="foreach:$root.progressOptions" style="min-width:100px;">
+                    <!-- Disable item if selected -->
+                    <li data-bind="css: {'disabled' : $data==$parent.progress()}">
+                        <a href="#" data-bind="click: $parent.progress"><span data-bind="text: $data"></span></a>
+                    </li>
+                </ul></div>
+                <span data-bind="visible:isSaving"><r:img dir="images" file="ajax-saver.gif"/> saving</span>
+            </td>
         </tr>
         </tbody>
     </table>
@@ -90,12 +103,8 @@
                         endDate: ko.observable(act.endDate).extend({simpleDate:false}),
                         plannedStartDate: ko.observable(act.plannedStartDate).extend({simpleDate:false}),
                         plannedEndDate: ko.observable(act.plannedEndDate).extend({simpleDate:false}),
-                        progress: ko.computed(function() {
-                            if (!act.progress) {
-                                return 'Started';
-                            }
-                            return act.progress.charAt(0).toUpperCase() + act.progress.slice(1);
-                        }),
+                        progress: ko.observable(act.progress),
+                        isSaving: ko.observable(false),
                         outputs: ko.observableArray([]),
                         collector: act.collector,
                         metaModel: act.model || {},
@@ -123,6 +132,29 @@
                             });
                         }
                     };
+                    activity.progress.subscribe(function (newValue) {
+                        var payload = {progress: newValue, activityId: activity.activityId}
+                        activity.isSaving(true);
+                        // save new status
+                        $.ajax({
+                            url: "${createLink(controller:'activity', action:'ajaxUpdate')}/" + activity.activityId,
+                            type: 'POST',
+                            data: JSON.stringify(payload),
+                            contentType: 'application/json',
+                            success: function (data) {
+                                if (data.error) {
+                                    alert(data.detail + ' \n' + data.error);
+                                }
+                            },
+                            error: function (data) {
+                                alert('An unhandled error occurred: ' + data.status);
+                            },
+                            complete: function () {
+                                activity.isSaving(false);
+                            }
+                        });
+
+                    });
                     $.each(act.outputs, function (j, out) {
                         activity.outputs.push({
                             outputId: out.outputId,
@@ -136,6 +168,7 @@
                 });
                 return acts;
             };
+            self.progressOptions = ['planned','started','finished','finalised'];
             self.lookupSiteName = function (siteId) {
                 var site;
                 if (siteId !== undefined && siteId !== '') {
