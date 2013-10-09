@@ -154,4 +154,11 @@ modules = {
         resource 'bootstrap/bootstrap-fuelux/fuelux.css'
         resource 'bootstrap/bootstrap-fuelux/fuelux-responsive.css'
     }
+
+    jqueryGantt {
+        resource 'jquery-gantt/css/style.css'
+        resource 'css/gantt.css'
+        resource 'jquery-gantt/js/jquery.fn.gantt.js'
+    }
+
 }

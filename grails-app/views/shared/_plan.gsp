@@ -1,4 +1,4 @@
-<r:require module="datepicker"/>
+<r:require modules="datepicker, jqueryGantt"/>
 <!-- This section is bound to a secondary KO viewModel. The following line prevents binding
          to the main viewModel. -->
 <!-- ko stopBinding: true -->
@@ -85,6 +85,7 @@
         </tbody>
     </table>
 </div>
+<div id="gantt-container"></div>
 <r:script>
     $(window).load(function () {
         function PlanViewModel(activities, sites) {
@@ -132,8 +133,9 @@
                             });
                         }
                     };
+                    // save progress updates as soon as they happen
                     activity.progress.subscribe(function (newValue) {
-                        var payload = {progress: newValue, activityId: activity.activityId}
+                        var payload = {progress: newValue, activityId: activity.activityId};
                         activity.isSaving(true);
                         // save new status
                         $.ajax({
@@ -235,11 +237,50 @@
                     self.step(stepNumber);
                 }
             };
+            self.getGanttData = function () {
+                var values = [];
+                $.each(self.activities(), function (i, act) {
+                    var statusClass = 'gantt-' + act.progress(),
+                        startDate = act.plannedStartDate.date().getTime(),
+                        endDate = act.plannedEndDate.date().getTime();
+                    if (!isNaN(startDate)) {
+                        values.push({
+                            name:act.projectStage,
+                            desc:act.type,
+                            values: [{
+                                label: act.type,
+                                from: "/Date(" + startDate + ")/",
+                                to: "/Date(" + endDate + ")/",
+                                customClass: statusClass
+                            }]
+                        });
+                    }
+                });
+                return values;
+            }
         }
 
         var planViewModel = new PlanViewModel(${activities ?: []}, ${sites ?: []});
         ko.applyBindings(planViewModel, document.getElementById('planContainer'));
         planViewModel.sortActivities("projectStage");
+
+        $("#gantt-container").gantt({
+            source: planViewModel.getGanttData(),
+            navigate: "scroll",
+            //minScale: "days",
+            itemsPerPage: 10,
+            onItemClick: function(data) {
+                alert("Item clicked - show some details");
+            }/*,
+            onAddClick: function(dt, rowId) {
+                alert("Empty space clicked - add an item!");
+            },
+            onRender: function() {
+                if (window.console && typeof console.log === "function") {
+                    console.log("chart rendered");
+                }
+            }*/
+        });
     });
 
 </r:script>
