@@ -1,8 +1,8 @@
 
-.fn-gantt .gantt-finalised {
+.fn-gantt .gantt-deferred {
     background-color: rgba(46, 46, 46, 0.79);
 }
-.fn-gantt .gantt-finalised .fn-label {
+.fn-gantt .gantt-deferred .fn-label {
     color: #fbfbfb !important;
 }
 

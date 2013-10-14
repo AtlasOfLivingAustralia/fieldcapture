@@ -35,12 +35,12 @@
             Waiting for approval of stage x.
         </div>
     </div>
-    <p data-bind="visible: activities().length == 0">
+    <p data-bind="visible: stages.length == 0">
         This project currently has no activities planned.
     </p>
     <table class="table table-condensed" id="activities">
         <thead>
-        <tr data-bind="visible: activities().length > 0">
+        <tr data-bind="visible: stages.length > 0">
             <th>Stage</th>
             <th width="34px"></th>
             <th>From</th>
@@ -52,10 +52,11 @@
             <th>Status</th>
         </tr>
         </thead>
+        <!-- ko foreach:stages -->
         <tbody data-bind="foreach:activities" id="activityList">
         <tr>
             <!-- ko foreach:stageCells -->
-            <td data-bind="attr:{rowspan:count}">
+            <td data-bind="attr:{rowspan:$parents[1].activities.length}">
                 <span data-bind="text:label"></span>
             </td>
             <!-- /ko -->
@@ -73,7 +74,7 @@
             </g:if>
             <td><div class="btn-group">
                 <button type="button" class="btn btn-small dropdown-toggle" data-toggle="dropdown"
-                        data-bind="css: {'btn-warning':progress()=='planned','btn-success':progress()=='started','btn-info':progress()=='finished','btn-inverse':progress()=='finalised'}"
+                        data-bind="css: {'btn-warning':progress()=='planned','btn-success':progress()=='started','btn-info':progress()=='finished','btn-inverse':progress()=='deferred'}"
                         style="line-height:16px;min-width:80px;text-align:left;">
                     <span data-bind="text: progress"></span> <span class="caret pull-right" style="margin-top:6px;"></span>
                 </button>
@@ -87,15 +88,111 @@
             </td>
         </tr>
         </tbody>
+        <!-- /ko -->
     </table>
 </div>
 <div id="gantt-container"></div>
 <r:script>
+
+    var sites = ${sites ?: []};
+    function lookupSiteName (siteId) {
+        var site;
+        if (siteId !== undefined && siteId !== '') {
+            site = $.grep(sites, function(obj, i) {
+                    return (obj.siteId === siteId);
+            });
+            if (site.length > 0) {
+                 return site[0].name;
+            }
+        }
+        return '';
+    }
+
     $(window).load(function () {
-        function PlanViewModel(activities, sites) {
+
+        var PlannedActivity = function (act, isFirst) {
+            var self = this;
+            this.activityId = act.activityId;
+            this.siteId = act.siteId;
+            this.siteName = lookupSiteName(act.siteId);
+            this.type = act.type;
+            this.projectStage = act.projectStage;
+            this.description = act.description;
+            this.startDate = ko.observable(act.startDate).extend({simpleDate:false});
+            this.endDate = ko.observable(act.endDate).extend({simpleDate:false});
+            this.plannedStartDate = ko.observable(act.plannedStartDate).extend({simpleDate:false});
+            this.plannedEndDate = ko.observable(act.plannedEndDate).extend({simpleDate:false});
+            this.progress = ko.observable(act.progress);
+            this.isSaving = ko.observable(false);
+            // save progress updates as soon as they happen
+            this.progress.subscribe(function (newValue) {
+                var payload = {progress: newValue, activityId: self.activityId};
+                self.isSaving(true);
+                // save new status
+                $.ajax({
+                    url: "${createLink(controller:'activity', action:'ajaxUpdate')}/" + self.activityId,
+                    type: 'POST',
+                    data: JSON.stringify(payload),
+                    contentType: 'application/json',
+                    success: function (data) {
+                        if (data.error) {
+                            alert(data.detail + ' \n' + data.error);
+                        }
+                    },
+                    error: function (data) {
+                        alert('An unhandled error occurred: ' + data.status);
+                    },
+                    complete: function () {
+                        self.isSaving(false);
+                    }
+                });
+
+            });
+            this.editActivity = function () {
+                document.location.href = fcConfig.activityEditUrl + "/" + self.activityId +
+                    "?returnTo=" + here;
+            };
+            this.printActivity = function() {
+                open(fcConfig.activityPrintUrl + "/" + self.activityId, "fieldDataPrintWindow");
+            };
+            this.del = function () {
+                // confirm first
+                bootbox.confirm("Delete this activity? Are you sure?", function(result) {
+                    if (result) {
+                        $.getJSON(fcConfig.activityDeleteUrl + '/' + self.activityId,
+                            function (data) {
+                                if (data.code < 400) {
+                                    document.location.reload();
+                                } else {
+                                    alert("Failed to delete activity - error " + data.code);
+                                }
+                            });
+                    }
+                });
+            };
+            // this controls the merging of the stage cell across rows where they have the same value
+            this.stageCells = ko.computed(function () {
+                return isFirst ? [{label: self.projectStage}] : [];
+            });
+        };
+
+        var PlanStage = function (stageLabel, activities) {
+            // Note that the two .map transforms are not combined becuase we want the index of
+            //  the PlannedActivity to be relative to the filtered set of activities.
+            var activitiesInThisStage = $.map(activities, function (act, index) {
+                return act.projectStage === stageLabel ? act : undefined;
+            });
+            this.label = stageLabel;
+            this.activities = $.map(activitiesInThisStage, function (act, index) {
+                return new PlannedActivity(act, index === 0);
+            });
+        };
+
+        function PlanViewModel(activities) {
             var self = this;
             this.loadActivities = function (activities) {
-                var acts = ko.observableArray([]);
+                var stages = [],
+                    stageLabels = [];
 
                 // sort activities list first so we can group by project stage
                 activities.sort(function (a,b) {
@@ -106,115 +203,22 @@
                     return 0;
                 });
 
-                $.each(activities, function (index, act) {
-                    var activity = {
-                        activityId: act.activityId,
-                        siteId: act.siteId,
-                        siteName: self.lookupSiteName(act.siteId),
-                        type: act.type,
-                        projectStage: act.projectStage,
-                        description: act.description,
-                        startDate: ko.observable(act.startDate).extend({simpleDate:false}),
-                        endDate: ko.observable(act.endDate).extend({simpleDate:false}),
-                        plannedStartDate: ko.observable(act.plannedStartDate).extend({simpleDate:false}),
-                        plannedEndDate: ko.observable(act.plannedEndDate).extend({simpleDate:false}),
-                        progress: ko.observable(act.progress),
-                        isSaving: ko.observable(false),
-                        outputs: ko.observableArray([]),
-                        collector: act.collector,
-                        metaModel: act.model || {},
-                        editActivity: function () {
-                            document.location.href = fcConfig.activityEditUrl + "/" + this.activityId +
-                                "?returnTo=" + here;
-                        },
-                        printActivity: function() {
-                            open(fcConfig.activityPrintUrl + "/" + this.activityId, "fieldDataPrintWindow");
-                        },
-                        del: function () {
-                            var self = this;
-                            // confirm first
-                            bootbox.confirm("Delete this activity? Are you sure?", function(result) {
-                                if (result) {
-                                    $.getJSON(fcConfig.activityDeleteUrl + '/' + self.activityId,
-                                        function (data) {
-                                            if (data.code < 400) {
-                                                document.location.reload();
-                                            } else {
-                                                alert("Failed to delete activity - error " + data.code);
-                                            }
-                                        });
-                                }
-                            });
-                        }
-                    };
-                    // this controls the merging of the stage cell across rows where they have the same value
-                    activity.stageCells = ko.computed(function () {
-                        var previousActivity = index === 0 ? null : activities[index -1],
-                            isFirstOfItsValue = previousActivity === null ||
-                                previousActivity.projectStage !== activity.projectStage,
-                            numTheSame = 1, cellData, i = index + 1;
-                        if (isFirstOfItsValue) {
-                            // calculate how many of the current value
-                            while (i < activities.length && activities[i].projectStage === activity.projectStage) {
-                                i++; numTheSame++;
-                            }
-                            cellData = {label: activity.projectStage, count: numTheSame};
-                            return [cellData];
-                        } else {
-                            return [];
-                        }
-                    });
-                    // save progress updates as soon as they happen
-                    activity.progress.subscribe(function (newValue) {
-                        var payload = {progress: newValue, activityId: activity.activityId};
-                        activity.isSaving(true);
-                        // save new status
-                        $.ajax({
-                            url: "${createLink(controller:'activity', action:'ajaxUpdate')}/" + activity.activityId,
-                            type: 'POST',
-                            data: JSON.stringify(payload),
-                            contentType: 'application/json',
-                            success: function (data) {
-                                if (data.error) {
-                                    alert(data.detail + ' \n' + data.error);
-                                }
-                            },
-                            error: function (data) {
-                                alert('An unhandled error occurred: ' + data.status);
-                            },
-                            complete: function () {
-                                activity.isSaving(false);
-                            }
-                        });
-
-                    });
-                    $.each(act.outputs, function (j, out) {
-                        activity.outputs.push({
-                            outputId: out.outputId,
-                            name: out.name,
-                            collector: out.collector,
-                            assessmentDate: out.assessmentDate,
-                            scores: out.scores
-                        });
-                    });
-                    acts.push(activity);
-                });
-                return acts;
-            };
-            self.progressOptions = ['planned','started','finished','deferred'];
-            self.lookupSiteName = function (siteId) {
-                var site;
-                if (siteId !== undefined && siteId !== '') {
-                    site = $.grep(sites, function(obj, i) {
-                            return (obj.siteId === siteId);
-                    });
-                    if (site.length > 0) {
-                         return site[0].name;
+                // get unique stage labels
+                $.each(activities, function(idx, act) {
+                    if ($.inArray(act.projectStage, stageLabels) == -1) {
+                        stageLabels.push(act.projectStage);
                     }
-                }
-                return '';
+                });
+
+                // group activities by stage
+                $.each(stageLabels, function (index, label) {
+                    stages.push(new PlanStage(label, activities));
+                });
+
+                return stages;
             };
-            self.activities = self.loadActivities(activities);
+            self.stages = self.loadActivities(activities);
+            self.progressOptions = ['planned','started','finished','deferred'];
             self.newActivity = function () {
                 var context = '',
                     projectId = "${project?.projectId}",
@@ -233,7 +237,7 @@
                     document.location.href = fcConfig.siteViewUrl + '/' + siteId;
                 }
             };
-            self.step = ko.observable(self.activities().length === 0 ? 1 : 2);
+            self.step = ko.observable(1);
             self.nextStep = function () {
                 self.step(self.step() + 1);
             };
@@ -247,49 +251,54 @@
             self.getGanttData = function () {
                 var values = [],
                     previousStage = '';
-                $.each(self.activities(), function (i, act) {
-                    var statusClass = 'gantt-' + act.progress(),
-                        startDate = act.plannedStartDate.date().getTime(),
-                        endDate = act.plannedEndDate.date().getTime();
-                    if (!isNaN(startDate)) {
-                        values.push({
-                            name:act.projectStage === previousStage ? '' : act.projectStage,
-                            desc:act.type,
-                            values: [{
-                                label: act.type,
-                                from: "/Date(" + startDate + ")/",
-                                to: "/Date(" + endDate + ")/",
-                                customClass: statusClass,
-                                dataObj: act
-                            }]
-                        });
-                    }
-                    previousStage = act.projectStage;
+                $.each(self.stages, function (i, stage) {
+                    $.each(stage.activities, function (j, act) {
+                        var statusClass = 'gantt-' + act.progress(),
+                            startDate = act.plannedStartDate.date().getTime(),
+                            endDate = act.plannedEndDate.date().getTime();
+                        if (!isNaN(startDate)) {
+                            values.push({
+                                name:act.projectStage === previousStage ? '' : act.projectStage,
+                                desc:act.type,
+                                values: [{
+                                    label: act.type,
+                                    from: "/Date(" + startDate + ")/",
+                                    to: "/Date(" + endDate + ")/",
+                                    customClass: statusClass,
+                                    dataObj: act
+                                }]
+                            });
+                        }
+                        previousStage = act.projectStage;
+                    });
                 });
                 return values;
             }
         }
 
-        var planViewModel = new PlanViewModel(${activities ?: []}, ${sites ?: []});
+        var planViewModel = new PlanViewModel(${activities ?: []});
         ko.applyBindings(planViewModel, document.getElementById('planContainer'));
 
-        $("#gantt-container").gantt({
-            source: planViewModel.getGanttData(),
-            navigate: "scroll",
-            //minScale: "days",
-            itemsPerPage: 10,
-            onItemClick: function(data) {
-                alert(data.type + ' (' + data.progress() + ')');
-            }/*,
-            onAddClick: function(dt, rowId) {
-                alert("Empty space clicked - add an item!");
-            },
-            onRender: function() {
-                if (window.console && typeof console.log === "function") {
-                    console.log("chart rendered");
-                }
-            }*/
-        });
+        var ganttData = planViewModel.getGanttData();
+        if (ganttData.length > 0) {
+            $("#gantt-container").gantt({
+                source: ganttData,
+                navigate: "scroll",
+                //minScale: "days",
+                itemsPerPage: 10,
+                onItemClick: function(data) {
+                    alert(data.type + ' (' + data.progress() + ')');
+                }/*,
+                onAddClick: function(dt, rowId) {
+                    alert("Empty space clicked - add an item!");
+                },
+                onRender: function() {
+                    if (window.console && typeof console.log === "function") {
+                        console.log("chart rendered");
+                    }
+                }*/
+            });
+        }
     });
 
 </r:script>
