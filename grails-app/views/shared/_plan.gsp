@@ -5,33 +5,35 @@
 <div class="row-fluid fuelux" id="planContainer">
     <div class="row-fluid wizard">
         <ul class="steps">
-            <li data-bind="css:{active:step() === 1,complete:step()>1},click:backtrack" data-target="#step1"><span class="badge" data-bind="css:{'badge-info':step()===1,'badge-success':step()>1}">1</span>Create new plan<span class="chevron"></span></li>
-            <li data-bind="css:{active:step() === 2,complete:step()>2},click:backtrack" data-target="#step2"><span class="badge" data-bind="css:{'badge-info':step()===2,'badge-success':step()>2}">2</span>Add activities<span class="chevron"></span></li>
-            <li data-bind="css:{active:step() === 3,complete:step()>3},click:backtrack" data-target="#step3"><span class="badge" data-bind="css:{'badge-info':step()===3,'badge-success':step()>3}">3</span>Submit plan<span class="chevron"></span></li>
+            <li data-bind="css:{active:step() === 1,complete:step()>1},click:backtrack" data-target="#step1"><span class="badge" data-bind="css:{'badge-info':step()===1,'badge-success':step()>1}">1</span>Plan project<span class="chevron"></span></li>
+            <li data-bind="css:{active:step() === 2,complete:step()>2},click:backtrack" data-target="#step2"><span class="badge" data-bind="css:{'badge-info':step()===2,'badge-success':step()>2}">2</span>Set targets<span class="chevron"></span></li>
+            <li data-bind="css:{active:step() === 3,complete:step()>3},click:backtrack" data-target="#step3"><span class="badge" data-bind="css:{'badge-info':step()===3,'badge-success':step()>3}">3</span>Approve plan<span class="chevron"></span></li>
             <li data-bind="css:{active:step() === 4,complete:step()>4},click:backtrack" data-target="#step4"><span class="badge" data-bind="css:{'badge-info':step()===4,'badge-success':step()>4}">4</span>Enter activity information<span class="chevron"></span></li>
-            <li data-bind="css:{active:step() === 5,complete:step()>5},click:backtrack" data-target="#step5"><span class="badge" data-bind="css:{'badge-info':step()===4,'badge-success':step()>4}">4</span>Report submitted<span class="chevron"></span></li>
+            <li data-bind="css:{active:step() === 5,complete:step()>5},click:backtrack" data-target="#step5"><span class="badge" data-bind="css:{'badge-info':step()===4,'badge-success':step()>4}">4</span>Report stage<span class="chevron"></span></li>
         </ul>
     </div>
     <div class="step-content">
         <div class="step-pane" id="step1" data-bind="css:{active:step()===1}">
-            Whatever needs to be done to create a plan happens here.
-            <button data-bind="click:nextStep" type="button" class="btn btn-small">Create plan</button>
+            Create your plan by adding activites.
+            <button data-bind="click:newActivity" type="button" class="btn btn-link">Plan new activity</button>
+            <button data-bind="click:nextStep" type="button" class="btn btn-small pull-right">I have finished planning activities <i class="icon-forward"></i></button>
         </div>
         <div class="step-pane" id="step2" data-bind="css:{active:step()===2}">
-            Create your plan by adding planned activites.
-            <button data-bind="click:newActivity" type="button" class="btn btn-link">Add new activity</button>
-            <button data-bind="click:nextStep" type="button" class="btn btn-small">Finished adding activities</button>
+            Set project-wide targets based on your planned activites.
+            <button data-bind="click:nextStep" type="button" class="btn btn-small pull-right">Submit plan for approval <i class="icon-forward"></i></button>
         </div>
         <div class="step-pane" id="step3" data-bind="css:{active:step()===3}">
-            Click to submit your plan for approval by your case manager.
-            <button data-bind="click:nextStep" type="button" class="btn btn-small">Submit plan for approval</button>
+            Waiting for approval by your case manager.
+            <button data-bind="click:nextStep" type="button" class="btn btn-small pull-right">Approve plan <i class="icon-forward"></i></button>
         </div>
         <div class="step-pane" id="step4" data-bind="css:{active:step()===4}">
-            Click <i class="icon-edit no-pointer"></i> edit button to enter activity data. You can also do this from the
-            activities tab.
-            <button data-bind="click:nextStep" type="button" class="btn btn-small">Submit report for approval</button>
+            Click <i class="icon-edit no-pointer"></i> edit button to enter activity data. Set the status for each
+            activity as it is started and finished. If an activity cannot be finished mark it as 'deferred'.
+            <button data-bind="click:nextStep" type="button" class="btn btn-small pull-right">Submit stage for approval <i class="icon-forward"></i></button>
         </div>
-        <div class="step-pane" id="step5" data-bind="css:{active:step()===5}">Report submitted.</div>
+        <div class="step-pane" id="step5" data-bind="css:{active:step()===5}">
+            Waiting for approval of stage x.
+        </div>
     </div>
     <p data-bind="visible: activities().length == 0">
         This project currently has no activities planned.
@@ -39,25 +41,27 @@
     <table class="table table-condensed" id="activities">
         <thead>
         <tr data-bind="visible: activities().length > 0">
+            <th>Stage</th>
             <th width="34px"></th>
-            <th class="sort" data-bind="sortIcon:activitiesSort,click:sortBy" data-column="projectStage">Stage</th>
-            <th class="sort" data-bind="sortIcon:activitiesSort,click:sortBy" data-column="startDate">From</th>
-            <th class="sort" data-bind="sortIcon:activitiesSort,click:sortBy" data-column="endDate">To</th>
-            <th class="sort" data-bind="sortIcon:activitiesSort,click:sortBy" data-column="type">Activity</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Activity</th>
             <g:if test="${showSites}">
-                <th class="sort" data-bind="sortIcon:activitiesSort,click:sortBy" data-column="siteName">Site</th>
+                <th>Site</th>
             </g:if>
-            <th class="status" data-bind="sortIcon:activitiesSort,click:sortBy" data-column="progress">Status</th>
+            <th>Status</th>
         </tr>
         </thead>
         <tbody data-bind="foreach:activities" id="activityList">
         <tr>
+            <!-- ko foreach:stageCells -->
+            <td data-bind="attr:{rowspan:count}">
+                <span data-bind="text:label"></span>
+            </td>
+            <!-- /ko -->
             <td>
                 <i class="icon-edit" title="Edit Activity" data-bind="click:editActivity"></i>
                 <i class="icon-remove" title="Delete activity" data-bind="click:del"></i>
-            </td>
-            <td>
-                <span data-bind="text:projectStage"></span>
             </td>
             <td><span data-bind="text:plannedStartDate.formattedDate"></span></td>
             <td><span data-bind="text:plannedEndDate.formattedDate"></span></td>
@@ -92,7 +96,17 @@
             var self = this;
             this.loadActivities = function (activities) {
                 var acts = ko.observableArray([]);
-                $.each(activities, function (i, act) {
+
+                // sort activities list first so we can group by project stage
+                activities.sort(function (a,b) {
+                    if (a.projectStage > b.projectStage)
+                      return 1;
+                    if (a.projectStage < b.projectStage)
+                      return -1;
+                    return 0;
+                });
+
+                $.each(activities, function (index, act) {
                     var activity = {
                         activityId: act.activityId,
                         siteId: act.siteId,
@@ -133,6 +147,23 @@
                             });
                         }
                     };
+                    // this controls the merging of the stage cell across rows where they have the same value
+                    activity.stageCells = ko.computed(function () {
+                        var previousActivity = index === 0 ? null : activities[index -1],
+                            isFirstOfItsValue = previousActivity === null ||
+                                previousActivity.projectStage !== activity.projectStage,
+                            numTheSame = 1, cellData, i = index + 1;
+                        if (isFirstOfItsValue) {
+                            // calculate how many of the current value
+                            while (i < activities.length && activities[i].projectStage === activity.projectStage) {
+                                i++; numTheSame++;
+                            }
+                            cellData = {label: activity.projectStage, count: numTheSame};
+                            return [cellData];
+                        } else {
+                            return [];
+                        }
+                    });
                     // save progress updates as soon as they happen
                     activity.progress.subscribe(function (newValue) {
                         var payload = {progress: newValue, activityId: activity.activityId};
@@ -170,7 +201,7 @@
                 });
                 return acts;
             };
-            self.progressOptions = ['planned','started','finished','finalised'];
+            self.progressOptions = ['planned','started','finished','deferred'];
             self.lookupSiteName = function (siteId) {
                 var site;
                 if (siteId !== undefined && siteId !== '') {
@@ -184,30 +215,6 @@
                 return '';
             };
             self.activities = self.loadActivities(activities);
-            self.activitiesSort = {};
-            self.activitiesSort.by = ko.observable("");
-            self.activitiesSort.order = ko.observable("");
-            self.sortActivities = function (sortBy, sortDir) {
-                if (sortBy !== undefined) { self.activitiesSort.by(sortBy) }
-                if (sortDir !== undefined) { self.activitiesSort.order(sortDir) }
-                var field = self.activitiesSort.by(),
-                    order = self.activitiesSort.order();
-                self.activities.sort(function (left, right) {
-                    var l = ko.utils.unwrapObservable(left[field]),
-                        r = ko.utils.unwrapObservable(right[field]);
-                    return l == r ? 0 : (l < r ? -1 : 1);
-                });
-                if (order === 'desc') {
-                    self.activities.reverse();
-                }
-            };
-            self.sortBy = function (data, event) {
-                var element = event.currentTarget;
-                state = $(element).find('i').hasClass('icon-chevron-up');
-                self.activitiesSort.order(state ? 'desc' : 'asc');
-                self.activitiesSort.by($(element).data('column'));
-                self.sortActivities();
-            };
             self.newActivity = function () {
                 var context = '',
                     projectId = "${project?.projectId}",
@@ -238,23 +245,26 @@
                 }
             };
             self.getGanttData = function () {
-                var values = [];
+                var values = [],
+                    previousStage = '';
                 $.each(self.activities(), function (i, act) {
                     var statusClass = 'gantt-' + act.progress(),
                         startDate = act.plannedStartDate.date().getTime(),
                         endDate = act.plannedEndDate.date().getTime();
                     if (!isNaN(startDate)) {
                         values.push({
-                            name:act.projectStage,
+                            name:act.projectStage === previousStage ? '' : act.projectStage,
                             desc:act.type,
                             values: [{
                                 label: act.type,
                                 from: "/Date(" + startDate + ")/",
                                 to: "/Date(" + endDate + ")/",
-                                customClass: statusClass
+                                customClass: statusClass,
+                                dataObj: act
                             }]
                         });
                     }
+                    previousStage = act.projectStage;
                 });
                 return values;
             }
@@ -262,7 +272,6 @@
 
         var planViewModel = new PlanViewModel(${activities ?: []}, ${sites ?: []});
         ko.applyBindings(planViewModel, document.getElementById('planContainer'));
-        planViewModel.sortActivities("projectStage");
 
         $("#gantt-container").gantt({
             source: planViewModel.getGanttData(),
@@ -270,7 +279,7 @@
             //minScale: "days",
             itemsPerPage: 10,
             onItemClick: function(data) {
-                alert("Item clicked - show some details");
+                alert(data.type + ' (' + data.progress() + ')');
             }/*,
             onAddClick: function(dt, rowId) {
                 alert("Empty space clicked - add an item!");
