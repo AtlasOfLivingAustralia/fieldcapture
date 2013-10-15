@@ -33,6 +33,7 @@ modules = {
         resource url: '/bootstrap/js/bootstrap.min.js'
         resource url: 'css/nrm/css/screen.css', attrs:[media:'screen,projection,print'] //, linkOverride: 'http://www.nrm.gov.au/css/screen.css'
         resource url: 'css/capture.css', attrs:[media:'screen,projection,print']
+        resource url: 'css/print.css', attrs:[media:'screen,projection,print']
     }
 
     gmap3 {
@@ -76,14 +77,14 @@ modules = {
     app_bootstrap {
         dependsOn 'application'
         resource url: '/bootstrap/js/bootstrap.min.js'
-        resource url: '/bootstrap/css/bootstrap.css'
+        resource url: '/bootstrap/css/bootstrap.css', attrs:[media:'screen,print']
         resource url: '/bootstrap/img/glyphicons-halflings-white.png'
         resource url: '/bootstrap/img/glyphicons-halflings.png'
     }
 
     app_bootstrap_responsive {
         dependsOn 'app_bootstrap'
-        resource url: '/bootstrap/css/bootstrap-responsive.min.css', attrs:[media:'screen']
+        resource url: '/bootstrap/css/bootstrap-responsive.min.css', attrs:[media:'screen,print']
     }
 
     bootstrap_combo {
