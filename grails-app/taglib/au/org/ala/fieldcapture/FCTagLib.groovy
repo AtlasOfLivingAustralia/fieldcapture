@@ -47,8 +47,16 @@ class FCTagLib {
         }
     }
 
+    /**
+     * @attr outerClass
+     * @attr id
+     * @attr name
+     * @attr rows
+     * @attr printable
+     */
     def textArea = { attrs ->
         def outerClass = attrs.remove 'outerClass'
+        def isprint = attrs.printable
         if (outerClass) {
             out << """<div class="${outerClass}">"""
         }
@@ -117,13 +125,19 @@ class FCTagLib {
     }
 
     /**
-     * attr title
-     * body content
+     * @attr title
+     * @attr printable Is this being printed?
+     * body content should contain the help text
      */
     def iconHelp = { attrs, body ->
-        out <<
-        """<a href="#" class="helphover" data-original-title="${attrs.title}"
- data-content="${body()}" ><i class="icon-question-sign"></i></a>"""
+        if (!attrs.printable) {
+            def mb = new MarkupBuilder(out)
+            mb.a(href:'#', class:'helphover', 'data-original-title':attrs.title, 'data-content':body()) {
+                i(class:'icon-question-sign') {
+                    mkp.yieldUnescaped("&nbsp;")
+                }
+            }
+        }
     }
 
     def initialiseState = { attrs, body ->

@@ -27,17 +27,17 @@
 </head>
 <body>
 <div class="container-fluid validationEngineContainer" id="validation-container">
-  <div id="koActivityMainBlock">
-      <g:if test="${!printView}">
-          <ul class="breadcrumb">
+    <div id="koActivityMainBlock">
+        <g:if test="${!printView}">
+            <ul class="breadcrumb">
                 <li><g:link controller="home">Home</g:link> <span class="divider">/</span></li>
                 <li><a data-bind="click:goToProject" class="clickable">Project</a> <span class="divider">/</span></li>
                 <li class="active">
                     <span data-bind="text:type"></span>
                     <span data-bind="text:startDate.formattedDate"></span><span data-bind="visible:endDate">/</span><span data-bind="text:endDate.formattedDate"></span>
                 </li>
-          </ul>
-      </g:if>
+            </ul>
+        </g:if>
 
         <div class="row-fluid title-block well well-small input-block-level">
             <div class="span12 title-attribute">
@@ -70,7 +70,7 @@
                 <div class="row-fluid">
                     <div class="span6">
                         <label for="startDate">Activity start date
-                        <fc:iconHelp title="Start date">Date the activity was started.</fc:iconHelp>
+                        <fc:iconHelp title="Start date" printable="${printView}">Date the activity was started.</fc:iconHelp>
                         </label>
                         <div class="input-append">
                             <fc:datePicker targetField="startDate.date" name="startDate" data-validation-engine="validate[required]" printable="${printView}"/>
@@ -78,7 +78,7 @@
                     </div>
                     <div class="span6">
                         <label for="endDate">Activity end date
-                        <fc:iconHelp title="End date">Date the activity finished.</fc:iconHelp>
+                        <fc:iconHelp title="End date" printable="${printView}">Date the activity finished.</fc:iconHelp>
                         </label>
                         <div class="input-append">
                             <fc:datePicker targetField="endDate.date" name="endDate" data-validation-engine="validate[future[startDate]]" printable="${printView}" />
@@ -93,7 +93,7 @@
                     </div>
                     <div class="span6">
                         <label for="projectStage">Project stage
-                        <fc:iconHelp title="Project stage">If the project is taking a staged approach to implementation, this identifies which project stage the activity in planned for.</fc:iconHelp>
+                        <fc:iconHelp title="Project stage" printable="${printView}">If the project is taking a staged approach to implementation, this identifies which project stage the activity in planned for.</fc:iconHelp>
                         </label>
                         <select id="projectStage" data-bind="value:projectStage" class="input-xlarge">
                             <option value="">None</option>
@@ -112,7 +112,7 @@
                     </div>
                     <div class="span6">
                         <label for="projectStage">Activity progress
-                        <fc:iconHelp title="Activity progress">Planned means no work has yet been done. Started means some work has been done. Done means no more work remains for this activity.</fc:iconHelp>
+                        <fc:iconHelp title="Activity progress" printable="${printView}">Planned means no work has yet been done. Started means some work has been done. Done means no more work remains for this activity.</fc:iconHelp>
                         </label>
                         <select data-bind="value:progress, options:transients.activityProgressValues" class="input-xlarge">
                         </select>

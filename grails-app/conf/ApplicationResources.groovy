@@ -19,28 +19,20 @@ modules = {
         resource url: 'css/default.skin.css'
     }
 
-    nrmPrintSkin {
-        dependsOn 'application'
-        //resource url: 'http://www.nrm.gov.au/css/screen.css'
-        resource url: '/bootstrap/js/bootstrap.min.js'
-        // LESS resources are processed into CSS automatically, but to trigger build you need to touch/edit the parent less file
-        // TODO: pull this out to its own bundle for use by other "skins"
-        resource url: '/bootstrap/less/bootstrap.less',attrs:[rel: "stylesheet/less", type:'css', media:'screen,projection,print'], bundle:'bundle_nrmPrintSkin'
-        resource url: '/bootstrap/less/responsive.less',attrs:[rel: "stylesheet/less", type:'css', media:'screen,projection,print'], bundle:'bundle_nrmPrintSkin'
-        resource url: 'css/nrm/css/screen.css', attrs:[media:'screen,projection,print'] //, linkOverride: 'http://www.nrm.gov.au/css/screen.css'
-        resource url: 'css/capture.css', attrs:[media:'screen,projection,print']
-    }
-
     nrmSkin {
-        dependsOn 'application'
+        dependsOn 'application,bootstrap'
         //resource url: 'http://www.nrm.gov.au/css/screen.css'
         resource url: '/bootstrap/js/bootstrap.min.js'
-        // LESS resources are processed into CSS automatically, but to trigger build you need to touch/edit the parent less file
-        // TODO: pull this out to its own bundle for use by other "skins"
-        resource url: '/bootstrap/less/bootstrap.less',attrs:[rel: "stylesheet/less", type:'css'], bundle:'bundle_nrmSkin'
-        resource url: '/bootstrap/less/responsive.less',attrs:[rel: "stylesheet/less", type:'css'], bundle:'bundle_nrmSkin'
         resource url: 'css/nrm/css/screen.css'//, linkOverride: 'http://www.nrm.gov.au/css/screen.css'
         resource url: 'css/capture.css'
+    }
+
+    nrmPrintSkin {
+        dependsOn 'application,bootstrap'
+        //resource url: 'http://www.nrm.gov.au/css/screen.css'
+        resource url: '/bootstrap/js/bootstrap.min.js'
+        resource url: 'css/nrm/css/screen.css', attrs:[media:'screen,projection,print'] //, linkOverride: 'http://www.nrm.gov.au/css/screen.css'
+        resource url: 'css/capture.css', attrs:[media:'screen,projection,print']
     }
 
     gmap3 {

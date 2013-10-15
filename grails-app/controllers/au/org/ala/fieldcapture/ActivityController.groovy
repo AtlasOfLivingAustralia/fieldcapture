@@ -80,13 +80,22 @@ class ActivityController {
     def print(String id) {
         def activity = activityService.get(id)
         if (activity) {
+            // permissions check
+            if (!projectService.canUserEditProject(userService.getCurrentUserId(), activity.projectId)) {
+                flash.message = "Access denied: User does not have <b>editor</b> permission for projectId ${activity.projectId}"
+                redirect(controller:'project', action:'index', id: activity.projectId)
+            }
             // pass the activity
-            def model = [activity: activity, returnTo: params.returnTo]
+            def model = [activity: activity, returnTo: params.returnTo, projectStages:projectStages()]
             // the activity meta-model
             model.metaModel = metadataService.getActivityModel(activity.type)
             // the array of output models
             model.outputModels = model.metaModel?.outputs?.collectEntries {
                 [ it, metadataService.getDataModelFromOutputName(it)] }
+            // the site
+            model.site = model.activity.siteId ? siteService.get(model.activity.siteId, [view:'brief']) : null
+            // the project
+            model.project = model.activity.projectId ? projectService.get(model.activity.projectId) : null
             // Add the species lists that are relevant to this activity.
             model.speciesLists = new JSONArray()
             model.project?.speciesLists?.each { list ->
@@ -94,18 +103,14 @@ class ActivityController {
                     model.speciesLists.add(list)
                 }
             }
-            // the site
-            model.site = model.activity.siteId ? siteService.get(model.activity.siteId) : null
-            // the project
-            model.project = model.activity.projectId ? projectService.get(model.activity.projectId) : null
-
+            model.mapFeatures = model.site ? siteService.getMapFeatures(model.site) : "{}"
+            model.themes = metadataService.getThemesForProject(model.project)
             model.printView = true
-
             render view: 'edit', model: model
-            model
         } else {
             forward(action: 'list', model: [error: 'no such id'])
         }
+
     }
 
 
