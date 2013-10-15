@@ -19,21 +19,15 @@ modules = {
         resource url: 'css/default.skin.css'
     }
 
-    nrmPrintSkin {
-        dependsOn 'application,bootstrap'
-        //resource url: 'http://www.nrm.gov.au/css/screen.css'
-        resource url: '/bootstrap/js/bootstrap.min.js'
-        resource url: 'css/nrm/css/screen.css', attrs:[media:'screen,projection,print'] //, linkOverride: 'http://www.nrm.gov.au/css/screen.css'
-        resource url: 'css/capture.css', attrs:[media:'screen,projection,print']
-        resource url: 'css/print.css', attrs:[media:'screen,projection,print']
-    }
-
     nrmSkin {
         dependsOn 'application,bootstrap'
-        //resource url: 'http://www.nrm.gov.au/css/screen.css'
-        resource url: '/bootstrap/js/bootstrap.min.js'
         resource url: 'css/nrm/css/screen.css'//, linkOverride: 'http://www.nrm.gov.au/css/screen.css'
         resource url: 'css/capture.css'
+    }
+
+    nrmPrintSkin {
+        dependsOn 'nrmSkin'
+        resource url: 'css/print.css', attrs:[media:'screen,projection,print']
     }
 
     gmap3 {
