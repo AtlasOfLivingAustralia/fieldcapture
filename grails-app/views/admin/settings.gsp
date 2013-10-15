@@ -20,7 +20,6 @@
                     <th>Setting</th>
                     <th>Value</th>
                     <th>Comment</th>
-                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -35,15 +34,36 @@
                         <td>
                             ${setting.comment}
                         </td>
+                    </tr>
+                </g:each>
+            </tbody>
+        </table>
+
+        <h2>Grails properties</h2>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Setting</th>
+                    <th>Value</th>
+                    <th>Comment</th>
+                </tr>
+            </thead>
+            <tbody>
+                <g:each var="setting" in="${grailsStuff}">
+                    <tr>
                         <td>
-                            <a href="${createLink(controller:'admin', action:'editSetting', id: setting.id)}" title="Edit this setting">
-                                <i class="icon-edit"></i>
-                            </a>
+                            ${setting.key}
+                        </td>
+                        <td>
+                            ${setting.value}
+                        </td>
+                        <td>
+                            ${setting.comment}
                         </td>
                     </tr>
                 </g:each>
-
             </tbody>
         </table>
+
     </body>
 </html>

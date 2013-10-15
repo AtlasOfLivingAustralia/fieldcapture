@@ -112,15 +112,16 @@ class AdminController {
 //            comment: 'location of the application meta-models such as the list of activities and ' +
 //                    'the output data models']
         ]
+        def grailsStuff = []
         def config = grailsApplication.config.flatten()
-        ['ecodata.baseUrl','grails.serverURL','grails.config.locations','biocache.baseURL',
-            'spatial.baseURL','ala.baseURL','collectory.baseURL','headerAndFooter.baseURL',
-            'spatial.layers.service.url','sld.polgon.default.url',
-            'sld.polgon.highlight.url','spatialLayerServices.baseUrl'
-        ].each {
-            settings << [key: it, value: config[it], comment: '']
+        for ( e in config ) {
+            if(e.key.startsWith("grails.")){
+                 grailsStuff << [key: e.key, value: e.value, comment: '']
+            } else {
+                settings << [key: e.key, value: e.value, comment: '']
+            }
         }
-        [settings: settings]
+        [settings: settings, grailsStuff: grailsStuff]
     }
 
     def reloadConfig = {
@@ -222,8 +223,5 @@ class AdminController {
             }
         }
         render contentType: 'text/json', status:400, text:'{"error":"No file supplied"}'
-
-
     }
-
 }
