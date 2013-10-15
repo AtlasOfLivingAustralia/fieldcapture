@@ -71,7 +71,7 @@
                                     <fc:userProjectList />
                                 </div>
                             </div>
-                            <g:if test="${fc.userInRole(role: grailsApplication.config.security.cas.adminRole)}">
+                            <g:if test="${fc.userInRole(role: "ROLE_ADMIN")}">
                                 <div class="btn-group">
                                     <button class="btn btn-warning btn-small" id="btnAdministration"><i class="icon-cog icon-white"></i><span class="hidden-tablet hidden-phone">&nbsp;Administration</span></button>
                                 </div>

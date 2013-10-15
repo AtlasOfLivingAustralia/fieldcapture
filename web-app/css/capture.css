@@ -531,7 +531,8 @@ ul.nav-tabs {
     top: 32px;
     word-wrap: normal;
     white-space: normal;
-    max-width: 240px;
+    min-width: 210px;
+    max-width: 280px;
     padding: 10px;
     font-size: 13px;
     line-height: 1.1em;
