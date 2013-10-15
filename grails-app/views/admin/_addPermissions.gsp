@@ -1,5 +1,5 @@
 <r:require modules="bootstrap_combo"/>
-<h3>Add Permissions</h3>
+<h4>Add Permissions</h4>
 <form class="form-horizontal" id="userAccessForm">
     <div class="control-group">
         <label class="control-label" for="emailAddress">User's email address</label>

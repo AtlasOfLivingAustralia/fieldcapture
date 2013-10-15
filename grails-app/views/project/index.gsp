@@ -257,9 +257,10 @@
                     <div class="span9">
                         <div class="pill-content">
                             <div id="permissions" class="pill-pane active">
+                                <h3>Project Access</h3>
                                 %{--<a name="permissions"></a>--}%
                                 <g:render template="/admin/addPermissions" model="[projectId:project.projectId]"/>
-                                <h3>Project Members</h3>
+                                <h4>Project Members</h4>
                                 <div class="row-fluid">
                                     <div class="span6">
                                         <table class="table table-condensed" id="projectMembersTable" style="">
@@ -272,7 +273,8 @@
                                                 <td class="clickable memEditRole"><i class="icon-edit tooltips" title="edit this user and role combination"></i></td>
                                                 <td class="clickable memRemoveRole"><i class="icon-remove tooltips" title="remove this user and role combination"></i></td>
                                             </tr>
-                                            <tr id="spinnerRow"><td colspan="4">loading data... <g:img dir="images" file="spinner.gif" id="spinner2" class="spinner"/></td></tr>
+                                            <tr id="spinnerRow"><td colspan="5">loading data... <g:img dir="images" file="spinner.gif" id="spinner2" class="spinner"/></td></tr>
+                                            <tr id="messageRow" class="hide"><td colspan="5">No project members set</td></tr>
                                             </tbody>
                                         </table>
                                     </div>
@@ -605,19 +607,24 @@
                 })
                 .done(function(data) {
                     //alert("Done data = " + data);
-                    $.each(data, function(i, el) {
-                        var $clone = $('.membersTbody tr.hide').clone();
-                        $clone.removeClass("hide");
-                        $clone.addClass("cloned");
-                        $clone.data("userid", el.userId);
-                        $clone.data("role", el.role);
-                        $clone.find('.memUserId').text(el.userId);
-                        $clone.find('.memUserName').text(el.displayName);
-                        $clone.find('.memUserRole select').val(el.role);
-                        $clone.find('.memUserRole select').attr("id", el.userId);
-                        $clone.find('.memUserRole span').text(el.role);
-                        $('.membersTbody').append($clone);
-                    });
+                    if (data.length > 0) {
+                        $("#messageRow").hide();
+                        $.each(data, function(i, el) {
+                            var $clone = $('.membersTbody tr.hide').clone();
+                            $clone.removeClass("hide");
+                            $clone.addClass("cloned");
+                            $clone.data("userid", el.userId);
+                            $clone.data("role", el.role);
+                            $clone.find('.memUserId').text(el.userId);
+                            $clone.find('.memUserName').text(el.displayName);
+                            $clone.find('.memUserRole select').val(el.role);
+                            $clone.find('.memUserRole select').attr("id", el.userId);
+                            $clone.find('.memUserRole span').text(el.role);
+                            $('.membersTbody').append($clone);
+                        });
+                    } else {
+                        $("#messageRow").show();
+                    }
                  })
                 .fail(function(jqXHR, textStatus, errorThrown) { alert(jqXHR.responseText); })
                 .always(function() { $("#spinnerRow").hide(); });
