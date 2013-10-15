@@ -37,6 +37,7 @@ class ProjectController {
              isProjectStarredByUser: userService.isProjectStarredByUser(user?.userId?:"0", project.projectId)?.isProjectStarredByUser,
              user: user,
              roles: roles,
+             activityTypes: metadataService.activityTypesList(),
              metrics: projectService.summary(id)]
         }
     }

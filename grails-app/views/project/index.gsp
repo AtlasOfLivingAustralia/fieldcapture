@@ -70,7 +70,7 @@
     </div>
 
     <!-- content tabs -->
-    <ul class="nav nav-tabs big-tabs">
+    <ul id="projectTabs" class="nav nav-tabs big-tabs">
         <li class="active"><a href="#overview" id="overview-tab" data-toggle="tab">Overview</a></li>
         <li><a href="#plan" id="plan-tab" data-toggle="tab">Plans & Reports</a></li>
         <li><a href="#activity" id="activity-tab" data-toggle="tab">Activities</a></li>
@@ -249,45 +249,47 @@
             <!-- ADMIN -->
                 <div class="row-fluid">
                     <div class="span3 large-space-before">
-                        <ul class="nav nav-list nav-tabs nav-stacked ">
-                            <li><a href="#permissions"><i class="icon-chevron-right"></i> Project access</a></li>
-                            <li><a href="#species"><i class="icon-chevron-right"></i> Species of interest</a></li>
+                        <ul id="adminNav" class="nav nav-tabs nav-stacked ">
+                            <li class="active"><a href="#permissions" data-toggle="tab"><i class="icon-chevron-right"></i> Project access</a></li>
+                            <li><a href="#speciesList" data-toggle="tab"><i class="icon-chevron-right"></i> Species of interest</a></li>
                         </ul>
                     </div>
                     <div class="span9">
-                        <div class="admin-sectionZ">
-                            <a name="permissions"></a>
-                            <g:render template="/admin/addPermissions" model="[projectId:project.projectId]"/>
-                            <h4>Project Members</h4>
-                            <div class="row-fluid">
-                                <div class="span6">
-                                    <table class="table table-condensed" id="projectMembersTable" style="">
-                                        <thead><tr><th width="10%">User&nbsp;Id</th><th>User&nbsp;Name</th><th width="15%">Role</th><th width="5%">&nbsp;</th><th width="5%">&nbsp;</th></tr></thead>
-                                        <tbody class="membersTbody">
-                                        <tr class="hide">
-                                            <td class="memUserId"></td>
-                                            <td class="memUserName"></td>
-                                            <td class="memUserRole"><span>&nbsp;</span><g:select class="hide" name="memberRole" from="${roles}"/></td>
-                                            <td class="clickable memEditRole"><i class="icon-edit tooltips" title="edit this user and role combination"></i></td>
-                                            <td class="clickable memRemoveRole"><i class="icon-remove tooltips" title="remove this user and role combination"></i></td>
-                                        </tr>
-                                        <tr id="spinnerRow"><td colspan="4">loading data... <g:img dir="images" file="spinner.gif" id="spinner2" class="spinner"/></td></tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="span5">
-                                    <div id="formStatus" class="hide alert alert-success">
-                                        <button class="close" onclick="$('.alert').fadeOut();" href="#">×</button>
-                                        <span></span>
+                        <div class="pill-content">
+                            <div id="permissions" class="pill-pane active">
+                                %{--<a name="permissions"></a>--}%
+                                <g:render template="/admin/addPermissions" model="[projectId:project.projectId]"/>
+                                <h3>Project Members</h3>
+                                <div class="row-fluid">
+                                    <div class="span6">
+                                        <table class="table table-condensed" id="projectMembersTable" style="">
+                                            <thead><tr><th width="10%">User&nbsp;Id</th><th>User&nbsp;Name</th><th width="15%">Role</th><th width="5%">&nbsp;</th><th width="5%">&nbsp;</th></tr></thead>
+                                            <tbody class="membersTbody">
+                                            <tr class="hide">
+                                                <td class="memUserId"></td>
+                                                <td class="memUserName"></td>
+                                                <td class="memUserRole"><span>&nbsp;</span><g:select class="hide" name="memberRole" from="${roles}"/></td>
+                                                <td class="clickable memEditRole"><i class="icon-edit tooltips" title="edit this user and role combination"></i></td>
+                                                <td class="clickable memRemoveRole"><i class="icon-remove tooltips" title="remove this user and role combination"></i></td>
+                                            </tr>
+                                            <tr id="spinnerRow"><td colspan="4">loading data... <g:img dir="images" file="spinner.gif" id="spinner2" class="spinner"/></td></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="span5">
+                                        <div id="formStatus" class="hide alert alert-success">
+                                            <button class="close" onclick="$('.alert').fadeOut();" href="#">×</button>
+                                            <span></span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <!-- SPECIES -->
-                        <div class="border-divider large-space-before">&nbsp;</div>
-                        <div class="admin-sectionZ large-space-after">
-                            <a name="species"></a>
-                            <g:render template="/species/species" model="[project:project]"/>
+                            <!-- SPECIES -->
+                            %{--<div class="border-divider large-space-before">&nbsp;</div>--}%
+                            <div id="speciesList" class="pill-pane">
+                                %{--<a name="species"></a>--}%
+                                <g:render template="/species/species" model="[project:project, activityTypes:activityTypes]"/>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -309,6 +311,9 @@
             <pre>${project?.encodeAsHTML()}</pre>
             <h4>Features</h4>
             <pre>${mapFeatures}</pre>
+            <h4>activityTypes</h4>
+            <pre>${activityTypes}</pre>
+
         </div>
     </div>
 </div>

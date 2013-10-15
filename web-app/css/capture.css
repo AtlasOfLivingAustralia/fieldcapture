@@ -516,6 +516,14 @@ ul.nav-tabs {
     font-size: 15px;
 }
 
+ul#adminNav li a {
+    background-color: #f0f0e8;
+}
+
+ul#adminNav li.active a {
+    background-color: #E3E3DB;
+}
+
 .nav-tabs li a:hover {
     background-color: #E3E3DB;
 }
