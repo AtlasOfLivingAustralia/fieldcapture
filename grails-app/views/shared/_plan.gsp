@@ -1,4 +1,4 @@
-<r:require modules="datepicker, jqueryGantt"/>
+<r:require modules="datepicker, jqueryGantt, jqueryValidationEngine"/>
 <!-- This section is bound to a secondary KO viewModel. The following line prevents binding
          to the main viewModel. -->
 <!-- ko stopBinding: true -->
@@ -8,9 +8,10 @@
             <ul class="steps">
                 <li data-bind="css:{active:currentStep() === 1,complete:currentStep()>1},click:backtrack" data-target="#step1"><span class="badge" data-bind="css:{'badge-info':currentStep()===1,'badge-success':currentStep()>1}">1</span>Plan project<span class="chevron"></span></li>
                 <li data-bind="css:{active:currentStep() === 2,complete:currentStep()>2},click:backtrack" data-target="#step2"><span class="badge" data-bind="css:{'badge-info':currentStep()===2,'badge-success':currentStep()>2}">2</span>Set targets<span class="chevron"></span></li>
-                <li data-bind="css:{active:currentStep() === 3,complete:currentStep()>3},click:backtrack" data-target="#step3"><span class="badge" data-bind="css:{'badge-info':currentStep()===3,'badge-success':currentStep()>3}">3</span>Approve plan<span class="chevron"></span></li>
-                <li data-bind="css:{active:currentStep() === 4,complete:currentStep()>4},click:backtrack" data-target="#step4"><span class="badge" data-bind="css:{'badge-info':currentStep()===4,'badge-success':currentStep()>4}">4</span>Enter activity information<span class="chevron"></span></li>
-                <li data-bind="css:{active:currentStep() === 5,complete:currentStep()>5},click:backtrack" data-target="#step5"><span class="badge" data-bind="css:{'badge-info':currentStep()===4,'badge-success':currentStep()>4}">4</span>Report stage<span class="chevron"></span></li>
+                <li data-bind="css:{active:currentStep() === 3,complete:currentStep()>3},click:backtrack" data-target="#step3"><span class="badge" data-bind="css:{'badge-info':currentStep()===3,'badge-success':currentStep()>3}">3</span>Submit plan<span class="chevron"></span></li>
+                <li data-bind="css:{active:currentStep() === 4,complete:currentStep()>4},click:backtrack" data-target="#step4"><span class="badge" data-bind="css:{'badge-info':currentStep()===4,'badge-success':currentStep()>4}">4</span>Approve plan<span class="chevron"></span></li>
+                <li data-bind="css:{active:currentStep() === 5,complete:currentStep()>5},click:backtrack" data-target="#step5"><span class="badge" data-bind="css:{'badge-info':currentStep()===5,'badge-success':currentStep()>5}">5</span>Enter activity information<span class="chevron"></span></li>
+                <li data-bind="css:{active:currentStep() === 6,complete:currentStep()>6},click:backtrack" data-target="#step6"><span class="badge" data-bind="css:{'badge-info':currentStep()===6,'badge-success':currentStep()>6}">6</span>Report stage<span class="chevron"></span></li>
             </ul>
         </div>
         <div class="step-content">
@@ -21,20 +22,24 @@
             </div>
             <div class="step-pane" id="step2" data-bind="css:{active:currentStep()===2}">
                 Set project-wide targets based on your planned activites.
-                <button data-bind="click:saveOutputTargets" type="button" class="btn btn-small btn-success pull-right">Submit plan for approval <i class="icon-forward icon-white"></i></button>
+                <button data-bind="click:saveOutputTargets" type="button" class="btn btn-small btn-success pull-right">I have finished entering output targets <i class="icon-forward icon-white"></i></button>
             </div>
             <div class="step-pane" id="step3" data-bind="css:{active:currentStep()===3}">
+                Review your plan and submit it for approval by your case manager. If you need to make changes, you can return to previous stages in the workflow by clicking on the appropriate numbered section heading.
+                <button data-bind="click:nextStep" type="button" class="btn btn-small btn-success pull-right">Submit plan <i class="icon-forward icon-white"></i></button>
+            </div>
+            <div class="step-pane" id="step4" data-bind="css:{active:currentStep()===4}">
                 Waiting for approval by your case manager.
                 <button data-bind="click:nextStep" type="button" class="btn btn-small btn-success pull-right">Approve plan <i class="icon-forward icon-white"></i></button>
             </div>
-            <div class="step-pane row-fluid" id="step4" data-bind="css:{active:currentStep()===4}">
+            <div class="step-pane row-fluid" id="step5" data-bind="css:{active:currentStep()===5}">
                 <span class="span8">Click <i class="icon-edit no-pointer"></i> edit button to enter activity data.
                 Set the status for each activity as it is started and finished. If an activity cannot be finished
                 mark it as 'deferred'.</span>
                 <span class="span4"><button data-bind="click:nextStep" type="button"
                     class="btn btn-small btn-success pull-right">Submit <b><span data-bind="text:currentProjectStage"></span></b> for approval <i class="icon-forward icon-white"></i></button></span>
             </div>
-            <div class="step-pane" id="step5" data-bind="css:{active:currentStep()===5}">
+            <div class="step-pane" id="step6" data-bind="css:{active:currentStep()===6}">
                 Waiting for approval of <b><span data-bind="text:currentProjectStage"></span></b>.
             </div>
         </div>
@@ -104,7 +109,7 @@
     </div>
     <div id="gantt-container" data-bind="visible: currentStep() != 2"></div>
 
-    <div id="outputTargetsContainer" data-bind="visible: currentStep() >= 2">
+    <form id="outputTargetsContainer" data-bind="visible: currentStep() >= 2">
         <h4>Output Targets</h4>
         <table id="outputTargets" class="table table-condensed">
             <thead><tr><th>Output Type</th><th>Output</th><th>Target</th></tr></thead>
@@ -113,14 +118,14 @@
                 <td data-bind="text:outputLabel"></td>
                 <td data-bind="text:scoreLabel"></td>
                 <td>
-                    <input type="text" class="input-small" data-bind="visible:$root.currentStep() == 2,value:target"/><span data-bind="visible:$root.currentStep()>2,text:target"></span> <span data-bind="text:units"></span>
+                    <input type="text" class="input-small" data-bind="visible:$root.currentStep() == 2,value:target" data-validation-engine="validate[required,custom[number]]"/><span data-bind="visible:$root.currentStep()>2,text:target"></span> <span data-bind="text:units"></span>
                 </td>
             </tr>
 
             </tbody>
         </table>
 
-    </div>
+    </form>
 </div>
 <!-- /ko -->
 <r:script>
@@ -387,7 +392,7 @@
             self.loadOutputTargets();
 
             self.saveOutputTargets = function() {
-                //if ($('#outputTargetsContainer').validationEngine('validate')) {
+                if ($('#outputTargetsContainer').validationEngine('validate')) {
                     var project = {projectId:'${project.projectId}', outputTargets:ko.toJS(self.outputTargets)};
                     var json = JSON.stringify(project);
                     var id = "${'/' + project.projectId}";
@@ -409,7 +414,7 @@
                             alert('An unhandled error occurred: ' + data.status);
                         }
                     });
-                //}
+                }
             };
 
         }
@@ -437,6 +442,8 @@
                 }*/
             });
         }
+        $('#outputTargetsContainer').validationEngine('attach', {scroll:false});
+
     });
 
 </r:script>
