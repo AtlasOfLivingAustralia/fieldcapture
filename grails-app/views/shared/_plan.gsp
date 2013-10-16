@@ -81,7 +81,7 @@
                     <span data-bind="text:type,click:editActivity" class="clickable"></span>
                 </td>
                 <g:if test="${showSites}">
-                    <td><a data-bind="text:siteName,click:$parent.openSite"></a></td>
+                    <td><a class="clickable" data-bind="text:siteName,click:$parents[1].openSite"></a></td>
                 </g:if>
                 <td><div class="btn-group">
                     <button type="button" class="btn btn-small dropdown-toggle" data-toggle="dropdown"
