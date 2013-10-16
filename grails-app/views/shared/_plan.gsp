@@ -20,7 +20,7 @@
         </div>
         <div class="step-pane" id="step2" data-bind="css:{active:step()===2}">
             Set project-wide targets based on your planned activites.
-            <button data-bind="click:nextStep" type="button" class="btn btn-small pull-right">Submit plan for approval <i class="icon-forward"></i></button>
+            <button data-bind="click:saveOutputTargets" type="button" class="btn btn-small pull-right">Submit plan for approval <i class="icon-forward"></i></button>
         </div>
         <div class="step-pane" id="step3" data-bind="css:{active:step()===3}">
             Waiting for approval by your case manager.
@@ -35,63 +35,85 @@
             Waiting for approval of stage x.
         </div>
     </div>
-    <p data-bind="visible: stages.length == 0">
-        This project currently has no activities planned.
-    </p>
-    <table class="table table-condensed" id="activities">
-        <thead>
-        <tr data-bind="visible: stages.length > 0">
-            <th>Stage</th>
-            <th width="34px"></th>
-            <th>From</th>
-            <th>To</th>
-            <th>Activity</th>
-            <g:if test="${showSites}">
-                <th>Site</th>
-            </g:if>
-            <th>Status</th>
-        </tr>
-        </thead>
-        <!-- ko foreach:stages -->
-        <tbody data-bind="foreach:activities" id="activityList">
-        <tr>
-            <!-- ko foreach:stageCells -->
-            <td data-bind="attr:{rowspan:$parents[1].activities.length}">
-                <span data-bind="text:label"></span>
-            </td>
+    <div id="activityContainer" data-bind="visible: step() != 2">
+        <h4>Planned Activities</h4>
+        <p data-bind="visible: stages.length == 0">
+            This project currently has no activities planned.
+        </p>
+        <table class="table table-condensed" id="activities">
+            <thead>
+            <tr data-bind="visible: stages.length > 0">
+                <th>Stage</th>
+                <th width="34px"></th>
+                <th>From</th>
+                <th>To</th>
+                <th>Activity</th>
+                <g:if test="${showSites}">
+                    <th>Site</th>
+                </g:if>
+                <th>Status</th>
+            </tr>
+            </thead>
+            <!-- ko foreach:stages -->
+            <tbody data-bind="foreach:activities" id="activityList">
+            <tr>
+                <!-- ko foreach:stageCells -->
+                <td data-bind="attr:{rowspan:$parents[1].activities.length}">
+                    <span data-bind="text:label"></span>
+                </td>
+                <!-- /ko -->
+                <td>
+                    <i class="icon-edit" title="Edit Activity" data-bind="click:editActivity"></i>
+                    <i class="icon-remove" title="Delete activity" data-bind="click:del"></i>
+                </td>
+                <td><span data-bind="text:plannedStartDate.formattedDate"></span></td>
+                <td><span data-bind="text:plannedEndDate.formattedDate"></span></td>
+                <td>
+                    <span data-bind="text:type,click:editActivity" class="clickable"></span>
+                </td>
+                <g:if test="${showSites}">
+                    <td><a data-bind="text:siteName,click:$parent.openSite"></a></td>
+                </g:if>
+                <td><div class="btn-group">
+                    <button type="button" class="btn btn-small dropdown-toggle" data-toggle="dropdown"
+                            data-bind="css: {'btn-warning':progress()=='planned','btn-success':progress()=='started','btn-info':progress()=='finished','btn-inverse':progress()=='deferred'}"
+                            style="line-height:16px;min-width:80px;text-align:left;">
+                        <span data-bind="text: progress"></span> <span class="caret pull-right" style="margin-top:6px;"></span>
+                    </button>
+                    <ul class="dropdown-menu" data-bind="foreach:$root.progressOptions" style="min-width:100px;">
+                        <!-- Disable item if selected -->
+                        <li data-bind="css: {'disabled' : $data==$parent.progress()}">
+                            <a href="#" data-bind="click: $parent.progress"><span data-bind="text: $data"></span></a>
+                        </li>
+                    </ul></div>
+                    <span data-bind="visible:isSaving"><r:img dir="images" file="ajax-saver.gif"/> saving</span>
+                </td>
+            </tr>
+            </tbody>
             <!-- /ko -->
-            <td>
-                <i class="icon-edit" title="Edit Activity" data-bind="click:editActivity"></i>
-                <i class="icon-remove" title="Delete activity" data-bind="click:del"></i>
-            </td>
-            <td><span data-bind="text:plannedStartDate.formattedDate"></span></td>
-            <td><span data-bind="text:plannedEndDate.formattedDate"></span></td>
-            <td>
-                <span data-bind="text:type,click:editActivity" class="clickable"></span>
-            </td>
-            <g:if test="${showSites}">
-                <td><a data-bind="text:siteName,click:$parent.openSite"></a></td>
-            </g:if>
-            <td><div class="btn-group">
-                <button type="button" class="btn btn-small dropdown-toggle" data-toggle="dropdown"
-                        data-bind="css: {'btn-warning':progress()=='planned','btn-success':progress()=='started','btn-info':progress()=='finished','btn-inverse':progress()=='deferred'}"
-                        style="line-height:16px;min-width:80px;text-align:left;">
-                    <span data-bind="text: progress"></span> <span class="caret pull-right" style="margin-top:6px;"></span>
-                </button>
-                <ul class="dropdown-menu" data-bind="foreach:$root.progressOptions" style="min-width:100px;">
-                    <!-- Disable item if selected -->
-                    <li data-bind="css: {'disabled' : $data==$parent.progress()}">
-                        <a href="#" data-bind="click: $parent.progress"><span data-bind="text: $data"></span></a>
-                    </li>
-                </ul></div>
-                <span data-bind="visible:isSaving"><r:img dir="images" file="ajax-saver.gif"/> saving</span>
-            </td>
-        </tr>
-        </tbody>
-        <!-- /ko -->
-    </table>
+        </table>
+    </div>
+    <div id="gantt-container" data-bind="visible: step() != 2"></div>
+
+
+    <div id="outputTargetsContainer" data-bind="visible: step() >= 2">
+        <h4>Output Targets</h4>
+        <table id="outputTargets" class="table table-condensed">
+            <thead><tr><th>Output Type</th><th>Output</th><th>Target</th></tr></thead>
+            <tbody data-bind="foreach:outputTargets">
+            <tr>
+                <td data-bind="text:outputLabel"></td>
+                <td data-bind="text:scoreLabel"></td>
+                <td>
+                    <input type="text" class="input-small" data-bind="visible:$root.step() == 2,value:target"/><span data-bind="visible:$root.step()>2,text:target"></span> <span data-bind="text:units"></span>
+                </td>
+            </tr>
+
+            </tbody>
+        </table>
+
+    </div>
 </div>
-<div id="gantt-container"></div>
 <r:script>
 
     var sites = ${sites ?: []};
@@ -188,7 +210,17 @@
             });
         };
 
-        function PlanViewModel(activities) {
+        var outputTarget = function(target) {
+                return {
+                    outputLabel:target.outputLabel,
+                    scoreName:target.scoreName,
+                    scoreLabel:target.scoreLabel,
+                    target:ko.observable(target.value),
+                    units:target.units
+                };
+            };
+
+        function PlanViewModel(activities, outputTargets) {
             var self = this;
             this.loadActivities = function (activities) {
                 var stages = [],
@@ -274,9 +306,74 @@
                 });
                 return values;
             }
+            self.outputTargets = ko.observableArray([]);
+            self.addOutputTarget = function(target) {
+                self.outputTargets.push(outputTarget(target));
+            };
+            self.activityScores = ${activityScores as grails.converters.JSON};
+
+            self.saveOutputTargets = function() {
+                outputTargetsViewModel.save();
+                self.nextStep();
+            };
+
+            self.loadOutputTargets = function() {
+                var types = {};
+                $.each(activities, function(i, activity) {
+
+                    if (!types[activity.type] && self.activityScores[activity.type]) {
+                        types[activity.type] = true;
+
+                        $.each(self.activityScores[activity.type], function(j, score) {
+                            if (score.aggregationType === 'SUM' || score.aggregationType === 'AVERAGE') {
+                                self.addOutputTarget({units: score.units, outputLabel:score.outputName, scoreName:score.name, scoreLabel:score.label, value:0, units:score.units});
+                            }
+                        });
+                    }
+
+                });
+
+                // Populate the target score for each target that we already have defined.
+                $.each(self.outputTargets(), function(i, outputTarget) {
+                    $.each(outputTargets, function(j, existingTarget) {
+                        if (existingTarget.scoreName === outputTarget.scoreName) {
+                            outputTarget.target(existingTarget.target);
+                        }
+                    });
+
+                });
+            }
+            self.loadOutputTargets();
+
+            self.saveOutputTargets = function() {
+                //if ($('#outputTargetsContainer').validationEngine('validate')) {
+                    var project = {projectId:'${project.projectId}', outputTargets:ko.toJS(self.outputTargets)};
+                    var json = JSON.stringify(project);
+                    var id = "${'/' + project.projectId}";
+                    $.ajax({
+                        url: "${createLink(action: 'ajaxUpdate')}" + id,
+                        type: 'POST',
+                        data: json,
+                        contentType: 'application/json',
+                        success: function (data) {
+                            if (data.error) {
+                                alert(data.detail + ' \n' + data.error);
+                            }
+                            else {
+                                self.nextStep();
+                            }
+                        },
+                        error: function (data) {
+                            var status = data.status;
+                            alert('An unhandled error occurred: ' + data.status);
+                        }
+                    });
+                //}
+            };
+
         }
 
-        var planViewModel = new PlanViewModel(${activities ?: []});
+        var planViewModel = new PlanViewModel(${activities ?: []}, ${project.outputTargets ?: '{}'});
         ko.applyBindings(planViewModel, document.getElementById('planContainer'));
 
         var ganttData = planViewModel.getGanttData();

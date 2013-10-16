@@ -107,8 +107,10 @@ class MetadataService {
                 def matchedOutput = activitiesModel.outputs.find {
                     output -> outputName == output.name
                 }
-                if (matchedOutput && matchedOutput.scoreNames) {
-                    scores.addAll matchedOutput?.scoreNames
+                if (matchedOutput && matchedOutput.scores) {
+                    matchedOutput.scores.each {
+                        scores << (it << [outputName : outputName])
+                    }
                 }
             }
         }

@@ -224,8 +224,8 @@
                             <h3>${metric.key}</h3>
                             <g:each in="${metric.value}" var="score">
                                 <g:if test="${score['target']}">
-                                    <strong>${score.scoreLabel}</strong><span class="pull-right progress-label">${score.aggregatedResult}</span>
-                                    <g:set var="percentComplete" value="${(score.aggregatedResult/score.target)*100}"/>
+                                    <strong>${score.scoreLabel}</strong><span class="pull-right progress-label">${score.aggregatedResult}/${score.target}</span>
+                                    <g:set var="percentComplete" value="${(score.aggregatedResult/(score.target as BigDecimal))*100}"/>
                                     <div class="progress progress-info active">
                                         <div class="bar" style="width: ${percentComplete}%;"></div>
                                     </div>
