@@ -10,8 +10,7 @@
             serverUrl: "${grailsApplication.config.grails.serverURL}",
             siteDeleteUrl: "${createLink(controller: 'site', action: 'ajaxDelete')}",
             siteViewUrl: "${createLink(controller: 'site', action: 'index')}",
-            activityEditUrl: "${createLink(controller: 'activity', action: 'edit')}",
-            activityCreateUrl: "${createLink(controller: 'activity', action: 'create')}",
+            activityViewUrl: "${createLink(controller: 'activity', action: 'index')}",
             spatialBaseUrl: "${grailsApplication.config.spatial.baseURL}",
             spatialWmsCacheUrl: "${grailsApplication.config.spatial.wms.cache.url}",
             spatialWmsUrl: "${grailsApplication.config.spatial.wms.url}",
@@ -136,7 +135,7 @@
         <div class="row-fluid">
             <!-- ACTIVITIES -->
             <div class="tab-pane active" id="activity">
-                <g:render template="/shared/activitiesList"
+                <g:render template="/shared/activitiesListReadOnly"
                           model="[activities:site.activities ?: [], sites:[], showSites:false]"/>
             </div>
         </div>

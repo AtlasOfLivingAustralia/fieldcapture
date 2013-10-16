@@ -27,20 +27,37 @@ class ActivityController {
     }*/
 
     def index(String id) {
-        /*def activity = activityService.get(id)
-        if (!activity || activity.error) {
-            flash.error = activity.error
-            redirect(controller: 'home')
-        } else {
-            //todo: ensure there are no control chars (\r\n etc) in the json as
-            //todo:     this will break the client-side parser
-            def model = [activity: activity, returnTo: params.returnTo]
-            model.site = model.activity.siteId ? siteService.get(model.activity.siteId) : null
-            model.project = model.activity.projectId ? [projectService.get(model.activity.projectId)] : null
-            log.debug model
+        def activity = activityService.get(id)
+        if (activity) {
+            // permissions check
+            if (!projectService.canUserEditProject(userService.getCurrentUserId(), activity.projectId)) {
+                flash.message = "Access denied: User does not have <b>editor</b> permission for projectId ${activity.projectId}"
+                redirect(controller:'project', action:'index', id: activity.projectId)
+            }
+            // pass the activity
+            def model = [activity: activity, returnTo: params.returnTo, projectStages:projectStages()]
+            // the activity meta-model
+            model.metaModel = metadataService.getActivityModel(activity.type)
+            // the array of output models
+            model.outputModels = model.metaModel?.outputs?.collectEntries {
+                [ it, metadataService.getDataModelFromOutputName(it)] }
+            // the site
+            model.site = model.activity.siteId ? siteService.get(model.activity.siteId, [view:'brief']) : null
+            // the project
+            model.project = model.activity.projectId ? projectService.get(model.activity.projectId) : null
+            // Add the species lists that are relevant to this activity.
+            model.speciesLists = new JSONArray()
+            model.project?.speciesLists?.each { list ->
+                if (list.purpose == activity.type) {
+                    model.speciesLists.add(list)
+                }
+            }
+            model.mapFeatures = model.site ? siteService.getMapFeatures(model.site) : "{}"
+            model.themes = metadataService.getThemesForProject(model.project)
             model
-        }*/
-        redirect action:'edit', id: id
+        } else {
+            forward(action: 'list', model: [error: 'no such id'])
+        }
     }
 
     def edit(String id) {

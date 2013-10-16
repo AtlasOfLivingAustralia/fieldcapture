@@ -1,158 +1,252 @@
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page import="grails.converters.JSON; org.codehaus.groovy.grails.web.json.JSONArray" contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/html">
 <head>
-    <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
-    <title>${activity?.activityId}| ${site?.name} | ${site?.projectName} | Field Capture</title>
-    <r:require module="knockout"/>
+    <g:if test="${printView}">
+        <meta name="layout" content="nrmPrint"/>
+        <title>Print | ${activity.type} | Field Capture</title>
+    </g:if>
+    <g:else>
+        <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
+        <title>Edit | ${activity.type} | Field Capture</title>
+    </g:else>
+
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&language=en"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jstimezonedetect/1.0.4/jstz.min.js"></script>
+    <r:script disposition="head">
+    var fcConfig = {
+        serverUrl: "${grailsApplication.config.grails.serverURL}",
+        activityUpdateUrl: "${createLink(controller: 'activity', action: 'ajaxUpdate')}",
+        activityDeleteUrl: "${createLink(controller: 'activity', action: 'ajaxDelete')}",
+        projectViewUrl: "${createLink(controller: 'project', action: 'index')}/",
+        siteViewUrl: "${createLink(controller: 'site', action: 'index')}/"
+        },
+        here = document.location.href;
+    </r:script>
+    <r:require modules="knockout,jqueryValidationEngine,datepicker,jQueryImageUpload,mapWithFeatures"/>
 </head>
 <body>
-<ul class="breadcrumb">
-    <li><g:link controller="home">Home</g:link> <span class="divider">/</span></li>
-    <li><g:link controller="project" id="${site?.projectId}">${site?.projectName}</g:link> <span class="divider">/</span></li>
-    <li><g:link controller="site" id="${site?.siteId}">${site?.name}</g:link> <span class="divider">/</span></li>
-    <li class="active">${activity.type}
-        <span data-bind="text:startDate.formattedDate"></span>/<span data-bind="text:endDate.formattedDate"></span>
-    </li>
-</ul>
-<div class="container-fluid">
-    <div class="row-fluid">
-        <div class="under-rule span12">
-            <div class="clearfix">
-                <h1 class="pull-left">${project?.name ? project.name +':' : ''} ${site?.name}</h1>
-                <g:link action="edit" id="${activity.activityId}" params="${[returnTo:returnTo]}" class="btn pull-right title-edit">Edit activity</g:link>
+<div class="container-fluid validationEngineContainer" id="validation-container">
+    <div id="koActivityMainBlock">
+        <g:if test="${!printView}">
+            <ul class="breadcrumb">
+                <li><g:link controller="home">Home</g:link> <span class="divider">/</span></li>
+                <li><a data-bind="click:goToProject" class="clickable">Project</a> <span class="divider">/</span></li>
+                <li class="active">
+                    <span data-bind="text:type"></span>
+                    <span data-bind="text:startDate.formattedDate"></span><span data-bind="visible:endDate">/</span><span data-bind="text:endDate.formattedDate"></span>
+                </li>
+            </ul>
+        </g:if>
+
+        <div class="row-fluid title-block well well-small input-block-level">
+            <div class="span12 title-attribute">
+                <h1><span data-bind="click:goToProject" class="clickable">${project?.name?.encodeAsHTML() ?: 'no project defined!!'}</span></h1>
+                <g:if test="${site}">
+                    <h2><span data-bind="click:goToSite" class="clickable">Site: ${site.name?.encodeAsHTML()}</span></h2>
+                </g:if>
+                <g:else>
+                    <select data-bind="options:transients.project.sites,optionsText:'name',optionsValue:'siteId',value:siteId,optionsCaption:'Choose a site...'"></select>
+                    Leave blank if this activity is not associated with a specific site.
+                </g:else>
+                <h3>Activity: <span data-bind="text:type"></span></h3>
+                <h4><span>${project.associatedProgram?.encodeAsHTML()}</span> <span>${project.associatedSubProgram?.encodeAsHTML()}</span></h4>
             </div>
-
-            <h2>Activity: ${activity.type}
-                <span data-bind="text:startDate.formattedDate"></span>/<span data-bind="text:endDate.formattedDate"></span></h2>
-            <p class="well well-small">${activity.description}</p>
         </div>
-    </div>
-    <h3>Type</h3>
-    <div class="row-fluid">
-        <span class="span6"><span class="label">Type:</span> ${activity.type}</span>
-        <span class="span3"><span class="label">Starts:</span> <span data-bind="text:startDate.formattedDate"></span></span>
-        <span class="span3"><span class="label">Ends:</span> <span data-bind="text:endDate.formattedDate"></span></span>
-    </div>
-    <div class="row-fluid">
-        <div class="span12">
-            <h3 style="border-bottom: #eeeeee solid 1px;">Outputs</h3>
-            <div data-bind="visible: outputs.length==0">
-                <p>Currently no outputs.</p>
+
+        <div class="row">
+            <div class="${mapFeatures.toString() != '{}' ? 'span9' : 'span12'}" style="font-size: 1.2em">
+                <!-- Common activity fields -->
+                <div class="row-fluid">
+                    <span class="span6"><span class="label">Description:</span> <span data-bind="text:description"></span></span>
+                    <span class="span6"><span class="label">Type:</span> <span data-bind="text:type"></span></span>
+                </div>
+                <div class="row-fluid">
+                    <span class="span6"><span class="label">Starts:</span> <span data-bind="text:startDate.formattedDate"></span></span>
+                    <span class="span6"><span class="label">Ends:</span> <span data-bind="text:endDate.formattedDate"></span></span>
+                </div>
+                <div class="row-fluid">
+                    <span class="span6"><span class="label">Project stage:</span> <span data-bind="text:projectStage"></span></span>
+                    <span class="span6"><span class="label">Major theme:</span> <span data-bind="text:mainTheme"></span></span>
+                </div>
+                <div class="row-fluid">
+                    <span class="span6"><span class="label">Activity status:</span> <span data-bind="text:progress"></span></span>
+                </div>
             </div>
-            <table class="table" data-bind="visible: outputs.length>0">
-                <thead>
-                <tr><td></td><td>Output id</td><td>Output Scores</td>
-                    <td>Assessment date</td><td>Collector</td></tr>
-                </thead>
-                <tbody data-bind="foreach: outputs">
-                <tr>
-                    <td><a data-bind="attr: {href: '${createLink(controller: "output", action: "index")}' + '/' + outputId}"><i class="icon-eye-open" title="View"></i></a>
-                        <a data-bind="attr: {href: '${createLink(controller: "output", action: "edit")}' + '/' + outputId}"><i class="icon-edit" title="Edit"></i></a>
-                        <i data-bind="click: $root.deleteOutput" class="icon-trash" title="Delete"></i>
-                    </td>
-                    <td><a data-bind="text: outputId, attr: {href: '${createLink(controller: "output", action: "index")}' + '/' + outputId}"> </a></td>
-                    <td>
-                        <!-- ko foreach: scores -->
-                        <span data-bind="text: name + ' = ' + score"></span><br>
-                        <!-- /ko -->
-                    </td>
-                    <td data-bind="text: assessmentDate"></td>
-                    <td data-bind="text: collector"></td>
-                </tr>
-                </tbody>
-            </table>
-            <button data-bind="click:newOutput" type="button" class="btn">Add an output</button>
+            <g:if test="${mapFeatures.toString() != '{}'}">
+                <div class="span3">
+                    <div id="smallMap" style="width:100%"></div>
+                </div>
+            </g:if>
         </div>
-    </div>
-    <h3>Method</h3>
-    <div class="row-fluid">
-        <span class="span4"><span class="label">Census method:</span> ${activity.censusMethod}</span>
-        <span class="span4"><span class="label">Method accuracy:</span> ${activity.methodAccuracy}</span>
-        <span class="span4"><span class="label">Collector:</span> ${activity.collector}</span>
-    </div>
-    <div class="row-fluid">
-        <div class="span12">
-            <h3>Notes</h3>
-            <span class="label">Notes:</span> ${activity.notes}
-        </div>
+
+        <g:if env="development" test="${!printView}">
+            <div class="expandable-debug">
+                <hr />
+                <h3>Debug</h3>
+                <div>
+                    <h4>KO model</h4>
+                    <pre data-bind="text:ko.toJSON($root,null,2)"></pre>
+                    <h4>Activity</h4>
+                    <pre>${activity?.encodeAsHTML()}</pre>
+                    <h4>Site</h4>
+                    <pre>${site?.encodeAsHTML()}</pre>
+                    <h4>Sites</h4>
+                    <pre>${(sites as JSON).toString()}</pre>
+                    <h4>Project</h4>
+                    <pre>${project?.encodeAsHTML()}</pre>
+                    <h4>Activity model</h4>
+                    <pre>${metaModel}</pre>
+                    <h4>Output models</h4>
+                    <pre>${outputModels}</pre>
+                    <h4>Themes</h4>
+                    <pre>${themes.toString()}</pre>
+                    <h4>Map features</h4>
+                    <pre>${mapFeatures.toString()}</pre>
+                </div>
+            </div>
+        </g:if>
     </div>
 
-    <div class="row-fluid">
-        <div class="span12 metadata">
-            <span class="label">Created:</span> <span data-bind="text:dateCreated.formattedDate"></span>
-        </div>
-    </div>
-    <div class="row-fluid">
-        <div class="span12 metadata">
-            <span class="label">Last updated:</span> <span data-bind="text:lastUpdated.formattedDate"></span>
-        </div>
-    </div>
+    <g:each in="${metaModel?.outputs}" var="outputName">
+        <g:set var="blockId" value="${fc.toSingleWord([name: outputName])}"/>
+        <g:set var="model" value="${outputModels[outputName]}"/>
+        <g:set var="output" value="${activity.outputs.find {it.name == outputName}}"/>
+        <g:if test="${!output}">
+            <g:set var="output" value="[name: outputName]"/>
+        </g:if>
+        <div class="output-block" id="ko${blockId}">
+            <h3>${outputName}</h3>
+            <!-- add the dynamic components -->
+            <md:modelView model="${model}" site="${site}"/>
+            <r:script>
+        $(function(){
 
-    <hr />
-    <div class="debug">
-        <h3 id="debug">Debug</h3>
-        <div style="display: none">
-            <pre data-bind="text: ko.toJSON($root, null, 2)"></pre>
-            <div>Activity : ${activity}</div>
-            <div>Site : ${site}</div>
+            var viewModelName = "${blockId}ViewModel",
+                viewModelInstance = viewModelName + "Instance";
+
+            // load dynamic models - usually objects in a list
+                <md:jsModelObjects model="${model}" site="${site}" speciesLists="${speciesLists}" viewModelInstance="${blockId}ViewModelInstance"/>
+
+                this[viewModelName] = function () {
+                    var self = this;
+                    self.name = "${output.name}";
+                self.outputId = "${output.outputId}";
+                self.data = {};
+                self.transients = {};
+                self.transients.dummy = ko.observable();
+
+                // add declarations for dynamic data
+                <md:jsViewModel model="${model}" viewModelInstance="${blockId}ViewModelInstance"/>
+
+                // this will be called when generating a savable model to remove transient properties
+                self.removeBeforeSave = function (jsData) {
+                    // add code to remove any transients added by the dynamic tags
+                <md:jsRemoveBeforeSave model="${model}"/>
+                delete jsData.activityType;
+                delete jsData.transients;
+                return jsData;
+                };
+
+                self.loadData = function (data) {
+                    // load dynamic data
+                <md:jsLoadModel model="${model}"/>
+
+                // if there is no data in tables then add an empty row for the user to add data
+                if (typeof self.addRow === 'function' && self.rowCount() === 0) {
+                    self.addRow();
+                }
+                self.transients.dummy.notifySubscribers();
+            };
+        };
+
+        window[viewModelInstance] = new this[viewModelName]();
+        window[viewModelInstance].loadData(${output.data ?: '{}'});
+
+            ko.applyBindings(window[viewModelInstance], document.getElementById("ko${blockId}"));
+        });
+
+            </r:script>
         </div>
+    </g:each>
+
+    <div class="form-actions">
+        <button type="button" id="cancel" class="btn">return</button>
     </div>
 </div>
+
+<!-- templates -->
+
 <r:script>
-    var outputModel = ${activity.outputs};
+
+    var returnTo = "${returnTo}";
 
     $(function(){
-        function ViewModel () {
+
+        $('.helphover').popover({animation: true, trigger:'hover'});
+
+        $('#cancel').click(function () {
+            document.location.href = returnTo;
+        });
+
+        function ViewModel (act, site, project, metaModel) {
             var self = this;
-            self.description = ko.observable("${activity.description}");
-            self.notes = ko.observable("${activity.notes}");
-            self.startDate = ko.observable("${activity.startDate}").extend({simpleDate: false});
-            self.endDate = ko.observable("${activity.endDate}").extend({simpleDate: false});
-            self.censusMethod = ko.observable("${activity.censusMethod}");
-            self.methodAccuracy = ko.observable("${activity.methodAccuracy}");
-            self.collector = ko.observable("${activity.collector}");
-            self.fieldNotes = ko.observable("${activity.fieldNotes}");
-            self.type = ko.observable("${activity.type}");
-            self.siteId = ko.observable("${activity.siteId}");
-            self.outputs = ko.observableArray(outputModel);
-            self.dateCreated = ko.observable("${activity.dateCreated}").extend({simpleDate: true});
-            self.lastUpdated = ko.observable("${activity.lastUpdated}").extend({simpleDate: true});
+            self.activityId = act.activityId;
+            self.description = ko.observable(act.description);
+            self.notes = ko.observable(act.notes);
+            self.startDate = ko.observable(act.startDate || act.plannedStartDate).extend({simpleDate: false});
+            self.endDate = ko.observable(act.endDate || act.plannedEndDate).extend({simpleDate: false});
+            self.eventPurpose = ko.observable(act.eventPurpose);
+            self.fieldNotes = ko.observable(act.fieldNotes);
+            self.associatedProgram = ko.observable(act.associatedProgram);
+            self.associatedSubProgram = ko.observable(act.associatedSubProgram);
+            self.projectStage = ko.observable(act.projectStage || "");
+            self.progress = ko.observable(act.progress || 'started');
+            self.mainTheme = ko.observable(act.mainTheme);
+            self.type = ko.observable(act.type);
+            self.siteId = ko.observable(act.siteId);
+            self.projectId = act.projectId;
+            self.transients = {};
+            self.transients.site = site;
+            self.transients.project = project;
+            self.transients.metaModel = metaModel || {};
+            self.transients.activityProgressValues = ['planned','started','finished'];
+            self.transients.themes = $.map(${themes}, function (obj, i) { return obj.name });
+            self.goToProject = function () {
+                if (self.projectId) {
+                    document.location.href = fcConfig.projectViewUrl + self.projectId;
+                }
+            };
+            self.goToSite = function () {
+                if (self.siteId()) {
+                    document.location.href = fcConfig.siteViewUrl + self.siteId();
+                }
+            };
             self.notImplemented = function () {
                 alert("Not implemented yet.")
             };
-            self.enterData = function () {
-                document.location.href = "${createLink(action: 'addData', id: activity.activityId)}"
-            };
-            self.newOutput = function () {
-                var d = {
-                    activityId: "${activity.activityId}"
-                };
-                $.ajax({
-                    url: '${createLink(controller: 'output', action: "ajaxUpdate")}',
-                    type: 'POST',
-                    data: JSON.stringify(d),
-                    contentType: 'application/json',
-                    success: function (data) {
-                        if (data.error) {
-                            alert(data.detail + ' \n' + data.error);
-                        } else {
-                            var newOutput = {
-                                outputId: data.outputId,
-                                activityId: data.activityId
-                            };
-                            self.outputs.push(newOutput);
-                        }
-                    },
-                    error: function (data) {
-                        var status = data.status
-                        alert('An unhandled error occurred: ' + data.status);
-                    }
-                });
-            }
         }
-        var viewModel = new ViewModel();
-        ko.applyBindings(viewModel);
+
+
+        var viewModel = new ViewModel(
+    ${(activity as JSON).toString()},
+    ${site ?: 'null'},
+    ${project ?: 'null'},
+    ${metaModel ?: 'null'});
+
+        ko.applyBindings(viewModel,document.getElementById('koActivityMainBlock'));
+
+        var mapFeatures = $.parseJSON('${mapFeatures}');
+        if(mapFeatures !=null && mapFeatures.features !== undefined && mapFeatures.features.length >0){
+            init_map_with_features({
+                    mapContainer: "smallMap",
+                    zoomToBounds:true,
+                    zoomLimit:16
+                },
+                mapFeatures
+            );
+        }
+
     });
 
 </r:script>
