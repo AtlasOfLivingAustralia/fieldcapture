@@ -2,39 +2,42 @@
 <!-- This section is bound to a secondary KO viewModel. The following line prevents binding
          to the main viewModel. -->
 <!-- ko stopBinding: true -->
-<div class="row-fluid fuelux" id="planContainer">
-    <div class="row-fluid wizard">
-        <ul class="steps">
-            <li data-bind="css:{active:step() === 1,complete:step()>1},click:backtrack" data-target="#step1"><span class="badge" data-bind="css:{'badge-info':step()===1,'badge-success':step()>1}">1</span>Plan project<span class="chevron"></span></li>
-            <li data-bind="css:{active:step() === 2,complete:step()>2},click:backtrack" data-target="#step2"><span class="badge" data-bind="css:{'badge-info':step()===2,'badge-success':step()>2}">2</span>Set targets<span class="chevron"></span></li>
-            <li data-bind="css:{active:step() === 3,complete:step()>3},click:backtrack" data-target="#step3"><span class="badge" data-bind="css:{'badge-info':step()===3,'badge-success':step()>3}">3</span>Approve plan<span class="chevron"></span></li>
-            <li data-bind="css:{active:step() === 4,complete:step()>4},click:backtrack" data-target="#step4"><span class="badge" data-bind="css:{'badge-info':step()===4,'badge-success':step()>4}">4</span>Enter activity information<span class="chevron"></span></li>
-            <li data-bind="css:{active:step() === 5,complete:step()>5},click:backtrack" data-target="#step5"><span class="badge" data-bind="css:{'badge-info':step()===4,'badge-success':step()>4}">4</span>Report stage<span class="chevron"></span></li>
-        </ul>
-    </div>
-    <div class="step-content">
-        <div class="step-pane" id="step1" data-bind="css:{active:step()===1}">
-            Create your plan by adding activites.
-            <button data-bind="click:newActivity" type="button" class="btn btn-link">Plan new activity</button>
-            <button data-bind="click:nextStep" type="button" class="btn btn-small pull-right">I have finished planning activities <i class="icon-forward"></i></button>
+<div class="row-fluid" id="planContainer">
+<div class="row-fluid" id="planContainer">
+    <div class="fuelux">
+        <div class="row-fluid wizard">
+            <ul class="steps">
+                <li data-bind="css:{active:step() === 1,complete:step()>1},click:backtrack" data-target="#step1"><span class="badge" data-bind="css:{'badge-info':step()===1,'badge-success':step()>1}">1</span>Plan project<span class="chevron"></span></li>
+                <li data-bind="css:{active:step() === 2,complete:step()>2},click:backtrack" data-target="#step2"><span class="badge" data-bind="css:{'badge-info':step()===2,'badge-success':step()>2}">2</span>Set targets<span class="chevron"></span></li>
+                <li data-bind="css:{active:step() === 3,complete:step()>3},click:backtrack" data-target="#step3"><span class="badge" data-bind="css:{'badge-info':step()===3,'badge-success':step()>3}">3</span>Approve plan<span class="chevron"></span></li>
+                <li data-bind="css:{active:step() === 4,complete:step()>4},click:backtrack" data-target="#step4"><span class="badge" data-bind="css:{'badge-info':step()===4,'badge-success':step()>4}">4</span>Enter activity information<span class="chevron"></span></li>
+                <li data-bind="css:{active:step() === 5,complete:step()>5},click:backtrack" data-target="#step5"><span class="badge" data-bind="css:{'badge-info':step()===4,'badge-success':step()>4}">4</span>Report stage<span class="chevron"></span></li>
+            </ul>
         </div>
-        <div class="step-pane" id="step2" data-bind="css:{active:step()===2}">
-            Set project-wide targets based on your planned activites.
-            <button data-bind="click:saveOutputTargets" type="button" class="btn btn-small pull-right">Submit plan for approval <i class="icon-forward"></i></button>
-        </div>
-        <div class="step-pane" id="step3" data-bind="css:{active:step()===3}">
-            Waiting for approval by your case manager.
-            <button data-bind="click:nextStep" type="button" class="btn btn-small pull-right">Approve plan <i class="icon-forward"></i></button>
-        </div>
-        <div class="step-pane row-fluid" id="step4" data-bind="css:{active:step()===4}">
-            <span class="span8">Click <i class="icon-edit no-pointer"></i> edit button to enter activity data.
-            Set the status for each activity as it is started and finished. If an activity cannot be finished
-            mark it as 'deferred'.</span>
-            <span class="span4"><button data-bind="click:nextStep" type="button"
-                class="btn btn-small pull-right">Submit <span data-bind="text:currentProjectStage"></span> for approval <i class="icon-forward"></i></button></span>
-        </div>
-        <div class="step-pane" id="step5" data-bind="css:{active:step()===5}">
-            Waiting for approval of stage x.
+        <div class="step-content">
+            <div class="step-pane" id="step1" data-bind="css:{active:step()===1}">
+                Create your plan by adding activites.
+                <button data-bind="click:newActivity" type="button" class="btn btn-link">Plan new activity</button>
+                <button data-bind="click:nextStep" type="button" class="btn btn-small pull-right">I have finished planning activities <i class="icon-forward"></i></button>
+            </div>
+            <div class="step-pane" id="step2" data-bind="css:{active:step()===2}">
+                Set project-wide targets based on your planned activites.
+                <button data-bind="click:saveOutputTargets" type="button" class="btn btn-small pull-right">Submit plan for approval <i class="icon-forward"></i></button>
+            </div>
+            <div class="step-pane" id="step3" data-bind="css:{active:step()===3}">
+                Waiting for approval by your case manager.
+                <button data-bind="click:nextStep" type="button" class="btn btn-small pull-right">Approve plan <i class="icon-forward"></i></button>
+            </div>
+            <div class="step-pane row-fluid" id="step4" data-bind="css:{active:step()===4}">
+                <span class="span8">Click <i class="icon-edit no-pointer"></i> edit button to enter activity data.
+                Set the status for each activity as it is started and finished. If an activity cannot be finished
+                mark it as 'deferred'.</span>
+                <span class="span4"><button data-bind="click:nextStep" type="button"
+                    class="btn btn-small pull-right">Submit <span data-bind="text:currentProjectStage"></span> for approval <i class="icon-forward"></i></button></span>
+            </div>
+            <div class="step-pane" id="step5" data-bind="css:{active:step()===5}">
+                Waiting for approval of stage x.
+            </div>
         </div>
     </div>
     <div id="activityContainer" data-bind="visible: step() != 2">
