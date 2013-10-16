@@ -3,7 +3,6 @@
          to the main viewModel. -->
 <!-- ko stopBinding: true -->
 <div class="row-fluid" id="planContainer">
-<div class="row-fluid" id="planContainer">
     <div class="fuelux">
         <div class="row-fluid wizard">
             <ul class="steps">
@@ -104,7 +103,6 @@
         </table>
     </div>
     <div id="gantt-container" data-bind="visible: step() != 2"></div>
-
 
     <div id="outputTargetsContainer" data-bind="visible: step() >= 2">
         <h4>Output Targets</h4>
@@ -423,4 +421,3 @@
     });
 
 </r:script>
-<!-- /ko -->
