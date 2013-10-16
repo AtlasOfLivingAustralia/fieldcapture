@@ -10,7 +10,7 @@ modules = {
     }
 
     bootstrap {
-        // override declaration in ala-web-theme plugin
+        // override declaration in ala-web-theme plugin, so BS code (CSS, JS) is not duplicated as app already has its own version
         dependsOn 'app_bootstrap_responsive'
     }
 
@@ -71,14 +71,18 @@ modules = {
     app_bootstrap {
         dependsOn 'application'
         resource url: '/bootstrap/js/bootstrap.min.js'
-        resource url: '/bootstrap/css/bootstrap.css', attrs:[media:'screen,print']
+        //resource url: '/bootstrap/css/bootstrap.css', attrs:[media:'screen,print']
+        resource url: 'bootstrap/less/bootstrap.less',attrs:[rel: "stylesheet/less", type:'css', media:'screen,print'], bundle:'bundle_app_bootstrap'
         resource url: '/bootstrap/img/glyphicons-halflings-white.png'
         resource url: '/bootstrap/img/glyphicons-halflings.png'
+        resource url: 'css/empty.css' // needed for less-resources plugin ?
     }
 
     app_bootstrap_responsive {
         dependsOn 'app_bootstrap'
-        resource url: '/bootstrap/css/bootstrap-responsive.min.css', attrs:[media:'screen,print']
+        //resource url: '/bootstrap/css/bootstrap-responsive.min.css', attrs:[media:'screen,print']
+        resource url: 'bootstrap/less/responsive.less',attrs:[rel: "stylesheet/less", type:'css', media:'screen,print'], bundle:'bundle_app_bootstrap_responsive'
+        resource url: 'css/empty.css' // needed for less-resources plugin ?
     }
 
     bootstrap_combo {
