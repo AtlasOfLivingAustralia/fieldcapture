@@ -6190,7 +6190,7 @@ textarea.span1,
   padding-left: 16px;
   margin-right: 4px;
   margin-left: -20px;
-  background-image: url(../img/form.png);
+  background-image: url("../img/form.png");
   background-position: 0 1px;
   background-repeat: no-repeat;
 }
@@ -6527,7 +6527,7 @@ textarea.span1,
   padding-left: 16px;
   margin-right: 4px;
   margin-left: -20px;
-  background-image: url(../img/form.png);
+  background-image: url("../img/form.png");
   background-position: 0 -15px;
   background-repeat: no-repeat;
 }

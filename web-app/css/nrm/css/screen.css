@@ -983,7 +983,7 @@ table tbody .remote { color: #8E5A30; }
 
 table.comparison { margin-top: 20px; margin-bottom: 10px; }
 table.comparison thead { background: none; }
-table.comparison thead th {color: #393124;background-color:none; -moz-border-radius-topright:8px;
+table.comparison thead th {color: #393124;background-color: transparent; -moz-border-radius-topright:8px;
     -moz-border-radius-topleft:8px;
     -webkit-border-top-right-radius:8px;
     -webkit-border-top-left-radius:8px; background: url(../images/bg_table_header.png) 0 0 repeat; width: 210px; white-space: normal; vertical-align: top; text-align: center; padding: 7px; border-top: 1px solid #F7F4EB; }
@@ -996,7 +996,7 @@ table.comparison tbody td ul { margin: 0 0 5px; }
 table.funding-options { margin-top: 20px; margin-bottom: 10px; }
 table.funding-options thead { background: none; }
 table.funding-options thead th {
-    background-color:none;
+    background-color: transparent;
     -moz-border-radius-topright:8px;
     -moz-border-radius-topleft:8px;
     -webkit-border-top-right-radius:8px;
@@ -1154,24 +1154,23 @@ p.intro{ font-size: 1.333em; line-height: 1.5; }
 
 /* Link lists with icons */
 ul.link-list { margin: 0 0 1em 0 ; padding: 0; list-style-type: none; }
-ul.link-list li { background: url("/images/ico_cta_link.png") no-repeat scroll 0 6px transparent; padding-left: 17px; margin-bottom: 5px; }
-ul.link-list li.pdf { background: url("/images/bg_sprites.png") no-repeat scroll -588px 2px transparent; }
-ul.link-list li.word { background: url("/images/bg_sprites.png") no-repeat scroll -572px -19px transparent; }
+ul.link-list li { background: url("../images/ico_cta_link.png") no-repeat scroll 0 6px transparent; padding-left: 17px; margin-bottom: 5px; }
+ul.link-list li.pdf { background: url("../images/bg_sprites.png") no-repeat scroll -588px 2px transparent; }
+ul.link-list li.word { background: url("../images/bg_sprites.png") no-repeat scroll -572px -19px transparent; }
 span.ppt {
-    background: url(/images/ico-ppt.gif) 50% 50% no-repeat;
+    background: url("../images/ico-ppt.gif") 50% 50% no-repeat;
     padding: 0 10px 0.1em 0;
     margin: 0 5px 0 2px;
 }
-ul.link-list li.excel { background: url("/images/bg_sprites.png") no-repeat scroll -552px -42px transparent; }
-ul.link-list li.generic { background: url("/images/bg_sprites.png") no-repeat scroll -536px -62px transparent; }
-ul.link-list li.image { background: url("/images/bg_sprites.png") no-repeat scroll -517px -86px transparent; }
-ul.link-list li.back { background: url("/images/ico_cta_back.png") no-repeat scroll 0 6px transparent; padding-left: 17px; margin-bottom: 5px; }
+ul.link-list li.excel { background: url("../images/bg_sprites.png") no-repeat scroll -552px -42px transparent; }
+ul.link-list li.generic { background: url("../images/bg_sprites.png") no-repeat scroll -536px -62px transparent; }
+ul.link-list li.image { background: url("../images/bg_sprites.png") no-repeat scroll -517px -86px transparent; }
+ul.link-list li.back { background: url("../images/ico_cta_back.png") no-repeat scroll 0 6px transparent; padding-left: 17px; margin-bottom: 5px; }
 
-li.link-list { margin: 0 0 1em 0 ; padding: 0; list-style-type: none; background: url("/images/ico_cta_link.png") no-repeat scroll 0 6px transparent; padding-left: 17px; margin-bottom: 5px; }
+li.link-list { margin: 0 0 1em 0 ; padding: 0; list-style-type: none; background: url("../images/ico_cta_link.png") no-repeat scroll 0 6px transparent; padding-left: 17px; margin-bottom: 5px; }
 
 li.back-to-top {
     list-style-type: none;
-    background: url(/images/ico-up.gif) no-repeat scroll 0 4px transparent; margin-left:-14px; padding-left: 14px; margin-bottom: 5px;
     padding-bottom:10px;
     border-bottom: 1px #CCCCCC dotted;
 }
@@ -1185,23 +1184,23 @@ ul.faq-list {
 ul.nested{  list-style-type: none; }
 
 span.pdf {
-    background: url("/images/bg_sprites.png") no-repeat scroll -588px 2px transparent;
+    background: url("../images/bg_sprites.png") no-repeat scroll -588px 2px transparent;
     padding: 0 10px 0.1em 0;
     margin: 0 5px 0 2px;
 }
 
 span.word {
-    background: url("/images/bg_sprites.png") no-repeat scroll -572px -19px transparent;
+    background: url("../images/bg_sprites.png") no-repeat scroll -572px -19px transparent;
     padding: 0 10px 0.1em 0;
     margin: 0 5px 0 2px;
 }
 span.generic {
-    background: url("/images/bg_sprites.png") no-repeat scroll -536px -65px transparent;
+    background: url("../images/bg_sprites.png") no-repeat scroll -536px -65px transparent;
     padding: 0 10px 0.1em 0;
     margin: 0 5px 0 2px;
 }
 span.excel {
-    background: url("/images/bg_sprites.png") no-repeat scroll -552px -43px transparent;
+    background: url("../images/bg_sprites.png") no-repeat scroll -552px -43px transparent;
     padding: 0 10px 0.1em 0;
     margin: 0 5px 0 2px;
 }
@@ -1820,7 +1819,7 @@ h2.target { font-size: 1.9em; margin-top: 10px; }
 .compactor-list h2.section.no-margin { margin-top: 0; }
 .compactor-list h2.section, .compactor-list h3.section { border-top: 1px solid #D0C6B9; padding: 10px 0 10px 0px; margin-top: 15px; }
 
-.collapsible-heading { padding-left:15px; background:url(/content_images/icon-triangle.png) 0 6px no-repeat; cursor:pointer;}
+.collapsible-heading { padding-left:15px; background:url(../images/icon-triangle.png) 0 6px no-repeat; cursor:pointer;}
 .collapsible-heading-collapsed { background-position:0 -83px; }
 .collapsible-heading-toggle { text-decoration:none; color:#333;font-size:.8em;font-weight:normal; }
 .collapsible-heading-status { position:absolute; left:-99999px; }
