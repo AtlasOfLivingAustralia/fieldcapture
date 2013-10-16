@@ -100,6 +100,13 @@
                 <span class="add-on open-datepicker"><i class="icon-th"></i></span>
             </div>
         </div>
+        <div class="control-group span4">
+            <label class="control-label" for="currentStage">Current stage of project</label>
+            <div class="controls">
+                <!-- later this will be a dropdown to pick from activity stages -->
+                <g:textField class="" name="currentStage" data-bind="value:currentStage"/>
+            </div>
+        </div>
     </div>
 
     <!-- ko stopBinding: true -->
@@ -174,14 +181,14 @@
          *  The block of view code (html) must be expunged from the main model using the
          *  "stopBinding: true" syntax.
          *  This model must be bound to an element inside that block.
-         *  @param image is an object representing an existing image or default values
+         *  @param img is an object representing an existing image or default values
          *  @param owner is an object with key and values properties - these are used to associate the
          *      image with an entity eg. key='projectId', value=<id>
          */
         function ImageViewModel (img, owner, updateUrl) {
             var self = this;
             this.filename = ko.observable(img ? img.filename : '');
-            this.name = ko.observable(img ? img.name : '');
+            this.name = ko.observable(img.name);
             this.attribution = ko.observable(img ? img.attribution : '');
             this.type = img.type || 'image';
             this.role = img.role;
@@ -189,6 +196,7 @@
             this[owner.key] = owner.value;
             this.save = function () {
                 var url = updateUrl + (self.documentId ? '/' + self.documentId : '');
+                if (self.name() === undefined || self.name() === '') { return }
                 $.ajax({
                     url: url,
                     type: 'POST',
@@ -238,6 +246,7 @@
             self.associatedSubProgram = ko.observable(data.associatedSubProgram);
             self.plannedStartDate = ko.observable(data.plannedStartDate).extend({simpleDate: false});
             self.plannedEndDate = ko.observable(data.plannedEndDate).extend({simpleDate: false});
+            self.currentStage = ko.observable(data.currentStage);
             self.organisation = ko.observable(data.organisation);
             self.transients = {};
             self.transients.organisations = organisations;
