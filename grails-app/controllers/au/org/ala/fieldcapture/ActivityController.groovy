@@ -137,6 +137,9 @@ class ActivityController {
                 projectStages:projectStages()]
         model.project = projectId ? projectService.get(projectId) : null
         model.site = siteId ? siteService.get(siteId) : null
+        if (projectId) {
+            model.themes = metadataService.getThemesForProject(model.project)
+        }
         if (!model.project && !model.site) {
             model.sites = siteService.list().collect({[name:it.name,siteId:it.siteId]})
             model.projects = projectService.list().collect({[name:it.name,projectId:it.projectId]})
