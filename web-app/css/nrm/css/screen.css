@@ -1263,6 +1263,11 @@ span.popup {
 .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
     background: url(../images/bg_tabs.png) no-repeat 100% -36px;
 }
+
+/** The above jquery ui style overrides break the autocomplete widget styling so they have to be reinstated here. **/
+.ui-widget-content.ui-autocomplete { border: 1px solid #aaaaaa; background: #ffffff url(../../smoothness/images/ui-bg_flat_75_ffffff_40x100.png) 50% 50% repeat-x; color: #222222; }
+.ui-widget-content.ui-autocomplete a { color: #222222; }
+
 .ui-state-default a, .ui-widget-content .ui-state-default a, .ui-widget-header .ui-state-default a{
     background: url(../images/bg_tabs.png) no-repeat 0 0;
 }
