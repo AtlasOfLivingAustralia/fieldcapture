@@ -26,10 +26,12 @@
             Waiting for approval by your case manager.
             <button data-bind="click:nextStep" type="button" class="btn btn-small pull-right">Approve plan <i class="icon-forward"></i></button>
         </div>
-        <div class="step-pane" id="step4" data-bind="css:{active:step()===4}">
-            Click <i class="icon-edit no-pointer"></i> edit button to enter activity data. Set the status for each
-            activity as it is started and finished. If an activity cannot be finished mark it as 'deferred'.
-            <button data-bind="click:nextStep" type="button" class="btn btn-small pull-right">Submit stage for approval <i class="icon-forward"></i></button>
+        <div class="step-pane row-fluid" id="step4" data-bind="css:{active:step()===4}">
+            <span class="span8">Click <i class="icon-edit no-pointer"></i> edit button to enter activity data.
+            Set the status for each activity as it is started and finished. If an activity cannot be finished
+            mark it as 'deferred'.</span>
+            <span class="span4"><button data-bind="click:nextStep" type="button"
+                class="btn btn-small pull-right">Submit <span data-bind="text:currentProjectStage"></span> for approval <i class="icon-forward"></i></button></span>
         </div>
         <div class="step-pane" id="step5" data-bind="css:{active:step()===5}">
             Waiting for approval of stage x.
@@ -55,11 +57,16 @@
             </tr>
             </thead>
             <!-- ko foreach:stages -->
-            <tbody data-bind="foreach:activities" id="activityList">
+            <tbody data-bind="foreach:activities, css:{activeStage:isCurrentStage, inactiveStage: !isCurrentStage}" id="activityList">
             <tr>
-                <!-- ko foreach:stageCells -->
-                <td data-bind="attr:{rowspan:$parents[1].activities.length}">
-                    <span data-bind="text:label"></span>
+                <!-- ko with:isFirst -->
+                <td data-bind="attr:{rowspan:$parents[1].activities.length}" class="stage-display">
+                    <span data-bind="text:projectStage%{--, blah:console.log(ko.toJS($data))--}%"></span>
+                    <br data-bind="visible:$parents[1].isCurrentStage">
+                    <span data-bind="visible:$parents[1].isCurrentStage" class="badge badge-info">Current stage</span>
+                    <br data-bind="visible:$parents[1].readyForApproval()">
+                    <span data-bind="visible:$parents[1].readyForApproval()" class="badge badge-success"
+                      title="Submit this stage for implementation approval by clicking the button in the section above.">Ready for approval</span>
                 </td>
                 <!-- /ko -->
                 <td>
@@ -114,6 +121,7 @@
 
     </div>
 </div>
+<!-- /ko -->
 <r:script>
 
     var sites = ${sites ?: []};
@@ -135,6 +143,7 @@
         var PlannedActivity = function (act, isFirst) {
             var self = this;
             this.activityId = act.activityId;
+            this.isFirst = isFirst ? this : undefined;
             this.siteId = act.siteId;
             this.siteName = lookupSiteName(act.siteId);
             this.type = act.type;
@@ -192,36 +201,45 @@
                     }
                 });
             };
-            // this controls the merging of the stage cell across rows where they have the same value
-            this.stageCells = ko.computed(function () {
-                return isFirst ? [{label: self.projectStage}] : [];
-            });
         };
 
-        var PlanStage = function (stageLabel, activities) {
-            // Note that the two .map transforms are not combined becuase we want the index of
-            //  the PlannedActivity to be relative to the filtered set of activities.
-            var activitiesInThisStage = $.map(activities, function (act, index) {
-                return act.projectStage === stageLabel ? act : undefined;
-            });
+        var PlanStage = function (stageLabel, activities, isCurrentStage) {
+            // Note that the two $ transforms used to extract activities are not combined because we
+            // want the index of the PlannedActivity to be relative to the filtered set of activities.
+            var self = this,
+                activitiesInThisStage = $.grep(activities, function (act, index) {
+                    return act.projectStage === stageLabel;
+                });
             this.label = stageLabel;
+            this.isCurrentStage = isCurrentStage;
             this.activities = $.map(activitiesInThisStage, function (act, index) {
                 return new PlannedActivity(act, index === 0);
             });
+            this.readyForApproval = ko.computed(function() {
+                return self.isCurrentStage ?
+                    $.grep(self.activities, function (act, i) {
+                        return !(act.progress() === 'finished' || act.progress() === 'deferred');
+                    }).length === 0 :
+                    false;
+            }, this, {deferEvaluation: true});
+            this.approveStage = function () {
+
+            };
         };
 
         var outputTarget = function(target) {
-                return {
-                    outputLabel:target.outputLabel,
-                    scoreName:target.scoreName,
-                    scoreLabel:target.scoreLabel,
-                    target:ko.observable(target.value),
-                    units:target.units
-                };
+            return {
+                outputLabel:target.outputLabel,
+                scoreName:target.scoreName,
+                scoreLabel:target.scoreLabel,
+                target:ko.observable(target.value),
+                units:target.units
             };
+        };
 
-        function PlanViewModel(activities, outputTargets) {
+        function PlanViewModel(activities, outputTargets, project) {
             var self = this;
+            self.currentProjectStage = project.currentStage === undefined ? 'Stage 1' : project.currentStage;
             this.loadActivities = function (activities) {
                 var stages = [],
                     stageLabels = [];
@@ -244,7 +262,7 @@
 
                 // group activities by stage
                 $.each(stageLabels, function (index, label) {
-                    stages.push(new PlanStage(label, activities));
+                    stages.push(new PlanStage(label, activities, label === self.currentProjectStage));
                 });
 
                 return stages;
@@ -253,7 +271,7 @@
             self.progressOptions = ['planned','started','finished','deferred'];
             self.newActivity = function () {
                 var context = '',
-                    projectId = "${project?.projectId}",
+                    projectId = project.projectId,
                     siteId = "${site?.siteId}",
                     returnTo = '?returnTo=' + document.location.href;
                 if (projectId) {
@@ -282,7 +300,8 @@
             };
             self.getGanttData = function () {
                 var values = [],
-                    previousStage = '';
+                    previousStage = '',
+                    hasAnyValidPlannedEndDate = false;
                 $.each(self.stages, function (i, stage) {
                     $.each(stage.activities, function (j, act) {
                         var statusClass = 'gantt-' + act.progress(),
@@ -301,11 +320,13 @@
                                 }]
                             });
                         }
+                        hasAnyValidPlannedEndDate |= !isNaN(endDate);
                         previousStage = act.projectStage;
                     });
                 });
-                return values;
-            }
+                // don't return any data if there is no valid end date because the lib will throw an error
+                return hasAnyValidPlannedEndDate ? values : [];
+            };
             self.outputTargets = ko.observableArray([]);
             self.addOutputTarget = function(target) {
                 self.outputTargets.push(outputTarget(target));
@@ -326,7 +347,7 @@
 
                         $.each(self.activityScores[activity.type], function(j, score) {
                             if (score.aggregationType === 'SUM' || score.aggregationType === 'AVERAGE') {
-                                self.addOutputTarget({units: score.units, outputLabel:score.outputName, scoreName:score.name, scoreLabel:score.label, value:0, units:score.units});
+                                self.addOutputTarget({units: score.units, outputLabel:score.outputName, scoreName:score.name, scoreLabel:score.label, value:0});
                             }
                         });
                     }
@@ -342,7 +363,7 @@
                     });
 
                 });
-            }
+            };
             self.loadOutputTargets();
 
             self.saveOutputTargets = function() {
@@ -373,7 +394,7 @@
 
         }
 
-        var planViewModel = new PlanViewModel(${activities ?: []}, ${project.outputTargets ?: '{}'});
+        var planViewModel = new PlanViewModel(${activities ?: []}, ${project.outputTargets ?: '{}'},${project});
         ko.applyBindings(planViewModel, document.getElementById('planContainer'));
 
         var ganttData = planViewModel.getGanttData();

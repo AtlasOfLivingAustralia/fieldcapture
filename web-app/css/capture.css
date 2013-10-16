@@ -642,3 +642,11 @@ a.btn-primary {
     padding: 10px;
     margin-bottom: 10px;
 }
+
+.stage-display span:first-child {
+    font-weight: bold;
+}
+
+tbody.inactiveStage {
+    background-color: ghostwhite;
+}
