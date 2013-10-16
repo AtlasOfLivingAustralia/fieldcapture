@@ -6,40 +6,40 @@
     <div class="fuelux">
         <div class="row-fluid wizard">
             <ul class="steps">
-                <li data-bind="css:{active:step() === 1,complete:step()>1},click:backtrack" data-target="#step1"><span class="badge" data-bind="css:{'badge-info':step()===1,'badge-success':step()>1}">1</span>Plan project<span class="chevron"></span></li>
-                <li data-bind="css:{active:step() === 2,complete:step()>2},click:backtrack" data-target="#step2"><span class="badge" data-bind="css:{'badge-info':step()===2,'badge-success':step()>2}">2</span>Set targets<span class="chevron"></span></li>
-                <li data-bind="css:{active:step() === 3,complete:step()>3},click:backtrack" data-target="#step3"><span class="badge" data-bind="css:{'badge-info':step()===3,'badge-success':step()>3}">3</span>Approve plan<span class="chevron"></span></li>
-                <li data-bind="css:{active:step() === 4,complete:step()>4},click:backtrack" data-target="#step4"><span class="badge" data-bind="css:{'badge-info':step()===4,'badge-success':step()>4}">4</span>Enter activity information<span class="chevron"></span></li>
-                <li data-bind="css:{active:step() === 5,complete:step()>5},click:backtrack" data-target="#step5"><span class="badge" data-bind="css:{'badge-info':step()===4,'badge-success':step()>4}">4</span>Report stage<span class="chevron"></span></li>
+                <li data-bind="css:{active:currentStep() === 1,complete:currentStep()>1},click:backtrack" data-target="#step1"><span class="badge" data-bind="css:{'badge-info':currentStep()===1,'badge-success':currentStep()>1}">1</span>Plan project<span class="chevron"></span></li>
+                <li data-bind="css:{active:currentStep() === 2,complete:currentStep()>2},click:backtrack" data-target="#step2"><span class="badge" data-bind="css:{'badge-info':currentStep()===2,'badge-success':currentStep()>2}">2</span>Set targets<span class="chevron"></span></li>
+                <li data-bind="css:{active:currentStep() === 3,complete:currentStep()>3},click:backtrack" data-target="#step3"><span class="badge" data-bind="css:{'badge-info':currentStep()===3,'badge-success':currentStep()>3}">3</span>Approve plan<span class="chevron"></span></li>
+                <li data-bind="css:{active:currentStep() === 4,complete:currentStep()>4},click:backtrack" data-target="#step4"><span class="badge" data-bind="css:{'badge-info':currentStep()===4,'badge-success':currentStep()>4}">4</span>Enter activity information<span class="chevron"></span></li>
+                <li data-bind="css:{active:currentStep() === 5,complete:currentStep()>5},click:backtrack" data-target="#step5"><span class="badge" data-bind="css:{'badge-info':currentStep()===4,'badge-success':currentStep()>4}">4</span>Report stage<span class="chevron"></span></li>
             </ul>
         </div>
         <div class="step-content">
-            <div class="step-pane" id="step1" data-bind="css:{active:step()===1}">
+            <div class="step-pane" id="step1" data-bind="css:{active:currentStep()===1}">
                 Create your plan by adding activites.
                 <button data-bind="click:newActivity" type="button" class="btn btn-link">Plan new activity</button>
-                <button data-bind="click:nextStep" type="button" class="btn btn-small pull-right">I have finished planning activities <i class="icon-forward"></i></button>
+                <button data-bind="click:nextStep" type="button" class="btn btn-small btn-success pull-right">I have finished planning activities <i class="icon-forward icon-white"></i></button>
             </div>
-            <div class="step-pane" id="step2" data-bind="css:{active:step()===2}">
+            <div class="step-pane" id="step2" data-bind="css:{active:currentStep()===2}">
                 Set project-wide targets based on your planned activites.
-                <button data-bind="click:saveOutputTargets" type="button" class="btn btn-small pull-right">Submit plan for approval <i class="icon-forward"></i></button>
+                <button data-bind="click:saveOutputTargets" type="button" class="btn btn-small btn-success pull-right">Submit plan for approval <i class="icon-forward icon-white"></i></button>
             </div>
-            <div class="step-pane" id="step3" data-bind="css:{active:step()===3}">
+            <div class="step-pane" id="step3" data-bind="css:{active:currentStep()===3}">
                 Waiting for approval by your case manager.
-                <button data-bind="click:nextStep" type="button" class="btn btn-small pull-right">Approve plan <i class="icon-forward"></i></button>
+                <button data-bind="click:nextStep" type="button" class="btn btn-small btn-success pull-right">Approve plan <i class="icon-forward icon-white"></i></button>
             </div>
-            <div class="step-pane row-fluid" id="step4" data-bind="css:{active:step()===4}">
+            <div class="step-pane row-fluid" id="step4" data-bind="css:{active:currentStep()===4}">
                 <span class="span8">Click <i class="icon-edit no-pointer"></i> edit button to enter activity data.
                 Set the status for each activity as it is started and finished. If an activity cannot be finished
                 mark it as 'deferred'.</span>
                 <span class="span4"><button data-bind="click:nextStep" type="button"
-                    class="btn btn-small pull-right">Submit <span data-bind="text:currentProjectStage"></span> for approval <i class="icon-forward"></i></button></span>
+                    class="btn btn-small btn-success pull-right">Submit <b><span data-bind="text:currentProjectStage"></span></b> for approval <i class="icon-forward icon-white"></i></button></span>
             </div>
-            <div class="step-pane" id="step5" data-bind="css:{active:step()===5}">
-                Waiting for approval of stage x.
+            <div class="step-pane" id="step5" data-bind="css:{active:currentStep()===5}">
+                Waiting for approval of <b><span data-bind="text:currentProjectStage"></span></b>.
             </div>
         </div>
     </div>
-    <div id="activityContainer" data-bind="visible: step() != 2">
+    <div id="activityContainer" data-bind="visible: currentStep() != 2">
         <h4>Planned Activities</h4>
         <p data-bind="visible: stages.length == 0">
             This project currently has no activities planned.
@@ -102,9 +102,9 @@
             <!-- /ko -->
         </table>
     </div>
-    <div id="gantt-container" data-bind="visible: step() != 2"></div>
+    <div id="gantt-container" data-bind="visible: currentStep() != 2"></div>
 
-    <div id="outputTargetsContainer" data-bind="visible: step() >= 2">
+    <div id="outputTargetsContainer" data-bind="visible: currentStep() >= 2">
         <h4>Output Targets</h4>
         <table id="outputTargets" class="table table-condensed">
             <thead><tr><th>Output Type</th><th>Output</th><th>Target</th></tr></thead>
@@ -113,7 +113,7 @@
                 <td data-bind="text:outputLabel"></td>
                 <td data-bind="text:scoreLabel"></td>
                 <td>
-                    <input type="text" class="input-small" data-bind="visible:$root.step() == 2,value:target"/><span data-bind="visible:$root.step()>2,text:target"></span> <span data-bind="text:units"></span>
+                    <input type="text" class="input-small" data-bind="visible:$root.currentStep() == 2,value:target"/><span data-bind="visible:$root.currentStep()>2,text:target"></span> <span data-bind="text:units"></span>
                 </td>
             </tr>
 
@@ -178,7 +178,6 @@
                         self.isSaving(false);
                     }
                 });
-
             });
             this.editActivity = function () {
                 document.location.href = fcConfig.activityEditUrl + "/" + self.activityId +
@@ -240,7 +239,7 @@
 
         function PlanViewModel(activities, outputTargets, project) {
             var self = this;
-            self.currentProjectStage = project.currentStage === undefined ? 'Stage 1' : project.currentStage;
+            this.currentProjectStage = project.currentStage === undefined ? 'Stage 1' : project.currentStage;
             this.loadActivities = function (activities) {
                 var stages = [],
                     stageLabels = [];
@@ -288,17 +287,37 @@
                     document.location.href = fcConfig.siteViewUrl + '/' + siteId;
                 }
             };
-            self.step = ko.observable(1);
+            self.currentStep = ko.observable(project.currentStep === undefined ? 1 : project.currentStep);
             self.nextStep = function () {
-                self.step(self.step() + 1);
+                self.currentStep(self.currentStep() + 1);
             };
             self.backtrack = function (data, event) {
-                var step = $(event.currentTarget).attr('data-target'),
-                    stepNumber = Number(step.substring(step.length-1));
-                if (stepNumber < self.step()) {
-                    self.step(stepNumber);
+                var currentStep = $(event.currentTarget).attr('data-target'),
+                    stepNumber = Number(currentStep.substring(currentStep.length-1));
+                if (stepNumber < self.currentStep()) {
+                    self.currentStep(stepNumber);
                 }
             };
+            // save step updates as they happen
+            this.currentStep.subscribe(function (newValue) {
+                var payload = {currentStep: newValue, projectId: project.projectId};
+                // save new status
+                $.ajax({
+                    url: "${createLink(action:'ajaxUpdate')}/" + project.projectId,
+                    type: 'POST',
+                    data: JSON.stringify(payload),
+                    contentType: 'application/json',
+                    success: function (data) {
+                        if (data.error) {
+                            alert(data.detail + ' \n' + data.error);
+                        }
+                    },
+                    error: function (data) {
+                        alert('An unhandled error occurred: ' + data.status);
+                    }
+                });
+
+            });
             self.getGanttData = function () {
                 var values = [],
                     previousStage = '',
