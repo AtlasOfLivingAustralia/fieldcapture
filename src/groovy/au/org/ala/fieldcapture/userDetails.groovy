@@ -28,6 +28,14 @@ class UserDetails {
     String userName
     String userId
 
+    public UserDetails(String displayName, String userName, String userId) {
+        this.displayName = displayName
+        this.userName = userName
+        this.userId = userId
+    }
+
+    public UserDetails() {}
+
     @Override
     public String toString() {
         "[ userId: ${userId}, userName: ${userName}, displayName: ${displayName} ]"

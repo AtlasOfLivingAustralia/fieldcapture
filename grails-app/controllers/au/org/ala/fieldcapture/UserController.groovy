@@ -19,10 +19,31 @@ class UserController {
             [error: "Logged in user not found (user = null)"]
         } else {
             log.debug('Viewing my dashboard :  ' + user)
-            def recentEdits = userService.getRecentEditsForUserId(user.userId)
-            def memberProjects = userService.getProjectsForUserId(user.userId)
-            def starredProjects = userService.getStarredProjectsForUserId(user.userId)
-            [user: user, recentEdits: recentEdits, memberProjects: memberProjects, starredProjects: starredProjects]
+            assmebleUserData(user)
+        }
+    }
+
+    private assmebleUserData(user) {
+        def recentEdits = userService.getRecentEditsForUserId(user.userId)
+        def memberProjects = userService.getProjectsForUserId(user.userId)
+        def starredProjects = userService.getStarredProjectsForUserId(user.userId)
+        [user: user, recentEdits: recentEdits, memberProjects: memberProjects, starredProjects: starredProjects]
+    }
+
+    @PreAuthorise(accessLevel = 'admin', redirectController = "home", projectIdParam = "projectId")
+    def show(String id) {
+        if (id) {
+            def user = userService.getUserForUserId(id)
+
+            if (user) {
+                render view: "index", model: assmebleUserData(user)
+            } else {
+                flash.message = "No user found for id: ${id}"
+                redirect(controller: 'home')
+            }
+        } else {
+            flash.message = "No user id specified"
+            forward(controller: 'home')
         }
     }
 

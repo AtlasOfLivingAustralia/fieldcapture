@@ -11,7 +11,7 @@ class UserService {
         auditBaseUrl = grailsApplication.config.ecodata.baseUrl + 'audit'
     }
 
-    UserDetails getUserForUserId(String userId) {
+    au.org.ala.web.UserDetails getUserForUserId(String userId) {
         Map<String, au.org.ala.web.UserDetails> um = authService.getAllUserNameMap()
         au.org.ala.web.UserDetails ud = null;
 
@@ -23,7 +23,7 @@ class UserService {
     }
 
     def getCurrentUserDisplayName() {
-        getUser()?.userDisplayName?:"" //?:"mark.woolston@csiro.au"
+        getUser()?.displayName?:"" //?:"mark.woolston@csiro.au"
     }
 
     def getCurrentUserId() {
@@ -32,7 +32,13 @@ class UserService {
 
     def getUser() {
         def u = authService.userDetails()
-        (u?.userId) ? u : null
+        def user
+
+        if (u?.userId) {
+            user = new UserDetails(u.userDisplayName, u.email, u.userId)
+        }
+
+        return user
     }
 
     def userInRole(role) {

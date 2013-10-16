@@ -13,7 +13,9 @@ class UrlMappings {
 
 		"/"(controller: 'home', action: 'index')
 		"/about"(controller: 'home', action: 'about')
-    "/myProfile"(controller: 'home', action: 'myProfile')
+        "/myProfile"(controller: 'home', action: 'myProfile')
+        "/user/index"(controller: "user", action: "index")
+        "/user/${id}"(controller: "user", action: "show")
 		"500"(view:'/error')
 	}
 }
