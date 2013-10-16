@@ -79,7 +79,7 @@
                     </select>
                 </div>
                 <div class="span4">
-                    <fc:textArea data-bind="value: description" id="description" label="Description" class="span12" rows="3" cols="50"/>
+                    <fc:textArea data-bind="value: description" id="description" label="Description" class="span12" rows="2" cols="50"/>
                 </div>
 
                 %{--<select data-bind="value: type, options: availableTypes, optionsText: 'name'" id="type"></select>--}%

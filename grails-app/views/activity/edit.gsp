@@ -58,15 +58,18 @@
         <div class="row-fluid">
             <div class="${mapFeatures.toString() != '{}' ? 'span9' : 'span12'}">
                 <!-- Common activity fields -->
+
                 <div class="row-fluid">
                     <div class="span6">
-                        <fc:textArea data-bind="value: description" id="description" label="Description" class="span12" rows="3" />
+                        <label for="purpose">Major theme</label>
+                        <select data-bind="value:mainTheme, options:transients.themes, optionsCaption:'Choose..'" class="input-xlarge">
+                        </select>
                     </div>
                     <div class="span6">
-                        <fc:textArea data-bind="value: notes" id="notes" label="Notes" class="span12" rows="3" />
+                        <fc:textArea data-bind="value: description" id="description" label="Description" class="span12" rows="2" />
                     </div>
-                </div>
 
+                </div>
                 <div class="row-fluid">
                     <div class="span6">
                         <label for="startDate">Activity start date
@@ -87,10 +90,7 @@
                 </div>
 
                 <div class="row-fluid">
-                    <div class="span6">
-                        <label for="purpose">Purpose of event</label>
-                        <input data-bind="value: eventPurpose" id="purpose" type="text" class="span12"/>
-                    </div>
+
                     <div class="span6">
                         <label for="projectStage">Project stage
                         <fc:iconHelp title="Project stage" printable="${printView}">If the project is taking a staged approach to implementation, this identifies which project stage the activity in planned for.</fc:iconHelp>
@@ -102,14 +102,6 @@
                             </g:each>
                         </select>
                     </div>
-                </div>
-
-                <div class="row-fluid">
-                    <div class="span6">
-                        <label for="purpose">Major theme</label>
-                        <select data-bind="value:mainTheme, options:transients.themes, optionsCaption:'Choose..'" class="input-xlarge">
-                        </select>
-                    </div>
                     <div class="span6">
                         <label for="projectStage">Activity progress
                         <fc:iconHelp title="Activity progress" printable="${printView}">Planned means no work has yet been done. Started means some work has been done. Done means no more work remains for this activity.</fc:iconHelp>
@@ -117,7 +109,10 @@
                         <select data-bind="value:progress, options:transients.activityProgressValues" class="input-xlarge">
                         </select>
                     </div>
+
                 </div>
+
+
             </div>
             <g:if test="${mapFeatures.toString() != '{}'}">
                 <div class="span3">
