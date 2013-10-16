@@ -23,7 +23,7 @@ class ProjectController {
                 user.metaClass.isEditor = true
                 user.metaClass.userNamesList = authService.getAllUserNameList()
             } else if (user && projectService.canUserEditProject(user.userId, id)) {
-                user["isEditor"] = true // use this for KO to allow editing of activities, etc ??
+                //user["isEditor"] = true // use this for KO to allow editing of activities, etc ??
                 user.metaClass.isEditor = true // use this for KO to allow editing of activities, etc ??
             }
             //log.debug activityService.activitiesForProject(id)
