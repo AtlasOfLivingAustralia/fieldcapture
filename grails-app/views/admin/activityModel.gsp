@@ -66,7 +66,7 @@
 
 <script id="viewOutputTmpl" type="text/html">
     <div>Template: <span data-bind="text:template"></span></div>
-    <div>Score names: <ul data-bind="foreach:scores">
+    <div>Scores: <ul data-bind="foreach:scores">
         <li><span data-bind="text:label"></span>, <span data-bind="text:aggregationType"></span></li>
     </ul></div>
     <button data-bind="click:$root.removeOutput" type="button" class="btn btn-mini pull-right">Remove</button>
@@ -80,6 +80,7 @@
         <li>
             <div style="text-align:left;">
             Name: <input type="text" data-bind="value:name"/>
+            <span class="pull-right"><i data-bind="click:$parent.removeScore" class="icon-remove"></i></span>
             </div>
             <div style="text-align:left;">
             Label: <input type="text" data-bind="value:label"/>
@@ -174,24 +175,6 @@
             this.scores = ko.observableArray($.map(out.scores || [], function (obj,i) {
                 return new ScoreModel(obj);
             }));
-            this.scoreNames = ko.observableArray(out.scoreNames);
-
-            // TODO - this is a temporary measure to convert score names into scores
-            // Should be removed (along with the score names) when the conversion is complete.
-            if (out.scoreNames) {
-                $.each(out.scoreNames, function(i, name) {
-                    var matchedScore = null;
-                    $.each(self.scores(), function(j, score) {
-                        if (score.name === name) {
-                            matchedScore = score;
-                            return false;
-                        }
-                    });
-                    if (!matchedScore) {
-                        self.scores.push(new ScoreModel({name:name, units:'', label:name, aggregationType:'SET'}))
-                    }
-                });
-            }
 
             this.expanded = ko.observable(false);
             this.toggle = function (data, event) {
