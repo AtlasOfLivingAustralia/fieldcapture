@@ -73,7 +73,6 @@
     <ul id="projectTabs" class="nav nav-tabs big-tabs">
         <li class="active"><a href="#overview" id="overview-tab" data-toggle="tab">Overview</a></li>
         <li><a href="#plan" id="plan-tab" data-toggle="tab">Plans & Reports</a></li>
-        <li><a href="#activity" id="activity-tab" data-toggle="tab">Activities</a></li>
         <li><a href="#site" id="site-tab" data-toggle="tab">Sites</a></li>
         <li><a href="#dashboard" id="dashboard-tab" data-toggle="tab">Dashboard</a></li>
         <g:if test="${user?.isAdmin}"><li><a href="#admin" id="admin-tab" data-toggle="tab">Admin</a></li></g:if>
@@ -137,12 +136,6 @@
         <div class="tab-pane" id="plan">
             <!-- PLANS -->
             <g:render template="/shared/plan"
-                      model="[activities:activities ?: [], sites:project.sites ?: [], showSites:true]"/>
-        </div>
-
-        <div class="tab-pane" id="activity">
-            <!-- ACTIVITIES -->
-            <g:render template="/shared/activitiesList"
                       model="[activities:activities ?: [], sites:project.sites ?: [], showSites:true]"/>
         </div>
 
@@ -518,7 +511,7 @@
         */
         function toggleStarred(isProjectStarredByUser) {
             var basUrl = fcConfig.starProjectUrl;
-            var query = "?userId=${user?.userId}&projectId=${project?.projectId}"
+            var query = "?userId=${user?.userId}&projectId=${project?.projectId}";
             if (isProjectStarredByUser) {
                 // remove star
                 $.getJSON(basUrl + "/remove" + query, function(data) {
