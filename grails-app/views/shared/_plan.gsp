@@ -36,8 +36,14 @@
                 <span class="span8">Click <i class="icon-edit no-pointer"></i> edit button to enter activity data.
                 Set the status for each activity as it is started and finished. If an activity cannot be finished
                 mark it as 'deferred'.</span>
-                <span class="span4"><button data-bind="click:nextStep" type="button"
-                    class="btn btn-small btn-success pull-right">Submit <b><span data-bind="text:currentProjectStage"></span></b> for approval <i class="icon-forward icon-white"></i></button></span>
+                <span class="span4">
+                    <button data-bind="click:nextStep,enable:currentStageReadyForApproval,
+                      attr:{title:currentStageReadyForApproval() ? '' :
+                      'All activities must be marked as finished or deferred before a stage can be submitted.'}"
+                      type="button" class="btn btn-small btn-success pull-right">Submit
+                      <b><span data-bind="text:currentProjectStage"></span></b>
+                      for approval <i class="icon-forward icon-white"></i></button>
+                </span>
             </div>
             <div class="step-pane" id="step6" data-bind="css:{active:currentStep()===6}">
                 Waiting for approval of <b><span data-bind="text:currentProjectStage"></span></b>.
@@ -273,6 +279,12 @@
                 return stages;
             };
             self.stages = self.loadActivities(activities);
+            self.currentStageReadyForApproval = ko.computed(function () {
+                var currPlanStage = $.grep(self.stages, function(stage) {
+                    return stage.label === self.currentProjectStage;
+                });
+                return currPlanStage.length > 0 ? currPlanStage[0].readyForApproval() : false;
+            });
             self.progressOptions = ['planned','started','finished','deferred'];
             self.newActivity = function () {
                 var context = '',
