@@ -375,16 +375,29 @@
                 self.nextStep();
             };
 
+            self.hasOutputTarget = function(score) {
+                var hasTarget = false;
+                $.each(self.outputTargets(), function(i, target) {
+                    if (score.outputName === target.outputLabel && score.name === target.scoreName) {
+                        hasTarget = true;
+                        return false;
+                    }
+                });
+                return hasTarget;
+            }
+
             self.loadOutputTargets = function() {
-                var types = {};
+                var activityTypes = {};
                 $.each(activities, function(i, activity) {
 
-                    if (!types[activity.type] && self.activityScores[activity.type]) {
-                        types[activity.type] = true;
+                    if (!activityTypes[activity.type] && self.activityScores[activity.type]) {
+                        activityTypes[activity.type] = true;
 
                         $.each(self.activityScores[activity.type], function(j, score) {
-                            if (score.aggregationType === 'SUM' || score.aggregationType === 'AVERAGE') {
-                                self.addOutputTarget({units: score.units, outputLabel:score.outputName, scoreName:score.name, scoreLabel:score.label, value:0});
+                            if (!self.hasOutputTarget(score)) {
+                                if (score.aggregationType === 'SUM' || score.aggregationType === 'AVERAGE') {
+                                    self.addOutputTarget({units: score.units, outputLabel:score.outputName, scoreName:score.name, scoreLabel:score.label, value:0});
+                                }
                             }
                         });
                     }
