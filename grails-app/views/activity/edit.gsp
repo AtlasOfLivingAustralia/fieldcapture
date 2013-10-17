@@ -61,8 +61,8 @@
 
                 <div class="row-fluid">
                     <div class="span6">
-                        <label for="purpose">Major theme</label>
-                        <select data-bind="value:mainTheme, options:transients.themes, optionsCaption:'Choose..'" class="input-xlarge">
+                        <label for="theme">Major theme</label>
+                        <select id="theme" data-bind="value:mainTheme, options:transients.themes, optionsCaption:'Choose..'" class="input-xlarge">
                         </select>
                     </div>
                     <div class="span6">
