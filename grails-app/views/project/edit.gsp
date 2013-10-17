@@ -100,13 +100,6 @@
                 <span class="add-on open-datepicker"><i class="icon-th"></i></span>
             </div>
         </div>
-        <div class="control-group span4">
-            <label class="control-label" for="currentStage">Current stage of project</label>
-            <div class="controls">
-                <!-- later this will be a dropdown to pick from activity stages -->
-                <g:textField class="" name="currentStage" data-bind="value:currentStage"/>
-            </div>
-        </div>
     </div>
 
     <!-- ko stopBinding: true -->
@@ -158,6 +151,9 @@
             <pre data-bind="text:ko.toJSON($root,null,2)"></pre>
             <h4>Project</h4>
             <pre>${project.encodeAsHTML()}</pre>
+            <label class="control-label" for="currentStage">Current stage of project</label>
+            <!-- later this will be a dropdown to pick from activity stages -->
+            <g:textField class="" name="currentStage" data-bind="value:currentStage"/>
         </div>
     </div>
 
