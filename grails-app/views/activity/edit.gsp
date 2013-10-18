@@ -159,7 +159,7 @@
         <div class="output-block" id="ko${blockId}">
             <h3 data-bind="css:{modified:dirtyFlag.isDirty},attr:{title:'Has been modified'}">${outputName}<i class="icon-asterisk modified-icon" data-bind="visible:dirtyFlag.isDirty" title="Has been modified" style="display: none;"></i></h3>
             <!-- add the dynamic components -->
-            <md:modelView model="${model}" site="${site}" edit="true"/>
+            <md:modelView model="${model}" site="${site}" edit="true" printable="${printView}" />
     <r:script>
         $(function(){
 
@@ -241,10 +241,12 @@
         </div>
     </g:each>
 
-    <div class="form-actions">
-        <button type="button" id="save" class="btn btn-primary">Save changes</button>
-        <button type="button" id="cancel" class="btn">Cancel</button>
-    </div>
+    <g:if test="${!printView}">
+        <div class="form-actions">
+            <button type="button" id="save" class="btn btn-primary">Save changes</button>
+            <button type="button" id="cancel" class="btn">Cancel</button>
+        </div>
+    </g:if>
 
 </div>
 

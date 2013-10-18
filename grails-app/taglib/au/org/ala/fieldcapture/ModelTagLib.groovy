@@ -60,161 +60,105 @@ class ModelTagLib {
     }
 
     /**
-     * Generates an element to display or edit a value.
+     * Generates an element for display, depending on context. Currently
      * @parma attrs the attributes passed to the tag library.  Used to access site id.
      * @param model of the data element
      * @param context the dot notation path to the data
      * @param editable if the html element is an input
-     * @param at any additional html attributes to output as a AttributeMap
+     * @param elementAttributes any additional html attributes to output as a AttributeMap
      * @param databindAttrs additional clauses to add to the data binding
      * @return the markup
      */
-    def dataTag(attrs, model, context, editable, at, databindAttrs, labelAttributes) {
-        def result = ""
-        if (!databindAttrs) { databindAttrs = new Databindings()}
+    def dataTag(attrs, model, context, editable, elementAttributes, databindAttrs, labelAttributes) {
+        ModelWidgetRenderer renderer
+
+        def validate = validationAttribute(model, editable)
+
+
+        if (attrs.printable) {
+            renderer = new PrintModelWidgetRenderer()
+        } else {
+            def toEdit = editable && !model.computed && !model.noEdit
+            if (toEdit) {
+                renderer = new EditModelWidgetRenderer()
+            } else {
+                renderer = new ViewModelWidgetRenderer()
+            }
+        }
+
+        def renderContext = new WidgetRenderContext(model, context, validate, databindAttrs, elementAttributes, labelAttributes, g, attrs)
+
         if (model.visibility) {
-            databindAttrs.add "visible", evalDependency(model.visibility)
+            renderContext.databindAttrs.add "visible", evalDependency(model.visibility)
         }
         if (model.enabled) {
-            databindAttrs.add "enable", evalDependency(model.enabled)
+            renderContext.databindAttrs.add "enable", evalDependency(model.enabled)
         }
-        if (!at) { at = new AttributeMap()}
-        if (!labelAttributes) { labelAttributes = new AttributeMap()}
-        def validate = validationAttribute(model, editable)
-        def toEdit = editable && !model.computed && !model.noEdit
-        def matrix = model.type + '-' + (toEdit ? 'edit' : 'view')
-        def source = (context ? context + '.' : '') + model.source
-        switch (matrix) {
-            case 'literal-edit':
-            case 'literal-view':
-                result += "<span${at.toString()}>${model.source}</span>" // don't include context in literals
-                break
-            case 'text-view':
-            case 'number-view':
-                databindAttrs.add 'text',source
-                result += "<span${at.toString()} data-bind='${databindAttrs.toString()}'></span>"
-                break
-            case 'text-edit':
-                at.addClass getInputSize(model.width)
-                databindAttrs.add 'value', source
-                result += "<input${at.toString()} data-bind='${databindAttrs.toString()}'${validate} type='text' class='input-small'/>"
-                break
-            case 'number-edit':
-                at.addClass getInputSize(model.width)
-                at.add 'style','text-align:center'
-                databindAttrs.add 'value', source
-                result += "<input${at.toString()} data-bind='${databindAttrs.toString()}'${validate} type='text' class='input-mini'/>"
-                break
-            case 'boolean-view':
-                databindAttrs.add 'visible', source
-                result += "<i data-bind='${databindAttrs.toString()}' class='icon-ok'></i>"
-                break
-            case 'boolean-edit':
-                databindAttrs.add 'checked', source
-                result += "<input${at.toString()} name='${source}' data-bind='${databindAttrs.toString()}'${validate} type='checkbox' class='checkbox'/>"
-                break
-            case 'textarea-view':
-                databindAttrs.add 'text', source
-                result += "<span${at.toString()} data-bind='${databindAttrs.toString()}'></span>"
-                break
-            case 'textarea-edit':
-                databindAttrs.add 'value', source
-                result += "<textarea${at.toString()} data-bind='${databindAttrs.toString()}'></textarea>"
-                break
-            case 'simpleDate-view':
-            case 'simpleDate-edit':
-                databindAttrs.add 'datepicker', source + '.date'
-                result += "<input${at.toString()} data-bind='${databindAttrs.toString()}'${validate} type='text' class='input-small'/>"
-                break
-            case 'selectOne-view':
-            case 'selectMany-view':
-                databindAttrs.add 'text',source
-                result += "<span${at.toString()} data-bind='${databindAttrs.toString()}'></span>"
-                break
-            case 'selectOne-edit':
-                databindAttrs.add 'value', source
-                // Select one or many view types require that the data model has defined a set of valid options
-                // to select from.
-                databindAttrs.add 'options', 'transients.'+model.source+'Constraints'
-                databindAttrs.add 'optionsCaption', '"Please select"'
 
-                result += "<select${at.toString()} data-bind='${databindAttrs.toString()}'${validate}></select>"
+        switch (model.type) {
+            case 'literal':
+                renderer.renderLiteral(renderContext)
                 break
-            case 'selectMany-edit':
-                labelAttributes.addClass 'checkbox-list-label '
-                def constraints = 'transients.'+model.source+'Constraints'
-                databindAttrs.add 'value', '\$data'
-                databindAttrs.add 'checked', "\$root.${source}"
-                result += """
-                    <ul class="checkbox-list" data-bind="foreach: ${constraints}">
-                        <li>
-                            <input type="checkbox" name="${source}" data-bind="${databindAttrs.toString()}"${validate}/> <span data-bind="text:\$data"></span>
-                        </li>
-                    </ul>
-                """
+            case 'text':
+                renderer.renderText(renderContext)
+                break;
+            case 'number':
+                renderer.renderNumber(renderContext)
                 break
-            case 'image-view':
-                databindAttrs.add "attr",  '{src: '+source+'.thumbnail_url}'
-                result += "<img data-bind='${databindAttrs.toString()}'></img>"
+            case 'boolean':
+                renderer.renderBoolean(renderContext)
                 break
-            case 'image-edit':
-                addDeferredTemplate('/output/fileUploadTemplate')
-                databindAttrs.add 'fileUpload', source
-                result += g.render(template: '/output/imageDataTypeTemplate', model: [databindAttrs:databindAttrs.toString(), source:source])
+            case 'textarea':
+                renderer.renderTextArea(renderContext)
                 break
-            case 'embeddedImage-edit':
-                addDeferredTemplate('/output/fileUploadTemplate')
-                databindAttrs.add 'fileUpload', source
-                result += g.render(template: '/output/imageDataTypeTemplate', model: [databindAttrs:databindAttrs.toString(), source:source])
+            case 'simpleDate':
+                renderer.renderSimpleDate(renderContext)
                 break
-            case 'embeddedImage-view':
-                databindAttrs.add "attr",  '{src: '+source+'().thumbnail_url}'
-                result += "<img data-bind='${databindAttrs.toString()}'></img>"
+            case 'selectOne':
+                renderer.renderSelectOne(renderContext)
+                break;
+            case 'selectMany':
+                renderer.renderSelectMany(renderContext)
                 break
-            case 'autocomplete-edit':
-                def newAttrs = new Databindings()
-                def link = g.createLink(controller: 'search', action:'species')
-                newAttrs.add "hasfocus", "transients.focused"
-                newAttrs.add "autocomplete", "{url:'${link}', render: renderItem, listId: list, result:speciesSelected}"
-                newAttrs.add "visible", "transients.editing()"
-                result += g.render(template: '/output/speciesTemplate', model:[source:source, databindAttrs: newAttrs.toString()])
+            case 'image':
+                renderer.renderImage(renderContext)
                 break
-            case 'autocomplete-view':
-                databindAttrs.add 'text', 'name'
-                result += """<span data-bind="with: ${source}"><span${at.toString()} data-bind='${databindAttrs.toString()}'></span>
-                            <a href="#" data-bind="popover: {title: name, content: transients.speciesInformation}"><i class="icon-info-sign"></i></a>
-                            </span>"""
+            case 'embeddedImage':
+                renderer.renderEmbeddedImage(renderContext)
                 break
-            case 'photopoint-view':
-            case 'photopoint-edit':
-                result +="""
-                <div><b><span data-bind="text:name"/></b></div>
-                <div>Lat:<span data-bind="text:lat"/></div>
-                <div>Lon:<span data-bind="text:lon"/></div>
-                <div>Bearing:<span data-bind="text:bearing"/></div>
-                """
+            case 'autocomplete':
+                renderer.renderAutocomplete(renderContext)
                 break
-            case 'link-view':
-            case 'link-edit':
-                result+="<a href=\""+g.createLink(specialProperties(attrs, model.properties))+"\">${model.source}</a>"
+            case 'photopoint':
+                renderer.renderPhotoPoint(renderContext)
                 break
-            case 'date-view':
-                result += "<span data-bind=\"text:${source}.formattedDate\"></span>"
+            case 'link':
+                renderer.renderLink(renderContext)
                 break
-            case 'date-edit':
-                result +="<div class=\"input-append\"><input data-bind=\"datepicker:${source}.date\" type=\"text\" size=\"12\"${validate}/>"
-                result +="<span class=\"add-on open-datepicker\"><i class=\"icon-th\"></i></span></div>"
+            case 'date':
+                renderer.renderDate(renderContext)
                 break
-
+            default:
+                log.warn("Unhandled widget type: ${model.type}")
+                break
         }
+
+        def result = renderContext.writer.toString()
+
+        // make sure to remember any deferred templates
+        renderContext.deferredTemplates?.each {
+            addDeferredTemplate(it)
+        }
+
         if (model.preLabel) {
-            //labelAttributes.addClass 'label preLabel'
-            result = "<span${labelAttributes.toString()}><label>${model.preLabel}</label></span>" + result
+            result = "<span ${labelAttributes.toString()}><label>${model.preLabel}</label></span>" + result
         }
+
         if (model.postLabel) {
             labelAttributes.addClass 'postLabel'
-            result += "<span${labelAttributes.toString()}>${model.postLabel}</span>"
+            result += "<span ${labelAttributes.toString()}>${model.postLabel}</span>"
         }
+
         return result
     }
 

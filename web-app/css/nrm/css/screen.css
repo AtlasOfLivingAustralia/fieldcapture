@@ -2245,3 +2245,17 @@ span.new {
 table select {
     width: auto;
 }
+
+.printed-form-field {
+    border: 1px solid black !important;
+    padding: 5px;
+    width: 100%;
+}
+
+.printed-checkbox {
+    width: 15px;
+    height: 15px;
+    padding: 0px;
+    display: inline-block;
+    border: 2px solid black !important;
+}

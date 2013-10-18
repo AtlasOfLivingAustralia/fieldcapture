@@ -59,7 +59,7 @@
             <thead>
             <tr data-bind="visible: stages.length > 0">
                 <th>Stage</th>
-                <th width="34px"></th>
+                <th width="50px"></th>
                 <th>From</th>
                 <th>To</th>
                 <th>Activity</th>
@@ -84,6 +84,7 @@
                 <!-- /ko -->
                 <td>
                     <i class="icon-edit" title="Edit Activity" data-bind="click:editActivity"></i>
+                    <i class="icon-print" title="Print activity" data-bind="click:printActivity"></i>
                     <i class="icon-remove" title="Delete activity" data-bind="click:del"></i>
                 </td>
                 <td><span data-bind="text:plannedStartDate.formattedDate"></span></td>
