@@ -65,6 +65,16 @@
 
                 }).trigger('change');
 
+                $("#btnReindexAll").click(function(e) {
+                    e.preventDefault();
+                    var url = "${createLink(controller: 'admin', action:'reIndexAll')}";
+                    $.ajax(url).done(function(result) {
+                        document.location.reload();
+                    }).fail(function (result) {
+                                alert(result);
+                            });
+                });
+
             });
 
         </script>
@@ -105,7 +115,13 @@
                         <p><g:uploadForm class="loadProjectData" controller="admin" action="importProjectData"><input id="projectData" type="file" accept="text/csv" name="projectData"/><input type="checkbox" name="importWithErrors">Force import (even with validation errors)</g:uploadForm></p>
                     </td>
                 </tr>
-
+                <tr>
+                    <td><button id="btnReindexAll" class="btn btn-small btn-info" title="Re-index all data">Re-index all</button>
+                    </td>
+                    <td>
+                        Re-indexes all data in the search index.
+                    </td>
+                </tr>
             </tbody>
         </table>
     </body>

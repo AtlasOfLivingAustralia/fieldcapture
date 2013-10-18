@@ -8,7 +8,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest
 //@PreAuthorise(accessLevel = 'admin')
 class AdminController {
 
-    def cacheService, metadataService, authService, projectService, importService
+    def cacheService, metadataService, authService, projectService, importService, adminService
     def beforeInterceptor = [action:this.&auth]
 
     private auth() {
@@ -210,6 +210,10 @@ class AdminController {
                 if (results.error) {
                     render contentType: 'text/json', status:400, text:"""{"error":"${results.error}"}"""
                 }
+                else {
+                    // Make sure the new projects are re-indexed.
+                    adminService.reIndexAll()
+                }
 
                 // The validation results are current returned as a CSV file so that it can easily be sent back to
                 // be corrected at the source.  It's not great usability at the moment.
@@ -221,7 +225,16 @@ class AdminController {
                 pw.flush()
                 return null
             }
+
         }
+
         render contentType: 'text/json', status:400, text:'{"error":"No file supplied"}'
+    }
+
+    /**
+     * Re-index all docs with ElasticSearch
+     */
+    def reIndexAll() {
+        render adminService.reIndexAll()
     }
 }

@@ -38,8 +38,11 @@ class ImportService {
         cacheService.clear(PROJECTS_CACHE_KEY)
 
         String[] csvLine = csvReader.readNext();
+        // Used to detect duplicate grantIds (as it is used as the key)
+        def grantIds = []
         while (csvLine) {
-            def project = validateProjectDetails(findHeaderColumns(headerIndexes, csvLine))
+            def project = validateProjectDetails(findHeaderColumns(headerIndexes, csvLine), grantIds)
+            grantIds << project.grantId
             if (project.errors.size() > 0) {
                 writeErrors(results.validationErrors, project.errors, csvLine)
             }
@@ -75,7 +78,7 @@ class ImportService {
 
     }
 
-    def validateProjectDetails(projectDetails) {
+    def validateProjectDetails(projectDetails, grantIds) {
 
         def project = [:]
         def errors = []
@@ -92,6 +95,15 @@ class ImportService {
         project.grantId = projectDetails['Grant ID']
         project.funding = projectDetails['Original Approved Amount']
         project.organisationName = projectDetails['Grantee Full Name']
+
+
+        if (grantIds.contains(project.grantId)) {
+            errors.add("Duplicate Grant ID detected: '$project.grantId'")
+        }
+
+        if (!project.name) {
+            errors.add("No name supplied for the project.")
+        }
 
         if (projectDetails['Application Location Desc']) {
             def locationData = (projectDetails['Application Location Desc'] =~ locationRegExp)
@@ -139,8 +151,8 @@ class ImportService {
         // Remove the site from the project as it will be saved separately.
         def site = project.remove('site')
 
-        // The grant id or external id should probably be the key instead of the name.
-        def p = findProjectByName(project.name)
+        // The Grant ID is the only best key we can use from the SEWPAC data.
+        def p = findProjectByGrantId(project.grantId)
         if (p) {
             project.projectId = p.projectId
             status.project = 'updated'
@@ -190,10 +202,10 @@ class ImportService {
 
     }
 
-    def findProjectByName(name) {
+    def findProjectByGrantId(grantId) {
         // Cache projects temporarily to avoid this query.
         def allProjects = cacheService.get(PROJECTS_CACHE_KEY) { projectService.list(true) }
-        return allProjects.find{it.name?.equalsIgnoreCase(name)}
+        return allProjects.find{it.grantId?.equalsIgnoreCase(grantId)}
     }
 
     def findProjectSiteByDescription(project, description) {
