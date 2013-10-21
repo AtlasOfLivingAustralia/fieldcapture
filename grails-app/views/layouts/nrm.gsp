@@ -155,6 +155,15 @@
                 $('div.container').addClass('container-fluid').removeClass('container');
             }
         });
+
+        // Set up a timer that will periodically poll the server to keep the session alive
+        var intervalSeconds = 5 * 60;
+
+        setInterval(function() {
+                $.ajax("${createLink(controller: 'ajax', action:'keepSessionAlive')}").done(function(data) {
+            });
+        }, intervalSeconds * 1000);
+
     });
 
 

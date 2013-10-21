@@ -118,4 +118,5 @@ class UserController {
             render status:400, text: 'Required param not provided: email'
         }
     }
+
 }
