@@ -59,7 +59,7 @@
             <thead>
             <tr data-bind="visible: stages.length > 0">
                 <th>Stage</th>
-                <th data-bind="attr:{width:canEditActivity()||canDeleteActivity() ? '32px' : '14px'}"></th>
+                <th data-bind="attr:{width:tweakActionWidth}"></th>
                 <th>From</th>
                 <th>To</th>
                 <th>Activity</th>
@@ -260,7 +260,7 @@
             var self = this;
             this.currentStep = ko.observable(project.currentStep === undefined ? 1 : project.currentStep);
             this.canEditActivity = ko.computed(function () {
-                return self.currentStep() === 5;
+                return self.currentStep() === 5 || self.currentStep() === 1;
             });
             this.canPrintActivity = ko.computed(function () {
                 return true;
@@ -270,6 +270,21 @@
             });
             this.canUpdateStatus = ko.computed(function () {
                 return self.currentStep() === 5;
+            });
+            // this is very much view rather than model but is too complex to bury in the html. It simply
+            // provides a tidier actions column. The offsets of the icons would otherwise leave unbalanced
+            // space on the right of the column.
+            this.tweakActionWidth = ko.computed(function () {
+                var numberOfIcons = 0, width = '0';
+                numberOfIcons += self.canEditActivity() ? 1 :0;
+                numberOfIcons += self.canPrintActivity() ? 1 :0;
+                numberOfIcons += self.canDeleteActivity() ? 1 :0;
+                switch (numberOfIcons) {
+                    case 1: width = '14px'; break;
+                    case 2: width = '32px'; break;
+                    case 3: width = '50px'; break;
+                }
+                return width;
             });
             this.currentDate = ko.observable(); // mechanism for testing behaviour at different dates
             this.currentProjectStage = project.currentStage === undefined ? 'Stage 1' : project.currentStage;
@@ -327,8 +342,11 @@
                 }
             };
             self.editActivity = function (activity) {
+                var url;
                 if (self.canEditActivity()) {
-                    document.location.href = fcConfig.activityEditUrl + "/" + activity.activityId +
+                    // step 1 allows editing activity data; step 5 allows editing output data and some activity data
+                    url = self.currentStep() === 5 ? fcConfig.activityEnterDataUrl : fcConfig.activityEditUrl;
+                    document.location.href = url + "/" + activity.activityId +
                         "?returnTo=" + here;
                 }
             };

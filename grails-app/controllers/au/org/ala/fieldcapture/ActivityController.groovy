@@ -60,7 +60,43 @@ class ActivityController {
         }
     }
 
+    /**
+     * A page that simply edits the activity data.
+     * @param id activity id
+     */
     def edit(String id) {
+        def activity = activityService.get(id)
+        if (activity) {
+            // permissions check
+            if (!projectService.canUserEditProject(userService.getCurrentUserId(), activity.projectId)) {
+                flash.message = "Access denied: User does not have <b>editor</b> permission for projectId ${activity.projectId}"
+                redirect(controller:'project', action:'index', id: activity.projectId)
+            }
+            // pass the activity
+            def model = [activity: activity, returnTo: params.returnTo, projectStages:projectStages()]
+            // the site
+            model.site = model.activity.siteId ? siteService.get(model.activity.siteId, [view:'brief']) : null
+            // the project
+            model.project = model.activity.projectId ? projectService.get(model.activity.projectId) : null
+            model.project?.speciesLists?.each { list ->
+                if (list.purpose == activity.type) {
+                    model.speciesLists.add(list)
+                }
+            }
+            model.activityTypes = metadataService.activityTypesList()
+            model.mapFeatures = model.site ? siteService.getMapFeatures(model.site) : "{}"
+            model.themes = metadataService.getThemesForProject(model.project)
+            model
+        } else {
+            forward(action: 'list', model: [error: 'no such id'])
+        }
+    }
+
+    /**
+     * A page for entering output data for an activity. Limited activity data can also be updated.
+     * @param id activity id
+     */
+    def enterData(String id) {
         def activity = activityService.get(id)
         if (activity) {
             // permissions check

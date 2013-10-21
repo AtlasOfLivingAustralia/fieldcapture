@@ -650,3 +650,15 @@ a.btn-primary {
 tbody.inactiveStage {
     background-color: #f6f6f6;
 }
+
+label.for-readonly {
+    font-weight: bold;
+}
+
+label.for-readonly:after {
+    content: ':';
+}
+
+span.readonly-text {
+    font-size: 1.1em;
+}

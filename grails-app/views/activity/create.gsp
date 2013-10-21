@@ -57,8 +57,8 @@
 
         <bs:form action="update" inline="true">
 
-            <div class="row-fluid control-group">
-                <div class="span4">
+            <div class="row-fluid">
+                <div class="span6">
                     <label for="type">Type of activity</label>
                     <select data-bind="value: type" id="type" data-validation-engine="validate[required]" class="input-xlarge">
                         <g:each in="${activityTypes}" var="t" status="i">
@@ -73,87 +73,37 @@
                         </g:each>
                     </select>
                 </div>
-                <div class="span4">
-                    <label for="purpose">Major theme</label>
-                    <select data-bind="value:mainTheme, options:transients.themes, optionsCaption:'Choose..'" class="input-xlarge">
+                <div class="span6">
+                    <label for="theme">Major theme</label>
+                    <select id="theme" data-bind="value:mainTheme, options:transients.themes, optionsCaption:'Choose..'" class="input-xlarge">
                     </select>
                 </div>
-                <div class="span4">
-                    <fc:textArea data-bind="value: description" id="description" label="Description" class="span12" rows="2" cols="50"/>
-                </div>
-
-                %{--<select data-bind="value: type, options: availableTypes, optionsText: 'name'" id="type"></select>--}%
             </div>
 
-            <div data-bind="visible: progress() === 'planned'">
-
-                <div class="row-fluid">
-                    <div class="span4 control-group">
-                        <label for="plannedStartDate">Planned start date
-                        <fc:iconHelp title="Planned start date">Start date of the time range in which the activity will be undertaken.</fc:iconHelp>
-                        </label>
-                        <div class="input-append">
-                            <input data-bind="datepicker:plannedStartDate.date" name="startDate" id="plannedStartDate" type="text" size="16"
-                                   data-validation-engine="validate[required]" class="input-xlarge"/>
-                            <span class="add-on open-datepicker"><i class="icon-th"></i></span>
-                        </div>
-                    </div>
-                    <div class="span4">
-                        <label for="plannedEndDate">Planned end date
-                        <fc:iconHelp title="Planned end date">End date of the time range in which the activity will be undertaken.</fc:iconHelp>
-                        </label>
-                        <div class="input-append">
-                            <input data-bind="datepicker:plannedEndDate.date" id="plannedEndDate" type="text" size="16"
-                                   data-validation-engine="validate[required,future[startDate]]" class="input-xlarge"/>
-                            <span class="add-on open-datepicker"><i class="icon-th"></i></span>
-                        </div>
-                    </div>
-                    <div class="span4">
-                        <label for="projectStage">Project stage
-                        <fc:iconHelp title="Project stage">If the project is taking a staged approach to implementation, this identifies which project stage the activity in planned for.</fc:iconHelp>
-                        </label>
-                        <select id="projectStage" data-bind="value:projectStage" data-validation-engine="validate[required]">
-                            <option value="">None</option>
-                            <g:each in="${projectStages}">
-                                <option value="${it}">${it}</option>
-                            </g:each>
-                        </select>
-                    </div>
-                </div>
-
-
-            </div>
-
-
-            <div data-bind="visible: progress() === 'started'">
-                <div class="row-fluid">
-                    <h3>Implementation dates</h3>
-                </div>
-                <div class="row-fluid">
-                    <div class="span4 control-group">
-                        <label for="startDate">Start date
-                        <fc:iconHelp title="Start date">Date the activity was started.</fc:iconHelp>
-                        </label>
-                        <div class="input-append">
-                            <input data-bind="datepicker:startDate.date" name="startDate" id="startDate" type="text" size="16"
-                                   data-validation-engine="validate[required]" class="input-xlarge"/>
-                            <span class="add-on open-datepicker"><i class="icon-th"></i></span>
-                        </div>
-                    </div>
-                    <div class="span4">
-                        <label for="endDate">End date
-                        <fc:iconHelp title="End date">Date the activity finished.</fc:iconHelp>
-                        </label>
-                        <div class="input-append">
-                            <input data-bind="datepicker:endDate.date" id="endDate" type="text" size="16"
-                                   data-validation-engine="validate[future[startDate]]" class="input-xlarge"/>
-                            <span class="add-on open-datepicker"><i class="icon-th"></i></span>
-                        </div>
-                    </div>
-
+            <div class="row-fluid">
+                <div class="span12">
+                    <fc:textArea data-bind="value: description" id="description" label="Description" class="span12" rows="2" />
                 </div>
             </div>
 
+            <div class="row-fluid">
+                <div class="span6">
+                    <label for="plannedStartDate">Planned start date
+                    <fc:iconHelp title="Planned start date" printable="${printView}">Date the activity is intended to start.</fc:iconHelp>
+                    </label>
+                    <div class="input-append">
+                        <fc:datePicker targetField="plannedStartDate.date" name="plannedStartDate" data-validation-engine="validate[required]" printable="${printView}"/>
+                    </div>
+                </div>
+                <div class="span6">
+                    <label for="plannedEndDate">Planned end date
+                    <fc:iconHelp title="Planned end date" printable="${printView}">Date the activity is intended to finish.</fc:iconHelp>
+                    </label>
+                    <div class="input-append">
+                        <fc:datePicker targetField="plannedEndDate.date" name="plannedEndDate" data-validation-engine="validate[future[plannedStartDate],required]" printable="${printView}" />
+                    </div>
+                </div>
+            </div>
 
             <div class="form-actions">
                 <button type="button" data-bind="click: save" class="btn btn-primary">Save changes</button>
@@ -221,7 +171,7 @@
             self.endDate = ko.observable(act.endDate).extend({simpleDate: false});
             self.plannedStartDate = ko.observable(act.plannedStartDate).extend({simpleDate: false});
             self.plannedEndDate = ko.observable(act.plannedEndDate).extend({simpleDate: false});
-            self.projectStage = ko.observable();
+            self.projectStage = 'Stage 1'; // hardwire until we have a scheme for picking the stage by date
             self.progress = ko.observable('planned');
             self.censusMethod = ko.observable(act.censusMethod);
             self.methodAccuracy = ko.observable(act.methodAccuracy);

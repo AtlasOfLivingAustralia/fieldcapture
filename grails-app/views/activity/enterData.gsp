@@ -54,57 +54,67 @@
             </div>
         </div>
 
+
         <div class="row-fluid">
             <div class="${mapFeatures.toString() != '{}' ? 'span9' : 'span12'}">
                 <!-- Common activity fields -->
 
-                <div class="row-fluid">
+                <div class="row-fluid space-after">
                     <div class="span6">
-                        <label for="type">Type of activity</label>
-                        <select data-bind="value: type" id="type" data-validation-engine="validate[required]" class="input-xlarge">
-                            <g:each in="${activityTypes}" var="t" status="i">
-                                <g:if test="${i == 0 && create}">
-                                    <option></option>
-                                </g:if>
-                                <optgroup label="${t.name}">
-                                    <g:each in="${t.list}" var="opt">
-                                        <option>${opt.name}</option>
-                                    </g:each>
-                                </optgroup>
-                            </g:each>
-                        </select>
+                        <label class="for-readonly">Major theme</label>
+                        <span class="readonly-text" data-bind="text:mainTheme"></span>
                     </div>
                     <div class="span6">
-                        <label for="theme">Major theme</label>
-                        <select id="theme" data-bind="value:mainTheme, options:transients.themes, optionsCaption:'Choose..'" class="input-xlarge">
-                        </select>
+                        <label class="for-readonly">Description</label>
+                        <span class="readonly-text" data-bind="text:description"></span>
+                    </div>
+                </div>
+
+                <div class="row-fluid space-after">
+                    <div class="span6">
+                        <label class="for-readonly inline">Project stage</label>
+                        <span class="readonly-text" data-bind="text:projectStage"></span>
+                    </div>
+                    <div class="span6">
+                        <label class="for-readonly inline">Activity progress</label>
+                        <button type="button" class="btn btn-small"
+                                data-bind="css: {'btn-warning':progress()=='planned','btn-success':progress()=='started','btn-info':progress()=='finished','btn-danger':progress()=='deferred','btn-inverse':progress()=='cancelled'}"
+                                style="line-height:16px;cursor:default;color:white">
+                            <span data-bind="text: progress"></span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="row-fluid space-after">
+                    <div class="span6">
+                        <label class="for-readonly inline">Planned start date</label>
+                        <span class="readonly-text" data-bind="text:plannedStartDate.formattedDate"></span>
+                    </div>
+                    <div class="span6">
+                        <label class="for-readonly inline">Planned end date</label>
+                        <span class="readonly-text" data-bind="text:plannedEndDate.formattedDate"></span>
                     </div>
                 </div>
 
                 <div class="row-fluid">
-                    <div class="span12">
-                        <fc:textArea data-bind="value: description" id="description" label="Description" class="span12" rows="2" />
+                    <div class="span6">
+                        <label for="startDate"><b>Actual start date</b>
+                        <fc:iconHelp title="Start date" printable="${printView}">Date the activity was started.</fc:iconHelp>
+                        </label>
+                        <div class="input-append">
+                            <fc:datePicker targetField="startDate.date" name="startDate" data-validation-engine="validate[required]" printable="${printView}"/>
+                        </div>
+                    </div>
+                    <div class="span6">
+                        <label for="endDate"><b>Actual end date</b>
+                        <fc:iconHelp title="End date" printable="${printView}">Date the activity finished.</fc:iconHelp>
+                        </label>
+                        <div class="input-append">
+                            <fc:datePicker targetField="endDate.date" name="endDate" data-validation-engine="validate[future[startDate]]" printable="${printView}" />
+                        </div>
                     </div>
                 </div>
 
-                <div class="row-fluid">
-                    <div class="span6">
-                        <label for="plannedStartDate">Planned start date
-                        <fc:iconHelp title="Planned start date" printable="${printView}">Date the activity is intended to start.</fc:iconHelp>
-                        </label>
-                        <div class="input-append">
-                            <fc:datePicker targetField="plannedStartDate.date" name="plannedStartDate" data-validation-engine="validate[required]" printable="${printView}"/>
-                        </div>
-                    </div>
-                    <div class="span6">
-                        <label for="plannedEndDate">Planned end date
-                        <fc:iconHelp title="Planned end date" printable="${printView}">Date the activity is intended to finish.</fc:iconHelp>
-                        </label>
-                        <div class="input-append">
-                            <fc:datePicker targetField="plannedEndDate.date" name="plannedEndDate" data-validation-engine="validate[future[plannedStartDate], required]" printable="${printView}" />
-                        </div>
-                    </div>
-                </div>
 
             </div>
             <g:if test="${mapFeatures.toString() != '{}'}">
@@ -129,6 +139,10 @@
                   <pre>${(sites as JSON).toString()}</pre>
                   <h4>Project</h4>
                   <pre>${project?.encodeAsHTML()}</pre>
+                  <h4>Activity model</h4>
+                  <pre>${metaModel}</pre>
+                  <h4>Output models</h4>
+                  <pre>${outputModels}</pre>
                   <h4>Themes</h4>
                   <pre>${themes.toString()}</pre>
                   <h4>Map features</h4>
@@ -137,6 +151,98 @@
           </div>
         </g:if>
     </div>
+
+    <g:each in="${metaModel?.outputs}" var="outputName">
+        <g:set var="blockId" value="${fc.toSingleWord([name: outputName])}"/>
+        <g:set var="model" value="${outputModels[outputName]}"/>
+        <g:set var="output" value="${activity.outputs.find {it.name == outputName}}"/>
+        <g:if test="${!output}">
+            <g:set var="output" value="[name: outputName]"/>
+        </g:if>
+        <div class="output-block" id="ko${blockId}">
+            <h3 data-bind="css:{modified:dirtyFlag.isDirty},attr:{title:'Has been modified'}">${outputName}<i class="icon-asterisk modified-icon" data-bind="visible:dirtyFlag.isDirty" title="Has been modified" style="display: none;"></i></h3>
+            <!-- add the dynamic components -->
+            <md:modelView model="${model}" site="${site}" edit="true" printable="${printView}" />
+    <r:script>
+        $(function(){
+
+            var viewModelName = "${blockId}ViewModel",
+                viewModelInstance = viewModelName + "Instance";
+
+            // load dynamic models - usually objects in a list
+            <md:jsModelObjects model="${model}" site="${site}" speciesLists="${speciesLists}" edit="true" viewModelInstance="${blockId}ViewModelInstance"/>
+
+            this[viewModelName] = function () {
+                var self = this;
+                self.name = "${output.name}";
+                self.outputId = "${output.outputId}";
+                self.data = {};
+                self.transients = {};
+                self.transients.dummy = ko.observable();
+
+                // add declarations for dynamic data
+                <md:jsViewModel model="${model}" edit="true" viewModelInstance="${blockId}ViewModelInstance"/>
+
+                // this will be called when generating a savable model to remove transient properties
+                self.removeBeforeSave = function (jsData) {
+                    // add code to remove any transients added by the dynamic tags
+                    <md:jsRemoveBeforeSave model="${model}"/>
+                    delete jsData.activityType;
+                    delete jsData.transients;
+                    return jsData;
+                };
+
+                // this returns a JS object ready for saving
+                self.modelForSaving = function () {
+                    // get model as a plain javascript object
+                    var jsData = ko.mapping.toJS(self, {'ignore':['transients']});
+                    // get rid of any transient observables
+                    return self.removeBeforeSave(jsData);
+                };
+
+                // this is a version of toJSON that just returns the model as it will be saved
+                // it is used for detecting when the model is modified (in a way that should invoke a save)
+                // the ko.toJSON conversion is preserved so we can use it to view the active model for debugging
+                self.modelAsJSON = function () {
+                    return JSON.stringify(self.modelForSaving());
+                };
+
+                self.loadData = function (data) {
+                    // load dynamic data
+                    <md:jsLoadModel model="${model}"/>
+
+                    // if there is no data in tables then add an empty row for the user to add data
+                    if (typeof self.addRow === 'function' && self.rowCount() === 0) {
+                        self.addRow();
+                    }
+                    self.transients.dummy.notifySubscribers();
+                };
+            };
+
+            window[viewModelInstance] = new this[viewModelName]();
+            window[viewModelInstance].loadData(${output.data ?: '{}'});
+
+            // dirtyFlag must be defined after data is loaded
+            window[viewModelInstance].dirtyFlag = ko.dirtyFlag(window[viewModelInstance], false);
+
+            ko.applyBindings(window[viewModelInstance], document.getElementById("ko${blockId}"));
+
+            // this resets the baseline for detecting changes to the model
+            // - shouldn't be required if everything behaves itself but acts as a backup for
+            //   any binding side-effects
+            // - note that it is not foolproof as applying the bindings happens asynchronously and there
+            //   is no easy way to detect its completion
+            window[viewModelInstance].dirtyFlag.reset();
+
+            // register with the master controller so this model can participate in the save cycle
+            master.register(viewModelInstance, window[viewModelInstance].modelForSaving,
+             window[viewModelInstance].dirtyFlag.isDirty, window[viewModelInstance].dirtyFlag.reset);
+
+        });
+
+            </r:script>
+        </div>
+    </g:each>
 
     <g:if test="${!printView}">
         <div class="form-actions">
@@ -159,7 +265,7 @@
         this.subscribers = [];
         // client models register their name and methods to participate in saving
         self.register = function (modelInstanceName, getMethod, isDirtyMethod, resetMethod) {
-            self.subscribers.push({
+            this.subscribers.push({
                 model: modelInstanceName,
                 get: getMethod,
                 isDirty: isDirtyMethod,
@@ -264,7 +370,58 @@
             master.reset();
         });
 
-        function ViewModel (act, site, project) {
+        $('.edit-btn').click(function () {
+            var data = ${activity.outputs},
+                outputName = $(this).parent().previous().html(),
+                outputId;
+            // search for corresponding outputs in the activity data
+            $.each(data, function (i,output) { // iterate output data in the activity to
+                                               // find any matching the meta-model name
+                if (output.name === outputName) {
+                    outputId = output.outputId;
+                }
+            });
+            if (outputId) {
+                // build edit link
+                document.location.href = fcConfig.serverUrl + "/output/edit/" + outputId +
+                    "?returnTo=" + here;
+            } else {
+                // build create link
+                document.location.href = fcConfig.serverUrl + "/output/create?activityId=${activity.activityId}" +
+                    '&outputName=' + encodeURIComponent(outputName) +
+                    "&returnTo=" + here;
+            }
+
+        });
+
+        ko.bindingHandlers.editOutput = {
+            init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+                var outputName = ko.utils.unwrapObservable(valueAccessor()),
+                    activity = bindingContext.$root,
+                    outputId;
+
+                // search for corresponding outputs in the activity data
+                $.each(activity.outputs, function (i,output) { // iterate output data in the activity to
+                                                                  // find any matching the meta-model name
+                    if (output.name === outputName) {
+                        outputId = output.outputId;
+                    }
+                });
+                if (outputId) {
+                    // build edit link
+                    $(element).html('Edit data');
+                    $(element).attr('href', fcConfig.serverUrl + "/output/edit/" + outputId +
+                        "?returnTo=" + here);
+                } else {
+                    // build create link
+                    $(element).attr('href', fcConfig.serverUrl + '/output/create?activityId=' + activity.activityId +
+                        '&outputName=' + encodeURIComponent(outputName) +
+                        "&returnTo=" + here);
+                }
+            }
+        };
+
+        function ViewModel (act, site, project, metaModel) {
             var self = this;
             self.activityId = act.activityId;
             self.description = ko.observable(act.description);
@@ -274,6 +431,7 @@
             self.plannedStartDate = ko.observable(act.plannedStartDate).extend({simpleDate: false});
             self.plannedEndDate = ko.observable(act.plannedEndDate).extend({simpleDate: false});
             self.eventPurpose = ko.observable(act.eventPurpose);
+            self.fieldNotes = ko.observable(act.fieldNotes);
             self.associatedProgram = ko.observable(act.associatedProgram);
             self.associatedSubProgram = ko.observable(act.associatedSubProgram);
             self.projectStage = ko.observable(act.projectStage || "");
@@ -285,6 +443,8 @@
             self.transients = {};
             self.transients.site = site;
             self.transients.project = project;
+            self.transients.metaModel = metaModel || {};
+            self.transients.activityProgressValues = ['planned','started','finished'];
             self.transients.themes = $.map(${themes}, function (obj, i) { return obj.name });
             self.goToProject = function () {
                 if (self.projectId) {
@@ -308,6 +468,17 @@
 
             self.save = function (callback, key) {
             };
+            self.removeActivity = function () {
+                bootbox.confirm("Delete this entire activity? Are you sure?", function(result) {
+                    if (result) {
+                        document.location.href = "${createLink(action:'delete',id:activity.activityId,
+                            params:[returnTo:grailsApplication.config.grails.serverURL + '/' + returnTo])}";
+                    }
+                });
+            };
+            self.notImplemented = function () {
+                alert("Not implemented yet.")
+            };
             self.dirtyFlag = ko.dirtyFlag(self, false);
         }
 
@@ -315,7 +486,8 @@
         var viewModel = new ViewModel(
             ${(activity as JSON).toString()},
             ${site ?: 'null'},
-            ${project ?: 'null'});
+            ${project ?: 'null'},
+            ${metaModel ?: 'null'});
 
         ko.applyBindings(viewModel,document.getElementById('koActivityMainBlock'));
 
