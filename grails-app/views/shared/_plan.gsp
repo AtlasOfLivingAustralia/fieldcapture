@@ -483,7 +483,7 @@
                 source: ganttData,
                 navigate: "scroll",
                 scale: "weeks",
-                itemsPerPage: 10,
+                itemsPerPage: 30,
                 onItemClick: function(data) {
                     alert(data.type + ' (' + data.progress() + ')');
                 }/*,
