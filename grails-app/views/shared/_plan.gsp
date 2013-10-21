@@ -59,7 +59,7 @@
             <thead>
             <tr data-bind="visible: stages.length > 0">
                 <th>Stage</th>
-                <th width="50px"></th>
+                <th data-bind="attr:{width:canEditActivity()||canDeleteActivity() ? '32px' : '14px'}"></th>
                 <th>From</th>
                 <th>To</th>
                 <th>Activity</th>
@@ -83,31 +83,20 @@
                 </td>
                 <!-- /ko -->
                 <td>
-                    <i class="icon-edit" title="Edit Activity" data-bind="click:editActivity"></i>
-                    <i class="icon-print" title="Print activity" data-bind="click:printActivity"></i>
-                    <i class="icon-remove" title="Delete activity" data-bind="click:del"></i>
+                    <i class="icon-edit" title="Edit Activity" data-bind="click:$root.editActivity, visible:$root.canEditActivity"></i>
+                    <i class="icon-print" title="Print activity" data-bind="click:$root.printActivity, visible:$root.canPrintActivity"></i>
+                    <i class="icon-remove" title="Delete activity" data-bind="click:del, visible:$root.canDeleteActivity"></i>
                 </td>
                 <td><span data-bind="text:plannedStartDate.formattedDate"></span></td>
                 <td><span data-bind="text:plannedEndDate.formattedDate"></span></td>
                 <td>
-                    <span data-bind="text:type,click:editActivity" class="clickable"></span>
+                    <span data-bind="text:type,click:$root.editActivity, css:{clickable:$root.canEditActivity}"></span>
                 </td>
                 <g:if test="${showSites}">
                     <td><a class="clickable" data-bind="text:siteName,click:$parents[1].openSite"></a></td>
                 </g:if>
-                <td><div class="btn-group">
-                    <button type="button" class="btn btn-small dropdown-toggle" data-toggle="dropdown"
-                            data-bind="css: {'btn-warning':progress()=='planned','btn-success':progress()=='started','btn-info':progress()=='finished','btn-inverse':progress()=='deferred'}"
-                            style="line-height:16px;min-width:80px;text-align:left;">
-                        <span data-bind="text: progress"></span> <span class="caret pull-right" style="margin-top:6px;"></span>
-                    </button>
-                    <ul class="dropdown-menu" data-bind="foreach:$root.progressOptions" style="min-width:100px;">
-                        <!-- Disable item if selected -->
-                        <li data-bind="css: {'disabled' : $data==$parent.progress()}">
-                            <a href="#" data-bind="click: $parent.progress"><span data-bind="text: $data"></span></a>
-                        </li>
-                    </ul></div>
-                    <span data-bind="visible:isSaving"><r:img dir="images" file="ajax-saver.gif"/> saving</span>
+                <td>
+                    <div data-bind="template:$root.canUpdateStatus() ? 'updateStatusTmpl' : 'viewStatusTmpl'"></div>
                 </td>
             </tr>
             </tbody>
@@ -134,6 +123,31 @@
 
     </form>
 </div>
+
+<script id="updateStatusTmpl" type="text/html">
+    <div class="btn-group">
+    <button type="button" class="btn btn-small dropdown-toggle" data-toggle="dropdown"
+            data-bind="css: {'btn-warning':progress()=='planned','btn-success':progress()=='started','btn-info':progress()=='finished','btn-danger':progress()=='deferred','btn-inverse':progress()=='cancelled'}"
+            style="line-height:16px;min-width:86px;text-align:left;">
+        <span data-bind="text: progress"></span> <span class="caret pull-right" style="margin-top:6px;"></span>
+    </button>
+    <ul class="dropdown-menu" data-bind="foreach:$root.progressOptions" style="min-width:100px;">
+        <!-- Disable item if selected -->
+        <li data-bind="css: {'disabled' : $data==$parent.progress()}">
+            <a href="#" data-bind="click: $parent.progress"><span data-bind="text: $data"></span></a>
+        </li>
+    </ul></div>
+    <span data-bind="visible:isSaving"><r:img dir="images" file="ajax-saver.gif"/> saving</span>
+</script>
+
+<script id="viewStatusTmpl" type="text/html">
+    <button type="button" class="btn btn-small"
+            data-bind="css: {'btn-warning':progress()=='planned','btn-success':progress()=='started','btn-info':progress()=='finished','btn-danger':progress()=='deferred','btn-inverse':progress()=='cancelled'}"
+            style="line-height:16px;min-width:75px;text-align:left;cursor:default;color:white">
+        <span data-bind="text: progress"></span>
+    </button>
+</script>
+
 <!-- /ko -->
 <r:script>
 
@@ -191,13 +205,6 @@
                     }
                 });
             });
-            this.editActivity = function () {
-                document.location.href = fcConfig.activityEditUrl + "/" + self.activityId +
-                    "?returnTo=" + here;
-            };
-            this.printActivity = function() {
-                open(fcConfig.activityPrintUrl + "/" + self.activityId, "fieldDataPrintWindow");
-            };
             this.del = function () {
                 // confirm first
                 bootbox.confirm("Delete this activity? Are you sure?", function(result) {
@@ -251,6 +258,20 @@
 
         function PlanViewModel(activities, outputTargets, project) {
             var self = this;
+            this.currentStep = ko.observable(project.currentStep === undefined ? 1 : project.currentStep);
+            this.canEditActivity = ko.computed(function () {
+                return self.currentStep() === 5;
+            });
+            this.canPrintActivity = ko.computed(function () {
+                return true;
+            });
+            this.canDeleteActivity = ko.computed(function () {
+                return self.currentStep() === 1;
+            });
+            this.canUpdateStatus = ko.computed(function () {
+                return self.currentStep() === 5;
+            });
+            this.currentDate = ko.observable(); // mechanism for testing behaviour at different dates
             this.currentProjectStage = project.currentStage === undefined ? 'Stage 1' : project.currentStage;
             this.loadActivities = function (activities) {
                 var stages = [],
@@ -286,7 +307,7 @@
                 });
                 return currPlanStage.length > 0 ? currPlanStage[0].readyForApproval() : false;
             });
-            self.progressOptions = ['planned','started','finished','deferred'];
+            self.progressOptions = ['planned','started','finished','deferred','cancelled'];
             self.newActivity = function () {
                 var context = '',
                     projectId = project.projectId,
@@ -305,7 +326,15 @@
                     document.location.href = fcConfig.siteViewUrl + '/' + siteId;
                 }
             };
-            self.currentStep = ko.observable(project.currentStep === undefined ? 1 : project.currentStep);
+            self.editActivity = function (activity) {
+                if (self.canEditActivity()) {
+                    document.location.href = fcConfig.activityEditUrl + "/" + activity.activityId +
+                        "?returnTo=" + here;
+                }
+            };
+            self.printActivity = function(activity) {
+                open(fcConfig.activityPrintUrl + "/" + activity.activityId, "fieldDataPrintWindow");
+            };
             self.nextStep = function () {
                 self.currentStep(self.currentStep() + 1);
             };
@@ -385,7 +414,7 @@
                     }
                 });
                 return hasTarget;
-            }
+            };
 
             self.loadOutputTargets = function() {
                 var activityTypes = {};
