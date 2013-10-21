@@ -482,7 +482,7 @@
             $("#gantt-container").gantt({
                 source: ganttData,
                 navigate: "scroll",
-                //minScale: "days",
+                scale: "weeks",
                 itemsPerPage: 10,
                 onItemClick: function(data) {
                     alert(data.type + ' (' + data.progress() + ')');
