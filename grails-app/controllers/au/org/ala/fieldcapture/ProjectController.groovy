@@ -17,8 +17,6 @@ class ProjectController {
         } else {
             project.sites?.sort {it.name}
             def user = userService.getUser()
-            user.metaClass.isAdmin = false
-            user.metaClass.isEditor = false
 
             if (user && projectService.isUserAdminForProject(user.userId, id)) {
                 // add admin tab to page
@@ -27,6 +25,10 @@ class ProjectController {
             } else if (user && projectService.canUserEditProject(user.userId, id)) {
                 //user["isEditor"] = true // use this for KO to allow editing of activities, etc ??
                 user.metaClass.isEditor = true // use this for KO to allow editing of activities, etc ??
+            }
+            else if (user) {
+                user.metaClass.isAdmin = false
+                user.metaClass.isEditor = false
             }
             //log.debug activityService.activitiesForProject(id)
             //todo: ensure there are no control chars (\r\n etc) in the json as
