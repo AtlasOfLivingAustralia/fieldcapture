@@ -153,8 +153,8 @@
                     <div class="map-box">
                         <div id="map" style="width: 100%; height: 100%;"></div>
                     </div>
-                    <div>
-                        <span id="numberOfProjects">${results?.hits?.total?:0 > 0}</span> projects with <span id="numberOfSites">[calculating]</span> sites
+                    <div id="map-info">
+                        <span id="numberOfProjects">${results?.hits?.total?:0 > 0}</span> projects with <span id="numberOfSites">[calculating]</span>
                     </div>
                 </div>
 
@@ -520,7 +520,7 @@
                 var projectLinkPrefix = "${createLink(controller:'project')}/";
                 var siteLinkPrefix = "${createLink(controller:'site')}/";
                 //console.log("total", geoPoints.hits.total);
-                $("#numberOfSites").html(geoPoints.hits.total);
+                $("#numberOfSites").html(geoPoints.hits.total + " sites");
                 if (geoPoints.hits.total > 0) {
                     $.each(geoPoints.hits.hits, function(j, h) {
                         var s = h["_source"];
@@ -546,7 +546,7 @@
                             });
                         }
 
-                        $("#numberOfSites").html(features.length);
+                        $("#numberOfSites").html((features.length > 0) ? features.length + " sites" : "0 sites <span class=\"label label-info\">No georeferenced points for the selected projects</span>");
                     });
 
                     if (facetList && facetList.length > 0) {
@@ -562,25 +562,32 @@
                     updateProjectTable();
                     //console.log("features count", features.length);
                 }
+
+                var mapData = {
+                    "zoomToBounds": true,
+                    "zoomLimit": 12,
+                    "highlightOnHover": false,
+                    "features": features
+                }
+
+                init_map_with_features({
+                        mapContainer: "map",
+                        zoomToBounds:true,
+                        scrollwheel: false,
+                        zoomLimit:16
+                    },
+                    mapData
+                );
+
+                if (!bounds.isEmpty()) {
+                    alaMap.map.fitBounds(bounds);
+                } else {
+                    //console.log("bounds is empty", alaMap.map);
+                    alaMap.map.setZoom(4);
+                }
+
+
             }
-
-            var mapData = {
-                "zoomToBounds": true,
-                "zoomLimit": 12,
-                "highlightOnHover": false,
-                "features": features
-            }
-
-            init_map_with_features({
-                    mapContainer: "map",
-                    zoomToBounds:true,
-                    scrollwheel: false,
-                    zoomLimit:16
-                },
-                mapData
-            );
-
-            alaMap.map.fitBounds(bounds);
 
         }).error(function (request, status, error) {
             console.error("AJAX error", status, error);

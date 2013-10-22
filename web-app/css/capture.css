@@ -662,3 +662,7 @@ label.for-readonly:after {
 span.readonly-text {
     font-size: 1.1em;
 }
+
+#map-info {
+    margin-top: 10px;
+}
