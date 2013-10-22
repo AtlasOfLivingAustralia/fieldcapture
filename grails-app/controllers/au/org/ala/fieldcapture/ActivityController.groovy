@@ -186,7 +186,6 @@ class ActivityController {
         def activity = [activityId: "", siteId: siteId, projectId: projectId]
         def model = [activity: activity, returnTo: params.returnTo, create: true,
                 activityTypes: metadataService.activityTypesList(),
-                activityScores: metadataService.getActivityScoresByActivity(),
                 projectStages:projectStages()]
         model.project = projectId ? projectService.get(projectId) : null
         model.site = siteId ? siteService.get(siteId) : null

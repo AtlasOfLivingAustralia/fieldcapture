@@ -44,7 +44,7 @@ class ProjectController {
              roles: roles,
              activityTypes: metadataService.activityTypesList(),
              metrics: projectService.summary(id),
-             activityScores: metadataService.getActivityScoresByActivity()]
+             activityScores: metadataService.getOutputTargetsByActivity()]
         }
     }
 

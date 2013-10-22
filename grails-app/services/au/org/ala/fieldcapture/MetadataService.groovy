@@ -94,14 +94,16 @@ class MetadataService {
     }
 
     /**
-     * Returns a Map with key: activityName and value: <list of score names for that activity>
+     * Returns a Map with key: activityName and value: <list of score definitions for the outputs that make up the activity>
      * Used to support the nomination of project output targets for various activity types.
      */
-    def getActivityScoresByActivity() {
+    def getOutputTargetsByActivity() {
         def activityScores = [:]
         def activitiesModel = activitiesModel()
+
         activitiesModel.activities.each { activity ->
             def scores = []
+
             activityScores[activity.name] = scores
             activity.outputs.each { outputName ->
                 def matchedOutput = activitiesModel.outputs.find {
@@ -109,13 +111,17 @@ class MetadataService {
                 }
                 if (matchedOutput && matchedOutput.scores) {
                     matchedOutput.scores.each {
-                        scores << (it << [outputName : outputName])
+                        if (it.isOutputTarget) {
+                            scores << (it << [outputName : outputName])
+                        }
                     }
                 }
             }
         }
         return activityScores
     }
+
+
 
     def clearEcodataCache() {
         webService.get(grailsApplication.config.ecodata.baseUrl + "admin/clearMetadataCache")

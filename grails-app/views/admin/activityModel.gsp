@@ -98,6 +98,10 @@
                 <option value="SET">list of distinct values</option>
             </select>
             </div>
+             <div style="text-align:left;">
+            Use as output target:
+            <input type="checkbox" data-bind="checked:isOutputTarget"/>
+            </div>
         </li>
     </ul><span data-bind="click:addScore" class="clickable"><i class="icon-plus"></i> Add new</span>
     </div>
@@ -165,7 +169,8 @@
             self.label = ko.observable(score.label)
             self.units = ko.observable(score.units)
             self.aggregationType = ko.observable(score.aggregationType)
-
+            %{-- True if this score can/should be assigned a target for project planning purposes. --}%
+            self.isOutputTarget = ko.observable(score.isOutputTarget)
         };
 
         var OutputModel = function (out, model) {
@@ -196,7 +201,7 @@
                 return self.editing() ? 'editOutputTmpl' : 'viewOutputTmpl';
             };
             this.addScore = function () {
-                self.scores.push(new ScoreModel('new score'));
+                self.scores.push(new ScoreModel({}));
             };
             this.removeScore = function (data) {
                 self.scores.remove(data);
