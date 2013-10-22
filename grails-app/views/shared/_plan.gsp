@@ -60,9 +60,10 @@
             <tr data-bind="visible: stages.length > 0">
                 <th>Stage</th>
                 <th data-bind="attr:{width:tweakActionWidth}"></th>
-                <th>From</th>
-                <th>To</th>
+                <th style="min-width:64px">From</th>
+                <th style="min-width:64px">To</th>
                 <th>Activity</th>
+                <th style="width:20%;" id="description-column">Description</th>
                 <g:if test="${showSites}">
                     <th>Site</th>
                 </g:if>
@@ -91,6 +92,9 @@
                 <td><span data-bind="text:plannedEndDate.formattedDate"></span></td>
                 <td>
                     <span data-bind="text:type,click:$root.editActivity, css:{clickable:$root.canEditActivity}"></span>
+                </td>
+                <td>
+                    <span class="truncate" data-bind="text:description"></span>
                 </td>
                 <g:if test="${showSites}">
                     <td><a class="clickable" data-bind="text:siteName,click:$parents[1].openSite"></a></td>
@@ -495,6 +499,69 @@
         var planViewModel = new PlanViewModel(${activities ?: []}, ${project.outputTargets ?: '{}'},${project});
         ko.applyBindings(planViewModel, document.getElementById('planContainer'));
 
+        // the following code handles resize-sensitive truncation of the description field
+        $.fn.textWidth = function(text, font) {
+            if (!$.fn.textWidth.fakeEl) $.fn.textWidth.fakeEl = $('<span>').hide().appendTo(document.body);
+            $.fn.textWidth.fakeEl.html(text || this.val() || this.text()).css('font', font || this.css('font'));
+            return $.fn.textWidth.fakeEl.width();
+        };
+
+        function adjustTruncations () {
+            function truncate (cellWidth, originalTextWidth, originalText) {
+                var fractionThatFits = cellWidth/originalTextWidth,
+                    truncationPoint = Math.floor(originalText.length * fractionThatFits) - 4;
+                return originalText.substr(0,truncationPoint) + '..';
+            }
+            $('.truncate').each( function () {
+                var $span = $(this),
+                    text = $span.html(),
+                    textWidth = $span.textWidth(),
+                    textLength = text.length,
+                    original = $span.data('truncation');
+                // store original values if first time in
+                if (original === undefined) {
+                    original = {
+                        text: text,
+                        textWidth: textWidth,
+                        textLength: textLength
+                    };
+                    $span.data('truncation',original);
+                }
+                var cellWidth = $span.parent().width(),
+                    isTruncated = original.text !== text;
+                if (cellWidth > 0 && textWidth > cellWidth) {
+                    $span.attr('title',original.text);
+                    $span.html(truncate(cellWidth, original.textWidth, original.text));
+                } else if (isTruncated && cellWidth > textWidth + 4) {
+                    // check whether the text can be fully expanded
+                    if (original.textWidth < cellWidth) {
+                        $span.html(original.text);
+                        $span.removeAttr('title');
+                    } else {
+                        $span.html(truncate(cellWidth, original.textWidth, original.text));
+                    }
+                }
+            });
+        }
+
+        // throttle the resize events so it doesn't go crazy
+        (function() {
+             var timer;
+             $(window).resize(function () {
+                 if(timer) {
+                     clearTimeout(timer);
+                 }
+                 timer = setTimeout(adjustTruncations, 50);
+             });
+        }());
+
+        // only initialise truncation when the table is visible else we will get 0 widths
+        $(document).on('planTabShown', function () {
+            // initial adjustments
+            adjustTruncations();
+        });
+
+        // the following draws the gantt chart
         var ganttData = planViewModel.getGanttData();
         if (ganttData.length > 0) {
             $("#gantt-container").gantt({

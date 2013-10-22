@@ -470,7 +470,7 @@
 
             // retain tab state for future re-visits
             // and handle tab-specific initialisations
-            var activitiesTabInitialised = false;
+            var planTabInitialised = false;
             $('a[data-toggle="tab"]').on('shown', function (e) {
                 var tab = e.currentTarget.hash;
                 amplify.store('project-tab-state', tab);
@@ -484,6 +484,10 @@
                     );
                     // set trigger for site reverse geocoding
                     viewModel.triggerGeocoding();
+                }
+                if (tab === '#plan' && !planTabInitialised) {
+                    $.event.trigger({type:'planTabShown'});
+                    planTabInitialised = true;
                 }
             });
             // re-establish the previous tab state
