@@ -546,7 +546,7 @@
                             });
                         }
 
-                        $("#numberOfSites").html((features.length > 0) ? features.length + " sites" : "0 sites <span class=\"label label-info\">No georeferenced points for the selected projects</span>");
+                        $("#numberOfSites").html((features.length > 0) ? features.length + " sites" : "0 sites <span class=\"label label-important\">No georeferenced points for the selected projects</span>");
                     });
 
                     if (facetList && facetList.length > 0) {
