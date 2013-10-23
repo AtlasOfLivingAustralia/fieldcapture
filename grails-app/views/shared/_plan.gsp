@@ -231,10 +231,14 @@
             // want the index of the PlannedActivity to be relative to the filtered set of activities.
             var self = this,
                 activitiesInThisStage = $.grep(activities, function (act, index) {
-                    return findStageFromDate(timeline, act.plannedStartDate) === stageLabel;
+                    return findStageFromDate(timeline, act.plannedEndDate) === stageLabel;
                 });
             this.label = stageLabel;
             this.isCurrentStage = isCurrentStage;
+            // sort activities by planned start date
+            activitiesInThisStage.sort(function (a,b) {
+                return a.plannedStartDate > b.plannedStartDate;
+            });
             this.activities = $.map(activitiesInThisStage, function (act, index) {
                 act.projectStage = stageLabel;
                 return new PlannedActivity(act, index === 0);
