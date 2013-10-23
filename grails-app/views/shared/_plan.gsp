@@ -75,7 +75,7 @@
             <tr>
                 <!-- ko with:isFirst -->
                 <td data-bind="attr:{rowspan:$parents[1].activities.length}" class="stage-display">
-                    <span data-bind="text:projectStage%{--, blah:console.log(ko.toJS($data))--}%"></span>
+                    <span data-bind="text:$parents[1].label%{--, blah:console.log(ko.toJS($data))--}%"></span>
                     <br data-bind="visible:$parents[1].isCurrentStage">
                     <span data-bind="visible:$parents[1].isCurrentStage" class="badge badge-info">Current stage</span>
                     <br data-bind="visible:$parents[1].readyForApproval()">
@@ -226,16 +226,17 @@
             };
         };
 
-        var PlanStage = function (stageLabel, activities, isCurrentStage) {
+        var PlanStage = function (stageLabel, activities, isCurrentStage, timeline) {
             // Note that the two $ transforms used to extract activities are not combined because we
             // want the index of the PlannedActivity to be relative to the filtered set of activities.
             var self = this,
                 activitiesInThisStage = $.grep(activities, function (act, index) {
-                    return act.projectStage === stageLabel;
+                    return findStageFromDate(timeline, act.plannedStartDate) === stageLabel;
                 });
             this.label = stageLabel;
             this.isCurrentStage = isCurrentStage;
             this.activities = $.map(activitiesInThisStage, function (act, index) {
+                act.projectStage = stageLabel;
                 return new PlannedActivity(act, index === 0);
             });
             this.readyForApproval = ko.computed(function() {
@@ -290,31 +291,15 @@
                 }
                 return width;
             });
-            this.currentDate = ko.observable(); // mechanism for testing behaviour at different dates
-            this.currentProjectStage = project.currentStage === undefined ? 'Stage 1' : project.currentStage;
+            //this.currentDate = ko.observable("2014-02-03T00:00:00Z"); // mechanism for testing behaviour at different dates
+            this.currentDate = ko.observable(new Date().toISOStringNoMillis()); // mechanism for testing behaviour at different dates
+            this.currentProjectStage = findStageFromDate(project.timeline,this.currentDate());
             this.loadActivities = function (activities) {
-                var stages = [],
-                    stageLabels = [];
-
-                // sort activities list first so we can group by project stage
-                activities.sort(function (a,b) {
-                    if (a.projectStage > b.projectStage)
-                      return 1;
-                    if (a.projectStage < b.projectStage)
-                      return -1;
-                    return 0;
-                });
-
-                // get unique stage labels
-                $.each(activities, function(idx, act) {
-                    if ($.inArray(act.projectStage, stageLabels) == -1) {
-                        stageLabels.push(act.projectStage);
-                    }
-                });
+                var stages = [];
 
                 // group activities by stage
-                $.each(stageLabels, function (index, label) {
-                    stages.push(new PlanStage(label, activities, label === self.currentProjectStage));
+                $.each(project.timeline, function (index, stage) {
+                    stages.push(new PlanStage(stage.name, activities, stage.name === self.currentProjectStage, project.timeline));
                 });
 
                 return stages;
@@ -496,7 +481,11 @@
 
         }
 
-        var planViewModel = new PlanViewModel(${activities ?: []}, ${project.outputTargets ?: '{}'},${project});
+        var planViewModel = new PlanViewModel(
+            ${activities ?: []},
+            ${project.outputTargets ?: '{}'},
+            checkAndUpdateProject(${project})
+        );
         ko.applyBindings(planViewModel, document.getElementById('planContainer'));
 
         // the following code handles resize-sensitive truncation of the description field

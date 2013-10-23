@@ -152,4 +152,9 @@ modules = {
         resource 'jquery-gantt/js/jquery.fn.gantt.js'
     }
 
+    projects {
+        defaultBundle false
+        dependsOn 'knockout'
+        resource 'js/projects.js'
+    }
 }

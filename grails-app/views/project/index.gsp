@@ -8,6 +8,7 @@
     <r:script disposition="head">
     var fcConfig = {
         serverUrl: "${grailsApplication.config.grails.serverURL}",
+        projectUpdateUrl: "${createLink(action: 'ajaxUpdate', id: project.projectId)}",
         siteDeleteUrl: "${createLink(controller: 'site', action: 'ajaxDelete')}",
         siteViewUrl: "${createLink(controller: 'site', action: 'index')}",
         activityEditUrl: "${createLink(controller: 'activity', action: 'edit')}",
@@ -31,7 +32,7 @@
         here = window.location.href;
 
     </r:script>
-    <r:require modules="gmap3,mapWithFeatures,knockout,datepicker,amplify,jqueryValidationEngine,fuelux"/>
+    <r:require modules="gmap3,mapWithFeatures,knockout,datepicker,amplify,jqueryValidationEngine,fuelux,projects"/>
 </head>
 <body>
 <div class="container-fluid">
@@ -465,7 +466,11 @@
                 };
             }
 
-            var viewModel = new ViewModel(${project},${project.sites},${activities ?: []},${user?.isEditor?:false});
+            var viewModel = new ViewModel(
+                checkAndUpdateProject(${project}),
+                ${project.sites},
+                ${activities ?: []},
+                ${user?.isEditor?:false});
             ko.applyBindings(viewModel);
 
             // retain tab state for future re-visits
