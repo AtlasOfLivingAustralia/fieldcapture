@@ -160,8 +160,7 @@
         var intervalSeconds = 5 * 60;
 
         setInterval(function() {
-                $.ajax("${createLink(controller: 'ajax', action:'keepSessionAlive')}").done(function(data) {
-            });
+            $.ajax("${createLink(controller: 'ajax', action:'keepSessionAlive')}").done(function(data) {});
         }, intervalSeconds * 1000);
 
     });

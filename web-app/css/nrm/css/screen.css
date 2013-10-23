@@ -2246,6 +2246,10 @@ table select {
     width: auto;
 }
 
+.checkbox-list li {
+    list-style-type: none;
+}
+
 .printed-form-field {
     border: 1px solid black !important;
     padding: 5px;
@@ -2259,5 +2263,6 @@ table select {
     display: inline-block;
     border: 2px solid black !important;
 }
+
 
 

@@ -159,7 +159,7 @@ class ActivityController {
             model.mapFeatures = model.site ? siteService.getMapFeatures(model.site) : "{}"
             model.themes = metadataService.getThemesForProject(model.project)
             model.printView = true
-            render view: 'edit', model: model
+            render view: 'enterData', model: model
         } else {
             forward(action: 'list', model: [error: 'no such id'])
         }

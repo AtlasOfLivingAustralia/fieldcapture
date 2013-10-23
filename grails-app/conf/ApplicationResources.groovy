@@ -21,13 +21,13 @@ modules = {
 
     nrmSkin {
         dependsOn 'application,bootstrap'
-        resource url: 'css/nrm/css/screen.css'//, linkOverride: 'http://www.nrm.gov.au/css/screen.css'
+        resource url: 'css/nrm/css/screen.css', attrs:[media:'screen,print']
         resource url: 'css/capture.css'
     }
 
     nrmPrintSkin {
         dependsOn 'nrmSkin'
-        resource url: 'css/print.css', attrs:[media:'screen,projection,print']
+        resource url: 'css/print.css', attrs:[media:'screen,print']
     }
 
     gmap3 {
