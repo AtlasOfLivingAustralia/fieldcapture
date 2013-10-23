@@ -152,6 +152,7 @@
         </g:if>
     </div>
 
+<!-- ko stopBinding: true -->
     <g:each in="${metaModel?.outputs}" var="outputName">
         <g:set var="blockId" value="${fc.toSingleWord([name: outputName])}"/>
         <g:set var="model" value="${outputModels[outputName]}"/>
@@ -243,17 +244,19 @@
             </r:script>
         </div>
     </g:each>
+<!-- /ko -->
 
     <g:if test="${!printView}">
         <div class="form-actions">
             <button type="button" id="save" class="btn btn-primary">Save changes</button>
             <button type="button" id="cancel" class="btn">Cancel</button>
+            <label class="checkbox inline">
+                <input data-bind="checked:transients.markedAsFinished" type="checkbox"> Mark this activity as finished.
+            </label>
         </div>
     </g:if>
 
 </div>
-
-<!-- templates -->
 
 <r:script>
 
@@ -435,7 +438,7 @@
             self.associatedProgram = ko.observable(act.associatedProgram);
             self.associatedSubProgram = ko.observable(act.associatedSubProgram);
             self.projectStage = ko.observable(act.projectStage || "");
-            self.progress = ko.observable(act.progress || 'started');
+            self.progress = ko.observable(act.progress);
             self.mainTheme = ko.observable(act.mainTheme);
             self.type = ko.observable(act.type);
             self.siteId = ko.observable(act.siteId);
@@ -446,6 +449,10 @@
             self.transients.metaModel = metaModel || {};
             self.transients.activityProgressValues = ['planned','started','finished'];
             self.transients.themes = $.map(${themes}, function (obj, i) { return obj.name });
+            self.transients.markedAsFinished = ko.observable(act.progress === 'finished');
+            self.transients.markedAsFinished.subscribe(function (finished) {
+                self.progress(finished ? 'finished' : 'started');
+            });
             self.goToProject = function () {
                 if (self.projectId) {
                     document.location.href = fcConfig.projectViewUrl + self.projectId;
@@ -480,8 +487,11 @@
                 alert("Not implemented yet.")
             };
             self.dirtyFlag = ko.dirtyFlag(self, false);
-        }
 
+            // make sure progress moves to started if we save any data (unless already finished)
+            // (do this here so the model becomes dirty)
+            self.progress(self.transients.markedAsFinished() ? 'finished' : 'started');
+        }
 
         var viewModel = new ViewModel(
             ${(activity as JSON).toString()},
@@ -489,7 +499,7 @@
             ${project ?: 'null'},
             ${metaModel ?: 'null'});
 
-        ko.applyBindings(viewModel,document.getElementById('koActivityMainBlock'));
+        ko.applyBindings(viewModel);
 
         master.register('activityModel', viewModel.modelForSaving, viewModel.dirtyFlag.isDirty, viewModel.dirtyFlag.reset);
 

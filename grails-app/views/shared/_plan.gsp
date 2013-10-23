@@ -137,7 +137,7 @@
     </button>
     <ul class="dropdown-menu" data-bind="foreach:$root.progressOptions" style="min-width:100px;">
         <!-- Disable item if selected -->
-        <li data-bind="css: {'disabled' : $data==$parent.progress()}">
+        <li data-bind="css: {'disabled' : $data==$parent.progress() || $data=='planned'}">
             <a href="#" data-bind="click: $parent.progress"><span data-bind="text: $data"></span></a>
         </li>
     </ul></div>

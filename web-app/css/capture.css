@@ -666,3 +666,8 @@ span.readonly-text {
 #map-info {
     margin-top: 10px;
 }
+
+.form-actions label.checkbox {
+    display: inline-block;
+    margin-left: 40px;
+}
