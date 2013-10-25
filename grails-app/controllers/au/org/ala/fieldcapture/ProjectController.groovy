@@ -17,6 +17,8 @@ class ProjectController {
         } else {
             project.sites?.sort {it.name}
             def user = userService.getUser()
+            def members = projectService.getMembersForProjectId(id)
+            def admins = members.findAll{ it.role == "admin" }.collect{ it.userName }.join(",") // comma separated list of user email addresses
 
             if (user && projectService.isUserAdminForProject(user.userId, id)) {
                 // add admin tab to page
@@ -25,8 +27,7 @@ class ProjectController {
             } else if (user && projectService.canUserEditProject(user.userId, id)) {
                 //user["isEditor"] = true // use this for KO to allow editing of activities, etc ??
                 user.metaClass.isEditor = true // use this for KO to allow editing of activities, etc ??
-            }
-            else if (user) {
+            } else if (user) {
                 user.metaClass.isAdmin = false
                 user.metaClass.isEditor = false
             }
@@ -42,6 +43,7 @@ class ProjectController {
              isProjectStarredByUser: userService.isProjectStarredByUser(user?.userId?:"0", project.projectId)?.isProjectStarredByUser,
              user: user,
              roles: roles,
+             admins: admins,
              activityTypes: metadataService.activityTypesList(),
              metrics: projectService.summary(id),
              activityScores: metadataService.getOutputTargetsByActivity()]
