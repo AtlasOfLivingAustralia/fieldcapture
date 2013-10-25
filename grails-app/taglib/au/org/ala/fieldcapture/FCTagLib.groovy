@@ -4,6 +4,7 @@ import au.org.ala.cas.util.AuthenticationCookieUtils
 import groovy.xml.MarkupBuilder
 import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
 
+
 import static org.github.bootstrap.Attribute.outputAttributes
 
 class FCTagLib {
@@ -484,4 +485,6 @@ class FCTagLib {
         def name = attrs.name ?: body()
         out << name.replaceAll(' ','_')
     }
+
+
 }

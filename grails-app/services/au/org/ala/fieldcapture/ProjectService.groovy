@@ -74,7 +74,7 @@ class ProjectService {
     def summary(String id) {
         def scores = webService.getJson(grailsApplication.config.ecodata.baseUrl + 'project/projectMetrics/' + id)
 
-        def scoresByOutput = scores.grep{ it.target || it.count || it.values }.groupBy { it.outputLabel}
+        def scoresByOutput = scores.grep{ it.target || it.results }.groupBy { it.score.outputName }
 
         scoresByOutput
     }
