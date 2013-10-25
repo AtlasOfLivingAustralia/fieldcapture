@@ -245,8 +245,8 @@
                 <div class="row-fluid">
                     <div class="span3 large-space-before">
                         <ul id="adminNav" class="nav nav-tabs nav-stacked ">
-                            <li class="active"><a href="#permissions" data-toggle="tab"><i class="icon-chevron-right"></i> Project access</a></li>
-                            <li><a href="#speciesList" data-toggle="tab"><i class="icon-chevron-right"></i> Species of interest</a></li>
+                            <li class="active"><a href="#permissions" id="permissions-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Project access</a></li>
+                            <li><a href="#species" id="species-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Species of interest</a></li>
                         </ul>
                     </div>
                     <div class="span9">
@@ -283,7 +283,7 @@
                             </div>
                             <!-- SPECIES -->
                             %{--<div class="border-divider large-space-before">&nbsp;</div>--}%
-                            <div id="speciesList" class="pill-pane">
+                            <div id="species" class="pill-pane">
                                 %{--<a name="species"></a>--}%
                                 <g:render template="/species/species" model="[project:project, activityTypes:activityTypes]"/>
                             </div>
@@ -476,7 +476,7 @@
             // retain tab state for future re-visits
             // and handle tab-specific initialisations
             var planTabInitialised = false;
-            $('a[data-toggle="tab"]').on('shown', function (e) {
+            $('#projectTabs a[data-toggle="tab"]').on('shown', function (e) {
                 var tab = e.currentTarget.hash;
                 amplify.store('project-tab-state', tab);
                 // only init map when the tab is first shown
@@ -549,6 +549,19 @@
         <r:script>
             // Admin JS code only exposed to admin users
             $(window).load(function () {
+
+                // remember state of admin nav (vertical tabs)
+                $('#adminNav a[data-toggle="tab"]').on('shown', function (e) {
+                    var tab = e.currentTarget.hash;
+                    amplify.store('project-admin-tab-state', tab);
+                });
+                var storedAdminTab = amplify.store('project-admin-tab-state');
+                // restore state if saved
+                if (storedAdminTab === '') {
+                    $('#permissions-tab').tab('show');
+                } else {
+                    $(storedAdminTab + "-tab").tab('show');
+                }
 
                 // click event on the "remove" button on Project Members table
                 $('.membersTbody').on("click", "td.memRemoveRole", function(e) {
