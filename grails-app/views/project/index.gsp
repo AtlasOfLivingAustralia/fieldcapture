@@ -203,7 +203,6 @@
 
         <div class="tab-pane" id="dashboard">
             <!-- DASHBOARD -->
-            <gvisualization:apiImport/>
             <h2 style="margin-top:0;">Totals across all activities under this project</h2>
             <div class="row-fluid">
                 <div class="span4">
@@ -423,15 +422,6 @@
                     $('#' + target + "List li").slideDown();
                     map.showAllfeatures();
                 };
-                this.removeSite = function () {
-                   var that = this,
-                       url = fcConfig.siteDeleteUrl + '/' + this.siteId;
-                    $.get(url, function (data) {
-                        if (data.status === 'deleted') {
-                            self.sites.remove(that);
-                        }
-                    });
-                };
                 this.highlight = function () {
                     map.highlightFeatureById(this.name());
                 };
@@ -439,13 +429,17 @@
                     map.unHighlightFeatureById(this.name());
                 };
                 this.removeAllSites = function () {
-                   var that = this;
-                   $.get(fcConfig.siteDeleteUrl + '/' + '${project.projectId}', function (data) {
-                        if (data.status === 'deleted') {
-                            //self.sites.remove(that);
-                        }
-                        //FIXME - currently doing a page reload, not nice
-                        document.location.href = here;
+                    bootbox.confirm("Are you sure you want to remove these sites? This will remove the links to this project but will NOT remove the sites from the site.", function(result){
+                       if(result){
+                           var that = this;
+                           $.get(fcConfig.siteDeleteUrl + '/' + '${project.projectId}', function (data) {
+                               if (data.status === 'deleted') {
+                                   //self.sites.remove(that);
+                               }
+                               //FIXME - currently doing a page reload, not nice
+                               document.location.href = here;
+                           });
+                       }
                     });
                 };
                 this.addSite = function () {

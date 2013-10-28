@@ -95,11 +95,11 @@
                 </div>
             </div>
 
-            <h2>Extent of site
-                <fc:iconHelp title="Extent of the site">The extent of the site can be represented by
+            <h2>Extent of site</h2>
+            <fc:iconHelp title="Extent of the site">The extent of the site can be represented by
                 a polygon, radius or point. KML, WKT and shape files are supported for uploading polygons.
                 As are PID's of existing features in the Atlas Spatial Portal.</fc:iconHelp>
-            </h2>
+
             <div class="row-fluid">
 
                 <div class="span6">

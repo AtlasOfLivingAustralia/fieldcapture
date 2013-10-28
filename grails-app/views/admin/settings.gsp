@@ -7,12 +7,6 @@
     </head>
 
     <body>
-        <script type="text/javascript">
-
-            $(document).ready(function() {
-            });
-
-        </script>
         <content tag="pageTitle">Settings</content>
         <table class="table table-bordered table-striped">
             <thead>

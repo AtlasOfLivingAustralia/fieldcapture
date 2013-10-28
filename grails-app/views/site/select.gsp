@@ -31,7 +31,7 @@
             <div class="well span6">
 
                 <div class="row-fluid" style="margin-bottom:20px;">
-                    <span class="span6">
+                    <span class="span5">
                         <form class="form-search" data-bind="submit: searchSites">
                          <div class="input-append">
                             <input type="text" class="search-query" data-bind="value: currentSearch" placeholder="Filter..."/>
@@ -40,9 +40,14 @@
                           </div>
                         </form>
                     </span>
-                    <span class="span6">
-                        <button class="btn" data-bind="click: clearSites">Clear selected sites (<span data-bind="text: currentProjectSites().length"></span>)</button>
-                        <button class="btn btn-primary pull-right" data-bind="click: useSelectedSites">Update sites</button>
+                    <span class="span3">
+                        <button class="btn" data-bind="click: clearSites">Clear sites (<span data-bind="text: currentProjectSites().length"></span>)</button>
+                    </span>
+                    <span class="span4">
+                        <span class=" pull-right">
+                        <button class="btn btn-primary" data-bind="click: useSelectedSites">Update sites</button>
+                        <button class="btn" data-bind="click: cancelUpdate">Cancel</button>
+                        </span>
                     </span>
                 </div>
 
@@ -126,6 +131,9 @@
                     <g:if test="${siteStatus>0}">,</g:if>'${site.siteId}'
                 </g:each>
             ]);
+            self.cancelUpdate = function(){
+                document.location.href = "${params.returnTo}";
+            }
             self.sitesToAdd = ko.observableArray([]);
             self.addAllMatched = function(){
               //alert('Not implemented. This should add all the sites in the search results');
