@@ -30,7 +30,7 @@ class ProxyController {
     def speciesListPost() {
         def postBody = request.JSON
         def druidParam = (postBody.druid) ? "/${postBody.druid}" : "" // URL part
-        def postResponse = webService.doPostAuth("${grailsApplication.config.lists.baseURL}/ws/speciesListPost${druidParam}", postBody)
+        def postResponse = webService.doPost("${grailsApplication.config.lists.baseURL}/ws/speciesListPost${druidParam}", postBody)
         if (postResponse.resp && postResponse.resp.druid) {
             def druid = postResponse.resp?.druid?:druid
             postBody.druid = druid

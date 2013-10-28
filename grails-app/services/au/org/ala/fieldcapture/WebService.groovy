@@ -98,13 +98,14 @@ class WebService {
             def user = userService.getUser()
             if (user) {
                 conn.setRequestProperty(grailsApplication.config.app.http.header.userId, user.userId) // used by ecodata
+                conn.setRequestProperty("Cookie", "ALA-Auth="+java.net.URLEncoder.encode(user.userName,"utf-8")) // used by specieslist
             }
             OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream())
             wr.write((postBody as JSON).toString())
             wr.flush()
             resp = conn.inputStream.text
             wr.close()
-            return [resp: JSON.parse(resp)]
+            return [resp: JSON.parse(resp?:"{}")] // fail over to empty json object if empty response string otherwise JSON.parse fails
         } catch (SocketTimeoutException e) {
             def error = [error: "Timed out calling web service. URL= ${url}."]
             log.error(error, e)
@@ -116,50 +117,6 @@ class WebService {
             log.error(error, e)
             return error
         }
-    }
-
-    /**
-     * Apache Commons HttpClient POST implementation that can POST to URLs under AUTH cookie check.
-     * Code borrowed from SP - posts to species list app.
-     *
-     * @param url
-     * @param postBody
-     * @return
-     */
-    def doPostAuth(String url, Map postBody) {
-        HttpClient client = new HttpClient()
-        PostMethod post = new PostMethod(url)
-        //post.setFollowRedirects(true)
-        def userEmail
-        //set the cookie from the user
-        try{
-            def user = userService.getUser()
-            if (user) {
-                post.setRequestHeader("Cookie", "ALA-Auth="+java.net.URLEncoder.encode(user.userName,"utf-8"))
-            }
-        }
-        catch(Exception e){
-            //should not happen as utf-8 is a supported encoding
-            log.error e.message,e
-        }
-        log.debug("Cookie = "+post.getRequestHeader("Cookie"))
-
-        try {
-            def json = postBody as JSON
-            StringRequestEntity requestEntity = new StringRequestEntity(json.toString(), "application/json", "UTF-8")
-            post.setRequestEntity(requestEntity)
-            int result = client.executeMethod(post)
-            def resp = post.getResponseBodyAsString()
-            log.debug "reponse code = $result"
-            return [resp: JSON.parse(resp?:"{}")]
-        } catch(Exception e){
-            def error = [error: "Failed calling web service. ${e.getMessage()} URL= ${url}.",
-                    statusCode: post.getStatusCode(),
-                    detail: post.getResponseBodyAsString()]
-            log.error error, e
-            return error
-        }
-        return null;
     }
 
     def doDelete(String url) {
