@@ -405,12 +405,7 @@
             }
         },
         clearFeatures: function(){
-           var self = this;
-//            self.features = {};
-//            self.featureIndex = {};
-//            self.currentId = 0;
-//            self.featureBounds =  new google.maps.LatLngBounds();
-
+            var self = this;
             //clear map of features
             $.each(self.featureIndex, function (i, obj) {
                 $.each(obj, function (j, f) {
@@ -419,6 +414,11 @@
                     }
                 });
             });
+
+            self.map.setCenter(new google.maps.LatLng(-28.5, 133.5));
+            self.map.setZoom(3);
+            self.featureIndex = {};
+            self.featureBounds =  new google.maps.LatLngBounds();
 
             //remove any overlays too
             //self.map.map.overlayMapTypes.setAt(0, null);

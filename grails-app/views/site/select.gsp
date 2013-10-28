@@ -40,11 +40,8 @@
                           </div>
                         </form>
                     </span>
-                    %{--<span class="span3">--}%
-                        %{--<button class="btn  pull-right" data-bind="click: addAllMatched">Add all</button>--}%
-                        %{--<button class="btn  pull-right" data-bind="click: clearAllMatched">Clear all</button>--}%
-                    %{--</span>--}%
-                    <span class="span3">
+                    <span class="span6">
+                        <button class="btn" data-bind="click: clearSites">Clear selected sites (<span data-bind="text: currentProjectSites().length"></span>)</button>
                         <button class="btn btn-primary pull-right" data-bind="click: useSelectedSites">Update sites</button>
                     </span>
                 </div>
@@ -57,11 +54,12 @@
                                    <span data-bind="text:name"></span>
                                </strong>
                                <br/>
-                               <span data-bind="visible:extent !=null && extent.geometry != null && extent.geometry.state != null">State: </span><span data-bind="text:extent !=null && extent.geometry != null ? extent.geometry.state : ''"></span>
-                               <span data-bind="visible:extent !=null && extent.geometry != null && extent.geometry.lga != null">LGA: </span><span data-bind="text:extent !=null && extent.geometry != null ? extent.geometry.lga : ''"></span>
+                               <span data-bind="visible:$data.extent === undefined">No georeference information available</span>
+                               <span data-bind="visible:$data.extent !== undefined && extent.geometry != null && extent.geometry.state != null">State: </span><span data-bind="text:$data.extent !== undefined && extent.geometry != null ? extent.geometry.state : ''"></span>
+                               <span data-bind="visible:$data.extent !== undefined && extent.geometry != null && extent.geometry.lga != null">LGA: </span><span data-bind="text:$data.extent !== undefined && extent.geometry != null ? extent.geometry.lga : ''"></span>
                             </span>
                             <span class="span2">
-                                  <button class="viewOnMap btn btn-small" data-bind="click: $parent.mapSite">
+                                  <button class="viewOnMap btn btn-small" data-bind="click: $parent.mapSite, disable:$data.extent === undefined">
                                       <i class="icon-eye-open"></i>
                                       Preview
                                   </button>
@@ -86,6 +84,10 @@
                         <button class="btn btn-small prev"><i class="icon-chevron-left"></i>&nbsp;previous</button>
                         <button class="btn btn-small next">next&nbsp;<i class="icon-chevron-right"></i></button>
                     </div>
+                    <g:if env="development">
+                        total: <span id="total"></span>
+                        offset: <span id="offset"></span>
+                    </g:if>
                 </div>
 
             </div>
@@ -94,14 +96,8 @@
                 <a href="" class="btn" data-bind="click: clearMap">Clear map</a>
             </div>
         </div>
-        <!--
-        <div class="form-actions">
-            <button type="button" data-bind="click: useSelectedSites" class="btn btn-primary">Use selected sites</button>
-            <button type="button" data-bind="click: cancel" id="cancel" class="btn">Cancel</button>
-        </div>
-        -->
 
-        <g:if test="debugUI">
+        <g:if env="development">
         <div class="container-fluid">
             <div class="expandable-debug">
                 <hr />
@@ -137,22 +133,17 @@
                   self.currentProjectSites.push(site.siteId);
               });
             },
-            self.clearAllMatched = function(){
+            self.clearSites = function(){
               self.currentProjectSites.removeAll();
+              $.each(self.sites(), function(idx,site){
+                 site.isProjectSite(false);
+              });
             }
             self.useSelectedSites = function(){
-
                 var dataToPost = {
                     projectId:self.projectId,
                     sites:self.currentProjectSites()
                 };
-                %{--alert('Sites to add: ' + self.sitesToAdd());--}%
-                %{--$.each(self.sitesToAdd(), function(idx, site){--}%
-                     %{--dataToPost.sites.push(site.siteId)--}%
-                %{--});--}%
-
-                console.log(dataToPost);
-
                 $.ajax({
                    url: "${createLink(controller: 'site', action: 'ajaxUpdateProjects')}",
                    type: 'POST',
@@ -163,17 +154,16 @@
                    contentType: 'application/json',
                    success: function (data) {
                       document.location.href = "${params.returnTo}";
-                      //alert('Added!');
                    },
                    error: function () {
-                       alert('There was a problem saving this site');
+                      alert('There was a problem saving this site');
                    }
                 });
             }
             self.mapSite = function(site){
                 console.log('Now mapping ' + site);
-                console.log(site);
                 mapSite(site);
+
             }
             self.clearMap = function(){
                 clearMap();
@@ -200,29 +190,103 @@
 
             }
             self.searchSites = function(){
-                $.ajax({
-                   url: "${createLink(controller: 'site', action: 'search')}?query=" + self.currentSearch() + "&max=100",
-                   type: 'GET',
-                   contentType: 'application/json',
-                   success: function (data) {
-                       //get results
-                       self.sites.removeAll();
-                       self.matchingSiteCount(data.hits.total);
-                       $.each(data.hits.hits, function(idx,hit){
-                          console.log(hit._source);
-                          var isProjectSite =($.inArray(hit._source.siteId, self.currentProjectSites()) >=0 );
-                          hit._source.isProjectSite = ko.observable(isProjectSite);
-                          self.sites.push(hit._source);
-                       })
-                   },
-                   error: function () {
-                       alert('There was a problem searching for sites.');
+                var max = 10;
+                var offset = 0;
+                queryForSites(self.currentSearch(), max, offset, function(data){
+                   $('#total').html(data.hits.total);
+                   $('#offset').html(0);
+
+                   if(data.hits.total > 10){
+                     initialisePagination(self.currentSearch(), 10, 0, data.hits.total);
+                   } else {
+                     $('#paginateTable').hide();
                    }
                 });
             }
             self.submitSites = function(){
                 alert('Not done - needs to save sites against the project.');
             }
+        }
+
+        function initialisePagination(query, pageSize, offset, total){
+           $('#paginateTable').show();
+           $('#paginateTable').data('query', query)
+           $('#paginateTable').data('max', pageSize);
+           $('#paginateTable').data('offset', offset);
+           $('#paginateTable').data('total', total);
+           $('#paginateTable .prev').addClass("disabled");
+        }
+
+        function paginateNext(){
+
+          if($('#paginateTable').data('offset')  + $('#paginateTable').data('max')> $('#paginateTable').data('total')){
+            return;
+          }
+
+          var query = $('#paginateTable').data('query');
+          var max   = $('#paginateTable').data('max');
+          var total = $('#paginateTable').data('total');
+          var newOffset = $('#paginateTable').data('offset') + max;
+
+          console.log('newOffset: ' + newOffset + ', total: ' + total +', max: ' + max);
+          //increment the stored offset
+          $('#paginateTable').data('offset', newOffset);
+
+          //debug
+          $('#offset').html(newOffset);
+
+          queryForSites(query, max, newOffset, function(data){
+              if(newOffset > 0){
+                 $('#paginateTable .prev').removeClass("disabled");
+              }
+
+              if(newOffset + max >= total){
+                $('#paginateTable .next').addClass("disabled");
+              }
+          });
+        }
+
+        function queryForSites(query, max, offset, callbackFcn){
+          $.ajax({
+               url: "${createLink(controller: 'site', action: 'search')}?query=" + query + "&max=" + max + "&offset=" + offset,
+               type: 'GET',
+               contentType: 'application/json',
+               success: function (data) {
+                   //get results
+                   siteModel.sites.removeAll();
+                   siteModel.matchingSiteCount(data.hits.total);
+
+                   $.each(data.hits.hits, function(idx,hit){
+                      console.log(hit._source);
+                      var isProjectSite =($.inArray(hit._source.siteId, siteModel.currentProjectSites()) >=0 );
+                      hit._source.isProjectSite = ko.observable(isProjectSite);
+                      siteModel.sites.push(hit._source);
+                      callbackFcn(data);
+                   })
+               },
+               error: function () {
+                   alert('There was a problem searching for sites.');
+               }
+          });
+        }
+
+        function paginatePrev(){
+
+          var offset = $('#paginateTable').data('offset') - $('#paginateTable').data('max');
+          if($('#paginateTable').data('offset') == 0 ){
+            return;
+          }
+          $('#paginateTable').data('offset', offset);
+
+          var query = $('#paginateTable').data('query');
+          var max   = $('#paginateTable').data('max');
+
+          queryForSites(query, max, offset, function(data){
+               if(offset <= 0){
+                 $('#paginateTable .prev').addClass("disabled");
+               }
+               $('#paginateTable .next').removeClass("disabled");
+          });
         }
 
         var mapOptions = {
@@ -239,6 +303,10 @@
         ko.applyBindings(siteModel);
 
         siteModel.searchSites();
+
+        //pagination event handlers
+        $('#paginateTable .next').click(paginateNext)
+        $('#paginateTable .prev').click(paginatePrev)
     });
 
 </r:script>
