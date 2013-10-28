@@ -1,6 +1,7 @@
 package au.org.ala.fieldcapture
 
 import au.org.ala.cas.util.AuthenticationCookieUtils
+import grails.util.Environment
 import groovy.xml.MarkupBuilder
 import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
 
@@ -202,6 +203,19 @@ class FCTagLib {
                     mkp.yieldUnescaped("&nbsp")
                     mkp.yield(message(code:'default.about.label', default: 'Dashboard'))
                 }
+            }
+            Environment.executeForCurrentEnvironment {
+              development {
+                li(class:attrs.active == 'advanced' ? 'active' : '') {
+                    a(href:createLink(controller: 'home', action:'advanced')) {
+                        i(class:"icon-th") {
+                            mkp.yieldUnescaped("&nbsp;")
+                        }
+                        mkp.yieldUnescaped("&nbsp")
+                        mkp.yield(message(code:'default.advanced.label', default: 'Advanced view'))
+                    }
+                }
+              }
             }
         }
 

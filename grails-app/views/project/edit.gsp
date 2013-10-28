@@ -128,6 +128,7 @@
                 <input type="text" data-bind="value:attribution" id="imageAttribution"/>
             </div>
         </div>
+        <g:if test="${grailsApplication.config.debugUI}">
         <div class="expandable-debug">
             <h3>Debug</h3>
             <div>
@@ -135,6 +136,7 @@
                 <pre data-bind="text:ko.toJSON($root,null,2)"></pre>
             </div>
         </div>
+        </g:if>
     </div>
     <!-- /ko -->
 
@@ -143,6 +145,7 @@
         <button type="button" id="cancel" class="btn">Cancel</button>
     </div>
 
+    <g:if env="development">
     <hr />
     <div class="expandable-debug">
         <h3>Debug</h3>
@@ -156,7 +159,8 @@
             <g:textField class="" name="currentStage" data-bind="value:currentStage"/>
         </div>
     </div>
-
+    </div>
+    </g:if>
 </div>
 <r:script>
 

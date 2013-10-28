@@ -111,6 +111,10 @@ class SiteService {
         webService.doDelete(grailsApplication.config.ecodata.baseUrl + 'site/' + id)
     }
 
+    def deleteSitesFromProject(projectId){
+        webService.doDelete(grailsApplication.config.ecodata.baseUrl + 'project/deleteSites/' + projectId)
+    }
+
     /**
      * Returns json that describes in a generic fashion the features to be placed on a map that
      * will represent the site's locations.

@@ -151,9 +151,8 @@
             </div>
         </div>
     </div>
-
+    <g:if env="development">
     <hr />
-
     <div class="expandable-debug">
         <h3>Debug</h3>
         <div>
@@ -167,6 +166,7 @@
             <pre>${projects}</pre>
         </div>
     </div>
+    </g:if>
 </div>
 
 <r:script>

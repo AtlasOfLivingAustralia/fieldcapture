@@ -87,6 +87,7 @@ class UserService {
 
     def checkEmailExists(String email) {
         def userList = authService.allUserNameList
+        println ("######################  userList:  " + userList.size())
         def match = userList.find { it.userName?.toLowerCase() == email.toLowerCase() }
         return match?.userId?:""
     }

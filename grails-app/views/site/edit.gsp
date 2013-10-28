@@ -205,6 +205,7 @@
             </div>
         </bs:form>
     </div>
+    <g:if env="development">
     <div class="container-fluid">
         <div class="expandable-debug">
             <hr />
@@ -223,6 +224,7 @@
             </div>
         </div>
     </div>
+    </g:if>
 
 <!-- templates -->
 <script type="text/html" id="none">
@@ -331,15 +333,15 @@
         <div class="row-fluid controls-row" style="display:none;">
             <span class="label label-success">Type</span> <span data-bind="text:geometry().type"></span>
         </div>
-        <div class="row-fluid controls-row">
+        <div class="row-fluid controls-row" data-bind="visible: geometry!=null && geometry().areaKmSq!=null && geometry().areaKmSq != '' ">
             <span class="label label-success">Area (km&sup2;)</span> <span data-bind="text:geometry().areaKmSq"></span>
         </div>
 
-        <div class="row-fluid controls-row gazProperties">
+        <div class="row-fluid controls-row gazProperties" data-bind="visible: geometry!=null && geometry().state!=null && geometry().state!=''">
             <span class="label label-success">State/territory</span> <span data-bind="text:geometry().state"></span>
         </div>
 
-        <div class="row-fluid controls-row gazProperties">
+        <div class="row-fluid controls-row gazProperties" data-bind="visible: geometry!=null && geometry().lga!=null && geometry().lga!=''">
             <span class="label label-success">Local Gov. Area</span> <span data-bind="text:geometry().lga"></span>
         </div>
 
@@ -814,6 +816,7 @@
             self.toJSON = function(){
                 var js = ko.toJS(self);
                 delete js.drawnShape;
+                delete js.projectList;
                 return js;
             }
             self.loadExtent = function(){

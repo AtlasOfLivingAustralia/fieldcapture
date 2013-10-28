@@ -53,6 +53,19 @@ class SearchService {
         webService.getJson(url)
     }
 
+    def allSites(params) {
+        //params.max = 9999
+        params.flimit = 999
+        params.fsort = "term"
+        //params.offset = 0
+//        params.query = "docType:site"
+        params.fq = "docType:site"
+        //def url = elasticBaseUrl + commonService.buildUrlParamsFromMap(params)
+        def url = grailsApplication.config.ecodata.baseUrl + 'search/elasticHome' + commonService.buildUrlParamsFromMap(params)
+        log.debug "url = $url"
+        webService.getJson(url)
+    }
+
     def HomePageFacets(params) {
         params.flimit = 999
         params.fsort = "term"
@@ -62,9 +75,9 @@ class SearchService {
         //def url = elasticBaseUrl + commonService.buildUrlParamsFromMap(params)
         def url = grailsApplication.config.ecodata.baseUrl + 'search/elasticHome' + commonService.buildUrlParamsFromMap(params)
         log.debug "url = $url"
-        def Jsonstring = webService.get(url)
-        def JsonObj = new JsonSlurper().parseText( Jsonstring )
-        JsonObj
+        def jsonstring = webService.get(url)
+        def jsonObj = new JsonSlurper().parseText( jsonstring )
+        jsonObj
     }
 
     def getProjectsForIds(params) {

@@ -232,19 +232,20 @@
     </div>
 </g:else>
 
+<g:if env="development">
 <div class="expandable-debug">
     <h3>Debug</h3>
     <div>
-        <!--h4>KO model</h4>
-            <pre data-bind="text:ko.toJSON($root,null,2)"></pre-->
         <h4>Results</h4>
         <pre>${results}</pre>
-        <h4>GeoPoints</h4>
+        <h4>Geo Points</h4>
         <pre>${geoPoints}</pre>
         <h4>Projects</h4>
         <pre>${projects}</pre>
     </div>
 </div>
+</g:if>
+
 </div>
 
 <r:script>

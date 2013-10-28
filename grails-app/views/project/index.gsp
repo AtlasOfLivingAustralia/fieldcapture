@@ -9,7 +9,7 @@
     var fcConfig = {
         serverUrl: "${grailsApplication.config.grails.serverURL}",
         projectUpdateUrl: "${createLink(action: 'ajaxUpdate', id: project.projectId)}",
-        siteDeleteUrl: "${createLink(controller: 'site', action: 'ajaxDelete')}",
+        siteDeleteUrl: "${createLink(controller: 'site', action: 'ajaxDeleteSitesFromProject')}",
         siteViewUrl: "${createLink(controller: 'site', action: 'index')}",
         activityEditUrl: "${createLink(controller: 'activity', action: 'edit')}",
         activityEnterDataUrl: "${createLink(controller: 'activity', action: 'enterData')}",
@@ -145,14 +145,21 @@
             <!-- SITES -->
             <div data-bind="visible: sites.length == 0">
                <p>No sites are currently associated with this project.</p>
-                <div class="btn-group btn-group-horizontal pull-right">
+               <div class="btn-group btn-group-horizontal ">
                     <button data-bind="click: $root.addSite" type="button" class="btn">Add new site</button>
                     <button data-bind="click: $root.addExistingSite" type="button" class="btn">Add existing site</button>
-                </div>
+               </div>
              </div>
 
             <div class="row-fluid"  data-bind="visible: sites.length > 0">
-                <div class="span4 well list-box">
+                <div class="span5 well list-box">
+
+                    <div class="btn-group btn-group-vertical pull-right">
+                        <a data-bind="click: $root.addSite" type="button" class="btn ">Add new site</a>
+                        <a data-bind="click: $root.addExistingSite" type="button" class="btn">Add existing site</a>
+                        <a data-bind="click: $root.removeAllSites" type="button" class="btn">Delete all sites</a>
+                    </div>
+
                     <div class="control-group">
                         <div class="input-append">
                             <g:textField class="filterinput input-medium" data-target="site"
@@ -166,6 +173,7 @@
                               style="display:none;margin-left:4px;"
                               data-bind="visible:isSitesFiltered,valueUpdate:'afterkeyup'">Filtered</span>
                     </div>
+
                     <div class="scroll-list">
                         <ul id="siteList"
                             data-bind="template: {foreach:sites},
@@ -187,23 +195,15 @@
                         </li>
                     </ul>
                 </div>--}%
-                <div class="span6">
+                <div class="span7">
                     <div id="map" style="width:100%"></div>
-                </div>
-                <div class="span2">
-                    <div class="btn-group btn-group-vertical pull-right">
-                        <button data-bind="click: $root.addSite" type="button" class="btn ">Add new site</button>
-                        <button data-bind="click: $root.addExistingSite" type="button" class="btn">Add existing site</button>
-                        <button data-bind="click: $root.removeAllSites" type="button" class="btn">Delete all sites</button>
-                    </div>
                 </div>
             </div>
         </div>
 
         <div class="tab-pane" id="dashboard">
             <!-- DASHBOARD -->
-            <gvisualization:apiImport/>
-            <h2 style="font-weight:normal;margin-top:0;">Totals across all activities under this project.</h2>
+            <h2 style="margin-top:0;">Totals across all activities under this project</h2>
             <div class="row-fluid">
                 <div class="span4">
                 <g:if test="${metrics}">
@@ -234,13 +234,13 @@
             <div class="tab-pane" id="admin">
             <!-- ADMIN -->
                 <div class="row-fluid">
-                    <div class="span3 large-space-before">
+                    <div class="span2 large-space-before">
                         <ul id="adminNav" class="nav nav-tabs nav-stacked ">
                             <li class="active"><a href="#permissions" id="permissions-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Project access</a></li>
                             <li><a href="#species" id="species-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Species of interest</a></li>
                         </ul>
                     </div>
-                    <div class="span9">
+                    <div class="span10">
                         <div class="pill-content">
                             <div id="permissions" class="pill-pane active">
                                 <h3>Project Access</h3>
@@ -285,6 +285,7 @@
         </g:if>
     </div>
 
+    <g:if env="development">
     <hr />
     <div class="expandable-debug">
         <h3>Debug</h3>
@@ -301,9 +302,9 @@
             <pre>${mapFeatures}</pre>
             <h4>activityTypes</h4>
             <pre>${activityTypes}</pre>
-
         </div>
     </div>
+    </g:if>
 </div>
     <r:script>
         $(window).load(function () {
@@ -437,7 +438,14 @@
                     map.unHighlightFeatureById(this.name());
                 };
                 this.removeAllSites = function () {
-                    self.notImplemented();
+                   var that = this;
+                   $.get(fcConfig.siteDeleteUrl + '/' + '${project.projectId}', function (data) {
+                        if (data.status === 'deleted') {
+                            //self.sites.remove(that);
+                        }
+                        //FIXME - currently doing a page reload, not nice
+                        document.location.href = here;
+                    });
                 };
                 this.addSite = function () {
                      document.location.href = fcConfig.siteCreateUrl;

@@ -6,11 +6,17 @@ import org.codehaus.groovy.grails.plugins.web.taglib.ApplicationTagLib
 
 class SiteController {
 
-    def siteService, projectService, activityService, metadataService, userService
+    def siteService, projectService, activityService, metadataService, userService, searchService
 
     static defaultAction = "index"
 
     static ignore = ['action','controller','id']
+
+    def search = {
+        params.fq = "docType:site"
+        def results = searchService.fulltextSearch(params)
+        render results as JSON
+    }
 
     def select(){
         // permissions check
@@ -18,7 +24,7 @@ class SiteController {
             flash.message = "Access denied: User does not have <b>editor</b> permission for projectId ${params.projectId}"
             redirect(controller:'project', action:'index', id: params.projectId)
         }
-        render view: 'select', model: [sites:siteService.list(), project:projectService.get(params.projectId)]
+        render view: 'select', model: [project:projectService.get(params.projectId)]
     }
 
     def create(){
@@ -83,6 +89,17 @@ class SiteController {
         }
     }
 
+    def ajaxDeleteSitesFromProject(String id){
+        def status = siteService.deleteSitesFromProject(id)
+        if (status < 400) {
+            def result = [status: 'deleted']
+            render result as JSON
+        } else {
+            def result = [status: status]
+            render result as JSON
+        }
+    }
+
     def ajaxDelete(String id) {
         def status = siteService.delete(id)
         if (status < 400) {
@@ -117,8 +134,8 @@ class SiteController {
 
     def ajaxUpdateProjects() {
         def postBody = request.JSON
-        println "Body: " + postBody
-        println "Params:"
+        log.debug "Body: " + postBody
+        log.debug "Params:"
         params.each { println it }
         //todo: need to detect 'cleared' values which will be missing from the params - implement _destroy
         def values = [:]
@@ -133,16 +150,18 @@ class SiteController {
         }
         log.debug "values: " + (values as JSON).toString()
 
-        siteService.updateProjectAssociations(values)
-        def result = [status: 'updated']
-
-        render result as JSON
+        def result = siteService.updateProjectAssociations(values)
+        if(result.error){
+            response.status = 500
+        } else {
+            render result as JSON
+        }
     }
 
     def ajaxUpdate(String id) {
         def postBody = request.JSON
-        println "Body: " + postBody
-        println "Params:"
+        log.debug "Body: " + postBody
+        log.debug "Params:"
         params.each { println it }
         //todo: need to detect 'cleared' values which will be missing from the params - implement _destroy
         def values = [:]

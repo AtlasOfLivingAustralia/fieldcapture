@@ -138,6 +138,7 @@
         </div>
     </g:else>
 
+    <g:if env="development">
     <div class="expandable-debug">
         <h3>Debug</h3>
         <div>
@@ -153,6 +154,7 @@
             <pre>${geoPoints}</pre>
         </div>
     </div>
+    </g:if>
 </div>
 
 <r:script>

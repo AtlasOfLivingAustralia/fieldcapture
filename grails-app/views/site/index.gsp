@@ -31,7 +31,7 @@
         <li class="active">${site.name?.encodeAsHTML()}</li>
     </ul>
     <div class="row-fluid space-after">
-        <div class="span8"><!-- left block of header -->
+        <div class="span6"><!-- left block of header -->
             <g:if test="${flash.errorMessage || flash.message}">
                 <div>
                     <div class="alert alert-error">
@@ -40,6 +40,7 @@
                     </div>
                 </div>
             </g:if>
+
             <div>
                 <div class="clearfix">
                     <h1 class="pull-left">${site?.name?.encodeAsHTML()}</h1>
@@ -51,14 +52,10 @@
                     </div>
                 </g:if>
             </div>
-            <div style="margin-top: 20px;">
-                <span class="span4">
+
+            <p>
                     <span class="label label-info">External Id:</span> ${site.externalId?:'Not specified'}
-                </span>
-                <span class="span4">
                     <span class="label label-info">Type:</span> ${site.type?:'Not specified'}
-                </span>
-                <span class="span4">
                     <span class="label label-info">Area:</span>
                     <g:if test="${site?.extent?.geometry?.area}">
                         ${site.extent.geometry.area} square km
@@ -67,36 +64,28 @@
                         Not specified
                     </g:else>
                 </span>
-            </div>
+            </p>
 
             <g:if test="${site.extent?.geometry}">
-            <div style="margin-top: 20px;">
-                <span class="span4">
+            <p>
                     <span class="label label-success">State/territory:</span> ${site.extent.geometry.state?:'Not specified'}
-                </span>
-                <span class="span4">
                     <span class="label label-success">Local government area:</span> ${site.extent.geometry.lga?:'Not specified'}
-                </span>
-                <span class="span4">
                     <span class="label label-success">NRM:</span> ${site.extent.geometry.nrm?:'Not specified'}
-                </span>
-            </div>
-            <div style="margin-top: 20px;">
-                <span class="span12">
+            </p>
+
+            <p>
                     <span class="label label-success">Locality:</span> ${site.extent.geometry.locality?:'Not specified'}
-                </span>
-            </div>
+            </p>
             </g:if>
 
             <div>
-                <span class="span12">
-                    <span class="label label-info">Notes:</span>
-                    ${site.notes?.encodeAsHTML()}</span>
+                <span class="label label-info">Notes:</span>
+                ${site.notes?.encodeAsHTML()}
             </div>
 
             <g:if test="${site.projects}">
             <div>
-                <span class="span2"><span class="label  label-info">Projects:</span></span>
+                <h2>Projects associated with this site</h2>
                 <ul style="list-style: none;margin:13px 0;">
                     <g:each in="${site.projects}" var="p" status="count">
                         <li>
@@ -109,8 +98,11 @@
             </g:if>
 
         </div>
-        <div class="span4">
-            <div id="smallMap" style="width:100%"></div>
+        <div class="span6">
+            <div id="siteNotDefined" class="hide pull-right">
+                <span class="label label-important">This site does not have a geoference associated with it.</span>
+            </div>
+            <div id="smallMap" style="width:100%;height:500px;"></div>
             <g:if test="${site?.extent?.geometry?.pid}">
                 <div style="margin-top:20px;" class="pull-right">
                     <a href="http://spatial-dev.ala.org.au/ws/shape/shp/${site.extent.geometry.pid}" class="btn">Download ShapeFile</a>
@@ -149,7 +141,7 @@
             </span>
         </div>
     </div>
-
+    <g:if env="development">
     <div class="expandable-debug">
         <hr />
         <h3>Debug</h3>
@@ -166,6 +158,7 @@
             <pre>${mapFeatures}</pre>
         </div>
     </div>
+    </g:if>
     </div>
     <r:script>
 
@@ -292,14 +285,17 @@
             }
 
             var mapFeatures = $.parseJSON('${mapFeatures}');
-            if(mapFeatures !=null && mapFeatures.features !== undefined && mapFeatures.features.length >0){
-                init_map_with_features({
-                        mapContainer: "smallMap",
-                        zoomToBounds:true,
-                        zoomLimit:16
-                    },
-                    mapFeatures
-                );
+
+            init_map_with_features({
+                    mapContainer: "smallMap",
+                    zoomToBounds:true,
+                    zoomLimit:16
+                },
+                mapFeatures
+            );
+
+            if(mapFeatures.features === undefined || mapFeatures.features.length == 0){
+                $('#siteNotDefined').show();
             }
         });
 
