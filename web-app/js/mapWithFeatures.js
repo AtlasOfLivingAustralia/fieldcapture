@@ -263,8 +263,8 @@
             var self = this;
             //console.log('All locations loaded - this.zoomToBounds - ' + this.zoomToBounds + " - zoom limit - " + self.zoomLimit);
             if (this.zoomToBounds) {
-                console.log("Zooming to bounds");
-                console.log(this.featureBounds);
+                //console.log("Zooming to bounds");
+                //console.log(this.featureBounds);
                 this.map.fitBounds(this.featureBounds);  // this happens asynchronously so need to wait for bounds to change
                 // to sanity-check the zoom level
 //                var boundsListener = google.maps.event.addListener(this.map, 'bounds_changed', function(event) {
@@ -273,8 +273,8 @@
 //                    }
 //                    google.maps.event.removeListener(boundsListener);
 //                });
-            } else {
-                console.log("NOT Zooming to bounds");
+          //  } else {
+            //    console.log("NOT Zooming to bounds");
             }
         },
         //
