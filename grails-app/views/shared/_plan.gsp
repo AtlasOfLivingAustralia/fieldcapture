@@ -59,7 +59,7 @@
             <thead>
             <tr data-bind="visible: stages.length > 0">
                 <th>Stage</th>
-                <th data-bind="attr:{width:tweakActionWidth}"></th>
+                <th data-bind="attr:{width:tweakActionWidth}">Actions</th>
                 <th style="min-width:64px">From</th>
                 <th style="min-width:64px">To</th>
                 <th>Activity</th>
@@ -91,7 +91,7 @@
                 <td><span data-bind="text:plannedStartDate.formattedDate"></span></td>
                 <td><span data-bind="text:plannedEndDate.formattedDate"></span></td>
                 <td>
-                    <span data-bind="text:type,click:$root.editActivity, css:{clickable:$root.canEditActivity}"></span>
+                    <a data-bind="text:type,click:$root.editActivity, css:{clickable:$root.canEditActivity}"></a>
                 </td>
                 <td>
                     <span class="truncate" data-bind="text:description"></span>
@@ -178,15 +178,16 @@
                 itemsPerPage: 30,
                 onItemClick: function(data) {
                     alert(data.type + ' (' + data.progress() + ')');
-                }/*,
+                },/*,
                 onAddClick: function(dt, rowId) {
                     alert("Empty space clicked - add an item!");
-                },
+                }, */
                 onRender: function() {
-                    if (window.console && typeof console.log === "function") {
-                        console.log("chart rendered");
-                    }
-                }*/
+                    // Disable mouse wheel scrolling in the gantt chart as it captures the page scrolling - there is no API option to do this.
+                    var element = document.getElementById('gantt-container');
+                    var wheel = 'onwheel' in element ? 'wheel' : document.onmousewheel !== undefined ? 'mousewheel' : 'DOMMouseScroll';
+                    $(element).off(wheel);
+                }
             });
         }
     }
@@ -269,7 +270,7 @@
             this.readyForApproval = ko.computed(function() {
                 return self.isCurrentStage ?
                     $.grep(self.activities, function (act, i) {
-                        return !(act.progress() === 'finished' || act.progress() === 'deferred');
+                        return (act.progress() === 'planned' || act.progress() === 'started');
                     }).length === 0 :
                     false;
             }, this, {deferEvaluation: true});
