@@ -48,6 +48,10 @@
         featureIndex: {},
         // a n incremented counter used as id if no id exists in the feature description
         currentId: 0,
+        //default center
+        defaultCenter: new google.maps.LatLng(-28.5, 133.5),
+        //default center
+        defaultZoom: 3,
         // default overlay options
         overlayOptions: {strokeColor:'#BC2B03',fillColor:'#DF4A21',fillOpacity:0.3,strokeWeight:1,zIndex:1,editable:false},
         // keep count of locations as we load them so we know when we've finished
@@ -89,6 +93,13 @@
                 this.load(features.features);
             }
             return this;
+        },
+        reset:function(){
+            var self = this;
+            self.map.setCenter(self.defaultCenter);
+            self.map.setZoom(self.defaultZoom);
+            self.featureIndex = {};
+            self.featureBounds =  new google.maps.LatLngBounds();
         },
         mapSite: function(site){
            var self = this;
@@ -415,10 +426,7 @@
                 });
             });
 
-            self.map.setCenter(new google.maps.LatLng(-28.5, 133.5));
-            self.map.setZoom(3);
-            self.featureIndex = {};
-            self.featureBounds =  new google.maps.LatLngBounds();
+            self.reset();
 
             //remove any overlays too
             //self.map.map.overlayMapTypes.setAt(0, null);

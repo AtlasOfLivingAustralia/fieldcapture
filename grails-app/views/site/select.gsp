@@ -296,7 +296,6 @@
             features:[]
         };
 
-
         init_map_with_features({mapContainer:'map'}, mapOptions);
 
         siteModel = new SiteSelectModel();
