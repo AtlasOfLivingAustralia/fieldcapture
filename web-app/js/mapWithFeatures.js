@@ -49,8 +49,7 @@
         // a n incremented counter used as id if no id exists in the feature description
         currentId: 0,
         // default overlay options
-        overlayOptions: {strokeColor:'#BC2B03',fillColor:'#DF4A21',fillOpacity: 0.3,strokeWeight: 1,
-            zIndex: 1, editable:false},
+        overlayOptions: {strokeColor:'#BC2B03',fillColor:'#DF4A21',fillOpacity:0.3,strokeWeight:1,zIndex:1,editable:false},
         // keep count of locations as we load them so we know when we've finished
         locationsLoaded: 0,
         // keep a running bounds for loaded locations so we can zoom when all are loaded
@@ -91,14 +90,110 @@
             }
             return this;
         },
+        mapSite: function(site){
+           var self = this;
+           console.log(site);
+           var loaded = self.loadFeature(site.extent.geometry);
+           if(loaded){
+             self.allLocationsLoaded();
+           }
+        },
+        loadFeature: function(loc){
+            var self = this, f, iw;
+            console.log("Loading feature: " + loc);
+            console.log(loc);
+            var loaded = false;
+            if(loc != null && loc.type != null){
+                console.log("Loading feature type: " + loc.type);
+                if (loc.type.toLowerCase() === 'point') {
+                    var ll = new google.maps.LatLng(Number(loc.coordinates[1]), Number(loc.coordinates[0]));
+                    f = new google.maps.Marker({
+                        map: self.map,
+                        position: ll,
+                        title: loc.name
+                    });
+                    self.featureBounds.extend(ll);
+                    self.addFeature(f, loc);
+                    loaded = true;
+                } else if (loc.type === 'dot') {
+                    var ll = new google.maps.LatLng(Number(loc.latitude), Number(loc.longitude));
+                    f = new google.maps.Marker({
+                        map: self.map,
+                        position: ll,
+                        title: loc.name,
+                        icon: map.smallDotIcon
+                    });
+                    self.featureBounds.extend(ll);
+                    self.addFeature(f, loc, iw);
+                    loaded = true;
+                } else if (loc.type.toLowerCase() === 'circle') {
+                   var ll = new google.maps.LatLng(loc.coordinates[1], loc.coordinates[0]);
+                   f = new google.maps.Circle({
+                      center: ll,
+                      radius: loc.radius,
+                      map: self.map,
+                      editable: false
+                   });
+                   //set the extend of the map
+                   //console.log("f.getBounds()",f.getBounds());
+                   self.featureBounds.extend(f.getBounds().getNorthEast());
+                   self.featureBounds.extend(f.getBounds().getSouthWest());
+                   self.addFeature(f, loc, iw);
+                   loaded = true;
+                } else if (loc.type.toLowerCase() === 'polygon') {
+                    var points;
+                    var paths = geojsonToPaths(loc.coordinates[0]);
+                    f = new google.maps.Polygon({
+                        paths: paths,
+                        map: self.map,
+                        title: 'polygon name',
+                        editable: false
+                    });
+                    f.setOptions(self.overlayOptions);
+                    // flatten arrays to array of points
+                    points = [].concat.apply([], paths);
+                    // extend bounds by each point
+                    $.each(points, function (i,obj) {self.featureBounds.extend(obj);});
+                    self.addFeature(f, loc, iw);
+                    loaded = true;
+                } else if (loc.type.toLowerCase() === 'pid') {
+                    //load the overlay instead
+                    var pid = loc.pid;
+                    //console.log('Loading PID: ' + pid);
+                    f = new PIDLayer(pid,256,256);
+                    map.map.overlayMapTypes.push(f);
+                    $.ajax({
+                        url: 'http://spatial-dev.ala.org.au/layers-service/object/' + pid,
+                        dataType:'jsonp'
+                    }).done(function(data) {
+                       //console.log('Retrieving metadata for object.....');
+                       if(data !== undefined && data.bbox !== undefined){
+                           var coords = data.bbox.replace(/POLYGON/g,"").replace(/[\\(|\\)]/g, "");
+                           var pointArray = coords.split(",");
+                           self.featureBounds.extend(new google.maps.LatLng(pointArray[1].split(" ")[1],pointArray[1].split(" ")[0]));
+                           self.featureBounds.extend(new google.maps.LatLng(pointArray[3].split(" ")[1],pointArray[3].split(" ")[0]));
+                       } else {
+//                           self.featureBounds.extend(new google.maps.LatLng(0,0));
+//                           self.featureBounds.extend(new google.maps.LatLng(-90, 180));
+                       }
+                       self.addFeature(f, loc);
+                    });
+                    loaded = true;
+                } else {
+                    // count the location as loaded even if we didn't
+                    console.log('Feature type not supported: ' + loc.type);
+                }
+                return loaded;
+            }
+        },
         // loads the features
-        load: function (features) {
+        load: function(features) {
 
-            if(features ===undefined || features.length == 0){
+            if(features === undefined || features.length == 0){
                 return;
             }
 
-            var self = this, f, p, iw;
+            var self = this, iw;
 
             if (!iw) {
                 iw = new google.maps.InfoWindow({maxWidth: 360});
@@ -107,75 +202,11 @@
             $.each(features, function (i,loc) {
                 //console.log('Loading feature with type:' + loc.type + "|" + loc.latitude);
                 if(loc != null){
-                    if (loc.type === 'Point') {
-                        var ll = new google.maps.LatLng(Number(loc.coordinates[1]), Number(loc.coordinates[0]));
-                        f = new google.maps.Marker({
-                            map: self.map,
-                            position: ll,
-                            title: loc.name
-                        });
-                        self.featureBounds.extend(ll);
-                        self.addFeature(f, loc);
-                    } else if (loc.type === 'dot') {
-                        var ll = new google.maps.LatLng(Number(loc.latitude), Number(loc.longitude));
-                        f = new google.maps.Marker({
-                            map: self.map,
-                            position: ll,
-                            title: loc.name,
-                            icon: map.smallDotIcon
-                        });
-                        self.featureBounds.extend(ll);
-                        self.addFeature(f, loc, iw);
-                    } else if (loc.type === 'Circle') {
-                       f = new google.maps.Circle({
-                          center: new google.maps.LatLng(loc.coordinates[1], loc.coordinates[0]),
-                          radius: loc.radius,
-                          map: self.map,
-                          editable: false
-                       });
-                       //set the extend of the map
-                       //console.log("f.getBounds()",f.getBounds());
-                       self.featureBounds.extend(f.getBounds().getNorthEast());
-                       self.featureBounds.extend(f.getBounds().getSouthWest());
-                       self.addFeature(f, loc, iw);
-                    } else if (loc.type === 'Polygon') {
-                        var points;
-                        var paths = geojsonToPaths(loc.coordinates[0]);
-                        f = new google.maps.Polygon({
-                            paths: paths,
-                            map: self.map,
-                            title: 'polygon name',
-                            editable: false
-                        });
-                        f.setOptions(self.overlayOptions);
-                        // flatten arrays to array of points
-                        points = [].concat.apply([], paths);
-                        // extend bounds by each point
-                        $.each(points, function (i,obj) {self.featureBounds.extend(obj);});
-                        self.addFeature(f, loc, iw);
-                    } else if (loc.type === 'pid') {
-                        //load the overlay instead
-                        var pid = loc.pid;
-                        //console.log('Loading PID: ' + pid);
-                        f = new PIDLayer(pid,256,256);
-                        map.map.overlayMapTypes.push(f);
-                        $.ajax({
-                            url: 'http://spatial-dev.ala.org.au/layers-service/object/' + pid,
-                            dataType:'jsonp'
-                        }).done(function(data) {
-                           //console.log('Retrieving metadata for object.....');
-                           var coords = data.bbox.replace(/POLYGON/g,"").replace(/[\\(|\\)]/g, "");
-                           var pointArray = coords.split(",");
-                           self.featureBounds.extend(new google.maps.LatLng(pointArray[1].split(" ")[1],pointArray[1].split(" ")[0]));
-                           self.featureBounds.extend(new google.maps.LatLng(pointArray[3].split(" ")[1],pointArray[3].split(" ")[0]));
-                           self.addFeature(f, loc);
-                        });
-                    } else {
-                        // count the location as loaded even if we didn't
-                        self.locationLoaded();
-                    }
+                   self.loadFeature(loc);
+                   //self.locationLoaded();
                 }
             });
+
             self.allLocationsLoaded();
         },
         addFeature: function (f, loc, iw) {
@@ -232,7 +263,8 @@
             var self = this;
             //console.log('All locations loaded - this.zoomToBounds - ' + this.zoomToBounds + " - zoom limit - " + self.zoomLimit);
             if (this.zoomToBounds) {
-                //console.log(this.featureBounds);
+                console.log("Zooming to bounds");
+                console.log(this.featureBounds);
                 this.map.fitBounds(this.featureBounds);  // this happens asynchronously so need to wait for bounds to change
                 // to sanity-check the zoom level
 //                var boundsListener = google.maps.event.addListener(this.map, 'bounds_changed', function(event) {
@@ -241,6 +273,8 @@
 //                    }
 //                    google.maps.event.removeListener(boundsListener);
 //                });
+            } else {
+                console.log("NOT Zooming to bounds");
             }
         },
         //
@@ -369,6 +403,25 @@
                     }
                 });
             }
+        },
+        clearFeatures: function(){
+           var self = this;
+//            self.features = {};
+//            self.featureIndex = {};
+//            self.currentId = 0;
+//            self.featureBounds =  new google.maps.LatLngBounds();
+
+            //clear map of features
+            $.each(self.featureIndex, function (i, obj) {
+                $.each(obj, function (j, f) {
+                    if(f.setMap !== undefined){
+                        f.setMap(null);
+                    }
+                });
+            });
+
+            //remove any overlays too
+            //self.map.map.overlayMapTypes.setAt(0, null);
         }
     };
 
@@ -382,9 +435,17 @@
     function init (options, features) {
         return map.init(options, features);
     }
+    function mapSite(site){
+        return map.mapSite(site)
+    }
+    function clearMap(){
+        map.clearFeatures();
+    }
 
     // expose these methods to the global scope
     windows.init_map_with_features = init;
+    windows.mapSite = mapSite;
+    windows.clearMap = clearMap;
     windows.alaMap = map;
 
 }(this));
