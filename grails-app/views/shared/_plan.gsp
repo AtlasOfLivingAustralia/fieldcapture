@@ -169,6 +169,28 @@
         return '';
     }
 
+    function drawGanttChart(ganttData) {
+        if (ganttData.length > 0) {
+            $("#gantt-container").gantt({
+                source: ganttData,
+                navigate: "scroll",
+                scale: "weeks",
+                itemsPerPage: 30,
+                onItemClick: function(data) {
+                    alert(data.type + ' (' + data.progress() + ')');
+                }/*,
+                onAddClick: function(dt, rowId) {
+                    alert("Empty space clicked - add an item!");
+                },
+                onRender: function() {
+                    if (window.console && typeof console.log === "function") {
+                        console.log("chart rendered");
+                    }
+                }*/
+            });
+        }
+    }
+
     $(window).load(function () {
 
         var PlannedActivity = function (act, isFirst) {
@@ -200,6 +222,7 @@
                         if (data.error) {
                             alert(data.detail + ' \n' + data.error);
                         }
+                        drawGanttChart(planViewModel.getGanttData());
                     },
                     error: function (data) {
                         alert('An unhandled error occurred: ' + data.status);
@@ -555,26 +578,8 @@
         });
 
         // the following draws the gantt chart
-        var ganttData = planViewModel.getGanttData();
-        if (ganttData.length > 0) {
-            $("#gantt-container").gantt({
-                source: ganttData,
-                navigate: "scroll",
-                scale: "weeks",
-                itemsPerPage: 30,
-                onItemClick: function(data) {
-                    alert(data.type + ' (' + data.progress() + ')');
-                }/*,
-                onAddClick: function(dt, rowId) {
-                    alert("Empty space clicked - add an item!");
-                },
-                onRender: function() {
-                    if (window.console && typeof console.log === "function") {
-                        console.log("chart rendered");
-                    }
-                }*/
-            });
-        }
+        drawGanttChart(planViewModel.getGanttData());
+
         $('#outputTargetsContainer').validationEngine('attach', {scroll:false});
 
     });
