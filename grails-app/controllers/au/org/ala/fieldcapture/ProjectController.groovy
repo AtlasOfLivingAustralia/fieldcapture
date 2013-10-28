@@ -4,7 +4,7 @@ import grails.converters.JSON
 
 class ProjectController {
 
-    def projectService, siteService, metadataService, commonService, activityService, userService, webService, authService
+    def projectService, metadataService, commonService, activityService, userService, webService, authService
     static defaultAction = "index"
     static ignore = ['action','controller','id']
 
@@ -64,7 +64,10 @@ class ProjectController {
 
     @PreAuthorise(accessLevel = 'admin')
     def create() {
-        render view: 'edit', model: [create:true, institutions: metadataService.institutionList()]
+        render view: 'edit', model: [create:true,
+                institutions: metadataService.institutionList(),
+                programs: metadataService.programsModel()
+        ]
     }
 
     /**
