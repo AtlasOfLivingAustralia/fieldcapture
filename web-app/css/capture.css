@@ -689,3 +689,7 @@ span.readonly-text {
     padding-bottom: 3px;
     font-size: 0.9em;
 }
+
+.nav-tab-small li a:hover {
+    font-size: 0.9em;
+}
