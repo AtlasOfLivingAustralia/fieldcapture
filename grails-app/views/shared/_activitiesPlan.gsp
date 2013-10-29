@@ -15,6 +15,14 @@
                 <input data-bind="checked:userIsCaseManager" type="checkbox"> Impersonate case manager
             </label>
         </span>
+
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#tablePlan" data-toggle="tab">Tabular</a></li>
+            <li><a href="#ganttPlan" data-toggle="tab">Gantt chart</a></li>
+        </ul>
+
+        <div class="tab-content" style="padding:4px">
+        <div class="tab-pane active" id="tablePlan">
         <table class="table table-condensed" id="activities">
             <thead>
             <tr data-bind="visible: stages.length > 0">
@@ -67,8 +75,12 @@
             </tbody>
             <!-- /ko -->
         </table>
+        </div>
+        <div class="tab-pane" id="ganttPlan">
+            <div id="gantt-container"></div>
+        </div>
+        </div>
     </div>
-    <div id="gantt-container"></div>
 
     <form id="outputTargetsContainer">
         <h4>Output Targets</h4>
