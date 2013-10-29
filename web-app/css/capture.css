@@ -683,3 +683,9 @@ span.readonly-text {
 .btn-container[disabled] {
     background-color: transparent;
 }
+
+.nav-tab-small li a {
+    padding-top: 3px;
+    padding-bottom: 3px;
+    font-size: 0.9em;
+}

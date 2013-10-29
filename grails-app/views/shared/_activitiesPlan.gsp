@@ -16,7 +16,7 @@
             </label>
         </span>
 
-        <ul class="nav nav-tabs">
+        <ul class="nav nav-tabs nav-tab-small space-before">
             <li class="active"><a href="#tablePlan" data-toggle="tab">Tabular</a></li>
             <li><a href="#ganttPlan" data-toggle="tab">Gantt chart</a></li>
         </ul>
