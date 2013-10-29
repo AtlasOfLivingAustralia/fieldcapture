@@ -21,64 +21,64 @@
             <li><a href="#ganttPlan" data-toggle="tab">Gantt chart</a></li>
         </ul>
 
-        <div class="tab-content" style="padding:0;border:none;">
-        <div class="tab-pane active" id="tablePlan">
-        <table class="table table-condensed" id="activities">
-            <thead>
-            <tr data-bind="visible: stages.length > 0">
-                <th>Stage</th>
-                <th style="width:50px;">Actions</th>
-                <th style="min-width:64px">From</th>
-                <th style="min-width:64px">To</th>
-                <th>Activity</th>
-                <th style="width:20%;" id="description-column">Description</th>
-                <g:if test="${showSites}">
-                    <th>Site</th>
-                </g:if>
-                <th>Status</th>
-            </tr>
-            </thead>
-            <!-- ko foreach:stages -->
-            <tbody data-bind="foreach:activities, css:{activeStage:isCurrentStage, inactiveStage: !isCurrentStage}" id="activityList">
-            <tr>
-                <!-- ko with:isFirst -->
-                <td data-bind="attr:{rowspan:$parents[1].activities.length}" class="stage-display">
-                    <span data-bind="text:$parents[1].label%{--, blah:console.log(ko.toJS($data))--}%"></span>
-                    <br data-bind="visible:$parents[1].isCurrentStage">
-                    <span data-bind="visible:$parents[1].isCurrentStage" class="badge badge-info">Current stage</span>
-                    <br data-bind="visible:$parents[1].isCurrentStage && $parents[2].isApproved()">
-                    <button type="button" class="btn btn-success btn-small" style="margin-top:4px;"
-                      data-bind="visible:$parents[1].isCurrentStage && $parents[2].isApproved(),disable:!$parents[1].readyForApproval()"
-                      title="Submit this stage for implementation approval.">Submit report</button>
-                </td>
-                <!-- /ko -->
-                <td>
-                    <button type="button" class="btn btn-container" data-bind="click:$root.editActivity, enable:$root.canEditActivity()||$root.canEditOutputData()"><i class="icon-edit" title="Edit Activity"></i></button>
-                    <button type="button" class="btn btn-container" data-bind="click:$root.printActivity, enable:$root.canPrintActivity"><i class="icon-print" title="Print activity"></i></button>
-                    <button type="button" class="btn btn-container" data-bind="click:del, enable:$root.canDeleteActivity"><i class="icon-remove" title="Delete activity"></i></button>
-                </td>
-                <td><span data-bind="text:plannedStartDate.formattedDate"></span></td>
-                <td><span data-bind="text:plannedEndDate.formattedDate"></span></td>
-                <td>
-                    <span data-bind="text:type,click:$root.editActivity, css:{clickable:$root.canEditActivity}"></span>
-                </td>
-                <td>
-                    <span class="truncate" data-bind="text:description"></span>
-                </td>
-                <g:if test="${showSites}">
-                    <td><a class="clickable" data-bind="text:siteName,click:$parents[1].openSite"></a></td>
-                </g:if>
-                <td>
-                    <div data-bind="template:$root.canUpdateStatus() ? 'updateStatusTmpl' : 'viewStatusTmpl'"></div>
-                </td>
-            </tr>
-            </tbody>
-            <!-- /ko -->
-        </table>
-        </div>
-        <div class="tab-pane" id="ganttPlan" style="overflow:hidden;">
-            <div id="gantt-container"></div>
-        </div>
+        <div class="tab-content" style="padding:0;border:none;overflow:visible">
+            <div class="tab-pane active" id="tablePlan">
+                <table class="table table-condensed" id="activities">
+                    <thead>
+                    <tr data-bind="visible: stages.length > 0">
+                        <th>Stage</th>
+                        <th style="width:50px;">Actions</th>
+                        <th style="min-width:64px">From</th>
+                        <th style="min-width:64px">To</th>
+                        <th>Activity</th>
+                        <th style="width:20%;" id="description-column">Description</th>
+                        <g:if test="${showSites}">
+                            <th>Site</th>
+                        </g:if>
+                        <th>Status</th>
+                    </tr>
+                    </thead>
+                    <!-- ko foreach:stages -->
+                    <tbody data-bind="foreach:activities, css:{activeStage:isCurrentStage, inactiveStage: !isCurrentStage}" id="activityList">
+                    <tr>
+                        <!-- ko with:isFirst -->
+                        <td data-bind="attr:{rowspan:$parents[1].activities.length}" class="stage-display">
+                            <span data-bind="text:$parents[1].label%{--, blah:console.log(ko.toJS($data))--}%"></span>
+                            <br data-bind="visible:$parents[1].isCurrentStage">
+                            <span data-bind="visible:$parents[1].isCurrentStage" class="badge badge-info">Current stage</span>
+                            <br data-bind="visible:$parents[1].isCurrentStage && $parents[2].isApproved()">
+                            <button type="button" class="btn btn-success btn-small" style="margin-top:4px;"
+                              data-bind="visible:$parents[1].isCurrentStage && $parents[2].isApproved(),disable:!$parents[1].readyForApproval()"
+                              title="Submit this stage for implementation approval.">Submit report</button>
+                        </td>
+                        <!-- /ko -->
+                        <td>
+                            <button type="button" class="btn btn-container" data-bind="click:$root.editActivity, enable:$root.canEditActivity()||$root.canEditOutputData()"><i class="icon-edit" title="Edit Activity"></i></button>
+                            <button type="button" class="btn btn-container" data-bind="click:$root.printActivity, enable:$root.canPrintActivity"><i class="icon-print" title="Print activity"></i></button>
+                            <button type="button" class="btn btn-container" data-bind="click:del, enable:$root.canDeleteActivity"><i class="icon-remove" title="Delete activity"></i></button>
+                        </td>
+                        <td><span data-bind="text:plannedStartDate.formattedDate"></span></td>
+                        <td><span data-bind="text:plannedEndDate.formattedDate"></span></td>
+                        <td>
+                            <span data-bind="text:type,click:$root.editActivity, css:{clickable:$root.canEditActivity}"></span>
+                        </td>
+                        <td>
+                            <span class="truncate" data-bind="text:description"></span>
+                        </td>
+                        <g:if test="${showSites}">
+                            <td><a class="clickable" data-bind="text:siteName,click:$parents[1].openSite"></a></td>
+                        </g:if>
+                        <td>
+                            <div data-bind="template:$root.canUpdateStatus() ? 'updateStatusTmpl' : 'viewStatusTmpl'"></div>
+                        </td>
+                    </tr>
+                    </tbody>
+                    <!-- /ko -->
+                </table>
+            </div>
+            <div class="tab-pane" id="ganttPlan" style="overflow:hidden;">
+                <div id="gantt-container"></div>
+            </div>
         </div>
     </div>
 
