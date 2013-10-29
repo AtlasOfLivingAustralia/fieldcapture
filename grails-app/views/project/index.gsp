@@ -209,6 +209,7 @@
 
         <div class="tab-pane" id="dashboard">
             <!-- DASHBOARD -->
+            <gvisualization:apiImport/>
             <h2 style="margin-top:0;">Totals across all activities under this project</h2>
             <div class="row-fluid">
                 <div class="span4">
