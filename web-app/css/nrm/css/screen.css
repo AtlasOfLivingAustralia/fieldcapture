@@ -2256,6 +2256,20 @@ table select {
     width: 100%;
 }
 
+.printed-form-table {
+    border: 1px solid black !important;
+    padding: 5px;
+}
+
+.printed-form-table tbody {
+    border: 1px solid black !important;
+}
+
+.printed-form-table td, .printed-form-table th {
+    border: 1px solid black !important;
+    height: 15px;
+}
+
 .printed-checkbox {
     width: 15px;
     height: 15px;

@@ -415,12 +415,21 @@ class ModelTagLib {
     }
 
     def table(out, attrs, model) {
+
+        def isprint = attrs.printable
+
         def extraClassAttrs = model.class ?: ""
+        def tableClass = isprint ? "printed-form-table" : ""
+
         out << "<div class=\"row-fluid ${extraClassAttrs}\">\n"
-        out << INDENT*3 << "<table class=\"table table-bordered ${model.source}\">\n"
+        out << INDENT*3 << "<table class=\"table table-bordered ${model.source} ${tableClass}\">\n"
         tableHeader out, attrs, model
-        tableBodyEdit out, attrs, model
-        footer out, attrs, model
+        if (isprint) {
+            tableBodyPrint out, attrs, model
+        } else {
+            tableBodyEdit out, attrs, model
+            footer out, attrs, model
+        }
 
         out << INDENT*3 << "</table>\n"
         out << INDENT*2 << "</div>\n"
@@ -431,7 +440,7 @@ class ModelTagLib {
         table.columns.eachWithIndex { col, i ->
             out << "<th>" + col.title + "</th>"
         }
-        if (attrs.edit) {
+        if (attrs.edit && !attrs.printable) {
             out << "<th></th>"
         }
         out << '\n' << INDENT*4 << "</tr></thead>\n"
@@ -444,6 +453,22 @@ class ModelTagLib {
             out << INDENT*5 << "<td>" << dataTag(attrs, col, '', false) << "</td>" << "\n"
         }
         out << INDENT*4 << "</tr></tbody>\n"
+    }
+
+    def tableBodyPrint (out, attrs, table) {
+
+        def numRows = table.printRows ?: 10
+
+        out << INDENT * 4 << "<tbody>\n"
+        for (int rowIndex = 0; rowIndex < numRows; ++rowIndex) {
+            out << INDENT * 5 << "<tr>"
+            table.columns.eachWithIndex { col, i ->
+                out << INDENT * 6 << "<td></td>\n"
+            }
+
+            out << INDENT * 5 << "</tr>"
+        }
+        out << INDENT * 4 << "</tbody>\n"
     }
 
     def tableBodyEdit (out, attrs, table) {
