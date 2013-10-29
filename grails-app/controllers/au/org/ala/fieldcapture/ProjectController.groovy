@@ -46,7 +46,9 @@ class ProjectController {
              admins: admins,
              activityTypes: metadataService.activityTypesList(),
              metrics: projectService.summary(id),
-             activityScores: metadataService.getOutputTargetsByActivity()]
+             activityScores: metadataService.getOutputTargetsByActivity(),
+             useAltPlan: params.useAltPlan
+            ]
         }
     }
 

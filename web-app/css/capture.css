@@ -671,3 +671,15 @@ span.readonly-text {
     display: inline-block;
     margin-left: 40px;
 }
+
+.btn-container {
+    background: none;
+    border: none !important;
+    margin: 0;
+    padding: 0 !important;
+    cursor: default;
+}
+
+.btn-container[disabled] {
+    background-color: transparent;
+}

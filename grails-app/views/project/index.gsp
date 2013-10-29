@@ -137,8 +137,14 @@
 
         <div class="tab-pane" id="plan">
             <!-- PLANS -->
-            <g:render template="/shared/plan"
+            <g:if test="${useAltPlan}">
+                <g:render template="/shared/activitiesPlan"
+                          model="[activities:activities ?: [], sites:project.sites ?: [], showSites:true]"/>
+            </g:if>
+            <g:else>
+                <g:render template="/shared/plan"
                       model="[activities:activities ?: [], sites:project.sites ?: [], showSites:true]"/>
+            </g:else>
         </div>
 
         <div class="tab-pane" id="site">
