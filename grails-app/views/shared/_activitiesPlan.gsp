@@ -21,7 +21,7 @@
             <li><a href="#ganttPlan" data-toggle="tab">Gantt chart</a></li>
         </ul>
 
-        <div class="tab-content" style="padding:4px">
+        <div class="tab-content" style="padding:0;border:none;">
         <div class="tab-pane active" id="tablePlan">
         <table class="table table-condensed" id="activities">
             <thead>
@@ -76,7 +76,7 @@
             <!-- /ko -->
         </table>
         </div>
-        <div class="tab-pane" id="ganttPlan">
+        <div class="tab-pane" id="ganttPlan" style="overflow:hidden;">
             <div id="gantt-container"></div>
         </div>
         </div>
