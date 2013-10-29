@@ -2264,5 +2264,9 @@ table select {
     border: 2px solid black !important;
 }
 
+.input-append > .printed-form-field {
+    width: 100%;
+}
+
 
 

@@ -46,8 +46,17 @@
                     <h2><span data-bind="click:goToSite" class="clickable">Site: ${site.name?.encodeAsHTML()}</span></h2>
                 </g:if>
                 <g:else>
-                    <select data-bind="options:transients.project.sites,optionsText:'name',optionsValue:'siteId',value:siteId,optionsCaption:'Choose a site...'"></select>
-                    Leave blank if this activity is not associated with a specific site.
+                    <div class="row-fluid">
+                        <div class="span1">
+                            Site:
+                        </div>
+                        <div class="span2">
+                            <fc:select data-bind="options:transients.project.sites,optionsText:'name',optionsValue:'siteId',value:siteId,optionsCaption:'Choose a site...'" printable="${printView}"/>
+                        </div>
+                        <div class="span6">
+                            Leave blank if this activity is not associated with a specific site.
+                        </div>
+                    </div>
                 </g:else>
                 <h3 data-bind="css:{modified:dirtyFlag.isDirty},attr:{title:'Has been modified'}">Activity: <span data-bind="text:type"></span><i class="icon-asterisk modified-icon" data-bind="visible:dirtyFlag.isDirty" title="Has been modified"></i></h3>
                 <h4><span>${project.associatedProgram?.encodeAsHTML()}</span> <span>${project.associatedSubProgram?.encodeAsHTML()}</span></h4>
@@ -101,17 +110,31 @@
                         <label for="startDate"><b>Actual start date</b>
                         <fc:iconHelp title="Start date" printable="${printView}">Date the activity was started.</fc:iconHelp>
                         </label>
-                        <div class="input-append">
-                            <fc:datePicker targetField="startDate.date" name="startDate" data-validation-engine="validate[required]" printable="${printView}"/>
-                        </div>
+                        <g:if test="${printView}">
+                            <div class="row-fluid">
+                                <fc:datePicker targetField="startDate.date" name="startDate" data-validation-engine="validate[required]" printable="${printView}"/>
+                            </div>
+                        </g:if>
+                        <g:else>
+                            <div class="input-append">
+                                <fc:datePicker targetField="startDate.date" name="startDate" data-validation-engine="validate[required]" printable="${printView}"/>
+                            </div>
+                        </g:else>
                     </div>
                     <div class="span6">
                         <label for="endDate"><b>Actual end date</b>
                         <fc:iconHelp title="End date" printable="${printView}">Date the activity finished.</fc:iconHelp>
                         </label>
-                        <div class="input-append">
+                        <g:if test="${printView}">
+                            <div class="row-fluid">
                             <fc:datePicker targetField="endDate.date" name="endDate" data-validation-engine="validate[future[startDate]]" printable="${printView}" />
-                        </div>
+                            </div>
+                        </g:if>
+                        <g:else>
+                            <div class="input-append">
+                                <fc:datePicker targetField="endDate.date" name="endDate" data-validation-engine="validate[future[startDate]]" printable="${printView}" />
+                            </div>
+                        </g:else>
                     </div>
                 </div>
 

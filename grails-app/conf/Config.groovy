@@ -134,7 +134,7 @@ security.cas.loginUrl = 'https://auth.ala.org.au/cas/login'
 security.cas.logoutUrl = 'https://auth.ala.org.au/cas/logout'
 security.cas.casServerUrlPrefix = 'https://auth.ala.org.au/cas'
 security.cas.bypass = false
-security.cas.adminRole = "ROLE_FC_ADMIN" // TODO change to ROLE_FC_ADMIN or equiv. (NdR)
+security.cas.adminRole = "ROLE_FC_ADMIN"
 
 upload.images.path = "/data/${appName}/images/"
 app.http.header.userId = "X-ALA-userId"

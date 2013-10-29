@@ -62,4 +62,12 @@
         page-break-after: avoid;
     }
 
+    #koActivityMainBlock {
+        /*page-break-after: always;*/
+    }
+
+    .output-block {
+        page-break-before: always;
+    }
+
 }

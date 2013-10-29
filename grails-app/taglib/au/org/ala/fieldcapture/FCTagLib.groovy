@@ -81,6 +81,24 @@ class FCTagLib {
     }
 
     /**
+     *
+     */
+    def select ={ attrs ->
+        def isprint = attrs.printable
+        def mb = new MarkupBuilder(out)
+
+        if (!isprint) {
+            mb.select(attrs) {
+                mkp.yieldUnescaped("&nbsp;")
+            }
+        } else {
+            mb.span(class:'span12 printed-form-field') {
+                mkp.yieldUnescaped("&nbsp;")
+            }
+        }
+    }
+
+    /**
      * @attr name
      * @attr targetField
      * @attr printable
@@ -128,7 +146,7 @@ class FCTagLib {
             def inputAttrs = [
                 name:"${attrs.name}",
                 id:"${attrs.id ?: attrs.name}",
-                class: (attrs.size ?: 'input-xlarge span12') + ' printed-form-field'
+                class: (attrs.size ?: 'span6') + ' printed-form-field'
             ]
 
             def ignoreList = ['name', 'id']
