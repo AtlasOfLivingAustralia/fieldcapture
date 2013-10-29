@@ -2256,6 +2256,12 @@ table select {
     width: 100%;
 }
 
+.printed-form-field.textarea {
+    border: none !important;
+    height: 120px;
+}
+
+
 .printed-form-table {
     border: 1px solid black !important;
     padding: 5px;
