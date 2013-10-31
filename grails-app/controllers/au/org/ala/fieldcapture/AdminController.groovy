@@ -11,6 +11,8 @@ class AdminController {
     def cacheService, metadataService, authService, projectService, importService, adminService
     def beforeInterceptor = [action:this.&auth]
 
+    def searchService
+
     private auth() {
         if (!authService.userInRole("ROLE_ADMIN")) {
             flash.message = "You are not authorised to access this page."
@@ -236,5 +238,34 @@ class AdminController {
      */
     def reIndexAll() {
         render adminService.reIndexAll()
+    }
+
+    def audit() {
+    }
+
+    def auditProjectSearch() {
+
+        def results = []
+        def searchTerm = params.searchTerm as String
+        if (searchTerm) {
+            if (!searchTerm.endsWith("*")) {
+                searchTerm += "*"
+            }
+            results = searchService.allProjects(params, searchTerm)
+        }
+
+        println results
+
+        render(view: 'audit', model:[results: results, searchTerm: params.searchTerm])
+    }
+
+    def auditProject() {
+        def id = params.id
+        if (id) {
+            def project = projectService.get(id)
+            [project: project]
+        } else {
+            redirect(action:'audit')
+        }
     }
 }

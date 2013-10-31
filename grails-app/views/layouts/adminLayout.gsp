@@ -60,6 +60,7 @@
                     <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'rawOutputModels')}" title="Raw output models" />
                     <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'outputModels')}" title="Output models" />
                     <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'programsModel')}" title="Programs model" />
+                    <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'audit')}" title="Audit" />
                 </ul>
                 <div style="text-align: center; margin-top: 30px;"><g:pageProperty name="page.adminButtonBar"/></div>
             </div>

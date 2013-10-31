@@ -40,12 +40,17 @@ class SearchService {
         webService.getJson(url)
     }
 
-    def allProjects(params) {
+    def allProjects(params, String searchTerm = null) {
         //params.max = 9999
         params.flimit = 999
         params.fsort = "term"
         //params.offset = 0
+
         params.query = "docType:project"
+        if (searchTerm) {
+            params.query += " AND " + searchTerm
+        }
+
         params.facets = "statesFacet,lgasFacet,nrmsFacet,organisationFacet"
         //def url = elasticBaseUrl + commonService.buildUrlParamsFromMap(params)
         def url = grailsApplication.config.ecodata.baseUrl + 'search/elasticHome' + commonService.buildUrlParamsFromMap(params)
@@ -102,4 +107,5 @@ class SearchService {
             [error: "required param ids not provided"]
         }
     }
+
 }
