@@ -109,13 +109,11 @@
              self.allLocationsLoaded();
            }
         },
-        loadFeature: function(loc){
-            var self = this, f, iw;
-            console.log("Loading feature: " + loc);
-            console.log(loc);
+        loadFeature: function(loc, iw){
+            var self = this, f;
             var loaded = false;
             if(loc != null && loc.type != null){
-                console.log("Loading feature type: " + loc.type);
+                //console.log("Loading feature type: " + loc.type);
                 if (loc.type.toLowerCase() === 'point') {
                     var ll = new google.maps.LatLng(Number(loc.coordinates[1]), Number(loc.coordinates[0]));
                     f = new google.maps.Marker({
@@ -213,7 +211,7 @@
             $.each(features, function (i,loc) {
                 //console.log('Loading feature with type:' + loc.type + "|" + loc.latitude);
                 if(loc != null){
-                   self.loadFeature(loc);
+                   self.loadFeature(loc, iw);
                    //self.locationLoaded();
                 }
             });
