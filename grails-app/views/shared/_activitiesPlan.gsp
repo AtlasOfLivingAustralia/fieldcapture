@@ -457,15 +457,37 @@
                 return hasAnyValidPlannedEndDate ? values : [];
             };
             self.outputTargets = ko.observableArray([]);
+            self.saveOutputTargets = function() {
+                if ($('#outputTargetsContainer').validationEngine('validate')) {
+                    var project = {projectId:'${project.projectId}', outputTargets:ko.toJS(self.outputTargets)};
+                    var json = JSON.stringify(project);
+                    var id = "${'/' + project.projectId}";
+                    $.ajax({
+                        url: "${createLink(action: 'ajaxUpdate')}" + id,
+                        type: 'POST',
+                        data: json,
+                        contentType: 'application/json',
+                        success: function (data) {
+                            if (data.error) {
+                                alert(data.detail + ' \n' + data.error);
+                            }
+                            else {
+                                self.nextStep();
+                            }
+                        },
+                        error: function (data) {
+                            var status = data.status;
+                            alert('An unhandled error occurred: ' + data.status);
+                        }
+                    });
+                }
+            };
             self.addOutputTarget = function(target) {
-                self.outputTargets.push(outputTarget(target));
+                var newOutputTarget = outputTarget(target);
+                self.outputTargets.push(newOutputTarget);
+                newOutputTarget.target.subscribe(function() {self.saveOutputTargets();});
             };
             self.activityScores = ${activityScores as grails.converters.JSON};
-
-            self.saveOutputTargets = function() {
-                outputTargetsViewModel.save();
-                self.nextStep();
-            };
 
             self.hasOutputTarget = function(score) {
                 var hasTarget = false;
@@ -508,31 +530,7 @@
             };
             self.loadOutputTargets();
 
-            self.saveOutputTargets = function() {
-                if ($('#outputTargetsContainer').validationEngine('validate')) {
-                    var project = {projectId:'${project.projectId}', outputTargets:ko.toJS(self.outputTargets)};
-                    var json = JSON.stringify(project);
-                    var id = "${'/' + project.projectId}";
-                    $.ajax({
-                        url: "${createLink(action: 'ajaxUpdate')}" + id,
-                        type: 'POST',
-                        data: json,
-                        contentType: 'application/json',
-                        success: function (data) {
-                            if (data.error) {
-                                alert(data.detail + ' \n' + data.error);
-                            }
-                            else {
-                                self.nextStep();
-                            }
-                        },
-                        error: function (data) {
-                            var status = data.status;
-                            alert('An unhandled error occurred: ' + data.status);
-                        }
-                    });
-                }
-            };
+
 
         }
 
