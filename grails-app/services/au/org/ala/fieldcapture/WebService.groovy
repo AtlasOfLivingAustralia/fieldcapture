@@ -15,10 +15,14 @@
 
 package au.org.ala.fieldcapture
 import grails.converters.JSON
-import org.apache.commons.httpclient.HttpClient
-import org.apache.commons.httpclient.methods.PostMethod
-import org.apache.commons.httpclient.methods.StringRequestEntity
+import groovyx.net.http.HTTPBuilder
+import groovyx.net.http.Method
+import org.apache.http.entity.mime.HttpMultipartMode
+import org.apache.http.entity.mime.MultipartEntity
+import org.apache.http.entity.mime.content.InputStreamBody
+import org.apache.http.entity.mime.content.StringBody
 import org.codehaus.groovy.grails.web.converters.exceptions.ConverterException
+import org.springframework.web.multipart.MultipartFile
 
 class WebService {
 
@@ -137,5 +141,36 @@ class WebService {
                 conn.disconnect()
             }
         }
+    }
+
+    /**
+     * Forwards a HTTP multipart/form-data request to ecodata.
+     * @param url the URL to forward to.
+     * @param params the (string typed) HTTP parameters to be attached.
+     * @param file the Multipart file object to forward.
+     * @return [status:<request status>, content:<The response content from the server, assumed to be JSON>
+     */
+    def postMultipart(url, Map params, MultipartFile file) {
+
+        def result = [:]
+        HTTPBuilder builder = new HTTPBuilder(url)
+        builder.request(Method.POST) { request ->
+            requestContentType : 'multipart/form-data'
+            MultipartEntity content = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE)
+            content.addPart(file.name, new InputStreamBody(file.inputStream, file.contentType, file.originalFilename))
+            params.each { key, value ->
+                content.addPart(key, new StringBody(value))
+            }
+
+            request.setEntity(content)
+
+            response.success = {resp, message ->
+                result.status = resp.status
+                result.content = message
+            }
+
+        }
+        result
+
     }
 }

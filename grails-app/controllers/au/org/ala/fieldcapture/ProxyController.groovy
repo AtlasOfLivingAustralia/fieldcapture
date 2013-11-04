@@ -46,9 +46,14 @@ class ProxyController {
     }
 
     def documentUpdate(String id) {
-        def body = request.JSON
-        //log.debug "body = ${body}"
-        def url = grailsApplication.config.ecodata.baseUrl + "document" + (id ? "/" + id : '')
-        render webService.doPost(url, body)
+
+        if (request.respondsTo('getFile')) {
+            def f = request.getFile('files')
+
+            def url = grailsApplication.config.ecodata.baseUrl + "document" + (id ? "/" + id : '')
+            def result =  webService.postMultipart(url, [document:params.document], f)
+
+            render result.content as JSON
+        }
     }
 }
