@@ -8,8 +8,14 @@ import org.springframework.web.multipart.MultipartHttpServletRequest
 //@PreAuthorise(accessLevel = 'admin')
 class AdminController {
 
-    def cacheService, metadataService, authService, projectService, importService, adminService
+    def cacheService
+    def metadataService
+    def authService
+    def projectService
+    def importService
+    def adminService
     def beforeInterceptor = [action:this.&auth]
+    def auditService
 
     def searchService
 
@@ -254,8 +260,6 @@ class AdminController {
             results = searchService.allProjects(params, searchTerm)
         }
 
-        println results
-
         render(view: 'audit', model:[results: results, searchTerm: params.searchTerm])
     }
 
@@ -263,9 +267,22 @@ class AdminController {
         def id = params.id
         if (id) {
             def project = projectService.get(id)
-            [project: project]
+            if (project) {
+                def messages = auditService.getAuditMessagesForProject(id)
+
+                messages?.messages?.each {
+                    println it
+                }
+
+                [project: project, messages: messages?.messages]
+            } else {
+                flash.message = "Specified project id does not exist!"
+                redirect(action:'audit')
+            }
         } else {
+            flash.message = "No project specified!"
             redirect(action:'audit')
         }
     }
+
 }

@@ -9,7 +9,32 @@
 	<body>
         <h3>Project Audit - ${project.name}</h3>
         <div class="well well-small">
-            TODO: Audit trail goes here!
+            <g:if test="${messages}">
+                <table>
+                    <thead>
+                        <th>Date</th>
+                        <th>Action</th>
+                        <th>Object type</th>
+                        <th>Object ID</th>
+                        <th>User</th>
+                    </thead>
+                    <tbody>
+                        <g:each in="${messages}" var="message">
+                            <tr>
+                                <td>${message.date}</td>
+                                <td>${message.eventType?.name}</td>
+                                <td>${message.entityType?.substring(message.entityType?.lastIndexOf('.')+1)}</td>
+                                <td>${message.entityId}</td>
+                                <td><g:encodeAs codec="HTML">${message.userId}</g:encodeAs></td>
+                            </tr>
+                        </g:each>
+                    </tbody>
+                </table>
+
+            </g:if>
+            <g:else>
+                <div>No messages found!</div>
+            </g:else>
         </div>
 
         <div class="row-fluid">
