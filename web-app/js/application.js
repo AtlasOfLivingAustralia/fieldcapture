@@ -143,3 +143,26 @@ function number_format (number, decimals, dec_point, thousands_sep) {
     }
     return s.join(dec);
 }
+
+/* From:
+ * jQuery File Upload User Interface Plugin 6.8.1
+ * https://github.com/blueimp/jQuery-File-Upload
+ *
+ * Copyright 2010, Sebastian Tschan
+ * https://blueimp.net
+ *
+ * Licensed under the MIT license:
+ * http://www.opensource.org/licenses/MIT
+ */
+function formatBytes(bytes) {
+    if (typeof bytes !== 'number') {
+        return '';
+    }
+    if (bytes >= 1000000000) {
+        return (bytes / 1000000000).toFixed(2) + ' GB';
+    }
+    if (bytes >= 1000000) {
+        return (bytes / 1000000).toFixed(2) + ' MB';
+    }
+    return (bytes / 1000).toFixed(2) + ' KB';
+}
