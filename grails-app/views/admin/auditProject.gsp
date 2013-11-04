@@ -17,15 +17,21 @@
                         <th>Object type</th>
                         <th>Object ID</th>
                         <th>User</th>
+                        <th/>
                     </thead>
                     <tbody>
                         <g:each in="${messages}" var="message">
                             <tr>
                                 <td>${message.date}</td>
-                                <td>${message.eventType?.name}</td>
+                                <td>${message.eventType}</td>
                                 <td>${message.entityType?.substring(message.entityType?.lastIndexOf('.')+1)}</td>
                                 <td>${message.entityId}</td>
                                 <td><g:encodeAs codec="HTML">${message.userId}</g:encodeAs></td>
+                                <td>
+                                    <a class="btn btn-small" href="${createLink(action:'auditMessageDetails', params:[id:message.id])}">
+                                        <i class="icon-search"></i>
+                                    </a>
+                                </td>
                             </tr>
                         </g:each>
                     </tbody>

@@ -285,4 +285,9 @@ class AdminController {
         }
     }
 
+    def auditMessageDetails() {
+        def results = auditService.getAuditMessage(params.id as String)
+        [message: results?.message]
+    }
+
 }

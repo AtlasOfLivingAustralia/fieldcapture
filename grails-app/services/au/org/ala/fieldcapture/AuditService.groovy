@@ -6,9 +6,13 @@ class AuditService {
     def grailsApplication
 
     def getAuditMessagesForProject(String projectId) {
-
         String url = grailsApplication.config.ecodata.baseUrl + 'audit/ajaxGetAuditMessagesForProject?projectId=' + projectId
         return webService.getJson(url)
-
     }
+
+    def getAuditMessage(String messageId) {
+        String url = grailsApplication.config.ecodata.baseUrl + 'audit/ajaxGetAuditMessage/' + messageId
+        return webService.getJson(url)
+    }
+
 }

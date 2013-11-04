@@ -3,6 +3,8 @@ package au.org.ala.fieldcapture
 import au.org.ala.cas.util.AuthenticationCookieUtils
 import grails.util.Environment
 import groovy.xml.MarkupBuilder
+import org.codehaus.groovy.grails.web.json.JSONArray
+import org.codehaus.groovy.grails.web.json.JSONObject
 import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
 
 
@@ -516,6 +518,46 @@ class FCTagLib {
     def toSingleWord = { attrs, body ->
         def name = attrs.name ?: body()
         out << name.replaceAll(' ','_')
+    }
+
+
+    def renderJsonObject = { attrs ->
+        def object = attrs.object as JSONObject
+        if (object) {
+            def mb = new MarkupBuilder(out)
+            renderObject(object, mb)
+        }
+    }
+
+    private void renderObject(Object object, MarkupBuilder mb) {
+
+        if (object instanceof JSONObject) {
+            mb.ul() {
+                object.keys().each { key ->
+                    def value = object.get(key)
+                    mb.li() {
+                        mkp.yield("${key}")
+                        renderObject(value, mb)
+                    }
+                }
+            }
+        } else if (object instanceof JSONArray) {
+            mb.ul() {
+                def arr = object as JSONArray
+                arr.eachWithIndex { def entry, int i ->
+                    mb.li() {
+                        renderObject(entry, mb)
+                    }
+                }
+            }
+        } else {
+            mb.span() {
+                mb.strong() {
+                    mkp.yield(object?.toString())
+                }
+            }
+
+        }
     }
 
 
