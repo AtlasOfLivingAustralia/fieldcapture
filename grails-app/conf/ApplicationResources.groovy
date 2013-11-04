@@ -141,6 +141,27 @@ modules = {
 
     }
 
+    jQueryFileUpload {
+        dependsOn 'jquery_ui'
+        resource url: 'bootstrap/css/bootstrap-responsive.min.css', attrs:[media:'screen']
+        resource url: 'bootstrap/css/bootstrap-image-gallery.min.css'
+        resource url: 'bootstrap/css/bootstrap-ie6.min.css',
+                wrapper: { s -> "<!--[if lt IE 7]>$s<![endif]-->" }
+
+        resource url: 'css/jquery.fileupload-ui.css', disposition: 'head'
+        resource url: 'js/fileupload-9.0.0/load-image.min.js'
+        resource url: 'js/fileupload-9.0.0/jquery.fileupload.js'
+        resource url: 'js/fileupload-9.0.0/jquery.fileupload-process.js'
+        resource url: 'js/fileupload-9.0.0/jquery.fileupload-image.js'
+        resource url: 'js/fileupload-9.0.0/jquery.fileupload-video.js'
+        resource url: 'js/fileupload-9.0.0/jquery.fileupload-validate.js'
+        resource url: 'js/fileupload-9.0.0/jquery.fileupload-audio.js'
+
+        resource url: 'js/locale.js'
+        resource url: 'js/cors/jquery.xdr-transport.js',
+                wrapper: { s -> "<!--[if gte IE 8]>$s<![endif]-->" }
+    }
+
     fuelux {
         resource 'bootstrap/bootstrap-fuelux/fuelux.css'
         resource 'bootstrap/bootstrap-fuelux/fuelux-responsive.css'
