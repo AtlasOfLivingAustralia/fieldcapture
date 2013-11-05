@@ -135,7 +135,7 @@ class ImportService {
         catch (Exception e) {
             errors.add("Unable to parse funding: "+funding)
         }
-        project.organisationName = projectDetails['Grantee Full Name']
+        project.organisationName = projectDetails['Grantee Organisation Legal Name']
         try {
             def startDate = projectDetails['Start']
             if (startDate) {
