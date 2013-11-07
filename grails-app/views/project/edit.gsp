@@ -140,6 +140,26 @@
     </div>
     <!-- /ko -->
 
+
+    <div class="row-fluid">
+        <div class="span6">
+            <table class="table table-striped">
+                <thead><tr><td>Project Documents</td><td></td></tr></thead>
+                <tbody data-bind="foreach:documents">
+                    <tr>
+                        <td><a data-bind="attr:{href:url}" ><span data-bind="text:name"></span></a></td>
+                        <td style="width:15%;"><button class="btn"><i class="icon-remove"></i>Delete</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    %{--The modal view contaning the contents for a modal dialog used to attach a document--}%
+    <g:render template="/shared/attachDocument"/>
+    <div class="row-fluid attachDocumentModal">
+        <button class="btn" id="doAttach" data-bind="click:attachDocument">Attach Document</button>
+    </div>
+
     <div class="form-actions">
         <button type="button" data-bind="click: save" class="btn btn-primary">Save changes</button>
         <button type="button" id="cancel" class="btn">Cancel</button>
@@ -255,6 +275,7 @@
             self.transients.subprogramsToDisplay = ko.computed(function () {
                 return self.transients.subprograms[self.associatedProgram()];
             });
+
             self.loadPrograms = function (programsModel) {
                 $.each(programsModel.programs, function (i, program) {
                     self.transients.programs.push(program.name);
@@ -262,6 +283,20 @@
                 });
                 self.associatedProgram(data.associatedProgram); // to trigger the computation of sub-programs
             };
+            self.documents = ko.observableArray();
+
+            self.addDocument = function(doc) {
+                self.documents.push(new DocumentViewModel(doc));
+            }
+            self.attachDocument = function() {
+                var url = '${g.createLink(controller:"proxy", action:"documentUpdate")}';
+                showDocumentAttachInModal( url,{key:'projectId', value:'${project.projectId}'}, '#attachDocument')
+                    .done(function(result){self.documents.push(result)});
+            }
+            $.each(data.documents, function(i, doc) {
+                self.addDocument(doc);
+            });
+
             self.removeTransients = function (jsData) {
                 delete jsData.transients;
                 return jsData;

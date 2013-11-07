@@ -162,6 +162,11 @@ modules = {
                 wrapper: { s -> "<!--[if gte IE 8]>$s<![endif]-->" }
     }
 
+    attachDocuments {
+        dependsOn 'jQueryFileUpload'
+        resource url: 'js/document.js'
+    }
+
     fuelux {
         resource 'bootstrap/bootstrap-fuelux/fuelux.css'
         resource 'bootstrap/bootstrap-fuelux/fuelux-responsive.css'
