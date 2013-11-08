@@ -131,8 +131,22 @@ function attachViewModelToFileUpload(uploadUrl, documentViewModel, uiSelector, p
     // We are keeping the reference to the helper here rather than the view model as it doesn't serialize correctly
     // (i.e. calls to toJSON fail).
     documentViewModel.save = function() {
-        fileUploadHelper.submit();
-        fileUploadHelper = null;
+        if (documentViewModel.filename()) {
+            fileUploadHelper.submit();
+            fileUploadHelper = null;
+        }
+        else {
+            // There is no file attachment but we can save the document anyway.
+            $.post(
+                uploadUrl,
+                {document:documentViewModel.toJSONString()},
+                function(result) {
+                    documentViewModel.fileUploaded(result);
+                })
+                .fail(function() {
+                    documentViewModel.fileUploadFailed('Error uploading document');
+                });
+        }
     }
 }
 
