@@ -140,14 +140,15 @@ function attachViewModelToFileUpload(uploadUrl, documentViewModel, uiSelector, p
 /**
  * Creates a bootstrap modal from the supplied UI element to collect and upload a document and returns a
  * jquery Deferred promise to provide access to the uploaded Document.
+ * @param uploadUrl the URL to upload the document to.
+ * @param document defaults for the document.  can be used to populate role, etc.
  * @param modalSelector a selector identifying the ui element that contains the markup for the bootstrap modal dialog.
  * @param fileUploadSelector a selector identifying the ui element to attach the file upload functionality to.
  * @param previewSelector a selector identifying an element to attach a preview of the file to (optional)
- * @param uploadUrl the URL to upload the document to.
  * @param owner an object containing key and value properties identifying the owning entity for the document. eg. {key:'projectId', value:'the_id_of_the_owning_project'}
  * @returns an instance of jQuery.Deferred - the uploaded document will be supplied to a chained 'done' function.
  */
-function showDocumentAttachInModal(uploadUrl, owner, modalSelector, fileUploadSelector, previewSelector) {
+function showDocumentAttachInModal(uploadUrl, document, owner, modalSelector, fileUploadSelector, previewSelector) {
 
     if (fileUploadSelector === undefined) {
         fileUploadSelector = '#attachDocument';
@@ -155,11 +156,9 @@ function showDocumentAttachInModal(uploadUrl, owner, modalSelector, fileUploadSe
     if (previewSelector === undefined) {
         previewSelector = '#preview';
     }
-    // TODO This style change seems to be necessary as the modal block has to be hidden to prevent it interfering with
-    // other components on the page despite being invisible.   Likely I am doing something wrong or the css is wrong somewhere.
-    var $fileUpload = $(fileUploadSelector).style('display', 'block');
+    var $fileUpload = $(fileUploadSelector);
     var $modal = $(modalSelector);
-    var documentViewModel = new DocumentViewModel({}, owner);
+    var documentViewModel = new DocumentViewModel(document?document:{}, owner);
 
     attachViewModelToFileUpload(uploadUrl, documentViewModel, fileUploadSelector, previewSelector);
 

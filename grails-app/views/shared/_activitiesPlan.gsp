@@ -1,4 +1,4 @@
-<r:require modules="datepicker, jqueryGantt, jqueryValidationEngine"/>
+<r:require modules="datepicker, jqueryGantt, jqueryValidationEngine, attachDocuments"/>
 <!-- This section is bound to a secondary KO viewModel. The following line prevents binding
          to the main viewModel. -->
 <!-- ko stopBinding: true -->
@@ -173,6 +173,94 @@
 </script>
 
 <!-- /ko -->
+
+<!-- ko stopBinding: true -->
+<div id="attachDocument" class="modal fade" style="display:none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="title">Activity Deferral</h4>
+            </div>
+
+            <div class="modal-body">
+                <p>Please enter the reason the activity is being deferred.  You can also attach supporting documentation.</p>
+                <form class="form-horizontal" id="documentForm">
+
+                    <div class="control-group">
+                        <label class="control-label" for="deferralReason">Reason</label>
+
+                        <div class="controls">
+                            <textarea id="deferralReason" rows="4" cols="80" data-bind="value:name"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="documentFile">Supporting documentation</label>
+
+                        <div class="controls">
+                            <span class="btn fileinput-button" data-bind="visible:!filename()">
+                                <i class="icon-plus"></i>
+                                <input id="documentFile" type="file" name="files"/>
+                                Attach file
+                            </span>
+                            <span data-bind="visible:filename()">
+                                <input type="text" readonly="readonly" data-bind="value:fileLabel"/>
+                                <button class="btn" data-bind="click:removeFile">
+                                    <span class="icon-remove"></span>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="control-group" data-bind="visible:hasPreview">
+                        <label class="control-label">Preview</label>
+
+                        <div id="preview" class="controls"></div>
+                    </div>
+
+                    <div class="control-group" data-bind="visible:progress() > 0">
+                        <label for="progress" class="control-label">Progress</label>
+
+                        <div id="progress" class="controls progress progress-info active input-large"
+                             data-bind="visible:!error() && progress() < 100, css:{'progress-info':progress()<100, 'progress-success':complete()}">
+                            <div class="bar" data-bind="style:{width:progress()+'%'}"></div>
+                        </div>
+
+                        <div id="successmessage" class="controls" data-bind="visible:complete()">
+                            <span class="alert alert-success">File successfully uploaded</span>
+                        </div>
+
+                        <div id="message" class="controls" data-bind="visible:error()">
+                            <span class="alert alert-error" data-bind="text:error"></span>
+                        </div>
+                    </div>
+
+                    <g:if test="${grailsApplication.config.debugUI}">
+                        <div class="expandable-debug">
+                            <h3>Debug</h3>
+                            <div>
+                                <h4>Document model</h4>
+                                <pre class="row-fluid" data-bind="text:toJSONString()"></pre>
+                            </div>
+                        </div>
+                    </g:if>
+
+                </form>
+            </div>
+            <div class="modal-footer control-group">
+                <div class="controls">
+                    <button type="button" class="btn btn-success"
+                            data-bind="enable:((filename() && progress() === 0) || name()) && !error(), click:save, visible:!complete()">Save</button>
+                    <button class="btn" data-bind="click:cancel, visible:!complete()">Cancel</button>
+                    <button class="btn" data-bind="click:close, visible:complete()">Close</button>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- /ko -->
 <r:script>
 
     var sites = ${sites ?: []};
@@ -231,27 +319,38 @@
             // save progress updates as soon as they happen
             this.progress.subscribe(function (newValue) {
                 var payload = {progress: newValue, activityId: self.activityId};
-                self.isSaving(true);
-                // save new status
-                $.ajax({
-                    url: "${createLink(controller:'activity', action:'ajaxUpdate')}/" + self.activityId,
-                    type: 'POST',
-                    data: JSON.stringify(payload),
-                    contentType: 'application/json',
-                    success: function (data) {
-                        if (data.error) {
-                            alert(data.detail + ' \n' + data.error);
-                        }
-                        drawGanttChart(planViewModel.getGanttData());
-                    },
-                    error: function (data) {
-                        alert('An unhandled error occurred: ' + data.status);
-                    },
-                    complete: function () {
-                        self.isSaving(false);
-                    }
-                });
+
+                if (newValue === 'deferred') {
+                    var url = '${g.createLink(controller:"proxy", action:"documentUpdate")}';
+                    showDocumentAttachInModal( url,{role:'deferReason'},{key:'activityId', value:self.activityId}, '#attachDocument')
+                        .done(self.saveProgress(payload));
+                }
+                else {
+                    self.saveProgress(payload);
+                }
             });
+            this.saveProgress = function(payload) {
+                self.isSaving(true);
+                    // save new status
+                    $.ajax({
+                        url: "${createLink(controller:'activity', action:'ajaxUpdate')}/" + self.activityId,
+                        type: 'POST',
+                        data: JSON.stringify(payload),
+                        contentType: 'application/json',
+                        success: function (data) {
+                            if (data.error) {
+                                alert(data.detail + ' \n' + data.error);
+                            }
+                            drawGanttChart(planViewModel.getGanttData());
+                        },
+                        error: function (data) {
+                            alert('An unhandled error occurred: ' + data.status);
+                        },
+                        complete: function () {
+                            self.isSaving(false);
+                        }
+                    });
+            };
             this.del = function () {
                 // confirm first
                 bootbox.confirm("Delete this activity? Are you sure?", function(result) {

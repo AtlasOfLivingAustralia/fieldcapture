@@ -290,12 +290,12 @@
             }
             self.attachDocument = function() {
                 var url = '${g.createLink(controller:"proxy", action:"documentUpdate")}';
-                showDocumentAttachInModal( url,{key:'projectId', value:'${project.projectId}'}, '#attachDocument')
+                showDocumentAttachInModal( url,{role:'information'},{key:'projectId', value:'${project.projectId}'}, '#attachDocument')
                     .done(function(result){self.documents.push(result)});
             }
             self.deleteDocument = function(document) {
                 var url = '${g.createLink(controller:"proxy", action:"deleteDocument")}/'+document.documentId;
-                $.post(url).done(self.documents.remove(document));
+                $.post(url, {}, function() {self.documents.remove(document);});
 
             }
             $.each(data.documents, function(i, doc) {
