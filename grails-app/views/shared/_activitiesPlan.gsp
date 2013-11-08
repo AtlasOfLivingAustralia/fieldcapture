@@ -69,7 +69,8 @@
                             <td><a class="clickable" data-bind="text:siteName,click:$parents[1].openSite"></a></td>
                         </g:if>
                         <td>
-                            <div data-bind="template:$root.canUpdateStatus() ? 'updateStatusTmpl' : 'viewStatusTmpl'"></div>
+                            <span data-bind="template:$root.canUpdateStatus() ? 'updateStatusTmpl' : 'viewStatusTmpl'"></span>
+                            <span data-bind="visible:deferReason()"><i class="icon-asterisk" data-bind="popover: {title: 'Reason for deferral', content: deferReason()}"></i></span>
                         </td>
                     </tr>
                     </tbody>
@@ -316,6 +317,8 @@
             this.plannedEndDate = ko.observable(act.plannedEndDate).extend({simpleDate:false});
             this.progress = ko.observable(act.progress);
             this.isSaving = ko.observable(false);
+            this.deferReason = ko.observable();
+
             // save progress updates as soon as they happen
             this.progress.subscribe(function (newValue) {
                 var payload = {progress: newValue, activityId: self.activityId};
@@ -366,6 +369,12 @@
                     }
                 });
             };
+
+            $.each(act.documents, function(i, document) {
+                if (document.role == 'deferReason') {
+                    self.deferReason(document.name);
+                }
+            });
         };
 
         var PlanStage = function (stageLabel, activities, isCurrentStage, timeline) {
