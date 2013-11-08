@@ -155,7 +155,9 @@ function showDocumentAttachInModal(uploadUrl, owner, modalSelector, fileUploadSe
     if (previewSelector === undefined) {
         previewSelector = '#preview';
     }
-    var $fileUpload = $(fileUploadSelector);
+    // TODO This style change seems to be necessary as the modal block has to be hidden to prevent it interfering with
+    // other components on the page despite being invisible.   Likely I am doing something wrong or the css is wrong somewhere.
+    var $fileUpload = $(fileUploadSelector).style('display', 'block');
     var $modal = $(modalSelector);
     var documentViewModel = new DocumentViewModel({}, owner);
 

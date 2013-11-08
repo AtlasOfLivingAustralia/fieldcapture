@@ -1,6 +1,6 @@
 <r:require module="attachDocuments"/>
 <!-- ko stopBinding: true -->
-<div id="attachDocument" class="modal fade">
+<div id="attachDocument" class="modal fade" style="display:none;">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -101,7 +101,6 @@
 
         </div>
     </div>
-
 </div>
 <!-- /ko -->
 

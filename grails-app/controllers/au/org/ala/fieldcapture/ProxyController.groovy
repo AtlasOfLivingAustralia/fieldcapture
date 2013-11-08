@@ -45,6 +45,11 @@ class ProxyController {
         }
     }
 
+    /**
+     * Proxies to the ecodata document controller.
+     * @param id the id of the document to update (if not supplied, a create operation will be assumed).
+     * @return the result of the update.
+     */
     def documentUpdate(String id) {
 
         if (request.respondsTo('getFile')) {
@@ -55,5 +60,17 @@ class ProxyController {
 
             render result.content as JSON
         }
+    }
+
+    /**
+     * Proxies to the ecodata document controller to delete the document with the supplied id.
+     * @param id the id of the document to delete.
+     * @return the result of the deletion.
+     */
+    def deleteDocument(String id) {
+        println 'deleting doc with id:'+id
+        def url = grailsApplication.config.ecodata.baseUrl + "document/" + id
+        def responseCode = webService.doDelete(url)
+        render status: responseCode
     }
 }

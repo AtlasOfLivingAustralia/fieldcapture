@@ -148,7 +148,7 @@
                 <tbody data-bind="foreach:documents">
                     <tr>
                         <td><a data-bind="attr:{href:url}" ><span data-bind="text:name"></span></a></td>
-                        <td style="width:15%;"><button class="btn"><i class="icon-remove"></i>Delete</button></td>
+                        <td style="width:15%;"><button class="btn btn-small" type="button" data-bind="click:$root.deleteDocument"><i class="icon-remove"></i>Delete</button></td>
                     </tr>
                 </tbody>
             </table>
@@ -292,6 +292,11 @@
                 var url = '${g.createLink(controller:"proxy", action:"documentUpdate")}';
                 showDocumentAttachInModal( url,{key:'projectId', value:'${project.projectId}'}, '#attachDocument')
                     .done(function(result){self.documents.push(result)});
+            }
+            self.deleteDocument = function(document) {
+                var url = '${g.createLink(controller:"proxy", action:"deleteDocument")}/'+document.documentId;
+                $.post(url).done(self.documents.remove(document));
+
             }
             $.each(data.documents, function(i, doc) {
                 self.addDocument(doc);
