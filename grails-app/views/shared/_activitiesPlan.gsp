@@ -190,7 +190,7 @@
                         <label class="control-label" for="deferralReason">Reason</label>
 
                         <div class="controls">
-                            <textarea id="deferralReason" rows="4" cols="80" data-bind="value:name"></textarea>
+                            <textarea id="deferralReason" rows="4" cols="80" data-bind="value:name, valueUpdate:'keyup'"></textarea>
                         </div>
                     </div>
 
@@ -250,7 +250,7 @@
             <div class="modal-footer control-group">
                 <div class="controls">
                     <button type="button" class="btn btn-success"
-                            data-bind="enable:((filename() && progress() === 0) || name()) && !error(), click:save, visible:!complete()">Save</button>
+                            data-bind="enable:name() && !error(), click:save, visible:!complete()">Save</button>
                     <button class="btn" data-bind="click:cancel, visible:!complete()">Cancel</button>
                     <button class="btn" data-bind="click:close, visible:complete()">Close</button>
 
