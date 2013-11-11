@@ -87,8 +87,13 @@
                     <div class="clearfix" >
                         <h4>
                             Supported by:
-                            <a href="${grailsApplication.config.collectory.baseURL +
+                            <g:if test="${project.organisation}">
+                                <a href="${grailsApplication.config.collectory.baseURL +
                                     'public/show/' + project.organisation}">${organisationName?.encodeAsHTML()}</a>
+                            </g:if>
+                            <g:else>
+                                ${organisationName?.encodeAsHTML()}
+                            </g:else>
                         </h4>
                     </div>
                 </g:if>
