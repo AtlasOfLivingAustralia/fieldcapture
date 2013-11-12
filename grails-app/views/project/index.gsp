@@ -119,7 +119,7 @@
                     <div>
                         <h5>
                             Project activities will be undertaken from <span data-bind="text:plannedStartDate.formattedDate"></span>
-                            <g:if test="${project.plannedEndDate}">to <span data-bind="text:plannedStartDate.formattedDate"></span> </g:if>
+                            <g:if test="${project.plannedEndDate}">to <span data-bind="text:plannedEndDate.formattedDate"></span> </g:if>
                         </h5>
                     </div>
                 </g:if>
