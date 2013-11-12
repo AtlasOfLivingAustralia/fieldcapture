@@ -129,12 +129,26 @@
                         <p class="well well-small more">${project.description?.encodeAsHTML()}</p>
                     </div>
                 </g:if>
+
                 <g:if test="${project.documents}">
-                    <g:set var="image" value="${project.documents[0]}"/>
-                    <div class="thumbnail with-caption">
-                        <img class="img-rounded" src="${image?.url}"/>
-                        <p class="caption">${image?.name?.encodeAsHTML()}</p>
-                        <p class="attribution"><small>${image?.attribution?.encodeAsHTML()}</small></p>
+                    <!-- show any image marked as primary -->
+                    <g:set var="image" value=""/>
+                    <g:each in="${project.documents}" var="doc">
+                        <g:if test="${doc.type == 'image' && doc.role == 'primary'}">
+                            <g:set var="image" value="${doc}"/>
+                        </g:if>
+                    </g:each>
+                    <g:if test="${image}">
+                        <div class="thumbnail with-caption span5">
+                            <img class="img-rounded" src="${image?.url}"/>
+                            <p class="caption">${image?.name?.encodeAsHTML()}</p>
+                            <p class="attribution"><small>${image?.attribution?.encodeAsHTML()}</small></p>
+                        </div>
+                    </g:if>
+                    <!-- show other documents -->
+                    <div class="span6">
+                        <g:render template="/shared/listDocuments"
+                          model="[documents:project.documents,imageUrl:resource(dir:'/images/filetypes')]"/>
                     </div>
                 </g:if>
             </div>
