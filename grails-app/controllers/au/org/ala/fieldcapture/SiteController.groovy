@@ -158,6 +158,24 @@ class SiteController {
         }
     }
 
+    def updateSiteCentrePoint(String grantId, Double lat, Double lon) {
+        def project = importService.findProjectByGrantId(grantId)
+        if (project) {
+            def site = importService.findProjectSiteByName(project, grantId)
+            if (site) {
+                def strLat =  "" + lat + ""
+                def strLon = "" + lon + ""
+                site.extent.geometry.centre = [strLon, strLat]
+                siteService.update(site.siteId, site)
+                render site as JSON
+            } else {
+                render "COULD NOT FIND SITE"
+            }
+        } else {
+            render "EMPTY"
+        }
+    }
+
     def ajaxUpdateProjects() {
         def postBody = request.JSON
         log.debug "Body: " + postBody

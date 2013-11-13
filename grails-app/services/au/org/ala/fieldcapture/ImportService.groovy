@@ -278,6 +278,10 @@ class ImportService {
         return project.sites?.find{it.description?.equalsIgnoreCase(description)}
     }
 
+    def findProjectSiteByName(project, name) {
+        return project.sites?.find{it.name?.equalsIgnoreCase(name)}
+    }
+
     def matchInstitution(String institutionName) {
 
         def lowerCaseName = institutionName.toLowerCase()
