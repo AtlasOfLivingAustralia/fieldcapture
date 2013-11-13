@@ -130,11 +130,6 @@ class SiteService {
                 featuresMap.features << site.extent.geometry
                 break
             case 'pid':
-                //retrieve from spatial portal services
-                site.extent.geometry.polygonUrl = grailsLinkGenerator.link(
-                        controller: 'proxy', action: 'geojsonFromPid',
-                        params: [pid: site.extent.geometry.pid]
-                )
                 featuresMap.features << site.extent.geometry
                 break
             case 'drawn' :

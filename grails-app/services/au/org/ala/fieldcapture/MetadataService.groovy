@@ -152,10 +152,13 @@ class MetadataService {
 
     def getLocationMetadataForPoint(lat, lng) {
         cacheService.get("spatial-point-${lat}-${lng}", {
-            def url = grailsApplication.config.spatial.baseURL + "ws/intersect/cl22,cl916/${lat}/${lng}"
-            def features = webService.getJson(url)
-            [state: features.find({it.field == 'cl22'})?.value,
-                    nrm: features.find({it.field == 'cl916'})?.value]
+            def featuresUrl = grailsApplication.config.spatial.baseURL + "ws/intersect/cl22,cl916,cl959/${lat}/${lng}"
+            def features = webService.getJson(featuresUrl)
+
+            def localityUrl = "http://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&sensor=true"
+            def localityValue = webService.getJson(localityUrl).results[0].formatted_address
+
+            [state: features.find({it.field == 'cl22'})?.value, nrm: features.find({it.field == 'cl916'})?.value, lga: features.find({it.field == 'cl959'})?.value, locality: localityValue]
         })
     }
 

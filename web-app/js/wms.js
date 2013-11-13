@@ -249,7 +249,7 @@ function PIDLayer(pid){
             if (lLR_Longitude < lUL_Longitude){
                 lLR_Longitude = Math.abs(lLR_Longitude);
             }
-            var urlResult = "http://spatial.ala.org.au/geoserver/wms/reflect?" + wmsParams.join("&") + "&bbox=" + lUL_Longitude + "," + lUL_Latitude + "," + lLR_Longitude + "," + lLR_Latitude;
+            var urlResult = "http://spatial-dev.ala.org.au/geoserver/wms/reflect?" + wmsParams.join("&") + "&bbox=" + lUL_Longitude + "," + lUL_Latitude + "," + lLR_Longitude + "," + lLR_Latitude;
 
             return urlResult;
         },
