@@ -32,7 +32,7 @@
         here = window.location.href;
 
     </r:script>
-    <r:require modules="gmap3,mapWithFeatures,knockout,datepicker,amplify,jqueryValidationEngine,fuelux,projects"/>
+    <r:require modules="gmap3,mapWithFeatures,knockout,datepicker,amplify,jqueryValidationEngine,projects, attachDocuments"/>
 </head>
 <body>
 <div class="container-fluid">
@@ -147,8 +147,9 @@
                     </g:if>
                     <!-- show other documents -->
                     <div class="span6">
+                        <h4>Project documents</h4>
                         <g:render template="/shared/listDocuments"
-                          model="[documents:project.documents,imageUrl:resource(dir:'/images/filetypes')]"/>
+                          model="[useExistingModel: true,editable:false,imageUrl:resource(dir:'/images/filetypes')]"/>
                     </div>
                 </g:if>
             </div>
@@ -264,6 +265,7 @@
                         <ul id="adminNav" class="nav nav-tabs nav-stacked ">
                             <li class="active"><a href="#permissions" id="permissions-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Project access</a></li>
                             <li><a href="#species" id="species-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Species of interest</a></li>
+                            <li><a href="#documents" id="documents-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Documents</a></li>
                         </ul>
                     </div>
                     <div class="span10">
@@ -303,6 +305,21 @@
                             <div id="species" class="pill-pane">
                                 %{--<a name="species"></a>--}%
                                 <g:render template="/species/species" model="[project:project, activityTypes:activityTypes]"/>
+                            </div>
+                            <!-- DOCUMENTS -->
+                            <div id="documents" class="pill-pane">
+                                <h3>Project Documents</h3>
+                                <div class="row-fluid">
+                                    <div class="span10">
+                                        <g:render template="/shared/listDocuments"
+                                                  model="[useExistingModel: true,editable:true,imageUrl:resource(dir:'/images/filetypes')]"/>
+                                    </div>
+                                </div>
+                                %{--The modal view containing the contents for a modal dialog used to attach a document--}%
+                                <g:render template="/shared/attachDocument"/>
+                                <div class="row-fluid attachDocumentModal">
+                                    <button class="btn" id="doAttach" data-bind="click:attachDocument">Attach Document</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -380,6 +397,25 @@
                 self.plannedEndDate = ko.observable(project.plannedEndDate).extend({simpleDate: false});
                 self.organisation = ko.observable(project.organisation);
                 self.mapLoaded = ko.observable(false);
+                // documents
+                self.documents = ko.observableArray();
+                self.addDocument = function(doc) {
+                    self.documents.push(new DocumentViewModel(doc));
+                };
+                self.attachDocument = function() {
+                    var url = '${g.createLink(controller:"proxy", action:"documentUpdate")}';
+                    showDocumentAttachInModal( url,{role:'information'},{key:'projectId', value:'${project.projectId}'}, '#attachDocument')
+                        .done(function(result){self.documents.push(result)});
+                };
+                self.deleteDocument = function(document) {
+                    var url = '${g.createLink(controller:"proxy", action:"deleteDocument")}/'+document.documentId;
+                    $.post(url, {}, function() {self.documents.remove(document);});
+
+                };
+                $.each(project.documents, function(i, doc) {
+                    self.addDocument(doc);
+                });
+                // sites
                 self.sites = $.map(sites, function (obj,i) {return new Site(obj)});
                 self.sitesFilter = ko.observable("");
                 self.isSitesFiltered = ko.observable(false);

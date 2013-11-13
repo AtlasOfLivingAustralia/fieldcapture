@@ -176,7 +176,7 @@
 <!-- /ko -->
 
 <!-- ko stopBinding: true -->
-<div id="attachDocument" class="modal fade" style="display:none;">
+<div id="attachReasonDocument" class="modal fade" style="display:none;">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -325,7 +325,12 @@
 
                 if (newValue === 'deferred') {
                     var url = '${g.createLink(controller:"proxy", action:"documentUpdate")}';
-                    showDocumentAttachInModal( url,{role:'deferReason'},{key:'activityId', value:self.activityId}, '#attachDocument')
+                    showDocumentAttachInModal(
+                     url,
+                     {role:'deferReason'},
+                     {key:'activityId', value:self.activityId},
+                     '#attachReasonDocument',
+                     '#attachReasonDocument')
                         .done(self.saveProgress(payload));
                 }
                 else {

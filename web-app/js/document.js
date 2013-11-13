@@ -1,3 +1,4 @@
+var imageLocation = "${imageUrl}";
 /**
  * A view model to capture metadata about a document and manage progress / feedback as a file is uploaded.
  * @param doc any existing details of the document.
@@ -7,8 +8,11 @@
 function DocumentViewModel (doc, owner) {
     var self = this;
     this.filename = ko.observable(doc ? doc.filename : '');
-    this.filesize = ko.observable(doc ? doc.filesize : '')
+    this.filesize = ko.observable(doc ? doc.filesize : '');
     this.name = ko.observable(doc.name);
+    this.filetypeImg = function () {
+        return imageLocation + "/" + iconnameFromFilename(self.filename());
+    };
     this.attribution = ko.observable(doc ? doc.attribution : '');
     this.license = ko.observable(doc ? doc.license : '');
     this.type = doc.type;
@@ -35,7 +39,7 @@ function DocumentViewModel (doc, owner) {
         self.progress(0);
         self.complete(false);
         self.file = null;
-    }
+    };
     // Callbacks from the file upload widget, these are attached manually (as opposed to a knockout binding).
     this.fileAttached = function(file) {
         self.filename(file.name);
@@ -181,7 +185,7 @@ function showDocumentAttachInModal(uploadUrl, document, owner, modalSelector, fi
 
     // Decorate the model so it can handle the button presses and close the modal window.
     documentViewModel.cancel = function() {
-        result.reject()
+        result.reject();
         closeModal();
     };
     documentViewModel.close = function() {
@@ -194,7 +198,7 @@ function showDocumentAttachInModal(uploadUrl, document, owner, modalSelector, fi
         $modal.modal('hide');
         ko.cleanNode($fileUpload[0]);
         //$fileUpload.fileupload('destroy');
-    }
+    };
 
     ko.applyBindings(documentViewModel, $fileUpload[0]);
 

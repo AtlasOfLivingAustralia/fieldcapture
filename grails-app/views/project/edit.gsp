@@ -102,64 +102,6 @@
         </div>
     </div>
 
-    <!-- ko stopBinding: true -->
-    <div class="well" id="projectImageContainer">
-        <label>Project Image</label>
-        <div class="row-fluid">
-            <div class="control-group span4">
-                <label for="imageFilename">File name</label>
-                <input type="text" data-bind="value:filename" id="imageFilename"/>
-                %{--<div class="control-group span4">
-                    <div class="fileupload fileupload-new" data-provides="fileupload">
-                        <div class="fileupload-preview thumbnail" style="width: 200px; height: 150px;"></div>
-                        <div>
-                            <span class="btn btn-file"><span class="fileupload-new">Select image</span><span class="fileupload-exists">Change</span><input type="file" /></span>
-                            <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
-                        </div>
-                    </div>
-                </div>--}%
-            </div>
-            <div class="control-group span4">
-                <label for="imageCaption">Caption</label>
-                <input type="text" data-bind="value:name" id="imageCaption"/>
-            </div>
-            <div class="control-group span4">
-                <label for="imageAttribution">Attribution</label>
-                <input type="text" data-bind="value:attribution" id="imageAttribution"/>
-            </div>
-        </div>
-        <g:if test="${grailsApplication.config.debugUI}">
-        <div class="expandable-debug">
-            <h3>Debug</h3>
-            <div>
-                <h4>project image model</h4>
-                <pre data-bind="text:ko.toJSON($root,null,2)"></pre>
-            </div>
-        </div>
-        </g:if>
-    </div>
-    <!-- /ko -->
-
-
-    <div class="row-fluid">
-        <div class="span6">
-            <table class="table table-striped">
-                <thead><tr><td>Project Documents</td><td></td></tr></thead>
-                <tbody data-bind="foreach:documents">
-                    <tr>
-                        <td><a data-bind="attr:{href:url}" ><span data-bind="text:name"></span></a></td>
-                        <td style="width:15%;"><button class="btn btn-small" type="button" data-bind="click:$root.deleteDocument"><i class="icon-remove"></i>Delete</button></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    %{--The modal view contaning the contents for a modal dialog used to attach a document--}%
-    <g:render template="/shared/attachDocument"/>
-    <div class="row-fluid attachDocumentModal">
-        <button class="btn" id="doAttach" data-bind="click:attachDocument">Attach Document</button>
-    </div>
-
     <div class="form-actions">
         <button type="button" data-bind="click: save" class="btn btn-primary">Save changes</button>
         <button type="button" id="cancel" class="btn">Cancel</button>
@@ -197,64 +139,6 @@
 
         var organisations = ${institutions};
 
-        /* This section is a separate view model to modularise image handling.
-         *  The block of view code (html) must be expunged from the main model using the
-         *  "stopBinding: true" syntax.
-         *  This model must be bound to an element inside that block.
-         *  @param img is an object representing an existing image or default values
-         *  @param owner is an object with key and values properties - these are used to associate the
-         *      image with an entity eg. key='projectId', value=<id>
-         */
-        function ImageViewModel (img, owner, updateUrl) {
-            var self = this;
-            this.filename = ko.observable(img ? img.filename : '');
-            this.name = ko.observable(img.name);
-            this.attribution = ko.observable(img ? img.attribution : '');
-            this.type = img.type || 'image';
-            this.role = img.role;
-            this.documentId = img ? img.documentId : '';
-            this[owner.key] = owner.value;
-            this.save = function () {
-                var url = updateUrl + (self.documentId ? '/' + self.documentId : '');
-                if (self.name() === undefined || self.name() === '') { return }
-                $.ajax({
-                    url: url,
-                    type: 'POST',
-                    data: ko.toJSON(self),
-                    contentType: 'application/json',
-                    success: function (data) {
-                        if (data.error) {
-                            alert(data.detail + ' \n' + data.error);
-                        }
-                    },
-                    error: function (data) {
-                        var status = data.status;
-                        alert('An unhandled error occurred: ' + data.status);
-                    }
-                });
-            }
-        }
-
-        // find an image with the right properties in the available 'documents'
-        var docs = ${project?.documents ?: []},
-            image = {type: 'image', role: 'primary', documentId: ''};
-        $.each(docs, function (i, doc) {
-            if (doc.type === 'image' && doc.role === 'primary') {
-                image = doc;
-            }
-        });
-
-        // create the model
-        var imageViewModel = new ImageViewModel(
-            image,
-            {key: 'projectId', value: "${project?.projectId}"},
-            "${createLink(controller: 'proxy', action: 'documentUpdate')}"
-        );
-
-        // bind the model
-        ko.applyBindings(imageViewModel, document.getElementById('projectImageContainer'));
-        /* END of section to modularise image handling */
-
         function ViewModel (data) {
             var self = this;
             self.name = ko.observable(data.name);
@@ -283,33 +167,12 @@
                 });
                 self.associatedProgram(data.associatedProgram); // to trigger the computation of sub-programs
             };
-            self.documents = ko.observableArray();
-
-            self.addDocument = function(doc) {
-                self.documents.push(new DocumentViewModel(doc));
-            }
-            self.attachDocument = function() {
-                var url = '${g.createLink(controller:"proxy", action:"documentUpdate")}';
-                showDocumentAttachInModal( url,{role:'information'},{key:'projectId', value:'${project.projectId}'}, '#attachDocument')
-                    .done(function(result){self.documents.push(result)});
-            }
-            self.deleteDocument = function(document) {
-                var url = '${g.createLink(controller:"proxy", action:"deleteDocument")}/'+document.documentId;
-                $.post(url, {}, function() {self.documents.remove(document);});
-
-            }
-            $.each(data.documents, function(i, doc) {
-                self.addDocument(doc);
-            });
 
             self.removeTransients = function (jsData) {
                 delete jsData.transients;
                 return jsData;
             };
             self.save = function () {
-                // save any changes to the image metadata
-                imageViewModel.save();
-
                 if ($('#validation-container').validationEngine('validate')) {
                     var jsData = ko.toJS(self);
                     var json = JSON.stringify(self.removeTransients(jsData));
