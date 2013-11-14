@@ -1,19 +1,19 @@
 <div class="row-fluid" id="documentList">
     <div data-bind="foreach:documents">
         <g:if test="${editable}">
-            <div class="clearfix space-after media" data-bind="template:type === 'image' ? 'imageDocEditTmpl' : 'objDocEditTmpl'"></div>
+            <div class="clearfix space-after media" data-bind="template:ko.utils.unwrapObservable(type) === 'image' ? 'imageDocEditTmpl' : 'objDocEditTmpl'"></div>
         </g:if>
         <g:else>
-            <div class="clearfix space-after media" data-bind="template:type === 'image' ? 'imageDocTmpl' : 'objDocTmpl'"></div>
+            <div class="clearfix space-after media" data-bind="template:ko.utils.unwrapObservable(type) === 'image' ? 'imageDocTmpl' : 'objDocTmpl'"></div>
         </g:else>
     </div>
 </div>
 
 <script id="imageDocTmpl" type="text/html">
-    <a class="pull-left" data-bind="attr:{href:url}">
+    <a class="pull-left" data-bind="attr:{href:url}" target="_blank">
         <img class="media-object img-rounded span1" data-bind="attr:{src:url}" style="width:32px;height:32px;">
     </a>
-    <div data-bind="template:'docMediaBody'"></div>
+    <div data-bind="template:'imgMediaBody'"></div>
 </script>
 
 <script id="objDocTmpl" type="text/html">
@@ -25,10 +25,10 @@
 
 <script id="imageDocEditTmpl" type="text/html">
     <button class="btn btn-mini pull-left" type="button" data-bind="click:$root.deleteDocument" style="margin:4px 10px 0 0;"><i class="icon-remove"></i></button>
-    <a class="pull-left" data-bind="attr:{href:url}">
+    <a class="pull-left" data-bind="attr:{href:url}" target="_blank">
         <img class="media-object img-rounded span1" data-bind="attr:{src:url}" style="width:32px;height:32px;">
     </a>
-    <div data-bind="template:'docMediaBody'"></div>
+    <div data-bind="template:'imgMediaBody'"></div>
 </script>
 
 <script id="objDocEditTmpl" type="text/html">
@@ -42,6 +42,15 @@
 <script id="docMediaBody" type="text/html">
     <div class="media-body">
         <a data-bind="attr:{href:url}">
+            <h5 class="media-heading" data-bind="text:name"></h5>
+        </a>
+        <span data-bind="text:attribution"></span>
+    </div>
+</script>
+
+<script id="imgMediaBody" type="text/html">
+    <div class="media-body">
+        <a data-bind="attr:{href:url}" target="_blank">
             <h5 class="media-heading" data-bind="text:name"></h5>
         </a>
         <span data-bind="text:attribution"></span>

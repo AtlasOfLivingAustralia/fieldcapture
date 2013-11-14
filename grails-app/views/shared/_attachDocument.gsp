@@ -37,6 +37,15 @@
                     </div>
 
                     <div class="control-group">
+                        <div class="controls">
+                            <label class="checkbox" for="documentRole">
+                                <input id="documentRole" type="checkbox" data-bind="enable:type() == 'image',checked:isPrimaryProjectImage"/>
+                                use as the main project image
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
                         <label class="control-label" for="documentFile">File</label>
 
                         <div class="controls">

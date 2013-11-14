@@ -15,14 +15,28 @@ function DocumentViewModel (doc, owner) {
     };
     this.attribution = ko.observable(doc ? doc.attribution : '');
     this.license = ko.observable(doc ? doc.license : '');
-    this.type = doc.type;
-    this.role = doc.role;
+    this.type = ko.observable(doc.type);
+    this.role = ko.observable(doc.role);
     this.url = doc.url;
     this.documentId = doc ? doc.documentId : '';
     this.hasPreview = ko.observable(false);
     this.error = ko.observable();
     this.progress = ko.observable(0);
     this.complete = ko.observable(false);
+    // this supports a checkbox that allows the user to assert that this image is to be used
+    // as the primary project image - implemented as a writeable computed
+    this.isPrimaryProjectImage = ko.computed({
+        read: function () {
+            return self.role() === 'primary' && self.type() === 'image';
+        },
+        write: function (value) {
+            if (value) {
+                self.role('primary');
+            } else {
+                self.role('information');
+            }
+        }
+    });
 
     if (owner !== undefined) {
         this[owner.key] = owner.value;
@@ -48,7 +62,7 @@ function DocumentViewModel (doc, owner) {
         if (file.type) {
             var type = file.type.split('/');
             if (type) {
-                self.type = type[0];
+                self.type(type[0]);
             }
         }
     };
@@ -56,18 +70,17 @@ function DocumentViewModel (doc, owner) {
         this.hasPreview(true);
     };
     this.uploadProgress = function(uploaded, total) {
-
         var progress = parseInt(uploaded/total*100, 10);
         self.progress(progress);
     };
     this.fileUploaded = function(file) {
         self.complete(true);
         self.url = file.url;
+        self.documentId = file.documentId;
         self.progress(100);
     };
     this.fileUploadFailed = function(error) {
         this.error(error);
-
     };
 
     /** Formatting function for the file name and file size */

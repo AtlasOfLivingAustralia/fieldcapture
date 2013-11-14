@@ -130,28 +130,19 @@
                     </div>
                 </g:if>
 
-                <g:if test="${project.documents}">
-                    <!-- show any image marked as primary -->
-                    <g:set var="image" value=""/>
-                    <g:each in="${project.documents}" var="doc">
-                        <g:if test="${doc.type == 'image' && doc.role == 'primary'}">
-                            <g:set var="image" value="${doc}"/>
-                        </g:if>
-                    </g:each>
-                    <g:if test="${image}">
-                        <div class="thumbnail with-caption span5">
-                            <img class="img-rounded" src="${image?.url}"/>
-                            <p class="caption">${image?.name?.encodeAsHTML()}</p>
-                            <p class="attribution"><small>${image?.attribution?.encodeAsHTML()}</small></p>
-                        </div>
-                    </g:if>
-                    <!-- show other documents -->
-                    <div class="span6">
-                        <h4>Project documents</h4>
-                        <g:render template="/shared/listDocuments"
-                          model="[useExistingModel: true,editable:false,imageUrl:resource(dir:'/images/filetypes')]"/>
-                    </div>
-                </g:if>
+                <!-- show any primary image -->
+                <div data-bind="visible:primaryImage() !== null,with:primaryImage" class="thumbnail with-caption span5">
+                    <img class="img-rounded" data-bind="attr:{src:url}"/>
+                    <p class="caption" data-bind="text:name"></p>
+                    <p class="attribution" data-bind="visible:attribution"><small><span data-bind="text:attribution"></span></small></p>
+                </div>
+
+                <!-- show other documents -->
+                <div class="span6">
+                    <h4>Project documents</h4>
+                    <g:render template="/shared/listDocuments"
+                      model="[useExistingModel: true,editable:false,imageUrl:resource(dir:'/images/filetypes')]"/>
+                </div>
             </div>
         </div>
 
@@ -412,6 +403,14 @@
                     $.post(url, {}, function() {self.documents.remove(document);});
 
                 };
+                // this supports display of the project's primary image
+                this.primaryImage = ko.computed(function () {
+                    var pi = $.grep(self.documents(), function (doc) {
+                        return ko.utils.unwrapObservable(doc.isPrimaryProjectImage);
+                    });
+                    return pi.length > 0 ? pi[0] : null;
+                });
+
                 $.each(project.documents, function(i, doc) {
                     self.addDocument(doc);
                 });
