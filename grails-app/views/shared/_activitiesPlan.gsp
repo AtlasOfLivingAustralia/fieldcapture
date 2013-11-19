@@ -10,11 +10,13 @@
         <i class="icon-lock" data-bind="visible:planStatus()==='submitted'"
             title="Plan cannot be modified once it has been submitted for approval"></i>
         <button type="button" class="btn btn-link" data-bind="visible:planStatus()==='not approved',click:newActivity" style="vertical-align: baseline"><i class="icon-plus"></i> Add new activity</button>
-        <span class="pull-right">
-            <label class="checkbox inline" style="font-size:0.8em;">
-                <input data-bind="checked:userIsCaseManager" type="checkbox"> Impersonate case manager
-            </label>
-        </span>
+        <g:if test="${grailsApplication.config.simulateCaseManager}">
+            <span class="pull-right">
+                <label class="checkbox inline" style="font-size:0.8em;">
+                    <input data-bind="checked:userIsCaseManager" type="checkbox"> Impersonate case manager
+                </label>
+            </span>
+        </g:if>
 
         <ul class="nav nav-tabs nav-tab-small space-before">
             <li class="active"><a href="#tablePlan" data-toggle="tab">Tabular</a></li>
@@ -30,8 +32,8 @@
                         <th style="width:50px;">Actions</th>
                         <th style="min-width:64px">From</th>
                         <th style="min-width:64px">To</th>
-                        <th>Activity</th>
                         <th style="width:20%;" id="description-column">Description</th>
+                        <th>Activity</th>
                         <g:if test="${showSites}">
                             <th>Site</th>
                         </g:if>
@@ -48,8 +50,12 @@
                             <span data-bind="visible:$parents[1].isCurrentStage" class="badge badge-info">Current stage</span>
                             <br data-bind="visible:$parents[1].isCurrentStage && $parents[2].isApproved()">
                             <button type="button" class="btn btn-success btn-small" style="margin-top:4px;"
-                              data-bind="visible:$parents[1].isCurrentStage && $parents[2].isApproved(),disable:!$parents[1].readyForApproval()"
-                              title="Submit this stage for implementation approval.">Submit report</button>
+                              data-bind="
+                              visible:$parents[1].isCurrentStage && $parents[2].isApproved(),
+                              disable:!$parents[1].readyForApproval(),
+                              click:$parents[1].submitReport,
+                              attr:{title:$parents[1].readyForApproval()?'Submit this stage for implementation approval.':'Report cannot be submitted while activities are still open.'}"
+                              >Submit report</button>
                         </td>
                         <!-- /ko -->
                         <td>
@@ -60,10 +66,10 @@
                         <td><span data-bind="text:plannedStartDate.formattedDate"></span></td>
                         <td><span data-bind="text:plannedEndDate.formattedDate"></span></td>
                         <td>
-                            <span data-bind="text:type,click:$root.editActivity, css:{clickable:$root.canEditActivity}"></span>
+                            <span class="truncate" data-bind="text:description,click:$root.editActivity, css:{clickable:$root.canEditActivity()||$root.canEditOutputData()}"></span>
                         </td>
                         <td>
-                            <span class="truncate" data-bind="text:description"></span>
+                            <span data-bind="text:type,click:$root.editActivity, css:{clickable:$root.canEditActivity()||$root.canEditOutputData()}"></span>
                         </td>
                         <g:if test="${showSites}">
                             <td><a class="clickable" data-bind="text:siteName,click:$parents[1].openSite"></a></td>
@@ -86,11 +92,10 @@
     <form id="outputTargetsContainer">
         <h4>Output Targets</h4>
         <table id="outputTargets" class="table table-condensed">
-            <thead><tr><th>Output Type</th><th>Output</th><th>Target</th></tr></thead>
+            <thead><tr><th>Output</th><th>Target</th></tr></thead>
             <tbody data-bind="foreach:outputTargets">
             <tr>
-                <td data-bind="text:outputLabel"></td>
-                <td data-bind="text:scoreLabel"></td>
+                <td><span data-bind="text:outputLabel"></span> - <span data-bind="text:scoreLabel"></span></td>
                 <td>
                     <input type="text" class="input-small" data-bind="visible:$root.planStatus()==='not approved',value:target" data-validation-engine="validate[required,custom[number]]"/>
                     <span data-bind="visible:$root.planStatus()!=='not approved',text:target"></span>
@@ -284,10 +289,10 @@
                 source: ganttData,
                 navigate: "keys",
                 scale: "weeks",
-                itemsPerPage: 30,
+                itemsPerPage: 30/*,
                 onItemClick: function(data) {
                     alert(data.type + ' (' + data.progress() + ')');
-                }/*,
+                },
                 onAddClick: function(dt, rowId) {
                     alert("Empty space clicked - add an item!");
                 },
@@ -400,12 +405,13 @@
                 return new PlannedActivity(act, index === 0);
             });
             this.readyForApproval = ko.computed(function() {
-                return self.isCurrentStage ?
-                    $.grep(self.activities, function (act, i) {
-                        return !(act.progress() === 'finished' || act.progress() === 'deferred');
-                    }).length === 0 :
-                    false;
+                return $.grep(self.activities, function (act, i) {
+                        return act.progress() === 'planned' || act.progress() === 'started';
+                    }).length === 0;
             }, this, {deferEvaluation: true});
+            this.submitReport = function () {
+                bootbox.alert("Reporting has not been enabled yet.");
+            };
             this.approveStage = function () {
 
             };
@@ -492,7 +498,7 @@
                     url = fcConfig.activityEnterDataUrl;
                     document.location.href = url + "/" + activity.activityId +
                         "?returnTo=" + here;
-                } else if (self.canEditActivity) {
+                } else if (self.canEditActivity()) {
                     url = fcConfig.activityEditUrl;
                     document.location.href = url + "/" + activity.activityId +
                         "?returnTo=" + here;
