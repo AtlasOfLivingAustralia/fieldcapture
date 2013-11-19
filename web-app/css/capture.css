@@ -535,7 +535,7 @@ ul#adminNav li.active a {
     opacity: .25;
 }
 
-.navbar .dropdown-menu {
+.navbar .dropdown-menu, #header .dropdown-menu {
     top: 32px;
     word-wrap: normal;
     white-space: normal;

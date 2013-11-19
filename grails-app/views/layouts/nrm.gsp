@@ -40,7 +40,29 @@
                     </a>
                 </div>
                 <div class="span6 visible-phone">
-                    <div class="btn-group pull-right"><fc:loginLogoutButton logoutUrl="${createLink(controller:'logout', action:'logout')}" cssClass="btn btn-small"/></div>
+                    <div class="pull-right" style="margin-right:10px;margin-bottom:10px;">
+                        <g:if test="${fc.userIsLoggedIn()}">
+                            <div class="btn-group">
+                                <button class="btn btn-small btn-primary" id="btnProfile" title="profile page">
+                                    <i class="icon-user icon-white"></i><span class="">&nbsp;<fc:currentUserDisplayName /></span>
+                                </button>
+                                <button class="btn btn-small btn-primary dropdown-toggle" data-toggle="dropdown">
+                                    <!--<i class="icon-star icon-white"></i>--> My projects&nbsp;&nbsp;<span class="caret"></span>
+                                </button>
+                                <div class="dropdown-menu pull-right">
+                                    <fc:userProjectList />
+                                </div>
+                            </div>
+                            <g:if test="${fc.userInRole(role: "ROLE_ADMIN")}">
+                                <div class="btn-group">
+                                    <button class="btn btn-warning btn-small" id="btnAdministration"><i class="icon-cog icon-white"></i><span class="">&nbsp;Administration</span></button>
+                                </div>
+                            </g:if>
+                        </g:if>
+                        <div class="btn-group">
+                            <fc:loginLogoutButton logoutUrl="${createLink(controller:'logout', action:'logout')}" cssClass="btn btn-small"/>
+                        </div>
+                    </div>
                 </div>
                 <div class="span6 hidden-phone">
                     <g:form controller="search" method="GET" class="search pull-right">
