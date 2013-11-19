@@ -215,15 +215,16 @@ class FCTagLib {
                     mkp.yield(message(code:'default.about.label', default: 'About'))
                 }
             }
-            li(class:attrs.active == 'dashboard' ? 'active' : '') {
-                a(href:createLink(controller: 'report', action:'dashboard')) {
-                    i(class:"icon-signal") {
-                        mkp.yieldUnescaped("&nbsp;")
-                    }
-                    mkp.yieldUnescaped("&nbsp")
-                    mkp.yield(message(code:'default.about.label', default: 'Dashboard'))
-                }
-            }
+// The dashboard mockup is being been hidden - will restore when it is implemented correctly.
+//            li(class:attrs.active == 'dashboard' ? 'active' : '') {
+//                a(href:createLink(controller: 'report', action:'dashboard')) {
+//                    i(class:"icon-signal") {
+//                        mkp.yieldUnescaped("&nbsp;")
+//                    }
+//                    mkp.yieldUnescaped("&nbsp")
+//                    mkp.yield(message(code:'default.about.label', default: 'Dashboard'))
+//                }
+//            }
             Environment.executeForCurrentEnvironment {
               development {
                 li(class:attrs.active == 'advanced' ? 'active' : '') {
