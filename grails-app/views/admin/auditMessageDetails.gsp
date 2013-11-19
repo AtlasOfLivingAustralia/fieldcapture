@@ -15,7 +15,8 @@
             </div>
             <div class="span4">
                 <Strong>User:</Strong>
-                <g:encodeAs codec="HTML">${message.userId ?: '<anon>'}</g:encodeAs>
+                ${userDetails.displayName}
+                (<g:encodeAs codec="HTML">${message.userId ?: '<anon>'}</g:encodeAs>)
             </div>
             <div class="span4">
                 <Strong>Project:</Strong>

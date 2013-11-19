@@ -16,8 +16,8 @@ class AdminController {
     def adminService
     def beforeInterceptor = [action:this.&auth]
     def auditService
-
     def searchService
+    def settingService
 
     private auth() {
         if (!authService.userInRole("ROLE_ADMIN")) {
@@ -129,7 +129,43 @@ class AdminController {
                 settings << [key: e.key, value: e.value, comment: '']
             }
         }
+        // Now add editable stuff...
+
+        settings << [key:'about.page.text', value: "&lt;Click edit to view...&gt;", editLink: createLink(controller:'admin', action:'editAboutText')]
+        settings << [key:'page.footer.text', value: "&lt;Click edit to view...&gt;", editLink: createLink(controller:'admin', action:'editFooterText')]
+
         [settings: settings, grailsStuff: grailsStuff]
+    }
+
+    def editAboutText() {
+        def aboutText = settingService.getAboutPageText()
+        render(view:'editTextAreaSetting', model:[textValue: aboutText, settingTitle:'About Page Content', settingKey:'about.page.text'] )
+    }
+
+    def editFooterText() {
+        def footerText = settingService.getPageFooterText()
+        println footerText
+        render(view:'editTextAreaSetting', model:[textValue: footerText, settingTitle:'Page Footer', settingKey:'page.footer.text'] )
+    }
+
+    def saveTextAreaSetting() {
+        def text = params.textValue
+        def settingKey = params.settingKey
+        if (settingKey && text) {
+            switch (settingKey) {
+                case 'about.page.text':
+                    settingService.setAboutPageText(text)
+                    break;
+                case 'page.footer.text':
+                    settingService.setPageFooterText(text)
+                    break;
+                default:
+                    throw new RuntimeException("Undefined setting key!")
+            }
+            flash.message = "${settingKey} content saved."
+        }
+
+        redirect(action:'settings')
     }
 
     def reloadConfig = {
@@ -269,12 +305,7 @@ class AdminController {
             def project = projectService.get(id)
             if (project) {
                 def messages = auditService.getAuditMessagesForProject(id)
-
-                messages?.messages?.each {
-                    println it
-                }
-
-                [project: project, messages: messages?.messages]
+                [project: project, messages: messages?.messages, userMap: messages?.userMap]
             } else {
                 flash.message = "Specified project id does not exist!"
                 redirect(action:'audit')
@@ -287,7 +318,11 @@ class AdminController {
 
     def auditMessageDetails() {
         def results = auditService.getAuditMessage(params.id as String)
-        [message: results?.message]
+        def userDetails = [:]
+        if (results?.message) {
+            userDetails = auditService.getUserDetails(results?.message?.userId)
+        }
+        [message: results?.message, userDetails: userDetails.user]
     }
 
 }

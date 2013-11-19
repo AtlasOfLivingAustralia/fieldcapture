@@ -26,7 +26,8 @@
                                 <td>${message.eventType}</td>
                                 <td>${message.entityType?.substring(message.entityType?.lastIndexOf('.')+1)}</td>
                                 <td>${message.entityId}</td>
-                                <td><g:encodeAs codec="HTML">${message.userId}</g:encodeAs></td>
+                                <g:set var="displayName" value="${userMap[message.userId] ?: message.userId }" />
+                                <td><g:encodeAs codec="HTML">${displayName}</g:encodeAs></td>
                                 <td>
                                     <a class="btn btn-small" href="${createLink(action:'auditMessageDetails', params:[id:message.id])}">
                                         <i class="icon-search"></i>

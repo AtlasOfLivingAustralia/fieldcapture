@@ -16,6 +16,7 @@ class FCTagLib {
 
     def commonService
     def userService
+    def settingService
 
     def textField = { attrs ->
         def outerClass = attrs.remove 'outerClass'
@@ -527,6 +528,13 @@ class FCTagLib {
         if (object) {
             def mb = new MarkupBuilder(out)
             renderObject(object, mb)
+        }
+    }
+
+    def footerContent = { attrs ->
+        def content = settingService.pageFooterText as String
+        if (content) {
+            out << content.markdownToHtml()
         }
     }
 

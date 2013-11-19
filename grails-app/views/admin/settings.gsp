@@ -27,6 +27,11 @@
                         </td>
                         <td>
                             ${setting.comment}
+                            <g:if test="${setting.editLink}">
+                                <a href="${setting.editLink}" class="btn btn-small">
+                                    <i class="icon-edit"></i>&nbsp;Edit
+                                </a>
+                            </g:if>
                         </td>
                     </tr>
                 </g:each>

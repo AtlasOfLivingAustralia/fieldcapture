@@ -4,7 +4,11 @@ import grails.converters.JSON
 
 class HomeController {
 
-    def projectService, siteService, activityService, searchService
+    def projectService
+    def siteService
+    def activityService
+    def searchService
+    def settingService
 
     def advanced() {
         [
@@ -36,6 +40,8 @@ class HomeController {
     }
 
     def about() {
+        def content = settingService.getAboutPageText()
+        [content: content]
     }
 
     def myProfile() {

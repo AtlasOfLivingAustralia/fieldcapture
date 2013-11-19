@@ -93,28 +93,11 @@
     <div id="footer">
         <div id="footer-wrapper">
             <div class="container-fluid">
-                <p>Caring for our Country is an Australian Government initiative jointly administered by the Australian Government<br>
-                    <a href="http://www.daff.gov.au/">Department of Agriculture, Fisheries and Forestry</a> and the <a href="http://www.environment.gov.au/index.html">Department of Sustainability, Environment, Water, Population and Communities</a><br/>
-                    This site is a prototype  developed by the Atlas of Living Australia in 2013.
-                    Report issues to <a href="mailto:support@ala.org.au">support@ala.org.au</a>
-                    %{--Last updated: Tuesday, 29-Nov-2011 19:58:28 EST--}%
-                </p>
+                <fc:footerContent />
             </div>
             <div class="container-fluid">
                 <div class="large-space-before">
                     <button class="btn btn-mini" id="toggleFluid">toggle fixed/fluid width</button>
-                    <div class="large-space-before">&copy; 2013 <a href="/about/copyright.html">Commonwealth of Australia</a></div>
-                    <div class="stay-connected pull-right">
-                        <h2 style="display:none;">Stay connected</h2>
-                        <ul class="horizontal">
-                            <li class="email"> <a href="http://www.nrm.gov.au/news/subscribe.html">Subscribe to receive<br>
-                                email alerts</a> </li>
-                            <li class="facebook"> <a href="http://www.facebook.com/CaringforourCountry">Join us on Facebook</a> </li>
-                            <li class="twitter"> <a href="http://twitter.com/#!/C4oC">Follow us on Twitter</a> </li>
-                            <li class="rss"> <a href="http://www.nrm.gov.au/news/news.xml">Subscribe to RSS</a><br>
-                                <a class="what" href="http://www.nrm.gov.au/news/rss.html">(what is RSS?)</a></li>
-                        </ul>
-                    </div>
             </div>
         </div>
 

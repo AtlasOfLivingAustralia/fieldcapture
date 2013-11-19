@@ -15,4 +15,9 @@ class AuditService {
         return webService.getJson(url)
     }
 
+    def getUserDetails(String userId) {
+        String url = grailsApplication.config.ecodata.baseUrl + 'audit/ajaxGetUserDetails/' + userId
+        return webService.getJson(url)
+    }
+
 }

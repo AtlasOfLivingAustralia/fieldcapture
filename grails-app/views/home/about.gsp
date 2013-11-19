@@ -31,13 +31,7 @@
             </div>
         </div>
         <div class="well" id="aboutDescription" style="margin-top:20px;">
-           <p>
-               This prototype was developed by the Atlas of Living Australia in 2013 in conjunction with
-               the Department of Sustainability, Environment, Water, Population and Communities.
-           </p>
-           <p>
-               Report issues to <a href="mailto:support@ala.org.au">support@ala.org.au</a>
-           </p>
+            <markdown:renderHtml>${content}</markdown:renderHtml>
         </div>
     </div>
 </body>
