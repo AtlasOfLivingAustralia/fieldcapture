@@ -276,6 +276,40 @@ class AdminController {
     }
 
     /**
+     * Accepts a CSV file (as a multipart file upload) and validates and bulk loads activity plan data for mulitple projects.
+     * @return an error message if the CSV file is invalid, otherwise writes a CSV file describing any validation
+     * errors that were encountered.
+     */
+    def importPlanData() {
+        if (request instanceof MultipartHttpServletRequest) {
+            def file = request.getFile('planData')
+
+            if (file) {
+
+                def results = importService.importPlansByCsv(file.inputStream, params.importWithErrors)
+
+                render results as JSON
+//                if (results.error) {
+//                    render contentType: 'text/json', status:400, text:"""{"error":"${results.error}"}"""
+//                }
+//
+//                // The validation results are current returned as a CSV file so that it can easily be sent back to
+//                // be corrected at the source.  It's not great usability at the moment.
+//                response.setContentType("text/csv")
+//                PrintWriter pw = new PrintWriter(response.outputStream)
+//                results.validationErrors.each {
+//                    pw.println('"'+it.join('","')+'"')
+//                }
+//                pw.flush()
+//                return null
+            }
+
+        }
+
+        render contentType: 'text/json', status:400, text:'{"error":"No file supplied"}'
+    }
+
+    /**
      * Re-index all docs with ElasticSearch
      */
     def reIndexAll() {

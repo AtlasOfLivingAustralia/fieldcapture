@@ -1,11 +1,9 @@
 package au.org.ala.fieldcapture
-
 import au.com.bytecode.opencsv.CSVReader
 import org.apache.commons.lang.StringUtils
 
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
-
 /**
  * Handles data import into ecodata.
  */
@@ -23,7 +21,7 @@ class ImportService {
     /** The current format location data is supplied in */
     def locationRegExp = /lat. = ([\-0-9\.]*)\nlong. = ([\-0-9\.]*)\nLocation Description = (.*)lat\. =.*/
 
-    def projectService, siteService, metadataService, cacheService
+    def projectService, siteService, metadataService, cacheService, activityService
 
 
     /**
@@ -332,6 +330,194 @@ class ImportService {
         projectDetails
     }
 
+
+
+    /** Constants used by the MERI plan import */
+    final int GRANT_ID_COLUMN = 0
+    final int OUTPUT_COLUMN = 3
+    final int STAGE_1_COLUMN = 24
+
+    /**
+     * Validates and imports project plan data as supplied by DOE.
+     */
+    def importPlansByCsv(InputStream csv,  importWithErrors = false) {
+
+        cacheService.clear(PROJECTS_CACHE_KEY)
+
+        CSVReader csvReader = new CSVReader(new InputStreamReader(csv, 'UTF-8'));
+
+        String[] csvLine = csvReader.readNext();
+
+        def stageOffsets = findStageOffsets(csvLine)
+        // Used to detect duplicate grantIds (as it is used as the key)
+        def grantIds = []
+
+        csvLine = csvReader.readNext()
+
+        def plans = [:]
+        while (csvLine) {
+
+            def grantId = csvLine[GRANT_ID_COLUMN]
+            if (!grantIds.contains(grantId)) {
+
+                def results = importPlan(csvLine, stageOffsets)
+                if (!results.error && !results.activities) {
+                    results = [error:"No activities defined for project with grant id = ${grantId}"]
+                }
+                plans[grantId] = results
+                grantIds << grantId
+            }
+            else {
+                log.error("Duplicate Grant ID detected: "+grantId)
+            }
+            csvLine = csvReader.readNext();
+
+        }
+
+        cacheService.clear(PROJECTS_CACHE_KEY)
+
+        return plans
+    }
+
+
+    def findStageOffsets(headerLine) {
+        int offset = STAGE_1_COLUMN
+
+        def stageOffsets = []
+
+        while (offset < headerLine.length && headerLine[offset]) {
+            if (headerLine[offset] == 'Stage') {
+                stageOffsets << offset
+            }
+            offset++
+        }
+
+        stageOffsets
+
+
+    }
+
+    def importPlan(String[] csvLine, stageOffsets) {
+
+        // Column headers: (as this is more or less a once off load..)
+
+        // Project ID	Project title	Project description	Theme 1 outputs: # ha to be revegetated	Theme 1 description: Vegetation description	Theme 1 description: Current condition	Theme 1 description: Intended condition	Theme 1 description: method used for assessment of condition	Theme 2 outputs: #ha to be protected	Theme 2 description: Vegetation description	Theme 2 description: current condition	Theme 2 description: intended condition	Theme 2 description: method for assessment	Theme 3 outputs: #ha to be managed	Theme 3 outputs: invasive spp managed	Theme 3 description: other	non-theme outputs: # plants planted	non-theme outputs: #kg seed sown	non-theme description: % survival rate for plants	non-theme description: #canopy species planted	non-theme description: #understorey spp planted	non-theme description: #ground layer spp planted	non-theme outputs: #km fenced	non-theme description: other	Stage	Stage start date	Stage end date	Activity 1 type	Activity 1 description	Activity 2 type	Activity 2 description	Activity 3 type	Activity 3 description	Activity 4 type	Activity 4 description	Activity 5 type	Activity 5 description	Activity 6 type	Activity 6 description	Activity 7 type	Activity 7 description	Activity 8 type	Activity 8 description	Activity 9 type	Activity 9 description	Activity 10 type	Activity 10 description	Activity 11 type	Activity 11 description	Stage	Stage start date	Stage end date	Activity 1 type	Activity 1 description	Activity 2 type	Activity 2 description	Activity 3 type	Activity 3 description	Activity 4 type	Activity 4 description	Activity 5 type	Activity 5 description	Activity 6 type	Activity 6 description	Activity 7 type	Activity 7 description	Activity 8 type	Activity 8 description	Activity 9 type	Activity 9 description	Activity 10 type	Activity 10 description	Activity 11type	Activity 11 description	Stage	Stage start date	Stage end date	Activity 1 type	Activity 1 description	Activity 2 type	Activity 2 description	Activity 3 type	Activity 3 description	Activity 4 type	Activity 4 description	Activity 5 type	Activity 5 description	Activity 6 type	Activity 6 description	Activity 7 type	Activity 7 description	Activity 8 type	Activity 8 description	Activity 9 type	Activity 9 description	Activity 10 type	Activity 10 description	Activity 11 type	Activity 11 description	Stage	Stage start date	Stage end date	Activity 1 type	Activity 1 description	Activity 2 type	Activity 2 description	Activity 3 type	Activity 3 description	Activity 4 type	Activity 4 description	Activity 5 type	Activity 5 description	Activity 6 type	Activity 6 description	Activity 7 type	Activity 7 description	Activity 8 type	Activity 8 description	Activity 9 type	Activity 9 description	Activity 10 type	Activity 10 description	Activity 11 type	Activity 11 description	Activity 12 type	Activity 12 description	Activity 13 type	Activity 13 description	Activity 14 type	Activity 14 description	Activity 15 type	Activity 15 description	Activity 16 type	Activity 16 description	Activity 17 type	Activity 17 description	Stage	Stage start date	Stage end date	Activity 1 type	Activity 1 description	Activity 2 type	Activity 2 description	Activity 3 type	Activity 3 description	Activity 4 type	Activity 4 description	Activity 5 type	Activity 5 description	Activity 6 type	Activity 6 description	Activity 7 type	Activity 7 description	Activity 8 type	Activity 8 description	Activity 9 type	Activity 9 description	Activity 10 type	Activity 10 description	Activity 11 type	Activity 11 description	Stage	Stage start date	Stage end date	Activity 1 type	Activity 1 description	Activity 2 type	Activity 2 description	Activity 3 type	Activity 3 description	Activity 4 type	Activity 4 description	Activity 5 type	Activity 5 description	Activity 6 type	Activity 6 description	Activity 7 type	Activity 7 description	Activity 8 type	Activity 8 description	Activity 9 type	Activity 9 description	Activity 10 type	Activity 10 description	Activity 11 type	Activity 11 description	Activity 12 type	Activity 12 description	Activity 13 type	Activity 13 description	Activity 14 type	Activity 14 description	Activity 15 type	Activity 15 description	Stage	Stage start date	Stage end date	Activity 1 type	Activity 1 description	Activity 2 type	Activity 2 description	Activity 3 type	Activity 3 description	Activity 4 type	Activity 4 description	Activity 5 type	Activity 5 description	Activity 6 type	Activity 6 description	Activity 7 type	Activity 7 description	Activity 8 type	Activity 8 description	Activity 9 type	Activity 9 description	Activity 10 type	Activity 10 description	Activity 11 type	Activity 11 description	Stage	Stage start date	Stage end date	Activity 1 type	Activity 1 description	Activity 2 type	Activity 2 description	Activity 3 type	Activity 3 description	Activity 4 type	Activity 4 description	Activity 5 type	Activity 5 description	Activity 6 type	Activity 6 description	Activity 7 type	Activity 7 description	Activity 8 type	Activity 8 description	Activity 9 type	Activity 9 description	Activity 10 type	Activity 10 description	Activity 11 type	Activity 11 description	Activity 12 type	Activity 12 description	Activity 13 type	Activity 13 description	Activity 14 type	Activity 14 description	Stage	Stage start date	Stage end date	Activity 1 type	Activity 1 description	Activity 2 type	Activity 2 description	Activity 3 type	Activity 3 description	Activity 4 type	Activity 4 description	Activity 5 type	Activity 5 description	Activity 6 type	Activity 6 description	Activity 7 type	Activity 7 description	Stage	Stage start date	Stage end date	Activity 1 type	Activity 1 description	Activity 2 type	Activity 2 description	Activity 3 type	Activity 3 description	Activity 4 type	Activity 4 description	Activity 5 type	Activity 5 description	Activity 6 type	Activity 6 description	Activity 7 type	Activity 7 description	Activity 8 type	Activity 8 description	Activity 9 type	Activity 9 description	Activity 10 type	Activity 10 description	Activity 11 type	Activity 11 description	Activity 12 type	Activity 12 description	Activity 13 type	Activity 13 description	Activity 14 type	Activity 14 description	Activity 15 type	Activity 15 description	Activity 16 type	Activity 16 description	Activity 17 type	Activity 17 description	Activity 18 type	Activity 18 description	Activity 19 type	Activity 19 description	Activity 20 type	Activity 20 description
+
+        def grantId = csvLine[GRANT_ID_COLUMN]
+        def project = findProjectByGrantId(grantId)
+
+        if (!project) {
+            return [error:"No project with grant id = ${grantId}"]
+        }
+        def existingActivities = activityService.activitiesForProject(project.projectId)
+        if (existingActivities) {
+            return [error:"Project with grant id = ${grantId} already has activities defined.  Not importing."]
+        }
+
+        int stageNum = 0
+        def timeline = []
+        def activities = []
+        def outputs = readOutputs(csvLine[OUTPUT_COLUMN..<STAGE_1_COLUMN])
+
+        while (stageNum < stageOffsets.size()) {
+
+            def startOffset = stageOffsets[stageNum]
+            def endOffset = stageNum < stageOffsets.size()-1 ? stageOffsets[stageNum+1] : csvLine.length
+
+            def stageDetails = readStage(csvLine[startOffset..<endOffset], project)
+            timeline << stageDetails.stage
+            if (stageDetails.activities) {
+                activities.addAll(stageDetails.activities)
+            }
+            stageNum++
+
+        }
+
+        return [timeline:timeline, activities:activities, outputs:outputs]
+
+    }
+
+    def readOutputs(outputDetails) {
+
+        def theme1 = 'Biodiverse plantings'
+        def theme2 = 'Protecting and enhancing existing native vegetation'
+        def theme3 = 'Managing invasive species in a connected landscape'
+
+        // This is essentially just a big lookup table.
+        def outputs = []
+
+        int offset = 0
+
+        addOutput(outputs, [outputLabel: 'Revegetation Details', scoreName: 'areaOfWorks' , scoreLabel: 'Area of works', units:'Ha', theme:theme1], outputDetails[offset++])
+        // Not sure what to do with the textual based descriptions, methods & outcomes.
+        offset+=4
+        addOutput(outputs, [outputLabel: 'Revegetation Details', scoreName: 'areaOfWorks' , scoreLabel: 'Area of works', units:'Ha', theme:theme2], outputDetails[offset++])
+        // Same again, a bunch of text for theme 2 this time.
+        offset+=4
+
+        // Theme 3 area
+        addOutput(outputs, [outputLabel: 'Weed Treatment Details', scoreName: 'areaTreatedHa' , scoreLabel: 'Total area treated (Ha)', units:'Ha', theme:theme3], outputDetails[offset++])
+
+        // Now species lists, text & number???  for theme 3.
+        offset+=2
+        addOutput(outputs, [outputLabel: 'Revegetation Details', scoreName: 'totalNumberPlanted' , scoreLabel: 'Number of plants planted', units:''], outputDetails[offset++])
+        addOutput(outputs, [outputLabel: 'Revegetation Details', scoreName: 'totalSeedSownKg' , scoreLabel: 'Kgs of seed sown', units:'kg'], outputDetails[offset++])
+
+        addOutput(outputs, [outputLabel: 'Missing output', scoreName: 'survivalRate' , scoreLabel: '% survival rate for plants', units:'%'], outputDetails[offset++])
+        addOutput(outputs, [outputLabel: 'Missing output', scoreName: 'numberCanopySpeciesPlanted' , scoreLabel: '# canopy species planted', units:''], outputDetails[offset++])
+        addOutput(outputs, [outputLabel: 'Missing output', scoreName: 'numberUnderstorySpeciesPlanted' , scoreLabel: '# understory species planted', units:''], outputDetails[offset++])
+        addOutput(outputs, [outputLabel: 'Missing output', scoreName: 'numberGroundLayerSpeciesPlanted' , scoreLabel: '# ground layer species planted', units:''], outputDetails[offset++])
+
+        addOutput(outputs, [outputLabel: 'Fence Details', scoreName: 'lengthOfFence' , scoreLabel: 'Total length of fence', units:'Km',], outputDetails[offset++])
+
+        // Now an "other"???
+
+        outputs
+    }
+
+    def addOutput(outputs, output, target) {
+        if (target) {
+            output.target = target
+            outputs << output
+        }
+    }
+
+    def readStage(stageDetails, project) {
+
+        def results = [:]
+        int offset = 0
+        def stage = [:]
+
+        stage.name = stageDetails[offset++]
+        def fromDate = stageDetails[offset++]
+        if (fromDate == 'Commencement') {
+            fromDate = project.startDate
+            if (!fromDate) {
+                fromDate = '01/07/2012' // Fixme to correct format
+            }
+        }
+        stage.fromDate = fromDate
+        stage.toDate = stageDetails[offset++]
+
+        results.stage = stage
+
+        // Assume at least one activity
+
+        def activities = []
+        while (offset < stageDetails.size() && stageDetails[offset]) {
+
+            def activity = [:]
+            activity.type = stageDetails[offset++] // May need a lookup here.
+            activity.description = stageDetails[offset++]
+            activity.plannedStartDate = stage.fromDate
+            activity.plannedEndDate = stage.toDate
+            activity.progress = 'planned'
+            activities << activity
+        }
+        results.activities = activities
+
+        results
+    }
 
 
 }

@@ -65,6 +65,21 @@
 
                 }).trigger('change');
 
+                $("#btnLoadPlanData").click(function(e) {
+                    e.preventDefault();
+                    $('form.loadPlanData').submit();
+                });
+
+                $("#planData").change(function() {
+                    if ($("#planData").val()) {
+                        $("#btnLoadPlanData").removeAttr("disabled");
+                    }
+                    else {
+                        $("#btnLoadPlanData").attr("disabled", "disabled");
+                    }
+
+                }).trigger('change');
+
                 $("#btnReindexAll").click(function(e) {
                     e.preventDefault();
                     var url = "${createLink(controller: 'admin', action:'reIndexAll')}";
@@ -113,6 +128,14 @@
                     <td>
                         Loads (or reloads) project information from a csv file.
                         <p><g:uploadForm class="loadProjectData" controller="admin" action="importProjectData"><input id="projectData" type="file" accept="text/csv" name="projectData"/><input type="checkbox" name="importWithErrors">Force import (even with validation errors)</g:uploadForm></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td><button disabled id="btnLoadPlanData" class="btn btn-small btn-info" title="Load project data">Load Plans from CSV</button>
+                    </td>
+                    <td>
+                        Loads (or reloads) project plan information from a csv file.
+                        <p><g:uploadForm class="loadPlanData" controller="admin" action="importPlanData"><input id="planData" type="file" accept="text/csv" name="planData"/><input type="checkbox" name="importWithErrors">Force import (even with validation errors)</g:uploadForm></p>
                     </td>
                 </tr>
                 <tr>
