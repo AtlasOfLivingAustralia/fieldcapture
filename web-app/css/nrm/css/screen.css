@@ -322,6 +322,9 @@ ul.horizontal li {
     margin-right: 0px;
 }
 
+.btn-login {
+    color:white !important;
+}
 
 #pn-news-flyout {
     width: 145px;

@@ -39,6 +39,9 @@
                         <r:img dir="css/nrm/images" file="gr_logo_wide.png" alt="Caring for our Country" />
                     </a>
                 </div>
+                <div class="span6 visible-phone">
+                    <div class="btn-group pull-right"><fc:loginLogoutButton logoutUrl="${createLink(controller:'logout', action:'logout')}" cssClass="btn btn-small"/></div>
+                </div>
                 <div class="span6 hidden-phone">
                     <g:form controller="search" method="GET" class="search pull-right">
                         <p>
@@ -53,16 +56,16 @@
             </div>
         </div>
     </div><!-- /#header -->
-    <div id="dcNav" class="clearfix">
+    <div id="dcNav" class="clearfix hidden-phone">
         <div class="navbar container-fluid">
-            <a class="brand hidden-tablet hidden-phone">MERI data capture prototype</a>
-            <div class="nav-collapse collapse">
+            <a class="brand">MERI data capture prototype</a>
+            %{--<div class="nav-collapse collapse">--}%
                 <div class="navbar-text pull-right">
                     <span id="buttonBar">
                         <g:if test="${fc.userIsLoggedIn()}">
                             <div class="btn-group">
                                 <button class="btn btn-small btn-primary" id="btnProfile" title="profile page">
-                                    <i class="icon-user icon-white"></i><span class="hidden-tablet hidden-phone">&nbsp;<fc:currentUserDisplayName /></span>
+                                    <i class="icon-user icon-white"></i><span class="">&nbsp;<fc:currentUserDisplayName /></span>
                                 </button>
                                 <button class="btn btn-small btn-primary dropdown-toggle" data-toggle="dropdown">
                                     <!--<i class="icon-star icon-white"></i>--> My projects&nbsp;&nbsp;<span class="caret"></span>
@@ -73,7 +76,7 @@
                             </div>
                             <g:if test="${fc.userInRole(role: "ROLE_ADMIN")}">
                                 <div class="btn-group">
-                                    <button class="btn btn-warning btn-small" id="btnAdministration"><i class="icon-cog icon-white"></i><span class="hidden-tablet hidden-phone">&nbsp;Administration</span></button>
+                                    <button class="btn btn-warning btn-small" id="btnAdministration"><i class="icon-cog icon-white"></i><span class="">&nbsp;Administration</span></button>
                                 </div>
                             </g:if>
                         </g:if>
@@ -82,7 +85,7 @@
                     </span>
                 </div>
                 <fc:navbar active="${pageProperty(name: 'page.topLevelNav')}"/>
-            </div>
+            %{--</div>--}%
         </div><!-- /.nav -->
     </div>
 

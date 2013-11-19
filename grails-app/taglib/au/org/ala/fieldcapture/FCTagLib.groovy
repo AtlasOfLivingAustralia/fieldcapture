@@ -198,7 +198,7 @@ class FCTagLib {
 
         def mb = new MarkupBuilder(out)
 
-        mb.ul(class:'nav') {
+        mb.ul(class:'nav hidden-tablet') {
             li(class:attrs.active == 'home' ? 'active' : '') {
                 a(href:createLink(uri: '/')) {
                     i(class:"icon-home") {
@@ -413,7 +413,7 @@ class FCTagLib {
         def logoutReturnToUrl = attrs.logoutReturnToUrl ?: requestUri
         def casLoginUrl = attrs.casLoginUrl ?: grailsApplication.config.security.cas.loginUrl ?: "https://auth.ala.org.au/cas/login"
         def casLogoutUrl = attrs.casLogoutUrl ?: grailsApplication.config.security.cas.logoutUrl ?: "https://auth.ala.org.au/cas/logout"
-        def cssClass = attrs.cssClass?:"btn btn-small btn-inverse"
+        def cssClass = attrs.cssClass?:"btn btn-small btn-inverse btn-login"
         def output
 
         if ((attrs.ignoreCookie != "true" &&
@@ -422,10 +422,10 @@ class FCTagLib {
             output = "<a href='${logoutUrl}" +
                     "?casUrl=${casLogoutUrl}" +
                     "&appUrl=${logoutReturnToUrl}' " +
-                    "class='${cssClass}' style='color:white;'><i class='icon-off icon-white'></i> Logout</a>"
+                    "class='${cssClass}'><i class='icon-off ${(cssClass.contains("btn-login")) ? "icon-white" : ""}'></i> Logout</a>"
         } else {
             // currently logged out
-            output =  "<a href='${casLoginUrl}?service=${loginReturnToUrl}' class='${cssClass}' style='color:white;'><span><i class='icon-off icon-white'></i> Log in</span></a>"
+            output =  "<a href='${casLoginUrl}?service=${loginReturnToUrl}' class='${cssClass}'><span><i class='icon-off ${(cssClass.contains("btn-login")) ? "icon-white" : ""}'></i> Log in</span></a>"
         }
         out << output
     }
