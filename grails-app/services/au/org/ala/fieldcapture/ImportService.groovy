@@ -21,7 +21,7 @@ class ImportService {
     /** The current format location data is supplied in */
     def locationRegExp = /lat. = ([\-0-9\.]*)\nlong. = ([\-0-9\.]*)\nLocation Description = (.*)lat\. =.*/
 
-    def projectService, siteService, metadataService, cacheService, activityService
+    def projectService, siteService, metadataService, cacheService, activityService, webService, grailsApplication
 
 
     /**
@@ -360,9 +360,13 @@ class ImportService {
             def grantId = csvLine[GRANT_ID_COLUMN]
             if (!grantIds.contains(grantId)) {
 
-                def results = importPlan(csvLine, stageOffsets)
+                def results = parsePlan(csvLine, stageOffsets)
                 if (!results.error && !results.activities) {
                     results = [error:"No activities defined for project with grant id = ${grantId}"]
+                }
+                else if (!results.error) {
+                    def importResults = importPlan(grantId, results)
+                    results << [importStatus:importResults]
                 }
                 plans[grantId] = results
                 grantIds << grantId
@@ -379,6 +383,18 @@ class ImportService {
         return plans
     }
 
+
+    def importPlan(grantId, planDetails) {
+
+        def project = [projectId:[type:'grantId', value:grantId]]
+        project.activities = planDetails.activities
+        project.outputTargets = planDetails.outputs
+
+        def url = grailsApplication.config.ecodata.baseUrl + 'external/v1/projectPlan'
+
+        def results = webService.doPost(url, project)
+        results
+    }
 
     def findStageOffsets(headerLine) {
         int offset = STAGE_1_COLUMN
@@ -397,7 +413,7 @@ class ImportService {
 
     }
 
-    def importPlan(String[] csvLine, stageOffsets) {
+    def parsePlan(String[] csvLine, stageOffsets) {
 
         // Column headers: (as this is more or less a once off load..)
 
@@ -425,6 +441,9 @@ class ImportService {
             def endOffset = stageNum < stageOffsets.size()-1 ? stageOffsets[stageNum+1] : csvLine.length
 
             def stageDetails = readStage(csvLine[startOffset..<endOffset], project)
+            if (stageDetails.error) {
+                return [error:stageDetails.error]
+            }
             timeline << stageDetails.stage
             if (stageDetails.activities) {
                 activities.addAll(stageDetails.activities)
@@ -484,6 +503,8 @@ class ImportService {
 
     def readStage(stageDetails, project) {
 
+        def validActivities = metadataService.activitiesModel().activities
+
         def results = [:]
         int offset = 0
         def stage = [:]
@@ -493,14 +514,15 @@ class ImportService {
         if (fromDate == 'Commencement') {
             fromDate = project.startDate
             if (!fromDate) {
-                fromDate = '01/07/2012' // Fixme to correct format
+                fromDate = '01/07/2012'
             }
         }
-        stage.fromDate = fromDate
-        stage.toDate = stageDetails[offset++]
+        stage.fromDate = convertDate(fromDate)
+        stage.toDate = convertDate(stageDetails[offset++])
 
         results.stage = stage
 
+        def unmatchedActivities = []
         // Assume at least one activity
 
         def activities = []
@@ -508,11 +530,19 @@ class ImportService {
 
             def activity = [:]
             activity.type = stageDetails[offset++] // May need a lookup here.
+
+            if (!validActivities.find{it.name == activity.type}) {
+                unmatchedActivities << activity.type
+            }
+
             activity.description = stageDetails[offset++]
             activity.plannedStartDate = stage.fromDate
             activity.plannedEndDate = stage.toDate
             activity.progress = 'planned'
             activities << activity
+        }
+        if (unmatchedActivities) {
+            results.error = "Unmatched activity type(s) supplied ${unmatchedActivities}"
         }
         results.activities = activities
 
