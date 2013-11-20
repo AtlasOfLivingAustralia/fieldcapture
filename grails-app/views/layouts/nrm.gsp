@@ -43,7 +43,7 @@
                     <div class="pull-right" style="margin-right:10px;margin-bottom:10px;">
                         <g:if test="${fc.userIsLoggedIn()}">
                             <div class="btn-group">
-                                <button class="btn btn-small btn-primary" id="btnProfile" title="profile page">
+                                <button class="btn btn-small btn-primary btnProfile" id="" title="profile page">
                                     <i class="icon-user icon-white"></i><span class="">&nbsp;<fc:currentUserDisplayName /></span>
                                 </button>
                                 <button class="btn btn-small btn-primary dropdown-toggle" data-toggle="dropdown">
@@ -55,7 +55,7 @@
                             </div>
                             <g:if test="${fc.userInRole(role: "ROLE_ADMIN")}">
                                 <div class="btn-group">
-                                    <button class="btn btn-warning btn-small" id="btnAdministration"><i class="icon-cog icon-white"></i><span class="">&nbsp;Administration</span></button>
+                                    <button class="btn btn-warning btn-small btnAdministration" id=""><i class="icon-cog icon-white"></i><span class="">&nbsp;Administration</span></button>
                                 </div>
                             </g:if>
                         </g:if>
@@ -86,7 +86,7 @@
                     <span id="buttonBar">
                         <g:if test="${fc.userIsLoggedIn()}">
                             <div class="btn-group">
-                                <button class="btn btn-small btn-primary" id="btnProfile" title="profile page">
+                                <button class="btn btn-small btn-primary btnProfile" id="" title="profile page">
                                     <i class="icon-user icon-white"></i><span class="">&nbsp;<fc:currentUserDisplayName /></span>
                                 </button>
                                 <button class="btn btn-small btn-primary dropdown-toggle" data-toggle="dropdown">
@@ -98,7 +98,7 @@
                             </div>
                             <g:if test="${fc.userInRole(role: "ROLE_ADMIN")}">
                                 <div class="btn-group">
-                                    <button class="btn btn-warning btn-small" id="btnAdministration"><i class="icon-cog icon-white"></i><span class="">&nbsp;Administration</span></button>
+                                    <button class="btn btn-warning btn-small btnAdministration" id=""><i class="icon-cog icon-white"></i><span class="">&nbsp;Administration</span></button>
                                 </div>
                             </g:if>
                         </g:if>
@@ -142,14 +142,14 @@
             window.location = "${createLink(controller: 'logout', action:'index')}";
         });
 
-        $("#btnAdministration").click(function (e) {
+        $(".btnAdministration").click(function (e) {
             window.location = "${createLink(controller: 'admin')}";
         });
         $('#btnDashboard').click(function(e) {
             window.location = "${createLink(controller: 'report')}"
         });
 
-        $("#btnProfile").click(function (e) {
+        $(".btnProfile").click(function (e) {
             window.location = "${createLink(controller: 'myProfile')}";
         });
 
