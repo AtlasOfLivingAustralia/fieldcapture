@@ -27,7 +27,7 @@
         <li>
             <g:link controller="home">Home</g:link> <span class="divider">/</span>
         </li>
-        <li class="active"><g:link controller="home" action="advanced">Sites</g:link> <span class="divider">/</span></li>
+        <li class="active">Sites <span class="divider">/</span></li>
         <li class="active">${site.name?.encodeAsHTML()}</li>
     </ul>
     <div class="row-fluid space-after">
@@ -54,27 +54,27 @@
             </div>
 
             <p>
-                    <span class="label label-info">External Id:</span> ${site.externalId?:'Not specified'}
-                    <span class="label label-info">Type:</span> ${site.type?:'Not specified'}
-                    <span class="label label-info">Area:</span>
-                    <g:if test="${site?.extent?.geometry?.area}">
-                        ${site.extent.geometry.area} square km
-                    </g:if>
-                    <g:else>
-                        Not specified
-                    </g:else>
+                <span class="label label-info">External Id:</span> ${site.externalId?:'Not specified'}
+                <span class="label label-info">Type:</span> ${site.type?:'Not specified'}
+                <span class="label label-info">Area:</span>
+                <g:if test="${site?.extent?.geometry?.area}">
+                    ${site.extent.geometry.area} square km
+                </g:if>
+                <g:else>
+                    Not specified
+                </g:else>
                 </span>
             </p>
 
             <g:if test="${site.extent?.geometry}">
             <p>
-                    <span class="label label-success">State/territory:</span> ${site.extent.geometry.state?:'Not specified'}
-                    <span class="label label-success">Local government area:</span> ${site.extent.geometry.lga?:'Not specified'}
-                    <span class="label label-success">NRM:</span> ${site.extent.geometry.nrm?:'Not specified'}
+                <span class="label label-success">State/territory:</span> ${site.extent.geometry.state?:'Not specified'}
+                <span class="label label-success">Local government area:</span> ${site.extent.geometry.lga?:'Not specified'}
+                <span class="label label-success">NRM:</span> ${site.extent.geometry.nrm?:'Not specified'}
             </p>
 
             <p>
-                    <span class="label label-success">Locality:</span> ${site.extent.geometry.locality?:'Not specified'}
+                <span class="label label-success">Locality:</span> ${site.extent.geometry.locality?:'Not specified'}
             </p>
             </g:if>
 
@@ -105,7 +105,10 @@
             <div id="smallMap" style="width:100%;height:500px;"></div>
             <g:if test="${site?.extent?.geometry?.pid}">
                 <div style="margin-top:20px;" class="pull-right">
-                    <a href="http://spatial-dev.ala.org.au/ws/shape/shp/${site.extent.geometry.pid}" class="btn">Download ShapeFile</a>
+                    <a href="http://spatial-dev.ala.org.au/ws/shape/shp/${site.extent.geometry.pid}" class="btn">
+                        <i class="icon-download"></i>
+                        Download ShapeFile
+                    </a>
                     <a href="http://spatial-dev.ala.org.au/?pid=${site.extent.geometry.pid}" class="btn">View in Spatial Portal</a>
                 </div>
             </g:if>

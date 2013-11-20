@@ -58,6 +58,25 @@ class SearchService {
         webService.getJson(url)
     }
 
+    def allProjectsWithSites(params, String searchTerm = null) {
+        //params.max = 9999
+        params.flimit = 999
+        params.fsort = "term"
+        //params.offset = 0
+
+        params.query = "docType:project"
+        if (searchTerm) {
+            params.query += " AND " + searchTerm
+        }
+
+        params.facets = "statesFacet,lgasFacet,nrmsFacet,organisationFacet"
+        //def url = elasticBaseUrl + commonService.buildUrlParamsFromMap(params)
+        def url = grailsApplication.config.ecodata.baseUrl + 'search/elasticGeo' + commonService.buildUrlParamsFromMap(params)
+        log.debug "url = $url"
+        webService.getJson(url)
+    }
+
+
     def allSites(params) {
         //params.max = 9999
         params.flimit = 999

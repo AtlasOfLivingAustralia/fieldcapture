@@ -497,8 +497,10 @@
         }).appendTo($list);
     }
 
+
     function generateMap() {
-        var url = "${createLink(action:'geoService')}?max=999";
+
+        var url = "${createLink(action:'geoService')}?max=10000&geo=true";
 
         if (facetList && facetList.length > 0) {
             url += "&fq=" + facetList.join("&fq=");
@@ -516,29 +518,27 @@
             var bounds = new google.maps.LatLngBounds();
             var geoPoints = data;
 
-            if (geoPoints.hits) {
+            if (geoPoints.total) {
                 //console.log("geoPoints: ", geoPoints);
                 var projectLinkPrefix = "${createLink(controller:'project')}/";
                 var siteLinkPrefix = "${createLink(controller:'site')}/";
-                //console.log("total", geoPoints.hits.total);
-                $("#numberOfSites").html(geoPoints.hits.total + " sites");
-                if (geoPoints.hits.total > 0) {
-                    $.each(geoPoints.hits.hits, function(j, h) {
-                        var s = h["_source"];
-                        var projectId = s.projectId
-                        var projectName = s.name
+                //console.log("total", geoPoints.total);
+                $("#numberOfSites").html(geoPoints.total + " sites");
+                if (geoPoints.total > 0) {
+                    $.each(geoPoints.projects, function(j, project) {
+                        var projectId = project.projectId
+                        var projectName = project.name
                         //console.log("s", s, j);
-                        if (s.geo && s.geo.length > 0) {
-                            $.each(s.geo, function(k, el) {
+                        if (project.geo && project.geo.length > 0) {
+                            $.each(project.geo, function(k, el) {
                                 var point = {
                                     type: "dot",
                                     id: projectId,
                                     name: projectName,
-                                    popup: generatePopup(projectLinkPrefix,projectId,projectName,s.organisationName,siteLinkPrefix,el.siteId, el.siteName),
+                                    popup: generatePopup(projectLinkPrefix,projectId,projectName,project.org,siteLinkPrefix,el.siteId, el.siteName),
                                     latitude: el.loc.lat,
                                     longitude: el.loc.lon
                                 }
-                                //console.log("point", point);
                                 features.push(point);
                                 bounds.extend(new google.maps.LatLng(el.loc.lat,el.loc.lon));
                                 if (projectId) {
@@ -546,8 +546,6 @@
                                 }
                             });
                         }
-
-                        $("#numberOfSites").html((features.length > 0) ? features.length + " sites" : "0 sites <span class=\"label label-important\">No georeferenced points for the selected projects</span>");
                     });
 
                     if (facetList && facetList.length > 0) {
@@ -559,43 +557,55 @@
                     } else {
                         projectListIds = []; // clear the list
                     }
-
-                    updateProjectTable();
-                    //console.log("features count", features.length);
                 }
-
-                var mapData = {
-                    "zoomToBounds": true,
-                    "zoomLimit": 12,
-                    "highlightOnHover": false,
-                    "features": features
-                }
-
-                init_map_with_features({
-                        mapContainer: "map",
-                        zoomToBounds:true,
-                        scrollwheel: false,
-                        zoomLimit:16
-                    },
-                    mapData
-                );
-
-                if (!bounds.isEmpty()) {
-                    alaMap.map.fitBounds(bounds);
-                } else {
-                    //console.log("bounds is empty", alaMap.map);
-                    alaMap.map.setZoom(4);
-                }
-
-
             }
+
+            initialiseMap(features, bounds)
+            updateProjectTable();
 
         }).error(function (request, status, error) {
             console.error("AJAX error", status, error);
         });
     }
 
+    function initialiseMap(features, bounds){
+        var mapData = {
+            "zoomToBounds": true,
+            "zoomLimit": 12,
+            "highlightOnHover": false,
+            "features": features
+        }
+
+        init_map_with_features({
+                mapContainer: "map",
+                zoomToBounds:true,
+                scrollwheel: false,
+                zoomLimit:16
+            },
+            mapData
+        );
+
+        if (!bounds.isEmpty()) {
+            alaMap.map.fitBounds(bounds);
+        } else {
+            alaMap.map.setZoom(4);
+        }
+
+        var numSitesHtml = "";
+        if(features.length > 0){
+            numSitesHtml = features.length + " sites";
+        } else {
+            numSitesHtml = "0 sites <span class=\"label label-important\">No georeferenced points for the selected projects</span>";
+        }
+
+        $("#numberOfSites").html(numSitesHtml);
+    }
+
+
     function generatePopup(projectLinkPrefix, projectId, projectName, orgName, siteLinkPrefix, siteId, siteName){
+
+        //console.log('Generating popup for ' + siteId);
+
         var html = "<div class='projectInfoWindow'>";
 
         if (projectId && projectName) {
@@ -647,8 +657,8 @@
         }
 
         <g:if test="${params.fq}">
-            <g:set var="fqList" value="${[params.fq].flatten()}"/>
-            params += "&fq=${fqList.join('&fq=')}";
+        <g:set var="fqList" value="${[params.fq].flatten()}"/>
+        params += "&fq=${fqList.join('&fq=')}";
         </g:if>
 
         $.post(url, params, function(data1) {
