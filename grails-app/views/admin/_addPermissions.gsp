@@ -10,7 +10,7 @@
     <div class="control-group">
         <label class="control-label" for="role">Permission level</label>
         <div class="controls">
-            <g:select name="role" id="addUserRole" from="${roles}" noSelection="['':'-- select a permission level --']" class="validate[required]" data-errormessage-value-missing="Role is required!"/>
+            <g:select name="role" id="addUserRole" from="${roles}" valueMessagePrefix="label.role" noSelection="['':'-- select a permission level --']" class="validate[required]" data-errormessage-value-missing="Role is required!"/>
         </div>
     </div>
     <g:if test="${projectId}">
@@ -92,13 +92,26 @@
                 url: "${createLink(controller: 'user', action: 'addUserAsRoleToProject')}",
                 data: { userId: userId, role: role, projectId: projectId }
             })
-            .done(function(result) { updateStatusMessage("user was added with role " + role); })
+            .done(function(result) { updateStatusMessage("user was added with role " + decodeCamelCase(role)); })
             .fail(function(jqXHR, textStatus, errorThrown) { alert(jqXHR.responseText); })
             .always(function(result) { resetAddForm(); });
         } else {
             alert("Required fields are: userId and role.");
             $('.spinner').hide();
         }
+    }
+
+    /**
+    * Roles have camelCase names and this is a work-around for printing them from AJAX
+    * responses.
+    * TODO implement i18n encoding with JS
+    *
+    * @param text
+    * @returns {string}
+    */
+    function decodeCamelCase(text) {
+        var result = text.replace( /([A-Z])/g, " $1" );
+        return result.charAt(0).toUpperCase() + result.slice(1); // capitalize the first letter - as an example.
     }
 
     function updateStatusMessage(msg) {

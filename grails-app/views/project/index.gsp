@@ -274,7 +274,7 @@
                                             <tr class="hide">
                                                 <td class="memUserId"></td>
                                                 <td class="memUserName"></td>
-                                                <td class="memUserRole"><span>&nbsp;</span><g:select class="hide" name="memberRole" from="${roles}"/></td>
+                                                <td class="memUserRole"><span style="white-space: nowrap">&nbsp;</span><g:select class="hide" name="memberRole" from="${roles}"/></td>
                                                 <td class="clickable memEditRole"><i class="icon-edit tooltips" title="edit this user and role combination"></i></td>
                                                 <td class="clickable memRemoveRole"><i class="icon-remove tooltips" title="remove this user and role combination"></i></td>
                                             </tr>
@@ -690,7 +690,7 @@
                             $clone.find('.memUserName').text(el.displayName);
                             $clone.find('.memUserRole select').val(el.role);
                             $clone.find('.memUserRole select').attr("id", el.userId);
-                            $clone.find('.memUserRole span').text(el.role);
+                            $clone.find('.memUserRole span').text(decodeCamelCase(el.role)); // TODO: i18n this
                             $('.membersTbody').append($clone);
                         });
                     } else {
