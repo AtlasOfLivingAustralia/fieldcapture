@@ -76,7 +76,7 @@
                         </g:if>
                         <td>
                             <span data-bind="template:$root.canUpdateStatus() ? 'updateStatusTmpl' : 'viewStatusTmpl'"></span>
-                            <span data-bind="visible:deferReason()"><i class="icon-asterisk" data-bind="popover: {title: 'Reason for deferral', content: deferReason()}"></i></span>
+                            <span data-bind="visible:deferReason()"><i class="icon-asterisk" data-bind="popover: {title: 'Reason for deferral', content: deferReason(), placement: 'left'}"></i></span>
                         </td>
                     </tr>
                     </tbody>

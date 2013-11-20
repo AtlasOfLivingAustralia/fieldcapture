@@ -27,7 +27,8 @@
         spatialWmsCacheUrl: "${grailsApplication.config.spatial.wms.cache.url}",
         spatialWmsUrl: "${grailsApplication.config.spatial.wms.url}",
         sldPolgonDefaultUrl: "${grailsApplication.config.sld.polgon.default.url}",
-        sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}"
+        sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}",
+        organisationLinkBaseUrl: "${grailsApplication.config.collectory.baseURL + 'public/show/'}"
         },
         here = window.location.href;
 
@@ -42,13 +43,13 @@
             <g:link controller="home">Home</g:link> <span class="divider">/</span>
         </li>
         <li class="active">Projects <span class="divider">/</span></li>
-        <li class="active">${project.name?.encodeAsHTML()}</li>
+        <li class="active" data-bind="text:name"></li>
     </ul>
 
     <div class="row-fluid">
         <div class="row-fluid">
             <div class="clearfix">
-                <h1 class="pull-left">${project?.name?.encodeAsHTML()}</h1>
+                <h1 class="pull-left" data-bind="text:name"></h1>
                 <g:if test="${flash.errorMessage || flash.message}">
                     <div class="span5">
                         <div class="alert alert-error">
@@ -65,7 +66,6 @@
                     <g:else>
                         <button class="btn" id="starBtn" ${disabled}><i class="icon-star-empty"></i> <span>Add to favourites</span></button>
                     </g:else>
-                    <g:link action="edit" id="${project.projectId}" class="btn">Change project details</g:link>
                 </div>
             </div>
         </div>
@@ -83,31 +83,20 @@
         <div class="tab-pane active" id="overview">
             <!-- OVERVIEW -->
             <div class="row-fluid">
-                <g:if test="${organisationName}">
-                    <div class="clearfix" >
-                        <h4>
-                            Supported by:
-                            <g:if test="${project.organisation}">
-                                <a href="${grailsApplication.config.collectory.baseURL +
-                                    'public/show/' + project.organisation}">${organisationName?.encodeAsHTML()}</a>
-                            </g:if>
-                            <g:else>
-                                ${organisationName?.encodeAsHTML()}
-                            </g:else>
-                        </h4>
-                    </div>
-                </g:if>
-                <g:if test="${project.associatedProgram}">
-                    <div class="clearfix" >
-                        <h4>
-                            Funded by:
-                            <span>${project.associatedProgram?.encodeAsHTML()}</span>
-                            <g:if test="${project.associatedSubProgram}">
-                                <span>${project.associatedSubProgram?.encodeAsHTML()}</span>
-                            </g:if>
-                        </h4>
-                    </div>
-                </g:if>
+                <div class="clearfix" data-bind="visible:organisation()||organisationName()">
+                    <h4>
+                        Supported by:
+                        <a data-bind="visible:organisation(),text:transients.collectoryOrgName,attr:{href:fcConfig.organisationLinkBaseUrl + organisation}"></a>
+                        <span data-bind="visible:organisationName(),text:organisationName"></span>
+                    </h4>
+                </div>
+                <div class="clearfix" data-bind="visible:associatedProgram()">
+                    <h4>
+                        Funded by:
+                        <span data-bind="text:associatedProgram"></span>
+                        <span data-bind="text:associatedSubProgram"></span>
+                    </h4>
+                </div>
                 <g:if test="${project.funding}">
                     <div class="clearfix" >
                         <h4>
@@ -115,20 +104,16 @@
                         </h4>
                     </div>
                 </g:if>
-                <g:if test="${project.plannedStartDate}">
-                    <div>
-                        <h5>
-                            Project activities will be undertaken from <span data-bind="text:plannedStartDate.formattedDate"></span>
-                            <g:if test="${project.plannedEndDate}">to <span data-bind="text:plannedEndDate.formattedDate"></span> </g:if>
-                        </h5>
-                    </div>
-                </g:if>
+                <div data-bind="visible:plannedStartDate()">
+                    <h5>
+                        Project activities will be undertaken from <span data-bind="text:plannedStartDate.formattedDate"></span>
+                        <span data-bind="visible:plannedEndDate()">to <span data-bind="text:plannedEndDate.formattedDate"></span></span>
+                    </h5>
+                </div>
 
-                <g:if test="${project.description?.encodeAsHTML()}">
-                    <div>
-                        <p class="well well-small more">${project.description?.encodeAsHTML()}</p>
-                    </div>
-                </g:if>
+                <div data-bind="visible:description()">
+                    <p class="well well-small more" data-bind="text:description"></p>
+                </div>
 
                 <!-- show any primary image -->
                 <div data-bind="visible:primaryImage() !== null,with:primaryImage" class="thumbnail with-caption span5">
@@ -254,14 +239,15 @@
                 <div class="row-fluid">
                     <div class="span2 large-space-before">
                         <ul id="adminNav" class="nav nav-tabs nav-stacked ">
-                            <li class="active"><a href="#permissions" id="permissions-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Project access</a></li>
+                            <li class="active"><a href="#settings" id="settings-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Project settings</a></li>
+                            <li><a href="#permissions" id="permissions-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Project access</a></li>
                             <li><a href="#species" id="species-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Species of interest</a></li>
                             <li><a href="#documents" id="documents-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Documents</a></li>
                         </ul>
                     </div>
                     <div class="span10">
                         <div class="pill-content">
-                            <div id="permissions" class="pill-pane active">
+                            <div id="permissions" class="pill-pane">
                                 <h3>Project Access</h3>
                                 %{--<a name="permissions"></a>--}%
                                 <g:render template="/admin/addPermissions" model="[projectId:project.projectId]"/>
@@ -312,6 +298,17 @@
                                     <button class="btn" id="doAttach" data-bind="click:attachDocument">Attach Document</button>
                                 </div>
                             </div>
+                            <!-- PROJECT SETTINGS -->
+                            <div id="settings" class="pill-pane active">
+                                <h3>Project Settings</h3>
+                                <div class="row-fluid">
+                                    <div id="save-result-placeholder"></div>
+                                    <div class="span10 validationEngineContainer" id="settings-validation">
+                                        <g:render template="editProject"
+                                                  model="[project: project]"/>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -341,6 +338,23 @@
     </g:if>
 </div>
     <r:script>
+        var organisations = ${institutions};
+
+        // custom validator to ensure that only one of two fields is populated
+        function exclusive (field, rules, i, options) {
+            var otherFieldId = rules[i+2], // get the id of the other field
+                otherValue = $('#'+otherFieldId).val(),
+                thisValue = field.val(),
+                message = rules[i+3];
+            // checking thisValue is technically redundant as this validator is only called
+            // if there is a value in the field
+            if (otherValue !== '' && thisValue !== '') {
+                return message;
+            } else {
+                return true;
+            }
+        }
+
         $(window).load(function () {
             var map;
             // setup 'read more' for long text
@@ -360,6 +374,14 @@
                         }
                     });
                 }
+            });
+
+            $('#settings-validation').validationEngine();
+
+            $('.helphover').popover({animation: true, trigger:'hover'});
+
+            $('#cancel').click(function () {
+                document.location.href = "${createLink(action: 'index', id: project.projectId)}";
             });
 
             var Site = function (site) {
@@ -387,7 +409,82 @@
                 self.plannedStartDate = ko.observable(project.plannedStartDate).extend({simpleDate: false});
                 self.plannedEndDate = ko.observable(project.plannedEndDate).extend({simpleDate: false});
                 self.organisation = ko.observable(project.organisation);
+                self.organisationName = ko.observable(project.organisationName);
+                self.associatedProgram = ko.observable(); // don't initialise yet - we want the change to trigger dependents
+                self.associatedSubProgram = ko.observable(project.associatedSubProgram);
                 self.mapLoaded = ko.observable(false);
+                self.transients = {};
+                self.transients.organisations = organisations;
+                self.transients.collectoryOrgName = ko.computed(function () {
+                    if (self.organisation() === undefined || self.organisation() === '') {
+                        return "";
+                    } else {
+                        return $.grep(self.transients.organisations, function (obj) {
+                            return obj.uid === self.organisation();
+                        })[0].name;
+                    }
+                });
+                self.transients.programs = [];
+                self.transients.subprograms = {};
+                self.transients.subprogramsToDisplay = ko.computed(function () {
+                    return self.transients.subprograms[self.associatedProgram()];
+                });
+                self.loadPrograms = function (programsModel) {
+                    $.each(programsModel.programs, function (i, program) {
+                        self.transients.programs.push(program.name);
+                        self.transients.subprograms[program.name] = $.map(program.subprograms,function (obj, i){return obj.name});
+                    });
+                    self.associatedProgram(project.associatedProgram); // to trigger the computation of sub-programs
+                };
+                self.removeTransients = function (jsData) {
+                    delete jsData.transients;
+                    return jsData;
+                };
+
+                // settings
+                self.saveSettings = function () {
+                    if ($('#settings-validation').validationEngine('validate')) {
+                        // only collect those fields that can be edited in the settings pane
+                        var jsData = {
+                            name: self.name(),
+                            description: self.description(),
+                            externalId: self.externalId(),
+                            grantId: self.grantId(),
+                            manager: self.manager(),
+                            plannedStartDate: self.plannedStartDate(),
+                            plannedEndDate: self.plannedEndDate(),
+                            organisation: self.organisation(),
+                            organisationName: self.organisationName(),
+                            associatedProgram: self.associatedProgram(),
+                            associatedSubProgram: self.associatedSubProgram()
+                        };
+                        // this call to stringify will make sure that undefined values are propagated to
+                        // the update call - otherwise it is impossible to erase fields
+                        var json = JSON.stringify(jsData, function (key, value) {
+                            return value === undefined ? "" : value;
+                        });
+                        var id = "${project?.projectId}";
+                        $.ajax({
+                            url: "${createLink(action: 'ajaxUpdate', id: project.projectId)}",
+                            type: 'POST',
+                            data: json,
+                            contentType: 'application/json',
+                            success: function (data) {
+                                if (data.error) {
+                                    showAlert("Failed to save settings: " + data.detail + ' \n' + data.error,
+                                        "alert-error","save-result-placeholder");
+                                } else {
+                                    showAlert("Project settings saved","alert-success","save-result-placeholder");
+                                }
+                            },
+                            error: function (data) {
+                                var status = data.status;
+                                alert('An unhandled error occurred: ' + data.status);
+                            }
+                        });
+                    }
+                };
+
                 // documents
                 self.documents = ko.observableArray();
                 self.addDocument = function(doc) {
@@ -395,8 +492,15 @@
                 };
                 self.attachDocument = function() {
                     var url = '${g.createLink(controller:"proxy", action:"documentUpdate")}';
-                    showDocumentAttachInModal( url,{role:'information'},{key:'projectId', value:'${project.projectId}'}, '#attachDocument')
+                    showDocumentAttachInModal( url,new DocumentViewModel({role:'information'},{key:'projectId', value:'${project.projectId}'}), '#attachDocument')
                         .done(function(result){self.documents.push(result)});
+                };
+                self.editDocumentMetadata = function(document) {
+                    %{--var url = '${g.createLink(controller:"proxy", action:"documentUpdate")}' + "/" + document.documentId;
+                    showDocumentAttachInModal( url, document, '#attachDocument')
+                        .done(function(result){
+                            document.name(result.name);
+                        });--}%
                 };
                 self.deleteDocument = function(document) {
                     var url = '${g.createLink(controller:"proxy", action:"deleteDocument")}/'+document.documentId;
@@ -526,6 +630,7 @@
                 ${project.sites},
                 ${activities ?: []},
                 ${user?.isEditor?:false});
+            viewModel.loadPrograms(${programs});
             ko.applyBindings(viewModel);
 
             // retain tab state for future re-visits

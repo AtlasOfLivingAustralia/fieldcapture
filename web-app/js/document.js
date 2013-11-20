@@ -148,7 +148,7 @@ function attachViewModelToFileUpload(uploadUrl, documentViewModel, uiSelector, p
     // We are keeping the reference to the helper here rather than the view model as it doesn't serialize correctly
     // (i.e. calls to toJSON fail).
     documentViewModel.save = function() {
-        if (documentViewModel.filename()) {
+        if (documentViewModel.filename() && fileUploadHelper !== undefined) {
             fileUploadHelper.submit();
             fileUploadHelper = null;
         }
@@ -172,14 +172,13 @@ function attachViewModelToFileUpload(uploadUrl, documentViewModel, uiSelector, p
  * Creates a bootstrap modal from the supplied UI element to collect and upload a document and returns a
  * jquery Deferred promise to provide access to the uploaded Document.
  * @param uploadUrl the URL to upload the document to.
- * @param document defaults for the document.  can be used to populate role, etc.
+ * @param documentViewModel default model for the document.  can be used to populate role, etc.
  * @param modalSelector a selector identifying the ui element that contains the markup for the bootstrap modal dialog.
  * @param fileUploadSelector a selector identifying the ui element to attach the file upload functionality to.
  * @param previewSelector a selector identifying an element to attach a preview of the file to (optional)
- * @param owner an object containing key and value properties identifying the owning entity for the document. eg. {key:'projectId', value:'the_id_of_the_owning_project'}
  * @returns an instance of jQuery.Deferred - the uploaded document will be supplied to a chained 'done' function.
  */
-function showDocumentAttachInModal(uploadUrl, document, owner, modalSelector, fileUploadSelector, previewSelector) {
+function showDocumentAttachInModal(uploadUrl, documentViewModel, modalSelector, fileUploadSelector, previewSelector) {
 
     if (fileUploadSelector === undefined) {
         fileUploadSelector = '#attachDocument';
@@ -189,7 +188,7 @@ function showDocumentAttachInModal(uploadUrl, document, owner, modalSelector, fi
     }
     var $fileUpload = $(fileUploadSelector);
     var $modal = $(modalSelector);
-    var documentViewModel = new DocumentViewModel(document?document:{}, owner);
+    //var documentViewModel = new DocumentViewModel(document?document:{}, owner);
 
     attachViewModelToFileUpload(uploadUrl, documentViewModel, fileUploadSelector, previewSelector);
 

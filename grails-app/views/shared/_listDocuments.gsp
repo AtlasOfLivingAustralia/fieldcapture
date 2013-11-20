@@ -24,7 +24,10 @@
 </script>
 
 <script id="imageDocEditTmpl" type="text/html">
-    <button class="btn btn-mini pull-left" type="button" data-bind="click:$root.deleteDocument" style="margin:4px 10px 0 0;"><i class="icon-remove"></i></button>
+    <div class="btn-group pull-left" style="margin-top:4px;">
+        <button class="btn btn-mini" type="button" data-bind="click:$root.deleteDocument"><i class="icon-remove"></i></button>
+        <button class="btn btn-mini" type="button" data-bind="click:$root.editDocumentMetadata"><i class="icon-edit"></i></button>
+    </div>
     <a class="pull-left" data-bind="attr:{href:url}" target="_blank">
         <img class="media-object img-rounded span1" data-bind="attr:{src:url}" style="width:32px;height:32px;">
     </a>
@@ -32,7 +35,10 @@
 </script>
 
 <script id="objDocEditTmpl" type="text/html">
-    <button class="btn btn-mini pull-left" type="button" data-bind="click:$root.deleteDocument" style="margin:5px 10px 0 0;"><i class="icon-remove"></i></button>
+    <div class="btn-group pull-left" style="margin-top:4px;">
+        <button class="btn btn-mini" type="button" data-bind="click:$root.deleteDocument"><i class="icon-remove"></i></button>
+        <button class="btn btn-mini" type="button" data-bind="click:$root.editDocumentMetadata"><i class="icon-edit"></i></button>
+    </div>
     <a class="pull-left" data-bind="attr:{href:url}">
         <img class="media-object" data-bind="attr:{src:filetypeImg()}">
     </a>
