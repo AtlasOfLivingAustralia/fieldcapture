@@ -13,7 +13,12 @@ class ProjectController {
         def roles = metadataService.getAccessLevels().collect { it.name }
 
         if (!project || project.error) {
-            forward(action: 'list', model: [error: project.error])
+            flash.message = "Project not found with id: ${id}"
+            if (project?.error) {
+                flash.message += "<br/>${project.error}"
+                log.warn project.error
+            }
+            redirect(controller: 'home', model: [error: flash.message])
         } else {
             project.sites?.sort {it.name}
             def user = userService.getUser()
@@ -27,7 +32,7 @@ class ProjectController {
             } else if (user && projectService.canUserEditProject(user.userId, id)) {
                 //user["isEditor"] = true // use this for KO to allow editing of activities, etc ??
                 user.metaClass.isAdmin = false
-                user.metaClass.isEditor = true // use this for KO to allow editing of activities, etc ??
+                user.metaClass.isEditor = true
             } else if (user) {
                 user.metaClass.isAdmin = false
                 user.metaClass.isEditor = false

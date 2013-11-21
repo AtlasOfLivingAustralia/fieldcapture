@@ -72,11 +72,12 @@
     </div>
 
     <!-- content tabs -->
+    <g:set var="tabIsActive"><g:if test="${user?.isEditor}">tab</g:if></g:set>
     <ul id="projectTabs" class="nav nav-tabs big-tabs">
         <li class="active"><a href="#overview" id="overview-tab" data-toggle="tab">Overview</a></li>
-        <li><a href="#plan" id="plan-tab" data-toggle="tab">Plans & Reports</a></li>
-        <li><a href="#site" id="site-tab" data-toggle="tab">Sites</a></li>
-        <li><a href="#dashboard" id="dashboard-tab" data-toggle="tab">Dashboard</a></li>
+        <li><a href="#plan" id="plan-tab" data-toggle="${tabIsActive}">Plans & Reports</a></li>
+        <li><a href="#site" id="site-tab" data-toggle="${tabIsActive}">Sites</a></li>
+        <li><a href="#dashboard" id="dashboard-tab" data-toggle="${tabIsActive}">Dashboard</a></li>
         <g:if test="${user?.isAdmin}"><li><a href="#admin" id="admin-tab" data-toggle="tab">Admin</a></li></g:if>
     </ul>
     <div class="tab-content" style="overflow:visible;">
@@ -130,109 +131,110 @@
                 </div>
             </div>
         </div>
-
-        <div class="tab-pane" id="plan">
-            <!-- PLANS -->
-            <g:if test="${useAltPlan}">
-                <g:render template="/shared/plan"
-                          model="[activities:activities ?: [], sites:project.sites ?: [], showSites:true]"/>
-            </g:if>
-            <g:else>
-                <g:render template="/shared/activitiesPlan"
-                          model="[activities:activities ?: [], sites:project.sites ?: [], showSites:true]"/>
-            </g:else>
-        </div>
-
-        <div class="tab-pane" id="site">
-            <!-- SITES -->
-            <div data-bind="visible: sites.length == 0">
-               <p>No sites are currently associated with this project.</p>
-               <div class="btn-group btn-group-horizontal ">
-                    <button data-bind="click: $root.addSite" type="button" class="btn">Add new site</button>
-                    <button data-bind="click: $root.addExistingSite" type="button" class="btn">Add existing site</button>
-               </div>
-             </div>
-
-            <div class="row-fluid"  data-bind="visible: sites.length > 0">
-                <div class="span5 well list-box">
-
-                    <div class="btn-group btn-group-vertical pull-right">
-                        <a data-bind="click: $root.addSite" type="button" class="btn ">Add new site</a>
-                        <a data-bind="click: $root.addExistingSite" type="button" class="btn">Add existing site</a>
-                        <a data-bind="click: $root.removeAllSites" type="button" class="btn">Delete all sites</a>
-                    </div>
-
-                    <div class="control-group">
-                        <div class="input-append">
-                            <g:textField class="filterinput input-medium" data-target="site"
-                                         data-bind="event: {keyup:filterChanged}"
-                                         title="Type a few characters to restrict the list." name="sites"
-                                         placeholder="filter"/>
-                            <button type="button" class="btn" data-bind="click:clearFilter"
-                                    title="clear"><i class="icon-remove"></i></button>
-                        </div>
-                        <span id="site-filter-warning" class="label filter-label label-warning"
-                              style="display:none;margin-left:4px;"
-                              data-bind="visible:isSitesFiltered,valueUpdate:'afterkeyup'">Filtered</span>
-                    </div>
-
-                    <div class="scroll-list">
-                        <ul id="siteList"
-                            data-bind="template: {foreach:sites},
-                                              beforeRemove: hideElement,
-                                              afterAdd: showElement">
-                            <li data-bind="event: {mouseover: $root.highlight, mouseout: $root.unhighlight}">
-                                <a data-bind="text:name, attr: {href:'${createLink(controller: "site", action: "index")}' + '/' + siteId}"></a>
-                                <span data-bind="text:state"></span><br>
-                                <span data-bind="text:address" style="font-size:11px;color:#666;"></span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                 %{--<div class="span5" id="sites-scroller">
-                    <ul class="unstyled inline" data-bind="foreach: sites">
-                        <li class="siteInstance" data-bind="event: {mouseover: $root.highlight, mouseout: $root.unhighlight}">
-                            <a data-bind="text: name, click: $root.openSite"></a>
-                            <button data-bind="click: $root.removeSite" type="button" class="close" title="delete">&times;</button>
-                        </li>
-                    </ul>
-                </div>--}%
-                <div class="span7">
-                    <div id="map" style="width:100%"></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="tab-pane" id="dashboard">
-            <!-- DASHBOARD -->
-            <gvisualization:apiImport/>
-            <h2 style="margin-top:0;">Totals across all activities under this project</h2>
-            <div class="row-fluid">
-                <div class="span4">
-                <g:if test="${metrics}">
-                    <g:set var="count" value="${metrics.size()}"/>
-
-                    <g:each in="${metrics?.entrySet()}" var="metric" status="i">
-
-                        %{--This is to stack the output metrics in three columns, the ceil biases uneven amounts to the left--}%
-                        <g:if test="${i == Math.ceil(count/3) || i == Math.ceil(count/3*2)}">
-                            </div>
-                            <div class="span4">
-                        </g:if>
-                        <div class="well">
-                            <h3>${metric.key}</h3>
-                            <g:each in="${metric.value}" var="score">
-                                <fc:renderScore score="${score}"></fc:renderScore>
-                            </g:each>
-                        </div>
-                    </g:each>
+        <g:if test="${user?.isEditor}">
+            <div class="tab-pane" id="plan">
+                <!-- PLANS -->
+                <g:if test="${useAltPlan}">
+                    <g:render template="/shared/plan"
+                              model="[activities:activities ?: [], sites:project.sites ?: [], showSites:true]"/>
                 </g:if>
                 <g:else>
-                    No activities or output targets have been defined for this project.
+                    <g:render template="/shared/activitiesPlan"
+                              model="[activities:activities ?: [], sites:project.sites ?: [], showSites:true]"/>
                 </g:else>
+            </div>
+
+            <div class="tab-pane" id="site">
+                <!-- SITES -->
+                <div data-bind="visible: sites.length == 0">
+                   <p>No sites are currently associated with this project.</p>
+                   <div class="btn-group btn-group-horizontal ">
+                        <button data-bind="click: $root.addSite" type="button" class="btn">Add new site</button>
+                        <button data-bind="click: $root.addExistingSite" type="button" class="btn">Add existing site</button>
+                   </div>
+                 </div>
+
+                <div class="row-fluid"  data-bind="visible: sites.length > 0">
+                    <div class="span5 well list-box">
+
+                        <div class="btn-group btn-group-vertical pull-right">
+                            <a data-bind="click: $root.addSite" type="button" class="btn ">Add new site</a>
+                            <a data-bind="click: $root.addExistingSite" type="button" class="btn">Add existing site</a>
+                            <a data-bind="click: $root.removeAllSites" type="button" class="btn">Delete all sites</a>
+                        </div>
+
+                        <div class="control-group">
+                            <div class="input-append">
+                                <g:textField class="filterinput input-medium" data-target="site"
+                                             data-bind="event: {keyup:filterChanged}"
+                                             title="Type a few characters to restrict the list." name="sites"
+                                             placeholder="filter"/>
+                                <button type="button" class="btn" data-bind="click:clearFilter"
+                                        title="clear"><i class="icon-remove"></i></button>
+                            </div>
+                            <span id="site-filter-warning" class="label filter-label label-warning"
+                                  style="display:none;margin-left:4px;"
+                                  data-bind="visible:isSitesFiltered,valueUpdate:'afterkeyup'">Filtered</span>
+                        </div>
+
+                        <div class="scroll-list">
+                            <ul id="siteList"
+                                data-bind="template: {foreach:sites},
+                                                  beforeRemove: hideElement,
+                                                  afterAdd: showElement">
+                                <li data-bind="event: {mouseover: $root.highlight, mouseout: $root.unhighlight}">
+                                    <a data-bind="text:name, attr: {href:'${createLink(controller: "site", action: "index")}' + '/' + siteId}"></a>
+                                    <span data-bind="text:state"></span><br>
+                                    <span data-bind="text:address" style="font-size:11px;color:#666;"></span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                     %{--<div class="span5" id="sites-scroller">
+                        <ul class="unstyled inline" data-bind="foreach: sites">
+                            <li class="siteInstance" data-bind="event: {mouseover: $root.highlight, mouseout: $root.unhighlight}">
+                                <a data-bind="text: name, click: $root.openSite"></a>
+                                <button data-bind="click: $root.removeSite" type="button" class="close" title="delete">&times;</button>
+                            </li>
+                        </ul>
+                    </div>--}%
+                    <div class="span7">
+                        <div id="map" style="width:100%"></div>
+                    </div>
                 </div>
             </div>
-        </div>
+
+            <div class="tab-pane" id="dashboard">
+                <!-- DASHBOARD -->
+                <gvisualization:apiImport/>
+                <h2 style="margin-top:0;">Totals across all activities under this project</h2>
+                <div class="row-fluid">
+                    <div class="span4">
+                    <g:if test="${metrics}">
+                        <g:set var="count" value="${metrics.size()}"/>
+
+                        <g:each in="${metrics?.entrySet()}" var="metric" status="i">
+
+                            %{--This is to stack the output metrics in three columns, the ceil biases uneven amounts to the left--}%
+                            <g:if test="${i == Math.ceil(count/3) || i == Math.ceil(count/3*2)}">
+                                </div>
+                                <div class="span4">
+                            </g:if>
+                            <div class="well">
+                                <h3>${metric.key}</h3>
+                                <g:each in="${metric.value}" var="score">
+                                    <fc:renderScore score="${score}"></fc:renderScore>
+                                </g:each>
+                            </div>
+                        </g:each>
+                    </g:if>
+                    <g:else>
+                        No activities or output targets have been defined for this project.
+                    </g:else>
+                    </div>
+                </div>
+            </div>
+        </g:if>
         <g:if test="${user?.isAdmin}">
             <div class="tab-pane" id="admin">
             <!-- ADMIN -->
@@ -636,6 +638,7 @@
             // retain tab state for future re-visits
             // and handle tab-specific initialisations
             var planTabInitialised = false;
+
             $('#projectTabs a[data-toggle="tab"]').on('shown', function (e) {
                 var tab = e.currentTarget.hash;
                 amplify.store('project-tab-state', tab);
@@ -657,11 +660,16 @@
             });
             // re-establish the previous tab state
             var storedTab = amplify.store('project-tab-state');
+            var isEditor = ${user?.isEditor?:false};
             if (storedTab === '') {
                 $('#overview-tab').tab('show');
-            } else {
+            } else if (isEditor) {
                 $(storedTab + '-tab').tab('show');
             }
+
+            // Non-editors should get tooltip and popup when trying to click other tabs
+            $('#projectTabs li a').not('[data-toggle="tab"]').css('cursor', 'not-allowed') //.data('placement',"right")
+            .attr('title','Only available to project members').addClass('tooltips');
 
             // Star button click event
             $("#starBtn").click(function(e) {
