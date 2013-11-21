@@ -693,3 +693,9 @@ span.readonly-text {
 .nav-tab-small li a:hover {
     font-size: 0.9em;
 }
+
+#projectTabs .tooltip.in  {
+    opacity: 0.9;
+    filter: alpha(opacity=90);
+    font-size: 12px;
+}
