@@ -26,6 +26,7 @@ class ProjectController {
                 user.metaClass.isEditor = true
             } else if (user && projectService.canUserEditProject(user.userId, id)) {
                 //user["isEditor"] = true // use this for KO to allow editing of activities, etc ??
+                user.metaClass.isAdmin = false
                 user.metaClass.isEditor = true // use this for KO to allow editing of activities, etc ??
             } else if (user) {
                 user.metaClass.isAdmin = false
