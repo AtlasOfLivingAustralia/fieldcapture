@@ -45,6 +45,10 @@ class UserService {
         authService.userInRole(role)
     }
 
+    def userIsSiteAdmin() {
+        authService.userInRole(grailsApplication.config.security.cas.adminRole) || authService.userInRole(grailsApplication.config.security.cas.alaAdminRole)
+    }
+
     def getRecentEditsForUserId(userId) {
         def url = auditBaseUrl + "/getRecentEditsForUserId/${userId}"
         webService.getJson(url)

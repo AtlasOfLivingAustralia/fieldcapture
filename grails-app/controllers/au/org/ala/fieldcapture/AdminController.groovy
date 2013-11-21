@@ -11,16 +11,17 @@ class AdminController {
     def cacheService
     def metadataService
     def authService
+    def userService
     def projectService
     def importService
     def adminService
-    def beforeInterceptor = [action:this.&auth]
     def auditService
     def searchService
     def settingService
+    def beforeInterceptor = [action:this.&auth]
 
     private auth() {
-        if (!authService.userInRole("ROLE_ADMIN")) {
+        if (!userService.userIsSiteAdmin()) {
             flash.message = "You are not authorised to access this page."
             redirect(controller: "home")
             false
@@ -30,6 +31,8 @@ class AdminController {
     }
 
     def index() {}
+
+    @PreAuthorise(accessLevel = 'alaAdmin', redirectController = "admin")
     def tools() {}
 
     /**
@@ -40,7 +43,6 @@ class AdminController {
      */
     def users() {
         def user = authService.userDetails()
-        //def userList = authService.getAllUserNameList()
         def projects = projectService.list(true)
         def roles = metadataService.getAccessLevels().collect { it.name }
 
@@ -52,14 +54,17 @@ class AdminController {
         }
     }
 
+    @PreAuthorise(accessLevel = 'alaAdmin', redirectController = "admin")
     def metadata() {
         [activitiesMetadata: metadataService.activitiesModel()]
     }
 
+    @PreAuthorise(accessLevel = 'alaAdmin', redirectController = "admin")
     def activityModel() {
         [activitiesModel: metadataService.activitiesModel()]
     }
 
+    @PreAuthorise(accessLevel = 'alaAdmin', redirectController = "admin")
     def programsModel() {
         [programsModel: metadataService.programsModel()]
     }
@@ -82,6 +87,7 @@ class AdminController {
         render result
     }
 
+    @PreAuthorise(accessLevel = 'alaAdmin', redirectController = "admin")
     def outputModels() {
         def model = [activitiesModel: metadataService.activitiesModel()]
         if (params.open) {
@@ -90,6 +96,7 @@ class AdminController {
         model
     }
 
+    @PreAuthorise(accessLevel = 'alaAdmin', redirectController = "admin")
     def rawOutputModels() {
         def model = [activitiesModel: metadataService.activitiesModel()]
         if (params.open) {
@@ -114,6 +121,7 @@ class AdminController {
         render result
     }
 
+    @PreAuthorise(accessLevel = 'alaAdmin', redirectController = "admin")
     def settings() {
         def settings = [
 //            [key:'app.external.model.dir', value: grailsApplication.config.app.external.model.dir,

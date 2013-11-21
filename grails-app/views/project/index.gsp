@@ -260,7 +260,7 @@
                                             <tr class="hide">
                                                 <td class="memUserId"></td>
                                                 <td class="memUserName"></td>
-                                                <td class="memUserRole"><span style="white-space: nowrap">&nbsp;</span><g:select class="hide" name="memberRole" from="${roles}"/></td>
+                                                <td class="memUserRole"><span style="white-space: nowrap">&nbsp;</span><g:select class="hide" name="memberRole" from="${roles}" valueMessagePrefix="label.role"/></td>
                                                 <td class="clickable memEditRole"><i class="icon-edit tooltips" title="edit this user and role combination"></i></td>
                                                 <td class="clickable memRemoveRole"><i class="icon-remove tooltips" title="remove this user and role combination"></i></td>
                                             </tr>
@@ -755,7 +755,7 @@
                     var role = $(this).val();
                     var currentRole = $(this).siblings('span').text();
                     var userId = $(this).attr('id'); // Couldn't get $(el).data('userId') to work for some reason
-                    bootbox.confirm("Are you sure you want to change this user's access from " + currentRole + " to " + role + "?", function(result) {
+                    bootbox.confirm("Are you sure you want to change this user's access from " + currentRole + " to " + decodeCamelCase(role) + "?", function(result) {
                         if (result) {
                             addUserWithRole(userId, role, "${project.projectId}");
                         } else {

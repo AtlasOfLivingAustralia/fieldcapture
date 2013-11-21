@@ -10,6 +10,7 @@ class HomeController {
     def searchService
     def settingService
 
+    @PreAuthorise(accessLevel = 'siteAdmin', redirectController = "admin")
     def advanced() {
         [
             projects: projectService.list(),

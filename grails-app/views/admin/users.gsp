@@ -12,7 +12,7 @@
 
         $(document).ready(function() {
 
-            $("#viewUerPermissionsButton").click(function(e) {
+            $("#viewUserPermissionsButton").click(function(e) {
                 e.preventDefault();
                 if ($('#userId2').val()) {
                     $("#spinner2").show();
@@ -68,7 +68,7 @@
             </div>
             <div class="control-group">
                 <div class="controls">
-                    <button id="viewUerPermissionsButton" class="btn btn-primary">View</button>
+                    <button id="viewUserPermissionsButton" class="btn btn-primary">View</button>
                     <g:img dir="images" file="spinner.gif" id="spinner2" class="hide spinner"/>
                 </div>
             </div>

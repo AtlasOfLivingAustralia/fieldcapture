@@ -448,6 +448,16 @@ class FCTagLib {
     }
 
     /**
+     * Check if the logged in user is a site admin
+     *
+     */
+    def userIsSiteAdmin = { attrs ->
+        if (userService.userIsSiteAdmin()) {
+            out << true
+        }
+    }
+
+    /**
      * Build HTML for drop down menu "My projects"
      */
     def userProjectList = { attrs ->
