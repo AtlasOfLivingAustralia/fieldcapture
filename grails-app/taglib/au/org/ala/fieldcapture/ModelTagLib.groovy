@@ -150,8 +150,9 @@ class ModelTagLib {
             addDeferredTemplate(it)
         }
 
+
         if (model.preLabel) {
-            result = "<span ${labelAttributes.toString()}><label>${model.preLabel}</label></span>" + result
+            result = "<span ${labelAttributes.toString()}><label>${labelText(attrs, model, model.preLabel)}</label></span>" + result
         }
 
         if (model.postLabel) {
@@ -160,6 +161,39 @@ class ModelTagLib {
         }
 
         return result
+    }
+
+    /**
+     * Generates the contents of a label, including help text if it is available in the model.
+     * The attribute "helpText" on the view model is used first, if that does not exist, the dataModel "description"
+     * attribute is used a fallback.  If that doesn't exist either, no help is added to the label.
+     * @param attrs the taglib attributes, includes the full model.
+     * @param model the current viewModel item being processed.
+     * @param label text to use for the label.  Will also be used as a title for the help test.
+     * @return a generated html string to use to render the label.
+     */
+    def labelText(attrs, model, label) {
+
+        if (attrs.printable) {
+            return label
+        }
+
+        def helpText = model.helpText
+
+        if (!helpText) {
+
+            if (model.source) {
+                // Get the description from the data model and use that as the help text.
+                def attr = getAttribute(attrs.model.dataModel, model.source)
+                if (!attr) {
+                    println "Attribute ${model.source} not found"
+                }
+                helpText = attr?.description
+            }
+        }
+        helpText = helpText?fc.iconHelp([title:label], helpText):''
+        return "${label}${helpText}"
+
     }
 
     def evalDependency(dependency) {
@@ -438,7 +472,7 @@ class ModelTagLib {
     def tableHeader(out, attrs, table) {
         out << INDENT*4 << "<thead><tr>"
         table.columns.eachWithIndex { col, i ->
-            out << "<th>" + col.title + "</th>"
+            out << "<th>" + labelText(attrs, col, col.title) + "</th>"
         }
         if (attrs.edit && !attrs.printable) {
             out << "<th></th>"
@@ -654,20 +688,16 @@ class ModelTagLib {
     }
 
     def getAttribute(model, name) {
-        def target = null
-        model.each( {
-            if (it.name == name) {
-                target = it
-                return target
+        return model.findResult( {
+
+            if (it?.dataType == 'list') {
+                return getAttribute(it.columns, name)
             }
-            else if (it?.dataType == 'list') {
-                target = getAttribute(it.columns, name)
-                if (target) {
-                    return target
-                }
+            else {
+                return (it.name == name)?it:null
             }
+
         })
-        return target
     }
 
 }
