@@ -72,7 +72,7 @@ class ModelTagLib {
     def dataTag(attrs, model, context, editable, elementAttributes, databindAttrs, labelAttributes) {
         ModelWidgetRenderer renderer
 
-        def validate = validationAttribute(model, editable)
+        def validate = validationAttribute(attrs, model, editable)
 
 
         if (attrs.printable) {
@@ -244,12 +244,19 @@ class ModelTagLib {
     }
 
     // -------- validation declarations --------------------
-    def validationAttribute(model, edit) {
+    def validationAttribute(attrs, model, edit) {
         //log.debug "checking validation for ${model}, edit = ${edit}"
         if (!edit) { return ""}  // don't bother if the user can't change it
-        if (!model.validate) { return ""} // no criteria
+        def validationCriteria = model.validate
+        if (!validationCriteria) {
+            // Try the data model.
+            validationCriteria = getAttribute(attrs.model.dataModel, model.source)?.validate
+            if (!validationCriteria) {
+                return ""
+            }
+        } // no criteria
         // collect the validation criteria
-        def criteria = model.validate.tokenize(',')
+        def criteria = validationCriteria.tokenize(',')
         criteria = criteria.collect { it.trim() }
         def values = []
         criteria.each {
