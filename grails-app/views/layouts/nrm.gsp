@@ -36,8 +36,17 @@
             <div class="row-fluid">
                 <div class="logo span6">
                     <a href="${createLink(uri:"/")}">
-                        <r:img dir="css/nrm/images" file="gr_logo_wide.png" alt="Caring for our Country" />
+                        <r:img dir="css/nrm/images" file="gr_logo_wide.png" alt="Caring for our Country" /> <!--${grails.util.Environment.getCurrent().name} -->
+
                     </a>
+                    <g:if test="${ grails.util.Environment.getCurrent().name =~ /dev|test/ }">
+                    <!-- Markup to include ONLY when in test or dev -->
+                        <br/><br/>
+                        <div id="testWatermark">
+                        This is a test system and any data added in this system will be removed and lost.
+                        To add your proper data go to <a href="http://fieldcapture.ala.org.au">http://fieldcapture.ala.org.au</a>
+                    </div>
+                </g:if>
                 </div>
                 <div class="span6 visible-phone">
                     <div class="pull-right" style="margin-right:10px;margin-bottom:10px;">
