@@ -36,8 +36,7 @@
             <div class="row-fluid">
                 <div class="logo span6">
                     <a href="${createLink(uri:"/")}">
-                        <r:img dir="css/nrm/images" file="gr_logo_wide.png" alt="Caring for our Country" /> <!--${grails.util.Environment.getCurrent().name} -->
-
+                        <r:img dir="css/nrm/images" file="gr_logo_wide.png" alt="Caring for our Country" />
                     </a>
                     <g:if test="${ grails.util.Environment.getCurrent().name =~ /dev|test/ }">
                     <!-- Markup to include ONLY when in test or dev -->
