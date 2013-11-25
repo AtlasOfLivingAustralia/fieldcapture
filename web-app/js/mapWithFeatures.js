@@ -333,11 +333,14 @@
         animateFeatureById: function (id) {
             var self = this,
                 features = this.featureIndex[id];
+            var returnVal = false;
             if (features) {
                 $.each(this.featureIndex[id], function (i,f) {
                     self.animateFeature(f);
                 });
+                returnVal = true;
             }
+            return returnVal;
         },
         unAnimateFeatureById: function (id) {
             var self = this,

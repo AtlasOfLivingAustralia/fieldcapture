@@ -249,7 +249,7 @@
 </div>
 
 <r:script>
-    var projectListIds = [], facetList = [], mapDataHasChanged = false, mapBounds; // globals
+    var projectListIds = [], facetList = [], mapDataHasChanged = false, mapBounds, projectSites; // globals
 
     $(window).load(function () {
         var delay = (function(){
@@ -324,7 +324,7 @@
             var thisEl = this;
             var fId = $(this).data("id");
             //if (prevFeatureId) alaMap.unAnimateFeatureById(prevFeatureId);
-            alaMap.animateFeatureById(fId);
+            projectSites = alaMap.animateFeatureById(fId);
             $(thisEl).tooltip('hide');
             //console.log("toggle", prevFeatureId, fId);
             if (!prevFeatureId) {
@@ -361,20 +361,30 @@
         var initCentre, initZoom;
         $('#projectTable').on("click", "a.zoom-in",function(el) {
             el.preventDefault();
+
+            if (!projectSites) {
+                alert("No sites found for project");
+                return false;
+            }
+
             if (!initCentre && !initZoom) {
                 initCentre = alaMap.map.getCenter();
                 initZoom = alaMap.map.getZoom();
             }
+
             var projectId = $(this).data("id");
-            var bounds = alaMap.getExtentByFeatureId(projectId);
             var delay = 0;
             if (!alaMap.map || alaMap.map.zoom == 0) {
-                // maps not loaded yet (lazy loading and tab not yet clicked) - add delay
+                // maps not loaded yet (lazy loading and maps tab not yet clicked) - add delay
+                // so that map data can be loaded #HACK
                 delay = 2000;
             }
             $('#mapView-tab').tab('show');
             setTimeout(
                 function() {
+                    //var fId = $(this).data("id");
+                    alaMap.animateFeatureById(projectId);
+                    var bounds = alaMap.getExtentByFeatureId(projectId);
                     alaMap.map.fitBounds(bounds);
                 }, delay
             );
