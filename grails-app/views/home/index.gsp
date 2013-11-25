@@ -375,7 +375,7 @@
             $('#mapView-tab').tab('show');
             setTimeout(
                 function() {
-                    console.log("alaMap.map 2", alaMap.map);
+                    alaMap.map.fitBounds(bounds);
                 }, delay
             );
 
