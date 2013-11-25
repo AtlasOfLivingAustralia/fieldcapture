@@ -8,9 +8,19 @@
         </div>
     </div>
     <div class="control-group">
-        <label class="control-label" for="role">Permission level</label>
-        <div class="controls">
-            <g:select name="role" id="addUserRole" from="${roles}" valueMessagePrefix="label.role" noSelection="['':'-- select a permission level --']" class="validate[required]" data-errormessage-value-missing="Role is required!"/>
+        <label class="control-label" for="addUserRole">Permission level</label>
+        <div class="controls" id="rolesSelect">
+            %{--<g:select name="role" id="addUserRole" from="${roles}" valueMessagePrefix="label.role" noSelection="['':'-- select a permission level --']" class="validate[required]" data-errormessage-value-missing="Role is required!"/>--}%
+            <select name="role" id="addUserRole" class="validate[required]" data-errormessage-value-missing="Role is required!">
+                <option value="">-- select a permission level --</option>
+                <g:set var="userIsSiteAdmin"><fc:userIsSiteAdmin /></g:set>
+                <g:each var="role" in="${roles}">
+                    <g:set var="disabledHtml" value='disabled="disabled" class="tooltips" title="Only ADMIN users can set Case Manager role"'/>
+                    <g:set var="disabled" value="${(role == 'caseManager' && !userIsSiteAdmin) ? disabledHtml : ''}" />
+                    <option value="${role}" ${disabled}><g:message code="label.role.${role}" default="${role}"/></option>
+                </g:each>
+            </select>
+
         </div>
     </div>
     <g:if test="${projectId}">
