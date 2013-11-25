@@ -3,8 +3,8 @@
          to the main viewModel. -->
 <!-- ko stopBinding: true -->
 <div class="row-fluid" id="planContainer">
-    <div class="actions row-fluid" data-bind="template:planStatusTemplateName">
-    </div>
+    <div class="actions row-fluid" data-bind="template:planStatusTemplateName"></div>
+    <div id="status-update-error-placeholder"></div>
     <div id="activityContainer" class="space-before">
         <h4 class="inline">Planned Activities</h4>
         <i class="icon-lock" data-bind="visible:planStatus()==='submitted'"
@@ -171,7 +171,7 @@
     <span data-bind="visible:userIsCaseManager" class="span8">
         <span>Case manager actions: </span>
         <span class="btn-group">
-            <button type="button" data-bind="click:rejectPlan" class="btn btn-info" title="Allow the user to vary and re-submit the plan">
+            <button type="button" data-bind="click:modifyPlan" class="btn btn-info" title="Allow the user to vary and re-submit the plan">
                 <i class="icon-repeat icon-white"></i> Modify plan
             </button>
         </span>
@@ -517,35 +517,112 @@
                     self.currentStep(stepNumber);
                 }
             };
-            // save plan status updates as they happen
-            this.planStatus.subscribe(function (newValue) {
+
+            // Project status manipulations
+            // ----------------------------
+            // This has been refactored to update project status on specific actions (rather than subscribing
+            //  to changes in the status) so that errors can be handled in a known context.
+
+            // save new status and return a promise
+            this.saveStatus = function (newValue) {
                 var payload = {planStatus: newValue, projectId: project.projectId};
-                // save new status
-                $.ajax({
+                return $.ajax({
                     url: "${createLink(action:'ajaxUpdate')}/" + project.projectId,
                     type: 'POST',
                     data: JSON.stringify(payload),
-                    contentType: 'application/json',
-                    success: function (data) {
-                        if (data.error) {
-                            alert(data.detail + ' \n' + data.error);
-                        }
-                    },
-                    error: function (data) {
-                        alert('An unhandled error occurred: ' + data.status);
+                    contentType: 'application/json'
+                });
+            };
+            // submit plan and handle errors
+            this.submitPlan = function () {
+                self.saveStatus('submitted')
+                .done(function (data) {
+                    if (data.error) {
+                        showAlert("Unable to submit plan. An unhandled error occurred: " + data.detail + ' \n' + data.error,
+                            "alert-error","status-update-error-placeholder");
+                    } else {
+                        self.planStatus('submitted');
+                    }
+                })
+                .fail(function (data) {
+                    if (data.status === 401) {
+                        showAlert("Unable to submit plan. You do not have editor rights for this project.",
+                            "alert-error","status-update-error-placeholder");
+                    } else {
+                        showAlert("Unable to submit plan. An unhandled error occurred: " + data.status,
+                            "alert-error","status-update-error-placeholder");
                     }
                 });
-
-            });
-            this.submitPlan = function () {
-                self.planStatus('submitted');
             };
+            // approve plan and handle errors
             this.approvePlan = function () {
-                self.planStatus('approved');
+                // should we check that status is 'submitted'?
+                self.saveStatus('approved')
+                .done(function (data) {
+                    if (data.error) {
+                        showAlert("Unable to approve plan. An unhandled error occurred: " + data.detail + ' \n' + data.error,
+                            "alert-error","status-update-error-placeholder");
+                    } else {
+                        self.planStatus('approved');
+                    }
+                })
+                .fail(function (data) {
+                    if (data.status === 401) {
+                        showAlert("Unable to approve plan. You do not have case manager rights for this project.",
+                            "alert-error","status-update-error-placeholder");
+                    } else {
+                        showAlert("Unable to approve plan. An unhandled error occurred: " + data.status,
+                            "alert-error","status-update-error-placeholder");
+                    }
+                });
             };
+            // reject plan and handle errors
             this.rejectPlan = function () {
-                self.planStatus('not approved');
+                // should we check that status is 'submitted'?
+                self.saveStatus('not approved')
+                .done(function (data) {
+                    if (data.error) {
+                        showAlert("Unable to reject plan. An unhandled error occurred: " + data.detail + ' \n' + data.error,
+                            "alert-error","status-update-error-placeholder");
+                    } else {
+                        self.planStatus('not approved');
+                    }
+                })
+                .fail(function (data) {
+                    if (data.status === 401) {
+                        showAlert("Unable to reject plan. You do not have case manager rights for this project.",
+                            "alert-error","status-update-error-placeholder");
+                    } else {
+                        showAlert("Unable to reject plan. An unhandled error occurred: " + data.status,
+                            "alert-error","status-update-error-placeholder");
+                    }
+                });
             };
+            // make plan modifiable and handle errors
+            // this is the same as rejectPlan apart from messages but it is expected that it will
+            // have different functionality in the future so it has been separated
+            this.modifyPlan = function () {
+                // should we check that status is 'approved'?
+                self.saveStatus('not approved')
+                .done(function (data) {
+                    if (data.error) {
+                        showAlert("Unable to modify plan. An unhandled error occurred: " + data.detail + ' \n' + data.error,
+                            "alert-error","status-update-error-placeholder");
+                    } else {
+                        self.planStatus('not approved');
+                    }
+                })
+                .fail(function (data) {
+                    if (data.status === 401) {
+                        showAlert("Unable to modify plan. You do not have case manager rights for this project.",
+                            "alert-error","status-update-error-placeholder");
+                    } else {
+                        showAlert("Unable to modify plan. An unhandled error occurred: " + data.status,
+                            "alert-error","status-update-error-placeholder");
+                    }
+                });
+            };
+
             this.getGanttData = function () {
                 var values = [],
                     previousStage = '',

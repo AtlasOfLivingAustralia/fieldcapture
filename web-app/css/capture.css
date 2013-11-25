@@ -714,3 +714,7 @@ span.readonly-text {
     font-weight: bold;
     text-decoration: underline;
 }
+
+#alertdiv {
+    margin-top:4px;
+}
