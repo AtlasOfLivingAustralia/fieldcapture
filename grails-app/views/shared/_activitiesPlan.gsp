@@ -429,7 +429,7 @@
 
         function PlanViewModel(activities, outputTargets, project) {
             var self = this;
-            this.userIsCaseManager = ko.observable(${user?.isAdmin});
+            this.userIsCaseManager = ko.observable(${user?.isCaseManager});
             this.planStatus = ko.observable(project.planStatus || 'not approved');
             this.planStatusTemplateName = ko.computed(function () {
                 return self.planStatus() === 'not approved' ? 'planningTmpl' : self.planStatus() + 'Tmpl';

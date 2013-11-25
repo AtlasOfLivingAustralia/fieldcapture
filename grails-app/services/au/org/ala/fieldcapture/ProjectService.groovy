@@ -248,10 +248,22 @@ class ProjectService {
             userIsEditor = true
         } else {
             def url = grailsApplication.config.ecodata.baseUrl + "permissions/isUserAdminForProject?projectId=${projectId}&userId=${userId}"
-            userIsEditor = webService.getJson(url)?.userIsEditor
+            userIsEditor = webService.getJson(url)?.userIsEditor // either will be true or false
         }
 
         userIsEditor
+    }
+
+    /**
+     * Does the current user have caseManager permission for the requested projectId?
+     *
+     * @param userId
+     * @param projectId
+     * @return
+     */
+    def isUserCaseManagerForProject(userId, projectId) {
+        def url = grailsApplication.config.ecodata.baseUrl + "permissions/isUserCaseManagerForProject?projectId=${projectId}&userId=${userId}"
+        webService.getJson(url)?.userIsCaseManager // either will be true or false
     }
 
     /**

@@ -25,17 +25,10 @@ class ProjectController {
             def members = projectService.getMembersForProjectId(id)
             def admins = members.findAll{ it.role == "admin" }.collect{ it.userName }.join(",") // comma separated list of user email addresses
 
-            if (user && projectService.isUserAdminForProject(user.userId, id)) {
-                // add admin tab to page
-                user.metaClass.isAdmin = true
-                user.metaClass.isEditor = true
-            } else if (user && projectService.canUserEditProject(user.userId, id)) {
-                //user["isEditor"] = true // use this for KO to allow editing of activities, etc ??
-                user.metaClass.isAdmin = false
-                user.metaClass.isEditor = true
-            } else if (user) {
-                user.metaClass.isAdmin = false
-                user.metaClass.isEditor = false
+            if (user) {
+                user.metaClass.isAdmin = projectService.isUserAdminForProject(user.userId, id)?:false
+                user.metaClass.isCaseManager = projectService.isUserCaseManagerForProject(user.userId, id)?:false
+                user.metaClass.isEditor = projectService.canUserEditProject(user.userId, id)?:false
             }
             //log.debug activityService.activitiesForProject(id)
             //todo: ensure there are no control chars (\r\n etc) in the json as
