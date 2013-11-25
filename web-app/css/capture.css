@@ -701,8 +701,8 @@ span.readonly-text {
 }
 
 #testWatermark {
-    position: absolute;
-    margin-top: -20px;
+    /*position: absolute;*/
+    /*margin-top: -20px;*/
     width: 100%;
     color: red;
     font-weight: bold;
