@@ -165,7 +165,7 @@
                   <h4>Activity model</h4>
                   <pre>${metaModel}</pre>
                   <h4>Output models</h4>
-                  <pre>${outputModels}</pre>
+                  <pre>${outputModels?.encodeAsHTML()}</pre>
                   <h4>Themes</h4>
                   <pre>${themes.toString()}</pre>
                   <h4>Map features</h4>
