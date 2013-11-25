@@ -390,7 +390,7 @@ class ImportService {
         project.activities = planDetails.activities
         project.outputTargets = planDetails.outputs
 
-        def url = grailsApplication.config.ecodata.baseUrl + 'external/v1/projectPlan'
+        def url = grailsApplication.config.ecodata.baseUrl + 'external/v1/projectActivities'
 
         def results = webService.doPost(url, project)
         results
@@ -509,7 +509,7 @@ class ImportService {
         int offset = 0
         def stage = [:]
 
-        stage.name = stageDetails[offset++]
+        stage.name = 'Stage '+stageDetails[offset++]
         def fromDate = stageDetails[offset++]
         if (fromDate == 'Commencement') {
             fromDate = project.startDate
@@ -529,10 +529,11 @@ class ImportService {
         while (offset < stageDetails.size() && stageDetails[offset]) {
 
             def activity = [:]
-            activity.type = stageDetails[offset++] // May need a lookup here.
 
-            if (!validActivities.find{it.name == activity.type}) {
-                unmatchedActivities << activity.type
+            def activityType = stageDetails[offset++]
+            activity.type = matchActivity(validActivities, activityType)
+            if (!activity.type) {
+                unmatchedActivities << activityType
             }
 
             activity.description = stageDetails[offset++]
@@ -549,5 +550,16 @@ class ImportService {
         results
     }
 
+    def matchActivity(validActivities, activityType) {
+
+        def match = validActivities.find {it.name.equalsIgnoreCase(activityType)}
+
+        if (!match && activityType == 'Administration') {
+            match = 'Project Administration'
+        }
+
+        return match
+
+    }
 
 }
