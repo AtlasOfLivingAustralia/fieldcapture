@@ -203,8 +203,8 @@
                                         <i class="icon-map-marker"></i>
                                         Sites: <a href="#" data-id="$id" class="zoom-in btnX btn-miniX"><i
                                             class="icon-plus-sign"></i> show on map</a>
-                                        <!--<a href="#" data-id="$id" class="zoom-out btnX btn-miniX"><i
-                                                class="icon-minus-sign"></i> zoom out</a> -->
+                                        %{--<a href="#" data-id="$id" class="zoom-out btnX btn-miniX"><i--}%
+                                                %{--class="icon-minus-sign"></i> zoom out</a>--}%
                                     </div>
                                     <div class="orgLine">
                                         <i class="icon-user"></i>
@@ -249,7 +249,7 @@
 </div>
 
 <r:script>
-    var projectListIds = [], facetList = [], mapDataHasChanged = false; // globals
+    var projectListIds = [], facetList = [], mapDataHasChanged = false, mapBounds; // globals
 
     $(window).load(function () {
         var delay = (function(){
@@ -273,7 +273,7 @@
         var storedTab = amplify.store('project-tab-state');
 
         if (storedTab === '') {
-            $('#map-tab').tab('show');
+            $('#mapView-tab').tab('show');
         } else {
             $(storedTab + '-tab').tab('show');
             if (storedTab == '#projectsView') {
@@ -367,15 +367,24 @@
             }
             var projectId = $(this).data("id");
             var bounds = alaMap.getExtentByFeatureId(projectId);
-            alaMap.map.fitBounds(bounds);
-            $('#t2').tab('show');
+            var delay = 0;
+            if (!alaMap.map || alaMap.map.zoom == 0) {
+                // maps not loaded yet (lazy loading and tab not yet clicked) - add delay
+                delay = 2000;
+            }
+            $('#mapView-tab').tab('show');
+            setTimeout(
+                function() {
+                    console.log("alaMap.map 2", alaMap.map);
+                }, delay
+            );
 
         });
         $('#projectTable').on("click", "a.zoom-out",function(el) {
             el.preventDefault();
+            $('#mapView-tab').tab('show');
             alaMap.map.setCenter(initCentre);
             alaMap.map.setZoom(initZoom);
-            $('#t2').tab('show');
         });
 
         // initial loading of map
@@ -560,7 +569,8 @@
                 }
             }
 
-            initialiseMap(features, bounds)
+            initialiseMap(features, bounds);
+            mapBounds = bounds;
             updateProjectTable();
 
         }).error(function (request, status, error) {
@@ -591,6 +601,14 @@
             alaMap.map.setZoom(4);
         }
 
+        // Create the DIV to hold the control and
+        // call the HomeControl() constructor passing
+        // in this DIV.
+        var homeControlDiv = document.createElement('div');
+        var homeControl = new HomeControl(homeControlDiv, alaMap.map);
+        homeControlDiv.index = 1;
+        alaMap.map.controls[google.maps.ControlPosition.LEFT_TOP].push(homeControlDiv);
+
         var numSitesHtml = "";
         if(features.length > 0){
             numSitesHtml = features.length + " sites";
@@ -620,6 +638,40 @@
         html+= "<div><i class='icon-map-marker'></i> Site: <a href='" +siteLinkPrefix + siteId + "'>" + siteName + "</a></div>";
         return html;
     }
+
+    function HomeControl(controlDiv, map) {
+
+        // Set CSS styles for the DIV containing the control
+        // Setting padding to 5 px will offset the control
+        // from the edge of the map
+        controlDiv.style.padding = '5px';
+
+        // Set CSS for the control border
+        var controlUI = document.createElement('div');
+        controlUI.style.backgroundColor = 'white';
+        controlUI.style.borderStyle = 'solid';
+        controlUI.style.borderWidth = '1px';
+        controlUI.style.cursor = 'pointer';
+        controlUI.style.textAlign = 'center';
+        controlUI.title = 'Click to set the map to show all sites';
+        controlDiv.appendChild(controlUI);
+
+        // Set CSS for the control interior
+        var controlText = document.createElement('div');
+        controlText.style.fontFamily = 'Arial,sans-serif';
+        controlText.style.fontSize = '12px';
+        controlText.style.paddingLeft = '6px';
+        controlText.style.paddingRight = '6px';
+        controlText.innerHTML = '<b>Reset</b>';
+        controlUI.appendChild(controlText);
+
+        // Setup the click event listeners
+        google.maps.event.addDomListener(controlUI, 'click', function() {
+            alaMap.map.fitBounds(mapBounds);
+        });
+
+    }
+
 
     function initialiseState(state) {
         switch (state) {
