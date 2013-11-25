@@ -82,9 +82,8 @@ class ProjectController {
     def ajaxUpdate(String id) {
         def postBody = request.JSON
         if (!id) { id = ''}
-        println "Body: " + postBody
-        println "Params:"
-        params.each { println it }
+        log.debug "Body: ${postBody}"
+        log.debug "Params: ${params}"
         def values = [:]
         // filter params to remove keys in the ignore list
         postBody.each { k, v ->
@@ -92,6 +91,16 @@ class ProjectController {
                 values[k] = v
             }
         }
+
+        if (values.containsKey("planStatus") && values.planStatus =~ /approved/) {
+            // check to see if user has caseManager permissions
+            if (!projectService.isUserCaseManagerForProject(userService.getUser()?.userId, id)) {
+                render status:401, text: "User does not have caseManager permissions for project"
+                log.debug "user not caseManager"
+                return
+            }
+        }
+
         log.debug "json=" + (values as JSON).toString()
         log.debug "id=${id} class=${id.getClass()}"
         def result = projectService.update(id, values)
