@@ -19,11 +19,11 @@ class UserController {
             [error: "Logged in user not found (user = null)"]
         } else {
             log.debug('Viewing my dashboard :  ' + user)
-            assmebleUserData(user)
+            assembleUserData(user)
         }
     }
 
-    private assmebleUserData(user) {
+    private assembleUserData(user) {
         def recentEdits = userService.getRecentEditsForUserId(user.userId)
         def memberProjects = userService.getProjectsForUserId(user.userId)
         def starredProjects = userService.getStarredProjectsForUserId(user.userId)
@@ -36,7 +36,7 @@ class UserController {
             def user = userService.getUserForUserId(id)
 
             if (user) {
-                render view: "index", model: assmebleUserData(user)
+                render view: "index", model: assembleUserData(user)
             } else {
                 flash.message = "No user found for id: ${id}"
                 redirect(controller: 'home')
