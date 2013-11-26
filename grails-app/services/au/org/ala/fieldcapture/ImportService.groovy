@@ -553,6 +553,7 @@ class ImportService {
     def matchActivity(validActivities, activityType) {
 
         def match = validActivities.find {it.name.equalsIgnoreCase(activityType)}
+        match = match?match.name:null
 
         if (!match && activityType == 'Administration') {
             match = 'Project Administration'
