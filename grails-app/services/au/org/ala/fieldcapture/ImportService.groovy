@@ -389,6 +389,7 @@ class ImportService {
         def project = [projectId:[type:'grantId', value:grantId]]
         project.activities = planDetails.activities
         project.outputTargets = planDetails.outputs
+        project.timeline = planDetails.timeline
 
         def url = grailsApplication.config.ecodata.baseUrl + 'external/v1/projectActivities'
 
