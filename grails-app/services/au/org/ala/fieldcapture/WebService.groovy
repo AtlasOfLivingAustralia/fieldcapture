@@ -22,6 +22,7 @@ import org.apache.http.entity.mime.MultipartEntity
 import org.apache.http.entity.mime.content.InputStreamBody
 import org.apache.http.entity.mime.content.StringBody
 import org.codehaus.groovy.grails.web.converters.exceptions.ConverterException
+import org.springframework.http.MediaType
 import org.springframework.web.multipart.MultipartFile
 
 class WebService {
@@ -37,7 +38,7 @@ class WebService {
             if (includeUserId && user) {
                 conn.setRequestProperty(grailsApplication.config.app.http.header.userId, user.userId)
             }
-            return conn.content.text
+            return responseText(conn)
         } catch (SocketTimeoutException e) {
             def error = [error: "Timed out calling web service. URL= ${url}."]
             log.error error
@@ -64,7 +65,8 @@ class WebService {
             if (user) {
                 conn.setRequestProperty(grailsApplication.config.app.http.header.userId, user.userId)
             }
-            def json = conn.content.text
+
+            def json = responseText(conn)
             return JSON.parse(json)
         } catch (ConverterException e) {
             def error = ['error': "Failed to parse json. ${e.getClass()} ${e.getMessage()} URL= ${url}."]
@@ -89,6 +91,22 @@ class WebService {
         }
     }
 
+    /**
+     * Reads the response from a URLConnection taking into account the character encoding.
+     * @param urlConnection the URLConnection to read the response from.
+     * @return the contents of the response, as a String.
+     */
+    def responseText(urlConnection) {
+
+        def charset = 'UTF-8' // default
+        def contentType = urlConnection.getContentType()
+        if (contentType) {
+            def mediaType = MediaType.parseMediaType(contentType)
+            charset = (mediaType.charSet)?mediaType.charSet.toString():'UTF-8'
+        }
+        return urlConnection.content.getText(charset)
+    }
+
     def doPost(String url, Map postBody) {
         if(!postBody.api_key){
             postBody.api_key = grailsApplication.config.api_key
@@ -99,6 +117,7 @@ class WebService {
         try {
             conn.setDoOutput(true)
             conn.setRequestProperty("Content-Type", "application/json");
+
             def user = userService.getUser()
             if (user) {
                 conn.setRequestProperty(grailsApplication.config.app.http.header.userId, user.userId) // used by ecodata
