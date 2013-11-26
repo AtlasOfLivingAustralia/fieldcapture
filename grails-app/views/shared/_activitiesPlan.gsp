@@ -437,7 +437,6 @@
             this.isApproved = ko.computed(function () {
                 return (self.planStatus() === 'approved');
             });
-            this.currentStep = ko.observable(project.currentStep === undefined ? 1 : project.currentStep);
             this.canEditActivity = ko.computed(function () {
                 return self.planStatus() === 'not approved';
             });
@@ -506,16 +505,6 @@
             };
             self.printActivity = function(activity) {
                 open(fcConfig.activityPrintUrl + "/" + activity.activityId, "fieldDataPrintWindow");
-            };
-            self.nextStep = function () {
-                self.currentStep(self.currentStep() + 1);
-            };
-            self.backtrack = function (data, event) {
-                var currentStep = $(event.currentTarget).attr('data-target'),
-                    stepNumber = Number(currentStep.substring(currentStep.length-1));
-                if (stepNumber < self.currentStep()) {
-                    self.currentStep(stepNumber);
-                }
             };
 
             // Project status manipulations
@@ -666,9 +655,6 @@
                         success: function (data) {
                             if (data.error) {
                                 alert(data.detail + ' \n' + data.error);
-                            }
-                            else {
-                                self.nextStep();
                             }
                         },
                         error: function (data) {
