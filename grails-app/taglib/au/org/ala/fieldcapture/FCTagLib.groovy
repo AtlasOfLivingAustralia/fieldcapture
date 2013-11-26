@@ -172,7 +172,7 @@ class FCTagLib {
     def iconHelp = { attrs, body ->
         if (!attrs.printable) {
             def mb = new MarkupBuilder(out)
-            mb.a(href:'#', class:'helphover', 'data-original-title':attrs.title, 'data-content':body()) {
+            mb.a(href:'#', class:'helphover', 'data-original-title':attrs.title, 'data-placement':'top', 'data-content':body()) {
                 i(class:'icon-question-sign') {
                     mkp.yieldUnescaped("&nbsp;")
                 }
