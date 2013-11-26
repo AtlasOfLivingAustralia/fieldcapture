@@ -60,10 +60,14 @@ class UserController {
         String role = params.role
         //def user = authService.userDetails()
 
-        if (projectService.isUserAdminForProject(userId, projectId) && userId && projectId && role) {
-            render userService.addUserAsRoleToProject(userId, projectId, role) as JSON
-        } else if (userId && projectId && role) {
-            render status:403, text: 'Permission denied'
+        if (userId && projectId && role) {
+            if (role == 'caseManager' && !userService.userIsSiteAdmin()) {
+                render status:403, text: 'Permission denied - ADMIN role required'
+            } else if (projectService.isUserAdminForProject(userId, projectId)) {
+                render userService.addUserAsRoleToProject(userId, projectId, role) as JSON
+            } else {
+                render status:403, text: 'Permission denied'
+            }
         } else {
             render status:400, text: 'Required params not provided: userId, role, projectId'
         }

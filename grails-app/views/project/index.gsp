@@ -262,7 +262,7 @@
                                             <tr class="hide">
                                                 <td class="memUserId"></td>
                                                 <td class="memUserName"></td>
-                                                <td class="memUserRole"><span style="white-space: nowrap">&nbsp;</span><g:select class="hide" name="memberRole" from="${roles}" valueMessagePrefix="label.role"/></td>
+                                                <td class="memUserRole"><span style="white-space: nowrap">&nbsp;</span><g:render template="/admin/userRolesSelect" model="[roles:roles, selectClass:'hide']"/></td>
                                                 <td class="clickable memEditRole"><i class="icon-edit tooltips" title="edit this user and role combination"></i></td>
                                                 <td class="clickable memRemoveRole"><i class="icon-remove tooltips" title="remove this user and role combination"></i></td>
                                             </tr>
