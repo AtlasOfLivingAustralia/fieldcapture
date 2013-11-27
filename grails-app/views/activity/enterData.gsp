@@ -183,6 +183,7 @@
         <g:if test="${!output}">
             <g:set var="output" value="[name: outputName]"/>
         </g:if>
+        <md:modelStyles model="${model}" edit="true"/>
         <div class="output-block" id="ko${blockId}">
             <h3 data-bind="css:{modified:dirtyFlag.isDirty},attr:{title:'Has been modified'}">${outputName}<i class="icon-asterisk modified-icon" data-bind="visible:dirtyFlag.isDirty" title="Has been modified" style="display: none;"></i></h3>
             <!-- add the dynamic components -->

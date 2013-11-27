@@ -74,6 +74,18 @@
 
 .preLabel {
     margin-right: 10px;
+    font-weight: bold;
+}
+
+.preLabel label {
+    font-weight: bold;
+}
+
+.required:after {
+    content: "*";
+    font-weight:bold;
+    font-size:2em;
+    color: red;
 }
 
 .postLabel {
@@ -285,6 +297,7 @@ li.item i[class^="icon-"]:hover {
 }
 .checkbox-list input[type=checkbox] {
     margin-bottom: 6px;
+    margin-right: 10px;
 }
 .checkbox-list-label.label  {
     vertical-align: top;

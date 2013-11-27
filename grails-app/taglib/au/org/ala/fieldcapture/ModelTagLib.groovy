@@ -74,7 +74,6 @@ class ModelTagLib {
 
         def validate = validationAttribute(attrs, model, editable)
 
-
         if (attrs.printable) {
             renderer = new PrintModelWidgetRenderer()
         } else {
@@ -152,6 +151,14 @@ class ModelTagLib {
 
 
         if (model.preLabel) {
+            labelAttributes.addClass 'preLabel'
+
+            if (validate instanceof GString) {
+                if (validate.values[0].contains("required")) {
+                    labelAttributes.addClass 'required'
+                }
+            }
+
             result = "<span ${labelAttributes.toString()}><label>${labelText(attrs, model, model.preLabel)}</label></span>" + result
         }
 
@@ -216,20 +223,6 @@ class ModelTagLib {
     // convenience method for the above
     def dataTag(attrs, model, context, editable) {
         dataTag(attrs, model, context, editable, null, null, null)
-    }
-
-    def getInputSize(width) {
-        if (!width) { return 'input-small' }
-        if (width && width[-1] == '%') {
-            width = width - '%'
-        }
-        switch (width.toInteger()) {
-            case 0..10: return 'input-mini'
-            case 11..20: return 'input-small'
-            case 21..30: return 'input-medium'
-            case 31..40: return 'input-large'
-            default: return 'input-small'
-        }
     }
 
     def specialProperties(attrs, properties) {
@@ -333,14 +326,18 @@ class ModelTagLib {
                 // Wrap data elements in rows to reset the bootstrap indentation on subsequent spans to save the
                 // model definition from needing to do so.
                 def labelAttributes = new AttributeMap()
+                def elementAttributes = new AttributeMap()
                 if (context == 'col') {
                     out << "<div class=\"row-fluid\">"
                     labelAttributes.addClass 'span4'
+                    elementAttributes.addClass 'span8'
+                } else {
+                    elementAttributes.addClass 'span12'
                 }
 
                 at.addSpan("span${span}")
                 out << "<span${at.toString()}>"
-                out << INDENT << dataTag(attrs, it, 'data', attrs.edit, null, null, labelAttributes)
+                out << INDENT << dataTag(attrs, it, 'data', attrs.edit, elementAttributes, null, labelAttributes)
                 out << "</span>"
 
                 if (context == 'col') {
@@ -477,9 +474,18 @@ class ModelTagLib {
     }
 
     def tableHeader(out, attrs, table) {
+
+
         out << INDENT*4 << "<thead><tr>"
         table.columns.eachWithIndex { col, i ->
-            out << "<th>" + labelText(attrs, col, col.title) + "</th>"
+            def validate = validationAttribute(attrs, col, attrs.edit)
+
+            if (validate instanceof GString && validate.values[0].contains("required")) {
+                out << "<th class=\"required\">" + labelText(attrs, col, col.title) + "</th>"
+            } else {
+                out << "<th>" + labelText(attrs, col, col.title) + "</th>"
+            }
+
         }
         if (attrs.edit && !attrs.printable) {
             out << "<th></th>"
@@ -637,6 +643,16 @@ class ModelTagLib {
                     </td></tr>\n"""
         }
         out << INDENT*4 << "</tfoot>\n"
+        if (attrs.edit && model.userAddedRows) {
+            out << INDENT*4 << """
+                              <script type="text/javascript">
+                                  \$('#paperTable').load(function(){
+                                        add${model.source}Row();
+                                   });
+                              </script>
+                               """
+        }
+
     }
 
     def photoPoints(out, attrs, model, index) {
