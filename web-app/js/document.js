@@ -1,15 +1,23 @@
 var imageLocation = "${imageUrl}";
 /**
  * A view model to capture metadata about a document and manage progress / feedback as a file is uploaded.
+ *
+ * NOTE that we are attempting to use this same model for document records that have an associated file
+ * and those that do not (eg deferral reason docs). The mechanisms for handling these two types (esp saving)
+ * are not well integrated at this point.
+ *
  * @param doc any existing details of the document.
  * @param owner an object containing key and value properties identifying the owning entity for the document. eg. {key:'projectId', value:'the_id_of_the_owning_project'}
  * @constructor
  */
 function DocumentViewModel (doc, owner) {
     var self = this;
+    // NOTE that attaching a file is optional, ie you can have a document record without a physical file
     this.filename = ko.observable(doc ? doc.filename : '');
     this.filesize = ko.observable(doc ? doc.filesize : '');
     this.name = ko.observable(doc.name);
+    // the notes field can be used as a pseudo-document (eg a deferral reason) or just for additional metadata
+    this.notes = ko.observable(doc.notes);
     this.filetypeImg = function () {
         return imageLocation + "/" + iconnameFromFilename(self.filename());
     };
@@ -18,7 +26,7 @@ function DocumentViewModel (doc, owner) {
     this.type = ko.observable(doc.type);
     this.role = ko.observable(doc.role);
     this.url = doc.url;
-    this.documentId = doc ? doc.documentId : '';
+    this.documentId = doc.documentId;
     this.hasPreview = ko.observable(false);
     this.error = ko.observable();
     this.progress = ko.observable(0);
@@ -91,6 +99,21 @@ function DocumentViewModel (doc, owner) {
         }
         return label;
     });
+
+    // This save method does not handle file uploads - it just deals with saving the doc record
+    // - see below for the file upload save
+    this.recordOnlySave = function (uploadUrl) {
+        $.post(
+            uploadUrl,
+            {document:self.toJSONString()},
+            function(result) {
+                self.complete(true); // ??
+                self.documentId = result.documentId;
+            })
+            .fail(function() {
+                self.error('Error saving document record');
+            });
+    };
 
     this.toJSONString = function() {
         // These are not properties of the document object, just used by the view model.

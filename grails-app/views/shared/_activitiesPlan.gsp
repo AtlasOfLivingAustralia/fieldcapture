@@ -1,4 +1,8 @@
 <r:require modules="datepicker, jqueryGantt, jqueryValidationEngine, attachDocuments"/>
+<r:script>
+    var PROJECT_STATE = {approved:'approved',submitted:'submitted',planned:'not approved'};
+    var ACTIVITY_STATE = {planned:'planned',started:'started',finished:'finished',deferred:'deferred',cancelled:'cancelled'};
+</r:script>
 <!-- This section is bound to a secondary KO viewModel. The following line prevents binding
          to the main viewModel. -->
 <!-- ko stopBinding: true -->
@@ -76,7 +80,30 @@
                         </g:if>
                         <td>
                             <span data-bind="template:$root.canUpdateStatus() ? 'updateStatusTmpl' : 'viewStatusTmpl'"></span>
-                            <span data-bind="visible:deferReason()"><i class="icon-asterisk" data-bind="popover: {title: 'Reason for deferral', content: deferReason(), placement: 'left'}"></i></span>
+                            <!-- ko with: deferReason -->
+                            <span data-bind="visible: $parent.progress()=='deferred' || $parent.progress()=='cancelled'"><i class="icon-list-alt" data-bind="popover: {title: 'Reason for deferral', content: notes, placement: 'left'}"></i></span>
+                            <!-- /ko -->
+
+                            <!-- Modal for getting reasons for status change -->
+                            <div id="activityStatusReason" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+                                data-bind="showModal:modal.displayReasonModal(),with:deferReason">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                                            data-bind="click:$parent.modal.cancelReasonModal">×</button>
+                                    <h3 id="myModalLabel">Reason for deferring or cancelling an activity</h3>
+                                </div>
+                                <div class="modal-body">
+                                    <p>If you wish to defer or cancel a planned activity you must provide an explanation. Your case
+                                    manager will use this information when assessing your report.</p>
+                                    <p>You can simply refer to a document that has been uploaded to the project if you like.</p>
+                                    <textarea data-bind="value:notes,hasFocus:true" rows=4 cols="80"></textarea>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn" data-bind="click: $parent.modal.cancelReasonModal" data-dismiss="modal" aria-hidden="true">Discard status change</button>
+                                    <button class="btn btn-primary" data-bind="click:$parent.modal.saveReasonDocument">Save reason</button>
+                                </div>
+                            </div>
+
                         </td>
                     </tr>
                     </tbody>
@@ -269,6 +296,38 @@
 <!-- /ko -->
 <r:script>
 
+    ko.bindingHandlers.showModal = {
+        init: function (element, valueAccessor) {
+            $(element).modal({ backdrop: 'static', keyboard: true, show: false });
+        },
+        update: function (element, valueAccessor) {
+            var value = valueAccessor();
+            if (ko.utils.unwrapObservable(value)) {
+                $(element).modal('show');
+            }
+            else {
+                $(element).modal('hide');
+            }
+        }
+    };
+
+    ko.extenders.withPrevious = function (target) {
+        // Define new properties for previous value and whether it's changed
+        target.previous = ko.observable();
+        target.changed = ko.computed(function () { return target() !== target.previous(); });
+        target.revert = function () {
+            target(target.previous());
+        };
+
+        // Subscribe to observable to update previous, before change.
+        target.subscribe(function (v) {
+            target.previous(v);
+        }, null, 'beforeChange');
+
+        // Return modified observable
+        return target;
+    };
+
     var sites = ${sites ?: []};
     function lookupSiteName (siteId) {
         var site;
@@ -320,49 +379,68 @@
             this.endDate = ko.observable(act.endDate).extend({simpleDate:false});
             this.plannedStartDate = ko.observable(act.plannedStartDate).extend({simpleDate:false});
             this.plannedEndDate = ko.observable(act.plannedEndDate).extend({simpleDate:false});
-            this.progress = ko.observable(act.progress);
+            this.progress = ko.observable(act.progress).extend({withPrevious:act.progress});
             this.isSaving = ko.observable(false);
-            this.deferReason = ko.observable();
 
-            // save progress updates as soon as they happen
+            this.deferReason = ko.observable(undefined); // a reason document or undefined
+            // the following handles the modal dialog for deferral/cancel reasons
+            this.modal = {};
+            this.modal.displayReasonModal = ko.observable(false);
+            this.modal.needsToBeSaved = true; // prevents unnecessary saves when a change to progress is reverted
+            this.modal.closeReasonModal = function() {
+                self.modal.displayReasonModal(false);
+                self.modal.needsToBeSaved = true;
+            };
+            this.modal.cancelReasonModal = function() {
+                self.modal.needsToBeSaved = false;
+                self.progress.revert();
+                self.modal.closeReasonModal();
+            };
+            this.modal.saveReasonDocument = function () {
+                self.saveProgress({progress: self.progress(), activityId: self.activityId});
+                self.deferReason().recordOnlySave("${createLink(controller:'proxy', action:'documentUpdate')}/" + (self.deferReason().documentId ? self.deferReason().documentId : ''));
+                self.modal.closeReasonModal();
+            };
+            // save progress updates - with a reason document in some cases
             this.progress.subscribe(function (newValue) {
-                var payload = {progress: newValue, activityId: self.activityId};
+                if (!self.progress.changed()) { return; } // Cancel if value hasn't changed
+                if (!self.modal.needsToBeSaved) { return; } // Cancel if value hasn't changed
 
-                if (newValue === 'deferred') {
-                    var url = '${g.createLink(controller:"proxy", action:"documentUpdate")}';
-                    showDocumentAttachInModal(
-                     url,
-                     {role:'deferReason'},
-                     {key:'activityId', value:self.activityId},
-                     '#attachReasonDocument',
-                     '#attachReasonDocument')
-                        .done(self.saveProgress(payload));
-                }
-                else {
-                    self.saveProgress(payload);
+                if (newValue === 'deferred' || newValue === 'cancelled') {
+                    // create a reason document if one doesn't exist
+                    // NOTE that 'deferReason' role is used in both cases, ie refers to cancel reason as well
+                    if (self.deferReason() === undefined) {
+                        self.deferReason(new DocumentViewModel({role:'deferReason'}, {key:'activityId', value:act.activityId}));
+                    }
+                    // popup dialog for reason
+                    self.modal.displayReasonModal(true);
+                } else if (self.modal.needsToBeSaved) {
+                    self.saveProgress({progress: newValue, activityId: self.activityId});
                 }
             });
+
             this.saveProgress = function(payload) {
                 self.isSaving(true);
-                    // save new status
-                    $.ajax({
-                        url: "${createLink(controller:'activity', action:'ajaxUpdate')}/" + self.activityId,
-                        type: 'POST',
-                        data: JSON.stringify(payload),
-                        contentType: 'application/json',
-                        success: function (data) {
-                            if (data.error) {
-                                alert(data.detail + ' \n' + data.error);
-                            }
-                            drawGanttChart(planViewModel.getGanttData());
-                        },
-                        error: function (data) {
-                            alert('An unhandled error occurred: ' + data.status);
-                        },
-                        complete: function () {
-                            self.isSaving(false);
+                // save new status
+                $.ajax({
+                    url: "${createLink(controller:'activity', action:'ajaxUpdate')}/" + self.activityId,
+                    type: 'POST',
+                    data: JSON.stringify(payload),
+                    contentType: 'application/json',
+                    success: function (data) {
+                        if (data.error) {
+                            alert(data.detail + ' \n' + data.error);
                         }
-                    });
+                        drawGanttChart(planViewModel.getGanttData());
+                    },
+                    error: function (data) {
+                        alert('An unhandled error occurred: ' + data.status);
+                    },
+                    complete: function () {
+                        //console.log('saved progress');
+                        self.isSaving(false);
+                    }
+                });
             };
             this.del = function () {
                 // confirm first
@@ -380,11 +458,12 @@
                 });
             };
 
-            $.each(act.documents, function(i, document) {
-                if (document.role == 'deferReason') {
-                    self.deferReason(document.name);
-                }
+            var reasonDocs = $.grep(act.documents, function(document) {
+                return document.role === 'deferReason';
             });
+            if (reasonDocs.length > 0) {
+                self.deferReason(new DocumentViewModel(reasonDocs[0], {key:'activityId', value:act.activityId}));
+            }
         };
 
         var PlanStage = function (stageLabel, activities, isCurrentStage, timeline) {
