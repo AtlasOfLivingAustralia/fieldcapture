@@ -566,6 +566,8 @@ class ImportService {
 
     def matchActivity(validActivities, activityType) {
 
+
+        activityType = activityType ? activityType.trim() : ''
         def match = validActivities.find {it.name.equalsIgnoreCase(activityType)}
         match = match?match.name:null
 
@@ -600,7 +602,10 @@ class ImportService {
                 match = 'Site Assessment - Biodiversity Fund (DoE)'
             }
             else if (activityType.equalsIgnoreCase('Infrastructure Works')) {
-
+                // To be created in our system.
+            }
+            else if (activityType.equalsIgnoreCase('Site Assessment - Bushland Condition Monitoring')) {
+                match = 'Site Assessment - Bushland Condition Monitoring (SA)'
             }
 
         }
