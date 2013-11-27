@@ -36,7 +36,7 @@ function plantingData(data) {
         }
     }
 
-    var table = google.visualization.arrayToDataTable(plantingData, false);
+    var table = google.visualization.arrayToDataTable(plantingData, true);
     var summaryData = google.visualization.data.group(table, [1],
         [
             {column: 0, aggregation: google.visualization.data.sum, type: 'number', label: 'Plants planted'}
@@ -165,7 +165,7 @@ function isWeed(dataTable, rowNum) {
 }
 
 function addSpeciesCharts(data) {
-    var table = google.visualization.arrayToDataTable(data, false);
+    var table = google.visualization.arrayToDataTable(data, true);
     var view = new google.visualization.DataView(table);
     view.setColumns([3,
         {calc: removePrefix, type: 'string', label: "Category"},

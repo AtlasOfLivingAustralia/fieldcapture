@@ -136,7 +136,7 @@ function createViewModel() {
             var params = $.param({attributes:defaultAttributes});
             jQuery.getJSON('${createLink(controller:'report', action:'summaryReport')}?'+params, function (results) {
                 data = results;
-                dataTable = google.visualization.arrayToDataTable(data, false);
+                dataTable = google.visualization.arrayToDataTable(data, true);
 
                 buildCharts(plantingData(data), themeData(data), engagementData(dataTable), fencingData(dataTable));
                 initMap(data);
