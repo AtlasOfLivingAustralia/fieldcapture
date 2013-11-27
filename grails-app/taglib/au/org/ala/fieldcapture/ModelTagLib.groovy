@@ -643,15 +643,6 @@ class ModelTagLib {
                     </td></tr>\n"""
         }
         out << INDENT*4 << "</tfoot>\n"
-        if (attrs.edit && model.userAddedRows) {
-            out << INDENT*4 << """
-                              <script type="text/javascript">
-                                  \$('#paperTable').load(function(){
-                                        add${model.source}Row();
-                                   });
-                              </script>
-                               """
-        }
 
     }
 

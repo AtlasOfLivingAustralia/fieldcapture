@@ -452,6 +452,11 @@ class ModelJSTagLib {
         }
         def insertDefaultModel = defaultRows.join('\n')
 
+        // If there are no default rows, insert a single blank row and make it available for editing.
+        if (insertDefaultModel.isEmpty()) {
+            insertDefaultModel = INDENT*5 + "var newRow = new ${rowModelName}(); self.data.${model.name}.push(newRow); newRow.isNew = true; self.editplantingRow(newRow);"
+        }
+
         out << """
             self.data.${model.name} = ko.observableArray([]);
             self.selected${model.name}Row = ko.observable();
