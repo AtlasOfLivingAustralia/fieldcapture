@@ -198,8 +198,8 @@ class FCTagLib {
 
         def mb = new MarkupBuilder(out)
 
-        mb.ul(class:'nav hidden-tablet') {
-            li(class:attrs.active == 'home' ? 'active' : '') {
+        //mb.ul(class:'nav visible-desktop ') {
+            mb.li(class:attrs.active == 'home' ? 'active' : '') {
                 a(href:createLink(uri: '/')) {
                     i(class:"icon-home") {
                         mkp.yieldUnescaped("&nbsp;")
@@ -207,7 +207,7 @@ class FCTagLib {
                     mkp.yieldUnescaped("&nbsp")
                     mkp.yield(message(code:'default.home.label', default: 'Home'))}
             }
-            li(class:attrs.active == 'about' ? 'active' : '') {
+            mb.li(class:attrs.active == 'about' ? 'active' : '') {
                 a(href:createLink(controller: 'about')) {
                     i(class:"icon-question-sign") {
                         mkp.yieldUnescaped("&nbsp;")
@@ -228,7 +228,7 @@ class FCTagLib {
 //            }
             Environment.executeForCurrentEnvironment {
               development {
-                li(class:attrs.active == 'advanced' ? 'active' : '') {
+                mb.li(class:attrs.active == 'advanced' ? 'active' : '') {
                     a(href:createLink(controller: 'home', action:'advanced')) {
                         i(class:"icon-th") {
                             mkp.yieldUnescaped("&nbsp;")
@@ -239,7 +239,7 @@ class FCTagLib {
                 }
               }
             }
-        }
+        //}
 
     }
 

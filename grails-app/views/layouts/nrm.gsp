@@ -31,20 +31,15 @@
 </head>
 <body class="${pageProperty(name:'body.class')}" id="${pageProperty(name:'body.id')}" onload="${pageProperty(name:'body.onload')}">
 <div id="body-wrapper">
-    <div id="header">
-        <div class="container-fluid">
-            <div class="row-fluid">
-                <div class="logo span6">
+    <div class="navbar navbar-inverse navbar-static-top" id="header">
+        <div class="navbar-inner">
+            <div class="container-fluid">
+                <div class="nav logo">
                     <a href="${createLink(uri:"/")}">
                         <r:img dir="css/nrm/images" file="gr_logo_wide.png" alt="Caring for our Country" />
                     </a>
                 </div>
-                <div class="span6 visible-phone">
-                    <div class="pull-right" style="margin-right:10px;margin-bottom:10px;">
-                        <g:render template="/layouts/nrmUserButtons" model="[loginBtnCss:'btn btn-small']"/>
-                    </div>
-                </div>
-                <div class="span6 hidden-phone">
+                <div class="nav-collapse collapse">
                     <g:form controller="search" method="GET" class="search pull-right">
                         <p>
                             <input type="text" name="query" id="keywords" value="${params.query}">
@@ -55,7 +50,7 @@
                         </p>
                     </g:form>
                 </div>
-            </div>
+            </div><!--/.container-fluid -->
             <g:if test="${ grails.util.Environment.getCurrent().name =~ /dev|test/ }">
                 <!-- Markup to include ONLY when in test or dev -->
                 <div class="row-fluid">
@@ -65,21 +60,33 @@
                     </div>
                 </div>
             </g:if>
-        </div>
-    </div><!-- /#header -->
-    <div id="dcNav" class="clearfix hidden-phone">
-        <div class="navbar container-fluid">
+        </div><!--/.navbar-inner -->
+    </div><!--/.navbar -->
+
+    <div id="dcNav" class="clearfix ">
+
+        <div class="navbar navbar-inverse container-fluid ">
             <a class="brand">MERI data capture prototype</a>
-            %{--<div class="nav-collapse collapse">--}%
-                <div class="navbar-text pull-right">
+            %{--<div class="">--}%
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+            <div class="nav-collapse collapse">
+                <ul class="nav">
+                    <fc:navbar active="${pageProperty(name: 'page.topLevelNav')}"/>
+                </ul>
+                <div class="navbar-form pull-right nav-collapse collapse">
                     <span id="buttonBar">
                         <g:render template="/layouts/nrmUserButtons"/>
                         <g:pageProperty name="page.buttonBar"/>
                     </span>
                 </div>
-                <fc:navbar active="${pageProperty(name: 'page.topLevelNav')}"/>
+            </div>
+
             %{--</div>--}%
-        </div><!-- /.nav -->
+        </div><!-- /.navbar-inner -->
     </div>
 
     <div id="content" class="clearfix">

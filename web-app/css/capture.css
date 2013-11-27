@@ -555,6 +555,10 @@ ul#adminNav li.active a {
     margin-left: -4px;
 }
 
+#header.navbar .btn-navbar {
+    margin: 20px -10px;
+}
+
 .dropdown-menu .listHeading {
     color: #393124;
     font-size: 14px;
@@ -589,20 +593,12 @@ ul.facetValues {
     -ms-transform:rotate(180deg);
 }
 
-div.output-block {
-    border: #999 solid thin;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    margin: 10px 0;
+div.output-block, div.admin-section {
+    border-top: #999 solid 2px;
+    /*-webkit-border-radius: 3px;*/
+    /*-moz-border-radius: 3px;*/
+    margin: 20px 0 10px 0;
     padding: 0 5px;
-}
-
-div.admin-section {
-    border: #999 solid thin;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    margin: 10px 0;
-    padding: 5px;
 }
 
 h3.modified {

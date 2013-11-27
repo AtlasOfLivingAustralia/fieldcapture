@@ -126,11 +126,16 @@ ul.horizontal li {
 
 #dcNav .navbar .nav>li>a {
     float: none;
-    padding: 10px 15px 10px;
+    padding: 10px 10px;
     color: #444;
     font-size: 14px;
     text-decoration: none;
     text-shadow: none;
+}
+
+#dcNav .navbar-inverse .nav-collapse .navbar-form {
+    margin-top: 2px;
+    margin-bottom: 5px;
 }
 
 /* Top level layout */
@@ -139,15 +144,56 @@ ul.horizontal li {
     /*background: #C2CD8D url(../images/bg_page_top_slice.png) repeat-x 0px -50px;*/
 }
 
-@media (max-width: 767px) {
+@media (max-width: 980px) {
     #body-wrapper {
         margin-left: -20px;
         margin-right: -20px;
     }
+    #body-wrapper > #header > div {
+        /*margin-left: 20px;*/
+        /*margin-right: 20px;*/
+    }
 
-    #header, #content, #footer-wrapper {
+    #header, #content, #footer-wrapper, #dcNav > div {
         margin-left: 20px;
         margin-right: 20px;
+    }
+
+    #dcNav ul.nav {
+        margin-bottom: 0;
+    }
+
+    #dcNav .nav-collapse .btn-group {
+        vertical-align: top;
+    }
+
+    #dcNav .nav-collapse .dropdown-menu a {
+        padding: 0;
+        color: #393124;
+    }
+
+    #dcNav .navbar .nav>li>a {
+        padding: 5px 10px;
+    }
+
+    #dcNav .navbar-inverse .nav-collapse .dropdown-menu a:hover,
+    #dcNav .navbar-inverse .nav-collapse .dropdown-menu a:focus,
+    #dcNav .navbar .nav>li>a:hover,
+    #dcNav .navbar .nav>li>a:focus {
+        background: none;
+    }
+
+    #dcNav .navbar-inverse .nav-collapse .navbar-form,
+    #dcNav .navbar-inverse .nav-collapse .navbar-search {
+        border: none;
+        box-shadow: none;
+        webkit-box-shadow: none;
+        margin:0;
+    }
+
+    #header #testWatermark {
+        margin: 0 10px;
+        font-size: 11px;
     }
 }
 
