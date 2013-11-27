@@ -46,8 +46,17 @@ function DocumentViewModel (doc, owner) {
         }
     });
 
+    // make this support both the old key/value syntax and any set of props so we can define more than
+    // one owner attribute
     if (owner !== undefined) {
-        this[owner.key] = owner.value;
+        if (owner.key !== undefined) {
+            self[owner.key] = owner.value;
+        }
+        for (var propName in owner) {
+            if (owner.hasOwnProperty(propName) && propName !== 'key' && propName !== 'value') {
+                self[propName] = owner[propName];
+            }
+        }
     }
 
     /**
