@@ -244,6 +244,16 @@ log4j = {
                         maxFileSize: 104857600,
                         file: "/var/log/tomcat6/fieldcapture-stacktrace.log"
             }
+            nectartest {
+                rollingFile name: "fieldcaptureLog",
+                        maxFileSize: 104857600,
+                        file: "/var/log/tomcat6/fieldcapture.log",
+                        threshold: org.apache.log4j.Level.INFO,
+                        layout: pattern(conversionPattern: "%d %-5p [%c{1}]  %m%n")
+                rollingFile name: "stacktrace",
+                        maxFileSize: 104857600,
+                        file: "/var/log/tomcat6/fieldcapture-stacktrace.log"
+            }
             production {
                 rollingFile name: "fieldcaptureLog",
                         maxFileSize: 104857600,
