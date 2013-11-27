@@ -71,11 +71,16 @@
     </div>
 </g:if>
 <g:elseif test="${results?.hits?.total?:0 > 0}">
-    <div id="content" class="row-fluid ">
+    <div id="contentZ" class="row-fluid ">
         <div id="facetsCol" class="span4 well well-small">
             <g:set var="reqParams" value="sort,order,max,fq"/>
-            <h2>Filter results</h2>
-
+            <div class="visible-phone pull-right" style="margin-top: 5px;">
+                <a href="#" id="toggleFacetDisplay" rel="facetsContent" role="button" class="btn btn-small btn-inverse" style="color:white;">
+                    <span>show</span> options&nbsp;
+                    <b class="caret"></b>
+                </a>
+            </div>
+            <h3 style="margin-bottom:0;">Filter results</h3>
             <g:if test="${params.fq}">
                 <div class="currentFilters">
                     <h4>Current filters</h4>
@@ -93,51 +98,53 @@
                     </ul>
                 </div>
             </g:if>
-            <g:set var="baseUrl"><fc:formatParams params="${params}" requiredParams="${reqParams}"/></g:set>
-            <g:set var="fqLink" value="${baseUrl?:"?"}"/>
-        <!-- fqLink = ${fqLink} -->
-            <g:each var="fn" in="${facetsList}">
-                <g:set var="f" value="${results.facets.get(fn)}"/>
-                <g:set var="max" value="${5}"/>
-                <g:if test="${fn != 'class' && f?.terms?.size() > 0}">
-                    <g:set var="fName"><g:message code="label.${fn}" default="${fn?.capitalize()}"/></g:set>
-                    <h4>${fName}</h4>
-                    <ul class="facetValues">
-                        <g:each var="t" in="${f.terms}" status="i">
-                            <g:if test="${i < max}">
-                                <li><a href="${fqLink}&fq=${fn.encodeAsURL()}:${t.term}"><g:message
-                                        code="label.${t.term}" default="${t.term}"/></a> (${t.count})
-                                </li>
-                            </g:if>
-                        </g:each>
-                    </ul>
-                    <g:if test="${f?.terms?.size() > max}">
-                        <a href="#${fn}Modal" role="button" class="moreFacets tooltips" data-toggle="modal" title="View full list of values"><i class="icon-hand-right"></i> choose more...</a>
-                        <div id="${fn}Modal" class="modal hide fade">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                <h3>Filter by ${fName}</h3>
-                            </div>
-                            <div class="modal-body">
-                                <ul class="facetValues">
-                                    <g:each var="t" in="${f.terms}">
-                                        <li data-sortalpha="${t.term.toLowerCase().trim()}" data-sortcount="${t.count}"><a href="${fqLink}&fq=${fn.encodeAsURL()}:${t.term}"><g:message
-                                                code="label.${t.term}" default="${t.term}"/></a> (<span class="fcount">${t.count}</span>)
-                                        </li>
-                                    </g:each>
-                                </ul>
-                            </div>
-                            <div class="modal-footer">
-                                <div class="pull-left">
-                                    <button class="btn btn-small sortAlpha"><i class="icon-filter"></i> Sort by name</button>
-                                    <button class="btn btn-small sortCount"><i class="icon-filter"></i> Sort by count</button>
+            <div id="facetsContent" class="hidden-phone">
+                <g:set var="baseUrl"><fc:formatParams params="${params}" requiredParams="${reqParams}"/></g:set>
+                <g:set var="fqLink" value="${baseUrl?:"?"}"/>
+            <!-- fqLink = ${fqLink} -->
+                <g:each var="fn" in="${facetsList}">
+                    <g:set var="f" value="${results.facets.get(fn)}"/>
+                    <g:set var="max" value="${5}"/>
+                    <g:if test="${fn != 'class' && f?.terms?.size() > 0}">
+                        <g:set var="fName"><g:message code="label.${fn}" default="${fn?.capitalize()}"/></g:set>
+                        <h4>${fName}</h4>
+                        <ul class="facetValues">
+                            <g:each var="t" in="${f.terms}" status="i">
+                                <g:if test="${i < max}">
+                                    <li><a href="${fqLink}&fq=${fn.encodeAsURL()}:${t.term}"><g:message
+                                            code="label.${t.term}" default="${t.term}"/></a> (${t.count})
+                                    </li>
+                                </g:if>
+                            </g:each>
+                        </ul>
+                        <g:if test="${f?.terms?.size() > max}">
+                            <a href="#${fn}Modal" role="button" class="moreFacets tooltips" data-toggle="modal" title="View full list of values"><i class="icon-hand-right"></i> choose more...</a>
+                            <div id="${fn}Modal" class="modal hide fade">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h3>Filter by ${fName}</h3>
                                 </div>
-                                <a href="#" class="btn" data-dismiss="modal">Close</a>
+                                <div class="modal-body">
+                                    <ul class="facetValues">
+                                        <g:each var="t" in="${f.terms}">
+                                            <li data-sortalpha="${t.term.toLowerCase().trim()}" data-sortcount="${t.count}"><a href="${fqLink}&fq=${fn.encodeAsURL()}:${t.term}"><g:message
+                                                    code="label.${t.term}" default="${t.term}"/></a> (<span class="fcount">${t.count}</span>)
+                                            </li>
+                                        </g:each>
+                                    </ul>
+                                </div>
+                                <div class="modal-footer">
+                                    <div class="pull-left">
+                                        <button class="btn btn-small sortAlpha"><i class="icon-filter"></i> Sort by name</button>
+                                        <button class="btn btn-small sortCount"><i class="icon-filter"></i> Sort by count</button>
+                                    </div>
+                                    <a href="#" class="btn" data-dismiss="modal">Close</a>
+                                </div>
                             </div>
-                        </div>
+                        </g:if>
                     </g:if>
-                </g:if>
-            </g:each>
+                </g:each>
+            </div>
         </div>
         <div class="span8">
 
@@ -463,6 +470,19 @@
                 $("#projectTable").data("offset", newOffset);
                 //console.log("offset", offset, newOffset, $("#projectTable").data("offset"));
                 updateProjectTable();
+            }
+        });
+
+        // in mobile view toggle display of facets
+        $("#toggleFacetDisplay").click(function(e) {
+            e.preventDefault();
+            $(this).find("i").toggleClass("icon-chevron-down icon-chevron-right");
+            if ($("#" + $(this).attr('rel')).is(":visible")) {
+                $("#" + $(this).attr('rel')).addClass("hidden-phone");
+                $(this).find("span").text("show");
+            } else {
+                $("#" + $(this).attr('rel')).removeClass("hidden-phone");
+                $(this).find("span").text("hide");
             }
         });
 
