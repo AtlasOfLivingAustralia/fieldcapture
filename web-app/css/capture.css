@@ -727,3 +727,9 @@ span.readonly-text {
 #alertdiv {
     margin-top:4px;
 }
+
+.save-indicator {
+    position:absolute;
+    margin-top:8px;
+    margin-left:10px;
+}

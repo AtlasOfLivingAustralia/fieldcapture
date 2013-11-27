@@ -127,7 +127,9 @@
                     <input type="text" class="input-small" data-bind="visible:$root.planStatus()==='not approved',value:target" data-validation-engine="validate[required,custom[number]]"/>
                     <span data-bind="visible:$root.planStatus()!=='not approved',text:target"></span>
                     <span data-bind="text:units"></span>
+                    <span class="save-indicator" data-bind="visible:isSaving"><r:img dir="images" file="ajax-saver.gif"/> saving</span>
                 </td>
+
             </tr>
 
             </tbody>
@@ -149,7 +151,7 @@
             <a href="#" data-bind="click: $parent.progress"><span data-bind="text: $data"></span></a>
         </li>
     </ul></div>
-    <span data-bind="visible:isSaving"><r:img dir="images" file="ajax-saver.gif"/> saving</span>
+    <span class="save-indicator" data-bind="visible:isSaving"><r:img dir="images" file="ajax-saver.gif"/> saving</span>
 </script>
 
 <script id="viewStatusTmpl" type="text/html">
@@ -502,6 +504,7 @@
                 scoreName:target.scoreName,
                 scoreLabel:target.scoreLabel,
                 target:ko.observable(target.value),
+                isSaving:ko.observable(false),
                 units:target.units
             };
         };
@@ -739,6 +742,13 @@
                         error: function (data) {
                             var status = data.status;
                             alert('An unhandled error occurred: ' + data.status);
+                        },
+                        complete: function(data) {
+                            $.each(self.outputTargets(), function(i, target) {
+                                // The timeout is here to ensure the save indicator is visible long enough for the
+                                // user to notice.
+                                setTimeout(function(){target.isSaving(false);}, 1000);
+                            });
                         }
                     });
                 }
@@ -746,7 +756,10 @@
             self.addOutputTarget = function(target) {
                 var newOutputTarget = outputTarget(target);
                 self.outputTargets.push(newOutputTarget);
-                newOutputTarget.target.subscribe(function() {self.saveOutputTargets();});
+                newOutputTarget.target.subscribe(function() {
+                    newOutputTarget.isSaving(true);
+                    self.saveOutputTargets();
+                });
             };
             self.activityScores = ${activityScores as grails.converters.JSON};
 
