@@ -118,7 +118,7 @@
 
                 <!-- show any primary image -->
                 <div data-bind="visible:primaryImage() !== null,with:primaryImage" class="thumbnail with-caption span5">
-                    <img class="img-rounded" data-bind="attr:{src:url}"/>
+                    <img class="img-rounded" data-bind="attr:{src:url, alt:name}" alt="primary image"/>
                     <p class="caption" data-bind="text:name"></p>
                     <p class="attribution" data-bind="visible:attribution"><small><span data-bind="text:attribution"></span></small></p>
                 </div>
@@ -266,7 +266,7 @@
                                                 <td class="clickable memEditRole"><i class="icon-edit tooltips" title="edit this user and role combination"></i></td>
                                                 <td class="clickable memRemoveRole"><i class="icon-remove tooltips" title="remove this user and role combination"></i></td>
                                             </tr>
-                                            <tr id="spinnerRow"><td colspan="5">loading data... <g:img dir="images" file="spinner.gif" id="spinner2" class="spinner"/></td></tr>
+                                            <tr id="spinnerRow"><td colspan="5">loading data... <g:img dir="images" file="spinner.gif" id="spinner2" class="spinner" alt="spinner icon"/></td></tr>
                                             <tr id="messageRow" class="hide"><td colspan="5">No project members set</td></tr>
                                             </tbody>
                                         </table>
