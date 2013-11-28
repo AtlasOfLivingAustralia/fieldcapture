@@ -454,7 +454,10 @@ class ModelJSTagLib {
 
         // If there are no default rows, insert a single blank row and make it available for editing.
         if (insertDefaultModel.isEmpty()) {
-            insertDefaultModel = INDENT*5 + "var newRow = new ${rowModelName}(); self.data.${model.name}.push(newRow); newRow.isNew = true; self.editplantingRow(newRow);"
+            insertDefaultModel = INDENT*5 + "var newRow = new ${rowModelName}(); self.data.${model.name}.push(newRow); newRow.isNew = true;"
+            if (editableRows) {
+                insertDefaultModel += " self.edit${model.name}Row(newRow);"
+            };
         }
 
         out << """
