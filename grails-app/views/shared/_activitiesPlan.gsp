@@ -80,16 +80,13 @@
                         </g:if>
                         <td>
                             <span data-bind="template:$root.canUpdateStatus() ? 'updateStatusTmpl' : 'viewStatusTmpl'"></span>
-                            <!-- ko with: deferReason -->
-                            <span data-bind="visible: $parent.progress()=='deferred' || $parent.progress()=='cancelled'"><i class="icon-list-alt" data-bind="popover: {title: 'Reason for deferral', content: notes, placement: 'left'}"></i></span>
-                            <!-- /ko -->
 
                             <!-- Modal for getting reasons for status change -->
                             <div id="activityStatusReason" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
-                                data-bind="showModal:modal.displayReasonModal(),with:deferReason">
+                                data-bind="showModal:displayReasonModal(),with:deferReason">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
-                                            data-bind="click:$parent.modal.cancelReasonModal">×</button>
+                                            data-bind="click:$parent.displayReasonModal.cancelReasonModal">×</button>
                                     <h3 id="myModalLabel">Reason for deferring or cancelling an activity</h3>
                                 </div>
                                 <div class="modal-body">
@@ -99,8 +96,8 @@
                                     <textarea data-bind="value:notes,hasFocus:true" rows=4 cols="80"></textarea>
                                 </div>
                                 <div class="modal-footer">
-                                    <button class="btn" data-bind="click: $parent.modal.cancelReasonModal" data-dismiss="modal" aria-hidden="true">Discard status change</button>
-                                    <button class="btn btn-primary" data-bind="click:$parent.modal.saveReasonDocument">Save reason</button>
+                                    <button class="btn" data-bind="click: $parent.displayReasonModal.cancelReasonModal" data-dismiss="modal" aria-hidden="true">Discard status change</button>
+                                    <button class="btn btn-primary" data-bind="click:$parent.displayReasonModal.saveReasonDocument">Save reason</button>
                                 </div>
                             </div>
 
@@ -152,6 +149,13 @@
         </li>
     </ul></div>
     <span class="save-indicator" data-bind="visible:isSaving"><r:img dir="images" file="ajax-saver.gif"/> saving</span>
+    <!-- ko with: deferReason -->
+    <span data-bind="visible: $parent.progress()=='deferred' || $parent.progress()=='cancelled'">
+        <i class="icon-list-alt"
+           data-bind="popover: {title: 'Reason for deferral<br><small>(Click icon to edit reason.)</small>', content: notes, placement: 'left'}, click:$parent.displayReasonModal.editReason">
+        </i>
+    </span>
+    <!-- /ko -->
 </script>
 
 <script id="viewStatusTmpl" type="text/html">
@@ -160,6 +164,13 @@
             style="line-height:16px;min-width:75px;text-align:left;cursor:default;color:white">
         <span data-bind="text: progress"></span>
     </button>
+    <!-- ko with: deferReason -->
+    <span data-bind="visible: $parent.progress()=='deferred' || $parent.progress()=='cancelled'">
+        <i class="icon-list-alt"
+           data-bind="popover: {title: 'Reason for deferral', content: notes, placement: 'left'}">
+        </i>
+    </span>
+    <!-- /ko -->
 </script>
 
 <script id="planningTmpl" type="text/html">
@@ -206,7 +217,6 @@
         </span>
     </span>
 </script>
-
 <!-- /ko -->
 
 <!-- ko stopBinding: true -->
@@ -368,7 +378,7 @@
 
     $(window).load(function () {
 
-        var PlannedActivity = function (act, isFirst) {
+        var PlannedActivity = function (act, isFirst, project) {
             var self = this;
             this.activityId = act.activityId;
             this.isFirst = isFirst ? this : undefined;
@@ -386,37 +396,49 @@
 
             this.deferReason = ko.observable(undefined); // a reason document or undefined
             // the following handles the modal dialog for deferral/cancel reasons
-            this.modal = {};
-            this.modal.displayReasonModal = ko.observable(false);
-            this.modal.needsToBeSaved = true; // prevents unnecessary saves when a change to progress is reverted
-            this.modal.closeReasonModal = function() {
-                self.modal.displayReasonModal(false);
-                self.modal.needsToBeSaved = true;
+            this.displayReasonModal = ko.observable(false);
+            this.displayReasonModal.trigger = ko.observable();
+            this.displayReasonModal.needsToBeSaved = true; // prevents unnecessary saves when a change to progress is reverted
+            this.displayReasonModal.closeReasonModal = function() {
+                self.displayReasonModal(false);
+                self.displayReasonModal.needsToBeSaved = true;
             };
-            this.modal.cancelReasonModal = function() {
-                self.modal.needsToBeSaved = false;
-                self.progress.revert();
-                self.modal.closeReasonModal();
+            this.displayReasonModal.cancelReasonModal = function() {
+                if (self.displayReasonModal.trigger() === 'progress_change') {
+                    self.displayReasonModal.needsToBeSaved = false;
+                    self.progress.revert();
+                }
+                self.displayReasonModal.closeReasonModal();
             };
-            this.modal.saveReasonDocument = function () {
-                self.saveProgress({progress: self.progress(), activityId: self.activityId});
+            this.displayReasonModal.saveReasonDocument = function () {
+                if (self.displayReasonModal.trigger() === 'progress_change') {
+                    self.saveProgress({progress: self.progress(), activityId: self.activityId});
+                }
                 self.deferReason().recordOnlySave("${createLink(controller:'proxy', action:'documentUpdate')}/" + (self.deferReason().documentId ? self.deferReason().documentId : ''));
-                self.modal.closeReasonModal();
+                self.displayReasonModal.closeReasonModal();
+            };
+            this.displayReasonModal.editReason = function () {
+                // popup dialog for reason
+                self.displayReasonModal.trigger('edit');
+                self.displayReasonModal(true);
             };
             // save progress updates - with a reason document in some cases
             this.progress.subscribe(function (newValue) {
                 if (!self.progress.changed()) { return; } // Cancel if value hasn't changed
-                if (!self.modal.needsToBeSaved) { return; } // Cancel if value hasn't changed
+                if (!self.displayReasonModal.needsToBeSaved) { return; } // Cancel if value hasn't changed
 
                 if (newValue === 'deferred' || newValue === 'cancelled') {
                     // create a reason document if one doesn't exist
                     // NOTE that 'deferReason' role is used in both cases, ie refers to cancel reason as well
                     if (self.deferReason() === undefined) {
-                        self.deferReason(new DocumentViewModel({role:'deferReason'}, {key:'activityId', value:act.activityId}));
+                        self.deferReason(new DocumentViewModel(
+                            {role:'deferReason', name:'Deferred/canceled reason document'},
+                            {activityId:act.activityId/*, projectId:project.projectId*/}));
                     }
                     // popup dialog for reason
-                    self.modal.displayReasonModal(true);
-                } else if (self.modal.needsToBeSaved) {
+                    self.displayReasonModal.trigger('progress_change');
+                    self.displayReasonModal(true);
+                } else if (self.displayReasonModal.needsToBeSaved) {
                     self.saveProgress({progress: newValue, activityId: self.activityId});
                 }
             });
@@ -464,16 +486,16 @@
                 return document.role === 'deferReason';
             });
             if (reasonDocs.length > 0) {
-                self.deferReason(new DocumentViewModel(reasonDocs[0], {key:'activityId', value:act.activityId}));
+                self.deferReason(new DocumentViewModel(reasonDocs[0], {activityId:act.activityId/*, projectId:project.projectId*/}));
             }
         };
 
-        var PlanStage = function (stageLabel, activities, isCurrentStage, timeline) {
+        var PlanStage = function (stageLabel, activities, isCurrentStage, project) {
             // Note that the two $ transforms used to extract activities are not combined because we
             // want the index of the PlannedActivity to be relative to the filtered set of activities.
             var self = this,
                 activitiesInThisStage = $.grep(activities, function (act, index) {
-                    return findStageFromDate(timeline, act.plannedEndDate) === stageLabel;
+                    return findStageFromDate(project.timeline, act.plannedEndDate) === stageLabel;
                 });
             this.label = stageLabel;
             this.isCurrentStage = isCurrentStage;
@@ -483,7 +505,7 @@
             });
             this.activities = $.map(activitiesInThisStage, function (act, index) {
                 act.projectStage = stageLabel;
-                return new PlannedActivity(act, index === 0);
+                return new PlannedActivity(act, index === 0, project);
             });
             this.readyForApproval = ko.computed(function() {
                 return $.grep(self.activities, function (act, i) {
@@ -545,7 +567,7 @@
 
                 // group activities by stage
                 $.each(project.timeline, function (index, stage) {
-                    stages.push(new PlanStage(stage.name, activities, stage.name === self.currentProjectStage, project.timeline));
+                    stages.push(new PlanStage(stage.name, activities, stage.name === self.currentProjectStage, project));
                 });
 
                 return stages;

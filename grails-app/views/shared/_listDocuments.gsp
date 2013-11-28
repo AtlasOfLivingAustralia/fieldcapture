@@ -92,6 +92,7 @@
     });
 
     function iconnameFromFilename(filename) {
+        if (filename === undefined) { return "_blank.png"; }
         var ext = filename.split('.').pop(),
             types = ['aac','ai','aiff','avi','bmp','c','cpp','css','dat','dmg','doc','dotx','dwg','dxf',
             'eps','exe','flv','gif','h','hpp','html','ics','iso','java','jpg','key','mid','mp3','mp4',
