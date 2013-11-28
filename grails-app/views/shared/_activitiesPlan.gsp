@@ -124,8 +124,8 @@
             <tr>
                 <td><span data-bind="text:outputLabel"></span> - <span data-bind="text:scoreLabel"></span></td>
                 <td>
-                    <input type="text" class="input-small" data-bind="visible:$root.planStatus()==='not approved',value:target" data-validation-engine="validate[required,custom[number]]"/>
-                    <span data-bind="visible:$root.planStatus()!=='not approved',text:target"></span>
+                    <input type="text" class="input-small" data-bind="visible:$root.canEditOutputTargets(),value:target" data-validation-engine="validate[required,custom[number]]"/>
+                    <span data-bind="visible:!$root.canEditOutputTargets(),text:target"></span>
                     <span data-bind="text:units"></span>
                     <span class="save-indicator" data-bind="visible:isSaving"><r:img dir="images" file="ajax-saver.gif"/> saving</span>
                 </td>
@@ -534,6 +534,9 @@
             this.canUpdateStatus = ko.computed(function () {
                 return self.planStatus() === 'approved';
             });
+            this.canEditOutputTargets = ko.computed(function() {
+                return self.planStatus() === 'not approved';
+            });
             //this.currentDate = ko.observable("2014-02-03T00:00:00Z"); // mechanism for testing behaviour at different dates
             this.currentDate = ko.observable(new Date().toISOStringNoMillis()); // mechanism for testing behaviour at different dates
             this.currentProjectStage = findStageFromDate(project.timeline,this.currentDate());
@@ -725,40 +728,44 @@
             };
             self.outputTargets = ko.observableArray([]);
             self.saveOutputTargets = function() {
-                if ($('#outputTargetsContainer').validationEngine('validate')) {
-                    var project = {projectId:'${project.projectId}', outputTargets:ko.toJS(self.outputTargets)};
-                    var json = JSON.stringify(project);
-                    var id = "${'/' + project.projectId}";
-                    $.ajax({
-                        url: "${createLink(action: 'ajaxUpdate')}" + id,
-                        type: 'POST',
-                        data: json,
-                        contentType: 'application/json',
-                        success: function (data) {
-                            if (data.error) {
-                                alert(data.detail + ' \n' + data.error);
+                if (self.canEditOutputTargets()) {
+                    if ($('#outputTargetsContainer').validationEngine('validate')) {
+                        var project = {projectId:'${project.projectId}', outputTargets:ko.toJS(self.outputTargets)};
+                        var json = JSON.stringify(project);
+                        var id = "${'/' + project.projectId}";
+                        $.ajax({
+                            url: "${createLink(action: 'ajaxUpdate')}" + id,
+                            type: 'POST',
+                            data: json,
+                            contentType: 'application/json',
+                            success: function (data) {
+                                if (data.error) {
+                                    alert(data.detail + ' \n' + data.error);
+                                }
+                            },
+                            error: function (data) {
+                                var status = data.status;
+                                alert('An unhandled error occurred: ' + data.status);
+                            },
+                            complete: function(data) {
+                                $.each(self.outputTargets(), function(i, target) {
+                                    // The timeout is here to ensure the save indicator is visible long enough for the
+                                    // user to notice.
+                                    setTimeout(function(){target.isSaving(false);}, 1000);
+                                });
                             }
-                        },
-                        error: function (data) {
-                            var status = data.status;
-                            alert('An unhandled error occurred: ' + data.status);
-                        },
-                        complete: function(data) {
-                            $.each(self.outputTargets(), function(i, target) {
-                                // The timeout is here to ensure the save indicator is visible long enough for the
-                                // user to notice.
-                                setTimeout(function(){target.isSaving(false);}, 1000);
-                            });
-                        }
-                    });
+                        });
+                    }
                 }
             };
             self.addOutputTarget = function(target) {
                 var newOutputTarget = outputTarget(target);
                 self.outputTargets.push(newOutputTarget);
                 newOutputTarget.target.subscribe(function() {
-                    newOutputTarget.isSaving(true);
-                    self.saveOutputTargets();
+                    if (self.canEditOutputTargets()) {
+                        newOutputTarget.isSaving(true);
+                        self.saveOutputTargets();
+                    }
                 });
             };
             self.activityScores = ${activityScores as grails.converters.JSON};
@@ -783,8 +790,16 @@
 
                         $.each(self.activityScores[activity.type], function(j, score) {
                             if (!self.hasOutputTarget(score)) {
+
                                 if (score.aggregationType === 'SUM' || score.aggregationType === 'AVERAGE') {
-                                    self.addOutputTarget({units: score.units, outputLabel:score.outputName, scoreName:score.name, scoreLabel:score.label, value:0});
+                                    var targetValue = 0;
+                                    $.each(outputTargets, function(j, existingTarget) {
+                                        if (existingTarget.scoreName === score.name && existingTarget.outputLabel === score.outputName) {
+                                            targetValue = existingTarget.target;
+                                            return false; // end the loop
+                                        }
+                                    });
+                                    self.addOutputTarget({units: score.units, outputLabel:score.outputName, scoreName:score.name, scoreLabel:score.label, value:targetValue});
                                 }
                             }
                         });
@@ -792,15 +807,6 @@
 
                 });
 
-                // Populate the target score for each target that we already have defined.
-                $.each(self.outputTargets(), function(i, outputTarget) {
-                    $.each(outputTargets, function(j, existingTarget) {
-                        if (existingTarget.scoreName === outputTarget.scoreName) {
-                            outputTarget.target(existingTarget.target);
-                        }
-                    });
-
-                });
             };
             self.loadOutputTargets();
 
