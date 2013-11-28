@@ -501,6 +501,9 @@
             this.isCurrentStage = isCurrentStage;
             // sort activities by planned start date
             activitiesInThisStage.sort(function (a,b) {
+                if (a.plannedStartDate === b.plannedStartDate) {
+                    return a.description > b.description;
+                }
                 return a.plannedStartDate > b.plannedStartDate;
             });
             this.activities = $.map(activitiesInThisStage, function (act, index) {
