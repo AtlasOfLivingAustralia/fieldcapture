@@ -395,7 +395,7 @@ class ImportService {
 
     def importPlan(grantId, planDetails) {
 
-        def project = [projectId:[type:'grantId', value:grantId]]
+        def project = [projectId:[type:'grantId', id:grantId]]
         project.activities = planDetails.activities
         project.outputTargets = planDetails.outputs
         project.timeline = planDetails.timeline
