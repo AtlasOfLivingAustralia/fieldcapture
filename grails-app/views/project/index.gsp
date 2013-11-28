@@ -490,7 +490,10 @@
                 // documents
                 self.documents = ko.observableArray();
                 self.addDocument = function(doc) {
-                    self.documents.push(new DocumentViewModel(doc));
+                    // check permissions
+                    if (isUserEditor || doc.role == "information" || doc.role == "primary") {
+                        self.documents.push(new DocumentViewModel(doc));
+                    }
                 };
                 self.attachDocument = function() {
                     var url = '${g.createLink(controller:"proxy", action:"documentUpdate")}';
