@@ -124,7 +124,7 @@
                     <input type="text" class="input-small" data-bind="visible:$root.canEditOutputTargets(),value:target" data-validation-engine="validate[required,custom[number]]"/>
                     <span data-bind="visible:!$root.canEditOutputTargets(),text:target"></span>
                     <span data-bind="text:units"></span>
-                    <span class="save-indicator" data-bind="visible:isSaving"><r:img dir="images" file="ajax-saver.gif"/> saving</span>
+                    <span class="save-indicator" data-bind="visible:isSaving"><r:img dir="images" file="ajax-saver.gif" alt="saving icon"/> saving</span>
                 </td>
 
             </tr>
@@ -148,7 +148,7 @@
             <a href="#" data-bind="click: $parent.progress"><span data-bind="text: $data"></span></a>
         </li>
     </ul></div>
-    <span class="save-indicator" data-bind="visible:isSaving"><r:img dir="images" file="ajax-saver.gif"/> saving</span>
+    <span class="save-indicator" data-bind="visible:isSaving"><r:img dir="images" file="ajax-saver.gif" alt="saving icon"/> saving</span>
     <!-- ko with: deferReason -->
     <span data-bind="visible: $parent.progress()=='deferred' || $parent.progress()=='cancelled'">
         <i class="icon-list-alt"

@@ -69,7 +69,7 @@
             <div class="control-group">
                 <div class="controls">
                     <button id="viewUserPermissionsButton" class="btn btn-primary">View</button>
-                    <g:img dir="images" file="spinner.gif" id="spinner2" class="hide spinner"/>
+                    <g:img dir="images" file="spinner.gif" id="spinner2" class="hide spinner" alt="spinner icon"/>
                 </div>
             </div>
         </form>

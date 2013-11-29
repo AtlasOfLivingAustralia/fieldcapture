@@ -141,7 +141,7 @@
             <a href="#" data-bind="click: $parent.progress"><span data-bind="text: $data"></span></a>
         </li>
     </ul></div>
-    <span data-bind="visible:isSaving"><r:img dir="images" file="ajax-saver.gif"/> saving</span>
+    <span data-bind="visible:isSaving"><r:img dir="images" file="ajax-saver.gif" alt="saving icon"/> saving</span>
 </script>
 
 <script id="viewStatusTmpl" type="text/html">
