@@ -509,12 +509,16 @@ class ModelJSTagLib {
                 self.selected${model.name}Row(row);
                 row.isSelected(true);
             };
-            self.accept${model.name} = function (row) {
+            self.accept${model.name} = function (row, event) {
+console.log(event);
+console.log(\$(event.currentTarget).closest('.validationEngineContainer')[0]);
+if(\$(event.currentTarget).closest('.validationEngineContainer').validationEngine('validate')) {
                 // todo: validation
                 row.commit();
                 self.selected${model.name}Row(null);
                 row.isSelected(false);
                 row.isNew = false;
+                };
             };
             self.cancel${model.name} = function (row) {
                 if (row.isNew) {
@@ -524,6 +528,12 @@ class ModelJSTagLib {
                     self.selected${model.name}Row(null);
                     row.isSelected(false);
                 }
+            };
+            self.attachValidation = function(row) {
+                \$(row).validationEngine('attach', {scroll:false});
+            };
+            self.${model.name}Editing = function() {
+                return self.selected${model.name}Row() != null;
             };
 """
             }

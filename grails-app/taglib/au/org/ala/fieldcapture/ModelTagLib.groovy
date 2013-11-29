@@ -522,7 +522,11 @@ class ModelTagLib {
         // body elements for main rows
         if (attrs.edit) {
             def templateName = table.editableRows ? "${table.source}templateToUse" : "'${table.source}viewTmpl'"
-            out << INDENT*4 << "<tbody data-bind=\"template:{name:${templateName}, foreach: data.${table.source}}\"></tbody>\n"
+            out << INDENT*4 << "<tbody data-bind=\"template:{name:${templateName}, foreach: data.${table.source}"
+            if (table.editableRows) {
+                out << ", afterRender:attachValidation"
+            }
+            out << "}\"></tbody>\n"
             if (table.editableRows) {
                 // write the view template
                 tableViewTemplate(out, attrs, table, false)
@@ -576,8 +580,8 @@ class ModelTagLib {
         }
         if (model.editableRows) {
                 out << INDENT*5 << "<td>\n"
-                out << INDENT*6 << "<a class='btn btn-mini' data-bind='click:\$root.edit${model.source}Row' href='#' title='edit'><i class='icon-edit'></i> Edit</a>\n"
-                out << INDENT*6 << "<a class='btn btn-mini' data-bind='click:\$root.remove${model.source}Row' href='#' title='remove'><i class='icon-trash'></i> Remove</a>\n"
+                out << INDENT*6 << "<button class='btn btn-mini' data-bind='click:\$root.edit${model.source}Row, enable:!\$root.${model.source}Editing()' title='edit'><i class='icon-edit'></i> Edit</button>\n"
+                out << INDENT*6 << "<button class='btn btn-mini' data-bind='click:\$root.remove${model.source}Row, enable:!\$root.${model.source}Editing()' title='remove'><i class='icon-trash'></i> Remove</button>\n"
                 out << INDENT*5 << "</td>\n"
         } else {
             if (edit) {
@@ -588,7 +592,7 @@ class ModelTagLib {
     }
 
     def tableEditTemplate(out, attrs, model) {
-        out << INDENT*4 << "<script id=\"${model.source}editTmpl\" type=\"text/html\"><tr>\n"
+        out << INDENT*4 << "<script id=\"${model.source}editTmpl\" type=\"text/html\"><tr class=\"validationEngineContainer\">\n"
         model.columns.eachWithIndex { col, i ->
             def edit = !col['readOnly'];
             // mechanism for additional data binding clauses
@@ -638,7 +642,11 @@ class ModelTagLib {
         }
         if (attrs.edit && model.userAddedRows) {
             out << INDENT*4 << """<tr><td colspan="${colCount}" style="text-align:left;">
-                        <button type="button" class="btn btn-small" data-bind="click:add${model.source}Row">
+                        <button type="button" class="btn btn-small" data-bind="click:add${model.source}Row"""
+            if (model.editableRows) {
+                out << ", enable:!\$root.${model.source}Editing()"
+            }
+            out << """">
                         <i class="icon-plus"></i> Add a row</button>
                     </td></tr>\n"""
         }
