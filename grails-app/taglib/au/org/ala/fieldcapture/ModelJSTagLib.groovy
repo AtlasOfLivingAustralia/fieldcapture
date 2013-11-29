@@ -161,6 +161,13 @@ class ModelJSTagLib {
         else if (model.computed.operation == 'difference') {
             out << INDENT*4 << "return ${dependantContext}.${model.computed.dependents[0]}() - ${dependantContext}.${model.computed.dependents[1]}();\n"
         }
+        else if (model.computed.operation == 'sum') {
+            out << "var total = 0;"
+            for(int i=0; i < model.computed.dependents.source.size(); i++) {
+                out << "total += Number(${dependantContext}.${model.computed.dependents.source[i]}());\n"
+            }
+            out << INDENT*4 << "return total;"
+        }
         else if (model.computed.operation == "lookup") {
             computedByNumberRangeLookupFunction out, attrs, model, "self.${model.computed.dependents[0]}"
         }
@@ -455,9 +462,9 @@ class ModelJSTagLib {
         // If there are no default rows, insert a single blank row and make it available for editing.
         if (insertDefaultModel.isEmpty()) {
             insertDefaultModel = INDENT*5 + "var newRow = new ${rowModelName}(); self.data.${model.name}.push(newRow); newRow.isNew = true;"
-            if (editableRows) {
+            if (attrs.edit) {
                 insertDefaultModel += " self.edit${model.name}Row(newRow);"
-            };
+            }
         }
 
         out << """
