@@ -13,18 +13,21 @@ var SpeciesViewModel = function(data, parentRow) {
     self.transients.availableLists = speciesLists;
     self.transients.focused = ko.observable();
     self.transients.editing = ko.observable();
+    self.transients.textFieldValue = ko.observable();
 
     self.speciesSelected = function(event, data) {
         if (!data.listId) {
             data.listId = self.list();
         }
+
         self.loadData(data);
         self.transients.editing(!data.name);
-
     };
-    self.edit = function(event, data) {
-        self.transients.editing(true);
-        self.transients.focused(true);
+
+    self.textFieldChanged = function(newValue) {
+        if (newValue != self.name()) {
+            self.transients.editing(true);
+        }
     };
 
     self.listName = function(listId) {
@@ -76,6 +79,7 @@ var SpeciesViewModel = function(data, parentRow) {
         self['name'](orBlank(data.name));
         self['listId'](orBlank(data.listId));
 
+        self.transients.textFieldValue(self.name());
         if (self.guid()) {
             var bieUrl = 'http://bie.ala.org.au/';
             // lookup taxon details in bie
@@ -99,9 +103,7 @@ var SpeciesViewModel = function(data, parentRow) {
         else {
             self.transients.speciesInformation("No profile information is available.");
         }
-        if (!self.name()) {
-            self.transients.editing(true);
-        }
+
     };
     self.list = ko.computed(function() {
         if (self.transients.availableLists.length) {
@@ -117,25 +119,10 @@ var SpeciesViewModel = function(data, parentRow) {
     self.transients.focused.subscribe(function(value) {
         if (!value && self.name()) {
             self.transients.editing(false);
+            self.transients.textFieldValue(self.name());
+
         }
     });
-
-    // The editing behaviour of a species data type needs to be coordinated with the table row editing
-    // if that row supports single row editing.  We check for this by the existence of the isSelected
-    // field (note that it is a knockout observable so we are checking for it's definition, not it's value)
-    if (parentRow && parentRow.isSelected) {
-
-        parentRow.isSelected.subscribe(function(value) {
-            if (value) {
-                self.edit();
-            }
-            else {
-                self.transients.editing(false);
-            }
-        });
-
-    }
-
 
 
 };

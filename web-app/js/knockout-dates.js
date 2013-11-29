@@ -626,10 +626,14 @@ ko.bindingHandlers.autocomplete = {
         var param = params();
         var url = ko.utils.unwrapObservable(param.url);
         var list = ko.utils.unwrapObservable(param.listId);
-
+        var valueCallback = ko.utils.unwrapObservable(param.valueChangeCallback)
         var options = {};
         options.source = function(request, response) {
             $(element).addClass("ac_loading");
+
+            if (valueCallback !== undefined) {
+                valueCallback(request.term);
+            }
             var data = {q:request.term};
             if (list) {
                 $.extend(data, {druid: list});
@@ -667,6 +671,9 @@ ko.bindingHandlers.autocomplete = {
                 return result.appendTo(ul);
 
             };
+        }
+        else {
+            $(element).autocomplete(options);
         }
     }
 };

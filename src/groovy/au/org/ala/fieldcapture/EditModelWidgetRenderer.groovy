@@ -83,9 +83,11 @@ public class EditModelWidgetRenderer implements ModelWidgetRenderer {
     void renderAutocomplete(WidgetRenderContext context) {
         def newAttrs = new Databindings()
         def link = context.g.createLink(controller: 'search', action:'species')
+
+        newAttrs.add "value", "transients.textFieldValue"
         newAttrs.add "hasfocus", "transients.focused"
-        newAttrs.add "autocomplete", "{url:'${link}', render: renderItem, listId: list, result:speciesSelected}"
-        newAttrs.add "visible", "transients.editing()"
+        newAttrs.add "autocomplete", "{url:'${link}', render: renderItem, listId: list, result:speciesSelected, valueChangeCallback:textFieldChanged}"
+
         context.writer << context.g.render(template: '/output/speciesTemplate', model:[source: context.source, databindAttrs: newAttrs.toString()])
     }
 
