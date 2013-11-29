@@ -206,33 +206,7 @@
 
             <div class="tab-pane" id="dashboard">
                 <!-- DASHBOARD -->
-                <gvisualization:apiImport/>
-                <h2 style="margin-top:0;">Totals across all activities under this project</h2>
-                <div class="row-fluid">
-                    <div class="span4">
-                    <g:if test="${metrics}">
-                        <g:set var="count" value="${metrics.size()}"/>
-
-                        <g:each in="${metrics?.entrySet()}" var="metric" status="i">
-
-                            %{--This is to stack the output metrics in three columns, the ceil biases uneven amounts to the left--}%
-                            <g:if test="${i == Math.ceil(count/3) || i == Math.ceil(count/3*2)}">
-                                </div>
-                                <div class="span4">
-                            </g:if>
-                            <div class="well">
-                                <h3>${metric.key}</h3>
-                                <g:each in="${metric.value}" var="score">
-                                    <fc:renderScore score="${score}"></fc:renderScore>
-                                </g:each>
-                            </div>
-                        </g:each>
-                    </g:if>
-                    <g:else>
-                        No activities or output targets have been defined for this project.
-                    </g:else>
-                    </div>
-                </div>
+                <g:render template="dashboard"/>
             </div>
         </g:if>
         <g:if test="${user?.isAdmin}">
