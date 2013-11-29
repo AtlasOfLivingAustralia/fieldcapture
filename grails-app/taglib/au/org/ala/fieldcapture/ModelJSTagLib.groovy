@@ -161,13 +161,6 @@ class ModelJSTagLib {
         else if (model.computed.operation == 'difference') {
             out << INDENT*4 << "return ${dependantContext}.${model.computed.dependents[0]}() - ${dependantContext}.${model.computed.dependents[1]}();\n"
         }
-        else if (model.computed.operation == 'sum') {
-            out << "var total = 0;"
-            for(int i=0; i < model.computed.dependents.source.size(); i++) {
-                out << "total += Number(${dependantContext}.${model.computed.dependents.source[i]}());\n"
-            }
-            out << INDENT*4 << "return total;"
-        }
         else if (model.computed.operation == "lookup") {
             computedByNumberRangeLookupFunction out, attrs, model, "self.${model.computed.dependents[0]}"
         }
@@ -191,7 +184,17 @@ class ModelJSTagLib {
                 out << INDENT*4 << "}\n"
                 out << INDENT*4 << "return count > 0 ? total/count : 0;\n"
             }
-
+        }
+        else if (model.computed.operation == 'sum') {
+            out << "var total = 0;"
+            if (model.computed.dependents.source.size() == 1) {
+                out << "total += Number(${dependantContext}.${model.computed.dependents.source[0]}());\n"
+            } else {
+                for(int i=0; i < model.computed.dependents.source.size(); i++) {
+                    out << "total += Number(${dependantContext}.${model.computed.dependents.source[i]}());\n"
+                }
+            }
+            out << INDENT*4 << "return total;"
         }
         else if (model.computed.dependents.fromMatrix) {
             out << INDENT*4 << "var total = 0;\n"
