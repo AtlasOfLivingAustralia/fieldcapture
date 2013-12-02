@@ -86,7 +86,7 @@
                         <h4>${fName}</h4>
                         <ul class="facetValues">
                             <g:each var="t" in="${f.terms}" status="i">
-                                <g:if test="${i < max}">
+                                <g:if test="${i < max && t.term}">
                                     <li><a href="${fqLink}&fq=${fn.encodeAsURL()}:${t.term}"><g:message
                                             code="label.${t.term}" default="${t.term}"/></a> (${t.count})
                                     </li>
@@ -103,9 +103,11 @@
                                 <div class="modal-body">
                                     <ul class="facetValues">
                                         <g:each var="t" in="${f.terms}">
-                                            <li><a href="${fqLink}&fq=${fn.encodeAsURL()}:${t.term}"><g:message
-                                                    code="label.${t.term}" default="${t.term}"/></a> (${t.count})
-                                            </li>
+                                            <g:if test="${t.term}">
+                                                <li><a href="${fqLink}&fq=${fn.encodeAsURL()}:${t.term}"><g:message
+                                                        code="label.${t.term}" default="${t.term}"/></a> (${t.count})
+                                                </li>
+                                            </g:if>
                                         </g:each>
                                     </ul>
                                 </div>
@@ -124,7 +126,7 @@
                         <tr>
                             <th class="<fc:getSortCssClasses params="${params}" field="class"/>">
                                 <g:set var="baseParams"><fc:formatParams params="${params}" requiredParams="query,fq,max" excludeParam="sort"/></g:set>
-                                <a href="${baseParams}&sort=class&order=${params.order=="DESC"?"ASC":"DESC"}" title="Sort by page type">Page</a>
+                                <a href="${baseParams}&sort=className&order=${params.order=="DESC"?"ASC":"DESC"}" title="Sort by page type">Page</a>
                             </th>
                             <th class="<fc:getSortCssClasses params="${params}" field="nameSort"/>">
                                 <g:set var="baseParams"><fc:formatParams params="${params}" requiredParams="query,fq,max" excludeParam="sort"/></g:set>
@@ -141,15 +143,15 @@
                             <g:set var="hit" value="${r._source}"/>
                             <g:set var="highlights" value="${r.highlight?._all}"/>
                             <tr>
-                                <td><g:message code="label.${hit.class}" default="${hit.class}"/></td>
+                                <td><g:message code="label.${hit.className}" default="${hit.className}"/></td>
                                 <td>
-                                    <g:if test="${hit.class=~/Project/}">
+                                    <g:if test="${hit.className=~/Project/}">
                                         <g:link controller="project" id="${hit.projectId}">${hit.name}</g:link>
                                     </g:if>
-                                    <g:if test="${hit.class=~/Site/}">
+                                    <g:if test="${hit.className=~/Site/}">
                                         <g:link controller="site" id="${hit.siteId}">${hit.name}</g:link>
                                     </g:if>
-                                    <g:elseif test="${hit.class=~/Activity/}">
+                                    <g:elseif test="${hit.className=~/Activity/}">
                                         <g:link controller="activity" id="${hit.activityId}">${hit.name?:hit.type}</g:link>
                                     </g:elseif>
                                     <g:else>
