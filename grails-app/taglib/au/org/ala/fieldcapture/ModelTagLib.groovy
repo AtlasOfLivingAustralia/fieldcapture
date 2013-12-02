@@ -153,10 +153,8 @@ class ModelTagLib {
         if (model.preLabel) {
             labelAttributes.addClass 'preLabel'
 
-            if (validate instanceof GString) {
-                if (validate.values[0].contains("required")) {
-                    labelAttributes.addClass 'required'
-                }
+            if (isRequired(attrs, model, editable)) {
+                labelAttributes.addClass 'required'
             }
 
             result = "<span ${labelAttributes.toString()}><label>${labelText(attrs, model, model.preLabel)}</label></span>" + result
@@ -237,20 +235,35 @@ class ModelTagLib {
     }
 
     // -------- validation declarations --------------------
-    def validationAttribute(attrs, model, edit) {
+    def getValidationCriteria(attrs, model, edit) {
         //log.debug "checking validation for ${model}, edit = ${edit}"
-        if (!edit) { return ""}  // don't bother if the user can't change it
+        if (!edit) { return []}  // don't bother if the user can't change it
         def validationCriteria = model.validate
         if (!validationCriteria) {
             // Try the data model.
             validationCriteria = getAttribute(attrs.model.dataModel, model.source)?.validate
             if (!validationCriteria) {
-                return ""
+                return []
             }
         } // no criteria
         // collect the validation criteria
         def criteria = validationCriteria.tokenize(',')
         criteria = criteria.collect { it.trim() }
+
+        return criteria
+    }
+
+    def isRequired(attrs, model, edit) {
+        def criteria = getValidationCriteria(attrs, model, edit)
+        return criteria.contains("required")
+    }
+
+    def validationAttribute(attrs, model, edit) {
+        def criteria = getValidationCriteria(attrs, model, edit)
+        if (criteria.isEmpty()) {
+            return ""
+        }
+
         def values = []
         criteria.each {
             switch (it) {
@@ -332,7 +345,9 @@ class ModelTagLib {
                     labelAttributes.addClass 'span4'
                     elementAttributes.addClass 'span8'
                 } else {
-                    elementAttributes.addClass 'span12'
+                    if (it.type != "number") {
+                        elementAttributes.addClass 'span12'
+                    }
                 }
 
                 at.addSpan("span${span}")
@@ -478,9 +493,7 @@ class ModelTagLib {
 
         out << INDENT*4 << "<thead><tr>"
         table.columns.eachWithIndex { col, i ->
-            def validate = validationAttribute(attrs, col, attrs.edit)
-
-            if (validate instanceof GString && validate.values[0].contains("required")) {
+            if (isRequired(attrs, col, attrs.edit)) {
                 out << "<th class=\"required\">" + labelText(attrs, col, col.title) + "</th>"
             } else {
                 out << "<th>" + labelText(attrs, col, col.title) + "</th>"

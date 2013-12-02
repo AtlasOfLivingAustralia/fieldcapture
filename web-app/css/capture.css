@@ -81,7 +81,7 @@
     font-weight: bold;
 }
 
-.required:after {
+.required label:after {
     content: "*";
     font-weight:bold;
     font-size:2em;
