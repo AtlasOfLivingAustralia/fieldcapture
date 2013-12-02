@@ -18,16 +18,8 @@
 <body>
     <div id="wrapper" class="container-fluid">
         <div class="row-fluid">
-            <div class="span12" id="header">
+            <div class="span12" id="">
                 <h1 class="pull-left">About the website</h1>
-                <form action="search" class="form-search pull-right">
-                    <div class="control-group">
-                        <div class="controls">
-                            <g:textField class="search-query input-medium" name="search"/>
-                            <button type="submit" class="btn">Search</button>
-                        </div>
-                    </div>
-                </form>
             </div>
         </div>
         <div class="well" id="aboutDescription" style="margin-top:20px;">
