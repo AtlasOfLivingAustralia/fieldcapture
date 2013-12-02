@@ -345,7 +345,7 @@ class ImportService {
     /**
      * Validates and imports project plan data as supplied by DOE.
      */
-    def importPlansByCsv(InputStream csv,  importWithErrors = false) {
+    def importPlansByCsv(InputStream csv,  overwriteActivities = false) {
 
         cacheService.clear(PROJECTS_CACHE_KEY)
 
@@ -369,7 +369,7 @@ class ImportService {
 
             if (!grantIds.contains(grantId)) {
 
-                def results = parsePlan(grantId, csvLine, stageOffsets)
+                def results = parsePlan(grantId, csvLine, stageOffsets, overwriteActivities)
                 if (!results.error && !results.activities) {
                     results = [error:"No activities defined for project with grant id = ${grantId}"]
                 }
@@ -423,7 +423,7 @@ class ImportService {
 
     }
 
-    def parsePlan(grantId, String[] csvLine, stageOffsets) {
+    def parsePlan(grantId, String[] csvLine, stageOffsets, overwriteActivities) {
 
         // Column headers: (as this is more or less a once off load..)
 
@@ -437,7 +437,12 @@ class ImportService {
             }
             def existingActivities = activityService.activitiesForProject(project.projectId)
             if (existingActivities) {
-                return [error:"Project with grant id = ${grantId} already has activities defined.  Not importing."]
+                if (!overwriteActivities) {
+                    return [error:"Project with grant id = ${grantId} already has activities defined.  Not importing."]
+                }
+                else {
+                    existingActivities.each { activityService.delete(it.activityId) }
+                }
             }
 
             int stageNum = 0
@@ -602,12 +607,19 @@ class ImportService {
                 match = 'Site Assessment - Biodiversity Fund (DoE)'
             }
             else if (activityType.equalsIgnoreCase('Infrastructure Works')) {
-                // To be created in our system.
+                match = 'Infrastructure Establishment'
             }
             else if (activityType.equalsIgnoreCase('Site Assessment - Bushland Condition Monitoring')) {
                 match = 'Site Assessment - Bushland Condition Monitoring (SA)'
             }
-
+            else if (activityType.equalsIgnoreCase('Site Preperation')) {
+                match = 'Site Preparation'
+            }
+            else if (activityType.equalsIgnoreCase('Site Assessment') ||
+                     activityType.equalsIgnoreCase('Site Assesment')  ||
+                     activityType.equalsIgnoreCase('Site Assessmnet')) {
+                match = 'Site Assessment - Biodiversity Fund (DoE)'
+            }
         }
 
 

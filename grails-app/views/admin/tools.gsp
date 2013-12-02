@@ -135,7 +135,7 @@
                     </td>
                     <td>
                         Loads (or reloads) project plan information from a csv file.
-                        <p><g:uploadForm class="loadPlanData" controller="admin" action="importPlanData"><input id="planData" type="file" accept="text/csv" name="planData"/><input type="checkbox" name="importWithErrors">Force import (even with validation errors)</g:uploadForm></p>
+                        <p><g:uploadForm class="loadPlanData" controller="admin" action="importPlanData"><input id="planData" type="file" accept="text/csv" name="planData"/><input type="checkbox" name="overwriteActivities">Replace existing activities</g:uploadForm></p>
                     </td>
                 </tr>
                 <tr>
