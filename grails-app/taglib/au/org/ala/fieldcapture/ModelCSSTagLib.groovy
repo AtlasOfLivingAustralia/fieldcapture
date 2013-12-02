@@ -58,6 +58,8 @@ class ModelCSSTagLib {
                 out << INDENT*2 << "table.${tableClass} td:last-child {width:4%;text-align:center;}\n"
             }
         }
+
+        out << INDENT*2 << "table.${tableClass} textarea {width:98%;}\n"
         out << INDENT << "</style>"
     }
 
