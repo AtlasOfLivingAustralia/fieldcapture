@@ -458,9 +458,9 @@ class ModelTagLib {
 
         def extraClassAttrs = model.class ?: ""
         def tableClass = isprint ? "printed-form-table" : ""
-
+        def validation = model.editableRows ? "data-bind=\"independentlyValidated:data.${model.source}\"":""
         out << "<div class=\"row-fluid ${extraClassAttrs}\">\n"
-        out << INDENT*3 << "<table class=\"table table-bordered ${model.source} ${tableClass}\">\n"
+        out << INDENT*3 << "<table class=\"table table-bordered ${model.source} ${tableClass}\" ${validation}>\n"
         tableHeader out, attrs, model
         if (isprint) {
             tableBodyPrint out, attrs, model
@@ -523,9 +523,9 @@ class ModelTagLib {
         if (attrs.edit) {
             def templateName = table.editableRows ? "${table.source}templateToUse" : "'${table.source}viewTmpl'"
             out << INDENT*4 << "<tbody data-bind=\"template:{name:${templateName}, foreach: data.${table.source}"
-            if (table.editableRows) {
-                out << ", afterRender:attachValidation"
-            }
+//            if (table.editableRows) {
+//                out << ", afterRender:attachValidation"
+//            }
             out << "}\"></tbody>\n"
             if (table.editableRows) {
                 // write the view template
@@ -592,7 +592,7 @@ class ModelTagLib {
     }
 
     def tableEditTemplate(out, attrs, model) {
-        out << INDENT*4 << "<script id=\"${model.source}editTmpl\" type=\"text/html\"><tr class=\"validationEngineContainer\">\n"
+        out << INDENT*4 << "<script id=\"${model.source}editTmpl\" type=\"text/html\"><tr>\n"
         model.columns.eachWithIndex { col, i ->
             def edit = !col['readOnly'];
             // mechanism for additional data binding clauses

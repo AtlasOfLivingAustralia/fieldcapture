@@ -11,8 +11,7 @@ var SpeciesViewModel = function(data, parentRow) {
     self.transients = {};
     self.transients.speciesInformation = ko.observable();
     self.transients.availableLists = speciesLists;
-    self.transients.focused = ko.observable();
-    self.transients.editing = ko.observable();
+    self.transients.editing = ko.observable(false);
     self.transients.textFieldValue = ko.observable();
 
     self.speciesSelected = function(event, data) {
@@ -101,7 +100,12 @@ var SpeciesViewModel = function(data, parentRow) {
             });
         }
         else {
-            self.transients.speciesInformation("No profile information is available.");
+            if (self.listId() === 'unmatched') {
+                self.transients.speciesInformation("This species was unable to be matched in the Atlas of Living Australia.");
+            }
+            else {
+                self.transients.speciesInformation("No profile information is available.");
+            }
         }
 
     };
@@ -116,13 +120,12 @@ var SpeciesViewModel = function(data, parentRow) {
     if (data) {
         self.loadData(data);
     }
-    self.transients.focused.subscribe(function(value) {
-        if (!value && self.name()) {
-            self.transients.editing(false);
+    self.focusLost = function(event) {
+        self.transients.editing(false);
+        if (self.name()) {
             self.transients.textFieldValue(self.name());
-
         }
-    });
+    };
 
 
 };

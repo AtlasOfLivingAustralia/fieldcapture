@@ -85,10 +85,10 @@ public class EditModelWidgetRenderer implements ModelWidgetRenderer {
         def link = context.g.createLink(controller: 'search', action:'species')
 
         newAttrs.add "value", "transients.textFieldValue"
-        newAttrs.add "hasfocus", "transients.focused"
+        newAttrs.add "event", "{focusout:focusLost}"
         newAttrs.add "autocomplete", "{url:'${link}', render: renderItem, listId: list, result:speciesSelected, valueChangeCallback:textFieldChanged}"
 
-        context.writer << context.g.render(template: '/output/speciesTemplate', model:[source: context.source, databindAttrs: newAttrs.toString()])
+        context.writer << context.g.render(template: '/output/speciesTemplate', model:[source: context.source, databindAttrs: newAttrs.toString(), validationAttrs:context.validationAttr])
     }
 
     @Override

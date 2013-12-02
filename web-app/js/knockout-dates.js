@@ -628,6 +628,7 @@ ko.bindingHandlers.autocomplete = {
         var list = ko.utils.unwrapObservable(param.listId);
         var valueCallback = ko.utils.unwrapObservable(param.valueChangeCallback)
         var options = {};
+
         options.source = function(request, response) {
             $(element).addClass("ac_loading");
 
@@ -795,3 +796,12 @@ ko.bindingHandlers.popover = {
         trigger: "hover"
     }
 };
+
+ko.bindingHandlers.independentlyValidated = {
+    init: function(element, valueAccessor) {
+        $(element).addClass('validationEngineContainer');
+        $(element).find('thead').attr('data-validation-engine', 'validate'); // Horrible hack.
+        $(element).validationEngine('attach', {scroll:false});
+    }
+};
+
