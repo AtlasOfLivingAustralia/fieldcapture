@@ -733,3 +733,11 @@ span.readonly-text {
     margin-top:8px;
     margin-left:10px;
 }
+
+table.tight-inputs input {
+    margin-bottom: 0;
+}
+
+table.tight-inputs textarea {
+    margin-bottom: 4px;
+}

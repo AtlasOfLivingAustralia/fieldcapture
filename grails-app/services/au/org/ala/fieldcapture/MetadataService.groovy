@@ -121,6 +121,47 @@ class MetadataService {
         return activityScores
     }
 
+    /**
+     * Returns a 3 level hierarchy given by:
+     *  a map keyed by activityName where each value is:
+     *      a map keyed by outputName where each value is:
+     *          a list of score definitions that are output targets
+     * Only includes activities and outputs if they contain output targets.
+     * Used to support the nomination of project output targets for various activity types.
+     */
+    def getOutputTargetsByOutputByActivity() {
+        def outputTargetMetadata = [:]
+        def activitiesModel = activitiesModel()
+
+        activitiesModel.activities.each { activity ->
+            def outputs = [:]
+
+            activity.outputs.each { outputName ->
+                def scores = []
+
+                def matchedOutput = activitiesModel.outputs.find {
+                    output -> outputName == output.name
+                }
+                if (matchedOutput && matchedOutput.scores) {
+                    matchedOutput.scores.each {
+                        if (it.isOutputTarget && (it.aggregationType == 'SUM' || it.aggregationType == 'AVERAGE')) {
+                            scores << it
+                        }
+                    }
+                    // only add the output if it has targets
+                    if (scores) {
+                        outputs[outputName] = scores
+                    }
+                }
+            }
+            // only add the activity if it has outputs that have targets
+            if (outputs) {
+                outputTargetMetadata[activity.name] = outputs
+            }
+        }
+        return outputTargetMetadata
+    }
+
 
 
     def clearEcodataCache() {

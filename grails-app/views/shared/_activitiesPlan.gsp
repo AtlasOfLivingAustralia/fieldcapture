@@ -115,24 +115,47 @@
 
     <form id="outputTargetsContainer">
         <h4>Output Targets</h4>
-        <table id="outputTargets" class="table table-condensed">
-            <thead><tr><th>Output</th><th>Target</th></tr></thead>
-            <tbody data-bind="foreach:outputTargets">
-            <tr>
-                <td><span data-bind="text:outputLabel"></span> - <span data-bind="text:scoreLabel"></span></td>
-                <td>
-                    <input type="text" class="input-small" data-bind="visible:$root.canEditOutputTargets(),value:target" data-validation-engine="validate[required,custom[number]]"/>
-                    <span data-bind="visible:!$root.canEditOutputTargets(),text:target"></span>
-                    <span data-bind="text:units"></span>
-                    <span class="save-indicator" data-bind="visible:isSaving"><r:img dir="images" file="ajax-saver.gif" alt="saving icon"/> saving</span>
-                </td>
+        <table id="outputTargets" class="table table-condensed tight-inputs">
+            <thead><tr><th>Output Type</th><th>Outcome Targets</th><th>Output Targets</th><th>Target</th></tr></thead>
+            <!-- ko foreach:outputTargets -->
+            <tbody data-bind="foreach:scores">
+                <tr>
+                    <!-- ko with:isFirst -->
+                    <td data-bind="attr:{rowspan:$parents[1].scores.length}">
+                        <b><span data-bind="text:$parents[1].name"></span></b>
+                    </td>
+                    <td data-bind="attr:{rowspan:$parents[1].scores.length}">
+                        <textarea data-bind="visible:$root.canEditOutputTargets(),value:$parents[1].outcomeTarget" rows="3" cols="80" style="width:90%"></textarea>
+                        <span data-bind="visible:!$root.canEditOutputTargets(),text:$parents[1].outcomeTarget"></span>
+                        <span class="save-indicator" data-bind="visible:$parents[1].isSaving"><r:img dir="images" file="ajax-saver.gif" alt="saving icon"/> saving</span>
+                    </td>
+                    <!-- /ko -->
+                    <td><span data-bind="text:scoreLabel"></span></td>
+                    <td>
+                        <input type="text" class="input-mini" data-bind="visible:$root.canEditOutputTargets(),value:target" data-validation-engine="validate[required,custom[number]]"/>
+                        <span data-bind="visible:!$root.canEditOutputTargets(),text:target"></span>
+                        <span data-bind="text:units"></span>
+                        <span class="save-indicator" data-bind="visible:isSaving"><r:img dir="images" file="ajax-saver.gif" alt="saving icon"/> saving</span>
+                    </td>
 
-            </tr>
-
+                </tr>
             </tbody>
+            <!-- /ko -->
         </table>
 
     </form>
+
+    <g:if env="development">
+        <hr />
+        <div class="expandable-debug">
+            <h3>Plan Debug</h3>
+            <div>
+                <h4>Target metadata</h4>
+                <pre data-bind="text:ko.toJSON(targetMetadata,null,2)"></pre>
+            </div>
+        </div>
+    </g:if>
+
 </div>
 
 <script id="updateStatusTmpl" type="text/html">
@@ -523,15 +546,89 @@
             };
         };
 
-        var outputTarget = function(target) {
-            return {
-                outputLabel:target.outputLabel,
-                scoreName:target.scoreName,
-                scoreLabel:target.scoreLabel,
-                target:ko.observable(target.value),
-                isSaving:ko.observable(false),
-                units:target.units
-            };
+        /* data structures for handling output targets */
+        var Output = function (name, scores, existingTargets, root) {
+            var self = this;
+            this.name = name;
+            this.outcomeTarget = ko.observable(function () {
+                // find any existing outcome value for this output
+                var outcomeValue = "";
+                $.each(existingTargets, function (j, existingTarget) {
+                    if (existingTarget.outcomeTarget && existingTarget.outputLabel === self.name) {
+                        outcomeValue = existingTarget.outcomeTarget;
+                        return false; // end the loop
+                    }
+                });
+                return outcomeValue;
+            }());
+            this.outcomeTarget.subscribe(function() {
+                if (root.canEditOutputTargets()) {
+                    self.isSaving(true);
+                    root.saveOutputTargets();
+                }
+            });
+            this.scores = $.map(scores, function (score, index) {
+                var targetValue = 0;
+                $.each(existingTargets, function(j, existingTarget) {
+                    if (existingTarget.scoreName === score.name && existingTarget.outputLabel === self.name) {
+                        targetValue = existingTarget.target;
+                        return false; // end the loop
+                    }
+                });
+                return new OutputTarget(score, targetValue, index === 0, root);
+            });
+            this.isSaving = ko.observable(false);
+        };
+        Output.prototype.toJSON = function () {
+            // we need to produce a flat target structure (for backwards compatibility)
+            var self = this,
+            targets = $.map(this.scores, function (score) {
+                var js = score.toJSON();
+                js.outputLabel = self.name;
+                return js;
+            });
+            // add the outcome target
+            targets.push({outputLabel:self.name, outcomeTarget: self.outcomeTarget()});
+            return targets;
+        };
+        Output.prototype.isSaving = function (saving) {
+            this.isSaving(saving);
+            $.each(this.scores, function (i, score) { score.isSaving(saving) });
+        };
+
+        var OutputTarget = function (target, value, isFirst, root) {
+            var self = this;
+            this.scoreName = target.name;
+            this.scoreLabel = target.label;
+            this.target = ko.observable(value);
+            this.isSaving = ko.observable(false);
+            this.isFirst = isFirst;
+            this.units = target.units;
+            this.target.subscribe(function() {
+                if (root.canEditOutputTargets()) {
+                    self.isSaving(true);
+                    root.saveOutputTargets();
+                }
+            });
+        };
+        OutputTarget.prototype.toJSON = function () {
+            var clone = ko.toJS(this);
+            delete clone.isSaving;
+            delete clone.isFirst;
+            return clone;
+        };
+
+        var Outcome = function (target) {
+            var self = this;
+            this.outputLabel = target.outputLabel;
+            this.outcomeText = target.outcomeText;
+            this.isSaving = ko.observable(false);
+        };
+
+        Outcome.prototype.toJSON = function () {
+            var clone = ko.toJS(this);
+            delete clone.isSaving;
+            return clone;
         };
 
         function PlanViewModel(activities, outputTargets, project) {
@@ -755,7 +852,11 @@
             self.saveOutputTargets = function() {
                 if (self.canEditOutputTargets()) {
                     if ($('#outputTargetsContainer').validationEngine('validate')) {
-                        var project = {projectId:'${project.projectId}', outputTargets:ko.toJS(self.outputTargets)};
+                        var targets = [];
+                        $.each(self.outputTargets(), function (i, target) {
+                            $.merge(targets, target.toJSON());
+                        });
+                        var project = {projectId:'${project.projectId}', outputTargets:targets};
                         var json = JSON.stringify(project);
                         var id = "${'/' + project.projectId}";
                         $.ajax({
@@ -784,7 +885,7 @@
                 }
             };
             self.addOutputTarget = function(target) {
-                var newOutputTarget = outputTarget(target);
+                var newOutputTarget = new OutputTarget(target);
                 self.outputTargets.push(newOutputTarget);
                 newOutputTarget.target.subscribe(function() {
                     if (self.canEditOutputTargets()) {
@@ -793,50 +894,26 @@
                     }
                 });
             };
-            self.activityScores = ${activityScores as grails.converters.JSON};
 
-            self.hasOutputTarget = function(score) {
-                var hasTarget = false;
-                $.each(self.outputTargets(), function(i, target) {
-                    if (score.outputName === target.outputLabel && score.name === target.scoreName) {
-                        hasTarget = true;
-                        return false;
-                    }
-                });
-                return hasTarget;
-            };
+            // metadata for setting up the output targets
+            self.targetMetadata = ${outputTargetMetadata as grails.converters.JSON};
 
-            self.loadOutputTargets = function() {
-                var activityTypes = {};
-                $.each(activities, function(i, activity) {
-
-                    if (!activityTypes[activity.type] && self.activityScores[activity.type]) {
+            self.loadOutputTargets = function () {
+                var activityTypes = {},  // this just saves us checking multiple activities of the same type
+                    uniqueOutputs = {};  // this ensures each output is unique
+                // collect the metadata for the unique outputs for the current set of activities
+                $.each(activities, function (i, activity) {
+                    if (!activityTypes[activity.type] && self.targetMetadata[activity.type]) {
                         activityTypes[activity.type] = true;
-
-                        $.each(self.activityScores[activity.type], function(j, score) {
-                            if (!self.hasOutputTarget(score)) {
-
-                                if (score.aggregationType === 'SUM' || score.aggregationType === 'AVERAGE') {
-                                    var targetValue = 0;
-                                    $.each(outputTargets, function(j, existingTarget) {
-                                        if (existingTarget.scoreName === score.name && existingTarget.outputLabel === score.outputName) {
-                                            targetValue = existingTarget.target;
-                                            return false; // end the loop
-                                        }
-                                    });
-                                    self.addOutputTarget({units: score.units, outputLabel:score.outputName, scoreName:score.name, scoreLabel:score.label, value:targetValue});
-                                }
+                        $.each(self.targetMetadata[activity.type], function(outputName, scores) {
+                            if (!uniqueOutputs[outputName]) {
+                                uniqueOutputs[outputName] = true;
+                                self.outputTargets.push(new Output(outputName, scores, outputTargets, self));
                             }
                         });
                     }
-
                 });
-
-            };
-            self.loadOutputTargets();
-
-
-
+            }();
         }
 
         var planViewModel = new PlanViewModel(
