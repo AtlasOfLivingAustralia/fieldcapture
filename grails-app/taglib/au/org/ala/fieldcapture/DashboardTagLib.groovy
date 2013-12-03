@@ -92,7 +92,7 @@ class DashboardTagLib {
         def chartId = score.score.label + '_chart'
         out << "<div id=\"${chartId}\"></div>"
 
-        out << gvisualization.pieCoreChart([elementId: chartId, title: title, columns: columns, data: data, width:'100%', height:'100%'])
+        out << gvisualization.pieCoreChart([elementId: chartId, title: title, columns: columns, data: data, width:'450', height:'300', backgroundColor: '#ebe6dc'])
     }
 
 
