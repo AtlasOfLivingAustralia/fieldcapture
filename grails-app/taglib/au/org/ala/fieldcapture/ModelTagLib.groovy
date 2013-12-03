@@ -343,7 +343,9 @@ class ModelTagLib {
                 if (context == 'col') {
                     out << "<div class=\"row-fluid\">"
                     labelAttributes.addClass 'span4'
-                    elementAttributes.addClass 'span8'
+                    if (it.type != "number") {
+                        elementAttributes.addClass 'span8'
+                    }
                 } else {
                     if (it.type != "number") {
                         elementAttributes.addClass 'span12'
