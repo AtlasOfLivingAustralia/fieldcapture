@@ -16,6 +16,8 @@ class ImportService {
 
     static outputDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ssZ")
     static inputDateFormat = new SimpleDateFormat("dd/MM/yyyy")
+    static shortInputDateFormat = new SimpleDateFormat("dd/MM/yy")
+
 
 
     /** The current format location data is supplied in */
@@ -206,7 +208,8 @@ class ImportService {
 
     def convertDate(date) {
         try {
-            outputDateFormat.format(inputDateFormat.parse(date))
+            def format = date.length() == 10 ? inputDateFormat : shortInputDateFormat
+            outputDateFormat.format(format.parse(date))
         }
         catch (Exception e) {
             throw e
@@ -340,7 +343,7 @@ class ImportService {
     /** Constants used by the MERI plan import */
     final int GRANT_ID_COLUMN = 0
     final int OUTPUT_COLUMN = 3
-    final int STAGE_1_COLUMN = 24
+
 
     /**
      * Validates and imports project plan data as supplied by DOE.
@@ -407,7 +410,7 @@ class ImportService {
     }
 
     def findStageOffsets(headerLine) {
-        int offset = STAGE_1_COLUMN
+        int offset = 0
 
         def stageOffsets = []
 
@@ -448,7 +451,7 @@ class ImportService {
             int stageNum = 0
             def timeline = []
             def activities = []
-            def outputs = readOutputs(csvLine[OUTPUT_COLUMN..<STAGE_1_COLUMN])
+            def outputs = readOutputs(csvLine[OUTPUT_COLUMN..<stageOffsets[0]])
 
             while (stageNum < stageOffsets.size()) {
 
@@ -472,6 +475,29 @@ class ImportService {
             e.printStackTrace()
             return [error:"Error importing project with grantId = ${grantId}, error=${e.getMessage()}"]
         }
+
+    }
+
+    def readCFOCOutputs(outputDetails) {
+        def headers=['Revegetation ha':[outputLabel: 'Revegetation Details', scoreName: 'areaOfWorks' , scoreLabel: 'Area of works', units:'Ha'],
+                'Weed treatment: area treated ha':[outputLabel: 'Weed Treatment Details', scoreName: 'areaTreatedHa' , scoreLabel: 'Total area treated (Ha)', units:'Ha'],
+                'Seed Collected Kg':[outputLabel: 'Seed Collection Details', scoreName: 'seedCollectedKg' , scoreLabel: 'Seed collected (Kg)', units:'Kg'],
+                'Length of Fence km':[outputLabel: 'Fence Details', scoreName: 'lengthOfFence' , scoreLabel: 'Total length of fence', units:'Km'],
+                'Total participants not employed':[outputLabel: 'Participant Information', scoreName: 'totalParticipants' , scoreLabel: 'Total No. of participants', units:''],
+                'number Of Indigenous Participants':[outputLabel: 'Participant Information', scoreName: 'numberOfIndigenousParticipants' , scoreLabel: 'No of indigenous participants', units:''],
+                'number Of Community Groups':[],
+                'Area of fire Ha':[outputLabel: 'Fire Information', scoreName: 'areaOfFireHa' , scoreLabel: 'Area of burn (Ha)', units:'Ha'],
+                'Fire reason':[],
+                'Access Management Method':[],
+                'number Of Installations':[],
+                'Number events':[],
+                'Event purpose':[],
+                'Number events':[],
+                'Event purpose':[],
+                'Works Implementation Planning-Sites':[],
+                'Works Implementation Planning-Outputs':[],
+                'number On Country Visits':[],
+                'number Of Indigenous Participants':[]]
 
     }
 
