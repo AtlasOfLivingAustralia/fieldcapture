@@ -30,19 +30,24 @@
     <g:layoutHead />
 </head>
 <body class="${pageProperty(name:'body.class')}" id="${pageProperty(name:'body.id')}" onload="${pageProperty(name:'body.onload')}">
+<g:if test="${fc.announcementContent()}">
+    <div id="announcement">
+        ${fc.announcementContent()}
+    </div>
+</g:if>
 <div id="body-wrapper">
     <div class="navbar navbar-inverse navbar-static-top" id="header">
         <div class="navbar-inner">
             <div class="container-fluid">
                 <div class="nav logo">
                     <a href="${createLink(uri:"/")}">
-                        <r:img dir="css/nrm/images" file="gr_logo_wide.png" alt="Caring for our Country" />
+                        <r:img dir="css/nrm/images" file="AustGovt_inline_white_on_transparent.png" alt="Australian Government Emblem" />
                     </a>
                 </div>
                 <div class="nav-collapse collapse">
                     <g:form controller="search" method="GET" class="search pull-right">
                         <p>
-                            <input type="text" name="query" id="keywords" value="${params.query}">
+                            <label for="keywords"><span class="hide">Full text search</span><input type="text" name="query" id="keywords" value="${params.query}"></label>
                             <input type="hidden" name="collection" value="agencies">
                             <input type="hidden" name="profile" value="nrm_env">
                             <input type="hidden" name="form" value="simple">
@@ -66,8 +71,10 @@
     <div id="dcNav" class="clearfix ">
 
         <div class="navbar navbar-inverse container-fluid ">
-            <a class="brand">MERI data capture prototype</a>
-            %{--<div class="">--}%
+            %{--<a href="${g.createLink(uri:"/")}" class="brand">MERI data capture prototype</a>--}%
+            <ul class="nav">
+                <li><a href="/fieldcapture/" class="active hidden-desktop"><i class="icon-home">&nbsp;</i>&nbsp;Home</a></li>
+            </ul>
             <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
@@ -84,8 +91,6 @@
                     </span>
                 </div>
             </div>
-
-            %{--</div>--}%
         </div><!-- /.navbar-inner -->
     </div>
 

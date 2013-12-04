@@ -8,12 +8,13 @@
         <r:require module="bootstrap" />
 	</head>
 	<body>
+        <content tag="pageTitle">Settings</content>
+        <a href="${createLink(controller:'admin', action:'settings')}" class="btn"><i class="icon-hand-left"></i> back to Settings</a>
         <h3>Edit ${settingTitle}</h3>
         <g:form controller="admin" action="saveTextAreaSetting">
             <g:hiddenField name="settingKey" value="${settingKey}" />
             <div class="row-fluid">
-            <g:textArea name="textValue" value="${textValue}" rows="20" cols="120" class="span10">
-            </g:textArea>
+            <g:textArea name="textValue" value="${textValue.trim()}" rows="20" cols="120" class="span10"></g:textArea>
             </div>
             <div class="row-fluid">
                 <a class="btn" href="${createLink(controller:'admin', action:'settings')}">Cancel</a>

@@ -346,15 +346,6 @@ img[src*="gstatic.com/"], img[src*="googleapis.com/"]  {
     max-width: 99999px;
 }
 
-.projectInfoWindow > div {
-    padding-left:20px;
-    text-indent:-20px;
-}
-
-.projectInfoWindow > div a.btn {
-    text-indent:0;
-}
-
 .accordion-heading {
     background-color: white;
 }
@@ -707,21 +698,6 @@ span.readonly-text {
     opacity: 0.9;
     filter: alpha(opacity=90);
     font-size: 12px;
-}
-
-#testWatermark {
-    /*position: absolute;*/
-    /*margin-top: -20px;*/
-    width: 100%;
-    color: red;
-    font-weight: bold;
-    font-size: 14px;
-}
-
-#testWatermark a {
-    color: red;
-    font-weight: bold;
-    text-decoration: underline;
 }
 
 #alertdiv {

@@ -22,16 +22,18 @@
                         <td>
                             ${setting.key}
                         </td>
-                        <td>
-                            ${setting.value}
+                        <td style="max-width:500px;overflow-wrap:break-word;">
+                            <g:if test="${setting.editLink}">
+                                <a href="${setting.editLink}" class="btn btn-small">
+                                    <i class="icon-edit"></i>&nbsp;View / Edit
+                                </a>
+                            </g:if>
+                            <g:else>
+                                ${setting.value}
+                            </g:else>
                         </td>
                         <td>
                             ${setting.comment}
-                            <g:if test="${setting.editLink}">
-                                <a href="${setting.editLink}" class="btn btn-small">
-                                    <i class="icon-edit"></i>&nbsp;Edit
-                                </a>
-                            </g:if>
                         </td>
                     </tr>
                 </g:each>

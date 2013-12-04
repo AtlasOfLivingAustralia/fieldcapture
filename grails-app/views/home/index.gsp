@@ -46,19 +46,15 @@
     </div>
 </div>
 <div class="row-fluid large-space-after">
-    <div class="span6">
-        The Online MERI Tool is being developed in collaboration with the <a href="http://www.ala.org.au/"
-        title="ALA home page (new window)" target="_blank">Atlas of Living Australia</a>,
-        and will soon be available for Biodiversity Fund and Caring for our Country
-        funding recipients to report on their projects. It is anticipated that the tool will be available
-        for funding recipients to use later in 2013.
+    <div class="span8">
+        <p>The online monitoring, evaluation, reporting and improvement tool (MERIT) is now available for funding recipients to start reporting.
+        MERIT allows funding recipients to record and upload data about the progress of their projects on a continual
+        basis and to submit reports online. It will also increase information sharing within NRM communities and the
+        broader public.</p>
     </div>
-    <div class="span6">
-        This tool aims to enhance the reporting process by allowing funding recipients to record
-        and upload data about the progress of their projects on a continual basis and submit reports
-        online. It will also enable information sharing within and across NRM communities and the broader
-        public. <span class="hide">This functionality has not been possible previously.</span>
-    </div>
+    %{--<div class="span6">--}%
+
+    %{--</div>--}%
 </div>
 
 <g:if test="${flash.error || results.error}">
@@ -71,7 +67,7 @@
     </div>
 </g:if>
 <g:elseif test="${results?.hits?.total?:0 > 0}">
-    <div id="contentZ" class="row-fluid ">
+    <div id="" class="row-fluid ">
         <div id="facetsCol" class="span4 well well-small">
             <g:set var="reqParams" value="sort,order,max,fq"/>
             <div class="visible-phone pull-right" style="margin-top: 5px;">
@@ -128,7 +124,7 @@
                                     <ul class="facetValues">
                                         <g:each var="t" in="${f.terms}">
                                             <li data-sortalpha="${t.term.toLowerCase().trim()}" data-sortcount="${t.count}"><a href="${fqLink}&fq=${fn.encodeAsURL()}:${t.term}"><g:message
-                                                    code="label.${t.term}" default="${t.term}"/></a> (<span class="fcount">${t.count}</span>)
+                                                    code="label.${t.term}" default="${t.term?:'[empty]'}"/></a> (<span class="fcount">${t.count}</span>)
                                             </li>
                                         </g:each>
                                     </ul>
@@ -226,6 +222,21 @@
                     </table>
                 </div>
             </div>
+            <p>&nbsp;</p>
+            <p>Developed in collaboration with the Atlas of Living Australia, MERIT will enhance the reporting process by
+            allowing simpler yet more complete project records and showing direct links between project activities and
+            contributions to Australia’s biodiversity conservation work.</p>
+            <p>At this stage MERIT includes the following programmes:</p>
+            <ul>
+                <li>Caring for our Country Target Area Grants</li>
+                <li>Caring for our Country Regional Delivery</li>
+                <li>Caring for our Country Reef Rescue</li>
+                <li>Caring for our Country Community Environment Grants</li>
+                <li>Biodiversity Fund Round 1</li>
+                <li>Biodiversity Fund Round 2</li>
+                <li>Biodiversity Fund Investing in Tasmania's Native Forests</li>
+                <li>Biodiversity Fund Northern Australia Targeted Investment</li>
+            </ul>
         </div>
     </div>
 </g:elseif>

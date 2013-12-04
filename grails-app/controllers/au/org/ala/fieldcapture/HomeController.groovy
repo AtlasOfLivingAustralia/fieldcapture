@@ -45,7 +45,7 @@ class HomeController {
     }
 
     def about() {
-        def content = settingService.getAboutPageText()
+        def content = settingService.getSettingText(SettingPageType.ABOUT)
         [content: content]
     }
 

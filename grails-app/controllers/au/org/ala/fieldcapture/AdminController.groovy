@@ -123,11 +123,13 @@ class AdminController {
 
     @PreAuthorise(accessLevel = 'alaAdmin', redirectController = "admin")
     def settings() {
-        def settings = [
-//            [key:'app.external.model.dir', value: grailsApplication.config.app.external.model.dir,
-//            comment: 'location of the application meta-models such as the list of activities and ' +
-//                    'the output data models']
-        ]
+        def settings = []
+
+        for (setting in SettingPageType.values()) {
+            log.debug "setting = $setting"
+            settings << [key:setting.key, value: "&lt;Click edit to view...&gt;", editLink: createLink(controller:'admin', action:"editSettingText/${setting.name}")]
+        }
+
         def grailsStuff = []
         def config = grailsApplication.config.flatten()
         for ( e in config ) {
@@ -137,40 +139,37 @@ class AdminController {
                 settings << [key: e.key, value: e.value, comment: '']
             }
         }
-        // Now add editable stuff...
-
-        settings << [key:'about.page.text', value: "&lt;Click edit to view...&gt;", editLink: createLink(controller:'admin', action:'editAboutText')]
-        settings << [key:'page.footer.text', value: "&lt;Click edit to view...&gt;", editLink: createLink(controller:'admin', action:'editFooterText')]
 
         [settings: settings, grailsStuff: grailsStuff]
     }
 
-    def editAboutText() {
-        def aboutText = settingService.getAboutPageText()
-        render(view:'editTextAreaSetting', model:[textValue: aboutText, settingTitle:'About Page Content', settingKey:'about.page.text'] )
-    }
+    def editSettingText(String id) {
+        def content
+        SettingPageType type = SettingPageType.getForName(id)
 
-    def editFooterText() {
-        def footerText = settingService.getPageFooterText()
-        println footerText
-        render(view:'editTextAreaSetting', model:[textValue: footerText, settingTitle:'Page Footer', settingKey:'page.footer.text'] )
+        if (type) {
+            content = settingService.getSettingText(type)
+        } else {
+            render(status: 404, text: "No settings type found for: ${id}")
+            return
+        }
+
+        render(view:'editTextAreaSetting', model:[textValue: content, settingTitle:type.title, settingKey:type.key] )
     }
 
     def saveTextAreaSetting() {
         def text = params.textValue
         def settingKey = params.settingKey
-        if (settingKey && text) {
-            switch (settingKey) {
-                case 'about.page.text':
-                    settingService.setAboutPageText(text)
-                    break;
-                case 'page.footer.text':
-                    settingService.setPageFooterText(text)
-                    break;
-                default:
-                    throw new RuntimeException("Undefined setting key!")
+        if (settingKey) {
+            SettingPageType type = SettingPageType.getForKey(settingKey)
+
+            if (type) {
+                settingService.setSettingText(type, text)
+                flash.message = "${settingKey} content saved."
+            } else {
+                throw new RuntimeException("Undefined setting key!")
+                flash.message = "Error: Undefined setting key - ${settingKey}"
             }
-            flash.message = "${settingKey} content saved."
         }
 
         redirect(action:'settings')

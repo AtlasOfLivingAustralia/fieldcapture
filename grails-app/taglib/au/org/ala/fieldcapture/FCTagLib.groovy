@@ -200,7 +200,7 @@ class FCTagLib {
 
         //mb.ul(class:'nav visible-desktop ') {
             mb.li(class:attrs.active == 'home' ? 'active' : '') {
-                a(href:createLink(uri: '/')) {
+                a(href:createLink(uri: '/'), class: 'visible-desktop') {
                     i(class:"icon-home") {
                         mkp.yieldUnescaped("&nbsp;")
                     }
@@ -209,21 +209,20 @@ class FCTagLib {
             }
             mb.li(class:attrs.active == 'about' ? 'active' : '') {
                 a(href:createLink(controller: 'about')) {
-                    i(class:"icon-question-sign") {
+                    i(class:"icon-info-sign") {
                         mkp.yieldUnescaped("&nbsp;")
                     }
                     mkp.yieldUnescaped("&nbsp")
                     mkp.yield(message(code:'default.about.label', default: 'About'))
                 }
             }
-// The dashboard mockup is being been hidden - will restore when it is implemented correctly.
             mb.li(class:attrs.active == 'dashboard' ? 'active' : '') {
                 a(href:createLink(controller: 'report', action:'dashboard')) {
                     i(class:"icon-signal") {
                         mkp.yieldUnescaped("&nbsp;")
                     }
                     mkp.yieldUnescaped("&nbsp")
-                    mkp.yield(message(code:'default.about.label', default: 'Dashboard'))
+                    mkp.yield(message(code:'default.dashboard.label', default: 'Dashboard'))
                 }
             }
             Environment.executeForCurrentEnvironment {
@@ -389,9 +388,12 @@ class FCTagLib {
     }
 
     def currentUserDisplayName = { attrs, body ->
-        def mb = new MarkupBuilder(out)
-        mb.span(class:'username') {
-            mkp.yield(userService.currentUserDisplayName)
+        def username = userService.currentUserDisplayName
+        if (username) {
+            def mb = new MarkupBuilder(out)
+            mb.span(class:'username') {
+                mkp.yield(username)
+            }
         }
     }
 
@@ -542,7 +544,14 @@ class FCTagLib {
     }
 
     def footerContent = { attrs ->
-        def content = settingService.pageFooterText as String
+        def content = settingService.getSettingText(SettingPageType.FOOTER) as String
+        if (content) {
+            out << content.markdownToHtml()
+        }
+    }
+
+    def announcementContent = { attrs ->
+        def content = settingService.getSettingText(SettingPageType.ANNOUNCEMENT) as String
         if (content) {
             out << content.markdownToHtml()
         }
