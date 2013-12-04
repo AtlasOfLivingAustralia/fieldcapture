@@ -599,6 +599,11 @@ class ImportService {
 
 
         activityType = activityType ? activityType.trim() : ''
+
+        // Default unspecified site assessments to the DoE site assessment.
+        if (activityType.equalsIgnoreCase('Site Assessment')) {
+            activityType = 'Site Assessment - Biodiversity Fund (DoE)'
+        }
         def match = validActivities.find {it.name.equalsIgnoreCase(activityType)}
         match = match?match.name:null
 
