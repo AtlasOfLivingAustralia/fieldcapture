@@ -1,4 +1,4 @@
-<g:if test="${fc.userIsLoggedIn()}">
+<g:if test="${fc.currentUserDisplayName()}">
     <div class="btn-group">
         <button class="btn btn-small btn-primary btnProfile" title="profile page">
             <i class="icon-user icon-white"></i><span class="">&nbsp;<fc:currentUserDisplayName /></span>
