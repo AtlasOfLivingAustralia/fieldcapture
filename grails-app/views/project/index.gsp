@@ -116,11 +116,13 @@
                     <p class="well well-small more" data-bind="text:description"></p>
                 </div>
 
-                <!-- show any primary image -->
-                <div data-bind="visible:primaryImage() !== null,with:primaryImage" class="thumbnail with-caption span5">
-                    <img class="img-rounded" data-bind="attr:{src:url, alt:name}" alt="primary image"/>
-                    <p class="caption" data-bind="text:name"></p>
-                    <p class="attribution" data-bind="visible:attribution"><small><span data-bind="text:attribution"></span></small></p>
+                <!-- show any primary images -->
+                <div data-bind="visible:primaryImages() !== null,foreach:primaryImages" class="span5">
+                    <div class="thumbnail with-caption space-after">
+                        <img class="img-rounded" data-bind="attr:{src:url, alt:name}" alt="primary image"/>
+                        <p class="caption" data-bind="text:name"></p>
+                        <p class="attribution" data-bind="visible:attribution"><small><span data-bind="text:attribution"></span></small></p>
+                    </div>
                 </div>
 
                 <!-- show other documents -->
@@ -486,12 +488,12 @@
                     $.post(url, {}, function() {self.documents.remove(document);});
 
                 };
-                // this supports display of the project's primary image
-                this.primaryImage = ko.computed(function () {
+                // this supports display of the project's primary images
+                this.primaryImages = ko.computed(function () {
                     var pi = $.grep(self.documents(), function (doc) {
                         return ko.utils.unwrapObservable(doc.isPrimaryProjectImage);
                     });
-                    return pi.length > 0 ? pi[0] : null;
+                    return pi.length > 0 ? pi : null;
                 });
 
                 $.each(project.documents, function(i, doc) {
