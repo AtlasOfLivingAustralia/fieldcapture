@@ -127,7 +127,7 @@
                 <div class="span6">
                     <h4>Project documents</h4>
                     <g:render template="/shared/listDocuments"
-                      model="[useExistingModel: true,editable:false,imageUrl:resource(dir:'/images/filetypes')]"/>
+                      model="[useExistingModel: true,editable:false,imageUrl:resource(dir:'/images/filetypes'),containerId:'overviewDocumentList']"/>
                 </div>
             </div>
         </div>
@@ -265,7 +265,7 @@
                                 <div class="row-fluid">
                                     <div class="span10">
                                         <g:render template="/shared/listDocuments"
-                                                  model="[useExistingModel: true,editable:true,imageUrl:resource(dir:'/images/filetypes')]"/>
+                                                  model="[useExistingModel: true,editable:true,imageUrl:resource(dir:'/images/filetypes'),containerId:'adminDocumentList']"/>
                                     </div>
                                 </div>
                                 %{--The modal view containing the contents for a modal dialog used to attach a document--}%

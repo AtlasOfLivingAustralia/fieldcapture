@@ -1,4 +1,4 @@
-<div class="row-fluid" id="documentList">
+<div class="row-fluid" id="${containerId}">
     <div data-bind="foreach:documents">
         <g:if test="${editable}">
             <div class="clearfix space-after media" data-bind="template:ko.utils.unwrapObservable(type) === 'image' ? 'imageDocEditTmpl' : 'objDocEditTmpl'"></div>
@@ -87,7 +87,7 @@
             }
 
             var docListViewModel = new DocListViewModel(${documents ?: []});
-            ko.applyBindings(docListViewModel, document.getElementById('documentList'));
+            ko.applyBindings(docListViewModel, document.getElementById('${containerId}'));
         }
     });
 
