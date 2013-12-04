@@ -109,7 +109,14 @@
             var y = this.getFullYear();
             var w = this.getDayForWeek().getWeekOfYear();
             var m = this.getMonth();
-            if (m === 11 && w === 1) {
+            // CG - The underlying problem appears to be that sometimes years get
+            // to have 53 weeks (0-52), and sometimes they get 52 (1-52).
+            // When matching a week at the end of the year to a new year, it is sometimes
+            // resulting in 0 for years that don't have a week zero, hence the end date
+            // doesn't match and the length of the div is set wrong.
+            // This is a workaround - a better fix would be to fix the division of
+            // the year into weeks.
+            if (m === 11 && (w <= 1)) {
                 y++;
             }
             return 'dh-' + y + "-" + w;
