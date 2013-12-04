@@ -84,6 +84,7 @@
                             <!-- Modal for getting reasons for status change -->
                             <div id="activityStatusReason" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
                                 data-bind="showModal:displayReasonModal(),with:deferReason">
+                                <form class="reasonModalForm">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
                                             data-bind="click:$parent.displayReasonModal.cancelReasonModal">×</button>
@@ -93,12 +94,12 @@
                                     <p>If you wish to defer or cancel a planned activity you must provide an explanation. Your case
                                     manager will use this information when assessing your report.</p>
                                     <p>You can simply refer to a document that has been uploaded to the project if you like.</p>
-                                    <textarea data-bind="value:notes,hasFocus:true" rows=4 cols="80"></textarea>
+                                    <textarea data-bind="value:notes,hasFocus:true" name="reason" rows=4 cols="80" class="validate[required]"></textarea>
                                 </div>
                                 <div class="modal-footer">
                                     <button class="btn" data-bind="click: $parent.displayReasonModal.cancelReasonModal" data-dismiss="modal" aria-hidden="true">Discard status change</button>
                                     <button class="btn btn-primary" data-bind="click:$parent.displayReasonModal.saveReasonDocument">Save reason</button>
-                                </div>
+                                </div></form>
                             </div>
 
                         </td>
@@ -433,12 +434,16 @@
                 }
                 self.displayReasonModal.closeReasonModal();
             };
-            this.displayReasonModal.saveReasonDocument = function () {
-                if (self.displayReasonModal.trigger() === 'progress_change') {
-                    self.saveProgress({progress: self.progress(), activityId: self.activityId});
+            this.displayReasonModal.saveReasonDocument = function (item , event) {
+                // make sure reason text has been added
+                var $form = $(event.currentTarget).parents('form');
+                if ($form.validationEngine('validate')) {
+                    if (self.displayReasonModal.trigger() === 'progress_change') {
+                        self.saveProgress({progress: self.progress(), activityId: self.activityId});
+                    }
+                    self.deferReason().recordOnlySave("${createLink(controller:'proxy', action:'documentUpdate')}/" + (self.deferReason().documentId ? self.deferReason().documentId : ''));
+                    self.displayReasonModal.closeReasonModal();
                 }
-                self.deferReason().recordOnlySave("${createLink(controller:'proxy', action:'documentUpdate')}/" + (self.deferReason().documentId ? self.deferReason().documentId : ''));
-                self.displayReasonModal.closeReasonModal();
             };
             this.displayReasonModal.editReason = function () {
                 // popup dialog for reason
@@ -591,9 +596,9 @@
             targets.push({outputLabel:self.name, outcomeTarget: self.outcomeTarget()});
             return targets;
         };
-        Output.prototype.isSaving = function (saving) {
-            this.isSaving(saving);
-            $.each(this.scores, function (i, score) { score.isSaving(saving) });
+        Output.prototype.clearSaving = function () {
+            this.isSaving(false);
+            $.each(this.scores, function (i, score) { score.isSaving(false) });
         };
 
         var OutputTarget = function (target, value, isFirst, root) {
@@ -877,9 +882,14 @@
                                 $.each(self.outputTargets(), function(i, target) {
                                     // The timeout is here to ensure the save indicator is visible long enough for the
                                     // user to notice.
-                                    setTimeout(function(){target.isSaving(false);}, 1000);
+                                    setTimeout(function(){target.clearSaving();}, 1000);
                                 });
                             }
+                        });
+                    } else {
+                        // clear the saving indicator when validation fails
+                        $.each(self.outputTargets(), function (i, target) {
+                            target.clearSaving();
                         });
                     }
                 }
