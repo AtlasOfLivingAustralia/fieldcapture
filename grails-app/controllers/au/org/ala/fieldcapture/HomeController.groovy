@@ -44,12 +44,25 @@ class HomeController {
         render searchService.getProjectsForIds(params) as JSON
     }
 
-    def about() {
-        def content = settingService.getSettingText(SettingPageType.ABOUT)
-        [content: content]
-    }
-
     def myProfile() {
         redirect(controller: 'user')
+    }
+
+    def about() {
+        def settingType = SettingPageType.ABOUT
+        def content = settingService.getSettingText(settingType)
+        [name: settingType.name, title: settingType.title, content: content]
+    }
+
+    def help() {
+        def settingType = SettingPageType.HELP
+        def content = settingService.getSettingText(settingType)
+        render view: 'about', model: [name: settingType.name, title: settingType.title, content: content]
+    }
+
+    def contacts() {
+        def settingType = SettingPageType.CONTACTS
+        def content = settingService.getSettingText(settingType)
+        render view: 'about', model: [name: settingType.name, title: settingType.title, content: content]
     }
 }

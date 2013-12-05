@@ -12,7 +12,7 @@ class UrlMappings {
     }
 
 		"/"(controller: 'home', action: 'index')
-		"/about"(controller: 'home', action: 'about')
+	//	"/about"(controller: 'home', action: 'about')
     "/myProfile"(controller: 'home', action: 'myProfile')
     "/user/index"(controller: "user", action: "index")
     "/user/checkEmailExists"(controller: "user", action: "checkEmailExists")

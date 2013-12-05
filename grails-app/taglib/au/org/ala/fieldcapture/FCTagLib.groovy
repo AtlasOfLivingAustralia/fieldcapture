@@ -208,7 +208,7 @@ class FCTagLib {
                     mkp.yield(message(code:'default.home.label', default: 'Home'))}
             }
             mb.li(class:attrs.active == 'about' ? 'active' : '') {
-                a(href:createLink(controller: 'about')) {
+                a(href:createLink(controller: 'home', action: 'about')) {
                     i(class:"icon-info-sign") {
                         mkp.yieldUnescaped("&nbsp;")
                     }
@@ -216,28 +216,46 @@ class FCTagLib {
                     mkp.yield(message(code:'default.about.label', default: 'About'))
                 }
             }
-            mb.li(class:attrs.active == 'dashboard' ? 'active' : '') {
-                a(href:createLink(controller: 'report', action:'dashboard')) {
-                    i(class:"icon-signal") {
+            mb.li(class:attrs.help == 'help' ? 'active' : '') {
+                a(href:createLink(controller: 'home', action: "help")) {
+                    i(class:"icon-question-sign") {
                         mkp.yieldUnescaped("&nbsp;")
                     }
                     mkp.yieldUnescaped("&nbsp")
-                    mkp.yield(message(code:'default.dashboard.label', default: 'Dashboard'))
+                    mkp.yield(message(code:'default.help.label', default: 'Help'))
                 }
             }
-            Environment.executeForCurrentEnvironment {
-              development {
-                mb.li(class:attrs.active == 'advanced' ? 'active' : '') {
-                    a(href:createLink(controller: 'home', action:'advanced')) {
-                        i(class:"icon-th") {
-                            mkp.yieldUnescaped("&nbsp;")
-                        }
-                        mkp.yieldUnescaped("&nbsp")
-                        mkp.yield(message(code:'default.advanced.label', default: 'Advanced view'))
+            mb.li(class:attrs.active == 'contacts' ? 'active' : '') {
+                a(href:createLink(controller: 'home', action: 'contacts')) {
+                    i(class:"icon-envelope") {
+                        mkp.yieldUnescaped("&nbsp;")
                     }
+                    mkp.yieldUnescaped("&nbsp")
+                    mkp.yield(message(code:'default.contacts.label', default: 'Contacts'))
                 }
-              }
             }
+//            mb.li(class:attrs.active == 'dashboard' ? 'active' : '') {
+//                a(href:createLink(controller: 'report', action:'dashboard')) {
+//                    i(class:"icon-signal") {
+//                        mkp.yieldUnescaped("&nbsp;")
+//                    }
+//                    mkp.yieldUnescaped("&nbsp")
+//                    mkp.yield(message(code:'default.dashboard.label', default: 'Dashboard'))
+//                }
+//            }
+//            Environment.executeForCurrentEnvironment {
+//              development {
+//                mb.li(class:attrs.active == 'advanced' ? 'active' : '') {
+//                    a(href:createLink(controller: 'home', action:'advanced')) {
+//                        i(class:"icon-th") {
+//                            mkp.yieldUnescaped("&nbsp;")
+//                        }
+//                        mkp.yieldUnescaped("&nbsp")
+//                        mkp.yield(message(code:'default.advanced.label', default: 'Advanced view'))
+//                    }
+//                }
+//              }
+//            }
         //}
 
     }
