@@ -126,8 +126,12 @@
                 </div>
 
                 <!-- show other documents -->
-                <div class="span6">
+                <div id="documents">
                     <h4>Project documents</h4>
+                    <div data-bind="visible:documents.length == 0">
+                        No documents current attached to this project.
+                        To add a document select the Admin tab.
+                    </div>
                     <g:render template="/shared/listDocuments"
                       model="[useExistingModel: true,editable:false,imageUrl:resource(dir:'/images/filetypes'),containerId:'overviewDocumentList']"/>
                 </div>
