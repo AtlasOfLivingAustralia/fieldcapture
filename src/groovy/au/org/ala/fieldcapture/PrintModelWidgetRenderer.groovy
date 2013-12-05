@@ -58,6 +58,11 @@ class PrintModelWidgetRenderer implements ModelWidgetRenderer {
     }
 
     @Override
+    void renderEmbeddedImages(WidgetRenderContext context) {
+        defaultRender(context)
+    }
+
+    @Override
     void renderAutocomplete(WidgetRenderContext context) {
         defaultRender(context)
     }
