@@ -143,7 +143,15 @@ class AdminController {
         [settings: settings, grailsStuff: grailsStuff]
     }
 
+    def ajaxEditSettingText(String id) {
+        editSettingTextCommon(id, true)
+    }
+
     def editSettingText(String id) {
+        editSettingTextCommon(id, false)
+    }
+
+    def editSettingTextCommon(String id, Boolean ajax) {
         def content
         SettingPageType type = SettingPageType.getForName(id)
 
@@ -154,7 +162,12 @@ class AdminController {
             return
         }
 
-        render(view:'editTextAreaSetting', model:[textValue: content, settingTitle:type.title, settingKey:type.key] )
+        render(view:'editTextAreaSetting', model:[
+                textValue: content,
+                layout: (ajax) ? "ajaxLayout" : null,
+                ajax: ajax,
+                settingTitle: type.title,
+                settingKey: type.key] )
     }
 
     def saveTextAreaSetting() {
