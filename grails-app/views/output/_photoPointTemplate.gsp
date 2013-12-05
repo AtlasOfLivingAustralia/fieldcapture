@@ -24,7 +24,7 @@ self.loadphotoPoints = function(data) {
             var photoPoint = new PhotoPoint(obj);
             var photoPointData = photoPointByName(obj.name, data);
             if (photoPointData === undefined) {
-                photoPointData = {comment:"", photo:""};
+                photoPointData = {comment:"", photo:[]};
             }
             var row = new PhotoPointsRow(photoPointData);
             $.extend(row, photoPoint);

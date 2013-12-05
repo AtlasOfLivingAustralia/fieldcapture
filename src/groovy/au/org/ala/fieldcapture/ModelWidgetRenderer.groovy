@@ -1,6 +1,5 @@
 package au.org.ala.fieldcapture
 
-import org.codehaus.groovy.grails.plugins.web.taglib.RenderTagLib
 import org.codehaus.groovy.grails.web.json.JSONObject
 import org.codehaus.groovy.grails.web.taglib.NamespacedTagDispatcher
 
@@ -16,6 +15,7 @@ public interface ModelWidgetRenderer {
     void renderSelectMany(WidgetRenderContext context)
     void renderImage(WidgetRenderContext context)
     void renderEmbeddedImage(WidgetRenderContext context)
+    void renderEmbeddedImages(WidgetRenderContext context)
     void renderAutocomplete(WidgetRenderContext context)
     void renderPhotoPoint(WidgetRenderContext context)
     void renderLink(WidgetRenderContext context)

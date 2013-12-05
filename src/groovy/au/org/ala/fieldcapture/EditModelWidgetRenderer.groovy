@@ -80,6 +80,12 @@ public class EditModelWidgetRenderer implements ModelWidgetRenderer {
     }
 
     @Override
+    void renderEmbeddedImages(WidgetRenderContext context) {
+        // The file upload template has support for muliple images.
+        renderEmbeddedImage(context)
+    }
+
+    @Override
     void renderAutocomplete(WidgetRenderContext context) {
         def newAttrs = new Databindings()
         def link = context.g.createLink(controller: 'search', action:'species')

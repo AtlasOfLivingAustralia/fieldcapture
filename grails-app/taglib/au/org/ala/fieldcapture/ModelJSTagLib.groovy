@@ -383,7 +383,19 @@ class ModelJSTagLib {
                         out << INDENT*3 << "this.${col.name} = ko.${observable}(orFalse(data['${col.name}']));\n"
                         break;
                     case 'embeddedImage':
-                        out << INDENT*3 << "this.${col.name} = ko.${observable}(orBlank(data['${col.name}']));\n"
+                        out << INDENT*3 << "if (data['${col.name}']) {\n"
+                        out << INDENT*4 << "this.${col.name} = data['${col.name}'];\n"
+                        out << INDENT*3 << "} else {\n"
+                        out << INDENT*4 << "this.${col.name} = {};\n"
+                        out << INDENT*3 << "}\n"
+                        break;
+                    case 'embeddedImages':
+                        out << INDENT*3 << "this.${col.name} = ko.observableArray();\n"
+                        out << INDENT*3 << "if (data['${col.name}'] instanceof Array) {\n"
+                        out << INDENT*4 << "this.${col.name}(data['${col.name}']);\n"
+                        out << INDENT*3 << "} else if (data['${col.name}']) {\n"
+                        out << INDENT*4 << "this.${col.name}.push(data['${col.name}']);\n"
+                        out << INDENT*3 << "}\n"
                         break;
                     case 'species':
                         out << INDENT*3 << "this.${col.name} =  new SpeciesViewModel(data['${col.name}'], this);\n"

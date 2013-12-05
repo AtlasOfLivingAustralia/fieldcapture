@@ -125,6 +125,9 @@ class ModelTagLib {
             case 'embeddedImage':
                 renderer.renderEmbeddedImage(renderContext)
                 break
+            case 'embeddedImages':
+                renderer.renderEmbeddedImages(renderContext)
+                break
             case 'autocomplete':
                 renderer.renderAutocomplete(renderContext)
                 break
