@@ -129,8 +129,8 @@
                 <div id="documents" data-bind="css: { span6: documents().length > 0 }">
                     <h4>Project documents</h4>
                     <div data-bind="visible:documents().length == 0">
-                        No documents current attached to this project.
-                        To add a document select the Admin tab.
+                        No documents are currently attached to this project.
+                        <g:if test="${user?.isAdmin}">To add a document use the Documents section of the Admin tab.</g:if>
                     </div>
                     <g:render template="/shared/listDocuments"
                       model="[useExistingModel: true,editable:false,imageUrl:resource(dir:'/images/filetypes'),containerId:'overviewDocumentList']"/>
@@ -224,7 +224,7 @@
                             <li class="active"><a href="#settings" id="settings-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Project settings</a></li>
                             <li><a href="#permissions" id="permissions-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Project access</a></li>
                             <li><a href="#species" id="species-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Species of interest</a></li>
-                            <li><a href="#documents" id="documents-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Documents</a></li>
+                            <li><a href="#edit-documents" id="documents-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Documents</a></li>
                         </ul>
                     </div>
                     <div class="span10">
@@ -266,7 +266,7 @@
                                 <g:render template="/species/species" model="[project:project, activityTypes:activityTypes]"/>
                             </div>
                             <!-- DOCUMENTS -->
-                            <div id="documents" class="pill-pane">
+                            <div id="edit-documents" class="pill-pane">
                                 <h3>Project Documents</h3>
                                 <div class="row-fluid">
                                     <div class="span10">
