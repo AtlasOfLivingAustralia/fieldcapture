@@ -22,8 +22,12 @@
                 <h1>${title?:'About the website'}
                     <g:if test="${fc.userIsSiteAdmin()}">
                         <span style="display: inline-block; margin: 10px 10px 20px 20px;">
-                            <a href="${g.createLink(controller:"admin",action:"ajaxEditSettingText", id: name)}"
-                                data-target="#myModal" role="button" class="btn btn-small" data-toggle="modal">Edit content</a>
+                            <div class="btn-group">
+                                <a href="${g.createLink(controller:"admin",action:"editSettingText", id: name, params: [layout:"ajaxLayout"])}"
+                                   data-target="#myModal" role="button" class="btn btn-small" data-toggle="modal">Quick Edit</a>
+                                <a href="${g.createLink(controller:"admin",action:"editSettingText", id: name, params: [layout:"nrm",returnUrl: g.createLink(controller: params.controller, action: params.action, absolute: true)])}"
+                                   class="btn btn-small">Full Edit</a>
+                            </div>
                         </span>
                 </h1>
                         <!-- Modal -->

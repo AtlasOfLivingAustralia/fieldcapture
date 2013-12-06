@@ -143,16 +143,10 @@ class AdminController {
         [settings: settings, grailsStuff: grailsStuff]
     }
 
-    def ajaxEditSettingText(String id) {
-        editSettingTextCommon(id, true)
-    }
-
     def editSettingText(String id) {
-        editSettingTextCommon(id, false)
-    }
-
-    def editSettingTextCommon(String id, Boolean ajax) {
         def content
+        def layout = params.layout?:"adminLayout"
+        def returnUrl = params.returnUrl?:g.createLink(controller:'admin', action:'settings', absolute: true )
         SettingPageType type = SettingPageType.getForName(id)
 
         if (type) {
@@ -164,8 +158,9 @@ class AdminController {
 
         render(view:'editTextAreaSetting', model:[
                 textValue: content,
-                layout: (ajax) ? "ajaxLayout" : null,
-                ajax: ajax,
+                layout: layout,
+                ajax: (layout =~ /ajax/) ? true : false,
+                returnUrl: returnUrl,
                 settingTitle: type.title,
                 settingKey: type.key] )
     }
@@ -173,6 +168,8 @@ class AdminController {
     def saveTextAreaSetting() {
         def text = params.textValue
         def settingKey = params.settingKey
+        def returnUrl = params.returnUrl?:g.createLink(controller:'admin', action:'settings', absolute: true )
+
         if (settingKey) {
             SettingPageType type = SettingPageType.getForKey(settingKey)
 
@@ -185,7 +182,7 @@ class AdminController {
             }
         }
 
-        redirect(action:'settings')
+        redirect(uri: returnUrl)
     }
 
     def reloadConfig = {
