@@ -78,7 +78,7 @@
                 center: new google.maps.LatLng(-28.5, 133.5),
                 panControl: false,
                 streetViewControl: false,
-                mapTypeControl: false,
+                mapTypeControl: true,
                 mapTypeId: google.maps.MapTypeId.TERRAIN,
                 scrollwheel: options.scrollwheel,
                 zoomControlOptions: {
@@ -87,8 +87,8 @@
             });
             //console.log('[init] ZoomToBounds: ' + features.zoomToBounds);
             //console.log('[init] ZoomLimit: ' + features.zoomLimit);
-            if (features.zoomToBounds) { this.zoomToBounds = features.zoomToBounds; }
-            if (features.zoomLimit) { this.zoomLimit = features.zoomLimit; }
+            if(features.zoomToBounds){ this.zoomToBounds = features.zoomToBounds; }
+            if(features.zoomLimit){ this.zoomLimit = features.zoomLimit; }
             if(features.features !== undefined){
                 this.load(features.features);
             }

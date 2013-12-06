@@ -43,8 +43,8 @@ class DashboardTagLib {
 
 
         out << """
-            <strong>${score.score.label}</strong><span class="pull-right progress-label">${result}/${score.target}</span>
-                <div class="progress progress-info active">
+            <strong>${score.score.label}</strong><span class="pull-right progress-label ${percentComplete >= 99 ? 'progress-100':''}">${result}/${score.target}</span>
+                <div class="progress progress-info active ">
                 <div class="bar" style="width: ${percentComplete}%;"></div>
             </div>"""
     }

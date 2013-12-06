@@ -126,9 +126,9 @@
                 </div>
 
                 <!-- show other documents -->
-                <div id="documents">
+                <div id="documents" data-bind="css: { span6: documents().length > 0 }">
                     <h4>Project documents</h4>
-                    <div data-bind="visible:documents.length == 0">
+                    <div data-bind="visible:documents().length == 0">
                         No documents current attached to this project.
                         To add a document select the Admin tab.
                     </div>
