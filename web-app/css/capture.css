@@ -721,3 +721,9 @@ table.tight-inputs input {
 table.tight-inputs textarea {
     margin-bottom: 4px;
 }
+
+.imageList li {
+    list-style: none;
+    display:inline;
+    margin-right: 10px;
+}
