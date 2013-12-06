@@ -495,6 +495,10 @@ span.progress-label {
     padding-right:4px;
 }
 
+.progress-100 {
+   color: #FFF;
+}
+
 .showHideCaret {
     font-size: 11px;
 }
@@ -716,10 +720,4 @@ table.tight-inputs input {
 
 table.tight-inputs textarea {
     margin-bottom: 4px;
-}
-
-.imageList li {
-    list-style: none;
-    display:inline;
-    margin-right: 10px;
 }
