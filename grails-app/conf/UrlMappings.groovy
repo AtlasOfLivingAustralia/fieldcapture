@@ -20,5 +20,6 @@ class UrlMappings {
     "/user/addUserAsRoleToProject"(controller: "user", action: "addUserAsRoleToProject")
     "/admin/user/${id}"(controller: "user", action: "show")
 		"500"(view:'/error')
+		"404"(view:'/error')
 	}
 }

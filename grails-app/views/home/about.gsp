@@ -1,9 +1,9 @@
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page import="au.org.ala.fieldcapture.SettingPageType" contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE HTML>
 <html>
 <head>
   <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
-  <title>${title?:'About'} | Field Capture</title>
+  <title>${settingType.title?:'About'} | Field Capture</title>
   <r:script disposition="head">
     var fcConfig = {
         baseUrl: "${grailsApplication.config.grails.serverURL}",
@@ -18,14 +18,14 @@
 <body>
     <div id="wrapper" class="container-fluid">
         <div class="row-fluid">
-            <div class="span12" id="">
-                <h1>${title?:'About the website'}
+            <div class="span8" id="">
+                <h1>${settingType.title?:'About the website'}
                     <g:if test="${fc.userIsSiteAdmin()}">
-                        <span style="display: inline-block; margin: 10px 10px 20px 20px;">
+                        <span style="display: inline-block; margin: 10px;">
                             <div class="btn-group">
-                                <a href="${g.createLink(controller:"admin",action:"editSettingText", id: name, params: [layout:"ajaxLayout"])}"
+                                <a href="${g.createLink(controller:"admin",action:"editSettingText", id: settingType.name, params: [layout:"ajaxLayout"])}"
                                    data-target="#myModal" role="button" class="btn btn-small" data-toggle="modal">Quick Edit</a>
-                                <a href="${g.createLink(controller:"admin",action:"editSettingText", id: name, params: [layout:"nrm",returnUrl: g.createLink(controller: params.controller, action: params.action, absolute: true)])}"
+                                <a href="${g.createLink(controller:"admin",action:"editSettingText", id: settingType.name, params: [layout:"nrm",returnUrl: g.createLink(controller: params.controller, action: params.action, absolute: true)])}"
                                    class="btn btn-small">Full Edit</a>
                             </div>
                         </span>
@@ -65,10 +65,6 @@
                                         //alert( "complete" );
                                     });
                                 });
-
-                                //$('#myModal').on('show', function () {
-                                    //$('.modal-body',this).css({width:'auto',height:'auto', 'max-height':'90%'});
-                                //});
                             });
                         </r:script>
                     </g:if>
@@ -77,9 +73,18 @@
                     </g:else>
             </div>
         </div>
-        <div class="well" id="aboutDescription" style="margin-top:20px;">
-            <markdown:renderHtml>${content}</markdown:renderHtml>
-        </div>
+        <div class="row-fluid">
+            <div class="span8">
+                <div class="" id="aboutDescription" style="margin-top:20px;">
+                    <markdown:renderHtml>${content}</markdown:renderHtml>
+                </div>
+            </div><!-- /.spanN  -->
+            <g:if test="${settingType == SettingPageType.ABOUT && fc.userIsLoggedIn()}">
+                <div class="span4 well well-small">
+                    <fc:getSettingContent settingType="${SettingPageType.INTRO}"/>
+                </div>
+            </g:if>
+        </div><!-- /.row-fluid  -->
     </div>
 </body>
 </html>

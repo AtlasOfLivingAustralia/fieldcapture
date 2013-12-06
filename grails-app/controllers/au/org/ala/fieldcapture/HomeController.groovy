@@ -49,20 +49,29 @@ class HomeController {
     }
 
     def about() {
-        def settingType = SettingPageType.ABOUT
-        def content = settingService.getSettingText(settingType)
-        [name: settingType.name, title: settingType.title, content: content]
+        renderStaticPage(SettingPageType.ABOUT)
     }
 
     def help() {
-        def settingType = SettingPageType.HELP
-        def content = settingService.getSettingText(settingType)
-        render view: 'about', model: [name: settingType.name, title: settingType.title, content: content]
+        renderStaticPage(SettingPageType.HELP)
     }
 
     def contacts() {
-        def settingType = SettingPageType.CONTACTS
+        renderStaticPage(SettingPageType.CONTACTS)
+    }
+
+    def staticPage(String id) {
+        def settingType = SettingPageType.getForName(id)
+        if (settingType) {
+            renderStaticPage(settingType)
+        } else {
+            response.sendError(404)
+            return
+        }
+    }
+
+    private renderStaticPage(SettingPageType settingType) {
         def content = settingService.getSettingText(settingType)
-        render view: 'about', model: [name: settingType.name, title: settingType.title, content: content]
+        render view: 'about', model: [settingType: settingType, content: content]
     }
 }

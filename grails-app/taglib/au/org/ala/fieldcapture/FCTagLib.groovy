@@ -575,6 +575,19 @@ class FCTagLib {
         }
     }
 
+    /**
+     * Output HTML content for the requested SettingPageType
+     *
+     * @attr settingType REQUIRED
+     */
+    def getSettingContent = { attrs ->
+        SettingPageType settingType = attrs.settingType
+        def content = settingService.getSettingText(settingType) as String
+        if (content) {
+            out << content.markdownToHtml()
+        }
+    }
+
     private void renderObject(Object object, MarkupBuilder mb) {
 
         if (object instanceof JSONObject) {
