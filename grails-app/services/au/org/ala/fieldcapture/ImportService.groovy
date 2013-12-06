@@ -451,7 +451,7 @@ class ImportService {
             int stageNum = 0
             def timeline = []
             def activities = []
-            def outputs = readOutputs(csvLine[OUTPUT_COLUMN..<stageOffsets[0]])
+            def outputs = readOutputs(project, csvLine[OUTPUT_COLUMN..<stageOffsets[0]])
 
             while (stageNum < stageOffsets.size()) {
 
@@ -478,6 +478,15 @@ class ImportService {
 
     }
 
+    def readOutputs(project, outputDetails) {
+        if (project.associatedProgram.startsWith('Biodiversity Fund')) {
+            return readBioFundOutputs(outputDetails)
+        }
+        else if (project.associatedProgram.startsWith('Caring')) {
+            return readCFOCOutputs(outputDetails)
+        }
+    }
+
     def readCFOCOutputs(outputDetails) {
         def headers=['Revegetation ha':[outputLabel: 'Revegetation Details', scoreName: 'areaOfWorks' , scoreLabel: 'Area of works', units:'Ha'],
                 'Weed treatment: area treated ha':[outputLabel: 'Weed Treatment Details', scoreName: 'areaTreatedHa' , scoreLabel: 'Total area treated (Ha)', units:'Ha'],
@@ -501,7 +510,7 @@ class ImportService {
 
     }
 
-    def readOutputs(outputDetails) {
+    def readBioFundOutputs(outputDetails) {
 
         def theme1 = 'Biodiverse plantings'
         def theme2 = 'Protecting and enhancing existing native vegetation'
