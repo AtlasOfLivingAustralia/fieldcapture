@@ -35,9 +35,14 @@
                     <markdown:renderHtml>${content}</markdown:renderHtml>
                 </div>
             </div><!-- /.spanN  -->
-            <g:if test="${settingType == SettingPageType.ABOUT && fc.userIsLoggedIn()}">
+            <g:set var="introText"><fc:getSettingContent settingType="${SettingPageType.INTRO}"/></g:set>
+            <g:if test="${introText && settingType == SettingPageType.ABOUT && fc.userIsLoggedIn()}">
                 <div class="span4 well well-small">
-                    <fc:getSettingContent settingType="${SettingPageType.INTRO}"/>
+                    <g:if test="${fc.userIsSiteAdmin()}">
+                        <a href="${g.createLink(controller:"admin",action:"editSettingText", id: SettingPageType.INTRO.name, params: [layout:"nrm",returnUrl: g.createLink(controller: params.controller, action: params.action, absolute: true)])}"
+                           class="btn btn-small pull-right"><i class="icon-edit"></i> Edit</a>
+                    </g:if>
+                    ${introText}
                 </div>
             </g:if>
         </div><!-- /.row-fluid  -->
