@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page import="au.org.ala.fieldcapture.SettingPageType" contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/html">
 <head>
@@ -47,10 +47,7 @@
 </div>
 <div class="row-fluid large-space-after">
     <div class="span8">
-        <p>The online monitoring, evaluation, reporting and improvement tool (MERIT) is now available for funding recipients to start reporting.
-        MERIT allows funding recipients to record and upload data about the progress of their projects on a continual
-        basis and to submit reports online. It will also increase information sharing within NRM communities and the
-        broader public.</p>
+        <markdown:renderHtml>${description}</markdown:renderHtml>
     </div>
     %{--<div class="span6">--}%
 
@@ -223,20 +220,7 @@
                 </div>
             </div>
             <p>&nbsp;</p>
-            <p>Developed in collaboration with the Atlas of Living Australia, MERIT will enhance the reporting process by
-            allowing simpler yet more complete project records and showing direct links between project activities and
-            contributions to Australia’s biodiversity conservation work.</p>
-            <p>At this stage MERIT includes the following programmes:</p>
-            <ul>
-                <li>Caring for our Country Target Area Grants</li>
-                <li>Caring for our Country Regional Delivery</li>
-                <li>Caring for our Country Reef Rescue</li>
-                <li>Caring for our Country Community Environment Grants</li>
-                <li>Biodiversity Fund Round 1</li>
-                <li>Biodiversity Fund Round 2</li>
-                <li>Biodiversity Fund Investing in Tasmania's Native Forests</li>
-                <li>Biodiversity Fund Northern Australia Targeted Investment</li>
-            </ul>
+            <fc:getSettingContent settingType="${SettingPageType.ABOUT}"/>
         </div>
     </div>
 </g:elseif>

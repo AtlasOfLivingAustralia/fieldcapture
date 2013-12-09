@@ -22,6 +22,7 @@ package au.org.ala.fieldcapture
  */
 enum SettingPageType {
     ABOUT ("about","About","fielddata.about.text"),
+    DESCRIPTION ("description","Description","fielddata.description.text"),
     FOOTER ("footer","Footer","fielddata.footer.text"),
     ANNOUNCEMENT ("announcement","Announcement","fielddata.announcement.text"),
     HELP ("help","Help","fielddata.help.text"),

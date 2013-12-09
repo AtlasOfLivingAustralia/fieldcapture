@@ -23,8 +23,9 @@ class HomeController {
     def index() {
         params.facets = "associatedProgramFacet,associatedSubProgramFacet,fundingSourceFacet,reportingThemesFacet,organisationFacet,statesFacet,nrmsFacet,lgasFacet"
         def resp = searchService.HomePageFacets(params)
-        [ facetsList: params.facets.tokenize(","),
-          results: resp ]
+        [   facetsList: params.facets.tokenize(","),
+            description: settingService.getSettingText(SettingPageType.DESCRIPTION),
+            results: resp ]
     }
 
     def tabbed() {
