@@ -121,7 +121,7 @@ class AdminController {
         render result
     }
 
-    @PreAuthorise(accessLevel = 'alaAdmin', redirectController = "admin")
+    @PreAuthorise(accessLevel = 'siteAdmin', redirectController = "admin")
     def settings() {
         def settings = []
 
