@@ -24,7 +24,7 @@
                         </td>
                         <td style="max-width:500px;overflow-wrap:break-word;">
                             <g:if test="${setting.editLink}">
-                                <a href="${setting.editLink}" class="btn btn-small">
+                                <a href="${setting.editLink}/${setting.name}" class="btn btn-small">
                                     <i class="icon-edit"></i>&nbsp;View / Edit
                                 </a>
                             </g:if>

@@ -127,14 +127,14 @@ class AdminController {
 
         for (setting in SettingPageType.values()) {
             log.debug "setting = $setting"
-            settings << [key:setting.key, value: "&lt;Click edit to view...&gt;", editLink: createLink(controller:'admin', action:"editSettingText/${setting.name}")]
+            settings << [key:setting.key, value:"&lt;Click edit to view...&gt;", editLink: createLink(controller:'admin', action:"editSettingText"), name:setting.name]
         }
 
         def grailsStuff = []
         def config = grailsApplication.config.flatten()
         for ( e in config ) {
             if(e.key.startsWith("grails.")){
-                 grailsStuff << [key: e.key, value: e.value, comment: '']
+                grailsStuff << [key: e.key, value: e.value, comment: '']
             } else {
                 settings << [key: e.key, value: e.value, comment: '']
             }
