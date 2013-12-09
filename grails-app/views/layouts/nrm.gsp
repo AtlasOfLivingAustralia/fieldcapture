@@ -179,7 +179,12 @@
             $.ajax("${createLink(controller: 'ajax', action:'keepSessionAlive')}").done(function(data) {});
         }, intervalSeconds * 1000);
 
-        <g:if test="${userLoggedIn}">
+    }); // end document ready
+
+</r:script>
+<g:if test="${userLoggedIn}">
+    <r:script>
+        $(document).ready(function (e) {
             // Show introduction popup (with cookie check)
             var cookieName = "hide-intro";
             var introCookie = $.cookie(cookieName);
@@ -198,12 +203,9 @@
                     $.removeCookie(cookieName);
                 }
             });
-        </g:if>
-
-    });
-
-
-</r:script>
+        }); // end document ready
+    </r:script>
+</g:if>
 
 <r:layoutResources/>
 </body>
