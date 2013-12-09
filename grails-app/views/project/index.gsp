@@ -78,7 +78,7 @@
         <li><a href="#plan" id="plan-tab" data-toggle="${tabIsActive}">Plans & Reports</a></li>
         <li><a href="#site" id="site-tab" data-toggle="${tabIsActive}">Sites</a></li>
         <li><a href="#dashboard" id="dashboard-tab" data-toggle="${tabIsActive}">Dashboard</a></li>
-        <g:if test="${user?.isAdmin}"><li><a href="#admin" id="admin-tab" data-toggle="tab">Admin</a></li></g:if>
+        <g:if test="${user?.isAdmin || user?.isCaseManager}"><li><a href="#admin" id="admin-tab" data-toggle="tab">Admin</a></li></g:if>
     </ul>
     <div class="tab-content" style="overflow:visible;">
         <div class="tab-pane active" id="overview">
@@ -215,21 +215,40 @@
                 <g:render template="dashboard"/>
             </div>
         </g:if>
-        <g:if test="${user?.isAdmin}">
+        <g:if test="${user?.isAdmin || user?.isCaseManager}">
+            <g:set var="activeClass" value="class='active'"/>
             <div class="tab-pane" id="admin">
             <!-- ADMIN -->
                 <div class="row-fluid">
                     <div class="span2 large-space-before">
                         <ul id="adminNav" class="nav nav-tabs nav-stacked ">
-                            <li class="active"><a href="#settings" id="settings-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Project settings</a></li>
-                            <li><a href="#permissions" id="permissions-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Project access</a></li>
+                            <g:if test="${fc.userInRole(role: "ROLE_ADMIN")}">
+                                <li ${activeClass}><a href="#settings" id="settings-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Project settings</a></li>
+                                <g:set var="activeClass" value=""/>
+                            </g:if>
+                            <li ${activeClass}><a href="#permissions" id="permissions-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Project access</a></li>
                             <li><a href="#species" id="species-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Species of interest</a></li>
                             <li><a href="#edit-documents" id="documents-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Documents</a></li>
                         </ul>
                     </div>
                     <div class="span10">
                         <div class="pill-content">
-                            <div id="permissions" class="pill-pane">
+                            <g:set var="activeClass" value="active"/>
+                            <g:if test="${fc.userInRole(role: "ROLE_ADMIN")}">
+                                <!-- PROJECT SETTINGS -->
+                                <div id="settings" class="pill-pane ${activeClass}">
+                                    <h3>Project Settings</h3>
+                                    <div class="row-fluid">
+                                        <div id="save-result-placeholder"></div>
+                                        <div class="span10 validationEngineContainer" id="settings-validation">
+                                            <g:render template="editProject"
+                                                      model="[project: project]"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <g:set var="activeClass" value=""/>
+                            </g:if>
+                            <div id="permissions" class="pill-pane ${activeClass}">
                                 <h3>Project Access</h3>
                                 %{--<a name="permissions"></a>--}%
                                 <g:render template="/admin/addPermissions" model="[projectId:project.projectId]"/>
@@ -278,17 +297,6 @@
                                 <g:render template="/shared/attachDocument"/>
                                 <div class="row-fluid attachDocumentModal">
                                     <button class="btn" id="doAttach" data-bind="click:attachDocument">Attach Document</button>
-                                </div>
-                            </div>
-                            <!-- PROJECT SETTINGS -->
-                            <div id="settings" class="pill-pane active">
-                                <h3>Project Settings</h3>
-                                <div class="row-fluid">
-                                    <div id="save-result-placeholder"></div>
-                                    <div class="span10 validationEngineContainer" id="settings-validation">
-                                        <g:render template="editProject"
-                                                  model="[project: project]"/>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -696,7 +704,7 @@
             }
         }
     </r:script>
-    <g:if test="${user?.isAdmin}">
+    <g:if test="${user?.isAdmin || user?.isCaseManager}">
         <r:script>
             // Admin JS code only exposed to admin users
             $(window).load(function () {
