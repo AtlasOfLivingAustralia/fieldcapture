@@ -90,6 +90,8 @@ class FCTagLib {
         def isprint = attrs.printable
         def mb = new MarkupBuilder(out)
 
+        mb.setEscapeAttributes(false)
+
         if (!isprint) {
             mb.select(attrs) {
                 mkp.yieldUnescaped("&nbsp;")
@@ -99,6 +101,7 @@ class FCTagLib {
                 mkp.yieldUnescaped("&nbsp;")
             }
         }
+
     }
 
     /**

@@ -51,7 +51,7 @@
                             Site:
                         </div>
                         <div class="span2">
-                            <fc:select data-bind="options:transients.project.sites,optionsText:'name',optionsValue:'siteId',value:siteId,optionsCaption:'Choose a site...'" printable="${printView}"/>
+                            <fc:select data-bind='options:transients.project.sites,optionsText:"name",optionsValue:"siteId",value:siteId,optionsCaption:"Choose a site..."' printable="${printView}"/>
                         </div>
                         <div class="span6">
                             Leave blank if this activity is not associated with a specific site.
