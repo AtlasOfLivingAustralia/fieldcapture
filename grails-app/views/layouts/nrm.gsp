@@ -19,17 +19,19 @@
   Date: 08/07/13
 --%>
 <%@ page contentType="text/html;charset=UTF-8" %>
-<%@ page import="org.codehaus.groovy.grails.commons.ConfigurationHolder" %>
+<%@ page import="au.org.ala.fieldcapture.SettingPageType; org.codehaus.groovy.grails.commons.ConfigurationHolder" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <title><g:layoutTitle /></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <r:require modules="nrmSkin"/>
+    <r:require modules="nrmSkin, jquery_cookie"/>
     <r:layoutResources/>
     <g:layoutHead />
 </head>
 <body class="${pageProperty(name:'body.class')}" id="${pageProperty(name:'body.id')}" onload="${pageProperty(name:'body.onload')}">
+<g:set var="introText"><fc:getSettingContent settingType="${SettingPageType.INTRO}"/></g:set>
+<g:set var="userLoggedIn"><fc:userIsLoggedIn/></g:set>
 <g:if test="${fc.announcementContent()}">
     <div id="announcement">
         ${fc.announcementContent()}
@@ -106,11 +108,34 @@
             <div class="container-fluid">
                 <div class="large-space-before">
                     <button class="btn btn-mini" id="toggleFluid">toggle fixed/fluid width</button>
+                    <g:if test="${userLoggedIn && introText}">
+                        <button class="btn btn-mini" type="button" data-toggle="modal" data-target="#introPopup">display user intro</button>
+                    </g:if>
             </div>
         </div>
 
     </div>
 </div><!-- /#body-wrapper -->
+<g:if test="${userLoggedIn && introText}">
+    %{-- User Intro Popup --}%
+    <div id="introPopup" class="modal hide fade">
+        <div class="modal-header hide">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>User Introduction</h3>
+        </div>
+        <div class="modal-body">
+            ${introText}
+        </div>
+        <div class="modal-footer">
+            <label for="hideIntro" class="pull-left">
+                <g:checkBox name="hideIntro" style="margin:0;"/>&nbsp;
+                Do not display this message again (current browser only)
+            </label>
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+            %{--<a href="#" class="btn btn-primary">Save changes</a>--}%
+        </div>
+    </div>
+</g:if>
 <r:script>
     // Prevent console.log() killing IE
     if (typeof console == "undefined") {
@@ -139,7 +164,7 @@
         $("#toggleFluid").click(function(el){
             var fluidNo = $('div.container-fluid').length;
             var fixNo = $('div.container').length;
-            console.log("counts", fluidNo, fixNo);
+            //console.log("counts", fluidNo, fixNo);
             if (fluidNo > fixNo) {
                 $('div.container-fluid').addClass('container').removeClass('container-fluid');
             } else {
@@ -153,6 +178,27 @@
         setInterval(function() {
             $.ajax("${createLink(controller: 'ajax', action:'keepSessionAlive')}").done(function(data) {});
         }, intervalSeconds * 1000);
+
+        <g:if test="${userLoggedIn}">
+            // Show introduction popup (with cookie check)
+            var cookieName = "hide-intro";
+            var introCookie = $.cookie(cookieName);
+            //  document.referrer is empty following login from AUTH
+            if (!introCookie && !document.referrer) {
+                $('#introPopup').modal('show');
+            } else {
+                $('#hideIntro').prop('checked', true);
+            }
+            // console.log("referrer", document.referrer);
+            // don't show popup if user has clicked checkbox on popup
+            $('#hideIntro').click(function() {
+                if ($(this).is(':checked')) {
+                    $.cookie(cookieName, 1);
+                } else {
+                    $.removeCookie(cookieName);
+                }
+            });
+        </g:if>
 
     });
 

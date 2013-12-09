@@ -183,4 +183,9 @@ modules = {
         dependsOn 'knockout'
         resource 'js/projects.js'
     }
+
+    jquery_cookie {
+        dependsOn 'jquery'
+        resource 'js/jquery.cookie.js'
+    }
 }
