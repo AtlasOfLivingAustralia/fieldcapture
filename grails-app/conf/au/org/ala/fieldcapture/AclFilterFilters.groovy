@@ -15,7 +15,12 @@ class AclFilterFilters {
                 def controller = grailsApplication.getArtefactByLogicalPropertyName("Controller", controllerName)
                 Class controllerClass = controller?.clazz
                 def method = controllerClass.getMethod(actionName?:"index", [] as Class[])
-                def roles = metadataService.getAccessLevels().collect { it.name } // List
+                def roles = metadataService.getAccessLevels().collect {
+                    if (it && it.hasProperty('name')) {
+                        it.name
+                    }
+                } // List
+
                 roles.addAll(["alaAdmin","siteAdmin"]) // augment roles with these extra ones
 
                 if (controllerClass.isAnnotationPresent(PreAuthorise) || method.isAnnotationPresent(PreAuthorise)) {
