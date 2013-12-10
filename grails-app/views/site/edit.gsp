@@ -114,8 +114,8 @@
                             <h4>Define extent using:
                             <g:select class="input-medium" data-bind="value: extent().source"
                                       name='extentSource'
-                                      from="['choose type','point','known shape','upload a shape','draw a shape']"
-                                      keys="['none','point','pid','upload','drawn']"/>
+                                      from="['choose type','point','known shape','draw a shape']"
+                                      keys="['none','point','pid','drawn']"/>
                             </h4>
                         </div>
 
