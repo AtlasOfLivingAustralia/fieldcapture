@@ -120,10 +120,10 @@ if (!bie.baseURL) {
     bie.baseURL = "http://bie.ala.org.au"
 }
 if(!webservice.connectTimeout){
-    webservice.connectTimeout = 5000
+    webservice.connectTimeout = 10000
 }
 if(!webservice.readTimeout){
-    webservice.readTimeout = 5000
+    webservice.readTimeout = 20000
 }
 if(!spatial.baseUrl){
     spatial.baseUrl = "http://spatial-dev.ala.org.au"
@@ -174,7 +174,7 @@ environments {
         layout.skin = "nrm"
         security.cas.appServerName = serverName
         security.cas.contextPath = "/" + appName
-        ecodata.baseUrl = 'http://localhost:8080/ecodata/ws/'
+        ecodata.baseUrl = 'http://ecodata.ala.org.au/ws/'
         upload.images.url = grails.serverURL+'/image/'
     }
     production {
