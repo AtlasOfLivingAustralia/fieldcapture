@@ -10,7 +10,11 @@ class ProjectController {
 
     def index(String id) {
         def project = projectService.get(id, 'brief')
-        def roles = metadataService.getAccessLevels().collect { it.name }
+        def roles = metadataService.getAccessLevels().collect {
+            if (it && it.hasProperty('name')) {
+                it.name
+            }
+        }
 
         if (!project || project.error) {
             flash.message = "Project not found with id: ${id}"
