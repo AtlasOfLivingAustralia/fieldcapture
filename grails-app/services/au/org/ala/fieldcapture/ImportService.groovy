@@ -152,17 +152,19 @@ class ImportService {
             project.organisationName = "Not specified"
         }
 
+        def startDate = projectDetails['Start']
         try {
-            def startDate = projectDetails['Start']
+
             if (startDate) {
                 project.plannedStartDate = convertDate(startDate)
             }
         }
         catch (Exception e) {
-            errors.add("Unable to parse Finish Date: ${endDate}")
+            errors.add("Unable to parse Start Date: ${startDate}")
         }
+        def endDate = projectDetails['Finish']
+
         try {
-            def endDate = projectDetails['Finish']
             if (endDate) {
                 project.plannedEndDate = convertDate(endDate);
             }
@@ -201,7 +203,7 @@ class ImportService {
         }
         else {
             project.associatedProgram = matchedProgram.name
-            def subprogram = program.subprograms.find {it.name == roundName}
+            def subprogram = matchedProgram.subprograms.find {it.name == roundName}
             if (!subprogram) {
                 warnings.add("'Round Name' does not match a valid subprogram name: ${roundName}")
             }
