@@ -229,10 +229,10 @@
 
 
         var viewModel = new ViewModel(
-    ${(activity as JSON).toString()},
-    ${site ?: 'null'},
-    ${project ?: 'null'},
-    ${metaModel ?: 'null'});
+            ${(activity as JSON).toString()},
+            ${site ?: 'null'},
+            ${project ?: 'null'},
+            ${metaModel ?: 'null'});
 
         ko.applyBindings(viewModel,document.getElementById('koActivityMainBlock'));
 
@@ -241,14 +241,14 @@
             init_map_with_features({
                     mapContainer: "smallMap",
                     zoomToBounds:true,
-                    zoomLimit:16
+                    zoomLimit:16,
+                    layerService: "${grailsApplication.config.spatial.layersUrl}",
+                    wmsServer: "${grailsApplication.config.spatial.geoserverUrl}"
                 },
                 mapFeatures
             );
         }
-
     });
-
 </r:script>
 </body>
 </html>

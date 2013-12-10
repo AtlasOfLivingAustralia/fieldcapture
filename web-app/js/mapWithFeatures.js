@@ -62,6 +62,10 @@
         smallDotIcon: "https://maps.gstatic.com/intl/en_us/mapfiles/markers2/measle.png", // blue: measle_blue.png
         // URL to red google marker icon
         redMarkerIcon: "http://www.google.com/intl/en_us/mapfiles/ms/micons/red-dot.png",
+        //spatial portal URL
+        layerService: "http://spatial-dev.ala.org.au/layers-service",
+        //WMS server for PID
+        wmsServer: "http://spatial-dev.ala.org.au/geoserver",
         // init map and load features
         init: function (options, features) {
             var self = this;
@@ -69,6 +73,9 @@
             // handle options
             if (options.mapContainer) {
                 this.containerId = options.mapContainer;
+            }
+            if(options.layerService){
+                this.layerService = options.layerService;
             }
             if (features.highlightOnHover) {
                 this.highlightOnHover = features.highlightOnHover;
@@ -169,10 +176,10 @@
                     //load the overlay instead
                     var pid = loc.pid;
                     //console.log('Loading PID: ' + pid);
-                    f = new PIDLayer(pid,256,256);
+                    f = new PIDLayer(pid, wmsServer);
                     map.map.overlayMapTypes.push(f);
                     $.ajax({
-                        url: 'http://spatial-dev.ala.org.au/layers-service/object/' + pid,
+                        url: this.layerService+ '/object/' + pid,
                         dataType:'jsonp'
                     }).done(function(data) {
                        //console.log('Retrieving metadata for object.....');
@@ -444,9 +451,11 @@
     function init (options, features) {
         return map.init(options, features);
     }
+
     function mapSite(site){
         return map.mapSite(site)
     }
+
     function clearMap(){
         map.clearFeatures();
     }

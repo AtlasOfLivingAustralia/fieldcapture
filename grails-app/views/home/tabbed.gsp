@@ -401,7 +401,9 @@
                     mapContainer: "map",
                     zoomToBounds:true,
                     scrollwheel: false,
-                    zoomLimit:16
+                    zoomLimit:16,
+                    layerService: "${grailsApplication.config.spatial.layersUrl}",
+                    wmsServer: "${grailsApplication.config.spatial.geoserverUrl}"
                 },
                 mapData
             );

@@ -470,7 +470,6 @@ function init (options) {
     config.baseUrl = options.server;
     config.spatialServiceUrl = options.spatialService;
     config.spatialWmsUrl = options.spatialWms;
-    config.spatialCacheUrl = options.spatialCache;
 
     /*****************************************\
     | Create map
@@ -553,7 +552,7 @@ function clearObjectsAndShapes(){
 }
 
 function showObjectOnMap(pid){
-    var pidLayer = new PIDLayer(pid,256,256);
+    var pidLayer = new PIDLayer(pid, config.spatialWmsUrl);
     if(map.gmap.overlayMapTypes.length>0){
         map.gmap.overlayMapTypes.removeAt(0);
     }

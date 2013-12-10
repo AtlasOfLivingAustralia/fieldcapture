@@ -404,8 +404,7 @@
         siteData: $.parseJSON('${json}'),
         checkForState: ${params.checkForState?:'false'},
         spatialService: '${grailsApplication.config.spatial.layersUrl}',
-        spatialWms: '${grailsApplication.config.spatial.geoserverUrl}/ALA/wms?',
-        spatialCache: '${grailsApplication.config.spatial.geoserverUrl}/gwc/service/wms?'
+        spatialWms: '${grailsApplication.config.spatial.geoserverUrl}'
     };
 
     var savedSiteData = {
@@ -593,7 +592,7 @@
                 self.layerObjects([]);
                 if(self.chosenLayer() !== undefined){
                     $.ajax({
-                        url: 'http://spatial.ala.org.au/ws/objects/' + this.chosenLayer(),
+                        url: SERVER_CONF.spatialService + '/objects/' + this.chosenLayer(),
                         dataType:'jsonp'
                     }).done(function(data) {
                         self.layerObjects(data);
@@ -631,7 +630,7 @@
                 self.layerObjects([]);
                 if(self.chosenLayer() !== undefined){
                     $.ajax({
-                        url: 'http://spatial.ala.org.au/ws/objects/' + this.chosenLayer(),
+                        url: SERVER_CONF.spatialService + '/objects/' + this.chosenLayer(),
                         dataType:'jsonp'
                     }).done(function(data) {
                         self.layerObjects(data);
@@ -649,7 +648,7 @@
 
                     //additional metadata required from service layer
                     $.ajax({
-                        url: 'http://spatial.ala.org.au/ws/object/' + self.layerObject(),
+                        url: SERVER_CONF.spatialService + '/object/' + self.layerObject(),
                         dataType:'jsonp'
                     }).done(function(data) {
                         console.log('Retrieving details of ' + self.layerObject());
@@ -934,7 +933,6 @@
         init_map({
             spatialService: SERVER_CONF.spatialService,
             spatialWms: SERVER_CONF.spatialWms,
-            spatialCache: SERVER_CONF.spatialCache,
             mapContainer: 'mapForExtent'
         });
 

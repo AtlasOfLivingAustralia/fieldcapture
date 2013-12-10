@@ -216,7 +216,7 @@ function getWMSTileUrl(coord, zoom, baseurl, customParams)
 }
 
 //Define custom WMS tiled layer
-function PIDLayer(pid){
+function PIDLayer(pid, wmsServer){
     return new google.maps.ImageMapType({
         getTileUrl: function(coord, zoom){
              var wmsParams = [
@@ -239,7 +239,7 @@ function PIDLayer(pid){
             var projectionMap = new MercatorProjection();
 
             var lULg = projectionMap.fromDivPixelToSphericalMercator(lULP, zoom);
-            var lLRg  = projectionMap.fromDivPixelToSphericalMercator(lLRP, zoom);
+            var lLRg = projectionMap.fromDivPixelToSphericalMercator(lLRP, zoom);
 
             var lUL_Latitude = lULg.y;
             var lUL_Longitude = lULg.x;
@@ -249,7 +249,7 @@ function PIDLayer(pid){
             if (lLR_Longitude < lUL_Longitude){
                 lLR_Longitude = Math.abs(lLR_Longitude);
             }
-            var urlResult = "http://spatial-dev.ala.org.au/geoserver/wms/reflect?" + wmsParams.join("&") + "&bbox=" + lUL_Longitude + "," + lUL_Latitude + "," + lLR_Longitude + "," + lLR_Latitude;
+            var urlResult = wmsServer + "/wms/reflect?" + wmsParams.join("&") + "&bbox=" + lUL_Longitude + "," + lUL_Latitude + "," + lLR_Longitude + "," + lLR_Latitude;
 
             return urlResult;
         },

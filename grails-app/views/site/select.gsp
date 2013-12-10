@@ -301,7 +301,9 @@
             zoomToBounds:true,
             zoomLimit:16,
             highlightOnHover:true,
-            features:[]
+            features:[],
+            layerService: "${grailsApplication.config.spatial.layersUrl}",
+            wmsServer: "${grailsApplication.config.spatial.geoserverUrl}"
         };
 
         init_map_with_features({mapContainer:'map'}, mapOptions);

@@ -105,11 +105,11 @@
             <div id="smallMap" style="width:100%;height:500px;"></div>
             <g:if test="${site?.extent?.geometry?.pid}">
                 <div style="margin-top:20px;" class="pull-right">
-                    <a href="http://spatial-dev.ala.org.au/ws/shape/shp/${site.extent.geometry.pid}" class="btn">
+                    <a href="${grailsApplication.config.spatial.layersUrl}/shape/shp/${site.extent.geometry.pid}" class="btn">
                         <i class="icon-download"></i>
                         Download ShapeFile
                     </a>
-                    <a href="http://spatial-dev.ala.org.au/?pid=${site.extent.geometry.pid}" class="btn">View in Spatial Portal</a>
+                    <a href="${grailsApplication.config.spatial.baseURL}/?pid=${site.extent.geometry.pid}" class="btn">View in Spatial Portal</a>
                 </div>
             </g:if>
         </div>
@@ -271,9 +271,8 @@
                 // only init map when the tab is first shown
                 if (tab === '#site' && map === undefined) {
                     init_map_with_features({
-                            spatialServiceUrl: '${grailsApplication.config.spatial.layersUrl}',
-                            spatialWmsUrl: '${grailsApplication.config.spatial.geoserverUrl}/ALA/wms?',
-                            spatialCacheUrl: '${grailsApplication.config.spatial.geoserverUrl}/gwc/service/wms?',
+                            layerService: "${grailsApplication.config.spatial.layersUrl}",
+                            wmsServer: "${grailsApplication.config.spatial.geoserverUrl}",
                             mapContainer: "map",
                             scrollwheel: false
                         },
@@ -292,7 +291,9 @@
             init_map_with_features({
                     mapContainer: "smallMap",
                     zoomToBounds:true,
-                    zoomLimit:16
+                    zoomLimit:16,
+                    layerService: "${grailsApplication.config.spatial.layersUrl}",
+                    wmsServer: "${grailsApplication.config.spatial.geoserverUrl}"
                 },
                 mapFeatures
             );

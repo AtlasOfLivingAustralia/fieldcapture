@@ -637,7 +637,9 @@
                 if (tab === '#site' && map === undefined) {
                     map = init_map_with_features({
                             mapContainer: "map",
-                            scrollwheel: false
+                            scrollwheel: false,
+                            layerService: "${grailsApplication.config.spatial.layersUrl}",
+                            wmsServer: "${grailsApplication.config.spatial.geoserverUrl}"
                         },
                         $.parseJSON('${mapFeatures}')
                     );
