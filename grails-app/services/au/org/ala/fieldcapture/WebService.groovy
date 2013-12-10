@@ -108,15 +108,11 @@ class WebService {
     }
 
     def doPost(String url, Map postBody) {
-        if(!postBody.api_key){
-            postBody.api_key = grailsApplication.config.api_key
-        }
-
-        def resp = ""
         def conn = new URL(url).openConnection()
         try {
             conn.setDoOutput(true)
             conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestProperty("Authorization", grailsApplication.config.api_key);
 
             def user = userService.getUser()
             if (user) {
@@ -126,7 +122,7 @@ class WebService {
             OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream())
             wr.write((postBody as JSON).toString())
             wr.flush()
-            resp = conn.inputStream.text
+            def resp = conn.inputStream.text
             wr.close()
             return [resp: JSON.parse(resp?:"{}")] // fail over to empty json object if empty response string otherwise JSON.parse fails
         } catch (SocketTimeoutException e) {
@@ -147,6 +143,7 @@ class WebService {
         def conn = new URL(url).openConnection()
         try {
             conn.setRequestMethod("DELETE")
+            conn.setRequestProperty("Authorization", grailsApplication.config.api_key);
             def user = userService.getUser()
             if (user) {
                 conn.setRequestProperty(grailsApplication.config.app.http.header.userId, user.userId)
@@ -180,7 +177,7 @@ class WebService {
             params.each { key, value ->
                 content.addPart(key, new StringBody(value))
             }
-
+            headers.'Authorization' = grailsApplication.config.api_key
             request.setEntity(content)
 
             response.success = {resp, message ->
