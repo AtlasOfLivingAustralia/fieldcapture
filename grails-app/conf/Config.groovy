@@ -3,7 +3,7 @@
  \******************************************************************************/
 def appName = 'fieldcapture'
 def ENV_NAME = "${appName.toUpperCase()}_CONFIG"
-def default_config = "/data/${appName}/config/${appName}-config.properties"
+default_config = "/data/${appName}/config/${appName}-config.properties"
 if(!grails.config.locations || !(grails.config.locations instanceof List)) {
     grails.config.locations = []
 }
@@ -113,32 +113,55 @@ if (!sld.polgon.default.url) {
 if (!sld.polgon.highlight.url) {
     sld.polgon.highlight.url = "http://fish.ala.org.au/data/fc-highlight.sld"
 }
-
 if (!lists.baseURL) {
     lists.baseURL = "http://lists.ala.org.au"
 }
-
 if (!bie.baseURL) {
     bie.baseURL = "http://bie.ala.org.au"
 }
+if(!webservice.connectTimeout){
+    webservice.connectTimeout = 5000
+}
+if(!webservice.readTimeout){
+    webservice.readTimeout = 5000
+}
+if(!spatial.baseUrl){
+    spatial.baseUrl = "http://spatial-dev.ala.org.au"
+}
+if(!spatial.layersUrl){
+    spatial.layersUrl = spatial.baseUrl + "/layers-service"
+}
+if(!spatial.geoserverUrl){
+    spatial.geoserverUrl = spatial.baseUrl + "/geoserver"
+}
+if(!security.cas.logoutUrl){
+    security.cas.logoutUrl = 'https://auth.ala.org.au/cas/logout'
+}
+if(!security.cas.casServerUrlPrefix){
+    security.cas.casServerUrlPrefix = 'https://auth.ala.org.au/cas'
+}
+if(!security.cas.bypass){
+    security.cas.bypass = false
+}
+if(!security.cas.alaAdminRole){
+    security.cas.alaAdminRole = "ROLE_ADMIN"
+}
+if(!security.cas.adminRole){
+    security.cas.adminRole = "ROLE_FC_ADMIN"
+}
+if(!upload.images.path){
+    upload.images.path = "/data/${appName}/images/"
+}
+if(!app.http.header.userId){
+    app.http.header.userId = "X-ALA-userId"
+}
+if(!ecodata.baseUrl){
+    ecodata.baseUrl = "http://ecodata.ala.org.au/ws/"
+}
+if(!upload.images.url){
+    upload.images.url = "http://fieldcapture.ala.org.au/images/"
+}
 
-spatial.baseUrl = "http://spatial-dev.ala.org.au"
-spatial.layersUrl = spatial.baseUrl + "/layers-service"
-spatial.geoserverUrl = spatial.baseUrl + "/geoserver"
-
-security.cas.casServerName = 'https://auth.ala.org.au'
-security.cas.uriFilterPattern = "/user/.*,/site/(?!index).*,/project/(?!index).*,/activity/(?!index).*,/output/(?!index).*,/image/(?!index).*,/admin/.*,/proxy/speciesListPost,/home/advanced" // pattern for pages that require authentication
-security.cas.uriExclusionFilterPattern = '/images.*,/css.*,/js.*,/less.*'
-security.cas.authenticateOnlyIfLoggedInPattern = "/,/;.*,/project/index.*,/site/index.*,/activity/index.*,/output/index.*,/ajax/keepSessionAlive,/search/.*,/home/.*" // pattern for pages that can optionally display info about the logged-in user
-security.cas.loginUrl = 'https://auth.ala.org.au/cas/login'
-security.cas.logoutUrl = 'https://auth.ala.org.au/cas/logout'
-security.cas.casServerUrlPrefix = 'https://auth.ala.org.au/cas'
-security.cas.bypass = false
-security.cas.alaAdminRole = "ROLE_ADMIN"
-security.cas.adminRole = "ROLE_FC_ADMIN"
-
-upload.images.path = "/data/${appName}/images/"
-app.http.header.userId = "X-ALA-userId"
 app.accessLevel.roles = [] // @Deprecated - use metadataService.getAccessLevels() instead
 
 environments {
@@ -154,58 +177,10 @@ environments {
         ecodata.baseUrl = 'http://localhost:8080/ecodata/ws/'
         upload.images.url = grails.serverURL+'/image/'
     }
-    test {
-        grails.logging.jul.usebridge = true
-        server.port = "8080"
-        grails.app.context = "/fieldcapture"
-        grails.host = "http://ala-testweb1.ala.org.au"
-        serverName = "${grails.host}:${server.port}"
-        grails.serverURL = serverName + grails.app.context
-
-        security.cas.appServerName = serverName
-        security.cas.contextPath = "/" + grails.app.context
-        ecodata.baseUrl = 'http://localhost:8080/ecodata/ws/'
-        upload.images.url = grails.serverURL+'/image/'
-    }
-    nectar {
-        grails.logging.jul.usebridge = true
-        server.port = "80"
-        grails.app.context = "/"
-        grails.host = "http://fieldcapture-dev.ala.org.au"
-        serverName = "${grails.host}"
-        grails.serverURL = serverName + grails.app.context
-        layout.skin = "nrm"
-        security.cas.appServerName = serverName
-        security.cas.contextPath = ""
-        ecodata.baseUrl = 'http://ecodata-dev.ala.org.au:8080/ws/'
-        upload.images.url = grails.serverURL+'/image/'
-    }
-    nectartest {
-        grails.logging.jul.usebridge = true
-        server.port = "80"
-        grails.app.context = "/"
-        grails.host = "http://fieldcapture-test.ala.org.au"
-        serverName = "${grails.host}"
-        grails.serverURL = serverName + grails.app.context
-        layout.skin = "nrm"
-        security.cas.appServerName = serverName
-        security.cas.contextPath = ""
-        ecodata.baseUrl = 'http://ecodata-test.ala.org.au:8080/ws/'
-        upload.images.url = grails.serverURL+'/image/'
-    }
     production {
         grails.logging.jul.usebridge = false
-        grails.app.context = "/"
-        grails.serverURL = "http://capture.ala.org.au"
-
-        security.cas.appServerName = grails.serverURL
-        security.cas.contextPath = ""
-        ecodata.baseUrl = 'http://ecodata.ala.org.au/ws/'
-        upload.images.url = grails.serverURL+'/image/'
     }
 }
-
-//println "grails.serverURL is ${grails.serverURL}"
 
 // log4j configuration
 log4j = {

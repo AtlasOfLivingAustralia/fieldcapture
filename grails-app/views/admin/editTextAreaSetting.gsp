@@ -25,7 +25,7 @@
             <div class="row-fluid">
                 <div class="span12" id="">
                     <g:if test="${!ajax}">
-                        <a href="${createLink(controller:'admin', action:'settings')}" class="btn"><i class="icon-hand-left"></i> back to ${returnUrl.tokenize("/")[-1].capitalize()}</a>
+                        <a href="${createLink(controller:'admin', action:'settings')}" class="btn"><i class="icon-hand-left"></i> back to Settings</a>
                         <h3>Edit &quot;${settingTitle}&quot; content</h3>
                     </g:if>
                     <g:form id="saveSettingContent" controller="admin" action="saveTextAreaSetting">
