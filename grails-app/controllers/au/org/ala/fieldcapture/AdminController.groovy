@@ -175,6 +175,7 @@ class AdminController {
 
             if (type) {
                 settingService.setSettingText(type, text)
+                cacheService.clear(type.key) // clear cached copy
                 flash.message = "${settingKey} content saved."
             } else {
                 throw new RuntimeException("Undefined setting key!")
