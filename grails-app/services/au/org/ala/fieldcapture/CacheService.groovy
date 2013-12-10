@@ -26,7 +26,6 @@ class CacheService {
     def get(String key, Closure source, int maxAgeInDays = 1) {
         def cached = cache[key]
         if (cached && cached.resp && !(new Date().after(cached.time + maxAgeInDays))) {
-            //log.debug "using cache for " + key
             return cached.resp
         }
         //log.debug "retrieving " + key
@@ -34,7 +33,7 @@ class CacheService {
         try {
             results = source.call()
             // only cache if there is no error returned
-            if (!results.error) {
+            if (!results.hasProperty('error')) {
                 synchronized (LOCK_1) {
                     cache.put key, [resp: results, time: new Date()]
                 }
