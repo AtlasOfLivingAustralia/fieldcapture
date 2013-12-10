@@ -1,6 +1,7 @@
 package au.org.ala.fieldcapture
 import au.com.bytecode.opencsv.CSVReader
 import org.apache.commons.lang.StringUtils
+import org.grails.plugins.csv.CSVMapReader
 
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
@@ -18,13 +19,69 @@ class ImportService {
     static inputDateFormat = new SimpleDateFormat("dd/MM/yyyy")
     static shortInputDateFormat = new SimpleDateFormat("dd/MM/yy")
 
-
-
     /** The current format location data is supplied in */
     def locationRegExp = /lat. = ([\-0-9\.]*)\nlong. = ([\-0-9\.]*)\nLocation Description = (.*)lat\. =.*/
 
-    def projectService, siteService, metadataService, cacheService, activityService, webService, grailsApplication
+    def projectService
+    def siteService
+    def metadataService
+    def cacheService
+    def activityService
+    def webService
+    def grailsApplication
 
+    /**
+     * Looks for columns "Grant ID","Sub-project ID","Recipient email 1","Recipient email 2","Grant manager email" and
+     * creates project admin roles for recipient emails 1 & 2, and the case manager role for Grant manager email
+     * @param csv
+     * @return
+     */
+    def importUserPermissionsCsv(InputStream csv) {
+        def results = [success:false, validationErrors:[], message:""]
+
+        if (!csv) {
+            results.message = "Invalid file - stream empty!"
+            return results
+        }
+
+        def reader = new InputStreamReader(csv)
+        try {
+
+            def line = 1
+            new CSVMapReader(reader).each { map ->
+                def grantId = map["Grant ID"]?.trim()
+                if (!grantId) {
+                    results.validationErrors << [line: line, message:"Missing grant id"]
+                    return
+                }
+
+                def project = findProjectByGrantIdAndName(grantId,'')
+                if (!project) {
+                    results.validationErrors << [line: line, message:"Invalid grant id '${grantId}'- No project found"]
+                    return
+                }
+
+                def subProjectId = map["Sub-project ID"]?.trim() // most of the time this will be empty
+
+                def admin1 = map["Recipient email 1"]?.trim()
+                def admin2 = map["Recipient email 2"]?.trim()
+                def caseManager = map["Grant manager email"]?.trim()
+
+                println "${line}. ${grantId}, ${subProjectId}, ${admin1}, ${admin2}, ${caseManager}"
+
+                line++
+            }
+
+        } catch (Exception ex) {
+            results.message = ex.message
+        } finally {
+            if (reader) {
+                reader.close()
+            }
+        }
+
+        return results
+    }
 
     /**
      * Validates and imports project, site and institution data supplied by the GMS as a CSV file.

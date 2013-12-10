@@ -55,6 +55,30 @@ class AdminController {
     }
 
     @PreAuthorise(accessLevel = 'alaAdmin', redirectController = "admin")
+    def bulkLoadUserPermissions() {
+        def user = authService.userDetails()
+        [user:user]
+    }
+
+    @PreAuthorise(accessLevel = 'alaAdmin', redirectController = "admin")
+    def uploadUserPermissionsCSV() {
+
+        def user = authService.userDetails()
+
+        def results
+
+        if (request instanceof MultipartHttpServletRequest) {
+            def file = request.getFile('projectData')
+            if (file) {
+                results = importService.importUserPermissionsCsv(file.inputStream)
+                flash.message = results?.message
+            }
+        }
+
+        render(view:'bulkLoadUserPermissions', model:[user: user, results: results])
+    }
+
+    @PreAuthorise(accessLevel = 'alaAdmin', redirectController = "admin")
     def metadata() {
         [activitiesMetadata: metadataService.activitiesModel()]
     }
