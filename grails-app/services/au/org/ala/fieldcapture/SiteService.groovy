@@ -103,7 +103,6 @@ class SiteService {
            def body = [geojson: geometry, name: name, description:'my description', user_id: '1551', api_key: "b3f3c932-ba88-4ad5-b429-f947475024af"]
            resp = webService.doPost(grailsApplication.config.spatial.layersUrl + "/shape/upload/geojson", body)
         }
-        println resp
         resp
     }
 

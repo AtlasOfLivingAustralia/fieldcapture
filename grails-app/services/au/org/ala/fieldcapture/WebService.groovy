@@ -32,8 +32,8 @@ class WebService {
     def get(String url, boolean includeUserId) {
         def conn = new URL(url).openConnection()
         try {
-            conn.setConnectTimeout(grailsApplication.config.webservice.connectTimeout)
-            conn.setReadTimeout(grailsApplication.config.webservice.readTimeout)
+            conn.setConnectTimeout(grailsApplication.config.webservice.connectTimeout as int)
+            conn.setReadTimeout(grailsApplication.config.webservice.readTimeout as int)
             def user = userService.getUser()
             if (includeUserId && user) {
                 conn.setRequestProperty(grailsApplication.config.app.http.header.userId, user.userId)
@@ -59,8 +59,8 @@ class WebService {
     def getJson(String url) {
         def conn = new URL(url).openConnection()
         try {
-            conn.setConnectTimeout(grailsApplication.config.webservice.connectTimeout)
-            conn.setReadTimeout(grailsApplication.config.webservice.readTimeout)
+            conn.setConnectTimeout(grailsApplication.config.webservice.connectTimeout as int)
+            conn.setReadTimeout(grailsApplication.config.webservice.readTimeout as int)
             def user = userService.getUser()
             if (user) {
                 conn.setRequestProperty(grailsApplication.config.app.http.header.userId, user.userId)
