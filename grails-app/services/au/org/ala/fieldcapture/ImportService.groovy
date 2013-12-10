@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat
 class ImportService {
 
     static int INSTITUTION_DIFFERENCE_THRESHOLD = 4
-    public static final List CSV_HEADERS = ['Grant ID', 'Grant External ID', 'Grant Name', 'Grant Description', 'Grantee Organisation Legal Name', 'Location Description', 'Grant Original Approved Amount', 'Round Name', 'Start', 'Finish']
+    public static final List CSV_HEADERS = ['Program', 'Round Name', 'GMS Round Name', 'Grant ID', 'Grant External ID', 'Sub-project ID', 'Grant Name', 'Grant Description', 'Grantee Organisation Legal Name', 'Grant Original Approved Amount', 'Grant Current Grant Funding (Ex. GST)', 'Start', 'Finish', 'Location Description']
 
     private static final String PROJECTS_CACHE_KEY = 'ImportService-AllProjects'
 
@@ -124,9 +124,19 @@ class ImportService {
 
         project.name = projectDetails['Grant Name']
         project.description = projectDetails['Grant Description']
-        project.grantId = projectDetails['Grant ID']
-        project.externalProjectId = projectDetails['Grant External ID']
 
+
+        project.grantId = projectDetails['Grant ID']
+        def subProjectID = projectDetails['Sub-project ID']
+        def externalID = projectDetails['Grant External ID']
+        if (subProjectID) {
+            project.externalProjectId = subProjectID
+        }
+        else {
+            if (externalID != 'Not Provided') {
+                project.externalProjectId = externalID
+            }
+        }
 
         def funding = projectDetails['Grant Original Approved Amount']
         try {
@@ -180,27 +190,24 @@ class ImportService {
             }
         }
 
-        if (projectDetails['Round Name']) {
-            String roundDetails = projectDetails['Round Name'];
-            // For whatever reason, many/all of the caring for our country programs are coded as "C4OC 2"
-            roundDetails = roundDetails.replace("C4OC 2", "Caring for our Country 2")
+        def program = projectDetails['Program']
+        def roundName = projectDetails['Round Name']
 
-            def program = metadataService.programsModel().programs.find{ roundDetails.startsWith(it.name)}
 
-            if (!program) {
-                warnings.add("'Round Name' does not match a valid program name: ${roundDetails}")
+        def matchedProgram = metadataService.programsModel().programs.find{ it.name == program}
+
+        if (!matchedProgram) {
+            warnings.add("'Program' does not match a valid program name: ${program}")
+        }
+        else {
+            project.associatedProgram = matchedProgram.name
+            def subprogram = program.subprograms.find {it.name == roundName}
+            if (!subprogram) {
+                warnings.add("'Round Name' does not match a valid subprogram name: ${roundName}")
             }
             else {
-                project.associatedProgram = program.name
-                def subprogram = program.subprograms.find {roundDetails.contains(it.name)}
-                if (!subprogram) {
-                    warnings.add("'Round Name' does not match a valid subprogram name: ${roundDetails}")
-                }
-                else {
-                    project.associatedSubProgram = subprogram.name
-                }
+                project.associatedSubProgram = subprogram.name
             }
-
         }
 
         return project
@@ -224,7 +231,7 @@ class ImportService {
         def site = project.remove('site')
 
         // The Grant ID is the only best key we can use from the SEWPAC data.
-        def p = findProjectByGrantId(project.grantId)
+        def p = findProjectByGrantAndExternalId(project.grantId, project.externalProjectId)
         if (p) {
             project.projectId = p.projectId
             status.project = 'updated'
@@ -274,10 +281,16 @@ class ImportService {
 
     }
 
-    def findProjectByGrantId(grantId) {
+    def findProjectByGrantAndExternalId(grantId, externalProjectId) {
         // Cache projects temporarily to avoid this query.
         def allProjects = cacheService.get(PROJECTS_CACHE_KEY) { [projects:projectService.list(true)] }
-        return allProjects.projects.find{it.grantId?.equalsIgnoreCase(grantId)}
+        return allProjects.projects.find{it.grantId?.equalsIgnoreCase(grantId) && it.externalProjectId?.equalsIgnoreCase(externalProjectId)}
+    }
+
+    def findProjectByGrantIdAndName(grantId, name) {
+        // Cache projects temporarily to avoid this query.
+        def allProjects = cacheService.get(PROJECTS_CACHE_KEY) { [projects:projectService.list(true)] }
+        return allProjects.projects.find{it.grantId?.equalsIgnoreCase(grantId) && it.name?.equalsIgnoreCase(name)}
     }
 
     def findProjectSiteByDescription(project, description) {
@@ -433,7 +446,8 @@ class ImportService {
         // Project ID	Project title	Project description	Theme 1 outputs: # ha to be revegetated	Theme 1 description: Vegetation description	Theme 1 description: Current condition	Theme 1 description: Intended condition	Theme 1 description: method used for assessment of condition	Theme 2 outputs: #ha to be protected	Theme 2 description: Vegetation description	Theme 2 description: current condition	Theme 2 description: intended condition	Theme 2 description: method for assessment	Theme 3 outputs: #ha to be managed	Theme 3 outputs: invasive spp managed	Theme 3 description: other	non-theme outputs: # plants planted	non-theme outputs: #kg seed sown	non-theme description: % survival rate for plants	non-theme description: #canopy species planted	non-theme description: #understorey spp planted	non-theme description: #ground layer spp planted	non-theme outputs: #km fenced	non-theme description: other	Stage	Stage start date	Stage end date	Activity 1 type	Activity 1 description	Activity 2 type	Activity 2 description	Activity 3 type	Activity 3 description	Activity 4 type	Activity 4 description	Activity 5 type	Activity 5 description	Activity 6 type	Activity 6 description	Activity 7 type	Activity 7 description	Activity 8 type	Activity 8 description	Activity 9 type	Activity 9 description	Activity 10 type	Activity 10 description	Activity 11 type	Activity 11 description	Stage	Stage start date	Stage end date	Activity 1 type	Activity 1 description	Activity 2 type	Activity 2 description	Activity 3 type	Activity 3 description	Activity 4 type	Activity 4 description	Activity 5 type	Activity 5 description	Activity 6 type	Activity 6 description	Activity 7 type	Activity 7 description	Activity 8 type	Activity 8 description	Activity 9 type	Activity 9 description	Activity 10 type	Activity 10 description	Activity 11type	Activity 11 description	Stage	Stage start date	Stage end date	Activity 1 type	Activity 1 description	Activity 2 type	Activity 2 description	Activity 3 type	Activity 3 description	Activity 4 type	Activity 4 description	Activity 5 type	Activity 5 description	Activity 6 type	Activity 6 description	Activity 7 type	Activity 7 description	Activity 8 type	Activity 8 description	Activity 9 type	Activity 9 description	Activity 10 type	Activity 10 description	Activity 11 type	Activity 11 description	Stage	Stage start date	Stage end date	Activity 1 type	Activity 1 description	Activity 2 type	Activity 2 description	Activity 3 type	Activity 3 description	Activity 4 type	Activity 4 description	Activity 5 type	Activity 5 description	Activity 6 type	Activity 6 description	Activity 7 type	Activity 7 description	Activity 8 type	Activity 8 description	Activity 9 type	Activity 9 description	Activity 10 type	Activity 10 description	Activity 11 type	Activity 11 description	Activity 12 type	Activity 12 description	Activity 13 type	Activity 13 description	Activity 14 type	Activity 14 description	Activity 15 type	Activity 15 description	Activity 16 type	Activity 16 description	Activity 17 type	Activity 17 description	Stage	Stage start date	Stage end date	Activity 1 type	Activity 1 description	Activity 2 type	Activity 2 description	Activity 3 type	Activity 3 description	Activity 4 type	Activity 4 description	Activity 5 type	Activity 5 description	Activity 6 type	Activity 6 description	Activity 7 type	Activity 7 description	Activity 8 type	Activity 8 description	Activity 9 type	Activity 9 description	Activity 10 type	Activity 10 description	Activity 11 type	Activity 11 description	Stage	Stage start date	Stage end date	Activity 1 type	Activity 1 description	Activity 2 type	Activity 2 description	Activity 3 type	Activity 3 description	Activity 4 type	Activity 4 description	Activity 5 type	Activity 5 description	Activity 6 type	Activity 6 description	Activity 7 type	Activity 7 description	Activity 8 type	Activity 8 description	Activity 9 type	Activity 9 description	Activity 10 type	Activity 10 description	Activity 11 type	Activity 11 description	Activity 12 type	Activity 12 description	Activity 13 type	Activity 13 description	Activity 14 type	Activity 14 description	Activity 15 type	Activity 15 description	Stage	Stage start date	Stage end date	Activity 1 type	Activity 1 description	Activity 2 type	Activity 2 description	Activity 3 type	Activity 3 description	Activity 4 type	Activity 4 description	Activity 5 type	Activity 5 description	Activity 6 type	Activity 6 description	Activity 7 type	Activity 7 description	Activity 8 type	Activity 8 description	Activity 9 type	Activity 9 description	Activity 10 type	Activity 10 description	Activity 11 type	Activity 11 description	Stage	Stage start date	Stage end date	Activity 1 type	Activity 1 description	Activity 2 type	Activity 2 description	Activity 3 type	Activity 3 description	Activity 4 type	Activity 4 description	Activity 5 type	Activity 5 description	Activity 6 type	Activity 6 description	Activity 7 type	Activity 7 description	Activity 8 type	Activity 8 description	Activity 9 type	Activity 9 description	Activity 10 type	Activity 10 description	Activity 11 type	Activity 11 description	Activity 12 type	Activity 12 description	Activity 13 type	Activity 13 description	Activity 14 type	Activity 14 description	Stage	Stage start date	Stage end date	Activity 1 type	Activity 1 description	Activity 2 type	Activity 2 description	Activity 3 type	Activity 3 description	Activity 4 type	Activity 4 description	Activity 5 type	Activity 5 description	Activity 6 type	Activity 6 description	Activity 7 type	Activity 7 description	Stage	Stage start date	Stage end date	Activity 1 type	Activity 1 description	Activity 2 type	Activity 2 description	Activity 3 type	Activity 3 description	Activity 4 type	Activity 4 description	Activity 5 type	Activity 5 description	Activity 6 type	Activity 6 description	Activity 7 type	Activity 7 description	Activity 8 type	Activity 8 description	Activity 9 type	Activity 9 description	Activity 10 type	Activity 10 description	Activity 11 type	Activity 11 description	Activity 12 type	Activity 12 description	Activity 13 type	Activity 13 description	Activity 14 type	Activity 14 description	Activity 15 type	Activity 15 description	Activity 16 type	Activity 16 description	Activity 17 type	Activity 17 description	Activity 18 type	Activity 18 description	Activity 19 type	Activity 19 description	Activity 20 type	Activity 20 description
 
         try {
-            def project = findProjectByGrantId(grantId)
+            // need name also.....
+            def project = findProjectByGrantIdAndName(grantId, '')
 
             if (!project) {
                 return [error:"No project with grant id = ${grantId}"]
