@@ -63,7 +63,7 @@ class ImportService {
             }
 
             def project = validateProjectDetails(findHeaderColumns(headerIndexes, csvLine), grantIds)
-            grantIds << project.grantId
+            grantIds << "${project.grantId}-${project.externalProjectId}"
             if (project.errors.size() > 0 || project.warnings.size() > 0) {
                 writeErrors(results.validationErrors, project.errors, project.warnings, csvLine)
             }
@@ -116,7 +116,7 @@ class ImportService {
                 if (it == 'Grant ID' || it == 'Grant Name') {
                     errors.add("No value for '${it}'")
                 }
-                else {
+                else if (it != 'Sub-project ID' && it != 'Location Description') {
                     warnings.add("No value for '${it}'")
                 }
             }
@@ -173,8 +173,8 @@ class ImportService {
             errors.add("Unable to parse Finish Date: ${endDate}")
         }
 
-        if (grantIds.contains(project.grantId)) {
-            errors.add("Duplicate Grant ID detected: '$project.grantId'")
+        if (grantIds.contains(project.grantId+'-'+project.externalProjectId)) {
+            errors.add("Duplicate Grant ID detected: '${project.grantId}-${project.externalProjectId}'")
         }
 
         if (projectDetails['Application Location Desc']) {
@@ -192,11 +192,11 @@ class ImportService {
             }
         }
 
-        def program = projectDetails['Program']
-        def roundName = projectDetails['Round Name']
+        def program = projectDetails['Program']?.trim()
+        def roundName = projectDetails['Round Name']?.trim()
 
 
-        def matchedProgram = metadataService.programsModel().programs.find{ it.name == program}
+        def matchedProgram = metadataService.programsModel().programs.find{ it.name.equalsIgnoreCase(program) }
 
         if (!matchedProgram) {
             warnings.add("'Program' does not match a valid program name: ${program}")
