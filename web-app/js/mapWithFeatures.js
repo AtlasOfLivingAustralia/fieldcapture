@@ -77,6 +77,9 @@
             if(options.layerService){
                 this.layerService = options.layerService;
             }
+            if(options.wmsServer){
+                this.wmsServer = options.wmsServer;
+            }
             if (features.highlightOnHover) {
                 this.highlightOnHover = features.highlightOnHover;
             }
@@ -176,7 +179,7 @@
                     //load the overlay instead
                     var pid = loc.pid;
                     //console.log('Loading PID: ' + pid);
-                    f = new PIDLayer(pid, wmsServer);
+                    f = new PIDLayer(pid, this.wmsServer);
                     map.map.overlayMapTypes.push(f);
                     $.ajax({
                         url: this.layerService+ '/object/' + pid,
