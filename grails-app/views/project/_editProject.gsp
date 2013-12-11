@@ -75,7 +75,7 @@
         <fc:iconHelp title="End date">Date the project is intended to finish.</fc:iconHelp>
         </label>
         <div class="input-append">
-            <fc:datePicker targetField="endDate.date" name="endDate" data-validation-engine="validate[future[startDate]]" printable="${printView}" size="input-large"/>
+            <fc:datePicker targetField="plannedEndDate.date" name="endDate" data-validation-engine="validate[future[startDate]]" printable="${printView}" size="input-large"/>
         </div>
     </div>
 </div>
