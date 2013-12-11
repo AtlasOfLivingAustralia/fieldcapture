@@ -44,7 +44,9 @@ class AdminController {
     def users() {
         def user = authService.userDetails()
         def projects = projectService.list(true)
-        def roles = metadataService.getAccessLevels().collect { it.name }
+        def roles = metadataService.getAccessLevels().collect {
+            it.name
+        }
 
         if (user && projects) {
             [ projects: projects, user: user, roles: roles]

@@ -55,9 +55,11 @@ class ImportService {
                     return
                 }
 
-                def project = findProjectByGrantIdAndName(grantId,'')
+                def externalId = getExternalIdFromProjectMap(map)
+
+                def project = findProjectByGrantAndExternalId(grantId, externalId)
                 if (!project) {
-                    results.validationErrors << [line: line, message:"Invalid grant id '${grantId}'- No project found"]
+                    results.validationErrors << [line: line, message:"Invalid grant id '${grantId}' (ExternalID=${externalId}) - No project found"]
                     return
                 }
 
@@ -160,6 +162,19 @@ class ImportService {
 
     }
 
+    def getExternalIdFromProjectMap(Map projectDetails) {
+        def subProjectID = projectDetails['Sub-project ID']
+        def externalID = projectDetails['Grant External ID']
+        if (subProjectID) {
+            return subProjectID
+        } else {
+            if (externalID != 'Not Provided') {
+                return externalID
+            }
+        }
+        return null
+    }
+
     def validateProjectDetails(projectDetails, grantIds) {
 
         def project = [:]
@@ -184,16 +199,7 @@ class ImportService {
 
 
         project.grantId = projectDetails['Grant ID']
-        def subProjectID = projectDetails['Sub-project ID']
-        def externalID = projectDetails['Grant External ID']
-        if (subProjectID) {
-            project.externalProjectId = subProjectID
-        }
-        else {
-            if (externalID != 'Not Provided') {
-                project.externalProjectId = externalID
-            }
-        }
+        def externalID = getExternalIdFromProjectMap(projectDetails)
 
         def funding = projectDetails['Grant Original Approved Amount']
         try {
@@ -343,13 +349,13 @@ class ImportService {
     def findProjectByGrantAndExternalId(grantId, externalProjectId) {
         // Cache projects temporarily to avoid this query.
         def allProjects = cacheService.get(PROJECTS_CACHE_KEY) { [projects:projectService.list(true)] }
-        return allProjects.projects.find{it.grantId?.equalsIgnoreCase(grantId) && it.externalProjectId?.equalsIgnoreCase(externalProjectId)}
+        return allProjects.projects.find{it.grantId?.equalsIgnoreCase(grantId) && (it.externalProjectId ?: '').equalsIgnoreCase(externalProjectId ?: '')}
     }
 
     def findProjectByGrantIdAndName(grantId, name) {
         // Cache projects temporarily to avoid this query.
         def allProjects = cacheService.get(PROJECTS_CACHE_KEY) { [projects:projectService.list(true)] }
-        return allProjects.projects.find{it.grantId?.equalsIgnoreCase(grantId) && it.name?.equalsIgnoreCase(name)}
+        return allProjects.projects.find{it.grantId?.equalsIgnoreCase(grantId) && (it.name ?: '').equalsIgnoreCase(name ?: '')}
     }
 
     def findProjectSiteByDescription(project, description) {
