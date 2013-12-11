@@ -296,7 +296,7 @@ class ImportService {
         def site = project.remove('site')
 
         // The Grant ID is the only best key we can use from the SEWPAC data.
-        def p = findProjectByGrantAndExternalId(project.grantId, project.externalProjectId)
+        def p = findProjectByGrantAndExternalId(project.grantId, project.externalId)
         if (p) {
             project.projectId = p.projectId
             status.project = 'updated'
