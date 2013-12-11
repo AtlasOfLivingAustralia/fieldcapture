@@ -33,7 +33,7 @@ class UserController {
     @PreAuthorise(accessLevel = 'admin', redirectController = "home", projectIdParam = "projectId")
     def show(String id) {
         if (id) {
-            def user = userService.getUserForUserId(id)
+            def user = userService.getUser() // getUserForUserId(id)
 
             if (user) {
                 render view: "index", model: assembleUserData(user)

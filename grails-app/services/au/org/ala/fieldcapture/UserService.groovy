@@ -11,17 +11,6 @@ class UserService {
         auditBaseUrl = grailsApplication.config.ecodata.baseUrl + 'audit'
     }
 
-    au.org.ala.web.UserDetails getUserForUserId(String userId) {
-        Map<String, au.org.ala.web.UserDetails> um = authService.getAllUserNameMap()
-        au.org.ala.web.UserDetails ud = null;
-
-        if (um && um.containsKey(userId)) {
-            ud = um.get(userId)
-        }
-
-        return ud
-    }
-
     def getCurrentUserDisplayName() {
         getUser()?.displayName?:"" //?:"mark.woolston@csiro.au"
     }
@@ -30,7 +19,7 @@ class UserService {
         getUser()?.userId?:""
     }
 
-    def getUser() {
+    public UserDetails getUser() {
         def u = authService.userDetails()
         def user
 
@@ -91,7 +80,7 @@ class UserService {
 
     def checkEmailExists(String email) {
         def userList = authService.allUserNameList
-        println ("######################  userList:  " + userList.size())
+        log.debug ("######################  userList:  " + userList.size())
         def match = userList.find { it.userName?.toLowerCase() == email.toLowerCase() }
         return match?.userId?:""
     }
