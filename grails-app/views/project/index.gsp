@@ -33,6 +33,17 @@
         here = window.location.href;
 
     </r:script>
+
+    <!--[if gte IE 8]>
+        <style>
+           .thumbnail > img {
+                max-width: 400px;
+            }
+            .thumbnail {
+                max-width: 410px;
+            }
+        </style>
+    <![endif]-->
     <r:require modules="gmap3,mapWithFeatures,knockout,datepicker,amplify,jqueryValidationEngine,projects, attachDocuments"/>
 </head>
 <body>
