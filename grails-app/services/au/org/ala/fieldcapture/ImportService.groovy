@@ -168,7 +168,7 @@ class ImportService {
         if (subProjectID) {
             return subProjectID
         } else {
-            if (externalID != 'Not Provided') {
+            if (!externalID.equalsIgnoreCase('Not Provided')) {
                 return externalID
             }
         }
@@ -199,7 +199,7 @@ class ImportService {
 
 
         project.grantId = projectDetails['Grant ID']
-        def externalID = getExternalIdFromProjectMap(projectDetails)
+        project.externalId = getExternalIdFromProjectMap(projectDetails)
 
         def funding = projectDetails['Grant Original Approved Amount']
         try {
@@ -349,7 +349,7 @@ class ImportService {
     def findProjectByGrantAndExternalId(grantId, externalProjectId) {
         // Cache projects temporarily to avoid this query.
         def allProjects = cacheService.get(PROJECTS_CACHE_KEY) { [projects:projectService.list(true)] }
-        return allProjects.projects.find{it.grantId?.equalsIgnoreCase(grantId) && (it.externalProjectId ?: '').equalsIgnoreCase(externalProjectId ?: '')}
+        return allProjects.projects.find{it.grantId?.equalsIgnoreCase(grantId) && (it.externalId ?: '').equalsIgnoreCase(externalProjectId ?: '')}
     }
 
     def findProjectByGrantIdAndName(grantId, name) {
