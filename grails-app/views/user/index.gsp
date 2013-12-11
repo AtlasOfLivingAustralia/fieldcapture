@@ -45,7 +45,7 @@
                         <g:each var="p" in="${recentEdits}">
                             <tr>
                                 <td><g:message code="label.${p.entityType}" default="${p.entityType}"/></td>
-                                <td><g:link controller="${fc.getControllerNameFromEntityType(entityType: p.entityType)}" id="${p.entityId}">${p.entity?.name?:p.entity?.type}</g:link></td>
+                                <td><g:link controller="${fc.getControllerNameFromEntityType(entityType: p.entityType)}" id="${p.entityId}">${p.entity?.name?:p.entity?.type?:p.entity?.key}</g:link></td>
                                 <td><fc:formatDateString date="${p.date}" inputFormat="yyyy-MM-dd'T'HH:mm:ss'Z'"/></td>
                             </tr>
                         </g:each>
