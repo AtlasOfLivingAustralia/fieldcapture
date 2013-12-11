@@ -16,7 +16,7 @@ class AclFilterFilters {
                 Class controllerClass = controller?.clazz
                 def method = controllerClass.getMethod(actionName?:"index", [] as Class[])
                 def roles = metadataService.getAccessLevels().collect {
-                    if (it && it.hasProperty('name')) {
+                    if (it && it['name']) {
                         it.name
                     }
                 } // List
