@@ -1,6 +1,7 @@
 package au.org.ala.fieldcapture
 
 import grails.converters.JSON
+import org.codehaus.groovy.grails.web.json.JSONObject
 
 class ProjectController {
 
@@ -11,8 +12,10 @@ class ProjectController {
     def index(String id) {
         def project = projectService.get(id, 'brief')
         def roles = metadataService.getAccessLevels().collect {
-            if (it && it['name']) {
+            if (it && it instanceof JSONObject && it.has('name')) {
                 it.name
+            } else {
+                log.warn "Error getting accessLevels: ${it}"
             }
         }
 

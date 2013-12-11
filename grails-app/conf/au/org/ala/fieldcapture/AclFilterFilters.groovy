@@ -1,5 +1,7 @@
 package au.org.ala.fieldcapture
 
+import org.codehaus.groovy.grails.web.json.JSONObject
+
 /**
  * Grails Filter to check for controller methods annotated with <code>@{@link PreAuthorise}</code>
  *
@@ -16,8 +18,10 @@ class AclFilterFilters {
                 Class controllerClass = controller?.clazz
                 def method = controllerClass.getMethod(actionName?:"index", [] as Class[])
                 def roles = metadataService.getAccessLevels().collect {
-                    if (it && it['name']) {
+                    if (it && it instanceof JSONObject && it.has('name')) {
                         it.name
+                    } else {
+                        log.warn "Error getting accessLevels: ${it}"
                     }
                 } // List
 
