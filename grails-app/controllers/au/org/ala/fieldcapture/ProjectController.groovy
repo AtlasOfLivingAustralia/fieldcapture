@@ -11,7 +11,7 @@ class ProjectController {
     def index(String id) {
         def project = projectService.get(id, 'brief')
         def roles = metadataService.getAccessLevels().collect {
-            if (it && it.hasProperty('name')) {
+            if (it && it['name']) {
                 it.name
             }
         }
