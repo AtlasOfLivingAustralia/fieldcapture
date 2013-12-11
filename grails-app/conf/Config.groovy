@@ -164,6 +164,9 @@ if(!upload.images.url){
 
 app.accessLevel.roles = [] // @Deprecated - use metadataService.getAccessLevels() instead
 
+// If true, no-cache headers will be added to all responses.
+app.view.nocache = false
+
 environments {
     development {
         grails.logging.jul.usebridge = true
