@@ -116,6 +116,22 @@
                         </h4>
                     </div>
                 </g:if>
+
+                <div class="clearfix" style="font-size:14px;">
+                    <div class="span4" data-bind="visible:grantId" style="margin-bottom: 0">
+                        Grant Id:
+                        <span data-bind="text:grantId"></span>
+                    </div>
+                    <div class="span4" data-bind="visible:externalId" style="margin-bottom: 0">
+                        External Id:
+                        <span data-bind="text:externalId"></span>
+                    </div>
+                    <div class="span4" data-bind="visible:manager" style="margin-bottom: 0">
+                        Manager:
+                        <span data-bind="text:manager"></span>
+                    </div>
+                </div>
+
                 <div data-bind="visible:plannedStartDate()">
                     <h5>
                         Project activities will be undertaken from <span data-bind="text:plannedStartDate.formattedDate"></span>
