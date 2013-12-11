@@ -79,9 +79,8 @@ class UserService {
     }
 
     def checkEmailExists(String email) {
-        def userList = authService.allUserNameList
-        log.debug ("######################  userList:  " + userList.size())
-        def match = userList.find { it.userName?.toLowerCase() == email.toLowerCase() }
-        return match?.userId?:""
+        def url = "http://auth.ala.org.au/userdetails/userDetails/getUserDetails?userName=${email}"
+        def resp = webService.doPost(url.toString(), [:])
+        return resp?.resp?.userId?:""
     }
 }
