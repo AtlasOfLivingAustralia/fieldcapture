@@ -79,26 +79,6 @@ grails.exceptionresolver.params.exclude = ['password']
 // configure auto-caching of queries by default (if false you can cache individual queries with 'cache: true')
 grails.hibernate.cache.queries = false
 
-// Ehcahce settings to override those provided by the ala-web-theme plugin
-// we do NOT want to cache the userListCache method so that newly registered users
-// always appear in that list - its only called when trying to add a user to a project.
-grails.cache.config = {
-    defaults {
-        eternal false
-        overflowToDisk false
-        maxElementsInMemory 20000
-        timeToLiveSeconds 3600
-    }
-    cache {
-        name 'userListCache'
-        timeToLiveSeconds 1
-    }
-    cache {
-        name 'userMapCache'
-    }
-
-}
-
 /******************************************************************************\
  *  EXTERNAL SERVERS
  \******************************************************************************/
@@ -194,7 +174,7 @@ environments {
         layout.skin = "nrm"
         security.cas.appServerName = serverName
         security.cas.contextPath = "/" + appName
-        ecodata.baseUrl = 'http://ecodata.ala.org.au/ws/'
+        ecodata.baseUrl = 'http://devt.ala.org.au:8080/ecodata/ws/'
         upload.images.url = grails.serverURL+'/image/'
     }
     production {
