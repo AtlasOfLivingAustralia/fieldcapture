@@ -29,6 +29,7 @@ class ImportService {
     def activityService
     def webService
     def grailsApplication
+    def userService
 
     /**
      * Looks for columns "Grant ID","Sub-project ID","Recipient email 1","Recipient email 2","Grant manager email" and
@@ -38,6 +39,8 @@ class ImportService {
      */
     def importUserPermissionsCsv(InputStream csv) {
         def results = [success:false, validationErrors:[], message:""]
+        def roleAdmin = "admin"
+        def roleCaseManager = "caseManager"
 
         if (!csv) {
             results.message = "Invalid file - stream empty!"
@@ -47,11 +50,27 @@ class ImportService {
         def reader = new InputStreamReader(csv)
         try {
 
-            def line = 1
+            def line = 0
             new CSVMapReader(reader).each { map ->
+
+                line++
+
+                // Convenience closure
+                def logError = { msg ->
+                    results.validationErrors << [line: line, message: msg]
+                }
+
+                def getUserName = { field ->
+                    def name = map[field]?.trim()
+                    if (name && name == "0") {
+                        name = ""
+                    }
+                    return name
+                }
+
                 def grantId = map["Grant ID"]?.trim()
                 if (!grantId) {
-                    results.validationErrors << [line: line, message:"Missing grant id"]
+                    logError("Missing grant id")
                     return
                 }
 
@@ -59,19 +78,74 @@ class ImportService {
 
                 def project = findProjectByGrantAndExternalId(grantId, externalId)
                 if (!project) {
-                    results.validationErrors << [line: line, message:"Invalid grant id '${grantId}' (ExternalID=${externalId}) - No project found"]
+                    logError("Invalid grant id '${grantId}' (ExternalID=${externalId}) - No project found")
                     return
                 }
 
-                def subProjectId = map["Sub-project ID"]?.trim() // most of the time this will be empty
+                def admin1 = getUserName("Recipient email 1")
 
-                def admin1 = map["Recipient email 1"]?.trim()
-                def admin2 = map["Recipient email 2"]?.trim()
-                def caseManager = map["Grant manager email"]?.trim()
+                if (admin1) {
+                    if (!userService.checkEmailExists(admin1)) {
+                        logError("User name ${admin1} does not exist! (Recepient email 1)")
+                        return
+                    }
+                }
 
-                println "${line}. ${grantId}, ${subProjectId}, ${admin1}, ${admin2}, ${caseManager}"
+                def admin2 = getUserName("Recipient email 2")
+                if (admin2) {
+                    if (!userService.checkEmailExists(admin2)) {
+                        logError("User name ${admin2} does not exist! (Recepient email 2)")
+                        return
+                    }
+                }
 
-                line++
+                def caseManager = getUserName("Grant manager email")
+                if (caseManager) {
+                    if (!userService.checkEmailExists(caseManager)) {
+                        logError("User name ${caseManager} does not exist (caseManager)!")
+                        return
+                    }
+                }
+
+                if (!admin1 && !admin2 && !caseManager) {
+                    logError("No user ids have been specified!")
+                    return
+                }
+
+                if (admin1) {
+                    if (!userService.isUserAdminForProject(admin1, project.projectId)) {
+                        def ret = userService.addUserAsRoleToProject(admin1, project.projectId, roleAdmin)
+                        if (ret?.error) {
+                            logError("Error occurred applying admin role to ${admin1} for project ${project.projectId}: ${ret.error}")
+                        }
+                    } else {
+                        logError("Warning: User ${admin1} is already admin for grant id ${grantId} - skipping")
+                    }
+                }
+
+                if (admin2) {
+                    if (!userService.isUserAdminForProject(admin2, project.projectId)) {
+                        def ret = userService.addUserAsRoleToProject(admin2, project.projectId, roleAdmin)
+                        if (ret?.error) {
+                            logError("Error occurred applying admin role to ${admin2} for project ${project.projectId}: ${ret.error}")
+                        }
+                    } else {
+                        logError("Warning: User ${admin2} is already admin for grant id ${grantId} - skipping")
+                    }
+                }
+
+                if (caseManager) {
+                    if (!userService.isUserCaseManagerForProject(caseManager, project.projectId)) {
+                        def ret = userService.addUserAsRoleToProject(caseManager, project.projectId, roleCaseManager)
+                        if (ret?.error) {
+                            logError("Error occurred applying caseManager role to ${caseManager} for project ${project.projectId}: ${ret.error}")
+                        }
+
+                    } else {
+                        logError("Warning: User ${caseManager} is already case manager for grant id ${grantId} - skipping")
+                    }
+                }
+
             }
 
         } catch (Exception ex) {

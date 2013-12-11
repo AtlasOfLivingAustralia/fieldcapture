@@ -32,7 +32,7 @@
                         Select a CSV file to upload
                     </label>
                     <div class="controls">
-                        <input type="file" name="projectData" />
+                        <input type="file" accept="text/csv" name="projectData" />
                     </div>
                 </div>
 
@@ -44,11 +44,11 @@
 
             </g:uploadForm>
             <g:if test="${results}">
-            <div>
-                <p class="alert alert-danger">${results.message}</p>
+            <div class="alert alert-danger">
+                <p>${results.message}</p>
                 <ul>
                 <g:each in="${results?.validationErrors}" var="message">
-                    <li>${message.line}  - ${message.message}</li>
+                    <li>Line ${message.line}: ${message.message}</li>
                 </g:each>
                 </ul>
             </div>

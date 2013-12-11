@@ -139,6 +139,14 @@
                     </td>
                 </tr>
                 <tr>
+                    <td>
+                        <a style="color:white" class="btn btn-small btn-info" href="${createLink(controller:'admin', action:'bulkLoadUserPermissions')}">Bulk Load Permissions</a>
+                    </td>
+                    <td>
+                        Loads user project roles from a csv file
+                    </td>
+                </tr>
+                <tr>
                     <td><button id="btnReindexAll" class="btn btn-small btn-info" title="Re-index all data">Re-index all</button>
                     </td>
                     <td>

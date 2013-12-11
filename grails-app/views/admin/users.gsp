@@ -13,10 +13,6 @@
     <div class="container">
         <div class="well">Logged in user is <b class="tooltips" title="${user}">${user.userDisplayName}</b></div>
 
-        <div class="well well-small">
-            <a class="btn" href="${createLink(controller:'admin', action:'bulkLoadUserPermissions')}">Bulk Load Permissions</a>
-        </div>
-
         <div>
             <g:render template="addPermissions" model="[projects:projects]"/>
         </div>

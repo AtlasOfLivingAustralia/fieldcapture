@@ -78,6 +78,18 @@ class UserService {
         webService.getJson(url)
     }
 
+    def isUserAdminForProject(userId, projectId) {
+        def url = grailsApplication.config.ecodata.baseUrl + "permissions/isUserAdminForProject?projectId=${projectId}&userId=${userId}"
+        def results = webService.getJson(url)
+        return results?.userIsAdmin
+    }
+
+    def isUserCaseManagerForProject(userId, projectId) {
+        def url = grailsApplication.config.ecodata.baseUrl + "permissions/isUserCaseManagerForProject?projectId=${projectId}&userId=${userId}"
+        def results = webService.getJson(url)
+        return results?.userIsCaseManager
+    }
+
     def checkEmailExists(String email) {
         def url = "http://auth.ala.org.au/userdetails/userDetails/getUserDetails?userName=${email}"
         def resp = webService.doPost(url.toString(), [:])
