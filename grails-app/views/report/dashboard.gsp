@@ -18,8 +18,7 @@
           media="screen, projection"/>
 
     <r:require modules="knockout"/>
-    <script src="http://maps.google.com/maps/api/js?key=AIzaSyDAqE0sOMHNienA0zFIUMlY53ztEDiv0d8&sensor=false"
-            type="text/javascript"></script>
+    <script src="${grailsApplication.config.google.maps.url}" type="text/javascript"></script>
 
     <style type="text/css">
     .chart {

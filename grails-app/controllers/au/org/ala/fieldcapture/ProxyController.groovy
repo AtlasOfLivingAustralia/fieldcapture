@@ -27,6 +27,18 @@ class ProxyController {
         render webService.get("${grailsApplication.config.lists.baseURL}/ws/speciesListItems/${params.druid}", false)
     }
 
+    def intersect(){
+        render webService.get("${grailsApplication.config.spatial.layersUrl}/intersect/${params.layerId}/${params.lat}/${params.lng}", false)
+    }
+
+    def features(){
+        render webService.get("${grailsApplication.config.spatial.layersUrl}/objects/${params.layerId}", false)
+    }
+
+    def feature(){
+        render webService.get("${grailsApplication.config.spatial.layersUrl}/object/${params.featureId}", false)
+    }
+
     def speciesListPost() {
         def postBody = request.JSON
         def druidParam = (postBody.druid) ? "/${postBody.druid}" : "" // URL part
@@ -56,14 +68,11 @@ class ProxyController {
         def result
         if (request.respondsTo('getFile')) {
             def f = request.getFile('files')
-
             result =  webService.postMultipart(url, [document:params.document], f)
             render result.content as JSON
-        }
-        else {
+        } else {
             render webService.doPost(url, JSON.parse(params.document)) as JSON;
         }
-
     }
 
     /**

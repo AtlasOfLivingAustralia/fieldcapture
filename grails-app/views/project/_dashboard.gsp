@@ -1,5 +1,5 @@
-<gvisualization:apiImport/>
-
+%{-- Not using this tag as we want  a protocol-less import<gvisualization:apiImport/>--}%
+<script type="text/javascript" src="//www.google.com/jsapi"></script>
 
 <g:set var="targets" value="${metrics.targets}"/>
 <g:set var="other" value="${metrics.other}"/>
@@ -10,11 +10,9 @@
     <div class="row-fluid">
         <div class="span4">
             <g:set var="count" value="${targets.size()}"/>
-
             <g:each in="${targets?.entrySet()}" var="metric" status="i">
-
             %{--This is to stack the output metrics in three columns, the ceil biases uneven amounts to the left--}%
-                <g:if test="${i == Math.ceil(count/3) || i == Math.ceil(count/3*2)}">
+            <g:if test="${i == Math.ceil(count/3) || i == Math.ceil(count/3*2)}">
         </div>
         <div class="span4">
                 </g:if>

@@ -30,8 +30,9 @@ class WebService {
     def grailsApplication, userService
 
     def get(String url, boolean includeUserId) {
-        def conn = new URL(url).openConnection()
+        def conn = null
         try {
+            conn = new URL(url).openConnection()
             conn.setConnectTimeout(grailsApplication.config.webservice.connectTimeout as int)
             conn.setReadTimeout(grailsApplication.config.webservice.readTimeout as int)
             def user = userService.getUser()
@@ -45,8 +46,8 @@ class WebService {
             return error
         } catch (Exception e) {
             def error = [error: "Failed calling web service. ${e.getClass()} ${e.getMessage()} URL= ${url}.",
-                    statusCode: conn.responseCode?:"",
-                    detail: conn.errorStream?.text]
+                    statusCode: conn?.responseCode?:"",
+                    detail: conn?.errorStream?.text]
             log.error error
             return error
         }
@@ -57,15 +58,15 @@ class WebService {
     }
 
     def getJson(String url) {
-        def conn = new URL(url).openConnection()
+        def conn = null
         try {
+            conn = new URL(url).openConnection()
             conn.setConnectTimeout(grailsApplication.config.webservice.connectTimeout as int)
             conn.setReadTimeout(grailsApplication.config.webservice.readTimeout as int)
             def user = userService.getUser()
             if (user) {
                 conn.setRequestProperty(grailsApplication.config.app.http.header.userId, user.userId)
             }
-
             def json = responseText(conn)
             return JSON.parse(json)
         } catch (ConverterException e) {
@@ -81,11 +82,11 @@ class WebService {
             def error = [error: "ecodata service not available. URL= ${url}."]
             println error
             return error
-        }catch (Exception e) {
+        } catch (Exception e) {
             log.info "Exception class = ${e.getClass().name} - ${e.getMessage()}"
             def error = [error: "Failed to get json from web service. ${e.getClass()} ${e.getMessage()} URL= ${url}.",
-                         statusCode: conn.responseCode?:"",
-                         detail: conn.errorStream?.text]
+                         statusCode: conn?.responseCode?:"",
+                         detail: conn?.errorStream?.text]
             log.error error
             return error
         }
@@ -108,8 +109,9 @@ class WebService {
     }
 
     def doPost(String url, Map postBody) {
-        def conn = new URL(url).openConnection()
+        def conn = null
         try {
+            conn = new URL(url).openConnection()
             conn.setDoOutput(true)
             conn.setRequestProperty("Content-Type", "application/json");
             conn.setRequestProperty("Authorization", grailsApplication.config.api_key);
@@ -131,8 +133,8 @@ class WebService {
             return error
         } catch (Exception e) {
             def error = [error: "Failed calling web service. ${e.getMessage()} URL= ${url}.",
-                    statusCode: conn.responseCode?:"",
-                    detail: conn.errorStream?.text]
+                    statusCode: conn?.responseCode?:"",
+                    detail: conn?.errorStream?.text]
             log.error(error, e)
             return error
         }
@@ -140,8 +142,9 @@ class WebService {
 
     def doDelete(String url) {
         url += (url.indexOf('?') == -1 ? '?' : '&') + "api_key=${grailsApplication.config.api_key}"
-        def conn = new URL(url).openConnection()
+        def conn = null
         try {
+            conn = new URL(url).openConnection()
             conn.setRequestMethod("DELETE")
             conn.setRequestProperty("Authorization", grailsApplication.config.api_key);
             def user = userService.getUser()
@@ -154,7 +157,7 @@ class WebService {
             return 500
         } finally {
             if (conn != null){
-                conn.disconnect()
+                conn?.disconnect()
             }
         }
     }

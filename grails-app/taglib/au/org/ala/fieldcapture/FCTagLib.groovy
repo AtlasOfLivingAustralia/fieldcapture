@@ -509,7 +509,9 @@ class FCTagLib {
             mb.ul {
                 memberProjects.eachWithIndex { p, i ->
                     if (j < maxItems) {
-                        listItem(p.project)
+                        if(p && p.project){
+                            listItem(p.project)
+                        }
                         j++
                     }
                 }?:mkp.yield("[No active projects]")
@@ -524,7 +526,9 @@ class FCTagLib {
             mb.ul {
                 starredProjects.eachWithIndex { p, i ->
                     if (j < maxItems) {
-                        listItem(p)
+                        if(p && p.project){
+                            listItem(p)
+                        }
                         j++
                     }
                 }?:mkp.yield("[No starred projects]")

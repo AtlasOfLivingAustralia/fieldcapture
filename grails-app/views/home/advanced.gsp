@@ -4,7 +4,7 @@
 <head>
     <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
     <title>Advanced | Field Capture</title>
-    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&language=en"></script>
+    <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
     <r:script disposition="head">
     var fcConfig = {
         baseUrl: "${grailsApplication.config.grails.serverURL}",
@@ -152,7 +152,7 @@
         </div>
     </div>
     <g:if env="development">
-    <hr />
+    <hr/>
     <div class="expandable-debug">
         <h3>Debug</h3>
         <div>

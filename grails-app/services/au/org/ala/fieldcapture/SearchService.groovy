@@ -100,8 +100,13 @@ class SearchService {
         def url = grailsApplication.config.ecodata.baseUrl + 'search/elasticHome' + commonService.buildUrlParamsFromMap(params)
         log.debug "url = $url"
         def jsonstring = webService.get(url)
-        def jsonObj = new JsonSlurper().parseText( jsonstring )
-        jsonObj
+        try {
+            def jsonObj = new JsonSlurper().parseText(jsonstring)
+            jsonObj
+        } catch(Exception e){
+            log.error(e.getMessage(), e)
+            [error:'Problem retrieving home page facets from: ' + url]
+        }
     }
 
     def getProjectsForIds(params) {
@@ -126,5 +131,4 @@ class SearchService {
             [error: "required param ids not provided"]
         }
     }
-
 }

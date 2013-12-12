@@ -510,7 +510,7 @@ function addMarker(lat, lng, name, dragEvent){
       map:map.gmap
   });
 
-  marker.setIcon('http://maps.google.com/mapfiles/marker_yellow.png');
+  marker.setIcon('https://maps.google.com/mapfiles/marker_yellow.png');
 
   google.maps.event.addListener(marker, 'click', function() {
       infowindow.open(map.gmap, marker);

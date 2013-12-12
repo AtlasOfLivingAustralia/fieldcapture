@@ -25,7 +25,7 @@
     }
   </style>
   <r:require modules="knockout,jquery_ui,amplify"/>
-  <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&libraries=drawing,geometry"></script>
+  <script type="text/javascript" src="${grailsApplication.config.google.drawmaps.url}"></script>
   <r:require modules="drawmap"/>
 </head>
 <body>
@@ -271,7 +271,7 @@
 
         //do the google geocode lookup
         $.ajax({
-            url: "http://maps.googleapis.com/maps/api/geocode/json?latlng="+ lat + "," + lng + "&sensor=true",
+            url: "${grailsApplication.config.google.geocode.url}"+ lat + "," + lng,
             async: false
         })
         .done(function(data) {

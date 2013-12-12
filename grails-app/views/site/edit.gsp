@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&language=en"></script>
+  <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
   <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
   <title> ${create ? 'New' : ('Edit | ' + site?.name?.encodeAsHTML())} | Sites | Field Capture</title>
   <style type="text/css">
@@ -21,7 +21,7 @@
     .no-border { border-top: none !important; }
   </style>
   <r:require modules="knockout, jqueryValidationEngine, amplify"/>
-  <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&libraries=drawing,geometry"></script>
+  <script type="text/javascript" src="${grailsApplication.config.google.drawmaps.url}"></script>
   <r:require modules="drawmap"/>
 </head>
 <body>
@@ -404,6 +404,9 @@
         siteData: $.parseJSON('${json}'),
         checkForState: ${params.checkForState?:'false'},
         spatialService: '${grailsApplication.config.spatial.layersUrl}',
+        intersectService: "${createLink(controller: 'proxy', action: 'intersect')}",
+        featuresService: "${createLink(controller: 'proxy', action: 'features')}",
+        featureService: "${createLink(controller: 'proxy', action: 'feature')}",
         spatialWms: '${grailsApplication.config.spatial.geoserverUrl}'
     };
 
@@ -465,8 +468,8 @@
 
         //state
         $.ajax({
-            url: SERVER_CONF.spatialService + "/intersect/cl22/"+lat+"/"+lng,
-            dataType: "jsonp",
+            url: SERVER_CONF.intersectService + "?layerId=cl22&lat="+lat+"&lng="+lng,
+            dataType: "json",
             async: false
         })
         .done(function(data) {
@@ -480,7 +483,7 @@
 
         //do the google geocode lookup
         $.ajax({
-            url: "http://maps.googleapis.com/maps/api/geocode/json?latlng="+ lat + "," + lng + "&sensor=true",
+            url: "${grailsApplication.config.google.geocode.url}"+ lat + "," + lng,
             async: false
         })
         .done(function(data) {
@@ -492,8 +495,8 @@
 
         //
         $.ajax({
-            url: SERVER_CONF.spatialService + "/intersect/cl959/"+lat+"/"+lng,
-            dataType:"jsonp",
+            url: SERVER_CONF.intersectService + "?layerId=cl959&lat="+lat+"&lng="+lng,
+            dataType:"json",
             async:false
         })
         .done(function(data) {
@@ -504,8 +507,8 @@
         });
 
         $.ajax({
-            url: SERVER_CONF.spatialService + "/intersect/cl916/"+lat+"/"+lng,
-            dataType:"jsonp",
+            url: SERVER_CONF.intersectService + "?layerId=cl916&lat="+lat+"&lng="+lng,
+            dataType:"json",
             async:false
         })
         .done(function(data) {
@@ -592,8 +595,8 @@
                 self.layerObjects([]);
                 if(self.chosenLayer() !== undefined){
                     $.ajax({
-                        url: SERVER_CONF.spatialService + '/objects/' + this.chosenLayer(),
-                        dataType:'jsonp'
+                        url: SERVER_CONF.featuresService + '?layerId=' +this.chosenLayer(),
+                        dataType:'json'
                     }).done(function(data) {
                         self.layerObjects(data);
                         console.log('Refresh complete. Objects:' + data.length);
@@ -630,8 +633,8 @@
                 self.layerObjects([]);
                 if(self.chosenLayer() !== undefined){
                     $.ajax({
-                        url: SERVER_CONF.spatialService + '/objects/' + this.chosenLayer(),
-                        dataType:'jsonp'
+                        url: SERVER_CONF.featuresService + '?layerId=' + this.chosenLayer(),
+                        dataType:'json'
                     }).done(function(data) {
                         self.layerObjects(data);
                         console.log('Refresh complete. Objects:' + data.length);
@@ -648,8 +651,8 @@
 
                     //additional metadata required from service layer
                     $.ajax({
-                        url: SERVER_CONF.spatialService + '/object/' + self.layerObject(),
-                        dataType:'jsonp'
+                        url: SERVER_CONF.featureService + '?featureId=' + self.layerObject(),
+                        dataType:'json'
                     }).done(function(data) {
                         console.log('Retrieving details of ' + self.layerObject());
                         self.layerObject(self.geometry().pid())

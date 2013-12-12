@@ -4,7 +4,7 @@
 <head>
     <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
     <title>Home | Field Capture</title>
-    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&language=en"></script>
+    <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
     <r:script disposition="head">
     var fcConfig = {
         baseUrl: "${grailsApplication.config.grails.serverURL}",
@@ -49,9 +49,6 @@
     <div class="span8">
         <markdown:renderHtml>${description}</markdown:renderHtml>
     </div>
-    %{--<div class="span6">--}%
-
-    %{--</div>--}%
 </div>
 
 <g:if test="${flash.error || results.error}">
@@ -821,41 +818,6 @@
         var dd  = d.getDate().toString();
         return yyyy + "-" + (mm[1]?mm:"0"+mm[0]) + "-" + (dd[1]?dd:"0"+dd[0]);
     }
-
-    /* This implementation of list filtering is not used but is left for reference.
-       The jQuery implementation is quicker and cleaner in this case. This may
-       not be true if the data model is needed for other purposes.
-    var data = {};
-    data.sites = /$/{sites};
-
-    function ViewModel (data) {
-        var self = this;
-        self.sitesFilter = ko.observable("");
-        self.sites = ko.observableArray(data.sites);
-        self.isSitesFiltered = ko.observable(false);
-        // Animation callbacks for the lists
-        self.showElement = function(elem) { if (elem.nodeType === 1) $(elem).hide().slideDown() };
-        self.hideElement = function(elem) { if (elem.nodeType === 1) $(elem).slideUp(function() { $(elem).remove(); }) };
-
-        self.filteredSites = ko.computed(function () {
-            var filter = self.sitesFilter().toLowerCase();
-            var regex = new RegExp('\\b' + filter, 'i');
-            if (!filter || filter.length === 1) {
-                self.isSitesFiltered(false);
-                return self.sites();
-            } else {
-                self.isSitesFiltered(true);
-                return ko.utils.arrayFilter(self.sites(), function (item) {
-                    return regex.test(item.name);
-                })
-            }
-        });
-        self.clearSiteFilter = function () {
-            self.sitesFilter("");
-        }
-    }
-    var viewModel = new ViewModel(data);
-    ko.applyBindings(viewModel);*/
 
 </r:script>
 </body>
