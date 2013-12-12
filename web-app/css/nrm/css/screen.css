@@ -2390,3 +2390,15 @@ div#announcement {
 div#announcement p {
     margin: 0;
 }
+
+.merit {
+    display: block;
+    float: left;
+    margin-top: 12px;
+}
+
+span.merit {
+    font-size: 24px;
+    color: white;
+    margin: 24px 24px 10px 10px;
+}

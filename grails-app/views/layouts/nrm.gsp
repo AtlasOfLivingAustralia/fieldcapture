@@ -46,8 +46,9 @@
                         <r:img dir="css/nrm/images" file="AustGovt_inline_white_on_transparent.png" alt="Australian Government Emblem" />
                     </a>
                 </div>
-                <div class="nav-collapse collapse">
-                    <g:form controller="search" method="GET" class="search pull-right">
+                <div class="nav-collapse collapse pull-right">
+                    <span class="merit">MERIT</span>
+                    <g:form controller="search" method="GET" class="search merit">
                         <p>
                             <label for="keywords"><span class="hide">Full text search</span><input type="text" name="query" id="keywords" value="${params.query}"></label>
                             <input type="hidden" name="collection" value="agencies">
