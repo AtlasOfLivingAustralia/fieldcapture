@@ -163,7 +163,7 @@ class ImportService {
      * Validates and imports project, site and institution data supplied by the GMS as a CSV file.
      */
     def importProjectsByCsv(InputStream csv,  importWithErrors = false) {
-        CSVReader csvReader = new CSVReader(new InputStreamReader(csv));
+        CSVReader csvReader = new CSVReader(new InputStreamReader(csv, 'Cp1252'));
         def headerIndexes = validateHeader(csvReader.readNext());
 
         if (headerIndexes.missing) {
@@ -202,6 +202,7 @@ class ImportService {
             }
             if (project.errors.size() == 0 || importWithErrors) {
                 project.remove('errors')
+                project.remove('warnings')
                 def status = importProject(project)
                 if (status.project == 'created') {
                     projectsCreated++
@@ -353,12 +354,24 @@ class ImportService {
     }
 
     def convertDate(date) {
-        try {
-            def format = date.length() == 10 ? inputDateFormat : shortInputDateFormat
-            outputDateFormat.format(format.parse(date))
+
+
+        if (date && date.isInteger()) {
+            final long DAYS_FROM_1900_TO_1970 = 25567
+            // Date is number of days since 1900
+            long days = date as Long
+            long millisSince1970 = (days - DAYS_FROM_1900_TO_1970) * 24l * 60l * 60l * 1000l
+            return outputDateFormat.format(new Date(millisSince1970))
         }
-        catch (Exception e) {
-            throw e
+        else {
+
+            try {
+                def format = date.length() == 10 ? inputDateFormat : shortInputDateFormat
+                outputDateFormat.format(format.parse(date))
+            }
+            catch (Exception e) {
+                throw e
+            }
         }
     }
 
@@ -426,10 +439,10 @@ class ImportService {
         return allProjects.projects.find{it.grantId?.equalsIgnoreCase(grantId) && (it.externalId ?: '').equalsIgnoreCase(externalProjectId ?: '')}
     }
 
-    def findProjectByGrantIdAndName(grantId, name) {
+    def findProjectByGrantId(grantId) {
         // Cache projects temporarily to avoid this query.
         def allProjects = cacheService.get(PROJECTS_CACHE_KEY) { [projects:projectService.list(true)] }
-        return allProjects.projects.find{it.grantId?.equalsIgnoreCase(grantId) && (it.name ?: '').equalsIgnoreCase(name ?: '')}
+        return allProjects.projects.find{it.grantId?.equalsIgnoreCase(grantId)}
     }
 
     def findProjectSiteByDescription(project, description) {
@@ -494,6 +507,7 @@ class ImportService {
 
     /** Constants used by the MERI plan import */
     final int GRANT_ID_COLUMN = 0
+    final int SUB_PROJECT_ID_COLUMN = 1
     final int OUTPUT_COLUMN = 3
 
 
@@ -504,11 +518,17 @@ class ImportService {
 
         cacheService.clear(PROJECTS_CACHE_KEY)
 
-        CSVReader csvReader = new CSVReader(new InputStreamReader(csv, 'UTF-8'));
+        CSVReader csvReader = new CSVReader(new InputStreamReader(csv, 'Cp1252'));
 
         String[] csvLine = csvReader.readNext();
 
+        def useSubProject = false
+        if (csvLine[SUB_PROJECT_ID_COLUMN]?.trim() == 'Sub-project ID') {
+            useSubProject = true
+        }
+
         def stageOffsets = findStageOffsets(csvLine)
+        def allHeaders = csvLine
         // Used to detect duplicate grantIds (as it is used as the key)
         def grantIds = []
 
@@ -521,19 +541,31 @@ class ImportService {
             if (grantId) {
                 grantId = grantId.split()[0]
             }
+            def subProject = ''
+            if (useSubProject) {
+                subProject = csvLine[SUB_PROJECT_ID_COLUMN]
+            }
 
-            if (!grantIds.contains(grantId)) {
+            def id = [grantId:grantId, externalId:subProject]
 
-                def results = parsePlan(grantId, csvLine, stageOffsets, overwriteActivities)
+            if (!grantIds.contains(id)) {
+
+                def results = parsePlan(grantId, subProject, csvLine, stageOffsets, overwriteActivities, allHeaders)
                 if (!results.error && !results.activities) {
                     results = [error:"No activities defined for project with grant id = ${grantId}"]
                 }
                 else if (!results.error) {
-                    def importResults = importPlan(grantId, results)
+                    def projectId = results.remove('projectId')
+                    def importResults = importPlan(projectId, results)
                     results << [importStatus:importResults]
+                    if (results.importStatus?.resp?.status == 200) {
+                        results.success = true
+                    }
                 }
-                plans[grantId] = results
-                grantIds << grantId
+                if (!results.success) {
+                    plans[id] = results
+                }
+                grantIds << id
             }
             else {
                 log.error("Duplicate Grant ID detected: "+grantId)
@@ -548,12 +580,14 @@ class ImportService {
     }
 
 
-    def importPlan(grantId, planDetails) {
+    def importPlan(projectId, planDetails) {
 
-        def project = [projectId:[type:'grantId', id:grantId]]
+        println "loading plan for ${projectId} planDetails: ${planDetails}"
+        def project = [projectId:[type:'guid', id:projectId]]
         project.activities = planDetails.activities
-        project.outputTargets = planDetails.outputs
+        project.outputTargets = planDetails.outputTargets
         project.timeline = planDetails.timeline
+        project.planStatus = "approved"
 
         def url = grailsApplication.config.ecodata.baseUrl + 'external/v1/projectActivities'
 
@@ -578,18 +612,24 @@ class ImportService {
 
     }
 
-    def parsePlan(grantId, String[] csvLine, stageOffsets, overwriteActivities) {
+    def parsePlan(grantId, externalId, String[] csvLine, stageOffsets, overwriteActivities, allHeaders) {
 
         // Column headers: (as this is more or less a once off load..)
 
         // Project ID	Project title	Project description	Theme 1 outputs: # ha to be revegetated	Theme 1 description: Vegetation description	Theme 1 description: Current condition	Theme 1 description: Intended condition	Theme 1 description: method used for assessment of condition	Theme 2 outputs: #ha to be protected	Theme 2 description: Vegetation description	Theme 2 description: current condition	Theme 2 description: intended condition	Theme 2 description: method for assessment	Theme 3 outputs: #ha to be managed	Theme 3 outputs: invasive spp managed	Theme 3 description: other	non-theme outputs: # plants planted	non-theme outputs: #kg seed sown	non-theme description: % survival rate for plants	non-theme description: #canopy species planted	non-theme description: #understorey spp planted	non-theme description: #ground layer spp planted	non-theme outputs: #km fenced	non-theme description: other	Stage	Stage start date	Stage end date	Activity 1 type	Activity 1 description	Activity 2 type	Activity 2 description	Activity 3 type	Activity 3 description	Activity 4 type	Activity 4 description	Activity 5 type	Activity 5 description	Activity 6 type	Activity 6 description	Activity 7 type	Activity 7 description	Activity 8 type	Activity 8 description	Activity 9 type	Activity 9 description	Activity 10 type	Activity 10 description	Activity 11 type	Activity 11 description	Stage	Stage start date	Stage end date	Activity 1 type	Activity 1 description	Activity 2 type	Activity 2 description	Activity 3 type	Activity 3 description	Activity 4 type	Activity 4 description	Activity 5 type	Activity 5 description	Activity 6 type	Activity 6 description	Activity 7 type	Activity 7 description	Activity 8 type	Activity 8 description	Activity 9 type	Activity 9 description	Activity 10 type	Activity 10 description	Activity 11type	Activity 11 description	Stage	Stage start date	Stage end date	Activity 1 type	Activity 1 description	Activity 2 type	Activity 2 description	Activity 3 type	Activity 3 description	Activity 4 type	Activity 4 description	Activity 5 type	Activity 5 description	Activity 6 type	Activity 6 description	Activity 7 type	Activity 7 description	Activity 8 type	Activity 8 description	Activity 9 type	Activity 9 description	Activity 10 type	Activity 10 description	Activity 11 type	Activity 11 description	Stage	Stage start date	Stage end date	Activity 1 type	Activity 1 description	Activity 2 type	Activity 2 description	Activity 3 type	Activity 3 description	Activity 4 type	Activity 4 description	Activity 5 type	Activity 5 description	Activity 6 type	Activity 6 description	Activity 7 type	Activity 7 description	Activity 8 type	Activity 8 description	Activity 9 type	Activity 9 description	Activity 10 type	Activity 10 description	Activity 11 type	Activity 11 description	Activity 12 type	Activity 12 description	Activity 13 type	Activity 13 description	Activity 14 type	Activity 14 description	Activity 15 type	Activity 15 description	Activity 16 type	Activity 16 description	Activity 17 type	Activity 17 description	Stage	Stage start date	Stage end date	Activity 1 type	Activity 1 description	Activity 2 type	Activity 2 description	Activity 3 type	Activity 3 description	Activity 4 type	Activity 4 description	Activity 5 type	Activity 5 description	Activity 6 type	Activity 6 description	Activity 7 type	Activity 7 description	Activity 8 type	Activity 8 description	Activity 9 type	Activity 9 description	Activity 10 type	Activity 10 description	Activity 11 type	Activity 11 description	Stage	Stage start date	Stage end date	Activity 1 type	Activity 1 description	Activity 2 type	Activity 2 description	Activity 3 type	Activity 3 description	Activity 4 type	Activity 4 description	Activity 5 type	Activity 5 description	Activity 6 type	Activity 6 description	Activity 7 type	Activity 7 description	Activity 8 type	Activity 8 description	Activity 9 type	Activity 9 description	Activity 10 type	Activity 10 description	Activity 11 type	Activity 11 description	Activity 12 type	Activity 12 description	Activity 13 type	Activity 13 description	Activity 14 type	Activity 14 description	Activity 15 type	Activity 15 description	Stage	Stage start date	Stage end date	Activity 1 type	Activity 1 description	Activity 2 type	Activity 2 description	Activity 3 type	Activity 3 description	Activity 4 type	Activity 4 description	Activity 5 type	Activity 5 description	Activity 6 type	Activity 6 description	Activity 7 type	Activity 7 description	Activity 8 type	Activity 8 description	Activity 9 type	Activity 9 description	Activity 10 type	Activity 10 description	Activity 11 type	Activity 11 description	Stage	Stage start date	Stage end date	Activity 1 type	Activity 1 description	Activity 2 type	Activity 2 description	Activity 3 type	Activity 3 description	Activity 4 type	Activity 4 description	Activity 5 type	Activity 5 description	Activity 6 type	Activity 6 description	Activity 7 type	Activity 7 description	Activity 8 type	Activity 8 description	Activity 9 type	Activity 9 description	Activity 10 type	Activity 10 description	Activity 11 type	Activity 11 description	Activity 12 type	Activity 12 description	Activity 13 type	Activity 13 description	Activity 14 type	Activity 14 description	Stage	Stage start date	Stage end date	Activity 1 type	Activity 1 description	Activity 2 type	Activity 2 description	Activity 3 type	Activity 3 description	Activity 4 type	Activity 4 description	Activity 5 type	Activity 5 description	Activity 6 type	Activity 6 description	Activity 7 type	Activity 7 description	Stage	Stage start date	Stage end date	Activity 1 type	Activity 1 description	Activity 2 type	Activity 2 description	Activity 3 type	Activity 3 description	Activity 4 type	Activity 4 description	Activity 5 type	Activity 5 description	Activity 6 type	Activity 6 description	Activity 7 type	Activity 7 description	Activity 8 type	Activity 8 description	Activity 9 type	Activity 9 description	Activity 10 type	Activity 10 description	Activity 11 type	Activity 11 description	Activity 12 type	Activity 12 description	Activity 13 type	Activity 13 description	Activity 14 type	Activity 14 description	Activity 15 type	Activity 15 description	Activity 16 type	Activity 16 description	Activity 17 type	Activity 17 description	Activity 18 type	Activity 18 description	Activity 19 type	Activity 19 description	Activity 20 type	Activity 20 description
+        int stageNum = 0
 
         try {
-            // need name also.....
-            def project = findProjectByGrantIdAndName(grantId, '')
+            def project = null
+            if (externalId) {
+                project = findProjectByGrantAndExternalId(grantId, externalId)
+            }
+            else {
+                project = findProjectByGrantId(grantId)
+            }
 
             if (!project) {
-                return [error:"No project with grant id = ${grantId}"]
+                return [error:"No project with grant id = ${grantId}, external id = ${externalId}"]
             }
             def existingActivities = activityService.activitiesForProject(project.projectId)
             if (existingActivities) {
@@ -601,10 +641,8 @@ class ImportService {
                 }
             }
 
-            int stageNum = 0
             def timeline = []
             def activities = []
-            def outputs = readOutputs(project, csvLine[OUTPUT_COLUMN..<stageOffsets[0]])
 
             while (stageNum < stageOffsets.size()) {
 
@@ -612,6 +650,10 @@ class ImportService {
                 def endOffset = stageNum < stageOffsets.size()-1 ? stageOffsets[stageNum+1] : csvLine.length
 
                 def stageDetails = readStage(csvLine[startOffset..<endOffset], project)
+                if (stageDetails.finished) {
+                    log.warn("Grant ${grantId} finished at stage ${stageNum}")
+                    break
+                }
                 if (stageDetails.error) {
                     return [error:stageDetails.error]
                 }
@@ -622,25 +664,27 @@ class ImportService {
                 stageNum++
 
             }
-            return [timeline:timeline, activities:activities, outputs:outputs]
+            def outputs = readOutputs(project, csvLine[OUTPUT_COLUMN..<stageOffsets[0]], activities, allHeaders[OUTPUT_COLUMN..<stageOffsets[0]])
+
+            return [timeline:timeline, activities:activities, outputTargets:outputs, projectId:project.projectId]
         }
         catch (Exception e) {
             e.printStackTrace()
-            return [error:"Error importing project with grantId = ${grantId}, error=${e.getMessage()}"]
+            return [error:"Error importing project with grantId = ${grantId}, stage=${stageNum}, error=${e.getMessage()}"]
         }
 
     }
 
-    def readOutputs(project, outputDetails) {
-        if (project.associatedProgram.startsWith('Biodiversity Fund')) {
-            return readBioFundOutputs(outputDetails)
+    def readOutputs(project, outputDetails, activities, outputHeaders) {
+        if (project.associatedProgram.startsWith('Biodiversity Fund') && project.associatedSubProgram == 'Round 1') {
+            return readBioFundOutputs(outputDetails, activities)
         }
-        else if (project.associatedProgram.startsWith('Caring')) {
-            return readCFOCOutputs(outputDetails)
+        else {
+            return readCFOCOutputs(outputDetails, outputHeaders, activities)
         }
     }
 
-    def readCFOCOutputs(outputDetails) {
+    def readCFOCOutputs(outputDetails, outputHeaders, activities) {
         def headers=['Revegetation ha':[outputLabel: 'Revegetation Details', scoreName: 'areaOfWorks' , scoreLabel: 'Area of works', units:'Ha'],
                 'Weed treatment: area treated ha':[outputLabel: 'Weed Treatment Details', scoreName: 'areaTreatedHa' , scoreLabel: 'Total area treated (Ha)', units:'Ha'],
                 'Seed Collected Kg':[outputLabel: 'Seed Collection Details', scoreName: 'seedCollectedKg' , scoreLabel: 'Seed collected (Kg)', units:'Kg'],
@@ -661,42 +705,182 @@ class ImportService {
                 'number On Country Visits':[],
                 'number Of Indigenous Participants':[]]
 
+        def agHeaders = [
+                'Entities adopt sus land management practices':[outputLabel:'Management Practice Change Details', scoreName:'totalEntitiesAdoptingChange', scoreLabel:'Farming entities adopting sustainable practice change', units:''],
+                'Area Sus ag adopted Ha':[outputLabel:'Management Practice Change Details', scoreName:'benefitAreaHa', scoreLabel:'Area of land changed to sustainable practices', units:'Ha'],
+                'Participants engaged':[outputLabel:'Participant Information', scoreName:'totalParticipantsNew', scoreLabel:'Total No. of unique participants attending project events', units:''],
+                'No. of community participation and engagement events':[outputLabel:'Event Details', scoreName:'eventTopics', scoreLabel:'Number of Community Participation and Engagement events', units:''],
+                'Revegetation: Area of works Ha':[outputLabel: 'Revegetation Details', scoreName: 'areaOfWorks' , scoreLabel: 'Area of works', units:'Ha'],
+                'Revegetation: Number of plants planted':[outputLabel: 'Revegetation Details', scoreName: 'totalNumberPlanted' , scoreLabel: 'Number of plants planted', units:''],
+                'Revegetation: Kgs of seed sown Kg':[outputLabel: 'Revegetation Details', scoreName: 'totalSeedSownKg' , scoreLabel: 'Kgs of seed sown', units:'kg'],
+                'Seed collected Kg':[outputLabel: 'Seed Collection Details', scoreName: 'seedCollectedKg' , scoreLabel: 'Seed collected (Kg)', units:'Kg'],
+                'Site Preparation: total area treated Ha':[outputLabel:'Site Preparation Actions', scoreName:'preparationAreaTotal', scoreLabel:'Total area prepared for follow-up treatment actions', units:'Ha'],
+                'Site Preperation: total area treated Ha':[outputLabel:'Site Preparation Actions', scoreName:'preparationAreaTotal', scoreLabel:'Total area prepared for follow-up treatment actions', units:'Ha'],
+                'Weed treatment: Total area treated Ha':[outputLabel:'Weed Treatment Details', scoreName:'areaTreatedHa', scoreLabel:'Total area treated (Ha)', units:'Ha'],
+                'Pest/disease: No. of individual animals killed/removed':[outputLabel:'Pest Management Details', scoreName:'pestAnimalsTreatedNo', scoreLabel:'No. of individual animals killed/removed', units:''],
+                'Pest/disease: Area covered by pest treatment Ha':[outputLabel:'Pest Management Details', scoreName:'areaTreatedForPests', scoreLabel:'Area covered by pest treatment (Ha)', units:'Ha'],
+                'Fire Management: Area of burn Ha':[outputLabel:'Fire Information', scoreName:'areaOfFireHa', scoreLabel:'Area of burn (Ha)', units:'Ha'],
+                'Conservation Grazing Management: Area managed with stock Ha':[outputLabel:'Stock Management Details', scoreName:'areaOfStockManagmentHa', scoreLabel:'Area managed with stock (Ha)', units:'Ha'],
+                'Area managed with stock Ha':[outputLabel:'Stock Management Details', scoreName:'areaOfStockManagmentHa', scoreLabel:'Area managed with stock (Ha)', units:'Ha'],
+                'Erosion area treated Ha':[outputLabel:'Erosion Management Details', scoreName:'erosionAreaTreated', scoreLabel:'Erosion area treated (Ha)', units:'Ha'],
+                'Erosion: Length of stream/coastline treated Km':[outputLabel:'Erosion Management Details', scoreName:'erosionLength', scoreLabel:'Length of stream/coastline treated (m)', units:'metres'],
+                'Weight of debris removed Tonnes':[outputLabel:'Debris Removal Details', scoreName:'debrisWeightTonnes', scoreLabel:'Weight of debris removed (Tonnes)', units:'Tonnes'],
+                'Volume of debris removed m3':[outputLabel:'Debris Removal Details', scoreName:'debrisVolumeM3', scoreLabel:'Volume of debris removed (m3)', units:'m3'],
+
+
+
+        ]
+
+        def outputs = []
+        outputDetails.eachWithIndex { target, i ->
+
+            def header = outputHeaders[i]?.trim()
+
+            if (agHeaders[header]) {
+                addOutput(outputs, agHeaders[header], target)
+            }
+            else if (headers[header]) {
+                addOutput(outputs, headers[header], target)
+            }
+            else if (header == 'Theme 2') {
+                def hasWeedTreatment = activities.find{it.type == 'Weed Treatment'}
+                def hasPests = activities.find{it.type == 'Pest and Disease Management'}
+                if (hasWeedTreatment) {
+                    addOutput(outputs, [outputLabel:'Weed Treatment Details', scoreName:'areaTreatedHa', scoreLabel:'Total area treated (Ha)', units:'Ha'], target)
+                }
+                if (hasPests) {
+                    addOutput(outputs, [outputLabel:'Pest Management Details', scoreName:'areaTreatedForPests', scoreLabel:'Area covered by pest treatment (Ha)', units:'Ha'], target)
+                }
+            }
+            else if (header.equalsIgnoreCase('Project description') || header.equalsIgnoreCase('Sub-project') || header.equalsIgnoreCase('Project title')) {
+                // Do nothing, some of the spreadsheets have different formats.
+            }
+            else {
+                throw new Exception("unmatched output target: ${target}, index: ${i}")
+            }
+        }
+        outputs
     }
 
-    def readBioFundOutputs(outputDetails) {
+    def readBioFundOutputs(outputDetails, activities) {
 
-        def theme1 = 'Biodiverse plantings'
-        def theme2 = 'Protecting and enhancing existing native vegetation'
-        def theme3 = 'Managing invasive species in a connected landscape'
-
-        // This is essentially just a big lookup table.
+        def revegOutcome = ''
         def outputs = []
 
         int offset = 0
 
-        addOutput(outputs, [outputLabel: 'Revegetation Details', scoreName: 'areaOfWorks' , scoreLabel: 'Area of works', units:'Ha', theme:theme1], outputDetails[offset++])
-        // Not sure what to do with the textual based descriptions, methods & outcomes.
-        offset+=4
-        addOutput(outputs, [outputLabel: 'Revegetation Details', scoreName: 'areaOfWorks' , scoreLabel: 'Area of works', units:'Ha', theme:theme2], outputDetails[offset++])
-        // Same again, a bunch of text for theme 2 this time.
-        offset+=4
+        def theme1Reveg = outputDetails[offset++]
 
+
+        def theme1Desc = outputDetails[offset++]
+        if (theme1Desc) {
+            revegOutcome += "Theme 1 vegetation description: ${theme1Desc}\n"
+        }
+        def theme1CurrentCondition = outputDetails[offset++]
+        if (theme1CurrentCondition) {
+            revegOutcome += "Theme 1 vegetation current condition: ${theme1CurrentCondition}\n"
+        }
+        def theme1TargetCondition = outputDetails[offset++]
+        if (theme1TargetCondition) {
+            revegOutcome += "Theme 1 vegetation target condition: ${theme1TargetCondition}\n"
+        }
+        def theme1AssessmentMethod = outputDetails[offset++]
+
+        if (theme1AssessmentMethod) {
+            revegOutcome += "Theme 1 vegetation assessment method: ${theme1AssessmentMethod}\n"
+        }
+        def theme2Reveg = outputDetails[offset++]
+
+        // Same again, a bunch of text for theme 2 this time.
+        def theme2Desc = outputDetails[offset++]
+        if (theme2Desc) {
+            revegOutcome += "Theme 2 vegetation description: ${theme2Desc}\n"
+        }
+        def theme2CurrentCondition = outputDetails[offset++]
+        if (theme2CurrentCondition) {
+            revegOutcome += "Theme 2 vegetation current condition: ${theme2CurrentCondition}\n"
+        }
+        def theme2TargetCondition = outputDetails[offset++]
+        if (theme2TargetCondition) {
+            revegOutcome += "Theme 2 vegetation target condition: ${theme2TargetCondition}\n"
+        }
+        def theme2AssessmentMethod = outputDetails[offset++]
+
+        if (theme2AssessmentMethod) {
+            revegOutcome += "Theme 2 vegetation assessment method: ${theme2AssessmentMethod}\n"
+        }
+
+        def hasWeedTreatment = activities.find{it.type == 'Weed Treatment'}
+        def hasPests = activities.find{it.type == 'Pest and Disease Management'}
+
+        def theme3Description = ''
         // Theme 3 area
-        addOutput(outputs, [outputLabel: 'Weed Treatment Details', scoreName: 'areaTreatedHa' , scoreLabel: 'Total area treated (Ha)', units:'Ha', theme:theme3], outputDetails[offset++])
+        def theme3Area = outputDetails[offset++]
+
 
         // Now species lists, text & number???  for theme 3.
-        offset+=2
+        def invasiveSpeciesManaged = outputDetails[offset++]
+        if (invasiveSpeciesManaged) {
+            theme3Description += "Invasive species managed: ${invasiveSpeciesManaged}\n"
+        }
+        def theme3OtherOutcome = outputDetails[offset++]
+        if (theme3OtherOutcome) {
+            theme3Description += "Theme 3 other outcomes: ${theme3OtherOutcome}"
+        }
+
+        if (hasWeedTreatment) {
+            addOutput(outputs, [outputLabel: 'Weed Treatment Details', scoreName: 'areaTreatedHa' , scoreLabel: 'Total area treated (Ha)', units:'Ha'], theme3Area)
+            outputs << [outputLabel:'Weed Treatment Details', outcomeTarget:theme3Description]
+
+        }
+        if (hasPests) {
+            addOutput(outputs, [outputLabel: 'Pest Management Details', scoreName: 'areaTreatedForPests' , scoreLabel: 'Area covered by pest treatment (Ha)', units:'Ha'], theme3Area)
+            outputs << [outputLabel:'Pest Management Details', outcomeTarget:theme3Description]
+
+        }
+
         addOutput(outputs, [outputLabel: 'Revegetation Details', scoreName: 'totalNumberPlanted' , scoreLabel: 'Number of plants planted', units:''], outputDetails[offset++])
         addOutput(outputs, [outputLabel: 'Revegetation Details', scoreName: 'totalSeedSownKg' , scoreLabel: 'Kgs of seed sown', units:'kg'], outputDetails[offset++])
 
-        addOutput(outputs, [outputLabel: 'Missing output', scoreName: 'survivalRate' , scoreLabel: '% survival rate for plants', units:'%'], outputDetails[offset++])
-        addOutput(outputs, [outputLabel: 'Missing output', scoreName: 'numberCanopySpeciesPlanted' , scoreLabel: '# canopy species planted', units:''], outputDetails[offset++])
-        addOutput(outputs, [outputLabel: 'Missing output', scoreName: 'numberUnderstorySpeciesPlanted' , scoreLabel: '# understory species planted', units:''], outputDetails[offset++])
-        addOutput(outputs, [outputLabel: 'Missing output', scoreName: 'numberGroundLayerSpeciesPlanted' , scoreLabel: '# ground layer species planted', units:''], outputDetails[offset++])
+
+        def survivalRate = outputDetails[offset++]
+        if (survivalRate) {
+            revegOutcome += "% survival rate for plants: ${survivalRate}\n"
+        }
+
+        def numberCanopySpeciesPlanted = outputDetails[offset++]
+        if (numberCanopySpeciesPlanted) {
+            revegOutcome += "# canopy species planted: ${numberCanopySpeciesPlanted}\n"
+        }
+
+        def numberUnderstorySpeciesPlanted = outputDetails[offset++]
+        if (numberUnderstorySpeciesPlanted) {
+            revegOutcome += "# understorey species planted: ${numberUnderstorySpeciesPlanted}\n"
+        }
+        def numberGroundLayerSpeciesPlanted = outputDetails[offset++]
+        if (numberGroundLayerSpeciesPlanted) {
+            revegOutcome += "# ground layer species planted: ${numberGroundLayerSpeciesPlanted}\n"
+        }
 
         addOutput(outputs, [outputLabel: 'Fence Details', scoreName: 'lengthOfFence' , scoreLabel: 'Total length of fence', units:'Km',], outputDetails[offset++])
 
         // Now an "other"???
+        def other = ''
+        other << "Other outcomes: ${outputDetails[offset++]}"
+        other << "Other outcomes: ${outputDetails[offset++]}"
+
+        outputs << [outputLabel:'Outcomes', outcomeTarget:other]
+
+        def totalReveg = 0
+        if (theme1Reveg && theme1Reveg.isInteger()) {
+            totalReveg += theme1Reveg as Integer
+        }
+        if (theme2Reveg && theme2Reveg.isInteger()) {
+            totalReveg += theme2Reveg as Integer
+        }
+        addOutput(outputs, [outputLabel: 'Revegetation Details', scoreName: 'areaOfWorks' , scoreLabel: 'Area of works', units:'Ha'], totalReveg)
+
+        outputs << [outputLabel:'Revegetation Details', outcomeTarget:revegOutcome]
 
         outputs
     }
@@ -716,9 +900,14 @@ class ImportService {
         int offset = 0
         def stage = [:]
 
-        stage.name = 'Stage '+stageDetails[offset++]
+        def stageNum = stageDetails[offset++]
+        if (!stageNum) {
+
+            return [finished:true]
+        }
+        stage.name = 'Stage '+ stageNum
         def fromDate = stageDetails[offset++]
-        if (fromDate == 'Commencement') {
+        if (fromDate.equalsIgnoreCase('Commencement')) {
             fromDate = project.startDate
             if (!fromDate) {
                 fromDate = '01/07/2012'
@@ -733,11 +922,11 @@ class ImportService {
         // Assume at least one activity
 
         def activities = []
-        while (offset < stageDetails.size() && stageDetails[offset]) {
+        while (offset < stageDetails.size() && stageDetails[offset]?.trim()) {
 
             def activity = [:]
 
-            def activityType = stageDetails[offset++]
+            def activityType = stageDetails[offset++]?.trim()
             activity.type = matchActivity(validActivities, activityType)
             if (!activity.type) {
                 unmatchedActivities << activityType
@@ -764,7 +953,7 @@ class ImportService {
 
         // Default unspecified site assessments to the DoE site assessment.
         if (activityType.equalsIgnoreCase('Site Assessment')) {
-            activityType = 'Site Assessment - Biodiversity Fund (DoE)'
+            activityType = 'Vegetation Assessment - Biodiversity Fund (DoE)'
         }
         def match = validActivities.find {it.name.equalsIgnoreCase(activityType)}
         match = match?match.name:null
@@ -772,46 +961,126 @@ class ImportService {
 
         if (!match) {
 
-            if (activityType.equalsIgnoreCase('Administration')) {
+            if (activityType.equalsIgnoreCase('Administration') ||
+                    activityType.equalsIgnoreCase('Project administratoon') ||
+                    activityType.equalsIgnoreCase('Poorject administration')) {
                 match = 'Project Administration'
             }
-            else if (activityType.equalsIgnoreCase('Project Employment')) {
+            else if (activityType.equalsIgnoreCase('Project Employment') ||
+                    activityType.equalsIgnoreCase('Indigenous Employment and Enterprise')) {
                 match ='Indigenous Employment & Enterprise'
             }
-            else if (activityType.equalsIgnoreCase('Site planning')) {
+            else if (activityType.equalsIgnoreCase('Site planning') ||
+                    activityType.equalsIgnoreCase('Sie Planning') ||
+                    activityType.equalsIgnoreCase('Works implentation planning') ||
+                    activityType.equalsIgnoreCase('Work implementation Planning') ) {
                 match = 'Works Implementation Planning'
             }
             else if (activityType.equalsIgnoreCase('Grazing Management')) {
                 match = 'Conservation Grazing Management'
             }
-            else if (activityType.equalsIgnoreCase('Weed Infestation & Monitoring')) {
+            else if (activityType.equalsIgnoreCase('Weed Infestation & Monitoring') ||
+                    activityType.equalsIgnoreCase('Weed Infestation and Monitoring') ||
+                    activityType.equalsIgnoreCase('Weed mapping and monitoring')) {
                 match = 'Weed Mapping & Monitoring'
             }
             else if (activityType.equalsIgnoreCase('Install/construct erosion control structure')) {
                 match = 'Erosion Management'
             }
-            else if (activityType.equalsIgnoreCase('Pest Management')) {
+            else if (activityType.equalsIgnoreCase('Pest Management') ||
+                    activityType.equalsIgnoreCase('Pest Animal management') ||
+                    activityType.equalsIgnoreCase('Pest management') ||
+                    activityType.equalsIgnoreCase('Pest  management') ||
+                    activityType.equalsIgnoreCase('Pest  management')) {
                 match = 'Pest and Disease Management'
             }
             else if (activityType.equalsIgnoreCase('BioCondition Site Assessment (v2.1)')) {
-                match = 'Site Assessment - BioCondition (QLD)'
+                match = 'Vegetation Assessment - BioCondition (QLD)'
             }
             else if (activityType.endsWith('Biodiversity Fund')) {
-                match = 'Site Assessment - Biodiversity Fund (DoE)'
+                match = 'Vegetation Assessment - Biodiversity Fund (DoE)'
             }
             else if (activityType.equalsIgnoreCase('Infrastructure Works')) {
                 match = 'Infrastructure Establishment'
             }
-            else if (activityType.equalsIgnoreCase('Site Assessment - Bushland Condition Monitoring')) {
-                match = 'Site Assessment - Bushland Condition Monitoring (SA)'
+            else if (activityType.equalsIgnoreCase('Site Assessment - Bushland Condition Monitoring') ||
+                    activityType.equalsIgnoreCase('Site Assessment - Bushland Condition Monitoring (SA)')) {
+                match = 'Vegetation Assessment - Bushland Condition Monitoring (SA)'
             }
-            else if (activityType.equalsIgnoreCase('Site Preperation')) {
+            else if (activityType.equalsIgnoreCase('Site Preperation') ||
+                    activityType.equalsIgnoreCase('Site preparation (e.g. including propagation for planting).') ||
+                    activityType.equalsIgnoreCase('Site preparation (e.g. including propagation for planting).') ||
+                    activityType.equalsIgnoreCase('Site preparation (e.g. including propagation for planting).') ||
+                    activityType.equalsIgnoreCase('Site preparation (e.g. includes propagation for planting).') ||
+                    activityType.equalsIgnoreCase('Site preparation (e.g. includes propagation for planting') ||
+                    activityType.equalsIgnoreCase('Site Preparation (e.g. include propagation of planting).') ||
+                    activityType.equalsIgnoreCase('Site preparation (e.g. includes propagation for planting)') ||
+                    activityType.equalsIgnoreCase('Site Preparation (e.g. includes propagation for planting).') ||
+                    activityType.equalsIgnoreCase('Site Preparation (e.g. includes propagation  for planting).') ||
+                    activityType.startsWith('Site Preparation') ||
+                    activityType.equalsIgnoreCase('Site preparartion')) {
                 match = 'Site Preparation'
+            }
+            else if (activityType.equalsIgnoreCase('community participation and development') ||
+                    activityType.equalsIgnoreCase('Community Participation and Enagement') ||
+                    activityType.equalsIgnoreCase('Community Participation and Engagment') ||
+                    activityType.equalsIgnoreCase('Commommunity Participation and Engagement') ||
+                    activityType.equalsIgnoreCase('Community Partiicipation and Engagement') ||
+                    activityType.equalsIgnoreCase('Community Participation and Enagagement') ||
+                    activityType.equalsIgnoreCase('Community Engagement and Participation') ||
+                    activityType.equalsIgnoreCase('Community Participation an Engagement') ||
+                    activityType.equalsIgnoreCase('Community Participation') ||
+                    activityType.equalsIgnoreCase('Communiy Particpation and Engagement')) {
+                match = 'Community Participation and Engagement'
             }
             else if (activityType.equalsIgnoreCase('Site Assessment') ||
                      activityType.equalsIgnoreCase('Site Assesment')  ||
-                     activityType.equalsIgnoreCase('Site Assessmnet')) {
-                match = 'Site Assessment - Biodiversity Fund (DoE)'
+                    activityType.equalsIgnoreCase('Site Assesment')  ||
+                    activityType.equalsIgnoreCase('Site Assesent')  ||
+                    activityType.equalsIgnoreCase('Site Assessments')  ||
+                    activityType.equalsIgnoreCase('Site assessmenet') ||
+                    activityType.equalsIgnoreCase('Site assessment (e.g. includes general monitoring).') ||
+                    activityType.equalsIgnoreCase('Site Assesssment') ||
+                    activityType.equalsIgnoreCase('Site Assessmnet') ||
+                    activityType.equalsIgnoreCase('Site assessment (e.g. includes general monitoring)') ||
+                    activityType.equalsIgnoreCase('Site assessment – Biodiversity Fund (DoE)') ||
+                    activityType.equalsIgnoreCase('Site assessment (e,g. inlcudes general monitoring).') ||
+                    activityType.equalsIgnoreCase('Site assessment – Biodiversity Fund (DoE)') ||
+                    activityType.equalsIgnoreCase('Site assessment (e.g. inlcludes general monitoring).') ||
+                    activityType.equalsIgnoreCase('Site assessement') ||
+                    activityType.equalsIgnoreCase('Site assessment – Biodiversity Fund (DoE)') ||
+                    activityType.equalsIgnoreCase('Site assessment –  Biodiversity Fund (DoE)') ||
+                    activityType.equalsIgnoreCase('Site assessment (e.g. include general monitoring).') ||
+                    activityType.equalsIgnoreCase('Site assessment (e.g. general monitoring).') ||
+                    activityType.equalsIgnoreCase('Site assessment –  Biodiversity Fund (DoE)') ||
+                    activityType.equalsIgnoreCase('Site assessment(e.g. includes general monitoring)') ||
+                    activityType.equalsIgnoreCase('Site Assessent') ||
+                    activityType.endsWith('(DoE)')) {
+                match = 'Vegetation Assessment - Biodiversity Fund (DoE)'
+            }
+            else if (activityType.equalsIgnoreCase('Pest animal assessment')) {
+                match = 'Pest animal survey'
+            }
+            else if (activityType.equalsIgnoreCase('Revegetaion') ||
+                    activityType.equalsIgnoreCase('Rvegetation')) {
+                match = 'Revegetation'
+            }
+            else if (activityType.equalsIgnoreCase('Site Assessment – TasVeg') ||
+                     activityType.endsWith('TasVeg')) {
+                match = 'Vegetation Assessment - TasVeg (TAS)'
+            }
+            else if (activityType.equalsIgnoreCase('Fauna (Biological Survey)') ||
+                    activityType.equalsIgnoreCase('Fauna (bioligical) survey') ||
+
+
+                    activityType.equalsIgnoreCase('fauna survey')) {
+                match = 'Fauna (biological) survey'
+            }
+            else if (activityType.equalsIgnoreCase('Training and Skill development')) {
+                match = 'Training and Skills Development'
+            }
+            else if (activityType.equalsIgnoreCase('Fence')) {
+                match = 'Fencing'
             }
         }
 
