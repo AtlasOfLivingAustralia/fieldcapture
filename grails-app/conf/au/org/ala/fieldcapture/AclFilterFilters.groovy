@@ -41,14 +41,6 @@ class AclFilterFilters {
                         log.error errorMsg
                     }
 
-//                    if (accessLevel.toLowerCase() == 'admin' && !projectService.isUserAdminForProject(userId, projectId)) {
-//                        errorMsg = "Access denied: User does not have <b>admin</b> permission ${projectId?'for project':''}"
-//                    } else if (accessLevel.toLowerCase() == 'editor' && !projectService.canUserEditProject(userId, projectId)) {
-//                        errorMsg = "Access denied: User does not have <b>editor</b> permission ${projectId?'for project':''}"
-//                    }
-                    //log.debug "accessLevel = $accessLevel"
-                    //log.debug "roles = $roles"
-
                     switch (accessLevel) {
                         case 'alaAdmin':
                             if (!userService.userInRole(grailsApplication.config.security.cas.alaAdminRole)) {
