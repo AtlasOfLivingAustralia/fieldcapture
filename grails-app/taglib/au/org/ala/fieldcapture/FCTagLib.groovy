@@ -526,7 +526,7 @@ class FCTagLib {
             mb.ul {
                 starredProjects.eachWithIndex { p, i ->
                     if (j < maxItems) {
-                        if(p && p.project){
+                        if(p){
                             listItem(p)
                         }
                         j++
