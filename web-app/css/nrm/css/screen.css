@@ -34,12 +34,12 @@ body {
 }
 
 a:link, a:visited {
-    color: #39641A;
+    color: #006699;
     text-decoration: none;
 }
 
 a:hover, a:active {
-    color: #39641A;
+    color: #003366;
     text-decoration: underline;
 }
 
@@ -447,7 +447,7 @@ ul.horizontal li {
     color: #393124;
 }
 .pn-flyout div .section a:hover {
-    color: #39641A;
+    color: #006699;
     text-decoration:underline;
 }
 
@@ -923,7 +923,7 @@ div.highlight {
     padding: 6px 10px 6px 9px;
     border-left: 5px solid #B8C780;
     background: #F7F4EB;
-    color: #39641A;
+    color: #006699;
     font-weight: bold;
 }
 
@@ -948,7 +948,7 @@ div.highlight {
     padding: 6px 10px 6px 9px !important;
     border-left: 5px solid #B8C780 !important;
     background: #F7F4EB !important;
-    color: #39641A !important;
+    color: #006699 !important;
     font-weight: bold !important;
 }
 
@@ -1360,7 +1360,7 @@ span.popup {
 }
 
 .ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited {
-    color: #39641A;
+    color: #006699;
 }
 
 .ui-state-active a, .ui-state-active a:link, .ui-state-active a:visited {
@@ -2058,7 +2058,7 @@ span.btn-orange-input-arrow input{ background: url(../images/btn_sprites.png) no
 #sm-dropdown span { background: url("../images/bg_sprites.png") no-repeat scroll 10px -17px #FFFFFF; font-size: 0.91em; left: 0; padding-left: 30px; position: absolute; top: -21px; width: 39px; border-top: 1px solid #D7CEC2; height: 21px; }
 #sm-dropdown ul { float: none; margin: 0; padding: 0;}
 #sm-dropdown ul li { border: none; float: none; margin: 0 0 9px; padding: 0 0 8px; background: url(../images/bdr_dotted_horizontal.gif) repeat-x 0 100%; line-height: 1; }
-#sm-dropdown ul li a { background: none; padding: 0; font-size: 1em; background: url("../images/ico_cta_link.png") no-repeat scroll 0 3px transparent; font-weight: bold; padding-left: 16px; color: #39641A; }
+#sm-dropdown ul li a { background: none; padding: 0; font-size: 1em; background: url("../images/ico_cta_link.png") no-repeat scroll 0 3px transparent; font-weight: bold; padding-left: 16px; color: #006699; }
 #sm-dropdown ul li.more { background: none; margin-bottom: 0; }
 
 /* Home page Carousel Module */
