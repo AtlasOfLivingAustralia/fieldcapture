@@ -30,19 +30,19 @@
             </div>
         </div>
         <div class="row-fluid">
-            <div class="span8">
+            <div class="span7">
                 <div class="" id="aboutDescription" style="margin-top:20px;">
                     <markdown:renderHtml>${content}</markdown:renderHtml>
                 </div>
             </div><!-- /.spanN  -->
-            <g:set var="introText"><fc:getSettingContent settingType="${SettingPageType.INTRO}"/></g:set>
-            <g:if test="${introText && settingType == SettingPageType.ABOUT && fc.userIsLoggedIn()}">
-                <div class="span4 well well-small">
+            <g:set var="newsText"><fc:getSettingContent settingType="${SettingPageType.NEWS}"/></g:set>
+            <g:if test="${newsText && settingType == SettingPageType.ABOUT && fc.userIsLoggedIn()}">
+                <div class="span5 well well-small">
                     <g:if test="${fc.userIsSiteAdmin()}">
-                        <a href="${g.createLink(controller:"admin",action:"editSettingText", id: SettingPageType.INTRO.name, params: [layout:"nrm",returnUrl: g.createLink(controller: params.controller, action: params.action, absolute: true)])}"
+                        <a href="${g.createLink(controller:"admin",action:"editSettingText", id: SettingPageType.NEWS.name, params: [layout:"nrm",returnUrl: g.createLink(controller: params.controller, action: params.action, absolute: true)])}"
                            class="btn btn-small pull-right"><i class="icon-edit"></i> Edit</a>
                     </g:if>
-                    ${introText}
+                    ${newsText}
                 </div>
             </g:if>
         </div><!-- /.row-fluid  -->

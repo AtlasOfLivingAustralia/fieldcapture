@@ -16,7 +16,7 @@
 package au.org.ala.fieldcapture
 
 /**
- * Created with IntelliJ IDEA.
+ * Enum class for static content (Setting Page)
  *
  * @author "Nick dos Remedios <Nick.dosRemedios@csiro.au>"
  */
@@ -26,6 +26,7 @@ enum SettingPageType {
     FOOTER ("footer","Footer","fielddata.footer.text"),
     ANNOUNCEMENT ("announcement","Announcement","fielddata.announcement.text"),
     HELP ("help","Help","fielddata.help.text"),
+    NEWS ("news","News","fielddata.news.text"),
     CONTACTS ("contacts","Contacts","fielddata.contacts.text"),
     INTRO ("intro","User Introduction","fielddata.introduction.text")
 
