@@ -110,18 +110,19 @@ class WebService {
 
     def doPost(String url, Map postBody) {
         def conn = null
+        def charEncoding = 'utf-8'
         try {
             conn = new URL(url).openConnection()
             conn.setDoOutput(true)
-            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestProperty("Content-Type", "application/json;charset=${charEncoding}");
             conn.setRequestProperty("Authorization", grailsApplication.config.api_key);
 
             def user = userService.getUser()
             if (user) {
                 conn.setRequestProperty(grailsApplication.config.app.http.header.userId, user.userId) // used by ecodata
-                conn.setRequestProperty("Cookie", "ALA-Auth="+java.net.URLEncoder.encode(user.userName,"utf-8")) // used by specieslist
+                conn.setRequestProperty("Cookie", "ALA-Auth="+java.net.URLEncoder.encode(user.userName, charEncoding)) // used by specieslist
             }
-            OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream())
+            OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream(), charEncoding)
             wr.write((postBody as JSON).toString())
             wr.flush()
             def resp = conn.inputStream.text
