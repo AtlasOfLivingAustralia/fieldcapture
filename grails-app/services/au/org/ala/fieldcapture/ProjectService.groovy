@@ -244,16 +244,16 @@ class ProjectService {
      * @return boolean
      */
     def isUserAdminForProject(userId, projectId) {
-        def userIsEditor
+        def userIsAdmin
 
         if (authService.userInRole(grailsApplication.config.security.cas.adminRole) || authService.userInRole(grailsApplication.config.security.cas.alaAdminRole)) {
-            userIsEditor = true
+            userIsAdmin = true
         } else {
             def url = grailsApplication.config.ecodata.baseUrl + "permissions/isUserAdminForProject?projectId=${projectId}&userId=${userId}"
-            userIsEditor = webService.getJson(url)?.userIsAdmin  // either will be true or false
+            userIsAdmin = webService.getJson(url)?.userIsAdmin  // either will be true or false
         }
 
-        userIsEditor
+        userIsAdmin
     }
 
     /**
