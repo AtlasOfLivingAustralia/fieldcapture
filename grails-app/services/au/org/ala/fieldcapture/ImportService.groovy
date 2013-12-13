@@ -963,6 +963,10 @@ class ImportService {
 
             if (activityType.equalsIgnoreCase('Administration') ||
                     activityType.equalsIgnoreCase('Project administratoon') ||
+                    activityType.equalsIgnoreCase('Adminit') ||
+                    activityType.equalsIgnoreCase('Adminitration') ||
+                    activityType.equalsIgnoreCase('Administratoin') ||
+                    activityType.equalsIgnoreCase('Project Administraton') ||
                     activityType.equalsIgnoreCase('Poorject administration')) {
                 match = 'Project Administration'
             }
@@ -973,6 +977,7 @@ class ImportService {
             else if (activityType.equalsIgnoreCase('Site planning') ||
                     activityType.equalsIgnoreCase('Sie Planning') ||
                     activityType.equalsIgnoreCase('Works implentation planning') ||
+                    activityType.equalsIgnoreCase('Works Implementation plannng') ||
                     activityType.equalsIgnoreCase('Work implementation Planning') ) {
                 match = 'Works Implementation Planning'
             }
@@ -981,7 +986,8 @@ class ImportService {
             }
             else if (activityType.equalsIgnoreCase('Weed Infestation & Monitoring') ||
                     activityType.equalsIgnoreCase('Weed Infestation and Monitoring') ||
-                    activityType.equalsIgnoreCase('Weed mapping and monitoring')) {
+                    activityType.equalsIgnoreCase('Weed mapping and monitoring') ||
+                    activityType.equalsIgnoreCase('Weed mapping and monitorig')) {
                 match = 'Weed Mapping & Monitoring'
             }
             else if (activityType.equalsIgnoreCase('Install/construct erosion control structure')) {
@@ -991,6 +997,7 @@ class ImportService {
                     activityType.equalsIgnoreCase('Pest Animal management') ||
                     activityType.equalsIgnoreCase('Pest management') ||
                     activityType.equalsIgnoreCase('Pest  management') ||
+                    activityType.equalsIgnoreCase('Pest nad Disease Management') ||
                     activityType.equalsIgnoreCase('Pest  management')) {
                 match = 'Pest and Disease Management'
             }
@@ -1017,6 +1024,8 @@ class ImportService {
                     activityType.equalsIgnoreCase('Site preparation (e.g. includes propagation for planting)') ||
                     activityType.equalsIgnoreCase('Site Preparation (e.g. includes propagation for planting).') ||
                     activityType.equalsIgnoreCase('Site Preparation (e.g. includes propagation  for planting).') ||
+                    activityType.equalsIgnoreCase('Site preperation (e.g. includes propagation for planting).') ||
+                    activityType.equalsIgnoreCase('Site Preparatiom') ||
                     activityType.startsWith('Site Preparation') ||
                     activityType.equalsIgnoreCase('Site preparartion')) {
                 match = 'Site Preparation'
@@ -1030,6 +1039,8 @@ class ImportService {
                     activityType.equalsIgnoreCase('Community Engagement and Participation') ||
                     activityType.equalsIgnoreCase('Community Participation an Engagement') ||
                     activityType.equalsIgnoreCase('Community Participation') ||
+                    activityType.equalsIgnoreCase('Community paqrticipation and engagement') ||
+                    activityType.equalsIgnoreCase('Community paticipation and development') ||
                     activityType.equalsIgnoreCase('Communiy Particpation and Engagement')) {
                 match = 'Community Participation and Engagement'
             }
@@ -1055,6 +1066,10 @@ class ImportService {
                     activityType.equalsIgnoreCase('Site assessment –  Biodiversity Fund (DoE)') ||
                     activityType.equalsIgnoreCase('Site assessment(e.g. includes general monitoring)') ||
                     activityType.equalsIgnoreCase('Site Assessent') ||
+                    activityType.equalsIgnoreCase('(1-26) Site Assessment') ||
+                    activityType.startsWith('Site assessment (e.g. includes general monitoring)') ||
+                    activityType.equalsIgnoreCase('Site Assesmment') ||
+                    activityType.equalsIgnoreCase('site asessment') ||
                     activityType.endsWith('(DoE)')) {
                 match = 'Vegetation Assessment - Biodiversity Fund (DoE)'
             }
@@ -1071,8 +1086,7 @@ class ImportService {
             }
             else if (activityType.equalsIgnoreCase('Fauna (Biological Survey)') ||
                     activityType.equalsIgnoreCase('Fauna (bioligical) survey') ||
-
-
+                    activityType.equalsIgnoreCase('Fauna  (biological) Survey') ||
                     activityType.equalsIgnoreCase('fauna survey')) {
                 match = 'Fauna (biological) survey'
             }
@@ -1081,6 +1095,12 @@ class ImportService {
             }
             else if (activityType.equalsIgnoreCase('Fence')) {
                 match = 'Fencing'
+            }
+            else if (activityType.equalsIgnoreCase('Site Assessment - Habitat Hectares')) {
+                match = 'Vegetation Assessment - Habitat Hectares (VIC)'
+            }
+            else if (activityType.equalsIgnoreCase('Outcomes , Evaluation and Learning')) {
+                match = 'Outcomes, Evaluation and Learning'
             }
         }
 
