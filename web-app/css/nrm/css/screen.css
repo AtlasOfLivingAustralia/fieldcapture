@@ -43,6 +43,14 @@ a:hover, a:active {
     text-decoration: underline;
 }
 
+a.btn {
+    color: #333333;
+}
+
+a.btn-primary a.btn-info, a.btn-success, a.btn-warning, a.btn-danger, a.btn-inverse {
+    color: #FFFFFF;
+}
+
 .top a:hover, a:active {
     text-decoration: none;
 }
