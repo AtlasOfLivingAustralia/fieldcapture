@@ -83,38 +83,44 @@ class ImportService {
                 }
 
                 def admin1 = getUserName("Recipient email 1")
+                def admin1Id = null
 
                 if (admin1) {
-                    if (!userService.checkEmailExists(admin1)) {
+                    admin1Id = userService.checkEmailExists(admin1)
+                    if (!admin1Id) {
                         logError("User name ${admin1} does not exist! (Recepient email 1)")
                         return
                     }
                 }
 
                 def admin2 = getUserName("Recipient email 2")
+                def admin2Id = null
                 if (admin2) {
-                    if (!userService.checkEmailExists(admin2)) {
+                    admin2Id = userService.checkEmailExists(admin2)
+                    if (!admin2Id) {
                         logError("User name ${admin2} does not exist! (Recepient email 2)")
                         return
                     }
                 }
 
                 def caseManager = getUserName("Grant manager email")
+                def caseManagerId = null
                 if (caseManager) {
-                    if (!userService.checkEmailExists(caseManager)) {
+                    caseManagerId = userService.checkEmailExists(caseManager)
+                    if (!caseManagerId) {
                         logError("User name ${caseManager} does not exist (caseManager)!")
                         return
                     }
                 }
 
-                if (!admin1 && !admin2 && !caseManager) {
+                if (!admin1Id && !admin2Id && !caseManagerId) {
                     logError("No user ids have been specified!")
                     return
                 }
 
-                if (admin1) {
-                    if (!userService.isUserAdminForProject(admin1, project.projectId)) {
-                        def ret = userService.addUserAsRoleToProject(admin1, project.projectId, roleAdmin)
+                if (admin1Id) {
+                    if (!userService.isUserAdminForProject(admin1Id, project.projectId)) {
+                        def ret = userService.addUserAsRoleToProject(admin1Id, project.projectId, roleAdmin)
                         if (ret?.error) {
                             logError("Error occurred applying admin role to ${admin1} for project ${project.projectId}: ${ret.error}")
                         }
@@ -123,9 +129,9 @@ class ImportService {
                     }
                 }
 
-                if (admin2) {
-                    if (!userService.isUserAdminForProject(admin2, project.projectId)) {
-                        def ret = userService.addUserAsRoleToProject(admin2, project.projectId, roleAdmin)
+                if (admin2Id) {
+                    if (!userService.isUserAdminForProject(admin2Id, project.projectId)) {
+                        def ret = userService.addUserAsRoleToProject(admin2Id, project.projectId, roleAdmin)
                         if (ret?.error) {
                             logError("Error occurred applying admin role to ${admin2} for project ${project.projectId}: ${ret.error}")
                         }
@@ -134,9 +140,9 @@ class ImportService {
                     }
                 }
 
-                if (caseManager) {
-                    if (!userService.isUserCaseManagerForProject(caseManager, project.projectId)) {
-                        def ret = userService.addUserAsRoleToProject(caseManager, project.projectId, roleCaseManager)
+                if (caseManagerId) {
+                    if (!userService.isUserCaseManagerForProject(caseManagerId, project.projectId)) {
+                        def ret = userService.addUserAsRoleToProject(caseManagerId, project.projectId, roleCaseManager)
                         if (ret?.error) {
                             logError("Error occurred applying caseManager role to ${caseManager} for project ${project.projectId}: ${ret.error}")
                         }
@@ -976,6 +982,7 @@ class ImportService {
                     activityType.equalsIgnoreCase('Project Administraton') ||
                     activityType.equalsIgnoreCase('Project administratio') ||
                     activityType.equalsIgnoreCase('Poorject administration') ||
+                    activityType.equalsIgnoreCase('Project adminisration') ||
                     activityType.equalsIgnoreCase('ProProject Administration')) {
                 match = 'Project Administration'
             }
@@ -1115,7 +1122,8 @@ class ImportService {
                 match = 'Vegetation Assessment - Habitat Hectares (VIC)'
             }
             else if (activityType.equalsIgnoreCase('Outcomes , Evaluation and Learning') ||
-                     activityType.startsWith('Outcomes, Evaluation and Learning')) {
+                     activityType.startsWith('Outcomes, Evaluation and Learning') ||
+                     activityType.startsWith('Outcomes, Evalation and Learning')) {
                 match = 'Outcomes, Evaluation and Learning'
             }
             else if (activityType.equalsIgnoreCase('Weeed Treatment')) {
