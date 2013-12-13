@@ -756,7 +756,10 @@ class ImportService {
                     addOutput(outputs, [outputLabel:'Pest Management Details', scoreName:'areaTreatedForPests', scoreLabel:'Area covered by pest treatment (Ha)', units:'Ha'], target)
                 }
             }
-            else if (header.equalsIgnoreCase('Project description') || header.equalsIgnoreCase('Sub-project') || header.equalsIgnoreCase('Project title')) {
+            else if (header.equalsIgnoreCase('Project description') ||
+                    header.equalsIgnoreCase('Sub-project') ||
+                    header.equalsIgnoreCase('Project title') ||
+                    header.equalsIgnoreCase('Funding ($)')) {
                 // Do nothing, some of the spreadsheets have different formats.
             }
             else {
@@ -971,6 +974,7 @@ class ImportService {
                     activityType.equalsIgnoreCase('Adminitration') ||
                     activityType.equalsIgnoreCase('Administratoin') ||
                     activityType.equalsIgnoreCase('Project Administraton') ||
+                    activityType.equalsIgnoreCase('Project administratio') ||
                     activityType.equalsIgnoreCase('Poorject administration')) {
                 match = 'Project Administration'
             }
@@ -1031,6 +1035,7 @@ class ImportService {
                     activityType.equalsIgnoreCase('Site preperation (e.g. includes propagation for planting).') ||
                     activityType.equalsIgnoreCase('Site Preparatiom') ||
                     activityType.startsWith('Site Preparation') ||
+                    activityType.startsWith('Site  preparation') ||
                     activityType.equalsIgnoreCase('Site preparartion')) {
                 match = 'Site Preparation'
             }
@@ -1074,6 +1079,7 @@ class ImportService {
                     activityType.startsWith('Site assessment (e.g. includes general monitoring)') ||
                     activityType.equalsIgnoreCase('Site Assesmment') ||
                     activityType.equalsIgnoreCase('site asessment') ||
+                    activityType.equalsIgnoreCase('Site assessment (e.g. inlcudes general monitoring).') ||
                     activityType.endsWith('(DoE)')) {
                 match = 'Vegetation Assessment - Biodiversity Fund (DoE)'
             }
@@ -1091,10 +1097,12 @@ class ImportService {
             else if (activityType.equalsIgnoreCase('Fauna (Biological Survey)') ||
                     activityType.equalsIgnoreCase('Fauna (bioligical) survey') ||
                     activityType.equalsIgnoreCase('Fauna  (biological) Survey') ||
+                    activityType.equalsIgnoreCase('Fauna (Biological) Surveys') ||
                     activityType.equalsIgnoreCase('fauna survey')) {
                 match = 'Fauna (biological) survey'
             }
-            else if (activityType.equalsIgnoreCase('Training and Skill development')) {
+            else if (activityType.equalsIgnoreCase('Training and Skill development') ||
+                    activityType.equalsIgnoreCase('Training and Skills Planning')) {
                 match = 'Training and Skills Development'
             }
             else if (activityType.equalsIgnoreCase('Fence')) {
@@ -1106,6 +1114,13 @@ class ImportService {
             else if (activityType.equalsIgnoreCase('Outcomes , Evaluation and Learning')) {
                 match = 'Outcomes, Evaluation and Learning'
             }
+            else if (activityType.equalsIgnoreCase('Weeed Treatment')) {
+                match = 'Weed Treatment'
+            }
+            else if (activityType.equalsIgnoreCase('Flora (Biological) Surverys')) {
+                match = 'Flora (biological) survey'
+            }
+
         }
 
 
