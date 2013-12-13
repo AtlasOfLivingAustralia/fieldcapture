@@ -98,7 +98,7 @@
                 <div class="clearfix" data-bind="visible:organisation()||organisationName()">
                     <h4>
                         Supported by:
-                        <a data-bind="visible:organisation(),text:transients.collectoryOrgName,attr:{href:fcConfig.organisationLinkBaseUrl + organisation}"></a>
+                        <a data-bind="visible:organisation(),text:transients.collectoryOrgName,attr:{href:fcConfig.organisationLinkBaseUrl + organisation()}"></a>
                         <span data-bind="visible:organisationName(),text:organisationName"></span>
                     </h4>
                 </div>
