@@ -534,7 +534,8 @@ class ImportService {
 
         csvLine = csvReader.readNext()
 
-        def plans = [:]
+        def failedPlans = [:]
+        def successPlans = [:]
         while (csvLine) {
 
             def grantId = csvLine[GRANT_ID_COLUMN]
@@ -563,7 +564,10 @@ class ImportService {
                     }
                 }
                 if (!results.success) {
-                    plans[id] = results
+                    failedPlans[id] = results
+                }
+                else {
+                    successPlans[id] = results
                 }
                 grantIds << id
             }
@@ -576,7 +580,7 @@ class ImportService {
 
         cacheService.clear(PROJECTS_CACHE_KEY)
 
-        return plans
+        return [failedCount:failedPlans.size(), successCount:successPlans.size(), failed:failedPlans, succeeded:successPlans]
     }
 
 
