@@ -183,9 +183,8 @@
                     map.map.overlayMapTypes.push(f);
                     $.ajax({
                         url: this.featureService+ '?featureId=' + pid,
-                        dataType:'jsonp'
+                        dataType:'json'
                     }).done(function(data) {
-                       //console.log('Retrieving metadata for object.....');
                        if(data !== undefined && data.bbox !== undefined){
                            var coords = data.bbox.replace(/POLYGON/g,"").replace(/[\\(|\\)]/g, "");
                            var pointArray = coords.split(",");
