@@ -271,7 +271,7 @@
                 // only init map when the tab is first shown
                 if (tab === '#site' && map === undefined) {
                     init_map_with_features({
-                            layerService: "${grailsApplication.config.spatial.layersUrl}",
+                            featureService: "${createLink(controller: 'proxy', action:'feature')}",
                             wmsServer: "${grailsApplication.config.spatial.geoserverUrl}",
                             mapContainer: "map",
                             scrollwheel: false
@@ -292,7 +292,7 @@
                     mapContainer: "smallMap",
                     zoomToBounds:true,
                     zoomLimit:16,
-                    layerService: "${grailsApplication.config.spatial.layersUrl}",
+                    featureService: "${createLink(controller:'proxy', action:'feature')}",
                     wmsServer: "${grailsApplication.config.spatial.geoserverUrl}"
                 },
                 mapFeatures

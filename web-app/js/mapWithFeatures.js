@@ -63,7 +63,7 @@
         // URL to red google marker icon
         redMarkerIcon: "http://www.google.com/intl/en_us/mapfiles/ms/micons/red-dot.png",
         //spatial portal URL
-        layerService: "http://spatial-dev.ala.org.au/layers-service",
+        featureService: "http://fieldcapture.ala.org.au/proxy/feature",
         //WMS server for PID
         wmsServer: "http://spatial-dev.ala.org.au/geoserver",
         // init map and load features
@@ -74,8 +74,8 @@
             if (options.mapContainer) {
                 this.containerId = options.mapContainer;
             }
-            if(options.layerService){
-                this.layerService = options.layerService;
+            if(options.featureService){
+                this.featureService = options.featureService;
             }
             if(options.wmsServer){
                 this.wmsServer = options.wmsServer;
@@ -182,7 +182,7 @@
                     f = new PIDLayer(pid, this.wmsServer);
                     map.map.overlayMapTypes.push(f);
                     $.ajax({
-                        url: this.layerService+ '/object/' + pid,
+                        url: this.featureService+ '?featureId=' + pid,
                         dataType:'jsonp'
                     }).done(function(data) {
                        //console.log('Retrieving metadata for object.....');

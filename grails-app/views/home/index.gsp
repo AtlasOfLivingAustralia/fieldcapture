@@ -613,7 +613,7 @@
                 zoomToBounds:true,
                 scrollwheel: false,
                 zoomLimit:16,
-                layerService: "${grailsApplication.config.spatial.layersUrl}",
+                featureService: "${createLink(controller: 'proxy', action:'feature')}",
                 wmsServer: "${grailsApplication.config.spatial.geoserverUrl}"
             },
             mapData

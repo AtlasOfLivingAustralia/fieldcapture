@@ -665,7 +665,7 @@
                     map = init_map_with_features({
                             mapContainer: "map",
                             scrollwheel: false,
-                            layerService: "${grailsApplication.config.spatial.layersUrl}",
+                            featureService: "${createLink(controller: 'proxy', action:'feature')}",
                             wmsServer: "${grailsApplication.config.spatial.geoserverUrl}"
                         },
                         $.parseJSON('${mapFeatures}')
