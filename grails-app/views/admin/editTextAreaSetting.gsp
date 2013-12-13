@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta name="layout" content="${layout?:'adminLayout'}"/>
-		<title>Admin - Edit ${settingTitle} | Data capture | Atlas of Living Australia</title>
+		<title>Static pages - Edit ${settingTitle} | Data capture | Atlas of Living Australia</title>
 		<style type="text/css" media="screen">
 		</style>
 	</head>
@@ -20,12 +20,12 @@
                     });
                 });
         </r:script>
-        <content tag="pageTitle">Settings</content>
+        <content tag="pageTitle">Static pages</content>
         <div id="wrapper" class="container-fluid">
             <div class="row-fluid">
                 <div class="span12" id="">
                     <g:if test="${!ajax}">
-                        <a href="${returnUrl}" class="btn"><i class="icon-hand-left"></i> back to ${returnUrl.tokenize("/")[-1].capitalize()}</a>
+                        <a href="${returnUrl}" class="btn"><i class="icon-hand-left"></i> back to ${returnLabel}</a>
                         <h3>Edit &quot;${settingTitle}&quot; content</h3>
                     </g:if>
                     <g:form id="saveSettingContent" controller="admin" action="saveTextAreaSetting">

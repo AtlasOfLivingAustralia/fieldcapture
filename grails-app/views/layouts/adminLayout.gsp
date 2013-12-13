@@ -53,14 +53,17 @@
                 <ul class="nav nav-list nav-stacked nav-tabs">
                     <fc:breadcrumbItem href="${createLink(controller: 'home', action:'advanced')}" title="Manage Projects, Sites & Activities"/>
                     <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'users')}" title="Users" />
-                    <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'tools')}" title="Tools" />
-                    <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'settings')}" title="Settings" />
-                    <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'metadata')}" title="Raw activity model" />
-                    <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'activityModel')}" title="Activity model" />
-                    <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'rawOutputModels')}" title="Raw output models" />
-                    <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'outputModels')}" title="Output models" />
-                    <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'programsModel')}" title="Programs model" />
                     <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'audit')}" title="Audit" />
+                    <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'staticPages')}" title="Static pages" />
+                    <g:if test="${fc.userInRole(role: grailsApplication.config.security.cas.alaAdminRole)}">
+                        <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'tools')}" title="Tools" />
+                        <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'settings')}" title="Settings" />
+                        <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'metadata')}" title="Raw activity model" />
+                        <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'activityModel')}" title="Activity model" />
+                        <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'rawOutputModels')}" title="Raw output models" />
+                        <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'outputModels')}" title="Output models" />
+                        <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'programsModel')}" title="Programs model" />
+                    </g:if>
                 </ul>
                 <div style="text-align: center; margin-top: 30px;"><g:pageProperty name="page.adminButtonBar"/></div>
             </div>

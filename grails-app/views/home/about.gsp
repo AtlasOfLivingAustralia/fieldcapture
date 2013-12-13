@@ -22,7 +22,7 @@
                 <h1>${settingType.title?:'About the website'}
                     <g:if test="${fc.userIsSiteAdmin()}">
                         <span style="display: inline-block; margin: 0 10px;">
-                            <a href="${g.createLink(controller:"admin",action:"editSettingText", id: settingType.name, params: [layout:"nrm",returnUrl: g.createLink(controller: params.controller, action: params.action, absolute: true)])}"
+                            <a href="${g.createLink(controller:"admin",action:"editSettingText", id: settingType.name, params: [layout:"nrm",returnUrl: g.createLink(controller: params.controller, action: params.action, id: params.id, absolute: true)])}"
                                class="btn btn-small"><i class="icon-edit"></i> Edit</a>
                         </span>
                     </g:if>

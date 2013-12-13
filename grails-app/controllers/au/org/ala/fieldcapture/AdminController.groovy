@@ -2,6 +2,7 @@ package au.org.ala.fieldcapture
 
 import grails.converters.JSON
 import grails.util.Environment
+import grails.util.GrailsNameUtils
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 import org.springframework.web.multipart.MultipartHttpServletRequest
 
@@ -136,13 +137,20 @@ class AdminController {
     }
 
     @PreAuthorise(accessLevel = 'siteAdmin', redirectController = "admin")
-    def settings() {
+    def staticPages() {
         def settings = []
 
         for (setting in SettingPageType.values()) {
             log.debug "setting = $setting"
             settings << [key:setting.key, value:"&lt;Click edit to view...&gt;", editLink: createLink(controller:'admin', action:"editSettingText"), name:setting.name]
         }
+
+        [settings: settings]
+    }
+
+    @PreAuthorise(accessLevel = 'alaAdmin', redirectController = "admin")
+    def settings() {
+        def settings = []
 
         def grailsStuff = []
         def config = grailsApplication.config.flatten()
@@ -160,7 +168,9 @@ class AdminController {
     def editSettingText(String id) {
         def content
         def layout = params.layout?:"adminLayout"
-        def returnUrl = params.returnUrl?:g.createLink(controller:'admin', action:'settings', absolute: true )
+        def returnUrl = params.returnUrl?:g.createLink(controller:'admin', action:'staticPages', absolute: true )
+        def returnAction = returnUrl.tokenize("/")[-1]
+        def returnLabel = GrailsNameUtils.getScriptName(returnAction).replaceAll('-',' ').capitalize()
         SettingPageType type = SettingPageType.getForName(id)
 
         if (type) {
@@ -175,6 +185,7 @@ class AdminController {
                 layout: layout,
                 ajax: (layout =~ /ajax/) ? true : false,
                 returnUrl: returnUrl,
+                returnLabel: returnLabel,
                 settingTitle: type.title,
                 settingKey: type.key] )
     }
