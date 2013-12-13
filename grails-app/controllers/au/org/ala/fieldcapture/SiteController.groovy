@@ -136,7 +136,9 @@ class SiteController {
         def project = importService.findProjectByGrantId(grantId)
         if (project) {
             def metadata = metadataService.getLocationMetadataForPoint(centroidLat, centroidLong)
-            def values = [extent: [source: 'pid', geometry: [pid: geometryPid, type: 'pid', state: metadata.state, nrm: metadata.nrm, lga: metadata.lga, locality: metadata.locality]], projects: [project.projectId], name: grantId]
+            def strLat =  "" + centroidLat + ""
+            def strLon = "" + centroidLong + ""
+            def values = [extent: [source: 'pid', geometry: [pid: geometryPid, type: 'pid', state: metadata.state, nrm: metadata.nrm, lga: metadata.lga, locality: metadata.locality, centre: [strLon, strLat]]], projects: [project.projectId], name: "Project area for " + grantId]
             def s = siteService.create(values)
             render s as JSON
         } else {
@@ -150,7 +152,7 @@ class SiteController {
             def metadata = metadataService.getLocationMetadataForPoint(lat, lon)
             def strLat =  "" + lat + ""
             def strLon = "" + lon + ""
-            def values = [extent: [source: 'point', geometry: [pid: geometryPid, type: 'point', decimalLatitude: strLat, decimalLongitude: strLon, centre: [strLon, strLat], coordinates: [strLon, strLat], datum: "WGS84", state: metadata.state, nrm: metadata.nrm, lga: metadata.lga, locality: metadata.locality]], projects: [project.projectId], name: grantId]
+            def values = [extent: [source: 'point', geometry: [pid: geometryPid, type: 'point', decimalLatitude: strLat, decimalLongitude: strLon, centre: [strLon, strLat], coordinates: [strLon, strLat], datum: "WGS84", state: metadata.state, nrm: metadata.nrm, lga: metadata.lga, locality: metadata.locality]], projects: [project.projectId], name: "Project area for " + grantId]
             def s = siteService.create(values)
             render s as JSON
         } else {
