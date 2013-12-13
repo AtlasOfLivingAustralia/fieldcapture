@@ -5,30 +5,18 @@ import grails.util.Environment
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 import org.springframework.web.multipart.MultipartHttpServletRequest
 
-//@PreAuthorise(accessLevel = 'admin')
+@PreAuthorise(accessLevel = 'siteAdmin', redirectController = "home")
 class AdminController {
 
     def cacheService
     def metadataService
     def authService
-    def userService
     def projectService
     def importService
     def adminService
     def auditService
     def searchService
     def settingService
-    def beforeInterceptor = [action:this.&auth]
-
-    private auth() {
-        if (!userService.userIsSiteAdmin()) {
-            flash.message = "You are not authorised to access this page."
-            redirect(controller: "home")
-            false
-        } else {
-            true
-        }
-    }
 
     def index() {}
 
