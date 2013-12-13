@@ -1,6 +1,7 @@
 package au.org.ala.fieldcapture
 
 import grails.converters.JSON
+import org.apache.commons.io.FilenameUtils
 
 class ProxyController {
 
@@ -65,18 +66,37 @@ class ProxyController {
     def documentUpdate(String id) {
 
         def url = grailsApplication.config.ecodata.baseUrl + "document" + (id ? "/" + id : '')
-        def result
         if (request.respondsTo('getFile')) {
             def f = request.getFile('files')
-            result =  webService.postMultipart(url, [document:params.document], f)
-            render result.content as JSON
+            def originalFilename = f.getOriginalFilename()
+            if(originalFilename){
+                def extension = FilenameUtils.getExtension(originalFilename)?.toLowerCase()
+                if (extension && !grailsApplication.config.upload.extensions.blacklist.contains(extension)){
+                    def result =  webService.postMultipart(url, [document:params.document], f)
+                    render result.content as JSON
+                } else {
+                    response.setStatus(400)
+                    //flag error for extension
+                    def error = [error: "Files with the extension '.${extension}' are not permitted.",
+                    statusCode: "400",
+                    detail: "Files with the extension ${extension} are not permitted."]
+                    render error
+                }
+            } else {
+                //flag error for extension
+                response.setStatus(400)
+                def error = [error: "Unable to retrieve the file name.",
+                statusCode: "400",
+                detail: "Unable to retrieve the file name."]
+                render error
+            }
         } else {
             render webService.doPost(url, JSON.parse(params.document)) as JSON;
         }
     }
 
     /**
-     * Proxies to the ecodata document controller to delete the document with the supplied id.
+     * Proxies to the eco data document controller to delete the document with the supplied id.
      * @param id the id of the document to delete.
      * @return the result of the deletion.
      */

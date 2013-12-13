@@ -161,6 +161,9 @@ if(!ecodata.baseUrl){
 if(!upload.images.url){
     upload.images.url = "http://fieldcapture.ala.org.au/images/"
 }
+if(!upload.extensions.blacklist){
+    upload.extensions.blacklist = ['exe','js','php','asp','aspx','com','bat']
+}
 if(!google.maps.url){
     google.maps.url = "//maps.google.com/maps/api/js?sensor=false&language=en"
 }
@@ -171,7 +174,7 @@ if(!google.drawmaps.url){
     google.drawmaps.url = "//maps.google.com/maps/api/js?sensor=false&libraries=drawing,geometry"
 }
 
-app.accessLevel.roles = [] // @Deprecated - use metadataService.getAccessLevels() instead
+
 
 // If true, no-cache headers will be added to all responses.
 if(!app.view.nocache){
