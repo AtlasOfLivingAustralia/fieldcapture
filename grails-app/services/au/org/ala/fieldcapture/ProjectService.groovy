@@ -250,7 +250,7 @@ class ProjectService {
             userIsEditor = true
         } else {
             def url = grailsApplication.config.ecodata.baseUrl + "permissions/isUserAdminForProject?projectId=${projectId}&userId=${userId}"
-            userIsEditor = webService.getJson(url)?.userIsEditor // either will be true or false
+            userIsEditor = webService.getJson(url)?.userIsAdmin  // either will be true or false
         }
 
         userIsEditor
