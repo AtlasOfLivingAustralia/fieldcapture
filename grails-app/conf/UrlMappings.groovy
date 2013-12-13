@@ -13,6 +13,7 @@ class UrlMappings {
 
 		"/"(controller: 'home', action: 'index')
 	//	"/about"(controller: 'home', action: 'about')
+    "/nocas/geoService"(controller: 'home', action: 'geoService')
     "/myProfile"(controller: 'home', action: 'myProfile')
     "/user/index"(controller: "user", action: "index")
     "/user/checkEmailExists"(controller: "user", action: "checkEmailExists")

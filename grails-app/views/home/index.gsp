@@ -531,7 +531,7 @@
 
     function generateMap() {
 
-        var url = "${createLink(action:'geoService')}?max=10000&geo=true";
+        var url = "${createLink(controller:'nocas', action:'geoService')}?max=10000&geo=true";
 
         if (facetList && facetList.length > 0) {
             url += "&fq=" + facetList.join("&fq=");
@@ -717,7 +717,7 @@
     * @param facetFilters (an array)
     */
     function updateProjectTable(facetFilters) {
-        var url = "${createLink(action:'geoService')}"; //?sort=lastUpdated&order=DESC";
+        var url = "${createLink(controller:'nocas', action:'geoService')}"; //?sort=lastUpdated&order=DESC";
         var sort = $('#projectTable').data("sort");
         var order = $('#projectTable').data("order");
         var offset = $('#projectTable').data("offset");
