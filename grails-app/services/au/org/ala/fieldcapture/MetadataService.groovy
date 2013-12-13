@@ -193,7 +193,7 @@ class MetadataService {
 
     def getLocationMetadataForPoint(lat, lng) {
         cacheService.get("spatial-point-${lat}-${lng}", {
-            def featuresUrl = grailsApplication.config.spatial.baseURL + "ws/intersect/cl22,cl916,cl959/${lat}/${lng}"
+            def featuresUrl = grailsApplication.config.spatial.baseUrl + "ws/intersect/cl22,cl916,cl959/${lat}/${lng}"
             def features = webService.getJson(featuresUrl)
 
             def localityUrl = grailsApplication.config.google.geocode.url + "${lat},${lng}"

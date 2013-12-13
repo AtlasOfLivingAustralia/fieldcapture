@@ -11,7 +11,7 @@
             siteDeleteUrl: "${createLink(controller: 'site', action: 'ajaxDelete')}",
             siteViewUrl: "${createLink(controller: 'site', action: 'index')}",
             activityViewUrl: "${createLink(controller: 'activity', action: 'index')}",
-            spatialBaseUrl: "${grailsApplication.config.spatial.baseURL}",
+            spatialBaseUrl: "${grailsApplication.config.spatial.baseUrl}",
             spatialWmsCacheUrl: "${grailsApplication.config.spatial.wms.cache.url}",
             spatialWmsUrl: "${grailsApplication.config.spatial.wms.url}",
             sldPolgonDefaultUrl: "${grailsApplication.config.sld.polgon.default.url}",
@@ -109,7 +109,7 @@
                         <i class="icon-download"></i>
                         Download ShapeFile
                     </a>
-                    <a href="${grailsApplication.config.spatial.baseURL}/?pid=${site.extent.geometry.pid}" class="btn">View in Spatial Portal</a>
+                    <a href="${grailsApplication.config.spatial.baseUrl}/?pid=${site.extent.geometry.pid}" class="btn">View in Spatial Portal</a>
                 </div>
             </g:if>
         </div>

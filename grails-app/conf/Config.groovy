@@ -85,9 +85,6 @@ grails.hibernate.cache.queries = false
 if (!biocache.baseURL) {
     biocache.baseURL = "http://biocache.ala.org.au/"
 }
-if (!spatial.baseURL) {
-    spatial.baseURL = "http://spatial.ala.org.au/"
-}
 if (!ala.baseURL) {
     ala.baseURL = "http://www.ala.org.au"
 }
@@ -98,14 +95,20 @@ if (!headerAndFooter.baseURL) {
     headerAndFooter.baseURL = "http://www2.ala.org.au/commonui"
 }
 // spatial services
+if(!spatial.baseUrl){
+    spatial.baseUrl = "http://spatial-dev.ala.org.au"
+}
+if(!spatial.layersUrl){
+    spatial.layersUrl = spatial.baseUrl + "/layers-service"
+}
+if(!spatial.geoserverUrl){
+    spatial.geoserverUrl = spatial.baseUrl + "/geoserver"
+}
 if (!spatial.wms.url) {
     spatial.wms.url = spatial.baseURL + "geoserver/ALA/wms?"
 }
 if (!spatial.wms.cache.url) {
-    spatial.wms.cache.url = spatial.baseURL + "geoserver/gwc/service/wms?"
-}
-if (!spatial.layers.service.url) {
-    spatial.layers.service.url = spatial.baseURL + "layers-service"
+    spatial.wms.cache.url = spatial.baseUrl + "geoserver/gwc/service/wms?"
 }
 if (!sld.polgon.default.url) {
     sld.polgon.default.url = "http://fish.ala.org.au/data/alt-dist.sld"
@@ -124,15 +127,6 @@ if(!webservice.connectTimeout){
 }
 if(!webservice.readTimeout){
     webservice.readTimeout = 20000
-}
-if(!spatial.baseUrl){
-    spatial.baseUrl = "http://spatial-dev.ala.org.au"
-}
-if(!spatial.layersUrl){
-    spatial.layersUrl = spatial.baseUrl + "/layers-service"
-}
-if(!spatial.geoserverUrl){
-    spatial.geoserverUrl = spatial.baseUrl + "/geoserver"
 }
 if(!security.cas.logoutUrl){
     security.cas.logoutUrl = 'https://auth.ala.org.au/cas/logout'
@@ -173,9 +167,6 @@ if(!google.geocode.url){
 if(!google.drawmaps.url){
     google.drawmaps.url = "//maps.google.com/maps/api/js?sensor=false&libraries=drawing,geometry"
 }
-
-
-
 // If true, no-cache headers will be added to all responses.
 if(!app.view.nocache){
 	app.view.nocache = false
