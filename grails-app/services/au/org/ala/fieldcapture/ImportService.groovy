@@ -975,7 +975,8 @@ class ImportService {
                     activityType.equalsIgnoreCase('Administratoin') ||
                     activityType.equalsIgnoreCase('Project Administraton') ||
                     activityType.equalsIgnoreCase('Project administratio') ||
-                    activityType.equalsIgnoreCase('Poorject administration')) {
+                    activityType.equalsIgnoreCase('Poorject administration') ||
+                    activityType.equalsIgnoreCase('ProProject Administration')) {
                 match = 'Project Administration'
             }
             else if (activityType.equalsIgnoreCase('Project Employment') ||
@@ -1006,7 +1007,8 @@ class ImportService {
                     activityType.equalsIgnoreCase('Pest management') ||
                     activityType.equalsIgnoreCase('Pest  management') ||
                     activityType.equalsIgnoreCase('Pest nad Disease Management') ||
-                    activityType.equalsIgnoreCase('Pest  management')) {
+                    activityType.equalsIgnoreCase('Pest  management') ||
+                    activityType.equalsIgnoreCase('Pest and Disease Mangement')) {
                 match = 'Pest and Disease Management'
             }
             else if (activityType.equalsIgnoreCase('BioCondition Site Assessment (v2.1)')) {
@@ -1098,6 +1100,7 @@ class ImportService {
                     activityType.equalsIgnoreCase('Fauna (bioligical) survey') ||
                     activityType.equalsIgnoreCase('Fauna  (biological) Survey') ||
                     activityType.equalsIgnoreCase('Fauna (Biological) Surveys') ||
+                    activityType.equalsIgnoreCase('Flora (biologiocal) survey') ||
                     activityType.equalsIgnoreCase('fauna survey')) {
                 match = 'Fauna (biological) survey'
             }
@@ -1111,7 +1114,8 @@ class ImportService {
             else if (activityType.equalsIgnoreCase('Site Assessment - Habitat Hectares')) {
                 match = 'Vegetation Assessment - Habitat Hectares (VIC)'
             }
-            else if (activityType.equalsIgnoreCase('Outcomes , Evaluation and Learning')) {
+            else if (activityType.equalsIgnoreCase('Outcomes , Evaluation and Learning') ||
+                     activityType.startsWith('Outcomes, Evaluation and Learning')) {
                 match = 'Outcomes, Evaluation and Learning'
             }
             else if (activityType.equalsIgnoreCase('Weeed Treatment')) {
