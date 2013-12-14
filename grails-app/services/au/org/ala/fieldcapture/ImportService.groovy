@@ -592,7 +592,6 @@ class ImportService {
 
     def importPlan(projectId, planDetails) {
 
-        println "loading plan for ${projectId} planDetails: ${planDetails}"
         def project = [projectId:[type:'guid', id:projectId]]
         project.activities = planDetails.activities
         project.outputTargets = planDetails.outputTargets
@@ -680,7 +679,7 @@ class ImportService {
         }
         catch (Exception e) {
             e.printStackTrace()
-            return [error:"Error importing project with grantId = ${grantId}, stage=${stageNum}, error=${e.getMessage()}"]
+            return [error:"Error importing project with grantId = ${grantId}, stage=${stageNum+1}, error=${e.getMessage()}"]
         }
 
     }
@@ -935,21 +934,27 @@ class ImportService {
         // Assume at least one activity
 
         def activities = []
-        while (offset < stageDetails.size() && stageDetails[offset]?.trim()) {
+        while (offset < stageDetails.size()) {
 
             def activity = [:]
 
             def activityType = stageDetails[offset++]?.trim()
-            activity.type = matchActivity(validActivities, activityType)
-            if (!activity.type) {
-                unmatchedActivities << activityType
-            }
+            def activityDescription = stageDetails[offset++]?.trim()
+            if (activityType) {
+                activity.type = matchActivity(validActivities, activityType)
+                if (!activity.type) {
+                    unmatchedActivities << activityType
+                }
 
-            activity.description = stageDetails[offset++]
-            activity.plannedStartDate = stage.fromDate
-            activity.plannedEndDate = stage.toDate
-            activity.progress = 'planned'
-            activities << activity
+                activity.description = activityDescription
+                activity.plannedStartDate = stage.fromDate
+                activity.plannedEndDate = stage.toDate
+                activity.progress = 'planned'
+                activities << activity
+            }
+            else if (activityDescription) { // There are spots in the spreadsheets containing blanks that have activities following.
+                results.error = "Description without activity type at offset ${offset-1} of ${stage.name}"
+            }
         }
         if (unmatchedActivities) {
             results.error = "Unmatched activity type(s) supplied ${unmatchedActivities}"
@@ -983,7 +988,8 @@ class ImportService {
                     activityType.equalsIgnoreCase('Project administratio') ||
                     activityType.equalsIgnoreCase('Poorject administration') ||
                     activityType.equalsIgnoreCase('Project adminisration') ||
-                    activityType.equalsIgnoreCase('ProProject Administration')) {
+                    activityType.equalsIgnoreCase('ProProject Administration') ||
+                    activityType.equalsIgnoreCase('Ptroject Administration')) {
                 match = 'Project Administration'
             }
             else if (activityType.equalsIgnoreCase('Project Employment') ||
@@ -1015,7 +1021,9 @@ class ImportService {
                     activityType.equalsIgnoreCase('Pest  management') ||
                     activityType.equalsIgnoreCase('Pest nad Disease Management') ||
                     activityType.equalsIgnoreCase('Pest  management') ||
-                    activityType.equalsIgnoreCase('Pest and Disease Mangement')) {
+                    activityType.equalsIgnoreCase('Pest and Disease Mangement') ||
+                    activityType.equalsIgnoreCase('Pest and Disease Managment') ||
+                    activityType.equalsIgnoreCase('pest and disease managemnet')) {
                 match = 'Pest and Disease Management'
             }
             else if (activityType.equalsIgnoreCase('BioCondition Site Assessment (v2.1)')) {
@@ -1059,6 +1067,7 @@ class ImportService {
                     activityType.equalsIgnoreCase('Community Participation') ||
                     activityType.equalsIgnoreCase('Community paqrticipation and engagement') ||
                     activityType.equalsIgnoreCase('Community paticipation and development') ||
+                    activityType.equalsIgnoreCase('Community Participation and Engegement') ||
                     activityType.equalsIgnoreCase('Communiy Particpation and Engagement')) {
                 match = 'Community Participation and Engagement'
             }
@@ -1096,7 +1105,8 @@ class ImportService {
                 match = 'Pest animal survey'
             }
             else if (activityType.equalsIgnoreCase('Revegetaion') ||
-                    activityType.equalsIgnoreCase('Rvegetation')) {
+                    activityType.equalsIgnoreCase('Rvegetation') ||
+                    activityType.equalsIgnoreCase('revegetation\'')) {
                 match = 'Revegetation'
             }
             else if (activityType.equalsIgnoreCase('Site Assessment – TasVeg') ||
@@ -1112,7 +1122,8 @@ class ImportService {
                 match = 'Fauna (biological) survey'
             }
             else if (activityType.equalsIgnoreCase('Training and Skill development') ||
-                    activityType.equalsIgnoreCase('Training and Skills Planning')) {
+                    activityType.equalsIgnoreCase('Training and Skills Planning') ||
+                    activityType.equalsIgnoreCase('Training Skills and Development')) {
                 match = 'Training and Skills Development'
             }
             else if (activityType.equalsIgnoreCase('Fence')) {
@@ -1126,10 +1137,13 @@ class ImportService {
                      activityType.startsWith('Outcomes, Evalation and Learning')) {
                 match = 'Outcomes, Evaluation and Learning'
             }
-            else if (activityType.equalsIgnoreCase('Weeed Treatment')) {
+            else if (activityType.equalsIgnoreCase('Weeed Treatment') ||
+                    activityType.equalsIgnoreCase('Weed Tratement') ||
+                    activityType.equalsIgnoreCase('weed treatement')) {
                 match = 'Weed Treatment'
             }
-            else if (activityType.equalsIgnoreCase('Flora (Biological) Surverys')) {
+            else if (activityType.equalsIgnoreCase('Flora (Biological) Surverys') ||
+                    activityType.equalsIgnoreCase('Flora (biological ) survey')) {
                 match = 'Flora (biological) survey'
             }
 
