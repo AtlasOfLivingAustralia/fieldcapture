@@ -920,7 +920,7 @@ class ImportService {
         stage.name = 'Stage '+ stageNum
         def fromDate = stageDetails[offset++]
         if (fromDate.equalsIgnoreCase('Commencement')) {
-            fromDate = project.startDate
+            fromDate = project.plannedStartDate
             if (!fromDate) {
                 fromDate = '01/07/2012'
             }
