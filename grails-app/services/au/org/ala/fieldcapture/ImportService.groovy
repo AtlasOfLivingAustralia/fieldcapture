@@ -451,6 +451,11 @@ class ImportService {
         return allProjects.projects.find{it.grantId?.equalsIgnoreCase(grantId)}
     }
 
+    def allProjectsWithGrantId(grantId) {
+        def allProjects = cacheService.get(PROJECTS_CACHE_KEY) { [projects:projectService.list(true)] }
+        return allProjects.projects.findAll{it.grantId?.equalsIgnoreCase(grantId)}
+    }
+
     def findProjectSiteByDescription(project, description) {
         return project.sites?.find{it.description?.equalsIgnoreCase(description)}
     }

@@ -1,8 +1,6 @@
 package au.org.ala.fieldcapture
-
 import grails.converters.JSON
 import org.codehaus.groovy.grails.web.json.JSONArray
-import org.codehaus.groovy.grails.plugins.web.taglib.ApplicationTagLib
 
 class SiteController {
 
@@ -133,28 +131,36 @@ class SiteController {
     }
 
     def createGeometryForGrantId(String grantId, String geometryPid, Double centroidLat, Double centroidLong) {
-        def project = importService.findProjectByGrantId(grantId)
-        if (project) {
-            def metadata = metadataService.getLocationMetadataForPoint(centroidLat, centroidLong)
-            def strLat =  "" + centroidLat + ""
-            def strLon = "" + centroidLong + ""
-            def values = [extent: [source: 'pid', geometry: [pid: geometryPid, type: 'pid', state: metadata.state, nrm: metadata.nrm, lga: metadata.lga, locality: metadata.locality, centre: [strLon, strLat]]], projects: [project.projectId], name: "Project area for " + grantId]
-            def s = siteService.create(values)
-            render s as JSON
+        def projects = importService.allProjectsWithGrantId(grantId)
+        if (projects) {
+            def sites = []
+            projects.each {project ->
+                def metadata = metadataService.getLocationMetadataForPoint(centroidLat, centroidLong)
+                def strLat =  "" + centroidLat + ""
+                def strLon = "" + centroidLong + ""
+                def values = [extent: [source: 'pid', geometry: [pid: geometryPid, type: 'pid', state: metadata.state, nrm: metadata.nrm, lga: metadata.lga, locality: metadata.locality, centre: [strLon, strLat]]], projects: [project.projectId], name: "Project area for " + grantId]
+                sites << siteService.create(values)
+            }
+            def result = [result:sites]
+            render result as JSON
         } else {
             render "EMPTY"
         }
     }
 
     def createPointForGrantId(String grantId, String geometryPid, Double lat, Double lon) {
-        def project = importService.findProjectByGrantId(grantId)
-        if (project) {
-            def metadata = metadataService.getLocationMetadataForPoint(lat, lon)
-            def strLat =  "" + lat + ""
-            def strLon = "" + lon + ""
-            def values = [extent: [source: 'point', geometry: [pid: geometryPid, type: 'point', decimalLatitude: strLat, decimalLongitude: strLon, centre: [strLon, strLat], coordinates: [strLon, strLat], datum: "WGS84", state: metadata.state, nrm: metadata.nrm, lga: metadata.lga, locality: metadata.locality]], projects: [project.projectId], name: "Project area for " + grantId]
-            def s = siteService.create(values)
-            render s as JSON
+        def projects = importService.allProjectsWithGrantId(grantId)
+        if (projects) {
+            def sites = []
+            projects.each {project ->
+                def metadata = metadataService.getLocationMetadataForPoint(lat, lon)
+                def strLat =  "" + lat + ""
+                def strLon = "" + lon + ""
+                def values = [extent: [source: 'point', geometry: [pid: geometryPid, type: 'point', decimalLatitude: strLat, decimalLongitude: strLon, centre: [strLon, strLat], coordinates: [strLon, strLat], datum: "WGS84", state: metadata.state, nrm: metadata.nrm, lga: metadata.lga, locality: metadata.locality]], projects: [project.projectId], name: "Project area for " + grantId]
+                sites << siteService.create(values)
+            }
+            def result = [result:sites]
+            render result as JSON
         } else {
             render "EMPTY"
         }
