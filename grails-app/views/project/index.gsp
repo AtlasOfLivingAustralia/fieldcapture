@@ -823,7 +823,7 @@
                             $clone.find('.memUserName').text(el.displayName);
                             $clone.find('.memUserRole select').val(el.role);
                             $clone.find('.memUserRole select').attr("id", el.userId);
-                            $clone.find('.memUserRole span').text(decodeCamelCase(el.role)); // TODO: i18n this
+                            $clone.find('.memUserRole span').text(decodeCamelCase(el.role).replace('Case','Grant')); // TODO: i18n this
                             $('.membersTbody').append($clone);
                         });
                     } else {
