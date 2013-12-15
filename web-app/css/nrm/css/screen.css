@@ -567,10 +567,13 @@ ul.horizontal li {
     /*position: absolute;*/
     /*right: 16px;*/
     /*top: 16px;*/
-    margin-top: 12px;
+    /*margin-top: 12px;*/
 }
 
-#header form.search fieldset{ border: none; padding: 0; }
+#header form.search fieldset {
+    border: none;
+    padding: 0;
+}
 
 #header label {
     float: left;
@@ -591,12 +594,17 @@ ul.horizontal li {
 
 #header #keywords {
     /*width: 130px;*/
+    line-height: 20px;
     height: 44px;
     float: left;
     clear: none;
     border: none;
     padding: 0 1px 0 15px;
     background: url(../images/bg_search_sprites.png) no-repeat;
+}
+
+.ie8 #header #keywords, .ie9 #header #keywords {
+    line-height: 44px;
 }
 
 #header .search input {

@@ -21,7 +21,10 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ page import="au.org.ala.fieldcapture.SettingPageType; org.codehaus.groovy.grails.commons.ConfigurationHolder" %>
 <!DOCTYPE html>
-<html lang="en">
+<!--[if IE 7]><html lang="en" class="ie ie7"><![endif]-->
+<!--[if IE 8]><html lang="en" class="ie ie8"><![endif]-->
+<!--[if IE 9]><html lang="en" class="ie ie9"><![endif]-->
+<!--[if !IE]><!--><html lang="en"><!--<![endif]-->
 <head>
     <title><g:layoutTitle /></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
