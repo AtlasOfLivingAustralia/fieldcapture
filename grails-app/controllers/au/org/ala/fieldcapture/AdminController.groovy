@@ -136,7 +136,7 @@ class AdminController {
         render result
     }
 
-    @PreAuthorise(accessLevel = 'siteAdmin', redirectController = "admin")
+    @PreAuthorise(accessLevel = 'alaAdmin', redirectController = "admin")
     def staticPages() {
         def settings = []
 
@@ -165,6 +165,7 @@ class AdminController {
         [settings: settings, grailsStuff: grailsStuff]
     }
 
+    @PreAuthorise(accessLevel = 'alaAdmin', redirectController = "admin")
     def editSettingText(String id) {
         def content
         def layout = params.layout?:"adminLayout"
