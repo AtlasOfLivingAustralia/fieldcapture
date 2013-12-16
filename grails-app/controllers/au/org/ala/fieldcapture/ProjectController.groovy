@@ -5,19 +5,13 @@ import org.codehaus.groovy.grails.web.json.JSONObject
 
 class ProjectController {
 
-    def projectService, metadataService, commonService, activityService, userService, webService, authService
+    def projectService, metadataService, commonService, activityService, userService, webService, roleService
     static defaultAction = "index"
     static ignore = ['action','controller','id']
 
     def index(String id) {
         def project = projectService.get(id, 'brief')
-        def roles = metadataService.getAccessLevels().collect {
-            if (it && it instanceof JSONObject && it.has('name')) {
-                it.name
-            } else {
-                log.warn "Error getting accessLevels: ${it}"
-            }
-        }
+        def roles = roleService.getRoles()
 
         if (!project || project.error) {
             flash.message = "Project not found with id: ${id}"

@@ -8,8 +8,9 @@ import org.codehaus.groovy.grails.web.json.JSONObject
  * @see au.org.ala.fieldcapture.PreAuthorise
  */
 class AclFilterFilters {
-    def grailsApplication, userService, projectService, metadataService
+    def grailsApplication, userService, projectService, roleService
 
+    def roles = []
 
     def filters = {
         all(controller:'*', action:'*') {
@@ -17,15 +18,7 @@ class AclFilterFilters {
                 def controller = grailsApplication.getArtefactByLogicalPropertyName("Controller", controllerName)
                 Class controllerClass = controller?.clazz
                 def method = controllerClass.getMethod(actionName?:"index", [] as Class[])
-                def roles = metadataService.getAccessLevels().collect {
-                    if (it && it instanceof JSONObject && it.has('name')) {
-                        it.name
-                    } else {
-                        log.warn "Error getting accessLevels: ${it}"
-                    }
-                } // List
-
-                roles.addAll(["alaAdmin","siteAdmin"]) // augment roles with these extra ones
+                def roles = roleService.getAugmentedRoles()
 
                 if (controllerClass.isAnnotationPresent(PreAuthorise) || method.isAnnotationPresent(PreAuthorise)) {
                     PreAuthorise pa = method.getAnnotation(PreAuthorise)?:controllerClass.getAnnotation(PreAuthorise)
@@ -62,6 +55,8 @@ class AclFilterFilters {
                                 errorMsg = "Access denied: User does not have <b>editor</b> permission ${projectId?'for project':''}"
                             }
                             break
+                        default:
+                            log.warn "Unexpected role: ${accessLevel}"
                     }
 
                     if (errorMsg) {
