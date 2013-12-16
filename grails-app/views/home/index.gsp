@@ -41,8 +41,7 @@
 
 <div class="row-fluid">
     <div class="span12" id="heading">
-        <h1 class="pull-left">Monitoring, Evaluation, Reporting and Improvement Tool (MERIT)&nbsp;<span
-                class="label label-info" style="position:relative;top:-15px;">Beta</span></h1>
+        <h1 class="pull-left">Monitoring, Evaluation, Reporting and Improvement Tool (MERIT)</h1>
     </div>
 </div>
 <div class="row-fluid large-space-after">
