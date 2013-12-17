@@ -69,10 +69,11 @@
                 <!-- Common activity fields -->
 
                 <div class="row-fluid space-after">
-                    <div class="span6">
-                        <label class="for-readonly">Major theme</label>
-                        <span class="readonly-text" data-bind="text:mainTheme"></span>
-                    </div>
+                <div class="span6">
+                    <label for="theme">Major theme</label>
+                    <select id="theme" data-bind="value:mainTheme, options:transients.themes, optionsCaption:'Choose..'" class="input-xlarge">
+                    </select>
+                </div>
                     <div class="span6">
                         <label class="for-readonly">Description</label>
                         <span class="readonly-text" data-bind="text:description"></span>
