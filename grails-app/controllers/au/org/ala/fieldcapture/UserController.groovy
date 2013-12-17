@@ -82,9 +82,14 @@ class UserController {
         String userId = params.userId
         String role = params.role
         String projectId = params.projectId
+        def adminUser = authService.userDetails()
 
-        if (projectId && role && userId) {
-            render userService.removeUserWithRole(projectId, userId, role) as JSON
+        if (adminUser && projectId && role && userId) {
+            if (projectService.isUserAdminForProject(adminUser.userId, projectId)) {
+                render userService.removeUserWithRole(projectId, userId, role) as JSON
+            } else {
+                render status:403, text: 'Permission denied'
+            }
         } else {
             render status:400, text: 'Required params not provided: userId, projectId, role'
         }

@@ -165,11 +165,20 @@ class ProjectController {
 
     def getMembersForProjectId() {
         String projectId = params.id
+        def adminUserId = userService.getCurrentUserId()
 
-        if (projectId) {
-            render projectService.getMembersForProjectId(projectId) as JSON
+        if (projectId && adminUserId) {
+            if (projectService.isUserAdminForProject(adminUserId, projectId)) {
+                render projectService.getMembersForProjectId(projectId) as JSON
+            } else {
+                render status:403, text: 'Permission denied'
+            }
+        } else if (adminUserId) {
+            render status:400, text: 'Required params not provided: projectId'
+        } else if (projectId) {
+            render status:403, text: 'User not logged-in or does not have permission'
         } else {
-            render status:400, text: 'Required params not provided:  projectId'
+            render status:500, text: 'Unexpected error'
         }
     }
 }
