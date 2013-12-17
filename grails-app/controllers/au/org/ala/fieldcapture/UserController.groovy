@@ -16,7 +16,8 @@ class UserController {
     def index() {
         def user = userService.getUser()
         if (!user) {
-            [error: "Logged in user not found (user = null)"]
+            flash.message = "User Profile Error: user not logged in."
+            redirect(controller: 'home', model: [error: flash.message])
         } else {
             log.debug('Viewing my dashboard :  ' + user)
             assembleUserData(user)

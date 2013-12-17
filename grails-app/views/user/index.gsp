@@ -16,7 +16,7 @@
 <div id="wrapper" class="container-fluid">
     <div class="row-fluid">
         <div class="span12" id="header">
-            <h1 class="pull-left">User Dashboard - ${user.displayName}</h1>
+            <h1 class="pull-left">User Dashboard - ${user?.displayName}</h1>
         </div>
     </div>
     <g:if test="${flash.error || error}">
