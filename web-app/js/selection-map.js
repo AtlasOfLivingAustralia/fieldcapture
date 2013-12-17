@@ -559,8 +559,8 @@ function showObjectOnMap(pid){
     map.gmap.overlayMapTypes.push(pidLayer);
 
     $.ajax({
-        url:config.spatialServiceUrl + '/object/' + pid,
-        dataType:'jsonp'
+        url:config.spatialServiceUrl + '?featureId=' + pid,
+        dataType:'json'
     }).done(function(data) {
         console.log('Retrieving metadata for object.....')
         //set map bounds

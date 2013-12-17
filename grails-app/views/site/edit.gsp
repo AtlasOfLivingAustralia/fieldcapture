@@ -403,7 +403,7 @@
         ajaxUpdateUrl: "${createLink(action: 'ajaxUpdate', id: site?.siteId)}",
         siteData: $.parseJSON('${json}'),
         checkForState: ${params.checkForState?:'false'},
-        spatialService: '${grailsApplication.config.spatial.layersUrl}',
+        spatialService: '${createLink(controller:'proxy', action:'feature')}',
         intersectService: "${createLink(controller: 'proxy', action: 'intersect')}",
         featuresService: "${createLink(controller: 'proxy', action: 'features')}",
         featureService: "${createLink(controller: 'proxy', action: 'feature')}",
