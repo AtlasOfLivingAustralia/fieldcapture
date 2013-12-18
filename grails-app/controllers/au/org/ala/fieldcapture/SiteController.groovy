@@ -156,7 +156,7 @@ class SiteController {
                 def metadata = metadataService.getLocationMetadataForPoint(lat, lon)
                 def strLat =  "" + lat + ""
                 def strLon = "" + lon + ""
-                def values = [extent: [source: 'point', geometry: [pid: geometryPid, type: 'point', decimalLatitude: strLat, decimalLongitude: strLon, centre: [strLon, strLat], coordinates: [strLon, strLat], datum: "WGS84", state: metadata.state, nrm: metadata.nrm, lga: metadata.lga, locality: metadata.locality]], projects: [project.projectId], name: "Project area for " + grantId]
+                def values = [extent: [source: 'point', geometry: [pid: geometryPid, type: 'point', decimalLatitude: strLat, decimalLongitude: strLon, centre: [strLon, strLat], coordinates: [strLon, strLat], datum: "WGS84", state: metadata.state, nrm: metadata.nrm, lga: metadata.lga, locality: metadata.locality, mvg: metadata.mvg, mvs: metadata.mvs]], projects: [project.projectId], name: "Project area for " + grantId]
                 sites << siteService.create(values)
             }
             def result = [result:sites]

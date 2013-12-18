@@ -76,6 +76,12 @@
             <p>
                 <span class="label label-success">Locality:</span> ${site.extent.geometry.locality?:'Not specified'}
             </p>
+            <p>
+                <span class="label label-success">NVIS major vegetation group:</span> ${site.extent.geometry.mvg?:'Not specified'}
+            </p>
+            <p>
+                <span class="label label-success">NVIS major vegetation subgroup:</span> ${site.extent.geometry.mvs?:'Not specified'}
+            </p>
             </g:if>
 
             <div>
