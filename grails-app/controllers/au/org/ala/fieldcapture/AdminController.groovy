@@ -407,7 +407,10 @@ class AdminController {
                  geometry["locality"] = metadata.locality
                  geometry["mvg"] = metadata.mvg
                  geometry["mvs"] = metadata.mvs
-                 siteService.update(siteId, site)
+
+                 def updatedSite = [:]
+                 updatedSite["extent"] = site["extent"]
+                 siteService.update(siteId, updatedSite)
              }
 
         }
