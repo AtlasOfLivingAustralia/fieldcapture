@@ -401,7 +401,7 @@
         homePageUrl : "${createLink(controller: 'home', action: 'index')}",
         drawSiteUrl : "${createLink(controller: 'site', action: 'draw')}",
         ajaxUpdateUrl: "${createLink(action: 'ajaxUpdate', id: site?.siteId)}",
-        siteData: $.parseJSON('${json}'),
+        siteData: ${json},
         checkForState: ${params.checkForState?:'false'},
         spatialService: '${createLink(controller:'proxy', action:'feature')}',
         intersectService: "${createLink(controller: 'proxy', action: 'intersect')}",
