@@ -23,14 +23,14 @@ class RoleService {
     }
 
     public List getRoles() {
-        def roles = roles() // cached
+        def allRoles = roles() // cached
 
-        if (roles.size() <= 1) {
+        if (allRoles.size() <= 1) {
             // possible empty list or value, due to previous WS call timing out
-            roles = roles(true) // reload with cleared cache
+            allRoles = roles(true) // reload with cleared cache
         }
 
-        return roles
+        return allRoles
     }
 
     public List getAugmentedRoles() {
