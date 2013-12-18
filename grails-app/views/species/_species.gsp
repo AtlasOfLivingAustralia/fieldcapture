@@ -59,7 +59,7 @@
             if ($('#speciesListForm').validationEngine('validate')) {
                 var listItems = $.trim($('#speciesList').val()).replace(/(\r\n|\n|\r)/gm,",");
                 var postData = {
-                    listName: "${project.name}",
+                    listName: "${project.name.encodeAsJavaScript()}",
                     projectId: "${project.projectId}",
                     druid:  "${project.listId}",
                     listType: "LOCAL_LIST",
