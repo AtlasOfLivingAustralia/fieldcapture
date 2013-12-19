@@ -945,6 +945,7 @@ class ImportService {
         def unmatchedActivities = []
         // Assume at least one activity
 
+        int i = 0
         def activities = []
         while (offset < stageDetails.size()) {
 
@@ -962,11 +963,13 @@ class ImportService {
                 activity.plannedStartDate = stage.fromDate
                 activity.plannedEndDate = stage.toDate
                 activity.progress = 'planned'
+                activity.sequence = i
                 activities << activity
             }
             else if (activityDescription) { // There are spots in the spreadsheets containing blanks that have activities following.
                 results.error = "Description without activity type at offset ${offset-1} of ${stage.name}"
             }
+            i++
         }
         if (unmatchedActivities) {
             results.error = "Unmatched activity type(s) supplied ${unmatchedActivities}"
