@@ -74,10 +74,13 @@ class ProjectService {
     def summary(String id) {
         def scores = webService.getJson(grailsApplication.config.ecodata.baseUrl + 'project/projectMetrics/' + id)
 
-        // There are some targets that have been saved as Strings instead of numbers.
-        def scoresWithTargetsByOutput = scores.grep{ it.target && it.target != "0" }.groupBy { it.score.outputName }
-        def scoresWithoutTargetsByOutputs = scores.grep{ it.results && (!it.target || it.target == "0") }.groupBy { it.score.outputName }
-
+        def scoresWithTargetsByOutput = [:]
+        def scoresWithoutTargetsByOutputs = [:]
+        if (scores && scores instanceof List) {  // If there was an error, it would be returning a map containing the error.
+            // There are some targets that have been saved as Strings instead of numbers.
+            scoresWithTargetsByOutput = scores.grep{ it.target && it.target != "0" }.groupBy { it.score.outputName }
+            scoresWithoutTargetsByOutputs = scores.grep{ it.results && (!it.target || it.target == "0") }.groupBy { it.score.outputName }
+        }
         [targets:scoresWithTargetsByOutput, other:scoresWithoutTargetsByOutputs]
     }
 
