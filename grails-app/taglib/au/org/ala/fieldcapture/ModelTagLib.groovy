@@ -199,7 +199,7 @@ class ModelTagLib {
                 helpText = attr?.description
             }
         }
-        helpText = helpText?fc.iconHelp([title:label], helpText):''
+        helpText = helpText?fc.iconHelp([title:''], helpText):''
         return "${label}${helpText}"
 
     }
