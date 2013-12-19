@@ -527,14 +527,21 @@
                 });
             this.label = stageLabel;
             this.isCurrentStage = isCurrentStage;
-            // sort activities by planned start date
-// CG - commented this out 14/12/2013 because of the many grants with > 10 activities per stage.
-//            activitiesInThisStage.sort(function (a,b) {
-//                if (a.plannedStartDate === b.plannedStartDate) {
-//                    return a.description > b.description;
-//                }
-//                return a.plannedStartDate > b.plannedStartDate;
-//            });
+            // sort activities by assigned sequence or date created (as a proxy for sequence).
+            // CG - still needs to be addressed properly.
+            activitiesInThisStage.sort(function (a,b) {
+                if (a.sequence !== undefined && b.sequence !== undefined) {
+                    return a.sequence > b.sequence;
+                }
+                if (a.dateCreated !== undefined && b.dateCreated !== undefined) {
+                    return a.dateCreated > b.dateCreated;
+                }
+
+                if (a.plannedStartDate === b.plannedStartDate) {
+                    return a.description > b.description;
+                }
+                return a.plannedStartDate > b.plannedStartDate;
+            });
             this.activities = $.map(activitiesInThisStage, function (act, index) {
                 act.projectStage = stageLabel;
                 return new PlannedActivity(act, index === 0, project);
