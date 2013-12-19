@@ -439,9 +439,8 @@ class FCTagLib {
         def cssClass = attrs.cssClass?:"btn btn-small btn-inverse btn-login"
         def output
 
-        if ((attrs.ignoreCookie != "true" &&
-                AuthenticationCookieUtils.cookieExists(request, AuthenticationCookieUtils.ALA_AUTH_COOKIE)) ||
-                request.userPrincipal) {
+        def username = userService.currentUserDisplayName
+        if (username) {
             output = "<a href='${logoutUrl}" +
                     "?casUrl=${casLogoutUrl}" +
                     "&appUrl=${logoutReturnToUrl}' " +
