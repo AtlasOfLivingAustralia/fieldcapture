@@ -241,17 +241,39 @@ class ModelTagLib {
     def getValidationCriteria(attrs, model, edit) {
         //log.debug "checking validation for ${model}, edit = ${edit}"
         if (!edit) { return []}  // don't bother if the user can't change it
+
         def validationCriteria = model.validate
+        def dataModel = getAttribute(attrs.model.dataModel, model.source)
+
         if (!validationCriteria) {
             // Try the data model.
-            validationCriteria = getAttribute(attrs.model.dataModel, model.source)?.validate
-            if (!validationCriteria) {
-                return []
-            }
+            validationCriteria = dataModel?.validate
         } // no criteria
-        // collect the validation criteria
-        def criteria = validationCriteria.tokenize(',')
-        criteria = criteria.collect { it.trim() }
+
+        def criteria = []
+        if (validationCriteria) {
+            criteria = validationCriteria.tokenize(',')
+            criteria = criteria.collect {
+                def rule = it.trim()
+                // Wrap these rules in "custom[]" to keep jquery-validation-engine happy and avoid having to
+                // specify "custom" in the json.
+                if (rule in ['number', 'integer', 'url', 'date', 'phone']) {
+                    rule = "custom[${rule}]"
+                }
+                rule
+            }
+        }
+
+        // Add implied numeric validation to numeric data types
+        if (dataModel?.dataType == 'number') {
+            if (!criteria.contains('custom[number]') && !criteria.contains('custom[integer]')) {
+                criteria << 'custom[number]'
+            }
+            if (!criteria.find{it.startsWith('min')}) {
+                criteria << 'min[0]'
+            }
+        }
+
 
         return criteria
     }
