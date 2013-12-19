@@ -97,7 +97,7 @@
             <div class="row-fluid">
                 <div class="clearfix" data-bind="visible:organisation()||organisationName()">
                     <h4>
-                        Supported by:
+                        Grant recipient:
                         <a data-bind="visible:organisation(),text:transients.collectoryOrgName,attr:{href:fcConfig.organisationLinkBaseUrl + organisation()}"></a>
                         <span data-bind="visible:organisationName(),text:organisationName"></span>
                     </h4>
@@ -112,10 +112,18 @@
                 <g:if test="${project.funding}">
                     <div class="clearfix" >
                         <h4>
-                            Funded amount: <g:formatNumber number="${project.funding as java.math.BigDecimal}" type="currency" currencyCode="AUD" currencySymbol="\$"/>
+                            Approved funding (GST inclusive): <g:formatNumber number="${project.funding as java.math.BigDecimal}" type="currency" currencyCode="AUD" currencySymbol="\$"/>
                         </h4>
                     </div>
                 </g:if>
+
+
+                <div data-bind="visible:plannedStartDate()">
+                    <h4>
+                        Project start: <span data-bind="text:plannedStartDate.formattedDate"></span>
+                        <span data-bind="visible:plannedEndDate()">Project finish: <span data-bind="text:plannedEndDate.formattedDate"></span></span>
+                    </h4>
+                </div>
 
                 <div class="clearfix" style="font-size:14px;">
                     <div class="span4" data-bind="visible:grantId" style="margin-bottom: 0">
@@ -131,14 +139,6 @@
                         <span data-bind="text:manager"></span>
                     </div>
                 </div>
-
-                <div data-bind="visible:plannedStartDate()">
-                    <h5>
-                        Project activities will be undertaken from <span data-bind="text:plannedStartDate.formattedDate"></span>
-                        <span data-bind="visible:plannedEndDate()">to <span data-bind="text:plannedEndDate.formattedDate"></span></span>
-                    </h5>
-                </div>
-
                 <div data-bind="visible:description()">
                     <p class="well well-small more" data-bind="text:description"></p>
                 </div>
