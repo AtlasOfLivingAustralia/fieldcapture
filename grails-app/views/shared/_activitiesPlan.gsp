@@ -531,16 +531,16 @@
             // CG - still needs to be addressed properly.
             activitiesInThisStage.sort(function (a,b) {
                 if (a.sequence !== undefined && b.sequence !== undefined) {
-                    return a.sequence > b.sequence;
+                    return a.sequence - b.sequence;
                 }
                 if (a.dateCreated !== undefined && b.dateCreated !== undefined) {
-                    return a.dateCreated > b.dateCreated;
+                    return a.dateCreated > b.dateCreated ? 1: -1;
                 }
 
                 if (a.plannedStartDate === b.plannedStartDate) {
-                    return a.description > b.description;
+                    return a.description > b.description ? 1 : -1;
                 }
-                return a.plannedStartDate > b.plannedStartDate;
+                return a.plannedStartDate > b.plannedStartDate ? 1: -1;
             });
             this.activities = $.map(activitiesInThisStage, function (act, index) {
                 act.projectStage = stageLabel;
