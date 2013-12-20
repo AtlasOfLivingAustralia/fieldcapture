@@ -401,7 +401,7 @@
         homePageUrl : "${createLink(controller: 'home', action: 'index')}",
         drawSiteUrl : "${createLink(controller: 'site', action: 'draw')}",
         ajaxUpdateUrl: "${createLink(action: 'ajaxUpdate', id: site?.siteId)}",
-        siteData: ${json},
+        siteData: ${json?:'{}'},
         checkForState: ${params.checkForState?:'false'},
         spatialService: '${createLink(controller:'proxy', action:'feature')}',
         intersectService: "${createLink(controller: 'proxy', action: 'intersect')}",
@@ -544,6 +544,8 @@
                 state: ko.observable(exists(l,'state')),
                 locality: ko.observable(exists(l,'locality')),
                 nrm: ko.observable(exists(l,'nrm')),
+                mvg: ko.observable(exists(l,'mvg')),
+                mvs: ko.observable(exists(l,'mvs')),
                 areaKmSq: ko.observable(exists(l,'areaKmSq')),
                 coordinates: ko.observable(exists(l,'coordinates'))
             });
@@ -555,6 +557,8 @@
                 self.geometry().radius(exists(l,'radius')),
                 self.geometry().state(exists(l,'state')),
                 self.geometry().locality(exists(l,'locality')),
+                self.geometry().mvg(exists(l,'mvg')),
+                self.geometry().mvs(exists(l,'mvs')),
                 self.geometry().areaKmSq(exists(l,'areaKmSq')),
                 self.geometry().coordinates(exists(l,'coordinates'))
             };
