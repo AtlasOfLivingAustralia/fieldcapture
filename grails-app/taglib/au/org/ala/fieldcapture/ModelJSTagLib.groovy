@@ -23,7 +23,6 @@ class ModelJSTagLib {
             }
         }
         // TODO only necessary if the model has a field of type species.
-        out << g.render(template:'/output/speciesViewModel')
         out << INDENT*2 << "var speciesLists = ${attrs.speciesLists.toString()};\n"
 
         def site = attrs.site ? attrs.site.toString() : "{}"
@@ -398,7 +397,7 @@ class ModelJSTagLib {
                         out << INDENT*3 << "}\n"
                         break;
                     case 'species':
-                        out << INDENT*3 << "this.${col.name} =  new SpeciesViewModel(data['${col.name}'], this);\n"
+                        out << INDENT*3 << "this.${col.name} =  new SpeciesViewModel(data['${col.name}'], speciesLists);\n"
                         break
 
                 }
@@ -577,7 +576,7 @@ class ModelJSTagLib {
     }
 
     def speciesModel(attrs, model, out) {
-        out << INDENT*3 << "self.data.${model.name} = new SpeciesViewModel();\n"
+        out << INDENT*3 << "self.data.${model.name} = new SpeciesViewModel({}, speciesLists);\n"
     }
 
     def modelConstraints(model, out) {

@@ -188,4 +188,9 @@ modules = {
         dependsOn 'jquery'
         resource 'js/jquery.cookie.js'
     }
+
+    species {
+        dependsOn 'knockout'
+        resource 'js/speciesModel.js'
+    }
 }
