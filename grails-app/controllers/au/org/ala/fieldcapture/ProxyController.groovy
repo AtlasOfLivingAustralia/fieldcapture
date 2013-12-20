@@ -40,6 +40,10 @@ class ProxyController {
         render webService.get("${grailsApplication.config.spatial.layersUrl}/object/${params.featureId}", false)
     }
 
+    def speciesProfile(String id) {
+        render webService.get("${grailsApplication.config.bie.baseURL}/ws/species/info/${id}.json", false)
+    }
+
     def speciesListPost() {
         def postBody = request.JSON
         def druidParam = (postBody.druid) ? "/${postBody.druid}" : "" // URL part

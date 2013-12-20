@@ -81,11 +81,11 @@ var SpeciesViewModel = function(data, speciesLists) {
 
         self.transients.textFieldValue(self.name());
         if (self.guid()) {
-            // lookup taxon details in bie
+
             var profileUrl = fcConfig.bieUrl + '/species/' + self.guid();
             $.ajax({
-                url: fcConfig.bieUrl + '/ws/species/info/' + self.guid() + '.json',
-                dataType: 'jsonp',
+                url: fcConfig.speciesProfileUrl+'/' + self.guid() + '.json',
+                dataType: 'json',
                 success: function (data) {
                     var profileInfo = '<a href="'+profileUrl+'" target="_blank">';
                     var imageUrl = data.taxonConcept.smallImageUrl;
@@ -97,6 +97,9 @@ var SpeciesViewModel = function(data, speciesLists) {
                     }
                     profileInfo += "</a>";
                     self.transients.speciesInformation(profileInfo);
+                },
+                error: function(request, status, error) {
+                    console.log(error);
                 }
             });
         }
