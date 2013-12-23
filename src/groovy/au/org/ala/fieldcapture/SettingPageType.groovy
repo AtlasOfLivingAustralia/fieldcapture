@@ -28,7 +28,8 @@ enum SettingPageType {
     HELP ("help","Help","fielddata.help.text"),
     NEWS ("news","News","fielddata.news.text"),
     CONTACTS ("contacts","Contacts","fielddata.contacts.text"),
-    INTRO ("intro","User Introduction","fielddata.introduction.text")
+    INTRO ("intro","User Introduction","fielddata.introduction.text"),
+    DECLARATION ('declaration', "Legal Declaration", "fielddata.declaration.text")
 
     String name
     String title
