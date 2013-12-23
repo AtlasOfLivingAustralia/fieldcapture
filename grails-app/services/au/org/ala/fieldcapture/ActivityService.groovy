@@ -1,10 +1,6 @@
 package au.org.ala.fieldcapture
-
 import org.codehaus.groovy.grails.web.json.JSONArray
 import org.codehaus.groovy.grails.web.json.JSONObject
-
-import java.util.regex.Matcher
-import java.util.regex.Pattern
 
 class ActivityService {
 
@@ -90,6 +86,19 @@ class ActivityService {
             it.model = metadataService.getActivityModel(it.type)
         }
         list
+    }
+
+    /**
+     * Updates the publicationStatus field of a set of Activities.
+     * @param activityIds a List of the activity ids.  Identifies which activities to update.
+     * @param status the new value for the publicationStatus field.
+     */
+    def updatePublicationStatus(activityIds, status) {
+
+        def ids = activityIds.collect{"id=${it}"}.join('&')
+        def body = ['publicationStatus':status]
+        webService.doPost(grailsApplication.config.ecodata.baseUrl + "activities/?$ids", body)
+
     }
 
         /*def convertToSimpleDate(value) {
