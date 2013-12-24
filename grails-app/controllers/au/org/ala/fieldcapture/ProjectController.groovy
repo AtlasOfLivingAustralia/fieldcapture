@@ -1,7 +1,5 @@
 package au.org.ala.fieldcapture
-
 import grails.converters.JSON
-import org.codehaus.groovy.grails.web.json.JSONObject
 
 class ProjectController {
 
@@ -168,7 +166,7 @@ class ProjectController {
         def adminUserId = userService.getCurrentUserId()
 
         if (projectId && adminUserId) {
-            if (projectService.isUserAdminForProject(adminUserId, projectId)) {
+            if (projectService.isUserAdminForProject(adminUserId, projectId) || projectService.isUserCaseManagerForProject(adminUserId, projectId)) {
                 render projectService.getMembersForProjectId(projectId) as JSON
             } else {
                 render status:403, text: 'Permission denied'
