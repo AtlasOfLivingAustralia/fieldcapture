@@ -235,8 +235,8 @@
 <div class="drawLocationDiv row-fluid">
     <div class="span12">
         <div class="row-fluid controls-row">
-            <fc:textField data-bind="value:geometry().decimalLatitude, event: { change: renderMap }" data-validation-engine="validate[required,custom[number],min[-90],max[90]]" outerClass="span6" label="Latitude"/>
-            <fc:textField data-bind="value:geometry().decimalLongitude, event: { change: renderMap }" data-validation-engine="validate[required,custom[number],min[-180],max[180]]" outerClass="span6" label="Longitude"/>
+            <fc:textField data-bind="value:geometry().decimalLatitude, event: { change: renderMap }" data-validation-engine="validate[required,custom[number],min[-90],max[0]]" outerClass="span6" label="Latitude"/>
+            <fc:textField data-bind="value:geometry().decimalLongitude, event: { change: renderMap }" data-validation-engine="validate[required,custom[number],min[-180],max[180]]" data-prompt-position="topRight:-150" outerClass="span6" label="Longitude"/>
         </div>
         <div class="row-fluid controls-row">
             <fc:textField data-bind="value:geometry().uncertainty, enable: hasCoordinate()" outerClass="span4" label="Uncertainty"/>
@@ -700,7 +700,7 @@
                decimalLongitude: ko.observable(exists(l,'decimalLongitude')),
                uncertainty: ko.observable(exists(l,'uncertainty')),
                precision: ko.observable(exists(l,'precision')),
-               datum: ko.observable(exists(l,'datum')),
+               datum: ko.observable('WGS84'), // only supporting WGS84 at the moment.
                nrm: ko.observable(exists(l,'nrm')),
                state: ko.observable(exists(l,'state')),
                lga: ko.observable(exists(l,'lga')),
@@ -714,6 +714,28 @@
                     && self.geometry().decimalLongitude() !== undefined
                     && self.geometry().decimalLongitude() !== '';
                 return hasCoordinate;
+            }
+
+            /**
+             * This is called only from a map drag event so we clear uncertaintly, precision and intercept data.
+             * The intercept data will be updated once the drag event ends
+             */
+            self.updateGeometry = function(latlng) {
+                var geom = self.geometry();
+                geom.decimalLatitude(latlng.lat());
+                geom.decimalLongitude(latlng.lng());
+                geom.uncertainty('');
+                geom.precision('');
+                self.clearGazInfo();
+            }
+            self.clearGazInfo = function() {
+                var geom = self.geometry();
+                geom.nrm('');
+                geom.state('');
+                geom.lga('');
+                geom.locality('');
+                geom.mvg('');
+                geom.mvs('');
             }
             self.renderMap = function(){
                 if(self.hasCoordinate()){
@@ -1175,10 +1197,20 @@
                         centre: [centreX,centreY]
                     };
                     break;
+                case google.maps.drawing.OverlayType.MARKER:
+                    viewModel.extent().updateGeometry(shape.getPosition());
+                    // This call is too expensive to do while dragging so the marker has been decorated with
+                    // the event information.
+                    if (!shape.dragging) {
+                        refreshGazInfo();
+                    }
+
+                    break;
             }
+
         }
         //set the drawn shape
-        if(DRAW_TOOL.drawnShape != null){
+        if(DRAW_TOOL.drawnShape != null && type !== google.maps.drawing.OverlayType.MARKER){
             // alert('setting drawn shape...');
             amplify.store("drawnShape", DRAW_TOOL.drawnShape);
             viewModel.extent().updateGeom(DRAW_TOOL.drawnShape);

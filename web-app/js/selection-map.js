@@ -226,11 +226,17 @@ map = {
                 var marker = new google.maps.Marker({
                     position: position,
                     title:arg3,
-                    draggable:false,
+                    draggable:true,
                     map:map.gmap
                 });
                 google.maps.event.addListener(marker, 'click', function() {
                     infowindow.open(map.gmap, marker);
+                });
+                google.maps.event.addListener(marker, 'dragend', function() {
+                     that.currentShapeCallback(type, google.maps.drawing.OverlayType.MARKER, $.extend(marker, {dragging:false}));
+                });
+                google.maps.event.addListener(marker, 'drag', function() {
+                    that.currentShapeCallback(type, google.maps.drawing.OverlayType.MARKER, marker), $.extend(marker, {dragging:true});
                 });
                 this.shapes[0] = marker;
 
