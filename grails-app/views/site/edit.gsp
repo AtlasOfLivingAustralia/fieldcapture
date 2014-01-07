@@ -235,13 +235,14 @@
 <div class="drawLocationDiv row-fluid">
     <div class="span12">
         <div class="row-fluid controls-row">
-            <fc:textField data-bind="value:geometry().decimalLatitude, event: { change: renderMap }" outerClass="span6" label="Latitude"/>
-            <fc:textField data-bind="value:geometry().decimalLongitude, event: { change: renderMap }" outerClass="span6" label="Longitude"/>
+            <fc:textField data-bind="value:geometry().decimalLatitude, event: { change: renderMap }" data-validation-engine="validate[required,custom[number],min[-90],max[90]]" outerClass="span6" label="Latitude"/>
+            <fc:textField data-bind="value:geometry().decimalLongitude, event: { change: renderMap }" data-validation-engine="validate[required,custom[number],min[-180],max[180]]" outerClass="span6" label="Longitude"/>
         </div>
         <div class="row-fluid controls-row">
             <fc:textField data-bind="value:geometry().uncertainty, enable: hasCoordinate()" outerClass="span4" label="Uncertainty"/>
             <fc:textField data-bind="value:geometry().precision, enable: hasCoordinate()" outerClass="span4" label="Precision"/>
-            <fc:textField data-bind="value:geometry().datum, enable: hasCoordinate()" outerClass="span4" label="Datum" placeholder="e.g. WGS84"/>
+            %{-- CG - only supporting WGS84 at the moment --}%
+            <fc:textField data-bind="value:geometry().datum, enable: hasCoordinate()" outerClass="span4" label="Datum" placeholder="WGS84" readonly="readonly"/>
         </div>
     </div>
     <div class="row-fluid controls-row gazProperties">
@@ -255,6 +256,13 @@
     </div>
     <div class="row-fluid controls-row gazProperties">
         <span class="label label-success">Locality</span> <span data-bind="text:geometry().locality"></span>
+    </div>
+    <div class="row-fluid controls-row gazProperties">
+        <span class="label label-success">NVIS major vegetation group:</span> <span data-bind="text:geometry().mvg"></span>
+    </div>
+
+    <div class="row-fluid controls-row gazProperties">
+        <span class="label label-success">NVIS major vegetation subgroup:</span> <span data-bind="text:geometry().mvs"></span>
     </div>
 </div>
 </script>
@@ -351,6 +359,14 @@
 
         <div class="row-fluid controls-row gazProperties">
             <span class="label label-success">Locality</span> <span data-bind="text:geometry().locality"></span>
+        </div>
+
+        <div class="row-fluid controls-row gazProperties">
+            <span class="label label-success">NVIS major vegetation group:</span> <span data-bind="text:geometry().mvg"></span>
+        </div>
+
+        <div class="row-fluid controls-row gazProperties">
+            <span class="label label-success">NVIS major vegetation subgroup:</span> <span data-bind="text:geometry().mvs"></span>
         </div>
 
         <div style="display:none;" class="row-fluid controls-row">
@@ -459,26 +475,33 @@
 
     function refreshGazInfo(){
 
-        if(viewModel.extent().geometry().centre == undefined){
+        var geom = viewModel.extent().geometry();
+        var lat, lng;
+        if (geom.type === 'Point') {
+            lat = viewModel.extent().geometry().decimalLatitude();
+            lng = viewModel.extent().geometry().decimalLongitude();
+        }
+        else if (geom.centre !== undefined) {
+            lat = viewModel.extent().geometry().centre()[1];
+            lng = viewModel.extent().geometry().centre()[0];
+        }
+        else {
+            // No coordinates we can use for the lookup.
             return;
         }
 
-        var lat = viewModel.extent().geometry().centre()[1];
-        var lng = viewModel.extent().geometry().centre()[0];
-
-        //state
         $.ajax({
-            url: SERVER_CONF.intersectService + "?layerId=cl22&lat="+lat+"&lng="+lng,
+            url: '<g:createLink controller="site" action="locationMetadataForPoint"/>' + "?lat="+lat+"&lon="+lng,
             dataType: "json",
             async: false
         })
         .done(function(data) {
-          if(data.length > 0){
-              console.log('Setting state - ' + data[0].value);
-              viewModel.extent().geometry().state(data[0].value);
-          } else {
-            console.log('Unable to retrieve the state - ' + data);
-          }
+            var geom = viewModel.extent().geometry();
+            for (var name in data) {
+                if (data.hasOwnProperty(name) && geom.hasOwnProperty(name)) {
+                    geom[name](data[name]);
+                }
+            }
         });
 
         //do the google geocode lookup
@@ -491,31 +514,6 @@
               console.log('Setting locality - ' + data.results[0].formatted_address);
               viewModel.extent().geometry().locality(data.results[0].formatted_address);
             }
-        });
-
-        //
-        $.ajax({
-            url: SERVER_CONF.intersectService + "?layerId=cl959&lat="+lat+"&lng="+lng,
-            dataType:"json",
-            async:false
-        })
-        .done(function(data) {
-          if(data.length > 0){
-              console.log('Setting lga - ' + data[0].value);
-              viewModel.extent().geometry().lga(data[0].value);
-          }
-        });
-
-        $.ajax({
-            url: SERVER_CONF.intersectService + "?layerId=cl916&lat="+lat+"&lng="+lng,
-            dataType:"json",
-            async:false
-        })
-        .done(function(data) {
-          if(data.length > 0){
-              console.log('Setting nrm - ' + data[0].value);
-              viewModel.extent().geometry().nrm(data[0].value);
-          }
         });
     }
 
@@ -706,7 +704,9 @@
                nrm: ko.observable(exists(l,'nrm')),
                state: ko.observable(exists(l,'state')),
                lga: ko.observable(exists(l,'lga')),
-               locality: ko.observable(exists(l,'locality'))
+               locality: ko.observable(exists(l,'locality')),
+               mvg: ko.observable(exists(l,'mvg')),
+               mvs: ko.observable(exists(l,'mvs'))
             });
             self.hasCoordinate = function () {
                 var hasCoordinate = self.geometry().decimalLatitude() !== undefined
@@ -722,8 +722,10 @@
                     showOnMap('point', self.geometry().decimalLatitude(), self.geometry().decimalLongitude(),'Extent of site');
                     zoomToShapeBounds();
                     showSatellite();
+                    refreshGazInfo();
                 }
             }
+
             self.toJSON = function(){
                 var js = ko.toJS(self);
                 if(js.geometry.decimalLatitude !== undefined

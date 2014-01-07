@@ -273,6 +273,31 @@ class SiteController {
         render md as JSON
     }
 
+    /**
+     * Looks up the site metadata (used for facetting) based on the supplied
+     * point and returns it as JSON.
+     * @param lat the latitude of the point (or centre of a shape)
+     * @param lon the longitude of the point (or centre of a shape)
+     */
+    def locationMetadataForPoint() {
+        def lat = params.lat
+        def lon = params.lon
+
+
+        if (!lat || !lon) {
+            response.status = 400
+            def result = [error:'lat and lon parameters are required']
+            render result as JSON
+        }
+        if (!lat.isDouble() || !lon.isDouble()) {
+            response.status = 400
+            def result = [error:'invalid lat and lon supplied']
+            render result as JSON
+        }
+
+        render metadataService.getLocationMetadataForPoint(lat, lon) as JSON
+    }
+
     def projectsForSite(String id) {
         def projects = siteService.projectsForSite(id) ?: []
         //log.debug projects
