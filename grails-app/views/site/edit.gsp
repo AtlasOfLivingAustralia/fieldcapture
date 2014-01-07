@@ -271,7 +271,7 @@
 <div class="drawLocationDiv row-fluid">
     <div class="span12">
         <div class="row-fluid controls-row">
-            <fc:textField data-bind="value:name" outerClass="span6" label="Name"/>
+            <fc:textField data-bind="value:name" outerClass="span6" label="Name" data-validation-engine="validate[required]"/>
         </div>
         <div class="row-fluid controls-row">
             <fc:textArea rows="2" data-bind="value:description" outerClass="span12" class="span12" label="Description"/>
@@ -284,9 +284,9 @@
                       keys="['none','point','photopoint', 'survey', 'other']"/>
         </div>
         <div class="row-fluid controls-row">
-            <fc:textField data-bind="value:geometry().decimalLatitude" outerClass="span4" label="Latitude"/>
-            <fc:textField data-bind="value:geometry().decimalLongitude" outerClass="span4" label="Longitude"/>
-            <fc:textField data-bind="value:geometry().bearing" outerClass="span4" label="Bearing (degrees)"/>
+            <fc:textField data-bind="value:geometry().decimalLatitude" outerClass="span4" label="Latitude" data-validation-engine="validate[required,custom[number],min[-90],max[0]]" data-prompt-position="topRight:-150"/>
+            <fc:textField data-bind="value:geometry().decimalLongitude" outerClass="span4" label="Longitude" data-validation-engine="validate[required,custom[number],min[-180],max[180]]"/>
+            <fc:textField data-bind="value:geometry().bearing" outerClass="span4" label="Bearing (degrees)" data-validation-engine="validate[custom[number],min[0],max[360]]" data-prompt-position="topRight:-150"/>
         </div>
         <div class="row-fluid controls-row" style="display:none;">
             <fc:textField data-bind="value:geometry().uncertainty, enable: hasCoordinate()" outerClass="span4" label="Uncertainty"/>
