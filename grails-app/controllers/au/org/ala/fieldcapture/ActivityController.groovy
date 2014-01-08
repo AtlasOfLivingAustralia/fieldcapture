@@ -230,12 +230,24 @@ class ActivityController {
 
         def result = [:]
 
-        def activity = activityService.get(id)
+        def projectId
+        if (id) {
+            def activity = activityService.get(id)
+            projectId = activity.projectId
+        }
+        else {
+            projectId = values.projectId
+        }
+        if (!projectId) {
+            response.status = 400
+            flash.message = "No project id supplied for activity: ${id}"
+            result = [error: flash.message]
+        }
 
         // check user has permissions to edit/update site - user must have 'editor' access to
         // ALL linked projects to proceed.
-        if (!projectService.canUserEditProject(userService.getCurrentUserId(), activity?.projectId)) {
-            flash.message = "Error: access denied: User does not have <b>editor</b> permission for projectId ${activity?.projectId}"
+        if (!projectService.canUserEditProject(userService.getCurrentUserId(), projectId)) {
+            flash.message = "Error: access denied: User does not have <b>editor</b> permission for projectId ${projectId}"
             result = [error: flash.message]
             //render result as JSON
         }
