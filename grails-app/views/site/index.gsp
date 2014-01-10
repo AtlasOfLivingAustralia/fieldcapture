@@ -282,7 +282,7 @@
                             mapContainer: "map",
                             scrollwheel: false
                         },
-                        $.parseJSON('${mapFeatures}')
+                        $.parseJSON('${mapFeatures?.encodeAsJavaScript()}')
                     );
                 }
             });
@@ -292,7 +292,7 @@
                 $('#site-tab').tab('show');
             }
 
-            var mapFeatures = $.parseJSON('${mapFeatures}');
+            var mapFeatures = $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
 
             init_map_with_features({
                     mapContainer: "smallMap",

@@ -668,7 +668,7 @@
                             featureService: "${createLink(controller: 'proxy', action:'feature')}",
                             wmsServer: "${grailsApplication.config.spatial.geoserverUrl}"
                         },
-                        $.parseJSON('${mapFeatures}')
+                        $.parseJSON('${mapFeatures?.encodeAsJavaScript()}')
                     );
                     // set trigger for site reverse geocoding
                     viewModel.triggerGeocoding();

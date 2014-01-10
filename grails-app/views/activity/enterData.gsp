@@ -530,7 +530,7 @@
 
         master.register('activityModel', viewModel.modelForSaving, viewModel.dirtyFlag.isDirty, viewModel.dirtyFlag.reset);
 
-        var mapFeatures = $.parseJSON('${mapFeatures}');
+        var mapFeatures = $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
         if(mapFeatures !=null && mapFeatures.features !== undefined && mapFeatures.features.length >0){
             init_map_with_features({
                     mapContainer: "smallMap",
