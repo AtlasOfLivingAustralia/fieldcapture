@@ -35,7 +35,7 @@ class RoleService {
 
     public List getAugmentedRoles() {
         def rolesCopy = getRoles().clone()
-        rolesCopy.addAll(["alaAdmin","siteAdmin"]) // augment roles with these extra ones TODO: refactor this
+        rolesCopy.addAll(["alaAdmin","siteAdmin","officer"]) // augment roles with these extra ones TODO: refactor this
 
         return rolesCopy
     }

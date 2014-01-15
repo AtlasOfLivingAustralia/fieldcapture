@@ -45,6 +45,11 @@ class AclFilterFilters {
                                 errorMsg = "Access denied: User does not have <b>admin</b> permission"
                             }
                             break
+                        case 'officer':
+                            if (!(userService.userInRole(grailsApplication.config.security.cas.alaAdminRole) || userService.userInRole(grailsApplication.config.security.cas.adminRole) || userService.userInRole(grailsApplication.config.security.cas.officerRole))) {
+                                errorMsg = "Access denied: User does not have <b>admin</b> permission"
+                            }
+                            break
                         case 'admin':
                             if (!projectService.isUserAdminForProject(userId, projectId)) {
                                 errorMsg = "Access denied: User does not have <b>admin</b> permission ${projectId?'for project':''}"

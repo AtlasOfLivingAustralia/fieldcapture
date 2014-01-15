@@ -249,7 +249,7 @@ class ProjectService {
     def isUserAdminForProject(userId, projectId) {
         def userIsAdmin
 
-        if (authService.userInRole(grailsApplication.config.security.cas.adminRole) || authService.userInRole(grailsApplication.config.security.cas.alaAdminRole)) {
+        if (isOfficerOrHigher()) {
             userIsAdmin = true
         } else {
             def url = grailsApplication.config.ecodata.baseUrl + "permissions/isUserAdminForProject?projectId=${projectId}&userId=${userId}"
@@ -283,7 +283,7 @@ class ProjectService {
     def canUserEditProject(userId, projectId) {
         def userCanEdit
 
-        if (authService.userInRole(grailsApplication.config.security.cas.adminRole) || authService.userInRole(grailsApplication.config.security.cas.alaAdminRole)) {
+        if (isOfficerOrHigher()) {
             userCanEdit = true
         } else {
             def url = grailsApplication.config.ecodata.baseUrl + "permissions/canUserEditProject?projectId=${projectId}&userId=${userId}"
@@ -291,6 +291,10 @@ class ProjectService {
         }
 
         userCanEdit
+    }
+
+    private isOfficerOrHigher() {
+        (authService.userInRole(grailsApplication.config.security.cas.officerRole) || authService.userInRole(grailsApplication.config.security.cas.adminRole) || authService.userInRole(grailsApplication.config.security.cas.alaAdminRole))
     }
 
 }

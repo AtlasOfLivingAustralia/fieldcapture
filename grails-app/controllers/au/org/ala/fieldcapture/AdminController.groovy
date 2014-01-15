@@ -6,7 +6,7 @@ import grails.util.GrailsNameUtils
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 import org.springframework.web.multipart.MultipartHttpServletRequest
 
-@PreAuthorise(accessLevel = 'siteAdmin', redirectController = "home")
+@PreAuthorise(accessLevel = 'officer', redirectController = "home")
 class AdminController {
 
     def cacheService
@@ -27,7 +27,7 @@ class AdminController {
 
     /**
      * Admin page for checking or modifying user/project roles, requires CAS admin role
-     * for access (see Config.groovy "security.cas.adminRole" for actual role)
+     * for access (see Config.groovy "security.cas.officerRole" for actual role)
      *
      * @return
      */
@@ -137,7 +137,7 @@ class AdminController {
         render result
     }
 
-    @PreAuthorise(accessLevel = 'alaAdmin', redirectController = "admin")
+    @PreAuthorise(accessLevel = 'siteAdmin', redirectController = "admin")
     def staticPages() {
         def settings = []
 
@@ -166,7 +166,7 @@ class AdminController {
         [settings: settings, grailsStuff: grailsStuff]
     }
 
-    @PreAuthorise(accessLevel = 'alaAdmin', redirectController = "admin")
+    @PreAuthorise(accessLevel = 'siteAdmin', redirectController = "admin")
     def editSettingText(String id) {
         def content
         def layout = params.layout?:"adminLayout"
@@ -192,6 +192,7 @@ class AdminController {
                 settingKey: type.key] )
     }
 
+    @PreAuthorise(accessLevel = 'siteAdmin', redirectController = "admin")
     def saveTextAreaSetting() {
         def text = params.textValue
         def settingKey = params.settingKey

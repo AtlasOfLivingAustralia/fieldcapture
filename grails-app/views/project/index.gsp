@@ -249,7 +249,7 @@
                 <div class="row-fluid">
                     <div class="span2 large-space-before">
                         <ul id="adminNav" class="nav nav-tabs nav-stacked ">
-                            <g:if test="${fc.userInRole(role: grailsApplication.config.security.cas.alaAdminRole)}">
+                            <g:if test="${fc.userInRole(role: grailsApplication.config.security.cas.alaAdminRole) || fc.userInRole(role: grailsApplication.config.security.cas.adminRole)}">
                                 <li ${activeClass}><a href="#settings" id="settings-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Project settings</a></li>
                                 <g:set var="activeClass" value=""/>
                             </g:if>
@@ -261,7 +261,7 @@
                     <div class="span10">
                         <div class="pill-content">
                             <g:set var="activeClass" value="active"/>
-                            <g:if test="${fc.userInRole(role: grailsApplication.config.security.cas.alaAdminRole)}">
+                            <g:if test="${fc.userInRole(role: grailsApplication.config.security.cas.alaAdminRole) || fc.userInRole(role: grailsApplication.config.security.cas.adminRole)}">
                                 <!-- PROJECT SETTINGS -->
                                 <div id="settings" class="pill-pane ${activeClass}">
                                     <h3>Project Settings</h3>
