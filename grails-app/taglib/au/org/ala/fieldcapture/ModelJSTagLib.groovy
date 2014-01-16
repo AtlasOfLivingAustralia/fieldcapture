@@ -184,17 +184,6 @@ class ModelJSTagLib {
                 out << INDENT*4 << "return count > 0 ? total/count : 0;\n"
             }
         }
-        else if (model.computed.operation == 'sum') {
-            out << "var total = 0;"
-            if (model.computed.dependents.source.size() == 1) {
-                out << "total += Number(${dependantContext}.${model.computed.dependents.source[0]}());\n"
-            } else {
-                for(int i=0; i < model.computed.dependents.source.size(); i++) {
-                    out << "total += Number(${dependantContext}.${model.computed.dependents.source[i]}());\n"
-                }
-            }
-            out << INDENT*4 << "return total;"
-        }
         else if (model.computed.dependents.fromMatrix) {
             out << INDENT*4 << "var total = 0;\n"
             if (model.computed.operation == 'average') {
@@ -218,6 +207,7 @@ class ModelJSTagLib {
                 out << INDENT*4 << "return count > 0 ? total/count : 0;\n"
             }
         }
+
         else if (model.computed.dependents.from) {
             out << """
                 var total = 0, dummyDependency = self.transients.dummy();
@@ -226,6 +216,17 @@ class ModelJSTagLib {
                 });
                 return total;
 """
+        }
+        else if (model.computed.operation == 'sum') {
+            out << "var total = 0;"
+            if (model.computed.dependents.source.size() == 1) {
+                out << "total += Number(${dependantContext}.${model.computed.dependents.source[0]}());\n"
+            } else {
+                for(int i=0; i < model.computed.dependents.source.size(); i++) {
+                    out << "total += Number(${dependantContext}.${model.computed.dependents.source[i]}());\n"
+                }
+            }
+            out << INDENT*4 << "return total;"
         }
         out << INDENT*3 << "});\n"
     }
