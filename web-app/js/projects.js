@@ -72,6 +72,13 @@ function addTimelineBasedOnStartDate (project) {
         // make one up so we can proceed
         project.plannedStartDate = new Date(Date.now()).toISOStringNoMillis();
     }
+    if (project.plannedEndDate === undefined || project.plannedEndDate === '') {
+        // make one up so we can proceed
+        var endDate = new Date(Date.now());
+        endDate = endDate.setUTCFullYear(endDate.getUTCFullYear()+5);
+        project.plannedEndDate = endDate.toISOStringNoMillis();
+    }
+
     var date = Date.fromISO(project.plannedStartDate),
         endDate = Date.fromISO(project.plannedEndDate),
         i = 0;
@@ -83,7 +90,7 @@ function addTimelineBasedOnStartDate (project) {
         // nudge the date a little to account for time zone differences (stages are in UTC+0, start and end dates
         // can be in various australian time zones).
         var dateToTest = new Date(date.getTime());
-        dateToTest.setUTCDate(date.getUTCDate()+1);
+        dateToTest.setUTCMonth(date.getUTCMonth()+1);
 
         var period = getSixMonthPeriodContainingDate(dateToTest);
         period.name = 'Stage ' + (i + 1);
