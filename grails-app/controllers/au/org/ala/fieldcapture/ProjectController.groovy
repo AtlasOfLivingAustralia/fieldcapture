@@ -112,6 +112,37 @@ class ProjectController {
         }
     }
 
+    @PreAuthorise(accessLevel = 'admin')
+    def ajaxSubmitReport(String id) {
+
+        def reportDetails = request.JSON
+
+        def result = projectService.submitStageReport(id, reportDetails)
+
+        render result as JSON
+    }
+
+    @PreAuthorise(accessLevel = 'caseManager')
+    def ajaxApproveReport(String id) {
+
+        def reportDetails = request.JSON
+
+        def result = projectService.approveStageReport(id, reportDetails)
+        render result as JSON
+    }
+
+    @PreAuthorise(accessLevel = 'caseManager')
+    def ajaxRejectReport(String id) {
+
+        def reportDetails = request.JSON
+
+        def result = projectService.rejectStageReport(id, reportDetails)
+
+        render result as JSON
+
+    }
+
+
     @PreAuthorise
     def update(String id) {
         //params.each { println it }

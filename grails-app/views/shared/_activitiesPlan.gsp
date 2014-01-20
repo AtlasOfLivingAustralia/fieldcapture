@@ -2,6 +2,7 @@
 <r:script>
     var PROJECT_STATE = {approved:'approved',submitted:'submitted',planned:'not approved'};
     var ACTIVITY_STATE = {planned:'planned',started:'started',finished:'finished',deferred:'deferred',cancelled:'cancelled'};
+
 </r:script>
 <!-- This section is bound to a secondary KO viewModel. The following line prevents binding
          to the main viewModel. -->
@@ -32,11 +33,11 @@
                 <table class="table table-condensed" id="activities">
                     <thead>
                     <tr data-bind="visible: stages.length > 0">
-                        <th>Stage</th>
+                        <th style="width:15%;">Stage</th>
                         <th style="width:50px;">Actions</th>
                         <th style="min-width:64px">From</th>
                         <th style="min-width:64px">To</th>
-                        <th style="width:20%;" id="description-column">Description</th>
+                        <th style="width:25%;" id="description-column">Description</th>
                         <th>Activity</th>
                         <g:if test="${showSites}">
                             <th>Site</th>
@@ -52,34 +53,28 @@
                             <span data-bind="text:$parents[1].label%{--, blah:console.log(ko.toJS($data))--}%"></span>
                             <br data-bind="visible:$parents[1].isCurrentStage">
                             <span data-bind="visible:$parents[1].isCurrentStage" class="badge badge-info">Current stage</span>
-                            <br data-bind="visible:$parents[1].isCurrentStage && $parents[2].isApproved()">
-                            <button type="button" class="btn btn-success btn-small" style="margin-top:4px;"
-                              data-bind="
-                              visible:$parents[1].isCurrentStage && $parents[2].isApproved(),
-                              disable:!$parents[1].readyForApproval(),
-                              click:$parents[1].submitReport,
-                              attr:{title:$parents[1].readyForApproval()?'Submit this stage for implementation approval.':'Report cannot be submitted while activities are still open.'}"
-                              >Submit report</button>
+
+                            <span data-bind="template:$parents[1].stageStatusTemplateName"/>
                         </td>
                         <!-- /ko -->
                         <td>
-                            <button type="button" class="btn btn-container" data-bind="click:$root.editActivity, enable:$root.canEditActivity()||$root.canEditOutputData()"><i class="icon-edit" title="Edit Activity"></i></button>
-                            <button type="button" class="btn btn-container" data-bind="click:$root.printActivity, enable:$root.canPrintActivity"><i class="icon-print" title="Print activity"></i></button>
-                            <button type="button" class="btn btn-container" data-bind="click:del, enable:$root.canDeleteActivity"><i class="icon-remove" title="Delete activity"></i></button>
+                            <button type="button" class="btn btn-container" data-bind="click:$parent.editActivity, enable:$parent.canEditActivity()||$parent.canEditOutputData()"><i class="icon-edit" title="Edit Activity"></i></button>
+                            <button type="button" class="btn btn-container" data-bind="click:$parent.printActivity, enable:$parent.canPrintActivity"><i class="icon-print" title="Print activity"></i></button>
+                            <button type="button" class="btn btn-container" data-bind="click:del, enable:$parent.canDeleteActivity"><i class="icon-remove" title="Delete activity"></i></button>
                         </td>
                         <td><span data-bind="text:plannedStartDate.formattedDate"></span></td>
                         <td><span data-bind="text:plannedEndDate.formattedDate"></span></td>
                         <td>
-                            <span class="truncate" data-bind="text:description,click:$root.editActivity, css:{clickable:$root.canEditActivity()||$root.canEditOutputData()}"></span>
+                            <span class="truncate" data-bind="text:description,click:$parent.editActivity, css:{clickable:$parent.canEditActivity()||$parent.canEditOutputData()}"></span>
                         </td>
                         <td>
-                            <span data-bind="text:type,click:$root.editActivity, css:{clickable:$root.canEditActivity()||$root.canEditOutputData()}"></span>
+                            <span data-bind="text:type,click:$parent.editActivity, css:{clickable:$parent.canEditActivity()||$parent.canEditOutputData()}"></span>
                         </td>
                         <g:if test="${showSites}">
                             <td><a class="clickable" data-bind="text:siteName,click:$parents[1].openSite"></a></td>
                         </g:if>
                         <td>
-                            <span data-bind="template:$root.canUpdateStatus() ? 'updateStatusTmpl' : 'viewStatusTmpl'"></span>
+                            <span data-bind="template:$parent.canUpdateStatus() ? 'updateStatusTmpl' : 'viewStatusTmpl'"></span>
 
                             <!-- Modal for getting reasons for status change -->
                             <div id="activityStatusReason" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
@@ -203,7 +198,7 @@
     </span>
     <span class="span9">
         Build your plan by adding activities and entering project targets. Submit your plan when it is built.
-        <button type="button" data-bind="click:submitPlan" class="btn btn-success"><i class="icon-thumbs-up icon-white"></i> Submit plan</button>
+        <button type="button" data-bind="click:confirmSubmitPlan" class="btn btn-success"><i class="icon-thumbs-up icon-white"></i> Submit plan</button>
     </span>
 </script>
 
@@ -241,6 +236,67 @@
         </span>
     </span>
 </script>
+
+<script id="stageNotReportableTmpl" type="text/html">
+
+</script>
+
+<script id="stageNotApprovedTmpl" type="text/html">
+
+    <br/>
+    <button type="button" class="btn btn-success btn-small" style="margin-top:4px;"
+    data-bind="
+            disable:!$parents[1].readyForApproval() || !$parents[2].isApproved(),
+            click:$parents[1].submitReport,
+            attr:{title:$parents[1].readyForApproval()?'Submit this stage for implementation approval.':'Report cannot be submitted while activities are still open.'}"
+    >Submit report</button>
+
+</script>
+
+<script id="stageApprovedTmpl" type="text/html">
+    <br/>
+    <span class="badge badge-success">Report Approved</span>
+    <g:if test="${user?.isAdmin}">
+    <br/>
+    <button type="button" data-bind="click:$parents[1].rejectStage" class="btn btn-danger"><i class="icon-remove icon-white"></i> Withdraw approval</button>
+    </g:if>
+</script>
+
+<script id="stageSubmittedTmpl" type="text/html">
+    <br/>
+    <span class="badge badge-info" style="font-size:13px;">Report submitted</span>
+    <g:if test="${user?.isCaseManager}">
+    <br/>
+    <span>Case manager actions: </span>
+    <br/>
+    <span class="btn-group">
+    <button type="button" data-bind="click:$parents[1].approveStage" class="btn btn-success"><i class="icon-ok icon-white"></i> Approve</button>
+    <button type="button" data-bind="click:$parents[1].rejectStage" class="btn btn-danger"><i class="icon-remove icon-white"></i> Reject</button>
+    </span>
+    </g:if>
+
+</script>
+<!-- /ko -->
+
+<!-- ko stopBinding: true -->
+<div id="declaration" class="modal hide fade">
+    <g:set var="legalDeclaration"><fc:getSettingContent settingType="${au.org.ala.fieldcapture.SettingPageType.DECLARATION}"/></g:set>
+    <div class="modal-header hide">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Declaration</h3>
+    </div>
+    <div class="modal-body">
+        ${legalDeclaration}
+    </div>
+    <div class="modal-footer">
+        <label for="acceptTerms" class="pull-left">
+            <g:checkBox name="acceptTerms" data-bind="checked:termsAccepted" style="margin:0;"/>&nbsp;
+            I agree with the above declaration.
+        </label>
+        <button class="btn btn-success" data-bind="click:submitReport, enable:termsAccepted" data-dismiss="modal" aria-hidden="true">Submit</button>
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+    </div>
+</div>
 <!-- /ko -->
 
 <!-- ko stopBinding: true -->
@@ -330,6 +386,8 @@
     </div>
 </div>
 <!-- /ko -->
+
+
 <r:script>
 
     ko.bindingHandlers.showModal = {
@@ -417,7 +475,7 @@
             this.plannedEndDate = ko.observable(act.plannedEndDate).extend({simpleDate:false});
             this.progress = ko.observable(act.progress).extend({withPrevious:act.progress});
             this.isSaving = ko.observable(false);
-
+            this.publicationStatus = act.publicationStatus ? act.publicationStatus : 'unpublished';
             this.deferReason = ko.observable(undefined); // a reason document or undefined
             // the following handles the modal dialog for deferral/cancel reasons
             this.displayReasonModal = ko.observable(false);
@@ -516,9 +574,17 @@
             if (reasonDocs.length > 0) {
                 self.deferReason(new DocumentViewModel(reasonDocs[0], {activityId:act.activityId/*, projectId:project.projectId*/}));
             }
+            this.isApproved = function() {
+                return this.publicationStatus == 'published';
+            };
+            this.isSubmitted = function() {
+                return this.publicationStatus == 'pendingApproval';
+            }
         };
 
-        var PlanStage = function (stageLabel, activities, isCurrentStage, project) {
+        var PlanStage = function (stage, activities, planViewModel, isCurrentStage, project) {
+            var stageLabel = stage.name;
+
             // Note that the two $ transforms used to extract activities are not combined because we
             // want the index of the PlannedActivity to be relative to the filtered set of activities.
             var self = this,
@@ -527,6 +593,10 @@
                 });
             this.label = stageLabel;
             this.isCurrentStage = isCurrentStage;
+            this.isReportable = Date.fromISO(stage.toDate).getTime() < new Date().getTime();
+            this.projectId = project.projectId;
+            this.planViewModel = planViewModel;
+
             // sort activities by assigned sequence or date created (as a proxy for sequence).
             // CG - still needs to be addressed properly.
             activitiesInThisStage.sort(function (a,b) {
@@ -562,16 +632,141 @@
                 act.projectStage = stageLabel;
                 return new PlannedActivity(act, index === 0, project);
             });
+            /**
+             * A stage is considered to be approved when all of the activities in the stage have been marked
+             * as published.
+             */
+            this.isApproved = ko.computed(function() {
+                var numActivities = self.activities ? self.activities.length : 0;
+                if (numActivities == 0) {
+                    return false;
+                }
+                return $.grep(self.activities, function(act, i) {
+                    return act.isApproved();
+                }).length == numActivities;
+            }, this, {deferEvaluation: true});
+            this.isSubmitted = ko.computed(function() {
+                var numActivities = self.activities ? self.activities.length : 0;
+                if (numActivities == 0) {
+                    return false;
+                }
+                var poo = $.grep(self.activities, function(act, i) {
+                    return act.isSubmitted();
+                });
+                console.log(self.label + " "+poo.length+ " submitted of "+numActivities+" total");
+                return $.grep(self.activities, function(act, i) {
+                    return act.isSubmitted();
+                }).length == numActivities;
+            }, this, {deferEvaluation: true});
+
             this.readyForApproval = ko.computed(function() {
                 return $.grep(self.activities, function (act, i) {
                         return act.progress() === 'planned' || act.progress() === 'started';
                     }).length === 0;
             }, this, {deferEvaluation: true});
             this.submitReport = function () {
-                bootbox.alert("Reporting has not been enabled yet.");
+                var declaration = $('#declaration')[0];
+                var declarationViewModel = {
+
+                    termsAccepted : ko.observable(false),
+                    submitReport : function() {
+                        self.submitStage();
+                    }
+                };
+                ko.applyBindings(declarationViewModel, declaration);
+                $(declaration).modal('show', { backdrop: 'static', keyboard: true, show: false }).on('hidden', function() {ko.cleanNode(declaration);});
+
+            };
+
+            this.submitStage = function() {
+            var url = '${createLink(controller:'project', action:'ajaxSubmitReport')}/';
+                self.updateStageStatus(url);
             };
             this.approveStage = function () {
+                var url = '${createLink(controller:'project', action:'ajaxApproveReport')}/';
+                self.updateStageStatus(url);
+            };
+            this.rejectStage = function() {
+                var url = '${createLink(controller:'project', action:'ajaxRejectReport')}/';
+                self.updateStageStatus(url);
+            };
 
+            this.updateStageStatus = function(url) {
+                var payload = {};
+                payload.activityIds = $.map(self.activities, function(act, i) {
+                    return act.activityId;
+                });
+                payload.stage = stageLabel;
+                payload.projectId = self.projectId;
+                $.ajax({
+                    url: url + self.projectId,
+                    type: 'POST',
+                    data: JSON.stringify(payload),
+                    contentType: 'application/json',
+                    success: function (data) {
+                        if (data.error) {
+                            alert(data.detail + ' \n' + data.error);
+                        }
+                        location.reload();
+                    },
+                    error: function (data) {
+                        alert('An unhandled error occurred: ' + data.status);
+                    },
+                    complete: function () {
+                        //console.log('saved progress');
+
+                    }
+                });
+            };
+
+            this.isReadOnly = ko.computed(function() {
+                return self.isSubmitted() || self.isApproved();
+            });
+            this.stageStatusTemplateName = ko.computed(function() {
+                if (!self.isReportable) {
+                    return 'stageNotReportableTmpl';
+                }
+                if (self.isApproved()) {
+                console.log(self.label + ' approved!');
+                    return 'stageApprovedTmpl';
+                }
+                if (self.isSubmitted()) {
+                    console.log(self.label + ' submitted!');
+                    return 'stageSubmittedTmpl';
+                }
+                return 'stageNotApprovedTmpl';
+            });
+
+            this.canEditActivity = ko.computed(function () {
+                return !self.isReadOnly() && planViewModel.planStatus() === 'not approved';
+            });
+            this.canEditOutputData = ko.computed(function () {
+                return !self.isReadOnly() && planViewModel.planStatus() === 'approved';
+            });
+            this.canPrintActivity = ko.computed(function () {
+                return true;
+            });
+            this.canDeleteActivity = ko.computed(function () {
+                return !self.isReadOnly() && planViewModel.planStatus() === 'not approved';
+            });
+            this.canUpdateStatus = ko.computed(function () {
+                return !self.isReadOnly() && planViewModel.planStatus() === 'approved';
+            });
+
+            this.editActivity = function (activity) {
+                var url;
+                if (self.canEditOutputData()) {
+                    url = fcConfig.activityEnterDataUrl;
+                    document.location.href = url + "/" + activity.activityId +
+                        "?returnTo=" + here;
+                } else if (self.canEditActivity()) {
+                    url = fcConfig.activityEditUrl;
+                    document.location.href = url + "/" + activity.activityId +
+                        "?returnTo=" + here;
+                }
+            };
+            this.printActivity = function(activity) {
+                open(fcConfig.activityPrintUrl + "/" + activity.activityId, "fieldDataPrintWindow");
             };
         };
 
@@ -670,21 +865,7 @@
             this.isApproved = ko.computed(function () {
                 return (self.planStatus() === 'approved');
             });
-            this.canEditActivity = ko.computed(function () {
-                return self.planStatus() === 'not approved';
-            });
-            this.canEditOutputData = ko.computed(function () {
-                return self.planStatus() === 'approved';
-            });
-            this.canPrintActivity = ko.computed(function () {
-                return true;
-            });
-            this.canDeleteActivity = ko.computed(function () {
-                return self.planStatus() === 'not approved';
-            });
-            this.canUpdateStatus = ko.computed(function () {
-                return self.planStatus() === 'approved';
-            });
+
             this.canEditOutputTargets = ko.computed(function() {
                 return self.planStatus() === 'not approved';
             });
@@ -696,7 +877,7 @@
 
                 // group activities by stage
                 $.each(project.timeline, function (index, stage) {
-                    stages.push(new PlanStage(stage.name, activities, stage.name === self.currentProjectStage, project));
+                    stages.push(new PlanStage(stage, activities, self, stage.name === self.currentProjectStage, project));
                 });
 
                 return stages;
@@ -727,21 +908,7 @@
                     document.location.href = fcConfig.siteViewUrl + '/' + siteId;
                 }
             };
-            self.editActivity = function (activity) {
-                var url;
-                if (self.canEditOutputData()) {
-                    url = fcConfig.activityEnterDataUrl;
-                    document.location.href = url + "/" + activity.activityId +
-                        "?returnTo=" + here;
-                } else if (self.canEditActivity()) {
-                    url = fcConfig.activityEditUrl;
-                    document.location.href = url + "/" + activity.activityId +
-                        "?returnTo=" + here;
-                }
-            };
-            self.printActivity = function(activity) {
-                open(fcConfig.activityPrintUrl + "/" + activity.activityId, "fieldDataPrintWindow");
-            };
+
 
             // Project status manipulations
             // ----------------------------
@@ -759,7 +926,21 @@
                 });
             };
             // submit plan and handle errors
+            this.confirmSubmitPlan = function () {
+                var declaration = $('#declaration')[0];
+                var declarationViewModel = {
+
+                    termsAccepted : ko.observable(false),
+                    submitReport : function() {
+                        self.submitPlan();
+                    }
+                };
+                ko.applyBindings(declarationViewModel, declaration);
+                $(declaration).modal('show', { backdrop: 'static', keyboard: true, show: false }).on('hidden', function() {ko.cleanNode(declaration);});
+
+            };
             this.submitPlan = function () {
+
                 self.saveStatus('submitted')
                 .done(function (data) {
                     if (data.error) {
@@ -846,6 +1027,13 @@
                             "alert-error","status-update-error-placeholder");
                     }
                 });
+            };
+
+
+            this.submitReport = function (e) {
+            console.log(e);
+                //bootbox.alert("Reporting has not been enabled yet.");
+                $('#declaration').modal('show');
             };
 
             this.getGanttData = function () {

@@ -4,7 +4,7 @@ import org.codehaus.groovy.grails.web.mapping.LinkGenerator
 
 class ProjectService {
 
-    def webService, grailsApplication, siteService, activityService, authService
+    def webService, grailsApplication, siteService, activityService, authService, emailService
     LinkGenerator grailsLinkGenerator
 
     def projects
@@ -297,4 +297,52 @@ class ProjectService {
         (authService.userInRole(grailsApplication.config.security.cas.officerRole) || authService.userInRole(grailsApplication.config.security.cas.adminRole) || authService.userInRole(grailsApplication.config.security.cas.alaAdminRole))
     }
 
+    /**
+     * Submits a report of the activities performed during a specific time period (a project stage).
+     * @param projectId the project the performing the activities.
+     * @param stageDetails details of the activities, specifically a list of activity ids.
+     */
+    def submitStageReport(projectId, stageDetails) {
+
+        def result = activityService.updatePublicationStatus(stageDetails.activityIds, 'pendingApproval')
+
+        if (!result.resp.error) {
+            emailService.sendReportSubmittedEmail(projectId, stageDetails)
+        }
+
+        result
+    }
+
+    /**
+     * Approves a submitted stage report.
+     * @param projectId the project the performing the activities.
+     * @param stageDetails details of the activities, specifically a list of activity ids.
+     */
+    def approveStageReport(projectId, stageDetails) {
+        def result = activityService.updatePublicationStatus(stageDetails.activityIds, 'published')
+
+        // TODO Create a document.  Send a message to GMS.
+        if (!result.resp.error) {
+            emailService.sendReportApprovedEmail(projectId, stageDetails)
+        }
+
+        result
+    }
+
+    /**
+     * Rejects a submitted stage report.
+     * @param projectId the project the performing the activities.
+     * @param stageDetails details of the activities, specifically a list of activity ids.
+     */
+    def rejectStageReport(projectId, stageDetails) {
+        def result = activityService.updatePublicationStatus(stageDetails.activityIds, 'unpublished')
+
+        // TODO Send a message to GMS.  Delete previous approval document?
+
+        if (!result.resp.error) {
+            emailService.sendReportRejectedEmail(projectId, stageDetails)
+        }
+
+        result
+    }
 }
