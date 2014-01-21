@@ -13,7 +13,7 @@ class EmailService {
     def sendReportSubmittedEmail(projectId, stageDetails) {
 
         def emailAddresses = getProjectEmailAddresses(projectId)
-        def ccEmails = addDefaultsToCC(emailAddresses.adminEmails)
+        def ccEmails = addDefaultsToCC(emailAddresses.adminEmails, emailAddresses)
 
         createAndSend(
                 SettingPageType.REPORT_SUBMITTED_EMAIL,
@@ -28,7 +28,7 @@ class EmailService {
 
     def sendReportApprovedEmail(projectId, stageDetails) {
         def emailAddresses = getProjectEmailAddresses(projectId)
-        def ccEmails = addDefaultsToCC(emailAddresses.grantManagerEmails)
+        def ccEmails = addDefaultsToCC(emailAddresses.grantManagerEmails, emailAddresses)
 
 
         createAndSend(
@@ -45,7 +45,7 @@ class EmailService {
     def sendReportRejectedEmail(projectId, stageDetails) {
 
         def emailAddresses = getProjectEmailAddresses(projectId)
-        def ccEmails = addDefaultsToCC(emailAddresses.grantManagerEmails)
+        def ccEmails = addDefaultsToCC(emailAddresses.grantManagerEmails, emailAddresses)
 
         createAndSend(
                 SettingPageType.REPORT_REJECTED_EMAIL,
@@ -72,6 +72,11 @@ class EmailService {
                 }
 
                 to = to.find {it ==~ emailFilter}
+                if (!to) {
+                    // The email won't be sent unless we have a to address - use the submitting user since
+                    // the purpose of this is testing.
+                    to = userService.getUser().userName
+                }
                 cc = cc.find {it ==~ emailFilter}
             }
             mailService.sendMail {
@@ -101,13 +106,13 @@ class EmailService {
         [userEmail:user.userName, grantManagerEmails:caseManagerEmails, adminEmails:adminEmails]
     }
 
-    def addDefaultsToCC(ccEmails) {
+    def addDefaultsToCC(ccEmails, emailAddresses) {
         if (!ccEmails instanceof Collection) {
             ccEmails = [ccEmails]
         }
         ccEmails << grailsApplication.config.merit.support.email
-        if (!ccEmails.contains(ccEmails.userEmail)) {
-            ccEmails << ccEmails.userEmail
+        if (!ccEmails.contains(emailAddresses.userEmail)) {
+            ccEmails << emailAddresses.userEmail
         }
         return ccEmails
     }

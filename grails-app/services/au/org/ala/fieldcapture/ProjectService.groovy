@@ -1,10 +1,11 @@
 package au.org.ala.fieldcapture
 
+import grails.converters.JSON
 import org.codehaus.groovy.grails.web.mapping.LinkGenerator
 
 class ProjectService {
 
-    def webService, grailsApplication, siteService, activityService, authService, emailService
+    def webService, grailsApplication, siteService, activityService, authService, emailService, documentService
     LinkGenerator grailsLinkGenerator
 
     def projects
@@ -322,6 +323,10 @@ class ProjectService {
         def result = activityService.updatePublicationStatus(stageDetails.activityIds, 'published')
 
         // TODO Create a document.  Send a message to GMS.
+        def projectDetails =  get(projectId, 'all')
+        def doc = [name:'report approval', projectId:projectId, type:'text', role:'approval', filename:'stage_approval']
+        documentService.createTextDocument(doc, (projectDetails as JSON).toString())
+
         if (!result.resp.error) {
             emailService.sendReportApprovedEmail(projectId, stageDetails)
         }
