@@ -50,6 +50,11 @@ class AclFilterFilters {
                                 errorMsg = "Access denied: User does not have <b>admin</b> permission"
                             }
                             break
+                        case 'caseManager':
+                            if (!projectService.isUserCaseManagerForProject(userId, projectId)) {
+                                errorMsg = "Access denied: User does not have <b>grant manager</b> permission ${projectId?'for project':''}"
+                            }
+                            break
                         case 'admin':
                             if (!projectService.isUserAdminForProject(userId, projectId)) {
                                 errorMsg = "Access denied: User does not have <b>admin</b> permission ${projectId?'for project':''}"
