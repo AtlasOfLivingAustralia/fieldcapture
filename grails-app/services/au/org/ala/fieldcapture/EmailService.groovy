@@ -1,7 +1,4 @@
 package au.org.ala.fieldcapture
-
-import groovy.text.GStringTemplateEngine
-
 /**
  * Sends email messages on behalf of MERIT users to notify interested parties of project lifecycle changes.
  * These include changes to project plan status and when reports are submitted, approved or rejected.
@@ -16,12 +13,12 @@ class EmailService {
         def ccEmails = addDefaultsToCC(emailAddresses.adminEmails, emailAddresses)
 
         createAndSend(
+                SettingPageType.REPORT_SUBMITTED_EMAIL_SUBJECT_LINE,
                 SettingPageType.REPORT_SUBMITTED_EMAIL,
                 stageDetails,
                 emailAddresses.grantManagerEmails,
                 emailAddresses.userEmail,
-                ccEmails,
-                "A MERIT Activity Report has been submitted for your approval"
+                ccEmails
         )
     }
 
@@ -32,12 +29,12 @@ class EmailService {
 
 
         createAndSend(
+                SettingPageType.REPORT_APPROVED_EMAIL_SUBJECT_LINE,
                 SettingPageType.REPORT_APPROVED_EMAIL,
                 stageDetails,
                 emailAddresses.adminEmails,
                 emailAddresses.userEmail,
-                ccEmails,
-                "A MERIT Activity Report has been approved."
+                ccEmails
         )
 
     }
@@ -48,6 +45,7 @@ class EmailService {
         def ccEmails = addDefaultsToCC(emailAddresses.grantManagerEmails, emailAddresses)
 
         createAndSend(
+                SettingPageType.REPORT_REJECTED_EMAIL_SUBJECT_LINE,
                 SettingPageType.REPORT_REJECTED_EMAIL,
                 stageDetails,
                 emailAddresses.adminEmails,
@@ -57,9 +55,10 @@ class EmailService {
         )
     }
 
-    def createAndSend(mailTemplate, model, to, from, cc, subject) {
+    def createAndSend(mailSubjectTemplate, mailTemplate, model, to, from, cc) {
         try {
-            def body = createEmailBodyText(mailTemplate, model)
+            def subject = settingService.getSettingText(mailSubjectTemplate, model)
+            def body = settingService.getSettingText(mailTemplate, model)
 
             // This is to prevent spamming real users while testing.
             def emailFilter = grailsApplication.config.emailFilter
@@ -96,8 +95,8 @@ class EmailService {
     def getProjectEmailAddresses(projectId) {
         def members = projectService.getMembersForProjectId(projectId)
         def user = userService.getUser()
-        def caseManagerEmails = members.findAll{it.role == 'caseManager'}.collect{it.userName}
-        def adminEmails = members.findAll{it.role == 'admin' && it.userName != user.userName}.collect{it.userName}
+        def caseManagerEmails = members.findAll{it.role == RoleService.GRANT_MANAGER_ROLE}.collect{it.userName}
+        def adminEmails = members.findAll{it.role == RoleService.PROJECT_ADMIN_ROLE && it.userName != user.userName}.collect{it.userName}
 
         if (!caseManagerEmails) {
             caseManagerEmails =  MERIT_EMAIL
@@ -116,11 +115,4 @@ class EmailService {
         }
         return ccEmails
     }
-
-    def createEmailBodyText(template, model) {
-        String templateText = settingService.getSettingText(template)
-        GStringTemplateEngine templateEngine = new GStringTemplateEngine();
-        return templateEngine.createTemplate(templateText).make(model).toString()
-    }
-
 }
