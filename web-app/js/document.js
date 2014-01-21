@@ -31,6 +31,7 @@ function DocumentViewModel (doc, owner) {
     this.error = ko.observable();
     this.progress = ko.observable(0);
     this.complete = ko.observable(false);
+    this.readOnly = ko.observable(doc && doc.readOnly ? doc.readOnly : false);
     // this supports a checkbox that allows the user to assert that this image is to be used
     // as the primary project image - implemented as a writeable computed
     this.isPrimaryProjectImage = ko.computed({
