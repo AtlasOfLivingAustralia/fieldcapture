@@ -5,6 +5,11 @@ import org.codehaus.groovy.grails.web.json.JSONObject
 class RoleService {
     def metadataService, cacheService
 
+    public static final String GRANT_MANAGER_ROLE = 'caseManager'
+    public static final String PROJECT_ADMIN_ROLE = 'admin'
+    public static final String PROJECT_EDITOR_ROLE = 'editor'
+
+
     private List roles(Boolean clearCache = false) {
         if (clearCache) {
             log.info "Clearing cache for 'accessLevels'"

@@ -324,7 +324,7 @@ class ProjectService {
 
         // TODO Create a document.  Send a message to GMS.
         def projectDetails =  get(projectId, 'all')
-        def doc = [name:'report approval', projectId:projectId, type:'text', role:'approval', filename:'stage_approval']
+        def doc = [name:'report approval', projectId:projectId, type:'text', role:'approval', filename:'stage_approval', readOnly:true, public:false]
         documentService.createTextDocument(doc, (projectDetails as JSON).toString())
 
         if (!result.resp.error) {
