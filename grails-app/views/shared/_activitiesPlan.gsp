@@ -256,7 +256,8 @@
 <script id="stageApprovedTmpl" type="text/html">
     <br/>
     <span class="badge badge-success">Report Approved</span>
-    <g:if test="${user?.isAdmin}">
+
+    <g:if test="${fc.userInRole(role: grailsApplication.config.security.cas.adminRole) || fc.userInRole(role: grailsApplication.config.security.cas.alaAdminRole)}">
     <br/>
     <button type="button" data-bind="click:$parents[1].rejectStage" class="btn btn-danger"><i class="icon-remove icon-white"></i> Withdraw approval</button>
     </g:if>
@@ -593,7 +594,7 @@
                 });
             this.label = stageLabel;
             this.isCurrentStage = isCurrentStage;
-            this.isReportable = Date.fromISO(stage.toDate).getTime() < new Date().getTime();
+            this.isReportable = stage.toDate < new Date().toISOStringNoMillis();
             this.projectId = project.projectId;
             this.planViewModel = planViewModel;
 
@@ -727,11 +728,9 @@
                     return 'stageNotReportableTmpl';
                 }
                 if (self.isApproved()) {
-                console.log(self.label + ' approved!');
                     return 'stageApprovedTmpl';
                 }
                 if (self.isSubmitted()) {
-                    console.log(self.label + ' submitted!');
                     return 'stageSubmittedTmpl';
                 }
                 return 'stageNotApprovedTmpl';
