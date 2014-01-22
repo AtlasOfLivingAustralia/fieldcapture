@@ -81,7 +81,7 @@ class EmailService {
 
             mailService.sendMail {
                 to recipient
-                cc ccList
+                if (ccList) {cc ccList}
                 from sender
                 subject subjectLine
                 html body
