@@ -323,9 +323,11 @@ class ProjectService {
         def result = activityService.updatePublicationStatus(stageDetails.activityIds, 'published')
 
         // TODO Create a document.  Send a message to GMS.
-        def projectDetails =  get(projectId, 'all')
-        def doc = [name:'report approval', projectId:projectId, type:'text', role:'approval', filename:'stage_approval', readOnly:true, public:false]
-        documentService.createTextDocument(doc, (projectDetails as JSON).toString())
+        def project = get(projectId, 'all')
+        def readableId = project.grantId + (project.externalId?'-'+project.externalId:'')
+        def name = "${readableId} ${stageDetails.stage} approval"
+        def doc = [name:name, projectId:projectId, type:'text', role:'approval',filename:name, readOnly:true, public:false]
+        documentService.createTextDocument(doc, (project as JSON).toString())
 
         if (!result.resp.error) {
             emailService.sendReportApprovedEmail(projectId, stageDetails)

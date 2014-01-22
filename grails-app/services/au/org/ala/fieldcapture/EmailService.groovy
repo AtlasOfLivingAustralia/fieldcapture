@@ -50,39 +50,40 @@ class EmailService {
                 stageDetails,
                 emailAddresses.adminEmails,
                 emailAddresses.userEmail,
-                ccEmails,
-                "A MERIT Activity Report has been rejected."
+                ccEmails
         )
     }
 
-    def createAndSend(mailSubjectTemplate, mailTemplate, model, to, from, cc) {
+    def createAndSend(mailSubjectTemplate, mailTemplate, model, recipient, sender, ccList) {
         try {
-            def subject = settingService.getSettingText(mailSubjectTemplate, model)
+            def subjectLine = settingService.getSettingText(mailSubjectTemplate, model)
             def body = settingService.getSettingText(mailTemplate, model)
 
             // This is to prevent spamming real users while testing.
             def emailFilter = grailsApplication.config.emailFilter
             if (emailFilter) {
-                if (!to instanceof Collection) {
-                    to = [to]
+                if (!recipient instanceof Collection) {
+                    recipient = [recipient]
                 }
-                if (!cc instanceof Collection) {
-                    cc = [cc]
+                if (!ccList instanceof Collection) {
+                    ccList = [ccList]
                 }
 
-                to = to.find {it ==~ emailFilter}
-                if (!to) {
+                recipient = recipient.findAll {it ==~ emailFilter}
+                if (!recipient) {
                     // The email won't be sent unless we have a to address - use the submitting user since
                     // the purpose of this is testing.
-                    to = userService.getUser().userName
+                    recipient = [userService.getUser().userName]
                 }
-                cc = cc.find {it ==~ emailFilter}
+                ccList = ccList.findAll {it ==~ emailFilter}
             }
+            log.info("Sending email: ${subjectLine} to: ${recipient}, from: ${sender}, cc:${ccList}, body: ${body}")
+
             mailService.sendMail {
-                to to
-                cc cc
-                from from
-                subject subject
+                to recipient
+                cc ccList
+                from sender
+                subject subjectLine
                 html body
 
             }
@@ -99,7 +100,7 @@ class EmailService {
         def adminEmails = members.findAll{it.role == RoleService.PROJECT_ADMIN_ROLE && it.userName != user.userName}.collect{it.userName}
 
         if (!caseManagerEmails) {
-            caseManagerEmails =  MERIT_EMAIL
+            caseManagerEmails = grailsApplication.config.merit.support.email
         }
 
         [userEmail:user.userName, grantManagerEmails:caseManagerEmails, adminEmails:adminEmails]
