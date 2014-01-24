@@ -3,7 +3,7 @@ import grails.converters.JSON
 
 class ProjectController {
 
-    def projectService, metadataService, commonService, activityService, userService, webService, roleService
+    def projectService, metadataService, commonService, activityService, userService, webService, roleService, grailsApplication
     static defaultAction = "index"
     static ignore = ['action','controller','id']
 
@@ -44,7 +44,8 @@ class ProjectController {
              outputTargetMetadata: metadataService.getOutputTargetsByOutputByActivity(),
              useAltPlan: params.useAltPlan,
              institutions: metadataService.institutionList(),
-             programs: metadataService.programsModel()
+             programs: metadataService.programsModel(),
+             enableReporting: grailsApplication.config.enableReporting
             ]
         }
     }
