@@ -594,7 +594,7 @@
                 });
             this.label = stageLabel;
             this.isCurrentStage = isCurrentStage;
-            this.isReportable = stage.toDate < new Date().toISOStringNoMillis();
+            this.isReportable = false; /* CG - Disabled reporting temporarily  stage.toDate < new Date().toISOStringNoMillis(); */
             this.projectId = project.projectId;
             this.planViewModel = planViewModel;
 
