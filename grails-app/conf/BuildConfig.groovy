@@ -33,12 +33,14 @@ grails.project.dependency.resolution = {
     def metadataExtractorVersion = "2.6.2"
     def imgscalrVersion = "4.2"
     def httpmimeVersion = "4.1.2"
+    def jtsVersion = "1.8"
     dependencies {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes e.g.
 
         compile "com.drewnoakes:metadata-extractor:${metadataExtractorVersion}"
         compile "org.imgscalr:imgscalr-lib:${imgscalrVersion}"
         compile "org.apache.httpcomponents:httpmime:${httpmimeVersion}"
+        compile "com.vividsolutions:jts:${jtsVersion}"
         // runtime 'mysql:mysql-connector-java:5.1.22'
         test "org.spockframework:spock-grails-support:0.7-groovy-2.0"
         test "org.gebish:geb-spock:0.9.0"

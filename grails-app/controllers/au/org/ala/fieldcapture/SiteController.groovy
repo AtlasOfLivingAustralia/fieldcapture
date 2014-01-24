@@ -1,10 +1,14 @@
 package au.org.ala.fieldcapture
+
+import com.vividsolutions.jts.geom.Geometry
+import com.vividsolutions.jts.geom.Point
+import com.vividsolutions.jts.io.WKTReader
 import grails.converters.JSON
 import org.codehaus.groovy.grails.web.json.JSONArray
 
 class SiteController {
 
-    def siteService, projectService, activityService, metadataService, userService, searchService, importService
+    def siteService, projectService, activityService, metadataService, userService, searchService, importService, webService
 
     static defaultAction = "index"
 
@@ -128,6 +132,77 @@ class SiteController {
         //log.debug (values as JSON).toString()
         siteService.update(id, values)
         chain(action: 'index', id:  id)
+    }
+
+    def uploadShapeFile() {
+        if (!projectService.canUserEditProject(userService.getCurrentUserId(), params.projectId)) {
+            flash.message = "Access denied: User does not have <b>editor</b> permission for projectId ${params.projectId}"
+            redirect(url: params.returnTo)
+        }
+        def url = "http://spatial-dev.ala.org.au/layers-service/shape/upload/shp?user_id=1551&api_key=b3f3c932-ba88-4ad5-b429-f947475024af"
+        if (request.respondsTo('getFile')) {
+            def f = request.getFile('shapefile')
+
+
+            def result =  webService.postMultipart(url, [:], f)
+
+            if (!result.error && result.content.size() > 1) {
+                def content = result.content
+                def shapeFileId = content.remove('shp_id')
+                def firstShape = content["0"]
+                def attributeNames = []
+                firstShape.each {key, value ->
+                    attributeNames << key
+                }
+                def shapes = content.collect {key, value ->
+                    [id:(key), values:(value)]
+                }
+                render view:'upload', model:[projectId: params.projectId, shapeFileId:shapeFileId, shapes:shapes, attributeNames:attributeNames]
+            }
+
+            else {
+                //flag error for extension
+                flash.message = "An error was encountered when processing the shapefile: ${result.error}"
+                render view:'upload', model:[projectId: params.projectId]
+            }
+
+        } else {
+            render view:'upload', model:[projectId: params.projectId]
+        }
+    }
+
+    def createSitesFromShapefile() {
+        def siteData = request.JSON
+
+        def baseUrl = "http://spatial-dev.ala.org.au/layers-service/shape/upload/shp"
+        def getWktUrl = "http://spatial-dev.ala.org.au/ws/shape/wkt"
+        siteData.sites.each {
+            def site = [name:it.name, description: it.description, user_id:1551, api_key:'b3f3c932-ba88-4ad5-b429-f947475024af']
+            def url = "${baseUrl}/${siteData.shapeFileId}/${it.id}"
+
+            def result = webService.doPost(url, site)
+            if (!result.error) {
+                def id = result.resp.id
+
+                def wkt = webService.get("${getWktUrl}/${id}")
+                Geometry geom = new WKTReader().read(wkt)
+                Point centriod = geom.getCentroid()
+                createSite(siteData.projectId, it.name, it.description, id, centriod.getX(), centriod.getY())
+            }
+
+        }
+
+
+        def result = [message:'woohoo']
+        render result as JSON
+    }
+
+    def createSite(projectId, name, description, geometryPid, centroidLat, centroidLong) {
+        def metadata = metadataService.getLocationMetadataForPoint(centroidLat, centroidLong)
+        def strLat =  "" + centroidLat + ""
+        def strLon = "" + centroidLong + ""
+        def values = [extent: [source: 'pid', geometry: [pid: geometryPid, type: 'pid', state: metadata.state, nrm: metadata.nrm, lga: metadata.lga, locality: metadata.locality, centre: [strLon, strLat]]], projects: [projectId], name: name, description: description]
+        return siteService.create(values)
     }
 
     def createGeometryForGrantId(String grantId, String geometryPid, Double centroidLat, Double centroidLong) {
