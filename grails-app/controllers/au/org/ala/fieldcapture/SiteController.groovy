@@ -52,6 +52,12 @@ class SiteController {
         //log.debug(id)
         def site = siteService.get(id, [view: 'scores'])
         if (site) {
+            // permissions check - can't use annotation as we have to know the projectId in order to lookup access right
+            if (!isUserMemberOfSiteProjects(site)) {
+                flash.message = "Access denied: User does not have permission to view site: ${id}"
+                redirect(controller:'home', action:'index')
+            }
+
             // inject the metadata model for each activity
             site.activities.each {
                 it.model = metadataService.getActivityModel(it.type)
@@ -71,12 +77,9 @@ class SiteController {
         if (site) {
             // check user has persmissions to edit - user must have edit access to
             // ALL linked projects to proceed.
-            String userId = userService.getCurrentUserId()
-            site.projects?.each { projectId ->
-                if (!projectService.canUserEditProject(userId, projectId)) {
-                    flash.message = "Access denied: User does not have <b>editor</b> permission for projectId ${projectId}"
-                    redirect(action:'index',id: id)
-                }
+            if (!isUserMemberOfSiteProjects(site)) {
+                flash.message = "Access denied: User does not have <b>editor</b> permission for projectId ${p.projectId}"
+                redirect(controller:'project', action:'index', id: p.projectId)
             }
 
             if (site.shapePid && !(site.shapePid instanceof JSONArray)) {
@@ -92,6 +95,12 @@ class SiteController {
     }
 
     def ajaxDeleteSitesFromProject(String id){
+        // permissions check - id is the projectId here
+        if (!projectService.canUserEditProject(userService.getCurrentUserId(), id)) {
+            render status:403, text: "Access denied: User does not have permission to edit site: ${id}"
+            return
+        }
+
         def status = siteService.deleteSitesFromProject(id)
         if (status < 400) {
             def result = [status: 'deleted']
@@ -103,6 +112,12 @@ class SiteController {
     }
 
     def ajaxDelete(String id) {
+        // permissions check
+        if (!isUserMemberOfSiteProjects(siteService.get(id))) {
+            render status:403, text: "Access denied: User does not have permission to edit site: ${id}"
+            return
+        }
+
         def status = siteService.delete(id)
         if (status < 400) {
             def result = [status: 'deleted']
@@ -116,6 +131,12 @@ class SiteController {
     def update(String id) {
 
         log.debug("Updating site: " + id)
+
+        // permissions check
+        if (!isUserMemberOfSiteProjects(siteService.get(id))) {
+            render status:403, text: "Access denied: User does not have permission to edit site: ${id}"
+            return
+        }
 
         //params.each { println it }
         //todo: need to detect 'cleared' values which will be missing from the params
@@ -451,5 +472,25 @@ class SiteController {
         } else {
             render 'no such site'
         }
+    }
+
+    /**
+     * Check each of the site's projects if logged in user is a member
+     *
+     * @param site
+     * @return
+     */
+    private Boolean isUserMemberOfSiteProjects(site) {
+        Boolean userCanEdit = false
+
+        site.projects.each { p ->
+            // handle both 'raw' and normal (project is a Map) output from siteService.get()
+            def pId = (p instanceof Map && p.containsKey('projectId')) ? p.projectId : p
+            if (pId && projectService.canUserEditProject(userService.getCurrentUserId(), pId)) {
+                userCanEdit = true
+            }
+        }
+
+        userCanEdit
     }
 }
