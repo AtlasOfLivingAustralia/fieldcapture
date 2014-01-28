@@ -210,7 +210,8 @@
         }); // end document ready
     </r:script>
 </g:if>
-<g:if test="${! grails.util.Environment.getCurrent().name =~ /dev/ }">
+<!-- current env = ${grails.util.Environment.getCurrent().name} -->
+<g:if test="${ grails.util.Environment.getCurrent().name =~ /test|prod/ }">
     <r:script type="text/javascript">
 
         var _gaq = _gaq || [];
