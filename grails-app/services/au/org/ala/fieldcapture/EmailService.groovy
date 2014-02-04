@@ -10,7 +10,7 @@ class EmailService {
     def sendReportSubmittedEmail(projectId, stageDetails) {
 
         def emailAddresses = getProjectEmailAddresses(projectId)
-        def ccEmails = addDefaultsToCC(emailAddresses.adminEmails, emailAddresses)
+        def ccEmails = addDefaultsToCC([], emailAddresses)
 
         createAndSend(
                 SettingPageType.REPORT_SUBMITTED_EMAIL_SUBJECT_LINE,
@@ -57,7 +57,7 @@ class EmailService {
     def createAndSend(mailSubjectTemplate, mailTemplate, model, recipient, sender, ccList) {
         try {
             def subjectLine = settingService.getSettingText(mailSubjectTemplate, model)
-            def body = settingService.getSettingText(mailTemplate, model)
+            def body = settingService.getSettingText(mailTemplate, model).markdownToHtml()
 
             // This is to prevent spamming real users while testing.
             def emailFilter = grailsApplication.config.emailFilter

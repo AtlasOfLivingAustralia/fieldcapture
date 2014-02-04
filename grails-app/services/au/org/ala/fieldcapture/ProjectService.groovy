@@ -306,7 +306,8 @@ class ProjectService {
     def submitStageReport(projectId, stageDetails) {
 
         def result = activityService.updatePublicationStatus(stageDetails.activityIds, 'pendingApproval')
-
+        def project = get(projectId)
+        stageDetails.project = project
         if (!result.resp.error) {
             emailService.sendReportSubmittedEmail(projectId, stageDetails)
         }
@@ -322,13 +323,13 @@ class ProjectService {
     def approveStageReport(projectId, stageDetails) {
         def result = activityService.updatePublicationStatus(stageDetails.activityIds, 'published')
 
-        // TODO Create a document.  Send a message to GMS.
+        // TODO Send a message to GMS.
         def project = get(projectId, 'all')
         def readableId = project.grantId + (project.externalId?'-'+project.externalId:'')
         def name = "${readableId} ${stageDetails.stage} approval"
         def doc = [name:name, projectId:projectId, type:'text', role:'approval',filename:name, readOnly:true, public:false]
         documentService.createTextDocument(doc, (project as JSON).toString())
-
+        stageDetails.project = project
         if (!result.resp.error) {
             emailService.sendReportApprovedEmail(projectId, stageDetails)
         }
@@ -344,7 +345,9 @@ class ProjectService {
     def rejectStageReport(projectId, stageDetails) {
         def result = activityService.updatePublicationStatus(stageDetails.activityIds, 'unpublished')
 
-        // TODO Send a message to GMS.  Delete previous approval document?
+        // TODO Send a message to GMS.  Delete previous approval document (only an issue for withdrawal of approval)?
+        def project = get(projectId)
+        stageDetails.project = project
 
         if (!result.resp.error) {
             emailService.sendReportRejectedEmail(projectId, stageDetails)
