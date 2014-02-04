@@ -506,7 +506,7 @@
                 self.documents = ko.observableArray();
                 self.addDocument = function(doc) {
                     // check permissions
-                    if (isUserEditor || doc.role == "information" || doc.role == "primary") {
+                    if ((isUserEditor && doc.role !== 'approval') || doc.role == "information" || doc.role == "primary") {
                         self.documents.push(new DocumentViewModel(doc));
                     }
                 };
