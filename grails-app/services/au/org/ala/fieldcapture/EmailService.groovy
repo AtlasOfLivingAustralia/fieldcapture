@@ -111,9 +111,7 @@ class EmailService {
             ccEmails = [ccEmails]
         }
         ccEmails << grailsApplication.config.merit.support.email
-        if (!ccEmails.contains(emailAddresses.userEmail)) {
-            ccEmails << emailAddresses.userEmail
-        }
+
         return ccEmails
     }
 }
