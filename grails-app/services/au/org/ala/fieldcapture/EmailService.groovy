@@ -110,7 +110,9 @@ class EmailService {
         if (!ccEmails instanceof Collection) {
             ccEmails = [ccEmails]
         }
-        ccEmails << grailsApplication.config.merit.support.email
+        if (grailsApplication.config.email.copy.merit.support) {
+            ccEmails << grailsApplication.config.merit.support.email
+        }
 
         return ccEmails
     }
