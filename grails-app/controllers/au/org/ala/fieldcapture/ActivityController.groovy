@@ -52,6 +52,7 @@ class ActivityController {
                     model.speciesLists.add(list)
                 }
             }
+            model.printView = true
             model.mapFeatures = model.site ? siteService.getMapFeatures(model.site) : "{}"
             model.themes = metadataService.getThemesForProject(model.project)
             model
