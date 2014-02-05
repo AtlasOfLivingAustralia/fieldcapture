@@ -45,10 +45,6 @@
                 <g:if test="${site}">
                     <h2><span data-bind="click:goToSite" class="clickable">Site: ${site.name?.encodeAsHTML()}</span></h2>
                 </g:if>
-                <g:else>
-                    <select data-bind="options:transients.project.sites,optionsText:'name',optionsValue:'siteId',value:siteId,optionsCaption:'Choose a site...'"></select>
-                    Leave blank if this activity is not associated with a specific site.
-                </g:else>
                 <h3>Activity: <span data-bind="text:type"></span></h3>
                 <h4><span>${project.associatedProgram?.encodeAsHTML()}</span> <span>${project.associatedSubProgram?.encodeAsHTML()}</span></h4>
             </div>
