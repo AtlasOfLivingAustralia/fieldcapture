@@ -34,7 +34,7 @@
                     <thead>
                     <tr data-bind="visible: stages.length > 0">
                         <th style="width:15%;">Stage</th>
-                        <th style="width:50px;">Actions</th>
+                        <th style="width:68px;">Actions</th>
                         <th style="min-width:64px">From</th>
                         <th style="min-width:64px">To</th>
                         <th style="width:25%;" id="description-column">Description</th>
@@ -59,16 +59,17 @@
                         <!-- /ko -->
                         <td>
                             <button type="button" class="btn btn-container" data-bind="click:$parent.editActivity, enable:$parent.canEditActivity()||$parent.canEditOutputData()"><i class="icon-edit" title="Edit Activity"></i></button>
+                            <button type="button" class="btn btn-container" data-bind="click:$parent.viewActivity"><i class="icon-eye-open" title="View Activity"></i></button>
                             <button type="button" class="btn btn-container" data-bind="click:$parent.printActivity, enable:$parent.canPrintActivity"><i class="icon-print" title="Print activity"></i></button>
                             <button type="button" class="btn btn-container" data-bind="click:del, enable:$parent.canDeleteActivity"><i class="icon-remove" title="Delete activity"></i></button>
                         </td>
                         <td><span data-bind="text:plannedStartDate.formattedDate"></span></td>
                         <td><span data-bind="text:plannedEndDate.formattedDate"></span></td>
                         <td>
-                            <span class="truncate" data-bind="text:description,click:$parent.editActivity, css:{clickable:$parent.canEditActivity()||$parent.canEditOutputData()}"></span>
+                            <span class="truncate" data-bind="text:description,click:$parent.editActivity, css:{clickable:true}"></span>
                         </td>
                         <td>
-                            <span data-bind="text:type,click:$parent.editActivity, css:{clickable:$parent.canEditActivity()||$parent.canEditOutputData()}"></span>
+                            <span data-bind="text:type,click:$parent.editActivity, css:{clickable:true}"></span>
                         </td>
                         <g:if test="${showSites}">
                             <td><a class="clickable" data-bind="text:siteName,click:$parents[1].openSite"></a></td>
@@ -759,7 +760,9 @@
 
             this.editActivity = function (activity) {
                 var url;
-                if (self.canEditOutputData()) {
+                if (self.isReadOnly()) {
+                    self.viewActivity(activity);
+                } else if (self.canEditOutputData()) {
                     url = fcConfig.activityEnterDataUrl;
                     document.location.href = url + "/" + activity.activityId +
                         "?returnTo=" + here;
@@ -768,6 +771,11 @@
                     document.location.href = url + "/" + activity.activityId +
                         "?returnTo=" + here;
                 }
+            };
+            this.viewActivity = function(activity) {
+                url = fcConfig.activityViewUrl;
+                document.location.href = url + "/" + activity.activityId +
+                        "?returnTo=" + here;
             };
             this.printActivity = function(activity) {
                 open(fcConfig.activityPrintUrl + "/" + activity.activityId, "fieldDataPrintWindow");

@@ -17,6 +17,7 @@
         activityCreateUrl: "${createLink(controller: 'activity', action: 'create')}",
         activityUpdateUrl: "${createLink(controller: 'activity', action: 'ajaxUpdate')}",
         activityDeleteUrl: "${createLink(controller: 'activity', action: 'ajaxDelete')}",
+        activityViewUrl: "${createLink(controller: 'activity', action: 'index')}",
         siteCreateUrl: "${createLink(controller: 'site', action: 'createForProject', params: [projectId:project.projectId])}",
         siteSelectUrl: "${createLink(controller: 'site', action: 'select', params:[projectId:project.projectId])}&returnTo=${createLink(controller: 'project', action: 'index', id: project.projectId)}",
         starProjectUrl: "${createLink(controller: 'project', action: 'starProject')}",
