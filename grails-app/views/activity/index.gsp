@@ -23,7 +23,7 @@
         },
         here = document.location.href;
     </r:script>
-    <r:require modules="knockout,jqueryValidationEngine,datepicker,jQueryImageUpload,mapWithFeatures"/>
+    <r:require modules="knockout,jqueryValidationEngine,datepicker,jQueryImageUpload,mapWithFeatures,species"/>
 </head>
 <body>
 <div class="container-fluid validationEngineContainer" id="validation-container">
