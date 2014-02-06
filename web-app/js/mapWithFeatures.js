@@ -111,6 +111,11 @@
             self.featureIndex = {};
             self.featureBounds =  new google.maps.LatLngBounds();
         },
+        replaceAllFeatures: function(features) {
+            this.features.features = features;
+            this.locationsLoaded = 0;
+            this.load(features);
+        },
         mapSite: function(site){
            var self = this;
            console.log(site);
@@ -220,6 +225,7 @@
             $.each(features, function (i,loc) {
                 //console.log('Loading feature with type:' + loc.type + "|" + loc.latitude);
                 if(loc != null){
+
                    self.loadFeature(loc, iw);
                    //self.locationLoaded();
                 }
@@ -255,6 +261,7 @@
                     if (prevMarker) prevMarker.setIcon(map.smallDotIcon);
                 });
             }
+
             this.indexFeature(f, loc);
             this.locationLoaded();
         },
@@ -270,7 +277,9 @@
         },
         // increments the count of loaded locations - zooms map when all are loaded
         locationLoaded: function () {
+
             this.locationsLoaded++;
+            //console.log("Locations loaded: "+this.locationsLoaded+", feature count: "+this.features.features.length);
             if (this.locationsLoaded === this.features.features.length) {
                 // all loaded
                 this.allLocationsLoaded();
@@ -279,7 +288,7 @@
         // zoom map to show features - but not higher than zoom = 12
         allLocationsLoaded: function () {
             var self = this;
-            //console.log('All locations loaded - this.zoomToBounds - ' + this.zoomToBounds + " - zoom limit - " + self.zoomLimit);
+            console.log('All locations loaded - this.zoomToBounds - ' + this.zoomToBounds + " - zoom limit - " + self.zoomLimit);
             if (this.zoomToBounds) {
                 //console.log("Zooming to bounds");
                 //console.log(this.featureBounds);

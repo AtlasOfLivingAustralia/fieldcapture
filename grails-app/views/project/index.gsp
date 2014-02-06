@@ -20,6 +20,7 @@
         activityViewUrl: "${createLink(controller: 'activity', action: 'index')}",
         siteCreateUrl: "${createLink(controller: 'site', action: 'createForProject', params: [projectId:project.projectId])}",
         siteSelectUrl: "${createLink(controller: 'site', action: 'select', params:[projectId:project.projectId])}&returnTo=${createLink(controller: 'project', action: 'index', id: project.projectId)}",
+        siteUploadUrl: "${createLink(controller: 'site', action: 'uploadShapeFile', params:[projectId:project.projectId])}&returnTo=${createLink(controller: 'project', action: 'index', id: project.projectId)}",
         starProjectUrl: "${createLink(controller: 'project', action: 'starProject')}",
         addUserRoleUrl: "${createLink(controller: 'user', action: 'addUserAsRoleToProject')}",
         removeUserWithRoleUrl: "${createLink(controller: 'user', action: 'removeUserWithRole')}",
@@ -185,6 +186,7 @@
                    <div class="btn-group btn-group-horizontal ">
                         <button data-bind="click: $root.addSite" type="button" class="btn">Add new site</button>
                         <button data-bind="click: $root.addExistingSite" type="button" class="btn">Add existing site</button>
+                        <button data-bind="click: $root.uploadShapefile" type="button" class="btn">Upload sites from shapefile</button>
                    </div>
                  </div>
 
@@ -194,13 +196,14 @@
                         <div class="btn-group btn-group-vertical pull-right">
                             <a data-bind="click: $root.addSite" type="button" class="btn ">Add new site</a>
                             <a data-bind="click: $root.addExistingSite" type="button" class="btn">Add existing site</a>
+                            <a data-bind="click: $root.uploadShapefile" type="button" class="btn">Upload sites from shapefile</a>
                             <a data-bind="click: $root.removeAllSites" type="button" class="btn">Delete all sites</a>
                         </div>
 
                         <div class="control-group">
                             <div class="input-append">
-                                <g:textField class="filterinput input-medium" data-target="site"
-                                             data-bind="event: {keyup:filterChanged}"
+                                <input type="text" class="filterinput input-medium"
+                                             data-bind="value: sitesFilter, valueUpdate:'keyup'"
                                              title="Type a few characters to restrict the list." name="sites"
                                              placeholder="filter"/>
                                 <button type="button" class="btn" data-bind="click:clearFilter"
@@ -208,12 +211,12 @@
                             </div>
                             <span id="site-filter-warning" class="label filter-label label-warning"
                                   style="display:none;margin-left:4px;"
-                                  data-bind="visible:isSitesFiltered,valueUpdate:'afterkeyup'">Filtered</span>
+                                  data-bind="visible:sitesFilter().length > 0,valueUpdate:'afterkeyup'">Filtered</span>
                         </div>
 
                         <div class="scroll-list">
                             <ul id="siteList"
-                                data-bind="template: {foreach:sites},
+                                data-bind="template: {foreach:displayedSites},
                                                   beforeRemove: hideElement,
                                                   afterAdd: showElement">
                                 <li data-bind="event: {mouseover: $root.highlight, mouseout: $root.unhighlight}">
@@ -222,6 +225,17 @@
                                     <span data-bind="text:address" style="font-size:11px;color:#666;"></span>
                                 </li>
                             </ul>
+                        </div>
+                        <div id="paginateTable" data-bind="visible:sites.length>20">
+                            <span id="paginationInfo" style="display:inline-block;float:left;margin-top:4px;"></span>
+                            <div class="btn-group">
+                                <button class="btn btn-small prev" data-bind="click:prevPage,enable:(offset()-pageSize) >= 0"><i class="icon-chevron-left"></i>&nbsp;previous</button>
+                                <button class="btn btn-small next" data-bind="click:nextPage,enable:(offset()+pageSize) < filteredSites().length">next&nbsp;<i class="icon-chevron-right"></i></button>
+                            </div>
+                            <g:if env="development">
+                                total: <span id="total" data-bind="text:filteredSites().length"></span>
+                                offset: <span id="offset" data-bind="text:offset"></span>
+                            </g:if>
                         </div>
                     </div>
                      %{--<div class="span5" id="sites-scroller">
@@ -402,13 +416,14 @@
                 document.location.href = "${createLink(action: 'index', id: project.projectId)}";
             });
 
-            var Site = function (site) {
+            var Site = function (site, feature) {
                 var self = this;
                 this.name = ko.observable(site.name);
                 this.siteId = site.siteId;
                 this.state = ko.observable('');
                 this.nrm = ko.observable('');
                 this.address = ko.observable("");
+                this.feature = feature;
                 this.setAddress = function (address) {
                     if (address.indexOf(', Australia') === address.length - 11) {
                         address = address.substr(0, address.length - 11);
@@ -540,9 +555,18 @@
                     self.addDocument(doc);
                 });
                 // sites
-                self.sites = $.map(sites, function (obj,i) {return new Site(obj)});
+                var mapFeatures = $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
+                var features = [];
+                if (mapFeatures.features) {
+                    features = mapFeatures.features;
+                }
+                self.sites = $.map(sites, function (obj,i) {return new Site(obj, features[i])});
                 self.sitesFilter = ko.observable("");
-                self.isSitesFiltered = ko.observable(false);
+                self.throttledFilter = ko.computed(self.sitesFilter).extend({throttle:400});
+                self.filteredSites = ko.observableArray(self.sites);
+                self.displayedSites = ko.observableArray();
+                self.offset = ko.observable(0);
+                self.pageSize = 10;
                 self.isUserEditor = ko.observable(isUserEditor);
                 self.getSiteName = function (siteId) {
                     var site;
@@ -562,51 +586,46 @@
                 self.clearSiteFilter = function () {
                     self.sitesFilter("");
                 };
-                self.filterChanged = function (model, event) {
-                    var element = event.target,
-                        a = $(element).val(),
-                        target = $(element).attr('data-target'),
-                        $target = $('#' + target + 'List li'),
-                        regex = new RegExp('\\b' + a, 'i');
-                    if (a.length > 1) {
-                        /*ko.utils.arrayForEach(self.sites, function (site) {
-                            site.visible = regex.test(site.name());
-                        });*/
-                        // this finds all links in the list that contain the input,
-                        // and hides the ones not containing the input
-                        var containing = $target.filter(function () {
-                            //var regex = new RegExp('\\b' + a, 'i');
-                            return regex.test($('a', this).text());
-                        }).slideDown();
-                        // make sure filtered-in sites are visible
-                        containing.each(function () {
-                            map.showFeatureById($(this).find('a').html());
-                        });
-                        $target.not(containing).slideUp();
-                        // make sure filtered-out sites are hidden
-                        $target.not(containing).each(function () {
-                            map.hideFeatureById($(this).find('a').html());
-                        });
-                        // show 'filtered' icon
-                        $('#' + target + '-filter-warning').show();
-                    } else {
-                        // hide 'filtered' icon
-                        $('#' + target + '-filter-warning').hide();
-                        // show all sites
-                        $target.slideDown();
-                        // show all markers
-                        map.showAllfeatures();
-                    }
-                    return true;
+                self.nextPage = function() {
+                    self.offset(self.offset() + self.pageSize);
+                    self.displaySites();
                 };
+                self.prevPage = function() {
+                    self.offset(self.offset() - self.pageSize);
+                    self.displaySites();
+                };
+                self.displaySites = function() {
+                    map.clearFeatures();
+
+                    self.displayedSites(self.filteredSites.slice(self.offset(), self.offset()+self.pageSize));
+
+                    var features = $.map(self.displayedSites(), function(obj, i) { return obj.feature; });
+                    map.replaceAllFeatures(features);
+
+                };
+
+                self.throttledFilter.subscribe(function (val) {
+                    self.offset(0);
+                    if (val) {
+                        var regex = new RegExp('\\b' + val, 'i');
+
+                        self.filteredSites([]);
+                        $.each(self.sites, function(i, site) {
+                            if (regex.test(site.name())) {
+                                self.filteredSites.push(site);
+                            }
+                        });
+                        self.displaySites();
+                    }
+                    else {
+                        self.filteredSites(self.sites);
+                        self.displaySites();
+                    }
+
+                });
                 self.clearFilter = function (model, event) {
-                    var element = event.currentTarget,
-                        $filterInput = $(element).prev(),
-                        target = $filterInput.attr('data-target');
-                    $filterInput.val('');
-                    $('#' + target + '-filter-warning').hide();
-                    $('#' + target + "List li").slideDown();
-                    map.showAllfeatures();
+
+                    self.sitesFilter("");
                 };
                 this.highlight = function () {
                     map.highlightFeatureById(this.name());
@@ -634,6 +653,10 @@
                 this.addExistingSite = function () {
                     document.location.href = fcConfig.siteSelectUrl;
                 };
+                this.uploadShapefile = function() {
+                    bootbox.alert("This feature will be available soon.");
+                    //document.location.href = fcConfig.siteUploadUrl;
+                }
                 self.notImplemented = function () {
                     alert("Not implemented yet.")
                 };
@@ -644,6 +667,7 @@
                         }
                     });
                 };
+
             }
 
             var viewModel = new ViewModel(
@@ -663,16 +687,26 @@
                 amplify.store('project-tab-state', tab);
                 // only init map when the tab is first shown
                 if (tab === '#site' && map === undefined) {
+                    var mapOptions = {
+                        zoomToBounds:true,
+                        zoomLimit:16,
+                        highlightOnHover:true,
+                        features:[],
+                        featureService: "${createLink(controller: 'proxy', action:'feature')}",
+                        wmsServer: "${grailsApplication.config.spatial.geoserverUrl}"
+                    };
+
                     map = init_map_with_features({
                             mapContainer: "map",
                             scrollwheel: false,
                             featureService: "${createLink(controller: 'proxy', action:'feature')}",
                             wmsServer: "${grailsApplication.config.spatial.geoserverUrl}"
                         },
-                        $.parseJSON('${mapFeatures?.encodeAsJavaScript()}')
+                        mapOptions
                     );
                     // set trigger for site reverse geocoding
                     viewModel.triggerGeocoding();
+                    viewModel.displaySites();
                 }
                 if (tab === '#plan' && !planTabInitialised) {
                     $.event.trigger({type:'planTabShown'});
