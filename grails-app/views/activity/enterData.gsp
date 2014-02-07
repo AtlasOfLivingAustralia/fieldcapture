@@ -109,8 +109,8 @@
                 </div>
 
                 <div class="row-fluid">
-                    <div class="span6">
-                        <label for="startDate"><b>Actual start date</b>
+                    <div class="span6 required">
+                        <label for="startDate""><b>Actual start date</b>
                         <fc:iconHelp title="Start date" printable="${printView}">Date the activity was started.</fc:iconHelp>
                         </label>
                         <g:if test="${printView}">
@@ -124,7 +124,7 @@
                             </div>
                         </g:else>
                     </div>
-                    <div class="span6">
+                    <div class="span6 required">
                         <label for="endDate"><b>Actual end date</b>
                         <fc:iconHelp title="End date" printable="${printView}">Date the activity finished.</fc:iconHelp>
                         </label>
