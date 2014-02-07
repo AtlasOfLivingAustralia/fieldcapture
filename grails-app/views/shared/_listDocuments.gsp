@@ -98,8 +98,9 @@
             'eps','exe','flv','gif','h','hpp','html','ics','iso','java','jpg','key','mid','mp3','mp4',
             'mpg','odf','ods','odt','otp','ots','ott','pdf','php','png','ppt','psd','py','qt','rar','rb',
             'rtf','sql','tga','tgz','tiff','txt','wav','xls','xlsx'];
+        ext = ext.toLowerCase();
         if (ext === 'docx') { ext = 'doc' }
-        if ($.inArray(ext.toLowerCase(), types) >= 0) {
+        if ($.inArray(ext, types) >= 0) {
             return ext + '.png';
         } else {
             return "_blank.png";
