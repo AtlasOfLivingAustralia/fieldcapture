@@ -1,11 +1,14 @@
 package au.org.ala.fieldcapture
 
+import com.vividsolutions.jts.geom.Geometry
+import com.vividsolutions.jts.geom.Point
+import com.vividsolutions.jts.io.WKTReader
 import grails.converters.JSON
 import org.codehaus.groovy.grails.web.mapping.LinkGenerator
 
 class SiteService {
 
-    def webService, grailsApplication, commonService, metadataService
+    def webService, grailsApplication, commonService, metadataService, userService
     LinkGenerator grailsLinkGenerator
 
     def list() {
@@ -89,6 +92,56 @@ class SiteService {
 
     def updateProjectAssociations(body) {
         webService.doPost(grailsApplication.config.ecodata.baseUrl + 'project/updateSites/' + body.projectId, body)
+    }
+
+    /** uploads a shapefile to the spatial portal */
+    def uploadShapefile(shapefile) {
+        def userId = userService.getUser().userId
+        def url = "${grailsApplication.config.spatial.layersUrl}/shape/upload/shp?user_id=${userId}&api_key=${grailsApplication.config.api_key}"
+
+        return webService.postMultipart(url, [:], shapefile)
+    }
+
+    /**
+     * Creates a site for a specified project from the supplied site data.
+     * @param shapeFileId the id of the shapefile in the spatial portal
+     * @param siteId the id of the shape to use (as returned by the spatial portal upload)
+     * @param name the name for the site
+     * @param description the description for the site
+     * @param projectId the project the site should be associated with.
+     */
+    def createSiteFromUploadedShapefile(shapeFileId, siteId, externalId, name, description, projectId) {
+        def baseUrl = "${grailsApplication.config.spatial.layersUrl}/shape/upload/shp"
+        def userId = userService.getUser().userId
+
+        def site = [name:name, description: description, user_id:userId, api_key:grailsApplication.config.api_key]
+
+        def url = "${baseUrl}/${shapeFileId}/${siteId}"
+
+        def result = webService.doPost(url, site)
+        if (!result.error) {
+            def id = result.resp.id
+
+            Point centriod = calculateSiteCentroid(id)
+            createSite(projectId, name, description, externalId, id, centriod.getY(), centriod.getX())
+        }
+    }
+
+    /** Returns the centroid (as a Point) of a site in the spatial portal */
+    def calculateSiteCentroid(spatialPortalSiteId) {
+
+        def getWktUrl = "${grailsApplication.config.spatial.baseUrl}/ws/shape/wkt"
+        def wkt = webService.get("${getWktUrl}/${spatialPortalSiteId}")
+        Geometry geom = new WKTReader().read(wkt)
+        return geom.getCentroid()
+    }
+
+    def createSite(projectId, name, description, externalId, geometryPid, centroidLat, centroidLong) {
+        def metadata = metadataService.getLocationMetadataForPoint(centroidLat, centroidLong)
+        def strLat =  "" + centroidLat + ""
+        def strLon = "" + centroidLong + ""
+        def values = [extent: [source: 'pid', geometry: [pid: geometryPid, type: 'pid', state: metadata.state, nrm: metadata.nrm, lga: metadata.lga, locality: metadata.locality, centre: [strLon, strLat]]], projects: [projectId], name: name, description: description, externalId:externalId]
+        return create(values)
     }
 
     def persistSiteExtent(name, geometry) {

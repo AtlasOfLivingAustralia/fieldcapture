@@ -1,8 +1,5 @@
 package au.org.ala.fieldcapture
 
-import com.vividsolutions.jts.geom.Geometry
-import com.vividsolutions.jts.geom.Point
-import com.vividsolutions.jts.io.WKTReader
 import grails.converters.JSON
 import org.codehaus.groovy.grails.web.json.JSONArray
 
@@ -160,12 +157,12 @@ class SiteController {
             flash.message = "Access denied: User does not have <b>editor</b> permission for projectId ${params.projectId}"
             redirect(url: params.returnTo)
         }
-        def url = "http://spatial-dev.ala.org.au/layers-service/shape/upload/shp?user_id=1551&api_key=b3f3c932-ba88-4ad5-b429-f947475024af"
+
         if (request.respondsTo('getFile')) {
             def f = request.getFile('shapefile')
 
 
-            def result =  webService.postMultipart(url, [:], f)
+            def result =  siteService.uploadShapefile(f)
 
             if (!result.error && result.content.size() > 1) {
                 def content = result.content
@@ -194,37 +191,31 @@ class SiteController {
 
     def createSitesFromShapefile() {
         def siteData = request.JSON
+        def progress = [total:siteData.sites.size(), uploaded:0]
 
-        def baseUrl = "http://spatial-dev.ala.org.au/layers-service/shape/upload/shp"
-        def getWktUrl = "http://spatial-dev.ala.org.au/ws/shape/wkt"
-        siteData.sites.each {
-            def site = [name:it.name, description: it.description, user_id:1551, api_key:'b3f3c932-ba88-4ad5-b429-f947475024af']
-            def url = "${baseUrl}/${siteData.shapeFileId}/${it.id}"
+        try {
+            session.uploadProgress = progress
 
-            def result = webService.doPost(url, site)
-            if (!result.error) {
-                def id = result.resp.id
-
-                def wkt = webService.get("${getWktUrl}/${id}")
-                Geometry geom = new WKTReader().read(wkt)
-                Point centriod = geom.getCentroid()
-                createSite(siteData.projectId, it.name, it.description, id, centriod.getX(), centriod.getY())
+            siteData.sites.each {
+                siteService.createSiteFromUploadedShapefile(siteData.shapeFileId, it.id, it.externalId, it.name, it.description?:'No description supplied', siteData.projectId)
+                progress.uploaded = progress.uploaded + 1
             }
-
+        }
+        finally {
+            progress.finished = true
         }
 
-
-        def result = [message:'woohoo']
+        def result = [message:'success', progress:progress]
         render result as JSON
     }
 
-    def createSite(projectId, name, description, geometryPid, centroidLat, centroidLong) {
-        def metadata = metadataService.getLocationMetadataForPoint(centroidLat, centroidLong)
-        def strLat =  "" + centroidLat + ""
-        def strLon = "" + centroidLong + ""
-        def values = [extent: [source: 'pid', geometry: [pid: geometryPid, type: 'pid', state: metadata.state, nrm: metadata.nrm, lga: metadata.lga, locality: metadata.locality, centre: [strLon, strLat]]], projects: [projectId], name: name, description: description]
-        return siteService.create(values)
+    def siteUploadProgress() {
+        def progress = session.uploadProgress?:[:]
+        render progress as JSON
     }
+
+
+
 
     def createGeometryForGrantId(String grantId, String geometryPid, Double centroidLat, Double centroidLong) {
         def projects = importService.allProjectsWithGrantId(grantId)

@@ -14,12 +14,13 @@
                 spatialWmsUrl: "${grailsApplication.config.spatial.wms.url}",
                 sldPolgonDefaultUrl: "${grailsApplication.config.sld.polgon.default.url}",
                 sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}",
-                saveSitesUrl: "${createLink(action: 'createSitesFromShapefile')}"
+                saveSitesUrl: "${createLink(action: 'createSitesFromShapefile')}",
+                siteUploadProgressUrl: "${createLink(action: 'siteUploadProgress')}"
 
             },
             returnTo = "${params.returnTo}";
     </r:script>
-    <r:require modules="knockout,mapWithFeatures,amplify"/>
+    <r:require modules="knockout,mapWithFeatures,amplify,jqueryValidationEngine"/>
 </head>
 <body>
 <div class="container-fluid validationEngineContainer" id="validation-container">
@@ -76,11 +77,12 @@
 
         </div>
         <div class="row-fluid" style="margin-top:10px; margin-bottom: 20px;">
-           <span class="span3"> <button class="btn btn-success" data-bind="click:save">Create sites</button> <button class="btn" data-bind="click:cancel">Cancel</button></span>
+           <span class="span3"> <button class="btn btn-success" data-bind="click:save,disable:selectedCount()<=0">Create sites</button> <button class="btn" data-bind="click:cancel">Cancel</button></span>
         </div>
     </form>
 
     <div class="row-fluid">
+    <form id="sites-container">
     <table>
       <thead>
       <tr>
@@ -105,9 +107,9 @@
       <!-- ko foreach: { data: sites, as: 'site'} -->
           <tr>
               <td><input type="checkbox" data-bind="checked:selected"></td>
-              <td><input type="text" data-bind="value:site.name"></td>
-              <td><input type="text" data-bind="value:site.description"></td>
-              <td><input type="text" data-bind="value:site.externalId"></td>
+              <td><input type="text" data-bind="value:site.name, enable:selected" data-validation-engine="validate[required]"></td>
+              <td><input type="text" data-bind="value:site.description, enable:selected"></td>
+              <td><input type="text" data-bind="value:site.externalId, enable:selected"></td>
 
           <!-- ko foreach: { data: $root.attributeNames, as: 'attributeNames' } -->
               <td data-bind="text:site.attributes[attributeNames]"></td>
@@ -117,8 +119,25 @@
       <!-- /ko -->
       </tbody>
     </table>
+    </form>
     </div>
     </g:else>
+</div>
+
+<div class="modal hide" id="uploadProgress">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title"><strong>Uploading sites...</strong></div>
+            </div>
+            <div class="modal-body">
+                <div data-bind="text:progressText"></div>
+                <div class="progress progress-popup">
+                    <div class="bar" data-bind="style:{width:progress}"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 
@@ -157,7 +176,9 @@ var SiteUploadViewModel = function() {
     self.attributeNames = ko.observableArray(attributeNames);
     self.sites = ko.observableArray([]);
     self.selectAll = ko.observable(true);
-
+    self.progress = ko.observable('0%');
+    self.progressText = ko.observable('');
+    self.selectedCount = ko.observable(0);
     self.selectAll.subscribe(function(newValue) {
         $.each(self.sites(), function(i, site) {site.selected(newValue);});
     });
@@ -168,7 +189,7 @@ var SiteUploadViewModel = function() {
                 site.name(site.attributes[newValue]);
             }
             else {
-                site.name('Site '+i);
+                site.name('Site '+(i+1));
             }
         });
     });
@@ -180,6 +201,9 @@ var SiteUploadViewModel = function() {
     });
 
     self.save = function() {
+        if (!$('#sites-container').validationEngine('validate')) {
+            return;
+        }
         var payload = {};
         payload.shapeFileId = '${shapeFileId.encodeAsJavaScript()}';
         payload.projectId = '${projectId}';
@@ -196,14 +220,51 @@ var SiteUploadViewModel = function() {
                contentType: 'application/json',
                data: JSON.stringify(payload),
                success: function (data) {
-                   alert('boo ya');
+                    self.progressText('Uploaded '+payload.sites.length+' of '+payload.sites.length+' sites');
+                    self.progress('100%');
+                    setTimeout(function() {
+                        $('#uploadProgress').modal('hide');
+                        document.location.href = "${params.returnTo}";
+                    }, 1000);
 
                },
                error: function () {
-                   alert('There was a problem searching for sites.');
+                   $('#uploadProgress').modal('hide');
+
+                   alert('There was a problem uploading sites.');
                }
           });
+          self.progressText('Uploaded 0 of '+payload.sites.length+' sites');
+          $('#uploadProgress').modal({backdrop:'static'});
+          setTimeout(self.showProgress, 2000);
 
+
+    };
+
+    self.showProgress = function() {
+        $.get(fcConfig.siteUploadProgressUrl, function(progress) {
+            var finished = false;
+            if (progress && progress.uploaded !== undefined) {
+                var progressPercent = Math.round(progress.uploaded/progress.total * 100)+'%';
+                self.progress(progressPercent);
+                self.progressText('Uploaded '+progress.uploaded+' of '+progress.total+' sites '+progressPercent);
+
+                finished = progress.finished;
+            }
+            if (!finished) {
+                setTimeout(self.showProgress, 2000);
+            }
+        });
+    }
+
+    self.countSelectedSites = function() {
+        var count = 0;
+        $.each(self.sites(), function(i, site) {
+            if (site.selected()) {
+                count++;
+            }
+        });
+        self.selectedCount(count);
     };
 
     self.cancel = function() {
@@ -211,8 +272,9 @@ var SiteUploadViewModel = function() {
     }
 
     $.each(shapes, function(i, obj) {
-        self.sites.push(new SiteViewModel(obj));
-        console.log(obj);
+        var site = new SiteViewModel(obj);
+        site.selected.subscribe(self.countSelectedSites);
+        self.sites.push(site);
     });
      $.each(attributeNames, function(i, name) {
         if (name.toUpperCase() === 'NAME') {
@@ -225,16 +287,17 @@ var SiteUploadViewModel = function() {
             self.descriptionAttribute(name);
         }
     });
-
-
+    self.countSelectedSites();
 
 }
-
+$('#uploadProgress').modal({backdrop:'static', show:false});
+$('#sites-container').validationEngine();
 ko.applyBindings(new SiteUploadViewModel());
 </g:if>
 <g:else>
 
     $('#uploadShapeFile').click(function() {
+        $(this).attr('disabled','disabled');
         $('#shapeFileUpload').submit();
     });
     $("#shapefile").change(function() {

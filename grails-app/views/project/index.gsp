@@ -654,8 +654,7 @@
                     document.location.href = fcConfig.siteSelectUrl;
                 };
                 this.uploadShapefile = function() {
-                    bootbox.alert("This feature will be available soon.");
-                    //document.location.href = fcConfig.siteUploadUrl;
+                    document.location.href = fcConfig.siteUploadUrl;
                 }
                 self.notImplemented = function () {
                     alert("Not implemented yet.")

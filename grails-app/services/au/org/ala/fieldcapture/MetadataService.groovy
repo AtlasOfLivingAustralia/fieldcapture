@@ -197,7 +197,8 @@ class MetadataService {
             def features = webService.getJson(featuresUrl)
 
             def localityUrl = grailsApplication.config.google.geocode.url + "${lat},${lng}"
-            def localityValue = webService.getJson(localityUrl).results[0].formatted_address
+            def result = webService.getJson(localityUrl)
+            localityValue = (result?.results && result.results)?result.results[0].formatted_address:''
 
             // Return the Nvis classes for the supplied location. This is an interim solution until the spatial portal can be fixed to handle
             // large grid files such as the NVIS grids.
