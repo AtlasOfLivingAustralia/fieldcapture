@@ -665,10 +665,6 @@
                 if (numActivities == 0) {
                     return false;
                 }
-                var poo = $.grep(self.activities, function(act, i) {
-                    return act.isSubmitted();
-                });
-                console.log(self.label + " "+poo.length+ " submitted of "+numActivities+" total");
                 return $.grep(self.activities, function(act, i) {
                     return act.isSubmitted();
                 }).length == numActivities;
