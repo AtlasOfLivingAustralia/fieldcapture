@@ -36,15 +36,14 @@
                 </div>
             </div><!-- /.spanN  -->
             <g:set var="newsText"><fc:getSettingContent settingType="${SettingPageType.NEWS}"/></g:set>
-            <g:if test="${newsText && settingType == SettingPageType.ABOUT && fc.userIsLoggedIn()}">
-                <div class="span5 well well-small">
-                    <g:if test="${fc.userInRole(role: grailsApplication.config.security.cas.alaAdminRole) || fc.userInRole(role: grailsApplication.config.security.cas.adminRole)}">
-                        <a href="${g.createLink(controller:"admin",action:"editSettingText", id: SettingPageType.NEWS.name, params: [layout:"nrm",returnUrl: g.createLink(controller: params.controller, action: params.action, absolute: true)])}"
-                           class="btn btn-small pull-right"><i class="icon-edit"></i> Edit</a>
-                    </g:if>
-                    ${newsText}
-                </div>
-            </g:if>
+            <div class="span5 well well-small">
+                <g:if test="${fc.userInRole(role: grailsApplication.config.security.cas.alaAdminRole) || fc.userInRole(role: grailsApplication.config.security.cas.adminRole)}">
+                    <a href="${g.createLink(controller:"admin",action:"editSettingText", id: SettingPageType.NEWS.name, params: [layout:"nrm",returnUrl: g.createLink(controller: params.controller, action: params.action, absolute: true)])}"
+                       class="btn btn-small pull-right"><i class="icon-edit"></i> Edit</a>
+                </g:if>
+                ${newsText}
+            </div>
+
         </div><!-- /.row-fluid  -->
     </div>
 </body>
