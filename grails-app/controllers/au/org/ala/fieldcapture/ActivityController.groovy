@@ -106,6 +106,9 @@ class ActivityController {
                 redirect(controller:'project', action:'index', id: activity.projectId)
             }
             // pass the activity
+            if (params.progress) {
+                activity.progress = params.progress
+            }
             def model = [activity: activity, returnTo: params.returnTo, projectStages:projectStages()]
             // the activity meta-model
             model.metaModel = metadataService.getActivityModel(activity.type)

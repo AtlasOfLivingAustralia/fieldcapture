@@ -471,6 +471,7 @@
             this.type = act.type;
             this.projectStage = act.projectStage;
             this.description = act.description;
+            this.hasOutputs = act.outputs && act.outputs.length;
             this.startDate = ko.observable(act.startDate).extend({simpleDate:false});
             this.endDate = ko.observable(act.endDate).extend({simpleDate:false});
             this.plannedStartDate = ko.observable(act.plannedStartDate).extend({simpleDate:false});
@@ -527,7 +528,14 @@
                     self.displayReasonModal.trigger('progress_change');
                     self.displayReasonModal(true);
                 } else if (self.displayReasonModal.needsToBeSaved) {
-                    self.saveProgress({progress: newValue, activityId: self.activityId});
+
+                    if ((newValue === 'started' || newValue === 'finished') && !self.hasOutputs) {
+                        url = fcConfig.activityEnterDataUrl;
+                        document.location.href = url + "/" + self.activityId + "?returnTo=" + here + '&progress='+newValue;
+                    }
+                    else {
+                        self.saveProgress({progress: newValue, activityId: self.activityId});
+                    }
                 }
             });
 
