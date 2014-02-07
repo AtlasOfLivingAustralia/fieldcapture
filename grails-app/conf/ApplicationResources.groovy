@@ -156,6 +156,8 @@ modules = {
         resource url: 'js/fileupload-9.0.0/jquery.fileupload-video.js'
         resource url: 'js/fileupload-9.0.0/jquery.fileupload-validate.js'
         resource url: 'js/fileupload-9.0.0/jquery.fileupload-audio.js'
+        resource url: 'js/fileupload-9.0.0/jquery.iframe-transport.js'
+
 
         resource url: 'js/locale.js'
         resource url: 'js/cors/jquery.xdr-transport.js',
