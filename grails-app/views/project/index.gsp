@@ -441,11 +441,18 @@
                 self.manager = ko.observable(project.manager);
                 self.plannedStartDate = ko.observable(project.plannedStartDate).extend({simpleDate: false});
                 self.plannedEndDate = ko.observable(project.plannedEndDate).extend({simpleDate: false});
+                self.regenerateProjectTimeline = ko.observable(false);
+                self.projectDatesChanged = ko.computed(function() {
+                    return project.plannedStartDate != self.plannedStartDate() ||
+                           project.plannedEndDate != self.plannedEndDate();
+                });
+
                 self.organisation = ko.observable(project.organisation);
                 self.organisationName = ko.observable(project.organisationName);
                 self.associatedProgram = ko.observable(); // don't initialise yet - we want the change to trigger dependents
                 self.associatedSubProgram = ko.observable(project.associatedSubProgram);
                 self.mapLoaded = ko.observable(false);
+
                 self.transients = {};
                 self.transients.organisations = organisations;
                 self.transients.collectoryOrgName = ko.computed(function () {
@@ -477,6 +484,7 @@
                 // settings
                 self.saveSettings = function () {
                     if ($('#settings-validation').validationEngine('validate')) {
+
                         // only collect those fields that can be edited in the settings pane
                         var jsData = {
                             name: self.name(),
@@ -491,6 +499,14 @@
                             associatedProgram: self.associatedProgram(),
                             associatedSubProgram: self.associatedSubProgram()
                         };
+                        if (self.regenerateProjectTimeline()) {
+                            var dates = {
+                                plannedStartDate: self.plannedStartDate(),
+                                plannedEndDate: self.plannedEndDate()
+                            };
+                            addTimelineBasedOnStartDate(dates);
+                            jsData.timeline = dates.timeline;
+                        }
                         // this call to stringify will make sure that undefined values are propagated to
                         // the update call - otherwise it is impossible to erase fields
                         var json = JSON.stringify(jsData, function (key, value) {
