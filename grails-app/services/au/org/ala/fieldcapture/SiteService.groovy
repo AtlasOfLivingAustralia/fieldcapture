@@ -140,7 +140,7 @@ class SiteService {
         def metadata = metadataService.getLocationMetadataForPoint(centroidLat, centroidLong)
         def strLat =  "" + centroidLat + ""
         def strLon = "" + centroidLong + ""
-        def values = [extent: [source: 'pid', geometry: [pid: geometryPid, type: 'pid', state: metadata.state, nrm: metadata.nrm, lga: metadata.lga, locality: metadata.locality, centre: [strLon, strLat]]], projects: [projectId], name: name, description: description, externalId:externalId]
+        def values = [extent: [source: 'pid', geometry: [pid: geometryPid, type: 'pid', state: metadata.state, nrm: metadata.nrm, lga: metadata.lga, locality: metadata.locality, mvg: metadata.mvg, mvs: metadata.mvs, centre: [strLon, strLat]]], projects: [projectId], name: name, description: description, externalId:externalId]
         return create(values)
     }
 
