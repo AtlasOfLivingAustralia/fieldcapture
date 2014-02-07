@@ -118,7 +118,6 @@
         },
         mapSite: function(site){
            var self = this;
-           console.log(site);
            var loaded = self.loadFeature(site.extent.geometry);
            if(loaded){
              self.allLocationsLoaded();
@@ -288,7 +287,7 @@
         // zoom map to show features - but not higher than zoom = 12
         allLocationsLoaded: function () {
             var self = this;
-            console.log('All locations loaded - this.zoomToBounds - ' + this.zoomToBounds + " - zoom limit - " + self.zoomLimit);
+            //console.log('All locations loaded - this.zoomToBounds - ' + this.zoomToBounds + " - zoom limit - " + self.zoomLimit);
             if (this.zoomToBounds) {
                 //console.log("Zooming to bounds");
                 //console.log(this.featureBounds);
@@ -436,19 +435,34 @@
         },
         clearFeatures: function(){
             var self = this;
+            var overlaysToRemove = [];
             //clear map of features
             $.each(self.featureIndex, function (i, obj) {
+
                 $.each(obj, function (j, f) {
                     if(f.setMap !== undefined){
                         f.setMap(null);
                     }
+                    else {
+                        self.map.overlayMapTypes.forEach(function(obj, i) {
+                            if (obj == f) {
+                                overlaysToRemove.push(i);
+                            }
+                        });
+                    }
                 });
+            });
+
+            // Sort in reverse numeric order so the indexes remain stable as we remove items from the array.
+            overlaysToRemove.sort(function(a,b) {
+                return b-a;
+            });
+            $.each(overlaysToRemove, function(i, index){
+                self.map.overlayMapTypes.removeAt(index);
             });
 
             self.reset();
 
-            //remove any overlays too
-            //self.map.map.overlayMapTypes.setAt(0, null);
         }
     };
 
