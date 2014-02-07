@@ -99,7 +99,7 @@
             'mpg','odf','ods','odt','otp','ots','ott','pdf','php','png','ppt','psd','py','qt','rar','rb',
             'rtf','sql','tga','tgz','tiff','txt','wav','xls','xlsx'];
         if (ext === 'docx') { ext = 'doc' }
-        if ($.inArray(ext, types) >= 0) {
+        if ($.inArray(ext.toLowerCase(), types) >= 0) {
             return ext + '.png';
         } else {
             return "_blank.png";
