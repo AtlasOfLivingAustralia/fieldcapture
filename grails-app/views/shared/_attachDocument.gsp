@@ -37,9 +37,16 @@
                     </div>
 
                     <div class="control-group">
+                        <label class="control-label" for="public">Settings</label>
+                        <div class="controls">
+                            <label class="checkbox" for="public">
+                                <input id="public" type="checkbox" data-bind="checked:public"/>
+                                make this document viewable by everyone
+                            </label>
+                        </div>
                         <div class="controls">
                             <label class="checkbox" for="documentRole">
-                                <input id="documentRole" type="checkbox" data-bind="enable:type() == 'image',checked:isPrimaryProjectImage"/>
+                                <input id="documentRole" type="checkbox" data-bind="enable:type() == 'image' && public(),checked:isPrimaryProjectImage"/>
                                 use as the main project image
                             </label>
                         </div>
@@ -73,7 +80,7 @@
                         <label for="progress" class="control-label">Progress</label>
 
                         <div id="progress" class="controls progress progress-info active input-large"
-                             data-bind="visible:!error() && progress() < 100, css:{'progress-info':progress()<100, 'progress-success':complete()}">
+                             data-bind="visible:!error() && progress() <= 100, css:{'progress-info':progress()<100, 'progress-success':complete()}">
                             <div class="bar" data-bind="style:{width:progress()+'%'}"></div>
                         </div>
 

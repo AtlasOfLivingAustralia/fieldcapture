@@ -538,14 +538,14 @@
                 self.documents = ko.observableArray();
                 self.addDocument = function(doc) {
                     // check permissions
-                    if ((isUserEditor && doc.role !== 'approval') || doc.role == "information" || doc.role == "primary") {
+                    if ((isUserEditor && doc.role !== 'approval') ||  doc.public) {
                         self.documents.push(new DocumentViewModel(doc));
                     }
                 };
                 self.attachDocument = function() {
                     var url = '${g.createLink(controller:"proxy", action:"documentUpdate")}';
                     showDocumentAttachInModal( url,new DocumentViewModel({role:'information'},{key:'projectId', value:'${project.projectId}'}), '#attachDocument')
-                        .done(function(result){self.documents.push(result)});
+                        .done(function(result){self.documents.push(new DocumentViewModel(result))});
                 };
                 self.editDocumentMetadata = function(document) {
                     %{--var url = '${g.createLink(controller:"proxy", action:"documentUpdate")}' + "/" + document.documentId;

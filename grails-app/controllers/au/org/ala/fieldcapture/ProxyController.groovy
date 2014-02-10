@@ -76,15 +76,20 @@ class ProxyController {
             if(originalFilename){
                 def extension = FilenameUtils.getExtension(originalFilename)?.toLowerCase()
                 if (extension && !grailsApplication.config.upload.extensions.blacklist.contains(extension)){
-                    def result =  webService.postMultipart(url, [document:params.document], f)
-                    render result.content as JSON
+                    def result =  webService.postMultipart(url, [document:params.document], f).content as JSON
+
+                    // This is returned to the browswer as a text response due to workaround the warning
+                    // displayed by IE8/9 when JSON is returned from an iframe submit.
+                    response.setContentType('text/plain;charset=UTF8')
+                    render result.toString();
                 } else {
                     response.setStatus(400)
                     //flag error for extension
                     def error = [error: "Files with the extension '.${extension}' are not permitted.",
                     statusCode: "400",
                     detail: "Files with the extension ${extension} are not permitted."]
-                    render error
+                    response.setContentType('text/plain;charset=UTF8')
+                    render error.toString()
                 }
             } else {
                 //flag error for extension
@@ -92,10 +97,16 @@ class ProxyController {
                 def error = [error: "Unable to retrieve the file name.",
                 statusCode: "400",
                 detail: "Unable to retrieve the file name."]
-                render error
+                response.setContentType('text/plain;charset=UTF8')
+                render error.toString()
             }
         } else {
-            render webService.doPost(url, JSON.parse(params.document)) as JSON;
+            // This is returned to the browswer as a text response due to workaround the warning
+            // displayed by IE8/9 when JSON is returned from an iframe submit.
+            def result = webService.doPost(url, JSON.parse(params.document)) as JSON;
+            response.setContentType('text/plain;charset=UTF8')
+
+            render result.toString()
         }
     }
 

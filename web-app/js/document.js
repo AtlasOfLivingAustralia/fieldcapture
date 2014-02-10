@@ -25,13 +25,14 @@ function DocumentViewModel (doc, owner) {
     this.license = ko.observable(doc ? doc.license : '');
     this.type = ko.observable(doc.type);
     this.role = ko.observable(doc.role);
+    this.public = ko.observable(doc.public);
     this.url = doc.url;
     this.documentId = doc.documentId;
     this.hasPreview = ko.observable(false);
     this.error = ko.observable();
     this.progress = ko.observable(0);
     this.complete = ko.observable(false);
-    this.readOnly = ko.observable(doc && doc.readOnly ? doc.readOnly : false);
+    this.readOnly = doc && doc.readOnly ? doc.readOnly : false;
     // this supports a checkbox that allows the user to assert that this image is to be used
     // as the primary project image - implemented as a writeable computed
     this.isPrimaryProjectImage = ko.computed({
@@ -88,7 +89,7 @@ function DocumentViewModel (doc, owner) {
         this.hasPreview(true);
     };
     this.uploadProgress = function(uploaded, total) {
-        var progress = parseInt(uploaded/total*100, 10);
+        var progress = Math.round(uploaded/total*100);
         self.progress(progress);
     };
     this.fileUploaded = function(file) {
@@ -153,15 +154,16 @@ function attachViewModelToFileUpload(uploadUrl, documentViewModel, uiSelector, p
         documentViewModel.fileAttached(data.files[0]);
     }).on('fileuploadprocessalways', function(e, data) {
         if (data.files[0].preview) {
-            if (previewElementSelector !== undefined) {
-                $(previewElementSelector).append(data.files[0].preview);
-            }
             documentViewModel.filePreviewAvailable(data.files[0]);
+            if (previewElementSelector !== undefined) {
+                $(uiSelector).find(previewElementSelector).append(data.files[0].preview);
+            }
+
         }
     }).on('fileuploadprogressall', function(e, data) {
         documentViewModel.uploadProgress(data.loaded, data.total);
     }).on('fileuploaddone', function(e, data) {
-        var result = data.result;
+        var result = JSON.parse(data.result);
         if (!result) {
             result = {};
             result.error = 'No response from server';
@@ -241,6 +243,7 @@ function showDocumentAttachInModal(uploadUrl, documentViewModel, modalSelector, 
     // Close the modal and tidy up the bindings.
     var closeModal = function() {
         $modal.modal('hide');
+        $fileUpload.find(previewSelector).empty();
         ko.cleanNode($fileUpload[0]);
         //$fileUpload.fileupload('destroy');
     };

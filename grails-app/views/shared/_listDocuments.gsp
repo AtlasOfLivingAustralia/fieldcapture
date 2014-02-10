@@ -25,8 +25,8 @@
 
 <script id="imageDocEditTmpl" type="text/html">
     <div class="btn-group pull-left" style="margin-top:4px;">
-        <button class="btn btn-mini" type="button" data-bind="enable:!readOnly(),click:$root.deleteDocument"><i class="icon-remove"></i></button>
-        <button class="btn btn-mini" type="button" data-bind="enable:!readOnly(),click:$root.editDocumentMetadata"><i class="icon-edit"></i></button>
+        <button class="btn btn-mini" type="button" data-bind="enable:!readOnly,click:$root.deleteDocument"><i class="icon-remove"></i></button>
+        <button class="btn btn-mini" type="button" data-bind="enable:!readOnly,click:$root.editDocumentMetadata"><i class="icon-edit"></i></button>
     </div>
     <a class="pull-left" data-bind="attr:{href:url}" target="_blank">
         <img class="media-object img-rounded span1" data-bind="attr:{src:url, alt:name}" style="width:32px;height:32px;"  alt="image preview icon">
@@ -36,8 +36,8 @@
 
 <script id="objDocEditTmpl" type="text/html">
     <div class="btn-group pull-left" style="margin-top:4px;">
-        <button class="btn btn-mini" type="button" data-bind="enable:!readOnly(),click:$root.deleteDocument"><i class="icon-remove"></i></button>
-        <button class="btn btn-mini" type="button" data-bind="enable:!readOnly(),click:$root.editDocumentMetadata"><i class="icon-edit"></i></button>
+        <button class="btn btn-mini" type="button" data-bind="enable:!readOnly,click:$root.deleteDocument"><i class="icon-remove"></i></button>
+        <button class="btn btn-mini" type="button" data-bind="enable:!readOnly,click:$root.editDocumentMetadata"><i class="icon-edit"></i></button>
     </div>
     <a class="pull-left" data-bind="attr:{href:url}">
         <img class="media-object" data-bind="attr:{src:filetypeImg(), alt:name}" alt="document icon">
