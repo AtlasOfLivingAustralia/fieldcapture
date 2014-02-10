@@ -199,7 +199,7 @@
     </span>
     <span class="span9">
         Build your plan by adding activities and entering project targets. Submit your plan when it is built.
-        <button type="button" data-bind="click:confirmSubmitPlan" class="btn btn-success"><i class="icon-thumbs-up icon-white"></i> Submit plan</button>
+        <button type="button" data-bind="click:submitPlan" class="btn btn-success"><i class="icon-thumbs-up icon-white"></i> Submit plan</button>
     </span>
 </script>
 
