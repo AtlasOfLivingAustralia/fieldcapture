@@ -84,6 +84,13 @@ function DocumentViewModel (doc, owner) {
                 self.type(type[0]);
             }
         }
+        else if (file.name) {
+            var type = name.split('.').pop();
+            var imageTypes = ['gif','jpeg', 'png'];
+            if ($.inArray(type, imageTypes)) {
+                self.type('image');
+            }
+        }
     };
     this.filePreviewAvailable = function(file) {
         this.hasPreview(true);
@@ -163,7 +170,7 @@ function attachViewModelToFileUpload(uploadUrl, documentViewModel, uiSelector, p
     }).on('fileuploadprogressall', function(e, data) {
         documentViewModel.uploadProgress(data.loaded, data.total);
     }).on('fileuploaddone', function(e, data) {
-        var result = JSON.parse(data.result);
+        var result = $.parseJSON(data.result);
         if (!result) {
             result = {};
             result.error = 'No response from server';
