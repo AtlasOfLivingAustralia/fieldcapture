@@ -156,7 +156,8 @@ function attachViewModelToFileUpload(uploadUrl, documentViewModel, uiSelector, p
     $(uiSelector).fileupload({
         url:uploadUrl,
         formData:function(form) {return [{name:'document', value:documentViewModel.toJSONString()}]},
-        autoUpload:false
+        autoUpload:false,
+        forceIframeTransport: true
     }).on('fileuploadadd', function(e, data) {
 
         fileUploadHelper = data;
@@ -172,7 +173,9 @@ function attachViewModelToFileUpload(uploadUrl, documentViewModel, uiSelector, p
     }).on('fileuploadprogressall', function(e, data) {
         documentViewModel.uploadProgress(data.loaded, data.total);
     }).on('fileuploaddone', function(e, data) {
-        var result = $.parseJSON(data.result);
+
+        var result = $.parseJSON($('pre', data.result).text());
+
         if (!result) {
             result = {};
             result.error = 'No response from server';
