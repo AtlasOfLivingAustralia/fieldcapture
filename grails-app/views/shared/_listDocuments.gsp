@@ -10,8 +10,8 @@
 </div>
 
 <script id="imageDocTmpl" type="text/html">
-    <a class="pull-left" data-bind="attr:{href:url}" target="_blank">
-        <img class="media-object img-rounded span1" data-bind="attr:{src:url}, alt:name" style="width:32px;height:32px;" alt="image preview icon">
+    <a class="pull-left" style="width:32px;height:32px;" data-bind="attr:{href:url}" target="_blank">
+        <img class="media-object img-rounded span1" data-bind="attr:{src:url}, alt:name" style="width:32px;height:32px;" width="32" height="32" alt="image preview icon">
     </a>
     <div data-bind="template:'imgMediaBody'"></div>
 </script>
@@ -28,7 +28,7 @@
         <button class="btn btn-mini" type="button" data-bind="enable:!readOnly,click:$root.deleteDocument"><i class="icon-remove"></i></button>
         <button class="btn btn-mini" type="button" data-bind="enable:!readOnly,click:$root.editDocumentMetadata"><i class="icon-edit"></i></button>
     </div>
-    <a class="pull-left" data-bind="attr:{href:url}" target="_blank">
+    <a class="pull-left" style="width:32px;height:32px;" data-bind="attr:{href:url}" target="_blank">
         <img class="media-object img-rounded span1" data-bind="attr:{src:url, alt:name}" style="width:32px;height:32px;"  alt="image preview icon">
     </a>
     <div data-bind="template:'imgMediaBody'"></div>
