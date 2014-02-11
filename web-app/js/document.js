@@ -88,9 +88,12 @@ function DocumentViewModel (doc, owner) {
 
             var type = file.name.split('.').pop();
 
-            var imageTypes = ['gif','jpeg', 'jpg', 'png'];
-            if ($.inArray(type.toLowerCase(), imageTypes)) {
+            var imageTypes = ['gif','jpeg', 'jpg', 'png', 'tif', 'tiff'];
+            if ($.inArray(type.toLowerCase(), imageTypes) > -1) {
                 self.type('image');
+            }
+            else {
+                self.type('document');
             }
         }
     };
