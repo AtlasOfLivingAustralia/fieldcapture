@@ -109,6 +109,7 @@ function DocumentViewModel (doc, owner) {
         self.url = file.url;
         self.documentId = file.documentId;
         self.progress(100);
+        setTimeout(self.close, 1000);
     };
     this.fileUploadFailed = function(error) {
         this.error(error);
@@ -177,7 +178,8 @@ function attachViewModelToFileUpload(uploadUrl, documentViewModel, uiSelector, p
         documentViewModel.uploadProgress(data.loaded, data.total);
     }).on('fileuploaddone', function(e, data) {
 
-        var result = $.parseJSON($('pre', data.result).text());
+        var resultText = $('pre', data.result).text();
+        var result = $.parseJSON(resultText);
 
         if (!result) {
             result = {};

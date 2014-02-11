@@ -87,7 +87,7 @@ class ProxyController {
                     //flag error for extension
                     def error = [error: "Files with the extension '.${extension}' are not permitted.",
                     statusCode: "400",
-                    detail: "Files with the extension ${extension} are not permitted."]
+                    detail: "Files with the extension ${extension} are not permitted."] as JSON
                     response.setContentType('text/plain;charset=UTF8')
                     render error.toString()
                 }
@@ -96,7 +96,7 @@ class ProxyController {
                 response.setStatus(400)
                 def error = [error: "Unable to retrieve the file name.",
                 statusCode: "400",
-                detail: "Unable to retrieve the file name."]
+                detail: "Unable to retrieve the file name."] as JSON
                 response.setContentType('text/plain;charset=UTF8')
                 render error.toString()
             }

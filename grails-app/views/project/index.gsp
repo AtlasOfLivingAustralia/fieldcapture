@@ -760,13 +760,22 @@
                 }
             });
 
+            var newsAndEventsInitialised = false;
             $('#editnewsandevents-tab').on('shown', function() {
-                var newsAndEventsViewModel = new window.newsAndEventsViewModel(viewModel, newsAndEventsMarkdown);
-                ko.applyBindings(newsAndEventsViewModel, $('#editnewsAndEventsContent')[0]);
+                if (!newsAndEventsInitialised) {
+                    var newsAndEventsViewModel = new window.newsAndEventsViewModel(viewModel, newsAndEventsMarkdown);
+                    ko.applyBindings(newsAndEventsViewModel, $('#editnewsAndEventsContent')[0]);
+                    newsAndEventsInitialised = true;
+                }
+
             });
+            var projectStoriesInitialised = false;
             $('#editprojectstories-tab').on('shown', function() {
-                var projectStoriesViewModel = new window.projectStoriesViewModel(viewModel, projectStoriesMarkdown);
-                ko.applyBindings(projectStoriesViewModel, $('#editprojectStoriesContent')[0]);
+                if (!projectStoriesInitialised) {
+                    var projectStoriesViewModel = new window.projectStoriesViewModel(viewModel, projectStoriesMarkdown);
+                    ko.applyBindings(projectStoriesViewModel, $('#editprojectStoriesContent')[0]);
+                    projectStoriesInitialised = true;
+                }
             });
 
             // re-establish the previous tab state
