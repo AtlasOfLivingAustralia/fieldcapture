@@ -708,41 +708,16 @@
                         }
                     });
                 };
-                self.saveContent = function(attributeName) {
-                    var rawContent = $('#'+attributeName+'Input').val();
-                    var formattedContent = $('#'+attributeName+'Output').val();
-                    self[attributeName](formattedContent);
-                    var payload = {};
-                    payload[attributeName] = rawContent;
-                    payload.projectId = self.projectId;
-                    var url = fcConfig.projectUpdateUrl;
-                    $.ajax({
-                        url: url,
-                        type: 'POST',
-                        data: JSON.stringify(payload),
-                        contentType: 'application/json',
-                        success: function (data) {
-                            if (data.error) {
-                                alert(data.detail + ' \n' + data.error);
-                            }
 
-                        },
-                        error: function (data) {
-                            alert('An unhandled error occurred: ' + data.status);
-                        }
-                    });
-                };
-                self.cancelContentEdit = function(attributeName) {
-                    $('#'+attributeName+'Input').val(project[attributeName]);
-                    $('#'+attributeName+'Input').focus();
-                };
 
             }
 
+            var newsAndEventsMarkdown = '${(project.newsAndEvents?:"").markdownToHtml().encodeAsJavaScript()}';
+            var projectStoriesMarkdown = '${(project.projectStories?:"").markdownToHtml().encodeAsJavaScript()}';
             var viewModel = new ViewModel(
                 checkAndUpdateProject(${project}),
-                '${(project.newsAndEvents?:"").markdownToHtml().encodeAsJavaScript()}',
-                '${(project.projectStories?:"").markdownToHtml().encodeAsJavaScript()}',
+                newsAndEventsMarkdown,
+                projectStoriesMarkdown,
                 ${project.sites},
                 ${activities ?: []},
                 ${user?.isEditor?:false});
@@ -786,10 +761,12 @@
             });
 
             $('#editnewsandevents-tab').on('shown', function() {
-                initialisenewsAndEvents();
+                var newsAndEventsViewModel = new window.newsAndEventsViewModel(viewModel, newsAndEventsMarkdown);
+                ko.applyBindings(newsAndEventsViewModel, $('#editnewsAndEventsContent')[0]);
             });
             $('#editprojectstories-tab').on('shown', function() {
-                initialiseprojectStories();
+                var projectStoriesViewModel = new window.projectStoriesViewModel(viewModel, projectStoriesMarkdown);
+                ko.applyBindings(projectStoriesViewModel, $('#editprojectStoriesContent')[0]);
             });
 
             // re-establish the previous tab state

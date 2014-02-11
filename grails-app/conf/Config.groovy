@@ -174,6 +174,12 @@ if(!google.drawmaps.url){
 if(!app.view.nocache){
 	app.view.nocache = false
 }
+if(!merit.support.email) {
+    merit.support.email = 'MERIT@environment.gov.au'
+}
+
+// Markdown configuration to match behaviour of the JavaScript editor.
+markdown.hardwraps = true
 
 environments {
     development {
@@ -187,6 +193,7 @@ environments {
         security.cas.contextPath = "/" + appName
         ecodata.baseUrl = 'http://devt.ala.org.au:8080/ecodata/ws/'
         upload.images.url = grails.serverURL+'/image/'
+        emailFilter = /[A-Z0-9._%-]+@csiro\.au|chris\.godwin\.ala@gmail.com/
     }
     production {
         grails.logging.jul.usebridge = false
