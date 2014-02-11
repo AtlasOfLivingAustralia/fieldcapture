@@ -46,7 +46,7 @@
             }
         </style>
     <![endif]-->
-    <r:require modules="gmap3,mapWithFeatures,knockout,datepicker,amplify,jqueryValidationEngine,projects, attachDocuments"/>
+    <r:require modules="gmap3,mapWithFeatures,knockout,datepicker,amplify,jqueryValidationEngine,projects, attachDocuments, wmd"/>
 </head>
 <body>
 <div class="container-fluid">
@@ -144,9 +144,10 @@
                 <div data-bind="visible:description()">
                     <p class="well well-small more" data-bind="text:description"></p>
                 </div>
-
+            </div>
+            <div class="row-fluid">
                 <!-- show any primary images -->
-                <div data-bind="visible:primaryImages() !== null,foreach:primaryImages" class="span5">
+                <div data-bind="visible:primaryImages() !== null,foreach:primaryImages,css:{span5:primaryImages()!=null}">
                     <div class="thumbnail with-caption space-after">
                         <img class="img-rounded" data-bind="attr:{src:url, alt:name}" alt="primary image"/>
                         <p class="caption" data-bind="text:name"></p>
@@ -155,7 +156,7 @@
                 </div>
 
                 <!-- show other documents -->
-                <div id="documents" data-bind="css: { span6: documents().length > 0 }">
+                <div id="documents" data-bind="css: { span3: primaryImages() != null, span7: primaryImages() == null }">
                     <h4>Project documents</h4>
                     <div data-bind="visible:documents().length == 0">
                         No documents are currently attached to this project.
@@ -163,6 +164,17 @@
                     </div>
                     <g:render template="/shared/listDocuments"
                       model="[useExistingModel: true,editable:false,imageUrl:resource(dir:'/images/filetypes'),containerId:'overviewDocumentList']"/>
+                </div>
+
+                <div class="span4">
+                    <div data-bind="visible:newsAndEvents()">
+                        <h4>News and events</h4>
+                        <div id="newsAndEventsDiv" data-bind="html:newsAndEvents" class="well"></div>
+                    </div>
+                    <div data-bind="visible:projectStories()">
+                        <h4>Project stories</h4>
+                        <div id="projectStoriesDiv" data-bind="html:projectStories" class="well"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -268,6 +280,9 @@
                                 <li ${activeClass}><a href="#settings" id="settings-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Project settings</a></li>
                                 <g:set var="activeClass" value=""/>
                             </g:if>
+                            <li><a href="#editNewsAndEvents" id="editnewsandevents-tab" data-toggle="tab"><i class="icon-chevron-right"></i> News and events</a></li>
+                            <li><a href="#editProjectStories" id="editprojectstories-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Project stories</a></li>
+
                             <li ${activeClass}><a href="#permissions" id="permissions-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Project access</a></li>
                             <li><a href="#species" id="species-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Species of interest</a></li>
                             <li><a href="#edit-documents" id="documents-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Documents</a></li>
@@ -290,6 +305,15 @@
                                 </div>
                                 <g:set var="activeClass" value=""/>
                             </g:if>
+                            <div id="editNewsAndEvents" class="pill-pane">
+
+                                <g:render template="editProjectContent" model="${[attributeName:'newsAndEvents', header:'News and events']}"/>
+                            </div>
+
+                            <div id="editProjectStories" class="pill-pane">
+                                <g:render template="editProjectContent" model="${[attributeName:'projectStories', header:'Project stories']}"/>
+                            </div>
+
                             <div id="permissions" class="pill-pane ${activeClass}">
                                 <h3>Project Access</h3>
                                 %{--<a name="permissions"></a>--}%
@@ -432,7 +456,7 @@
                 };
             };
 
-            function ViewModel(project, sites, activities, isUserEditor) {
+            function ViewModel(project, newsAndEvents, projectStories, sites, activities, isUserEditor) {
                 var self = this;
                 self.name = ko.observable(project.name);
                 self.description = ko.observable(project.description);
@@ -451,6 +475,8 @@
                 self.organisationName = ko.observable(project.organisationName);
                 self.associatedProgram = ko.observable(); // don't initialise yet - we want the change to trigger dependents
                 self.associatedSubProgram = ko.observable(project.associatedSubProgram);
+                self.newsAndEvents = ko.observable(newsAndEvents);
+                self.projectStories = ko.observable(projectStories);
                 self.mapLoaded = ko.observable(false);
 
                 self.transients = {};
@@ -682,11 +708,41 @@
                         }
                     });
                 };
+                self.saveContent = function(attributeName) {
+                    var rawContent = $('#'+attributeName+'Input').val();
+                    var formattedContent = $('#'+attributeName+'Output').val();
+                    self[attributeName](formattedContent);
+                    var payload = {};
+                    payload[attributeName] = rawContent;
+                    payload.projectId = self.projectId;
+                    var url = fcConfig.projectUpdateUrl;
+                    $.ajax({
+                        url: url,
+                        type: 'POST',
+                        data: JSON.stringify(payload),
+                        contentType: 'application/json',
+                        success: function (data) {
+                            if (data.error) {
+                                alert(data.detail + ' \n' + data.error);
+                            }
+
+                        },
+                        error: function (data) {
+                            alert('An unhandled error occurred: ' + data.status);
+                        }
+                    });
+                };
+                self.cancelContentEdit = function(attributeName) {
+                    $('#'+attributeName+'Input').val(project[attributeName]);
+                    $('#'+attributeName+'Input').focus();
+                };
 
             }
 
             var viewModel = new ViewModel(
                 checkAndUpdateProject(${project}),
+                '${(project.newsAndEvents?:"").markdownToHtml().encodeAsJavaScript()}',
+                '${(project.projectStories?:"").markdownToHtml().encodeAsJavaScript()}',
                 ${project.sites},
                 ${activities ?: []},
                 ${user?.isEditor?:false});
@@ -728,6 +784,14 @@
                     planTabInitialised = true;
                 }
             });
+
+            $('#editnewsandevents-tab').on('shown', function() {
+                initialisenewsAndEvents();
+            });
+            $('#editprojectstories-tab').on('shown', function() {
+                initialiseprojectStories();
+            });
+
             // re-establish the previous tab state
             var storedTab = amplify.store('project-tab-state');
             var isEditor = ${user?.isEditor?:false};
