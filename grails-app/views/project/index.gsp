@@ -9,8 +9,11 @@
     var fcConfig = {
         serverUrl: "${grailsApplication.config.grails.serverURL}",
         projectUpdateUrl: "${createLink(action: 'ajaxUpdate', id: project.projectId)}",
-        siteDeleteUrl: "${createLink(controller: 'site', action: 'ajaxDeleteSitesFromProject')}",
+        sitesDeleteUrl: "${createLink(controller: 'site', action: 'ajaxDeleteSitesFromProject', id:project.projectId)}",
+        siteDeleteUrl: "${createLink(controller: 'site', action: 'ajaxDeleteSiteFromProject', id:project.projectId)}",
         siteViewUrl: "${createLink(controller: 'site', action: 'index')}",
+        siteEditUrl: "${createLink(controller: 'site', action: 'edit')}",
+        removeSiteUrl: "${createLink(controller: 'site', action: '')}",
         activityEditUrl: "${createLink(controller: 'activity', action: 'edit')}",
         activityEnterDataUrl: "${createLink(controller: 'activity', action: 'enterData')}",
         activityPrintUrl: "${createLink(controller: 'activity', action: 'print')}",
@@ -30,7 +33,8 @@
         spatialWmsUrl: "${grailsApplication.config.spatial.wms.url}",
         sldPolgonDefaultUrl: "${grailsApplication.config.sld.polgon.default.url}",
         sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}",
-        organisationLinkBaseUrl: "${grailsApplication.config.collectory.baseURL + 'public/show/'}"
+        organisationLinkBaseUrl: "${grailsApplication.config.collectory.baseURL + 'public/show/'}",
+        returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
         },
         here = window.location.href;
 
@@ -204,14 +208,7 @@
 
                 <div class="row-fluid"  data-bind="visible: sites.length > 0">
                     <div class="span5 well list-box">
-
-                        <div class="btn-group btn-group-vertical pull-right">
-                            <a data-bind="click: $root.addSite" type="button" class="btn ">Add new site</a>
-                            <a data-bind="click: $root.addExistingSite" type="button" class="btn">Add existing site</a>
-                            <a data-bind="click: $root.uploadShapefile" type="button" class="btn">Upload sites from shapefile</a>
-                            <a data-bind="click: $root.removeAllSites" type="button" class="btn">Delete all sites</a>
-                        </div>
-
+                        <div class="span9">
                         <div class="control-group">
                             <div class="input-append">
                                 <input type="text" class="filterinput input-medium"
@@ -227,14 +224,18 @@
                         </div>
 
                         <div class="scroll-list">
-                            <ul id="siteList"
+                            <ul id="siteList" style="list-style: none; margin-left: 0px;"
                                 data-bind="template: {foreach:displayedSites},
                                                   beforeRemove: hideElement,
                                                   afterAdd: showElement">
                                 <li data-bind="event: {mouseover: $root.highlight, mouseout: $root.unhighlight}">
-                                    <a data-bind="text:name, attr: {href:'${createLink(controller: "site", action: "index")}' + '/' + siteId}"></a>
-                                    <span data-bind="text:state"></span><br>
-                                    <span data-bind="text:address" style="font-size:11px;color:#666;"></span>
+                                    <span>
+                                        <button type="button" data-bind="click:$root.editSite" class="btn btn-container"><i class="icon-edit" title="Edit Site"></i></button>
+                                        <button type="button" data-bind="click:$root.viewSite" class="btn btn-container"><i class="icon-eye-open" title="View Site"></i></button>
+                                        <button type="button" data-bind="click:$root.deleteSite" class="btn btn-container"><i class="icon-remove" title="Delete Site"></i></button>
+                                    </span>
+                                    <a style="margin-left:10px;" data-bind="text:name, attr: {href:'${createLink(controller: "site", action: "index")}' + '/' + siteId}"></a>
+
                                 </li>
                             </ul>
                         </div>
@@ -249,6 +250,7 @@
                                 offset: <span id="offset" data-bind="text:offset"></span>
                             </g:if>
                         </div>
+
                     </div>
                      %{--<div class="span5" id="sites-scroller">
                         <ul class="unstyled inline" data-bind="foreach: sites">
@@ -258,10 +260,23 @@
                             </li>
                         </ul>
                     </div>--}%
+
+                    <div class="row-fluid">
+                        <div class="span3">
+                            <div class="btn-group btn-group-vertical pull-right">
+                                <a data-bind="click: $root.addSite" type="button" class="btn ">Add new site</a>
+                                <a data-bind="click: $root.addExistingSite" type="button" class="btn">Add existing site</a>
+                                <a data-bind="click: $root.uploadShapefile" type="button" class="btn">Upload sites from shapefile</a>
+                                <a data-bind="click: $root.removeAllSites" type="button" class="btn">Delete all sites</a>
+                            </div>
+                        </div>
+                </div>
+                    </div>
                     <div class="span7">
                         <div id="map" style="width:100%"></div>
                     </div>
                 </div>
+
             </div>
 
             <div class="tab-pane" id="dashboard">
@@ -648,8 +663,13 @@
 
                 self.throttledFilter.subscribe(function (val) {
                     self.offset(0);
-                    if (val) {
-                        var regex = new RegExp('\\b' + val, 'i');
+
+                    self.filterSites(val);
+                });
+
+                self.filterSites = function(filter) {
+                    if (filter) {
+                        var regex = new RegExp('\\b' + filter, 'i');
 
                         self.filteredSites([]);
                         $.each(self.sites, function(i, site) {
@@ -663,8 +683,7 @@
                         self.filteredSites(self.sites);
                         self.displaySites();
                     }
-
-                });
+                };
                 self.clearFilter = function (model, event) {
 
                     self.sitesFilter("");
@@ -679,7 +698,7 @@
                     bootbox.confirm("Are you sure you want to remove these sites? This will remove the links to this project but will NOT remove the sites from the site.", function(result){
                        if(result){
                            var that = this;
-                           $.get(fcConfig.siteDeleteUrl + '/' + '${project.projectId}', function (data) {
+                           $.get(fcConfig.sitesDeleteUrl, function (data) {
                                if (data.status === 'deleted') {
                                    //self.sites.remove(that);
                                }
@@ -688,6 +707,31 @@
                            });
                        }
                     });
+                };
+                this.editSite = function(site) {
+                    var url = fcConfig.siteEditUrl+'/'+site.siteId+'?returnTo='+fcConfig.returnTo;
+                    document.location.href = url;
+                };
+                this.deleteSite = function(site) {
+                    bootbox.confirm("Are you sure you want to remove this site from this project?", function(result){
+                       if(result){
+
+                           $.get(fcConfig.siteDeleteUrl+'?siteId='+site.siteId, function (data) {
+                               $.each(self.sites, function(i, tmpSite) {
+                                   if (site.siteId === tmpSite.siteId) {
+                                       self.sites.splice(i, 1);
+                                       return false;
+                                   }
+                               });
+                               self.filterSites(self.sitesFilter());
+                           });
+
+                       }
+                    });
+                };
+                this.viewSite = function(site) {
+                    var url = fcConfig.siteViewUrl+'/'+site.siteId+'?returnTo='+fcConfig.returnTo;
+                    document.location.href = url;
                 };
                 this.addSite = function () {
                      document.location.href = fcConfig.siteCreateUrl;

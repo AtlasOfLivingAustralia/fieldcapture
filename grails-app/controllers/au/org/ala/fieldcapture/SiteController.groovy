@@ -108,6 +108,27 @@ class SiteController {
         }
     }
 
+    def ajaxDeleteSiteFromProject(String id) {
+        def projectId = id
+        def siteId = params.siteId
+        if (!projectId || !siteId) {
+            render status:400, text:'The siteId parameter is mandatory'
+            return
+        }
+        if (!projectService.canUserEditProject(userService.getCurrentUserId(), projectId)) {
+            render status:403, text: "Access denied: User does not have permission to edit sites for project: ${projectId}"
+            return
+        }
+
+        def site = siteService.get(siteId, [raw:'true'])
+        def projects = site.projects
+        projects.remove(projectId)
+
+        def result = siteService.update(siteId, [projects:projects])
+        render result as JSON
+
+    }
+
     def ajaxDelete(String id) {
         // permissions check
         if (!isUserMemberOfSiteProjects(siteService.get(id))) {
