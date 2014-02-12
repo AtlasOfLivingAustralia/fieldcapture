@@ -188,6 +188,11 @@ class WebService {
                 result.status = resp.status
                 result.content = message
             }
+
+            response.failure = {resp ->
+                result.status = resp.status
+                result.error = "Error POSTing to ${url}"
+            }
         }
         result
     }

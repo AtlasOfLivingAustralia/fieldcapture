@@ -180,12 +180,14 @@ class SiteController {
 
             else {
                 //flag error for extension
-                flash.message = "An error was encountered when processing the shapefile: ${result.error}"
-                render view:'upload', model:[projectId: params.projectId]
+                def message ='Please ensure the shapefile is valid and uses the WGS 84 coordinate reference system.'
+
+                flash.message = "An error was encountered when processing the shapefile: ${message}"
+                render view:'upload', model:[projectId: params.projectId, returnTo:params.returnTo]
             }
 
         } else {
-            render view:'upload', model:[projectId: params.projectId]
+            render view:'upload', model:[projectId: params.projectId, returnTo:params.returnTo]
         }
     }
 

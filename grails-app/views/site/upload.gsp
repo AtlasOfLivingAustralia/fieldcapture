@@ -34,9 +34,31 @@
 <div class="container-fluid">
 
     <g:if test="${!shapeFileId}">
+
         <h2>Upload a shape file</h2>
+
+        <g:if test="${flash.errorMessage || flash.message}">
+            <div class="row-fluid">
+                <div class="span5">
+                    <div class="alert alert-error">
+                        <button class="close" onclick="$('.alert').fadeOut();" href="#">×</button>
+                        ${flash.errorMessage?:flash.message}
+                    </div>
+                </div>
+            </div>
+        </g:if>
+
+        <div class="row-fluid">
+            <div class="span5">
+                <div class="alert">
+                    <button class="close" onclick="$('.alert').fadeOut();" href="#">×</button>
+                    Please note only the WGS 84 coordinate reference system is currently supported.
+                </div>
+            </div>
+        </div>
+
         <g:uploadForm id="shapeFileUpload" class="loadPlanData" controller="site" action="uploadShapeFile">
-            <input type="hidden" name="returnTo" value="${params.returnTo}">
+            <input type="hidden" name="returnTo" value="${returnTo}">
             <input type="hidden" name="projectId" value="${projectId}">
             <label for="shapefile">Attach shape file (zip format)</label>
             <input id="shapefile" type="file" accept="application/zip" name="shapefile"/>
