@@ -52,7 +52,7 @@
             <div class="span5">
                 <div class="alert">
                     <button class="close" onclick="$('.alert').fadeOut();" href="#">×</button>
-                    Please note only the WGS 84 coordinate reference system is currently supported.
+                    Please note only the WGS 84 (EPSG:4326) coordinate reference system is currently supported.
                 </div>
             </div>
         </div>
