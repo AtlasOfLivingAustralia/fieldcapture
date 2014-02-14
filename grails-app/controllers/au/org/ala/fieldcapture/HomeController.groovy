@@ -50,15 +50,15 @@ class HomeController {
     }
 
     def about() {
-        renderStaticPage(SettingPageType.ABOUT)
+        renderStaticPage(SettingPageType.ABOUT, true)
     }
 
     def help() {
-        renderStaticPage(SettingPageType.HELP)
+        renderStaticPage(SettingPageType.HELP, false)
     }
 
     def contacts() {
-        renderStaticPage(SettingPageType.CONTACTS)
+        renderStaticPage(SettingPageType.CONTACTS, false)
     }
 
     def staticPage(String id) {
@@ -71,8 +71,8 @@ class HomeController {
         }
     }
 
-    private renderStaticPage(SettingPageType settingType) {
+    private renderStaticPage(SettingPageType settingType, showNews) {
         def content = settingService.getSettingText(settingType)
-        render view: 'about', model: [settingType: settingType, content: content]
+        render view: 'about', model: [settingType: settingType, content: content, showNews:showNews]
     }
 }

@@ -35,6 +35,7 @@
                     <markdown:renderHtml>${content}</markdown:renderHtml>
                 </div>
             </div><!-- /.spanN  -->
+            <g:if test="${showNews}">
             <g:set var="newsText"><fc:getSettingContent settingType="${SettingPageType.NEWS}"/></g:set>
             <div class="span5 well well-small">
                 <g:if test="${fc.userInRole(role: grailsApplication.config.security.cas.alaAdminRole) || fc.userInRole(role: grailsApplication.config.security.cas.adminRole)}">
@@ -43,6 +44,7 @@
                 </g:if>
                 ${newsText}
             </div>
+            </g:if>
 
         </div><!-- /.row-fluid  -->
     </div>
