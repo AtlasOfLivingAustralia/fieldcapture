@@ -243,7 +243,7 @@
 </script>
 
 <script id="stageNotApprovedTmpl" type="text/html">
-
+    <g:if test="${user?.isAdmin}">
     <br/>
     <button type="button" class="btn btn-success btn-small" style="margin-top:4px;"
     data-bind="
@@ -251,7 +251,7 @@
             click:$parents[1].submitReport,
             attr:{title:$parents[1].readyForApproval()?'Submit this stage for implementation approval.':'Report cannot be submitted while activities are still open.'}"
     >Submit report</button>
-
+    </g:if>
 </script>
 
 <script id="stageApprovedTmpl" type="text/html">
