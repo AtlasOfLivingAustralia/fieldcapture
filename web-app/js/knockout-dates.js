@@ -509,14 +509,16 @@ ko.bindingHandlers.fileUpload = {
             // The upload URL is specified using the data-url attribute to allow it to be easily pulled from the
             // application configuration.
             $(element).fileupload('option', 'completed', function(e, data) {
-                $.each(data.result, function(index, obj) {
-                    if (observable.hasOwnProperty('push')) {
-                        observable.push(new Image(obj));
-                    }
-                    else {
-                        observable(new Image(obj))
-                    }
-                });
+                if (data.result && data.result.files) {
+                    $.each(data.result.files, function(index, obj) {
+                        if (observable.hasOwnProperty('push')) {
+                            observable.push(new Image(obj));
+                        }
+                        else {
+                            observable(new Image(obj))
+                        }
+                    });
+                }
             });
             $(element).fileupload('option', 'destroyed', function(e, data) {
                 var filename = $(e.currentTarget).attr('data-filename');
@@ -552,8 +554,17 @@ ko.bindingHandlers.fileUpload = {
             $(element).fileupload('option', 'completed', function(e, data) {
                 addCallbacks();
             });
-            var data = isArray ? {result:value} : {result:[value]};
-            $(element).fileupload('option', 'done').call(element, '', data);
+            var data = {result:{}};
+            if (isArray)  {
+                data.result.files = value
+            }
+            else {
+                data.result.files = [value];
+            }
+            var doneFunction = $(element).fileupload('option', 'done');
+            var e = {isDefaultPrevented:function(){return false;}};
+
+            doneFunction.call(element, e, data);
         }
         else {
             addCallbacks();

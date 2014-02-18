@@ -144,10 +144,11 @@ class ImageController {
                         delete_url: grailsApplication.config.grails.serverURL +
                                 "/image/delete?filename=" + filename,
                         delete_type: 'DELETE']
-                result = [md]
+                result = [files:[md]]
             }
         }
         log.debug result
+
         response.addHeader('Content-Type','text/plain')
         def json = result as JSON
         render json.toString()
@@ -155,7 +156,7 @@ class ImageController {
 
     def delete = {
         log.debug "deleted " + params.filename
-        render 'Deleted'
+        render '{"deleted":true}'
     }
 
     /**

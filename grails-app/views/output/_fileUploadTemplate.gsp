@@ -48,7 +48,7 @@
 
         {% } %}
         <td>
-            <button class="delete-image btn btn-mini" data-type="DELETE" data-url="${grailsApplication.config.upload.images.url}" data-filename="{%=file.name%}">
+            <button class="delete-image delete btn btn-mini" data-type="DELETE" data-url="${grailsApplication.config.upload.images.url}" data-filename="{%=file.name%}">
                 <i class="icon-trash"></i>
                 <span>{%=locale.fileupload.destroy%}</span>
             </button>
