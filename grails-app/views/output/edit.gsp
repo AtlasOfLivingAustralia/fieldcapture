@@ -5,7 +5,7 @@
     <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
     <title>Edit | ${activity.activityId ?: 'new'} | ${site.name} | ${site.projectName} | Field Capture</title>
     <md:modelStyles model="${model}" edit="true"/>
-    <r:require modules="jstimezonedetect,knockout,jqueryValidationEngine,datepicker,jQueryImageUpload"/>
+    <r:require modules="jstimezonedetect,knockout,jqueryValidationEngine,datepicker,jQueryFileUpload"/>
 </head>
 <body>
 <div class="container-fluid">
