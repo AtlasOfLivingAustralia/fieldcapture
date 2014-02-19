@@ -25,7 +25,7 @@
         },
         here = document.location.href;
     </r:script>
-    <r:require modules="knockout,jqueryValidationEngine,datepicker,jQueryFileUploadUI,mapWithFeatures,attachDocuments"/>
+    <r:require modules="knockout,jqueryValidationEngine,datepicker,jQueryFileUploadUI,mapWithFeatures,attachDocuments,species"/>
 </head>
 <body>
 <div class="container-fluid validationEngineContainer" id="validation-container">
@@ -110,7 +110,7 @@
 
                 <div class="row-fluid">
                     <div class="span6 required">
-                        <label for="startDate""><b>Actual start date</b>
+                        <label for="startDate"><b>Actual start date</b>
                         <fc:iconHelp title="Start date" printable="${printView}">Date the activity was started.</fc:iconHelp>
                         </label>
                         <g:if test="${printView}">
