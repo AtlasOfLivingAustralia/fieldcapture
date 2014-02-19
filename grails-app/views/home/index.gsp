@@ -100,7 +100,7 @@
                         <ul class="facetValues">
                             <g:each var="t" in="${f.terms}" status="i">
                                 <g:if test="${i < max}">
-                                    <li><a href="${fqLink}&fq=${fn.encodeAsURL()}:${t.term}"><g:message
+                                    <li><a href="${fqLink}&fq=${fn.encodeAsURL()}:${t.term.encodeAsURL()}"><g:message
                                             code="label.${t.term}" default="${t.term}"/></a> (${t.count})
                                     </li>
                                 </g:if>
@@ -116,7 +116,7 @@
                                 <div class="modal-body">
                                     <ul class="facetValues">
                                         <g:each var="t" in="${f.terms}">
-                                            <li data-sortalpha="${t.term.toLowerCase().trim()}" data-sortcount="${t.count}"><a href="${fqLink}&fq=${fn.encodeAsURL()}:${t.term}"><g:message
+                                            <li data-sortalpha="${t.term.toLowerCase().trim()}" data-sortcount="${t.count}"><a href="${fqLink}&fq=${fn.encodeAsURL()}:${t.term.encodeAsURL()}"><g:message
                                                     code="label.${t.term}" default="${t.term?:'[empty]'}"/></a> (<span class="fcount">${t.count}</span>)
                                             </li>
                                         </g:each>
@@ -538,7 +538,7 @@
 
         <g:if test="${params.fq}">
             <g:set var="fqList" value="${[params.fq].flatten()}"/>
-            url += "&fq=${fqList.join('&fq=')}";
+            url += "&fq=${fqList.collect{it.encodeAsURL()}.join('&fq=')}";
         </g:if>
 
         $.getJSON(url, function(data) {
@@ -733,7 +733,7 @@
 
         <g:if test="${params.fq}">
         <g:set var="fqList" value="${[params.fq].flatten()}"/>
-        params += "&fq=${fqList.join('&fq=')}";
+        params += "&fq=${fqList.collect{it.encodeAsURL()}.join('&fq=')}";
         </g:if>
 
         $.post(url, params, function(data1) {
