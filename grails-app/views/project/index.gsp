@@ -540,7 +540,7 @@
                             organisationName: self.organisationName(),
                             associatedProgram: self.associatedProgram(),
                             associatedSubProgram: self.associatedSubProgram(),
-                            funding: self.funding()
+                            funding: new Number(self.funding())
                         };
                         if (self.regenerateProjectTimeline()) {
                             var dates = {
