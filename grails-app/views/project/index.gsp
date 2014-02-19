@@ -115,14 +115,12 @@
                         <span data-bind="text:associatedSubProgram"></span>
                     </h4>
                 </div>
-                <g:if test="${project.funding}">
-                    <div class="clearfix" >
-                        <h4>
-                            Approved funding (GST inclusive): <g:formatNumber number="${project.funding as java.math.BigDecimal}" type="currency" currencyCode="AUD" currencySymbol="\$"/>
-                        </h4>
-                    </div>
-                </g:if>
+                <div class="clearfix" data-bind="visible:funding()">
+                    <h4>
+                        Approved funding (GST inclusive): <span data-bind="text:funding.formattedCurrency"></span>
+                    </h4>
 
+                </div>
 
                 <div data-bind="visible:plannedStartDate()">
                     <h4>
@@ -480,6 +478,8 @@
                 self.manager = ko.observable(project.manager);
                 self.plannedStartDate = ko.observable(project.plannedStartDate).extend({simpleDate: false});
                 self.plannedEndDate = ko.observable(project.plannedEndDate).extend({simpleDate: false});
+                self.funding = ko.observable(project.funding).extend({currency:{}});
+
                 self.regenerateProjectTimeline = ko.observable(false);
                 self.projectDatesChanged = ko.computed(function() {
                     return project.plannedStartDate != self.plannedStartDate() ||
@@ -510,6 +510,7 @@
                 self.transients.subprogramsToDisplay = ko.computed(function () {
                     return self.transients.subprograms[self.associatedProgram()];
                 });
+
                 self.loadPrograms = function (programsModel) {
                     $.each(programsModel.programs, function (i, program) {
                         self.transients.programs.push(program.name);
@@ -538,7 +539,8 @@
                             organisation: self.organisation(),
                             organisationName: self.organisationName(),
                             associatedProgram: self.associatedProgram(),
-                            associatedSubProgram: self.associatedSubProgram()
+                            associatedSubProgram: self.associatedSubProgram(),
+                            funding: self.funding()
                         };
                         if (self.regenerateProjectTimeline()) {
                             var dates = {

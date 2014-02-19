@@ -30,12 +30,6 @@
 </div>
 <div class="row-fluid">
     <div class="control-group span4">
-        <label class="control-label" for="manager">Project manager</label>
-        <div class="controls">
-            <g:textField class="" name="manager" data-bind="value:manager"/>
-        </div>
-    </div>
-    <div class="control-group span4">
         <label class="control-label" for="externalId">External id</label>
         <div class="controls">
             <g:textField class="" name="externalId" data-bind="value:externalId"/>
@@ -50,19 +44,36 @@
 </div>
 
 <div class="row-fluid">
-    <div class="span6">
+    <div class="control-group span4">
+        <label class="control-label" for="manager">Project manager</label>
+        <div class="controls">
+            <g:textField class="" name="manager" data-bind="value:manager"/>
+        </div>
+    </div>
+
+    <div class="control-group span4">
+        <label class="control-label" for="manager">Project funding</label>
+        <div class="controls">
+            <g:textField class="" name="funding" data-bind="value:funding"/>
+        </div>
+    </div>
+
+</div>
+
+<div class="row-fluid">
+    <div class="span4">
         <label class="control-label">Program name</label>
         <select data-bind="value:associatedProgram,options:transients.programs,optionsCaption: 'Choose...'"
                 data-validation-engine="validate[required]"></select>
     </div>
-    <div class="span6">
+    <div class="span4">
         <label class="control-label">Sub-program name</label>
         <select data-bind="value:associatedSubProgram,options:transients.subprogramsToDisplay,optionsCaption: 'Choose...'"></select>
     </div>
 </div>
 
 <div class="row-fluid">
-    <div class="span6">
+    <div class="span4">
         <label for="startDate">Planned start date
         <fc:iconHelp title="Start date">Date the project is intended to commence.</fc:iconHelp>
         </label>
@@ -70,7 +81,7 @@
             <fc:datePicker targetField="plannedStartDate.date" name="startDate" data-validation-engine="validate[required]" printable="${printView}" size="input-large"/>
         </div>
     </div>
-    <div class="span6">
+    <div class="span4">
         <label for="endDate">Planned end date
         <fc:iconHelp title="End date">Date the project is intended to finish.</fc:iconHelp>
         </label>
