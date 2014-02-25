@@ -63,9 +63,15 @@
                                 <span data-bind="text:fileButtonText">Attach file</span>
                             </span>
                         </div>
-                        <div class="controls" style="margin-top:5px;">
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="fileLabel"></label>
+
+                        <div class="controls">
+
                             <span data-bind="visible:filename()">
-                                <input type="text" readonly="readonly" data-bind="value:fileLabel"/>
+                                <input id="fileLabel" type="text" readonly="readonly" data-bind="value:fileLabel"/>
                                 <button class="btn" data-bind="click:removeFile">
                                     <span class="icon-remove"></span>
                                 </button>
