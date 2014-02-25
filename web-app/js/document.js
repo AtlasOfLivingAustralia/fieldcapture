@@ -33,6 +33,9 @@ function DocumentViewModel (doc, owner) {
     this.progress = ko.observable(0);
     this.complete = ko.observable(false);
     this.readOnly = doc && doc.readOnly ? doc.readOnly : false;
+    this.fileButtonText = ko.computed(function() {
+        return (self.filename() ? "Change file" : "Attach file");
+    });
     // this supports a checkbox that allows the user to assert that this image is to be used
     // as the primary project image - implemented as a writeable computed
     this.isPrimaryProjectImage = ko.computed({

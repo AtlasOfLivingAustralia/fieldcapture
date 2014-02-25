@@ -56,11 +56,14 @@
                         <label class="control-label" for="documentFile">File</label>
 
                         <div class="controls">
-                            <span class="btn fileinput-button" data-bind="visible:!filename()">
+
+                            <span class="btn fileinput-button">
                                 <i class="icon-plus"></i>
                                 <input id="documentFile" type="file" name="files"/>
-                                Attach file
+                                <span data-bind="text:fileButtonText">Attach file</span>
                             </span>
+                        </div>
+                        <div class="controls" style="margin-top:5px;">
                             <span data-bind="visible:filename()">
                                 <input type="text" readonly="readonly" data-bind="value:fileLabel"/>
                                 <button class="btn" data-bind="click:removeFile">
