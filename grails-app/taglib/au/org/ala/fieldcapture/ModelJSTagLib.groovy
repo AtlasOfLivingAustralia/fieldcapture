@@ -487,6 +487,7 @@ class ModelJSTagLib {
             out << """
 
             self.load${model.name} = function (data) {
+                self.data.${model.name}([]);
                 if (data === undefined) {
                     ${insertDefaultModel}
                 } else {
@@ -510,6 +511,17 @@ class ModelJSTagLib {
             };
             self.${model.name}rowCount = function () {
                 return self.data.${model.name}().length;
+            };
+            self.upload${model.name}TableData = function() {
+                var options = {
+                    done:function(e, data) {console.log(data);},
+                    fail:function(e, data) {console.log(data);},
+                    uploadTemplateId: "${model.name}template-upload",
+                    downloadTemplateId: "${model.name}template-download",
+                    formData:{outputName:'${attrs.output}', listName:'${model.name}'}
+
+                };
+                uploadFile('#${model.name}TableDataUpload', '${createLink([controller: 'activity', action: 'ajaxUpload'])}', options);
             };
 """
             if (editableRows) {

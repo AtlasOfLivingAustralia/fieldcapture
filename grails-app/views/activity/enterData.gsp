@@ -25,7 +25,7 @@
         },
         here = document.location.href;
     </r:script>
-    <r:require modules="knockout,jqueryValidationEngine,datepicker,jQueryFileUploadUI,mapWithFeatures,attachDocuments,species"/>
+    <r:require modules="knockout,jqueryValidationEngine,datepicker,jQueryFileUploadUI,mapWithFeatures,attachDocuments,species,amplify"/>
 </head>
 <body>
 <div class="container-fluid validationEngineContainer" id="validation-container">
@@ -209,7 +209,7 @@
                 self.transients.dummy = ko.observable();
 
                 // add declarations for dynamic data
-                <md:jsViewModel model="${model}" edit="true" viewModelInstance="${blockId}ViewModelInstance"/>
+                <md:jsViewModel model="${model}"  output="${output.name}"  edit="true" viewModelInstance="${blockId}ViewModelInstance"/>
 
                 // this will be called when generating a savable model to remove transient properties
                 self.removeBeforeSave = function (jsData) {
@@ -248,7 +248,10 @@
             };
 
             window[viewModelInstance] = new this[viewModelName]();
-            window[viewModelInstance].loadData(${output.data ?: '{}'});
+
+            var output = ${output.data ?: '{}'};
+
+            window[viewModelInstance].loadData(output);
 
             // dirtyFlag must be defined after data is loaded
             window[viewModelInstance].dirtyFlag = ko.dirtyFlag(window[viewModelInstance], false);
@@ -266,6 +269,23 @@
             master.register(viewModelInstance, window[viewModelInstance].modelForSaving,
              window[viewModelInstance].dirtyFlag.isDirty, window[viewModelInstance].dirtyFlag.reset);
 
+            // Check for locally saved data for this output - this will happen in the event of a session timeout
+            // for example.
+            var savedData = amplify.store('activity-${activity.activityId}');
+            var savedOutput = null;
+            if (savedData) {
+                var outputData = $.parseJSON(savedData);
+                $.each(outputData.outputs, function(i, tmpOutput) {
+                    if (tmpOutput.name === '${output.name}') {
+                        if (tmpOutput.data) {
+                            savedOutput = tmpOutput.data;
+                        }
+                    }
+                });
+            }
+            if (savedOutput) {
+                window[viewModelInstance].loadData(savedOutput);
+            }
         });
 
             </r:script>
@@ -283,6 +303,14 @@
         </div>
     </g:if>
 
+</div>
+
+<div id="timeoutMessage" class="hide">
+
+    <span class='label label-important'>Important</span><h4>There was an error while trying to save your changes.</h4>
+    <p>This could be because your login has timed out or the internet is unavailable.</p>
+    <p>Your data has been saved on this computer but you may need to login again before the data can be sent to the server.</p>
+    <a href="${createLink(action:'enterData', id:activity.activityId)}?returnTo=${returnTo}">Click here to refresh your login and reload this page.</a>
 </div>
 
 <r:script>
@@ -322,6 +350,7 @@
          * Validates the entire page before saving.
          */
         this.save = function () {
+
             var activityData, outputs = [];
             if ($('#validation-container').validationEngine('validate')) {
                 $.each(this.subscribers, function(i, obj) {
@@ -339,10 +368,13 @@
                 }
                 if (activityData === undefined) { activityData = {}}
                 activityData.outputs = outputs;
+
+                var toSave = JSON.stringify(activityData);
+                amplify.store('activity-${activity.activityId}', toSave);
                 $.ajax({
                     url: "${createLink(action: 'ajaxUpdate', id: activity.activityId)}",
                     type: 'POST',
-                    data: JSON.stringify(activityData),
+                    data: toSave,
                     contentType: 'application/json',
                     success: function (data) {
                         var errorText = "";
@@ -359,10 +391,19 @@
                             self.reset();
                             self.saved();
                         }
+                        amplify.store('activity-${activity.activityId}', null);
                     },
-                    error: function (data) {
-                        var status = data.status;
-                        alert('An unhandled error occurred: ' + data.status);
+                    error: function (jqXHR, status, error) {
+
+                        // This is to detect a redirect to CAS response due to session timeout, which is not
+                        // 100% reliable using ajax (e.g. no network will give the same response).
+                        if (jqXHR.readyState == 0) {
+
+                            bootbox.alert($('#timeoutMessage').html());
+                        }
+                        else {
+                            alert('An unhandled error occurred: ' + error);
+                        }
                     }
                 });
             }
