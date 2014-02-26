@@ -1,5 +1,4 @@
 package au.org.ala.fieldcapture
-
 import grails.converters.JSON
 import org.codehaus.groovy.grails.web.json.JSONArray
 
@@ -245,14 +244,15 @@ class ActivityController {
         if (!projectId) {
             response.status = 400
             flash.message = "No project id supplied for activity: ${id}"
-            result = [error: flash.message]
+            result = [status: 400, error: flash.message]
         }
 
         // check user has permissions to edit/update site - user must have 'editor' access to
         // ALL linked projects to proceed.
         if (!projectService.canUserEditProject(userService.getCurrentUserId(), projectId)) {
             flash.message = "Error: access denied: User does not have <b>editor</b> permission for projectId ${projectId}"
-            result = [error: flash.message]
+            response.status = 401
+            result = [status:401, error: flash.message]
             //render result as JSON
         }
 
