@@ -202,7 +202,7 @@ class ImportService {
             }
 
             def project = validateProjectDetails(findHeaderColumns(headerIndexes, csvLine), grantIds)
-            grantIds << "${project.grantId}-${project.externalProjectId}"
+            grantIds << "${project.grantId}-${project.externalId}"
             if (project.errors.size() > 0 || project.warnings.size() > 0) {
                 writeErrors(results.validationErrors, project.errors, project.warnings, csvLine)
             }
@@ -317,8 +317,8 @@ class ImportService {
             errors.add("Unable to parse Finish Date: ${endDate}")
         }
 
-        if (grantIds.contains(project.grantId+'-'+project.externalProjectId)) {
-            errors.add("Duplicate Grant ID detected: '${project.grantId}-${project.externalProjectId}'")
+        if (grantIds.contains(project.grantId+'-'+project.externalId)) {
+            errors.add("Duplicate Grant ID detected: '${project.grantId}-${project.externalId}'")
         }
 
         if (projectDetails['Application Location Desc']) {
@@ -439,10 +439,10 @@ class ImportService {
 
     }
 
-    def findProjectByGrantAndExternalId(grantId, externalProjectId) {
+    def findProjectByGrantAndExternalId(grantId, externalId) {
         // Cache projects temporarily to avoid this query.
         def allProjects = cacheService.get(PROJECTS_CACHE_KEY) { [projects:projectService.list(true)] }
-        return allProjects.projects.find{it.grantId?.equalsIgnoreCase(grantId) && (it.externalId ?: '').equalsIgnoreCase(externalProjectId ?: '')}
+        return allProjects.projects.find{it.grantId?.equalsIgnoreCase(grantId) && (it.externalId ?: '').equalsIgnoreCase(externalId ?: '')}
     }
 
     def findProjectByGrantId(grantId) {
