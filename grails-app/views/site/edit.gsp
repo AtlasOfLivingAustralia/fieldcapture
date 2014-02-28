@@ -428,14 +428,14 @@
 
     var savedSiteData = {
         id: "${site?.id}",
-        name : "${site?.name}",
+        name : "${site?.name?.encodeAsJavaScript()}",
         externalId : "${site?.externalId}",
         type : "${site?.type}",
         extent: ${site?.extent?:'null'},
         poi: ${site?.poi?:'[]'},
         area : "${site?.area}",
-        description : "${site?.description}",
-        notes : "${site?.notes}",
+        description : "${site?.description?.encodeAsJavaScript()}",
+        notes : "${site?.notes?.encodeAsJavaScript()}",
         <g:if test="${project}">
         projects : ['${project.projectId}'],
         </g:if>
