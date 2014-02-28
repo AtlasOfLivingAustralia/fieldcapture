@@ -41,6 +41,7 @@ grails.project.dependency.resolution = {
         compile "org.imgscalr:imgscalr-lib:${imgscalrVersion}"
         compile "org.apache.httpcomponents:httpmime:${httpmimeVersion}"
         compile "com.vividsolutions:jts:${jtsVersion}"
+        compile "joda-time:joda-time:2.3"
         // runtime 'mysql:mysql-connector-java:5.1.22'
         test "org.spockframework:spock-grails-support:0.7-groovy-2.0"
         test "org.gebish:geb-spock:0.9.0"
@@ -68,6 +69,9 @@ grails.project.dependency.resolution = {
         compile ":google-visualization:0.6.2"
 
         compile ":mail:1.0.1"
+
+        compile ":excel-export:0.2.0"
+        compile ":excel-import:1.0.0"
 
         test ":geb:0.9.0"
         test (":spock:0.7") {

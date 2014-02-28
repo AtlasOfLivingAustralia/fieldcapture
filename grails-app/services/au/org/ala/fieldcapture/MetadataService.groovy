@@ -11,6 +11,13 @@ class MetadataService {
         })
     }
 
+    def annotatedOutputDataModel(type) {
+        return cacheService.get('annotated-output-model'+type,{
+            webService.getJson(grailsApplication.config.ecodata.baseUrl +
+                    'metadata/annotatedOutputDataModel?type='+type.encodeAsURL())
+        })
+    }
+
     def updateActivitiesModel(model) {
         def result = webService.doPost(grailsApplication.config.ecodata.baseUrl +
                 'metadata/updateActivitiesModel', [model: model])
