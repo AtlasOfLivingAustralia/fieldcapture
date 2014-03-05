@@ -493,6 +493,16 @@ ko.extenders.async = function(computedDeferred, initialValue) {
     return plainObservable;
 };
 
+ko.bindingHandlers.fileUploadNoImage = {
+    init: function(element, options) {
+
+        var defaults = {autoUpload:true, forceIframeTransport:true};
+        var settings = {};
+        $.extend(settings, defaults, options());
+        $(element).fileupload(settings);
+    }
+}
+
 ko.bindingHandlers.fileUpload = {
     init: function(element, valueAccessor) {
 
