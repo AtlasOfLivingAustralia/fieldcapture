@@ -133,7 +133,7 @@
                 self.transients.dummy = ko.observable();
 
                 // add declarations for dynamic data
-                <md:jsViewModel model="${model}" viewModelInstance="${blockId}ViewModelInstance"/>
+                <md:jsViewModel model="${model}" output="${output.name}" viewModelInstance="${blockId}ViewModelInstance"/>
 
                 // this will be called when generating a savable model to remove transient properties
                 self.removeBeforeSave = function (jsData) {

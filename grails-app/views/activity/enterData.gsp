@@ -190,7 +190,7 @@
         <div class="output-block" id="ko${blockId}">
             <h3 data-bind="css:{modified:dirtyFlag.isDirty},attr:{title:'Has been modified'}">${outputName}<i class="icon-asterisk modified-icon" data-bind="visible:dirtyFlag.isDirty" title="Has been modified" style="display: none;"></i></h3>
             <!-- add the dynamic components -->
-            <md:modelView model="${model}" site="${site}" edit="true" printable="${printView}" />
+            <md:modelView model="${model}" site="${site}" edit="true" output="${output.name}" printable="${printView}" />
     <r:script>
         $(function(){
 

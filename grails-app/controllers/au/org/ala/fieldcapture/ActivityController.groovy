@@ -1,10 +1,13 @@
 package au.org.ala.fieldcapture
 import grails.converters.JSON
+import org.apache.poi.ss.usermodel.Workbook
+import org.apache.poi.ss.usermodel.WorkbookFactory
+import org.apache.poi.ss.util.CellReference
 import org.codehaus.groovy.grails.web.json.JSONArray
 
 class ActivityController {
 
-    def activityService, siteService, projectService, metadataService, userService
+    def activityService, siteService, projectService, metadataService, userService, excelImportService, webService, grailsApplication, speciesService
 
     static ignore = ['action','controller','id']
 
@@ -296,5 +299,59 @@ class ActivityController {
 
     def projectStages() {
         return ["Stage 1", "Stage 2", "Stage 3", "Stage 4", "Stage 5", "Stage 6", "Stage 7", "Stage 8", "Stage 9", "Stage 10"]
+    }
+
+
+    def ajaxUpload() {
+        if (request.respondsTo('getFile')) {
+            def file = request.getFile('data')
+            if (file) {
+
+                def outputName = params.type
+                def listName = params.listName
+
+                def model = metadataService.annotatedOutputDataModel(outputName)
+                if (listName) {
+                    model = model.find { it.name == listName }?.columns
+                }
+                int index = 0;
+                def columnMap = model.collectEntries {
+                    def colString = CellReference.convertNumToColString(index++)
+                    [(colString):it.name]
+                }
+                def config = [
+                        sheet:outputName,
+                        startRow:1,
+                        columnMap:columnMap
+                ]
+                Workbook workbook = WorkbookFactory.create(file.inputStream)
+
+                def data = excelImportService.convertColumnMapConfigManyRows(workbook, config)
+
+                // Do species lookup
+                def species = model.find {it.dataType == 'species'}
+                if (species) {
+                    data.each { row ->
+                        def scientificName = row[species.name]
+
+                        def result = speciesService.searchByScientificName(scientificName)
+                        if (result) {
+                            row[species.name] = [name:result.name, listId:result.listId, guid:result.guid]
+                        }
+                        else {
+                            row[species.name] = [name:scientificName, listId:'unmatched', guid:null]
+                        }
+
+                    }
+                }
+
+                def result = [status: 200, data:data]
+
+                render result as JSON
+            }
+        }
+
+        def result = [status: 400, error:'no file found']
+        render result as JSON
     }
 }

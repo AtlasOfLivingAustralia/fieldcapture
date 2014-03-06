@@ -688,7 +688,25 @@ class ModelTagLib {
             }
             out << """">
                         <i class="icon-plus"></i> Add a row</button>
+                        <button type="button" class="btn btn-small" data-bind="click:show${model.source}TableDataUpload"><i class="icon-upload"></i> Upload data for this table</button>
+
+
                     </td></tr>\n"""
+            out << """<tr data-bind="visible:${model.source}TableDataUploadVisible"><td colspan="${colCount}">
+                <div class="text-error text-left">
+                    Note: Only valid exact scientific names will be matched and populated from the database.
+                    Unmatched species will be replaced by <em>Unlisted</em> and unmatched values in select lists will be left blank. Please check your uploaded data and correct as required.
+                </div>
+                <div class="text-left" style="margin:5px">
+                    <a href="${createLink(controller: 'proxy', action:'excelOutputTemplate')}?type=${attrs.output}&listName=${model.source}" target="${model.source}TemplateDownload" class="btn">Step 1 - Download template (.xlsx)</a>
+                </div>
+                <div class="btn fileinput-button" style="margin-left:5px">
+                        <input id="${model.source}TableDataUpload" type="file" name="data" data-bind="fileUploadNoImage:${model.source}TableDataUploadOptions">
+                        Step 2 - Upload populated template
+                </div>
+                    </td></tr>"""
+            out << """ <script id="${model.source}template-upload" type="text/x-tmpl">{% %}</script>
+                       <script id="${model.source}template-download" type="text/x-tmpl">{% %}</script>"""
         }
         out << INDENT*4 << "</tfoot>\n"
 

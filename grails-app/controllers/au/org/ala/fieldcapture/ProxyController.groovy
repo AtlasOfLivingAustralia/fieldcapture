@@ -121,4 +121,14 @@ class ProxyController {
         def responseCode = webService.doDelete(url)
         render status: responseCode
     }
+
+    /**
+     * Returns an excel template that can be used to populate a table of data in an output form.
+     */
+    def excelOutputTemplate() {
+        String url =  "${grailsApplication.config.ecodata.baseUrl}metadata/excelOutputTemplate?type=${params.type?.encodeAsURL()}&listName=${params.listName?.encodeAsURL()}"
+
+        webService.proxyGetRequest(response, url)
+        return null
+    }
 }

@@ -132,7 +132,7 @@
             self.transients.activityEndDate = ko.observable("${activity.endDate}").extend({simpleDate: false});
 
 // add declarations for dynamic data
-<md:jsViewModel model="${model}" edit="true"/>
+<md:jsViewModel model="${model}" output="${output.name}" edit="true"/>
 
             // this will be called from the save method to remove transient properties
             self.removeBeforeSave = function (jsData) {

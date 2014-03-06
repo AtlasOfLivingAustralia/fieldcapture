@@ -22,8 +22,11 @@ import org.apache.http.entity.mime.MultipartEntity
 import org.apache.http.entity.mime.content.InputStreamBody
 import org.apache.http.entity.mime.content.StringBody
 import org.codehaus.groovy.grails.web.converters.exceptions.ConverterException
+import org.codehaus.groovy.grails.web.servlet.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.web.multipart.MultipartFile
+
+import javax.servlet.http.HttpServletResponse
 
 class WebService {
 
@@ -32,13 +35,7 @@ class WebService {
     def get(String url, boolean includeUserId) {
         def conn = null
         try {
-            conn = new URL(url).openConnection()
-            conn.setConnectTimeout(grailsApplication.config.webservice.connectTimeout as int)
-            conn.setReadTimeout(grailsApplication.config.webservice.readTimeout as int)
-            def user = userService.getUser()
-            if (includeUserId && user) {
-                conn.setRequestProperty(grailsApplication.config.app.http.header.userId, user.userId)
-            }
+            conn = configureConnection(url, includeUserId)
             return responseText(conn)
         } catch (SocketTimeoutException e) {
             def error = [error: "Timed out calling web service. URL= ${url}."]
@@ -53,6 +50,37 @@ class WebService {
         }
     }
 
+    private URLConnection configureConnection(String url, boolean includeUserId) {
+        URLConnection conn = new URL(url).openConnection()
+        conn.setConnectTimeout(grailsApplication.config.webservice.connectTimeout as int)
+        conn.setReadTimeout(grailsApplication.config.webservice.readTimeout as int)
+        def user = userService.getUser()
+        if (includeUserId && user) {
+            conn.setRequestProperty(grailsApplication.config.app.http.header.userId, user.userId)
+        }
+        conn
+    }
+
+    /**
+     * Proxies a request URL but doesn't assume the response is text based. (Used for proxying requests to
+     * ecodata for excel-based reports)
+     */
+    def proxyGetRequest(HttpServletResponse response, String url, boolean includeUserId = true) {
+
+        HttpURLConnection conn = configureConnection(url, includeUserId)
+
+        def headers = [HttpHeaders.CONTENT_DISPOSITION, HttpHeaders.TRANSFER_ENCODING]
+        response.setContentType(conn.getContentType())
+        response.setContentLength(conn.getContentLength())
+
+        headers.each { header ->
+            response.setHeader(header, conn.getHeaderField(header))
+        }
+        response.status = conn.responseCode
+        response.outputStream << conn.inputStream
+
+    }
+
     def get(String url) {
         return get(url, true)
     }
@@ -60,13 +88,7 @@ class WebService {
     def getJson(String url) {
         def conn = null
         try {
-            conn = new URL(url).openConnection()
-            conn.setConnectTimeout(grailsApplication.config.webservice.connectTimeout as int)
-            conn.setReadTimeout(grailsApplication.config.webservice.readTimeout as int)
-            def user = userService.getUser()
-            if (user) {
-                conn.setRequestProperty(grailsApplication.config.app.http.header.userId, user.userId)
-            }
+            conn = configureConnection(url, true)
             def json = responseText(conn)
             return JSON.parse(json)
         } catch (ConverterException e) {

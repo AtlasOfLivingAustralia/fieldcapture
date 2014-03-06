@@ -82,7 +82,7 @@
             self.transients.dummy = ko.observable('');
 
             // add the properties for the dynamic part of the model
-<md:jsViewModel model="${model}"/>
+<md:jsViewModel model="${model}"  output="${output.name}"/>
 
         // add props that are standard for all outputs
         self.assessmentDate = ko.observable("${output.assessmentDate}").extend({simpleDate: false});

@@ -486,8 +486,10 @@ class ModelJSTagLib {
         if (model.dataType != 'photoPoints') {
             out << """
 
-            self.load${model.name} = function (data) {
-                self.data.${model.name}([]);
+            self.load${model.name} = function (data, append) {
+                if (!append) {
+                    self.data.${model.name}([]);
+                }
                 if (data === undefined) {
                     ${insertDefaultModel}
                 } else {
@@ -512,16 +514,23 @@ class ModelJSTagLib {
             self.${model.name}rowCount = function () {
                 return self.data.${model.name}().length;
             };
-            self.upload${model.name}TableData = function() {
-                var options = {
-                    done:function(e, data) {console.log(data);},
-                    fail:function(e, data) {console.log(data);},
+
+            self.${model.name}TableDataUploadVisible = ko.observable(false);
+            self.show${model.name}TableDataUpload = function() {
+                self.${model.name}TableDataUploadVisible(!self.${model.name}TableDataUploadVisible());
+            };
+
+            self.${model.name}TableDataUploadOptions = {
+                    url:'${createLink([controller: 'activity', action: 'ajaxUpload'])}',
+                    done:function(e, data) {self.load${model.name}(data.result.data, true);},
+                    fail:function(e, data) {
+                        var text = "<span class='label label-important'>Important</span><h4>There was an error uploading your data.</h4>";
+                        text += "<p>Please contact MERIT support and attach your spreadsheet to help us resolve the problem</p>";
+                        bootbox.alert(text)
+                    },
                     uploadTemplateId: "${model.name}template-upload",
                     downloadTemplateId: "${model.name}template-download",
-                    formData:{outputName:'${attrs.output}', listName:'${model.name}'}
-
-                };
-                uploadFile('#${model.name}TableDataUpload', '${createLink([controller: 'activity', action: 'ajaxUpload'])}', options);
+                    formData:{type:'${attrs.output}', listName:'${model.name}'}
             };
 """
             if (editableRows) {
