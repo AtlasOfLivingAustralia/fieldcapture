@@ -527,7 +527,7 @@ class ModelJSTagLib {
                             self.uploadFailed(data.result.error);
                         }
                         else {
-                            self.load${model.name}(data.result.data, true);
+                            self.load${model.name}(data.result.data, self.appendTableRows());
                         }
                     },
                     fail:function(e, data) {
@@ -539,6 +539,7 @@ class ModelJSTagLib {
                     downloadTemplateId: "${model.name}template-download",
                     formData:{type:'${attrs.output}', listName:'${model.name}'}
             };
+            self.appendTableRows = ko.observable(true);
             self.uploadFailed = function(message) {
                         var text = "<span class='label label-important'>Important</span><h4>There was an error uploading your data.</h4>";
                         text += "<p>"+message+"</p>";
