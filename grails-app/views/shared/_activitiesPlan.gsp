@@ -14,6 +14,7 @@
         <h4 class="inline">Planned Activities</h4>
         <i class="icon-lock" data-bind="visible:planStatus()==='submitted'"
             title="Plan cannot be modified once it has been submitted for approval"></i>
+        <g:if test="${user?.isEditor}">
         <button type="button" class="btn btn-link" data-bind="visible:planStatus()==='not approved',click:newActivity" style="vertical-align: baseline"><i class="icon-plus"></i> Add new activity</button>
         <g:if test="${grailsApplication.config.simulateCaseManager}">
             <span class="pull-right">
@@ -21,6 +22,7 @@
                     <input data-bind="checked:userIsCaseManager" type="checkbox"> Impersonate case manager
                 </label>
             </span>
+        </g:if>
         </g:if>
 
         <ul class="nav nav-tabs nav-tab-small space-before">
@@ -197,10 +199,12 @@
     <span class="span3">
         <span class="badge badge-warning" style="font-size:13px;">This plan is not yet approved</span>
     </span>
+    <g:if test="${user?.isAdmin}">
     <span class="span9">
         Build your plan by adding activities and entering project targets. Submit your plan when it is built.
         <button type="button" data-bind="click:submitPlan" class="btn btn-success"><i class="icon-thumbs-up icon-white"></i> Submit plan</button>
     </span>
+    </g:if>
 </script>
 
 <script id="submittedTmpl" type="text/html">
@@ -731,7 +735,8 @@
             };
 
             this.isReadOnly = ko.computed(function() {
-                return self.isSubmitted() || self.isApproved();
+                var viewOnly = ${user?.hasViewAccess?'true':'false'};
+                return viewOnly || self.isSubmitted() || self.isApproved();
             });
             this.stageStatusTemplateName = ko.computed(function() {
                 if (!self.isReportable) {
@@ -883,7 +888,8 @@
             });
 
             this.canEditOutputTargets = ko.computed(function() {
-                return self.planStatus() === 'not approved';
+                var isEditor = ${user?.isEditor?'true':'false'};
+                return isEditor && self.planStatus() === 'not approved';
             });
             //this.currentDate = ko.observable("2014-02-03T00:00:00Z"); // mechanism for testing behaviour at different dates
             this.currentDate = ko.observable(new Date().toISOStringNoMillis()); // mechanism for testing behaviour at different dates

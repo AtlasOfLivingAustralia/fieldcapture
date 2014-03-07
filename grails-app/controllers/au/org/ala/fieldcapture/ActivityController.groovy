@@ -32,7 +32,7 @@ class ActivityController {
         def activity = activityService.get(id)
         if (activity) {
             // permissions check  - can't use annotation as we have to know the projectId in order to redirect to the right page
-            if (!projectService.canUserEditProject(userService.getCurrentUserId(), activity.projectId)) {
+            if (!projectService.canUserViewProject(userService.getCurrentUserId(), activity.projectId)) {
                 flash.message = "Access denied: User does not have <b>editor</b> permission for projectId ${activity.projectId}"
                 redirect(controller:'project', action:'index', id: activity.projectId)
             }
@@ -140,7 +140,7 @@ class ActivityController {
         def activity = activityService.get(id)
         if (activity) {
             // permissions check
-            if (!projectService.canUserEditProject(userService.getCurrentUserId(), activity.projectId)) {
+            if (!projectService.canUserViewProject(userService.getCurrentUserId(), activity.projectId)) {
                 flash.message = "Access denied: User does not have <b>editor</b> permission for projectId ${activity.projectId}"
                 redirect(controller:'project', action:'index', id: activity.projectId)
             }

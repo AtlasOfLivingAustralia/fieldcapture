@@ -89,7 +89,7 @@
     </div>
 
     <!-- content tabs -->
-    <g:set var="tabIsActive"><g:if test="${user?.isEditor}">tab</g:if></g:set>
+    <g:set var="tabIsActive"><g:if test="${user?.hasViewAccess}">tab</g:if></g:set>
     <ul id="projectTabs" class="nav nav-tabs big-tabs">
         <li class="active"><a href="#overview" id="overview-tab" data-toggle="tab">Overview</a></li>
         <li><a href="#plan" id="plan-tab" data-toggle="${tabIsActive}">Plans & Reports</a></li>
@@ -180,7 +180,7 @@
                 </div>
             </div>
         </div>
-        <g:if test="${user?.isEditor}">
+        <g:if test="${user?.hasViewAccess}">
             <div class="tab-pane" id="plan">
                 <!-- PLANS -->
                 <g:if test="${useAltPlan}">
@@ -197,11 +197,13 @@
                 <!-- SITES -->
                 <div data-bind="visible: sites.length == 0">
                    <p>No sites are currently associated with this project.</p>
+                   <g:if test="${user?.isEditor}">
                    <div class="btn-group btn-group-horizontal ">
                         <button data-bind="click: $root.addSite" type="button" class="btn">Add new site</button>
                         <button data-bind="click: $root.addExistingSite" type="button" class="btn">Add existing site</button>
                         <button data-bind="click: $root.uploadShapefile" type="button" class="btn">Upload sites from shapefile</button>
                    </div>
+                   </g:if>
                  </div>
 
                 <div class="row-fluid"  data-bind="visible: sites.length > 0">
@@ -227,13 +229,18 @@
                                                   beforeRemove: hideElement,
                                                   afterAdd: showElement">
                                 <li data-bind="event: {mouseover: $root.highlight, mouseout: $root.unhighlight}">
+                                    <g:if test="${user?.isEditor}">
                                     <span>
                                         <button type="button" data-bind="click:$root.editSite" class="btn btn-container"><i class="icon-edit" title="Edit Site"></i></button>
                                         <button type="button" data-bind="click:$root.viewSite" class="btn btn-container"><i class="icon-eye-open" title="View Site"></i></button>
                                         <button type="button" data-bind="click:$root.deleteSite" class="btn btn-container"><i class="icon-remove" title="Delete Site"></i></button>
                                     </span>
-                                    <a style="margin-left:10px;" data-bind="text:name, attr: {href:'${createLink(controller: "site", action: "index")}' + '/' + siteId}"></a>
 
+                                    <a style="margin-left:10px;" data-bind="text:name, attr: {href:'${createLink(controller: "site", action: "index")}' + '/' + siteId}"></a>
+                                    </g:if>
+                                    <g:else>
+                                        <span data-bind="text:name"></span>
+                                    </g:else>
                                 </li>
                             </ul>
                         </div>
@@ -259,6 +266,8 @@
                         </ul>
                     </div>--}%
 
+                    <g:if test="${user?.isEditor}">
+
                     <div class="row-fluid">
                         <div class="span3">
                             <div class="btn-group btn-group-vertical pull-right">
@@ -268,7 +277,8 @@
                                 <a data-bind="click: $root.removeAllSites" type="button" class="btn">Delete all sites</a>
                             </div>
                         </div>
-                </div>
+                    </div>
+                    </g:if>
                     </div>
                     <div class="span7">
                         <div id="map" style="width:100%"></div>

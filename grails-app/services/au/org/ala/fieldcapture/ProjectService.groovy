@@ -294,6 +294,23 @@ class ProjectService {
         userCanEdit
     }
 
+    /**
+     * Does the current user have permission to view details of the requested projectId?
+     * @param userId the user to test.
+     * @param the project to test.
+     */
+    def canUserViewProject(userId, projectId) {
+
+        def userCanView
+        if (isOfficerOrHigher() || authService.userInRole(grailsApplication.config.security.cas.readOnlyOfficerRole)) {
+            userCanView = true
+        }
+        else {
+            userCanView = canUserEditProject(userId, projectId)
+        }
+        userCanView
+    }
+
     private isOfficerOrHigher() {
         (authService.userInRole(grailsApplication.config.security.cas.officerRole) || authService.userInRole(grailsApplication.config.security.cas.adminRole) || authService.userInRole(grailsApplication.config.security.cas.alaAdminRole))
     }

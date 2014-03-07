@@ -28,6 +28,7 @@ class ProjectController {
                 user.metaClass.isAdmin = projectService.isUserAdminForProject(user.userId, id)?:false
                 user.metaClass.isCaseManager = projectService.isUserCaseManagerForProject(user.userId, id)?:false
                 user.metaClass.isEditor = projectService.canUserEditProject(user.userId, id)?:false
+                user.metaClass.hasViewAccess = projectService.canUserViewProject(user.userId, id)?:false
             }
             //log.debug activityService.activitiesForProject(id)
             //todo: ensure there are no control chars (\r\n etc) in the json as
