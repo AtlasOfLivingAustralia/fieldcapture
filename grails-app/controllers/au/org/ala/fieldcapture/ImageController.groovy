@@ -138,11 +138,9 @@ class ImageController {
                         decimalLongitude: doubleToString(exifMd.decLng),
                         verbatimLatitude: exifMd.latitude,
                         verbatimLongitude: exifMd.longitude,
-                        url: grailsApplication.config.upload.images.url + filename,
-                        thumbnail_url: grailsApplication.config.upload.images.url +
-                                thumbFilename,
-                        delete_url: grailsApplication.config.grails.serverURL +
-                                "/image/delete?filename=" + filename,
+                        url: encodeImageURL(grailsApplication.config.upload.images.url,filename),
+                        thumbnail_url: encodeImageURL(grailsApplication.config.upload.images.url, thumbFilename),
+                        delete_url: encodeImageURL(grailsApplication.config.grails.serverURL+"/image/delete?filename=", filename),
                         delete_type: 'DELETE']
                 result = [files:[md]]
             }
@@ -157,6 +155,12 @@ class ImageController {
     def delete = {
         log.debug "deleted " + params.filename
         render '{"deleted":true}'
+    }
+
+    def encodeImageURL(prefix, filename) {
+        def encodedFileName = filename.encodeAsURL().replaceAll('\\+', '%20')
+        URI uri = new URI(prefix + encodedFileName)
+        return uri.toURL();
     }
 
     /**
