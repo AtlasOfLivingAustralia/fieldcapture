@@ -735,8 +735,8 @@
             };
 
             this.isReadOnly = ko.computed(function() {
-                var viewOnly = ${user?.hasViewAccess?'true':'false'};
-                return viewOnly || self.isSubmitted() || self.isApproved();
+                var isEditor = ${user?.isEditor?'true':'false'};
+                return !isEditor || self.isSubmitted() || self.isApproved();
             });
             this.stageStatusTemplateName = ko.computed(function() {
                 if (!self.isReportable) {
