@@ -345,13 +345,20 @@ class ActivityController {
                     }
                 }
 
-                def result = [status: 200, data:data]
+                def result
+                if (!data) {
+                    response.status = 400
+                    result = [status:400, error:'No data was found that matched the columns in this table, please check the template you used to upload the data. ']
+                }
+                else {
+                    result = [status: 200, data:data]
+                }
 
                 render result as JSON
             }
         }
-
-        def result = [status: 400, error:'no file found']
+        response.status = 400
+        def result = [status: 400, error:'No file attachment found']
         render result as JSON
     }
 }

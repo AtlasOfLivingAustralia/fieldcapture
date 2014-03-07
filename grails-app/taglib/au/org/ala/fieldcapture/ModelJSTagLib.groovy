@@ -522,15 +522,27 @@ class ModelJSTagLib {
 
             self.${model.name}TableDataUploadOptions = {
                     url:'${createLink([controller: 'activity', action: 'ajaxUpload'])}',
-                    done:function(e, data) {self.load${model.name}(data.result.data, true);},
+                    done:function(e, data) {
+                        if (data.result.error) {
+                            self.uploadFailed(data.result.error);
+                        }
+                        else {
+                            self.load${model.name}(data.result.data, true);
+                        }
+                    },
                     fail:function(e, data) {
-                        var text = "<span class='label label-important'>Important</span><h4>There was an error uploading your data.</h4>";
-                        text += "<p>Please contact MERIT support and attach your spreadsheet to help us resolve the problem</p>";
-                        bootbox.alert(text)
+                        var message = 'Please contact MERIT support and attach your spreadsheet to help us resolve the problem';
+                        self.uploadFailed(data);
+
                     },
                     uploadTemplateId: "${model.name}template-upload",
                     downloadTemplateId: "${model.name}template-download",
                     formData:{type:'${attrs.output}', listName:'${model.name}'}
+            };
+            self.uploadFailed = function(message) {
+                        var text = "<span class='label label-important'>Important</span><h4>There was an error uploading your data.</h4>";
+                        text += "<p>"+message+"</p>";
+                        bootbox.alert(text)
             };
 """
             if (editableRows) {
