@@ -569,11 +569,18 @@
                                     latitude: el.loc.lat,
                                     longitude: el.loc.lon
                                 }
-                                features.push(point);
-                                bounds.extend(new google.maps.LatLng(el.loc.lat,el.loc.lon));
-                                if (projectId) {
-                                    projectIdMap[projectId] = true;
+                                var lat = parseFloat(point.latitude);
+                                var lon = parseFloat(point.longitude);
+                                if (!isNaN(lat) && !isNaN(lon)) {
+                                    if (lat >= -90 && lat <=90 && lon >= -180 && lon <= 180) {
+                                        features.push(point);
+                                        bounds.extend(new google.maps.LatLng(el.loc.lat,el.loc.lon));
+                                        if (projectId) {
+                                            projectIdMap[projectId] = true;
+                                        }
+                                    }
                                 }
+
                             });
                         }
                     });
