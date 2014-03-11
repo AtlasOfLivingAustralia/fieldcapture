@@ -78,7 +78,7 @@ class ModelJSTagLib {
                 loadColumnTotals out, attrs, mod
             }
             else if (mod.dataType == 'matrix') {
-                //out << INDENT*4 << "self.load${mod.name.capitalize()}(data.${mod.name});\n"
+                out << INDENT*4 << "self.load${mod.name.capitalize()}(data.${mod.name});\n"
             }
             else if ((mod.dataType == 'text' || mod.dataType == 'date') && !mod.computed) {
                 // MEW: Removed the 'orBlank' wrapper on the initial data which means missing data will be
@@ -304,7 +304,6 @@ class ModelJSTagLib {
         out << """
                 });
             };
-            self.data.${model.name}.init(outputData.${model.name}, ${model.name}Columns, ${model.name}Rows);
             self.data.${model.name}.get = function (row,col) {
                 var value = this[col][${model.name}Rows[row]];
 """
@@ -462,6 +461,7 @@ class ModelJSTagLib {
             expression = "neat_number(${expression},${model.computed.rounding})"
         }
         out << INDENT*6 << "return " + expression + ";\n"
+
         out << INDENT*5 << "});\n"
     }
 
