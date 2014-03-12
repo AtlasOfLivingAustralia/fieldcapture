@@ -1,8 +1,5 @@
 package au.org.ala.fieldcapture
-
-import org.codehaus.groovy.grails.commons.ConfigurationHolder
 import grails.converters.JSON
-
 /**
  * Handles caching of service responses (after transforming).
  * Uses passed closures to handle service requests - so remains independent
@@ -33,7 +30,7 @@ class CacheService {
         try {
             results = source.call()
             // only cache if there is no error returned
-            if (!results.hasProperty('error')) {
+            if (!isError(results)) {
                 synchronized (LOCK_1) {
                     cache.put key, [resp: results, time: new Date()]
                 }
@@ -42,6 +39,10 @@ class CacheService {
             results = [error: e.message]
         }
         return results
+    }
+
+    def isError(results) {
+        return (results instanceof Map)?results['error']:results.hasProperty('error')
     }
 
     def clear(key) {
