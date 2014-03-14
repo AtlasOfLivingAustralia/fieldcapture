@@ -45,7 +45,7 @@
     </div>
 </div>
 <div class="row-fluid large-space-after">
-    <div class="span8">
+    <div class="span12">
         <markdown:renderHtml>${description}</markdown:renderHtml>
     </div>
 </div>
