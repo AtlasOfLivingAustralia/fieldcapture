@@ -32,6 +32,15 @@ class DashboardTagLib {
 
     }
 
+    def pieChart = {attrs, body ->
+        def columnDefs = [['string', attrs.label], ['number', 'Count']]
+        def chartData = []
+        attrs.data.each{ key, value ->
+            chartData << [key, value]
+        }
+        drawPieChart(attrs.label, attrs.title, columnDefs, chartData)
+    }
+
     /**
      * Renders the value of a score alongside it's target value as a progress bar.
      * @param score the score being rendered
@@ -51,18 +60,19 @@ class DashboardTagLib {
 
     private void renderSingleScore(score) {
         switch (score.score.aggregationType.name) {
+
             case 'SUM':
             case 'AVERAGE':
             case 'COUNT':
                 def result = score.results ? score.results[0].result as Double : 0
-                out << "<div><b>${score.score.label}</b> : ${result}</div>"
+                out << "<div><b>${score.score.label}</b> : ${g.formatNumber(type:'number',number:result, maxFractionDigits: 2, groupingUsed:true)}</div>"
                 break
             case 'HISTOGRAM':
                 def chartData = []
                 score.results[0].result.each {key, value ->
                     chartData << [key, value]
                 }
-                drawPieChart(score, score.score.label, [['string', score.score.label], ['number', 'Count']], chartData)
+                drawPieChart(score.score.label, score.score.label, [['string', score.score.label], ['number', 'Count']], chartData)
                 break
             case 'SET':
                 out << "<div><b>${score.score.label}</b> :${score.results[0].result.join(',')}</div>"
@@ -79,7 +89,7 @@ class DashboardTagLib {
                 score.results.each({
                     chartData << [it.group, it.result]
                 })
-                drawPieChart(score, score.groupTitle, [['string', score.groupTitle], ['number', score.score.label]], chartData)
+                drawPieChart(score.score.label, score.groupTitle, [['string', score.groupTitle], ['number', score.score.label]], chartData)
 
                 break
             case 'HISTOGRAM':
@@ -88,8 +98,8 @@ class DashboardTagLib {
         }
     }
 
-    private void drawPieChart(score, title, columns, data) {
-        def chartId = score.score.label + '_chart'
+    private void drawPieChart(label, title, columns, data) {
+        def chartId = label + '_chart'
         out << "<div id=\"${chartId}\"></div>"
 
         out << gvisualization.pieCoreChart([elementId: chartId, title: title, columns: columns, data: data, width:'450', height:'300', backgroundColor: '#ebe6dc'])
