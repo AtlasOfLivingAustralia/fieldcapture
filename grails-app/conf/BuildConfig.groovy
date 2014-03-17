@@ -43,6 +43,7 @@ grails.project.dependency.resolution = {
         compile "org.apache.httpcomponents:httpmime:${httpmimeVersion}"
         compile "com.vividsolutions:jts:${jtsVersion}"
         compile "joda-time:joda-time:2.3"
+
         // runtime 'mysql:mysql-connector-java:5.1.22'
         test "org.spockframework:spock-grails-support:0.7-groovy-2.0"
         test "org.gebish:geb-spock:0.9.0"
@@ -56,6 +57,10 @@ grails.project.dependency.resolution = {
     plugins {
         runtime ":jquery:1.8.3"
         runtime ":resources:1.2.1"
+        // required by the cached-resources plugin
+        runtime ":cache-headers:1.1.6"
+
+        runtime ":cached-resources:1.0"
         runtime ":ala-web-theme:0.2.2"
         runtime ":csv:0.3.1"
         runtime ":lesscss-resources:1.3.3"
