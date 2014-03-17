@@ -7,6 +7,8 @@ modules = {
         resource url: 'js/application.js'
         resource url: 'js/jquery.shorten.js'
         resource url: 'js/bootbox.min.js'
+        resource url: 'js/jquery.columnizer.js'
+        resource url: 'js/jquery.blockUI.js'
     }
 
     bootstrap {
@@ -106,6 +108,7 @@ modules = {
         resource 'js/jquery-ui-1.9.2.custom.min.js'
         resource 'css/smoothness/jquery-ui-1.9.2.custom.min.css'
         resource 'css/jquery-autocomplete.css'
+
     }
 
     jquery_bootstrap_datatable {

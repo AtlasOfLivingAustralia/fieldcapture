@@ -534,7 +534,8 @@
                 } else if (self.displayReasonModal.needsToBeSaved) {
 
                     if ((newValue === 'started' || newValue === 'finished') && !self.hasOutputs) {
-                        url = fcConfig.activityEnterDataUrl;
+                        blockUIWithMessage('Loading activity form...');
+                        var url = fcConfig.activityEnterDataUrl;
                         document.location.href = url + "/" + self.activityId + "?returnTo=" + here + '&progress='+newValue;
                     }
                     else {
