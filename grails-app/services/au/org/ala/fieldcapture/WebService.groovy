@@ -50,10 +50,16 @@ class WebService {
         }
     }
 
-    private URLConnection configureConnection(String url, boolean includeUserId) {
+    private int defaultTimeout() {
+        grailsApplication.config.webservice.readTimeout as int
+    }
+
+    private URLConnection configureConnection(String url, boolean includeUserId, Integer timeout = null) {
         URLConnection conn = new URL(url).openConnection()
+
+        def readTimeout = timeout?:defaultTimeout()
         conn.setConnectTimeout(grailsApplication.config.webservice.connectTimeout as int)
-        conn.setReadTimeout(grailsApplication.config.webservice.readTimeout as int)
+        conn.setReadTimeout(readTimeout)
         def user = userService.getUser()
         if (includeUserId && user) {
             conn.setRequestProperty(grailsApplication.config.app.http.header.userId, user.userId)
@@ -85,10 +91,11 @@ class WebService {
         return get(url, true)
     }
 
-    def getJson(String url) {
+
+    def getJson(String url, Integer timeout = null) {
         def conn = null
         try {
-            conn = configureConnection(url, true)
+            conn = configureConnection(url, true, timeout)
             def json = responseText(conn)
             return JSON.parse(json)
         } catch (ConverterException e) {
