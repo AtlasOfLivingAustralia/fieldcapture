@@ -120,6 +120,9 @@ class ModelJSTagLib {
         attrs.model?.viewModel?.each({
             if (it.dataType == 'tableWithEditableRows' || it.type == 'photoPoints' || it.type == 'table') {
                 out << INDENT*4 << "delete jsData.selected${it.source}Row;\n"
+                out << INDENT*4 << "delete jsData.${it.source}TableDataUploadOptions\n"
+                out << INDENT*4 << "delete jsData.${it.source}TableDataUploadVisible\n"
+
             }
         })
     }
