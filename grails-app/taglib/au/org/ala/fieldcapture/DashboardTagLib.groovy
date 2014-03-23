@@ -1,5 +1,7 @@
 package au.org.ala.fieldcapture
 
+import org.grails.plugins.google.visualization.GoogleVisualization
+
 /**
  * Renders output scores for display on a project or program dashboard.
  */
@@ -34,11 +36,8 @@ class DashboardTagLib {
 
     def pieChart = {attrs, body ->
         def columnDefs = [['string', attrs.label], ['number', 'Count']]
-        def chartData = []
-        attrs.data.each{ key, value ->
-            chartData << [key, value]
-        }
-        drawPieChart(attrs.label, attrs.title, columnDefs, chartData)
+        def chartData = toArray(attrs.data)
+        drawChart(GoogleVisualization.PIE_CHART, attrs.label, attrs.title, columnDefs, chartData)
     }
 
     /**
@@ -68,11 +67,9 @@ class DashboardTagLib {
                 out << "<div><b>${score.score.label}</b> : ${g.formatNumber(type:'number',number:result, maxFractionDigits: 2, groupingUsed:true)}</div>"
                 break
             case 'HISTOGRAM':
-                def chartData = []
-                score.results[0].result.each {key, value ->
-                    chartData << [key, value]
-                }
-                drawPieChart(score.score.label, score.score.label, [['string', score.score.label], ['number', 'Count']], chartData)
+                def chartData = toArray(score.results[0].result)
+                def chartType = score.chartType?:'piechart'
+                drawChart(chartType, score.score.label, score.score.label, [['string', score.score.label], ['number', 'Count']], chartData)
                 break
             case 'SET':
                 out << "<div><b>${score.score.label}</b> :${score.results[0].result.join(',')}</div>"
@@ -80,16 +77,22 @@ class DashboardTagLib {
         }
     }
 
+    private def toArray(dataMap) {
+        def chartData = []
+        dataMap.each{ key, value ->
+            chartData << [key, value]
+        }
+        chartData
+    }
+
     private void renderGroupedScore(score) {
         switch (score.score.aggregationType.name) {
             case 'SUM':
             case 'AVERAGE':
             case 'COUNT':
-                def chartData = []
-                score.results.each({
-                    chartData << [it.group, it.result]
-                })
-                drawPieChart(score.score.label, score.groupTitle, [['string', score.groupTitle], ['number', score.score.label]], chartData)
+                def chartData = score.results.collect{[it.group, it.result]}
+                def chartType = score.chartType?:'piechart'
+                drawChart(chartType, score.score.label, score.groupTitle, [['string', score.groupTitle], ['number', score.score.label]], chartData)
 
                 break
             case 'HISTOGRAM':
@@ -99,11 +102,26 @@ class DashboardTagLib {
     }
 
     private void drawPieChart(label, title, columns, data) {
+        drawChart('piechart', label, title, columns, data)
+    }
+
+    private void drawBarChart(label, title, columns, data) {
+        drawChart('barchart', label, title, columns, data)
+
+    }
+
+    private void drawChart(type, label, title, columns, data) {
         def chartId = label + '_chart'
         out << "<div id=\"${chartId}\"></div>"
 
-        out << gvisualization.pieCoreChart([elementId: chartId, title: title, columns: columns, data: data, width:'450', height:'300', backgroundColor: '#ebe6dc'])
+        switch (type) {
+            case 'piechart':
+                out << gvisualization.pieCoreChart([elementId: chartId, title: title, columns: columns, data: data, width:'450', height:'300', backgroundColor: '#ebe6dc'])
+                break;
+            case 'barchart':
+                out << gvisualization.barCoreChart([elementId: chartId, title: title, columns: columns, data: data, width:'450', backgroundColor: '#ebe6dc'])
+                break;
+        }
     }
-
 
 }

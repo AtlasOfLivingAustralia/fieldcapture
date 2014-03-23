@@ -727,3 +727,16 @@ table.tight-inputs textarea {
     display:inline;
     margin-right: 10px;
 }
+
+#reports .accordion-heading {
+    background: #DAE0B9;
+}
+#reports a {
+    font-weight:bold;
+    color:black;
+}
+#reports .column.last .well {margin-left:15px;}
+
+#reports .outputData {margin-top:10px;}
+
+#dashboard .outputs-without-targets .column.last .well {margin-left:15px;}

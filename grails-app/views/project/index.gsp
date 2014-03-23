@@ -784,6 +784,8 @@
             // and handle tab-specific initialisations
             var planTabInitialised = false;
 
+            var dashboardInitialised = false;
+
             $('#projectTabs a[data-toggle="tab"]').on('shown', function (e) {
                 var tab = e.currentTarget.hash;
                 amplify.store('project-tab-state', tab);
@@ -813,6 +815,10 @@
                 if (tab === '#plan' && !planTabInitialised) {
                     $.event.trigger({type:'planTabShown'});
                     planTabInitialised = true;
+                }
+                if (tab == '#dashboard' && !dashboardInitialised) {
+                    $.event.trigger({type:'dashboardShown'});
+                    dashboardInitialised;
                 }
             });
 
