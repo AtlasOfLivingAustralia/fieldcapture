@@ -116,10 +116,11 @@ class DashboardTagLib {
 
         switch (type) {
             case 'piechart':
-                out << gvisualization.pieCoreChart([elementId: chartId, dynamicLoading: true, title: title, columns: columns, data: data, width:'450', height:'300', backgroundColor: '#ebe6dc'])
+                out << gvisualization.pieCoreChart([elementId: chartId,  chartArea:new Expando(left:20, top:20, width:'350', height:'300'), dynamicLoading: true, title: title, columns: columns, data: data, width:'450', height:'300', backgroundColor: '#ebe6dc'])
                 break;
             case 'barchart':
-                out << gvisualization.barCoreChart([elementId: chartId, dynamicLoading: true, title: title, columns: columns, data: data, width:'450', backgroundColor: '#ebe6dc'])
+                def height = Math.min(300, data.size()*30)
+                out << gvisualization.barCoreChart([elementId: chartId, dynamicLoading: true, title: title, columns: columns, data: data, width:'450', height:height, backgroundColor: '#ebe6dc'])
                 break;
         }
     }

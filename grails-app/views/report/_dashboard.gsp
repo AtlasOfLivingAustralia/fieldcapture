@@ -52,7 +52,7 @@
         var content = $(e.target);
         var columnized = content.find('.column').length > 0;
         if (!columnized){
-            content.columnize({ columns: 2, lastNeverTallest:true, accuracy: 10 });
+            //content.columnize({ columns: 2, lastNeverTallest:true, accuracy: 10 });
         }
 
     })
