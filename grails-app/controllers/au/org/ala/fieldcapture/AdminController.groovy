@@ -402,12 +402,7 @@ class AdminController {
                  def longitude = geometry["centre"][0]
                  def latitude = geometry["centre"][1]
                  def metadata = metadataService.getLocationMetadataForPoint(latitude, longitude)
-                 geometry["state"] = metadata.state
-                 geometry["nrm"] = metadata.nrm
-                 geometry["lga"] = metadata.lga
-                 geometry["locality"] = metadata.locality
-                 geometry["mvg"] = metadata.mvg
-                 geometry["mvs"] = metadata.mvs
+                 geometry.putAll(metadata)
 
                  def updatedSite = [:]
                  updatedSite["extent"] = site["extent"]

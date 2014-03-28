@@ -110,6 +110,9 @@ if (!spatial.wms.url) {
 if (!spatial.wms.cache.url) {
     spatial.wms.cache.url = spatial.baseUrl + "geoserver/gwc/service/wms?"
 }
+if (!spatial.intersectUrl) {
+    spatial.intersectUrl = spatial.baseUrl + '/ws/intersect/'
+}
 if (!sld.polgon.default.url) {
     sld.polgon.default.url = "http://fish.ala.org.au/data/alt-dist.sld"
 }
@@ -121,6 +124,12 @@ if (!lists.baseURL) {
 }
 if (!bie.baseURL) {
     bie.baseURL = "http://bie.ala.org.au"
+}
+if (!regions.baseURL) {
+    regions.baseURL = 'http://regions.ala.org.au/regions/'
+}
+if (!regions.otherRegionsURL) {
+    regions.otherRegionsURL = regions.baseURL + 'regionList?type=other'
 }
 if(!webservice.connectTimeout){
     webservice.connectTimeout = 10000
@@ -168,7 +177,7 @@ if(!google.maps.url){
     google.maps.url = "//maps.google.com/maps/api/js?sensor=false&language=en"
 }
 if(!google.geocode.url){
-    google.geocode.url = "https://maps.googleapis.com/maps/api/geocode/json?sensor=true&latlng="
+    google.geocode.url = "https://maps.googleapis.com/maps/api/geocode/json?sensor=false&latlng="
 }
 if(!google.drawmaps.url){
     google.drawmaps.url = "//maps.google.com/maps/api/js?sensor=false&libraries=drawing,geometry"

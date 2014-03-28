@@ -193,25 +193,72 @@ class MetadataService {
 
     def getAccessLevels() {
         return cacheService.get('accessLevels',{
-            webService.getJson(grailsApplication.config.ecodata.baseUrl +
-                    "permissions/getAllAccessLevels")
+            webService.getJson(grailsApplication.config.ecodata.baseUrl +  "permissions/getAllAccessLevels")
         })
     }
 
     def getLocationMetadataForPoint(lat, lng) {
         cacheService.get("spatial-point-${lat}-${lng}", {
-            def featuresUrl = grailsApplication.config.spatial.baseUrl + "/ws/intersect/cl22,cl916,cl959/${lat}/${lng}"
-            def features = webService.getJson(featuresUrl)
+            def features = performLayerIntersect(lat, lng)
 
             def localityUrl = grailsApplication.config.google.geocode.url + "${lat},${lng}"
             def result = webService.getJson(localityUrl)
             def localityValue = (result?.results && result.results)?result.results[0].formatted_address:''
+            features << [locality: localityValue]
 
             // Return the Nvis classes for the supplied location. This is an interim solution until the spatial portal can be fixed to handle
             // large grid files such as the NVIS grids.
             def nvisData = webService.getJson(grailsApplication.config.ecodata.baseUrl + 'metadata/getNvisClassesForPoint?lat=' + lat.toString() + "&lon=" + lng.toString())
+            features << nvisData
 
-            [state: features.find({it.field == 'cl22'})?.value, nrm: features.find({it.field == 'cl916'})?.value, lga: features.find({it.field == 'cl959'})?.value, locality: localityValue]  << nvisData
+            features
+        })
+    }
+
+    def performLayerIntersect(lat,lng) {
+
+        // The spatial portal returns n/a when the point does not intersect a layer.
+        def NO_MATCH_VALUE = 'n/a'
+        def layers = [[layerName:'state',fid:'cl22'],[layerName:'nrm',fid:'cl916'],[layerName:'lga',fid:'cl959'],[layerName:'ibra',fid:'cl20'],[layerName:'imcra4_pb',fid:'cl21']]
+        def otherRegions = getOtherFacetableRegions()
+        def otherLayers = []
+        otherRegions.names?.each {
+            def layer = otherRegions.objects[it]
+            if (!layer.error) {
+                otherLayers << [layerName:layer.layerName,fid:layer.fid]
+            }
+        }
+        def fids = layers.collect{it.fid}
+        fids.addAll(otherLayers.collect{it.fid})
+
+        def featuresUrl = grailsApplication.config.spatial.intersectUrl+"${fids.join(',')}/${lat}/${lng}"
+        def features = webService.getJson(featuresUrl)
+
+        def intersectValues = [:]
+        layers.each { layer ->
+            def match = features.find{it.field == layer.fid}
+            if (match) {
+                intersectValues << [(layer.layerName):match.value]
+            }
+        }
+        def otherValues = []
+        otherLayers.each { layer ->
+            def match = features.find{it.field == layer.fid}
+            if (match && match.value != NO_MATCH_VALUE) {
+                otherValues << match.value
+            }
+        }
+        if (otherValues) {
+            intersectValues << [other:otherValues]
+        }
+
+        intersectValues
+
+    }
+
+    def getOtherFacetableRegions() {
+        cacheService.get("other-regions", {
+            webService.getJson(grailsApplication.config.regions.otherRegionsURL)
         })
     }
 
