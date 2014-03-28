@@ -8,13 +8,14 @@
 <div class="accordion" id="reports">
     <g:each in="${categories}" var="category">
 
+        <g:set var="categoryContent" value="${category.replaceAll("\\s", "_")}"/>
         <div class="accordion-group">
             <div class="accordion-heading header">
-                <a class="accordion-toggle" data-toggle="collapse" data-parent="#reports" href="#${category}-content">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#reports" href="#${categoryContent}">
                     ${category}
                 </a>
             </div>
-            <div id="${category}-content" class="outputData accordian-body collapse">
+            <div id="${categoryContent}" class="outputData accordian-body collapse">
 
         <g:each in="${scores[category]}" var="categoryScores">
 

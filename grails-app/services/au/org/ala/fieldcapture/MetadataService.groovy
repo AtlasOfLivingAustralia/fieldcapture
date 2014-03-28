@@ -220,8 +220,10 @@ class MetadataService {
             def categories = new LinkedHashSet()
             activitiesModel().outputs.each { output ->
                 output.scores.each { score ->
-                    def cat = score.category?.trim()?:'None'
-                    categories << cat
+                    def cat = score.category?.trim()
+                    if (cat) {
+                        categories << cat
+                    }
                 }
             }
             categories
