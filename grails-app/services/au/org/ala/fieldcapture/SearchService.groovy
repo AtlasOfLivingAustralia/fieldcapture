@@ -7,7 +7,7 @@ import javax.annotation.PostConstruct
  * Service for ElasticSearch running on ecodata
  */
 class SearchService {
-    def webService, commonService
+    def webService, commonService, cacheService, metadataService
     def grailsApplication
     def elasticBaseUrl
 
@@ -128,5 +128,16 @@ class SearchService {
         } else {
             [error: "required param ids not provided"]
         }
+    }
+
+    def dashboardReport(params) {
+
+        cacheService.get("dashboard-"+params, {
+            params.query = 'docType:project'
+            def url = grailsApplication.config.ecodata.baseUrl + 'search/dashboardReport' + commonService.buildUrlParamsFromMap(params)
+            webService.getJson(url, 1200000)
+        })
+
+
     }
 }

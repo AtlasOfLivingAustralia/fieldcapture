@@ -12,9 +12,11 @@
         spatialWmsCacheUrl: "${grailsApplication.config.spatial.wms.cache.url}",
         spatialWmsUrl: "${grailsApplication.config.spatial.wms.url}",
         sldPolgonDefaultUrl: "${grailsApplication.config.sld.polgon.default.url}",
-        sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}"
+        sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}",
+        dashboardUrl: "${g.createLink(controller: 'report', action: 'dashboardReport', params: params)}"
     }
     </r:script>
+    <script type="text/javascript" src="//www.google.com/jsapi"></script>
     <r:require modules="knockout,mapWithFeatures,jquery_bootstrap_datatable,js_iso8601,amplify"/>
 </head>
 <body>
@@ -70,6 +72,7 @@
                 </a>
             </div>
             <h3 style="margin-bottom:0;">Filter results</h3>
+
             <g:if test="${params.fq}">
                 <div class="currentFilters">
                     <h4>Current filters</h4>
@@ -141,6 +144,10 @@
                 <ul class="nav nav-tabs" data-tabs="tabs">
                     <li class="active"><a id="mapView-tab" href="#mapView" data-toggle="tab">Map</a></li>
                     <li class=""><a id="projectsView-tab" href="#projectsView" data-toggle="tab">Projects</a></li>
+                %{--Temporarily hiding the reports from non-admin until they are ready for public consumption. --}%
+                <g:if test="${fc.userIsSiteAdmin()}">
+                    <li class=""><a id="reportView-tab" href="#reportView" data-toggle="tab">Reports</a></li>
+                </g:if>
                 </ul>
             </div>
 
@@ -214,6 +221,14 @@
                         </tr>
                     </table>
                 </div>
+                %{--Temporarily hiding the reports from non-admin until they are ready for public consumption. --}%
+                <g:if test="${fc.userIsSiteAdmin()}">
+                <div class="tab-pane" id="reportView">
+                    <div class="loading-message">
+                        <r:img dir="images" file="loading.gif" alt="saving icon"/> Loading report...
+                    </div>
+                </div>
+                </g:if>
             </div>
             <p>&nbsp;</p>
             <fc:getSettingContent settingType="${SettingPageType.ABOUT}"/>
@@ -258,6 +273,7 @@
             };
         })();
 
+        var initialisedReport = false;
         // retain tab state for future re-visits
         $('a[data-toggle="tab"]').on('shown', function (e) {
             var tab = e.currentTarget.hash;
@@ -265,6 +281,16 @@
             if (tab === '#mapView' && mapDataHasChanged) {
                 mapDataHasChanged = false;
                 generateMap();
+            }
+            else if (tab === '#reportView') {
+                if (!initialisedReport) {
+                    initialisedReport = true;
+
+                    $.get(fcConfig.dashboardUrl, function(data) {
+                        $('#reportView').html(data);
+                    });
+
+                }
             }
         });
         // re-establish the previous tab state
