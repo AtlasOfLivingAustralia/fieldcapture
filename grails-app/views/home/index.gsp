@@ -300,7 +300,7 @@
             $('#mapView-tab').tab('show');
         } else {
             $(storedTab + '-tab').tab('show');
-            if (storedTab == '#projectsView') {
+            if (storedTab != '#mapView') {
                 mapDataHasChanged = true;
             }
         }
