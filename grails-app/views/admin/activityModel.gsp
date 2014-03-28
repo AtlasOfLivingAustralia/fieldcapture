@@ -67,7 +67,7 @@
 <script id="viewOutputTmpl" type="text/html">
     <div>Template: <span data-bind="text:template"></span></div>
     <div>Scores: <ul data-bind="foreach:scores">
-        <li><span data-bind="text:label"></span>, <span data-bind="text:aggregationType"></span></li>
+        <li><span data-bind="text:label"></span> (<span data-bind="text:category"></span>), <span data-bind="text:aggregationType"></span></li>
     </ul></div>
     <button data-bind="click:$root.removeOutput" type="button" class="btn btn-mini pull-right">Remove</button>
     <button data-bind="click:edit" type="button" class="btn btn-mini pull-right">Edit</button>
@@ -84,6 +84,9 @@
             </div>
             <div style="text-align:left;">
             Label: <input type="text" data-bind="value:label"/>
+            </div>
+            <div style="text-align:left;">
+            Category: <input type="text" data-bind="value:category"/>
             </div>
             <div style="text-align:left;">
             Units: <input type="text" data-bind="value:units"/>
@@ -167,8 +170,10 @@
             var self = this;
             self.name = ko.observable(score.name);
             self.label = ko.observable(score.label)
+            self.category = ko.observable(score.category);
             self.units = ko.observable(score.units)
             self.aggregationType = ko.observable(score.aggregationType)
+
             %{-- True if this score can/should be assigned a target for project planning purposes. --}%
             self.isOutputTarget = ko.observable(score.isOutputTarget)
         };

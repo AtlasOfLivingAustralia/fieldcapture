@@ -215,6 +215,19 @@ class MetadataService {
         })
     }
 
+    def getReportCategories() {
+        return cacheService.get('report-categories',{
+            def categories = new LinkedHashSet()
+            activitiesModel().outputs.each { output ->
+                output.scores.each { score ->
+                    def cat = score.category?.trim()?:'None'
+                    categories << cat
+                }
+            }
+            categories
+        })
+    }
+
     static outputTypes = [
             [name: 'Fence erected', unit: 'Km', dataType: 'Decimal'],
             [name: 'Vegetation units planted', unit: 'No.', dataType: 'Int'],
