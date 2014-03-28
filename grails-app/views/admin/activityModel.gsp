@@ -101,7 +101,17 @@
                 <option value="SET">list of distinct values</option>
             </select>
             </div>
-             <div style="text-align:left;">
+            <div style="text-align:left;">
+                Grouping: <input type="text" data-bind="value:groupBy"/>
+            </div>
+            <div style="text-align:left;">
+                Display type: <select data-bind="value:displayType">
+                <option value="piechart">Pie chart</option>
+                <option value="barchart">Bar chart</option>
+                </select>
+            </div>
+
+            <div style="text-align:left;">
             Use as output target:
             <input type="checkbox" data-bind="checked:isOutputTarget"/>
             </div>
@@ -173,6 +183,8 @@
             self.category = ko.observable(score.category);
             self.units = ko.observable(score.units)
             self.aggregationType = ko.observable(score.aggregationType)
+            self.groupBy = ko.observable(score.groupBy);
+            self.displayType = ko.observable(score.displayType);
 
             %{-- True if this score can/should be assigned a target for project planning purposes. --}%
             self.isOutputTarget = ko.observable(score.isOutputTarget)

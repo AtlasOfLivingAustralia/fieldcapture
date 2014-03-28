@@ -91,7 +91,7 @@ class DashboardTagLib {
             case 'AVERAGE':
             case 'COUNT':
                 def chartData = score.results.collect{[it.group, it.result]}
-                def chartType = score.chartType?:'piechart'
+                def chartType = score.score.displayType?:'piechart'
                 drawChart(chartType, score.score.label, score.groupTitle, [['string', score.groupTitle], ['number', score.score.label]], chartData)
 
                 break
