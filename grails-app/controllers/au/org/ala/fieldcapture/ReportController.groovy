@@ -30,7 +30,6 @@ class ReportController {
 
         def defaultCategory = "Not categorized"
         def categories = metadataService.getReportCategories()
-        categories << defaultCategory
         // The _ parameter is appended by jquery ajax calls and will stop the report contents from being cached.
         params.remove("_")
         def results = searchService.dashboardReport(params)
@@ -43,6 +42,9 @@ class ReportController {
         def doubleGroupedScores = [:]
         groupedScores.each {key, value ->
             doubleGroupedScores.put(key, value.groupBy{it.score.outputName})
+        }
+        if (groupedScores.keySet().contains(defaultCategory)) {
+            categories << defaultCategory
         }
 
 

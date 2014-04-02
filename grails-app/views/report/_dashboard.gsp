@@ -6,9 +6,9 @@
 
 
 <div class="accordion" id="reports">
-    <g:each in="${categories}" var="category">
+    <g:each in="${categories}" var="category" status="i">
 
-        <g:set var="categoryContent" value="${category.replaceAll("\\s", "_")}"/>
+        <g:set var="categoryContent" value="category_${i}"/>
         <div class="accordion-group">
             <div class="accordion-heading header">
                 <a class="accordion-toggle" data-toggle="collapse" data-parent="#reports" href="#${categoryContent}">
@@ -16,23 +16,30 @@
                 </a>
             </div>
             <div id="${categoryContent}" class="outputData accordian-body collapse">
+            <div class="accordian-inner">
+            <g:if test="${scores[category]}">
 
-        <g:each in="${scores[category]}" var="categoryScores">
+            <g:each in="${scores[category]}" var="categoryScores">
 
-                <g:each in="${categoryScores}" var="outputScores">
+                    <g:each in="${categoryScores}" var="outputScores">
 
-                    <div class="dontsplit">
-                        <div class="well well-small">
-                            <h3>${outputScores.key}</h3>
-                            <g:each in="${outputScores.value}" var="score">
-                                <fc:renderScore score="${score}"></fc:renderScore>
-                            </g:each>
-                        </div><!-- /.well -->
-                    </div><!-- /.span6 -->
+                        <div class="dontsplit">
+                            <div class="well well-small">
+                                <h3>${outputScores.key}</h3>
+                                <g:each in="${outputScores.value}" var="score">
+                                    <fc:renderScore score="${score}"></fc:renderScore>
+                                </g:each>
+                            </div><!-- /.well -->
+                        </div><!-- /.span6 -->
 
-                </g:each>
+                    </g:each>
 
-        </g:each>
+            </g:each>
+            </g:if>
+            <g:else>
+                There is no data available for this category.<br/>
+            </g:else>
+            </div>
             </div>
 
         </div>
