@@ -119,10 +119,16 @@ class DashboardTagLib {
                 out << gvisualization.pieCoreChart([elementId: chartId,  chartArea:new Expando(left:20, top:20, width:'350', height:'300'), dynamicLoading: true, title: title, columns: columns, data: data, width:'450', height:'300', backgroundColor: '#ebe6dc'])
                 break;
             case 'barchart':
-                def height = Math.max(300, data.size()*30)
-                out << gvisualization.barCoreChart([elementId: chartId, dynamicLoading: true, title: title, columns: columns, data: data, width:'450', height:height, backgroundColor: '#ebe6dc'])
+                def topMargin = 50
+                def bottomMargin = 100
+                def height = Math.max(300, data.size()*20+topMargin+bottomMargin)
+                out << gvisualization.barCoreChart([elementId: chartId, legendTextStyle:chartFont(), fontSize:11, tooltipTextStyle:chartFont(), legend:"none", dynamicLoading: true, title: title, columns: columns, data: data, chartArea:new Expando(left:140, top:topMargin, bottom:bottomMargin, width:'290', height:height-topMargin-bottomMargin), width:'450', height:height, backgroundColor: '#ebe6dc'])
                 break;
         }
     }
 
+    def chartFont() {
+
+        return new Expando(fontSize:'10');
+    }
 }
