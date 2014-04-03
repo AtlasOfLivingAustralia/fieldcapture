@@ -79,7 +79,7 @@
     <div>Scores: <ul data-bind="sortable:{data:scores}" class="sortableList small">
         <li>
             <div style="text-align:left;">
-            Name: <input type="text" data-bind="value:name"/>
+            Name: <select data-bind="value:compoundName,options:nameOptions"/>
             <span class="pull-right"><i data-bind="click:$parent.removeScore" class="icon-remove"></i></span>
             </div>
             <div style="text-align:left;">
@@ -93,7 +93,7 @@
             </div>
             <div style="text-align:left;">
             Aggregation:
-            <select data-bind="value:aggregationType">
+            <select data-bind="value:aggregationType, style: { color: aggregationTypeValid() ? 'black':'red' }">
                 <option value="SUM">summed</option>
                 <option value="COUNT">counted</option>
                 <option value="AVERAGE">averaged</option>
@@ -106,6 +106,7 @@
             </div>
             <div style="text-align:left;">
                 Display type: <select data-bind="value:displayType">
+                <option value=""></option>
                 <option value="piechart">Pie chart</option>
                 <option value="barchart">Bar chart</option>
                 </select>
@@ -176,7 +177,7 @@
             }
         };
 
-        var ScoreModel = function (score) {
+        var ScoreModel = function (template, score) {
             var self = this;
             self.name = ko.observable(score.name);
             self.label = ko.observable(score.label)
@@ -185,18 +186,89 @@
             self.aggregationType = ko.observable(score.aggregationType)
             self.groupBy = ko.observable(score.groupBy);
             self.displayType = ko.observable(score.displayType);
+            self.listName = ko.observable(score.listName);
+
+            self.buildCompoundName = function(list, name) {
+                if (list) {
+                    return list + '.' + name;
+                }
+                return name;
+            };
+            self.compoundName = ko.observable(self.buildCompoundName(self.listName(), self.name()));
+            self.compoundName.subscribe(function(name) {
+                var bits = name.split('.');
+                if (bits.length == 1) {
+                    self.name(bits[0]);
+                    self.listName('');
+                }
+                else {
+                    self.name(bits[1]);
+                    self.listName(bits[0]);
+                }
+            });
+            self.nameOptions = ko.observableArray([self.compoundName()]);
 
             %{-- True if this score can/should be assigned a target for project planning purposes. --}%
             self.isOutputTarget = ko.observable(score.isOutputTarget)
+
+            self.template = ko.observable(template);
+            self.template.subscribe(function(template) {
+                $.each(template.dataModel, function(i, obj) {
+                    if (obj.dataType == 'list') {
+                        $.each(obj.columns, function(i, nested) {
+                            self.nameOptions.push(obj.name + '.' + nested.name);
+                        });
+                    }
+                    self.nameOptions.push(obj.name);
+                });
+            });
+
+
+            self.aggregationTypeValid = ko.computed(function() {
+                if (!self.template()) {
+                    return true;
+                }
+                $.each(self.template().dataModel, function(i, obj) {
+                    if (self.name() == obj.name) {
+                        if (obj.dataType == 'number') {
+                            return self.aggregationType() == "SUM" ||  self.aggregationType() == "AVERAGE";
+                        }
+                        else {
+                            return !(self.aggregationType() == "SUM" ||  self.aggregationType() == "AVERAGE");
+                        }
+
+                    }
+                });
+                return true;
+            });
+
+            this.toJSON = function() {
+                var js = ko.toJS(this);
+                delete js.template;
+                delete js.compoundName;
+                delete js.nameOptions;
+                delete js.aggregationTypeValid;
+
+                return js;
+            }
         };
 
         var OutputModel = function (out, model) {
             var self = this;
             this.name = ko.observable(out.name);
             this.template = ko.observable(out.template);
+            this.templateDetail = ko.observable();
+
             this.scores = ko.observableArray($.map(out.scores || [], function (obj,i) {
-                return new ScoreModel(obj);
+                return new ScoreModel(self.templateDetail(), obj);
             }));
+
+            this.templateDetail.subscribe(function (template) {
+                $.each(self.scores(), function(i, score) {
+                    score.template(template);
+                });
+
+            });
 
             this.expanded = ko.observable(false);
             this.toggle = function (data, event) {
@@ -212,13 +284,16 @@
                 }
             };
             this.editing = ko.observable(false);
-            this.edit = function () { self.editing(true) };
+            this.edit = function () {
+                self.editing(true);
+                self.getOutputModelTemplate();
+            };
             this.done = function () { self.editing(false) };
             this.displayMode = function () {
                 return self.editing() ? 'editOutputTmpl' : 'viewOutputTmpl';
             };
             this.addScore = function () {
-                self.scores.push(new ScoreModel({}));
+                self.scores.push(new ScoreModel(self.templateDetail(), {}));
             };
             this.removeScore = function (data) {
                 self.scores.remove(data);
@@ -250,7 +325,22 @@
                 delete js.isReferenced;
                 delete js.isAddable;
 
+                js.scores = []
+                $.each(self.scores(), function(i, score) {
+                    js.scores.push(score.toJSON());
+                });
                 return js;
+            }
+            this.getOutputModelTemplate = function() {
+                $.getJSON("${createLink(action: 'getOutputDataModel')}/" + self.template(), function (data) {
+                    if (data.error) {
+                        bootbox.alert('Unable to get output definition for '+output);
+
+                    } else {
+                        self.templateDetail(data);
+
+                    }
+                });
             }
         };
 
@@ -303,6 +393,7 @@
                     dataType: 'text'
                 });
             };
+
         };
 
         var viewModel = new ViewModel(${activitiesModel});
