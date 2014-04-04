@@ -322,6 +322,19 @@ class ProjectService {
      */
     def submitStageReport(projectId, stageDetails) {
 
+        def activities = activityService.activitiesForProject(projectId);
+
+        def allowedStates = ['finished', 'deferred', 'cancelled']
+        def readyForSubmit = true
+        stageDetails.activityIds.each { activityId ->
+            def activity = activities.find {it.activityId == activityId}
+            if (!allowedStates.contains(activity?.progress)) {
+                readyForSubmit = false
+            }
+        }
+        if (!readyForSubmit) {
+            return [error:'All activities must be finished, deferred or cancelled']
+        }
         def result = activityService.updatePublicationStatus(stageDetails.activityIds, 'pendingApproval')
         def project = get(projectId)
         stageDetails.project = project

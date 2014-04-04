@@ -559,7 +559,7 @@
                         drawGanttChart(planViewModel.getGanttData());
                     },
                     error: function (data) {
-                        alert('An unhandled error occurred: ' + data.status);
+                        bootbox.alert('The activity was not updated due to a login timeout or server error.  Please try again after the page reloads.', function() {location.reload();});
                     },
                     complete: function () {
                         //console.log('saved progress');
@@ -721,12 +721,14 @@
                     contentType: 'application/json',
                     success: function (data) {
                         if (data.error) {
-                            alert(data.detail + ' \n' + data.error);
+                            bootbox.alert("The report could not be submited.  This may be due to a login timeout or because not all activities have been completed, deferred or cancelled.  Please try again after the page reloads.", function() {location.reload();});
                         }
-                        location.reload();
+                        else {
+                            location.reload();
+                        }
                     },
                     error: function (data) {
-                        alert('An unhandled error occurred: ' + data.status);
+                        bootbox.alert("The report could not be submited due to a login timeout or server error.  Please try again after the page reloads.", function() {location.reload();});
                     },
                     complete: function () {
                         //console.log('saved progress');
