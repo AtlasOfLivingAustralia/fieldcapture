@@ -7,46 +7,46 @@
         <div class="accordion-group">
             <div class="accordion-heading header">
                 <a class="accordion-toggle" data-toggle="collapse" data-parent="#reports" href="#${categoryContent}">
-                    ${category} <g:if test="${!scores[category]}"><span style="font-weight:normal">[no data available]</span></g:if>
+                    ${category} <g:if test="${!scores[category]}"><span class="pull-right" style="font-weight:normal">[no data available]</span></g:if>
+
                 </a>
             </div>
             <div id="${categoryContent}" class="outputData accordian-body collapse">
             <div class="accordian-inner row-fluid">
             <g:if test="${scores[category]}">
-                <div class="span6">
+                <div class="span6" style="min-width: 460px;">
 
                     <g:each in="${scores[category][0]}" var="categoryScores">
 
                         <g:each in="${categoryScores}" var="outputScores">
 
-                            <div class="dontsplit">
-                                <div class="well well-small">
-                                    <h3>${outputScores.key}</h3>
-                                    <g:each in="${outputScores.value}" var="score">
-                                        <fc:renderScore score="${score}"></fc:renderScore>
-                                    </g:each>
-                                </div><!-- /.well -->
-                            </div><!-- /.span6 -->
+
+                            <div class="well well-small">
+                                <h3>${outputScores.key}</h3>
+                                <g:each in="${outputScores.value}" var="score">
+                                    <fc:renderScore score="${score}"></fc:renderScore>
+                                </g:each>
+                            </div><!-- /.well -->
 
                         </g:each>
 
 
                     </g:each>
                 </div>
-                <div class="span6">
+                <div class="span6" style="min-width: 460px;">
 
                     <g:each in="${scores[category][1]}" var="categoryScores">
 
                         <g:each in="${categoryScores}" var="outputScores">
 
-                            <div class="dontsplit">
+
                                 <div class="well well-small">
                                     <h3>${outputScores.key}</h3>
                                     <g:each in="${outputScores.value}" var="score">
                                         <fc:renderScore score="${score}"></fc:renderScore>
                                     </g:each>
                                 </div><!-- /.well -->
-                            </div><!-- /.span6 -->
+
 
                         </g:each>
 
@@ -70,17 +70,6 @@
 
 </div>
 
-<script>
-
-    $('#reports').on('shown', function (e) {
-        var content = $(e.target);
-        var columnized = content.find('.column').length > 0;
-        if (!columnized){
-        //    content.columnize({ columns: 2, lastNeverTallest:true, accuracy: 10 });
-        }
-
-    })
-</script>
 </g:if>
 <g:else>
     <div class="alert alert-error">
