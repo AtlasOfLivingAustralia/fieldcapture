@@ -1,10 +1,5 @@
-%{-- Not using this tag as we want  a protocol-less import<gvisualization:apiImport/>--}%
 
-<style type="text/css">
-
-</style>
-
-
+<g:if test="${metadata.projects > 1}">
 <div class="accordion" id="reports">
     <g:each in="${categories}" var="category" status="i">
 
@@ -12,7 +7,7 @@
         <div class="accordion-group">
             <div class="accordion-heading header">
                 <a class="accordion-toggle" data-toggle="collapse" data-parent="#reports" href="#${categoryContent}">
-                    ${category}
+                    ${category} <g:if test="${!scores[category]}"><span style="font-weight:normal">[no data available]</span></g:if>
                 </a>
             </div>
             <div id="${categoryContent}" class="outputData accordian-body collapse">
@@ -54,13 +49,18 @@
 
 <script>
 
-
-    $('#reports').on('show', function (e) {
+    $('#reports').on('shown', function (e) {
         var content = $(e.target);
         var columnized = content.find('.column').length > 0;
         if (!columnized){
-            //content.columnize({ columns: 2, lastNeverTallest:true, accuracy: 10 });
+        //    content.columnize({ columns: 2, lastNeverTallest:true, accuracy: 10 });
         }
 
     })
 </script>
+</g:if>
+<g:else>
+    <div class="alert alert-error">
+        Not enough data was returned to display summary data for your facet selection.
+    </div>
+</g:else>

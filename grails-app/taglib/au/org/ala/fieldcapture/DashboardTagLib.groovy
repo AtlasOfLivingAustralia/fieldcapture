@@ -90,7 +90,7 @@ class DashboardTagLib {
             case 'SUM':
             case 'AVERAGE':
             case 'COUNT':
-                def chartData = score.results.collect{[it.group, it.result]}
+                def chartData = score.results.findAll{it.result}.collect{[it.group, it.result]}.sort{a,b -> a[0].compareTo(b[0])}
                 def chartType = score.score.displayType?:'piechart'
                 drawChart(chartType, score.score.label, score.groupTitle, [['string', score.groupTitle], ['number', score.score.label]], chartData)
 
@@ -112,16 +112,26 @@ class DashboardTagLib {
 
     private void drawChart(type, label, title, columns, data) {
         def chartId = label + '_chart'
-        out << "<div id=\"${chartId}\"></div>"
+
+
+
 
         switch (type) {
             case 'piechart':
+                out << "<div id=\"${chartId}\"></div>"
                 out << gvisualization.pieCoreChart([elementId: chartId,  chartArea:new Expando(left:20, top:20, width:'350', height:'300'), dynamicLoading: true, title: title, columns: columns, data: data, width:'450', height:'300', backgroundColor: '#ebe6dc'])
                 break;
             case 'barchart':
+
                 def topMargin = 50
                 def bottomMargin = 100
                 def height = Math.max(300, data.size()*20+topMargin+bottomMargin)
+                if (height > 500) {
+                    out << "<div id=\"${chartId}\" style=\"height:500px; overflow-y:scroll;\"></div>"
+                }
+                else {
+                    out << "<div id=\"${chartId}\"></div>"
+                }
                 out << gvisualization.barCoreChart([elementId: chartId, legendTextStyle:chartFont(), fontSize:11, tooltipTextStyle:chartFont(), legend:"none", dynamicLoading: true, title: title, columns: columns, data: data, chartArea:new Expando(left:140, top:topMargin, bottom:bottomMargin, width:'290', height:height-topMargin-bottomMargin), width:'450', height:height, backgroundColor: '#ebe6dc'])
                 break;
         }
