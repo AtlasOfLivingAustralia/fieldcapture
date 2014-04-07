@@ -35,18 +35,45 @@ class ReportController {
         def results = searchService.dashboardReport(params)
         def scores = results.outputData
 
-        def groupedScores = scores.groupBy{
+        def scoresByCategory = scores.groupBy{
             (it.score.category?:defaultCategory)
         }
 
         def doubleGroupedScores = [:]
-        groupedScores.each {key, value ->
-            doubleGroupedScores.put(key, value.groupBy{it.score.outputName})
+        // Split the scores up into 2 columms for display.
+        scoresByCategory.each { category, categoryScores ->
+
+            categoryScores.sort{it.score.outputName}
+            def previousOutput = ""
+            def runningHeights = categoryScores.collect {
+                def height = DashboardTagLib.estimateHeight(it.score)
+                if (it.score.outputName != previousOutput) {
+                    height += 60 // Account for the output name header, padding etc.
+                    previousOutput = it.score.outputName
+                }
+                height
+            }
+            def totalHeight = runningHeights.sum()
+            def columns = [[], []]
+
+            println category + ' ' +runningHeights
+            def runningHeight = 0
+            // Iterating backwards to bias the left hand column.
+            for (int i=0 ; i<categoryScores.size(); i++) {
+
+                def idx = runningHeight <= (totalHeight/2) ? 0 : 1
+                runningHeight += runningHeights[i]
+
+                columns[idx] << categoryScores[i]
+            }
+
+
+            def columnsGroupedByOutput = [columns[0].groupBy{it.score.outputName}, columns[1].groupBy{it.score.outputName}]
+            doubleGroupedScores.put(category, columnsGroupedByOutput)
         }
-        if (groupedScores.keySet().contains(defaultCategory)) {
+        if (scoresByCategory.keySet().contains(defaultCategory)) {
             categories << defaultCategory
         }
-
 
         def model = [categories:categories, scores:doubleGroupedScores, metadata:results.metadata]
 

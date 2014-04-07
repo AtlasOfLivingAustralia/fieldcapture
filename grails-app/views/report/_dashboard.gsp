@@ -11,25 +11,48 @@
                 </a>
             </div>
             <div id="${categoryContent}" class="outputData accordian-body collapse">
-            <div class="accordian-inner">
+            <div class="accordian-inner row-fluid">
             <g:if test="${scores[category]}">
+                <div class="span6">
 
-            <g:each in="${scores[category]}" var="categoryScores">
+                    <g:each in="${scores[category][0]}" var="categoryScores">
 
-                    <g:each in="${categoryScores}" var="outputScores">
+                        <g:each in="${categoryScores}" var="outputScores">
 
-                        <div class="dontsplit">
-                            <div class="well well-small">
-                                <h3>${outputScores.key}</h3>
-                                <g:each in="${outputScores.value}" var="score">
-                                    <fc:renderScore score="${score}"></fc:renderScore>
-                                </g:each>
-                            </div><!-- /.well -->
-                        </div><!-- /.span6 -->
+                            <div class="dontsplit">
+                                <div class="well well-small">
+                                    <h3>${outputScores.key}</h3>
+                                    <g:each in="${outputScores.value}" var="score">
+                                        <fc:renderScore score="${score}"></fc:renderScore>
+                                    </g:each>
+                                </div><!-- /.well -->
+                            </div><!-- /.span6 -->
+
+                        </g:each>
+
 
                     </g:each>
+                </div>
+                <div class="span6">
 
-            </g:each>
+                    <g:each in="${scores[category][1]}" var="categoryScores">
+
+                        <g:each in="${categoryScores}" var="outputScores">
+
+                            <div class="dontsplit">
+                                <div class="well well-small">
+                                    <h3>${outputScores.key}</h3>
+                                    <g:each in="${outputScores.value}" var="score">
+                                        <fc:renderScore score="${score}"></fc:renderScore>
+                                    </g:each>
+                                </div><!-- /.well -->
+                            </div><!-- /.span6 -->
+
+                        </g:each>
+
+
+                    </g:each>
+                </div>
             </g:if>
             <g:else>
                 There is no data available for this category.<br/>

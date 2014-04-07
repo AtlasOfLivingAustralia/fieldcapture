@@ -34,6 +34,19 @@ class DashboardTagLib {
 
     }
 
+    static int estimateHeight(score) {
+
+        def height = 25
+
+        if (score.groupBy || score.aggregationType.name == 'HISTOGRAM') {
+
+            height = score.displayType == 'barchart' ? 500 : 300
+        }
+        println score.outputName + ', '+score.label+'('+score.groupTitle+')'+' = '+height
+        return height;
+
+    }
+
     def pieChart = {attrs, body ->
         def columnDefs = [['string', attrs.label], ['number', 'Count']]
         def chartData = toArray(attrs.data)
@@ -124,10 +137,10 @@ class DashboardTagLib {
             case 'barchart':
 
                 def topMargin = 50
-                def bottomMargin = 100
+                def bottomMargin = 50
                 def height = Math.max(300, data.size()*20+topMargin+bottomMargin)
                 if (height > 500) {
-                    out << "<div id=\"${chartId}\" style=\"height:500px; overflow-y:scroll;\"></div>"
+                    out << "<div id=\"${chartId}\" style=\"height:500px; overflow-y:scroll; margin-bottom:20px;\"></div>"
                 }
                 else {
                     out << "<div id=\"${chartId}\"></div>"
