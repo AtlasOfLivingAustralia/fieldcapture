@@ -1,5 +1,4 @@
 package au.org.ala.fieldcapture
-
 import grails.converters.JSON
 import org.codehaus.groovy.grails.web.json.JSONArray
 
