@@ -3,7 +3,10 @@
 <html xmlns="http://www.w3.org/1999/html">
 <head>
 
-    <meta name="layout" content="mobile"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <r:require modules="nrmSkin, jquery_cookie"/>
+    <r:layoutResources/>
+    <g:layoutHead />
 
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jstimezonedetect/1.0.4/jstz.min.js"></script>
@@ -22,6 +25,7 @@
     <r:require modules="knockout,jqueryValidationEngine,datepicker,jQueryFileUploadUI,mapWithFeatures,attachDocuments,species,amplify"/>
 </head>
 <body>
+<div id="content" class="clearfix">
 <div class="container-fluid validationEngineContainer" id="validation-container">
 <div id="koActivityMainBlock">
 
@@ -213,7 +217,7 @@ console.log("something!");
 <!-- /ko -->
 
 </div>
-
+</div>
 <r:script>
 
 
@@ -402,5 +406,6 @@ console.log("something!");
         }
     });
 </r:script>
+<r:layoutResources/>
 </body>
 </html>
