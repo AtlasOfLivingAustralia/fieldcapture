@@ -1,6 +1,4 @@
-﻿/*
- * jQuery Shorten plugin 1.0.0
- *
+/*
  * Copyright (c) 2013 Viral Patel
  * http://viralpatel.net
  *
