@@ -756,3 +756,26 @@ table.tight-inputs textarea {
     width:50px;
     height:50px;
 }
+
+/* disabling the invalid styles as we are using a different validation solution and html5 validation is not applied consistently */
+input:focus:invalid,
+textarea:focus:invalid,
+select:focus:invalid {
+    color: #555555;
+    border: 1px solid #cccccc;
+}
+
+input:focus:invalid:focus,
+textarea:focus:invalid:focus,
+select:focus:invalid:focus {
+    border-color: rgba(82, 168, 236, 0.8);
+    outline: 0;
+    outline: thin dotted \9;
+    /* IE6-9 */
+
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+}
+
+input[type="checkbox"] { -webkit-appearance: checkbox; !important }

@@ -19,7 +19,7 @@ public class EditModelWidgetRenderer implements ModelWidgetRenderer {
         context.attributes.addClass context.getInputWidth()
         context.attributes.add 'style','text-align:center'
         context.databindAttrs.add 'value', context.source
-        context.writer << "<input${context.attributes.toString()} data-bind='${context.databindAttrs.toString()}'${context.validationAttr} type='text' class='input-mini'/>"
+        context.writer << "<input${context.attributes.toString()} data-bind='${context.databindAttrs.toString()}'${context.validationAttr} type='number' class='input-mini'/>"
     }
 
     @Override
