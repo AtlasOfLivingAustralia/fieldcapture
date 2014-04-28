@@ -130,7 +130,7 @@ class ActivityController {
             }
             model.mapFeatures = model.site ? siteService.getMapFeatures(model.site) : "{}"
             model.themes = metadataService.getThemesForProject(model.project)
-            render view:params.mobile?'mobile':'enterData', model:model
+            model
         } else {
             forward(action: 'list', model: [error: 'no such id'])
         }
@@ -361,5 +361,4 @@ class ActivityController {
         def result = [status: 400, error:'No file attachment found']
         render result as JSON
     }
-
 }

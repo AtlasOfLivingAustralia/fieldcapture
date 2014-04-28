@@ -19,7 +19,7 @@
         },
         here = document.location.href;
     </r:script>
-    <r:require modules="knockout,jqueryValidationEngine,datepicker,jQueryFileUploadUI,mapWithFeatures,attachDocuments,species,amplify"/>
+    <r:require modules="application,knockout,jqueryValidationEngine,datepicker,jQueryFileUploadUI,mapWithFeatures,attachDocuments,species,amplify"/>
 </head>
 <body>
 <div class="container-fluid validationEngineContainer" id="validation-container">
@@ -110,7 +110,6 @@
         <md:modelView model="${model}" site="${site}" edit="true" output="${outputName}" />
         <r:script>
         $(function(){
-console.log("something!");
 
             var viewModelName = "${blockId}ViewModel",
                 viewModelInstance = viewModelName + "Instance";
@@ -254,13 +253,13 @@ console.log("something!");
             var activityData, outputs = [];
             if ($('#validation-container').validationEngine('validate')) {
                 $.each(this.subscribers, function(i, obj) {
-                    if (obj.isDirty()) {
+                   // if (obj.isDirty()) {
                         if (obj.model === 'activityModel') {
                             activityData = obj.get();
                         } else {
                             outputs.push(obj.get());
                         }
-                    }
+                    //}
                 });
                 if (outputs.length === 0 && activityData === undefined) {
                     alert("Nothing to save.");
@@ -286,8 +285,16 @@ console.log("something!");
         };
     };
 
+    if (mobileBindings == undefined) {
+        var mobileBindings = {
+        loadActivity:function(){return "{}"},
+        saveActivity:function(){}
+        };
+    }
     var master = new Master();
     var activity = JSON.parse(mobileBindings.loadActivity());
+    var themes = ['theme1', 'theme2'];
+
     var site = {};
 
 
@@ -352,7 +359,7 @@ console.log("something!");
             self.transients = {};
             self.transients.site = site;
             self.transients.activityProgressValues = ['planned','started','finished'];
-            self.transients.themes = $.map(${themes}, function (obj, i) { return obj.name });
+            self.transients.themes = themes;
             self.transients.markedAsFinished = ko.observable(act.progress === 'finished');
             self.transients.markedAsFinished.subscribe(function (finished) {
                 self.progress(finished ? 'finished' : 'started');

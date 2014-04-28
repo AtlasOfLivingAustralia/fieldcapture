@@ -137,6 +137,47 @@ class WebService {
         return urlConnection.content.getText(charset)
     }
 
+    def doPostWithParams(String url, Map params) {
+        def conn = null
+        def charEncoding = 'utf-8'
+        try {
+            String query = ""
+            boolean first = true
+            for (String name:params.keySet()) {
+                query+=first?"?":"&"
+                first = false
+                query+=name.encodeAsURL()+"="+params.get(name).encodeAsURL()
+            }
+            conn = new URL(url+query).openConnection()
+            conn.setRequestMethod("POST")
+            conn.setDoOutput(true)
+            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            conn.setRequestProperty("Authorization", grailsApplication.config.api_key);
+
+            def user = userService.getUser()
+            if (user) {
+                conn.setRequestProperty(grailsApplication.config.app.http.header.userId, user.userId) // used by ecodata
+                conn.setRequestProperty("Cookie", "ALA-Auth="+java.net.URLEncoder.encode(user.userName, charEncoding)) // used by specieslist
+            }
+            OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream(), charEncoding)
+
+            wr.flush()
+            def resp = conn.inputStream.text
+            wr.close()
+            return [resp: JSON.parse(resp?:"{}")] // fail over to empty json object if empty response string otherwise JSON.parse fails
+        } catch (SocketTimeoutException e) {
+            def error = [error: "Timed out calling web service. URL= ${url}."]
+            log.error(error, e)
+            return error
+        } catch (Exception e) {
+            def error = [error: "Failed calling web service. ${e.getMessage()} URL= ${url}.",
+                         statusCode: conn?.responseCode?:"",
+                         detail: conn?.errorStream?.text]
+            log.error(error, e)
+            return error
+        }
+    }
+
     def doPost(String url, Map postBody) {
         def conn = null
         def charEncoding = 'utf-8'
