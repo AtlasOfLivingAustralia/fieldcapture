@@ -127,6 +127,21 @@ class SiteService {
         }
     }
 
+    /**
+     * Creates (and saves) a site definition from a name, description and lat/lon.
+     * @param projectId the project the site should be associated with.
+     * @param name a name for the site.
+     * @param description a description of the site.
+     * @param lat latitude of the site centroid.
+     * @param lon longitude of the site centroid.
+     */
+    def createSiteFromPoint(projectId, name, description, lat, lon) {
+        def site = [name:name, description:description, projects:[projectId]]
+        site.extent = siteExtentFromPoint(lat, lon)
+
+        create(site)
+    }
+
     /** Returns the centroid (as a Point) of a site in the spatial portal */
     def calculateSiteCentroid(spatialPortalSiteId) {
 

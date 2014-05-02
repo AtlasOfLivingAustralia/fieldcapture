@@ -13,12 +13,15 @@ import java.util.zip.ZipOutputStream
  */
 class MobileController {
 
+    private static String USER_NAME_HEADER_FIELD = "userName"
+    private static String AUTH_KEY_HEADER_FIELD = "authKey"
+
 
     static String MOBILE_AUTH_BASE_URL = "https://m.ala.org.au"
     static String MOBILE_AUTH_GET_KEY_URL = MOBILE_AUTH_BASE_URL+"/mobileauth/mobileKey/generateKey"
     static String MOBILE_AUTH_CHECK_KEY_URL = MOBILE_AUTH_BASE_URL+"/mobileauth/mobileKey/checkKey"
 
-    def metadataService, webService, grailsApplication, userService, projectService
+    def metadataService, webService, grailsApplication, userService, projectService, activityService, siteService
 
     def jsRegexp = /(?m)script src="\/(.*)" type="text\/javascript"/
     def cssRegexp = /(?m)link href="\/(.*)" type="text\/css"/
@@ -132,11 +135,8 @@ class MobileController {
      * @return the projects for the supplied user.
      */
     def userProjects() {
-        def username = params.userName
-        def authKey = params.authKey
-
         // validate with mobile auth.
-        UserDetails user = authorize(username, authKey)
+        UserDetails user = authorize()
 
         if (user) {
             render userService.getProjectsForUserId(user.userId) as JSON
@@ -150,22 +150,152 @@ class MobileController {
     }
 
     def projectDetails(String id) {
-        def username = params.userName
-        def authKey = params.authKey
 
         // validate with mobile auth.
-        UserDetails user = authorize(username, authKey)
+        UserDetails user = authorize()
 
-        if (!projectService.canUserEditProject(user.userId, id)) {
-            def error = [error:"Access denied: User does not have <b>editor</b> permission for project:'${id}'}"]
-            response.status = 401
-            render error as JSON
+        if (user) {
+
+            if (!projectService.canUserEditProject(user.userId, id)) {
+                def error = [error: "Access denied: User does not have <b>editor</b> permission for project:'${id}'}"]
+                response.status = 401
+                render error as JSON
+            }
+
+            render projectService.get(id, 'all') as JSON
         }
+        else  {
+            response.status = 401
+            def message = [error:'Invalid credentials supplied']
+            render message as JSON
 
-        render projectService.get(id, 'all') as JSON
+        }
     }
 
-    UserDetails authorize(username, key) {
+    def updateActivity(String id) {
+
+        UserDetails user = authorize()
+
+        if (user) {
+            def postBody = request.JSON
+            if (!id || !postBody) {
+                response.status = 400
+                def result = [status: 400, error: "No activity id or details supplied"]
+                render result as JSON
+                return
+            }
+
+            def result = [:]
+
+            def projectId
+            if (id) {
+                def activity = activityService.get(id)
+                projectId = activity.projectId
+            } else {
+                projectId = values.projectId
+            }
+            if (!projectId) {
+                response.status = 400
+                flash.message = "No project id supplied for activity: ${id}"
+                result = [status: 400, error: flash.message]
+            }
+
+            // check user has permissions to edit/update site - user must have 'editor' access to
+            // ALL linked projects to proceed.
+            if (!projectService.canUserEditProject(user.userId, projectId)) {
+                flash.message = "Error: access denied: User does not have <b>editor</b> permission for projectId ${projectId}"
+                response.status = 401
+                result = [status: 401, error: flash.message]
+                //render result as JSON
+            }
+
+            if (!result) {
+                result = activityService.update(id, postBody)
+            }
+            //log.debug "result is " + result
+
+            if (result.error) {
+                render result as JSON
+            } else {
+                //log.debug "json result is " + (result as JSON)
+                render result.resp as JSON
+            }
+        }
+        else {
+            response.status = 401
+            def message = [error:'Invalid credentials supplied']
+            render message as JSON
+        }
+    }
+
+    def createSite() {
+        UserDetails user = authorize()
+
+        def mandatoryFields = ['name', 'lat', 'lon', 'projectId']
+        if (user) {
+
+            def result = [:]
+
+            def siteDetails = request.JSON
+            def missingFields = []
+            mandatoryFields.each {
+                if (!siteDetails[it]) {
+                    missingFields << it
+                }
+            }
+
+            def message = ""
+            if (missingFields) {
+                response.status = 400
+                message += "Missing mandatory fields: ${missingFields}."
+                result = [status: 400, error:message]
+
+            }
+            def projectId = siteDetails.projectId
+
+            // check user has permissions to edit/update site - user must have 'editor' access to
+            // ALL linked projects to proceed.
+            if (projectId && !projectService.canUserEditProject(user.userId, projectId)) {
+                message += "Access denied: User does not have <b>editor</b> permission for projectId ${projectId}"
+                response.status = 401
+                result = [status: 401, error: message]
+                //render result as JSON
+            }
+
+            if (!result) {
+                result = siteService.createSiteFromPoint(projectId, siteDetails.name, siteDetails.description, siteDetails.lat, siteDetails.lon)
+                if (result.error) {
+                    response.status = result.statusCode
+                    render result as JSON
+                }
+                else {
+                    render result.resp as JSON
+                }
+            }
+            else {
+                render result as JSON
+            }
+
+        }
+        else  {
+            response.status = 401
+            def message = [error:'Invalid credentials supplied']
+            render message as JSON
+
+
+        }
+    }
+
+    /**
+     * Extracts the username and authorization key from the HTTP header then validates the key with the mobile
+     * auth service.
+     * @return a UserDetails object if the key was valid, null otherwise.
+     */
+    UserDetails authorize() {
+
+        def username = request.getHeader(USER_NAME_HEADER_FIELD)
+        def key = request.getHeader(AUTH_KEY_HEADER_FIELD)
+
         // validate auth key.
         def url = MOBILE_AUTH_CHECK_KEY_URL
         def params = [userName:username, authKey:key]
