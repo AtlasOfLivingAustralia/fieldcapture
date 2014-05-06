@@ -153,8 +153,7 @@
                     return JSON.stringify(self.modelForSaving());
                 };
 
-                self.loadData = function (outputId, data) {
-                    self.outputId = outputId;
+                self.loadData = function (data) {
                     // load dynamic data
                     <md:jsLoadModel model="${model}"/>
 
