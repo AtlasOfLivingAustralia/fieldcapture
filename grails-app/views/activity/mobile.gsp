@@ -120,52 +120,71 @@
             this[viewModelName] = function (output) {
                 var self = this;
                 self.name = "${outputName}";
-                self.outputId = "";
+                self.outputId = orBlank(output.outputId);
+
                 self.data = {};
                 self.transients = {};
                 self.transients.dummy = ko.observable();
 
                 // add declarations for dynamic data
-            <md:jsViewModel model="${model}"  output="${outputName}"  edit="true" viewModelInstance="${blockId}ViewModelInstance"/>
+                <md:jsViewModel model="${model}"  output="${outputName}"  edit="true" viewModelInstance="${blockId}ViewModelInstance"/>
 
-            // this will be called when generating a savable model to remove transient properties
-            self.removeBeforeSave = function (jsData) {
-                // add code to remove any transients added by the dynamic tags
-            <md:jsRemoveBeforeSave model="${model}"/>
-            delete jsData.activityType;
-            delete jsData.transients;
-            return jsData;
-        };
+                // this will be called when generating a savable model to remove transient properties
+                self.removeBeforeSave = function (jsData) {
+                    // add code to remove any transients added by the dynamic tags
+                    <md:jsRemoveBeforeSave model="${model}"/>
+                    delete jsData.activityType;
+                    delete jsData.transients;
+                    return jsData;
+                };
 
-        // this returns a JS object ready for saving
-        self.modelForSaving = function () {
-            // get model as a plain javascript object
-            var jsData = ko.mapping.toJS(self, {'ignore':['transients']});
-            // get rid of any transient observables
-            return self.removeBeforeSave(jsData);
-        };
+                // this returns a JS object ready for saving
+                self.modelForSaving = function () {
+                    // get model as a plain javascript object
+                    var jsData = ko.mapping.toJS(self, {'ignore':['transients']});
+                    // get rid of any transient observables
+                    return self.removeBeforeSave(jsData);
+                };
 
-        // this is a version of toJSON that just returns the model as it will be saved
-        // it is used for detecting when the model is modified (in a way that should invoke a save)
-        // the ko.toJSON conversion is preserved so we can use it to view the active model for debugging
-        self.modelAsJSON = function () {
-            return JSON.stringify(self.modelForSaving());
-        };
+                // this is a version of toJSON that just returns the model as it will be saved
+                // it is used for detecting when the model is modified (in a way that should invoke a save)
+                // the ko.toJSON conversion is preserved so we can use it to view the active model for debugging
+                self.modelAsJSON = function () {
+                    return JSON.stringify(self.modelForSaving());
+                };
 
-        self.loadData = function (outputId, data) {
-            self.outputId = outputId;
-            // load dynamic data
-            <md:jsLoadModel model="${model}"/>
+                self.loadData = function (outputId, data) {
+                    self.outputId = outputId;
+                    // load dynamic data
+                    <md:jsLoadModel model="${model}"/>
 
-            // if there is no data in tables then add an empty row for the user to add data
-            if (typeof self.addRow === 'function' && self.rowCount() === 0) {
-                self.addRow();
+                    // if there is no data in tables then add an empty row for the user to add data
+                    if (typeof self.addRow === 'function' && self.rowCount() === 0) {
+                        self.addRow();
+                    }
+                    self.transients.dummy.notifySubscribers();
+                };
+            };
+
+
+            var savedData = activity;
+            if (!savedData.outputs) {
+                savedData.outputs = [];
             }
-            self.transients.dummy.notifySubscribers();
-        };
-    };
+            var savedOutput = {};
+            if (savedData) {
 
-    window[viewModelInstance] = new this[viewModelName]();
+                $.each(savedData.outputs, function(i, tmpOutput) {
+                    if (tmpOutput.name === '${outputName}') {
+                        savedOutput = tmpOutput;
+                    }
+                });
+            }
+
+            window[viewModelInstance] = new this[viewModelName](savedOutput);
+            var output = savedOutput.data ? savedOutput.data : {};
+
+            window[viewModelInstance].loadData(output);
             window[viewModelInstance].dirtyFlag = ko.dirtyFlag(window[viewModelInstance], false);
 
             ko.applyBindings(window[viewModelInstance], document.getElementById("ko${blockId}"));
@@ -179,31 +198,7 @@
 
             // register with the master controller so this model can participate in the save cycle
             master.register(viewModelInstance, window[viewModelInstance].modelForSaving,
-             window[viewModelInstance].dirtyFlag.isDirty, window[viewModelInstance].dirtyFlag.reset);
-
-            // Check for locally saved data for this output - this will happen in the event of a session timeout
-            // for example.
-            var savedData = activity;
-            if (!savedData.outputs) {
-                savedData.outputs = [];
-            }
-            console.log(savedData);
-            var savedOutput = null;
-            var savedOutputId = null;
-            if (savedData) {
-
-                $.each(savedData.outputs, function(i, tmpOutput) {
-                    if (tmpOutput.name === '${outputName}') {
-                        if (tmpOutput.data) {
-                            savedOutput = tmpOutput.data;
-
-                        }
-                    }
-                });
-            }
-            if (savedOutput) {
-                window[viewModelInstance].loadData(savedOutputId, savedOutput);
-            }
+            window[viewModelInstance].dirtyFlag.isDirty, window[viewModelInstance].dirtyFlag.reset);
         });
 
         </r:script>
@@ -299,8 +294,6 @@
 
 
     $(function(){
-
-        console.log("Blah!");
 
         $('#validation-container').validationEngine('attach', {scroll: false});
 
