@@ -56,10 +56,11 @@ public class EditModelWidgetRenderer implements ModelWidgetRenderer {
         def constraints = 'transients.' + context.model.source + 'Constraints'
         context.databindAttrs.add 'value', '\$data'
         context.databindAttrs.add 'checked', "\$root.${context.source}"
+        context.databindAttrs.add 'attr', "{id: '${context.model.source}'+\$index()}"
         context.writer << """
             <ul class="checkbox-list" data-bind="foreach: ${constraints}">
                 <li>
-                    <input type="checkbox" name="${context.source}" data-bind="${context.databindAttrs.toString()}" ${context.validationAttr}/><span data-bind="text:\$data"></span>
+                    <label data-bind="attr:{for: '${context.model.source}'+\$index()}"><input type="checkbox" name="${context.source}" data-bind="${context.databindAttrs.toString()}" ${context.validationAttr}/><span data-bind="text:\$data"/></label></span>
                 </li>
             </ul>
         """
