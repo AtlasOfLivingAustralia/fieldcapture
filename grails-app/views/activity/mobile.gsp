@@ -5,8 +5,6 @@
 
     <meta name="layout" content="mobile"/>
 
-    <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jstimezonedetect/1.0.4/jstz.min.js"></script>
     <r:script disposition="head">
     var fcConfig = {
         serverUrl: "${grailsApplication.config.grails.serverURL}",
@@ -26,46 +24,38 @@
 <div id="koActivityMainBlock">
 
     <div class="row-fluid">
-        <div class="${mapFeatures.toString() != '{}' ? 'span9' : 'span12'}">
+        <div class="span12">
             <!-- Common activity fields -->
 
             <div class="row-fluid space-after">
-                <div class="span6">
-                    <label for="theme">Major theme</label>
-                    <select id="theme" data-bind="value:mainTheme, options:transients.themes, optionsCaption:'Choose..'" class="input-xlarge">
-                    </select>
+                <div class="span4">
+
+                    <label class="for-readonly">Type</label>
+                    <span class="readonly-text" data-bind="text:type"></span>
                 </div>
-                <div class="span6">
+                <div class="span8">
+
                     <label class="for-readonly">Description</label>
                     <span class="readonly-text" data-bind="text:description"></span>
                 </div>
             </div>
 
-            <div class="row-fluid space-after">
-
-                <div class="span6">
-                    <label class="for-readonly inline">Activity progress</label>
-                    <button type="button" class="btn btn-small"
-                            data-bind="css: {'btn-warning':progress()=='planned','btn-success':progress()=='started','btn-info':progress()=='finished','btn-danger':progress()=='deferred','btn-inverse':progress()=='cancelled'}"
-                            style="line-height:16px;cursor:default;color:white">
-                        <span data-bind="text: progress"></span>
-                    </button>
-                </div>
-            </div>
 
             <div class="row-fluid space-after">
-                <div class="span6">
+                <div class="span4">
                     <label class="for-readonly inline">Planned start date</label>
                     <span class="readonly-text" data-bind="text:plannedStartDate.formattedDate"></span>
                 </div>
-                <div class="span6">
+                <div class="span8">
                     <label class="for-readonly inline">Planned end date</label>
                     <span class="readonly-text" data-bind="text:plannedEndDate.formattedDate"></span>
                 </div>
             </div>
 
-            <div class="row-fluid">
-                <div class="span6 required">
+            <div class="well">
+
+            <div class="row-fluid space-after">
+                <div class="span4 required">
                     <label for="startDate"><b>Actual start date</b>
                         <fc:iconHelp title="Start date">Date the activity was started.</fc:iconHelp>
                     </label>
@@ -76,7 +66,7 @@
                     </div>
 
                 </div>
-                <div class="span6 required">
+                <div class="span8 required">
                     <label for="endDate"><b>Actual end date</b>
                         <fc:iconHelp title="End date">Date the activity finished.</fc:iconHelp>
                     </label>
@@ -87,14 +77,31 @@
 
                 </div>
             </div>
+            <div class="row-fluid space-after">
+                <div class="span6">
+                    <label for="theme"><b>Major theme</b></label>
+                    <select id="theme" data-bind="value:mainTheme, options:transients.themes, optionsCaption:'Choose..'" class="input-xlarge">
+                    </select>
+                </div>
 
-
-        </div>
-        <g:if test="${mapFeatures.toString() != '{}'}">
-            <div class="span3">
-                <div id="smallMap" style="width:100%"></div>
             </div>
-        </g:if>
+            <div class="row-fluid">
+                <div class="span4">
+                    <label for="site"><b>Site</b></label>
+                    <fc:select id="site" width="100%" data-bind='options:transients.sites,optionsText:"name",optionsValue:"siteId",value:siteId,optionsCaption:"Choose a site..."'/>
+
+                    <br/>Leave blank if this activity is not associated with a specific site.
+
+                </div>
+
+                <div class="span8">
+                    <img width="250" height="200" data-bind="attr:{src:transients.siteImgUrl}"/>
+                </div>
+
+
+            </div>
+            </div>
+        </div>
     </div>
 
 </div>
@@ -281,125 +288,133 @@
 
     if (mobileBindings == undefined) {
         var mobileBindings = {
-        loadActivity:function(){return "{}"},
+        <g:if test="${activity}">
+            loadActivity:function(){return '${(activity as JSON).toString().encodeAsJavaScript()}'},
+        </g:if>
+        <g:else>
+            loadActivity:function(){return "{}"},
+        </g:else>
+        <g:if test="${sites}">
+            loadSites:function(){return '${(sites as JSON).toString().encodeAsJavaScript()}'},
+        </g:if>
+        <g:else>
+            loadSites:function(){return "[]"},
+        </g:else>
+
         saveActivity:function(){}
-        };
-    }
-    var master = new Master();
-    var activity = JSON.parse(mobileBindings.loadActivity());
-    var themes = ['theme1', 'theme2'];
+    };
+}
+var master = new Master();
+var activity = JSON.parse(mobileBindings.loadActivity());
+var themes = ['theme1', 'theme2'];
 
-    var site = {};
+var sites = JSON.parse(mobileBindings.loadSites());
 
 
-    $(function(){
+$(function(){
 
-        $('#validation-container').validationEngine('attach', {scroll: false});
+    $('#validation-container').validationEngine('attach', {scroll: false});
 
-        $('.helphover').popover({animation: true, trigger:'hover'});
+    $('.helphover').popover({animation: true, trigger:'hover'});
 
-        $('#reset').click(function () {
-            master.reset();
+    $('#reset').click(function () {
+        master.reset();
+    });
+
+
+    ko.bindingHandlers.editOutput = {
+        init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+            var outputName = ko.utils.unwrapObservable(valueAccessor()),
+                activity = bindingContext.$root,
+                outputId;
+
+            // search for corresponding outputs in the activity data
+            $.each(activity.outputs, function (i,output) { // iterate output data in the activity to
+                                                              // find any matching the meta-model name
+                if (output.name === outputName) {
+                    outputId = output.outputId;
+                }
+            });
+            if (outputId) {
+                // build edit link
+                $(element).html('Edit data');
+                $(element).attr('href', fcConfig.serverUrl + "/output/edit/" + outputId +
+                    "?returnTo=" + here);
+            } else {
+                // build create link
+                $(element).attr('href', fcConfig.serverUrl + '/output/create?activityId=' + activity.activityId +
+                    '&outputName=' + encodeURIComponent(outputName) +
+                    "&returnTo=" + here);
+            }
+        }
+    };
+
+    function ViewModel (act, sites) {
+        var self = this;
+        self.activityId = act.activityId;
+        self.description = ko.observable(act.description);
+        self.notes = ko.observable(act.notes);
+        self.startDate = ko.observable(act.startDate).extend({simpleDate: false});
+        self.endDate = ko.observable(act.endDate || act.plannedEndDate).extend({simpleDate: false});
+        self.plannedStartDate = ko.observable(act.plannedStartDate).extend({simpleDate: false});
+        self.plannedEndDate = ko.observable(act.plannedEndDate).extend({simpleDate: false});
+        self.eventPurpose = ko.observable(act.eventPurpose);
+        self.fieldNotes = ko.observable(act.fieldNotes);
+        self.associatedProgram = ko.observable(act.associatedProgram);
+        self.associatedSubProgram = ko.observable(act.associatedSubProgram);
+        self.progress = ko.observable(act.progress);
+        self.mainTheme = ko.observable(act.mainTheme);
+        self.type = ko.observable(act.type);
+        self.siteId = ko.observable(act.siteId);
+        self.projectId = act.projectId;
+        self.transients = {};
+        self.transients.sites = sites;
+        self.transients.activityProgressValues = ['planned','started','finished'];
+        self.transients.themes = themes;
+        self.transients.markedAsFinished = ko.observable(act.progress === 'finished');
+        self.transients.markedAsFinished.subscribe(function (finished) {
+            self.progress(finished ? 'finished' : 'started');
+        });
+        self.transients.siteImgUrl = ko.computed(function() {
+            if (self.siteId()) {
+                 var site = $.grep(self.transients.sites, function(site, index) { return site.siteId == self.siteId(); })[0];
+                 if (site && site.extent && site.extent.geometry && site.extent.geometry.centre) {
+                    return  "http://maps.googleapis.com/maps/api/staticmap?maptype=terrian&zoom=12&sensor=false&size=250x200&markers=color:red%7C"+site.extent.geometry.centre[1]+","+site.extent.geometry.centre[0]+"&centre=false";
+                 }
+            }
+            return "";
         });
 
-
-        ko.bindingHandlers.editOutput = {
-            init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
-                var outputName = ko.utils.unwrapObservable(valueAccessor()),
-                    activity = bindingContext.$root,
-                    outputId;
-
-                // search for corresponding outputs in the activity data
-                $.each(activity.outputs, function (i,output) { // iterate output data in the activity to
-                                                                  // find any matching the meta-model name
-                    if (output.name === outputName) {
-                        outputId = output.outputId;
-                    }
-                });
-                if (outputId) {
-                    // build edit link
-                    $(element).html('Edit data');
-                    $(element).attr('href', fcConfig.serverUrl + "/output/edit/" + outputId +
-                        "?returnTo=" + here);
-                } else {
-                    // build create link
-                    $(element).attr('href', fcConfig.serverUrl + '/output/create?activityId=' + activity.activityId +
-                        '&outputName=' + encodeURIComponent(outputName) +
-                        "&returnTo=" + here);
-                }
-            }
+        self.modelForSaving = function () {
+            // get model as a plain javascript object
+            var jsData = ko.toJS(self);
+            delete jsData.transients;
+            return jsData;
+        };
+        self.modelAsJSON = function () {
+            return JSON.stringify(self.modelForSaving());
         };
 
-        function ViewModel (act, site) {
-            var self = this;
-            self.activityId = act.activityId;
-            self.description = ko.observable(act.description);
-            self.notes = ko.observable(act.notes);
-            self.startDate = ko.observable(act.startDate).extend({simpleDate: false});
-            self.endDate = ko.observable(act.endDate || act.plannedEndDate).extend({simpleDate: false});
-            self.plannedStartDate = ko.observable(act.plannedStartDate).extend({simpleDate: false});
-            self.plannedEndDate = ko.observable(act.plannedEndDate).extend({simpleDate: false});
-            self.eventPurpose = ko.observable(act.eventPurpose);
-            self.fieldNotes = ko.observable(act.fieldNotes);
-            self.associatedProgram = ko.observable(act.associatedProgram);
-            self.associatedSubProgram = ko.observable(act.associatedSubProgram);
-            self.progress = ko.observable(act.progress);
-            self.mainTheme = ko.observable(act.mainTheme);
-            self.type = ko.observable(act.type);
-            self.siteId = ko.observable(act.siteId);
-            self.projectId = act.projectId;
-            self.transients = {};
-            self.transients.site = site;
-            self.transients.activityProgressValues = ['planned','started','finished'];
-            self.transients.themes = themes;
-            self.transients.markedAsFinished = ko.observable(act.progress === 'finished');
-            self.transients.markedAsFinished.subscribe(function (finished) {
-                self.progress(finished ? 'finished' : 'started');
-            });
+        self.save = function (callback, key) {
+        };
 
-            self.modelForSaving = function () {
-                // get model as a plain javascript object
-                var jsData = ko.toJS(self);
-                delete jsData.transients;
-                return jsData;
-            };
-            self.modelAsJSON = function () {
-                return JSON.stringify(self.modelForSaving());
-            };
+        self.notImplemented = function () {
+            alert("Not implemented yet.")
+        };
+        self.dirtyFlag = ko.dirtyFlag(self, false);
 
-            self.save = function (callback, key) {
-            };
-
-            self.notImplemented = function () {
-                alert("Not implemented yet.")
-            };
-            self.dirtyFlag = ko.dirtyFlag(self, false);
-
-            // make sure progress moves to started if we save any data (unless already finished)
-            // (do this here so the model becomes dirty)
-            self.progress(self.transients.markedAsFinished() ? 'finished' : 'started');
-        }
+        // make sure progress moves to started if we save any data (unless already finished)
+        // (do this here so the model becomes dirty)
+        self.progress(self.transients.markedAsFinished() ? 'finished' : 'started');
+    }
 
 
-        var viewModel = new ViewModel(activity, site);
+    var viewModel = new ViewModel(activity, sites);
 
-        ko.applyBindings(viewModel);
+    ko.applyBindings(viewModel);
 
-        master.register('activityModel', viewModel.modelForSaving, viewModel.dirtyFlag.isDirty, viewModel.dirtyFlag.reset);
-
-        var mapFeatures = $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
-        if(mapFeatures !=null && mapFeatures.features !== undefined && mapFeatures.features.length >0){
-            init_map_with_features({
-                    mapContainer: "smallMap",
-                    zoomToBounds:true,
-                    zoomLimit:16,
-                    featureService: "${createLink(controller: 'proxy', action:'feature')}",
-                    wmsServer: "${grailsApplication.config.spatial.geoserverUrl}"
-                },
-                mapFeatures
-            );
-        }
-    });
+    master.register('activityModel', viewModel.modelForSaving, viewModel.dirtyFlag.isDirty, viewModel.dirtyFlag.reset);
+});
 </r:script>
 
 </body>

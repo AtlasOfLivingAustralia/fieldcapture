@@ -25,6 +25,7 @@ class MobileController {
 
     def jsRegexp = /(?m)script src="\/(.*)" type="text\/javascript"/
     def cssRegexp = /(?m)link href="\/(.*)" type="text\/css"/
+    def cssImgRegexp = /(?m)url\("(.*)"/
 
     /**
      * Bundles activity forms into a zip file for use offline by the mobile applications.
@@ -42,8 +43,8 @@ class MobileController {
             def type = it.name
             def enterActivityDataHtml = activityHtml(type)
             if (first) {
-                addExternalFiles(zip, jsRegexp, enterActivityDataHtml)
-                addExternalFiles(zip, cssRegexp, enterActivityDataHtml)
+                def added = addExternalFiles(zip, jsRegexp, enterActivityDataHtml, [])
+                addExternalFiles(zip, cssRegexp, enterActivityDataHtml, added)
                 first = false
             }
             // replace absolute references with relative ones to enable loading from file.
@@ -68,28 +69,58 @@ class MobileController {
      * @param regexp used to match URLs to follow and add.
      * @param html the html to search.
      */
-    private def addExternalFiles(ZipOutputStream zip, regexp, String html) {
+    private def addExternalFiles(ZipOutputStream zip, regexp, String html, alreadyAdded, path = "") {
         def urls = []
+
         def results = html =~ regexp
         while (results.find()) {
             urls << results.group(1)
         }
 
-        urls.each {
-            try {
-                def page = webService.get(grailsApplication.config.serverName +'/'+ it)
+        urls.each { String url ->
+            if (!alreadyAdded.contains(url)) {
+                try {
+                    def page = ""
+                    def fullUrl = grailsApplication.config.serverName +'/'+ path + url
+                    byte[] pageBytes
+                    if (isImageUrl(url)) {
+                        pageBytes = readBinaryUrl(fullUrl)
+                    }
+                    else {
+                        page = webService.get(fullUrl)
+                        pageBytes = page.getBytes('UTF-8')
+                    }
+                    zip.putNextEntry(new ZipEntry(path+url))
+                    zip.write(pageBytes, 0, pageBytes.length)
+                    zip.closeEntry()
 
-                zip.putNextEntry(new ZipEntry(it))
+                    alreadyAdded << url
+                    if (url.endsWith("css")) {
+                        def relativePath = url.substring(0, url.lastIndexOf('/'))+'/'
 
-                byte[] pageBytes = page.getBytes('UTF-8')
-                zip.write(pageBytes, 0, pageBytes.length)
-                zip.closeEntry()
-            }
-            catch (Exception e) {
-                println e
+                        alreadyAdded = addExternalFiles(zip, cssImgRegexp, page, alreadyAdded, relativePath)
+
+                    }
+                }
+                catch (Exception e) {
+                    println e
+                }
             }
         }
 
+        return alreadyAdded
+
+    }
+
+    private boolean isImageUrl(String url) {
+        url.endsWith("png") || url.endsWith("jpg") || url.endsWith("gif")
+    }
+
+    byte[] readBinaryUrl(String url) {
+        ByteArrayOutputStream bytesout = new ByteArrayOutputStream(2048)
+        bytesout << new URL(url).openStream()
+
+        return bytesout.toByteArray()
     }
 
 
@@ -102,15 +133,17 @@ class MobileController {
 
     def activityForm(String id) {
 
-        println "rendering ${id}"
-
-
         def model = [:]
         model.speciesLists = new JSONArray()
         model.metaModel = metadataService.getActivityModel(id)
         // the array of output models
         model.outputModels = model.metaModel?.outputs?.collectEntries {
             [it, metadataService.getDataModelFromOutputName(it)]
+        }
+
+        if (params.activityId) {
+            model.activity = activityService.get(params.activityId)
+            model.sites = projectService.get(model.activity.projectId).sites
         }
 
         render view:'/activity/mobile', model:model
