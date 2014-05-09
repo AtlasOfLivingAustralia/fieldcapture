@@ -94,7 +94,11 @@
 
                 </div>
 
-                <div class="span8">
+                <div class="span2">
+                    <button class="btn btn-info" data-bind="click:createNewSite">Create new Site</button>
+                </div>
+
+                <div class="span6">
                     <img width="250" height="200" data-bind="attr:{src:transients.siteImgUrl}"/>
                 </div>
 
@@ -301,7 +305,8 @@
             loadSites:function(){return "[]"},
         </g:else>
 
-        saveActivity:function(){}
+        saveActivity:function(){},
+        createNewSite:function(){}
     };
 }
 var master = new Master();
@@ -397,6 +402,10 @@ $(function(){
 
         self.save = function (callback, key) {
         };
+
+        self.createNewSite = function() {
+            mobileBindings.createNewSite();
+        }
 
         self.notImplemented = function () {
             alert("Not implemented yet.")
