@@ -13,11 +13,12 @@
         projectViewUrl: "${createLink(controller: 'project', action: 'index')}/",
         siteViewUrl: "${createLink(controller: 'site', action: 'index')}/",
         bieUrl: "${grailsApplication.config.bie.baseURL}",
-        speciesProfileUrl: "${createLink(controller: 'proxy', action: 'speciesProfile')}"
+        speciesProfileUrl: "${createLink(controller: 'proxy', action: 'speciesProfile')}",
+        googleStaticUrl:"http://maps.googleapis.com/maps/api/staticmap?maptype=terrian&zoom=12&sensor=false&size=250x200&markers=color:red%7C"
         },
         here = document.location.href;
     </r:script>
-    <r:require modules="application,knockout,jqueryValidationEngine,datepicker,jQueryFileUploadUI,mapWithFeatures,attachDocuments,species,amplify"/>
+    <r:require modules="application,knockout,jqueryValidationEngine,datepicker,jQueryFileUploadUI,attachDocuments,species"/>
 </head>
 <body>
 <div class="container-fluid validationEngineContainer" id="validation-container">
@@ -62,7 +63,7 @@
 
 
                     <div class="input-append">
-                        <fc:datePicker targetField="startDate.date" name="startDate" data-validation-engine="validate[required]"/>
+                        <fc:datePicker readonly="readonly" targetField="startDate.date" name="startDate" data-validation-engine="validate[required]"/>
                     </div>
 
                 </div>
@@ -72,7 +73,7 @@
                     </label>
 
                     <div class="input-append">
-                        <fc:datePicker targetField="endDate.date" name="endDate" data-validation-engine="validate[future[startDate]]" />
+                        <fc:datePicker readonly="readonly" targetField="endDate.date" name="endDate" data-validation-engine="validate[future[startDate]]" />
                     </div>
 
                 </div>
@@ -95,6 +96,7 @@
                 </div>
 
                 <div class="span2">
+                    <br/>
                     <button class="btn btn-info" data-bind="click:createNewSite">Create new Site</button>
                 </div>
 
@@ -288,6 +290,12 @@
                 }
             });
         };
+
+        this.addSite = function(site) {
+            var viewModel = ko.dataFor(document.getElementById('site'));
+            viewModel.transients.sites.push(site);
+            viewModel.siteId(site.siteId);
+        }
     };
 
     if (mobileBindings == undefined) {
@@ -311,8 +319,6 @@
 }
 var master = new Master();
 var activity = JSON.parse(mobileBindings.loadActivity());
-var themes = ['theme1', 'theme2'];
-
 var sites = JSON.parse(mobileBindings.loadSites());
 
 
@@ -373,18 +379,29 @@ $(function(){
         self.siteId = ko.observable(act.siteId);
         self.projectId = act.projectId;
         self.transients = {};
-        self.transients.sites = sites;
+        self.transients.sites = ko.observableArray(sites);
         self.transients.activityProgressValues = ['planned','started','finished'];
-        self.transients.themes = themes;
+        self.transients.themes = act.themes ? act.themes: [];
         self.transients.markedAsFinished = ko.observable(act.progress === 'finished');
         self.transients.markedAsFinished.subscribe(function (finished) {
             self.progress(finished ? 'finished' : 'started');
         });
         self.transients.siteImgUrl = ko.computed(function() {
             if (self.siteId()) {
-                 var site = $.grep(self.transients.sites, function(site, index) { return site.siteId == self.siteId(); })[0];
-                 if (site && site.extent && site.extent.geometry && site.extent.geometry.centre) {
-                    return  "http://maps.googleapis.com/maps/api/staticmap?maptype=terrian&zoom=12&sensor=false&size=250x200&markers=color:red%7C"+site.extent.geometry.centre[1]+","+site.extent.geometry.centre[0]+"&centre=false";
+                 var site = $.grep(self.transients.sites(), function(site, index) { return site.siteId == self.siteId(); })[0];
+                 if (site) {
+                    var lat,lon;
+                    if (site.lat && site.lon) {
+                        lat = site.lat;
+                        lon = site.lon;
+                    }
+                    else if (site.extent && site.extent.geometry && site.extent.geometry.centre) {
+                        lat = site.extent.geometry.centre[1];
+                        lon = site.extent.geometry.centre[0];
+                    }
+                    if (lat && lon) {
+                        return fcConfig.googleStaticUrl+lat+","+lon;
+                    }
                  }
             }
             return "";

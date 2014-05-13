@@ -194,8 +194,31 @@ class MobileController {
                 response.status = 401
                 render error as JSON
             }
+            def project = projectService.get(id, 'all')
+            project.sites.each { site ->
+                def centre = site.extent?.geometry?.centre
+                if (centre) {
+                    site.centroidLat = centre[1]
+                    site.centroidLon = centre[0]
+                }
+                site.remove('projects')
 
-            render projectService.get(id, 'all') as JSON
+                site.photoPoints = site.poi?.findAll { it.type == 'photopoint' || it.type == 'point' }
+                site.remove('poi')
+            }
+            project.themes = metadataService.getThemesForProject(project)?.collect {it.name}
+
+            project.activities.each {activity ->
+                activity.themes = project.themes
+            }
+
+            // Removed unused fields to reduce the size of the payload.
+            project.remove('documents')
+            project.remove('outputTargets')
+            project.remove('timeline')
+
+
+            render project as JSON
         }
         else  {
             response.status = 401
@@ -264,7 +287,7 @@ class MobileController {
     def createSite() {
         UserDetails user = authorize()
 
-        def mandatoryFields = ['name', 'lat', 'lon', 'projectId']
+        def mandatoryFields = ['name', 'centroidLat', 'centroidLon', 'projectId']
         if (user) {
 
             def result = [:]
@@ -296,7 +319,7 @@ class MobileController {
             }
 
             if (!result) {
-                result = siteService.createSiteFromPoint(projectId, siteDetails.name, siteDetails.description, siteDetails.lat, siteDetails.lon)
+                result = siteService.createSiteFromPoint(projectId, siteDetails.name, siteDetails.description, siteDetails.centroidLat, siteDetails.centroidLon)
                 if (result.error) {
                     response.status = result.statusCode
                     render result as JSON
