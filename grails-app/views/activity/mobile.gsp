@@ -391,7 +391,7 @@ $(function(){
                  var site = $.grep(self.transients.sites(), function(site, index) { return site.siteId == self.siteId(); })[0];
                  if (site) {
                     var lat,lon;
-                    if (site.lat && site.lon) {
+                    if (site.centroidLat && site.centroidLon) {
                         lat = site.lat;
                         lon = site.lon;
                     }
