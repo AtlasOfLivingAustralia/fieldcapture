@@ -25,7 +25,7 @@ class MobileController {
 
     def jsRegexp = /(?m)script src="\/(.*)" type="text\/javascript"/
     def cssRegexp = /(?m)link href="\/(.*)" type="text\/css"/
-    def cssImgRegexp = /(?m)url\("(.*)"/
+    def cssImgRegexp = /(?m)url\(["'](.*)["']/
 
     /**
      * Bundles activity forms into a zip file for use offline by the mobile applications.
