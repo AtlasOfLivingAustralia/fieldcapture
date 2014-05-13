@@ -281,7 +281,7 @@
             <g:select data-bind="value: type"
                       name='type'
                       from="['choose type','photopoint', 'location of previous surveys', 'other']"
-                      keys="['none','point','photopoint', 'survey', 'other']"/>
+                      keys="['none','photopoint', 'survey', 'other']"/>
         </div>
         <div class="row-fluid controls-row">
             <fc:textField data-bind="value:geometry().decimalLatitude" outerClass="span4" label="Latitude" data-validation-engine="validate[required,custom[number],min[-90],max[0]]" data-prompt-position="topRight:-150"/>
