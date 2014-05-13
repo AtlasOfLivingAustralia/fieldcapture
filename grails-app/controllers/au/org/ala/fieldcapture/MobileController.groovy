@@ -195,7 +195,7 @@ class MobileController {
                 render error as JSON
             }
             def project = projectService.get(id, 'all')
-            project.sites.each { site ->
+            project.sites?.each { site ->
                 def centre = site.extent?.geometry?.centre
                 if (centre) {
                     site.centroidLat = centre[1]
@@ -208,8 +208,10 @@ class MobileController {
             }
             project.themes = metadataService.getThemesForProject(project)?.collect {it.name}
 
-            project.activities.each {activity ->
-                activity.themes = project.themes
+            project.activities?.each {activity ->
+                if (activity) {
+                    activity.themes = project.themes
+                }
             }
 
             // Removed unused fields to reduce the size of the payload.
