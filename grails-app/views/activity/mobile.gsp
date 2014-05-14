@@ -14,7 +14,7 @@
         siteViewUrl: "${createLink(controller: 'site', action: 'index')}/",
         bieUrl: "${grailsApplication.config.bie.baseURL}",
         speciesProfileUrl: "${createLink(controller: 'proxy', action: 'speciesProfile')}",
-        googleStaticUrl:"http://maps.googleapis.com/maps/api/staticmap?maptype=terrian&zoom=12&sensor=false&size=250x200&markers=color:red%7C"
+        googleStaticUrl:"http://maps.googleapis.com/maps/api/staticmap?maptype=terrian&zoom=12&sensor=false&size=350x250&markers=color:red%7C"
         },
         here = document.location.href;
     </r:script>
@@ -54,58 +54,88 @@
             </div>
 
             <div class="well">
+                <div class="row-fluid">
 
-            <div class="row-fluid space-after">
-                <div class="span4 required">
-                    <label for="startDate"><b>Actual start date</b>
-                        <fc:iconHelp title="Start date">Date the activity was started.</fc:iconHelp>
-                    </label>
+                    <span class="span8">
+                    <div class="row-fluid space-after">
+
+                        <div class="span6 required">
+                            <label for="startDate"><b>Actual start date</b>
+                                <fc:iconHelp title="Start date">Date the activity was started.</fc:iconHelp>
+                            </label>
 
 
-                    <div class="input-append">
-                        <fc:datePicker readonly="readonly" targetField="startDate.date" name="startDate" data-validation-engine="validate[required]"/>
+                            <div class="input-append">
+                                <fc:datePicker readonly="readonly" targetField="startDate.date" name="startDate" data-validation-engine="validate[required]"/>
+                            </div>
+
+                        </div>
+                        <div class="span6" data-bind="css:{required:transients.activityComplete}">
+                            <label for="endDate"><b>Actual end date</b>
+                                <fc:iconHelp title="End date">Date the activity finished.</fc:iconHelp>
+                            </label>
+
+                            <div class="input-append">
+                                <fc:datePicker readonly="readonly" targetField="endDate.date" name="endDate" data-validation-engine="validate[future[startDate]]" />
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row-fluid space-after">
+                        <div class="span6">
+                            <label for="theme"><b>Major theme</b></label>
+                            <select id="theme" data-bind="value:mainTheme, options:transients.themes, optionsCaption:'Choose..'" class="input-xlarge" style="width:90%">
+                            </select>
+                        </div>
+
+                        <div class="span6">
+                            <label><b>Progress</b></label>
+                            <label for="activityComplete"><input type="checkbox" id="activityComplete" data-bind="checked:transients.activityComplete" style="margin-right:1em;"><span>This activity is complete</span></label>
+
+                        </div>
+
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span6">
+                            <label for="site"><b>Site</b></label>
+                            <fc:select id="site" style="width:90%" data-bind='options:transients.sites,optionsText:"name",optionsValue:"siteId",value:siteId,optionsCaption:"Choose a site..."'/>
+
+                        </div>
+
+                        <div class="span2">
+                            <br/>
+                            <button class="btn btn-info" data-bind="click:createNewSite">Create new Site</button>
+                        </div>
+
+
+
+
                     </div>
 
+                    %{--<div class="row-fluid">--}%
+                        %{--<table id="photoPoints">--}%
+                            %{--<thead>--}%
+                                %{--<tr><td>Photo point</td><td>Lat</td><td>Lon</td><td></td></tr>--}%
+                            %{--</thead>--}%
+                            %{--<tbody>--}%
+                                %{--<tr data-bind="foreach:transients.photoPoints">--}%
+                                    %{--<td data-bind="text:name"></td>--}%
+                                    %{--<td data-bind="text:geometry.decimalLatitude"></td>--}%
+                                    %{--<td data-bind="text:geometry.decimalLongitude"></td>--}%
+                                    %{--<td><button class="btn-info" data-bind="click:attachPhotoPoint">Attach Photo</button> </td>--}%
+
+                                %{--</tr>--}%
+                            %{--</tbody>--}%
+                        %{--</table>--}%
+
+                    %{--</div>--}%
+                    </span>
+                    <span class="span4">
+
+                            <img width="350" height="250" data-bind="attr:{src:transients.siteImgUrl}"/>
+
+                    </span>
                 </div>
-                <div class="span8 required">
-                    <label for="endDate"><b>Actual end date</b>
-                        <fc:iconHelp title="End date">Date the activity finished.</fc:iconHelp>
-                    </label>
-
-                    <div class="input-append">
-                        <fc:datePicker readonly="readonly" targetField="endDate.date" name="endDate" data-validation-engine="validate[future[startDate]]" />
-                    </div>
-
-                </div>
-            </div>
-            <div class="row-fluid space-after">
-                <div class="span6">
-                    <label for="theme"><b>Major theme</b></label>
-                    <select id="theme" data-bind="value:mainTheme, options:transients.themes, optionsCaption:'Choose..'" class="input-xlarge">
-                    </select>
-                </div>
-
-            </div>
-            <div class="row-fluid">
-                <div class="span4">
-                    <label for="site"><b>Site</b></label>
-                    <fc:select id="site" width="100%" data-bind='options:transients.sites,optionsText:"name",optionsValue:"siteId",value:siteId,optionsCaption:"Choose a site..."'/>
-
-                    <br/>Leave blank if this activity is not associated with a specific site.
-
-                </div>
-
-                <div class="span2">
-                    <br/>
-                    <button class="btn btn-info" data-bind="click:createNewSite">Create new Site</button>
-                </div>
-
-                <div class="span6">
-                    <img width="250" height="200" data-bind="attr:{src:transients.siteImgUrl}"/>
-                </div>
-
-
-            </div>
             </div>
         </div>
     </div>
@@ -114,13 +144,14 @@
 
 <!-- ko stopBinding: true -->
 <g:each in="${metaModel?.outputs}" var="outputName">
+    <g:if test="${outputName != 'Photo Points'}">
     <g:set var="blockId" value="${fc.toSingleWord([name: outputName])}"/>
     <g:set var="model" value="${outputModels[outputName]}"/>
     <md:modelStyles model="${model}" edit="true"/>
     <div class="output-block" id="ko${blockId}">
         <h3 data-bind="css:{modified:dirtyFlag.isDirty},attr:{title:'Has been modified'}">${outputName}<i class="icon-asterisk modified-icon" data-bind="visible:dirtyFlag.isDirty" title="Has been modified" style="display: none;"></i></h3>
         <!-- add the dynamic components -->
-        <md:modelView model="${model}" site="${site}" edit="true" output="${outputName}" />
+        <md:modelView model="${model}" site="${site}" edit="true" disableTableUpload="true" output="${outputName}" />
         <r:script>
         $(function(){
 
@@ -140,7 +171,7 @@
                 self.transients.dummy = ko.observable();
 
                 // add declarations for dynamic data
-                <md:jsViewModel model="${model}"  output="${outputName}"  edit="true" viewModelInstance="${blockId}ViewModelInstance"/>
+                <md:jsViewModel model="${model}"  output="${outputName}" edit="true" viewModelInstance="${blockId}ViewModelInstance"/>
 
                 // this will be called when generating a savable model to remove transient properties
                 self.removeBeforeSave = function (jsData) {
@@ -215,6 +246,7 @@
 
         </r:script>
     </div>
+    </g:if>
 </g:each>
 <!-- /ko -->
 
@@ -379,7 +411,18 @@ $(function(){
         self.siteId = ko.observable(act.siteId);
         self.projectId = act.projectId;
         self.transients = {};
+        self.transients.activityComplete = ko.observable(false);
+        self.transients.activityComplete.subscribe(function(newValue) {
+            self.progress(newValue?'finished':'started');
+        });
         self.transients.sites = ko.observableArray(sites);
+        self.transients.photoPoints = ko.computed(function() {
+            var site = $.grep(self.transients.sites(), function(site, index) { return site.siteId == self.siteId(); })[0];
+             if (site) {
+                 return site.photoPoints ? site.photoPoints : site.poi;
+             }
+             return [];
+        });
         self.transients.activityProgressValues = ['planned','started','finished'];
         self.transients.themes = act.themes ? act.themes: [];
         self.transients.markedAsFinished = ko.observable(act.progress === 'finished');
@@ -426,6 +469,10 @@ $(function(){
 
         self.notImplemented = function () {
             alert("Not implemented yet.")
+        };
+
+        self.attachPhotoPoint = function(e) {
+            console.log(e);
         };
         self.dirtyFlag = ko.dirtyFlag(self, false);
 

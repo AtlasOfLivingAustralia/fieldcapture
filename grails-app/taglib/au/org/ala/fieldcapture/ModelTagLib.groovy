@@ -684,31 +684,37 @@ class ModelTagLib {
             out << INDENT*4 << """<tr><td colspan="${colCount}" style="text-align:left;">
                         <button type="button" class="btn btn-small" data-bind="click:add${model.source}Row"""
             if (model.editableRows) {
-                out << ", enable:!\$root.${model.source}Editing()"
+                out << ", enable:!\$root.${model.source}Editing()>"
             }
             out << """">
-                        <i class="icon-plus"></i> Add a row</button>
-                        <button type="button" class="btn btn-small" data-bind="click:show${model.source}TableDataUpload"><i class="icon-upload"></i> Upload data for this table</button>
+                        <i class="icon-plus"></i> Add a row</button>"""
+            if (!attrs.disableTableUpload) {
+                out << """
+                <button type="button" class="btn btn-small" data-bind="click:show${model.source}TableDataUpload"><i class="icon-upload"></i> Upload data for this table</button>
 
 
                     </td></tr>\n"""
-            out << """<tr data-bind="visible:${model.source}TableDataUploadVisible"><td colspan="${colCount}">
+                out << """<tr data-bind="visible:${model.source}TableDataUploadVisible"><td colspan="${colCount}">
                 <div class="text-error text-left">
                     Note: Only valid exact scientific names will be matched and populated from the database (indicated by a green tick). Unmatched species will load, but will be indicated by a green <b>?</b>. Please check your uploaded data and correct as required.
                 </div>
                 <div class="text-left" style="margin:5px">
-                    <a href="${createLink(controller: 'proxy', action:'excelOutputTemplate')}?type=${attrs.output}&listName=${model.source}" target="${model.source}TemplateDownload" class="btn">Step 1 - Download template (.xlsx)</a>
+                    <a href="${createLink(controller: 'proxy', action: 'excelOutputTemplate')}?type=${
+                    attrs.output
+                }&listName=${model.source}" target="${model.source}TemplateDownload" class="btn">Step 1 - Download template (.xlsx)</a>
                 </div>
                 <div class="text-left" style="margin:5px;">
                     <input type="checkbox" data-bind="checked:appendTableRows" style="margin-right:5px">Append uploaded data to table (unticking this checkbox will result in all table rows being replaced)
                 </div>
 
                 <div class="btn fileinput-button" style="margin-left:5px">
-                        <input id="${model.source}TableDataUpload" type="file" name="data" data-bind="fileUploadNoImage:${model.source}TableDataUploadOptions">
+                        <input id="${
+                    model.source
+                }TableDataUpload" type="file" name="data" data-bind="fileUploadNoImage:${model.source}TableDataUploadOptions">
                         Step 2 - Upload populated template
-                </div>
-
-                    </td></tr>"""
+                </div>"""
+            }
+            out<<"""</td></tr>"""
             out << """ <script id="${model.source}template-upload" type="text/x-tmpl">{% %}</script>
                        <script id="${model.source}template-download" type="text/x-tmpl">{% %}</script>"""
         }
