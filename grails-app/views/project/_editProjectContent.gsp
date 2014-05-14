@@ -8,7 +8,7 @@
     </div>
 </div>
 <div class="row-fluid">
-    <div class="span5">
+    <div class="span10">
         <h4>Update project "${header}"</h4>
         <div id="${attributeName}-button-bar" style="width:100%;background-color: white;"></div>
         <div style="padding-right:12px;">
@@ -18,10 +18,11 @@
         <div class="hide"><input type="text" name="${attributeName}Output" id="${attributeName}Output" class="hide"></div>
 
     </div>
+</div>
+<div class="row-fluid">
     <div class="span5">
         <h4>Preview</h4>
         <div id="${attributeName}-preview" class="well well-small"></div>
-
     </div>
 
 </div>
