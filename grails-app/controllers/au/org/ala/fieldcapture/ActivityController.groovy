@@ -320,7 +320,7 @@ class ActivityController {
                     [(colString):it.name]
                 }
                 def config = [
-                        sheet:outputName,
+                        sheet:sheetNameFromOutput(outputName),
                         startRow:1,
                         columnMap:columnMap
                 ]
@@ -360,5 +360,14 @@ class ActivityController {
         response.status = 400
         def result = [status: 400, error:'No file attachment found']
         render result as JSON
+    }
+
+    static final int MAX_SHEET_NAME_LENGTH = 31
+    private String sheetNameFromOutput(outputName) {
+        def end = Math.min(outputName.length(), MAX_SHEET_NAME_LENGTH)-1
+        def shortName = outputName[0..end]
+        shortName = shortName.replaceAll('[^a-zA-z0-9 ]', '')
+
+        shortName
     }
 }
