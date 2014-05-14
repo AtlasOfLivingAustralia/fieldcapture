@@ -434,20 +434,20 @@ $(function(){
                  var site = $.grep(self.transients.sites(), function(site, index) { return site.siteId == self.siteId(); })[0];
                  if (site) {
                     var lat,lon;
-                    if (site.centroidLat && site.centroidLon) {
-                        lat = site.lat;
-                        lon = site.lon;
+                    if (site.centroidLat !== undefined && site.centroidLon !== undefined) {
+                        lat = site.centroidLat;
+                        lon = site.centroidLon;
                     }
                     else if (site.extent && site.extent.geometry && site.extent.geometry.centre) {
                         lat = site.extent.geometry.centre[1];
                         lon = site.extent.geometry.centre[0];
                     }
-                    if (lat && lon) {
+                    if (lat !== undefined && lon !== undefined) {
                         return fcConfig.googleStaticUrl+lat+","+lon;
                     }
                  }
             }
-            return "";
+            return "images/nolocation.png";
         });
 
         self.modelForSaving = function () {
