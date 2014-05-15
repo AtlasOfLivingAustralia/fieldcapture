@@ -5,9 +5,8 @@
     <title><g:layoutTitle /></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <style type="text/css">
-        input[type=checkbox] {
-            -webkit-transform: scale(1.5); margin:50px;
-        }
+        input[type=checkbox] {  -webkit-transform: scale(1.5); }
+        .checkbox-list label { min-height: 40px; }
     </style>
     <r:require modules="nrmSkin, jquery_cookie"/>
     <r:layoutResources/>

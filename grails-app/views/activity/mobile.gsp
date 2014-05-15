@@ -102,7 +102,7 @@
 
                         </div>
 
-                        <div class="span2">
+                        <div class="span3">
                             <br/>
                             <button class="btn btn-info" data-bind="click:createNewSite">Create new Site</button>
                         </div>
@@ -132,7 +132,7 @@
                     </span>
                     <span class="span4">
 
-                            <img width="350" height="250" data-bind="attr:{src:transients.siteImgUrl}"/>
+                            <img width="350" height="250" data-bind="attr:{src:transients.siteImgUrl}, visible:transients.siteImgUrl()"/>
 
                     </span>
                 </div>
@@ -447,7 +447,7 @@ $(function(){
                     }
                  }
             }
-            return "images/nolocation.png";
+            return "";
         });
 
         self.modelForSaving = function () {
