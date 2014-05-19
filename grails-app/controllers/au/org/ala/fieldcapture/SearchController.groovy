@@ -2,7 +2,7 @@ package au.org.ala.fieldcapture
 import grails.converters.JSON
 
 class SearchController {
-    def searchService, webService, speciesService
+    def searchService, webService, speciesService, grailsApplication, commonService
 
     /**
      * Main search page that takes its input from the search bar in the header
@@ -24,6 +24,20 @@ class SearchController {
 
         render speciesService.searchForSpecies(q, limit, params.listId) as JSON
 
+    }
+
+    @PreAuthorise(accessLevel = 'admin')
+    def downloadSearchResults() {
+        def path = 'search/downloadSearchResults'
+        if (params.view == 'xlsx') {
+             path += ".xlsx"
+        }
+        def facets = []
+        facets.addAll(params.getList("fq"))
+        facets << "className:au.org.ala.ecodata.Project"
+        params.put("fq", facets)
+        def url = grailsApplication.config.ecodata.baseUrl + path +  commonService.buildUrlParamsFromMap(params)
+        webService.proxyGetRequest(response, url)
     }
 
 }
