@@ -26,7 +26,7 @@ class SearchController {
 
     }
 
-    @PreAuthorise(accessLevel = 'admin')
+    @PreAuthorise(accessLevel = 'siteReadOnly', redirectController ='home', redirectAction = 'index')
     def downloadSearchResults() {
         def path = 'search/downloadSearchResults'
         if (params.view == 'xlsx') {
@@ -37,7 +37,7 @@ class SearchController {
         facets << "className:au.org.ala.ecodata.Project"
         params.put("fq", facets)
         def url = grailsApplication.config.ecodata.baseUrl + path +  commonService.buildUrlParamsFromMap(params)
-        webService.proxyGetRequest(response, url)
+        webService.proxyGetRequest(response, url, true, true)
     }
 
 }
