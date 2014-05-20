@@ -36,7 +36,7 @@ class ModelCSSTagLib {
         def tableClass = model.source
 
         out << '<style type="text/css">\n'
-        if (model.allowHeaderWrap) {
+        if (model.allowHeaderWrap || attrs.forceHeaderWrap) {
             out << INDENT*2 << "table.${tableClass} th {white-space:normal;}\n"
         }
         model.columns.eachWithIndex { col, i ->
@@ -63,7 +63,7 @@ class ModelCSSTagLib {
             }
         }
 
-        out << INDENT*2 << "table.${tableClass} textarea {width:98%;}\n"
+        out << INDENT*2 << "table.${tableClass} textarea {width:100%; box-sizing:border-box; }\n"
         out << INDENT << "</style>"
     }
 

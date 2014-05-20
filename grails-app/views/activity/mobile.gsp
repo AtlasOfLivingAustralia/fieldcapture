@@ -103,13 +103,9 @@
                         </div>
 
                         <div class="span3">
-                            <br/>
-                            <button class="btn btn-info" data-bind="click:createNewSite">Create new Site</button>
+
+                            <button class="btn btn-info" style="margin-top:25px;" data-bind="visible:transients.newSiteSupported,click:createNewSite">Create new Site</button>
                         </div>
-
-
-
-
                     </div>
 
                     %{--<div class="row-fluid">--}%
@@ -132,7 +128,7 @@
                     </span>
                     <span class="span4">
 
-                            <img width="350" height="250" data-bind="attr:{src:transients.siteImgUrl}, visible:transients.siteImgUrl()"/>
+                            <img width="100%" data-bind="attr:{src:transients.siteImgUrl}, visible:transients.siteImgUrl()"/>
 
                     </span>
                 </div>
@@ -147,7 +143,7 @@
     <g:if test="${outputName != 'Photo Points'}">
     <g:set var="blockId" value="${fc.toSingleWord([name: outputName])}"/>
     <g:set var="model" value="${outputModels[outputName]}"/>
-    <md:modelStyles model="${model}" edit="true"/>
+    <md:modelStyles model="${model}" edit="true" forceHeaderWrap="true"/>
     <div class="output-block" id="ko${blockId}">
         <h3 data-bind="css:{modified:dirtyFlag.isDirty},attr:{title:'Has been modified'}">${outputName}<i class="icon-asterisk modified-icon" data-bind="visible:dirtyFlag.isDirty" title="Has been modified" style="display: none;"></i></h3>
         <!-- add the dynamic components -->
@@ -344,10 +340,10 @@
         <g:else>
             loadSites:function(){return "[]"},
         </g:else>
-
+        supportsNewSite:function() { return true; },
         saveActivity:function(){},
         createNewSite:function(){}
-    };
+};
 }
 var master = new Master();
 var activity = JSON.parse(mobileBindings.loadActivity());
@@ -356,137 +352,138 @@ var sites = JSON.parse(mobileBindings.loadSites());
 
 $(function(){
 
-    $('#validation-container').validationEngine('attach', {scroll: false});
+$('#validation-container').validationEngine('attach', {scroll: false});
 
-    $('.helphover').popover({animation: true, trigger:'hover'});
+$('.helphover').popover({animation: true, trigger:'hover'});
 
-    $('#reset').click(function () {
-        master.reset();
+$('#reset').click(function () {
+master.reset();
+});
+
+
+ko.bindingHandlers.editOutput = {
+init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+    var outputName = ko.utils.unwrapObservable(valueAccessor()),
+        activity = bindingContext.$root,
+        outputId;
+
+    // search for corresponding outputs in the activity data
+    $.each(activity.outputs, function (i,output) { // iterate output data in the activity to
+                                                      // find any matching the meta-model name
+        if (output.name === outputName) {
+            outputId = output.outputId;
+        }
     });
-
-
-    ko.bindingHandlers.editOutput = {
-        init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
-            var outputName = ko.utils.unwrapObservable(valueAccessor()),
-                activity = bindingContext.$root,
-                outputId;
-
-            // search for corresponding outputs in the activity data
-            $.each(activity.outputs, function (i,output) { // iterate output data in the activity to
-                                                              // find any matching the meta-model name
-                if (output.name === outputName) {
-                    outputId = output.outputId;
-                }
-            });
-            if (outputId) {
-                // build edit link
-                $(element).html('Edit data');
-                $(element).attr('href', fcConfig.serverUrl + "/output/edit/" + outputId +
-                    "?returnTo=" + here);
-            } else {
-                // build create link
-                $(element).attr('href', fcConfig.serverUrl + '/output/create?activityId=' + activity.activityId +
-                    '&outputName=' + encodeURIComponent(outputName) +
-                    "&returnTo=" + here);
-            }
-        }
-    };
-
-    function ViewModel (act, sites) {
-        var self = this;
-        self.activityId = act.activityId;
-        self.description = ko.observable(act.description);
-        self.notes = ko.observable(act.notes);
-        self.startDate = ko.observable(act.startDate).extend({simpleDate: false});
-        self.endDate = ko.observable(act.endDate || act.plannedEndDate).extend({simpleDate: false});
-        self.plannedStartDate = ko.observable(act.plannedStartDate).extend({simpleDate: false});
-        self.plannedEndDate = ko.observable(act.plannedEndDate).extend({simpleDate: false});
-        self.eventPurpose = ko.observable(act.eventPurpose);
-        self.fieldNotes = ko.observable(act.fieldNotes);
-        self.associatedProgram = ko.observable(act.associatedProgram);
-        self.associatedSubProgram = ko.observable(act.associatedSubProgram);
-        self.progress = ko.observable(act.progress);
-        self.mainTheme = ko.observable(act.mainTheme);
-        self.type = ko.observable(act.type);
-        self.siteId = ko.observable(act.siteId);
-        self.projectId = act.projectId;
-        self.transients = {};
-        self.transients.activityComplete = ko.observable(false);
-        self.transients.activityComplete.subscribe(function(newValue) {
-            self.progress(newValue?'finished':'started');
-        });
-        self.transients.sites = ko.observableArray(sites);
-        self.transients.photoPoints = ko.computed(function() {
-            var site = $.grep(self.transients.sites(), function(site, index) { return site.siteId == self.siteId(); })[0];
-             if (site) {
-                 return site.photoPoints ? site.photoPoints : site.poi;
-             }
-             return [];
-        });
-        self.transients.activityProgressValues = ['planned','started','finished'];
-        self.transients.themes = act.themes ? act.themes: [];
-        self.transients.markedAsFinished = ko.observable(act.progress === 'finished');
-        self.transients.markedAsFinished.subscribe(function (finished) {
-            self.progress(finished ? 'finished' : 'started');
-        });
-        self.transients.siteImgUrl = ko.computed(function() {
-            if (self.siteId()) {
-                 var site = $.grep(self.transients.sites(), function(site, index) { return site.siteId == self.siteId(); })[0];
-                 if (site) {
-                    var lat,lon;
-                    if (site.centroidLat !== undefined && site.centroidLon !== undefined) {
-                        lat = site.centroidLat;
-                        lon = site.centroidLon;
-                    }
-                    else if (site.extent && site.extent.geometry && site.extent.geometry.centre) {
-                        lat = site.extent.geometry.centre[1];
-                        lon = site.extent.geometry.centre[0];
-                    }
-                    if (lat !== undefined && lon !== undefined) {
-                        return fcConfig.googleStaticUrl+lat+","+lon;
-                    }
-                 }
-            }
-            return "";
-        });
-
-        self.modelForSaving = function () {
-            // get model as a plain javascript object
-            var jsData = ko.toJS(self);
-            delete jsData.transients;
-            return jsData;
-        };
-        self.modelAsJSON = function () {
-            return JSON.stringify(self.modelForSaving());
-        };
-
-        self.save = function (callback, key) {
-        };
-
-        self.createNewSite = function() {
-            mobileBindings.createNewSite();
-        }
-
-        self.notImplemented = function () {
-            alert("Not implemented yet.")
-        };
-
-        self.attachPhotoPoint = function(e) {
-            console.log(e);
-        };
-        self.dirtyFlag = ko.dirtyFlag(self, false);
-
-        // make sure progress moves to started if we save any data (unless already finished)
-        // (do this here so the model becomes dirty)
-        self.progress(self.transients.markedAsFinished() ? 'finished' : 'started');
+    if (outputId) {
+        // build edit link
+        $(element).html('Edit data');
+        $(element).attr('href', fcConfig.serverUrl + "/output/edit/" + outputId +
+            "?returnTo=" + here);
+    } else {
+        // build create link
+        $(element).attr('href', fcConfig.serverUrl + '/output/create?activityId=' + activity.activityId +
+            '&outputName=' + encodeURIComponent(outputName) +
+            "&returnTo=" + here);
     }
+}
+};
+
+function ViewModel (act, sites) {
+var self = this;
+self.activityId = act.activityId;
+self.description = ko.observable(act.description);
+self.notes = ko.observable(act.notes);
+self.startDate = ko.observable(act.startDate).extend({simpleDate: false});
+self.endDate = ko.observable(act.endDate || act.plannedEndDate).extend({simpleDate: false});
+self.plannedStartDate = ko.observable(act.plannedStartDate).extend({simpleDate: false});
+self.plannedEndDate = ko.observable(act.plannedEndDate).extend({simpleDate: false});
+self.eventPurpose = ko.observable(act.eventPurpose);
+self.fieldNotes = ko.observable(act.fieldNotes);
+self.associatedProgram = ko.observable(act.associatedProgram);
+self.associatedSubProgram = ko.observable(act.associatedSubProgram);
+self.progress = ko.observable(act.progress);
+self.mainTheme = ko.observable(act.mainTheme);
+self.type = ko.observable(act.type);
+self.siteId = ko.observable(act.siteId);
+self.projectId = act.projectId;
+self.transients = {};
+self.transients.activityComplete = ko.observable(false);
+self.transients.activityComplete.subscribe(function(newValue) {
+    self.progress(newValue?'finished':'started');
+});
+self.transients.sites = ko.observableArray(sites);
+self.transients.photoPoints = ko.computed(function() {
+    var site = $.grep(self.transients.sites(), function(site, index) { return site.siteId == self.siteId(); })[0];
+     if (site) {
+         return site.photoPoints ? site.photoPoints : site.poi;
+     }
+     return [];
+});
+self.transients.activityProgressValues = ['planned','started','finished'];
+self.transients.themes = act.themes ? act.themes: [];
+self.transients.markedAsFinished = ko.observable(act.progress === 'finished');
+self.transients.markedAsFinished.subscribe(function (finished) {
+    self.progress(finished ? 'finished' : 'started');
+});
+self.transients.siteImgUrl = ko.computed(function() {
+    if (self.siteId()) {
+         var site = $.grep(self.transients.sites(), function(site, index) { return site.siteId == self.siteId(); })[0];
+         if (site) {
+            var lat,lon;
+            if (site.centroidLat !== undefined && site.centroidLon !== undefined) {
+                lat = site.centroidLat;
+                lon = site.centroidLon;
+            }
+            else if (site.extent && site.extent.geometry && site.extent.geometry.centre) {
+                lat = site.extent.geometry.centre[1];
+                lon = site.extent.geometry.centre[0];
+            }
+            if (lat !== undefined && lon !== undefined) {
+                return fcConfig.googleStaticUrl+lat+","+lon;
+            }
+         }
+    }
+    return "";
+});
+self.transients.newSiteSupported = ko.observable( mobileBindings.supportsNewSite());
+
+self.modelForSaving = function () {
+    // get model as a plain javascript object
+    var jsData = ko.toJS(self);
+    delete jsData.transients;
+    return jsData;
+};
+self.modelAsJSON = function () {
+    return JSON.stringify(self.modelForSaving());
+};
+
+self.save = function (callback, key) {
+};
+
+self.createNewSite = function() {
+    mobileBindings.createNewSite();
+}
+
+self.notImplemented = function () {
+    alert("Not implemented yet.")
+};
+
+self.attachPhotoPoint = function(e) {
+    console.log(e);
+};
+self.dirtyFlag = ko.dirtyFlag(self, false);
+
+// make sure progress moves to started if we save any data (unless already finished)
+// (do this here so the model becomes dirty)
+self.progress(self.transients.markedAsFinished() ? 'finished' : 'started');
+}
 
 
-    var viewModel = new ViewModel(activity, sites);
+var viewModel = new ViewModel(activity, sites);
 
-    ko.applyBindings(viewModel);
+ko.applyBindings(viewModel);
 
-    master.register('activityModel', viewModel.modelForSaving, viewModel.dirtyFlag.isDirty, viewModel.dirtyFlag.reset);
+master.register('activityModel', viewModel.modelForSaving, viewModel.dirtyFlag.isDirty, viewModel.dirtyFlag.reset);
 });
 </r:script>
 
