@@ -7,11 +7,6 @@
 
     <r:script disposition="head">
     var fcConfig = {
-        serverUrl: "${grailsApplication.config.grails.serverURL}",
-        activityUpdateUrl: "${createLink(controller: 'activity', action: 'ajaxUpdate')}",
-        activityDeleteUrl: "${createLink(controller: 'activity', action: 'ajaxDelete')}",
-        projectViewUrl: "${createLink(controller: 'project', action: 'index')}/",
-        siteViewUrl: "${createLink(controller: 'site', action: 'index')}/",
         bieUrl: "${grailsApplication.config.bie.baseURL}",
         speciesProfileUrl: "${createLink(controller: 'proxy', action: 'speciesProfile')}",
         googleStaticUrl:"http://maps.googleapis.com/maps/api/staticmap?maptype=terrian&zoom=12&sensor=false&size=350x250&markers=color:red%7C"
@@ -128,7 +123,8 @@
                     </span>
                     <span class="span4">
 
-                            <img width="100%" data-bind="attr:{src:transients.siteImgUrl}, visible:transients.siteImgUrl()"/>
+                        <img id="siteLocationImage" width="100%" data-bind="event:{error:siteLoadError}, attr:{src:transients.siteImgUrl}, visible:transients.siteImgUrl()"/>
+
 
                     </span>
                 </div>
@@ -304,7 +300,6 @@
                 activityData.outputs = outputs;
 
                 var toSave = JSON.stringify(activityData);
-                console.log("saving"+toSave);
                 mobileBindings.saveActivity(toSave);
 
             }
@@ -439,12 +434,17 @@ self.transients.siteImgUrl = ko.computed(function() {
                 lon = site.extent.geometry.centre[0];
             }
             if (lat !== undefined && lon !== undefined) {
+                $('#siteLocationImage').show();
                 return fcConfig.googleStaticUrl+lat+","+lon;
             }
          }
     }
     return "";
 });
+self.siteLoadError = function(data, event) {
+    $('#siteLocationImage').hide();
+};
+
 self.transients.newSiteSupported = ko.observable( mobileBindings.supportsNewSite());
 
 self.modelForSaving = function () {
