@@ -26,6 +26,7 @@ class MobileController {
     def jsRegexp = /(?m)script src="\/(.*)" type="text\/javascript"/
     def cssRegexp = /(?m)link href="\/(.*)" type="text\/css"/
     def cssImgRegexp = /(?m)url\(["'](.*)["']/
+    def imgRegexp = /(?m)img src="\/(.*\.gif|png|jpg)"/
 
     /**
      * Bundles activity forms into a zip file for use offline by the mobile applications.
@@ -37,19 +38,20 @@ class MobileController {
 
         response.setContentType('application/zip')
 
-        boolean first = true
         ZipOutputStream zip = new ZipOutputStream(response.outputStream)
+        def added = []
         activities.each {
+
             def type = it.name
             def enterActivityDataHtml = activityHtml(type)
-            if (first) {
-                def added = addExternalFiles(zip, jsRegexp, enterActivityDataHtml, [])
-                addExternalFiles(zip, cssRegexp, enterActivityDataHtml, added)
-                first = false
-            }
+
+            added = addExternalFiles(zip, jsRegexp, enterActivityDataHtml, added)
+            added = addExternalFiles(zip, cssRegexp, enterActivityDataHtml, added)
+            added = addExternalFiles(zip, imgRegexp, enterActivityDataHtml, added)
             // replace absolute references with relative ones to enable loading from file.
             enterActivityDataHtml = enterActivityDataHtml.replaceAll(jsRegexp, /script src="$1" type="text\/javascript"/)
             enterActivityDataHtml = enterActivityDataHtml.replaceAll(cssRegexp, /link href="$1" type="text\/css"/)
+            enterActivityDataHtml = enterActivityDataHtml.replaceAll(imgRegexp, /img src="$1"/)
 
             zip.putNextEntry(new ZipEntry(type.replaceAll(' ', '_')+'.html'))
 

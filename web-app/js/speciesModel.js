@@ -50,14 +50,17 @@ var SpeciesViewModel = function(data, speciesLists) {
         if (!row.listId) {
             row.listId = 'Atlas of Living Australia';
         }
-        if (row.listId !== 'unmatched' && self.renderItem.lastHeader !== row.listId) {
+        if (row.listId !== 'unmatched' && row.listId !== 'error-unmatched' && self.renderItem.lastHeader !== row.listId) {
             result+='<div style="background:grey;color:white; padding-left:5px;"> '+self.listName(row.listId)+'</div>';
         }
         // We are keeping track of list headers so we only render each one once.
         self.renderItem.lastHeader = row.listId ? row.listId : 'Atlas of Living Australia';
-        result+='<a>';
+        result+='<a class="speciesAutocompleteRow">';
         if (row.listId && row.listId === 'unmatched') {
             result += '<i>Unlisted or unknown species</i>';
+        }
+        else if (row.listId && row.listId === 'error-unmatched') {
+            result += '<i>Offline</i><div>Species:'+<b>row.name</b>+'</div>';
         }
         else {
 

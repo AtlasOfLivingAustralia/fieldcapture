@@ -89,7 +89,7 @@ public class EditModelWidgetRenderer implements ModelWidgetRenderer {
     @Override
     void renderAutocomplete(WidgetRenderContext context) {
         def newAttrs = new Databindings()
-        def link = context.g.createLink(controller: 'search', action:'species')
+        def link = context.g.createLink(controller: 'search', action:'species', absolute:'true')
 
         newAttrs.add "value", "transients.textFieldValue"
         newAttrs.add "event", "{focusout:focusLost}"

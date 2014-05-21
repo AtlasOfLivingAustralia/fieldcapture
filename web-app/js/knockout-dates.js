@@ -676,6 +676,10 @@ ko.bindingHandlers.autocomplete = {
                     response(items);
 
                 },
+                error: function() {
+                    items = [{label:"Error during species lookup", value:request.term, source: {listId:'error-unmatched', name: request.term}}];
+                    response(items);
+                },
                 complete: function() {
                     $(element).removeClass("ac_loading");
                 }

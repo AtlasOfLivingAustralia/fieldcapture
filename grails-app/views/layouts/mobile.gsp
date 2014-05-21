@@ -7,6 +7,7 @@
     <style type="text/css">
         input[type=checkbox] {  -webkit-transform: scale(1.5); }
         .checkbox-list label { min-height: 40px; }
+        .speciesAutocompleteRow {min-height:40px;}
     </style>
     <r:require modules="nrmSkin, jquery_cookie"/>
     <r:layoutResources/>
