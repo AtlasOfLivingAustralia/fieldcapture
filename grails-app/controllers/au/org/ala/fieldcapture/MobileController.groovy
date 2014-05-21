@@ -127,7 +127,7 @@ class MobileController {
 
 
     String activityHtml(type) {
-        def url = g.createLink(controller:'mobile', action:'activityForm', id:type, absolute: true)
+        def url = g.createLink(controller:'mobile', action:'activityForm', id:type, absolute: true, params: params)
 
         def result = webService.get(url)
         return result
