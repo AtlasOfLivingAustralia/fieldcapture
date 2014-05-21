@@ -279,10 +279,18 @@
          *
          * Validates the entire page before saving.
          */
-        this.save = function () {
+        this.save = function (validate) {
 
+            if (validate === undefined) {
+                validate = true;
+            }
             var activityData, outputs = [];
-            if ($('#validation-container').validationEngine('validate')) {
+
+            var success = true;
+            if (validate) {
+                success = $('#validation-container').validationEngine('validate');
+            }
+            if (success) {
                 $.each(this.subscribers, function(i, obj) {
                    // if (obj.isDirty()) {
                         if (obj.model === 'activityModel') {
@@ -304,6 +312,7 @@
 
             }
 
+            return success;
         };
 
         this.reset = function () {
@@ -347,7 +356,11 @@ var sites = JSON.parse(mobileBindings.loadSites());
 
 $(function(){
 
-$('#validation-container').validationEngine('attach', {scroll: true});
+var scroll = false;
+<g:if test="${params.android}">
+    scroll = true;
+</g:if>
+$('#validation-container').validationEngine('attach', {scroll: scroll});
 
 $('.helphover').popover({animation: true, trigger:'hover'});
 
@@ -484,7 +497,27 @@ var viewModel = new ViewModel(activity, sites);
 ko.applyBindings(viewModel);
 
 master.register('activityModel', viewModel.modelForSaving, viewModel.dirtyFlag.isDirty, viewModel.dirtyFlag.reset);
+
+<g:if test="${params.android}">
+// Workaround for Android bug 6721 - prevents components under the datepicker from receiving clicks on the datepicker.
+var disabled = null;
+$('[data-bind^=datepicker]').datepicker().on('show', function() {
+
+    disabled = $("input:enabled, select:enabled, button:enabled");
+    disabled.prop('disabled', true);
+
 });
+$('[data-bind^=datepicker]').datepicker().on('hide', function() {
+    if (disabled !== null) {
+        disabled.prop('disabled', false);
+        diabled = null;
+    }
+
+});
+</g:if>
+});
+
+
 </r:script>
 
 </body>

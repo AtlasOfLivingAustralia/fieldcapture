@@ -89,6 +89,7 @@
     font-weight:bold;
     font-size:2em;
     color: red;
+    position: absolute;
 }
 
 .postLabel {
