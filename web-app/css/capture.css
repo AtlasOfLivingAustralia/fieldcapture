@@ -81,6 +81,9 @@
     font-weight: bold;
 }
 
+.output-block .required label,  .validationEngineContainer .required label {
+    position:relative;
+}
 .output-block .required label:after, .output-block th.required:after, .validationEngineContainer .required label:after {
     content: "*";
     font-weight:bold;
