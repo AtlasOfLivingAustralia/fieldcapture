@@ -60,7 +60,7 @@ var SpeciesViewModel = function(data, speciesLists) {
             result += '<i>Unlisted or unknown species</i>';
         }
         else if (row.listId && row.listId === 'error-unmatched') {
-            result += '<i>Offline</i><div>Species:'+<b>row.name</b>+'</div>';
+            result += '<i>Offline</i><div>Species:<b>'+row.name+'</b></div>';
         }
         else {
 
