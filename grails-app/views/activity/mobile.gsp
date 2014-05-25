@@ -502,17 +502,16 @@ master.register('activityModel', viewModel.modelForSaving, viewModel.dirtyFlag.i
 // Workaround for Android bug 6721 - prevents components under the datepicker from receiving clicks on the datepicker.
 var disabled = null;
 $('[data-bind^=datepicker]').datepicker().on('show', function() {
-
-    disabled = $("input:enabled, select:enabled, button:enabled");
-    disabled.prop('disabled', true);
-
+    if (disabled == null) {
+        disabled = $("input:enabled, select:enabled, button:enabled");
+        disabled.prop('disabled', true);
+    }
 });
 $('[data-bind^=datepicker]').datepicker().on('hide', function() {
     if (disabled !== null) {
         disabled.prop('disabled', false);
-        diabled = null;
+        disabled = null;
     }
-
 });
 </g:if>
 });
