@@ -195,6 +195,7 @@ class SiteController {
                 def shapes = content.collect {key, value ->
                     [id:(key), values:(value)]
                 }
+                JSON.use("nullSafe") // JSONNull is rendered as empty string.
                 render view:'upload', model:[projectId: params.projectId, shapeFileId:shapeFileId, shapes:shapes, attributeNames:attributeNames]
             }
 
