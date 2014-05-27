@@ -278,9 +278,9 @@
          * NOTE that the model for each section must register itself to be included in this save.
          *
          * Validates the entire page before saving.
+         * @return -1 if the page was not modified, 0 if validation failed, 1 if validation succeeded (or was not requested).
          */
         this.save = function (validate) {
-
             // Ensure any active change is committed - the knockout binding typically fires on blur.
             $( document.activeElement ).blur();
 
@@ -293,29 +293,30 @@
             if (validate) {
                 success = $('#validation-container').validationEngine('validate');
             }
+            if (!self.isDirty()) {
+                mobileBindings.onSaveActivity(-1, null);
+                return -1;
+            }
             if (success) {
                 $.each(this.subscribers, function(i, obj) {
-                   // if (obj.isDirty()) {
-                        if (obj.model === 'activityModel') {
-                            activityData = obj.get();
-                        } else {
-                            outputs.push(obj.get());
-                        }
-                    //}
+                    if (obj.model === 'activityModel') {
+                        activityData = obj.get();
+                    } else {
+                        outputs.push(obj.get());
+                    }
                 });
-                if (outputs.length === 0 && activityData === undefined) {
-                    alert("Nothing to save.");
-                    return;
-                }
+
                 if (activityData === undefined) { activityData = {}}
                 activityData.outputs = outputs;
 
                 var toSave = JSON.stringify(activityData);
-                mobileBindings.saveActivity(toSave);
+                mobileBindings.onSaveActivity(1, toSave);
 
             }
-
-            return success;
+            else {
+                mobileBindings.onSaveActivity(0, null);
+            }
+            return success?1:0;
         };
 
         this.reset = function () {
@@ -348,7 +349,7 @@
             loadSites:function(){return "[]"},
         </g:else>
         supportsNewSite:function() { return true; },
-        saveActivity:function(){},
+        onSaveActivity:function(){},
         createNewSite:function(){}
 };
 }
