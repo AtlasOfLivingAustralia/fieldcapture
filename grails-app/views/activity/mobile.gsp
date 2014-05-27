@@ -281,6 +281,9 @@
          */
         this.save = function (validate) {
 
+            // Ensure any active change is committed - the knockout binding typically fires on blur.
+            $( document.activeElement ).blur();
+
             if (validate === undefined) {
                 validate = true;
             }

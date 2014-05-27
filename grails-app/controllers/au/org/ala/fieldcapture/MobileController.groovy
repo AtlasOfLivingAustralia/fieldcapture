@@ -174,7 +174,16 @@ class MobileController {
         UserDetails user = authorize()
 
         if (user) {
-            render userService.getProjectsForUserId(user.userId) as JSON
+            def projects = userService.getProjectsForUserId(user.userId)
+
+            if (params.program) {
+                projects = projects.findAll{it?.project.associatedProgram == params.program}
+            }
+
+            projects?.each {
+                trimProject(it?.project)
+            }
+            render projects as JSON
         }
         else  {
             response.status = 401
@@ -182,6 +191,13 @@ class MobileController {
             render message as JSON
 
         }
+    }
+
+    private def trimProject(project) {
+        // Removed unused fields to reduce the size of the payload.
+        project.remove('documents')
+        project.remove('outputTargets')
+        project.remove('timeline')
     }
 
     def projectDetails(String id) {
@@ -210,17 +226,18 @@ class MobileController {
             }
             project.themes = metadataService.getThemesForProject(project)?.collect {it.name}
 
+
+            if (params.updatedAfter) {
+                project.activities = project.activities.findAll{it && it.lastUpdated > params.lastUpdated}
+            }
+
             project.activities?.each {activity ->
                 if (activity) {
                     activity.themes = project.themes
                 }
             }
 
-            // Removed unused fields to reduce the size of the payload.
-            project.remove('documents')
-            project.remove('outputTargets')
-            project.remove('timeline')
-
+            trimProject(project)
 
             render project as JSON
         }
@@ -251,6 +268,16 @@ class MobileController {
             if (id) {
                 def activity = activityService.get(id)
                 projectId = activity.projectId
+
+                // There is a potential timing issue on the mobile - if an activity is re-edited after the sync is
+                // triggered but before it is complete (and new outputIds assigned on the mobile device), the
+                // output ids can be absent on the second update, resulting in duplicate outputs for an activity.
+                postBody.outputs?.each { output ->
+                    def matchingOutput = activity.outputs?.find{it.name == output.name}
+                    if (matchingOutput) {
+                        output.outputId = matchingOutput.outputId
+                    }
+                }
             } else {
                 projectId = values.projectId
             }
@@ -266,7 +293,6 @@ class MobileController {
                 flash.message = "Error: access denied: User does not have <b>editor</b> permission for projectId ${projectId}"
                 response.status = 401
                 result = [status: 401, error: flash.message]
-                //render result as JSON
             }
 
             if (!result) {
