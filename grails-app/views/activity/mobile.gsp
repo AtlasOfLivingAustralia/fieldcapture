@@ -65,7 +65,7 @@
                             </div>
 
                         </div>
-                        <div class="span6" data-bind="css:{required:transients.activityComplete}">
+                        <div class="span6" data-bind="css:{required:transients.markedAsFinished}">
                             <label for="endDate"><b>Actual end date</b>
                                 <fc:iconHelp title="End date">Date the activity finished.</fc:iconHelp>
                             </label>
@@ -85,7 +85,7 @@
 
                         <div class="span6">
                             <label><b>Progress</b></label>
-                            <label for="activityComplete"><input type="checkbox" id="activityComplete" data-bind="checked:transients.activityComplete" style="margin-right:1em;"><span>This activity is complete</span></label>
+                            <label for="activityComplete"><input type="checkbox" id="activityComplete" data-bind="checked:transients.markedAsFinished" style="margin-right:1em;"><span>This activity is complete</span></label>
 
                         </div>
 
@@ -402,11 +402,13 @@ init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingCo
 
 function ViewModel (act, sites) {
 var self = this;
+var today = new Date().toISOStringNoMillis();
+
 self.activityId = act.activityId;
 self.description = ko.observable(act.description);
 self.notes = ko.observable(act.notes);
-self.startDate = ko.observable(act.startDate).extend({simpleDate: false});
-self.endDate = ko.observable(act.endDate || act.plannedEndDate).extend({simpleDate: false});
+self.startDate = ko.observable(act.startDate || today).extend({simpleDate: false});
+self.endDate = ko.observable(act.endDate).extend({simpleDate: false});
 self.plannedStartDate = ko.observable(act.plannedStartDate).extend({simpleDate: false});
 self.plannedEndDate = ko.observable(act.plannedEndDate).extend({simpleDate: false});
 self.eventPurpose = ko.observable(act.eventPurpose);
@@ -419,10 +421,6 @@ self.type = ko.observable(act.type);
 self.siteId = ko.observable(act.siteId);
 self.projectId = act.projectId;
 self.transients = {};
-self.transients.activityComplete = ko.observable(false);
-self.transients.activityComplete.subscribe(function(newValue) {
-    self.progress(newValue?'finished':'started');
-});
 self.transients.sites = ko.observableArray(sites);
 self.transients.photoPoints = ko.computed(function() {
     var site = $.grep(self.transients.sites(), function(site, index) { return site.siteId == self.siteId(); })[0];
@@ -436,6 +434,9 @@ self.transients.themes = act.themes ? act.themes: [];
 self.transients.markedAsFinished = ko.observable(act.progress === 'finished');
 self.transients.markedAsFinished.subscribe(function (finished) {
     self.progress(finished ? 'finished' : 'started');
+    if (finished || !self.endDate()) {
+        self.endDate(today);
+    }
 });
 self.transients.siteImgUrl = ko.computed(function() {
     if (self.siteId()) {
