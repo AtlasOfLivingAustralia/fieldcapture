@@ -212,7 +212,8 @@ class MobileController {
                 response.status = 401
                 render error as JSON
             }
-            def project = projectService.get(id, 'all')
+            def includeDeleted = params.boolean('includeDeleted', false)
+            def project = projectService.get(id, 'all', includeDeleted)
             project.sites?.each { site ->
                 def centre = site.extent?.geometry?.centre
                 if (centre) {
