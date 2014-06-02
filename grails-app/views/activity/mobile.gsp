@@ -348,15 +348,22 @@
         <g:else>
             loadSites:function(){return "[]"},
         </g:else>
+        <g:if test="${themes}">
+            loadThemes:function(){return '${(themes as JSON).toString().encodeAsJavaScript()}'},
+        </g:if>
+        <g:else>
+            loadThemes:function(){return "[]"},
+        </g:else>
+
         supportsNewSite:function() { return true; },
         onSaveActivity:function(){},
         createNewSite:function(){}
-};
+    };
 }
 var master = new Master();
 var activity = JSON.parse(mobileBindings.loadActivity());
 var sites = JSON.parse(mobileBindings.loadSites());
-
+var themes = JSON.parse(mobileBindings.loadThemes());
 
 $(function(){
 
@@ -400,7 +407,7 @@ init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingCo
 }
 };
 
-function ViewModel (act, sites) {
+function ViewModel (act, sites, themes) {
 var self = this;
 var today = new Date().toISOStringNoMillis();
 
@@ -430,7 +437,7 @@ self.transients.photoPoints = ko.computed(function() {
      return [];
 });
 self.transients.activityProgressValues = ['planned','started','finished'];
-self.transients.themes = act.themes ? act.themes: [];
+self.transients.themes = themes?themes:[];
 self.transients.markedAsFinished = ko.observable(act.progress === 'finished');
 self.transients.markedAsFinished.subscribe(function (finished) {
     self.progress(finished ? 'finished' : 'started');
@@ -497,7 +504,7 @@ self.progress(self.transients.markedAsFinished() ? 'finished' : 'started');
 }
 
 
-var viewModel = new ViewModel(activity, sites);
+var viewModel = new ViewModel(activity, sites, themes);
 
 ko.applyBindings(viewModel);
 
