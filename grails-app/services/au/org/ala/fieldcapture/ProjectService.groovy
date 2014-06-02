@@ -24,9 +24,13 @@ class ProjectService {
         resp.list
     }
 
-    def get(id, levelOfDetail = "") {
-        def lod = levelOfDetail ? "?view=${levelOfDetail}" : ''
-        webService.getJson(grailsApplication.config.ecodata.baseUrl + 'project/' + id + lod)
+    def get(id, levelOfDetail = "", includeDeleted = false) {
+
+        def params = '?'
+
+        params += levelOfDetail ? "view=${levelOfDetail}&" : ''
+        params += "includeDeleted=${includeDeleted}"
+        webService.getJson(grailsApplication.config.ecodata.baseUrl + 'project/' + id + params)
     }
 
     def getRich(id) {
