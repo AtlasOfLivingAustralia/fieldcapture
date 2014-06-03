@@ -88,12 +88,14 @@
     content: "*";
     font-weight:bold;
     font-size:1.5em;
-
     color: red;
     position:absolute;
     white-space: nowrap;
 }
 
+.ie .output-block .required label:after, .output-block th.required:after, .validationEngineContainer .required label:after {
+    font-size:1em;
+}
 .postLabel {
     margin-left: 4px;
 }
