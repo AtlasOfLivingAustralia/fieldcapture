@@ -93,7 +93,7 @@
     white-space: nowrap;
 }
 
-.ie .output-block .required label:after, .output-block th.required:after, .validationEngineContainer .required label:after {
+.ie .output-block .required label:after, .ie .output-block th.required:after, .ie .validationEngineContainer .required label:after {
     font-size:1em;
 }
 .postLabel {
