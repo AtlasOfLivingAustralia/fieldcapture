@@ -87,9 +87,11 @@
 .output-block .required label:after, .output-block th.required:after, .validationEngineContainer .required label:after {
     content: "*";
     font-weight:bold;
-    font-size:2em;
+    font-size:1.5em;
+
     color: red;
-    position: absolute;
+    position:absolute;
+    white-space: nowrap;
 }
 
 .postLabel {
