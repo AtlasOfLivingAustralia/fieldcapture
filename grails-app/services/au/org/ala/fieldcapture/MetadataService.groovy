@@ -89,14 +89,14 @@ class MetadataService {
         return activitiesModel().activities.find({it.name == type})?.template
     }
 
-    def activityTypesList() {
-        cacheService.get('activitiesSelectList', {
-            def acts = activitiesModel().activities
-            [
-                [name:'Activities', list: acts.findAll({it.type == 'Activity'}).collect {[name:it.name]}],
-                [name:'Assessments', list: acts.findAll({it.type == 'Assessment'}).collect {[name:it.name]}]
-            ]
-
+    def activityTypesList(program = '') {
+        cacheService.get('activitiesSelectList'+program, {
+            String url = grailsApplication.config.ecodata.baseUrl + 'metadata/activitiesList'
+            if (program) {
+                url += 'program='+program.encodeAsURL()
+            }
+            def activityTypes = webService.getJson(url)
+            activityTypes.collect {key, value -> [name:key, list:value.collect{[name:it]}]}
         })
     }
 
