@@ -100,6 +100,8 @@
     margin-left: 4px;
 }
 
+.activityList .item.disabled {color:#ddd;}
+
 .big-tabs .active a {
     /*font-size: 28px;*/
     /*font-weight: bold;*/
