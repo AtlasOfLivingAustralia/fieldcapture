@@ -801,17 +801,27 @@ ko.vetoableObservable = function(initialValue, vetoCheck, noVetoCallback, vetoCa
  *
  */
 ko.bindingHandlers.popover = {
+
     update: function(element, valueAccessor) {
         var options = ko.utils.unwrapObservable(valueAccessor());
 
         var combinedOptions = ko.utils.extend({}, ko.bindingHandlers.popover.defaultOptions);
+        var content = ko.utils.unwrapObservable(options.content);
         ko.utils.extend(combinedOptions, options);
+        combinedOptions.description = content;
 
         $(element).popover(combinedOptions);
+        if (options.autoShow) {
+            if (this.firstRun === false) {
+                $(element).popover('show');
+            }
+            this.firstRun = false;
+        }
 
         ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
             $(element).popover("destroy");
         });
+
     },
 
     defaultOptions: {

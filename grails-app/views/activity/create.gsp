@@ -60,7 +60,7 @@
             <div class="row-fluid">
                 <div class="span6">
                     <label for="type">Type of activity</label>
-                    <select data-bind="value: type" id="type" data-validation-engine="validate[required]" class="input-xlarge">
+                    <select data-bind="value: type, popover:{title:'', content:transients.activityDescription, trigger:'click', autoShow:true}" id="type" data-validation-engine="validate[required]" class="input-xlarge">
                         <g:each in="${activityTypes}" var="t" status="i">
                             <g:if test="${i == 0 && create}">
                                 <option></option>
@@ -161,7 +161,7 @@
             }
         }
 
-        function ViewModel (act, sites, projects, site, project) {
+        function ViewModel (act, sites, projects, site, project, activityTypes) {
             var self = this;
 
             self.description = ko.observable(act.description);
@@ -196,10 +196,24 @@
                     document.location.href = fcConfig.siteViewUrl + self.siteId();
                 }
             };
-            /*self.transients.site.projects = ko.computed(function () {
-                return getProjectsForSite(self.siteId());
-            }).extend({async: []});*/
 
+            self.transients.activityDescription = ko.computed(function() {
+                var result = "";
+                if (self.type()) {
+                    $.each(activityTypes, function(i, obj) {
+                        $.each(obj.list, function(j, type) {
+                            if (type.name === self.type()) {
+                                result = type.description;
+                                return false;
+                            }
+                        });
+                        if (result) {
+                            return false;
+                        }
+                    });
+                }
+                return result;
+            });
 
             self.save = function () {
                 if ($('#validation-container').validationEngine('validate')) {
@@ -250,8 +264,12 @@
             ${((projects ?: []) as JSON).toString()},
             ${site ?: 'null'},
             ${project ?: 'null'},
-            ${(activityScores as JSON).toString()} );
+            ${(activityTypes as JSON).toString()});
         ko.applyBindings(viewModel,document.getElementById('koActivityMainBlock'));
+
+        // We are displaying the activity description popover on type change - this is to dismiss it when the
+        // user clicks pretty much anywhere so it doesn't get in the way of filling out the form.
+        $('body').on('click', function() {$('#type').popover('hide');});
 
     });
 

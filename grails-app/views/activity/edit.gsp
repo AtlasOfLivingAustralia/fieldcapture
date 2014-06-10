@@ -57,11 +57,17 @@
         <div class="row-fluid">
             <div class="${mapFeatures.toString() != '{}' ? 'span9' : 'span12'}">
                 <!-- Common activity fields -->
+                <div class="row-fluid" data-bind="visible:transients.typeWarning()" style="display:none">
+                    <div class="alert alert-error">
+                        <strong>Warning!</strong> This activity has data recorded.  Changing the type of the activity will cause this data to be lost!
+                    </div>
+                </div>
+
 
                 <div class="row-fluid">
                     <div class="span6">
                         <label for="type">Type of activity</label>
-                        <select data-bind="value: type" id="type" data-validation-engine="validate[required]" class="input-xlarge">
+                        <select data-bind="value: type, popover:{title:'', content:transients.activityDescription, trigger:'click', autoShow:true}" id="type" data-validation-engine="validate[required]" class="input-xlarge">
                             <g:each in="${activityTypes}" var="t" status="i">
                                 <g:if test="${i == 0 && create}">
                                     <option></option>
@@ -264,7 +270,7 @@
             master.reset();
         });
 
-        function ViewModel (act, site, project) {
+        function ViewModel (act, site, project, activityTypes) {
             var self = this;
             self.activityId = act.activityId;
             self.description = ko.observable(act.description);
@@ -286,6 +292,33 @@
             self.transients.site = site;
             self.transients.project = project;
             self.transients.themes = $.map(${themes}, function (obj, i) { return obj.name });
+            self.transients.typeWarning = ko.computed(function() {
+                if (act.outputs === undefined || act.outputs.length == 0) {
+                    return false;
+                }
+                if (!self.type()) {
+                    return false;
+                }
+                return (self.type() != act.type);
+            });
+            self.transients.activityDescription = ko.computed(function() {
+                var result = "";
+                if (self.type()) {
+                    $.each(activityTypes, function(i, obj) {
+                        $.each(obj.list, function(j, type) {
+                            if (type.name === self.type()) {
+                                result = type.description;
+                                return false;
+                            }
+                        });
+                        if (result) {
+                            return false;
+                        }
+                    });
+                }
+                return result;
+            });
+
             self.goToProject = function () {
                 if (self.projectId) {
                     document.location.href = fcConfig.projectViewUrl + self.projectId;
@@ -315,7 +348,8 @@
         var viewModel = new ViewModel(
             ${(activity as JSON).toString()},
             ${site ?: 'null'},
-            ${project ?: 'null'});
+            ${project ?: 'null'},
+            ${(activityTypes as JSON).toString()});
 
         ko.applyBindings(viewModel,document.getElementById('koActivityMainBlock'));
 
@@ -333,6 +367,9 @@
                 mapFeatures
             );
         }
+        // We are displaying the activity description popover on type change - this is to dismiss it when the
+        // user clicks pretty much anywhere so it doesn't get in the way of filling out the form.
+        $('body').on('click', function() {$('#type').popover('hide');});
     });
 </r:script>
 </body>

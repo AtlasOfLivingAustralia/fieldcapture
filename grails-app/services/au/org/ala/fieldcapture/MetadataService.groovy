@@ -96,7 +96,7 @@ class MetadataService {
                 url += 'program='+program.encodeAsURL()
             }
             def activityTypes = webService.getJson(url)
-            activityTypes.collect {key, value -> [name:key, list:value.collect{[name:it]}]}.sort{it.name}
+            activityTypes.collect {key, value -> [name:key, list:value]}.sort{it.name}
 
         })
     }
