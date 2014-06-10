@@ -67,7 +67,7 @@
                 <div class="row-fluid">
                     <div class="span6">
                         <label for="type">Type of activity</label>
-                        <select data-bind="value: type, popover:{title:'', content:transients.activityDescription, trigger:'click', autoShow:true}" id="type" data-validation-engine="validate[required]" class="input-xlarge">
+                        <select data-bind="value: type, popover:{title:'', content:transients.activityDescription, trigger:'manual', autoShow:true}" id="type" data-validation-engine="validate[required]" class="input-xlarge">
                             <g:each in="${activityTypes}" var="t" status="i">
                                 <g:if test="${i == 0 && create}">
                                     <option></option>
@@ -120,7 +120,7 @@
             </g:if>
         </div>
 
-        <g:if env="development" test="${!printView}">
+        <g:if env="developkjkment" test="${!printView}">
           <div class="expandable-debug">
               <hr />
               <h3>Debug</h3>
@@ -308,6 +308,7 @@
                         $.each(obj.list, function(j, type) {
                             if (type.name === self.type()) {
                                 result = type.description;
+                                console.log(result);
                                 return false;
                             }
                         });
@@ -367,9 +368,6 @@
                 mapFeatures
             );
         }
-        // We are displaying the activity description popover on type change - this is to dismiss it when the
-        // user clicks pretty much anywhere so it doesn't get in the way of filling out the form.
-        $('body').on('click', function() {$('#type').popover('hide');});
     });
 </r:script>
 </body>

@@ -802,7 +802,37 @@ ko.vetoableObservable = function(initialValue, vetoCheck, noVetoCallback, vetoCa
  */
 ko.bindingHandlers.popover = {
 
+    init: function(element, valueAccessor) {
+        ko.bindingHandlers.popover.initPopover(element, valueAccessor);
+    },
     update: function(element, valueAccessor) {
+
+        $(element).popover('destroy');
+        var options = ko.bindingHandlers.popover.initPopover(element, valueAccessor);
+        if (options.autoShow) {
+            if ($(element).data('firstPopover') === false) {
+                $(element).popover('show');
+                $('body').on('click', function(e) {
+                    console.log(e.target);
+                    console.log(element);
+                    if (e.target != element) {
+                        $(element).popover('hide');
+                    }
+                });
+            }
+            $(element).data('firstPopover', false);
+        }
+
+    },
+
+    defaultOptions: {
+        placement: "right",
+        animation: true,
+        html: false,
+        trigger: "hover"
+    },
+
+    initPopover: function(element, valueAccessor) {
         var options = ko.utils.unwrapObservable(valueAccessor());
 
         var combinedOptions = ko.utils.extend({}, ko.bindingHandlers.popover.defaultOptions);
@@ -811,24 +841,12 @@ ko.bindingHandlers.popover = {
         combinedOptions.description = content;
 
         $(element).popover(combinedOptions);
-        if (options.autoShow) {
-            if (this.firstRun === false) {
-                $(element).popover('show');
-            }
-            this.firstRun = false;
-        }
 
         ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
+            console.log("destroy called");
             $(element).popover("destroy");
         });
-
-    },
-
-    defaultOptions: {
-        placement: "right",
-        animation: true,
-        html: true,
-        trigger: "hover"
+        return options;
     }
 };
 
