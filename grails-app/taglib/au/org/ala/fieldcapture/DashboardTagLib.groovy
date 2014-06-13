@@ -42,7 +42,6 @@ class DashboardTagLib {
 
             height = score.displayType == 'barchart' ? 500 : 300
         }
-        println score.outputName + ', '+score.label+'('+score.groupTitle+')'+' = '+height
         return height;
 
     }
@@ -140,6 +139,8 @@ class DashboardTagLib {
                 def bottomMargin = 50
                 def height = Math.max(300, data.size()*20+topMargin+bottomMargin)
                 if (height > 500) {
+                    topMargin = 0
+                    out << "<div class='chartTitle'>${title}</div>"
                     out << "<div id=\"${chartId}\" style=\"height:500px; overflow-y:scroll; margin-bottom:20px;\"></div>"
                 }
                 else {

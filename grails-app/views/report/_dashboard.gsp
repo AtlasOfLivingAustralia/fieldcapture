@@ -1,5 +1,8 @@
 
 <g:if test="${metadata.projects > 1}">
+<p>
+Data presented in this dashboard has been extracted from grant recipient progress reports approved by the Department of the Environment. While efforts are made to ensure the accuracy of the ecological information contained in MERIT, for confirmation of authoritative data please contact the <g:createLink controller="home" action="contacts">Department of Environment</g:createLink>. Also note that dashboard data for Biodiversity Fund Round One are incomplete due to legacy issues.
+</p>
 <div class="accordion" id="reports">
     <g:each in="${categories}" var="category" status="i">
 
@@ -64,7 +67,7 @@
     </g:each>
 
         <div id="metadata">
-            Results include ${metadata.projects} projects, ${metadata.sites} sites and ${metadata.activities} activities
+            results include approved reported data from ${metadata.projects} projects, ${metadata.sites} sites and ${metadata.activities} activities
 
         </div>
 

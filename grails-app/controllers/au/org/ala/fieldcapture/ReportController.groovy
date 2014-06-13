@@ -75,7 +75,11 @@ class ReportController {
             categories << defaultCategory
         }
 
-        def model = [categories:categories, scores:doubleGroupedScores, metadata:results.metadata]
+        def sortedCategories = []
+        sortedCategories.addAll(categories)
+        sortedCategories.sort()
+
+        def model = [categories:categories.sort(), scores:doubleGroupedScores, metadata:results.metadata]
 
         render view:'_dashboard', model:model
 
