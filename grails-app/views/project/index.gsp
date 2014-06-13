@@ -244,7 +244,7 @@
                                 </li>
                             </ul>
                         </div>
-                        <div id="paginateTable" data-bind="visible:sites.length>20">
+                        <div id="paginateTable" data-bind="visible:sites.length>pageSize">
                             <span id="paginationInfo" style="display:inline-block;float:left;margin-top:4px;"></span>
                             <div class="btn-group">
                                 <button class="btn btn-small prev" data-bind="click:prevPage,enable:(offset()-pageSize) >= 0"><i class="icon-chevron-left"></i>&nbsp;previous</button>
