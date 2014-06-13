@@ -402,6 +402,9 @@ class ModelJSTagLib {
                     case 'species':
                         out << INDENT*3 << "this.${col.name} =  new SpeciesViewModel(data['${col.name}'], speciesLists);\n"
                         break
+                    case 'stringList':
+                        out << INDENT*3 << "this.${col.name}=ko.observableArray(orEmptyArray(data['${col.name}']));\n";
+                        break
 
                 }
                 modelConstraints(col, out)

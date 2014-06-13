@@ -54,13 +54,17 @@ public class EditModelWidgetRenderer implements ModelWidgetRenderer {
     void renderSelectMany(WidgetRenderContext context) {
         context.labelAttributes.addClass 'checkbox-list-label '
         def constraints = 'transients.' + context.model.source + 'Constraints'
+        // This complicated binding string is to ensure we have unique ids for checkboxes, even when they are nested
+        // inside tables.  (The ids are necessary to allow the label to be selected to check the checkbox.  This is
+        // in turn necessary to make checkboxes usabled on mobile devices).
+        def idBinding = "'${context.model.source}'+\$index()+'-'+(\$parentContext.\$index?\$parentContext.\$index():'')"
         context.databindAttrs.add 'value', '\$data'
-        context.databindAttrs.add 'checked', "\$root.${context.source}"
-        context.databindAttrs.add 'attr', "{id: '${context.model.source}'+\$index()}"
+        context.databindAttrs.add 'checked', "\$parent.${context.source}"
+        context.databindAttrs.add 'attr', "{id: ${idBinding}}"
         context.writer << """
             <ul class="checkbox-list" data-bind="foreach: ${constraints}">
                 <li>
-                    <label data-bind="attr:{for: '${context.model.source}'+\$index()}"><input type="checkbox" name="${context.source}" data-bind="${context.databindAttrs.toString()}" ${context.validationAttr}/><span data-bind="text:\$data"/></label></span>
+                    <label data-bind="attr:{for: ${idBinding}}"><input type="checkbox" name="${context.source}" data-bind="${context.databindAttrs.toString()}" ${context.validationAttr}/><span data-bind="text:\$data"/></label></span>
                 </li>
             </ul>
         """
