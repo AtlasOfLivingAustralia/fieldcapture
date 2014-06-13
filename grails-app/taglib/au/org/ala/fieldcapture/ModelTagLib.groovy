@@ -684,7 +684,7 @@ class ModelTagLib {
             out << INDENT*4 << """<tr><td colspan="${colCount}" style="text-align:left;">
                         <button type="button" class="btn btn-small" data-bind="click:add${model.source}Row"""
             if (model.editableRows) {
-                out << ", enable:!\$root.${model.source}Editing()>"
+                out << ", enable:!\$root.${model.source}Editing()"
             }
             out << """">
                         <i class="icon-plus"></i> Add a row</button>"""
