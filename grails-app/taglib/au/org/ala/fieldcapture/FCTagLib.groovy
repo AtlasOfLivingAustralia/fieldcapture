@@ -207,7 +207,7 @@ class FCTagLib {
                     i(class:"icon-home") {
                         mkp.yieldUnescaped("&nbsp;")
                     }
-                    mkp.yieldUnescaped("&nbsp")
+                    mkp.yieldUnescaped("&nbsp;")
                     mkp.yield(message(code:'default.home.label', default: 'Home'))}
             }
             mb.li(class:attrs.active == 'about' ? 'active' : '') {
@@ -215,7 +215,7 @@ class FCTagLib {
                     i(class:"icon-info-sign") {
                         mkp.yieldUnescaped("&nbsp;")
                     }
-                    mkp.yieldUnescaped("&nbsp")
+                    mkp.yieldUnescaped("&nbsp;")
                     mkp.yield(message(code:'default.about.label', default: 'About'))
                 }
             }
@@ -224,7 +224,7 @@ class FCTagLib {
                     i(class:"icon-question-sign") {
                         mkp.yieldUnescaped("&nbsp;")
                     }
-                    mkp.yieldUnescaped("&nbsp")
+                    mkp.yieldUnescaped("&nbsp;")
                     mkp.yield(message(code:'default.help.label', default: 'Help'))
                 }
             }
@@ -233,7 +233,7 @@ class FCTagLib {
                     i(class:"icon-envelope") {
                         mkp.yieldUnescaped("&nbsp;")
                     }
-                    mkp.yieldUnescaped("&nbsp")
+                    mkp.yieldUnescaped("&nbsp;")
                     mkp.yield(message(code:'default.contacts.label', default: 'Contacts'))
                 }
             }
