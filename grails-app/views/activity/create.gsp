@@ -204,7 +204,6 @@
                         $.each(obj.list, function(j, type) {
                             if (type.name === self.type()) {
                                 result = type.description;
-                                console.log(result);
                                 return false;
                             }
                         });

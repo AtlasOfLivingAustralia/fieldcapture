@@ -807,20 +807,20 @@ ko.bindingHandlers.popover = {
     },
     update: function(element, valueAccessor) {
 
-        $(element).popover('destroy');
+        var $element = $(element);
+        $element.popover('destroy');
         var options = ko.bindingHandlers.popover.initPopover(element, valueAccessor);
         if (options.autoShow) {
-            if ($(element).data('firstPopover') === false) {
-                $(element).popover('show');
+            if ($element.data('firstPopover') === false) {
+                $element.popover('show');
                 $('body').on('click', function(e) {
-                    console.log(e.target);
-                    console.log(element);
-                    if (e.target != element) {
-                        $(element).popover('hide');
+
+                    if (e.target != element && $element.find(e.target).length == 0) {
+                        $element.popover('hide');
                     }
                 });
             }
-            $(element).data('firstPopover', false);
+            $element.data('firstPopover', false);
         }
 
     },
@@ -828,7 +828,7 @@ ko.bindingHandlers.popover = {
     defaultOptions: {
         placement: "right",
         animation: true,
-        html: false,
+        html: true,
         trigger: "hover"
     },
 
@@ -843,7 +843,6 @@ ko.bindingHandlers.popover = {
         $(element).popover(combinedOptions);
 
         ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
-            console.log("destroy called");
             $(element).popover("destroy");
         });
         return options;
