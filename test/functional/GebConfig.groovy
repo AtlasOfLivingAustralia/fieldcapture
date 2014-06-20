@@ -4,19 +4,19 @@
 	See: http://www.gebish.org/manual/current/configuration.html
 */
 
-import org.openqa.selenium.htmlunit.HtmlUnitDriver
-import org.openqa.selenium.firefox.FirefoxDriver
-import org.openqa.selenium.chrome.ChromeDriver
 
-baseUrl = 'http://localhost:8090/fieldcapture/'
+import org.openqa.selenium.chrome.ChromeDriver
+import org.openqa.selenium.firefox.FirefoxDriver
+
+baseUrl = 'https://fieldcapture-test.ala.org.au/'
 reportsDir = 'target/geb-reports'
 
 // Use htmlunit as the default
 // See: http://code.google.com/p/selenium/wiki/HtmlUnitDriver
 driver = {
-    def htmldriver = new HtmlUnitDriver()
-    htmldriver.javascriptEnabled = true
-    htmldriver
+    System.setProperty('webdriver.chrome.driver', '/opt/webdrivers/chromedriver')
+
+    new ChromeDriver()
 }
 
 environments {
