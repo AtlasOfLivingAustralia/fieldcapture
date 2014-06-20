@@ -209,10 +209,14 @@ environments {
     }
     production {
         grails.logging.jul.usebridge = false
+        grails.resources.work.dir = "/data/${appName}/cache"
     }
 }
 
 // log4j configuration
+if (!logging.dir) {
+    logging.dir = (System.getProperty('catalina.base') ? System.getProperty('catalina.base') + '/logs'  : '/var/log/tomcat6')
+}
 log4j = {
     appenders {
         environments{
@@ -222,52 +226,52 @@ log4j = {
                         threshold: org.apache.log4j.Level.DEBUG
                 rollingFile name: "fieldcaptureLog",
                         maxFileSize: 104857600,
-                        file: "/var/log/tomcat6/fieldcapture.log",
+                        file: logging.dir+"/fieldcapture.log",
                         threshold: org.apache.log4j.Level.INFO,
                         layout: pattern(conversionPattern: "%d %-5p [%c{1}]  %m%n")
                 rollingFile name: "stacktrace",
                         maxFileSize: 104857600,
-                        file: "/var/log/tomcat6/fieldcapture-stacktrace.log"
+                        file: logging.dir+"/fieldcapture-stacktrace.log"
             }
             test {
                 rollingFile name: "fieldcaptureLog",
                         maxFileSize: 104857600,
-                        file: "/var/log/tomcat6/fieldcapture.log",
+                        file: logging.dir+"/fieldcapture.log",
                         threshold: org.apache.log4j.Level.INFO,
                         layout: pattern(conversionPattern: "%d %-5p [%c{1}]  %m%n")
                 rollingFile name: "stacktrace",
                         maxFileSize: 104857600,
-                        file: "/var/log/tomcat6/fieldcapture-stacktrace.log"
+                        file: logging.dir+"fieldcapture-stacktrace.log"
             }
             nectar {
                 rollingFile name: "fieldcaptureLog",
                         maxFileSize: 104857600,
-                        file: "/var/log/tomcat6/fieldcapture.log",
+                        file: logging.dir+"/fieldcapture.log",
                         threshold: org.apache.log4j.Level.INFO,
                         layout: pattern(conversionPattern: "%d %-5p [%c{1}]  %m%n")
                 rollingFile name: "stacktrace",
                         maxFileSize: 104857600,
-                        file: "/var/log/tomcat6/fieldcapture-stacktrace.log"
+                        file: logging.dir+"/fieldcapture-stacktrace.log"
             }
             nectartest {
                 rollingFile name: "fieldcaptureLog",
                         maxFileSize: 104857600,
-                        file: "/var/log/tomcat6/fieldcapture.log",
+                        file: logging.dir+"/fieldcapture.log",
                         threshold: org.apache.log4j.Level.INFO,
                         layout: pattern(conversionPattern: "%d %-5p [%c{1}]  %m%n")
                 rollingFile name: "stacktrace",
                         maxFileSize: 104857600,
-                        file: "/var/log/tomcat6/fieldcapture-stacktrace.log"
+                        file: logging.dir+"/fieldcapture-stacktrace.log"
             }
             production {
                 rollingFile name: "fieldcaptureLog",
                         maxFileSize: 104857600,
-                        file: "/var/log/tomcat6/fieldcapture.log",
+                        file: logging.dir+"fieldcapture.log",
                         threshold: org.apache.log4j.Level.INFO,
                         layout: pattern(conversionPattern: "%d %-5p [%c{1}]  %m%n")
                 rollingFile name: "stacktrace",
                         maxFileSize: 104857600,
-                        file: "/var/log/tomcat6/fieldcapture-stacktrace.log"
+                        file: logging.dir+"/fieldcapture-stacktrace.log"
             }
         }
     }
