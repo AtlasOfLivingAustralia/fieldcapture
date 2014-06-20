@@ -46,7 +46,7 @@ grails.project.dependency.resolution = {
 
         // runtime 'mysql:mysql-connector-java:5.1.22'
         test "org.spockframework:spock-grails-support:0.7-groovy-2.0"
-        test "org.gebish:geb-spock:0.9.0"
+        test "org.gebish:geb-spock:0.9.3"
         test("org.seleniumhq.selenium:selenium-htmlunit-driver:$seleniumVersion") {
             exclude "xml-apis"
         }
@@ -79,7 +79,7 @@ grails.project.dependency.resolution = {
         compile ":excel-export:0.2.0"
         compile ":excel-import:1.0.0"
 
-        test ":geb:0.9.0"
+        test ":geb:0.9.3"
         test (":spock:0.7") {
             exclude "spock-grails-support"
         }
