@@ -206,6 +206,7 @@ environments {
         ecodata.baseUrl = 'http://devt.ala.org.au:8080/ecodata/ws/'
         upload.images.url = grails.serverURL+'/image/'
         emailFilter = /[A-Z0-9._%-]+@csiro\.au|chris\.godwin\.ala@gmail.com/
+        logging.dir = '.'
     }
     production {
         grails.logging.jul.usebridge = false
@@ -224,7 +225,7 @@ log4j = {
                 console name: "stdout",
                         layout: pattern(conversionPattern: "%d %-5p [%c{1}]  %m%n"),
                         threshold: org.apache.log4j.Level.DEBUG
-                rollingFile name: "fieldcaptureLog",
+                rollingFile name: "/fieldcaptureLog",
                         maxFileSize: 104857600,
                         file: logging.dir+"/fieldcapture.log",
                         threshold: org.apache.log4j.Level.INFO,
@@ -241,7 +242,7 @@ log4j = {
                         layout: pattern(conversionPattern: "%d %-5p [%c{1}]  %m%n")
                 rollingFile name: "stacktrace",
                         maxFileSize: 104857600,
-                        file: logging.dir+"fieldcapture-stacktrace.log"
+                        file: logging.dir+"/fieldcapture-stacktrace.log"
             }
             nectar {
                 rollingFile name: "fieldcaptureLog",
@@ -266,7 +267,7 @@ log4j = {
             production {
                 rollingFile name: "fieldcaptureLog",
                         maxFileSize: 104857600,
-                        file: logging.dir+"fieldcapture.log",
+                        file: logging.dir+"/fieldcapture.log",
                         threshold: org.apache.log4j.Level.INFO,
                         layout: pattern(conversionPattern: "%d %-5p [%c{1}]  %m%n")
                 rollingFile name: "stacktrace",
