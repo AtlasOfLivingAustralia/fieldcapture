@@ -28,20 +28,22 @@ grails.project.dependency.resolution = {
         mavenCentral()
 
         mavenRepo "http://maven.ala.org.au/repository/"
+        mavenRepo "http://repo.opengeo.org" 
 
     }
     def seleniumVersion = "2.21.0"
     def metadataExtractorVersion = "2.6.2"
     def imgscalrVersion = "4.2"
     def httpmimeVersion = "4.1.2"
-    def jtsVersion = "1.8"
+    def geoToolsVersion = "11.1"
     dependencies {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes e.g.
 
         compile "com.drewnoakes:metadata-extractor:${metadataExtractorVersion}"
         compile "org.imgscalr:imgscalr-lib:${imgscalrVersion}"
         compile "org.apache.httpcomponents:httpmime:${httpmimeVersion}"
-        compile "com.vividsolutions:jts:${jtsVersion}"
+        compile "org.geotools.xsd:gt-xsd-kml:${geoToolsVersion}"
+
         compile "joda-time:joda-time:2.3"
 
         // runtime 'mysql:mysql-connector-java:5.1.22'
