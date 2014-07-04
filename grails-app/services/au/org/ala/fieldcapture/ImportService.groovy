@@ -381,16 +381,20 @@ class ImportService {
         }
     }
 
-    def importProject(project) {
+    def importProject(project, reload = true) {
 
         def status = [:]
 
         // Remove the site from the project as it will be saved separately.
         def site = project.remove('site')
 
-        // The Grant ID is the only best key we can use from the SEWPAC data.
+        // The GrantID and External ID are not necessarily unique individually.
         def p = findProjectByGrantAndExternalId(project.grantId, project.externalId)
         if (p) {
+            if (!reload) {
+                status.project = 'existing'
+                return
+            }
             project.projectId = p.projectId
             status.project = 'updated'
         }
@@ -402,6 +406,7 @@ class ImportService {
 
         // If a project was created the ID will be returned, otherwise use the value retrieved by the original query.
         def projectId = result.resp.projectId?:project.projectId
+        project.projectId = projectId
 
 
         if (false && site && site.description) {
@@ -1167,6 +1172,65 @@ class ImportService {
 
         return match
 
+    }
+
+    def gmsImport(InputStream csv) {
+
+        cacheService.clear(PROJECTS_CACHE_KEY)
+        def reader = new InputStreamReader(csv)
+        try {
+
+            def prevGrantId = null
+            def projectRows = []
+            new CSVMapReader(reader).eachWithIndex { rowMap, i ->
+
+                def currentGrantId = rowMap[GmsMapper.GRANT_ID_COLUMN]
+                // We have read all the details for a project.
+                if (currentGrantId != prevGrantId && prevGrantId) {
+                    importAll(projectRows)
+
+                    projectRows = []
+                }
+                rowMap.index = i
+                projectRows << rowMap
+                prevGrantId = currentGrantId
+            }
+            // import the last project
+            importAll(projectRows)
+
+
+        }
+        catch (Exception e) {
+            e.printStackTrace()
+        }
+    }
+
+    def importAll(projectRows) {
+
+        def mapper = new GmsMapper()
+
+        def projectDetails = mapper.createProject(projectRows)
+
+        importProject(projectDetails.project, false) // Do not overwrite existing projects because of the impacts to sites / activities etc.
+
+        def sites = projectDetails.sites
+        sites.each { site ->
+            def created = false
+            if (site.kmlUrl) {
+                def kml = webService.get(site.kmlUrl, false)
+                def result = siteService.createSitesFromKml(kml, projectDetails.project.projectId)
+                created = !result.error
+            }
+            if (!created) {
+                siteService.createSiteFromPoint(projectDetails.project.projectId, site.name, site.description, site.lat, site.lon)
+            }
+        }
+
+        def activities = projectDetails.activities
+        activities.each { activity ->
+            activity.projectId = projectDetails.project.projectId
+            activityService.update('', activity)
+        }
     }
 
 }

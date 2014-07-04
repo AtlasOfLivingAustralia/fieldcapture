@@ -295,14 +295,19 @@ class AdminController {
 
             if (file) {
 
-                def results = importService.importProjectsByCsv(file.inputStream, params.importWithErrors)
-
+                def results
+                if (params.newFormat) {
+                    results = importService.gmsImport(file.inputStream)
+                }
+                else {
+                    results = importService.importProjectsByCsv(file.inputStream, params.importWithErrors)
+                }
                 if (results.error) {
                     render contentType: 'text/json', status:400, text:"""{"error":"${results.error}"}"""
                 }
                 else {
                     // Make sure the new projects are re-indexed.
-                    adminService.reIndexAll()
+                    //adminService.reIndexAll()
                 }
 
                 // The validation results are current returned as a CSV file so that it can easily be sent back to

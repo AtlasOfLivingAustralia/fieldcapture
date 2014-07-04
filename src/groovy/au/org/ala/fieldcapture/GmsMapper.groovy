@@ -44,7 +44,7 @@ class GmsMapper {
 
     def siteMapping = [
             LOC_DESC:[name:'description', type:'string'],
-            LOC_URL:[name:'googleMapsEngineUrl',type:'url'],
+            LOC_URL:[name:'kmlUrl',type:'url'],
             LOC_LATITUDE:[name:'lat',type:'decimal'],
             LOC_LONGITUDE:[name:'lon',type:'decimal']
     ]
@@ -81,22 +81,22 @@ class GmsMapper {
     ]
 
     def outputTargetMapping = [
-            'Revegetation(no. of plants)no':[outputLabel:'Revegetation Details', scoreLabel:'Number of plants planted'],
-            'Revegetation(area of works)ha':[outputLabel:'Revegetation Details', scoreLabel:'Area of revegetation works (Ha)'],
-            'Weed treatment(total area)ha':[outputLabel:'Weed Treatment Details', scoreLabel:'Total area treated (Ha)'],
-            'Plant propagation(no. of plants)no':[outputLabel:'Plant Propagation Details', scoreLabel:'Total No. of plants grown and ready for planting'],
-            'Community participation and engagement(events)no':[outputLabel:'Event Details', scoreLabel:'Total No. of Community Participation and Engagement events run'],
-            'Erosion management(length)km':[outputLabel:'Erosion Management Details', scoreLabel:'Length of stream/coastline treated (m)'], // CG - spreadsheet from GMS uses km...
-            'Fauna (biological) survey(reports)no':[outputLabel:'Fauna Survey Details',scoreLabel:'No. of surveys undertaken'], // Not currently output target
-            'Fencing(length)km':[outputLabel:'Fence Details', scoreLabel:'Total length of fence (Km)'],
+            'Revegetation(no. of plants)no':[outputLabel:'Revegetation Details', scoreLabel:'Number of plants planted', scoreName:'totalNumberPlanted', units:''],
+            'Revegetation(area of works)ha':[outputLabel:'Revegetation Details', scoreLabel:'Area of revegetation works (Ha)', scoreName:'areaRevegHa', units:'Ha'],
+            'Weed treatment(total area)ha':[outputLabel:'Weed Treatment Details', scoreLabel:'Total area treated (Ha)', scoreName:'areaTreatedHa', units:'Ha'],
+            'Plant propagation(no. of plants)no':[outputLabel:'Plant Propagation Details', scoreLabel:'Total No. of plants grown and ready for planting', scoreName:'totalNumberGrown', units:''],
+            'Community participation and engagement(events)no':[outputLabel:'Event Details', scoreLabel:'Total No. of Community Participation and Engagement events run', scoreName:'eventTopics', units:''],
+            'Erosion management(length)km':[outputLabel:'Erosion Management Details', scoreLabel:'Length of stream/coastline treated (Km)', scoreName:'erosionLength', units:'Km'], // CG - spreadsheet from GMS uses km...
+            'Fauna (biological) survey(reports)no':[outputLabel:'Fauna Survey Details',scoreLabel:'No. of surveys undertaken',scoreName:'totalNumberOfOrganisms', units:''], // Not currently output target
+            'Fencing(length)km':[outputLabel:'Fence Details', scoreLabel:'Total length of fence (Km)', scoreName:'lengthOfFence', units:'Km'],
             'Fire management(length)km':[outputLabel:'Fire Management Details', scoreLabel:''], // Currently no score for length in fire management
-            'Flora (biological) survey(reports)no':[outputLabel:'Flora Survey Details', scoreLabel:'No. of surveys undertaken'], // Not currently output target
-            'Public access management(reports)no':[outputLabel:'Access Control Details', scoreLabel:'No. of activities implementing access control works'], // Not currently output target
-            'Seed collection(collected)kg':[outputLabel:'Seed Collection Details', scoreLabel:'Total seed collected (Kg)'],
-            'Site preparation(total area treated/prepared)ha':[outputLabel:'Site Preparation Actions', scoreLabel:'Total area prepared (Ha) for follow-up treatment actions'],
+            'Flora (biological) survey(reports)no':[outputLabel:'Flora Survey Details', scoreLabel:'No. of surveys undertaken', scoreName:'totalNumberOfOrganisms', units:''], // Not currently output target
+            'Public access management(reports)no':[outputLabel:'Access Control Details', scoreLabel:'No. of activities implementing access control works', scoreName:'structuresInstalled', units:''], // Not currently output target
+            'Seed collection(collected)kg':[outputLabel:'Seed Collection Details', scoreLabel:'Total seed collected (Kg)', scoreName:'totalSeedCollectedKg', units:'Kg'],
+            'Site preparation(total area treated/prepared)ha':[outputLabel:'Site Preparation Actions', scoreLabel:'Total area prepared (Ha) for follow-up treatment actions', scoreName:'preparationAreaTotal', units:'Ha'],
             'Site assessment(reports)no':[outputLabel:'', scoreLabel: ''], // no scores configured for Vegetation Assessment - Commonwealth government methodology
             'Vegetation monitoring and related activities(sites)no':[outputLabel:'', scoreLabel:''], // no scores configured for Vegetation Assessment - Commonwealth government methodology
-            'Water quality survey and assessment(reports)no':[outputLabel:'Water Quality Measurements', scoreLabel:'No. of water quality monitoring events undertaken' ] // NOt sure if this is exactly what we want.
+            'Water quality survey and assessment(reports)no':[outputLabel:'Water Quality Measurements', scoreLabel:'No. of water quality monitoring events undertaken', scoreName:'instrumentCalibration', units:'' ] // NOt sure if this is exactly what we want.
 
     ]
 
@@ -104,6 +104,7 @@ class GmsMapper {
 
     def createProject(projectRows) {
 
+        def errors = []
         def project = map(projectRows[0], projectMapping) // All project rows have the project details.
         project.planStatus = 'not approved'
 
@@ -113,13 +114,12 @@ class GmsMapper {
         if (siteRow) {
             def site = map(siteRow, siteMapping)
 
-            if (site.googleMapsEngineUrl) {
-                // Do KML import
+            if (site.kmlUrl) {
+                site.kmlUrl = site.kmlUrl.replace('edit', 'kml')
             }
-            else {
-                site.name = "Project area for ${project.grantId}"
-                sites << site
-            }
+            site.name = "Project area for ${project.grantId}"
+
+            sites << site
         }
 
         def mainThemes = projectRows.findAll{it[DATA_TYPE_COLUMN] == REPORTING_THEME_DATA_TYPE && it[DATA_SUB_TYPE_COLUMN] == REPORTING_THEME_DATA_SUB_TYPE}.collect{it[REPORTING_THEME_COLUMN]}
@@ -134,24 +134,32 @@ class GmsMapper {
         def activities = []
         activityRows.eachWithIndex { activityRow, i ->
             def activity = map(activityRow, activityMapping)
-            activity.type = activityTypeMapping[activity.type]
-            activity.description = 'Activity '+i
-            if (mainTheme) {
-                activity.mainTheme = mainTheme
+            def unmappedType = activity.type
+            activity.type = activityTypeMapping[unmappedType]
+
+            // Types for example other cannot be mapped.
+            if (activity.type) {
+
+                activity.description = 'Activity ' + (i + 1)
+                if (mainTheme) {
+                    activity.mainTheme = mainTheme
+                }
+
+                activities << activity
+
+                def target = mapTarget(activityRow)
+                if (!project.outputTargets) {
+                    project.outputTargets = []
+                }
+                project.outputTargets << target
             }
-
-            activities << activity
-
-            def target = mapTarget(activityRow)
-            if (!project.outputTargets) {
-                project.outputTargets = []
+            else {
+                errors << [error:"Unmappable type for activity : ${unmappedType} row: {$activityRow.index}"]
             }
-            project.outputTargets << target
-
 
         }
 
-        [project:project, sites:sites, activities:activities]
+        [project:project, sites:sites, activities:activities, errors:errors]
 
     }
 
@@ -196,6 +204,8 @@ class GmsMapper {
             case 'decimal':
                 return convertDecimal(value)
             case 'string':
+                return value
+            case 'url':
                 return value
         }
         throw new IllegalArgumentException("Unsupported type: ${type}")
