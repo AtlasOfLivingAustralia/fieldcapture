@@ -5,8 +5,12 @@ import com.vividsolutions.jts.geom.Point
 import com.vividsolutions.jts.io.WKTReader
 import grails.converters.JSON
 import org.codehaus.groovy.grails.web.mapping.LinkGenerator
+import org.geotools.kml.v22.KMLConfiguration
+import org.geotools.xml.Parser
+import org.opengis.feature.simple.SimpleFeature
 
 class SiteService {
+
 
     def webService, grailsApplication, commonService, metadataService, userService
     LinkGenerator grailsLinkGenerator
@@ -141,6 +145,62 @@ class SiteService {
 
         create(site)
     }
+
+    /**
+     * Creates sites for a project from the supplied KML.  The Placemark elements in the KML are used to create
+     * the sites, other contextual and styling information is ignored.
+     * @param kml the KML that defines the sites to be created
+     * @param projectId the project the sites will be assigned to.
+     */
+    def createSitesFromKml(kml, projectId) {
+
+        def url = "${grailsApplication.config.spatial.layersUrl}/shape/upload/wkt"
+        def userId = userService.getUser().userId
+
+        Parser parser = new Parser(new KMLConfiguration())
+        SimpleFeature f = parser.parse(new StringReader(kml))
+
+        def placemarks = []
+        extractPlacemarks(f, placemarks)
+
+        def sites = []
+
+        placemarks.each { SimpleFeature placemark ->
+            def name = placemark.getAttribute('name')
+            def description = placemark.getAttribute('description')
+
+            Geometry geom = placemark.getDefaultGeometry()
+            def site = [name:name, description: description, user_id:userId, api_key:grailsApplication.config.api_key, wkt:geom.toText()]
+
+            def result = webService.doPost(url, site)
+            if (!result.error) {
+                def id = result.resp.id
+                if (!result.resp.error) {
+                    sites << createSite(projectId, name, description, '', id, geom.centriod.getY(), geom.centriod.getX())
+                }
+            }
+
+        }
+        return sites
+    }
+
+    /**
+     * Extracts any features that have a geometry attached, in the case of KML these will likely be placemarks.
+     */
+    def extractPlacemarks(features, placemarks) {
+        if (!features) {
+            return
+        }
+        features.each { SimpleFeature feature ->
+            if (feature.getDefaultGeometry()) {
+                placemarks << feature
+            }
+            else {
+                extractPlacemarks(feature.getAttribute('Feature'), placemarks)
+            }
+        }
+    }
+
 
     /** Returns the centroid (as a Point) of a site in the spatial portal */
     def calculateSiteCentroid(spatialPortalSiteId) {
