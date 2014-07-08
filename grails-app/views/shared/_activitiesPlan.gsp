@@ -13,16 +13,16 @@
     <div id="activityContainer" class="space-before">
         <h4 class="inline">Planned Activities</h4>
         <i class="icon-lock" data-bind="visible:planStatus()==='submitted'"
-            title="Plan cannot be modified once it has been submitted for approval"></i>
+           title="Plan cannot be modified once it has been submitted for approval"></i>
         <g:if test="${user?.isEditor}">
-        <button type="button" class="btn btn-link" data-bind="visible:planStatus()==='not approved',click:newActivity" style="vertical-align: baseline"><i class="icon-plus"></i> Add new activity</button>
-        <g:if test="${grailsApplication.config.simulateCaseManager}">
-            <span class="pull-right">
-                <label class="checkbox inline" style="font-size:0.8em;">
-                    <input data-bind="checked:userIsCaseManager" type="checkbox"> Impersonate case manager
-                </label>
-            </span>
-        </g:if>
+            <button type="button" class="btn btn-link" data-bind="visible:planStatus()==='not approved',click:newActivity" style="vertical-align: baseline"><i class="icon-plus"></i> Add new activity</button>
+            <g:if test="${grailsApplication.config.simulateCaseManager}">
+                <span class="pull-right">
+                    <label class="checkbox inline" style="font-size:0.8em;">
+                        <input data-bind="checked:userIsCaseManager" type="checkbox"> Impersonate case manager
+                    </label>
+                </span>
+            </g:if>
         </g:if>
 
         <ul class="nav nav-tabs nav-tab-small space-before">
@@ -83,21 +83,21 @@
                             <div id="activityStatusReason" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
                                 data-bind="showModal:displayReasonModal(),with:deferReason">
                                 <form class="reasonModalForm">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
-                                            data-bind="click:$parent.displayReasonModal.cancelReasonModal">×</button>
-                                    <h3 id="myModalLabel">Reason for deferring or cancelling an activity</h3>
-                                </div>
-                                <div class="modal-body">
-                                    <p>If you wish to defer or cancel a planned activity you must provide an explanation. Your case
-                                    manager will use this information when assessing your report.</p>
-                                    <p>You can simply refer to a document that has been uploaded to the project if you like.</p>
-                                    <textarea data-bind="value:notes,hasFocus:true" name="reason" rows=4 cols="80" class="validate[required]"></textarea>
-                                </div>
-                                <div class="modal-footer">
-                                    <button class="btn" data-bind="click: $parent.displayReasonModal.cancelReasonModal" data-dismiss="modal" aria-hidden="true">Discard status change</button>
-                                    <button class="btn btn-primary" data-bind="click:$parent.displayReasonModal.saveReasonDocument">Save reason</button>
-                                </div></form>
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                                                data-bind="click:$parent.displayReasonModal.cancelReasonModal">×</button>
+                                        <h3 id="myModalLabel">Reason for deferring or cancelling an activity</h3>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>If you wish to defer or cancel a planned activity you must provide an explanation. Your case
+                                        manager will use this information when assessing your report.</p>
+                                        <p>You can simply refer to a document that has been uploaded to the project if you like.</p>
+                                        <textarea data-bind="value:notes,hasFocus:true" name="reason" rows=4 cols="80" class="validate[required]"></textarea>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="btn" data-bind="click: $parent.displayReasonModal.cancelReasonModal" data-dismiss="modal" aria-hidden="true">Discard status change</button>
+                                        <button class="btn btn-primary" data-bind="click:$parent.displayReasonModal.saveReasonDocument">Save reason</button>
+                                    </div></form>
                             </div>
 
                         </td>
@@ -118,26 +118,26 @@
             <thead><tr><th>Output Type</th><th>Outcome Targets</th><th>Output Targets</th><th>Target</th></tr></thead>
             <!-- ko foreach:outputTargets -->
             <tbody data-bind="foreach:scores">
-                <tr>
-                    <!-- ko with:isFirst -->
-                    <td data-bind="attr:{rowspan:$parents[1].scores.length}">
-                        <b><span data-bind="text:$parents[1].name"></span></b>
-                    </td>
-                    <td data-bind="attr:{rowspan:$parents[1].scores.length}">
-                        <textarea data-bind="visible:$root.canEditOutputTargets(),value:$parents[1].outcomeTarget" rows="3" cols="80" style="width:90%"></textarea>
-                        <span data-bind="visible:!$root.canEditOutputTargets(),text:$parents[1].outcomeTarget"></span>
-                        <span class="save-indicator" data-bind="visible:$parents[1].isSaving"><r:img dir="images" file="ajax-saver.gif" alt="saving icon"/> saving</span>
-                    </td>
-                    <!-- /ko -->
-                    <td><span data-bind="text:scoreLabel"></span></td>
-                    <td>
-                        <input type="text" class="input-mini" data-bind="visible:$root.canEditOutputTargets(),value:target" data-validation-engine="validate[required,custom[number]]"/>
-                        <span data-bind="visible:!$root.canEditOutputTargets(),text:target"></span>
-                        <span data-bind="text:units"></span>
-                        <span class="save-indicator" data-bind="visible:isSaving"><r:img dir="images" file="ajax-saver.gif" alt="saving icon"/> saving</span>
-                    </td>
+            <tr>
+                <!-- ko with:isFirst -->
+                <td data-bind="attr:{rowspan:$parents[1].scores.length}">
+                    <b><span data-bind="text:$parents[1].name"></span></b>
+                </td>
+                <td data-bind="attr:{rowspan:$parents[1].scores.length}">
+                    <textarea data-bind="visible:$root.canEditOutputTargets(),value:$parents[1].outcomeTarget" rows="3" cols="80" style="width:90%"></textarea>
+                    <span data-bind="visible:!$root.canEditOutputTargets(),text:$parents[1].outcomeTarget"></span>
+                    <span class="save-indicator" data-bind="visible:$parents[1].isSaving"><r:img dir="images" file="ajax-saver.gif" alt="saving icon"/> saving</span>
+                </td>
+                <!-- /ko -->
+                <td><span data-bind="text:scoreLabel"></span></td>
+                <td>
+                    <input type="text" class="input-mini" data-bind="visible:$root.canEditOutputTargets(),value:target" data-validation-engine="validate[required,custom[number]]"/>
+                    <span data-bind="visible:!$root.canEditOutputTargets(),text:target"></span>
+                    <span data-bind="text:units"></span>
+                    <span class="save-indicator" data-bind="visible:isSaving"><r:img dir="images" file="ajax-saver.gif" alt="saving icon"/> saving</span>
+                </td>
 
-                </tr>
+            </tr>
             </tbody>
             <!-- /ko -->
         </table>
@@ -159,17 +159,18 @@
 
 <script id="updateStatusTmpl" type="text/html">
     <div class="btn-group">
-    <button type="button" class="btn btn-small dropdown-toggle" data-toggle="dropdown"
-            data-bind="css: {'btn-warning':progress()=='planned','btn-success':progress()=='started','btn-info':progress()=='finished','btn-danger':progress()=='deferred','btn-inverse':progress()=='cancelled'}"
-            style="line-height:16px;min-width:86px;text-align:left;">
-        <span data-bind="text: progress"></span> <span class="caret pull-right" style="margin-top:6px;"></span>
-    </button>
-    <ul class="dropdown-menu" data-bind="foreach:$root.progressOptions" style="min-width:100px;">
-        <!-- Disable item if selected -->
-        <li data-bind="css: {'disabled' : $data==$parent.progress() || $data=='planned'}">
-            <a href="#" data-bind="click: $parent.progress"><span data-bind="text: $data"></span></a>
-        </li>
-    </ul></div>
+        <button type="button" class="btn btn-small dropdown-toggle" data-toggle="dropdown"
+                data-bind="css: {'btn-warning':progress()=='planned','btn-success':progress()=='started','btn-info':progress()=='finished','btn-danger':progress()=='deferred','btn-inverse':progress()=='cancelled'}"
+                style="line-height:16px;min-width:86px;text-align:left;">
+            <span data-bind="text: progress"></span> <span class="caret pull-right" style="margin-top:6px;"></span>
+        </button>
+        <ul class="dropdown-menu" data-bind="foreach:$root.progressOptions" style="min-width:100px;">
+            <!-- Disable item if selected -->
+            <li data-bind="css: {'disabled' : $data==$parent.progress() || $data=='planned'}">
+                <a href="#" data-bind="click: $parent.progress"><span data-bind="text: $data"></span></a>
+            </li>
+        </ul>
+    </div>
     <span class="save-indicator" data-bind="visible:isSaving"><r:img dir="images" file="ajax-saver.gif" alt="saving icon"/> saving</span>
     <!-- ko with: deferReason -->
     <span data-bind="visible: $parent.progress()=='deferred' || $parent.progress()=='cancelled'">
@@ -177,69 +178,69 @@
            data-bind="popover: {title: 'Reason for deferral<br><small>(Click icon to edit reason.)</small>', content: notes, placement: 'left'}, click:$parent.displayReasonModal.editReason">
         </i>
     </span>
-    <!-- /ko -->
+<!-- /ko -->
 </script>
 
 <script id="viewStatusTmpl" type="text/html">
-    <button type="button" class="btn btn-small"
-            data-bind="css: {'btn-warning':progress()=='planned','btn-success':progress()=='started','btn-info':progress()=='finished','btn-danger':progress()=='deferred','btn-inverse':progress()=='cancelled'}"
-            style="line-height:16px;min-width:75px;text-align:left;cursor:default;color:white">
-        <span data-bind="text: progress"></span>
-    </button>
-    <!-- ko with: deferReason -->
-    <span data-bind="visible: $parent.progress()=='deferred' || $parent.progress()=='cancelled'">
-        <i class="icon-list-alt"
-           data-bind="popover: {title: 'Reason for deferral', content: notes, placement: 'left'}">
-        </i>
-    </span>
-    <!-- /ko -->
+<button type="button" class="btn btn-small"
+        data-bind="css: {'btn-warning':progress()=='planned','btn-success':progress()=='started','btn-info':progress()=='finished','btn-danger':progress()=='deferred','btn-inverse':progress()=='cancelled'}"
+        style="line-height:16px;min-width:75px;text-align:left;cursor:default;color:white">
+    <span data-bind="text: progress"></span>
+</button>
+<!-- ko with: deferReason -->
+<span data-bind="visible: $parent.progress()=='deferred' || $parent.progress()=='cancelled'">
+    <i class="icon-list-alt"
+       data-bind="popover: {title: 'Reason for deferral', content: notes, placement: 'left'}">
+    </i>
+</span>
+<!-- /ko -->
 </script>
 
 <script id="planningTmpl" type="text/html">
-    <span class="span3">
-        <span class="badge badge-warning" style="font-size:13px;">This plan is not yet approved</span>
-    </span>
-    <g:if test="${user?.isAdmin}">
+<span class="span3">
+    <span class="badge badge-warning" style="font-size:13px;">This plan is not yet approved</span>
+</span>
+<g:if test="${user?.isAdmin}">
     <span class="span9">
         Build your plan by adding activities and entering project targets. Submit your plan when it is built.
         <button type="button" data-bind="click:submitPlan" class="btn btn-success"><i class="icon-thumbs-up icon-white"></i> Submit plan</button>
     </span>
-    </g:if>
+</g:if>
 </script>
 
 <script id="submittedTmpl" type="text/html">
-    <span class="span4">
-        <span class="badge badge-info" style="font-size:13px;">This plan has been submitted for approval</span>
+<span class="span4">
+    <span class="badge badge-info" style="font-size:13px;">This plan has been submitted for approval</span>
+</span>
+<span data-bind="visible:!userIsCaseManager()" class="span8">
+    <span>Your plan is locked until it is approved by your case manager. Once your plan is approved
+    you can start entering activity information.</span>
+</span>
+<span data-bind="visible:userIsCaseManager" class="span8">
+    <span>Case manager actions: </span>
+    <span class="btn-group">
+        <button type="button" data-bind="click:approvePlan" class="btn btn-success"><i class="icon-ok icon-white"></i> Approve plan</button>
+        <button type="button" data-bind="click:rejectPlan" class="btn btn-danger"><i class="icon-remove icon-white"></i> Reject plan</button>
     </span>
-    <span data-bind="visible:!userIsCaseManager()" class="span8">
-        <span>Your plan is locked until it is approved by your case manager. Once your plan is approved
-        you can start entering activity information.</span>
-    </span>
-    <span data-bind="visible:userIsCaseManager" class="span8">
-        <span>Case manager actions: </span>
-        <span class="btn-group">
-            <button type="button" data-bind="click:approvePlan" class="btn btn-success"><i class="icon-ok icon-white"></i> Approve plan</button>
-            <button type="button" data-bind="click:rejectPlan" class="btn btn-danger"><i class="icon-remove icon-white"></i> Reject plan</button>
-        </span>
-    </span>
+</span>
 </script>
 
 <script id="approvedTmpl" type="text/html">
-    <span class="span3">
-        <span class="badge badge-success" style="font-size:13px;">This plan has been approved</span>
+<span class="span3">
+    <span class="badge badge-success" style="font-size:13px;">This plan has been approved</span>
+</span>
+<span data-bind="visible:!userIsCaseManager()" class="span9">
+    <span>Enter information into each activity. When all activities in a stage are finished (or
+    cancelled or deferred) you can submit the stage for validation by clicking the 'report' button.</span>
+</span>
+<span data-bind="visible:userIsCaseManager" class="span8">
+    <span>Case manager actions: </span>
+    <span class="btn-group">
+        <button type="button" data-bind="click:modifyPlan" class="btn btn-info" title="Allow the user to vary and re-submit the plan">
+            <i class="icon-repeat icon-white"></i> Modify plan
+        </button>
     </span>
-    <span data-bind="visible:!userIsCaseManager()" class="span9">
-        <span>Enter information into each activity. When all activities in a stage are finished (or
-         cancelled or deferred) you can submit the stage for validation by clicking the 'report' button.</span>
-    </span>
-    <span data-bind="visible:userIsCaseManager" class="span8">
-        <span>Case manager actions: </span>
-        <span class="btn-group">
-            <button type="button" data-bind="click:modifyPlan" class="btn btn-info" title="Allow the user to vary and re-submit the plan">
-                <i class="icon-repeat icon-white"></i> Modify plan
-            </button>
-        </span>
-    </span>
+</span>
 </script>
 
 <script id="stageNotReportableTmpl" type="text/html">
@@ -247,39 +248,39 @@
 </script>
 
 <script id="stageNotApprovedTmpl" type="text/html">
-    <g:if test="${user?.isAdmin}">
+<g:if test="${user?.isAdmin}">
     <br/>
     <button type="button" class="btn btn-success btn-small" style="margin-top:4px;"
-    data-bind="
+            data-bind="
             disable:!$parents[1].readyForApproval() || !$parents[2].isApproved(),
             click:$parents[1].submitReport,
             attr:{title:$parents[1].readyForApproval()?'Submit this stage for implementation approval.':'Report cannot be submitted while activities are still open.'}"
     >Submit report</button>
-    </g:if>
+</g:if>
 </script>
 
 <script id="stageApprovedTmpl" type="text/html">
-    <br/>
-    <span class="badge badge-success">Report Approved</span>
+<br/>
+<span class="badge badge-success">Report Approved</span>
 
-    <g:if test="${fc.userInRole(role: grailsApplication.config.security.cas.adminRole) || fc.userInRole(role: grailsApplication.config.security.cas.alaAdminRole)}">
+<g:if test="${fc.userInRole(role: grailsApplication.config.security.cas.adminRole) || fc.userInRole(role: grailsApplication.config.security.cas.alaAdminRole)}">
     <br/>
     <button type="button" data-bind="click:$parents[1].rejectStage" class="btn btn-danger"><i class="icon-remove icon-white"></i> Withdraw approval</button>
-    </g:if>
+</g:if>
 </script>
 
 <script id="stageSubmittedTmpl" type="text/html">
-    <br/>
-    <span class="badge badge-info" style="font-size:13px;">Report submitted</span>
-    <g:if test="${user?.isCaseManager}">
+<br/>
+<span class="badge badge-info" style="font-size:13px;">Report submitted</span>
+<g:if test="${user?.isCaseManager}">
     <br/>
     <span>Case manager actions: </span>
     <br/>
     <span class="btn-group">
-    <button type="button" data-bind="click:$parents[1].approveStage" class="btn btn-success"><i class="icon-ok icon-white"></i> Approve</button>
-    <button type="button" data-bind="click:$parents[1].rejectStage" class="btn btn-danger"><i class="icon-remove icon-white"></i> Reject</button>
+        <button type="button" data-bind="click:$parents[1].approveStage" class="btn btn-success"><i class="icon-ok icon-white"></i> Approve</button>
+        <button type="button" data-bind="click:$parents[1].rejectStage" class="btn btn-danger"><i class="icon-remove icon-white"></i> Reject</button>
     </span>
-    </g:if>
+</g:if>
 
 </script>
 <!-- /ko -->
@@ -608,12 +609,8 @@
                 });
             this.label = stageLabel;
             this.isCurrentStage = isCurrentStage;
-            <g:if test="${enableReporting}">
-                this.isReportable = stage.toDate < new Date().toISOStringNoMillis();
-            </g:if>
-            <g:else>
-                this.isReportable = false;
-            </g:else>
+
+            this.isReportable = stage.toDate < new Date().toISOStringNoMillis();
             this.projectId = project.projectId;
             this.planViewModel = planViewModel;
 
@@ -623,11 +620,9 @@
                 if (a.sequence !== undefined && b.sequence !== undefined) {
                     return a.sequence - b.sequence;
                 }
-                if (a.dateCreated !== undefined && b.dateCreated !== undefined && a.dateCreated != b.dateCreated) {
-                    return a.dateCreated < b.dateCreated ? 1 : -1;
-                }
+
                 if (a.plannedStartDate != b.plannedStartDate) {
-                     a.plannedStartDate < b.plannedStartDate ? 1 : (a.plannedStartDate > b.plannedStartDate ? -1 : 0);
+                     return a.plannedStartDate < b.plannedStartDate ? -1 : (a.plannedStartDate > b.plannedStartDate ? 1 : 0);
                 }
                 var numericActivity = /[Aa]ctivity (\d+)(\w)?.*/;
                 var first = numericActivity.exec(a.description);
@@ -644,6 +639,9 @@
                     return  firstNum - secondNum;
                 }
                 else {
+                    if (a.dateCreated !== undefined && b.dateCreated !== undefined && a.dateCreated != b.dateCreated) {
+                        return a.dateCreated < b.dateCreated ? 1 : -1;
+                    }
                     return a.description > b.description ? 1 : (a.description < b.description ? -1 : 0);
                 }
 
@@ -688,14 +686,14 @@
                     submitReport : function() {
                         self.submitStage();
                     }
-                };
-                ko.applyBindings(declarationViewModel, declaration);
-                $(declaration).modal({ backdrop: 'static', keyboard: true, show: true }).on('hidden', function() {ko.cleanNode(declaration);});
+            };
+            ko.applyBindings(declarationViewModel, declaration);
+            $(declaration).modal({ backdrop: 'static', keyboard: true, show: true }).on('hidden', function() {ko.cleanNode(declaration);});
 
             };
 
             this.submitStage = function() {
-            var url = '${createLink(controller:'project', action:'ajaxSubmitReport')}/';
+                var url = '${createLink(controller:'project', action:'ajaxSubmitReport')}/';
                 self.updateStageStatus(url);
             };
             this.approveStage = function () {
@@ -1164,8 +1162,8 @@
         }
 
         var planViewModel = new PlanViewModel(
-            ${activities ?: []},
-            ${project.outputTargets ?: '{}'},
+${activities ?: []},
+${project.outputTargets ?: '{}'},
             checkAndUpdateProject(${project})
         );
         ko.applyBindings(planViewModel, document.getElementById('planContainer'));
