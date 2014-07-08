@@ -28,7 +28,8 @@ grails.project.dependency.resolution = {
         mavenCentral()
 
         mavenRepo "http://maven.ala.org.au/repository/"
-        mavenRepo "http://repo.opengeo.org" 
+        mavenRepo "http://repo.opengeo.org"
+        mavenRepo "http://download.osgeo.org/webdav/geotools/"
 
     }
     def seleniumVersion = "2.21.0"
