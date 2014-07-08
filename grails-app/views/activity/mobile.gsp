@@ -52,74 +52,74 @@
                 <div class="row-fluid">
 
                     <span class="span8">
-                    <div class="row-fluid space-after">
+                        <div class="row-fluid space-after">
 
-                        <div class="span6 required">
-                            <label for="startDate"><b>Actual start date</b>
-                                <fc:iconHelp title="Start date">Date the activity was started.</fc:iconHelp>
-                            </label>
+                            <div class="span6 required">
+                                <label for="startDate"><b>Actual start date</b>
+                                    <fc:iconHelp title="Start date">Date the activity was started.</fc:iconHelp>
+                                </label>
 
 
-                            <div class="input-append">
-                                <fc:datePicker readonly="readonly" targetField="startDate.date" name="startDate" data-validation-engine="validate[required]"/>
+                                <div class="input-append">
+                                    <fc:datePicker readonly="readonly" targetField="startDate.date" name="startDate" data-validation-engine="validate[required]"/>
+                                </div>
+
+                            </div>
+                            <div class="span6" data-bind="css:{required:transients.markedAsFinished}">
+                                <label for="endDate"><b>Actual end date</b>
+                                    <fc:iconHelp title="End date">Date the activity finished.</fc:iconHelp>
+                                </label>
+
+                                <div class="input-append">
+                                    <fc:datePicker readonly="readonly" targetField="endDate.date" name="endDate" data-validation-engine="validate[future[startDate]]" />
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="row-fluid space-after">
+                            <div class="span6">
+                                <label for="theme"><b>Major theme</b></label>
+                                <select id="theme" data-bind="value:mainTheme, options:transients.themes, optionsCaption:'Choose..'" class="input-xlarge" style="width:90%">
+                                </select>
+                            </div>
+
+                            <div class="span6">
+                                <label><b>Progress</b></label>
+                                <label for="activityComplete"><input type="checkbox" id="activityComplete" data-bind="checked:transients.markedAsFinished" style="margin-right:1em;"><span>This activity is complete</span></label>
+
                             </div>
 
                         </div>
-                        <div class="span6" data-bind="css:{required:transients.markedAsFinished}">
-                            <label for="endDate"><b>Actual end date</b>
-                                <fc:iconHelp title="End date">Date the activity finished.</fc:iconHelp>
-                            </label>
+                        <div class="row-fluid">
+                            <div class="span6">
+                                <label for="site"><b>Site</b></label>
+                                <fc:select id="site" style="width:90%" data-bind='options:transients.sites,optionsText:"name",optionsValue:"siteId",value:siteId,optionsCaption:"Choose a site..."'/>
 
-                            <div class="input-append">
-                                <fc:datePicker readonly="readonly" targetField="endDate.date" name="endDate" data-validation-engine="validate[future[startDate]]" />
                             </div>
 
-                        </div>
-                    </div>
-                    <div class="row-fluid space-after">
-                        <div class="span6">
-                            <label for="theme"><b>Major theme</b></label>
-                            <select id="theme" data-bind="value:mainTheme, options:transients.themes, optionsCaption:'Choose..'" class="input-xlarge" style="width:90%">
-                            </select>
+                            <div class="span3">
+
+                                <button class="btn btn-info" style="margin-top:25px;" data-bind="visible:transients.newSiteSupported,click:createNewSite">Create new Site</button>
+                            </div>
                         </div>
 
-                        <div class="span6">
-                            <label><b>Progress</b></label>
-                            <label for="activityComplete"><input type="checkbox" id="activityComplete" data-bind="checked:transients.markedAsFinished" style="margin-right:1em;"><span>This activity is complete</span></label>
-
-                        </div>
-
-                    </div>
-                    <div class="row-fluid">
-                        <div class="span6">
-                            <label for="site"><b>Site</b></label>
-                            <fc:select id="site" style="width:90%" data-bind='options:transients.sites,optionsText:"name",optionsValue:"siteId",value:siteId,optionsCaption:"Choose a site..."'/>
-
-                        </div>
-
-                        <div class="span3">
-
-                            <button class="btn btn-info" style="margin-top:25px;" data-bind="visible:transients.newSiteSupported,click:createNewSite">Create new Site</button>
-                        </div>
-                    </div>
-
-                    %{--<div class="row-fluid">--}%
+                        %{--<div class="row-fluid">--}%
                         %{--<table id="photoPoints">--}%
-                            %{--<thead>--}%
-                                %{--<tr><td>Photo point</td><td>Lat</td><td>Lon</td><td></td></tr>--}%
-                            %{--</thead>--}%
-                            %{--<tbody>--}%
-                                %{--<tr data-bind="foreach:transients.photoPoints">--}%
-                                    %{--<td data-bind="text:name"></td>--}%
-                                    %{--<td data-bind="text:geometry.decimalLatitude"></td>--}%
-                                    %{--<td data-bind="text:geometry.decimalLongitude"></td>--}%
-                                    %{--<td><button class="btn-info" data-bind="click:attachPhotoPoint">Attach Photo</button> </td>--}%
+                        %{--<thead>--}%
+                        %{--<tr><td>Photo point</td><td>Lat</td><td>Lon</td><td></td></tr>--}%
+                        %{--</thead>--}%
+                        %{--<tbody>--}%
+                        %{--<tr data-bind="foreach:transients.photoPoints">--}%
+                        %{--<td data-bind="text:name"></td>--}%
+                        %{--<td data-bind="text:geometry.decimalLatitude"></td>--}%
+                        %{--<td data-bind="text:geometry.decimalLongitude"></td>--}%
+                        %{--<td><button class="btn-info" data-bind="click:attachPhotoPoint">Attach Photo</button> </td>--}%
 
-                                %{--</tr>--}%
-                            %{--</tbody>--}%
+                        %{--</tr>--}%
+                        %{--</tbody>--}%
                         %{--</table>--}%
 
-                    %{--</div>--}%
+                        %{--</div>--}%
                     </span>
                     <span class="span4">
 
@@ -137,25 +137,25 @@
 <!-- ko stopBinding: true -->
 <g:each in="${metaModel?.outputs}" var="outputName">
     <g:if test="${outputName != 'Photo Points'}">
-    <g:set var="blockId" value="${fc.toSingleWord([name: outputName])}"/>
-    <g:set var="model" value="${outputModels[outputName]}"/>
-    <md:modelStyles model="${model}" edit="true" forceHeaderWrap="true"/>
-    <div class="output-block" id="ko${blockId}">
-        <h3 data-bind="css:{modified:dirtyFlag.isDirty},attr:{title:'Has been modified'}">${outputName}<i class="icon-asterisk modified-icon" data-bind="visible:dirtyFlag.isDirty" title="Has been modified" style="display: none;"></i></h3>
-        <!-- add the dynamic components -->
-        <md:modelView model="${model}" site="${site}" edit="true" disableTableUpload="true" output="${outputName}" />
-        <r:script>
-        $(function(){
+        <g:set var="blockId" value="${fc.toSingleWord([name: outputName])}"/>
+        <g:set var="model" value="${outputModels[outputName]}"/>
+        <md:modelStyles model="${model}" edit="true" forceHeaderWrap="true"/>
+        <div class="output-block" id="ko${blockId}">
+            <h3 data-bind="css:{modified:dirtyFlag.isDirty},attr:{title:'Has been modified'}">${outputName}</h3>
+            <!-- add the dynamic components -->
+            <md:modelView model="${model}" site="${site}" edit="true" disableTableUpload="true" output="${outputName}" />
+            <r:script>
+            $(function(){
 
-            var viewModelName = "${blockId}ViewModel",
+                var viewModelName = "${blockId}ViewModel",
                 viewModelInstance = viewModelName + "Instance";
 
             // load dynamic models - usually objects in a list
-            <md:jsModelObjects model="${model}" site="${site}" speciesLists="${speciesLists}" edit="true" viewModelInstance="${blockId}ViewModelInstance"/>
+                <md:jsModelObjects model="${model}" site="${site}" speciesLists="${speciesLists}" edit="true" viewModelInstance="${blockId}ViewModelInstance"/>
 
-            this[viewModelName] = function (output) {
-                var self = this;
-                self.name = "${outputName}";
+                this[viewModelName] = function (output) {
+                    var self = this;
+                    self.name = "${outputName}";
                 self.outputId = orBlank(output.outputId);
 
                 self.data = {};
@@ -168,49 +168,49 @@
                 // this will be called when generating a savable model to remove transient properties
                 self.removeBeforeSave = function (jsData) {
                     // add code to remove any transients added by the dynamic tags
-                    <md:jsRemoveBeforeSave model="${model}"/>
-                    delete jsData.activityType;
-                    delete jsData.transients;
-                    return jsData;
-                };
-
-                // this returns a JS object ready for saving
-                self.modelForSaving = function () {
-                    // get model as a plain javascript object
-                    var jsData = ko.mapping.toJS(self, {'ignore':['transients']});
-                    // get rid of any transient observables
-                    return self.removeBeforeSave(jsData);
-                };
-
-                // this is a version of toJSON that just returns the model as it will be saved
-                // it is used for detecting when the model is modified (in a way that should invoke a save)
-                // the ko.toJSON conversion is preserved so we can use it to view the active model for debugging
-                self.modelAsJSON = function () {
-                    return JSON.stringify(self.modelForSaving());
-                };
-
-                self.loadData = function (data) {
-                    // load dynamic data
-                    <md:jsLoadModel model="${model}"/>
-
-                    // if there is no data in tables then add an empty row for the user to add data
-                    if (typeof self.addRow === 'function' && self.rowCount() === 0) {
-                        self.addRow();
-                    }
-                    self.transients.dummy.notifySubscribers();
-                };
+                <md:jsRemoveBeforeSave model="${model}"/>
+                delete jsData.activityType;
+                delete jsData.transients;
+                return jsData;
             };
 
+            // this returns a JS object ready for saving
+            self.modelForSaving = function () {
+                // get model as a plain javascript object
+                var jsData = ko.mapping.toJS(self, {'ignore':['transients']});
+                // get rid of any transient observables
+                return self.removeBeforeSave(jsData);
+            };
 
-            var savedData = activity;
-            if (!savedData.outputs) {
-                savedData.outputs = [];
-            }
-            var savedOutput = {};
-            if (savedData) {
+            // this is a version of toJSON that just returns the model as it will be saved
+            // it is used for detecting when the model is modified (in a way that should invoke a save)
+            // the ko.toJSON conversion is preserved so we can use it to view the active model for debugging
+            self.modelAsJSON = function () {
+                return JSON.stringify(self.modelForSaving());
+            };
 
-                $.each(savedData.outputs, function(i, tmpOutput) {
-                    if (tmpOutput.name === '${outputName}') {
+            self.loadData = function (data) {
+                // load dynamic data
+                <md:jsLoadModel model="${model}"/>
+
+                // if there is no data in tables then add an empty row for the user to add data
+                if (typeof self.addRow === 'function' && self.rowCount() === 0) {
+                    self.addRow();
+                }
+                self.transients.dummy.notifySubscribers();
+            };
+        };
+
+
+        var savedData = activity;
+        if (!savedData.outputs) {
+            savedData.outputs = [];
+        }
+        var savedOutput = {};
+        if (savedData) {
+
+            $.each(savedData.outputs, function(i, tmpOutput) {
+                if (tmpOutput.name === '${outputName}') {
                         savedOutput = tmpOutput;
                     }
                 });
@@ -236,8 +236,8 @@
             window[viewModelInstance].dirtyFlag.isDirty, window[viewModelInstance].dirtyFlag.reset);
         });
 
-        </r:script>
-    </div>
+            </r:script>
+        </div>
     </g:if>
 </g:each>
 <!-- /ko -->
@@ -380,33 +380,6 @@ master.reset();
 });
 
 
-ko.bindingHandlers.editOutput = {
-init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
-    var outputName = ko.utils.unwrapObservable(valueAccessor()),
-        activity = bindingContext.$root,
-        outputId;
-
-    // search for corresponding outputs in the activity data
-    $.each(activity.outputs, function (i,output) { // iterate output data in the activity to
-                                                      // find any matching the meta-model name
-        if (output.name === outputName) {
-            outputId = output.outputId;
-        }
-    });
-    if (outputId) {
-        // build edit link
-        $(element).html('Edit data');
-        $(element).attr('href', fcConfig.serverUrl + "/output/edit/" + outputId +
-            "?returnTo=" + here);
-    } else {
-        // build create link
-        $(element).attr('href', fcConfig.serverUrl + '/output/create?activityId=' + activity.activityId +
-            '&outputName=' + encodeURIComponent(outputName) +
-            "&returnTo=" + here);
-    }
-}
-};
-
 function ViewModel (act, sites, themes) {
 var self = this;
 var today = new Date().toISOStringNoMillis();
@@ -511,20 +484,20 @@ ko.applyBindings(viewModel);
 master.register('activityModel', viewModel.modelForSaving, viewModel.dirtyFlag.isDirty, viewModel.dirtyFlag.reset);
 
 <g:if test="${params.android}">
-// Workaround for Android bug 6721 - prevents components under the datepicker from receiving clicks on the datepicker.
-var disabled = null;
-$('[data-bind^=datepicker]').datepicker().on('show', function() {
-    if (disabled == null) {
-        disabled = $("input:enabled, select:enabled, button:enabled");
-        disabled.prop('disabled', true);
-    }
-});
-$('[data-bind^=datepicker]').datepicker().on('hide', function() {
-    if (disabled !== null) {
-        disabled.prop('disabled', false);
-        disabled = null;
-    }
-});
+    // Workaround for Android bug 6721 - prevents components under the datepicker from receiving clicks on the datepicker.
+    var disabled = null;
+    $('[data-bind^=datepicker]').datepicker().on('show', function() {
+        if (disabled == null) {
+            disabled = $("input:enabled, select:enabled, button:enabled");
+            disabled.prop('disabled', true);
+        }
+    });
+    $('[data-bind^=datepicker]').datepicker().on('hide', function() {
+        if (disabled !== null) {
+            disabled.prop('disabled', false);
+            disabled = null;
+        }
+    });
 </g:if>
 });
 
