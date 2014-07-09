@@ -229,13 +229,17 @@ function stringToDate(date) {
                 $element.datepicker('show');
             });
 
-            //when a user changes the date via the datepicker, update the view model
-            ko.utils.registerEventHandler(element, "changeDate", function(event) {
+            var changeHandler = function(event) {
                 var value = valueAccessor();
                 if (ko.isObservable(value)) {
                     value(event.date);
                 }
-            });
+            };
+
+            //when a user changes the date via the datepicker, update the view model
+            ko.utils.registerEventHandler(element, "changeDate", changeHandler);
+            ko.utils.registerEventHandler(element, "hide", changeHandler);
+
 
             //when a user changes the date via the input, update the view model
             ko.utils.registerEventHandler(element, "change", function() {
