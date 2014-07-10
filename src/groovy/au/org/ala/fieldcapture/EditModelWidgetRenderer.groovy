@@ -58,9 +58,10 @@ public class EditModelWidgetRenderer implements ModelWidgetRenderer {
         // inside tables.  (The ids are necessary to allow the label to be selected to check the checkbox.  This is
         // in turn necessary to make checkboxes usabled on mobile devices).
         def idBinding = "'${context.model.source}'+\$index()+'-'+(\$parentContext.\$index?\$parentContext.\$index():'')"
+        def nameBinding = "'${context.model.source}'+'-'+(\$parentContext.\$index?\$parentContext.\$index():'')"
         context.databindAttrs.add 'value', '\$data'
         context.databindAttrs.add 'checked', "\$parent.${context.source}"
-        context.databindAttrs.add 'attr', "{id: ${idBinding}}"
+        context.databindAttrs.add 'attr', "{id: ${idBinding}, name: ${nameBinding}}"
         context.writer << """
             <ul class="checkbox-list" data-bind="foreach: ${constraints}">
                 <li>
