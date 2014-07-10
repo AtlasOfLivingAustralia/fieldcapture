@@ -52,8 +52,8 @@ class MobileController {
             enterActivityDataHtml = enterActivityDataHtml.replaceAll(jsRegexp, /script src="$1" type="text\/javascript"/)
             enterActivityDataHtml = enterActivityDataHtml.replaceAll(cssRegexp, /link href="$1" type="text\/css"/)
             enterActivityDataHtml = enterActivityDataHtml.replaceAll(imgRegexp, /img src="$1"/)
-            if (params.prod) {
-                enterActivityDataHtml = enterActivityDataHtml.replaceAll(/fieldcapture-test.ala.org.au/, /fieldcapture.ala.org.au/)
+            if (params.targetServer) {
+                enterActivityDataHtml = enterActivityDataHtml.replaceAll(grailsApplication.config.grails.serverURL, params.targetServer)
             }
 
             zip.putNextEntry(new ZipEntry(type.replaceAll(' ', '_')+'.html'))
