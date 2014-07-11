@@ -1,5 +1,6 @@
 package au.org.ala.fieldcapture
 
+import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 
 /**
@@ -20,14 +21,19 @@ class GmsMapper {
     static final DATA_SUB_TYPE_COLUMN = 'ENV_DATA_TYPE'
     static final REPORTING_THEME_COLUMN = 'PGAT_PRIORITY'
 
+    static MERIT_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ssZ")
 
-    static OUTPUT_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ssZ")
+    static final GMS_DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy")
+    static final SHORT_GMS_DATE_FORMAT = new SimpleDateFormat("dd/MM/yy")
 
-    static final INPUT_DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy")
-    static final SHORT_INPUT_DATE_FORMAT = new SimpleDateFormat("dd/MM/yy")
+    static final GMS_DECIMAL_FORMAT = new DecimalFormat()
+
     static {
-        OUTPUT_DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"))
+        MERIT_DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"))
+        GMS_DECIMAL_FORMAT.setMaximumFractionDigits(0)
     }
+
+
 
     def projectMapping = [
             (GRANT_ID_COLUMN):[name:'grantId', type:'string'],
@@ -39,7 +45,7 @@ class GmsMapper {
             ORG_TRADING_NAME:[name:'organisationName', type:'string'],
             START_DT:[name:'plannedStartDate', type:'date'],
             FINISH_DT:[name:'plannedEndDate', type:'date'],
-            FUNDING:[name:'funding', type:'string']
+            FUNDING:[name:'funding', type:'decimal']
     ]
 
     def siteMapping = [
@@ -100,19 +106,17 @@ class GmsMapper {
 
     ]
 
-
-
     def createProject(projectRows) {
 
         def errors = []
-        def project = map(projectRows[0], projectMapping) // All project rows have the project details.
+        def project = gmsToMerit(projectRows[0], projectMapping) // All project rows have the project details.
         project.planStatus = 'not approved'
 
         // TODO more than one location row?
         def siteRow = projectRows.find{it[DATA_TYPE_COLUMN] == LOCATION_DATA_TYPE}
         def sites = []
         if (siteRow) {
-            def site = map(siteRow, siteMapping)
+            def site = gmsToMerit(siteRow, siteMapping)
 
             if (site.kmlUrl) {
                 site.kmlUrl = site.kmlUrl.replace('edit', 'kml')
@@ -133,7 +137,7 @@ class GmsMapper {
         def activityRows = projectRows.findAll{it[DATA_TYPE_COLUMN] == ACTIVITY_DATA_TYPE && it[DATA_SUB_TYPE_COLUMN] == ACTIVITY_DATA_SUB_TYPE}
         def activities = []
         activityRows.eachWithIndex { activityRow, i ->
-            def activity = map(activityRow, activityMapping)
+            def activity = gmsToMerit(activityRow, activityMapping)
             def unmappedType = activity.type
             activity.type = activityTypeMapping[unmappedType]
 
@@ -163,9 +167,9 @@ class GmsMapper {
 
     }
 
-    def mapTarget(rowMap) {
+    private def mapTarget(rowMap) {
 
-        def map = map(rowMap, outputTargetColumnMapping)
+        def map = gmsToMerit(rowMap, outputTargetColumnMapping)
 
         def key = map.type.trim()+map.gmsScore.trim()+map.units.trim()
 
@@ -177,7 +181,7 @@ class GmsMapper {
         result
     }
 
-    def map(rowMap, mapping) {
+    private def gmsToMerit(rowMap, mapping) {
         def result = [:]
         def errors = []
         mapping.each { entry ->
@@ -196,7 +200,7 @@ class GmsMapper {
         result
     }
 
-    def convertByType(String value, String type) {
+    private def convertByType(String value, String type) {
         value = value?value.trim():''
         switch (type) {
             case 'date':
@@ -211,7 +215,7 @@ class GmsMapper {
         throw new IllegalArgumentException("Unsupported type: ${type}")
     }
 
-    def convertDate(date) {
+    private def convertDate(date) {
 
 
         if (date && date.isInteger()) {
@@ -219,16 +223,108 @@ class GmsMapper {
             // Date is number of days since 1900
             long days = date as Long
             long millisSince1970 = (days - DAYS_FROM_1900_TO_1970) * 24l * 60l * 60l * 1000l
-            return OUTPUT_DATE_FORMAT.format(new Date(millisSince1970))
+            return MERIT_DATE_FORMAT.format(new Date(millisSince1970))
         }
         else {
-            def format = date.length() == 10 ? INPUT_DATE_FORMAT : SHORT_INPUT_DATE_FORMAT
-            OUTPUT_DATE_FORMAT.format(format.parse(date))
+            def format = date.length() == 10 ? GMS_DATE_FORMAT : SHORT_GMS_DATE_FORMAT
+            MERIT_DATE_FORMAT.format(format.parse(date))
         }
     }
 
-    def convertDecimal(value) {
+    private def convertDecimal(value) {
         return new BigDecimal(value).doubleValue()
+    }
+
+    /**
+     * Maps a project into a List of Maps representing rows in the GMS spreadsheet format.
+     * @param project the project to export.
+     */
+    def exportToGMS(project, metaDataModel) {
+
+        def resultRows = []
+
+        // These need to be included in every row mapped.
+        def projectDetails = meritToGMS(project, projectMapping)
+
+        project.outputTargets.each { outputTarget ->
+
+            def mappedOutputTarget = mapOutputTarget(outputTarget)
+
+        }
+
+
+        return resultRows
+    }
+
+    private def meritToGMS(project, mapping) {
+
+        def results = [:]
+
+        mapping.each { gmsKey, fieldMapping ->
+
+            def meritKey = fieldMapping.name
+            def meritValue = formatByType(project[meritKey], fieldMapping.type)
+
+
+            results << [(gmsKey) : meritValue]
+
+        }
+        results
+    }
+
+
+    private def mapOutputTarget(outputTarget) {
+
+//        "outputLabel": "Weed Treatment Details",
+//        "target": "30",
+//        "units": "Ha",
+//        "scoreLabel": "Total area treated (Ha)",
+//        "scoreName": "areaTreatedHa"
+
+        [:]
+    }
+
+
+    private def formatByType(value, type) {
+
+
+        switch (type) {
+            case 'date':
+                return formatDate(value)
+            case 'decimal':
+                return formatDecimal(value)
+            case 'string':
+                return value
+        }
+        throw new IllegalArgumentException("Unsupported type: ${type}")
+    }
+
+    private def formatDate(value) {
+
+        if (!value) {
+            return ''
+        }
+        // No support for 'Z' as the timezone designator.
+        if (value.endsWith('Z')) {
+            value = value.replace('Z', '+0000')
+        }
+
+        def date = MERIT_DATE_FORMAT.parse(value)
+        return GMS_DATE_FORMAT.format(date)
+    }
+
+    private def formatDecimal(value) {
+        if (!value) {
+            return ''
+        }
+        def numericValue
+        if (value instanceof String) {
+            numericValue = GMS_DECIMAL_FORMAT.parse(value)
+        }
+        else {
+            numericValue = value
+        }
+        return GMS_DECIMAL_FORMAT.format(numericValue)
     }
 
 }

@@ -1,0 +1,543 @@
+{
+    "associatedProgram": "Biodiversity Fund",
+    "associatedSubProgram": "Round 1",
+    "dateCreated": "2013-12-12T22:35:42Z",
+    "description": "Project test description",
+    "externalId": "LSP-12345-678",
+    "funding": 1,
+    "grantId": "B001234567G",
+    "lastUpdated": "2014-02-07T00:08:43Z",
+    "name": "Project name test",
+    "organisationName": "Test organisation",
+    "outputTargets": [
+        {
+            "outputLabel": "Weed Treatment Details",
+            "target": "30",
+            "units": "Ha",
+            "scoreLabel": "Total area treated (Ha)",
+            "scoreName": "areaTreatedHa"
+        },
+        {
+            "outputLabel": "Weed Treatment Details",
+            "outcomeTarget": "Invasive species managed: 7\nTheme 3 other outcomes: 0"
+        },
+        {
+            "outputLabel": "Revegetation Details",
+            "target": "0",
+            "units": "",
+            "scoreLabel": "Number of plants planted",
+            "scoreName": "totalNumberPlanted"
+        },
+        {
+            "outputLabel": "Revegetation Details",
+            "target": "0",
+            "units": "kg",
+            "scoreLabel": "Kgs of seed sown",
+            "scoreName": "totalSeedSownKg"
+        },
+        {
+            "outputLabel": "Fence Details",
+            "target": "3",
+            "units": "Km",
+            "scoreLabel": "Total length of fence",
+            "scoreName": "lengthOfFence"
+        },
+        {
+            "outputLabel": "Outcomes",
+            "outcomeTarget": ""
+        },
+        {
+            "outputLabel": "Revegetation Details",
+            "target": 30,
+            "units": "Ha",
+            "scoreLabel": "Area of works",
+            "scoreName": "areaOfWorks"
+        },
+        {
+            "outputLabel": "Revegetation Details",
+            "outcomeTarget": "Theme 1 vegetation description: 0\nTheme 1 vegetation current condition: 0\nTheme 1 vegetation target condition: 0\nTheme 1 vegetation assessment method: 0\nTheme 2 vegetation description: River Red gum Swamp and Riparian communities\nTheme 2 vegetation current condition: Poor-Good\nTheme 2 vegetation target condition: Good-Excellent\nTheme 2 vegetation assessment method: Vegetation surveys as stipulated in monitoring section 11. And possible ‘Bushland Condition Monitoring’.\n% survival rate for plants: 76-100\n# canopy species planted: 3\n# understorey species planted: 3\n# ground layer species planted: 4\n"
+        }],
+    "planStatus": "approved",
+    "plannedEndDate": "2017-09-10T14:00:00Z",
+    "plannedStartDate": "2011-06-30T14:00:00Z",
+    "projectId": "eac41ca6-f32b-4795-a3b4-c23dc0b6562c",
+    "status": "active",
+    "timeline": [
+
+        {
+            "fromDate": "2011-06-30T14:00:00Z",
+            "name": "Stage 1",
+            "toDate": "2012-12-31T12:00:00+1100"
+        },
+        {
+            "fromDate": "2013-01-01T12:00:00+1100",
+            "name": "Stage 2",
+            "toDate": "2013-06-30T12:00:00+1000"
+        },
+        {
+            "fromDate": "2013-07-01T12:00:00+1000",
+            "name": "Stage 3",
+            "toDate": "2013-12-31T12:00:00+1100"
+        },
+        {
+            "fromDate": "2014-01-01T12:00:00+1100",
+            "name": "Stage 4",
+            "toDate": "2014-06-30T12:00:00+1000"
+        },
+        {
+            "fromDate": "2014-07-01T12:00:00+1000",
+            "name": "Stage 5",
+            "toDate": "2014-12-31T12:00:00+1100"
+        },
+        {
+            "fromDate": "2015-01-01T12:00:00+1100",
+            "name": "Stage 6",
+            "toDate": "2015-06-30T12:00:00+1000"
+        },
+        {
+            "fromDate": "2015-07-01T12:00:00+1000",
+            "name": "Stage 7",
+            "toDate": "2015-12-31T12:00:00+1100"
+        },
+        {
+            "fromDate": "2016-01-01T12:00:00+1100",
+            "name": "Stage 8",
+            "toDate": "2016-06-30T12:00:00+1000"
+        },
+        {
+            "fromDate": "2016-07-01T12:00:00+1000",
+            "name": "Stage 9",
+            "toDate": "2016-12-31T12:00:00+1100"
+        },
+        {
+            "fromDate": "2017-01-01T12:00:00+1100",
+            "name": "Stage 10",
+            "toDate": "2017-06-30T12:00:00+1000"
+        },
+        {
+            "fromDate": "2017-07-01T12:00:00+1000",
+            "name": "Stage 11",
+            "toDate": "2017-12-31T12:00:00+1100"
+        },
+        {
+            "fromDate": "2018-01-01T12:00:00+1100",
+            "name": "Stage 12",
+            "toDate": "2018-06-30T12:00:00+1000"
+        }],
+    "id": "52aa3a3ee4b04f7eedcdfc65",
+    "sites": [],
+    "outputSummary": [
+        {
+            "groupTitle": null,
+            "score": {
+                "aggregationType": {
+                    "enumType": "au.org.ala.ecodata.reporting.Score$AGGREGATION_TYPE",
+                    "name": "SUM"
+                },
+                "category": "Revegetation",
+                "class": "au.org.ala.ecodata.reporting.Score",
+                "displayType": "barchart",
+                "groupBy": null,
+                "isOutputTarget": true,
+                "label": "Area of revegetation works (Ha)",
+                "listName": "",
+                "name": "areaRevegHa",
+                "outputName": "Revegetation Details",
+                "units": "Ha"
+            },
+            "results": [
+                {
+                    "class": "au.org.ala.ecodata.reporting.Aggregators$AggregrationResult",
+                    "count": 1,
+                    "group": "",
+                    "outputName": null,
+                    "result": 32,
+                    "score": "au.org.ala.ecodata.reporting.Score@23521aaa",
+                    "units": null
+                }
+            ]
+        },
+        {
+            "groupTitle": null,
+            "score": {
+                "aggregationType": {
+                    "enumType": "au.org.ala.ecodata.reporting.Score$AGGREGATION_TYPE",
+                    "name": "SUM"
+                },
+                "category": "Revegetation",
+                "class": "au.org.ala.ecodata.reporting.Score",
+                "displayType": "",
+                "groupBy": null,
+                "isOutputTarget": true,
+                "label": "Number of plants planted",
+                "listName": null,
+                "name": "totalNumberPlanted",
+                "outputName": "Revegetation Details",
+                "units": ""
+            },
+            "results": [
+                {
+                    "class": "au.org.ala.ecodata.reporting.Aggregators$AggregrationResult",
+                    "count": 1,
+                    "group": "",
+                    "outputName": null,
+                    "result": 270,
+                    "score": "au.org.ala.ecodata.reporting.Score@131d816e",
+                    "units": null
+                }
+            ],
+            "target": "0"
+        },
+        {
+            "groupTitle": null,
+            "score": {
+                "aggregationType": {
+                    "enumType": "au.org.ala.ecodata.reporting.Score$AGGREGATION_TYPE",
+                    "name": "SUM"
+                },
+                "category": "Revegetation",
+                "class": "au.org.ala.ecodata.reporting.Score",
+                "displayType": "barchart",
+                "groupBy": null,
+                "isOutputTarget": true,
+                "label": "Kilograms of seed sown",
+                "listName": null,
+                "name": "totalSeedSownKg",
+                "outputName": "Revegetation Details",
+                "units": "Kg"
+            },
+            "results": [
+                {
+                    "class": "au.org.ala.ecodata.reporting.Aggregators$AggregrationResult",
+                    "count": 1,
+                    "group": "",
+                    "outputName": null,
+                    "result": 5.969999999999999,
+                    "score": "au.org.ala.ecodata.reporting.Score@7c72cc3b",
+                    "units": null
+                }
+            ]
+        },
+        {
+            "groupTitle": null,
+            "score": {
+                "aggregationType": {
+                    "enumType": "au.org.ala.ecodata.reporting.Score$AGGREGATION_TYPE",
+                    "name": "SUM"
+                },
+                "category": "Revegetation",
+                "class": "au.org.ala.ecodata.reporting.Score",
+                "displayType": "",
+                "groupBy": null,
+                "isOutputTarget": true,
+                "label": "Total seed collected (Kg)",
+                "listName": "",
+                "name": "totalSeedCollectedKg",
+                "outputName": "Seed Collection Details",
+                "units": "Kg"
+            },
+            "results": []
+        },
+        {
+            "groupTitle": null,
+            "score": {
+                "aggregationType": {
+                    "enumType": "au.org.ala.ecodata.reporting.Score$AGGREGATION_TYPE",
+                    "name": "SUM"
+                },
+                "category": "Revegetation",
+                "class": "au.org.ala.ecodata.reporting.Score",
+                "displayType": "",
+                "groupBy": null,
+                "isOutputTarget": true,
+                "label": "Total area prepared (Ha) for follow-up treatment actions",
+                "listName": null,
+                "name": "preparationAreaTotal",
+                "outputName": "Site Preparation Actions",
+                "units": "Ha"
+            },
+            "results": [
+                {
+                    "class": "au.org.ala.ecodata.reporting.Aggregators$AggregrationResult",
+                    "count": 2,
+                    "group": "",
+                    "outputName": null,
+                    "result": 62,
+                    "score": "au.org.ala.ecodata.reporting.Score@543b92dc",
+                    "units": null
+                }
+            ]
+        },
+        {
+            "groupTitle": null,
+            "score": {
+                "aggregationType": {
+                    "enumType": "au.org.ala.ecodata.reporting.Score$AGGREGATION_TYPE",
+                    "name": "COUNT"
+                },
+                "category": "Community Engagement and Capacity Building",
+                "class": "au.org.ala.ecodata.reporting.Score",
+                "displayType": "",
+                "groupBy": null,
+                "isOutputTarget": true,
+                "label": "Total No. of Community Participation and Engagement events run",
+                "listName": null,
+                "name": "eventTopics",
+                "outputName": "Event Details",
+                "units": null
+            },
+            "results": []
+        },
+        {
+            "groupTitle": null,
+            "score": {
+                "aggregationType": {
+                    "enumType": "au.org.ala.ecodata.reporting.Score$AGGREGATION_TYPE",
+                    "name": "SUM"
+                },
+                "category": "Natural Resources Management",
+                "class": "au.org.ala.ecodata.reporting.Score",
+                "displayType": "",
+                "groupBy": null,
+                "isOutputTarget": true,
+                "label": "Burnt area (Ha) - may be different to the total area managed",
+                "listName": null,
+                "name": "areaOfFireHa",
+                "outputName": "Fire Management Details",
+                "units": "Ha"
+            },
+            "results": []
+        },
+        {
+            "groupTitle": null,
+            "score": {
+                "aggregationType": {
+                    "enumType": "au.org.ala.ecodata.reporting.Score$AGGREGATION_TYPE",
+                    "name": "SUM"
+                },
+                "category": "Invasive Species Management - Weeds",
+                "class": "au.org.ala.ecodata.reporting.Score",
+                "displayType": "",
+                "groupBy": null,
+                "isOutputTarget": true,
+                "label": "Total area treated (Ha)",
+                "listName": null,
+                "name": "areaTreatedHa",
+                "outputName": "Weed Treatment Details",
+                "units": "Ha"
+            },
+            "results": [
+                {
+                    "class": "au.org.ala.ecodata.reporting.Aggregators$AggregrationResult",
+                    "count": 2,
+                    "group": "",
+                    "outputName": null,
+                    "result": 57,
+                    "score": "au.org.ala.ecodata.reporting.Score@2b40321c",
+                    "units": null
+                }
+            ],
+            "target": "30"
+        },
+        {
+            "groupTitle": null,
+            "score": {
+                "aggregationType": {
+                    "enumType": "au.org.ala.ecodata.reporting.Score$AGGREGATION_TYPE",
+                    "name": "SUM"
+                },
+                "category": "Natural Resources Management",
+                "class": "au.org.ala.ecodata.reporting.Score",
+                "displayType": "",
+                "groupBy": null,
+                "isOutputTarget": true,
+                "label": "Area managed with conservation grazing (Ha)",
+                "listName": null,
+                "name": "areaOfStockManagmentHa",
+                "outputName": "Stock Management Details",
+                "units": "Ha"
+            },
+            "results": []
+        },
+        {
+            "groupTitle": null,
+            "score": {
+                "aggregationType": {
+                    "enumType": "au.org.ala.ecodata.reporting.Score$AGGREGATION_TYPE",
+                    "name": "SUM"
+                },
+                "category": "Natural Resources Management",
+                "class": "au.org.ala.ecodata.reporting.Score",
+                "displayType": "",
+                "groupBy": null,
+                "isOutputTarget": true,
+                "label": "Weight of debris removed (Tonnes)",
+                "listName": null,
+                "name": "debrisWeightTonnes",
+                "outputName": "Debris Removal Details",
+                "units": "Tonnes"
+            },
+            "results": []
+        },
+        {
+            "groupTitle": null,
+            "score": {
+                "aggregationType": {
+                    "enumType": "au.org.ala.ecodata.reporting.Score$AGGREGATION_TYPE",
+                    "name": "SUM"
+                },
+                "category": "Natural Resources Management",
+                "class": "au.org.ala.ecodata.reporting.Score",
+                "displayType": "",
+                "groupBy": null,
+                "isOutputTarget": true,
+                "label": "Volume of debris removed (m3)",
+                "listName": null,
+                "name": "debrisVolumeM3",
+                "outputName": "Debris Removal Details",
+                "units": "m3"
+            },
+            "results": []
+        },
+        {
+            "groupTitle": null,
+            "score": {
+                "aggregationType": {
+                    "enumType": "au.org.ala.ecodata.reporting.Score$AGGREGATION_TYPE",
+                    "name": "SUM"
+                },
+                "category": "Natural Resources Management",
+                "class": "au.org.ala.ecodata.reporting.Score",
+                "displayType": "",
+                "groupBy": null,
+                "isOutputTarget": true,
+                "label": "Erosion area treated (Ha)",
+                "listName": null,
+                "name": "erosionAreaTreated",
+                "outputName": "Erosion Management Details",
+                "units": "Ha"
+            },
+            "results": []
+        },
+        {
+            "groupTitle": null,
+            "score": {
+                "aggregationType": {
+                    "enumType": "au.org.ala.ecodata.reporting.Score$AGGREGATION_TYPE",
+                    "name": "SUM"
+                },
+                "category": "Natural Resources Management",
+                "class": "au.org.ala.ecodata.reporting.Score",
+                "displayType": "",
+                "groupBy": null,
+                "isOutputTarget": true,
+                "label": "Length of stream/coastline treated (m)",
+                "listName": null,
+                "name": "erosionLength",
+                "outputName": "Erosion Management Details",
+                "units": "metres"
+            },
+            "results": []
+        },
+        {
+            "groupTitle": null,
+            "score": {
+                "aggregationType": {
+                    "enumType": "au.org.ala.ecodata.reporting.Score$AGGREGATION_TYPE",
+                    "name": "SUM"
+                },
+                "category": "Farm Management Practices",
+                "class": "au.org.ala.ecodata.reporting.Score",
+                "displayType": "",
+                "groupBy": null,
+                "isOutputTarget": true,
+                "label": "No. of farming entities adopting sustainable practice change",
+                "listName": null,
+                "name": "totalEntitiesAdoptingChange",
+                "outputName": "Management Practice Change Details",
+                "units": null
+            },
+            "results": []
+        },
+        {
+            "groupTitle": null,
+            "score": {
+                "aggregationType": {
+                    "enumType": "au.org.ala.ecodata.reporting.Score$AGGREGATION_TYPE",
+                    "name": "SUM"
+                },
+                "category": "Farm Management Practices",
+                "class": "au.org.ala.ecodata.reporting.Score",
+                "displayType": "",
+                "groupBy": null,
+                "isOutputTarget": true,
+                "label": "Area of land (Ha) on which improved management practices have been implemented",
+                "listName": null,
+                "name": "totalChangePracticeTreatedArea",
+                "outputName": "Management Practice Change Details",
+                "units": "Ha"
+            },
+            "results": []
+        },
+        {
+            "groupTitle": null,
+            "score": {
+                "aggregationType": {
+                    "enumType": "au.org.ala.ecodata.reporting.Score$AGGREGATION_TYPE",
+                    "name": "SUM"
+                },
+                "category": "Farm Management Practices",
+                "class": "au.org.ala.ecodata.reporting.Score",
+                "displayType": "",
+                "groupBy": null,
+                "isOutputTarget": true,
+                "label": "Area of land (Ha) changed to sustainable practices",
+                "listName": null,
+                "name": "benefitAreaHa",
+                "outputName": "Management Practice Change Details",
+                "units": "Ha"
+            },
+            "results": []
+        },
+        {
+            "groupTitle": null,
+            "score": {
+                "aggregationType": {
+                    "enumType": "au.org.ala.ecodata.reporting.Score$AGGREGATION_TYPE",
+                    "name": "SUM"
+                },
+                "category": "Invasive Species Management - Pest Animals",
+                "class": "au.org.ala.ecodata.reporting.Score",
+                "displayType": "barchart",
+                "groupBy": "output:targetSpecies.name",
+                "isOutputTarget": true,
+                "label": "No. of individual animals killed/removed by species",
+                "listName": "",
+                "name": "pestAnimalsTreatedNo",
+                "outputName": "Pest Management Details",
+                "units": ""
+            },
+            "results": []
+        },
+        {
+            "groupTitle": null,
+            "score": {
+                "aggregationType": {
+                    "enumType": "au.org.ala.ecodata.reporting.Score$AGGREGATION_TYPE",
+                    "name": "AVERAGE"
+                },
+                "category": "Revegetation",
+                "class": "au.org.ala.ecodata.reporting.Score",
+                "displayType": "piechart",
+                "groupBy": null,
+                "isOutputTarget": true,
+                "label": "Average survivability of tubestock and seedstock (%)",
+                "listName": "revegetationMonitoring",
+                "name": "survivalRate",
+                "outputName": "Vegetation Monitoring Results",
+                "units": null
+            },
+            "results": []
+        }
+    ]
+}

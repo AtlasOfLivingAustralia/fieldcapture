@@ -1,5 +1,6 @@
 package au.org.ala.fieldcapture
 
+import grails.converters.JSON
 import grails.test.GrailsUnitTestCase
 import org.grails.plugins.csv.CSVMapReader
 
@@ -15,7 +16,7 @@ class GmsMapperTest extends GrailsUnitTestCase{
     /**
      * Tests a project maps correctly.  No errors are present in the test data for this test.
      */
-    def testMapping() {
+    def testGmsToMeritMapping() {
 
         CSVMapReader reader = new CSVMapReader(new InputStreamReader(getClass().getResourceAsStream('/resources/gmsMappingTestData1.csv'), 'cp1252'))
         def rows = reader.readAll()
@@ -72,6 +73,35 @@ class GmsMapperTest extends GrailsUnitTestCase{
         }
 
     }
+
+    /**
+     * Tests a project maps correctly.  No errors are present in the test data for this test.
+     */
+    def testMeritToGmsMapping() {
+
+        def projectJson = getClass().getResource('/resources/meritMappingTestData1.json').text
+        def project = JSON.parse(projectJson)
+
+        def gmsRows = gmsMapper.exportToGMS(project)
+
+        def projectDetailsRow = gmsRows[0]
+        assertEquals('B001234567G', projectDetailsRow.APP_ID)
+        assertEquals('LSP-12345-678', projectDetailsRow.EXTERNAL_ID)
+        assertEquals('Biodiversity Fund', projectDetailsRow.PROGRAM_NM)
+        assertEquals('Round 1', projectDetailsRow.ROUND_NM)
+        assertEquals('Project name test', projectDetailsRow.APP_NM)
+        assertEquals('Project test description', projectDetailsRow.APP_DESC)
+        assertEquals('Test organisation', projectDetailsRow.ORG_TRADING_NAME)
+        assertEquals('01/07/2011', projectDetailsRow.START_DT)
+        assertEquals('11/09/2017', projectDetailsRow.FINISH_DT)
+        assertEquals('1', projectDetailsRow.FUNDING)
+
+
+
+        println gmsRows
+
+    }
+
 
 
 }
