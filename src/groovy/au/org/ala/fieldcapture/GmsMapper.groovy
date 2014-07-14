@@ -2,12 +2,12 @@ package au.org.ala.fieldcapture
 
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
-
 /**
  * Knows how to map from the format supplied by the GMS into projects, sites and activities.
  */
 class GmsMapper {
 
+    public static final List GMS_COLUMNS = ['PROGRAM_NM',	'ROUND_NM',	'APP_ID', 'EXTERNAL_ID', 'APP_NM', 'APP_DESC',	'START_DT',	'FINISH_DT', 'FUNDING',	'APPLICANT_NAME', 'ORG_TRADING_NAME', 'APPLICANT_EMAIL', 'AUTHORISEDP_CONTACT_TYPE', 'AUTHORISEDP_EMAIL', 'GRANT_MGR_EMAIL', 'DATA_TYPE', 'ENV_DATA_TYPE',	'PGAT_PRIORITY', 'PGAT_GOAL_CATEGORY',	'PGAT_GOALS', 'PGAT_OTHER_DETAILS','PGAT_PRIMARY_ACTIVITY','PGAT_ACTIVITY_DELIVERABLE','PGAT_ACTIVITY_TYPE','PGAT_ACTIVITY_UNIT','PGAT_UOM', 'PGAT_REPORTED_PROGRESS']
 
     // These identify the data contained in the row.
     static final LOCATION_DATA_TYPE = 'Location Data'
@@ -235,7 +235,18 @@ class GmsMapper {
         if (!value) {
             return 0
         }
-        return new BigDecimal(value).doubleValue()
+        BigDecimal result
+        try {
+            if (value instanceof String) {
+                value = value.replaceAll(",", "")
+            }
+            result = new BigDecimal(value)
+        }
+        catch (Exception e) {
+            println e
+            result = new BigDecimal(0)
+        }
+        result.doubleValue()
     }
 
     /**
@@ -252,6 +263,7 @@ class GmsMapper {
         if (project.outputTargets) {
 
             // We only want to map scores with non-zero targets
+
             project.outputTargets.findAll{convertDecimal(it.target)}.each { outputTarget ->
 
                 def mappedOutputTarget = mapOutputTarget(outputTarget, project.outputSummary)
@@ -272,6 +284,34 @@ class GmsMapper {
 
         return resultRows
     }
+
+    public void toCsv(projects, writer) {
+
+        writer.println(GMS_COLUMNS.join(','))
+        projects.each { project ->
+
+            def projectRows = exportToGMS(project)
+            projectRows.each { mapRow ->
+
+                StringBuilder row = new StringBuilder()
+                GMS_COLUMNS.each {
+
+                    if (row) { row.append(',')}
+                    row.append(writeCsvValue(mapRow[it]))
+                }
+                writer.println(row)
+            }
+
+        }
+        writer.flush()
+    }
+
+    private def writeCsvValue(val) {
+        if (!val) return ''
+
+        return "\"${val.replaceAll("\"", "\"\"")}\""
+    }
+
 
     private def meritToGMS(project, mapping) {
 

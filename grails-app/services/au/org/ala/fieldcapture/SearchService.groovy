@@ -140,4 +140,11 @@ class SearchService {
 
 
     }
+
+    def projectReports(params) {
+
+        def url = grailsApplication.config.ecodata.baseUrl + 'search/downloadSearchResults' + commonService.buildUrlParamsFromMap(params)
+
+        webService.doPost(url, [:])
+    }
 }

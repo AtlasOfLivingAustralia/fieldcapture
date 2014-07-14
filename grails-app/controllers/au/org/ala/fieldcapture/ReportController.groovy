@@ -85,4 +85,19 @@ class ReportController {
 
     }
 
+    def gmsExportSummary() {
+
+
+        params.type = 'outputSummary'
+        def results = searchService.projectReports(params)
+
+        GmsMapper mapper = new GmsMapper()
+
+        response.setContentType('text/csv')
+        mapper.toCsv(results.resp, response.getWriter())
+
+        response.getWriter().flush()
+
+    }
+
 }

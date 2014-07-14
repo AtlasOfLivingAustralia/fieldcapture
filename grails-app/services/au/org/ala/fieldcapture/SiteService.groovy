@@ -176,7 +176,7 @@ class SiteService {
             if (!result.error) {
                 def id = result.resp.id
                 if (!result.resp.error) {
-                    sites << createSite(projectId, name, description, '', id, geom.centriod.getY(), geom.centriod.getX())
+                    sites << createSite(projectId, name, description, '', id, geom.centroid.getY(), geom.centroid.getX())
                 }
             }
 
