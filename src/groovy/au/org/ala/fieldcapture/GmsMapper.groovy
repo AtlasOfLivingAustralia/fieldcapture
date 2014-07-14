@@ -87,22 +87,22 @@ class GmsMapper {
     ]
 
     def outputTargetMapping = [
-            'Revegetation(no. of plants)no':[outputLabel:'Revegetation Details', scoreLabel:'Number of plants planted', scoreName:'totalNumberPlanted', units:''],
-            'Revegetation(area of works)ha':[outputLabel:'Revegetation Details', scoreLabel:'Area of revegetation works (Ha)', scoreName:'areaRevegHa', units:'Ha'],
-            'Weed treatment(total area)ha':[outputLabel:'Weed Treatment Details', scoreLabel:'Total area treated (Ha)', scoreName:'areaTreatedHa', units:'Ha'],
-            'Plant propagation(no. of plants)no':[outputLabel:'Plant Propagation Details', scoreLabel:'Total No. of plants grown and ready for planting', scoreName:'totalNumberGrown', units:''],
-            'Community participation and engagement(events)no':[outputLabel:'Event Details', scoreLabel:'Total No. of Community Participation and Engagement events run', scoreName:'eventTopics', units:''],
-            'Erosion management(length)km':[outputLabel:'Erosion Management Details', scoreLabel:'Length of stream/coastline treated (Km)', scoreName:'erosionLength', units:'Km'], // CG - spreadsheet from GMS uses km...
-            'Fauna (biological) survey(reports)no':[outputLabel:'Fauna Survey Details',scoreLabel:'No. of surveys undertaken',scoreName:'totalNumberOfOrganisms', units:''], // Not currently output target
-            'Fencing(length)km':[outputLabel:'Fence Details', scoreLabel:'Total length of fence (Km)', scoreName:'lengthOfFence', units:'Km'],
-            'Fire management(length)km':[outputLabel:'Fire Management Details', scoreLabel:''], // Currently no score for length in fire management
-            'Flora (biological) survey(reports)no':[outputLabel:'Flora Survey Details', scoreLabel:'No. of surveys undertaken', scoreName:'totalNumberOfOrganisms', units:''], // Not currently output target
-            'Public access management(reports)no':[outputLabel:'Access Control Details', scoreLabel:'No. of activities implementing access control works', scoreName:'structuresInstalled', units:''], // Not currently output target
-            'Seed collection(collected)kg':[outputLabel:'Seed Collection Details', scoreLabel:'Total seed collected (Kg)', scoreName:'totalSeedCollectedKg', units:'Kg'],
-            'Site preparation(total area treated/prepared)ha':[outputLabel:'Site Preparation Actions', scoreLabel:'Total area prepared (Ha) for follow-up treatment actions', scoreName:'preparationAreaTotal', units:'Ha'],
-            'Site assessment(reports)no':[outputLabel:'', scoreLabel: ''], // no scores configured for Vegetation Assessment - Commonwealth government methodology
-            'Vegetation monitoring and related activities(sites)no':[outputLabel:'', scoreLabel:''], // no scores configured for Vegetation Assessment - Commonwealth government methodology
-            'Water quality survey and assessment(reports)no':[outputLabel:'Water Quality Measurements', scoreLabel:'No. of water quality monitoring events undertaken', scoreName:'instrumentCalibration', units:'' ] // NOt sure if this is exactly what we want.
+            ['Revegetation', '(no. of plants)', 'no']:[outputLabel:'Revegetation Details', scoreLabel:'Number of plants planted', scoreName:'totalNumberPlanted', units:''],
+            ['Revegetation', '(area of works)', 'ha']:[outputLabel:'Revegetation Details', scoreLabel:'Area of revegetation works (Ha)', scoreName:'areaRevegHa', units:'Ha'],
+            ['Weed treatment','(total area)','ha']:[outputLabel:'Weed Treatment Details', scoreLabel:'Total area treated (Ha)', scoreName:'areaTreatedHa', units:'Ha'],
+            ['Plant propagation', '(no. of plants)','no']:[outputLabel:'Plant Propagation Details', scoreLabel:'Total No. of plants grown and ready for planting', scoreName:'totalNumberGrown', units:''],
+            ['Community participation and engagement','(events)','no']:[outputLabel:'Event Details', scoreLabel:'Total No. of Community Participation and Engagement events run', scoreName:'eventTopics', units:''],
+            ['Erosion management','(length)','km']:[outputLabel:'Erosion Management Details', scoreLabel:'Length of stream/coastline treated (Km)', scoreName:'erosionLength', units:'Km'], // CG - spreadsheet from GMS uses km...
+            ['Fauna (biological) survey','(reports)','no']:[outputLabel:'Fauna Survey Details',scoreLabel:'No. of surveys undertaken',scoreName:'totalNumberOfOrganisms', units:''], // Not currently output target
+            ['Fencing', '(length)','km']:[outputLabel:'Fence Details', scoreLabel:'Total length of fence (Km)', scoreName:'lengthOfFence', units:'Km'],
+            ['Fire management','(length)','km']:[outputLabel:'Fire Management Details', scoreLabel:''], // Currently no score for length in fire management
+            ['Flora (biological) survey','(reports)','no']:[outputLabel:'Flora Survey Details', scoreLabel:'No. of surveys undertaken', scoreName:'totalNumberOfOrganisms', units:''], // Not currently output target
+            ['Public access management','(reports)','no']:[outputLabel:'Access Control Details', scoreLabel:'No. of activities implementing access control works', scoreName:'structuresInstalled', units:''], // Not currently output target
+            ['Seed collection','(collected)','kg']:[outputLabel:'Seed Collection Details', scoreLabel:'Total seed collected (Kg)', scoreName:'totalSeedCollectedKg', units:'Kg'],
+            ['Site preparation','(total area treated/prepared)','ha']:[outputLabel:'Site Preparation Actions', scoreLabel:'Total area prepared (Ha) for follow-up treatment actions', scoreName:'preparationAreaTotal', units:'Ha'],
+            ['Site assessment','(reports)','no']:[outputLabel:'', scoreLabel: ''], // no scores configured for Vegetation Assessment - Commonwealth government methodology
+            ['Vegetation monitoring and related activities','(sites)','no']:[outputLabel:'', scoreLabel:''], // no scores configured for Vegetation Assessment - Commonwealth government methodology
+            ['Water quality survey and assessment','(reports)','no']:[outputLabel:'Water Quality Measurements', scoreLabel:'No. of water quality monitoring events undertaken', scoreName:'instrumentCalibration', units:'' ] // NOt sure if this is exactly what we want.
 
     ]
 
@@ -171,7 +171,7 @@ class GmsMapper {
 
         def map = gmsToMerit(rowMap, outputTargetColumnMapping)
 
-        def key = map.type.trim()+map.gmsScore.trim()+map.units.trim()
+        def key = [map.type.trim(), map.gmsScore.trim(), map.units.trim()]
 
         def result = [target:map.target]
         result.putAll(outputTargetMapping[key])
@@ -232,6 +232,9 @@ class GmsMapper {
     }
 
     private def convertDecimal(value) {
+        if (!value) {
+            return 0
+        }
         return new BigDecimal(value).doubleValue()
     }
 
@@ -239,17 +242,31 @@ class GmsMapper {
      * Maps a project into a List of Maps representing rows in the GMS spreadsheet format.
      * @param project the project to export.
      */
-    def exportToGMS(project, metaDataModel) {
+    def exportToGMS(project) {
 
         def resultRows = []
 
         // These need to be included in every row mapped.
         def projectDetails = meritToGMS(project, projectMapping)
 
-        project.outputTargets.each { outputTarget ->
+        if (project.outputTargets) {
 
-            def mappedOutputTarget = mapOutputTarget(outputTarget)
+            // We only want to map scores with non-zero targets
+            project.outputTargets.findAll{convertDecimal(it.target)}.each { outputTarget ->
 
+                def mappedOutputTarget = mapOutputTarget(outputTarget, project.outputSummary)
+
+                def row = [:]
+                row.putAll(projectDetails)
+                row.putAll([(DATA_TYPE_COLUMN): ACTIVITY_DATA_TYPE, (DATA_SUB_TYPE_COLUMN): ACTIVITY_DATA_SUB_TYPE])
+                row.putAll(mappedOutputTarget)
+
+                resultRows << row
+
+            }
+        }
+        else {
+            resultRows << projectDetails
         }
 
 
@@ -273,15 +290,35 @@ class GmsMapper {
     }
 
 
-    private def mapOutputTarget(outputTarget) {
+    private def mapOutputTarget(outputTarget, outputSummary) {
 
-//        "outputLabel": "Weed Treatment Details",
-//        "target": "30",
-//        "units": "Ha",
-//        "scoreLabel": "Total area treated (Ha)",
-//        "scoreName": "areaTreatedHa"
+        // Reverse key's and values in map.
 
-        [:]
+        def meritToGmsTargets = outputTargetMapping.collectEntries {key, value-> [(value):key]}
+
+        def gmsTargets
+        if (meritToGmsTargets[outputTarget]) {
+            gmsTargets = meritToGmsTargets[outputTarget]
+        }
+        else {
+
+            gmsTargets = [outputTarget.outputLabel, outputTarget.scoreLabel, outputTarget.units]
+        }
+        gmsTargets << formatDecimal(outputTarget.target)
+
+        def score = outputSummary.find {it.score.outputName == outputTarget.outputLabel && it.score.label == outputTarget.scoreLabel}
+
+        def result = [PGAT_ACTIVITY_DELIVERABLE: gmsTargets[0], PGAT_ACTIVITY_TYPE:gmsTargets[1], PGAT_UOM: gmsTargets[2], PGAT_ACTIVITY_UNIT:gmsTargets[3]]
+
+        if (score && score.results) {
+            result << [PGAT_REPORTED_PROGRESS:formatDecimal(score.results[0].result)]
+        }
+        else {
+            result << [PGAT_REPORTED_PROGRESS: '0']
+        }
+
+        result
+
     }
 
 

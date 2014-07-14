@@ -50,7 +50,7 @@
             "outputLabel": "Revegetation Details",
             "target": 30,
             "units": "Ha",
-            "scoreLabel": "Area of works",
+            "scoreLabel": "Area of revegetation works (Ha)",
             "scoreName": "areaOfWorks"
         },
         {

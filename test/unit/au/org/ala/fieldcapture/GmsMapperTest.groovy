@@ -3,6 +3,7 @@ package au.org.ala.fieldcapture
 import grails.converters.JSON
 import grails.test.GrailsUnitTestCase
 import org.grails.plugins.csv.CSVMapReader
+import org.junit.Before
 
 /**
  * Tests the GmsMapper
@@ -11,7 +12,11 @@ class GmsMapperTest extends GrailsUnitTestCase{
 
 
 
-    def gmsMapper = new GmsMapper()
+    def gmsMapper
+    @Before
+    public void setUp() {
+        gmsMapper = new GmsMapper()
+    }
 
     /**
      * Tests a project maps correctly.  No errors are present in the test data for this test.
@@ -36,7 +41,7 @@ class GmsMapperTest extends GrailsUnitTestCase{
         assertEquals('Green Army Round 1', project.associatedSubProgram)
         assertEquals(expectedStartDate, project.plannedStartDate)
         assertEquals(expectedEndDate, project.plannedEndDate)
-        assertEquals('', project.funding)
+        assertEquals(0, project.funding)
         assertEquals('not approved', project.planStatus)
 
         // TODO check timeline!
@@ -51,7 +56,7 @@ class GmsMapperTest extends GrailsUnitTestCase{
         def expectedTypes = ['Revegetation', 'Weed Treatment', 'Plant Propagation']
         activities.eachWithIndex { activity, i ->
             assertEquals(expectedTypes[i], activity.type)
-            assertEquals("Activity ${i}", activity.description)
+            assertEquals("Activity ${i+1}", activity.description)
             assertEquals(expectedStartDate, activity.plannedStartDate)
             assertEquals(expectedEndDate, activity.plannedEndDate)
             assertEquals('Protect and conserve Australia\u2019s natural, historic and Indigenous heritage.', activity.mainTheme)
@@ -81,24 +86,47 @@ class GmsMapperTest extends GrailsUnitTestCase{
 
         def projectJson = getClass().getResource('/resources/meritMappingTestData1.json').text
         def project = JSON.parse(projectJson)
-
         def gmsRows = gmsMapper.exportToGMS(project)
 
-        def projectDetailsRow = gmsRows[0]
-        assertEquals('B001234567G', projectDetailsRow.APP_ID)
-        assertEquals('LSP-12345-678', projectDetailsRow.EXTERNAL_ID)
-        assertEquals('Biodiversity Fund', projectDetailsRow.PROGRAM_NM)
-        assertEquals('Round 1', projectDetailsRow.ROUND_NM)
-        assertEquals('Project name test', projectDetailsRow.APP_NM)
-        assertEquals('Project test description', projectDetailsRow.APP_DESC)
-        assertEquals('Test organisation', projectDetailsRow.ORG_TRADING_NAME)
-        assertEquals('01/07/2011', projectDetailsRow.START_DT)
-        assertEquals('11/09/2017', projectDetailsRow.FINISH_DT)
-        assertEquals('1', projectDetailsRow.FUNDING)
+
+        def expectedTargets = [
+                ['Weed Treatment Details', 'Total area treated (Ha)', 'Ha', '30', '57'],
+                ['Fence Details', 'Total length of fence', 'Km', '3', '0'],
+                ['Revegetation Details', 'Area of revegetation works (Ha)', 'Ha', '30', '32']
+        ]
+
+        assertEquals(3, gmsRows.size())
+
+        // These should be duplicated on every row.
+        gmsRows.eachWithIndex { row, i ->
+
+             // Project details should be in every row.
+            assertEquals('B001234567G', row.APP_ID)
+            assertEquals('LSP-12345-678', row.EXTERNAL_ID)
+            assertEquals('Biodiversity Fund', row.PROGRAM_NM)
+            assertEquals('Round 1', row.ROUND_NM)
+            assertEquals('Project name test', row.APP_NM)
+            assertEquals('Project test description', row.APP_DESC)
+            assertEquals('Test organisation', row.ORG_TRADING_NAME)
+            assertEquals('01/07/2011', row.START_DT)
+            assertEquals('11/09/2017', row.FINISH_DT)
+            assertEquals('1', row.FUNDING)
 
 
 
-        println gmsRows
+            assertEquals('Environmental Data', row.DATA_TYPE)
+            assertEquals('Activities', row.ENV_DATA_TYPE)
+
+
+            def expectedTarget = expectedTargets[i]
+
+            assertEquals(expectedTarget[0], row.PGAT_ACTIVITY_DELIVERABLE)
+            assertEquals(expectedTarget[1], row.PGAT_ACTIVITY_TYPE)
+            assertEquals(expectedTarget[2], row.PGAT_UOM)
+            assertEquals(expectedTarget[3], row.PGAT_ACTIVITY_UNIT)
+            assertEquals(expectedTarget[4], row.PGAT_REPORTED_PROGRESS)
+
+        }
 
     }
 
