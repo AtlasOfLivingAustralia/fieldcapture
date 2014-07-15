@@ -354,12 +354,22 @@ class ActivityController {
                     result = [status: 200, data:data]
                 }
 
-                render result as JSON
+                // This is returned to the browswer as a text response due to workaround the warning
+                // displayed by IE8/9 when JSON is returned from an iframe submit.
+                response.setContentType('text/plain;charset=UTF8')
+                def resultJson = result as JSON
+                render resultJson.toString();
             }
         }
-        response.status = 400
-        def result = [status: 400, error:'No file attachment found']
-        render result as JSON
+        else {
+            response.status = 400
+            def result = [status: 400, error:'No file attachment found']
+            // This is returned to the browswer as a text response due to workaround the warning
+            // displayed by IE8/9 when JSON is returned from an iframe submit.
+            response.setContentType('text/plain;charset=UTF8')
+            def resultJson = result as JSON
+            render result as JSON
+        }
     }
 
     static final int MAX_SHEET_NAME_LENGTH = 31
