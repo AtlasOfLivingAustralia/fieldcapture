@@ -106,17 +106,24 @@ class GmsMapper {
 
     ]
 
-    def createProject(projectRows) {
+    def mapProject(projectRows) {
 
         def errors = []
-        def project = gmsToMerit(projectRows[0], projectMapping) // All project rows have the project details.
+        def result = gmsToMerit(projectRows[0], projectMapping) // All project rows have the project details.
+
+        def project = result.mappedData
+        errors.addAll(result.errors)
+
         project.planStatus = 'not approved'
 
         // TODO more than one location row?
         def siteRow = projectRows.find{it[DATA_TYPE_COLUMN] == LOCATION_DATA_TYPE}
         def sites = []
         if (siteRow) {
-            def site = gmsToMerit(siteRow, siteMapping)
+
+            def siteResult = gmsToMerit(siteRow, siteMapping)
+            def site = siteResult.mappedData
+            errors.addAll(siteResult.errors)
 
             if (site.kmlUrl) {
                 site.kmlUrl = site.kmlUrl.replace('edit', 'kml')
@@ -137,7 +144,10 @@ class GmsMapper {
         def activityRows = projectRows.findAll{it[DATA_TYPE_COLUMN] == ACTIVITY_DATA_TYPE && it[DATA_SUB_TYPE_COLUMN] == ACTIVITY_DATA_SUB_TYPE}
         def activities = []
         activityRows.eachWithIndex { activityRow, i ->
-            def activity = gmsToMerit(activityRow, activityMapping)
+            def activityResult = gmsToMerit(activityRow, activityMapping)
+            def activity = activityResult.mappedData
+            errors.addAll(activityResult.errors)
+
             def unmappedType = activity.type
             activity.type = activityTypeMapping[unmappedType]
 
@@ -151,7 +161,9 @@ class GmsMapper {
 
                 activities << activity
 
-                def target = mapTarget(activityRow)
+                def targetResult = mapTarget(activityRow)
+                def target = targetResult.mappedData
+                errors.addAll(targetResult.errors)
                 if (!project.outputTargets) {
                     project.outputTargets = []
                 }
@@ -169,16 +181,17 @@ class GmsMapper {
 
     private def mapTarget(rowMap) {
 
+        def errors = []
         def map = gmsToMerit(rowMap, outputTargetColumnMapping)
+        def target = map.mappedData
+        errors.addAll(map.errors)
 
-        def key = [map.type.trim(), map.gmsScore.trim(), map.units.trim()]
+        def key = [target.type, target.gmsScore, target.units]
 
         def result = [target:map.target]
         result.putAll(outputTargetMapping[key])
-        if (map.errors) {
-            result.errors = map.errors
-        }
-        result
+
+        [mappedData:result, errors: errors]
     }
 
     private def gmsToMerit(rowMap, mapping) {
@@ -194,10 +207,8 @@ class GmsMapper {
                 errors << "Error converting value: ${rowMap[entry.key]} from row ${rowMap.index} column: ${entry.key}, ${e.getMessage()}"
             }
         }
-        if (errors.size() > 0) {
-            result.errors = errors
-        }
-        result
+
+        [mappedData:result, errors:errors]
     }
 
     private def convertByType(String value, String type) {

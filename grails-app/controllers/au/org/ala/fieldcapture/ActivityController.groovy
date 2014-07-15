@@ -358,7 +358,7 @@ class ActivityController {
                 // displayed by IE8/9 when JSON is returned from an iframe submit.
                 response.setContentType('text/plain;charset=UTF8')
                 def resultJson = result as JSON
-                render resultJson.toString();
+                render resultJson.toString()
             }
         }
         else {
@@ -368,7 +368,7 @@ class ActivityController {
             // displayed by IE8/9 when JSON is returned from an iframe submit.
             response.setContentType('text/plain;charset=UTF8')
             def resultJson = result as JSON
-            render result as JSON
+            render resultJson.toString()
         }
     }
 

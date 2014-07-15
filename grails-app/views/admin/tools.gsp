@@ -123,11 +123,24 @@
         </td>
     </tr>
     <tr>
+        <td>
+            <a style="color:white" class="btn btn-small btn-info" href="${createLink(controller:'admin', action:'gmsProjectImport')}">Import GMS project data</a>
+        </td>
+        <td>
+            Imports projects from the GMS using the new format.
+        </td>
+    </tr>
+    <tr>
         <td><button disabled id="btnLoadProjectData" class="btn btn-small btn-info" title="Load project data">Load Projects from CSV</button>
         </td>
         <td>
             Loads (or reloads) project information from a csv file.
-            <p><g:uploadForm class="loadProjectData" controller="admin" action="importProjectData"><input id="projectData" type="file" accept="text/csv" name="projectData"/><input type="checkbox" name="newFormat">Select if the project data is using the new GMS format<input type="checkbox" name="importWithErrors">Force import (even with validation errors)</g:uploadForm></p>
+            <p><g:uploadForm class="loadProjectData" controller="admin" action="importProjectData">
+               <div><input id="projectData" type="file" accept="text/csv" name="projectData"/></div>
+               <div><input type="checkbox" name="importWithErrors">Force import (even with validation errors)</div>
+              </g:uploadForm>
+
+           </p>
         </td>
     </tr>
     <tr>

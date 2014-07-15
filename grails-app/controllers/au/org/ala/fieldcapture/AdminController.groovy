@@ -283,6 +283,10 @@ class AdminController {
         render 'done'
     }
 
+    def gmsProjectImport() {
+        render(view:'import', model:[:])
+    }
+
     /**
      * Accepts a CSV file (as a multipart file upload) and validates and loads project, site & institution data from it.
      * @return an error message if the CSV file is invalid, otherwise writes a CSV file describing any validation
@@ -297,7 +301,14 @@ class AdminController {
 
                 def results
                 if (params.newFormat) {
-                    results = importService.gmsImport(file.inputStream)
+                    def status = [finished:false, projects:[]]
+                    session.status = status
+                    importService.gmsImport(file.inputStream, status.projects, true) //params.preview)
+                    status.finished = true
+
+                    def statusJson = status as JSON
+                    render contentType: 'text/plain', status: 200, text:statusJson
+                    return
                 }
                 else {
                     results = importService.importProjectsByCsv(file.inputStream, params.importWithErrors)
@@ -324,6 +335,10 @@ class AdminController {
         }
 
         render contentType: 'text/json', status:400, text:'{"error":"No file supplied"}'
+    }
+
+    def importStatus() {
+        render session.status as JSON
     }
 
     /**

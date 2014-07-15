@@ -1174,7 +1174,10 @@ class ImportService {
 
     }
 
-    def gmsImport(InputStream csv) {
+
+    def gmsImport(InputStream csv, status, preview) {
+
+        def action = preview?{rows -> mapProjectRows(rows, status)}:{rows -> importAll(rows, status)}
 
         cacheService.clear(PROJECTS_CACHE_KEY)
         def reader = new InputStreamReader(csv)
@@ -1187,7 +1190,8 @@ class ImportService {
                 def currentGrantId = rowMap[GmsMapper.GRANT_ID_COLUMN]
                 // We have read all the details for a project.
                 if (currentGrantId != prevGrantId && prevGrantId) {
-                    importAll(projectRows)
+
+                    action(projectRows)
 
                     projectRows = []
                 }
@@ -1196,7 +1200,7 @@ class ImportService {
                 prevGrantId = currentGrantId
             }
             // import the last project
-            importAll(projectRows)
+            action(projectRows)
 
 
         }
@@ -1205,31 +1209,58 @@ class ImportService {
         }
     }
 
-    def importAll(projectRows) {
+    def mapProjectRows(projectRows, status) {
 
         def mapper = new GmsMapper()
+        def projectDetails = mapper.mapProject(projectRows)
+        def grantId = projectDetails.project.grantId?:'<not mapped>'
+        def externalId = projectDetails.project.externalId?:'<not mapped>'
 
-        def projectDetails = mapper.createProject(projectRows)
+        status << [grantId:grantId, externalId:externalId, success:projectDetails.errors.size() == 0, errors:projectDetails.errors]
+    }
 
-        importProject(projectDetails.project, false) // Do not overwrite existing projects because of the impacts to sites / activities etc.
+    def importAll(projectRows, status) {
 
-        def sites = projectDetails.sites
-        sites.each { site ->
-            def created = false
-            if (site.kmlUrl) {
-                def kml = webService.get(site.kmlUrl, false)
-                def result = siteService.createSitesFromKml(kml, projectDetails.project.projectId)
-                created = !result.error
+        def mapper = new GmsMapper()
+        def projectDetails = mapper.mapProject(projectRows)
+
+        def grantId = projectDetails.project.grantId?:'<not mapped>'
+        def externalId = projectDetails.project.externalId?:'<not mapped>'
+        if (!projectDetails.error) {
+
+            def result = importProject(projectDetails.project, false) // Do not overwrite existing projects because of the impacts to sites / activities etc.
+
+            if (result.status.project == 'existing') {
+                status << [grantId:grantId, externalId:externalId, success:false, errors:['Project already exists in MERIT, skipping']]
+                return
             }
-            if (!created) {
-                siteService.createSiteFromPoint(projectDetails.project.projectId, site.name, site.description, site.lat, site.lon)
+            def sites = projectDetails.sites
+            sites.each { site ->
+                def created = false
+                if (site.kmlUrl) {
+                    def kml = webService.get(site.kmlUrl, false)
+                    def sitesCreated = siteService.createSitesFromKml(kml, projectDetails.project.projectId)
+                    if (!sitesCreated) {
+                        status << [grantId:grantId, externalId:externalId, success:false, errors:["Unable to create sites from ${site.kmlUrl}"]]
+                        return
+                    }
+                }
+                if (!created) {
+                    siteService.createSiteFromPoint(projectDetails.project.projectId, site.name, site.description, site.lat, site.lon)
+                }
             }
+
+            def activities = projectDetails.activities
+            activities.each { activity ->
+                activity.projectId = projectDetails.project.projectId
+                activityService.update('', activity)
+            }
+            status << [grantId:grantId, externalId:externalId, success:projectDetails.errors.size() == 0, errors:projectDetails.errors]
+
         }
+        else {
+            status << [grantId:grantId, externalId:externalId, success:false, errors:projectDetails.errors]
 
-        def activities = projectDetails.activities
-        activities.each { activity ->
-            activity.projectId = projectDetails.project.projectId
-            activityService.update('', activity)
         }
     }
 
