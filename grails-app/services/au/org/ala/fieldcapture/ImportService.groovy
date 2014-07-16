@@ -31,6 +31,9 @@ class ImportService {
     def grailsApplication
     def userService
 
+    def roleAdmin = "admin"
+    def roleGrantManager = "caseManager"
+
     /**
      * Looks for columns "Grant ID","Sub-project ID","Recipient email 1","Recipient email 2","Grant manager email" and
      * creates project admin roles for recipient emails 1 & 2, and the case manager role for Grant manager email
@@ -39,8 +42,7 @@ class ImportService {
      */
     def importUserPermissionsCsv(InputStream csv) {
         def results = [success:false, validationErrors:[], message:""]
-        def roleAdmin = "admin"
-        def roleCaseManager = "caseManager"
+
 
         if (!csv) {
             results.message = "Invalid file - stream empty!"
@@ -142,7 +144,7 @@ class ImportService {
 
                 if (caseManagerId) {
                     if (!userService.isUserCaseManagerForProject(caseManagerId, project.projectId)) {
-                        def ret = userService.addUserAsRoleToProject(caseManagerId, project.projectId, roleCaseManager)
+                        def ret = userService.addUserAsRoleToProject(caseManagerId, project.projectId, roleGrantManager)
                         if (ret?.error) {
                             logError("Error occurred applying caseManager role to ${caseManager} for project ${project.projectId}: ${ret.error}")
                         }
@@ -1233,11 +1235,34 @@ class ImportService {
         def externalId = projectDetails.project.externalId?:'<not mapped>'
         if (!projectDetails.error) {
 
+            def adminEmail = projectDetails.project.remove('adminEmail')
+            def grantManagerEmail = projectDetails.project.remove('grantManagerEmail')
+
             def result = importProject(projectDetails.project, false) // Do not overwrite existing projects because of the impacts to sites / activities etc.
 
             if (result.project == 'existing') {
                 status << [grantId:grantId, externalId:externalId, success:false, errors:['Project already exists in MERIT, skipping']]
                 return
+            }
+
+            def projectId = projectDetails.project.projectId
+
+
+            if (adminEmail) {
+                def userId = userService.checkEmailExists(adminEmail)
+                if (userId) {
+                    userService.addUserAsRoleToProject(userId, projectId, roleAdmin)
+                } else {
+                    projectDetails.errors << "${adminEmail} is not registered with the ALA"
+                }
+            }
+            if (grantManagerEmail) {
+                def userId = userService.checkEmailExists(grantManagerEmail)
+                if (userId) {
+                    userService.addUserAsRoleToProject(userId, projectId, roleGrantManager)
+                } else {
+                    projectDetails.errors << "${adminEmail} is not registered with the ALA"
+                }
             }
             def sites = projectDetails.sites
             sites.each { site ->
@@ -1247,7 +1272,7 @@ class ImportService {
 
                     try {
                         def kml = webService.get(site.kmlUrl, false)
-                        sitesCreated = siteService.createSitesFromKml(kml, projectDetails.project.projectId)
+                        sitesCreated = siteService.createSitesFromKml(kml, projectId)
                     }
                     catch (Exception e) {
                         log.error("Unable to create sites from ${site.kmlUrl}, message: ${e.getMessage()}", e)

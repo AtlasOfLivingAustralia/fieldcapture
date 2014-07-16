@@ -1,5 +1,7 @@
 package au.org.ala.fieldcapture
 
+import org.apache.commons.validator.EmailValidator
+
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 /**
@@ -45,7 +47,9 @@ class GmsMapper {
             ORG_TRADING_NAME:[name:'organisationName', type:'string'],
             START_DT:[name:'plannedStartDate', type:'date'],
             FINISH_DT:[name:'plannedEndDate', type:'date'],
-            FUNDING:[name:'funding', type:'decimal']
+            FUNDING:[name:'funding', type:'decimal'],
+            AUTHORISEDP_EMAIL:[name:'adminEmail', type:'email'],
+            GRANT_MGR_EMAIL:[name:'grantManagerEmail', type:'email']
     ]
 
     def siteMapping = [
@@ -122,8 +126,9 @@ class GmsMapper {
 
         def project = result.mappedData
         errors.addAll(result.errors)
-
         project.planStatus = 'not approved'
+
+
 
         // TODO more than one location row?
         def siteRow = projectRows.find{it[DATA_TYPE_COLUMN] == LOCATION_DATA_TYPE}
@@ -260,6 +265,12 @@ class GmsMapper {
             case 'string':
                 return value
             case 'url':
+                URI.create(value) // validation purposes only
+                return value
+            case 'email':
+                if (value && !EmailValidator.instance.isValid(value)) {
+                    throw new IllegalArgumentException("Invalid email: ${value}")
+                }
                 return value
         }
         throw new IllegalArgumentException("Unsupported type: ${type}")
