@@ -103,14 +103,20 @@
             <div class="row-fluid">
                 <div class="clearfix" data-bind="visible:organisation()||organisationName()">
                     <h4>
-                        Grant recipient:
+                        Recipient:
                         <a data-bind="visible:organisation(),text:transients.collectoryOrgName,attr:{href:fcConfig.organisationLinkBaseUrl + organisation()}"></a>
                         <span data-bind="visible:organisationName(),text:organisationName"></span>
                     </h4>
                 </div>
+                <div class="clearfix" data-bind="visible:serviceProviderName()">
+                    <h4>
+                        Service provider:
+                        <span data-bind="text:serviceProviderName"></span>
+                    </h4>
+                </div>
                 <div class="clearfix" data-bind="visible:associatedProgram()">
                     <h4>
-                        Funded by:
+                        Programme:
                         <span data-bind="text:associatedProgram"></span>
                         <span data-bind="text:associatedSubProgram"></span>
                     </h4>
@@ -498,6 +504,7 @@
 
                 self.organisation = ko.observable(project.organisation);
                 self.organisationName = ko.observable(project.organisationName);
+                self.serviceProviderName = ko.observable(project.serviceProviderName);
                 self.associatedProgram = ko.observable(); // don't initialise yet - we want the change to trigger dependents
                 self.associatedSubProgram = ko.observable(project.associatedSubProgram);
                 self.newsAndEvents = ko.observable(newsAndEvents);
@@ -548,6 +555,7 @@
                             plannedEndDate: self.plannedEndDate(),
                             organisation: self.organisation(),
                             organisationName: self.organisationName(),
+                            serviceProviderName: self.serviceProviderName(),
                             associatedProgram: self.associatedProgram(),
                             associatedSubProgram: self.associatedSubProgram(),
                             funding: new Number(self.funding())

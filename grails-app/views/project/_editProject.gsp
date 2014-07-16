@@ -21,6 +21,12 @@
     </div>
 </div>
 <div class="row-fluid">
+    <div class="control-group span5">
+        <label class="control-label">Service provider organisation name</label>
+        <input class="input-xlarge" data-bind="value:serviceProviderName" id="serviceProviderName"/>
+    </div>
+</div>
+<div class="row-fluid">
     <div class="control-group">
         <label for="description" class="control-label">Project description</label>
         <div class="controls">
@@ -62,12 +68,12 @@
 
 <div class="row-fluid">
     <div class="span4">
-        <label class="control-label">Program name</label>
+        <label class="control-label">Programme name</label>
         <select data-bind="value:associatedProgram,options:transients.programs,optionsCaption: 'Choose...'"
                 data-validation-engine="validate[required]"></select>
     </div>
     <div class="span4">
-        <label class="control-label">Sub-program name</label>
+        <label class="control-label">Sub-programme name</label>
         <select data-bind="value:associatedSubProgram,options:transients.subprogramsToDisplay,optionsCaption: 'Choose...'"></select>
     </div>
 </div>
