@@ -294,25 +294,17 @@ class AdminController {
      */
     def importProjectData() {
 
+        if (params.newFormat) {
+            gmsImport()
+            return
+        }
         if (request instanceof MultipartHttpServletRequest) {
             def file = request.getFile('projectData')
 
             if (file) {
 
-                def results
-                if (params.newFormat) {
-                    def status = [finished:false, projects:[]]
-                    session.status = status
-                    importService.gmsImport(file.inputStream, status.projects, true) //params.preview)
-                    status.finished = true
+                def results = importService.importProjectsByCsv(file.inputStream, params.importWithErrors)
 
-                    def statusJson = status as JSON
-                    render contentType: 'text/plain', status: 200, text:statusJson
-                    return
-                }
-                else {
-                    results = importService.importProjectsByCsv(file.inputStream, params.importWithErrors)
-                }
                 if (results.error) {
                     render contentType: 'text/json', status:400, text:"""{"error":"${results.error}"}"""
                 }
@@ -335,6 +327,45 @@ class AdminController {
         }
 
         render contentType: 'text/json', status:400, text:'{"error":"No file supplied"}'
+    }
+
+    def gmsImport() {
+
+        def file
+        if (params.preview) {
+            if (request instanceof MultipartHttpServletRequest) {
+                def tmp = request.getFile('projectData')
+                file = File.createTempFile(tmp.originalFilename, '.csv')
+                tmp.transferTo(file)
+                file.deleteOnExit()
+
+                session.gmsFile = file
+            }
+        }
+        else {
+            file = session.gmsFile
+            session.gmsFile = null
+        }
+
+        if (file) {
+            def status = [finished: false, projects: []]
+            session.status = status
+            def fileIn = new FileInputStream(file)
+            try {
+                def result = importService.gmsImport(fileIn, status.projects, params.preview)
+                status.finished = true
+                status.error = result.error
+            }
+            finally {
+                fileIn.close()
+            }
+            def statusJson = status as JSON
+            render contentType: 'text/plain', status: 200, text: statusJson
+
+        }
+        else {
+            render contentType: 'text/json', status:400, text:'{"error":"No file supplied"}'
+        }
     }
 
     def importStatus() {

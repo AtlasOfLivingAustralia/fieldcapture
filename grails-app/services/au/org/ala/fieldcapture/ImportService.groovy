@@ -393,7 +393,7 @@ class ImportService {
         if (p) {
             if (!reload) {
                 status.project = 'existing'
-                return
+                return status
             }
             project.projectId = p.projectId
             status.project = 'updated'
@@ -1179,6 +1179,7 @@ class ImportService {
 
         def action = preview?{rows -> mapProjectRows(rows, status)}:{rows -> importAll(rows, status)}
 
+        def result = [:]
         cacheService.clear(PROJECTS_CACHE_KEY)
         def reader = new InputStreamReader(csv)
         try {
@@ -1205,8 +1206,12 @@ class ImportService {
 
         }
         catch (Exception e) {
-            e.printStackTrace()
+            def message = 'Error processing projects: '+e.getMessage()
+            log.error(message, e)
+            result.error = message
+
         }
+        result
     }
 
     def mapProjectRows(projectRows, status) {
@@ -1230,7 +1235,7 @@ class ImportService {
 
             def result = importProject(projectDetails.project, false) // Do not overwrite existing projects because of the impacts to sites / activities etc.
 
-            if (result.status.project == 'existing') {
+            if (result.project == 'existing') {
                 status << [grantId:grantId, externalId:externalId, success:false, errors:['Project already exists in MERIT, skipping']]
                 return
             }
@@ -1238,8 +1243,15 @@ class ImportService {
             sites.each { site ->
                 def created = false
                 if (site.kmlUrl) {
-                    def kml = webService.get(site.kmlUrl, false)
-                    def sitesCreated = siteService.createSitesFromKml(kml, projectDetails.project.projectId)
+                    def sitesCreated = []
+
+                    try {
+                        def kml = webService.get(site.kmlUrl, false)
+                        sitesCreated = siteService.createSitesFromKml(kml, projectDetails.project.projectId)
+                    }
+                    catch (Exception e) {
+                        log.error("Unable to create sites from ${site.kmlUrl}, message: ${e.getMessage()}", e)
+                    }
                     if (!sitesCreated) {
                         status << [grantId:grantId, externalId:externalId, success:false, errors:["Unable to create sites from ${site.kmlUrl}"]]
                         return
@@ -1255,7 +1267,7 @@ class ImportService {
                 activity.projectId = projectDetails.project.projectId
                 activityService.update('', activity)
             }
-            status << [grantId:grantId, externalId:externalId, success:projectDetails.errors.size() == 0, errors:projectDetails.errors]
+            status << [projectId:projectDetails.project.projectId, grantId:grantId, externalId:externalId, success:projectDetails.errors.size() == 0, errors:projectDetails.errors]
 
         }
         else {

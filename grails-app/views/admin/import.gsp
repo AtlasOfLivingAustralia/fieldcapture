@@ -8,6 +8,7 @@
             var fcConfig = {
                 serverUrl: "${grailsApplication.config.grails.serverURL}",
                 importUrl: "${createLink(action: 'importProjectData')}",
+                projectUrl:"${createLink(controller:'project', action:'index')}",
                 importProgressUrl: "${createLink(action: 'importStatus')}"
             },
             returnTo = "${params.returnTo}";
@@ -27,7 +28,7 @@
         Select the (cp1252 encoded) CSV file containing the GMS data.  The file will be uploaded automatically.
     </div>
      <div class="span2 btn fileinput-button" style="margin-left:5px">
-        <input type="file" accept="text/csv" data-bind="fileUploadNoImage:uploadOptions">Select file</button>
+        <input id="fileUpload" type="file" accept="text/csv" data-bind="fileUploadNoImage:uploadOptions, enabled:!finished() && !finishedPreview()">Select file</button>
     </div>
 </div>
 
@@ -38,7 +39,8 @@
     <h3> Results </h3>
     <div class="row-fluid">
     <span data-bind="text:progressSummary"></span>
-
+    <button class="btn" data-bind="click:doImport, visible:finishedPreview() && !finished(), enabled:!importing()">Import Projects</button>
+        <br/>
     <table class="table">
         <thead>
         <tr>
@@ -48,7 +50,10 @@
         <tbody>
         <!-- ko foreach: { data: progressDetail, as: 'project'} -->
         <tr>
-            <td data-bind="text:grantId"></td>
+            <td>
+                <span data-bind="text:grantId"></span>
+                <a data-bind="attr:{href:fcConfig.projectUrl+$data.projectId}, visible:$data.projectUrl">(View Project)</a>
+            </td>
             <td data-bind="text:externalId"></td>
             <td data-bind="text:success?'Yes':'No'"></td>
             <td>
@@ -78,7 +83,11 @@
         self.filename = ko.observable();
         self.progressSummary = ko.observable();
         self.progressDetail = ko.observableArray([]);
+        self.finishedPreview = ko.observable(false);
         self.finished = ko.observable(false);
+        self.preview = ko.observable(true);
+        self.importing = ko.observable(false);
+
 
         self.uploadOptions = {
             url: fcConfig.importUrl,
@@ -86,7 +95,17 @@
                 console.log(data.result);
                 if (data.result) {
                     self.progressDetail(data.result.projects);
-                    self.progressSummary('Processed '+data.result.projects.length+' projects');
+                    self.progressSummary('Processed ' + data.result.projects.length + ' projects');
+                    if (self.preview()) {
+                        self.preview(false);
+                        self.finishedPreview(true);
+                        self.finished(false);
+
+                    }
+                    else {
+                        self.finished(true);
+                    }
+
                 }
                 else {
                     var message = 'Please contact MERIT support and attach your spreadsheet to help us resolve the problem';
@@ -106,26 +125,10 @@
             paramName: 'projectData'
 
         }
-        self.importProjects = function () {
-            var payload = {};
 
-            $.ajax({
-                url: fcConfig.importUrl,
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(payload),
-                success: function (data) {
-                    setTimeout(self.showProgress, 2000);
-
-                },
-                error: function () {
-                    alert('There was a problem uploading the project CSV.');
-                }
-            });
-        };
         self.showProgress = function () {
             $.get(fcConfig.importProgressUrl, function (progress) {
-                self.finished(progress.finished);
+
                 self.progressDetail(progress.projects);
                 if (!progress.finished) {
                     self.progressSummary(progress.projects.length + ' projects processed...');
@@ -138,6 +141,38 @@
             });
 
         };
+
+        self.doImport = function () {
+            self.importing(true);
+            self.progressSummary('Importing....');
+            self.progressDetail([]);
+
+            $.ajax(fcConfig.importUrl + '?newFormat=true', {
+
+                dataType: 'json',
+                success: function (result) {
+
+                    if (result.error) {
+                        alert(result.error);
+                        self.progressSummary(result.error);
+                        self.progressDetail(result.projects?result.projects:[])
+                    }
+                    else {
+                        self.progressDetail(result.projects);
+
+                        self.progressSummary('Import complete.');
+                    }
+                    self.finished(true);
+                    self.finishedPreview(false);
+
+                },
+                error: function () {
+                    var message = 'Please contact MERIT support and attach your spreadsheet to help us resolve the problem';
+                    alert(message);
+                }
+            });
+            setTimeout(self.showProgress, 2000);
+        }
     };
     ko.applyBindings(new SiteUploadViewModel());
 </r:script>

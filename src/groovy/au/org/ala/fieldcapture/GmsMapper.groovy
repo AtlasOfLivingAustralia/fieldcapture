@@ -83,7 +83,16 @@ class GmsMapper {
             'Site preparation':'Site Preparation',
             'Site assessment':'Vegetation Assessment - Commonwealth government methodology',
             'Vegetation monitoring and related activities':'Vegetation Assessment - Commonwealth government methodology',
-            'Water quality survey and assessment':'Water Quality Survey'
+            'Water quality survey and assessment':'Water Quality Survey',
+            'Debris removal':'Debris Removal',
+            'Pest management':'Pest Management',
+            'Indigenous knowledge, use and maintenance':'ndigenous Knowledge Transfer',
+            'Weed survey & assessment':'Weed Mapping & Monitoring',
+            'Heritage survey and assessment':'Heritage Conservation',
+            'Pest survey & assessment':'Pest Animal Survey',
+            'Disease management':'Disease Management'
+
+
     ]
 
     def outputTargetMapping = [
@@ -151,6 +160,22 @@ class GmsMapper {
             def unmappedType = activity.type
             activity.type = activityTypeMapping[unmappedType]
 
+            // Gah, inconsistently formatted data...
+            if (!activity.type) {
+                if (unmappedType.contains('(')) {
+                    def splitType = unmappedType.substring(0, unmappedType.lastIndexOf('(')).trim()
+                    activity.type = activityTypeMapping[splitType]
+                    if (activity.type) {
+                        activityRow.PGAT_ACTIVITY_DELIVERABLE = splitType
+
+                        def score = unmappedType.substring(unmappedType.lastIndexOf('(')).trim()
+                        activityRow.PGAT_ACTIVITY_TYPE = score
+                    }
+
+                }
+
+            }
+
             // Types for example other cannot be mapped.
             if (activity.type) {
 
@@ -169,7 +194,7 @@ class GmsMapper {
                 }
                 project.outputTargets << target
             }
-            else {
+            else if (unmappedType != 'Other') { // Silently ignore 'Other'
                 errors << [error:"Unmappable type for activity : ${unmappedType} row: {$activityRow.index}"]
             }
 
@@ -186,11 +211,25 @@ class GmsMapper {
         def target = map.mappedData
         errors.addAll(map.errors)
 
-        def key = [target.type, target.gmsScore, target.units]
+        def key = [target.type?.trim(), target.gmsScore?.trim(), target.units?.trim()]
 
-        def result = [target:map.target]
-        result.putAll(outputTargetMapping[key])
+        // There is some inconsistency in the format here.
+        def flattenedMapping = outputTargetMapping.collectEntries{ k,v -> [(k.join('')):v]}
 
+        def flatKey = key.join('')
+
+        if (!target) {
+            errors << "No target defined for ${flatKey}, row: ${rowMap.index}"
+        }
+        def result = [:]
+        def score = flattenedMapping[flatKey]
+        if (!score) {
+            errors << "No mapping for score ${flatKey}, row: ${rowMap.index}"
+        }
+        else {
+            result << [target: target.target]
+            result.putAll(score)
+        }
         [mappedData:result, errors: errors]
     }
 
