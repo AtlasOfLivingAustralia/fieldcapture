@@ -171,6 +171,7 @@ modules = {
         defaultBundle false
         dependsOn 'knockout'
         resource 'js/projects.js'
+        resource 'js/moment.min.js'
     }
 
     jquery_cookie {

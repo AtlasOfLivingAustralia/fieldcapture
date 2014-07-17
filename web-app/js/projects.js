@@ -66,7 +66,15 @@ function createTimelineIfMissing (project) {
  * planned start date.
  * @param project
  */
-function addTimelineBasedOnStartDate (project) {
+function addTimelineBasedOnStartDate (project, reportingPeriod, alignToCalendar) {
+
+    if (!reportingPeriod) {
+        reportingPeriod = 6;
+    }
+    if (alignToCalendar == undefined) {
+        alignToCalendar = true;
+    }
+
     // planned start date should be an ISO8601 UTC string
     if (project.plannedStartDate === undefined || project.plannedStartDate === '') {
         // make one up so we can proceed
@@ -83,44 +91,32 @@ function addTimelineBasedOnStartDate (project) {
         endDate = Date.fromISO(project.plannedEndDate),
         i = 0;
 
-    var endDateOfLastStage = Date.fromISO(getSixMonthPeriodContainingDate(endDate).toDate);
+    if (alignToCalendar) {
+        var month = date.getMonth();
+        var numPeriods = Math.floor(month/reportingPeriod);
+        var monthOfStartDate = numPeriods*reportingPeriod;
+        var dayOfStartDate = 1;
+
+        date = new Date(date.getFullYear(), monthOfStartDate, dayOfStartDate);
+    }
     project.timeline = [];
 
-    while (date.getTime() <= endDateOfLastStage.getTime()) {
-        // nudge the date a little to account for time zone differences (stages are in UTC+0, start and end dates
-        // can be in various australian time zones).
-        var dateToTest = new Date(date.getTime());
-        dateToTest.setUTCMonth(date.getUTCMonth()+1);
+    var duration = moment.duration({'months':reportingPeriod});
 
-        var period = getSixMonthPeriodContainingDate(dateToTest);
+    var periodStart = moment(date);
+    while (periodStart.isBefore(endDate)) {
+
+        var periodEnd = moment(periodStart).add(duration);
+        var period = {
+            fromDate: periodStart.toISOString(),
+            toDate:periodEnd.toISOString()
+        };
         period.name = 'Stage ' + (i + 1);
         project.timeline.push(period);
 
         // add 6 months to date
-        date = new Date(date.setUTCMonth(date.getUTCMonth() + 6));
+        periodStart = periodEnd;
         i++;
-    }
-}
-
-/**
- * Returns the from and to dates of the half year that the specified
- * date falls in.
- * @param date
- * @returns {{fromDate: string, toDate: string}}
- */
-function getSixMonthPeriodContainingDate (date) {
-    var year = date.getUTCFullYear(),
-        midYear = new Date(Date.UTC(year, 6, 0));
-    if (date.getTime() < midYear.getTime()) {
-        return {
-            fromDate: year + "-01-01T00:00:00Z",
-            toDate: year + "-07-01T00:00:00Z"
-        };
-    } else {
-        return {
-            fromDate: year + "-07-01T00:00:00Z",
-            toDate: (year + 1) + "-01-01T00:00:00Z"
-        };
     }
 }
 

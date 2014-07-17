@@ -50,7 +50,7 @@
             }
         </style>
     <![endif]-->
-    <r:require modules="gmap3,mapWithFeatures,knockout,datepicker,amplify,jqueryValidationEngine,projects, attachDocuments, wmd"/>
+    <r:require modules="gmap3,mapWithFeatures,knockout,datepicker,amplify,jqueryValidationEngine, projects, attachDocuments, wmd"/>
 </head>
 <body>
 <div class="container-fluid">
@@ -522,6 +522,7 @@
                         })[0].name;
                     }
                 });
+                self.transients.programsModel = [];
                 self.transients.programs = [];
                 self.transients.subprograms = {};
                 self.transients.subprogramsToDisplay = ko.computed(function () {
@@ -529,6 +530,7 @@
                 });
 
                 self.loadPrograms = function (programsModel) {
+                    self.transients.programsModel = programsModel;
                     $.each(programsModel.programs, function (i, program) {
                         self.transients.programs.push(program.name);
                         self.transients.subprograms[program.name] = $.map(program.subprograms,function (obj, i){return obj.name});
@@ -565,7 +567,16 @@
                                 plannedStartDate: self.plannedStartDate(),
                                 plannedEndDate: self.plannedEndDate()
                             };
-                            addTimelineBasedOnStartDate(dates);
+                            var program = $.grep(self.transients.programsModel.programs, function(program, index) {
+                                return program.name == self.associatedProgram();
+                            });
+
+                            if (program[0]) {
+                                addTimelineBasedOnStartDate(dates, program[0].reportingPeriod, program[0].reportingPeriodAlignedToCalendar);
+                            }
+                            else {
+                                addTimelineBasedOnStartDate(dates);
+                            }
                             jsData.timeline = dates.timeline;
                         }
                         // this call to stringify will make sure that undefined values are propagated to
