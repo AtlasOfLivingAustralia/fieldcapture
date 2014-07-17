@@ -35,7 +35,8 @@ class GmsMapper {
         GMS_DECIMAL_FORMAT.setMaximumFractionDigits(0)
     }
 
-
+    /** used to support mapping of activities and scores between MERIT and GMS */
+    private def activitiesModel
 
     def projectMapping = [
             (GRANT_ID_COLUMN):[name:'grantId', type:'string'],
@@ -72,52 +73,13 @@ class GmsMapper {
             PGAT_UOM:[name:'units', type:'string']
     ]
 
-    def activityTypeMapping = [
-            'Revegetation':'Revegetation',
-            'Weed treatment':'Weed Treatment',
-            'Plant propagation':'Plant Propagation',
-            'Community participation and engagement':'Community Participation and Engagement',
-            'Erosion management':'Erosion Management',
-            'Fauna (biological) survey':'Fauna Survey - general',
-            'Fencing':'Fencing',
-            'Fire management':'Fire Management',
-            'Flora (biological) survey':'Flora Survey - general',
-            'Public access management':'Public Access and Infrastructure',
-            'Seed collection':'Seed Collection',
-            'Site preparation':'Site Preparation',
-            'Site assessment':'Vegetation Assessment - Commonwealth government methodology',
-            'Vegetation monitoring and related activities':'Vegetation Assessment - Commonwealth government methodology',
-            'Water quality survey and assessment':'Water Quality Survey',
-            'Debris removal':'Debris Removal',
-            'Pest management':'Pest Management',
-            'Indigenous knowledge, use and maintenance':'ndigenous Knowledge Transfer',
-            'Weed survey & assessment':'Weed Mapping & Monitoring',
-            'Heritage survey and assessment':'Heritage Conservation',
-            'Pest survey & assessment':'Pest Animal Survey',
-            'Disease management':'Disease Management'
+    public GmsMapper() {
+        this.activitiesModel = []
+    }
 
-
-    ]
-
-    def outputTargetMapping = [
-            ['Revegetation', '(no. of plants)', 'no']:[outputLabel:'Revegetation Details', scoreLabel:'Number of plants planted', scoreName:'totalNumberPlanted', units:''],
-            ['Revegetation', '(area of works)', 'ha']:[outputLabel:'Revegetation Details', scoreLabel:'Area of revegetation works (Ha)', scoreName:'areaRevegHa', units:'Ha'],
-            ['Weed treatment','(total area)','ha']:[outputLabel:'Weed Treatment Details', scoreLabel:'Total area treated (Ha)', scoreName:'areaTreatedHa', units:'Ha'],
-            ['Plant propagation', '(no. of plants)','no']:[outputLabel:'Plant Propagation Details', scoreLabel:'Total No. of plants grown and ready for planting', scoreName:'totalNumberGrown', units:''],
-            ['Community participation and engagement','(events)','no']:[outputLabel:'Event Details', scoreLabel:'Total No. of Community Participation and Engagement events run', scoreName:'eventTopics', units:''],
-            ['Erosion management','(length)','km']:[outputLabel:'Erosion Management Details', scoreLabel:'Length of stream/coastline treated (Km)', scoreName:'erosionLength', units:'Km'], // CG - spreadsheet from GMS uses km...
-            ['Fauna (biological) survey','(reports)','no']:[outputLabel:'Fauna Survey Details',scoreLabel:'No. of surveys undertaken',scoreName:'totalNumberOfOrganisms', units:''], // Not currently output target
-            ['Fencing', '(length)','km']:[outputLabel:'Fence Details', scoreLabel:'Total length of fence (Km)', scoreName:'lengthOfFence', units:'Km'],
-            ['Fire management','(length)','km']:[outputLabel:'Fire Management Details', scoreLabel:''], // Currently no score for length in fire management
-            ['Flora (biological) survey','(reports)','no']:[outputLabel:'Flora Survey Details', scoreLabel:'No. of surveys undertaken', scoreName:'totalNumberOfOrganisms', units:''], // Not currently output target
-            ['Public access management','(reports)','no']:[outputLabel:'Access Control Details', scoreLabel:'No. of activities implementing access control works', scoreName:'structuresInstalled', units:''], // Not currently output target
-            ['Seed collection','(collected)','kg']:[outputLabel:'Seed Collection Details', scoreLabel:'Total seed collected (Kg)', scoreName:'totalSeedCollectedKg', units:'Kg'],
-            ['Site preparation','(total area treated/prepared)','ha']:[outputLabel:'Site Preparation Actions', scoreLabel:'Total area prepared (Ha) for follow-up treatment actions', scoreName:'preparationAreaTotal', units:'Ha'],
-            ['Site assessment','(reports)','no']:[outputLabel:'', scoreLabel: ''], // no scores configured for Vegetation Assessment - Commonwealth government methodology
-            ['Vegetation monitoring and related activities','(sites)','no']:[outputLabel:'', scoreLabel:''], // no scores configured for Vegetation Assessment - Commonwealth government methodology
-            ['Water quality survey and assessment','(reports)','no']:[outputLabel:'Water Quality Measurements', scoreLabel:'No. of water quality monitoring events undertaken', scoreName:'instrumentCalibration', units:'' ] // NOt sure if this is exactly what we want.
-
-    ]
+    public GmsMapper(activitiesModel) {
+        this.activitiesModel = activitiesModel
+    }
 
     def mapProject(projectRows) {
 
@@ -127,8 +89,6 @@ class GmsMapper {
         def project = result.mappedData
         errors.addAll(result.errors)
         project.planStatus = 'not approved'
-
-
 
         // TODO more than one location row?
         def siteRow = projectRows.find{it[DATA_TYPE_COLUMN] == LOCATION_DATA_TYPE}
@@ -162,24 +122,12 @@ class GmsMapper {
             def activity = activityResult.mappedData
             errors.addAll(activityResult.errors)
 
-            def unmappedType = activity.type
-            activity.type = activityTypeMapping[unmappedType]
-
-            // Gah, inconsistently formatted data...
-            if (!activity.type) {
-                if (unmappedType.contains('(')) {
-                    def splitType = unmappedType.substring(0, unmappedType.lastIndexOf('(')).trim()
-                    activity.type = activityTypeMapping[splitType]
-                    if (activity.type) {
-                        activityRow.PGAT_ACTIVITY_DELIVERABLE = splitType
-
-                        def score = unmappedType.substring(unmappedType.lastIndexOf('(')).trim()
-                        activityRow.PGAT_ACTIVITY_TYPE = score
-                    }
-
-                }
+            // Inconsistent GMS format to deal with.
+            if (!activityRow.PGAT_ACTIVITY_TYPE && activity.type.contains('(')) {
+                activity.type = activity.type.substring(0, activity.type.lastIndexOf('(')).trim()
 
             }
+            activity.type = activitiesModel.activities.find{it.name.equalsIgnoreCase(activity.type) || it.gmsName?.equalsIgnoreCase(activity.type)}
 
             // Types for example other cannot be mapped.
             if (activity.type) {
@@ -199,8 +147,11 @@ class GmsMapper {
                 }
                 project.outputTargets << target
             }
-            else if (unmappedType != 'Other') { // Silently ignore 'Other'
-                errors << [error:"Unmappable type for activity : ${unmappedType} row: {$activityRow.index}"]
+            else if (activity.type != 'Other') { // Silently ignore 'Other'
+                errors << [error:"Unmappable type for activity : ${activityRow.PGAT_ACTIVITY_DELIVERABLE} row: {$activityRow.index}"]
+            }
+            else {
+                errors << [error:"Ignoring other activity: ${activityRow.PGAT_OTHER_DETAILS}"]
             }
 
         }
@@ -216,24 +167,29 @@ class GmsMapper {
         def target = map.mappedData
         errors.addAll(map.errors)
 
-        def key = [target.type?.trim(), target.gmsScore?.trim(), target.units?.trim()]
-
-        // There is some inconsistency in the format here.
-        def flattenedMapping = outputTargetMapping.collectEntries{ k,v -> [(k.join('')):v]}
-
-        def flatKey = key.join('')
+        def flatKey = target.type?.trim() +' '+ target.gmsScore?.trim()
 
         if (!target) {
             errors << "No target defined for ${flatKey}, row: ${rowMap.index}"
         }
         def result = [:]
-        def score = flattenedMapping[flatKey]
+
+        def outputName, score
+        activitiesModel.outputs.find { output ->
+            score = output.scores?.find{it.gmsScoreName == flatKey && it.gmsUnits == target.units?.trim()}
+            outputName = output.name
+            return score
+        }
+
         if (!score) {
             errors << "No mapping for score ${flatKey}, row: ${rowMap.index}"
         }
         else {
-            result << [target: target.target]
-            result.putAll(score)
+            if (!score.isOutputTarget) {
+                errors << "Warning: score ${flatKey} is not an output target"
+            }
+
+            result << [target: target.target, outputLabel:outputName, scoreLabel:score.label, scoreName:score.name, units:score.units]
         }
         [mappedData:result, errors: errors]
     }
