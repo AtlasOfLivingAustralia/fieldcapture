@@ -132,6 +132,7 @@ class GmsMapper {
             // Types for example other cannot be mapped.
             if (activity.type) {
 
+                activity.type = activity.type.name
                 activity.description = 'Activity ' + (i + 1)
                 if (mainTheme) {
                     activity.mainTheme = mainTheme
@@ -167,7 +168,7 @@ class GmsMapper {
         def target = map.mappedData
         errors.addAll(map.errors)
 
-        def flatKey = target.type?.trim() +' '+ target.gmsScore?.trim()
+        def flatKey = (target.type?.trim() +' '+ target.gmsScore?.trim()).trim()
 
         if (!target) {
             errors << "No target defined for ${flatKey}, row: ${rowMap.index}"
