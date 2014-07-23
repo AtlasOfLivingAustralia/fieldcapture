@@ -17,6 +17,7 @@ class GmsMapper {
     static final ACTIVITY_DATA_SUB_TYPE = 'Activities'
     static final ACTIVITY_DATA_TYPE = 'Environmental Data'
     static final REPORTING_THEME_DATA_TYPE = 'Environmental Data'
+    static final RISK_DATA_TYPE = 'Risk Data'
 
     static final GRANT_ID_COLUMN = 'APP_ID'
     static final DATA_TYPE_COLUMN = 'DATA_TYPE'
@@ -73,6 +74,13 @@ class GmsMapper {
             PGAT_UOM:[name:'units', type:'string']
     ]
 
+    def riskMapping = [
+            RISK_DESC:[name:'riskDescription', type:'string'],
+            RISK_IMPACT:[name:'consequence', type:'lookup', values:['Insignificant', 'Minor', 'Moderate', 'Major', 'Extreme']],
+            RISK_LIKELIHOOD:[name:'likelihood', type:'lookup', values:['Almost Certain', 'Likely', 'Possible', 'Unlikely', 'Remote']],
+            RISK_MITIGATION:[name:'currentControl', type:'string']
+    ]
+
     public GmsMapper() {
         this.activitiesModel = []
     }
@@ -90,10 +98,23 @@ class GmsMapper {
         errors.addAll(result.errors)
         project.planStatus = 'not approved'
 
+        mapRisks(projectRows, project, errors)
+
+        def sites = mapSites(projectRows, project, errors)
+
+        def activities = mapActivities(projectRows, project, errors)
+
+
+        [project:project, sites:sites, activities:activities, errors:errors]
+
+    }
+
+    private def mapSites(projectRows, project, errors) {
         // TODO more than one location row?
-        def siteRow = projectRows.find{it[DATA_TYPE_COLUMN] == LOCATION_DATA_TYPE}
+        def siteRows = projectRows.findAll{it[DATA_TYPE_COLUMN] == LOCATION_DATA_TYPE}
         def sites = []
-        if (siteRow) {
+        def count = siteRows.size()
+        siteRows.eachWithIndex {siteRow, i ->
 
             def siteResult = gmsToMerit(siteRow, siteMapping)
             def site = siteResult.mappedData
@@ -102,11 +123,15 @@ class GmsMapper {
             if (site.kmlUrl) {
                 site.kmlUrl = site.kmlUrl.replace('edit', 'kml')
             }
-            site.name = "Project area for ${project.grantId}"
+            def siteIndex = count > 1 ? "${i+1} " : ''
+            site.name = "Project area ${siteIndex}for ${project.grantId}"
 
             sites << site
         }
+        sites
+    }
 
+    private def mapActivities(projectRows, project, errors) {
         def mainThemes = projectRows.findAll{it[DATA_TYPE_COLUMN] == REPORTING_THEME_DATA_TYPE && it[DATA_SUB_TYPE_COLUMN] == REPORTING_THEME_DATA_SUB_TYPE}.collect{it[REPORTING_THEME_COLUMN]}
 
         def mainTheme = null
@@ -156,9 +181,21 @@ class GmsMapper {
             }
 
         }
+        activities
 
-        [project:project, sites:sites, activities:activities, errors:errors]
+    }
 
+    private def mapRisks(projectRows, project, errors) {
+        def riskRows = projectRows.findAll {it[DATA_TYPE_COLUMN] == RISK_DATA_TYPE}
+        def risks = []
+        riskRows.eachWithIndex { riskRow, i ->
+
+            def result = gmsToMerit(riskRow, riskMapping)
+            errors.addAll(result.errors)
+            risks << result.mappedData
+        }
+        project.custom = [details:[risks:[:]]]
+        project.custom.details.risks.rows = risks
     }
 
     private def mapTarget(rowMap) {
@@ -201,7 +238,7 @@ class GmsMapper {
         mapping.each { entry ->
 
             try {
-                def value = convertByType(rowMap[entry.key], entry.value.type)
+                def value = convertByType(rowMap[entry.key], entry.value)
                 result[entry.value.name] = value
             }
             catch (Exception e) {
@@ -212,7 +249,8 @@ class GmsMapper {
         [mappedData:result, errors:errors]
     }
 
-    private def convertByType(String value, String type) {
+    private def convertByType(String value, mapping) {
+        def type = mapping.type
         value = value?value.trim():''
         switch (type) {
             case 'date':
@@ -229,6 +267,12 @@ class GmsMapper {
                     throw new IllegalArgumentException("Invalid email: ${value}")
                 }
                 return value
+            case 'lookup':
+                if (!(value in mapping.values)) {
+                    throw new IllegalArgumentException("${value} is not in ${mapping.values}")
+                }
+                return value
+
         }
         throw new IllegalArgumentException("Unsupported type: ${type}")
     }
