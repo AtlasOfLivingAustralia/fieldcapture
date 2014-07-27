@@ -1,6 +1,9 @@
 package au.org.ala.fieldcapture
 
 import grails.converters.JSON
+
+import java.text.SimpleDateFormat
+
 import org.codehaus.groovy.grails.web.mapping.LinkGenerator
 
 class ProjectService {
@@ -339,6 +342,25 @@ class ProjectService {
         if (!readyForSubmit) {
             return [error:'All activities must be finished, deferred or cancelled']
         }
+		
+		//generate stage report and attach to the project
+		def projectAll = get(projectId, 'all')
+		readyForSubmit = false;
+		projectAll?.timeline?.each{
+			if(it.name.equals(stageDetails.stage)){
+				readyForSubmit = true;
+			}
+		}
+		if (!readyForSubmit) {
+			return [error:'Invalid stage']
+		}
+		
+		def stageName = stageDetails.stage;
+		def htmlTxt = documentService.createHTMLStageReport(projectAll, activities, stageName)
+		def dateWithTime = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss")
+		def name = projectAll?.grantId + '_' + stageName + '_' + dateWithTime.format(new Date()) + ".pdf"
+		def doc = [name:name, projectId:projectId, saveAs:'pdf', type:'pdf', role:'stageReport',filename:name, readOnly:true, public:false]
+		documentService.createTextDocument(doc, htmlTxt)
         def result = activityService.updatePublicationStatus(stageDetails.activityIds, 'pendingApproval')
         def project = get(projectId)
         stageDetails.project = project

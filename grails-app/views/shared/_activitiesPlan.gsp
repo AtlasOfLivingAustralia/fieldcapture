@@ -248,15 +248,19 @@
 </script>
 
 <script id="stageNotApprovedTmpl" type="text/html">
-<g:if test="${user?.isAdmin}">
+<span class="badge badge-warning">Report not submittted</span>
+<!--
+	todo remove submit stage report code from activities plan   
+	<g:if test="${user?.isAdmin}">
     <br/>
     <button type="button" class="btn btn-success btn-small" style="margin-top:4px;"
-            data-bind="
+    data-bind="
             disable:!$parents[1].readyForApproval() || !$parents[2].isApproved(),
             click:$parents[1].submitReport,
             attr:{title:$parents[1].readyForApproval()?'Submit this stage for implementation approval.':'Report cannot be submitted while activities are still open.'}"
     >Submit report</button>
-</g:if>
+    </g:if>
+-->
 </script>
 
 <script id="stageApprovedTmpl" type="text/html">
