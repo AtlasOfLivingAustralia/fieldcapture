@@ -188,6 +188,28 @@ function findActivitiesForStage (activities, timeline, stage) {
 }
 
 /**
+ * Is it a current or past stage
+ * @param timeline
+ * @param stage current stage name
+ * @param period stage period
+ * @returns true if past stage.
+ */
+function isPastStage(timeline, currentStage, period) {
+
+	var stageFromDate = '';
+	var stageToDate = '';
+	$.each(timeline, function (i, period) {
+		if(period.name == currentStage){
+			stageFromDate = period.fromDate;
+			stageToDate = period.toDate;
+		}
+	});
+	
+	return period.toDate <= stageToDate; 
+    
+}
+
+/**
  * Create project details 
  * @param activities
  * @param timeline
