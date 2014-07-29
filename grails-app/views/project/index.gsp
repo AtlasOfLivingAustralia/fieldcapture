@@ -92,7 +92,8 @@
     <g:set var="tabIsActive"><g:if test="${user?.hasViewAccess}">tab</g:if></g:set>
     <ul id="projectTabs" class="nav nav-tabs big-tabs">
         <li class="active"><a href="#overview" id="overview-tab" data-toggle="tab">Overview</a></li>
-        <li><a href="#plan" id="plan-tab" data-toggle="${tabIsActive}">Plans & Reports</a></li>
+		<li><a href="#details" id="details-tab" data-toggle="${tabIsActive}">Project Details</a></li>        
+        <li><a href="#plan" id="plan-tab" data-toggle="${tabIsActive}">Activities</a></li>
         <li><a href="#site" id="site-tab" data-toggle="${tabIsActive}">Sites</a></li>
         <li><a href="#dashboard" id="dashboard-tab" data-toggle="${tabIsActive}">Dashboard</a></li>
         <g:if test="${user?.isAdmin || user?.isCaseManager}"><li><a href="#admin" id="admin-tab" data-toggle="tab">Admin</a></li></g:if>
@@ -186,6 +187,12 @@
                 </div>
             </div>
         </div>
+        
+        <div class="tab-pane" id="details">
+			<!-- Project Details -->
+			<g:render template="projectDetails" model="[project: project]"/>
+		</div>
+		
         <g:if test="${user?.hasViewAccess}">
             <div class="tab-pane" id="plan">
                 <!-- PLANS -->
@@ -309,6 +316,9 @@
                                 <li ${activeClass}><a href="#settings" id="settings-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Project settings</a></li>
                                 <g:set var="activeClass" value=""/>
                             </g:if>
+							
+							<li><a href="#projectDetails" id="projectdetails-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Project details</a></li>
+							<li><a href="#summaryReports" id="summaryreports-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Summary reports</a></li>							                            
                             <li><a href="#editNewsAndEvents" id="editnewsandevents-tab" data-toggle="tab"><i class="icon-chevron-right"></i> News and events</a></li>
                             <li><a href="#editProjectStories" id="editprojectstories-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Project stories</a></li>
 
@@ -334,6 +344,25 @@
                                 </div>
                                 <g:set var="activeClass" value=""/>
                             </g:if>
+ 							
+ 							<!-- PROJECT DETAILS -->
+                            <div id="projectDetails" class="pill-pane">
+                                <!-- Edit project details -->
+								<h3>Project Details</h3>                                
+								<div class="row-fluid">          
+									<div class="span10 validationEngineContainer" id="project-details-validation">                      
+                                		<g:render template="editProjectDetails" model="[project: project]"/>
+                                	</div>
+                                </div>
+                            </div>                            
+ 							
+ 							<!-- SUMMARY REPORTS -->
+                            <div id="summaryReports" class="pill-pane">
+                            	<div class="span10 validationEngineContainer" id="summary-validation">
+                                	<g:render template="summaryReports" model="[project: project]"/>
+                                </div>
+                            </div> 
+                            
                             <div id="editNewsAndEvents" class="pill-pane">
 
                                 <g:render template="editProjectContent" model="${[attributeName:'newsAndEvents', header:'News and events']}"/>
@@ -462,12 +491,20 @@
             });
 
             $('#settings-validation').validationEngine();
+            $('#project-details-validation').validationEngine();
+            $('#summary-validation').validationEngine();
 
             $('.helphover').popover({animation: true, trigger:'hover'});
 
             $('#cancel').click(function () {
                 document.location.href = "${createLink(action: 'index', id: project.projectId)}";
             });
+            $('#details-cancel').click(function () {
+                document.location.href = "${createLink(action: 'index', id: project.projectId)}";
+            });
+            $('#summary-cancel').click(function () {
+                document.location.href = "${createLink(action: 'index', id: project.projectId)}";
+            }); 
 
             var Site = function (site, feature) {
                 var self = this;
@@ -485,7 +522,7 @@
                 };
             };
 
-            function ViewModel(project, newsAndEvents, projectStories, sites, activities, isUserEditor) {
+            function ViewModel(project, newsAndEvents, projectStories, sites, activities, isUserEditor,today) {
                 var self = this;
                 self.name = ko.observable(project.name);
                 self.description = ko.observable(project.description);
@@ -495,13 +532,330 @@
                 self.plannedStartDate = ko.observable(project.plannedStartDate).extend({simpleDate: false});
                 self.plannedEndDate = ko.observable(project.plannedEndDate).extend({simpleDate: false});
                 self.funding = ko.observable(project.funding).extend({currency:{}});
-
                 self.regenerateProjectTimeline = ko.observable(false);
+
+                //If there is no stages then store it under unknown stage, in future provide facility in admin area to change stage name.
+                if(!project.custom){
+					project = createProjectDetails(project);				               		
+				}
+				
+				$.each(project.custom['details'].milestones["rows"], function (i, milestone) {
+						milestone['dueDate'] = ko.observable(milestone["dueDate"]).extend({simpleDate: false});
+				});
+				
+				$.each(project.custom['details'].nationalAndRegionalPriorities["rows"], function (i, nationalAndRegionalPriorities) {
+						nationalAndRegionalPriorities['dueDate'] = ko.observable(nationalAndRegionalPriorities["dueDate"]).extend({simpleDate: false});
+				});
+				
+                // todo: move this to mongodb lookup.
+ 	            self.threatOptions = [
+	                'Australian Government policy change',
+	                'Blow-out in cost of project materials',
+	                'Changes to regional boundaries affecting the project area',
+					'Co-investor withdrawal / investment reduction',                
+					'Lack of delivery partner capacity',
+					'Lack of delivery partner / landholder interest in project activities',
+					'Organisational restructure / loss of corporate knowledge',
+					'Organisational risk (strategic, operational, resourcing and project levels)',
+					'Seasonal conditions (eg. drought, flood, etc.)',
+					'Timeliness of project approvals processes',
+					'Workplace health & safety (eg. Project staff and / or delivery partner injury or death)'			            
+	        	];
+	        	self.likelihoodOptions = [
+	                'Almost Certain',
+	                'Likely',
+	                'Possible',
+	                'Unlikely',
+					'Remote'                
+	        	];
+	        	
+	        	self.consequenceOptions = [
+	        		'Insignificant',
+	        		'Minor',
+	        		'Moderate',
+	        		'Major',
+	        		'Extreme'
+	        	];
+
+	        	self.ratingOptions =[
+	        		'High',
+	        		'Significant',
+	        		'Medium',
+	        		'Low'
+	        	];
+                self.details = ko.mapping.fromJS(project.custom['details']);
+				self.planStatus = ko.observable(project.planStatus)
+                self.addObjectives = function(){
+					self.details['objectives']['rows'].push ({
+						shortLabel : "",
+						description: ""
+					});
+    			}
+				self.removeObjectives = function(objectives){
+                	self.details['objectives']['rows'].remove(objectives);
+                }
+                self.addMilestones = function(){
+					self.details['milestones']['rows'].push ({
+						shortLabel : "",
+						description: "",
+						dueDate : ko.observable().extend({simpleDate: false}) 
+					});
+    			}			
+                self.removeMilestones = function(milestones){
+                	self.details['milestones']['rows'].remove(milestones);
+                }
+                self.addNationalAndRegionalPriorities = function(){
+					self.details['nationalAndRegionalPriorities']['rows'].push ({
+						shortLabel : "",
+						description: "",
+						dueDate: ko.observable().extend({simpleDate: false})
+					});
+    			}			
+                self.removeNationalAndRegionalPriorities = function(nationalAndRegionalPriorities){
+                	self.details['nationalAndRegionalPriorities']['rows'].remove(nationalAndRegionalPriorities);
+                }
+                
+                //Risks details
+				self.addRisks = function(){
+					self.details['risks']['rows'].push ({
+              				"threat"  : ko.observable(),
+              				"description" : ko.observable(),
+              				"likelihood" : ko.observable(),
+              				"consequence" : ko.observable(),
+              				"riskRating" :ko.observable(),
+              				"currentControl" : ko.observable(),
+              				"residualRisk" : ko.observable()				               								               								               				
+               		});
+                }
+                self.removeRisk = function(risk) {
+					self.details['risks']['rows'].remove(risk);
+                }
+
+				var riskCol = ["Insignificant","Minor","Moderate","Major","Extreme"];
+	            var riskTable = [
+	              		["Almost Certain","Medium","Significant","High","High","High"],
+	              		["Likely","Low","Medium","Significant","High","High"],
+	              		["Possible","Low","Medium","Medium","Significant","High"],
+	              		["Unlikely","Low","Low","Medium","Medium","Significant"],
+	              		["Remote","Low","Low","Low","Medium","Medium"]
+	              	];
+
+	            self.consequenceChanged = function(obj) {
+	            	var copy = ko.mapping.toJS(obj);
+	            	var riskRating = "";
+					var riskRowIndex = -1;
+					for(var i = 0; i < riskTable.length; i++){
+						if(riskTable[i][0] == copy.likelihood){
+							riskRowIndex = i;
+							break;
+						}
+					}										
+					if(riskRowIndex >= 0){
+						for(var i = 0; i < riskCol.length; i++){
+							if(riskCol[i] == copy.consequence){
+								riskRating = riskTable[riskRowIndex][i+1];
+								break;
+							}
+						}
+					}
+	            	copy['riskRating'] = riskRating;
+	            	
+	            	if(riskRating != '')
+	            		self.details['risks']['rows'].replace(obj, ko.mapping.fromJS(copy));
+   				};  	
+              	
+				self.likelihoodChanged = function(obj) {
+					var copy = ko.mapping.toJS(obj);
+	            	var riskRating = "";
+					var riskColIndex = -1;
+					for(var i = 0; i < riskCol.length; i++){
+						if(riskCol[i] == copy.consequence){
+							riskColIndex = i;
+							break; 
+						}
+					}
+					if(riskColIndex >= 0){
+						for(var i = 0; i < riskTable.length; i++){
+							if(riskTable[i][0] == copy.likelihood){
+								riskRating = riskTable[i][riskColIndex+1];
+								break;
+							}
+						}
+					}
+	            	copy['riskRating'] = riskRating;
+	            	if(riskRating != '')
+	            		self.details['risks']['rows'].replace(obj, ko.mapping.fromJS(copy));
+   				};
+
                 self.projectDatesChanged = ko.computed(function() {
                     return project.plannedStartDate != self.plannedStartDate() ||
                            project.plannedEndDate != self.plannedEndDate();
                 });
+				
+				self.overAllRiskHighlight = ko.computed(function () {
+					return getClassName(self.details['risks'].overallRisk());
+    			});
+				    		
+				function getClassName(val){
+					var className = '';
+					if(val == 'High')
+			     		className = 'badge badge-important';
+			     	else if (val == 'Significant')
+			     		className = 'badge badge-warning';
+					else if (val == 'Medium')
+			     		className = 'badge badge-info';
+					else if (val == 'Low')
+			     		className = 'badge badge-success';			     					     		
+					return className;			     		
+				}
 
+				//non admin project details page
+				self.customStages = [];
+				$.each(project.timeline, function(i, period){
+					self.customStages.push({
+						name: period.name,
+						objectives: project.custom['details']['objectives'].rows,
+						milestones: project.custom['details']['milestones'].rows,
+						from: period.fromDate,
+						to: period.doDate
+						});
+				});
+				
+                //remove any unwanted observables (like dates.)
+				self.customStages = ko.mapping.toJS(self.customStages);
+				ko.mapping.fromJS(self.customStages);
+   				
+   				//Summary report
+   				self.timeline = [];
+   				self.stage = ko.observable(findStageFromDate(project.timeline,today));
+   				self.stageStart = ko.observable().extend({simpleDate: false});
+   				self.stageEnd = ko.observable().extend({simpleDate: false});
+				self.currentStage = ko.observable(true);
+				$.each(project.timeline, function(i, period){
+					self.timeline.push(period.name);
+					if(period.name == self.stage()){
+						self.stageStart(period.fromDate);
+                		self.stageEnd(period.toDate);
+                		self.currentStage(true);
+					}
+				});
+				
+				//Find activities that fall under current stage.
+				self.disableSave = ko.observable(false);
+				self.readyToSubmit = ko.observable(false);
+				self.activityStatus = ko.observable();
+              	self.currentStageActivities = [];
+                self.stageSelectionHandler = function() {
+					self.updateStageActivities();
+   				};
+
+   				self.updateStageActivities = function() {
+					$.each(project.timeline, function(i,period){
+						if(period.name == self.stage()){
+							self.stageStart(period.fromDate);
+                			self.stageEnd(period.toDate);
+						}
+					});
+					self.currentStage(findStageFromDate(project.timeline,today) == self.stage());
+					self.currentStageActivities = findActivitiesForStage (activities, project.timeline, self.stage());
+					self.activityStatus(self.currentStageActivities.length == 0 ? 'Report not submitted' : '');
+					self.disableSave(!self.currentStageActivities.length == 0);
+					$.each(self.currentStageActivities, function(i, act){
+					    if(act.publicationStatus == 'published'){
+                    		self.activityStatus('Report approved');
+                    		self.disableSave(true);
+                    		return;
+                    	}
+                    	else if(act.publicationStatus == 'pendingApproval'){
+                    		self.activityStatus('Report submitted');
+                    		self.disableSave(true);
+                    		return;
+                    	}
+                    	else{
+                    		self.activityStatus('Report not submitted');
+                    		self.disableSave(false);
+                    		return;
+                    	}
+					});
+					
+					//Check whether user is allowed to submit report: 
+					if(project.planStatus == 'approved' && self.currentStageActivities.length > 0){
+						$.each(self.currentStageActivities, function(i, act){
+							if(self.activityStatus() == 'Report approved'  || self.activityStatus() == 'Report submitted'){
+								self.readyToSubmit(false);
+								return;
+							}
+							else if(act.progress == 'planned' || act.progress == 'started'){
+								self.readyToSubmit(false);
+								return;
+							}
+							else
+								self.readyToSubmit(true);	
+						});
+					}
+					else
+						self.readyToSubmit(false);
+				};
+				
+				self.showStageMilestones = ko.computed(function(){
+					return !(self.details['objectives']['rows']()[0].shortLabel() == '' ||
+						self.details['milestones']['rows']()[0].shortLabel() == '' ||
+						self.details['milestones']['rows']()[0].dueDate() == '' || 
+						project.custom['details']['status'] == "");
+				});
+				
+				self.activityStatusTheme = ko.computed(function () {
+					if(self.activityStatus() == 'Report approved')
+						return 'badge badge-success';
+					else if(self.activityStatus() == 'Report submitted')
+						return 'badge badge-info';
+					else							
+						return 'badge badge-warning';
+    			});
+    			self.activityStatusTheme();
+   				self.updateStageActivities();
+   				
+   				//Summmary - Submit stage report.
+   				self.termsAccepted = ko.observable(false);
+   				self.submitReport = function (){
+   					var url = '${createLink(controller:'project', action:'ajaxSubmitReport')}/';
+   					var payload = {};
+	                payload.activityIds = $.map(self.currentStageActivities, function(act, i) {
+	                	return act.activityId;
+	                });
+	                payload.stage = self.stage();
+	                payload.projectId = project.projectId;
+	                $.ajax({
+	                    url: url + project.projectId,
+	                    type: 'POST',
+	                    data: JSON.stringify(payload),
+	                    contentType: 'application/json',
+	                    success: function (data) {
+	                        if (data.error) {
+	                            bootbox.alert("The report could not be submited.  This may be due to a login timeout or because not all activities have been completed, deferred or cancelled.  Please try again after the page reloads.", function() {location.reload();});
+	                        }
+	                        else {
+	                            bootbox.alert("Successfully submitted the report. ", function() {location.reload();});
+	                        }
+	                    },
+	                    error: function (data) {
+	                        bootbox.alert("The report could not be submited due to a login timeout or server error.  Please try again after the page reloads.", function() {location.reload();});
+	                    },
+	                    complete: function () {
+	                        //console.log('saved progress');
+	
+	                    }
+	                });
+   				};
+   				
+				self.submitStageReport = function () {
+					if ($('#summary-validation').validationEngine('validate')) {
+						self.saveProject(false,true);
+						var stageDeclaration = $('#stageDeclaration')[0];
+	                	$('#stageDeclaration').modal('show');
+					}
+            	};
+   				
                 self.organisation = ko.observable(project.organisation);
                 self.organisationName = ko.observable(project.organisationName);
                 self.serviceProviderName = ko.observable(project.serviceProviderName);
@@ -541,7 +895,83 @@
                     delete jsData.transients;
                     return jsData;
                 };
-
+               
+                // open stage report
+                self.openStageReport = function(){
+                	var url = "${createLink(action: 'previewStageReport',params: [projectId:project.projectId])}";
+					window.open(url+'&stageName='+self.stage(), '_blank');
+                }
+                
+				self.saveSummaryDetails = function(){
+					if ($('#summary-validation').validationEngine('validate')) {
+						self.saveProject(false,true);
+					}
+				};
+				self.saveProjectDetails = function(){
+					if ($('#project-details-validation').validationEngine('validate')) {
+						self.saveProject(true,false);
+						self.updateStageActivities();
+					}
+				};
+				
+				// Save project details.
+				self.saveProject = function(reload,stagesOnly){
+					var stages = {};
+					if(stagesOnly){
+						 stages['details'] =  project['custom'].details;
+						 var details = ko.mapping.toJS(self.details)
+						 stages['details']['objectives'] = details['objectives'];
+						 stages['details']['milestones'] = details['milestones'];
+						 stages['details']['nationalAndRegionalPriorities'] = details['nationalAndRegionalPriorities'];
+					}
+					else
+						stages['details'] =  ko.mapping.toJS(self.details);
+						
+					// Add milestone and objectives details for every stage.
+					$.each(project.timeline, function(i, stage){
+						var stageName = stage.name;
+						for(var j = 0; j < stages['details'].objectives["rows"].length; j++){
+							if(!stages['details'].objectives["rows"][j][stageName])
+								stages['details'].objectives["rows"][j][stageName] = '';
+						}
+						for(var j = 0; j < stages['details'].milestones["rows"].length; j++) {
+							if(!stages['details'].milestones["rows"][j][stageName])
+								stages['details'].milestones["rows"][j][stageName] = '';
+						}
+					});
+										   					               				
+					stages['details']['status'] = 'active';
+					var jsData = {"custom": stages};
+                       var json = JSON.stringify(jsData, function (key, value) {
+                           return value === undefined ? "" : value;
+                       });
+                      
+                       var id = "${project?.projectId}";
+   					   $.ajax({
+                           url: "${createLink(action: 'ajaxUpdate', id: project.projectId)}",
+                           type: 'POST',
+                           data: json,
+                           contentType: 'application/json',
+                           success: function (data) {
+                               if (data.error) {
+                                   showAlert("Failed to save project details: " + data.detail + ' \n' + data.error,
+                                       "alert-error","save-details-result-placeholder");
+                                   showAlert("Failed to save project details: " + data.detail + ' \n' + data.error,
+                                       "alert-error","summary-result-placeholder");
+                               } else {
+                                   showAlert("Project details saved","alert-success","save-details-result-placeholder");
+                                   showAlert("Project details saved","alert-success","summary-result-placeholder");
+                                   if(reload)
+                                   	location.reload();
+                               }
+                           },
+                           error: function (data) {
+                               var status = data.status;
+                               alert('An unhandled error occurred: ' + data.status);
+                           }
+                       });                        
+				};
+				
                 // settings
                 self.saveSettings = function () {
                     if ($('#settings-validation').validationEngine('validate')) {
@@ -789,13 +1219,15 @@
 
             var newsAndEventsMarkdown = '${(project.newsAndEvents?:"").markdownToHtml().encodeAsJavaScript()}';
             var projectStoriesMarkdown = '${(project.projectStories?:"").markdownToHtml().encodeAsJavaScript()}';
+            var today = '${today}';
             var viewModel = new ViewModel(
                 checkAndUpdateProject(${project}),
                 newsAndEventsMarkdown,
                 projectStoriesMarkdown,
                 ${project.sites},
                 ${activities ?: []},
-                ${user?.isEditor?:false});
+                ${user?.isEditor?:false},
+                today);
             viewModel.loadPrograms(${programs});
             ko.applyBindings(viewModel);
 

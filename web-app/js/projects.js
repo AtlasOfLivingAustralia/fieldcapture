@@ -121,6 +121,28 @@ function addTimelineBasedOnStartDate (project, reportingPeriod, alignToCalendar)
 }
 
 /**
+ * Returns the from and to dates of the half year that the specified
+ * date falls in.
+ * @param date
+ * @returns {{fromDate: string, toDate: string}}
+ */
+function getSixMonthPeriodContainingDate (date) {
+    var year = date.getUTCFullYear(),
+        midYear = new Date(Date.UTC(year, 6, 0));
+    if (date.getTime() < midYear.getTime()) {
+        return {
+            fromDate: year + "-01-01T00:00:00Z",
+            toDate: year + "-07-01T00:00:00Z"
+        };
+    } else {
+        return {
+            fromDate: year + "-07-01T00:00:00Z",
+            toDate: (year + 1) + "-01-01T00:00:00Z"
+        };
+    }
+}
+
+/**
  * Returns the stage within the timeline that contains the specified date.
  * @param timeline
  * @param UTCDateStr date must be an ISO8601 string
@@ -135,4 +157,84 @@ function findStageFromDate (timeline, UTCDateStr) {
         }
     });
     return stage;
+}
+
+/**
+ * Returns the activities associated with the stage.
+ * @param activities
+ * @param timeline
+ * @param stage stage name 
+ * @returns {[]}
+ */
+function findActivitiesForStage (activities, timeline, stage) {
+	var stageFromDate = '';
+	var stageToDate = '';
+	
+	$.each(timeline, function (i, period) {
+		if(period.name == stage){
+			stageFromDate = period.fromDate;
+			stageToDate = period.toDate;
+		}
+	});
+	
+    stageActivities = $.map(activities, function(act, i) {
+    	var endDate = act.endDate ? act.endDate : act.plannedEndDate;
+    	var startDate = act.startDate ? act.startDate : act.plannedStartDate;
+        if(startDate >= stageFromDate && endDate <= stageToDate){
+        	return act;
+        }
+    });
+    return stageActivities;
+}
+
+/**
+ * Create project details 
+ * @param activities
+ * @param timeline
+ * @param stage stage name 
+ * @returns {[]}
+ */
+function createProjectDetails(project){
+	project.custom = {};
+	project.custom['details'] = {};
+	project.custom['details'].dataSharingProtocols = {};
+	project.custom['details'].dataSharingProtocols["description"] = "";
+	project.custom['details'].projectImplementation = {};
+	project.custom['details'].projectImplementation["description"] = "";
+	project.custom['details'].monitoringApproach = {};
+	project.custom['details'].monitoringApproach["description"] = "";
+	project.custom['details'].projectPartnership = {};
+	project.custom['details'].projectPartnership["description"] = "";
+	project.custom['details'].objectives = {};
+	project.custom['details'].objectives["rows"] = [{
+	               				"shortLabel"  : "",
+	               				"description" : "" 
+                				}];
+	project.custom['details'].milestones = {};
+	project.custom['details'].milestones["rows"] = [{
+	               				"shortLabel"  : "",
+	               				"description" : "",
+	               				"dueDate" : ko.observable().extend({simpleDate: false})	 
+                				}];
+	project.custom['details'].nationalAndRegionalPriorities = {};
+	project.custom['details'].nationalAndRegionalPriorities["rows"] = [{
+	               				"shortLabel"  : "",
+	               				"description" : "",
+	               				"dueDate" : ko.observable().extend({simpleDate: false})
+	               				}];
+	project.custom['details'].risks = {};
+	project.custom['details'].risks["overallRisk"] = "";
+	project.custom['details'].risks["rows"] = [{
+	               				"threat"  : "",
+               					"description" : "",
+               					"likelihood" : "",
+               					"consequence" : "",
+               					"riskRating" : "",
+               					"currentControl" : "",
+               					"residualRisk" : ""	
+	               				}];
+	project.custom['details'].lastUpdated = "";
+	project.custom['details'].status = "";
+	
+	return project;
 }

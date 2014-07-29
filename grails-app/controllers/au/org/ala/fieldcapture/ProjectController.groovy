@@ -3,7 +3,7 @@ import grails.converters.JSON
 
 class ProjectController {
 
-    def projectService, metadataService, commonService, activityService, userService, webService, roleService, grailsApplication
+    def projectService, metadataService, documentService, commonService, activityService, userService, webService, roleService, grailsApplication
     static defaultAction = "index"
     static ignore = ['action','controller','id']
 
@@ -33,6 +33,9 @@ class ProjectController {
             //log.debug activityService.activitiesForProject(id)
             //todo: ensure there are no control chars (\r\n etc) in the json as
             //todo:     this will break the client-side parser
+			TimeZone.setDefault(TimeZone.getTimeZone('UTC'))
+			def now = new Date()
+			
             [project: project,
              activities: activityService.activitiesForProject(id),
              mapFeatures: commonService.getMapFeatures(project),
@@ -46,7 +49,8 @@ class ProjectController {
              useAltPlan: params.useAltPlan,
              institutions: metadataService.institutionList(),
              programs: metadataService.programsModel(),
-             enableReporting: grailsApplication.config.enableReporting
+             enableReporting: grailsApplication.config.enableReporting,
+			 today:now.format("yyyy-MM-dd'T'HH:mm:ss'Z'"),
             ]
         }
     }
@@ -193,7 +197,37 @@ class ProjectController {
             render status:400, text: 'Required params not provided: userId, projectId'
         }
     }
-
+	
+	@PreAuthorise(accessLevel = 'admin')
+	def previewStageReport(){
+		String projectId =  params.projectId 
+		String stageName = params.stageName
+		
+		if(stageName && projectId) {
+			def project = projectService.get(projectId, 'all')
+			def activities = activityService.activitiesForProject(projectId);
+			boolean invalidStage = true;
+			if (project && !project.error) {
+				project.timeline?.each{
+					if(it.name.equals(stageName)){
+						def htmlContent = documentService.createHTMLStageReport(project, activities, stageName)
+						invalidStage = false;
+						render text: htmlContent, contentType:"text", encoding:"UTF-8";
+					}
+				}
+				if(invalidStage){
+					render status:400, text: 'Invalid stage'
+				}
+			}
+			else{
+				render status:400, text: 'Invalid project'
+			}
+		}
+		else{
+			render status:400, text: 'Required params not provided: projectId, stageName'
+		}
+	}
+	
     def getMembersForProjectId() {
         String projectId = params.id
         def adminUserId = userService.getCurrentUserId()
