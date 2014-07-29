@@ -66,7 +66,7 @@
 					<div align="right">
 				  		<b> Overall project risk profile : <span data-bind="text: details['risks']['overallRisk'], css: overAllRiskHighlight" ></span></b>
 					</div>
-					<table class="tableProjectDetailsCol8" >
+					<table>
 				    <thead>
 			          <tr>
 			            <th>Type of threat / risk</th>
