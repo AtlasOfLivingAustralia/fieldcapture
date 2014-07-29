@@ -711,14 +711,17 @@
 
 				//non admin project details page
 				self.customStages = [];
+				self.stage = ko.observable(findStageFromDate(project.timeline,today));
 				$.each(project.timeline, function(i, period){
-					self.customStages.push({
-						name: period.name,
-						objectives: project.custom['details']['objectives'].rows,
-						milestones: project.custom['details']['milestones'].rows,
-						from: period.fromDate,
-						to: period.doDate
-						});
+					if(isPastStage(project.timeline, self.stage(), period)){
+						self.customStages.push({
+							name: period.name,
+							objectives: project.custom['details']['objectives'].rows,
+							milestones: project.custom['details']['milestones'].rows,
+							from: period.fromDate,
+							to: period.doDate
+							});
+					} 
 				});
 				
                 //remove any unwanted observables (like dates.)
@@ -727,12 +730,13 @@
    				
    				//Summary report
    				self.timeline = [];
-   				self.stage = ko.observable(findStageFromDate(project.timeline,today));
+   				
    				self.stageStart = ko.observable().extend({simpleDate: false});
    				self.stageEnd = ko.observable().extend({simpleDate: false});
 				self.currentStage = ko.observable(true);
 				$.each(project.timeline, function(i, period){
-					self.timeline.push(period.name);
+					if(isPastStage(project.timeline, self.stage(), period))
+						self.timeline.push(period.name);
 					if(period.name == self.stage()){
 						self.stageStart(period.fromDate);
                 		self.stageEnd(period.toDate);
