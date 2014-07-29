@@ -42,7 +42,12 @@
         <div class="row-fluid title-block well well-small input-block-level">
             <div class="span12 title-attribute">
                 <h1><span data-bind="click:goToProject" class="clickable">${project?.name?.encodeAsHTML() ?: 'no project defined!!'}</span></h1>
-                <g:if test="${site}">
+                <g:if test="${hasPhotopointData}">
+                    <div class="row-fluid">
+                        <span class="alert alert-warning">
+                            This activity has photo point data recorded.  The site cannot be changed.
+                        </span>
+                    </div>
                     <h2><span data-bind="click:goToSite" class="clickable">Site: ${site.name?.encodeAsHTML()}</span></h2>
                 </g:if>
                 <g:else>
@@ -55,7 +60,7 @@
         </div>
 
         <div class="row-fluid">
-            <div class="${mapFeatures.toString() != '{}' ? 'span9' : 'span12'}">
+            <div class="span9">
                 <!-- Common activity fields -->
                 <div class="row-fluid" data-bind="visible:transients.typeWarning()" style="display:none">
                     <div class="alert alert-error">
@@ -113,11 +118,10 @@
                 </div>
 
             </div>
-            <g:if test="${mapFeatures.toString() != '{}'}">
-                <div class="span3">
+            <div class="span3">
                     <div id="smallMap" style="width:100%"></div>
-                </div>
-            </g:if>
+            </div>
+
         </div>
 
         <g:if env="developkjkment" test="${!printView}">
@@ -270,7 +274,7 @@
             master.reset();
         });
 
-        function ViewModel (act, site, project, activityTypes) {
+        function ViewModel (act, site, project, activityTypes, themes) {
             var self = this;
             self.activityId = act.activityId;
             self.description = ko.observable(act.description);
@@ -289,9 +293,9 @@
             self.siteId = ko.observable(act.siteId);
             self.projectId = act.projectId;
             self.transients = {};
-            self.transients.site = site;
+            self.transients.site = ko.observable(site);
             self.transients.project = project;
-            self.transients.themes = $.map(${themes}, function (obj, i) { return obj.name });
+            self.transients.themes = $.map(themes, function (obj, i) { return obj.name });
             self.transients.typeWarning = ko.computed(function() {
                 if (act.outputs === undefined || act.outputs.length == 0) {
                     return false;
@@ -301,6 +305,7 @@
                 }
                 return (self.type() != act.type);
             });
+
             self.transients.activityDescription = ko.computed(function() {
                 var result = "";
                 if (self.type()) {
@@ -318,6 +323,23 @@
                     });
                 }
                 return result;
+            });
+
+            self.siteId = ko.observable(act.siteId);
+
+            self.siteId.subscribe(function(siteId) {
+
+                var matchingSite = $.grep(self.transients.project.sites, function(site) { return siteId == site.siteId})[0];
+
+                if (matchingSite) {
+
+                    alaMap.clearFeatures();
+                    alaMap.replaceAllFeatures([matchingSite.extent.geometry]);
+                }
+                else {
+                    alaMap.clearFeatures();
+                }
+                self.transients.site(matchingSite);
             });
 
             self.goToProject = function () {
@@ -343,31 +365,35 @@
             self.save = function (callback, key) {
             };
             self.dirtyFlag = ko.dirtyFlag(self, false);
-        }
+        };
 
 
         var viewModel = new ViewModel(
             ${(activity as JSON).toString()},
             ${site ?: 'null'},
             ${project ?: 'null'},
-            ${(activityTypes as JSON).toString()});
+            ${(activityTypes as JSON).toString()},
+            ${themes});
 
         ko.applyBindings(viewModel,document.getElementById('koActivityMainBlock'));
 
         master.register('activityModel', viewModel.modelForSaving, viewModel.dirtyFlag.isDirty, viewModel.dirtyFlag.reset);
 
         var mapFeatures = $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
-        if(mapFeatures !=null && mapFeatures.features !== undefined && mapFeatures.features.length >0){
-            init_map_with_features({
-                    mapContainer: "smallMap",
-                    zoomToBounds:true,
-                    zoomLimit:16,
-                    featureService: "${createLink(controller: 'proxy', action:'feature')}",
-                    wmsServer: "${grailsApplication.config.spatial.geoserverUrl}"
-                },
-                mapFeatures
-            );
+        if (!mapFeatures) {
+            mapFeatures = {zoomToBounds: true, zoomLimit: 15, highlightOnHover: true, features: []};
         }
+
+        init_map_with_features({
+                mapContainer: "smallMap",
+                zoomToBounds:true,
+                zoomLimit:16,
+                featureService: "${createLink(controller: 'proxy', action:'feature')}",
+                wmsServer: "${grailsApplication.config.spatial.geoserverUrl}"
+            },
+            mapFeatures
+        );
+
     });
 </r:script>
 </body>

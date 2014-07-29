@@ -89,6 +89,12 @@ class ActivityController {
             model.activityTypes = metadataService.activityTypesList()
             model.mapFeatures = model.site ? siteService.getMapFeatures(model.site) : "{}"
             model.themes = metadataService.getThemesForProject(model.project)
+            // Required so we can supply a warning to the user if they attempt to change the site.
+            // TODO photopoints need to be formally a part of the model instead of an output type to prevent
+            // this kind of check.
+            def photopointOutput = activity.outputs.find {it.name == 'Photo Points'}
+            def photos = photopointOutput?.data?.photoPoints?.find { it.photo }
+            model.hasPhotopointData = photos != null
             model
         } else {
             forward(action: 'list', model: [error: 'no such id'])
