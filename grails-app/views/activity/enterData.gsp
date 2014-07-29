@@ -44,10 +44,6 @@
         <div class="row-fluid title-block well well-small input-block-level">
             <div class="span12 title-attribute">
                 <h1><span data-bind="click:goToProject" class="clickable">${project?.name?.encodeAsHTML() ?: 'no project defined!!'}</span></h1>
-                <g:if test="${site}">
-                    <h2><span data-bind="click:goToSite" class="clickable">Site: ${site.name?.encodeAsHTML()}</span></h2>
-                </g:if>
-                <g:else>
                     <div class="row-fluid">
                         <div class="span1">
                             Site:
@@ -59,7 +55,6 @@
                             Leave blank if this activity is not associated with a specific site.
                         </div>
                     </div>
-                </g:else>
                 <h3 data-bind="css:{modified:dirtyFlag.isDirty},attr:{title:'Has been modified'}">Activity: <span data-bind="text:type"></span></h3>
                 <h4><span>${project.associatedProgram?.encodeAsHTML()}</span> <span>${project.associatedSubProgram?.encodeAsHTML()}</span></h4>
             </div>
@@ -67,7 +62,7 @@
 
 
         <div class="row-fluid">
-            <div class="${mapFeatures.toString() != '{}' ? 'span9' : 'span12'}">
+            <div class="span9">
                 <!-- Common activity fields -->
 
                 <div class="row-fluid space-after">
@@ -143,11 +138,11 @@
 
 
             </div>
-            <g:if test="${mapFeatures.toString() != '{}'}">
-                <div class="span3">
-                    <div id="smallMap" style="width:100%"></div>
-                </div>
-            </g:if>
+
+            <div class="span3">
+                <div id="smallMap" style="width:100%"></div>
+            </div>
+
         </div>
 
         <g:if env="development" test="${!printView}">
@@ -200,13 +195,14 @@
             // load dynamic models - usually objects in a list
             <md:jsModelObjects model="${model}" site="${site}" speciesLists="${speciesLists}" edit="true" viewModelInstance="${blockId}ViewModelInstance"/>
 
-            this[viewModelName] = function () {
+            this[viewModelName] = function (site) {
                 var self = this;
                 self.name = "${output.name}";
                 self.outputId = "${output.outputId}";
                 self.data = {};
                 self.transients = {};
                 self.transients.dummy = ko.observable();
+                self.transients.selectedSite = ko.observable(site);
 
                 // add declarations for dynamic data
                 <md:jsViewModel model="${model}"  output="${output.name}"  edit="true" viewModelInstance="${blockId}ViewModelInstance"/>
@@ -247,7 +243,7 @@
                 };
             };
 
-            window[viewModelInstance] = new this[viewModelName]();
+            window[viewModelInstance] = new this[viewModelName](site);
 
             var output = ${output.data ?: '{}'};
 
@@ -266,8 +262,8 @@
             window[viewModelInstance].dirtyFlag.reset();
 
             // register with the master controller so this model can participate in the save cycle
-            master.register(viewModelInstance, window[viewModelInstance].modelForSaving,
-             window[viewModelInstance].dirtyFlag.isDirty, window[viewModelInstance].dirtyFlag.reset);
+            master.registerOutput(window[viewModelInstance], viewModelInstance, window[viewModelInstance].modelForSaving,
+             window[viewModelInstance].dirtyFlag.isDirty, window[viewModelInstance].dirtyFlag.reset, window[viewModelInstance].transients.selectedSite);
 
             // Check for locally saved data for this output - this will happen in the event of a session timeout
             // for example.
@@ -321,15 +317,28 @@
     var Master = function () {
         var self = this;
         this.subscribers = [];
+        this.site = null;
+        this.outputModels = [];
+
+        self.registerOutput = function(outputViewModel, modelInstanceName, getMethod, isDirtyMethod, resetMethod, siteMethod) {
+            self.register(modelInstanceName, getMethod, isDirtyMethod, resetMethod, siteMethod);
+            self.outputModels.push(outputViewModel);
+        },
+        self.registerActivity = function(activityViewModel, modelInstanceName, getMethod, isDirtyMethod, resetMethod, siteMethod) {
+            self.register(modelInstanceName, getMethod, isDirtyMethod, resetMethod, siteMethod);
+            activityViewModel.transients.outputs = self.outputModels;
+        },
         // client models register their name and methods to participate in saving
-        self.register = function (modelInstanceName, getMethod, isDirtyMethod, resetMethod) {
+        self.register = function (modelInstanceName, getMethod, isDirtyMethod, resetMethod, siteMethod) {
             this.subscribers.push({
                 model: modelInstanceName,
                 get: getMethod,
                 isDirty: isDirtyMethod,
-                reset: resetMethod
+                reset: resetMethod,
+                updateSite:siteMethod
             });
         };
+
         // master isDirty flag for the whole page - can control button enabling
         this.isDirty  = function () {
             var dirty = false;
@@ -509,17 +518,61 @@
             self.progress = ko.observable(act.progress);
             self.mainTheme = ko.observable(act.mainTheme);
             self.type = ko.observable(act.type);
-            self.siteId = ko.observable(act.siteId);
             self.projectId = act.projectId;
             self.transients = {};
-            self.transients.site = site;
+            self.transients.site = ko.observable(site);
             self.transients.project = project;
+            self.transients.outputs = [];
             self.transients.metaModel = metaModel || {};
             self.transients.activityProgressValues = ['planned','started','finished'];
             self.transients.themes = $.map(${themes}, function (obj, i) { return obj.name });
             self.transients.markedAsFinished = ko.observable(act.progress === 'finished');
             self.transients.markedAsFinished.subscribe(function (finished) {
                 self.progress(finished ? 'finished' : 'started');
+            });
+            self.transients.photoPointOutput = function() {
+                var photopointOutput = $.grep(self.transients.outputs, function(output) {
+                    return output.name == 'Photo Points';
+                });
+                return photopointOutput[0];
+            };
+
+            self.hasPhotoPointData = function() {
+
+                var photopointOutput = self.transients.photoPointOutput();
+
+                return photopointOutput && photopointOutput.hasPhotos();
+            };
+
+
+            self.confirmSiteChange = function() {
+
+                if (self.hasPhotoPointData()) {
+                    return window.confirm(
+                        "This activity has photo points attached.\n  Changing the site will delete these photos.\n  This cannot be undone.  Are you sure?"
+                    );
+                }
+                return true;
+            };
+            self.siteId = ko.vetoableObservable(act.siteId, self.confirmSiteChange);
+
+            self.siteId.subscribe(function(siteId) {
+
+                var matchingSite = $.grep(self.transients.project.sites, function(site) { return siteId == site.siteId})[0];
+
+                if (matchingSite) {
+
+                    alaMap.clearFeatures();
+                    alaMap.replaceAllFeatures([matchingSite.extent.geometry]);
+                }
+                else {
+                    alaMap.clearFeatures();
+                }
+                self.transients.site(matchingSite);
+                var photoPointOutput = self.transients.photoPointOutput();
+                if (photoPointOutput) {
+                    photoPointOutput.transients.selectedSite(matchingSite);
+                }
             });
             self.goToProject = function () {
                 if (self.projectId) {
@@ -559,7 +612,7 @@
             // make sure progress moves to started if we save any data (unless already finished)
             // (do this here so the model becomes dirty)
             self.progress(self.transients.markedAsFinished() ? 'finished' : 'started');
-        }
+        };
 
         var viewModel = new ViewModel(
             ${(activity as JSON).toString()},
@@ -567,22 +620,25 @@
             ${project ?: 'null'},
             ${metaModel ?: 'null'});
 
-        ko.applyBindings(viewModel);
-
-        master.register('activityModel', viewModel.modelForSaving, viewModel.dirtyFlag.isDirty, viewModel.dirtyFlag.reset);
 
         var mapFeatures = $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
-        if(mapFeatures !=null && mapFeatures.features !== undefined && mapFeatures.features.length >0){
-            init_map_with_features({
-                    mapContainer: "smallMap",
-                    zoomToBounds:true,
-                    zoomLimit:16,
-                    featureService: "${createLink(controller: 'proxy', action:'feature')}",
-                    wmsServer: "${grailsApplication.config.spatial.geoserverUrl}"
-                },
-                mapFeatures
-            );
+        if (!mapFeatures) {
+            mapFeatures = {zoomToBounds: true, zoomLimit: 15, highlightOnHover: true, features: []};
         }
+        init_map_with_features({
+                mapContainer: "smallMap",
+                zoomToBounds:true,
+                zoomLimit:16,
+                featureService: "${createLink(controller: 'proxy', action:'feature')}",
+                wmsServer: "${grailsApplication.config.spatial.geoserverUrl}"
+            },
+            mapFeatures
+        );
+        ko.applyBindings(viewModel);
+
+        master.registerActivity(viewModel, 'activityModel', viewModel.modelForSaving, viewModel.dirtyFlag.isDirty, viewModel.dirtyFlag.reset);
+
+
     });
 </r:script>
 </body>

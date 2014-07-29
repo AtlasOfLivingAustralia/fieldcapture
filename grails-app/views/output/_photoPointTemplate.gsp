@@ -6,7 +6,31 @@ var PhotoPoint = function(data) {
     this.description = data.description;
 };
 
+self.hasPhotos = function() {
+     var photos = $.grep(self.data.photoPoints(), function(photoPoint) {
+        return photoPoint.photo().length > 0;
+    });
+    return photos.length > 0;
+};
+
+self.transients.previousSiteId = site ? site.siteId : null;
+
+self.transients.selectedSite.subscribe(function(site) {
+
+    if (!site || self.transients.previousSiteId != site.siteId) {
+        // The site has changed, so reload our photopoints.
+        self.data.photoPoints([]);
+        self.loadphotoPoints([]);
+        site.photoPointData = self.data.photoPoints;
+    }
+    self.transients.previousSiteId = site ? site.siteId : null;
+});
+
+
 self.loadphotoPoints = function(data) {
+
+    var site = self.transients.selectedSite();
+
     var photoPointByName = function(name, data) {
         var photoPoint;
         if (data !== undefined) {
@@ -19,7 +43,10 @@ self.loadphotoPoints = function(data) {
         }
         return photoPoint;
     };
+
+
     if (site !== undefined && site.poi !== undefined) {
+
         $.each(site.poi, function(index, obj) {
             var photoPoint = new PhotoPoint(obj);
             var photoPointData = photoPointByName(obj.name, data);
@@ -37,3 +64,4 @@ self.loadphotoPoints = function(data) {
 self.removePhotoPoint = function(photoPoint) {
    self.data.${model.name}.remove(photoPoint);
 };
+
