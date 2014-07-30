@@ -18,7 +18,7 @@
 				<span data-bind="foreach: details['objectives']['rows']">
 					<span data-bind="if: shortLabel">
 						<b><span data-bind="text:shortLabel" ></span><span style="color: red;">*</span></b><br/> 
-						<textarea style="width: auto;" data-bind="disable: $parent.disableSave, value: $data[$parent.stage()]" 
+						<textarea style="width: 98%;" data-bind="disable: $parent.disableSave, value: $data[$parent.stage()]" 
 							data-validation-engine="validate[required]"   rows="5" cols="50"></textarea>
 						<br/>	
 					</span>
@@ -31,7 +31,7 @@
 				<span data-bind="foreach: details['milestones']['rows']">
 				<span data-bind="if: shortLabel">
 					<b><span data-bind="text:shortLabel" ></span><span style="color: red;">*</span></b>&nbsp; <span data-bind="text:dueDate.formattedDate" ></span><br/> 
-					<textarea style="width: auto;" data-bind="disable: $parent.disableSave, value: $data[$parent.stage()]"  
+					<textarea style="width: 98%;" data-bind="disable: $parent.disableSave, value: $data[$parent.stage()]"  
 					data-validation-engine="validate[required]" rows="5" cols="50"></textarea>
 					<br/>
 				</span>	

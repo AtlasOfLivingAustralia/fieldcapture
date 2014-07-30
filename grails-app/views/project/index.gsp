@@ -584,6 +584,7 @@
 	        		'Low'
 	        	];
                 self.details = ko.mapping.fromJS(project.custom['details']);
+                self.detailsLastUpdated = ko.observable(project.custom['details']['lastUpdated']).extend({simpleDate: true});;
 				self.planStatus = ko.observable(project.planStatus)
                 self.addObjectives = function(){
 					self.details['objectives']['rows'].push ({
@@ -930,7 +931,11 @@
 					}
 					else
 						stages['details'] =  ko.mapping.toJS(self.details);
-						
+					
+					if(!stagesOnly){
+						stages['details']['lastUpdated'] = '';
+					}
+											
 					// Add milestone and objectives details for every stage.
 					$.each(project.timeline, function(i, stage){
 						var stageName = stage.name;
