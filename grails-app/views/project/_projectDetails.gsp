@@ -3,6 +3,7 @@
 <h4>Project details not available.</h4>
 </div>
 <div data-bind="if:showStageMilestones">
+	<span style="float:right;" data-bind="if:detailsLastUpdated">Last update date : <span data-bind="text:detailsLastUpdated.formattedDate"></span></span>
 	<div data-bind="visible: details['monitoringApproach'].description">
 		<h3>General Project Information</h3>
 		<div class="row-fluid space-after">
@@ -10,7 +11,7 @@
 			        <div id="project-objectives" class="well well-small">
 			 			<label><b>Project objectives / goals / assets:</b></label> 	 
 					        <span data-bind="foreach : details['objectives']['rows']">
-			                    <b><span data-bind="text: shortLabel"> </span></b>
+			                    <b><span data-bind="text: $index()+1"></span>. <span data-bind="text: shortLabel"> </span></b>
 			                    <label style="margin-left: 15px" data-bind="text: description"></label>
 					        </span>
 			        </div>
@@ -20,7 +21,7 @@
 			        <div id="national-priorities" class="well well-small">
 			 			<label><b>National and regional priorities:</b></label>
 					        <span data-bind="foreach : details['nationalAndRegionalPriorities']['rows']">
-			                    <b><span data-bind="text: shortLabel"> </span></b>
+			                    <b><span data-bind="text: $index()+1"></span>. <span data-bind="text: shortLabel"> </span></b>
 			                   <label style="margin-left: 15px" data-bind="text: description"></label>
 							</span>			                    
 			        </div>
@@ -28,12 +29,15 @@
 		</div>
 		
 		<div class="row-fluid space-after">
-				    <div class="span6">
-				        <div id="project-implementation" class="well well-small">
-				 			<label><b>Project implementation / delivery mechanism</b></label> 
-							<label style="margin-left: 15px" data-bind="text:details['projectImplementation'].description" ></label>
-				        </div>
-				    </div>
+				 <div class="span6">
+			        <div id="project-milestones" class="well well-small">
+			 			<label><b>Project Milestones:</b></label> 	 
+					        <span data-bind="foreach : details['milestones']['rows']">
+			                    <b><span data-bind="text: $index()+1"></span>. <span data-bind="text: shortLabel"> </span></b>
+			                    <label style="margin-left: 15px" data-bind="text: description"></label>
+					        </span>
+			        </div>
+			    </div>
 				    
 				<div class="span6" data-bind="visible:details['projectPartnership'].description">
 			        <div id="project-partnership" class="well well-small">
@@ -58,6 +62,16 @@
 			        </div>
 			    </div>
 		</div>
+		
+		<div class="row-fluid space-after">
+				    <div class="span6">
+				        <div id="project-implementation" class="well well-small">
+				 			<label><b>Project implementation / delivery mechanism</b></label> 
+							<label style="margin-left: 15px" data-bind="text:details['projectImplementation'].description" ></label>
+				        </div>
+				    </div>
+				    
+			</div>		
 		
 		<div class="row-fluid space-after">
 			<div class="required">
