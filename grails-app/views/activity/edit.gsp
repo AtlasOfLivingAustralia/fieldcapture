@@ -43,12 +43,13 @@
             <div class="span12 title-attribute">
                 <h1><span data-bind="click:goToProject" class="clickable">${project?.name?.encodeAsHTML() ?: 'no project defined!!'}</span></h1>
                 <g:if test="${hasPhotopointData}">
-                    <div class="row-fluid">
+                    <div class="row-fluid"  style="margin-bottom: 10px;">
                         <span class="alert alert-warning">
-                            This activity has photo point data recorded.  The site cannot be changed.
+                            This activity has photo point data recorded.  The site can only be changed on the full activity data entry page.
                         </span>
                     </div>
-                    <h2><span data-bind="click:goToSite" class="clickable">Site: ${site.name?.encodeAsHTML()}</span></h2>
+                    <h2><span class="span12" data-bind="click:goToSite" class="clickable">Site: ${site.name?.encodeAsHTML()}</span></h2>
+
                 </g:if>
                 <g:else>
                     <select data-bind="options:transients.project.sites,optionsText:'name',optionsValue:'siteId',value:siteId,optionsCaption:'Choose a site...'"></select>
@@ -359,7 +360,11 @@
                 return jsData;
             };
             self.modelAsJSON = function () {
-                return JSON.stringify(self.modelForSaving());
+                return JSON.stringify(self.modelForSaving(), function(k, v) {
+                // If we leave the site or theme undefined, it will be ignored during JSON serialisation and hence
+                // will not overwrite the current value on the server.
+                    return v === undefined ? '' : v;
+                });
             };
 
             self.save = function (callback, key) {
