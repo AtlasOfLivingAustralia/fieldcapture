@@ -356,15 +356,22 @@
             self.modelForSaving = function () {
                 // get model as a plain javascript object
                 var jsData = ko.toJS(self);
+
                 delete jsData.transients;
+                // If we leave the site or theme undefined, it will be ignored during JSON serialisation and hence
+                // will not overwrite the current value on the server.
+                var possiblyUndefinedProperties = ['siteId', 'mainTheme'];
+
+                $.each(possiblyUndefinedProperties, function(i, propertyName) {
+                    if (jsData[propertyName] === undefined) {
+                        jsData[propertyName] = '';
+                    }
+                });
+
                 return jsData;
             };
             self.modelAsJSON = function () {
-                return JSON.stringify(self.modelForSaving(), function(k, v) {
-                // If we leave the site or theme undefined, it will be ignored during JSON serialisation and hence
-                // will not overwrite the current value on the server.
-                    return v === undefined ? '' : v;
-                });
+                return JSON.stringify(self.modelForSaving());
             };
 
             self.save = function (callback, key) {
