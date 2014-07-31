@@ -387,9 +387,6 @@
             ${(activityTypes as JSON).toString()},
             ${themes});
 
-        ko.applyBindings(viewModel,document.getElementById('koActivityMainBlock'));
-
-        master.register('activityModel', viewModel.modelForSaving, viewModel.dirtyFlag.isDirty, viewModel.dirtyFlag.reset);
 
         var mapFeatures = $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
         if (!mapFeatures) {
@@ -405,6 +402,10 @@
             },
             mapFeatures
         );
+
+        ko.applyBindings(viewModel,document.getElementById('koActivityMainBlock'));
+
+        master.register('activityModel', viewModel.modelForSaving, viewModel.dirtyFlag.isDirty, viewModel.dirtyFlag.reset);
 
     });
 </r:script>
