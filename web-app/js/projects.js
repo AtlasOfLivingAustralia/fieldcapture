@@ -241,8 +241,7 @@ function createProjectDetails(project){
 	project.custom['details'].nationalAndRegionalPriorities = {};
 	project.custom['details'].nationalAndRegionalPriorities["rows"] = [{
 	               				"shortLabel"  : "",
-	               				"description" : "",
-	               				"dueDate" : ko.observable().extend({simpleDate: false})
+	               				"description" : ""
 	               				}];
 	project.custom['details'].risks = {};
 	project.custom['details'].risks["overallRisk"] = "";

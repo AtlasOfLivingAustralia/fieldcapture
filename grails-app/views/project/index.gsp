@@ -350,7 +350,7 @@
                                 <!-- Edit project details -->
 								<h3>Project Details</h3>                                
 								<div class="row-fluid">          
-									<div class="span10 validationEngineContainer" id="project-details-validation">                      
+									<div class="validationEngineContainer" id="project-details-validation">                      
                                 		<g:render template="editProjectDetails" model="[project: project]"/>
                                 	</div>
                                 </div>
@@ -358,7 +358,7 @@
  							
  							<!-- SUMMARY REPORTS -->
                             <div id="summaryReports" class="pill-pane">
-                            	<div class="span10 validationEngineContainer" id="summary-validation">
+                            	<div class="validationEngineContainer" id="summary-validation">
                                 	<g:render template="summaryReports" model="[project: project]"/>
                                 </div>
                             </div> 
@@ -543,10 +543,6 @@
 						milestone['dueDate'] = ko.observable(milestone["dueDate"]).extend({simpleDate: false});
 				});
 				
-				$.each(project.custom['details'].nationalAndRegionalPriorities["rows"], function (i, nationalAndRegionalPriorities) {
-						nationalAndRegionalPriorities['dueDate'] = ko.observable(nationalAndRegionalPriorities["dueDate"]).extend({simpleDate: false});
-				});
-				
                 // todo: move this to mongodb lookup.
  	            self.threatOptions = [
 	                'Australian Government policy change',
@@ -608,8 +604,7 @@
                 self.addNationalAndRegionalPriorities = function(){
 					self.details['nationalAndRegionalPriorities']['rows'].push ({
 						shortLabel : "",
-						description: "",
-						dueDate: ko.observable().extend({simpleDate: false})
+						description: ""
 					});
     			}			
                 self.removeNationalAndRegionalPriorities = function(nationalAndRegionalPriorities){
@@ -927,10 +922,15 @@
 						 var details = ko.mapping.toJS(self.details)
 						 stages['details']['objectives'] = details['objectives'];
 						 stages['details']['milestones'] = details['milestones'];
-						 stages['details']['nationalAndRegionalPriorities'] = details['nationalAndRegionalPriorities'];
+						 stages['details']['risks'] = details['risks'];
 					}
 					else
 						stages['details'] =  ko.mapping.toJS(self.details);
+						
+					//Sort milestones array by due date.
+					stages['details']['milestones']['rows'].sort(function(a,b){
+						return new Date(a.dueDate) - new Date(b.dueDate);
+					});	
 					
 					if(!stagesOnly){
 						stages['details']['lastUpdated'] = '';
@@ -969,7 +969,7 @@
                                        "alert-error","summary-result-placeholder");
                                } else {
                                    showAlert("Project details saved","alert-success","save-details-result-placeholder");
-                                   showAlert("Project details saved","alert-success","summary-result-placeholder");
+                                   showAlert("Successfully saved","alert-success","summary-result-placeholder");
                                    if(reload)
                                    	location.reload();
                                }
