@@ -29,9 +29,11 @@
 	       <div class="well well-small" >
 				<label><b>Progress against milestones:</b></label>
 				<span data-bind="foreach: details['milestones']['rows']">
-				<span data-bind="if: shortLabel">
+				<!-- compare dates and ignore time stamp -->
+				<span data-bind="if: shortLabel && new Date(new Date(dueDate()).toDateString()) >= new Date(new Date($parent.stageStart()).toDateString())
+			 									&& new Date(new Date(dueDate()).toDateString()) < new Date(new Date($parent.stageEnd()).toDateString())">
 					<b><span data-bind="text:shortLabel" ></span><span style="color: red;">*</span></b>
-					<span style="float:right;">Due date: <span data-bind="text: dueDate.formattedDate" ></span></span>
+					<span style="float:right;"><b>Due date: </b><span data-bind="text: dueDate.formattedDate" ></span></span>
 					<textarea style="width: 98%;" data-bind="disable: $parent.disableSave, value: $data[$parent.stage()]"  
 					data-validation-engine="validate[required]" rows="5" cols="50"></textarea>
 					<br/>

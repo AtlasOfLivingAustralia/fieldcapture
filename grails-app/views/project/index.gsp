@@ -580,6 +580,10 @@
 	        		'Low'
 	        	];
                 self.details = ko.mapping.fromJS(project.custom['details']);
+                self.isProjectDetailsLocked = ko.computed (function (){
+                	return (project.planStatus == 'approved' || project.planStatus =='submitted');
+                });
+                
                 self.detailsLastUpdated = ko.observable(project.custom['details']['lastUpdated']).extend({simpleDate: true});;
 				self.planStatus = ko.observable(project.planStatus)
                 self.addObjectives = function(){
@@ -715,7 +719,7 @@
 							objectives: project.custom['details']['objectives'].rows,
 							milestones: project.custom['details']['milestones'].rows,
 							from: period.fromDate,
-							to: period.doDate
+							to: period.toDate
 							});
 					} 
 				});

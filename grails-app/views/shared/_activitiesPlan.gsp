@@ -975,6 +975,7 @@
                             "alert-error","status-update-error-placeholder");
                     } else {
                         self.planStatus('submitted');
+                        location.reload();
                     }
                 })
                 .fail(function (data) {
@@ -997,6 +998,7 @@
                             "alert-error","status-update-error-placeholder");
                     } else {
                         self.planStatus('approved');
+                        location.reload();
                     }
                 })
                 .fail(function (data) {
@@ -1019,6 +1021,7 @@
                             "alert-error","status-update-error-placeholder");
                     } else {
                         self.planStatus('not approved');
+                        location.reload();
                     }
                 })
                 .fail(function (data) {
@@ -1043,6 +1046,7 @@
                             "alert-error","status-update-error-placeholder");
                     } else {
                         self.planStatus('not approved');
+                        location.reload();
                     }
                 })
                 .fail(function (data) {

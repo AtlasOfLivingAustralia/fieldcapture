@@ -3,13 +3,17 @@
         <div style="float: left;" class="controls">
            <b>From: </b><span data-bind="text: plannedStartDate.formattedDate"></span>  <b>To: </b> <span data-bind="text: plannedEndDate.formattedDate"></span>
         </div>
-		<div style="float: right;" data-bind="visible: planStatus() == 'approved'">
+		<div style="float: right;" data-bind="if: planStatus() == 'approved'">
         	<span class="badge badge-success" style="font-size: 13px;">This plan has been approved</span>
         	<span data-bind="if:detailsLastUpdated"> <br/>Last update date : <span data-bind="text:detailsLastUpdated.formattedDate"></span></span>
         </div>
-        <div style="float: right;" data-bind="visible: planStatus() != 'approved' ">
+        <div style="float: right;" data-bind="if: planStatus() == '' || planStatus() == 'not approved' ">
         	<span class="badge badge-warning" style="font-size: 13px;">This plan is not yet approved</span>
-        	<span data-bind="if:detailsLastUpdated"><br/>Last update date :  <span data-bind="text:detailsLastUpdated"></span></span>
+        	<span data-bind="if:detailsLastUpdated"><br/>Last update date :  <span data-bind="text:detailsLastUpdated.formattedDate"></span></span>
+        </div>
+        <div style="float: right;" data-bind="if: planStatus() == 'submitted'">
+        	<span class="badge badge-info" style="font-size: 13px;">This plan has been submitted for approval</span>
+        	<span data-bind="if:detailsLastUpdated"><br/>Last update date :  <span data-bind="text:detailsLastUpdated.formattedDate"></span></span>
         </div>
        
     </div>
@@ -32,10 +36,10 @@
 			        <tbody data-bind="foreach : details['objectives']['rows']">
 			                <tr>
 			                	<td width="2%"> <span data-bind="text:$index()+1"></span></td>
-			                    <td width="30%"> <input style="width: 97%;" type="text"  class="input-xlarge"  data-bind="value: shortLabel" data-validation-engine="validate[required]"> </td>
-			                    <td width="64%"> <textarea style="width: 97%;" data-bind="value: description" rows="5" ></textarea> </td>
+			                    <td width="30%"> <input style="width: 97%;" type="text"  class="input-xlarge"  data-bind="value: shortLabel, disable: $parent.isProjectDetailsLocked()" data-validation-engine="validate[required]"> </td>
+			                    <td width="64%"> <textarea style="width: 97%;" data-bind="value: description, disable: $parent.isProjectDetailsLocked()" rows="5" ></textarea> </td>
 			                    <td width="4%">
-                        			<span data-bind="if: $index()" id="remove-objectives" ><i class="icon-remove" data-bind="click: $parent.removeObjectives"></i></span>
+                        			<span data-bind="if: $index() && !$parent.isProjectDetailsLocked()" id="remove-objectives" ><i class="icon-remove" data-bind="click: $parent.removeObjectives"></i></span>
 			                    </td>
 			                </tr>
 			        </tbody>
@@ -43,7 +47,7 @@
           				<tr>
           					<td></td>
           					<td colspan="0" style="text-align:left;">
-                  			<button type="button" class="btn btn-small" id="add-objectives" data-bind="click: addObjectives">
+                  			<button type="button" class="btn btn-small" id="add-objectives" data-bind="disable:isProjectDetailsLocked(), click: addObjectives">
                   			<i class="icon-plus"></i> Add a row</button>
                   			</td>
                   		</tr>
@@ -71,15 +75,16 @@
 			        <tbody data-bind="foreach : details['milestones']['rows']">
 			                <tr>
 			                	<td width="2%">  <span data-bind="text:$index()+1"></span></td>
-			                    <td width="20%"> <input style="width: 97%;" type="text"  class="input-xlarge"  data-bind="value: shortLabel" data-validation-engine="validate[required]"> </td>
-			                    <td width="54%"> <textarea style="width: 97%;" class="input-xlarge" data-bind="value: description"  id="partnership" rows="5"></textarea></td>
+			                    <td width="20%"> <input style="width: 97%;" type="text"  class="input-xlarge"  data-bind="value: shortLabel, disable: $parent.isProjectDetailsLocked()" data-validation-engine="validate[required]"> </td>
+			                    <td width="54%"> <textarea style="width: 97%;" class="input-xlarge" data-bind="value: description, disable: $parent.isProjectDetailsLocked()"  id="partnership" rows="5"></textarea></td>
 			                    <td width="20%">
-			                    	<div class="input-append">
+			                    	<div class="input-append" data-bind="if: !$parent.isProjectDetailsLocked()">
 			                    		<fc:datePicker style="width: 80%;" targetField="dueDate.date" name="dueDate" data-validation-engine="validate[required]" printable="${printView}" size="input-large"/>
 			                    	</div>
+									<span data-bind="text: dueDate.formattedDate, if: $parent.isProjectDetailsLocked()"></span>
 			                    </td>	
 			                    <td width="4%">
-                        			<span data-bind="if: $index()" id="remove-milestones" ><i class="icon-remove" data-bind="click: $parent.removeMilestones"></i></span>
+                        			<span data-bind="if: $index() && !$parent.isProjectDetailsLocked()" id="remove-milestones" ><i class="icon-remove" data-bind="click: $parent.removeMilestones"></i></span>
 			                    </td>		                    
 			                </tr>
 					</tbody>
@@ -87,7 +92,7 @@
              				<tr>
              					<td></td>
              					<td colspan="0" style="text-align:left;">
-                     			<button type="button" class="btn btn-small" id="add-milestones" data-bind="click: addMilestones">
+                     			<button type="button" class="btn btn-small" id="add-milestones" data-bind="disable: isProjectDetailsLocked(), click: addMilestones">
                      			<i class="icon-plus"></i> Add a row</button></td>
                      		</tr>
 					</tfoot>
@@ -115,23 +120,21 @@
 			        <tbody data-bind="foreach : details['nationalAndRegionalPriorities']['rows']">
 			                <tr>
 			                	<td width="2%"> <span data-bind="text:$index()+1"></span></td>
-			                    <td width="30%"> <input style="width: 97%;" type="text"  class="input-xlarge"  data-bind="value: shortLabel" data-validation-engine="validate[required]"> </td>
-			                    <td width="64%"><textarea style="width: 97%;" class="input-xlarge" data-bind="value: description"  id="national" rows="5"></textarea></td>
+			                    <td width="30%"> <input style="width: 97%;" type="text"  class="input-xlarge"  data-bind="value: shortLabel, disable: $parent.isProjectDetailsLocked()" data-validation-engine="validate[required]"> </td>
+			                    <td width="64%"><textarea style="width: 97%;" class="input-xlarge" data-bind="value: description, disable: $parent.isProjectDetailsLocked()"  id="national" rows="5"></textarea></td>
 			                    <td width="4%"> 
-                        			<span data-bind="if: $index()" id="remove-national" ><i class="icon-remove" data-bind="click: $parent.removeNationalAndRegionalPriorities"></i></span>
+                        			<span data-bind="if: $index() && !$parent.isProjectDetailsLocked()" id="remove-national" ><i class="icon-remove" data-bind="click: $parent.removeNationalAndRegionalPriorities"></i></span>
 			                    </td>		                    
 			                </tr>
 					 </tbody>
-			       
  					<tfoot>
              				<tr>
              					<td></td>
              					<td colspan="0" style="text-align:left;">
-                     			<button type="button" class="btn btn-small" id="add-national" data-bind="click: addNationalAndRegionalPriorities">
+                     			<button type="button" class="btn btn-small" id="add-national" data-bind="disable: isProjectDetailsLocked(), click: addNationalAndRegionalPriorities">
                      			<i class="icon-plus"></i> Add a row</button></td>
                      		</tr>
 					</tfoot>
-					 			        
 			    </table>
 	        </div>
 	    </div>
@@ -142,7 +145,7 @@
 	        <div id="monitor-approach" class="well well-small">
 	 			<label><b>Monitoring approach</b></label> 	 
 		        <p>Explain the approach that will be used to monitor the implementation progress and outcomes of the project, including methods, resources, timing, etc</p>	        
-				<textarea style="width: 98%;" data-bind="value: details['monitoringApproach'].description" class="input-xlarge" id="monitoring-approach" rows="5"
+				<textarea style="width: 98%;" data-bind="value: details['monitoringApproach'].description, disable: isProjectDetailsLocked()" class="input-xlarge" id="monitoring-approach" rows="5"
 					data-validation-engine="validate[required]"></textarea>
 	        </div>
 	    </div>
@@ -151,7 +154,7 @@
 	        <div id="data-sharing" class="well well-small">
 	 			<label><b>Data sharing protocols</b></label>
 	 			<p>Explain how the project will ensure that data being collected complies with state and commonwealth data standards / requirements / protocols and how it will shared.</p>	        
-				<textarea style="width: 98%;" data-bind="value:details['dataSharingProtocols'].description" class="input-xlarge" id="data-sharing-protocols" rows="5"></textarea>
+				<textarea style="width: 98%;" data-bind="value:details['dataSharingProtocols'].description, disable:isProjectDetailsLocked()" class="input-xlarge" id="data-sharing-protocols" rows="5"></textarea>
 	        </div>
 	    </div>
 </div>
@@ -161,7 +164,7 @@
 		        <div id="project-implementation" class="well well-small">
 		 			<label><b>Project implementation / delivery mechanism</b></label> 
 		 			<p>Explain how the project will be implemented, including methods, approaches, collaborations, etc.</p>	        
-					<textarea style="width: 98%;" data-bind="value:details['projectImplementation'].description" class="input-xlarge" id="implementation" rows="5" data-validation-engine="validate[required]"></textarea>
+					<textarea style="width: 98%;" data-bind="value:details['projectImplementation'].description, disable: isProjectDetailsLocked()" class="input-xlarge" id="implementation" rows="5" data-validation-engine="validate[required]"></textarea>
 		        </div>
 		    </div>
 		    
@@ -169,7 +172,7 @@
 	        <div id="project-partnership" class="well well-small">
 	 			<label><b>Project partnerships</b></label> 
 	 			<p>Provide details on all project partners and the nature and scope of their participation in the project.</p>	        
-				<textarea style="width: 98%;" data-bind="value:details['projectPartnership'].description" class="input-xlarge" id="partnership" rows="5"></textarea>
+				<textarea style="width: 98%;" data-bind="value:details['projectPartnership'].description, disable: isProjectDetailsLocked()" class="input-xlarge" id="partnership" rows="5"></textarea>
 	        </div>
 		</div>
 </div>
@@ -177,7 +180,7 @@
 <div id="save-details-result-placeholder"></div>
 <div class="row-fluid">
 	<div class="form-actions">
-            <button type="button" data-bind="click: saveProjectDetails" id="project-details-save" class="btn btn-primary">Save changes</button>
+            <button type="button" data-bind="click: saveProjectDetails, disable: isProjectDetailsLocked()" id="project-details-save" class="btn btn-primary">Save changes</button>
             <button type="button" id="details-cancel" class="btn">Cancel</button>
 	</div>	
 </div>
