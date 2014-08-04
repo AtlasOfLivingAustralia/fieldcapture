@@ -189,15 +189,26 @@
 		</div>
 	</div>
 	
-	<div class="span6 required" data-bind="if: isProjectDetailsLocked() && userIsCaseManager()">
-		<div class="form-actions">
-				<b>Case manager actions:</b>
-	            <button type="button" data-bind="click: modifyPlan"  id="modify-plan" class="btn btn-info">Modify</button>
-	            <br/><br/>		
-				<ul>
-					<li>"Modify" to edit project details information. </li>
-					<li>Modifying the project will change the state of the project to "Not approved".</li>
-				</ul>
+	<div class="span6 required" data-bind="if: userIsCaseManager()">
+		<div data-bind="if: planStatus() == 'approved'">
+			<div class="form-actions">
+					<b>Case manager actions:</b>
+		            <button type="button" data-bind="click: modifyPlan"  id="modify-plan" class="btn btn-info">Modify</button>
+		            <br/><br/>		
+					<ul>
+						<li>"Modify" to edit project details information. </li>
+						<li>Modifying the project will change the state of the project to "Not approved".</li>
+					</ul>
+			</div>
+		</div>	
+			<div data-bind="if: planStatus() == 'submitted'">
+				<div class="form-actions" >
+						<b>Case manager actions:</b>
+					    <span class="btn-group">
+	      					<button type="button" data-bind="click:approvePlan" class="btn btn-success"><i class="icon-ok icon-white"></i> Approve</button>
+	      					<button type="button" data-bind="click:rejectPlan" class="btn btn-danger"><i class="icon-remove icon-white"></i> Reject</button>
+		  				</span>
+				</div>
 		</div>
 	</div>
 </div>

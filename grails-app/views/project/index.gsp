@@ -1017,7 +1017,55 @@
                             "alert-error","status-update-error-placeholder");
                     }
                 });
+          	  };
+          	             // approve plan and handle errors
+            self.approvePlan = function () {
+                // should we check that status is 'submitted'?
+                self.saveStatus('approved')
+                .done(function (data) {
+                    if (data.error) {
+                        showAlert("Unable to approve plan. An unhandled error occurred: " + data.detail + ' \n' + data.error,
+                            "alert-error","status-update-error-placeholder");
+                    } else {
+                        self.planStatus('approved');
+                        location.reload();
+                    }
+                })
+                .fail(function (data) {
+                    if (data.status === 401) {
+                        showAlert("Unable to approve plan. You do not have case manager rights for this project.",
+                            "alert-error","status-update-error-placeholder");
+                    } else {
+                        showAlert("Unable to approve plan. An unhandled error occurred: " + data.status,
+                            "alert-error","status-update-error-placeholder");
+                    }
+                });
             };
+            // reject plan and handle errors
+            self.rejectPlan = function () {
+                // should we check that status is 'submitted'?
+                self.saveStatus('not approved')
+                .done(function (data) {
+                    if (data.error) {
+                        showAlert("Unable to reject plan. An unhandled error occurred: " + data.detail + ' \n' + data.error,
+                            "alert-error","status-update-error-placeholder");
+                    } else {
+                        self.planStatus('not approved');
+                        location.reload();
+                    }
+                })
+                .fail(function (data) {
+                    if (data.status === 401) {
+                        showAlert("Unable to reject plan. You do not have case manager rights for this project.",
+                            "alert-error","status-update-error-placeholder");
+                    } else {
+                        showAlert("Unable to reject plan. An unhandled error occurred: " + data.status,
+                            "alert-error","status-update-error-placeholder");
+                    }
+                });
+          	  };
+          	  
+          	  
                 // settings
                 self.saveSettings = function () {
                     if ($('#settings-validation').validationEngine('validate')) {
