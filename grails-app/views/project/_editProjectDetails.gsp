@@ -81,7 +81,9 @@
 			                    	<div class="input-append" data-bind="if: !$parent.isProjectDetailsLocked()">
 			                    		<fc:datePicker style="width: 80%;" targetField="dueDate.date" name="dueDate" data-validation-engine="validate[required]" printable="${printView}" size="input-large"/>
 			                    	</div>
-									<span data-bind="text: dueDate.formattedDate, if: $parent.isProjectDetailsLocked()"></span>
+									<span data-bind="if: $parent.isProjectDetailsLocked()">
+										<span data-bind="text: dueDate.formattedDate"></span>
+									</span>
 			                    </td>	
 			                    <td width="4%">
                         			<span data-bind="if: $index() && !$parent.isProjectDetailsLocked()" id="remove-milestones" ><i class="icon-remove" data-bind="click: $parent.removeMilestones"></i></span>

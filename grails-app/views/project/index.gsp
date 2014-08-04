@@ -317,14 +317,14 @@
                                 <g:set var="activeClass" value=""/>
                             </g:if>
 							
-							<li><a href="#projectDetails" id="projectdetails-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Project details</a></li>
-							<li><a href="#summaryReports" id="summaryreports-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Summary reports</a></li>							                            
-                            <li><a href="#editNewsAndEvents" id="editnewsandevents-tab" data-toggle="tab"><i class="icon-chevron-right"></i> News and events</a></li>
-                            <li><a href="#editProjectStories" id="editprojectstories-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Project stories</a></li>
+							<li><a href="#projectDetails" id="projectDetails-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Project details</a></li>
+							<li><a href="#summaryReports" id="summaryReports-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Summary reports</a></li>							                            
+                            <li><a href="#editNewsAndEvents" id="editNewsAndEvents-tab" data-toggle="tab"><i class="icon-chevron-right"></i> News and events</a></li>
+                            <li><a href="#editProjectStories" id="editProjectStories-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Project stories</a></li>
 
                             <li ${activeClass}><a href="#permissions" id="permissions-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Project access</a></li>
                             <li><a href="#species" id="species-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Species of interest</a></li>
-                            <li><a href="#edit-documents" id="documents-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Documents</a></li>
+                            <li><a href="#edit-documents" id="edit-documents-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Documents</a></li>
                         </ul>
                     </div>
                     <div class="span10">
