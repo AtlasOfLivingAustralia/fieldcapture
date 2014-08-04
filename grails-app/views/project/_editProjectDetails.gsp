@@ -178,9 +178,24 @@
 </div>
 
 <div id="save-details-result-placeholder"></div>
-<div class="row-fluid">
-	<div class="form-actions">
-            <button type="button" data-bind="click: saveProjectDetails, disable: isProjectDetailsLocked()" id="project-details-save" class="btn btn-primary">Save changes</button>
-            <button type="button" id="details-cancel" class="btn">Cancel</button>
-	</div>	
+
+<div class="row-fluid space-after">
+	<div class="span6 required">
+		<div class="form-actions">
+	            <button type="button" data-bind="click: saveProjectDetails, disable: isProjectDetailsLocked()" id="project-details-save" class="btn btn-primary">Save changes</button>
+	            <button type="button" id="details-cancel" class="btn">Cancel</button>
+		</div>
+	</div>
+	
+	<div class="span6 required" data-bind="if: isProjectDetailsLocked() && userIsCaseManager()">
+		<div class="form-actions">
+				<b>Case manager actions:</b>
+	            <button type="button" data-bind="click: modifyPlan"  id="modify-plan" class="btn btn-info">Modify</button>
+	            <br/><br/>		
+				<ul>
+					<li>"Modify" to edit project details information. </li>
+					<li>Modifying the project will change the state of the project to "Not approved".</li>
+				</ul>
+		</div>
+	</div>
 </div>
