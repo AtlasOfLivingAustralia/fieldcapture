@@ -75,7 +75,7 @@ class GmsMapper {
     ]
 
     def riskMapping = [
-            RISK_DESC:[name:'riskDescription', type:'string'],
+            RISK_DESC:[name:'description', type:'string'],
             RISK_IMPACT:[name:'consequence', type:'lookup', values:['Insignificant', 'Minor', 'Moderate', 'Major', 'Extreme']],
             RISK_LIKELIHOOD:[name:'likelihood', type:'lookup', values:['Almost Certain', 'Likely', 'Possible', 'Unlikely', 'Remote']],
             RISK_MITIGATION:[name:'currentControl', type:'string']
@@ -188,14 +188,51 @@ class GmsMapper {
     private def mapRisks(projectRows, project, errors) {
         def riskRows = projectRows.findAll {it[DATA_TYPE_COLUMN] == RISK_DATA_TYPE}
         def risks = []
+        createProjectDetails(project)
         riskRows.eachWithIndex { riskRow, i ->
 
             def result = gmsToMerit(riskRow, riskMapping)
             errors.addAll(result.errors)
-            risks << result.mappedData
+            def risk = [
+                    "threat"  : "",
+                    "description" : "",
+                    "likelihood" : "",
+                    "consequence" : "",
+                    "riskRating" : "",
+                    "currentControl" : "",
+                    "residualRisk" : ""]
+            risk.putAll(result.mappedData)
+            risks << risk
         }
-        project.custom = [details:[risks:[:]]]
-        project.custom.details.risks.rows = risks
+        if (risks) {
+            project.custom.details.risks.rows = risks
+        }
+    }
+    
+    private def createProjectDetails(project) {
+      
+        project.custom = [details:[:]]
+
+        project.custom.details.dataSharingProtocols = [description:""]
+        project.custom.details.projectImplementation = [description:""]
+        project.custom.details.monitoringApproach = [description:""]
+        project.custom.details.projectPartnership = [description:""]
+        project.custom.details.objectives = [rows : [["shortLabel"  : "", "description" : ""]]]
+        project.custom.details.milestones = [rows:[["shortLabel"  : "", "description" : "", "dueDate" : null]]]
+        project.custom.details.nationalAndRegionalPriorities = [rows:[["shortLabel"  : "", "description" : ""]]]
+        project.custom.details.risks = [overallRisk:""]
+        project.custom.details.risks.rows = [[
+                                               "threat"  : "",
+                                               "description" : "",
+                                               "likelihood" : "",
+                                               "consequence" : "",
+                                               "riskRating" : "",
+                                               "currentControl" : "",
+                                               "residualRisk" : ""
+                                            ]]
+        project.custom.details.lastUpdated = null
+        project.custom.details.status = ""
+
     }
 
     private def mapTarget(rowMap) {
