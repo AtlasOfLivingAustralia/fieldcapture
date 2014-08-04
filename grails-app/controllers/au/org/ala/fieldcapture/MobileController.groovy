@@ -173,6 +173,12 @@ class MobileController {
      * @return the projects for the supplied user.
      */
     def userProjects() {
+
+        // Only the green army app exists at the moment and the iOS app is not passing a filter parameter.
+        if (!params.program) {
+            params.program == 'Green Army'
+        }
+
         // validate with mobile auth.
         UserDetails user = authorize()
 
