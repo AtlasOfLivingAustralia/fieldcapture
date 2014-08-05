@@ -534,6 +534,7 @@
                 self.funding = ko.observable(project.funding).extend({currency:{}});
                 self.regenerateProjectTimeline = ko.observable(false);
 				self.userIsCaseManager = ko.observable(${user?.isCaseManager});
+				self.userIsAdmin = ko.observable(${user?.isAdmin});
                 //If there is no stages then store it under unknown stage, in future provide facility in admin area to change stage name.
                 if(!project.custom){
 					project = createProjectDetails(project);				               		
@@ -580,6 +581,9 @@
 	        		'Low'
 	        	];
                 self.details = ko.mapping.fromJS(project.custom['details']);
+                self.isProjectDetailsSaved = ko.computed (function (){
+                	return (project['custom']['details'].status == 'active');
+                });
                 self.isProjectDetailsLocked = ko.computed (function (){
                 	return (project.planStatus == 'approved' || project.planStatus =='submitted');
                 });
@@ -908,7 +912,7 @@
                 
 				self.saveSummaryDetails = function(){
 					if ($('#summary-validation').validationEngine('validate')) {
-						self.saveProject(false,true);
+						self.saveProject(true,true);
 					}
 				};
 				self.saveProjectDetails = function(){
@@ -996,6 +1000,27 @@
 	                });
             	};
             	
+            	self.submitChanges = function (newValue) {
+	                self.saveStatus('submitted')
+	                .done(function (data) {
+	                    if (data.error) {
+	                        showAlert("Unable to modify plan. An unhandled error occurred: " + data.detail + ' \n' + data.error,
+	                            "alert-error","status-update-error-placeholder");
+	                    } else {
+	                        location.reload();
+	                    }
+	                })
+	                .fail(function (data) {
+	                    if (data.status === 401) {
+	                        showAlert("Unable to modify plan. You do not have case manager rights for this project.",
+	                            "alert-error","status-update-error-placeholder");
+	                    } else {
+	                        showAlert("Unable to modify plan. An unhandled error occurred: " + data.status,
+	                            "alert-error","status-update-error-placeholder");
+	                    }
+	                });
+            	};
+            	
             	self.modifyPlan = function () {
                 // should we check that status is 'approved'?
                 self.saveStatus('not approved')
@@ -1004,7 +1029,6 @@
                         showAlert("Unable to modify plan. An unhandled error occurred: " + data.detail + ' \n' + data.error,
                             "alert-error","status-update-error-placeholder");
                     } else {
-                        self.planStatus('not approved');
                         location.reload();
                     }
                 })
@@ -1027,7 +1051,6 @@
                         showAlert("Unable to approve plan. An unhandled error occurred: " + data.detail + ' \n' + data.error,
                             "alert-error","status-update-error-placeholder");
                     } else {
-                        self.planStatus('approved');
                         location.reload();
                     }
                 })
@@ -1050,7 +1073,6 @@
                         showAlert("Unable to reject plan. An unhandled error occurred: " + data.detail + ' \n' + data.error,
                             "alert-error","status-update-error-placeholder");
                     } else {
-                        self.planStatus('not approved');
                         location.reload();
                     }
                 })

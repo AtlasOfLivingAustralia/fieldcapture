@@ -186,29 +186,39 @@
 		<div class="form-actions">
 	            <button type="button" data-bind="click: saveProjectDetails, disable: isProjectDetailsLocked()" id="project-details-save" class="btn btn-primary">Save changes</button>
 	            <button type="button" id="details-cancel" class="btn">Cancel</button>
-		</div>
-	</div>
-	
-	<div class="span6 required" data-bind="if: userIsCaseManager()">
-		<div data-bind="if: planStatus() == 'approved'">
-			<div class="form-actions">
-					<b>Case manager actions:</b>
-		            <button type="button" data-bind="click: modifyPlan"  id="modify-plan" class="btn btn-info">Modify</button>
-		            <br/><br/>		
-					<ul>
-						<li>"Modify" to edit project details information. </li>
-						<li>Modifying the project will change the state of the project to "Not approved".</li>
-					</ul>
-			</div>
-		</div>	
-			<div data-bind="if: planStatus() == 'submitted'">
-				<div class="form-actions" >
-						<b>Case manager actions:</b>
-					    <span class="btn-group">
-	      					<button type="button" data-bind="click:approvePlan" class="btn btn-success"><i class="icon-ok icon-white"></i> Approve</button>
-	      					<button type="button" data-bind="click:rejectPlan" class="btn btn-danger"><i class="icon-remove icon-white"></i> Reject</button>
-		  				</span>
+				<!--  Admin - submit to approval. -->
+				<div data-bind="if: userIsAdmin()">
+					<div data-bind="if: planStatus() == 'not approved' || planStatus() == ''">
+						<br/>Save your changes before submitting for approval: <button type="button" data-bind="click: submitChanges, enable: isProjectDetailsSaved()"  id="modify-plan" class="btn btn-info">Submit for approval</button><br/>		            	
+					</div>	
 				</div>
 		</div>
+		
+	</div>
+	<!--  Case manager actions -->
+	<div class="span6 required">
+			<div data-bind="if: userIsCaseManager()">
+				<div data-bind="if: planStatus() == 'approved'">
+					<div class="form-actions">
+							<b>Case manager actions:</b>
+				            <button type="button" data-bind="click: modifyPlan"  id="modify-plan" class="btn btn-info">Modify</button>
+				            <br/><br/>		
+							<ul>
+								<li>"Modify" to edit project details information. </li>
+								<li>Modifying the project will change the state of the project to "Not approved".</li>
+							</ul>
+					</div>
+				</div>	
+				<div data-bind="if: planStatus() == 'submitted'">
+					<div class="form-actions" >
+							<b>Case manager actions:</b>
+						    <span class="btn-group">
+		      					<button type="button" data-bind="click:approvePlan" class="btn btn-success"><i class="icon-ok icon-white"></i> Approve</button>
+		      					<button type="button" data-bind="click:rejectPlan" class="btn btn-danger"><i class="icon-remove icon-white"></i> Reject</button>
+			  				</span>
+					</div>
+				</div>
+			</div>
+			
 	</div>
 </div>
