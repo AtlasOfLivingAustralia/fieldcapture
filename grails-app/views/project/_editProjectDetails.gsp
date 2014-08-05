@@ -195,7 +195,6 @@
 							<li>Build your project by adding project details, activities and project targets information.</li>
 							<li>Save your changes before submitting for approval: <button type="button" data-bind="click: submitChanges, enable: isProjectDetailsSaved()"  id="modify-plan" class="btn btn-info">Submit for approval</button></li>
 						</ul>
-						<br/><br/>		            	
 					</div>
 					<div data-bind="if: planStatus() == 'submitted' || planStatus() == 'approved'">
 						<hr/>
