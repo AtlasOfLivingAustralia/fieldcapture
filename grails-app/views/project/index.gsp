@@ -364,7 +364,6 @@
                             </div> 
                             
                             <div id="editNewsAndEvents" class="pill-pane">
-
                                 <g:render template="editProjectContent" model="${[attributeName:'newsAndEvents', header:'News and events']}"/>
                             </div>
 

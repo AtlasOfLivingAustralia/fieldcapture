@@ -189,7 +189,21 @@
 				<!--  Admin - submit to approval. -->
 				<div data-bind="if: userIsAdmin()">
 					<div data-bind="if: planStatus() == 'not approved' || planStatus() == ''">
-						<br/>Save your changes before submitting for approval: <button type="button" data-bind="click: submitChanges, enable: isProjectDetailsSaved()"  id="modify-plan" class="btn btn-info">Submit for approval</button><br/>		            	
+						<hr/>
+						<b>Admin actions:</b>
+						<ul>
+							<li>Build your project by adding project details, activities and project targets information.</li>
+							<li>Save your changes before submitting for approval: <button type="button" data-bind="click: submitChanges, enable: isProjectDetailsSaved()"  id="modify-plan" class="btn btn-info">Submit for approval</button></li>
+						</ul>
+						<br/><br/>		            	
+					</div>
+					<div data-bind="if: planStatus() == 'submitted' || planStatus() == 'approved'">
+						<hr/>
+						<b>Admin:</b>
+						<ul>
+							<li>Your project is locked until it is approved by your case manager.</li> 
+							<li>Once your plan is approved you can start editing project information.</li>
+						</ul>
 					</div>	
 				</div>
 		</div>
@@ -201,10 +215,10 @@
 				<div data-bind="if: planStatus() == 'approved'">
 					<div class="form-actions">
 							<b>Case manager actions:</b>
-				            <button type="button" data-bind="click: modifyPlan"  id="modify-plan" class="btn btn-info">Modify</button>
+				            <button type="button" data-bind="click: modifyPlan"  id="modify-plan" class="btn btn-info">Modify project</button>
 				            <br/><br/>		
 							<ul>
-								<li>"Modify" to edit project details information. </li>
+								<li>"Modify project" will allow project admin's to edit project information. </li>
 								<li>Modifying the project will change the state of the project to "Not approved".</li>
 							</ul>
 					</div>

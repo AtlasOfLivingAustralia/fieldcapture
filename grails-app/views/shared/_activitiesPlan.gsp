@@ -195,6 +195,8 @@
 </span>
 <!-- /ko -->
 </script>
+<script id="noActionTmpl" type="text/html">
+</script>
 
 <script id="planningTmpl" type="text/html">
 <span class="span3">
@@ -886,7 +888,9 @@
             this.userIsCaseManager = ko.observable(${user?.isCaseManager});
             this.planStatus = ko.observable(project.planStatus || 'not approved');
             this.planStatusTemplateName = ko.computed(function () {
-                return self.planStatus() === 'not approved' ? 'planningTmpl' : self.planStatus() + 'Tmpl';
+            	// todo remove casemanager and admin functionality from activities plan page  
+                //return self.planStatus() === 'not approved' ? 'planningTmpl' : self.planStatus() + 'Tmpl';
+                return 'noActionTmpl';
             });
             this.isApproved = ko.computed(function () {
                 return (self.planStatus() === 'approved');
