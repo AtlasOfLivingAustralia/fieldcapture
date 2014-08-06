@@ -1389,7 +1389,7 @@
             });
 
             var newsAndEventsInitialised = false;
-            $('#editnewsandevents-tab').on('shown', function() {
+            $('#editNewsAndEvents-tab').on('shown', function() {
                 if (!newsAndEventsInitialised) {
                     var newsAndEventsViewModel = new window.newsAndEventsViewModel(viewModel, newsAndEventsMarkdown);
                     ko.applyBindings(newsAndEventsViewModel, $('#editnewsAndEventsContent')[0]);
@@ -1398,7 +1398,7 @@
 
             });
             var projectStoriesInitialised = false;
-            $('#editprojectstories-tab').on('shown', function() {
+            $('#editProjectStories-tab').on('shown', function() {
                 if (!projectStoriesInitialised) {
                     var projectStoriesViewModel = new window.projectStoriesViewModel(viewModel, projectStoriesMarkdown);
                     ko.applyBindings(projectStoriesViewModel, $('#editprojectStoriesContent')[0]);

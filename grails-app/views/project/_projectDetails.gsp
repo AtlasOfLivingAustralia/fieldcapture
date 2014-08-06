@@ -34,7 +34,7 @@
 			 			<label><b>Project Milestones:</b></label> 	 
 					        <span data-bind="foreach : details['milestones']['rows']">
 			                    <b><span data-bind="text: $index()+1"></span>. <span data-bind="text: shortLabel"> </span></b>
-			                    <span style="float:right;">Due date: <span data-bind="text: dueDate.formattedDate" ></span></span>
+			                    <span style="float:right;"><b>Due date: </b><span data-bind="text: dueDate.formattedDate" ></span></span>
 			                    <label style="margin-left: 15px" data-bind="text: description"></label>
 					        </span>
 			        </div>
