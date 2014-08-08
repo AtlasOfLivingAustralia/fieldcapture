@@ -3,7 +3,8 @@
 <span data-bind="text: activityStatus, css: activityStatusTheme"></span> 
 <span data-bind="visible: currentStage" class="badge badge-info" style="font-size: 13px;">Current</span>
 <br/>
-<b>From: </b><span data-bind="text:stageStart.formattedDate"></span> <b> To:</b> <span data-bind="text:stageEnd.formattedDate"></span>
+<b>From: </b><span data-bind="text:moment(stageStart()).format('DD/MM/YYYY')"></span>
+<b> To: </b> <span data-bind="text:moment(stageEnd()).format('DD/MM/YYYY')"></span>
 <br/><br/>
 
 <div data-bind="if:showStageMilestones">
@@ -30,10 +31,11 @@
 				<label><b>Progress against milestones:</b></label>
 				<span data-bind="foreach: details['milestones']['rows']">
 				<!-- compare dates and ignore time stamp -->
-				<span data-bind="if: shortLabel && new Date(new Date(dueDate()).toDateString()) >= new Date(new Date($parent.stageStart()).toDateString())
-			 									&& new Date(new Date(dueDate()).toDateString()) < new Date(new Date($parent.stageEnd()).toDateString())">
+					<span data-bind="if: shortLabel && new Date(moment(dueDate()).format('L')) >= new Date(moment($parent.stageStart()).format('L'))
+			 												&& new Date(moment(dueDate()).format('L')) < new Date(moment($parent.stageEnd()).format('L'))">
+			 									
 					<b><span data-bind="text:shortLabel" ></span><span style="color: red;">*</span></b>
-					<span style="float:right;"><b>Due date: </b><span data-bind="text: dueDate.formattedDate" ></span></span>
+					<span style="float:right;"><b>Due date: </b><span data-bind="text: moment(dueDate()).format('DD/MM/YYYY')" ></span></span>
 					<textarea style="width: 98%;" data-bind="disable: $parent.disableSave, value: $data[$parent.stage()]"  
 					data-validation-engine="validate[required]" rows="5" cols="50"></textarea>
 					<br/>

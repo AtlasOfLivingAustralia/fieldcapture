@@ -82,7 +82,7 @@
 			                    		<fc:datePicker style="width: 80%;" targetField="dueDate.date" name="dueDate" data-validation-engine="validate[required]" printable="${printView}" size="input-large"/>
 			                    	</div>
 									<span data-bind="if: $parent.isProjectDetailsLocked()">
-										<span data-bind="text: dueDate.formattedDate"></span>
+										<span data-bind="text: moment(dueDate()).format('DD/MM/YYYY')"></span>
 									</span>
 			                    </td>	
 			                    <td width="4%">

@@ -34,7 +34,7 @@
 			 			<label><b>Project Milestones:</b></label> 	 
 					        <span data-bind="foreach : details['milestones']['rows']">
 			                    <b><span data-bind="text: $index()+1"></span>. <span data-bind="text: shortLabel"> </span></b>
-			                    <span style="float:right;"><b>Due date: </b><span data-bind="text: dueDate.formattedDate" ></span></span>
+			                    <span style="float:right;"><b>Due date: </b><span data-bind="text: moment(dueDate()).format('DD/MM/YYYY')" ></span></span>
 			                    <label style="margin-left: 15px" data-bind="text: description"></label>
 					        </span>
 			        </div>
@@ -128,8 +128,8 @@
 	 <div data-bind="foreach : customStages" >
 		<div data-bind="visible: objectives">	    
 			<h4><span data-bind="text: name"> </span></h4>
-			<b>From : </b><span data-bind="text: new Date(from).toDateString()"> </span>
-			<b>To : </b><span data-bind="text: new Date(to).toDateString()"> </span>
+			<b>From : </b><span data-bind="text: moment(from).format('DD/MM/YYYY')"> </span>
+			<b>To : </b><span data-bind="text: moment(to).format('DD/MM/YYYY')"> </span>
 			<div class="row-fluid space-after">
 			    <div class="span6">
 			        <div class="well well-small" data-bind="visible: objectives" >
@@ -145,10 +145,10 @@
 			 			<label><b>Progress against milestones:</b></label>
 			 			<span data-bind="foreach: milestones">
 			 				<!-- compare dates and ignore time stamp -->	
-			 				<span data-bind="if: shortLabel && new Date(new Date(dueDate).toDateString()) >= new Date(new Date($parent.from).toDateString())
-			 												&& new Date(new Date(dueDate).toDateString()) < new Date(new Date($parent.to).toDateString())">
+			 				<span data-bind="if: shortLabel && new Date(moment(dueDate).format('L')) >= new Date(moment($parent.from).format('L'))
+			 												&& new Date(moment(dueDate).format('L')) < new Date(moment($parent.to).format('L'))">
 				 				<b><span data-bind="text:shortLabel"></span></b>
-				 				<span style="float:right;"><b>Due date: </b><span data-bind="text: new Date(dueDate).toDateString()" ></span></span>
+				 				<span style="float:right;"><b>Due date: </b><span data-bind="text: moment(dueDate).format('DD/MM/YYYY')" ></span></span>
 				 				<label style="margin-left: 15px" data-bind="text:$data[$parent.name]" ></label>
 			 				</span>
 					   </span>

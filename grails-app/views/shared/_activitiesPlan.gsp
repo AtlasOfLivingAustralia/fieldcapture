@@ -745,8 +745,8 @@
                 var isEditor = ${user?.isEditor?'true':'false'};
                 return !isEditor || self.isSubmitted() || self.isApproved();
             });
-            this.stageStatusTemplateName = ko.computed(function() {
-                if (!self.isReportable) {
+            this.stageStatusTemplateName = ko.computed(function(){
+					if (!self.isReportable) {
                     return 'stageNotReportableTmpl';
                 }
                 if (self.isApproved()) {
@@ -891,7 +891,7 @@
             	// todo remove casemanager and admin functionality from activities plan page  
                 //return self.planStatus() === 'not approved' ? 'planningTmpl' : self.planStatus() + 'Tmpl';
                 return 'noActionTmpl';
-            });
+          });
             this.isApproved = ko.computed(function () {
                 return (self.planStatus() === 'approved');
             });

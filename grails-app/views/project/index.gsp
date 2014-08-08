@@ -734,8 +734,8 @@
    				//Summary report
    				self.timeline = [];
    				
-   				self.stageStart = ko.observable().extend({simpleDate: false});
-   				self.stageEnd = ko.observable().extend({simpleDate: false});
+   				self.stageStart = ko.observable();
+   				self.stageEnd = ko.observable();
 				self.currentStage = ko.observable(true);
 				$.each(project.timeline, function(i, period){
 					if(isPastStage(project.timeline, self.stage(), period))
