@@ -53,6 +53,9 @@
     <r:require modules="gmap3,mapWithFeatures,knockout,datepicker,amplify,jqueryValidationEngine, projects, attachDocuments, wmd"/>
 </head>
 <body>
+<div id="spinner" class="spinner" style="position: fixed;top: 50%;left: 50%;margin-left: -50px;margin-top: -50px;text-align:center;z-index:1234;overflow: auto;width: 100px;height: 102px;">
+ 	<img id="img-spinner" src="${request.contextPath}/images/loading.gif" alt="Loading"/>
+</div>
 <div class="container-fluid">
 
     <ul class="breadcrumb">
@@ -98,7 +101,9 @@
         <li><a href="#dashboard" id="dashboard-tab" data-toggle="${tabIsActive}">Dashboard</a></li>
         <g:if test="${user?.isAdmin || user?.isCaseManager}"><li><a href="#admin" id="admin-tab" data-toggle="tab">Admin</a></li></g:if>
     </ul>
-    <div class="tab-content" style="overflow:visible;">
+    
+	
+    <div class="tab-content" style="overflow:visible;display:none">
         <div class="tab-pane active" id="overview">
             <!-- OVERVIEW -->
             <div class="row-fluid">
@@ -467,7 +472,6 @@
                 return true;
             }
         }
-
         $(window).load(function () {
             var map;
             // setup 'read more' for long text
@@ -1427,7 +1431,10 @@
 
             // BS tooltip
             $('.tooltips').tooltip();
-
+            
+            //Page loading indicator.
+			$('.spinner').hide();
+        	$('.tab-content').fadeIn();
         });// end window.load
 
        /**
