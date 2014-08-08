@@ -54,7 +54,7 @@
 </head>
 <body>
 <div id="spinner" class="spinner" style="position: fixed;top: 50%;left: 50%;margin-left: -50px;margin-top: -50px;text-align:center;z-index:1234;overflow: auto;width: 100px;height: 102px;">
- 	<img id="img-spinner" src="${request.contextPath}/images/loading.gif" alt="Loading"/>
+ 	<img id="img-spinner" width="50" height="50" src="${request.contextPath}/images/loading.gif" alt="Loading"/>
 </div>
 <div class="container-fluid">
 
