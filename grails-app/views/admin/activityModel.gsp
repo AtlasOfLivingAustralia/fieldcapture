@@ -48,7 +48,7 @@
     <div>Type: <span data-bind="text:type"></span></div>
     <div>Category: <span data-bind="text:category"></span></div>
     <div>Enabled: <span data-bind="text:enabled"></span></div>
-    <div>GMS name: <span data-bind="text:gmsId"></span></div>
+    <div>GMS ID: <span data-bind="text:gmsId"></span></div>
 
     <div>Outputs: <ul data-bind="foreach:outputs">
         <li data-bind="text:$data"></li>
