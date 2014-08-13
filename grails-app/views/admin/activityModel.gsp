@@ -48,7 +48,7 @@
     <div>Type: <span data-bind="text:type"></span></div>
     <div>Category: <span data-bind="text:category"></span></div>
     <div>Enabled: <span data-bind="text:enabled"></span></div>
-    <div>GMS name: <span data-bind="text:gmsName"></span></div>
+    <div>GMS name: <span data-bind="text:gmsId"></span></div>
 
     <div>Outputs: <ul data-bind="foreach:outputs">
         <li data-bind="text:$data"></li>
@@ -62,7 +62,7 @@
     <div class="clearfix"><span class="span2">Type:</span> <select data-bind="options:['Activity','Assessment'],value:type" class="pull-right"></select></div>
     <div class="clearfix"><span class="span2">Category:</span> <input type="text" class="input-large pull-right" data-bind="value:category"></div>
     <div class="clearfix"><span class="span2">Enabled:</span><input type="checkbox" class="pull-right" data-bind="checked:enabled"></div>
-    <div class="clearfix"><span class="span2">GMS name:</span> <input type="text" class="input-large pull-right" data-bind="value:gmsName"></div>
+    <div class="clearfix"><span class="span2">GMS ID:</span> <input type="text" class="input-large pull-right" data-bind="value:gmsId"></div>
 
     <div>Outputs: <ul data-bind="sortable:{data:outputs}" class="output-drop-target sortableList small">
         <li>
@@ -101,10 +101,7 @@
             Units: <input type="text" data-bind="value:units"/>
             </div>
             <div style="text-align:left;">
-            GMS name: <input type="text" data-bind="value:gmsScoreName"/>
-            </div>
-            <div style="text-align:left;">
-            GMS units: <input type="text" data-bind="value:gmsUnits"/>
+            GMS ID: <input type="text" data-bind="value:gmsId"/>
             </div>
 
             <div style="text-align:left;">
@@ -166,7 +163,7 @@
             this.category = ko.observable(act.category);
             this.enabled = ko.observable(!act.status || act.status == 'active');
             this.status = ko.observable(act.status);
-            this.gmsName = ko.observable(act.gmsName);
+            this.gmsId = ko.observable(act.gmsId);
             this.enabled.subscribe(function (enabled) {
                 if (enabled) {
                     self.status('active');
@@ -217,9 +214,7 @@
             self.groupBy = ko.observable(score.groupBy);
             self.displayType = ko.observable(score.displayType);
             self.listName = ko.observable(score.listName);
-            self.gmsScoreName = ko.observable(score.gmsScoreName);
-            self.gmsUnits = ko.observable(score.gmsUnits);
-
+            self.gmsId = ko.observable(score.gmsId);
             self.buildCompoundName = function(list, name) {
                 if (list) {
                     return list + '.' + name;
