@@ -797,3 +797,18 @@ select:focus:invalid:focus {
 }
 
 input[type="checkbox"] { -webkit-appearance: checkbox; !important }
+
+#imageViewerModal {
+    left: 5%;
+    width:90%;
+    top: 5%;
+    height:80%;
+    margin-left:0px;
+
+}
+#imageViewerModal .modal-body {
+    height:100%;
+    width:100%;
+    max-height:100%;
+    padding:0px;
+}

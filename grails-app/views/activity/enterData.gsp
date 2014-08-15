@@ -25,7 +25,7 @@
         },
         here = document.location.href;
     </r:script>
-    <r:require modules="knockout,jqueryValidationEngine,datepicker,jQueryFileUploadUI,mapWithFeatures,attachDocuments,species,amplify"/>
+    <r:require modules="knockout,jqueryValidationEngine,datepicker,jQueryFileUploadUI,mapWithFeatures,attachDocuments,species,amplify,imageViewer"/>
 </head>
 <body>
 <div class="container-fluid validationEngineContainer" id="validation-container">
@@ -310,6 +310,8 @@
     <a href="${createLink(action:'enterData', id:activity.activityId)}?returnTo=${returnTo}">Click here to refresh your login and reload this page.</a>
 </div>
 
+<g:render template="/shared/imagerViewerModal"></g:render>
+
 <r:script>
 
     var returnTo = "${returnTo}";
@@ -320,6 +322,7 @@
         this.subscribers = [];
         this.site = null;
         this.outputModels = [];
+        this.activityViewModel = null;
 
         self.registerOutput = function(outputViewModel, modelInstanceName, getMethod, isDirtyMethod, resetMethod, siteMethod) {
             self.register(modelInstanceName, getMethod, isDirtyMethod, resetMethod, siteMethod);
@@ -328,6 +331,7 @@
         self.registerActivity = function(activityViewModel, modelInstanceName, getMethod, isDirtyMethod, resetMethod, siteMethod) {
             self.register(modelInstanceName, getMethod, isDirtyMethod, resetMethod, siteMethod);
             activityViewModel.transients.outputs = self.outputModels;
+            self.activityViewModel = activityViewModel;
         },
         // client models register their name and methods to participate in saving
         self.register = function (modelInstanceName, getMethod, isDirtyMethod, resetMethod, siteMethod) {
@@ -338,6 +342,14 @@
                 reset: resetMethod,
                 updateSite:siteMethod
             });
+        };
+
+        self.activityContext = function() {
+            return {
+                activityId: self.activityViewModel.activityId,
+                siteId: self.activityViewModel.siteId(),
+                projectId: self.activityViewModel.projectId
+            }
         };
 
         // master isDirty flag for the whole page - can control button enabling
@@ -451,56 +463,6 @@
             master.reset();
         });
 
-        $('.edit-btn').click(function () {
-            var data = ${activity.outputs},
-                outputName = $(this).parent().previous().html(),
-                outputId;
-            // search for corresponding outputs in the activity data
-            $.each(data, function (i,output) { // iterate output data in the activity to
-                                               // find any matching the meta-model name
-                if (output.name === outputName) {
-                    outputId = output.outputId;
-                }
-            });
-            if (outputId) {
-                // build edit link
-                document.location.href = fcConfig.serverUrl + "/output/edit/" + outputId +
-                    "?returnTo=" + here;
-            } else {
-                // build create link
-                document.location.href = fcConfig.serverUrl + "/output/create?activityId=${activity.activityId}" +
-                    '&outputName=' + encodeURIComponent(outputName) +
-                    "&returnTo=" + here;
-            }
-
-        });
-
-        ko.bindingHandlers.editOutput = {
-            init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
-                var outputName = ko.utils.unwrapObservable(valueAccessor()),
-                    activity = bindingContext.$root,
-                    outputId;
-
-                // search for corresponding outputs in the activity data
-                $.each(activity.outputs, function (i,output) { // iterate output data in the activity to
-                                                                  // find any matching the meta-model name
-                    if (output.name === outputName) {
-                        outputId = output.outputId;
-                    }
-                });
-                if (outputId) {
-                    // build edit link
-                    $(element).html('Edit data');
-                    $(element).attr('href', fcConfig.serverUrl + "/output/edit/" + outputId +
-                        "?returnTo=" + here);
-                } else {
-                    // build create link
-                    $(element).attr('href', fcConfig.serverUrl + '/output/create?activityId=' + activity.activityId +
-                        '&outputName=' + encodeURIComponent(outputName) +
-                        "&returnTo=" + here);
-                }
-            }
-        };
 
         function ViewModel (act, site, project, metaModel) {
             var self = this;

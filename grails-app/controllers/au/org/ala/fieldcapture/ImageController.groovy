@@ -19,6 +19,8 @@ import java.text.SimpleDateFormat
 
 class ImageController {
 
+    def webService
+
     static defaultAction = "get"
 
     def test() {}
@@ -95,7 +97,40 @@ class ImageController {
 
     def demo() {}
 
-    def upload = {
+    /**
+     * Uploads the image to the ALA image service.
+     * @return
+     */
+    def upload() {
+        if (request.respondsTo('getFile')) {
+            def url = grailsApplication.config.ala.image.service.url + 'ws/uploadImage'
+
+            def params = [synchronousThumbnail:'true']
+            MultipartFile file = request.getFile('files')
+
+            def result = webService.postMultipart(url, params, file, 'image')
+            if (result.content) {
+                def detailsUrl = "${grailsApplication.config.ala.image.service.url}ws/getImageInfo?id=${result.content.imageId}"
+                def imageDetails = webService.getJson(detailsUrl)
+                def thumbnailUrl = imageDetails.imageUrl.replace("/original", "/thumbnail")
+
+                def md = [
+                        name         : imageDetails.orignalFileName,
+                        size         : imageDetails.sizeInBytes,
+                        id           : result.content.imageId,
+                        url          : imageDetails.imageUrl,
+                        thumbnail_url: thumbnailUrl,
+                        delete_url   : grailsApplication.config.grails.serverURL + '/image/delete?id='+result.content.imageId,
+                        delete_type  : 'DELETE']
+                result = [files: [md]]
+            }
+            render result as JSON
+        }
+    }
+
+
+
+    def uploadOld() {
         log.debug "-------------------------------upload action"
         params.each { log.debug it }
         def result = []

@@ -394,9 +394,9 @@ class ModelJSTagLib {
                     case 'embeddedImages':
                         out << INDENT*3 << "this.${col.name} = ko.observableArray();\n"
                         out << INDENT*3 << "if (data['${col.name}'] instanceof Array) {\n"
-                        out << INDENT*4 << "this.${col.name}(data['${col.name}']);\n"
+                        out << INDENT*4 << "for (var i=0; i< data['${col.name}'].length; i++) {this.${col.name}.push(image(data['${col.name}'][i]))}\n"
                         out << INDENT*3 << "} else if (data['${col.name}']) {\n"
-                        out << INDENT*4 << "this.${col.name}.push(data['${col.name}']);\n"
+                        out << INDENT*4 << "this.${col.name}.push(image(data['${col.name}']));\n"
                         out << INDENT*3 << "}\n"
                         break;
                     case 'species':
@@ -605,9 +605,20 @@ class ModelJSTagLib {
         """
     }
 
+    def populateImageList(model, out) {
+        out << INDENT*4 << """
+        self.load${model.name} = function (data) {
+            if (data !== undefined) {
+                \$.each(data, function (i, obj) {
+                    self.data.${model.name}.push(image(obj));
+                });
+        }};
+        """
+    }
+
     def imageModel(model, out) {
         out << INDENT*4 << "self.data.${model.name}=ko.observableArray([]);\n"
-        populateList(model, out)
+        populateImageList(model, out)
     }
 
     def photoPointModel(attrs, model, out) {

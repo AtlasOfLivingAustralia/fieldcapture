@@ -67,6 +67,8 @@ class ViewModelWidgetRenderer implements ModelWidgetRenderer {
     @Override
     void renderEmbeddedImages(WidgetRenderContext context) {
         context.writer << "<ul class=\"imageList\" data-bind=\"foreach: ${context.source}\">"
+        context.databindAttrs.add "click", "viewImage"
+
         context.databindAttrs.add "attr",  "{src: thumbnail_url}"
         context.writer << "<li><img data-bind=\"${context.databindAttrs.toString()}\"></img></li>"
         context.writer << "</ul>"

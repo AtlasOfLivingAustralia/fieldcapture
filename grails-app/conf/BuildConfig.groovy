@@ -7,6 +7,7 @@ grails.project.source.level = 1.6
 //grails.project.war.file = "target/${appName}-${appVersion}.war"
 grails.project.fork.run=false
 
+//grails.plugin.location.'images-client-plugin'='../images-client-plugin'
 grails.project.dependency.resolution = {
     // inherit Grails' default dependencies
     inherits("global") {
@@ -81,6 +82,8 @@ grails.project.dependency.resolution = {
 
         compile ":excel-export:0.2.0"
         compile ":excel-import:1.0.0"
+
+        compile (":images-client-plugin:0.2.3")
 
         test ":geb:0.9.3"
         test (":spock:0.7") {

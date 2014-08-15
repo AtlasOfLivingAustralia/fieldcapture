@@ -183,4 +183,9 @@ modules = {
         dependsOn 'knockout'
         resource 'js/speciesModel.js'
     }
+
+    imageViewer {
+        dependsOn 'viewer'
+
+    }
 }
