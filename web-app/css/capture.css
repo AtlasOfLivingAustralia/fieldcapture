@@ -798,17 +798,23 @@ select:focus:invalid:focus {
 
 input[type="checkbox"] { -webkit-appearance: checkbox; !important }
 
-#imageViewerModal {
-    left: 5%;
-    width:90%;
-    top: 5%;
-    height:80%;
-    margin-left:0px;
-
+.fancybox-nav {
+    width: 60px;
 }
-#imageViewerModal .modal-body {
-    height:100%;
-    width:100%;
-    max-height:100%;
-    padding:0px;
+
+.fancybox-nav span {
+    visibility: visible;
+    opacity: 0.5;
+}
+
+.fancybox-nav:hover span {
+    opacity: 1;
+}
+
+.fancybox-next {
+    right: -60px;
+}
+
+.fancybox-prev {
+    left: -60px;
 }
