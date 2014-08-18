@@ -128,8 +128,6 @@ class ImageController {
         }
     }
 
-
-
     def uploadOld() {
         log.debug "-------------------------------upload action"
         params.each { log.debug it }

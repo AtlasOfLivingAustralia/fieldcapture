@@ -131,4 +131,21 @@ class ProxyController {
         webService.proxyGetRequest(response, url)
         return null
     }
+
+    /** Proxies the ALA image service as the development server doesn't support SSL. */
+    def getImageInfo(String id) {
+        def detailsUrl = "${grailsApplication.config.ala.image.service.url}ws/getImageInfo?id=${id}"
+        def result = webService.getJson(detailsUrl) as JSON
+
+        if (params.callback) {
+            result = "${params.callback}(${result.toString()})"
+            response.setContentType('text/plain;charset=UTF8')
+
+            render result.toString()
+        }
+        else {
+            render result
+        }
+
+    }
 }
