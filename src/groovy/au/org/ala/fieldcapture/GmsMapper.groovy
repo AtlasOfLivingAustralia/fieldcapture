@@ -51,7 +51,9 @@ class GmsMapper {
             FINISH_DT:[name:'plannedEndDate', type:'date'],
             FUNDING:[name:'funding', type:'decimal'],
             AUTHORISEDP_EMAIL:[name:'adminEmail', type:'email'],
-            GRANT_MGR_EMAIL:[name:'grantManagerEmail', type:'email']
+            GRANT_MGR_EMAIL:[name:'grantManagerEmail', type:'email'],
+            SERVICE_PROVIDER:[name:'serviceProviderName', type:'string'],
+            SERVICE_PROVIDER_EMAIL:[name:'serviceProviderEmail', type:'email']
     ]
 
     def siteMapping = [
@@ -76,8 +78,8 @@ class GmsMapper {
 
     def riskMapping = [
             RISK_DESC:[name:'description', type:'string'],
-            RISK_IMPACT:[name:'consequence', type:'lookup', values:['Insignificant', 'Minor', 'Moderate', 'Major', 'Extreme']],
-            RISK_LIKELIHOOD:[name:'likelihood', type:'lookup', values:['Almost Certain', 'Likely', 'Possible', 'Unlikely', 'Remote']],
+            RISK_IMPACT:[name:'consequence', type:'lookup', values:['1':'Insignificant', '2':'Minor', '3':'Moderate', '4':'Major', '5':'Extreme']],
+            RISK_LIKELIHOOD:[name:'likelihood', type:'lookup', values:['5':'Almost Certain', '4':'Likely', '3':'Possible', '2':'Unlikely', '1':'Remote']],
             RISK_MITIGATION:[name:'currentControl', type:'string']
     ]
 
@@ -171,7 +173,9 @@ class GmsMapper {
                 if (!project.outputTargets) {
                     project.outputTargets = []
                 }
-                project.outputTargets << target
+                if (target) {
+                    project.outputTargets << target
+                }
             }
             else if (activity.type != 'Other') { // Silently ignore 'Other'
                 errors << [error:"Unmappable type for activity : ${activityRow.PGAT_ACTIVITY_DELIVERABLE} row: {$activityRow.index}"]
@@ -185,10 +189,17 @@ class GmsMapper {
 
     }
 
+    static def riskMatrix = [
+            "Almost Certain":["Insignificant":"Medium","Minor":"Significant","Moderate":"High","Major":"High","Extreme":"High"],
+            "Likely":        ["Insignificant":"Low","Minor":"Medium","Moderate":"Significant","Major":"High","Extreme":"High"],
+            "Possible":      ["Insignificant":"Low","Minor":"Medium","Moderate":"Medium","Major":"High","Significant":"High"],
+            "Unlikely":      ["Insignificant":"Low","Minor":"Low","Moderate":"Medium","Major":"Medium","Significant":"Significant"],
+            "Remote":        ["Insignificant":"Low","Minor":"Low","Moderate":"Low","Major":"Medium","Significant":"Medium"]
+    ]
+
     private def mapRisks(projectRows, project, errors) {
         def riskRows = projectRows.findAll {it[DATA_TYPE_COLUMN] == RISK_DATA_TYPE}
         def risks = []
-        createProjectDetails(project)
         riskRows.eachWithIndex { riskRow, i ->
 
             def result = gmsToMerit(riskRow, riskMapping)
@@ -202,37 +213,13 @@ class GmsMapper {
                     "currentControl" : "",
                     "residualRisk" : ""]
             risk.putAll(result.mappedData)
+
+            risk.riskRating = riskMatrix[risk.likelihood]?riskMatrix[risk.likelihood][risk.consequence]:''
             risks << risk
         }
         if (risks) {
-            project.custom.details.risks.rows = risks
+            project.risks = [rows:risks]
         }
-    }
-    
-    private def createProjectDetails(project) {
-      
-        project.custom = [details:[:]]
-
-        project.custom.details.dataSharingProtocols = [description:""]
-        project.custom.details.projectImplementation = [description:""]
-        project.custom.details.monitoringApproach = [description:""]
-        project.custom.details.projectPartnership = [description:""]
-        project.custom.details.objectives = [rows : [["shortLabel"  : "", "description" : ""]]]
-        project.custom.details.milestones = [rows:[["shortLabel"  : "", "description" : "", "dueDate" : null]]]
-        project.custom.details.nationalAndRegionalPriorities = [rows:[["shortLabel"  : "", "description" : ""]]]
-        project.custom.details.risks = [overallRisk:""]
-        project.custom.details.risks.rows = [[
-                                               "threat"  : "",
-                                               "description" : "",
-                                               "likelihood" : "",
-                                               "consequence" : "",
-                                               "riskRating" : "",
-                                               "currentControl" : "",
-                                               "residualRisk" : ""
-                                            ]]
-        project.custom.details.lastUpdated = null
-        project.custom.details.status = ""
-
     }
 
     private def mapTarget(rowMap) {
@@ -305,10 +292,11 @@ class GmsMapper {
                 }
                 return value
             case 'lookup':
-                if (!(value in mapping.values)) {
+                def lookupValue = mapping.values[value]
+                if (!(lookupValue)) {
                     throw new IllegalArgumentException("${value} is not in ${mapping.values}")
                 }
-                return value
+                return lookupValue
 
         }
         throw new IllegalArgumentException("Unsupported type: ${type}")

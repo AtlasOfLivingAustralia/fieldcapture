@@ -1103,16 +1103,16 @@ class ImportService {
                     activityType.equalsIgnoreCase('Site Assesssment') ||
                     activityType.equalsIgnoreCase('Site Assessmnet') ||
                     activityType.equalsIgnoreCase('Site assessment (e.g. includes general monitoring)') ||
-                    activityType.equalsIgnoreCase('Site assessment – Biodiversity Fund (DoE)') ||
+                    activityType.equalsIgnoreCase('Site assessment ï¿½ Biodiversity Fund (DoE)') ||
                     activityType.equalsIgnoreCase('Site assessment (e,g. inlcudes general monitoring).') ||
-                    activityType.equalsIgnoreCase('Site assessment – Biodiversity Fund (DoE)') ||
+                    activityType.equalsIgnoreCase('Site assessment ï¿½ Biodiversity Fund (DoE)') ||
                     activityType.equalsIgnoreCase('Site assessment (e.g. inlcludes general monitoring).') ||
                     activityType.equalsIgnoreCase('Site assessement') ||
-                    activityType.equalsIgnoreCase('Site assessment – Biodiversity Fund (DoE)') ||
-                    activityType.equalsIgnoreCase('Site assessment –  Biodiversity Fund (DoE)') ||
+                    activityType.equalsIgnoreCase('Site assessment ï¿½ Biodiversity Fund (DoE)') ||
+                    activityType.equalsIgnoreCase('Site assessment ï¿½  Biodiversity Fund (DoE)') ||
                     activityType.equalsIgnoreCase('Site assessment (e.g. include general monitoring).') ||
                     activityType.equalsIgnoreCase('Site assessment (e.g. general monitoring).') ||
-                    activityType.equalsIgnoreCase('Site assessment –  Biodiversity Fund (DoE)') ||
+                    activityType.equalsIgnoreCase('Site assessment ï¿½  Biodiversity Fund (DoE)') ||
                     activityType.equalsIgnoreCase('Site assessment(e.g. includes general monitoring)') ||
                     activityType.equalsIgnoreCase('Site Assessent') ||
                     activityType.equalsIgnoreCase('(1-26) Site Assessment') ||
@@ -1131,7 +1131,7 @@ class ImportService {
                     activityType.equalsIgnoreCase('revegetation\'')) {
                 match = 'Revegetation'
             }
-            else if (activityType.equalsIgnoreCase('Site Assessment – TasVeg') ||
+            else if (activityType.equalsIgnoreCase('Site Assessment ï¿½ TasVeg') ||
                      activityType.endsWith('TasVeg')) {
                 match = 'Vegetation Assessment - TasVeg (TAS)'
             }
@@ -1177,13 +1177,13 @@ class ImportService {
     }
 
 
-    def gmsImport(InputStream csv, status, preview) {
+    def gmsImport(InputStream csv, status, preview, charEncoding = 'Cp1252') {
 
         def action = preview?{rows -> mapProjectRows(rows, status)}:{rows -> importAll(rows, status)}
 
         def result = [:]
         cacheService.clear(PROJECTS_CACHE_KEY)
-        def reader = new InputStreamReader(csv)
+        def reader = new InputStreamReader(csv, charEncoding)
         try {
 
             def prevGrantId = null
@@ -1237,6 +1237,7 @@ class ImportService {
 
             def adminEmail = projectDetails.project.remove('adminEmail')
             def grantManagerEmail = projectDetails.project.remove('grantManagerEmail')
+            def serviceProviderEmail = projectDetails.project.remove('serviceProviderEmail')
 
             def result = importProject(projectDetails.project, false) // Do not overwrite existing projects because of the impacts to sites / activities etc.
 
@@ -1247,23 +1248,10 @@ class ImportService {
 
             def projectId = projectDetails.project.projectId
 
+            addUser(adminEmail, roleAdmin, projectId, projectDetails.errors)
+            addUser(serviceProviderEmail, roleAdmin, projectId, projectDetails.errors)
+            addUser(grantManagerEmail, roleGrantManager, projectId, projectDetails.errors)
 
-            if (adminEmail) {
-                def userId = userService.checkEmailExists(adminEmail)
-                if (userId) {
-                    userService.addUserAsRoleToProject(userId, projectId, roleAdmin)
-                } else {
-                    projectDetails.errors << "${adminEmail} is not registered with the ALA"
-                }
-            }
-            if (grantManagerEmail) {
-                def userId = userService.checkEmailExists(grantManagerEmail)
-                if (userId) {
-                    userService.addUserAsRoleToProject(userId, projectId, roleGrantManager)
-                } else {
-                    projectDetails.errors << "${adminEmail} is not registered with the ALA"
-                }
-            }
             def sites = projectDetails.sites
             sites.each { site ->
                 def created = false
@@ -1298,6 +1286,17 @@ class ImportService {
         else {
             status << [grantId:grantId, externalId:externalId, success:false, errors:projectDetails.errors]
 
+        }
+    }
+
+    def addUser(email, role, projectId, errors) {
+        if (email) {
+            def userId = userService.checkEmailExists(email)
+            if (userId) {
+                userService.addUserAsRoleToProject(userId, projectId, role)
+            } else {
+                errors << "${email} is not registered with the ALA"
+            }
         }
     }
 
