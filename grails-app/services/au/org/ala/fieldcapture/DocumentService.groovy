@@ -180,7 +180,7 @@ class DocumentService {
 					'project team consider to be within the reasonable influence of the project team to anticipate and manage.</p>')
 		append(html,'<table cellpadding="3" border="0">')
 		append(html,'<tr><th>Risk/Threat Description</th><th>Likelihood</th><th>Consequence</th><th>Rating</th><th>Current Controls/Contingency </th><th>Residual Risk</th></tr>')
-		project.custom?.details?.risks?.rows.each{
+		project.risks?.rows.each{
 			append(html,'<tr><td>'+it.description+'</td><td>'+it.likelihood+'</td><td>'+it.consequence+'</td><td>'+
 				it.riskRating+'</td><td>'+it.currentControl+'</td><td>'+it.residualRisk+'</td></tr>')
 		}

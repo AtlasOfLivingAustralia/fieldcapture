@@ -51,6 +51,7 @@ class ProjectController {
              programs: metadataService.programsModel(),
              enableReporting: grailsApplication.config.enableReporting,
 			 today:now.format("yyyy-MM-dd'T'HH:mm:ss'Z'"),
+			 themes:metadataService.getThemesForProject(project)
             ]
         }
     }

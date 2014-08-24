@@ -204,58 +204,37 @@ function isPastStage(timeline, currentStage, period) {
 			stageToDate = period.toDate;
 		}
 	});
-	
 	return period.toDate <= stageToDate; 
-    
 }
 
-/**
- * Create project details 
- * @param activities
- * @param timeline
- * @param stage stage name 
- * @returns {[]}
- */
-function createProjectDetails(project){
-	project.custom = {};
-	project.custom['details'] = {};
-	project.custom['details'].dataSharingProtocols = {};
-	project.custom['details'].dataSharingProtocols["description"] = "";
-	project.custom['details'].projectImplementation = {};
-	project.custom['details'].projectImplementation["description"] = "";
-	project.custom['details'].monitoringApproach = {};
-	project.custom['details'].monitoringApproach["description"] = "";
-	project.custom['details'].projectPartnership = {};
-	project.custom['details'].projectPartnership["description"] = "";
-	project.custom['details'].objectives = {};
-	project.custom['details'].objectives["rows"] = [{
-	               				"shortLabel"  : "",
-	               				"description" : "" 
-                				}];
-	project.custom['details'].milestones = {};
-	project.custom['details'].milestones["rows"] = [{
-	               				"shortLabel"  : "",
-	               				"description" : "",
-	               				"dueDate" : ko.observable().extend({simpleDate: false})	 
-                				}];
-	project.custom['details'].nationalAndRegionalPriorities = {};
-	project.custom['details'].nationalAndRegionalPriorities["rows"] = [{
-	               				"shortLabel"  : "",
-	               				"description" : ""
-	               				}];
-	project.custom['details'].risks = {};
-	project.custom['details'].risks["overallRisk"] = "";
-	project.custom['details'].risks["rows"] = [{
-	               				"threat"  : "",
-               					"description" : "",
-               					"likelihood" : "",
-               					"consequence" : "",
-               					"riskRating" : "",
-               					"currentControl" : "",
-               					"residualRisk" : ""	
-	               				}];
-	project.custom['details'].lastUpdated = "";
-	project.custom['details'].status = "";
-	
-	return project;
+function getBugetHeaders(timeline) {
+	var headers = [];
+	var startYr = '';
+	var endYr = '';
+	$.each(timeline, function (i, period) {
+		if (i == 0)
+			startYr = moment(period.fromDate).format('YYYY')
+		else if(timeline.length == i+1)
+			endYr = moment(period.fromDate).format('YYYY');
+	});
+	var count = endYr - startYr;
+	for (i = 0; i < count; i++){
+		//todo: check whether we need to cap the budget years
+		//if(i < 7)
+		headers.push(startYr + '/' + ++startYr);
+	}
+	return headers;
 }
+
+function isValid(p, a) {
+	 a = a.split(".");
+	 for (i in a) {
+		var key = a[i];
+		if (p[key] == null || p[key] == undefined){
+			return '';
+		}
+		p = p[key];
+	 }
+	 return p;
+}
+

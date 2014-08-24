@@ -250,19 +250,19 @@
 </script>
 
 <script id="stageNotApprovedTmpl" type="text/html">
-<span class="badge badge-warning">Report not submittted</span>
-<!--
-	todo remove submit stage report code from activities plan   
+<br/><span class="badge badge-warning">Report not submittted</span>
 	<g:if test="${user?.isAdmin}">
     <br/>
     <button type="button" class="btn btn-success btn-small" style="margin-top:4px;"
     data-bind="
-            disable:!$parents[1].readyForApproval() || !$parents[2].isApproved(),
+            disable:!$parents[1].readyForApproval() || !$parents[2].isApproved() || !$parents[1].riskAndDetailsActive(),
             click:$parents[1].submitReport,
-            attr:{title:$parents[1].readyForApproval()?'Submit this stage for implementation approval.':'Report cannot be submitted while activities are still open.'}"
+            attr:{title:($parents[1].readyForApproval() && $parents[1].riskAndDetailsActive()) ?'Submit this stage for implementation approval.':'* Report cannot be submitted while activities are still open. \n* Project details and risk table information are mandatory for report submission.'}"
     >Submit report</button>
+	<br/>
+	<button  class="btn btn-link" data-bind="click:$parents[1].previewStage" type="button"><i class="icon-eye-open"></i>Preview</button>	
     </g:if>
--->
+<br/>
 </script>
 
 <script id="stageApprovedTmpl" type="text/html">
@@ -272,6 +272,12 @@
 <g:if test="${fc.userInRole(role: grailsApplication.config.security.cas.adminRole) || fc.userInRole(role: grailsApplication.config.security.cas.alaAdminRole)}">
     <br/>
     <button type="button" data-bind="click:$parents[1].rejectStage" class="btn btn-danger"><i class="icon-remove icon-white"></i> Withdraw approval</button>
+</g:if>
+
+<g:if test="${user?.isAdmin}">
+    
+	<br/>
+	<button  class="btn btn-link" data-bind="click:$parents[1].previewStage" type="button"><i class="icon-eye-open"></i>Preview</button>
 </g:if>
 </script>
 
@@ -286,6 +292,10 @@
         <button type="button" data-bind="click:$parents[1].approveStage" class="btn btn-success"><i class="icon-ok icon-white"></i> Approve</button>
         <button type="button" data-bind="click:$parents[1].rejectStage" class="btn btn-danger"><i class="icon-remove icon-white"></i> Reject</button>
     </span>
+</g:if>
+<g:if test="${user?.isAdmin}">
+    <br/>
+	<button  class="btn btn-link" data-bind="click:$parents[1].previewStage" type="button"><i class="icon-eye-open"></i>Preview</button>
 </g:if>
 
 </script>
@@ -684,6 +694,13 @@
                         return act.progress() === 'planned' || act.progress() === 'started';
                     }).length === 0;
             }, this, {deferEvaluation: true});
+            
+            this.riskAndDetailsActive = ko.computed(function(){
+            	if(project.risks && project.custom)
+            		return project['custom']['details']['status'] == 'active' && project.risks['status'] == 'active';
+            	return false;	
+            });
+            
             this.submitReport = function () {
                 var declaration = $('#declaration')[0];
                 var declarationViewModel = {
@@ -697,7 +714,11 @@
             $(declaration).modal({ backdrop: 'static', keyboard: true, show: true }).on('hidden', function() {ko.cleanNode(declaration);});
 
             };
-
+			this.previewStage = function(){
+				var url = '${createLink(controller:'project', action:'previewStageReport')}';
+                window.open(url+'?projectId='+self.projectId+'&stageName='+stageLabel, '_blank');
+			};
+			
             this.submitStage = function() {
                 var url = '${createLink(controller:'project', action:'ajaxSubmitReport')}/';
                 self.updateStageStatus(url);
@@ -746,7 +767,7 @@
                 return !isEditor || self.isSubmitted() || self.isApproved();
             });
             this.stageStatusTemplateName = ko.computed(function(){
-					if (!self.isReportable) {
+				if (!self.isReportable) {
                     return 'stageNotReportableTmpl';
                 }
                 if (self.isApproved()) {
