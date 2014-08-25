@@ -87,7 +87,9 @@ class ReportController {
 
     def gmsExportSummary() {
 
-
+        if (!params.query) {
+            params.query = '*'
+        }
         params.type = 'outputSummary'
         def results = searchService.projectReports(params)
 

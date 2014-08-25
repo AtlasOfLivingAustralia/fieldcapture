@@ -1198,7 +1198,7 @@ class ImportService {
 
                     projectRows = []
                 }
-                rowMap.index = i
+                rowMap.index = (i+2) // accounts for 1-based index of Excel and the column header row.
                 projectRows << rowMap
                 prevGrantId = currentGrantId
             }

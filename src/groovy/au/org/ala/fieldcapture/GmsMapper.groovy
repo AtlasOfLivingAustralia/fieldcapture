@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat
  */
 class GmsMapper {
 
-    public static final List GMS_COLUMNS = ['PROGRAM_NM',	'ROUND_NM',	'APP_ID', 'EXTERNAL_ID', 'APP_NM', 'APP_DESC',	'START_DT',	'FINISH_DT', 'FUNDING',	'APPLICANT_NAME', 'ORG_TRADING_NAME', 'APPLICANT_EMAIL', 'AUTHORISEDP_CONTACT_TYPE', 'AUTHORISEDP_EMAIL', 'GRANT_MGR_EMAIL', 'DATA_TYPE', 'ENV_DATA_TYPE',	'PGAT_PRIORITY', 'PGAT_GOAL_CATEGORY',	'PGAT_GOALS', 'PGAT_OTHER_DETAILS','PGAT_PRIMARY_ACTIVITY','PGAT_ACTIVITY_DELIVERABLE','PGAT_ACTIVITY_TYPE','PGAT_ACTIVITY_UNIT','PGAT_UOM', 'PGAT_REPORTED_PROGRESS']
+    public static final List GMS_COLUMNS = ['PROGRAM_NM',	'ROUND_NM',	'APP_ID', 'EXTERNAL_ID', 'APP_NM', 'APP_DESC',	'START_DT',	'FINISH_DT', 'FUNDING',	'APPLICANT_NAME', 'ORG_TRADING_NAME', 'APPLICANT_EMAIL', 'AUTHORISEDP_CONTACT_TYPE', 'AUTHORISEDP_EMAIL', 'GRANT_MGR_EMAIL', 'DATA_TYPE', 'ENV_DATA_TYPE',	'PGAT_PRIORITY', 'PGAT_GOAL_CATEGORY',	'PGAT_GOALS', 'PGAT_OTHER_DETAILS','PGAT_PRIMARY_ACTIVITY','PGAT_CODE','PGAT_ACTIVITY_DELIVERABLE','PGAT_ACTIVITY_TYPE','PGAT_ACTIVITY_UNIT','PGAT_UOM', 'PGAT_REPORTED_PROGRESS']
 
     // These identify the data contained in the row.
     static final LOCATION_DATA_TYPE = 'Location Data'
@@ -65,12 +65,14 @@ class GmsMapper {
 
     def activityMapping = [
             PGAT_ACTIVITY_DELIVERABLE:[name:'type', type:'string'],
+            PGAT_CODE:[name:'code', type:'string'],
             START_DT:[name:'plannedStartDate',type:'date'],
             FINISH_DT:[name:'plannedEndDate', type:'date']
     ]
 
     def outputTargetColumnMapping = [
             PGAT_ACTIVITY_DELIVERABLE:[name:'type', type:'string'],
+            PGAT_CODE:[name:'code', type:'string'],
             PGAT_ACTIVITY_TYPE:[name:'gmsScore',type:'string'],
             PGAT_ACTIVITY_UNIT:[name:'target', type:'decimal'],
             PGAT_UOM:[name:'units', type:'string']
@@ -134,6 +136,16 @@ class GmsMapper {
     }
 
     private def mapActivities(projectRows, project, errors) {
+
+        // Build a lookup from GMS code to activity type.
+        def gmsCodeToActivityType = [:]
+        activitiesModel.activities.each {
+            if (it.gmsId) {
+                for (id in it.gmsId.split('\\s')) {
+                    gmsCodeToActivityType << [(id):it.name]
+                }
+            }
+        }
         def mainThemes = projectRows.findAll{it[DATA_TYPE_COLUMN] == REPORTING_THEME_DATA_TYPE && it[DATA_SUB_TYPE_COLUMN] == REPORTING_THEME_DATA_SUB_TYPE}.collect{it[REPORTING_THEME_COLUMN]}
 
         def mainTheme = null
@@ -146,42 +158,41 @@ class GmsMapper {
         def activities = []
         activityRows.eachWithIndex { activityRow, i ->
             def activityResult = gmsToMerit(activityRow, activityMapping)
-            def activity = activityResult.mappedData
+            def mappedActivity = activityResult.mappedData
             errors.addAll(activityResult.errors)
 
-            // Inconsistent GMS format to deal with.
-            if (!activityRow.PGAT_ACTIVITY_TYPE && activity.type.contains('(')) {
-                activity.type = activity.type.substring(0, activity.type.lastIndexOf('(')).trim()
+            def activity = [:]
+            if (mappedActivity.code) {
+                def activityType = gmsCodeToActivityType[mappedActivity.code]
 
-            }
-            activity.type = activitiesModel.activities.find{it.name.equalsIgnoreCase(activity.type) || it.gmsName?.equalsIgnoreCase(activity.type)}
+                if (activityType) {
+                    activity.type = activityType
+                    activity.plannedStartDate = mappedActivity.plannedStartDate
+                    activity.plannedEndDate = mappedActivity.plannedEndDate
 
-            // Types for example other cannot be mapped.
-            if (activity.type) {
+                    activity.description = 'Activity ' + (activities.size() + 1)
+                    if (mainTheme) {
+                        activity.mainTheme = mainTheme
+                    }
 
-                activity.type = activity.type.name
-                activity.description = 'Activity ' + (i + 1)
-                if (mainTheme) {
-                    activity.mainTheme = mainTheme
+                    activities << activity
+
+                    def targetResult = mapTarget(activityRow)
+                    def target = targetResult.mappedData
+                    errors.addAll(targetResult.errors)
+                    if (!project.outputTargets) {
+                        project.outputTargets = []
+                    }
+                    if (target) {
+                        project.outputTargets << target
+                    }
                 }
-
-                activities << activity
-
-                def targetResult = mapTarget(activityRow)
-                def target = targetResult.mappedData
-                errors.addAll(targetResult.errors)
-                if (!project.outputTargets) {
-                    project.outputTargets = []
+                else {
+                    errors << [error:"Unmappable code for activity : ${mappedActivity.code} - ${activityRow.PGAT_ACTIVITY_DELIVERABLE} row: {$activityRow.index}"]
                 }
-                if (target) {
-                    project.outputTargets << target
-                }
-            }
-            else if (activity.type != 'Other') { // Silently ignore 'Other'
-                errors << [error:"Unmappable type for activity : ${activityRow.PGAT_ACTIVITY_DELIVERABLE} row: {$activityRow.index}"]
             }
             else {
-                errors << [error:"Ignoring other activity: ${activityRow.PGAT_OTHER_DETAILS}"]
+                errors << [error:"Missing code for activity: ${activityRow.PGAT_ACTIVITY_DELIVERABLE} row: {$activityRow.index}"]
             }
 
         }
@@ -229,8 +240,7 @@ class GmsMapper {
         def target = map.mappedData
         errors.addAll(map.errors)
 
-        def flatKey = (target.type?.trim() +' '+ target.gmsScore?.trim()).trim()
-
+        def code = target.remove('code')
         if (!target) {
             errors << "No target defined for ${flatKey}, row: ${rowMap.index}"
         }
@@ -238,17 +248,17 @@ class GmsMapper {
 
         def outputName, score
         activitiesModel.outputs.find { output ->
-            score = output.scores?.find{it.gmsScoreName == flatKey && it.gmsUnits == target.units?.trim()}
+            score = output.scores?.find{it.gmsId == code}
             outputName = output.name
             return score
         }
 
         if (!score) {
-            errors << "No mapping for score ${flatKey}, row: ${rowMap.index}"
+            errors << "No mapping for score ${code}, row: ${rowMap.index}"
         }
         else {
             if (!score.isOutputTarget) {
-                errors << "Warning: score ${flatKey} is not an output target"
+                errors << "Warning: score ${code} is not an output target"
             }
 
             result << [target: target.target, outputLabel:outputName, scoreLabel:score.label, scoreName:score.name, units:score.units]
@@ -344,30 +354,26 @@ class GmsMapper {
 
         def resultRows = []
 
+        // These are the scores that have meaning to the GMS
+        def scores = project.outputSummary?.grep { score -> (score.results || score.target) && score.score.gmsId }.flatten()
+
         // These need to be included in every row mapped.
         def projectDetails = meritToGMS(project, projectMapping)
 
-        if (project.outputTargets) {
+        scores.each { score ->
 
-            // We only want to map scores with non-zero targets
+            def mappedOutputTarget = mapScore(score)
 
-            project.outputTargets.findAll{convertDecimal(it.target)}.each { outputTarget ->
+            def row = [:]
+            row.putAll(projectDetails)
+            row.putAll([(DATA_TYPE_COLUMN): ACTIVITY_DATA_TYPE, (DATA_SUB_TYPE_COLUMN): ACTIVITY_DATA_SUB_TYPE])
+            row.putAll(mappedOutputTarget)
 
-                def mappedOutputTarget = mapOutputTarget(outputTarget, project.outputSummary)
+            resultRows << row
 
-                def row = [:]
-                row.putAll(projectDetails)
-                row.putAll([(DATA_TYPE_COLUMN): ACTIVITY_DATA_TYPE, (DATA_SUB_TYPE_COLUMN): ACTIVITY_DATA_SUB_TYPE])
-                row.putAll(mappedOutputTarget)
-
-                resultRows << row
-
-            }
-        }
-        else {
-            resultRows << projectDetails
         }
 
+        resultRows << projectDetails
 
         return resultRows
     }
@@ -417,32 +423,15 @@ class GmsMapper {
     }
 
 
-    private def mapOutputTarget(outputTarget, outputSummary) {
+    private def mapScore(score) {
 
-        // Reverse key's and values in map.
-
-        def meritToGmsTargets = outputTargetMapping.collectEntries {key, value-> [(value):key]}
-
-        def gmsTargets
-        if (meritToGmsTargets[outputTarget]) {
-            gmsTargets = meritToGmsTargets[outputTarget]
+        def target = ''
+        if (score.score.isOutputTarget) {
+            target = score.target ? formatDecimal(score.target) : '0'
         }
-        else {
 
-            gmsTargets = [outputTarget.outputLabel, outputTarget.scoreLabel, outputTarget.units]
-        }
-        gmsTargets << formatDecimal(outputTarget.target)
-
-        def score = outputSummary.find {it.score.outputName == outputTarget.outputLabel && it.score.label == outputTarget.scoreLabel}
-
-        def result = [PGAT_ACTIVITY_DELIVERABLE: gmsTargets[0], PGAT_ACTIVITY_TYPE:gmsTargets[1], PGAT_UOM: gmsTargets[2], PGAT_ACTIVITY_UNIT:gmsTargets[3]]
-
-        if (score && score.results) {
-            result << [PGAT_REPORTED_PROGRESS:formatDecimal(score.results[0].result)]
-        }
-        else {
-            result << [PGAT_REPORTED_PROGRESS: '0']
-        }
+        def value = score.results? score.results[0].result : 0
+        def result = [PGAT_CODE: score.score.gmsId, PGAT_ACTIVITY_UNIT:target, PGAT_REPORTED_PROGRESS: formatDecimal(value, '0')]
 
         result
 
@@ -458,6 +447,8 @@ class GmsMapper {
             case 'decimal':
                 return formatDecimal(value)
             case 'string':
+                return value
+            case 'email':
                 return value
         }
         throw new IllegalArgumentException("Unsupported type: ${type}")
@@ -477,9 +468,9 @@ class GmsMapper {
         return GMS_DATE_FORMAT.format(date)
     }
 
-    private def formatDecimal(value) {
+    private def formatDecimal(value, defaultValue = '') {
         if (!value) {
-            return ''
+            return defaultValue
         }
         def numericValue
         if (value instanceof String) {
