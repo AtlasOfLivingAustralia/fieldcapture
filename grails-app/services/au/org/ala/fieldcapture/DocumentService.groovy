@@ -228,10 +228,8 @@ class DocumentService {
 						reason = "${it.notes}${it.data?.eventNotes}${it.data?.debrisNotes}${it.data?.erosionNotes}${it.data?.pestObservationNotes}${it.data?.weedInspectionNotes}${it.data?.fenceNotes}"
 					}
 					append(html,'<tr><td>Reason '+it.name+'</td><td>'+reason+'</td></tr>')
-					it.outputs.each{
-						def outputNotes = "${it.data?.notes}${it.data?.eventNotes}"+
-							+"${it.data?.debrisNotes}${it.data?.erosionNotes}${it.data?.pestObservationNotes}"
-							+"${it.data?.weedInspectionNotes}${it.data?.fenceNotes}";
+					it.outputs?.each{
+						def outputNotes = "${it?.data?.notes}${it?.data?.eventNotes}${it?.data?.debrisNotes}${it?.data?.erosionNotes}${it?.data?.pestObservationNotes}${it?.data?.weedInspectionNotes}${it?.data?.fenceNotes}";
 						append(html,"<tr><td>Comments for ${it.name} </td><td> ${outputNotes} </td></tr>")
 					}
 				}
