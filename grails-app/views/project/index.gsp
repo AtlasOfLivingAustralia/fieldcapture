@@ -565,7 +565,6 @@
             	this.rows = ko.observableArray($.map(row, function (obj,i) {
 			         return new GenericRowViewModel(obj);
 			    }));
-			    
             };
             
             var GenericRowViewModel = function(o) {
@@ -598,22 +597,23 @@
 			    this.overallTotal = ko.computed(function (){
 			    	var total = 0.0;
             		ko.utils.arrayForEach(this.rows(), function(row) {
-           				if(row.rowTotal())
-           					total += parseFloat(row.rowTotal().replace(/,/gi, ""));
+           				if(row.rowTotal()){
+           					total += parseFloat(row.rowTotal());
+           				}
     				});
 			    	return total;
-			    },this);
-
+			    },this).extend({currency:{}});
+				
 			    var allBudgetTotal = [];
 			    for(i = 0; i < period.length; i++){
 					allBudgetTotal.push(new BudgetTotalViewModel(this.rows, i));	
 				}
 			    this.columnTotal = ko.observableArray(allBudgetTotal);
             };
-            
+
+			//col total            
             var BudgetTotalViewModel = function (rows, index){
             	var self = this;
-            
             	this.data =  ko.computed(function (){
             		var total = 0.0;
             		ko.utils.arrayForEach(rows(), function(row) {
@@ -622,8 +622,8 @@
            				}	
     				});
     				return total;
-            	},this);
-            }
+            	},this).extend({currency:{}});
+            };
             
             var BudgetRowViewModel = function(o,period) {
             	var self = this;
@@ -643,17 +643,17 @@
             		var total = 0.0;
             		ko.utils.arrayForEach(this.costs(), function(cost) {
             			if(cost.dollar())
-            				total += parseFloat(cost.dollar().replace(/,/gi, ""));
+            				total += parseFloat(cost.dollar());
     				});
-					return total.toFixed(2);
-            	},this);
+					return total;
+            	},this).extend({currency:{}});
             	
             };
             
             var FloatViewModel = function(o){
             	var self = this;
             	if(!o) o = {};
-            	self.dollar = ko.observable(o.dollar ? o.dollar : 0.0);
+            	self.dollar = ko.observable(o.dollar ? o.dollar : 0.0).extend({currency:{}});
             };
             
 			var RisksViewModel = function(risks) {
@@ -714,6 +714,7 @@
 				$(field).attr('maxlength',maxChar);
 			}
 			
+			//event.keyCode == 188 ||
 			ko.bindingHandlers.numeric = {
 				    init: function (element, valueAccessor) {
 				        $(element).on("keydown", function (event) {
@@ -722,7 +723,7 @@
 				                // Allow: Ctrl+A
 				                (event.keyCode == 65 && event.ctrlKey === true) ||
 				                // Allow: . ,
-				                (event.keyCode == 188 || event.keyCode == 190 || event.keyCode == 110) ||
+				                (event.keyCode == 190 || event.keyCode == 110) ||
 				                // Allow: home, end, left, right
 				                (event.keyCode >= 35 && event.keyCode <= 39)) {
 				                // let it happen, don't do anything
@@ -829,6 +830,7 @@
 	        	self.projectThemes =  $.map(themes, function(theme, i) {
 	                	return theme.name;
 	                });
+	        	self.projectThemes.push("Others");
 	        	
 	        	self.allYears = function(startYear) {
 		            var currentYear = new Date().getFullYear(), years = [];
@@ -1010,7 +1012,7 @@
 				self.saveProject = function(){
 					var tmp = {};
 					tmp['details'] =  ko.mapping.toJS(self.details);
-
+					//Make elastic search hapy 
 					var jsData = {"custom": tmp};
                        var json = JSON.stringify(jsData, function (key, value) {
                            return value === undefined ? "" : value;

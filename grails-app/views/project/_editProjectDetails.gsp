@@ -49,7 +49,7 @@
 
 <div class="row-fluid space-after">
 	    <div class="required">
-	        <div id="project-objectives" class="well well-small">
+	        <div class="well well-small">
 	 			<label><b>Project objectives</b></label> 	 
 	 			<table style="width: 100%;">
 			        <thead>
@@ -82,7 +82,7 @@
 			                    <td width="30%"> <input style="width: 97%;" type="text"  class="input-xlarge"  data-bind="value: data1, disable: $parent.isProjectDetailsLocked()" data-validation-engine="validate[required]"> </td>
 			                    <td width="64%"> <textarea style="width: 97%;" data-bind="value: data2, disable: $parent.isProjectDetailsLocked()" rows="5" ></textarea> </td>
 			                    <td width="4%">
-                        			<span data-bind="if: $index() && !$parent.isProjectDetailsLocked()" id="remove-objectives" ><i class="icon-remove" data-bind="click: $parent.removeObjectives"></i></span>
+                        			<span data-bind="if: $index() && !$parent.isProjectDetailsLocked()"><i class="icon-remove" data-bind="click: $parent.removeObjectives"></i></span>
 			                    </td>
 			                </tr>
 			        </tbody>
@@ -90,7 +90,7 @@
           				<tr>
           					<td></td>
           					<td colspan="0" style="text-align:left;">
-                  			<button type="button" class="btn btn-small" id="add-objectives" data-bind="disable:isProjectDetailsLocked(), click: addObjectives">
+                  			<button type="button" class="btn btn-small" data-bind="disable:isProjectDetailsLocked(), click: addObjectives">
                   			<i class="icon-plus"></i> Add a row</button>
                   			</td>
                   		</tr>
@@ -131,7 +131,7 @@
            				<tr>
            					<td></td>
            					<td colspan="0" style="text-align:left;">
-                   			<button type="button" class="btn btn-small" id="add-national" data-bind="disable: isProjectDetailsLocked(), click: addNationalAndRegionalPriorities">
+                   			<button type="button" class="btn btn-small" data-bind="disable: isProjectDetailsLocked(), click: addNationalAndRegionalPriorities">
                    			<i class="icon-plus"></i> Add a row</button></td>
                    		</tr>
 					</tfoot>
@@ -209,10 +209,13 @@
 			        <tbody data-bind="foreach : details.keq.rows">
 			                <tr>
 			                	<td width="2%"> <span data-bind="text:$index()+1"></span></td>
-			                    <td width="42%"> <input style="width: 97%;" type="text"  class="input-xlarge"  data-bind="value: data1, disable: $parent.isProjectDetailsLocked()" data-validation-engine="validate[required]"> </td>
-			                    <td width="42%"><textarea style="width: 97%;" class="input-xlarge" data-bind="value: data2, disable: $parent.isProjectDetailsLocked()"  id="national" rows="5"></textarea></td>
+			                    <td width="32%"> 
+		                    		<textarea style="width: 97%;" rows="2"  class="input-xlarge"  data-bind="value: data1, disable: $parent.isProjectDetailsLocked()" data-validation-engine="validate[required]"> 
+		                    		</textarea>
+			                    </td>
+			                    <td width="52%"><textarea style="width: 97%;" class="input-xlarge" data-bind="value: data2, disable: $parent.isProjectDetailsLocked()"  rows="5"></textarea></td>
 			                    <td width="4%"> 
-                        			<span data-bind="if: $index() && !$parent.isProjectDetailsLocked()" id="remove-national" ><i class="icon-remove" data-bind="click: $parent.removeKEQ"></i></span>
+                        			<span data-bind="if: $index() && !$parent.isProjectDetailsLocked()" ><i class="icon-remove" data-bind="click: $parent.removeKEQ"></i></span>
 			                    </td>		                    
 			                </tr>
 					 </tbody>
@@ -220,7 +223,7 @@
            				<tr>
            					<td></td>
            					<td colspan="0" style="text-align:left;">
-                   			<button type="button" class="btn btn-small" id="add-national" data-bind="disable: isProjectDetailsLocked(), click: addKEQ">
+                   			<button type="button" class="btn btn-small" data-bind="disable: isProjectDetailsLocked(), click: addKEQ">
                    			<i class="icon-plus"></i> Add a row</button></td>
                    		</tr>
 					</tfoot>
@@ -231,7 +234,7 @@
 
 <div class="row-fluid space-after">
 	<div class="required">
-	        <div id="keq" class="well well-small">
+	        <div class="well well-small">
 	 			<div>1. Are you aware of, and compliment with, your workplace health and safety legislation and obligations.<span style="color: red;"><b>*</b></span> 
 	 				<select style="width: 10%;" data-bind="options: obligationOptions, optionsCaption: 'Please select', value:details.obligations, disable: isProjectDetailsLocked()" data-validation-engine="validate[required]"> </select>
 	 			</div>	
@@ -243,11 +246,10 @@
 	    </div>
 </div>
 
-
 <!-- Budget table -->
 <div class="row-fluid space-after">
 	<div class="required">
-	        <div id="keq" class="well well-small">
+	        <div class="well well-small">
 	 			<label><b>Budget table</b></label>
 	 			Budget summary <span style="color: red;"><b>*</b></span> <fc:iconHelp title="Budget summary"></fc:iconHelp>
 	 			<textarea style="width: 99%;" data-bind="value: details.budget.description, disable: isProjectDetailsLocked()" data-validation-engine="validate[required]" rows="4" ></textarea> 	 
@@ -277,7 +279,7 @@
 		                    		</td>
 		                    	<!-- /ko -->
 			                    
-			                    <td style="text-align: center;" >$<span style="text-align: center;" data-bind="text: rowTotal, disable: $parent.isProjectDetailsLocked()"></span></td>
+			                    <td style="text-align: center;" ><span style="text-align: center;" data-bind="text: rowTotal.formattedCurrency, disable: $parent.isProjectDetailsLocked()"></span></td>
 			                    <td> 
                         			<span data-bind="if: $index() && !$parent.isProjectDetailsLocked()" ><i class="icon-remove" data-bind="click: $parent.removeBudget"></i></span>
 			                  	</td>
@@ -291,9 +293,9 @@
                    			<i class="icon-plus"></i> Add a row</button></td>
 							<td style="text-align: right;" ><b>Total </b></td>
 							<!-- ko foreach: details.budget.columnTotal -->
-								<td style="text-align: center;" width="10%">$<span data-bind="text:data"></span></td>
+								<td style="text-align: center;" width="10%"><span data-bind="text:data.formattedCurrency"></span></td>
 							<!-- /ko -->
-							<td style="text-align: center;"><b>$<span data-bind="text:details.budget.overallTotal"></span></b></td>
+							<td style="text-align: center;"><b><span data-bind="text:details.budget.overallTotal.formattedCurrency"></span></b></td>
                    		</tr>
 					</tfoot>
 			    </table>

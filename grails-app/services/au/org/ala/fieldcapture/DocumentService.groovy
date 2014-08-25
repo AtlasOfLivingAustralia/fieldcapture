@@ -159,6 +159,16 @@ class DocumentService {
 		append(html,'<br>')
 		append(html,'<p align="left">_________________________________________________________________________________________________________</p>')
 		append(html,'<br>')
+		append(html,'<h2><font>Project Objectives</font></h2>')
+		append(html,'<p><font>'+project?.custom?.details?.objectives?.description+'</font></p>')
+		append(html,'<p><font><b>Protected natural assests:</b> '+project?.custom?.details?.objectives?.assets?.join(", ")+'</font></p>')
+		project?.custom?.details?.objectives?.rows?.each {
+			append(html,'<p><font><b>'+it.data1+'</b></font></p>');
+			append(html,'<p><font>'+it.data2+'</font></p>');
+		}
+		append(html,'<br>')
+		append(html,'<p align="left">_________________________________________________________________________________________________________</p>')
+		append(html,'<br>')
 		append(html,'<h2><font>Summary of Project Progress and Issues</font></h2>')
 		append(html,'<table cellpadding="3" border="0">')
 		append(html,'<tr><td>Overview of Project Progress*</td><td>'+stageOverviewProgress+'</td></tr>')

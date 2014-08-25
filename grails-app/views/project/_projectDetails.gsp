@@ -108,10 +108,10 @@
 			                   	<td><div style="text-align: left;"><span style="width: 90%;" data-bind="text: description"></span></div></td>
 							
 								<!-- ko foreach: costs -->
-		                    	<td><div style="text-align: center;"><span style="width: 90%;" data-bind="text: dollar"></span></div></td>
+		                    	<td><div style="text-align: center;"><span style="width: 90%;" data-bind="text: dollar.formattedCurrency"></span></div></td>
 		                    	<!-- /ko -->
 			                    
-			                    <td style="text-align: center;" >$<span style="width: 90%;" data-bind="text: rowTotal"></span></td>
+			                    <td style="text-align: center;" ><span style="width: 90%;" data-bind="text: rowTotal.formattedCurrency"></span></td>
 			                    
 			                </tr>
 					 </tbody>
@@ -121,9 +121,9 @@
            					<td></td>
 							<td style="text-align: right;" ><b>Total </b></td>
 							 <!-- ko foreach: details.budget.columnTotal -->
-								<td style="text-align: center;" width="10%">$<span data-bind="text:data"></span></td>
+								<td style="text-align: center;" width="10%"><span data-bind="text:data.formattedCurrency"></span></td>
 							<!-- /ko -->
-							<td style="text-align: center;"><b>$<span data-bind="text:details.budget.overallTotal"></span></b></td>
+							<td style="text-align: center;"><b><span data-bind="text:details.budget.overallTotal.formattedCurrency"></span></b></td>
                    		</tr>
 					</tfoot>
 			    </table>
