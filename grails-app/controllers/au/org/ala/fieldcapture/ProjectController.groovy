@@ -203,15 +203,17 @@ class ProjectController {
 	def previewStageReport(){
 		String projectId =  params.projectId 
 		String stageName = params.stageName
+		String status = params.status
 		
-		if(stageName && projectId) {
+		if(stageName && projectId && status) {
 			def project = projectService.get(projectId, 'all')
 			def activities = activityService.activitiesForProject(projectId);
 			boolean invalidStage = true;
 			if (project && !project.error) {
 				project.timeline?.each{
 					if(it.name.equals(stageName)){
-						def htmlContent = documentService.createHTMLStageReport(project, activities, stageName)
+						def param  = [project: project, activities:activities, stageName:stageName, status:status]
+						def htmlContent = documentService.createHTMLStageReport(param)
 						invalidStage = false;
 						render text: htmlContent, contentType:"text", encoding:"UTF-8";
 					}
@@ -225,7 +227,7 @@ class ProjectController {
 			}
 		}
 		else{
-			render status:400, text: 'Required params not provided: projectId, stageName'
+			render status:400, text: 'Required params not provided: projectId, stageName, status'
 		}
 	}
 	

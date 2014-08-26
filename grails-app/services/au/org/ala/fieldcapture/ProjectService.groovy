@@ -361,7 +361,8 @@ class ProjectService {
 		}
 		
 		def stageName = stageDetails.stage;
-		def htmlTxt = documentService.createHTMLStageReport(projectAll, activities, stageName)
+		def param  = [project: projectAll, activities:activities, stageName:stageName, status:"Report submitted"]
+		def htmlTxt = documentService.createHTMLStageReport(param)
 		def dateWithTime = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss")
 		def name = projectAll?.grantId + '_' + stageName + '_' + dateWithTime.format(new Date()) + ".pdf"
 		def doc = [name:name, projectId:projectId, saveAs:'pdf', type:'pdf', role:'stageReport',filename:name, readOnly:true, public:false]

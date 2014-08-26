@@ -714,10 +714,7 @@
             $(declaration).modal({ backdrop: 'static', keyboard: true, show: true }).on('hidden', function() {ko.cleanNode(declaration);});
 
             };
-			this.previewStage = function(){
-				var url = '${createLink(controller:'project', action:'previewStageReport')}';
-                window.open(url+'?projectId='+self.projectId+'&stageName='+stageLabel, '_blank');
-			};
+	
 			
             this.submitStage = function() {
                 var url = '${createLink(controller:'project', action:'ajaxSubmitReport')}/';
@@ -779,6 +776,20 @@
                 return 'stageNotApprovedTmpl';
             });
 
+			this.previewStage = function(){
+				var status = "Report not submittted";
+				if (!self.isReportable) {
+                   status = "Report not reportable";
+                }
+                else if (self.isApproved()) {
+                    status = "Report approved";
+                }
+                else if (self.isSubmitted()) {
+                	status = "Report submitted";
+                }
+				var url = '${createLink(controller:'project', action:'previewStageReport')}';
+                window.open(url+'?projectId='+self.projectId+'&stageName='+stageLabel+'&status='+status, '_blank');
+			};
             this.canEditActivity = ko.computed(function () {
                 return !self.isReadOnly() && planViewModel.planStatus() === 'not approved';
             });
