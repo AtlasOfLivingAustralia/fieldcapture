@@ -49,7 +49,7 @@ class DashboardTagLib {
     def pieChart = {attrs, body ->
         def columnDefs = [['string', attrs.label], ['number', 'Count']]
         def chartData = toArray(attrs.data)
-        drawChart(GoogleVisualization.PIE_CHART, attrs.label, attrs.title, columnDefs, chartData)
+        drawChart(GoogleVisualization.PIE_CHART, attrs.label, attrs.title, '', columnDefs, chartData)
     }
 
     /**
@@ -76,12 +76,12 @@ class DashboardTagLib {
             case 'AVERAGE':
             case 'COUNT':
                 def result = score.results ? score.results[0].result as Double : 0
-                out << "<div><b>${score.score.label}</b> : ${g.formatNumber(type:'number',number:result, maxFractionDigits: 2, groupingUsed:true)}</div>"
+                out << "<div><b>${score.score.label}</b>${helpText(score)} : ${g.formatNumber(type:'number',number:result, maxFractionDigits: 2, groupingUsed:true)}</div>"
                 break
             case 'HISTOGRAM':
                 def chartData = toArray(score.results[0].result)
                 def chartType = score.chartType?:'piechart'
-                drawChart(chartType, score.score.label, score.score.label, [['string', score.score.label], ['number', 'Count']], chartData)
+                drawChart(chartType, score.score.label, score.score.label, helpText(score), [['string', score.score.label], ['number', 'Count']], chartData)
                 break
             case 'SET':
                 out << "<div><b>${score.score.label}</b> :${score.results[0].result.join(',')}</div>"
@@ -97,6 +97,13 @@ class DashboardTagLib {
         chartData
     }
 
+    private def helpText(score) {
+        if (score.score.description) {
+            return fc.iconHelp([title:'']){score.score.description}
+        }
+        return ''
+    }
+
     private void renderGroupedScore(score) {
         switch (score.score.aggregationType.name) {
             case 'SUM':
@@ -104,7 +111,7 @@ class DashboardTagLib {
             case 'COUNT':
                 def chartData = score.results.findAll{it.result}.collect{[it.group, it.result]}.sort{a,b -> a[0].compareTo(b[0])}
                 def chartType = score.score.displayType?:'piechart'
-                drawChart(chartType, score.score.label, score.groupTitle, [['string', score.groupTitle], ['number', score.score.label]], chartData)
+                drawChart(chartType, score.score.label, score.groupTitle, helpText(score), [['string', score.groupTitle], ['number', score.score.label]], chartData)
 
                 break
             case 'HISTOGRAM':
@@ -114,33 +121,32 @@ class DashboardTagLib {
     }
 
     private void drawPieChart(label, title, columns, data) {
-        drawChart('piechart', label, title, columns, data)
+        drawChart('piechart', label, title, '', columns, data)
     }
 
     private void drawBarChart(label, title, columns, data) {
-        drawChart('barchart', label, title, columns, data)
+        drawChart('barchart', label, title, '', columns, data)
 
     }
 
-    private void drawChart(type, label, title, columns, data) {
+    private void drawChart(type, label, title, helpText, columns, data) {
         def chartId = label + '_chart'
 
-
-
+        out << "<div class='chartTitle'>${title}${helpText}</div>"
 
         switch (type) {
+
             case 'piechart':
                 out << "<div id=\"${chartId}\"></div>"
-                out << gvisualization.pieCoreChart([elementId: chartId,  chartArea:new Expando(left:20, top:20, right:20, width:'430', height:'300'), dynamicLoading: true, title: title, columns: columns, data: data, width:'450', height:'300', backgroundColor: '#ebe6dc'])
+                out << gvisualization.pieCoreChart([elementId: chartId,  chartArea:new Expando(left:20, top:5, right:20, width:'430', height:'300'), dynamicLoading: true, title: title, columns: columns, data: data, width:'450', height:'300', backgroundColor: '#ebe6dc'])
                 break;
             case 'barchart':
 
-                def topMargin = 50
+                def topMargin = 5
                 def bottomMargin = 50
                 def height = Math.max(300, data.size()*20+topMargin+bottomMargin)
                 if (height > 500) {
                     topMargin = 0
-                    out << "<div class='chartTitle'>${title}</div>"
                     out << "<div id=\"${chartId}\" style=\"height:500px; overflow-y:scroll; margin-bottom:20px;\"></div>"
                 }
                 else {

@@ -288,6 +288,7 @@
 
                     $.get(fcConfig.dashboardUrl, function(data) {
                         $('#reportView').html(data);
+                        $('#reportView .helphover').popover({animation: true, trigger:'hover'});
                     });
 
                 }

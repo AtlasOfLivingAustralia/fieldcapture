@@ -94,6 +94,9 @@
             <div style="text-align:left;">
             Label: <input type="text" data-bind="value:label"/>
             </div>
+            <div style="text-align: left;">
+            Description: <input type="text" data-bind="value:description"/>
+            </div>
             <div style="text-align:left;">
             Category: <input type="text" data-bind="value:category"/>
             </div>
@@ -117,6 +120,10 @@
             <div style="text-align:left;">
                 Grouping: <input type="text" data-bind="value:groupBy"/>
             </div>
+            <div style="text-align:left;">
+                Filtering: <input type="text" data-bind="value:filterBy"/>
+            </div>
+
             <div style="text-align:left;">
                 Display type: <select data-bind="value:displayType">
                 <option value=""></option>
@@ -207,11 +214,13 @@
         var ScoreModel = function (template, score) {
             var self = this;
             self.name = ko.observable(score.name);
-            self.label = ko.observable(score.label)
+            self.label = ko.observable(score.label);
+            self.description = ko.observable(score.description);
             self.category = ko.observable(score.category);
             self.units = ko.observable(score.units)
             self.aggregationType = ko.observable(score.aggregationType)
             self.groupBy = ko.observable(score.groupBy);
+            self.filterBy = ko.observable(score.filterBy);
             self.displayType = ko.observable(score.displayType);
             self.listName = ko.observable(score.listName);
             self.gmsId = ko.observable(score.gmsId);
