@@ -578,13 +578,13 @@
             var BudgetViewModel = function(o, period){
             	var self = this;
             	if(!o) o = {};
-            	
+
             	this.description = ko.observable(o.description);
             	this.overallTotal = ko.observable(0.0);
 
 				var headerArr = [];
 				for(i = 0; i < period.length; i++){
-					headerArr.push({"data":period[i]});	
+					headerArr.push({"data":period[i]});
 				}
 				this.headers = ko.observableArray(headerArr);
 
@@ -593,7 +593,7 @@
             	this.rows = ko.observableArray($.map(row, function (obj, i) {
 					return new BudgetRowViewModel(obj,period);
 			    }));
-			    
+
 			    this.overallTotal = ko.computed(function (){
 			    	var total = 0.0;
             		ko.utils.arrayForEach(this.rows(), function(row) {
@@ -603,10 +603,10 @@
     				});
 			    	return total;
 			    },this).extend({currency:{}});
-				
+
 			    var allBudgetTotal = [];
 			    for(i = 0; i < period.length; i++){
-					allBudgetTotal.push(new BudgetTotalViewModel(this.rows, i));	
+					allBudgetTotal.push(new BudgetTotalViewModel(this.rows, i));
 				}
 			    this.columnTotal = ko.observableArray(allBudgetTotal);
             };
@@ -872,7 +872,7 @@
 					self.details.priorities.rows.push(new GenericRowViewModel());
     			};
                 self.removeNationalAndRegionalPriorities = function(row){
-                	self.details.priorities.rows.remove();
+                	self.details.priorities.rows.remove(row);
                 };
                 
                 self.addKEQ = function(){
