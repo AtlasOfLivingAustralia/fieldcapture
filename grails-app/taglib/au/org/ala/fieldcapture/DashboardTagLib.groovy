@@ -18,7 +18,7 @@ class DashboardTagLib {
 
             def target = score.target ? score.target as Double : 0
             // A zero target essentially means not a target.
-            if (target > 0 && score.score.isOutputTarget && !score.groupTitle) {
+            if (target > 0 && score.score.isOutputTarget && !score.displayType) {
                 renderTarget(score, target)
             }
             else if (!score.score.displayType) {
@@ -133,6 +133,9 @@ class DashboardTagLib {
     }
 
     private void drawChart(type, label, title, helpText, columns, data) {
+        if (!data) {
+            return
+        }
         def chartId = label + '_chart'
 
         out << "<div class='chartTitle'>${title}${helpText}</div>"
