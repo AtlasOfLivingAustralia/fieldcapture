@@ -247,7 +247,7 @@
             %{-- True if this score can/should be assigned a target for project planning purposes. --}%
             self.isOutputTarget = ko.observable(score.isOutputTarget)
 
-            self.template = ko.observable(template);
+            self.template = ko.observable();
             self.template.subscribe(function(template) {
                 $.each(template.dataModel, function(i, obj) {
                     if (obj.dataType == 'list') {
@@ -258,6 +258,8 @@
                     self.nameOptions.push(obj.name);
                 });
             });
+
+            self.template(template);
 
 
             self.aggregationTypeValid = ko.computed(function() {
@@ -360,6 +362,7 @@
                 delete js.editing;
                 delete js.isReferenced;
                 delete js.isAddable;
+                delete js.templateDetail;
 
                 js.scores = []
                 $.each(self.scores(), function(i, score) {
