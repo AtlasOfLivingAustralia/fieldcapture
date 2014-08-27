@@ -56,7 +56,6 @@ class ReportController {
             def totalHeight = runningHeights.sum()
             def columns = [[], []]
 
-            println category + ' ' +runningHeights
             def runningHeight = 0
             // Iterating backwards to bias the left hand column.
             for (int i=0 ; i<categoryScores.size(); i++) {
