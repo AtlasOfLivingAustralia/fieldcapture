@@ -373,7 +373,6 @@ class ProjectService {
         if (!result.resp.error) {
             emailService.sendReportSubmittedEmail(projectId, stageDetails)
         }
-
         result
     }
 

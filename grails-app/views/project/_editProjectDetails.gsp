@@ -120,8 +120,8 @@
 			                <tr>
 			                	<td width="2%"> <span data-bind="text:$index()+1"></span></td>
 			                    <td width="30%"> <input style="width: 97%;" type="text"  class="input-xlarge"  data-bind="value: data1, disable: $parent.isProjectDetailsLocked()" data-validation-engine="validate[required]"> </td>
-			                    <td width="32%"><textarea style="width: 97%;" class="input-xlarge" data-bind="value: data2, disable: $parent.isProjectDetailsLocked()"  rows="5"></textarea></td>
-			                    <td width="32%"><textarea style="width: 97%;" class="input-xlarge" data-bind="value: data3, disable: $parent.isProjectDetailsLocked()"  rows="5"></textarea></td>
+			                    <td width="32%"> <textarea style="width: 97%;" class="input-xlarge" data-bind="value: data2, disable: $parent.isProjectDetailsLocked()"  rows="5"></textarea></td>
+			                    <td width="32%"> <textarea style="width: 97%;" class="input-xlarge" data-bind="value: data3, disable: $parent.isProjectDetailsLocked()"  rows="5"></textarea></td>
 			                    <td width="4%"> 
                         			<span data-bind="if: $index() && !$parent.isProjectDetailsLocked()"><i class="icon-remove" data-bind="click: $parent.removeNationalAndRegionalPriorities"></i></span>
 			                    </td>		                    
@@ -274,7 +274,7 @@
 							
 								<!-- ko foreach: costs -->
 		                    		<td><div style="text-align: center;">
-		                    			<input data-validation-engine="validate[required]" style="text-align: center; width: 80%;" class="input-xlarge" data-bind="value: dollar, numeric: $root.number, disable: $root.isProjectDetailsLocked()" ></input>
+		                    			<input data-validation-engine="validate[required]" style="text-align: center; width: 80%;" class="input-xlarge" data-bind="value: dollar, numeric: $root.number, disable: $root.isProjectDetailsLocked()" />
 		                    			</div>
 		                    		</td>
 		                    	<!-- /ko -->

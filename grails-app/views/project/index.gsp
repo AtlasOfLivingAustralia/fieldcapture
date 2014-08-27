@@ -713,8 +713,7 @@
 			function limitText(field, maxChar){
 				$(field).attr('maxlength',maxChar);
 			}
-			
-			//event.keyCode == 188 ||
+            //event.keyCode == 188 ||
 			ko.bindingHandlers.numeric = {
 				    init: function (element, valueAccessor) {
 				        $(element).on("keydown", function (event) {
@@ -738,8 +737,7 @@
 				        });
 				    }
 			};
-			
-			
+
             function ViewModel(project, newsAndEvents, projectStories, sites, activities, isUserEditor,today,themes) {
                 var self = this;
                 self.name = ko.observable(project.name);
@@ -839,7 +837,7 @@
 		                    years.push(startYear++);
 		            } 
 		            return years;
-			    }
+			    };
 			    self.years = [];
 			    self.years = self.allYears();
 				
@@ -861,43 +859,43 @@
                 	return (project.planStatus == 'approved' || project.planStatus =='submitted');
                 });
                 
-                self.detailsLastUpdated = ko.observable(project.custom.details.lastUpdated).extend({simpleDate: true});;
-				self.planStatus = ko.observable(project.planStatus)
+                self.detailsLastUpdated = ko.observable(project.custom.details.lastUpdated).extend({simpleDate: true});
+				self.planStatus = ko.observable(project.planStatus);
                 
                 self.addObjectives = function(){
 					self.details.objectives.rows.push(new GenericRowViewModel());
-    			}
+    			};
 				self.removeObjectives = function(row){
                 	self.details.objectives.rows.remove(row);
-                }
+                };
                 self.addNationalAndRegionalPriorities = function(){
 					self.details.priorities.rows.push(new GenericRowViewModel());
-    			}			
+    			};
                 self.removeNationalAndRegionalPriorities = function(row){
                 	self.details.priorities.rows.remove();
-                }
+                };
                 
                 self.addKEQ = function(){
 					self.details.keq.rows.push(new GenericRowViewModel());
-    			}			
+    			};
                 self.removeKEQ = function(keq){
                 	self.details.keq.rows.remove(keq);
-                }
+                };
                 
                 self.addPartnership = function(){
 					self.details.partnership.rows.push (new GenericRowViewModel());
-    			}			
+    			};
                 self.removePartnership = function(partnership){
                 	self.details.partnership.rows.remove(partnership);
-                }
+                };
                 
                 //Risks details
 				self.addRisks = function(){
                		self.risks.rows.push(new RisksRowViewModel());
-                }
+                };
                 self.removeRisk = function(risk) {
 					self.risks.rows.remove(risk);
-                }
+                };
                 
                 self.projectDatesChanged = ko.computed(function() {
                     return project.plannedStartDate != self.plannedStartDate() ||
@@ -923,11 +921,10 @@
 
 				self.addBudget = function(){
 					self.details.budget.rows.push (new BudgetRowViewModel({},getBugetHeaders(project.timeline)));
-    			}			
+    			};
                 self.removeBudget = function(budget){
                 	self.details.budget.rows.remove(budget);
-                }
-   				
+                };
                 self.organisation = ko.observable(project.organisation);
                 self.organisationName = ko.observable(project.organisationName);
                 self.serviceProviderName = ko.observable(project.serviceProviderName);
