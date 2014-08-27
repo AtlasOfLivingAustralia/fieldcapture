@@ -21,7 +21,7 @@ class DashboardTagLib {
             if (target > 0 && score.score.isOutputTarget && !score.groupTitle) {
                 renderTarget(score, target)
             }
-            else if (!score.groupTitle) {
+            else if (!score.score.displayType) {
                 renderSingleScore(score)
             }
             else {
@@ -115,6 +115,9 @@ class DashboardTagLib {
 
                 break
             case 'HISTOGRAM':
+                def chartData = toArray(score.results[0].result)
+                def chartType = score.chartType?:'piechart'
+                drawChart(chartType, score.score.label, score.score.label, helpText(score), [['string', score.score.label], ['number', 'Count']], chartData)
                 break
 
         }
