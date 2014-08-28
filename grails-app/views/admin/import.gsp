@@ -127,16 +127,20 @@
         }
 
         self.showProgress = function () {
+            var stop = false;
             $.get(fcConfig.importProgressUrl, function (progress) {
 
                 self.progressDetail(progress.projects);
                 if (!progress.finished) {
                     self.progressSummary(progress.projects.length + ' projects processed...');
-
-                    setTimeout(self.showProgress, 2000);
                 }
                 else {
-                    self.progressSummary('All projects processed.');
+                    stop = true;
+                    self.progressSummary('All '+progress.projects.length+'projects processed.');
+                }
+            }).always(function() {
+                if (!stop) {
+                    setTimeout(self.showProgress, 2000);
                 }
             });
 

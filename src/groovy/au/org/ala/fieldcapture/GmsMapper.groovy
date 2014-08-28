@@ -53,7 +53,8 @@ class GmsMapper {
             AUTHORISEDP_EMAIL:[name:'adminEmail', type:'email'],
             GRANT_MGR_EMAIL:[name:'grantManagerEmail', type:'email'],
             SERVICE_PROVIDER:[name:'serviceProviderName', type:'string'],
-            SERVICE_PROVIDER_EMAIL:[name:'serviceProviderEmail', type:'email']
+            APPLICANT_EMAIL:[name:'applicantEmail', type:'email'],
+            ADMIN_EMAIL:[name:'adminEmail2', type:'email']
     ]
 
     def siteMapping = [
@@ -165,10 +166,7 @@ class GmsMapper {
             if (mappedActivity.code == 'OTH') {
                 return
             }
-            // Two codes for the same activity in GMS
-            if (mappedActivity.code == 'WSA') {
-                mappedActivity.code = 'WMM'
-            }
+
             if (mappedActivity.code) {
                 def activityType = gmsCodeToActivityType[mappedActivity.code]
 
@@ -248,10 +246,7 @@ class GmsMapper {
         errors.addAll(map.errors)
 
         def code = target.remove('code')
-        // Two codes for the same activity in GMS
-        if (code == 'WSA') {
-            code = 'WMM'
-        }
+
         if (!target) {
             errors << "No target defined for ${flatKey}, row: ${rowMap.index}"
         }
@@ -259,7 +254,9 @@ class GmsMapper {
 
         def outputName, score
         activitiesModel.outputs.find { output ->
-            score = output.scores?.find{it.gmsId == code}
+            score = output.scores?.find{
+                it.gmsId?.split('\\s')?.contains(code)
+            }
             outputName = output.name
             return score
         }
@@ -268,11 +265,13 @@ class GmsMapper {
             errors << "No mapping for score ${code}, row: ${rowMap.index}"
         }
         else {
-            if (!score.isOutputTarget) {
+            if (score.isOutputTarget) {
+                result << [target: target.target, outputLabel:outputName, scoreLabel:score.label, scoreName:score.name, units:score.units]
+            }
+            else {
                 errors << "Warning: score ${code} is not an output target"
             }
 
-            result << [target: target.target, outputLabel:outputName, scoreLabel:score.label, scoreName:score.name, units:score.units]
         }
         [mappedData:result, errors: errors]
     }
@@ -441,8 +440,10 @@ class GmsMapper {
             target = score.target ? formatDecimal(score.target) : '0'
         }
 
+        // Two codes can be mapped to a single score, in this case we return the first one.
+        def code = score.score.gmsId.split('\\s')[0]
         def value = score.results? score.results[0].result : 0
-        def result = [PGAT_ACTIVITY_DELIVERABLE_GMS_CODE: score.score.gmsId, PGAT_ACTIVITY_UNIT:target, PGAT_REPORTED_PROGRESS: formatDecimal(value, '0')]
+        def result = [PGAT_ACTIVITY_DELIVERABLE_GMS_CODE: code, PGAT_ACTIVITY_UNIT:target, PGAT_REPORTED_PROGRESS: formatDecimal(value, '0')]
 
         result
 

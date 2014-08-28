@@ -1237,7 +1237,8 @@ class ImportService {
 
             def adminEmail = projectDetails.project.remove('adminEmail')
             def grantManagerEmail = projectDetails.project.remove('grantManagerEmail')
-            def serviceProviderEmail = projectDetails.project.remove('serviceProviderEmail')
+            def applicantEmail = projectDetails.project.remove('applicantEmail')
+            def adminEmail2 = projectDetails.project.remove('adminEmail2')
 
             def result = importProject(projectDetails.project, false) // Do not overwrite existing projects because of the impacts to sites / activities etc.
 
@@ -1249,7 +1250,8 @@ class ImportService {
             def projectId = projectDetails.project.projectId
 
             addUser(adminEmail, roleAdmin, projectId, projectDetails.errors)
-            addUser(serviceProviderEmail, roleAdmin, projectId, projectDetails.errors)
+            addUser(applicantEmail, roleAdmin, projectId, projectDetails.errors)
+            addUser(adminEmail2, roleAdmin, projectId, projectDetails.errors)
             addUser(grantManagerEmail, roleGrantManager, projectId, projectDetails.errors)
 
             def sites = projectDetails.sites
