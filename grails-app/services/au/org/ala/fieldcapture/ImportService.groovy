@@ -1426,7 +1426,7 @@ class ImportService {
 
         // No point creating the activity if there is no data for it.
         if (!preview && values) {
-            activityService.update(activity)
+            activityService.update('', activity)
         }
 
         return activity

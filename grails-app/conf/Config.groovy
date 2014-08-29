@@ -206,8 +206,8 @@ environments {
         layout.skin = "nrm"
         security.cas.appServerName = serverName
         security.cas.contextPath = "/" + appName
-        ecodata.baseUrl = 'http://devt.ala.org.au:8080/ecodata/ws/'
-        //ecodata.baseUrl = 'http://ecodata-test.ala.org.au/ws/'
+        //ecodata.baseUrl = 'http://devt.ala.org.au:8080/ecodata/ws/'
+        ecodata.baseUrl = 'http://ecodata-test.ala.org.au/ws/'
 
         upload.images.url = grails.serverURL+'/image/'
         emailFilter = /[A-Z0-9._%-]+@csiro\.au|chris\.godwin\.ala@gmail.com/
