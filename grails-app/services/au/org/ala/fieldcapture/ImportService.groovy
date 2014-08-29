@@ -1398,7 +1398,7 @@ class ImportService {
         def activity = [projectId:project.projectId,
                         siteId:site.siteId,
                         description:SUMMARY_ACTIVITY_NAME,
-                        name:SUMMARY_ACTIVITY_NAME,
+                        type:SUMMARY_ACTIVITY_NAME,
                         plannedStartDate:startDate,
                         plannedEndDate:endDate,
                         startDate:startDate,
@@ -1420,7 +1420,7 @@ class ImportService {
             values << [scoreLabel: target.scoreLabel, score:target.progressToDate]
         }
 
-        def output = [ type:SUMMARY_OUTPUT_NAME, data:[scores:values] ]
+        def output = [ name:SUMMARY_OUTPUT_NAME, data:[scores:values] ]
 
         activity.outputs = [output]
 
