@@ -65,6 +65,24 @@
 
         }).trigger('change');
 
+        $("#btnLoadActivityData").click(function(e) {
+            e.preventDefault();
+
+
+            $('form.loadActivityData').submit();
+        });
+
+        $("#activityData").change(function() {
+            if ($("#activityData").val()) {
+                $("#btnLoadActivityData").removeAttr("disabled");
+            }
+            else {
+                $("#btnLoadActivityData").attr("disabled", "disabled");
+            }
+
+        }).trigger('change');
+
+
         $("#btnLoadPlanData").click(function(e) {
             e.preventDefault();
             $('form.loadPlanData').submit();
@@ -141,6 +159,19 @@
               </g:uploadForm>
 
            </p>
+        </td>
+    </tr>
+    <tr>
+        <td><button disabled id="btnLoadActivityData" class="btn btn-small btn-info" title="Load project aggregrate data">Load Summary Activity Data from CSV</button>
+        </td>
+        <td>
+            Loads (or reloads) activity information from a csv file.
+        <p><g:uploadForm class="loadActivityData" controller="admin" action="populateAggregrateProjectData">
+            <div><input id="activityData" type="file" accept="text/csv" name="activityData"/></div>
+            <div><input type="checkbox" name="preview">Preview errors only, don't actually modify anything</div>
+        </g:uploadForm>
+
+        </p>
         </td>
     </tr>
     <tr>

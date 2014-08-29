@@ -465,4 +465,16 @@ class AdminController {
         render result as JSON
     }
 
+    def populateAggregrateProjectData() {
+        def result = [:]
+        if (request instanceof MultipartHttpServletRequest) {
+            def file = request.getFile('activityData')
+
+            if (file) {
+                result = importService.populateAggregrateProjectData(file.inputStream, params.preview)
+            }
+        }
+
+        render result as JSON
+    }
 }

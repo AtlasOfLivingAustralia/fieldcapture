@@ -1302,4 +1302,134 @@ class ImportService {
         }
     }
 
+    def populateAggregrateProjectData(InputStream csv, preview, charEncoding = 'Cp1252') {
+
+
+        def result = [errors:[], activities : []]
+        cacheService.clear(PROJECTS_CACHE_KEY)
+        def reader = new InputStreamReader(csv, charEncoding)
+        try {
+
+            def prevGrantId = null
+            def projectRows = []
+
+            new CSVMapReader(reader).eachWithIndex { rowMap, i ->
+
+                def currentGrantId = rowMap[GmsMapper.GRANT_ID_COLUMN]
+                // We have read all the details for a project.
+                if (currentGrantId != prevGrantId && prevGrantId) {
+
+                    result.activities << importProjectProgress(projectRows, result.errors, preview)
+
+                    projectRows = []
+                }
+                rowMap.index = (i+2) // accounts for 1-based index of Excel and the column header row.
+                projectRows << rowMap
+                prevGrantId = currentGrantId
+            }
+            // import the last project
+            result.activities << importProjectProgress(projectRows, result.errors, preview)
+
+
+        }
+        catch (Exception e) {
+            def message = 'Error processing projects: '+e.getMessage()
+            log.error(message, e)
+            result.errors << message
+
+        }
+        result
+
+    }
+
+    def SUMMARY_OUTPUT_NAME = 'Upload of stage 1 and 2 reporting data'
+    def SUMMARY_ACTIVITY_NAME = 'Upload of stage 1 and 2 reporting data'
+    private def importProjectProgress(projectRows, errors, preview) {
+
+
+        def activitiesModel = metadataService.activitiesModel()
+        def mapper = new GmsMapper(activitiesModel, true)
+        def projectDetails = mapper.mapProject(projectRows)
+
+        errors.addAll(projectDetails.errors)
+
+        // Get the project id from the grant / external id.
+        def project = findProjectByGrantAndExternalId(projectDetails.project.grantId, projectDetails.project.externalId)
+
+        if (!project) {
+            errors << "No project with Grant Id: ${projectDetails.project.grantId}, External Id: ${projectDetails.project.externalId}"
+            return [:]
+        }
+
+        // Get the project details so we have access to the sites and activities for the project.
+        project = projectService.get(project.projectId, 'all')
+
+
+        def startDate, endDate
+        // Get the timeline from the project.
+        if (project.timeline) {
+            def stage1 = project.timeline.find{it.name=='Stage 1'}
+
+            if (!stage1) {
+                errors << "Could not find stage 1 for project with Grant Id: ${project.grantId}, External Id: ${project.externalId}"
+                return [:]
+            }
+            startDate = stage1.fromDate
+            endDate = stage1.toDate
+        }
+        else {
+            errors << "No timeline for project with Grant Id: ${project.grantId}, External Id: ${project.externalId}"
+            return [:]
+        }
+
+
+        if (!project.sites) {
+            errors << "No sites for project with Grant Id: ${project.grantId}, External Id: ${project.externalId}"
+            return [:]
+        }
+
+        // Find a sensible site to attach to our new activity
+        def site = project.sites.find{it.name.startsWith('Project area')}
+        if (!site) {
+            site = project.sites[0]
+        }
+
+        // Create our dodgy import activity in first stage, ignore targets.
+        def activity = [projectId:project.projectId,
+                        siteId:site.siteId,
+                        description:SUMMARY_ACTIVITY_NAME,
+                        name:SUMMARY_ACTIVITY_NAME,
+                        plannedStartDate:startDate,
+                        plannedEndDate:endDate,
+                        startDate:startDate,
+                        endDate:endDate,
+                        publicationStatus:'published' ]
+
+
+        def outputTargets = projectDetails.project.outputTargets
+
+        def values = []
+        outputTargets.each { target ->
+
+            if (!target.progressToDate) {
+                errors << "No delivery information for ${project.grantId}, ${target.label}"
+                return
+            }
+
+            // we know our special output has a flat mapping structure
+            values << [scoreLabel: target.scoreLabel, score:target.progressToDate]
+        }
+
+        def output = [ type:SUMMARY_OUTPUT_NAME, data:[scores:values] ]
+
+        activity.outputs = [output]
+
+        // No point creating the activity if there is no data for it.
+        if (!preview && values) {
+            activityService.update(activity)
+        }
+
+        return activity
+    }
+
 }

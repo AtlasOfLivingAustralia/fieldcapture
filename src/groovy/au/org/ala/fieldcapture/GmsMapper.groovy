@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat
  */
 class GmsMapper {
 
-    public static final List GMS_COLUMNS = ['PROGRAM_NM',	'ROUND_NM',	'APP_ID', 'EXTERNAL_ID', 'APP_NM', 'APP_DESC',	'START_DT',	'FINISH_DT', 'FUNDING',	'APPLICANT_NAME', 'ORG_TRADING_NAME', 'APPLICANT_EMAIL', 'AUTHORISEDP_CONTACT_TYPE', 'AUTHORISEDP_EMAIL', 'GRANT_MGR_EMAIL', 'DATA_TYPE', 'ENV_DATA_TYPE',	'PGAT_PRIORITY', 'PGAT_GOAL_CATEGORY',	'PGAT_GOALS', 'PGAT_OTHER_DETAILS','PGAT_PRIMARY_ACTIVITY','PGAT_ACTIVITY_DELIVERABLE_GMS_CODE','PGAT_ACTIVITY_DELIVERABLE','PGAT_ACTIVITY_TYPE','PGAT_ACTIVITY_UNIT','PGAT_UOM', 'PGAT_REPORTED_PROGRESS']
+    public static final List GMS_COLUMNS = ['PROGRAM_NM',	'ROUND_NM',	'APP_ID', 'EXTERNAL_ID', 'APP_NM', 'APP_DESC',	'START_DT',	'FINISH_DT', 'FUNDING',	'APPLICANT_NAME', 'ORG_TRADING_NAME', 'APPLICANT_EMAIL', 'AUTHORISEDP_CONTACT_TYPE', 'AUTHORISEDP_EMAIL', 'GRANT_MGR_EMAIL', 'DATA_TYPE', 'ENV_DATA_TYPE',	'PGAT_PRIORITY', 'PGAT_GOAL_CATEGORY',	'PGAT_GOALS', 'PGAT_OTHER_DETAILS','PGAT_PRIMARY_ACTIVITY','PGAT_ACTIVITY_DELIVERABLE_GMS_CODE','PGAT_ACTIVITY_DELIVERABLE','PGAT_ACTIVITY_TYPE','PGAT_ACTIVITY_UNIT','PGAT_UOM', 'UNITS_DELIVERED']
 
     // These identify the data contained in the row.
     static final LOCATION_DATA_TYPE = 'Location Data'
@@ -76,6 +76,7 @@ class GmsMapper {
             PGAT_ACTIVITY_DELIVERABLE_GMS_CODE:[name:'code', type:'string'],
             PGAT_ACTIVITY_TYPE:[name:'gmsScore',type:'string'],
             PGAT_ACTIVITY_UNIT:[name:'target', type:'decimal'],
+            UNITS_DELIVERED:[name:'progressToDate', type:'decimal'],
             PGAT_UOM:[name:'units', type:'string']
     ]
 
@@ -86,12 +87,16 @@ class GmsMapper {
             RISK_MITIGATION:[name:'currentControl', type:'string']
     ]
 
+    private boolean includeProgress
+
     public GmsMapper() {
         this.activitiesModel = []
+        includeProgress = false
     }
 
-    public GmsMapper(activitiesModel) {
+    public GmsMapper(activitiesModel, includeProgress = false) {
         this.activitiesModel = activitiesModel
+        this.includeProgress = includeProgress
     }
 
     def mapProject(projectRows) {
@@ -248,7 +253,7 @@ class GmsMapper {
         def code = target.remove('code')
 
         if (!target) {
-            errors << "No target defined for ${flatKey}, row: ${rowMap.index}"
+            errors << "No target defined for ${code}, row: ${rowMap.index}"
         }
         def result = [:]
 
@@ -265,11 +270,16 @@ class GmsMapper {
             errors << "No mapping for score ${code}, row: ${rowMap.index}"
         }
         else {
-            if (score.isOutputTarget) {
-                result << [target: target.target, outputLabel:outputName, scoreLabel:score.label, scoreName:score.name, units:score.units]
+            if (includeProgress) {
+                result << [target: target.target, outputLabel:outputName, scoreLabel:score.label, scoreName:score.name, units:score.units, progressToDate:target.progressToDate]
             }
             else {
-                errors << "Warning: score ${code} is not an output target"
+                if (score.isOutputTarget) {
+                    result << [target: target.target, outputLabel:outputName, scoreLabel:score.label, scoreName:score.name, units:score.units]
+                }
+                else {
+                    errors << "Warning: score ${code} is not an output target"
+                }
             }
 
         }
@@ -443,7 +453,7 @@ class GmsMapper {
         // Two codes can be mapped to a single score, in this case we return the first one.
         def code = score.score.gmsId.split('\\s')[0]
         def value = score.results? score.results[0].result : 0
-        def result = [PGAT_ACTIVITY_DELIVERABLE_GMS_CODE: code, PGAT_ACTIVITY_UNIT:target, PGAT_REPORTED_PROGRESS: formatDecimal(value, '0')]
+        def result = [PGAT_ACTIVITY_DELIVERABLE_GMS_CODE: code, PGAT_ACTIVITY_UNIT:target, UNITS_DELIVERED: formatDecimal(value, '0')]
 
         result
 
