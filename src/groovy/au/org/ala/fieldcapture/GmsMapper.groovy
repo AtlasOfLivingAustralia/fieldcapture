@@ -24,7 +24,7 @@ class GmsMapper {
     static final DATA_SUB_TYPE_COLUMN = 'ENV_DATA_TYPE'
     static final REPORTING_THEME_COLUMN = 'PGAT_PRIORITY'
 
-    static MERIT_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ssZ")
+    static MERIT_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
 
     static final GMS_DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy")
     static final SHORT_GMS_DATE_FORMAT = new SimpleDateFormat("dd/MM/yy")
@@ -344,7 +344,9 @@ class GmsMapper {
         }
         else {
             def format = date.length() == 10 ? GMS_DATE_FORMAT : SHORT_GMS_DATE_FORMAT
-            MERIT_DATE_FORMAT.format(format.parse(date))
+            def parsedDate = format.parse(date)
+            parsedDate.setTimeZone()
+            MERIT_DATE_FORMAT.format(parsedDate)
         }
     }
 

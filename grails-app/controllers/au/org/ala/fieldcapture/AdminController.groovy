@@ -477,4 +477,8 @@ class AdminController {
 
         render result as JSON
     }
+
+    def nlpMigrate() {
+        render adminService.migrateToNlp(params.projectId) as JSON
+    }
 }
