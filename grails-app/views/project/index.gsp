@@ -177,7 +177,7 @@
                         <g:if test="${user?.isAdmin}">To add a document use the Documents section of the Admin tab.</g:if>
                     </div>
                     <g:render template="/shared/listDocuments"
-                      model="[useExistingModel: true,editable:false,imageUrl:resource(dir:'/images/filetypes'),containerId:'overviewDocumentList']"/>
+                      model="[useExistingModel: true,editable:false, filterBy: 'all',imageUrl:resource(dir:'/images/filetypes'),containerId:'overviewDocumentList']"/>
                 </div>
 
                 <div class="span4">
@@ -194,8 +194,10 @@
         </div>
         
         <div class="tab-pane" id="details">
-			<!-- Project Details --> 
+				<!-- Project Details --> 
 				<g:render template="projectDetails" model="[project: project]"/>
+				<g:render template="/shared/listDocuments"
+                      model="[useExistingModel: true,editable:false, filterBy: 'programmeLogic', imageUrl:resource(dir:'/images/filetypes'),containerId:'overviewDocumentList']"/>
 			
 		</div>
 		
@@ -414,7 +416,7 @@
                                 <div class="row-fluid">
                                     <div class="span10">
                                         <g:render template="/shared/listDocuments"
-                                                  model="[useExistingModel: true,editable:true,imageUrl:resource(dir:'/images/filetypes'),containerId:'adminDocumentList']"/>
+                                                  model="[useExistingModel: true,editable:true, filterBy: 'all', imageUrl:resource(dir:'/images/filetypes'),containerId:'adminDocumentList']"/>
                                     </div>
                                 </div>
                                 %{--The modal view containing the contents for a modal dialog used to attach a document--}%
@@ -507,7 +509,7 @@
             $('#summary-cancel').click(function () {
                 document.location.href = "${createLink(action: 'index', id: project.projectId)}";
             }); 
-
+			
             var Site = function (site, feature) {
                 var self = this;
                 this.name = ko.observable(site.name);

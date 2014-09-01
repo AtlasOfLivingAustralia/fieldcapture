@@ -1,11 +1,13 @@
 <div class="row-fluid" id="${containerId}">
     <div data-bind="foreach:documents">
-        <g:if test="${editable}">
-            <div class="clearfix space-after media" data-bind="template:ko.utils.unwrapObservable(type) === 'image' ? 'imageDocEditTmpl' : 'objDocEditTmpl'"></div>
-        </g:if>
-        <g:else>
-            <div class="clearfix space-after media" data-bind="template:ko.utils.unwrapObservable(type) === 'image' ? 'imageDocTmpl' : 'objDocTmpl'"></div>
-        </g:else>
+		<span data-bind="if: role() == '${filterBy}' || 'all' == '${filterBy}'">
+	       	<g:if test="${editable}">
+	            <div class="clearfix space-after media" data-bind="template:ko.utils.unwrapObservable(type) === 'image' ? 'imageDocEditTmpl' : 'objDocEditTmpl'"></div>
+	        </g:if>
+	        <g:else>
+	            <div class="clearfix space-after media" data-bind="template:ko.utils.unwrapObservable(type) === 'image' ? 'imageDocTmpl' : 'objDocTmpl'"></div>
+	        </g:else>
+         </span>
     </div>
 </div>
 
