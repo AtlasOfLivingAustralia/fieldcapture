@@ -101,6 +101,11 @@ class ActivityService {
 
     }
 
+    def bulkUpdateActivities(activityIds, props) {
+        def ids = activityIds.collect{"id=${it}"}.join('&')
+        webService.doPost(grailsApplication.config.ecodata.baseUrl + "activities/?$ids", props)
+    }
+
         /*def convertToSimpleDate(value) {
             def pattern = ~/\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ/
             if (value instanceof String && pattern.matcher(value).matches()) {
