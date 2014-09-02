@@ -25,6 +25,7 @@ class ModelCSSTagLib {
                     break
                 case 'section':
                 case 'row':
+                case 'col':
                     viewModelStyles(attrs, out, mod.items)
                     break
             }
