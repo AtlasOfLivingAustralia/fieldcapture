@@ -201,7 +201,7 @@ class SiteController {
 
             else {
                 //flag error for extension
-                def message ='Please ensure the shapefile is valid and uses the WGS 84 (ESPG:4326) coordinate reference system.'
+                def message ='There was an error uploading the shapefile.  Please send an email to support for further assistance.'
 
                 flash.message = "An error was encountered when processing the shapefile: ${message}"
                 render view:'upload', model:[projectId: params.projectId, returnTo:params.returnTo]

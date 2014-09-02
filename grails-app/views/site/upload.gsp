@@ -52,7 +52,7 @@
             <div class="span5">
                 <div class="alert">
                     <button class="close" onclick="$('.alert').fadeOut();" href="#">×</button>
-                    Please note only the WGS 84 (EPSG:4326) coordinate reference system is currently supported.
+                    MERIT no longer requires that shapefiles use the WGS84 CRS.  This feature is currently experimental, so please let us know if you encounter issues when uploading your shapefile.
                 </div>
             </div>
         </div>
