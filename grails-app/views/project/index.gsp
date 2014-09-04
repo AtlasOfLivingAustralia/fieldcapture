@@ -177,7 +177,7 @@
                         <g:if test="${user?.isAdmin}">To add a document use the Documents section of the Admin tab.</g:if>
                     </div>
                     <g:render template="/shared/listDocuments"
-                      model="[useExistingModel: true,editable:false, filterBy: 'all',imageUrl:resource(dir:'/images/filetypes'),containerId:'overviewDocumentList']"/>
+                      model="[useExistingModel: true,editable:false, filterBy: 'all', ignore: 'programmeLogic', imageUrl:resource(dir:'/images/filetypes'),containerId:'overviewDocumentList']"/>
                 </div>
 
                 <div class="span4">
@@ -196,9 +196,16 @@
         <div class="tab-pane" id="details">
 				<!-- Project Details --> 
 				<g:render template="projectDetails" model="[project: project]"/>
-				<g:render template="/shared/listDocuments"
-                      model="[useExistingModel: true,editable:false, filterBy: 'programmeLogic', imageUrl:resource(dir:'/images/filetypes'),containerId:'overviewDocumentList']"/>
-			
+				
+				<div class="row-fluid space-after">
+					<div class="span6">
+						<div class="well well-small">
+				 			<label><b>Programme Logic:</b></label>
+							<g:render template="/shared/listDocuments"
+	                    	  model="[useExistingModel: true,editable:false, filterBy: 'programmeLogic', ignore: '', imageUrl:resource(dir:'/images/filetypes'),containerId:'overviewDocumentList']"/>
+						</div>
+					</div>	
+				</div>	
 		</div>
 		
         <g:if test="${user?.hasViewAccess}">
@@ -416,7 +423,7 @@
                                 <div class="row-fluid">
                                     <div class="span10">
                                         <g:render template="/shared/listDocuments"
-                                                  model="[useExistingModel: true,editable:true, filterBy: 'all', imageUrl:resource(dir:'/images/filetypes'),containerId:'adminDocumentList']"/>
+                                                  model="[useExistingModel: true,editable:true, filterBy: 'all', ignore: '', imageUrl:resource(dir:'/images/filetypes'),containerId:'adminDocumentList']"/>
                                     </div>
                                 </div>
                                 %{--The modal view containing the contents for a modal dialog used to attach a document--}%
@@ -1209,6 +1216,7 @@
                         self.documents.push(new DocumentViewModel(doc));
                     }
                 };
+                
                 self.attachDocument = function() {
                     var url = '${g.createLink(controller:"proxy", action:"documentUpdate")}';
                     showDocumentAttachInModal( url,new DocumentViewModel({role:'information'},{key:'projectId', value:'${project.projectId}'}), '#attachDocument')

@@ -12,6 +12,8 @@ var imageLocation = "${imageUrl}";
  */
 function DocumentViewModel (doc, owner) {
     var self = this;
+    //todo: Update the role list and change camelCase to sentence case.
+    roles = ['programmeLogic','information'];
     // NOTE that attaching a file is optional, ie you can have a document record without a physical file
     this.filename = ko.observable(doc ? doc.filename : '');
     this.filesize = ko.observable(doc ? doc.filesize : '');
@@ -36,6 +38,7 @@ function DocumentViewModel (doc, owner) {
     this.fileButtonText = ko.computed(function() {
         return (self.filename() ? "Change file" : "Attach file");
     });
+   
     // this supports a checkbox that allows the user to assert that this image is to be used
     // as the primary project image - implemented as a writeable computed
     this.isPrimaryProjectImage = ko.computed({

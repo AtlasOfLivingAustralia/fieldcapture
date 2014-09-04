@@ -26,6 +26,15 @@
 
                         </div>
                     </div>
+                    
+                    <div class="control-group">
+                        <label class="control-label" for="documentRole">Document type</label>
+
+                        <div class="controls">
+                            <select style="width: 97%;" data-bind="options:roles, value:role"></select>
+                        </div>
+                    </div>
+                    
 
                     <div class="control-group">
                         <label class="control-label" for="documentLicense">License</label>
