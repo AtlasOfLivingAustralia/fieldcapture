@@ -19,7 +19,9 @@
         activityUpdateUrl: "${createLink(controller: 'activity', action: 'ajaxUpdate')}",
         activityDeleteUrl: "${createLink(controller: 'activity', action: 'ajaxDelete')}",
         projectViewUrl: "${createLink(controller: 'project', action: 'index')}/",
-        siteViewUrl: "${createLink(controller: 'site', action: 'index')}/"
+        siteViewUrl: "${createLink(controller: 'site', action: 'index')}/",
+        bieUrl: "${grailsApplication.config.bie.baseURL}",
+        speciesProfileUrl: "${createLink(controller: 'proxy', action: 'speciesProfile')}"
         },
         here = document.location.href;
     </r:script>
