@@ -51,11 +51,8 @@ class ProjectService {
     }
 
     def update(id, body) {
-		
-		if(body?.custom?.details?.lastUpdated?.equals("")){
-			TimeZone.setDefault(TimeZone.getTimeZone('UTC'))
-			body.custom.details.lastUpdated = new Date().format("yyyy-MM-dd'T'HH:mm:ss'Z'")
-		}
+        TimeZone.setDefault(TimeZone.getTimeZone('UTC'))
+        body?.custom?.details?.lastUpdated = new Date().format("yyyy-MM-dd'T'HH:mm:ss'Z'")
         webService.doPost(grailsApplication.config.ecodata.baseUrl + 'project/' + id, body)
     }
 

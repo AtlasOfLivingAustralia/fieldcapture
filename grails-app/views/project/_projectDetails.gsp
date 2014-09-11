@@ -8,9 +8,15 @@
 		<div class="row-fluid space-after">
 			    <div class="span6">
 			        <div id="project-objectives" class="well well-small">
-			 			<label><b>Project objectives:</b></label> 	 
-			 				<label style="margin-left: 15px" data-bind="text: details.objectives.description"></label>
-			 				<label style="margin-left: 15px"> <b>Protected natural assets: </b></label> <label style="margin-left: 15px" data-bind="text: details.objectives.assets"></label>
+			 			<label><b>Project Outcomes:</b></label>
+                            <span data-bind="foreach : details.objectives.rows1">
+                                <b><span data-bind="text: $index()+1"></span>. Objective : </b><span data-bind="text:description"></span>
+                                <br/>
+                                <span style="margin-left: 15px">Goals : <span data-bind="text:assets"></span></span>
+                                <br/>
+                            </span>
+
+                        <label><b>Approach:</b></label>
 					        <span data-bind="foreach : details.objectives.rows">
 			                    <b><span data-bind="text: $index()+1"></span>. <span data-bind="text:data1"></span></b>
 			                    <label style="margin-left: 15px" data-bind="text: data2"></label>
@@ -85,7 +91,7 @@
 		<div class="row-fluid space-after">
 			<div class="required">
 	        <div id="keq" class="well well-small">
-	 			<label><b>Budget table</b></label>
+	 			<label><b>Project Budget</b></label>
 	 			<b>Budget summary : </b> 
 	 			<span style="width: 99%;" data-bind="text: details.budget.description, disable: isProjectDetailsLocked()" ></span> 	 
 			    <table style="width: 100%;">

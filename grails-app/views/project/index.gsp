@@ -95,7 +95,7 @@
     <g:set var="tabIsActive"><g:if test="${user?.hasViewAccess}">tab</g:if></g:set>
     <ul id="projectTabs" class="nav nav-tabs big-tabs">
         <li class="active"><a href="#overview" id="overview-tab" data-toggle="tab">Overview</a></li>
-		<li><a href="#details" id="details-tab" data-toggle="${tabIsActive}">Project Details</a></li>        
+		<li><a href="#details" id="details-tab" data-toggle="${tabIsActive}">MERI Plan</a></li>
         <li><a href="#plan" id="plan-tab" data-toggle="${tabIsActive}">Activities</a></li>
         <li><a href="#site" id="site-tab" data-toggle="${tabIsActive}">Sites</a></li>
         <li><a href="#dashboard" id="dashboard-tab" data-toggle="${tabIsActive}">Dashboard</a></li>
@@ -200,7 +200,7 @@
 				<div class="row-fluid space-after">
 					<div class="span6">
 						<div class="well well-small">
-				 			<label><b>Programme Logic:</b></label>
+				 			<label><b>Programme documents:</b></label>
 							<g:render template="/shared/listDocuments"
 	                    	  model="[useExistingModel: true,editable:false, filterBy: 'programmeLogic', ignore: '', imageUrl:resource(dir:'/images/filetypes'),containerId:'overviewDocumentList']"/>
 						</div>
@@ -335,7 +335,7 @@
                                 <g:set var="activeClass" value=""/>
                             </g:if>
 							
-							<li><a href="#projectDetails" id="projectDetails-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Project details</a></li>
+							<li><a href="#projectDetails" id="projectDetails-tab" data-toggle="tab"><i class="icon-chevron-right"></i> MERI Plan</a></li>
                             <li><a href="#editNewsAndEvents" id="editNewsAndEvents-tab" data-toggle="tab"><i class="icon-chevron-right"></i> News and events</a></li>
                             <li><a href="#editProjectStories" id="editProjectStories-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Project stories</a></li>
 
@@ -365,7 +365,7 @@
  							<!-- PROJECT DETAILS -->
                             <div id="projectDetails" class="pill-pane">
                                 <!-- Edit project details -->
-								<h3>Project Details</h3>                                
+								<h3>MERI Plan</h3>
 								<div class="row-fluid">          
 									<div class="validationEngineContainer" id="project-details-validation">                      
                                 		<g:render template="editProjectDetails" model="[project: project]"/>
@@ -546,16 +546,21 @@
 				this.lastUpdated = o.lastUpdated ? o.lastUpdated : moment().format();
 				this.budget = new BudgetViewModel(o.budget, period);
             };
-            
+
             var ObjectiveViewModel = function(o) {
             	var self = this;
             	if(!o) o = {}; 
-            	this.description = ko.observable(o.description);
-            	this.assets = ko.observableArray(o.assets);
+
             	var row = [];
             	o.rows ? row = o.rows : row.push(ko.mapping.toJS(new GenericRowViewModel()));
             	this.rows = ko.observableArray($.map(row, function (obj, i) {
 					return new GenericRowViewModel(obj);
+			    }));
+
+            	var row1 = [];
+            	o.rows1 ? row1 = o.rows1 : row1.push(ko.mapping.toJS(new OutcomeRowViewModel()));
+            	this.rows1 = ko.observableArray($.map(row1, function (obj, i) {
+					return new OutcomeRowViewModel(obj);
 			    }));
             };
             var ImplementationViewModel = function(o) {
@@ -582,6 +587,14 @@
             	this.data1 = ko.observable(o.data1);
             	this.data2 = ko.observable(o.data2);
             	this.data3 = ko.observable(o.data3);
+            };
+
+            var OutcomeRowViewModel = function(o) {
+            	var self = this;
+            	if(!o) o = {};
+            	this.description = ko.observable(o.description);
+            	this.assets = ko.observableArray(o.assets);
+
             };
             
             var BudgetViewModel = function(o, period){
@@ -832,7 +845,7 @@
 					'Indigenous Ecological Knowledge',
 					'Remnat Vegetation',
 					'Aquatic and Coastal systems including wetlands',
-					'Other'
+					'Not Applicable'
 	        	];
 	        	self.projectThemes =  $.map(themes, function(theme, i) {
 	                	return theme.name;
@@ -874,8 +887,14 @@
                 self.addObjectives = function(){
 					self.details.objectives.rows.push(new GenericRowViewModel());
     			};
+    			 self.addOutcome = function(){
+					self.details.objectives.rows1.push(new OutcomeRowViewModel());
+    			};
 				self.removeObjectives = function(row){
                 	self.details.objectives.rows.remove(row);
+                };
+                self.removeObjectivesOutcome = function(row){
+                	self.details.objectives.rows1.remove(row);
                 };
                 self.addNationalAndRegionalPriorities = function(){
 					self.details.priorities.rows.push(new GenericRowViewModel());
@@ -1018,7 +1037,9 @@
 				self.saveProject = function(){
 					var tmp = {};
 					tmp['details'] =  ko.mapping.toJS(self.details);
-					//Make elastic search hapy 
+					tmp['details']['status'] = 'active';
+					console.log(JSON.stringify(tmp));
+					//Make elastic search hapy
 					var jsData = {"custom": tmp};
                        var json = JSON.stringify(jsData, function (key, value) {
                            return value === undefined ? "" : value;
@@ -1031,10 +1052,10 @@
                          contentType: 'application/json',
                          success: function (data) {
                              if (data.error) {
-                                 showAlert("Failed to save project details: " + data.detail + ' \n' + data.error,
+                                 showAlert("Failed to save MERI Plan: " + data.detail + ' \n' + data.error,
                                      "alert-error","save-details-result-placeholder");
                              } else {
-                                 showAlert("Project details saved","alert-success","save-details-result-placeholder");
+                                 showAlert("MERI Plan saved","alert-success","save-details-result-placeholder");
                                  location.reload();
                              }
                          },
