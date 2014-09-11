@@ -1319,8 +1319,14 @@ class ImportService {
                 // We have read all the details for a project.
                 if (currentGrantId != prevGrantId && prevGrantId) {
 
-                    result.activities << importProjectProgress(projectRows, result.errors, preview)
-
+                    def activity = importProjectProgress(projectRows, result.errors, preview)
+                    if (activity) {
+                        result.activities << activity
+                        result.errors << "SUCCESS for ${prevGrantId}"
+                    }
+                    else {
+                        result.errors << "*********Import FAILED for ${prevGrantId} - see above for errors ****************"
+                    }
                     projectRows = []
                 }
                 rowMap.index = (i+2) // accounts for 1-based index of Excel and the column header row.
@@ -1328,7 +1334,14 @@ class ImportService {
                 prevGrantId = currentGrantId
             }
             // import the last project
-            result.activities << importProjectProgress(projectRows, result.errors, preview)
+            def activity = importProjectProgress(projectRows, result.errors, preview)
+            if (activity) {
+                result.activities << activity
+                result.errors << "SUCCESS for ${prevGrantId}"
+            }
+            else {
+                result.errors << "*********Import FAILED for ${prevGrantId} - see above for errors ****************"
+            }
 
 
         }
@@ -1344,6 +1357,8 @@ class ImportService {
 
     def SUMMARY_OUTPUT_NAME = 'Upload of stage 1 and 2 reporting data'
     def SUMMARY_ACTIVITY_NAME = 'Upload of stage 1 and 2 reporting data'
+    private static def MERIT_CHANGE_OVER_DATE = '2013-06-30T14:00:00Z';
+
     private def importProjectProgress(projectRows, errors, preview) {
 
 
@@ -1351,7 +1366,7 @@ class ImportService {
         def mapper = new GmsMapper(activitiesModel, metadataService.programsModel(), true)
         def projectDetails = mapper.mapProject(projectRows)
 
-        errors.addAll(projectDetails.errors)
+        //errors.addAll(projectDetails.errors)
 
         // Get the project id from the grant / external id.
         def project = findProjectByGrantAndExternalId(projectDetails.project.grantId, projectDetails.project.externalId)
@@ -1405,8 +1420,29 @@ class ImportService {
                         endDate:endDate,
                         publicationStatus:'published' ]
 
+        // Update other activities in the stage to finished and approved.
+        def stage1And2Activities = project.activities?.findAll {it.plannedEndDate <= MERIT_CHANGE_OVER_DATE}
+
+        def allPlanned = true
+        stage1And2Activities.each {
+            if (it.progress != 'planned') {
+                errors << "Activity ${it.activityId} status is not planned!"
+                allPlanned = false
+            }
+            if (it.publicationStatus == 'pendingApproval' || it.publicationStatus == 'approved') {
+                errors << "Activity ${it.activityId} status is ${it.publicationStatus}"
+                allPlanned = false
+            }
+
+
+        }
+        if (!allPlanned) {
+            return
+        }
 
         def outputTargets = projectDetails.project.outputTargets
+
+
 
         def values = []
         outputTargets.each { target ->
@@ -1420,6 +1456,11 @@ class ImportService {
             values << [scoreLabel: target.scoreLabel, score:target.progressToDate]
         }
 
+        if (!values) {
+            errors << "No scores defined for ${project.grantId}"
+            return
+        }
+
         def output = [ name:SUMMARY_OUTPUT_NAME, data:[scores:values] ]
 
         activity.outputs = [output]
@@ -1427,6 +1468,7 @@ class ImportService {
         // No point creating the activity if there is no data for it.
         if (!preview && values) {
             activityService.update('', activity)
+            activityService.bulkUpdateActivities(stage1And2Activities.collect{it.activityId}, [progress:'finished', publicationStatus:'approved'])
         }
 
         return activity
