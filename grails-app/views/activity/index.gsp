@@ -19,7 +19,9 @@
         activityUpdateUrl: "${createLink(controller: 'activity', action: 'ajaxUpdate')}",
         activityDeleteUrl: "${createLink(controller: 'activity', action: 'ajaxDelete')}",
         projectViewUrl: "${createLink(controller: 'project', action: 'index')}/",
-        siteViewUrl: "${createLink(controller: 'site', action: 'index')}/"
+        siteViewUrl: "${createLink(controller: 'site', action: 'index')}/",
+        bieUrl: "${grailsApplication.config.bie.baseURL}",
+        speciesProfileUrl: "${createLink(controller: 'proxy', action: 'speciesProfile')}"
         },
         here = document.location.href;
     </r:script>
@@ -124,12 +126,13 @@
             // load dynamic models - usually objects in a list
                 <md:jsModelObjects model="${model}" site="${site}" speciesLists="${speciesLists}" viewModelInstance="${blockId}ViewModelInstance"/>
 
-                this[viewModelName] = function () {
+                this[viewModelName] = function (site) {
                     var self = this;
                     self.name = "${output.name}";
                 self.outputId = "${output.outputId}";
                 self.data = {};
                 self.transients = {};
+                 self.transients.selectedSite = ko.observable(site);
                 self.transients.dummy = ko.observable();
 
                 // add declarations for dynamic data
@@ -156,7 +159,7 @@
             };
         };
 
-        window[viewModelInstance] = new this[viewModelName]();
+        window[viewModelInstance] = new this[viewModelName](site);
         window[viewModelInstance].loadData(${output.data ?: '{}'});
 
             ko.applyBindings(window[viewModelInstance], document.getElementById("ko${blockId}"));

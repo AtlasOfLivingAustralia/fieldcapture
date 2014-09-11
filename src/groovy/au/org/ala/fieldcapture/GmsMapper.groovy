@@ -345,7 +345,6 @@ class GmsMapper {
         else {
             def format = date.length() == 10 ? GMS_DATE_FORMAT : SHORT_GMS_DATE_FORMAT
             def parsedDate = format.parse(date)
-            parsedDate.setTimeZone()
             MERIT_DATE_FORMAT.format(parsedDate)
         }
     }
