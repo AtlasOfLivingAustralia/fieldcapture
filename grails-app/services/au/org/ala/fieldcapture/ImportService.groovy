@@ -1218,7 +1218,7 @@ class ImportService {
 
     def mapProjectRows(projectRows, status) {
 
-        def mapper = new GmsMapper(metadataService.activitiesModel())
+        def mapper = new GmsMapper(metadataService.activitiesModel(), metadataService.programsModel())
         def projectDetails = mapper.mapProject(projectRows)
         def grantId = projectDetails.project.grantId?:'<not mapped>'
         def externalId = projectDetails.project.externalId?:'<not mapped>'
@@ -1228,7 +1228,7 @@ class ImportService {
 
     def importAll(projectRows, status) {
 
-        def mapper = new GmsMapper(metadataService.activitiesModel())
+        def mapper = new GmsMapper(metadataService.activitiesModel(), metadataService.programsModel())
         def projectDetails = mapper.mapProject(projectRows)
 
         def grantId = projectDetails.project.grantId?:'<not mapped>'
@@ -1348,7 +1348,7 @@ class ImportService {
 
 
         def activitiesModel = metadataService.activitiesModel()
-        def mapper = new GmsMapper(activitiesModel, true)
+        def mapper = new GmsMapper(activitiesModel, metadataService.programsModel(), true)
         def projectDetails = mapper.mapProject(projectRows)
 
         errors.addAll(projectDetails.errors)

@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat
  */
 class GmsMapper {
 
-    public static final List GMS_COLUMNS = ['PROGRAM_NM',	'ROUND_NM',	'APP_ID', 'EXTERNAL_ID', 'APP_NM', 'APP_DESC',	'START_DT',	'FINISH_DT', 'FUNDING',	'APPLICANT_NAME', 'ORG_TRADING_NAME', 'APPLICANT_EMAIL', 'AUTHORISEDP_CONTACT_TYPE', 'AUTHORISEDP_EMAIL', 'GRANT_MGR_EMAIL', 'DATA_TYPE', 'ENV_DATA_TYPE',	'PGAT_PRIORITY', 'PGAT_GOAL_CATEGORY',	'PGAT_GOALS', 'PGAT_OTHER_DETAILS','PGAT_PRIMARY_ACTIVITY','PGAT_ACTIVITY_DELIVERABLE_GMS_CODE','PGAT_ACTIVITY_DELIVERABLE','PGAT_ACTIVITY_TYPE','PGAT_ACTIVITY_UNIT','PGAT_UOM', 'UNITS_DELIVERED']
+    public static final List GMS_COLUMNS = ['PROGRAM_NM',	'ROUND_NM',	'APP_ID', 'EXTERNAL_ID', 'APP_NM', 'APP_DESC',	'START_DT',	'FINISH_DT', 'FUNDING',	'APPLICANT_NAME', 'ORG_TRADING_NAME', 'APPLICANT_EMAIL', 'AUTHORISEDP_CONTACT_TYPE', 'AUTHORISEDP_EMAIL', 'GRANT_MGR_EMAIL', 'DATA_TYPE', 'ENV_DATA_TYPE',	'PGAT_PRIORITY', 'PGAT_GOAL_CATEGORY',	'PGAT_GOALS', 'PGAT_OTHER_DETAILS','PGAT_PRIMARY_ACTIVITY','PGAT_ACTIVITY_DELIVERABLE_GMS_CODE','PGAT_ACTIVITY_DELIVERABLE','PGAT_ACTIVITY_TYPE','PGAT_ACTIVITY_UNIT','PGAT_UOM', 'UNITS_COMPLETED']
 
     // These identify the data contained in the row.
     static final LOCATION_DATA_TYPE = 'Location Data'
@@ -38,6 +38,8 @@ class GmsMapper {
 
     /** used to support mapping of activities and scores between MERIT and GMS */
     private def activitiesModel
+
+    private def programModel
 
     def projectMapping = [
             (GRANT_ID_COLUMN):[name:'grantId', type:'string'],
@@ -76,7 +78,7 @@ class GmsMapper {
             PGAT_ACTIVITY_DELIVERABLE_GMS_CODE:[name:'code', type:'string'],
             PGAT_ACTIVITY_TYPE:[name:'gmsScore',type:'string'],
             PGAT_ACTIVITY_UNIT:[name:'target', type:'decimal'],
-            UNITS_DELIVERED:[name:'progressToDate', type:'decimal'],
+            UNITS_COMPLETED:[name:'progressToDate', type:'decimal'],
             PGAT_UOM:[name:'units', type:'string']
     ]
 
@@ -91,11 +93,13 @@ class GmsMapper {
 
     public GmsMapper() {
         this.activitiesModel = []
+        this.programModel = []
         includeProgress = false
     }
 
-    public GmsMapper(activitiesModel, includeProgress = false) {
+    public GmsMapper(activitiesModel, programModel, includeProgress = false) {
         this.activitiesModel = activitiesModel
+        this.programModel = programModel
         this.includeProgress = includeProgress
     }
 
@@ -105,6 +109,19 @@ class GmsMapper {
         def result = gmsToMerit(projectRows[0], projectMapping) // All project rows have the project details.
 
         def project = result.mappedData
+
+        def program = programModel.programs.find {it.name == project.associatedProgram}
+        if (!program) {
+            errors << "Programme ${project.associatedProgram} doesn't match an existing MERIT programme"
+        }
+        else {
+            if (project.associatedSubProgram) {
+                if (!program.subprograms.find{it.name == project.associatedSubProgram}) {
+                    errors << "Sub-programme ${project.associatedSubProgram} doesn't match any MERIT programme"
+                }
+            }
+        }
+
         errors.addAll(result.errors)
         project.planStatus = 'not approved'
 
@@ -454,7 +471,7 @@ class GmsMapper {
         // Two codes can be mapped to a single score, in this case we return the first one.
         def code = score.score.gmsId.split('\\s')[0]
         def value = score.results? score.results[0].result : 0
-        def result = [PGAT_ACTIVITY_DELIVERABLE_GMS_CODE: code, PGAT_ACTIVITY_UNIT:target, UNITS_DELIVERED: formatDecimal(value, '0')]
+        def result = [PGAT_ACTIVITY_DELIVERABLE_GMS_CODE: code, PGAT_ACTIVITY_UNIT:target, UNITS_COMPLETED: formatDecimal(value, '0')]
 
         result
 
