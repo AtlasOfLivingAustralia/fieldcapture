@@ -101,7 +101,7 @@ class ProxyController {
                 render error.toString()
             }
         } else {
-            // This is returned to the browswer as a text response due to workaround the warning
+            // This is returned to the browser as a text response due to workaround the warning
             // displayed by IE8/9 when JSON is returned from an iframe submit.
             def result = webService.doPost(url, JSON.parse(params.document)) as JSON;
             response.setContentType('text/plain;charset=UTF8')

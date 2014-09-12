@@ -5,7 +5,7 @@ package au.org.ala.fieldcapture
  */
 class AdminService {
 
-    def grailsApplication,webService,projectService, siteService, userService, activityService
+    def grailsApplication,webService,projectService, siteService, userService, activityService, documentService
 
     /**
      * Triggers a full site re-index.
@@ -72,7 +72,11 @@ class AdminService {
             userService.addUserAsRoleToProject(it.userId, newId, it.role)
         }
 
-        // Leaving documents alone for the time being.
+        documents.each { document ->
+            document.documentId = ''
+            document.projectId = newId
+            documentService.updateDocument(document)
+        }
 
         def nlpActivities = []
         activities.each {

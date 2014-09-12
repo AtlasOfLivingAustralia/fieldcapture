@@ -14,8 +14,13 @@ class DocumentService {
     def webService, grailsApplication, userService, siteService
 
     def createTextDocument(doc, content) {
-        def url = grailsApplication.config.ecodata.baseUrl + "document"
         doc.content = content
+        updateDocument(doc)
+    }
+
+    def updateDocument(doc) {
+        def url = grailsApplication.config.ecodata.baseUrl + "document"
+
         return webService.doPost(url, doc)
     }
 		
