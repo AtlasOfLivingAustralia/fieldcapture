@@ -672,7 +672,12 @@
             	var arr = [];
             	for(i = 0 ; i < period.length; i++)
             		arr.push(ko.mapping.toJS(new FloatViewModel()));
-				o.costs ? arr = o.costs : arr; 
+				
+				//Incase if timeline is generated.
+				if(o.costs && o.costs.length != arr.length) {
+					o.costs = arr;
+				}
+				o.costs ? arr = o.costs : arr;
             	this.costs = ko.observableArray($.map(arr, function (obj, i) {
 					return new FloatViewModel(obj);
 			    }));
