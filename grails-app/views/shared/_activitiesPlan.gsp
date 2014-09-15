@@ -696,8 +696,9 @@
             }, this, {deferEvaluation: true});
             
             this.riskAndDetailsActive = ko.computed(function(){
-            	if(project.risks && project.custom)
-            		return project['custom']['details']['status'] == 'active' && project.risks['status'] == 'active';
+            	if(project.risks)
+            		//return project['custom']['details']['status'] == 'active' && project.risks['status'] == 'active';
+            		return project.risks['status'] == 'active';
             	return false;	
             });
             

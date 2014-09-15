@@ -1,38 +1,70 @@
 <div data-bind="ifnot: details.status() == 'active'">
-	<h4>Project details not available.</h4>
+	<h4>MERI Plan not available.</h4>
 </div>
 
 <div data-bind="if: details.status() == 'active'">
 	<span style="float:right;" data-bind="if:detailsLastUpdated">Last update date : <span data-bind="text:detailsLastUpdated.formattedDate"></span></span>
-		<h3>General Project Information</h3>
+		<h3>MERI Plan Information</h3>
 		<div class="row-fluid space-after">
 			    <div class="span6">
 			        <div id="project-objectives" class="well well-small">
 			 			<label><b>Project Outcomes:</b></label>
-                            <span data-bind="foreach : details.objectives.rows1">
-                                <b><span data-bind="text: $index()+1"></span>. Objective : </b><span data-bind="text:description"></span>
-                                <br/>
-                                <span style="margin-left: 15px">Goals : <span data-bind="text:assets"></span></span>
-                                <br/>
-                            </span>
-
-                        <label><b>Approach:</b></label>
-					        <span data-bind="foreach : details.objectives.rows">
-			                    <b><span data-bind="text: $index()+1"></span>. <span data-bind="text:data1"></span></b>
-			                    <label style="margin-left: 15px" data-bind="text: data2"></label>
-					        </span>
+						<table style="width: 100%;">
+					        <thead>
+					            <tr>
+					            	<th></th>
+					                <th>Outcomes</th>
+					                <th>Project Goals</th>
+					            </tr>
+					        </thead>
+						<tbody data-bind="foreach : details.objectives.rows1">
+							<tr>
+				            	<td><span data-bind="text: $index()+1"></span></td>
+				            	<td><span data-bind="text:description"></span></td>
+				            	<td><label data-bind="text:assets"></label></td>
+				            </tr>
+						</tbody>		
+						</table>	
+						
+						<table style="width: 100%;">
+					        <thead>
+					            <tr>
+					            	<th></th>
+					                <th>Monitoring indicator</th>
+					                <th>Monitoring approach</th>
+					            </tr>
+					        </thead>
+						<tbody data-bind="foreach : details.objectives.rows">
+							<tr>
+				            	<td><span data-bind="text: $index()+1"></span></td>
+				            	<td><span data-bind="text:data1"></span></td>
+				            	<td><label data-bind="text:data2"></label></td>
+				            </tr>
+						</tbody>		
+						</table>			 			
 			        </div>
 			    </div>
 			    <div class="span6">
 		        <div id="project-partnership" class="well well-small">
 		 			<label><b>Project partnership:</b></label> 
-					<span data-bind="foreach : details.partnership.rows">
-	                   <span ><b> <span data-bind="text: $index()+1"></span>. Type of organisation: </b></span><span data-bind="text: data3"></span>
-	                   <br/>
-	                   <span style="margin-left: 15px"><b>Partner name: </b> </span><span data-bind="text:data1"></span>
-	                   <br/>
-	                   <span style="margin-left: 15px"><b>Nature of partnership: </b></span><label style="margin-left: 15px" data-bind="text: data2"></label>
-					</span>	
+		 			<table style="width: 100%;">
+					        <thead>
+					            <tr>
+					            	<th></th>
+					                <th>Partner name</th>
+					                <th>Nature of partnership</th>
+					                <th>Type of organisation</th>
+					            </tr>
+					        </thead>
+						<tbody data-bind="foreach : details.partnership.rows">
+							<tr>
+				            	<td><span data-bind="text: $index()+1"></span></td>
+				            	<td><span data-bind="text:data1"></span></td>
+				            	<td><label data-bind="text:data2"></label></td>
+				            	<td><label data-bind="text:data3"></label></td>
+				            </tr>
+						</tbody>		
+					</table>			
 		        </div>
 	        </div>
 		</div>
@@ -40,29 +72,55 @@
 		<div class="row-fluid space-after">
 		    <div class="span6">
 		        <div id="project-implementation" class="well well-small">
-		 			<label><b>Project implementation / delivery mechanism</b></label>
-		 			<span data-bind="foreach : details.partnership.rows"> 
-			 			<b>	<span data-bind="text: $index()+1"></span>. 
-							<span data-bind="text: data1"> </span>
-						</b>							  
-						<span style="float:right;" data-bind="text: data3"> </span>
-				         <label style="margin-left: 15px" data-bind="text: data2"></label>
-			        </span> 
+		 			<label><b>Project implementation / delivery mechanism:</b></label>
+		 			<span data-bind="text: details.implementation.description"> </span>
 		        </div>
 		    </div>
 		    
 		    <div class="span6">
 		        <div id="project-keq" class="well well-small">
-		 			<label><b>Key evaluation question</b></label>
-		 			<span data-bind="foreach : details.keq.rows"> 
-			 			<b>	<span data-bind="text: $index()+1"></span>. 
-							<span data-bind="text: data1"> </span>
-						</b>							  
-				         <label style="margin-left: 15px" data-bind="text: data2"></label>
-			        </span> 
+		        	<label><b>Project Events and Announcements</b></label>
+		 			<table style="width: 100%;">
+				        <thead>
+				            <tr>
+				            	<th></th>
+				                <th>Event or announcement</th>
+				                <th>Date </th>
+				            </tr>
+				        </thead>
+						<tbody data-bind="foreach : details.events">
+							<tr>
+				            	<td><span data-bind="text: $index()+1"></span></td>
+				            	<td><span data-bind="text:name"></span></td>
+				            	<td><label data-bind="text:scheduledDate.formattedDate"></label></td>
+				            </tr>
+						</tbody>		
+					</table>
 		        </div>
 		    </div>
 		</div>
+		
+		<div class="row-fluid space-after">
+			<div class="well well-small">
+ 				<label><b>Key evaluation question</b></label>
+	 			<table style="width: 100%;">
+			        <thead>
+			            <tr>
+			            	<th></th>
+			                <th>Project Key evaluation question (KEQ)</th>
+			                <th>How will KEQ be monitored </th>
+			            </tr>
+			        </thead>
+					<tbody data-bind="foreach : details.keq.rows">
+						<tr>
+			            	<td><span data-bind="text: $index()+1"></span></td>
+			            	<td><span data-bind="text:data1"></span></td>
+			            	<td><label data-bind="text:data2"></label></td>
+			            </tr>
+					</tbody>		
+				</table>
+			</div>
+		</div>		
 		
 		<div class="row-fluid space-after">
 			<div id="national-priorities" class="well well-small">
@@ -185,5 +243,24 @@
 		        </div>
 			    </div>
 		</div>
+		
+				
+		<div class="row-fluid space-after">
+			<div class="span6">
+	        	<div class="well well-small">
+		        	<label><b>Workplace Health and Safety</b></label>
+		 			<div>1. Are you aware of, and compliment with, your workplace health and safety legislation and obligations: <b><span data-bind="text: details.obligations"></span></b></div>
+		 			<div>2. Have you got appropriate policies and procedures in place that are commensurate with your project activities: <b><span data-bind="text: details.policies"></span></b></div>
+	        	</div>
+	        </div>
+	        <div class="span6">
+	        	<div class="well well-small">
+		        	<span><b>&nbsp;Are you willing for your project to be used as a case study by the Department?</b></span>
+		        	<input class="pull-left" type="checkbox"  data-bind="checked: details.caseStudy, disable: true" />
+	        	</div>
+	        </div>	
+		</div>
+		
+	
 	
 </div>

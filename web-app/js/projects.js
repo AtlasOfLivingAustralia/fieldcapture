@@ -212,10 +212,12 @@ function getBugetHeaders(timeline) {
 	var startYr = '';
 	var endYr = '';
 	$.each(timeline, function (i, period) {
-		if (i == 0)
+		if (i == 0){
 			startYr = moment(period.fromDate).format('YYYY')
+			endYr = moment(period.toDate).format('YYYY');
+		}	
 		else if(timeline.length == i+1)
-			endYr = moment(period.fromDate).format('YYYY');
+			endYr = moment(period.toDate).format('YYYY');
 	});
 	var count = endYr - startYr;
 	for (i = 0; i < count; i++){

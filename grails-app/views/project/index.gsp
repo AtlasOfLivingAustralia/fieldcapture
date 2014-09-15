@@ -200,7 +200,7 @@
 				<div class="row-fluid space-after">
 					<div class="span6">
 						<div class="well well-small">
-				 			<label><b>Programme documents:</b></label>
+				 			<label><b>MERI attachments:</b></label>
 							<g:render template="/shared/listDocuments"
 	                    	  model="[useExistingModel: true,editable:false, filterBy: 'programmeLogic', ignore: '', imageUrl:resource(dir:'/images/filetypes'),containerId:'overviewDocumentList']"/>
 						</div>
@@ -537,7 +537,8 @@
             	var self = this;
 				this.status = ko.observable(o.status); 	
 				this.obligations = ko.observable(o.obligations);
-				this.workplace = ko.observable(o.workplace);
+				this.policies = ko.observable(o.policies);
+				this.caseStudy = ko.observable(o.caseStudy ? o.caseStudy : false);
             	this.keq = new GenericViewModel(o.keq);
             	this.objectives = new ObjectiveViewModel(o.objectives);
             	this.priorities = new GenericViewModel(o.priorities);
@@ -545,6 +546,12 @@
 				this.partnership = new GenericViewModel(o.partnership);
 				this.lastUpdated = o.lastUpdated ? o.lastUpdated : moment().format();
 				this.budget = new BudgetViewModel(o.budget, period);
+
+            	var row = [];
+            	o.events ? row = o.events : row.push(ko.mapping.toJS(new EventsRowViewModel()));
+				this.events = ko.observableArray($.map(row, function (obj, i) {
+					return new EventsRowViewModel(obj);
+			    }));
             };
 
             var ObjectiveViewModel = function(o) {
@@ -589,10 +596,19 @@
             	this.data3 = ko.observable(o.data3);
             };
 
+            var EventsRowViewModel = function(o) {
+            	var self = this;
+            	if(!o) o = {}; 
+            	this.name = ko.observable(o.name);
+            	if(!o.scheduledDate) o.scheduledDate = new Date(); 
+            	this.scheduledDate = ko.observable(o.scheduledDate).extend({simpleDate: false});
+            };
+
             var OutcomeRowViewModel = function(o) {
             	var self = this;
             	if(!o) o = {};
             	this.description = ko.observable(o.description);
+            	if(!o.assets) o.assets = []; 
             	this.assets = ko.observableArray(o.assets);
 
             };
@@ -908,6 +924,13 @@
     			};
                 self.removeKEQ = function(keq){
                 	self.details.keq.rows.remove(keq);
+                };
+                
+                self.addEvents = function(){
+					self.details.events.push(new EventsRowViewModel());
+    			};
+                self.removeEvents = function(event){
+                	self.details.events.remove(event);
                 };
                 
                 self.addPartnership = function(){
