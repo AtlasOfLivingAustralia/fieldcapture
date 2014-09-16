@@ -249,7 +249,7 @@
 			<div class="span6">
 	        	<div class="well well-small">
 		        	<label><b>Workplace Health and Safety</b></label>
-		 			<div>1. Are you aware of, and compliment with, your workplace health and safety legislation and obligations: <b><span data-bind="text: details.obligations"></span></b></div>
+		 			<div>1. Are you aware of, and compliant with, your workplace health and safety legislation and obligations: <b><span data-bind="text: details.obligations"></span></b></div>
 		 			<div>2. Have you got appropriate policies and procedures in place that are commensurate with your project activities: <b><span data-bind="text: details.policies"></span></b></div>
 	        	</div>
 	        </div>
