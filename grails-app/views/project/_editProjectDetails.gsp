@@ -270,7 +270,7 @@
 		                    		</textarea>
 			                    </td>
 			                    <td width="12%">
-			                    <input data-bind="datepicker:scheduledDate.date" type="text" size="12"/>
+			                    <input data-bind="datepicker:scheduledDate.date, disable: $parent.isProjectDetailsLocked()" type="text" size="12"/>
 			                    </td>
 			                    <td width="4%"> 
                         			<span data-bind="if: $index() && !$parent.isProjectDetailsLocked()" ><i class="icon-remove" data-bind="click: $parent.removeEvents"></i></span>
