@@ -31,13 +31,13 @@ class DocumentService {
 		def stageName = param.stageName
 		def status = param.status
 		
-		def stage = '';
-		def planned = 0;
-		def started = 0;
-		def finished = 0;
-		def deferred = 0;
-		def cancelled = 0;
-		def stageStartDate = '';
+		def stage = ''
+		def planned = 0
+		def started = 0
+		def finished = 0
+		def deferred = 0
+		def cancelled = 0
+		def stageStartDate = ''
 		def stageEndDate = ''
 		
 		org.codehaus.groovy.runtime.NullObject.metaClass.toString = {return ''}
@@ -169,13 +169,15 @@ class DocumentService {
 		append(html,'<br>')
 		append(html,'<p align="left">_________________________________________________________________________________________________________</p>')
 		append(html,'<br>')
-		append(html,'<h2><font>Project Objectives</font></h2>')
-		append(html,'<p><font>'+project?.custom?.details?.objectives?.description+'</font></p>')
-		append(html,'<p><font><b>Protected natural assests:</b> '+project?.custom?.details?.objectives?.assets?.join(", ")+'</font></p>')
-		project?.custom?.details?.objectives?.rows?.each {
-			append(html,'<p><font><b>'+it.data1+'</b></font></p>');
-			append(html,'<p><font>'+it.data2+'</font></p>');
+		append(html,'<h2><font>Project Outcomes</font></h2>')
+        append(html,'<table cellpadding="3" border="0">')
+        append(html,'<tr><td>Outcomes</td><td>Project Goals</td></tr>');
+		project?.custom?.details?.objectives?.rows1?.each {
+            append(html,'<tr><td>'+it.description+'</td>');
+            append(html,'<td>'+it.assets?.join(", ")+'</td></tr>');
 		}
+        append(html,'</table>')
+
 		append(html,'<br>')
 		append(html,'<p align="left">_________________________________________________________________________________________________________</p>')
 		append(html,'<br>')
@@ -200,7 +202,7 @@ class DocumentService {
 					'project team consider to be within the reasonable influence of the project team to anticipate and manage.</p>')
 		append(html,'<table cellpadding="3" border="0">')
 		append(html,'<tr><th>Risk/Threat Description</th><th>Likelihood</th><th>Consequence</th><th>Rating</th><th>Current Controls/Contingency </th><th>Residual Risk</th></tr>')
-		project.risks?.rows.each{
+		project?.risks?.rows?.each{
 			append(html,'<tr><td>'+it.description+'</td><td>'+it.likelihood+'</td><td>'+it.consequence+'</td><td>'+
 				it.riskRating+'</td><td>'+it.currentControl+'</td><td>'+it.residualRisk+'</td></tr>')
 		}
@@ -212,7 +214,7 @@ class DocumentService {
 		append(html,'<h2><font color="">Project Against Each Activity</font></h2>')
 		
 		int i=0;
-		project.activities?.each{
+		project?.activities?.each{
 			def endDate = it.endDate ? it.endDate : it.plannedEndDate
 			if(dateInSlot(stageStartDate,stageEndDate,endDate)){
 				i++;
