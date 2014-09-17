@@ -85,7 +85,7 @@
 				            <tr>
 				            	<th></th>
 				                <th>Event or announcement</th>
-				                <th>Date </th>
+				                <th>Planned date </th>
 				            </tr>
 				        </thead>
 						<tbody data-bind="foreach : details.events">
