@@ -1022,9 +1022,7 @@
                 };
                 
 				self.saveProjectDetails = function(){
-					if ($('#project-details-validation').validationEngine('validate')) {
-						self.saveProject();
-					}
+					self.saveProject(false);
 				};
 				
 				// Save risks details.
@@ -1062,12 +1060,10 @@
 				};
 				
 				// Save project details
-				self.saveProject = function(){
+				self.saveProject = function(enableSubmit){
 					var tmp = {};
+					self.details.status('active');
 					tmp['details'] =  ko.mapping.toJS(self.details);
-					tmp['details']['status'] = 'active';
-					console.log(JSON.stringify(tmp));
-					//Make elastic search hapy
 					var jsData = {"custom": tmp};
                        var json = JSON.stringify(jsData, function (key, value) {
                            return value === undefined ? "" : value;
@@ -1084,7 +1080,8 @@
                                      "alert-error","save-details-result-placeholder");
                              } else {
                                  showAlert("MERI Plan saved","alert-success","save-details-result-placeholder");
-                                 location.reload();
+                                 if(enableSubmit)
+                                 	self.submitChanges();
                              }
                          },
                          error: function (data) {
@@ -1103,6 +1100,10 @@
 	                    data: JSON.stringify(payload),
 	                    contentType: 'application/json'
 	                });
+            	};
+            	
+            	self.saveAndSubmitChanges = function(){
+            		self.saveProject(true);
             	};
             	
             	self.submitChanges = function (newValue) {
