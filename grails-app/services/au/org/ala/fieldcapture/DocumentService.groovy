@@ -123,11 +123,9 @@ class DocumentService {
 		append(html,'<table cellpadding="3" border="0">')
 		append(html,'<tr><th>Output type</th><th>Output Target Measure</th><th>Output Achieved(stage)</th><th>Output Achieved (project to date)</th><th>Output Target (whole project)</th></tr>')
 		project.outputTargets?.each{
-			if(it.isSaving){
-				append(html,'<tr><td>'+it.outputLabel+'</td><td>'+it.scoreLabel+'</td><td>'+
-						getTotalStageScore(project, it.scoreName, stageStartDate, stageEndDate)+'</td><td>'+
-						getTotalScore(project, it.scoreName)+'</td><td>'+it.target+' '+it.units+ '</td></tr>')
-			}	
+            append(html,'<tr><td>'+it.outputLabel+'</td><td>'+it.scoreLabel+'</td><td>'+
+                    getTotalStageScore(project, it.scoreName, stageStartDate, stageEndDate)+'</td><td>'+
+                    getTotalScore(project, it.scoreName)+'</td><td>'+it.target+' '+it.units+ '</td></tr>')
 		}
 		append(html,'</table>')
 
