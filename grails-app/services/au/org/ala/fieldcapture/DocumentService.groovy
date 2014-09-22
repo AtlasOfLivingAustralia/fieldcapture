@@ -269,12 +269,17 @@ class DocumentService {
 	}
 	
 	private getTotalScore(project, scoreName){
-		int total = 0;
+		double total = 0;
 		project?.activities?.each{
 			it.outputs?.each{
 				for (d in it.data){
 					if(d.key.equals(scoreName)){
-						total = total + d.value?.toInteger()
+                        try {
+                            total = total + d.value?.toDouble()
+                        }
+                        catch (Exception e) {
+                            log.warn "Invalid format", e
+                        }
 					}
 				}
 			}	
@@ -283,13 +288,18 @@ class DocumentService {
 	}
 	
 	private getTotalStageScore(project, scoreName, stageStartDate, stageEndDate){
-		int total = 0;
+        double total = 0;
 		project?.activities?.each{
 			if(dateInSlot(stageStartDate,stageEndDate,it.plannedStartDate)){
 				it.outputs?.each{
 					for (d in it.data){
 						if(d.key.equals(scoreName)){
-							total = total + d.value?.toInteger()
+                            try {
+                                total = total + d.value?.toDouble()
+                            }
+                            catch (Exception e) {
+                                log.warn "Invalid format", e
+                            }
 						}
 					}
 				}
