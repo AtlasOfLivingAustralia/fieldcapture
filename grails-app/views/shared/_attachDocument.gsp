@@ -31,7 +31,7 @@
                         <label class="control-label" for="documentRole">Document type</label>
 
                         <div class="controls">
-                            <select style="width: 97%;" data-bind="options:roles, value:role"></select>
+                            <select style="width: 97%;" data-bind="options:roles, optionsText: 'name', optionsValue: 'id', value:role, event: {change: onRoleChange}"></select>
                         </div>
                     </div>
                     
@@ -49,16 +49,11 @@
                         <label class="control-label" for="public">Settings</label>
                         <div class="controls">
                             <label class="checkbox" for="public">
-                                <input id="public" type="checkbox" data-bind="checked:public"/>
+                                <input id="public" type="checkbox" data-bind="checked:public, enable: role() =='information'"/>
                                 make this document viewable by everyone
                             </label>
                         </div>
-                        <div class="controls">
-                            <label class="checkbox" for="documentRole">
-                                <input id="documentRole" type="checkbox" data-bind="enable:type() == 'image' && public(),checked:isPrimaryProjectImage"/>
-                                use as the main project image
-                            </label>
-                        </div>
+
                     </div>
 
                     <div class="control-group">
@@ -71,6 +66,16 @@
                                 <input id="documentFile" type="file" name="files"/>
                                 <span data-bind="text:fileButtonText">Attach file</span>
                             </span>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="documentFile">Image settings</label>
+                        <div class="controls">
+                            <label class="checkbox" for="documentRole">
+                                <input id="documentRole" type="checkbox" data-bind="enable:type() == 'image' && public() && role() =='information', checked: isPrimaryProjectImage"/>
+                                use as the main project image
+                            </label>
                         </div>
                     </div>
 
