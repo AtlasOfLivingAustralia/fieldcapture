@@ -717,7 +717,7 @@
 				 this.description = ko.observable(risksRow.description);
 				 this.likelihood = ko.observable(risksRow.likelihood);
 				 this.consequence = ko.observable(risksRow.consequence);
-				 this.currentControl = ko.observable(risksRow.consequence);
+				 this.currentControl = ko.observable(risksRow.currentControl);
 				 this.residualRisk = ko.observable(risksRow.residualRisk);
 				 this.riskRating = ko.computed(function (){
 				 		if (this.likelihood() == '' && this.consequence() == '')
