@@ -48,15 +48,15 @@ class DocumentService {
 				stageEndDate =  it.toDate
 			}
 		}
-		
 		activities.each{
-			def endDate = it.endDate ? it.endDate : it.plannedEndDate
+			def endDate = it.plannedEndDate ? it.plannedEndDate : it.endDate
+
 			if(it.progress.equals('planned') && dateInSlot(stageStartDate,stageEndDate,endDate))
 				planned++
 			else if (it.progress.equals('started') && dateInSlot(stageStartDate,stageEndDate,endDate))
 				started++
 			else if (it.progress.equals('finished') && dateInSlot(stageStartDate,stageEndDate,endDate))
-				finished++
+                finished++
 			else if (it.progress.equals('deferred') && dateInSlot(stageStartDate,stageEndDate,endDate))
 				deferred++;
 			else if (it.progress.equals('cancelled') && dateInSlot(stageStartDate,stageEndDate,endDate))
@@ -107,10 +107,10 @@ class DocumentService {
 		append(html,'<table cellpadding="3" border="0">')
 		append(html,'<tr><th>Document</th><th>File name</th></tr>')
 		project.activities?.each{
-			def endDate = it.endDate ? it.endDate : it.plannedEndDate
+			def endDate = it.plannedEndDate ? it.plannedEndDate : it.endDate
 			if(dateInSlot(stageStartDate,stageEndDate,endDate)){
 				it.documents?.each{
-					append(html,'<tr><td>'+it.name+'</td><td>'+it.filename+'</td></tr>')
+					append(html,"<tr><td>${it.name}</td><td>${it.filename}</td></tr>")
 				}
 			}
 		}	
@@ -213,7 +213,7 @@ class DocumentService {
 		
 		int i=0;
 		project?.activities?.each{
-			def endDate = it.endDate ? it.endDate : it.plannedEndDate
+			def endDate = it.plannedEndDate ? it.plannedEndDate : it.endDate
 			if(dateInSlot(stageStartDate,stageEndDate,endDate)){
 				i++;
 				append(html,'<p>')
