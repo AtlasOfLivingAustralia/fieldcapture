@@ -109,7 +109,7 @@ class DocumentService {
 		append(html,'<tr><th>Document name</th><th>Uploaded date</th></tr>')
 		project.documents?.each{
 			if(it.lastUpdated && "active".equals(it.status) && dateInSlot(stageStartDate,stageEndDate,it.lastUpdated)){
-			    append(html,"<tr><td>${it.name}</td><td>${dateWithTime.parse(it.lastUpdated).format('dd-MM-YYYY HH:MM:SS')}</td></tr>")
+			    append(html,"<tr><td>${it.name}</td><td>${dateWithTime.parse(it.lastUpdated).format('dd-MM-YYYY hh:mm:ss')}</td></tr>")
 			}
 		}	
 		append(html,'</table>')
