@@ -47,7 +47,7 @@ class AdminService {
             }
         }
 
-        def toUpdate = [plannedEndDate:NLP_CHANGE_OVER_DATE, timeline:oldPrjTimeline]
+        def toUpdate = [description:'[C4OC] '+project.description, plannedEndDate:NLP_CHANGE_OVER_DATE, timeline:oldPrjTimeline]
         projectService.update(projectId, toUpdate)
 
         // New project.
