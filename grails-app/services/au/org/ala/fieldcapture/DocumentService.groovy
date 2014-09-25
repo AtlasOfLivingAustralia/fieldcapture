@@ -20,7 +20,8 @@ class DocumentService {
 
     def updateDocument(doc) {
         def url = grailsApplication.config.ecodata.baseUrl + "document"
-
+        TimeZone.setDefault(TimeZone.getTimeZone('UTC'))
+        doc?.content?.lastUpdated = dateWithTime.format(new Date())
         return webService.doPost(url, doc)
     }
 		
@@ -105,13 +106,10 @@ class DocumentService {
 		append(html,'<br>')
 		append(html,'<h2><font color="">Supporting Documents Attached During This Stage</font></h2>')
 		append(html,'<table cellpadding="3" border="0">')
-		append(html,'<tr><th>Document</th><th>File name</th></tr>')
-		project.activities?.each{
-			def endDate = it.plannedEndDate ? it.plannedEndDate : it.endDate
-			if(dateInSlot(stageStartDate,stageEndDate,endDate)){
-				it.documents?.each{
-					append(html,"<tr><td>${it.name}</td><td>${it.filename}</td></tr>")
-				}
+		append(html,'<tr><th>Document name</th><th>Uploaded date</th></tr>')
+		project.documents?.each{
+			if(it.lastUpdated && "active".equals(it.status) && dateInSlot(stageStartDate,stageEndDate,it.lastUpdated)){
+			    append(html,"<tr><td>${it.name}</td><td>${dateWithTime.parse(it.lastUpdated).format('dd-MM-YYYY HH:MM:SS')}</td></tr>")
 			}
 		}	
 		append(html,'</table>')
