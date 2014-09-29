@@ -198,12 +198,12 @@ class ProjectController {
             render status:400, text: 'Required params not provided: userId, projectId'
         }
     }
-	
-	@PreAuthorise(accessLevel = 'admin')
-	def previewStageReport(){
-		String projectId =  params.projectId 
-		String stageName = params.stageName
-		String status = params.status
+
+    @PreAuthorise(accessLevel = 'admin')
+	def previewStageReport(String id){
+        String projectId =  params.id
+        String stageName = params.stageName
+        String status = params.status
 		
 		if(stageName && projectId && status) {
 			def project = projectService.get(projectId, 'all')
@@ -227,7 +227,7 @@ class ProjectController {
 			}
 		}
 		else{
-			render status:400, text: 'Required params not provided: projectId, stageName, status'
+			render status:400, text: 'Required params not provided: id, stageName, status'
 		}
 	}
 	
