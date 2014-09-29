@@ -200,7 +200,7 @@ class ProjectController {
     }
 
     @PreAuthorise(accessLevel = 'admin')
-	def previewStageReport(String id){
+	def previewStageReport(){
         String projectId =  params.id
         String stageName = params.stageName
         String status = params.status
