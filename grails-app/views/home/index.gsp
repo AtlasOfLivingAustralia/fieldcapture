@@ -217,6 +217,17 @@
                                     <div class="descLine">
                                         <i class="icon-info-sign"></i>
                                     </div>
+                                    <g:if test="${fc.userIsSiteAdmin()}">
+                                        <div class="downloadLine">
+                                            <i class="icon-download"></i>
+                                            <a href="" target="_blank">Download (.xlsx)</a>
+                                        </div>
+                                        <div class="downloadJSONLine">
+                                            <i class="icon-download"></i>
+                                            <a href="" target="_blank">Download (.json)</a>
+                                        </div>
+                                    </g:if>
+
                                 </div>
                             </td>
                             <td class="td2">$date</td>
@@ -866,6 +877,10 @@
             $tr.find('a.zoom-out').data("id", id);
             $tr.find('.orgLine').append(src.organisationName);
             $tr.find('.descLine').append(src.description);
+            <g:if test="${fc.userIsSiteAdmin()}">
+                $tr.find('.downloadLine a').attr("href", "${createLink(controller: 'project',action: 'downloadProjectData')}" + "?id="+id+"&view=xlsx");
+                $tr.find('.downloadJSONLine a').attr("href", "${createLink(controller: 'project',action: 'downloadProjectData')}" + "?id="+id+"&view=json");
+            </g:if>
             $tr.find('.td2').text(formatDate(Date.parse(src.lastUpdated))); // relies on the js_iso8601 resource
             //console.log("appending row", $tr);
             $('#projectTable tbody').append($tr);

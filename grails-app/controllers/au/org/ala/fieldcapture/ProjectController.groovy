@@ -249,4 +249,25 @@ class ProjectController {
             render status:500, text: 'Unexpected error'
         }
     }
+
+    @PreAuthorise(accessLevel = 'alaAdmin', redirectController ='home', redirectAction = 'index')
+    def downloadProjectData() {
+        String projectId = params.id
+
+        if (!projectId) {
+            render status:400, text: 'Required params not provided: id'
+        }
+        else{
+            def path = "project/downloadProjectData/${projectId}"
+
+            if (params.view == 'xlsx' || params.view == 'json') {
+                path += ".${params.view}"
+            }else{
+                path += ".json"
+            }
+            def url = grailsApplication.config.ecodata.baseUrl + path
+            webService.proxyGetRequest(response, url, true, true,120000)
+        }
+    }
+
 }
