@@ -137,13 +137,11 @@ class SearchService {
             def url = grailsApplication.config.ecodata.baseUrl + 'search/dashboardReport' + commonService.buildUrlParamsFromMap(params)
             webService.getJson(url, 1200000)
         })
-
-
     }
 
     def projectReports(params) {
 
-        def url = grailsApplication.config.ecodata.baseUrl + 'search/downloadSearchResults' + commonService.buildUrlParamsFromMap(params)
+        def url = grailsApplication.config.ecodata.baseUrl + 'search/downloadAllData' + commonService.buildUrlParamsFromMap(params)
 
         webService.doPost(url, [:])
     }

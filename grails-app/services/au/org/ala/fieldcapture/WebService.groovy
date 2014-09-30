@@ -71,9 +71,13 @@ class WebService {
      * Proxies a request URL but doesn't assume the response is text based. (Used for proxying requests to
      * ecodata for excel-based reports)
      */
-    def proxyGetRequest(HttpServletResponse response, String url, boolean includeUserId = true, boolean includeApiKey = false) {
+    def proxyGetRequest(HttpServletResponse response, String url, boolean includeUserId = true, boolean includeApiKey = false, Integer timeout = null) {
 
         HttpURLConnection conn = configureConnection(url, includeUserId)
+        def readTimeout = timeout?:defaultTimeout()
+        conn.setConnectTimeout(grailsApplication.config.webservice.connectTimeout as int)
+        conn.setReadTimeout(readTimeout)
+
         if (includeApiKey) {
             conn.setRequestProperty("Authorization", grailsApplication.config.api_key);
         }
