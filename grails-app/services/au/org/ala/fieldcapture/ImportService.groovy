@@ -1488,8 +1488,8 @@ class ImportService {
         try {
             new CSVMapReader(reader).eachWithIndex { rowMap, i ->
 
-                def grantId = rowMap['Grant ID']
-                def externalId = rowMap['Current External ID']
+                def grantId = rowMap['Grant ID']?.trim()
+                def externalId = rowMap['Current External ID']?.trim()
                 def migrate = rowMap['Migrate shell to NLP'] == 'Y'
                 if (migrate) {
 
