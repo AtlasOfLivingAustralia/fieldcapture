@@ -21,7 +21,7 @@ self.transients.selectedSite.subscribe(function(site) {
         // The site has changed, so reload our photopoints.
         self.data.photoPoints([]);
         self.loadphotoPoints([]);
-        site.photoPointData = self.data.photoPoints;
+        if (site) site.photoPointData = self.data.photoPoints;
     }
     self.transients.previousSiteId = site ? site.siteId : null;
 });
