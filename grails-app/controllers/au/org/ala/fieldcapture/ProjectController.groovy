@@ -250,7 +250,7 @@ class ProjectController {
         }
     }
 
-    @PreAuthorise(accessLevel = 'alaAdmin', redirectController ='home', redirectAction = 'index')
+    @PreAuthorise(accessLevel = 'admin', redirectController ='home', redirectAction = 'index')
     def downloadProjectData() {
         String projectId = params.id
 
