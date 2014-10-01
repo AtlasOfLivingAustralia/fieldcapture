@@ -484,7 +484,8 @@ class AdminController {
         if (request instanceof MultipartHttpServletRequest) {
             def file = request.getFile('nlpData')
             if (file) {
-                results = importService.doNlpMigration(file.inputStream, Boolean.parseBoolean(params.preview?:''))
+                def preview = params.preview == 'on'
+                results = importService.doNlpMigration(file.inputStream, preview)
             }
 
         }

@@ -452,6 +452,11 @@ class ImportService {
         return allProjects.projects.find{it.grantId?.equalsIgnoreCase(grantId) && (it.externalId ?: '').equalsIgnoreCase(externalId ?: '')}
     }
 
+    def findProjectsByOriginalProjectId(projectId) {
+        def allProjects = cacheService.get(PROJECTS_CACHE_KEY) { [projects:projectService.list(true)] }
+        return allProjects.projects.findAll{it.originalProjectId == projectId}
+    }
+
     def findProjectByGrantId(grantId) {
         // Cache projects temporarily to avoid this query.
         def allProjects = cacheService.get(PROJECTS_CACHE_KEY) { [projects:projectService.list(true)] }
@@ -1490,16 +1495,24 @@ class ImportService {
 
                     def project = findProjectByGrantAndExternalId(grantId, externalId)
                     if (project) {
-                        def config = [name: rowMap['NLP Project name'],
-                                      migrateSites:rowMap['Migrate Sites to NLP'] == 'Y',
-                                      migrateGrantManagers:rowMap['Migrate Grant Manager'] == 'Y',
-                                      migrateEditors:rowMap['Migrate Editor'] == 'Y' ,
-                                      migrateAdmins:rowMap['Migrate Admin'] == 'Y',
-                                      migrateDocuments:rowMap['Migrate attachments to NLP'] == 'Y',
-                                      migrateActivities:rowMap['Migrate activities to NLP'] == 'Y',
-                                      funding:rowMap['Funding'] as Long,
-                                      preview: preview]
-                        results << migrateToNlp(project.projectId, config)
+
+                        def alreadyMigrated = findProjectsByOriginalProjectId(project.projectId)
+
+                        if (alreadyMigrated) {
+                            errors << "Project ${grantId}, ${externalId} has already been migrated"
+                        }
+                        else {
+                            def config = [name: rowMap['NLP Project name'],
+                                          migrateSites:rowMap['Migrate Sites to NLP'] == 'Y',
+                                          migrateGrantManagers:rowMap['Migrate Grant Manager'] == 'Y',
+                                          migrateEditors:rowMap['Migrate Editor'] == 'Y' ,
+                                          migrateAdmins:rowMap['Migrate Admin'] == 'Y',
+                                          migrateDocuments:rowMap['Migrate attachments to NLP'] == 'Y',
+                                          migrateActivities:rowMap['Migrate activities to NLP'] == 'Y',
+                                          funding:rowMap['Funding'] as Long,
+                                          preview: preview]
+                            results << migrateToNlp(project.projectId, config)
+                        }
                     }
                     else {
                         errors << "Unable to find existing project with Grant ID=${grantId}, External ID=${externalId}"
@@ -1545,7 +1558,7 @@ class ImportService {
             }
         }
 
-        def toUpdate = [description:'[C4OC] '+project.description, plannedEndDate:NLP_CHANGE_OVER_DATE, timeline:oldPrjTimeline]
+        def toUpdate = [name:'[C4OC] '+project.name, plannedEndDate:NLP_CHANGE_OVER_DATE, timeline:oldPrjTimeline]
         if (!config.preview) {
             projectService.update(projectId, toUpdate)
         }
