@@ -479,6 +479,15 @@ class AdminController {
     }
 
     def nlpMigrate() {
-        render adminService.migrateToNlp(params.projectId) as JSON
+
+        def results = []
+        if (request instanceof MultipartHttpServletRequest) {
+            def file = request.getFile('nlpData')
+            if (file) {
+                results = importService.doNlpMigration(file.inputStream, Boolean.parseBoolean(params.preview?:''))
+            }
+
+        }
+        render results as JSON
     }
 }

@@ -82,6 +82,20 @@
 
         }).trigger('change');
 
+        $("#nlpData").change(function() {
+            if ($("#nlpData").val()) {
+                $("#btnNlpData").removeAttr("disabled");
+            }
+            else {
+                $("#btnNlpData").attr("disabled", "disabled");
+            }
+
+        }).trigger('change');
+
+        $('#btnNlpData').click(function(e) {
+            e.preventDefault();
+            $('form.nlpData').submit();
+        });
 
         $("#btnLoadPlanData").click(function(e) {
             e.preventDefault();
@@ -169,6 +183,19 @@
         <p><g:uploadForm class="loadActivityData" controller="admin" action="populateAggregrateProjectData">
             <div><input id="activityData" type="file" accept="text/csv" name="activityData"/></div>
             <div><input type="checkbox" name="preview">Preview errors only, don't actually modify anything</div>
+        </g:uploadForm>
+
+        </p>
+        </td>
+    </tr>
+    <tr>
+        <td><button disabled id="btnNlpData" class="btn btn-small btn-info" title="Load project aggregrate data">Perform NLP migration on selected projects (CSV)</button>
+        </td>
+        <td>
+            End dates C4oC projects and creates new NLP projects for the projects specified on a supplied CSV
+        <p><g:uploadForm class="nlpData" controller="admin" action="nlpMigrate">
+            <div><input id="nlpData" type="file" accept="text/csv" name="nlpData"/></div>
+            <div><input type="checkbox" name="preview" checked="checked">Preview errors only, don't actually modify anything</div>
         </g:uploadForm>
 
         </p>
