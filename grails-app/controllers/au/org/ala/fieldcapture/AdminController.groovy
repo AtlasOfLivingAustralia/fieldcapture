@@ -82,7 +82,7 @@ class AdminController {
 
     @PreAuthorise(accessLevel = 'alaAdmin', redirectController = "admin")
     def programsModel() {
-        [programsModel: metadataService.programsModel()]
+        [programsModel: metadataService.programsModel(), activityTypes:metadataService.activityTypesList()]
     }
 
     def updateActivitiesModel() {

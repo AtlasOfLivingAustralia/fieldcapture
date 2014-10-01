@@ -816,3 +816,8 @@ input[type="checkbox"] { -webkit-appearance: checkbox; !important }
 .fancybox-prev {
     left: -60px;
 }
+
+.program-activities li {
+    text-align : left;
+    margin-left: 10px;
+}
