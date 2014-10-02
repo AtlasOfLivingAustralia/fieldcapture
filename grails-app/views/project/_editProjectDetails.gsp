@@ -56,7 +56,10 @@
 			            <tr>
                             <th></th>
 			                <th>Outcomes <fc:iconHelp title="Outcomes">Enter the outcomes sought by the project; this should be expressed as a ‘SMART’ statement (Specific Measurable Attainable Realistic and Time-bound) and deliver against the programme. The objective should be no more than 2 sentences.</fc:iconHelp></th>
-			                <th>Project Goals <fc:iconHelp title="Project Goals">Select the most appropriate natural/cultural asset or assets being addressed by this project from the drop down list. Note that multiple selections can be made. (Hold down the Ctrl key and click to select multiple values.)</fc:iconHelp></th>
+			                <th>
+                                Project Goals <fc:iconHelp title="Project Goals">Select the most appropriate natural/cultural asset or assets being addressed by this project from the drop down list. Note that multiple selections can be made. </fc:iconHelp>
+                                </br> (Hold down the Ctrl key and click to select multiple values.)
+                            </th>
 			            </tr>
 			        </thead>
                     <tbody data-bind="foreach : details.objectives.rows1">
@@ -95,7 +98,7 @@
 			        <tbody data-bind="foreach : details.objectives.rows">
 			                <tr>
 			                	<td width="2%"> <span data-bind="text:$index()+1"></span></td>
-			                    <td width="30%"> <input style="width: 97%;" type="text"  class="input-xlarge"  data-bind="value: data1, disable: $parent.isProjectDetailsLocked()" > </td>
+			                    <td width="30%"> <textarea style="width: 97%;" data-bind="value: data1, disable: $parent.isProjectDetailsLocked()" rows="3"> </textarea></td>
 			                    <td width="64%"> <textarea style="width: 97%;" data-bind="value: data2, disable: $parent.isProjectDetailsLocked()" rows="5" ></textarea> </td>
 			                    <td width="4%">
                         			<span data-bind="if: $index() && !$parent.isProjectDetailsLocked()"><i class="icon-remove" data-bind="click: $parent.removeObjectives"></i></span>
@@ -135,7 +138,7 @@
 			        <tbody data-bind="foreach : details.priorities.rows">
 			                <tr>
 			                	<td width="2%"> <span data-bind="text:$index()+1"></span></td>
-			                    <td width="30%"> <input style="width: 97%;" type="text"  class="input-xlarge"  data-bind="value: data1, disable: $parent.isProjectDetailsLocked()" > </td>
+			                    <td width="30%"> <textarea style="width: 97%;" class="input-xlarge"  data-bind="value: data1, disable: $parent.isProjectDetailsLocked()" rows="3"> </textarea></td>
 			                    <td width="32%"> <textarea style="width: 97%;" class="input-xlarge" data-bind="value: data2, disable: $parent.isProjectDetailsLocked()"  rows="5"></textarea></td>
 			                    <td width="32%"> <textarea style="width: 97%;" class="input-xlarge" data-bind="value: data3, disable: $parent.isProjectDetailsLocked()"  rows="5"></textarea></td>
 			                    <td width="4%"> 
@@ -187,7 +190,7 @@
 			        <tbody data-bind="foreach : details.partnership.rows">
 			                <tr>
 			                	<td width="2%"> <span data-bind="text:$index()+1"></span></td>
-			                    <td width="20%"> <input style="width: 97%;" type="text"  class="input-xlarge"  data-bind="value: data1, disable: $parent.isProjectDetailsLocked()" > </td>
+			                    <td width="20%"> <textarea style="width: 97%;" class="input-xlarge"  data-bind="value: data1, disable: $parent.isProjectDetailsLocked()" rows="3"></textarea> </td>
 			                    <td width="54%"><textarea style="width: 97%;" class="input-xlarge" data-bind="value: data2, disable: $parent.isProjectDetailsLocked()"  rows="5"></textarea></td>
 			                    <td width="20%"><select style="width: 97%;" class="input-xlarge" data-bind="options: $parent.organisations, value:data3,optionsCaption: 'Please select',disable: $parent.isProjectDetailsLocked()"></select></td>
 			                    <td width="4%"> 
@@ -226,7 +229,7 @@
 			                <tr>
 			                	<td width="2%"> <span data-bind="text:$index()+1"></span></td>
 			                    <td width="32%"> 
-		                    		<textarea style="width: 97%;" rows="2"  class="input-xlarge"  data-bind="value: data1, disable: $parent.isProjectDetailsLocked()"> 
+		                    		<textarea style="width: 97%;" rows="3"  class="input-xlarge"  data-bind="value: data1, disable: $parent.isProjectDetailsLocked()">
 		                    		</textarea>
 			                    </td>
 			                    <td width="52%"><textarea style="width: 97%;" class="input-xlarge" data-bind="value: data2, disable: $parent.isProjectDetailsLocked()"  rows="5"></textarea></td>
