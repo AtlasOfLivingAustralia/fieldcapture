@@ -1,11 +1,10 @@
-<%@ page import="org.codehaus.groovy.grails.web.json.JSONArray" contentType="text/html;charset=UTF-8" %>
+<%@ page import="net.sf.json.JSON; org.codehaus.groovy.grails.web.json.JSONArray" contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>
 <html>
 <head>
-  <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
-  <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
-  <title> ${create ? 'New' : ('Edit | ' + site?.name?.encodeAsHTML())} | Sites | Field Capture</title>
-  <style type="text/css">
+    <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
+    <title> ${create ? 'New' : ('Edit | ' + site?.name?.encodeAsHTML())} | Sites | Field Capture</title>
+    <style type="text/css">
     legend {
         border: none;
         margin-bottom: 5px;
@@ -19,193 +18,193 @@
         height: 42px;
     }
     .no-border { border-top: none !important; }
-  </style>
-  <r:require modules="knockout, jqueryValidationEngine, amplify"/>
-  <script type="text/javascript" src="${grailsApplication.config.google.drawmaps.url}"></script>
-  <r:require modules="drawmap"/>
+    </style>
+    <r:require modules="knockout, jqueryValidationEngine, amplify"/>
+    <script type="text/javascript" src="${grailsApplication.config.google.drawmaps.url}"></script>
+    <r:require modules="drawmap"/>
 </head>
 <body>
-    <div class="container-fluid validationEngineContainer" id="validation-container">
-        <ul class="breadcrumb">
-            <li><g:link controller="home">Home</g:link> <span class="divider">/</span></li>
-            <li>Sites<span class="divider">/</span></li>
-            <g:if test="${project}">
-                <li class="active">Create new site for ${project?.name?.encodeAsHTML()}</li>
-            </g:if>
-            <g:elseif test="${create}">
-                <li class="active">Create</li>
-            </g:elseif>
-            <g:else>
-                <li><g:link controller="site" action="index" id="${site?.siteId}">
-                    <span data-bind="text: name">${site?.name?.encodeAsHTML()}</span>
-                </g:link><span class="divider">/</span></li>
-                <li class="active">Edit</li>
-            </g:else>
-        </ul>
+<div class="container-fluid validationEngineContainer" id="validation-container">
+    <ul class="breadcrumb">
+        <li><g:link controller="home">Home</g:link> <span class="divider">/</span></li>
+        <li>Sites<span class="divider">/</span></li>
+        <g:if test="${project}">
+            <li class="active">Create new site for ${project?.name?.encodeAsHTML()}</li>
+        </g:if>
+        <g:elseif test="${create}">
+            <li class="active">Create</li>
+        </g:elseif>
+        <g:else>
+            <li><g:link controller="site" action="index" id="${site?.siteId}">
+                <span data-bind="text: name">${site?.name?.encodeAsHTML()}</span>
+            </g:link><span class="divider">/</span></li>
+            <li class="active">Edit</li>
+        </g:else>
+    </ul>
 
-        <bs:form action="update" inline="true">
+    <bs:form action="update" inline="true">
 
-            <div class="row-fluid">
-                <g:hiddenField name="id" value="${site?.siteId}"/>
-                <div>
-                    <label for="name">Site name</label>
-                    <h1>
-                        <input data-bind="value: name" data-validation-engine="validate[required]"
-                               class="span8" id="name" type="text" value="${site?.name?.encodeAsHTML()}"
-                               placeholder="Enter a name for the new site"/>
-                    </h1>
-                </div>
+        <div class="row-fluid">
+            <g:hiddenField name="id" value="${site?.siteId}"/>
+            <div>
+                <label for="name">Site name</label>
+                <h1>
+                    <input data-bind="value: name" data-validation-engine="validate[required]"
+                           class="span8" id="name" type="text" value="${site?.name?.encodeAsHTML()}"
+                           placeholder="Enter a name for the new site"/>
+                </h1>
             </div>
-            <g:if test="${project}">
+        </div>
+        <g:if test="${project}">
             <div class="row-fluid" style="padding-bottom:15px;">
                 <span>Project name:</span>
                 <g:link controller="project" action="index" id="${project?.projectId}">${project?.name?.encodeAsHTML()}</g:link>
             </div>
-            </g:if>
-            <div class="row-fluid">
-                <div class="span4">
-                    <label for="externalId">External Id
-                        <fc:iconHelp title="External id">Identifier code for the site - used in external documents.</fc:iconHelp>
-                    </label>
-                    <input data-bind="value:externalId" id="externalId" type="text" class="span12"/>
-                </div>
-                <div class="span4">
-                    <label for="type">Type</label>
-                    %{--<input data-bind="value: type" id="type" type="text" class="span12"/>--}%
-                    <g:select id="type"
-                              data-bind="value: type"
-                              class="span12"
-                              name='type'
-                              from="['choose site type','Pastoral','Industrial','Urban','Coastal', 'Reserve', 'Private land']"
-                              keys="['none','Pastoral','Industrial','Urban','Coastal','Reserve', 'Private land']"/>
-                </div>
-                <div class="span4">
-                    <label for="area">Area (decimal hectares)
-                        <fc:iconHelp title="Area of site">The area in decimal hectares (4dp) enclosed within the boundary of the shape file.</fc:iconHelp></label>
-                    <input data-bind="value: area" id="area" type="text" class="span12"/>
-                </div>
+        </g:if>
+        <div class="row-fluid">
+            <div class="span4">
+                <label for="externalId">External Id
+                <fc:iconHelp title="External id">Identifier code for the site - used in external documents.</fc:iconHelp>
+                </label>
+                <input data-bind="value:externalId" id="externalId" type="text" class="span12"/>
             </div>
-
-            <div class="row-fluid">
-                <div class="span6">
-                    <fc:textArea data-bind="value: description" id="description" label="Description" class="span12" rows="3" cols="50"/>
-                </div>
-                <div class="span6">
-                    <fc:textArea data-bind="value: notes" id="notes" label="Notes" class="span12" rows="3" cols="50"/>
-                </div>
+            <div class="span4">
+                <label for="type">Type</label>
+                %{--<input data-bind="value: type" id="type" type="text" class="span12"/>--}%
+                <g:select id="type"
+                          data-bind="value: type"
+                          class="span12"
+                          name='type'
+                          from="['choose site type','Pastoral','Industrial','Urban','Coastal', 'Reserve', 'Private land']"
+                          keys="['none','Pastoral','Industrial','Urban','Coastal','Reserve', 'Private land']"/>
             </div>
+            <div class="span4">
+                <label for="area">Area (decimal hectares)
+                    <fc:iconHelp title="Area of site">The area in decimal hectares (4dp) enclosed within the boundary of the shape file.</fc:iconHelp></label>
+                <input data-bind="value: area" id="area" type="text" class="span12"/>
+            </div>
+        </div>
 
-            <h2>Extent of site</h2>
-            <fc:iconHelp title="Extent of the site">The extent of the site can be represented by
+        <div class="row-fluid">
+            <div class="span6">
+                <fc:textArea data-bind="value: description" id="description" label="Description" class="span12" rows="3" cols="50"/>
+            </div>
+            <div class="span6">
+                <fc:textArea data-bind="value: notes" id="notes" label="Notes" class="span12" rows="3" cols="50"/>
+            </div>
+        </div>
+
+        <h2>Extent of site</h2>
+        <fc:iconHelp title="Extent of the site">The extent of the site can be represented by
                 a polygon, radius or point. KML, WKT and shape files are supported for uploading polygons.
                 As are PID's of existing features in the Atlas Spatial Portal.</fc:iconHelp>
 
-            <div class="row-fluid">
+        <div class="row-fluid">
 
-                <div class="span6">
-                    <div id="mapForExtent" class="smallMap span6" style="width:100%;height:600px;"></div>
-                </div>
+            <div class="span6">
+                <div id="mapForExtent" class="smallMap span6" style="width:100%;height:600px;"></div>
+            </div>
 
-                <div class="span6">
+            <div class="span6">
 
-                    <div class="well well-small">
+                <div class="well well-small">
 
-                        <div>
-                            <h4>Define extent using:
-                            <g:select class="input-medium" data-bind="value: extent().source"
-                                      name='extentSource'
-                                      from="['choose type','point','known shape','draw a shape']"
-                                      keys="['none','point','pid','drawn']"/>
-                            </h4>
-                        </div>
+                    <div>
+                        <h4>Define extent using:
+                        <g:select class="input-medium" data-bind="value: extent().source"
+                                  name='extentSource'
+                                  from="['choose type','point','known shape','draw a shape']"
+                                  keys="['none','point','pid','drawn']"/>
+                        </h4>
+                    </div>
 
-                        <div id="map-controls" data-bind="visible: extent().source() == 'drawn' ">
-                            <ul id="control-buttons">
-                                <li class="active" id="pointer" title="Drag to move. Double click or use the zoom control to zoom.">
-                                    <a href="javascript:void(0);" class="btn active draw-tool-btn">
+                    <div id="map-controls" data-bind="visible: extent().source() == 'drawn' ">
+                        <ul id="control-buttons">
+                            <li class="active" id="pointer" title="Drag to move. Double click or use the zoom control to zoom.">
+                                <a href="javascript:void(0);" class="btn active draw-tool-btn">
                                     %{--<img src="${resource(dir:'bootstrap/img',file:'pointer.png')}" alt="pointer"/>--}%
                                     <img src="${resource(dir:'bootstrap/img',file:'glyphicons_347_hand_up.png')}" alt="center and radius"/>
                                     <span class="drawButtonLabel">Move & zoom</span>
-                                    </a>
-                                </li>
-                                <li id="circle" title="Click at centre and drag the desired radius. Values can be adjusted in the boxes.">
-                                    <a href="javascript:void(0);" class="btn draw-tool-btn">
+                                </a>
+                            </li>
+                            <li id="circle" title="Click at centre and drag the desired radius. Values can be adjusted in the boxes.">
+                                <a href="javascript:void(0);" class="btn draw-tool-btn">
                                     %{--<img src="${resource(dir:'images/map',file:'circle.png')}" alt="center and radius"/>--}%
                                     <img src="${resource(dir:'bootstrap/img',file:'glyphicons_095_vector_path_circle.png')}" alt="center and radius"/>
                                     <span class="drawButtonLabel">Draw circle</span>
-                                    </a>
-                                </li>
-                                <li id="rectangle" title="Click and drag a rectangle.">
-                                    <a href="javascript:void(0);" class="btn draw-tool-btn">
+                                </a>
+                            </li>
+                            <li id="rectangle" title="Click and drag a rectangle.">
+                                <a href="javascript:void(0);" class="btn draw-tool-btn">
                                     %{--<img src="${resource(dir:'images/map',file:'rectangle.png')}" alt="rectangle"/>--}%
                                     <img src="${resource(dir:'bootstrap/img',file:'glyphicons_094_vector_path_square.png')}" alt="rectangle"/>
                                     <span class="drawButtonLabel">Draw rect</span>
-                                    </a>
-                                </li>
-                                <li id="polygon" title="Click any number of times to draw a polygon. Double click to close the polygon.">
-                                    <a href="javascript:void(0);" class="btn draw-tool-btn">
+                                </a>
+                            </li>
+                            <li id="polygon" title="Click any number of times to draw a polygon. Double click to close the polygon.">
+                                <a href="javascript:void(0);" class="btn draw-tool-btn">
                                     %{--<img src="${resource(dir:'images/map',file:'polygon.png')}" alt="polygon"/>--}%
                                     <img src="${resource(dir:'bootstrap/img',file:'glyphicons_096_vector_path_polygon.png')}" alt="polygon"/>
                                     <span class="drawButtonLabel">Draw polygon</span>
-                                    </a>
-                                </li>
-                                <li id="clear" title="Clear the region from the map.">
-                                    <a href="javascript:void(0);" class="btn draw-tool-btn">
+                                </a>
+                            </li>
+                            <li id="clear" title="Clear the region from the map.">
+                                <a href="javascript:void(0);" class="btn draw-tool-btn">
                                     %{--<img src="${resource(dir:'images/map',file:'clear.png')}" alt="clear"/>--}%
                                     <img src="${resource(dir:'bootstrap/img',file:'glyphicons_016_bin.png')}" alt="clear"/>
                                     <span class="drawButtonLabel">Clear</span>
-                                    </a>
-                                </li>
-                                <li id="reset" title="Zoom and centre on Australia.">
-                                    <a href="javascript:void(0);" class="btn draw-tool-btn">
+                                </a>
+                            </li>
+                            <li id="reset" title="Zoom and centre on Australia.">
+                                <a href="javascript:void(0);" class="btn draw-tool-btn">
                                     <img src="${resource(dir:'bootstrap/img',file:'reset.png')}" alt="reset map"/>
                                     <span class="drawButtonLabel">Reset</span>
-                                    </a>
-                                </li>
-                                <li id="zoomToExtent" title="Zoom to extent of drawn shape.">
-                                    <a href="javascript:zoomToShapeBounds();" class="btn draw-tool-btn">
+                                </a>
+                            </li>
+                            <li id="zoomToExtent" title="Zoom to extent of drawn shape.">
+                                <a href="javascript:zoomToShapeBounds();" class="btn draw-tool-btn">
                                     <img src="${resource(dir:'bootstrap/img',file:'glyphicons_186_move.png')}" alt="zoom to extent of drawn shape"/>
                                     <span class="drawButtonLabel">Zoom</span>
-                                    </a>
-                                </li>
-                            </ul>
-                         </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
 
-                         <div style="padding-top:10px;" data-bind="template: { name: updateExtent(), data: extent(), afterRender: extent().renderMap}"></div>
-                        </div>
+                    <div style="padding-top:10px;" data-bind="template: { name: updateExtent(), data: extent(), afterRender: extent().renderMap}"></div>
+                </div>
 
-                    <div class="well well-small">
-                        <h4>Points of interest
-                            <fc:iconHelp title="Points of interest">You can specify any number of points
+                <div class="well well-small">
+                    <h4>Points of interest
+                    <fc:iconHelp title="Points of interest">You can specify any number of points
                             of interest with a site. Points of interest may include photo points
                             or the locations of previous survey work.</fc:iconHelp>
-                        </h4>
-                        <div class="row-fluid" id="pointsOfInterest" >
-                            <div class="span12" data-bind="foreach: poi">
-                                <div>
-                                    <div data-bind="template: { name: 'poi'}" ></div>
-                                    <button type="button" class="btn btn-danger" style="margin-bottom:20px;" data-bind="click: $parent.removePOI">Remove</button>
-                                </div>
-                                <hr/>
+                    </h4>
+                    <div class="row-fluid" id="pointsOfInterest" >
+                        <div class="span12" data-bind="foreach: poi">
+                            <div>
+                                <div data-bind="template: { name: 'poi'}" ></div>
+                                <button type="button" class="btn btn-danger" style="margin-bottom:20px;" data-bind="click: $parent.removePOI, visible:!hasDocuments">Remove</button>
                             </div>
+                            <hr/>
                         </div>
-                        <div class="row-fluid">
-                            <button type="button" data-bind="click: addPOI, visible: poi.length == 0" class="btn">Add a POI</button>
-                            <button type="button" data-bind="click: addPOI, visible: poi.length > 0" class="btn">Add another POI</button>
-                        </div>
+                    </div>
+                    <div class="row-fluid">
+                        <button type="button" data-bind="click: addPOI, visible: poi.length == 0" class="btn">Add a POI</button>
+                        <button type="button" data-bind="click: addPOI, visible: poi.length > 0" class="btn">Add another POI</button>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="row-fluid">
-                <div class="form-actions span12">
-                    <button type="button" data-bind="click: save" class="btn btn-primary">Save changes</button>
-                    <button type="button" id="cancel" class="btn">Cancel</button>
-                </div>
+        <div class="row-fluid">
+            <div class="form-actions span12">
+                <button type="button" data-bind="click: save" class="btn btn-primary">Save changes</button>
+                <button type="button" id="cancel" class="btn">Cancel</button>
             </div>
-        </bs:form>
-    </div>
-    <g:if env="development">
+        </div>
+    </bs:form>
+</div>
+<g:if env="development">
     <div class="container-fluid">
         <div class="expandable-debug">
             <hr />
@@ -224,11 +223,11 @@
             </div>
         </div>
     </div>
-    </g:if>
+</g:if>
 
 <!-- templates -->
 <script type="text/html" id="none">
-    %{--<span>Choose a type</span>--}%
+%{--<span>Choose a type</span>--}%
 </script>
 
 <script type="text/html" id="point">
@@ -270,6 +269,9 @@
 <script type="text/html" id="poi">
 <div class="drawLocationDiv row-fluid">
     <div class="span12">
+        <div class="row-fluid alert" style="box-sizing:border-box;" data-bind="visible:hasDocuments">
+            This point of interest has documents attached and cannot be removed.
+        </div>
         <div class="row-fluid controls-row">
             <fc:textField data-bind="value:name" outerClass="span6" label="Name" data-validation-engine="validate[required]"/>
         </div>
@@ -331,7 +333,7 @@
 </script>
 
 <script type="text/html" id="upload">
-    <h3> Not implemented - waiting on web services...</h3>
+<h3> Not implemented - waiting on web services...</h3>
 </script>
 
 <script type="text/html" id="drawn">
@@ -398,22 +400,22 @@
     // server side generated paths & properties
     var SERVER_CONF = {
         <g:if test="${project}">
-        pageUrl : "${grailsApplication.config.grails.serverName}${createLink(controller:'site', action:'createForProject', params:[projectId:project.projectId,checkForState:true])}",
+    pageUrl : "${grailsApplication.config.grails.serverName}${createLink(controller:'site', action:'createForProject', params:[projectId:project.projectId,checkForState:true])}",
         projectUrl : "${grailsApplication.config.grails.serverName}${createLink(controller:'project', action:'index', id:project.projectId)}",
-        </g:if>
-        <g:elseif test="${site}">
-        pageUrl : "${grailsApplication.config.grails.serverName}${createLink(controller:'site', action:'edit', id: site?.siteId, params:[checkForState:true])}",
-        </g:elseif>
-        <g:else>
-        pageUrl : "${grailsApplication.config.grails.serverName}${createLink(controller:'site', action:'create', params:[checkForState:true])}",
-        </g:else>
-        <g:if test="${project}">
-        projectList : ['${project.projectId}'],
-        </g:if>
-        <g:else>
-        projectList : ${projectList?:'[]'},
-        </g:else>
-        sitePageUrl : "${createLink(action: 'index', id: site?.siteId)}",
+</g:if>
+<g:elseif test="${site}">
+    pageUrl : "${grailsApplication.config.grails.serverName}${createLink(controller:'site', action:'edit', id: site?.siteId, params:[checkForState:true])}",
+</g:elseif>
+<g:else>
+    pageUrl : "${grailsApplication.config.grails.serverName}${createLink(controller:'site', action:'create', params:[checkForState:true])}",
+</g:else>
+<g:if test="${project}">
+    projectList : ['${project.projectId}'],
+</g:if>
+<g:else>
+    projectList : ${projectList?:'[]'},
+</g:else>
+sitePageUrl : "${createLink(action: 'index', id: site?.siteId)}",
         homePageUrl : "${createLink(controller: 'home', action: 'index')}",
         drawSiteUrl : "${createLink(controller: 'site', action: 'draw')}",
         ajaxUpdateUrl: "${createLink(action: 'ajaxUpdate', id: site?.siteId)}",
@@ -436,62 +438,63 @@
         area : "${site?.area}",
         description : "${site?.description?.encodeAsJavaScript()}",
         notes : "${site?.notes?.encodeAsJavaScript()}",
-        <g:if test="${project}">
-        projects : ['${project.projectId}'],
-        </g:if>
-        <g:else>
-        projects : ${site?.projects?:'[]'}
-        </g:else>
-    };
+        documents : JSON.parse('${documents.encodeAsJavaScript()}'),
+<g:if test="${project}">
+    projects : ['${project.projectId}'],
+</g:if>
+<g:else>
+    projects : ${site?.projects?:'[]'}
+</g:else>
+};
 
-    // returns blank string if the property is undefined, else the value
-    function orBlank(v) {
-        return v === undefined ? '' : v;
+// returns blank string if the property is undefined, else the value
+function orBlank(v) {
+    return v === undefined ? '' : v;
+}
+
+// returns blank string if the object or the specified property is undefined, else the value
+function exists(parent, prop) {
+    if(parent === undefined)
+        return '';
+    if(parent == null)
+        return '';
+    if(parent[prop] === undefined)
+        return '';
+    if(parent[prop] == null)
+        return '';
+    if(ko.isObservable(parent[prop])){
+        return parent[prop]();
+    }
+    return parent[prop];
+}
+
+function makeid(){
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    for(var i=0; i < 10; i++)
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+    return text;
+}
+
+function refreshGazInfo(){
+
+    var geom = viewModel.extent().geometry();
+    var lat, lng;
+    if (geom.type === 'Point') {
+        lat = viewModel.extent().geometry().decimalLatitude();
+        lng = viewModel.extent().geometry().decimalLongitude();
+    }
+    else if (geom.centre !== undefined) {
+        lat = viewModel.extent().geometry().centre()[1];
+        lng = viewModel.extent().geometry().centre()[0];
+    }
+    else {
+        // No coordinates we can use for the lookup.
+        return;
     }
 
-    // returns blank string if the object or the specified property is undefined, else the value
-    function exists(parent, prop) {
-        if(parent === undefined)
-            return '';
-        if(parent == null)
-            return '';
-        if(parent[prop] === undefined)
-            return '';
-        if(parent[prop] == null)
-            return '';
-        if(ko.isObservable(parent[prop])){
-            return parent[prop]();
-        }
-        return parent[prop];
-    }
-
-    function makeid(){
-        var text = "";
-        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        for(var i=0; i < 10; i++)
-            text += possible.charAt(Math.floor(Math.random() * possible.length));
-        return text;
-    }
-
-    function refreshGazInfo(){
-
-        var geom = viewModel.extent().geometry();
-        var lat, lng;
-        if (geom.type === 'Point') {
-            lat = viewModel.extent().geometry().decimalLatitude();
-            lng = viewModel.extent().geometry().decimalLongitude();
-        }
-        else if (geom.centre !== undefined) {
-            lat = viewModel.extent().geometry().centre()[1];
-            lng = viewModel.extent().geometry().centre()[0];
-        }
-        else {
-            // No coordinates we can use for the lookup.
-            return;
-        }
-
-        $.ajax({
-            url: '<g:createLink controller="site" action="locationMetadataForPoint"/>' + "?lat="+lat+"&lon="+lng,
+    $.ajax({
+        url: '<g:createLink controller="site" action="locationMetadataForPoint"/>' + "?lat="+lat+"&lon="+lng,
             dataType: "json",
             async: false
         })
@@ -761,11 +764,12 @@
             }
         };
 
-        var POI = function (l) {
+        var POI = function (l, hasDocuments) {
             var self = this;
+            self.poiId = ko.observable(exists(l, 'poiId'));
             self.name = ko.observable(exists(l,'name'));
             self.type = ko.observable(exists(l,'type'));
-
+            self.hasDocuments = hasDocuments;
             var storedGeom;
             if(l !== undefined){
                 storedGeom = l.geometry;
@@ -798,6 +802,7 @@
             }
             self.toJSON = function(){
                 var js = ko.toJS(self);
+                delete js.hasDocuments;
                 if(js.geometry.decimalLatitude !== undefined
                     && js.geometry.decimalLatitude !== ''
                     && js.geometry.decimalLongitude !== undefined
@@ -833,10 +838,13 @@
                 //get the center of the map
                 var lngLat = getMapCentre();
                 var randomBit = (self.poi().length + 1) /1000;
-                self.poi.push(new POI({name:'Point of interest #' + (self.poi().length + 1) , geometry:{decimalLongitude:lngLat[0] - (0.001+randomBit),decimalLatitude:lngLat[1] - (0.001+randomBit)}}));
+                self.poi.push(new POI({name:'Point of interest #' + (self.poi().length + 1) , geometry:{decimalLongitude:lngLat[0] - (0.001+randomBit),decimalLatitude:lngLat[1] - (0.001+randomBit)}}, false));
                 self.renderPOIs();
             }
             self.removePOI = function(){
+                if (this.hasDocuments) {
+                    return;
+                }
                 self.poi.remove(this);
                 self.renderPOIs();
             }
@@ -897,10 +905,20 @@
                 }
                 return self.extent().source();
             };
+            self.hasDocuments = function(poi) {
+                var hasDoc = false;
+                $.each(siteData.documents, function(i, doc) {
+                    if (doc.poiId === poi.poiId) {
+                        hasDoc = true;
+                        return false;
+                    }
+                });
+                return hasDoc;
+            }
             self.loadPOI = function () {
                 if(SERVER_CONF.siteData != null && SERVER_CONF.siteData.poi != NaN && SERVER_CONF.siteData.poi !== undefined){
                     $.each(SERVER_CONF.siteData.poi, function (i, poi) {
-                        self.poi.push(new POI(poi));
+                        self.poi.push(new POI(poi, self.hasDocuments(poi)));
                     });
                 }
             };
@@ -929,234 +947,234 @@
                         contentType: 'application/json',
                         success: function (data) {
                             if(data.status == 'created'){
-                                <g:if test="${project}">
-                                document.location.href = SERVER_CONF.projectUrl;
-                                </g:if>
-                                <g:else>
-                                document.location.href = SERVER_CONF.sitePageUrl + '/' + data.id;
-                                </g:else>
-                            } else {
-                                document.location.href = SERVER_CONF.sitePageUrl;
-                            }
-                        },
-                        error: function (data) {
-                            alert('There was a problem saving this site');
-                        }
-                    });
+<g:if test="${project}">
+    document.location.href = SERVER_CONF.projectUrl;
+</g:if>
+<g:else>
+    document.location.href = SERVER_CONF.sitePageUrl + '/' + data.id;
+</g:else>
+} else {
+    document.location.href = SERVER_CONF.sitePageUrl;
+}
+},
+error: function (data) {
+alert('There was a problem saving this site');
+}
+});
+}
+};
+self.notImplemented = function () {
+alert("Not implemented yet.")
+};
+}
+
+ko.bindingHandlers.switchModel = {
+update: function (element, valueAccessor) {
+ko.bindingHandlers.value.update(element, valueAccessor);
+}
+};
+
+//retrieve serialised model
+viewModel = new SiteViewModel(savedSiteData);
+
+ko.applyBindings(viewModel);
+
+init_map({
+spatialService: SERVER_CONF.spatialService,
+spatialWms: SERVER_CONF.spatialWms,
+mapContainer: 'mapForExtent'
+});
+
+viewModel.loadExtent();
+viewModel.loadPOI();
+
+//render POIs
+viewModel.renderPOIs();
+
+// this sets the function to call when the user draws a shape
+setCurrentShapeCallback(shapeDrawn);
+
+//render the shape that is store if it exists
+if(SERVER_CONF.siteData != null && SERVER_CONF.siteData.extent != undefined && SERVER_CONF.siteData.extent.geometry != null){
+renderSavedShape(SERVER_CONF.siteData.extent.geometry);
+}
+});
+
+var DRAW_TOOL = {
+drawnShape : null
+}
+
+function renderSavedShape(currentDrawnShape){
+//retrieve the current shape if exists
+%{--var currentDrawnShape = viewModel.extent().geometry();--}%
+%{--console.log('Retrieved shape: ' + currentDrawnShape);--}%
+console.log(currentDrawnShape);
+
+if(currentDrawnShape !== undefined){
+    if(currentDrawnShape.type == 'Polygon'){
+        console.log('Redrawing polygon');
+        showOnMap('polygon', geoJsonToPath(currentDrawnShape));
+        zoomToShapeBounds();
+    } else if(currentDrawnShape.type == 'Circle'){
+        console.log('Redrawing circle');
+        showOnMap('circle', currentDrawnShape.coordinates[1],currentDrawnShape.coordinates[0],currentDrawnShape.radius);
+        zoomToShapeBounds();
+    } else if(currentDrawnShape.type == 'Rectangle'){
+        console.log('Redrawing rectangle');
+        var shapeBounds = new google.maps.LatLngBounds(
+            new google.maps.LatLng(currentDrawnShape.minLat,currentDrawnShape.minLon),
+            new google.maps.LatLng(currentDrawnShape.maxLat,currentDrawnShape.maxLon)
+        );
+        //render on the map
+        showOnMap('rectangle', shapeBounds);
+        zoomToShapeBounds();
+    } else if(currentDrawnShape.type == 'pid'){
+        console.log('Loading the PID...' + currentDrawnShape.pid);
+        showObjectOnMap(currentDrawnShape.pid);
+        viewModel.extent().setCurrentPID();
+    } else if(currentDrawnShape.type == 'Point'){
+        console.log('Loading the point...' + currentDrawnShape.pid);
+        showOnMap('point', currentDrawnShape.decimalLatitude, currentDrawnShape.decimalLongitude,'site name');
+        zoomToShapeBounds();
+        showSatellite();
+        //addMarker(currentDrawnShape.decimalLatitude,currentDrawnShape.decimalLongitude);
+    }
+}
+}
+
+function setPageValues(){}
+
+function clearSessionData(){}
+
+function clearData() {
+$('#drawnArea > div').css('display','none');
+$('#drawnArea input').val("");
+$('#wkt').val("");
+$('#circleLat').val("");
+$('#circleLon').val("");
+$('#circleRadius').val("");
+}
+
+function shapeDrawn(source, type, shape) {
+console.log("[shapeDrawn] shapeDrawn called: " + type);
+if (source === 'clear') {
+    DRAW_TOOL.drawnShape = null;
+    clearData();
+    clearSessionData('drawnShapes');
+    $('#useLocation').addClass("disabled");
+} else {
+    $('#useLocation').removeClass("disabled");
+    switch (type) {
+        case google.maps.drawing.OverlayType.CIRCLE:
+            /*// don't show or set circle props if source is a locality
+             if (source === "user-drawn") {*/
+            var center = shape.getCenter();
+            // set coord display
+            $('#circLat').val(round(center.lat()));
+            $('#circLon').val(round(center.lng()));
+            $('#circRadius').val(round(shape.getRadius()/1000,2) + "km");
+            $('#circleArea').css('display','block');
+            // set hidden inputs
+            $('#circleLat').val(center.lat());
+            $('#circleLon').val(center.lng());
+            $('#circleRadius').val(shape.getRadius());
+            console.log("circle lat: " + center.lat());
+            console.log("circle lng: " + center.lng());
+            console.log("circle radius: " + shape.getRadius());
+
+            var calcAreaKm = ((3.14 * shape.getRadius() * shape.getRadius())/1000)/1000;
+            $('#calculatedArea').html(calcAreaKm);
+            //calculate the area
+            DRAW_TOOL.drawnShape = {
+                type:'Circle',
+                userDrawn: 'Circle',
+                coordinates:[center.lng(), center.lat()],
+                centre: [center.lng(), center.lat()],
+                radius: shape.getRadius(),
+                areaKmSq:calcAreaKm
+            };
+            break;
+        case google.maps.drawing.OverlayType.RECTANGLE:
+            var bounds = shape.getBounds(),
+                    sw = bounds.getSouthWest(),
+                    ne = bounds.getNorthEast();
+            // set coord display
+            $('#swLat').val(round(sw.lat()));
+            $('#swLon').val(round(sw.lng()));
+            $('#neLat').val(round(ne.lat()));
+            $('#neLon').val(round(ne.lng()));
+            $('#rectangleArea').css('display','block');
+
+            //calculate the area
+            var mvcArray = new google.maps.MVCArray();
+            mvcArray.push(new google.maps.LatLng(sw.lat(), sw.lng()));
+            mvcArray.push(new google.maps.LatLng(ne.lat(), sw.lng()));
+            mvcArray.push(new google.maps.LatLng(ne.lat(), ne.lng()));
+            mvcArray.push(new google.maps.LatLng(sw.lat(), ne.lng()));
+            mvcArray.push(new google.maps.LatLng(sw.lat(), sw.lng()));
+
+            var calculatedArea = google.maps.geometry.spherical.computeArea(mvcArray);
+            var calcAreaKm = ((calculatedArea)/1000)/1000;
+            $('#calculatedArea').html(calcAreaKm);
+
+            var centreY = (sw.lat() + ne.lat())/2;
+            var centreX =  (sw.lng() + ne.lng())/2;
+
+            DRAW_TOOL.drawnShape = {
+                type: 'Polygon',
+                userDrawn: 'Rectangle',
+                coordinates:[[
+                    [sw.lng(),sw.lat()],
+                    [sw.lng(),ne.lat()],
+                    [ne.lng(),ne.lat()],
+                    [ne.lng(),sw.lat()],
+                    [ne.lng(),sw.lat()]
+                ]],
+                bbox:[sw.lat(),sw.lng(),ne.lat(),ne.lng()],
+                areaKmSq:calcAreaKm,
+                centre: [centreX,centreY]
+            }
+            break;
+        case google.maps.drawing.OverlayType.POLYGON:
+            /*
+             * Note that the path received from the drawing manager does not end by repeating the starting
+             * point (number coords = number vertices). However the path derived from a WKT does repeat
+             * (num coords = num vertices + 1). So we need to check whether the last coord is the same as the
+             * first and if so ignore it.
+             */
+            var path,
+                    $lat = null,
+                    $ul = $('#polygonArea ul'),
+                    realLength = 0,
+                    isRect;
+
+            if(shape.getPath()){
+                path = shape.getPath();
+            } else {
+                path = shape;
+            }
+
+            isRect = representsRectangle(path);
+
+            // set coord display
+            if (isRect) {
+                $('#swLat').val(round(path.getAt(0).lat()));
+                $('#swLon').val(round(path.getAt(0).lng()));
+                $('#neLat').val(round(path.getAt(2).lat()));
+                $('#neLon').val(round(path.getAt(2).lng()));
+                $('#rectangleArea').css('display','block');
+            } else {
+                $ul.find('li').remove();
+                realLength = path.getLength();
+                if (path.getAt(0).equals(path.getAt(path.length - 1))) {
+                    realLength = realLength - 1;
                 }
-            };
-            self.notImplemented = function () {
-                alert("Not implemented yet.")
-            };
-        }
-
-        ko.bindingHandlers.switchModel = {
-            update: function (element, valueAccessor) {
-                ko.bindingHandlers.value.update(element, valueAccessor);
-            }
-        };
-
-        //retrieve serialised model
-        viewModel = new SiteViewModel(savedSiteData);
-
-        ko.applyBindings(viewModel);
-
-        init_map({
-            spatialService: SERVER_CONF.spatialService,
-            spatialWms: SERVER_CONF.spatialWms,
-            mapContainer: 'mapForExtent'
-        });
-
-        viewModel.loadExtent();
-        viewModel.loadPOI();
-
-        //render POIs
-        viewModel.renderPOIs();
-
-        // this sets the function to call when the user draws a shape
-        setCurrentShapeCallback(shapeDrawn);
-
-        //render the shape that is store if it exists
-        if(SERVER_CONF.siteData != null && SERVER_CONF.siteData.extent != undefined && SERVER_CONF.siteData.extent.geometry != null){
-            renderSavedShape(SERVER_CONF.siteData.extent.geometry);
-        }
-    });
-
-    var DRAW_TOOL = {
-        drawnShape : null
-    }
-
-    function renderSavedShape(currentDrawnShape){
-        //retrieve the current shape if exists
-        %{--var currentDrawnShape = viewModel.extent().geometry();--}%
-        %{--console.log('Retrieved shape: ' + currentDrawnShape);--}%
-        console.log(currentDrawnShape);
-
-        if(currentDrawnShape !== undefined){
-            if(currentDrawnShape.type == 'Polygon'){
-                console.log('Redrawing polygon');
-                showOnMap('polygon', geoJsonToPath(currentDrawnShape));
-                zoomToShapeBounds();
-            } else if(currentDrawnShape.type == 'Circle'){
-                console.log('Redrawing circle');
-                showOnMap('circle', currentDrawnShape.coordinates[1],currentDrawnShape.coordinates[0],currentDrawnShape.radius);
-                zoomToShapeBounds();
-            } else if(currentDrawnShape.type == 'Rectangle'){
-                console.log('Redrawing rectangle');
-                var shapeBounds = new google.maps.LatLngBounds(
-                    new google.maps.LatLng(currentDrawnShape.minLat,currentDrawnShape.minLon),
-                    new google.maps.LatLng(currentDrawnShape.maxLat,currentDrawnShape.maxLon)
-                );
-                //render on the map
-                showOnMap('rectangle', shapeBounds);
-                zoomToShapeBounds();
-            } else if(currentDrawnShape.type == 'pid'){
-                console.log('Loading the PID...' + currentDrawnShape.pid);
-                showObjectOnMap(currentDrawnShape.pid);
-                viewModel.extent().setCurrentPID();
-            } else if(currentDrawnShape.type == 'Point'){
-                console.log('Loading the point...' + currentDrawnShape.pid);
-                showOnMap('point', currentDrawnShape.decimalLatitude, currentDrawnShape.decimalLongitude,'site name');
-                zoomToShapeBounds();
-                showSatellite();
-                //addMarker(currentDrawnShape.decimalLatitude,currentDrawnShape.decimalLongitude);
-            }
-        }
-    }
-
-    function setPageValues(){}
-
-    function clearSessionData(){}
-
-    function clearData() {
-        $('#drawnArea > div').css('display','none');
-        $('#drawnArea input').val("");
-        $('#wkt').val("");
-        $('#circleLat').val("");
-        $('#circleLon').val("");
-        $('#circleRadius').val("");
-    }
-
-    function shapeDrawn(source, type, shape) {
-        console.log("[shapeDrawn] shapeDrawn called: " + type);
-        if (source === 'clear') {
-            DRAW_TOOL.drawnShape = null;
-            clearData();
-            clearSessionData('drawnShapes');
-            $('#useLocation').addClass("disabled");
-        } else {
-            $('#useLocation').removeClass("disabled");
-            switch (type) {
-                case google.maps.drawing.OverlayType.CIRCLE:
-                    /*// don't show or set circle props if source is a locality
-                     if (source === "user-drawn") {*/
-                    var center = shape.getCenter();
-                    // set coord display
-                    $('#circLat').val(round(center.lat()));
-                    $('#circLon').val(round(center.lng()));
-                    $('#circRadius').val(round(shape.getRadius()/1000,2) + "km");
-                    $('#circleArea').css('display','block');
-                    // set hidden inputs
-                    $('#circleLat').val(center.lat());
-                    $('#circleLon').val(center.lng());
-                    $('#circleRadius').val(shape.getRadius());
-                    console.log("circle lat: " + center.lat());
-                    console.log("circle lng: " + center.lng());
-                    console.log("circle radius: " + shape.getRadius());
-
-                    var calcAreaKm = ((3.14 * shape.getRadius() * shape.getRadius())/1000)/1000;
-                    $('#calculatedArea').html(calcAreaKm);
-                    //calculate the area
-                    DRAW_TOOL.drawnShape = {
-                        type:'Circle',
-                        userDrawn: 'Circle',
-                        coordinates:[center.lng(), center.lat()],
-                        centre: [center.lng(), center.lat()],
-                        radius: shape.getRadius(),
-                        areaKmSq:calcAreaKm
-                    };
-                    break;
-                case google.maps.drawing.OverlayType.RECTANGLE:
-                    var bounds = shape.getBounds(),
-                            sw = bounds.getSouthWest(),
-                            ne = bounds.getNorthEast();
-                    // set coord display
-                    $('#swLat').val(round(sw.lat()));
-                    $('#swLon').val(round(sw.lng()));
-                    $('#neLat').val(round(ne.lat()));
-                    $('#neLon').val(round(ne.lng()));
-                    $('#rectangleArea').css('display','block');
-
-                    //calculate the area
-                    var mvcArray = new google.maps.MVCArray();
-                    mvcArray.push(new google.maps.LatLng(sw.lat(), sw.lng()));
-                    mvcArray.push(new google.maps.LatLng(ne.lat(), sw.lng()));
-                    mvcArray.push(new google.maps.LatLng(ne.lat(), ne.lng()));
-                    mvcArray.push(new google.maps.LatLng(sw.lat(), ne.lng()));
-                    mvcArray.push(new google.maps.LatLng(sw.lat(), sw.lng()));
-
-                    var calculatedArea = google.maps.geometry.spherical.computeArea(mvcArray);
-                    var calcAreaKm = ((calculatedArea)/1000)/1000;
-                    $('#calculatedArea').html(calcAreaKm);
-
-                    var centreY = (sw.lat() + ne.lat())/2;
-                    var centreX =  (sw.lng() + ne.lng())/2;
-
-                    DRAW_TOOL.drawnShape = {
-                        type: 'Polygon',
-                        userDrawn: 'Rectangle',
-                        coordinates:[[
-                            [sw.lng(),sw.lat()],
-                            [sw.lng(),ne.lat()],
-                            [ne.lng(),ne.lat()],
-                            [ne.lng(),sw.lat()],
-                            [ne.lng(),sw.lat()]
-                        ]],
-                        bbox:[sw.lat(),sw.lng(),ne.lat(),ne.lng()],
-                        areaKmSq:calcAreaKm,
-                        centre: [centreX,centreY]
-                    }
-                    break;
-                case google.maps.drawing.OverlayType.POLYGON:
-                    /*
-                     * Note that the path received from the drawing manager does not end by repeating the starting
-                     * point (number coords = number vertices). However the path derived from a WKT does repeat
-                     * (num coords = num vertices + 1). So we need to check whether the last coord is the same as the
-                     * first and if so ignore it.
-                     */
-                    var path,
-                            $lat = null,
-                            $ul = $('#polygonArea ul'),
-                            realLength = 0,
-                            isRect;
-
-                    if(shape.getPath()){
-                        path = shape.getPath();
-                    } else {
-                        path = shape;
-                    }
-
-                    isRect = representsRectangle(path);
-
-                    // set coord display
-                    if (isRect) {
-                        $('#swLat').val(round(path.getAt(0).lat()));
-                        $('#swLon').val(round(path.getAt(0).lng()));
-                        $('#neLat').val(round(path.getAt(2).lat()));
-                        $('#neLon').val(round(path.getAt(2).lng()));
-                        $('#rectangleArea').css('display','block');
-                    } else {
-                        $ul.find('li').remove();
-                        realLength = path.getLength();
-                        if (path.getAt(0).equals(path.getAt(path.length - 1))) {
-                            realLength = realLength - 1;
-                        }
-                        for (i = 0; i < realLength; i++) {
-                            // check whether widget exists
-                            $lat = $('#lat' + i);
-                            if ($lat.length === 0) {
-                                // doesn't so create it
-                                $lat = $('<li><input type="text" id="lat' + i +
+                for (i = 0; i < realLength; i++) {
+                    // check whether widget exists
+                    $lat = $('#lat' + i);
+                    if ($lat.length === 0) {
+                        // doesn't so create it
+                        $lat = $('<li><input type="text" id="lat' + i +
                                         '"/><input type="text" id="lon' + i + '"/></li>')
                                         .appendTo($ul);
                             }
@@ -1178,7 +1196,13 @@
                             maxLat=-90,
                             maxLng=-180;
 
-                    $.each(path, function(i){
+                    // There appears to have been an API change here - this is required locally but it
+                    // still works without this change in test and prod.
+                    var pathArray = path;
+                    if (typeof(path.getArray) === 'function') {
+                        pathArray = path.getArray();
+                    }
+                    $.each(pathArray, function(i){
                       //console.log(path.getAt(i));
                       var coord = path.getAt(i);
                       if(coord.lat()>maxLat) maxLat = coord.lat();

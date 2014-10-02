@@ -69,7 +69,7 @@ class SiteController {
     }
 
     def edit(String id) {
-        def site = siteService.get(id, [raw:'true'])
+        def site = siteService.get(id, [rich:'true'])
         if (site) {
             // check user has persmissions to edit - user must have edit access to
             // ALL linked projects to proceed.
@@ -82,9 +82,8 @@ class SiteController {
                 log.debug "converting to array"
                 site.shapePid = [site.shapePid] as JSONArray
             }
-            [site: site, json: (site as JSON).toString(), meta: siteService.metaModel()
-//                    ,projectList: projectService.list(true)
-            ]
+            def documents = site.documents?:[]
+            [site: site, json: (site as JSON).toString(), documents:documents as JSON, meta: siteService.metaModel()]
         } else {
             render 'no such site'
         }
