@@ -1602,10 +1602,14 @@ class ImportService {
             }
         }
 
+        def docsToCopy = []
         if (config.migrateDocuments) {
             documents.each { document ->
                 document.documentId = ''
                 document.projectId = newId
+                document.remove('url')
+                document.remove('thumbnailUrl')
+                docsToCopy << document
                 if (!config.preview) {
                     documentService.updateDocument(document)
                 }
@@ -1626,7 +1630,7 @@ class ImportService {
                 activityService.bulkUpdateActivities(activitiesToUpdate, [projectId: newId])
             }
         }
-        [origProject:toUpdate, newProject:project, sites:sitesToUpdate, activities:activitiesToUpdate]
+        [origProject:toUpdate, newProject:project, sites:sitesToUpdate, activities:activitiesToUpdate, documents:docsToCopy]
     }
 
 }
