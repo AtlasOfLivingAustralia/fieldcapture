@@ -1,4 +1,6 @@
 package au.org.ala.fieldcapture
+
+import grails.converters.JSON
 import org.apache.commons.lang.CharUtils;
 import java.text.SimpleDateFormat
 
@@ -23,6 +25,19 @@ class DocumentService {
         TimeZone.setDefault(TimeZone.getTimeZone('UTC'))
         doc?.content?.lastUpdated = dateWithTime.format(new Date())
         return webService.doPost(url, doc)
+    }
+
+    def createDocument(doc, contentType, inputStream) {
+
+        def url = grailsApplication.config.ecodata.baseUrl + "document"
+
+        def params = [document:doc as JSON]
+        return webService.postMultipart(url, params, inputStream, contentType, doc.filename)
+    }
+
+    def getDocumentsForSite(id) {
+        def url = "${grailsApplication.config.ecodata.baseUrl}site/${id}/documents"
+        return webService.doPost(url, [:])
     }
 		
 	def createHTMLStageReport(param) {

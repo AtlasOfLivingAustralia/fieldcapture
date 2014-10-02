@@ -4,7 +4,7 @@ import org.codehaus.groovy.grails.web.json.JSONArray
 
 class SiteController {
 
-    def siteService, projectService, activityService, metadataService, userService, searchService, importService, webService
+    def siteService, projectService, activityService, metadataService, userService, searchService, importService, webService, documentService
 
     static defaultAction = "index"
 
@@ -69,7 +69,7 @@ class SiteController {
     }
 
     def edit(String id) {
-        def site = siteService.get(id, [rich:'true'])
+        def site = siteService.get(id, [raw:'true'])
         if (site) {
             // check user has persmissions to edit - user must have edit access to
             // ALL linked projects to proceed.
@@ -82,7 +82,7 @@ class SiteController {
                 log.debug "converting to array"
                 site.shapePid = [site.shapePid] as JSONArray
             }
-            def documents = site.documents?:[]
+            def documents = documentService.getDocumentsForSite(site.siteId).resp?.documents?:[]
             [site: site, json: (site as JSON).toString(), documents:documents as JSON, meta: siteService.metaModel()]
         } else {
             render 'no such site'
