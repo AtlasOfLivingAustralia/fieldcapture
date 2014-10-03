@@ -27,7 +27,7 @@ class SearchController {
 
     }
 
-    @PreAuthorise(accessLevel = 'admin', redirectController ='home', redirectAction = 'index')
+    @PreAuthorise(accessLevel = 'siteAdmin', redirectController ='home', redirectAction = 'index')
     def downloadAllData() {
 
         params.query = "docType:project"
@@ -48,7 +48,7 @@ class SearchController {
         webService.proxyGetRequest(response, url, true, true,960000)
     }
 
-    @PreAuthorise(accessLevel = 'admin', redirectController ='home', redirectAction = 'index')
+    @PreAuthorise(accessLevel = 'siteAdmin', redirectController ='home', redirectAction = 'index')
     def downloadSummaryData() {
         params.query = "docType:project"
         def path = "search/downloadSummaryData"

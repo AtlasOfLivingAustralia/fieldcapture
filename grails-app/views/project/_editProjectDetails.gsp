@@ -55,7 +55,7 @@
 			        <thead>
 			            <tr>
                             <th></th>
-			                <th>Outcomes <fc:iconHelp title="Outcomes">Enter the outcomes sought by the project; this should be expressed as a ‘SMART’ statement (Specific Measurable Attainable Realistic and Time-bound) and deliver against the programme. The objective should be no more than 2 sentences.</fc:iconHelp></th>
+			                <th>Outcomes <fc:iconHelp title="Outcomes">Enter the outcomes sought by the project. This should be expressed as a 'SMART' statement (Specific Measurable Attainable Realistic and Time-bound) and deliver against the programme.  The outcome should be no more than 2 sentences.</fc:iconHelp></th>
 			                <th>
                                 Project Goals <fc:iconHelp title="Project Goals">Select the most appropriate natural/cultural asset or assets being addressed by this project from the drop down list. Note that multiple selections can be made. </fc:iconHelp>
                                 </br> (Hold down the Ctrl key and click to select multiple values.)
@@ -164,7 +164,7 @@
 		    <div>
 		        <div id="project-implementation" class="well well-small">
 		 			<label><b>Project implementation / delivery mechanism</b></label> 
-		 			<p>Explain how the project will be implemented, including methods, approaches, collaborations, etc. <b><fc:iconHelp title="Project implementation / delivery mechanism">How is the project to be delivered? Briefly describe the high level method/s to be used (e.g. Landholder EOI against defined criteria, community steering committees to ensure NRM community involvement etc). The delivery mechanism/s should provide sufficient detail to understand how the projects outputs and activities will be implemented.</fc:iconHelp></b></p>
+		 			<p>Explain how the project will be implemented, including methods, approaches, collaborations, etc. <b><fc:iconHelp title="Project implementation / delivery mechanism">How is the project to be delivered? Briefly describe the high level method/s to be used. The delivery mechanism/s should provide sufficient detail to understand how the project's outcomes will be achieved.</fc:iconHelp></b></p>
 					<textarea style="width: 98%;" maxlength="500" 
 						data-bind="value:details.implementation.description, disable: isProjectDetailsLocked()" 
 						class="input-xlarge" id="implementation" rows="10" ></textarea>
@@ -359,7 +359,7 @@
  				<select style="width: 10%;" data-bind="options: obligationOptions, optionsCaption: 'Please select', value:details.obligations, disable: isProjectDetailsLocked()"> </select>
  			</div>
  			<div>
-	 			2. Have you got appropriate policies and procedures in place that are commensurate with your project activities?
+	 			2. Do you have appropriate policies and procedures in place that are commensurate with your project activities?
 	 			<select style="width: 10%;" data-bind="options: obligationOptions, optionsCaption: 'Please select', value:details.policies, disable: isProjectDetailsLocked()"> </select>
  			</div>
         </div>
