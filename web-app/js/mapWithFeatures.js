@@ -122,11 +122,11 @@
             this.load(features);
         },
         mapSite: function(site){
-           var self = this;
-           var loaded = self.loadFeature(site.extent.geometry);
-           if(loaded){
-             self.allLocationsLoaded();
-           }
+            var self = this;
+            var loaded = self.loadFeature(site.extent.geometry);
+            if(loaded){
+                self.allLocationsLoaded();
+            }
         },
         loadFeature: function(loc, iw){
             var self = this, f;
@@ -155,19 +155,19 @@
                     self.addFeature(f, loc, iw);
                     loaded = true;
                 } else if (loc.type.toLowerCase() === 'circle') {
-                   var ll = new google.maps.LatLng(loc.coordinates[1], loc.coordinates[0]);
-                   f = new google.maps.Circle({
-                      center: ll,
-                      radius: loc.radius,
-                      map: self.map,
-                      editable: false
-                   });
-                   //set the extend of the map
-                   //console.log("f.getBounds()",f.getBounds());
-                   self.featureBounds.extend(f.getBounds().getNorthEast());
-                   self.featureBounds.extend(f.getBounds().getSouthWest());
-                   self.addFeature(f, loc, iw);
-                   loaded = true;
+                    var ll = new google.maps.LatLng(loc.coordinates[1], loc.coordinates[0]);
+                    f = new google.maps.Circle({
+                        center: ll,
+                        radius: loc.radius,
+                        map: self.map,
+                        editable: false
+                    });
+                    //set the extend of the map
+                    //console.log("f.getBounds()",f.getBounds());
+                    self.featureBounds.extend(f.getBounds().getNorthEast());
+                    self.featureBounds.extend(f.getBounds().getSouthWest());
+                    self.addFeature(f, loc, iw);
+                    loaded = true;
                 } else if (loc.type.toLowerCase() === 'polygon') {
                     var points;
                     var paths = geojsonToPaths(loc.coordinates[0]);
@@ -188,30 +188,29 @@
                     //load the overlay instead
                     var pid = loc.pid;
                     //console.log('Loading PID: ' + pid);
-                    f = new PIDLayer(pid, this.wmsServer);
+                    f = new PIDLayer(pid, this.wmsServer, loc.style);
                     map.map.overlayMapTypes.push(f);
                     $.ajax({
                         url: this.featureService+ '?featureId=' + pid,
                         dataType:'json'
                     }).done(function(data) {
-                       if(data !== undefined && data !== null && data.bbox !== undefined){
-                           var coords = data.bbox.replace(/POLYGON|LINESTRING/g,"").replace(/[\\(|\\)]/g, "");
-                           var pointArray = coords.split(',');
-                           if (pointArray.length == 2) {
-                               // The bounding box of a point is a linestring with two points
-                               pointArray = [pointArray[0], pointArray[1], pointArray[0], pointArray[1]];
-                           }
-
-                           self.featureBounds.extend(new google.maps.LatLng(pointArray[1].split(" ")[1],pointArray[1].split(" ")[0]));
-                           self.featureBounds.extend(new google.maps.LatLng(pointArray[3].split(" ")[1],pointArray[3].split(" ")[0]));
-                           if (!loc.areaKmSq) {
-                               loc.areaKmSq = data.area_km ? data.area_km : 0;
-                           }
-                       } else {
+                        if(data !== undefined && data !== null && data.bbox !== undefined && !loc.excludeBounds){
+                            var coords = data.bbox.replace(/POLYGON|LINESTRING/g,"").replace(/[\\(|\\)]/g, "");
+                            var pointArray = coords.split(",");
+                            if (pointArray.length == 2) {
+                                // The bounding box of a point is a linestring with two points
+                                pointArray = [pointArray[0], pointArray[1], pointArray[0], pointArray[1]];
+                            }
+                            self.featureBounds.extend(new google.maps.LatLng(pointArray[1].split(" ")[1],pointArray[1].split(" ")[0]));
+                            self.featureBounds.extend(new google.maps.LatLng(pointArray[3].split(" ")[1],pointArray[3].split(" ")[0]));
+                            if (!loc.areaKmSq) {
+                                loc.areaKmSq = data.area_km ? data.area_km : 0;
+                            }
+                        } else {
 //                           self.featureBounds.extend(new google.maps.LatLng(0,0));
 //                           self.featureBounds.extend(new google.maps.LatLng(-90, 180));
-                       }
-                       self.addFeature(f, loc);
+                        }
+                        self.addFeature(f, loc);
                     });
                     loaded = true;
                 } else {
@@ -238,8 +237,8 @@
                 //console.log('Loading feature with type:' + loc.type + "|" + loc.latitude);
                 if(loc != null){
 
-                   self.loadFeature(loc, iw);
-                   //self.locationLoaded();
+                    self.loadFeature(loc, iw);
+                    //self.locationLoaded();
                 }
             });
 
@@ -328,8 +327,8 @@
 //                    }
 //                    google.maps.event.removeListener(boundsListener);
 //                });
-          //  } else {
-            //    console.log("NOT Zooming to bounds");
+                //  } else {
+                //    console.log("NOT Zooming to bounds");
             }
         },
         //
