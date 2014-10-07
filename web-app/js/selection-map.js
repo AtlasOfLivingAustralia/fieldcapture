@@ -575,12 +575,16 @@ function showObjectOnMap(pid){
         // 150.772781 -35.1119459999999,
         // 150.772781 -35.92208,
         // 148.761582 -35.92208))
-       var coords = data.bbox.replace(/POLYGON/g,"").replace(/[\\(|\\)]/g, "");
-       var pointArray = coords.split(",");
-       map.gmap.fitBounds(new google.maps.LatLngBounds(
+        var coords = data.bbox.replace(/POLYGON|LINESTRING/g,"").replace(/[\\(|\\)]/g, "");
+        var pointArray = coords.split(",");
+        if (pointArray.length == 2) {
+            // The bounding box of a point is a linestring with two points
+            pointArray = [pointArray[0], pointArray[1], pointArray[0], pointArray[1]];
+        }
+        map.gmap.fitBounds(new google.maps.LatLngBounds(
             new google.maps.LatLng(pointArray[1].split(" ")[1],pointArray[1].split(" ")[0]),
             new google.maps.LatLng(pointArray[3].split(" ")[1],pointArray[3].split(" ")[0])
-       ));
+        ));
     });
 }
 

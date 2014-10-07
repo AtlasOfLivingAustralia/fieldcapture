@@ -1,19 +1,19 @@
-/* 
-    Document   : wms.js
-    Created on : Feb 16, 2011, 3:25:27 PM
-    Author     : "Gavin Jackson <Gavin.Jackson@csiro.au>"
-    Modified   : "Ajay Ranipeta <Ajay.Ranipeta@csiro.au>"
-                 - Added better direct tile support rather than ImageMapType
-                 - Added tiles loaded checking
-                 "Nick dos Remedios (Nick.dosRemedios@csiro.au)"
-                 - Modified colour palett to use Google colour scheme via array index
-                 - Changed MWS opacity to 0.9
-                 "Mark Woolston <Mark.Woolston@csiro.au>"
-                 - allow opacity to be specified by the caller
+/*
+ Document   : wms.js
+ Created on : Feb 16, 2011, 3:25:27 PM
+ Author     : "Gavin Jackson <Gavin.Jackson@csiro.au>"
+ Modified   : "Ajay Ranipeta <Ajay.Ranipeta@csiro.au>"
+ - Added better direct tile support rather than ImageMapType
+ - Added tiles loaded checking
+ "Nick dos Remedios (Nick.dosRemedios@csiro.au)"
+ - Modified colour palett to use Google colour scheme via array index
+ - Changed MWS opacity to 0.9
+ "Mark Woolston <Mark.Woolston@csiro.au>"
+ - allow opacity to be specified by the caller
 
 
-    Refactored code from http://lyceum.massgis.state.ma.us/wiki/doku.php?id=googlemapsv3:home
-*/
+ Refactored code from http://lyceum.massgis.state.ma.us/wiki/doku.php?id=googlemapsv3:home
+ */
 
 function bound(value, opt_min, opt_max) {
     if (opt_min != null) value = Math.max(value, opt_min);
@@ -32,7 +32,7 @@ function radiansToDegrees(rad) {
 function MercatorProjection() {
     var MERCATOR_RANGE = 256;
     this.pixelOrigin_ = new google.maps.Point(
-        MERCATOR_RANGE / 2, MERCATOR_RANGE / 2);
+            MERCATOR_RANGE / 2, MERCATOR_RANGE / 2);
     this.pixelsPerLonDegree_ = MERCATOR_RANGE / 360;
     this.pixelsPerLonRadian_ = MERCATOR_RANGE / (2 * Math.PI);
 };
@@ -83,14 +83,14 @@ function getWMSObject(map, name, baseURL, customParams){
 
     //var baseURL = "";
     var wmsParams = [
-    "request=GetMap",
-    "service=WMS",
-    "version=1.1.1",
-    "bgcolor=0xFFFFFF",
-    "transparent=TRUE",
-    "srs=EPSG:900913", // 3395?
-    "width="+ tileWidth,
-    "height="+ tileHeight
+        "request=GetMap",
+        "service=WMS",
+        "version=1.1.1",
+        "bgcolor=0xFFFFFF",
+        "transparent=TRUE",
+        "srs=EPSG:900913", // 3395?
+            "width="+ tileWidth,
+            "height="+ tileHeight
     ];
 
     //add additional parameters
@@ -132,7 +132,7 @@ function getWMSObject(map, name, baseURL, customParams){
 
     var overlayWMS = new google.maps.ImageMapType(overlayOptions);
 
-    return overlayWMS; 
+    return overlayWMS;
 }
 
 var totalTileCount = 0;
@@ -176,14 +176,14 @@ function getWMSTileUrl(coord, zoom, baseurl, customParams)
 {
 
     var wmsParams = [
-    "REQUEST=GetMap",
-    "SERVICE=WMS",
-    "VERSION=1.1.1",
-    "BGCOLOR=0xFFFFFF",
-    "TRANSPARENT=TRUE",
-    "SRS=EPSG:900913", // 3395?
-    "WIDTH=256",
-    "HEIGHT=256"
+        "REQUEST=GetMap",
+        "SERVICE=WMS",
+        "VERSION=1.1.1",
+        "BGCOLOR=0xFFFFFF",
+        "TRANSPARENT=TRUE",
+        "SRS=EPSG:900913", // 3395?
+        "WIDTH=256",
+        "HEIGHT=256"
     ];
 
     //add additional parameters
@@ -216,10 +216,11 @@ function getWMSTileUrl(coord, zoom, baseurl, customParams)
 }
 
 //Define custom WMS tiled layer
-function PIDLayer(pid, wmsServer){
+function PIDLayer(pid, wmsServer, style){
+
     return new google.maps.ImageMapType({
         getTileUrl: function(coord, zoom){
-             var wmsParams = [
+            var wmsParams = [
                 "format=image/png",
                 "layers=ALA:Objects",
                 "REQUEST=GetMap",
@@ -230,8 +231,8 @@ function PIDLayer(pid, wmsServer){
                 "SRS=EPSG:900913", // 3395?
                 "WIDTH=256",
                 "HEIGHT=256",
-                "viewparams=s:" + pid
-                ];
+                    "viewparams=s:" + pid
+            ];
 
             var lULP = new google.maps.Point(coord.x*256,(coord.y+1)*256);
             var lLRP = new google.maps.Point((coord.x+1)*256,coord.y*256);
@@ -250,6 +251,9 @@ function PIDLayer(pid, wmsServer){
                 lLR_Longitude = Math.abs(lLR_Longitude);
             }
             var urlResult = wmsServer + "/wms/reflect?" + wmsParams.join("&") + "&bbox=" + lUL_Longitude + "," + lUL_Latitude + "," + lLR_Longitude + "," + lLR_Latitude;
+            if (style) {
+                urlResult+='&STYLES='+style;
+            }
 
             return urlResult;
         },
