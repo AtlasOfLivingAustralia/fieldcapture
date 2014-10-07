@@ -22,8 +22,6 @@ class DocumentService {
 
     def updateDocument(doc) {
         def url = grailsApplication.config.ecodata.baseUrl + "document"
-        TimeZone.setDefault(TimeZone.getTimeZone('UTC'))
-        doc?.content?.lastUpdated = dateWithTime.format(new Date())
         return webService.doPost(url, doc)
     }
 
