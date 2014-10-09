@@ -13,7 +13,7 @@
 
 <script id="imageDocTmpl" type="text/html">
     <a class="pull-left" style="width:32px;height:32px;" data-bind="attr:{href:url}" target="_blank">
-        <img class="media-object img-rounded span1" data-bind="attr:{src:url}, alt:name" style="width:32px;height:32px;" width="32" height="32" alt="image preview icon">
+        <img class="media-object img-rounded span1" data-bind="attr:{src:thumbnailUrl}, alt:name" style="width:32px;height:32px;" width="32" height="32" alt="image preview icon">
     </a>
     <div data-bind="template:'imgMediaBody'"></div>
 </script>
@@ -31,7 +31,7 @@
         <button class="btn btn-mini" type="button" data-bind="enable:!readOnly,click:$root.editDocumentMetadata"><i class="icon-edit"></i></button>
     </div>
     <a class="pull-left" style="width:32px;height:32px;" data-bind="attr:{href:url}" target="_blank">
-        <img class="media-object img-rounded span1" data-bind="attr:{src:url, alt:name}" style="width:32px;height:32px;"  alt="image preview icon">
+        <img class="media-object img-rounded span1" data-bind="attr:{src:thumbnailUrl, alt:name}" style="width:32px;height:32px;"  alt="image preview icon">
     </a>
     <div data-bind="template:'imgMediaBody'"></div>
 </script>
@@ -79,6 +79,7 @@
                 this.filename = doc.filename;
                 this.type = doc.type;
                 this.url = doc.url;
+                this.thumbnailUrl = doc.thumbnailUrl ? doc.thumbnailUrl : doc.url;
                 this.filetypeImg = function () {
                     return imageLocation + "/" + iconnameFromFilename(self.filename);
                 };

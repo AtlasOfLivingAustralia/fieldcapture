@@ -29,6 +29,7 @@ function DocumentViewModel (doc, owner) {
     this.role = ko.observable(doc.role);
     this.public = ko.observable(doc.public);
     this.url = doc.url;
+    this.thumbnailUrl = doc.thumbnailUrl ? doc.thumbnailUrl : doc.url;
     this.documentId = doc.documentId;
     this.hasPreview = ko.observable(false);
     this.error = ko.observable();
