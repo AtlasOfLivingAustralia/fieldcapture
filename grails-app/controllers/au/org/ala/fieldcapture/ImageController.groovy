@@ -124,7 +124,9 @@ class ImageController {
                         delete_type  : 'DELETE']
                 result = [files: [md]]
             }
-            render result as JSON
+            response.addHeader('Content-Type','text/plain')
+            def json = result as JSON
+            render json.toString()
         }
     }
 
