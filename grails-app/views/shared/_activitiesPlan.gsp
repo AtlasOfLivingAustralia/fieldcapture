@@ -115,7 +115,7 @@
     <form id="outputTargetsContainer">
         <h4>Output Targets</h4>
         <table id="outputTargets" class="table table-condensed tight-inputs">
-            <thead><tr><th>Output Type</th><th>Outcome Targets</th><th>Output Targets</th><th>Target</th></tr></thead>
+            <thead><tr><th>Output Type</th><th>Outcome Description</th><th>Output Targets</th><th>Target</th></tr></thead>
             <!-- ko foreach:outputTargets -->
             <tbody data-bind="foreach:scores">
             <tr>
