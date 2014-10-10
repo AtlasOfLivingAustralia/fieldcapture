@@ -444,17 +444,19 @@ class AdminController {
     }
 
     def reloadSiteMetadata() {
-        def sites = siteService.list()
+        def sites = []
+        if (params.siteId) {
+            sites << siteService.get(params.siteId)
+        }
+        else {
+            sites = siteService.list()
+        }
+
         for (site in sites) {
              def siteId = site["siteId"]
              def geometry = site["extent"]["geometry"]
              if (geometry)
              if (geometry.containsKey("centre")) {
-                 def longitude = geometry["centre"][0]
-                 def latitude = geometry["centre"][1]
-                 def metadata = metadataService.getLocationMetadataForPoint(latitude, longitude)
-                 geometry.putAll(metadata)
-
                  def updatedSite = [:]
                  updatedSite["extent"] = site["extent"]
                  siteService.update(siteId, updatedSite)
