@@ -102,7 +102,7 @@
                         <h4>${fName}</h4>
                         <ul class="facetValues">
                             <g:each var="t" in="${f.terms}" status="i">
-                                <g:if test="${i < max}">
+                                <g:if test="${i < max && t.term?.trim()}">
                                     <li><a href="${fqLink}&fq=${fn.encodeAsURL()}:${t.term.encodeAsURL()}"><g:message
                                             code="label.${t.term}" default="${t.term}"/></a> (${t.count})
                                     </li>
