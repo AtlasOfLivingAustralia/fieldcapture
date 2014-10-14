@@ -549,8 +549,7 @@
             };
             self.modelForSaving = function () {
                 // get model as a plain javascript object
-                var jsData = ko.toJS(self);
-                delete jsData.transients;
+                var jsData = ko.mapping.toJS(self, {'ignore':['transients']});
 
                  // If we leave the site or theme undefined, it will be ignored during JSON serialisation and hence
                 // will not overwrite the current value on the server.
