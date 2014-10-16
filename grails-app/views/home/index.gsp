@@ -72,7 +72,8 @@
                 </a>
             </div>
             <h3 style="margin-bottom:0;">Filter results</h3>
-
+            <button class="btn btn-small facetSearch"><i class="icon-filter"></i>Refine</button>
+            <button class="btn btn-small clearFacet"><i class="icon-remove-sign"></i>Clear all</button>
             <g:if test="${params.fq}">
                 <div class="currentFilters">
                     <h4>Current filters</h4>
@@ -100,10 +101,12 @@
                     <g:if test="${fn != 'class' && f?.terms?.size() > 0}">
                         <g:set var="fName"><g:message code="label.${fn}" default="${fn?.capitalize()}"/></g:set>
                         <h4>${fName}</h4>
-                        <ul class="facetValues">
+                        <ul style="list-style-type: none;" class="facetValues">
                             <g:each var="t" in="${f.terms}" status="i">
-                                <g:if test="${i < max && t.term?.trim()}">
-                                    <li><a href="${fqLink}&fq=${fn.encodeAsURL()}:${t.term.encodeAsURL()}"><g:message
+                                <g:if test="${i < max}">
+                                    <li>
+                                    		<input type="checkbox" class="facetSelection" name="facetSelection" value="fq=${fn.encodeAsURL()}:${t.term.encodeAsURL()}">
+                                    		<a href="${fqLink}&fq=${fn.encodeAsURL()}:${t.term.encodeAsURL()}"><g:message
                                             code="label.${t.term}" default="${t.term}"/></a> (${t.count})
                                     </li>
                                 </g:if>
@@ -112,26 +115,32 @@
                         <g:if test="${f?.terms?.size() > max}">
                             <a href="#${fn}Modal" role="button" class="moreFacets tooltips" data-toggle="modal" title="View full list of values"><i class="icon-hand-right"></i> choose more...</a>
                             <div id="${fn}Modal" class="modal hide fade">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                    <h3>Filter by ${fName}</h3>
-                                </div>
-                                <div class="modal-body">
-                                    <ul class="facetValues">
-                                        <g:each var="t" in="${f.terms}">
-                                            <li data-sortalpha="${t.term.toLowerCase().trim()}" data-sortcount="${t.count}"><a href="${fqLink}&fq=${fn.encodeAsURL()}:${t.term.encodeAsURL()}"><g:message
-                                                    code="label.${t.term}" default="${t.term?:'[empty]'}"/></a> (<span class="fcount">${t.count}</span>)
-                                            </li>
-                                        </g:each>
-                                    </ul>
-                                </div>
-                                <div class="modal-footer">
-                                    <div class="pull-left">
-                                        <button class="btn btn-small sortAlpha"><i class="icon-filter"></i> Sort by name</button>
-                                        <button class="btn btn-small sortCount"><i class="icon-filter"></i> Sort by count</button>
-                                    </div>
-                                    <a href="#" class="btn" data-dismiss="modal">Close</a>
-                                </div>
+                               	<div class="modal-header">
+	                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	                                    <h3>Filter by ${fName}</h3>
+	                                </div>
+	                                <div class="modal-body">
+	                                    <ul style="list-style-type: none;" class="facetValues">
+	                                        <g:each var="t" in="${f.terms}">
+	                                        		
+	                                            <li data-sortalpha="${t.term.toLowerCase().trim()}" data-sortcount="${t.count}">
+	                                            		<input type="checkbox" class="facetSelection" name="facetSelection" value="fq=${fn.encodeAsURL()}:${t.term.encodeAsURL()}">
+	                                            		<a href="${fqLink}&fq=${fn.encodeAsURL()}:${t.term.encodeAsURL()}"><g:message
+	                                                    code="label.${t.term}" default="${t.term?:'[empty]'}"/></a> (<span class="fcount">${t.count}</span>)
+	                                            </li>
+	                                        </g:each>
+	                                    </ul>
+	                                </div>
+	                                <div class="modal-footer">
+	                                    <div class="pull-left">
+                                            <button class="btn btn-small facetSearch"><i class="icon-filter"></i>Refine</button>
+	                                        <button class="btn btn-small sortAlpha"><i class="icon-filter"></i> Sort by name</button>
+	                                        <button class="btn btn-small sortCount"><i class="icon-filter"></i> Sort by count</button>
+	                                    </div>
+	                                   
+	                                    <a href="#" class="btn" data-dismiss="modal">Close</a>
+	                                </div>
+                            	 
                             </div>
                         </g:if>
                     </g:if>
@@ -310,6 +319,7 @@
     var projectListIds = [], facetList = [], mapDataHasChanged = false, mapBounds, projectSites; // globals
 
     $(window).load(function () {
+    
         var delay = (function(){
             var timer = 0;
             return function(callback, ms){
@@ -567,6 +577,22 @@
             sortList($list, "sortalpha", "<");
             $(this).find("i").addClass("icon-flipped180");
         });
+        
+        $(".clearFacet").click(function(e){
+       	 window.location.href ="${grailsApplication.config.grails.serverURL}";
+        });
+        
+        $(".facetSearch").click(function(e){
+        	var data = [];
+        	$('input[type="checkbox"][name="facetSelection"]').each(function(i){
+		        if(this.checked){
+		            data.push(this.value);
+		        }
+		    });
+			var url = "${baseUrl?:"?"}";
+		    window.location.href = url + "&" + data.join('&');
+        });
+        
         // sort facets in popups by count
         $(".sortCount").toggle(function(el) {
             var $list = $(this).closest(".modal").find(".facetValues");
