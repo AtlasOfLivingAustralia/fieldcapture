@@ -73,7 +73,7 @@
 		    <div class="span6">
 		        <div id="project-implementation" class="well well-small">
 		 			<label><b>Project implementation / delivery mechanism:</b></label>
-		 			<span data-bind="text: details.implementation.description"> </span>
+		 			<span style="white-space: pre-wrap;" data-bind="text: details.implementation.description"> </span>
 		        </div>
 		    </div>
 		    
