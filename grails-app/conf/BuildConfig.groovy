@@ -44,10 +44,11 @@ grails.project.dependency.resolution = {
         compile "com.drewnoakes:metadata-extractor:${metadataExtractorVersion}"
         compile "org.imgscalr:imgscalr-lib:${imgscalrVersion}"
         compile "org.apache.httpcomponents:httpmime:${httpmimeVersion}"
+        runtime "javax.media:jai_core:1.1.3" // Added as an explicit dependency (rather than transitive) to try and get the travis build working.
+
         compile "org.geotools.xsd:gt-xsd-kml:${geoToolsVersion}"
 
         compile "joda-time:joda-time:2.3"
-        compile "javax.media:jai_core:1.1.3" // Added as an explicit dependency (rather than transitive) to try and get the travis build working.
 
         // runtime 'mysql:mysql-connector-java:5.1.22'
         test "org.spockframework:spock-grails-support:0.7-groovy-2.0"
