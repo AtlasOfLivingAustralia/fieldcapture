@@ -1332,6 +1332,7 @@ class ImportService {
                     else {
                         result.errors << "*********Import FAILED for ${prevGrantId} - see above for errors ****************"
                     }
+                    result.errors << "            =================================================="
                     projectRows = []
                 }
                 rowMap.index = (i+2) // accounts for 1-based index of Excel and the column header row.
@@ -1347,7 +1348,6 @@ class ImportService {
             else {
                 result.errors << "*********Import FAILED for ${prevGrantId} - see above for errors ****************"
             }
-
 
         }
         catch (Exception e) {
@@ -1423,30 +1423,30 @@ class ImportService {
                         plannedEndDate:endDate,
                         startDate:startDate,
                         endDate:endDate,
+                        progress:'finished',
                         publicationStatus:'published' ]
 
         // Update other activities in the stage to finished and approved.
         def stage1And2Activities = project.activities?.findAll {it.plannedEndDate <= MERIT_CHANGE_OVER_DATE}
 
-        def allPlanned = true
+        def notPlannedCount = 0
+        def submitApprovedCount = 0
         stage1And2Activities.each {
             if (it.progress != 'planned') {
-                errors << "Activity ${it.activityId} status is not planned!"
-                allPlanned = false
+                notPlannedCount++
             }
             if (it.publicationStatus == 'pendingApproval' || it.publicationStatus == 'approved') {
-                errors << "Activity ${it.activityId} status is ${it.publicationStatus}"
-                allPlanned = false
+               submitApprovedCount++
             }
-
-
-        }
-        if (!allPlanned) {
-            return
         }
 
+        if (notPlannedCount > 0) {
+            errors << "Warn: project ${project.grantId}, ${project.externalId} has ${notPlannedCount} activities that are not in the 'planned' state"
+        }
+        if (submitApprovedCount > 0) {
+            errors << "Warn: project ${project.grantId}, ${project.externalId} has submitted or approved stages"
+        }
         def outputTargets = projectDetails.project.outputTargets
-
 
 
         def values = []
@@ -1473,7 +1473,7 @@ class ImportService {
         // No point creating the activity if there is no data for it.
         if (!preview && values) {
             activityService.update('', activity)
-            activityService.bulkUpdateActivities(stage1And2Activities.collect{it.activityId}, [progress:'finished', publicationStatus:'approved'])
+            stage1And2Activities.each{activityService.delete(it.activityId)}
         }
 
         return activity
