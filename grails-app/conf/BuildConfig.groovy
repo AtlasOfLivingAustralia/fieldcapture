@@ -15,7 +15,7 @@ grails.project.dependency.resolution = {
         // excludes 'ehcache'
         excludes 'xercesImpl'
     }
-    log "debug" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
+    log "warn" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
     checksums true // Whether to verify checksums on resolve
 
     repositories {
