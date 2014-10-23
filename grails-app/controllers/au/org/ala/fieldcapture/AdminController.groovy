@@ -477,7 +477,11 @@ class AdminController {
             }
         }
 
-        render result as JSON
+        def resultJSON = result as JSON
+        // Write to file as the request will likely time out for a large load
+        new File('/data/fieldcapture/biofundload.json').withWriter {it << resultJSON.toString(true)}
+
+        render resultJSON
     }
 
     def nlpMigrate() {
