@@ -1458,7 +1458,7 @@ class ImportService {
             }
 
             // we know our special output has a flat mapping structure
-            values << [scoreLabel: target.scoreLabel, score:target.progressToDate]
+            values << [outputName: target.outputLabel, scoreLabel: target.scoreLabel, score:target.progressToDate]
         }
 
         if (!values) {
