@@ -152,7 +152,7 @@ function findStageFromDate (timeline, UTCDateStr) {
     var stage = 'unknown';
     // try a simple lexical comparison
     $.each(timeline, function (i, period) {
-        if (UTCDateStr > period.fromDate && UTCDateStr < period.toDate) {
+        if (UTCDateStr > period.fromDate && UTCDateStr <= period.toDate) {
             stage = period.name;
         }
     });
