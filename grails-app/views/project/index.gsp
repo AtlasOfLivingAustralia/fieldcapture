@@ -860,11 +860,11 @@
 					'Threatened Ecological Communities',
 					'Migratory Species',
 					'Ramsar Wetland',
-					'World Heriatge area',
-					'Community awareness/particpation in NRM',
-					'Indignous Cultural Values',
+					'World Heritage area',
+					'Community awareness/participation in NRM',
+					'Indigenous Cultural Values',
 					'Indigenous Ecological Knowledge',
-					'Remnat Vegetation',
+					'Remnant Vegetation',
 					'Aquatic and Coastal systems including wetlands',
 					'Not Applicable'
 	        	];
