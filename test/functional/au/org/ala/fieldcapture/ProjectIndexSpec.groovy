@@ -7,16 +7,16 @@ import spock.lang.Stepwise
 @Stepwise
 public class ProjectIndexSpec extends GebReportingSpec {
 
-    def "check Peter Brenton Test Project 2"() {
-        given:
-        to ProjectIndex, "325f4a71-fa22-46b3-a315-2371f61f6740"
+    def "check A test project"() {
+        given: "go to project index page"
+        to ProjectIndex, "cb5497a9-0f36-4fef-9f6a-9ea832c5b68c"
 
         expect:
         at ProjectIndex
 
         and:
-        projectName.text() == 'P Brenton test project 2'
-        overview.associatedProgram.text() == 'Biodiversity Fund'
+        projectName.text() == 'A test project'
+        overview.associatedProgram.text() == 'None'
 
 
     }
