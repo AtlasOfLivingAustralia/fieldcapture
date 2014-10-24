@@ -31,7 +31,7 @@ println "[${appName}] (*) grails.config.locations = ${grails.config.locations}"
  \******************************************************************************/
 reloadable.cfgs = ["file:/data/${appName}/config/${appName}-config.properties"]
 
-grails.project.groupId = "au.org.ala." + appName // change this to alter the default package name and Maven publishing destination
+grails.project.groupId = "au.org.ala" // change this to alter the default package name and Maven publishing destination
 grails.mime.file.extensions = true // enables the parsing of file extensions from URLs into the request format
 grails.mime.use.accept.header = false
 grails.mime.types = [
