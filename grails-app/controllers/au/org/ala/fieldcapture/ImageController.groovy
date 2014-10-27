@@ -1,21 +1,20 @@
 package au.org.ala.fieldcapture
 
+import com.drew.imaging.ImageMetadataReader
+import com.drew.lang.GeoLocation
+import com.drew.metadata.Directory
+import com.drew.metadata.Metadata
+import com.drew.metadata.exif.ExifSubIFDDirectory
+import com.drew.metadata.exif.GpsDirectory
 import grails.converters.JSON
 import org.apache.commons.io.FilenameUtils
 import org.imgscalr.Scalr
 import org.springframework.web.multipart.MultipartFile
-import com.drew.imaging.ImageMetadataReader
-import com.drew.metadata.Metadata
-import com.drew.metadata.Directory
-import com.drew.metadata.exif.ExifSubIFDDirectory
-import com.drew.metadata.exif.GpsDirectory
-import com.drew.lang.GeoLocation
 
 import javax.imageio.ImageIO
 import java.awt.image.BufferedImage
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
-
 
 class ImageController {
 
@@ -101,7 +100,7 @@ class ImageController {
      * Uploads the image to the ALA image service.
      * @return
      */
-    def upload() {
+    def uploadNew() {
         if (request.respondsTo('getFile')) {
             def url = grailsApplication.config.ala.image.service.url + 'ws/uploadImage'
 
@@ -130,7 +129,7 @@ class ImageController {
         }
     }
 
-    def uploadOld() {
+    def upload() {
         log.debug "-------------------------------upload action"
         params.each { log.debug it }
         def result = []
@@ -139,21 +138,22 @@ class ImageController {
             //println "file is " + file
             if (file?.size) {  // will only have size if a file was selected
                 def filename = file.getOriginalFilename().replaceAll(' ','_')
-                def filenamename = FilenameUtils.getBaseName(filename)
                 def ext = FilenameUtils.getExtension(filename)
-                def thumbFilename = filenamename + "-thumb." + ext
+                filename = nextUniqueFileName(FilenameUtils.getBaseName(filename)+'.'+ext)
+
+                def thumbFilename = FilenameUtils.removeExtension(filename) + "-thumb." + ext
                 //println "filename=${filename}"
 
                 def colDir = new File(grailsApplication.config.upload.images.path as String)
                 colDir.mkdirs()
-                File f = new File(colDir, filename)
+                File f = new File(fullPath(filename))
                 //println "saving ${filename} to ${f.absoluteFile}"
                 file.transferTo(f)
                 def exifMd = getExifMetadata(f)
 
                 // thumbnail it
                 BufferedImage img = ImageIO.read(f)
-                BufferedImage tn = Scalr.resize(img, 100, Scalr.OP_ANTIALIAS)
+                BufferedImage tn = Scalr.resize(img, 300, Scalr.OP_ANTIALIAS)
                 File tnFile = new File(colDir, thumbFilename)
                 try {
                     def success = ImageIO.write(tn, ext, tnFile)
@@ -167,6 +167,7 @@ class ImageController {
                         name: filename,
                         size: file.size,
                         isoDate: exifMd.date,
+                        contentType: file.contentType,
                         date: isoDateStrToDate(exifMd.date) ?: 'Not available',
                         time: isoDateStrToTime((exifMd.date)),
                         decimalLatitude: doubleToString(exifMd.decLat),
@@ -203,9 +204,8 @@ class ImageController {
      * The content type of the file is derived purely from the file extension.
      */
     def get() {
-        def imageDir = new File(grailsApplication.config.upload.images.path as String)
 
-        File f = new File(imageDir, params.id)
+        File f = new File(fullPath(params.id))
         if (!f.exists()) {
             response.status = 404
             return
@@ -217,5 +217,27 @@ class ImageController {
         response.outputStream << new FileInputStream(f)
         response.outputStream.flush()
 
+    }
+
+    /**
+     * We are preserving the file name so the URLs look nicer and the file extension isn't lost.
+     * As filename are not guaranteed to be unique, we are pre-pending the file with a counter if necessary to
+     * make it unique.
+     */
+    private String nextUniqueFileName(filename) {
+        int counter = 0;
+        String newFilename = filename
+        File f = new File(fullPath(newFilename))
+        while (f.exists()) {
+            newFilename = "${counter}_${filename}"
+            counter++;
+            f = new File(fullPath(newFilename))
+        }
+        return newFilename;
+    }
+
+    String fullPath(filename) {
+
+        return grailsApplication.config.upload.images.path + File.separator  + filename
     }
 }
