@@ -106,6 +106,7 @@ public class AddActivitySpec extends GebReportingSpec {
 
         def activities = plansAndReports.activities
         def activity = activities.find {
+            println it.description
             it.description == 'Test activity [edited]'
         }
         activity.type == 'Plant Propagation'
@@ -118,16 +119,16 @@ public class AddActivitySpec extends GebReportingSpec {
 
     def "delete the new activity"() {
         when:
-        def activities = plansAndReports.activities
-        def activity = activities.find {
+        def activity = plansAndReports.activities.find {
             it.description == 'Test activity [edited]'
         }
         activity.actionDelete.click()
-        iAmSure.click()
+        waitFor 2, {iAmSure.click()} // this is animated so takes time to be clickable.
 
         then: "the activity is no longer available on the page"
-        activities.find { it.description == 'Test activity [edited]' } == null
+        waitFor 10, {at ProjectIndex}
 
+        plansAndReports.activities.find { it.description == 'Test activity [edited]' } == null
     }
 
     def login(Browser browser, username, password) {

@@ -2,6 +2,8 @@ package pages
 
 import geb.Module
 import geb.Page
+import geb.content.PageContentTemplate
+import geb.navigator.factory.NavigatorFactory
 
 /**
  * Represents a project index page.
@@ -25,7 +27,7 @@ class ProjectIndex extends Page {
         dashboard { module DashboardTab }
         admin { module AdminTab }
 
-        iAmSure { $('div modal a[data-handler~=1]') }
+        iAmSure { $('.modal a', text:'OK') }
     }
 }
 
@@ -51,22 +53,32 @@ class PlansAndReportsTab extends Module {
 
     static content = {
         activities {
-            $('#tablePlan tbody').collect {
-                module ActivityRow, it
+
+            def tableRows = $('#tablePlan tbody tr')
+            def activities = []
+            if (tableRows.size() > 0) {
+                activities = tableRows.collect {
+                    module ActivityRow, it
+                }
             }
+            activities
         }
     }
 }
 
 class ActivityRow extends Module {
     static content = {
-        cell { i-> $('td', i)}
-        stage { cell(0).text() }
+        cell { i ->
+            def index = $('td').size() == 8?i:i-1 // The stage column spans rows so only exists for the first activity of the stage.
+            $('td', index)
+        }
+
+        stage { cell(0).text()  }
 
         actionEdit { cell(1).find('[data-bind*=editActivity]') }
-        actionView {  cell(1).find('[data-bind*=viewActivity]') }
-        actionPrint {  cell(1).find('[data-bind*=printActivity]') }
-        actionDelete {  cell(1).find('[data-bind*=del]') }
+        actionView { cell(1).find('[data-bind*=viewActivity]') }
+        actionPrint { cell(1).find('[data-bind*=printActivity]') }
+        actionDelete { cell(1).find('[data-bind*=del]') }
 
         fromDate { cell(2).text() }
         toDate { cell(3).text() }
@@ -75,6 +87,7 @@ class ActivityRow extends Module {
         site { cell(6).text() }
         status { cell(7).text() }
     }
+
 }
 
 class SitesTab extends Module {
