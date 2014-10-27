@@ -1273,11 +1273,13 @@
                         .done(function(result){self.documents.push(new DocumentViewModel(result))});
                 };
                 self.editDocumentMetadata = function(document) {
-                    %{--var url = '${g.createLink(controller:"proxy", action:"documentUpdate")}' + "/" + document.documentId;
+                    var url = '${g.createLink(controller:"proxy", action:"documentUpdate")}' + "/" + document.documentId;
                     showDocumentAttachInModal( url, document, '#attachDocument')
                         .done(function(result){
-                            document.name(result.name);
-                        });--}%
+                            window.location.href = here; // The display doesn't update properly otherwise.
+                        });
+
+
                 };
                 self.deleteDocument = function(document) {
                     var url = '${g.createLink(controller:"proxy", action:"deleteDocument")}/'+document.documentId;
