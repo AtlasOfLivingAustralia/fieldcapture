@@ -13,7 +13,7 @@ class ProjectIndex extends Page {
     static content = {
 
         overviewTab {$('#overview-tab')}
-        plansAndReportsTab {${'#plan-tab'}}
+        plansAndReportsTab {$('#plan-tab')}
         sitesTab {$('#site-tab')}
         dashboardTab {$('#dashboard-tab')}
         adminTab {$('#admin-tab')}
@@ -24,6 +24,8 @@ class ProjectIndex extends Page {
         sites { module SitesTab }
         dashboard { module DashboardTab }
         admin { module AdminTab }
+
+        iAmSure { $('div modal a[data-handler~=1]') }
     }
 }
 
@@ -47,6 +49,32 @@ class OverviewTab extends Module {
 
 class PlansAndReportsTab extends Module {
 
+    static content = {
+        activities {
+            $('#tablePlan tbody').collect {
+                module ActivityRow, it
+            }
+        }
+    }
+}
+
+class ActivityRow extends Module {
+    static content = {
+        cell { i-> $('td', i)}
+        stage { cell(0).text() }
+
+        actionEdit { cell(1).find('[data-bind*=editActivity]') }
+        actionView {  cell(1).find('[data-bind*=viewActivity]') }
+        actionPrint {  cell(1).find('[data-bind*=printActivity]') }
+        actionDelete {  cell(1).find('[data-bind*=del]') }
+
+        fromDate { cell(2).text() }
+        toDate { cell(3).text() }
+        description { cell(4).text() }
+        type { cell(5).text() }
+        site { cell(6).text() }
+        status { cell(7).text() }
+    }
 }
 
 class SitesTab extends Module {

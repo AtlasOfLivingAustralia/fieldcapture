@@ -21,7 +21,7 @@ driver = {
 
 environments {
 
-    // run as “grails -Dgeb.env=chrome test-app”
+    // run as ï¿½grails -Dgeb.env=chrome test-appï¿½
     // See: http://code.google.com/p/selenium/wiki/ChromeDriver
     chrome {
         System.setProperty('webdriver.chrome.driver', '/opt/webdrivers/chromedriver')
@@ -30,7 +30,7 @@ environments {
         }
     }
 
-    // run as “grails -Dgeb.env=firefox test-app”
+    // run as ï¿½grails -Dgeb.env=firefox test-appï¿½
     // See: http://code.google.com/p/selenium/wiki/FirefoxDriver
     firefox {
         driver = { new FirefoxDriver() }
