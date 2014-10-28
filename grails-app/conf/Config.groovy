@@ -213,6 +213,10 @@ environments {
         emailFilter = /[A-Z0-9._%-]+@csiro\.au|chris\.godwin\.ala@gmail.com/
         logging.dir = '.'
     }
+    test {
+        test.user.admin.email = 'fc-ta@outlook.com'
+        test.user.admin.password = 'testing!'
+    }
     production {
         grails.logging.jul.usebridge = false
         grails.resources.work.dir = "/data/${appName}/cache"
