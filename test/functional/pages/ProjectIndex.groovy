@@ -99,5 +99,61 @@ class DashboardTab extends Module {
 }
 
 class AdminTab extends Module {
+    static content = {
 
+        projectSettingsTab {$('#settings-tab')}
+        meriPlanTab {$('#projectDetails-tab')}
+        newsAndEventsTab {$('#editNewsAndEvents-tab')}
+        projectStoriesTab {$('#editProjectStories-tab')}
+        projectAccessTab {$('#permissions-tab')}
+        speciesOfInterestTab { $('#species-tab') }
+        documentsTab { $('#edit-documents-tab') }
+
+        documents { module AdminDocumentsTab }
+
+    }
+}
+
+class AdminDocumentsTab extends Module {
+    static content = {
+
+        attachDocumentButton { $('#doAttach') }
+
+        documents {
+            $('#adminDocumentList .media').collect {
+                module DocumentSummary, it
+            }
+        }
+
+        attachDocumentDialog { module DocumentDialog, $('#attachDocument') }
+    }
+
+
+}
+
+class DocumentSummary extends Module {
+
+    static content = {
+        deleteButton { $('[data-bind*=deleteDocument]')}
+        editButton { $('[data-bind*=editDocumentMetadata]') }
+        icon { $('.media-object') }
+        name { $('.media-heading').text() }
+        attribution { $('span[data-bind*=attribution]').text()}
+    }
+
+}
+
+class DocumentDialog extends Module {
+    static content = {
+        title { $('#documentName') }
+        attribution { $('#documentAttribution') }
+        type { $('#documentRole') }
+        license { $('#documentLicense') }
+        publiclyViewable { $('#public') }
+        file { $('#documentFile') }
+        mainProjectImage { $('#documentRole') }
+        saveButton { $('[data-bind*=save]') }
+        cancelButton { $('[data-bind*=cancel]') }
+
+    }
 }
