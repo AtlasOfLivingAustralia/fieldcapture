@@ -29,164 +29,164 @@
 </head>
 <body>
 <div class="container-fluid validationEngineContainer" id="validation-container">
-    <div id="koActivityMainBlock">
-        <g:if test="${!printView}">
-            <ul class="breadcrumb">
-                <li><g:link controller="home">Home</g:link> <span class="divider">/</span></li>
-                <li><a data-bind="click:goToProject" class="clickable">Project</a> <span class="divider">/</span></li>
-                <li class="active">
-                    <span data-bind="text:type"></span>
-                    <span data-bind="text:startDate.formattedDate"></span><span data-bind="visible:endDate">/</span><span data-bind="text:endDate.formattedDate"></span>
-                </li>
-            </ul>
-        </g:if>
+<div id="koActivityMainBlock">
+    <g:if test="${!printView}">
+        <ul class="breadcrumb">
+            <li><g:link controller="home">Home</g:link> <span class="divider">/</span></li>
+            <li><a data-bind="click:goToProject" class="clickable">Project</a> <span class="divider">/</span></li>
+            <li class="active">
+                <span data-bind="text:type"></span>
+                <span data-bind="text:startDate.formattedDate"></span><span data-bind="visible:endDate">/</span><span data-bind="text:endDate.formattedDate"></span>
+            </li>
+        </ul>
+    </g:if>
 
-        <div class="row-fluid title-block well well-small input-block-level">
-            <div class="span12 title-attribute">
-                <h1><span data-bind="click:goToProject" class="clickable">${project?.name?.encodeAsHTML() ?: 'no project defined!!'}</span></h1>
-                    <div class="row-fluid">
-                        <div class="span1">
-                            Site:
-                        </div>
-                        <div class="span2">
-                            <fc:select data-bind='options:transients.project.sites,optionsText:"name",optionsValue:"siteId",value:siteId,optionsCaption:"Choose a site..."' printable="${printView}"/>
-                        </div>
-                        <div class="span6">
-                            Leave blank if this activity is not associated with a specific site.
-                        </div>
-                    </div>
-                <h3 data-bind="css:{modified:dirtyFlag.isDirty},attr:{title:'Has been modified'}">Activity: <span data-bind="text:type"></span></h3>
-                <h4><span>${project.associatedProgram?.encodeAsHTML()}</span> <span>${project.associatedSubProgram?.encodeAsHTML()}</span></h4>
+    <div class="row-fluid title-block well well-small input-block-level">
+        <div class="span12 title-attribute">
+            <h1><span data-bind="click:goToProject" class="clickable">${project?.name?.encodeAsHTML() ?: 'no project defined!!'}</span></h1>
+            <div class="row-fluid">
+                <div class="span1">
+                    Site:
+                </div>
+                <div class="span2">
+                    <fc:select data-bind='options:transients.project.sites,optionsText:"name",optionsValue:"siteId",value:siteId,optionsCaption:"Choose a site..."' printable="${printView}"/>
+                </div>
+                <div class="span6">
+                    Leave blank if this activity is not associated with a specific site.
+                </div>
             </div>
+            <h3 data-bind="css:{modified:dirtyFlag.isDirty},attr:{title:'Has been modified'}">Activity: <span data-bind="text:type"></span></h3>
+            <h4><span>${project.associatedProgram?.encodeAsHTML()}</span> <span>${project.associatedSubProgram?.encodeAsHTML()}</span></h4>
         </div>
+    </div>
 
 
-        <div class="row-fluid">
-            <div class="span9">
-                <!-- Common activity fields -->
+    <div class="row-fluid">
+        <div class="span9">
+            <!-- Common activity fields -->
 
-                <div class="row-fluid space-after">
+            <div class="row-fluid space-after">
                 <div class="span6">
                     <label for="theme">Major theme</label>
                     <select id="theme" data-bind="value:mainTheme, options:transients.themes, optionsCaption:'Choose..'" class="input-xlarge">
                     </select>
                 </div>
-                    <div class="span6">
-                        <label class="for-readonly">Description</label>
-                        <span class="readonly-text" data-bind="text:description"></span>
-                    </div>
+                <div class="span6">
+                    <label class="for-readonly">Description</label>
+                    <span class="readonly-text" data-bind="text:description"></span>
                 </div>
+            </div>
 
-                <div class="row-fluid space-after">
-                    <div class="span6">
-                        <label class="for-readonly inline">Project stage</label>
-                        <span class="readonly-text" data-bind="text:projectStage"></span>
-                    </div>
-                    <div class="span6">
-                        <label class="for-readonly inline">Activity progress</label>
-                        <button type="button" class="btn btn-small"
-                                data-bind="css: {'btn-warning':progress()=='planned','btn-success':progress()=='started','btn-info':progress()=='finished','btn-danger':progress()=='deferred','btn-inverse':progress()=='cancelled'}"
-                                style="line-height:16px;cursor:default;color:white">
-                            <span data-bind="text: progress"></span>
-                        </button>
-                    </div>
+            <div class="row-fluid space-after">
+                <div class="span6">
+                    <label class="for-readonly inline">Project stage</label>
+                    <span class="readonly-text" data-bind="text:projectStage"></span>
                 </div>
-
-                <div class="row-fluid space-after">
-                    <div class="span6">
-                        <label class="for-readonly inline">Planned start date</label>
-                        <span class="readonly-text" data-bind="text:plannedStartDate.formattedDate"></span>
-                    </div>
-                    <div class="span6">
-                        <label class="for-readonly inline">Planned end date</label>
-                        <span class="readonly-text" data-bind="text:plannedEndDate.formattedDate"></span>
-                    </div>
+                <div class="span6">
+                    <label class="for-readonly inline">Activity progress</label>
+                    <button type="button" class="btn btn-small"
+                            data-bind="css: {'btn-warning':progress()=='planned','btn-success':progress()=='started','btn-info':progress()=='finished','btn-danger':progress()=='deferred','btn-inverse':progress()=='cancelled'}"
+                            style="line-height:16px;cursor:default;color:white">
+                        <span data-bind="text: progress"></span>
+                    </button>
                 </div>
+            </div>
 
-                <div class="row-fluid">
-                    <div class="span6 required">
-                        <label for="startDate"><b>Actual start date</b>
+            <div class="row-fluid space-after">
+                <div class="span6">
+                    <label class="for-readonly inline">Planned start date</label>
+                    <span class="readonly-text" data-bind="text:plannedStartDate.formattedDate"></span>
+                </div>
+                <div class="span6">
+                    <label class="for-readonly inline">Planned end date</label>
+                    <span class="readonly-text" data-bind="text:plannedEndDate.formattedDate"></span>
+                </div>
+            </div>
+
+            <div class="row-fluid">
+                <div class="span6 required">
+                    <label for="startDate"><b>Actual start date</b>
                         <fc:iconHelp title="Start date" printable="${printView}">Date the activity was started.</fc:iconHelp>
-                        </label>
-                        <g:if test="${printView}">
-                            <div class="row-fluid">
-                                <fc:datePicker targetField="startDate.date" name="startDate" data-validation-engine="validate[required]" printable="${printView}"/>
-                            </div>
-                        </g:if>
-                        <g:else>
-                            <div class="input-append">
-                                <fc:datePicker targetField="startDate.date" name="startDate" data-validation-engine="validate[required]" printable="${printView}"/>
-                            </div>
-                        </g:else>
-                    </div>
-                    <div class="span6 required">
-                        <label for="endDate"><b>Actual end date</b>
-                        <fc:iconHelp title="End date" printable="${printView}">Date the activity finished.</fc:iconHelp>
-                        </label>
-                        <g:if test="${printView}">
-                            <div class="row-fluid">
-                            <fc:datePicker targetField="endDate.date" name="endDate" data-validation-engine="validate[future[startDate]]" printable="${printView}" />
-                            </div>
-                        </g:if>
-                        <g:else>
-                            <div class="input-append">
-                                <fc:datePicker targetField="endDate.date" name="endDate" data-validation-engine="validate[future[startDate]]" printable="${printView}" />
-                            </div>
-                        </g:else>
-                    </div>
+                    </label>
+                    <g:if test="${printView}">
+                        <div class="row-fluid">
+                            <fc:datePicker targetField="startDate.date" name="startDate" data-validation-engine="validate[required]" printable="${printView}"/>
+                        </div>
+                    </g:if>
+                    <g:else>
+                        <div class="input-append">
+                            <fc:datePicker targetField="startDate.date" name="startDate" data-validation-engine="validate[required]" printable="${printView}"/>
+                        </div>
+                    </g:else>
                 </div>
-
-
+                <div class="span6 required">
+                    <label for="endDate"><b>Actual end date</b>
+                        <fc:iconHelp title="End date" printable="${printView}">Date the activity finished.</fc:iconHelp>
+                    </label>
+                    <g:if test="${printView}">
+                        <div class="row-fluid">
+                            <fc:datePicker targetField="endDate.date" name="endDate" data-validation-engine="validate[future[startDate]]" printable="${printView}" />
+                        </div>
+                    </g:if>
+                    <g:else>
+                        <div class="input-append">
+                            <fc:datePicker targetField="endDate.date" name="endDate" data-validation-engine="validate[future[startDate]]" printable="${printView}" />
+                        </div>
+                    </g:else>
+                </div>
             </div>
 
-            <div class="span3">
-                <div id="smallMap" style="width:100%"></div>
-            </div>
 
         </div>
 
-        <g:if env="development" test="${!printView}">
-          <div class="expandable-debug">
-              <hr />
-              <h3>Debug</h3>
-              <div>
-                  <h4>KO model</h4>
-                  <pre data-bind="text:ko.toJSON($root.modelForSaving(),null,2)"></pre>
-                  <h4>Activity</h4>
-                  <pre>${activity?.encodeAsHTML()}</pre>
-                  <h4>Site</h4>
-                  <pre>${site?.encodeAsHTML()}</pre>
-                  <h4>Sites</h4>
-                  <pre>${(sites as JSON).toString()}</pre>
-                  <h4>Project</h4>
-                  <pre>${project?.encodeAsHTML()}</pre>
-                  <h4>Activity model</h4>
-                  <pre>${metaModel}</pre>
-                  <h4>Output models</h4>
-                  <pre>${outputModels?.encodeAsHTML()}</pre>
-                  <h4>Themes</h4>
-                  <pre>${themes.toString()}</pre>
-                  <h4>Map features</h4>
-                  <pre>${mapFeatures.toString()}</pre>
-              </div>
-          </div>
-        </g:if>
+        <div class="span3">
+            <div id="smallMap" style="width:100%"></div>
+        </div>
+
     </div>
 
+    <g:if env="development" test="${!printView}">
+        <div class="expandable-debug">
+            <hr />
+            <h3>Debug</h3>
+            <div>
+                <h4>KO model</h4>
+                <pre data-bind="text:ko.toJSON($root.modelForSaving(),null,2)"></pre>
+                <h4>Activity</h4>
+                <pre>${activity?.encodeAsHTML()}</pre>
+                <h4>Site</h4>
+                <pre>${site?.encodeAsHTML()}</pre>
+                <h4>Sites</h4>
+                <pre>${(sites as JSON).toString()}</pre>
+                <h4>Project</h4>
+                <pre>${project?.encodeAsHTML()}</pre>
+                <h4>Activity model</h4>
+                <pre>${metaModel}</pre>
+                <h4>Output models</h4>
+                <pre>${outputModels?.encodeAsHTML()}</pre>
+                <h4>Themes</h4>
+                <pre>${themes.toString()}</pre>
+                <h4>Map features</h4>
+                <pre>${mapFeatures.toString()}</pre>
+            </div>
+        </div>
+    </g:if>
+</div>
+
 <!-- ko stopBinding: true -->
-    <g:each in="${metaModel?.outputs}" var="outputName">
-        <g:set var="blockId" value="${fc.toSingleWord([name: outputName])}"/>
-        <g:set var="model" value="${outputModels[outputName]}"/>
-        <g:set var="output" value="${activity.outputs.find {it.name == outputName}}"/>
-        <g:if test="${!output}">
-            <g:set var="output" value="[name: outputName]"/>
-        </g:if>
-        <md:modelStyles model="${model}" edit="true"/>
-        <div class="output-block" id="ko${blockId}">
-            <h3 data-bind="css:{modified:dirtyFlag.isDirty},attr:{title:'Has been modified'}">${outputName}</h3>
-            <!-- add the dynamic components -->
-            <md:modelView model="${model}" site="${site}" edit="true" output="${output.name}" printable="${printView}" />
-    <r:script>
+<g:each in="${metaModel?.outputs}" var="outputName">
+    <g:set var="blockId" value="${fc.toSingleWord([name: outputName])}"/>
+    <g:set var="model" value="${outputModels[outputName]}"/>
+    <g:set var="output" value="${activity.outputs.find {it.name == outputName}}"/>
+    <g:if test="${!output}">
+        <g:set var="output" value="[name: outputName]"/>
+    </g:if>
+    <md:modelStyles model="${model}" edit="true"/>
+    <div class="output-block" id="ko${blockId}">
+        <h3 data-bind="css:{modified:dirtyFlag.isDirty},attr:{title:'Has been modified'}">${outputName}</h3>
+        <!-- add the dynamic components -->
+        <md:modelView model="${model}" site="${site}" edit="true" output="${output.name}" printable="${printView}" />
+        <r:script>
         $(function(){
 
             var viewModelName = "${blockId}ViewModel",
@@ -205,100 +205,100 @@
                 self.transients.selectedSite = ko.observable(site);
 
                 // add declarations for dynamic data
-                <md:jsViewModel model="${model}"  output="${output.name}"  edit="true" viewModelInstance="${blockId}ViewModelInstance"/>
+            <md:jsViewModel model="${model}"  output="${output.name}"  edit="true" viewModelInstance="${blockId}ViewModelInstance"/>
 
-                // this will be called when generating a savable model to remove transient properties
-                self.removeBeforeSave = function (jsData) {
-                    // add code to remove any transients added by the dynamic tags
-                    <md:jsRemoveBeforeSave model="${model}"/>
-                    delete jsData.activityType;
-                    delete jsData.transients;
-                    return jsData;
-                };
+            // this will be called when generating a savable model to remove transient properties
+            self.removeBeforeSave = function (jsData) {
+                // add code to remove any transients added by the dynamic tags
+            <md:jsRemoveBeforeSave model="${model}"/>
+            delete jsData.activityType;
+            delete jsData.transients;
+            return jsData;
+        };
 
-                // this returns a JS object ready for saving
-                self.modelForSaving = function () {
-                    // get model as a plain javascript object
-                    var jsData = ko.mapping.toJS(self, {'ignore':['transients']});
+        // this returns a JS object ready for saving
+        self.modelForSaving = function () {
+            // get model as a plain javascript object
+            var jsData = ko.mapping.toJS(self, {'ignore':['transients']});
 
-                    // get rid of any transient observables
-                    return self.removeBeforeSave(jsData);
-                };
+            // get rid of any transient observables
+            return self.removeBeforeSave(jsData);
+        };
 
-                // this is a version of toJSON that just returns the model as it will be saved
-                // it is used for detecting when the model is modified (in a way that should invoke a save)
-                // the ko.toJSON conversion is preserved so we can use it to view the active model for debugging
-                self.modelAsJSON = function () {
-                    return JSON.stringify(self.modelForSaving());
-                };
+        // this is a version of toJSON that just returns the model as it will be saved
+        // it is used for detecting when the model is modified (in a way that should invoke a save)
+        // the ko.toJSON conversion is preserved so we can use it to view the active model for debugging
+        self.modelAsJSON = function () {
+            return JSON.stringify(self.modelForSaving());
+        };
 
-                self.loadData = function (data) {
-                    // load dynamic data
-                    <md:jsLoadModel model="${model}"/>
+        self.loadData = function (data) {
+            // load dynamic data
+            <md:jsLoadModel model="${model}"/>
 
-                    // if there is no data in tables then add an empty row for the user to add data
-                    if (typeof self.addRow === 'function' && self.rowCount() === 0) {
-                        self.addRow();
-                    }
-                    self.transients.dummy.notifySubscribers();
-                };
-            };
-
-            window[viewModelInstance] = new this[viewModelName](site);
-
-            var output = ${output.data ?: '{}'};
-
-            window[viewModelInstance].loadData(output);
-
-            // dirtyFlag must be defined after data is loaded
-            window[viewModelInstance].dirtyFlag = ko.dirtyFlag(window[viewModelInstance], false);
-
-            ko.applyBindings(window[viewModelInstance], document.getElementById("ko${blockId}"));
-
-            // this resets the baseline for detecting changes to the model
-            // - shouldn't be required if everything behaves itself but acts as a backup for
-            //   any binding side-effects
-            // - note that it is not foolproof as applying the bindings happens asynchronously and there
-            //   is no easy way to detect its completion
-            window[viewModelInstance].dirtyFlag.reset();
-
-            // register with the master controller so this model can participate in the save cycle
-            master.registerOutput(window[viewModelInstance], viewModelInstance, window[viewModelInstance].modelForSaving,
-             window[viewModelInstance].dirtyFlag.isDirty, window[viewModelInstance].dirtyFlag.reset, window[viewModelInstance].transients.selectedSite);
-
-            // Check for locally saved data for this output - this will happen in the event of a session timeout
-            // for example.
-            var savedData = amplify.store('activity-${activity.activityId}');
-            var savedOutput = null;
-            if (savedData) {
-                var outputData = $.parseJSON(savedData);
-                $.each(outputData.outputs, function(i, tmpOutput) {
-                    if (tmpOutput.name === '${output.name}') {
-                        if (tmpOutput.data) {
-                            savedOutput = tmpOutput.data;
-                        }
-                    }
-                });
+            // if there is no data in tables then add an empty row for the user to add data
+            if (typeof self.addRow === 'function' && self.rowCount() === 0) {
+                self.addRow();
             }
-            if (savedOutput) {
-                window[viewModelInstance].loadData(savedOutput);
-            }
-        });
+            self.transients.dummy.notifySubscribers();
+        };
+    };
 
-            </r:script>
-        </div>
-    </g:each>
+    window[viewModelInstance] = new this[viewModelName](site);
+
+    var output = ${output.data ?: '{}'};
+
+        window[viewModelInstance].loadData(output);
+
+        // dirtyFlag must be defined after data is loaded
+        window[viewModelInstance].dirtyFlag = ko.dirtyFlag(window[viewModelInstance], false);
+
+        ko.applyBindings(window[viewModelInstance], document.getElementById("ko${blockId}"));
+
+        // this resets the baseline for detecting changes to the model
+        // - shouldn't be required if everything behaves itself but acts as a backup for
+        //   any binding side-effects
+        // - note that it is not foolproof as applying the bindings happens asynchronously and there
+        //   is no easy way to detect its completion
+        window[viewModelInstance].dirtyFlag.reset();
+
+        // register with the master controller so this model can participate in the save cycle
+        master.registerOutput(window[viewModelInstance], viewModelInstance, window[viewModelInstance].modelForSaving,
+         window[viewModelInstance].dirtyFlag.isDirty, window[viewModelInstance].dirtyFlag.reset, window[viewModelInstance].transients.selectedSite);
+
+        // Check for locally saved data for this output - this will happen in the event of a session timeout
+        // for example.
+        var savedData = amplify.store('activity-${activity.activityId}');
+        var savedOutput = null;
+        if (savedData) {
+            var outputData = $.parseJSON(savedData);
+            $.each(outputData.outputs, function(i, tmpOutput) {
+                if (tmpOutput.name === '${output.name}') {
+                    if (tmpOutput.data) {
+                        savedOutput = tmpOutput.data;
+                    }
+                }
+            });
+        }
+        if (savedOutput) {
+            window[viewModelInstance].loadData(savedOutput);
+        }
+    });
+
+        </r:script>
+    </div>
+</g:each>
 <!-- /ko -->
 
-    <g:if test="${!printView}">
-        <div class="form-actions">
-            <button type="button" id="save" class="btn btn-primary">Save changes</button>
-            <button type="button" id="cancel" class="btn">Cancel</button>
-            <label class="checkbox inline">
-                <input data-bind="checked:transients.markedAsFinished" type="checkbox"> Mark this activity as finished.
-            </label>
-        </div>
-    </g:if>
+<g:if test="${!printView}">
+    <div class="form-actions">
+        <button type="button" id="save" class="btn btn-primary">Save changes</button>
+        <button type="button" id="cancel" class="btn">Cancel</button>
+        <label class="checkbox inline">
+            <input data-bind="checked:transients.markedAsFinished" type="checkbox"> Mark this activity as finished.
+        </label>
+    </div>
+</g:if>
 
 </div>
 
@@ -386,14 +386,17 @@
                 });
                 if (outputs.length === 0 && activityData === undefined) {
                     alert("Nothing to save.");
-                    $('#save').prop('disabled', false);
                     return;
                 }
+                // Don't allow another save to be initiated.
+                blockUIWithMessage("Saving activity data...");
+
                 if (activityData === undefined) { activityData = {}}
                 activityData.outputs = outputs;
 
                 var toSave = JSON.stringify(activityData);
                 amplify.store('activity-${activity.activityId}', toSave);
+                var unblock = true;
                 $.ajax({
                     url: "${createLink(action: 'ajaxUpdate', id: activity.activityId)}",
                     type: 'POST',
@@ -405,12 +408,14 @@
                             errorText = "<span class='label label-important'>Important</span><h4>There was an error while trying to save your changes.</h4>";
                             $.each(data.errors, function (i, error) {
                                 errorText += "<p>Saving <b>" +
-                                 (error.name === 'activity' ? 'the activity context' : error.name) +
-                                 "</b> threw the following error:<br><blockquote>" + error.error + "</blockquote></p>";
+(error.name === 'activity' ? 'the activity context' : error.name) +
+"</b> threw the following error:<br><blockquote>" + error.error + "</blockquote></p>";
                             });
                             errorText += "<p>Any other changes should have been saved.</p>";
                             bootbox.alert(errorText);
                         } else {
+                            unblock = false; // We will be transitioning off this page.
+                            blockUIWithMessage("Activity data saved.")
                             self.reset();
                             self.saved();
                         }
@@ -430,7 +435,9 @@
 
                     },
                     complete: function () {
-                        $('#save').prop('disabled', false);
+                        if (unblock) {
+                            $.unblockUI();
+                        }
                     }
                 });
             }
@@ -457,7 +464,7 @@
         $('.helphover').popover({animation: true, trigger:'hover'});
 
         $('#save').click(function () {
-            $(this).prop('disabled', true);
+
             master.save();
         });
 
