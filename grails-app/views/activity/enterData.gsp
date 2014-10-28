@@ -248,42 +248,42 @@
 
     var output = ${output.data ?: '{}'};
 
-            window[viewModelInstance].loadData(output);
+        window[viewModelInstance].loadData(output);
 
-            // dirtyFlag must be defined after data is loaded
-            window[viewModelInstance].dirtyFlag = ko.dirtyFlag(window[viewModelInstance], false);
+        // dirtyFlag must be defined after data is loaded
+        window[viewModelInstance].dirtyFlag = ko.dirtyFlag(window[viewModelInstance], false);
 
-            ko.applyBindings(window[viewModelInstance], document.getElementById("ko${blockId}"));
+        ko.applyBindings(window[viewModelInstance], document.getElementById("ko${blockId}"));
 
-            // this resets the baseline for detecting changes to the model
-            // - shouldn't be required if everything behaves itself but acts as a backup for
-            //   any binding side-effects
-            // - note that it is not foolproof as applying the bindings happens asynchronously and there
-            //   is no easy way to detect its completion
-            window[viewModelInstance].dirtyFlag.reset();
+        // this resets the baseline for detecting changes to the model
+        // - shouldn't be required if everything behaves itself but acts as a backup for
+        //   any binding side-effects
+        // - note that it is not foolproof as applying the bindings happens asynchronously and there
+        //   is no easy way to detect its completion
+        window[viewModelInstance].dirtyFlag.reset();
 
-            // register with the master controller so this model can participate in the save cycle
-            master.registerOutput(window[viewModelInstance], viewModelInstance, window[viewModelInstance].modelForSaving,
-             window[viewModelInstance].dirtyFlag.isDirty, window[viewModelInstance].dirtyFlag.reset, window[viewModelInstance].transients.selectedSite);
+        // register with the master controller so this model can participate in the save cycle
+        master.registerOutput(window[viewModelInstance], viewModelInstance, window[viewModelInstance].modelForSaving,
+         window[viewModelInstance].dirtyFlag.isDirty, window[viewModelInstance].dirtyFlag.reset, window[viewModelInstance].transients.selectedSite);
 
-            // Check for locally saved data for this output - this will happen in the event of a session timeout
-            // for example.
-            var savedData = amplify.store('activity-${activity.activityId}');
-            var savedOutput = null;
-            if (savedData) {
-                var outputData = $.parseJSON(savedData);
-                $.each(outputData.outputs, function(i, tmpOutput) {
-                    if (tmpOutput.name === '${output.name}') {
-                        if (tmpOutput.data) {
-                            savedOutput = tmpOutput.data;
-                        }
+        // Check for locally saved data for this output - this will happen in the event of a session timeout
+        // for example.
+        var savedData = amplify.store('activity-${activity.activityId}');
+        var savedOutput = null;
+        if (savedData) {
+            var outputData = $.parseJSON(savedData);
+            $.each(outputData.outputs, function(i, tmpOutput) {
+                if (tmpOutput.name === '${output.name}') {
+                    if (tmpOutput.data) {
+                        savedOutput = tmpOutput.data;
                     }
-                });
-            }
-            if (savedOutput) {
-                window[viewModelInstance].loadData(savedOutput);
-            }
-        });
+                }
+            });
+        }
+        if (savedOutput) {
+            window[viewModelInstance].loadData(savedOutput);
+        }
+    });
 
         </r:script>
     </div>
@@ -585,7 +585,7 @@
                 bootbox.confirm("Delete this entire activity? Are you sure?", function(result) {
                     if (result) {
                         document.location.href = "${createLink(action:'delete',id:activity.activityId,
-        params:[returnTo:grailsApplication.config.grails.serverURL + '/' + returnTo])}";
+                            params:[returnTo:grailsApplication.config.grails.serverURL + '/' + returnTo])}";
                     }
                 });
             };
@@ -600,10 +600,10 @@
         };
 
         var viewModel = new ViewModel(
-${(activity as JSON).toString()},
-${site ?: 'null'},
-${project ?: 'null'},
-${metaModel ?: 'null'});
+            ${(activity as JSON).toString()},
+            ${site ?: 'null'},
+            ${project ?: 'null'},
+            ${metaModel ?: 'null'});
 
 
         var mapFeatures = $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
