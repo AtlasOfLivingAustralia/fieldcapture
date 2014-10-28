@@ -386,6 +386,7 @@
                 });
                 if (outputs.length === 0 && activityData === undefined) {
                     alert("Nothing to save.");
+                    $('#save').prop('disabled', false);
                     return;
                 }
                 if (activityData === undefined) { activityData = {}}
@@ -426,6 +427,10 @@
                         else {
                             alert('An unhandled error occurred: ' + error);
                         }
+
+                    },
+                    complete: function () {
+                        $('#save').prop('disabled', false);
                     }
                 });
             }
@@ -452,6 +457,7 @@
         $('.helphover').popover({animation: true, trigger:'hover'});
 
         $('#save').click(function () {
+            $(this).prop('disabled', true);
             master.save();
         });
 
