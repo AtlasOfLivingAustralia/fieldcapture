@@ -617,7 +617,6 @@
             	var self = this;
             	if(!o) o = {};
 
-            	this.description = ko.observable(o.description);
             	this.overallTotal = ko.observable(0.0);
 
 				var headerArr = [];

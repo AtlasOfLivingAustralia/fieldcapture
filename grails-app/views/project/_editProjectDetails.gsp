@@ -57,7 +57,7 @@
                             <th></th>
 			                <th>Outcomes <fc:iconHelp title="Outcomes">Enter the outcomes sought by the project. This should be expressed as a 'SMART' statement (Specific Measurable Attainable Realistic and Time-bound) and deliver against the programme.  The outcome should be no more than 2 sentences.</fc:iconHelp></th>
 			                <th>
-                                Project Goals <fc:iconHelp title="Project Goals">Select the most appropriate natural/cultural asset or assets being addressed by this project from the drop down list. Note that multiple selections can be made. </fc:iconHelp>
+                                Asset(s) addressed <fc:iconHelp title="Asset(s) addressed">Select the most appropriate natural/cultural asset or assets being addressed by this project from the drop down list. Note that multiple selections can be made. </fc:iconHelp>
                                 </br> (Hold down the Ctrl key and click to select multiple values.)
                             </th>
 			            </tr>
@@ -299,9 +299,7 @@
 <div class="row-fluid space-after">
 	<div>
 	        <div class="well well-small">
-	 			<label><b>Project Budget</b></label>
-	 			Budget summary<fc:iconHelp title="Budget summary">Include the planned budget expenditure against each programme objective. This information will be used to report on the use of public money.</fc:iconHelp>
-	 			<textarea style="width: 99%;" data-bind="value: details.budget.description, disable: isProjectDetailsLocked()" rows="4" ></textarea> 	 
+	 			<label><b>Project Budget</b><fc:iconHelp title="Project Budget">Include the planned budget expenditure against each programme objective. This information will be used to report on the use of public money.</fc:iconHelp></label>
 			    <table style="width: 100%;">
 			        <thead>
 			            <tr>
