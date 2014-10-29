@@ -79,6 +79,9 @@ grails.exceptionresolver.params.exclude = ['password']
 // configure auto-caching of queries by default (if false you can cache individual queries with 'cache: true')
 grails.hibernate.cache.queries = false
 
+// revert to grails 2.2 behaviour for html escaping until such time as every page can be reviewed.
+grails.views.default.codec = "none"
+
 /******************************************************************************\
  *  EXTERNAL SERVERS
  \******************************************************************************/
@@ -202,7 +205,7 @@ environments {
         server.port = "8087"
         grails.host = "http://devt.ala.org.au"
         serverName = "${grails.host}:${server.port}"
-        grails.serverURL = serverName + "/fieldcapture"
+        grails.serverURL = serverName + "/${appName}"
         layout.skin = "nrm"
         security.cas.appServerName = serverName
         security.cas.contextPath = "/" + appName
@@ -225,7 +228,7 @@ environments {
 
 // log4j configuration
 if (!logging.dir) {
-    logging.dir = (System.getProperty('catalina.base') ? System.getProperty('catalina.base') + '/logs'  : '/var/log/tomcat6')
+    logging.dir = (System.getProperty('catalina.base') ? System.getProperty('catalina.base') + '/logs'  : '/var/log/tomcat7')
 }
 log4j = {
     appenders {

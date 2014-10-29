@@ -299,20 +299,6 @@
     </div>
 </g:else>
 
-<g:if env="development">
-<div class="expandable-debug">
-    <h3>Debug</h3>
-    <div>
-        <h4>Results</h4>
-        <pre>${results}</pre>
-        <h4>Geo Points</h4>
-        <pre>${geoPoints}</pre>
-        <h4>Projects</h4>
-        <pre>${projects}</pre>
-    </div>
-</div>
-</g:if>
-
 </div>
 
 <r:script>
