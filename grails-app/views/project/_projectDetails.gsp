@@ -14,7 +14,7 @@
 					            <tr>
 					            	<th></th>
 					                <th>Outcomes</th>
-					                <th>Project Goals</th>
+					                <th>Asset(s) addressed</th>
 					            </tr>
 					        </thead>
 						<tbody data-bind="foreach : details.objectives.rows1">
@@ -150,8 +150,6 @@
 			<div class="required">
 	        <div id="keq" class="well well-small">
 	 			<label><b>Project Budget</b></label>
-	 			<b>Budget summary : </b> 
-	 			<span style="width: 99%;" data-bind="text: details.budget.description, disable: isProjectDetailsLocked()" ></span> 	 
 			    <table style="width: 100%;">
 			        <thead>
 			            <tr>
