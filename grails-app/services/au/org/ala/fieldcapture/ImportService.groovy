@@ -1411,10 +1411,19 @@ class ImportService {
             errors << "No sites for project with Grant Id: ${project.grantId}, External Id: ${project.externalId}"
         }
         else {
+<<<<<<< HEAD
         // Find a sensible site to attach to our new activity
         def site = project.sites.find{it.name.startsWith('Project area')}
         if (!site) {
             site = project.sites[0]
+=======
+            // Find a sensible site to attach to our new activity
+            def site = project.sites.find{it.name.startsWith('Project area')}
+            if (!site) {
+                site = project.sites[0]
+            }
+            siteId = site?.siteId
+>>>>>>> Allow the biofund load to proceed when a project has no sites.
         }
             siteId = site?.siteId
         }
