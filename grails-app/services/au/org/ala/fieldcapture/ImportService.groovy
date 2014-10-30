@@ -1402,21 +1402,23 @@ class ImportService {
             return [:]
         }
 
+        def siteId = ''
 
         if (!project.sites) {
             errors << "No sites for project with Grant Id: ${project.grantId}, External Id: ${project.externalId}"
-            return [:]
         }
-
-        // Find a sensible site to attach to our new activity
-        def site = project.sites.find{it.name.startsWith('Project area')}
-        if (!site) {
-            site = project.sites[0]
+        else {
+            // Find a sensible site to attach to our new activity
+            def site = project.sites.find{it.name.startsWith('Project area')}
+            if (!site) {
+                site = project.sites[0]
+            }
+            siteId = site?.siteId
         }
 
         // Create our dodgy import activity in first stage, ignore targets.
         def activity = [projectId:project.projectId,
-                        siteId:site.siteId,
+                        siteId:siteId,
                         description:SUMMARY_ACTIVITY_NAME,
                         type:SUMMARY_ACTIVITY_NAME,
                         plannedStartDate:startDate,
