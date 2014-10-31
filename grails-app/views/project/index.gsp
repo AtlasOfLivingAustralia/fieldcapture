@@ -142,18 +142,30 @@
                 </div>
 
                 <div class="clearfix" style="font-size:14px;">
-                    <div class="span4" data-bind="visible:grantId" style="margin-bottom: 0">
+                	<div class="span3" data-bind="visible:state" style="margin-bottom: 0">
+                        <span data-bind="if: state() == 'Active'">
+                        	Project Status:
+                        	<span data-bind="text:state" class="badge badge-success" style="font-size: 13px;"></span>
+                        </span>
+                        <span data-bind="if: state() == 'Completed'">
+                        	Project Status:
+                        	<span data-bind="text:state" class="badge badge-info" style="font-size: 13px;"></span>
+                        </span>
+                        
+                    </div>
+                    <div class="span3" data-bind="visible:grantId" style="margin-bottom: 0">
                         Grant Id:
                         <span data-bind="text:grantId"></span>
                     </div>
-                    <div class="span4" data-bind="visible:externalId" style="margin-bottom: 0">
+                    <div class="span3" data-bind="visible:externalId" style="margin-bottom: 0">
                         External Id:
                         <span data-bind="text:externalId"></span>
                     </div>
-                    <div class="span4" data-bind="visible:manager" style="margin-bottom: 0">
+                    <div class="span3" data-bind="visible:manager" style="margin-bottom: 0">
                         Manager:
                         <span data-bind="text:manager"></span>
                     </div>
+                    
                 </div>
                 <div data-bind="visible:description()">
                     <p class="well well-small more" data-bind="text:description"></p>
@@ -219,6 +231,11 @@
                     <g:render template="/shared/activitiesPlan"
                               model="[activities:activities ?: [], sites:project.sites ?: [], showSites:true]"/>
                 </g:else>
+                <g:if test="${user?.isCaseManager}">
+	                <div class="validationEngineContainer" id="grantmanager-validation">
+	                	<g:render template="grantManagerSettings" model="[project:project]"/>
+	                </div>
+                </g:if>
 				<div class="validationEngineContainer" id="risk-validation">
 	                <g:render template="riskTable" model="[project:project]"/>
 	            </div>    
@@ -505,6 +522,7 @@
             $('#settings-validation').validationEngine();
             $('#project-details-validation').validationEngine();
             $('#risk-validation').validationEngine();
+            $('#grantmanager-validation').validationEngine();
             $('.helphover').popover({animation: true, trigger:'hover'});
 
             $('#cancel').click(function () {
@@ -793,6 +811,16 @@
                 self.regenerateProjectTimeline = ko.observable(false);
 				self.userIsCaseManager = ko.observable(${user?.isCaseManager});
 				self.userIsAdmin = ko.observable(${user?.isAdmin});
+				
+				var projectDefault = "Active";
+				if(project.state){
+					projectDefault = project.state; 
+				}
+				self.state = ko.observable(projectDefault);
+				self.projectStates = [
+	                'Active',
+	                'Completed'
+	        	];
 
                 // todo: move this to mongodb lookup.
  	            self.threatOptions = [
@@ -990,6 +1018,7 @@
                 self.mapLoaded = ko.observable(false);
 
                 self.transients = {};
+				self.transients.variation = ko.observable();
                 self.transients.organisations = organisations;
                 self.transients.collectoryOrgName = ko.computed(function () {
                     if (self.organisation() === undefined || self.organisation() === '') {
@@ -1193,7 +1222,43 @@
           	  };
           	  
           	  
-                // settings
+                // grant manager settings
+                self.saveGrantManagerSettings = function () {
+                    if ($('#grantmanager-validation').validationEngine('validate')) {
+	                    var variations = [];
+	                    if(project.variations)
+	                    	variations = project.variations; 
+	                    variations.push({oldDate:project.plannedEndDate, newDate:self.plannedEndDate(),reason:self.transients.variation()})
+	                    var jsData = {
+	                     	plannedEndDate: self.plannedEndDate(),
+	                     	variations: variations
+	                     };
+	                     var json = JSON.stringify(jsData, function (key, value) {
+	                            return value === undefined ? "" : value;
+	                     });
+	                        
+	                     var id = "${project?.projectId}";
+	                        $.ajax({
+	                            url: "${createLink(action: 'ajaxUpdate', id: project.projectId)}",
+	                            type: 'POST',
+	                            data: json,
+	                            contentType: 'application/json',
+	                            success: function (data) {
+	                                if (data.error) {
+	                                    showAlert("Failed to save settings: " + data.detail + ' \n' + data.error,
+	                                        "alert-error","save-settings-result-placeholder");
+	                                } else {
+	                                    showAlert("Project end date saved","alert-success","save-settings-result-placeholder");
+	                                    location.reload();
+	                                }
+	                            },
+	                            error: function (data) {
+	                                var status = data.status;
+	                                alert('An unhandled error occurred: ' + data.status);
+	                            }
+	                        });
+                	}
+                };	    
                 self.saveSettings = function () {
                     if ($('#settings-validation').validationEngine('validate')) {
 
@@ -1211,8 +1276,10 @@
                             serviceProviderName: self.serviceProviderName(),
                             associatedProgram: self.associatedProgram(),
                             associatedSubProgram: self.associatedSubProgram(),
-                            funding: new Number(self.funding())
+                            funding: new Number(self.funding()),
+                            state:self.state()
                         };
+
                         if (self.regenerateProjectTimeline()) {
                             var dates = {
                                 plannedStartDate: self.plannedStartDate(),

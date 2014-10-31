@@ -299,6 +299,26 @@
 </g:if>
 
 </script>
+
+<script id="stageSubmittedVariationTmpl" type="text/html">
+<br/>
+<span class="badge badge-info" style="font-size:13px;">Report submitted</span>
+<g:if test="${user?.isCaseManager}">
+    <br/>
+    <span>Case manager actions: </span>
+    <br/>
+    <span class="btn-group">
+        <button type="button" data-bind="click:$parents[1].approveStage" class="btn btn-success"><i class="icon-ok icon-white"></i> Approve</button>
+        <button type="button" data-bind="click:$parents[1].variationModal" class="btn btn-danger"><i class="icon-remove icon-white"></i> Variation</button>
+    </span>
+</g:if>
+<g:if test="${user?.isAdmin}">
+    <br/>
+	<button  class="btn btn-link" data-bind="click:$parents[1].previewStage" type="button"><i class="icon-eye-open"></i>Preview</button>
+</g:if>
+
+</script>
+
 <!-- /ko -->
 
 <!-- ko stopBinding: true -->
@@ -614,7 +634,7 @@
             }
         };
 
-        var PlanStage = function (stage, activities, planViewModel, isCurrentStage, project) {
+        var PlanStage = function (stage, activities, planViewModel, isCurrentStage, project,today) {
             var stageLabel = stage.name;
 
             // Note that the two $ transforms used to extract activities are not combined because we
@@ -730,6 +750,10 @@
                 var url = '${createLink(controller:'project', action:'ajaxRejectReport')}/';
                 self.updateStageStatus(url);
             };
+            
+            this.variationModal = function() {
+                $('#variation').modal("show");
+            };
 
             this.updateStageStatus = function(url) {
                 var payload = {};
@@ -771,6 +795,9 @@
                 }
                 if (self.isApproved()) {
                     return 'stageApprovedTmpl';
+                }
+                if (self.isSubmitted() && today >= project.plannedEndDate) {
+                    return 'stageSubmittedVariationTmpl';
                 }
                 if (self.isSubmitted()) {
                     return 'stageSubmittedTmpl';
@@ -917,7 +944,7 @@
             return clone;
         };
 
-        function PlanViewModel(activities, outputTargets, project) {
+        function PlanViewModel(activities, outputTargets, project,today) {
             var self = this;
             this.userIsCaseManager = ko.observable(${user?.isCaseManager});
             this.planStatus = ko.observable(project.planStatus || 'not approved');
@@ -942,7 +969,7 @@
 
                 // group activities by stage
                 $.each(project.timeline, function (index, stage) {
-                    stages.push(new PlanStage(stage, activities, self, stage.name === self.currentProjectStage, project));
+                    stages.push(new PlanStage(stage, activities, self, stage.name === self.currentProjectStage, project,today));
                 });
 
                 return stages;
@@ -1206,11 +1233,12 @@
                 });
             }();
         }
-
+		var today = '${today}';
         var planViewModel = new PlanViewModel(
 ${activities ?: []},
 ${project.outputTargets ?: '{}'},
-            checkAndUpdateProject(${project})
+            checkAndUpdateProject(${project}),
+        today    
         );
         ko.applyBindings(planViewModel, document.getElementById('planContainer'));
 
