@@ -1,6 +1,6 @@
 <div class="row-fluid" id="${containerId}">
     <div data-bind="foreach:documents">
-		<span data-bind="if: (role() == '${filterBy}' || 'all' == '${filterBy}') && role() != '${ignore}' ">
+		<span data-bind="if: (role() == '${filterBy}' || 'all' == '${filterBy}') && role() != '${ignore}' && role() != 'variation' ">
 	       	<g:if test="${editable}">
 	            <div class="clearfix space-after media" data-bind="template:ko.utils.unwrapObservable(type) === 'image' ? 'imageDocEditTmpl' : 'objDocEditTmpl'"></div>
 	        </g:if>

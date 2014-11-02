@@ -142,14 +142,14 @@
                 </div>
 
                 <div class="clearfix" style="font-size:14px;">
-                	<div class="span3" data-bind="visible:state" style="margin-bottom: 0">
-                        <span data-bind="if: state() == 'Active'">
+                	<div class="span3" data-bind="visible:status" style="margin-bottom: 0">
+                        <span data-bind="if: status().toLowerCase() == 'active'">
                         	Project Status:
-                        	<span data-bind="text:state" class="badge badge-success" style="font-size: 13px;"></span>
+                        	<span style="text-transform:uppercase;" data-bind="text:status" class="badge badge-success" style="font-size: 13px;"></span>
                         </span>
-                        <span data-bind="if: state() == 'Completed'">
+                        <span data-bind="if: status().toLowerCase() == 'completed'">
                         	Project Status:
-                        	<span data-bind="text:state" class="badge badge-info" style="font-size: 13px;"></span>
+                        	<span style="text-transform:uppercase;" data-bind="text:status" class="badge badge-info" style="font-size: 13px;"></span>
                         </span>
                         
                     </div>
@@ -813,11 +813,11 @@
 				self.userIsAdmin = ko.observable(${user?.isAdmin});
 				
 				var projectDefault = "Active";
-				if(project.state){
-					projectDefault = project.state; 
+				if(project.status){
+					projectDefault = project.status; 
 				}
-				self.state = ko.observable(projectDefault);
-				self.projectStates = [
+				self.status = ko.observable(projectDefault);
+				self.projectStatus = [
 	                'Active',
 	                'Completed'
 	        	];
@@ -1221,22 +1221,32 @@
                 });
           	  };
           	  
-          	  
-                // grant manager settings
+               self.uploadVariationDoc = function(doc){
+	               	 var json = JSON.stringify(doc, function (key, value) {
+	                            return value === undefined ? "" : value;
+	                     });
+					 $.post(
+			            "${createLink(controller:"proxy", action:"documentUpdate")}",
+			            {document:json},
+			            function(result) {
+	                        showAlert("Project end date saved","alert-success","save-settings-result-placeholder");
+							location.reload();
+			            })
+			            .fail(function() {
+			                alert('Error saving document record');
+            			});	 
+                };
                 self.saveGrantManagerSettings = function () {
+
                     if ($('#grantmanager-validation').validationEngine('validate')) {
-	                    var variations = [];
-	                    if(project.variations)
-	                    	variations = project.variations; 
-	                    variations.push({oldDate:project.plannedEndDate, newDate:self.plannedEndDate(),reason:self.transients.variation()})
+                    	var doc = {oldDate:project.plannedEndDate, newDate:self.plannedEndDate(),reason:self.transients.variation(),role:"variation",projectId:project.projectId};
 	                    var jsData = {
 	                     	plannedEndDate: self.plannedEndDate(),
-	                     	variations: variations
 	                     };
 	                     var json = JSON.stringify(jsData, function (key, value) {
 	                            return value === undefined ? "" : value;
 	                     });
-	                        
+
 	                     var id = "${project?.projectId}";
 	                        $.ajax({
 	                            url: "${createLink(action: 'ajaxUpdate', id: project.projectId)}",
@@ -1246,10 +1256,9 @@
 	                            success: function (data) {
 	                                if (data.error) {
 	                                    showAlert("Failed to save settings: " + data.detail + ' \n' + data.error,
-	                                        "alert-error","save-settings-result-placeholder");
+	                                    "alert-error","save-settings-result-placeholder");
 	                                } else {
-	                                    showAlert("Project end date saved","alert-success","save-settings-result-placeholder");
-	                                    location.reload();
+	                                    self.uploadVariationDoc(doc);
 	                                }
 	                            },
 	                            error: function (data) {
@@ -1277,7 +1286,7 @@
                             associatedProgram: self.associatedProgram(),
                             associatedSubProgram: self.associatedSubProgram(),
                             funding: new Number(self.funding()),
-                            state:self.state()
+                            status:self.status()
                         };
 
                         if (self.regenerateProjectTimeline()) {
