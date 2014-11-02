@@ -411,7 +411,7 @@ class ProjectService {
 		
 		if(validActivities == published){
 			def values = [:]
-			values["state"] = "Completed"
+			values["status"] = "completed"
 			update(projectId, values)
 		}
 		
