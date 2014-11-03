@@ -10,7 +10,8 @@ class ProjectService {
 
     def webService, grailsApplication, siteService, activityService, authService, emailService, documentService
     LinkGenerator grailsLinkGenerator
-
+	static dateWithTime = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss")
+	
     def projects
 
     def map() {
@@ -391,10 +392,43 @@ class ProjectService {
         if (!result.resp.error) {
             emailService.sendReportApprovedEmail(projectId, stageDetails)
         }
-
+		
+		//Update project status to completed
+		int published = 0;
+		int validActivities = 0
+		def activities = activityService.activitiesForProject(projectId);;
+		project.timeline?.each {timeline->
+			activities.each{act->
+				def endDate = act.plannedEndDate ? act.plannedEndDate : act.endDate
+				if(dateInSlot(timeline.fromDate,timeline.toDate,endDate)){
+					validActivities++;
+					if(act.publicationStatus.equals("published")){
+						published++
+					}
+				}
+			}
+		}
+		
+		if(validActivities == published){
+			def values = [:]
+			values["status"] = "completed"
+			update(projectId, values)
+		}
+		
         result
     }
-
+	
+	private dateInSlot(d1,d2,range){
+		if(d1 && d2 && range){
+			d1 = dateWithTime.parse(d1)
+			d2 = dateWithTime.parse(d2)
+			range = dateWithTime.parse(range)
+			def slot = d1..d2
+			return slot.containsWithinBounds(range)
+		}
+		return false;
+	}
+	
     /**
      * Rejects a submitted stage report.
      * @param projectId the project the performing the activities.

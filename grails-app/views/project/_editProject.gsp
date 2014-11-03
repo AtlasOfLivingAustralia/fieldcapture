@@ -97,6 +97,19 @@
     </div>
 </div>
 
+<div class="row-fluid">
+    <div class="span4">
+        <label>Project status
+        	<fc:iconHelp title="Project status">Project status.</fc:iconHelp>
+        </label>
+        <select class="input-xlarge" id="projectState" data-bind="options:projectStatus, value:status"></select>
+    </div>
+    <div class="span4">
+       
+    </div>
+</div>
+
+
 <div class="row-fluid" data-bind="visible:projectDatesChanged">
     <span class="span6">
         <label for="regenerateProjectTimeline">Re-calculate the project stage dates? (This page must be reloaded before the change will be visible)</label>
