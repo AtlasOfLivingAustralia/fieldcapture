@@ -153,9 +153,8 @@
                 <ul class="nav nav-tabs" data-tabs="tabs">
                     <li class="active"><a id="mapView-tab" href="#mapView" data-toggle="tab">Map</a></li>
                     <li class=""><a id="projectsView-tab" href="#projectsView" data-toggle="tab">Projects</a></li>
-                    %{--Temporarily hiding the reports from non-admin until they are ready for public consumption. --}%
+                    <li class=""><a id="reportView-tab" href="#reportView" data-toggle="tab">Dashboard</a></li>
                     <g:if test="${fc.userIsSiteAdmin()}">
-                        <li class=""><a id="reportView-tab" href="#reportView" data-toggle="tab">Dashboard</a></li>
                         <li class=""><a id="downloadView-tab" href="#downloadView" data-toggle="tab">Download</a></li>
                     </g:if>
 
