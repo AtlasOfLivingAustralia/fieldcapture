@@ -80,7 +80,7 @@ class DashboardTagLib {
                 break
             case 'HISTOGRAM':
                 def chartData = toArray(score.results[0].result)
-                def chartType = score.chartType?:'piechart'
+                def chartType = score.score.displayType?:'piechart'
                 drawChart(chartType, score.score.label, score.score.label, helpText(score), [['string', score.score.label], ['number', 'Count']], chartData)
                 break
             case 'SET':
@@ -116,7 +116,7 @@ class DashboardTagLib {
                 break
             case 'HISTOGRAM':
                 def chartData = toArray(score.results[0].result)
-                def chartType = score.chartType?:'piechart'
+                def chartType = score.score.displayType?:'piechart'
                 drawChart(chartType, score.score.label, score.score.label, helpText(score), [['string', score.score.label], ['number', 'Count']], chartData)
                 break
 
