@@ -1568,12 +1568,12 @@ class ImportService {
         project.timeline = newPrjTimeline
         project.name = config.name?:project.name
         project.originalProjectId = projectId // In case we need this later.
-        project.grantId = ''
-        project.externalId = ''
+        project.grantId = 'to be assigned'
+        project.externalId = 'to be assigned'
         project.funding = config.funding?:0
         project.plannedStartDate = NLP_CHANGE_OVER_DATE
         project.associatedProgram = 'National Landcare Programme'
-        project.associatedSubProgram = 'Regional Delivery'
+        project.associatedSubProgram = 'Regional Funding'
 
         // Save the new project.
         def newId = 'Temp New ID'
