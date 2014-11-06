@@ -242,13 +242,14 @@
                         </tr>
                     </table>
                 </div>
-                %{--Temporarily hiding the reports from non-admin until they are ready for public consumption. --}%
-                <g:if test="${fc.userIsSiteAdmin()}">
-                    <div class="tab-pane" id="reportView">
-                        <div class="loading-message">
-                            <r:img dir="images" file="loading.gif" alt="saving icon"/> Loading report...
-                        </div>
+
+                <div class="tab-pane" id="reportView">
+                    <div class="loading-message">
+                        <r:img dir="images" file="loading.gif" alt="saving icon"/> Loading report...
                     </div>
+                </div>
+                %{-- hiding the downloads from non-admin until they are approved for public consumption. --}%
+                <g:if test="${fc.userIsSiteAdmin()}">
                     <div class="tab-pane" id="downloadView">
                         <h3>Download data for a filtered selection of projects</h3>
                         <table style="width: 50%;">
