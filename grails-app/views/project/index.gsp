@@ -176,7 +176,7 @@
                         No documents are currently attached to this project.
                         <g:if test="${user?.isAdmin}">To add a document use the Documents section of the Admin tab.</g:if>
                     </div>
-                    <g:render template="/shared/listDocuments"
+                    <g:render plugin="fieldcapture-plugin" template="/shared/listDocuments"
                       model="[useExistingModel: true,editable:false, filterBy: 'all', ignore: 'programmeLogic', imageUrl:resource(dir:'/images/filetypes'),containerId:'overviewDocumentList']"/>
                 </div>
 
@@ -201,7 +201,7 @@
 					<div class="span6">
 						<div class="well well-small">
 				 			<label><b>MERI attachments:</b></label>
-							<g:render template="/shared/listDocuments"
+							<g:render plugin="fieldcapture-plugin" template="/shared/listDocuments"
 	                    	  model="[useExistingModel: true,editable:false, filterBy: 'programmeLogic', ignore: '', imageUrl:resource(dir:'/images/filetypes'),containerId:'overviewDocumentList']"/>
 						</div>
 					</div>	
@@ -212,7 +212,7 @@
             <div class="tab-pane" id="plan">
                 <!-- PLANS -->
                 <g:if test="${useAltPlan}">
-                    <g:render template="/shared/plan"
+                    <g:render  plugin="fieldcapture-plugin" template="/shared/plan"
                               model="[activities:activities ?: [], sites:project.sites ?: [], showSites:true]"/>
                 </g:if>
                 <g:else>
@@ -320,7 +320,7 @@
 
             <div class="tab-pane" id="dashboard">
                 <!-- DASHBOARD -->
-                <g:render template="dashboard"/>
+                <g:render plugin="fieldcapture-plugin" template="dashboard"/>
             </div>
         </g:if>
         <g:if test="${user?.isAdmin || user?.isCaseManager}">
@@ -354,7 +354,7 @@
                                     <div class="row-fluid">
                                         <div id="save-result-placeholder"></div>
                                         <div class="span10 validationEngineContainer" id="settings-validation">
-                                            <g:render template="editProject"
+                                            <g:render plugin="fieldcapture-plugin" template="editProject"
                                                       model="[project: project]"/>
                                         </div>
                                     </div>
@@ -374,17 +374,17 @@
                             </div>                            
  							
                             <div id="editNewsAndEvents" class="pill-pane">
-                                <g:render template="editProjectContent" model="${[attributeName:'newsAndEvents', header:'News and events']}"/>
+                                <g:render plugin="fieldcapture-plugin"  template="editProjectContent" model="${[attributeName:'newsAndEvents', header:'News and events']}"/>
                             </div>
 
                             <div id="editProjectStories" class="pill-pane">
-                                <g:render template="editProjectContent" model="${[attributeName:'projectStories', header:'Project stories']}"/>
+                                <g:render plugin="fieldcapture-plugin" template="editProjectContent" model="${[attributeName:'projectStories', header:'Project stories']}"/>
                             </div>
 
                             <div id="permissions" class="pill-pane ${activeClass}">
                                 <h3>Project Access</h3>
                                 %{--<a name="permissions"></a>--}%
-                                <g:render template="/admin/addPermissions" model="[projectId:project.projectId]"/>
+                                <g:render plugin="fieldcapture-plugin"  template="/admin/addPermissions" model="[projectId:project.projectId]"/>
                                 <h4>Project Members</h4>
                                 <div class="row-fluid">
                                     <div class="span6">
@@ -394,7 +394,7 @@
                                             <tr class="hide">
                                                 <td class="memUserId"></td>
                                                 <td class="memUserName"></td>
-                                                <td class="memUserRole"><span style="white-space: nowrap">&nbsp;</span><g:render template="/admin/userRolesSelect" model="[roles:roles, selectClass:'hide']"/></td>
+                                                <td class="memUserRole"><span style="white-space: nowrap">&nbsp;</span><g:render plugin="fieldcapture-plugin" template="/admin/userRolesSelect" model="[roles:roles, selectClass:'hide']"/></td>
                                                 <td class="clickable memEditRole"><i class="icon-edit tooltips" title="edit this user and role combination"></i></td>
                                                 <td class="clickable memRemoveRole"><i class="icon-remove tooltips" title="remove this user and role combination"></i></td>
                                             </tr>
@@ -415,19 +415,19 @@
                             %{--<div class="border-divider large-space-before">&nbsp;</div>--}%
                             <div id="species" class="pill-pane">
                                 %{--<a name="species"></a>--}%
-                                <g:render template="/species/species" model="[project:project, activityTypes:activityTypes]"/>
+                                <g:render plugin="fieldcapture-plugin"  template="/species/species" model="[project:project, activityTypes:activityTypes]"/>
                             </div>
                             <!-- DOCUMENTS -->
                             <div id="edit-documents" class="pill-pane">
                                 <h3>Project Documents</h3>
                                 <div class="row-fluid">
                                     <div class="span10">
-                                        <g:render template="/shared/listDocuments"
+                                        <g:render plugin="fieldcapture-plugin" template="/shared/listDocuments"
                                                   model="[useExistingModel: true,editable:true, filterBy: 'all', ignore: '', imageUrl:resource(dir:'/images/filetypes'),containerId:'adminDocumentList']"/>
                                     </div>
                                 </div>
                                 %{--The modal view containing the contents for a modal dialog used to attach a document--}%
-                                <g:render template="/shared/attachDocument"/>
+                                <g:render plugin="fieldcapture-plugin" template="/shared/attachDocument"/>
                                 <div class="row-fluid attachDocumentModal">
                                     <button class="btn" id="doAttach" data-bind="click:attachDocument">Attach Document</button>
                                 </div>

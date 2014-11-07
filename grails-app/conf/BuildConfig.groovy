@@ -59,5 +59,9 @@ grails.project.dependency.resolution = {
         // The plugins are mostly defined in the fieldcapture-hubs-plugin
 
         runtime ":jquery:1.11.1" // Override jquery as 1.8.3 was being pulled in from somewhere
+        compile ":resources:1.2.8"
+
+        runtime ":lesscss-resources:1.3.3"
+
     }
 }
