@@ -1,3 +1,5 @@
+import grails.util.Environment
+
 grails.servlet.version = "2.5" // Change depending on target container compliance (2.5 or 3.0)
 grails.project.class.dir = "target/classes"
 grails.project.test.class.dir = "target/test-classes"
@@ -22,9 +24,9 @@ grails.project.fork = [
 ]
 
 // settings for the inline fieldcapture-plugin
-
-grails.plugin.location.'fieldcapture-plugin'='../fieldcapture-hubs/fieldcapture-hubs-plugin'
-
+if (Environment.current == Environment.DEVELOPMENT) {
+    grails.plugin.location.'fieldcapture-plugin' = '../fieldcapture-hubs/fieldcapture-hubs-plugin'
+}
 grails.project.dependency.resolver = "maven"
 grails.project.dependency.resolution = {
     // inherit Grails' default dependencies
@@ -62,6 +64,10 @@ grails.project.dependency.resolution = {
         compile ":resources:1.2.8"
 
         runtime ":lesscss-resources:1.3.3"
+
+        if (Environment.current != Environment.DEVELOPMENT) {
+            compile ":fieldcapture-hubs-plugin:1.0"
+        }
 
     }
 }
