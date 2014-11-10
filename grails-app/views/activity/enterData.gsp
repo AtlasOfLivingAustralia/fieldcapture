@@ -175,6 +175,7 @@
 
 <!-- ko stopBinding: true -->
 <g:each in="${metaModel?.outputs}" var="outputName">
+        <g:if test="${outputName != 'Photo Points'}">
     <g:set var="blockId" value="${fc.toSingleWord([name: outputName])}"/>
     <g:set var="model" value="${outputModels[outputName]}"/>
     <g:set var="output" value="${activity.outputs.find {it.name == outputName}}"/>
@@ -195,14 +196,13 @@
             // load dynamic models - usually objects in a list
             <md:jsModelObjects model="${model}" site="${site}" speciesLists="${speciesLists}" edit="true" viewModelInstance="${blockId}ViewModelInstance"/>
 
-            this[viewModelName] = function (site) {
+                this[viewModelName] = function () {
                 var self = this;
                 self.name = "${output.name}";
                 self.outputId = "${output.outputId}";
                 self.data = {};
                 self.transients = {};
                 self.transients.dummy = ko.observable();
-                self.transients.selectedSite = ko.observable(site);
 
                 // add declarations for dynamic data
             <md:jsViewModel model="${model}"  output="${output.name}"  edit="true" viewModelInstance="${blockId}ViewModelInstance"/>
@@ -263,8 +263,8 @@
             window[viewModelInstance].dirtyFlag.reset();
 
             // register with the master controller so this model can participate in the save cycle
-            master.registerOutput(window[viewModelInstance], viewModelInstance, window[viewModelInstance].modelForSaving,
-             window[viewModelInstance].dirtyFlag.isDirty, window[viewModelInstance].dirtyFlag.reset, window[viewModelInstance].transients.selectedSite);
+                master.register(window[viewModelInstance], window[viewModelInstance].modelForSaving,
+                    window[viewModelInstance].dirtyFlag.isDirty, window[viewModelInstance].dirtyFlag.reset);
 
             // Check for locally saved data for this output - this will happen in the event of a session timeout
             // for example.
@@ -287,9 +287,17 @@
 
         </r:script>
     </div>
+        </g:if>
 </g:each>
 <!-- /ko -->
 
+
+    <div class="output-block" data-bind="with:transients.photoPointModel">
+        <h3>Photo Points</h3>
+
+         <g:render template="/site/photoPoints" plugin="fieldcapture-plugin"></g:render>
+
+    </div>
 <g:if test="${!printView}">
     <div class="form-actions">
         <button type="button" id="save" class="btn btn-primary">Save changes</button>
@@ -310,7 +318,7 @@
     <a href="${createLink(action:'enterData', id:activity.activityId)}?returnTo=${returnTo}">Click here to refresh your login and reload this page.</a>
 </div>
 
-<g:render template="/shared/imagerViewerModal"></g:render>
+<g:render template="/shared/imagerViewerModal" model="[readOnly:false]"></g:render>
 
 <r:script>
 
@@ -320,36 +328,16 @@
     var Master = function () {
         var self = this;
         this.subscribers = [];
-        this.site = null;
-        this.outputModels = [];
-        this.activityViewModel = null;
 
-        self.registerOutput = function(outputViewModel, modelInstanceName, getMethod, isDirtyMethod, resetMethod, siteMethod) {
-            self.register(modelInstanceName, getMethod, isDirtyMethod, resetMethod, siteMethod);
-            self.outputModels.push(outputViewModel);
-        },
-        self.registerActivity = function(activityViewModel, modelInstanceName, getMethod, isDirtyMethod, resetMethod, siteMethod) {
-            self.register(modelInstanceName, getMethod, isDirtyMethod, resetMethod, siteMethod);
-            activityViewModel.transients.outputs = self.outputModels;
-            self.activityViewModel = activityViewModel;
-        },
         // client models register their name and methods to participate in saving
-        self.register = function (modelInstanceName, getMethod, isDirtyMethod, resetMethod, siteMethod) {
+        self.register = function (modelInstanceName, getMethod, isDirtyMethod, resetMethod) {
             this.subscribers.push({
                 model: modelInstanceName,
                 get: getMethod,
                 isDirty: isDirtyMethod,
-                reset: resetMethod,
-                updateSite:siteMethod
-            });
-        };
+                reset: resetMethod
 
-        self.activityContext = function() {
-            return {
-                activityId: self.activityViewModel.activityId,
-                siteId: self.activityViewModel.siteId(),
-                projectId: self.activityViewModel.projectId
-            }
+            });
         };
 
         // master isDirty flag for the whole page - can control button enabling
@@ -373,18 +361,21 @@
          */
         this.save = function () {
 
-            var activityData, outputs = [];
+            var activityData, outputs = [], photoPoints;
             if ($('#validation-container').validationEngine('validate')) {
                 $.each(this.subscribers, function(i, obj) {
                     if (obj.isDirty()) {
                         if (obj.model === 'activityModel') {
                             activityData = obj.get();
-                        } else {
+                        } else if (obj.model === 'photoPoints') {
+                            photoPoints = obj.get();
+                        }
+                        else {
                             outputs.push(obj.get());
                         }
                     }
                 });
-                if (outputs.length === 0 && activityData === undefined) {
+                if (outputs.length === 0 && activityData === undefined && photoPoints === undefined) {
                     alert("Nothing to save.");
                     return;
                 }
@@ -464,7 +455,6 @@
         $('.helphover').popover({animation: true, trigger:'hover'});
 
         $('#save').click(function () {
-
             master.save();
         });
 
@@ -475,7 +465,6 @@
         $('#reset').click(function () {
             master.reset();
         });
-
 
         function ViewModel (act, site, project, metaModel) {
             var self = this;
@@ -506,26 +495,12 @@
             self.transients.markedAsFinished.subscribe(function (finished) {
                 self.progress(finished ? 'finished' : 'started');
             });
-            self.transients.photoPointOutput = function() {
-                var photopointOutput = $.grep(self.transients.outputs, function(output) {
-                    return output.name == 'Photo Points';
-                });
-                return photopointOutput[0];
-            };
-
-            self.hasPhotoPointData = function() {
-
-                var photopointOutput = self.transients.photoPointOutput();
-
-                return photopointOutput && photopointOutput.hasPhotos();
-            };
-
 
             self.confirmSiteChange = function() {
 
-                if (self.hasPhotoPointData()) {
+                if (self.transients.photoPointModel().isDirty()) {
                     return window.confirm(
-                        "This activity has photo points attached.\n  Changing the site will delete these photos.\n  This cannot be undone.  Are you sure?"
+                        "This activity has photos attached to photo points.\n  Changing the site will delete these photos.\n  This cannot be undone.  Are you sure?"
                     );
                 }
                 return true;
@@ -536,19 +511,13 @@
 
                 var matchingSite = $.grep(self.transients.project.sites, function(site) { return siteId == site.siteId})[0];
 
+                alaMap.clearFeatures();
                 if (matchingSite) {
-
-                    alaMap.clearFeatures();
                     alaMap.replaceAllFeatures([matchingSite.extent.geometry]);
                 }
-                else {
-                    alaMap.clearFeatures();
-                }
                 self.transients.site(matchingSite);
-                var photoPointOutput = self.transients.photoPointOutput();
-                if (photoPointOutput) {
-                    photoPointOutput.transients.selectedSite(matchingSite);
-                }
+                self.updatePhotoPointModel(matchingSite);
+
             });
             self.goToProject = function () {
                 if (self.projectId) {
@@ -560,9 +529,16 @@
                     document.location.href = fcConfig.siteViewUrl + self.siteId();
                 }
             };
+
+            self.transients.photoPointModel = ko.observable(new PhotoPointViewModel(site, activity));
+            self.updatePhotoPointModel = function(site) {
+                self.transients.photoPointModel(new PhotoPointViewModel(site, activity));
+            };
+
             self.modelForSaving = function () {
                 // get model as a plain javascript object
                 var jsData = ko.mapping.toJS(self, {'ignore':['transients']});
+                jsData.photoPoints = self.transients.photoPointModel().modelForSaving();
 
                  // If we leave the site or theme undefined, it will be ignored during JSON serialisation and hence
                 // will not overwrite the current value on the server.
@@ -599,11 +575,14 @@
             self.progress(self.transients.markedAsFinished() ? 'finished' : 'started');
         };
 
+        var activity = JSON.parse('${(activity as JSON).toString().encodeAsJavaScript()}');
+        var site = JSON.parse('${(site as JSON).toString().encodeAsJavaScript()}');
+
         var viewModel = new ViewModel(
-${(activity as JSON).toString()},
-${site ?: 'null'},
-${project ?: 'null'},
-${metaModel ?: 'null'});
+            activity,
+            site,
+            ${project ? "JSON.parse('${project.toString().encodeAsJavaScript()}')": 'null'},
+            ${metaModel ?: 'null'});
 
 
         var mapFeatures = $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
@@ -621,8 +600,7 @@ ${metaModel ?: 'null'});
         );
         ko.applyBindings(viewModel);
 
-        master.registerActivity(viewModel, 'activityModel', viewModel.modelForSaving, viewModel.dirtyFlag.isDirty, viewModel.dirtyFlag.reset);
-
+        master.register('activityModel', viewModel.modelForSaving, viewModel.dirtyFlag.isDirty, viewModel.dirtyFlag.reset);
 
     });
 </r:script>
