@@ -108,6 +108,28 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
             emailService.sendReportApprovedEmail(projectId, stageDetails)
         }
 
+        //Update project status to completed
+        int published = 0;
+        int validActivities = 0
+        def activities = activityService.activitiesForProject(projectId);;
+        project.timeline?.each {timeline->
+            activities.each{act->
+                def endDate = act.plannedEndDate ? act.plannedEndDate : act.endDate
+                if(dateInSlot(timeline.fromDate,timeline.toDate,endDate)){
+                    validActivities++;
+                    if(act.publicationStatus.equals("published")){
+                        published++
+                    }
+                }
+            }
+        }
+
+        if(validActivities == published){
+            def values = [:]
+            values["status"] = "completed"
+            update(projectId, values)
+        }
+
         result
     }
 

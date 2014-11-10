@@ -153,9 +153,8 @@
                 <ul class="nav nav-tabs" data-tabs="tabs">
                     <li class="active"><a id="mapView-tab" href="#mapView" data-toggle="tab">Map</a></li>
                     <li class=""><a id="projectsView-tab" href="#projectsView" data-toggle="tab">Projects</a></li>
-                    %{--Temporarily hiding the reports from non-admin until they are ready for public consumption. --}%
+                    <li class=""><a id="reportView-tab" href="#reportView" data-toggle="tab">Dashboard</a></li>
                     <g:if test="${fc.userIsSiteAdmin()}">
-                        <li class=""><a id="reportView-tab" href="#reportView" data-toggle="tab">Dashboard</a></li>
                         <li class=""><a id="downloadView-tab" href="#downloadView" data-toggle="tab">Download</a></li>
                     </g:if>
 
@@ -243,13 +242,14 @@
                         </tr>
                     </table>
                 </div>
-                %{--Temporarily hiding the reports from non-admin until they are ready for public consumption. --}%
-                <g:if test="${fc.userIsSiteAdmin()}">
-                    <div class="tab-pane" id="reportView">
-                        <div class="loading-message">
-                            <r:img dir="images" file="loading.gif" alt="saving icon"/> Loading report...
-                        </div>
+
+                <div class="tab-pane" id="reportView">
+                    <div class="loading-message">
+                        <r:img dir="images" file="loading.gif" alt="saving icon"/> Loading report...
                     </div>
+                </div>
+                %{-- hiding the downloads from non-admin until they are approved for public consumption. --}%
+                <g:if test="${fc.userIsSiteAdmin()}">
                     <div class="tab-pane" id="downloadView">
                         <h3>Download data for a filtered selection of projects</h3>
                         <table style="width: 50%;">
@@ -329,7 +329,7 @@
 
                     $.get(fcConfig.dashboardUrl, function(data) {
                         $('#reportView').html(data);
-                        $('#reportView .helphover').popover({animation: true, trigger:'hover'});
+                        $('#reportView .helphover').popover({animation: true, trigger:'hover', container:'body'});
                     });
 
                 }
