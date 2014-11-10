@@ -393,7 +393,7 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
     private getTotalStageScore(project, scoreName, stageStartDate, stageEndDate){
         double total = 0;
         project?.activities?.each{
-            if(dateInSlot(stageStartDate,stageEndDate,it.plannedStartDate)){
+            if(dateInSlot(stageStartDate,stageEndDate,it.plannedEndDate)){
                 it.outputs?.each{
                     for (d in it.data){
                         if(d.key.equals(scoreName)){
