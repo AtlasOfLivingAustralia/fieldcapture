@@ -1,13 +1,33 @@
+import grails.util.Environment
+
 grails.servlet.version = "2.5" // Change depending on target container compliance (2.5 or 3.0)
 grails.project.class.dir = "target/classes"
 grails.project.test.class.dir = "target/test-classes"
 grails.project.test.reports.dir = "target/test-reports"
+grails.project.work.dir = "target/work"
 grails.project.target.level = 1.6
 grails.project.source.level = 1.6
 //grails.project.war.file = "target/${appName}-${appVersion}.war"
-grails.project.fork.run=false
 
-//grails.plugin.location.'images-client-plugin'='../images-client-plugin'
+grails.project.fork = [
+    // configure settings for compilation JVM, note that if you alter the Groovy version forked compilation is required
+    //  compile: [maxMemory: 256, minMemory: 64, debug: false, maxPerm: 256, daemon:true],
+
+    // configure settings for the test-app JVM, uses the daemon by default
+    test: false, // [maxMemory: 768, minMemory: 64, debug: false, maxPerm: 256, daemon:true],
+    // configure settings for the run-app JVM
+    run: false, // [maxMemory: 768, minMemory: 512, debug: true, maxPerm: 256],
+    // configure settings for the run-war JVM
+    war: [maxMemory: 768, minMemory: 64, debug: false, maxPerm: 256, forkReserve:false],
+    // configure settings for the Console UI JVM
+    console: false// [maxMemory: 768, minMemory: 64, debug: false, maxPerm: 256]
+]
+
+// settings for the inline fieldcapture-plugin
+if (Environment.current == Environment.DEVELOPMENT) {
+    grails.plugin.location.'fieldcapture-plugin' = '../fieldcapture-hubs/fieldcapture-hubs-plugin'
+}
+grails.project.dependency.resolver = "maven"
 grails.project.dependency.resolution = {
     // inherit Grails' default dependencies
     inherits("global") {
@@ -15,12 +35,11 @@ grails.project.dependency.resolution = {
         // excludes 'ehcache'
         excludes 'xercesImpl'
     }
-    log "warn" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
+    legacyResolve true // needs to be true for inline plugin whether to do a secondary resolve on plugin installation, not advised and here for backwards compatibility
+    log "error" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
     checksums true // Whether to verify checksums on resolve
 
     repositories {
-        inherits true // Whether to inherit repository definitions from plugins
-
         grailsPlugins()
         grailsHome()
         grailsCentral()
@@ -33,68 +52,22 @@ grails.project.dependency.resolution = {
         mavenRepo "http://download.osgeo.org/webdav/geotools/"
 
     }
-    def seleniumVersion = "2.21.0"
-    def metadataExtractorVersion = "2.6.2"
-    def imgscalrVersion = "4.2"
-    def httpmimeVersion = "4.1.2"
-    def geoToolsVersion = "11.1"
+
     dependencies {
-        // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes e.g.
-
-        compile "com.drewnoakes:metadata-extractor:${metadataExtractorVersion}"
-        compile "org.imgscalr:imgscalr-lib:${imgscalrVersion}"
-        compile "org.apache.httpcomponents:httpmime:${httpmimeVersion}"
-        runtime "javax.media:jai_core:1.1.3" // Added as an explicit dependency (rather than transitive) to try and get the travis build working.
-
-        compile "org.geotools.xsd:gt-xsd-kml:${geoToolsVersion}"
-
-        compile "joda-time:joda-time:2.3"
-
-        // runtime 'mysql:mysql-connector-java:5.1.22'
-        test "org.spockframework:spock-grails-support:0.7-groovy-2.0"
-        test "org.gebish:geb-spock:0.9.3"
-        test("org.seleniumhq.selenium:selenium-htmlunit-driver:$seleniumVersion") {
-            exclude "xml-apis"
-        }
-        test("org.seleniumhq.selenium:selenium-support:$seleniumVersion")
-        test("org.seleniumhq.selenium:selenium-chrome-driver:$seleniumVersion")
-        test("org.seleniumhq.selenium:selenium-firefox-driver:$seleniumVersion")
+        // The dependencies from the fieldcapture-hubs-plugin are all we need.
     }
 
     plugins {
-        runtime ":jquery:1.8.3"
-        runtime ":resources:1.2.1"
-        // required by the cached-resources plugin
-        runtime ":cache-headers:1.1.6"
+        // The plugins are mostly defined in the fieldcapture-hubs-plugin
 
-        runtime ":cached-resources:1.0"
-        runtime ":ala-web-theme:0.2.2"
-        runtime ":csv:0.3.1"
+        runtime ":jquery:1.11.1" // Override jquery as 1.8.3 was being pulled in from somewhere
+        compile ":resources:1.2.8"
+
         runtime ":lesscss-resources:1.3.3"
-        compile ":markdown:1.1.1"
-        compile (":wmd:0.1") {
-            exclude "resources"
+
+        if (Environment.current != Environment.DEVELOPMENT) {
+            compile ":fieldcapture-hubs-plugin:1.0"
         }
 
-        build ":tomcat:$grailsVersion"
-
-        compile ':cache:1.0.1'
-        compile ":google-visualization:0.6.2"
-
-        compile ":mail:1.0.1"
-
-        compile ":excel-export:0.2.0"
-        compile ":excel-import:1.0.0"
-
-        compile (":images-client-plugin:0.2.3")
-
-        test ":geb:0.9.3"
-        test (":spock:0.7") {
-            exclude "spock-grails-support"
-        }
-//        build ':release:2.2.1', ':rest-client-builder:1.0.3', {
-//            export = false
-//        }
-        build ":release:2.2.1"
     }
 }
