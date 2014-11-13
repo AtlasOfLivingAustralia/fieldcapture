@@ -1,26 +1,81 @@
+import au.org.ala.fieldcapture.SettingService
+import org.codehaus.groovy.grails.commons.spring.GrailsWebApplicationContext
+
 class UrlMappings {
 
-	static mappings = {
-		"/$controller/$action?/$id?"{
+    static isHubValid(applicationContext, hub) {
+        def settingsService = applicationContext.getBean(SettingService)
+        return settingsService.isValidHub(hub)
+    }
+
+    static mappings = { GrailsWebApplicationContext applicationContext ->
+		"/$hub/$controller/$action?/$id?"{
 			constraints {
-				// apply constraints here
+				hub validator: {val, obj -> isHubValid(applicationContext, val)}
 			}
 		}
 
-        "/$controller/$id?"(parseRequest:true) {
+        "/$controller/$action?/$id?"{
+
+        }
+
+        "/$hub/$controller/$id?"(parseRequest:true) {
+            constraints {
+                hub validator: {val, obj -> isHubValid(applicationContext, val)}
+            }
             action = [GET: "get", POST: "upload", PUT: "upload", DELETE: "delete"]
         }
 
-        "/"(controller: 'home', action: 'index')
-        "/nocas/geoService"(controller: 'home', action: 'geoService')
-        "/myProfile"(controller: 'home', action: 'myProfile')
-        "/user/index"(controller: "user", action: "index")
-        "/user/checkEmailExists"(controller: "user", action: "checkEmailExists")
-        "/user/removeUserWithRole"(controller: "user", action: "removeUserWithRole")
-        "/user/addUserAsRoleToProject"(controller: "user", action: "addUserAsRoleToProject")
-        "/admin/user/${id}"(controller: "user", action: "show")
+        "/$controller/$id?"(parseRequest:true) {
+
+            action = [GET: "get", POST: "upload", PUT: "upload", DELETE: "delete"]
+        }
+
+        "/$hub/"(controller: 'home', action: 'index') {
+            constraints {
+                hub validator: {val, obj -> isHubValid(applicationContext, val)}
+            }
+        }
+        "/$hub"(controller: 'home', action: 'index') {
+
+            constraints {
+                hub validator: {val, obj -> isHubValid(applicationContext, val)}
+            }
+        }
+        "/"(controller: 'home', action: 'index') {
+
+        }
+        "/$hub/nocas/geoService"(controller: 'home', action: 'geoService') {
+            constraints {
+                hub validator: {val, obj -> isHubValid(applicationContext, val)}
+            }
+        }
+        "/nocas/geoService"(controller: 'home', action: 'geoService') {
+
+        }
+        "/$hub/myProfile"(controller: 'home', action: 'myProfile') {
+            constraints {
+                hub validator: {val, obj -> isHubValid(applicationContext, val)}
+            }
+        }
+        "/myProfile"(controller: 'home', action: 'myProfile') {
+
+        }
+
+        "/$hub/admin/user/$id"(controller: "user", action: "show") {
+            constraints {
+                hub validator: {val, obj -> isHubValid(applicationContext, val)}
+            }
+        }
+        "/admin/user/$id"(controller: "user", action: "show") {
+
+        }
 		"500"(view:'/error')
 		"404"(view:'/error')
-        "/$controller/ws/$action/$id"()
+        "/$hub?/$controller/ws/$action/$id" {
+            constraints {
+                hub validator: {val, obj -> isHubValid(applicationContext, val)}
+            }
+        }
     }
 }

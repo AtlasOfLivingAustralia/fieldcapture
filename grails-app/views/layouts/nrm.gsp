@@ -45,7 +45,7 @@
         <div class="navbar-inner">
             <div class="container-fluid">
                 <div class="nav logo">
-                    <a href="${createLink(uri:"/")}">
+                    <a href="${createLink(controller:"home")}">
                         <r:img dir="css/nrm/images" file="AustGovt_inline_white_on_transparent.png" alt="Australian Government Emblem" />
                     </a>
                 </div>
