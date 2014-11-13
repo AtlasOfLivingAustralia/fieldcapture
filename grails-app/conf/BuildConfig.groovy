@@ -66,7 +66,7 @@ grails.project.dependency.resolution = {
         runtime ":lesscss-resources:1.3.3"
 
         if (Environment.current != Environment.DEVELOPMENT) {
-            compile ":fieldcapture-hubs-plugin:1.0"
+            compile ":fieldcapture-plugin:1.0"
         }
 
     }
