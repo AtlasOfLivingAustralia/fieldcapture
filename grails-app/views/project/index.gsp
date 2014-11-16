@@ -812,15 +812,12 @@
 				self.userIsCaseManager = ko.observable(${user?.isCaseManager});
 				self.userIsAdmin = ko.observable(${user?.isAdmin});
 				
-				var projectDefault = "Active";
+				var projectDefault = "active";
 				if(project.status){
 					projectDefault = project.status; 
 				}
 				self.status = ko.observable(projectDefault);
-				self.projectStatus = [
-	                'Active',
-	                'Completed'
-	        	];
+				self.projectStatus = [{id: 'active', name:'Active'},{id:'completed',name:'Completed'}];
 
                 // todo: move this to mongodb lookup.
  	            self.threatOptions = [

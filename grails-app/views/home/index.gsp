@@ -83,7 +83,7 @@
                         <g:each var="f" in="${fqList}">
                             <g:set var="fqBits" value="${f?.tokenize(':')}"/>
                             <g:set var="newUrl"><fc:formatParams params="${params}" requiredParams="${reqParams}" excludeParam="${f}"/></g:set>
-                            <li><g:message code="label.${fqBits[0]}" default="${fqBits[0]}"/>: <g:message code="label.${fqBits[1]}" default="${fqBits[1]}"/>
+                            <li><g:message code="label.${fqBits[0]}" default="${fqBits[0]}"/>: <g:message code="label.${fqBits[1]}" default="${fqBits[1].capitalize()}"/>
                                 <a href="${newUrl?:"?"}" class="btn btn-inverse btn-mini tooltips" title="remove filter">
                                     <i class="icon-white icon-remove"></i></a>
                             </li>
@@ -105,9 +105,10 @@
                             <g:each var="t" in="${f.terms}" status="i">
                                 <g:if test="${i < max}">
                                     <li>
+
                                     		<input type="checkbox" class="facetSelection" name="facetSelection" value="fq=${fn.encodeAsURL()}:${t.term.encodeAsURL()}">
                                     		<a href="${fqLink}&fq=${fn.encodeAsURL()}:${t.term.encodeAsURL()}"><g:message
-                                            code="label.${t.term}" default="${t.term}"/></a> (${t.count})
+                                            code="label.${t.term.capitalize()}" default="${t.term.capitalize()}"/></a> (${t.count})
                                     </li>
                                 </g:if>
                             </g:each>
