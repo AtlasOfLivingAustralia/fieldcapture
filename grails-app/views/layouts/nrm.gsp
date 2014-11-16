@@ -46,7 +46,7 @@
             <div class="container-fluid">
                 <div class="nav logo">
                     <a href="${createLink(controller:"home")}">
-                        <r:img dir="css/nrm/images" file="AustGovt_inline_white_on_transparent.png" alt="Australian Government Emblem" />
+                        <r:img dir="css/nrm/images" file="AustGovt_inline_white_on_transparent.png" plugin="fieldcapture-plugin" alt="Australian Government Emblem" />
                     </a>
                 </div>
                 <div class="nav-collapse collapse pull-right">
