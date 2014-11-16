@@ -102,7 +102,7 @@
         <label>Project status
         	<fc:iconHelp title="Project status">Project status.</fc:iconHelp>
         </label>
-        <select class="input-xlarge" id="projectState" data-bind="options:projectStatus, value:status"></select>
+        <select class="input-xlarge" id="projectState" data-bind="options:projectStatus, optionsText: 'name', optionsValue: 'id', value:status"></select>
     </div>
     <div class="span4">
        
