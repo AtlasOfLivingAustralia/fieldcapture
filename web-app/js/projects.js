@@ -167,22 +167,9 @@ function findStageFromDate (timeline, UTCDateStr) {
  */
 function isStageReportable (project, stage) {
 
-    var lastStageIndex = -1;
-    var periodEndDate;
-
-    $.each(project.timeline, function (i, period) {
-        if(!periodEndDate){
-            periodEndDate = period.toDate;
-            lastStageIndex = i;
-        }
-        if (period.toDate >= periodEndDate) {
-            periodEndDate = period.toDate;
-            lastStageIndex = i;
-        }
-    });
-
     //is current stage a last stage?
-    if(lastStageIndex != -1 && project.timeline[lastStageIndex].name == stage.name){
+    if(project.timeline && project.timeline.length > 0 &&
+        project.timeline[project.timeline.length-1].name == stage.name){
        return project.plannedEndDate < new Date().toISOStringNoMillis();
     }
     else{
