@@ -1039,8 +1039,12 @@
                 self.loadPrograms = function (programsModel) {
                     self.transients.programsModel = programsModel;
                     $.each(programsModel.programs, function (i, program) {
+                        if (program.readOnly) {
+                            return;
+                        }
                         self.transients.programs.push(program.name);
                         self.transients.subprograms[program.name] = $.map(program.subprograms,function (obj, i){return obj.name});
+
                     });
                     self.associatedProgram(project.associatedProgram); // to trigger the computation of sub-programs
                 };
@@ -1518,16 +1522,18 @@
             var newsAndEventsMarkdown = '${(project.newsAndEvents?:"").markdownToHtml().encodeAsJavaScript()}';
             var projectStoriesMarkdown = '${(project.projectStories?:"").markdownToHtml().encodeAsJavaScript()}';
             var today = '${today}';
+            var programs = <fc:encodeModel model="${programs}"/>;
+
             var viewModel = new ViewModel(
                 checkAndUpdateProject(${project}),
                 newsAndEventsMarkdown,
                 projectStoriesMarkdown,
-    ${project.sites},
-    ${activities ?: []},
-    ${user?.isEditor?:false},
+                ${project.sites},
+                ${activities ?: []},
+                ${user?.isEditor?:false},
                 today,
-    ${themes});
-            viewModel.loadPrograms(${programs});
+                ${themes});
+            viewModel.loadPrograms(programs);
             ko.applyBindings(viewModel);
 
             // retain tab state for future re-visits
