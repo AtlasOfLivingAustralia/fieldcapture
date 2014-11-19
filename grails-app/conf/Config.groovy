@@ -195,6 +195,9 @@ if(!app.view.nocache){
 if(!merit.support.email) {
     merit.support.email = 'MERIT@environment.gov.au'
 }
+if(!app.default.hub) {
+    app.default.hub = 'default'
+}
 
 // Markdown configuration to match behaviour of the JavaScript editor.
 markdown.hardwraps = true
