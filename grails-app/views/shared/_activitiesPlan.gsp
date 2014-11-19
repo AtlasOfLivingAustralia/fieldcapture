@@ -645,8 +645,7 @@
                 });
             this.label = stageLabel;
             this.isCurrentStage = isCurrentStage;
-
-            this.isReportable = stage.toDate < new Date().toISOStringNoMillis();
+            this.isReportable = isStageReportable(project,stage);
             this.projectId = project.projectId;
             this.planViewModel = planViewModel;
 
