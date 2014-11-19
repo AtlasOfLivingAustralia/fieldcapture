@@ -821,6 +821,7 @@
 
                 // todo: move this to mongodb lookup.
  	            self.threatOptions = [
+ 	                'Australian Government policy change',
 	                'Blow-out in cost of project materials',
 	                'Changes to regional boundaries affecting the project area',
 					'Co-investor withdrawal / investment reduction',                
@@ -830,8 +831,7 @@
 					'Organisational risk (strategic, operational, resourcing and project levels)',
 					'Seasonal conditions (eg. drought, flood, etc.)',
 					'Timeliness of project approvals processes',
-					'Workplace health & safety (eg. Project staff and / or delivery partner injury or death)',
-                    'Other'
+					'Workplace health & safety (eg. Project staff and / or delivery partner injury or death)'
 	        	];
 	        	self.likelihoodOptions = [
 	                'Almost Certain',
