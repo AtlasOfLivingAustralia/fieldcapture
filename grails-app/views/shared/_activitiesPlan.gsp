@@ -309,7 +309,8 @@
     <br/>
     <span class="btn-group">
         <button type="button" data-bind="click:$parents[1].approveStage" class="btn btn-success"><i class="icon-ok icon-white"></i> Approve</button>
-        <button type="button" data-bind="click:$parents[1].variationModal" class="btn btn-danger"><i class="icon-remove icon-white"></i> Variation</button>
+        <button type="button" data-bind="click:$parents[1].rejectStage" class="btn btn-danger"><i class="icon-remove icon-white"></i> Reject</button>
+        <button type="button" data-bind="click:$parents[1].variationModal" class="btn btn-warning"><i class="icon-remove icon-white"></i> Variation</button>
     </span>
 </g:if>
 <g:if test="${user?.isAdmin}">
@@ -645,8 +646,7 @@
                 });
             this.label = stageLabel;
             this.isCurrentStage = isCurrentStage;
-
-            this.isReportable = stage.toDate < new Date().toISOStringNoMillis();
+            this.isReportable = isStageReportable(project,stage);
             this.projectId = project.projectId;
             this.planViewModel = planViewModel;
 

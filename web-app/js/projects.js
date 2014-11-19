@@ -160,6 +160,23 @@ function findStageFromDate (timeline, UTCDateStr) {
 }
 
 /**
+ * Returns stage report status.
+ * @param project
+ * @param stage
+ * @returns {boolean}
+ */
+function isStageReportable (project, stage) {
+
+    //is current stage a last stage?
+    if(project.timeline && project.timeline.length > 0 &&
+        project.timeline[project.timeline.length-1].name == stage.name){
+       return project.plannedEndDate < new Date().toISOStringNoMillis();
+    }
+    else{
+        return stage.toDate < new Date().toISOStringNoMillis();
+    }
+}
+/**
  * Returns the activities associated with the stage.
  * @param activities
  * @param timeline
