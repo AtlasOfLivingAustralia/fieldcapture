@@ -1519,7 +1519,7 @@
             var newsAndEventsMarkdown = '${(project.newsAndEvents?:"").markdownToHtml().encodeAsJavaScript()}';
             var projectStoriesMarkdown = '${(project.projectStories?:"").markdownToHtml().encodeAsJavaScript()}';
             var today = '${today}';
-            var programs = <fc:encodeModel model="${programs}"/>;
+            var programs = <fc:modelAsJavascript model="${programs}"/>;
 
             var viewModel = new ViewModel(
                 checkAndUpdateProject(${project}),
