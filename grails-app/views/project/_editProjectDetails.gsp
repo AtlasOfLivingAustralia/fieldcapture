@@ -255,8 +255,8 @@
 <div class="row-fluid space-after">
 	<div>
 		<div id="keq" class="well well-small">
-			<label><b>Project Events and Announcements
-				<fc:iconHelp title="Project Events and Announcements">This section provides Grantee’s a place to provide key forward (planned) announcables and invite the Australian Government to participate in launches, communication and media opportunities related to this requirement. This includes opportunities to announce recipients of small projects and related activities.</fc:iconHelp></label>
+			<label><b>Projects Announcements
+				<fc:iconHelp title="Projects Announcements">This section provides Grantee’s a place to provide key forward (planned) announcables and invite the Australian Government to participate in launches, communication and media opportunities related to this requirement. This includes opportunities to announce recipients of small projects and related activities.</fc:iconHelp></label>
 		</b>
 			<table style="width: 100%;">
 				<thead>

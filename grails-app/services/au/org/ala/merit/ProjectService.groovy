@@ -233,10 +233,11 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
         append(html,'<br>')
         append(html,'<h2><font color="">Supporting Documents Attached During This Stage</font></h2>')
         append(html,'<table cellpadding="3" border="0">')
-        append(html,'<tr><th>Document name</th><th>Uploaded date</th></tr>')
+        append(html,'<tr><th>Document name</th></tr>')
         project.documents?.each{
-            if(it.lastUpdated && "active".equals(it.status) && dateInSlot(stageStartDate,stageEndDate,it.lastUpdated)){
-                append(html,"<tr><td>${it.name}</td><td>${dateWithTime.parse(it.lastUpdated).format('dd-MM-YYYY hh:mm:ss')}</td></tr>")
+			String name = "Stage ${it.stage}";	
+            if("active".equals(it.status) && name.equals(stageName)){
+                append(html,"<tr><td>${it.name}</td></tr>")
             }
         }
         append(html,'</table>')
