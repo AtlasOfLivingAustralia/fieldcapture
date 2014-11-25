@@ -821,7 +821,7 @@
 
                 // todo: move this to mongodb lookup.
  	            self.threatOptions = [
-	                'Australian Government policy change',
+ 	            	'Changes to implementation priorities',
 	                'Blow-out in cost of project materials',
 	                'Changes to regional boundaries affecting the project area',
 					'Co-investor withdrawal / investment reduction',
@@ -1339,14 +1339,17 @@
                 self.addDocument = function(doc) {
                     // check permissions
                     if ((isUserEditor && doc.role !== 'approval') ||  doc.public) {
+                    	doc.maxStages = '${project.timeline.size()}';
                         self.documents.push(new DocumentViewModel(doc));
                     }
                 };
 
                 self.attachDocument = function() {
                     var url = '${g.createLink(controller:"proxy", action:"documentUpdate")}';
-                    showDocumentAttachInModal( url,new DocumentViewModel({role:'information'},{key:'projectId', value:'${project.projectId}'}), '#attachDocument')
-                        .done(function(result){self.documents.push(new DocumentViewModel(result))});
+                    showDocumentAttachInModal( url,
+                    		new DocumentViewModel({role:'information', maxStages:'${project.timeline.size()}'},{key:'projectId', value:'${project.projectId}'}), 
+                    		'#attachDocument')
+                        	.done(function(result){self.documents.push(new DocumentViewModel(result))});
                 };
                 self.editDocumentMetadata = function(document) {
                     var url = '${g.createLink(controller:"proxy", action:"documentUpdate")}' + "/" + document.documentId;
@@ -1354,8 +1357,6 @@
                         .done(function(result){
                             window.location.href = here; // The display doesn't update properly otherwise.
                         });
-
-
                 };
                 self.deleteDocument = function(document) {
                     var url = '${g.createLink(controller:"proxy", action:"deleteDocument")}/'+document.documentId;
