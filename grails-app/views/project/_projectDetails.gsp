@@ -79,7 +79,7 @@
 		    
 		    <div class="span6">
 		        <div id="project-keq" class="well well-small">
-		        	<label><b>Project Events and Announcements</b></label>
+		        	<label><b>Projects Announcements</b></label>
 		 			<table style="width: 100%;">
 				        <thead>
 				            <tr>
