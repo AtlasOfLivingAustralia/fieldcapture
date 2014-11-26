@@ -821,7 +821,6 @@
 
                 // todo: move this to mongodb lookup.
  	            self.threatOptions = [
- 	                'Australian Government policy change',
 	                'Blow-out in cost of project materials',
 	                'Changes to regional boundaries affecting the project area',
 					'Co-investor withdrawal / investment reduction',                
@@ -895,7 +894,8 @@
 	        	self.projectThemes =  $.map(themes, function(theme, i) {
 	                	return theme.name;
 	                });
-	        	self.projectThemes.push("Others");
+	        	self.projectThemes.push("MERI & Admin");
++	            self.projectThemes.push("Others"); 
 	        	
 	        	self.allYears = function(startYear) {
 		            var currentYear = new Date().getFullYear(), years = [];
