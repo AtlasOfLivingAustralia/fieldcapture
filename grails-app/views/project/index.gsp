@@ -821,7 +821,6 @@
 
                 // todo: move this to mongodb lookup.
  	            self.threatOptions = [
- 	            	'Changes to implementation priorities',
 	                'Blow-out in cost of project materials',
 	                'Changes to regional boundaries affecting the project area',
 					'Co-investor withdrawal / investment reduction',
