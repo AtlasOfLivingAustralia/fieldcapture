@@ -894,7 +894,8 @@
 	        	self.projectThemes =  $.map(themes, function(theme, i) {
 	                	return theme.name;
 	                });
-	        	self.projectThemes.push("Others");
+	            self.projectThemes.push("MERI & Admin");
+	            self.projectThemes.push("Others");    
 
 	        	self.allYears = function(startYear) {
 		            var currentYear = new Date().getFullYear(), years = [];
