@@ -241,19 +241,27 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
             }
         }
         append(html,'</table>')
-
-        append(html,'<br>')
-        append(html,'<p align="left">_________________________________________________________________________________________________________</p>')
-        append(html,'<br>')
-        append(html,'<h2><font color="">Outputs: Targets Vs Achieved</font></h2>')
-        append(html,'<table cellpadding="3" border="0">')
-        append(html,'<tr><th>Output type</th><th>Output Target Measure</th><th>Output Achieved(stage)</th><th>Output Achieved (project to date)</th><th>Output Target (whole project)</th></tr>')
-        project.outputTargets?.each{
-				append(html,'<tr><td>'+it.outputLabel+'</td><td>'+it.scoreLabel+'</td><td>'+
-                    getTotalStageScore(project, it.scoreName, stageStartDate, stageEndDate)+'</td><td>'+
-					getTotalScore(project, it.scoreName)+'</td><td>'+it.target+' '+it.units+ '</td></tr>')
+		append(html,'<br>')
+		
+		// use existing project dashboard calculation to display metrics data.
+		append(html,'<p align="left">_________________________________________________________________________________________________________</p>')
+		append(html,'<br>')
+		append(html,'<h2><font color="">Outputs: Targets Vs Achieved</font></h2>')
+		append(html,'<table cellpadding="3" border="0">')
+		append(html,'<tr><th>Output type</th><th>Output Target Measure</th><th>Output Achieved (project to date)</th><th>Output Target (whole project)</th></tr>')
+		
+		def metrics = summary(project.projectId); 			
+		metrics?.targets?.each{ k, v->
+			v?.each{ data ->
+				String units = data.score?.units ? data.score.units : '';
+				double total = 0.0;
+				data.results?.each { result ->
+					total = total + result.result;
+				}
+				append(html,"<tr><td>${data.score?.outputName}</td><td>${data.score?.label}</td><td>${total}</td><td>${data.target} ${units}</td></tr>")
 			}
-        append(html,'</table>')
+		}
+		append(html,'</table>')
         append(html,'<br>')
         append(html,'<p align="left">_________________________________________________________________________________________________________</p>')
         append(html,'<br>')
@@ -365,46 +373,6 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
 
     private append(StringBuilder str, String data){
         str.append(data).append(CharUtils.CR).append(CharUtils.LF)
-    }
-
-    private getTotalScore(project, scoreName){
-        double total = 0;
-        project?.activities?.each{
-            it.outputs?.each{
-                for (d in it.data){
-                    if(d.key.equals(scoreName)){
-                        try {
-                            total = total + d.value?.toDouble()
-                        }
-                        catch (Exception e) {
-                            log.warn "Invalid format", e
-                        }
-                    }
-                }
-            }
-        }
-        return total
-    }
-	
-    private getTotalStageScore(project, scoreName, stageStartDate, stageEndDate){
-        double total = 0;
-        project?.activities?.each{
-            if(dateInSlot(stageStartDate,stageEndDate,it.plannedEndDate)){
-                it.outputs?.each{
-						for (d in it.data){
-							if(d.key.equals(scoreName)){
-								try {
-									total = total + d.value?.toDouble()
-								}
-								catch (Exception e) {
-									log.warn "Invalid format", e
-								}
-							}
-						}
-					}
-            }
-        }
-        return total
     }
 
     private convertDate(date) {
