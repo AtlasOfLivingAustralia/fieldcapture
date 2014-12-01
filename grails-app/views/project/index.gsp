@@ -812,19 +812,15 @@
 				self.userIsCaseManager = ko.observable(${user?.isCaseManager});
 				self.userIsAdmin = ko.observable(${user?.isAdmin});
 
-				var projectDefault = "Active";
+				var projectDefault = "active";
 				if(project.status){
 					projectDefault = project.status;
 				}
-				self.status = ko.observable(projectDefault);
-				self.projectStatus = [
-	                'Active',
-	                'Completed'
-	        	];
+				self.status = ko.observable(projectDefault.toLowerCase());
+				self.projectStatus = [{id: 'active', name:'Active'},{id:'completed',name:'Completed'}];
 
                 // todo: move this to mongodb lookup.
  	            self.threatOptions = [
-	                'Australian Government policy change',
 	                'Blow-out in cost of project materials',
 	                'Changes to regional boundaries affecting the project area',
 					'Co-investor withdrawal / investment reduction',
@@ -898,7 +894,8 @@
 	        	self.projectThemes =  $.map(themes, function(theme, i) {
 	                	return theme.name;
 	                });
-	        	self.projectThemes.push("Others");
+	            self.projectThemes.push("MERI & Admin");
+	            self.projectThemes.push("Others");    
 
 	        	self.allYears = function(startYear) {
 		            var currentYear = new Date().getFullYear(), years = [];
@@ -1342,14 +1339,17 @@
                 self.addDocument = function(doc) {
                     // check permissions
                     if ((isUserEditor && doc.role !== 'approval') ||  doc.public) {
+                    	doc.maxStages = '${project.timeline.size()}';
                         self.documents.push(new DocumentViewModel(doc));
                     }
                 };
 
                 self.attachDocument = function() {
                     var url = '${g.createLink(controller:"proxy", action:"documentUpdate")}';
-                    showDocumentAttachInModal( url,new DocumentViewModel({role:'information'},{key:'projectId', value:'${project.projectId}'}), '#attachDocument')
-                        .done(function(result){self.documents.push(new DocumentViewModel(result))});
+                    showDocumentAttachInModal( url,
+                    		new DocumentViewModel({role:'information', maxStages:'${project.timeline.size()}'},{key:'projectId', value:'${project.projectId}'}), 
+                    		'#attachDocument')
+                        	.done(function(result){self.documents.push(new DocumentViewModel(result))});
                 };
                 self.editDocumentMetadata = function(document) {
                     var url = '${g.createLink(controller:"proxy", action:"documentUpdate")}' + "/" + document.documentId;
@@ -1357,8 +1357,6 @@
                         .done(function(result){
                             window.location.href = here; // The display doesn't update properly otherwise.
                         });
-
-
                 };
                 self.deleteDocument = function(document) {
                     var url = '${g.createLink(controller:"proxy", action:"deleteDocument")}/'+document.documentId;
