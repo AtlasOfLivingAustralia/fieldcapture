@@ -1192,12 +1192,14 @@ class ImportService {
         try {
 
             def prevGrantId = null
+            def prevExternalId = null
             def projectRows = []
             new CSVMapReader(reader).eachWithIndex { rowMap, i ->
 
                 def currentGrantId = rowMap[GmsMapper.GRANT_ID_COLUMN]
+                def currentExternalId = rowMap['EXTERNAL_ID']
                 // We have read all the details for a project.
-                if (currentGrantId != prevGrantId && prevGrantId) {
+                if (((currentGrantId != prevGrantId) || (currentExternalId != prevExternalId)) && prevGrantId) {
 
                     action(projectRows)
 
@@ -1206,6 +1208,7 @@ class ImportService {
                 rowMap.index = (i+2) // accounts for 1-based index of Excel and the column header row.
                 projectRows << rowMap
                 prevGrantId = currentGrantId
+                prevExternalId = currentExternalId
             }
             // import the last project
             action(projectRows)
