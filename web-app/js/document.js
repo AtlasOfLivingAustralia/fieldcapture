@@ -12,8 +12,15 @@ var imageLocation = "${imageUrl}";
  */
 function DocumentViewModel (doc, owner) {
     var self = this;
-
     roles = [{id: 'programmeLogic', name:'Programme Logic'},{id:'information',name:'Information'}];
+    stages = [];
+    
+    //Associate project document to stages.
+    this.maxStages = doc.maxStages;
+    for(i = 0; i < this.maxStages; i++){
+    	stages.push((i+1))
+    }
+    this.stage = ko.observable(doc ? doc.stage : 0);
     // NOTE that attaching a file is optional, ie you can have a document record without a physical file
     this.filename = ko.observable(doc ? doc.filename : '');
     this.filesize = ko.observable(doc ? doc.filesize : '');
@@ -144,7 +151,7 @@ function DocumentViewModel (doc, owner) {
     }
 
     this.modelForSaving = function() {
-        return ko.mapping.toJS(self, {'ignore':['helper', 'progress', 'hasPreview', 'error', 'fileLabel', 'file', 'complete', 'fileButtonText']});
+        return ko.mapping.toJS(self, {'ignore':['helper', 'progress', 'hasPreview', 'error', 'fileLabel', 'file', 'complete', 'fileButtonText','stages','maxStages']});
     }
 }
 
