@@ -1192,12 +1192,14 @@ class ImportService {
         try {
 
             def prevGrantId = null
+            def prevExternalId = null
             def projectRows = []
             new CSVMapReader(reader).eachWithIndex { rowMap, i ->
 
                 def currentGrantId = rowMap[GmsMapper.GRANT_ID_COLUMN]
+                def currentExternalId = rowMap['EXTERNAL_ID']
                 // We have read all the details for a project.
-                if (currentGrantId != prevGrantId && prevGrantId) {
+                if (((currentGrantId != prevGrantId) || (currentExternalId != prevExternalId)) && prevGrantId) {
 
                     action(projectRows)
 
@@ -1206,6 +1208,7 @@ class ImportService {
                 rowMap.index = (i+2) // accounts for 1-based index of Excel and the column header row.
                 projectRows << rowMap
                 prevGrantId = currentGrantId
+                prevExternalId = currentExternalId
             }
             // import the last project
             action(projectRows)
@@ -1402,21 +1405,23 @@ class ImportService {
             return [:]
         }
 
+        def siteId = ''
 
         if (!project.sites) {
             errors << "No sites for project with Grant Id: ${project.grantId}, External Id: ${project.externalId}"
-            return [:]
         }
-
+        else {
         // Find a sensible site to attach to our new activity
         def site = project.sites.find{it.name.startsWith('Project area')}
         if (!site) {
             site = project.sites[0]
         }
+            siteId = site?.siteId
+        }
 
         // Create our dodgy import activity in first stage, ignore targets.
         def activity = [projectId:project.projectId,
-                        siteId:site.siteId,
+                        siteId:siteId,
                         description:SUMMARY_ACTIVITY_NAME,
                         type:SUMMARY_ACTIVITY_NAME,
                         plannedStartDate:startDate,
@@ -1566,12 +1571,12 @@ class ImportService {
         project.timeline = newPrjTimeline
         project.name = config.name?:project.name
         project.originalProjectId = projectId // In case we need this later.
-        project.grantId = ''
-        project.externalId = ''
+        project.grantId = 'to be assigned'
+        project.externalId = 'to be assigned'
         project.funding = config.funding?:0
         project.plannedStartDate = NLP_CHANGE_OVER_DATE
         project.associatedProgram = 'National Landcare Programme'
-        project.associatedSubProgram = 'Regional Delivery'
+        project.associatedSubProgram = 'Regional Funding'
 
         // Save the new project.
         def newId = 'Temp New ID'
