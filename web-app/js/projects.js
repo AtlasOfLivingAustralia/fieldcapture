@@ -226,20 +226,23 @@ function isPastStage(timeline, currentStage, period) {
 
 function getBugetHeaders(timeline) {
 	var headers = [];
-	var startYr = '';
-	var endYr = '';
-	$.each(timeline, function (i, period) {
-		if (i == 0){
-			startYr = moment(period.fromDate).format('YYYY')
-			endYr = moment(period.toDate).format('YYYY');
-		}	
-		else if(timeline.length == i+1)
-			endYr = moment(period.toDate).format('YYYY');
-	});
+	var startYr = moment(timeline[0].fromDate).format('YYYY');
+	var endYr = moment(timeline[timeline.length-1].toDate).format('YYYY');
+	var startMonth = moment(timeline[0].fromDate).format('M');
+	var endMonth = moment(timeline[timeline.length-1].toDate).format('M');
+	
+	//Is startYr is between jan to june?
+	if(startMonth >= 1 &&  startMonth <= 6 ){
+		startYr--;
+	}
+		
+	//Is end year is between july to dec?
+	if(endMonth >= 7 &&  endMonth <= 12 ){
+		endYr++;
+	}
+
 	var count = endYr - startYr;
 	for (i = 0; i < count; i++){
-		//todo: check whether we need to cap the budget years
-		//if(i < 7)
 		headers.push(startYr + '/' + ++startYr);
 	}
 	return headers;
