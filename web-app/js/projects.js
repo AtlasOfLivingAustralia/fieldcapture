@@ -227,7 +227,7 @@ function isPastStage(timeline, currentStage, period) {
 function getBugetHeaders(timeline) {
 	var headers = [];
 	var startYr = moment(timeline[0].fromDate).format('YYYY');
-	var endYr = moment(timeline[timeline.length-1].toDate).format('YYYY');;
+	var endYr = moment(timeline[timeline.length-1].toDate).format('YYYY');
 	var startMonth = moment(timeline[0].fromDate).format('M');
 	var endMonth = moment(timeline[timeline.length-1].toDate).format('M');
 	
@@ -236,7 +236,7 @@ function getBugetHeaders(timeline) {
 		startYr--;
 	}
 		
-	//Is the end year is between july to dec?
+	//Is end year is between july to dec?
 	if(endMonth >= 7 &&  endMonth <= 12 ){
 		endYr++;
 	}
