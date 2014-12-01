@@ -13,7 +13,7 @@ class DocumentService {
 	static dateWithTimeFormat2 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
 	static convertTo = new SimpleDateFormat("dd MMM yyyy")
 
-    def webService, grailsApplication, userService, siteService
+    def webService, grailsApplication, userService, siteService, projectService, metadataService
 
     def createTextDocument(doc, content) {
         doc.content = content
@@ -39,12 +39,12 @@ class DocumentService {
     }
 		
 	def createHTMLStageReport(param) {
-
+		
 		def project = param.project
 		def activities = param.activities
 		def stageName = param.stageName
 		def status = param.status
-		
+	
 		def stage = ''
 		def planned = 0
 		def started = 0
@@ -53,7 +53,7 @@ class DocumentService {
 		def cancelled = 0
 		def stageStartDate = ''
 		def stageEndDate = ''
-		
+	
 		org.codehaus.groovy.runtime.NullObject.metaClass.toString = {return ''}
 		project.timeline?.each {
 			if(it.name.equals(stageName)){
@@ -64,31 +64,31 @@ class DocumentService {
 		}
 		activities.each{
 			def endDate = it.plannedEndDate ? it.plannedEndDate : it.endDate
-
+	
 			if(it.progress.equals('planned') && dateInSlot(stageStartDate,stageEndDate,endDate))
 				planned++
 			else if (it.progress.equals('started') && dateInSlot(stageStartDate,stageEndDate,endDate))
 				started++
 			else if (it.progress.equals('finished') && dateInSlot(stageStartDate,stageEndDate,endDate))
-                finished++
+				finished++
 			else if (it.progress.equals('deferred') && dateInSlot(stageStartDate,stageEndDate,endDate))
 				deferred++;
 			else if (it.progress.equals('cancelled') && dateInSlot(stageStartDate,stageEndDate,endDate))
 				cancelled++;
 		}
-
+	
 		StringBuilder html = new StringBuilder();
 		append(html,"<html lang=\"en-AU\">")
 		append(html,"<head>")
 		append(html,"<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />")
 		append(html,"</head>")
-
+	
 		append(html,'<body>')
 		append(html,'<font face="Arial">')
 		append(html,'<h1 align="center"><font color="#008080">MERIT STAGE SUMMARY</font></h1>')
 		append(html,'<br>')
 		append(html,'<h2><font color="">'+stage+'</font></h2></hr>')
-		
+	
 		append(html,'<table cellpadding="3" border="0">')
 		append(html,'<tr><td>Project Name</td><td>'+project.name+'</td></tr>')
 		append(html,'<tr><td>Recipient</td><td>'+project.organisationName+'</td></tr>')
@@ -100,7 +100,7 @@ class DocumentService {
 		append(html,'<tr><td>Grant ID</td><td>'+project.grantId+'</td></tr>')
 		append(html,'<tr><td>External ID</td><td>'+project.externalId+'</td></tr>')
 		append(html,'</table>')
-		
+	
 		append(html,'<br>')
 		append(html,'<p align="left">_________________________________________________________________________________________________________</p>')
 		append(html,'<br>')
@@ -113,115 +113,97 @@ class DocumentService {
 		append(html,'<tr><td>Deferred</td><td>'+deferred+'</td></tr>')
 		append(html,'<tr><td>Cancelled</td><td>'+cancelled+'</td></tr>')
 		append(html,'</table>')
-
+	
 		append(html,'<br>')
 		append(html,'<p align="left">_________________________________________________________________________________________________________</p>')
 		append(html,'<br>')
 		append(html,'<h2><font color="">Supporting Documents Attached During This Stage</font></h2>')
 		append(html,'<table cellpadding="3" border="0">')
-		append(html,'<tr><th>Document name</th><th>Uploaded date</th></tr>')
+		append(html,'<tr><th>Document name</th></tr>')
 		project.documents?.each{
-			if(it.lastUpdated && "active".equals(it.status) && dateInSlot(stageStartDate,stageEndDate,it.lastUpdated)){
-			    append(html,"<tr><td>${it.name}</td><td>${dateWithTime.parse(it.lastUpdated).format('dd-MM-YYYY hh:mm:ss')}</td></tr>")
+			String name = "Stage ${it.stage}";
+			if("active".equals(it.status) && name.equals(stageName)){
+				append(html,"<tr><td>${it.name}</td></tr>")
 			}
-		}	
+		}
 		append(html,'</table>')
-		
 		append(html,'<br>')
+		
+		// use existing project dashboard calculation to display metrics data.
 		append(html,'<p align="left">_________________________________________________________________________________________________________</p>')
 		append(html,'<br>')
 		append(html,'<h2><font color="">Outputs: Targets Vs Achieved</font></h2>')
 		append(html,'<table cellpadding="3" border="0">')
-		append(html,'<tr><th>Output type</th><th>Output Target Measure</th><th>Output Achieved(stage)</th><th>Output Achieved (project to date)</th><th>Output Target (whole project)</th></tr>')
-		project.outputTargets?.each{
-            append(html,'<tr><td>'+it.outputLabel+'</td><td>'+it.scoreLabel+'</td><td>'+
-                    getTotalStageScore(project, it.scoreName, stageStartDate, stageEndDate)+'</td><td>'+
-                    getTotalScore(project, it.scoreName)+'</td><td>'+it.target+' '+it.units+ '</td></tr>')
+		append(html,'<tr><th>Output type</th><th>Output Target Measure</th><th>Output Achieved (project to date)</th><th>Output Target (whole project)</th></tr>')
+		
+		def metrics = projectService.summary(project.projectId);
+		metrics?.targets?.each{ k, v->
+			v?.each{ data ->
+				String units = data.score?.units ? data.score.units : '';
+				double total = 0.0;
+				data.results?.each { result ->
+					total = total + result.result;
+				}
+				append(html,"<tr><td>${data.score?.outputName}</td><td>${data.score?.label}</td><td>${total}</td><td>${data.target} ${units}</td></tr>")
+			}
 		}
 		append(html,'</table>')
-
-		// todo: move this to lookup and rely on key.
-		def stageOverviewProgress = ''
-		def projectEnvironmentalOutcomes = ''
-		def projectSocialOutcomes = ''
-		def projectEconomicOutcomes = ''
-		def stageReportAdaptations = ''
-		def stageReportImplementation = ''
-		def stageReportNotes = ''
-		def stageReportImprovements = ''
-		def stageReportLessons = ''
-
-		project?.activities?.each {
-			if(it.type.equals('Progress, Outcomes and Learning - stage report')){
-				it.outputs?.each{
-					if(it.name.equals('Overview of Project Progress')){
-						stageOverviewProgress = it.data?.stageOverviewProgress
-					}
-					else if(it.name.equals('Environmental, Economic and Social Outcomes')){
-						projectEnvironmentalOutcomes = it.data?.projectEnvironmentalOutcomes
-						projectSocialOutcomes = it.data?.projectSocialOutcomes
-						projectEconomicOutcomes = it.data?.projectEconomicOutcomes
-					}
-					else if(it.name.equals('Implementation Update')){
-						stageReportAdaptations = it.data?.stageReportAdaptations
-						stageReportImplementation =  it.data?.stageReportImplementation
-					}
-					else if(it.name.equals('Lessons Learned and Improvements')){
-						stageReportNotes = it.data?.stageReportNotes
-						stageReportImprovements = it.data?.stageReportImprovements
-						stageReportLessons = it.data?.stageReportLessons
-					}
-				}
-			}	
-		}
-		
 		append(html,'<br>')
 		append(html,'<p align="left">_________________________________________________________________________________________________________</p>')
 		append(html,'<br>')
 		append(html,'<h2><font>Project Outcomes</font></h2>')
-        append(html,'<table cellpadding="3" border="0">')
-        append(html,'<tr><td>Outcomes</td><td>Project Goals</td></tr>');
+		append(html,'<table cellpadding="3" border="0">')
+		append(html,'<tr><td>Outcomes</td><td>Project Goals</td></tr>');
 		project?.custom?.details?.objectives?.rows1?.each {
-            append(html,'<tr><td>'+it.description+'</td>');
-            append(html,'<td>'+it.assets?.join(", ")+'</td></tr>');
+			append(html,'<tr><td>'+it.description+'</td>');
+			append(html,'<td>'+it.assets?.join(", ")+'</td></tr>');
 		}
-        append(html,'</table>')
-
+		append(html,'</table>')
+	
 		append(html,'<br>')
 		append(html,'<p align="left">_________________________________________________________________________________________________________</p>')
 		append(html,'<br>')
 		append(html,'<h2><font>Summary of Project Progress and Issues</font></h2>')
-		append(html,'<table cellpadding="3" border="0">')
-		append(html,'<tr><td>Overview of Project Progress*</td><td>'+stageOverviewProgress+'</td></tr>')
-		append(html,'<tr><td>Environmental*</td><td>'+projectEnvironmentalOutcomes+'</td></tr>')
-		append(html,'<tr><td>Social*</td><td>'+projectSocialOutcomes+'</td></tr>')
-		append(html,'<tr><td>Economic*</td><td>'+projectEconomicOutcomes+'</td></tr>')
-		append(html,'<tr><td>Implementation*</td><td>'+stageReportImplementation+'</br>'+stageReportAdaptations+'</td></tr>')
-		append(html,'<tr><td>Lessons Learned*</td><td>'+stageReportLessons+'</td></tr>')
-		append(html,'<tr><td>Improvements*</td><td>'+stageReportImprovements+'</td></tr>')
-		append(html,'<tr><td>Additional Comments*</td><td>'+stageReportNotes+'</td></tr>')
-		append(html,'</table>')
 		
+		project?.activities?.each {
+			if(it.type.equals('Progress, Outcomes and Learning - stage report')){
+				it.outputs?.each{
+					def type = metadataService.annotatedOutputDataModel("$it.name")
+					append(html,"<b> $it.name: </b> <br>");
+					it.data?.each{ k, v ->
+						def label = "Result"
+						type.each{ view ->
+							if(view.name.equals(k)){
+								label = view.label;
+							}
+						}
+						append(html,"${label}:- ${v}<br>");
+					}
+					append(html,"<br>");
+				}
+			}
+		}
+				
 		append(html,'<br>')
 		append(html,'<p align="left">_________________________________________________________________________________________________________</p>')
 		append(html,'<br>')
 		append(html,'<h2><font color="">Project Risk</font></h2>')
-		append(html,'<p>To help anticipate and determine management and mitigation strategies for the risks associated with delivering and '+ 
-					'reporting the outcomes of this Regional Delivery project, complete the table below. Risks identified should be those that the '+ 
-					'project team consider to be within the reasonable influence of the project team to anticipate and manage.</p>')
+		append(html,'<p>To help anticipate and determine management and mitigation strategies for the risks associated with delivering and '+
+				'reporting the outcomes of this Regional Delivery project, complete the table below. Risks identified should be those that the '+
+				'project team consider to be within the reasonable influence of the project team to anticipate and manage.</p>')
 		append(html,'<table cellpadding="3" border="0">')
 		append(html,'<tr><th>Risk/Threat Description</th><th>Likelihood</th><th>Consequence</th><th>Rating</th><th>Current Controls/Contingency </th><th>Residual Risk</th></tr>')
 		project?.risks?.rows?.each{
 			append(html,'<tr><td>'+it.description+'</td><td>'+it.likelihood+'</td><td>'+it.consequence+'</td><td>'+
-				it.riskRating+'</td><td>'+it.currentControl+'</td><td>'+it.residualRisk+'</td></tr>')
+					it.riskRating+'</td><td>'+it.currentControl+'</td><td>'+it.residualRisk+'</td></tr>')
 		}
 		append(html,'</table>')
-		
+	
 		append(html,'<br>')
 		append(html,'<p align="left">_________________________________________________________________________________________________________</p>')
 		append(html,'<br>')
 		append(html,'<h2><font color="">Project Against Each Activity</font></h2>')
-		
+	
 		int i=0;
 		project?.activities?.each{
 			def endDate = it.plannedEndDate ? it.plannedEndDate : it.endDate
@@ -233,7 +215,7 @@ class DocumentService {
 				append(html,'<tr><td>Status</td><td>'+it.progress+'</td></tr>')
 				append(html,'<tr><td>Activity Description</td><td>'+it.description+'</td></tr>')
 				append(html,'<tr><td>Major Theme</td><td>'+it.mainTheme+'</td></tr>')
-				
+	
 				def temp = it.siteId;
 				project.sites?.each{
 					if(it.siteId.equals(temp)){
@@ -242,7 +224,7 @@ class DocumentService {
 				}
 				append(html,"<tr><td>Start Date</td><td>${convertDate(it.startDate)}</td></tr>")
 				append(html,"<tr><td>End Date</td><td>${convertDate(it.endDate)}</td></tr>")
-				
+	
 				def reason = ''
 				if(it.progress.equals('deferred') || it.progress.equals('cancelled')){
 					it.documents.each{
@@ -271,10 +253,10 @@ class DocumentService {
 		append(html,"</font></body>")
 		append(html,"</html>")
 		org.codehaus.groovy.runtime.NullObject.metaClass.toString = {return 'null'}
-
+	
 		return html.toString();
 	}
-	
+		
 	private append(StringBuilder str, String data){
 		str.append(data).append(CharUtils.CR).append(CharUtils.LF)
 	}
