@@ -17,7 +17,7 @@ class HomeController {
             sites: siteService.list(),
             //sites: siteService.injectLocationMetadata(siteService.list()),
             activities: activityService.list(),
-            assessments: activityService.assessments(),
+            assessments: activityService.assessments()
         ]
     }
     def index() {
@@ -25,7 +25,10 @@ class HomeController {
         def resp = searchService.HomePageFacets(params)
         [   facetsList: params.facets.tokenize(","),
             description: settingService.getSettingText(SettingPageType.DESCRIPTION),
-            results: resp ]
+            results: resp,
+			promotionalProjects: projectService.listPromotionalProjects()
+		]
+		
     }
 
     def tabbed() {

@@ -17,7 +17,7 @@
     }
     </r:script>
     <script type="text/javascript" src="//www.google.com/jsapi"></script>
-    <r:require modules="knockout,mapWithFeatures,jquery_bootstrap_datatable,js_iso8601,amplify"/>
+    <r:require modules="knockout,mapWithFeatures,jquery_bootstrap_datatable,js_iso8601,amplify,sliderProMaster"/>
 </head>
 <body>
 <div id="wrapper" class="container-fluid">
@@ -46,12 +46,13 @@
         <h1 class="pull-left">Monitoring, Evaluation, Reporting and Improvement Tool (MERIT)</h1>
     </div>
 </div>
+<!-- 
 <div class="row-fluid large-space-after">
     <div class="span12">
         <markdown:renderHtml>${description}</markdown:renderHtml>
     </div>
 </div>
-
+ -->
 <g:if test="${flash.error || results.error}">
     <g:set var="error" value="${flash.error?:results.error}"/>
     <div class="row-fluid">
@@ -149,7 +150,10 @@
             </div>
         </div>
         <div class="span8">
-
+			<g:if test="${promotionalProjects?.size() > 1 }">
+				<g:render template="carousel" model="[promotionalProjects:promotionalProjects]"/>
+			</g:if>
+			
             <div class="tabbable">
                 <ul class="nav nav-tabs" data-tabs="tabs">
                     <li class="active"><a id="mapView-tab" href="#mapView" data-toggle="tab">Map</a></li>
@@ -320,6 +324,27 @@
     var projectListIds = [], facetList = [], mapDataHasChanged = false, mapBounds, projectSites; // globals
 
     $(window).load(function () {
+    	console.log(${promotionalProjects})
+    	//Slider loader
+    	$( '#carousel' ).sliderPro({
+			width: 960,
+			height: 250,
+			arrows: true,
+			buttons: false,
+			waitForLayers: true,
+			thumbnailWidth: 200,
+			thumbnailHeight: 100,
+			thumbnailPointer: true,
+			autoplay: true,
+			autoScaleLayers: false,
+			breakpoints: {
+				500: {
+					thumbnailWidth: 120,
+					thumbnailHeight: 50
+				}
+			}
+		}); 
+    
     
         var delay = (function(){
             var timer = 0;

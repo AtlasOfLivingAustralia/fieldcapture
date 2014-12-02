@@ -190,4 +190,11 @@ modules = {
         resource 'fancybox/jquery.fancybox.css?v=2.1.5'
 
     }
+	
+	sliderProMaster{
+		dependsOn 'jquery'
+		resource 'slider-pro-master/js/jquery.sliderPro.min.js'
+		resource 'slider-pro-master/css/slider-pro.min.css'
+		resource 'slider-pro-master/css/images/blank.gif'
+	}
 }

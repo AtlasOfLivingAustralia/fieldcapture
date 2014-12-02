@@ -818,6 +818,8 @@
 				}
 				self.status = ko.observable(projectDefault.toLowerCase());
 				self.projectStatus = [{id: 'active', name:'Active'},{id:'completed',name:'Completed'}];
+				self.promote = [{id: 'yes', name:'Yes'},{id:'no',name:'No'}];
+				self.promoteOnHomepage = ko.observable(project.promoteOnHomepage);
 
                 // todo: move this to mongodb lookup.
  	            self.threatOptions = [
@@ -1283,7 +1285,8 @@
                             associatedProgram: self.associatedProgram(),
                             associatedSubProgram: self.associatedSubProgram(),
                             funding: new Number(self.funding()),
-                            status:self.status()
+                            status:self.status(),
+                            promoteOnHomepage:self.promoteOnHomepage()
                         };
 
                         if (self.regenerateProjectTimeline()) {
