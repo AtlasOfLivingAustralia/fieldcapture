@@ -27,6 +27,10 @@ class ProjectService {
         def resp = webService.getJson(grailsApplication.config.ecodata.baseUrl + 'project/' + params)
         resp.list
     }
+	
+	def listPromotionalProjects() {
+		webService.getJson(grailsApplication.config.ecodata.baseUrl + 'project/promoted')
+	}
 
     def get(id, levelOfDetail = "", includeDeleted = false) {
 
