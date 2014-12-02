@@ -46,13 +46,7 @@
         <h1 class="pull-left">Monitoring, Evaluation, Reporting and Improvement Tool (MERIT)</h1>
     </div>
 </div>
-<!-- 
-<div class="row-fluid large-space-after">
-    <div class="span12">
-        <markdown:renderHtml>${description}</markdown:renderHtml>
-    </div>
-</div>
- -->
+
 <g:if test="${flash.error || results.error}">
     <g:set var="error" value="${flash.error?:results.error}"/>
     <div class="row-fluid">
