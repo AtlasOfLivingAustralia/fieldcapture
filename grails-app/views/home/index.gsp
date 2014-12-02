@@ -324,7 +324,6 @@
     var projectListIds = [], facetList = [], mapDataHasChanged = false, mapBounds, projectSites; // globals
 
     $(window).load(function () {
-    	console.log(${promotionalProjects})
     	//Slider loader
     	$( '#carousel' ).sliderPro({
 			width: 960,
