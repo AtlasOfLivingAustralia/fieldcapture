@@ -641,12 +641,33 @@
 				for(i = 0; i < period.length; i++){
 					headerArr.push({"data":period[i]});
 				}
+				
 				this.headers = ko.observableArray(headerArr);
 
 				var row = [];
 				o.rows ? row = o.rows : row.push(ko.mapping.toJS(new BudgetRowViewModel({},period)));
+
             	this.rows = ko.observableArray($.map(row, function (obj, i) {
-					return new BudgetRowViewModel(obj,period);
+					// Headers don't match with previous stored headers, adjust rows accordingly.
+					if(o.headers && period && o.headers.length != period.length) {
+						var updatedRow = [];
+						for(i = 0; i < period.length; i++) {
+							var index = -1;
+
+							for(j = 0; j < o.headers.length; j++) {
+								if(period[i] == o.headers[j].data) {
+									index = j;
+									break;
+								}
+							}
+							updatedRow.push(index != -1 ? obj.costs[index] : 0.0)
+							index = -1;
+						}
+						obj.costs = updatedRow;
+						return new BudgetRowViewModel(obj,period);
+					}
+					else
+						return new BudgetRowViewModel(obj,period);
 			    }));
 
 			    this.overallTotal = ko.computed(function (){
