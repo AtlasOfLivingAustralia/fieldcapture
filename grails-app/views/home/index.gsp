@@ -46,12 +46,6 @@
         <h1 class="pull-left">Monitoring, Evaluation, Reporting and Improvement Tool (MERIT)</h1>
     </div>
 </div>
-<div class="row-fluid large-space-after">
-    <div class="span12">
-        <markdown:renderHtml>${description}</markdown:renderHtml>
-    </div>
-</div>
-
 <g:if test="${flash.error || results.error}">
     <g:set var="error" value="${flash.error?:results.error}"/>
     <div class="row-fluid">
@@ -149,9 +143,9 @@
             </div>
         </div>
         <div class="span8">
-			%{--<g:if test="${promotionalProjects?.size() > 1 }">--}%
-				%{--<g:render template="carousel" model="[promotionalProjects:promotionalProjects]"/>--}%
-			%{--</g:if>--}%
+			<g:if test="${promotionalProjects?.size() > 1 }">
+				<g:render template="carousel" model="[promotionalProjects:promotionalProjects]"/>
+			</g:if>
 			
             <div class="tabbable">
                 <ul class="nav nav-tabs" data-tabs="tabs">
@@ -323,27 +317,6 @@
     var projectListIds = [], facetList = [], mapDataHasChanged = false, mapBounds, projectSites; // globals
 
     $(window).load(function () {
-    	//Slider loader
-    	/*$( '#carousel' ).sliderPro({
-			width: 960,
-			height: 250,
-			arrows: true,
-			buttons: false,
-			waitForLayers: true,
-			thumbnailWidth: 200,
-			thumbnailHeight: 100,
-			thumbnailPointer: true,
-			autoplay: true,
-			autoScaleLayers: false,
-			breakpoints: {
-				500: {
-					thumbnailWidth: 120,
-					thumbnailHeight: 50
-				}
-			}
-		}); */
-    
-    
         var delay = (function(){
             var timer = 0;
             return function(callback, ms){

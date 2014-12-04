@@ -193,6 +193,7 @@ modules = {
 	
 	sliderProMaster{
 		dependsOn 'jquery'
+		resource 'js/carousel.js'
 		resource 'slider-pro-master/js/jquery.sliderPro.min.js'
 		resource 'slider-pro-master/css/slider-pro.min.css'
 		resource 'slider-pro-master/css/images/blank.gif'
