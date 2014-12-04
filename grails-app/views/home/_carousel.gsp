@@ -1,4 +1,4 @@
-<div id="carousel" class="slider-pro">
+<div style="display:none" id="carousel" class="slider-pro">
 	<div class="sp-slides">
 		<g:each in="${promotionalProjects}" var="p">
 				<!--  Use this image, in case  if client wants to promote the project that has no primary project image. -->

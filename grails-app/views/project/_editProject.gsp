@@ -106,7 +106,7 @@
     </div>
 	<div class="span4">
 	        <label>Promote project on homepage
-	        	<fc:iconHelp title="Project status">Promote project on homepage.</fc:iconHelp>
+	        	<fc:iconHelp title="Promote project">Promote project on homepage.</fc:iconHelp>
 	        </label>
 	        <select class="input-xlarge" id="projectState" data-bind="options:promote, optionsCaption: 'Please select', optionsText: 'name', optionsValue: 'id', value:promoteOnHomepage"></select>
 	</div>
