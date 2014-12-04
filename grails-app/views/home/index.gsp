@@ -43,7 +43,7 @@
 
 <div class="row-fluid">
     <div class="span12" id="heading">
-        <h1 class="pull-left">Monitoring, Evaluation, Reporting and Improvement Tool (MERIT)</h1>
+        <h1 class="pull-left"><fc:homePageTitle/></h1>
     </div>
 </div>
 <div class="row-fluid large-space-after">
