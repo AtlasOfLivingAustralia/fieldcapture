@@ -618,7 +618,6 @@
             	var self = this;
             	if(!o) o = {}; 
             	this.name = ko.observable(o.name);
-            	if(!o.scheduledDate) o.scheduledDate = new Date(); 
             	this.scheduledDate = ko.observable(o.scheduledDate).extend({simpleDate: false});
             };
 
