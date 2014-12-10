@@ -7,6 +7,8 @@ grails.project.source.level = 1.6
 //grails.project.war.file = "target/${appName}-${appVersion}.war"
 grails.project.fork.run=false
 
+grails.project.dependency.resolver = "maven"
+
 //grails.plugin.location.'images-client-plugin'='../images-client-plugin'
 grails.project.dependency.resolution = {
     // inherit Grails' default dependencies
@@ -19,20 +21,10 @@ grails.project.dependency.resolution = {
     checksums true // Whether to verify checksums on resolve
 
     repositories {
-        inherits true // Whether to inherit repository definitions from plugins
-
-        grailsPlugins()
-        grailsHome()
-        grailsCentral()
-
         mavenLocal()
-        mavenCentral()
-
-        mavenRepo "http://maven.ala.org.au/repository/"
-        mavenRepo "http://repo.opengeo.org"
-        mavenRepo "http://download.osgeo.org/webdav/geotools/"
-
+        mavenRepo("http://nexus.ala.org.au/content/groups/public/")
     }
+
     def seleniumVersion = "2.21.0"
     def metadataExtractorVersion = "2.6.2"
     def imgscalrVersion = "4.2"
