@@ -1,7 +1,12 @@
 package au.org.ala.merit
 
+import au.org.ala.fieldcapture.DateUtils
 import grails.converters.JSON
 import org.apache.commons.lang.CharUtils
+import org.joda.time.DateTime
+import org.joda.time.Interval
+import org.joda.time.Period
+import org.joda.time.format.DateTimeFormat
 
 import java.text.SimpleDateFormat
 
@@ -150,6 +155,57 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
         }
 
         result
+    }
+
+    def createReportingActivitiesForProject(projectId, config) {
+        def activities = generateReportingActivitiesForProject(projectId, config)
+        activities.each { activity ->
+            activityService.create(activity)
+        }
+    }
+
+
+    /**
+     * This method supports automatically creating reporting activities for a project that re-occur at defined intervals.
+     * e.g. a stage report once every 6 months or a green army monthly report once per month.
+     * Activities will only be created when no reporting activity of the correct type exists within each period.
+     * @param projectId identifies the project.
+     * @param config List of [type:<activity type>, period:<period that must have a reporting activity>
+     * @return
+     */
+    def generateReportingActivitiesForProject(projectId, config) {
+
+        def project = get(projectId)
+
+        def startDate = DateUtils.parse(project.plannedStartDate)
+        def endDate = DateUtils.parse(project.plannedEndDate)
+
+
+        def toCreate = []
+        config.each {
+            def periodStartDate = DateUtils.alignToPeriod(startDate, it.period)
+            def activitiesOfType = project.activities.findAll {activity -> activity.type == it.type}
+
+            def existingActivitiesByPeriod = DateUtils.groupByDateRange(activitiesOfType, {it.plannedEndDate}, it.period, periodStartDate, endDate)
+
+            def gaps = []
+            existingActivitiesByPeriod.each { interval, activities ->
+                if (!activities) {
+                    gaps << interval;
+                }
+            }
+
+            gaps.each {Interval period ->
+                // Subtract a day from the end date so the activity is displayed as 01/01/2014-31/01/2014 etc
+                // If the period end date is after the project end date, use the project end date.
+                def end = period.end.isBefore(endDate) ? period.end.minusDays(1) : endDate
+                def activity = [type:it.type, plannedStartDate:DateUtils.format(period.start), plannedEndDate:DateUtils.format(end), projectId:projectId]
+                activity.description = activityService.defaultDescription(activity)
+                toCreate << activity
+            }
+        }
+        return toCreate
+
     }
 
     def createHTMLStageReport(param) {
@@ -392,4 +448,8 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
         }
         return false;
     }
+
+
+
+
 }

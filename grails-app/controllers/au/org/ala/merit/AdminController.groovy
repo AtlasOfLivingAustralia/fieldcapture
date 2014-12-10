@@ -2,6 +2,7 @@ package au.org.ala.merit
 
 import au.org.ala.fieldcapture.PreAuthorise
 import grails.converters.JSON
+import org.joda.time.Period
 import org.springframework.web.multipart.MultipartHttpServletRequest
 
 @PreAuthorise(accessLevel = 'officer', redirectController = "home")
@@ -147,5 +148,22 @@ class AdminController extends au.org.ala.fieldcapture.AdminController {
 
         }
         render results as JSON
+    }
+
+    def generateProjectReports() {
+        def projectId = params.projectId
+        def activityType = params.activityType
+        def period = params.period
+
+
+        if (!projectId || !activityType || !period) {
+            flash.errorMessage = 'Invalid inputs, no parameters may be null'
+        }
+        else {
+            def result = projectService.createReportingActivitiesForProject(projectId, [[type:activityType, period:Period.months(period as Integer)]])
+            flash.errorMessage = result.message
+        }
+
+        render view:'tools'
     }
 }
