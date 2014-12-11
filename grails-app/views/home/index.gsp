@@ -137,8 +137,7 @@
 	                                        <button class="btn btn-small sortAlpha"><i class="icon-filter"></i> Sort by name</button>
 	                                        <button class="btn btn-small sortCount"><i class="icon-filter"></i> Sort by count</button>
 	                                    </div>
-	                                   
-	                                    <a href="#" class="btn" data-dismiss="modal">Close</a>
+                                        <a href="#" class="btn" data-dismiss="modal">Close</a>
 	                                </div>
                             	 
                             </div>
@@ -305,7 +304,20 @@
     var projectListIds = [], facetList = [], mapDataHasChanged = false, mapBounds, projectSites; // globals
 
     $(window).load(function () {
-    
+
+        $.fn.clicktoggle = function(a, b) {
+            return this.each(function() {
+                var clicked = false;
+                $(this).click(function() {
+                    if (clicked) {
+                        clicked = false;
+                        return b.apply(this, arguments);
+                    }
+                    clicked = true;
+                    return a.apply(this, arguments);
+                });
+            });
+        };
         var delay = (function(){
             var timer = 0;
             return function(callback, ms){
@@ -554,7 +566,7 @@
 //        });
 
         // sort facets in popups by term
-        $(".sortAlpha").toggle(function(el) {
+        $(".sortAlpha").clicktoggle(function(el) {
             var $list = $(this).closest(".modal").find(".facetValues");
             sortList($list, "sortalpha", ">");
             $(this).find("i").removeClass("icon-flipped180");
@@ -580,7 +592,7 @@
         });
         
         // sort facets in popups by count
-        $(".sortCount").toggle(function(el) {
+        $(".sortCount").clicktoggle(function(el) {
             var $list = $(this).closest(".modal").find(".facetValues");
             sortList($list, "sortcount", "<");
             $(this).find("i").removeClass("icon-flipped180");
