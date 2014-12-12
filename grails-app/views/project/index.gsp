@@ -618,7 +618,6 @@
             	var self = this;
             	if(!o) o = {};
             	this.name = ko.observable(o.name);
-            	if(!o.scheduledDate) o.scheduledDate = new Date();
             	this.scheduledDate = ko.observable(o.scheduledDate).extend({simpleDate: false});
             };
 
@@ -645,7 +644,26 @@
 
 				var row = [];
 				o.rows ? row = o.rows : row.push(ko.mapping.toJS(new BudgetRowViewModel({},period)));
+
             	this.rows = ko.observableArray($.map(row, function (obj, i) {
+                    // Headers don't match with previously stored headers, adjust rows accordingly.
+					if(o.headers && period && o.headers.length != period.length) {
+						var updatedRow = [];
+						for(i = 0; i < period.length; i++) {
+							var index = -1;
+
+							for(j = 0; j < o.headers.length; j++) {
+								if(period[i] == o.headers[j].data) {
+									index = j;
+									break;
+								}
+							}
+							updatedRow.push(index != -1 ? obj.costs[index] : 0.0)
+							index = -1;
+						}
+						obj.costs = updatedRow;
+					}
+
 					return new BudgetRowViewModel(obj,period);
 			    }));
 
