@@ -113,9 +113,11 @@
     </div>
 
     <form id="outputTargetsContainer">
-        <h4>Output Targets</h4>
+        <h4 style="display: inline;">Total Project Outputs </h4>
+        <fc:iconHelp title="Total Project Outputs">Statement of Outputs to be delivered by end of the project should be SMART and link to a relevant Project Outcome. For example: By 30 June 2018, 10ha of riparian revegetation works will be completed along priority waterways towards Outcome 1.</fc:iconHelp>
+        <br/><br/>
         <table id="outputTargets" class="table table-condensed tight-inputs">
-            <thead><tr><th>Output Type</th><th>Outcome Description</th><th>Output Targets</th><th>Target</th></tr></thead>
+            <thead><tr><th>Output Type</th><th>Output Statement / Description</th><th>Output Targets</th><th>Target</th></tr></thead>
             <!-- ko foreach:outputTargets -->
             <tbody data-bind="foreach:scores">
             <tr>
