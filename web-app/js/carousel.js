@@ -1,5 +1,5 @@
 $(function() {
-	$('#carousel').fadeIn();
+/*	$('#carousel').fadeIn();
 	$('#carousel').sliderPro({
 		width: 960,
 		height: 250,
@@ -18,5 +18,6 @@ $(function() {
 			}
 		}
 	});
+*/	
 });    
     
