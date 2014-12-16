@@ -78,8 +78,10 @@ class OrganisationService extends au.org.ala.fieldcapture.OrganisationService {
             if (!activitiesOfType) {
                 return
             }
+            def firstActivityByEndDate = activitiesOfType.min{it.plannedEndDate}.plannedEndDate
+            def startDate = DateUtils.alignToPeriod(DateUtils.parse(firstActivityByEndDate), conf.period)
 
-            Map<Interval, List> activitiesByPeriod = DateUtils.groupByDateRange(activities, {it.plannedEndDate}, conf.period)
+            Map<Interval, List> activitiesByPeriod = DateUtils.groupByDateRange(activities, {it.plannedEndDate}, conf.period, startDate)
 
             activitiesByPeriod.each { interval, activitiesInInterval ->
 
