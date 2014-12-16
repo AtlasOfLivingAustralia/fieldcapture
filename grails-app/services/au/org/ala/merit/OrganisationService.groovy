@@ -11,7 +11,11 @@ import org.joda.time.Period
  */
 class OrganisationService extends au.org.ala.fieldcapture.OrganisationService {
 
-    def activityService
+    private static def APPROVAL_STATUS = ['unpublished', 'pendingApproval', 'published']
+
+    public static Comparator<String> APPROVAL_STATUS_COMPARATOR = {a,b -> APPROVAL_STATUS.indexOf(a) <=> APPROVAL_STATUS.indexOf(b)}
+
+    def activityService, messageSource
 
     /** Overrides the parent to add Green Army reports to the results */
     def get(String id, view = '') {
@@ -79,12 +83,18 @@ class OrganisationService extends au.org.ala.fieldcapture.OrganisationService {
 
             activitiesByPeriod.each { interval, activitiesInInterval ->
 
+                if (activitiesInInterval) {
+                    def publicationStatus = activitiesInInterval.min(APPROVAL_STATUS_COMPARATOR)
+                    def approvalStatus = messageSource.getMessage("report.publicationStatus."+publicationStatus, null, "Report not submitted", Locale.default)
+                    def finishedCount = activitiesInInterval.count { it.progress == 'finished' }
 
-                def progress = activitiesInInterval.max(ActivityService.PROGRESS_COMPARATOR)
-
-                def report = [type: conf.type, plannedStartDate: DateUtils.format(interval.start), plannedEndDate: DateUtils.format(interval.end), count: activitiesInInterval.size(), progress: progress]
-                report.description = activityService.defaultDescription(report)
-                reports << report
+                    def report = [type: conf.type, programme:'Green Army - Green Army Round 1',
+                                  plannedStartDate: DateUtils.format(interval.start), plannedEndDate: DateUtils.format(interval.end), dueDate: DateUtils.format(interval.end + Period.days(7)),
+                                  count: activitiesInInterval.size(), finishedCount:finishedCount,
+                                  approvalStatus:approvalStatus]
+                    report.description = activityService.defaultDescription(report)
+                    reports << report
+                }
             }
         }
 
