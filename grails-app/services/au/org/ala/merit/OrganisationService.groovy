@@ -48,7 +48,7 @@ class OrganisationService extends au.org.ala.fieldcapture.OrganisationService {
         def endDate = organisation.projects.max { it.plannedEndDate }.plannedEndDate
 
         def projectIds = organisation.projects.collect { it.projectId }
-        def criteria = [type: activityTypes, projectId: projectIds, plannedStartDate : startDate, plannedEndDate: endDate]
+        def criteria = [type: activityTypes, projectId: projectIds, dateProperty:'plannedEndDate', startDate : startDate, endDate: endDate]
 
         def response = activityService.search(criteria)
 
@@ -81,7 +81,7 @@ class OrganisationService extends au.org.ala.fieldcapture.OrganisationService {
             def firstActivityByEndDate = activitiesOfType.min{it.plannedEndDate}.plannedEndDate
             def startDate = DateUtils.alignToPeriod(DateUtils.parse(firstActivityByEndDate), conf.period)
 
-            Map<Interval, List> activitiesByPeriod = DateUtils.groupByDateRange(activities, {it.plannedEndDate}, conf.period, startDate)
+            Map<Interval, List> activitiesByPeriod = DateUtils.groupByDateRange(activitiesOfType, {it.plannedEndDate}, conf.period, startDate)
 
             activitiesByPeriod.each { interval, activitiesInInterval ->
 
