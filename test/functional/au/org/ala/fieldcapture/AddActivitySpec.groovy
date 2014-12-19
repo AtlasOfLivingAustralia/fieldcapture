@@ -2,7 +2,6 @@ package au.org.ala.fieldcapture
 
 import geb.Browser
 import geb.spock.GebReportingSpec
-import org.codehaus.groovy.grails.commons.ConfigurationHolder
 import org.openqa.selenium.Cookie
 import pages.AddActivityPage
 import pages.EditActivityPage
