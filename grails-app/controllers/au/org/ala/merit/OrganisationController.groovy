@@ -18,7 +18,7 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
             [name:it, dataModel:metadataService.annotatedOutputDataModel(it)]
         }
 
-        def criteria = [type:activityType, projectId:organisation.projects.collect{it.projectId}, plannedStartDate:params.plannedStartDate, plannedEndDate:params.plannedEndDate]
+        def criteria = [type:activityType, projectId:organisation.projects.collect{it.projectId}, dateProperty:'plannedEndDate', startDate:params.plannedStartDate, endDate:params.plannedEndDate]
 
         def activityResp = activityService.search(criteria)
         def activities = activityResp?.resp.activities
