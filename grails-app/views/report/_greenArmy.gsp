@@ -30,3 +30,22 @@
     Non-Indigenous Project participation by Month
     <fc:groupedChart elementId="projectchartnonindigenous" scores="${['No. of non indigenous Participants who commenced projects in period', 'No. of non indigenous Participants who did not complete projects in period', 'No. of Participants who completed Projects in period'].collect{[label:it]}}" data="${report.outputData}"/>
 </div>
+
+
+<div>
+
+
+    <g:each in="${report.outputData}" var="group">
+
+        <div>
+            <h4>${group.group}</h4>
+            <g:each in="${group.results}" var="score">
+                <fc:renderScore score="${score}"/>
+            </g:each>
+        </div>
+
+
+    </g:each>
+
+
+</div>
