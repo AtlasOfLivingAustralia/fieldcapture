@@ -29,10 +29,10 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
 
     def greenArmyReport() {
 
-        DateTime date = new DateTime(2014, 1, 1, 0, 0, 0)
+        DateTime date = new DateTime(2014, 8, 1, 0, 0, 0)
         Period period = Period.months(1)
 
-        DateTime end = new DateTime(2015, 6, 1, 0, 0, 0)
+        DateTime end = new DateTime(2015, 2, 1, 0, 0, 0)
 
         def dateRanges = []
 
@@ -44,6 +44,15 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
         params.dates = dateRanges
 
         def results = searchService.report(params)
+
+        // Remove the overflow buckets for now.  TODO may need to make this configurable or check for no data.
+        if (results.outputData && results.outputData[0].group.startsWith("Before")) {
+            results.outputData.remove(0)
+        }
+
+        if (results.outputData && results.outputData[results.outputData.size()-1].group.startsWith("After")) {
+            results.outputData.remove(results.outputData.size()-1)
+        }
 
 
         render view:'_greenArmy', model:[report:results]

@@ -3,16 +3,49 @@
 
 <div>
 
-    <fc:groupedTable elementId="gatable" scores="${['No. starting accredited training', 'No. starting non-accredited training', 'Total No. of participants who completed training', 'No. who exited training', 'No. who completed training', 'No. of Participants who commenced Projects in period', 'No. of Participants who did not complete projects in period', 'No. of Participants who completed Projects in period'].collect{[label:it]}}" data="${report.outputData}"/>
+    <fc:groupedTable elementId="gatable" scores="${
+        ['No. non indigenous participants starting accredited training', 'No. indigenous participants starting accredited training', 'No. non indigenous participants commencing non-accredited training', 'No. indigenous participants commencing non-accredited training',
+         'No. of non indigenous Participants who exited training during period', 'No. of indigenous Participants who exited training during period', 'No. of non indigenous Participants who completed training in period', 'No. of indigenous Participants who completed training in period',
+        'No. of non indigenous Participants who commenced projects in period', 'No. of indigenous Participants who commenced projects in period', 'No. of non indigenous Participants who did not complete projects in period', 'No. of indigenous Participants who did not complete projects in period',
+        'No. of non indigenous Participants who completed projects in period', 'No. of indigenous Participants who completed projects in period'].collect{[label:it]}}" data="${report.outputData}"/>
 </div>
 
 <div>
-    Training participation by Month
-    <fc:groupedChart elementId="trainingchart" scores="${['No. starting accredited training', 'No. starting non-accredited training', 'No. who exited training', 'No. who completed training'].collect{[label:it]}}" data="${report.outputData}"/>
+    Indigenous Training participation by Month
+    <fc:groupedChart elementId="trainingchartindigenous" scores="${['No. indigenous participants starting accredited training', 'No. indigenous participants commencing non-accredited training', 'No. of indigenous Participants who exited training during period', 'No. of indigenous Participants who completed training in period'].collect{[label:it]}}" data="${report.outputData}"/>
+</div>
+
+<div>
+    Non-Indigenous Training participation by Month
+    <fc:groupedChart elementId="trainingchartnonindigenous" scores="${['No. non indigenous participants starting accredited training', 'No. non indigenous participants commencing non-accredited training', 'No. of non indigenous Participants who exited training during period', 'No. of non indigenous Participants who completed training in period'].collect{[label:it]}}" data="${report.outputData}"/>
 </div>
 
 
 <div>
-    Project participation by Month
-    <fc:groupedChart elementId="projectchart" scores="${['No. of Participants who commenced Projects in period', 'No. of Participants who did not complete projects in period', 'No. of Participants who completed Projects in period'].collect{[label:it]}}" data="${report.outputData}"/>
+    Indigenous Project participation by Month
+    <fc:groupedChart elementId="projectchartindigenous" scores="${['No. of indigenous Participants who commenced projects in period', 'No. of indigenous Participants who did not complete projects in period', 'No. of indigenous Participants who completed projects in period'].collect{[label:it]}}" data="${report.outputData}"/>
+</div>
+
+<div>
+    Non-Indigenous Project participation by Month
+    <fc:groupedChart elementId="projectchartnonindigenous" scores="${['No. of non indigenous Participants who commenced projects in period', 'No. of non indigenous Participants who did not complete projects in period', 'No. of Participants who completed Projects in period'].collect{[label:it]}}" data="${report.outputData}"/>
+</div>
+
+
+<div>
+
+
+    <g:each in="${report.outputData}" var="group">
+
+        <div>
+            <h4>${group.group}</h4>
+            <g:each in="${group.results}" var="score">
+                <fc:renderScore score="${score}"/>
+            </g:each>
+        </div>
+
+
+    </g:each>
+
+
 </div>
