@@ -675,6 +675,7 @@
                         var layer = {};
                         layer.color = i < staticColors.length ? staticColors[facet.layerType] : getRandomColor();
                         layer.layerName = facet.layerName;
+                        layer.count = facet.count;
                         layers.push(layer);
                     });
 
@@ -899,7 +900,7 @@
             table.append('<tr>' +
              '<td><input checked type="checkbox" class="layerSelection" id="'+idx+'" value="'+layer.layerName+'"></td>' +
               '<td style="background:'+layer.color+'"></td>' +
-               '<td>'+layer.layerName+'</td></tr>');
+               '<td>'+layer.layerName + ' (' + layer.count + ')</td></tr>');
         });
         $('input[type="checkbox"][class="layerSelection"]').change(function() {
             var map = $('#'+this.id).prop('checked') ? alaMap.map : null;
