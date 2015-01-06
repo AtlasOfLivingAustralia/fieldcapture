@@ -1357,7 +1357,7 @@
                 self.addDocument = function(doc) {
                     // check permissions
                     if ((isUserEditor && doc.role !== 'approval') ||  doc.public) {
-                    	doc.maxStages = '${project.timeline.size()}';
+                    	doc.maxStages = '${project.timeline?.size()}';
                         self.documents.push(new DocumentViewModel(doc));
                     }
                 };
@@ -1365,7 +1365,7 @@
                 self.attachDocument = function() {
                     var url = '${g.createLink(controller:"proxy", action:"documentUpdate")}';
                     showDocumentAttachInModal( url,
-                    		new DocumentViewModel({role:'information', maxStages:'${project.timeline.size()}'},{key:'projectId', value:'${project.projectId}'}), 
+                    		new DocumentViewModel({role:'information', maxStages:'${project.timeline?.size()}'},{key:'projectId', value:'${project.projectId}'}),
                     		'#attachDocument')
                         	.done(function(result){self.documents.push(new DocumentViewModel(result))});
                 };
