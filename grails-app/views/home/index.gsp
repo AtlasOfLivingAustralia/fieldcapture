@@ -172,7 +172,7 @@
                     <div style="display:none;" id="map-legend">
                         <span id="colorOptions">
                             <select style="font-size:100%; width:150px; opacity:0.8;filter:alpha(opacity=50);" id="mapchange" onchange="generateMap(this.options[this.selectedIndex].value)">
-                                <option value="-1">Mark sites by</option>
+                                <option value="-1">Mark points by</option>
                                     <g:each var="fn" in="${mapFacets}">
                                         <g:set var="f" value="${results.facets.get(fn)}"/>
                                         <g:if test="${fn != 'class' && f?.terms?.size() > 0}">
@@ -1022,7 +1022,7 @@
 
      function getRandomColor(h) {
        return (function(h){return '#000000'.substr(0,7-h.length)+h})((~~(Math.random()*(1<<24))).toString(16));
-    }
+     }
 
 </r:script>
 </body>
