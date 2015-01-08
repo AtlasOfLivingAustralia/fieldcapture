@@ -662,21 +662,21 @@
             var projectIdMap = {};
             var bounds = new google.maps.LatLngBounds();
             var geoPoints = data;
-            var layers = [];
-            if (geoPoints.total) {
+            var legends = [];
 
+            if (geoPoints.total) {
                 var projectLinkPrefix = "${createLink(controller:'project')}/";
                 var siteLinkPrefix = "${createLink(controller:'site')}/";
                 $("#numberOfSites").html(geoPoints.total + " sites");
 
                 if (geoPoints.total > 0) {
                     var staticColors = ['#A52A2A','#00008B','#8B7355','#53868B','#458B00','#8B4513','#6495ED','#8B8878','#006400','#483D8B','#8B0A50','#8B6914']
-                    $.each(geoPoints.selectedFacet, function(i,facet){
-                        var layer = {};
-                        layer.color = i < staticColors.length ? staticColors[facet.layerType] : getRandomColor();
-                        layer.layerName = facet.layerName;
-                        layer.count = facet.count;
-                        layers.push(layer);
+                    $.each(geoPoints.selectedFacetTerms, function(i,facet){
+                        var legend = {};
+                        legend.color = i < staticColors.length ? staticColors[facet.index] : getRandomColor();
+                        legend.legendName = facet.legendName;
+                        legend.count = facet.count;
+                        legends.push(legend);
                     });
 
                     $.each(geoPoints.projects, function(j, project) {
@@ -698,9 +698,9 @@
                                 var lon = parseFloat(point.longitude);
                                 if (!isNaN(lat) && !isNaN(lon)) {
                                     if (lat >= -90 && lat <=90 && lon >= -180 && lon <= 180) {
-                                        if(el.layerType !== undefined && el.layerType != null){
-                                            point.color = layers[el.layerType].color;
-                                            point.layerName = el.layerName;
+                                        if(el.index !== undefined && el.index != null){
+                                            point.color = legends[el.index].color;
+                                            point.legendName = el.legendName;
                                         }
                                         features.push(point);
                                         bounds.extend(new google.maps.LatLng(el.loc.lat,el.loc.lon));
@@ -729,7 +729,7 @@
             initialiseMap(features, bounds);
             mapBounds = bounds;
             updateProjectTable();
-            features.length > 0 ? showLayers(layers) : "";
+            features.length > 0 ? showLegends(legends) : "";
 
         }).error(function (request, status, error) {
             console.error("AJAX error", status, error);
@@ -893,18 +893,18 @@
         }
     }
 
-    function showLayers(layers){
+    function showLegends(legends){
         var table = $("#legend tbody");
         $(table).empty();
-        $.each(layers, function(idx, layer){
+        $.each(legends, function(idx, legend){
             table.append('<tr>' +
-             '<td><input checked type="checkbox" class="layerSelection" id="'+idx+'" value="'+layer.layerName+'"></td>' +
-              '<td style="background:'+layer.color+'"></td>' +
-               '<td>'+layer.layerName + ' (' + layer.count + ')</td></tr>');
+             '<td><input checked type="checkbox" class="legendSelection" id="'+idx+'" value="'+legend.legendName+'"></td>' +
+              '<td style="background:'+legend.color+'"></td>' +
+               '<td>'+legend.legendName + ' (' + legend.count + ')</td></tr>');
         });
-        $('input[type="checkbox"][class="layerSelection"]').change(function() {
+        $('input[type="checkbox"][class="legendSelection"]').change(function() {
             var map = $('#'+this.id).prop('checked') ? alaMap.map : null;
-            alaMap.removeMarkers(this.value, map);
+            alaMap.toggleMarkerVisibilty(this.value, map);
         });
     }
 
