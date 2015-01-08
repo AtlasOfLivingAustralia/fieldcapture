@@ -904,7 +904,7 @@
         });
         $('input[type="checkbox"][class="legendSelection"]').change(function() {
             var map = $('#'+this.id).prop('checked') ? alaMap.map : null;
-            alaMap.toggleMarkerVisibilty(this.value, map);
+            alaMap.toggleMarkerVisibility(this.value, map);
         });
     }
 
