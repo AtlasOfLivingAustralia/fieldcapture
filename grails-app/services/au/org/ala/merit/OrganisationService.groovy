@@ -25,8 +25,8 @@ class OrganisationService extends au.org.ala.fieldcapture.OrganisationService {
         // This is the behaviour we want for green army.  it may be extendible to other programs (e.g.
         // biodiversity fund has a stage report and end of project report)
         def reportConf = [
-                [type: 'Green Army - Monthly project status report', period: Period.months(1)],
-                [type: 'Green Army - Quarterly project report', period: Period.months(3)]]
+                [type: 'Green Army - Monthly project status report', period: Period.months(1), bulkEditable: true],
+                [type: 'Green Army - Quarterly project report', period: Period.months(3), bulkEditable: false]]
         organisation.reports = getReportsForOrganisation(organisation, reportConf)
         organisation
     }
@@ -93,7 +93,7 @@ class OrganisationService extends au.org.ala.fieldcapture.OrganisationService {
                     def report = [type: conf.type, programme:'Green Army - Green Army Round 1',
                                   plannedStartDate: DateUtils.format(interval.start), plannedEndDate: DateUtils.format(interval.end), dueDate: DateUtils.format(interval.end + Period.days(7)),
                                   count: activitiesInInterval.size(), finishedCount:finishedCount,
-                                  approvalStatus:approvalStatus]
+                                  approvalStatus:approvalStatus, bulkEditable: conf.bulkEditable, activities:activitiesInInterval]
                     report.description = activityService.defaultDescription(report)
                     reports << report
                 }
