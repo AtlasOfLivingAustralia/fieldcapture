@@ -41,6 +41,40 @@
         </ul>
     </g:if>
 
+    <div data-bind="template: {name:headerTemplate, afterRender:initialiseMap}">
+
+    </div>
+
+    <g:if env="development" test="${!printView}">
+        <div class="expandable-debug">
+            <hr />
+            <h3>Debug</h3>
+            <div>
+                <h4>KO model</h4>
+                <pre data-bind="text:ko.toJSON($root.modelForSaving(),null,2)"></pre>
+                <h4>Activity</h4>
+                <pre>${activity?.encodeAsHTML()}</pre>
+                <h4>Site</h4>
+                <pre>${site?.encodeAsHTML()}</pre>
+                <h4>Sites</h4>
+                <pre>${(sites as JSON).toString()}</pre>
+                <h4>Project</h4>
+                <pre>${project?.encodeAsHTML()}</pre>
+                <h4>Activity model</h4>
+                <pre>${metaModel}</pre>
+                <h4>Output models</h4>
+                <pre>${outputModels?.encodeAsHTML()}</pre>
+                <h4>Themes</h4>
+                <pre>${themes.toString()}</pre>
+                <h4>Map features</h4>
+                <pre>${mapFeatures.toString()}</pre>
+            </div>
+        </div>
+    </g:if>
+</div>
+
+<script type="text/html" id="activityHeader">
+
     <div class="row-fluid title-block well well-small input-block-level">
         <div class="span12 title-attribute">
             <h1><span data-bind="click:goToProject" class="clickable">${project?.name?.encodeAsHTML() ?: 'no project defined!!'}</span></h1>
@@ -144,35 +178,18 @@
         </div>
 
     </div>
-
-    <g:if env="development" test="${!printView}">
-        <div class="expandable-debug">
-            <hr />
-            <h3>Debug</h3>
-            <div>
-                <h4>KO model</h4>
-                <pre data-bind="text:ko.toJSON($root.modelForSaving(),null,2)"></pre>
-                <h4>Activity</h4>
-                <pre>${activity?.encodeAsHTML()}</pre>
-                <h4>Site</h4>
-                <pre>${site?.encodeAsHTML()}</pre>
-                <h4>Sites</h4>
-                <pre>${(sites as JSON).toString()}</pre>
-                <h4>Project</h4>
-                <pre>${project?.encodeAsHTML()}</pre>
-                <h4>Activity model</h4>
-                <pre>${metaModel}</pre>
-                <h4>Output models</h4>
-                <pre>${outputModels?.encodeAsHTML()}</pre>
-                <h4>Themes</h4>
-                <pre>${themes.toString()}</pre>
-                <h4>Map features</h4>
-                <pre>${mapFeatures.toString()}</pre>
-            </div>
-        </div>
-    </g:if>
+</script>
+<script type="text/html" id="reportHeader">
+<div class="row-fluid title-block well well-small input-block-level">
+    <div class="span12 title-attribute">
+        <h1><span data-bind="click:goToProject" class="clickable">${project?.name?.encodeAsHTML() ?: 'no project defined!!'}</span></h1>
+        <h3 data-bind="css:{modified:dirtyFlag.isDirty},attr:{title:'Has been modified'}">Activity: <span data-bind="text:type"></span></h3>
+        <h4><span>${project.associatedProgram?.encodeAsHTML()}</span> <span>${project.associatedSubProgram?.encodeAsHTML()}</span></h4>
+        <h4>Report period from <span data-bind="text:plannedStartDate.formattedDate"></span> to <span data-bind="text:plannedEndDate.formattedDate"></span> </h4>
+    </div>
 </div>
 
+</script>
 <!-- ko stopBinding: true -->
 <g:each in="${metaModel?.outputs}" var="outputName">
         <g:if test="${outputName != 'Photo Points'}">
@@ -291,13 +308,14 @@
 </g:each>
 <!-- /ko -->
 
-
+    <g:if test="${metaModel.supportsPhotoPoints}">
     <div class="output-block" data-bind="with:transients.photoPointModel">
         <h3>Photo Points</h3>
 
          <g:render template="/site/photoPoints" plugin="fieldcapture-plugin"></g:render>
 
     </div>
+    </g:if>
 <g:if test="${!printView}">
     <div class="form-actions">
         <button type="button" id="save" class="btn btn-primary">Save changes</button>
@@ -495,6 +513,12 @@
             self.transients.markedAsFinished.subscribe(function (finished) {
                 self.progress(finished ? 'finished' : 'started');
             });
+            self.headerTemplate = function(something) {
+                if (metaModel.type === 'Report') {
+                    return 'reportHeader';
+                }
+                return 'activityHeader';
+            };
 
             self.confirmSiteChange = function() {
 
@@ -530,16 +554,19 @@
                 }
             };
 
-            self.transients.photoPointModel = ko.observable(new PhotoPointViewModel(site, activity));
-            self.updatePhotoPointModel = function(site) {
-                self.transients.photoPointModel(new PhotoPointViewModel(site, activity));
-            };
+            if (metaModel.supportsPhotoPoints) {
+                self.transients.photoPointModel = ko.observable(new PhotoPointViewModel(site, activity));
+                self.updatePhotoPointModel = function(site) {
+                    self.transients.photoPointModel(new PhotoPointViewModel(site, activity));
+                };
+            }
 
             self.modelForSaving = function () {
                 // get model as a plain javascript object
                 var jsData = ko.mapping.toJS(self, {'ignore':['transients']});
-                jsData.photoPoints = self.transients.photoPointModel().modelForSaving();
-
+                if (metaModel.supportsPhotoPoints) {
+                    jsData.photoPoints = self.transients.photoPointModel().modelForSaving();
+                }
                  // If we leave the site or theme undefined, it will be ignored during JSON serialisation and hence
                 // will not overwrite the current value on the server.
                 var possiblyUndefinedProperties = ['siteId', 'mainTheme'];
@@ -573,31 +600,36 @@
             // make sure progress moves to started if we save any data (unless already finished)
             // (do this here so the model becomes dirty)
             self.progress(self.transients.markedAsFinished() ? 'finished' : 'started');
+
+            self.initialiseMap = function() {
+                if (metaModel.supportsSites) {
+                    var mapFeatures = $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
+                    if (!mapFeatures) {
+                        mapFeatures = {zoomToBounds: true, zoomLimit: 15, highlightOnHover: true, features: []};
+                    }
+                    init_map_with_features({
+                            mapContainer: "smallMap",
+                            zoomToBounds:true,
+                            zoomLimit:16,
+                            featureService: "${createLink(controller: 'proxy', action: 'feature')}",
+                            wmsServer: "${grailsApplication.config.spatial.geoserverUrl}"
+                        },
+                        mapFeatures
+                    );
+                }
+            };
+
         };
 
         var activity = JSON.parse('${(activity as JSON).toString().encodeAsJavaScript()}');
         var site = JSON.parse('${(site as JSON).toString().encodeAsJavaScript()}');
-
+        var metaModel = ${metaModel};
         var viewModel = new ViewModel(
             activity,
             site,
             ${project ? "JSON.parse('${project.toString().encodeAsJavaScript()}')": 'null'},
-            ${metaModel ?: 'null'});
+            metaModel);
 
-
-        var mapFeatures = $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
-        if (!mapFeatures) {
-            mapFeatures = {zoomToBounds: true, zoomLimit: 15, highlightOnHover: true, features: []};
-        }
-        init_map_with_features({
-                mapContainer: "smallMap",
-                zoomToBounds:true,
-                zoomLimit:16,
-                featureService: "${createLink(controller: 'proxy', action:'feature')}",
-                wmsServer: "${grailsApplication.config.spatial.geoserverUrl}"
-            },
-            mapFeatures
-        );
         ko.applyBindings(viewModel);
 
         master.register('activityModel', viewModel.modelForSaving, viewModel.dirtyFlag.isDirty, viewModel.dirtyFlag.reset);
