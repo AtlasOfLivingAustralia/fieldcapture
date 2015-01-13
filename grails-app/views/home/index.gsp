@@ -181,12 +181,17 @@
                                         </g:if>
                                     </g:each>
                             </select>
-                            <span style="">
-                                <table style="opacity:1.0; filter:alpha(opacity=50); border: none; font-size : 80%;" id="legend" >
+                            <img style="display:none;" id="map-colorby-status" width="23" height="23" src="${request.contextPath}/images/loading-1.gif" alt="Loading"/>
+                            <div id="legend-table">
+                                <table style="opacity:1.0; filter:alpha(opacity=50); border: none; font-size : 80%; display:inline-block;" id="legend-1" >
                                     <tbody>
                                     </tbody>
                                 </table>
-                            </span>
+                                <table style="opacity:1.0; filter:alpha(opacity=50); border: none; font-size : 80%; display:inline-block;" id="legend-2" >
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
                         </span>
                     </div>
                 </div>
@@ -656,29 +661,33 @@
             <g:set var="fqList" value="${[params.fq].flatten()}"/>
             url += "&fq=${fqList.collect{it.encodeAsURL()}.join('&fq=')}";
         </g:if>
+    $("#legend-table").hide();
+    $("#map-colorby-status").show();
+    $.getJSON(url, function(data) {
 
-        $.getJSON(url, function(data) {
-            var features = [];
-            var projectIdMap = {};
-            var bounds = new google.maps.LatLngBounds();
-            var geoPoints = data;
-            var legends = [];
+        var features = [];
+        var projectIdMap = {};
+        var bounds = new google.maps.LatLngBounds();
+        var geoPoints = data;
+        var legends = [];
 
-            if (geoPoints.total) {
-                var projectLinkPrefix = "${createLink(controller:'project')}/";
+        if (geoPoints.total) {
+            var projectLinkPrefix = "${createLink(controller:'project')}/";
                 var siteLinkPrefix = "${createLink(controller:'site')}/";
                 $("#numberOfSites").html(geoPoints.total + " sites");
 
                 if (geoPoints.total > 0) {
-                    var staticColors = ['#A52A2A','#00008B','#8B7355','#53868B','#458B00','#8B4513','#6495ED','#8B8878','#006400','#483D8B','#8B0A50','#8B6914']
+                    var staticColors =
+                    ['#3c5189','#600d77','#64bc99','#1c03c3','#8cebfc','#99da1f','#e8e41e','#a549f6','#20988e','#afaec9',
+                    '#dc0430','#aa7f69','#1077f1','#6da1ab','#3598e6','#95294d','#f27ad5','#dfd06e','#c16b54','#34f242'];
                     $.each(geoPoints.selectedFacetTerms, function(i,facet){
                         var legend = {};
-                        legend.color = i < staticColors.length ? staticColors[facet.index] : getRandomColor();
+                        var hex = i < staticColors.length ? staticColors[facet.index] : getRandomColor();
+                        legend.color = hex;
                         legend.legendName = facet.legendName;
                         legend.count = facet.count;
                         legends.push(legend);
                     });
-
                     $.each(geoPoints.projects, function(j, project) {
                         var projectId = project.projectId
                         var projectName = project.name
@@ -725,6 +734,11 @@
                     }
                 }
             }
+
+            //To reduce memory footprint and leak, make sure to clear feature before loading new feature.
+            alaMap.map ? clearMap() : "";
+            $("#legend-table").fadeIn();
+            $("#map-colorby-status").hide();
 
             initialiseMap(features, bounds);
             mapBounds = bounds;
@@ -870,7 +884,6 @@
         controlText.style.paddingRight = '6px';
         controlText.innerHTML = '<i class="icon-list"></i>';
         controlUI.appendChild(controlText);
-
         // Setup the click event listeners
         google.maps.event.addDomListener(controlUI, 'click', function() {
            $("#map-legend").toggle();
@@ -894,13 +907,34 @@
     }
 
     function showLegends(legends){
-        var table = $("#legend tbody");
+        legends.sort(function(a, b){
+            if (a.legendName > b.legendName) {
+                return 1;
+            }
+            if (a.legendName < b.legendName) {
+                return -1;
+            }
+            return 0;
+        });
+        var table = $("#legend-1 tbody");
         $(table).empty();
-        $.each(legends, function(idx, legend){
+        var firstHalf = Math.ceil(legends.length / 2);
+        var legends1 = legends.slice(0,firstHalf);
+        var legends2 = legends.slice(firstHalf,legends.length);
+        $.each(legends1, function(idx, legend){
             table.append('<tr>' +
-             '<td><input checked type="checkbox" class="legendSelection" id="'+idx+'" value="'+legend.legendName+'"></td>' +
-              '<td style="background:'+legend.color+'"></td>' +
-               '<td>'+legend.legendName + ' (' + legend.count + ')</td></tr>');
+             '<td><input checked type="checkbox" class="legendSelection" id="a'+idx+'" value="'+legend.legendName+'"></td>' +
+               '<td style="background:'+legend.color+'"></td>' +
+               '<td width="200"> '+legend.legendName + ' (' + legend.count + ')</td></tr>');
+        });
+
+        var table1 = $("#legend-2 tbody");
+        $(table1).empty();
+        $.each(legends2, function(idx, legend){
+            table1.append('<tr>' +
+             '<td><input checked type="checkbox" class="legendSelection" id="b'+idx+'" value="'+legend.legendName+'"></td>' +
+               '<td style="background:'+legend.color+'"></td>' +
+               '<td width="200">'+legend.legendName + ' (' + legend.count + ')</td></tr>');
         });
         $('input[type="checkbox"][class="legendSelection"]').change(function() {
             var map = $('#'+this.id).prop('checked') ? alaMap.map : null;
@@ -1020,10 +1054,9 @@
         return yyyy + "-" + (mm[1]?mm:"0"+mm[0]) + "-" + (dd[1]?dd:"0"+dd[0]);
     }
 
-     function getRandomColor(h) {
-       return (function(h){return '#000000'.substr(0,7-h.length)+h})((~~(Math.random()*(1<<24))).toString(16));
-     }
-
+    function getRandomColor(h) {
+        return (function(h){return '#000000'.substr(0,7-h.length)+h})((~~(Math.random()*(1<<24))).toString(16));
+    }
 </r:script>
 </body>
 </html>
