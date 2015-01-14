@@ -678,7 +678,7 @@
 
                 if (geoPoints.total > 0) {
                     var staticColors =
-                    ['#3c5189','#600d77','#64bc99','#1c03c3','#8cebfc','#99da1f','#e8e41e','#a549f6','#20988e','#afaec9',
+                    ['#458B00','#FF0000','#FF00FF','#282828','#8B4513','#FF8000','#1E90FF','#a549f6','#20988e','#afaec9',
                     '#dc0430','#aa7f69','#1077f1','#6da1ab','#3598e6','#95294d','#f27ad5','#dfd06e','#c16b54','#34f242'];
                     $.each(geoPoints.selectedFacetTerms, function(i,facet){
                         var legend = {};
