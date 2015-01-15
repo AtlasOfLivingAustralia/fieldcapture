@@ -233,18 +233,18 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
             }
         }
         activities.each{
-            def endDate = it.plannedEndDate ? it.plannedEndDate : it.endDate
-
-            if(it.progress.equals('planned') && dateInSlot(stageStartDate,stageEndDate,endDate))
-                planned++
-            else if (it.progress.equals('started') && dateInSlot(stageStartDate,stageEndDate,endDate))
-                started++
-            else if (it.progress.equals('finished') && dateInSlot(stageStartDate,stageEndDate,endDate))
-                finished++
-            else if (it.progress.equals('deferred') && dateInSlot(stageStartDate,stageEndDate,endDate))
-                deferred++;
-            else if (it.progress.equals('cancelled') && dateInSlot(stageStartDate,stageEndDate,endDate))
-                cancelled++;
+            if(dateInSlot(stageStartDate,stageEndDate,it.plannedEndDate)){
+                if(it.progress.equals('planned'))
+                    planned++
+                else if (it.progress.equals('started'))
+                    started++
+                else if (it.progress.equals('finished'))
+                    finished++
+                else if (it.progress.equals('deferred'))
+                    deferred++
+                else if (it.progress.equals('cancelled'))
+                    cancelled++
+            }
         }
 
         StringBuilder html = new StringBuilder();
@@ -336,7 +336,8 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
         append(html,'<h2><font>Summary of Project Progress and Issues</font></h2>')
         
 		project?.activities?.each {
-			if(it.type.equals('Progress, Outcomes and Learning - stage report')){
+			if(it.type.equals('Progress, Outcomes and Learning - stage report') &&
+                    dateInSlot(stageStartDate,stageEndDate,it.plannedEndDate)){
 				it.outputs?.each{
 					def type = metadataService.annotatedOutputDataModel("$it.name")
 					append(html,"<b> $it.name: </b> <br>");
@@ -376,8 +377,7 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
 
         int i=0;
         project?.activities?.each{
-            def endDate = it.plannedEndDate ? it.plannedEndDate : it.endDate
-            if(dateInSlot(stageStartDate,stageEndDate,endDate)){
+            if(dateInSlot(stageStartDate,stageEndDate,it.plannedEndDate)){
                 i++;
                 append(html,'<p>')
                 append(html,'<table cellpadding="3" border="0">')
