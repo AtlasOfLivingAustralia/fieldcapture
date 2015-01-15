@@ -166,7 +166,9 @@ class DocumentService {
 		append(html,'<h2><font>Summary of Project Progress and Issues</font></h2>')
 		
 		project?.activities?.each {
-			if(it.type.equals('Progress, Outcomes and Learning - stage report')){
+			def endDate = it.plannedEndDate ? it.plannedEndDate : it.endDate
+			if(it.type.equals('Progress, Outcomes and Learning - stage report') &&
+					dateInSlot(stageStartDate,stageEndDate,endDate)){
 				it.outputs?.each{
 					def type = metadataService.annotatedOutputDataModel("$it.name")
 					append(html,"<b> $it.name: </b> <br>");
