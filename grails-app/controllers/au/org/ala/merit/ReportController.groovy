@@ -27,6 +27,17 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
 
     }
 
+    def loadReport() {
+        switch (params.report) {
+            case 'greenArmy' :
+                forward action: 'greenArmyReport', params:params
+                break
+            default:
+                forward action: 'dashboardReport', params:params
+                break
+        }
+    }
+
     def greenArmyReport() {
 
         DateTime date = new DateTime(2014, 8, 1, 0, 0, 0)
