@@ -25,7 +25,7 @@
         },
         here = document.location.href;
     </r:script>
-    <r:require modules="knockout,jqueryValidationEngine,datepicker,jQueryFileUploadUI,mapWithFeatures,species"/>
+    <r:require modules="knockout,jqueryValidationEngine,datepicker,jQueryFileUploadUI,mapWithFeatures,species,attachDocuments"/>
 </head>
 <body>
 <div class="container-fluid validationEngineContainer" id="validation-container">
@@ -147,7 +147,7 @@
                 return jsData;
                 };
 
-                self.loadData = function (data) {
+                self.loadData = function (data, documents) {
                     // load dynamic data
                 <md:jsLoadModel model="${model}"/>
 
@@ -160,7 +160,7 @@
         };
 
         window[viewModelInstance] = new this[viewModelName](site);
-        window[viewModelInstance].loadData(${output.data ?: '{}'});
+        window[viewModelInstance].loadData(${output.data ?: '{}'}, <fc:modelAsJavascript model="${activity.documents}"/>);
 
             ko.applyBindings(window[viewModelInstance], document.getElementById("ko${blockId}"));
         });
@@ -175,6 +175,7 @@
 </div>
 
 <!-- templates -->
+<g:render template="/shared/documentTemplate" plugin="fieldcapture-plugin"/>
 
 <r:script>
 

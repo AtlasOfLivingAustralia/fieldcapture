@@ -217,6 +217,7 @@
                 var self = this;
                 self.name = "${output.name}";
                 self.outputId = "${output.outputId}";
+
                 self.data = {};
                 self.transients = {};
                 self.transients.dummy = ko.observable();
@@ -224,48 +225,58 @@
                 // add declarations for dynamic data
             <md:jsViewModel model="${model}"  output="${output.name}"  edit="true" viewModelInstance="${blockId}ViewModelInstance"/>
 
-            // this will be called when generating a savable model to remove transient properties
-            self.removeBeforeSave = function (jsData) {
+                // this will be called when generating a savable model to remove transient properties
+                self.removeBeforeSave = function (jsData) {
                 // add code to remove any transients added by the dynamic tags
-            <md:jsRemoveBeforeSave model="${model}"/>
-            delete jsData.activityType;
-            delete jsData.transients;
-            return jsData;
-        };
+                    <md:jsRemoveBeforeSave model="${model}"/>
+                        delete jsData.activityType;
+                        delete jsData.transients;
+                        return jsData;
+                };
 
-        // this returns a JS object ready for saving
-        self.modelForSaving = function () {
-            // get model as a plain javascript object
-            var jsData = ko.mapping.toJS(self, {'ignore':['transients']});
+                // this returns a JS object ready for saving
+                self.modelForSaving = function () {
+                    // get model as a plain javascript object
+                    var jsData = ko.mapping.toJS(self, {'ignore':['transients']});
 
-            // get rid of any transient observables
-            return self.removeBeforeSave(jsData);
-        };
+                    // get rid of any transient observables
+                    return self.removeBeforeSave(jsData);
+                };
 
-        // this is a version of toJSON that just returns the model as it will be saved
-        // it is used for detecting when the model is modified (in a way that should invoke a save)
-        // the ko.toJSON conversion is preserved so we can use it to view the active model for debugging
-        self.modelAsJSON = function () {
-            return JSON.stringify(self.modelForSaving());
-        };
+                // this is a version of toJSON that just returns the model as it will be saved
+                // it is used for detecting when the model is modified (in a way that should invoke a save)
+                // the ko.toJSON conversion is preserved so we can use it to view the active model for debugging
+                self.modelAsJSON = function () {
+                    return JSON.stringify(self.modelForSaving());
+                };
 
-        self.loadData = function (data) {
-            // load dynamic data
-            <md:jsLoadModel model="${model}"/>
+                self.loadData = function (data, documents) {
+                    // load dynamic data
+                    <md:jsLoadModel model="${model}"/>
 
-            // if there is no data in tables then add an empty row for the user to add data
-            if (typeof self.addRow === 'function' && self.rowCount() === 0) {
-                self.addRow();
-            }
-            self.transients.dummy.notifySubscribers();
-        };
-    };
+                    // if there is no data in tables then add an empty row for the user to add data
+                    if (typeof self.addRow === 'function' && self.rowCount() === 0) {
+                        self.addRow();
+                    }
+                    self.transients.dummy.notifySubscribers();
+                };
 
-    window[viewModelInstance] = new this[viewModelName](site);
+                self.attachDocument = function(target) {
+                    var url = '${g.createLink(controller:"proxy", action:"documentUpdate")}';
+                    showDocumentAttachInModal( url,new DocumentViewModel({role:'information'},{key:'activityId', value:'${activity.activityId}'}), '#attachDocument')
+                        .done(
+                        function(result){
+                            target(new DocumentViewModel(result))
+                            });
+                };
 
-    var output = ${output.data ?: '{}'};
+            };
 
-            window[viewModelInstance].loadData(output);
+            window[viewModelInstance] = new this[viewModelName](site);
+
+            var output = ${output.data ?: '{}'};
+
+            window[viewModelInstance].loadData(output, activity.documents);
 
             // dirtyFlag must be defined after data is loaded
             window[viewModelInstance].dirtyFlag = ko.dirtyFlag(window[viewModelInstance], false);
@@ -280,7 +291,7 @@
             window[viewModelInstance].dirtyFlag.reset();
 
             // register with the master controller so this model can participate in the save cycle
-                master.register(window[viewModelInstance], window[viewModelInstance].modelForSaving,
+            master.register(window[viewModelInstance], window[viewModelInstance].modelForSaving,
                     window[viewModelInstance].dirtyFlag.isDirty, window[viewModelInstance].dirtyFlag.reset);
 
             // Check for locally saved data for this output - this will happen in the event of a session timeout
@@ -337,7 +348,13 @@
 </div>
 
 <g:render template="/shared/imagerViewerModal" model="[readOnly:false]"></g:render>
+<g:render template="/shared/documentTemplate" plugin="fieldcapture-plugin"></g:render>
 
+%{--The modal view containing the contents for a modal dialog used to attach a document--}%
+<g:render template="/shared/attachDocument" plugin="fieldcapture-plugin"/>
+<div class="row-fluid attachDocumentModal">
+    <button class="btn" id="doAttach" data-bind="click:attachDocument">Attach Document</button>
+</div>
 <r:script>
 
     var returnTo = "${returnTo}";
@@ -465,6 +482,7 @@
     };
 
     var master = new Master();
+    var activity = JSON.parse('${(activity as JSON).toString().encodeAsJavaScript()}');
 
     $(function(){
 
@@ -595,6 +613,7 @@
             self.notImplemented = function () {
                 alert("Not implemented yet.")
             };
+
             self.dirtyFlag = ko.dirtyFlag(self, false);
 
             // make sure progress moves to started if we save any data (unless already finished)
@@ -621,7 +640,6 @@
 
         };
 
-        var activity = JSON.parse('${(activity as JSON).toString().encodeAsJavaScript()}');
         var site = JSON.parse('${(site as JSON).toString().encodeAsJavaScript()}');
         var metaModel = ${metaModel};
         var viewModel = new ViewModel(
