@@ -13,10 +13,10 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
 
         def organisation = organisationService.get(id, 'all')
         def activityType = params.type
-
+        
         def activityModel = metadataService.getActivityModel(activityType)
         def outputModels = activityModel.outputs.collect {
-            [name:it, dataModel:metadataService.annotatedOutputDataModel(it)]
+            [name:it, annotatedModel:metadataService.annotatedOutputDataModel(it), dataModel:metadataService.getDataModelFromOutputName(it)]
         }
 
         def criteria = [type:activityType, projectId:organisation.projects.collect{it.projectId}, dateProperty:'plannedEndDate', startDate:params.plannedStartDate, endDate:params.plannedEndDate]
