@@ -19,7 +19,7 @@
     <span class="span12">
         <ul class="nav nav-tabs" data-tabs="tabs">
             <g:each in="${tabConfig}" var="tab" status="i">
-                <li class="tab <g:if test='${i == 0}'>active</g:if>"><a id="${tab.name}-tab" data-toggle="tab" href="#${tab.name}">${tab.name}</a></li>
+                <li class="tab"><a id="${tab.name}-tab" data-toggle="tab" href="#${tab.name}">${tab.name}</a></li>
             </g:each>
 
         </ul>
@@ -343,7 +343,9 @@
 
             self.initialise = function(element, model) {
                 model.initialise(element);
+
             };
+            $('#${tabConfig[0].name}-tab').click();
         };
         ko.applyBindings(new ViewModel(), document.getElementById('greenArmyReport'));
 
