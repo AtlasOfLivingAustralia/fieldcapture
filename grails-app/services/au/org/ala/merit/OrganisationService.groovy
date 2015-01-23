@@ -1,6 +1,5 @@
 package au.org.ala.merit
 
-import au.org.ala.fieldcapture.ActivityService
 import au.org.ala.fieldcapture.DateUtils
 import org.joda.time.Interval
 import org.joda.time.Period
@@ -11,24 +10,44 @@ import org.joda.time.Period
  */
 class OrganisationService extends au.org.ala.fieldcapture.OrganisationService {
 
+
     private static def APPROVAL_STATUS = ['unpublished', 'pendingApproval', 'published']
 
     public static Comparator<String> APPROVAL_STATUS_COMPARATOR = {a,b -> APPROVAL_STATUS.indexOf(a) <=> APPROVAL_STATUS.indexOf(b)}
 
-    def activityService, messageSource
+    // This is the behaviour we want for green army.  it may be extendible to other programs (e.g.
+    // biodiversity fund has a stage report and end of project report)
+    private static def GREEN_ARMY_REPORT_CONFIG = [
+            [type: 'Green Army - Monthly project status report', period: Period.months(1), bulkEditable: true],
+            [type: 'Green Army - Quarterly project report', period: Period.months(3), bulkEditable: false],
+            [type: 'Green Army - Site Visit Checklist', period: Period.months(1), bulkEditable: false, adhoc: true, grantManagerOnly:true],
+            [type: 'Green Army - Desktop Audit Checklist', period: Period.months(1), bulkEditable: false, adhoc: true, grantManagerOnly:true],
+            [type: 'Green Army - Change or Absence of Team Supervisor', period: Period.months(1), bulkEditable: false, adhoc: true]
+    ]
+
+    def activityService, messageSource, userService
 
     /** Overrides the parent to add Green Army reports to the results */
     def get(String id, view = '') {
 
         def organisation = super.get(id, view)
 
-        // This is the behaviour we want for green army.  it may be extendible to other programs (e.g.
-        // biodiversity fund has a stage report and end of project report)
-        def reportConf = [
-                [type: 'Green Army - Monthly project status report', period: Period.months(1), bulkEditable: true],
-                [type: 'Green Army - Quarterly project report', period: Period.months(3), bulkEditable: false]]
-        organisation.reports = getReportsForOrganisation(organisation, reportConf)
+
+        organisation.reports = getReportsForOrganisation(organisation, getReportConfig(id))
         organisation
+    }
+
+    /** May be useful to make this configurable per org or something? */
+    def getReportConfig(organisationId) {
+        return GREEN_ARMY_REPORT_CONFIG
+    }
+
+    def getSupportedAdHocReports(projectId) {
+        def adHocReports = getReportConfig(null).findAll{it.adhoc}
+        if (projectService.isOfficerOrHigher() || projectService.isUserCaseManagerForProject(userService.getUser()?.userId, projectId)) {
+            return adHocReports.collect{it.type}
+        }
+        return adHocReports.findAll{!it.grantManagerOnly}.collect{it.type}
     }
 
     /**

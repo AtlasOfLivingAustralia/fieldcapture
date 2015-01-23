@@ -162,7 +162,7 @@
 <script id="updateStatusTmpl" type="text/html">
 <div class="btn-group">
     <button type="button" class="btn btn-small dropdown-toggle" data-toggle="dropdown"
-            data-bind="css: {'btn-warning':progress()=='planned','btn-success':progress()=='started','btn-info':progress()=='finished','btn-danger':progress()=='deferred','btn-inverse':progress()=='cancelled'}"
+            data-bind="activityProgress:progress"
             style="line-height:16px;min-width:86px;text-align:left;">
         <span data-bind="text: progress"></span> <span class="caret pull-right" style="margin-top:6px;"></span>
     </button>
@@ -185,7 +185,7 @@
 
 <script id="viewStatusTmpl" type="text/html">
 <button type="button" class="btn btn-small"
-        data-bind="css: {'btn-warning':progress()=='planned','btn-success':progress()=='started','btn-info':progress()=='finished','btn-danger':progress()=='deferred','btn-inverse':progress()=='cancelled'}"
+        data-bind="activityProgress:progress"
         style="line-height:16px;min-width:75px;text-align:left;cursor:default;color:white">
     <span data-bind="text: progress"></span>
 </button>
