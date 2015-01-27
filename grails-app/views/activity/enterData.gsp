@@ -352,9 +352,7 @@
 
 %{--The modal view containing the contents for a modal dialog used to attach a document--}%
 <g:render template="/shared/attachDocument" plugin="fieldcapture-plugin"/>
-<div class="row-fluid attachDocumentModal">
-    <button class="btn" id="doAttach" data-bind="click:attachDocument">Attach Document</button>
-</div>
+
 <r:script>
 
     var returnTo = "${returnTo}";

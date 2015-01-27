@@ -13,7 +13,7 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
 
         def organisation = organisationService.get(id, 'all')
         def activityType = params.type
-        
+
         def activityModel = metadataService.getActivityModel(activityType)
         def outputModels = activityModel.outputs.collect {
             [name:it, annotatedModel:metadataService.annotatedOutputDataModel(it), dataModel:metadataService.getDataModelFromOutputName(it)]
@@ -26,7 +26,9 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
 
         // augment each activity with project name so we can display it.
         activities.each { activity ->
-            activity.projectName = organisation.projects.find{it.projectId == activity.projectId}.name
+            def project = organisation.projects.find{it.projectId == activity.projectId}
+            activity.projectName = project?.name
+            activity.grantId = project?.grantId
         }
 
         render view: '/activity/bulkEdit', model:[organisation:organisation, title:activityService.defaultDescription([type:activityType, plannedStartDate:params.plannedStartDate, plannedEndDate:params.plannedEndDate]), activities:activities, outputModels:outputModels]
