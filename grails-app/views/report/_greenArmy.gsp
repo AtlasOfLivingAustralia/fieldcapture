@@ -4,6 +4,9 @@
         #Docs tr.selected td {
             background-color: #FFFFCC;
         }
+        .dataTable th {
+            white-space: normal;
+        }
     </style>
 
 </head>
@@ -66,7 +69,7 @@
         <h3>Project-by-project Monthly Report for ${date}</h3>
         <div class="row-fluid">
             <span class="span12">
-                <table class="activityTable">
+                <table class="activityTable table-striped">
                     <th>
                         <tr>
                             <th colspan="7">Project Data</th>
@@ -223,13 +226,23 @@
             console.log(title);
             console.log(activities);
 
-            var header = [{sTitle:'Grant ID'}, {sTitle:'No. starting on projects', source:{output:'Monthly Status Report Data', dataItem:'totalParticipantsCommencedNonIndigenous'}}];
+            var header = [
+                {sTitle:'Grant ID'},
+                {sTitle:'Project status', source:{output:'Monthly Status Report Data', dataItem:'projectStatus'}},
+                {sTitle:'No. starting on projects', source:{output:'Monthly Status Report Data', dataItem:'totalParticipantsCommencedTotal'}},
+                {sTitle:'No. not completing projects', source:{output:'Monthly Status Report Data', dataItem:'totalParticipantsNotCompletedTotal'}},
+                {sTitle:'No. completing projects', source:{output:'Monthly Status Report Data', dataItem:'totalParticipantsCompletedTotal'}},
+                {sTitle:'No. starting accredited training', source:{output:'Monthly Status Report Data', dataItem:'trainingCommencedAccreditedTotal'}},
+                {sTitle:'No. starting non-accredited training', source:{output:'Monthly Status Report Data', dataItem:'trainingCommencedNonaccreditedTotal'}},
+                {sTitle:'No. who exited training', source:{output:'Monthly Status Report Data', dataItem:'trainingNoExitedTotal'}},
+                {sTitle:'No. who completed training', source:{output:'Monthly Status Report Data', dataItem:'trainingNoCompletedTotal'}}];
             var totals = [];
 
             $.each(activities, function(i, activity) {
 
                 var row = [];
                 row.push(activity.grantId);
+
                 for (var j=1; j<header.length; j++) {
                     row.push(getOutputValue(activity, header[j].source.output, header[j].source.dataItem));
                 }
