@@ -2,6 +2,7 @@ package au.org.ala.merit
 
 import au.org.ala.fieldcapture.DateUtils
 import au.org.ala.fieldcapture.GmsMapper
+import grails.converters.JSON
 import org.joda.time.DateTime
 import org.joda.time.Interval
 import org.joda.time.Period
@@ -43,14 +44,15 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
 
     def greenArmyReport() {
 
-        DateTime date = new DateTime(2014, 8, 1, 0, 0, 0)
-        Period period = Period.months(1)
+        def startDate = new DateTime(2014, 7 , 1, 0, 0)
+        def endDate = new DateTime(2015, 7 , 2, 0, 0) // This is a workaround for a UTC vs local time.
 
-        DateTime end = new DateTime(2015, 2, 1, 0, 0, 0)
+        Period period = Period.months(1)
 
         def dateRanges = []
 
-        while (date.isBefore(end)) {
+        def date = startDate
+        while (date.isBefore(endDate)) {
             dateRanges << DateUtils.format(date)
             date = date.plus(period)
         }
@@ -68,16 +70,12 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
             results.outputData.remove(results.outputData.size()-1)
         }
 
-
-
-        render view:'_greenArmy', model:[report:results, adHocReports:adHocReport(), monthlyActivities:monthlyReports()]
+        println results.outputData ? (results.outputData as JSON).toString(true) : '{}'
+        render view:'_greenArmy', model:[report:results, adHocReports:adHocReport(startDate, endDate), monthlyActivities:monthlyReports(startDate, endDate)]
 
     }
 
-    def monthlyReports() {
-
-        def startDate = new DateTime(2014, 7 , 1, 0, 0)
-        def endDate = new DateTime(2015, 7 , 1, 0, 0)
+    def monthlyReports(startDate, endDate) {
 
         def newParams = [max:1000] + params
         def results = searchService.fulltextSearch(newParams)
@@ -101,7 +99,7 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
     }
 
 
-    def adHocReport() {
+    def adHocReport(startDate, endDate) {
 
         // Find all activities of type ad hoc report as per the config.
         def newParams = [max:1000] + params
@@ -110,7 +108,7 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
         def projectIds = projects?.collect{it.projectId}
 
         def types = params.adhocReportTypes ?: ['Green Army - Site Visit Checklist', 'Green Army - Desktop Audit Checklist', 'Green Army - Change or Absence of Team Supervisor']
-        def criteria = [type: types, projectId: projectIds, dateProperty:'plannedEndDate' /*, startDate : startDate, endDate: endDate*/]
+        def criteria = [type: types, projectId: projectIds, dateProperty:'plannedEndDate', startDate : startDate.toDate(), endDate: endDate.toDate()]
         def resp = activityService.search(criteria)
 
         def activities = resp?.resp?.activities

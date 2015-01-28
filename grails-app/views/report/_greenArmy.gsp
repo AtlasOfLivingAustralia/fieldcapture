@@ -15,7 +15,7 @@
 <h2>Green Army Reporting</h2>
 
 <div class="row-fluid">
-    <span class="span1">For financial year</span><span class="span1"><select name="financialYear"><option name="2014">2014/15</option></select></span><span class="span9"></span><span class="span1"><img src="" title="Green Army Logo"></span>
+    <span class="span1">For financial year</span><span class="span1"><select name="financialYear"><option name="2014">2014/15</option></select></span><span class="span9"></span><span class="span1"><r:img dir="images" file="green_army_logo.png" alt="Green Army Logo"/></span>
 </div>
 <g:set var="tabConfig" value="${[[name:'Jul',template:'monthly',title:'July',yearModifier:0], [name:'Aug',template:'monthly', title:'August',yearModifier:0], [name:'Sep',template:'monthly', title:'September',yearModifier:0], [name:'Oct',template:'monthly', title:'October',yearModifier:0], [name:'Nov',template:'monthly',title:'November',yearModifier:0], [name:'Dec',template:'monthly',title:'December',yearModifier:0], [name:'Jan',template:'monthly',title:'January',yearModifier:1], [name:'Feb',template:'monthly', title:'February',yearModifier:1], [name:'Mar',template:'monthly',title:'March',yearModifier:1], [name:'Apr',template:'monthly', title:'April', yearModifier:1], [name:'May',template:'monthly', title:'May',yearModifier:1], [name:'Jun',template:'monthly', title:'June',yearModifier:1], [name:'Q1',template:'quarterly', yearModifier:0], [name:'Q2',template:'quarterly'], [name:'Q3',template:'quarterly'], [name:'Q4',template:'quarterly'], [name:'Docs',template:'docsTemplate']]}"/>
 <div class="row-fluid">
@@ -44,22 +44,26 @@
     <div class="well">
         <h3>Summary Statistics for <span data-bind="text:title"></span> (all projects)</h3>
         <div class="row-fluid">
-            <span class="span6">
+            <span class="span5">
                 <h4>Projects</h4>
-                Total number of projects:
-                Number of new projects:
-                Number of projects completed in period:
-                Number of projects not completed in period:
-                Number of projects on track & MERIT updated:
-                Number of projects on track & MERIT not updated:
+                <div class="row-fluid"><span class="span6">Total number of projects:</span><span class="span6" data-bind="text:scores['']"></span></div>
+                <div class="row-fluid"><span class="span6">Number of new projects:</span><span class="span6"></span></div>
+                <div class="row-fluid"><span class="span6">Number of projects completed in period:</span><span class="span6"></span></div>
+                <div class="row-fluid"><span class="span6">Number of projects not completed in period:</span><span class="span6"></span></div>
+                <div class="row-fluid"><span class="span6">Number of projects on track & MERIT updated:</span><span class="span6"></span></div>
+                <div class="row-fluid"><span class="span6">Number of projects on track & MERIT not updated:</span><span class="span6"></span></div>
 
             </span>
-            <span class="span6">
-                <h4>Participants and Training</h4>
-                Number of participants who commenced on projects:
-                Number of participants who did not complete projects in period:
-                Number of participants who completed projects in period:
-                Number of participants who completed
+            <span class="span7">
+                <div class="row-fluid"><span class="span9"><h4>Participants and Training</h4></span><span class="span1"><b>Indigenous</b></span><span class="span1"><b>Non indigenous</b></span><span class="span1"><b>Total</b></span></div>
+                <div class="row-fluid"><span class="span9">Number of participants who commenced on projects:</span><span class="span1" data-bind="text:scores['No. of indigenous Participants who commenced projects in period'] || 0"></span><span class="span1" data-bind="text:scores['No. of non indigenous Participants who commenced projects in period'] || 0"></span><span class="span1"><b data-bind="text:(scores['No. of non indigenous Participants who commenced projects in period'] || 0) + (scores['No. of indigenous Participants who commenced projects in period'] || 0)"></b></span></div>
+                <div class="row-fluid"><span class="span9">Number of participants who did not complete projects in period:</span><span class="span1" data-bind="text:scores['No. of indigenous Participants who did not complete projects in period'] || 0"></span><span class="span1" data-bind="text:scores['No. of non indigenous Participants who did not complete projects in period'] || 0"></span><span class="span1"><b data-bind="text:(scores['No. of non indigenous Participants who did not complete projects in period'] || 0) + (scores['No. of indigenous Participants who did not complete projects in period'] || 0)"></b></span></div>
+                <div class="row-fluid"><span class="span9">Number of participants who completed projects in period:</span><span class="span1" data-bind="text:scores['No. of indigenous Participants who completed projects in period'] || 0"></span><span class="span1" data-bind="text:scores['No. of non indigenous Participants who completed projects in period'] || 0"></span><span class="span1"><b data-bind="text:(scores['No. of non indigenous Participants who completed projects in period'] || 0) + (scores['No. of indigenous Participants who completed projects in period'] || 0)"></b></span></div>
+                <div class="row-fluid"><span class="span9">Number of participants who commenced accredited training in period:</span><span class="span1" data-bind="text:scores['No. indigenous participants starting accredited training'] || 0"></span><span class="span1" data-bind="text:scores['No. non indigenous participants starting accredited training'] || 0"></span><span class="span1"><b data-bind="text:(scores['No. non indigenous participants starting accredited training'] || 0) + (scores['No. indigenous participants starting accredited training'] || 0)"></b></span></div>
+                <div class="row-fluid"><span class="span9">Number of participants who commenced non-accredited training in period:</span><span class="span1" data-bind="text:scores['No. indigenous participants commencing non-accredited training'] || 0"></span><span class="span1" data-bind="text:scores['No. non indigenous participants commencing non-accredited training'] || 0"></span><span class="span1"><b data-bind="text:(scores['No. non indigenous participants commencing non-accredited training'] || 0) + (scores['No. indigenous participants commencing non-accredited training'] || 0)"></b></span></div>
+                <div class="row-fluid"><span class="span9">Number of participants who exited training in period:</span><span class="span1" data-bind="text:scores['No. of indigenous Participants who exited training during period'] || 0"></span><span class="span1" data-bind="text:scores['No. of non indigenous Participants who exited training during period'] || 0"></span><span class="span1"><b data-bind="text:(scores['No. of non indigenous Participants who exited training during period'] || 0) + (scores['No. of indigenous Participants who exited training during period'] || 0)"></b></span></div>
+                <div class="row-fluid"><span class="span9">Number of participants who completed training (accredited and non-accredited in period):</span><span class="span1" data-bind="text:scores['No. of indigenous Participants who completed training in period'] || 0"></span><span class="span1" data-bind="text:scores['No. of non indigenous Participants who completed training in period'] || 0"></span><span class="span1"><b data-bind="text:(scores['No. of non indigenous Participants who completed training in period'] || 0) + (scores['No. of indigenous Participants who did not complete projects in period'] || 0)"></b></span></div>
+
             </span>
 
         </div>
@@ -217,25 +221,29 @@
         };
 
         var monthlyReports = <fc:modelAsJavascript model="${monthlyActivities}"/>;
-        var MonthlyReportViewModel = function(title, activities) {
+        var MonthlyReportViewModel = function(title, activities, scores) {
 
             var self = this;
 
             var rows = [];
 
-            console.log(title);
-            console.log(activities);
-
             var header = [
                 {sTitle:'Grant ID'},
                 {sTitle:'Project status', source:{output:'Monthly Status Report Data', dataItem:'projectStatus'}},
-                {sTitle:'No. starting on projects', source:{output:'Monthly Status Report Data', dataItem:'totalParticipantsCommencedTotal'}},
-                {sTitle:'No. not completing projects', source:{output:'Monthly Status Report Data', dataItem:'totalParticipantsNotCompletedTotal'}},
-                {sTitle:'No. completing projects', source:{output:'Monthly Status Report Data', dataItem:'totalParticipantsCompletedTotal'}},
-                {sTitle:'No. starting accredited training', source:{output:'Monthly Status Report Data', dataItem:'trainingCommencedAccreditedTotal'}},
-                {sTitle:'No. starting non-accredited training', source:{output:'Monthly Status Report Data', dataItem:'trainingCommencedNonaccreditedTotal'}},
-                {sTitle:'No. who exited training', source:{output:'Monthly Status Report Data', dataItem:'trainingNoExitedTotal'}},
-                {sTitle:'No. who completed training', source:{output:'Monthly Status Report Data', dataItem:'trainingNoCompletedTotal'}}];
+                {sTitle:'No. indigenous starting on projects', source:{output:'Monthly Status Report Data', dataItem:'totalParticipantsCommencedIndigenous'}},
+                {sTitle:'No. non indigenous starting on projects', source:{output:'Monthly Status Report Data', dataItem:'totalParticipantsCommencedNonIndigenous'}},
+                {sTitle:'No. indigenous not completing projects', source:{output:'Monthly Status Report Data', dataItem:'totalParticipantsNotCompletedIndigenous'}},
+                {sTitle:'No. indigenous completing projects', source:{output:'Monthly Status Report Data', dataItem:'totalParticipantsNotCompletedNonIndigenous'}},
+                {sTitle:'No. indigenous completing projects', source:{output:'Monthly Status Report Data', dataItem:'totalParticipantsCompletedIndigenous'}},
+                {sTitle:'No. non indigenous completing projects', source:{output:'Monthly Status Report Data', dataItem:'totalParticipantsCompletedNonIndigenous'}},
+                {sTitle:'No. indigenous starting accredited training', source:{output:'Monthly Status Report Data', dataItem:'trainingCommencedAccreditedIndigenous'}},
+                {sTitle:'No. non indigenous starting accredited training', source:{output:'Monthly Status Report Data', dataItem:'trainingCommencedAccreditedNonIndigenous'}},
+                {sTitle:'No. indigenous starting non-accredited training', source:{output:'Monthly Status Report Data', dataItem:'trainingCommencedNonaccreditedIndigenous'}},
+                {sTitle:'No. non indigenous starting non-accredited training', source:{output:'Monthly Status Report Data', dataItem:'trainingCommencedNonaccreditedNonIndigenous'}},
+                {sTitle:'No. indigenous who exited training', source:{output:'Monthly Status Report Data', dataItem:'trainingNoExitedIndigenous'}},
+                {sTitle:'No. non indigenous who exited training', source:{output:'Monthly Status Report Data', dataItem:'trainingNoExitedNonIndigenous'}},
+                {sTitle:'No. indigenous who completed training', source:{output:'Monthly Status Report Data', dataItem:'trainingNoCompletedIndigenous'}},
+                {sTitle:'No. non indigenous who completed training', source:{output:'Monthly Status Report Data', dataItem:'trainingNoCompletedNonIndigenous'}}];
             var totals = [];
 
             $.each(activities, function(i, activity) {
@@ -252,12 +260,24 @@
 
             self.title = title;
             self.initialise = function(element) {
-                console.log(rows);
                 $(element).find('.activityTable').dataTable( {
                     "aaData": rows,
                     "aoColumns": header
                 } );
             };
+
+
+            self.scores = {};
+            if (scores) {
+                $.each(scores.results, function(i, score) {
+                    console.log(score);
+                    if (score.results && score.results[0]) {
+                        self.scores[score.results[0].label] = score.results[0].result;
+                    }
+
+                });
+            }
+            console.log(self.scores);
 
         };
 
@@ -329,6 +349,7 @@
         };
 
         var projectReports = <fc:modelAsJavascript model="${adHocReports}"/>;
+        var scores = <fc:modelAsJavascript model="${report.outputData}"/>;
 
 
         var ViewModel = function() {
@@ -339,9 +360,15 @@
             var title;
             <g:each in="${tabConfig}" var="tab">
             <g:if test="${tab.template == 'monthly'}">
-            title = '${tab.title} '+(year+${tab.yearModifier});
+            var tabYear = year+${tab.yearModifier};
+            title = '${tab.title} '+ tabYear;
+            var shortTitle = '${tab.name} ' + tabYear;
 
-            self.${tab.name}ViewModel = new MonthlyReportViewModel(title, monthlyReports[title]);
+            var monthlyScores = $.grep(scores, function(results) {
+                return results.group == shortTitle;
+            })[0];
+
+            self.${tab.name}ViewModel = new MonthlyReportViewModel(title, monthlyReports[title], monthlyScores);
             </g:if>
             <g:if test="${tab.template == 'quarterly'}">
             self.${tab.name}ViewModel = new QuarterlyReportViewModel(quarterlyReports['${tab.name}']);
