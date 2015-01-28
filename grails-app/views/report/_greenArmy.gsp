@@ -154,7 +154,7 @@
     <div class="well">
         <h3>Ad-hoc Documents</h3>
         <div class="row-fluid">
-            <span class="span5">
+            <span class="span6">
                 <table class="table table-striped">
                     <thead>
                         <tr>
@@ -178,9 +178,9 @@
 
                 </table>
             </span>
-            <span class="span7" data-bind="with:selectedProject">
+            <span class="span6" data-bind="with:selectedProject">
                 <strong>Documents for Project <span data-bind="text:$parent.selectedGrantId"></span></strong>
-                <table>
+                <table style="width:100%;">
                     <thead>
                         <tr>
                             <th>Date attached</th>
@@ -190,7 +190,7 @@
                     <tbody data-bind="foreach:reports">
                         <tr>
                             <td><span data-bind="text:dateCreated"></span></td>
-                            <td><span data-bind="text:type"></span> </td>
+                            <td><a data-bind="attr:{href:fcConfig.activityViewUrl+'/'+activityId}" title="View the document"><span data-bind="text:type"></span> </a></td>
                         </tr>
 
                     </tbody>
