@@ -70,7 +70,6 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
             results.outputData.remove(results.outputData.size()-1)
         }
 
-        println results.outputData ? (results.outputData as JSON).toString(true) : '{}'
         render view:'_greenArmy', model:[report:results, adHocReports:adHocReport(startDate, endDate), monthlyActivities:monthlyReports(startDate, endDate)]
 
     }

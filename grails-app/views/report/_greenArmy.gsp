@@ -60,7 +60,6 @@
                 <div class="row-fluid"><span class="span9">Number of participants who did not complete projects in period:</span><span class="span1" data-bind="text:scores['No. of indigenous Participants who did not complete projects in period'] || 0"></span><span class="span1" data-bind="text:scores['No. of non indigenous Participants who did not complete projects in period'] || 0"></span><span class="span1"><b data-bind="text:(scores['No. of non indigenous Participants who did not complete projects in period'] || 0) + (scores['No. of indigenous Participants who did not complete projects in period'] || 0)"></b></span></div>
                 <div class="row-fluid"><span class="span9">Number of participants who completed projects in period:</span><span class="span1" data-bind="text:scores['No. of indigenous Participants who completed projects in period'] || 0"></span><span class="span1" data-bind="text:scores['No. of non indigenous Participants who completed projects in period'] || 0"></span><span class="span1"><b data-bind="text:(scores['No. of non indigenous Participants who completed projects in period'] || 0) + (scores['No. of indigenous Participants who completed projects in period'] || 0)"></b></span></div>
                 <div class="row-fluid"><span class="span9">Number of participants who commenced accredited training in period:</span><span class="span1" data-bind="text:scores['No. indigenous participants starting accredited training'] || 0"></span><span class="span1" data-bind="text:scores['No. non indigenous participants starting accredited training'] || 0"></span><span class="span1"><b data-bind="text:(scores['No. non indigenous participants starting accredited training'] || 0) + (scores['No. indigenous participants starting accredited training'] || 0)"></b></span></div>
-                <div class="row-fluid"><span class="span9">Number of participants who commenced non-accredited training in period:</span><span class="span1" data-bind="text:scores['No. indigenous participants commencing non-accredited training'] || 0"></span><span class="span1" data-bind="text:scores['No. non indigenous participants commencing non-accredited training'] || 0"></span><span class="span1"><b data-bind="text:(scores['No. non indigenous participants commencing non-accredited training'] || 0) + (scores['No. indigenous participants commencing non-accredited training'] || 0)"></b></span></div>
                 <div class="row-fluid"><span class="span9">Number of participants who exited training in period:</span><span class="span1" data-bind="text:scores['No. of indigenous Participants who exited training during period'] || 0"></span><span class="span1" data-bind="text:scores['No. of non indigenous Participants who exited training during period'] || 0"></span><span class="span1"><b data-bind="text:(scores['No. of non indigenous Participants who exited training during period'] || 0) + (scores['No. of indigenous Participants who exited training during period'] || 0)"></b></span></div>
                 <div class="row-fluid"><span class="span9">Number of participants who completed training (accredited and non-accredited in period):</span><span class="span1" data-bind="text:scores['No. of indigenous Participants who completed training in period'] || 0"></span><span class="span1" data-bind="text:scores['No. of non indigenous Participants who completed training in period'] || 0"></span><span class="span1"><b data-bind="text:(scores['No. of non indigenous Participants who completed training in period'] || 0) + (scores['No. of indigenous Participants who did not complete projects in period'] || 0)"></b></span></div>
 
@@ -154,7 +153,7 @@
     <div class="well">
         <h3>Ad-hoc Documents</h3>
         <div class="row-fluid">
-            <span class="span5">
+            <span class="span6">
                 <table class="table table-striped">
                     <thead>
                         <tr>
@@ -178,9 +177,9 @@
 
                 </table>
             </span>
-            <span class="span7" data-bind="with:selectedProject">
+            <span class="span6" data-bind="with:selectedProject">
                 <strong>Documents for Project <span data-bind="text:$parent.selectedGrantId"></span></strong>
-                <table>
+                <table style="width:100%;">
                     <thead>
                         <tr>
                             <th>Date attached</th>
@@ -190,7 +189,7 @@
                     <tbody data-bind="foreach:reports">
                         <tr>
                             <td><span data-bind="text:dateCreated"></span></td>
-                            <td><span data-bind="text:type"></span> </td>
+                            <td><a data-bind="attr:{href:fcConfig.activityViewUrl+'/'+activityId}" title="View the document"><span data-bind="text:type"></span> </a></td>
                         </tr>
 
                     </tbody>
@@ -238,8 +237,6 @@
                 {sTitle:'No. non indigenous completing projects', source:{output:'Monthly Status Report Data', dataItem:'totalParticipantsCompletedNonIndigenous'}},
                 {sTitle:'No. indigenous starting accredited training', source:{output:'Monthly Status Report Data', dataItem:'trainingCommencedAccreditedIndigenous'}},
                 {sTitle:'No. non indigenous starting accredited training', source:{output:'Monthly Status Report Data', dataItem:'trainingCommencedAccreditedNonIndigenous'}},
-                {sTitle:'No. indigenous starting non-accredited training', source:{output:'Monthly Status Report Data', dataItem:'trainingCommencedNonaccreditedIndigenous'}},
-                {sTitle:'No. non indigenous starting non-accredited training', source:{output:'Monthly Status Report Data', dataItem:'trainingCommencedNonaccreditedNonIndigenous'}},
                 {sTitle:'No. indigenous who exited training', source:{output:'Monthly Status Report Data', dataItem:'trainingNoExitedIndigenous'}},
                 {sTitle:'No. non indigenous who exited training', source:{output:'Monthly Status Report Data', dataItem:'trainingNoExitedNonIndigenous'}},
                 {sTitle:'No. indigenous who completed training', source:{output:'Monthly Status Report Data', dataItem:'trainingNoCompletedIndigenous'}},
