@@ -46,12 +46,12 @@
         <div class="row-fluid">
             <span class="span5">
                 <h4>Projects</h4>
-                <div class="row-fluid"><span class="span6">Total number of projects:</span><span class="span6" data-bind="text:scores['']"></span></div>
-                <div class="row-fluid"><span class="span6">Number of new projects:</span><span class="span6"></span></div>
-                <div class="row-fluid"><span class="span6">Number of projects completed in period:</span><span class="span6"></span></div>
-                <div class="row-fluid"><span class="span6">Number of projects not completed in period:</span><span class="span6"></span></div>
-                <div class="row-fluid"><span class="span6">Number of projects on track & MERIT updated:</span><span class="span6"></span></div>
-                <div class="row-fluid"><span class="span6">Number of projects on track & MERIT not updated:</span><span class="span6"></span></div>
+                <div class="row-fluid"><span class="span9">Total number of projects:</span><b><span class="span3" data-bind="text:numberOfProjects"></span></b></div>
+                <div class="row-fluid"><span class="span9">Number of new projects:</span><b><span class="span3" data-bind="text:numberOfNewProjects"></span></b></div>
+                <div class="row-fluid"><span class="span9">Number of projects completed in period:</span><b><span class="span3" data-bind="text:completedProjects"></span></b></div>
+                <div class="row-fluid"><span class="span9">Number of projects not completed in period:</span><b><span class="span3" data-bind="text:numberOfProjects - completedProjects"></span></b></div>
+                <div class="row-fluid"><span class="span9">Number of projects on track & MERIT updated:</span><b><span class="span3" data-bind="text:projectsOnTrack"></span></b></div>
+                <div class="row-fluid"><span class="span9">Number of projects on track & MERIT not updated:</span><b><span class="span3" data-bind="text:projectsNotOnTrack"></span></b></div>
 
             </span>
             <span class="span7">
@@ -90,6 +90,9 @@
         </div>
 
     </div>
+
+
+
 </script>
 
 <!-- Quarterly report -->
@@ -263,19 +266,38 @@
                 } );
             };
 
+            self.numberOfProjects = activities.length;
 
             self.scores = {};
             if (scores) {
                 $.each(scores.results, function(i, score) {
-                    console.log(score);
+
                     if (score.results && score.results[0]) {
+                        console.log(score);
                         self.scores[score.results[0].label] = score.results[0].result;
                     }
 
                 });
             }
-            console.log(self.scores);
+            var projectsByStatus = self.scores['Count of projects by project status'];
+            var newProjects = 0, completedProjects = 0, onTrack = 0, notOnTrack = 0;
+            if (projectsByStatus && projectsByStatus.results && projectsByStatus.results[0]) {
+                newProjects = projectByStatus.results[0].result['Commenced'] || 0;
+                completedProjects = projectByStatus.results[0].result['Completed'] || 0;
+                onTrack = (projectByStatus.results[0].result['Progressing - on schedule'] || 0) +
+                          (projectByStatus.results[0].result['Progressing - ahead of schedule'] || 0);
+                notOnTrack = (projectByStatus.results[0].result['Progressing - behind schedule'] || 0) +
+                               (projectByStatus.results[0].result['Abandoned'] || 0);
 
+            }
+            else {
+                console.log("pbs: ");
+                console.log(projectsByStatus);
+            }
+            self.numberOfNewProjects = newProjects;
+            self.completedProjects = completedProjects;
+            self.projectsOnTrack = onTrack;
+            self.projectsNotOnTrack = notOnTrack;
         };
 
         var quarterlyReports = {'Q1':[], Q2:[], Q3:[], Q4:[]};
