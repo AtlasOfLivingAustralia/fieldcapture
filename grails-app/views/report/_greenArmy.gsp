@@ -7,6 +7,10 @@
         .dataTable th {
             white-space: normal;
         }
+
+        #greenArmyReport table {
+            width:100%;
+        }
     </style>
 
 </head>
@@ -17,7 +21,7 @@
 <div class="row-fluid">
     <span class="span1">For financial year</span><span class="span1"><select name="financialYear"><option name="2014">2014/15</option></select></span><span class="span9"></span><span class="span1"><r:img dir="images" file="green_army_logo.png" alt="Green Army Logo"/></span>
 </div>
-<g:set var="tabConfig" value="${[[name:'Jul',template:'monthly',title:'July',yearModifier:0], [name:'Aug',template:'monthly', title:'August',yearModifier:0], [name:'Sep',template:'monthly', title:'September',yearModifier:0], [name:'Oct',template:'monthly', title:'October',yearModifier:0], [name:'Nov',template:'monthly',title:'November',yearModifier:0], [name:'Dec',template:'monthly',title:'December',yearModifier:0], [name:'Jan',template:'monthly',title:'January',yearModifier:1], [name:'Feb',template:'monthly', title:'February',yearModifier:1], [name:'Mar',template:'monthly',title:'March',yearModifier:1], [name:'Apr',template:'monthly', title:'April', yearModifier:1], [name:'May',template:'monthly', title:'May',yearModifier:1], [name:'Jun',template:'monthly', title:'June',yearModifier:1], [name:'Q1',template:'quarterly', yearModifier:0], [name:'Q2',template:'quarterly'], [name:'Q3',template:'quarterly'], [name:'Q4',template:'quarterly'], [name:'Docs',template:'docsTemplate']]}"/>
+<g:set var="tabConfig" value="${[[name:'Jul',template:'monthly',title:'July',yearModifier:0], [name:'Aug',template:'monthly', title:'August',yearModifier:0], [name:'Sep',template:'monthly', title:'September',yearModifier:0], [name:'Oct',template:'monthly', title:'October',yearModifier:0], [name:'Nov',template:'monthly',title:'November',yearModifier:0], [name:'Dec',template:'monthly',title:'December',yearModifier:0], [name:'Jan',template:'monthly',title:'January',yearModifier:1], [name:'Feb',template:'monthly', title:'February',yearModifier:1], [name:'Mar',template:'monthly',title:'March',yearModifier:1], [name:'Apr',template:'monthly', title:'April', yearModifier:1], [name:'May',template:'monthly', title:'May',yearModifier:1], [name:'Jun',template:'monthly', title:'June',yearModifier:1], [name:'Q1',template:'quarterly', yearModifier:0, title:'July - September'], [name:'Q2',template:'quarterly', title:'October - December', yearModifier:0], [name:'Q3',template:'quarterly', title:'January - March', yearModifier:1], [name:'Q4',template:'quarterly', title:'April - June', yearModifier:1], [name:'Docs',template:'docsTemplate']]}"/>
 <div class="row-fluid">
     <span class="span12">
         <ul class="nav nav-tabs" data-tabs="tabs">
@@ -104,19 +108,30 @@
         <h3>Year-to-date Quarterly Report Summary</h3>
         <div class="row-fluid">
             <span class="span12">
-                <table>
+                <table  class="summaryTable table-striped">
                     <thead>
                         <tr>
-                            <th colspan="7">Project Data</th>
-                            <th colspan="7">Participant and Training Data</th>
+                            <th>Period</th>
+                            <th>Total projects</th>
+                            <th>Projects completed</th>
+                            <th>Projects not completed</th>
+                            <th>No. starting on projects</th>
+                            <th>No. not completing projects</th>
+                            <th>No. completing projects</th>
+                            <th>No. starting training</th>
+                            <th>No. who exited training</th>
+                            <th>No. who completed training</th>
                         </tr>
-                        <tr>
-                            <th>
 
-                            </th>
-                        </tr>
                     </thead>
+                    <tbody data-bind="foreach:{data:quarterlyScores, as:'scores'}">
+                        <tr>
+                            <!-- ko foreach:$parent.scoreLabels -->
+                            <td data-bind="text:scores[$data]"></td>
+                            <!-- /ko -->
+                        </tr>
 
+                    </tbody>
                 </table>
             </span>
 
@@ -125,10 +140,10 @@
     </div>
 
     <div class="well">
-        <h3>Project-by-project Quarterly Report for July-September 2014</h3>
+        <h3>Project-by-project Quarterly Report for <span data-bind="text:title"></span></h3>
         <div class="row-fluid">
             <span class="span12">
-                <table>
+                <table class="activityTable table-striped">
                     <th>
                         <tr>
                             <th colspan="7">Project Data</th>
@@ -223,6 +238,8 @@
         };
 
         var monthlyReports = <fc:modelAsJavascript model="${monthlyActivities}"/>;
+        var quarterlyReports = <fc:modelAsJavascript model="${quarterlyReports}"/>;
+
         var MonthlyReportViewModel = function(title, activities, scores) {
 
             var self = this;
@@ -244,7 +261,6 @@
                 {sTitle:'No. non indigenous who exited training', source:{output:'Monthly Status Report Data', dataItem:'trainingNoExitedNonIndigenous'}},
                 {sTitle:'No. indigenous who completed training', source:{output:'Monthly Status Report Data', dataItem:'trainingNoCompletedIndigenous'}},
                 {sTitle:'No. non indigenous who completed training', source:{output:'Monthly Status Report Data', dataItem:'trainingNoCompletedNonIndigenous'}}];
-            var totals = [];
 
             $.each(activities, function(i, activity) {
 
@@ -273,7 +289,6 @@
                 $.each(scores.results, function(i, score) {
 
                     if (score.results && score.results[0]) {
-                        console.log(score);
                         self.scores[score.results[0].label] = score.results[0].result;
                     }
 
@@ -290,20 +305,84 @@
                                (projectByStatus.results[0].result['Abandoned'] || 0);
 
             }
-            else {
-                console.log("pbs: ");
-                console.log(projectsByStatus);
-            }
+
             self.numberOfNewProjects = newProjects;
             self.completedProjects = completedProjects;
             self.projectsOnTrack = onTrack;
             self.projectsNotOnTrack = notOnTrack;
         };
 
-        var quarterlyReports = {'Q1':[], Q2:[], Q3:[], Q4:[]};
-        var QuarterlyReportViewModel = function(activities) {
-            this.initialise = function() {
+        var QuarterlyReportViewModel = function(title, activities, scores) {
 
+            var self = this;
+            self.title = title;
+
+            var output = 'Three Monthly Report';
+            var header = [
+                {sTitle:'Grant ID'},
+                {sTitle:'No. of incidents', source:{output:output, dataItem:'incidentCount'}},
+                {sTitle:'No. of complaints', source:{output:output, dataItem:'complaintCount'}},
+                {sTitle:'No. of training activities', source:{output:output, dataItem:'complaintCount'}},
+                {sTitle:'No. of withdrawals', source:{output:output, dataItem:'complaintCount'}},
+                {sTitle:'No. of exits', source:{output:output, dataItem:'complaintCount'}},
+                {sTitle:'No. starting training', source:{output:output, dataItem:'complaintCount'}},
+                {sTitle:'No. who exited training', source:{output:output, dataItem:'complaintCount'}},
+                {sTitle:'17 yrs', source:{output:output, dataItem:'no17Years'}},
+                {sTitle:'18 yrs', source:{output:output, dataItem:'no18Years'}},
+                {sTitle:'19 yrs', source:{output:output, dataItem:'no19Years'}},
+                {sTitle:'20 yrs', source:{output:output, dataItem:'no20Years'}},
+                {sTitle:'21 yrs', source:{output:output, dataItem:'no21Years'}},
+                {sTitle:'22 yrs', source:{output:output, dataItem:'no22Years'}},
+                {sTitle:'23 yrs', source:{output:output, dataItem:'no23Years'}},
+                {sTitle:'24 yrs', source:{output:output, dataItem:'no24Years'}},
+                {sTitle:'Total participants', source:{output:output, dataItem:'totalParticipants'}}];
+
+            var rows = [];
+            $.each(activities, function(i, activity) {
+
+                var row = [];
+                row.push(activity.grantId);
+
+                for (var j=1; j<header.length; j++) {
+                    row.push(getOutputValue(activity, header[j].source.output, header[j].source.dataItem));
+                }
+                rows.push(row);
+
+            });
+
+            function findScoreByLabel(scores, label) {
+                for (var i=0; i<scores.length; i++) {
+                    if (scores[i].results && scores[i].results[0]) {
+                        if (scores[i].results[0].label == label) {
+                            return scores[i].results[0].result;
+                        }
+                    }
+                }
+            }
+            self.scoreLabels = ['group', 'Total projects', ''];
+            self.quarterlyScores = [];
+            if (scores) {
+                $.each(scores, function(i, groupedScores) {
+
+                    var group = groupedScores.group;
+                    console.log(group);
+                    if (group.indexOf('Before') < 0 && group.indexOf('After') < 0) {
+                        var row = {group:group};
+
+                        for (var j=1; j<self.scoreLabels.length; j++) {
+                            row[self.scoreLabels[j]] = findScoreByLabel(groupedScores.results, self.scoreLabels[j]);
+                        }
+                        self.quarterlyScores.push(row);
+                    }
+                });
+            }
+            console.log(self.quarterlyScores);
+
+            this.initialise = function(element) {
+                $(element).find('.activityTable').dataTable( {
+                    "data": rows,
+                    "columns": header
+                } );
             };
         };
 
@@ -336,7 +415,6 @@
             });
 
         };
-
         var AdHocReportsViewModel = function(projectReports) {
 
 
@@ -368,7 +446,8 @@
         };
 
         var projectReports = <fc:modelAsJavascript model="${adHocReports}"/>;
-        var scores = <fc:modelAsJavascript model="${report.outputData}"/>;
+        var monthlySummaryScores = <fc:modelAsJavascript model="${monthlySummary.outputData}"/>;
+        var quarterlySummaryScores = <fc:modelAsJavascript model="${quarterlySummary.outputData}"/>;
 
 
         var ViewModel = function() {
@@ -377,20 +456,24 @@
 
             var year = 2014;
             var title;
+            var shortTitle;
             <g:each in="${tabConfig}" var="tab">
-            <g:if test="${tab.template == 'monthly'}">
+
+            <g:if test="${tab.template != 'docsTemplate'}">
             var tabYear = year+${tab.yearModifier};
             title = '${tab.title} '+ tabYear;
-            var shortTitle = '${tab.name} ' + tabYear;
+            shortTitle = '${tab.name} ' + tabYear;
 
-            var monthlyScores = $.grep(scores, function(results) {
+            <g:if test="${tab.template == 'monthly'}">
+            var monthlyScores = $.grep(monthlySummaryScores, function(results) {
                 return results.group == shortTitle;
             })[0];
 
             self.${tab.name}ViewModel = new MonthlyReportViewModel(title, monthlyReports[title], monthlyScores);
             </g:if>
             <g:if test="${tab.template == 'quarterly'}">
-            self.${tab.name}ViewModel = new QuarterlyReportViewModel(quarterlyReports['${tab.name}']);
+            self.${tab.name}ViewModel = new QuarterlyReportViewModel(title, quarterlyReports['${tab.name}'], quarterlySummaryScores);
+            </g:if>
             </g:if>
             <g:if test="${tab.template == 'docsTemplate'}">
             self.${tab.name}ViewModel = new AdHocReportsViewModel(projectReports);
