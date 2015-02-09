@@ -70,8 +70,9 @@ class OrganisationService extends au.org.ala.fieldcapture.OrganisationService {
         def criteria = [type: activityTypes, projectId: projectIds, dateProperty:'plannedEndDate', startDate : startDate, endDate: endDate]
 
         def response = activityService.search(criteria)
+        List activities = response?.resp?.activities ?: []
 
-        response.resp?.activities
+        return activities
     }
 
     /**

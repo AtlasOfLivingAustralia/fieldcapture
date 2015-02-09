@@ -64,7 +64,7 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
 
 
         def reports = monthlyAndQuarterlyReports(startDate, endDate)
-        render view:'_greenArmy', model:[monthlySummary:monthlySummary, quarterlySummary:quarterlySummary, adHocReports:adHocReport(startDate, endDate), monthlyActivities:reports.monthlyReports, quarterlyReports:reports.quarterlyReports]
+        render view:'_greenArmy', model:[monthlySummary:monthlySummary, quarterlySummary:quarterlySummary, adHocReports:adHocReport(startDate, endDate), monthlyActivities:reports.monthlyReports, quarterlyReports:reports.quarterlyReports, includeOrganisationName:params.includeOrganisationName?:false]
 
     }
 
@@ -95,6 +95,7 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
             def project = projects.find{it.projectId == activity.projectId}
             activity.grantId = project?.grantId
             activity.projectName = project?.name
+            activity.organisationName = project?.organisationName
         }
 
         def activitiesByType = activities.groupBy{it.type}
