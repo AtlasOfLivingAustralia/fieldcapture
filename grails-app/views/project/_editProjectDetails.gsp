@@ -262,7 +262,7 @@
 				<thead>
 				<tr>
 					<th></th>
-					<th>Event or announcement</th>
+			                <th>Announcement</th>
 					<th>Planned date</th>
 					<th></th>
 				</tr>
