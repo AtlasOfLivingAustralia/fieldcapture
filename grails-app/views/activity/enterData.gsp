@@ -272,7 +272,11 @@
 
             };
 
-            window[viewModelInstance].loadData(output);
+            window[viewModelInstance] = new this[viewModelName](site);
+
+            var output = ${output.data ?: '{}'};
+
+            window[viewModelInstance].loadData(output, activity.documents);
 
             // dirtyFlag must be defined after data is loaded
             window[viewModelInstance].dirtyFlag = ko.dirtyFlag(window[viewModelInstance], false);
@@ -287,8 +291,8 @@
             window[viewModelInstance].dirtyFlag.reset();
 
             // register with the master controller so this model can participate in the save cycle
-            master.registerOutput(window[viewModelInstance], viewModelInstance, window[viewModelInstance].modelForSaving,
-             window[viewModelInstance].dirtyFlag.isDirty, window[viewModelInstance].dirtyFlag.reset, window[viewModelInstance].transients.selectedSite);
+            master.register(window[viewModelInstance], window[viewModelInstance].modelForSaving,
+                    window[viewModelInstance].dirtyFlag.isDirty, window[viewModelInstance].dirtyFlag.reset);
 
             // Check for locally saved data for this output - this will happen in the event of a session timeout
             // for example.
@@ -641,7 +645,6 @@
             site,
             ${project ? "JSON.parse('${project.toString().encodeAsJavaScript()}')": 'null'},
             metaModel);
-
 
         ko.applyBindings(viewModel);
 
