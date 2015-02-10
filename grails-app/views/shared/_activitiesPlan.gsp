@@ -81,7 +81,7 @@
 
                             <!-- Modal for getting reasons for status change -->
                             <div id="activityStatusReason" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
-                                data-bind="showModal:displayReasonModal(),with:deferReason">
+                                 data-bind="showModal:displayReasonModal(),with:deferReason">
                                 <form class="reasonModalForm">
                                     <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
@@ -160,32 +160,32 @@
 </div>
 
 <script id="updateStatusTmpl" type="text/html">
-    <div class="btn-group">
-        <button type="button" class="btn btn-small dropdown-toggle" data-toggle="dropdown"
-                data-bind="css: {'btn-warning':progress()=='planned','btn-success':progress()=='started','btn-info':progress()=='finished','btn-danger':progress()=='deferred','btn-inverse':progress()=='cancelled'}"
-                style="line-height:16px;min-width:86px;text-align:left;">
-            <span data-bind="text: progress"></span> <span class="caret pull-right" style="margin-top:6px;"></span>
-        </button>
-        <ul class="dropdown-menu" data-bind="foreach:$root.progressOptions" style="min-width:100px;">
-            <!-- Disable item if selected -->
-            <li data-bind="css: {'disabled' : $data==$parent.progress() || $data=='planned'}">
-                <a href="#" data-bind="click: $parent.progress"><span data-bind="text: $data"></span></a>
-            </li>
-        </ul>
-    </div>
-    <span class="save-indicator" data-bind="visible:isSaving"><r:img dir="images" file="ajax-saver.gif" alt="saving icon"/> saving</span>
-    <!-- ko with: deferReason -->
-    <span data-bind="visible: $parent.progress()=='deferred' || $parent.progress()=='cancelled'">
-        <i class="icon-list-alt"
-           data-bind="popover: {title: 'Reason for deferral<br><small>(Click icon to edit reason.)</small>', content: notes, placement: 'left'}, click:$parent.displayReasonModal.editReason">
-        </i>
-    </span>
+<div class="btn-group">
+    <button type="button" class="btn btn-small dropdown-toggle" data-toggle="dropdown"
+            data-bind="activityProgress:progress"
+            style="line-height:16px;min-width:86px;text-align:left;">
+        <span data-bind="text: progress"></span> <span class="caret pull-right" style="margin-top:6px;"></span>
+    </button>
+    <ul class="dropdown-menu" data-bind="foreach:$root.progressOptions" style="min-width:100px;">
+        <!-- Disable item if selected -->
+        <li data-bind="css: {'disabled' : $data==$parent.progress() || $data=='planned'}">
+            <a href="#" data-bind="click: $parent.progress"><span data-bind="text: $data"></span></a>
+        </li>
+    </ul>
+</div>
+<span class="save-indicator" data-bind="visible:isSaving"><r:img dir="images" file="ajax-saver.gif" alt="saving icon"/> saving</span>
+<!-- ko with: deferReason -->
+<span data-bind="visible: $parent.progress()=='deferred' || $parent.progress()=='cancelled'">
+    <i class="icon-list-alt"
+       data-bind="popover: {title: 'Reason for deferral<br><small>(Click icon to edit reason.)</small>', content: notes, placement: 'left'}, click:$parent.displayReasonModal.editReason">
+    </i>
+</span>
 <!-- /ko -->
 </script>
 
 <script id="viewStatusTmpl" type="text/html">
 <button type="button" class="btn btn-small"
-        data-bind="css: {'btn-warning':progress()=='planned','btn-success':progress()=='started','btn-info':progress()=='finished','btn-danger':progress()=='deferred','btn-inverse':progress()=='cancelled'}"
+        data-bind="activityProgress:progress"
         style="line-height:16px;min-width:75px;text-align:left;cursor:default;color:white">
     <span data-bind="text: progress"></span>
 </button>
@@ -253,17 +253,17 @@
 
 <script id="stageNotApprovedTmpl" type="text/html">
 <br/><span class="badge badge-warning">Report not submittted</span>
-	<g:if test="${user?.isAdmin}">
+<g:if test="${user?.isAdmin}">
     <br/>
     <button type="button" class="btn btn-success btn-small" style="margin-top:4px;"
-    data-bind="
+            data-bind="
             disable:!$parents[1].readyForApproval() || !$parents[2].isApproved() || !$parents[1].riskAndDetailsActive(),
             click:$parents[1].submitReport,
             attr:{title:($parents[1].readyForApproval() && $parents[1].riskAndDetailsActive()) ?'Submit this stage for implementation approval.':'* Report cannot be submitted while activities are still open. \n* Project details and risk table information are mandatory for report submission.'}"
     >Submit report</button>
-	<br/>
-	<button  class="btn btn-link" data-bind="click:$parents[1].previewStage" type="button"><i class="icon-eye-open"></i>Preview</button>	
-    </g:if>
+    <br/>
+    <button  class="btn btn-link" data-bind="click:$parents[1].previewStage" type="button"><i class="icon-eye-open"></i>Preview</button>
+</g:if>
 <br/>
 </script>
 
@@ -277,9 +277,9 @@
 </g:if>
 
 <g:if test="${user?.isAdmin}">
-    
-	<br/>
-	<button  class="btn btn-link" data-bind="click:$parents[1].previewStage" type="button"><i class="icon-eye-open"></i>Preview</button>
+
+    <br/>
+    <button  class="btn btn-link" data-bind="click:$parents[1].previewStage" type="button"><i class="icon-eye-open"></i>Preview</button>
 </g:if>
 </script>
 
@@ -297,7 +297,7 @@
 </g:if>
 <g:if test="${user?.isAdmin}">
     <br/>
-	<button  class="btn btn-link" data-bind="click:$parents[1].previewStage" type="button"><i class="icon-eye-open"></i>Preview</button>
+    <button  class="btn btn-link" data-bind="click:$parents[1].previewStage" type="button"><i class="icon-eye-open"></i>Preview</button>
 </g:if>
 
 </script>
@@ -716,15 +716,15 @@
                         return act.progress() === 'planned' || act.progress() === 'started';
                     }).length === 0;
             }, this, {deferEvaluation: true});
-            
+
             this.riskAndDetailsActive = ko.computed(function(){
             	/*
             	if(project.risks)
             		return project.risks['status'] == 'active';
-				*/            		
-            	return true;	
+				*/
+            	return true;
             });
-            
+
             this.submitReport = function () {
                 var declaration = $('#declaration')[0];
                 var declarationViewModel = {
@@ -738,8 +738,8 @@
             $(declaration).modal({ backdrop: 'static', keyboard: true, show: true }).on('hidden', function() {ko.cleanNode(declaration);});
 
             };
-	
-			
+
+
             this.submitStage = function() {
                 var url = '${createLink(controller:'project', action:'ajaxSubmitReport')}/';
                 self.updateStageStatus(url);
@@ -951,7 +951,7 @@
             this.userIsCaseManager = ko.observable(${user?.isCaseManager});
             this.planStatus = ko.observable(project.planStatus || 'not approved');
             this.planStatusTemplateName = ko.computed(function () {
-            	// todo remove casemanager and admin functionality from activities plan page  
+            	// todo remove casemanager and admin functionality from activities plan page
                 //return self.planStatus() === 'not approved' ? 'planningTmpl' : self.planStatus() + 'Tmpl';
                 return 'noActionTmpl';
           });

@@ -25,7 +25,7 @@
         },
         here = document.location.href;
     </r:script>
-    <r:require modules="knockout,jqueryValidationEngine,datepicker,jQueryFileUploadUI,mapWithFeatures,species"/>
+    <r:require modules="knockout,jqueryValidationEngine,datepicker,jQueryFileUploadUI,mapWithFeatures,species,attachDocuments,imageViewer"/>
 </head>
 <body>
 <div class="container-fluid validationEngineContainer" id="validation-container">
@@ -105,8 +105,9 @@
             </div>
         </g:if>
     </div>
-
+<!-- ko stopBinding: true -->
     <g:each in="${metaModel?.outputs}" var="outputName">
+        <g:if test="${outputName != 'Photo Points'}">
         <g:set var="blockId" value="${fc.toSingleWord([name: outputName])}"/>
         <g:set var="model" value="${outputModels[outputName]}"/>
         <g:set var="output" value="${activity.outputs.find {it.name == outputName}}"/>
@@ -147,7 +148,7 @@
                 return jsData;
                 };
 
-                self.loadData = function (data) {
+                self.loadData = function (data, documents) {
                     // load dynamic data
                 <md:jsLoadModel model="${model}"/>
 
@@ -160,14 +161,24 @@
         };
 
         window[viewModelInstance] = new this[viewModelName](site);
-        window[viewModelInstance].loadData(${output.data ?: '{}'});
+        window[viewModelInstance].loadData(${output.data ?: '{}'}, <fc:modelAsJavascript model="${activity.documents}"/>);
 
             ko.applyBindings(window[viewModelInstance], document.getElementById("ko${blockId}"));
         });
 
             </r:script>
         </div>
+        </g:if>
     </g:each>
+<!-- /ko -->
+    <g:if test="${metaModel.supportsPhotoPoints}">
+        <div class="output-block" data-bind="with:transients.photoPointModel">
+            <h3>Photo Points</h3>
+
+            <g:render template="/site/photoPoints" plugin="fieldcapture-plugin" model="${[readOnly:true]}"></g:render>
+
+        </div>
+    </g:if>
 
     <div class="form-actions">
         <button type="button" id="cancel" class="btn">return</button>
@@ -175,6 +186,8 @@
 </div>
 
 <!-- templates -->
+<g:render template="/shared/documentTemplate" plugin="fieldcapture-plugin"/>
+<g:render template="/shared/imagerViewerModal" model="[readOnly:false]"></g:render>
 
 <r:script>
 
@@ -224,6 +237,10 @@
             self.notImplemented = function () {
                 alert("Not implemented yet.")
             };
+
+            if (metaModel.supportsPhotoPoints) {
+                self.transients.photoPointModel = ko.observable(new PhotoPointViewModel(site, act));
+            }
         }
 
 
@@ -233,7 +250,7 @@
             ${project ?: 'null'},
             ${metaModel ?: 'null'});
 
-        ko.applyBindings(viewModel,document.getElementById('koActivityMainBlock'));
+        ko.applyBindings(viewModel);
 
         var mapFeatures = $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
         if(mapFeatures !=null && mapFeatures.features !== undefined && mapFeatures.features.length >0){

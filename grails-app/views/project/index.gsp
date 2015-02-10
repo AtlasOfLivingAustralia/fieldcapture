@@ -2,8 +2,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
-  <title>${project?.name.encodeAsHTML()} | Project | Field Capture</title>
+    <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
+    <title>${project?.name.encodeAsHTML()} | Project | Field Capture</title>
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
     <r:script disposition="head">
     var fcConfig = {
@@ -17,7 +17,7 @@
         activityEditUrl: "${createLink(controller: 'activity', action: 'edit')}",
         activityEnterDataUrl: "${createLink(controller: 'activity', action: 'enterData')}",
         activityPrintUrl: "${createLink(controller: 'activity', action: 'print')}",
-        activityCreateUrl: "${createLink(controller: 'activity', action: 'create')}",
+        activityCreateUrl: "${createLink(controller: 'activity', action: 'createPlan')}",
         activityUpdateUrl: "${createLink(controller: 'activity', action: 'ajaxUpdate')}",
         activityDeleteUrl: "${createLink(controller: 'activity', action: 'ajaxDelete')}",
         activityViewUrl: "${createLink(controller: 'activity', action: 'index')}",
@@ -54,7 +54,7 @@
 </head>
 <body>
 <div id="spinner" class="spinner" style="position: fixed;top: 50%;left: 50%;margin-left: -50px;margin-top: -50px;text-align:center;z-index:1234;overflow: auto;width: 100px;height: 102px;">
- 	<img id="img-spinner" width="50" height="50" src="${request.contextPath}/images/loading.gif" alt="Loading"/>
+    <img id="img-spinner" width="50" height="50" src="${request.contextPath}/images/loading.gif" alt="Loading"/>
 </div>
 <div class="container-fluid">
 
@@ -95,14 +95,14 @@
     <g:set var="tabIsActive"><g:if test="${user?.hasViewAccess}">tab</g:if></g:set>
     <ul id="projectTabs" class="nav nav-tabs big-tabs">
         <li class="active"><a href="#overview" id="overview-tab" data-toggle="tab">Overview</a></li>
-		<li><a href="#details" id="details-tab" data-toggle="${tabIsActive}">MERI Plan</a></li>
+        <li><a href="#details" id="details-tab" data-toggle="${tabIsActive}">MERI Plan</a></li>
         <li><a href="#plan" id="plan-tab" data-toggle="${tabIsActive}">Activities</a></li>
         <li><a href="#site" id="site-tab" data-toggle="${tabIsActive}">Sites</a></li>
         <li><a href="#dashboard" id="dashboard-tab" data-toggle="${tabIsActive}">Dashboard</a></li>
         <g:if test="${user?.isAdmin || user?.isCaseManager}"><li><a href="#admin" id="admin-tab" data-toggle="tab">Admin</a></li></g:if>
     </ul>
-    
-	
+
+
     <div class="tab-content" style="overflow:visible;display:none">
         <div class="tab-pane active" id="overview">
             <!-- OVERVIEW -->
@@ -142,16 +142,16 @@
                 </div>
 
                 <div class="clearfix" style="font-size:14px;">
-                	<div class="span3" data-bind="visible:status" style="margin-bottom: 0">
+                    <div class="span3" data-bind="visible:status" style="margin-bottom: 0">
                         <span data-bind="if: status().toLowerCase() == 'active'">
-                        	Project Status:
-                        	<span style="text-transform:uppercase;" data-bind="text:status" class="badge badge-success" style="font-size: 13px;"></span>
+                            Project Status:
+                            <span style="text-transform:uppercase;" data-bind="text:status" class="badge badge-success" style="font-size: 13px;"></span>
                         </span>
                         <span data-bind="if: status().toLowerCase() == 'completed'">
-                        	Project Status:
-                        	<span style="text-transform:uppercase;" data-bind="text:status" class="badge badge-info" style="font-size: 13px;"></span>
+                            Project Status:
+                            <span style="text-transform:uppercase;" data-bind="text:status" class="badge badge-info" style="font-size: 13px;"></span>
                         </span>
-                        
+
                     </div>
                     <div class="span3" data-bind="visible:grantId" style="margin-bottom: 0">
                         Grant Id:
@@ -165,7 +165,7 @@
                         Manager:
                         <span data-bind="text:manager"></span>
                     </div>
-                    
+
                 </div>
                 <div data-bind="visible:description()">
                     <p class="well well-small more" data-bind="text:description"></p>
@@ -188,8 +188,8 @@
                         No documents are currently attached to this project.
                         <g:if test="${user?.isAdmin}">To add a document use the Documents section of the Admin tab.</g:if>
                     </div>
-                    <g:render template="/shared/listDocuments"
-                      model="[useExistingModel: true,editable:false, filterBy: 'all', ignore: 'programmeLogic', imageUrl:resource(dir:'/images/filetypes'),containerId:'overviewDocumentList']"/>
+                    <g:render plugin="fieldcapture-plugin" template="/shared/listDocuments"
+                              model="[useExistingModel: true,editable:false, filterBy: 'all', ignore: 'programmeLogic', imageUrl:resource(dir:'/images/filetypes'),containerId:'overviewDocumentList']"/>
                 </div>
 
                 <div class="span4">
@@ -204,27 +204,27 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="tab-pane" id="details">
-				<!-- Project Details --> 
-				<g:render template="projectDetails" model="[project: project]"/>
-				
-				<div class="row-fluid space-after">
-					<div class="span6">
-						<div class="well well-small">
-				 			<label><b>MERI attachments:</b></label>
-							<g:render template="/shared/listDocuments"
-	                    	  model="[useExistingModel: true,editable:false, filterBy: 'programmeLogic', ignore: '', imageUrl:resource(dir:'/images/filetypes'),containerId:'overviewDocumentList']"/>
-						</div>
-					</div>	
-				</div>	
-		</div>
-		
+            <!-- Project Details -->
+            <g:render template="projectDetails" model="[project: project]"/>
+
+            <div class="row-fluid space-after">
+                <div class="span6">
+                    <div class="well well-small">
+                        <label><b>MERI attachments:</b></label>
+							<g:render plugin="fieldcapture-plugin" template="/shared/listDocuments"
+                                  model="[useExistingModel: true,editable:false, filterBy: 'programmeLogic', ignore: '', imageUrl:resource(dir:'/images/filetypes'),containerId:'overviewDocumentList']"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <g:if test="${user?.hasViewAccess}">
             <div class="tab-pane" id="plan">
-                <!-- PLANS -->
+            <!-- PLANS -->
                 <g:if test="${useAltPlan}">
-                    <g:render template="/shared/plan"
+                    <g:render  plugin="fieldcapture-plugin" template="/shared/plan"
                               model="[activities:activities ?: [], sites:project.sites ?: [], showSites:true]"/>
                 </g:if>
                 <g:else>
@@ -232,101 +232,101 @@
                               model="[activities:activities ?: [], sites:project.sites ?: [], showSites:true]"/>
                 </g:else>
                 <g:if test="${user?.isCaseManager}">
-	                <div class="validationEngineContainer" id="grantmanager-validation">
-	                	<g:render template="grantManagerSettings" model="[project:project]"/>
-	                </div>
+                    <div class="validationEngineContainer" id="grantmanager-validation">
+                        <g:render template="grantManagerSettings" model="[project:project]"/>
+                    </div>
                 </g:if>
-				<div class="validationEngineContainer" id="risk-validation">
-	                <g:render template="riskTable" model="[project:project]"/>
-	            </div>    
+                <div class="validationEngineContainer" id="risk-validation">
+                    <g:render template="riskTable" model="[project:project]"/>
+                </div>
             </div>
 
             <div class="tab-pane" id="site">
                 <!-- SITES -->
                 <div data-bind="visible: sites.length == 0">
-                   <p>No sites are currently associated with this project.</p>
-                   <g:if test="${user?.isEditor}">
-                   <div class="btn-group btn-group-horizontal ">
-                        <button data-bind="click: $root.addSite" type="button" class="btn">Add new site</button>
-                        <button data-bind="click: $root.addExistingSite" type="button" class="btn">Add existing site</button>
-                        <button data-bind="click: $root.uploadShapefile" type="button" class="btn">Upload sites from shapefile</button>
-                   </div>
-                   </g:if>
-                 </div>
+                    <p>No sites are currently associated with this project.</p>
+                    <g:if test="${user?.isEditor}">
+                        <div class="btn-group btn-group-horizontal ">
+                            <button data-bind="click: $root.addSite" type="button" class="btn">Add new site</button>
+                            <button data-bind="click: $root.addExistingSite" type="button" class="btn">Add existing site</button>
+                            <button data-bind="click: $root.uploadShapefile" type="button" class="btn">Upload sites from shapefile</button>
+                        </div>
+                    </g:if>
+                </div>
 
                 <div class="row-fluid"  data-bind="visible: sites.length > 0">
                     <div class="span5 well list-box">
                         <div class="span9">
-                        <div class="control-group">
-                            <div class="input-append">
-                                <input type="text" class="filterinput input-medium"
-                                             data-bind="value: sitesFilter, valueUpdate:'keyup'"
-                                             title="Type a few characters to restrict the list." name="sites"
-                                             placeholder="filter"/>
-                                <button type="button" class="btn" data-bind="click:clearFilter"
-                                        title="clear"><i class="icon-remove"></i></button>
+                            <div class="control-group">
+                                <div class="input-append">
+                                    <input type="text" class="filterinput input-medium"
+                                           data-bind="value: sitesFilter, valueUpdate:'keyup'"
+                                           title="Type a few characters to restrict the list." name="sites"
+                                           placeholder="filter"/>
+                                    <button type="button" class="btn" data-bind="click:clearFilter"
+                                            title="clear"><i class="icon-remove"></i></button>
+                                </div>
+                                <span id="site-filter-warning" class="label filter-label label-warning"
+                                      style="display:none;margin-left:4px;"
+                                      data-bind="visible:sitesFilter().length > 0,valueUpdate:'afterkeyup'">Filtered</span>
                             </div>
-                            <span id="site-filter-warning" class="label filter-label label-warning"
-                                  style="display:none;margin-left:4px;"
-                                  data-bind="visible:sitesFilter().length > 0,valueUpdate:'afterkeyup'">Filtered</span>
-                        </div>
 
-                        <div class="scroll-list">
-                            <ul id="siteList" style="list-style: none; margin-left: 0px;"
-                                data-bind="template: {foreach:displayedSites},
+                            <div class="scroll-list">
+                                <ul id="siteList" style="list-style: none; margin-left: 0px;"
+                                    data-bind="template: {foreach:displayedSites},
                                                   beforeRemove: hideElement,
                                                   afterAdd: showElement">
-                                <li data-bind="event: {mouseover: $root.highlight, mouseout: $root.unhighlight}">
-                                    <g:if test="${user?.isEditor}">
-                                    <span>
-                                        <button type="button" data-bind="click:$root.editSite" class="btn btn-container"><i class="icon-edit" title="Edit Site"></i></button>
-                                        <button type="button" data-bind="click:$root.viewSite" class="btn btn-container"><i class="icon-eye-open" title="View Site"></i></button>
-                                        <button type="button" data-bind="click:$root.deleteSite" class="btn btn-container"><i class="icon-remove" title="Delete Site"></i></button>
-                                    </span>
+                                    <li data-bind="event: {mouseover: $root.highlight, mouseout: $root.unhighlight}">
+                                        <g:if test="${user?.isEditor}">
+                                            <span>
+                                                <button type="button" data-bind="click:$root.editSite" class="btn btn-container"><i class="icon-edit" title="Edit Site"></i></button>
+                                                <button type="button" data-bind="click:$root.viewSite" class="btn btn-container"><i class="icon-eye-open" title="View Site"></i></button>
+                                                <button type="button" data-bind="click:$root.deleteSite" class="btn btn-container"><i class="icon-remove" title="Delete Site"></i></button>
+                                            </span>
 
-                                    <a style="margin-left:10px;" data-bind="text:name, attr: {href:'${createLink(controller: "site", action: "index")}' + '/' + siteId}"></a>
-                                    </g:if>
-                                    <g:else>
-                                        <span data-bind="text:name"></span>
-                                    </g:else>
-                                </li>
-                            </ul>
-                        </div>
-                        <div id="paginateTable" data-bind="visible:sites.length>pageSize">
-                            <span id="paginationInfo" style="display:inline-block;float:left;margin-top:4px;"></span>
-                            <div class="btn-group">
-                                <button class="btn btn-small prev" data-bind="click:prevPage,enable:(offset()-pageSize) >= 0"><i class="icon-chevron-left"></i>&nbsp;previous</button>
-                                <button class="btn btn-small next" data-bind="click:nextPage,enable:(offset()+pageSize) < filteredSites().length">next&nbsp;<i class="icon-chevron-right"></i></button>
+                                            <a style="margin-left:10px;" data-bind="text:name, attr: {href:'${createLink(controller: "site", action: "index")}' + '/' + siteId}"></a>
+                                        </g:if>
+                                        <g:else>
+                                            <span data-bind="text:name"></span>
+                                        </g:else>
+                                    </li>
+                                </ul>
                             </div>
-                            <g:if env="development">
-                                total: <span id="total" data-bind="text:filteredSites().length"></span>
-                                offset: <span id="offset" data-bind="text:offset"></span>
-                            </g:if>
-                        </div>
-
-                    </div>
-                     %{--<div class="span5" id="sites-scroller">
-                        <ul class="unstyled inline" data-bind="foreach: sites">
-                            <li class="siteInstance" data-bind="event: {mouseover: $root.highlight, mouseout: $root.unhighlight}">
-                                <a data-bind="text: name, click: $root.openSite"></a>
-                                <button data-bind="click: $root.removeSite" type="button" class="close" title="delete">&times;</button>
-                            </li>
-                        </ul>
-                    </div>--}%
-
-                    <g:if test="${user?.isEditor}">
-
-                    <div class="row-fluid">
-                        <div class="span3">
-                            <div class="btn-group btn-group-vertical pull-right">
-                                <a data-bind="click: $root.addSite" type="button" class="btn ">Add new site</a>
-                                <a data-bind="click: $root.addExistingSite" type="button" class="btn">Add existing site</a>
-                                <a data-bind="click: $root.uploadShapefile" type="button" class="btn">Upload sites from shapefile</a>
-                                <a data-bind="click: $root.removeAllSites" type="button" class="btn">Delete all sites</a>
+                            <div id="paginateTable" data-bind="visible:sites.length>pageSize">
+                                <span id="paginationInfo" style="display:inline-block;float:left;margin-top:4px;"></span>
+                                <div class="btn-group">
+                                    <button class="btn btn-small prev" data-bind="click:prevPage,enable:(offset()-pageSize) >= 0"><i class="icon-chevron-left"></i>&nbsp;previous</button>
+                                    <button class="btn btn-small next" data-bind="click:nextPage,enable:(offset()+pageSize) < filteredSites().length">next&nbsp;<i class="icon-chevron-right"></i></button>
+                                </div>
+                                <g:if env="development">
+                                    total: <span id="total" data-bind="text:filteredSites().length"></span>
+                                    offset: <span id="offset" data-bind="text:offset"></span>
+                                </g:if>
                             </div>
+
                         </div>
-                    </div>
-                    </g:if>
+                    %{--<div class="span5" id="sites-scroller">
+                       <ul class="unstyled inline" data-bind="foreach: sites">
+                           <li class="siteInstance" data-bind="event: {mouseover: $root.highlight, mouseout: $root.unhighlight}">
+                               <a data-bind="text: name, click: $root.openSite"></a>
+                               <button data-bind="click: $root.removeSite" type="button" class="close" title="delete">&times;</button>
+                           </li>
+                       </ul>
+                   </div>--}%
+
+                        <g:if test="${user?.isEditor}">
+
+                            <div class="row-fluid">
+                                <div class="span3">
+                                    <div class="btn-group btn-group-vertical pull-right">
+                                        <a data-bind="click: $root.addSite" type="button" class="btn ">Add new site</a>
+                                        <a data-bind="click: $root.addExistingSite" type="button" class="btn">Add existing site</a>
+                                        <a data-bind="click: $root.uploadShapefile" type="button" class="btn">Upload sites from shapefile</a>
+                                        <a data-bind="click: $root.removeAllSites" type="button" class="btn">Delete all sites</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </g:if>
                     </div>
                     <div class="span7">
                         <div id="map" style="width:100%"></div>
@@ -337,13 +337,13 @@
 
             <div class="tab-pane" id="dashboard">
                 <!-- DASHBOARD -->
-                <g:render template="dashboard"/>
+                <g:render plugin="fieldcapture-plugin" template="dashboard"/>
             </div>
         </g:if>
         <g:if test="${user?.isAdmin || user?.isCaseManager}">
             <g:set var="activeClass" value="class='active'"/>
             <div class="tab-pane" id="admin">
-            <!-- ADMIN -->
+                <!-- ADMIN -->
                 <div class="row-fluid">
                     <div class="span2 large-space-before">
                         <ul id="adminNav" class="nav nav-tabs nav-stacked ">
@@ -351,8 +351,8 @@
                                 <li ${activeClass}><a href="#settings" id="settings-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Project settings</a></li>
                                 <g:set var="activeClass" value=""/>
                             </g:if>
-							
-							<li><a href="#projectDetails" id="projectDetails-tab" data-toggle="tab"><i class="icon-chevron-right"></i> MERI Plan</a></li>
+
+                            <li><a href="#projectDetails" id="projectDetails-tab" data-toggle="tab"><i class="icon-chevron-right"></i> MERI Plan</a></li>
                             <li><a href="#editNewsAndEvents" id="editNewsAndEvents-tab" data-toggle="tab"><i class="icon-chevron-right"></i> News and events</a></li>
                             <li><a href="#editProjectStories" id="editProjectStories-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Project stories</a></li>
 
@@ -371,37 +371,37 @@
                                     <div class="row-fluid">
                                         <div id="save-result-placeholder"></div>
                                         <div class="span10 validationEngineContainer" id="settings-validation">
-                                            <g:render template="editProject"
+                                            <g:render plugin="fieldcapture-plugin" template="editProject"
                                                       model="[project: project]"/>
                                         </div>
                                     </div>
                                 </div>
                                 <g:set var="activeClass" value=""/>
                             </g:if>
- 							
- 							<!-- PROJECT DETAILS -->
+
+                        <!-- PROJECT DETAILS -->
                             <div id="projectDetails" class="pill-pane">
                                 <!-- Edit project details -->
-								<h3>MERI Plan</h3>
-								<div class="row-fluid">          
-									<div class="validationEngineContainer" id="project-details-validation">                      
-                                		<g:render template="editProjectDetails" model="[project: project]"/>
-                                	</div>
+                                <h3>MERI Plan</h3>
+                                <div class="row-fluid">
+                                    <div class="validationEngineContainer" id="project-details-validation">
+                                        <g:render template="editProjectDetails" model="[project: project]"/>
+                                    </div>
                                 </div>
-                            </div>                            
- 							
+                            </div>
+
                             <div id="editNewsAndEvents" class="pill-pane">
-                                <g:render template="editProjectContent" model="${[attributeName:'newsAndEvents', header:'News and events']}"/>
+                                <g:render plugin="fieldcapture-plugin"  template="editProjectContent" model="${[attributeName:'newsAndEvents', header:'News and events']}"/>
                             </div>
 
                             <div id="editProjectStories" class="pill-pane">
-                                <g:render template="editProjectContent" model="${[attributeName:'projectStories', header:'Project stories']}"/>
+                                <g:render plugin="fieldcapture-plugin" template="editProjectContent" model="${[attributeName:'projectStories', header:'Project stories']}"/>
                             </div>
 
                             <div id="permissions" class="pill-pane ${activeClass}">
                                 <h3>Project Access</h3>
                                 %{--<a name="permissions"></a>--}%
-                                <g:render template="/admin/addPermissions" model="[projectId:project.projectId]"/>
+                                <g:render plugin="fieldcapture-plugin"  template="/admin/addPermissions" model="[projectId:project.projectId]"/>
                                 <h4>Project Members</h4>
                                 <div class="row-fluid">
                                     <div class="span6">
@@ -411,7 +411,7 @@
                                             <tr class="hide">
                                                 <td class="memUserId"></td>
                                                 <td class="memUserName"></td>
-                                                <td class="memUserRole"><span style="white-space: nowrap">&nbsp;</span><g:render template="/admin/userRolesSelect" model="[roles:roles, selectClass:'hide']"/></td>
+                                                <td class="memUserRole"><span style="white-space: nowrap">&nbsp;</span><g:render plugin="fieldcapture-plugin" template="/admin/userRolesSelect" model="[roles:roles, selectClass:'hide']"/></td>
                                                 <td class="clickable memEditRole"><i class="icon-edit tooltips" title="edit this user and role combination"></i></td>
                                                 <td class="clickable memRemoveRole"><i class="icon-remove tooltips" title="remove this user and role combination"></i></td>
                                             </tr>
@@ -432,19 +432,19 @@
                             %{--<div class="border-divider large-space-before">&nbsp;</div>--}%
                             <div id="species" class="pill-pane">
                                 %{--<a name="species"></a>--}%
-                                <g:render template="/species/species" model="[project:project, activityTypes:activityTypes]"/>
+                                <g:render plugin="fieldcapture-plugin"  template="/species/species" model="[project:project, activityTypes:activityTypes]"/>
                             </div>
                             <!-- DOCUMENTS -->
                             <div id="edit-documents" class="pill-pane">
                                 <h3>Project Documents</h3>
                                 <div class="row-fluid">
                                     <div class="span10">
-                                        <g:render template="/shared/listDocuments"
+                                        <g:render plugin="fieldcapture-plugin" template="/shared/listDocuments"
                                                   model="[useExistingModel: true,editable:true, filterBy: 'all', ignore: '', imageUrl:resource(dir:'/images/filetypes'),containerId:'adminDocumentList']"/>
                                     </div>
                                 </div>
                                 %{--The modal view containing the contents for a modal dialog used to attach a document--}%
-                                <g:render template="/shared/attachDocument"/>
+                                <g:render plugin="fieldcapture-plugin" template="/shared/attachDocument"/>
                                 <div class="row-fluid attachDocumentModal">
                                     <button class="btn" id="doAttach" data-bind="click:attachDocument">Attach Document</button>
                                 </div>
@@ -457,29 +457,29 @@
     </div>
 
     <g:if env="development">
-    <hr />
-    <div class="expandable-debug">
-        <h3>Debug</h3>
-        <div>
-            <h4>KO model</h4>
-            <pre data-bind="text:ko.toJSON($root,null,2)"></pre>
-            <h4>Activities</h4>
-            <pre>${activities?.encodeAsHTML()}</pre>
-            <h4>Sites</h4>
-            <pre>${project.sites?.encodeAsHTML()}</pre>
-            <h4>Project</h4>
-            <pre>${project?.encodeAsHTML()}</pre>
-            <h4>Features</h4>
-            <pre>${mapFeatures}</pre>
-            <h4>activityTypes</h4>
-            <pre>${activityTypes}</pre>
+        <hr />
+        <div class="expandable-debug">
+            <h3>Debug</h3>
+            <div>
+                <h4>KO model</h4>
+                <pre data-bind="text:ko.toJSON($root,null,2)"></pre>
+                <h4>Activities</h4>
+                <pre>${activities?.encodeAsHTML()}</pre>
+                <h4>Sites</h4>
+                <pre>${project.sites?.encodeAsHTML()}</pre>
+                <h4>Project</h4>
+                <pre>${project?.encodeAsHTML()}</pre>
+                <h4>Features</h4>
+                <pre>${mapFeatures}</pre>
+                <h4>activityTypes</h4>
+                <pre>${activityTypes}</pre>
+            </div>
         </div>
-    </div>
     </g:if>
 </div>
-    <r:script>
-    
-    
+<r:script>
+
+
         var organisations = ${institutions};
 
         // custom validator to ensure that only one of two fields is populated
@@ -496,9 +496,9 @@
                 return true;
             }
         }
-        
+
         $(window).load(function () {
-        
+
             var map;
             // setup 'read more' for long text
             $('.more').shorten({
@@ -518,7 +518,7 @@
                     });
                 }
             });
-  			
+
             $('#settings-validation').validationEngine();
             $('#project-details-validation').validationEngine();
             $('#risk-validation').validationEngine();
@@ -533,8 +533,8 @@
             });
             $('#summary-cancel').click(function () {
                 document.location.href = "${createLink(action: 'index', id: project.projectId)}";
-            }); 
-			
+            });
+
             var Site = function (site, feature) {
                 var self = this;
                 this.name = ko.observable(site.name);
@@ -550,10 +550,10 @@
                     self.address(address);
                 };
             };
-            
+
             var DetailsViewModel = function(o, period) {
             	var self = this;
-				this.status = ko.observable(o.status); 	
+				this.status = ko.observable(o.status);
 				this.obligations = ko.observable(o.obligations);
 				this.policies = ko.observable(o.policies);
 				this.caseStudy = ko.observable(o.caseStudy ? o.caseStudy : false);
@@ -574,7 +574,7 @@
 
             var ObjectiveViewModel = function(o) {
             	var self = this;
-            	if(!o) o = {}; 
+            	if(!o) o = {};
 
             	var row = [];
             	o.rows ? row = o.rows : row.push(ko.mapping.toJS(new GenericRowViewModel()));
@@ -590,14 +590,14 @@
             };
             var ImplementationViewModel = function(o) {
             	var self = this;
-            	if(!o) o = {}; 
+            	if(!o) o = {};
             	this.description = ko.observable(o.description);
             };
-            
+
             //National, Partnership and KEQ
             var GenericViewModel = function(o) {
             	var self = this;
-            	if(!o) o = {}; 
+            	if(!o) o = {};
             	this.description = ko.observable(o.description);
             	var row = [];
             	o.rows ? row = o.rows : row.push(ko.mapping.toJS(new GenericRowViewModel()));
@@ -605,10 +605,10 @@
 			         return new GenericRowViewModel(obj);
 			    }));
             };
-            
+
             var GenericRowViewModel = function(o) {
             	var self = this;
-            	if(!o) o = {}; 
+            	if(!o) o = {};
             	this.data1 = ko.observable(o.data1);
             	this.data2 = ko.observable(o.data2);
             	this.data3 = ko.observable(o.data3);
@@ -616,7 +616,7 @@
 
             var EventsRowViewModel = function(o) {
             	var self = this;
-            	if(!o) o = {}; 
+            	if(!o) o = {};
             	this.name = ko.observable(o.name);
             	this.scheduledDate = ko.observable(o.scheduledDate).extend({simpleDate: false});
             };
@@ -625,11 +625,11 @@
             	var self = this;
             	if(!o) o = {};
             	this.description = ko.observable(o.description);
-            	if(!o.assets) o.assets = []; 
+            	if(!o.assets) o.assets = [];
             	this.assets = ko.observableArray(o.assets);
 
             };
-            
+
             var BudgetViewModel = function(o, period){
             	var self = this;
             	if(!o) o = {};
@@ -640,14 +640,12 @@
 				for(i = 0; i < period.length; i++){
 					headerArr.push({"data":period[i]});
 				}
-				
 				this.headers = ko.observableArray(headerArr);
 
 				var row = [];
 				o.rows ? row = o.rows : row.push(ko.mapping.toJS(new BudgetRowViewModel({},period)));
-
             	this.rows = ko.observableArray($.map(row, function (obj, i) {
-					// Headers don't match with previous stored headers, adjust rows accordingly.
+                    // Headers don't match with previously stored headers, adjust rows accordingly.
 					if(o.headers && period && o.headers.length != period.length) {
 						var updatedRow = [];
 						for(i = 0; i < period.length; i++) {
@@ -663,10 +661,9 @@
 							index = -1;
 						}
 						obj.costs = updatedRow;
-						return new BudgetRowViewModel(obj,period);
 					}
-					else
-						return new BudgetRowViewModel(obj,period);
+
+					return new BudgetRowViewModel(obj,period);
 			    }));
 
 			    this.overallTotal = ko.computed(function (){
@@ -686,7 +683,7 @@
 			    this.columnTotal = ko.observableArray(allBudgetTotal);
             };
 
-			//col total            
+			//col total
             var BudgetTotalViewModel = function (rows, index){
             	var self = this;
             	this.data =  ko.computed(function (){
@@ -694,22 +691,22 @@
             		ko.utils.arrayForEach(rows(), function(row) {
            				if(row.costs()[index]){
            					total += parseFloat(row.costs()[index].dollar());
-           				}	
+           				}
     				});
     				return total;
             	},this).extend({currency:{}});
             };
-            
+
             var BudgetRowViewModel = function(o,period) {
             	var self = this;
-            	if(!o) o = {}; 
+            	if(!o) o = {};
             	this.shortLabel = ko.observable(o.shortLabel);
             	this.description = ko.observable(o.description);
 
             	var arr = [];
             	for(i = 0 ; i < period.length; i++)
             		arr.push(ko.mapping.toJS(new FloatViewModel()));
-				
+
 				//Incase if timeline is generated.
 				if(o.costs && o.costs.length != arr.length) {
 					o.costs = arr;
@@ -718,7 +715,7 @@
             	this.costs = ko.observableArray($.map(arr, function (obj, i) {
 					return new FloatViewModel(obj);
 			    }));
-            	
+
             	this.rowTotal = ko.computed(function (){
             		var total = 0.0;
             		ko.utils.arrayForEach(this.costs(), function(cost) {
@@ -727,15 +724,15 @@
     				});
 					return total;
             	},this).extend({currency:{}});
-            	
+
             };
-            
+
             var FloatViewModel = function(o){
             	var self = this;
             	if(!o) o = {};
             	self.dollar = ko.observable(o.dollar ? o.dollar : 0.0).extend({currency:{}});
             };
-            
+
 			var RisksViewModel = function(risks) {
 				 var self = this;
 				 this.overallRisk = ko.observable(risks ? risks.overallRisk : '');
@@ -746,10 +743,10 @@
 			         return new RisksRowViewModel(obj);
 			     }));
 			};
-			
+
 			var RisksRowViewModel = function(risksRow) {
 				 var self = this;
-				 if(!risksRow) risksRow = {}; 
+				 if(!risksRow) risksRow = {};
 				 this.threat = ko.observable(risksRow.threat);
 				 this.description = ko.observable(risksRow.description);
 				 this.likelihood = ko.observable(risksRow.likelihood);
@@ -759,7 +756,7 @@
 				 this.riskRating = ko.computed(function (){
 				 		if (this.likelihood() == '' && this.consequence() == '')
 				 			return;
-				 			
+
 			 			var riskCol = ["Insignificant","Minor","Moderate","Major","Extreme"];
 			            var riskTable = [
 			              		["Almost Certain","Medium","Significant","High","High","High"],
@@ -770,14 +767,14 @@
 			              	];
 			 			var riskRating = "";
 						var riskRowIndex = -1;
-						
+
 						for(var i = 0; i < riskTable.length; i++) {
 							if(riskTable[i][0] == this.likelihood()){
 								riskRowIndex = i;
 								break;
 							}
-						}										
-						
+						}
+
 						if(riskRowIndex >= 0){
 							for(var i = 0; i < riskCol.length; i++) {
 								if(riskCol[i] == this.consequence()){
@@ -789,7 +786,7 @@
             			return riskRating;
                  }, this);
 			};
-            
+
 			function limitText(field, maxChar){
 				$(field).attr('maxlength',maxChar);
 			}
@@ -845,7 +842,7 @@
  	            self.threatOptions = [
 	                'Blow-out in cost of project materials',
 	                'Changes to regional boundaries affecting the project area',
-					'Co-investor withdrawal / investment reduction',                
+					'Co-investor withdrawal / investment reduction',
 					'Lack of delivery partner capacity',
 					'Lack of delivery partner / landholder interest in project activities',
 					'Organisational restructure / loss of corporate knowledge',
@@ -859,9 +856,9 @@
 	                'Likely',
 	                'Possible',
 	                'Unlikely',
-					'Remote'                
+					'Remote'
 	        	];
-	        	
+
 	        	self.consequenceOptions = [
 	        		'Insignificant',
 	        		'Minor',
@@ -876,12 +873,12 @@
 	        		'Medium',
 	        		'Low'
 	        	];
-				
+
 				self.obligationOptions =[
 	        		'Yes',
 	        		'No'
 	        	];
-	        	
+
 	        	self.organisations =[
 					'Academic/research institution',
 					'Australian Government Department',
@@ -898,7 +895,7 @@
 					'State Government Organisation',
 					'Trust',
 	        	];
-	        	
+
 	        	self.protectedNaturalAssests =[
 					'Natural/Cultural assets managed',
 					'Threatened Species',
@@ -916,20 +913,20 @@
 	        	self.projectThemes =  $.map(themes, function(theme, i) {
 	                	return theme.name;
 	                });
-	        	self.projectThemes.push("MERI & Admin");
-+	            self.projectThemes.push("Others"); 
-	        	
+	            self.projectThemes.push("MERI & Admin");
+	            self.projectThemes.push("Others");    
+
 	        	self.allYears = function(startYear) {
 		            var currentYear = new Date().getFullYear(), years = [];
 		            startYear = startYear || 2010;
 		            while ( startYear <= currentYear+10 ) {
 		                    years.push(startYear++);
-		            } 
+		            }
 		            return years;
 			    };
 			    self.years = [];
 			    self.years = self.allYears();
-				
+
 				if(!project.custom){
 					project.custom = {};
 				}
@@ -938,19 +935,19 @@
 				}
 
                 self.details = new DetailsViewModel(project.custom.details, getBugetHeaders(project.timeline));
-				
+
                 self.risks = new RisksViewModel(project.risks);
-               
+
                 self.isProjectDetailsSaved = ko.computed (function (){
                 	return (project['custom']['details'].status == 'active');
                 });
                 self.isProjectDetailsLocked = ko.computed (function (){
                 	return (project.planStatus == 'approved' || project.planStatus =='submitted');
                 });
-                
+
                 self.detailsLastUpdated = ko.observable(project.custom.details.lastUpdated).extend({simpleDate: true});
 				self.planStatus = ko.observable(project.planStatus);
-                
+
                 self.addObjectives = function(){
 					self.details.objectives.rows.push(new GenericRowViewModel());
     			};
@@ -969,28 +966,28 @@
                 self.removeNationalAndRegionalPriorities = function(row){
                 	self.details.priorities.rows.remove(row);
                 };
-                
+
                 self.addKEQ = function(){
 					self.details.keq.rows.push(new GenericRowViewModel());
     			};
                 self.removeKEQ = function(keq){
                 	self.details.keq.rows.remove(keq);
                 };
-                
+
                 self.addEvents = function(){
 					self.details.events.push(new EventsRowViewModel());
     			};
                 self.removeEvents = function(event){
                 	self.details.events.remove(event);
                 };
-                
+
                 self.addPartnership = function(){
 					self.details.partnership.rows.push (new GenericRowViewModel());
     			};
                 self.removePartnership = function(partnership){
                 	self.details.partnership.rows.remove(partnership);
                 };
-                
+
                 //Risks details
 				self.addRisks = function(){
                		self.risks.rows.push(new RisksRowViewModel());
@@ -998,16 +995,16 @@
                 self.removeRisk = function(risk) {
 					self.risks.rows.remove(risk);
                 };
-                
+
                 self.projectDatesChanged = ko.computed(function() {
                     return project.plannedStartDate != self.plannedStartDate() ||
                            project.plannedEndDate != self.plannedEndDate();
                 });
-				
+
 				self.overAllRiskHighlight = ko.computed(function () {
 					return getClassName(self.risks.overallRisk());
     			});
-		
+
 				function getClassName(val){
 					var className = '';
 					if(val == 'High')
@@ -1017,8 +1014,8 @@
 					else if (val == 'Medium')
 			     		className = 'badge badge-info';
 					else if (val == 'Low')
-			     		className = 'badge badge-success';			     					     		
-					return className;			     		
+			     		className = 'badge badge-success';
+					return className;
 				}
 
 				self.addBudget = function(){
@@ -1058,8 +1055,12 @@
                 self.loadPrograms = function (programsModel) {
                     self.transients.programsModel = programsModel;
                     $.each(programsModel.programs, function (i, program) {
+                        if (program.readOnly) {
+                            return;
+                        }
                         self.transients.programs.push(program.name);
                         self.transients.subprograms[program.name] = $.map(program.subprograms,function (obj, i){return obj.name});
+
                     });
                     self.associatedProgram(project.associatedProgram); // to trigger the computation of sub-programs
                 };
@@ -1067,23 +1068,23 @@
                     delete jsData.transients;
                     return jsData;
                 };
-                
+
 				self.saveProjectDetails = function(){
 					self.saveProject(false);
 				};
-				
+
 				// Save risks details.
 				self.saveRisks = function(){
-					
+
 					if (!$('#risk-validation').validationEngine('validate'))
-						return; 
+						return;
 					var tmp = {};
 					tmp = ko.mapping.toJS(self.risks);
 					tmp['status'] = 'active';
 					var jsData = {"risks": tmp};
 					var json = JSON.stringify(jsData, function (key, value) {
 									return value === undefined ? "" : value;
-					                });	
+					                });
 					var id = "${project?.projectId}";
 					$.ajax({
 			                url: "${createLink(action: 'ajaxUpdate', id: project.projectId)}",
@@ -1103,9 +1104,9 @@
 			                    var status = data.status;
 			                    alert('An unhandled error occurred: ' + data.status);
 			                }
-			            }); 
+			            });
 				};
-				
+
 				// Save project details
 				self.saveProject = function(enableSubmit){
 					var tmp = {};
@@ -1135,9 +1136,9 @@
                              var status = data.status;
                              alert('An unhandled error occurred: ' + data.status);
                          }
-                     });                        
+                     });
 				};
-				
+
 				// Modify plan
 				self.saveStatus = function (newValue) {
 	                var payload = {planStatus: newValue, projectId: project.projectId};
@@ -1148,11 +1149,11 @@
 	                    contentType: 'application/json'
 	                });
             	};
-            	
+
             	self.saveAndSubmitChanges = function(){
             		self.saveProject(true);
             	};
-            	
+
             	self.submitChanges = function (newValue) {
 	                self.saveStatus('submitted')
 	                .done(function (data) {
@@ -1173,7 +1174,7 @@
 	                    }
 	                });
             	};
-            	
+
             	self.modifyPlan = function () {
                 // should we check that status is 'approved'?
                 self.saveStatus('not approved')
@@ -1362,7 +1363,7 @@
                         self.documents.push(new DocumentViewModel(doc));
                     }
                 };
-                
+
                 self.attachDocument = function() {
                     var url = '${g.createLink(controller:"proxy", action:"documentUpdate")}';
                     showDocumentAttachInModal( url,
@@ -1376,8 +1377,6 @@
                         .done(function(result){
                             window.location.href = here; // The display doesn't update properly otherwise.
                         });
-
-
                 };
                 self.deleteDocument = function(document) {
                     var url = '${g.createLink(controller:"proxy", action:"deleteDocument")}/'+document.documentId;
@@ -1541,6 +1540,8 @@
             var newsAndEventsMarkdown = '${(project.newsAndEvents?:"").markdownToHtml().encodeAsJavaScript()}';
             var projectStoriesMarkdown = '${(project.projectStories?:"").markdownToHtml().encodeAsJavaScript()}';
             var today = '${today}';
+            var programs = <fc:modelAsJavascript model="${programs}"/>;
+
             var viewModel = new ViewModel(
                 checkAndUpdateProject(${project}),
                 newsAndEventsMarkdown,
@@ -1550,7 +1551,7 @@
                 ${user?.isEditor?:false},
                 today,
                 ${themes});
-            viewModel.loadPrograms(${programs});
+            viewModel.loadPrograms(programs);
             ko.applyBindings(viewModel);
 
             // retain tab state for future re-visits
@@ -1634,7 +1635,7 @@
 
             // BS tooltip
             $('.tooltips').tooltip();
-            
+
             //Page loading indicator.
 			$('.spinner').hide();
         	$('.tab-content').fadeIn();
@@ -1670,9 +1671,9 @@
                 }).fail(function(j,t,e){ alert(t + ":" + e);}).done();
             }
         }
-    </r:script>
-    <g:if test="${user?.isAdmin || user?.isCaseManager}">
-        <r:script>
+</r:script>
+<g:if test="${user?.isAdmin || user?.isCaseManager}">
+    <r:script>
             // Admin JS code only exposed to admin users
             $(window).load(function () {
 
@@ -1797,7 +1798,7 @@
                 });
             }
 
-        </r:script>
-    </g:if>
+    </r:script>
+</g:if>
 </body>
 </html>

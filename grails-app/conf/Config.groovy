@@ -53,7 +53,7 @@ grails.mime.types = [
 //grails.urlmapping.cache.maxsize = 1000
 
 // What URL patterns should be processed by the resources plugin
-grails.resources.adhoc.patterns = ['/images/*', '/css/*', '/js/*', '/plugins/*']
+grails.resources.adhoc.patterns = ['/images/*', '/css/*', '/js/*', '/plugins/**']
 
 // The default codec used to encode data with ${}
 grails.views.default.codec = "none" // none, html, base64
@@ -78,6 +78,9 @@ grails.exceptionresolver.params.exclude = ['password']
 
 // configure auto-caching of queries by default (if false you can cache individual queries with 'cache: true')
 grails.hibernate.cache.queries = false
+
+// revert to grails 2.2 behaviour for html escaping until such time as every page can be reviewed.
+grails.views.default.codec = "none"
 
 /******************************************************************************\
  *  EXTERNAL SERVERS
@@ -192,6 +195,9 @@ if(!app.view.nocache){
 if(!merit.support.email) {
     merit.support.email = 'MERIT@environment.gov.au'
 }
+if(!app.default.hub) {
+    app.default.hub = 'default'
+}
 
 // Markdown configuration to match behaviour of the JavaScript editor.
 markdown.hardwraps = true
@@ -202,7 +208,7 @@ environments {
         server.port = "8087"
         grails.host = "http://devt.ala.org.au"
         serverName = "${grails.host}:${server.port}"
-        grails.serverURL = serverName + "/fieldcapture"
+        grails.serverURL = serverName + "/${appName}"
         layout.skin = "nrm"
         security.cas.appServerName = serverName
         security.cas.contextPath = "/" + appName
@@ -225,8 +231,10 @@ environments {
 
 // log4j configuration
 if (!logging.dir) {
-    logging.dir = (System.getProperty('catalina.base') ? System.getProperty('catalina.base') + '/logs'  : '/var/log/tomcat6')
+    logging.dir = (System.getProperty('catalina.base') ? System.getProperty('catalina.base') + '/logs'  : '/var/log/tomcat7')
 }
+def loggingDir = logging.dir
+
 log4j = {
     appenders {
         environments{
@@ -234,54 +242,54 @@ log4j = {
                 console name: "stdout",
                         layout: pattern(conversionPattern: "%d %-5p [%c{1}]  %m%n"),
                         threshold: org.apache.log4j.Level.DEBUG
-                rollingFile name: "/fieldcaptureLog",
+                rollingFile name: "fieldcaptureLog",
                         maxFileSize: 104857600,
-                        file: logging.dir+"/fieldcapture.log",
+                        file: loggingDir+"/fieldcapture.log",
                         threshold: org.apache.log4j.Level.INFO,
                         layout: pattern(conversionPattern: "%d %-5p [%c{1}]  %m%n")
                 rollingFile name: "stacktrace",
                         maxFileSize: 104857600,
-                        file: logging.dir+"/fieldcapture-stacktrace.log"
+                        file: loggingDir+"/fieldcapture-stacktrace.log"
             }
             test {
                 rollingFile name: "fieldcaptureLog",
                         maxFileSize: 104857600,
-                        file: logging.dir+"/fieldcapture.log",
+                        file: loggingDir+"/fieldcapture.log",
                         threshold: org.apache.log4j.Level.INFO,
                         layout: pattern(conversionPattern: "%d %-5p [%c{1}]  %m%n")
                 rollingFile name: "stacktrace",
                         maxFileSize: 104857600,
-                        file: logging.dir+"/fieldcapture-stacktrace.log"
+                        file: loggingDir+"/fieldcapture-stacktrace.log"
             }
             nectar {
                 rollingFile name: "fieldcaptureLog",
                         maxFileSize: 104857600,
-                        file: logging.dir+"/fieldcapture.log",
+                        file: loggingDir+"/fieldcapture.log",
                         threshold: org.apache.log4j.Level.INFO,
                         layout: pattern(conversionPattern: "%d %-5p [%c{1}]  %m%n")
                 rollingFile name: "stacktrace",
                         maxFileSize: 104857600,
-                        file: logging.dir+"/fieldcapture-stacktrace.log"
+                        file: loggingDir+"/fieldcapture-stacktrace.log"
             }
             nectartest {
                 rollingFile name: "fieldcaptureLog",
                         maxFileSize: 104857600,
-                        file: logging.dir+"/fieldcapture.log",
+                        file: loggingDir+"/fieldcapture.log",
                         threshold: org.apache.log4j.Level.INFO,
                         layout: pattern(conversionPattern: "%d %-5p [%c{1}]  %m%n")
                 rollingFile name: "stacktrace",
                         maxFileSize: 104857600,
-                        file: logging.dir+"/fieldcapture-stacktrace.log"
+                        file: loggingDir+"/fieldcapture-stacktrace.log"
             }
             production {
                 rollingFile name: "fieldcaptureLog",
                         maxFileSize: 104857600,
-                        file: logging.dir+"/fieldcapture.log",
+                        file: loggingDir+"/fieldcapture.log",
                         threshold: org.apache.log4j.Level.INFO,
                         layout: pattern(conversionPattern: "%d %-5p [%c{1}]  %m%n")
                 rollingFile name: "stacktrace",
                         maxFileSize: 104857600,
-                        file: logging.dir+"/fieldcapture-stacktrace.log"
+                        file: loggingDir+"/fieldcapture-stacktrace.log"
             }
         }
     }

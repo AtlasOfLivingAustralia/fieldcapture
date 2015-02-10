@@ -122,6 +122,11 @@
             });
         });
 
+        $("#generateReports").click(function(e) {
+            $('#projectActivitiesForm').submit();
+        });
+
+
     });
 
 </script>
@@ -222,6 +227,18 @@
         </td>
         <td>
             Re-indexes all data in the search index.
+        </td>
+    </tr>
+    <tr>
+        <td><button id="generateReports" class="btn btn-small btn-info" title="Generate project activities">Generate project activities</button>
+        </td>
+        <td>
+            Create project reporting activities for a project based on one activity per period.
+            <g:form id="projectActivitiesForm" url="[action:'generateProjectReports']">
+                Project ID <input type="text" name="projectId"><br/>
+                Activity Type <input type="text" name="activityType"><br/>
+                Period (months) <input type="text" name="period">
+            </g:form>
         </td>
     </tr>
     </tbody>
