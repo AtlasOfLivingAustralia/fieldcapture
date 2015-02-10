@@ -40,17 +40,8 @@ grails.project.dependency.resolution = {
     checksums true // Whether to verify checksums on resolve
 
     repositories {
-        grailsPlugins()
-        grailsHome()
-        grailsCentral()
-
         mavenLocal()
-        mavenCentral()
-
-        mavenRepo "http://maven.ala.org.au/repository/"
-        mavenRepo "http://repo.opengeo.org"
-        mavenRepo "http://download.osgeo.org/webdav/geotools/"
-
+        mavenRepo "http://nexus.ala.org.au/content/groups/public/"
     }
 
     dependencies {
