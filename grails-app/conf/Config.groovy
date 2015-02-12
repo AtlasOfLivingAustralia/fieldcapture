@@ -199,6 +199,17 @@ if(!app.default.hub) {
     app.default.hub = 'default'
 }
 
+if (!grails.cache.ehcache) {
+    grails {
+        cache {
+            ehcache {
+                cacheManagerName = appName + '-ehcache'
+                reloadable = false
+            }
+        }
+    }
+}
+
 // Markdown configuration to match behaviour of the JavaScript editor.
 markdown.hardwraps = true
 
