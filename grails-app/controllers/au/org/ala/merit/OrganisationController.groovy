@@ -31,7 +31,10 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
             activity.grantId = project?.grantId
         }
 
-        render view: '/activity/bulkEdit', model:[organisation:organisation, type:activityType, title:activityService.defaultDescription([type:activityType, plannedStartDate:params.plannedStartDate, plannedEndDate:params.plannedEndDate]), activities:activities, outputModels:outputModels]
+        render view: '/activity/bulkEdit', model:[organisation:organisation, type:activityType,
+                       title:activityService.defaultDescription([type:activityType, plannedStartDate:params.plannedStartDate, plannedEndDate:params.plannedEndDate]),
+                       activities:activities,
+                       outputModels:outputModels]
     }
 
 
