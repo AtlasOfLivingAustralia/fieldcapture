@@ -205,7 +205,7 @@
                     <tbody data-bind="foreach:reports">
                         <tr>
                             <td><span data-bind="text:dateCreated.formattedDate()"></span></td>
-                            <td><a data-bind="attr:{href:fcConfig.activityViewUrl+'/'+activityId}" title="View the document"><span data-bind="text:type"></span> </a></td>
+                            <td><a data-bind="attr:{href:fcConfig.activityViewUrl+'/'+activityId+'?returnTo=javascript:window.close();'}" target="attachedDocument" title="View the document"><span data-bind="text:type"></span> </a></td>
                         </tr>
 
                     </tbody>
