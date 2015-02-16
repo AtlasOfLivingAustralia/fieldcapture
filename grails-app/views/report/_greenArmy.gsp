@@ -471,10 +471,11 @@
 
         var reportCategories = [{type:'Green Army - Desktop Audit Checklist', title:'Audits undertaken'}, {type:'Green Army - Change or Absence of Team Supervisor', title:'Team supervisor notification'}, {type:'', title:'Other'}];
 
-        var ProjectReportsViewModel = function(grantId, reports) {
+        var ProjectReportsViewModel = function(grantId, projectId, reports) {
             var self = this;
             self.grantId = grantId;
             self.reports = [];
+            self.projectId = projectId;
 
 
             $.each(reportCategories, function(i, category) {
@@ -514,7 +515,7 @@
             self.projects = [];
 
             $.each(projectReports, function(i, project) {
-                self.projects.push(new ProjectReportsViewModel(project.grantId, project.reports));
+                self.projects.push(new ProjectReportsViewModel(project.grantId, project.projectId, project.reports));
             });
 
             var columns = [
@@ -525,10 +526,11 @@
             });
 
             self.selectedGrantId = ko.observable(self.projects[0].grantId);
+            self.selectedProjectId = ko.observable(self.projects[0].projectId);
 
             self.selectedProject = ko.computed(function() {
                 var project = $.grep(self.projects, function(project) {
-                    return project.grantId == self.selectedGrantId();
+                    return project.projectId == self.selectedProjectId();
                 });
                 if (project[0]) {
                     return project[0];
@@ -553,6 +555,7 @@
                                 if (selectedRow && selectedRow.data()) {
                                     var grantId = selectedRow.data().grantId
                                     self.selectedGrantId(grantId);
+                                    self.selectedProjectId(selectedRow.data().projectId);
                                 }
                             });
                         }
