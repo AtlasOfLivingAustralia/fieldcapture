@@ -183,27 +183,14 @@
         <h3>Ad-hoc Documents</h3>
         <div class="row-fluid">
             <span class="span6">
-                <table class="table table-striped">
+                <table id="documents" class="table table-striped">
                     <thead>
                         <tr>
-                            <th></th>
-                            <th>Grant ID</th>
-                            <!-- ko foreach: categories -->
-                            <th><span data-bind="text:$data"></span> </th>
-                            <!-- /ko -->
+
                         </tr>
                     </thead>
-                    <tbody data-bind="foreach:projects">
-                            <tr data-bind="css:{'selected':$parent.selectedGrantId()==grantId}">
-                                <td><input type="radio" name="selectedGrantId" data-bind="value:grantId, checked:$parent.selectedGrantId"></td>
-                                <td><span data-bind="text:grantId"></span></td>
-                                <!-- ko foreach: counts -->
-                                <td><span data-bind="text:$data"></span></td>
-                                <!-- /ko -->
-                            </tr>
 
-                    </tbody>
-
+                    <tbody></tbody>
                 </table>
             </span>
             <span class="span6" data-bind="with:selectedProject">
@@ -217,7 +204,7 @@
                     </thead>
                     <tbody data-bind="foreach:reports">
                         <tr>
-                            <td><span data-bind="text:dateCreated"></span></td>
+                            <td><span data-bind="text:dateCreated.formattedDate()"></span></td>
                             <td><a data-bind="attr:{href:fcConfig.activityViewUrl+'/'+activityId}" title="View the document"><span data-bind="text:type"></span> </a></td>
                         </tr>
 
@@ -487,27 +474,32 @@
         var ProjectReportsViewModel = function(grantId, reports) {
             var self = this;
             self.grantId = grantId;
-            self.reports = reports;
+            self.reports = [];
 
-            self.counts = [];
 
-            $.each(reportCategories, function() {
-                self.counts.push(0);
+            $.each(reportCategories, function(i, category) {
+                self[category.title] = 0;
             });
 
             // Do a count for each category.
             $.each(reports, function(i, report) {
-                var index = -1;
+                var found = false;
                 $.each(reportCategories, function(i, category) {
                     if (category.type == report.type) {
-                        index = i;
+                        found = true;
+                        self[category.title]++;
                         return false;
                     }
                 });
-                if (index == -1) {
-                    index = reportCategories.length - 1; // Assign to the "Other" category
+                if (!found) {
+                    self['Other']++;
                 }
-                self.counts[index]++;
+                self.reports.push({
+                    dateCreated:ko.observable(report.dateCreated).extend({simpleDate:false}),
+                    type:report.type,
+                    activityId:report.activityId
+                })
+
             });
 
         };
@@ -525,6 +517,13 @@
                 self.projects.push(new ProjectReportsViewModel(project.grantId, project.reports));
             });
 
+            var columns = [
+                {"title":"Grant ID", "data":"grantId"}
+            ];
+            $.each(reportCategories, function(i, category) {
+                columns.push({"title":category.title, "data":category.title});
+            });
+
             self.selectedGrantId = ko.observable(self.projects[0].grantId);
 
             self.selectedProject = ko.computed(function() {
@@ -537,7 +536,29 @@
                 return self.projects[0];
             });
 
-            this.initialise = function() {};
+            this.initialise = function() {
+                var $table = $('#documents');
+                $table.dataTable({
+                    columns:columns,
+                    data:self.projects,
+                    initComplete:function(settings, json) {
+
+                        if (self.projects.length > 0) {
+                            var api = this.api();
+                            $(api.row(0).node()).addClass('selected');
+                            $('#documents tbody').on('click', 'tr', function () {
+                                $table.find('tr.selected').removeClass('selected');
+                                $(this).addClass('selected');
+                                var selectedRow = api.row('.selected');
+                                if (selectedRow && selectedRow.data()) {
+                                    var grantId = selectedRow.data().grantId
+                                    self.selectedGrantId(grantId);
+                                }
+                            });
+                        }
+                    }
+                });
+            };
 
         };
 
