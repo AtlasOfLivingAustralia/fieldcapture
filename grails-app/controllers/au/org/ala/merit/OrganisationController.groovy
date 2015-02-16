@@ -29,7 +29,9 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
             def project = organisation.projects.find{it.projectId == activity.projectId}
             activity.projectName = project?.name
             activity.grantId = project?.grantId
+            activity.externalId = project?.externalId
         }
+        activities?.sort{a,b -> (a.plannedEndDate <=> b.plannedEndDate) ?: (a.grantId <=> b.grantId) ?: (a.externalId <=> b.externalId) ?: (a.activityId <=> b.activityId)}
 
         render view: '/activity/bulkEdit', model:[organisation:organisation, type:activityType,
                        title:activityService.defaultDescription([type:activityType, plannedStartDate:params.plannedStartDate, plannedEndDate:params.plannedEndDate]),

@@ -7,10 +7,17 @@
         #greenArmyReport th {
             white-space: normal;
         }
-
+        #greenArmyReport th.participantInfo {
+            background-color: #c8d295;
+        }
         #greenArmyReport table {
             width:100%;
         }
+        #greenArmyReport table.activityTable tfoot {
+            border-top: 2px solid black;
+        }
+
+
     </style>
 
 </head>
@@ -83,17 +90,13 @@
         <div class="row-fluid">
             <span class="span12">
                 <table class="activityTable table-striped">
-                    <th>
-                        <tr>
-                            <th colspan="7">Project Data</th>
-                            <th colspan="7">Participant and Training Data</th>
-                        </tr>
-                        <tr>
-                            <th>
+                    <thead>
 
-                            </th>
-                        </tr>
-                    </th>
+                    </thead>
+                    <tfoot>
+                    <tr class=""><td colspan="2">Totals</td></tr>
+                    </tfoot>
+                    <tbody></tbody>
                 </table>
             </span>
 
@@ -116,18 +119,19 @@
             <span class="span12">
                 <table  class="summaryTable table-striped">
                     <thead>
+                        <tr><th colspan="4">Project data</th><th>Participant and Training Data</th></tr>
                         <tr>
                             <th>Period</th>
                             <th>Total projects</th>
                             <th>Projects completed</th>
                             <th>Projects not completed</th>
-                            <th>No. commencing projects</th>
-                            <th>No. indigenous commencing projects</th>
-                            <th>No. not completing projects</th>
-                            <th>No. completing projects</th>
-                            <th>No. starting training</th>
-                            <th>No. who exited training</th>
-                            <th>No. who completed training</th>
+                            <th class="participantInfo">No. commencing projects</th>
+                            <th class="participantInfo">No. indigenous commencing projects</th>
+                            <th class="participantInfo"No. not completing projects</th>
+                            <th class="participantInfo">No. completing projects</th>
+                            <th class="participantInfo">No. starting training</th>
+                            <th class="participantInfo">No. who exited training</th>
+                            <th class="participantInfo">No. who completed training</th>
                         </tr>
 
                     </thead>
@@ -179,27 +183,14 @@
         <h3>Ad-hoc Documents</h3>
         <div class="row-fluid">
             <span class="span6">
-                <table class="table table-striped">
+                <table id="documents" class="table table-striped">
                     <thead>
                         <tr>
-                            <th></th>
-                            <th>Grant ID</th>
-                            <!-- ko foreach: categories -->
-                            <th><span data-bind="text:$data"></span> </th>
-                            <!-- /ko -->
+
                         </tr>
                     </thead>
-                    <tbody data-bind="foreach:projects">
-                            <tr data-bind="css:{'selected':$parent.selectedGrantId()==grantId}">
-                                <td><input type="radio" name="selectedGrantId" data-bind="value:grantId, checked:$parent.selectedGrantId"></td>
-                                <td><span data-bind="text:grantId"></span></td>
-                                <!-- ko foreach: counts -->
-                                <td><span data-bind="text:$data"></span></td>
-                                <!-- /ko -->
-                            </tr>
 
-                    </tbody>
-
+                    <tbody></tbody>
                 </table>
             </span>
             <span class="span6" data-bind="with:selectedProject">
@@ -213,8 +204,8 @@
                     </thead>
                     <tbody data-bind="foreach:reports">
                         <tr>
-                            <td><span data-bind="text:dateCreated"></span></td>
-                            <td><a data-bind="attr:{href:fcConfig.activityViewUrl+'/'+activityId}" title="View the document"><span data-bind="text:type"></span> </a></td>
+                            <td><span data-bind="text:dateCreated.formattedDate()"></span></td>
+                            <td><a data-bind="attr:{href:fcConfig.activityViewUrl+'/'+activityId+'?returnTo=javascript:window.close();'}" target="attachedDocument" title="View the document"><span data-bind="text:type"></span> </a></td>
                         </tr>
 
                     </tbody>
@@ -281,7 +272,56 @@
             self.initialise = function(element) {
                 $(element).find('.activityTable').dataTable( {
                     "aaData": rows,
-                    "aoColumns": header
+                    "aoColumns": header,
+                    "initComplete": function ( settings, json ) {
+                        var api = this.api();
+
+                        var projectColumns = [0,1];
+                        var participantColumns = [2, 3, 4, 5, 6, 7, 8];
+                        var adminColumns = [9];
+                        api.columns(projectColumns).header().to$().addClass('projectInfo');
+                        api.columns(participantColumns).header().to$().addClass('participantInfo');
+
+                        var header = api.table().header();
+                        $(header).prepend('<tr><th colspan="'+projectColumns.length+'">Project Data</th><th colspan="'+participantColumns.length+'">Participant and Training Data</th><th colspan="1">Administration</th></tr>')
+
+
+                    },
+                    "footerCallback": function ( tfoot, data, start, end, display ) {
+                        var api = this.api();
+
+                        // Remove the formatting to get integer data for summation
+                        var intVal = function ( i ) {
+                            return typeof i === 'string' ?
+                            i.replace(/[\$,]/g, '')*1 :
+                                    typeof i === 'number' ?
+                                            i : 0;
+                        };
+
+                        // Total over all numerical columns and all pages
+                        for (var i=2; i<=9; i++) {
+
+
+                            var data = api.column(i).data();
+                            var total = data
+                                    .reduce(function (a, b) {
+                                        return intVal(a) + intVal(b);
+                                    }, 0);
+
+                            // Total over this page
+                            var pageTotal = api
+                                    .column(i, {page: 'current'})
+                                    .data()
+                                    .reduce(function (a, b) {
+                                        return intVal(a) + intVal(b);
+                                    }, 0);
+
+                            // Update footer
+                            $(api.table().footer()).find('tr').append('<td>'+pageTotal + ' ('+total + ' total)</td>');
+
+
+                        }
+                    }
                 } );
             };
 
@@ -380,7 +420,6 @@
                         var row = {group:group};
 
                         var projectsByStatus = findScoreByLabel(groupedScores.results, 'Count of projects by project status');
-                        console.log(projectsByStatus);
                         var newProjects = 0, completedProjects = 0;
                         if (projectsByStatus && projectsByStatus.results && projectsByStatus.results[0]) {
                             newProjects = projectByStatus.results[0].result['Commenced'] || 0;
@@ -400,10 +439,33 @@
             }
 
             this.initialise = function(element) {
-                $(element).find('.activityTable').dataTable( {
+                var options = {
                     "data": rows,
-                    "columns": header
-                } );
+                    "columns": header,
+                    "initComplete": function ( settings, json ) {
+                        var api = this.api();
+
+                        var projectColumns = [0, 1];
+                        var participantColumns = [2, 3, 4, 5, 6] ;
+                        var participantDemographicColumns = [7, 8, 9, 10, 11, 12, 13, 14, 15];
+                        if (showOrganisation) {
+                            projectColumns = [0, 1, 2];
+                            participantColumns = [3, 4, 5, 6, 7];
+                            participantDemographicColumns = [8, 9, 10, 11, 12, 13, 14, 15, 16];
+                        }
+                        var header = api.table().header();
+                        $(header).prepend('<tr><th colspan="'+projectColumns.length+'">Project Data</th><th colspan="'+participantColumns.length+'">Participant and Training Data</th><th colspan="'+participantDemographicColumns.length+'">Participant Deomographics</th></tr>')
+
+                        api.columns(projectColumns).header().to$().addClass('projectInfo');
+                        api.columns(participantColumns).header().to$().addClass('participantInfo');
+                        api.columns(participantDemographicColumns).header().to$().addClass('participantInfo');
+                    }
+                };
+                if (!showOrganisation) {
+                    options.paging = false;
+                    options.searching = false;
+                }
+                $(element).find('.activityTable').dataTable( options );
             };
         };
 
@@ -412,27 +474,32 @@
         var ProjectReportsViewModel = function(grantId, reports) {
             var self = this;
             self.grantId = grantId;
-            self.reports = reports;
+            self.reports = [];
 
-            self.counts = [];
 
-            $.each(reportCategories, function() {
-                self.counts.push(0);
+            $.each(reportCategories, function(i, category) {
+                self[category.title] = 0;
             });
 
             // Do a count for each category.
             $.each(reports, function(i, report) {
-                var index = -1;
+                var found = false;
                 $.each(reportCategories, function(i, category) {
                     if (category.type == report.type) {
-                        index = i;
+                        found = true;
+                        self[category.title]++;
                         return false;
                     }
                 });
-                if (index == -1) {
-                    index = reportCategories.length - 1; // Assign to the "Other" category
+                if (!found) {
+                    self['Other']++;
                 }
-                self.counts[index]++;
+                self.reports.push({
+                    dateCreated:ko.observable(report.dateCreated).extend({simpleDate:false}),
+                    type:report.type,
+                    activityId:report.activityId
+                })
+
             });
 
         };
@@ -450,6 +517,13 @@
                 self.projects.push(new ProjectReportsViewModel(project.grantId, project.reports));
             });
 
+            var columns = [
+                {"title":"Grant ID", "data":"grantId"}
+            ];
+            $.each(reportCategories, function(i, category) {
+                columns.push({"title":category.title, "data":category.title});
+            });
+
             self.selectedGrantId = ko.observable(self.projects[0].grantId);
 
             self.selectedProject = ko.computed(function() {
@@ -462,7 +536,29 @@
                 return self.projects[0];
             });
 
-            this.initialise = function() {};
+            this.initialise = function() {
+                var $table = $('#documents');
+                $table.dataTable({
+                    columns:columns,
+                    data:self.projects,
+                    initComplete:function(settings, json) {
+
+                        if (self.projects.length > 0) {
+                            var api = this.api();
+                            $(api.row(0).node()).addClass('selected');
+                            $('#documents tbody').on('click', 'tr', function () {
+                                $table.find('tr.selected').removeClass('selected');
+                                $(this).addClass('selected');
+                                var selectedRow = api.row('.selected');
+                                if (selectedRow && selectedRow.data()) {
+                                    var grantId = selectedRow.data().grantId
+                                    self.selectedGrantId(grantId);
+                                }
+                            });
+                        }
+                    }
+                });
+            };
 
         };
 

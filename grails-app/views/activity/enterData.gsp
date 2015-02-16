@@ -78,6 +78,7 @@
     <div class="row-fluid title-block well well-small input-block-level">
         <div class="span12 title-attribute">
             <h1><span data-bind="click:goToProject" class="clickable">${project?.name?.encodeAsHTML() ?: 'no project defined!!'}</span></h1>
+            <g:if test="${metaModel.supportsPhotoPoints}">
             <div class="row-fluid">
                 <div class="span1">
                     Site:
@@ -89,6 +90,7 @@
                     Leave blank if this activity is not associated with a specific site.
                 </div>
             </div>
+            </g:if>
             <h3 data-bind="css:{modified:dirtyFlag.isDirty},attr:{title:'Has been modified'}">Activity: <span data-bind="text:type"></span></h3>
             <h4><span>${project.associatedProgram?.encodeAsHTML()}</span> <span>${project.associatedSubProgram?.encodeAsHTML()}</span></h4>
         </div>
@@ -538,7 +540,7 @@
 
             self.confirmSiteChange = function() {
 
-                if (self.transients.photoPointModel().isDirty()) {
+                if (metaModel.supportsSites && metaModel.supportsPhotoPoints && self.transients.photoPointModel().isDirty()) {
                     return window.confirm(
                         "This activity has photos attached to photo points.\n  Changing the site will delete these photos.\n  This cannot be undone.  Are you sure?"
                     );
