@@ -12,16 +12,6 @@ class AdminController extends au.org.ala.fieldcapture.AdminController {
         render(view:'import', model:[:])
     }
 
-    def zam2() {
-        def list = JSON.parse(new FileReader(new File('/Users/god08d/Downloads/userList.json')))
-        def pretty = list.collect {
-            [id:it.id, lastName:it.lastName, firstName:it.firstName, email:it.email, userName:it.userName]
-        }
-        def prettyJson = pretty as JSON
-        prettyJson.setPrettyPrint(true)
-        render prettyJson
-    }
-
     /**
      * Accepts a CSV file (as a multipart file upload) and validates and loads project, site & institution data from it.
      * @return an error message if the CSV file is invalid, otherwise writes a CSV file describing any validation

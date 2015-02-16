@@ -25,7 +25,7 @@ grails.project.fork = [
 
 // settings for the inline fieldcapture-plugin
 if (Environment.current == Environment.DEVELOPMENT) {
-    grails.plugin.location.'fieldcapture-plugin' = '../chrisala-fieldcapture-hubs/fieldcapture-hubs-plugin'
+    grails.plugin.location.'fieldcapture-plugin' = '../fieldcapture-hubs/fieldcapture-hubs-plugin'
 }
 grails.project.dependency.resolver = "maven"
 grails.project.dependency.resolution = {
