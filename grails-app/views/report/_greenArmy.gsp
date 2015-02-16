@@ -11,6 +11,10 @@
         #greenArmyReport table {
             width:100%;
         }
+        #greenArmyReport table.activityTable tfoot {
+            border-top: 2px solid black;
+        }
+
     </style>
 
 </head>
@@ -83,17 +87,13 @@
         <div class="row-fluid">
             <span class="span12">
                 <table class="activityTable table-striped">
-                    <th>
-                        <tr>
-                            <th colspan="7">Project Data</th>
-                            <th colspan="7">Participant and Training Data</th>
-                        </tr>
-                        <tr>
-                            <th>
+                    <thead>
 
-                            </th>
-                        </tr>
-                    </th>
+                    </thead>
+                    <tfoot>
+                    <tr class=""><td colspan="2">Totals</td></tr>
+                    </tfoot>
+                    <tbody></tbody>
                 </table>
             </span>
 
@@ -281,7 +281,42 @@
             self.initialise = function(element) {
                 $(element).find('.activityTable').dataTable( {
                     "aaData": rows,
-                    "aoColumns": header
+                    "aoColumns": header,
+                    "footerCallback": function ( tfoot, data, start, end, display ) {
+                        var api = this.api();
+
+                        // Remove the formatting to get integer data for summation
+                        var intVal = function ( i ) {
+                            return typeof i === 'string' ?
+                            i.replace(/[\$,]/g, '')*1 :
+                                    typeof i === 'number' ?
+                                            i : 0;
+                        };
+
+                        // Total over all numerical columns and all pages
+                        for (var i=2; i<=9; i++) {
+
+
+                            var data = api.column(i).data();
+                            var total = data
+                                    .reduce(function (a, b) {
+                                        return intVal(a) + intVal(b);
+                                    }, 0);
+
+                            // Total over this page
+                            var pageTotal = api
+                                    .column(i, {page: 'current'})
+                                    .data()
+                                    .reduce(function (a, b) {
+                                        return intVal(a) + intVal(b);
+                                    }, 0);
+
+                            // Update footer
+                            $(api.table().footer()).find('tr').append('<td>'+pageTotal + ' ('+total + ' total)</td>');
+
+
+                        }
+                    }
                 } );
             };
 
@@ -380,7 +415,6 @@
                         var row = {group:group};
 
                         var projectsByStatus = findScoreByLabel(groupedScores.results, 'Count of projects by project status');
-                        console.log(projectsByStatus);
                         var newProjects = 0, completedProjects = 0;
                         if (projectsByStatus && projectsByStatus.results && projectsByStatus.results[0]) {
                             newProjects = projectByStatus.results[0].result['Commenced'] || 0;
