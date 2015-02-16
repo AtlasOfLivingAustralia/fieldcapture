@@ -7,13 +7,16 @@
         #greenArmyReport th {
             white-space: normal;
         }
-
+        #greenArmyReport th.participantInfo {
+            background-color: #c8d295;
+        }
         #greenArmyReport table {
             width:100%;
         }
         #greenArmyReport table.activityTable tfoot {
             border-top: 2px solid black;
         }
+
 
     </style>
 
@@ -116,18 +119,19 @@
             <span class="span12">
                 <table  class="summaryTable table-striped">
                     <thead>
+                        <tr><th colspan="4">Project data</th><th>Participant and Training Data</th></tr>
                         <tr>
                             <th>Period</th>
                             <th>Total projects</th>
                             <th>Projects completed</th>
                             <th>Projects not completed</th>
-                            <th>No. commencing projects</th>
-                            <th>No. indigenous commencing projects</th>
-                            <th>No. not completing projects</th>
-                            <th>No. completing projects</th>
-                            <th>No. starting training</th>
-                            <th>No. who exited training</th>
-                            <th>No. who completed training</th>
+                            <th class="participantInfo">No. commencing projects</th>
+                            <th class="participantInfo">No. indigenous commencing projects</th>
+                            <th class="participantInfo"No. not completing projects</th>
+                            <th class="participantInfo">No. completing projects</th>
+                            <th class="participantInfo">No. starting training</th>
+                            <th class="participantInfo">No. who exited training</th>
+                            <th class="participantInfo">No. who completed training</th>
                         </tr>
 
                     </thead>
@@ -282,6 +286,20 @@
                 $(element).find('.activityTable').dataTable( {
                     "aaData": rows,
                     "aoColumns": header,
+                    "initComplete": function ( settings, json ) {
+                        var api = this.api();
+
+                        var projectColumns = [0,1];
+                        var participantColumns = [2, 3, 4, 5, 6, 7, 8];
+                        var adminColumns = [9];
+                        api.columns(projectColumns).header().to$().addClass('projectInfo');
+                        api.columns(participantColumns).header().to$().addClass('participantInfo');
+
+                        var header = api.table().header();
+                        $(header).prepend('<tr><th colspan="'+projectColumns.length+'">Project Data</th><th colspan="'+participantColumns.length+'">Participant and Training Data</th><th colspan="1">Administration</th></tr>')
+
+
+                    },
                     "footerCallback": function ( tfoot, data, start, end, display ) {
                         var api = this.api();
 
@@ -434,10 +452,33 @@
             }
 
             this.initialise = function(element) {
-                $(element).find('.activityTable').dataTable( {
+                var options = {
                     "data": rows,
-                    "columns": header
-                } );
+                    "columns": header,
+                    "initComplete": function ( settings, json ) {
+                        var api = this.api();
+
+                        var projectColumns = [0, 1];
+                        var participantColumns = [2, 3, 4, 5, 6] ;
+                        var participantDemographicColumns = [7, 8, 9, 10, 11, 12, 13, 14, 15];
+                        if (showOrganisation) {
+                            projectColumns = [0, 1, 2];
+                            participantColumns = [3, 4, 5, 6, 7];
+                            participantDemographicColumns = [8, 9, 10, 11, 12, 13, 14, 15, 16];
+                        }
+                        var header = api.table().header();
+                        $(header).prepend('<tr><th colspan="'+projectColumns.length+'">Project Data</th><th colspan="'+participantColumns.length+'">Participant and Training Data</th><th colspan="'+participantDemographicColumns.length+'">Participant Deomographics</th></tr>')
+
+                        api.columns(projectColumns).header().to$().addClass('projectInfo');
+                        api.columns(participantColumns).header().to$().addClass('participantInfo');
+                        api.columns(participantDemographicColumns).header().to$().addClass('participantInfo');
+                    }
+                };
+                if (!showOrganisation) {
+                    options.paging = false;
+                    options.searching = false;
+                }
+                $(element).find('.activityTable').dataTable( options );
             };
         };
 
