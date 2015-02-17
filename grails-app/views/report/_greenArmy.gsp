@@ -238,7 +238,24 @@
         var monthlyReports = <fc:modelAsJavascript model="${monthlyActivities}"/>;
         var quarterlyReports = <fc:modelAsJavascript model="${quarterlyReports}"/>;
 
-        var MonthlyReportViewModel = function(title, activities, scores) {
+        var outputValueRenderer = function(data) {
+            var previous = data.previous;
+            var current = data.current;
+
+            if (!current) {
+                return '';
+            }
+            if (!previous) {
+                return current;
+            }
+            else if (current == previous) {
+                return current;
+            }
+            return '<span title="Last month: '+previous+'" style="color:red">'+current+'</span>';
+
+        }
+
+        var MonthlyReportViewModel = function(title, activities, lastMonthsActivities, scores) {
 
             var self = this;
 
@@ -246,27 +263,43 @@
 
             var header = [
                 {sTitle:'Grant ID'},
-                {sTitle:'Project status', source:{output:'Monthly Status Report Data', dataItem:'projectStatus'}},
-                {sTitle:'Total No. commencing projects', source:{output:'Monthly Status Report Data', dataItem:'totalParticipantsCommenced'}},
-                {sTitle:'Total No. completing projects', source:{output:'Monthly Status Report Data', dataItem:'totalParticipantsCompleted'}},
-                {sTitle:'No. not completing projects', source:{output:'Monthly Status Report Data', dataItem:'totalParticipantsNotCompleted'}},
-                {sTitle:'No. of indigenous participants commenced', source:{output:'Monthly Status Report Data', dataItem:'totalIndigenousParticipantsCommenced'}},
-                {sTitle:'Commenced accredited training', source:{output:'Monthly Status Report Data', dataItem:'trainingCommencedAccredited'}},
-                {sTitle:'Exited training', source:{output:'Monthly Status Report Data', dataItem:'trainingNoExited'}},
-                {sTitle:'Completed training', source:{output:'Monthly Status Report Data', dataItem:'trainingNoCompleted'}},
-                {sTitle:'Time taken to complete report', source:{output:'Monthly Status Report Data', dataItem:'reportingTimeTaken'}}];
+                {sTitle:'Project status', source:{output:'Monthly Status Report Data', dataItem:'projectStatus'}, render:outputValueRenderer},
+                {sTitle:'Total No. commencing projects', source:{output:'Monthly Status Report Data', dataItem:'totalParticipantsCommenced'}, render:outputValueRenderer},
+                {sTitle:'Total No. completing projects', source:{output:'Monthly Status Report Data', dataItem:'totalParticipantsCompleted'}, render:outputValueRenderer},
+                {sTitle:'No. not completing projects', source:{output:'Monthly Status Report Data', dataItem:'totalParticipantsNotCompleted'}, render:outputValueRenderer},
+                {sTitle:'No. of indigenous participants commenced', source:{output:'Monthly Status Report Data', dataItem:'totalIndigenousParticipantsCommenced'}, render:outputValueRenderer},
+                {sTitle:'Commenced accredited training', source:{output:'Monthly Status Report Data', dataItem:'trainingCommencedAccredited'}, render:outputValueRenderer},
+                {sTitle:'Exited training', source:{output:'Monthly Status Report Data', dataItem:'trainingNoExited'}, render:outputValueRenderer},
+                {sTitle:'Completed training', source:{output:'Monthly Status Report Data', dataItem:'trainingNoCompleted'}, render:outputValueRenderer},
+                {sTitle:'Time taken to complete report', source:{output:'Monthly Status Report Data', dataItem:'reportingTimeTaken'}, render:outputValueRenderer}];
 
             $.each(activities, function(i, activity) {
 
                 var row = [];
                 row.push(activity.grantId);
 
+                var previousMonth = $.grep(lastMonthsActivities, function(previousActivity) {
+                   return activity.projectId == previousActivity.projectId;
+                });
+                if (previousMonth.length) {
+                    previousMonth = previousMonth[0];
+                }
+                else {
+                    previousMonth = undefined;
+                }
+
                 for (var j=1; j<header.length; j++) {
-                    row.push(getOutputValue(activity, header[j].source.output, header[j].source.dataItem));
+
+                    var item = {current:getOutputValue(activity, header[j].source.output, header[j].source.dataItem)};
+                    if (previousMonth) {
+                        item.previous = getOutputValue(previousMonth, header[j].source.output, header[j].source.dataItem);
+                    }
+                    row.push(item);
                 }
                 rows.push(row);
 
             });
+
 
             self.title = title;
             self.initialise = function(element) {
@@ -577,29 +610,31 @@
             var year = 2014;
             var title;
             var shortTitle;
+
+            var prevTitle;
             <g:each in="${tabConfig}" var="tab">
 
-            <g:if test="${tab.template != 'docsTemplate'}">
-            var tabYear = year+${tab.yearModifier};
-            title = '${tab.title} '+ tabYear;
-            shortTitle = '${tab.name} ' + tabYear;
+                <g:if test="${tab.template != 'docsTemplate'}">
+                var tabYear = year+${tab.yearModifier};
+                title = '${tab.title} '+ tabYear;
+                shortTitle = '${tab.name} ' + tabYear;
 
-            <g:if test="${tab.template == 'monthly'}">
-            var monthlyScores = $.grep(monthlySummaryScores, function(results) {
-                return results.group == shortTitle;
-            })[0];
+                <g:if test="${tab.template == 'monthly'}">
+                var monthlyScores = $.grep(monthlySummaryScores, function(results) {
+                    return results.group == shortTitle;
+                })[0];
 
-            self.${tab.name}ViewModel = new MonthlyReportViewModel(title, monthlyReports[title], monthlyScores);
-            </g:if>
-            <g:if test="${tab.template == 'quarterly'}">
-            self.${tab.name}ViewModel = new QuarterlyReportViewModel(title, quarterlyReports['${tab.name}'], quarterlySummaryScores, ${includeOrganisationName});
-            </g:if>
-            </g:if>
-            <g:if test="${tab.template == 'docsTemplate'}">
-            self.${tab.name}ViewModel = new AdHocReportsViewModel(projectReports);
-            </g:if>
+                self.${tab.name}ViewModel = new MonthlyReportViewModel(title, monthlyReports[title], monthlyReports[prevTitle], monthlyScores);
+                </g:if>
+                <g:if test="${tab.template == 'quarterly'}">
+                self.${tab.name}ViewModel = new QuarterlyReportViewModel(title, quarterlyReports['${tab.name}'], quarterlySummaryScores, ${includeOrganisationName});
+                </g:if>
+                </g:if>
+                <g:if test="${tab.template == 'docsTemplate'}">
+                self.${tab.name}ViewModel = new AdHocReportsViewModel(projectReports);
+                </g:if>
 
-
+                prevTitle = title;
 
             </g:each>
 
