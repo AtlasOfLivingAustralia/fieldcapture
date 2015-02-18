@@ -278,14 +278,17 @@
                 var row = [];
                 row.push(activity.grantId);
 
-                var previousMonth = $.grep(lastMonthsActivities, function(previousActivity) {
-                   return activity.projectId == previousActivity.projectId;
-                });
-                if (previousMonth.length) {
-                    previousMonth = previousMonth[0];
-                }
-                else {
-                    previousMonth = undefined;
+                var previousMonth = undefined;
+                if (lastMonthsActivities) {
+                    previousMonth = $.grep(lastMonthsActivities, function (previousActivity) {
+                        return activity.projectId == previousActivity.projectId;
+                    });
+                    if (previousMonth.length) {
+                        previousMonth = previousMonth[0];
+                    }
+                    else {
+                        previousMonth = undefined;
+                    }
                 }
 
                 for (var j=1; j<header.length; j++) {
