@@ -86,7 +86,7 @@
     </div>
 
     <div class="well">
-        <h3>Project-by-project Monthly Report for ${date}</h3>
+        <h3>Project-by-project Monthly Report for <span data-bind="text:title"></span></h3>
         <div class="row-fluid">
             <span class="span12">
                 <table class="activityTable table-striped">
