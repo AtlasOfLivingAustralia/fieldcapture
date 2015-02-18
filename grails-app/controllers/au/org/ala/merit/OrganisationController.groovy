@@ -1,13 +1,14 @@
 package au.org.ala.merit
 
 import grails.converters.JSON
+import org.joda.time.Period
 
 /**
  * Extends the plugin OrganisationController to support Green Army project reporting.
  */
 class OrganisationController extends au.org.ala.fieldcapture.OrganisationController {
 
-    def activityService, metadataService
+    def activityService, metadataService, projectService
 
     def report(String id) {
 
@@ -63,5 +64,54 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
             // Go back to where we were before.
             render ''
         }
+    }
+
+    /** Temporary method to prepopulate Green Army projects and reporting activities */
+    def prepopGreenArmy() {
+
+
+        def resp = projectService.search([associatedProgram:'Green Army', view:'flat'])
+
+        if (resp?.resp?.projects) {
+            def projects = resp.resp.projects
+            def projectsByOrg = projects.groupBy{it.serviceProviderName}
+
+            projectsByOrg.each{org, orgProjects ->
+                if (!org) {
+                    return
+                }
+                def reportProjectName = org+' Green Army Reporting'
+                def orgReportProject = orgProjects.find{ it.name == reportProjectName }
+                if (!orgReportProject) {
+                    orgReportProject = [
+                            externalId:org+'-Report',
+                            name:reportProjectName,
+                            plannedStartDate:orgProjects.min{it.plannedStartDate}.plannedStartDate,
+                            plannedEndDate:orgProjects.max{it.plannedEndDate}.plannedEndDate,
+                            associatedProgram:'Green Army',
+                            description:'This project is to support the reporting requirements of the Green Army Programme',
+                            organisationName:org,
+                            serviceProviderName:org
+                    ]
+                    def result = projectService.create(orgReportProject)
+                    orgReportProject.projectId = result.resp.projectId
+
+                }
+                projectService.createReportingActivitiesForProject(orgReportProject.projectId, [[period: Period.months(3), type:'Green Army - Quarterly project report']])
+
+                orgProjects.each { project ->
+                    if (project.projectId == orgReportProject.projectId) {
+                        return
+                    }
+
+                    projectService.createReportingActivitiesForProject(project.projectId, [[period: Period.months(1), type:'Green Army - Monthly project status report']])
+                }
+            }
+
+
+            render projectsByOrg as JSON
+        }
+
+
     }
 }
