@@ -13,7 +13,7 @@
         spatialWmsUrl: "${grailsApplication.config.spatial.wms.url}",
         sldPolgonDefaultUrl: "${grailsApplication.config.sld.polgon.default.url}",
         sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}",
-        dashboardUrl: "${g.createLink(controller: 'report', action: 'dashboardReport', params: params)}"
+        dashboardUrl: "${g.createLink(controller: 'report', action: 'loadReport', params: params)}"
     }
     </r:script>
     <script type="text/javascript" src="//www.google.com/jsapi"></script>
@@ -272,8 +272,22 @@
                 </div>
 
                 <div class="tab-pane" id="reportView">
+                    <div class="row-fluid">
+                        <g:if test="${fc.userIsSiteAdmin()}">
+                        <span class="span12">
+                            <h4>Report: </h4>
+                            <select id="dashboardType" name="dashboardType"><option value="outputs">Activity Outputs</option><option value="greenArmy">Green Army</option></select>
+                        </span>
+                        </g:if>
+                        <g:else>
+                            <select id="dashboardType" name="dashboardType" style="display:none"><option value="outputs">Activity Outputs</option><option value="greenArmy">Green Army</option></select>
+                        </g:else>
+                    </div>
                     <div class="loading-message">
-                        <r:img dir="images" file="loading.gif" alt="saving icon"/> Loading report...
+                        <r:img dir="images" file="loading.gif" alt="saving icon"/> Loading...
+                    </div>
+                    <div id="dashboard-content">
+
                     </div>
                 </div>
                 %{-- hiding the downloads from non-admin until they are approved for public consumption. --}%
@@ -354,6 +368,22 @@
             };
         })();
 
+        var initialisedReport = {};
+
+        var loadReport = function(reportType) {
+            var $content = $('#dashboard-content');
+            var $loading = $('.loading-message');
+            $content.hide();
+            $loading.show();
+
+            $.get(fcConfig.dashboardUrl,{report:reportType}, function(data) {
+                $content.show();
+                $loading.hide();
+                $content.html(data);
+                $('#reportView .helphover').popover({animation: true, trigger:'hover', container:'body'});
+            });
+        };
+
         var initialisedReport = false;
         // retain tab state for future re-visits
         $('a[data-toggle="tab"]').on('shown', function (e) {
@@ -366,13 +396,13 @@
             else if (tab === '#reportView') {
                 if (!initialisedReport) {
                     initialisedReport = true;
-
-                    $.get(fcConfig.dashboardUrl, function(data) {
-                        $('#reportView').html(data);
-                        $('#reportView .helphover').popover({animation: true, trigger:'hover', container:'body'});
-                    });
-
+                    var $reportSelector = $('#dashboardType');
+                    $reportSelector.change(function() {
+                        var reportType = $reportSelector.val();
+                        loadReport(reportType);
+                    }).trigger('change');
                 }
+
             }
         });
         // re-establish the previous tab state

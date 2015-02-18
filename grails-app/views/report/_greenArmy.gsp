@@ -542,7 +542,6 @@
         };
         var AdHocReportsViewModel = function(projectReports) {
 
-
             var self = this;
             self.categories = $.map(reportCategories, function(category) {
                 return category.title;
@@ -561,8 +560,13 @@
                 columns.push({"title":category.title, "data":category.title});
             });
 
-            self.selectedGrantId = ko.observable(self.projects[0].grantId);
-            self.selectedProjectId = ko.observable(self.projects[0].projectId);
+            self.selectedGrantId = ko.observable();
+            self.selectedProjectId = ko.observable();
+
+            if (self.projects.length > 0) {
+                self.selectedGrantId(self.projects[0].grantId);
+                self.selectedProjectId(self.projects[0].projectId);
+            }
 
             self.selectedProject = ko.computed(function() {
                 var project = $.grep(self.projects, function(project) {
