@@ -140,8 +140,8 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
                     println '***********************************'
                     Sheet sheet = workbook.getSheet(sheetName)
 
-                    // The data we care about starts at row 12.
-                    int rowIndex = 12
+                    // The data we care about starts at row 12 (1 based)
+                    int rowIndex = 11
                     Row row = sheet.getRow(rowIndex++)
                     def hasData = true
                     while (hasData) {
@@ -186,21 +186,26 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
         def previouslyCompleted = row.getCell(3).getStringCellValue() == 'YES'
         if (previouslyCompleted) {
             println "Project ${projectId} previously completed\n\n"
-            return false
+            return true
         }
 
 
         def agreementDate = getCellValue(row, 5)
 
-        if (agreementDate && !project.serviceProviderAgreementDate) {
-            def agreementDateString = excelDateToISODateString(agreementDate)
-            // set the agreement date.
-            println "Setting ${projectId} agreement date to ${agreementDateString}\n"
-            projectService.update(project.projectId, [serviceProviderAgreementDate:agreementDateString])
+        if (agreementDate && (agreementDate instanceof Number)) {
+            if (agreementDate instanceof Number) {
+                def agreementDateString = excelDateToISODateString(agreementDate)
+
+                if (project.serviceProviderAgreementDate != agreementDateString) {
+                    // set the agreement date.
+                    println "Setting ${projectId} agreement date to ${agreementDateString}\n"
+                    projectService.update(project.projectId, [serviceProviderAgreementDate: agreementDateString])
+                }
+            }
         }
 
         def commencementDate = getCellValue(row, 7)
-        if (commencementDate) {
+        if (commencementDate && (commencementDate instanceof Number)) {
             def startDateString = excelDateToISODateString(commencementDate)
 
             def actualCommencementDate = getCellValue(row, 9)
@@ -365,7 +370,7 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
     }
 
     private String excelDateToISODateString(date) {
-        final long DAYS_FROM_1900_TO_1970 = 25567
+        final long DAYS_FROM_1900_TO_1970 = 25569
         // In Excel, the date is number of days since 1900
         long days = date as Long
         long millisSince1970 = (days - DAYS_FROM_1900_TO_1970) * 24l * 60l * 60l * 1000l
