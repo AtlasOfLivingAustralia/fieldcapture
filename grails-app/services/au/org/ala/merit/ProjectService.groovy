@@ -158,9 +158,18 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
     }
 
     def createReportingActivitiesForProject(projectId, config) {
-        def activities = generateReportingActivitiesForProject(projectId, config)
-        activities.each { activity ->
+        def result = regenerateReportingActivitiesForProject(projectId, config)
+        result.create.each { activity ->
             activityService.create(activity)
+        }
+
+        result.delete.each { activity ->
+            if (activity.progress != 'planned') {
+                log.warn("Attempt to delete non - planned activity ${activity.activityId}, progress: ${activity.progress}")
+            }
+            else {
+                activityService.delete(activity.activityId)
+            }
         }
     }
 
@@ -173,24 +182,40 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
      * @param config List of [type:<activity type>, period:<period that must have a reporting activity>
      * @return
      */
-    def generateReportingActivitiesForProject(projectId, config) {
+    def regenerateReportingActivitiesForProject(projectId, config) {
 
-        def project = get(projectId)
+        def project = get(projectId, 'all')
 
         def startDate = DateUtils.parse(project.plannedStartDate)
         def endDate = DateUtils.parse(project.plannedEndDate)
 
 
         def toCreate = []
+        def toDelete = []
         config.each {
-            def periodStartDate = DateUtils.alignToPeriod(startDate, it.period)
-            def activitiesOfType = project.activities.findAll {activity -> activity.type == it.type}
 
-            def existingActivitiesByPeriod = DateUtils.groupByDateRange(activitiesOfType, {it.plannedEndDate}, it.period, periodStartDate, endDate)
+            def periodStartDate = startDate
+            def periodEndDate = endDate
+            def activitiesOfType = project.activities.findAll {activity -> activity.type == it.type}
+            if (activitiesOfType) {
+                def firstActivityEndDate = DateUtils.parse(activitiesOfType.min{it.plannedEndDate}.plannedEndDate)
+                periodStartDate = startDate < firstActivityEndDate ? startDate : firstActivityEndDate
+
+                def lastActivityEndDate = DateUtils.parse(activitiesOfType.max{it.plannedEndDate}.plannedEndDate)
+                periodEndDate = endDate > lastActivityEndDate ? endDate : lastActivityEndDate
+
+            }
+
+            periodStartDate = DateUtils.alignToPeriod(periodStartDate, it.period)
+
+            def existingActivitiesByPeriod = DateUtils.groupByDateRange(activitiesOfType, {it.plannedEndDate}, it.period, periodStartDate, periodEndDate)
 
             def gaps = []
             existingActivitiesByPeriod.each { interval, activities ->
-                if (!activities) {
+                if (interval.isBefore(startDate) || interval.isAfter(endDate)) {
+                    toDelete += activities
+                }
+                else if (!activities) {
                     gaps << interval;
                 }
             }
@@ -204,7 +229,7 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
                 toCreate << activity
             }
         }
-        return toCreate
+        return [create:toCreate, delete:toDelete]
 
     }
 
