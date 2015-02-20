@@ -28,7 +28,9 @@
 <div class="row-fluid">
     <span class="span1">For financial year</span><span class="span1"><select name="financialYear"><option name="2014">2014/15</option></select></span><span class="span9"></span><span class="span1"><r:img dir="images" file="green_army_logo.png" alt="Green Army Logo"/></span>
 </div>
-<g:set var="tabConfig" value="${[[name:'Jul',template:'monthly',title:'July',yearModifier:0], [name:'Aug',template:'monthly', title:'August',yearModifier:0], [name:'Sep',template:'monthly', title:'September',yearModifier:0], [name:'Oct',template:'monthly', title:'October',yearModifier:0], [name:'Nov',template:'monthly',title:'November',yearModifier:0], [name:'Dec',template:'monthly',title:'December',yearModifier:0], [name:'Jan',template:'monthly',title:'January',yearModifier:1], [name:'Feb',template:'monthly', title:'February',yearModifier:1], [name:'Mar',template:'monthly',title:'March',yearModifier:1], [name:'Apr',template:'monthly', title:'April', yearModifier:1], [name:'May',template:'monthly', title:'May',yearModifier:1], [name:'Jun',template:'monthly', title:'June',yearModifier:1], [name:'Q1',template:'quarterly', yearModifier:0, title:'July - September'], [name:'Q2',template:'quarterly', title:'October - December', yearModifier:0], [name:'Q3',template:'quarterly', title:'January - March', yearModifier:1], [name:'Q4',template:'quarterly', title:'April - June', yearModifier:1], [name:'Docs',template:'docsTemplate']]}"/>
+
+<g:set var="tabConfig" value="${[[name:'Jul',template:'monthly',title:'July',yearModifier:0], [name:'Aug',template:'monthly', title:'August',yearModifier:0], [name:'Sep',template:'monthly', title:'September',yearModifier:0], [name:'Oct',template:'monthly', title:'October',yearModifier:0], [name:'Nov',template:'monthly',title:'November',yearModifier:0], [name:'Dec',template:'monthly',title:'December',yearModifier:0], [name:'Jan',template:'monthly',title:'January',yearModifier:1], [name:'Feb',template:'monthly', title:'February',yearModifier:1], [name:'Mar',template:'monthly',title:'March',yearModifier:1], [name:'Apr',template:'monthly', title:'April', yearModifier:1], [name:'May',template:'monthly', title:'May',yearModifier:1], [name:'Jun',template:'monthly', title:'June',yearModifier:1],
+                                 [name:'Q1',template:'quarterly', yearModifier:0, title:'July - September'], [name:'Q2',template:'quarterly', title:'October - December', yearModifier:0], [name:'Q3',template:'quarterly', title:'January - March', yearModifier:1], [name:'Q4',template:'quarterly', title:'April - June', yearModifier:1], [name:'Docs',template:'docsTemplate']]}"/>
 <div class="row-fluid">
     <span class="span12">
         <ul class="nav nav-tabs" data-tabs="tabs">
@@ -86,7 +88,7 @@
     </div>
 
     <div class="well">
-        <h3>Project-by-project Monthly Report for ${date}</h3>
+        <h3>Project-by-project Monthly Report for <span data-bind="text:title"></span></h3>
         <div class="row-fluid">
             <span class="span12">
                 <table class="activityTable table-striped">
@@ -119,7 +121,7 @@
             <span class="span12">
                 <table  class="summaryTable table-striped">
                     <thead>
-                        <tr><th colspan="4">Project data</th><th>Participant and Training Data</th></tr>
+                        <tr><th colspan="4">Project data</th><th colspan="7">Participant and Training Data</th></tr>
                         <tr>
                             <th>Period</th>
                             <th>Total projects</th>
@@ -127,7 +129,7 @@
                             <th>Projects not completed</th>
                             <th class="participantInfo">No. commencing projects</th>
                             <th class="participantInfo">No. indigenous commencing projects</th>
-                            <th class="participantInfo"No. not completing projects</th>
+                            <th class="participantInfo">No. not completing projects</th>
                             <th class="participantInfo">No. completing projects</th>
                             <th class="participantInfo">No. starting training</th>
                             <th class="participantInfo">No. who exited training</th>
@@ -341,7 +343,7 @@
                             var data = api.column(i).data();
                             var total = data
                                     .reduce(function (a, b) {
-                                        return intVal(a) + intVal(b);
+                                        return intVal(a) + intVal(b.current);
                                     }, 0);
 
                             // Total over this page
@@ -349,12 +351,18 @@
                                     .column(i, {page: 'current'})
                                     .data()
                                     .reduce(function (a, b) {
-                                        return intVal(a) + intVal(b);
+                                        return intVal(a) + intVal(b.current);
                                     }, 0);
 
                             // Update footer
-                            $(api.table().footer()).find('tr').append('<td>'+pageTotal + ' ('+total + ' total)</td>');
-
+                            var footerRow = $(api.table().footer()).find('tr');
+                            var col = footerRow.find('td.col'+i);
+                            if (!col.length) {
+                                footerRow.append('<td class="col'+i+'">'+pageTotal + ' ('+total + ' total)</td>');
+                            }
+                            else {
+                                col.text(pageTotal + ' ('+total + ' total)');
+                            }
 
                         }
                     }
@@ -455,18 +463,10 @@
                     if (group.indexOf('Before') < 0 && group.indexOf('After') < 0) {
                         var row = {group:group};
 
-                        var projectsByStatus = findScoreByLabel(groupedScores.results, 'Count of projects by project status');
-                        var newProjects = 0, completedProjects = 0;
-                        if (projectsByStatus && projectsByStatus.results && projectsByStatus.results[0]) {
-                            newProjects = projectByStatus.results[0].result['Commenced'] || 0;
-                            completedProjects = projectByStatus.results[0].result['Completed'] || 0;
+                        for (var j=1; j<4; j++) {
+                            row[self.scoreLabels[j]] = ko.observable(); // These will be initialised from the monthly reports.
                         }
-
-                        self.numberOfNewProjects = newProjects;
-                        self.completedProjects = completedProjects;
-                        //self.notCompletedProjects = n
-
-                        for (var j=1; j<self.scoreLabels.length; j++) {
+                        for (var j=4; j<self.scoreLabels.length; j++) {
                             row[self.scoreLabels[j]] = findScoreByLabel(groupedScores.results, self.scoreLabels[j]);
                         }
                         self.quarterlyScores.push(row);
@@ -474,7 +474,22 @@
                 });
             }
 
-            this.initialise = function(element) {
+            this.initialise = function(element, model) {
+
+                var months = [['Jul', 'Aug', 'Sep'], ['Oct', 'Nov', 'Dec'], ['Jan', 'Feb', 'Mar'], ['Apr', 'May', 'Jun']];
+                for (var quarter = 0; quarter < months.length; quarter++) {
+                    var numberOfProjects = 0;
+                    var completedProjects = 0;
+                    for (var i=0; i<months[quarter].length; i++) {
+                        numberOfProjects += model[months[quarter][i]+'ViewModel'].numberOfProjects;
+                        completedProjects += model[months[quarter][i]+'ViewModel'].completedProjects;
+                    }
+                    self.quarterlyScores[quarter]['Total projects'](numberOfProjects);
+                    self.quarterlyScores[quarter]['Projects completed'](completedProjects);
+                    self.quarterlyScores[quarter]['Projects not completed'](numberOfProjects = completedProjects);
+
+                }
+
                 var options = {
                     "data": rows,
                     "columns": header,
@@ -646,7 +661,7 @@
             </g:each>
 
             self.initialise = function(element, model) {
-                model.initialise(element);
+                model.initialise(element, self);
 
             };
             $('#${tabConfig[0].name}-tab').click();

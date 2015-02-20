@@ -368,8 +368,6 @@
             };
         })();
 
-        var initialisedReport = {};
-
         var loadReport = function(reportType) {
             var $content = $('#dashboard-content');
             var $loading = $('.loading-message');
@@ -396,9 +394,14 @@
             else if (tab === '#reportView') {
                 if (!initialisedReport) {
                     initialisedReport = true;
+                    var reportType = amplify.store('report-type-state');
                     var $reportSelector = $('#dashboardType');
+                    if (reportType) {
+                        $reportSelector.val(reportType);
+                    }
                     $reportSelector.change(function() {
                         var reportType = $reportSelector.val();
+                        amplify.store('report-type-state', reportType);
                         loadReport(reportType);
                     }).trigger('change');
                 }

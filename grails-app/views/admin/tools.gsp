@@ -126,6 +126,21 @@
             $('#projectActivitiesForm').submit();
         });
 
+        $("#gaData").change(function() {
+            if ($("#gaData").val()) {
+                $("#btnGaData").removeAttr("disabled");
+            }
+            else {
+                $("#btnGaData").attr("disabled", "disabled");
+            }
+
+        }).trigger('change');
+
+        $('#btnGaData').click(function(e) {
+            e.preventDefault();
+            $('form.gaData').submit();
+        });
+
 
     });
 
@@ -239,6 +254,19 @@
                 Activity Type <input type="text" name="activityType"><br/>
                 Period (months) <input type="text" name="period">
             </g:form>
+        </td>
+    </tr>
+    <tr>
+        <td><button disabled id="btnGaData" class="btn btn-small btn-info" title="Load Green Army reporting data">Load Green Army Reporting Data</button>
+        </td>
+        <td>
+            Loads Green army reporting data
+        <p><g:uploadForm class="gaData" controller="organisation" action="importGreenArmyMonthlyReports">
+            <div><input id="gaData" type="file" name="gaData"/></div>
+            <div><input type="checkbox" name="preview" checked="checked">Preview errors only, don't actually modify anything</div>
+        </g:uploadForm>
+
+        </p>
         </td>
     </tr>
     </tbody>
