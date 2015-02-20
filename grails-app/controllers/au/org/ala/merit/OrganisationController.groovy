@@ -205,19 +205,19 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
         }
 
         def commencementDate = getCellValue(row, 7)
-        if (commencementDate && (commencementDate instanceof Number)) {
-            def startDateString = excelDateToISODateString(commencementDate)
-
-            def actualCommencementDate = getCellValue(row, 9)
-            if (actualCommencementDate) {
-                def actualCommencementDateString = excelDateToISODateString(actualCommencementDate)
-
-                if (actualCommencementDateString != startDateString) {
-                    println "**** Planned start is different to actual start ***"
-                }
-
-                startDateString = actualCommencementDateString
+        def actualCommencementDate = getCellValue(row, 9)
+        if ((commencementDate && (commencementDate instanceof Number) || (actualCommencementDate && actualCommencementDate instanceof Number))) {
+            def commencementDateString = ''
+            if (commencementDate && (commencementDate instanceof Number)) {
+                commencementDateString = excelDateToISODateString(commencementDate)
             }
+
+            def actualCommencementDateString = ''
+            if (actualCommencementDate && (actualCommencementDate instanceof Number)) {
+                actualCommencementDateString = excelDateToISODateString(actualCommencementDate)
+            }
+
+            def startDateString = actualCommencementDateString ?: commencementDateString
 
             if (startDateString != project.plannedStartDate) {
                 println "Project ${projectId} actual commencement date  ${startDateString} plannedStartDate ${project.plannedStartDate}\n"
