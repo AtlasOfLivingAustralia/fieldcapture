@@ -141,6 +141,20 @@
             $('form.gaData').submit();
         });
 
+        $("#bulkUploadSites").change(function() {
+            if ($("#bulkUploadSites").val()) {
+                $("#btnBulkUploadSites").removeAttr("disabled");
+            }
+            else {
+                $("#btnBulkUploadSites").attr("disabled", "disabled");
+            }
+
+        }).trigger('change');
+
+        $('#btnBulkUploadSites').click(function(e) {
+            e.preventDefault();
+            $('form.bulkUploadSites').submit();
+        });
 
     });
 
@@ -269,6 +283,21 @@
         </p>
         </td>
     </tr>
+
+    <tr>
+        <td><button disabled id="btnBulkUploadSites" class="btn btn-small btn-info" title="Bulk load sites">Bulk load sites</button>
+        </td>
+        <td>
+            Bulk loads sites from a shapefile.
+        <p><g:uploadForm class="bulkUploadSites" action="bulkUploadSites">
+            <div><input id="bulkUploadSites" type="file" name="shapefile"/></div>
+
+        </g:uploadForm>
+
+        </p>
+        </td>
+    </tr>
+
     </tbody>
 </table>
 </body>

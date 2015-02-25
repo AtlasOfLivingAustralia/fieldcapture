@@ -2,6 +2,7 @@ package au.org.ala.fieldcapture
 import au.com.bytecode.opencsv.CSVReader
 import org.apache.commons.lang.StringUtils
 import org.grails.plugins.csv.CSVMapReader
+import org.joda.time.DateTime
 
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
@@ -1636,6 +1637,76 @@ class ImportService {
             }
         }
         [origProject:toUpdate, newProject:project, sites:sitesToUpdate, activities:activitiesToUpdate, documents:docsToCopy]
+    }
+
+    /**
+     * Bulk imports sites for many projects.  The supplied shapefile must have attributes GRANT_ID and EXTERNAL_I
+     */
+    def bulkImportSites(shapefile) {
+        def result =  siteService.uploadShapefile(shapefile)
+
+        cacheService.clear(PROJECTS_CACHE_KEY)
+
+        def errors = []
+        def sites = []
+        if (!result.error && result.content.size() > 1) {
+            def now = DateUtils.displayFormat(new DateTime())
+            def projectsWithSites = [:]
+            def content = result.content
+            def shapeFileId = content.remove('shp_id')
+
+            def shapes = content.collect { key, value ->
+                [id: (key), attributes: (value)]
+            }
+
+            def grantIdAttribute = "GRANT_ID"
+            def externalIdAttribute = "EXTERNAL_I"
+
+            shapes.each { shape ->
+
+                def grantId = shape.attributes[grantIdAttribute]
+                def externalId = shape.attributes[externalIdAttribute]
+
+                if (!grantId && !externalId) {
+                    errors << "Shape is missing GRANT_ID and EXTERNAL_I attributes: ${shape.attributes}"
+                    return
+                }
+
+                def project = findProjectByGrantAndExternalId(grantId, externalId)
+
+                if (!project) {
+                    errors << "No project found with grant id=${grantId} and external id=${externalId}"
+                }
+                else {
+                    def projectDetails = projectsWithSites[project.projectId]
+                    if (!projectDetails) {
+                        projectDetails = projectService.get(project.projectId, 'all')
+                        projectsWithSites[project.projectId] = projectDetails
+                        if (!projectDetails.sites) {
+                            projectDetails.sites = []
+                        }
+                    }
+                    int siteNumber = projectDetails.sites ? projectDetails.sites.size() +1 : 1
+                    def name = "${project.grantId} - Site ${siteNumber}"
+                    def description = "Imported on ${now}"
+                    def siteExternalId = shapeFileId+'-'+shape.id
+
+                    def resp = siteService.createSiteFromUploadedShapefile(shapeFileId, shape.id, siteExternalId, name, description, project.projectId)
+                    if (resp?.resp.siteId) {
+                        projectDetails.sites << [siteId:resp.resp.siteId, name:name, description:description]
+                        sites << name
+                    }
+                    else {
+                        errors << resp
+                    }
+                }
+            }
+            return [success:true, message:[errors:errors, sites:sites]]
+
+        }
+        else {
+            return [success:false, message:"Invalid shapefile: ${result.error}"]
+        }
     }
 
 }
