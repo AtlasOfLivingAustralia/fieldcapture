@@ -166,4 +166,23 @@ class AdminController extends au.org.ala.fieldcapture.AdminController {
 
         render view:'tools'
     }
+
+
+    @PreAuthorise(accessLevel = 'alaAdmin')
+    def bulkUploadSites() {
+
+        if (request.respondsTo('getFile')) {
+            def f = request.getFile('shapefile')
+
+            def result =  importService.bulkImportSites(f)
+
+            flash.message = result.message
+            render view:'tools'
+
+
+        } else {
+            flash.message = 'No shapefile attached'
+            render view:'tools'
+        }
+    }
 }
