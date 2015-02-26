@@ -63,8 +63,7 @@
                 <div class="row-fluid"><span class="span10">Number of new projects:</span><b><span class="span2 text-center" data-bind="text:numberOfNewProjects"></span></b></div>
                 <div class="row-fluid"><span class="span10">Number of projects completed in period:</span><b><span class="span2 text-center" data-bind="text:completedProjects"></span></b></div>
                 <div class="row-fluid"><span class="span10">Number of projects not completed in period:</span><b><span class="span2 text-center" data-bind="text:numberOfProjects - completedProjects"></span></b></div>
-                <div class="row-fluid"><span class="span10">Number of projects on track & MERIT updated:</span><b><span class="span2 text-center" data-bind="text:projectsOnTrack"></span></b></div>
-                <div class="row-fluid"><span class="span10">Number of projects on track & MERIT not updated:</span><b><span class="span2 text-center" data-bind="text:projectsNotOnTrack"></span></b></div>
+                <div class="row-fluid"><span class="span10">Number of projects behind schedule:</span><b><span class="span2 text-center" data-bind="text:projectsNotOnTrack"></span></b></div>
 
             </span>
             <span class="span6">
