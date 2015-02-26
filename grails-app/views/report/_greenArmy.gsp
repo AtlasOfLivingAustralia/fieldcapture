@@ -57,7 +57,7 @@
     <div class="well">
         <h3>Summary Statistics for <span data-bind="text:title"></span> (all projects)</h3>
         <div class="row-fluid">
-            <span class="span4">
+            <span class="span6">
                 <h4>Projects</h4>
                 <div class="row-fluid"><span class="span10">Total number of projects:</span><b><span class="span2 text-center" data-bind="text:numberOfProjects"></span></b></div>
                 <div class="row-fluid"><span class="span10">Number of new projects:</span><b><span class="span2 text-center" data-bind="text:numberOfNewProjects"></span></b></div>
@@ -67,7 +67,7 @@
                 <div class="row-fluid"><span class="span10">Number of projects on track & MERIT not updated:</span><b><span class="span2 text-center" data-bind="text:projectsNotOnTrack"></span></b></div>
 
             </span>
-            <span class="span4">
+            <span class="span6">
                 <div class="row-fluid"><span class="span10"><h4>Participants and Training</h4></span></div>
                 <div class="row-fluid"><span class="span10">Number of Indigenous Participants who commenced on projects:</span><b><span class="span2 text-center" data-bind="text:scores['No. of Indigenous Participants who commenced projects'] || 0"></span></b></div>
                 <div class="row-fluid"><span class="span10">Total number of Participants who commenced on projects:</span><b><span class="span2 text-center" data-bind="text:scores['No. of Participants who commenced projects'] || 0"></span></b></div>
@@ -76,12 +76,6 @@
                 <div class="row-fluid"><span class="span10">Number of participants who commenced accredited training in period:</span><b><span class="span2 text-center" data-bind="text:scores['No. of Participants who completed training'] || 0"></span></b></div>
                 <div class="row-fluid"><span class="span10">Number of participants who exited training in period:</span><b><span class="span2 text-center" data-bind="text:scores['No. of Participants who exited training'] || 0"></span></b></div>
                 <div class="row-fluid"><span class="span10">Number of participants who completed training in period:</span><b><span class="span2 text-center" data-bind="text:scores['No. of Participants who completed training'] || 0"></span></b></div>
-
-            </span>
-            <span class="span4">
-                <h4>Administration</h4>
-                <div class="row-fluid"><span class="span10">Total time spent on reporting activities:</span><b><span class="span2 text-center" data-bind="text:scores['Time taken to fulfill reporting requirements'] || 0"></span></b></div>
-
             </span>
 
         </div>
@@ -91,7 +85,7 @@
         <h3>Project-by-project Monthly Report for <span data-bind="text:title"></span></h3>
         <div class="row-fluid">
             <span class="span12">
-                <table class="activityTable table-striped">
+                <table class="activityTable table table-striped">
                     <thead>
 
                     </thead>
@@ -123,17 +117,17 @@
                     <thead>
                         <tr><th colspan="4">Project data</th><th colspan="7">Participant and Training Data</th></tr>
                         <tr>
-                            <th>Period</th>
-                            <th>Total projects</th>
-                            <th>Projects completed</th>
-                            <th>Projects not completed</th>
-                            <th class="participantInfo">No. commencing projects</th>
-                            <th class="participantInfo">No. indigenous commencing projects</th>
-                            <th class="participantInfo">No. not completing projects</th>
-                            <th class="participantInfo">No. completing projects</th>
-                            <th class="participantInfo">No. starting training</th>
-                            <th class="participantInfo">No. who exited training</th>
-                            <th class="participantInfo">No. who completed training</th>
+                            <th style="width:10%;">Period</th>
+                            <th style="width:9%;">Total projects</th>
+                            <th style="width:9%;">Projects completed</th>
+                            <th style="width:9%;">Projects not completed</th>
+                            <th style="width:9%;" class="participantInfo">No. commencing projects</th>
+                            <th style="width:9%;" class="participantInfo">No. indigenous commencing projects</th>
+                            <th style="width:9%;" class="participantInfo">No. not completing projects</th>
+                            <th style="width:9%;" class="participantInfo">No. completing projects</th>
+                            <th style="width:9%;" class="participantInfo">No. starting training</th>
+                            <th style="width:9%;" class="participantInfo">No. who exited training</th>
+                            <th style="width:9%;" class="participantInfo">No. who completed training</th>
                         </tr>
 
                     </thead>
@@ -156,7 +150,7 @@
         <h3>Quarterly Report for <span data-bind="text:title"></span></h3>
         <div class="row-fluid">
             <span class="span12">
-                <table class="activityTable table-striped">
+                <table class="activityTable table table-striped">
                     <th>
                         <tr>
                             <th colspan="7">Project Data</th>
@@ -264,16 +258,15 @@
             var rows = [];
 
             var header = [
-                {sTitle:'Grant ID'},
-                {sTitle:'Project status', source:{output:'Monthly Status Report Data', dataItem:'projectStatus'}, render:outputValueRenderer},
-                {sTitle:'Total No. commencing projects', source:{output:'Monthly Status Report Data', dataItem:'totalParticipantsCommenced'}, render:outputValueRenderer},
-                {sTitle:'Total No. completing projects', source:{output:'Monthly Status Report Data', dataItem:'totalParticipantsCompleted'}, render:outputValueRenderer},
-                {sTitle:'No. not completing projects', source:{output:'Monthly Status Report Data', dataItem:'totalParticipantsNotCompleted'}, render:outputValueRenderer},
-                {sTitle:'No. of indigenous participants commenced', source:{output:'Monthly Status Report Data', dataItem:'totalIndigenousParticipantsCommenced'}, render:outputValueRenderer},
-                {sTitle:'Commenced accredited training', source:{output:'Monthly Status Report Data', dataItem:'trainingCommencedAccredited'}, render:outputValueRenderer},
-                {sTitle:'Exited training', source:{output:'Monthly Status Report Data', dataItem:'trainingNoExited'}, render:outputValueRenderer},
-                {sTitle:'Completed training', source:{output:'Monthly Status Report Data', dataItem:'trainingNoCompleted'}, render:outputValueRenderer},
-                {sTitle:'Time taken to complete report', source:{output:'Monthly Status Report Data', dataItem:'reportingTimeTaken'}, render:outputValueRenderer}];
+                {title:'Grant ID', width:"15%"},
+                {title:'Project status', width:"15%", source:{output:'Monthly Status Report Data', dataItem:'projectStatus'}, render:outputValueRenderer},
+                {title:'Total No. commencing projects', width:"10%", source:{output:'Monthly Status Report Data', dataItem:'totalParticipantsCommenced'}, render:outputValueRenderer},
+                {title:'Total No. completing projects', width:"10%", source:{output:'Monthly Status Report Data', dataItem:'totalParticipantsCompleted'}, render:outputValueRenderer},
+                {title:'No. not completing projects', width:"10%", source:{output:'Monthly Status Report Data', dataItem:'totalParticipantsNotCompleted'}, render:outputValueRenderer},
+                {title:'No. of indigenous participants commenced', width:"10%", source:{output:'Monthly Status Report Data', dataItem:'totalIndigenousParticipantsCommenced'}, render:outputValueRenderer},
+                {title:'Commenced accredited training', width:"10%", source:{output:'Monthly Status Report Data', dataItem:'trainingCommencedAccredited'}, render:outputValueRenderer},
+                {title:'Exited training', width:"10%", source:{output:'Monthly Status Report Data', dataItem:'trainingNoExited'}, render:outputValueRenderer},
+                {title:'Completed training', width:"10%", source:{output:'Monthly Status Report Data', dataItem:'trainingNoCompleted'}, render:outputValueRenderer}];
 
             $.each(activities, function(i, activity) {
 
@@ -311,17 +304,17 @@
                 $(element).find('.activityTable').dataTable( {
                     "aaData": rows,
                     "aoColumns": header,
+                    "autoWidth":false,
                     "initComplete": function ( settings, json ) {
                         var api = this.api();
 
                         var projectColumns = [0,1];
                         var participantColumns = [2, 3, 4, 5, 6, 7, 8];
-                        var adminColumns = [9];
                         api.columns(projectColumns).header().to$().addClass('projectInfo');
                         api.columns(participantColumns).header().to$().addClass('participantInfo');
 
                         var header = api.table().header();
-                        $(header).prepend('<tr><th colspan="'+projectColumns.length+'">Project Data</th><th colspan="'+participantColumns.length+'">Participant and Training Data</th><th colspan="1">Administration</th></tr>')
+                        $(header).prepend('<tr><th colspan="'+projectColumns.length+'">Project Data</th><th colspan="'+participantColumns.length+'">Participant and Training Data</th></tr>')
 
 
                     },
@@ -337,7 +330,7 @@
                         };
 
                         // Total over all numerical columns and all pages
-                        for (var i=2; i<=9; i++) {
+                        for (var i=2; i<=8; i++) {
 
 
                             var data = api.column(i).data();
@@ -386,10 +379,9 @@
             if (projectsByStatus && projectsByStatus.results && projectsByStatus.results[0]) {
                 newProjects = projectByStatus.results[0].result['Commenced'] || 0;
                 completedProjects = projectByStatus.results[0].result['Completed'] || 0;
-                onTrack = (projectByStatus.results[0].result['Progressing - on schedule'] || 0) +
-                          (projectByStatus.results[0].result['Progressing - ahead of schedule'] || 0);
+                onTrack = (projectByStatus.results[0].result['Progressing - on schedule'] || 0);
                 notOnTrack = (projectByStatus.results[0].result['Progressing - behind schedule'] || 0) +
-                               (projectByStatus.results[0].result['Abandoned'] || 0);
+                               (projectByStatus.results[0].result['Cancelled'] || 0);
 
             }
 
@@ -406,22 +398,22 @@
 
             var output = 'Three Monthly Report';
             var header = [
-                {sTitle:'No. of incidents', source:{output:output, dataItem:'incidentCount'}},
-                {sTitle:'No. of complaints', source:{output:output, dataItem:'complaintCount'}},
-                {sTitle:'No. of training activities', source:{output:output, dataItem:'complaintCount'}},
-                {sTitle:'No. of withdrawals', source:{output:output, dataItem:'complaintCount'}},
-                {sTitle:'No. of exits', source:{output:output, dataItem:'complaintCount'}},
-                {sTitle:'No. starting training', source:{output:output, dataItem:'complaintCount'}},
-                {sTitle:'No. who exited training', source:{output:output, dataItem:'complaintCount'}},
-                {sTitle:'17 yrs', source:{output:output, dataItem:'no17Years'}},
-                {sTitle:'18 yrs', source:{output:output, dataItem:'no18Years'}},
-                {sTitle:'19 yrs', source:{output:output, dataItem:'no19Years'}},
-                {sTitle:'20 yrs', source:{output:output, dataItem:'no20Years'}},
-                {sTitle:'21 yrs', source:{output:output, dataItem:'no21Years'}},
-                {sTitle:'22 yrs', source:{output:output, dataItem:'no22Years'}},
-                {sTitle:'23 yrs', source:{output:output, dataItem:'no23Years'}},
-                {sTitle:'24 yrs', source:{output:output, dataItem:'no24Years'}},
-                {sTitle:'Total participants', source:{output:output, dataItem:'totalParticipants'}}];
+                {title:'No. of incidents', width:"6.25%", source:{output:output, dataItem:'incidentCount'}},
+                {title:'No. of complaints', width:"6.25%", source:{output:output, dataItem:'complaintCount'}},
+                {title:'No. of training activities', width:"6.25%", source:{output:output, dataItem:'complaintCount'}},
+                {title:'No. of withdrawals', width:"6.25%", source:{output:output, dataItem:'complaintCount'}},
+                {title:'No. of exits', width:"6.25%", source:{output:output, dataItem:'complaintCount'}},
+                {title:'No. starting training', width:"6.25%", source:{output:output, dataItem:'complaintCount'}},
+                {title:'No. who exited training', width:"6.25%", source:{output:output, dataItem:'complaintCount'}},
+                {title:'17 yrs', width:"6.25%", source:{output:output, dataItem:'no17Years'}},
+                {title:'18 yrs', width:"6.25%", source:{output:output, dataItem:'no18Years'}},
+                {title:'19 yrs', width:"6.25%", source:{output:output, dataItem:'no19Years'}},
+                {title:'20 yrs', width:"6.25%", source:{output:output, dataItem:'no20Years'}},
+                {title:'21 yrs', width:"6.25%", source:{output:output, dataItem:'no21Years'}},
+                {title:'22 yrs', width:"6.25%", source:{output:output, dataItem:'no22Years'}},
+                {title:'23 yrs', width:"6.25%", source:{output:output, dataItem:'no23Years'}},
+                {title:'24 yrs', width:"6.25%", source:{output:output, dataItem:'no24Years'}},
+                {title:'Total participants', width:"6.25%", source:{output:output, dataItem:'totalParticipants'}}];
 
 
             var rows = [];
@@ -493,6 +485,7 @@
                 var options = {
                     "data": rows,
                     "columns": header,
+                    "autoWidth":false,
                     "initComplete": function ( settings, json ) {
                         var api = this.api();
 
