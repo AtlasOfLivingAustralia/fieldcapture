@@ -9,7 +9,7 @@ import org.joda.time.Period
 
 class ReportController extends au.org.ala.fieldcapture.ReportController {
 
-    def activityService
+    def activityService, projectService
 
     static defaultAction = "dashboard"
 
@@ -36,10 +36,54 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
             case 'greenArmy' :
                 forward action: 'greenArmyReport', params:params
                 break
+            case 'announcements' :
+                forward action: 'announcementsReport', params:params
+                break
             default:
                 forward action: 'dashboardReport', params:params
                 break
         }
+    }
+
+    def announcementsReport() {
+
+        def newParams = [max:1500] + params
+        newParams.query = "docType:project"
+        def results = searchService.fulltextSearch(newParams)
+        def projects = results.hits?.hits?.findAll{it._source.custom?.details?.events}.collect{it._source}
+
+        def projectIds = projects?.collect{it.projectId}
+        def resp = projectService.search([projectId:projectIds, view:'sites'])
+
+
+        def events = []
+        resp?.resp?.projects.each { project ->
+            project.custom.details.events.each { event ->
+                if (event.scheduledDate || event.name) {
+                    def announcement = [projectId: project.projectId, grantId: project.grantId, name: project.name, organisationName: project.organisationName, associatedProgram: project.associatedProgram, planStatus: project.planStatus, eventDate: event.scheduledDate, eventName: event.name, eventDescription: event.description, media: event.media]
+
+                    def states = new HashSet()
+                    def electorates = new HashSet()
+                    project.sites.each {
+                        if (it.extent?.geometry?.state) {
+                            def state = it.extent?.geometry?.state
+                            state = g.message(code:'label.'+state, default:state)
+                            states.add(state)
+                        }
+                        if (it.extent?.geometry?.elect) {
+                            def electorate = it.extent?.geometry?.elect
+                            electorate = g.message(code:'label.'+electorate, default:electorate)
+                            electorates.add(electorate)
+                        }
+                    }
+                    announcement.state = states.join(',')
+                    announcement.electorate = electorates.join(',')
+                    events << announcement
+                }
+            }
+        }
+
+        render view:'_announcements', model:[events:events]
     }
 
     def greenArmyReport() {

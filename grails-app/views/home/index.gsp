@@ -273,10 +273,10 @@
 
                 <div class="tab-pane" id="reportView">
                     <div class="row-fluid">
-                        <g:if test="${fc.userIsSiteAdmin()}">
+                        <g:if test="${fc.userIsAlaOrFcAdmin()}">
                         <span class="span12">
                             <h4>Report: </h4>
-                            <select id="dashboardType" name="dashboardType"><option value="outputs">Activity Outputs</option><option value="greenArmy">Green Army</option></select>
+                            <select id="dashboardType" name="dashboardType"><option value="outputs">Activity Outputs</option><option value="greenArmy">Green Army</option><option value="announcements">Announcements</option></select>
                         </span>
                         </g:if>
                         <g:else>
