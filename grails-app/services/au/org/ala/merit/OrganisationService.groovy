@@ -25,7 +25,7 @@ class OrganisationService extends au.org.ala.fieldcapture.OrganisationService {
             [type: 'Green Army - Change or Absence of Team Supervisor', period: Period.months(1), bulkEditable: false, adhoc: true]
     ]
 
-    def activityService, messageSource, userService
+    def activityService, messageSource
 
     /** Overrides the parent to add Green Army reports to the results */
     def get(String id, view = '') {
@@ -44,7 +44,7 @@ class OrganisationService extends au.org.ala.fieldcapture.OrganisationService {
 
     def getSupportedAdHocReports(projectId) {
         def adHocReports = getReportConfig(null).findAll{it.adhoc}
-        if (projectService.isOfficerOrHigher() || projectService.isUserCaseManagerForProject(userService.getUser()?.userId, projectId)) {
+        if (userService.userIsSiteAdmin() || projectService.isUserCaseManagerForProject(userService.getUser()?.userId, projectId)) {
             return adHocReports.collect{it.type}
         }
         return adHocReports.findAll{!it.grantManagerOnly}.collect{it.type}
