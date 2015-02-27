@@ -105,7 +105,7 @@
 							<td><span data-bind="text:name"></span></td>
 							<td><label data-bind="text:scheduledDate.formattedDate"></label></td>
 							<td><span data-bind="text: description"></span></td>
-							<td><select class="form-control" data-validation-engine="validate[required]" data-bind="disable: true, options: $parent.mediaOptions, optionsText:'name', optionsValue:'id', value:media, optionsCaption:'-- Please select --'" ></select></td>
+							<td><span data-bind="text: media"></span></td>
 						</tr>
 						</tbody>
 					</table>
