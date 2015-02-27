@@ -195,10 +195,7 @@
                 <div class="span4">
                     <div data-bind="visible:newsAndEvents()">
                         <h4>News and events</h4>
-                        <div id="save-announcement-result-placeholder"></div>
-                        <g:render template="announcements" model="[project: project]"/>
                         <div id="newsAndEventsDiv" data-bind="html:newsAndEvents" class="well"></div>
-
                     </div>
                     <div data-bind="visible:projectStories()">
                         <h4>Project stories</h4>
