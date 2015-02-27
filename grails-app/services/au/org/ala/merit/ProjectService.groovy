@@ -34,7 +34,7 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
      */
     def canUserEditProject(userId, projectId) {
         def userCanEdit
-        if (isOfficerOrHigher()) {
+        if (userService.userIsSiteAdmin()) {
             userCanEdit = true
         } else {
             def url = grailsApplication.config.ecodata.baseUrl + "permissions/canUserEditProject?projectId=${projectId}&userId=${userId}"
