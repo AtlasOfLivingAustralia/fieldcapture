@@ -78,7 +78,7 @@
     <div class="row-fluid title-block well well-small input-block-level">
         <div class="span12 title-attribute">
             <h1><span data-bind="click:goToProject" class="clickable">${project?.name?.encodeAsHTML() ?: 'no project defined!!'}</span></h1>
-            <g:if test="${metaModel.supportsPhotoPoints}">
+            <g:if test="${metaModel.supportsSites}">
             <div class="row-fluid">
                 <div class="span1">
                     Site:
@@ -504,6 +504,7 @@
 
         function ViewModel (act, site, project, metaModel) {
             var self = this;
+            var mapInitialised = false;
             self.activityId = act.activityId;
             self.description = ko.observable(act.description);
             self.notes = ko.observable(act.notes);
@@ -553,13 +554,14 @@
 
                 var matchingSite = $.grep(self.transients.project.sites, function(site) { return siteId == site.siteId})[0];
 
-                alaMap.clearFeatures();
-                if (matchingSite) {
-                    alaMap.replaceAllFeatures([matchingSite.extent.geometry]);
+                if (mapInitialised) {
+                    alaMap.clearFeatures();
+                    if (matchingSite) {
+                        alaMap.replaceAllFeatures([matchingSite.extent.geometry]);
+                    }
+                    self.transients.site(matchingSite);
+                    self.updatePhotoPointModel(matchingSite);
                 }
-                self.transients.site(matchingSite);
-                self.updatePhotoPointModel(matchingSite);
-
             });
             self.goToProject = function () {
                 if (self.projectId) {
@@ -635,6 +637,7 @@
                         },
                         mapFeatures
                     );
+                    mapInitialised = true;
                 }
             };
 
