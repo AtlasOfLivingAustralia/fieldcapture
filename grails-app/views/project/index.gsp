@@ -456,6 +456,8 @@
         </g:if>
     </div>
 
+    <g:render template="/shared/timeoutMessage" plugin="fieldcapture-plugin" model="${[url:createLink(action:'index', id:project.projectId)]}"/>
+
     <g:if env="development">
         <hr />
         <div class="expandable-debug">
@@ -498,7 +500,7 @@
         }
 
         $(window).load(function () {
-
+            var PROJECT_DETAILS_KEY = 'project.custom.details';
             var map;
             // setup 'read more' for long text
             $('.more').shorten({
@@ -533,6 +535,9 @@
             });
             $('#summary-cancel').click(function () {
                 document.location.href = "${createLink(action: 'index', id: project.projectId)}";
+            });
+            $('a[data-toggle="tab"').on('show', function(e) {
+                // TODO track if visible tab is MERI plan and warn when navigating away with unsaved changes.
             });
 
             var Site = function (site, feature) {
@@ -790,30 +795,6 @@
 			function limitText(field, maxChar){
 				$(field).attr('maxlength',maxChar);
 			}
-            //event.keyCode == 188 ||
-			ko.bindingHandlers.numeric = {
-				    init: function (element, valueAccessor) {
-				        $(element).on("keydown", function (event) {
-				            // Allow: backspace, delete, tab, escape, and enter
-				            if (event.keyCode == 46 || event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 27 || event.keyCode == 13 ||
-				                // Allow: Ctrl+A
-				                (event.keyCode == 65 && event.ctrlKey === true) ||
-				                // Allow: . ,
-				                (event.keyCode == 190 || event.keyCode == 110) ||
-				                // Allow: home, end, left, right
-				                (event.keyCode >= 35 && event.keyCode <= 39)) {
-				                // let it happen, don't do anything
-				                return;
-				            }
-				            else {
-				                // Ensure that it is a number and stop the keypress
-				                if (event.shiftKey || (event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105)) {
-				                    event.preventDefault();
-				                }
-				            }
-				        });
-				    }
-			};
 
             function ViewModel(project, newsAndEvents, projectStories, sites, activities, isUserEditor,today,themes) {
                 var self = this;
@@ -934,7 +915,16 @@
 					project.custom.details = {};
 				}
 
-                self.details = new DetailsViewModel(project.custom.details, getBugetHeaders(project.timeline));
+                var projectDetails = project.custom.details;
+                var savedProjectCustomDetails = amplify.store(PROJECT_DETAILS_KEY);
+                if (savedProjectCustomDetails) {
+                    var restored = JSON.parse(savedProjectCustomDetails);
+
+                    if (restored.custom) {
+                        projectDetails = restored.custom.details;
+                    }
+                }
+                self.details = new DetailsViewModel(projectDetails, getBugetHeaders(project.timeline));
 
                 self.risks = new RisksViewModel(project.risks);
 
@@ -1113,11 +1103,13 @@
 					self.details.status('active');
 					tmp['details'] =  ko.mapping.toJS(self.details);
 					var jsData = {"custom": tmp};
-                       var json = JSON.stringify(jsData, function (key, value) {
+                    var json = JSON.stringify(jsData, function (key, value) {
                            return value === undefined ? "" : value;
                        });
-                     var id = "${project?.projectId}";
- 					   $.ajax({
+
+                    amplify.store(PROJECT_DETAILS_KEY, json);
+
+ 					$.ajax({
                          url: "${createLink(action: 'ajaxUpdate', id: project.projectId)}",
                          type: 'POST',
                          data: json,
@@ -1128,15 +1120,16 @@
                                      "alert-error","save-details-result-placeholder");
                              } else {
                                  showAlert("MERI Plan saved","alert-success","save-details-result-placeholder");
+                                 amplify.store(PROJECT_DETAILS_KEY, null);
                                  if(enableSubmit)
                                  	self.submitChanges();
                              }
                          },
                          error: function (data) {
-                             var status = data.status;
-                             alert('An unhandled error occurred: ' + data.status);
+                             bootbox.alert($('#timeoutMessage').html());
+
                          }
-                     });
+                    });
 				};
 
 				// Modify plan
