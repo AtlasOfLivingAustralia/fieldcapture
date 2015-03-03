@@ -383,6 +383,12 @@
                             <div id="projectDetails" class="pill-pane">
                                 <!-- Edit project details -->
                                 <h3>MERI Plan</h3>
+                                <div id="restoredData" class="alert hide">
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    <strong>Unsaved data has been been found and restored from a previous editing session.</strong>
+                                    <p>Press Save to apply the changes to your project or Cancel to discard these edits</p>
+
+                                </div>
                                 <div class="row-fluid">
                                     <div class="validationEngineContainer" id="project-details-validation">
                                         <g:render template="editProjectDetails" model="[project: project]"/>
@@ -456,7 +462,7 @@
         </g:if>
     </div>
 
-    <g:render template="/shared/timeoutMessage" plugin="fieldcapture-plugin" model="${[url:createLink(action:'index', id:project.projectId)]}"/>
+    <g:render template="/shared/timeoutMessage" plugin="fieldcapture-plugin" model="${[url:createLink(action:'index', id:project.projectId), unsavedData:'MERI Plan']}"/>
 
     <g:if env="development">
         <hr />
@@ -500,7 +506,7 @@
         }
 
         $(window).load(function () {
-            var PROJECT_DETAILS_KEY = 'project.custom.details';
+            var PROJECT_DETAILS_KEY = 'project.custom.details.${project.projectId}';
             var map;
             // setup 'read more' for long text
             $('.more').shorten({
@@ -531,13 +537,11 @@
                 document.location.href = "${createLink(action: 'index', id: project.projectId)}";
             });
             $('#details-cancel').click(function () {
+                amplify.store(PROJECT_DETAILS_KEY, null);
                 document.location.href = "${createLink(action: 'index', id: project.projectId)}";
             });
             $('#summary-cancel').click(function () {
                 document.location.href = "${createLink(action: 'index', id: project.projectId)}";
-            });
-            $('a[data-toggle="tab"').on('show', function(e) {
-                // TODO track if visible tab is MERI plan and warn when navigating away with unsaved changes.
             });
 
             var Site = function (site, feature) {
@@ -575,6 +579,16 @@
 				this.events = ko.observableArray($.map(row, function (obj, i) {
 					return new EventsRowViewModel(obj);
 			    }));
+
+			    this.modelAsJSON = function() {
+			        var tmp = {};
+					tmp['details'] =  ko.mapping.toJS(self);
+					var jsData = {"custom": tmp};
+                    var json = JSON.stringify(jsData, function (key, value) {
+                           return value === undefined ? "" : value;
+                       });
+                    return json;
+			    };
             };
 
             var ObjectiveViewModel = function(o) {
@@ -921,6 +935,7 @@
                     var restored = JSON.parse(savedProjectCustomDetails);
 
                     if (restored.custom) {
+                        $('#restoredData').show();
                         projectDetails = restored.custom.details;
                     }
                 }
@@ -1082,6 +1097,7 @@
 			                data: json,
 			                contentType: 'application/json',
 			                success: function (data) {
+
 			                    if (data.error) {
 			                        showAlert("Failed to save risks details: " + data.detail + ' \n' + data.error,
 			                            "alert-error","summary-result-placeholder");
@@ -1099,13 +1115,9 @@
 
 				// Save project details
 				self.saveProject = function(enableSubmit){
-					var tmp = {};
 					self.details.status('active');
-					tmp['details'] =  ko.mapping.toJS(self.details);
-					var jsData = {"custom": tmp};
-                    var json = JSON.stringify(jsData, function (key, value) {
-                           return value === undefined ? "" : value;
-                       });
+                    $('#restoredData').hide();
+					var json = self.details.modelAsJSON();
 
                     amplify.store(PROJECT_DETAILS_KEY, json);
 
@@ -1121,6 +1133,7 @@
                              } else {
                                  showAlert("MERI Plan saved","alert-success","save-details-result-placeholder");
                                  amplify.store(PROJECT_DETAILS_KEY, null);
+                                 self.details.dirtyFlag.reset();
                                  if(enableSubmit)
                                  	self.submitChanges();
                              }
@@ -1535,8 +1548,9 @@
             var today = '${today}';
             var programs = <fc:modelAsJavascript model="${programs}"/>;
 
+            var project = <fc:modelAsJavascript model="${project}"/>;
             var viewModel = new ViewModel(
-                checkAndUpdateProject(${project}),
+                checkAndUpdateProject(project),
                 newsAndEventsMarkdown,
                 projectStoriesMarkdown,
                 ${project.sites},
@@ -1546,6 +1560,39 @@
                 ${themes});
             viewModel.loadPrograms(programs);
             ko.applyBindings(viewModel);
+            viewModel.details.dirtyFlag = ko.simpleDirtyFlag(viewModel.details);
+            viewModel.details.dirtyFlag.isDirty.subscribe(function() {
+                if (viewModel.details.dirtyFlag.isDirty()) {
+
+                    window.setInterval(function() {
+                        amplify.store(PROJECT_DETAILS_KEY, viewModel.details.modelAsJSON());
+                    }, 60*1000);
+
+                }
+            });
+            window.addEventListener('storage', function(e) {
+                // TODO use this to detect logout
+            });
+
+            var meriPlanVisible = false;
+            $('a[data-toggle="tab"').on('show', function(e) {
+
+                if (meriPlanVisible && viewModel.details.dirtyFlag.isDirty()) {
+                    e.preventDefault();
+                    bootbox.confirm($('#unsavedChangesMessage').html(), function(result) {
+                        console.log(result);
+                        if (result) {
+                            amplify.store(PROJECT_DETAILS_KEY, null);
+                            viewModel.details.dirtyFlag.reset();
+                            $(e.target).tab('show');
+                        }
+                    });
+                }
+                else {
+                    meriPlanVisible = (e.target.hash  == '#projectDetails');
+                }
+            });
+
 
             // retain tab state for future re-visits
             // and handle tab-specific initialisations
