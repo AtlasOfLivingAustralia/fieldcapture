@@ -1618,7 +1618,7 @@
                 if (meriPlanVisible && viewModel.details.dirtyFlag.isDirty()) {
                     e.preventDefault();
                     bootbox.confirm($('#unsavedChangesMessage').html(), function(result) {
-                        console.log(result);
+
                         if (result) {
                             amplify.store(PROJECT_DETAILS_KEY, null);
                             viewModel.details.dirtyFlag.reset();
