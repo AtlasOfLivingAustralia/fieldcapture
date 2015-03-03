@@ -78,28 +78,41 @@
 		    </div>
 		    
 		    <div class="span6">
-		        <div id="project-keq" class="well well-small">
-		        	<label><b>Projects Announcements</b></label>
-		 			<table style="width: 100%;">
-				        <thead>
-				            <tr>
-				            	<th></th>
-				                <th>Announcement</th>
-				                <th>Planned date </th>
-				            </tr>
-				        </thead>
-						<tbody data-bind="foreach : details.events">
-							<tr>
-				            	<td><span data-bind="text: $index()+1"></span></td>
-				            	<td><span data-bind="text:name"></span></td>
-				            	<td><label data-bind="text:scheduledDate.formattedDate"></label></td>
-				            </tr>
-						</tbody>		
-					</table>
-		        </div>
+
 		    </div>
 		</div>
-		
+
+
+
+		<div class="row-fluid space-after">
+			<div class="well well-small">
+				<div id="project-keq" class="well well-small">
+					<label><b>Projects Announcements</b></label>
+					<table style="width: 100%;">
+						<thead>
+						<tr>
+							<th></th>
+							<th>Proposed event/announcement</th>
+							<th>Proposed Date of event/<br/>announcement (if known)</th>
+							<th>Description of the event</th>
+							<th>Will there be, or do you <br/>intend there to be, media <br/> involvement in this event?</th>
+							<th></th>
+						</tr>
+						</thead>
+						<tbody data-bind="foreach : details.events">
+						<tr>
+							<td><span data-bind="text: $index()+1"></span></td>
+							<td><span data-bind="text:name"></span></td>
+							<td><label data-bind="text:scheduledDate.formattedDate"></label></td>
+							<td><span data-bind="text: description"></span></td>
+							<td><span data-bind="text: media"></span></td>
+						</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
 		<div class="row-fluid space-after">
 			<div class="well well-small">
  				<label><b>Key evaluation question</b></label>

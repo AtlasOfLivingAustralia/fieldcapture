@@ -398,6 +398,9 @@
 
                             <div id="editNewsAndEvents" class="pill-pane">
                                 <g:render plugin="fieldcapture-plugin"  template="editProjectContent" model="${[attributeName:'newsAndEvents', header:'News and events']}"/>
+                                <hr/>
+                                <div id="announcement-result-placeholder"></div>
+                                <g:render template="announcements" model="[project: project]"/>
                             </div>
 
                             <div id="editProjectStories" class="pill-pane">
@@ -637,6 +640,8 @@
             	var self = this;
             	if(!o) o = {};
             	this.name = ko.observable(o.name);
+            	this.description = ko.observable(o.description);
+            	this.media = ko.observable(o.media);
             	this.scheduledDate = ko.observable(o.scheduledDate).extend({simpleDate: false});
             };
 
@@ -979,6 +984,8 @@
                 	self.details.keq.rows.remove(keq);
                 };
 
+                self.mediaOptions = [{id:"yes",name:"Yes"},{id:"no",name:"No"}];
+
                 self.addEvents = function(){
 					self.details.events.push(new EventsRowViewModel());
     			};
@@ -1078,6 +1085,35 @@
 					self.saveProject(false);
 				};
 
+				self.saveAnnouncements= function(){
+				    var tmp = {};
+					self.details.status('active');
+					tmp['details'] =  ko.mapping.toJS(self.details);
+					var jsData = {"custom": tmp};
+                       var json = JSON.stringify(jsData, function (key, value) {
+                           return value === undefined ? "" : value;
+                       });
+                     var id = "${project?.projectId}";
+ 					   $.ajax({
+                         url: "${createLink(action: 'ajaxUpdate', id: project.projectId)}",
+                         type: 'POST',
+                         data: json,
+                         contentType: 'application/json',
+                         success: function (data) {
+                             if (data.error) {
+                                 showAlert("Failed to save project announcement: " + data.detail + ' \n' + data.error,
+                                     "alert-error","announcement-result-placeholder");
+                             } else {
+                                 showAlert("Projects announcements saved","alert-success","announcement-result-placeholder");
+                             }
+                         },
+                         error: function (data) {
+                             var status = data.status;
+                             alert('An unhandled error occurred: ' + data.status);
+                         }
+                     });
+				};
+
 				// Save risks details.
 				self.saveRisks = function(){
 
@@ -1112,6 +1148,8 @@
 			                }
 			            });
 				};
+
+
 
 				// Save project details
 				self.saveProject = function(enableSubmit){
