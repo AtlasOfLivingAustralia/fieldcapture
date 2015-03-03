@@ -341,13 +341,7 @@
 
 </div>
 
-<div id="timeoutMessage" class="hide">
-
-    <span class='label label-important'>Important</span><h4>There was an error while trying to save your changes.</h4>
-    <p>This could be because your login has timed out or the internet is unavailable.</p>
-    <p>Your data has been saved on this computer but you may need to login again before the data can be sent to the server.</p>
-    <a href="${createLink(action:'enterData', id:activity.activityId)}?returnTo=${returnTo}">Click here to refresh your login and reload this page.</a>
-</div>
+<g:render template="/shared/timeoutMessage" plugin="fieldcapture-plugin" model="${[url:createLink(action:'enterData', id:activity.activityId, params: [returnTo:returnTo])]}"/>
 
 <g:render template="/shared/imagerViewerModal" model="[readOnly:false]"></g:render>
 <g:render template="/shared/documentTemplate" plugin="fieldcapture-plugin"></g:render>
