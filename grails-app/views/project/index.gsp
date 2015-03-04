@@ -383,12 +383,7 @@
                             <div id="projectDetails" class="pill-pane">
                                 <!-- Edit project details -->
                                 <h3>MERI Plan</h3>
-                                <div id="restoredData" class="alert hide">
-                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                    <strong>Unsaved data has been been found and restored from a previous editing session.</strong>
-                                    <p>Press Save to apply the changes to your project or Cancel to discard these edits</p>
-
-                                </div>
+                                <g:render template="/shared/restoredData" plugin="fieldcapture-plugin" model="[id:'restoredData', saveButton:'Save', cancelButton:'Cancel']"/>
                                 <div class="row-fluid">
                                     <div class="validationEngineContainer" id="project-details-validation">
                                         <g:render template="editProjectDetails" model="[project: project]"/>
@@ -465,7 +460,9 @@
         </g:if>
     </div>
 
-    <g:render template="/shared/timeoutMessage" plugin="fieldcapture-plugin" model="${[url:createLink(action:'index', id:project.projectId), unsavedData:'MERI Plan']}"/>
+    <g:render template="/shared/timeoutMessage" plugin="fieldcapture-plugin" model="${[url:createLink(action:'index', id:project.projectId)]}"/>
+    <g:render template="/shared/unsavedChanges" plugin="fieldcapture-plugin" model="${[id:'meriPlanUnsavedChanges', unsavedData:'MERI Plan']}"/>
+    <g:render template="/shared/unsavedChanges" plugin="fieldcapture-plugin" model="${[id:'risksUnsavedChanges', unsavedData:'Risks & Threats']}"/>
 
     <g:if env="development">
         <hr />
@@ -510,6 +507,7 @@
 
         $(window).load(function () {
             var PROJECT_DETAILS_KEY = 'project.custom.details.${project.projectId}';
+            var PROJECT_RISKS_KEY = 'project.risks.${project.projectId}';
             var map;
             // setup 'read more' for long text
             $('.more').shorten({
@@ -541,6 +539,10 @@
             });
             $('#details-cancel').click(function () {
                 amplify.store(PROJECT_DETAILS_KEY, null);
+                document.location.href = "${createLink(action: 'index', id: project.projectId)}";
+            });
+            $('#risks-cancel').click(function () {
+                amplify.store(PROJECT_RISKS_KEY, null);
                 document.location.href = "${createLink(action: 'index', id: project.projectId)}";
             });
             $('#summary-cancel').click(function () {
@@ -758,14 +760,37 @@
             };
 
 			var RisksViewModel = function(risks) {
+
 				 var self = this;
-				 this.overallRisk = ko.observable(risks ? risks.overallRisk : '');
-				 this.status = ko.observable(risks ? risks.status : '');
-				 var row = [];
-				 risks ? row = risks.rows : row.push(ko.mapping.toJS(new RisksRowViewModel()));
-			     this.rows = ko.observableArray($.map(row, function (obj,i) {
-			         return new RisksRowViewModel(obj);
-			     }));
+				 this.overallRisk = ko.observable();
+				 this.status = ko.observable();
+				 this.rows = ko.observableArray();
+			     this.load = function(risks) {
+			         if (!risks) {
+			             risks = {};
+			         }
+			         self.overallRisk(orBlank(risks.overallRisk));
+                     self.status(orBlank(risks.status));
+			         if (risks.rows) {
+                         self.rows($.map(risks.rows, function (obj) {
+                            return new RisksRowViewModel(obj);
+                         }));
+			         }
+			         else {
+			            self.rows.push(new RisksRowViewModel());
+			         }
+			     };
+			     this.modelAsJSON = function() {
+			         var tmp = {};
+					 tmp = ko.mapping.toJS(self);
+					 tmp['status'] = 'active';
+					 var jsData = {"risks": tmp};
+					 var json = JSON.stringify(jsData, function (key, value) {
+                        return value === undefined ? "" : value;
+                     });
+                     return json;
+			     };
+			     this.load(risks);
 			};
 
 			var RisksRowViewModel = function(risksRow) {
@@ -946,7 +971,16 @@
                 }
                 self.details = new DetailsViewModel(projectDetails, getBugetHeaders(project.timeline));
 
-                self.risks = new RisksViewModel(project.risks);
+                var projectRisks = project.risks;
+                var savedRisks = amplify.store(PROJECT_RISKS_KEY);
+                if (savedRisks) {
+                    var restored = JSON.parse(savedRisks);
+                    if (restored.risks) {
+                        $('#restoredRiskData').show();
+                        projectRisks = restored.risks;
+                    }
+                }
+                self.risks = new RisksViewModel(projectRisks);
 
                 self.isProjectDetailsSaved = ko.computed (function (){
                 	return (project['custom']['details'].status == 'active');
@@ -1119,68 +1153,19 @@
 
 					if (!$('#risk-validation').validationEngine('validate'))
 						return;
-					var tmp = {};
-					tmp = ko.mapping.toJS(self.risks);
-					tmp['status'] = 'active';
-					var jsData = {"risks": tmp};
-					var json = JSON.stringify(jsData, function (key, value) {
-									return value === undefined ? "" : value;
-					                });
-					var id = "${project?.projectId}";
-					$.ajax({
-			                url: "${createLink(action: 'ajaxUpdate', id: project.projectId)}",
-			                type: 'POST',
-			                data: json,
-			                contentType: 'application/json',
-			                success: function (data) {
+                    self.risks.saveWithErrorDetection(function() {location.reload();});
 
-			                    if (data.error) {
-			                        showAlert("Failed to save risks details: " + data.detail + ' \n' + data.error,
-			                            "alert-error","summary-result-placeholder");
-			                    } else {
-			                        showAlert("Successfully saved","alert-success","summary-result-placeholder");
-			                        location.reload();
-			                    }
-			                },
-			                error: function (data) {
-			                    var status = data.status;
-			                    alert('An unhandled error occurred: ' + data.status);
-			                }
-			            });
 				};
-
-
 
 				// Save project details
 				self.saveProject = function(enableSubmit){
 					self.details.status('active');
-                    $('#restoredData').hide();
-					var json = self.details.modelAsJSON();
 
-                    amplify.store(PROJECT_DETAILS_KEY, json);
-
- 					$.ajax({
-                         url: "${createLink(action: 'ajaxUpdate', id: project.projectId)}",
-                         type: 'POST',
-                         data: json,
-                         contentType: 'application/json',
-                         success: function (data) {
-                             if (data.error) {
-                                 showAlert("Failed to save MERI Plan: " + data.detail + ' \n' + data.error,
-                                     "alert-error","save-details-result-placeholder");
-                             } else {
-                                 showAlert("MERI Plan saved","alert-success","save-details-result-placeholder");
-                                 amplify.store(PROJECT_DETAILS_KEY, null);
-                                 self.details.dirtyFlag.reset();
-                                 if(enableSubmit)
-                                 	self.submitChanges();
-                             }
-                         },
-                         error: function (data) {
-                             bootbox.alert($('#timeoutMessage').html());
-
-                         }
-                    });
+					self.details.saveWithErrorDetection(function() {
+					    if(enableSubmit) {
+                            self.submitChanges();
+                        }
+					});
 				};
 
 				// Modify plan
@@ -1596,28 +1581,44 @@
                 ${user?.isEditor?:false},
                 today,
                 ${themes});
+
             viewModel.loadPrograms(programs);
             ko.applyBindings(viewModel);
-            viewModel.details.dirtyFlag = ko.simpleDirtyFlag(viewModel.details);
-            viewModel.details.dirtyFlag.isDirty.subscribe(function() {
-                if (viewModel.details.dirtyFlag.isDirty()) {
-
-                    window.setInterval(function() {
-                        amplify.store(PROJECT_DETAILS_KEY, viewModel.details.modelAsJSON());
-                    }, 60*1000);
-
-                }
-            });
+            autoSaveModel(
+                viewModel.details,
+                '${createLink(action: 'ajaxUpdate', id: project.projectId)}',
+                {
+                    storageKey:PROJECT_DETAILS_KEY,
+                    autoSaveIntervalInSeconds:${grailsApplication.config.fieldcapture.autoSaveIntervalInSeconds?:60},
+                    restoredDataWarningSelector:'#restoredData',
+                    resultsMessageId:'save-details-result-placeholder',
+                    timeoutMessageSelector:'#timeoutMessage',
+                    errorMessage:"Failed to save MERI Plan: ",
+                    successMessage: 'MERI Plan saved'
+                });
+            autoSaveModel(
+                viewModel.risks,
+                '${createLink(action: 'ajaxUpdate', id: project.projectId)}',
+                {
+                    storageKey:PROJECT_RISKS_KEY,
+                    autoSaveIntervalInSeconds:${grailsApplication.config.fieldcapture.autoSaveIntervalInSeconds?:60},
+                    restoredDataWarningSelector:'#restoredRisksData',
+                    resultsMessageId:'summary-result-placeholder',
+                    timeoutMessageSelector:'#timeoutMessage',
+                    errorMessage:"Failed to save risks details: ",
+                    successMessage: 'Successfully saved'
+                });
             window.addEventListener('storage', function(e) {
                 // TODO use this to detect logout
             });
 
             var meriPlanVisible = false;
-            $('a[data-toggle="tab"').on('show', function(e) {
+            var risksVisible = false;
+            $('a[data-toggle="tab"]').on('show', function(e) {
 
                 if (meriPlanVisible && viewModel.details.dirtyFlag.isDirty()) {
                     e.preventDefault();
-                    bootbox.confirm($('#unsavedChangesMessage').html(), function(result) {
+                    bootbox.confirm($('#meriPlanUnsavedChanges').html(), function(result) {
 
                         if (result) {
                             amplify.store(PROJECT_DETAILS_KEY, null);
@@ -1629,7 +1630,21 @@
                 else {
                     meriPlanVisible = (e.target.hash  == '#projectDetails');
                 }
+                if (risksVisible && viewModel.risks.dirtyFlag.isDirty()) {
+                    e.preventDefault();
+                    bootbox.confirm($('#risksUnsavedChanges').html(), function(result) {
+                     if (result) {
+                            amplify.store(PROJECT_RISKS_KEY, null);
+                            viewModel.risks.dirtyFlag.reset();
+                            $(e.target).tab('show');
+                        }
+                    });
+                }
+                else {
+                    risksVisible = (e.target.hash  == '#plan');
+                }
             });
+
 
 
             // retain tab state for future re-visits
