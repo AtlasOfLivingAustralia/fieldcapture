@@ -85,7 +85,7 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
 		def name = projectAll?.grantId + '_' + stageName + '_' + dateWithTime.format(new Date()) + ".pdf"
 		def doc = [name:name, projectId:projectId, saveAs:'pdf', type:'pdf', role:'stageReport',filename:name, readOnly:true, public:false]
 		documentService.createTextDocument(doc, htmlTxt)
-        def result = activityService.updatePublicationStatus(stageDetails.activityIds, 'pendingApproval')
+        def result = activityService.submitActivitiesForPublication(stageDetails.activityIds)
         def project = get(projectId)
         stageDetails.project = project
         if (!result.resp.error) {
@@ -100,7 +100,7 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
      * @param stageDetails details of the activities, specifically a list of activity ids.
      */
     def approveStageReport(projectId, stageDetails) {
-        def result = activityService.updatePublicationStatus(stageDetails.activityIds, 'published')
+        def result = activityService.approveActivitiesForPublication(stageDetails.activityIds)
 
         // TODO Send a message to GMS.
         def project = get(projectId, 'all')
@@ -144,7 +144,7 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
      * @param stageDetails details of the activities, specifically a list of activity ids.
      */
     def rejectStageReport(projectId, stageDetails) {
-        def result = activityService.updatePublicationStatus(stageDetails.activityIds, 'unpublished')
+        def result = activityService.rejectActivitiesForPublication(stageDetails.activityIds)
 
         // TODO Send a message to GMS.  Delete previous approval document (only an issue for withdrawal of approval)?
         def project = get(projectId)
