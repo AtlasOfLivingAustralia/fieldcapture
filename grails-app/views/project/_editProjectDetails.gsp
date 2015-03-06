@@ -272,7 +272,7 @@
 					</th>
 					<th>Proposed Date of event/<br/>announcement (if known)
 					<fc:iconHelp title="Proposed Date of event/announcement (if known) ">
-						Please indicate if this date is confirmed (C) or whether it is to be confirmed (TBC).
+						Please indicate if this date is confirmed (C) or whether it is to be confirmed (TBC) in the description field.
 					</fc:iconHelp>
 					</th>
 					<th>Description of the event
