@@ -25,15 +25,16 @@ class OrganisationService extends au.org.ala.fieldcapture.OrganisationService {
             [type: 'Green Army - Change or Absence of Team Supervisor', period: Period.months(1), bulkEditable: false, adhoc: true]
     ]
 
-    def activityService, messageSource
+    def activityService, messageSource, emailService
 
     /** Overrides the parent to add Green Army reports to the results */
     def get(String id, view = '') {
 
         def organisation = super.get(id, view)
 
-
-        organisation.reports = getReportsForOrganisation(organisation, getReportConfig(id))
+        if (view != 'flat') {
+            organisation.reports = getReportsForOrganisation(organisation, getReportConfig(id))
+        }
         organisation
     }
 
@@ -106,13 +107,13 @@ class OrganisationService extends au.org.ala.fieldcapture.OrganisationService {
             activitiesByPeriod.each { interval, activitiesInInterval ->
 
                 if (activitiesInInterval) {
-                    def publicationStatus = activitiesInInterval.min(APPROVAL_STATUS_COMPARATOR)
+                    def publicationStatus = activitiesInInterval.min(APPROVAL_STATUS_COMPARATOR).publicationStatus
                     def approvalStatus = messageSource.getMessage("report.publicationStatus."+publicationStatus, null, "Report not submitted", Locale.default)
                     def finishedCount = activitiesInInterval.count { it.progress == 'finished' }
 
                     def report = [type: conf.type, programme:'Green Army - Green Army Round 1',
                                   plannedStartDate: DateUtils.format(interval.start), plannedEndDate: DateUtils.format(interval.end), dueDate: DateUtils.format(interval.end + Period.days(7)),
-                                  count: activitiesInInterval.size(), finishedCount:finishedCount,
+                                  count: activitiesInInterval.size(), finishedCount:finishedCount, publicationStatus:publicationStatus,
                                   approvalStatus:approvalStatus, bulkEditable: conf.bulkEditable, activities:activitiesInInterval]
                     report.description = activityService.defaultDescription(report)
                     reports << report
@@ -122,6 +123,66 @@ class OrganisationService extends au.org.ala.fieldcapture.OrganisationService {
 
         reports
 
+    }
+
+    def submitReport(organisationId, activityIds) {
+        def resp = activityService.search([activityId:activityIds])
+        def organisation = get(organisationId, 'flat')
+        def activities = resp?.resp?.activities?:[]
+        def readyForSubmit = activities.findAll{it.complete}.size() == activityIds.size()
+
+        if (!readyForSubmit) {
+            return [error:'All activities must be finished, deferred or cancelled']
+        }
+
+        resp = activityService.submitActivitiesForPublication(activityIds)
+        if (!resp.error) {
+            emailService.sendGreenArmyReportSubmittedEmail(organisationId, [organisation:organisation])
+        }
+        else {
+            return [success:false, error:resp.error]
+        }
+        return [success:true]
+    }
+
+    def approveReport(organisationId, activityIds) {
+        def resp = activityService.search([activityId:activityIds])
+        def organisation = get(organisationId, 'flat')
+        def activities = resp?.resp?.activities?:[]
+        def readyForApproval = activities.findAll{it.complete && it.publicationStatus == 'pendingApproval'}.size() == activityIds.size()
+
+        if (!readyForApproval) {
+            return [error:'All activities must be complete and submitted for approval']
+        }
+
+        resp = activityService.approveActivitiesForPublication(activityIds)
+        if (!resp.error) {
+            emailService.sendGreenArmyReportApprovedEmail(organisationId, [organisation:organisation])
+        }
+        else {
+            return [success:false, error:resp.error]
+        }
+        return [success:true]
+    }
+
+    def rejectReport(organisationId, activityIds) {
+        def resp = activityService.search([activityId:activityIds])
+        def organisation = get(organisationId, 'flat')
+        def activities = resp?.resp?.activities?:[]
+        def readyForApproval = activities.findAll{it.complete}.size() == activityIds.size()
+
+        if (!readyForApproval) {
+            return [error:'All activities must be complete']
+        }
+
+        resp = activityService.rejectActivitiesForPublication(activityIds)
+        if (!resp.error) {
+            emailService.sendGreenArmyReportRejectedEmail(organisationId, [organisation:organisation])
+        }
+        else {
+            return [success:false, error:resp.error]
+        }
+        return [success:true]
     }
 
 }

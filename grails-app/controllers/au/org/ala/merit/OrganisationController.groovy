@@ -1,6 +1,7 @@
 package au.org.ala.merit
 
 import au.org.ala.fieldcapture.DateUtils
+import au.org.ala.fieldcapture.PreAuthorise
 import grails.converters.JSON
 import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.Row
@@ -156,6 +157,46 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
             }
         }
         render "done"
+    }
+
+
+    def ajaxSubmitReport(String id) {
+
+        if (!organisationService.isUserAdminForOrganisation(id)) {
+            render status:401, message:'No permission to submit report'
+            return
+        }
+        def reportDetails = request.JSON
+
+        def result = organisationService.submitReport(id, reportDetails.activityIds)
+
+        render result as JSON
+    }
+
+    def ajaxApproveReport(String id) {
+
+        if (!organisationService.isUserGrantManagerForOrganisation(id)) {
+            render status:401, message:'No permission to approve report'
+            return
+        }
+        def reportDetails = request.JSON
+
+        def result = organisationService.approveReport(id, reportDetails.activityIds)
+
+        render result as JSON
+    }
+
+    def ajaxRejectReport(String id) {
+
+        if (!organisationService.isUserGrantManagerForOrganisation(id)) {
+            render status:401, message:'No permission to reject report'
+            return
+        }
+        def reportDetails = request.JSON
+
+        def result = organisationService.rejectReport(id, reportDetails.activityIds)
+
+        render result as JSON
     }
 
 
