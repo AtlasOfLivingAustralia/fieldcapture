@@ -1,7 +1,6 @@
 package au.org.ala.merit
 
 import au.org.ala.fieldcapture.DateUtils
-import au.org.ala.fieldcapture.PreAuthorise
 import grails.converters.JSON
 import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.Row
@@ -24,9 +23,32 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
     def report(String id) {
 
         def organisation = organisationService.get(id, 'all')
+        if (!organisation) {
+            flash.errorMessage = "Organisation with id ${id} does not exist"
+            redirect action:'list'
+            return
+        }
+
         def activityType = params.type
 
+        if (!activityType) {
+            flash.errorMessage = 'No such report'
+            redirect action:'index', id:id
+            return
+        }
+
+        if (!organisationService.isUserAdminForOrganisation(id)) {
+            flash.errorMessage = 'You do not have permission to view this page'
+            redirect action:'index', id:id
+            return
+        }
+
         def activityModel = metadataService.getActivityModel(activityType)
+        if (!activityModel || !activityModel.outputs) {
+            flash.errorMessage = 'No such report'
+            redirect action:'index', id:id
+            return
+        }
         def outputModels = activityModel.outputs.collect {
             [name:it, annotatedModel:metadataService.annotatedOutputDataModel(it), dataModel:metadataService.getDataModelFromOutputName(it)]
         }
@@ -35,6 +57,12 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
 
         def activityResp = activityService.search(criteria)
         def activities = activityResp?.resp.activities
+
+        if (!activities) {
+            flash.errorMessage = 'No such report'
+            redirect action:'index', id:id
+            return
+        }
 
         // augment each activity with project name so we can display it.
         activities.each { activity ->
