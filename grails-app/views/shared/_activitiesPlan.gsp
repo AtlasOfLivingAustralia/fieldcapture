@@ -820,7 +820,7 @@
 
             this.editActivity = function (activity) {
                 var url;
-                if (self.isReadOnly()) {
+                if (self.isReadOnly() || (activity.publicationStatus == 'pendingApproval' || activity.publicationStatus == 'published')) {
                     self.viewActivity(activity);
                 } else if (self.canEditOutputData()) {
                     url = fcConfig.activityEnterDataUrl;
