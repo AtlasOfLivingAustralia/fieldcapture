@@ -846,6 +846,7 @@
                 self.description = ko.observable(project.description);
                 self.externalId = ko.observable(project.externalId);
                 self.grantId = ko.observable(project.grantId);
+                self.workOrderId = ko.observable(project.workOrderId);
                 self.manager = ko.observable(project.manager);
                 self.plannedStartDate = ko.observable(project.plannedStartDate).extend({simpleDate: false});
                 self.plannedEndDate = ko.observable(project.plannedEndDate).extend({simpleDate: false});
@@ -1098,6 +1099,42 @@
                     return self.transients.subprograms[self.associatedProgram()];
                 });
 
+
+                var updatingEndDate = false; // Flag to prevent endless loops during change of end date / duration.
+                var plannedDuration = function() {
+                    var start = moment(self.plannedStartDate());
+                    var end = moment(self.plannedEndDate());
+                    return end.diff(start, 'weeks')
+                };
+                self.transients.duration = ko.observable(plannedDuration());
+                self.transients.duration.subscribe(function(newDuration) {
+                    if (updatingEndDate) {
+                        return;
+                    }
+                    try {
+                        updatingEndDate = true;
+                        var start = moment(self.plannedStartDate());
+                        var end = start.add(newDuration, 'weeks');
+                        self.plannedEndDate(end.toDate().toISOStringNoMillis());
+                    }
+                    finally {
+                        updatingEndDate = false;
+                    }
+                });
+
+                self.plannedEndDate.subscribe(function(newEndDate) {
+                    if (updatingEndDate) {
+                        return;
+                    }
+                    try {
+                        updatingEndDate = true;
+                        self.transients.duration(plannedDuration());
+                    }
+                    finally {
+                        updatingEndDate = false;
+                    }
+                });
+
                 self.loadPrograms = function (programsModel) {
                     self.transients.programsModel = programsModel;
                     $.each(programsModel.programs, function (i, program) {
@@ -1110,6 +1147,7 @@
                     });
                     self.associatedProgram(project.associatedProgram); // to trigger the computation of sub-programs
                 };
+
                 self.removeTransients = function (jsData) {
                     delete jsData.transients;
                     return jsData;
@@ -1326,6 +1364,7 @@
                             description: self.description(),
                             externalId: self.externalId(),
                             grantId: self.grantId(),
+                            workOrderId: self.workOrderId(),
                             manager: self.manager(),
                             plannedStartDate: self.plannedStartDate(),
                             plannedEndDate: self.plannedEndDate(),
