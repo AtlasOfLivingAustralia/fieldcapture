@@ -1661,11 +1661,14 @@ class ImportService {
 
             def grantIdAttribute = "GRANT_ID"
             def externalIdAttribute = "EXTERNAL_I"
+            def siteNameAttribute = "SITE_NAME"
+            def siteDescriptionAttribute = "SITE_DESCR"
 
             shapes.each { shape ->
 
                 def grantId = shape.attributes[grantIdAttribute]
                 def externalId = shape.attributes[externalIdAttribute]
+
 
                 if (!grantId && !externalId) {
                     errors << "Shape is missing GRANT_ID and EXTERNAL_I attributes: ${shape.attributes}"
@@ -1687,8 +1690,8 @@ class ImportService {
                         }
                     }
                     int siteNumber = projectDetails.sites ? projectDetails.sites.size() +1 : 1
-                    def name = "${project.grantId} - Site ${siteNumber}"
-                    def description = "Imported on ${now}"
+                    def name = shape.attributes[siteNameAttribute]?:"${project.grantId} - Site ${siteNumber}"
+                    def description = shape.attributes[siteDescriptionAttribute] ?: "Imported on ${now}"
                     def siteExternalId = shapeFileId+'-'+shape.id
 
                     def resp = siteService.createSiteFromUploadedShapefile(shapeFileId, shape.id, siteExternalId, name, description, project.projectId)
