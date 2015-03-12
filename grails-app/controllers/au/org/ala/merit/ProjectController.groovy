@@ -39,6 +39,25 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
     }
 
     @PreAuthorise(accessLevel = 'admin')
+    def ajaxSubmitPlan(String id) {
+        def result = projectService.submitPlan(id)
+        render result as JSON
+    }
+
+    @PreAuthorise(accessLevel = 'caseManager')
+    def ajaxApprovePlan(String id) {
+        def result = projectService.approvePlan(id)
+        render result as JSON
+    }
+
+    @PreAuthorise(accessLevel = 'caseManager')
+    def ajaxRejectPlan(String id) {
+        def result = projectService.rejectPlan(id)
+        render result as JSON
+    }
+
+
+    @PreAuthorise(accessLevel = 'admin')
 	def previewStageReport(){
         String projectId =  params.id
         String stageName = params.stageName

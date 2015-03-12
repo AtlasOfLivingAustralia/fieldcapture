@@ -1207,10 +1207,10 @@
 				};
 
 				// Modify plan
-				self.saveStatus = function (newValue) {
-	                var payload = {planStatus: newValue, projectId: project.projectId};
+				self.saveStatus = function (url) {
+	                var payload = {projectId: project.projectId};
 	                return $.ajax({
-	                    url: "${createLink(action:'ajaxUpdate')}/" + project.projectId,
+	                    url: url,
 	                    type: 'POST',
 	                    data: JSON.stringify(payload),
 	                    contentType: 'application/json'
@@ -1222,7 +1222,7 @@
             	};
 
             	self.submitChanges = function (newValue) {
-	                self.saveStatus('submitted')
+	                self.saveStatus('${g.createLink(action:'ajaxSubmitPlan', id:project.projectId)}')
 	                .done(function (data) {
 	                    if (data.error) {
 	                        showAlert("Unable to modify plan. An unhandled error occurred: " + data.detail + ' \n' + data.error,
@@ -1244,7 +1244,7 @@
 
             	self.modifyPlan = function () {
                 // should we check that status is 'approved'?
-                self.saveStatus('not approved')
+                self.saveStatus('${g.createLink(action:'ajaxRejectPlan', id:project.projectId)}')
                 .done(function (data) {
                     if (data.error) {
                         showAlert("Unable to modify plan. An unhandled error occurred: " + data.detail + ' \n' + data.error,
@@ -1266,7 +1266,7 @@
 			// approve plan and handle errors
             self.approvePlan = function () {
                 // should we check that status is 'submitted'?
-                self.saveStatus('approved')
+                self.saveStatus('${g.createLink(action:'ajaxApprovePlan', id:project.projectId)}')
                 .done(function (data) {
                     if (data.error) {
                         showAlert("Unable to approve plan. An unhandled error occurred: " + data.detail + ' \n' + data.error,
@@ -1288,7 +1288,7 @@
             // reject plan and handle errors
             self.rejectPlan = function () {
                 // should we check that status is 'submitted'?
-                self.saveStatus('not approved')
+                self.saveStatus('${g.createLink(action:'ajaxRejectPlan', id:project.projectId)}')
                 .done(function (data) {
                     if (data.error) {
                         showAlert("Unable to reject plan. An unhandled error occurred: " + data.detail + ' \n' + data.error,
