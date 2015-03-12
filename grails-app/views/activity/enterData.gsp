@@ -281,7 +281,7 @@
             window[viewModelInstance].loadData(output, activity.documents);
 
             // dirtyFlag must be defined after data is loaded
-            window[viewModelInstance].dirtyFlag = ko.dirtyFlag(window[viewModelInstance], false);
+            window[viewModelInstance].dirtyFlag = ko.simpleDirtyFlag(window[viewModelInstance], false);
 
             ko.applyBindings(window[viewModelInstance], document.getElementById("ko${blockId}"));
 
@@ -391,7 +391,11 @@
         this.save = function () {
 
             var activityData, outputs = [], photoPoints;
+
             if ($('#validation-container').validationEngine('validate')) {
+                // Don't allow another save to be initiated.
+                blockUIWithMessage("Saving activity data...");
+
                 $.each(this.subscribers, function(i, obj) {
                     if (obj.isDirty()) {
                         if (obj.model === 'activityModel') {
@@ -406,10 +410,10 @@
                 });
                 if (outputs.length === 0 && activityData === undefined && photoPoints === undefined) {
                     alert("Nothing to save.");
+                    $.unblockUI();
                     return;
                 }
-                // Don't allow another save to be initiated.
-                blockUIWithMessage("Saving activity data...");
+
 
                 if (activityData === undefined) { activityData = {}}
                 activityData.outputs = outputs;
