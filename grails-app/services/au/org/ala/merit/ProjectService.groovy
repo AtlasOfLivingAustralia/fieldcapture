@@ -3,10 +3,7 @@ package au.org.ala.merit
 import au.org.ala.fieldcapture.DateUtils
 import grails.converters.JSON
 import org.apache.commons.lang.CharUtils
-import org.joda.time.DateTime
 import org.joda.time.Interval
-import org.joda.time.Period
-import org.joda.time.format.DateTimeFormat
 
 import java.text.SimpleDateFormat
 
@@ -16,6 +13,9 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
     static dateWithTimeFormat2 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
     static convertTo = new SimpleDateFormat("dd MMM yyyy")
 
+    static final String PLAN_APPROVED = 'approved'
+    static final String PLAN_NOT_APPROVED = 'not approved'
+    static final String PLAN_SUBMITTED = 'submitted'
 
     def update(id, body) {
         TimeZone.setDefault(TimeZone.getTimeZone('UTC'))
@@ -44,6 +44,52 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
         userCanEdit
     }
 
+    def submitPlan(String projectId) {
+        def project = get(projectId)
+
+        if (!project.planStatus || project.planStatus == PLAN_NOT_APPROVED) {
+            def resp = update(projectId, [planStatus:PLAN_SUBMITTED])
+            if (resp.resp && !resp.resp.error) {
+                emailService.sendPlanSubmittedEmail(projectId, [project:project])
+                return [message:'success']
+            }
+            else {
+                return [error:"Update failed: ${resp?.resp?.error}"]
+            }
+        }
+        return [error:'Invalid plan status']
+    }
+
+    def approvePlan(String projectId) {
+        def project = get(projectId)
+        if (project.planStatus == PLAN_SUBMITTED) {
+            def resp = update(projectId, [planStatus:PLAN_APPROVED])
+            if (resp.resp && !resp.resp.error) {
+                emailService.sendPlanApprovedEmail(projectId, [project:project])
+                return [message:'success']
+            }
+            else {
+                return [error:"Update failed: ${resp?.resp?.error}"]
+            }
+        }
+        return [error:'Invalid plan status']
+
+    }
+
+    def rejectPlan(String projectId) {
+        def project = get(projectId)
+        if (project.planStatus in [PLAN_SUBMITTED, PLAN_APPROVED]) {
+            def resp = update(projectId, [planStatus:PLAN_NOT_APPROVED])
+            if (resp.resp && !resp.resp.error) {
+                emailService.sendPlanRejectedEmail(projectId, [project:project])
+                return [message:'success']
+            }
+            else {
+                return [error:"Update failed: ${resp?.resp?.error}"]
+            }
+        }
+        return [error:'Invalid plan status']
+    }
 
     /**
      * Submits a report of the activities performed during a specific time period (a project stage).

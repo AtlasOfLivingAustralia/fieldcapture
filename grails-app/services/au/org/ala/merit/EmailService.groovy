@@ -55,6 +55,53 @@ class EmailService extends au.org.ala.fieldcapture.EmailService {
         )
     }
 
+    def sendPlanSubmittedEmail(projectId, planDetails) {
+
+        def emailAddresses = getProjectEmailAddresses(projectId)
+        def ccEmails = addDefaultsToCC([], emailAddresses)
+
+        createAndSend(
+                SettingPageType.PLAN_SUBMITTED_EMAIL_SUBJECT_LINE,
+                SettingPageType.PLAN_SUBMITTED_EMAIL,
+                planDetails,
+                emailAddresses.grantManagerEmails,
+                emailAddresses.userEmail,
+                ccEmails
+        )
+    }
+
+
+    def sendPlanApprovedEmail(projectId, planDetails) {
+        def emailAddresses = getProjectEmailAddresses(projectId)
+        def ccEmails = addDefaultsToCC(emailAddresses.grantManagerEmails, emailAddresses)
+
+
+        createAndSend(
+                SettingPageType.PLAN_APPROVED_EMAIL_SUBJECT_LINE,
+                SettingPageType.PLAN_APPROVED_EMAIL,
+                planDetails,
+                emailAddresses.adminEmails,
+                emailAddresses.userEmail,
+                ccEmails
+        )
+
+    }
+
+    def sendPlanRejectedEmail(projectId, planDetails) {
+
+        def emailAddresses = getProjectEmailAddresses(projectId)
+        def ccEmails = addDefaultsToCC(emailAddresses.grantManagerEmails, emailAddresses)
+
+        createAndSend(
+                SettingPageType.PLAN_REJECTED_EMAIL_SUBJECT_LINE,
+                SettingPageType.PLAN_REJECTED_EMAIL,
+                planDetails,
+                emailAddresses.adminEmails,
+                emailAddresses.userEmail,
+                ccEmails
+        )
+    }
+
     def sendGreenArmyReportSubmittedEmail(organisationId, reportDetails) {
 
         def emailAddresses = getOrganisationEmailAddresses(organisationId)
