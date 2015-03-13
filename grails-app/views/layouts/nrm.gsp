@@ -40,6 +40,7 @@
         ${fc.announcementContent()}
     </div>
 </g:if>
+
 <div id="body-wrapper">
     <g:if test="${hubConfig.bannerUrl}">
         <div class="navbar navbar-inverse navbar-static-top" id="header" style="background:url(${hubConfig.bannerUrl}) repeat-x">
@@ -47,6 +48,29 @@
     <g:else>
     <div class="navbar navbar-inverse navbar-static-top" id="header">
     </g:else>
+    <g:if test="${fc.currentUserDisplayName()}">
+        <div id="logout-warning" class="row-fluid hide">
+            <div class="alert alert-error text-center">
+                <strong>You have logged out of MERIT from another tab.  All tabs in the same browser are connected to the same login so this page has been logged out.</strong>
+            </div>
+        </div>
+        <script type="text/javascript">
+            $(function() {
+                $('#logout-btn').click(function() {
+                    console.log('logout');
+                    if (window.localStorage) {
+                        window.localStorage.setItem('logout', new Date().getTime());
+                    }
+                });
+                window.addEventListener('storage', function(e) {
+                    console.log(e);
+                    if (e.key == 'logout') {
+                        $('#logout-warning').show();
+                    }
+                });
+            });
+        </script>
+    </g:if>
        %{--<div class="navbar-inner">--}%
             <div class="container-fluid">
                 <g:if test="${hubConfig.logoUrl}">
