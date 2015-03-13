@@ -1827,7 +1827,15 @@
                     var $this = this;
                     var userId = $($this).parent().data("userid");
                     var role = $($this).parent().data("role");
-                    bootbox.confirm("Are you sure you want to remove this user's access?", function(result) {
+
+                    var message;
+                    if (userId == ${user?.userId}) {
+                        message = "<span class='label label-important'>Important</span><p><b>If you proceed you may need assistance to get your access back.</b></p><p>Are you sure you want to remove your access to this project?</p>";
+                    }
+                    else {
+                        message = "Are you sure you want to remove this user's access?";
+                    }
+                    bootbox.confirm(message, function(result) {
                         if (result) {
                             if (userId && role) {
                                 removeUserRole(userId, role);
@@ -1854,7 +1862,16 @@
                     var role = $(this).val();
                     var currentRole = $(this).siblings('span').text();
                     var userId = $(this).attr('id'); // Couldn't get $(el).data('userId') to work for some reason
-                    bootbox.confirm("Are you sure you want to change this user's access from " + currentRole + " to " + decodeCamelCase(role) + "?", function(result) {
+
+                    var message;
+                    if (userId == ${user?.userId}) {
+                        message = "<span class='label label-important'>Important</span><p><b>If you modify your access level you may need assistance to get it back.</b></p><p>Are you sure you want to change your access to this project from " + currentRole + " to " + decodeCamelCase(role)+"?</p>";
+                    }
+                    else {
+                        message = "Are you sure you want to change this user's access from " + currentRole + " to " + decodeCamelCase(role) + "?";
+                    }
+
+                    bootbox.confirm(message, function(result) {
                         if (result) {
                             addUserWithRole(userId, role, "${project.projectId}");
                         } else {
