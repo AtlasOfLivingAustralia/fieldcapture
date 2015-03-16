@@ -1647,9 +1647,6 @@
                     errorMessage:"Failed to save risks details: ",
                     successMessage: 'Successfully saved'
                 });
-            window.addEventListener('storage', function(e) {
-                // TODO use this to detect logout
-            });
 
             var meriPlanVisible = false;
             var risksVisible = false;
