@@ -51,7 +51,8 @@
     <g:if test="${fc.currentUserDisplayName()}">
         <div id="logout-warning" class="row-fluid hide">
             <div class="alert alert-error text-center">
-                <strong>You have logged out of MERIT from another tab.  All tabs in the same browser are connected to the same login so this page has been logged out.</strong>
+                <strong>You have logged out of MERIT from another tab.  Any changes you have made will not be saved to the server until you log back in.</strong>
+                <fc:loginInNewWindow>Click here to login again (opens a new window)</fc:loginInNewWindow>
             </div>
         </div>
         <script type="text/javascript">
