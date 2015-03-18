@@ -63,6 +63,7 @@
                         window.localStorage.setItem('logout', new Date().getTime());
                     }
                 });
+                $('#logout-warning a').click(function(){ $('#logout-warning').hide(); });
                 window.addEventListener('storage', function(e) {
                     console.log(e);
                     if (e.key == 'logout') {
