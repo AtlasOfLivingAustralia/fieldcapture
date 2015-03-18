@@ -1,3 +1,4 @@
+<%@ page import="org.joda.time.DateTime" %>
 <html>
 
 <head>
@@ -14,6 +15,7 @@
 <table id="announcementsTable" class="table table-striped">
 
 </table>
+    <g:set var="suffix" value="${au.org.ala.fieldcapture.DateUtils.displayFormat(new org.joda.time.DateTime())}"/>
     <script type="text/javascript">
     $(function() {
 
@@ -46,7 +48,17 @@
                 "columns": columns,
                 "dom": 'Tlfrtip',
                 tableTools: {
-                    "sSwfPath": "${grailsApplication.config.contextPath}/swf/copy_csv_xls_pdf.swf"
+                    "sSwfPath": "${grailsApplication.config.contextPath}/swf/copy_csv_xls_pdf.swf",
+                    "aButtons": [
+                        "copy",
+                        "print",
+                        {
+                            "sExtends":    "collection",
+                            "sButtonText": "Save",
+                            "aButtons":    [
+                                {"sExtends":"csv",  "sFileName":"Annoucements-${suffix}.csv"}, {"sExtends":"xls",  "sFileName":"Annoucements-${suffix}.xls"}, {"sExtends":"pdf",  "sFileName":"Annoucements-${suffix}.pdf"} ]
+                        }
+                    ]
                 }
             });
 
