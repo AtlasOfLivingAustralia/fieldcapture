@@ -1654,27 +1654,14 @@
 
                 if (meriPlanVisible && viewModel.details.dirtyFlag.isDirty()) {
                     e.preventDefault();
-                    bootbox.confirm($('#meriPlanUnsavedChanges').html(), function(result) {
-
-                        if (result) {
-                            amplify.store(PROJECT_DETAILS_KEY, null);
-                            viewModel.details.dirtyFlag.reset();
-                            $(e.target).tab('show');
-                        }
-                    });
+                    bootbox.alert($('#meriPlanUnsavedChanges').html());
                 }
                 else {
                     meriPlanVisible = (e.target.hash  == '#projectDetails');
                 }
                 if (risksVisible && viewModel.risks.dirtyFlag.isDirty()) {
                     e.preventDefault();
-                    bootbox.confirm($('#risksUnsavedChanges').html(), function(result) {
-                     if (result) {
-                            amplify.store(PROJECT_RISKS_KEY, null);
-                            viewModel.risks.dirtyFlag.reset();
-                            $(e.target).tab('show');
-                        }
-                    });
+                    bootbox.alert($('#risksUnsavedChanges').html());
                 }
                 else {
                     risksVisible = (e.target.hash  == '#plan');
