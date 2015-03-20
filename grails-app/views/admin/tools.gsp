@@ -141,6 +141,21 @@
             $('form.gaData').submit();
         });
 
+        $("#gaProjectData").change(function() {
+            if ($("#gaProjectData").val()) {
+                $("#btnGaProjectData").removeAttr("disabled");
+            }
+            else {
+                $("#btnGaProjectData").attr("disabled", "disabled");
+            }
+
+        }).trigger('change');
+
+        $('#btnGaProjectData').click(function(e) {
+            e.preventDefault();
+            $('form.gaProjectData').submit();
+        });
+
         $("#bulkUploadSites").change(function() {
             if ($("#bulkUploadSites").val()) {
                 $("#btnBulkUploadSites").removeAttr("disabled");
@@ -283,7 +298,19 @@
         </p>
         </td>
     </tr>
+    <tr>
+        <td><button disabled id="btnGaProjectData" class="btn btn-small btn-info" title="Load Green Army project data">Load Green Army Project Data</button>
+        </td>
+        <td>
+            Loads Green army project data
+        <p><g:uploadForm class="gaProjectData" controller="organisation" action="processGreenArmyProjectData">
+            <div><input id="gaProjectData" type="file" name="gaProjectData"/></div>
+            <div><input type="checkbox" name="preview" checked="checked">Preview errors only, don't actually modify anything</div>
+        </g:uploadForm>
 
+        </p>
+        </td>
+    </tr>
     <tr>
         <td><button disabled id="btnBulkUploadSites" class="btn btn-small btn-info" title="Bulk load sites">Bulk load sites</button>
         </td>
