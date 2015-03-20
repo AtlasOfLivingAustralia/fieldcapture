@@ -502,8 +502,6 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
                 activityService.bulkUpdateActivities(activityIds, [plannedStartDate: plannedStartDate, plannedEndDate: plannedEndDate])
             }
             projectService.createReportingActivitiesForProject(project.projectId, [[period: Period.months(1), type: 'Green Army - Monthly project status report']])
-            projectService.createReportingActivitiesForProject(project.projectId, [[period: Period.months(3), type: 'Green Army - Quarterly project report']])
-
         }
         return [error:errors, results:results]
 
