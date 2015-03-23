@@ -7,11 +7,17 @@ import org.apache.poi.ss.usermodel.Row
 import org.apache.poi.ss.usermodel.Sheet
 import org.apache.poi.ss.usermodel.Workbook
 import org.apache.poi.ss.usermodel.WorkbookFactory
+import org.grails.plugins.csv.CSVMapReader
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
+import org.joda.time.Duration
 import org.joda.time.Interval
 import org.joda.time.Period
+import org.joda.time.Weeks
 import org.joda.time.format.DateTimeFormat
+import org.springframework.web.multipart.MultipartHttpServletRequest
+
+import java.text.SimpleDateFormat
 
 /**
  * Extends the plugin OrganisationController to support Green Army project reporting.
@@ -273,55 +279,6 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
             }
         }
 
-        def commencementDate = getCellValue(row, 7)
-        def actualCommencementDate = getCellValue(row, 9)
-        if ((commencementDate && (commencementDate instanceof Number) || (actualCommencementDate && actualCommencementDate instanceof Number))) {
-            def commencementDateString = ''
-            if (commencementDate && (commencementDate instanceof Number)) {
-                commencementDateString = excelDateToISODateString(commencementDate)
-            }
-
-            def actualCommencementDateString = ''
-            if (actualCommencementDate && (actualCommencementDate instanceof Number)) {
-                actualCommencementDateString = excelDateToISODateString(actualCommencementDate)
-            }
-
-            def startDateString = actualCommencementDateString ?: commencementDateString
-
-            if (startDateString != project.plannedStartDate) {
-                println "Project ${projectId} actual commencement date  ${startDateString} plannedStartDate ${project.plannedStartDate}\n"
-
-                println "****************************Updating project dates and activities!!! ${project.grantId} ${project.projectId}**********************************"
-
-
-                def originalStartDate = DateUtils.parse(project.plannedStartDate)
-                def originalEndDate = DateUtils.parse(project.plannedEndDate)
-
-                def originalDuration = new Interval(originalStartDate, originalEndDate).toDuration()
-
-                // So do we update the project date at this point?
-                project.plannedStartDate = startDateString
-
-                def startDate = DateUtils.parse(startDateString)
-
-                def endDate = startDate.plus(originalDuration)
-
-                project.plannedEndDate = DateUtils.format(endDate.toDateTimeISO())
-
-                projectService.update(project.projectId, [plannedStartDate: project.plannedStartDate, plannedEndDate: project.plannedEndDate])
-
-
-                // Update the dates of the works activities
-                def activityIds = project.activities.findAll{it.type != 'Green Army - Monthly project status report'}.collect {it.activityId}
-
-                activityService.bulkUpdateActivities(activityIds, [plannedStartDate: project.plannedStartDate, plannedEndDate: project.plannedEndDate])
-
-                projectService.createReportingActivitiesForProject(project.projectId, [[period: Period.months(1), type:'Green Army - Monthly project status report']])
-            }
-
-        }
-
-
 
         def continuingProject = getCellValue(row, 11)
         def completed = getCellValue(row, 13)
@@ -446,5 +403,107 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
         def dateTime = new DateTime(millisSince1970)
         dateTime = dateTime.toDateTime(DateTimeZone.UTC)
         return DateUtils.format(dateTime)
+    }
+
+
+    def processGreenArmyProjectData() {
+        def results = []
+        if (request instanceof MultipartHttpServletRequest) {
+            def file = request.getFile('gaProjectData')
+
+            if (file) {
+
+                def reader = new InputStreamReader(file.inputStream, 'cp1252')
+
+                new CSVMapReader(reader).eachWithIndex { rowMap, i ->
+                    results << processAnotherTypeOfGreenArmyDataLoad(rowMap)
+                }
+
+            }
+        }
+        render results as JSON
+    }
+
+    private def processAnotherTypeOfGreenArmyDataLoad(projectDetails) {
+
+        def errors = []
+        def results = []
+        def resp = projectService.search([grantId:projectDetails.grantId, view:'all'])
+        def projects = resp?.resp?.projects
+        if (!projects) {
+            errors << 'Failed to find project with grant id = '+projectDetails.grantId
+            return [grantId:projectDetails.grantId, error:errors]
+        }
+        else if (projects.size() > 1) {
+            errors << "Muliple projects found with grant id = ${projectDetails.grantId}\n\n"
+            return [grantId:projectDetails.grantId, error:errors]
+        }
+
+        def project = projects[0]
+
+        def plannedStartDate = projectDetails.plannedStartDate
+        def plannedEndDate = projectDetails.plannedEndDate
+        def workOrderId = projectDetails.workOrderId
+
+        SimpleDateFormat inputFormat = new SimpleDateFormat("dd/MM/yyyy")
+        plannedStartDate = DateUtils.format(new DateTime(inputFormat.parse(plannedStartDate)).toDateTime(DateTimeZone.UTC))
+        plannedEndDate =  DateUtils.format(new DateTime(inputFormat.parse(plannedEndDate)).toDateTime(DateTimeZone.UTC))
+
+
+        if (plannedStartDate != project.plannedStartDate) {
+            results << "Project ${project.grantId} actual commencement date  ${plannedStartDate} plannedStartDate ${project.plannedStartDate}\n"
+        }
+
+        def newDetails= [plannedStartDate: plannedStartDate, plannedEndDate: plannedEndDate, workOrderId: workOrderId, timeline:null]
+        resp = projectService.update(project.projectId, newDetails)
+        if (!resp || resp.error) {
+            errors << "Unable to update project ${project.grantId} : ${resp?.error}"
+        }
+        else {
+
+            def activitiesWithDefaultDates = project.activities.findAll {
+
+                if (it.plannedStartDate == project.plannedStartDate && it.plannedEndDate == project.plannedEndDate) {
+                    return true
+                }
+                def actStart = DateUtils.parse(it.plannedStartDate)
+                def actEnd = DateUtils.parse(it.plannedEndDate)
+
+                return new Duration(actStart, actEnd).isLongerThan(Weeks.weeks(19).toStandardDuration())
+            }
+
+            def modifiedActivities = project.activities.findAll {
+                !(it.activityId in activitiesWithDefaultDates.collect{a -> a.activityId})
+            }
+
+            if (modifiedActivities) {
+                errors << "${project.grantId}: Number of activities with non-default dates: ${modifiedActivities.size()}"
+            }
+
+
+            if (modifiedActivities) {
+                modifiedActivities.each {
+                    if (it.plannedStartDate < plannedStartDate) {
+                        errors << "${project.grantId}: Activity ${it.description} starts before contract date: ${it.plannedStartDate}, ${plannedStartDate}"
+                    }
+                    if (it.plannedEndDate > plannedEndDate) {
+                        errors << "${project.grantId}: Activity ${it.description} ends after contract end date: ${it.plannedEndDate}, ${plannedEndDate}"
+                    }
+                    if (it.plannedEndDate < plannedStartDate) {
+                        errors << "${project.grantId}: Activity ${it.description} ends before contract start date: ${it.plannedEndDate}, ${plannedStartDate}"
+                    }
+                }
+
+            }
+
+            if (activitiesWithDefaultDates) {
+                // Update the dates of the works activities that haven't been modified from the original defaults.
+                def activityIds = activitiesWithDefaultDates.collect { it.activityId }
+                activityService.bulkUpdateActivities(activityIds, [plannedStartDate: plannedStartDate, plannedEndDate: plannedEndDate])
+            }
+            projectService.createReportingActivitiesForProject(project.projectId, [[period: Period.months(1), type: 'Green Army - Monthly project status report']])
+        }
+        return [error:errors, results:results]
+
     }
 }
