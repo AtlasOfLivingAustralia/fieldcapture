@@ -13,6 +13,7 @@
         spatialWmsUrl: "${grailsApplication.config.spatial.wms.url}",
         sldPolgonDefaultUrl: "${grailsApplication.config.sld.polgon.default.url}",
         sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}",
+        viewProjectUrl: "${g.createLink(controller: 'project', action:'index')}",
         dashboardUrl: "${g.createLink(controller: 'report', action: 'loadReport', params: params)}"
     }
     </r:script>
