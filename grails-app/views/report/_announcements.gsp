@@ -29,17 +29,17 @@
 
         var events = <fc:modelAsJavascript model="${events}"></fc:modelAsJavascript>;
         var columns =  [
-            {title:'Grant ID', width:'10%', render:projectUrlRenderer, data:'grantId'},
-            {title:'Name', width:'25%', data:'name'},
+            {title:'Proposed Date of event/announcement (if known)', data:'eventDate', render:dateRenderer},
             {title:'State/Territory', width:'10%', data:'state'},
             {title:'Electorate(s) of the Project', width:'10%', data:'electorate'},
             {title:'Name of Organisation/Proponent', width:'10%', data:'organisationName'},
-            {title:'What programme does the announcement relate to?', width:'13%', data:'associatedProgram'},
+            {title:'Name', width:'25%', data:'name'},
             {title:'Proposed event/annoucement', data:'eventName'},
-            {title:'Proposed Date of event/announcement (if known)', data:'eventDate', render:dateRenderer},
             {title:'Description of the event', data:'eventDescription'},
             {title:'Will there be, or do you intend there to be, media involvement in this event?', data:'media'},
-            {title:'MERI plan approval status', data:'planStatus'}];
+            {title:'MERI plan approval status', data:'planStatus'},
+            {title:'What programme does the announcement relate to?', width:'13%', data:'associatedProgram'},
+            {title:'Grant ID', width:'10%', render:projectUrlRenderer, data:'grantId'}];
 
 
             $('#announcementsTable').dataTable({
