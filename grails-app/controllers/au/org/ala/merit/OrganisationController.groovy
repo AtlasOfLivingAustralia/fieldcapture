@@ -164,7 +164,7 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
 
         response.setContentType('text/plain')
 
-        def sheets = ['Jul14', 'Aug14', 'Sep14', 'Oct14', 'Nov14', 'Dec14', 'Jan15']
+        def sheets = ['Jul14', 'Aug14', 'Sep14', 'Oct14', 'Nov14', 'Dec14', 'Jan15', 'Feb15']
         if (request.respondsTo('getFile')) {
             def file = request.getFile('gaData')
             if (file) {
@@ -279,6 +279,46 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
             }
         }
 
+        def commencementDate = getCellValue(row, 7)
+        def actualCommencementDate = getCellValue(row, 9)
+        if ((commencementDate && (commencementDate instanceof Number) || (actualCommencementDate && actualCommencementDate instanceof Number))) {
+            def commencementDateString = ''
+            if (commencementDate && (commencementDate instanceof Number)) {
+                commencementDateString = excelDateToISODateString(commencementDate)
+            }
+
+            def actualCommencementDateString = ''
+            if (actualCommencementDate && (actualCommencementDate instanceof Number)) {
+                actualCommencementDateString = excelDateToISODateString(actualCommencementDate)
+            }
+
+            def startDateString = actualCommencementDateString ?: commencementDateString
+
+            if (startDateString != project.plannedStartDate) {
+                println "Project ${projectId} actual commencement date  ${startDateString} plannedStartDate ${project.plannedStartDate}\n"
+
+                println "****************************Updating project dates and activities!!! ${project.grantId} ${project.projectId}**********************************"
+
+
+                def originalStartDate = DateUtils.parse(project.plannedStartDate)
+                def originalEndDate = DateUtils.parse(project.plannedEndDate)
+
+                def originalDuration = new Interval(originalStartDate, originalEndDate).toDuration()
+
+                def startDate = DateUtils.parse(startDateString)
+
+                def endDate = startDate.plus(originalDuration)
+
+                def endDateString = DateUtils.format(endDate.toDateTimeISO())
+
+                projectService.update(project.projectId, [plannedStartDate: startDateString, plannedEndDate: endDateString])
+
+                updateActivities(project, [], startDateString, endDateString)
+
+                // Reload the updated project
+                project = projectService.get(project.projectId, 'all')
+            }
+        }
 
         def continuingProject = getCellValue(row, 11)
         def completed = getCellValue(row, 13)
@@ -454,56 +494,59 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
             results << "Project ${project.grantId} actual commencement date  ${plannedStartDate} plannedStartDate ${project.plannedStartDate}\n"
         }
 
-        def newDetails= [plannedStartDate: plannedStartDate, plannedEndDate: plannedEndDate, workOrderId: workOrderId, timeline:null]
+        def newDetails= [plannedStartDate: plannedStartDate, workOrderStartDate: plannedStartDate, plannedEndDate: plannedEndDate, workOrderEndDate: plannedEndDate, workOrderId: workOrderId, timeline:null]
         resp = projectService.update(project.projectId, newDetails)
         if (!resp || resp.error) {
             errors << "Unable to update project ${project.grantId} : ${resp?.error}"
         }
         else {
-
-            def activitiesWithDefaultDates = project.activities.findAll {
-
-                if (it.plannedStartDate == project.plannedStartDate && it.plannedEndDate == project.plannedEndDate) {
-                    return true
-                }
-                def actStart = DateUtils.parse(it.plannedStartDate)
-                def actEnd = DateUtils.parse(it.plannedEndDate)
-
-                return new Duration(actStart, actEnd).isLongerThan(Weeks.weeks(19).toStandardDuration())
-            }
-
-            def modifiedActivities = project.activities.findAll {
-                !(it.activityId in activitiesWithDefaultDates.collect{a -> a.activityId})
-            }
-
-            if (modifiedActivities) {
-                errors << "${project.grantId}: Number of activities with non-default dates: ${modifiedActivities.size()}"
-            }
-
-
-            if (modifiedActivities) {
-                modifiedActivities.each {
-                    if (it.plannedStartDate < plannedStartDate) {
-                        errors << "${project.grantId}: Activity ${it.description} starts before contract date: ${it.plannedStartDate}, ${plannedStartDate}"
-                    }
-                    if (it.plannedEndDate > plannedEndDate) {
-                        errors << "${project.grantId}: Activity ${it.description} ends after contract end date: ${it.plannedEndDate}, ${plannedEndDate}"
-                    }
-                    if (it.plannedEndDate < plannedStartDate) {
-                        errors << "${project.grantId}: Activity ${it.description} ends before contract start date: ${it.plannedEndDate}, ${plannedStartDate}"
-                    }
-                }
-
-            }
-
-            if (activitiesWithDefaultDates) {
-                // Update the dates of the works activities that haven't been modified from the original defaults.
-                def activityIds = activitiesWithDefaultDates.collect { it.activityId }
-                activityService.bulkUpdateActivities(activityIds, [plannedStartDate: plannedStartDate, plannedEndDate: plannedEndDate])
-            }
-            projectService.createReportingActivitiesForProject(project.projectId, [[period: Period.months(1), type: 'Green Army - Monthly project status report']])
+            updateActivities(project, errors, plannedStartDate, plannedEndDate)
         }
         return [error:errors, results:results]
 
+    }
+
+    private void updateActivities(project, errors, plannedStartDate, plannedEndDate) {
+        def activitiesWithDefaultDates = project.activities.findAll {
+
+            if (it.plannedStartDate == project.plannedStartDate && it.plannedEndDate == project.plannedEndDate) {
+                return true
+            }
+            def actStart = DateUtils.parse(it.plannedStartDate)
+            def actEnd = DateUtils.parse(it.plannedEndDate)
+
+            return new Duration(actStart, actEnd).isLongerThan(Weeks.weeks(19).toStandardDuration())
+        }
+
+        def modifiedActivities = project.activities.findAll {
+            !(it.activityId in activitiesWithDefaultDates.collect { a -> a.activityId })
+        }
+
+        if (modifiedActivities) {
+            errors << "${project.grantId}: Number of activities with non-default dates: ${modifiedActivities.size()}"
+        }
+
+
+        if (modifiedActivities) {
+            modifiedActivities.each {
+                if (it.plannedStartDate < plannedStartDate) {
+                    errors << "${project.grantId}: Activity ${it.description} starts before contract date: ${it.plannedStartDate}, ${plannedStartDate}"
+                }
+                if (it.plannedEndDate > plannedEndDate) {
+                    errors << "${project.grantId}: Activity ${it.description} ends after contract end date: ${it.plannedEndDate}, ${plannedEndDate}"
+                }
+                if (it.plannedEndDate < plannedStartDate) {
+                    errors << "${project.grantId}: Activity ${it.description} ends before contract start date: ${it.plannedEndDate}, ${plannedStartDate}"
+                }
+            }
+
+        }
+
+        if (activitiesWithDefaultDates) {
+            // Update the dates of the works activities that haven't been modified from the original defaults.
+            def activityIds = activitiesWithDefaultDates.collect { it.activityId }
+            activityService.bulkUpdateActivities(activityIds, [plannedStartDate: plannedStartDate, plannedEndDate: plannedEndDate])
+        }
+        projectService.createReportingActivitiesForProject(project.projectId, [[period: Period.months(1), type: 'Green Army - Monthly project status report']])
     }
 }
