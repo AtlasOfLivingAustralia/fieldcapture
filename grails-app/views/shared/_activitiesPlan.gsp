@@ -866,7 +866,7 @@
             this.scores = $.map(scores, function (score, index) {
                 var targetValue = 0;
                 $.each(existingTargets, function(j, existingTarget) {
-                    if (existingTarget.scoreName === score.name && existingTarget.outputLabel === self.name) {
+                    if (existingTarget.scoreLabel === score.label) {
                         targetValue = existingTarget.target;
                         return false; // end the loop
                     }
