@@ -1,6 +1,9 @@
 package au.org.ala.merit
 
 import au.org.ala.fieldcapture.DateUtils
+import org.joda.time.DateTime
+import org.joda.time.DateTimeConstants
+import org.joda.time.DateTimeZone
 import org.joda.time.Interval
 import org.joda.time.Period
 
@@ -18,8 +21,8 @@ class OrganisationService extends au.org.ala.fieldcapture.OrganisationService {
     // This is the behaviour we want for green army.  it may be extendible to other programs (e.g.
     // biodiversity fund has a stage report and end of project report)
     private static def GREEN_ARMY_REPORT_CONFIG = [
-            [type: 'Green Army - Monthly project status report', period: Period.months(1), bulkEditable: true],
-            [type: 'Green Army - Quarterly project report', period: Period.months(3), bulkEditable: false],
+            [type: 'Green Army - Monthly project status report', period: Period.months(1), bulkEditable: true, businessDaysToCompleteReport:5],
+            [type: 'Green Army - Quarterly project report', period: Period.months(3), bulkEditable: false, businessDaysToCompleteReport:10],
             [type: 'Green Army - Site Visit Checklist', period: Period.months(1), bulkEditable: false, adhoc: true, grantManagerOnly:true],
             [type: 'Green Army - Desktop Audit Checklist', period: Period.months(1), bulkEditable: false, adhoc: true, grantManagerOnly:true],
             [type: 'Green Army - Change or Absence of Team Supervisor', period: Period.months(1), bulkEditable: false, adhoc: true]
@@ -112,7 +115,7 @@ class OrganisationService extends au.org.ala.fieldcapture.OrganisationService {
                     def finishedCount = activitiesInInterval.count { it.progress == 'finished' }
 
                     def report = [type: conf.type, programme:'Green Army - Green Army Round 1',
-                                  plannedStartDate: DateUtils.format(interval.start), plannedEndDate: DateUtils.format(interval.end), dueDate: DateUtils.format(interval.end + Period.days(7)),
+                                  plannedStartDate: DateUtils.format(interval.start), plannedEndDate: DateUtils.format(interval.end), dueDate: DateUtils.format(calculateDueDate(conf, interval.end)),
                                   count: activitiesInInterval.size(), finishedCount:finishedCount, publicationStatus:publicationStatus,
                                   approvalStatus:approvalStatus, bulkEditable: conf.bulkEditable, activities:activitiesInInterval]
                     report.description = activityService.defaultDescription(report)
@@ -123,6 +126,22 @@ class OrganisationService extends au.org.ala.fieldcapture.OrganisationService {
 
         reports
 
+    }
+
+    def calculateDueDate(reportConfig, DateTime monthEndDate) {
+        if (!reportConfig.businessDaysToCompleteReport) {
+            return monthEndDate
+        }
+        int i = 0
+        def dueDate = monthEndDate.withZone(DateTimeZone.default).minusDays(1) // The date range for reports is UTC and goes to the fist millisecond of the new month.
+        while (i<reportConfig.businessDaysToCompleteReport) {
+
+            dueDate = dueDate.plusDays(1)
+            if (dueDate.getDayOfWeek() < DateTimeConstants.SATURDAY) {
+                i++
+            }
+        }
+        return dueDate.withZone(DateTimeZone.UTC)
     }
 
     def submitReport(organisationId, activityIds) {
