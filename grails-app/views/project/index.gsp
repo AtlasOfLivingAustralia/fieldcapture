@@ -404,7 +404,7 @@
 
                             <div id="permissions" class="pill-pane ${activeClass}">
                                 <h3>Project Access</h3>
-
+                                <h4>Add Permissions</h4>
                                 <g:render plugin="fieldcapture-plugin" template="/admin/addPermissions" model="[addUserUrl:g.createLink(controller:'user', action:'addUserAsRoleToProject'), entityId:project.projectId]"/>
                                 <g:render plugin="fieldcapture-plugin" template="/admin/permissionTable" model="[loadPermissionsUrl:g.createLink(controller:'project', action:'getMembersForProjectId', id:project.projectId), removeUserUrl:g.createLink(controller:'user', action:'removeUserWithRoleFromProject'), entityId:project.projectId, user:user]"/>
                             </div>
