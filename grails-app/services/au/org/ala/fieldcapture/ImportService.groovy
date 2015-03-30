@@ -1191,7 +1191,8 @@ class ImportService {
         cacheService.clear(PROJECTS_CACHE_KEY)
         def reader = new InputStreamReader(csv, charEncoding)
         try {
-
+            def mapper = new GmsMapper(metadataService.activitiesModel(), metadataService.programsModel())
+            def first = true
             def prevGrantId = null
             def prevExternalId = null
             def projectRows = []
@@ -1210,6 +1211,12 @@ class ImportService {
                 projectRows << rowMap
                 prevGrantId = currentGrantId
                 prevExternalId = currentExternalId
+                if (first) {
+                    def errors = mapper.validateHeaders(projectRows)
+                    status << [grantId:'Column Headers', externalId:'', success:errors.size() == 0, errors:errors]
+                    first = false
+                }
+
             }
             // import the last project
             action(projectRows)

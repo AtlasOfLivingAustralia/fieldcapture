@@ -49,8 +49,8 @@ class GmsMapper {
             ROUND_NM:[name:'associatedSubProgram', type:'string'],
             EXTERNAL_ID:[name:'externalId', type:'string'],
             ORG_TRADING_NAME:[name:'organisationName', type:'string'],
-            START_DT:[name:'plannedStartDate', type:'date'],
-            FINISH_DT:[name:'plannedEndDate', type:'date'],
+            START_DT:[name:'plannedStartDate', type:'date', mandatory:true],
+            FINISH_DT:[name:'plannedEndDate', type:'date', mandatory:true],
             CONTRACT_START_DT:[name:'contractStartDate', type:'date'],
             CONTRACT_END_DT:[name:'contractEndDate', type:'date'],
             WORK_ORDER_ID:[name:'workOrderId', type:'string'],
@@ -104,6 +104,32 @@ class GmsMapper {
         this.activitiesModel = activitiesModel
         this.programModel = programModel
         this.includeProgress = includeProgress
+    }
+
+    def validateHeaders(projectRows) {
+        def errors = []
+        def mappings = projectMapping + siteMapping + activityMapping + outputTargetColumnMapping + riskMapping
+        def mappingKeys = new HashSet(mappings.keySet())
+        mappingKeys.add(GRANT_ID_COLUMN)
+        mappingKeys.add(DATA_TYPE_COLUMN)
+        mappingKeys.add(DATA_SUB_TYPE_COLUMN)
+        mappingKeys.add(REPORTING_THEME_COLUMN)
+
+        projectRows[0].keySet().each { key ->
+            if (key == 'index') {
+                return
+            }
+            if (!(key in mappingKeys)) {
+                errors << "Unused column header ${key}, please check it is not named incorrectly"
+            }
+        }
+        mappingKeys.each { key ->
+
+            if (!(key in projectRows[0].keySet())) {
+                errors << "Missing column in spreadsheet ${key} - load may be incomplete without this"
+            }
+        }
+        return errors
     }
 
     def mapProject(projectRows) {
@@ -328,7 +354,7 @@ class GmsMapper {
         value = value?value.trim():''
         switch (type) {
             case 'date':
-                return convertDate(value)
+                return convertDate(value, mapping.mandatory)
             case 'decimal':
                 return convertDecimal(value)
             case 'string':
@@ -352,8 +378,11 @@ class GmsMapper {
         throw new IllegalArgumentException("Unsupported type: ${type}")
     }
 
-    private def convertDate(date) {
+    private def convertDate(date, mandatory) {
 
+        if (!mandatory && !date) {
+            return ''
+        }
 
         if (date && date.isInteger()) {
             final long DAYS_FROM_1900_TO_1970 = 25567
