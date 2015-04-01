@@ -61,7 +61,7 @@ grails.project.dependency.resolution = {
         build ":release:3.0.1"
 
         if (Environment.current != Environment.DEVELOPMENT) {
-            compile ":fieldcapture-plugin:1.0.3-SNAPSHOT"
+            compile ":fieldcapture-plugin:1.0.3"
         }
 
     }
