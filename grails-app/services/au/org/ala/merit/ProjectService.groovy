@@ -3,7 +3,9 @@ package au.org.ala.merit
 import au.org.ala.fieldcapture.DateUtils
 import grails.converters.JSON
 import org.apache.commons.lang.CharUtils
+import org.joda.time.Days
 import org.joda.time.Interval
+import org.joda.time.Period
 
 import java.text.SimpleDateFormat
 
@@ -215,6 +217,43 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
         result
     }
 
+
+    def changeProjectStartDate(projectId, plannedStartDate) {
+        def project = get(projectId)
+        if (!project.planStatus || project.planStatus == PLAN_NOT_APPROVED) {
+
+            def previousStartDate = DateUtils.parse(project.plannedStartDate)
+            def newStartDate = DateUtils.parse(plannedStartDate)
+
+            def daysChanged = Days.daysBetween(previousStartDate, newStartDate).days
+
+            log.info("Updating start date for project ${projectId} from ${project.plannedStartDate} to ${plannedStartDate}, ${daysChanged} days difference")
+
+            def newEndDate = DateUtils.format(DateUtils.parse(project.plannedEndDate).plusDays(daysChanged))
+
+            def resp = update(projectId, [plannedStartDate:plannedStartDate, plannedEndDate:newEndDate])
+            if (resp.resp && !resp.resp.error) {
+
+                def activities = activityService.activitiesForProject(projectId)
+                activities.each { activity ->
+                    if (!activityService.isReport(activity)) {
+                        def newActivityStartDate = DateUtils.format(DateUtils.parse(activity.plannedStartDate).plusDays(daysChanged))
+                        def newActivityEndDate = DateUtils.format(DateUtils.parse(activity.plannedEndDate).plusDays(daysChanged))
+                        activityService.update(activity.activityId, [activityId:activity.activityId, plannedStartDate:newActivityStartDate, plannedEndDate:newActivityEndDate])
+                    }
+
+                }
+                createReportingActivitiesForProject(project.projectId, [[period: Period.months(1), type:'Green Army - Monthly project status report']])
+
+                return [message:'success']
+            }
+            else {
+                return [error:"Update failed: ${resp?.resp?.error}"]
+            }
+        }
+        return [error:'Invalid plan status']
+    }
+
     def createReportingActivitiesForProject(projectId, config) {
         def result = regenerateReportingActivitiesForProject(projectId, config)
         result.create.each { activity ->
@@ -230,7 +269,6 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
             }
         }
     }
-
 
     /**
      * This method supports automatically creating reporting activities for a project that re-occur at defined intervals.
