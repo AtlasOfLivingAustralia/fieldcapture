@@ -11,11 +11,43 @@
     <div class="actions row-fluid" data-bind="template:planStatusTemplateName"></div>
     <div id="status-update-error-placeholder"></div>
     <div id="activityContainer" class="space-before">
+
+        <g:if test="${user?.isAdmin}">
+            <div data-bind="visible:canModifyProjectStart && isPlanEditable()">
+                <span class="pull-right"><button class="btn" data-bind="click:changeProjectStartDate">Change project start date</button><fc:iconHelp>If your project will start before the contracted start date use this to adjust your project plan</fc:iconHelp> </span>
+            </div>
+            <div class="modal hide" id="changeProjectStartDate">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Change project start date</h4>
+                        </div>
+
+                        <div class="modal-body">
+                            <form id="projectStartDateForm">
+                            <p>Changing the project start date will also adjust the dates of all activities in the plan</p>
+                            New project start date: <fc:datePicker class="input-small" targetField="plannedStartDate.date" name="plannedStartDate" data-validation-engine="validate[funcCall[validateProjectStartDate]]"/>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer control-group">
+                        <div class="controls">
+                            <button type="button" class="btn btn-success"
+                                    data-bind="click:saveProjectStartDate">Save</button>
+                            <button class="btn" data-bind="click:cancelChangeProjectStartDate">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </g:if>
+
+
         <h4 class="inline">Planned Activities</h4>
         <i class="icon-lock" data-bind="visible:planStatus()==='submitted'"
            title="Plan cannot be modified once it has been submitted for approval"></i>
         <g:if test="${user?.isEditor}">
-            <button type="button" class="btn btn-link" data-bind="visible:planStatus()==='not approved',click:newActivity" style="vertical-align: baseline"><i class="icon-plus"></i> Add new activity</button>
+            <button type="button" class="btn btn-link" data-bind="visible:isPlanEditable,click:newActivity" style="vertical-align: baseline"><i class="icon-plus"></i> Add new activity</button>
             <g:if test="${grailsApplication.config.simulateCaseManager}">
                 <span class="pull-right">
                     <label class="checkbox inline" style="font-size:0.8em;">
@@ -927,7 +959,7 @@
             return clone;
         };
 
-        function PlanViewModel(activities, outputTargets, project,today) {
+        function PlanViewModel(activities, outputTargets, project, programModel, today) {
             var self = this;
             this.userIsCaseManager = ko.observable(${user?.isCaseManager});
             this.planStatus = ko.observable(project.planStatus || 'not approved');
@@ -935,11 +967,14 @@
             	// todo remove casemanager and admin functionality from activities plan page
                 //return self.planStatus() === 'not approved' ? 'planningTmpl' : self.planStatus() + 'Tmpl';
                 return 'noActionTmpl';
-          });
+            });
             this.isApproved = ko.computed(function () {
                 return (self.planStatus() === 'approved');
             });
 
+            this.isPlanEditable = ko.computed(function() {
+                return self.planStatus()==='not approved'
+            });
             this.canEditOutputTargets = ko.computed(function() {
                 var isEditor = ${user?.isEditor?'true':'false'};
                 return isEditor && self.planStatus() === 'not approved';
@@ -984,6 +1019,70 @@
                 }
             };
 
+            var minProjectStart = '2013-01-01T13:00:00Z', canModifyProjectStart = false;
+            $.each(programModel.programs, function(i, program) {
+                if (project.associatedProgram == program.name) {
+                    canModifyProjectStart = !program.projectDatesContracted; // The project dates aren't constrained by the contract dates.
+
+                    $.each(program.subprograms, function(j, subprogram) {
+                        if (project.associatedSubProgram == subprogram.name) {
+                            minProjectStart = subprogram.startDate || minProjectStart;
+                            return false;
+                        }
+                    });
+                    return false;
+                }
+            });
+
+            this.canModifyProjectStart = canModifyProjectStart;
+            this.minProjectStart = minProjectStart;
+            this.maxProjectStart = project.contractStartDate;
+
+            self.plannedStartDate = ko.observable(project.plannedStartDate).extend({simpleDate:false});
+
+            self.changeProjectStartDate = function() {
+                $('#changeProjectStartDate').modal({backdrop:'static'});
+                $('#projectStartDateForm').validationEngine();
+            };
+            // Window scoped for use by jquery validation engine
+            window.validateProjectStartDate = function() {
+                var value = self.plannedStartDate();
+
+                if (value == project.plannedStartDate) {
+                    return 'The date has not changed';
+                }
+
+                if (self.maxProjectStart && value >= self.maxProjectStart) {
+                    return 'The date must be before the contract start date - '+convertToSimpleDate(self.maxProjectStart);
+                }
+                if (self.minProjectStart && value < self.minProjectStart) {
+                    return 'The date must be after '+convertToSimpleDate(self.minProjectStart);
+                }
+            };
+            self.saveProjectStartDate = function() {
+
+                var result = $('#projectStartDateForm').validationEngine('validate');
+                if (result) {
+                    $('#changeProjectStartDate').modal('hide');
+                    var payload = {plannedStartDate: self.plannedStartDate(), projectId: project.projectId};
+                    blockUIWithMessage("Updating project start date...");
+                    $.ajax({
+                        url: "${createLink(controller: 'project', action: 'updateProjectStartDate')}/" + project.projectId,
+                        type: 'POST',
+                        data: JSON.stringify(payload),
+                        contentType: 'application/json'
+                    }).done(function(data) {
+                        document.location.reload();
+                    }).fail(function(data) {
+                        showAlert("Unable to update the project start date.",
+                                "alert-error","status-update-error-placeholder");
+                        $.unblockUI();
+                    });
+                }
+            };
+            self.cancelChangeProjectStartDate = function() {
+                $('#changeProjectStartDate').modal('hide');
+            };
 
             // Project status manipulations
             // ----------------------------
@@ -1217,11 +1316,14 @@
             }();
         }
 		var today = '${today}';
+		var programModel = <fc:modelAsJavascript model="${programs}"/>;
+
         var planViewModel = new PlanViewModel(
-${activities ?: []},
-${project.outputTargets ?: '{}'},
+            ${activities ?: []},
+            ${project.outputTargets ?: '{}'},
             checkAndUpdateProject(${project}),
-        today    
+            programModel,
+            today
         );
         ko.applyBindings(planViewModel, document.getElementById('planContainer'));
 
