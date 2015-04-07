@@ -826,6 +826,9 @@
                 self.manager = ko.observable(project.manager);
                 self.plannedStartDate = ko.observable(project.plannedStartDate).extend({simpleDate: false});
                 self.plannedEndDate = ko.observable(project.plannedEndDate).extend({simpleDate: false});
+                self.contractStartDate = ko.observable(project.contractStartDate).extend({simpleDate: false});
+                self.contractEndDate = ko.observable(project.contractEndDate).extend({simpleDate: false});
+
                 self.funding = ko.observable(project.funding).extend({currency:{}});
                 self.regenerateProjectTimeline = ko.observable(false);
 				self.userIsCaseManager = ko.observable(${user?.isCaseManager});
@@ -1080,10 +1083,11 @@
                 var plannedDuration = function() {
                     var start = moment(self.plannedStartDate());
                     var end = moment(self.plannedEndDate());
-                    return end.diff(start, 'weeks')
+                    return end.diff(start, 'weeks');
                 };
-                self.transients.duration = ko.observable(plannedDuration());
-                self.transients.duration.subscribe(function(newDuration) {
+
+                self.transients.plannedDuration = ko.observable(plannedDuration());
+                self.transients.plannedDuration.subscribe(function(newDuration) {
                     if (updatingEndDate) {
                         return;
                     }
@@ -1104,12 +1108,59 @@
                     }
                     try {
                         updatingEndDate = true;
-                        self.transients.duration(plannedDuration());
+                        self.transients.plannedDuration(plannedDuration());
                     }
                     finally {
                         updatingEndDate = false;
                     }
                 });
+
+
+                 var contractDuration = function() {
+                    if (!self.contractStartDate() || !self.contractEndDate()) {
+                        return '';
+                    }
+                    var start = moment(self.contractStartDate());
+                    var end = moment(self.contractEndDate());
+                    return end.diff(start, 'weeks');
+                };
+
+                self.transients.contractDuration = ko.observable(contractDuration());
+                self.transients.contractDuration.subscribe(function(newDuration) {
+                    if (updatingEndDate) {
+                        return;
+                    }
+                    if (!self.contractStartDate()) {
+                        return;
+                    }
+                    try {
+                        updatingEndDate = true;
+                        var start = moment(self.contractStartDate());
+                        var end = start.add(newDuration, 'weeks');
+                        self.contractEndDate(end.toDate().toISOStringNoMillis());
+                    }
+                    finally {
+                        updatingEndDate = false;
+                    }
+                });
+
+                self.contractEndDate.subscribe(function(newEndDate) {
+                    if (updatingEndDate) {
+                        return;
+                    }
+                    if (!self.contractDateDate()) {
+                        return;
+                    }
+                    try {
+                        updatingEndDate = true;
+                        self.transients.contractDuration(contractDuration());
+                    }
+                    finally {
+                        updatingEndDate = false;
+                    }
+                });
+
+
 
                 self.loadPrograms = function (programsModel) {
                     self.transients.programsModel = programsModel;
@@ -1344,6 +1395,8 @@
                             manager: self.manager(),
                             plannedStartDate: self.plannedStartDate(),
                             plannedEndDate: self.plannedEndDate(),
+                            contractStartDate: self.contractStartDate(),
+                            contractEndDate: self.contractEndDate(),
                             organisation: self.organisation(),
                             organisationName: self.organisationName(),
                             serviceProviderName: self.serviceProviderName(),
