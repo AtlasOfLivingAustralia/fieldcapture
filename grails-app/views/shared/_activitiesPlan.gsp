@@ -14,7 +14,7 @@
 
         <g:if test="${user?.isAdmin}">
             <div data-bind="visible:canModifyProjectStart && isPlanEditable()">
-                <span class="pull-right"><button class="btn" data-bind="click:changeProjectStartDate">Change project start date</button><fc:iconHelp>If your project will start before the contracted start date use this to adjust your project plan</fc:iconHelp> </span>
+                <span class="pull-right"><button class="btn" data-bind="click:changeProjectStartDate">Change project start date</button><fc:iconHelp>Use this to adjust the start date of your project, if required. The dates for all project activities will be adjusted to reflect the date you select. The administrative reports will also be updated to reflect the start date you select</fc:iconHelp> </span>
             </div>
             <div class="modal hide" id="changeProjectStartDate">
                 <div class="modal-dialog">
@@ -25,7 +25,7 @@
 
                         <div class="modal-body">
                             <form id="projectStartDateForm">
-                            <p>Changing the project start date will also adjust the dates of all activities in the plan</p>
+                            <p>Changing the project start date will also adjust the dates of all project activities and update any administrative reports currently listed against your project.</p>
                             New project start date: <fc:datePicker class="input-small" targetField="plannedStartDate.date" name="plannedStartDate" data-validation-engine="validate[funcCall[validateProjectStartDate]]"/>
                             </form>
                         </div>
