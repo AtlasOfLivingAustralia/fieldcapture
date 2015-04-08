@@ -12,7 +12,7 @@
     <div id="status-update-error-placeholder"></div>
     <div id="activityContainer" class="space-before">
 
-        <g:if test="${user?.isAdmin}">
+        <g:if test="${user?.isAdmin || user?.isCaseManager}">
             <div data-bind="visible:canModifyProjectStart && isPlanEditable()">
                 <span class="pull-right"><button class="btn" data-bind="click:changeProjectDates">Change project dates</button><fc:iconHelp>Use this to adjust the start and end date of your project, if required. The dates for all project activities will be adjusted to reflect the date you select. The administrative reports will also be updated to reflect the start date you select</fc:iconHelp> </span>
             </div>
