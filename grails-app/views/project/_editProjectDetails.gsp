@@ -296,7 +296,7 @@
 					<td width="20%"> <textarea style="width: 97%;" rows="2"  class="input-xlarge"  data-bind="value: name, disable: $parent.isProjectDetailsLocked()"></textarea></td>
 					<td width="10%"> <div style="text-align: center; "><input data-bind="datepicker:scheduledDate.date, disable: $parent.isProjectDetailsLocked()" type="text" style="text-align: center; width: 75%;"/></div></td>
 					<td width="54%"> <textarea style="width: 97%;" rows="2"  class="input-xlarge"  data-bind="value: description,disable: $parent.isProjectDetailsLocked()"></textarea></td>
-					<td width="10%"> <select class="form-control" data-validation-engine="validate[required]" data-bind="disable: $parent.isProjectDetailsLocked(), options: $parent.mediaOptions, optionsText:'name', optionsValue:'id', value:media, optionsCaption:'-- Please select --'" ></select> </td>
+					<td width="10%"> <select class="form-control" data-bind="disable: $parent.isProjectDetailsLocked(), options: $parent.mediaOptions, optionsText:'name', optionsValue:'id', value:media, optionsCaption:'-- Please select --'" ></select> </td>
 					<td width="4%"> <span data-bind="if: $index() && !$parent.isProjectDetailsLocked()" ><i class="icon-remove" data-bind="click: $parent.removeEvents"></i></span></td>
 				</tr>
 				</tbody>
@@ -340,7 +340,7 @@
 
 					<!-- ko foreach: costs -->
 					<td><div style="text-align: center;">
-						<input style="text-align: center; width: 98%;" class="input-xlarge" data-bind="value: dollar, numeric: $root.number, disable: $root.isProjectDetailsLocked()" />
+						<input style="text-align: center; width: 98%;" class="input-xlarge" data-bind="value: dollar, numeric: $root.number, disable: $root.isProjectDetailsLocked()" data-validation-engine="validate[custom[number]]"/>
 					</div>
 					</td>
 					<!-- /ko -->

@@ -732,7 +732,7 @@
             var FloatViewModel = function(o){
             	var self = this;
             	if(!o) o = {};
-            	self.dollar = ko.observable(o.dollar ? o.dollar : 0.0).extend({currency:{}});
+            	self.dollar = ko.observable(o.dollar ? o.dollar : 0.0).extend({numericString:0}).extend({currency:{}});
             };
 
 			var RisksViewModel = function(risks) {
@@ -1224,13 +1224,15 @@
 
 				// Save project details
 				self.saveProject = function(enableSubmit){
-					self.details.status('active');
+				    if ($('#project-details-validation').validationEngine('validate')) {
+                        self.details.status('active');
 
-					self.details.saveWithErrorDetection(function() {
-					    if(enableSubmit) {
-                            self.submitChanges();
-                        }
-					});
+                        self.details.saveWithErrorDetection(function() {
+                            if(enableSubmit) {
+                                self.submitChanges();
+                            }
+                        });
+					}
 				};
 
 				// Modify plan
