@@ -933,7 +933,7 @@
             var self = this;
             this.scoreName = target.name;
             this.scoreLabel = target.label;
-            this.target = ko.observable(value);
+            this.target = ko.observable(value).extend({numericString:1});
             this.isSaving = ko.observable(false);
             this.isFirst = isFirst;
             this.units = target.units;
