@@ -14,27 +14,32 @@
 
         <g:if test="${user?.isAdmin}">
             <div data-bind="visible:canModifyProjectStart && isPlanEditable()">
-                <span class="pull-right"><button class="btn" data-bind="click:changeProjectStartDate">Change project start date</button><fc:iconHelp>If your project will start before the contracted start date use this to adjust your project plan</fc:iconHelp> </span>
+                <span class="pull-right"><button class="btn" data-bind="click:changeProjectDates">Change project dates</button><fc:iconHelp>Use this to adjust the start and end date of your project, if required. The dates for all project activities will be adjusted to reflect the date you select. The administrative reports will also be updated to reflect the start date you select</fc:iconHelp> </span>
             </div>
-            <div class="modal hide" id="changeProjectStartDate">
+            <div class="modal hide" id="changeProjectDates">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h4 class="modal-title">Change project start date</h4>
+                            <h4 class="modal-title">Change project dates</h4>
                         </div>
 
                         <div class="modal-body">
-                            <form id="projectStartDateForm">
-                            <p>Changing the project start date will also adjust the dates of all activities in the plan</p>
-                            New project start date: <fc:datePicker class="input-small" targetField="plannedStartDate.date" name="plannedStartDate" data-validation-engine="validate[funcCall[validateProjectStartDate]]"/>
+                            <form id="projectDatesForm">
+                                <p>Changing the project dates will also adjust the dates of all project activities and update any administrative reports currently listed against your project.</p>
+                                <p>New project start date: <fc:datePicker class="input-small" targetField="plannedStartDate.date" name="plannedStartDate" data-validation-engine="validate[funcCall[validateProjectStartDate]]"/></p>
+                                <p>New project end date: &nbsp;<fc:datePicker class="input-small" targetField="plannedEndDate.date" name="plannedEndDate" data-validation-engine="validate[future[plannedStartDate]]"/></p>
+                                <p>Automatically adjust end date to maintain project duration: <input type="checkbox" data-bind="checked:autoUpdateEndDate"></p>
                             </form>
+                        </div>
+                        <div class="alert" data-bind="visible:showDurationWarning">
+                            Warning: Significant changes to the project duration will require grant manager approval.
                         </div>
                     </div>
                     <div class="modal-footer control-group">
                         <div class="controls">
                             <button type="button" class="btn btn-success"
-                                    data-bind="click:saveProjectStartDate">Save</button>
-                            <button class="btn" data-bind="click:cancelChangeProjectStartDate">Cancel</button>
+                                    data-bind="click:saveProjectDates">Save</button>
+                            <button class="btn" data-bind="click:cancelChangeProjectDates">Cancel</button>
                         </div>
                     </div>
                 </div>
@@ -928,7 +933,7 @@
             var self = this;
             this.scoreName = target.name;
             this.scoreLabel = target.label;
-            this.target = ko.observable(value);
+            this.target = ko.observable(value).extend({numericString:1});
             this.isSaving = ko.observable(false);
             this.isFirst = isFirst;
             this.units = target.units;
@@ -1039,17 +1044,35 @@
             this.maxProjectStart = project.contractStartDate;
 
             self.plannedStartDate = ko.observable(project.plannedStartDate).extend({simpleDate:false});
+            self.plannedEndDate = ko.observable(project.plannedEndDate).extend({simpleDate:false});
+            self.autoUpdateEndDate = ko.observable(true);
 
-            self.changeProjectStartDate = function() {
-                $('#changeProjectStartDate').modal({backdrop:'static'});
-                $('#projectStartDateForm').validationEngine();
+            self.changeProjectDates = function() {
+                $('#changeProjectDates').modal({backdrop:'static'});
+                $('#projectDatesForm').validationEngine();
             };
+            self.plannedStartDate.subscribeChanged(function(oldStartDate, newStartDate) {
+
+                if (self.autoUpdateEndDate()) {
+                    var end = moment(self.plannedEndDate());
+                    var duration = moment(newStartDate).diff(moment(oldStartDate), 'days');
+                    end.subtract(duration, 'days');
+                    self.plannedEndDate(convertToIsoDate(end.toDate()));
+                }
+            }, null, "beforeChange");
+
+            var originalDuration = moment(project.plannedStartDate).diff(moment(project.plannedEndDate), 'days');
+            self.showDurationWarning = ko.computed(function() {
+                var duration = moment(self.plannedStartDate()).diff(moment(self.plannedEndDate()), 'days');
+                return Math.abs(duration - originalDuration) >= 7;
+            });
+
             // Window scoped for use by jquery validation engine
             window.validateProjectStartDate = function() {
                 var value = self.plannedStartDate();
-
-                if (value == project.plannedStartDate) {
-                    return 'The date has not changed';
+                var endDate = self.plannedEndDate();
+                if (value == project.plannedStartDate && endDate == project.plannedEndDate) {
+                    return 'The dates have not changed';
                 }
 
                 if (self.maxProjectStart && value >= self.maxProjectStart) {
@@ -1059,29 +1082,29 @@
                     return 'The date must be after '+convertToSimpleDate(self.minProjectStart);
                 }
             };
-            self.saveProjectStartDate = function() {
+            self.saveProjectDates = function() {
 
-                var result = $('#projectStartDateForm').validationEngine('validate');
+                var result = $('#projectDatesForm').validationEngine('validate');
                 if (result) {
-                    $('#changeProjectStartDate').modal('hide');
-                    var payload = {plannedStartDate: self.plannedStartDate(), projectId: project.projectId};
-                    blockUIWithMessage("Updating project start date...");
+                    $('#changeProjectDates').modal('hide');
+                    var payload = {projectId: project.projectId, plannedStartDate: self.plannedStartDate(), plannedEndDate: self.plannedEndDate()};
+                    blockUIWithMessage("Updating project dates...");
                     $.ajax({
-                        url: "${createLink(controller: 'project', action: 'updateProjectStartDate')}/" + project.projectId,
+                        url: "${createLink(controller: 'project', action: 'updateProjectDates')}/" + project.projectId,
                         type: 'POST',
                         data: JSON.stringify(payload),
                         contentType: 'application/json'
                     }).done(function(data) {
                         document.location.reload();
                     }).fail(function(data) {
-                        showAlert("Unable to update the project start date.",
+                        showAlert("Unable to update the project dates.",
                                 "alert-error","status-update-error-placeholder");
                         $.unblockUI();
                     });
                 }
             };
-            self.cancelChangeProjectStartDate = function() {
-                $('#changeProjectStartDate').modal('hide');
+            self.cancelChangeProjectDates = function() {
+                $('#changeProjectDates').modal('hide');
             };
 
             // Project status manipulations
