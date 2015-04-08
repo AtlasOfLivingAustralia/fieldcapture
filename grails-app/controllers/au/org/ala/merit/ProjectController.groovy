@@ -68,6 +68,17 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
     }
 
     @PreAuthorise(accessLevel = 'admin')
+    def updateProjectDates(String id) {
+        def payload = request.getJSON()
+        if (!payload.plannedStartDate || !payload.plannedEndDate) {
+            render status:400, text:"Missing parameters plannedStartDate, plannedEndDate"
+            return
+        }
+        def result = projectService.changeProjectDates(id, payload.plannedStartDate, payload.plannedEndDate)
+        render result as JSON
+    }
+
+    @PreAuthorise(accessLevel = 'admin')
 	def previewStageReport(){
         String projectId =  params.id
         String stageName = params.stageName

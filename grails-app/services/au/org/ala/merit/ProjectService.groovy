@@ -254,6 +254,67 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
         return [error:'Invalid plan status']
     }
 
+    def changeProjectDates(projectId, plannedStartDate, plannedEndDate) {
+        def project = get(projectId)
+        if (!project.planStatus || project.planStatus == PLAN_NOT_APPROVED) {
+
+            def previousStartDate = DateUtils.parse(project.plannedStartDate)
+            def newStartDate = DateUtils.parse(plannedStartDate)
+
+            def previousEndDate = DateUtils.parse(project.plannedEndDate)
+            def newEndDate = DateUtils.parse(plannedEndDate)
+
+            def daysStartChanged = Days.daysBetween(previousStartDate, newStartDate).days
+
+            def previousDuration = Days.daysBetween(previousStartDate, previousEndDate).days
+            def newDuration = Days.daysBetween(newStartDate, newEndDate).days
+
+            if (newDuration <= 0 || previousDuration <= 0) {
+                return [error:"Invalid project dates"]
+            }
+
+            def scale = (double)newDuration / (double)previousDuration
+
+            log.info("Updating start date for project ${projectId} from ${project.plannedStartDate} to ${newStartDate}, ${daysStartChanged} days difference")
+            log.info("Updating end date for project ${projectId} from ${project.plannedEndDate} to ${newEndDate}")
+            log.info("Project duration changing by a factor of ${scale}")
+
+            def resp = update(projectId, [plannedStartDate:plannedStartDate, plannedEndDate:plannedEndDate])
+            if (resp.resp && !resp.resp.error) {
+
+                def activities = activityService.activitiesForProject(projectId)
+                activities.each { activity ->
+                    if (!activityService.isReport(activity)) {
+                        def newActivityStartDate = DateUtils.format(DateUtils.parse(activity.plannedStartDate).plusDays(daysStartChanged))
+                        def daysToChangeEndDate = (int)Math.round(daysStartChanged * scale)
+                        def newActivityEndDate = DateUtils.format(DateUtils.parse(activity.plannedEndDate).plusDays(daysToChangeEndDate))
+
+                        // Account for any rounding errors that would result in the activity falling outside the project date range.
+                        if (newActivityStartDate < plannedStartDate) {
+                            newActivityStartDate = plannedStartDate
+                        }
+                        if (newActivityEndDate > plannedEndDate) {
+                            newActivityEndDate = plannedEndDate
+                        }
+                        if (newActivityStartDate > newActivityEndDate) {
+                            newActivityStartDate = newActivityEndDate
+                        }
+
+                        activityService.update(activity.activityId, [activityId:activity.activityId, plannedStartDate:newActivityStartDate, plannedEndDate:newActivityEndDate])
+                    }
+
+                }
+                createReportingActivitiesForProject(project.projectId, [[period: Period.months(1), type:'Green Army - Monthly project status report']])
+
+                return [message:'success']
+            }
+            else {
+                return [error:"Update failed: ${resp?.resp?.error}"]
+            }
+        }
+        return [error:'Invalid plan status']
+    }
+
     def createReportingActivitiesForProject(projectId, config) {
         def result = regenerateReportingActivitiesForProject(projectId, config)
         result.create.each { activity ->
