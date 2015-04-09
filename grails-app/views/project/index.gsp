@@ -1094,6 +1094,19 @@
                     return end.toDate().toISOStringNoMillis();
                 };
 
+                var contractDatesFixed = function() {
+                    var programs = self.transients.programsModel.programs;
+                    for (var i=0; i<programs.length; i++) {
+                        console.log(programs[i]);
+
+                        if (programs[i].name === self.associatedProgram()) {
+                        console.log(programs[i].name);
+                            return programs[i].projectDatesContracted;
+                        }
+                    }
+                    return true;
+                }
+
                 var updatingDurations = false; // Flag to prevent endless loops during change of end date / duration.
 
                 self.transients.plannedDuration = ko.observable(calculateDuration(self.plannedStartDate(), self.plannedEndDate()));
@@ -1127,15 +1140,29 @@
                     if (updatingDurations) {
                         return;
                     }
-                    if (!self.transients.plannedDuration()) {
-                        return;
+                    if (contractDatesFixed()) {
+                        if (!self.plannedEndDate()) {
+                            return;
+                        }
+                        try {
+                            updatingDurations = true;
+                            self.transients.plannedDuration(calculateDuration(newStartDate, self.plannedEndDate()));
+                        }
+                        finally {
+                            updatingDurations = false;
+                        }
                     }
-                    try {
-                        updatingDurations = true;
-                        self.plannedEndDate(calculateEndDate(newStartDate, self.transients.plannedDuration()));
-                    }
-                    finally {
-                        updatingDurations = false;
+                    else {
+                        if (!self.transients.plannedDuration()) {
+                            return;
+                        }
+                        try {
+                            updatingDurations = true;
+                            self.plannedEndDate(calculateEndDate(newStartDate, self.transients.plannedDuration()));
+                        }
+                        finally {
+                            updatingDurations = false;
+                        }
                     }
                 });
 
@@ -1177,15 +1204,29 @@
                     if (updatingDurations) {
                         return;
                     }
-                    if (!self.transients.contractDuration()) {
-                        return;
+                    if (contractDatesFixed()) {
+                        if (!self.contractEndDate()) {
+                            return;
+                        }
+                        try {
+                            updatingDurations = true;
+                            self.transients.contractDuration(calculateDuration(newStartDate, self.contractEndDate()));
+                        }
+                        finally {
+                            updatingDurations = false;
+                        }
                     }
-                    try {
-                        updatingDurations = true;
-                        self.contractEndDate(calculateEndDate(newStartDate, self.transients.contractDuration()));
-                    }
-                    finally {
-                        updatingDurations = false;
+                    else {
+                        if (!self.transients.contractDuration()) {
+                            return;
+                        }
+                        try {
+                            updatingDurations = true;
+                            self.contractEndDate(calculateEndDate(newStartDate, self.transients.contractDuration()));
+                        }
+                        finally {
+                            updatingDurations = false;
+                        }
                     }
                 });
 
