@@ -25,7 +25,15 @@ grails.project.fork = [
 
 // settings for the inline fieldcapture-plugin
 if (Environment.current == Environment.DEVELOPMENT) {
-    grails.plugin.location.'fieldcapture-plugin' = '../fieldcapture-hubs/fieldcapture-hubs-plugin'
+    def props = new Properties()
+    File propertiesFile = new File('/data/fieldcapture/config/fieldcapture-config.properties')
+    if (propertiesFile.exists()) {
+        propertiesFile.withInputStream {
+            stream -> props.load(stream)
+        }
+    }
+    def pluginLocation = props.getProperty("fieldcapture-hubs-plugin.location") ?: '../fieldcapture-hubs/fieldcapture-hubs-plugin'
+    grails.plugin.location.'fieldcapture-plugin' = pluginLocation
 }
 grails.project.dependency.resolver = "maven"
 grails.project.dependency.resolution = {
