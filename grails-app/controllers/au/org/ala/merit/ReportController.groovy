@@ -58,27 +58,29 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
 
         def events = []
         resp?.resp?.projects.each { project ->
-            project.custom.details.events.each { event ->
-                if (event.scheduledDate || event.name) {
-                    def announcement = [projectId: project.projectId, grantId: project.grantId, name: project.name, organisationName: project.organisationName, associatedProgram: project.associatedProgram, planStatus: project.planStatus, eventDate: event.scheduledDate, eventName: event.name, eventDescription: event.description, media: event.media]
+            if (project?.custom?.details?.events) {
+                project.custom.details.events.each { event ->
+                    if (event.scheduledDate || event.name) {
+                        def announcement = [projectId: project.projectId, grantId: project.grantId, name: project.name, organisationName: project.organisationName, associatedProgram: project.associatedProgram, planStatus: project.planStatus, eventDate: event.scheduledDate, eventName: event.name, eventDescription: event.description, media: event.media]
 
-                    def states = new HashSet()
-                    def electorates = new HashSet()
-                    project.sites.each {
-                        if (it.extent?.geometry?.state) {
-                            def state = it.extent?.geometry?.state
-                            state = g.message(code:'label.'+state, default:state)
-                            states.add(state)
+                        def states = new HashSet()
+                        def electorates = new HashSet()
+                        project.sites.each {
+                            if (it.extent?.geometry?.state) {
+                                def state = it.extent?.geometry?.state
+                                state = g.message(code: 'label.' + state, default: state)
+                                states.add(state)
+                            }
+                            if (it.extent?.geometry?.elect) {
+                                def electorate = it.extent?.geometry?.elect
+                                electorate = g.message(code: 'label.' + electorate, default: electorate)
+                                electorates.add(electorate)
+                            }
                         }
-                        if (it.extent?.geometry?.elect) {
-                            def electorate = it.extent?.geometry?.elect
-                            electorate = g.message(code:'label.'+electorate, default:electorate)
-                            electorates.add(electorate)
-                        }
+                        announcement.state = states.join(',')
+                        announcement.electorate = electorates.join(',')
+                        events << announcement
                     }
-                    announcement.state = states.join(',')
-                    announcement.electorate = electorates.join(',')
-                    events << announcement
                 }
             }
         }
