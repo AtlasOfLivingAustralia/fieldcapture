@@ -62,14 +62,14 @@ grails.project.dependency.resolution = {
         build ":tomcat:7.0.55"
 
         runtime ":jquery:1.11.1" // Override jquery as 1.8.3 was being pulled in from somewhere
-        compile ":resources:1.2.8"
+        compile ":resources:1.2.14"
 
         runtime ":lesscss-resources:1.3.3"
 
         build ":release:3.0.1"
 
         if (Environment.current != Environment.DEVELOPMENT) {
-            compile ":fieldcapture-plugin:1.0.5-SNAPSHOT"
+            compile ":fieldcapture-plugin:1.1.1-SNAPSHOT"
         }
 
     }
