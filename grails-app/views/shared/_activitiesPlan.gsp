@@ -1040,8 +1040,6 @@
             });
 
             this.canModifyProjectStart = canModifyProjectStart;
-            this.minProjectStart = minProjectStart;
-            this.maxProjectStart = project.contractStartDate;
 
             self.plannedStartDate = ko.observable(project.plannedStartDate).extend({simpleDate:false});
             self.plannedEndDate = ko.observable(project.plannedEndDate).extend({simpleDate:false});
@@ -1074,12 +1072,12 @@
                 if (value == project.plannedStartDate && endDate == project.plannedEndDate) {
                     return 'The dates have not changed';
                 }
-
-                if (self.maxProjectStart && value >= self.maxProjectStart) {
-                    return 'The date must be before the contract start date - '+convertToSimpleDate(self.maxProjectStart);
+                var maxProjectStart = project.contractStartDate;
+                if (maxProjectStart && value > maxProjectStart) {
+                    return 'The date must be on or before the contract start date - '+convertToSimpleDate(maxProjectStart);
                 }
-                if (self.minProjectStart && value < self.minProjectStart) {
-                    return 'The date must be after '+convertToSimpleDate(self.minProjectStart);
+                if (minProjectStart && value < minProjectStart) {
+                    return 'The date must be on or after '+convertToSimpleDate(minProjectStart);
                 }
             };
             self.saveProjectDates = function() {

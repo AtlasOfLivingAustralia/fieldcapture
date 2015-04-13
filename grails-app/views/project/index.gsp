@@ -976,89 +976,157 @@
                     return self.transients.subprograms[self.associatedProgram()];
                 });
 
+                var calculateDuration = function(startDate, endDate) {
+                    if (!startDate || !endDate) {
+                        return '';
+                    }
+                    var start = moment(startDate);
+                    var end = moment(endDate);
+                    var durationInDays = end.diff(start, 'days');
 
-                var updatingEndDate = false; // Flag to prevent endless loops during change of end date / duration.
-                var plannedDuration = function() {
-                    var start = moment(self.plannedStartDate());
-                    var end = moment(self.plannedEndDate());
-                    return end.diff(start, 'weeks');
+                    return Math.ceil(durationInDays/7);
+                };
+                var calculateEndDate = function(startDate, duration) {
+                    var start =  moment(startDate);
+                    var end = start.add(duration*7, 'days');
+                    return end.toDate().toISOStringNoMillis();
                 };
 
-                self.transients.plannedDuration = ko.observable(plannedDuration());
+                var contractDatesFixed = function() {
+                    var programs = self.transients.programsModel.programs;
+                    for (var i=0; i<programs.length; i++) {
+                        console.log(programs[i]);
+
+                        if (programs[i].name === self.associatedProgram()) {
+                        console.log(programs[i].name);
+                            return programs[i].projectDatesContracted;
+                        }
+                    }
+                    return true;
+                }
+
+                var updatingDurations = false; // Flag to prevent endless loops during change of end date / duration.
+
+                self.transients.plannedDuration = ko.observable(calculateDuration(self.plannedStartDate(), self.plannedEndDate()));
                 self.transients.plannedDuration.subscribe(function(newDuration) {
-                    if (updatingEndDate) {
+                    if (updatingDurations) {
                         return;
                     }
                     try {
-                        updatingEndDate = true;
-                        var start = moment(self.plannedStartDate());
-                        var end = start.add(newDuration, 'weeks');
-                        self.plannedEndDate(end.toDate().toISOStringNoMillis());
+                        updatingDurations = true;
+                        self.plannedEndDate(calculateEndDate(self.plannedStartDate(), newDuration));
                     }
                     finally {
-                        updatingEndDate = false;
+                        updatingDurations = false;
                     }
                 });
 
                 self.plannedEndDate.subscribe(function(newEndDate) {
-                    if (updatingEndDate) {
+                    if (updatingDurations) {
                         return;
                     }
                     try {
-                        updatingEndDate = true;
-                        self.transients.plannedDuration(plannedDuration());
+                        updatingDurations = true;
+                        self.transients.plannedDuration(calculateDuration(self.plannedStartDate(), newEndDate));
                     }
                     finally {
-                        updatingEndDate = false;
+                        updatingDurations = false;
                     }
                 });
 
-
-                 var contractDuration = function() {
-                    if (!self.contractStartDate() || !self.contractEndDate()) {
-                        return '';
+                self.plannedStartDate.subscribe(function(newStartDate) {
+                    if (updatingDurations) {
+                        return;
                     }
-                    var start = moment(self.contractStartDate());
-                    var end = moment(self.contractEndDate());
-                    return end.diff(start, 'weeks');
-                };
+                    if (contractDatesFixed()) {
+                        if (!self.plannedEndDate()) {
+                            return;
+                        }
+                        try {
+                            updatingDurations = true;
+                            self.transients.plannedDuration(calculateDuration(newStartDate, self.plannedEndDate()));
+                        }
+                        finally {
+                            updatingDurations = false;
+                        }
+                    }
+                    else {
+                        if (!self.transients.plannedDuration()) {
+                            return;
+                        }
+                        try {
+                            updatingDurations = true;
+                            self.plannedEndDate(calculateEndDate(newStartDate, self.transients.plannedDuration()));
+                        }
+                        finally {
+                            updatingDurations = false;
+                        }
+                    }
+                });
 
-                self.transients.contractDuration = ko.observable(contractDuration());
+                self.transients.contractDuration = ko.observable(calculateDuration(self.contractStartDate(), self.contractEndDate()));
                 self.transients.contractDuration.subscribe(function(newDuration) {
-                    if (updatingEndDate) {
+                    if (updatingDurations) {
                         return;
                     }
                     if (!self.contractStartDate()) {
                         return;
                     }
                     try {
-                        updatingEndDate = true;
-                        var start = moment(self.contractStartDate());
-                        var end = start.add(newDuration, 'weeks');
-                        self.contractEndDate(end.toDate().toISOStringNoMillis());
+                        updatingDurations = true;
+                        self.contractEndDate(calculateEndDate(self.contractStartDate(), newDuration));
                     }
                     finally {
-                        updatingEndDate = false;
+                        updatingDurations = false;
                     }
                 });
 
+
                 self.contractEndDate.subscribe(function(newEndDate) {
-                    if (updatingEndDate) {
+                    if (updatingDurations) {
                         return;
                     }
-                    if (!self.contractDateDate()) {
+                    if (!self.contractStartDate()) {
                         return;
                     }
                     try {
-                        updatingEndDate = true;
-                        self.transients.contractDuration(contractDuration());
+                        updatingDurations = true;
+                        self.transients.contractDuration(calculateDuration(self.contractStartDate(), newEndDate));
                     }
                     finally {
-                        updatingEndDate = false;
+                        updatingDurations = false;
                     }
                 });
 
-
+                self.contractStartDate.subscribe(function(newStartDate) {
+                    if (updatingDurations) {
+                        return;
+                    }
+                    if (contractDatesFixed()) {
+                        if (!self.contractEndDate()) {
+                            return;
+                        }
+                        try {
+                            updatingDurations = true;
+                            self.transients.contractDuration(calculateDuration(newStartDate, self.contractEndDate()));
+                        }
+                        finally {
+                            updatingDurations = false;
+                        }
+                    }
+                    else {
+                        if (!self.transients.contractDuration()) {
+                            return;
+                        }
+                        try {
+                            updatingDurations = true;
+                            self.contractEndDate(calculateEndDate(newStartDate, self.transients.contractDuration()));
+                        }
+                        finally {
+                            updatingDurations = false;
+                        }
+                    }
+                });
 
                 self.loadPrograms = function (programsModel) {
                     self.transients.programsModel = programsModel;
