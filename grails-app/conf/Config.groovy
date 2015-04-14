@@ -198,6 +198,9 @@ if(!app.view.nocache){
 if(!merit.support.email) {
     merit.support.email = 'MERIT@environment.gov.au'
 }
+if (!fieldcapture.system.email.address) {
+    fieldcapture.system.email.address = 'merit@ala.org.au'
+}
 if(!app.default.hub) {
     app.default.hub = 'default'
 }
