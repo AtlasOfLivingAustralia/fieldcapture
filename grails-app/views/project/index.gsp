@@ -1559,9 +1559,6 @@
                     var sitesViewModel = new SitesViewModel(project.sites, map, mapFeatures, ${user?.isEditor?:false});
                     ko.applyBindings(sitesViewModel, document.getElementById('sitesList'));
 
-                    // set trigger for site reverse geocoding
-                    sitesViewModel.triggerGeocoding();
-                    sitesViewModel.displaySites();
                 }
                 if (tab === '#plan' && !planTabInitialised) {
                     $.event.trigger({type:'planTabShown'});
