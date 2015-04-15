@@ -378,7 +378,7 @@
 <r:script>
 
 
-        var organisations = ${institutions};
+        var organisations = <fc:modelAsJavascript model="${organisations}"/>;
 
         // custom validator to ensure that only one of two fields is populated
         function exclusive (field, rules, i, options) {
