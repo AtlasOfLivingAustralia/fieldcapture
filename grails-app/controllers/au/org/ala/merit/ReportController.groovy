@@ -49,7 +49,7 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
 
         def newParams = [max:1500] + params
         newParams.query = "docType:project"
-        def results = searchService.fulltextSearch(newParams)
+        def results = searchService.allProjects(newParams, newParams.query)
         def projects = results.hits?.hits?.findAll{it._source.custom?.details?.events}.collect{it._source}
 
         def projectIds = projects?.collect{it.projectId}
@@ -128,7 +128,7 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
     def monthlyAndQuarterlyReports(startDate, endDate) {
 
         def newParams = [max:1000] + params
-        def results = searchService.fulltextSearch(newParams)
+        def results = searchService.allProjects(newParams, newParams.query?:"docType:project")
         def projects = results.hits?.hits?.collect{it._source}
         def projectIds = projects?.collect{it.projectId}
 
@@ -160,7 +160,7 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
 
         // Find all activities of type ad hoc report as per the config.
         def newParams = [max:1000] + params
-        def results = searchService.fulltextSearch(newParams)
+        def results = searchService.allProjects(newParams, newParams.query?:"docType:project")
         def projects = results.hits?.hits?.collect{it._source}
         def projectIds = projects?.collect{it.projectId}
 
