@@ -164,7 +164,7 @@
                 </td>
                 <td data-bind="attr:{rowspan:$parents[1].scores.length}">
                     <textarea data-bind="visible:$root.canEditOutputTargets(),value:$parents[1].outcomeTarget" rows="3" cols="80" style="width:90%"></textarea>
-                    <span data-bind="visible:!$root.canEditOutputTargets(),text:$parents[1].outcomeTarget" style="white-space: pre;"></span>
+                    <span data-bind="visible:!$root.canEditOutputTargets(),text:$parents[1].outcomeTarget" style="white-space: pre-wrap;"></span>
                     <span class="save-indicator" data-bind="visible:$parents[1].isSaving"><r:img dir="images" file="ajax-saver.gif" alt="saving icon"/> saving</span>
                 </td>
                 <!-- /ko -->
