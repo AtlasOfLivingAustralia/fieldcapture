@@ -137,7 +137,7 @@
                 createLink(action: 'index', id: project?.projectId)}";
         });
 
-        var organisations = ${institutions};
+        var organisations = <fc:modelAsJavascript model="${organisations}"/>;
 
         function ViewModel (data) {
             var self = this;

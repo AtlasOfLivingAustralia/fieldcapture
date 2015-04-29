@@ -185,4 +185,19 @@ class AdminController extends au.org.ala.fieldcapture.AdminController {
             render view:'tools'
         }
     }
+
+    def allScores() {
+        def scores = []
+        def activityModel = metadataService.activitiesModel()
+        activityModel.outputs.each { output ->
+            def outputScores = output.scores.findAll{it.isOutputTarget}
+            outputScores.each {
+                scores << [output:output.name] + it
+            }
+        }
+
+        render scores as JSON
+
+
+    }
 }
