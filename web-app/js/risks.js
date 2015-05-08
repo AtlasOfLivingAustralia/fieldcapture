@@ -1,5 +1,15 @@
-function Risks(risks) {
+function Risks(risks, key) {
     var self = this;
+
+    var savedRisks = amplify.store(key);
+    if (savedRisks) {
+        var restored = JSON.parse(savedRisks);
+        if (restored.risks) {
+            $('#restoredRiskData').show();
+            risks = restored.risks;
+        }
+    }
+
     self.risks = new RisksViewModel(risks);
 
     self.addRisks = function(){

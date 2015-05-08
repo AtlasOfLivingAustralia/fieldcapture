@@ -51,7 +51,7 @@
             }
         </style>
     <![endif]-->
-    <r:require modules="gmap3,mapWithFeatures,knockout,datepicker,amplify,jqueryValidationEngine, projects, attachDocuments, wmd, meriplan, risks"/>
+    <r:require modules="gmap3,mapWithFeatures,knockout,datepicker,amplify,jqueryValidationEngine, merit_projects, attachDocuments, wmd"/>
 </head>
 <body>
 <div id="spinner" class="spinner" style="position: fixed;top: 50%;left: 50%;margin-left: -50px;margin-top: -50px;text-align:center;z-index:1234;overflow: auto;width: 100px;height: 102px;">
@@ -452,8 +452,8 @@
             function ViewModel(project, sites, activities, isUserEditor, themes) {
                 var self = this;
                 $.extend(this, new ProjectViewModel(project, ${user?.isEditor?:false}, organisations));
-                $.extend(this, new MERIPlan(project, themes));
-                $.extend(this, new Risks(project.risks));
+                $.extend(this, new MERIPlan(project, themes, PROJECT_DETAILS_KEY));
+                $.extend(this, new Risks(project.risks, PROJECT_RISKS_KEY));
 
                 self.workOrderId = ko.observable(project.workOrderId);
                 self.contractStartDate = ko.observable(project.contractStartDate).extend({simpleDate: false});
@@ -464,10 +464,7 @@
 				self.promoteOnHomepage = ko.observable(project.promoteOnHomepage);
 				self.planStatus = ko.observable(project.planStatus);
                 self.organisation = ko.observable(project.organisation);
-                self.organisationName = ko.observable(project.organisationName);
                 self.serviceProviderName = ko.observable(project.serviceProviderName);
-                self.associatedProgram = ko.observable(); // don't initialise yet - we want the change to trigger dependents
-                self.associatedSubProgram = ko.observable(project.associatedSubProgram);
                 self.mapLoaded = ko.observable(false);
 				self.transients.variation = ko.observable();
                 self.projectDatesChanged = ko.computed(function() {
@@ -496,25 +493,6 @@
 			    self.years = [];
 			    self.years = self.allYears();
 
-                var savedProjectCustomDetails = amplify.store(PROJECT_DETAILS_KEY);
-                if (savedProjectCustomDetails) {
-                    var restored = JSON.parse(savedProjectCustomDetails);
-
-                    if (restored.custom) {
-                        $('#restoredData').show();
-                        project.custom.details = restored.custom.details;
-                    }
-                }
-
-                var savedRisks = amplify.store(PROJECT_RISKS_KEY);
-                if (savedRisks) {
-                    var restored = JSON.parse(savedRisks);
-                    if (restored.risks) {
-                        $('#restoredRiskData').show();
-                        project.risks = restored.risks;
-                    }
-                }
-
                 var calculateDuration = function(startDate, endDate) {
                     if (!startDate || !endDate) {
                         return '';
@@ -534,10 +512,7 @@
                 var contractDatesFixed = function() {
                     var programs = self.transients.programsModel.programs;
                     for (var i=0; i<programs.length; i++) {
-                        console.log(programs[i]);
-
                         if (programs[i].name === self.associatedProgram()) {
-                        console.log(programs[i].name);
                             return programs[i].projectDatesContracted;
                         }
                     }
@@ -834,7 +809,7 @@
                     if ($('#grantmanager-validation').validationEngine('validate')) {
                     	var doc = {oldDate:project.plannedEndDate, newDate:self.plannedEndDate(),reason:self.transients.variation(),role:"variation",projectId:project.projectId};
 	                    var jsData = {
-	                     	plannedEndDate: self.plannedEndDate(),
+	                     	plannedEndDate: self.plannedEndDate()
 	                     };
 	                     var json = JSON.stringify(jsData, function (key, value) {
 	                            return value === undefined ? "" : value;
@@ -861,6 +836,7 @@
 	                        });
                 	}
                 };
+
                 self.saveSettings = function () {
                     if ($('#settings-validation').validationEngine('validate')) {
 
@@ -972,10 +948,10 @@
 
             var viewModel = new ViewModel(
                 checkAndUpdateProject(project),
-    ${project.sites},
-    ${activities ?: []},
-    ${user?.isEditor?:false},
-    ${themes});
+                ${project.sites},
+                ${activities ?: []},
+                ${user?.isEditor?:false},
+                ${themes});
 
             viewModel.loadPrograms(programs);
             ko.applyBindings(viewModel);
