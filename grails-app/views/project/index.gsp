@@ -162,10 +162,12 @@
             </div>
 
             <div class="tab-pane" id="documents">
-                <g:render plugin="fieldcapture-plugin" template="docs" model="[project:project]"/>
+                <!-- Project Documents -->
+                <g:render plugin="fieldcapture-plugin" template="docs"/>
             </div>
 
         </g:if>
+
         <g:if test="${user?.isAdmin || user?.isCaseManager}">
             <g:set var="activeClass" value="class='active'"/>
             <div class="tab-pane" id="admin">
