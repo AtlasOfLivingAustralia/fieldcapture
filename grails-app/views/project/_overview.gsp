@@ -22,7 +22,7 @@
              <b>Programme:</b>
         </div>
         <div class="span10 text-left">
-            span data-bind="text:associatedProgram"></span>
+            <span data-bind="text:associatedProgram"></span>
             <span data-bind="text:associatedSubProgram"></span>
         </div>
     </div>
