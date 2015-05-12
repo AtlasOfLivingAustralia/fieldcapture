@@ -1,3 +1,5 @@
+import org.grails.plugins.google.visualization.util.ConfigOptionRendererUtil
+
 /******************************************************************************\
  *  CONFIG MANAGEMENT
  \******************************************************************************/
@@ -23,6 +25,13 @@ if(System.getenv(ENV_NAME) && new File(System.getenv(ENV_NAME)).exists()) {
 } else {
     println "[${appName}] No external configuration file defined."
 }
+
+// The grails mail plugin needs configuration in groovy slurper format to specify java mail properties
+def mail_config = "/data/${appName}/config/mail-config.groovy"
+if (new File(mail_config).exists()) {
+    grails.config.locations.add "file:" + mail_config
+}
+
 
 println "[${appName}] (*) grails.config.locations = ${grails.config.locations}"
 
