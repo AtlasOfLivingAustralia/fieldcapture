@@ -1,5 +1,3 @@
-import org.grails.plugins.google.visualization.util.ConfigOptionRendererUtil
-
 /******************************************************************************\
  *  CONFIG MANAGEMENT
  \******************************************************************************/
