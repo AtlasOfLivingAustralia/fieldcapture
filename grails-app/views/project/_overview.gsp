@@ -120,19 +120,19 @@
         </div>
     </div>
 
+
 </div>
 
-<div data-bind="if: iframes().length > 0">
-    <div class="row-fluid">
-        <div class="span12 text-left">
-            <div data-bind="foreach: iframes">
-                <span data-bind="html: code"></span> &nbsp;
+<div class="row-fluid" >
+    <div class="span12 text-left">
+        <div class="light-box zoom-gallery">
+            <div data-bind="foreach: embeddedVideos">
+                <span data-bind="html: iframe"></span>
             </div>
-        </br></br>
         </div>
-
     </div>
 </div>
+
 
 <div data-bind="if: newsAndEvents">
     <div class="well" >
@@ -167,7 +167,7 @@
 
             zoom : {
                 enabled: true,
-                duration: 300, // don't forget to change the duration also in CSS
+                duration: 300,
                 opener: function(element) {
                     return element.find('img');
                 }
@@ -177,7 +177,5 @@
             }
 
         });
-
-
     });
 </r:script>

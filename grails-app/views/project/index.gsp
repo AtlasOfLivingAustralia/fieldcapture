@@ -231,7 +231,6 @@
 
                             <div id="editProjectStories" class="pill-pane">
                                 <g:render plugin="fieldcapture-plugin" template="editProjectContent" model="${[attributeName:'projectStories', header:'Project stories']}"/>
-                                <g:render plugin="fieldcapture-plugin" template="iframes" model="[project: project]"/>
                             </div>
 
                             <div id="permissions" class="pill-pane ${activeClass}">
