@@ -35,7 +35,9 @@
         sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}",
         organisationLinkBaseUrl: "${grailsApplication.config.collectory.baseURL + 'public/show/'}",
         imageLocation:"${resource(dir:'/images/filetypes')}",
-        returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
+        returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}",
+        documentUpdateUrl: "${createLink(controller:"proxy", action:"documentUpdate")}",
+        documentDeleteUrl: "${createLink(controller:"proxy", action:"deleteDocument")}"
         },
         here = window.location.href;
 
@@ -51,7 +53,7 @@
             }
         </style>
     <![endif]-->
-    <r:require modules="gmap3,mapWithFeatures,knockout,datepicker,amplify,jqueryValidationEngine, projects, attachDocuments, wmd, meriplan, risks"/>
+    <r:require modules="gmap3,mapWithFeatures,knockout,datepicker,amplify,jqueryValidationEngine, merit_projects, attachDocuments, wmd,magnific_poppup"/>
 </head>
 <body>
 <div id="spinner" class="spinner" style="position: fixed;top: 50%;left: 50%;margin-left: -50px;margin-top: -50px;text-align:center;z-index:1234;overflow: auto;width: 100px;height: 102px;">
@@ -100,110 +102,14 @@
         <li><a href="#plan" id="plan-tab" data-toggle="${tabIsActive}">Activities</a></li>
         <li><a href="#site" id="site-tab" data-toggle="${tabIsActive}">Sites</a></li>
         <li><a href="#dashboard" id="dashboard-tab" data-toggle="${tabIsActive}">Dashboard</a></li>
+        <li><a href="#documents" id="documents-tab" data-toggle="${tabIsActive}">Documents</a></li>
         <g:if test="${user?.isAdmin || user?.isCaseManager}"><li><a href="#admin" id="admin-tab" data-toggle="tab">Admin</a></li></g:if>
     </ul>
 
 
     <div class="tab-content" style="overflow:visible;display:none">
         <div class="tab-pane active" id="overview">
-            <!-- OVERVIEW -->
-            <div class="row-fluid">
-                <div class="clearfix" data-bind="visible:organisation()||organisationName()">
-                    <h4>
-                        Recipient:
-                        <a data-bind="visible:organisation(),text:transients.collectoryOrgName,attr:{href:fcConfig.organisationLinkBaseUrl + organisation()}"></a>
-                        <span data-bind="visible:organisationName(),text:organisationName"></span>
-                    </h4>
-                </div>
-                <div class="clearfix" data-bind="visible:serviceProviderName()">
-                    <h4>
-                        Service provider:
-                        <span data-bind="text:serviceProviderName"></span>
-                    </h4>
-                </div>
-                <div class="clearfix" data-bind="visible:associatedProgram()">
-                    <h4>
-                        Programme:
-                        <span data-bind="text:associatedProgram"></span>
-                        <span data-bind="text:associatedSubProgram"></span>
-                    </h4>
-                </div>
-                <div class="clearfix" data-bind="visible:funding()">
-                    <h4>
-                        Approved funding (GST inclusive): <span data-bind="text:funding.formattedCurrency"></span>
-                    </h4>
-
-                </div>
-
-                <div data-bind="visible:plannedStartDate()">
-                    <h4>
-                        Project start: <span data-bind="text:plannedStartDate.formattedDate"></span>
-                        <span data-bind="visible:plannedEndDate()">Project finish: <span data-bind="text:plannedEndDate.formattedDate"></span></span>
-                    </h4>
-                </div>
-
-                <div class="clearfix" style="font-size:14px;">
-                    <div class="span3" data-bind="visible:status" style="margin-bottom: 0">
-                        <span data-bind="if: status().toLowerCase() == 'active'">
-                            Project Status:
-                            <span style="text-transform:uppercase;" data-bind="text:status" class="badge badge-success" style="font-size: 13px;"></span>
-                        </span>
-                        <span data-bind="if: status().toLowerCase() == 'completed'">
-                            Project Status:
-                            <span style="text-transform:uppercase;" data-bind="text:status" class="badge badge-info" style="font-size: 13px;"></span>
-                        </span>
-
-                    </div>
-                    <div class="span3" data-bind="visible:grantId" style="margin-bottom: 0">
-                        Grant Id:
-                        <span data-bind="text:grantId"></span>
-                    </div>
-                    <div class="span3" data-bind="visible:externalId" style="margin-bottom: 0">
-                        External Id:
-                        <span data-bind="text:externalId"></span>
-                    </div>
-                    <div class="span3" data-bind="visible:manager" style="margin-bottom: 0">
-                        Manager:
-                        <span data-bind="text:manager"></span>
-                    </div>
-
-                </div>
-                <div data-bind="visible:description()">
-                    <p class="well well-small more" data-bind="text:description"></p>
-                </div>
-            </div>
-            <div class="row-fluid">
-                <!-- show any primary images -->
-                <div data-bind="visible:primaryImages() !== null,foreach:primaryImages,css:{span5:primaryImages()!=null}">
-                    <div class="thumbnail with-caption space-after">
-                        <img class="img-rounded" data-bind="attr:{src:url, alt:name}" alt="primary image"/>
-                        <p class="caption" data-bind="text:name"></p>
-                        <p class="attribution" data-bind="visible:attribution"><small><span data-bind="text:attribution"></span></small></p>
-                    </div>
-                </div>
-
-                <!-- show other documents -->
-                <div id="documents" data-bind="css: { span3: primaryImages() != null, span7: primaryImages() == null }">
-                    <h4>Project documents</h4>
-                    <div data-bind="visible:documents().length == 0">
-                        No documents are currently attached to this project.
-                        <g:if test="${user?.isAdmin}">To add a document use the Documents section of the Admin tab.</g:if>
-                    </div>
-                    <g:render plugin="fieldcapture-plugin" template="/shared/listDocuments"
-                              model="[useExistingModel: true,editable:false, filterBy: 'all', ignore: 'programmeLogic', imageUrl:resource(dir:'/images/filetypes'),containerId:'overviewDocumentList']"/>
-                </div>
-
-                <div class="span4">
-                    <div data-bind="visible:newsAndEvents()">
-                        <h4>News and events</h4>
-                        <div id="newsAndEventsDiv" data-bind="html:newsAndEvents" class="well"></div>
-                    </div>
-                    <div data-bind="visible:projectStories()">
-                        <h4>Project stories</h4>
-                        <div id="projectStoriesDiv" data-bind="html:projectStories" class="well"></div>
-                    </div>
-                </div>
-            </div>
+            <g:render template="overview" model="[project:project]"/>
         </div>
 
         <div class="tab-pane" id="details">
@@ -254,7 +160,14 @@
                 <!-- DASHBOARD -->
                 <g:render plugin="fieldcapture-plugin" template="dashboard"/>
             </div>
+
+            <div class="tab-pane" id="documents">
+                <!-- Project Documents -->
+                <g:render plugin="fieldcapture-plugin" template="docs"/>
+            </div>
+
         </g:if>
+
         <g:if test="${user?.isAdmin || user?.isCaseManager}">
             <g:set var="activeClass" value="class='active'"/>
             <div class="tab-pane" id="admin">
@@ -452,8 +365,8 @@
             function ViewModel(project, sites, activities, isUserEditor, themes) {
                 var self = this;
                 $.extend(this, new ProjectViewModel(project, ${user?.isEditor?:false}, organisations));
-                $.extend(this, new MERIPlan(project, themes));
-                $.extend(this, new Risks(project.risks));
+                $.extend(this, new MERIPlan(project, themes, PROJECT_DETAILS_KEY));
+                $.extend(this, new Risks(project.risks, PROJECT_RISKS_KEY));
 
                 self.workOrderId = ko.observable(project.workOrderId);
                 self.contractStartDate = ko.observable(project.contractStartDate).extend({simpleDate: false});
@@ -464,10 +377,7 @@
 				self.promoteOnHomepage = ko.observable(project.promoteOnHomepage);
 				self.planStatus = ko.observable(project.planStatus);
                 self.organisation = ko.observable(project.organisation);
-                self.organisationName = ko.observable(project.organisationName);
                 self.serviceProviderName = ko.observable(project.serviceProviderName);
-                self.associatedProgram = ko.observable(); // don't initialise yet - we want the change to trigger dependents
-                self.associatedSubProgram = ko.observable(project.associatedSubProgram);
                 self.mapLoaded = ko.observable(false);
 				self.transients.variation = ko.observable();
                 self.projectDatesChanged = ko.computed(function() {
@@ -496,25 +406,6 @@
 			    self.years = [];
 			    self.years = self.allYears();
 
-                var savedProjectCustomDetails = amplify.store(PROJECT_DETAILS_KEY);
-                if (savedProjectCustomDetails) {
-                    var restored = JSON.parse(savedProjectCustomDetails);
-
-                    if (restored.custom) {
-                        $('#restoredData').show();
-                        project.custom.details = restored.custom.details;
-                    }
-                }
-
-                var savedRisks = amplify.store(PROJECT_RISKS_KEY);
-                if (savedRisks) {
-                    var restored = JSON.parse(savedRisks);
-                    if (restored.risks) {
-                        $('#restoredRiskData').show();
-                        project.risks = restored.risks;
-                    }
-                }
-
                 var calculateDuration = function(startDate, endDate) {
                     if (!startDate || !endDate) {
                         return '';
@@ -534,10 +425,7 @@
                 var contractDatesFixed = function() {
                     var programs = self.transients.programsModel.programs;
                     for (var i=0; i<programs.length; i++) {
-                        console.log(programs[i]);
-
                         if (programs[i].name === self.associatedProgram()) {
-                        console.log(programs[i].name);
                             return programs[i].projectDatesContracted;
                         }
                     }
@@ -834,7 +722,7 @@
                     if ($('#grantmanager-validation').validationEngine('validate')) {
                     	var doc = {oldDate:project.plannedEndDate, newDate:self.plannedEndDate(),reason:self.transients.variation(),role:"variation",projectId:project.projectId};
 	                    var jsData = {
-	                     	plannedEndDate: self.plannedEndDate(),
+	                     	plannedEndDate: self.plannedEndDate()
 	                     };
 	                     var json = JSON.stringify(jsData, function (key, value) {
 	                            return value === undefined ? "" : value;
@@ -861,6 +749,7 @@
 	                        });
                 	}
                 };
+
                 self.saveSettings = function () {
                     if ($('#settings-validation').validationEngine('validate')) {
 
@@ -930,39 +819,6 @@
                     }
                 };
 
-                // documents
-                self.addDocument = function(doc) {
-                    // check permissions
-                    if ((isUserEditor && doc.role !== 'approval') ||  doc.public) {
-                    	doc.maxStages = '${project.timeline?.size()}';
-                        self.documents.push(new DocumentViewModel(doc));
-                    }
-                };
-
-                self.attachDocument = function() {
-                    var url = '${g.createLink(controller:"proxy", action:"documentUpdate")}';
-                    showDocumentAttachInModal( url,
-                    		new DocumentViewModel({role:'information', maxStages:'${project.timeline?.size()}'},{key:'projectId', value:'${project.projectId}'}),
-                    		'#attachDocument')
-                        	.done(function(result){self.documents.push(new DocumentViewModel(result))});
-                };
-                self.editDocumentMetadata = function(document) {
-                    var url = '${g.createLink(controller:"proxy", action:"documentUpdate")}' + "/" + document.documentId;
-                    showDocumentAttachInModal( url, document, '#attachDocument')
-                        .done(function(result){
-                            window.location.href = here; // The display doesn't update properly otherwise.
-                        });
-                };
-                self.deleteDocument = function(document) {
-                    var url = '${g.createLink(controller:"proxy", action:"deleteDocument")}/'+document.documentId;
-                    $.post(url, {}, function() {self.documents.remove(document);});
-
-                };
-
-                $.each(project.documents, function(i, doc) {
-                    self.addDocument(doc);
-                });
-
             } // end of view model
 
             var newsAndEventsMarkdown = '${(project.newsAndEvents?:"").markdownToHtml().encodeAsJavaScript()}';
@@ -972,10 +828,10 @@
 
             var viewModel = new ViewModel(
                 checkAndUpdateProject(project),
-    ${project.sites},
-    ${activities ?: []},
-    ${user?.isEditor?:false},
-    ${themes});
+                ${project.sites},
+                ${activities ?: []},
+                ${user?.isEditor?:false},
+                ${themes});
 
             viewModel.loadPrograms(programs);
             ko.applyBindings(viewModel);
@@ -1028,7 +884,6 @@
          // retain tab state for future re-visits
             // and handle tab-specific initialisations
             var planTabInitialised = false;
-
             var dashboardInitialised = false;
 
             $('#projectTabs a[data-toggle="tab"]').on('shown', function (e) {
@@ -1065,6 +920,11 @@
                 if (tab == '#dashboard' && !dashboardInitialised) {
                     $.event.trigger({type:'dashboardShown'});
                     dashboardInitialised;
+                }
+
+                var documentsInitialised = false;
+                if(tab == "#documents" && !documentsInitialised){
+                    documentsInitialised = true;
                 }
             });
 

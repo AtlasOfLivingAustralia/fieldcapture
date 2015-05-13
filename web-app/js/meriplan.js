@@ -2,10 +2,19 @@
    Script for handling Project MERI Plan
  */
 
-function MERIPlan(project, themes) {
+function MERIPlan(project, themes, key) {
    var self = this;
    if(!project.custom){ project.custom = {};}
    if(!project.custom.details){project.custom.details = {};}
+
+   var savedProjectCustomDetails = amplify.store(key);
+   if (savedProjectCustomDetails) {
+      var restored = JSON.parse(savedProjectCustomDetails);
+      if (restored.custom) {
+         $('#restoredData').show();
+         project.custom.details = restored.custom.details;
+      }
+   }
 
    self.details = new DetailsViewModel(project.custom.details, getBugetHeaders(project.timeline));
    self.detailsLastUpdated = ko.observable(project.custom.details.lastUpdated).extend({simpleDate: true});

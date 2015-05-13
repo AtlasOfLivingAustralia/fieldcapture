@@ -1,8 +1,8 @@
 modules = {
-    meriplan {
+    merit_projects {
+        dependsOn 'projects'
         resource url:'js/meriplan.js'
-    }
-    risks{
         resource url:'js/risks.js'
     }
+
 }
