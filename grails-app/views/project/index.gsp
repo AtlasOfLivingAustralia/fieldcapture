@@ -365,7 +365,7 @@
                 document.location.href = "${createLink(action: 'index', id: project.projectId)}";
             });
 
-            function ViewModel(project, sites, activities, isUserEditor, themes) {
+            function ViewModel(project, sites, activities, isUserEditor, themes, newsAndEvents, projectStories) {
                 var self = this;
                 $.extend(this, new ProjectViewModel(project, ${user?.isEditor?:false}, organisations));
                 $.extend(this, new MERIPlan(project, themes, PROJECT_DETAILS_KEY));
@@ -383,6 +383,9 @@
                 self.serviceProviderName = ko.observable(project.serviceProviderName);
                 self.mapLoaded = ko.observable(false);
 				self.transients.variation = ko.observable();
+                self.newsAndEvents = ko.observable(newsAndEvents);
+                self.projectStories = ko.observable(projectStories);
+
                 self.projectDatesChanged = ko.computed(function() {
                     return project.plannedStartDate != self.plannedStartDate() ||
                            project.plannedEndDate != self.plannedEndDate();
@@ -834,7 +837,9 @@
                 ${project.sites},
                 ${activities ?: []},
                 ${user?.isEditor?:false},
-                ${themes});
+                ${themes},
+                 newsAndEventsMarkdown,
+                 projectStoriesMarkdown);
 
             viewModel.loadPrograms(programs);
             ko.applyBindings(viewModel);
