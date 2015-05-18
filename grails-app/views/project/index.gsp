@@ -53,7 +53,7 @@
             }
         </style>
     <![endif]-->
-    <r:require modules="gmap3,mapWithFeatures,knockout,datepicker,amplify,jqueryValidationEngine, merit_projects, attachDocuments, wmd,magnific_poppup"/>
+    <r:require modules="gmap3,mapWithFeatures,knockout,datepicker,amplify,jqueryValidationEngine, merit_projects, attachDocuments, wmd"/>
 </head>
 <body>
 <div id="spinner" class="spinner" style="position: fixed;top: 50%;left: 50%;margin-left: -50px;margin-top: -50px;text-align:center;z-index:1234;overflow: auto;width: 100px;height: 102px;">
@@ -98,11 +98,11 @@
     <g:set var="tabIsActive"><g:if test="${user?.hasViewAccess}">tab</g:if></g:set>
     <ul id="projectTabs" class="nav nav-tabs big-tabs">
         <li class="active"><a href="#overview" id="overview-tab" data-toggle="tab">Overview</a></li>
+        <li><a href="#documents" id="documents-tab" data-toggle="tab">Documents</a></li>
         <li><a href="#details" id="details-tab" data-toggle="${tabIsActive}">MERI Plan</a></li>
         <li><a href="#plan" id="plan-tab" data-toggle="${tabIsActive}">Activities</a></li>
         <li><a href="#site" id="site-tab" data-toggle="${tabIsActive}">Sites</a></li>
         <li><a href="#dashboard" id="dashboard-tab" data-toggle="${tabIsActive}">Dashboard</a></li>
-        <li><a href="#documents" id="documents-tab" data-toggle="${tabIsActive}">Documents</a></li>
         <g:if test="${user?.isAdmin || user?.isCaseManager}"><li><a href="#admin" id="admin-tab" data-toggle="tab">Admin</a></li></g:if>
     </ul>
 
@@ -110,6 +110,11 @@
     <div class="tab-content" style="overflow:visible;display:none">
         <div class="tab-pane active" id="overview">
             <g:render template="overview" model="[project:project]"/>
+        </div>
+
+        <div class="tab-pane" id="documents">
+            <!-- Project Documents -->
+            <g:render plugin="fieldcapture-plugin" template="docs"/>
         </div>
 
         <div class="tab-pane" id="details">
@@ -126,6 +131,8 @@
                 </div>
             </div>
         </div>
+
+
 
         <g:if test="${user?.hasViewAccess}">
             <div class="tab-pane" id="plan">
@@ -161,10 +168,6 @@
                 <g:render plugin="fieldcapture-plugin" template="dashboard"/>
             </div>
 
-            <div class="tab-pane" id="documents">
-                <!-- Project Documents -->
-                <g:render plugin="fieldcapture-plugin" template="docs"/>
-            </div>
 
         </g:if>
 
