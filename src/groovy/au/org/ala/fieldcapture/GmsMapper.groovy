@@ -41,6 +41,8 @@ class GmsMapper {
 
     private def programModel
 
+    private def organisations
+
     def projectMapping = [
             (GRANT_ID_COLUMN):[name:'grantId', type:'string'],
             APP_NM:[name:'name', type:'string'],
@@ -97,13 +99,15 @@ class GmsMapper {
     public GmsMapper() {
         this.activitiesModel = []
         this.programModel = []
+        this.organisations = []
         includeProgress = false
     }
 
-    public GmsMapper(activitiesModel, programModel, includeProgress = false) {
+    public GmsMapper(activitiesModel, programModel, organisations, includeProgress = false) {
         this.activitiesModel = activitiesModel
         this.programModel = programModel
         this.includeProgress = includeProgress
+        this.organisations = organisations
     }
 
     def validateHeaders(projectRows) {
@@ -150,7 +154,13 @@ class GmsMapper {
                 }
             }
         }
-
+        def organisation = organisations.find{it.name == project.organisationName}
+        if (organisation) {
+            project.organisationId = organisation.organisationId
+        }
+        else {
+            errors << "No organisation exists with name ${project.organisationName}"
+        }
         errors.addAll(result.errors)
         project.planStatus = 'not approved'
 
