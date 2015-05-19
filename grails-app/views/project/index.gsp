@@ -33,7 +33,7 @@
         spatialWmsUrl: "${grailsApplication.config.spatial.wms.url}",
         sldPolgonDefaultUrl: "${grailsApplication.config.sld.polgon.default.url}",
         sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}",
-        organisationLinkBaseUrl: "${grailsApplication.config.collectory.baseURL + 'public/show/'}",
+        organisationLinkBaseUrl: "${createLink(controller:'organisation', action:'index')}",
         imageLocation:"${resource(dir:'/images/filetypes')}",
         returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}",
         documentUpdateUrl: "${createLink(controller:"proxy", action:"documentUpdate")}",
@@ -379,7 +379,6 @@
                 self.promote = [{id: 'yes', name:'Yes'},{id:'no',name:'No'}];
 				self.promoteOnHomepage = ko.observable(project.promoteOnHomepage);
 				self.planStatus = ko.observable(project.planStatus);
-                self.organisation = ko.observable(project.organisation);
                 self.serviceProviderName = ko.observable(project.serviceProviderName);
                 self.mapLoaded = ko.observable(false);
 				self.transients.variation = ko.observable();
@@ -389,15 +388,6 @@
                 self.projectDatesChanged = ko.computed(function() {
                     return project.plannedStartDate != self.plannedStartDate() ||
                            project.plannedEndDate != self.plannedEndDate();
-                });
-                self.transients.collectoryOrgName = ko.computed(function () {
-                    if (self.organisation() === undefined || self.organisation() === '') {
-                        return "";
-                    } else {
-                        return $.grep(self.transients.organisations, function (obj) {
-                            return obj.uid === self.organisation();
-                        })[0].name;
-                    }
                 });
                 self.transients.programsModel = [];
 
@@ -436,7 +426,7 @@
                         }
                     }
                     return true;
-                }
+                };
 
                 var updatingDurations = false; // Flag to prevent endless loops during change of end date / duration.
 
@@ -771,7 +761,7 @@
                             plannedEndDate: self.plannedEndDate(),
                             contractStartDate: self.contractStartDate(),
                             contractEndDate: self.contractEndDate(),
-                            organisation: self.organisation(),
+                            organisationId: self.organisationId(),
                             organisationName: self.organisationName(),
                             serviceProviderName: self.serviceProviderName(),
                             associatedProgram: self.associatedProgram(),
