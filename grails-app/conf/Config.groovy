@@ -24,6 +24,13 @@ if(System.getenv(ENV_NAME) && new File(System.getenv(ENV_NAME)).exists()) {
     println "[${appName}] No external configuration file defined."
 }
 
+// The grails mail plugin needs configuration in groovy slurper format to specify java mail properties
+def mail_config = "/data/${appName}/config/mail-config.groovy"
+if (new File(mail_config).exists()) {
+    grails.config.locations.add "file:" + mail_config
+}
+
+
 println "[${appName}] (*) grails.config.locations = ${grails.config.locations}"
 
 /******************************************************************************\
@@ -55,7 +62,7 @@ grails.mime.types = [
 // What URL patterns should be processed by the resources plugin
 grails.resources.resourceLocatorEnabled = true
 grails.resources.adhoc.patterns = ['/images/*', '/css/*', '/js/*', '/plugins/*']
-grails.resources.adhoc.includes = ['/images/**', '/css/**', '/js/**', '/plugins/**', '/bootstrap/**', '/bootstrap-datepicker/**', '/fancybox/**', '/fuelux/**', '/slickgrid/**']
+grails.resources.adhoc.includes = ['/images/**', '/css/**', '/js/**', '/plugins/**', '/bootstrap/**', '/bootstrap-datepicker/**', '/fancybox/**', '/fuelux/**', '/slickgrid/**', '/slider-pro-master/**']
 
 // The default codec used to encode data with ${}
 grails.views.default.codec = "none" // none, html, base64

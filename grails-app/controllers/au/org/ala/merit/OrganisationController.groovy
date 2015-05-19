@@ -549,4 +549,8 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
         }
         projectService.createReportingActivitiesForProject(project.projectId, [[period: Period.months(1), type: 'Green Army - Monthly project status report']])
     }
+
+    def isProjectCreationDisabled() {
+        return true;
+    }
 }

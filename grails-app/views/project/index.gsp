@@ -34,7 +34,10 @@
         sldPolgonDefaultUrl: "${grailsApplication.config.sld.polgon.default.url}",
         sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}",
         organisationLinkBaseUrl: "${grailsApplication.config.collectory.baseURL + 'public/show/'}",
-        returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
+        imageLocation:"${resource(dir:'/images/filetypes')}",
+        returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}",
+        documentUpdateUrl: "${createLink(controller:"proxy", action:"documentUpdate")}",
+        documentDeleteUrl: "${createLink(controller:"proxy", action:"deleteDocument")}"
         },
         here = window.location.href;
 
@@ -50,7 +53,7 @@
             }
         </style>
     <![endif]-->
-    <r:require modules="gmap3,mapWithFeatures,knockout,datepicker,amplify,jqueryValidationEngine, projects, attachDocuments, wmd"/>
+    <r:require modules="gmap3,mapWithFeatures,knockout,datepicker,amplify,jqueryValidationEngine, merit_projects, attachDocuments, wmd"/>
 </head>
 <body>
 <div id="spinner" class="spinner" style="position: fixed;top: 50%;left: 50%;margin-left: -50px;margin-top: -50px;text-align:center;z-index:1234;overflow: auto;width: 100px;height: 102px;">
@@ -95,6 +98,7 @@
     <g:set var="tabIsActive"><g:if test="${user?.hasViewAccess}">tab</g:if></g:set>
     <ul id="projectTabs" class="nav nav-tabs big-tabs">
         <li class="active"><a href="#overview" id="overview-tab" data-toggle="tab">Overview</a></li>
+        <li><a href="#documents" id="documents-tab" data-toggle="tab">Documents</a></li>
         <li><a href="#details" id="details-tab" data-toggle="${tabIsActive}">MERI Plan</a></li>
         <li><a href="#plan" id="plan-tab" data-toggle="${tabIsActive}">Activities</a></li>
         <li><a href="#site" id="site-tab" data-toggle="${tabIsActive}">Sites</a></li>
@@ -105,104 +109,12 @@
 
     <div class="tab-content" style="overflow:visible;display:none">
         <div class="tab-pane active" id="overview">
-            <!-- OVERVIEW -->
-            <div class="row-fluid">
-                <div class="clearfix" data-bind="visible:organisation()||organisationName()">
-                    <h4>
-                        Recipient:
-                        <a data-bind="visible:organisation(),text:transients.collectoryOrgName,attr:{href:fcConfig.organisationLinkBaseUrl + organisation()}"></a>
-                        <span data-bind="visible:organisationName(),text:organisationName"></span>
-                    </h4>
-                </div>
-                <div class="clearfix" data-bind="visible:serviceProviderName()">
-                    <h4>
-                        Service provider:
-                        <span data-bind="text:serviceProviderName"></span>
-                    </h4>
-                </div>
-                <div class="clearfix" data-bind="visible:associatedProgram()">
-                    <h4>
-                        Programme:
-                        <span data-bind="text:associatedProgram"></span>
-                        <span data-bind="text:associatedSubProgram"></span>
-                    </h4>
-                </div>
-                <div class="clearfix" data-bind="visible:funding()">
-                    <h4>
-                        Approved funding (GST inclusive): <span data-bind="text:funding.formattedCurrency"></span>
-                    </h4>
+            <g:render template="overview" model="[project:project]"/>
+        </div>
 
-                </div>
-
-                <div data-bind="visible:plannedStartDate()">
-                    <h4>
-                        Project start: <span data-bind="text:plannedStartDate.formattedDate"></span>
-                        <span data-bind="visible:plannedEndDate()">Project finish: <span data-bind="text:plannedEndDate.formattedDate"></span></span>
-                    </h4>
-                </div>
-
-                <div class="clearfix" style="font-size:14px;">
-                    <div class="span3" data-bind="visible:status" style="margin-bottom: 0">
-                        <span data-bind="if: status().toLowerCase() == 'active'">
-                            Project Status:
-                            <span style="text-transform:uppercase;" data-bind="text:status" class="badge badge-success" style="font-size: 13px;"></span>
-                        </span>
-                        <span data-bind="if: status().toLowerCase() == 'completed'">
-                            Project Status:
-                            <span style="text-transform:uppercase;" data-bind="text:status" class="badge badge-info" style="font-size: 13px;"></span>
-                        </span>
-
-                    </div>
-                    <div class="span3" data-bind="visible:grantId" style="margin-bottom: 0">
-                        Grant Id:
-                        <span data-bind="text:grantId"></span>
-                    </div>
-                    <div class="span3" data-bind="visible:externalId" style="margin-bottom: 0">
-                        External Id:
-                        <span data-bind="text:externalId"></span>
-                    </div>
-                    <div class="span3" data-bind="visible:manager" style="margin-bottom: 0">
-                        Manager:
-                        <span data-bind="text:manager"></span>
-                    </div>
-
-                </div>
-                <div data-bind="visible:description()">
-                    <p class="well well-small more" data-bind="text:description"></p>
-                </div>
-            </div>
-            <div class="row-fluid">
-                <!-- show any primary images -->
-                <div data-bind="visible:primaryImages() !== null,foreach:primaryImages,css:{span5:primaryImages()!=null}">
-                    <div class="thumbnail with-caption space-after">
-                        <img class="img-rounded" data-bind="attr:{src:url, alt:name}" alt="primary image"/>
-                        <p class="caption" data-bind="text:name"></p>
-                        <p class="attribution" data-bind="visible:attribution"><small><span data-bind="text:attribution"></span></small></p>
-                    </div>
-                </div>
-
-                <!-- show other documents -->
-                <div id="documents" data-bind="css: { span3: primaryImages() != null, span7: primaryImages() == null }">
-                    <h4>Project documents</h4>
-                    <div data-bind="visible:documents().length == 0">
-                        No documents are currently attached to this project.
-                        <g:if test="${user?.isAdmin}">To add a document use the Documents section of the Admin tab.</g:if>
-                    </div>
-                    <g:render plugin="fieldcapture-plugin" template="/shared/listDocuments"
-                              model="[useExistingModel: true,editable:false, filterBy: 'all', ignore: 'programmeLogic', imageUrl:resource(dir:'/images/filetypes'),containerId:'overviewDocumentList']"/>
-                </div>
-
-                <div class="span4">
-                    <div data-bind="visible:newsAndEvents()">
-                        <h4>News and events</h4>
-                        <div id="newsAndEventsDiv" data-bind="html:newsAndEvents" class="well"></div>
-                    </div>
-                    <div data-bind="visible:projectStories()">
-                        <h4>Project stories</h4>
-                        <div id="projectStoriesDiv" data-bind="html:projectStories" class="well"></div>
-                    </div>
-                </div>
-            </div>
+        <div class="tab-pane" id="documents">
+            <!-- Project Documents -->
+            <g:render plugin="fieldcapture-plugin" template="docs"/>
         </div>
 
         <div class="tab-pane" id="details">
@@ -213,19 +125,21 @@
                 <div class="span6">
                     <div class="well well-small">
                         <label><b>MERI attachments:</b></label>
-							<g:render plugin="fieldcapture-plugin" template="/shared/listDocuments"
+                        <g:render plugin="fieldcapture-plugin" template="/shared/listDocuments"
                                   model="[useExistingModel: true,editable:false, filterBy: 'programmeLogic', ignore: '', imageUrl:resource(dir:'/images/filetypes'),containerId:'overviewDocumentList']"/>
                     </div>
                 </div>
             </div>
         </div>
 
+
+
         <g:if test="${user?.hasViewAccess}">
             <div class="tab-pane" id="plan">
             <!-- PLANS -->
                 <g:if test="${useAltPlan}">
                     <g:render  plugin="fieldcapture-plugin" template="/shared/plan"
-                              model="[activities:activities ?: [], sites:project.sites ?: [], showSites:true]"/>
+                               model="[activities:activities ?: [], sites:project.sites ?: [], showSites:true]"/>
                 </g:if>
                 <g:else>
                     <g:render template="/shared/activitiesPlan"
@@ -253,7 +167,10 @@
                 <!-- DASHBOARD -->
                 <g:render plugin="fieldcapture-plugin" template="dashboard"/>
             </div>
+
+
         </g:if>
+
         <g:if test="${user?.isAdmin || user?.isCaseManager}">
             <g:set var="activeClass" value="class='active'"/>
             <div class="tab-pane" id="admin">
@@ -349,7 +266,7 @@
                             <g:if test="${fc.userInRole(role: grailsApplication.config.security.cas.alaAdminRole) || fc.userInRole(role: grailsApplication.config.security.cas.adminRole)}">
                                 <!-- Audit -->
                                 <div id="project-audit" class="pill-pane">
-                                     <g:render template="/project/audit" plugin="fieldcapture-plugin"/>
+                                    <g:render template="/project/audit" plugin="fieldcapture-plugin"/>
                                 </div>
                             </g:if>
                         </div>
@@ -384,12 +301,11 @@
         </div>
     </g:if>
 </div>
+
 <r:script>
-
-
         var organisations = <fc:modelAsJavascript model="${organisations}"/>;
 
-        // custom validator to ensure that only one of two fields is populated
+       // custom validator to ensure that only one of two fields is populated
         function exclusive (field, rules, i, options) {
             var otherFieldId = rules[i+2], // get the id of the other field
                 otherValue = $('#'+otherFieldId).val(),
@@ -407,6 +323,7 @@
         $(window).load(function () {
             var PROJECT_DETAILS_KEY = 'project.custom.details.${project.projectId}';
             var PROJECT_RISKS_KEY = 'project.risks.${project.projectId}';
+
             var map;
             // setup 'read more' for long text
             $('.more').shorten({
@@ -448,527 +365,31 @@
                 document.location.href = "${createLink(action: 'index', id: project.projectId)}";
             });
 
-            var DetailsViewModel = function(o, period) {
-            	var self = this;
-				this.status = ko.observable(o.status);
-				this.obligations = ko.observable(o.obligations);
-				this.policies = ko.observable(o.policies);
-				this.caseStudy = ko.observable(o.caseStudy ? o.caseStudy : false);
-            	this.keq = new GenericViewModel(o.keq);
-            	this.objectives = new ObjectiveViewModel(o.objectives);
-            	this.priorities = new GenericViewModel(o.priorities);
-				this.implementation = new ImplementationViewModel(o.implementation);
-				this.partnership = new GenericViewModel(o.partnership);
-				this.lastUpdated = o.lastUpdated ? o.lastUpdated : moment().format();
-				this.budget = new BudgetViewModel(o.budget, period);
-
-            	var row = [];
-            	o.events ? row = o.events : row.push(ko.mapping.toJS(new EventsRowViewModel()));
-				this.events = ko.observableArray($.map(row, function (obj, i) {
-					return new EventsRowViewModel(obj);
-			    }));
-
-			    this.modelAsJSON = function() {
-			        var tmp = {};
-					tmp['details'] =  ko.mapping.toJS(self);
-					var jsData = {"custom": tmp};
-                    var json = JSON.stringify(jsData, function (key, value) {
-                           return value === undefined ? "" : value;
-                       });
-                    return json;
-			    };
-            };
-
-            var ObjectiveViewModel = function(o) {
-            	var self = this;
-            	if(!o) o = {};
-
-            	var row = [];
-            	o.rows ? row = o.rows : row.push(ko.mapping.toJS(new GenericRowViewModel()));
-            	this.rows = ko.observableArray($.map(row, function (obj, i) {
-					return new GenericRowViewModel(obj);
-			    }));
-
-            	var row1 = [];
-            	o.rows1 ? row1 = o.rows1 : row1.push(ko.mapping.toJS(new OutcomeRowViewModel()));
-            	this.rows1 = ko.observableArray($.map(row1, function (obj, i) {
-					return new OutcomeRowViewModel(obj);
-			    }));
-            };
-            var ImplementationViewModel = function(o) {
-            	var self = this;
-            	if(!o) o = {};
-            	this.description = ko.observable(o.description);
-            };
-
-            //National, Partnership and KEQ
-            var GenericViewModel = function(o) {
-            	var self = this;
-            	if(!o) o = {};
-            	this.description = ko.observable(o.description);
-            	var row = [];
-            	o.rows ? row = o.rows : row.push(ko.mapping.toJS(new GenericRowViewModel()));
-            	this.rows = ko.observableArray($.map(row, function (obj,i) {
-			         return new GenericRowViewModel(obj);
-			    }));
-            };
-
-            var GenericRowViewModel = function(o) {
-            	var self = this;
-            	if(!o) o = {};
-            	this.data1 = ko.observable(o.data1);
-            	this.data2 = ko.observable(o.data2);
-            	this.data3 = ko.observable(o.data3);
-            };
-
-            var EventsRowViewModel = function(o) {
-            	var self = this;
-            	if(!o) o = {};
-            	this.name = ko.observable(o.name);
-            	this.description = ko.observable(o.description);
-            	this.media = ko.observable(o.media);
-            	this.scheduledDate = ko.observable(o.scheduledDate).extend({simpleDate: false});
-            };
-
-            var OutcomeRowViewModel = function(o) {
-            	var self = this;
-            	if(!o) o = {};
-            	this.description = ko.observable(o.description);
-            	if(!o.assets) o.assets = [];
-            	this.assets = ko.observableArray(o.assets);
-
-            };
-
-            var BudgetViewModel = function(o, period){
-            	var self = this;
-            	if(!o) o = {};
-
-            	this.overallTotal = ko.observable(0.0);
-
-				var headerArr = [];
-				for(i = 0; i < period.length; i++){
-					headerArr.push({"data":period[i]});
-				}
-				this.headers = ko.observableArray(headerArr);
-
-				var row = [];
-				o.rows ? row = o.rows : row.push(ko.mapping.toJS(new BudgetRowViewModel({},period)));
-            	this.rows = ko.observableArray($.map(row, function (obj, i) {
-                    // Headers don't match with previously stored headers, adjust rows accordingly.
-					if(o.headers && period && o.headers.length != period.length) {
-						var updatedRow = [];
-						for(i = 0; i < period.length; i++) {
-							var index = -1;
-
-							for(j = 0; j < o.headers.length; j++) {
-								if(period[i] == o.headers[j].data) {
-									index = j;
-									break;
-								}
-							}
-							updatedRow.push(index != -1 ? obj.costs[index] : 0.0)
-							index = -1;
-						}
-						obj.costs = updatedRow;
-					}
-
-					return new BudgetRowViewModel(obj,period);
-			    }));
-
-			    this.overallTotal = ko.computed(function (){
-			    	var total = 0.0;
-            		ko.utils.arrayForEach(this.rows(), function(row) {
-           				if(row.rowTotal()){
-           					total += parseFloat(row.rowTotal());
-           				}
-    				});
-			    	return total;
-			    },this).extend({currency:{}});
-
-			    var allBudgetTotal = [];
-			    for(i = 0; i < period.length; i++){
-					allBudgetTotal.push(new BudgetTotalViewModel(this.rows, i));
-				}
-			    this.columnTotal = ko.observableArray(allBudgetTotal);
-            };
-
-			//col total
-            var BudgetTotalViewModel = function (rows, index){
-            	var self = this;
-            	this.data =  ko.computed(function (){
-            		var total = 0.0;
-            		ko.utils.arrayForEach(rows(), function(row) {
-           				if(row.costs()[index]){
-           					total += parseFloat(row.costs()[index].dollar());
-           				}
-    				});
-    				return total;
-            	},this).extend({currency:{}});
-            };
-
-            var BudgetRowViewModel = function(o,period) {
-            	var self = this;
-            	if(!o) o = {};
-            	this.shortLabel = ko.observable(o.shortLabel);
-            	this.description = ko.observable(o.description);
-
-            	var arr = [];
-            	for(i = 0 ; i < period.length; i++)
-            		arr.push(ko.mapping.toJS(new FloatViewModel()));
-
-				//Incase if timeline is generated.
-				if(o.costs && o.costs.length != arr.length) {
-					o.costs = arr;
-				}
-				o.costs ? arr = o.costs : arr;
-            	this.costs = ko.observableArray($.map(arr, function (obj, i) {
-					return new FloatViewModel(obj);
-			    }));
-
-            	this.rowTotal = ko.computed(function (){
-            		var total = 0.0;
-            		ko.utils.arrayForEach(this.costs(), function(cost) {
-            			if(cost.dollar())
-            				total += parseFloat(cost.dollar());
-    				});
-					return total;
-            	},this).extend({currency:{}});
-
-            };
-
-            var FloatViewModel = function(o){
-            	var self = this;
-            	if(!o) o = {};
-            	self.dollar = ko.observable(o.dollar ? o.dollar : 0.0).extend({numericString:0}).extend({currency:{}});
-            };
-
-			var RisksViewModel = function(risks) {
-
-				 var self = this;
-				 this.overallRisk = ko.observable();
-				 this.status = ko.observable();
-				 this.rows = ko.observableArray();
-			     this.load = function(risks) {
-			         if (!risks) {
-			             risks = {};
-			         }
-			         self.overallRisk(orBlank(risks.overallRisk));
-                     self.status(orBlank(risks.status));
-			         if (risks.rows) {
-                         self.rows($.map(risks.rows, function (obj) {
-                            return new RisksRowViewModel(obj);
-                         }));
-			         }
-			         else {
-			            self.rows.push(new RisksRowViewModel());
-			         }
-			     };
-			     this.modelAsJSON = function() {
-			         var tmp = {};
-					 tmp = ko.mapping.toJS(self);
-					 tmp['status'] = 'active';
-					 var jsData = {"risks": tmp};
-					 var json = JSON.stringify(jsData, function (key, value) {
-                        return value === undefined ? "" : value;
-                     });
-                     return json;
-			     };
-			     this.load(risks);
-			};
-
-			var RisksRowViewModel = function(risksRow) {
-				 var self = this;
-				 if(!risksRow) risksRow = {};
-				 this.threat = ko.observable(risksRow.threat);
-				 this.description = ko.observable(risksRow.description);
-				 this.likelihood = ko.observable(risksRow.likelihood);
-				 this.consequence = ko.observable(risksRow.consequence);
-				 this.currentControl = ko.observable(risksRow.currentControl);
-				 this.residualRisk = ko.observable(risksRow.residualRisk);
-				 this.riskRating = ko.computed(function (){
-				 		if (this.likelihood() == '' && this.consequence() == '')
-				 			return;
-
-			 			var riskCol = ["Insignificant","Minor","Moderate","Major","Extreme"];
-			            var riskTable = [
-			              		["Almost Certain","Medium","Significant","High","High","High"],
-			              		["Likely","Low","Medium","Significant","High","High"],
-			              		["Possible","Low","Medium","Medium","Significant","High"],
-			              		["Unlikely","Low","Low","Medium","Medium","Significant"],
-			              		["Remote","Low","Low","Low","Medium","Medium"]
-			              	];
-			 			var riskRating = "";
-						var riskRowIndex = -1;
-
-						for(var i = 0; i < riskTable.length; i++) {
-							if(riskTable[i][0] == this.likelihood()){
-								riskRowIndex = i;
-								break;
-							}
-						}
-
-						if(riskRowIndex >= 0){
-							for(var i = 0; i < riskCol.length; i++) {
-								if(riskCol[i] == this.consequence()){
-									riskRating = riskTable[riskRowIndex][i+1];
-									break;
-								}
-							}
-						}
-            			return riskRating;
-                 }, this);
-			};
-
-			function limitText(field, maxChar){
-				$(field).attr('maxlength',maxChar);
-			}
-
-            function ViewModel(project, newsAndEvents, projectStories, sites, activities, isUserEditor,today,themes) {
+            function ViewModel(project, sites, activities, isUserEditor, themes, newsAndEvents, projectStories) {
                 var self = this;
-                self.name = ko.observable(project.name);
-                self.description = ko.observable(project.description);
-                self.externalId = ko.observable(project.externalId);
-                self.grantId = ko.observable(project.grantId);
+                $.extend(this, new ProjectViewModel(project, ${user?.isEditor?:false}, organisations));
+                $.extend(this, new MERIPlan(project, themes, PROJECT_DETAILS_KEY));
+                $.extend(this, new Risks(project.risks, PROJECT_RISKS_KEY));
+
                 self.workOrderId = ko.observable(project.workOrderId);
-                self.manager = ko.observable(project.manager);
-                self.plannedStartDate = ko.observable(project.plannedStartDate).extend({simpleDate: false});
-                self.plannedEndDate = ko.observable(project.plannedEndDate).extend({simpleDate: false});
                 self.contractStartDate = ko.observable(project.contractStartDate).extend({simpleDate: false});
                 self.contractEndDate = ko.observable(project.contractEndDate).extend({simpleDate: false});
-
-                self.funding = ko.observable(project.funding).extend({currency:{}});
-                self.regenerateProjectTimeline = ko.observable(false);
 				self.userIsCaseManager = ko.observable(${user?.isCaseManager});
 				self.userIsAdmin = ko.observable(${user?.isAdmin});
-				
-				var projectDefault = "active";
-				if(project.status){
-					projectDefault = project.status; 
-				}
-				self.status = ko.observable(projectDefault.toLowerCase());
-				self.projectStatus = [{id: 'active', name:'Active'},{id:'completed',name:'Completed'}];
-				self.promote = [{id: 'yes', name:'Yes'},{id:'no',name:'No'}];
+                self.promote = [{id: 'yes', name:'Yes'},{id:'no',name:'No'}];
 				self.promoteOnHomepage = ko.observable(project.promoteOnHomepage);
-
-                // todo: move this to mongodb lookup.
- 	            self.threatOptions = [
-	                'Blow-out in cost of project materials',
-	                'Changes to regional boundaries affecting the project area',
-					'Co-investor withdrawal / investment reduction',
-					'Lack of delivery partner capacity',
-					'Lack of delivery partner / landholder interest in project activities',
-					'Organisational restructure / loss of corporate knowledge',
-					'Organisational risk (strategic, operational, resourcing and project levels)',
-					'Seasonal conditions (eg. drought, flood, etc.)',
-					'Timeliness of project approvals processes',
-					'Workplace health & safety (eg. Project staff and / or delivery partner injury or death)'
-	        	];
-	        	self.likelihoodOptions = [
-	                'Almost Certain',
-	                'Likely',
-	                'Possible',
-	                'Unlikely',
-					'Remote'
-	        	];
-
-	        	self.consequenceOptions = [
-	        		'Insignificant',
-	        		'Minor',
-	        		'Moderate',
-	        		'Major',
-	        		'Extreme'
-	        	];
-
-	        	self.ratingOptions =[
-	        		'High',
-	        		'Significant',
-	        		'Medium',
-	        		'Low'
-	        	];
-
-				self.obligationOptions =[
-	        		'Yes',
-	        		'No'
-	        	];
-
-	        	self.organisations =[
-					'Academic/research institution',
-					'Australian Government Department',
-					'Commercial entity',
-					'Community group',
-					'Farm/Fishing Business',
-					'If other, enter type',
-					'Indigenous Organisation',
-					'Individual',
-					'Local Government',
-					'Other',
-					'Primary Industry group',
-					'School',
-					'State Government Organisation',
-					'Trust',
-	        	];
-
-	        	self.protectedNaturalAssests =[
-					'Natural/Cultural assets managed',
-					'Threatened Species',
-					'Threatened Ecological Communities',
-					'Migratory Species',
-					'Ramsar Wetland',
-					'World Heritage area',
-					'Community awareness/participation in NRM',
-					'Indigenous Cultural Values',
-					'Indigenous Ecological Knowledge',
-					'Remnant Vegetation',
-					'Aquatic and Coastal systems including wetlands',
-					'Not Applicable'
-	        	];
-	        	self.projectThemes =  $.map(themes, function(theme, i) {
-	                	return theme.name;
-	                });
-	            self.projectThemes.push("MERI & Admin");
-	            self.projectThemes.push("Others");    
-
-	        	self.allYears = function(startYear) {
-		            var currentYear = new Date().getFullYear(), years = [];
-		            startYear = startYear || 2010;
-		            while ( startYear <= currentYear+10 ) {
-		                    years.push(startYear++);
-		            }
-		            return years;
-			    };
-			    self.years = [];
-			    self.years = self.allYears();
-
-				if(!project.custom){
-					project.custom = {};
-				}
-				if(!project.custom.details){
-					project.custom.details = {};
-				}
-
-                var projectDetails = project.custom.details;
-                var savedProjectCustomDetails = amplify.store(PROJECT_DETAILS_KEY);
-                if (savedProjectCustomDetails) {
-                    var restored = JSON.parse(savedProjectCustomDetails);
-
-                    if (restored.custom) {
-                        $('#restoredData').show();
-                        projectDetails = restored.custom.details;
-                    }
-                }
-                self.details = new DetailsViewModel(projectDetails, getBugetHeaders(project.timeline));
-
-                var projectRisks = project.risks;
-                var savedRisks = amplify.store(PROJECT_RISKS_KEY);
-                if (savedRisks) {
-                    var restored = JSON.parse(savedRisks);
-                    if (restored.risks) {
-                        $('#restoredRiskData').show();
-                        projectRisks = restored.risks;
-                    }
-                }
-                self.risks = new RisksViewModel(projectRisks);
-
-                self.isProjectDetailsSaved = ko.computed (function (){
-                	return (project['custom']['details'].status == 'active');
-                });
-                self.isProjectDetailsLocked = ko.computed (function (){
-                	return (project.planStatus == 'approved' || project.planStatus =='submitted');
-                });
-
-                self.detailsLastUpdated = ko.observable(project.custom.details.lastUpdated).extend({simpleDate: true});
 				self.planStatus = ko.observable(project.planStatus);
-
-                self.addObjectives = function(){
-					self.details.objectives.rows.push(new GenericRowViewModel());
-    			};
-    			 self.addOutcome = function(){
-					self.details.objectives.rows1.push(new OutcomeRowViewModel());
-    			};
-				self.removeObjectives = function(row){
-                	self.details.objectives.rows.remove(row);
-                };
-                self.removeObjectivesOutcome = function(row){
-                	self.details.objectives.rows1.remove(row);
-                };
-                self.addNationalAndRegionalPriorities = function(){
-					self.details.priorities.rows.push(new GenericRowViewModel());
-    			};
-                self.removeNationalAndRegionalPriorities = function(row){
-                	self.details.priorities.rows.remove(row);
-                };
-
-                self.addKEQ = function(){
-					self.details.keq.rows.push(new GenericRowViewModel());
-    			};
-                self.removeKEQ = function(keq){
-                	self.details.keq.rows.remove(keq);
-                };
-
-                self.mediaOptions = [{id:"yes",name:"Yes"},{id:"no",name:"No"}];
-
-                self.addEvents = function(){
-					self.details.events.push(new EventsRowViewModel());
-    			};
-                self.removeEvents = function(event){
-                	self.details.events.remove(event);
-                };
-
-                self.addPartnership = function(){
-					self.details.partnership.rows.push (new GenericRowViewModel());
-    			};
-                self.removePartnership = function(partnership){
-                	self.details.partnership.rows.remove(partnership);
-                };
-
-                //Risks details
-				self.addRisks = function(){
-               		self.risks.rows.push(new RisksRowViewModel());
-                };
-                self.removeRisk = function(risk) {
-					self.risks.rows.remove(risk);
-                };
+                self.organisation = ko.observable(project.organisation);
+                self.serviceProviderName = ko.observable(project.serviceProviderName);
+                self.mapLoaded = ko.observable(false);
+				self.transients.variation = ko.observable();
+                self.newsAndEvents = ko.observable(newsAndEvents);
+                self.projectStories = ko.observable(projectStories);
 
                 self.projectDatesChanged = ko.computed(function() {
                     return project.plannedStartDate != self.plannedStartDate() ||
                            project.plannedEndDate != self.plannedEndDate();
                 });
-
-				self.overAllRiskHighlight = ko.computed(function () {
-					return getClassName(self.risks.overallRisk());
-    			});
-
-				function getClassName(val){
-					var className = '';
-					if(val == 'High')
-			     		className = 'badge badge-important';
-			     	else if (val == 'Significant')
-			     		className = 'badge badge-warning';
-					else if (val == 'Medium')
-			     		className = 'badge badge-info';
-					else if (val == 'Low')
-			     		className = 'badge badge-success';
-					return className;
-				}
-
-				self.addBudget = function(){
-					self.details.budget.rows.push (new BudgetRowViewModel({},getBugetHeaders(project.timeline)));
-    			};
-                self.removeBudget = function(budget){
-                	self.details.budget.rows.remove(budget);
-                };
-                self.organisation = ko.observable(project.organisation);
-                self.organisationName = ko.observable(project.organisationName);
-                self.serviceProviderName = ko.observable(project.serviceProviderName);
-                self.associatedProgram = ko.observable(); // don't initialise yet - we want the change to trigger dependents
-                self.associatedSubProgram = ko.observable(project.associatedSubProgram);
-                self.newsAndEvents = ko.observable(newsAndEvents);
-                self.projectStories = ko.observable(projectStories);
-                self.mapLoaded = ko.observable(false);
-
-                self.transients = {};
-				self.transients.variation = ko.observable();
-                self.transients.organisations = organisations;
                 self.transients.collectoryOrgName = ko.computed(function () {
                     if (self.organisation() === undefined || self.organisation() === '') {
                         return "";
@@ -979,11 +400,17 @@
                     }
                 });
                 self.transients.programsModel = [];
-                self.transients.programs = [];
-                self.transients.subprograms = {};
-                self.transients.subprogramsToDisplay = ko.computed(function () {
-                    return self.transients.subprograms[self.associatedProgram()];
-                });
+
+                self.allYears = function(startYear) {
+		            var currentYear = new Date().getFullYear(), years = [];
+		            startYear = startYear || 2010;
+		            while ( startYear <= currentYear+10 ) {
+		                    years.push(startYear++);
+		            }
+		            return years;
+			    };
+			    self.years = [];
+			    self.years = self.allYears();
 
                 var calculateDuration = function(startDate, endDate) {
                     if (!startDate || !endDate) {
@@ -1004,10 +431,7 @@
                 var contractDatesFixed = function() {
                     var programs = self.transients.programsModel.programs;
                     for (var i=0; i<programs.length; i++) {
-                        console.log(programs[i]);
-
                         if (programs[i].name === self.associatedProgram()) {
-                        console.log(programs[i].name);
                             return programs[i].projectDatesContracted;
                         }
                     }
@@ -1137,24 +561,6 @@
                     }
                 });
 
-                self.loadPrograms = function (programsModel) {
-                    self.transients.programsModel = programsModel;
-                    $.each(programsModel.programs, function (i, program) {
-                        if (program.readOnly) {
-                            return;
-                        }
-                        self.transients.programs.push(program.name);
-                        self.transients.subprograms[program.name] = $.map(program.subprograms,function (obj, i){return obj.name});
-
-                    });
-                    self.associatedProgram(project.associatedProgram); // to trigger the computation of sub-programs
-                };
-
-                self.removeTransients = function (jsData) {
-                    delete jsData.transients;
-                    return jsData;
-                };
-
 				self.saveProjectDetails = function(){
 					self.saveProject(false);
 				};
@@ -1188,20 +594,10 @@
                      });
 				};
 
-				// Save risks details.
-				self.saveRisks = function(){
-
-					if (!$('#risk-validation').validationEngine('validate'))
-						return;
-                    self.risks.saveWithErrorDetection(function() {location.reload();});
-
-				};
-
 				// Save project details
 				self.saveProject = function(enableSubmit){
 				    if ($('#project-details-validation').validationEngine('validate')) {
                         self.details.status('active');
-
                         self.details.saveWithErrorDetection(function() {
                             if(enableSubmit) {
                                 self.submitChanges();
@@ -1311,7 +707,7 @@
                     }
                 });
           	  };
-          	  
+
                self.uploadVariationDoc = function(doc){
 	               	 var json = JSON.stringify(doc, function (key, value) {
 	                            return value === undefined ? "" : value;
@@ -1325,14 +721,14 @@
 			            })
 			            .fail(function() {
 			                alert('Error saving document record');
-            			});	 
+            			});
                 };
                 self.saveGrantManagerSettings = function () {
 
                     if ($('#grantmanager-validation').validationEngine('validate')) {
                     	var doc = {oldDate:project.plannedEndDate, newDate:self.plannedEndDate(),reason:self.transients.variation(),role:"variation",projectId:project.projectId};
 	                    var jsData = {
-	                     	plannedEndDate: self.plannedEndDate(),
+	                     	plannedEndDate: self.plannedEndDate()
 	                     };
 	                     var json = JSON.stringify(jsData, function (key, value) {
 	                            return value === undefined ? "" : value;
@@ -1358,7 +754,8 @@
 	                            }
 	                        });
                 	}
-                };	    
+                };
+
                 self.saveSettings = function () {
                     if ($('#settings-validation').validationEngine('validate')) {
 
@@ -1428,67 +825,25 @@
                     }
                 };
 
-                // documents
-                self.documents = ko.observableArray();
-                self.addDocument = function(doc) {
-                    // check permissions
-                    if ((isUserEditor && doc.role !== 'approval') ||  doc.public) {
-                    	doc.maxStages = '${project.timeline?.size()}';
-                        self.documents.push(new DocumentViewModel(doc));
-                    }
-                };
-
-                self.attachDocument = function() {
-                    var url = '${g.createLink(controller:"proxy", action:"documentUpdate")}';
-                    showDocumentAttachInModal( url,
-                    		new DocumentViewModel({role:'information', maxStages:'${project.timeline?.size()}'},{key:'projectId', value:'${project.projectId}'}), 
-                    		'#attachDocument')
-                        	.done(function(result){self.documents.push(new DocumentViewModel(result))});
-                };
-                self.editDocumentMetadata = function(document) {
-                    var url = '${g.createLink(controller:"proxy", action:"documentUpdate")}' + "/" + document.documentId;
-                    showDocumentAttachInModal( url, document, '#attachDocument')
-                        .done(function(result){
-                            window.location.href = here; // The display doesn't update properly otherwise.
-                        });
-                };
-                self.deleteDocument = function(document) {
-                    var url = '${g.createLink(controller:"proxy", action:"deleteDocument")}/'+document.documentId;
-                    $.post(url, {}, function() {self.documents.remove(document);});
-
-                };
-                // this supports display of the project's primary images
-                this.primaryImages = ko.computed(function () {
-                    var pi = $.grep(self.documents(), function (doc) {
-                        return ko.utils.unwrapObservable(doc.isPrimaryProjectImage);
-                    });
-                    return pi.length > 0 ? pi : null;
-                });
-
-                $.each(project.documents, function(i, doc) {
-                    self.addDocument(doc);
-                });
-
             } // end of view model
 
             var newsAndEventsMarkdown = '${(project.newsAndEvents?:"").markdownToHtml().encodeAsJavaScript()}';
             var projectStoriesMarkdown = '${(project.projectStories?:"").markdownToHtml().encodeAsJavaScript()}';
-            var today = '${today}';
             var programs = <fc:modelAsJavascript model="${programs}"/>;
-
             var project = <fc:modelAsJavascript model="${project}"/>;
+
             var viewModel = new ViewModel(
                 checkAndUpdateProject(project),
-                newsAndEventsMarkdown,
-                projectStoriesMarkdown,
                 ${project.sites},
                 ${activities ?: []},
                 ${user?.isEditor?:false},
-                today,
-                ${themes});
+                ${themes},
+                 newsAndEventsMarkdown,
+                 projectStoriesMarkdown);
 
             viewModel.loadPrograms(programs);
             ko.applyBindings(viewModel);
+
             autoSaveModel(
                 viewModel.details,
                 '${createLink(action: 'ajaxUpdate', id: project.projectId)}',
@@ -1534,12 +889,9 @@
                 }
             });
 
-
-
-            // retain tab state for future re-visits
+         // retain tab state for future re-visits
             // and handle tab-specific initialisations
             var planTabInitialised = false;
-
             var dashboardInitialised = false;
 
             $('#projectTabs a[data-toggle="tab"]').on('shown', function (e) {
@@ -1576,6 +928,11 @@
                 if (tab == '#dashboard' && !dashboardInitialised) {
                     $.event.trigger({type:'dashboardShown'});
                     dashboardInitialised;
+                }
+
+                var documentsInitialised = false;
+                if(tab == "#documents" && !documentsInitialised){
+                    documentsInitialised = true;
                 }
             });
 
@@ -1655,6 +1012,7 @@
             }
         }
 </r:script>
+
 <g:if test="${user?.isAdmin || user?.isCaseManager}">
     <r:script>
         // Admin JS code only exposed to admin users

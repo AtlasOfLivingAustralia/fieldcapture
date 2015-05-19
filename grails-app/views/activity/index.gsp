@@ -21,11 +21,12 @@
         projectViewUrl: "${createLink(controller: 'project', action: 'index')}/",
         siteViewUrl: "${createLink(controller: 'site', action: 'index')}/",
         bieUrl: "${grailsApplication.config.bie.baseURL}",
+        imageLocation:"${resource(dir:'/images/filetypes')}",
         speciesProfileUrl: "${createLink(controller: 'proxy', action: 'speciesProfile')}"
         },
         here = document.location.href;
     </r:script>
-    <r:require modules="knockout,jqueryValidationEngine,datepicker,jQueryFileUploadUI,mapWithFeatures,species,attachDocuments,imageViewer"/>
+    <r:require modules="knockout,jqueryValidationEngine,datepicker,jQueryFileUploadUI,mapWithFeatures,species,activity,attachDocuments,imageViewer"/>
 </head>
 <body>
 <div class="container-fluid validationEngineContainer" id="validation-container">

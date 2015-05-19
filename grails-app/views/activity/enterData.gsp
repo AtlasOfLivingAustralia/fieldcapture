@@ -21,11 +21,14 @@
         projectViewUrl: "${createLink(controller: 'project', action: 'index')}/",
         siteViewUrl: "${createLink(controller: 'site', action: 'index')}/",
         bieUrl: "${grailsApplication.config.bie.baseURL}",
-        speciesProfileUrl: "${createLink(controller: 'proxy', action: 'speciesProfile')}"
+        speciesProfileUrl: "${createLink(controller: 'proxy', action: 'speciesProfile')}",
+        documentUpdateUrl: "${g.createLink(controller:"proxy", action:"documentUpdate")}",
+        documentDeleteUrl: "${g.createLink(controller:"proxy", action:"deleteDocument")}",
+        imageLocation:"${resource(dir:'/images/filetypes')}"
         },
         here = document.location.href;
     </r:script>
-    <r:require modules="knockout,jqueryValidationEngine,datepicker,jQueryFileUploadUI,mapWithFeatures,attachDocuments,species,amplify,imageViewer"/>
+    <r:require modules="knockout,jqueryValidationEngine,datepicker,jQueryFileUploadUI,activity,mapWithFeatures,attachDocuments,species,amplify,imageViewer"/>
 </head>
 <body>
 <div class="container-fluid validationEngineContainer" id="validation-container">
@@ -264,12 +267,22 @@
                 };
 
                 self.attachDocument = function(target) {
-                    var url = '${g.createLink(controller:"proxy", action:"documentUpdate")}';
-                    showDocumentAttachInModal( url,new DocumentViewModel({role:'information'},{key:'activityId', value:'${activity.activityId}'}), '#attachDocument')
+                    var url = fcConfig.documentUpdateUrl;
+                    showDocumentAttachInModal(url, new DocumentViewModel({role:'information'},{key:'activityId', value:'${activity.activityId}'}), '#attachDocument')
                         .done(
                         function(result){
                             target(new DocumentViewModel(result))
                             });
+                };
+                self.editDocumentMetadata = function(document) {
+                    var url = fcConfig.documentUpdateUrl + "/" + document.documentId;
+                    showDocumentAttachInModal(url, document, '#attachDocument');
+                };
+                self.deleteDocument = function(document) {
+                    document.status('deleted');
+                    var url = fcConfig.documentDeleteUrl+'/'+document.documentId;
+                    $.post(url, {}, function() {});
+
                 };
 
             };
