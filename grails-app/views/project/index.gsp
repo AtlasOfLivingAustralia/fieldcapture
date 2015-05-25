@@ -747,7 +747,7 @@
             var newsAndEventsInitialised = false;
             $('#editNewsAndEvents-tab').on('shown', function() {
                 if (!newsAndEventsInitialised) {
-                    var newsAndEventsViewModel = new window.newsAndEventsViewModel(viewModel, newsAndEventsMarkdown);
+                    var newsAndEventsViewModel = new window.newsAndEventsViewModel(viewModel, project.newsAndEvents);
                     ko.applyBindings(newsAndEventsViewModel, $('#editnewsAndEventsContent')[0]);
                     newsAndEventsInitialised = true;
                 }
@@ -756,7 +756,7 @@
             var projectStoriesInitialised = false;
             $('#editProjectStories-tab').on('shown', function() {
                 if (!projectStoriesInitialised) {
-                    var projectStoriesViewModel = new window.projectStoriesViewModel(viewModel, projectStoriesMarkdown);
+                    var projectStoriesViewModel = new window.projectStoriesViewModel(viewModel, project.projectStories);
                     ko.applyBindings(projectStoriesViewModel, $('#editprojectStoriesContent')[0]);
                     projectStoriesInitialised = true;
                 }
