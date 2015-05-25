@@ -1,10 +1,12 @@
 <!-- OVERVIEW -->
 <div class="row-fluid">
-    <div class="clearfix" data-bind="visible:organisation()||organisationName()">
+    <div class="clearfix" data-bind="visible:organisationId()||organisationName()">
         <h4>
             Recipient:
-            <a data-bind="visible:organisation(),text:transients.collectoryOrgName,attr:{href:fcConfig.organisationLinkBaseUrl + organisation()}"></a>
-            <span data-bind="visible:organisationName(),text:organisationName"></span>
+            <a data-bind="visible:organisationId(),attr:{href:fcConfig.organisationLinkBaseUrl+'/'+organisationId()}">
+                <span data-bind="text:organisationName"></span>
+            </a>
+            <span data-bind="visible:!organisationId(),text:organisationName"></span>
         </h4>
     </div>
     <div class="clearfix" data-bind="visible:serviceProviderName()">
