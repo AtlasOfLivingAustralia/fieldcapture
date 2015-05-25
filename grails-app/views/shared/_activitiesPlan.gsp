@@ -1342,7 +1342,7 @@
         var planViewModel = new PlanViewModel(
             ${activities ?: []},
             ${project.outputTargets ?: '{}'},
-            checkAndUpdateProject(${project}),
+            checkAndUpdateProject(${project}, null, programModel),
             programModel,
             today
         );
