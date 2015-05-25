@@ -92,14 +92,14 @@
         <div data-bind="visible:newsAndEvents()">
             <div class="well">
                 <h4 >News and events: </h4>
-                <div id="newsAndEventsDiv" data-bind="html:newsAndEvents" ></div>
+                <div id="newsAndEventsDiv" data-bind="html:newsAndEvents.markdownToHtml()" ></div>
             </div>
         </div>
 
         <div data-bind="visible:projectStories()">
             <div class="well">
                 <h4>Project stories: </h4>
-                <div id="projectStoriesDiv" data-bind="html:projectStories"></div>
+                <div id="projectStoriesDiv" data-bind="html:projectStories.markdownToHtml()"></div>
             </div>
         </div>
 

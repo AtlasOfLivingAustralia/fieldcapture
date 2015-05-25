@@ -360,13 +360,6 @@
                 self.serviceProviderName = ko.observable(project.serviceProviderName);
                 self.mapLoaded = ko.observable(false);
 				self.transients.variation = ko.observable();
-                self.newsAndEvents = ko.observable(newsAndEvents);
-                self.projectStories = ko.observable(projectStories);
-
-                self.projectDatesChanged = ko.computed(function() {
-                    return project.plannedStartDate != self.plannedStartDate() ||
-                           project.plannedEndDate != self.plannedEndDate();
-                });
 
                 self.allYears = function(startYear) {
 		            var currentYear = new Date().getFullYear(), years = [];
@@ -590,7 +583,7 @@
                             plannedEndDate: self.plannedEndDate(),
                             contractStartDate: self.contractStartDate(),
                             contractEndDate: self.contractEndDate(),
-                            organisation: self.organisation(),
+                            organisationId: self.organisationId(),
                             organisationName: self.organisationName(),
                             serviceProviderName: self.serviceProviderName(),
                             associatedProgram: self.associatedProgram(),
@@ -646,8 +639,6 @@
 
             } // end of view model
 
-            var newsAndEventsMarkdown = '${(project.newsAndEvents?:"").markdownToHtml().encodeAsJavaScript()}';
-            var projectStoriesMarkdown = '${(project.projectStories?:"").markdownToHtml().encodeAsJavaScript()}';
             var programs = <fc:modelAsJavascript model="${programs}"/>;
             var project = <fc:modelAsJavascript model="${project}"/>;
 
@@ -656,9 +647,7 @@
                 ${project.sites},
                 ${activities ?: []},
                 ${user?.isEditor?:false},
-                ${themes},
-                 newsAndEventsMarkdown,
-                 projectStoriesMarkdown);
+                ${themes});
 
             viewModel.loadPrograms(programs);
             ko.applyBindings(viewModel);
@@ -758,7 +747,7 @@
             var newsAndEventsInitialised = false;
             $('#editNewsAndEvents-tab').on('shown', function() {
                 if (!newsAndEventsInitialised) {
-                    var newsAndEventsViewModel = new window.newsAndEventsViewModel(viewModel, newsAndEventsMarkdown);
+                    var newsAndEventsViewModel = new window.newsAndEventsViewModel(viewModel, project.newsAndEvents);
                     ko.applyBindings(newsAndEventsViewModel, $('#editnewsAndEventsContent')[0]);
                     newsAndEventsInitialised = true;
                 }
@@ -767,7 +756,7 @@
             var projectStoriesInitialised = false;
             $('#editProjectStories-tab').on('shown', function() {
                 if (!projectStoriesInitialised) {
-                    var projectStoriesViewModel = new window.projectStoriesViewModel(viewModel, projectStoriesMarkdown);
+                    var projectStoriesViewModel = new window.projectStoriesViewModel(viewModel, project.projectStories);
                     ko.applyBindings(projectStoriesViewModel, $('#editprojectStoriesContent')[0]);
                     projectStoriesInitialised = true;
                 }
