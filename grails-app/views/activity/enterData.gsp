@@ -571,7 +571,9 @@
                         alaMap.replaceAllFeatures([matchingSite.extent.geometry]);
                     }
                     self.transients.site(matchingSite);
-                    self.updatePhotoPointModel(matchingSite);
+                    if (metaModel.supportsPhotoPoints) {
+                        self.updatePhotoPointModel(matchingSite);
+                    }
                 }
             });
             self.goToProject = function () {

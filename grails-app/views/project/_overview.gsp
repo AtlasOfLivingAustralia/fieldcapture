@@ -3,8 +3,10 @@
     <div class="clearfix" data-bind="visible:organisationId()||organisationName()">
         <h4>
             Recipient:
-            <a data-bind="visible:organisationId(),text:organisationName,attr:{href:fcConfig.organisationLinkBaseUrl + '/' + organisationId()}"></a>
-            <span data-bind="visible:!organisationId() && organisationName(),text:organisationName"></span>
+            <a data-bind="visible:organisationId(),attr:{href:fcConfig.organisationLinkBaseUrl+'/'+organisationId()}">
+                <span data-bind="text:organisationName"></span>
+            </a>
+            <span data-bind="visible:!organisationId(),text:organisationName"></span>
         </h4>
     </div>
     <div class="clearfix" data-bind="visible:serviceProviderName()">
@@ -90,14 +92,14 @@
         <div data-bind="visible:newsAndEvents()">
             <div class="well">
                 <h4 >News and events: </h4>
-                <div id="newsAndEventsDiv" data-bind="html:newsAndEvents" ></div>
+                <div id="newsAndEventsDiv" data-bind="html:newsAndEvents.markdownToHtml()" ></div>
             </div>
         </div>
 
         <div data-bind="visible:projectStories()">
             <div class="well">
                 <h4>Project stories: </h4>
-                <div id="projectStoriesDiv" data-bind="html:projectStories"></div>
+                <div id="projectStoriesDiv" data-bind="html:projectStories.markdownToHtml()"></div>
             </div>
         </div>
 

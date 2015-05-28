@@ -280,26 +280,6 @@
     <g:render template="/shared/unsavedChanges" plugin="fieldcapture-plugin" model="${[id:'meriPlanUnsavedChanges', unsavedData:'MERI Plan']}"/>
     <g:render template="/shared/unsavedChanges" plugin="fieldcapture-plugin" model="${[id:'risksUnsavedChanges', unsavedData:'Risks & Threats']}"/>
 
-    <g:if env="development">
-        <hr />
-        <div class="expandable-debug">
-            <h3>Debug</h3>
-            <div>
-                <h4>KO model</h4>
-                <pre data-bind="text:ko.toJSON($root,null,2)"></pre>
-                <h4>Activities</h4>
-                <pre>${activities?.encodeAsHTML()}</pre>
-                <h4>Sites</h4>
-                <pre>${project.sites?.encodeAsHTML()}</pre>
-                <h4>Project</h4>
-                <pre>${project?.encodeAsHTML()}</pre>
-                <h4>Features</h4>
-                <pre>${mapFeatures}</pre>
-                <h4>activityTypes</h4>
-                <pre>${activityTypes}</pre>
-            </div>
-        </div>
-    </g:if>
 </div>
 
 <r:script>
@@ -372,9 +352,7 @@
                 $.extend(this, new Risks(project.risks, PROJECT_RISKS_KEY));
 
                 self.workOrderId = ko.observable(project.workOrderId);
-                self.contractStartDate = ko.observable(project.contractStartDate).extend({simpleDate: false});
-                self.contractEndDate = ko.observable(project.contractEndDate).extend({simpleDate: false});
-				self.userIsCaseManager = ko.observable(${user?.isCaseManager});
+                self.userIsCaseManager = ko.observable(${user?.isCaseManager});
 				self.userIsAdmin = ko.observable(${user?.isAdmin});
                 self.promote = [{id: 'yes', name:'Yes'},{id:'no',name:'No'}];
 				self.promoteOnHomepage = ko.observable(project.promoteOnHomepage);
@@ -382,14 +360,6 @@
                 self.serviceProviderName = ko.observable(project.serviceProviderName);
                 self.mapLoaded = ko.observable(false);
 				self.transients.variation = ko.observable();
-                self.newsAndEvents = ko.observable(newsAndEvents);
-                self.projectStories = ko.observable(projectStories);
-
-                self.projectDatesChanged = ko.computed(function() {
-                    return project.plannedStartDate != self.plannedStartDate() ||
-                           project.plannedEndDate != self.plannedEndDate();
-                });
-                self.transients.programsModel = [];
 
                 self.allYears = function(startYear) {
 		            var currentYear = new Date().getFullYear(), years = [];
@@ -402,154 +372,6 @@
 			    self.years = [];
 			    self.years = self.allYears();
 
-                var calculateDuration = function(startDate, endDate) {
-                    if (!startDate || !endDate) {
-                        return '';
-                    }
-                    var start = moment(startDate);
-                    var end = moment(endDate);
-                    var durationInDays = end.diff(start, 'days');
-
-                    return Math.ceil(durationInDays/7);
-                };
-                var calculateEndDate = function(startDate, duration) {
-                    var start =  moment(startDate);
-                    var end = start.add(duration*7, 'days');
-                    return end.toDate().toISOStringNoMillis();
-                };
-
-                var contractDatesFixed = function() {
-                    var programs = self.transients.programsModel.programs;
-                    for (var i=0; i<programs.length; i++) {
-                        if (programs[i].name === self.associatedProgram()) {
-                            return programs[i].projectDatesContracted;
-                        }
-                    }
-                    return true;
-                };
-
-                var updatingDurations = false; // Flag to prevent endless loops during change of end date / duration.
-
-                self.transients.plannedDuration = ko.observable(calculateDuration(self.plannedStartDate(), self.plannedEndDate()));
-                self.transients.plannedDuration.subscribe(function(newDuration) {
-                    if (updatingDurations) {
-                        return;
-                    }
-                    try {
-                        updatingDurations = true;
-                        self.plannedEndDate(calculateEndDate(self.plannedStartDate(), newDuration));
-                    }
-                    finally {
-                        updatingDurations = false;
-                    }
-                });
-
-                self.plannedEndDate.subscribe(function(newEndDate) {
-                    if (updatingDurations) {
-                        return;
-                    }
-                    try {
-                        updatingDurations = true;
-                        self.transients.plannedDuration(calculateDuration(self.plannedStartDate(), newEndDate));
-                    }
-                    finally {
-                        updatingDurations = false;
-                    }
-                });
-
-                self.plannedStartDate.subscribe(function(newStartDate) {
-                    if (updatingDurations) {
-                        return;
-                    }
-                    if (contractDatesFixed()) {
-                        if (!self.plannedEndDate()) {
-                            return;
-                        }
-                        try {
-                            updatingDurations = true;
-                            self.transients.plannedDuration(calculateDuration(newStartDate, self.plannedEndDate()));
-                        }
-                        finally {
-                            updatingDurations = false;
-                        }
-                    }
-                    else {
-                        if (!self.transients.plannedDuration()) {
-                            return;
-                        }
-                        try {
-                            updatingDurations = true;
-                            self.plannedEndDate(calculateEndDate(newStartDate, self.transients.plannedDuration()));
-                        }
-                        finally {
-                            updatingDurations = false;
-                        }
-                    }
-                });
-
-                self.transients.contractDuration = ko.observable(calculateDuration(self.contractStartDate(), self.contractEndDate()));
-                self.transients.contractDuration.subscribe(function(newDuration) {
-                    if (updatingDurations) {
-                        return;
-                    }
-                    if (!self.contractStartDate()) {
-                        return;
-                    }
-                    try {
-                        updatingDurations = true;
-                        self.contractEndDate(calculateEndDate(self.contractStartDate(), newDuration));
-                    }
-                    finally {
-                        updatingDurations = false;
-                    }
-                });
-
-
-                self.contractEndDate.subscribe(function(newEndDate) {
-                    if (updatingDurations) {
-                        return;
-                    }
-                    if (!self.contractStartDate()) {
-                        return;
-                    }
-                    try {
-                        updatingDurations = true;
-                        self.transients.contractDuration(calculateDuration(self.contractStartDate(), newEndDate));
-                    }
-                    finally {
-                        updatingDurations = false;
-                    }
-                });
-
-                self.contractStartDate.subscribe(function(newStartDate) {
-                    if (updatingDurations) {
-                        return;
-                    }
-                    if (contractDatesFixed()) {
-                        if (!self.contractEndDate()) {
-                            return;
-                        }
-                        try {
-                            updatingDurations = true;
-                            self.transients.contractDuration(calculateDuration(newStartDate, self.contractEndDate()));
-                        }
-                        finally {
-                            updatingDurations = false;
-                        }
-                    }
-                    else {
-                        if (!self.transients.contractDuration()) {
-                            return;
-                        }
-                        try {
-                            updatingDurations = true;
-                            self.contractEndDate(calculateEndDate(newStartDate, self.transients.contractDuration()));
-                        }
-                        finally {
-                            updatingDurations = false;
-                        }
-                    }
-                });
 
 				self.saveProjectDetails = function(){
 					self.saveProject(false);
@@ -776,7 +598,7 @@
                                 plannedStartDate: self.plannedStartDate(),
                                 plannedEndDate: self.plannedEndDate()
                             };
-                            var program = $.grep(self.transients.programsModel.programs, function(program, index) {
+                            var program = $.grep(self.transients.programs, function(program, index) {
                                 return program.name == self.associatedProgram();
                             });
 
@@ -817,19 +639,15 @@
 
             } // end of view model
 
-            var newsAndEventsMarkdown = '${(project.newsAndEvents?:"").markdownToHtml().encodeAsJavaScript()}';
-            var projectStoriesMarkdown = '${(project.projectStories?:"").markdownToHtml().encodeAsJavaScript()}';
             var programs = <fc:modelAsJavascript model="${programs}"/>;
             var project = <fc:modelAsJavascript model="${project}"/>;
 
             var viewModel = new ViewModel(
-                checkAndUpdateProject(project),
+                checkAndUpdateProject(project, undefined, programs),
                 ${project.sites},
                 ${activities ?: []},
                 ${user?.isEditor?:false},
-                ${themes},
-                 newsAndEventsMarkdown,
-                 projectStoriesMarkdown);
+                ${themes});
 
             viewModel.loadPrograms(programs);
             ko.applyBindings(viewModel);
@@ -929,7 +747,7 @@
             var newsAndEventsInitialised = false;
             $('#editNewsAndEvents-tab').on('shown', function() {
                 if (!newsAndEventsInitialised) {
-                    var newsAndEventsViewModel = new window.newsAndEventsViewModel(viewModel, newsAndEventsMarkdown);
+                    var newsAndEventsViewModel = new window.newsAndEventsViewModel(viewModel, project.newsAndEvents);
                     ko.applyBindings(newsAndEventsViewModel, $('#editnewsAndEventsContent')[0]);
                     newsAndEventsInitialised = true;
                 }
@@ -938,7 +756,7 @@
             var projectStoriesInitialised = false;
             $('#editProjectStories-tab').on('shown', function() {
                 if (!projectStoriesInitialised) {
-                    var projectStoriesViewModel = new window.projectStoriesViewModel(viewModel, projectStoriesMarkdown);
+                    var projectStoriesViewModel = new window.projectStoriesViewModel(viewModel, project.projectStories);
                     ko.applyBindings(projectStoriesViewModel, $('#editprojectStoriesContent')[0]);
                     projectStoriesInitialised = true;
                 }

@@ -22,17 +22,7 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
     def update(id, body) {
         TimeZone.setDefault(TimeZone.getTimeZone('UTC'))
         body?.custom?.details?.lastUpdated = new Date().format("yyyy-MM-dd'T'HH:mm:ss'Z'")
-
-        def datesChanged = false
-        if (body['plannedStartDate'] || body['plannedEndDate']) {
-            body.timeline = null // Force a reset of the project timeline.
-            datesChanged = true
-        }
-
         def resp = super.update(id, body)
-//        if (datesChanged && resp && !resp.error) {
-//            createReportingActivitiesForProject(id)
-//        }
 
         return resp
     }
