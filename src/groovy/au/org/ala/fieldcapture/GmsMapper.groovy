@@ -230,18 +230,19 @@ class GmsMapper {
 
             if (mappedActivity.code) {
                 def activityType = gmsCodeToActivityType[mappedActivity.code]
-
                 if (activityType) {
-                    activity.type = activityType
-                    activity.plannedStartDate = mappedActivity.plannedStartDate
-                    activity.plannedEndDate = mappedActivity.plannedEndDate
+                    if (!activities.find{it.type == activityType}) {
+                        activity.type = activityType
+                        activity.plannedStartDate = mappedActivity.plannedStartDate
+                        activity.plannedEndDate = mappedActivity.plannedEndDate
 
-                    activity.description = 'Activity ' + (activities.size() + 1)
-                    if (mainTheme) {
-                        activity.mainTheme = mainTheme
+                        activity.description = 'Activity ' + (activities.size() + 1)
+                        if (mainTheme) {
+                            activity.mainTheme = mainTheme
+                        }
+
+                        activities << activity
                     }
-
-                    activities << activity
 
                     def targetResult = mapTarget(activityRow)
                     def target = targetResult.mappedData
