@@ -51,11 +51,12 @@
             "target": 30,
             "units": "Ha",
             "scoreLabel": "Area of revegetation works (Ha)",
-            "scoreName": "areaOfWorks"
+            "scoreName": "areaOfWorks",
+            "gmsId":"RVA"
         },
         {
             "outputLabel": "Revegetation Details",
-            "outcomeTarget": "Theme 1 vegetation description: 0\nTheme 1 vegetation current condition: 0\nTheme 1 vegetation target condition: 0\nTheme 1 vegetation assessment method: 0\nTheme 2 vegetation description: River Red gum Swamp and Riparian communities\nTheme 2 vegetation current condition: Poor-Good\nTheme 2 vegetation target condition: Good-Excellent\nTheme 2 vegetation assessment method: Vegetation surveys as stipulated in monitoring section 11. And possible ‘Bushland Condition Monitoring’.\n% survival rate for plants: 76-100\n# canopy species planted: 3\n# understorey species planted: 3\n# ground layer species planted: 4\n"
+            "outcomeTarget": "Theme 1 vegetation description: 0\nTheme 1 vegetation current condition: 0\nTheme 1 vegetation target condition: 0\nTheme 1 vegetation assessment method: 0\nTheme 2 vegetation description: River Red gum Swamp and Riparian communities\nTheme 2 vegetation current condition: Poor-Good\nTheme 2 vegetation target condition: Good-Excellent\nTheme 2 vegetation assessment method: Vegetation surveys as stipulated in monitoring section 11. And possible ï¿½Bushland Condition Monitoringï¿½.\n% survival rate for plants: 76-100\n# canopy species planted: 3\n# understorey species planted: 3\n# ground layer species planted: 4\n"
         }],
     "planStatus": "approved",
     "plannedEndDate": "2017-09-10T14:00:00Z",
@@ -143,7 +144,8 @@
                 "listName": "",
                 "name": "areaRevegHa",
                 "outputName": "Revegetation Details",
-                "units": "Ha"
+                "units": "Ha",
+                "gmsId": "RVA"
             },
             "results": [
                 {
@@ -324,7 +326,8 @@
                 "listName": null,
                 "name": "areaTreatedHa",
                 "outputName": "Weed Treatment Details",
-                "units": "Ha"
+                "units": "Ha",
+                "gmsId":"WDT"
             },
             "results": [
                 {
