@@ -20,6 +20,7 @@ class GmsMapper {
     static final RISK_DATA_TYPE = 'Risk Data'
 
     static final GRANT_ID_COLUMN = 'APP_ID'
+    static final EXTERNAL_ID_COLUMN = 'EXTERNAL_ID'
     static final DATA_TYPE_COLUMN = 'DATA_TYPE'
     static final DATA_SUB_TYPE_COLUMN = 'ENV_DATA_TYPE'
     static final REPORTING_THEME_COLUMN = 'PGAT_PRIORITY'
