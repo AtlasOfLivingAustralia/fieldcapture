@@ -1199,7 +1199,7 @@ class ImportService {
             new CSVMapReader(reader).eachWithIndex { rowMap, i ->
 
                 def currentGrantId = rowMap[GmsMapper.GRANT_ID_COLUMN]
-                def currentExternalId = rowMap['EXTERNAL_ID']
+                def currentExternalId = rowMap[GmsMapper.EXTERNAL_ID_COLUMN]
                 // We have read all the details for a project.
                 if (((currentGrantId != prevGrantId) || (currentExternalId != prevExternalId)) && prevGrantId) {
 
@@ -1327,13 +1327,15 @@ class ImportService {
         try {
 
             def prevGrantId = null
+            def prevExternalId = null
             def projectRows = []
 
             new CSVMapReader(reader).eachWithIndex { rowMap, i ->
 
                 def currentGrantId = rowMap[GmsMapper.GRANT_ID_COLUMN]
+                def currentExternalId = rowMap[GmsMapper.EXTERNAL_ID_COLUMN]
                 // We have read all the details for a project.
-                if (currentGrantId != prevGrantId && prevGrantId) {
+                if (((currentGrantId != prevGrantId) || (currentExternalId != prevExternalId)) && prevGrantId) {
 
                     def activity = importProjectProgress(projectRows, result.errors, preview)
                     if (activity) {
@@ -1349,6 +1351,7 @@ class ImportService {
                 rowMap.index = (i+2) // accounts for 1-based index of Excel and the column header row.
                 projectRows << rowMap
                 prevGrantId = currentGrantId
+                prevExternalId = currentExternalId
             }
             // import the last project
             def activity = importProjectProgress(projectRows, result.errors, preview)
@@ -1371,16 +1374,14 @@ class ImportService {
 
     }
 
-    def SUMMARY_OUTPUT_NAME = 'Upload of stage 1 and 2 reporting data'
-    def SUMMARY_ACTIVITY_NAME = 'Upload of stage 1 and 2 reporting data'
-    private static def MERIT_CHANGE_OVER_DATE = '2013-06-30T14:00:00Z';
+    static def SUMMARY_OUTPUT_NAME = 'Upload of historical summary reporting data'
+    static def SUMMARY_ACTIVITY_NAME = 'Upload of historical summary reporting data'
 
     private def importProjectProgress(projectRows, errors, preview) {
 
 
         def activitiesModel = metadataService.activitiesModel()
-        def organisations = metadataService.organisationList()?.list
-        def mapper = new GmsMapper(activitiesModel, metadataService.programsModel(), organisations, true)
+        def mapper = new GmsMapper(activitiesModel, [:], [], true)
         def projectDetails = mapper.mapProject(projectRows)
 
         //errors.addAll(projectDetails.errors)
@@ -1398,20 +1399,28 @@ class ImportService {
 
 
         def startDate, endDate
-        // Get the timeline from the project.
-        if (project.timeline) {
-            def stage1 = project.timeline.find{it.name=='Stage 1'}
-
-            if (!stage1) {
-                errors << "Could not find stage 1 for project with Grant Id: ${project.grantId}, External Id: ${project.externalId}"
-                return [:]
-            }
-            startDate = stage1.fromDate
-            endDate = stage1.toDate
+        if (projectDetails.plannedStartDate && projectDetails.plannedEndDate) {
+            startDate = projectDetails.plannedStartDate
+            endDate = projectDetails.plannedEndDate
         }
         else {
-            errors << "No timeline for project with Grant Id: ${project.grantId}, External Id: ${project.externalId}"
-            return [:]
+            // Get the timeline from the project.
+            if (project.timeline) {
+                def stage1 = project.timeline.find{it.name=='Stage 1'}
+
+                if (!stage1) {
+                    errors << "Could not find stage 1 for project with Grant Id: ${project.grantId}, External Id: ${project.externalId}, using project dates"
+                    startDate = project.plannedStartDate
+                    endDate = project.plannedEndDate
+                }
+                startDate = stage1.fromDate
+                endDate = stage1.toDate
+            }
+            else {
+                errors << "No timeline for project with Grant Id: ${project.grantId}, External Id: ${project.externalId}"
+                startDate = project.plannedStartDate
+                endDate = project.plannedEndDate
+            }
         }
 
         def siteId = ''
@@ -1441,11 +1450,11 @@ class ImportService {
                         publicationStatus:'published' ]
 
         // Update other activities in the stage to finished and approved.
-        def stage1And2Activities = project.activities?.findAll {it.plannedEndDate <= MERIT_CHANGE_OVER_DATE}
+        def existingActivities = project.activities?.findAll {it.plannedEndDate >= startDate && it.plannedEndDate <= endDate}
 
         def notPlannedCount = 0
         def submitApprovedCount = 0
-        stage1And2Activities.each {
+        existingActivities.each {
             if (it.progress != 'planned') {
                 notPlannedCount++
             }
@@ -1487,7 +1496,7 @@ class ImportService {
         // No point creating the activity if there is no data for it.
         if (!preview && values) {
             activityService.update('', activity)
-            stage1And2Activities.each{activityService.delete(it.activityId)}
+            existingActivities.each{activityService.delete(it.activityId)}
         }
 
         return activity
