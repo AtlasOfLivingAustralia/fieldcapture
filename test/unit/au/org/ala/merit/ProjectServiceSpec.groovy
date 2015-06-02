@@ -31,9 +31,12 @@ class ProjectServiceSpec extends Specification {
         webService.getJson(_) >> [projectId:projectId, plannedStartDate:start, plannedEndDate:end]
 
         when:
-        def activities = service.generateReportingActivitiesForProject(projectId, config)
+        def result = service.regenerateReportingActivitiesForProject(projectId, config)
 
         then:
+        result.create.size() == 4
+        result.delete.size() == 0
+        def activities = result.create
         activities.size() == 4
         activities[0].plannedStartDate == '2014-01-01T00:00:00Z'
         activities[0].plannedEndDate == '2014-03-31T00:00:00Z'
@@ -69,10 +72,12 @@ class ProjectServiceSpec extends Specification {
         webService.getJson(_) >> [projectId:projectId, plannedStartDate:start, plannedEndDate:end]
 
         when:
-        def activities = service.generateReportingActivitiesForProject(projectId, config)
+        def result = service.regenerateReportingActivitiesForProject(projectId, config)
 
         then:
-        activities.size() == 6
+        result.create.size() == 6
+        result.delete.size() == 0
+        def activities = result.create
         activities[0].plannedStartDate == '2014-01-01T00:00:00Z'
         activities[0].plannedEndDate == '2014-01-31T00:00:00Z'
         activities[0].type == 't1'
@@ -99,9 +104,12 @@ class ProjectServiceSpec extends Specification {
         webService.getJson(_) >> [projectId:projectId, plannedStartDate:start, plannedEndDate:end, activities:existingActivities]
 
         when:
-        def activities = service.generateReportingActivitiesForProject(projectId, config)
+        def result = service.regenerateReportingActivitiesForProject(projectId, config)
 
         then:
+        result.create.size() == 4
+        result.delete.size() == 0
+        def activities = result.create
         activities.size() == 4
         activities[0].plannedStartDate == '2014-02-01T00:00:00Z'
         activities[0].plannedEndDate == '2014-02-28T00:00:00Z'
