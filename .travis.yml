@@ -5,6 +5,7 @@ branches:
   except:
   - trunk
 before_install:
+- export TZ=Australia/Canberra
 - rm -rf ~/.gvm
 - curl -s get.gvmtool.net > ~/install_gvm.sh
 - chmod 775 ~/install_gvm.sh
