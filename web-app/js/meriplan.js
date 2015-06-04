@@ -285,7 +285,7 @@ function BudgetRowViewModel(o,period) {
 function FloatViewModel(o){
    var self = this;
    if(!o) o = {};
-   self.dollar = ko.observable(o.dollar ? o.dollar : 0.0).extend({numericString:0}).extend({currency:{}});
+   self.dollar = ko.observable(o.dollar ? o.dollar : 0.0).extend({numericString:2}).extend({currency:{}});
 };
 
 function limitText(field, maxChar){
