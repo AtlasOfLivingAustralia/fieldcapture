@@ -135,4 +135,45 @@ class ProjectServiceSpec extends Specification {
 
     }
 
+    def "plan should not be submitted if it's already been submitted."(){
+        given:
+        def projectId = 'project1'
+        def planStatus = "PLAN_SUBMITTED"
+        webService.getJson(_) >> [projectId:projectId, planStatus:planStatus]
+
+        when:
+        def result = service.submitPlan(projectId)
+
+        then:
+        result.error == "Invalid plan status"
+    }
+
+
+    def "plan should not be approved if it's already been approved."(){
+        given:
+        def projectId = 'project1'
+        def planStatus = "PLAN_APPROVED"
+        webService.getJson(_) >> [projectId:projectId, planStatus:planStatus]
+
+        when:
+        def result = service.approvePlan(projectId)
+
+        then:
+        result.error == "Invalid plan status"
+    }
+
+    def "plan should not be rejected if it's not been approved."(){
+        given:
+        def projectId = 'project1'
+        def planStatus = "PLAN_NOT_APPROVED"
+        webService.getJson(_) >> [projectId:projectId, planStatus:planStatus]
+
+        when:
+        def result = service.rejectPlan(projectId)
+
+        then:
+        result.error == "Invalid plan status"
+    }
+
+
 }
