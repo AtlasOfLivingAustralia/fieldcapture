@@ -5,6 +5,7 @@ branches:
   except:
   - trunk
 before_install:
+- export TZ=Australia/Canberra
 - rm -rf ~/.gvm
 - curl -s get.gvmtool.net > ~/install_gvm.sh
 - chmod 775 ~/install_gvm.sh
@@ -18,8 +19,9 @@ before_script:
 - mkdir -p ~/.grails; wget -q -O ~/.grails/settings.groovy https://raw.githubusercontent.com/AtlasOfLivingAustralia/travis-build-configuration/master/travis_grails_settings_old.groovy
 - MAVEN_REPO="ala-repo-snapshot"; grep '^app\.version=' ./application.properties |
   grep -q "\-SNAPSHOT"; if [ "$?" = "1" ]; then MAVEN_REPO="ala-repo-release"; fi;
-script: grails clean; grails refresh-dependencies --non-interactive; grails prod
-  war --non-interactive && grails prod maven-deploy --repository=$MAVEN_REPO --non-interactive
+script:
+  - grails clean; grails refresh-dependencies --non-interactive && grails test-app :unit --non-interactive && grails prod war --non-interactive
+  - '[ "$TRAVIS_PULL_REQUEST" != "false" ] || grails prod maven-deploy --repository=$MAVEN_REPO --non-interactive'
 env:
   global:
   - secure: cWYm92Lwc8jyxwd4eYDEEtXJhF5SrFD/eN+e2d6V3Vk22qTlCZDOzKY3XEg5O5KAM0htYdSVcif47fpFJh6GFnvO0C2AiSoWLeqMXwiTijQK/nfc/WirqRK71UtGvQYTVjNn3Si8XETsFB3jwYuqV5T20cJ/13bZxxWCc6cU6M4=
