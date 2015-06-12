@@ -19,7 +19,7 @@ class ActivityPage extends Page {
  * Models the new activity page.
  */
 class AddActivityPage extends ActivityPage {
-    static url = "activity/create"
+    static url = "activity/createPlan"
 
     static at = { title == "Create | Activity | Field Capture"}
 

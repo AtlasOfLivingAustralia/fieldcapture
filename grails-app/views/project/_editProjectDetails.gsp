@@ -395,7 +395,7 @@
 			<br/>
 
 			<button type="button" data-bind="click: saveProjectDetails, disable: isProjectDetailsLocked()" id="project-details-save" class="btn btn-primary">Save changes</button>
-			<button type="button" id="details-cancel" class="btn">Cancel</button>
+			<button type="button" id="details-cancel" class="btn" data-bind="click: cancelProjectDetailsEdits">Cancel</button>
 
 			<!--  Admin - submit to approval. -->
 			<div data-bind="if: userIsAdmin()">
