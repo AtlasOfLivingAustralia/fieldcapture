@@ -375,9 +375,8 @@
 				};
 
 				self.cancelProjectDetailsEdits = function() {
-				    if (typeof self.details.cancelEdits === 'function') {
-				        self.details.cancelEdits();
-				    }
+				    self.details.cancelAutosave();
+
 				    document.location.reload(true);
 				};
 
