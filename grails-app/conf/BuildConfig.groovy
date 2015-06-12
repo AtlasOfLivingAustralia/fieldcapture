@@ -74,7 +74,7 @@ grails.project.dependency.resolution = {
 
         if (Environment.current != Environment.DEVELOPMENT) {
             compile ":fieldcapture-plugin:1.1.4-SNAPSHOT"
-            test ":fieldcapture-test-plugin:0.1-SNAPSHOT"
+            test ":fieldcapture-test:0.1-SNAPSHOT"
         }
 
     }
