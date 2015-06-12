@@ -333,10 +333,7 @@
             $('#cancel').click(function () {
                 document.location.href = "${createLink(action: 'index', id: project.projectId)}";
             });
-            $('#details-cancel').click(function () {
-                amplify.store(PROJECT_DETAILS_KEY, null);
-                document.location.href = "${createLink(action: 'index', id: project.projectId)}";
-            });
+
             $('#risks-cancel').click(function () {
                 amplify.store(PROJECT_RISKS_KEY, null);
                 document.location.href = "${createLink(action: 'index', id: project.projectId)}";
@@ -375,6 +372,13 @@
 
 				self.saveProjectDetails = function(){
 					self.saveProject(false);
+				};
+
+				self.cancelProjectDetailsEdits = function() {
+				    if (typeof self.details.cancelEdits === 'function') {
+				        self.details.cancelEdits();
+				    }
+				    document.location.reload(true);
 				};
 
 				self.saveAnnouncements= function(){
@@ -662,7 +666,8 @@
                     resultsMessageId:'save-details-result-placeholder',
                     timeoutMessageSelector:'#timeoutMessage',
                     errorMessage:"Failed to save MERI Plan: ",
-                    successMessage: 'MERI Plan saved'
+                    successMessage: 'MERI Plan saved',
+                    preventNavigationIfDirty:true
                 });
             autoSaveModel(
                 viewModel.risks,
