@@ -666,7 +666,8 @@
                     timeoutMessageSelector:'#timeoutMessage',
                     errorMessage:"Failed to save MERI Plan: ",
                     successMessage: 'MERI Plan saved',
-                    preventNavigationIfDirty:true
+                    preventNavigationIfDirty:true,
+                    defaultDirtyFlag:ko.dirtyFlag
                 });
             autoSaveModel(
                 viewModel.risks,
@@ -678,7 +679,8 @@
                     resultsMessageId:'summary-result-placeholder',
                     timeoutMessageSelector:'#timeoutMessage',
                     errorMessage:"Failed to save risks details: ",
-                    successMessage: 'Successfully saved'
+                    successMessage: 'Successfully saved',
+                    defaultDirtyFlag:ko.dirtyFlag
                 });
 
             var meriPlanVisible = false;
