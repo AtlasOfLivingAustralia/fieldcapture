@@ -1,7 +1,5 @@
 package au.org.ala.fieldcapture
 
-import co.freeside.betamax.Recorder
-import org.junit.Rule
 import pages.EntryPage
 import pages.ProgramsModel
 import spock.lang.Stepwise
@@ -12,7 +10,6 @@ import spock.lang.Stepwise
 @Stepwise
 class ProgramsModelSpec extends FieldcaptureFunctionalTest {
 
-    @Rule Recorder recorder
     def setupSpec() {
         useDataSet('data-set-1')
     }
@@ -27,8 +24,6 @@ class ProgramsModelSpec extends FieldcaptureFunctionalTest {
         at EntryPage
     }
 
-
-    //@Betamax(tape="cas")
     def "the list of programs should be displayed"() {
         logout(browser)
         loginAsAlaAdmin(browser)
