@@ -8,6 +8,19 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
     static defaultAction = "index"
     static ignore = ['action','controller','id']
 
+    /** Overrides the projectContent method in the fieldcapture controller to include the MERI plan and risks and threats content */
+    protected Map projectContent(project, user, programs) {
+        def program = programs.programs.find{it.name == project.associatedProgram}
+        [overview:[label:'Overview', visible: true, type:'tab'],
+         documents:[label:'Documents', visible: true, type:'tab'],
+         details:[label:'MERI Plan', disabled:!user?.hasViewAccess, disabled:!user?.hasViewAccess, visible:program?.optionalProjectContent?.contains('MERI Plan'), type:'tab'],
+         plan:[label:'Activities', visible:true, disabled:!user?.hasViewAccess, type:'tab'],
+         risksAndThreats:[label:'Risks and Threats', disabled:!user?.hasViewAccess, visible:user?.hasViewAccess && program?.optionalProjectContent?.contains('Risks and Threats')],
+         site:[label:'Sites', visible: true, disabled:!user?.hasViewAccess, type:'tab'],
+         dashboard:[label:'Dashboard', visible: true, disabled:!user?.hasViewAccess, type:'tab'],
+         admin:[label:'Admin', visible:(user?.isAdmin || user?.isCaseManager), type:'tab']]
+    }
+
     @PreAuthorise(accessLevel = 'admin')
     def ajaxSubmitReport(String id) {
 
