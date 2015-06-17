@@ -1,6 +1,7 @@
 package au.org.ala.merit
 
 import au.org.ala.fieldcapture.DateUtils
+import au.org.ala.fieldcapture.RoleService
 import grails.converters.JSON
 import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.Row
@@ -25,6 +26,25 @@ import java.text.SimpleDateFormat
 class OrganisationController extends au.org.ala.fieldcapture.OrganisationController {
 
     def activityService, metadataService, projectService
+
+
+    protected Map content(organisation) {
+
+        def user = userService.getUser()
+        def members = organisationService.getMembersOfOrganisation(organisation.organisationId)
+        def orgRole = members.find { it.userId == user.userId } ?: [:]
+        def hasAdminAccess = userService.userIsAlaOrFcAdmin() || orgRole.role == RoleService.PROJECT_ADMIN_ROLE
+
+        def hasViewAccess = hasAdminAccess || userService.userHasReadOnlyAccess() || orgRole.role == RoleService.PROJECT_EDITOR_ROLE
+
+        def reportingVisible = organisation.reports && hasAdminAccess || userService.userHasReadOnlyAccess()
+
+        [reporting : [label: 'Reporting', visible: reportingVisible, default:reportingVisible, type: 'tab'],
+         projects : [label: 'Projects', visible: true, default:!reportingVisible, type: 'tab', disableProjectCreation:true],
+         sites    : [label: 'Sites', visible: false, type: 'tab'],
+         dashboard: [label: 'Dashboard', visible: hasViewAccess, type: 'tab', template:'/shared/dashboard', reports:[[name:'greenArmy', label:'Green Army'], [name:'outputs', label:'Activity Outputs'], [name:'announcements', label:'Annoucements']]],
+         admin    : [label: 'Admin', visible: hasAdminAccess, type: 'tab']]
+    }
 
     def report(String id) {
 
@@ -548,9 +568,5 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
             activityService.bulkUpdateActivities(activityIds, [plannedStartDate: plannedStartDate, plannedEndDate: plannedEndDate])
         }
         projectService.createReportingActivitiesForProject(project.projectId, [[period: Period.months(1), type: 'Green Army - Monthly project status report']])
-    }
-
-    def isProjectCreationDisabled() {
-        return true;
     }
 }
