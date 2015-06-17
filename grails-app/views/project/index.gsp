@@ -95,7 +95,6 @@
     </div>
 
     <!-- content tabs -->
-    <g:set var="tabIsActive"><g:if test="${user?.hasViewAccess}">tab</g:if></g:set>
     <ul id="projectTabs" class="nav nav-tabs big-tabs">
         <fc:tabList tabs="${projectContent}"/>
     </ul>
@@ -204,7 +203,6 @@
                                 <g:set var="activeClass" value=""/>
                             </g:if>
 
-                            <g:if test="${projectContent.details.visible}">
                             <!-- PROJECT DETAILS -->
                             <div id="projectDetails" class="pill-pane">
                                 <!-- Edit project details -->
@@ -216,7 +214,6 @@
                                     </div>
                                 </div>
                             </div>
-                            </g:if>
                             <div id="editNewsAndEvents" class="pill-pane">
                                 <g:render plugin="fieldcapture-plugin"  template="editProjectContent" model="${[attributeName:'newsAndEvents', header:'News and events']}"/>
                                 <hr/>

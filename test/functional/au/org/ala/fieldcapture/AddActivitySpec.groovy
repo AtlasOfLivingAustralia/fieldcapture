@@ -3,18 +3,12 @@ package au.org.ala.fieldcapture
 import pages.AddActivityPage
 import pages.EditActivityPage
 import pages.ProjectIndex
-import spock.lang.Shared
 import spock.lang.Stepwise
 
 @Stepwise
 public class AddActivitySpec extends FieldcaptureFunctionalTest {
 
-
-    @Shared def testConfig
     def setupSpec() {
-        def filePath = new File('grails-app/conf/Config.groovy').toURI().toURL()
-        testConfig = new ConfigSlurper(System.properties.get('grails.env')).parse(filePath)
-
         useDataSet('data-set-1')
     }
 
@@ -23,8 +17,7 @@ public class AddActivitySpec extends FieldcaptureFunctionalTest {
     def "No permission to add an activity"() {
 
         logout(browser)
-        login(browser, "fc-te@outlook.com", "testing!")
-
+        loginAsProjectEditor(browser)
         when: "go to new activity page"
         via AddActivityPage, projectId:projectId
 
@@ -35,7 +28,7 @@ public class AddActivitySpec extends FieldcaptureFunctionalTest {
     def "Add an activity"() {
 
         logout(browser)
-        login(browser,  testConfig.test.user.admin.email , testConfig.test.user.admin.password)
+        loginAsProjectAdmin(browser)
 
         def returnToUrl = getConfig().baseUrl+ProjectIndex.url+'/'+projectId
 
@@ -57,7 +50,7 @@ public class AddActivitySpec extends FieldcaptureFunctionalTest {
     def "the new activity is displayed on the project index page"() {
         when: "find the new activity on the project page"
         to ProjectIndex, projectId
-        plansAndReportsTab.click()
+        activitiesTab.click()
 
         def activities = plansAndReports.activities
         def activity = activities.find {
