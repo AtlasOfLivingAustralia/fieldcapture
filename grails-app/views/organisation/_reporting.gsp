@@ -1,3 +1,6 @@
+<r:script type="text/javascript">
+        fcConfig.organisationReportUrl = '${createLink(action:'report', id:organisation.organisationId)}';
+</r:script>
 <!-- ko stopBinding: true -->
 <div id="reporting-content">
 
