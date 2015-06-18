@@ -58,7 +58,7 @@ class OrganisationControllerSpec extends Specification {
         model.organisation == testOrg
         model.content.reporting.visible == true
         model.content.projects.visible == true
-        model.content.sites.visible == true
+        model.content.sites.visible == false // Disabled until we have content
         model.content.dashboard.visible == true
         model.content.admin.visible == false
     }
@@ -76,7 +76,7 @@ class OrganisationControllerSpec extends Specification {
         model.organisation == testOrg
         model.content.reporting.visible == true
         model.content.projects.visible == true
-        model.content.sites.visible == true
+        model.content.sites.visible == false // Disabled until we have content
         model.content.dashboard.visible == true
         model.content.admin.visible == true
     }
@@ -94,7 +94,7 @@ class OrganisationControllerSpec extends Specification {
         model.organisation == testOrg
         model.content.reporting.visible == true
         model.content.projects.visible == true
-        model.content.sites.visible == true
+        model.content.sites.visible == false // Disabled until we have content.
         model.content.dashboard.visible == true
         model.content.admin.visible == true
     }
@@ -112,7 +112,7 @@ class OrganisationControllerSpec extends Specification {
         model.organisation == testOrg
         model.content.reporting.visible == false
         model.content.projects.visible == true
-        model.content.sites.visible == true
+        model.content.sites.visible == false // Disabled until we have content.
         model.content.dashboard.visible == true
         model.content.admin.visible == false
     }
@@ -155,6 +155,37 @@ class OrganisationControllerSpec extends Specification {
             }
         }
         numDefault == 1
+    }
+
+    def "only the activity report should be available to organisation editors"() {
+        setup:
+        def testOrg = testOrganisation(true)
+        organisationService.get(_,_) >> testOrg
+        setupOrganisationEditor()
+
+        when:
+        def model = controller.index('id')
+
+        then:
+        model.content.dashboard.reports.size() == 1
+        model.content.dashboard.reports[0].name == 'outputs'
+    }
+
+    def "all reports should be available to organisation admins"() {
+        setup:
+        def testOrg = testOrganisation(true)
+        organisationService.get(_,_) >> testOrg
+        setupOrganisationAdmin()
+
+        when:
+        def model = controller.index('id')
+
+        then:
+        model.content.dashboard.reports.size() == 3
+        model.content.dashboard.reports.find{it.name == 'outputs'} != null
+        model.content.dashboard.reports.find{it.name == 'announcements'} != null
+        model.content.dashboard.reports.find{it.name == 'greenArmy'} != null
+
     }
 
     private Map testOrganisation(boolean includeReports) {

@@ -36,13 +36,20 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
         def hasAdminAccess = userService.userIsAlaOrFcAdmin() || orgRole.role == RoleService.PROJECT_ADMIN_ROLE
 
         def hasViewAccess = hasAdminAccess || userService.userHasReadOnlyAccess() || orgRole.role == RoleService.PROJECT_EDITOR_ROLE
-
         def reportingVisible = organisation.reports && hasAdminAccess || userService.userHasReadOnlyAccess()
+
+        def dashboardReports
+        if (hasAdminAccess) {
+            dashboardReports = [[name:'greenArmy', label:'Green Army'], [name:'outputs', label:'Activity Outputs'], [name:'announcements', label:'Annoucements']]
+        }
+        else {
+            dashboardReports = [[name:'outputs', label:'Activity Outputs']]
+        }
 
         [reporting : [label: 'Reporting', visible: reportingVisible, default:reportingVisible, type: 'tab'],
          projects : [label: 'Projects', visible: true, default:!reportingVisible, type: 'tab', disableProjectCreation:true],
          sites    : [label: 'Sites', visible: false, type: 'tab'],
-         dashboard: [label: 'Dashboard', visible: hasViewAccess, type: 'tab', template:'/shared/dashboard', reports:[[name:'greenArmy', label:'Green Army'], [name:'outputs', label:'Activity Outputs'], [name:'announcements', label:'Annoucements']]],
+         dashboard: [label: 'Dashboard', visible: hasViewAccess, type: 'tab', template:'/shared/dashboard', reports:dashboardReports],
          admin    : [label: 'Admin', visible: hasAdminAccess, type: 'tab']]
     }
 
