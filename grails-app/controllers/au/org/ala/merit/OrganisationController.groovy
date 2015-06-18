@@ -40,7 +40,7 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
 
         def dashboardReports
         if (hasAdminAccess) {
-            dashboardReports = [[name:'greenArmy', label:'Green Army'], [name:'outputs', label:'Activity Outputs'], [name:'announcements', label:'Annoucements']]
+            dashboardReports = [[name:'greenArmy', label:'Green Army'], [name:'dashboard', label:'Activity Outputs'], [name:'announcements', label:'Annoucements']]
         }
         else {
             dashboardReports = [[name:'outputs', label:'Activity Outputs']]

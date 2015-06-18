@@ -168,7 +168,7 @@ class OrganisationControllerSpec extends Specification {
 
         then:
         model.content.dashboard.reports.size() == 1
-        model.content.dashboard.reports[0].name == 'outputs'
+        model.content.dashboard.reports[0].name == 'dashboard'
     }
 
     def "all reports should be available to organisation admins"() {
@@ -182,7 +182,7 @@ class OrganisationControllerSpec extends Specification {
 
         then:
         model.content.dashboard.reports.size() == 3
-        model.content.dashboard.reports.find{it.name == 'outputs'} != null
+        model.content.dashboard.reports.find{it.name == 'dashboard'} != null
         model.content.dashboard.reports.find{it.name == 'announcements'} != null
         model.content.dashboard.reports.find{it.name == 'greenArmy'} != null
 
