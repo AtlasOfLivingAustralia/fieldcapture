@@ -4,7 +4,7 @@
 		<div data-bind="if: userIsCaseManager()">
 			<div data-bind="if: planStatus() == 'approved'">
 				<div class="form-actions">
-					<b>Case manager actions:</b>
+					<b>Grant manager actions:</b>
 					<button type="button" data-bind="click: modifyPlan"  id="modify-plan" class="btn btn-info">Modify MERI Plan</button>
 					<br/><br/>
 					<ul>
@@ -26,6 +26,7 @@
 
 	</div>
 </div>
+<g:if test="${projectContent.details.visible}">
 <div class="row-fluid">
 	<div class="control-group">
 		<div style="float: left;" class="controls">
@@ -382,6 +383,24 @@
 	</div>
 </div>
 
+</g:if>
+<g:else>
+	<div>
+		<div data-bind="if: planStatus() == 'approved'">
+			<span class="badge badge-success" style="font-size: 13px;">This plan has been approved</span>
+			<span data-bind="if:detailsLastUpdated"> <br/>Last update date : <span data-bind="text:detailsLastUpdated.formattedDate"></span></span>
+		</div>
+		<div data-bind="if: planStatus() == '' || planStatus() == 'not approved' ">
+			<span class="badge badge-warning" style="font-size: 13px;">This plan is not yet approved</span>
+			<span data-bind="if:detailsLastUpdated"><br/>Last update date :  <span data-bind="text:detailsLastUpdated.formattedDate"></span></span>
+		</div>
+		<div data-bind="if: planStatus() == 'submitted'">
+			<span class="badge badge-info" style="font-size: 13px;">This plan has been submitted for approval</span>
+			<span data-bind="if:detailsLastUpdated"><br/>Last update date :  <span data-bind="text:detailsLastUpdated.formattedDate"></span></span>
+		</div>
+	</div>
+
+</g:else>
 
 <div id="save-details-result-placeholder"></div>
 
@@ -395,7 +414,7 @@
 			<br/>
 
 			<button type="button" data-bind="click: saveProjectDetails, disable: isProjectDetailsLocked()" id="project-details-save" class="btn btn-primary">Save changes</button>
-			<button type="button" id="details-cancel" class="btn">Cancel</button>
+			<button type="button" id="details-cancel" class="btn" data-bind="click: cancelProjectDetailsEdits">Cancel</button>
 
 			<!--  Admin - submit to approval. -->
 			<div data-bind="if: userIsAdmin()">
@@ -405,7 +424,7 @@
 					<ul>
 						<li>Build your project by adding MERI plan details, activities and project targets information.</li>
 					</ul>
-					<button type="button" data-bind="click: saveAndSubmitChanges"  id="modify-plan" class="btn btn-info">Submit for approval</button>
+					<button type="button" data-bind="click: saveAndSubmitChanges" class="btn btn-info">Submit for approval</button>
 				</div>
 				<div data-bind="if: planStatus() == 'submitted' || planStatus() == 'approved'">
 					<hr/>

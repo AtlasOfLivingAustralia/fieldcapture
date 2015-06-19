@@ -246,8 +246,27 @@ environments {
         logging.dir = '.'
     }
     test {
+        server.port = "8087"
+        grails.host = "http://devt.ala.org.au"
+        serverName = "${grails.host}:${server.port}"
+        grails.serverURL = serverName + "/${appName}"
+        layout.skin = "nrm"
+        runWithNoExternalConfig = true
+        def casBaseUrl = "https://auth.ala.org.au"
+        security.cas.appServerName="${serverName}"
+        security.cas.contextPath="/${appName}"
+        security.cas.casServerName="${casBaseUrl}"
+        security.cas.uriFilterPattern=".*/user/.*,.*/site/(?!index).*,.*/project/(?!index).*,.*/activity/(?!index).*,.*/output/(?!index).*,.*/image/(?!index).*,.*/admin/.*,i.*/proxy/speciesListPost,.*/proxy/documentUpdate,.*/proxy/deleteDocument,.*/home/advanced,.*/organisation/(?!index).*,.*/organisation/(?!list).*"
+        security.cas.uriExclusionFilterPattern="/images.*,/css.*,/js.*,/less.*"
+        security.cas.authenticateOnlyIfLoggedInPattern="/,/;.*,/[A-Za-z0-9]+/?,.*/project/index.*,.*/site/index.*,.*/activity/index.*,.*/output/index.*,.*/ajax/keepSessionAlive,.*/search/.*,.*/home/.*,.*/organisation/index.*,.*/organisation/list.*"
+        gateway="true"
+        security.cas.casServerUrlPrefix="${casBaseUrl}/cas"
+        security.cas.loginUrl="${casServerUrlPrefix}/login"
+        logging.dir = '.'
         test.user.admin.email = 'fc-ta@outlook.com'
         test.user.admin.password = 'testing!'
+        ecodata.baseUrl = 'http://devt.ala.org.au:8080/ecodata/ws/'
+
     }
     production {
         grails.logging.jul.usebridge = false

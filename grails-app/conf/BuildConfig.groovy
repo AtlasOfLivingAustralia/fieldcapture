@@ -34,6 +34,10 @@ if (Environment.current == Environment.DEVELOPMENT) {
     }
     def pluginLocation = props.getProperty("fieldcapture-hubs-plugin.location") ?: '../fieldcapture-hubs/fieldcapture-hubs-plugin'
     grails.plugin.location.'fieldcapture-plugin' = pluginLocation
+
+    def testPluginLocation = props.getProperty("fieldcapture-test-plugin.location") ?: '../fieldcapture-test-plugin'
+    grails.plugin.location.'fieldcapture-test-plugin' = testPluginLocation
+
 }
 grails.project.dependency.resolver = "maven"
 grails.project.dependency.resolution = {
@@ -53,7 +57,7 @@ grails.project.dependency.resolution = {
     }
 
     dependencies {
-        // The dependencies from the fieldcapture-hubs-plugin are all we need.
+
     }
 
     plugins {
@@ -69,7 +73,8 @@ grails.project.dependency.resolution = {
         build ":release:3.0.1"
 
         if (Environment.current != Environment.DEVELOPMENT) {
-            compile ":fieldcapture-plugin:1.1.3.1-SNAPSHOT"
+            compile ":fieldcapture-plugin:1.1.4-SNAPSHOT"
+            test ":fieldcapture-test:0.1-SNAPSHOT"
         }
 
     }

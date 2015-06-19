@@ -8,17 +8,11 @@ import spock.lang.Shared
 import spock.lang.Stepwise
 
 @Stepwise
-public class DocumentCRUDSpec extends GebReportingSpec {
+public class DocumentCRUDSpec extends FieldcaptureFunctionalTest {
 
-
-    @Shared def testConfig
     def setupSpec() {
-        def filePath = new File('grails-app/conf/Config.groovy').toURI().toURL()
-        testConfig = new ConfigSlurper(System.properties.get('grails.env')).parse(filePath)
-
         logout(browser)
-        login(browser,  testConfig.test.user.admin.email , testConfig.test.user.admin.password)
-
+        loginAsProjectAdmin(browser)
     }
     def projectId = "cb5497a9-0f36-4fef-9f6a-9ea832c5b68c"
 
@@ -32,7 +26,7 @@ public class DocumentCRUDSpec extends GebReportingSpec {
         admin.documents.attachDocumentButton.click()
 
         then:
-        waitFor 2, {admin.documents.attachDocumentDialog.isDisplayed()}  // This dialog is animated into position so we have to wait.
+        waitFor 5, {admin.documents.attachDocumentDialog.isDisplayed()}  // This dialog is animated into position so we have to wait.
 
     }
 
@@ -44,9 +38,14 @@ public class DocumentCRUDSpec extends GebReportingSpec {
         admin.documents.attachDocumentDialog.type = 'Information'
         admin.documents.attachDocumentDialog.license = 'Creative Commons'
         admin.documents.attachDocumentDialog.publiclyViewable = true
+
         def file = new File('test/functional/resources/testImage.png')
         assert file.exists()
         admin.documents.attachDocumentDialog.file = file.getAbsolutePath()
+
+        waitFor 2, {admin.documents.attachDocumentDialog.privacyDeclaration.displayed}
+        admin.documents.attachDocumentDialog.privacyDeclaration = true
+
         admin.documents.attachDocumentDialog.saveButton.click()
 
         then:
@@ -92,23 +91,6 @@ public class DocumentCRUDSpec extends GebReportingSpec {
         waitFor 5, {
             admin.documents.documents.size() == (docCount -1)
         }
-    }
-
-    def login(Browser browser, username, password) {
-
-        browser.to LoginPage, service: getConfig().baseUrl+EntryPage.url
-        browser.page.username = username
-        browser.page.password = password
-        browser.page.submit()
-
-        browser.at EntryPage
-
-        browser.driver.manage().addCookie(new Cookie("hide-intro", "1"))
-    }
-
-    def logout(Browser browser) {
-        browser.go 'https://auth.ala.org.au/cas/logout'
-
     }
 
 }

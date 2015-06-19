@@ -95,15 +95,8 @@
     </div>
 
     <!-- content tabs -->
-    <g:set var="tabIsActive"><g:if test="${user?.hasViewAccess}">tab</g:if></g:set>
     <ul id="projectTabs" class="nav nav-tabs big-tabs">
-        <li class="active"><a href="#overview" id="overview-tab" data-toggle="tab">Overview</a></li>
-        <li><a href="#documents" id="documents-tab" data-toggle="tab">Documents</a></li>
-        <li><a href="#details" id="details-tab" data-toggle="${tabIsActive}">MERI Plan</a></li>
-        <li><a href="#plan" id="plan-tab" data-toggle="${tabIsActive}">Activities</a></li>
-        <li><a href="#site" id="site-tab" data-toggle="${tabIsActive}">Sites</a></li>
-        <li><a href="#dashboard" id="dashboard-tab" data-toggle="${tabIsActive}">Dashboard</a></li>
-        <g:if test="${user?.isAdmin || user?.isCaseManager}"><li><a href="#admin" id="admin-tab" data-toggle="tab">Admin</a></li></g:if>
+        <fc:tabList tabs="${projectContent}"/>
     </ul>
 
 
@@ -117,6 +110,7 @@
             <g:render plugin="fieldcapture-plugin" template="docs"/>
         </div>
 
+        <g:if test="${projectContent.details.visible}">
         <div class="tab-pane" id="details">
             <!-- Project Details -->
             <g:render template="projectDetails" model="[project: project]"/>
@@ -131,28 +125,24 @@
                 </div>
             </div>
         </div>
-
+        </g:if>
 
 
         <g:if test="${user?.hasViewAccess}">
             <div class="tab-pane" id="plan">
             <!-- PLANS -->
-                <g:if test="${useAltPlan}">
-                    <g:render  plugin="fieldcapture-plugin" template="/shared/plan"
-                               model="[activities:activities ?: [], sites:project.sites ?: [], showSites:true]"/>
-                </g:if>
-                <g:else>
-                    <g:render template="/shared/activitiesPlan"
-                              model="[activities:activities ?: [], sites:project.sites ?: [], showSites:true]"/>
-                </g:else>
+                <g:render template="/shared/activitiesPlan"
+                    model="[activities:activities ?: [], sites:project.sites ?: [], showSites:true]"/>
                 <g:if test="${user?.isCaseManager}">
                     <div class="validationEngineContainer" id="grantmanager-validation">
                         <g:render template="grantManagerSettings" model="[project:project]"/>
                     </div>
                 </g:if>
+                <g:if test="${projectContent.risksAndThreats.visible}">
                 <div class="validationEngineContainer" id="risk-validation">
                     <g:render template="riskTable" model="[project:project]"/>
                 </div>
+                </g:if>
             </div>
 
             <div class="tab-pane" id="site">
@@ -171,7 +161,7 @@
 
         </g:if>
 
-        <g:if test="${user?.isAdmin || user?.isCaseManager}">
+        <g:if test="${projectContent.admin.visible}">
             <g:set var="activeClass" value="class='active'"/>
             <div class="tab-pane" id="admin">
                 <!-- ADMIN -->
@@ -213,7 +203,7 @@
                                 <g:set var="activeClass" value=""/>
                             </g:if>
 
-                        <!-- PROJECT DETAILS -->
+                            <!-- PROJECT DETAILS -->
                             <div id="projectDetails" class="pill-pane">
                                 <!-- Edit project details -->
                                 <h3>MERI Plan</h3>
@@ -224,7 +214,6 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div id="editNewsAndEvents" class="pill-pane">
                                 <g:render plugin="fieldcapture-plugin"  template="editProjectContent" model="${[attributeName:'newsAndEvents', header:'News and events']}"/>
                                 <hr/>
@@ -333,10 +322,7 @@
             $('#cancel').click(function () {
                 document.location.href = "${createLink(action: 'index', id: project.projectId)}";
             });
-            $('#details-cancel').click(function () {
-                amplify.store(PROJECT_DETAILS_KEY, null);
-                document.location.href = "${createLink(action: 'index', id: project.projectId)}";
-            });
+
             $('#risks-cancel').click(function () {
                 amplify.store(PROJECT_RISKS_KEY, null);
                 document.location.href = "${createLink(action: 'index', id: project.projectId)}";
@@ -375,6 +361,12 @@
 
 				self.saveProjectDetails = function(){
 					self.saveProject(false);
+				};
+
+				self.cancelProjectDetailsEdits = function() {
+				    self.details.cancelAutosave();
+
+				    document.location.reload(true);
 				};
 
 				self.saveAnnouncements= function(){
@@ -662,7 +654,9 @@
                     resultsMessageId:'save-details-result-placeholder',
                     timeoutMessageSelector:'#timeoutMessage',
                     errorMessage:"Failed to save MERI Plan: ",
-                    successMessage: 'MERI Plan saved'
+                    successMessage: 'MERI Plan saved',
+                    preventNavigationIfDirty:true,
+                    defaultDirtyFlag:ko.dirtyFlag
                 });
             autoSaveModel(
                 viewModel.risks,
@@ -674,7 +668,8 @@
                     resultsMessageId:'summary-result-placeholder',
                     timeoutMessageSelector:'#timeoutMessage',
                     errorMessage:"Failed to save risks details: ",
-                    successMessage: 'Successfully saved'
+                    successMessage: 'Successfully saved',
+                    defaultDirtyFlag:ko.dirtyFlag
                 });
 
             var meriPlanVisible = false;
