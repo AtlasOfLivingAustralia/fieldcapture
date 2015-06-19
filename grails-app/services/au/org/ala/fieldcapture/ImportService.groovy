@@ -32,6 +32,7 @@ class ImportService {
     def grailsApplication
     def userService
     def documentService
+    def roleEditor = "editor"
     def roleAdmin = "admin"
     def roleGrantManager = "caseManager"
 
@@ -1252,9 +1253,12 @@ class ImportService {
         if (!projectDetails.error) {
 
             def adminEmail = projectDetails.project.remove('adminEmail')
-            def grantManagerEmail = projectDetails.project.remove('grantManagerEmail')
+            def grantManagerEmail = projectDetails.project.remove('grantManagerEmail')            
+            def grantManagerEmail2 = projectDetails.project.remove('grantManagerEmail2')
             def applicantEmail = projectDetails.project.remove('applicantEmail')
             def adminEmail2 = projectDetails.project.remove('adminEmail2')
+            def editorEmail = projectDetails.project.remove('editorEmail')
+            def editorEmail2 = projectDetails.project.remove('editorEmail2')
 
             def result = importProject(projectDetails.project, false) // Do not overwrite existing projects because of the impacts to sites / activities etc.
 
@@ -1269,6 +1273,10 @@ class ImportService {
             addUser(applicantEmail, roleAdmin, projectId, projectDetails.errors)
             addUser(adminEmail2, roleAdmin, projectId, projectDetails.errors)
             addUser(grantManagerEmail, roleGrantManager, projectId, projectDetails.errors)
+            addUser(grantManagerEmail2, roleGrantManager, projectId, projectDetails.errors)
+            addUser(editorEmail, roleEditor, projectId, projectDetails.errors)
+            addUser(editorEmail2, roleEditor, projectId, projectDetails.errors)
+
 
             def sites = projectDetails.sites
             sites.each { site ->
