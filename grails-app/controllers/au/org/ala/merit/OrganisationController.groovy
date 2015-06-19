@@ -38,12 +38,12 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
         def hasViewAccess = hasAdminAccess || userService.userHasReadOnlyAccess() || orgRole.role == RoleService.PROJECT_EDITOR_ROLE
         def reportingVisible = organisation.reports && hasAdminAccess || userService.userHasReadOnlyAccess()
 
-        def dashboardReports
+        def dashboardReports = [[name:'dashboard', label:'Activity Outputs']]
         if (hasAdminAccess) {
-            dashboardReports = [[name:'greenArmy', label:'Green Army'], [name:'dashboard', label:'Activity Outputs'], [name:'announcements', label:'Annoucements']]
-        }
-        else {
-            dashboardReports = [[name:'outputs', label:'Activity Outputs']]
+            dashboardReports += [name:'announcements', label:'Announcements']
+            if (organisation.projects.find{it.associatedProgram == 'Green Army'}) {
+                dashboardReports += [name:'greenArmy', label:'Green Army']
+            }
         }
 
         [reporting : [label: 'Reporting', visible: reportingVisible, default:reportingVisible, type: 'tab'],
