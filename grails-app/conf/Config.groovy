@@ -1,3 +1,5 @@
+import grails.util.Environment
+
 /******************************************************************************\
  *  CONFIG MANAGEMENT
  \******************************************************************************/
@@ -251,6 +253,7 @@ environments {
         serverName = "${grails.host}:${server.port}"
         grails.serverURL = serverName + "/${appName}"
         layout.skin = "nrm"
+        app.default.hub='merit'
         runWithNoExternalConfig = true
         def casBaseUrl = "https://auth.ala.org.au"
         security.cas.appServerName="${serverName}"
@@ -261,11 +264,13 @@ environments {
         security.cas.authenticateOnlyIfLoggedInPattern="/,/;.*,/[A-Za-z0-9]+/?,.*/project/index.*,.*/site/index.*,.*/activity/index.*,.*/output/index.*,.*/ajax/keepSessionAlive,.*/search/.*,.*/home/.*,.*/organisation/index.*,.*/organisation/list.*"
         gateway="true"
         security.cas.casServerUrlPrefix="${casBaseUrl}/cas"
-        security.cas.loginUrl="${casServerUrlPrefix}/login"
+        security.cas.loginUrl="${security.cas.casServerUrlPrefix}/login"
+        security.cas.casLoginUrl="${security.cas.casServerUrlPrefix}/login"
         logging.dir = '.'
         test.user.admin.email = 'fc-ta@outlook.com'
         test.user.admin.password = 'testing!'
         ecodata.baseUrl = 'http://devt.ala.org.au:8080/ecodata/ws/'
+        api_key=System.getenv('API_KEY')
 
     }
     production {
