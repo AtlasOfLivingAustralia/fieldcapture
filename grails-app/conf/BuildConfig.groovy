@@ -36,7 +36,7 @@ if (Environment.current == Environment.DEVELOPMENT) {
     grails.plugin.location.'fieldcapture-plugin' = pluginLocation
 
     def testPluginLocation = props.getProperty("fieldcapture-test-plugin.location") ?: '../fieldcapture-test-plugin'
-    grails.plugin.location.'fieldcapture-test-plugin' = testPluginLocation
+    grails.plugin.location.'fieldcapture-test' = testPluginLocation
 
 }
 grails.project.dependency.resolver = "maven"
