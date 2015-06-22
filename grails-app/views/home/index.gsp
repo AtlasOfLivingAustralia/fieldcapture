@@ -175,7 +175,7 @@
 
                     <div style="display:none;" id="map-legend">
                         <span id="colorOptions">
-                            <select style="font-size:100%; width:150px; opacity:0.8;filter:alpha(opacity=50);" id="mapchange" onchange="generateMap(this.options[this.selectedIndex].value)">
+                            <select style="font-size:100%; width:150px; opacity:0.8;filter:alpha(opacity=50);" id="mapchange" onchange="generateMap(facetList, this.options[this.selectedIndex].value)">
                                 <option value="-1">Mark points by</option>
                                     <g:each var="fn" in="${mapFacets}">
                                         <g:set var="f" value="${results.facets.get(fn)}"/>
@@ -383,43 +383,41 @@
             });
         };
 
-        var initialisedReport = false;
+        var TAB_STATE_KEY = 'project-tab-state';
+        var initialisedReport = false, initialisedMap = false, initialisedProjects = false;
+        var initialiseTab = function(tab) {
+            if (tab === '#mapView' && !initialisedMap) {
+                generateMap(facetList);
+                initialisedMap = true;
+            }
+            else if (tab === '#projectsView' && !initialisedProjects) {
+                updateProjectTable();
+                initialisedProjects = true;
+            }
+            else if (tab === '#reportView' && !initialisedReport) {
+                initialisedReport = true;
+                var reportType = amplify.store('report-type-state');
+                var $reportSelector = $('#dashboardType');
+                if (reportType) {
+                    $reportSelector.val(reportType);
+                }
+                $reportSelector.change(function() {
+                    var reportType = $reportSelector.val();
+                    amplify.store('report-type-state', reportType);
+                    loadReport(reportType);
+                }).trigger('change');
+            }
+        };
         // retain tab state for future re-visits
         $('a[data-toggle="tab"]').on('shown', function (e) {
             var tab = e.currentTarget.hash;
-            amplify.store('project-tab-state', tab);
-            if (tab === '#mapView' && mapDataHasChanged) {
-                mapDataHasChanged = false;
-                generateMap();
-            }
-            else if (tab === '#reportView') {
-                if (!initialisedReport) {
-                    initialisedReport = true;
-                    var reportType = amplify.store('report-type-state');
-                    var $reportSelector = $('#dashboardType');
-                    if (reportType) {
-                        $reportSelector.val(reportType);
-                    }
-                    $reportSelector.change(function() {
-                        var reportType = $reportSelector.val();
-                        amplify.store('report-type-state', reportType);
-                        loadReport(reportType);
-                    }).trigger('change');
-                }
-
-            }
+            amplify.store(TAB_STATE_KEY, tab);
+            initialiseTab(tab);
         });
-        // re-establish the previous tab state
-        var storedTab = amplify.store('project-tab-state');
 
-        if (storedTab === '') {
-            $('#mapView-tab').tab('show');
-        } else {
-            $(storedTab + '-tab').tab('show');
-            if (storedTab != '#mapView') {
-                mapDataHasChanged = true;
-            }
-        }
+        // re-establish the previous tab state
+        var storedTab = amplify.store(TAB_STATE_KEY) || '#mapView';
+        $('.nav-tabs a[href="'+storedTab+'"]').tab('show');
 
         // project list filter
         $('.filterinput').keyup(function() {
@@ -537,9 +535,6 @@
             alaMap.map.setZoom(initZoom);
         });
 
-        // initial loading of map
-        generateMap();
-
         // Tooltips
         $('.projectTitle').tooltip({
             placement: "right",
@@ -565,31 +560,6 @@
             $(this).addClass((newOrder == "ASC") ? "headerSortDown" : "headerSortUp");
             // $(this).removeClass((newOrder == "ASC") ? "headerSortUp" : "headerSortDown");
             updateProjectTable();
-        });
-
-        // facet buttons
-        $(".facetBtn").click(function(el) {
-            facetList = []; // reset global var
-            var facet = $(this).data("facet");
-            var facetVal = $(this).data("value");
-            var prevFacet =  $("#projectTable").data("facetName");
-            // store values in table
-            $("#projectTable").data("facetName",facet);
-            $("#projectTable").data("facetValue",facetVal);
-            if (facetVal.length > 1) {
-                facetList.push(facet + ":" + facetVal);
-            }
-            $("#projectTable").data("offset", 0);
-            mapDataHasChanged = true;
-            generateMap();
-            // change button class to indicate this facet is active
-            if (facet != prevFacet) {
-                // different facet group selected - reset prev
-                $(".facetBtn[data-facet='" + prevFacet + "']").removeClass("btn-info");
-                $(".facetBtn[data-value='']").addClass("btn-info");
-            }
-            $(".facetBtn[data-facet='" + facet + "']").removeClass("btn-info");
-            $(this).addClass("btn-info");
         });
 
         // next/prev buttons in project list table
@@ -618,14 +588,6 @@
                 $(this).find("span").text("hide");
             }
         });
-
-        // trigger Google maps tofire when maps tab is loaded
-//        $('.nav-tabs a[href="#mapView"]').on('shown', function(){
-//            if (mapDataHasChanged) {
-//                mapDataHasChanged = false;
-//                generateMap();
-//            }
-//        });
 
         // sort facets in popups by term
         $(".sortAlpha").clicktoggle(function(el) {
@@ -685,7 +647,7 @@
         }).appendTo($list);
     }
 
-    function generateMap(markBy) {
+    function generateMap(facetList, markBy) {
         markBy =  (markBy === undefined) || markBy == "-1" ? "" : "&markBy="+markBy;
 
         var url = "${createLink(controller:'nocas', action:'geoService')}?max=10000&geo=true"+markBy;
@@ -779,7 +741,6 @@
 
             initialiseMap(features, bounds);
             mapBounds = bounds;
-            updateProjectTable();
             features.length > 0 ? showLegends(legends) : "";
 
         }).error(function (request, status, error) {
@@ -926,21 +887,6 @@
            $("#map-legend").toggle();
         });
 
-    }
-
-
-    function initialiseState(state) {
-        switch (state) {
-            case 'Queensland': return 'QLD'; break;
-            case 'Victoria': return 'VIC'; break;
-            case 'Tasmania': return 'TAS'; break;
-            default:
-                var words = state.split(' '), initials = '';
-                for(var i=0; i < words.length; i++) {
-                    initials += words[i][0]
-                }
-                return initials;
-        }
     }
 
     function showLegends(legends){
