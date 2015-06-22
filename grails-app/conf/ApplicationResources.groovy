@@ -5,4 +5,10 @@ modules = {
         resource url:'js/risks.js'
     }
 
+    greenArmy {
+        defaultBundle 'application'
+        resource 'js/greenArmyReporting.js'
+    }
+
+
 }

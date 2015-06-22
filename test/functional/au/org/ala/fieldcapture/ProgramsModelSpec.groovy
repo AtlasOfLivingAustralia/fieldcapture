@@ -1,6 +1,6 @@
 package au.org.ala.fieldcapture
 
-import pages.EntryPage
+import pages.LoginPage
 import pages.ProgramsModel
 import pages.ProjectIndex
 import spock.lang.Stepwise
@@ -22,7 +22,7 @@ class ProgramsModelSpec extends FieldcaptureFunctionalTest {
         via ProgramsModel
 
         then:
-        at EntryPage
+        at LoginPage
     }
 
     def "the list of programs should be displayed"() {

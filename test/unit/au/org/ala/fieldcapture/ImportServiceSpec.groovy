@@ -13,11 +13,13 @@ class ImportServiceSpec extends Specification {
     def importService
     def projectServiceStub = Stub(ProjectService)
     def activitiesModel = JSON.parse(new InputStreamReader(getClass().getResourceAsStream('/resources/activities-model.json')))
+    def userService = Mock(UserService)
 
     def setup() {
         importService = new ImportService()
         importService.cacheService = new CacheService()
         importService.projectService = projectServiceStub
+        importService.userService = userService
 
         def metadataServiceStub = Stub(MetadataService)
         metadataServiceStub.activitiesModel() >> activitiesModel
