@@ -48,7 +48,7 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
 
         [reporting : [label: 'Reporting', visible: reportingVisible, default:reportingVisible, type: 'tab'],
          projects : [label: 'Projects', visible: true, default:!reportingVisible, type: 'tab', disableProjectCreation:true],
-         sites    : [label: 'Sites', visible: true, type: 'tab'],
+         sites    : [label: 'Sites', visible: true, type: 'tab', template:'/shared/sites', projectCount:organisation.projects?.size()?:0],
          dashboard: [label: 'Dashboard', visible: hasViewAccess, type: 'tab', template:'/shared/dashboard', reports:dashboardReports],
          admin    : [label: 'Admin', visible: hasAdminAccess, type: 'tab']]
     }
