@@ -53,6 +53,10 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
          admin    : [label: 'Admin', visible: hasAdminAccess, type: 'tab']]
     }
 
+    /**
+     * Presents a page which allows the user to edit the events/announcements for all of the projects managed by
+     * this organisation at once.
+     */
     def editAnnouncements() {
 
         def organisationId = params.organisationId
@@ -82,6 +86,35 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
             }
         }
         [events:announcements, organisation: organisation]
+    }
+
+    /**
+     * Bulk saves the edits to project events/announcements.
+     */
+    def saveAnnouncements() {
+
+        def organisationId = params.organisationId
+
+        def organisation = organisationId ? organisationService.get(organisationId, 'flat') : null
+
+        if (!organisation || organisation.error) {
+            render status:404, text:'Organisation with id "'+organisationId+'" does not exist.'
+            return
+        }
+
+        if (!userService.userIsAlaOrFcAdmin() && !organisationService.isUserAdminForOrganisation(organisationId)) {
+            flash.message = 'Only organisation administrators can perform this action.'
+            redirect action:'index', id:organisationId
+            return
+        }
+
+        def annoucements = request.getJSON()
+
+        def announcementsByProject = annoucements.groupBy { it.projectId }
+        announcementsByProject.each { projectId, announcements ->
+            announcements = annoucements.collect {[scheduledDate:it.eventDate, name:it.eventName, description: it.eventDescription, media:it.media]}
+            projectService.update(projectId, [custom:[details:[events:announcements]]])
+        }
     }
 
     def report(String id) {

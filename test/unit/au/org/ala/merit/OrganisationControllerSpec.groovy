@@ -198,7 +198,7 @@ class OrganisationControllerSpec extends Specification {
 
     }
 
-    def "an anonymouse user cannot bulk edit project announcements"() {
+    def "an anonymous user cannot bulk edit project announcements"() {
         setup:
         setupAnonymousUser()
         def testOrg = testOrganisation(true)
@@ -266,6 +266,76 @@ class OrganisationControllerSpec extends Specification {
         response.status == 200
         model.events != null
         model.organisation == testOrg
+    }
+
+    def "an anonymous user cannot save project announcements"() {
+        setup:
+        setupAnonymousUser()
+        def testOrg = testOrganisation(true)
+        organisationService.get(_,_) >> testOrg
+
+        when:
+        params.organisationId = '1234'
+        controller.saveAnnouncements()
+
+        then:
+        response.redirectedUrl == '/organisation/index/1234'
+    }
+
+    def "an organisation editor cannot save project announcements"() {
+        setup:
+        setupAnonymousUser()
+        def testOrg = testOrganisation(true)
+        organisationService.get(_,_) >> testOrg
+
+        when:
+        setupOrganisationEditor()
+        params.organisationId = '1234'
+        controller.saveAnnouncements()
+
+        then:
+        response.redirectedUrl == '/organisation/index/1234'
+    }
+
+    def "the organisationId parameter is mandatory to save organisation announcements"() {
+        setup:
+        setupOrganisationAdmin()
+
+        when:
+        controller.saveAnnouncements()
+
+        then:
+        response.status == 404
+    }
+
+    def "if the organisation does not exist when saving, a 404 should be returned"() {
+        setup:
+        setupOrganisationAdmin()
+
+        when:
+        organisationService.get(_,_) >> [error:'Organisation does not exist']
+        params.organisationId = '1234'
+        controller.saveAnnouncements()
+
+        then:
+        response.status == 404
+    }
+
+    def "an organisation admin can save project announcements"() {
+        setup:
+        def testOrg = testOrganisation(true)
+        testOrg.projects = [[projectId:'1234', associatedProgram:'Program 1']]
+        organisationService.get(_,_) >> testOrg
+        setupOrganisationAdmin()
+
+        when:
+        params.organisationId = testOrg.organisationId
+        def model = controller.saveAnnouncements()
+
+        then:
+        response.status == 200
+//        model.events != null
+//        model.organisation == testOrg
     }
 
     private Map testOrganisation(boolean includeReports) {
