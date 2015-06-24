@@ -350,7 +350,7 @@
             });
         };
 
-        var TAB_STATE_KEY = 'project-tab-state';
+        var TAB_STATE_KEY = 'homepage-tab-state';
         var initialisedReport = false, initialisedMap = false, initialisedProjects = false;
         var initialiseTab = function(tab) {
             if (tab === '#mapView' && !initialisedMap) {
