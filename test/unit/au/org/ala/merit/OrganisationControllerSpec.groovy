@@ -198,6 +198,76 @@ class OrganisationControllerSpec extends Specification {
 
     }
 
+    def "an anonymouse user cannot bulk edit project announcements"() {
+        setup:
+        setupAnonymousUser()
+        def testOrg = testOrganisation(true)
+        organisationService.get(_,_) >> testOrg
+
+        when:
+        params.organisationId = '1234'
+        controller.editAnnouncements()
+
+        then:
+        response.redirectedUrl == '/organisation/index/1234'
+    }
+
+    def "an organisation editor cannot bulk edit project announcements"() {
+        setup:
+        setupAnonymousUser()
+        def testOrg = testOrganisation(true)
+        organisationService.get(_,_) >> testOrg
+
+        when:
+        setupOrganisationEditor()
+        params.organisationId = '1234'
+        controller.editAnnouncements()
+
+        then:
+        response.redirectedUrl == '/organisation/index/1234'
+    }
+
+    def "the organisationId parameter is mandatory to edit organisation announcements"() {
+        setup:
+        setupOrganisationAdmin()
+
+        when:
+        controller.editAnnouncements()
+
+        then:
+        response.status == 404
+    }
+
+    def "if the organisation does not exist, a 404 should be returned"() {
+        setup:
+        setupOrganisationAdmin()
+
+        when:
+        organisationService.get(_,_) >> [error:'Organisation does not exist']
+        params.organisationId = '1234'
+        controller.editAnnouncements()
+
+        then:
+        response.status == 404
+    }
+
+    def "an organisation admin can bulk edit project announcements"() {
+        setup:
+        def testOrg = testOrganisation(true)
+        testOrg.projects = [[projectId:'1234', associatedProgram:'Program 1']]
+        organisationService.get(_,_) >> testOrg
+        setupOrganisationAdmin()
+
+        when:
+        params.organisationId = testOrg.organisationId
+        def model = controller.editAnnouncements()
+
+        then:
+        response.status == 200
+        model.events != null
+        model.organisation == testOrg
+    }
+
     private Map testOrganisation(boolean includeReports) {
         def org = [organisationId:'id', name:'name', description:'description']
         if (includeReports) {
@@ -233,6 +303,7 @@ class OrganisationControllerSpec extends Specification {
         userService.userHasReadOnlyAccess() >> false
         userService.userIsAlaOrFcAdmin() >> false
         organisationService.getMembersOfOrganisation(_) >> [[userId:userId, role:RoleService.PROJECT_ADMIN_ROLE]]
+        organisationService.isUserAdminForOrganisation(_) >> true
     }
 
     private void setupOrganisationEditor() {

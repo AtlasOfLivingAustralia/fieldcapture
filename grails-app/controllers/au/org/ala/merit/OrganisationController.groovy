@@ -53,6 +53,37 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
          admin    : [label: 'Admin', visible: hasAdminAccess, type: 'tab']]
     }
 
+    def editAnnouncements() {
+
+        def organisationId = params.organisationId
+
+        def organisation = organisationId ? organisationService.get(organisationId, 'flat') : null
+
+        if (!organisation || organisation.error) {
+            render status:404, text:'Organisation with id "'+organisationId+'" does not exist.'
+            return
+        }
+
+        if (!userService.userIsAlaOrFcAdmin() && !organisationService.isUserAdminForOrganisation(organisationId)) {
+            flash.message = 'Only organisation administrators can perform this action.'
+            redirect action:'index', id:organisationId
+            return
+        }
+
+        def queryParams = [max:1500, fq:['organisationFacet:'+organisation.name]]
+        queryParams.query = "docType:project"
+        def results = searchService.allProjects(queryParams, queryParams.query)
+        def projects = results?.hits?.hits?.findAll{it._source.custom?.details?.events}.collect{it._source}
+
+        def announcements = []
+        projects.each { project ->
+            project.custom.details.events.each { event ->
+                announcements << [projectId: project.projectId, grantId: project.grantId, name: project.name, organisationName: project.organisationName, associatedProgram: project.associatedProgram, planStatus: project.planStatus, eventDate: event.scheduledDate, eventName: event.name, eventDescription: event.description, media: event.media]
+            }
+        }
+        [events:announcements, organisation: organisation]
+    }
+
     def report(String id) {
 
         def organisation = organisationService.get(id, 'all')
