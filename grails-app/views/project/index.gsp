@@ -658,6 +658,23 @@
                     preventNavigationIfDirty:true,
                     defaultDirtyFlag:ko.dirtyFlag
                 });
+
+
+            $('#project-details-save').appear().on('appear', function() {
+                if (viewModel.details.dirtyFlag.isDirty()) {
+                    $('#floating-save').slideUp(400);
+                }
+            }).on('disappear', function() {
+                $('#floating-save').slideDown(400);
+            });
+            viewModel.details.dirtyFlag.isDirty.subscribe(function(dirty) {
+                if (dirty && !$('#floating-save').is(':appeared')) {
+                   $('#floating-save').slideDown(400);
+                }
+                else {
+                    $('#floating-save').slideUp(400);
+                }
+            });
             autoSaveModel(
                 viewModel.risks,
                 '${createLink(action: 'ajaxUpdate', id: project.projectId)}',

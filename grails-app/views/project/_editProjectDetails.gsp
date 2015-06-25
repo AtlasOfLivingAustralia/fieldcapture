@@ -1,33 +1,60 @@
+<style type="text/css">
+#floating-save {
+	position: fixed;
+	bottom:0;
+	left:0;
+	width:100%;
+	height:40px;
+}
+#floating-save .transparent-background {
+	background-color:#000000;
+	opacity: 0.2;
+}
+#floating-save div {
+	width: 100%;
+	height:30px;
+
+	position: absolute;
+	top: 0;
+	left:0;
+	padding-top: 5px;
+	padding-bottom:5px;
+	text-align:center;
+}
+#floating-save button {
+	top:5px;
+}
+</style>
+
 <!--  Case manager actions -->
-<div class="row-fluid space-after">
+<div class="row-fluid space-after" data-bind="visible: userIsCaseManager() && (planStatus() == 'approved' || planStatus() == 'submitted')">
 	<div class="span6 required">
-		<div data-bind="if: userIsCaseManager()">
-			<div data-bind="if: planStatus() == 'approved'">
-				<div class="form-actions">
-					<b>Grant manager actions:</b>
-					<button type="button" data-bind="click: modifyPlan"  id="modify-plan" class="btn btn-info">Modify MERI Plan</button>
-					<br/><br/>
-					<ul>
-						<li>"Modify MERI Plan" will allow project admin's to edit MERI plan information. </li>
-						<li>Modifying the MERI plan will change the state of the project to "Not approved".</li>
-					</ul>
-				</div>
+		<div data-bind="if: planStatus() == 'approved'">
+			<div class="form-actions">
+				<b>Grant manager actions:</b>
+				<button type="button" data-bind="click: modifyPlan"  id="modify-plan" class="btn btn-info">Modify MERI Plan</button>
+				<br/><br/>
+				<ul>
+					<li>"Modify MERI Plan" will allow project admin's to edit MERI plan information. </li>
+					<li>Modifying the MERI plan will change the state of the project to "Not approved".</li>
+				</ul>
 			</div>
-			<div data-bind="if: planStatus() == 'submitted'">
-				<div class="form-actions" >
-					<b>Case manager actions:</b>
-					<span class="btn-group">
-						<button type="button" data-bind="click:approvePlan" class="btn btn-success"><i class="icon-ok icon-white"></i> Approve</button>
-						<button type="button" data-bind="click:rejectPlan" class="btn btn-danger"><i class="icon-remove icon-white"></i> Reject</button>
-					</span>
-				</div>
+		</div>
+		<div data-bind="if: planStatus() == 'submitted'">
+			<div class="form-actions" >
+				<b>Case manager actions:</b>
+				<span class="btn-group">
+					<button type="button" data-bind="click:approvePlan" class="btn btn-success"><i class="icon-ok icon-white"></i> Approve</button>
+					<button type="button" data-bind="click:rejectPlan" class="btn btn-danger"><i class="icon-remove icon-white"></i> Reject</button>
+				</span>
 			</div>
 		</div>
 
 	</div>
 </div>
 <g:if test="${projectContent.details.visible}">
-<div class="row-fluid">
+
+	<div class="row-fluid">
 	<div class="control-group">
 		<div style="float: left;" class="controls">
 			<b>From: </b><span data-bind="text: plannedStartDate.formattedDate"></span>  <b>To: </b> <span data-bind="text: plannedEndDate.formattedDate"></span>
@@ -438,4 +465,9 @@
 		</div>
 
 	</div>
+</div>
+
+<div id="floating-save" style="display:none;">
+	<div class="transparent-background"></div>
+	<div><button class="right btn btn-info">Save changes</button></div>
 </div>
