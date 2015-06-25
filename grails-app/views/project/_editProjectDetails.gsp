@@ -469,5 +469,5 @@
 
 <div id="floating-save" style="display:none;">
 	<div class="transparent-background"></div>
-	<div><button class="right btn btn-info">Save changes</button></div>
+	<div><button class="right btn btn-info" data-bind="click: saveProjectDetails">Save changes</button></div>
 </div>
