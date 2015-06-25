@@ -661,11 +661,14 @@
 
 
             $('#project-details-save').appear().on('appear', function() {
+                $('#floating-save').slideUp(400);
+            }).on('disappear', function() {
                 if (viewModel.details.dirtyFlag.isDirty()) {
+                    $('#floating-save').slideDown(400);
+                }
+                else {
                     $('#floating-save').slideUp(400);
                 }
-            }).on('disappear', function() {
-                $('#floating-save').slideDown(400);
             });
             viewModel.details.dirtyFlag.isDirty.subscribe(function(dirty) {
                 if (dirty && !$('#floating-save').is(':appeared')) {
