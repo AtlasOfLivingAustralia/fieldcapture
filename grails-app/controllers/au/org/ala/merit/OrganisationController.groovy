@@ -53,6 +53,70 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
          admin    : [label: 'Admin', visible: hasAdminAccess, type: 'tab']]
     }
 
+    /**
+     * Presents a page which allows the user to edit the events/announcements for all of the projects managed by
+     * this organisation at once.
+     */
+    def editAnnouncements() {
+
+        def organisationId = params.organisationId
+
+        def organisation = organisationId ? organisationService.get(organisationId, 'flat') : null
+
+        if (!organisation || organisation.error) {
+            render status:404, text:'Organisation with id "'+organisationId+'" does not exist.'
+            return
+        }
+
+        if (!userService.userIsAlaOrFcAdmin() && !organisationService.isUserAdminForOrganisation(organisationId)) {
+            flash.message = 'Only organisation administrators can perform this action.'
+            redirect action:'index', id:organisationId
+            return
+        }
+
+        def queryParams = [max:1500, fq:['organisationFacet:'+organisation.name]]
+        queryParams.query = "docType:project"
+        def results = searchService.allProjects(queryParams, queryParams.query)
+        def projects = results?.hits?.hits?.findAll{it._source.custom?.details?.events}.collect{it._source}
+
+        def announcements = []
+        projects.each { project ->
+            project.custom.details.events.each { event ->
+                announcements << [projectId: project.projectId, grantId: project.grantId, name: project.name, organisationName: project.organisationName, associatedProgram: project.associatedProgram, planStatus: project.planStatus, eventDate: event.scheduledDate, eventName: event.name, eventDescription: event.description, media: event.media]
+            }
+        }
+        [events:announcements, organisation: organisation]
+    }
+
+    /**
+     * Bulk saves the edits to project events/announcements.
+     */
+    def saveAnnouncements() {
+
+        def organisationId = params.organisationId
+
+        def organisation = organisationId ? organisationService.get(organisationId, 'flat') : null
+
+        if (!organisation || organisation.error) {
+            render status:404, text:'Organisation with id "'+organisationId+'" does not exist.'
+            return
+        }
+
+        if (!userService.userIsAlaOrFcAdmin() && !organisationService.isUserAdminForOrganisation(organisationId)) {
+            flash.message = 'Only organisation administrators can perform this action.'
+            redirect action:'index', id:organisationId
+            return
+        }
+
+        def annoucements = request.getJSON()
+
+        def announcementsByProject = annoucements.groupBy { it.projectId }
+        announcementsByProject.each { projectId, announcements ->
+            announcements = annoucements.collect {[scheduledDate:it.eventDate, name:it.eventName, description: it.eventDescription, media:it.media]}
+            projectService.update(projectId, [custom:[details:[events:announcements]]])
+        }
+    }
+
     def report(String id) {
 
         def organisation = organisationService.get(id, 'all')
