@@ -33,7 +33,7 @@ class GmsMapperSpec extends Specification {
         when:
         def projectDetails = gmsMapper.mapProject(rows)
 
-        then:
+        then: "Project details are mapped correctly"
         def expectedStartDate = '2014-10-12T13:00:00+0000'
         def expectedEndDate = '2015-03-22T13:00:00+0000'
         def project = projectDetails.project
@@ -50,12 +50,12 @@ class GmsMapperSpec extends Specification {
         0 == project.funding
         'not approved' == project.planStatus
 
-        // TODO check timeline!
-
+        // TODO check timeline
+        and: "sites are mapped correctly"
         def sites = projectDetails.sites
         // Ignoring for the moment, not sure how to handle the kml transformation, probably out of scope of the mapper.
 
-
+        and: "activities are mapped correctly"
         // Input data contains 4 output targets which can be mapped to 3 activities
         def activities = projectDetails.activities
         3 == activities.size()
@@ -70,6 +70,7 @@ class GmsMapperSpec extends Specification {
 
         }
 
+        and: "output targets are mapped correctly"
         // output targets
         def outputTargets = project.outputTargets
         4 == outputTargets.size()
@@ -83,6 +84,12 @@ class GmsMapperSpec extends Specification {
             expectedTargets[i] == outputTarget.target
 
         }
+
+        and: "emails are mapped correctly"
+        project.editorEmail == "editor@test.com"
+        project.editorEmail2 == "editor2@test.com"
+        project.grantManagerEmail == "gm@test.com"
+        project.grantManagerEmail2 == "gm2@test.com"
 
     }
 

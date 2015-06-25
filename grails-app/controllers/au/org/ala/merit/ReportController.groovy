@@ -31,20 +31,6 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
 
     }
 
-    def loadReport() {
-        switch (params.report) {
-            case 'greenArmy' :
-                forward action: 'greenArmyReport', params:params
-                break
-            case 'announcements' :
-                forward action: 'announcementsReport', params:params
-                break
-            default:
-                forward action: 'dashboardReport', params:params
-                break
-        }
-    }
-
     def announcementsReport() {
 
         def newParams = [max:1500] + params

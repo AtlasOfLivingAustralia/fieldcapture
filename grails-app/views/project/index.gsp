@@ -148,7 +148,7 @@
             <div class="tab-pane" id="site">
                 <!-- SITES -->
                 <!-- ko stopBinding:true -->
-                <g:render plugin="fieldcapture-plugin" template="/site/sitesList"/>
+                <g:render plugin="fieldcapture-plugin" template="/site/sitesList" model="${[config:[editable:user?.isEditor]]}"/>
                 <!-- /ko -->
 
             </div>
