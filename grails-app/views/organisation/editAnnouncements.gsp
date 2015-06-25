@@ -69,6 +69,7 @@
 <r:script>
     $(function() {
 
+
         var events = <fc:modelAsJavascript model="${events}"></fc:modelAsJavascript>;
         var columns =  [
             {id:'grantID', name:'Grant ID', width:10, field:'grantId'},
@@ -76,7 +77,7 @@
             {id:'date', name:'Proposed Date of event/announcement (if known)', width:10, field:'eventDate', editor: Slick.Editors.Date},
             {id:'event', name:'Proposed event/annoucement', field:'eventName', editor: Slick.Editors.Text},
             {id:'eventDescription', name:'Description of the event', field:'eventDescription', editor: Slick.Editors.LongText},
-            {id:'media', name:'Will there be, or do you intend there to be, media involvement in this event?', width:10, field:'media'}
+            {id:'media', name:'Will there be, or do you intend there to be, media involvement in this event?', editor:SelectEditor, options:[{label:'Yes', value:'yes'}, {label:'No', value:'no'}], width:10, field:'media'}
             ];
 
         var options = {
