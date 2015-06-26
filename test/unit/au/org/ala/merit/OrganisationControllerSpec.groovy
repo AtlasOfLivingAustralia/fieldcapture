@@ -350,7 +350,7 @@ class OrganisationControllerSpec extends Specification {
         userService.getUser() >> null
         userService.userHasReadOnlyAccess() >> false
         userService.userIsAlaOrFcAdmin() >> false
-        organisationService.getMembersOfOrganisation(_) >> []
+        organisationService.getMembersOfOrganisation(_) >> [[userId:'1234', role:RoleService.PROJECT_ADMIN_ROLE]]
     }
 
     private void setupFcAdmin() {
