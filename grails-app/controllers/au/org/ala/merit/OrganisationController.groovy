@@ -97,13 +97,13 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
 
         if (!organisation || organisation.error) {
             def resp = [status:404, text:'Organisation with id "'+id+'" does not exist.']
-            render status: resp.status, message: resp as JSON
+            respond([status: resp.status], (resp as JSON))
             return
         }
 
         if (!userService.userIsAlaOrFcAdmin() && !organisationService.isUserAdminForOrganisation(id)) {
             def resp = [status:403, message:'You are not authorized to perform that operation.']
-            render status: resp.status, message: resp as JSON
+            respond(status: resp.status,(resp as JSON))
             return
         }
 
@@ -114,6 +114,8 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
             projectAnnouncements = projectAnnouncements.collect {[scheduledDate:it.eventDate, name:it.eventName, description: it.eventDescription, media:it.media]}
             projectService.update(projectId, [custom:[details:[events:projectAnnouncements]]])
         }
+        def resp = [status:200, message:'success']
+        respond(status:200, resp as JSON)
     }
 
     def report(String id) {

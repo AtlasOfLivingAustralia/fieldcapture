@@ -7,7 +7,7 @@
     <r:script disposition="head">
     var fcConfig = {
         organisationViewUrl: "${createLink(controller:'organisation', action:'index', id:organisation.organisationId)}",
-        saveAnnouncementsUrl: "${createLink(controller:'organisation', action:'saveAnnouncements', id:organisation.organisationId)}",
+        saveAnnouncementsUrl: "${createLink(controller:'organisation', action:'saveAnnouncements', id:organisation.organisationId, params:[format:'json'])}",
         returnTo: "${params.returnTo}"
         },
         here = document.location.href;
@@ -49,7 +49,7 @@
                     </div>
 
                     <div class="text-left" style="margin:5px">
-                        <span class="btn btn-small fileinput-button">
+                        <span class="btn btn-small fileinput-button">yh
                             Step 2 - Upload populated template <input id="fileupload" type="file" name="templateFile">
                         </span>
                     </div>
@@ -62,6 +62,7 @@
         </div>
     </div>
 
+    <g:render template="/shared/timeoutMessage" plugin="fieldcapture-plugin" model="${[newWindow:true]}"/>
 
 <r:script>
     $(function() {
