@@ -26,7 +26,12 @@
 <h2>Green Army Reporting</h2>
 
 <div class="row-fluid">
-    <span class="span1">For financial year</span><span class="span1"><select name="financialYear"><option name="2014">2014/15</option></select></span><span class="span9"></span><span class="span1"><r:img dir="images" file="green_army_logo.png" alt="Green Army Logo"/></span>
+    <span class="span3">For financial year:
+        <select name="financialYear" data-bind="value:financialYear, options:availableYears, optionsText:'label', optionsValue:'value'">
+        </select>
+    </span>
+    <span class="span8"></span>
+    <span class="span1"><r:img dir="images" file="green_army_logo.png" alt="Green Army Logo"/></span>
 </div>
 
 <g:set var="tabConfig" value="${[[name:'Jul',template:'monthly',title:'July',yearModifier:0], [name:'Aug',template:'monthly', title:'August',yearModifier:0], [name:'Sep',template:'monthly', title:'September',yearModifier:0], [name:'Oct',template:'monthly', title:'October',yearModifier:0], [name:'Nov',template:'monthly',title:'November',yearModifier:0], [name:'Dec',template:'monthly',title:'December',yearModifier:0], [name:'Jan',template:'monthly',title:'January',yearModifier:1], [name:'Feb',template:'monthly', title:'February',yearModifier:1], [name:'Mar',template:'monthly',title:'March',yearModifier:1], [name:'Apr',template:'monthly', title:'April', yearModifier:1], [name:'May',template:'monthly', title:'May',yearModifier:1], [name:'Jun',template:'monthly', title:'June',yearModifier:1],
@@ -615,13 +620,35 @@
         var projectReports = <fc:modelAsJavascript model="${adHocReports}"/>;
         var monthlySummaryScores = <fc:modelAsJavascript model="${monthlySummary.outputData}"/>;
         var quarterlySummaryScores = <fc:modelAsJavascript model="${quarterlySummary.outputData}"/>;
+        var availableYears = <fc:modelAsJavascript model="${availableYears}"/>;
 
+        var ViewModel = function(availableYears, selectedYear) {
 
-        var ViewModel = function() {
 
             var self = this;
+            self.availableYears = availableYears;
+            self.financialYear = ko.observable(selectedYear);
 
-            var year = 2014;
+            self.financialYear.subscribe(function(year) {
+
+                if (year != selectedYear) {
+                var $content = $('#dashboard-content');
+                var $loading = $('.loading-message');
+                $content.hide();
+                $loading.show();
+
+                var reportType = $('#dashboardType').val();
+
+                $.get(fcConfig.dashboardUrl, {report:reportType, financialYear:year}).done(function(data) {
+                    $content.html(data);
+                    $loading.hide();
+                    $content.show();
+
+                });
+                }
+            });
+
+            var year = selectedYear;
             var title;
             var shortTitle;
 
@@ -658,7 +685,7 @@
             };
             $('#${tabConfig[0].name}-tab').click();
         };
-        ko.applyBindings(new ViewModel(), document.getElementById('greenArmyReport'));
+        ko.applyBindings(new ViewModel(availableYears, ${financialYear}), document.getElementById('greenArmyReport'));
 
 
     });
