@@ -2,8 +2,8 @@ package au.org.ala.merit
 
 import au.org.ala.fieldcapture.DateUtils
 import au.org.ala.fieldcapture.GmsMapper
-import grails.converters.JSON
 import org.joda.time.DateTime
+import org.joda.time.DateTimeUtils
 import org.joda.time.Interval
 import org.joda.time.Period
 
@@ -76,8 +76,13 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
 
     def greenArmyReport() {
 
-        def startDate = new DateTime(2014, 7 , 1, 0, 0)
-        def endDate = new DateTime(2015, 7 , 2, 0, 0) // This is a workaround for a UTC vs local time.
+        Integer financialYear = params.getInt('financialYear')
+        if (!financialYear) {
+            financialYear = defaultYearForReport()
+        }
+
+        def startDate = new DateTime(financialYear, 7 , 1, 0, 0)
+        def endDate = new DateTime(financialYear+1, 7 , 2, 0, 0) // This is a workaround for a UTC vs local time.
 
         params.dates = buildDateGroupingCriteria(startDate, endDate, Period.months(1))
         def monthlySummary = searchService.report(params)
@@ -96,9 +101,38 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
 
 
         def reports = monthlyAndQuarterlyReports(startDate, endDate)
-        render view:'_greenArmy', model:[monthlySummary:monthlySummary, quarterlySummary:quarterlySummary, adHocReports:adHocReport(startDate, endDate), monthlyActivities:reports.monthlyReports, quarterlyReports:reports.quarterlyReports, includeOrganisationName:params.includeOrganisationName?:false]
+        render view:'_greenArmy', model:
+                [
+                 availableYears:availableYears(),
+                 financialYear:financialYear,
+                 monthlySummary:monthlySummary,
+                 quarterlySummary:quarterlySummary,
+                 adHocReports:adHocReport(startDate, endDate),
+                 monthlyActivities:reports.monthlyReports,
+                 quarterlyReports:reports.quarterlyReports,
+                 includeOrganisationName:params.includeOrganisationName?:false]
 
     }
+
+    private def defaultYearForReport() {
+        def now = new DateTime()
+        def cutoff = now.minusMonths(7)  // Default to the previous financial year for the first month of the new one.
+
+        return cutoff.year
+    }
+
+    private List availableYears() {
+        def availableYears = []
+        int first = 2014
+        int year = first
+        int current = DateUtils.currentFinancialYear()
+        while (year <= current) {
+            availableYears << [label:"${year}/${year+1}", value:year]
+            year++
+        }
+        availableYears
+    }
+
 
     private List<String> buildDateGroupingCriteria(DateTime startDate, DateTime endDate, Period period) {
         List<String> dateRanges = []
@@ -121,7 +155,7 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
         def types = ['Green Army - Monthly project status report', 'Green Army - Quarterly project report']
         def criteria = [type: types, projectId: projectIds, dateProperty:'plannedEndDate', startDate : startDate.toDate(), endDate: endDate.toDate()]
         def resp = activityService.search(criteria)
-        def activities = resp?.resp?.activities
+        def activities = resp?.resp?.activities ?: []
 
         activities.each {activity ->
             def project = projects.find{it.projectId == activity.projectId}
@@ -154,7 +188,7 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
         def criteria = [type: types, projectId: projectIds, dateProperty:'plannedEndDate', startDate : startDate.toDate(), endDate: endDate.toDate()]
         def resp = activityService.search(criteria)
 
-        def activities = resp?.resp?.activities
+        def activities = resp?.resp?.activities ?: []
         def groupedReports = activities.groupBy{it.projectId}
 
         def adHocReports = groupedReports.collect{k, v -> [projectId:k, grantId:projects.find{it.projectId == k}?.grantId, reports:v]}

@@ -279,7 +279,7 @@ class OrganisationControllerSpec extends Specification {
         controller.saveAnnouncements()
 
         then:
-        response.redirectedUrl == '/organisation/index/1234'
+        response.status == 404
     }
 
     def "an organisation editor cannot save project announcements"() {
@@ -290,11 +290,11 @@ class OrganisationControllerSpec extends Specification {
 
         when:
         setupOrganisationEditor()
-        params.organisationId = '1234'
+        params.id = '1234'
         controller.saveAnnouncements()
 
         then:
-        response.redirectedUrl == '/organisation/index/1234'
+        response.status == 403
     }
 
     def "the organisationId parameter is mandatory to save organisation announcements"() {
@@ -314,7 +314,7 @@ class OrganisationControllerSpec extends Specification {
 
         when:
         organisationService.get(_,_) >> [error:'Organisation does not exist']
-        params.organisationId = '1234'
+        params.id = '1234'
         controller.saveAnnouncements()
 
         then:
@@ -329,7 +329,7 @@ class OrganisationControllerSpec extends Specification {
         setupOrganisationAdmin()
 
         when:
-        params.organisationId = testOrg.organisationId
+        params.id = testOrg.organisationId
         def model = controller.saveAnnouncements()
 
         then:
