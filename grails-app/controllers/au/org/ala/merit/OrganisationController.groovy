@@ -91,29 +91,28 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
     /**
      * Bulk saves the edits to project events/announcements.
      */
-    def saveAnnouncements() {
+    def saveAnnouncements(String id) {
 
-        def organisationId = params.organisationId
-
-        def organisation = organisationId ? organisationService.get(organisationId, 'flat') : null
+        def organisation = id ? organisationService.get(id, 'flat') : null
 
         if (!organisation || organisation.error) {
-            render status:404, text:'Organisation with id "'+organisationId+'" does not exist.'
+            def resp = [status:404, text:'Organisation with id "'+id+'" does not exist.']
+            render status: resp.status, message: resp as JSON
             return
         }
 
-        if (!userService.userIsAlaOrFcAdmin() && !organisationService.isUserAdminForOrganisation(organisationId)) {
-            flash.message = 'Only organisation administrators can perform this action.'
-            redirect action:'index', id:organisationId
+        if (!userService.userIsAlaOrFcAdmin() && !organisationService.isUserAdminForOrganisation(id)) {
+            def resp = [status:403, message:'You are not authorized to perform that operation.']
+            render status: resp.status, message: resp as JSON
             return
         }
 
-        def annoucements = request.getJSON()
+        def announcements = request.JSON
 
-        def announcementsByProject = annoucements.groupBy { it.projectId }
-        announcementsByProject.each { projectId, announcements ->
-            announcements = annoucements.collect {[scheduledDate:it.eventDate, name:it.eventName, description: it.eventDescription, media:it.media]}
-            projectService.update(projectId, [custom:[details:[events:announcements]]])
+        def announcementsByProject = announcements.groupBy { it.projectId }
+        announcementsByProject.each { projectId, projectAnnouncements ->
+            projectAnnouncements = projectAnnouncements.collect {[scheduledDate:it.eventDate, name:it.eventName, description: it.eventDescription, media:it.media]}
+            projectService.update(projectId, [custom:[details:[events:projectAnnouncements]]])
         }
     }
 

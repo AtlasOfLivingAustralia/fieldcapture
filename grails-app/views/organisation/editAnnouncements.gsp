@@ -7,10 +7,7 @@
     <r:script disposition="head">
     var fcConfig = {
         organisationViewUrl: "${createLink(controller:'organisation', action:'index', id:organisation.organisationId)}",
-        serverUrl: "${grailsApplication.config.grails.serverURL}",
-        projectViewUrl: "${createLink(controller: 'project', action: 'index')}/",
-        saveUrl: "${createLink(controller:'activity', action:'ajaxUpdate')}",
-        siteViewUrl: "${createLink(controller: 'site', action: 'index')}/",
+        saveAnnouncementsUrl: "${createLink(controller:'organisation', action:'saveAnnouncements', id:organisation.organisationId)}",
         returnTo: "${params.returnTo}"
         },
         here = document.location.href;
@@ -59,8 +56,8 @@
                 </div>
             </span>
             <span class="span9"style="text-align:right">
-                <button type="button" id="save" class="btn btn-primary" title="Save edits and return to the previous page">Save</button>
-                <buttom type="button" id="cancel" class="btn btn" title="Cancel edits and return to previous page">Cancel</buttom>
+                <button type="button" id="save" data-bind="click:save" class="btn btn-primary" title="Save edits and return to the previous page">Save</button>
+                <buttom type="button" id="cancel" data-bind="click:cancel" class="btn btn" title="Cancel edits and return to previous page">Cancel</buttom>
             </span>
         </div>
     </div>
@@ -71,6 +68,7 @@
 
 
         var events = <fc:modelAsJavascript model="${events}"></fc:modelAsJavascript>;
+        var organisationId = '${organisation.organisationId}';
         var columns =  [
             {id:'grantID', name:'Grant ID', width:10, field:'grantId'},
             {id:'projectName', name:'Project Name', width:25, field:'name', options:['','Greening the west of Melbourne - Point Cook Coastal Park and Port Phillip Bay Western Shoreline Nature Link Enhancement', 'cat', 'mat'], editor: ComboBoxEditor},
@@ -91,15 +89,51 @@
 
 
         var grid = new Slick.Grid("#announcementsTable", events, columns, options);
-        grid.onAddNewRow.subscribe(function (e, args) {
-            var item = args.item;
-            grid.invalidateRow(events.length);
-            events.push(item);
-            grid.updateRowCount();
-            grid.render();
-        });
+
         grid.init();
 
+        var EditAnnouncementsViewModel = function(grid, events) {
+            var self = this;
+            var editedAnnouncements = [];
+
+            self.modelAsJSON = function() {
+                return JSON.stringify(editedAnnouncements);
+            };
+
+            self.cancel = function() {
+                self.cancelAutosave();
+                document.location.href = fcConfig.organisationViewUrl;
+            };
+
+            self.save = function() {
+                self.saveWithErrorDetection(function() {
+                    document.location.href = fcConfig.organisationViewUrl;
+                });
+            };
+
+            grid.onAddNewRow.subscribe(function (e, args) {
+                var item = args.item;
+                grid.invalidateRow(events.length);
+                events.push(item);
+                grid.updateRowCount();
+                grid.render();
+            });
+            grid.onCellChange.subscribe(function(e, args) {
+                editedAnnouncements.push(args.item);
+            });
+        };
+        var editAnnouncementsViewModel = new EditAnnouncementsViewModel(grid, events);
+
+        var options = {
+            storageKey : 'BULK_ANNOUNCEMENTS'+organisationId,
+            blockUIOnSave: true,
+            blockUISaveMessage: "Saving announcements...",
+            preventNavigationIfDirty: true
+        };
+
+        autoSaveModel(editAnnouncementsViewModel, fcConfig.saveAnnouncementsUrl, options);
+
+        ko.applyBindings(editAnnouncementsViewModel);
 
     });
 </r:script>
