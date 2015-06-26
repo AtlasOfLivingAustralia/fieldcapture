@@ -32,7 +32,7 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
 
         def user = userService.getUser()
         def members = organisationService.getMembersOfOrganisation(organisation.organisationId)
-        def orgRole = members.find { it.userId == user.userId } ?: [:]
+        def orgRole = members.find { it.userId == user?.userId } ?: [:]
         def hasAdminAccess = userService.userIsAlaOrFcAdmin() || orgRole.role == RoleService.PROJECT_ADMIN_ROLE
 
         def hasViewAccess = hasAdminAccess || userService.userHasReadOnlyAccess() || orgRole.role == RoleService.PROJECT_EDITOR_ROLE
