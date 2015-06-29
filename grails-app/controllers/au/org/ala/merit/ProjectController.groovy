@@ -11,7 +11,7 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
     /** Overrides the projectContent method in the fieldcapture controller to include the MERI plan and risks and threats content */
     protected Map projectContent(project, user, programs) {
         def program = programs.programs.find{it.name == project.associatedProgram}
-        [overview:[label:'Overview', visible: true, default:true, type:'tab'],
+        def model = [overview:[label:'Overview', visible: true, default:true, type:'tab'],
          documents:[label:'Documents', visible: true, type:'tab'],
          details:[label:'MERI Plan', disabled:!user?.hasViewAccess, disabled:!user?.hasViewAccess, visible:program?.optionalProjectContent?.contains('MERI Plan'), type:'tab'],
          plan:[label:'Activities', visible:true, disabled:!user?.hasViewAccess, type:'tab'],
@@ -19,6 +19,8 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
          site:[label:'Sites', visible: true, disabled:!user?.hasViewAccess, type:'tab'],
          dashboard:[label:'Dashboard', visible: true, disabled:!user?.hasViewAccess, type:'tab'],
          admin:[label:'Admin', visible:(user?.isAdmin || user?.isCaseManager), type:'tab']]
+
+        return [view:'index', model:model]
     }
 
     @PreAuthorise(accessLevel = 'admin')

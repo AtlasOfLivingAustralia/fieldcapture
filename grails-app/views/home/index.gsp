@@ -244,6 +244,8 @@
                         <g:if test="${fc.userIsAlaOrFcAdmin()}">
                         <span class="span12">
                             <h4>Report: </h4>
+                            ${params.showOrganisations = 'true'} %{--// Hack for the announcements report to distinguish it from the report on the org page.--}%
+
                             <select id="dashboardType" name="dashboardType"><option value="dashboard">Activity Outputs</option><option value="greenArmy">Green Army</option><option value="announcements">Announcements</option></select>
                         </span>
                         </g:if>
