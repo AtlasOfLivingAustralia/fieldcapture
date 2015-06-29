@@ -14,8 +14,8 @@
         sldPolgonDefaultUrl: "${grailsApplication.config.sld.polgon.default.url}",
         sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}",
         viewProjectUrl: "${g.createLink(controller: 'project', action:'index')}",
-        dashboardUrl: "${g.createLink(controller: 'report', action: 'loadReport', params: params)}"
-    }
+        dashboardUrl: "${g.createLink(controller: 'report', action: 'loadReport', params: params+[showOrganisations:true])}" %{--// Hack for the announcements report to distinguish it from the report on the org page.--}%
+        };
     </r:script>
     <script type="text/javascript" src="//www.google.com/jsapi"></script>
     <r:require modules="knockout,mapWithFeatures,jquery_bootstrap_datatable,js_iso8601,amplify"/>
@@ -244,8 +244,6 @@
                         <g:if test="${fc.userIsAlaOrFcAdmin()}">
                         <span class="span12">
                             <h4>Report: </h4>
-                            ${params.showOrganisations = 'true'} %{--// Hack for the announcements report to distinguish it from the report on the org page.--}%
-
                             <select id="dashboardType" name="dashboardType"><option value="dashboard">Activity Outputs</option><option value="greenArmy">Green Army</option><option value="announcements">Announcements</option></select>
                         </span>
                         </g:if>
