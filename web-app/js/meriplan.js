@@ -175,6 +175,8 @@ function EventsRowViewModel(o) {
    self.name = ko.observable(o.name);
    self.description = ko.observable(o.description);
    self.media = ko.observable(o.media);
+   self.type = ko.observable(o.type || '');
+   self.funding = ko.observable(o.funding);
    self.scheduledDate = ko.observable(o.scheduledDate).extend({simpleDate: false});
 };
 

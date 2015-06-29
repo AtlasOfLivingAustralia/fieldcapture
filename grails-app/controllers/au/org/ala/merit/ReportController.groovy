@@ -3,13 +3,12 @@ package au.org.ala.merit
 import au.org.ala.fieldcapture.DateUtils
 import au.org.ala.fieldcapture.GmsMapper
 import org.joda.time.DateTime
-import org.joda.time.DateTimeUtils
 import org.joda.time.Interval
 import org.joda.time.Period
 
 class ReportController extends au.org.ala.fieldcapture.ReportController {
 
-    def activityService, projectService
+    def activityService, projectService, organisationService
 
     static defaultAction = "dashboard"
 
@@ -41,13 +40,16 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
         def projectIds = projects?.collect{it.projectId}
         def resp = projectService.search([projectId:projectIds, view:'sites'])
 
+        def organisations = organisationService.list()?.list
 
         def events = []
         resp?.resp?.projects.each { project ->
             if (project?.custom?.details?.events) {
                 project.custom.details.events.each { event ->
+
+                    def organisation = project.organisationId?organisations.find{it.organisationId == project.organisationId}:[:]
                     if (event.scheduledDate || event.name) {
-                        def announcement = [projectId: project.projectId, grantId: project.grantId, name: project.name, organisationName: project.organisationName, associatedProgram: project.associatedProgram, planStatus: project.planStatus, eventDate: event.scheduledDate, eventName: event.name, eventDescription: event.description, media: event.media]
+                        def announcement = [projectId: project.projectId, grantId: project.grantId, name: project.name, organisationName: project.organisationName, associatedProgram: project.associatedProgram, planStatus: project.planStatus, eventDate: event.scheduledDate, eventName: event.name, eventDescription: event.description, type:event.type, funding: event.funding, organisationWebSite:organisation?.url?:'', contact:'']
 
                         def states = new HashSet()
                         def electorates = new HashSet()
@@ -63,8 +65,8 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
                                 electorates.add(electorate)
                             }
                         }
-                        announcement.state = states.join(',')
-                        announcement.electorate = electorates.join(',')
+                        announcement.state = states.join(', ')
+                        announcement.electorate = electorates.join(', ')
                         events << announcement
                     }
                 }
