@@ -333,7 +333,7 @@
 					<td width="10%"> <div style="text-align: center; "><input data-bind="datepicker:scheduledDate.date, disable: $parent.isProjectDetailsLocked()" type="text" style="text-align: center; width: 90%;"/></div></td>
 					<td width="14%"> <select data-bind="value:type" style="text-align: center; width: 90%;" data-validation-engine="validate[required]"><option value="">Please select</option><option>Grant opening</option><option>Announce successful applicants</option><option>Other event/announcement</option></select></td>
 					<td width="40%"> <textarea style="width: 97%;" rows="3"  class="input-xlarge"  data-bind="value: description"></textarea></td>
-					<td width="10%"> <input type="text" class="form-control" style="width:90%" data-bind="value:funding" ></td>
+					<td width="10%"> <input type="text" class="form-control" style="width:90%" data-bind="value:funding" data-validation-engine="validate[custom[number]]"></td>
 					<td width="4%"> <span data-bind="if: $index()" ><i class="icon-remove" data-bind="click: $parent.removeEvents"></i></span></td>
 				</tr>
 				</tbody>
