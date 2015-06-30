@@ -36,7 +36,7 @@ if (Environment.current == Environment.DEVELOPMENT) {
     grails.plugin.location.'fieldcapture-plugin' = pluginLocation
 
     def testPluginLocation = props.getProperty("fieldcapture-test-plugin.location") ?: '../fieldcapture-test-plugin'
-    grails.plugin.location.'fieldcapture-test-plugin' = testPluginLocation
+    grails.plugin.location.'fieldcapture-test' = testPluginLocation
 
 }
 grails.project.dependency.resolver = "maven"
@@ -73,7 +73,7 @@ grails.project.dependency.resolution = {
         build ":release:3.0.1"
 
         if (Environment.current != Environment.DEVELOPMENT) {
-            compile ":fieldcapture-plugin:1.1.4-SNAPSHOT"
+            compile ":fieldcapture-plugin:1.1.5-SNAPSHOT"
             test ":fieldcapture-test:0.1-SNAPSHOT"
         }
 

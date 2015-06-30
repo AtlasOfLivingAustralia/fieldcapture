@@ -1,6 +1,7 @@
 package au.org.ala.merit
 
 import au.org.ala.fieldcapture.DateUtils
+import au.org.ala.fieldcapture.RoleService
 import grails.converters.JSON
 import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.Row
@@ -25,6 +26,97 @@ import java.text.SimpleDateFormat
 class OrganisationController extends au.org.ala.fieldcapture.OrganisationController {
 
     def activityService, metadataService, projectService
+
+
+    protected Map content(organisation) {
+
+        def user = userService.getUser()
+        def members = organisationService.getMembersOfOrganisation(organisation.organisationId)
+        def orgRole = members.find { it.userId == user?.userId } ?: [:]
+        def hasAdminAccess = userService.userIsAlaOrFcAdmin() || orgRole.role == RoleService.PROJECT_ADMIN_ROLE
+
+        def hasViewAccess = hasAdminAccess || userService.userHasReadOnlyAccess() || orgRole.role == RoleService.PROJECT_EDITOR_ROLE
+        def reportingVisible = organisation.reports && hasAdminAccess || userService.userHasReadOnlyAccess()
+
+        def dashboardReports = [[name:'dashboard', label:'Activity Outputs']]
+        if (hasAdminAccess) {
+            dashboardReports += [name:'announcements', label:'Announcements']
+            if (organisation.projects.find{it.associatedProgram == 'Green Army'}) {
+                dashboardReports += [name:'greenArmy', label:'Green Army']
+            }
+        }
+
+        [reporting : [label: 'Reporting', visible: reportingVisible, default:reportingVisible, type: 'tab'],
+         projects : [label: 'Projects', visible: true, default:!reportingVisible, type: 'tab', disableProjectCreation:true],
+         sites    : [label: 'Sites', visible: true, type: 'tab', template:'/shared/sites', projectCount:organisation.projects?.size()?:0],
+         dashboard: [label: 'Dashboard', visible: hasViewAccess, type: 'tab', template:'/shared/dashboard', reports:dashboardReports],
+         admin    : [label: 'Admin', visible: hasAdminAccess, type: 'tab']]
+    }
+
+    /**
+     * Presents a page which allows the user to edit the events/announcements for all of the projects managed by
+     * this organisation at once.
+     */
+    def editAnnouncements() {
+
+        def organisationId = params.organisationId
+
+        def organisation = organisationId ? organisationService.get(organisationId, 'flat') : null
+
+        if (!organisation || organisation.error) {
+            render status:404, text:'Organisation with id "'+organisationId+'" does not exist.'
+            return
+        }
+
+        if (!userService.userIsAlaOrFcAdmin() && !organisationService.isUserAdminForOrganisation(organisationId)) {
+            flash.message = 'Only organisation administrators can perform this action.'
+            redirect action:'index', id:organisationId
+            return
+        }
+
+        def queryParams = [max:1500, fq:['organisationFacet:'+organisation.name]]
+        queryParams.query = "docType:project"
+        def results = searchService.allProjects(queryParams, queryParams.query)
+        def projects = results?.hits?.hits?.findAll{it._source.custom?.details?.events}.collect{it._source}
+
+        def announcements = []
+        projects.each { project ->
+            project.custom.details.events.each { event ->
+                announcements << [projectId: project.projectId, grantId: project.grantId, name: project.name, organisationName: project.organisationName, associatedProgram: project.associatedProgram, planStatus: project.planStatus, eventDate: event.scheduledDate, eventName: event.name, eventDescription: event.description, media: event.media]
+            }
+        }
+        [events:announcements, organisation: organisation]
+    }
+
+    /**
+     * Bulk saves the edits to project events/announcements.
+     */
+    def saveAnnouncements(String id) {
+
+        def organisation = id ? organisationService.get(id, 'flat') : null
+
+        if (!organisation || organisation.error) {
+            def resp = [status:404, text:'Organisation with id "'+id+'" does not exist.']
+            respond([status: resp.status], (resp as JSON))
+            return
+        }
+
+        if (!userService.userIsAlaOrFcAdmin() && !organisationService.isUserAdminForOrganisation(id)) {
+            def resp = [status:403, message:'You are not authorized to perform that operation.']
+            respond(status: resp.status,(resp as JSON))
+            return
+        }
+
+        def announcements = request.JSON
+
+        def announcementsByProject = announcements.groupBy { it.projectId }
+        announcementsByProject.each { projectId, projectAnnouncements ->
+            projectAnnouncements = projectAnnouncements.collect {[scheduledDate:it.eventDate, name:it.eventName, description: it.eventDescription, media:it.media]}
+            projectService.update(projectId, [custom:[details:[events:projectAnnouncements]]])
+        }
+        def resp = [status:200, message:'success']
+        respond(status:200, resp as JSON)
+    }
 
     def report(String id) {
 
@@ -548,9 +640,5 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
             activityService.bulkUpdateActivities(activityIds, [plannedStartDate: plannedStartDate, plannedEndDate: plannedEndDate])
         }
         projectService.createReportingActivitiesForProject(project.projectId, [[period: Period.months(1), type: 'Green Army - Monthly project status report']])
-    }
-
-    def isProjectCreationDisabled() {
-        return true;
     }
 }

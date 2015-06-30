@@ -2,14 +2,13 @@ package au.org.ala.merit
 
 import au.org.ala.fieldcapture.DateUtils
 import au.org.ala.fieldcapture.GmsMapper
-import grails.converters.JSON
 import org.joda.time.DateTime
 import org.joda.time.Interval
 import org.joda.time.Period
 
 class ReportController extends au.org.ala.fieldcapture.ReportController {
 
-    def activityService, projectService
+    def activityService, projectService, organisationService
 
     static defaultAction = "dashboard"
 
@@ -31,20 +30,6 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
 
     }
 
-    def loadReport() {
-        switch (params.report) {
-            case 'greenArmy' :
-                forward action: 'greenArmyReport', params:params
-                break
-            case 'announcements' :
-                forward action: 'announcementsReport', params:params
-                break
-            default:
-                forward action: 'dashboardReport', params:params
-                break
-        }
-    }
-
     def announcementsReport() {
 
         def newParams = [max:1500] + params
@@ -55,13 +40,16 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
         def projectIds = projects?.collect{it.projectId}
         def resp = projectService.search([projectId:projectIds, view:'sites'])
 
+        def organisations = organisationService.list()?.list
 
         def events = []
         resp?.resp?.projects.each { project ->
             if (project?.custom?.details?.events) {
                 project.custom.details.events.each { event ->
+
+                    def organisation = project.organisationId?organisations.find{it.organisationId == project.organisationId}:[:]
                     if (event.scheduledDate || event.name) {
-                        def announcement = [projectId: project.projectId, grantId: project.grantId, name: project.name, organisationName: project.organisationName, associatedProgram: project.associatedProgram, planStatus: project.planStatus, eventDate: event.scheduledDate, eventName: event.name, eventDescription: event.description, media: event.media]
+                        def announcement = [projectId: project.projectId, grantId: project.grantId, name: project.name, organisationName: project.organisationName, associatedProgram: project.associatedProgram, planStatus: project.planStatus, eventDate: event.scheduledDate, eventName: event.name, eventDescription: event.description, type:event.type, funding: event.funding, organisationWebSite:organisation?.url?:'', contact:'']
 
                         def states = new HashSet()
                         def electorates = new HashSet()
@@ -77,8 +65,8 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
                                 electorates.add(electorate)
                             }
                         }
-                        announcement.state = states.join(',')
-                        announcement.electorate = electorates.join(',')
+                        announcement.state = states.join(', ')
+                        announcement.electorate = electorates.join(', ')
                         events << announcement
                     }
                 }
@@ -90,8 +78,13 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
 
     def greenArmyReport() {
 
-        def startDate = new DateTime(2014, 7 , 1, 0, 0)
-        def endDate = new DateTime(2015, 7 , 2, 0, 0) // This is a workaround for a UTC vs local time.
+        Integer financialYear = params.getInt('financialYear')
+        if (!financialYear) {
+            financialYear = defaultYearForReport()
+        }
+
+        def startDate = new DateTime(financialYear, 7 , 1, 0, 0)
+        def endDate = new DateTime(financialYear+1, 7 , 2, 0, 0) // This is a workaround for a UTC vs local time.
 
         params.dates = buildDateGroupingCriteria(startDate, endDate, Period.months(1))
         def monthlySummary = searchService.report(params)
@@ -110,9 +103,38 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
 
 
         def reports = monthlyAndQuarterlyReports(startDate, endDate)
-        render view:'_greenArmy', model:[monthlySummary:monthlySummary, quarterlySummary:quarterlySummary, adHocReports:adHocReport(startDate, endDate), monthlyActivities:reports.monthlyReports, quarterlyReports:reports.quarterlyReports, includeOrganisationName:params.includeOrganisationName?:false]
+        render view:'_greenArmy', model:
+                [
+                 availableYears:availableYears(),
+                 financialYear:financialYear,
+                 monthlySummary:monthlySummary,
+                 quarterlySummary:quarterlySummary,
+                 adHocReports:adHocReport(startDate, endDate),
+                 monthlyActivities:reports.monthlyReports,
+                 quarterlyReports:reports.quarterlyReports,
+                 includeOrganisationName:params.includeOrganisationName?:false]
 
     }
+
+    private def defaultYearForReport() {
+        def now = new DateTime()
+        def cutoff = now.minusMonths(7)  // Default to the previous financial year for the first month of the new one.
+
+        return cutoff.year
+    }
+
+    private List availableYears() {
+        def availableYears = []
+        int first = 2014
+        int year = first
+        int current = DateUtils.currentFinancialYear()
+        while (year <= current) {
+            availableYears << [label:"${year}/${year+1}", value:year]
+            year++
+        }
+        availableYears
+    }
+
 
     private List<String> buildDateGroupingCriteria(DateTime startDate, DateTime endDate, Period period) {
         List<String> dateRanges = []
@@ -135,7 +157,7 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
         def types = ['Green Army - Monthly project status report', 'Green Army - Quarterly project report']
         def criteria = [type: types, projectId: projectIds, dateProperty:'plannedEndDate', startDate : startDate.toDate(), endDate: endDate.toDate()]
         def resp = activityService.search(criteria)
-        def activities = resp?.resp?.activities
+        def activities = resp?.resp?.activities ?: []
 
         activities.each {activity ->
             def project = projects.find{it.projectId == activity.projectId}
@@ -168,7 +190,7 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
         def criteria = [type: types, projectId: projectIds, dateProperty:'plannedEndDate', startDate : startDate.toDate(), endDate: endDate.toDate()]
         def resp = activityService.search(criteria)
 
-        def activities = resp?.resp?.activities
+        def activities = resp?.resp?.activities ?: []
         def groupedReports = activities.groupBy{it.projectId}
 
         def adHocReports = groupedReports.collect{k, v -> [projectId:k, grantId:projects.find{it.projectId == k}?.grantId, reports:v]}

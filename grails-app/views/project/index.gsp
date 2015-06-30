@@ -148,7 +148,7 @@
             <div class="tab-pane" id="site">
                 <!-- SITES -->
                 <!-- ko stopBinding:true -->
-                <g:render plugin="fieldcapture-plugin" template="/site/sitesList"/>
+                <g:render plugin="fieldcapture-plugin" template="/site/sitesList" model="${[editable:user?.isEditor]}"/>
                 <!-- /ko -->
 
             </div>
@@ -658,6 +658,26 @@
                     preventNavigationIfDirty:true,
                     defaultDirtyFlag:ko.dirtyFlag
                 });
+
+
+            $('#project-details-save').appear().on('appear', function() {
+                $('#floating-save').slideUp(400);
+            }).on('disappear', function() {
+                if (viewModel.details.dirtyFlag.isDirty()) {
+                    $('#floating-save').slideDown(400);
+                }
+                else {
+                    $('#floating-save').slideUp(400);
+                }
+            });
+            viewModel.details.dirtyFlag.isDirty.subscribe(function(dirty) {
+                if (dirty && !$('#floating-save').is(':appeared')) {
+                   $('#floating-save').slideDown(400);
+                }
+                else {
+                    $('#floating-save').slideUp(400);
+                }
+            });
             autoSaveModel(
                 viewModel.risks,
                 '${createLink(action: 'ajaxUpdate', id: project.projectId)}',

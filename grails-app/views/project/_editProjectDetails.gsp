@@ -1,33 +1,63 @@
+<style type="text/css">
+#floating-save {
+	position: fixed;
+	bottom:0;
+	left:0;
+	width:100%;
+	height:40px;
+}
+#floating-save .transparent-background {
+	background-color:#000000;
+	opacity: 0.2;
+}
+#floating-save div {
+	width: 100%;
+	height:30px;
+
+	position: absolute;
+	top: 0;
+	left:0;
+	padding-top: 5px;
+	padding-bottom:5px;
+	text-align:center;
+}
+#floating-save button {
+	top:5px;
+}
+#announcements th {
+	white-space: normal;
+}
+</style>
+
 <!--  Case manager actions -->
-<div class="row-fluid space-after">
+<div class="row-fluid space-after" data-bind="visible: userIsCaseManager() && (planStatus() == 'approved' || planStatus() == 'submitted')">
 	<div class="span6 required">
-		<div data-bind="if: userIsCaseManager()">
-			<div data-bind="if: planStatus() == 'approved'">
-				<div class="form-actions">
-					<b>Grant manager actions:</b>
-					<button type="button" data-bind="click: modifyPlan"  id="modify-plan" class="btn btn-info">Modify MERI Plan</button>
-					<br/><br/>
-					<ul>
-						<li>"Modify MERI Plan" will allow project admin's to edit MERI plan information. </li>
-						<li>Modifying the MERI plan will change the state of the project to "Not approved".</li>
-					</ul>
-				</div>
+		<div data-bind="if: planStatus() == 'approved'">
+			<div class="form-actions">
+				<b>Grant manager actions:</b>
+				<button type="button" data-bind="click: modifyPlan"  id="modify-plan" class="btn btn-info">Modify MERI Plan</button>
+				<br/><br/>
+				<ul>
+					<li>"Modify MERI Plan" will allow project admin's to edit MERI plan information. </li>
+					<li>Modifying the MERI plan will change the state of the project to "Not approved".</li>
+				</ul>
 			</div>
-			<div data-bind="if: planStatus() == 'submitted'">
-				<div class="form-actions" >
-					<b>Case manager actions:</b>
-					<span class="btn-group">
-						<button type="button" data-bind="click:approvePlan" class="btn btn-success"><i class="icon-ok icon-white"></i> Approve</button>
-						<button type="button" data-bind="click:rejectPlan" class="btn btn-danger"><i class="icon-remove icon-white"></i> Reject</button>
-					</span>
-				</div>
+		</div>
+		<div data-bind="if: planStatus() == 'submitted'">
+			<div class="form-actions" >
+				<b>Case manager actions:</b>
+				<span class="btn-group">
+					<button type="button" data-bind="click:approvePlan" class="btn btn-success"><i class="icon-ok icon-white"></i> Approve</button>
+					<button type="button" data-bind="click:rejectPlan" class="btn btn-danger"><i class="icon-remove icon-white"></i> Reject</button>
+				</span>
 			</div>
 		</div>
 
 	</div>
 </div>
 <g:if test="${projectContent.details.visible}">
-<div class="row-fluid">
+
+	<div class="row-fluid">
 	<div class="control-group">
 		<div style="float: left;" class="controls">
 			<b>From: </b><span data-bind="text: plannedStartDate.formattedDate"></span>  <b>To: </b> <span data-bind="text: plannedEndDate.formattedDate"></span>
@@ -255,25 +285,30 @@
 
 <div class="row-fluid space-after">
 	<div>
-		<div id="keq" class="well well-small">
+		<div id="announcements" class="well well-small">
 			<label>
 				<b>Projects Announcements
 				<fc:iconHelp title="Projects Announcements">This section provides Grantee’s a place to provide key forward (planned) announcables and invite the Australian Government to participate in launches, communication and media opportunities related to this requirement. This includes opportunities to announce recipients of small projects and related activities.</fc:iconHelp>
 				</b>
 			</label>
 
-			<table class="table" style="width: 100%;" >
+            <table class="table" style="width: 100%;" >
 				<thead>
 				<tr>
 					<th></th>
-					<th>Proposed event/announcement
-					<fc:iconHelp title="Proposed event/ announcement">
-						Title of the event, for example: '  xxxx Region / CMA Community Seed Planting Day.'
+					<th>Name of grant round or other event/announcement
+					<fc:iconHelp title="Name of grant round or other event/announcement ">
+						TBA
 					</fc:iconHelp>
 					</th>
 					<th>Proposed Date of event/<br/>announcement (if known)
 					<fc:iconHelp title="Proposed Date of event/announcement (if known) ">
 						Please indicate if this date is confirmed (C) or whether it is to be confirmed (TBC) in the description field.
+					</fc:iconHelp>
+					</th>
+					<th>Type of event/<br/>announcement
+					<fc:iconHelp title="Type of event ">
+						TBA
 					</fc:iconHelp>
 					</th>
 					<th>Description of the event
@@ -282,10 +317,10 @@
 					</fc:iconHelp>
 					</th>
 
-					<th> <span style="word-wrap: break-word">Will there be, or do you <br/>intend there to be, media <br/> involvement in this event?</span>
-						<fc:iconHelp title="Will there be, or do you intend there to be, media involvement in this event? Y/N">
-							Will traditional forms of media be involved, such as TV, radio and print media? Have you already organised this media to attend? What about social  media opportunities?
-						</fc:iconHelp>
+					<th>Value of funding round
+					<fc:iconHelp title="Value of funding round ">
+						TBA
+					</fc:iconHelp>
 					</th>
 
 					<th></th>
@@ -295,10 +330,11 @@
 				<tr>
 					<td width="2%">  <span data-bind="text:$index()+1"></span></td>
 					<td width="20%"> <textarea style="width: 97%;" rows="2"  class="input-xlarge"  data-bind="value: name, disable: $parent.isProjectDetailsLocked()"></textarea></td>
-					<td width="10%"> <div style="text-align: center; "><input data-bind="datepicker:scheduledDate.date, disable: $parent.isProjectDetailsLocked()" type="text" style="text-align: center; width: 75%;"/></div></td>
-					<td width="54%"> <textarea style="width: 97%;" rows="2"  class="input-xlarge"  data-bind="value: description,disable: $parent.isProjectDetailsLocked()"></textarea></td>
-					<td width="10%"> <select class="form-control" data-bind="disable: $parent.isProjectDetailsLocked(), options: $parent.mediaOptions, optionsText:'name', optionsValue:'id', value:media, optionsCaption:'-- Please select --'" ></select> </td>
-					<td width="4%"> <span data-bind="if: $index() && !$parent.isProjectDetailsLocked()" ><i class="icon-remove" data-bind="click: $parent.removeEvents"></i></span></td>
+					<td width="10%"> <div style="text-align: center; "><input data-bind="datepicker:scheduledDate.date, disable: $parent.isProjectDetailsLocked()" type="text" style="text-align: center; width: 90%;"/></div></td>
+					<td width="14%"> <select data-bind="value:type" style="text-align: center; width: 90%;" data-validation-engine="validate[required]"><option value="">Please select</option><option>Grant opening</option><option>Announce successful applicants</option><option>Other event/announcement</option></select></td>
+					<td width="40%"> <textarea style="width: 97%;" rows="3"  class="input-xlarge"  data-bind="value: description"></textarea></td>
+					<td width="10%"> <input type="text" class="form-control" style="width:90%" data-bind="value:funding" data-validation-engine="validate[custom[number]]"></td>
+					<td width="4%"> <span data-bind="if: $index()" ><i class="icon-remove" data-bind="click: $parent.removeEvents"></i></span></td>
 				</tr>
 				</tbody>
 				<tfoot>
@@ -438,4 +474,9 @@
 		</div>
 
 	</div>
+</div>
+
+<div id="floating-save" style="display:none;">
+	<div class="transparent-background"></div>
+	<div><button class="right btn btn-info" data-bind="click: saveProjectDetails">Save changes</button></div>
 </div>

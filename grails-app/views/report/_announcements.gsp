@@ -7,6 +7,10 @@
         white-space: normal;
     }
 
+    #announcementsTable td {
+        white-space: normal;
+    }
+
     #announcementsTable table {
         width:100%;
     }
@@ -26,20 +30,29 @@
         var dateRenderer = function(data) {
             return convertToSimpleDate(data, false);
         };
+        var webSiteUrlRenderer = function(data, type, row, meta) {
+            return '<a href="'+data+'">'+data+'</a>';
+        };
 
         var events = <fc:modelAsJavascript model="${events}"></fc:modelAsJavascript>;
         var columns =  [
-            {title:'Proposed Date of event/announcement (if known)', data:'eventDate', render:dateRenderer},
+            {title:'Proposed Date of event/announcement (if known)', data:'eventDate', width:'5%', render:dateRenderer},
             {title:'State/Territory', width:'10%', data:'state'},
             {title:'Electorate(s) of the Project', width:'10%', data:'electorate'},
-            {title:'Name of Organisation/Proponent', width:'10%', data:'organisationName'},
+            <g:if test="${params.showOrganisations}">{title:'Name of Organisation/Proponent', width:'10%', data:'organisationName'},</g:if>
             {title:'Name', width:'25%', data:'name'},
-            {title:'Proposed event/annoucement', data:'eventName'},
-            {title:'Description of the event', data:'eventDescription'},
-            {title:'Will there be, or do you intend there to be, media involvement in this event?', data:'media'},
+            {title:'Name of grant round or other event/announcement', data:'eventName'},
+            {title:'Type of event/announcement', data:'type'},
+            {title:'Description of the event', data:'eventDescription', width:'15%'},
+            {title:'Value of funding round', data:'funding'},
             {title:'MERI plan approval status', data:'planStatus'},
             {title:'What programme does the announcement relate to?', width:'13%', data:'associatedProgram'},
-            {title:'Grant ID', width:'10%', render:projectUrlRenderer, data:'grantId'}];
+            {title:'Grant ID', width:'10%', render:projectUrlRenderer, data:'grantId'},
+            <g:if test="${params.showOrganisations}">
+                {title:'Organisation website', width:'10%', render:webSiteUrlRenderer, data:'organisationWebSite'},
+                {title:'Contact details', width:'10%', data:'contact'}
+            </g:if>
+            ];
 
 
             $('#announcementsTable').dataTable({
