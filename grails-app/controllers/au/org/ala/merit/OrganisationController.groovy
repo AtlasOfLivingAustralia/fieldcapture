@@ -77,12 +77,19 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
         def queryParams = [max:1500, fq:['organisationFacet:'+organisation.name]]
         queryParams.query = "docType:project"
         def results = searchService.allProjects(queryParams, queryParams.query)
-        def projects = results?.hits?.hits?.findAll{it._source.custom?.details?.events}.collect{it._source}
+        def projects = results?.hits?.hits?.collect{it._source}
 
         def announcements = []
         projects.each { project ->
-            project.custom.details.events.each { event ->
-                announcements << [projectId: project.projectId, grantId: project.grantId, name: project.name, organisationName: project.organisationName, associatedProgram: project.associatedProgram, planStatus: project.planStatus, eventDate: event.scheduledDate, eventName: event.name, eventDescription: event.description, media: event.media]
+            if (project.custom?.details?.events) {
+                project.custom.details.events.each { event ->
+                    announcements << [projectId: project.projectId, grantId: project.grantId, name: project.name, organisationName: project.organisationName, associatedProgram: project.associatedProgram, planStatus: project.planStatus, eventDate: event.scheduledDate, eventName: event.name, eventDescription: event.description, media: event.media]
+                }
+            }
+            else {
+                // Add a blank row to make it easier to add announcements for that project. (so the user
+                // doesn't have to select the project name which could be from a long list).
+                announcements << [projectId: project.projectId, grantId: project.grantId, name: project.name, organisationName: project.organisationName, associatedProgram: project.associatedProgram, planStatus: project.planStatus, eventDate: '', eventName: '', eventDescription: '', media: '']
             }
         }
         [events:announcements, organisation: organisation]
