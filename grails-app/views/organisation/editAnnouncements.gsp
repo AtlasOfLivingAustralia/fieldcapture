@@ -22,7 +22,8 @@
     </style>
 </head>
 
-<body class="container-fluid">
+<body>
+<div class="container-fluid">
     <ul class="breadcrumb">
         <li><g:link controller="home">Home</g:link> <span class="divider">/</span></li>
         <li><a href="${createLink(controller:'organisation', action:'index', id:organisation.organisationId)}" class="clickable">Organisation</a> <span class="divider">/</span></li>
@@ -67,16 +68,20 @@
 <r:script>
     $(function() {
 
+        function controlsFormatter() {
+            return "<button class='btn btn-container' title='Adds a new announcement for this project in the row below this'><i class='icon-plus'></i></button> <button class='btn btn-container' title='Deletes this announcement'><i class='icon-remove'></i></button>";
+        }
 
         var events = <fc:modelAsJavascript model="${events}"></fc:modelAsJavascript>;
         var organisationId = '${organisation.organisationId}';
         var columns =  [
-            {id:'grantID', name:'Grant ID', width:10, field:'grantId'},
-            {id:'projectName', name:'Project Name', width:25, field:'name', options:['','Greening the west of Melbourne - Point Cook Coastal Park and Port Phillip Bay Western Shoreline Nature Link Enhancement', 'cat', 'mat'], editor: ComboBoxEditor},
-            {id:'date', name:'Proposed Date of event/announcement (if known)', width:10, field:'eventDate', editor: Slick.Editors.Date},
-            {id:'event', name:'Proposed event/annoucement', field:'eventName', editor: Slick.Editors.Text},
-            {id:'eventDescription', name:'Description of the event', field:'eventDescription', editor: Slick.Editors.LongText},
-            {id:'media', name:'Will there be, or do you intend there to be, media involvement in this event?', editor:SelectEditor, options:[{label:'Yes', value:'yes'}, {label:'No', value:'no'}], width:10, field:'media'}
+            {id:'grantID', name:'Grant ID', width:80, field:'grantId'},
+            {id:'projectName', name:'Project Name', width:200, field:'name', options:['','Greening the west of Melbourne - Point Cook Coastal Park and Port Phillip Bay Western Shoreline Nature Link Enhancement', 'cat', 'mat'], editor: ComboBoxEditor},
+            {id:'date', name:'Proposed Date of event / announcement (if known)', width:80, field:'eventDate', formatter:dateFormatter, editor: DateEditor2},
+            {id:'event', name:'Proposed event/announcement', width:200, field:'eventName', editor: Slick.Editors.Text},
+            {id:'eventDescription', name:'Description of the event', width:200, field:'eventDescription', editor: Slick.Editors.LongText},
+            {id:'media', name:'Will there be, or do you intend there to be, media involvement in this event?', width:100, editor:SelectEditor, options:[{label:'Yes', value:'yes'}, {label:'No', value:'no'}], field:'media'},
+            {id:'controls', name:'', width:20, formatter:controlsFormatter}
             ];
 
         var options = {
@@ -112,6 +117,27 @@
                 });
             };
 
+            self.addRow = function(index) {
+                var event = events[index];
+
+                events.splice(index+1, 0, {projectId:event.projectId, name:event.name, grantId:event.grantId});
+                grid.invalidateAllRows();
+                grid.updateRowCount();
+                grid.render();
+            };
+
+            self.deleteRow = function(index) {
+                bootbox.confirm("Are you sure you want to delete this announcement?", function(ok) {
+                    if (ok) {
+                        events.splice(index, 1);
+                        grid.invalidateAllRows();
+                        grid.updateRowCount();
+                        grid.render();
+                    }
+                });
+
+            };
+
             grid.onAddNewRow.subscribe(function (e, args) {
                 var item = args.item;
                 grid.invalidateRow(events.length);
@@ -122,6 +148,17 @@
             grid.onCellChange.subscribe(function(e, args) {
                 editedAnnouncements.push(args.item);
             });
+
+            grid.onClick.subscribe(function(e) {
+                if ($(e.target).hasClass('icon-plus')) {
+                    self.addRow(grid.getCellFromEvent(e).row);
+                }
+                else if ($(e.target).hasClass('icon-remove')) {
+                    self.deleteRow(grid.getCellFromEvent(e).row);
+                }
+            });
+
+
         };
         var editAnnouncementsViewModel = new EditAnnouncementsViewModel(grid, events);
 
@@ -138,5 +175,6 @@
 
     });
 </r:script>
+</div>
 </body>
 </html>
