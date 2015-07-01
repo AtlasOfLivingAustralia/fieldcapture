@@ -92,7 +92,7 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
                 announcements << [projectId: project.projectId, grantId: project.grantId, name: project.name, organisationName: project.organisationName, associatedProgram: project.associatedProgram, planStatus: project.planStatus, eventDate: '', eventName: '', eventDescription: '', media: '']
             }
         }
-        [events:announcements, organisation: organisation]
+        [events:announcements, organisation: organisation, projectList:projects.collect{[projectId:it.projectId, name:it.name, grantId:it.grantId]}]
     }
 
     /**

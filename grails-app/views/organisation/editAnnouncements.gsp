@@ -74,9 +74,10 @@
 
         var events = <fc:modelAsJavascript model="${events}"></fc:modelAsJavascript>;
         var organisationId = '${organisation.organisationId}';
+        var projectList = <fc:modelAsJavascript model="${projectList}"/>
         var columns =  [
             {id:'grantID', name:'Grant ID', width:80, field:'grantId'},
-            {id:'projectName', name:'Project Name', width:200, field:'name', options:['','Greening the west of Melbourne - Point Cook Coastal Park and Port Phillip Bay Western Shoreline Nature Link Enhancement', 'cat', 'mat'], editor: ComboBoxEditor},
+            {id:'projectName', name:'Project Name', width:200, field:'name', options:projectList, optionLabel:'name', optionValue:'name', editor: ComboBoxEditor},
             {id:'date', name:'Proposed Date of event / announcement (if known)', width:80, field:'eventDate', formatter:dateFormatter, editor: DateEditor2},
             {id:'event', name:'Proposed event/announcement', width:200, field:'eventName', editor: Slick.Editors.Text},
             {id:'eventDescription', name:'Description of the event', width:200, field:'eventDescription', editor: Slick.Editors.LongText},
