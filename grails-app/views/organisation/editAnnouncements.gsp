@@ -73,8 +73,8 @@
         var columns =  [
             {id:'grantID', name:'Grant ID', width:10, field:'grantId'},
             {id:'projectName', name:'Project Name', width:25, field:'name', options:['','Greening the west of Melbourne - Point Cook Coastal Park and Port Phillip Bay Western Shoreline Nature Link Enhancement', 'cat', 'mat'], editor: ComboBoxEditor},
-            {id:'date', name:'Proposed Date of event/announcement (if known)', width:10, field:'eventDate', editor: Slick.Editors.Date},
-            {id:'event', name:'Proposed event/annoucement', field:'eventName', editor: Slick.Editors.Text},
+            {id:'date', name:'Proposed Date of event/announcement (if known)', width:10, field:'eventDate', formatter:dateFormatter, editor: DateEditor2},
+            {id:'event', name:'Proposed event/announcement', field:'eventName', editor: Slick.Editors.Text},
             {id:'eventDescription', name:'Description of the event', field:'eventDescription', editor: Slick.Editors.LongText},
             {id:'media', name:'Will there be, or do you intend there to be, media involvement in this event?', editor:SelectEditor, options:[{label:'Yes', value:'yes'}, {label:'No', value:'no'}], width:10, field:'media'}
             ];
