@@ -33,8 +33,18 @@ class OrganisationService extends au.org.ala.fieldcapture.OrganisationService {
     /** Overrides the parent to add Green Army reports to the results */
     def get(String id, view = '') {
 
-        def organisation = super.get(id, view)
+        def organisation = super.get(id, 'flat')
 
+        def projects = []
+        def resp = projectService.search(organisationId: id, view:'enhanced')
+        if (resp?.resp?.projects) {
+            projects += resp.resp.projects
+        }
+        resp = projectService.search(orgIdSvcProvider: id, view:'enhanced')
+        if (resp?.resp?.projects) {
+            projects += resp.resp.projects.findAll{!projects.find{project -> project.projectId == it.projectId} }
+        }
+        organisation.projects = projects
         if (view != 'flat') {
             organisation.reports = getReportsForOrganisation(organisation, getReportConfig(id))
         }
