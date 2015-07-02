@@ -293,3 +293,95 @@ function FloatViewModel(o){
 function limitText(field, maxChar){
    $(field).attr('maxlength',maxChar);
 }
+
+var EditAnnouncementsViewModel = function(grid, events) {
+    var self = this;
+    var modifiedProjects = [];
+    self.events = events.slice();
+
+    function copyEvent(event) {
+        return {
+            eventName:event.eventName,
+            eventDescription:event.eventDescription,
+            media:event.media,
+            eventDate:event.eventDate
+        };
+    }
+
+    self.modelAsJSON = function() {
+        var projects = [];
+        for (var i=0; i<modifiedProjects.length; i++) {
+            var projectAnnouncements = {projectId:modifiedProjects[i], announcements:[]};
+            for (var j=0; j<self.events.length; j++) {
+                if (self.events[j].projectId == modifiedProjects[i]) {
+                    projectAnnouncements.announcements.push(copyEvent(self.events[j]));
+                }
+
+            }
+            projects.push(projectAnnouncements);
+        }
+        return JSON.stringify(projects);
+    };
+
+    self.cancel = function() {
+        self.cancelAutosave();
+        document.location.href = fcConfig.organisationViewUrl;
+    };
+
+    self.save = function() {
+        self.saveWithErrorDetection(function() {
+            document.location.href = fcConfig.organisationViewUrl;
+        });
+    };
+
+    self.insertRow = function(index) {
+        var event = events[index];
+        modifiedProjects.push(event.projectId);
+        self.events.splice(index+1, 0, {projectId:event.projectId, name:event.name, grantId:event.grantId});
+        grid.invalidateAllRows();
+        grid.updateRowCount();
+        grid.render();
+    };
+
+    self.deleteRow = function(index) {
+        bootbox.confirm("Are you sure you want to delete this announcement?", function(ok) {
+            if (ok) {
+                var deleted = self.events.splice(index, 1);
+                modifiedProjects.push(deleted[0].projectId);
+                grid.invalidateAllRows();
+                grid.updateRowCount();
+                grid.render();
+            }
+        });
+    };
+
+    self.addRow = function(item) {
+        events.push(item);
+        grid.invalidateRow(events.length);
+        grid.updateRowCount();
+        grid.render();
+    };
+
+    self.eventEdited = function(event) {
+        modifiedProjects.push(event.projectId);
+    };
+
+    // Attach event handlers to the grid
+    grid.onAddNewRow.subscribe(function (e, args) {
+        var item = args.item;
+        self.addRow(item);
+    });
+    grid.onCellChange.subscribe(function(e, args) {
+        self.eventEdited(args.item);
+    });
+
+    grid.onClick.subscribe(function(e) {
+        if ($(e.target).hasClass('icon-plus')) {
+            self.addRow(grid.getCellFromEvent(e).row);
+        }
+        else if ($(e.target).hasClass('icon-remove')) {
+            self.deleteRow(grid.getCellFromEvent(e).row);
+        }
+    });
+    grid.setData(self.events);
+};

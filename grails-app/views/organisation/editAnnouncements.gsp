@@ -12,7 +12,7 @@
         },
         here = document.location.href;
     </r:script>
-    <r:require modules="knockout,jqueryValidationEngine,datepicker,slickgrid,jQueryFileUpload,jQueryFileDownload,amplify"/>
+    <r:require modules="knockout,jqueryValidationEngine,datepicker,slickgrid,jQueryFileUpload,jQueryFileDownload,amplify,merit_projects"/>
     <style type="text/css">
     input.editor-text {box-sizing:border-box; width: 100%;}
     .slick-column-name { white-space: normal; }
@@ -95,73 +95,10 @@
         };
 
 
-        var grid = new Slick.Grid("#announcementsTable", events, columns, options);
+        var grid = new Slick.Grid("#announcementsTable", [], columns, options);
 
-        grid.init();
-
-        var EditAnnouncementsViewModel = function(grid, events) {
-            var self = this;
-            var editedAnnouncements = [];
-
-            self.modelAsJSON = function() {
-                return JSON.stringify(editedAnnouncements);
-            };
-
-            self.cancel = function() {
-                self.cancelAutosave();
-                document.location.href = fcConfig.organisationViewUrl;
-            };
-
-            self.save = function() {
-                self.saveWithErrorDetection(function() {
-                    document.location.href = fcConfig.organisationViewUrl;
-                });
-            };
-
-            self.addRow = function(index) {
-                var event = events[index];
-
-                events.splice(index+1, 0, {projectId:event.projectId, name:event.name, grantId:event.grantId});
-                grid.invalidateAllRows();
-                grid.updateRowCount();
-                grid.render();
-            };
-
-            self.deleteRow = function(index) {
-                bootbox.confirm("Are you sure you want to delete this announcement?", function(ok) {
-                    if (ok) {
-                        events.splice(index, 1);
-                        grid.invalidateAllRows();
-                        grid.updateRowCount();
-                        grid.render();
-                    }
-                });
-
-            };
-
-            grid.onAddNewRow.subscribe(function (e, args) {
-                var item = args.item;
-                grid.invalidateRow(events.length);
-                events.push(item);
-                grid.updateRowCount();
-                grid.render();
-            });
-            grid.onCellChange.subscribe(function(e, args) {
-                editedAnnouncements.push(args.item);
-            });
-
-            grid.onClick.subscribe(function(e) {
-                if ($(e.target).hasClass('icon-plus')) {
-                    self.addRow(grid.getCellFromEvent(e).row);
-                }
-                else if ($(e.target).hasClass('icon-remove')) {
-                    self.deleteRow(grid.getCellFromEvent(e).row);
-                }
-            });
-
-
-        };
         var editAnnouncementsViewModel = new EditAnnouncementsViewModel(grid, events);
+        grid.init();
 
         var options = {
             storageKey : 'BULK_ANNOUNCEMENTS'+organisationId,
