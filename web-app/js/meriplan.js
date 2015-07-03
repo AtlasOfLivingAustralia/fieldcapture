@@ -329,6 +329,7 @@ var EditAnnouncementsViewModel = function(grid, events) {
     };
 
     self.save = function() {
+        Slick.GlobalEditorLock.commitCurrentEdit();
         self.saveWithErrorDetection(function() {
             document.location.href = fcConfig.organisationViewUrl;
         });
@@ -355,29 +356,51 @@ var EditAnnouncementsViewModel = function(grid, events) {
         });
     };
 
-    self.addRow = function(item) {
-        events.push(item);
-        grid.invalidateRow(events.length);
+    self.addRow = function(item, args) {
+        self.events.push(item);
+        if (item.name) {
+            self.projectNameEdited(item, args);
+        }
+        grid.invalidateAllRows(args.row);
+
         grid.updateRowCount();
         grid.render();
     };
 
-    self.eventEdited = function(event) {
+    self.eventEdited = function(event, args) {
         modifiedProjects.push(event.projectId);
+        if (args.cell == 1) {
+            self.projectNameEdited(event, args);
+            grid.invalidateRow(args.row);
+            grid.render();
+        }
+
+    };
+
+    self.projectNameEdited = function(event, args) {
+        // The project has been changed.
+        for (var i=0; i<self.events.length; i++) {
+            if (self.events[i].name == event.name) {
+                event.projectId = self.events[i].projectId;
+                event.grantId = self.events[i].grantId;
+                modifiedProjects.push(event.projectId); // Both the previous and new projects have been modified.
+                break;
+            }
+        }
     };
 
     // Attach event handlers to the grid
     grid.onAddNewRow.subscribe(function (e, args) {
         var item = args.item;
-        self.addRow(item);
+        self.addRow(item, args);
     });
     grid.onCellChange.subscribe(function(e, args) {
-        self.eventEdited(args.item);
+        self.eventEdited(args.item, args);
     });
 
     grid.onClick.subscribe(function(e) {
         if ($(e.target).hasClass('icon-plus')) {
-            self.addRow(grid.getCellFromEvent(e).row);
+            self.insertRow(grid.getCellFromEvent(e).row);
         }
         else if ($(e.target).hasClass('icon-remove')) {
             self.deleteRow(grid.getCellFromEvent(e).row);

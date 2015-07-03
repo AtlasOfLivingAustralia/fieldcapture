@@ -6,7 +6,7 @@ describe("the EditAnnouncementsViewModel", function () {
         for (var i=0; i<projects.length; i++) {
             var id = projects[i].projectId;
             for (var j=0; j<projects[i].eventCount; j++) {
-                tmpEvents.push({projectId:id, eventName:"name "+j+" for project "+id, eventDescription:"description "+j+" for project "+id});
+                tmpEvents.push({projectId:id, name:"Project "+id, grantId:"Grant"+id, eventName:"name "+j+" for project "+id, eventDescription:"description "+j+" for project "+id});
             }
         }
         return tmpEvents;
@@ -19,7 +19,8 @@ describe("the EditAnnouncementsViewModel", function () {
             setData:function(){},
             invalidateAllRows:function(){},
             updateRowCount:function(){},
-            render:function(){}
+            render:function(){},
+            invalidateRow:function(){}
         };
         window.bootbox = {
             confirm : function(message, callback) {
@@ -39,7 +40,7 @@ describe("the EditAnnouncementsViewModel", function () {
     });
 
     it("should return all announcements for a project if any event related to that project is edited", function() {
-        model.eventEdited({projectId:'1', eventName:'test'});
+        model.eventEdited({projectId:'1', eventName:'test'}, {});
         var result = JSON.parse(model.modelAsJSON());
         expect(result.length).toEqual(1);
         expect(result[0].projectId).toEqual('1');
@@ -60,6 +61,21 @@ describe("the EditAnnouncementsViewModel", function () {
         expect(result.length).toEqual(1);
         expect(result[0].projectId).toEqual('1');
         expect(result[0].announcements.length).toEqual(2);
+    });
+
+    it("should update the previous and current project if the project name is edited", function(){
+        model.eventEdited({projectId:'1', name:'Project 2'}, {cell:1});
+        var result = JSON.parse(model.modelAsJSON());
+        expect(result.length).toEqual(2);
+        expect(result[0].projectId).toEqual('1');
+        expect(result[1].projectId).toEqual('2');
+    });
+
+    it("should update the grantId and projectId if the project name is edited", function(){
+        var event = {projectId:'1', name:'Project 2'};
+        model.eventEdited(event, {cell:1});
+        expect(event.projectId).toEqual('2');
+        expect(event.grantId).toEqual('Grant2');
     });
 
     function event(projectId, name, description) {

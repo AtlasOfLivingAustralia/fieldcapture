@@ -114,15 +114,13 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
             return
         }
 
-        def announcements = request.JSON
-
-        def announcementsByProject = announcements.groupBy { it.projectId }
-        announcementsByProject.each { projectId, projectAnnouncements ->
-            projectAnnouncements = projectAnnouncements.collect {[scheduledDate:it.eventDate, name:it.eventName, description: it.eventDescription, media:it.media]}
-            projectService.update(projectId, [custom:[details:[events:projectAnnouncements]]])
+        def announcementsByProject = request.JSON
+        announcementsByProject.each { project ->
+            def projectAnnouncements = project.announcements.collect {[scheduledDate:it.eventDate, name:it.eventName, description: it.eventDescription, media:it.media]}
+            projectService.update(project.projectId, [custom:[details:[events:projectAnnouncements]]])
         }
-        def resp = [status:200, message:'success']
-        respond(status:200, resp as JSON)
+        Object resp = [status:200, message:'success']
+        respond(resp)
     }
 
     def report(String id) {

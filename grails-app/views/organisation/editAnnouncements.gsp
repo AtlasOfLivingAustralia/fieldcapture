@@ -81,7 +81,7 @@
             {id:'date', name:'Proposed Date of event / announcement (if known)', width:80, field:'eventDate', formatter:dateFormatter, editor: DateEditor2},
             {id:'event', name:'Proposed event/announcement', width:200, field:'eventName', editor: Slick.Editors.Text},
             {id:'eventDescription', name:'Description of the event', width:200, field:'eventDescription', editor: Slick.Editors.LongText},
-            {id:'media', name:'Will there be, or do you intend there to be, media involvement in this event?', width:100, editor:SelectEditor, options:[{label:'Yes', value:'yes'}, {label:'No', value:'no'}], field:'media'},
+            {id:'media', name:'Will there be, or do you intend there to be, media involvement in this event?', width:100, editor:SelectEditor, formatter:optionsFormatter, options:[{label:'Yes', value:'yes'}, {label:'No', value:'no'}], field:'media'},
             {id:'controls', name:'', width:20, formatter:controlsFormatter}
             ];
 
