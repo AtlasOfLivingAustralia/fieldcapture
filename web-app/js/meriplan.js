@@ -303,8 +303,9 @@ var EditAnnouncementsViewModel = function(grid, events) {
         return {
             eventName:event.eventName,
             eventDescription:event.eventDescription,
-            media:event.media,
-            eventDate:event.eventDate
+            funding:event.funding,
+            eventDate:event.eventDate,
+            eventType:event.eventType
         };
     }
 

@@ -78,10 +78,11 @@
         var columns =  [
             {id:'grantID', name:'Grant ID', width:80, field:'grantId'},
             {id:'projectName', name:'Project Name', width:200, field:'name', options:projectList, optionLabel:'name', optionValue:'name', editor: ComboBoxEditor},
-            {id:'date', name:'Proposed Date of event / announcement (if known)', width:80, field:'eventDate', formatter:dateFormatter, editor: DateEditor2},
             {id:'event', name:'Proposed event/announcement', width:200, field:'eventName', editor: Slick.Editors.Text},
+            {id:'date', name:'Proposed Date of event / announcement (if known)', width:80, field:'eventDate', formatter:dateFormatter, editor: DateEditor2},
+            {id:'type', name:'Type of event / announcement (if known)', width:80, field:'eventType', formatter:optionsFormatter, editor: SelectEditor, options:[{label:'', value:''},{label:'Grant Opening', value:'Grant Opening'}, {label:'Announce successful applicants', value:'Announce successful applicants'}, {label:'Other event/announcement', value:'Other event/announcement'}], validationRules:'validate[required]'},
             {id:'eventDescription', name:'Description of the event', width:200, field:'eventDescription', editor: Slick.Editors.LongText},
-            {id:'media', name:'Will there be, or do you intend there to be, media involvement in this event?', width:100, editor:SelectEditor, formatter:optionsFormatter, options:[{label:'Yes', value:'yes'}, {label:'No', value:'no'}], field:'media'},
+            {id:'value', name:'Value of funding round', width:100, editor:Slick.Editors.Integer, field:'funding'},
             {id:'controls', name:'', width:20, formatter:controlsFormatter}
             ];
 
@@ -113,6 +114,12 @@
         autoSaveModel(editAnnouncementsViewModel, fcConfig.saveAnnouncementsUrl, options);
 
         ko.applyBindings(editAnnouncementsViewModel);
+
+        $('.validationEngineContainer').validationEngine({scroll:false});
+        $('.helphover').popover({animation: true, trigger:'hover'});
+        // Hacky slickgrid / jqueryValidationEngine integration for some amount of user experience consistency.
+        $('.slick-row').addClass('validationEngineContainer').validationEngine({scroll:false});
+
 
     });
 </r:script>
