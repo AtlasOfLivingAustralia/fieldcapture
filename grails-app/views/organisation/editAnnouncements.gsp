@@ -91,7 +91,10 @@
             enableCellNavigation: true,
             forceFitColumns:true,
             autoHeight:true,
-            explicitInitialization:true
+            explicitInitialization:true,
+            enableColumnReorder:false,
+            enableTextSelectionOnCells:true,
+            editFocusRight:true
         };
 
 
