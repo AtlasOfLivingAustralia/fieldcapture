@@ -9,5 +9,5 @@ import org.junit.runner.RunWith
 @RunWith(KarmaTestSuiteRunner.class)
 @KarmaTestSuiteRunner.KarmaProcessName("node_modules/karma/bin/karma")
 @KarmaTestSuiteRunner.KarmaConfigPath("test/unit/javascript/karma.ci.conf.js")
-class JavaScriptUnitTestKarmaSuite {
+class MeritJavaScriptUnitTestKarmaSuite {
 }
