@@ -293,3 +293,119 @@ function FloatViewModel(o){
 function limitText(field, maxChar){
    $(field).attr('maxlength',maxChar);
 }
+
+var EditAnnouncementsViewModel = function(grid, events) {
+    var self = this;
+    var modifiedProjects = [];
+    self.events = events.slice();
+
+    function copyEvent(event) {
+        return {
+            eventName:event.eventName,
+            eventDescription:event.eventDescription,
+            funding:event.funding,
+            eventDate:event.eventDate,
+            eventType:event.eventType
+        };
+    }
+
+    self.modelAsJSON = function() {
+        var projects = [];
+        for (var i=0; i<modifiedProjects.length; i++) {
+            var projectAnnouncements = {projectId:modifiedProjects[i], announcements:[]};
+            for (var j=0; j<self.events.length; j++) {
+                if (self.events[j].projectId == modifiedProjects[i]) {
+                    projectAnnouncements.announcements.push(copyEvent(self.events[j]));
+                }
+
+            }
+            projects.push(projectAnnouncements);
+        }
+        return JSON.stringify(projects);
+    };
+
+    self.cancel = function() {
+        self.cancelAutosave();
+        document.location.href = fcConfig.organisationViewUrl;
+    };
+
+    self.save = function() {
+        Slick.GlobalEditorLock.commitCurrentEdit();
+        self.saveWithErrorDetection(function() {
+            document.location.href = fcConfig.organisationViewUrl;
+        });
+    };
+
+    self.insertRow = function(index) {
+        var event = events[index];
+        modifiedProjects.push(event.projectId);
+        self.events.splice(index+1, 0, {projectId:event.projectId, name:event.name, grantId:event.grantId});
+        grid.invalidateAllRows();
+        grid.updateRowCount();
+        grid.render();
+    };
+
+    self.deleteRow = function(index) {
+        bootbox.confirm("Are you sure you want to delete this announcement?", function(ok) {
+            if (ok) {
+                var deleted = self.events.splice(index, 1);
+                modifiedProjects.push(deleted[0].projectId);
+                grid.invalidateAllRows();
+                grid.updateRowCount();
+                grid.render();
+            }
+        });
+    };
+
+    self.addRow = function(item, args) {
+        self.events.push(item);
+        if (item.name) {
+            self.projectNameEdited(item, args);
+        }
+        grid.invalidateAllRows(args.row);
+
+        grid.updateRowCount();
+        grid.render();
+    };
+
+    self.eventEdited = function(event, args) {
+        modifiedProjects.push(event.projectId);
+        if (args.cell == 1) {
+            self.projectNameEdited(event, args);
+            grid.invalidateRow(args.row);
+            grid.render();
+        }
+
+    };
+
+    self.projectNameEdited = function(event, args) {
+        // The project has been changed.
+        for (var i=0; i<self.events.length; i++) {
+            if (self.events[i].name == event.name) {
+                event.projectId = self.events[i].projectId;
+                event.grantId = self.events[i].grantId;
+                modifiedProjects.push(event.projectId); // Both the previous and new projects have been modified.
+                break;
+            }
+        }
+    };
+
+    // Attach event handlers to the grid
+    grid.onAddNewRow.subscribe(function (e, args) {
+        var item = args.item;
+        self.addRow(item, args);
+    });
+    grid.onCellChange.subscribe(function(e, args) {
+        self.eventEdited(args.item, args);
+    });
+
+    grid.onClick.subscribe(function(e) {
+        if ($(e.target).hasClass('icon-plus')) {
+            self.insertRow(grid.getCellFromEvent(e).row);
+        }
+        else if ($(e.target).hasClass('icon-remove')) {
+            self.deleteRow(grid.getCellFromEvent(e).row);
+        }
+    });
+    grid.setData(self.events);
+};

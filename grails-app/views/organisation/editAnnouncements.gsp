@@ -12,7 +12,7 @@
         },
         here = document.location.href;
     </r:script>
-    <r:require modules="knockout,jqueryValidationEngine,datepicker,slickgrid,jQueryFileUpload,jQueryFileDownload,amplify"/>
+    <r:require modules="knockout,jqueryValidationEngine,datepicker,slickgrid,jQueryFileUpload,jQueryFileDownload,amplify,merit_projects"/>
     <style type="text/css">
     input.editor-text {box-sizing:border-box; width: 100%;}
     .slick-column-name { white-space: normal; }
@@ -78,10 +78,11 @@
         var columns =  [
             {id:'grantID', name:'Grant ID', width:80, field:'grantId'},
             {id:'projectName', name:'Project Name', width:200, field:'name', options:projectList, optionLabel:'name', optionValue:'name', editor: ComboBoxEditor},
-            {id:'date', name:'Proposed Date of event / announcement (if known)', width:80, field:'eventDate', formatter:dateFormatter, editor: DateEditor2},
             {id:'event', name:'Proposed event/announcement', width:200, field:'eventName', editor: Slick.Editors.Text},
+            {id:'date', name:'Proposed Date of event / announcement (if known)', width:80, field:'eventDate', formatter:dateFormatter, editor: DateEditor2},
+            {id:'type', name:'Type of event / announcement (if known)', width:80, field:'eventType', formatter:optionsFormatter, editor: SelectEditor, options:[{label:'', value:''},{label:'Grant Opening', value:'Grant Opening'}, {label:'Announce successful applicants', value:'Announce successful applicants'}, {label:'Other event/announcement', value:'Other event/announcement'}], validationRules:'validate[required]'},
             {id:'eventDescription', name:'Description of the event', width:200, field:'eventDescription', editor: Slick.Editors.LongText},
-            {id:'media', name:'Will there be, or do you intend there to be, media involvement in this event?', width:100, editor:SelectEditor, options:[{label:'Yes', value:'yes'}, {label:'No', value:'no'}], field:'media'},
+            {id:'value', name:'Value of funding round', width:100, editor:Slick.Editors.Integer, field:'funding'},
             {id:'controls', name:'', width:20, formatter:controlsFormatter}
             ];
 
@@ -91,77 +92,17 @@
             enableCellNavigation: true,
             forceFitColumns:true,
             autoHeight:true,
-            explicitInitialization:true
+            explicitInitialization:true,
+            enableColumnReorder:false,
+            enableTextSelectionOnCells:true,
+            editFocusRight:true
         };
 
 
-        var grid = new Slick.Grid("#announcementsTable", events, columns, options);
+        var grid = new Slick.Grid("#announcementsTable", [], columns, options);
 
-        grid.init();
-
-        var EditAnnouncementsViewModel = function(grid, events) {
-            var self = this;
-            var editedAnnouncements = [];
-
-            self.modelAsJSON = function() {
-                return JSON.stringify(editedAnnouncements);
-            };
-
-            self.cancel = function() {
-                self.cancelAutosave();
-                document.location.href = fcConfig.organisationViewUrl;
-            };
-
-            self.save = function() {
-                self.saveWithErrorDetection(function() {
-                    document.location.href = fcConfig.organisationViewUrl;
-                });
-            };
-
-            self.addRow = function(index) {
-                var event = events[index];
-
-                events.splice(index+1, 0, {projectId:event.projectId, name:event.name, grantId:event.grantId});
-                grid.invalidateAllRows();
-                grid.updateRowCount();
-                grid.render();
-            };
-
-            self.deleteRow = function(index) {
-                bootbox.confirm("Are you sure you want to delete this announcement?", function(ok) {
-                    if (ok) {
-                        events.splice(index, 1);
-                        grid.invalidateAllRows();
-                        grid.updateRowCount();
-                        grid.render();
-                    }
-                });
-
-            };
-
-            grid.onAddNewRow.subscribe(function (e, args) {
-                var item = args.item;
-                grid.invalidateRow(events.length);
-                events.push(item);
-                grid.updateRowCount();
-                grid.render();
-            });
-            grid.onCellChange.subscribe(function(e, args) {
-                editedAnnouncements.push(args.item);
-            });
-
-            grid.onClick.subscribe(function(e) {
-                if ($(e.target).hasClass('icon-plus')) {
-                    self.addRow(grid.getCellFromEvent(e).row);
-                }
-                else if ($(e.target).hasClass('icon-remove')) {
-                    self.deleteRow(grid.getCellFromEvent(e).row);
-                }
-            });
-
-
-        };
         var editAnnouncementsViewModel = new EditAnnouncementsViewModel(grid, events);
+        grid.init();
 
         var options = {
             storageKey : 'BULK_ANNOUNCEMENTS'+organisationId,
@@ -173,6 +114,12 @@
         autoSaveModel(editAnnouncementsViewModel, fcConfig.saveAnnouncementsUrl, options);
 
         ko.applyBindings(editAnnouncementsViewModel);
+
+        $('.validationEngineContainer').validationEngine({scroll:false});
+        $('.helphover').popover({animation: true, trigger:'hover'});
+        // Hacky slickgrid / jqueryValidationEngine integration for some amount of user experience consistency.
+        $('.slick-row').addClass('validationEngineContainer').validationEngine({scroll:false});
+
 
     });
 </r:script>

@@ -4,6 +4,7 @@ import au.org.ala.fieldcapture.DocumentService
 import au.org.ala.fieldcapture.RoleService
 import au.org.ala.fieldcapture.SearchService
 import au.org.ala.fieldcapture.UserService
+import grails.converters.JSON
 import grails.test.mixin.TestFor
 import spock.lang.Specification
 
@@ -18,6 +19,7 @@ class OrganisationControllerSpec extends Specification {
     def documentService = Mock(DocumentService)
     def roleService = Stub(RoleService)
     def userService = Stub(UserService)
+    def projectService = Mock(ProjectService)
 
     def setup() {
         controller.organisationService = organisationService
@@ -25,7 +27,7 @@ class OrganisationControllerSpec extends Specification {
         controller.documentService = documentService
         controller.roleService = roleService
         controller.userService = userService
-
+        controller.projectService = projectService
     }
 
     def "only the organisation projects and sites should be viewable anonymously"() {
@@ -328,14 +330,18 @@ class OrganisationControllerSpec extends Specification {
         organisationService.get(_,_) >> testOrg
         setupOrganisationAdmin()
 
+        def announcements = [[projectId:'1', announcements:[[eventName:'project 1 event2'], [eventName:'project 1 event 2']]]]
+
         when:
+        request.method = 'POST'
+        request.json = announcements as JSON
         params.id = testOrg.organisationId
-        def model = controller.saveAnnouncements()
+        controller.saveAnnouncements()
 
         then:
         response.status == 200
-//        model.events != null
-//        model.organisation == testOrg
+        1 * projectService.update(announcements[0].projectId, _)
+
     }
 
     private Map testOrganisation(boolean includeReports) {

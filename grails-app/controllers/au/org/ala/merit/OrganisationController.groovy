@@ -83,13 +83,13 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
         projects.each { project ->
             if (project.custom?.details?.events) {
                 project.custom.details.events.each { event ->
-                    announcements << [projectId: project.projectId, grantId: project.grantId, name: project.name, organisationName: project.organisationName, associatedProgram: project.associatedProgram, planStatus: project.planStatus, eventDate: event.scheduledDate, eventName: event.name, eventDescription: event.description, media: event.media]
+                    announcements << [projectId: project.projectId, grantId: project.grantId, name: project.name, organisationName: project.organisationName, associatedProgram: project.associatedProgram, planStatus: project.planStatus, eventDate: event.scheduledDate, eventName: event.name, eventType:event.type, eventDescription: event.description, funding: event.funding]
                 }
             }
             else {
                 // Add a blank row to make it easier to add announcements for that project. (so the user
                 // doesn't have to select the project name which could be from a long list).
-                announcements << [projectId: project.projectId, grantId: project.grantId, name: project.name, organisationName: project.organisationName, associatedProgram: project.associatedProgram, planStatus: project.planStatus, eventDate: '', eventName: '', eventDescription: '', media: '']
+                announcements << [projectId: project.projectId, grantId: project.grantId, name: project.name, organisationName: project.organisationName, associatedProgram: project.associatedProgram, planStatus: project.planStatus, eventDate: '', eventName: '', eventDescription: '', eventType: '', funding:'']
             }
         }
         [events:announcements, organisation: organisation, projectList:projects.collect{[projectId:it.projectId, name:it.name, grantId:it.grantId]}]
@@ -114,15 +114,13 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
             return
         }
 
-        def announcements = request.JSON
-
-        def announcementsByProject = announcements.groupBy { it.projectId }
-        announcementsByProject.each { projectId, projectAnnouncements ->
-            projectAnnouncements = projectAnnouncements.collect {[scheduledDate:it.eventDate, name:it.eventName, description: it.eventDescription, media:it.media]}
-            projectService.update(projectId, [custom:[details:[events:projectAnnouncements]]])
+        def announcementsByProject = request.JSON
+        announcementsByProject.each { project ->
+            def projectAnnouncements = project.announcements.collect {[scheduledDate:it.eventDate, name:it.eventName, type:it.eventType, description: it.eventDescription, funding:it.funding]}
+            projectService.update(project.projectId, [custom:[details:[events:projectAnnouncements]]])
         }
-        def resp = [status:200, message:'success']
-        respond(status:200, resp as JSON)
+        Object resp = [status:200, message:'success']
+        respond(resp)
     }
 
     def report(String id) {
