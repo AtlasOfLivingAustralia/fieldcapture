@@ -72,7 +72,7 @@ grails.project.dependency.resolution = {
 
         build ":release:3.0.1"
 
-        test ":karma-test-runner:0.2.4"
+        //test ":karma-test-runner:0.2.4"
 
         if (Environment.current != Environment.DEVELOPMENT) {
             compile ":fieldcapture-plugin:1.2-SNAPSHOT"
