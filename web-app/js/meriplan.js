@@ -309,6 +309,62 @@ var EditAnnouncementsViewModel = function(grid, events) {
         };
     }
 
+    self.showBulkUploadOptions = ko.observable(false);
+    self.toggleBulkUploadOptions = function() {
+        self.showBulkUploadOptions(!self.showBulkUploadOptions);
+    };
+
+    function projectModified(projectId) {
+        if (modifiedProjects.indexOf(projectId) < 0) {
+            modifiedProjects.push(projectId);
+        }
+    }
+
+    function revalidateAll() {
+        grid.invalidateAllRows();
+        grid.updateRowCount();
+        grid.render();
+    }
+
+    self.findProjectIdForEvent = function(event) {
+        for (var i=0; i<events.length; i++) {
+            if (events[i].grantId == event.grantId && events[i].name == event.name) {
+                return events[i].projectId;
+            }
+        }
+        return null;
+    };
+
+    /**
+     * Replaces all of the existing events with the supplied array.
+     */
+    self.updateEvents = function(newEvents) {
+        var i;
+
+        for (i=0; i<newEvents.length; i++) {
+            var projectId = self.findProjectIdForEvent(newEvents[i]);
+            if (projectId) {
+                newEvents[i].projectId = projectId;
+                projectModified(newEvents[i].projectId);
+            }
+            else {
+                newEvents[i].grantId = undefined;
+                newEvents[i].name = undefined;
+
+            }
+        }
+        // In case all events for a project were deleted, add previously existing projects as well
+        for (i=0; i<events.length; i++) {
+            projectModified(events[i].projectId);
+        }
+
+        self.events = newEvents;
+        grid.setData(self.events);
+        revalidateAll();
+
+        self.validate();
+    };
+
     self.modelAsJSON = function() {
         var projects = [];
         for (var i=0; i<modifiedProjects.length; i++) {
@@ -331,18 +387,18 @@ var EditAnnouncementsViewModel = function(grid, events) {
 
     self.save = function() {
         Slick.GlobalEditorLock.commitCurrentEdit();
-        self.saveWithErrorDetection(function() {
-            document.location.href = fcConfig.organisationViewUrl;
-        });
+        if (self.validate()) {
+            self.saveWithErrorDetection(function() {
+                document.location.href = fcConfig.organisationViewUrl;
+            });
+        }
     };
 
     self.insertRow = function(index) {
         var event = events[index];
         modifiedProjects.push(event.projectId);
         self.events.splice(index+1, 0, {projectId:event.projectId, name:event.name, grantId:event.grantId});
-        grid.invalidateAllRows();
-        grid.updateRowCount();
-        grid.render();
+        revalidateAll();
     };
 
     self.deleteRow = function(index) {
@@ -350,9 +406,7 @@ var EditAnnouncementsViewModel = function(grid, events) {
             if (ok) {
                 var deleted = self.events.splice(index, 1);
                 modifiedProjects.push(deleted[0].projectId);
-                grid.invalidateAllRows();
-                grid.updateRowCount();
-                grid.render();
+                revalidateAll();
             }
         });
     };
@@ -362,10 +416,7 @@ var EditAnnouncementsViewModel = function(grid, events) {
         if (item.name) {
             self.projectNameEdited(item, args);
         }
-        grid.invalidateAllRows(args.row);
-
-        grid.updateRowCount();
-        grid.render();
+        revalidateAll();
     };
 
     self.eventEdited = function(event, args) {
@@ -388,6 +439,36 @@ var EditAnnouncementsViewModel = function(grid, events) {
                 break;
             }
         }
+    };
+
+    self.validate = function() {
+        var valid = true;
+        var columns = grid.getColumns();
+        for (var i=0; i<columns.length; i++) {
+            if (columns[i].validationRules) {
+                var validationFunctions = parseValidationString(columns[i].validationRules);
+
+                for (var j=0; j<self.events.length; j++) {
+                    var field = columns[i]['field'];
+                    var value = self.events[j][field];
+
+                    for (var k=0; k<validationFunctions.length; k++) {
+                        var result = validationFunctions[k](field, value);
+                        if (!result.valid) {
+                            valid = false;
+                            var columnIdx = columnIndex(result.field, grid.getColumns());
+                            var node = grid.getCellNode(j, columnIdx);
+                            if (node) {
+                                validationSupport.addPrompt($(node), 'event'+j, result.field, result.error);
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+
+        return valid;
     };
 
     // Attach event handlers to the grid

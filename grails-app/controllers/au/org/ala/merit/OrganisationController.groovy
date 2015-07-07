@@ -8,6 +8,7 @@ import org.apache.poi.ss.usermodel.Row
 import org.apache.poi.ss.usermodel.Sheet
 import org.apache.poi.ss.usermodel.Workbook
 import org.apache.poi.ss.usermodel.WorkbookFactory
+import org.apache.poi.ss.util.CellReference
 import org.grails.plugins.csv.CSVMapReader
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
@@ -17,6 +18,8 @@ import org.joda.time.Period
 import org.joda.time.Weeks
 import org.joda.time.format.DateTimeFormat
 import org.springframework.web.multipart.MultipartHttpServletRequest
+import pl.touk.excel.export.WebXlsxExporter
+import pl.touk.excel.export.XlsxExporter
 
 import java.text.SimpleDateFormat
 
@@ -25,7 +28,7 @@ import java.text.SimpleDateFormat
  */
 class OrganisationController extends au.org.ala.fieldcapture.OrganisationController {
 
-    def activityService, metadataService, projectService
+    def activityService, metadataService, projectService, excelImportService
 
 
     protected Map content(organisation) {
@@ -57,42 +60,50 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
      * Presents a page which allows the user to edit the events/announcements for all of the projects managed by
      * this organisation at once.
      */
-    def editAnnouncements() {
+    def editAnnouncements(String id) {
 
-        def organisationId = params.organisationId
-
-        def organisation = organisationId ? organisationService.get(organisationId, 'flat') : null
+        def organisation = id ? organisationService.get(id, 'flat') : null
 
         if (!organisation || organisation.error) {
-            render status:404, text:'Organisation with id "'+organisationId+'" does not exist.'
+            render status:404, text:'Organisation with id "'+id+'" does not exist.'
             return
         }
 
-        if (!userService.userIsAlaOrFcAdmin() && !organisationService.isUserAdminForOrganisation(organisationId)) {
+        if (!userService.userIsAlaOrFcAdmin() && !organisationService.isUserAdminForOrganisation(id)) {
             flash.message = 'Only organisation administrators can perform this action.'
-            redirect action:'index', id:organisationId
+            redirect action:'index', id:id
             return
         }
 
-        def queryParams = [max:1500, fq:['organisationFacet:'+organisation.name]]
+        def announcements = findOrganisationAnnouncements(organisation)
+        def projectList = announcements.collect {[projectId: it.projectId, name: it.name, grantId: it.grantId]}.unique()
+
+        [events: announcements,
+         organisation: organisation,
+         projectList: projectList
+        ]
+    }
+
+    private List findOrganisationAnnouncements(organisation) {
+        def queryParams = [max: 1500, fq: ['organisationFacet:' + organisation.name]]
         queryParams.query = "docType:project"
         def results = searchService.allProjects(queryParams, queryParams.query)
-        def projects = results?.hits?.hits?.collect{it._source}
+        def projects = results?.hits?.hits?.collect { it._source }
 
         def announcements = []
         projects.each { project ->
             if (project.custom?.details?.events) {
                 project.custom.details.events.each { event ->
-                    announcements << [projectId: project.projectId, grantId: project.grantId, name: project.name, organisationName: project.organisationName, associatedProgram: project.associatedProgram, planStatus: project.planStatus, eventDate: event.scheduledDate, eventName: event.name, eventType:event.type, eventDescription: event.description, funding: event.funding]
+                    announcements << [projectId: project.projectId, grantId: project.grantId, name: project.name, organisationName: project.organisationName, associatedProgram: project.associatedProgram, planStatus: project.planStatus, eventDate: event.scheduledDate, eventName: event.name, eventType: event.type, eventDescription: event.description, funding: event.funding]
                 }
-            }
-            else {
+            } else {
                 // Add a blank row to make it easier to add announcements for that project. (so the user
                 // doesn't have to select the project name which could be from a long list).
-                announcements << [projectId: project.projectId, grantId: project.grantId, name: project.name, organisationName: project.organisationName, associatedProgram: project.associatedProgram, planStatus: project.planStatus, eventDate: '', eventName: '', eventDescription: '', eventType: '', funding:'']
+                announcements << [projectId: project.projectId, grantId: project.grantId, name: project.name, organisationName: project.organisationName, associatedProgram: project.associatedProgram, planStatus: project.planStatus, eventDate: '', eventName: '', eventDescription: '', eventType: '', funding: '']
             }
         }
-        [events:announcements, organisation: organisation, projectList:projects.collect{[projectId:it.projectId, name:it.name, grantId:it.grantId]}]
+        announcements
+
     }
 
     /**
@@ -121,6 +132,33 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
         }
         Object resp = [status:200, message:'success']
         respond(resp)
+    }
+
+    def downloadAnnouncementsTemplate(String id) {
+
+        def organisation = id ? organisationService.get(id, 'flat') : null
+
+        if (!organisation || organisation.error) {
+            render status:404, text:'Organisation with id "'+id+'" does not exist.'
+            return
+        }
+
+        def announcements = findOrganisationAnnouncements(organisation)
+
+        new AnnouncementsMapper(excelImportService).announcementsToExcel(response, announcements)
+    }
+
+    def bulkUploadAnnouncements() {
+        if (request.respondsTo('getFile')) {
+            def file = request.getFile('announcementsTemplate')
+            if (file) {
+                def announcements = new AnnouncementsMapper(excelImportService).excelToAnnouncements(file.inputStream)
+
+                respond announcements
+                return
+            }
+        }
+        respond status:400, text: 'Missing file'
     }
 
     def report(String id) {

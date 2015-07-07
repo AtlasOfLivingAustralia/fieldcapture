@@ -18,6 +18,7 @@ module.exports = function (config) {
 
         // list of files / patterns to load in the browser
         files: [
+            'node_modules/knockout/build/output/knockout-latest.js',
             'web-app/js/meriplan.js',
             'test/unit/javascript/spec/**/*.js'
         ],
