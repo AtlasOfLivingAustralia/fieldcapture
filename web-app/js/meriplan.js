@@ -309,6 +309,56 @@ var EditAnnouncementsViewModel = function(grid, events) {
         };
     }
 
+    function compareEvents(event1, event2) {
+
+        return event1.projectId == event2.projectId &&
+            event1.grantId == event2.grantId &&
+            event1.name == event2.name &&
+            compare(event1.eventName, event2.eventName) &&
+            compare(event1.eventDescription, event2.eventDescription) &&
+            compare(event1.eventDate, event2.eventDate) &&
+            compare(event1.eventType, event2.eventType) &&
+            compare(event1.funding, event2.funding);
+
+
+    }
+
+    /** Compares 2 strings, treating falsely as equal */
+    function compare(s1, s2) {
+       return (!s1 && !s2) || (s1 == s2);
+    }
+
+    function sortEvent(event1, event2) {
+        var returnValue = 0;
+        var properties = ['projectId', 'grantId', 'name', 'eventName', 'eventDescription', 'funding', 'eventDate', 'eventType'];
+        var propertyIndex = 0;
+        while (returnValue == 0) {
+            returnValue = sortByProperty(event1, event2, properties[propertyIndex]);
+            propertyIndex++;
+        }
+        return returnValue;
+    }
+
+    function sortByProperty(event1, event2, property) {
+        if (event1[property] > event2[property]) { return 1; }
+        if (event2[property] > event1[property]) { return -1; }
+        return 0;
+    }
+
+    function compareProjectEvents(projectEvents1, projectEvents2) {
+
+        if (projectEvents1.length != projectEvents2.length) {
+            return false;
+        }
+
+        for (var i=0; i<projectEvents1.length; i++) {
+            if (!compareEvents(projectEvents1[i], projectEvents2[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     self.showBulkUploadOptions = ko.observable(false);
     self.toggleBulkUploadOptions = function() {
         self.showBulkUploadOptions(!self.showBulkUploadOptions);
@@ -354,17 +404,38 @@ var EditAnnouncementsViewModel = function(grid, events) {
             var projectId = self.findProjectIdForEvent(newEvents[i]);
             if (projectId) {
                 newEvents[i].projectId = projectId;
-                projectModified(newEvents[i].projectId);
             }
             else {
                 newEvents[i].grantId = undefined;
                 newEvents[i].name = undefined;
-
             }
         }
-        // In case all events for a project were deleted, add previously existing projects as well
+
+        var groupedExistingEvents = {};
+        var existingProjectIds = [];
         for (i=0; i<events.length; i++) {
-            projectModified(events[i].projectId);
+            if (!groupedExistingEvents[events[i].projectId]) {
+                groupedExistingEvents[events[i].projectId] = [];
+                existingProjectIds.push(events[i].projectId);
+            }
+            groupedExistingEvents[events[i].projectId].push(events[i]);
+        }
+
+        var groupedNewEvents = {};
+        var newProjectIds = [];
+        for (i=0; i<newEvents.length; i++) {
+            if (!groupedNewEvents[newEvents[i].projectId]) {
+                groupedNewEvents[newEvents[i].projectId] = [];
+                newProjectIds.push(newEvents[i].projectId);
+            }
+            groupedNewEvents[newEvents[i].projectId].push(newEvents[i]);
+        }
+
+        for (i=0; i<existingProjectIds.length; i++) {
+            if ((newProjectIds.indexOf(existingProjectIds[i]) < 0) ||
+                (!compareProjectEvents(groupedExistingEvents[existingProjectIds[i]], groupedNewEvents[existingProjectIds[i]]))) {
+                projectModified(existingProjectIds[i]);
+            }
         }
 
         self.events = newEvents;
