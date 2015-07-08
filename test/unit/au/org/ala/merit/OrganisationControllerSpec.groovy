@@ -6,6 +6,8 @@ import au.org.ala.fieldcapture.SearchService
 import au.org.ala.fieldcapture.UserService
 import grails.converters.JSON
 import grails.test.mixin.TestFor
+import org.grails.plugins.excelimport.ExcelImportService
+import org.springframework.mock.web.MockMultipartFile
 import spock.lang.Specification
 
 /**
@@ -15,7 +17,7 @@ import spock.lang.Specification
 class OrganisationControllerSpec extends Specification {
 
     def organisationService = Mock(au.org.ala.fieldcapture.OrganisationService)
-    def searchService = Mock(SearchService)
+    def searchService = Stub(SearchService)
     def documentService = Mock(DocumentService)
     def roleService = Stub(RoleService)
     def userService = Stub(UserService)
@@ -207,7 +209,7 @@ class OrganisationControllerSpec extends Specification {
         organisationService.get(_,_) >> testOrg
 
         when:
-        params.organisationId = '1234'
+        params.id = '1234'
         controller.editAnnouncements()
 
         then:
@@ -222,7 +224,7 @@ class OrganisationControllerSpec extends Specification {
 
         when:
         setupOrganisationEditor()
-        params.organisationId = '1234'
+        params.id = '1234'
         controller.editAnnouncements()
 
         then:
@@ -259,9 +261,10 @@ class OrganisationControllerSpec extends Specification {
         testOrg.projects = [[projectId:'1234', associatedProgram:'Program 1']]
         organisationService.get(_,_) >> testOrg
         setupOrganisationAdmin()
+        searchService.allProjects(_,_) >> [results:[hits:[hits:[]]]]
 
         when:
-        params.organisationId = testOrg.organisationId
+        params.id = testOrg.organisationId
         def model = controller.editAnnouncements()
 
         then:
@@ -344,6 +347,68 @@ class OrganisationControllerSpec extends Specification {
 
     }
 
+    def "A blank announcement should be returned for a project with no announcements to make it easier for the user"() {
+        setup:
+        def testOrg = testOrganisation(true)
+        organisationService.get(_,_) >> testOrg
+        def projectsWithAnnouncements = projectsWithAnnouncements(3)
+        projectsWithAnnouncements[1].custom.details.events = []
+
+        searchService.allProjects(_, _) >> [hits:[hits:projectsWithAnnouncements.collect {[_source:it]}]]
+        setupOrganisationAdmin()
+
+        when:
+        params.id = testOrg.organisationId
+        def model = controller.editAnnouncements()
+
+        then:
+        response.status == 200
+        model.projectList.size() == 3
+        model.events.size() == 21
+
+    }
+
+
+    def "The list of announcements for an organisation can be downloaded as a spreadsheet"() {
+        setup:
+        def testOrg = testOrganisation(true)
+        organisationService.get(_,_) >> testOrg
+        def projectsWithAnnouncements = projectsWithAnnouncements(3)
+
+        searchService.allProjects(_, _) >> [hits:[hits:projectsWithAnnouncements.collect {[_source:it]}]]
+        setupOrganisationAdmin()
+
+        when:
+        params.id = testOrg.organisationId
+        controller.downloadAnnouncementsTemplate()
+
+        then:
+        response.status == 200
+        response.getHeader('Content-Disposition').startsWith('attachment; filename=announcements')
+        response.contentType == 'application/vnd.ms-excel'
+        // Spreadsheet contents is tested in the AnnouncementsMapperSpec
+    }
+
+
+    def "announcements can be bulk uploaded"() {
+        setup:
+        def testOrg = testOrganisation(true)
+        organisationService.get(_,_) >> testOrg
+        controller.setExcelImportService(new ExcelImportService())
+        setupOrganisationAdmin()
+        request.addFile(new MockMultipartFile('announcementsTemplate', getClass().getResourceAsStream('/resources/announcements.xlsx')))
+
+        when:
+        params.format = 'json'
+        params.id = testOrg.organisationId
+        controller.bulkUploadAnnouncements()
+
+        then:
+        response.status == 200
+        response.contentType == 'application/json;charset=UTF-8'
+        response.json.size() == 10
+    }
+
     private Map testOrganisation(boolean includeReports) {
         def org = [organisationId:'id', name:'name', description:'description']
         if (includeReports) {
@@ -388,6 +453,24 @@ class OrganisationControllerSpec extends Specification {
         userService.userHasReadOnlyAccess() >> false
         userService.userIsAlaOrFcAdmin() >> false
         organisationService.getMembersOfOrganisation(_) >> [[userId:userId, role:RoleService.PROJECT_EDITOR_ROLE]]
+    }
+
+    private List projectsWithAnnouncements(projectCount) {
+        List projects = []
+        def annoucementsCount = 0
+        for (int i=0; i<projectCount; i++) {
+            projects << [projectId:'project'+i, name:'Project '+i, grantId:'Grant '+i, custom:[details:[events:buildAnnouncements(10, annoucementsCount)]]]
+            annoucementsCount+=10
+        }
+        return projects
+    }
+
+    def buildAnnouncements(howMany, startIndex) {
+        def announcements = []
+        for (int i=startIndex; i<howMany+startIndex; i++) {
+            announcements << [name:'Event '+i, description:'Description '+i, scheduledDate:'2015-06-0'+i, funding:i, type:'Other']
+        }
+        announcements
     }
 
 }

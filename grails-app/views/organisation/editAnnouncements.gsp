@@ -8,6 +8,7 @@
     var fcConfig = {
         organisationViewUrl: "${createLink(controller:'organisation', action:'index', id:organisation.organisationId)}",
         saveAnnouncementsUrl: "${createLink(controller:'organisation', action:'saveAnnouncements', id:organisation.organisationId, params:[format:'json'])}",
+        bulkUploadAnnouncementsUrl: "${createLink(controller: 'organisation', action:'bulkUploadAnnouncements', params:[format:'json'])}",
         returnTo: "${params.returnTo}"
         },
         here = document.location.href;
@@ -43,15 +44,15 @@
 
         <div class="form-actions" >
             <span class="span3">
-                <button type="button" id ="bulkUploadTrigger" class="btn btn-small"><i class="icon-upload"></i> Upload data for this table</button>
-                <div id="bulkUpload" style="display:none;">
+                <button type="button" id ="bulkUploadTrigger" data-bind="click:showBulkUploadOptions" class="btn btn-small"><i class="icon-upload"></i> Upload data for this table</button>
+                <div id="bulkUpload" data-bind="visible:showBulkUploadOptions" style="display:none;">
                     <div class="text-left" style="margin:5px">
-                        <a target="_blank" id="downloadTemplate" class="btn btn-small">Step 1 - Download template (.xlsx)</a>
+                        <a target="_blank" id="downloadTemplate" class="btn btn-small" href="${createLink(action:'downloadAnnouncementsTemplate', id:organisation.organisationId)}">Step 1 - Download template (.xlsx)</a>
                     </div>
 
                     <div class="text-left" style="margin:5px">
-                        <span class="btn btn-small fileinput-button">yh
-                            Step 2 - Upload populated template <input id="fileupload" type="file" name="templateFile">
+                        <span class="btn btn-small fileinput-button">
+                            Step 2 - Upload populated template <input id="fileupload" type="file" name="announcementsTemplate">
                         </span>
                     </div>
                 </div>
@@ -77,7 +78,7 @@
         var projectList = <fc:modelAsJavascript model="${projectList}"/>
         var columns =  [
             {id:'grantID', name:'Grant ID', width:80, field:'grantId'},
-            {id:'projectName', name:'Project Name', width:200, field:'name', options:projectList, optionLabel:'name', optionValue:'name', editor: ComboBoxEditor},
+            {id:'projectName', name:'Project Name', width:200, field:'name', options:projectList, optionLabel:'name', optionValue:'name', editor: ComboBoxEditor, validationRules:'validate[required]'},
             {id:'event', name:'Proposed event/announcement', width:200, field:'eventName', editor: Slick.Editors.Text},
             {id:'date', name:'Proposed Date of event / announcement (if known)', width:80, field:'eventDate', formatter:dateFormatter, editor: DateEditor2},
             {id:'type', name:'Type of event / announcement (if known)', width:80, field:'eventType', formatter:optionsFormatter, editor: SelectEditor, options:[{label:'', value:''},{label:'Grant Opening', value:'Grant Opening'}, {label:'Announce successful applicants', value:'Announce successful applicants'}, {label:'Other event/announcement', value:'Other event/announcement'}], validationRules:'validate[required]'},
@@ -120,6 +121,17 @@
         // Hacky slickgrid / jqueryValidationEngine integration for some amount of user experience consistency.
         $('.slick-row').addClass('validationEngineContainer').validationEngine({scroll:false});
 
+        $('#fileupload').fileupload({
+            url: fcConfig.bulkUploadAnnouncementsUrl,
+            dataType: 'json',
+            done: function (e, data) {
+                editAnnouncementsViewModel.updateEvents(data.result);
+            },
+            fail: function (e, data) {
+                var message = 'Please contact MERIT support and attach your spreadsheet to help us resolve the problem';
+                showAlert(message, "alert-error","load-xlsx-result-placeholder");
+            }
+        });
 
     });
 </r:script>

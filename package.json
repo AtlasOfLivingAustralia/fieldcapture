@@ -15,7 +15,8 @@
     "karma-jasmine-jquery": "^0.1.1",
     "karma-jquery": "^0.1.0",
     "karma-phantomjs-launcher": "^0.1.4",
-    "karma-remote-reporter": "^0.2.0"
+    "karma-remote-reporter": "^0.2.0",
+    "knockout": "^3.3.0"
   },
   "scripts": {
     "test": "karma start test/unit/javascript/karama.config.js"
