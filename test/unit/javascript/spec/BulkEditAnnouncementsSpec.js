@@ -20,7 +20,8 @@ describe("the EditAnnouncementsViewModel", function () {
             invalidateAllRows:function(){},
             updateRowCount:function(){},
             render:function(){},
-            invalidateRow:function(){}
+            invalidateRow:function(){},
+            getColumns:function(){return[]}
         };
         window.bootbox = {
             confirm : function(message, callback) {
@@ -28,7 +29,7 @@ describe("the EditAnnouncementsViewModel", function () {
             }
         };
 
-        var events = initialiseEvents([{projectId:'1', eventCount:3}, {projectId:'2', eventCount:1}, {projectId:3, eventCount:4}]);
+        var events = initialiseEvents([{projectId:'1', eventCount:3}, {projectId:'2', eventCount:1}, {projectId:'3', eventCount:4}]);
         model = new EditAnnouncementsViewModel(grid, events);
     });
     afterEach(function() {
@@ -78,11 +79,42 @@ describe("the EditAnnouncementsViewModel", function () {
         expect(event.grantId).toEqual('Grant2');
     });
 
+    it("should mark all projects changed after a bulk upload containing no data", function(){
+        model.updateEvents([]);
+
+        expect(model.dirtyFlag.isDirty()).toBe(true);
+        expect(model.modifiedProjects().length).toBe(3);
+        expect(model.modifiedProjects().indexOf('1') >= 0).toBeTruthy();
+        expect(model.modifiedProjects().indexOf('2') >= 0).toBeTruthy();
+        expect(model.modifiedProjects().indexOf('3') >= 0).toBeTruthy();
+
+    });
+
+    it("should mark no projects changed after a bulk upload containing no changes", function(){
+        model.updateEvents(model.events);
+
+        expect(model.dirtyFlag.isDirty()).toBe(false);
+        expect(model.modifiedProjects().length).toBe(0);
+        expect(model.modifiedProjects().indexOf('1')).toBe(-1);
+        expect(model.modifiedProjects().indexOf('2')).toBe(-1);
+        expect(model.modifiedProjects().indexOf('3')).toBe(-1);
+
+    });
+
+    it("should only mark the changed projects after a bulk upload", function() {
+        var modifiedEvents = initialiseEvents([{projectId:'1', eventCount:3}, {projectId:'2', eventCount:1}, {projectId:'3', eventCount:4}]);
+        modifiedEvents[1].eventName = 'New name';
+        model.updateEvents(modifiedEvents);
+
+        expect(model.dirtyFlag.isDirty()).toBe(true);
+        expect(model.modifiedProjects().length).toBe(1);
+        expect(model.modifiedProjects().indexOf('1')).toBe(0);
+        expect(model.modifiedProjects().indexOf('2')).toBe(-1);
+        expect(model.modifiedProjects().indexOf('3')).toBe(-1);
+    });
+
     function event(projectId, name, description) {
         return {projectId:projectId, name:name, description:description}
     }
 
-    function stubGrid() {
-        return
-    }
 });

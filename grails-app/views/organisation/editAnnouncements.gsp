@@ -33,9 +33,20 @@
         </li>
     </ul>
     <div class="row-fluid">
-        <h2>Edit Announcements</h2>
+        <h2>Edit Announcements - ${organisation.name}</h2>
     </div>
+    <div class="well">
+        <p>Instructions:</p>
 
+        <ul>
+            <li>Existing announcements can be edited by selecting a table cell.</li>
+            <li>To add a new announcement for a project, use the <i class="icon-plus"></i> control in the last column.</li>
+            <li>To delete an existing announcement for a project, use the <i class="icon-remove"></i> control in the last column.</li>
+            <li>A blank row has been included for each project that does not currently have any announcements.  This is for editing convenience only, there is no need to delete these rows.
+            </li>
+        </ul>
+        <p>Alternatively, use the "Upload data for this table" button to upload announcements from an Excel spreadsheet</p>
+    </div>
     <div id="announcementsTable" class="table table-striped" style="width:100%;">
 
     </div>
@@ -45,21 +56,23 @@
         <div class="form-actions" >
             <span class="span3">
                 <button type="button" id ="bulkUploadTrigger" data-bind="click:showBulkUploadOptions" class="btn btn-small"><i class="icon-upload"></i> Upload data for this table</button>
-                <div id="bulkUpload" data-bind="visible:showBulkUploadOptions" style="display:none;">
-                    <div class="text-left" style="margin:5px">
-                        <a target="_blank" id="downloadTemplate" class="btn btn-small" href="${createLink(action:'downloadAnnouncementsTemplate', id:organisation.organisationId)}">Step 1 - Download template (.xlsx)</a>
-                    </div>
-
-                    <div class="text-left" style="margin:5px">
-                        <span class="btn btn-small fileinput-button">
-                            Step 2 - Upload populated template <input id="fileupload" type="file" name="announcementsTemplate">
-                        </span>
-                    </div>
-                </div>
             </span>
             <span class="span9"style="text-align:right">
                 <button type="button" id="save" data-bind="click:save" class="btn btn-primary" title="Save edits and return to the previous page">Save</button>
                 <buttom type="button" id="cancel" data-bind="click:cancel" class="btn btn" title="Cancel edits and return to previous page">Cancel</buttom>
+            </span>
+        </div>
+    </div>
+    <div id="bulkUpload" class="row-fluid" data-bind="visible:showBulkUploadOptions" style="display:none;">
+        When adding new rows to the Excel template, please be sure that the Grant ID and Project Name columns exactly match an existing project.
+
+        <div class="text-left" style="margin:5px">
+            <a target="_blank" id="downloadTemplate" class="btn btn-small" href="${createLink(action:'downloadAnnouncementsTemplate', id:organisation.organisationId)}">Step 1 - Download template (.xlsx)</a>
+        </div>
+
+        <div class="text-left" style="margin:5px">
+            <span class="btn btn-small fileinput-button">
+                Step 2 - Upload populated template <input id="fileupload" type="file" name="announcementsTemplate">
             </span>
         </div>
     </div>
