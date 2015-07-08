@@ -67,13 +67,16 @@ class AnnouncementsMapper {
 
         def fileName = 'announcements_'+DateUtils.displayFormat(new DateTime())+XlsxExporter.filenameSuffix
 
-        new WebXlsxExporter().with {
+        def exporter = new WebXlsxExporter()
+        exporter.with {
             setWorksheetName(DEFAULT_SHEET)
             setResponseHeaders(response, fileName)
             fillHeader(headers)
             add(announcements, properties)
-            save(response.outputStream)
         }
+        exporter.getWorkbook().write(response.outputStream)
+        response.outputStream.flush()
+
     }
 
     public List excelToAnnouncements(InputStream excelIn) {
