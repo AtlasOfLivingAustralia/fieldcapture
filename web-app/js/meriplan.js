@@ -296,14 +296,14 @@ function limitText(field, maxChar){
 
 var EditAnnouncementsViewModel = function(grid, events) {
     var self = this;
-    var modifiedProjects = [];
+    self.modifiedProjects = ko.observableArray([]);
     self.events = events.slice();
 
     function copyEvent(event) {
         return {
             eventName:event.eventName,
             eventDescription:event.eventDescription,
-            funding:event.funding,
+            funding:event.funding || '',
             eventDate:event.eventDate,
             eventType:event.eventType
         };
@@ -314,9 +314,18 @@ var EditAnnouncementsViewModel = function(grid, events) {
         self.showBulkUploadOptions(!self.showBulkUploadOptions);
     };
 
+    self.dirtyFlag = {
+        isDirty: ko.computed(function() {
+            return self.modifiedProjects().length > 0;
+        }),
+        reset:function() {
+            self.modifiedProjects([]);
+        }
+    };
+
     function projectModified(projectId) {
-        if (modifiedProjects.indexOf(projectId) < 0) {
-            modifiedProjects.push(projectId);
+        if (self.modifiedProjects().indexOf(projectId) < 0) {
+            self.modifiedProjects.push(projectId);
         }
     }
 
@@ -367,10 +376,10 @@ var EditAnnouncementsViewModel = function(grid, events) {
 
     self.modelAsJSON = function() {
         var projects = [];
-        for (var i=0; i<modifiedProjects.length; i++) {
-            var projectAnnouncements = {projectId:modifiedProjects[i], announcements:[]};
+        for (var i=0; i<self.modifiedProjects().length; i++) {
+            var projectAnnouncements = {projectId:self.modifiedProjects()[i], announcements:[]};
             for (var j=0; j<self.events.length; j++) {
-                if (self.events[j].projectId == modifiedProjects[i]) {
+                if (self.events[j].projectId == self.modifiedProjects()[i]) {
                     projectAnnouncements.announcements.push(copyEvent(self.events[j]));
                 }
 
@@ -396,7 +405,7 @@ var EditAnnouncementsViewModel = function(grid, events) {
 
     self.insertRow = function(index) {
         var event = events[index];
-        modifiedProjects.push(event.projectId);
+        projectModified(event.projectId);
         self.events.splice(index+1, 0, {projectId:event.projectId, name:event.name, grantId:event.grantId});
         revalidateAll();
     };
@@ -405,7 +414,7 @@ var EditAnnouncementsViewModel = function(grid, events) {
         bootbox.confirm("Are you sure you want to delete this announcement?", function(ok) {
             if (ok) {
                 var deleted = self.events.splice(index, 1);
-                modifiedProjects.push(deleted[0].projectId);
+                projectModified(deleted[0].projectId);
                 revalidateAll();
             }
         });
@@ -420,7 +429,7 @@ var EditAnnouncementsViewModel = function(grid, events) {
     };
 
     self.eventEdited = function(event, args) {
-        modifiedProjects.push(event.projectId);
+        projectModified(event.projectId);
         if (args.cell == 1) {
             self.projectNameEdited(event, args);
             grid.invalidateRow(args.row);
@@ -435,7 +444,7 @@ var EditAnnouncementsViewModel = function(grid, events) {
             if (self.events[i].name == event.name) {
                 event.projectId = self.events[i].projectId;
                 event.grantId = self.events[i].grantId;
-                modifiedProjects.push(event.projectId); // Both the previous and new projects have been modified.
+                projectModified(event.projectId); // Both the previous and new projects have been modified.
                 break;
             }
         }
@@ -448,18 +457,22 @@ var EditAnnouncementsViewModel = function(grid, events) {
             if (columns[i].validationRules) {
                 var validationFunctions = parseValidationString(columns[i].validationRules);
 
-                for (var j=0; j<self.events.length; j++) {
-                    var field = columns[i]['field'];
-                    var value = self.events[j][field];
+                for (var project=0; project<self.modifiedProjects().length; project++) {
+                    for (var j=0; j<self.events.length; j++) {
+                        if (self.events[j].projectId == self.modifiedProjects()[project]) {
+                            var field = columns[i]['field'];
+                            var value = self.events[j][field];
 
-                    for (var k=0; k<validationFunctions.length; k++) {
-                        var result = validationFunctions[k](field, value);
-                        if (!result.valid) {
-                            valid = false;
-                            var columnIdx = columnIndex(result.field, grid.getColumns());
-                            var node = grid.getCellNode(j, columnIdx);
-                            if (node) {
-                                validationSupport.addPrompt($(node), 'event'+j, result.field, result.error);
+                            for (var k=0; k<validationFunctions.length; k++) {
+                                var result = validationFunctions[k](field, value);
+                                if (!result.valid) {
+                                    valid = false;
+                                    var columnIdx = columnIndex(result.field, grid.getColumns());
+                                    var node = grid.getCellNode(j, columnIdx);
+                                    if (node) {
+                                        validationSupport.addPrompt($(node), 'event'+j, result.field, result.error);
+                                    }
+                                }
                             }
                         }
                     }
