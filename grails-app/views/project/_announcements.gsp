@@ -12,44 +12,49 @@
                 <tr>
                     <th></th>
                     <th>Name of grant round or other event/announcement
-                        <fc:iconHelp title="Name of grant round or other event/announcement ">
-                            TBA
-                        </fc:iconHelp>
+                    <fc:iconHelp title="Name of grant round or other event/announcement">
+                        TBA
+                    </fc:iconHelp>
                     </th>
-                    <th>Proposed Date of event/<br/>announcement (if known)
-                    <fc:iconHelp title="Proposed Date of event/announcement (if known) ">
-                            Please indicate if this date is confirmed (C) or whether it is to be confirmed (TBC) in the description field.
-                        </fc:iconHelp>
+                    <th>Scheduled date for grant round opening of other non-funding op
+                    <fc:iconHelp title="Scheduled date for grant round opening of other non-funding op ">
+                        Please indicate if this date is confirmed (C) or whether it is to be confirmed (TBC) in the description field.
+                    </fc:iconHelp>
+                    </th>
+                    <th>Total value of grant round
+                    <fc:iconHelp title="Total value of grant round ">
+                        TBA
+                    </fc:iconHelp>
+                    </th>
+                    <th>Information about this grant round or non-funding op
+                    <fc:iconHelp title="Information about this grant round or non-funding op ">
+                        A description of the opportunity, including location, the type of event (e.g a launch, a media release, an event, a workshop, etc) the number of people expected to attend the event, the proposed duration of the event and any attendees of note.    Is the event in the same electorate as the project? If not, please state which electorate this event is in.
+                    </fc:iconHelp>
+                    </th>
+                    <th>When will these grants be announced
+                    <fc:iconHelp title="Scheduled date for grant round opening of other non-funding op ">
+                        Please indicate if this date is confirmed (C) or whether it is to be confirmed (TBC) in the description field.
+                    </fc:iconHelp>
                     </th>
                     <th>Type of event/<br/>announcement
                     <fc:iconHelp title="Type of event ">
                         TBA
                     </fc:iconHelp>
                     </th>
-                    <th>Description of the event
-                    <fc:iconHelp title="Description of the event ">
-                            A description of the opportunity, including location, the type of event (e.g a launch, a media release, an event, a workshop, etc) the number of people expected to attend the event, the proposed duration of the event and any attendees of note.    Is the event in the same electorate as the project? If not, please state which electorate this event is in.
-                        </fc:iconHelp>
-                    </th>
-
-                    <th>Value of funding round
-                    <fc:iconHelp title="Value of funding round ">
-                        TBA
-                    </fc:iconHelp>
-                    </th>
-
                     <th></th>
                 </tr>
                 </thead>
                 <tbody data-bind="foreach : details.events">
                 <tr>
                     <td width="2%">  <span data-bind="text:$index()+1"></span></td>
-                    <td width="20%"> <textarea style="width: 97%;" rows="2"  class="input-xlarge"  data-bind="value: name, disable: $parent.isProjectDetailsLocked()"></textarea></td>
-                    <td width="10%"> <div style="text-align: center; "><input data-bind="datepicker:scheduledDate.date, disable: $parent.isProjectDetailsLocked()" type="text" style="text-align: center; width: 90%;"/></div></td>
-                    <td width="14%"> <select data-bind="value:type" style="text-align: center; width: 90%;" data-validation-engine="validate[required]"><option value="">Please select</option><option>Grant opening</option><option>Announce successful applicants</option><option>Other event/announcement</option></select></td>
-                    <td width="40%"> <textarea style="width: 97%;" rows="3"  class="input-xlarge"  data-bind="value: description"></textarea></td>
-                    <td width="10%"> <input type="text" class="form-control" style="width:90%" data-bind="value:funding" data-validation-engine="validate[custom[number]]"></td>
+                    <td width="20%"> <textarea style="width: 97%;" rows="2"  class="input-xlarge"  data-bind="value: name, disable: !$parent.isProjectDetailsLocked()"></textarea></td>
+                    <td width="8%"> <div style="text-align: center; "><input data-bind="datepicker:scheduledDate.date, disable: !$parent.isProjectDetailsLocked()" type="text" style="text-align: center; width: 90%;"/></div></td>
+                    <td width="10%"> <input type="text" class="form-control" style="width:90%" data-bind="value:funding, disable: !$parent.isProjectDetailsLocked()" data-validation-engine="validate[custom[number]]"></td>
+                    <td width="36%"> <textarea style="width: 97%;" rows="3"  class="input-xlarge"  data-bind="value: description"></textarea></td>
+                    <td width="8%"> <div style="text-align: center; "><input data-bind="datepicker:grantAnnouncementDate.date, disable: !$parent.isProjectDetailsLocked()" type="text" style="text-align: center; width: 90%;"/></div></td>
+                    <td width="12%"> <select data-bind="value:type, disable: !$parent.isProjectDetailsLocked()" style="text-align: center; width: 90%;" data-validation-engine="validate[required]"><option value="">Please select</option><option>Grant announcement</option><option>Non-funding opp</option></select></td>
                     <td width="4%"> <span data-bind="if: $index()" ><i class="icon-remove" data-bind="click: $parent.removeEvents"></i></span></td>
+
                 </tr>
                 </tbody>
                 <tfoot>
