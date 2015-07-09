@@ -98,7 +98,7 @@
             {id:'eventDescription', name:'Information about this grant round or non-funding op', width:200, field:'eventDescription', editor: Slick.Editors.LongText},
             {id:'date', name:'When will these grants be announced', width:80, field:'grantAnnouncementDate', formatter:dateFormatter, editor: DateEditor2},
             {id:'type', name:'Type of event / announcement (if known)', width:90, field:'eventType', formatter:optionsFormatter, editor: SelectEditor, options:[{label:'', value:''},{label:'Grant announcement', value:'Grant announcement'}, {label:'Non-funding opp', value:'Non-funding opp'}], validationRules:'validate[required]'},
-            {id:'controls', name:'', width:35, formatter:controlsFormatter}
+            {id:'controls', name:'', width:35, minWidth:35, formatter:controlsFormatter}
             ];
 
         var options = {
