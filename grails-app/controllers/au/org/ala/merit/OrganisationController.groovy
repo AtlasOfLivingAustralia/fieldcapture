@@ -53,7 +53,7 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
          projects : [label: 'Projects', visible: true, default:!reportingVisible, stopBinding:true, type: 'tab', disableProjectCreation:true],
          sites    : [label: 'Sites', visible: true, type: 'tab', stopBinding:true, template:'/shared/sites', projectCount:organisation.projects?.size()?:0],
          dashboard: [label: 'Dashboard', visible: hasViewAccess, stopBinding:true, type: 'tab', template:'/shared/dashboard', reports:dashboardReports],
-         admin    : [label: 'Admin', visible: hasAdminAccess, type: 'tab']]
+         admin    : [label: 'Admin', visible: hasAdminAccess, type: 'tab', showEditAnnoucements:organisation.projects?.size()]]
     }
 
     /**
@@ -94,12 +94,12 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
         projects.each { project ->
             if (project.custom?.details?.events) {
                 project.custom.details.events.each { event ->
-                    announcements << [projectId: project.projectId, grantId: project.grantId, name: project.name, organisationName: project.organisationName, associatedProgram: project.associatedProgram, planStatus: project.planStatus, eventDate: event.scheduledDate, eventName: event.name, eventType: event.type, eventDescription: event.description, funding: event.funding]
+                    announcements << [projectId: project.projectId, grantId: project.grantId, name: project.name, planStatus: project.planStatus, eventDate: event.scheduledDate, eventName: event.name, eventType: event.type, eventDescription: event.description, grantAnnouncementDate: event.grantAnnouncementDate, funding: event.funding]
                 }
             } else {
                 // Add a blank row to make it easier to add announcements for that project. (so the user
                 // doesn't have to select the project name which could be from a long list).
-                announcements << [projectId: project.projectId, grantId: project.grantId, name: project.name, organisationName: project.organisationName, associatedProgram: project.associatedProgram, planStatus: project.planStatus, eventDate: '', eventName: '', eventDescription: '', eventType: '', funding: '']
+                announcements << [projectId: project.projectId, grantId: project.grantId, name: project.name, planStatus: project.planStatus, eventDate: '', eventName: '', eventDescription: '', eventType: '', funding: '', grantAnnouncementDate:'']
             }
         }
         announcements
@@ -127,7 +127,7 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
 
         def announcementsByProject = request.JSON
         announcementsByProject.each { project ->
-            def projectAnnouncements = project.announcements.collect {[scheduledDate:it.eventDate, name:it.eventName, type:it.eventType, description: it.eventDescription, funding:it.funding]}
+            def projectAnnouncements = project.announcements.collect {[scheduledDate:it.eventDate, name:it.eventName, type:it.eventType, description: it.eventDescription, grantAnnouncementDate:it.grantAnnouncementDate, funding:it.funding]}
             projectService.update(project.projectId, [custom:[details:[events:projectAnnouncements]]])
         }
         Object resp = [status:200, message:'success']

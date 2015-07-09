@@ -468,7 +468,7 @@ class OrganisationControllerSpec extends Specification {
     def buildAnnouncements(howMany, startIndex) {
         def announcements = []
         for (int i=startIndex; i<howMany+startIndex; i++) {
-            announcements << [name:'Event '+i, description:'Description '+i, scheduledDate:'2015-06-0'+i, funding:i, type:'Other']
+            announcements << [projectId:'project'+i, grantId:'Grant '+i, name:'Project '+i, eventName:'Event '+i, eventDescription:'Description '+i, eventDate:"2015-06-${i%30+1}T00:00:00Z".toString(), funding:i, grantAnnouncementDate:"2015-${i%12+1}-${i%28+1}T00:00:00Z".toString(), eventType:'Non-funding op']
         }
         announcements
     }

@@ -1,11 +1,14 @@
 package au.org.ala.merit
 
 import au.org.ala.fieldcapture.DateUtils
-import org.apache.poi.ss.usermodel.Workbook
-import org.apache.poi.ss.usermodel.WorkbookFactory
+import org.apache.poi.hssf.util.HSSFColor
+import org.apache.poi.ss.usermodel.*
 import org.apache.poi.ss.util.CellReference
+import org.apache.poi.xssf.usermodel.XSSFDataFormat
 import org.grails.plugins.excelimport.ExcelImportService
 import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
+import org.joda.time.LocalDate
 import pl.touk.excel.export.WebXlsxExporter
 import pl.touk.excel.export.XlsxExporter
 import pl.touk.excel.export.getters.PropertyGetter
@@ -22,7 +25,7 @@ class AnnouncementsMapper {
 
     /**
      * A formatter for use with the Grails Excel Export Plugin to convert ISO formatted dates
-     * to our display format.
+     * to Java Dates so the cell style can be set correctly
      */
     static class DisplayDateFormatter extends PropertyGetter<String, String> {
         DisplayDateFormatter(String propertyName) {
@@ -33,18 +36,42 @@ class AnnouncementsMapper {
             if (!isoDate) {
                 return ''
             }
-            return DateUtils.isoToDisplayFormat(isoDate)
+            return DateUtils.displayFormat(DateUtils.parse(isoDate))
         }
     }
+
+    /** Handles empty strings, nulls, strings and LocalDates */
+    public String parseDisplayDate(displayDate) {
+        try {
+            if (!displayDate) {
+                return ''
+            }
+            def date
+            if (displayDate instanceof LocalDate) {
+                date = displayDate.toDateTimeAtStartOfDay(DateTimeZone.UTC)
+            }
+            else {
+                date = DateUtils.parseDisplayDate(displayDate)
+            }
+            return DateUtils.format(date)
+        }
+        catch (Exception e) {
+            println "Parsing ${displayDate} failed. Type: ${displayDate.class}"
+            return ''
+        }
+    }
+
 
     static def ANNOUNCEMENT_HEADER_MAPPING = [
             'Grant ID':'grantId',
             'Project Name':'name',
-            'Proposed event/announcement':'eventName',
-            'Proposed Date of event / announcement (if known)':'eventDate',
-            'Type of event / announcement (if known)':'eventType',
-            'Description of the event':'eventDescription',
-            'Value of the funding round':'funding']
+            'Name of Grant round or non-funding op':'eventName',
+            'Scheduled date for grant round opening of other non-funding opp':'eventDate',
+            'Total value of grant round':'funding',
+            'Information about this grant round or non-funding op':'eventDescription',
+            'When will these grants be announced':'grantAnnouncementDate',
+            'Type of event / announcement':'eventType'
+        ]
 
     def excelImportService
 
@@ -57,7 +84,7 @@ class AnnouncementsMapper {
         def properties = [], headers = []
         ANNOUNCEMENT_HEADER_MAPPING.each { header, property ->
             headers << header
-            if (property == 'scheduledDate') {
+            if (property == 'eventDate' || property == 'grantAnnouncementDate') {
                 properties << new DisplayDateFormatter(property)
             }
             else {
@@ -67,17 +94,74 @@ class AnnouncementsMapper {
 
         def fileName = 'announcements_'+DateUtils.displayFormat(new DateTime())+XlsxExporter.filenameSuffix
 
+
         def exporter = new WebXlsxExporter()
+
         exporter.with {
+            CellStyle headerStyle = headerStyle(workbook)
+            CellStyle dateStyle = dateStyle(workbook)
+
+            setDateCellFormat('dd-mm-yyyy')
             setWorksheetName(DEFAULT_SHEET)
             setResponseHeaders(response, fileName)
             fillHeader(headers)
+            styleRow(sheet, 0, headerStyle)
+            sheet.setDefaultColumnStyle(3, dateStyle)
+            sheet.setDefaultColumnStyle(6, dateStyle)
             add(announcements, properties)
-        }
-        exporter.getWorkbook().write(response.outputStream)
-        response.outputStream.flush()
+            styleColumn(sheet, 3, dateStyle)
+            styleColumn(sheet, 6, dateStyle)
 
+            sizeColumns(workbook)
+            workbook.write(response.outputStream)
+        }
+
+        response.outputStream.flush()
     }
+
+    def styleRow(Sheet sheet, int row, CellStyle style) {
+        sheet.getRow(row).cellIterator().toList().each {
+            it.setCellStyle(style)
+        }
+    }
+
+    def styleColumn(Sheet sheet, int column, CellStyle style) {
+        for (int i=1; i<sheet.lastRowNum; i++) {
+            sheet.getRow(i).getCell(column).setCellStyle(style)
+        }
+    }
+
+    private CellStyle headerStyle(Workbook workbook) {
+        CellStyle headerStyle = workbook.createCellStyle()
+        headerStyle.setFillBackgroundColor(IndexedColors.BLACK.getIndex())
+        headerStyle.setFillPattern(CellStyle.SOLID_FOREGROUND)
+        Font font = workbook.createFont()
+        font.setBoldweight(Font.BOLDWEIGHT_BOLD)
+        font.setColor(HSSFColor.WHITE.index)
+        headerStyle.setFont(font)
+        return headerStyle
+    }
+    private CellStyle dateStyle(Workbook workbook) {
+        CellStyle dateCellStyle = workbook.createCellStyle()
+        XSSFDataFormat dateFormat = workbook.createDataFormat()
+        dateCellStyle.dataFormat = dateFormat.getFormat('dd-mm-yyyy')
+
+        return dateCellStyle
+    }
+
+    def sizeColumns(workbook) {
+        for (Sheet sheet:workbook) {
+            // For table upload templates, the validation sheet may have no rows if nothing needs validation.
+            def row = sheet.getRow(0)
+            if (row) {
+                int columns = row.getLastCellNum()
+                for (int col = 0; col < columns; col++) {
+                    sheet.autoSizeColumn(col);
+                }
+            }
+        }
+    }
+
 
     public List excelToAnnouncements(InputStream excelIn) {
 
@@ -92,7 +176,11 @@ class AnnouncementsMapper {
         ]
 
         Workbook workbook = WorkbookFactory.create(excelIn)
-        excelImportService.columns(workbook, config)
+        def announcements = excelImportService.columns(workbook, config)
+        announcements.each { announcement ->
+            announcement.eventDate = parseDisplayDate(announcement.eventDate)
+            announcement.grantAnnouncementDate = parseDisplayDate(announcement.grantAnnouncementDate)
+        }
     }
 
 
