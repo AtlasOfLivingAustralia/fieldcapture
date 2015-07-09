@@ -49,7 +49,7 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
 
                     def organisation = project.organisationId?organisations.find{it.organisationId == project.organisationId}:[:]
                     if (event.scheduledDate || event.name) {
-                        def announcement = [projectId: project.projectId, grantId: project.grantId, name: project.name, organisationName: project.organisationName, associatedProgram: project.associatedProgram, planStatus: project.planStatus, eventDate: event.scheduledDate, eventName: event.name, eventDescription: event.description, type:event.type, funding: event.funding, organisationWebSite:organisation?.url?:'', contact:'']
+                        def announcement = [projectId: project.projectId, grantId: project.grantId, name: project.name, organisationName: project.organisationName, associatedProgram: project.associatedProgram, planStatus: project.planStatus, eventDate: event.scheduledDate, eventName: event.name, eventDescription: event.description, type:event.type, funding: event.funding, grantAnnouncementDate:event.grantAnnouncementDate, organisationWebSite:organisation?.url?:'', contact:'']
 
                         def states = new HashSet()
                         def electorates = new HashSet()

@@ -83,7 +83,7 @@
     $(function() {
 
         function controlsFormatter() {
-            return "<button class='btn btn-container' title='Adds a new announcement for this project in the row below this'><i class='icon-plus'></i></button> <button class='btn btn-container' title='Deletes this announcement'><i class='icon-remove'></i></button>";
+            return "<button class='btn btn-container add-row' title='Adds a new announcement for this project in the row below this'><i class='icon-plus add-row'></i></button> <button class='btn btn-container remove-row' title='Deletes this announcement'><i class='icon-remove remove-row'></i></button>";
         }
 
         var events = <fc:modelAsJavascript model="${events}"></fc:modelAsJavascript>;
@@ -92,17 +92,18 @@
         var columns =  [
             {id:'grantID', name:'Grant ID', width:80, field:'grantId'},
             {id:'projectName', name:'Project Name', width:200, field:'name', options:projectList, optionLabel:'name', optionValue:'name', editor: ComboBoxEditor, validationRules:'validate[required]'},
-            {id:'event', name:'Proposed event/announcement', width:200, field:'eventName', editor: Slick.Editors.Text},
-            {id:'date', name:'Proposed Date of event / announcement (if known)', width:80, field:'eventDate', formatter:dateFormatter, editor: DateEditor2},
-            {id:'type', name:'Type of event / announcement (if known)', width:80, field:'eventType', formatter:optionsFormatter, editor: SelectEditor, options:[{label:'', value:''},{label:'Grant Opening', value:'Grant Opening'}, {label:'Announce successful applicants', value:'Announce successful applicants'}, {label:'Other event/announcement', value:'Other event/announcement'}], validationRules:'validate[required]'},
-            {id:'eventDescription', name:'Description of the event', width:200, field:'eventDescription', editor: Slick.Editors.LongText},
-            {id:'value', name:'Value of funding round', width:100, editor:Slick.Editors.Integer, field:'funding'},
+            {id:'event', name:'Name of Grant round or non-funding op', width:200, field:'eventName', editor: Slick.Editors.Text},
+            {id:'grantOpeningDate', name:'Scheduled date for grant round opening of other non-funding opp', width:80, field:'eventDate', formatter:dateFormatter, editor: DateEditor2},
+            {id:'value', name:'Total value of grant round', width:100, editor:Slick.Editors.Integer, field:'funding'},
+            {id:'eventDescription', name:'Information about this grant round or non-funding op', width:200, field:'eventDescription', editor: Slick.Editors.LongText},
+            {id:'date', name:'When will these grants be announced', width:80, field:'grantAnnouncementDate', formatter:dateFormatter, editor: DateEditor2},
+            {id:'type', name:'Type of event / announcement (if known)', width:90, field:'eventType', formatter:optionsFormatter, editor: SelectEditor, options:[{label:'', value:''},{label:'Grant announcement', value:'Grant announcement'}, {label:'Non-funding opp', value:'Non-funding opp'}], validationRules:'validate[required]'},
             {id:'controls', name:'', width:20, formatter:controlsFormatter}
             ];
 
         var options = {
             editable:true,
-            enableAddRow: true,
+            enableAddRow: false,
             enableCellNavigation: true,
             forceFitColumns:true,
             autoHeight:true,

@@ -36,15 +36,16 @@
 
         var events = <fc:modelAsJavascript model="${events}"></fc:modelAsJavascript>;
         var columns =  [
-            {title:'Proposed Date of event/announcement (if known)', data:'eventDate', width:'5%', render:dateRenderer},
+            {title:'Scheduled date for grant round opening of other non-funding op', data:'eventDate', width:'5%', render:dateRenderer},
             {title:'State/Territory', width:'10%', data:'state'},
             {title:'Electorate(s) of the Project', width:'10%', data:'electorate'},
             <g:if test="${params.showOrganisations}">{title:'Name of Organisation/Proponent', width:'10%', data:'organisationName'},</g:if>
             {title:'Name', width:'25%', data:'name'},
-            {title:'Name of grant round or other event/announcement', data:'eventName'},
+            {title:'Name of Grant round or non-funding op', data:'eventName'},
+            {title:'Total value of grant round', data:'funding'},
+            {title:'Information about this grant round or non-funding op', data:'eventDescription', width:'15%'},
+            {title:'Grant announcement date', data:'grantAnnouncementDate', width:'5%', render:dateRenderer},
             {title:'Type of event/announcement', data:'type'},
-            {title:'Description of the event', data:'eventDescription', width:'15%'},
-            {title:'Value of funding round', data:'funding'},
             {title:'MERI plan approval status', data:'planStatus'},
             {title:'What programme does the announcement relate to?', width:'13%', data:'associatedProgram'},
             {title:'Grant ID', width:'10%', render:projectUrlRenderer, data:'grantId'},

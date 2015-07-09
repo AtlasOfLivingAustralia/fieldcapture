@@ -178,6 +178,7 @@ function EventsRowViewModel(o) {
    self.type = ko.observable(o.type || '');
    self.funding = ko.observable(o.funding).extend({numericString:0}).extend({currency:true});
    self.scheduledDate = ko.observable(o.scheduledDate).extend({simpleDate: false});
+   self.grantAnnouncementDate = ko.observable(o.grantAnnouncementDate).extend({simpleDate: false});
 };
 
 function OutcomeRowViewModel(o) {
@@ -299,28 +300,26 @@ var EditAnnouncementsViewModel = function(grid, events) {
     self.modifiedProjects = ko.observableArray([]);
     self.events = events.slice();
 
+    var eventProperties = ['eventName', 'eventDescription', 'funding', 'eventDate', 'grantAnnouncementDate', 'eventType'];
+    var projectProperties = ['projectId', 'grantId', 'name'];
+    var properties = projectProperties.concat(eventProperties);
+
     function copyEvent(event) {
-        return {
-            eventName:event.eventName,
-            eventDescription:event.eventDescription,
-            funding:event.funding || '',
-            eventDate:event.eventDate,
-            eventType:event.eventType
-        };
+        var copy = {};
+        for (var i=0; i<eventProperties.length; i++) {
+            copy[eventProperties[i]] = event[eventProperties[i]];
+        }
+        return copy;
     }
 
     function compareEvents(event1, event2) {
 
-        return event1.projectId == event2.projectId &&
-            event1.grantId == event2.grantId &&
-            event1.name == event2.name &&
-            compare(event1.eventName, event2.eventName) &&
-            compare(event1.eventDescription, event2.eventDescription) &&
-            compare(event1.eventDate, event2.eventDate) &&
-            compare(event1.eventType, event2.eventType) &&
-            compare(event1.funding, event2.funding);
-
-
+        for (var i=0; i<properties.length; i++) {
+            if (!compare(event1[properties[i]], event2[properties[i]])) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /** Compares 2 strings, treating falsely as equal */
@@ -330,7 +329,6 @@ var EditAnnouncementsViewModel = function(grid, events) {
 
     function sortEvent(event1, event2) {
         var returnValue = 0;
-        var properties = ['projectId', 'grantId', 'name', 'eventName', 'eventDescription', 'funding', 'eventDate', 'eventType'];
         var propertyIndex = 0;
         while (returnValue == 0) {
             returnValue = sortByProperty(event1, event2, properties[propertyIndex]);
@@ -565,10 +563,10 @@ var EditAnnouncementsViewModel = function(grid, events) {
     });
 
     grid.onClick.subscribe(function(e) {
-        if ($(e.target).hasClass('icon-plus')) {
+        if ($(e.target).hasClass('add-row')) {
             self.insertRow(grid.getCellFromEvent(e).row);
         }
-        else if ($(e.target).hasClass('icon-remove')) {
+        else if ($(e.target).hasClass('remove-row')) {
             self.deleteRow(grid.getCellFromEvent(e).row);
         }
     });
