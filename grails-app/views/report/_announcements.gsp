@@ -42,10 +42,10 @@
             <g:if test="${params.showOrganisations}">{title:'Name of Organisation/Proponent', width:'10%', data:'organisationName'},</g:if>
             {title:'Name', width:'25%', data:'name'},
             {title:'Name of Grant round or non-funding op', data:'eventName'},
-            {title:'Type of event/announcement', data:'type'},
-            {title:'Information about this grant round or non-funding op', data:'eventDescription', width:'15%'},
             {title:'Total value of grant round', data:'funding'},
+            {title:'Information about this grant round or non-funding op', data:'eventDescription', width:'15%'},
             {title:'Grant announcement date', data:'grantAnnouncementDate', width:'5%', render:dateRenderer},
+            {title:'Type of event/announcement', data:'type'},
             {title:'MERI plan approval status', data:'planStatus'},
             {title:'What programme does the announcement relate to?', width:'13%', data:'associatedProgram'},
             {title:'Grant ID', width:'10%', render:projectUrlRenderer, data:'grantId'},
