@@ -307,7 +307,7 @@ var EditAnnouncementsViewModel = function(grid, events) {
     function copyEvent(event) {
         var copy = {};
         for (var i=0; i<eventProperties.length; i++) {
-            copy[eventProperties[i]] = event[eventProperties[i]];
+            copy[eventProperties[i]] = event[eventProperties[i]] || '';
         }
         return copy;
     }
