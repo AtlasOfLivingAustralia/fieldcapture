@@ -1,6 +1,3 @@
-
-var url = "${createLink(controller: 'proxy', action: 'excelBulkActivityTemplate')}";
-            $.fileDownload(url, { httpMethod : "POST", data: { ids : ids.toString(), type : "${type}" }});<%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
     <meta name="layout" content="${hubConfig.skin}"/>
