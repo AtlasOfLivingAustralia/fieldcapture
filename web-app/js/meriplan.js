@@ -359,7 +359,7 @@ var EditAnnouncementsViewModel = function(grid, events) {
 
     self.showBulkUploadOptions = ko.observable(false);
     self.toggleBulkUploadOptions = function() {
-        self.showBulkUploadOptions(!self.showBulkUploadOptions);
+        self.showBulkUploadOptions(!self.showBulkUploadOptions());
     };
 
     self.dirtyFlag = {

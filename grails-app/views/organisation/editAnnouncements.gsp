@@ -1,4 +1,6 @@
-<%@ page contentType="text/html;charset=UTF-8" %>
+
+var url = "${createLink(controller: 'proxy', action: 'excelBulkActivityTemplate')}";
+            $.fileDownload(url, { httpMethod : "POST", data: { ids : ids.toString(), type : "${type}" }});<%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
     <meta name="layout" content="${hubConfig.skin}"/>
@@ -55,7 +57,7 @@
 
         <div class="form-actions" >
             <span class="span3">
-                <button type="button" id ="bulkUploadTrigger" data-bind="click:showBulkUploadOptions" class="btn btn-small"><i class="icon-upload"></i> Upload data for this table</button>
+                <button type="button" id ="bulkUploadTrigger" data-bind="click:toggleBulkUploadOptions" class="btn btn-small"><i class="icon-upload"></i> Upload data for this table</button>
             </span>
             <span class="span9"style="text-align:right">
                 <button type="button" id="save" data-bind="click:save" class="btn btn-primary" title="Save edits and return to the previous page">Save</button>
@@ -67,7 +69,7 @@
         When adding new rows to the Excel template, please be sure that the Grant ID and Project Name columns exactly match an existing project.
 
         <div class="text-left" style="margin:5px">
-            <a target="_blank" id="downloadTemplate" class="btn btn-small" href="${createLink(action:'downloadAnnouncementsTemplate', id:organisation.organisationId)}">Step 1 - Download template (.xlsx)</a>
+            <a target="_blank" id="downloadTemplate" class="btn btn-small">Step 1 - Download template (.xlsx)</a>
         </div>
 
         <div class="text-left" style="margin:5px">
@@ -145,6 +147,11 @@
                 var message = 'Please contact MERIT support and attach your spreadsheet to help us resolve the problem';
                 showAlert(message, "alert-error","load-xlsx-result-placeholder");
             }
+        });
+        $('#downloadTemplate').click(function() {
+
+            var url = "${createLink(action:'downloadAnnouncementsTemplate', id:organisation.organisationId)}";
+            $.fileDownload(url);
         });
 
     });
