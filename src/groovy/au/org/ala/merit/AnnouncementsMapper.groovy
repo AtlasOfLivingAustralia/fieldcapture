@@ -36,7 +36,12 @@ class AnnouncementsMapper {
             if (!isoDate) {
                 return ''
             }
-            return DateUtils.displayFormat(DateUtils.parse(isoDate))
+            try {
+                return DateUtils.displayFormat(DateUtils.parse(isoDate))
+            }
+            catch (Exception e) {
+                return ''
+            }
         }
     }
 
