@@ -178,7 +178,7 @@ function EventsRowViewModel(o) {
    self.type = ko.observable(o.type || '');
    self.funding = ko.observable(o.funding).extend({numericString:0}).extend({currency:true});
    self.scheduledDate = ko.observable(o.scheduledDate).extend({simpleDate: false});
-   self.grantAnnouncementDate = ko.observable(o.grantAnnouncementDate).extend({simpleDate: false});
+   self.grantAnnouncementDate = ko.observable(o.grantAnnouncementDate);
 };
 
 function OutcomeRowViewModel(o) {
@@ -521,6 +521,7 @@ var EditAnnouncementsViewModel = function(grid, events) {
 
     self.validate = function() {
         var valid = true;
+        var firstErrorPos = 0;
         var columns = grid.getColumns();
         for (var i=0; i<columns.length; i++) {
             if (columns[i].validationRules) {
@@ -539,6 +540,8 @@ var EditAnnouncementsViewModel = function(grid, events) {
                                     var columnIdx = columnIndex(result.field, grid.getColumns());
                                     var node = grid.getCellNode(j, columnIdx);
                                     if (node) {
+                                        var errorPos = $(node).offset().top;
+                                        firstErrorPos = Math.min(firstErrorPos, errorPos);
                                         validationSupport.addPrompt($(node), 'event'+j, result.field, result.error);
                                     }
                                 }
@@ -549,7 +552,9 @@ var EditAnnouncementsViewModel = function(grid, events) {
 
             }
         }
-
+        if (!valid) {
+            window.scroll(0, firstErrorPos);
+        }
         return valid;
     };
 
