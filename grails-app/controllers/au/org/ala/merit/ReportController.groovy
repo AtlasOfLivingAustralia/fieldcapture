@@ -49,10 +49,11 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
 
                     def organisation = project.organisationId?organisations.find{it.organisationId == project.organisationId}:[:]
                     if (event.scheduledDate || event.name) {
-                        def announcement = [projectId: project.projectId, grantId: project.grantId, name: project.name, organisationName: project.organisationName, associatedProgram: project.associatedProgram, planStatus: project.planStatus, eventDate: event.scheduledDate, eventName: event.name, eventDescription: event.description, type:event.type, funding: event.funding, grantAnnouncementDate:event.grantAnnouncementDate, organisationWebSite:organisation?.url?:'', contact:'']
+                        def announcement = [projectId: project.projectId, grantId: project.grantId, name: project.name, organisationName: project.organisationName, associatedProgram: project.associatedProgram, associatedSubProgram:project.associatedSubProgram, planStatus: project.planStatus, eventDate: event.scheduledDate, eventName: event.name, eventDescription: event.description, type:event.type, funding: event.funding, grantAnnouncementDate:event.grantAnnouncementDate, organisationWebSite:organisation?.url?:'', contact:'']
 
                         def states = new HashSet()
                         def electorates = new HashSet()
+                        def nrms = new HashSet()
                         project.sites.each {
                             if (it.extent?.geometry?.state) {
                                 def state = it.extent?.geometry?.state
@@ -64,9 +65,13 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
                                 electorate = g.message(code: 'label.' + electorate, default: electorate)
                                 electorates.add(electorate)
                             }
+                            if (it.extent?.geometry?.nrm) {
+                                nrms.add(it.extent.geometry.nrm)
+                            }
                         }
                         announcement.state = states.join(', ')
                         announcement.electorate = electorates.join(', ')
+                        announcement.nrm = nrms.join(',')
                         events << announcement
                     }
                 }

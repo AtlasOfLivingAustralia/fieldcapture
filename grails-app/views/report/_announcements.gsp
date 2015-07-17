@@ -36,45 +36,58 @@
 
         var events = <fc:modelAsJavascript model="${events}"></fc:modelAsJavascript>;
         var columns =  [
-            {title:'Scheduled date for grant round opening of other non-funding op', data:'eventDate', width:'5%', render:dateRenderer},
+            {title:'Programme', width:'13%', data:'associatedProgram'},
+            {title:'Sub-programme', width:'13%', data:'associatedSubProgram'},
+            {title:'Scheduled date', data:'eventDate', width:'5%', render:dateRenderer},
+            {title:'Electorate/s', width:'10%', data:'electorate'},
             {title:'State/Territory', width:'10%', data:'state'},
-            {title:'Electorate(s) of the Project', width:'10%', data:'electorate'},
-            <g:if test="${params.showOrganisations}">{title:'Name of Organisation/Proponent', width:'10%', data:'organisationName'},</g:if>
-            {title:'Name', width:'25%', data:'name'},
-            {title:'Name of Grant round or non-funding op', data:'eventName'},
-            {title:'Total value of grant round', data:'funding'},
-            {title:'Information about this grant round or non-funding op', data:'eventDescription', width:'15%'},
-            {title:'Grant announcement date', data:'grantAnnouncementDate', width:'5%', render:dateRenderer},
-            {title:'Type of event/announcement', data:'type'},
-            {title:'MERI plan approval status', data:'planStatus'},
-            {title:'What programme does the announcement relate to?', width:'13%', data:'associatedProgram'},
-            {title:'Grant ID', width:'10%', render:projectUrlRenderer, data:'grantId'},
-            <g:if test="${params.showOrganisations}">
-                {title:'Organisation website', width:'10%', render:webSiteUrlRenderer, data:'organisationWebSite'},
-                {title:'Contact details', width:'10%', data:'contact'}
+            {title:'Name of NRM region', width:'10%', data:'nrm'},
+            <g:if test="${params.showOrganisations}">{title:'Organisation', width:'10%', data:'organisationName'},
+            {title:'CEO Name', width:'10%', data:'contact'},
+            {title:'CEO contact number', width:'10%', data:'contact'},
             </g:if>
-            ];
+            {title:'Name of Grant round', data:'eventName'},
+            {title:'Total value of grant round', data:'funding'},
+            {title:'Information about this grant round', data:'eventDescription', width:'15%'},
+            <g:if test="${params.showOrganisations}">
+            {title:'For more information about these grants or how to apply go to', width:'10%', render:webSiteUrlRenderer, data:'organisationWebSite'},
+            </g:if>
+            {title:'Scheduled date for announcement of grant round outcome (2 week window)', data:'grantAnnouncementDate', width:'5%'},
+            {title:'Type of event', data:'type'},
+            {title:'Grant ID', width:'10%', render:projectUrlRenderer, data:'grantId'},
+            {title:'Name', width:'25%', data:'name'},
+            {title:'MERI plan approval status', data:'planStatus'}
+        ];
 
+        var typeColumn = 0;
+        var scheduledDateColumn = 2;
 
-            $('#announcementsTable').dataTable({
-                "data": events,
-                "autoWidth": false,
-                "columns": columns,
-                "dom": 'Tlfrtip',
-                tableTools: {
-                    "sSwfPath": "${grailsApplication.config.contextPath}/swf/copy_csv_xls_pdf.swf",
-                    "aButtons": [
-                        "copy",
-                        "print",
-                        {
-                            "sExtends":    "collection",
-                            "sButtonText": "Save",
-                            "aButtons":    [
-                                {"sExtends":"csv",  "sFileName":"Annoucements-${suffix}.csv"}, {"sExtends":"xls",  "sFileName":"Annoucements-${suffix}.xls"}, {"sExtends":"pdf",  "sFileName":"Annoucements-${suffix}.pdf"} ]
-                        }
-                    ]
-                }
-            });
+        for (var i=0; i<columns.length; i++) {
+            if (columns[i].data == 'type') {
+                typeColumn = i;
+                break;
+            }
+        }
+        $('#announcementsTable').dataTable({
+            "data": events,
+            "order":[[typeColumn, 'asc'], [scheduledDateColumn, 'asc']],
+            "autoWidth": false,
+            "columns": columns,
+            "dom": 'Tlfrtip',
+            tableTools: {
+                "sSwfPath": "${grailsApplication.config.contextPath}/swf/copy_csv_xls_pdf.swf",
+                "aButtons": [
+                    "copy",
+                    "print",
+                    {
+                        "sExtends":    "collection",
+                        "sButtonText": "Save",
+                        "aButtons":    [
+                            {"sExtends":"csv",  "sFileName":"Annoucements-${suffix}.csv"}, {"sExtends":"xls",  "sFileName":"Annoucements-${suffix}.xls"}, {"sExtends":"pdf",  "sFileName":"Annoucements-${suffix}.pdf"} ]
+                    }
+                ]
+            }
+        });
 
 
     });
