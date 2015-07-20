@@ -70,12 +70,13 @@ class AnnouncementsMapper {
     static def ANNOUNCEMENT_HEADER_MAPPING = [
             'Grant ID':'grantId',
             'Project Name':'name',
-            'Name of Grant round or non-funding op':'eventName',
-            'Scheduled date for grant round opening of other non-funding opp':'eventDate',
-            'Total value of grant round':'funding',
-            'Information about this grant round or non-funding op':'eventDescription',
-            'When will these grants be announced':'grantAnnouncementDate',
-            'Type of event / announcement':'eventType'
+            'Type':'eventType',
+            'Name of funding announcement or non-funding opportunity':'eventName',
+            'Scheduled date for: 1 - Announcing the opening of the grant round; 2 - Non-funding opportunities':'eventDate',
+            'When will successful applicants be announced':'grantAnnouncementDate',
+            'Total value of funding announcement':'funding',
+            'Information about this funding announcement or non-funding opportunity':'eventDescription',
+
         ]
 
     def excelImportService

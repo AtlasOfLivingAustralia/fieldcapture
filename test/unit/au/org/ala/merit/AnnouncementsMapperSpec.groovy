@@ -45,12 +45,13 @@ class AnnouncementsMapperSpec extends Specification {
 
         sheet.getRow(2).getCell(0).stringCellValue == "Grant 1"
         sheet.getRow(1).getCell(1).stringCellValue == "Project 0"
-        sheet.getRow(3).getCell(2).stringCellValue == "Event 2"
-        sheet.getRow(4).getCell(3).stringCellValue == '04-06-2015'
-        sheet.getRow(5).getCell(4).numericCellValue == 4d
-        sheet.getRow(6).getCell(5).stringCellValue == 'Description 5'
-        sheet.getRow(7).getCell(6).stringCellValue == '07-07-2015'
-        sheet.getRow(8).getCell(7).stringCellValue == 'Non-funding op'
+        sheet.getRow(8).getCell(2).stringCellValue == 'Non-funding op'
+        sheet.getRow(3).getCell(3).stringCellValue == "Event 2"
+        sheet.getRow(4).getCell(4).stringCellValue == '04-06-2015'
+        sheet.getRow(5).getCell(6).numericCellValue == 4d
+        sheet.getRow(6).getCell(7).stringCellValue == 'Description 5'
+        sheet.getRow(7).getCell(5).stringCellValue == '07-07-2015'
+
 
 
     }
