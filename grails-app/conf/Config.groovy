@@ -215,6 +215,9 @@ if (!fieldcapture.system.email.address) {
 if(!app.default.hub) {
     app.default.hub = 'default'
 }
+if(!granteeProjectLogo) {
+    granteeProjectLogo = 'grantee_project_logo.jpg'
+}
 
 if (!grails.cache.ehcache) {
     grails {
