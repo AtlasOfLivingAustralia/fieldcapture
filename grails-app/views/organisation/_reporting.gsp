@@ -1,6 +1,4 @@
-<r:script type="text/javascript">
-        fcConfig.organisationReportUrl = '${createLink(action:'report', id:organisation.organisationId)}';
-</r:script>
+
 
 <div id="reporting-content">
 
@@ -152,3 +150,11 @@
 </g:if>
 </script>
 </div>
+
+<r:script type="text/javascript">
+fcConfig.organisationReportUrl = '${createLink(action:'report', id:organisation.organisationId)}';
+$(function() {
+    var reports = <fc:modelAsJavascript model="${organisation.reports}"/>;
+    ko.applyBindings(new ReportsViewModel(reports, fcConfig.projects), document.getElementById('reporting-content'));
+});
+</r:script>
