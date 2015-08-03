@@ -654,6 +654,18 @@
                 }
             };
 
+            /**
+            *  Takes into account changes to the photo point photo's as the default knockout dependency
+            *  detection misses edits to some of the fields.
+            */
+            self.transients.isDirty = function() {
+                var dirty = self.dirtyFlag.isDirty();
+                if (!dirty && metaModel.supportsPhotoPoints) {
+                    dirty = self.transients.photoPointModel().isDirty();
+                }
+                return dirty;
+            };
+
         };
 
         var site = JSON.parse('${(site as JSON).toString().encodeAsJavaScript()}');
@@ -666,8 +678,7 @@
 
         ko.applyBindings(viewModel);
 
-        master.register('activityModel', viewModel.modelForSaving, viewModel.dirtyFlag.isDirty, viewModel.dirtyFlag.reset);
-
+        master.register('activityModel', viewModel.modelForSaving, viewModel.transients.isDirty, viewModel.dirtyFlag.reset);
     });
 </r:script>
 </body>
