@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import au.com.bytecode.opencsv.CSVReader
 import au.org.ala.fieldcapture.PreAuthorise
 import grails.converters.JSON
 import org.joda.time.Period
@@ -7,6 +8,8 @@ import org.springframework.web.multipart.MultipartHttpServletRequest
 
 @PreAuthorise(accessLevel = 'officer', redirectController = "home")
 class AdminController extends au.org.ala.fieldcapture.AdminController {
+
+    def organisationService
 
     def gmsProjectImport() {
         render(view:'import', model:[:])
@@ -200,4 +203,94 @@ class AdminController extends au.org.ala.fieldcapture.AdminController {
 
 
     }
+
+
+    def createMissingOrganisations() {
+
+        def results = [errors:[], messages:[]]
+        if (request instanceof MultipartHttpServletRequest) {
+            def file = request.getFile('orgData')
+            if (file) {
+                CSVReader reader = new CSVReader(new InputStreamReader(file.inputStream, 'UTF-8'))
+                String[] line = reader.readNext()
+                line = reader.readNext() // Discard header line
+                while (line) {
+
+                    def currentOrgName = line[0]
+                    def correctOrgName = line[3]
+
+                    def orgResults = createOrg(currentOrgName, correctOrgName)
+                    results.errors += orgResults.errors
+                    results.messages += orgResults.messages
+
+                    line = reader.readNext()
+                }
+            }
+
+        }
+
+        render results as JSON
+    }
+    def createOrg(String existingOrgName, String correctOrgName) {
+
+        def errors = []
+        def messages = []
+        def existingOrganisations = metadataService.organisationList()
+
+        def orgName = correctOrgName ?: existingOrgName
+
+        def organisationId
+        def organisation = existingOrganisations.list.find{it.name == orgName}
+        if (!organisation) {
+            def resp = organisationService.update('', [name:orgName])
+
+            organisationId = resp?.resp?.organisationId
+            if (!organisationId) {
+                errors << "Error creating organisation ${orgName} - ${resp?.error}"
+                return [errors:errors]
+            }
+            else {
+                messages << "Created organisation with name: ${orgName}"
+            }
+
+        }
+        else {
+            organisationId = organisation.organisationId
+            messages << "Organisation with name: ${orgName} already exists"
+        }
+
+
+        def projectsResp = projectService.search([organisationName:existingOrgName])
+        if (projectsResp?.resp.projects) {
+            def projects = projectsResp.resp.projects
+            messages << "Found ${projects.size()} projects with name ${existingOrgName}"
+            projects.each { project ->
+                if (project.organisationId != organisationId || project.organisationName != orgName) {
+                    def resp = projectService.update(project.projectId, [organisationName:orgName, organisationId:organisationId])
+                    if (!resp || resp.error) {
+                        errors << "Error updating project ${project.projectId}"
+                    }
+                    else {
+                        messages << "Updated project ${project.projectId} organisation to ${orgName}"
+                    }
+                }
+                else {
+                    messages << "Project ${project.projectId} already had correct organisation details"
+                }
+
+            }
+        }
+        else {
+            if (projectsResp?.resp?.projects?.size() == 0) {
+                messages << "Organisation ${existingOrgName} has no projects"
+            }
+            else {
+                errors << "Error retreiving projects for organisation ${existingOrgName} - ${projectsResp.error}"
+            }
+        }
+        return [errors:errors, messages:messages]
+
+    }
+
+
 }

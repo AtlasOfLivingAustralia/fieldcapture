@@ -171,6 +171,21 @@
             $('form.bulkUploadSites').submit();
         });
 
+        $("#createOrgs").change(function() {
+            if ($("#createOrgs").val()) {
+                $("#btnCreateOrgs").removeAttr("disabled");
+            }
+            else {
+                $("#btnCreateOrgs").attr("disabled", "disabled");
+            }
+
+        }).trigger('change');
+
+        $('#btnCreateOrgs').click(function(e) {
+            e.preventDefault();
+            $('form.createOrgs').submit();
+        });
+
     });
 
 </script>
@@ -315,9 +330,22 @@
         <td><button disabled id="btnBulkUploadSites" class="btn btn-small btn-info" title="Bulk load sites">Bulk load sites</button>
         </td>
         <td>
-            Bulk loads sites from a shapefile.
+            Bulk creates organisations and updates projects.
         <p><g:uploadForm class="bulkUploadSites" action="bulkUploadSites">
             <div><input id="bulkUploadSites" type="file" name="shapefile"/></div>
+
+        </g:uploadForm>
+
+        </p>
+        </td>
+    </tr>
+    <tr>
+        <td><button disabled id="btnCreateOrgs" class="btn btn-small btn-info" title="Bulk create organisations">Bulk create organisations</button>
+        </td>
+        <td>
+            Bulk loads sites from a shapefile.
+        <p><g:uploadForm class="createOrgs" action="createMissingOrganisations">
+            <div><input id="createOrgs" type="file" name="orgData"/></div>
 
         </g:uploadForm>
 
