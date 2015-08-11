@@ -14,6 +14,9 @@
         <g:elseif test="${response.status == 404}">
             <p>404 - The requested page was not found</p>
         </g:elseif>
+        <g:elseif test="${error}">
+            <p>${error}</p>
+        </g:elseif>
         <div class="space-before space-after">&nbsp</div>
 	</body>
 </html>
