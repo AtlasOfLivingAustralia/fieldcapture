@@ -8,6 +8,7 @@ import org.apache.poi.ss.usermodel.Row
 import org.apache.poi.ss.usermodel.Sheet
 import org.apache.poi.ss.usermodel.Workbook
 import org.apache.poi.ss.usermodel.WorkbookFactory
+import org.apache.poi.ss.util.CellReference
 import org.grails.plugins.csv.CSVMapReader
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
@@ -17,6 +18,8 @@ import org.joda.time.Period
 import org.joda.time.Weeks
 import org.joda.time.format.DateTimeFormat
 import org.springframework.web.multipart.MultipartHttpServletRequest
+import pl.touk.excel.export.WebXlsxExporter
+import pl.touk.excel.export.XlsxExporter
 
 import java.text.SimpleDateFormat
 
@@ -25,7 +28,7 @@ import java.text.SimpleDateFormat
  */
 class OrganisationController extends au.org.ala.fieldcapture.OrganisationController {
 
-    def activityService, metadataService, projectService
+    def activityService, metadataService, projectService, excelImportService
 
 
     protected Map content(organisation) {
@@ -46,46 +49,62 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
             }
         }
 
-        [reporting : [label: 'Reporting', visible: reportingVisible, default:reportingVisible, type: 'tab'],
-         projects : [label: 'Projects', visible: true, default:!reportingVisible, type: 'tab', disableProjectCreation:true],
-         sites    : [label: 'Sites', visible: true, type: 'tab', template:'/shared/sites', projectCount:organisation.projects?.size()?:0],
-         dashboard: [label: 'Dashboard', visible: hasViewAccess, type: 'tab', template:'/shared/dashboard', reports:dashboardReports],
-         admin    : [label: 'Admin', visible: hasAdminAccess, type: 'tab']]
+        [about     : [label: 'About', visible: true, stopBinding: false, type:'tab'],
+         reporting : [label: 'Reporting', visible: reportingVisible, stopBinding:true, default:reportingVisible, type: 'tab'],
+         projects  : [label: 'Projects', visible: true, default:!reportingVisible, stopBinding:true, type: 'tab', disableProjectCreation:true],
+         sites     : [label: 'Sites', visible: true, type: 'tab', stopBinding:true, template:'/shared/sites', projectCount:organisation.projects?.size()?:0],
+         dashboard : [label: 'Dashboard', visible: hasViewAccess, stopBinding:true, type: 'tab', template:'/shared/dashboard', reports:dashboardReports],
+         admin     : [label: 'Admin', visible: hasAdminAccess, type: 'tab', showEditAnnoucements:organisation.projects?.size()]]
     }
 
     /**
      * Presents a page which allows the user to edit the events/announcements for all of the projects managed by
      * this organisation at once.
      */
-    def editAnnouncements() {
+    def editAnnouncements(String id) {
 
-        def organisationId = params.organisationId
-
-        def organisation = organisationId ? organisationService.get(organisationId, 'flat') : null
+        def organisation = id ? organisationService.get(id, 'flat') : null
 
         if (!organisation || organisation.error) {
-            render status:404, text:'Organisation with id "'+organisationId+'" does not exist.'
+            render status:404, text:'Organisation with id "'+id+'" does not exist.'
             return
         }
 
-        if (!userService.userIsAlaOrFcAdmin() && !organisationService.isUserAdminForOrganisation(organisationId)) {
+        if (!userService.userIsAlaOrFcAdmin() && !organisationService.isUserAdminForOrganisation(id)) {
             flash.message = 'Only organisation administrators can perform this action.'
-            redirect action:'index', id:organisationId
+            redirect action:'index', id:id
             return
         }
 
-        def queryParams = [max:1500, fq:['organisationFacet:'+organisation.name]]
+        def announcements = findOrganisationAnnouncements(organisation)
+        def projectList = announcements.collect {[projectId: it.projectId, name: it.name, grantId: it.grantId]}.unique()
+
+        [events: announcements,
+         organisation: organisation,
+         projectList: projectList
+        ]
+    }
+
+    private List findOrganisationAnnouncements(organisation) {
+        def queryParams = [max: 1500, fq: ['organisationFacet:' + organisation.name]]
         queryParams.query = "docType:project"
         def results = searchService.allProjects(queryParams, queryParams.query)
-        def projects = results?.hits?.hits?.findAll{it._source.custom?.details?.events}.collect{it._source}
+        def projects = results?.hits?.hits?.collect { it._source }
 
         def announcements = []
         projects.each { project ->
-            project.custom.details.events.each { event ->
-                announcements << [projectId: project.projectId, grantId: project.grantId, name: project.name, organisationName: project.organisationName, associatedProgram: project.associatedProgram, planStatus: project.planStatus, eventDate: event.scheduledDate, eventName: event.name, eventDescription: event.description, media: event.media]
+            if (project.custom?.details?.events) {
+                project.custom.details.events.each { event ->
+                    announcements << [projectId: project.projectId, grantId: project.grantId, name: project.name, planStatus: project.planStatus, eventDate: event.scheduledDate, eventName: event.name, eventType: event.type, eventDescription: event.description, grantAnnouncementDate: event.grantAnnouncementDate, funding: event.funding]
+                }
+            } else {
+                // Add a blank row to make it easier to add announcements for that project. (so the user
+                // doesn't have to select the project name which could be from a long list).
+                announcements << [projectId: project.projectId, grantId: project.grantId, name: project.name, planStatus: project.planStatus, eventDate: '', eventName: '', eventDescription: '', eventType: '', funding: '', grantAnnouncementDate:'']
             }
         }
-        [events:announcements, organisation: organisation]
+        announcements
+
     }
 
     /**
@@ -107,15 +126,40 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
             return
         }
 
-        def announcements = request.JSON
-
-        def announcementsByProject = announcements.groupBy { it.projectId }
-        announcementsByProject.each { projectId, projectAnnouncements ->
-            projectAnnouncements = projectAnnouncements.collect {[scheduledDate:it.eventDate, name:it.eventName, description: it.eventDescription, media:it.media]}
-            projectService.update(projectId, [custom:[details:[events:projectAnnouncements]]])
+        def announcementsByProject = request.JSON
+        announcementsByProject.each { project ->
+            def projectAnnouncements = project.announcements.collect {[scheduledDate:it.eventDate, name:it.eventName, type:it.eventType, description: it.eventDescription, grantAnnouncementDate:it.grantAnnouncementDate, funding:it.funding]}
+            projectService.update(project.projectId, [custom:[details:[events:projectAnnouncements]]])
         }
-        def resp = [status:200, message:'success']
-        respond(status:200, resp as JSON)
+        Object resp = [status:200, message:'success']
+        respond(resp)
+    }
+
+    def downloadAnnouncementsTemplate(String id) {
+
+        def organisation = id ? organisationService.get(id, 'flat') : null
+
+        if (!organisation || organisation.error) {
+            render status:404, text:'Organisation with id "'+id+'" does not exist.'
+            return
+        }
+
+        def announcements = findOrganisationAnnouncements(organisation)
+
+        new AnnouncementsMapper(excelImportService).announcementsToExcel(response, announcements)
+    }
+
+    def bulkUploadAnnouncements() {
+        if (request.respondsTo('getFile')) {
+            def file = request.getFile('announcementsTemplate')
+            if (file) {
+                def announcements = new AnnouncementsMapper(excelImportService).excelToAnnouncements(file.inputStream)
+
+                respond announcements
+                return
+            }
+        }
+        respond status:400, text: 'Missing file'
     }
 
     def report(String id) {

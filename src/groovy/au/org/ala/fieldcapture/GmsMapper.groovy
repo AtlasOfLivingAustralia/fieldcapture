@@ -146,6 +146,8 @@ class GmsMapper {
         def result = gmsToMerit(projectRows[0], projectMapping) // All project rows have the project details.
 
         def project = result.mappedData
+        project.projectType = 'works'
+        project.isMERIT = true
 
         def program = programModel.programs.find {it.name == project.associatedProgram}
         if (!program) {
@@ -164,6 +166,15 @@ class GmsMapper {
         }
         else {
             errors << "No organisation exists with name ${project.organisationName}"
+        }
+        if (project.serviceProviderName) {
+            def serviceProviderOrganisation = organisations.find{it.name == project.serviceProviderName}
+            if (serviceProviderOrganisation) {
+                project.orgIdSvcProvider = serviceProviderOrganisation.organisationId
+            }
+            else {
+                errors << "No (service provider) organisation exists with name ${project.serviceProviderOrganisation}"
+            }
         }
         errors.addAll(result.errors)
         project.planStatus = 'not approved'

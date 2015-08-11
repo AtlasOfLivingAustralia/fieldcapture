@@ -261,31 +261,54 @@
                 %{-- hiding the downloads from non-admin until they are approved for public consumption. --}%
                 <g:if test="${fc.userIsSiteAdmin()}">
                     <div class="tab-pane" id="downloadView">
+                        <div class="alert">Please do not run more than one download at a time as they can place a lot of load on the system</div>
                         <h3>Download data for a filtered selection of projects</h3>
+
                         <table style="width: 50%;">
                             <thead>
-                            <tr><th></th>
-                                <th><b>Summary data</b></th>
-                                <th><b>All data</b></th>
+                            <tr>
+                                <th colspan="2"><b>Summary data (Actvity Output scores)</b></th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr>
-                                <td width="10%">1</td>
-                                <td width="45%">
-                                    <a target="_blank" href="${grailsApplication.config.grails.serverURL}/search/downloadSummaryData<fc:formatParams params="${params}"/>view=json">JSON</a>
+                                <td width="50%">
+                                    <a target="_blank" href="${grailsApplication.config.grails.serverURL}/search/downloadSummaryData<fc:formatParams params="${params}"/>&view=xlsx">XLSX</a>
                                 </td>
-                                <td width="45%">
+                                <td width="50%">
                                     <a target="_blank" href="${grailsApplication.config.grails.serverURL}/search/downloadAllData<fc:formatParams params="${params}"/>&view=json">JSON</a>
                                 </td>
                              </tr>
+                            </tbody>
+                        </table>
+                        <table style="width: 50%;">
+                            <thead>
                             <tr>
-                                <td width="10%">2</td>
-                                <td width="45%">
-                                    <a target="_blank" href="${grailsApplication.config.grails.serverURL}/search/downloadSummaryData<fc:formatParams params="${params}"/>&view=xlsx">XLSX</a>
-                                </td>
-                                <td width="45%">
+                                <th colspan="2"><b>All data (Project, Site, Activity & Output)</b></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td width="50%">
                                     <a target="_blank" href="${grailsApplication.config.grails.serverURL}/search/downloadAllData<fc:formatParams params="${params}"/>&view=xlsx">XLSX</a>
+                                </td>
+                                <td width="50%">
+                                    <a target="_blank" href="${grailsApplication.config.grails.serverURL}/search/downloadAllData<fc:formatParams params="${params}"/>view=json">JSON</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <table style="width: 50%;">
+                            <thead>
+                            <tr>
+                                <th><b>Site data (Project Sites)</b></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td width="100%">
+                                    <a target="_blank" href='<g:createLink controller="search" action="downloadShapefile" params="${params}"/>'>Shapefile</a>
                                 </td>
                             </tr>
                             </tbody>

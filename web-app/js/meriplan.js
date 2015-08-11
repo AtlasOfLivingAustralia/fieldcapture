@@ -178,6 +178,7 @@ function EventsRowViewModel(o) {
    self.type = ko.observable(o.type || '');
    self.funding = ko.observable(o.funding).extend({numericString:0}).extend({currency:true});
    self.scheduledDate = ko.observable(o.scheduledDate).extend({simpleDate: false});
+   self.grantAnnouncementDate = ko.observable(o.grantAnnouncementDate);
 };
 
 function OutcomeRowViewModel(o) {
@@ -293,3 +294,286 @@ function FloatViewModel(o){
 function limitText(field, maxChar){
    $(field).attr('maxlength',maxChar);
 }
+
+var EditAnnouncementsViewModel = function(grid, events) {
+    var self = this;
+    self.modifiedProjects = ko.observableArray([]);
+    self.events = events.slice();
+
+    var eventProperties = ['eventName', 'eventDescription', 'funding', 'eventDate', 'grantAnnouncementDate', 'eventType'];
+    var projectProperties = ['projectId', 'grantId', 'name'];
+    var properties = projectProperties.concat(eventProperties);
+
+    function copyEvent(event) {
+        var copy = {};
+        for (var i=0; i<eventProperties.length; i++) {
+            copy[eventProperties[i]] = event[eventProperties[i]] || '';
+        }
+        return copy;
+    }
+
+    function compareEvents(event1, event2) {
+
+        for (var i=0; i<properties.length; i++) {
+            if (!compare(event1[properties[i]], event2[properties[i]])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /** Compares 2 strings, treating falsely as equal */
+    function compare(s1, s2) {
+       return (!s1 && !s2) || (s1 == s2);
+    }
+
+    function sortEvent(event1, event2) {
+        var returnValue = 0;
+        var propertyIndex = 0;
+        while (returnValue == 0) {
+            returnValue = sortByProperty(event1, event2, properties[propertyIndex]);
+            propertyIndex++;
+        }
+        return returnValue;
+    }
+
+    function sortByProperty(event1, event2, property) {
+        if (event1[property] > event2[property]) { return 1; }
+        if (event2[property] > event1[property]) { return -1; }
+        return 0;
+    }
+
+    function compareProjectEvents(projectEvents1, projectEvents2) {
+
+        if (projectEvents1.length != projectEvents2.length) {
+            return false;
+        }
+
+        for (var i=0; i<projectEvents1.length; i++) {
+            if (!compareEvents(projectEvents1[i], projectEvents2[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    self.showBulkUploadOptions = ko.observable(false);
+    self.toggleBulkUploadOptions = function() {
+        self.showBulkUploadOptions(!self.showBulkUploadOptions());
+    };
+
+    self.dirtyFlag = {
+        isDirty: ko.computed(function() {
+            return self.modifiedProjects().length > 0;
+        }),
+        reset:function() {
+            self.modifiedProjects([]);
+        }
+    };
+
+    function projectModified(projectId) {
+        if (self.modifiedProjects().indexOf(projectId) < 0) {
+            self.modifiedProjects.push(projectId);
+        }
+    }
+
+    function revalidateAll() {
+        grid.invalidateAllRows();
+        grid.updateRowCount();
+        grid.render();
+    }
+
+    self.findProjectIdForEvent = function(event) {
+        for (var i=0; i<events.length; i++) {
+            if (events[i].grantId == event.grantId && events[i].name == event.name) {
+                return events[i].projectId;
+            }
+        }
+        return null;
+    };
+
+    /**
+     * Replaces all of the existing events with the supplied array.
+     */
+    self.updateEvents = function(newEvents) {
+        var i;
+
+        for (i=0; i<newEvents.length; i++) {
+            var projectId = self.findProjectIdForEvent(newEvents[i]);
+            if (projectId) {
+                newEvents[i].projectId = projectId;
+            }
+            else {
+                newEvents[i].grantId = undefined;
+                newEvents[i].name = undefined;
+            }
+        }
+
+        var groupedExistingEvents = {};
+        var existingProjectIds = [];
+        for (i=0; i<events.length; i++) {
+            if (!groupedExistingEvents[events[i].projectId]) {
+                groupedExistingEvents[events[i].projectId] = [];
+                existingProjectIds.push(events[i].projectId);
+            }
+            groupedExistingEvents[events[i].projectId].push(events[i]);
+        }
+
+        var groupedNewEvents = {};
+        var newProjectIds = [];
+        for (i=0; i<newEvents.length; i++) {
+            if (!groupedNewEvents[newEvents[i].projectId]) {
+                groupedNewEvents[newEvents[i].projectId] = [];
+                newProjectIds.push(newEvents[i].projectId);
+            }
+            groupedNewEvents[newEvents[i].projectId].push(newEvents[i]);
+        }
+
+        for (i=0; i<existingProjectIds.length; i++) {
+            if ((newProjectIds.indexOf(existingProjectIds[i]) < 0) ||
+                (!compareProjectEvents(groupedExistingEvents[existingProjectIds[i]], groupedNewEvents[existingProjectIds[i]]))) {
+                projectModified(existingProjectIds[i]);
+            }
+        }
+
+        self.events = newEvents;
+        grid.setData(self.events);
+        revalidateAll();
+
+        self.validate();
+    };
+
+    self.modelAsJSON = function() {
+        var projects = [];
+        for (var i=0; i<self.modifiedProjects().length; i++) {
+            var projectAnnouncements = {projectId:self.modifiedProjects()[i], announcements:[]};
+            for (var j=0; j<self.events.length; j++) {
+                if (self.events[j].projectId == self.modifiedProjects()[i]) {
+                    projectAnnouncements.announcements.push(copyEvent(self.events[j]));
+                }
+
+            }
+            projects.push(projectAnnouncements);
+        }
+        return JSON.stringify(projects);
+    };
+
+    self.cancel = function() {
+        self.cancelAutosave();
+        document.location.href = fcConfig.organisationViewUrl;
+    };
+
+    self.save = function() {
+        Slick.GlobalEditorLock.commitCurrentEdit();
+        if (self.validate()) {
+            self.saveWithErrorDetection(function() {
+                document.location.href = fcConfig.organisationViewUrl;
+            });
+        }
+    };
+
+    self.insertRow = function(index) {
+        var event = events[index];
+        projectModified(event.projectId);
+        self.events.splice(index+1, 0, {projectId:event.projectId, name:event.name, grantId:event.grantId});
+        revalidateAll();
+    };
+
+    self.deleteRow = function(index) {
+        bootbox.confirm("Are you sure you want to delete this announcement?", function(ok) {
+            if (ok) {
+                var deleted = self.events.splice(index, 1);
+                projectModified(deleted[0].projectId);
+                revalidateAll();
+            }
+        });
+    };
+
+    self.addRow = function(item, args) {
+        self.events.push(item);
+        if (item.name) {
+            self.projectNameEdited(item, args);
+        }
+        revalidateAll();
+    };
+
+    self.eventEdited = function(event, args) {
+        projectModified(event.projectId);
+        if (args.cell == 1) {
+            self.projectNameEdited(event, args);
+            grid.invalidateRow(args.row);
+            grid.render();
+        }
+
+    };
+
+    self.projectNameEdited = function(event, args) {
+        // The project has been changed.
+        for (var i=0; i<self.events.length; i++) {
+            if (self.events[i].name == event.name) {
+                event.projectId = self.events[i].projectId;
+                event.grantId = self.events[i].grantId;
+                projectModified(event.projectId); // Both the previous and new projects have been modified.
+                break;
+            }
+        }
+    };
+
+    self.validate = function() {
+        var valid = true;
+        var firstErrorPos = 0;
+        var columns = grid.getColumns();
+        for (var i=0; i<columns.length; i++) {
+            if (columns[i].validationRules) {
+                var validationFunctions = parseValidationString(columns[i].validationRules);
+
+                for (var project=0; project<self.modifiedProjects().length; project++) {
+                    for (var j=0; j<self.events.length; j++) {
+                        if (self.events[j].projectId == self.modifiedProjects()[project]) {
+                            var field = columns[i]['field'];
+                            var value = self.events[j][field];
+
+                            for (var k=0; k<validationFunctions.length; k++) {
+                                var result = validationFunctions[k](field, value);
+                                if (!result.valid) {
+                                    valid = false;
+                                    var columnIdx = columnIndex(result.field, grid.getColumns());
+                                    var node = grid.getCellNode(j, columnIdx);
+                                    if (node) {
+                                        var errorPos = $(node).offset().top;
+                                        firstErrorPos = Math.min(firstErrorPos, errorPos);
+                                        validationSupport.addPrompt($(node), 'event'+j, result.field, result.error);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+        if (!valid) {
+            window.scroll(0, firstErrorPos);
+        }
+        return valid;
+    };
+
+    // Attach event handlers to the grid
+    grid.onAddNewRow.subscribe(function (e, args) {
+        var item = args.item;
+        self.addRow(item, args);
+    });
+    grid.onCellChange.subscribe(function(e, args) {
+        self.eventEdited(args.item, args);
+    });
+
+    grid.onClick.subscribe(function(e) {
+        if ($(e.target).hasClass('add-row')) {
+            self.insertRow(grid.getCellFromEvent(e).row);
+        }
+        else if ($(e.target).hasClass('remove-row')) {
+            self.deleteRow(grid.getCellFromEvent(e).row);
+        }
+    });
+    grid.setData(self.events);
+};
