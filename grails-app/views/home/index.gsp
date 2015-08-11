@@ -261,6 +261,7 @@
                 %{-- hiding the downloads from non-admin until they are approved for public consumption. --}%
                 <g:if test="${fc.userIsSiteAdmin()}">
                     <div class="tab-pane" id="downloadView">
+                        <div class="alert">Please do not run more than one download at a time as they can place a lot of load on the system</div>
                         <h3>Download data for a filtered selection of projects</h3>
 
                         <table style="width: 50%;">
