@@ -4,8 +4,9 @@ jdk:
 node_js:
   - "0.10"
 branches:
-  except:
-  - trunk
+  only:
+  - master
+  - dev 
 before_install:
 - export TZ=Australia/Canberra
 - rm -rf ~/.gvm
