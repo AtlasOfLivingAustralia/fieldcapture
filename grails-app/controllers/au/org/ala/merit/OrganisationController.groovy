@@ -52,7 +52,7 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
         [about     : [label: 'About', visible: true, stopBinding: false, type:'tab'],
          reporting : [label: 'Reporting', visible: reportingVisible, stopBinding:true, default:reportingVisible, type: 'tab'],
          projects  : [label: 'Projects', visible: true, default:!reportingVisible, stopBinding:true, type: 'tab', disableProjectCreation:true],
-         sites     : [label: 'Sites', visible: true, type: 'tab', stopBinding:true, template:'/shared/sites', projectCount:organisation.projects?.size()?:0],
+         sites     : [label: 'Sites', visible: true, type: 'tab', stopBinding:true, projectCount:organisation.projects?.size()?:0, showShapefileDownload:hasAdminAccess],
          dashboard : [label: 'Dashboard', visible: hasViewAccess, stopBinding:true, type: 'tab', template:'/shared/dashboard', reports:dashboardReports],
          admin     : [label: 'Admin', visible: hasAdminAccess, type: 'tab', showEditAnnoucements:organisation.projects?.size()]]
     }
