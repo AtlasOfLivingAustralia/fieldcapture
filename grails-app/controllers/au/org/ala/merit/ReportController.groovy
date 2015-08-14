@@ -8,7 +8,7 @@ import org.joda.time.Period
 
 class ReportController extends au.org.ala.fieldcapture.ReportController {
 
-    def activityService, projectService, organisationService
+    def activityService, projectService, organisationService, commonService
 
     static defaultAction = "dashboard"
 
@@ -119,6 +119,59 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
                  quarterlyReports:reports.quarterlyReports,
                  includeOrganisationName:params.includeOrganisationName?:false]
 
+    }
+
+    def outputTargetsReport() {
+        def url = grailsApplication.config.ecodata.baseUrl + 'search/targetsReport' + commonService.buildUrlParamsFromMap(params)
+
+        def results = cacheService.get("outputTargets-"+params, {
+            webService.getJson(url, 300000)
+        })
+
+        def scores = [:]
+        def distinctPrograms = new HashSet()
+        results.targets.each { program, targets ->
+            distinctPrograms.add(program)
+            targets.each { score, target ->
+                if (!scores[score]) {
+                    scores[score] = [:]
+                }
+                if (!scores[score][program]) {
+                    scores[score][program] = [:]
+                }
+                scores[score][program]['target'] = target
+                def programOutputs = results.scores.outputData.find{it.group == program}
+                if (programOutputs) {
+                    def outputScore = programOutputs.results.find{it.score.label == score}
+                    if (outputScore) {
+                        if (outputScore.results) {
+                            scores[score][program]['value'] = outputScore.results[0].result
+                        }
+                    }
+                }
+            }
+        }
+        def programsArray = new ArrayList(distinctPrograms)
+        programsArray.sort()
+
+        def scoresarray = []
+        scores.each {score, programs ->
+            if (score == 'projectCount') {
+                return
+            }
+            def scoreDetails = [score:score]
+
+            programsArray.each {
+                def programTarget = programs[it]
+                def target = programTarget?.target?.total ?: ''
+                def progressToDate = programTarget?.value ?: ''
+                scoreDetails[it+' - Target'] = target
+                scoreDetails[it+' - Value'] = progressToDate
+            }
+            scoresarray << scoreDetails
+        }
+
+        render view:'_outputTargets', model:[programs:programsArray, scores:scoresarray]
     }
 
     private def defaultYearForReport() {
