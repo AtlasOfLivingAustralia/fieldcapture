@@ -317,6 +317,7 @@
             $('#project-details-validation').validationEngine();
             $('#risk-validation').validationEngine();
             $('#grantmanager-validation').validationEngine();
+            $('#risks-announcements').validationEngine();
             $('.helphover').popover({animation: true, trigger:'hover'});
 
             $('#cancel').click(function () {
@@ -370,6 +371,10 @@
 				};
 
 				self.saveAnnouncements= function(){
+
+				    if (!$('#risks-announcements').validationEngine('validate')) {
+				        return;
+				    }
 				    var tmp = {};
 					self.details.status('active');
 					tmp['details'] =  ko.mapping.toJS(self.details);
