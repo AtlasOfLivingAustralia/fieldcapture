@@ -24,9 +24,10 @@
 #floating-save button {
 	top:5px;
 }
-#announcements th {
+#announcements th, #risks-announcements th {
 	white-space: normal;
 }
+
 </style>
 
 <!--  Case manager actions -->
@@ -195,7 +196,7 @@
 	<div>
 		<div id="project-implementation" class="well well-small">
 			<label><b>Project implementation / delivery mechanism</b></label>
-			<p>Explain how the project will be implemented, including methods, approaches, collaborations, etc. <b><fc:iconHelp title="Project implementation / delivery mechanism">How is the project to be delivered? Briefly describe the high level method/s to be used. The delivery mechanism/s should provide sufficient detail to understand how the project's outcomes will be achieved.</fc:iconHelp></b></p>
+			<p>Explain how the project will be implemented, including methods, approaches, collaborations, etc. (5000 character limit) <b><fc:iconHelp title="Project implementation / delivery mechanism">How is the project to be delivered? Briefly describe the high level method/s to be used. The delivery mechanism/s should provide sufficient detail to understand how the project's outcomes will be achieved.</fc:iconHelp></b></p>
 			<textarea style="width: 98%;" maxlength="5000"
 					  data-bind="value:details.implementation.description, disable: isProjectDetailsLocked()"
 					  class="input-xlarge" id="implementation" rows="10" ></textarea>
@@ -296,15 +297,15 @@
 				<thead>
 				<tr>
 					<th></th>
-					<th>Type of event
+					<th class="required">Type of event
 					<fc:iconHelp title="Type of event ">
 						For category 1, funding announcements -  include all funding announcements including: opening of grant rounds, EOI rounds, tenders, and announcements of successful applicants.
-                        For category 2, non-funding opportunities -  include all non-funding opportunities such as: field days, community planting day, workshops and other community engagement activities
+                        For category 2, non-funding opportunities -  include all non-funding opportunities such as: field days, community planting day, workshops and other community engagement or sustainable and profitable agriculture activities
 					</fc:iconHelp>
 					</th>
 					<th>Name of funding announcement or non-funding opportunity
 					<fc:iconHelp title="Name of funding announcement or non-funding opportunity">
-						Enter the name of your funding announcement or non-funding opportunity, for example ‘The Dandenong Ranges bushfire recovery community grants’ or ‘Improving wetlands and woodlands programme  EOI’ or for a non-funding opportunity– ‘the Namoi community tree planting day’
+						Enter the name of your funding announcement or non-funding opportunity, for example ‘The Dandenong Ranges bushfire recovery community grants’ or ‘Improving wetlands and woodlands programme  EOI’ or for a non-funding opportunity– ‘the Corangamite community farm planning day’
 					</fc:iconHelp>
 					</th>
 					<th>Scheduled date for:<br/>
@@ -328,7 +329,7 @@
 					<fc:iconHelp title="Information about this funding announcement or non-funding opportunity">
 						(150 word limit)
                         Provide a description of the funding announcement or the non-funding opportunity, i.e. ‘grants from $x - $y are available under the x local programme to undertake A to achieve B’, or ‘targeted EOIs are being invited under the x local programme to undertake A to achieve B. Please note - Information about the successful applicants will be collected separately.
-                        For non-funding opportunities, please provide information that sets the context for the event, ie ‘a work shop will be held at location x to showcase how sustainable agricultural processes can benefit riparian health and improved water quality’ or ‘a field day will be held at x to provide community with access to information on revegetation and soil health’.
+                        For non-funding opportunities, please provide information that sets the context for the event, ie ‘a work shop will be held at location x to showcase how sustainable agricultural processes can benefit riparian health and improved water quality, farm sustainability and profit’ or ‘a field day will be held at x to provide community with access to information on revegetation, soil health and/or sustainable agriculture activities’.
 					</fc:iconHelp>
 					</th>
 
@@ -338,20 +339,20 @@
 				<tbody data-bind="foreach : details.events">
 				<tr>
 					<td width="2%">  <span data-bind="text:$index()+1"></span></td>
-					<td width="12%"> <select data-bind="value:type, disable: $parent.isProjectDetailsLocked()" style="text-align: center; width: 90%;" data-validation-engine="validate[required]"><option value="">Please select</option><option>1: funding announcements</option><option>2: non-funding opportunities</option></select></td>
+					<td width="12%"> <select data-bind="value:type, disable: $parent.isProjectDetailsLocked()" style="text-align: center; width: 90%;" data-errormessage="*This field is required. If you do not have any announcement information available yet then please delete this row via the X icon" data-validation-engine="validate[required]"><option value="">Please select</option><option>1: funding announcements</option><option>2: non-funding opportunities</option></select></td>
 					<td width="18%"> <textarea style="width: 97%;" rows="2"  class="input-xlarge"  data-bind="value: name, disable: $parent.isProjectDetailsLocked()"></textarea></td>
 					<td width="12%"> <div style="text-align: center; "><input data-bind="datepicker:scheduledDate.date, disable: $parent.isProjectDetailsLocked()" type="text" style="text-align: center; width: 90%;"/></div></td>
 					<td width="12%"> <div style="text-align: center; "><input data-bind="value:grantAnnouncementDate, disable: $parent.isProjectDetailsLocked()" type="text" style="text-align: center; width: 90%;"/></div></td>
 					<td width="12%"> <div style="width:90%" class="input-append input-prepend"><span class="add-on">$</span><input type="text" class="form-control" style="width:3em;" data-bind="value:funding, disable: $parent.isProjectDetailsLocked()" data-validation-engine="validate[custom[number]]"><span class="add-on">.00</span></div></td>
 					<td width="28%"> <textarea maxlength="1000" style="width: 97%;" rows="3"  class="input-xlarge"  data-bind="value: description, disable: $parent.isProjectDetailsLocked()"></textarea></td>
-					<td width="4%"> <span data-bind="if: $index()" ><i class="icon-remove" data-bind="click: $parent.removeEvents"></i></span></td>
+					<td width="4%"> <span><i class="icon-remove" data-bind="click: $parent.removeEvents"></i></span></td>
 
 				</tr>
 				</tbody>
 				<tfoot>
 				<tr>
 					<td></td>
-					<td colspan="0" style="text-align:left;">
+					<td colspan="3" style="text-align:left;">
 						<button type="button" class="btn btn-small" data-bind="disable: isProjectDetailsLocked(), click: addEvents">
 							<i class="icon-plus"></i> Add a row</button></td>
 				</tr>
