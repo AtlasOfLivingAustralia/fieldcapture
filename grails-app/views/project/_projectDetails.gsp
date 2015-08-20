@@ -1,3 +1,8 @@
+<style type="text/css">
+.announcements th {
+	white-space: normal;
+}
+</style>
 <div data-bind="ifnot: details.status() == 'active'">
 	<h4>MERI Plan not available.</h4>
 </div>
@@ -86,26 +91,31 @@
 
 		<div class="row-fluid space-after">
 			<div class="well well-small">
-				<div id="project-keq" class="well well-small">
+				<div id="project-keq" class="announcements well well-small">
 					<label><b>Projects Announcements</b></label>
-					<table style="width: 100%;">
+					<table style="width: 100%; ">
 						<thead>
 						<tr>
 							<th></th>
-							<th>Proposed event/announcement</th>
-							<th>Proposed Date of event/<br/>announcement (if known)</th>
-							<th>Description of the event</th>
-							<th>Will there be, or do you <br/>intend there to be, media <br/> involvement in this event?</th>
-							<th></th>
+							<th>Type of event</th>
+							<th>Name of funding announcement or non-funding opportunity</th>
+							<th>Scheduled date for:<br/>
+								1 - Announcing the opening of the grant round;<br/>
+								2 - Non-funding opportunities</th>
+							<th>When will successful applicants be announced</th>
+							<th>Total value of funding announcement</th>
+							<th>Information about this funding announcement or non-funding opportunity</th>
 						</tr>
 						</thead>
 						<tbody data-bind="foreach : details.events">
 						<tr>
 							<td><span data-bind="text: $index()+1"></span></td>
-							<td><span data-bind="text:name"></span></td>
-							<td><label data-bind="text:scheduledDate.formattedDate"></label></td>
-							<td><span data-bind="text: description"></span></td>
-							<td><span data-bind="text: media"></span></td>
+							<td width="12%"> <span data-bind="text:type"></span></td>
+							<td width="18%"> <span data-bind="text: name"></span></td>
+							<td width="12%"> <span data-bind="text:scheduledDate.formattedDate"></span></td>
+							<td width="12%"> <span data-bind="text:grantAnnouncementDate"></span></td>
+							<td width="12%"> <span data-bind="text:funding"></span></td>
+							<td width="28%"> <span data-bind="text: description"></span></td>
 						</tr>
 						</tbody>
 					</table>
