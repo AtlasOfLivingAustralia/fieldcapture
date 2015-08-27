@@ -340,6 +340,12 @@ log4j = {
                 rollingFile name: "stacktrace",
                         maxFileSize: 104857600,
                         file: loggingDir+"/fieldcapture-stacktrace.log"
+                rollingFile name: "sessionActivity",
+                        maxFileSize: 104857600,
+                        file: loggingDir+'/fieldcapture-sessions.log',
+                        threshold: org.apache.log4j.Level.INFO,
+                        layout: pattern(conversionPattern: "%d %-5p [%c{1}]  %m%n")
+
             }
         }
     }
@@ -353,7 +359,14 @@ log4j = {
                     'grails.app.taglib.au.org.ala.fieldcapture',
                     'grails.app.conf.au.org.ala.fieldcapture',
                     'grails.app.filters.au.org.ala.fieldcapture',
-                    'au.org.ala.cas.client'
+                    'au.org.ala.cas.client',
+                    'au.org.ala.merit.SessionLogger'
+
+            ]
+        }
+        production {
+            all additivity: false, sessionActivity: [
+                    'au.org.ala.merit.SessionLogger'
             ]
         }
     }
