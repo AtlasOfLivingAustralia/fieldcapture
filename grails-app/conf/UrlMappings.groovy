@@ -70,8 +70,8 @@ class UrlMappings {
         "/admin/user/$id"(controller: "user", action: "show") {
 
         }
-		"500"(view:'/error')
-		"404"(view:'/error')
+        "500"(controller:'error', action:'response500')
+        "404"(controller:'error', action:'response404')
         "/$hub?/$controller/ws/$action/$id" {
             constraints {
                 hub validator: {val, obj -> isHubValid(applicationContext, val)}
