@@ -662,7 +662,7 @@
             // want the index of the PlannedActivity to be relative to the filtered set of activities.
             var self = this,
                 activitiesInThisStage = $.grep(activities, function (act, index) {
-                    return findStageFromDate(project.timeline, act.plannedEndDate) === stageLabel;
+                    return act.plannedEndDate > stage.fromDate &&  act.plannedEndDate <= stage.toDate;
                 });
             this.label = stageLabel;
             this.isCurrentStage = isCurrentStage;
@@ -706,28 +706,14 @@
                 act.projectStage = stageLabel;
                 return new PlannedActivity(act, index === 0, project);
             });
-            /**
-             * A stage is considered to be approved when all of the activities in the stage have been marked
-             * as published.
-             */
-            this.isApproved = ko.computed(function() {
-                var numActivities = self.activities ? self.activities.length : 0;
-                if (numActivities == 0) {
-                    return false;
-                }
-                return $.grep(self.activities, function(act, i) {
-                    return act.isApproved();
-                }).length == numActivities;
-            }, this, {deferEvaluation: true});
-            this.isSubmitted = ko.computed(function() {
-                var numActivities = self.activities ? self.activities.length : 0;
-                if (numActivities == 0) {
-                    return false;
-                }
-                return $.grep(self.activities, function(act, i) {
-                    return act.isSubmitted();
-                }).length == numActivities;
-            }, this, {deferEvaluation: true});
+
+            this.isApproved = function() {
+                return stage.publicationStatus == 'published';
+            };
+            this.isSubmitted = function() {
+                return stage.publicationStatus == 'pendingApproval';
+            }
+
 
             this.readyForApproval = ko.computed(function() {
                 return $.grep(self.activities, function (act, i) {
@@ -781,6 +767,7 @@
                     return act.activityId;
                 });
                 payload.stage = stageLabel;
+                payload.reportId = stage.reportId;
                 payload.projectId = self.projectId;
                 $.ajax({
                     url: url + self.projectId,
@@ -964,7 +951,7 @@
             return clone;
         };
 
-        function PlanViewModel(activities, outputTargets, project, programModel, today) {
+        function PlanViewModel(activities, reports, outputTargets, project, programModel, today) {
             var self = this;
             this.userIsCaseManager = ko.observable(${user?.isCaseManager});
             this.planStatus = ko.observable(project.planStatus || 'not approved');
@@ -986,13 +973,13 @@
             });
             //this.currentDate = ko.observable("2014-02-03T00:00:00Z"); // mechanism for testing behaviour at different dates
             this.currentDate = ko.observable(new Date().toISOStringNoMillis()); // mechanism for testing behaviour at different dates
-            this.currentProjectStage = findStageFromDate(project.timeline,this.currentDate());
+            this.currentProjectStage = findStageFromDate(reports,this.currentDate());
             this.loadActivities = function (activities) {
                 var stages = [];
 
                 // group activities by stage
-                $.each(project.timeline, function (index, stage) {
-                    stages.push(new PlanStage(stage, activities, self, stage.name === self.currentProjectStage, project,today));
+                $.each(reports, function (index, stageReport) {
+                    stages.push(new PlanStage(stageReport, activities, self, stageReport.name === self.currentProjectStage, project,today));
                 });
 
                 return stages;
@@ -1230,8 +1217,7 @@
 
 
             this.submitReport = function (e) {
-            console.log(e);
-                //bootbox.alert("Reporting has not been enabled yet.");
+
                 $('#declaration').modal('show');
             };
 
@@ -1338,9 +1324,11 @@
         }
 		var today = '${today}';
 		var programModel = <fc:modelAsJavascript model="${programs}"/>;
+        var reports = <fc:modelAsJavascript model="${reports}"/>;
 
         var planViewModel = new PlanViewModel(
             ${activities ?: []},
+            reports,
             ${project.outputTargets ?: '{}'},
             checkAndUpdateProject(${project}, null, programModel),
             programModel,

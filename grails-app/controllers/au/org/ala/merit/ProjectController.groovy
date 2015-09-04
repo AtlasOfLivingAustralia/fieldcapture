@@ -5,8 +5,11 @@ import grails.converters.JSON
 
 class ProjectController extends au.org.ala.fieldcapture.ProjectController {
 
+
     static defaultAction = "index"
     static ignore = ['action','controller','id']
+
+    def reportService
 
     /** Overrides the projectContent method in the fieldcapture controller to include the MERI plan and risks and threats content */
     protected Map projectContent(project, user, programs) {
@@ -14,7 +17,7 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
         def model = [overview:[label:'Overview', visible: true, default:true, type:'tab'],
          documents:[label:'Documents', visible: true, type:'tab'],
          details:[label:'MERI Plan', disabled:!user?.hasViewAccess, disabled:!user?.hasViewAccess, visible:program?.optionalProjectContent?.contains('MERI Plan'), type:'tab'],
-         plan:[label:'Activities', visible:true, disabled:!user?.hasViewAccess, type:'tab'],
+         plan:[label:'Activities', visible:true, disabled:!user?.hasViewAccess, type:'tab', reports:reportService.getReportsForProject(project.projectId)],
          risksAndThreats:[label:'Risks and Threats', disabled:!user?.hasViewAccess, visible:user?.hasViewAccess && program?.optionalProjectContent?.contains('Risks and Threats')],
          site:[label:'Sites', visible: true, disabled:!user?.hasViewAccess, type:'tab'],
          dashboard:[label:'Dashboard', visible: true, disabled:!user?.hasViewAccess, type:'tab'],

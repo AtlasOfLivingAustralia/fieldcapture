@@ -11,6 +11,8 @@ import java.text.SimpleDateFormat
 
 class ProjectService extends au.org.ala.fieldcapture.ProjectService {
 
+    def reportService
+
     static dateWithTime = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss")
     static dateWithTimeFormat2 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
     static convertTo = new SimpleDateFormat("dd MMM yyyy")
@@ -136,6 +138,7 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
 		def doc = [name:name, projectId:projectId, saveAs:'pdf', type:'pdf', role:'stageReport',filename:name, readOnly:true, public:false]
 		documentService.createTextDocument(doc, htmlTxt)
         def result = activityService.submitActivitiesForPublication(stageDetails.activityIds)
+        reportService.submit(stageDetails.reportId)
         def project = get(projectId)
         stageDetails.project = project
         if (!result.resp.error) {
@@ -166,6 +169,7 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
         //Update project status to completed
         int published = 0;
         int validActivities = 0
+        reportService.approve(stageDetails.reportId)
         def activities = activityService.activitiesForProject(projectId);;
         project.timeline?.each {timeline->
             activities.each{act->
@@ -194,6 +198,7 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
      * @param stageDetails details of the activities, specifically a list of activity ids.
      */
     def rejectStageReport(projectId, stageDetails) {
+        reportService.reject(stageDetails.reportId)
         def result = activityService.rejectActivitiesForPublication(stageDetails.activityIds)
 
         // TODO Send a message to GMS.  Delete previous approval document (only an issue for withdrawal of approval)?
