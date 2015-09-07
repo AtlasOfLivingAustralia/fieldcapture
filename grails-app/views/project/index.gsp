@@ -34,10 +34,16 @@
         sldPolgonDefaultUrl: "${grailsApplication.config.sld.polgon.default.url}",
         sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}",
         organisationLinkBaseUrl: "${createLink(controller:'organisation', action:'index')}",
-        imageLocation:"${resource(dir:'/images/filetypes')}",
+        imageLocation:"${resource(dir:'/images')}",
         returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}",
         documentUpdateUrl: "${createLink(controller:"proxy", action:"documentUpdate")}",
-        documentDeleteUrl: "${createLink(controller:"proxy", action:"deleteDocument")}"
+        documentDeleteUrl: "${createLink(controller:"proxy", action:"deleteDocument")}",
+        pdfgenUrl: "${createLink(controller: 'resource', action: 'pdfUrl')}",
+        pdfViewer: "${createLink(controller: 'resource', action: 'viewer')}",
+        imgViewer: "${createLink(controller: 'resource', action: 'imageviewer')}",
+        audioViewer: "${createLink(controller: 'resource', action: 'audioviewer')}",
+        videoViewer: "${createLink(controller: 'resource', action: 'videoviewer')}",
+        errorViewer: "${createLink(controller: 'resource', action: 'error')}",
         },
         here = window.location.href;
 
@@ -120,7 +126,7 @@
                     <div class="well well-small">
                         <label><b>MERI attachments:</b></label>
                         <g:render plugin="fieldcapture-plugin" template="/shared/listDocuments"
-                                  model="[useExistingModel: true,editable:false, filterBy: 'programmeLogic', ignore: '', imageUrl:resource(dir:'/images/filetypes'),containerId:'overviewDocumentList']"/>
+                                  model="[useExistingModel: true,editable:false, filterBy: 'programmeLogic', ignore: '', imageUrl:resource(dir:'/images'),containerId:'overviewDocumentList']"/>
                     </div>
                 </div>
             </div>
@@ -243,7 +249,7 @@
                                 <div class="row-fluid">
                                     <div class="span10">
                                         <g:render plugin="fieldcapture-plugin" template="/shared/listDocuments"
-                                                  model="[useExistingModel: true,editable:true, filterBy: 'all', ignore: '', imageUrl:resource(dir:'/images/filetypes'),containerId:'adminDocumentList']"/>
+                                                  model="[useExistingModel: true,editable:true, filterBy: 'all', ignore: '', imageUrl:resource(dir:'/images'),containerId:'adminDocumentList']"/>
                                     </div>
                                 </div>
                                 %{--The modal view containing the contents for a modal dialog used to attach a document--}%

@@ -215,6 +215,9 @@ if (!fieldcapture.system.email.address) {
 if(!app.default.hub) {
     app.default.hub = 'default'
 }
+if (!pdfgen.baseURL){
+    pdfgen.baseURL="http://pdfgen.ala.org.au/"
+}
 
 if (!grails.cache.ehcache) {
     grails {
