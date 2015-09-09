@@ -759,24 +759,40 @@ var ProjectReportsViewModel = function(project) {
 
     self.currentPhase = currentReport ? currentReport.phase() : '';
 
+
     self.getHistory = function() {
-        var history = '<ul style="float:right">';
-        for (var i=0;i <self.reports.length; i++) {
-            history+=self.reports[i].getHistory();
-        }
-        history += '</ul>';
+        var id = 'reportingHistory-'+project.projectId;
+        var history = '<div style="float:right" id="'+id+'"><img src="'+fcConfig.imageLocation+'/ajax-saver.gif"></div>';
+        var url = fcConfig.projectReportsUrl+'/'+project.projectId;
+        $.ajax({url: url,
+            type: 'GET',
+            dataType:'html'}).done(function(data) {
+                $('#'+id).html(data).slideDown();
+            }).fail(function(data) {
+                $('#'+id).html('<div float:right">There was an error retrieving the reporting history for this project.</div>');
+            }).always(function(data) {
+                self.historyVisible(true);
+            });
+
 
         return history;
-    }
+    };
 
+    var toggling = false;
     self.toggleHistory = function(data, e) {
 
+        if (toggling) {
+            return;
+        }
+        toggling = true;
+
         var tr = $(e.currentTarget).closest('tr');
-        var row = table.row( tr );
+        var row = tr.closest('table').DataTable().row( tr );
         if ( row.child.isShown() ) {
             // This row is already open - close it
             row.child.hide();
             tr.removeClass('shown');
+            self.historyVisible(false);
         }
         else {
             // Open this row
@@ -785,6 +801,7 @@ var ProjectReportsViewModel = function(project) {
             row.child( data ).show();
             tr.addClass('shown');
         }
+        toggling = false;
     };
 
     self.savingCaseStudy = ko.observable(false);

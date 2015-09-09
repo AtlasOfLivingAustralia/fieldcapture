@@ -128,5 +128,13 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
 		}
 	}
 
+    @PreAuthorise(accessLevel = 'admin')
+    def reportingHistory(String id) {
+
+        def reportingHistory = reportService.getReportingHistoryForProject(id)
+
+        render view:'/report/_reportingHistory', model:[reportingHistory:reportingHistory]
+    }
+
 
 }

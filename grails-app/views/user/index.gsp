@@ -8,8 +8,9 @@
         serverUrl: "${grailsApplication.config.grails.serverURL}",
         projectViewUrl: "${createLink(controller:'project', action:'index')}",
         projectUpdateUrl: "${createLink(controller:'project', action:'ajaxUpdate')}",
-
-        organisationViewUrl: "${createLink(controller:'organisation', action:'index')}"
+        projectReportsUrl:"${createLink(controller: 'project', action:'reportingHistory')}",
+        organisationViewUrl: "${createLink(controller:'organisation', action:'index')}",
+        imageLocation:"${resource(dir:'images')}"
         },
         here = window.location.href;
 

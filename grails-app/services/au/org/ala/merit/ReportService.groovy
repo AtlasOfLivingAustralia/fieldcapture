@@ -1,7 +1,8 @@
 package au.org.ala.merit
 
 import au.org.ala.fieldcapture.DateUtils
-import org.joda.time.Interval
+
+import org.joda.time.Period
 
 
 class ReportService {
@@ -9,6 +10,8 @@ class ReportService {
     def grailsApplication
     def webService
     def userService
+    def projectService
+    def authService
 
     /**
      * This method supports automatically creating reporting activities for a project that re-occur at defined intervals.
@@ -18,59 +21,76 @@ class ReportService {
      * @param config List of [type:<activity type>, period:<period that must have a reporting activity>
      * @return
      */
-    def regenerateStageReportsForProject(projectId, config) {
+    def regenerateStageReportsForProject(projectId, periodInMonths, alignToCalendar) {
 
-        def project = get(projectId, 'all')
+        def project = projectService.get(projectId, 'all')
+        def period = Period.months(periodInMonths)
+
+        def reports = getReportsForProject(projectId).sort{it.toDate}
 
         def startDate = DateUtils.parse(project.plannedStartDate)
         def endDate = DateUtils.parse(project.plannedEndDate)
 
-
-        def toCreate = []
-        def toDelete = []
-        config.each {
-
-            def periodStartDate = startDate
-            def periodEndDate = endDate
-            def activitiesOfType = project.activities.findAll {activity -> activity.type == it.type}
-            if (activitiesOfType) {
-                def firstActivityEndDate = DateUtils.parse(activitiesOfType.min{it.plannedEndDate}.plannedEndDate)
-                periodStartDate = startDate < firstActivityEndDate ? startDate : firstActivityEndDate
-
-                def lastActivityEndDate = DateUtils.parse(activitiesOfType.max{it.plannedEndDate}.plannedEndDate)
-                periodEndDate = endDate > lastActivityEndDate ? endDate : lastActivityEndDate
-
-            }
-
-            periodStartDate = DateUtils.alignToPeriod(periodStartDate, it.period)
-
-            def existingActivitiesByPeriod = DateUtils.groupByDateRange(activitiesOfType, {it.plannedEndDate}, it.period, periodStartDate, periodEndDate)
-
-            def gaps = []
-            existingActivitiesByPeriod.each { interval, activities ->
-                if (interval.isBefore(startDate) || interval.isAfter(endDate)) {
-                    toDelete += activities
-                }
-                else if (!activities) {
-                    gaps << interval;
-                }
-            }
-
-            gaps.each { Interval period ->
-                // Subtract a day from the end date so the activity is displayed as 01/01/2014-31/01/2014 etc
-                // If the period end date is after the project end date, use the project end date.
-                def end = period.end.isBefore(endDate) ? period.end.minusDays(1) : endDate
-                def activity = [type:it.type, plannedStartDate:DateUtils.format(period.start), plannedEndDate:DateUtils.format(end), projectId:projectId]
-                activity.description = activityService.defaultDescription(activity)
-                toCreate << activity
+        def periodStartDate = null
+        def stage = 1
+        for (int i=reports.size()-1; i>0; i--) {
+            if (reports[i].publicationStatus == 'submitted' || reports[i].publicationStatus == 'approved') {
+                periodStartDate = reports[i].toDate
+                stage = i+1
             }
         }
-        return [create:toCreate, delete:toDelete]
+
+        if (!periodStartDate) {
+            periodStartDate = startDate
+
+            if (alignToCalendar) {
+                periodStartDate = DateUtils.alignToPeriod(periodStartDate, period)
+            }
+
+        }
+
+        def periodEndDate = startDate.plus(period)
+
+        while (periodEndDate < endDate) {
+
+            def report = [
+                    fromDate:periodStartDate,
+                    toDate:periodEndDate,
+                    dueDate:periodEndDate.plusDays(30),
+                    type:'Activity',
+                    projectId:projectId,
+                    name:'Stage '+stage,
+                    description:'Stage '+stage+' for '+project.name
+            ]
+            create(report)
+            stage++
+            periodStartDate = periodEndDate
+            periodEndDate = periodEndDate.plus(period)
+        }
+
+
+
 
     }
 
     def getReportsForProject(String projectId) {
         webService.getJson(grailsApplication.config.ecodata.baseUrl+"project/${projectId}/reports")
+    }
+
+    def getReportingHistoryForProject(String projectId) {
+        def reports = getReportsForProject(projectId)
+
+        def history = []
+        reports.each { report ->
+
+            report.statusChangeHistory.each { change ->
+                def changingUser = authService.getUserForUserId(change.changedBy)
+                def displayName = changingUser?changingUser.displayName:'unknown'
+                history << [name:report.name, date:change.dateChanged, who:displayName, status:change.status]
+            }
+        }
+        history.sort {it.dateChanged}
+        history
     }
 
     def submit(String reportId) {
@@ -85,6 +105,14 @@ class ReportService {
         webService.doPost(grailsApplication.config.ecodata.baseUrl+"report/returnForRework/${reportId}", [:])
     }
 
+    def create(report) {
+        webService.doPost(grailsApplication.config.ecodata.baseUrl+"report", report)
+    }
+
+    def update(report) {
+        webService.doPost(grailsApplication.config.ecodata.baseUrl+"report/"+report.reportId, report)
+    }
+
     def findReportsForUser(String userId) {
 
         def reports = webService.doPost(grailsApplication.config.ecodata.baseUrl+"user/${userId}/reports", [:])
@@ -93,38 +121,6 @@ class ReportService {
         if (reports.resp && !reports.error) {
             return reports.resp.projectReports.groupBy{it.projectId}
         }
-
-    }
-
-    def doSomethingWithReports(allReports) {
-
-        def interestingReportsByProject = [:]
-        def reportsByProject = allReports.groupBy{it.projectId}
-
-        reportsByProject.each {projectId, reports ->
-            if (!projectId) {// Organisation reports
-                return
-            }
-            interestingReportsByProject[projectId] = doSomethingWithASingleProjectsReports(reports)
-
-        }
-        interestingReportsByProject
-    }
-
-    List doSomethingWithASingleProjectsReports(reports) {
-
-        def interestingReports = []
-
-
-        reports.each { report ->
-
-            if (report.isCurrent || report.isDue || report.isOverdue) {
-                interestingReports << report
-            }
-
-
-        }
-        interestingReports.sort{it.toDate}
 
     }
 }
