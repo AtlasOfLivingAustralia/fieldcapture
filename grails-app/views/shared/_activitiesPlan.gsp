@@ -154,7 +154,7 @@
         <fc:iconHelp title="Total Project Outputs">Statement of Outputs to be delivered by end of the project should be SMART and link to a relevant Project Outcome. For example: By 30 June 2018, 10ha of riparian revegetation works will be completed along priority waterways towards Outcome 1.</fc:iconHelp>
         <br/><br/>
         <table id="outputTargets" class="table table-condensed tight-inputs">
-            <thead><tr><th>Output Type</th><th>Output Statement / Description</th><th>Output Targets</th><th>Target</th></tr></thead>
+            <thead><tr><th>Output Type</th><th>Output Statement / Description</th><th>Output Target Measure(s)</th><th>Target</th></tr></thead>
             <!-- ko foreach:outputTargets -->
             <tbody data-bind="foreach:scores">
             <tr>
@@ -290,6 +290,7 @@
 
 <script id="stageNotApprovedTmpl" type="text/html">
 <br/><span class="badge badge-warning">Report not submittted</span>
+<!-- Disable button for editor with help text -->
 <g:if test="${user?.isAdmin}">
     <br/>
     <button type="button" class="btn btn-success btn-small" style="margin-top:4px;"
@@ -301,6 +302,14 @@
     <br/>
     <button  class="btn btn-link" data-bind="click:$parents[1].previewStage" type="button"><i class="icon-eye-open"></i>Preview</button>
 </g:if>
+<g:else>
+    <g:if test="${user?.isEditor}">
+        <br/>
+        <button type="button" class="btn btn-success btn-small" style="margin-top:4px;" disabled="disabled" title="Your Editor access level does not allow submitting of a report, this is an administrator user role. Contact your Administrator or Grant Manager if access upgrade is required">Submit report</button>
+        <br/>
+        <button  class="btn btn-link" data-bind="click:$parents[1].previewStage" type="button"><i class="icon-eye-open"></i>Preview</button>
+    </g:if>
+</g:else>
 <br/>
 </script>
 
