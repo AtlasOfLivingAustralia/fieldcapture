@@ -292,5 +292,29 @@ class AdminController extends au.org.ala.fieldcapture.AdminController {
 
     }
 
+    def createReports() {
+        def offset = 0
+        def max = 100
+
+        def projects = searchService.allProjects([max:max, offset:offset])
+
+        while (offset < projects.hits.total) {
+
+            offset+=max
+            projects = searchService.allProjects([max:max, offset:offset])
+
+            projects.hits?.hits?.each { hit ->
+                def project = hit._source
+                if (!project.timeline) {
+                    projectService.generateProjectStageReports(project.projectId)
+                    println "Generated reports for project ${project.projectId}"
+                }
+            }
+            println offset
+
+        }
+
+    }
+
 
 }

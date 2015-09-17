@@ -154,7 +154,7 @@
         <fc:iconHelp title="Total Project Outputs">Statement of Outputs to be delivered by end of the project should be SMART and link to a relevant Project Outcome. For example: By 30 June 2018, 10ha of riparian revegetation works will be completed along priority waterways towards Outcome 1.</fc:iconHelp>
         <br/><br/>
         <table id="outputTargets" class="table table-condensed tight-inputs">
-            <thead><tr><th>Output Type</th><th>Output Statement / Description</th><th>Output Targets</th><th>Target</th></tr></thead>
+            <thead><tr><th>Output Type</th><th>Output Statement / Description</th><th>Output Target Measure(s)</th><th>Target</th></tr></thead>
             <!-- ko foreach:outputTargets -->
             <tbody data-bind="foreach:scores">
             <tr>
@@ -290,6 +290,7 @@
 
 <script id="stageNotApprovedTmpl" type="text/html">
 <br/><span class="badge badge-warning">Report not submittted</span>
+<!-- Disable button for editor with help text -->
 <g:if test="${user?.isAdmin}">
     <br/>
     <button type="button" class="btn btn-success btn-small" style="margin-top:4px;"
@@ -301,6 +302,14 @@
     <br/>
     <button  class="btn btn-link" data-bind="click:$parents[1].previewStage" type="button"><i class="icon-eye-open"></i>Preview</button>
 </g:if>
+<g:else>
+    <g:if test="${user?.isEditor}">
+        <br/>
+        <button type="button" class="btn btn-success btn-small" style="margin-top:4px;" disabled="disabled" title="Your Editor access level does not allow submitting of a report, this is an administrator user role. Contact your Administrator or Grant Manager if access upgrade is required">Submit report</button>
+        <br/>
+        <button  class="btn btn-link" data-bind="click:$parents[1].previewStage" type="button"><i class="icon-eye-open"></i>Preview</button>
+    </g:if>
+</g:else>
 <br/>
 </script>
 
@@ -662,7 +671,7 @@
             // want the index of the PlannedActivity to be relative to the filtered set of activities.
             var self = this,
                 activitiesInThisStage = $.grep(activities, function (act, index) {
-                    return findStageFromDate(project.timeline, act.plannedEndDate) === stageLabel;
+                    return act.plannedEndDate > stage.fromDate &&  act.plannedEndDate <= stage.toDate;
                 });
             this.label = stageLabel;
             this.isCurrentStage = isCurrentStage;
@@ -706,28 +715,14 @@
                 act.projectStage = stageLabel;
                 return new PlannedActivity(act, index === 0, project);
             });
-            /**
-             * A stage is considered to be approved when all of the activities in the stage have been marked
-             * as published.
-             */
-            this.isApproved = ko.computed(function() {
-                var numActivities = self.activities ? self.activities.length : 0;
-                if (numActivities == 0) {
-                    return false;
-                }
-                return $.grep(self.activities, function(act, i) {
-                    return act.isApproved();
-                }).length == numActivities;
-            }, this, {deferEvaluation: true});
-            this.isSubmitted = ko.computed(function() {
-                var numActivities = self.activities ? self.activities.length : 0;
-                if (numActivities == 0) {
-                    return false;
-                }
-                return $.grep(self.activities, function(act, i) {
-                    return act.isSubmitted();
-                }).length == numActivities;
-            }, this, {deferEvaluation: true});
+
+            this.isApproved = function() {
+                return stage.publicationStatus == 'published';
+            };
+            this.isSubmitted = function() {
+                return stage.publicationStatus == 'pendingApproval';
+            }
+
 
             this.readyForApproval = ko.computed(function() {
                 return $.grep(self.activities, function (act, i) {
@@ -781,6 +776,7 @@
                     return act.activityId;
                 });
                 payload.stage = stageLabel;
+                payload.reportId = stage.reportId;
                 payload.projectId = self.projectId;
                 $.ajax({
                     url: url + self.projectId,
@@ -964,7 +960,7 @@
             return clone;
         };
 
-        function PlanViewModel(activities, outputTargets, project, programModel, today) {
+        function PlanViewModel(activities, reports, outputTargets, project, programModel, today) {
             var self = this;
             this.userIsCaseManager = ko.observable(${user?.isCaseManager});
             this.planStatus = ko.observable(project.planStatus || 'not approved');
@@ -986,13 +982,13 @@
             });
             //this.currentDate = ko.observable("2014-02-03T00:00:00Z"); // mechanism for testing behaviour at different dates
             this.currentDate = ko.observable(new Date().toISOStringNoMillis()); // mechanism for testing behaviour at different dates
-            this.currentProjectStage = findStageFromDate(project.timeline,this.currentDate());
+            this.currentProjectStage = findStageFromDate(reports,this.currentDate());
             this.loadActivities = function (activities) {
                 var stages = [];
 
                 // group activities by stage
-                $.each(project.timeline, function (index, stage) {
-                    stages.push(new PlanStage(stage, activities, self, stage.name === self.currentProjectStage, project,today));
+                $.each(reports, function (index, stageReport) {
+                    stages.push(new PlanStage(stageReport, activities, self, stageReport.name === self.currentProjectStage, project,today));
                 });
 
                 return stages;
@@ -1230,8 +1226,7 @@
 
 
             this.submitReport = function (e) {
-            console.log(e);
-                //bootbox.alert("Reporting has not been enabled yet.");
+
                 $('#declaration').modal('show');
             };
 
@@ -1338,9 +1333,11 @@
         }
 		var today = '${today}';
 		var programModel = <fc:modelAsJavascript model="${programs}"/>;
+        var reports = <fc:modelAsJavascript model="${reports}"/>;
 
         var planViewModel = new PlanViewModel(
             ${activities ?: []},
+            reports,
             ${project.outputTargets ?: '{}'},
             checkAndUpdateProject(${project}, null, programModel),
             programModel,

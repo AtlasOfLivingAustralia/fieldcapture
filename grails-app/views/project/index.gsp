@@ -34,10 +34,16 @@
         sldPolgonDefaultUrl: "${grailsApplication.config.sld.polgon.default.url}",
         sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}",
         organisationLinkBaseUrl: "${createLink(controller:'organisation', action:'index')}",
-        imageLocation:"${resource(dir:'/images/filetypes')}",
+        imageLocation:"${resource(dir:'/images')}",
         returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}",
         documentUpdateUrl: "${createLink(controller:"proxy", action:"documentUpdate")}",
-        documentDeleteUrl: "${createLink(controller:"proxy", action:"deleteDocument")}"
+        documentDeleteUrl: "${createLink(controller:"proxy", action:"deleteDocument")}",
+        pdfgenUrl: "${createLink(controller: 'resource', action: 'pdfUrl')}",
+        pdfViewer: "${createLink(controller: 'resource', action: 'viewer')}",
+        imgViewer: "${createLink(controller: 'resource', action: 'imageviewer')}",
+        audioViewer: "${createLink(controller: 'resource', action: 'audioviewer')}",
+        videoViewer: "${createLink(controller: 'resource', action: 'videoviewer')}",
+        errorViewer: "${createLink(controller: 'resource', action: 'error')}",
         },
         here = window.location.href;
 
@@ -57,7 +63,7 @@
 </head>
 <body>
 <div id="spinner" class="spinner" style="position: fixed;top: 50%;left: 50%;margin-left: -50px;margin-top: -50px;text-align:center;z-index:1234;overflow: auto;width: 100px;height: 102px;">
-    <img id="img-spinner" width="50" height="50" src="${request.contextPath}/images/loading.gif" alt="Loading"/>
+    <r:img id="img-spinner" width="50" height="50" dir="images" file="loading.gif" alt="Loading"/>
 </div>
 <div class="container-fluid">
 
@@ -120,7 +126,7 @@
                     <div class="well well-small">
                         <label><b>MERI attachments:</b></label>
                         <g:render plugin="fieldcapture-plugin" template="/shared/listDocuments"
-                                  model="[useExistingModel: true,editable:false, filterBy: 'programmeLogic', ignore: '', imageUrl:resource(dir:'/images/filetypes'),containerId:'overviewDocumentList']"/>
+                                  model="[useExistingModel: true,editable:false, filterBy: 'programmeLogic', ignore: '', imageUrl:resource(dir:'/images'),containerId:'overviewDocumentList']"/>
                     </div>
                 </div>
             </div>
@@ -132,7 +138,7 @@
             <div class="tab-pane" id="plan">
             <!-- PLANS -->
                 <g:render template="/shared/activitiesPlan"
-                    model="[activities:activities ?: [], sites:project.sites ?: [], showSites:true]"/>
+                    model="[activities:activities ?: [], sites:project.sites ?: [], showSites:true, reports:projectContent.plan?.reports]"/>
                 <g:if test="${user?.isCaseManager}">
                     <div class="validationEngineContainer" id="grantmanager-validation">
                         <g:render template="grantManagerSettings" model="[project:project]"/>
@@ -243,7 +249,7 @@
                                 <div class="row-fluid">
                                     <div class="span10">
                                         <g:render plugin="fieldcapture-plugin" template="/shared/listDocuments"
-                                                  model="[useExistingModel: true,editable:true, filterBy: 'all', ignore: '', imageUrl:resource(dir:'/images/filetypes'),containerId:'adminDocumentList']"/>
+                                                  model="[useExistingModel: true,editable:true, filterBy: 'all', ignore: '', imageUrl:resource(dir:'/images'),containerId:'adminDocumentList']"/>
                                     </div>
                                 </div>
                                 %{--The modal view containing the contents for a modal dialog used to attach a document--}%
@@ -590,23 +596,6 @@
                             promoteOnHomepage:self.promoteOnHomepage()
                         };
 
-                        if (self.regenerateProjectTimeline()) {
-                            var dates = {
-                                plannedStartDate: self.plannedStartDate(),
-                                plannedEndDate: self.plannedEndDate()
-                            };
-                            var program = $.grep(self.transients.programs, function(program, index) {
-                                return program.name == self.associatedProgram();
-                            });
-
-                            if (program[0]) {
-                                addTimelineBasedOnStartDate(dates, program[0].reportingPeriod, program[0].reportingPeriodAlignedToCalendar);
-                            }
-                            else {
-                                addTimelineBasedOnStartDate(dates);
-                            }
-                            jsData.timeline = dates.timeline;
-                        }
                         // this call to stringify will make sure that undefined values are propagated to
                         // the update call - otherwise it is impossible to erase fields
                         var json = JSON.stringify(jsData, function (key, value) {

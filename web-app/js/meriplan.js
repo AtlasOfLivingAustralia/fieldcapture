@@ -16,7 +16,7 @@ function MERIPlan(project, themes, key) {
       }
    }
 
-   self.details = new DetailsViewModel(project.custom.details, getBugetHeaders(project.timeline));
+   self.details = new DetailsViewModel(project.custom.details, getBudgetHeaders(project));
    self.detailsLastUpdated = ko.observable(project.custom.details.lastUpdated).extend({simpleDate: true});
    self.isProjectDetailsSaved = ko.computed (function (){
       return (project['custom']['details'].status == 'active');
@@ -45,7 +45,7 @@ function MERIPlan(project, themes, key) {
       'Indigenous Ecological Knowledge', 'Remnant Vegetation', 'Aquatic and Coastal systems including wetlands', 'Not Applicable'];
 
    self.addBudget = function(){
-      self.details.budget.rows.push (new BudgetRowViewModel({},getBugetHeaders(project.timeline)));
+      self.details.budget.rows.push (new BudgetRowViewModel({},getBudgetHeaders(project)));
    };
    self.removeBudget = function(budget){
       self.details.budget.rows.remove(budget);
@@ -577,3 +577,262 @@ var EditAnnouncementsViewModel = function(grid, events) {
     });
     grid.setData(self.events);
 };
+
+var Report = function(report) {
+    var now = new Date().toISOStringNoMillis();
+
+    var self = this;
+
+    var fromDate = report.fromDate;
+    var toDate = report.toDate;
+    var dueDate = report.dueDate;
+    var name = report.name;
+    var description = report.description;
+
+    self.isSubmitted = function() {
+        return report.publicationStatus == 'pendingApproval';
+    }
+
+    self.isApproved = function() {
+        return report.publicationStatus == 'published';
+    }
+
+
+    self.isCurrent = function() {
+
+        return  report.publicationStatus != 'pendingApproval' &&
+            report.publicationStatus != 'published' &&
+            fromDate < now && toDate >= now;
+    }
+
+    self.isDue = function() {
+        return  report.publicationStatus != 'pendingApproval' &&
+            report.publicationStatus != 'published' &&
+            toDate < now && dueDate >= now
+    }
+
+    self.isOverdue = function() {
+        return  report.publicationStatus != 'pendingApproval' &&
+            report.publicationStatus != 'published' &&
+            dueDate < now
+    }
+
+    self.status = function() {
+        if (self.isOverdue()) {
+            return name + ' overdue by '+Math.round(self.overdueDelta())+' day(s)';
+        }
+        if (self.isDue()) {
+            return name + ' due on '+convertToSimpleDate(report.dueDate, false);
+        }
+        if (self.isCurrent()) {
+            return name + ' in progress';
+        }
+        if (self.isSubmitted()) {
+            return name + ' submitted for approval';
+        }
+        return '';
+    }
+
+    self.phase = function() {
+        if (self.isApproved()) {
+            return name+' approved';
+        }
+        if (self.isSubmitted()) {
+            return name+' submitted for approval';
+        }
+        if (self.isDue() || self.isOverdue()) {
+            return name+ ' due';
+        }
+        return name+' in progress';
+
+    }
+
+    self.submissionDelta = function() {
+        var submitted = moment(report.dateSubmitted);
+        var due = moment(report.dueDate);
+
+        return due.diff(submitted, 'days');
+
+    };
+
+    self.overdueDelta = function() {
+        var due = moment(report.dueDate);
+
+        return moment(now).diff(due, 'days');
+
+    };
+
+    self.getHistory = function() {
+        var result = '';
+        for (var i=0; i<report.statusChangeHistory.length; i++) {
+            result+='<li>'+report.name+' '+report.statusChangeHistory[i].status+' by '+report.statusChangeHistory[i].changedBy+' on '+convertToSimpleDate(report.statusChangeHistory[i].dateChanged, false);
+        }
+
+        return result;
+    };
+
+}
+
+
+var ProjectReportsViewModel = function(project) {
+
+    var self = this;
+
+    self.projectId = project.projectId;
+    self.organisationId = project.orgIdSvcProvider || project.organisationId;
+    self.organisationName = project.serviceProviderName || project.organisationName;
+    self.name = project.name;
+    self.grantId = project.grantId || '';
+    self.associatedProgram = project.associatedProgram;
+    self.associatedSubProgram = project.associatedSubProgram;
+    self.submittedReportCount = 0;
+    self.recommendAsCaseStudy = ko.observable(project.promoteOnHomePage);
+
+    self.reports = [];
+    var now = new Date().toISOStringNoMillis();
+    var reportingTimeSum = 0;
+    var reportsCounted = 0;
+
+    var currentReport = null;
+
+    if (project.reports) {
+        for (var i=0; i<project.reports.length; i++) {
+            var report = new Report(project.reports[i]);
+            self.reports.push(report);
+
+            // Rule for "current" report is:
+            // 1) Any report awaiting action. (Overdue > Submitted).
+            // 2) Current stage.
+
+            if (report.isOverdue()) {
+                currentReport = report;
+            }
+            else if (report.isSubmitted() && (!currentReport || !currentReport.isOverdue())) {
+                currentReport = report;
+            }
+            else if (report.isCurrent() && (!currentReport || !currentReport.isOverdue() && !currentReport.isSubmitted())) {
+                currentReport = report;
+            }
+
+            if (report.isSubmitted() || report.isApproved()) {
+                self.submittedReportCount++;
+                reportingTimeSum += report.submissionDelta();
+            }
+        }
+    }
+    if (self.submittedReportCount > 0) {
+        self.averageReportingTime = reportingTimeSum / self.submittedReportCount;
+    }
+    else {
+        self.averageReportingTime = '';
+    }
+
+    self.averageReportingTimeText = function() {
+        if (self.submittedReportCount > 0) {
+            var deltaDays = Math.round(self.averageReportingTime);
+            if (deltaDays < 0) {
+                return '<span class="early">'+Math.abs(deltaDays)+' day(s) early</span>';
+            }
+            else if (deltaDays == 0) {
+                return 'on time';
+            }
+            else {
+                return '<span class="late">'+Math.abs(deltaDays)+' day(s) late</span>';
+            }
+        }
+        else {
+            return '';
+        }
+    }
+
+    self.isOverdue = currentReport ? currentReport.isOverdue() : false;
+
+    self.historyVisible = ko.observable(false);
+
+    self.currentStatus = function() {
+        if (currentReport) {
+            return currentReport.status();
+        }
+
+        return 'No current report';
+    }();
+
+    self.currentPhase = currentReport ? currentReport.phase() : '';
+
+
+    self.getHistory = function() {
+        var id = 'reportingHistory-'+project.projectId;
+        var history = '<div style="float:right" id="'+id+'"><img src="'+fcConfig.imageLocation+'/ajax-saver.gif"></div>';
+        var url = fcConfig.projectReportsUrl+'/'+project.projectId;
+        $.ajax({url: url,
+            type: 'GET',
+            dataType:'html'}).done(function(data) {
+                $('#'+id).html(data).slideDown();
+            }).fail(function(data) {
+                $('#'+id).html('<div float:right">There was an error retrieving the reporting history for this project.</div>');
+            }).always(function(data) {
+                self.historyVisible(true);
+            });
+
+
+        return history;
+    };
+
+    var toggling = false;
+    self.toggleHistory = function(data, e) {
+
+        if (toggling) {
+            return;
+        }
+        toggling = true;
+
+        var tr = $(e.currentTarget).closest('tr');
+        var row = tr.closest('table').DataTable().row( tr );
+        if ( row.child.isShown() ) {
+            // This row is already open - close it
+            row.child.hide();
+            tr.removeClass('shown');
+            self.historyVisible(false);
+        }
+        else {
+            // Open this row
+            var data = self.getHistory() || '';
+
+            row.child( data ).show();
+            tr.addClass('shown');
+        }
+        toggling = false;
+    };
+
+    self.savingCaseStudy = ko.observable(false);
+    self.recommendAsCaseStudy.subscribe(function() {
+        var url = fcConfig.projectUpdateUrl + '/' + project.projectId;
+        var payload = {promoteOnHomepage:self.recommendAsCaseStudy};
+
+        self.savingCaseStudy(true);
+
+        // save new status
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: JSON.stringify(payload),
+            contentType: 'application/json',
+
+            error: function (data) {
+                bootbox.alert('The change was not saved due to a server error or timeout.  Please try again later.', function() {location.reload();});
+            },
+            complete: function () {
+                self.savingCaseStudy(false);
+            }
+        });
+    });
+
+}
+
+var ProjectReportingViewModel = function(projects) {
+    var self = this;
+    self.projects = [];
+    for (var i=0; i<projects.length; i++) {
+        self.projects.push(new ProjectReportsViewModel(projects[i].project));
+    }
+}

@@ -24,7 +24,7 @@
         speciesProfileUrl: "${createLink(controller: 'proxy', action: 'speciesProfile')}",
         documentUpdateUrl: "${g.createLink(controller:"proxy", action:"documentUpdate")}",
         documentDeleteUrl: "${g.createLink(controller:"proxy", action:"deleteDocument")}",
-        imageLocation:"${resource(dir:'/images/filetypes')}"
+        imageLocation:"${resource(dir:'/images')}"
         },
         here = document.location.href;
     </r:script>
