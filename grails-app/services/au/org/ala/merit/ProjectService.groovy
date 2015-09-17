@@ -310,6 +310,22 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
         return [error:'Invalid plan status']
     }
 
+    def generateProjectStageReports(String projectId) {
+        def project = get(projectId)
+        def programConfig = metadataService.getProgramConfiguration(project.associatedProgram, project.associatedSubProgram)
+
+        def period = programConfig.reportingPeriod
+        if (period) {
+            period = period as Integer
+        }
+
+        def alignedToCalendar = programConfig.reportingPeriodAlignedToCalendar
+
+        reportService.regenerateAllStageReportsForProject(projectId, period, alignedToCalendar)
+
+
+    }
+
     def createReportingActivitiesForProject(projectId, config) {
         def result = regenerateReportingActivitiesForProject(projectId, config)
         result.create.each { activity ->

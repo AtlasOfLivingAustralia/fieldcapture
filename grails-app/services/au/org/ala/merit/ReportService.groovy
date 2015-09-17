@@ -21,9 +21,11 @@ class ReportService {
      * @param config List of [type:<activity type>, period:<period that must have a reporting activity>
      * @return
      */
-    def regenerateStageReportsForProject(projectId, periodInMonths, alignToCalendar) {
+    def regenerateAllStageReportsForProject(projectId, periodInMonths = 6, alignToCalendar = false) {
 
         def project = projectService.get(projectId, 'all')
+        println periodInMonths
+
         def period = Period.months(periodInMonths)
 
         def reports = getReportsForProject(projectId).sort{it.toDate}
@@ -49,28 +51,41 @@ class ReportService {
 
         }
 
-        def periodEndDate = startDate.plus(period)
-
-        while (periodEndDate < endDate) {
+        while (periodStartDate < endDate) {
+            def periodEndDate = periodStartDate.plus(period)
 
             def report = [
-                    fromDate:periodStartDate,
-                    toDate:periodEndDate,
-                    dueDate:periodEndDate.plusDays(30),
+                    fromDate:DateUtils.format(periodStartDate),
+                    toDate:DateUtils.format(periodEndDate),
+                    dueDate:DateUtils.format(periodEndDate.plusDays(43)),
                     type:'Activity',
                     projectId:projectId,
                     name:'Stage '+stage,
                     description:'Stage '+stage+' for '+project.name
             ]
-            create(report)
+
+            if (reports.size() >= stage) {
+                report.reportId = reports[stage-1].reportId
+                update(report)
+            }
+            else {
+                create(report)
+            }
             stage++
             periodStartDate = periodEndDate
-            periodEndDate = periodEndDate.plus(period)
         }
 
+        // Delete any left over reports.
+        for (int i=stage-2; i<reports.size(); i++) {
+            delete(reports[i].reportId)
+        }
+    }
 
-
-
+    def delete(String reportId) {
+        if (!reportId) {
+            throw new IllegalArgumentException("Missing parameter reportId")
+        }
+        webService.doDelete(grailsApplication.config.ecodata.baseUrl+"report/${reportId}")
     }
 
     def getReportsForProject(String projectId) {
@@ -106,7 +121,7 @@ class ReportService {
     }
 
     def create(report) {
-        webService.doPost(grailsApplication.config.ecodata.baseUrl+"report", report)
+        webService.doPost(grailsApplication.config.ecodata.baseUrl+"report/", report)
     }
 
     def update(report) {
