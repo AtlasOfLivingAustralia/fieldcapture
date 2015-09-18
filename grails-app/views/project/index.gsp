@@ -248,8 +248,8 @@
                                 <h3>Project Documents</h3>
                                 <div class="row-fluid">
                                     <div class="span10">
-                                        <g:render plugin="fieldcapture-plugin" template="/shared/listDocuments"
-                                                  model="[useExistingModel: true,editable:true, filterBy: 'all', ignore: '', imageUrl:resource(dir:'/images'),containerId:'adminDocumentList']"/>
+                                        <g:render plugin="fieldcapture-plugin" template="/shared/editDocuments"
+                                                  model="[useExistingModel: true,editable:true, filterBy: 'all', ignore: '', imageUrl:resource(dir:'/images/filetypes'),containerId:'adminDocumentList']"/>
                                     </div>
                                 </div>
                                 %{--The modal view containing the contents for a modal dialog used to attach a document--}%
