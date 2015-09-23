@@ -32,7 +32,7 @@
             <td><a data-bind="attr:{href:fcConfig.projectViewUrl+'/'+projectId}"><span data-bind="text:name"></span></a></td>
             <td><a data-bind="attr:{href:fcConfig.organisationViewUrl+'/'+organisationId}"><span data-bind="text:organisationName"></span></a></td>
             <td data-bind="text:currentStatus, css:{late:isOverdue}"></td>
-            <td data-bind="text:currentPhase"></td>
+            <td data-bind="text:meriPlanStatus()"></td>
             <td data-bind="click:toggleHistory"><span data-bind="html:averageReportingTimeText()"></span> <br/><em data-bind="visible:!historyVisible()">Show history <i class="icon-plus"></i></em><em data-bind="visible:historyVisible()">Hide history <i class="icon-minus"></i></em></td>
             <td><label class="checkbox"><input type="checkbox" data-bind="checked:recommendAsCaseStudy"><span data-bind="visible:savingCaseStudy"><r:img dir="images" file="ajax-saver.gif" alt="saving icon"/> saving</span></label></td>
         </tr>
