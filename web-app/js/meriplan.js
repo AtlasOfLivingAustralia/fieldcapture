@@ -631,21 +631,7 @@ var Report = function(report) {
             return name + ' submitted for approval';
         }
         return '';
-    }
-
-    self.phase = function() {
-        if (self.isApproved()) {
-            return name+' approved';
-        }
-        if (self.isSubmitted()) {
-            return name+' submitted for approval';
-        }
-        if (self.isDue() || self.isOverdue()) {
-            return name+ ' due';
-        }
-        return name+' in progress';
-
-    }
+    };
 
     self.submissionDelta = function() {
         var submitted = moment(report.dateSubmitted);
@@ -743,7 +729,7 @@ var ProjectReportsViewModel = function(project) {
         else {
             return '';
         }
-    }
+    };
 
     self.isOverdue = currentReport ? currentReport.isOverdue() : false;
 
@@ -757,7 +743,17 @@ var ProjectReportsViewModel = function(project) {
         return 'No current report';
     }();
 
-    self.currentPhase = currentReport ? currentReport.phase() : '';
+    self.meriPlanStatus = function() {
+        if (project.planStatus === 'approved') {
+            return 'This plan has been approved';
+        }
+        if (project.planStatus === 'submitted') {
+            return 'This plan has been submitted for approval';
+        }
+
+        return 'This plan is editable';
+
+    };
 
 
     self.getHistory = function() {
