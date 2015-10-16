@@ -23,28 +23,7 @@
     </div>
     <div id="help-links">
         <h4>Helpful links</h4>
-        <div class="row-fluid">
-            <span class="span4">
-                QUICK REFERENCE GUIDE
-            </span>
-            <span class="span4">
-                USER GUIDE
-            </span>
-            <span class="span4">
-                MERIT TUTORIAL
-            </span>
-        </div>
-        <div class="row-fluid">
-            <span class="span4">
-                ACTIVITY REFERENCE
-            </span>
-            <span class="span4">
-                DEMONSTRATOR PROJECT
-            </span>
-            <span class="span4">
-                MORE RESOURCES
-            </span>
-        </div>
+        <g:render template="helpLinks"/>
     </div>
     <div id="project-explorer">
         <div class="row-fluid">
