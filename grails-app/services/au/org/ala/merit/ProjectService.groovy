@@ -21,6 +21,13 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
     static final String PLAN_NOT_APPROVED = 'not approved'
     static final String PLAN_SUBMITTED = 'submitted'
 
+    @Override
+    def get(id, levelOfDetail = "", includeDeleted = false) {
+        def project = super.get(id, levelOfDetail, includeDeleted)
+        project.reports = reportService.getReportsForProject(id)
+        project
+    }
+
     def update(id, body) {
         TimeZone.setDefault(TimeZone.getTimeZone('UTC'))
         body?.custom?.details?.lastUpdated = new Date().format("yyyy-MM-dd'T'HH:mm:ss'Z'")
