@@ -25,7 +25,7 @@
 
         var scores = <fc:modelAsJavascript model="${scores}"></fc:modelAsJavascript>;
         var columns =  [
-            {title:'Score', width:'200px', data:'score'}
+            {title:'Output Target measure', width:'200px', data:'score'}
         ];
         <g:each in="${programs}" var="program">
             columns.push({title:"${program} - Target", data:"${program} - Target", width:'50px'});

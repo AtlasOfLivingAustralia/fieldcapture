@@ -11,6 +11,8 @@ import java.text.SimpleDateFormat
 
 class ProjectService extends au.org.ala.fieldcapture.ProjectService {
 
+    def reportService
+
     static dateWithTime = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss")
     static dateWithTimeFormat2 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
     static convertTo = new SimpleDateFormat("dd MMM yyyy")
@@ -18,6 +20,13 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
     static final String PLAN_APPROVED = 'approved'
     static final String PLAN_NOT_APPROVED = 'not approved'
     static final String PLAN_SUBMITTED = 'submitted'
+
+    @Override
+    def get(id, levelOfDetail = "", includeDeleted = false) {
+        def project = super.get(id, levelOfDetail, includeDeleted)
+        project.reports = reportService.getReportsForProject(id)
+        project
+    }
 
     def update(id, body) {
         TimeZone.setDefault(TimeZone.getTimeZone('UTC'))
@@ -136,6 +145,7 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
 		def doc = [name:name, projectId:projectId, saveAs:'pdf', type:'pdf', role:'stageReport',filename:name, readOnly:true, public:false]
 		documentService.createTextDocument(doc, htmlTxt)
         def result = activityService.submitActivitiesForPublication(stageDetails.activityIds)
+        reportService.submit(stageDetails.reportId)
         def project = get(projectId)
         stageDetails.project = project
         if (!result.resp.error) {
@@ -166,6 +176,7 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
         //Update project status to completed
         int published = 0;
         int validActivities = 0
+        reportService.approve(stageDetails.reportId)
         def activities = activityService.activitiesForProject(projectId);;
         project.timeline?.each {timeline->
             activities.each{act->
@@ -194,6 +205,7 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
      * @param stageDetails details of the activities, specifically a list of activity ids.
      */
     def rejectStageReport(projectId, stageDetails) {
+        reportService.reject(stageDetails.reportId)
         def result = activityService.rejectActivitiesForPublication(stageDetails.activityIds)
 
         // TODO Send a message to GMS.  Delete previous approval document (only an issue for withdrawal of approval)?
@@ -303,6 +315,22 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
             }
         }
         return [error:'Invalid plan status']
+    }
+
+    def generateProjectStageReports(String projectId) {
+        def project = get(projectId)
+        def programConfig = metadataService.getProgramConfiguration(project.associatedProgram, project.associatedSubProgram)
+
+        def period = programConfig.reportingPeriod
+        if (period) {
+            period = period as Integer
+        }
+
+        def alignedToCalendar = programConfig.reportingPeriodAlignedToCalendar
+
+        reportService.regenerateAllStageReportsForProject(projectId, period, alignedToCalendar)
+
+
     }
 
     def createReportingActivitiesForProject(projectId, config) {

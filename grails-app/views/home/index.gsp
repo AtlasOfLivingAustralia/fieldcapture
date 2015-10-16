@@ -14,7 +14,8 @@
         sldPolgonDefaultUrl: "${grailsApplication.config.sld.polgon.default.url}",
         sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}",
         viewProjectUrl: "${g.createLink(controller: 'project', action:'index')}",
-        dashboardUrl: "${g.createLink(controller: 'report', action: 'loadReport', params: params+[showOrganisations:true])}" %{--// Hack for the announcements report to distinguish it from the report on the org page.--}%
+        dashboardUrl: "${g.createLink(controller: 'report', action: 'loadReport', params: params+[showOrganisations:true])}",%{--// Hack for the announcements report to distinguish it from the report on the org page.--}%
+        dashboardCategoryUrl: "${g.createLink(controller: 'report', action: 'activityOutputs', params: params+[showOrganisations:true])}"
         };
     </r:script>
     <script type="text/javascript" src="//www.google.com/jsapi"></script>
@@ -84,7 +85,7 @@
                         <g:each var="f" in="${fqList}">
                             <g:set var="fqBits" value="${f?.tokenize(':')}"/>
                             <g:set var="newUrl"><fc:formatParams params="${params}" requiredParams="${reqParams}" excludeParam="${f}"/></g:set>
-                            <li><g:message code="label.${fqBits[0]}" default="${fqBits[0]}"/>: <g:message code="label.${fqBits[1]}" default="${fqBits[1].capitalize()}"/>
+                            <li><g:message code="label.${fqBits[0]}" default="${fqBits[0]}"/>: <g:message code="label.${fqBits[1]}" default="${fqBits[1]?.capitalize()}"/>
                                 <a href="${newUrl?:"?"}" class="btn btn-inverse btn-mini tooltips" title="remove filter">
                                     <i class="icon-white icon-remove"></i></a>
                             </li>
