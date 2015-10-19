@@ -49,7 +49,7 @@
                     <g:if test="${fn != 'class' && f?.terms?.size() > 0}">
                         <g:set var="fName"><g:message code="label.${fn}" default="${fn?.capitalize()}"/></g:set>
                         <div><h4 style="display:inline-block">${fName}</h4><a class="accordian-toggle" data-toggle="collapse" data-target="#facet-list-${j}"><i style="float:right; margin-top:10px;" class="icon-plus"></i></a></div>
-                        <div id="facet-list-${j}" class="collapse">
+                        <div id="facet-list-${j}" data-name="${fn}" class="collapse">
                             <ul style="list-style-type: none;" class="facetValues">
                                 <g:each var="t" in="${f.terms}" status="i">
                                     <g:if test="${i < max}">
@@ -358,6 +358,38 @@
         // re-establish the previous tab state
         var storedTab = amplify.store(TAB_STATE_KEY) || '#mapView';
         $('#project-display-options '+storedTab).collapse('show');
+
+
+        var expandedToggles = amplify.store('facetToggleState') || [];
+        if (expandedToggles) {
+            for (var i=0; i<expandedToggles.length; i++) {
+                $('[data-name="'+expandedToggles[i]+'"]').collapse('show');
+            }
+        }
+        // Remember facet toggle state.
+        $('#facetsContent').on('shown', function (e) {
+            var facetName = $(e.target).data('name');
+            var index = expandedToggles.indexOf(facetName);
+            if (index < 0) {
+                expandedToggles.push(facetName);
+                amplify.store('facetToggleState', expandedToggles);
+            }
+
+            $('[data-target="#'+e.target.id+'"] i').removeClass('icon-plus').addClass('icon-minus');
+        });
+        $('#facetsContent').on('hidden', function (e) {
+            var facetName = $(e.target).data('name');
+            var index = expandedToggles.indexOf(facetName);
+            if (index >= 0) {
+                expandedToggles.splice(index, 1);
+                amplify.store('facetToggleState', expandedToggles);
+            }
+
+            $('[data-target="#'+e.target.id+'"] i').removeClass('icon-minus').addClass('icon-plus');
+
+        });
+
+
 
         // project list filter
         $('.filterinput').keyup(function() {
