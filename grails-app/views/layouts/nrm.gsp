@@ -114,7 +114,7 @@
             </a>
             <div class="nav-collapse collapse">
                 <ul class="nav">
-                    <fc:navbar active="${pageProperty(name: 'page.topLevelNav')}" items="${['home', 'about', 'help', 'contacts']}"/>
+                    <fc:navbar active="${pageProperty(name: 'page.topLevelNav')}" items="${['home', 'projectExplorer', 'about', 'help', 'contacts']}"/>
                 </ul>
                 <div class="navbar-form pull-right nav-collapse collapse">
                     <span id="buttonBar">
