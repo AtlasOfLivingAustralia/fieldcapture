@@ -43,225 +43,234 @@
                 <g:set var="baseUrl"><fc:formatParams params="${params}" requiredParams="${reqParams}"/></g:set>
                 <g:set var="fqLink" value="${baseUrl?:"?"}"/>
             <!-- fqLink = ${fqLink} -->
-                <g:each var="fn" in="${facetsList}">
+                <g:each var="fn" in="${facetsList}" status="j">
                     <g:set var="f" value="${results.facets.get(fn)}"/>
                     <g:set var="max" value="${5}"/>
                     <g:if test="${fn != 'class' && f?.terms?.size() > 0}">
                         <g:set var="fName"><g:message code="label.${fn}" default="${fn?.capitalize()}"/></g:set>
-                        <h4>${fName}</h4>
-                        <ul style="list-style-type: none;" class="facetValues">
-                            <g:each var="t" in="${f.terms}" status="i">
-                                <g:if test="${i < max}">
-                                    <li>
-                                        <input type="checkbox" class="facetSelection" name="facetSelection" value="fq=${fn.encodeAsURL()}:${t.term.encodeAsURL()}">
-                                        <a href="${fqLink}&fq=${fn.encodeAsURL()}:${t.term.encodeAsURL()}"><g:message
-                                                code="label.${t.term.capitalize()}" default="${t.term.capitalize()}"/></a> (${t.count})
-                                    </li>
-                                </g:if>
-                            </g:each>
-                        </ul>
-                        <g:if test="${f?.terms?.size() > max}">
-                            <a href="#${fn}Modal" role="button" class="moreFacets tooltips" data-toggle="modal" title="View full list of values"><i class="icon-hand-right"></i> choose more...</a>
-                            <div id="${fn}Modal" class="modal hide fade">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                    <h3>Filter by ${fName}</h3>
-                                </div>
-                                <div class="modal-body">
-                                    <ul style="list-style-type: none;" class="facetValues">
-                                        <g:each var="t" in="${f.terms}">
+                        <div><h4 style="display:inline-block">${fName}</h4><a class="accordian-toggle" data-toggle="collapse" data-target="#facet-list-${j}"><i style="float:right; margin-top:10px;" class="icon-plus"></i></a></div>
+                        <div id="facet-list-${j}" class="collapse">
+                            <ul style="list-style-type: none;" class="facetValues">
+                                <g:each var="t" in="${f.terms}" status="i">
+                                    <g:if test="${i < max}">
+                                        <li>
+                                            <input type="checkbox" class="facetSelection" name="facetSelection" value="fq=${fn.encodeAsURL()}:${t.term.encodeAsURL()}">
+                                            <a href="${fqLink}&fq=${fn.encodeAsURL()}:${t.term.encodeAsURL()}"><g:message
+                                                    code="label.${t.term.capitalize()}" default="${t.term.capitalize()}"/></a> (${t.count})
+                                        </li>
+                                    </g:if>
+                                </g:each>
+                            </ul>
 
-                                            <li data-sortalpha="${t.term.toLowerCase().trim()}" data-sortcount="${t.count}">
-                                                <input type="checkbox" class="facetSelection" name="facetSelection" value="fq=${fn.encodeAsURL()}:${t.term.encodeAsURL()}">
-                                                <a href="${fqLink}&fq=${fn.encodeAsURL()}:${t.term.encodeAsURL()}"><g:message
-                                                        code="label.${t.term}" default="${t.term?:'[empty]'}"/></a> (<span class="fcount">${t.count}</span>)
-                                            </li>
-                                        </g:each>
-                                    </ul>
-                                </div>
-                                <div class="modal-footer">
-                                    <div class="pull-left">
-                                        <button class="btn btn-small facetSearch"><i class="icon-filter"></i>Refine</button>
-                                        <button class="btn btn-small sortAlpha"><i class="icon-filter"></i> Sort by name</button>
-                                        <button class="btn btn-small sortCount"><i class="icon-filter"></i> Sort by count</button>
+                            <g:if test="${f?.terms?.size() > max}">
+                                <a href="#${fn}Modal" role="button" class="moreFacets tooltips" data-toggle="modal" title="View full list of values"><i class="icon-hand-right"></i> choose more...</a>
+                                <div id="${fn}Modal" class="modal hide fade">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h3>Filter by ${fName}</h3>
                                     </div>
-                                    <a href="#" class="btn" data-dismiss="modal">Close</a>
-                                </div>
+                                    <div class="modal-body">
+                                        <ul style="list-style-type: none;" class="facetValues">
+                                            <g:each var="t" in="${f.terms}">
 
-                            </div>
-                        </g:if>
+                                                <li data-sortalpha="${t.term.toLowerCase().trim()}" data-sortcount="${t.count}">
+                                                    <input type="checkbox" class="facetSelection" name="facetSelection" value="fq=${fn.encodeAsURL()}:${t.term.encodeAsURL()}">
+                                                    <a href="${fqLink}&fq=${fn.encodeAsURL()}:${t.term.encodeAsURL()}"><g:message
+                                                            code="label.${t.term}" default="${t.term?:'[empty]'}"/></a> (<span class="fcount">${t.count}</span>)
+                                                </li>
+                                            </g:each>
+                                        </ul>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="pull-left">
+                                            <button class="btn btn-small facetSearch"><i class="icon-filter"></i>Refine</button>
+                                            <button class="btn btn-small sortAlpha"><i class="icon-filter"></i> Sort by name</button>
+                                            <button class="btn btn-small sortCount"><i class="icon-filter"></i> Sort by count</button>
+                                        </div>
+                                        <a href="#" class="btn" data-dismiss="modal">Close</a>
+                                    </div>
+
+                                </div>
+                            </g:if>
+                        </div>
                     </g:if>
                 </g:each>
             </div>
         </div>
         <div class="span8">
 
-            <div class="tabbable">
-                <ul class="nav nav-tabs" data-tabs="tabs">
-                    <li class=""><a id="mapView-tab" href="#mapView" data-toggle="tab">Map</a></li>
-                    <li class=""><a id="projectsView-tab" href="#projectsView" data-toggle="tab">Projects</a></li>
-                    <li class=""><a id="reportView-tab" href="#reportView" data-toggle="tab">Dashboard</a></li>
-                    <g:if test="${fc.userIsSiteAdmin()}">
-                        <li class=""><a id="downloadView-tab" href="#downloadView" data-toggle="tab">Download</a></li>
-                    </g:if>
-
-                </ul>
-            </div>
-
-            <div class="tab-content clearfix">
-                <g:render template="/shared/sites" plugin="fieldcapture-plugin" model="${[projectCount:results?.hits?.total?:0]}"/>
-
-                <div class="tab-pane " id="projectsView">
-                    <div class="scroll-list clearfix" id="projectList">
-                        <table class="table table-bordered table-hover" id="projectTable" data-sort="lastUpdated" data-order="DESC" data-offset="0" data-max="10">
-                            <thead>
-                            <tr>
-                                <th width="85%" data-sort="nameSort" data-order="ASC" class="header">Project name</th>
-                                <th width="15%" data-sort="lastUpdated"  data-order="DESC" class="header headerSortUp">Last&nbsp;updated&nbsp;</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                        <div id="paginateTable" class="hide" style="text-align:center;">
-                            <span id="paginationInfo" style="display:inline-block;float:left;margin-top:4px;"></span>
-                            <div class="btn-group">
-                                <button class="btn btn-small prev"><i class="icon-chevron-left"></i>&nbsp;previous</button>
-                                <button class="btn btn-small next">next&nbsp;<i class="icon-chevron-right"></i></button>
-                            </div>
-                            <span id="project-filter-warning" class="label filter-label label-warning hide pull-left">Filtered</span>
-                            <div class="control-group pull-right dataTables_filter">
-                                <div class="input-append">
-                                    <g:textField class="filterinput input-medium" data-target="project"
-                                                 title="Type a few characters to restrict the list." name="projects"
-                                                 placeholder="filter"/>
-                                    <button type="button" class="btn clearFilterBtn"
-                                            title="clear"><i class="icon-remove"></i></button>
+            <div class="accordian" id="project-display-options">
+                <div class="accordion-group">
+                    <div class="accordian-heading">
+                        <a class="accordian-toggle" id="mapView-heading" href="#mapView" data-toggle="collapse" data-parent="#project-display-options">Map</a>
+                    </div>
+                    <div id="mapView" class="accordian-body collapse">
+                        <g:render template="/shared/sites" plugin="fieldcapture-plugin" model="${[projectCount:results?.hits?.total?:0]}"/>
+                    </div>
+                </div>
+                <div class="accordion-group">
+                    <div class="accordian-heading">
+                        <a class="accordian-toggle" id="projectsView-heading" href="#projectsView" data-toggle="collapse" data-parent="#project-display-options">Projects</a>
+                    </div>
+                    <div class="accordian-body collapse" id="projectsView">
+                        <div class="scroll-list clearfix" id="projectList">
+                            <table class="table table-bordered table-hover" id="projectTable" data-sort="lastUpdated" data-order="DESC" data-offset="0" data-max="10">
+                                <thead>
+                                <tr>
+                                    <th width="85%" data-sort="nameSort" data-order="ASC" class="header">Project name</th>
+                                    <th width="15%" data-sort="lastUpdated"  data-order="DESC" class="header headerSortUp">Last&nbsp;updated&nbsp;</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                            <div id="paginateTable" class="hide" style="text-align:center;">
+                                <span id="paginationInfo" style="display:inline-block;float:left;margin-top:4px;"></span>
+                                <div class="btn-group">
+                                    <button class="btn btn-small prev"><i class="icon-chevron-left"></i>&nbsp;previous</button>
+                                    <button class="btn btn-small next">next&nbsp;<i class="icon-chevron-right"></i></button>
+                                </div>
+                                <span id="project-filter-warning" class="label filter-label label-warning hide pull-left">Filtered</span>
+                                <div class="control-group pull-right dataTables_filter">
+                                    <div class="input-append">
+                                        <g:textField class="filterinput input-medium" data-target="project"
+                                                     title="Type a few characters to restrict the list." name="projects"
+                                                     placeholder="filter"/>
+                                        <button type="button" class="btn clearFilterBtn"
+                                                title="clear"><i class="icon-remove"></i></button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    %{-- template for jQuery DOM injection --}%
-                    <table id="projectRowTempl" class="hide">
-                        <tr>
-                            <td class="td1">
-                                <a href="#" class="projectTitle" id="a_" data-id="" title="click to show/hide details">
-                                    <span class="showHideCaret">&#9658;</span> <span class="projectTitleName">$name</span></a>
-                                <div class="hide projectInfo" id="proj_$id">
-                                    <div class="homeLine">
-                                        <i class="icon-home"></i>
-                                        <a href="">View project page</a>
-                                    </div>
-                                    <div class="sitesLine">
-                                        <i class="icon-map-marker"></i>
-                                        Sites: <a href="#" data-id="$id" class="zoom-in btnX btn-miniX"><i
-                                            class="icon-plus-sign"></i> show on map</a>
-                                        %{--<a href="#" data-id="$id" class="zoom-out btnX btn-miniX"><i--}%
-                                        %{--class="icon-minus-sign"></i> zoom out</a>--}%
-                                    </div>
-                                    <div class="orgLine">
-                                        <i class="icon-user"></i>
-                                    </div>
-                                    <div class="descLine">
-                                        <i class="icon-info-sign"></i>
-                                    </div>
-                                    <g:if test="${fc.userIsSiteAdmin()}">
-                                        <div class="downloadLine">
-                                            <i class="icon-download"></i>
-                                            <a href="" target="_blank">Download (.xlsx)</a>
+                        %{-- template for jQuery DOM injection --}%
+                        <table id="projectRowTempl" class="hide">
+                            <tr>
+                                <td class="td1">
+                                    <a href="#" class="projectTitle" id="a_" data-id="" title="click to show/hide details">
+                                        <span class="showHideCaret">&#9658;</span> <span class="projectTitleName">$name</span></a>
+                                    <div class="hide projectInfo" id="proj_$id">
+                                        <div class="homeLine">
+                                            <i class="icon-home"></i>
+                                            <a href="">View project page</a>
                                         </div>
-                                        <div class="downloadJSONLine">
-                                            <i class="icon-download"></i>
-                                            <a href="" target="_blank">Download (.json)</a>
+                                        <div class="sitesLine">
+                                            <i class="icon-map-marker"></i>
+                                            Sites: <a href="#" data-id="$id" class="zoom-in btnX btn-miniX"><i
+                                                class="icon-plus-sign"></i> show on map</a>
+                                            %{--<a href="#" data-id="$id" class="zoom-out btnX btn-miniX"><i--}%
+                                            %{--class="icon-minus-sign"></i> zoom out</a>--}%
                                         </div>
-                                    </g:if>
+                                        <div class="orgLine">
+                                            <i class="icon-user"></i>
+                                        </div>
+                                        <div class="descLine">
+                                            <i class="icon-info-sign"></i>
+                                        </div>
+                                        <g:if test="${fc.userIsSiteAdmin()}">
+                                            <div class="downloadLine">
+                                                <i class="icon-download"></i>
+                                                <a href="" target="_blank">Download (.xlsx)</a>
+                                            </div>
+                                            <div class="downloadJSONLine">
+                                                <i class="icon-download"></i>
+                                                <a href="" target="_blank">Download (.json)</a>
+                                            </div>
+                                        </g:if>
 
-                                </div>
-                            </td>
-                            <td class="td2">$date</td>
-                        </tr>
-                    </table>
-                </div>
-
-                <div class="tab-pane" id="reportView">
-                    <div class="row-fluid">
-                        <g:if test="${fc.userIsAlaOrFcAdmin()}">
-                            <span class="span12">
-                                <h4>Report: </h4>
-                                <select id="dashboardType" name="dashboardType"><option value="dashboard">Activity Outputs</option><option value="greenArmy">Green Army</option><option value="announcements">Announcements</option><option value="outputTargets">Output Targets By Programme</option></select>
-                            </span>
-                        </g:if>
-                        <g:else>
-                            <select id="dashboardType" name="dashboardType" style="display:none"><option value="dashboard">Activity Outputs</option><option value="greenArmy">Green Army</option></select>
-                        </g:else>
-                    </div>
-                    <div class="loading-message">
-                        <r:img dir="images" file="loading.gif" alt="saving icon"/> Loading...
-                    </div>
-                    <div id="dashboard-content">
-
+                                    </div>
+                                </td>
+                                <td class="td2">$date</td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
-            %{-- hiding the downloads from non-admin until they are approved for public consumption. --}%
+                <div class="accordion-group">
+                    <div class="accordian-heading">
+                        <a class="accordian-toggle" id="reportView-heading" href="#reportView" data-toggle="collapse" data-parent="#project-display-options">Dashboard</a>
+                    </div>
+                    <div class="accordian-body collapse" id="reportView">
+                        <div class="row-fluid">
+                            <g:if test="${fc.userIsAlaOrFcAdmin()}">
+                                <span class="span12">
+                                    <h4>Report: </h4>
+                                    <select id="dashboardType" name="dashboardType"><option value="dashboard">Activity Outputs</option><option value="greenArmy">Green Army</option><option value="announcements">Announcements</option><option value="outputTargets">Output Targets By Programme</option></select>
+                                </span>
+                            </g:if>
+                            <g:else>
+                                <select id="dashboardType" name="dashboardType" style="display:none"><option value="dashboard">Activity Outputs</option><option value="greenArmy">Green Army</option></select>
+                            </g:else>
+                        </div>
+                        <div class="loading-message">
+                            <r:img dir="images" file="loading.gif" alt="saving icon"/> Loading...
+                        </div>
+                        <div id="dashboard-content">
+
+                        </div>
+                    </div>
+                </div>
                 <g:if test="${fc.userIsSiteAdmin()}">
-                    <div class="tab-pane" id="downloadView">
-                        <div class="alert">Please do not run more than one download at a time as they can place a lot of load on the system</div>
-                        <h3>Download data for a filtered selection of projects</h3>
+                    <div class="accordion-group">
+                        <div class="accordian-heading">
+                            <a class="accordian-toggle" id="downloadView-heading" href="#downloadView" data-toggle="collapse" data-parent="#project-display-options">Download</a>
+                        </div>
+                        <div class="accordian-body collapse" id="downloadView">
+                            <div class="alert">Please do not run more than one download at a time as they can place a lot of load on the system</div>
+                            <h3>Download data for a filtered selection of projects</h3>
 
-                        <table style="width: 50%;">
-                            <thead>
-                            <tr>
-                                <th colspan="2"><b>Summary data (Actvity Output scores)</b></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td width="50%">
-                                    <a target="_blank" href="${grailsApplication.config.grails.serverURL}/search/downloadSummaryData<fc:formatParams params="${params}"/>&view=xlsx">XLSX</a>
-                                </td>
-                                <td width="50%">
-                                    <a target="_blank" href="${grailsApplication.config.grails.serverURL}/search/downloadAllData<fc:formatParams params="${params}"/>&view=json">JSON</a>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <table style="width: 50%;">
-                            <thead>
-                            <tr>
-                                <th colspan="2"><b>All data (Project, Site, Activity & Output)</b></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td width="50%">
-                                    <a target="_blank" href="${grailsApplication.config.grails.serverURL}/search/downloadAllData<fc:formatParams params="${params}"/>&view=xlsx">XLSX</a>
-                                </td>
-                                <td width="50%">
-                                    <a target="_blank" href="${grailsApplication.config.grails.serverURL}/search/downloadAllData<fc:formatParams params="${params}"/>view=json">JSON</a>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
+                            <table style="width: 50%;">
+                                <thead>
+                                <tr>
+                                    <th colspan="2"><b>Summary data (Actvity Output scores)</b></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td width="50%">
+                                        <a target="_blank" href="${grailsApplication.config.grails.serverURL}/search/downloadSummaryData<fc:formatParams params="${params}"/>&view=xlsx">XLSX</a>
+                                    </td>
+                                    <td width="50%">
+                                        <a target="_blank" href="${grailsApplication.config.grails.serverURL}/search/downloadAllData<fc:formatParams params="${params}"/>&view=json">JSON</a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <table style="width: 50%;">
+                                <thead>
+                                <tr>
+                                    <th colspan="2"><b>All data (Project, Site, Activity & Output)</b></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td width="50%">
+                                        <a target="_blank" href="${grailsApplication.config.grails.serverURL}/search/downloadAllData<fc:formatParams params="${params}"/>&view=xlsx">XLSX</a>
+                                    </td>
+                                    <td width="50%">
+                                        <a target="_blank" href="${grailsApplication.config.grails.serverURL}/search/downloadAllData<fc:formatParams params="${params}"/>view=json">JSON</a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
 
-                        <table style="width: 50%;">
-                            <thead>
-                            <tr>
-                                <th><b>Site data (Project Sites)</b></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td width="100%">
-                                    <a target="_blank" href='<g:createLink controller="search" action="downloadShapefile" params="${params}"/>'>Shapefile</a>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
+                            <table style="width: 50%;">
+                                <thead>
+                                <tr>
+                                    <th><b>Site data (Project Sites)</b></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td width="100%">
+                                        <a target="_blank" href='<g:createLink controller="search" action="downloadShapefile" params="${params}"/>'>Shapefile</a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
 
+                        </div>
                     </div>
                 </g:if>
             </div>
-
         </div>
     </div>
 </g:elseif>
@@ -317,16 +326,16 @@
 
         var TAB_STATE_KEY = 'homepage-tab-state';
         var initialisedReport = false, initialisedMap = false, initialisedProjects = false;
-        var initialiseTab = function(tab) {
-            if (tab === '#mapView' && !initialisedMap) {
+        var initialiseContentSection = function(section) {
+            if (section === '#mapView' && !initialisedMap) {
                 generateMap(facetList);
                 initialisedMap = true;
             }
-            else if (tab === '#projectsView' && !initialisedProjects) {
+            else if (section === '#projectsView' && !initialisedProjects) {
                 updateProjectTable();
                 initialisedProjects = true;
             }
-            else if (tab === '#reportView' && !initialisedReport) {
+            else if (section === '#reportView' && !initialisedReport) {
                 initialisedReport = true;
                 var reportType = amplify.store('report-type-state');
                 var $reportSelector = $('#dashboardType');
@@ -340,16 +349,15 @@
                 }).trigger('change');
             }
         };
-        // retain tab state for future re-visits
-        $('a[data-toggle="tab"]').on('shown', function (e) {
-            var tab = e.currentTarget.hash;
-            amplify.store(TAB_STATE_KEY, tab);
-            initialiseTab(tab);
+        // retain accordian state for future re-visits
+        $('#project-display-options').on('shown', function (e) {
+            var section = '#'+e.target.id;
+            amplify.store(TAB_STATE_KEY, section);
+            initialiseContentSection(section);
         });
-
         // re-establish the previous tab state
         var storedTab = amplify.store(TAB_STATE_KEY) || '#mapView';
-        $('.nav-tabs a[href="'+storedTab+'"]').tab('show');
+        $('#project-display-options '+storedTab).collapse('show');
 
         // project list filter
         $('.filterinput').keyup(function() {
