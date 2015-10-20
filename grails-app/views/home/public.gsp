@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
+    <link rel="stylesheet" href="http://merit.giraffedesign.com.au/css/homepage.css">
     <meta name="layout" content="${grailsApplication.config.layout.skin ?: 'main'}"/>
     <title>Home | MERIT</title>
     <r:script disposition="head">

@@ -30,6 +30,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <r:require modules="nrmSkin, jquery_cookie"/>
     <r:layoutResources/>
+    <link rel="stylesheet" href="http://merit.giraffedesign.com.au/css/global-styles.css">
     <g:layoutHead />
 </head>
 <body class="${pageProperty(name:'body.class')}" id="${pageProperty(name:'body.id')}" onload="${pageProperty(name:'body.onload')}">
