@@ -2,6 +2,7 @@
 <!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/html">
 <head>
+    <link rel="stylesheet" href="http://merit.giraffedesign.com.au/css/project-explorer.css">
     <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
     <title>Home | Field Capture</title>
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
