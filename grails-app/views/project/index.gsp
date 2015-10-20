@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <link rel="stylesheet" href="http://merit.giraffedesign.com.au/css/project.css">
     <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
     <title>${project?.name.encodeAsHTML()} | Project | Field Capture</title>
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
