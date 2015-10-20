@@ -11,7 +11,7 @@
 </g:if>
 <g:elseif test="${results?.hits?.total?:0 > 0}">
     <div id="" class="row-fluid ">
-        <div id="facetsCol" class="well well-small">
+        <div id="facetsCol" class="well well-small" style="display:none;">
             <g:set var="reqParams" value="sort,order,max,fq"/>
             <div class="visible-phone pull-right" style="margin-top: 5px;">
                 <a href="#" id="toggleFacetDisplay" rel="facetsContent" role="button" class="btn btn-small btn-inverse" style="color:white;">
@@ -343,7 +343,7 @@
             });
         };
 
-        var TAB_STATE_KEY = 'homepage-tab-state';
+        var VIEW_STATE_KEY = 'homepage-tab-state';
         var initialisedReport = false, initialisedMap = false, initialisedProjects = false;
         var initialiseContentSection = function(section) {
 
@@ -371,20 +371,25 @@
         };
         // retain accordian state for future re-visits
         $('#project-display-options').on('shown', function (e) {
-            var section = '#'+e.target.id;
-            amplify.store(TAB_STATE_KEY, section);
-            initialiseContentSection(section);
+            // Because the facets use accordion and are inside the main accordion view we need to filter them out.
+            if ($(e.target).hasClass('accordian-body')) {
+
+                var section = '#'+e.target.id;
+                amplify.store(VIEW_STATE_KEY, section);
+                initialiseContentSection(section);
+            }
         });
         $('#project-display-options').on('show', function (e) {
+
             var section = '#'+e.target.id;
             $('#facetsCol').appendTo($(section).find('.facet-holder'));
+            $('#facetsCol').show();
         });
 
-        // re-establish the previous tab state
-        var storedTab = amplify.store(TAB_STATE_KEY) || '#mapView';
+        // re-establish the previous view state
+        var storedTab = amplify.store(VIEW_STATE_KEY) || '#mapView';
         $('#project-display-options '+storedTab).collapse({parent:'#project-display-options'});
         $('#project-display-options '+storedTab).collapse('show');
-
 
 
         var expandedToggles = amplify.store('facetToggleState') || [];

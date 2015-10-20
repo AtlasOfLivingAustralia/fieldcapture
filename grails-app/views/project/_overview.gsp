@@ -69,41 +69,40 @@
 
 <div class="row-fluid">
 
-    <!-- show any primary images & videos -->
-    <div data-bind="visible: primaryImages() !== null || embeddedVideos, css:{span5:primaryImages() != null || embeddedVideos}">
 
-        <div data-bind="foreach: embeddedVideos">
-            <span data-bind="html: iframe"></span>
-        </div>
 
-        <span data-bind="foreach:primaryImages">
-            <div class="thumbnail with-caption space-after">
-                <img class="img-rounded" data-bind="attr:{src:url, alt:name}" alt="primary image"/>
-                <p class="caption" data-bind="text:name"></p>
-                <p class="attribution" data-bind="visible:attribution"><small><span data-bind="text:attribution"></span></small></p>
-            </div>
-        </span>
-
+    <div data-bind="foreach: embeddedVideos">
+        <span data-bind="html: iframe"></span>
     </div>
 
-
-    <div data-bind="css:{span7:primaryImages()!=null || embeddedVideos}">
-
-        <div data-bind="visible:newsAndEvents()">
-            <div class="well">
-                <h4 >News and events: </h4>
-                <div id="newsAndEventsDiv" data-bind="html:newsAndEvents.markdownToHtml()" ></div>
-            </div>
+    <span data-bind="foreach:primaryImages">
+        <div class="thumbnail with-caption space-after">
+            <img class="img-rounded" data-bind="attr:{src:url, alt:name}" alt="primary image"/>
+            <p class="caption" data-bind="text:name"></p>
+            <p class="attribution" data-bind="visible:attribution"><small><span data-bind="text:attribution"></span></small></p>
         </div>
-
-        <div data-bind="visible:projectStories()">
-            <div class="well">
-                <h4>Project stories: </h4>
-                <div id="projectStoriesDiv" data-bind="html:projectStories.markdownToHtml()"></div>
-            </div>
-        </div>
-
-    </div>
+    </span>
 
 </div>
+
+
+
+<div class="row-fluid" data-bind="visible:newsAndEvents()">
+    <div class="well">
+        <h4 >News and events: </h4>
+        <div id="newsAndEventsDiv" data-bind="html:newsAndEvents.markdownToHtml()" ></div>
+    </div>
+</div>
+
+
+
+<div class="row-fluid" data-bind="visible:projectStories()">
+    <div class="well">
+        <h4>Project stories: </h4>
+        <div id="projectStoriesDiv" data-bind="html:projectStories.markdownToHtml()"></div>
+    </div>
+</div>
+
+
+
 
