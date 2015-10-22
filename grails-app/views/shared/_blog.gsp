@@ -2,8 +2,10 @@
 <div id="blog">
     <div class="blog-entry" data-bind="foreach:entries">
         <img class="floatleft" src="">
-        <span class="title" data-bind="text:title"></span><span class="floatright" data-bind="text:date"></span>
-        <div class="text" data-bind="text:text"></div>
+        <div class="widget-news-right-body">
+            <h3 class="title" data-bind="text:title"></h3><span class="floatright" data-bind="text:date"></span>
+            <div class="text" data-bind="text:text"></div>
+        </div>
     </div>
 </div>
 <!-- /ko -->

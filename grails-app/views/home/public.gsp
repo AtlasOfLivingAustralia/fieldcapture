@@ -32,7 +32,7 @@
         <g:render template="/report/statistics"/>
     </div>
     <div class="row-fluid">
-        <div id="latest-news' class="span6">
+        <div id="latest-news" class="span6">
             <h4>Latest news</h4>
             <g:render template="/shared/blog"/>
         </div>
