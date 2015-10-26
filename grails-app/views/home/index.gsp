@@ -24,7 +24,7 @@
     <r:require modules="knockout,mapWithFeatures,jquery_bootstrap_datatable,js_iso8601,amplify"/>
 </head>
 <body>
-<div id="wrapper" class="container-fluid">
+<div id="wrapper" class="${containerType}">
 
 <div class="row-fluid">
     <g:if test="${flash.errorMessage}">

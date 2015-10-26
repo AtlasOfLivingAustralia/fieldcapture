@@ -3,19 +3,19 @@
         <div class="sp-slides">
             <div class="sp-slide">
                 <img class="sp-image" src="http://ecodata.ala.org.au/uploads/2015-02/thumb_Site_1_20712_Start.jpg" data-src="http://ecodata.ala.org.au/uploads/2015-02/thumb_Site_1_20712_Start.jpg"/>
-                <p class="sp-layer sp-white sp-padding"><strong>My Site</strong><br>My project</p>
+                <p class="sp-layer sp-white sp-padding"><h3>My Site</h3><p>My project</p>
             </div>
 
             <div class="sp-slide">
                 <a href="http://bqworks.com">
                     <img class="sp-image" src="http://ecodata.ala.org.au/uploads/2015-02/thumb_BD_site_2_181213.jpg" data-src="http://ecodata.ala.org.au/uploads/2015-02/thumb_BD_site_2_J10b_181213.jpg"/>
-                    <p class="sp-layer sp-white sp-padding"><strong>Test</strong><br>Test test test</p>
+                    <p class="sp-layer sp-white sp-padding"><h3>Test</h3><p>Test test test</p>
                 </a>
             </div>
 
             <div class="sp-slide">
                 <img class="sp-image" src="http://ecodata.ala.org.au/uploads/2015-02/thumb_BD_site_2_J10b_181213.jpg" data-src="http://ecodata.ala.org.au/uploads/2015-02/thumb_BD_site_2_J10b_181213.jpg"/>
-                <p class="sp-layer sp-white sp-padding"><strong>Test</strong><br>Test test test</p>
+                <p class="sp-layer sp-white sp-padding"><h3>Test</h3><p>Test test test</p>
             </div>
         </div>
 
