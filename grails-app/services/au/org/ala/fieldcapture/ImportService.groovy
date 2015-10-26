@@ -1306,6 +1306,9 @@ class ImportService {
                 activity.projectId = projectDetails.project.projectId
                 activityService.update('', activity)
             }
+
+            projectService.generateProjectStageReports(projectId)
+
             status << [projectId:projectDetails.project.projectId, grantId:grantId, externalId:externalId, success:projectDetails.errors.size() == 0, errors:projectDetails.errors]
 
         }

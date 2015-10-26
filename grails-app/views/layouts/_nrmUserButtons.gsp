@@ -16,6 +16,3 @@
         </div>
     </g:if>
 </g:if>
-<div class="btn-group">
-    <fc:loginLogoutButton logoutUrl="${createLink(controller:'logout', action:'logout')}" logoutReturnToUrl="${createLink(controller: "home", absolute: true)}" cssClass="${loginBtnCss}"/>
-</div>
