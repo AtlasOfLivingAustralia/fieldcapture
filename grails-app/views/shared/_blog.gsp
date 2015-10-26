@@ -3,7 +3,7 @@
     <div class="blog-entry" data-bind="foreach:entries">
         <img class="floatleft" src="">
         <div class="widget-news-right-body">
-            <h3 class="title" data-bind="text:title"></h3><span class="floatright" data-bind="text:date"></span>
+            <h3><span class="title" data-bind="text:title"></span><span class="floatright" data-bind="text:date"></span></h3>
             <div class="text" data-bind="text:text"></div>
         </div>
     </div>

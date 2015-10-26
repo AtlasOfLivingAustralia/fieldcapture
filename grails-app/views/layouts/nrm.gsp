@@ -66,8 +66,10 @@
             <div class="nav logo">
 
                 <a href="${createLink(controller:"home")}">
-                    <img src="${hubConfig.logoUrl}" alt="${hubConfig.title}" />
+                    %{--<img src="${hubConfig.logoUrl}" alt="${hubConfig.title}" />--}%
+                <img src="http://merit.giraffedesign.com.au/images/ag_Inline_W.png" alt="${hubConfig.title}" />
                 </a>
+
                 <g:if test="${hubConfig.title}"><span class="merit">${hubConfig.title}</span></g:if>
             </div>
             </g:if>
@@ -125,27 +127,28 @@
             </div>
         </div>
     </div>
+</div>
 
-    <div id="content" class="clearfix">
-        <g:layoutBody />
-    </div><!-- /#content -->
+<div id="content" class="clearfix">
+    <g:layoutBody />
+</div><!-- /#content -->
 
-    <div id="footer">
-        <div id="footer-wrapper">
-            <div class="${container}">
-                <fc:footerContent />
-            </div>
-            <div class="container-fluid">
-                <div class="large-space-before">
-                    <button class="btn btn-mini" id="toggleFluid">toggle fixed/fluid width</button>
-                    <g:if test="${userLoggedIn && introText}">
-                        <button class="btn btn-mini" type="button" data-toggle="modal" data-target="#introPopup">display user intro</button>
-                    </g:if>
-            </div>
+<div id="footer">
+    <div id="footer-wrapper">
+        <div class="${container}">
+            <fc:footerContent />
         </div>
-
+        <div class="container-fluid">
+            <div class="large-space-before">
+                <button class="btn btn-mini" id="toggleFluid">toggle fixed/fluid width</button>
+                <g:if test="${userLoggedIn && introText}">
+                    <button class="btn btn-mini" type="button" data-toggle="modal" data-target="#introPopup">display user intro</button>
+                </g:if>
+        </div>
     </div>
-</div><!-- /#body-wrapper -->
+
+</div>
+
 <g:if test="${userLoggedIn && introText}">
     %{-- User Intro Popup --}%
     <div id="introPopup" class="modal hide fade">
