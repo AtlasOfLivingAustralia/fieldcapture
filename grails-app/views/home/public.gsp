@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
+    <g:set var="containerType" scope="request" value="container"/>
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
     <link rel="stylesheet" href="http://merit.giraffedesign.com.au/css/homepage.css">
     <link rel="stylesheet" href="http://merit.giraffedesign.com.au/css/project-explorer.css">
@@ -27,7 +28,7 @@
 
 <body>
 
-<div class="content container-fluid">
+<div class="content container">
     <div class="row-fluid statistics">
         <g:render template="/report/statistics"/>
     </div>

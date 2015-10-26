@@ -34,6 +34,7 @@
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400italic,600,700" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="http://merit.giraffedesign.com.au/css/global-styles.css">
     <g:layoutHead />
+    <g:set var="container" value="${containerType?:'container-fluid'}"/>
 </head>
 <body class="${pageProperty(name:'body.class')}" id="${pageProperty(name:'body.id')}" onload="${pageProperty(name:'body.onload')}">
 <g:set var="introText"><fc:getSettingContent settingType="${SettingPageType.INTRO}"/></g:set>
@@ -44,12 +45,12 @@
     </div>
 </g:if>
 
-<div id="body-wrapper">
+<div class="page-header">
     <g:if test="${hubConfig.bannerUrl}">
         <div class="navbar navbar-inverse navbar-static-top" id="header" style="background:url(${hubConfig.bannerUrl}) repeat-x">
     </g:if>
     <g:else>
-    <div class="navbar navbar-inverse navbar-static-top" id="header">
+        <div class="navbar navbar-inverse navbar-static-top" id="header">
     </g:else>
     <g:if test="${fc.currentUserDisplayName()}">
         <div id="logout-warning" class="row-fluid hide">
@@ -58,75 +59,71 @@
                 <fc:loginInNewWindow>Click here to login again (opens a new window)</fc:loginInNewWindow>
             </div>
         </div>
-        <script type="text/javascript">
-            $(function() {
-                $('#logout-btn').click(function() {
-                    console.log('logout');
-                    if (window.localStorage) {
-                        window.localStorage.setItem('logout', new Date().getTime());
-                    }
-                });
-                $('#logout-warning a').click(function(){ $('#logout-warning').hide(); });
-                window.addEventListener('storage', function(e) {
-                    console.log(e);
-                    if (e.key == 'logout') {
-                        $('#logout-warning').show();
-                    }
-                });
-            });
-        </script>
     </g:if>
-       %{--<div class="navbar-inner">--}%
-            <div class="container-fluid">
-                <g:if test="${hubConfig.logoUrl}">
-                <div class="nav logo">
 
-                    <a href="${createLink(controller:"home")}">
-                        <img src="${hubConfig.logoUrl}" alt="${hubConfig.title}" />
-                    </a>
-                </div>
-                </g:if>
-                <div class="nav-collapse collapse pull-right">
-                    <g:if test="${hubConfig.title}"><span class="merit">${hubConfig.title}</span></g:if>
-                    <g:form controller="search" method="GET" class="search merit">
-                        <p>
-                            <label for="keywords"><span class="hide">Full text search</span><input type="text" name="query" id="keywords" value="${params.query}"></label>
-                            <input type="hidden" name="collection" value="agencies">
-                            <input type="hidden" name="profile" value="nrm_env">
-                            <input type="hidden" name="form" value="simple">
-                            <input type="submit" value="search" class="search button">
-                        </p>
-                    </g:form>
-                </div>
-            </div><!--/.container-fluid -->
+        <div class="${container}">
+            <g:if test="${hubConfig.logoUrl}">
+            <div class="nav logo">
 
-        %{--</div><!--/.navbar-inner -->--}%
+                <a href="${createLink(controller:"home")}">
+                    <img src="${hubConfig.logoUrl}" alt="${hubConfig.title}" />
+                </a>
+                <g:if test="${hubConfig.title}"><span class="merit">${hubConfig.title}</span></g:if>
+            </div>
+            </g:if>
+            <div class="navbar-form pull-right nav-collapse collapse">
+                <div class="btn-group">
+                    <fc:loginLogoutButton logoutUrl="${createLink(controller:'logout', action:'logout')}" logoutReturnToUrl="${createLink(controller: "home", absolute: true)}" cssClass="${loginBtnCss}"/>
+                </div>
+
+            </div>
+
+        </div><!--/.container -->
+
+
     </div><!--/.navbar -->
 
-    <div id="dcNav" class="clearfix ">
+    <div class="page-header-menu">
+        <div class="${container}">
+            <div class="nav-collapse collapse pull-right">
 
-        <div class="navbar navbar-inverse container-fluid ">
-            %{--<a href="${g.createLink(uri:"/")}" class="brand">MERI data capture prototype</a>--}%
-            <ul class="nav">
-                <li><a href="/fieldcapture/" class="active hidden-desktop"><i class="icon-home">&nbsp;</i>&nbsp;Home</a></li>
-            </ul>
-            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </a>
-            <div class="nav-collapse collapse">
-                <ul class="nav">
-                    <fc:navbar active="${pageProperty(name: 'page.topLevelNav')}" items="${['home', 'projectExplorer', 'about', 'help', 'contacts']}"/>
-                </ul>
-                <div class="navbar-form pull-right nav-collapse collapse">
-                    <span id="buttonBar">
-                        <g:render template="/layouts/nrmUserButtons"/>
-                        <g:pageProperty name="page.buttonBar"/>
-                    </span>
-                </div>
+                <g:form controller="search" method="GET" class="search merit">
+                    <p>
+                        <label for="keywords"><span class="hide">Full text search</span><input type="text" name="query" id="keywords" value="${params.query}"></label>
+                        <input type="hidden" name="collection" value="agencies">
+                        <input type="hidden" name="profile" value="nrm_env">
+                        <input type="hidden" name="form" value="simple">
+                        <input type="submit" value="search" class="search button">
+                    </p>
+                </g:form>
             </div>
-        </div><!-- /.navbar-inner -->
+
+            <div id="dcNav" class="clearfix ">
+
+                <div class="navbar navbar-inverse">
+
+                    <ul class="nav">
+                        <li><a href="/fieldcapture/" class="active hidden-desktop"><i class="icon-home">&nbsp;</i>&nbsp;Home</a></li>
+                    </ul>
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+                    <div class="nav-collapse collapse">
+                        <ul class="nav">
+                            <fc:navbar active="${pageProperty(name: 'page.topLevelNav')}" items="${['home', 'projectExplorer', 'about', 'help', 'contacts']}"/>
+                        </ul>
+                        <div class="navbar-form pull-right nav-collapse collapse">
+                            <span id="buttonBar">
+                                <g:render template="/layouts/nrmUserButtons"/>
+                                <g:pageProperty name="page.buttonBar"/>
+                            </span>
+                        </div>
+                    </div>
+                </div><!-- /.navbar-inner -->
+            </div>
+        </div>
     </div>
 
     <div id="content" class="clearfix">
@@ -135,7 +132,7 @@
 
     <div id="footer">
         <div id="footer-wrapper">
-            <div class="container-fluid">
+            <div class="${container}">
                 <fc:footerContent />
             </div>
             <div class="container-fluid">
