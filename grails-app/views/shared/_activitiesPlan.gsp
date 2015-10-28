@@ -573,7 +573,7 @@
                     if (self.displayReasonModal.trigger() === 'progress_change') {
                         self.saveProgress({progress: self.progress(), activityId: self.activityId});
                     }
-                    self.deferReason().recordOnlySave("${createLink(controller:'proxy', action:'documentUpdate')}/" + (self.deferReason().documentId ? self.deferReason().documentId : ''));
+                    self.deferReason().recordOnlySave("${createLink(controller:'document', action:'documentUpdate')}/" + (self.deferReason().documentId ? self.deferReason().documentId : ''));
                     self.displayReasonModal.closeReasonModal();
                 }
             };
