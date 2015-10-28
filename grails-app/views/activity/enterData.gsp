@@ -22,8 +22,8 @@
         siteViewUrl: "${createLink(controller: 'site', action: 'index')}/",
         bieUrl: "${grailsApplication.config.bie.baseURL}",
         speciesProfileUrl: "${createLink(controller: 'proxy', action: 'speciesProfile')}",
-        documentUpdateUrl: "${g.createLink(controller:"proxy", action:"documentUpdate")}",
-        documentDeleteUrl: "${g.createLink(controller:"proxy", action:"deleteDocument")}",
+        documentUpdateUrl: "${g.createLink(controller:"document", action:"documentUpdate")}",
+        documentDeleteUrl: "${g.createLink(controller:"document", action:"deleteDocument")}",
         imageLocation:"${resource(dir:'/images')}"
         },
         here = document.location.href;
