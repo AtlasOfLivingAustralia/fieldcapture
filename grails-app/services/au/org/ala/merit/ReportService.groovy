@@ -140,56 +140,85 @@ class ReportService {
 
     }
 
-    def getHighlightedStatistics() {
+    public Number filteredProjectCount(List<String> filter) {
+        def result = searchService.allProjects([fq:filter])
+        result?.hits?.total ?: 0
+    }
 
-        //"Number of projects addressing threatened species"
-        //searchService.search([fq:'meriPlanAssetFacet:Threatened+Species'])
+    public Map<String, Number> filteredInvestment(List<String> filter, String investmentType = null) {
 
+        int BATCH_SIZE = 100
+        def result = searchService.allProjects([fq:filter])
+        BigDecimal dollarsInvested = new BigDecimal(0)
+        int count = result?.hits?.total ?: 0
+        int matchCount = 0
+        int processed = 0
+        while (processed < count) {
+            result.hits.hits?.each { hit ->
 
-        //fq:"associatedSubProgram:Reef Rescue 2013/14"
-        //score:"Total No. of farming entities adopting sustainable practice change"
+                def budget = hit._source.custom?.details?.budget
+                if (budget) {
+                    if (investmentType) {
+                        def investmentRow = budget.rows.find { it.shortLabel == investmentType }
+                        if (investmentRow) {
+                            dollarsInvested += (investmentRow.rowTotal as BigDecimal)
+                            matchCount++
+                        }
+                    }
+                    else {
+                        dollarsInvested += budget.overallTotal as BigDecimal
+                        matchCount++
+                    }
+                }
+                processed++
 
-//        Reef
-//
-//        Weight of marine debris removed
-//        (Pest Management) Number of Crown of Thorn Starfish removed
-//        Length of fences erected
-//        Additional info-graphics for Future projects (Reef Trust phase II, III and IV)
-//
-//        Total Erosion area treated
-//        Indigenous
-//
-//        No employed and no of on country visits for Indigenous
-//        National Landcare Programme
-//
-//        $XXX and no. Project Sustainable ag - If we tell you which budget line is sustainable agriculture could we aggregate this figure?  custom.details.budget.rows.shortLabel:"MERI & Admin"
-//                $XXX and no. Projects - to support Indigenous projects (using Asset addressed)
-//        $XXX and no. Projects - that help protect threatened species and their habitat (using Asset addressed)
-//        $XXX and no. Projects - that support the health of World Heritage Area (using Asset addressed).
-//        Pest animals area managed – target for now, moving to delivered down the track?
-//                Weeds treated by area, moving to delivered down the track?
-//                20MT-number of trees (>2m) planted, also ability to modify this to number of trees surviving as program matures. Display – progress against target of 20 million
-//        All programmes:
-//
-//        Ha of weeds removed
-//        All programmes: Area treated for felius catus
-//        NLP:
-//
-//        Ha weed treatment by main activity partner ‘Local Landcare, ‘Friends of’, community, or farmer groups
-//        No of volunteers participating in project activities
-//        Green Army:
-//
-//        No. of Participants who commenced projects
-//        Green Army: No of teams (projects), active and complete
-        [
-                [config:'1', programme:'National Landcare Programme', text:'volunteers participating', value:'234', units:''],
-                [config:'2', programme:'Green Army', text:'of debris removed', value:'40,149', units:'m<super>2</super>'],
-                [config:'3', programme:'Green Army', text:'of weed treatment', value:'5,486', units:'Ha'],
-                [config:'4', programme:'Green Army', text:'plants planted', value:'101,641', units:''],
-                [config:'5', programme:'Green Army', text:'active & complete teams', value:'128', units:''],
-                [config:'6', programme:'20 Million Trees', text:'of 20 million trees contracted', value:'1,123,412', units:'']
-        ]
+            }
+            result = searchService.allProjects([fq:filter, offset:processed, max:BATCH_SIZE])
+        }
+        [count:matchCount, investment:dollarsInvested]
+    }
 
+    public Map<String, Number> getNumericScores(List<String> scores, List<String> filter = null) {
 
+        def results = searchService.reportOnScores(scores,filter)
+
+        Map<String, Number> values = scores.collectEntries { score ->
+            def result = results.outputData?.find {it.groupTitle == score}
+            def value = 0
+            if (result && result.results) {
+                value = result.results[0].result
+            }
+            [(score):(value as Number)]
+        }
+        values
+    }
+
+    public Number getNumericScore(String score, List<String> filter = null) {
+
+        def results = searchService.reportOnScores([score], filter)
+
+        def result = results.outputData?.find {it.groupTitle == score}
+        def value = 0
+        if (result && result.results) {
+            value = result.results[0].result
+        }
+        value as Number
+
+    }
+
+    public Number filterGroupedScore(String score, String groupToFilter, List<String> filters = null) {
+        def results = searchService.reportOnScores([score], filters)
+        def value = 0
+        if (results.outputData && results.outputData[0].results) {
+            def result = results.outputData[0].results.find{it.group == groupToFilter}
+            if (result) {
+                value = result.result
+            }
+        }
+        value
+    }
+
+    public Number outputTarget(String scoreLabel, List<String> filters) {
+        return 0
     }
 }

@@ -29,7 +29,7 @@
 <body>
 
 <div class="content container">
-    <div class="row-fluid statistics">
+    <div id="stats-holder">
         <g:render template="/report/statistics"/>
     </div>
     <div class="row-fluid">
@@ -70,6 +70,18 @@
                     });
                 });
             });
+
+            var url = '${g.createLink(controller:'report', action:'statisticsReport')}';
+
+            var working = false;
+            $('#stats-holder').on('click', '.show-more-stats', function() {
+                if (!working) {
+                    working = true;
+                    replaceContentSection('.statistics', url).always(function() { working = false; });
+                }
+            });
+
+
         </r:script>
     </div>
     </g:else>
