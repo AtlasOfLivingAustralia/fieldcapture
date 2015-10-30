@@ -17,7 +17,7 @@
     </r:script>
 </head>
 <body>
-<div id="wrapper" class="container-fluid">
+<div id="wrapper" class="${containerType}">
     <div class="row-fluid">
         <div class="span12" id="header">
             <h2 class="pull-left">User Profile - ${user?.displayName}</h2>

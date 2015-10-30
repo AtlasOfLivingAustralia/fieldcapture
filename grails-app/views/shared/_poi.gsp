@@ -20,8 +20,9 @@
     $(function() {
         $( '#poi-slider' ).sliderPro({
             width: '100%',
-            height: '300',
-            centre:true,
+            height: '400',
+            centerImage:true,
+            imageScaleMode:'contain',
             arrows: false, // at the moment we only support 1 image
             buttons: false,
             waitForLayers: true,

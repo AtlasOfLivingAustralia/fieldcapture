@@ -34,7 +34,7 @@
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400italic,600,700" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="http://merit.giraffedesign.com.au/css/global-styles.css">
     <g:layoutHead />
-    <g:set var="container" scope="request" value="${containerType?:'container'}"/>
+    <g:set var="containerType" scope="request" value="${containerType?:'container'}"/>
 </head>
 <body class="${pageProperty(name:'body.class')}" id="${pageProperty(name:'body.id')}" onload="${pageProperty(name:'body.onload')}">
 <g:set var="introText"><fc:getSettingContent settingType="${SettingPageType.INTRO}"/></g:set>
@@ -61,7 +61,7 @@
         </div>
     </g:if>
 
-        <div class="${container}">
+        <div class="${containerType}">
             <g:if test="${hubConfig.logoUrl}">
             <div class="nav logo">
 
@@ -86,7 +86,7 @@
     </div><!--/.navbar -->
 
     <div class="page-header-menu">
-        <div class="${container}">
+        <div class="${containerType}">
             <div class="nav-collapse collapse pull-right">
 
                 <g:form controller="search" method="GET" class="search merit">
@@ -135,10 +135,10 @@
 
 <div id="footer">
     <div id="footer-wrapper">
-        <div class="${container}">
+        <div class="${containerType}">
             <fc:footerContent />
         </div>
-        <div class="container-fluid">
+        <div class="${containerType}">
             <div class="large-space-before">
                 <button class="btn btn-mini" id="toggleFluid">toggle fixed/fluid width</button>
                 <g:if test="${userLoggedIn && introText}">

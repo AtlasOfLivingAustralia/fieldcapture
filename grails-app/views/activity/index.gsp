@@ -29,7 +29,7 @@
     <r:require modules="knockout,jqueryValidationEngine,datepicker,jQueryFileUploadUI,mapWithFeatures,species,activity,attachDocuments,imageViewer"/>
 </head>
 <body>
-<div class="container-fluid validationEngineContainer" id="validation-container">
+<div class="${containerType} validationEngineContainer" id="validation-container">
     <div id="koActivityMainBlock">
         <g:if test="${!printView}">
             <ul class="breadcrumb">
