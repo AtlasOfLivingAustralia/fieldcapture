@@ -1,20 +1,22 @@
 <div id="poi-slider" class="slider-pro">
+
     <div class="sp-slides">
-        <div class="sp-slides">
-            <g:each in="${images}" var="image">
-                <div class="sp-slide">
-                    <a href="${g.createLink(controller: 'project', action:'index', id:image.projectId)}">
-                    <img class="sp-image" src="${image.url}"/>
-                    </a>
-                    <p class="sp-layer sp-white sp-padding"><h3>${image.name}</h3><p>${image.projectName}</p>
+        <g:each in="${images}" var="image">
+            <div class="sp-slide">
 
-                </div>
+                <img class="sp-image" src="${image.url}"/>
 
-            </g:each>
+                <h3 class="sp-layer sp-black" data-width="100%" data-height="30px" data-stay-duration="-1" style="padding-left:5px;">${image.name}</h3>
+                <p class="sp-layer sp-black" data-width="100%" data-height="20px" data-vertical="30px" style="padding-left:5px;">${image.projectName}</p>
+
 
         </div>
 
+        </g:each>
+
     </div>
+
+
 </div>
 <r:script>
     $(function() {
@@ -23,13 +25,14 @@
             height: '400',
             centerImage:true,
             imageScaleMode:'contain',
-            arrows: false, // at the moment we only support 1 image
+            arrows: false,
             buttons: false,
             waitForLayers: true,
             fade: true,
             autoplay: true,
             autoScaleLayers: false,
-            touchSwipe:true
+            touchSwipe:true,
+            buttons:true
         });
     });
 </r:script>
