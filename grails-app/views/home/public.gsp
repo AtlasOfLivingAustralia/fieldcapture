@@ -51,10 +51,10 @@
     <g:else>
     <div id="project-explorer-holder">
         <div class="row-fluid">
-            <span id="project-explorer-icon" class="span12 text-center"><i class="icon-search"></i></span>
+            <span id="project-explorer-icon" class="span12 text-center"><i class="fa fa-search"></i></span>
         </div>
         <div class="row-fluid" id="projectExplorerHolder">
-            <span class="span12 text-center">PROJECT EXPLORER</span>
+            <span class="span12 text-center project-explorer-text">PROJECT EXPLORER</span>
         </div>
         <r:script>
             $(function() {

@@ -67,7 +67,7 @@
 
                 <a href="${createLink(controller:"home")}">
                     %{--<img src="${hubConfig.logoUrl}" alt="${hubConfig.title}" />--}%
-                <img src="http://merit.giraffedesign.com.au/images/ag_Inline_W.png" alt="${hubConfig.title}" />
+                <img src="http://merit.giraffedesign.com.au/images/ag-Inline_W.png" alt="${hubConfig.title}" />
                 </a>
 
                 <g:if test="${hubConfig.title}"><span class="merit">${hubConfig.title}</span></g:if>
