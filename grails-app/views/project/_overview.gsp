@@ -72,24 +72,25 @@
 </g:if>
 
 <g:if test="${outcomes}">
-    <g:if test="${outcomes.environmentalOutcome}">
-        <div class="row-fluid outcome outcome-environmental">
-            <h3>Environmental Outcomes</h3>
-            <p>${outcomes.environmentalOutcome}</p>
-        </div>
-    </g:if>
-    <g:if test="${outcomes.environmentalOutcome}">
-        <div class="row-fluid outcome outcome-economic">
-            <h3>Economic Outcomes</h3>
-            <p>${outcomes.economicOutcome}</p>
-        </div>
-    </g:if>
-    <g:if test="${outcomes.socialOutcome}">
-        <div class="row-fluid outcome outcome-social">
-            <h3>Social Outcomes</h3>
-            <p>${outcomes.socialOutcome}</p>
-        </div>
-    </g:if>
+    <div id="outcomes">
+        <g:if test="${outcomes.environmentalOutcome}">
+            <div class="row-fluid outcome outcome-environmental">
+                <h3>Environmental Outcomes</h3>
+                <p>${outcomes.environmentalOutcome}</p>
+            </div>
+        </g:if>
+        <g:if test="${outcomes.environmentalOutcome}">
+            <div class="row-fluid outcome outcome-economic">
+                <h3>Economic Outcomes</h3>
+                <p>${outcomes.economicOutcome}</p>
+            </div>
+        </g:if>
+        <g:if test="${outcomes.socialOutcome}">
+            <div class="row-fluid outcome outcome-social">
+                <h3>Social Outcomes</h3>
+                <p>${outcomes.socialOutcome}</p>
+            </div>
+        </g:if>
     </div>
 </g:if>
 
@@ -99,16 +100,28 @@
         <span data-bind="html: iframe"></span>
     </div>
 
-    <span data-bind="foreach:primaryImages">
-        <div class="thumbnail with-caption space-after">
-            <img class="img-rounded" data-bind="attr:{src:url, alt:name}" alt="primary image"/>
-            <p class="caption" data-bind="text:name"></p>
-            <p class="attribution" data-bind="visible:attribution"><small><span data-bind="text:attribution"></span></small></p>
-        </div>
-    </span>
+    %{--<span data-bind="foreach:primaryImages">--}%
+        %{--<div class="thumbnail with-caption space-after">--}%
+            %{--<img class="img-rounded" data-bind="attr:{src:url, alt:name}" alt="primary image"/>--}%
+            %{--<p class="caption" data-bind="text:name"></p>--}%
+            %{--<p class="attribution" data-bind="visible:attribution"><small><span data-bind="text:attribution"></span></small></p>--}%
+        %{--</div>--}%
+    %{--</span>--}%
 
 </div>
 
+<g:if test="${publicImages}">
+<div class="row-fluid">
+    <h3>Project photos</h3>
+    <g:render template="thumbnails" model="${[publicImages:publicImages]}"/>
+</div>
+</g:if>
+
+<div class="row-fluid">
+    <h3>Project blog</h3>
+    <g:render template="/shared/blog"/>
+
+</div>
 
 
 <div class="row-fluid" data-bind="visible:newsAndEvents()">

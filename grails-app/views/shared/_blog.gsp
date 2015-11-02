@@ -1,4 +1,4 @@
-<!-- ko:stopBinding true -->
+<!-- ko stopBinding:true -->
 <div id="blog"  data-bind="foreach:entries">
     <div class="blog-entry">
         <img class="blog-image floatleft" data-bind="attr:{src:imageUrl}">

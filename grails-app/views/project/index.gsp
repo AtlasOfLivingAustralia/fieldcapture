@@ -60,7 +60,7 @@
             }
         </style>
     <![endif]-->
-    <r:require modules="gmap3,mapWithFeatures,knockout,datepicker,amplify,jqueryValidationEngine, merit_projects, attachDocuments, wmd"/>
+    <r:require modules="gmap3,mapWithFeatures,knockout,datepicker,amplify,sliderpro, jqueryValidationEngine, merit_projects, attachDocuments, wmd"/>
 </head>
 <body>
 <div id="spinner" class="spinner" style="position: fixed;top: 50%;left: 50%;margin-left: -50px;margin-top: -50px;text-align:center;z-index:1234;overflow: auto;width: 100px;height: 102px;">
@@ -109,7 +109,7 @@
 
     <div class="tab-content" style="overflow:visible;display:none">
         <div class="tab-pane active" id="overview">
-            <g:render template="overview" model="[project:project]"/>
+            <g:render template="overview" model="${projectContent.overview}"/>
         </div>
 
         <div class="tab-pane" id="documents">
@@ -772,13 +772,33 @@
                 }
             });
 
-            // re-establish the previous tab state
-            var storedTab = amplify.store('project-tab-state');
-            var isEditor = ${user?.isEditor?:false};
-            if (storedTab === '') {
-                $('#overview-tab').tab('show');
-            } else if (isEditor) {
-                $(storedTab + '-tab').tab('show');
+            var overviewInitialised = false;
+            $('#overview-tab').on('shown', function() {
+                if (!overviewInitialised) {
+                    initialiseOverview();
+
+                    overviewInitialised = true;
+                }
+            });
+            function initialiseOverview() {
+                $( '#public-images-slider' ).sliderPro({
+                        width: '100%',
+                        height:500,
+                        arrows: true,
+                        waitForLayers:true,
+                        buttons: false,
+                        autoScaleLayers: false,
+                        thumbnailWidth:300,
+                        thumbnailHeight:200
+                    });
+                    $('.sp-slides-container').hide();
+                    var imageHidden = true;
+                    $('.sp-thumbnail-image').on('click', function() {
+                        if (imageHidden) {
+                            $('.sp-slides-container').slideDown('slow');
+                            imageHidden = false;
+                        }
+                    })
             }
 
             // Non-editors should get tooltip and popup when trying to click other tabs
@@ -797,6 +817,16 @@
             //Page loading indicator.
 			$('.spinner').hide();
         	$('.tab-content').fadeIn();
+
+        	// re-establish the previous tab state
+            var storedTab = amplify.store('project-tab-state');
+            var isEditor = ${user?.isEditor?:false};
+
+            initialiseOverview();
+            if (storedTab !== '') {
+                $(storedTab + '-tab').tab('show');
+            }
+
         });// end window.load
 
        /**
