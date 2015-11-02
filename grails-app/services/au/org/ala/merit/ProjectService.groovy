@@ -13,6 +13,10 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
 
     def reportService
 
+    static final String FINAL_REPORT_ACTIVITY_TYPE = 'Outcomes, Evaluation and Learning - final report'
+    static final String OUTCOMES_OUTPUT_TYPE = 'Outcomes'
+    static final String COMPLETE = 'completed'
+
     static dateWithTime = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss")
     static dateWithTimeFormat2 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
     static convertTo = new SimpleDateFormat("dd MMM yyyy")
@@ -408,6 +412,23 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
 
     }
 
+
+    String getProjectOutcomes(Map project) {
+        def outcomes = [:]
+        if (COMPLETE.equalsIgnoreCase(project.status)) {
+            def activity = project.activities?.find { it.type == FINAL_REPORT_ACTIVITY_TYPE }
+
+            def outcomeOutput = activity?.outputs?.find { it.name == OUTCOMES_OUTPUT_TYPE }
+
+            outcomes = [environmentalOutcomes: outcomeOutput?.data?.projectEnvironmentalOutcomes,
+                        economicOutcomes     : outcomeOutput?.data?.projectEconomicOutcomes,
+                        socialOutcomes       : outcomeOutput?.data?.projectSocialOutcomes]
+        }
+        outcomes
+
+    }
+
+
     def createHTMLStageReport(param) {
 
         def project = param.project
@@ -648,8 +669,6 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
         }
         return false;
     }
-
-
 
 
 }
