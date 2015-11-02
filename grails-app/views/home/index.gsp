@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="http://merit.giraffedesign.com.au/css/project-explorer.css">
     <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
     <title>Home | Field Capture</title>
-    <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
+    <script type="text/javascript" src="${grailsApplication.config.google.maps.url}&libraries=visualization"></script>
     <r:script disposition="head">
     var fcConfig = {
         baseUrl: "${grailsApplication.config.grails.serverURL}",
