@@ -418,12 +418,15 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
         if (COMPLETE.equalsIgnoreCase(project.status)) {
             def activity = project.activities?.find { it.type == FINAL_REPORT_ACTIVITY_TYPE }
 
-            activity = activityService.get(activity.activityId)
-            def outcomeOutput = activity?.outputs?.find { it.name == OUTCOMES_OUTPUT_TYPE }
+            if (activity) {
+                activity = activityService.get(activity.activityId)
+                def outcomeOutput = activity?.outputs?.find { it.name == OUTCOMES_OUTPUT_TYPE }
 
-            outcomes = [environmentalOutcomes: outcomeOutput?.data?.projectEnvironmentalOutcomes,
-                        economicOutcomes     : outcomeOutput?.data?.projectEconomicOutcomes,
-                        socialOutcomes       : outcomeOutput?.data?.projectSocialOutcomes]
+                outcomes = [environmentalOutcomes: outcomeOutput?.data?.projectEnvironmentalOutcomes,
+                            economicOutcomes     : outcomeOutput?.data?.projectEconomicOutcomes,
+                            socialOutcomes       : outcomeOutput?.data?.projectSocialOutcomes]
+            }
+
         }
         outcomes
 
