@@ -67,9 +67,33 @@
     </div>
 </div>
 
+<g:if test="${metrics.targets}">
+    <g:render template="outputTargets" model="${[targets:metrics.targets]}"/>
+</g:if>
+
+<g:if test="${outcomes}">
+    <g:if test="${outcomes.environmentalOutcome}">
+        <div class="row-fluid outcome outcome-environmental">
+            <h3>Environmental Outcomes</h3>
+            <p>${outcomes.environmentalOutcome}</p>
+        </div>
+    </g:if>
+    <g:if test="${outcomes.environmentalOutcome}">
+        <div class="row-fluid outcome outcome-economic">
+            <h3>Economic Outcomes</h3>
+            <p>${outcomes.economicOutcome}</p>
+        </div>
+    </g:if>
+    <g:if test="${outcomes.socialOutcome}">
+        <div class="row-fluid outcome outcome-social">
+            <h3>Social Outcomes</h3>
+            <p>${outcomes.socialOutcome}</p>
+        </div>
+    </g:if>
+    </div>
+</g:if>
+
 <div class="row-fluid">
-
-
 
     <div data-bind="foreach: embeddedVideos">
         <span data-bind="html: iframe"></span>
