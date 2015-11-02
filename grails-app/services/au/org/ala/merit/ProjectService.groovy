@@ -413,7 +413,7 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
     }
 
 
-    String getProjectOutcomes(Map project) {
+    Map getProjectOutcomes(Map project) {
         def outcomes = [:]
         if (COMPLETE.equalsIgnoreCase(project.status)) {
             def activity = project.activities?.find { it.type == FINAL_REPORT_ACTIVITY_TYPE }

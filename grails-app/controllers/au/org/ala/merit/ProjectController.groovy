@@ -14,7 +14,9 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
     /** Overrides the projectContent method in the fieldcapture controller to include the MERI plan and risks and threats content */
     protected Map projectContent(project, user, programs) {
         def program = programs.programs.find{it.name == project.associatedProgram}
-        def model = [overview:[label:'Overview', visible: true, default:true, type:'tab', outcomes:projectService.getProjectOutcomes(project)],
+        def publicImages = project.documents.findAll{it.public == true && it.thirdPartyConsentDeclarationMade == true && it.type == 'image'}
+        def imagesModel = publicImages.collect {[name:it.name, projectName:project.name, url:it.url]}
+        def model = [overview:[label:'Overview', visible: true, default:true, type:'tab', outcomes:projectService.getProjectOutcomes(project), publicImages:imagesModel],
          documents:[label:'Documents', visible: true, type:'tab'],
          details:[label:'MERI Plan', disabled:!user?.hasViewAccess, disabled:!user?.hasViewAccess, visible:program?.optionalProjectContent?.contains('MERI Plan'), type:'tab'],
          plan:[label:'Activities', visible:true, disabled:!user?.hasViewAccess, type:'tab', reports:reportService.getReportsForProject(project.projectId)],
