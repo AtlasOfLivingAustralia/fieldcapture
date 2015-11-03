@@ -94,10 +94,10 @@
     </div>
 </g:if>
 
-<div class="row-fluid">
-
+<div class="row-fluid multimedia" data-bind="if:embeddedVideos">
+    <h3>Multimedia</h3>
     <div data-bind="foreach: embeddedVideos">
-        <span data-bind="html: iframe"></span>
+        <span class="span6" data-bind="html: iframe"></span>
     </div>
 
     %{--<span data-bind="foreach:primaryImages">--}%
@@ -117,27 +117,31 @@
 </div>
 </g:if>
 
-<div class="row-fluid">
-    <h3>Project blog</h3>
+<hr/>
+
+<div class="row-fluid" id="project-blog">
+    <h2>Project blog</h2>
+
+    <h3>News & events</h3>
     <g:render template="/shared/blog"/>
 
-</div>
 
+%{--<div class="row-fluid" data-bind="visible:newsAndEvents()">--}%
+    %{--<div class="well">--}%
+        %{--<h4 >News and events: </h4>--}%
+        %{--<div id="newsAndEventsDiv" data-bind="html:newsAndEvents.markdownToHtml()" ></div>--}%
+    %{--</div>--}%
+%{--</div>--}%
 
-<div class="row-fluid" data-bind="visible:newsAndEvents()">
-    <div class="well">
-        <h4 >News and events: </h4>
-        <div id="newsAndEventsDiv" data-bind="html:newsAndEvents.markdownToHtml()" ></div>
-    </div>
-</div>
-
+<hr/>
 
 
 <div class="row-fluid" data-bind="visible:projectStories()">
-    <div class="well">
-        <h4>Project stories: </h4>
-        <div id="projectStoriesDiv" data-bind="html:projectStories.markdownToHtml()"></div>
-    </div>
+    <h3>Project stories</h3>
+    <div id="projectStoriesDiv" data-bind="html:projectStories.markdownToHtml()"></div>
+
+</div>
+
 </div>
 
 
