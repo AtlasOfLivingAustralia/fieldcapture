@@ -1,4 +1,4 @@
-<div class="row-fluid">
+<div class="row-fluid outputTargets">
     <div class="span4">
         <g:set var="count" value="${targets.size()}"/>
         <g:each in="${targets?.entrySet()}" var="metric" status="i">

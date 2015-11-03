@@ -17,7 +17,7 @@ class ProjectControllerSpec extends Specification {
 
     def userServiceStub = Stub(UserService)
     def metadataServiceStub = Stub(MetadataService)
-    def projectServiceStub = Stub(au.org.ala.fieldcapture.ProjectService)
+    def projectServiceStub = Stub(ProjectService)
     def siteServiceStub = Stub(SiteService)
     def roleServiceStub = Stub(RoleService)
     def activityServiceStub = Stub(ActivityService)
@@ -40,6 +40,7 @@ class ProjectControllerSpec extends Specification {
         userServiceStub.isProjectStarredByUser(_, _) >> [isProjectStarredByUser:true]
         roleServiceStub.getRoles() >> []
         reportServiceStub.getReportsForProject(_) >> []
+
     }
 
 

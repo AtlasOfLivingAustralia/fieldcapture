@@ -50,17 +50,36 @@
 
     </r:script>
 
-    <!--[if gte IE 8]>
+
         <style>
-           .thumbnail > img {
-                max-width: 400px;
+           .thumbnail-image-container > img {
+               width: 300px;
+               height: auto;
             }
-            .thumbnail {
-                max-width: 410px;
+            .thumbnail-image-container {
+                width: 300px;
+                height: 280px;
+                overflow:hidden;
+            }
+            .thumbnail-container {
+                height:300px;
+                position:relative;
+            }
+            .thumbnail-container .caption {
+                position: absolute;
+                bottom:0;
+                padding-bottom:0;
+                margin-bottom:0;
+            }
+
+            #public-images-slider{
+              overflow: auto;
+              width: 100%;
+              height: 300px;
             }
         </style>
-    <![endif]-->
-    <r:require modules="gmap3,mapWithFeatures,knockout,datepicker,amplify,sliderpro, jqueryValidationEngine, merit_projects, attachDocuments, wmd"/>
+
+    <r:require modules="gmap3,mapWithFeatures,knockout,datepicker,amplify,imageViewer, jqueryValidationEngine, merit_projects, attachDocuments, wmd"/>
 </head>
 <body>
 <div id="spinner" class="spinner" style="position: fixed;top: 50%;left: 50%;margin-left: -50px;margin-top: -50px;text-align:center;z-index:1234;overflow: auto;width: 100px;height: 102px;">
@@ -781,24 +800,8 @@
                 }
             });
             function initialiseOverview() {
-                $( '#public-images-slider' ).sliderPro({
-                        width: '100%',
-                        height:500,
-                        arrows: true,
-                        waitForLayers:true,
-                        buttons: false,
-                        autoScaleLayers: false,
-                        thumbnailWidth:300,
-                        thumbnailHeight:200
-                    });
-                    $('.sp-slides-container').hide();
-                    var imageHidden = true;
-                    $('.sp-thumbnail-image').on('click', function() {
-                        if (imageHidden) {
-                            $('.sp-slides-container').slideDown('slow');
-                            imageHidden = false;
-                        }
-                    })
+                $( '#public-images-slider' ).mThumbnailScroller({});
+                $('#public-images-slider .fancybox').fancybox();
             }
 
             // Non-editors should get tooltip and popup when trying to click other tabs
