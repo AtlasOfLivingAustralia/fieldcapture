@@ -15,8 +15,9 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
     protected Map projectContent(project, user, programs) {
         def program = programs.programs.find{it.name == project.associatedProgram}
         def publicImages = project.documents.findAll{it.public == true && it.thirdPartyConsentDeclarationMade == true && it.type == 'image'}
+        def blog = project.blog
         def imagesModel = publicImages.collect {[name:it.name, projectName:project.name, url:it.url]}
-        def model = [overview:[label:'Overview', visible: true, default:true, type:'tab', outcomes:projectService.getProjectOutcomes(project), publicImages:imagesModel],
+        def model = [overview:[label:'Overview', visible: true, default:true, type:'tab', outcomes:projectService.getProjectOutcomes(project), publicImages:imagesModel, blog:blog],
          documents:[label:'Documents', visible: true, type:'tab'],
          details:[label:'MERI Plan', disabled:!user?.hasViewAccess, disabled:!user?.hasViewAccess, visible:program?.optionalProjectContent?.contains('MERI Plan'), type:'tab'],
          plan:[label:'Activities', visible:true, disabled:!user?.hasViewAccess, type:'tab', reports:reportService.getReportsForProject(project.projectId)],
