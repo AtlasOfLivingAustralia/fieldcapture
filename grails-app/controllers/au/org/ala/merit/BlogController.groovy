@@ -37,4 +37,11 @@ class BlogController {
         Map response = [status:result.status]
         render response as JSON
     }
+
+    def delete(String id) {
+
+        def result = blogService.delete(params.projectId, id)
+
+        chain controller: 'admin', action: 'editSiteBlog'
+    }
 }

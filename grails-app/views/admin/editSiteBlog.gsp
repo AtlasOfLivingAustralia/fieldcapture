@@ -11,6 +11,7 @@
            imageLocation:"${resource(dir:'/images')}"
         }
     </r:script>
+    <g:set var="here" value="${g.createLink(action:'editSiteBlog')}"/>
 </head>
 
 <body>
@@ -20,7 +21,9 @@
     <g:if test="${blog.size() > 0}">
     <ul>
         <g:each in="${blog}" var="blogEntry">
-        <li>${blogEntry.title} | Edit | Delete</li>
+        <li>${blogEntry.title} |
+            <a href="${g.createLink(controller: 'blog', action:'edit', id:blogEntry.blogEntryId, params:[returnTo:here])}">Edit</a> |
+            <a href="${g.createLink(controller:'blog', action:'delete', id:blogEntry.blogEntryId, params:[returnTo:here])}">Delete</a></li>
         </g:each>
 
     </ul>
