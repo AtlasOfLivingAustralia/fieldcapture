@@ -96,17 +96,14 @@
 
 <div class="multimedia" data-bind="if:embeddedVideos">
     <h3>Multimedia</h3>
-    <!-- ko foreach: embeddedVideos -->
-
-        <div class="row-fluid" data-bind="if:$index() % 2 == 0" >
-            <span class="span6" data-bind="html: iframe"></span>
+        <div class="row-fluid" data-bind="repeat:{foreach:embeddedVideos, step:2}" >
+            <!-- ko if:embeddedVideos()[$index] -->
+            <span class="span6" data-bind="html: embeddedVideos()[$index].iframe"></span>
+            <!-- /ko -->
+            <!-- ko if:embeddedVideos()[$index+1] -->
+            <span class="span6" data-bind="html: embeddedVideos()[$index+1].iframe"></span>
+            <!-- /ko -->
         </div>
-        <!-- ko if:$index() % 2 == 1 -->
-            <span class="span6" data-bind="html: iframe"></span>
-        <!-- /ko -->
-
-    <!-- /ko -->
-
 </div>
 
 <g:if test="${publicImages}">
