@@ -30,7 +30,7 @@ class BlogService {
             result = updateSiteBlog(id, blogEntry)
         }
         else {
-            result = updateProjectBlog(id, blogEntry)
+            result = updateProjectBlog(projectId, id, blogEntry)
         }
         result
     }
@@ -52,7 +52,7 @@ class BlogService {
 
     }
 
-    def updateProjectBlog(String id, Map blogEntry) {
+    def updateProjectBlog(String projectId, String id, Map blogEntry) {
         Map project = projectService.get(projectId)
 
         if (!project.blog) {
