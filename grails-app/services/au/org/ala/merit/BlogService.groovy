@@ -10,10 +10,17 @@ class BlogService {
     SettingService settingService
 
     Map get(String projectId, String blogEntryId) {
-        Map project = projectService.get(projectId)
-
         int index = Integer.parseInt(blogEntryId)
-        return project.blog[index]
+        List<Map> blog
+        if (!projectId) {
+            blog = getSiteBlog()
+        }
+        else {
+            Map project = projectService.get(projectId)
+            blog = project.blog
+        }
+
+        return blog[index]
     }
 
     List<Map> getSiteBlog() {
@@ -34,6 +41,40 @@ class BlogService {
         }
         result
     }
+
+    def delete(String projectId, String id) {
+        def result
+        if (projectId) {
+            result = deleteProjectBlogEntry(projectId, id)
+        }
+        else {
+            result = deleteSiteBlogEntry(id)
+        }
+        result
+    }
+
+    private def deleteProjectBlogEntry(String projectId, String id) {
+        Map project = projectService.get(projectId)
+
+        if (project.blog) {
+
+            int index = Integer.parseInt(id)
+            project.blog.remove(index)
+        }
+
+        projectService.update(projectId, project)
+    }
+
+    private def deleteSiteBlogEntry(String id) {
+        List blog = getSiteBlog()
+
+
+        int index = Integer.parseInt(id)
+        blog.remove(index)
+
+        settingService.set(SITE_BLOG_KEY, ([blog:blog] as JSON).toString())
+    }
+
 
     def updateSiteBlog(String id, Map blogEntry) {
 
