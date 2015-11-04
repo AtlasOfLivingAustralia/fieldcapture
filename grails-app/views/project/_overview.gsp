@@ -94,19 +94,18 @@
     </div>
 </g:if>
 
-<div class="row-fluid multimedia" data-bind="if:embeddedVideos">
+<div class="multimedia" data-bind="if:embeddedVideos">
     <h3>Multimedia</h3>
-    <div data-bind="foreach: embeddedVideos">
-        <span class="span6" data-bind="html: iframe"></span>
-    </div>
+    <!-- ko foreach: embeddedVideos -->
 
-    %{--<span data-bind="foreach:primaryImages">--}%
-        %{--<div class="thumbnail with-caption space-after">--}%
-            %{--<img class="img-rounded" data-bind="attr:{src:url, alt:name}" alt="primary image"/>--}%
-            %{--<p class="caption" data-bind="text:name"></p>--}%
-            %{--<p class="attribution" data-bind="visible:attribution"><small><span data-bind="text:attribution"></span></small></p>--}%
-        %{--</div>--}%
-    %{--</span>--}%
+        <div class="row-fluid" data-bind="if:$index() % 2 == 0" >
+            <span class="span6" data-bind="html: iframe"></span>
+        </div>
+        <!-- ko if:$index() % 2 == 1 -->
+            <span class="span6" data-bind="html: iframe"></span>
+        <!-- /ko -->
+
+    <!-- /ko -->
 
 </div>
 
@@ -123,22 +122,24 @@
     <h2>Project blog</h2>
 
     <h3>News & events</h3>
-    <g:render template="/shared/blog"/>
+    <g:render template="/shared/blog" model="${[blog:blog, type:'News and events']}"/>
 
-
-%{--<div class="row-fluid" data-bind="visible:newsAndEvents()">--}%
-    %{--<div class="well">--}%
-        %{--<h4 >News and events: </h4>--}%
-        %{--<div id="newsAndEventsDiv" data-bind="html:newsAndEvents.markdownToHtml()" ></div>--}%
-    %{--</div>--}%
-%{--</div>--}%
+    %{-- Legacy news & events section--}%
+    <div class="row-fluid" data-bind="if:newsAndEvents()">
+        <div class="span12" id="newsAndEventsDiv" data-bind="html:newsAndEvents.markdownToHtml()" ></div>
+    </div>
 
 <hr/>
 
 
-<div class="row-fluid" data-bind="visible:projectStories()">
+<div class="row-fluid">
     <h3>Project stories</h3>
-    <div id="projectStoriesDiv" data-bind="html:projectStories.markdownToHtml()"></div>
+    <g:render template="/shared/blog" model="${[blog:blog, type:'Project stories']}"/>
+
+    %{-- Legacy news & events section--}%
+    <div class="row-fluid" data-bind="visible:projectStories()">
+        <div class="span12" id="projectStoriesDiv" data-bind="html:projectStories.markdownToHtml()"></div>
+    </div>
 
 </div>
 

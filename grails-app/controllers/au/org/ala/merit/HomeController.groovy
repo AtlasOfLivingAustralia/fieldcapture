@@ -18,6 +18,7 @@ class HomeController {
     def reportService
     def documentService
     def statisticsFactory
+    def blogService
 
     @PreAuthorise(accessLevel = 'alaAdmin', redirectController = "admin")
     def advanced() {
@@ -82,8 +83,9 @@ class HomeController {
         def helpPage = g.createLink([action:'help'])
         def helpLinks = documentService.findAllHelpResources()
         helpLinks << [name:'MORE RESOURCES', type:'text', url:helpPage]
+        def blog = blogService.getSiteBlog()
 
-        def model = [statistics:statistics, helpLinks:helpLinks, images:images]
+        def model = [statistics:statistics, helpLinks:helpLinks, images:images, blog:blog]
         if (params.fq) {
             model.putAll(projectExplorerModel())
             model.showProjectExplorer = true
