@@ -55,12 +55,7 @@
         <markdown:renderHtml>${description}</markdown:renderHtml>
     </div>
 </div>
-
     <g:render template="projectFinder"/>
-
-    <p>&nbsp;</p>
-    <fc:getSettingContent settingType="${au.org.ala.fieldcapture.SettingPageType.ABOUT}"/>
-
 </div>
 
 
