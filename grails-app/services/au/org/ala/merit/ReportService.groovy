@@ -13,6 +13,7 @@ class ReportService {
     def projectService
     def authService
     def searchService
+    def commonService
 
     /**
      * This method supports automatically creating reporting activities for a project that re-occur at defined intervals.
@@ -219,6 +220,22 @@ class ReportService {
     }
 
     public Number outputTarget(String scoreLabel, List<String> filters) {
-        return 0
+        def reportParams = [scores:scoreLabel]
+        if (filters) {
+            reportParams.fq = filters
+        }
+        def url = grailsApplication.config.ecodata.baseUrl + 'search/targetsReportByScoreLabel' + commonService.buildUrlParamsFromMap(reportParams)
+        def results = webService.getJson(url, 300000)
+        if (!results || !results.targets) {
+            return 0
+        }
+        BigDecimal result = new BigDecimal(0)
+        results.targets.each {k, v ->
+            if (v[scoreLabel]) {
+                result = result.plus(new BigDecimal(v[scoreLabel].total))
+            }
+        }
+        println results
+        return result
     }
 }
