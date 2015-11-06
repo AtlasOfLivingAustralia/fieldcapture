@@ -17,7 +17,7 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
         def publicImages = project.documents.findAll{it.public == true && it.thirdPartyConsentDeclarationMade == true && it.type == 'image'}
         def blog = project.blog
         def imagesModel = publicImages.collect {[name:it.name, projectName:project.name, url:it.url]}
-        def model = [overview:[label:'Overview', visible: true, default:true, type:'tab', outcomes:projectService.getProjectOutcomes(project), publicImages:imagesModel, blog:blog],
+        def model = [overview:[label:'Overview', visible: true, default:true, type:'tab', /*outcomes:projectService.getProjectOutcomes(project),*/ publicImages:imagesModel, blog:blog],
          documents:[label:'Documents', visible: true, type:'tab'],
          details:[label:'MERI Plan', disabled:!user?.hasViewAccess, disabled:!user?.hasViewAccess, visible:program?.optionalProjectContent?.contains('MERI Plan'), type:'tab'],
          plan:[label:'Activities', visible:true, disabled:!user?.hasViewAccess, type:'tab', reports:reportService.getReportsForProject(project.projectId)],
@@ -104,7 +104,7 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
         String projectId =  params.id
         String stageName = params.stageName
         String status = params.status
-		
+
 		if(stageName && projectId && status) {
 			def project = projectService.get(projectId, 'all')
 			def activities = activityService.activitiesForProject(projectId);
