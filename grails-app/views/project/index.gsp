@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <link rel="stylesheet" href="http://merit.giraffedesign.com.au/css/project.css">
     <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
     <title>${project?.name.encodeAsHTML()} | Project | Field Capture</title>
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
@@ -34,32 +35,57 @@
         sldPolgonDefaultUrl: "${grailsApplication.config.sld.polgon.default.url}",
         sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}",
         organisationLinkBaseUrl: "${createLink(controller:'organisation', action:'index')}",
-        imageLocation:"${resource(dir:'/images/filetypes')}",
+        imageLocation:"${resource(dir:'/images')}",
         returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}",
-        documentUpdateUrl: "${createLink(controller:"proxy", action:"documentUpdate")}",
-        documentDeleteUrl: "${createLink(controller:"proxy", action:"deleteDocument")}"
+        documentUpdateUrl: "${createLink(controller:"document", action:"documentUpdate")}",
+        documentDeleteUrl: "${createLink(controller:"document", action:"deleteDocument")}",
+        pdfgenUrl: "${createLink(controller: 'resource', action: 'pdfUrl')}",
+        pdfViewer: "${createLink(controller: 'resource', action: 'viewer')}",
+        imgViewer: "${createLink(controller: 'resource', action: 'imageviewer')}",
+        audioViewer: "${createLink(controller: 'resource', action: 'audioviewer')}",
+        videoViewer: "${createLink(controller: 'resource', action: 'videoviewer')}",
+        errorViewer: "${createLink(controller: 'resource', action: 'error')}",
         },
         here = window.location.href;
 
     </r:script>
 
-    <!--[if gte IE 8]>
+
         <style>
-           .thumbnail > img {
-                max-width: 400px;
+           .thumbnail-image-container > img {
+               width: 300px;
+               height: auto;
             }
-            .thumbnail {
-                max-width: 410px;
+            .thumbnail-image-container {
+                width: 300px;
+                height: 280px;
+                overflow:hidden;
+            }
+            .thumbnail-container {
+                height:300px;
+                position:relative;
+            }
+            .thumbnail-container .caption {
+                position: absolute;
+                bottom:0;
+                padding-bottom:0;
+                margin-bottom:0;
+            }
+
+            #public-images-slider{
+              overflow: auto;
+              width: 100%;
+              height: 300px;
             }
         </style>
-    <![endif]-->
-    <r:require modules="gmap3,mapWithFeatures,knockout,datepicker,amplify,jqueryValidationEngine, merit_projects, attachDocuments, wmd"/>
+
+    <r:require modules="gmap3,mapWithFeatures,knockout,datepicker,amplify,imageViewer, jqueryValidationEngine, merit_projects, attachDocuments, wmd"/>
 </head>
 <body>
 <div id="spinner" class="spinner" style="position: fixed;top: 50%;left: 50%;margin-left: -50px;margin-top: -50px;text-align:center;z-index:1234;overflow: auto;width: 100px;height: 102px;">
-    <img id="img-spinner" width="50" height="50" src="${request.contextPath}/images/loading.gif" alt="Loading"/>
+    <r:img id="img-spinner" width="50" height="50" dir="images" file="loading.gif" alt="Loading"/>
 </div>
-<div class="container-fluid">
+<div class="${containerType}">
 
     <ul class="breadcrumb">
         <li>
@@ -102,7 +128,7 @@
 
     <div class="tab-content" style="overflow:visible;display:none">
         <div class="tab-pane active" id="overview">
-            <g:render template="overview" model="[project:project]"/>
+            <g:render template="overview" model="${projectContent.overview}"/>
         </div>
 
         <div class="tab-pane" id="documents">
@@ -120,7 +146,7 @@
                     <div class="well well-small">
                         <label><b>MERI attachments:</b></label>
                         <g:render plugin="fieldcapture-plugin" template="/shared/listDocuments"
-                                  model="[useExistingModel: true,editable:false, filterBy: 'programmeLogic', ignore: '', imageUrl:resource(dir:'/images/filetypes'),containerId:'overviewDocumentList']"/>
+                                  model="[useExistingModel: true,editable:false, filterBy: 'programmeLogic', ignore: '', imageUrl:resource(dir:'/images'),containerId:'overviewDocumentList']"/>
                     </div>
                 </div>
             </div>
@@ -132,7 +158,7 @@
             <div class="tab-pane" id="plan">
             <!-- PLANS -->
                 <g:render template="/shared/activitiesPlan"
-                    model="[activities:activities ?: [], sites:project.sites ?: [], showSites:true]"/>
+                    model="[activities:activities ?: [], sites:project.sites ?: [], showSites:true, reports:projectContent.plan?.reports]"/>
                 <g:if test="${user?.isCaseManager}">
                     <div class="validationEngineContainer" id="grantmanager-validation">
                         <g:render template="grantManagerSettings" model="[project:project]"/>
@@ -242,7 +268,7 @@
                                 <h3>Project Documents</h3>
                                 <div class="row-fluid">
                                     <div class="span10">
-                                        <g:render plugin="fieldcapture-plugin" template="/shared/listDocuments"
+                                        <g:render plugin="fieldcapture-plugin" template="/shared/editDocuments"
                                                   model="[useExistingModel: true,editable:true, filterBy: 'all', ignore: '', imageUrl:resource(dir:'/images/filetypes'),containerId:'adminDocumentList']"/>
                                     </div>
                                 </div>
@@ -590,23 +616,6 @@
                             promoteOnHomepage:self.promoteOnHomepage()
                         };
 
-                        if (self.regenerateProjectTimeline()) {
-                            var dates = {
-                                plannedStartDate: self.plannedStartDate(),
-                                plannedEndDate: self.plannedEndDate()
-                            };
-                            var program = $.grep(self.transients.programs, function(program, index) {
-                                return program.name == self.associatedProgram();
-                            });
-
-                            if (program[0]) {
-                                addTimelineBasedOnStartDate(dates, program[0].reportingPeriod, program[0].reportingPeriodAlignedToCalendar);
-                            }
-                            else {
-                                addTimelineBasedOnStartDate(dates);
-                            }
-                            jsData.timeline = dates.timeline;
-                        }
                         // this call to stringify will make sure that undefined values are propagated to
                         // the update call - otherwise it is impossible to erase fields
                         var json = JSON.stringify(jsData, function (key, value) {
@@ -782,13 +791,17 @@
                 }
             });
 
-            // re-establish the previous tab state
-            var storedTab = amplify.store('project-tab-state');
-            var isEditor = ${user?.isEditor?:false};
-            if (storedTab === '') {
-                $('#overview-tab').tab('show');
-            } else if (isEditor) {
-                $(storedTab + '-tab').tab('show');
+            var overviewInitialised = false;
+            $('#overview-tab').on('shown', function() {
+                if (!overviewInitialised) {
+                    initialiseOverview();
+
+                    overviewInitialised = true;
+                }
+            });
+            function initialiseOverview() {
+                $( '#public-images-slider' ).mThumbnailScroller({});
+                $('#public-images-slider .fancybox').fancybox();
             }
 
             // Non-editors should get tooltip and popup when trying to click other tabs
@@ -807,6 +820,16 @@
             //Page loading indicator.
 			$('.spinner').hide();
         	$('.tab-content').fadeIn();
+
+        	// re-establish the previous tab state
+            var storedTab = amplify.store('project-tab-state');
+            var isEditor = ${user?.isEditor?:false};
+
+            initialiseOverview();
+            if (storedTab !== '') {
+                $(storedTab + '-tab').tab('show');
+            }
+
         });// end window.load
 
        /**

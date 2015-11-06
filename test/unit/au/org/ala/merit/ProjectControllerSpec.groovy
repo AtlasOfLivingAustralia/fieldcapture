@@ -17,11 +17,12 @@ class ProjectControllerSpec extends Specification {
 
     def userServiceStub = Stub(UserService)
     def metadataServiceStub = Stub(MetadataService)
-    def projectServiceStub = Stub(au.org.ala.fieldcapture.ProjectService)
+    def projectServiceStub = Stub(ProjectService)
     def siteServiceStub = Stub(SiteService)
     def roleServiceStub = Stub(RoleService)
     def activityServiceStub = Stub(ActivityService)
     def commonServiceStub = Stub(CommonService)
+    def reportServiceStub = Stub(ReportService)
 
 
     void setup() {
@@ -32,11 +33,14 @@ class ProjectControllerSpec extends Specification {
         controller.roleService = roleServiceStub
         controller.activityService = activityServiceStub
         controller.commonService = commonServiceStub
+        controller.reportService = reportServiceStub
         projectServiceStub.getMembersForProjectId(_) >> []
         metadataServiceStub.organisationList() >> [list:[]]
         userServiceStub.getOrganisationIdsForUserId(_) >> []
         userServiceStub.isProjectStarredByUser(_, _) >> [isProjectStarredByUser:true]
         roleServiceStub.getRoles() >> []
+        reportServiceStub.getReportsForProject(_) >> []
+
     }
 
 

@@ -630,7 +630,7 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
             results << "Project ${project.grantId} actual commencement date  ${plannedStartDate} plannedStartDate ${project.plannedStartDate}\n"
         }
 
-        def newDetails= [plannedStartDate: plannedStartDate, contractStartDate: plannedStartDate, plannedEndDate: plannedEndDate, contractEndDate: plannedEndDate, workOrderId: workOrderId, timeline:null]
+        def newDetails= [plannedStartDate: plannedStartDate, contractStartDate: plannedStartDate, plannedEndDate: plannedEndDate, contractEndDate: plannedEndDate, workOrderId: workOrderId]
         resp = projectService.update(project.projectId, newDetails)
         if (!resp || resp.error) {
             errors << "Unable to update project ${project.grantId} : ${resp?.error}"

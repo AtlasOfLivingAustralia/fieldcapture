@@ -22,16 +22,16 @@
         siteViewUrl: "${createLink(controller: 'site', action: 'index')}/",
         bieUrl: "${grailsApplication.config.bie.baseURL}",
         speciesProfileUrl: "${createLink(controller: 'proxy', action: 'speciesProfile')}",
-        documentUpdateUrl: "${g.createLink(controller:"proxy", action:"documentUpdate")}",
-        documentDeleteUrl: "${g.createLink(controller:"proxy", action:"deleteDocument")}",
-        imageLocation:"${resource(dir:'/images/filetypes')}"
+        documentUpdateUrl: "${g.createLink(controller:"document", action:"documentUpdate")}",
+        documentDeleteUrl: "${g.createLink(controller:"document", action:"deleteDocument")}",
+        imageLocation:"${resource(dir:'/images')}"
         },
         here = document.location.href;
     </r:script>
     <r:require modules="knockout,jqueryValidationEngine,datepicker,jQueryFileUploadUI,activity,mapWithFeatures,attachDocuments,species,amplify,imageViewer"/>
 </head>
 <body>
-<div class="container-fluid validationEngineContainer" id="validation-container">
+<div class="${containerType} validationEngineContainer" id="validation-container">
 <div id="koActivityMainBlock">
     <g:if test="${!printView}">
         <ul class="breadcrumb">

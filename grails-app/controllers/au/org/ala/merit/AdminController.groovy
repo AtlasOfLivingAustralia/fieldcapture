@@ -9,7 +9,8 @@ import org.springframework.web.multipart.MultipartHttpServletRequest
 @PreAuthorise(accessLevel = 'officer', redirectController = "home")
 class AdminController extends au.org.ala.fieldcapture.AdminController {
 
-    def organisationService
+    OrganisationService organisationService
+    BlogService blogService
 
     def gmsProjectImport() {
         render(view:'import', model:[:])
@@ -292,5 +293,33 @@ class AdminController extends au.org.ala.fieldcapture.AdminController {
 
     }
 
+    def createReports() {
+        def offset = 0
+        def max = 100
+
+        def projects = searchService.allProjects([max:max, offset:offset])
+
+        while (offset < projects.hits.total) {
+
+            offset+=max
+            projects = searchService.allProjects([max:max, offset:offset])
+
+            projects.hits?.hits?.each { hit ->
+                def project = hit._source
+                if (!project.timeline) {
+                    projectService.generateProjectStageReports(project.projectId)
+                    println "Generated reports for project ${project.projectId}"
+                }
+            }
+            println offset
+
+        }
+
+    }
+
+    def editSiteBlog() {
+        List<Map> blog = blogService.getSiteBlog()
+        [blog:blog]
+    }
 
 }

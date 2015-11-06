@@ -1,0 +1,259 @@
+{
+  "statistics": {
+    "ts1": {
+      "config": "1",
+      "title": "Threatened Species Strategy",
+      "label": "Number of projects addressing threatened species",
+      "units": "",
+      "type": "projectCount",
+      "projectFilter": [
+        "meriPlanAssetFacet:Threatened Species"
+      ]
+    },
+    "r1": {
+      "config": "2",
+      "title": "Reef",
+      "label": "Total No. of farming entities adopting sustainable practice change",
+      "units": "",
+      "type": "score",
+      "projectFilter": [
+        "associatedProgramFacet:Reef Trust"
+      ],
+      "scoreLabel": "Total No. of farming entities adopting sustainable practice change"
+    },
+    "r2": {
+      "config": "3",
+      "title": "Reef",
+      "label": "Weight of debris removed",
+      "units": "Tonnes",
+      "type": "score",
+      "projectFilter": [
+        "associatedProgramFacet:Reef Trust"
+      ],
+      "scoreLabel": "Weight of debris removed (Tonnes)"
+    },
+    "r3": {
+      "config": "4",
+      "title": "Reef",
+      "label": "Total length of fence",
+      "units": "Km",
+      "type": "score",
+      "projectFilter": [
+        "associatedProgramFacet:Reef Trust"
+      ],
+      "scoreLabel": "Total length of fence (Km)"
+    },
+    "r4": {
+      "config": "5",
+      "title": "Reef",
+      "label": "No. of individual animals and colonies killed / removed by species",
+      "units": "",
+      "type": "score",
+      "projectFilter": [
+        "associatedProgramFacet:Reef Trust"
+      ],
+      "scoreLabel": "No. of individual animals and colonies killed / removed by species",
+      "resultFilter": "Acanthaster planci"
+    },
+    "i1": {
+      "config": "6",
+      "title": "Indigenous",
+      "label": "Total No. of Indigenous people employed",
+      "units": "",
+      "type": "score",
+      "scoreLabel": "Total No. of Indigenous people employed"
+    },
+    "i2": {
+      "config": "6",
+      "title": "Indigenous",
+      "label": "No. of on-country visits involving both older and younger people together",
+      "units": "",
+      "type": "score",
+      "scoreLabel": "No. of on-country visits involving both older and younger people together"
+    },
+    "nlp1": {
+      "config": "5",
+      "title": "National Landcare Programme",
+      "label": "# of projects supporting sustainable agriculture",
+      "units": "",
+      "type": "investmentProjectCount",
+      "projectFilter": [
+        "associatedProgramFacet::National Landcare Programme"
+      ],
+      "investmentTypeFilter": "Farmers and fishers are increasing their long term returns through better management of the natural resource base"
+    },
+    "nlp2": {
+      "config": "4",
+      "title": "National Landcare Programme",
+      "label": "$ supporting sustainable agriculture",
+      "units": "",
+      "type": "investmentDollars",
+      "projectFilter": [
+        "associatedProgramFacet::National Landcare Programme"
+      ],
+      "investmentTypeFilter": "Farmers and fishers are increasing their long term returns through better management of the natural resource base"
+    },
+    "nlp3": {
+      "config": "3",
+      "title": "National Landcare Programme",
+      "label": "$ supporting indigenous projects",
+      "units": "",
+      "type": "investmentDollars",
+      "projectFilter": [
+        "associatedProgramFacet::National Landcare Programme",
+        "meriPlanAssetFacet::Indigenous Cultural Values"
+      ]
+    },
+    "nlp4": {
+      "config": "2",
+      "title": "National Landcare Programme",
+      "label": "# of indigenous projects",
+      "units": "",
+      "type": "projectCount",
+      "projectFilter": [
+        "associatedProgramFacet::National Landcare Programme",
+        "meriPlanAssetFacet::Indigenous Cultural Values"
+      ]
+    },
+    "nlp5": {
+      "config": "1",
+      "title": "National Landcare Programme",
+      "label": "# of projects that help protect threatened species",
+      "units": "",
+      "type": "projectCount",
+      "projectFilter": [
+        "associatedProgramFacet::National Landcare Programme",
+        "meriPlanAssetFacet::Threatened Species"
+      ]
+    },
+    "nlp6": {
+      "config": "4",
+      "title": "National Landcare Programme",
+      "label": "$ that help protect threatened species",
+      "units": "",
+      "type": "investmentDollars",
+      "projectFilter": [
+        "associatedProgramFacet::National Landcare Programme",
+        "meriPlanAssetFacet::Threatened Species"
+      ]
+    },
+    "nlp7": {
+      "config": "5",
+      "title": "National Landcare Programme",
+      "label": "# of projects that support the health of World Heritage Area",
+      "units": "",
+      "type": "projectCount",
+      "projectFilter": [
+        "associatedProgramFacet::National Landcare Programme",
+        "meriPlanAssetFacet::World Heritage area "
+      ]
+    },
+    "nlp8": {
+      "config": "6",
+      "title": "National Landcare Programme",
+      "label": "$ that support the health of World Heritage Area",
+      "units": "",
+      "type": "investmentDollars",
+      "projectFilter": [
+        "associatedProgramFacet::National Landcare Programme",
+        "meriPlanAssetFacet::World Heritage area"
+      ]
+    },
+    "nlp9": {
+      "config": "1",
+      "title": "National Landcare Programme",
+      "label": "$ that support the health of World Heritage Area",
+      "units": "",
+      "type": "investmentDollars",
+      "projectFilter": [
+        "associatedProgramFacet::National Landcare Programme",
+        "meriPlanAssetFacet::World Heritage area"
+      ]
+    },
+    "nlp10": {
+      "config": "2",
+      "title": "National Landcare Programme",
+      "label": "Ha weed treatment by main activity partner ‘Local Landcare, ‘Friends of’, community, or farmer groups",
+      "units": "Ha",
+      "type": "score",
+      "projectFilter": [
+        "associatedProgramFacet::National Landcare Programme"
+      ],
+      "scoreLabel": "No. of activities treating weeds by type of delivery partner",
+      "resultFilter": "Local Landcare, \"Friends of\", community, or farmer group"
+    },
+    "nlp11": {
+      "config": "3",
+      "title": "National Landcare Programme",
+      "label": "No of volunteers participating in project activities",
+      "units": "",
+      "type": "score",
+      "projectFilter": [
+        "associatedProgramFacet::National Landcare Programme"
+      ],
+      "scoreLabel": "No of volunteers participating in project activities"
+    },
+    "nlp12": {
+      "config": "4",
+      "title": "20 Million Trees",
+      "label": "Number of trees contracted for planting",
+      "units": "",
+      "type": "outputTarget",
+      "projectFilter": [
+        "associatedProgramFacet::National Landcare Programme"
+      ],
+      "scoreLabel": "No. of plants planted > 2 metres in height"
+    },
+    "all1": {
+      "config": "5",
+      "title": "",
+      "label": "Ha of weeds removed",
+      "units": "Ha",
+      "type": "score",
+      "scoreLabel": "Total new area treated (Ha)"
+    },
+    "all2": {
+      "config": "6",
+      "title": "",
+      "label": "Area treated for felius catus",
+      "units": "Ha",
+      "type": "score",
+      "scoreLabel": "Area covered (Ha) by pest treatment actions",
+      "resultFilter": "Felis catus"
+    }
+  },
+  "groups": [
+    [
+      "ts1",
+      "r1",
+      "r2",
+      "r3",
+      "r4",
+      "all1"
+    ],
+    [
+      "i1",
+      "i2",
+      "nlp1",
+      "nlp2",
+      "nlp3",
+      "nlp4"
+    ],
+    [
+      "nlp5",
+      "nlp6",
+      "nlp7",
+      "nlp8",
+      "nlp9",
+      "nlp10"
+    ],
+    [
+      "nlp11",
+      "nlp12",
+      "all1",
+      "all2",
+      "ts1",
+      "r1"
+    ]
+  ]
+}

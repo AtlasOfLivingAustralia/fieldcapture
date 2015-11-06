@@ -12,12 +12,14 @@ import spock.lang.Specification
 @TestFor(ProjectService)
 class ProjectServiceSpec extends Specification {
 
-    def webService = Stub(WebService)
+    WebService webService = Stub(WebService)
+    ReportService reportService = Stub(ReportService)
 
     def setup() {
         service.webService = webService
         service.activityService = new ActivityService() // This is used to generate activity descriptions.
         service.grailsApplication = [config:[ecodata:[baseUrl:'']]]
+        service.reportService = reportService
     }
 
     def "generate reports with 3 monthly period"() {

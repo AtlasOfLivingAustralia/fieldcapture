@@ -67,43 +67,81 @@
     </div>
 </div>
 
-<div class="row-fluid">
+<g:if test="${metrics.targets}">
+    <g:render template="outputTargets" model="${[targets:metrics.targets]}"/>
+</g:if>
 
-    <!-- show any primary images & videos -->
-    <div data-bind="visible: primaryImages() !== null || embeddedVideos, css:{span5:primaryImages() != null || embeddedVideos}">
-
-        <div data-bind="foreach: embeddedVideos">
-            <span data-bind="html: iframe"></span>
-        </div>
-
-        <span data-bind="foreach:primaryImages">
-            <div class="thumbnail with-caption space-after">
-                <img class="img-rounded" data-bind="attr:{src:url, alt:name}" alt="primary image"/>
-                <p class="caption" data-bind="text:name"></p>
-                <p class="attribution" data-bind="visible:attribution"><small><span data-bind="text:attribution"></span></small></p>
+<g:if test="${outcomes}">
+    <div id="outcomes">
+        <g:if test="${outcomes.environmentalOutcomes}">
+            <div class="row-fluid outcome outcome-environmental">
+                <h3>Environmental Outcomes</h3>
+                <p>${outcomes.environmentalOutcomes}</p>
             </div>
-        </span>
+        </g:if>
+        <g:if test="${outcomes.economicOutcomes}">
+            <div class="row-fluid outcome outcome-economic">
+                <h3>Economic Outcomes</h3>
+                <p>${outcomes.economicOutcomes}</p>
+            </div>
+        </g:if>
+        <g:if test="${outcomes.socialOutcomes}">
+            <div class="row-fluid outcome outcome-social">
+                <h3>Social Outcomes</h3>
+                <p>${outcomes.socialOutcomes}</p>
+            </div>
+        </g:if>
+    </div>
+</g:if>
 
+<div class="multimedia" data-bind="if:embeddedVideos">
+    <h3>Multimedia</h3>
+        <div class="row-fluid" data-bind="repeat:{foreach:embeddedVideos, step:2}" >
+            <!-- ko if:embeddedVideos()[$index] -->
+            <span class="span6" data-bind="html: embeddedVideos()[$index].iframe"></span>
+            <!-- /ko -->
+            <!-- ko if:embeddedVideos()[$index+1] -->
+            <span class="span6" data-bind="html: embeddedVideos()[$index+1].iframe"></span>
+            <!-- /ko -->
+        </div>
+</div>
+
+<g:if test="${publicImages}">
+<div class="row-fluid">
+    <h3>Project photos</h3>
+    <g:render template="thumbnails" model="${[publicImages:publicImages]}"/>
+</div>
+</g:if>
+
+<hr/>
+
+<div class="row-fluid" id="project-blog">
+    <h2>Project blog</h2>
+
+    <h3>News & events</h3>
+    <g:render template="/shared/blog" model="${[blog:blog, type:'News and events']}"/>
+
+    %{-- Legacy news & events section--}%
+    <div class="row-fluid" data-bind="if:newsAndEvents()">
+        <div class="span12" id="newsAndEventsDiv" data-bind="html:newsAndEvents.markdownToHtml()" ></div>
     </div>
 
+<hr/>
 
-    <div data-bind="css:{span7:primaryImages()!=null || embeddedVideos}">
 
-        <div data-bind="visible:newsAndEvents()">
-            <div class="well">
-                <h4 >News and events: </h4>
-                <div id="newsAndEventsDiv" data-bind="html:newsAndEvents.markdownToHtml()" ></div>
-            </div>
-        </div>
+<div class="row-fluid">
+    <h3>Project stories</h3>
+    <g:render template="/shared/blog" model="${[blog:blog, type:'Project stories']}"/>
 
-        <div data-bind="visible:projectStories()">
-            <div class="well">
-                <h4>Project stories: </h4>
-                <div id="projectStoriesDiv" data-bind="html:projectStories.markdownToHtml()"></div>
-            </div>
-        </div>
-
+    %{-- Legacy news & events section--}%
+    <div class="row-fluid" data-bind="visible:projectStories()">
+        <div class="span12" id="projectStoriesDiv" data-bind="html:projectStories.markdownToHtml()"></div>
     </div>
 
 </div>
+
+</div>
+
+
+
 
