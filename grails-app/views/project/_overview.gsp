@@ -71,28 +71,29 @@
     <g:render template="outputTargets" model="${[targets:metrics.targets]}"/>
 </g:if>
 
-<g:if test="${outcomes}">
-    <div id="outcomes">
-        <g:if test="${outcomes.environmentalOutcomes}">
-            <div class="row-fluid outcome outcome-environmental">
-                <h3>Environmental Outcomes</h3>
-                <p>${outcomes.environmentalOutcomes}</p>
-            </div>
-        </g:if>
-        <g:if test="${outcomes.economicOutcomes}">
-            <div class="row-fluid outcome outcome-economic">
-                <h3>Economic Outcomes</h3>
-                <p>${outcomes.economicOutcomes}</p>
-            </div>
-        </g:if>
-        <g:if test="${outcomes.socialOutcomes}">
-            <div class="row-fluid outcome outcome-social">
-                <h3>Social Outcomes</h3>
-                <p>${outcomes.socialOutcomes}</p>
-            </div>
-        </g:if>
-    </div>
-</g:if>
+
+%{--<g:if test="${outcomes}">--}%
+    %{--<div id="outcomes">--}%
+        %{--<g:if test="${outcomes.environmentalOutcomes}">--}%
+            %{--<div class="row-fluid outcome outcome-environmental">--}%
+                %{--<h3>Environmental Outcomes</h3>--}%
+                %{--<p>${outcomes.environmentalOutcomes}</p>--}%
+            %{--</div>--}%
+        %{--</g:if>--}%
+        %{--<g:if test="${outcomes.economicOutcomes}">--}%
+            %{--<div class="row-fluid outcome outcome-economic">--}%
+                %{--<h3>Economic Outcomes</h3>--}%
+                %{--<p>${outcomes.economicOutcomes}</p>--}%
+            %{--</div>--}%
+        %{--</g:if>--}%
+        %{--<g:if test="${outcomes.socialOutcomes}">--}%
+            %{--<div class="row-fluid outcome outcome-social">--}%
+                %{--<h3>Social Outcomes</h3>--}%
+                %{--<p>${outcomes.socialOutcomes}</p>--}%
+            %{--</div>--}%
+        %{--</g:if>--}%
+    %{--</div>--}%
+%{--</g:if>--}%
 
 <div class="multimedia" data-bind="if:embeddedVideos">
     <h3>Multimedia</h3>
