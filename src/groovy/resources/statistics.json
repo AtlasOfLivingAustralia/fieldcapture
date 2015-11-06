@@ -3,7 +3,7 @@
     "ts1": {
       "config": "1",
       "title": "Threatened Species Strategy",
-      "label": "Number of projects addressing threatened species",
+      "label": "Number of projects that help protect threatened species",
       "units": "",
       "type": "projectCount",
       "projectFilter": [
@@ -99,9 +99,9 @@
       "label": "$ supporting indigenous projects",
       "units": "",
       "type": "investmentDollars",
+      "searchTerm":"meriPlanAssetFacet:\"Indigenous Cultural Values\" OR meriPlanAssetFacet:\"Indigenous Ecological Knowledge\"",
       "projectFilter": [
-        "associatedProgramFacet::National Landcare Programme",
-        "meriPlanAssetFacet::Indigenous Cultural Values"
+        "associatedProgramFacet::National Landcare Programme"
       ]
     },
     "nlp4": {
@@ -110,9 +110,9 @@
       "label": "# of indigenous projects",
       "units": "",
       "type": "projectCount",
+      "searchTerm":"meriPlanAssetFacet:\"Indigenous Cultural Values\" OR meriPlanAssetFacet:\"Indigenous Ecological Knowledge\"",
       "projectFilter": [
-        "associatedProgramFacet::National Landcare Programme",
-        "meriPlanAssetFacet::Indigenous Cultural Values"
+        "associatedProgramFacet::National Landcare Programme"
       ]
     },
     "nlp5": {
@@ -162,13 +162,13 @@
     "nlp9": {
       "config": "1",
       "title": "National Landcare Programme",
-      "label": "$ that support the health of World Heritage Area",
-      "units": "",
-      "type": "investmentDollars",
+      "label": "Area contracted for weed treatment",
+      "units": "Ha",
+      "type": "outputTarget",
       "projectFilter": [
-        "associatedProgramFacet::National Landcare Programme",
-        "meriPlanAssetFacet::World Heritage area"
-      ]
+        "associatedProgramFacet::National Landcare Programme"
+      ],
+      "scoreLabel":"Total new area treated (Ha)"
     },
     "nlp10": {
       "config": "2",
@@ -203,6 +203,17 @@
         "associatedProgramFacet::National Landcare Programme"
       ],
       "scoreLabel": "No. of plants planted > 2 metres in height"
+    },
+    "nlp13": {
+      "config": "4",
+      "title": "National Landcare Programme",
+      "label": "Area contracted for pest animal management",
+      "units": "",
+      "type": "outputTarget",
+      "projectFilter": [
+        "associatedProgramFacet::National Landcare Programme"
+      ],
+      "scoreLabel": "Area covered (Ha) by pest treatment actions"
     },
     "all1": {
       "config": "5",
@@ -250,7 +261,7 @@
     [
       "nlp11",
       "nlp12",
-      "all1",
+      "nlp13",
       "all2",
       "ts1",
       "r1"

@@ -141,15 +141,15 @@ class ReportService {
 
     }
 
-    public Number filteredProjectCount(List<String> filter) {
-        def result = searchService.allProjects([fq:filter])
+    public Number filteredProjectCount(List<String> filter, String searchTerm) {
+        def result = searchService.allProjects([fq:filter], searchTerm)
         result?.hits?.total ?: 0
     }
 
-    public Map<String, Number> filteredInvestment(List<String> filter, String investmentType = null) {
+    public Map<String, Number> filteredInvestment(List<String> filter, String searchTerm = null, String investmentType = null) {
 
         int BATCH_SIZE = 100
-        def result = searchService.allProjects([fq:filter])
+        def result = searchService.allProjects([fq:filter], searchTerm)
         BigDecimal dollarsInvested = new BigDecimal(0)
         int count = result?.hits?.total ?: 0
         int matchCount = 0
@@ -235,7 +235,6 @@ class ReportService {
                 result = result.plus(new BigDecimal(v[scoreLabel].total))
             }
         }
-        println results
         return result
     }
 }
