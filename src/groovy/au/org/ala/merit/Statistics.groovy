@@ -7,7 +7,7 @@ abstract class Statistic {
     ReportService reportService
 
     String numberFormatPattern
-    String defaultPattern = "#"
+    String defaultPattern = "###,###,###,###,###,##0"
 
     List<String> projectFilter
 
