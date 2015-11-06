@@ -31,9 +31,9 @@ class BlogController {
 
             if (result.status == SC_OK) {
                 blogEntry.imageUrl = result.content.url
-                result = blogService.update(id, blogEntry)
             }
         }
+        result = blogService.update(id, blogEntry)
         Map response = [status:result.status]
         render response as JSON
     }

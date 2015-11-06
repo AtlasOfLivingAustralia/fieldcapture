@@ -49,6 +49,14 @@
         </div>
     </div>
 
+    <div class="control-group">
+        <label class="control-label span3"
+               for="title">URL: <fc:iconHelp>The URL this blog will like to if you select to view more of the blog item</fc:iconHelp></label>
+        <div class="span9">
+            <input type="text" id="viewMoreUrl" class="input-xxlarge" data-bind="value:viewMoreUrl" data-validation-engine="validate[custom[url]]">
+        </div>
+    </div>
+
     <div class="control-group required">
         <label class="control-label span3" for="blog-content">Content: <fc:iconHelp>The content of this blog entry</fc:iconHelp></label>
         <div class="span9">
