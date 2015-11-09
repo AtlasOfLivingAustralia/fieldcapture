@@ -5,7 +5,6 @@ import grails.converters.JSON
 
 class ProjectController extends au.org.ala.fieldcapture.ProjectController {
 
-
     static defaultAction = "index"
     static ignore = ['action','controller','id']
 
@@ -14,12 +13,15 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
     /** Overrides the projectContent method in the fieldcapture controller to include the MERI plan and risks and threats content */
     protected Map projectContent(project, user, programs) {
         def program = programs.programs.find{it.name == project.associatedProgram}
+        def meriPlanVisible = program?.optionalProjectContent?.contains('MERI Plan')
+        def meriPlanEnabled = user?.hasViewAccess || (project.associatedProgram == 'National Landcare Programme' && project.associatedSubProgram == 'Regional Funding')
         def publicImages = project.documents.findAll{it.public == true && it.thirdPartyConsentDeclarationMade == true && it.type == 'image'}
         def blog = project.blog
         def imagesModel = publicImages.collect {[name:it.name, projectName:project.name, url:it.url]}
+
         def model = [overview:[label:'Overview', visible: true, default:true, type:'tab', /*outcomes:projectService.getProjectOutcomes(project),*/ publicImages:imagesModel, blog:blog],
          documents:[label:'Documents', visible: true, type:'tab'],
-         details:[label:'MERI Plan', disabled:!user?.hasViewAccess, disabled:!user?.hasViewAccess, visible:program?.optionalProjectContent?.contains('MERI Plan'), type:'tab'],
+         details:[label:'MERI Plan', disabled:!meriPlanEnabled, visible:meriPlanVisible, type:'tab'],
          plan:[label:'Activities', visible:true, disabled:!user?.hasViewAccess, type:'tab', reports:reportService.getReportsForProject(project.projectId)],
          risksAndThreats:[label:'Risks and Threats', disabled:!user?.hasViewAccess, visible:user?.hasViewAccess && program?.optionalProjectContent?.contains('Risks and Threats')],
          site:[label:'Sites', visible: true, disabled:!user?.hasViewAccess, type:'tab'],
@@ -104,7 +106,7 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
         String projectId =  params.id
         String stageName = params.stageName
         String status = params.status
-
+		
 		if(stageName && projectId && status) {
 			def project = projectService.get(projectId, 'all')
 			def activities = activityService.activitiesForProject(projectId);

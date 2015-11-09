@@ -88,7 +88,7 @@
 		</div>
 
 
-
+		<g:if test="${user?.isAdmin}">
 		<div class="row-fluid space-after">
 			<div class="well well-small">
 				<div id="project-keq" class="announcements well well-small">
@@ -122,6 +122,7 @@
 				</div>
 			</div>
 		</div>
+		</g:if>
 
 		<div class="row-fluid space-after">
 			<div class="well well-small">
@@ -167,8 +168,9 @@
 				</tbody>		
 				</table>
 			</div>
-		</div>		
-		
+		</div>
+
+	<g:if test="${user?.isAdmin}">
 		<div class="row-fluid space-after">
 			<div class="required">
 	        <div id="keq" class="well well-small">
@@ -215,6 +217,7 @@
 	        </div>
 	    	</div>
 		</div>
+		</g:if>
 		
 		<div class="row-fluid space-after">
 			<div class="required">
@@ -264,7 +267,7 @@
 		        </div>
 			    </div>
 		</div>
-		
+
 				
 		<div class="row-fluid space-after">
 			<div class="span6">
