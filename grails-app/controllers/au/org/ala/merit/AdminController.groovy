@@ -322,4 +322,9 @@ class AdminController extends au.org.ala.fieldcapture.AdminController {
         [blog:blog]
     }
 
+
+    def selectHomePageImages() {
+    }
+
+
 }
