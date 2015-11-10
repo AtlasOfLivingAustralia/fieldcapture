@@ -22,7 +22,7 @@
         };
     </r:script>
     <script type="text/javascript" src="//www.google.com/jsapi"></script>
-    <r:require modules="application, sliderpro, knockout,mapWithFeatures,jquery_bootstrap_datatable,js_iso8601,amplify"/>
+    <r:require modules="application, sliderpro, knockout,mapWithFeatures,wmd,jquery_bootstrap_datatable,js_iso8601,amplify"/>
 
 </head>
 

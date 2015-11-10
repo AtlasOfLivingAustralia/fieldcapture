@@ -6,12 +6,12 @@
 
                 <img class="sp-image" src="${image.url}"/>
 
-                <h3 class="sp-layer sp-black" data-width="100%" data-height="30px" data-stay-duration="-1" style="padding-left:5px;"><fc:truncate value="${image.name}" maxLength="40"/></h3>
-                <p class="sp-layer sp-black" data-width="100%" data-height="20px" data-vertical="30px" style="padding-left:5px;"><fc:truncate value="${image.projectName}" maxLength="60"/></p>
-
+                <div class="sp-caption">
+                    <h3><fc:truncate value="${image.name}" maxLength="60"/></h3>
+                    <a href="${g.createLink(controller: 'project', action:'index', id:image.projectId)}"><p><fc:truncate value="${image.projectName}" maxLength="80"/></p></a>
+                </div>
 
         </div>
-
         </g:each>
 
     </div>
@@ -21,8 +21,7 @@
 <r:script>
     $(function() {
         $( '#poi-slider' ).sliderPro({
-            width: '100%',
-            height: '400',
+            width:'400',
             centerImage:true,
             imageScaleMode:'contain',
             arrows: false,

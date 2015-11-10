@@ -11,4 +11,10 @@ modules = {
     }
 
 
+    admin {
+        dependsOn 'application'
+        resource url: 'js/admin.js'
+    }
+
+
 }

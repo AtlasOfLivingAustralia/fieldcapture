@@ -1,7 +1,7 @@
 package au.org.ala.merit
 
 import au.org.ala.fieldcapture.DateUtils
-
+import grails.converters.JSON
 import org.joda.time.Period
 
 
@@ -14,6 +14,7 @@ class ReportService {
     def authService
     def searchService
     def commonService
+    def documentService
 
     /**
      * This method supports automatically creating reporting activities for a project that re-occur at defined intervals.
@@ -141,15 +142,15 @@ class ReportService {
 
     }
 
-    public Number filteredProjectCount(List<String> filter) {
-        def result = searchService.allProjects([fq:filter])
+    public Number filteredProjectCount(List<String> filter, String searchTerm) {
+        def result = searchService.allProjects([fq:filter], searchTerm)
         result?.hits?.total ?: 0
     }
 
-    public Map<String, Number> filteredInvestment(List<String> filter, String investmentType = null) {
+    public Map<String, Number> filteredInvestment(List<String> filter, String searchTerm = null, String investmentType = null) {
 
         int BATCH_SIZE = 100
-        def result = searchService.allProjects([fq:filter])
+        def result = searchService.allProjects([fq:filter], searchTerm)
         BigDecimal dollarsInvested = new BigDecimal(0)
         int count = result?.hits?.total ?: 0
         int matchCount = 0
@@ -235,7 +236,50 @@ class ReportService {
                 result = result.plus(new BigDecimal(v[scoreLabel].total))
             }
         }
-        println results
         return result
+    }
+
+    def findHomePageNominatedProjects(Integer max = 10, Integer offset = 0, Boolean omitSource = false) {
+        def results = searchService.allProjects([max:max, offset:offset, omitSource:omitSource], "custom.details.caseStudy:true OR promoteOnHomePage:true")
+        println results
+        results
+    }
+
+    Map findPotentialHomePageImages(Integer max = 10, Integer offset = 0) {
+
+        def projectIds = findHomePageNominatedProjects(10000, 0, true)?.hits.hits.collect{it._id}
+
+        def criteria = [
+                type:'image',
+                public:true,
+                thirdPartyConsentDeclarationMade: true,
+                max:max,
+                offset:offset,
+                projectId:projectIds,
+                sort:'dateCreated',
+                order:'desc'
+        ]
+        documentService.search(criteria)
+    }
+
+    List homePageImages() {
+        def criteria = [
+                type:'image',
+                public:true,
+                thirdPartyConsentDeclarationMade: true,
+                max:1,
+                offset:0,
+                labels:'hp-y'
+        ]
+
+        def count = documentService.search(criteria).count
+        criteria.offset = (int)Math.floor(Math.random()*count)
+        criteria.max = 5
+        def images = documentService.search(criteria).documents ?: []
+
+        def projectIds = images.collect {it.projectId}
+        def projects = projectService.search([projectId:projectIds])?.resp?.projects ?: []
+
+        images.collect {[name:it.name, projectName:projects.find{project -> it.projectId == project.projectId}?.name?:'', url:it.url, projectId:it.projectId]}
     }
 }

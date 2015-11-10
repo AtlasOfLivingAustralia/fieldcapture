@@ -78,7 +78,7 @@ class HomeController {
     def publicHome() {
 
         def statistics = statisticsFactory.randomGroup()
-        def images = searchService.selectProjectImages()
+        def images = reportService.homePageImages()
 
         def helpPage = g.createLink([action:'help'])
         def helpLinks = documentService.findAllHelpResources()

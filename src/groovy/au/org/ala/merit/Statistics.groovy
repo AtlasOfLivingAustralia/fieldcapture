@@ -5,6 +5,7 @@ import java.text.NumberFormat
 
 abstract class Statistic {
     ReportService reportService
+    String searchTerm
 
     String numberFormatPattern
     String defaultPattern = "###,###,###,###,###,##0"
@@ -46,7 +47,7 @@ class FilteredScore extends Statistic {
 
 class FilteredProjectCount extends Statistic {
     Number getValue() {
-        reportService.filteredProjectCount(projectFilter)
+        reportService.filteredProjectCount(projectFilter, searchTerm)
     }
 }
 
@@ -55,7 +56,7 @@ class InvestmentDollars extends Statistic {
     String investmentTypeFilter
 
     Number getValue() {
-        reportService.filteredInvestment(projectFilter, investmentTypeFilter).investment
+        reportService.filteredInvestment(projectFilter, searchTerm, investmentTypeFilter).investment
     }
     String format(Number value) {
         return '$'+super.format(value)
@@ -65,9 +66,10 @@ class InvestmentDollars extends Statistic {
 class InvestmentProjectCount extends Statistic {
 
     String investmentTypeFilter
+    String searchTerm
 
     Number getValue() {
-        reportService.filteredInvestment(projectFilter, investmentTypeFilter).count
+        reportService.filteredInvestment(projectFilter, searchTerm, investmentTypeFilter).count
     }
 }
 
