@@ -263,6 +263,7 @@ class ReportService {
     }
 
     List homePageImages() {
+        def max = 5
         def criteria = [
                 type:'image',
                 public:true,
@@ -274,7 +275,8 @@ class ReportService {
 
         def count = documentService.search(criteria).count
         criteria.offset = (int)Math.floor(Math.random()*count)
-        criteria.max = 5
+        criteria.max = max
+        criteria.offset = Math.min(criteria.offset, count-max)
         def images = documentService.search(criteria).documents ?: []
 
         def projectIds = images.collect {it.projectId}
