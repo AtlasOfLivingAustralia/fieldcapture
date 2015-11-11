@@ -8,7 +8,7 @@
     <r:script disposition="head">
         var fcConfig = {
             serverUrl: "${grailsApplication.config.grails.serverURL}",
-            blogUpdateUrl: "${createLink(action:'update')}",
+            blogUpdateUrl: "${createLink(action:'update', id:blogEntry.blogEntryId)}",
             blogViewUrl: "${createLink(action:'index')}",
             documentUpdateUrl: "${createLink(controller:"document", action:"documentUpdate")}",
             returnTo: "${params.returnTo}"

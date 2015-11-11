@@ -10,7 +10,6 @@ class BlogService {
     SettingService settingService
 
     Map get(String projectId, String blogEntryId) {
-        int index = Integer.parseInt(blogEntryId)
         List<Map> blog
         if (!projectId) {
             blog = getSiteBlog()
@@ -20,6 +19,7 @@ class BlogService {
             blog = project.blog
         }
 
+        int index = blog.findIndexOf{it.blogEntryId == blogEntryId}
         return blog[index]
     }
 
@@ -58,18 +58,18 @@ class BlogService {
 
         if (project.blog) {
 
-            int index = Integer.parseInt(id)
+            int index = project.blog.findIndexOf{it.blogEntryId == id}
             project.blog.remove(index)
         }
 
-        projectService.update(projectId, project)
+        projectService.update(projectId, [blog:project.blog])
     }
 
     private def deleteSiteBlogEntry(String id) {
         List blog = getSiteBlog()
 
 
-        int index = Integer.parseInt(id)
+        int index = blog.findIndexOf{it.blogEntryId == id}
         blog.remove(index)
 
         settingService.set(SITE_BLOG_KEY, ([blog:blog] as JSON).toString())
@@ -81,11 +81,11 @@ class BlogService {
         List blog = getSiteBlog()
 
         if (id) {
-            int index = Integer.parseInt(blogEntry.blogEntryId)
+            int index = blog.findIndexOf{it.blogEntryId == id}
             blog[index] = blogEntry
         }
         else {
-            blogEntry.blogEntryId = "0"
+            blogEntry.blogEntryId = nextId(blog)
             blog << blogEntry
         }
 
@@ -101,14 +101,19 @@ class BlogService {
         }
 
         if (id) {
-            int index = Integer.parseInt(blogEntry.blogEntryId)
+            int index = project.blog.findIndexOf{it.blogEntryId == id}
             project.blog[index] = blogEntry
         } else {
-            blogEntry.blogEntryId = "0"
+            blogEntry.blogEntryId = nextId(project.blog)
             project.blog << blogEntry
         }
 
-        projectService.update(project.projectId, project)
+        projectService.update(project.projectId, [blog:project.blog])
     }
 
+    String nextId(List<Map> blog) {
+        def entry = blog.max{Integer.parseInt(it.blogEntryId)}
+
+        return entry?Integer.parseInt(entry.blogEntryId)+1:0
+    }
 }

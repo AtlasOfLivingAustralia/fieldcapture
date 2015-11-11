@@ -45,7 +45,10 @@
         audioViewer: "${createLink(controller: 'resource', action: 'audioviewer')}",
         videoViewer: "${createLink(controller: 'resource', action: 'videoviewer')}",
         errorViewer: "${createLink(controller: 'resource', action: 'error')}",
-        },
+        createBlogEntryUrl: "${createLink(controller: 'blog', action:'create', params:[projectId:project.projectId, returnTo:createLink(controller: 'project', action: 'index', id: project.projectId)])}",
+        editBlogEntryUrl: "${createLink(controller: 'blog', action:'edit', params:[projectId:project.projectId, returnTo:createLink(controller: 'project', action: 'index', id: project.projectId)])}",
+        deleteBlogEntryUrl: "${createLink(controller: 'blog', action:'delete', params:[projectId:project.projectId])}",
+    },
         here = window.location.href;
 
     </r:script>
@@ -200,9 +203,13 @@
                             </g:if>
 
                             <li><a href="#projectDetails" id="projectDetails-tab" data-toggle="tab"><i class="icon-chevron-right"></i> MERI Plan</a></li>
-                            <li><a href="#editNewsAndEvents" id="editNewsAndEvents-tab" data-toggle="tab"><i class="icon-chevron-right"></i> News and events</a></li>
-                            <li><a href="#editProjectStories" id="editProjectStories-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Project stories</a></li>
-
+                            <li><a href="#projectBlog" id="editProjectBlog-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Edit Project Blog</a></li>
+                            <g:if test="${project.newsAndEvents}">
+                                <li><a href="#editNewsAndEvents" id="editNewsAndEvents-tab" data-toggle="tab"><i class="icon-chevron-right"></i> News and events</a></li>
+                            </g:if>
+                            <g:if test="${project.projectStories}">
+                                <li><a href="#editProjectStories" id="editProjectStories-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Project stories</a></li>
+                            </g:if>
                             <li ${activeClass}><a href="#permissions" id="permissions-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Project access</a></li>
                             <li><a href="#species" id="species-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Species of interest</a></li>
                             <li><a href="#edit-documents" id="edit-documents-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Documents</a></li>
@@ -240,17 +247,23 @@
                                     </div>
                                 </div>
                             </div>
+                            <div id="projectBlog" class="pill-pane">
+                                <h3>Edit Project Blog</h3>
+                                <g:render template="/blog/blogSummary" model="${[blog:project.blog?:[]]}"/>
+                            </div>
+                            <g:if test="${project.newsAndEvents}">
                             <div id="editNewsAndEvents" class="pill-pane">
                                 <g:render plugin="fieldcapture-plugin"  template="editProjectContent" model="${[attributeName:'newsAndEvents', header:'News and events']}"/>
                                 <hr/>
                                 <div id="announcement-result-placeholder"></div>
                                 <g:render template="announcements" model="[project: project]"/>
                             </div>
-
-                            <div id="editProjectStories" class="pill-pane">
-                                <g:render plugin="fieldcapture-plugin" template="editProjectContent" model="${[attributeName:'projectStories', header:'Project stories']}"/>
-                            </div>
-
+                            </g:if>
+                            <g:if test="${project.projectStories}">
+                                <div id="editProjectStories" class="pill-pane">
+                                    <g:render plugin="fieldcapture-plugin" template="editProjectContent" model="${[attributeName:'projectStories', header:'Project stories']}"/>
+                                </div>
+                            </g:if>
                             <div id="permissions" class="pill-pane ${activeClass}">
                                 <h3>Project Access</h3>
                                 <h4>Add Permissions</h4>
