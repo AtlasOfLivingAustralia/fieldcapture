@@ -7,8 +7,9 @@
                 <img class="sp-image" src="${image.url}"/>
 
                 <div class="sp-caption">
-                    <h3><fc:truncate value="${image.name}" maxLength="45"/></h3>
-                    <a href="${g.createLink(controller: 'project', action:'index', id:image.projectId)}"><p><fc:truncate value="${image.projectName}" maxLength="80"/></p></a>
+                    <h3 class="image-caption"><fc:truncate value="${image.name}" maxLength="45"/></h3>
+                    <g:if test="${image.attribution}"><p class="image-attribution">Photo by: ${image.attribution}</p></g:if>
+                    <a href="${g.createLink(controller: 'project', action:'index', id:image.projectId)}"><p class="image-project"><fc:truncate value="${image.projectName}" maxLength="80"/></p></a>
                 </div>
 
         </div>

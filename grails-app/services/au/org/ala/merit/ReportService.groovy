@@ -240,9 +240,12 @@ class ReportService {
     }
 
     def findHomePageNominatedProjects(Integer max = 10, Integer offset = 0, Boolean omitSource = false) {
-        def results = searchService.allProjects([max:max, offset:offset, omitSource:omitSource], "custom.details.caseStudy:true OR promoteOnHomePage:true")
-        println results
-        results
+        Map searchParams = [max:max, offset:offset, sort:'lastUpdated', order:'desc']
+        if (omitSource) {
+            searchParams.omitSource = true
+        }
+        def queryString =  "custom.details.caseStudy:true OR promoteOnHomePage:true"
+        searchService.allProjects(searchParams, queryString)
     }
 
     Map findPotentialHomePageImages(Integer max = 10, Integer offset = 0) {
@@ -282,6 +285,6 @@ class ReportService {
         def projectIds = images.collect {it.projectId}
         def projects = projectService.search([projectId:projectIds])?.resp?.projects ?: []
 
-        images.collect {[name:it.name, projectName:projects.find{project -> it.projectId == project.projectId}?.name?:'', url:it.url, projectId:it.projectId]}
+        images.collect {[name:it.name, attribution:it.attribution, projectName:projects.find{project -> it.projectId == project.projectId}?.name?:'', url:it.url, projectId:it.projectId]}
     }
 }
