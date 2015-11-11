@@ -244,11 +244,11 @@
                         <g:if test="${fc.userIsAlaOrFcAdmin()}">
                         <span class="span12">
                             <h4>Report: </h4>
-                            <select id="dashboardType" name="dashboardType"><option value="dashboard">Activity Outputs</option><option value="greenArmy">Green Army</option><option value="announcements">Announcements</option><option value="outputTargets">Output Targets By Programme</option></select>
+                            <select id="dashboardType" name="dashboardType"><option value="dashboard">Activity Outputs</option><option value="announcements">Announcements</option><option value="outputTargets">Output Targets By Programme</option></select>
                         </span>
                         </g:if>
                         <g:else>
-                            <select id="dashboardType" name="dashboardType" style="display:none"><option value="dashboard">Activity Outputs</option><option value="greenArmy">Green Army</option></select>
+                            <select id="dashboardType" name="dashboardType" style="display:none"><option value="dashboard">Activity Outputs</option></select>
                         </g:else>
                     </div>
                     <div class="loading-message">
