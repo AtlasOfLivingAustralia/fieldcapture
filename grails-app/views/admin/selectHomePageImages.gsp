@@ -16,10 +16,10 @@
 </head>
 
 <body>
-<div class="${containerType}">
-<h3>Nominate Images for Display on the Home Page</h3>
+<div class="row-fluid">
+    <h3>Nominate Images for Display on the Home Page</h3>
 
-<g:render template="gallery"/>
+    <g:render template="gallery"/>
 </div>
 </body>
 </html>

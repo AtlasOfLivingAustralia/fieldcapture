@@ -26,35 +26,31 @@
 <body>
 <div id="wrapper" class="${containerType}">
 
-<div class="row-fluid">
-    <g:if test="${flash.errorMessage}">
-        <div class="${containerType}">
-            <div class="alert alert-error">
-                ${flash.errorMessage}
+    <div class="row-fluid">
+        <g:if test="${flash.errorMessage}">
+            <div class="${containerType}">
+                <div class="alert alert-error">
+                    ${flash.errorMessage}
+                </div>
             </div>
-        </div>
-    </g:if>
+        </g:if>
 
-    <g:if test="${flash.message}">
-        <div class="row-fluid">
-            <div class="span6 alert alert-info" style="margin-bottom:0;">
-                <button class="close" onclick="$('.alert').fadeOut();" href="#">×</button>
-                ${flash.message}
+        <g:if test="${flash.message}">
+            <div class="row-fluid">
+                <div class="span6 alert alert-info" style="margin-bottom:0;">
+                    <button class="close" onclick="$('.alert').fadeOut();" href="#">×</button>
+                    ${flash.message}
+                </div>
             </div>
-        </div>
-    </g:if>
-</div>
+        </g:if>
+    </div>
 
-<div class="row-fluid">
-    <div class="span12" id="heading">
-        <h1 class="pull-left"><fc:homePageTitle/></h1>
+    <div class="row-fluid">
+        <div class="span12" id="heading">
+            <h1 class="pull-left"><fc:homePageTitle/></h1>
+        </div>
     </div>
-</div>
-<div class="row-fluid large-space-after">
-    <div class="span12">
-        <markdown:renderHtml>${description}</markdown:renderHtml>
-    </div>
-</div>
+
     <g:render template="projectFinder"/>
 </div>
 
