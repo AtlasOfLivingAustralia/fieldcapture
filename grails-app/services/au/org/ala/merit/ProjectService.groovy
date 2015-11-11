@@ -233,7 +233,6 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
                     }
 
                 }
-                createReportingActivitiesForProject(project.projectId, [[period: Period.months(1), type:'Green Army - Monthly project status report']])
 
                 return [message:'success']
             }
@@ -294,7 +293,6 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
                     }
 
                 }
-                createReportingActivitiesForProject(project.projectId, [[period: Period.months(1), type:'Green Army - Monthly project status report']])
 
                 return [message:'success']
             }
