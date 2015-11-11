@@ -44,13 +44,9 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
         def dashboardReports = [[name:'dashboard', label:'Activity Outputs']]
         if (hasAdminAccess) {
             dashboardReports += [name:'announcements', label:'Announcements']
-            if (organisation.projects.find{it.associatedProgram == 'Green Army'}) {
-                dashboardReports += [name:'greenArmy', label:'Green Army']
-            }
         }
 
         [about     : [label: 'About', visible: true, stopBinding: false, type:'tab'],
-         reporting : [label: 'Reporting', visible: reportingVisible, stopBinding:true, default:reportingVisible, type: 'tab'],
          projects  : [label: 'Projects', visible: true, default:!reportingVisible, stopBinding:true, type: 'tab', disableProjectCreation:true],
          sites     : [label: 'Sites', visible: true, type: 'tab', stopBinding:true, projectCount:organisation.projects?.size()?:0, showShapefileDownload:hasAdminAccess],
          dashboard : [label: 'Dashboard', visible: hasViewAccess, stopBinding:true, type: 'tab', template:'/shared/dashboard', reports:dashboardReports],

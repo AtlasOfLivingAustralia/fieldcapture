@@ -60,7 +60,6 @@ class OrganisationControllerSpec extends Specification {
 
         then:
         model.organisation == testOrg
-        model.content.reporting.visible == true
         model.content.projects.visible == true
         model.content.sites.visible == true
         model.content.dashboard.visible == true
@@ -78,7 +77,6 @@ class OrganisationControllerSpec extends Specification {
 
         then:
         model.organisation == testOrg
-        model.content.reporting.visible == true
         model.content.projects.visible == true
         model.content.sites.visible == true
         model.content.dashboard.visible == true
@@ -96,7 +94,6 @@ class OrganisationControllerSpec extends Specification {
 
         then:
         model.organisation == testOrg
-        model.content.reporting.visible == true
         model.content.projects.visible == true
         model.content.sites.visible == true
         model.content.dashboard.visible == true
@@ -114,7 +111,6 @@ class OrganisationControllerSpec extends Specification {
 
         then:
         model.organisation == testOrg
-        model.content.reporting.visible == false
         model.content.projects.visible == true
         model.content.sites.visible == true
         model.content.dashboard.visible == true
@@ -182,7 +178,7 @@ class OrganisationControllerSpec extends Specification {
         organisationService.get(_,_) >> testOrg
         setupOrganisationAdmin()
 
-        when: "the organisation has no projects sponsored by the Green Army programme"
+        when: "the organisation page is viewed"
         def model = controller.index('id')
 
         then: "there should only be two reports"
@@ -190,15 +186,6 @@ class OrganisationControllerSpec extends Specification {
         model.content.dashboard.reports.find{it.name == 'dashboard'} != null
         model.content.dashboard.reports.find{it.name == 'announcements'} != null
 
-        when: "there is at least one project sponsored by the Green Army programme"
-        testOrg.projects << [projectId:'1235', associatedProgram:'Green Army']
-        model = controller.index('id')
-
-        then: "there should be 3 reports"
-        model.content.dashboard.reports.size() == 3
-        model.content.dashboard.reports.find{it.name == 'dashboard'} != null
-        model.content.dashboard.reports.find{it.name == 'announcements'} != null
-        model.content.dashboard.reports.find{it.name == 'greenArmy'} != null
 
     }
 
