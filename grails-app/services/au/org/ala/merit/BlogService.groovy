@@ -1,12 +1,16 @@
 package au.org.ala.merit
 
+import au.org.ala.fieldcapture.DocumentService
 import au.org.ala.fieldcapture.SettingService
 import grails.converters.JSON
+import org.codehaus.groovy.grails.web.json.JSONArray
+import org.codehaus.groovy.grails.web.json.JSONObject
 
 class BlogService {
 
     private static final String SITE_BLOG_KEY = 'merit.site.blog'
     ProjectService projectService
+    DocumentService documentService
     SettingService settingService
 
     Map get(String projectId, String blogEntryId) {
@@ -20,13 +24,23 @@ class BlogService {
         }
 
         int index = blog.findIndexOf{it.blogEntryId == blogEntryId}
-        return blog[index]
+        Map blogEntry = blog[index]
+        attachImages([blogEntry])
+        return blogEntry
     }
 
     List<Map> getSiteBlog() {
-        Map blog = settingService.getJson(SITE_BLOG_KEY)
+        Map blogSetting = settingService.getJson(SITE_BLOG_KEY)
 
-        return blog?.blog?:[]
+        List<Map> blog = blogSetting?.blog?:[]
+        attachImages(blog)
+        blog
+    }
+
+    List<Map> getProjectBlog(Map project) {
+        List<Map> blog = project?.blog?:[]
+        attachImages(blog)
+        blog
     }
 
     def update(String id, Map blogEntry) {
@@ -115,5 +129,18 @@ class BlogService {
         def entry = blog.max{Integer.parseInt(it.blogEntryId)}
 
         return entry?Integer.parseInt(entry.blogEntryId)+1:0
+    }
+
+    private void attachImages(List<Map> blog) {
+        blog.each { entry ->
+            if (entry.imageId) {
+                def doc = documentService.get(entry.imageId)
+                if (doc) {
+                    // entry is a JSONObject so if we add a List to to it won't serialize properly.
+                    entry.documents = new JSONArray()
+                    entry.documents.add(doc)
+                }
+            }
+        }
     }
 }

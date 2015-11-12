@@ -117,7 +117,9 @@
 <hr/>
 
 <div class="row-fluid" id="project-blog">
-    <h2>Project blog</h2>
+    <h2>Project blog</h2> <g:if test="${user?.isAdmin}">
+    <a href="${g.createLink(controller: 'blog', action: 'create', params:[projectId:project.projectId, returnTo:g.createLink(controller: 'project', action:'index', id:project.projectId)])}"><button class="btn"><i class="fa fa-newspaper-o"></i> New Entry</button></a>
+    <button id="gotoEditBlog" class="btn"><i class="fa fa-edit"></i> Edit</button></g:if></a>
 
     <h3>News & events</h3>
     <g:render template="/shared/blog" model="${[blog:blog, type:'News and events']}"/>

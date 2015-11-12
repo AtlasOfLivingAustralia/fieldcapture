@@ -8,7 +8,8 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
     static defaultAction = "index"
     static ignore = ['action','controller','id']
 
-    def reportService
+    ReportService reportService
+    BlogService blogService
 
     /** Overrides the projectContent method in the fieldcapture controller to include the MERI plan and risks and threats content */
     protected Map projectContent(project, user, programs) {
@@ -16,7 +17,7 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
         def meriPlanVisible = program?.optionalProjectContent?.contains('MERI Plan')
         def meriPlanEnabled = user?.hasViewAccess || (project.associatedProgram == 'National Landcare Programme' && project.associatedSubProgram == 'Regional Funding')
         def publicImages = project.documents.findAll{it.public == true && it.thirdPartyConsentDeclarationMade == true && it.type == 'image'}
-        def blog = project.blog
+        def blog = blogService.getProjectBlog(project)
         def imagesModel = publicImages.collect {[name:it.name, projectName:project.name, url:it.url]}
 
         def model = [overview:[label:'Overview', visible: true, default:true, type:'tab', /*outcomes:projectService.getProjectOutcomes(project),*/ publicImages:imagesModel, blog:blog],

@@ -29,8 +29,8 @@ class BlogController {
             image.projectId = blogEntry.projectId
             result = documentService.saveStagedImageDocument(image)
 
-            if (result.status == SC_OK) {
-                blogEntry.imageUrl = result.content.url
+            if (result.statusCode == SC_OK) {
+                blogEntry.imageId = result.resp.documentId
             }
         }
         result = blogService.update(id, blogEntry)
