@@ -30,22 +30,37 @@
         <label class="control-label span3"
                for="image">Feature image: <fc:iconHelp>An image that will be displayed alongside this blog entry</fc:iconHelp></label>
 
-        <div class="span3" style="text-align:center;background:white">
+        <div class="span3" style="text-align:center;background:white" data-bind="visible:!stockIcon()">
             <div style="margin:0;padding:0;width:200px;height:150px;line-height:146px;text-align:left;">
                 <img alt="No image provided" data-bind="attr:{src:imageUrl}">
             </div>
         </div>
+        <div class="span3" data-bind="visible:stockIcon()">
+            <i class="fa fa-4x" data-bind="css:stockIcon"></i>
+        </div>
         <div class="span3">
-            <span class="btn fileinput-button"
+            <p data-bind="visible:!image() && !stockIcon()">Select or attach an image</p>
+            <select data-bind="visible:!image(), value:stockIcon">
+                <option/>
+                <option value="fa-warning">Important<i class="fa fa-warning fa-3x"></i></option>
+                <option value="fa-newspaper-o">News<i class="fa fa-newspaper-o fa-3x"></i></option>
+                <option value="fa-star">Star<i class="fa fa-star-o fa-3x"></i></option>
+                <option value="fa-info-circle">Information<i class="fa fa-info-circle fa-3x"></i></option>
+            </select>
+            <p></p>
+
+            <div class="btn fileinput-button"
                   data-url="${createLink(controller: 'image', action: 'upload')}"
                   data-role="mainImage"
                   data-owner-type="blogEntryId"
                   data-owner-id="${blogEntry?.blogEntryId}"
-                  data-bind="stagedImageUpload:documents, visible:!image()"><i class="icon-plus"></i> <input
-                    id="image" type="file" name="files"><span>Attach</span></span>
+                  data-bind="stagedImageUpload:documents, visible:!image() && !stockIcon()"><i class="icon-plus"></i> <input
+                    id="image" type="file" name="files"><span>Attach</span></div>
 
             <button class="btn main-image-button" data-bind="click:removeBlogImage, visible:image()"><i
                     class="icon-minus"></i> Remove</button>
+
+
         </div>
     </div>
     <div class="control-group" data-bind="with:image">
