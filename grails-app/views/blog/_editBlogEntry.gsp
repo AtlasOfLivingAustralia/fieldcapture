@@ -26,7 +26,7 @@
         </div>
     </div>
 
-    <div class="control-group required">
+    <div class="control-group">
         <label class="control-label span3"
                for="image">Feature image: <fc:iconHelp>An image that will be displayed alongside this blog entry</fc:iconHelp></label>
 
@@ -48,12 +48,21 @@
                     class="icon-minus"></i> Remove</button>
         </div>
     </div>
-
-    <div class="control-group">
+    <div class="control-group" data-bind="with:image">
         <label class="control-label span3"
-               for="title">URL: <fc:iconHelp>The URL this blog will like to if you select to view more of the blog item</fc:iconHelp></label>
+               for="attribution">Image attribution: <fc:iconHelp>Will be displayed alongside the image</fc:iconHelp></label>
         <div class="span9">
-            <input type="text" id="viewMoreUrl" class="input-xxlarge" data-bind="value:viewMoreUrl" data-validation-engine="validate[custom[url]]">
+            <input type="text" id="attribution" class="input-xxlarge" data-bind="value:attribution">
+        </div>
+    </div>
+    <div class="control-group" data-bind="with:image">
+        <label class="control-label required span3"
+               for="declaration">Privacy declaration: <fc:iconHelp>You must accept the declaration before the image can be saved.</fc:iconHelp></label>
+        <div class="span9">
+            <label id="thirdPartyDeclarationText" class="checkbox" for="declaration">
+                <input id="declaration" type="checkbox" name="thirdPartyConsentDeclarationMade" data-validation-engine="validate[required]" data-bind="checked:thirdPartyConsentDeclarationMade">
+                <fc:getSettingContent settingType="${au.org.ala.fieldcapture.SettingPageType.THIRD_PARTY_PHOTO_CONSENT_DECLARATION}"/>
+            </label>
         </div>
     </div>
 
@@ -62,6 +71,14 @@
         <div class="span9">
             <textarea rows="10" id="blog-content" class="input-xxlarge" data-bind="value:content" data-validation-engine="validate[required]" placeholder="Content goes here..."></textarea>
             <br/><button class="btn popup-edit" data-bind="click:editContent"><i class="icon-edit"></i> Edit with Markdown Editor</button>
+        </div>
+    </div>
+
+    <div class="control-group">
+        <label class="control-label span3"
+               for="title">See More URL: <fc:iconHelp>If supplied, the blog entry will show a "see more" link at the end which will take the user to this URL</fc:iconHelp></label>
+        <div class="span9">
+            <input type="text" id="viewMoreUrl" class="input-xxlarge" data-bind="value:viewMoreUrl" data-validation-engine="validate[custom[url]]">
         </div>
     </div>
 </form>

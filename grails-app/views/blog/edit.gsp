@@ -23,7 +23,7 @@
         <li>
             <g:link controller="home">Home</g:link> <span class="divider">/</span>
         </li>
-        <li class="active"><g:link controller="organisation" action="list">Organisations</g:link> <span class="divider">/</span></li>
+        <li class="active"><g:link url="${params.returnTo}">${params.returnToTitle?:'Project'}</g:link> <span class="divider">/</span></li>
         <li class="active">Edit blog entry</li>
     </ul>
 

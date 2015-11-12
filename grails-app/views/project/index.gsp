@@ -203,7 +203,7 @@
                             </g:if>
 
                             <li><a href="#projectDetails" id="projectDetails-tab" data-toggle="tab"><i class="icon-chevron-right"></i> MERI Plan</a></li>
-                            <li><a href="#projectBlog" id="editProjectBlog-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Edit Project Blog</a></li>
+                            <li><a href="#editProjectBlog" id="editProjectBlog-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Edit Project Blog</a></li>
                             <g:if test="${project.newsAndEvents}">
                                 <li><a href="#editNewsAndEvents" id="editNewsAndEvents-tab" data-toggle="tab"><i class="icon-chevron-right"></i> News and events</a></li>
                             </g:if>
@@ -247,7 +247,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div id="projectBlog" class="pill-pane">
+                            <div id="editProjectBlog" class="pill-pane">
                                 <h3>Edit Project Blog</h3>
                                 <g:render template="/blog/blogSummary" model="${[blog:project.blog?:[]]}"/>
                             </div>
@@ -817,6 +817,12 @@
                 $('#public-images-slider .fancybox').fancybox();
             }
 
+            $('#gotoEditBlog').click(function () {
+                amplify.store('project-admin-tab-state', '#editProjectBlog');
+                $('#admin-tab').tab('show');
+            });
+
+
             // Non-editors should get tooltip and popup when trying to click other tabs
             $('#projectTabs li a').not('[data-toggle="tab"]').css('cursor', 'not-allowed') //.data('placement',"right")
             .attr('title','Only available to project members').addClass('tooltips');
@@ -880,20 +886,22 @@
 <g:if test="${user?.isAdmin || user?.isCaseManager}">
     <r:script>
         // Admin JS code only exposed to admin users
-        $(window).load(function () {
-
+        $(function () {
             // remember state of admin nav (vertical tabs)
             $('#adminNav a[data-toggle="tab"]').on('shown', function (e) {
                 var tab = e.currentTarget.hash;
                 amplify.store('project-admin-tab-state', tab);
             });
-            var storedAdminTab = amplify.store('project-admin-tab-state');
-            // restore state if saved
-            if (storedAdminTab === '') {
-                $('#permissions-tab').tab('show');
-            } else {
-                $(storedAdminTab + "-tab").tab('show');
-            }
+            $('#admin-tab').on('shown', function() {
+                var storedAdminTab = amplify.store('project-admin-tab-state');
+                // restore state if saved
+                if (storedAdminTab === '') {
+                    $('#permissions-tab').tab('show');
+                } else {
+                    $(storedAdminTab + "-tab").tab('show');
+                }
+            });
+
             populatePermissionsTable();
         });
 

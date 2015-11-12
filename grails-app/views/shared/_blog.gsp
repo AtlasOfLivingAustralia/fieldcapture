@@ -5,7 +5,7 @@
         <img class="blog-image floatleft" data-bind="attr:{src:imageUrl}">
         <div class="widget-news-right-body">
             <h3><span class="title" data-bind="text:title"></span><span class="floatright" data-bind="text:formattedDate"></span></h3>
-            <div class="text" data-bind="html:content.markdownToHtml()"></div> <i class="fa fa-arrow-circle-o-right"></i>
+            <div class="text" data-bind="html:content.markdownToHtml()"></div> <a data-bind="visible:viewMoreUrl, attr:{href:viewMoreUrl}"><i class="fa fa-arrow-circle-o-right"></i></a>
         </div>
     </div>
 
