@@ -35,7 +35,7 @@
     <div class="row-fluid">
         <div id="latest-news" class="span6">
             <h4>Latest news</h4>
-            <g:render template="/shared/blog"/>
+            <g:render template="/shared/blog" />
         </div>
         <div id="poi" class="span6">
             <g:render template="/shared/poi"/>
@@ -66,6 +66,19 @@
                         replaceContentSection('.statistics', url).always(function() { working = false; });
                     }
                 });
+
+                if ($('#latest-news').height() > 400) {
+                    $('#latest-news').height(400).css('overflow-y', 'scroll');
+                }
+                //var $news = $('#latest-news');
+                //var approxExtras = $news.find('h4').height() + ($news.outerHeight()-$news.height())/2;
+                //$($news).on('scroll', function(e) {
+                //    var scrollPos = $news.scrollTop();
+                //    var blogHeight = $('#blog-').height();
+                //    if (scrollPos+400 >= blogHeight+approxExtras-10) {
+                //        // we would load more blog entries at this point.
+                //    }
+                //});
             });
 
 </r:script>
