@@ -17,8 +17,8 @@
       "units": "",
       "type": "score",
       "projectFilter": [
-        "associatedProgramFacet:Reef Trust"
       ],
+      "searchTerm":"associatedProgramFacet:\"Reef Trust\" OR associatedProgramFacet:\"Reef Rescue\"",
       "scoreLabel": "Total No. of farming entities adopting sustainable practice change"
     },
     "r2": {
@@ -28,7 +28,8 @@
       "units": "Tonnes",
       "type": "score",
       "projectFilter": [
-        "associatedProgramFacet:Reef Trust"
+        "associatedProgramFacet:Reef Trust",
+        "associatedSubProgramFacet:Reef Trust Phase 1 Investment"
       ],
       "scoreLabel": "Weight of debris removed (Tonnes)"
     },
@@ -39,20 +40,20 @@
       "units": "Km of fencing",
       "type": "score",
       "projectFilter": [
-        "associatedProgramFacet:Reef Trust"
       ],
+      "searchTerm":"associatedProgramFacet:\"Reef Trust\" OR associatedProgramFacet:\"Reef Rescue\"",
       "scoreLabel": "Total length of fence (Km)"
     },
     "r4": {
       "config": "4",
       "title": "Reef",
-      "label": "Crown of Thorn Starfish removed from the reef",
-      "units": "",
+      "label": "Reef area treated for Crown of Thorn Starfish",
+      "units": "Ha",
       "type": "score",
       "projectFilter": [
         "associatedProgramFacet:Reef Trust"
       ],
-      "scoreLabel": "No. of individual animals and colonies killed / removed by species",
+      "scoreLabel": "Treated area (Ha) by species",
       "resultFilter": "Acanthaster planci"
     },
     "i1": {
@@ -192,11 +193,11 @@
   "groups": [
     [
       "ts1",
-      "r1",
+      "all1",
       "r2",
       "r3",
       "all2",
-      "all1"
+      "r1"
     ],
     [
       "r4",
