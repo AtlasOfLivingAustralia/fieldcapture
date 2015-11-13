@@ -216,6 +216,12 @@ class ReportService {
             if (result) {
                 value = result.result
             }
+            else {
+                def section = results.outputData[0].results.find{it.result && it.result[groupToFilter]}
+                if (section && section.result[groupToFilter]) {
+                    value = section.result[groupToFilter]
+                }
+            }
         }
         value
     }

@@ -3,8 +3,8 @@
     "ts1": {
       "config": "1",
       "title": "Threatened Species Strategy",
-      "label": "Projects protecting threatened species",
-      "units": "",
+      "label": "Protecting threatened species",
+      "units": "Projects",
       "type": "projectCount",
       "projectFilter": [
         "meriPlanAssetFacet:Threatened Species"
@@ -59,8 +59,8 @@
     "i1": {
       "config": "5",
       "title": "Indigenous",
-      "label": "Indigenous people employed to deliver projects",
-      "units": "",
+      "label": "Indigenous people employed to deliver",
+      "units": "Projects",
       "type": "score",
       "scoreLabel": "Total No. of Indigenous people employed"
     },
@@ -75,45 +75,45 @@
     "nlp1": {
       "config": "1",
       "title": "National Landcare Programme",
-      "label": "Projects supporting sustainable agriculture",
-      "units": "",
+      "label": "Supporting sustainable agriculture",
+      "units": "Projects",
       "type": "investmentProjectCount",
       "projectFilter": [
-        "associatedProgramFacet::National Landcare Programme"
+        "associatedProgramFacet:National Landcare Programme"
       ],
       "investmentTypeFilter": "Farmers and fishers are increasing their long term returns through better management of the natural resource base"
     },
     "nlp4": {
       "config": "1",
       "title": "National Landcare Programme",
-      "label": "Projects using traditional ecological knowledge",
-      "units": "",
+      "label": "Using traditional ecological knowledge",
+      "units": "Projects",
       "type": "projectCount",
       "searchTerm":"meriPlanAssetFacet:\"Indigenous Cultural Values\" OR meriPlanAssetFacet:\"Indigenous Ecological Knowledge\"",
       "projectFilter": [
-        "associatedProgramFacet::National Landcare Programme"
+        "associatedProgramFacet:National Landcare Programme"
       ]
     },
     "nlp5": {
       "config": "1",
       "title": "National Landcare Programme",
-      "label": "Projects protecting threatened species/communities",
-      "units": "",
+      "label": "Protecting threatened species",
+      "units": "Projects",
       "type": "projectCount",
       "projectFilter": [
-        "associatedProgramFacet::National Landcare Programme",
-        "meriPlanAssetFacet::Threatened Species"
+        "associatedProgramFacet:National Landcare Programme",
+        "meriPlanAssetFacet:Threatened Species"
       ]
     },
     "nlp7": {
       "config": "6",
       "title": "National Landcare Programme",
-      "label": "Projects that support World Heritage Areas",
-      "units": "",
+      "label": "That support World Heritage Areas",
+      "units": "Projects",
       "type": "projectCount",
       "projectFilter": [
-        "associatedProgramFacet::National Landcare Programme",
-        "meriPlanAssetFacet::World Heritage area "
+        "associatedProgramFacet:National Landcare Programme",
+        "meriPlanAssetFacet:World Heritage area"
       ]
     },
     "nlp9": {
@@ -123,7 +123,7 @@
       "units": "Ha",
       "type": "outputTarget",
       "projectFilter": [
-        "associatedProgramFacet::National Landcare Programme"
+        "associatedProgramFacet:National Landcare Programme"
       ],
       "scoreLabel":"Total new area treated (Ha)"
     },
@@ -134,10 +134,10 @@
       "units": "Ha",
       "type": "score",
       "projectFilter": [
-        "associatedProgramFacet::National Landcare Programme"
+        "associatedProgramFacet:National Landcare Programme"
       ],
       "scoreLabel": "No. of activities treating weeds by type of delivery partner",
-      "resultFilter": "Local Landcare, \"Friends of\", community, or farmer group"
+      "resultFilter": "Local Landcare, 'Friends of', community, or farmer group"
     },
     "nlp11": {
       "config": "3",
@@ -146,7 +146,7 @@
       "units": "",
       "type": "score",
       "projectFilter": [
-        "associatedProgramFacet::National Landcare Programme"
+        "associatedProgramFacet:National Landcare Programme"
       ],
       "scoreLabel": "No of volunteers participating in project activities"
     },
@@ -157,24 +157,24 @@
       "units": "",
       "type": "outputTarget",
       "projectFilter": [
-        "associatedProgramFacet::National Landcare Programme"
+        "associatedProgramFacet:National Landcare Programme"
       ],
       "scoreLabel": "No. of plants planted > 2 metres in height"
     },
     "nlp13": {
       "config": "6",
       "title": "National Landcare Programme",
-      "label": "Area targeted for pest animal control",
+      "label": "Ha targeted for pest animal control",
       "units": "",
       "type": "outputTarget",
       "projectFilter": [
-        "associatedProgramFacet::National Landcare Programme"
+        "associatedProgramFacet:National Landcare Programme"
       ],
       "scoreLabel": "Area covered (Ha) by pest treatment actions"
     },
     "all1": {
       "config": "3",
-      "title": "",
+      "title": "All programmes",
       "label": "Managed for invasive weeds",
       "units": "Ha",
       "type": "score",
@@ -182,12 +182,45 @@
     },
     "all2": {
       "config": "6",
-      "title": "",
+      "title": "All programmes",
       "label": "Area treated for felius catus",
       "units": "Ha",
       "type": "score",
       "scoreLabel": "Treated area (Ha) by species",
       "resultFilter": "Felis catus"
+    },
+    "ga1": {
+      "config": "3",
+      "title": "Green Army",
+      "label": "Number of plants planted",
+      "units": "Ha",
+      "type": "score",
+      "scoreLabel": "Number of plants planted",
+      "projectFilter": [
+        "associatedProgramFacet:Green Army"
+      ]
+    },
+    "ga2": {
+      "config": "2",
+      "title": "Green Army",
+      "label": "Volume of debris removed",
+      "units": "Ha",
+      "type": "score",
+      "scoreLabel": "Number of plants planted",
+      "projectFilter": [
+        "associatedProgramFacet:Green Army"
+      ]
+    },
+    "ga3": {
+      "config": "2",
+      "title": "Green Army",
+      "label": "Ha of weeds treated",
+      "units": "",
+      "type": "score",
+      "scoreLabel": "Total new area treated (Ha)",
+      "projectFilter": [
+        "associatedProgramFacet:Green Army"
+      ]
     }
   },
   "groups": [
@@ -195,7 +228,7 @@
       "ts1",
       "all1",
       "r2",
-      "r3",
+      "ga1",
       "all2",
       "r1"
     ],
@@ -204,7 +237,7 @@
       "nlp11",
       "nlp1",
       "nlp4",
-      "nlp13",
+      "ga3",
       "i1"
     ],
     [
@@ -214,7 +247,14 @@
       "nlp10",
       "i2",
       "nlp12"
+    ],
+    [
+      "ga2",
+      "r1",
+      "i1",
+      "nlp13",
+      "i2",
+      "nlp11"
     ]
-
   ]
 }

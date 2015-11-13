@@ -47,14 +47,15 @@ class StatisticsFactory {
         }, 1)
     }
 
-    public List<Map> randomGroup(int exclude = -1) {
+    public Map randomGroup(int exclude = -1) {
         int groupCount = getGroupCount()
         int group = Math.floor(Math.random()*groupCount)
         while (group == exclude) {
             group = Math.floor(Math.random()*groupCount)
         }
-        getStatisticsGroup(group)
+        List stats = getStatisticsGroup(group)
 
+        [group:group, statistics:stats]
     }
 
     public synchronized int getGroupCount() {
