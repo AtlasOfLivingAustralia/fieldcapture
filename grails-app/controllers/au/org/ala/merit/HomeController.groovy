@@ -78,6 +78,7 @@ class HomeController {
     def publicHome() {
 
         def statistics = statisticsFactory.randomGroup()
+        session.lastGroup = statistics.group // So we can request more stats and not get 2 in a row the same
         def images = reportService.homePageImages()
 
         def helpPage = g.createLink([action:'help'])
@@ -85,7 +86,7 @@ class HomeController {
         helpLinks << [name:'MORE RESOURCES', type:'text', url:helpPage]
         def blog = blogService.getSiteBlog()
 
-        def model = [statistics:statistics, helpLinks:helpLinks, images:images, blog:blog]
+        def model = [statistics:statistics.statistics, helpLinks:helpLinks, images:images, blog:blog]
         if (params.fq) {
             model.putAll(projectExplorerModel())
             model.showProjectExplorer = true
