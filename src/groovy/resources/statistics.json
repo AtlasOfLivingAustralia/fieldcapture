@@ -3,7 +3,7 @@
     "ts1": {
       "config": "1",
       "title": "Threatened Species Strategy",
-      "label": "Number of projects that help protect threatened species",
+      "label": "Projects protecting threatened species",
       "units": "",
       "type": "projectCount",
       "projectFilter": [
@@ -11,9 +11,9 @@
       ]
     },
     "r1": {
-      "config": "2",
+      "config": "1",
       "title": "Reef",
-      "label": "Total No. of farming entities adopting sustainable practice change",
+      "label": "Farms adopting practice change to protect the reef",
       "units": "",
       "type": "score",
       "projectFilter": [
@@ -22,9 +22,9 @@
       "scoreLabel": "Total No. of farming entities adopting sustainable practice change"
     },
     "r2": {
-      "config": "3",
+      "config": "2",
       "title": "Reef",
-      "label": "Weight of debris removed",
+      "label": "Waste prevented from entering the reef",
       "units": "Tonnes",
       "type": "score",
       "projectFilter": [
@@ -35,8 +35,8 @@
     "r3": {
       "config": "4",
       "title": "Reef",
-      "label": "Total length of fence",
-      "units": "Km",
+      "label": "To improve quality of water entering the reef",
+      "units": "Km of fencing",
       "type": "score",
       "projectFilter": [
         "associatedProgramFacet:Reef Trust"
@@ -44,9 +44,9 @@
       "scoreLabel": "Total length of fence (Km)"
     },
     "r4": {
-      "config": "5",
+      "config": "4",
       "title": "Reef",
-      "label": "No. of individual animals and colonies killed / removed by species",
+      "label": "Crown of Thorn Starfish removed from the reef",
       "units": "",
       "type": "score",
       "projectFilter": [
@@ -56,25 +56,25 @@
       "resultFilter": "Acanthaster planci"
     },
     "i1": {
-      "config": "6",
+      "config": "5",
       "title": "Indigenous",
-      "label": "Total No. of Indigenous people employed",
+      "label": "Indigenous people employed to deliver projects",
       "units": "",
       "type": "score",
       "scoreLabel": "Total No. of Indigenous people employed"
     },
     "i2": {
-      "config": "6",
+      "config": "5",
       "title": "Indigenous",
-      "label": "No. of on-country visits involving both older and younger people together",
+      "label": "Indigenous people working on country",
       "units": "",
       "type": "score",
       "scoreLabel": "No. of on-country visits involving both older and younger people together"
     },
     "nlp1": {
-      "config": "5",
+      "config": "1",
       "title": "National Landcare Programme",
-      "label": "# of projects supporting sustainable agriculture",
+      "label": "Projects supporting sustainable agriculture",
       "units": "",
       "type": "investmentProjectCount",
       "projectFilter": [
@@ -82,32 +82,10 @@
       ],
       "investmentTypeFilter": "Farmers and fishers are increasing their long term returns through better management of the natural resource base"
     },
-    "nlp2": {
-      "config": "4",
-      "title": "National Landcare Programme",
-      "label": "$ supporting sustainable agriculture",
-      "units": "",
-      "type": "investmentDollars",
-      "projectFilter": [
-        "associatedProgramFacet::National Landcare Programme"
-      ],
-      "investmentTypeFilter": "Farmers and fishers are increasing their long term returns through better management of the natural resource base"
-    },
-    "nlp3": {
-      "config": "3",
-      "title": "National Landcare Programme",
-      "label": "$ supporting indigenous projects",
-      "units": "",
-      "type": "investmentDollars",
-      "searchTerm":"meriPlanAssetFacet:\"Indigenous Cultural Values\" OR meriPlanAssetFacet:\"Indigenous Ecological Knowledge\"",
-      "projectFilter": [
-        "associatedProgramFacet::National Landcare Programme"
-      ]
-    },
     "nlp4": {
-      "config": "2",
+      "config": "1",
       "title": "National Landcare Programme",
-      "label": "# of indigenous projects",
+      "label": "Projects using traditional ecological knowledge",
       "units": "",
       "type": "projectCount",
       "searchTerm":"meriPlanAssetFacet:\"Indigenous Cultural Values\" OR meriPlanAssetFacet:\"Indigenous Ecological Knowledge\"",
@@ -118,7 +96,7 @@
     "nlp5": {
       "config": "1",
       "title": "National Landcare Programme",
-      "label": "# of projects that help protect threatened species",
+      "label": "Projects protecting threatened species/communities",
       "units": "",
       "type": "projectCount",
       "projectFilter": [
@@ -126,21 +104,10 @@
         "meriPlanAssetFacet::Threatened Species"
       ]
     },
-    "nlp6": {
-      "config": "4",
-      "title": "National Landcare Programme",
-      "label": "$ that help protect threatened species",
-      "units": "",
-      "type": "investmentDollars",
-      "projectFilter": [
-        "associatedProgramFacet::National Landcare Programme",
-        "meriPlanAssetFacet::Threatened Species"
-      ]
-    },
     "nlp7": {
-      "config": "5",
+      "config": "6",
       "title": "National Landcare Programme",
-      "label": "# of projects that support the health of World Heritage Area",
+      "label": "Projects that support World Heritage Areas",
       "units": "",
       "type": "projectCount",
       "projectFilter": [
@@ -148,21 +115,10 @@
         "meriPlanAssetFacet::World Heritage area "
       ]
     },
-    "nlp8": {
-      "config": "6",
-      "title": "National Landcare Programme",
-      "label": "$ that support the health of World Heritage Area",
-      "units": "",
-      "type": "investmentDollars",
-      "projectFilter": [
-        "associatedProgramFacet::National Landcare Programme",
-        "meriPlanAssetFacet::World Heritage area"
-      ]
-    },
     "nlp9": {
-      "config": "1",
+      "config": "2",
       "title": "National Landcare Programme",
-      "label": "Area contracted for weed treatment",
+      "label": "Area targeted for weed control",
       "units": "Ha",
       "type": "outputTarget",
       "projectFilter": [
@@ -173,7 +129,7 @@
     "nlp10": {
       "config": "2",
       "title": "National Landcare Programme",
-      "label": "Ha weed treatment by main activity partner ‘Local Landcare, ‘Friends of’, community, or farmer groups",
+      "label": "Area community groups are managing for weeds",
       "units": "Ha",
       "type": "score",
       "projectFilter": [
@@ -185,7 +141,7 @@
     "nlp11": {
       "config": "3",
       "title": "National Landcare Programme",
-      "label": "No of volunteers participating in project activities",
+      "label": "Volunteers participating in projects",
       "units": "",
       "type": "score",
       "projectFilter": [
@@ -194,9 +150,9 @@
       "scoreLabel": "No of volunteers participating in project activities"
     },
     "nlp12": {
-      "config": "4",
+      "config": "3",
       "title": "20 Million Trees",
-      "label": "Number of trees contracted for planting",
+      "label": "Trees planned for planting",
       "units": "",
       "type": "outputTarget",
       "projectFilter": [
@@ -205,9 +161,9 @@
       "scoreLabel": "No. of plants planted > 2 metres in height"
     },
     "nlp13": {
-      "config": "4",
+      "config": "6",
       "title": "National Landcare Programme",
-      "label": "Area contracted for pest animal management",
+      "label": "Area targeted for pest animal control",
       "units": "",
       "type": "outputTarget",
       "projectFilter": [
@@ -216,9 +172,9 @@
       "scoreLabel": "Area covered (Ha) by pest treatment actions"
     },
     "all1": {
-      "config": "5",
+      "config": "3",
       "title": "",
-      "label": "Ha of weeds removed",
+      "label": "Managed for invasive weeds",
       "units": "Ha",
       "type": "score",
       "scoreLabel": "Total new area treated (Ha)"
@@ -229,7 +185,7 @@
       "label": "Area treated for felius catus",
       "units": "Ha",
       "type": "score",
-      "scoreLabel": "Area covered (Ha) by pest treatment actions",
+      "scoreLabel": "Treated area (Ha) by species",
       "resultFilter": "Felis catus"
     }
   },
@@ -239,32 +195,25 @@
       "r1",
       "r2",
       "r3",
-      "r4",
+      "all2",
       "all1"
     ],
     [
-      "i1",
-      "i2",
+      "r4",
+      "nlp11",
       "nlp1",
-      "nlp2",
-      "nlp3",
-      "nlp4"
+      "nlp4",
+      "nlp13",
+      "i1"
     ],
     [
       "nlp5",
-      "nlp6",
       "nlp7",
-      "nlp8",
       "nlp9",
-      "nlp10"
-    ],
-    [
-      "nlp11",
-      "nlp12",
-      "nlp13",
-      "all2",
-      "ts1",
-      "r1"
+      "nlp10",
+      "i2",
+      "nlp12"
     ]
+
   ]
 }
