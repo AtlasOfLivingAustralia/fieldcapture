@@ -193,7 +193,7 @@
       "config": "3",
       "title": "Green Army",
       "label": "Number of plants planted",
-      "units": "Ha",
+      "units": "",
       "type": "score",
       "scoreLabel": "Number of plants planted",
       "projectFilter": [
@@ -204,9 +204,9 @@
       "config": "2",
       "title": "Green Army",
       "label": "Volume of debris removed",
-      "units": "Ha",
+      "units": "m<super>3</super>",
       "type": "score",
-      "scoreLabel": "Number of plants planted",
+      "scoreLabel": "Volume of debris removed (m3)",
       "projectFilter": [
         "associatedProgramFacet:Green Army"
       ]
