@@ -388,6 +388,9 @@
 
         // re-establish the previous view state
         var storedTab = amplify.store(VIEW_STATE_KEY) || '#mapView';
+        if (!$('#project-display-options '+storedTab)[0]) {
+            storedTab = '#mapView';
+        }
         $('#project-display-options '+storedTab).collapse({parent:'#project-display-options'});
         $('#project-display-options '+storedTab).collapse('show');
 
