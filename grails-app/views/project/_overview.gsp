@@ -129,7 +129,7 @@
 
 
     <h3>News & events</h3>
-    <g:render template="/shared/blog" model="${[blog:blog, type:'News and events']}"/>
+    <g:render template="/shared/blog" model="${[blog:blog, type:'News and Events']}"/>
 
     %{-- Legacy news & events section--}%
     <div class="row-fluid" data-bind="if:newsAndEvents()">
@@ -141,7 +141,7 @@
 
 <div class="row-fluid">
     <h3>Project stories</h3>
-    <g:render template="/shared/blog" model="${[blog:blog, type:'Project stories']}"/>
+    <g:render template="/shared/blog" model="${[blog:blog, type:'Project Stories']}"/>
 
     %{-- Legacy news & events section--}%
     <div class="row-fluid" data-bind="visible:projectStories()">
