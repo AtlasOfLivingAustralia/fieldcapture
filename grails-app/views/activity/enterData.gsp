@@ -86,10 +86,8 @@
                 <div class="span1">
                     Site:
                 </div>
-                <div class="span2">
+                <div class="span8">
                     <fc:select data-bind='options:transients.project.sites,optionsText:"name",optionsValue:"siteId",value:siteId,optionsCaption:"Choose a site..."' printable="${printView}"/>
-                </div>
-                <div class="span6">
                     Leave blank if this activity is not associated with a specific site.
                 </div>
             </div>
@@ -197,7 +195,7 @@
 </script>
 <!-- ko stopBinding: true -->
 <g:each in="${metaModel?.outputs}" var="outputName">
-        <g:if test="${outputName != 'Photo Points'}">
+    <g:if test="${outputName != 'Photo Points'}">
     <g:set var="blockId" value="${fc.toSingleWord([name: outputName])}"/>
     <g:set var="model" value="${outputModels[outputName]}"/>
     <g:set var="output" value="${activity.outputs.find {it.name == outputName}}"/>
@@ -207,8 +205,13 @@
     <md:modelStyles model="${model}" edit="true"/>
     <div class="output-block" id="ko${blockId}">
         <h3 data-bind="css:{modified:dirtyFlag.isDirty},attr:{title:'Has been modified'}">${outputName}</h3>
+        <div data-bind="if:transients.optional">
+            <label class="checkbox" ><input type="checkbox" data-bind="checked:outputNotCompleted"> <span data-bind="text:transients.questionText"></span> </label>
+        </div>
+        <div id="${blockId}-content" data-bind="visible:!outputNotCompleted()">
         <!-- add the dynamic components -->
         <md:modelView model="${model}" site="${site}" edit="true" output="${output.name}" printable="${printView}" />
+        </div>
         <r:script>
         $(function(){
 
@@ -218,13 +221,21 @@
             // load dynamic models - usually objects in a list
             <md:jsModelObjects model="${model}" site="${site}" speciesLists="${speciesLists}" edit="true" viewModelInstance="${blockId}ViewModelInstance"/>
 
-                this[viewModelName] = function () {
+                this[viewModelName] = function (site, config, outputNotCompleted) {
                 var self = this;
                 self.name = "${output.name}";
                 self.outputId = "${output.outputId}";
 
                 self.data = {};
                 self.transients = {};
+                var notCompleted = outputNotCompleted;
+
+                if (notCompleted === undefined) {
+                    notCompleted = config.collapsedByDefault;
+                }
+                self.outputNotCompleted = ko.observable(notCompleted);
+                self.transients.optional = config.optional || false;
+                self.transients.questionText = config.optionalQuestionText || 'No '+self.name+' was completed during this activity';
                 self.transients.dummy = ko.observable();
 
                 // add declarations for dynamic data
@@ -287,7 +298,9 @@
 
             };
 
-            window[viewModelInstance] = new this[viewModelName](site);
+            var config = ${fc.modelAsJavascript(model:metaModel.outputConfig?.find{it.outputName == outputName}, default:'{}')};
+            var outputNotCompleted = ${output.outputNotCompleted?:'undefined'};
+            window[viewModelInstance] = new this[viewModelName](site, config, outputNotCompleted);
 
             var output = ${output.data ?: '{}'};
 
