@@ -18,11 +18,6 @@
 </head>
 <body>
 <div id="wrapper" class="${containerType}">
-    <div class="row-fluid">
-        <div class="span12" id="header">
-            <h2 class="pull-left">User Profile - ${user?.displayName}</h2>
-        </div>
-    </div>
     <g:if test="${flash.error || error}">
         <g:set var="error" value="${flash.error?:user?.error}"/>
         <div class="row-fluid">
