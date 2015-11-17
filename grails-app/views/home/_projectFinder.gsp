@@ -48,7 +48,7 @@
                     <g:set var="max" value="${5}"/>
                     <g:if test="${fn != 'class' && f?.terms?.size() > 0}">
                         <g:set var="fName"><g:message code="label.${fn}" default="${fn?.capitalize()}"/></g:set>
-                        <div><h4 style="display:inline-block">${fName}</h4><a class="accordian-toggle" data-toggle="collapse" data-target="#facet-list-${j}"><i style="float:right; margin-top:10px;" class="icon-plus"></i></a></div>
+                        <div><h4 style="display:inline-block">${fName}</h4><a class="accordian-toggle" data-toggle="collapse" data-target="#facet-list-${j}"><i style="float:right; margin-top:10px;" class="fa fa-plus"></i></a></div>
                         <div id="facet-list-${j}" data-name="${fn}" class="collapse">
                             <ul style="list-style-type: none;" class="facetValues">
                                 <g:each var="t" in="${f.terms}" status="i">
@@ -63,7 +63,7 @@
                             </ul>
 
                             <g:if test="${f?.terms?.size() > max}">
-                                <a href="#${fn}Modal" role="button" class="moreFacets tooltips" data-toggle="modal" title="View full list of values"><i class="icon-hand-right"></i> choose more...</a>
+                                <a href="#${fn}Modal" role="button" class="moreFacets tooltips" data-toggle="modal" title="View full list of values"><i class="fa fa-hand-o-right"></i> choose more...</a>
                                 <div id="${fn}Modal" class="modal hide fade">
                                     <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -102,7 +102,7 @@
             <div class="accordian" id="project-display-options">
                 <div class="accordion-group">
                     <div class="accordian-heading">
-                        <a class="accordian-toggle" id="mapView-heading" href="#mapView" data-toggle="collapse" data-parent="#project-display-options">Map</a>
+                        <a class="accordian-toggle" id="mapView-heading" href="#mapView" data-toggle="collapse" data-parent="#project-display-options">Map <i style="padding-left:50px; padding-top:5px;" class="fa fa-plus pull-right"></i></a>
                     </div>
                     <div id="mapView" class="accordian-body collapse">
                         <span class="span4 facet-holder"></span>
@@ -114,7 +114,7 @@
                 </div>
                 <div class="accordion-group">
                     <div class="accordian-heading">
-                        <a class="accordian-toggle" id="projectsView-heading" href="#projectsView" data-toggle="collapse" data-parent="#project-display-options">Projects</a>
+                        <a class="accordian-toggle" id="projectsView-heading" href="#projectsView" data-toggle="collapse" data-parent="#project-display-options">Projects <i style="padding-left:50px; padding-top:5px;" class="fa fa-plus pull-right"></i></a>
                     </div>
                     <div class="accordian-body collapse" id="projectsView">
                         <span class="span4 facet-holder"></span>
@@ -158,29 +158,28 @@
                                             <span class="showHideCaret">&#9658;</span> <span class="projectTitleName">$name</span></a>
                                         <div class="hide projectInfo" id="proj_$id">
                                             <div class="homeLine">
-                                                <i class="icon-home"></i>
+                                                <i class="fa fa-home"></i>
                                                 <a href="">View project page</a>
                                             </div>
                                             <div class="sitesLine">
-                                                <i class="icon-map-marker"></i>
+                                                <i class="fa fa-map-marker"></i>
                                                 Sites: <a href="#" data-id="$id" class="zoom-in btnX btn-miniX"><i
-                                                    class="icon-plus-sign"></i> show on map</a>
-                                                %{--<a href="#" data-id="$id" class="zoom-out btnX btn-miniX"><i--}%
-                                                %{--class="icon-minus-sign"></i> zoom out</a>--}%
+                                                    class="fa fa-plus"></i> show on map</a>
+
                                             </div>
                                             <div class="orgLine">
-                                                <i class="icon-user"></i>
+                                                <i class="fa fa-user"></i>
                                             </div>
                                             <div class="descLine">
-                                                <i class="icon-info-sign"></i>
+                                                <i class="fa fa-info"></i>
                                             </div>
                                             <g:if test="${fc.userIsSiteAdmin()}">
                                                 <div class="downloadLine">
-                                                    <i class="icon-download"></i>
+                                                    <i class="fa fa-download"></i>
                                                     <a href="" target="_blank">Download (.xlsx)</a>
                                                 </div>
                                                 <div class="downloadJSONLine">
-                                                    <i class="icon-download"></i>
+                                                    <i class="fa fa-download"></i>
                                                     <a href="" target="_blank">Download (.json)</a>
                                                 </div>
                                             </g:if>
@@ -196,7 +195,7 @@
 
                 <div class="accordion-group">
                     <div class="accordian-heading">
-                        <a class="accordian-toggle" id="reportView-heading" href="#reportView" data-toggle="collapse" data-parent="#project-display-options">Dashboard</a>
+                        <a class="accordian-toggle" id="reportView-heading" href="#reportView" data-toggle="collapse" data-parent="#project-display-options">Dashboard<i style="padding-left:50px; padding-top:5px;" class="fa fa-plus pull-right"></i></a>
                     </div>
                     <div class="accordian-body collapse" id="reportView">
                         <span class="span4 facet-holder"></span>
@@ -225,7 +224,7 @@
                 <g:if test="${fc.userIsSiteAdmin()}">
                     <div class="accordion-group">
                         <div class="accordian-heading">
-                            <a class="accordian-toggle" id="downloadView-heading" href="#downloadView" data-toggle="collapse" data-parent="#project-display-options">Download</a>
+                            <a class="accordian-toggle" id="downloadView-heading" href="#downloadView" data-toggle="collapse" data-parent="#project-display-options"><span>Download</span><i style="padding-left:50px; padding-top:5px;" class="fa fa-plus pull-right"></i></a>
                         </div>
                         <div class="accordian-body collapse" id="downloadView">
                             <span class="span4 facet-holder"></span>
@@ -372,11 +371,13 @@
         // retain accordian state for future re-visits
         $('#project-display-options').on('shown', function (e) {
             // Because the facets use accordion and are inside the main accordion view we need to filter them out.
-            if ($(e.target).hasClass('accordian-body')) {
-
-                var section = '#'+e.target.id;
+            var $target = $(e.target);
+            if ($target.hasClass('accordian-body')) {
+                var targetId = e.target.id;
+                var section = '#'+targetId;
                 amplify.store(VIEW_STATE_KEY, section);
                 initialiseContentSection(section);
+                $('#'+targetId+'-heading').find('i').removeClass('fa-plus').addClass('fa-minus');
             }
         });
         $('#project-display-options').on('show', function (e) {
@@ -384,6 +385,10 @@
             var section = '#'+e.target.id;
             $('#facetsCol').appendTo($(section).find('.facet-holder'));
             $('#facetsCol').show();
+        });
+        $('#project-display-options').on('hidden', function (e) {
+            var targetId = e.target.id;
+            $('#'+targetId+'-heading').find('i').removeClass('fa-minus').addClass('fa-plus');
         });
 
         // re-establish the previous view state
@@ -410,7 +415,7 @@
                 amplify.store('facetToggleState', expandedToggles);
             }
 
-            $('[data-target="#'+e.target.id+'"] i').removeClass('icon-plus').addClass('icon-minus');
+            $('[data-target="#'+e.target.id+'"] i').removeClass('fa-plus').addClass('fa-minus');
         });
 
         $('#facetsContent').on('hidden', function (e) {
@@ -421,7 +426,7 @@
                 amplify.store('facetToggleState', expandedToggles);
             }
 
-            $('[data-target="#'+e.target.id+'"] i').removeClass('icon-minus').addClass('icon-plus');
+            $('[data-target="#'+e.target.id+'"] i').removeClass('fa-minus').addClass('fa-plus');
 
         });
 

@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import au.org.ala.fieldcapture.MetadataService
 import au.org.ala.fieldcapture.WebService
 import grails.test.mixin.TestFor
 import spock.lang.Specification
@@ -12,11 +13,13 @@ class ReportServiceSpec extends Specification {
 
     def webService = Mock(WebService)
     def projectService = Stub(ProjectService)
+    def metadataService = Stub(MetadataService)
 
     def setup() {
 
         service.webService = webService
         service.projectService = projectService
+        service.metadataService = metadataService
     }
 
     def project(plannedStartDate = '2015-01-01T00:00:00Z', plannedEndDate = '2016-12-31T23:59:59Z') {

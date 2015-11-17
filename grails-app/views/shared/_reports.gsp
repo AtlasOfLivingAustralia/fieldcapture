@@ -10,17 +10,17 @@
         color:red;
     }
 </style>
-<table id="report">
+<table id="report" class="table">
     <thead>
         <tr>
-            <th>Grant ID</th>
-            <th>Programme</th>
-            <th>Sub-programme</th>
-            <th>Project name</th>
-            <th>Organisation / Service Provider</th>
-            <th>Current Report Status</th>
-            <th>Current Phase</th>
-            <th>Average time of reoprting compared to due date</th>
+            <th class="sorting">Grant ID</th>
+            <th class="sorting">Programme</th>
+            <th class="sorting">Sub-programme</th>
+            <th class="sorting">Project name</th>
+            <th class="sorting">Organisation / Service Provider</th>
+            <th class="sorting">Current Report Status</th>
+            <th class="sorting">Current Phase</th>
+            <th class="sorting">Average time of reoprting compared to due date</th>
             <th>Recommend as case study (tick box)</th>
         </tr>
     </thead>
