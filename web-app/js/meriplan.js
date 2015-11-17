@@ -637,7 +637,7 @@ var Report = function(report) {
         var submitted = moment(report.dateSubmitted);
         var due = moment(report.dueDate);
 
-        return due.diff(submitted, 'days');
+        return submitted.diff(due, 'days');
 
     };
 
@@ -672,7 +672,7 @@ var ProjectReportsViewModel = function(project) {
     self.associatedProgram = project.associatedProgram;
     self.associatedSubProgram = project.associatedSubProgram;
     self.submittedReportCount = 0;
-    self.recommendAsCaseStudy = ko.observable(project.promoteOnHomePage);
+    self.recommendAsCaseStudy = ko.observable(project.promoteOnHomepage);
 
     self.reports = [];
     var now = new Date().toISOStringNoMillis();
@@ -803,7 +803,7 @@ var ProjectReportsViewModel = function(project) {
     self.savingCaseStudy = ko.observable(false);
     self.recommendAsCaseStudy.subscribe(function() {
         var url = fcConfig.projectUpdateUrl + '/' + project.projectId;
-        var payload = {promoteOnHomepage:self.recommendAsCaseStudy};
+        var payload = {promoteOnHomepage:self.recommendAsCaseStudy()};
 
         self.savingCaseStudy(true);
 
