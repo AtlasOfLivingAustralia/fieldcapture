@@ -15,6 +15,9 @@ class ReportService {
     def searchService
     def commonService
     def documentService
+    def metadataService
+
+    private static int DEFAULT_REPORT_DAYS_TO_COMPLETE = 43
 
     /**
      * This method supports automatically creating reporting activities for a project that re-occur at defined intervals.
@@ -27,8 +30,7 @@ class ReportService {
     def regenerateAllStageReportsForProject(projectId, periodInMonths = 6, alignToCalendar = false) {
 
         def project = projectService.get(projectId, 'all')
-        println periodInMonths
-
+        def programConfig = metadataService.getProgramConfiguration(project.associatedProgram, project.associatedSubProgram)
         def period = Period.months(periodInMonths)
 
         def reports = getReportsForProject(projectId).sort{it.toDate}
@@ -60,7 +62,7 @@ class ReportService {
             def report = [
                     fromDate:DateUtils.format(periodStartDate),
                     toDate:DateUtils.format(periodEndDate),
-                    dueDate:DateUtils.format(periodEndDate.plusDays(43)),
+                    dueDate:DateUtils.format(periodEndDate.plusDays(programConfig.weekDaysToCompleteReport ?: DEFAULT_REPORT_DAYS_TO_COMPLETE)),
                     type:'Activity',
                     projectId:projectId,
                     name:'Stage '+stage,
