@@ -214,8 +214,8 @@
     "ga3": {
       "config": "2",
       "title": "Green Army",
-      "label": "Ha of weeds treated",
-      "units": "",
+      "label": "Managed for weeds",
+      "units": "Ha",
       "type": "score",
       "scoreLabel": "Total new area treated (Ha)",
       "projectFilter": [
