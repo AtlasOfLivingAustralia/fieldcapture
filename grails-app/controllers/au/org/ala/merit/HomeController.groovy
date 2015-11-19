@@ -83,7 +83,7 @@ class HomeController {
 
         def helpPage = g.createLink([action:'help'])
         def helpLinks = documentService.findAllHelpResources()
-        helpLinks << [name:'MORE RESOURCES', type:'text', url:helpPage]
+        helpLinks << [name:'MORE RESOURCES', type:'', url:helpPage]
         def blog = blogService.getSiteBlog()
 
         def model = [statistics:statistics.statistics, helpLinks:helpLinks, images:images, blog:blog]
