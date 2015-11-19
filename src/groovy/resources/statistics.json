@@ -22,7 +22,7 @@
       "scoreLabel": "Total No. of farming entities adopting sustainable practice change"
     },
     "r2": {
-      "config": "2",
+      "config": "4",
       "title": "Reef",
       "label": "Waste prevented from entering the reef",
       "units": "Tonnes",
@@ -59,8 +59,8 @@
     "i1": {
       "config": "5",
       "title": "Indigenous",
-      "label": "Indigenous people employed to deliver",
-      "units": "Projects",
+      "label": "Indigenous people employed to deliver projects",
+      "units": "",
       "type": "score",
       "scoreLabel": "Total No. of Indigenous people employed"
     },
