@@ -20,7 +20,7 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
         def blog = blogService.getProjectBlog(project)
         def imagesModel = publicImages.collect {[name:it.name, projectName:project.name, url:it.url]}
 
-        def model = [overview:[label:'Overview', visible: true, default:true, type:'tab', /*outcomes:projectService.getProjectOutcomes(project),*/ publicImages:imagesModel, blog:blog],
+        def model = [overview:[label:'Overview', visible: true, default:true, type:'tab', /*outcomes:projectService.getProjectOutcomes(project),*/ publicImages:imagesModel, displayTargets:false, displayOutcomes:false, blog:blog],
          documents:[label:'Documents', visible: true, type:'tab'],
          details:[label:'MERI Plan', disabled:!meriPlanEnabled, visible:meriPlanVisible, type:'tab'],
          plan:[label:'Activities', visible:true, disabled:!user?.hasViewAccess, type:'tab', reports:reportService.getReportsForProject(project.projectId)],

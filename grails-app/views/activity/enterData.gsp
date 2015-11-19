@@ -235,7 +235,7 @@
                 }
                 self.outputNotCompleted = ko.observable(notCompleted);
                 self.transients.optional = config.optional || false;
-                self.transients.questionText = config.optionalQuestionText || 'No '+self.name+' was completed during this activity';
+                self.transients.questionText = config.optionalQuestionText || 'Not applicable';
                 self.transients.dummy = ko.observable();
 
                 // add declarations for dynamic data

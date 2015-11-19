@@ -50,7 +50,7 @@ $(function() {
 
     ko.applyBindings(viewModel, document.getElementById('report'));
 
-    var table = $('#report').DataTable();
+    var table = $('#report').DataTable({displayLength:50});
 
 });
 </r:script>
