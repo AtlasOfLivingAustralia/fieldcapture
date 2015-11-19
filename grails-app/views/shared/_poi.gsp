@@ -8,8 +8,12 @@
 
                 <div class="sp-caption">
                     <h3 class="image-caption"><fc:truncate value="${image.name}" maxLength="45"/></h3>
-                    <g:if test="${image.attribution}"><p class="image-attribution">Photo by: ${image.attribution}</p></g:if>
-                    <a href="${g.createLink(controller: 'project', action:'index', id:image.projectId)}"><p class="image-project"><fc:truncate value="${image.projectName}" maxLength="80"/></p></a>
+                    <a href="${g.createLink(controller: 'project', action:'index', id:image.projectId)}">
+                        <p class="image-project"><fc:truncate value="${image.projectName}" maxLength="80"/></p>
+                    </a>
+                    <p class="image-attribution">
+                        <g:if test="${image.attribution}">Photo by: ${image.attribution}</g:if>
+                    </p>
                 </div>
 
         </div>
