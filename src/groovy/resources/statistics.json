@@ -13,8 +13,8 @@
     "r1": {
       "config": "1",
       "title": "Reef",
-      "label": "Farms adopting practice change to protect the reef",
-      "units": "",
+      "label": "adopting practice change to protect the reef",
+      "units": "Farmers ",
       "type": "score",
       "projectFilter": [
       ],
@@ -142,8 +142,8 @@
     "nlp11": {
       "config": "3",
       "title": "National Landcare Programme",
-      "label": "Volunteers participating in projects",
-      "units": "",
+      "label": "participating in projects",
+      "units": "Volunteers",
       "type": "score",
       "projectFilter": [
         "associatedProgramFacet:National Landcare Programme"
@@ -153,8 +153,8 @@
     "nlp12": {
       "config": "3",
       "title": "20 Million Trees",
-      "label": "Trees planned for planting",
-      "units": "",
+      "label": "planned for planting",
+      "units": "Trees",
       "type": "outputTarget",
       "projectFilter": [
         "associatedProgramFacet:National Landcare Programme"
@@ -192,8 +192,8 @@
     "ga1": {
       "config": "3",
       "title": "Green Army",
-      "label": "Number of plants planted",
-      "units": "",
+      "label": "planted by Green Army",
+      "units": "Plants",
       "type": "score",
       "scoreLabel": "Number of plants planted",
       "projectFilter": [
