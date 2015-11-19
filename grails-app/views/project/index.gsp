@@ -110,7 +110,7 @@
             <g:render plugin="fieldcapture-plugin" template="docs"/>
         </div>
 
-        <g:if test="${projectContent.details.visible}">
+        <g:if test="${projectContent.details.visible && !projectContent.details.disabled}">
         <div class="tab-pane" id="details">
             <!-- Project Details -->
             <g:render template="projectDetails" model="[project: project]"/>
