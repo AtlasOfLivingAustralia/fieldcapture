@@ -47,7 +47,7 @@
     "r4": {
       "config": "4",
       "title": "Reef",
-      "label": "Reef area treated for Crown of Thorn Starfish",
+      "label": "of the reef treated for Crown of Thorn Starfish",
       "units": "Ha",
       "type": "score",
       "projectFilter": [
@@ -119,7 +119,7 @@
     "nlp9": {
       "config": "2",
       "title": "National Landcare Programme",
-      "label": "Area targeted for weed control",
+      "label": "Targeted for weed control",
       "units": "Ha",
       "type": "outputTarget",
       "projectFilter": [
@@ -130,7 +130,7 @@
     "nlp10": {
       "config": "2",
       "title": "National Landcare Programme",
-      "label": "Area community groups are managing for weeds",
+      "label": "Weeds managed by community groups",
       "units": "Ha",
       "type": "score",
       "projectFilter": [
@@ -164,8 +164,8 @@
     "nlp13": {
       "config": "6",
       "title": "National Landcare Programme",
-      "label": "Ha targeted for pest animal control",
-      "units": "",
+      "label": "Targeted for pest animal control",
+      "units": "Ha",
       "type": "outputTarget",
       "projectFilter": [
         "associatedProgramFacet:National Landcare Programme"
@@ -183,7 +183,7 @@
     "all2": {
       "config": "6",
       "title": "All programmes",
-      "label": "Area treated for felius catus",
+      "label": "Treated for felius catus",
       "units": "Ha",
       "type": "score",
       "scoreLabel": "Treated area (Ha) by species",
