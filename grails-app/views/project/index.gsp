@@ -140,7 +140,7 @@
             <g:render plugin="fieldcapture-plugin" template="docs"/>
         </div>
 
-        <g:if test="${projectContent.details.visible}">
+        <g:if test="${projectContent.details.visible && !projectContent.details.disabled}">
         <div class="tab-pane" id="details">
             <!-- Project Details -->
             <g:render template="projectDetails" model="[project: project]"/>
@@ -842,7 +842,8 @@
         	$('.tab-content').fadeIn();
 
         	// re-establish the previous tab state
-            var storedTab = amplify.store('project-tab-state');
+            var storedTab = ${user?"amplify.store('project-tab-state')":"'overview'"};
+
             var isEditor = ${user?.isEditor?:false};
 
             initialiseOverview();

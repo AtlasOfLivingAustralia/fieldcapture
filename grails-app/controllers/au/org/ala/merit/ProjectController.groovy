@@ -15,7 +15,7 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
     protected Map projectContent(project, user, programs) {
         def program = programs.programs.find{it.name == project.associatedProgram}
         def meriPlanVisible = program?.optionalProjectContent?.contains('MERI Plan')
-        def meriPlanEnabled = user?.hasViewAccess || (project.associatedProgram == 'National Landcare Programme' && project.associatedSubProgram == 'Regional Funding')
+        def meriPlanEnabled = user?.hasViewAccess || ((project.associatedProgram == 'National Landcare Programme' && project.associatedSubProgram == 'Regional Funding') && project.planStatus == 'approved')
         def publicImages = project.documents.findAll{it.public == true && it.thirdPartyConsentDeclarationMade == true && it.type == 'image'}
         def blog = blogService.getProjectBlog(project)
         def imagesModel = publicImages.collect {[name:it.name, projectName:project.name, url:it.url]}
