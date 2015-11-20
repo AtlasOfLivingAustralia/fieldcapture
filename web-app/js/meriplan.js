@@ -591,11 +591,11 @@ var Report = function(report) {
 
     self.isSubmitted = function() {
         return report.publicationStatus == 'pendingApproval';
-    }
+    };
 
     self.isApproved = function() {
         return report.publicationStatus == 'published';
-    }
+    };
 
 
     self.isCurrent = function() {
@@ -603,26 +603,30 @@ var Report = function(report) {
         return  report.publicationStatus != 'pendingApproval' &&
             report.publicationStatus != 'published' &&
             fromDate < now && toDate >= now;
-    }
+    };
 
     self.isDue = function() {
         return  report.publicationStatus != 'pendingApproval' &&
             report.publicationStatus != 'published' &&
-            toDate < now && dueDate >= now
-    }
+            toDate < now && (!dueDate || dueDate >= now); // Due date is temporarily optional.
+    };
 
     self.isOverdue = function() {
         return  report.publicationStatus != 'pendingApproval' &&
             report.publicationStatus != 'published' &&
-            dueDate < now
-    }
+            dueDate && dueDate < now;
+    };
 
     self.status = function() {
         if (self.isOverdue()) {
             return name + ' overdue by '+Math.round(self.overdueDelta())+' day(s)';
         }
         if (self.isDue()) {
-            return name + ' due on '+convertToSimpleDate(report.dueDate, false);
+            var status = name +  ' due';
+            if (dueDate) {
+                status += ' on '+convertToSimpleDate(report.dueDate, false);
+            }
+            return status;
         }
         if (self.isCurrent()) {
             return name + ' in progress';
@@ -634,6 +638,9 @@ var Report = function(report) {
     };
 
     self.submissionDelta = function() {
+        if (!dueDate) {
+            return 0;
+        }
         var submitted = moment(report.dateSubmitted);
         var due = moment(report.dueDate);
 
@@ -642,6 +649,9 @@ var Report = function(report) {
     };
 
     self.overdueDelta = function() {
+        if (!dueDate) {
+            return 0;
+        }
         var due = moment(report.dueDate);
 
         return moment(now).diff(due, 'days');
@@ -675,16 +685,18 @@ var ProjectReportsViewModel = function(project) {
     self.recommendAsCaseStudy = ko.observable(project.promoteOnHomepage);
 
     self.reports = [];
-    var now = new Date().toISOStringNoMillis();
     var reportingTimeSum = 0;
-    var reportsCounted = 0;
 
     var currentReport = null;
 
     if (project.reports) {
         for (var i=0; i<project.reports.length; i++) {
+
             var report = new Report(project.reports[i]);
             self.reports.push(report);
+            if (!currentReport) {
+                currentReport = report;
+            }
 
             // Rule for "current" report is:
             // 1) Any report awaiting action. (Overdue > Submitted).
@@ -693,10 +705,13 @@ var ProjectReportsViewModel = function(project) {
             if (report.isOverdue()) {
                 currentReport = report;
             }
-            else if (report.isSubmitted() && (!currentReport || !currentReport.isOverdue())) {
+            else if (report.isSubmitted() && !currentReport.isOverdue()) {
                 currentReport = report;
             }
-            else if (report.isCurrent() && (!currentReport || !currentReport.isOverdue() && !currentReport.isSubmitted())) {
+            else if (report.isDue() && !currentReport.isOverdue() && !currentReport.isSubmitted()) {
+                currentReport = report;
+            }
+            else if (report.isCurrent() && !currentReport.isDue() && !currentReport.isOverdue() && !currentReport.isSubmitted()) {
                 currentReport = report;
             }
 
@@ -745,14 +760,12 @@ var ProjectReportsViewModel = function(project) {
 
     self.meriPlanStatus = function() {
         if (project.planStatus === 'approved') {
-            return 'This plan has been approved';
+            return 'Reporting phase';
         }
         if (project.planStatus === 'submitted') {
-            return 'This plan has been submitted for approval';
+            return 'MERI plan submitted for approval';
         }
-
-        return 'This plan is editable';
-
+        return 'Planning phase';
     };
 
 
@@ -823,7 +836,7 @@ var ProjectReportsViewModel = function(project) {
         });
     });
 
-}
+};
 
 var ProjectReportingViewModel = function(projects) {
     var self = this;
