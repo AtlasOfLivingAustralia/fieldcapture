@@ -79,32 +79,6 @@
             </g:if>
         </div>
 
-        <g:if env="development" test="${!printView}">
-            <div class="expandable-debug">
-                <hr />
-                <h3>Debug</h3>
-                <div>
-                    <h4>KO model</h4>
-                    <pre data-bind="text:ko.toJSON($root,null,2)"></pre>
-                    <h4>Activity</h4>
-                    <pre>${activity?.encodeAsHTML()}</pre>
-                    <h4>Site</h4>
-                    <pre>${site?.encodeAsHTML()}</pre>
-                    <h4>Sites</h4>
-                    <pre>${(sites as JSON).toString()}</pre>
-                    <h4>Project</h4>
-                    <pre>${project?.encodeAsHTML()}</pre>
-                    <h4>Activity model</h4>
-                    <pre>${metaModel}</pre>
-                    <h4>Output models</h4>
-                    <pre>${outputModels}</pre>
-                    <h4>Themes</h4>
-                    <pre>${themes.toString()}</pre>
-                    <h4>Map features</h4>
-                    <pre>${mapFeatures.toString()}</pre>
-                </div>
-            </div>
-        </g:if>
     </div>
 <!-- ko stopBinding: true -->
     <g:each in="${metaModel?.outputs}" var="outputName">
