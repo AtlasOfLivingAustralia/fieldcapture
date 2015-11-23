@@ -30,7 +30,12 @@
             <td data-bind="text:associatedProgram"></td>
             <td data-bind="text:associatedSubProgram"></td>
             <td><a data-bind="attr:{href:fcConfig.projectViewUrl+'/'+projectId}"><span data-bind="text:name"></span></a></td>
-            <td><a data-bind="attr:{href:fcConfig.organisationViewUrl+'/'+organisationId}"><span data-bind="text:organisationName"></span></a></td>
+            <td>
+                <a data-bind="if:organisationId, attr:{href:fcConfig.organisationViewUrl+'/'+organisationId}"><span data-bind="text:organisationName"></span></a>
+                <!-- ko if:!organisationId -->
+                <span data-bind="text:organisationName"></span>
+                <!-- /ko -->
+            </td>
             <td data-bind="text:currentStatus, css:{late:isOverdue}"></td>
             <td data-bind="text:meriPlanStatus()"></td>
             <td data-bind="click:toggleHistory"><span data-bind="html:averageReportingTimeText()"></span> <br/><em data-bind="visible:!historyVisible()">Show history <i class="icon-plus"></i></em><em data-bind="visible:historyVisible()">Hide history <i class="icon-minus"></i></em></td>
