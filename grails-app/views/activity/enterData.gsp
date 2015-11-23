@@ -403,6 +403,29 @@
             });
             return dirty;
         };
+
+        this.validate = function() {
+            var valid = $('#validation-container').validationEngine('validate');
+            if (valid) {
+                // Check there is some data on the form - if every section has been collapsed, fail the validation.
+                var hasData = false;
+                $.each(self.subscribers, function(i, obj) {
+                    if (obj.model !== 'activityModel' && obj.model !== 'photoPoints') {
+                        var outputData = obj.get();
+                        if (!outputData.outputNotCompleted) {
+                            hasData = true;
+                        }
+                    }
+                });
+                if (!hasData) {
+                   valid = false;
+                   bootbox.alert("At least one form section must be completed");
+                }
+            }
+
+            return valid;
+        };
+
         /**
          * Makes an ajax call to save any sections that have been modified. This includes the activity
          * itself and each output.
@@ -418,7 +441,7 @@
 
             var activityData, outputs = [], photoPoints;
 
-            if ($('#validation-container').validationEngine('validate')) {
+            if (self.validate()) {
                 // Don't allow another save to be initiated.
                 blockUIWithMessage("Saving activity data...");
 
