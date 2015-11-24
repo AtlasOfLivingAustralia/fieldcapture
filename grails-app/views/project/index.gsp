@@ -2,7 +2,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" href="http://merit.giraffedesign.com.au/css/project.css">
     <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
     <title>${project?.name.encodeAsHTML()} | Project | Field Capture</title>
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
@@ -142,18 +141,23 @@
 
         <g:if test="${projectContent.details.visible && !projectContent.details.disabled}">
         <div class="tab-pane" id="details">
-            <!-- Project Details -->
-            <g:render template="projectDetails" model="[project: project]"/>
+            <g:if test="${projectContent.details.meriPlanVisibleToUser}">
+                <!-- Project Details -->
+                <g:render template="projectDetails" model="[project: project]"/>
 
-            <div class="row-fluid space-after">
-                <div class="span6">
-                    <div class="well well-small">
-                        <label><b>MERI attachments:</b></label>
-                        <g:render plugin="fieldcapture-plugin" template="/shared/listDocuments"
+                <div class="row-fluid space-after">
+                    <div class="span6">
+                        <div class="well well-small">
+                            <label><b>MERI attachments:</b></label>
+                            <g:render plugin="fieldcapture-plugin" template="/shared/listDocuments"
                                   model="[useExistingModel: true,editable:false, filterBy: 'programmeLogic', ignore: '', imageUrl:resource(dir:'/images'),containerId:'overviewDocumentList']"/>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </g:if>
+            <g:else>
+                <h3>MERI plan in development</h3>
+            </g:else>
         </div>
         </g:if>
 

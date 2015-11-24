@@ -28,11 +28,11 @@
 <head>
     <title><g:layoutTitle /></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <r:require modules="nrmSkin, jquery_cookie"/>
+    <r:require modules="newSkin, nrmSkin, jquery_cookie"/>
     <r:layoutResources/>
     <link href="https://fonts.googleapis.com/css?family=Oswald:300" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400italic,600,700" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="http://merit.giraffedesign.com.au/css/global-styles.css">
+    %{--<link rel="stylesheet" href="http://merit.giraffedesign.com.au/css/global-styles.css">--}%
     <g:layoutHead />
     <g:set var="containerType" scope="request" value="${containerType?:'container'}"/>
 </head>
@@ -67,7 +67,7 @@
 
                 <a href="${createLink(controller:"home")}">
                     %{--<img src="${hubConfig.logoUrl}" alt="${hubConfig.title}" />--}%
-                <img src="http://merit.giraffedesign.com.au/images/ag-Inline_W.png" alt="${hubConfig.title}" />
+                <r:img dir="images" file="ag-Inline_W.png" alt="${hubConfig.title}" />
                 </a>
 
                 <g:if test="${hubConfig.title}"><span class="merit">${hubConfig.title}</span></g:if>

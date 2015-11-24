@@ -3,8 +3,6 @@
 <head>
     <g:set var="containerType" scope="request" value="container"/>
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}&libraries=visualization"></script>
-    <link rel="stylesheet" href="http://merit.giraffedesign.com.au/css/homepage.css">
-    <link rel="stylesheet" href="http://merit.giraffedesign.com.au/css/project-explorer.css">
     <meta name="layout" content="${grailsApplication.config.layout.skin ?: 'main'}"/>
     <title>Home | MERIT</title>
     <r:script disposition="head">
@@ -22,7 +20,7 @@
         };
     </r:script>
     <script type="text/javascript" src="//www.google.com/jsapi"></script>
-    <r:require modules="application, sliderpro, knockout,mapWithFeatures,wmd,jquery_bootstrap_datatable,js_iso8601,amplify"/>
+    <r:require modules="application, sliderpro, knockout,mapWithFeatures,wmd,jquery_bootstrap_datatable,js_iso8601,amplify,homepage"/>
 
 </head>
 

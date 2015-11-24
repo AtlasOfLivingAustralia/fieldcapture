@@ -3,6 +3,7 @@ modules = {
         dependsOn 'projects'
         resource url:'js/meriplan.js'
         resource url:'js/risks.js'
+        resource url:'css/project.css'
     }
 
     greenArmy {
@@ -14,6 +15,17 @@ modules = {
     admin {
         dependsOn 'application'
         resource url: 'js/admin.js'
+    }
+
+    newSkin {
+        dependsOn 'nrmSkin'
+        resource url: 'css/global-styles.css'
+    }
+
+    homepage {
+        dependsOn 'application', 'newSkin'
+        resource url:'css/homepage.css'
+        resource url:'css/project-explorer.css'
     }
 
 
