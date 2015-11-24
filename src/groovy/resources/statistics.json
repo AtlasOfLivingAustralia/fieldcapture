@@ -13,8 +13,8 @@
     "r1": {
       "config": "1",
       "title": "Reef",
-      "label": "Farms adopting practice change to protect the reef",
-      "units": "",
+      "label": "adopting practice change to protect the reef",
+      "units": "Farmers ",
       "type": "score",
       "projectFilter": [
       ],
@@ -47,7 +47,7 @@
     "r4": {
       "config": "4",
       "title": "Reef",
-      "label": "Reef area treated for Crown of Thorn Starfish",
+      "label": "of the reef treated for Crown of Thorn Starfish",
       "units": "Ha",
       "type": "score",
       "projectFilter": [
@@ -119,7 +119,7 @@
     "nlp9": {
       "config": "2",
       "title": "National Landcare Programme",
-      "label": "Area targeted for weed control",
+      "label": "Targeted for weed control",
       "units": "Ha",
       "type": "outputTarget",
       "projectFilter": [
@@ -130,7 +130,7 @@
     "nlp10": {
       "config": "2",
       "title": "National Landcare Programme",
-      "label": "Area community groups are managing for weeds",
+      "label": "Weeds managed by community groups",
       "units": "Ha",
       "type": "score",
       "projectFilter": [
@@ -142,8 +142,8 @@
     "nlp11": {
       "config": "3",
       "title": "National Landcare Programme",
-      "label": "Volunteers participating in projects",
-      "units": "",
+      "label": "participating in projects",
+      "units": "Volunteers",
       "type": "score",
       "projectFilter": [
         "associatedProgramFacet:National Landcare Programme"
@@ -153,8 +153,8 @@
     "nlp12": {
       "config": "3",
       "title": "20 Million Trees",
-      "label": "Trees planned for planting",
-      "units": "",
+      "label": "planned for planting",
+      "units": "Trees",
       "type": "outputTarget",
       "projectFilter": [
         "associatedProgramFacet:National Landcare Programme"
@@ -164,8 +164,8 @@
     "nlp13": {
       "config": "6",
       "title": "National Landcare Programme",
-      "label": "Ha targeted for pest animal control",
-      "units": "",
+      "label": "Targeted for pest animal control",
+      "units": "Ha",
       "type": "outputTarget",
       "projectFilter": [
         "associatedProgramFacet:National Landcare Programme"
@@ -183,7 +183,7 @@
     "all2": {
       "config": "6",
       "title": "All programmes",
-      "label": "Area treated for felius catus",
+      "label": "Treated for felius catus",
       "units": "Ha",
       "type": "score",
       "scoreLabel": "Treated area (Ha) by species",
@@ -192,8 +192,8 @@
     "ga1": {
       "config": "3",
       "title": "Green Army",
-      "label": "Number of plants planted",
-      "units": "",
+      "label": "planted by Green Army",
+      "units": "Plants",
       "type": "score",
       "scoreLabel": "Number of plants planted",
       "projectFilter": [
