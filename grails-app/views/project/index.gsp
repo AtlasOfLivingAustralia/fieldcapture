@@ -150,7 +150,7 @@
                         <div class="well well-small">
                             <label><b>MERI attachments:</b></label>
                             <g:render plugin="fieldcapture-plugin" template="/shared/listDocuments"
-                                      model="[useExistingModel: true,editable:false, filterBy: 'programmeLogic', ignore: '', imageUrl:resource(dir:'/images/filetypes'),containerId:'overviewDocumentList']"/>
+                                  model="[useExistingModel: true,editable:false, filterBy: 'programmeLogic', ignore: '', imageUrl:resource(dir:'/images'),containerId:'overviewDocumentList']"/>
                         </div>
                     </div>
                 </div>

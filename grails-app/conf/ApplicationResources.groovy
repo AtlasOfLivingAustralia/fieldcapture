@@ -22,5 +22,11 @@ modules = {
         resource url: 'css/global-styles.css'
     }
 
+    homepage {
+        dependsOn 'application', 'newSkin'
+        resource url:'css/homepage.css'
+        resource url:'css/project-explorer.css'
+    }
+
 
 }
