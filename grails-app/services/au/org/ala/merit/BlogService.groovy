@@ -20,7 +20,7 @@ class BlogService {
         }
         else {
             Map project = projectService.get(projectId)
-            blog = project.blog
+            blog = getProjectBlog(project)
         }
 
         int index = blog.findIndexOf{it.blogEntryId == blogEntryId}
