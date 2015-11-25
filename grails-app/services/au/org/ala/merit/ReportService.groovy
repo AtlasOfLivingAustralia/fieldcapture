@@ -62,12 +62,14 @@ class ReportService {
             def report = [
                     fromDate:DateUtils.format(periodStartDate),
                     toDate:DateUtils.format(periodEndDate),
-                    dueDate:DateUtils.format(periodEndDate.plusDays(programConfig.weekDaysToCompleteReport ?: DEFAULT_REPORT_DAYS_TO_COMPLETE)),
                     type:'Activity',
                     projectId:projectId,
                     name:'Stage '+stage,
                     description:'Stage '+stage+' for '+project.name
             ]
+            if (programConfig.weekDaysToCompleteReport) {
+                report.dueDate = DateUtils.format(periodEndDate.plusDays(programConfig.weekDaysToCompleteReport))
+            }
 
             if (reports.size() >= stage) {
                 report.reportId = reports[stage-1].reportId
