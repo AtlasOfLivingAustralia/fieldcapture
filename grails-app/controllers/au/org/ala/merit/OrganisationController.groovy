@@ -38,7 +38,6 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
         def orgRole = members.find { it.userId == user?.userId } ?: [:]
         def hasAdminAccess = userService.userIsAlaOrFcAdmin() || orgRole.role == RoleService.PROJECT_ADMIN_ROLE
 
-        def hasViewAccess = hasAdminAccess || userService.userHasReadOnlyAccess() || orgRole.role == RoleService.PROJECT_EDITOR_ROLE
         def reportingVisible = organisation.reports && hasAdminAccess || userService.userHasReadOnlyAccess()
 
         def dashboardReports = [[name:'dashboard', label:'Activity Outputs']]
@@ -49,7 +48,7 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
         [about     : [label: 'About', visible: true, stopBinding: false, type:'tab'],
          projects  : [label: 'Projects', visible: true, default:!reportingVisible, stopBinding:true, type: 'tab', disableProjectCreation:true],
          sites     : [label: 'Sites', visible: true, type: 'tab', stopBinding:true, projectCount:organisation.projects?.size()?:0, showShapefileDownload:hasAdminAccess],
-         dashboard : [label: 'Dashboard', visible: hasViewAccess, stopBinding:true, type: 'tab', template:'/shared/dashboard', reports:dashboardReports],
+         dashboard : [label: 'Dashboard', visible: true, stopBinding:true, type: 'tab', template:'/shared/dashboard', reports:dashboardReports],
          admin     : [label: 'Admin', visible: hasAdminAccess, type: 'tab', showEditAnnoucements:organisation.projects?.size()]]
     }
 
