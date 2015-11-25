@@ -45,7 +45,7 @@ class OrganisationControllerSpec extends Specification {
         model.organisation == testOrg
         model.content.projects.visible == true
         model.content.sites.visible == true
-        model.content.dashboard.visible == false
+        model.content.dashboard.visible == true
         model.content.admin.visible == false
     }
 

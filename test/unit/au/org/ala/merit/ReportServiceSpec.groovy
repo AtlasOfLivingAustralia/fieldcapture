@@ -20,6 +20,8 @@ class ReportServiceSpec extends Specification {
         service.webService = webService
         service.projectService = projectService
         service.metadataService = metadataService
+
+        metadataService.getProgramConfiguration(_,_) >> [weekDaysToCompleteReport:43]
     }
 
     def project(plannedStartDate = '2015-01-01T00:00:00Z', plannedEndDate = '2016-12-31T23:59:59Z') {
