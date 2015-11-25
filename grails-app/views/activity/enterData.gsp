@@ -425,7 +425,8 @@
                 });
                 if (optionalCount > 1 && notCompletedCount == optionalCount) {
                    valid = false;
-                   bootbox.alert("At least one form section marked with 'Not applicable' must be completed");
+                   bootbox.alert("<p>To 'Save changes', the mandatory fields of at least one section of this form must be completed.</p>"+
+                        "<p>If all sections are 'Not applicable' please contact your grant manager to discuss alternate form options</p>");
                 }
             }
 
