@@ -685,6 +685,7 @@ var ProjectReportsViewModel = function(project) {
     self.recommendAsCaseStudy = ko.observable(project.promoteOnHomepage);
 
     self.reports = [];
+    self.extendedStatus = [];
     var reportingTimeSum = 0;
 
     var currentReport = null;
@@ -719,8 +720,21 @@ var ProjectReportsViewModel = function(project) {
                 self.submittedReportCount++;
                 reportingTimeSum += report.submissionDelta();
             }
+
+
+        }
+
+        for (var i=0; i<self.reports.length; i++) {
+            var report = self.reports[i];
+            if (report.isOverdue() || report.isSubmitted() || report.isDue()) {
+                if (report !== currentReport) {
+                    self.extendedStatus.push(report.status());
+                }
+            }
         }
     }
+
+
     if (self.submittedReportCount > 0) {
         self.averageReportingTime = reportingTimeSum / self.submittedReportCount;
     }
@@ -785,6 +799,12 @@ var ProjectReportsViewModel = function(project) {
 
 
         return history;
+    };
+
+    self.extendedStatusVisible = ko.observable(false);
+
+    self.toggleExtendedStatus = function() {
+        self.extendedStatusVisible(!self.extendedStatusVisible());
     };
 
     var toggling = false;
