@@ -254,6 +254,9 @@
                 self.modelForSaving = function () {
                     // get model as a plain javascript object
                     var jsData = ko.mapping.toJS(self, {'ignore':['transients']});
+                    if (self.outputNotCompleted()) {
+                        jsData.data = {};
+                    }
 
                     // get rid of any transient observables
                     return self.removeBeforeSave(jsData);
@@ -407,19 +410,22 @@
         this.validate = function() {
             var valid = $('#validation-container').validationEngine('validate');
             if (valid) {
-                // Check there is some data on the form - if every section has been collapsed, fail the validation.
-                var hasData = false;
+                // Check that forms with multiple optional sections have at least one of those sections completed.
+                var optionalCount = 0;
+                var notCompletedCount = 0;
                 $.each(self.subscribers, function(i, obj) {
                     if (obj.model !== 'activityModel' && obj.model !== 'photoPoints') {
-                        var outputData = obj.get();
-                        if (!outputData.outputNotCompleted) {
-                            hasData = true;
+                        if (obj.model.transients.optional) {
+                            optionalCount++;
+                            if (obj.model.outputNotCompleted()) {
+                                notCompletedCount++;
+                            }
                         }
                     }
                 });
-                if (!hasData) {
+                if (optionalCount > 1 && notCompletedCount == optionalCount) {
                    valid = false;
-                   bootbox.alert("At least one form section must be completed");
+                   bootbox.alert("At least one form section marked with 'Not applicable' must be completed");
                 }
             }
 
