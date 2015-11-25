@@ -62,10 +62,13 @@ $(function() {
     };
     var statusRenderer = function(data) {
         var badge = 'badge';
-        if (data == 'active') {
+        if (data && data.toLowerCase() == 'active') {
             badge += ' badge-success';
         }
-        return '<span class="'+badge+'">'+data+'</span>';
+        else {
+            badge += ' badge-info';
+        }
+        return '<span style="text-transform:uppercase;" class="'+badge+'">'+data+'</span>';
     };
     var projectListHeader =  [
         {title:'Grant ID', width:'10%', render:projectUrlRenderer, data:'grantId'},
