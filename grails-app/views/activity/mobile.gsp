@@ -7,7 +7,7 @@
 
     <r:script disposition="head">
     var fcConfig = {
-        bieUrl: "${grailsApplication.config.bie.baseURL}",
+        bieUrl: <g:if test="${params.android}">"${grailsApplication.config.bie.baseURL}"</g:if><g:else>"#"</g:else>,
         speciesProfileUrl: "${createLink(controller: 'proxy', action: 'speciesProfile', absolute:true)}",
         googleStaticUrl:"http://maps.googleapis.com/maps/api/staticmap?maptype=terrian&zoom=12&sensor=false&size=350x250&markers=color:red%7C"
         },
