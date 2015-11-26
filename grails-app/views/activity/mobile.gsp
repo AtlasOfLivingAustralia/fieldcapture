@@ -14,9 +14,9 @@
         here = document.location.href;
     </r:script>
     <r:require modules="knockout,jqueryValidationEngine,datepicker,jQueryFileUploadUI,mapWithFeatures,activity,attachDocuments,species,amplify,imageViewer"/>
-    <if test="${params.newSkin}">
+    <g:if test="${params.newSkin}">
         <r:require module="newSkin"/>
-    </if>
+    </g:if>
 </if>
 </head>
 <body>
