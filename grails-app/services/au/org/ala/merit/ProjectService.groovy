@@ -223,10 +223,17 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
         result
     }
 
-
-    def changeProjectStartDate(projectId, plannedStartDate) {
+    /**
+     * This method is used to shift the entire project start and end date without changing the duration.
+     * It can only be called for projects in the "planning" phase.
+     * @param projectId the ID of the project
+     * @param plannedStartDate an ISO 8601 formatted date string describing the new start date of the project.
+     */
+    def changeProjectStartDate(String projectId, String plannedStartDate) {
         def project = get(projectId)
-        if (!project.planStatus || project.planStatus == PLAN_NOT_APPROVED) {
+        Map message
+        String validationResult = canChangeProjectDates(project)
+        if (validationResult == null) {
 
             def previousStartDate = DateUtils.parse(project.plannedStartDate)
             def newStartDate = DateUtils.parse(plannedStartDate)
@@ -237,7 +244,7 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
 
             def newEndDate = DateUtils.format(DateUtils.parse(project.plannedEndDate).plusDays(daysChanged))
 
-            def resp = update(projectId, [plannedStartDate:plannedStartDate, plannedEndDate:newEndDate])
+            def resp = update(projectId, [plannedStartDate: plannedStartDate, plannedEndDate: newEndDate])
             if (resp.resp && !resp.resp.error) {
 
                 def activities = activityService.activitiesForProject(projectId)
@@ -245,23 +252,34 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
                     if (!activityService.isReport(activity)) {
                         def newActivityStartDate = DateUtils.format(DateUtils.parse(activity.plannedStartDate).plusDays(daysChanged))
                         def newActivityEndDate = DateUtils.format(DateUtils.parse(activity.plannedEndDate).plusDays(daysChanged))
-                        activityService.update(activity.activityId, [activityId:activity.activityId, plannedStartDate:newActivityStartDate, plannedEndDate:newActivityEndDate])
+                        activityService.update(activity.activityId, [activityId: activity.activityId, plannedStartDate: newActivityStartDate, plannedEndDate: newActivityEndDate])
                     }
 
                 }
 
-                return [message:'success']
-            }
-            else {
-                return [error:"Update failed: ${resp?.resp?.error}"]
+                message = [message: 'success']
+            } else {
+                message = [error: "Update failed: ${resp?.resp?.error}"]
             }
         }
-        return [error:'Invalid plan status']
+        else {
+            message = [error: validationResult]
+        }
+
+        return message
     }
 
+    /**
+     * This method changes a project start and end date
+     * It can only be called for projects in the "planning" phase.
+     * @param projectId the ID of the project
+     * @param plannedStartDate the new start date of the project.
+     */
     def changeProjectDates(projectId, plannedStartDate, plannedEndDate) {
+        Map message
         def project = get(projectId)
-        if (!project.planStatus || project.planStatus == PLAN_NOT_APPROVED) {
+        String validationResult = canChangeProjectDates(project)
+        if (validationResult == null) {
 
             def previousStartDate = DateUtils.parse(project.plannedStartDate)
             def newStartDate = DateUtils.parse(plannedStartDate)
@@ -310,13 +328,37 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
 
                 }
 
-                return [message:'success']
+                message = [message:'success']
             }
             else {
-                return [error:"Update failed: ${resp?.resp?.error}"]
+                message = [error:"Update failed: ${resp?.resp?.error}"]
             }
         }
-        return [error:'Invalid plan status']
+        else {
+            message = [error: validationResult]
+        }
+        message
+    }
+
+    boolean isMeriPlanSubmittedOrApproved(Map project) {
+        return (project.planStatus == PLAN_SUBMITTED || project.planStatus == PLAN_APPROVED)
+    }
+
+    /**
+     * Returns null if the project dates can be changed.  Otherwise returns an error message.
+     * @param project
+     * @return
+     */
+    private String canChangeProjectDates(Map project) {
+
+        String result = null
+        if (reportService.includesSubmittedOrApprovedReports(project.reports)) {
+            result = "Cannot change the start date of a project with submitted or approved reports"
+        }
+        if (isMeriPlanSubmittedOrApproved(project)) {
+            result = "Cannot change project dates when the MERI plan is approved"
+        }
+        return result
     }
 
     def generateProjectStageReports(String projectId) {
@@ -410,8 +452,13 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
 
     }
 
-
-    Map getProjectOutcomes(Map project) {
+    /**
+     * Looks for an activity of type FINAL_REPORT_ACTIVITY_TYPE in completed projects only and returns the contents
+     * of the Outcomes sections from that activity.
+     * @param project the project
+     * @return a Map with keys: environmentalOutcomes, economicOutcomes, socialOutcomes
+     */
+    Map<String, String> getProjectOutcomes(Map project) {
         def outcomes = [:]
         if (COMPLETE.equalsIgnoreCase(project.status)) {
             def activity = project.activities?.find { it.type == FINAL_REPORT_ACTIVITY_TYPE }
