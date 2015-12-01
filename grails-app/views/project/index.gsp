@@ -234,7 +234,7 @@
                                         <div id="save-result-placeholder"></div>
                                         <div class="span10 validationEngineContainer" id="settings-validation">
                                             <g:render plugin="fieldcapture-plugin" template="editProject"
-                                                      model="[project: project]"/>
+                                                      model="[project: project, canChangeProjectDates:projectContent.admin.canChangeProjectDates]"/>
                                         </div>
                                     </div>
                                 </div>

@@ -1,11 +1,14 @@
 package au.org.ala.merit
 
 import au.org.ala.fieldcapture.DateUtils
-import grails.converters.JSON
 import org.joda.time.Period
 
 
 class ReportService {
+
+    public static final String REPORT_APPROVED = 'published'
+    public static final String REPORT_SUBMITTED = 'pendingApproval'
+    public static final String REPORT_NOT_APPROVED = 'unpublished'
 
     def grailsApplication
     def webService
@@ -41,7 +44,7 @@ class ReportService {
         def periodStartDate = null
         def stage = 1
         for (int i=reports.size()-1; i>0; i--) {
-            if (reports[i].publicationStatus == 'submitted' || reports[i].publicationStatus == 'approved') {
+            if (isSubmittedOrApproved(reports[i])) {
                 periodStartDate = reports[i].toDate
                 stage = i+1
             }
@@ -86,6 +89,37 @@ class ReportService {
         for (int i=stage-2; i<reports.size(); i++) {
             delete(reports[i].reportId)
         }
+    }
+
+    /**
+     * Returns the latest date at which a period exists that is covered by an approved or submitted stage report.
+     * @param reports the reports to check.
+     * @return a ISO 8601 formatted date string
+     */
+    public String latestSubmittedOrApprovedReportDate(List<Map> reports) {
+        String lastSubmittedOrApprovedReportEndDate = null
+        reports?.each { report ->
+            if (isSubmittedOrApproved(report)) {
+                if (report.toDate > lastSubmittedOrApprovedReportEndDate) {
+                    lastSubmittedOrApprovedReportEndDate = report.toDate
+                }
+            }
+        }
+        return lastSubmittedOrApprovedReportEndDate
+    }
+
+
+    /**
+     * Returns true if any report in the supplied list has been submitted or approval or approved.
+     * @param reports the List of reports to check
+     * @return true if any report in the supplied list has been submitted or approval or approved.
+     */
+    boolean includesSubmittedOrApprovedReports(List reports) {
+        return (reports?.find {isSubmittedOrApproved(it)} != null)
+    }
+
+    boolean isSubmittedOrApproved(Map report) {
+        return report.publicationStatus == REPORT_SUBMITTED || report.publicationStatus == REPORT_APPROVED
     }
 
     def delete(String reportId) {
