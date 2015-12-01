@@ -92,6 +92,24 @@ class ReportService {
     }
 
     /**
+     * Returns the latest date at which a period exists that is covered by an approved or submitted stage report.
+     * @param reports the reports to check.
+     * @return a ISO 8601 formatted date string
+     */
+    public String latestSubmittedOrApprovedReportDate(List<Map> reports) {
+        String lastSubmittedOrApprovedReportEndDate = null
+        reports?.each { report ->
+            if (isSubmittedOrApproved(report)) {
+                if (report.toDate > lastSubmittedOrApprovedReportEndDate) {
+                    lastSubmittedOrApprovedReportEndDate = report.toDate
+                }
+            }
+        }
+        return lastSubmittedOrApprovedReportEndDate
+    }
+
+
+    /**
      * Returns true if any report in the supplied list has been submitted or approval or approved.
      * @param reports the List of reports to check
      * @return true if any report in the supplied list has been submitted or approval or approved.

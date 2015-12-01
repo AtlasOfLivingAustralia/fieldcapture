@@ -21,15 +21,16 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
         def publicImages = project.documents.findAll{it.public == true && it.thirdPartyConsentDeclarationMade == true && it.type == 'image'}
         def blog = blogService.getProjectBlog(project)
         def imagesModel = publicImages.collect {[name:it.name, projectName:project.name, url:it.url]}
+        boolean canChangeProjectDates = projectService.canChangeProjectDates(project)
 
-        def model = [overview:[label:'Overview', visible: true, default:true, type:'tab', /*outcomes:projectService.getProjectOutcomes(project),*/ publicImages:imagesModel, displayTargets:false, displayOutcomes:false, blog:blog],
+        def model = [overview:[label:'Overview', visible: true, default:true, type:'tab', /*outcomes:projectService.getProjectOutcomes(project),*/ publicImages:imagesModel, displayTargets:false, displayOutcomes:false, blog:blog, canChangeProjectDates:canChangeProjectDates],
          documents:[label:'Documents', visible: true, type:'tab'],
          details:[label:'MERI Plan', disabled:!user?.hasViewAccess, disabled:!meriPlanEnabled, visible:meriPlanVisible, meriPlanVisibleToUser:meriPlanVisibleToUser, type:'tab'],
          plan:[label:'Activities', visible:true, disabled:!user?.hasViewAccess, type:'tab', reports:reportService.getReportsForProject(project.projectId)],
          risksAndThreats:[label:'Risks and Threats', disabled:!user?.hasViewAccess, visible:user?.hasViewAccess && program?.optionalProjectContent?.contains('Risks and Threats')],
          site:[label:'Sites', visible: true, disabled:!user?.hasViewAccess, type:'tab'],
          dashboard:[label:'Dashboard', visible: true, disabled:!user?.hasViewAccess, type:'tab'],
-         admin:[label:'Admin', visible:(user?.isAdmin || user?.isCaseManager), type:'tab']]
+         admin:[label:'Admin', visible:(user?.isAdmin || user?.isCaseManager), type:'tab', canChangeProjectDates: canChangeProjectDates]]
 
         return [view:'index', model:model]
     }

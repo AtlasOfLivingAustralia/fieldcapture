@@ -5,7 +5,6 @@ import grails.converters.JSON
 import org.apache.commons.lang.CharUtils
 import org.joda.time.Days
 import org.joda.time.Interval
-import org.joda.time.Period
 
 import java.text.SimpleDateFormat
 
@@ -132,11 +131,10 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
 		//generate stage report and attach to the project
 		def projectAll = get(projectId, 'all')
 		readyForSubmit = false;
-		projectAll?.timeline?.each{
-			if(it.name.equals(stageDetails.stage)){
-				readyForSubmit = true;
-			}
-		}
+        if (projectAll.reports?.find{it.name == stageDetails.stage}) {
+            readyForSubmit = true
+        }
+
 		if (!readyForSubmit) {
 			return [error:'Invalid stage']
 		}
@@ -170,7 +168,7 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
         def project = get(projectId, 'all')
         def readableId = project.grantId + (project.externalId?'-'+project.externalId:'')
         def name = "${readableId} ${stageDetails.stage} approval"
-        def doc = [name:name, projectId:projectId, type:'text', role:'approval',filename:name, readOnly:true, public:false]
+        def doc = [name:name, projectId:projectId, type:'text', role:'approval',filename:name, readOnly:true, public:false, reportId:stageDetails.reportId]
         documentService.createTextDocument(doc, (project as JSON).toString())
         stageDetails.project = project
         if (!result.resp.error) {
@@ -181,20 +179,14 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
         int published = 0;
         int validActivities = 0
         reportService.approve(stageDetails.reportId)
-        def activities = activityService.activitiesForProject(projectId);;
-        project.timeline?.each {timeline->
-            activities.each{act->
-                def endDate = act.plannedEndDate ? act.plannedEndDate : act.endDate
-                if(dateInSlot(timeline.fromDate,timeline.toDate,endDate)){
-                    validActivities++;
-                    if(act.publicationStatus.equals("published")){
-                        published++
-                    }
-                }
-            }
-        }
 
-        if(validActivities == published){
+        def activities = activityService.activitiesForProject(projectId)
+
+        // Close the project when the last stage report is approved.
+        // Some projects have extra stage reports after the end date due to legacy data so this checks we've got the last stage within the project dates.
+        def lastReport = project.reports?.max{it.fromDate < project.plannedEndDate ? it.fromDate : project.plannedStartDate}
+
+        if(lastReport == stageDetails.reportId){
             def values = [:]
             values["status"] = "completed"
             update(projectId, values)
@@ -232,7 +224,7 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
     def changeProjectStartDate(String projectId, String plannedStartDate) {
         def project = get(projectId)
         Map message
-        String validationResult = canChangeProjectDates(project)
+        String validationResult = validateProjectDates(project)
         if (validationResult == null) {
 
             def previousStartDate = DateUtils.parse(project.plannedStartDate)
@@ -278,7 +270,7 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
     def changeProjectDates(projectId, plannedStartDate, plannedEndDate) {
         Map message
         def project = get(projectId)
-        String validationResult = canChangeProjectDates(project)
+        String validationResult = validateProjectDates(project)
         if (validationResult == null) {
 
             def previousStartDate = DateUtils.parse(project.plannedStartDate)
@@ -349,7 +341,7 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
      * @param project
      * @return
      */
-    private String canChangeProjectDates(Map project) {
+    private String validateProjectDates(Map project) {
 
         String result = null
         if (reportService.includesSubmittedOrApprovedReports(project.reports)) {
@@ -360,6 +352,15 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
         }
         return result
     }
+
+    /**
+     * Returns true if the project dates can be changed.
+     * @param project the project to check.
+     */
+    public boolean canChangeProjectDates(Map project) {
+        return validateProjectDates(project) == null
+    }
+
 
     def generateProjectStageReports(String projectId) {
         def project = get(projectId)
@@ -495,13 +496,14 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
         def stageEndDate = ''
 
         org.codehaus.groovy.runtime.NullObject.metaClass.toString = {return ''}
-        project.timeline?.each {
-            if(it.name.equals(stageName)){
-                stage = "${it.name} : "+convertDate(it.fromDate) +" - " +convertDate(it.toDate)
-                stageStartDate = it.fromDate
-                stageEndDate =  it.toDate
-            }
+        def report = project.reports.find{it.name == stageName}
+        if (!report) {
+            throw new IllegalArgumentException("Invalid report : "+stageName)
         }
+        stageStartDate = report.fromDate
+        stageEndDate = report.toDate
+        stage = "${report.name} : "+convertDate(report.fromDate) +" - " +convertDate(report.toDate)
+
         activities.each{
             if(dateInSlot(stageStartDate,stageEndDate,it.plannedEndDate)){
                 if(it.progress.equals('planned'))
