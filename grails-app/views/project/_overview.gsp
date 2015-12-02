@@ -12,7 +12,10 @@
     <div class="clearfix" data-bind="visible:serviceProviderName()">
         <h4>
             Service provider:
-            <span data-bind="text:serviceProviderName"></span>
+            <a data-bind="visible:orgIdSvcProvider(),attr:{href:fcConfig.organisationLinkBaseUrl+'/'+orgIdSvcProvider()}">
+                <span data-bind="text:serviceProviderName"></span>
+            </a>
+            <span data-bind="visible:!orgIdSvcProvider(),text:serviceProviderName"></span>
         </h4>
     </div>
     <div class="clearfix" data-bind="visible:associatedProgram()">
