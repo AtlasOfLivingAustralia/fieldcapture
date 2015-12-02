@@ -26,9 +26,18 @@
         </div>
     </div>
 
+
     <div class="control-group">
+        <!-- ko if:type() !== 'Photo' -->
         <label class="control-label span3"
-               for="image">Feature image: <fc:iconHelp>An image that will be displayed alongside this blog entry</fc:iconHelp></label>
+               for="image">Feature image: <fc:iconHelp>An image that will be displayed alongside this blog entry</fc:iconHelp>
+        </label>
+        <!-- /ko -->
+        <!-- ko if:type() == 'Photo' -->
+        <label class="control-label span3"
+               for="image">Project photo: <fc:iconHelp>The photo that will be attached to the project images section of the blog</fc:iconHelp>
+        </label>
+        <!-- /ko -->
 
         <div class="span3" style="text-align:center;background:white" data-bind="visible:!stockIcon()">
             <div style="margin:0;padding:0;width:200px;height:150px;line-height:146px;text-align:left;">
@@ -39,7 +48,9 @@
             <i class="fa fa-4x" data-bind="css:stockIcon"></i>
         </div>
         <div class="span3">
+            <!-- ko if:type() !== 'Photo' -->
             <p data-bind="visible:!image() && !stockIcon()">Select or attach an image</p>
+
             <select data-bind="visible:!image(), value:stockIcon">
                 <option/>
                 <option value="fa-warning">Important<i class="fa fa-warning fa-3x"></i></option>
@@ -48,6 +59,7 @@
                 <option value="fa-info-circle">Information<i class="fa fa-info-circle fa-3x"></i></option>
             </select>
             <p></p>
+            <!-- /ko -->
 
             <div class="btn fileinput-button"
                   data-url="${createLink(controller: 'image', action: 'upload')}"
@@ -63,6 +75,7 @@
 
         </div>
     </div>
+
     <div class="control-group" data-bind="with:image">
         <label class="control-label span3"
                for="attribution">Image attribution: <fc:iconHelp>Will be displayed alongside the image</fc:iconHelp></label>
@@ -81,6 +94,7 @@
         </div>
     </div>
 
+    <!-- ko if:type() !== 'Photo' -->
     <div class="control-group required">
         <label class="control-label span3" for="blog-content">Content: <fc:iconHelp>The content of this blog entry</fc:iconHelp></label>
         <div class="span9">
@@ -96,6 +110,7 @@
             <input type="text" id="viewMoreUrl" class="input-xxlarge" data-bind="value:viewMoreUrl" data-validation-engine="validate[custom[url]]">
         </div>
     </div>
+    <!-- /ko -->
 </form>
 <g:render template="/shared/attachDocument" plugin="fieldcapture-plugin"/>
 <g:render template="/shared/markdownEditorModal" plugin="fieldcapture-plugin"/>

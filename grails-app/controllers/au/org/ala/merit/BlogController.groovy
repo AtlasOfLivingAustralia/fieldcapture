@@ -27,6 +27,8 @@ class BlogController {
         def result
         if (image) {
             image.projectId = blogEntry.projectId
+            image.name = blogEntry.title
+            image.public = true
             result = documentService.saveStagedImageDocument(image)
 
             if (result.statusCode == SC_OK) {
