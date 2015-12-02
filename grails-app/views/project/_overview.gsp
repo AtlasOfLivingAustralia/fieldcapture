@@ -112,6 +112,7 @@
 
 <hr/>
 
+
 <h2>Project blog</h2>
 <g:if test="${user?.isAdmin}">
     <a href="${g.createLink(controller: 'blog', action: 'create', params:[projectId:project.projectId, returnTo:g.createLink(controller: 'project', action:'index', id:project.projectId)])}"><button class="btn"><i class="fa fa-newspaper-o"></i> New Entry</button></a>
@@ -120,40 +121,40 @@
 </g:if>
 
 <g:if test="${publicImages}">
-<div class="row-fluid">
-    <h3>Project photos</h3>
-    <g:render template="thumbnails" model="${[publicImages:publicImages]}"/>
+    <div class="row-fluid">
+        <h3>Project photos</h3>
+        <g:render template="thumbnails" model="${[publicImages:publicImages]}"/>
+</div>
+    <hr/>
+
+</g:if>
+
+
+<g:if test="${hasNewsAndEvents}">
+    <h3>News & events</h3>
+    <div class="blog-section">
+        <g:render template="/shared/blog" model="${[blog:blog, type:'News and Events']}"/>
+    </div>
+%{-- Legacy news & events section--}%
+<div class="row-fluid" data-bind="if:newsAndEvents()">
+    <div class="span12" id="newsAndEventsDiv" data-bind="html:newsAndEvents.markdownToHtml()" ></div>
 </div>
 </g:if>
 
-<hr/>
-
-<div class="row-fluid" id="project-blog">
-
-
-    <h3>News & events</h3>
-    <g:render template="/shared/blog" model="${[blog:blog, type:'News and Events']}"/>
-
-    %{-- Legacy news & events section--}%
-    <div class="row-fluid" data-bind="if:newsAndEvents()">
-        <div class="span12" id="newsAndEventsDiv" data-bind="html:newsAndEvents.markdownToHtml()" ></div>
-    </div>
-
-<hr/>
-
-
+<g:if test="${hasProjectStories}">
 <div class="row-fluid">
     <h3>Project stories</h3>
-    <g:render template="/shared/blog" model="${[blog:blog, type:'Project Stories']}"/>
-
+    <div class="blog-section">
+        <g:render template="/shared/blog" model="${[blog:blog, type:'Project Stories']}"/>
+    </div>
     %{-- Legacy news & events section--}%
     <div class="row-fluid" data-bind="visible:projectStories()">
         <div class="span12" id="projectStoriesDiv" data-bind="html:projectStories.markdownToHtml()"></div>
     </div>
 
 </div>
+</g:if>
 
-</div>
 
 
 

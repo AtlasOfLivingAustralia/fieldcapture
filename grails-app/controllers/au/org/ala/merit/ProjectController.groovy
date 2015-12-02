@@ -20,10 +20,16 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
 
         def publicImages = project.documents.findAll{it.public == true && it.thirdPartyConsentDeclarationMade == true && it.type == 'image'}
         def blog = blogService.getProjectBlog(project)
+        def hasNewsAndEvents = blog.find{it.type == 'News and Events'}
+        def hasProjectStories = blog.find{it.type == 'Project Stories'}
+
+        hasNewsAndEvents = hasNewsAndEvents || project.newsAndEvents
+        hasProjectStories = hasProjectStories || project.projectStories
+
         def imagesModel = publicImages.collect {[name:it.name, projectName:project.name, url:it.url]}
         boolean canChangeProjectDates = projectService.canChangeProjectDates(project)
 
-        def model = [overview:[label:'Overview', visible: true, default:true, type:'tab', /*outcomes:projectService.getProjectOutcomes(project),*/ publicImages:imagesModel, displayTargets:false, displayOutcomes:false, blog:blog, canChangeProjectDates:canChangeProjectDates],
+        def model = [overview:[label:'Overview', visible: true, default:true, type:'tab', publicImages:imagesModel, displayTargets:false, displayOutcomes:false, blog:blog, hasNewsAndEvents:hasNewsAndEvents, hasProjectStories:hasProjectStories, canChangeProjectDates:canChangeProjectDates],
          documents:[label:'Documents', visible: true, type:'tab'],
          details:[label:'MERI Plan', disabled:!user?.hasViewAccess, disabled:!meriPlanEnabled, visible:meriPlanVisible, meriPlanVisibleToUser:meriPlanVisibleToUser, type:'tab'],
          plan:[label:'Activities', visible:true, disabled:!user?.hasViewAccess, type:'tab', reports:reportService.getReportsForProject(project.projectId)],
