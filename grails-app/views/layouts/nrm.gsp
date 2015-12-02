@@ -149,26 +149,6 @@
 
 </div>
 
-<g:if test="${userLoggedIn && introText}">
-    %{-- User Intro Popup --}%
-    <div id="introPopup" class="modal hide fade">
-        <div class="modal-header hide">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h3>User Introduction</h3>
-        </div>
-        <div class="modal-body">
-            ${introText}
-        </div>
-        <div class="modal-footer">
-            <label for="hideIntro" class="pull-left">
-                <g:checkBox name="hideIntro" style="margin:0;"/>&nbsp;
-                Do not display this message again (current browser only)
-            </label>
-            <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-            %{--<a href="#" class="btn btn-primary">Save changes</a>--}%
-        </div>
-    </div>
-</g:if>
 <r:script>
     // Prevent console.log() killing IE
     if (typeof console == "undefined") {
@@ -212,30 +192,6 @@
     }); // end document ready
 
 </r:script>
-<g:if test="${userLoggedIn}">
-    <r:script>
-        $(document).ready(function (e) {
-            // Show introduction popup (with cookie check)
-            var cookieName = "hide-intro";
-            var introCookie = $.cookie(cookieName);
-            //  document.referrer is empty following login from AUTH
-            if (!introCookie && !document.referrer) {
-                $('#introPopup').modal('show');
-            } else {
-                $('#hideIntro').prop('checked', true);
-            }
-            // console.log("referrer", document.referrer);
-            // don't show popup if user has clicked checkbox on popup
-            $('#hideIntro').click(function() {
-                if ($(this).is(':checked')) {
-                    $.cookie(cookieName, 1);
-                } else {
-                    $.removeCookie(cookieName);
-                }
-            });
-        }); // end document ready
-    </r:script>
-</g:if>
 
 <g:if test="${grailsApplication.config.bugherd.integration}">
     <r:script>

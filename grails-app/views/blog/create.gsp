@@ -11,7 +11,7 @@
             blogUpdateUrl: "${createLink(action:'update')}",
             blogViewUrl: "${createLink(action:'index')}",
             documentUpdateUrl: "${createLink(controller:"document", action:"documentUpdate")}",
-            returnTo: "${params.returnTo?:params.projectId}"
+            returnTo: "${params.returnTo?:g.createLink(controller:'project', id:params.projectId)}"
             };
     </r:script>
     <r:require modules="knockout,jqueryValidationEngine,datepicker,jQueryFileUpload,amplify,wmd"/>
@@ -23,7 +23,10 @@
         <li>
             <g:link controller="home">Home</g:link> <span class="divider">/</span>
         </li>
-        <li class="active"><g:link controller="organisation" action="list">Organisations</g:link> <span class="divider">/</span></li>
+        <g:if test="${params.projectId}">
+            <g:link controller="project" id="${params.projectId}">Project </g:link>  <span class="divider"> / </span></li>
+        </g:if>
+
         <li class="active">New blog entry</li>
     </ul>
 

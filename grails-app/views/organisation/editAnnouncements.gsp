@@ -16,8 +16,9 @@
     <style type="text/css">
     input.editor-text {box-sizing:border-box; width: 100%;}
     .slick-column-name { white-space: normal; }
-    .slick-header-column.ui-state-default { background: #DAE0B9; height: 100%; font-weight: bold;}
-    .slick-header { background: #DAE0B9; }
+    .slick-header-column.ui-state-default { background: #d9edf7; height: 100%; font-weight: bold;}
+    .slick-header { background: #d9edf7; }
+    .slick-column-name a { background: 0}
 
     </style>
 </head>
@@ -129,10 +130,16 @@
 
         ko.applyBindings(editAnnouncementsViewModel);
 
+
+
         $('.validationEngineContainer').validationEngine({scroll:false});
         $('.helphover').popover({animation: true, trigger:'hover'});
         // Hacky slickgrid / jqueryValidationEngine integration for some amount of user experience consistency.
         $('.slick-row').addClass('validationEngineContainer').validationEngine({scroll:false});
+
+        // The slick table is actually just divs and the header borders don't work unless we set them full height.
+        var parentHeight = $('.slick-header-columns').height();
+        $('.slick-header-column').height(parentHeight);
 
         $('#fileupload').fileupload({
             url: fcConfig.bulkUploadAnnouncementsUrl,
