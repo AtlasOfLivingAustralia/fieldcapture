@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta name="layout" content="${hubConfig.skin}"/>
-    <title>User Dashboard | Field Capture</title>
+    <title>My Projects | Field Capture</title>
     <r:script disposition="head">
     var fcConfig = {
         serverUrl: "${grailsApplication.config.grails.serverURL}",
