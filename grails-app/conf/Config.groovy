@@ -357,8 +357,10 @@ log4j = {
         development {
             all additivity: false, stdout: [
                     'grails.app.controllers.au.org.ala.fieldcapture',
+                    'grails.app.controllers.au.org.ala.merit',
                     'grails.app.domain.au.org.ala.fieldcapture',
                     'grails.app.services.au.org.ala.fieldcapture',
+                    'grails.app.services.au.org.ala.merit',
                     'grails.app.taglib.au.org.ala.fieldcapture',
                     'grails.app.conf.au.org.ala.fieldcapture',
                     'grails.app.filters.au.org.ala.fieldcapture',
@@ -366,6 +368,20 @@ log4j = {
                     'au.org.ala.merit.SessionLogger'
 
             ]
+        }
+        test {
+            all additivity: false, stdout: [
+                    'grails.app.controllers.au.org.ala.fieldcapture',
+                    'grails.app.controllers.au.org.ala.merit',
+                    'grails.app.domain.au.org.ala.fieldcapture',
+                    'grails.app.services.au.org.ala.fieldcapture',
+                    'grails.app.services.au.org.ala.merit',
+                    'grails.app.taglib.au.org.ala.fieldcapture',
+                    'grails.app.conf.au.org.ala.fieldcapture',
+                    'grails.app.filters.au.org.ala.fieldcapture',
+                    'au.org.ala.cas.client',
+                    'au.org.ala.merit.SessionLogger'
+                    ]
         }
         production {
             all additivity: false, sessionActivity: [
@@ -376,8 +392,10 @@ log4j = {
 
     all additivity: false, fieldcaptureLog: [
             'grails.app.controllers.au.org.ala.fieldcapture',
+            'grails.app.controllers.au.org.ala.merit',
             'grails.app.domain.au.org.ala.fieldcapture',
             'grails.app.services.au.org.ala.fieldcapture',
+            'grails.app.services.au.org.ala.merit',
             'grails.app.taglib.au.org.ala.fieldcapture',
             'grails.app.conf.au.org.ala.fieldcapture',
             'grails.app.filters.au.org.ala.fieldcapture'
