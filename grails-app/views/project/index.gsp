@@ -35,7 +35,6 @@
         sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}",
         organisationLinkBaseUrl: "${createLink(controller:'organisation', action:'index')}",
         imageLocation:"${resource(dir:'/images')}",
-        returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}",
         documentUpdateUrl: "${createLink(controller:"document", action:"documentUpdate")}",
         documentDeleteUrl: "${createLink(controller:"document", action:"deleteDocument")}",
         pdfgenUrl: "${createLink(controller: 'resource', action: 'pdfUrl')}",
@@ -44,10 +43,12 @@
         audioViewer: "${createLink(controller: 'resource', action: 'audioviewer')}",
         videoViewer: "${createLink(controller: 'resource', action: 'videoviewer')}",
         errorViewer: "${createLink(controller: 'resource', action: 'error')}",
-        createBlogEntryUrl: "${createLink(controller: 'blog', action:'create', params:[projectId:project.projectId, returnTo:createLink(controller: 'project', action: 'index', id: project.projectId)])}",
-        editBlogEntryUrl: "${createLink(controller: 'blog', action:'edit', params:[projectId:project.projectId, returnTo:createLink(controller: 'project', action: 'index', id: project.projectId)])}",
+        createBlogEntryUrl: "${createLink(controller: 'blog', action:'create', params:[projectId:project.projectId, returnTo:createLink(controller: 'project', action: 'index', id: project.projectId)])}%23overview",
+        editBlogEntryUrl: "${createLink(controller: 'blog', action:'edit', params:[projectId:project.projectId, returnTo:createLink(controller: 'project', action: 'index', id: project.projectId)])}%23overview",
         deleteBlogEntryUrl: "${createLink(controller: 'blog', action:'delete', params:[projectId:project.projectId])}",
-        shapefileDownloadUrl: "${createLink(controller:'project', action:'downloadShapefile', id:project.projectId)}"
+        shapefileDownloadUrl: "${createLink(controller:'project', action:'downloadShapefile', id:project.projectId)}",
+        returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
+
     },
         here = window.location.href;
 
@@ -846,8 +847,10 @@
         	$('.tab-content').fadeIn();
 
         	// re-establish the previous tab state
-            var storedTab = ${user?"amplify.store('project-tab-state')":"'overview'"};
-
+            var storedTab = window.location.hash;
+            if (!storedTab) {
+                storedTab = ${user?"amplify.store('project-tab-state')":"'overview'"};
+            }
             var isEditor = ${user?.isEditor?:false};
 
             initialiseOverview();

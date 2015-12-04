@@ -71,9 +71,7 @@ class BlogService {
         Map project = projectService.get(projectId)
 
         if (project.blog) {
-
-            int index = project.blog.findIndexOf{it.blogEntryId == id}
-            project.blog.remove(index)
+            deleteBlogEntry(project.blog, id)
         }
 
         projectService.update(projectId, [blog:project.blog])
@@ -82,13 +80,18 @@ class BlogService {
     private def deleteSiteBlogEntry(String id) {
         List blog = getSiteBlog()
 
-
-        int index = blog.findIndexOf{it.blogEntryId == id}
-        blog.remove(index)
+        deleteBlogEntry(blog, id)
 
         settingService.set(SITE_BLOG_KEY, ([blog:blog] as JSON).toString())
     }
 
+    private void deleteBlogEntry(List blog, String blogEntryId) {
+        int index = blog.findIndexOf{it.blogEntryId == blogEntryId}
+        Map blogEntry = blog.remove(index)
+        if (blogEntry.imageId) {
+            documentService.delete(blogEntry.imageId)
+        }
+    }
 
     def updateSiteBlog(String id, Map blogEntry) {
 

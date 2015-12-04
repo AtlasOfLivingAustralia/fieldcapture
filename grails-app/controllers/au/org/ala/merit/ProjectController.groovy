@@ -151,5 +151,8 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
         render view:'/report/_reportingHistory', model:[reportingHistory:reportingHistory]
     }
 
+    def mine() {
+        forward controller: 'user', action:'index'
+    }
 
 }
