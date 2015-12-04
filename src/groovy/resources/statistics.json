@@ -192,7 +192,7 @@
     "ga1": {
       "config": "3",
       "title": "Green Army",
-      "label": "planted by Green Army",
+      "label": "planted by Green Army teams",
       "units": "Plants",
       "type": "score",
       "scoreLabel": "Number of plants planted",
@@ -203,7 +203,7 @@
     "ga2": {
       "config": "2",
       "title": "Green Army",
-      "label": "Volume of debris removed",
+      "label": "Volume of debris removed by Green Army teams",
       "units": "m<super>3</super>",
       "type": "score",
       "scoreLabel": "Volume of debris removed (m3)",
@@ -214,7 +214,7 @@
     "ga3": {
       "config": "2",
       "title": "Green Army",
-      "label": "Managed for weeds",
+      "label": "Managed for weeds by Green Army teams",
       "units": "Ha",
       "type": "score",
       "scoreLabel": "Total new area treated (Ha)",
