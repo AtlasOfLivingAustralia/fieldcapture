@@ -13,7 +13,7 @@
     "r1": {
       "config": "1",
       "title": "Reef",
-      "label": "adopting practice change to protect the reef",
+      "label": "adopting improved management practices to protect the reef",
       "units": "Farmers ",
       "type": "score",
       "projectFilter": [
@@ -24,7 +24,7 @@
     "r2": {
       "config": "4",
       "title": "Reef",
-      "label": "Waste prevented from entering the reef",
+      "label": "Of rubbish prevented from entering the reef",
       "units": "Tonnes",
       "type": "score",
       "projectFilter": [
@@ -36,7 +36,7 @@
     "r3": {
       "config": "4",
       "title": "Reef",
-      "label": "To improve quality of water entering the reef",
+      "label": "to reduce erosion of waterways",
       "units": "Km of fencing",
       "type": "score",
       "projectFilter": [
@@ -47,7 +47,7 @@
     "r4": {
       "config": "4",
       "title": "Reef",
-      "label": "of the reef treated for Crown of Thorn Starfish",
+      "label": "of high-value tourist reefs where Crown of Thorns Starfish were removed",
       "units": "Ha",
       "type": "score",
       "projectFilter": [
