@@ -1,6 +1,8 @@
 package au.org.ala.merit
 
 import au.org.ala.fieldcapture.ActivityService
+import au.org.ala.fieldcapture.MetadataService
+import au.org.ala.fieldcapture.UserService
 import au.org.ala.fieldcapture.WebService
 import grails.test.mixin.TestFor
 import org.joda.time.Period
@@ -15,12 +17,18 @@ class ProjectServiceSpec extends Specification {
 
     WebService webService = Stub(WebService)
     ReportService reportService = Stub(ReportService)
+    UserService userService = Stub(UserService)
+    MetadataService metadataService = Stub(MetadataService)
 
     def setup() {
         service.webService = webService
         service.activityService = new ActivityService() // This is used to generate activity descriptions.
         service.grailsApplication = [config:[ecodata:[baseUrl:'']]]
         service.reportService = reportService
+        service.userService = userService
+        service.metadataService = metadataService
+        userService.userIsAlaOrFcAdmin() >> false
+        metadataService.getProgramConfiguration(_,_) >> [reportingPeriod:6, reportingPeriodAlignedToCalendar: true, weekDaysToCompleteReport:43]
     }
 
     def "generate reports with 3 monthly period"() {
@@ -187,7 +195,7 @@ class ProjectServiceSpec extends Specification {
         webService.getJson(_) >> [projectId:projectId, planStatus:PLAN_SUBMITTED, plannedStartDate: '2015-07-01T00:00Z']
 
         when:
-        def result = service.changeProjectStartDate(projectId, newStartDate)
+        def result = service.changeProjectStartDate(projectId, newStartDate, false)
 
         then:
         result.error != null
@@ -202,7 +210,7 @@ class ProjectServiceSpec extends Specification {
         webService.getJson(_) >> [projectId:projectId, planStatus:PLAN_APPROVED, plannedStartDate: '2015-07-01T00:00Z']
 
         when:
-        def result = service.changeProjectStartDate(projectId, newStartDate)
+        def result = service.changeProjectStartDate(projectId, newStartDate, false)
 
         then:
         result.error != null
@@ -214,25 +222,25 @@ class ProjectServiceSpec extends Specification {
         def newStartDate = '2015-06-01T00:00Z'
         reportService.includesSubmittedOrApprovedReports(_) >> true
         reportService.getReportsForProject(_) >> [[publicationStatus:ReportService.REPORT_APPROVED]]
-        webService.getJson(_) >> [projectId:projectId, planStatus:PLAN_NOT_APPROVED, plannedStartDate: '2015-07-01T00:00Z']
+        webService.getJson(_) >> [projectId:projectId, planStatus:PLAN_NOT_APPROVED, plannedStartDate: '2015-07-01T00:00Z', plannedEndDate:'2016-12-31T00:00Z']
 
         when:
-        def result = service.changeProjectStartDate(projectId, newStartDate)
+        def result = service.changeProjectStartDate(projectId, newStartDate, false)
 
         then:
         result.error != null
     }
 
-    def "a project's end date cannot be changed a period containing a submitted or approved report"() {
+    def "a project's end date cannot be changed to fall within a period containing a submitted or approved report"() {
         given:
         def projectId = 'project1'
-        def newStartDate = '2015-06-01T00:00Z'
+        def newStartDate = '2015-07-01T00:00Z'
         reportService.includesSubmittedOrApprovedReports(_) >> true
         reportService.getReportsForProject(_) >> [[publicationStatus:ReportService.REPORT_APPROVED]]
-        webService.getJson(_) >> [projectId:projectId, planStatus:PLAN_NOT_APPROVED, plannedStartDate: '2015-07-01T00:00Z']
-
+        webService.getJson(_) >> [projectId:projectId, planStatus:PLAN_NOT_APPROVED, plannedStartDate: '2015-07-01T00:00Z', plannedEndDate:'2016-12-31T00:00Z']
+        webService.doPost(_, _) >> [resp:[status:200]]
         when:
-        def result = service.changeProjectStartDate(projectId, newStartDate)
+        def result = service.changeProjectStartDate(projectId, newStartDate, false)
 
         then:
         result.error != null

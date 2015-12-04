@@ -27,26 +27,26 @@ class ReportService {
      * e.g. a stage report once every 6 months or a green army monthly report once per month.
      * Activities will only be created when no reporting activity of the correct type exists within each period.
      * @param projectId identifies the project.
-     * @param config List of [type:<activity type>, period:<period that must have a reporting activity>
-     * @return
+
      */
-    def regenerateAllStageReportsForProject(projectId, periodInMonths = 6, alignToCalendar = false) {
+    def regenerateAllStageReportsForProject(String projectId, Integer periodInMonths = 6, boolean alignToCalendar = false, Integer weekDaysToCompleteReport = null) {
 
         def project = projectService.get(projectId, 'all')
-        def programConfig = metadataService.getProgramConfiguration(project.associatedProgram, project.associatedSubProgram)
+        log.info("Processing project "+project.name)
         def period = Period.months(periodInMonths)
 
-        def reports = getReportsForProject(projectId).sort{it.toDate}
+        def reports = (project.reports?:[]).sort{it.toDate}
 
         def startDate = DateUtils.parse(project.plannedStartDate)
         def endDate = DateUtils.parse(project.plannedEndDate)
 
         def periodStartDate = null
         def stage = 1
-        for (int i=reports.size()-1; i>0; i--) {
+        for (int i=reports.size()-1; i>=0; i--) {
             if (isSubmittedOrApproved(reports[i])) {
-                periodStartDate = reports[i].toDate
-                stage = i+1
+                periodStartDate = DateUtils.parse(reports[i].toDate)
+                stage = i+2 // Start at the stage after the submitted or approved one
+                break
             }
         }
 
@@ -59,6 +59,7 @@ class ReportService {
 
         }
 
+        log.info "Regenerating stages starting from stage: "+stage+ ", starting from: "+periodStartDate+" ending at: "+endDate
         while (periodStartDate < endDate) {
             def periodEndDate = periodStartDate.plus(period)
 
@@ -70,15 +71,23 @@ class ReportService {
                     name:'Stage '+stage,
                     description:'Stage '+stage+' for '+project.name
             ]
-            if (programConfig.weekDaysToCompleteReport) {
-                report.dueDate = DateUtils.format(periodEndDate.plusDays(programConfig.weekDaysToCompleteReport))
+            if (weekDaysToCompleteReport) {
+                report.dueDate = DateUtils.format(periodEndDate.plusDays(weekDaysToCompleteReport))
             }
 
             if (reports.size() >= stage) {
                 report.reportId = reports[stage-1].reportId
-                update(report)
+                // Only do the update if the report details have changed.
+                if (!report.equals(reports[stage-1])) {
+                    log.info("Updating report " + report.name + " for project " + project.projectId)
+                    log.info("name: " + reports[stage - 1].name + " - " + report.name)
+                    log.info("fromDate: " + reports[stage - 1].fromDate + " - " + report.fromDate)
+                    log.info("toDate: " + reports[stage - 1].toDate + " - " + report.toDate)
+                    update(report)
+                }
             }
             else {
+                log.info("Creating report "+report.name+" for project "+project.projectId)
                 create(report)
             }
             stage++
@@ -86,9 +95,11 @@ class ReportService {
         }
 
         // Delete any left over reports.
-        for (int i=stage-2; i<reports.size(); i++) {
+        for (int i=stage-1; i<reports.size(); i++) {
+            log.info("Deleting report "+reports[i].name+" for project "+project.projectId)
             delete(reports[i].reportId)
         }
+        log.info("***********")
     }
 
     /**
