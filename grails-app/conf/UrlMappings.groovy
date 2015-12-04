@@ -53,12 +53,12 @@ class UrlMappings {
         "/nocas/geoService"(controller: 'home', action: 'geoService') {
 
         }
-        "/$hub/myProfile"(controller: 'home', action: 'myProfile') {
+        "/$hub/myProjects"(controller: 'home', action: 'myProfile') {
             constraints {
                 hub validator: {val, obj -> isHubValid(applicationContext, val)}
             }
         }
-        "/myProfile"(controller: 'home', action: 'myProfile') {
+        "/myProjects"(controller: 'home', action: 'myProfile') {
 
         }
 

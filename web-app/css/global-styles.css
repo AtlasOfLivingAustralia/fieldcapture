@@ -152,6 +152,10 @@ span.merit {
 	margin-top: 20px;
 }
 
+#header.navbar .login-logout .btn {
+    margin-top: 0
+}
+
 #dcNav {
 	background: none;
 }
@@ -567,6 +571,9 @@ button#risks-cancel:hover {
 }
 
 
+.greeting {
+    color: #BCC2CB;
+}
 
 
 @media (max-width: 980px) {
@@ -610,18 +617,14 @@ button#risks-cancel:hover {
 
 
 @media (max-width: 767px) {
-    
-    
-    
-body {
-	padding-left: 0;
-	padding-right: 0;
-}
 
-.statistics .stat {
-	min-height: 130px !important;
-	background-image: none !important;
-}
+    body {
+        padding-left: 0;
+        padding-right: 0;
+    }
 
-
+    .statistics .stat {
+        min-height: 130px !important;
+        background-image: none !important;
+    }
 }

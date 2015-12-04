@@ -1,18 +1,11 @@
 <g:if test="${fc.currentUserDisplayName()}">
 
         <div class="btn-group">
-        <button class="btn btn-small btn-fc btnProfile" title="profile page">
-            <i class="icon-user icon-white"></i><span class="">&nbsp;<fc:currentUserDisplayName /></span>
-        </button>
-        </div>
-        <div class="btn-group ">
-            <button class="btn btn-small btn-fc dropdown-toggle" data-toggle="dropdown">
-                <!--<i class="icon-star icon-white"></i>--> My projects&nbsp;&nbsp;<span class="caret"></span>
+            <button class="btn btn-small btn-fc btnProfile" title="My Projects">
+                <i class="icon-user icon-white"></i><span class="">My projects</span>
             </button>
-            <div class="dropdown-menu pull-right">
-                <fc:userProjectList />
-            </div>
         </div>
+
         <div class="btn-group ">
             <button class="btn btn-small btn-fc dropdown-toggle" data-toggle="dropdown">
                 <!--<i class="icon-star icon-white"></i>--> My organisations&nbsp;&nbsp;<span class="caret"></span>

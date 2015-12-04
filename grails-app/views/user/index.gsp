@@ -29,7 +29,7 @@
     </g:if>
     <g:else>
 
-        <h2>Your Projects</h2>
+        <h2>My Projects</h2>
         <g:render template="/shared/reports"/>
         <div class="row-fluid ">
             <div class="span8">

@@ -74,7 +74,11 @@
             </div>
             </g:if>
             <div class="navbar-form pull-right nav-collapse collapse">
-                <div class="btn-group">
+                <g:if test="${fc.currentUserDisplayName()}">
+                    <div class="greeting text-right">G'day <fc:currentUserDisplayName/></div>
+                </g:if>
+
+                <div class="btn-group pull-right login-logout">
                     <fc:loginLogoutButton logoutUrl="${createLink(controller:'logout', action:'logout')}" logoutReturnToUrl="${createLink(controller: "home", absolute: true)}" cssClass="${loginBtnCss}"/>
                 </div>
 
@@ -168,7 +172,7 @@
         });
 
         $(".btnProfile").click(function (e) {
-            window.location = "${createLink(controller: 'myProfile')}";
+            window.location = "${createLink(controller: 'project', action:'mine')}";
         });
 
         $("#toggleFluid").click(function(el){
