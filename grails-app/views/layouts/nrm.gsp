@@ -95,7 +95,7 @@
 
                 <g:form controller="search" method="GET" class="search merit">
                     <p>
-                        <label for="keywords"><span class="hide">Full text search</span><input type="text" name="query" id="keywords" placeholder="Search MERIT" value="${params.query}"></label>
+                        <label for="keywords"><span class="hide">Full text search</span><input aria-label="Search MERIT" type="text" name="query" id="keywords" placeholder="Search MERIT" value="${params.query}"></label>
                         <input type="hidden" name="collection" value="agencies">
                         <input type="hidden" name="profile" value="nrm_env">
                         <input type="hidden" name="form" value="simple">

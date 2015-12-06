@@ -39,7 +39,7 @@
             <g:render template="/shared/poi"/>
         </div>
     </div>
-    <div id="help-links">
+    <div id="help-links-container">
         <h4>Helpful links</h4>
         <g:render template="helpLinks"/>
     </div>

@@ -6,7 +6,7 @@
         <i class="blog-icon floatleft fa fa-4x" data-bind="visible:stockIcon(), css:stockIcon"></i>
         <div class="widget-news-right-body">
             <h3><span class="title" data-bind="text:title"></span><span class="floatright" data-bind="text:formattedDate"></span></h3>
-            <div class="text" data-bind="html:content.markdownToHtml()"></div> <a data-bind="visible:viewMoreUrl, attr:{href:viewMoreUrl}"><i class="fa fa-arrow-circle-o-right"></i></a>
+            <div class="text" data-bind="html:content.markdownToHtml()"></div> <a data-bind="visible:viewMoreUrl, attr:{href:viewMoreUrl}" aria-label="More information"><i class="fa fa-arrow-circle-o-right"></i></a>
         </div>
     </div>
 
