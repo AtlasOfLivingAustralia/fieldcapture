@@ -13,7 +13,7 @@
     "r1": {
       "config": "1",
       "title": "Reef",
-      "label": "adopting improved management practices to protect the reef",
+      "label": "improving management practices to protect the reef",
       "units": "Farmers ",
       "type": "score",
       "projectFilter": [
@@ -47,7 +47,7 @@
     "r4": {
       "config": "4",
       "title": "Reef",
-      "label": "of high-value tourist reefs where Crown of Thorns Starfish were removed",
+      "label": "of high-value reefs treated for Crown of Thorns Starfish",
       "units": "Ha",
       "type": "score",
       "projectFilter": [
