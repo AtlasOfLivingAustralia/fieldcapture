@@ -10,7 +10,7 @@
     </div>
 </g:if>
 <g:elseif test="${results?.hits?.total?:0 > 0}">
-    <div id="" class="row-fluid ">
+    <div class="row-fluid ">
         <div id="facetsCol" class="well well-small" style="display:none;">
             <g:set var="reqParams" value="sort,order,max,fq"/>
             <div class="visible-phone pull-right" style="margin-top: 5px;">
@@ -32,7 +32,7 @@
                             <g:set var="fqBits" value="${f?.tokenize(':')}"/>
                             <g:set var="newUrl"><fc:formatParams params="${params}" requiredParams="${reqParams}" excludeParam="${f}"/></g:set>
                             <li><g:message code="label.${fqBits[0]}" default="${fqBits[0]}"/>: <g:message code="label.${fqBits[1]}" default="${fqBits[1]?.capitalize()}"/>
-                                <a href="${newUrl?:"?"}" class="btn btn-inverse btn-mini tooltips" title="remove filter">
+                                <a href="${newUrl?:"?"}" class="btn btn-inverse btn-mini tooltips" title="remove filter" aria-label="remove filter">
                                     <i class="icon-white icon-remove"></i></a>
                             </li>
                         </g:each>
@@ -48,15 +48,15 @@
                     <g:set var="max" value="${5}"/>
                     <g:if test="${fn != 'class' && f?.terms?.size() > 0}">
                         <g:set var="fName"><g:message code="label.${fn}" default="${fn?.capitalize()}"/></g:set>
-                        <div><h4 style="display:inline-block">${fName}</h4><a class="accordian-toggle" data-toggle="collapse" data-target="#facet-list-${j}"><i style="float:right; margin-top:10px;" class="fa fa-plus"></i></a></div>
+                        <div><h4 id="facet-list-${j}-header" style="display:inline-block">${fName}</h4><a class="accordian-toggle" data-toggle="collapse" data-target="#facet-list-${j}"><i style="float:right; margin-top:10px;" class="fa fa-plus"></i></a></div>
                         <div id="facet-list-${j}" data-name="${fn}" class="collapse">
-                            <ul style="list-style-type: none;" class="facetValues">
+                            <ul role="group" aria-labelledby="facet-list-${j}-header" style="list-style-type: none;" class="facetValues">
                                 <g:each var="t" in="${f.terms}" status="i">
-                                    <g:if test="${i < max}">
+                                    <g:if test="${i < max && t.term}">
+                                        <g:set var="termLabel" value="${g.message(code:"label."+t.term.capitalize(), default:t.term.capitalize())}"/>
                                         <li>
-                                            <input type="checkbox" class="facetSelection" name="facetSelection" value="fq=${fn.encodeAsURL()}:${t.term.encodeAsURL()}">
-                                            <a href="${fqLink}&fq=${fn.encodeAsURL()}:${t.term.encodeAsURL()}"><g:message
-                                                    code="label.${t.term.capitalize()}" default="${t.term.capitalize()}"/></a> (${t.count})
+                                            <input type="checkbox" class="facetSelection" name="facetSelection" value="fq=${fn.encodeAsURL()}:${t.term.encodeAsURL()}" aria-label="${termLabel}">
+                                            <a href="${fqLink}&fq=${fn.encodeAsURL()}:${t.term.encodeAsURL()}">${termLabel}</a> (${t.count})
                                         </li>
                                     </g:if>
                                 </g:each>
@@ -102,9 +102,9 @@
             <div class="accordian" id="project-display-options">
                 <div class="accordion-group">
                     <div class="accordian-heading">
-                        <a class="accordian-toggle" id="mapView-heading" href="#mapView" data-toggle="collapse" data-parent="#project-display-options">Map <i style="padding-left:50px; padding-top:5px;" class="fa fa-plus pull-right"></i></a>
+                        <a class="accordian-toggle" id="accordionMapView-heading" href="#accordionMapView" data-toggle="collapse" data-parent="#project-display-options">Map <i style="padding-left:50px; padding-top:5px;" class="fa fa-plus pull-right"></i></a>
                     </div>
-                    <div id="mapView" class="accordian-body collapse">
+                    <div id="accordionMapView" class="accordian-body collapse">
                         <span class="span4 facet-holder"></span>
 
                         <span class="span8">
@@ -125,8 +125,8 @@
                                 <table class="table table-bordered table-hover" id="projectTable" data-sort="lastUpdated" data-order="DESC" data-offset="0" data-max="10">
                                     <thead>
                                     <tr>
-                                        <th width="85%" data-sort="nameSort" data-order="ASC" class="header">Project name</th>
-                                        <th width="15%" data-sort="lastUpdated"  data-order="DESC" class="header headerSortUp">Last&nbsp;updated&nbsp;</th>
+                                        <th width="85%" data-sort="nameSort" scope="col" data-order="ASC" class="header">Project name</th>
+                                        <th width="15%" data-sort="lastUpdated" scope="col"  data-order="DESC" class="header headerSortUp">Last&nbsp;updated&nbsp;</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -346,7 +346,7 @@
         var initialisedReport = false, initialisedMap = false, initialisedProjects = false;
         var initialiseContentSection = function(section) {
 
-            if (section === '#mapView' && !initialisedMap) {
+            if (section === '#accordionMapView' && !initialisedMap) {
                 generateMap(facetList);
                 initialisedMap = true;
             }
@@ -392,9 +392,9 @@
         });
 
         // re-establish the previous view state
-        var storedTab = amplify.store(VIEW_STATE_KEY) || '#mapView';
+        var storedTab = amplify.store(VIEW_STATE_KEY) || '#accordionMapView';
         if (!$('#project-display-options '+storedTab)[0]) {
-            storedTab = '#mapView';
+            storedTab = '#accordionMapView';
         }
         $('#project-display-options '+storedTab).collapse({parent:'#project-display-options'});
         $('#project-display-options '+storedTab).collapse('show');
@@ -474,6 +474,7 @@
             el.preventDefault();
             var thisEl = this;
             var fId = $(this).data("id");
+
             //if (prevFeatureId) alaMap.unAnimateFeatureById(prevFeatureId);
             projectSites = alaMap.animateFeatureById(fId);
             $(thisEl).tooltip('hide');
@@ -530,7 +531,7 @@
                 // so that map data can be loaded #HACK
                 delay = 2000;
             }
-            $('#mapView-tab').tab('show');
+            //$('#accordionMapView').tab('show');
             setTimeout(
                 function() {
                     //var fId = $(this).data("id");
@@ -541,12 +542,7 @@
             );
 
         });
-        $('#projectTable').on("click", "a.zoom-out",function(el) {
-            el.preventDefault();
-            $('#mapView-tab').tab('show');
-            alaMap.map.setCenter(initCentre);
-            alaMap.map.setZoom(initZoom);
-        });
+
 
         // Tooltips
         $('.projectTitle').tooltip({
