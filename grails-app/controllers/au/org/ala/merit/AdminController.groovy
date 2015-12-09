@@ -216,7 +216,6 @@ class AdminController extends au.org.ala.fieldcapture.AdminController {
                 String[] line = reader.readNext()
                 line = reader.readNext() // Discard header line
                 while (line) {
-
                     def currentOrgName = line[0]
                     def correctOrgName = line[3]
 
@@ -228,6 +227,10 @@ class AdminController extends au.org.ala.fieldcapture.AdminController {
                 }
             }
 
+        }
+        def jsonResults = results as JSON
+        new File('/tmp/organisation_creation_results.json').withPrintWriter { pw ->
+            pw.print jsonResults.toString(true)
         }
 
         render results as JSON
@@ -243,7 +246,7 @@ class AdminController extends au.org.ala.fieldcapture.AdminController {
         def organisationId
         def organisation = existingOrganisations.list.find{it.name == orgName}
         if (!organisation) {
-            def resp = organisationService.update('', [name:orgName])
+            def resp = organisationService.update('', [name:orgName, sourceSystem:'merit'])
 
             organisationId = resp?.resp?.organisationId
             if (!organisationId) {
