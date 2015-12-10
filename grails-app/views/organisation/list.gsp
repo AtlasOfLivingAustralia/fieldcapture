@@ -31,8 +31,9 @@
         position:relative;
     }
     .organisation-text {
-        margin-left: 220px;
+        margin-left: 10px;
         margin-top: 5px;
+        float: left;
     }
 </style>
 
