@@ -58,13 +58,18 @@
         </g:if>
     </div>
 </g:if>
+    <fc:getSettingContent settingType="${au.org.ala.fieldcapture.SettingPageType.ORGANISATION_LIST_PAGE_HEADER}"/>
 
     <div class="row-fluid">
-        <div class="span6 input-prepend">
-            <span class="add-on"><i class="icon-search"></i> </span>
-            <input id="searchText" data-bind="value:searchTerm, valueUpdate:'keyup'" class="span12" placeholder="Search..." />
+        <div class="span6 input-append">
+            <input id="searchText" data-bind="value:searchTerm, valueUpdate:'keyup'" class="span12" placeholder="Search organisations..." />
+            <span class="add-on"><i class="fa fa-search"></i> </span>
         </div>
     </div>
+
+    <h4>Found <span data-bind="text:pagination.totalResults"></span> organisations</h4>
+
+    <hr/>
 
     <!-- ko foreach : organisations -->
         <div class="row-fluid organisation">
@@ -82,10 +87,6 @@
 
     <!-- /ko -->
 
-
-    <div class="row-fluid" data-bind="visible:!organisations().length">
-        <h4>No organisations found</h4>
-    </div>
     <div class="row-fluid">
         <g:render template="/shared/pagination"/>
     </div>
