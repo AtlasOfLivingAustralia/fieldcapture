@@ -112,6 +112,13 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
     }
 
     @PreAuthorise(accessLevel = 'admin')
+    def regenerateStageReports(String id) {
+
+        projectService.generateProjectStageReports(id)
+        render status:200, text:'ok'
+    }
+
+    @PreAuthorise(accessLevel = 'admin')
 	def previewStageReport(){
         String projectId =  params.id
         String stageName = params.stageName
