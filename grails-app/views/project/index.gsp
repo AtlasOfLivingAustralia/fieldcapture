@@ -47,6 +47,7 @@
         editBlogEntryUrl: "${createLink(controller: 'blog', action:'edit', params:[projectId:project.projectId, returnTo:createLink(controller: 'project', action: 'index', id: project.projectId)])}%23overview",
         deleteBlogEntryUrl: "${createLink(controller: 'blog', action:'delete', params:[projectId:project.projectId])}",
         shapefileDownloadUrl: "${createLink(controller:'project', action:'downloadShapefile', id:project.projectId)}",
+        regenerateStageReportsUrl: "${createLink(controller:'project', action:'regenerateStageReports', id:project.projectId)}",
         returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
 
     },
@@ -660,6 +661,13 @@
                             }
                         });
                     }
+                };
+                self.regenerateStageReports = function() {
+                    $.ajax(fcConfig.regenerateStageReportsUrl).done(function(data) {
+                        document.location.reload();
+                    }).fail(function(data) {
+                        bootbox.alert('<span class="label label-warning">Error</span> <p>There was an error regenerating the stage reports: '+data+'</p>');
+                    });
                 };
 
             } // end of view model
