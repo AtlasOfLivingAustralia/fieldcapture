@@ -40,7 +40,7 @@
         </div>
     </div>
     <div id="help-links-container">
-        <h4>Helpful links</h4>
+        <fc:getSettingContent settingType="${au.org.ala.fieldcapture.SettingPageType.HELP_LINKS_TITLE}"/>
         <g:render template="helpLinks"/>
     </div>
 
