@@ -38,6 +38,9 @@
     </div>
 </g:if>
     <fc:getSettingContent settingType="${au.org.ala.fieldcapture.SettingPageType.ORGANISATION_LIST_PAGE_HEADER}"/>
+    <g:if test="${fc.userIsAlaOrFcAdmin()}">
+        <a href="${g.createLink(action:'create')}"><button class="btn btn-info pull-right">Create Organisation</button></a>
+    </g:if>
 
     <div class="row-fluid">
         <div class="span6 input-append">
