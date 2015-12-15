@@ -10,32 +10,11 @@
             serverUrl: "${grailsApplication.config.grails.serverURL}",
             createOrganisationUrl: "${createLink(controller: 'organisation', action: 'create')}",
             viewOrganisationUrl: "${createLink(controller: 'organisation', action: 'index')}",
-            organisationSearchUrl: "${createLink(controller: 'organisation', action: 'search')}"
+            organisationSearchUrl: "${createLink(controller: 'organisation', action: 'search')}",
+            noLogoImageUrl: "${r.resource(dir:'images', file:'no-image-2.png')}"
             };
     </r:script>
     <r:require modules="knockout,mapWithFeatures,amplify,organisation"/>
-    <style type="text/css">
-    .organisation-logo {
-        width: 200px;
-        height: 150px;
-        line-height: 146px;
-        margin-right: 10px;
-        overflow: hidden;
-        padding: 1px;
-        text-align: center;
-        float:left;
-        top:5px;
-        left:5px;
-    }
-    .organisation {
-        position:relative;
-    }
-    .organisation-text {
-        margin-left: 10px;
-        margin-top: 5px;
-        float: left;
-    }
-</style>
 
 </head>
 
@@ -59,6 +38,9 @@
     </div>
 </g:if>
     <fc:getSettingContent settingType="${au.org.ala.fieldcapture.SettingPageType.ORGANISATION_LIST_PAGE_HEADER}"/>
+    <g:if test="${fc.userIsAlaOrFcAdmin()}">
+        <a href="${g.createLink(action:'create')}"><button class="btn btn-info pull-right">Create Organisation</button></a>
+    </g:if>
 
     <div class="row-fluid">
         <div class="span6 input-append">
@@ -73,14 +55,14 @@
 
     <!-- ko foreach : organisations -->
         <div class="row-fluid organisation">
-            <div class="organisation-logo" data-bind="visible:logoUrl"><img class="logo" data-bind="attr:{'src':logoUrl}"></div>
+            <div class="organisation-logo"><img class="logo" data-bind="attr:{'src':logoUrl()?logoUrl():fcConfig.noLogoImageUrl}"></div>
             <div class="organisation-text">
                 <h4>
                     <a data-bind="visible:organisationId,attr:{href:fcConfig.viewOrganisationUrl+'/'+organisationId}"><span
                             data-bind="text:name"></span></a>
                     <span data-bind="visible:!organisationId,text:name"></span>
                 </h4>
-                <span data-bind="html:description.markdownToHtml()"></span>
+                <div data-bind="html:description.markdownToHtml()"></div>
             </div>
         </div>
     <hr/>
