@@ -13,7 +13,7 @@
     "r1": {
       "config": "1",
       "title": "Reef",
-      "label": "adopting improved management practices to protect the reef",
+      "label": "improving management practice to protect the reef",
       "units": "Farmers ",
       "type": "score",
       "projectFilter": [
@@ -47,7 +47,7 @@
     "r4": {
       "config": "4",
       "title": "Reef",
-      "label": "of high-value tourist reefs where Crown of Thorns Starfish were removed",
+      "label": "high-value reef treated for Crown of Thorns Starfish",
       "units": "Ha",
       "type": "score",
       "projectFilter": [
@@ -86,7 +86,7 @@
     "nlp4": {
       "config": "1",
       "title": "National Landcare Programme",
-      "label": "Using traditional ecological knowledge",
+      "label": "Using Indigenous ecological knowledge",
       "units": "Projects",
       "type": "projectCount",
       "searchTerm":"meriPlanAssetFacet:\"Indigenous Cultural Values\" OR meriPlanAssetFacet:\"Indigenous Ecological Knowledge\"",
