@@ -86,7 +86,7 @@
     "nlp4": {
       "config": "1",
       "title": "National Landcare Programme",
-      "label": "Using traditional ecological knowledge",
+      "label": "Using Indigenous ecological knowledge",
       "units": "Projects",
       "type": "projectCount",
       "searchTerm":"meriPlanAssetFacet:\"Indigenous Cultural Values\" OR meriPlanAssetFacet:\"Indigenous Ecological Knowledge\"",
