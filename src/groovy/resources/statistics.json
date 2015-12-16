@@ -1,7 +1,7 @@
 {
   "statistics": {
     "ts1": {
-      "config": "1",
+      "config": "5",
       "title": "Threatened Species Strategy",
       "label": "Protecting threatened species",
       "units": "Projects",
@@ -11,7 +11,7 @@
       ]
     },
     "r1": {
-      "config": "1",
+      "config": "5",
       "title": "Reef",
       "label": "improving management practice to protect the reef",
       "units": "Farmers ",
@@ -57,7 +57,7 @@
       "resultFilter": "Acanthaster planci"
     },
     "i1": {
-      "config": "5",
+      "config": "1",
       "title": "Indigenous",
       "label": "Indigenous people employed to deliver projects",
       "units": "",
@@ -65,7 +65,7 @@
       "scoreLabel": "Total No. of Indigenous people employed"
     },
     "i2": {
-      "config": "5",
+      "config": "1",
       "title": "Indigenous",
       "label": "Indigenous people working on country",
       "units": "",
@@ -73,7 +73,7 @@
       "scoreLabel": "No. of on-country visits involving both older and younger people together"
     },
     "nlp1": {
-      "config": "1",
+      "config": "5",
       "title": "National Landcare Programme",
       "label": "Supporting sustainable agriculture",
       "units": "Projects",
@@ -84,7 +84,7 @@
       "investmentTypeFilter": "Farmers and fishers are increasing their long term returns through better management of the natural resource base"
     },
     "nlp4": {
-      "config": "1",
+      "config": "5",
       "title": "National Landcare Programme",
       "label": "Using Indigenous ecological knowledge",
       "units": "Projects",
@@ -95,7 +95,7 @@
       ]
     },
     "nlp5": {
-      "config": "1",
+      "config": "5",
       "title": "National Landcare Programme",
       "label": "Protecting threatened species",
       "units": "Projects",
@@ -245,7 +245,7 @@
       "nlp7",
       "nlp9",
       "nlp10",
-      "i2",
+      "nlp4",
       "nlp12"
     ],
     [
@@ -253,7 +253,7 @@
       "r3",
       "i1",
       "nlp13",
-      "i2",
+      "r4",
       "nlp11"
     ]
   ]
