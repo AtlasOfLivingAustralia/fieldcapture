@@ -6,7 +6,7 @@
 		<link rel="stylesheet" href="${resource(dir: 'css', file: 'errors.css')}" type="text/css">
 	</head>
 	<body>
-    <div id="wrapper" class="container-fluid">
+    <div id="wrapper" class="${containerType}">
         <h1 style="margin:20px 0;">An error occurred</h1>
         <g:if test="${exception}">
             <g:renderException exception="${exception}" />

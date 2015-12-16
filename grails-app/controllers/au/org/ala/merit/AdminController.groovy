@@ -9,7 +9,8 @@ import org.springframework.web.multipart.MultipartHttpServletRequest
 @PreAuthorise(accessLevel = 'officer', redirectController = "home")
 class AdminController extends au.org.ala.fieldcapture.AdminController {
 
-    def organisationService
+    OrganisationService organisationService
+    BlogService blogService
 
     def gmsProjectImport() {
         render(view:'import', model:[:])
@@ -215,7 +216,6 @@ class AdminController extends au.org.ala.fieldcapture.AdminController {
                 String[] line = reader.readNext()
                 line = reader.readNext() // Discard header line
                 while (line) {
-
                     def currentOrgName = line[0]
                     def correctOrgName = line[3]
 
@@ -227,6 +227,10 @@ class AdminController extends au.org.ala.fieldcapture.AdminController {
                 }
             }
 
+        }
+        def jsonResults = results as JSON
+        new File('/tmp/organisation_creation_results.json').withPrintWriter { pw ->
+            pw.print jsonResults.toString(true)
         }
 
         render results as JSON
@@ -242,7 +246,7 @@ class AdminController extends au.org.ala.fieldcapture.AdminController {
         def organisationId
         def organisation = existingOrganisations.list.find{it.name == orgName}
         if (!organisation) {
-            def resp = organisationService.update('', [name:orgName])
+            def resp = organisationService.update('', [name:orgName, sourceSystem:'merit'])
 
             organisationId = resp?.resp?.organisationId
             if (!organisationId) {
@@ -290,6 +294,39 @@ class AdminController extends au.org.ala.fieldcapture.AdminController {
         }
         return [errors:errors, messages:messages]
 
+    }
+
+    def createReports() {
+        def offset = 0
+        def max = 100
+
+        def projects = searchService.allProjects([max:max, offset:offset])
+
+        while (offset < projects.hits.total) {
+
+            offset+=max
+            projects = searchService.allProjects([max:max, offset:offset])
+
+            projects.hits?.hits?.each { hit ->
+                def project = hit._source
+                if (!project.timeline) {
+                    projectService.generateProjectStageReports(project.projectId)
+                    println "Generated reports for project ${project.projectId}"
+                }
+            }
+            println offset
+
+        }
+
+    }
+
+    def editSiteBlog() {
+        List<Map> blog = blogService.getSiteBlog()
+        [blog:blog]
+    }
+
+
+    def selectHomePageImages() {
     }
 
 

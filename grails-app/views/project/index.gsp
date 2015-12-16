@@ -34,32 +34,63 @@
         sldPolgonDefaultUrl: "${grailsApplication.config.sld.polgon.default.url}",
         sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}",
         organisationLinkBaseUrl: "${createLink(controller:'organisation', action:'index')}",
-        imageLocation:"${resource(dir:'/images/filetypes')}",
-        returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}",
-        documentUpdateUrl: "${createLink(controller:"proxy", action:"documentUpdate")}",
-        documentDeleteUrl: "${createLink(controller:"proxy", action:"deleteDocument")}"
-        },
+        imageLocation:"${resource(dir:'/images')}",
+        documentUpdateUrl: "${createLink(controller:"document", action:"documentUpdate")}",
+        documentDeleteUrl: "${createLink(controller:"document", action:"deleteDocument")}",
+        pdfgenUrl: "${createLink(controller: 'resource', action: 'pdfUrl')}",
+        pdfViewer: "${createLink(controller: 'resource', action: 'viewer')}",
+        imgViewer: "${createLink(controller: 'resource', action: 'imageviewer')}",
+        audioViewer: "${createLink(controller: 'resource', action: 'audioviewer')}",
+        videoViewer: "${createLink(controller: 'resource', action: 'videoviewer')}",
+        errorViewer: "${createLink(controller: 'resource', action: 'error')}",
+        createBlogEntryUrl: "${createLink(controller: 'blog', action:'create', params:[projectId:project.projectId, returnTo:createLink(controller: 'project', action: 'index', id: project.projectId)])}%23overview",
+        editBlogEntryUrl: "${createLink(controller: 'blog', action:'edit', params:[projectId:project.projectId, returnTo:createLink(controller: 'project', action: 'index', id: project.projectId)])}%23overview",
+        deleteBlogEntryUrl: "${createLink(controller: 'blog', action:'delete', params:[projectId:project.projectId])}",
+        shapefileDownloadUrl: "${createLink(controller:'project', action:'downloadShapefile', id:project.projectId)}",
+        regenerateStageReportsUrl: "${createLink(controller:'project', action:'regenerateStageReports', id:project.projectId)}",
+        returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
+
+    },
         here = window.location.href;
 
     </r:script>
 
-    <!--[if gte IE 8]>
+
         <style>
-           .thumbnail > img {
-                max-width: 400px;
+           .thumbnail-image-container > img {
+               width: 300px;
+               height: auto;
             }
-            .thumbnail {
-                max-width: 410px;
+            .thumbnail-image-container {
+                width: 300px;
+                height: 280px;
+                overflow:hidden;
+            }
+            .thumbnail-container {
+                height:300px;
+                position:relative;
+            }
+            .thumbnail-container .caption {
+                position: absolute;
+                bottom:0;
+                padding-bottom:0;
+                margin-bottom:0;
+            }
+
+            #public-images-slider{
+              overflow: auto;
+              width: 100%;
+              height: 300px;
             }
         </style>
-    <![endif]-->
-    <r:require modules="gmap3,mapWithFeatures,knockout,datepicker,amplify,jqueryValidationEngine, merit_projects, attachDocuments, wmd"/>
+
+    <r:require modules="gmap3,mapWithFeatures,knockout,datepicker,amplify,imageViewer, jqueryValidationEngine, merit_projects, attachDocuments, wmd"/>
 </head>
 <body>
 <div id="spinner" class="spinner" style="position: fixed;top: 50%;left: 50%;margin-left: -50px;margin-top: -50px;text-align:center;z-index:1234;overflow: auto;width: 100px;height: 102px;">
-    <img id="img-spinner" width="50" height="50" src="${request.contextPath}/images/loading.gif" alt="Loading"/>
+    <r:img id="img-spinner" width="50" height="50" dir="images" file="loading.gif" alt="Loading"/>
 </div>
-<div class="container-fluid">
+<div class="${containerType}">
 
     <ul class="breadcrumb">
         <li>
@@ -102,7 +133,7 @@
 
     <div class="tab-content" style="overflow:visible;display:none">
         <div class="tab-pane active" id="overview">
-            <g:render template="overview" model="[project:project]"/>
+            <g:render template="overview" model="${projectContent.overview}"/>
         </div>
 
         <div class="tab-pane" id="documents">
@@ -121,7 +152,7 @@
                         <div class="well well-small">
                             <label><b>MERI attachments:</b></label>
                             <g:render plugin="fieldcapture-plugin" template="/shared/listDocuments"
-                                      model="[useExistingModel: true,editable:false, filterBy: 'programmeLogic', ignore: '', imageUrl:resource(dir:'/images/filetypes'),containerId:'overviewDocumentList']"/>
+                                  model="[useExistingModel: true,editable:false, filterBy: 'programmeLogic', ignore: '', imageUrl:resource(dir:'/images'),containerId:'overviewDocumentList']"/>
                         </div>
                     </div>
                 </div>
@@ -137,7 +168,7 @@
             <div class="tab-pane" id="plan">
             <!-- PLANS -->
                 <g:render template="/shared/activitiesPlan"
-                    model="[activities:activities ?: [], sites:project.sites ?: [], showSites:true]"/>
+                    model="[activities:activities ?: [], sites:project.sites ?: [], showSites:true, reports:projectContent.plan?.reports]"/>
                 <g:if test="${user?.isCaseManager}">
                     <div class="validationEngineContainer" id="grantmanager-validation">
                         <g:render template="grantManagerSettings" model="[project:project]"/>
@@ -179,9 +210,13 @@
                             </g:if>
 
                             <li><a href="#projectDetails" id="projectDetails-tab" data-toggle="tab"><i class="icon-chevron-right"></i> MERI Plan</a></li>
-                            <li><a href="#editNewsAndEvents" id="editNewsAndEvents-tab" data-toggle="tab"><i class="icon-chevron-right"></i> News and events</a></li>
-                            <li><a href="#editProjectStories" id="editProjectStories-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Project stories</a></li>
-
+                            <li><a href="#editProjectBlog" id="editProjectBlog-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Edit Project Blog</a></li>
+                            <g:if test="${project.newsAndEvents}">
+                                <li><a href="#editNewsAndEvents" id="editNewsAndEvents-tab" data-toggle="tab"><i class="icon-chevron-right"></i> News and events</a></li>
+                            </g:if>
+                            <g:if test="${project.projectStories}">
+                                <li><a href="#editProjectStories" id="editProjectStories-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Project stories</a></li>
+                            </g:if>
                             <li ${activeClass}><a href="#permissions" id="permissions-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Project access</a></li>
                             <li><a href="#species" id="species-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Species of interest</a></li>
                             <li><a href="#edit-documents" id="edit-documents-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Documents</a></li>
@@ -201,7 +236,7 @@
                                         <div id="save-result-placeholder"></div>
                                         <div class="span10 validationEngineContainer" id="settings-validation">
                                             <g:render plugin="fieldcapture-plugin" template="editProject"
-                                                      model="[project: project]"/>
+                                                      model="[project: project, canChangeProjectDates:projectContent.admin.canChangeProjectDates]"/>
                                         </div>
                                     </div>
                                 </div>
@@ -219,17 +254,23 @@
                                     </div>
                                 </div>
                             </div>
+                            <div id="editProjectBlog" class="pill-pane">
+                                <h3>Edit Project Blog</h3>
+                                <g:render template="/blog/blogSummary" model="${[blog:project.blog?:[]]}"/>
+                            </div>
+                            <g:if test="${project.newsAndEvents}">
                             <div id="editNewsAndEvents" class="pill-pane">
                                 <g:render plugin="fieldcapture-plugin"  template="editProjectContent" model="${[attributeName:'newsAndEvents', header:'News and events']}"/>
                                 <hr/>
                                 <div id="announcement-result-placeholder"></div>
                                 <g:render template="announcements" model="[project: project]"/>
                             </div>
-
-                            <div id="editProjectStories" class="pill-pane">
-                                <g:render plugin="fieldcapture-plugin" template="editProjectContent" model="${[attributeName:'projectStories', header:'Project stories']}"/>
-                            </div>
-
+                            </g:if>
+                            <g:if test="${project.projectStories}">
+                                <div id="editProjectStories" class="pill-pane">
+                                    <g:render plugin="fieldcapture-plugin" template="editProjectContent" model="${[attributeName:'projectStories', header:'Project stories']}"/>
+                                </div>
+                            </g:if>
                             <div id="permissions" class="pill-pane ${activeClass}">
                                 <h3>Project Access</h3>
                                 <h4>Add Permissions</h4>
@@ -247,7 +288,7 @@
                                 <h3>Project Documents</h3>
                                 <div class="row-fluid">
                                     <div class="span10">
-                                        <g:render plugin="fieldcapture-plugin" template="/shared/listDocuments"
+                                        <g:render plugin="fieldcapture-plugin" template="/shared/editDocuments"
                                                   model="[useExistingModel: true,editable:true, filterBy: 'all', ignore: '', imageUrl:resource(dir:'/images/filetypes'),containerId:'adminDocumentList']"/>
                                     </div>
                                 </div>
@@ -595,23 +636,6 @@
                             promoteOnHomepage:self.promoteOnHomepage()
                         };
 
-                        if (self.regenerateProjectTimeline()) {
-                            var dates = {
-                                plannedStartDate: self.plannedStartDate(),
-                                plannedEndDate: self.plannedEndDate()
-                            };
-                            var program = $.grep(self.transients.programs, function(program, index) {
-                                return program.name == self.associatedProgram();
-                            });
-
-                            if (program[0]) {
-                                addTimelineBasedOnStartDate(dates, program[0].reportingPeriod, program[0].reportingPeriodAlignedToCalendar);
-                            }
-                            else {
-                                addTimelineBasedOnStartDate(dates);
-                            }
-                            jsData.timeline = dates.timeline;
-                        }
                         // this call to stringify will make sure that undefined values are propagated to
                         // the update call - otherwise it is impossible to erase fields
                         var json = JSON.stringify(jsData, function (key, value) {
@@ -637,6 +661,13 @@
                             }
                         });
                     }
+                };
+                self.regenerateStageReports = function() {
+                    $.ajax(fcConfig.regenerateStageReportsUrl).done(function(data) {
+                        document.location.reload();
+                    }).fail(function(data) {
+                        bootbox.alert('<span class="label label-warning">Error</span> <p>There was an error regenerating the stage reports: '+data+'</p>');
+                    });
                 };
 
             } // end of view model
@@ -787,14 +818,24 @@
                 }
             });
 
-            // re-establish the previous tab state
-            var storedTab = amplify.store('project-tab-state');
-            var isEditor = ${user?.isEditor?:false};
-            if (storedTab === '') {
-                $('#overview-tab').tab('show');
-            } else if (isEditor) {
-                $(storedTab + '-tab').tab('show');
+            var overviewInitialised = false;
+            $('#overview-tab').on('shown', function() {
+                if (!overviewInitialised) {
+                    initialiseOverview();
+
+                    overviewInitialised = true;
+                }
+            });
+            function initialiseOverview() {
+                $( '#public-images-slider' ).mThumbnailScroller({});
+                $('#public-images-slider .fancybox').fancybox();
             }
+
+            $('#gotoEditBlog').click(function () {
+                amplify.store('project-admin-tab-state', '#editProjectBlog');
+                $('#admin-tab').tab('show');
+            });
+
 
             // Non-editors should get tooltip and popup when trying to click other tabs
             $('#projectTabs li a').not('[data-toggle="tab"]').css('cursor', 'not-allowed') //.data('placement',"right")
@@ -812,6 +853,19 @@
             //Page loading indicator.
 			$('.spinner').hide();
         	$('.tab-content').fadeIn();
+
+        	// re-establish the previous tab state
+            var storedTab = window.location.hash;
+            if (!storedTab) {
+                storedTab = ${user?"amplify.store('project-tab-state')":"'overview'"};
+            }
+            var isEditor = ${user?.isEditor?:false};
+
+            initialiseOverview();
+            if (storedTab !== '') {
+                $(storedTab + '-tab').tab('show');
+            }
+
         });// end window.load
 
        /**
@@ -849,20 +903,22 @@
 <g:if test="${user?.isAdmin || user?.isCaseManager}">
     <r:script>
         // Admin JS code only exposed to admin users
-        $(window).load(function () {
-
+        $(function () {
             // remember state of admin nav (vertical tabs)
             $('#adminNav a[data-toggle="tab"]').on('shown', function (e) {
                 var tab = e.currentTarget.hash;
                 amplify.store('project-admin-tab-state', tab);
             });
-            var storedAdminTab = amplify.store('project-admin-tab-state');
-            // restore state if saved
-            if (storedAdminTab === '') {
-                $('#permissions-tab').tab('show');
-            } else {
-                $(storedAdminTab + "-tab").tab('show');
-            }
+            $('#admin-tab').on('shown', function() {
+                var storedAdminTab = amplify.store('project-admin-tab-state');
+                // restore state if saved
+                if (storedAdminTab === '') {
+                    $('#permissions-tab').tab('show');
+                } else {
+                    $(storedAdminTab + "-tab").tab('show');
+                }
+            });
+
             populatePermissionsTable();
         });
 

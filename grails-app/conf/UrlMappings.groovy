@@ -53,12 +53,12 @@ class UrlMappings {
         "/nocas/geoService"(controller: 'home', action: 'geoService') {
 
         }
-        "/$hub/myProfile"(controller: 'home', action: 'myProfile') {
+        "/$hub/myProjects"(controller: 'home', action: 'myProfile') {
             constraints {
                 hub validator: {val, obj -> isHubValid(applicationContext, val)}
             }
         }
-        "/myProfile"(controller: 'home', action: 'myProfile') {
+        "/myProjects"(controller: 'home', action: 'myProfile') {
 
         }
 
@@ -70,8 +70,8 @@ class UrlMappings {
         "/admin/user/$id"(controller: "user", action: "show") {
 
         }
-		"500"(view:'/error')
-		"404"(view:'/error')
+        "500"(controller:'error', action:'response500')
+        "404"(controller:'error', action:'response404')
         "/$hub?/$controller/ws/$action/$id" {
             constraints {
                 hub validator: {val, obj -> isHubValid(applicationContext, val)}

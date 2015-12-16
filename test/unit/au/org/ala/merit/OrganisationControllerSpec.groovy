@@ -45,7 +45,7 @@ class OrganisationControllerSpec extends Specification {
         model.organisation == testOrg
         model.content.projects.visible == true
         model.content.sites.visible == true
-        model.content.dashboard.visible == false
+        model.content.dashboard.visible == true
         model.content.admin.visible == false
     }
 
@@ -407,6 +407,7 @@ class OrganisationControllerSpec extends Specification {
     private void setupAnonymousUser() {
         userService.getUser() >> null
         userService.userHasReadOnlyAccess() >> false
+        userService.userIsSiteAdmin() >> false
         userService.userIsAlaOrFcAdmin() >> false
         organisationService.getMembersOfOrganisation(_) >> [[userId:'1234', role:RoleService.PROJECT_ADMIN_ROLE]]
     }
@@ -414,6 +415,7 @@ class OrganisationControllerSpec extends Specification {
     private void setupFcAdmin() {
         userService.getUser() >> [userId:'1345']
         userService.userHasReadOnlyAccess() >> false
+        userService.userIsSiteAdmin() >> true
         userService.userIsAlaOrFcAdmin() >> true
         organisationService.getMembersOfOrganisation(_) >> []
     }
@@ -421,6 +423,7 @@ class OrganisationControllerSpec extends Specification {
     private void setupReadOnlyUser() {
         userService.getUser() >> [userId:'1345']
         userService.userHasReadOnlyAccess() >> true
+        userService.userIsSiteAdmin() >> false
         userService.userIsAlaOrFcAdmin() >> false
         organisationService.getMembersOfOrganisation(_) >> []
     }
@@ -429,6 +432,7 @@ class OrganisationControllerSpec extends Specification {
         def userId = '1234'
         userService.getUser() >> [userId:userId]
         userService.userHasReadOnlyAccess() >> false
+        userService.userIsSiteAdmin() >> false
         userService.userIsAlaOrFcAdmin() >> false
         organisationService.getMembersOfOrganisation(_) >> [[userId:userId, role:RoleService.PROJECT_ADMIN_ROLE]]
         organisationService.isUserAdminForOrganisation(_) >> true
@@ -438,6 +442,7 @@ class OrganisationControllerSpec extends Specification {
         def userId = '1234'
         userService.getUser() >> [userId:userId]
         userService.userHasReadOnlyAccess() >> false
+        userService.userIsSiteAdmin() >> false
         userService.userIsAlaOrFcAdmin() >> false
         organisationService.getMembersOfOrganisation(_) >> [[userId:userId, role:RoleService.PROJECT_EDITOR_ROLE]]
     }

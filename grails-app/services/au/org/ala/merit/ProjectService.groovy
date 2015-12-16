@@ -5,11 +5,16 @@ import grails.converters.JSON
 import org.apache.commons.lang.CharUtils
 import org.joda.time.Days
 import org.joda.time.Interval
-import org.joda.time.Period
 
 import java.text.SimpleDateFormat
 
 class ProjectService extends au.org.ala.fieldcapture.ProjectService {
+
+    def reportService
+
+    static final String FINAL_REPORT_ACTIVITY_TYPE = 'Outcomes, Evaluation and Learning - final report'
+    static final String OUTCOMES_OUTPUT_TYPE = 'Outcomes'
+    static final String COMPLETE = 'completed'
 
     static dateWithTime = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss")
     static dateWithTimeFormat2 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
@@ -19,10 +24,31 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
     static final String PLAN_NOT_APPROVED = 'not approved'
     static final String PLAN_SUBMITTED = 'submitted'
 
-    def update(id, body) {
+    @Override
+    def get(id, levelOfDetail = "", includeDeleted = false) {
+        def project = super.get(id, levelOfDetail, includeDeleted)
+        project.reports = reportService.getReportsForProject(id)
+        project
+    }
+
+    def update(String id, Map projectDetails) {
         TimeZone.setDefault(TimeZone.getTimeZone('UTC'))
-        body?.custom?.details?.lastUpdated = new Date().format("yyyy-MM-dd'T'HH:mm:ss'Z'")
-        def resp = super.update(id, body)
+        projectDetails?.custom?.details?.lastUpdated = new Date().format("yyyy-MM-dd'T'HH:mm:ss'Z'")
+
+        // Changing project dates requires some extra validation and updates to the stage reports
+        String plannedStartDate = projectDetails.remove('plannedStartDate')
+        String plannedEndDate = projectDetails.remove('plannedEndDate')
+
+        def resp = [:]
+        if (plannedStartDate || plannedEndDate) {
+            def currentProject = get(id)
+            if (currentProject.plannedStartDate != plannedStartDate || currentProject.plannedEndDate != plannedEndDate) {
+                resp = changeProjectDates(id, plannedStartDate, plannedEndDate, false)
+            }
+        }
+        if (projectDetails) {
+            resp = super.update(id, projectDetails)
+        }
 
         return resp
     }
@@ -119,11 +145,10 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
 		//generate stage report and attach to the project
 		def projectAll = get(projectId, 'all')
 		readyForSubmit = false;
-		projectAll?.timeline?.each{
-			if(it.name.equals(stageDetails.stage)){
-				readyForSubmit = true;
-			}
-		}
+        if (projectAll.reports?.find{it.name == stageDetails.stage}) {
+            readyForSubmit = true
+        }
+
 		if (!readyForSubmit) {
 			return [error:'Invalid stage']
 		}
@@ -136,6 +161,7 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
 		def doc = [name:name, projectId:projectId, saveAs:'pdf', type:'pdf', role:'stageReport',filename:name, readOnly:true, public:false]
 		documentService.createTextDocument(doc, htmlTxt)
         def result = activityService.submitActivitiesForPublication(stageDetails.activityIds)
+        reportService.submit(stageDetails.reportId)
         def project = get(projectId)
         stageDetails.project = project
         if (!result.resp.error) {
@@ -156,7 +182,7 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
         def project = get(projectId, 'all')
         def readableId = project.grantId + (project.externalId?'-'+project.externalId:'')
         def name = "${readableId} ${stageDetails.stage} approval"
-        def doc = [name:name, projectId:projectId, type:'text', role:'approval',filename:name, readOnly:true, public:false]
+        def doc = [name:name, projectId:projectId, type:'text', role:'approval',filename:name, readOnly:true, public:false, reportId:stageDetails.reportId]
         documentService.createTextDocument(doc, (project as JSON).toString())
         stageDetails.project = project
         if (!result.resp.error) {
@@ -166,20 +192,15 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
         //Update project status to completed
         int published = 0;
         int validActivities = 0
-        def activities = activityService.activitiesForProject(projectId);;
-        project.timeline?.each {timeline->
-            activities.each{act->
-                def endDate = act.plannedEndDate ? act.plannedEndDate : act.endDate
-                if(dateInSlot(timeline.fromDate,timeline.toDate,endDate)){
-                    validActivities++;
-                    if(act.publicationStatus.equals("published")){
-                        published++
-                    }
-                }
-            }
-        }
+        reportService.approve(stageDetails.reportId)
 
-        if(validActivities == published){
+        def activities = activityService.activitiesForProject(projectId)
+
+        // Close the project when the last stage report is approved.
+        // Some projects have extra stage reports after the end date due to legacy data so this checks we've got the last stage within the project dates.
+        def lastReport = project.reports?.max{it.fromDate < project.plannedEndDate ? it.fromDate : project.plannedStartDate}
+
+        if(lastReport == stageDetails.reportId){
             def values = [:]
             values["status"] = "completed"
             update(projectId, values)
@@ -194,6 +215,7 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
      * @param stageDetails details of the activities, specifically a list of activity ids.
      */
     def rejectStageReport(projectId, stageDetails) {
+        reportService.reject(stageDetails.reportId)
         def result = activityService.rejectActivitiesForPublication(stageDetails.activityIds)
 
         // TODO Send a message to GMS.  Delete previous approval document (only an issue for withdrawal of approval)?
@@ -207,10 +229,18 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
         result
     }
 
-
-    def changeProjectStartDate(projectId, plannedStartDate) {
+    /**
+     * This method is used to shift the entire project start and end date without changing the duration.
+     * It can only be called for projects in the "planning" phase.
+     * @param projectId the ID of the project
+     * @param plannedStartDate an ISO 8601 formatted date string describing the new start date of the project.
+     * @param updateActivities set to true if existing activities should be modified to fit into the new schedule
+     */
+    def changeProjectStartDate(String projectId, String plannedStartDate, boolean updateActivities = true) {
         def project = get(projectId)
-        if (!project.planStatus || project.planStatus == PLAN_NOT_APPROVED) {
+        Map message
+        String validationResult = validateProjectDates(project, plannedStartDate)
+        if (validationResult == null) {
 
             def previousStartDate = DateUtils.parse(project.plannedStartDate)
             def newStartDate = DateUtils.parse(plannedStartDate)
@@ -221,39 +251,57 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
 
             def newEndDate = DateUtils.format(DateUtils.parse(project.plannedEndDate).plusDays(daysChanged))
 
-            def resp = update(projectId, [plannedStartDate:plannedStartDate, plannedEndDate:newEndDate])
-            if (resp.resp && !resp.resp.error) {
+            // The update method in this class treats dates specially and delegates the updates to the changeProjectDates method.
+            def resp = super.update(projectId, [plannedStartDate: plannedStartDate, plannedEndDate: newEndDate])
+            generateProjectStageReports(projectId)
+            if (resp.resp && !resp.resp.error && updateActivities) {
 
                 def activities = activityService.activitiesForProject(projectId)
                 activities.each { activity ->
                     if (!activityService.isReport(activity)) {
                         def newActivityStartDate = DateUtils.format(DateUtils.parse(activity.plannedStartDate).plusDays(daysChanged))
                         def newActivityEndDate = DateUtils.format(DateUtils.parse(activity.plannedEndDate).plusDays(daysChanged))
-                        activityService.update(activity.activityId, [activityId:activity.activityId, plannedStartDate:newActivityStartDate, plannedEndDate:newActivityEndDate])
+                        activityService.update(activity.activityId, [activityId: activity.activityId, plannedStartDate: newActivityStartDate, plannedEndDate: newActivityEndDate])
                     }
 
                 }
 
-                return [message:'success']
-            }
-            else {
-                return [error:"Update failed: ${resp?.resp?.error}"]
+                message = [message: 'success']
+            } else {
+                message = [error: "Update failed: ${resp?.resp?.error}"]
             }
         }
-        return [error:'Invalid plan status']
+        else {
+            message = [error: validationResult]
+        }
+
+        return message
     }
 
-    def changeProjectDates(projectId, plannedStartDate, plannedEndDate) {
+    /**
+     * This method changes a project start and end date
+     * It can only be called for projects in the "planning" phase.
+     * @param projectId the ID of the project
+     * @param plannedStartDate an ISO 8601 formatted date string describing the new start date of the project.
+     * * @param plannedStartDate an ISO 8601 formatted date string describing the new end date of the project.
+     * @param updateActivities set to true if existing activities should be modified to fit into the new schedule
+     */
+    def changeProjectDates(String projectId, String plannedStartDate, String plannedEndDate, boolean updateActivities = true) {
+        Map message
         def project = get(projectId)
-        if (!project.planStatus || project.planStatus == PLAN_NOT_APPROVED) {
+        def previousStartDate = DateUtils.parse(project.plannedStartDate)
+        def newStartDate = DateUtils.parse(plannedStartDate)
+        def daysStartChanged = Days.daysBetween(previousStartDate, newStartDate).days
+        // This check is to allow for time zone changes.
+        if (daysStartChanged <= 1) {
+            plannedStartDate = project.plannedStartDate
+        }
 
-            def previousStartDate = DateUtils.parse(project.plannedStartDate)
-            def newStartDate = DateUtils.parse(plannedStartDate)
+        String validationResult = validateProjectDates(project, plannedStartDate)
+        if (validationResult == null) {
 
             def previousEndDate = DateUtils.parse(project.plannedEndDate)
             def newEndDate = DateUtils.parse(plannedEndDate)
-
-            def daysStartChanged = Days.daysBetween(previousStartDate, newStartDate).days
 
             def previousDuration = Days.daysBetween(previousStartDate, previousEndDate).days
             def newDuration = Days.daysBetween(newStartDate, newEndDate).days
@@ -268,8 +316,11 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
             log.info("Updating end date for project ${projectId} from ${project.plannedEndDate} to ${newEndDate}")
             log.info("Project duration changing by a factor of ${scale}")
 
-            def resp = update(projectId, [plannedStartDate:plannedStartDate, plannedEndDate:plannedEndDate])
-            if (resp.resp && !resp.resp.error) {
+            // The update method in this class treats dates specially and delegates the updates to this method.
+            def resp = super.update(projectId, [plannedStartDate:plannedStartDate, plannedEndDate:plannedEndDate])
+
+            generateProjectStageReports(projectId)
+            if (resp.resp && !resp.resp.error && updateActivities) {
 
                 def activities = activityService.activitiesForProject(projectId)
                 activities.each { activity ->
@@ -294,13 +345,69 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
 
                 }
 
-                return [message:'success']
+                message = [message:'success']
             }
             else {
-                return [error:"Update failed: ${resp?.resp?.error}"]
+                message = [error:"Update failed: ${resp?.resp?.error}"]
             }
         }
-        return [error:'Invalid plan status']
+        else {
+            message = [error: validationResult]
+        }
+        message
+    }
+
+    boolean isMeriPlanSubmittedOrApproved(Map project) {
+        return (project.planStatus == PLAN_SUBMITTED || project.planStatus == PLAN_APPROVED)
+    }
+
+    /**
+     * Returns null if the project dates can be changed.  Otherwise returns an error message.
+     */
+    private String validateProjectDates(Map project, String plannedStartDate) {
+
+        String result = null
+
+        if (project.plannedStartDate != plannedStartDate && !canChangeStartDate(project)) {
+            result = "Cannot change the start date of a project with submitted or approved reports"
+        }
+        // Allow FC_ADMINS to change project dates even with an approved plan as they are likely just
+        // correcting bad data.
+        if (!userService.userIsAlaOrFcAdmin()) {
+            if (isMeriPlanSubmittedOrApproved(project)) {
+                result = "Cannot change project dates when the MERI plan is approved"
+            }
+        }
+        return result
+    }
+
+    /**
+     * Returns true if the project dates can be changed.
+     * @param project the project to check.
+     */
+    public boolean canChangeProjectDates(Map project) {
+        return canChangeStartDate(project) && !isMeriPlanSubmittedOrApproved(project)
+    }
+
+    public boolean canChangeStartDate(project) {
+        return !reportService.includesSubmittedOrApprovedReports(project.reports)
+    }
+
+
+    def generateProjectStageReports(String projectId) {
+        def project = get(projectId)
+        def programConfig = metadataService.getProgramConfiguration(project.associatedProgram, project.associatedSubProgram)
+
+        def period = programConfig.reportingPeriod
+        if (period) {
+            period = period as Integer
+        }
+
+        def alignedToCalendar = programConfig.reportingPeriodAlignedToCalendar
+
+        reportService.regenerateAllStageReportsForProject(projectId, period, alignedToCalendar)
+
+
     }
 
     def createReportingActivitiesForProject(projectId, config) {
@@ -378,6 +485,32 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
 
     }
 
+    /**
+     * Looks for an activity of type FINAL_REPORT_ACTIVITY_TYPE in completed projects only and returns the contents
+     * of the Outcomes sections from that activity.
+     * @param project the project
+     * @return a Map with keys: environmentalOutcomes, economicOutcomes, socialOutcomes
+     */
+    Map<String, String> getProjectOutcomes(Map project) {
+        def outcomes = [:]
+        if (COMPLETE.equalsIgnoreCase(project.status)) {
+            def activity = project.activities?.find { it.type == FINAL_REPORT_ACTIVITY_TYPE }
+
+            if (activity) {
+                activity = activityService.get(activity.activityId)
+                def outcomeOutput = activity?.outputs?.find { it.name == OUTCOMES_OUTPUT_TYPE }
+
+                outcomes = [environmentalOutcomes: outcomeOutput?.data?.projectEnvironmentalOutcomes,
+                            economicOutcomes     : outcomeOutput?.data?.projectEconomicOutcomes,
+                            socialOutcomes       : outcomeOutput?.data?.projectSocialOutcomes]
+            }
+
+        }
+        outcomes
+
+    }
+
+
     def createHTMLStageReport(param) {
 
         def project = param.project
@@ -395,13 +528,14 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
         def stageEndDate = ''
 
         org.codehaus.groovy.runtime.NullObject.metaClass.toString = {return ''}
-        project.timeline?.each {
-            if(it.name.equals(stageName)){
-                stage = "${it.name} : "+convertDate(it.fromDate) +" - " +convertDate(it.toDate)
-                stageStartDate = it.fromDate
-                stageEndDate =  it.toDate
-            }
+        def report = project.reports.find{it.name == stageName}
+        if (!report) {
+            throw new IllegalArgumentException("Invalid report : "+stageName)
         }
+        stageStartDate = report.fromDate
+        stageEndDate = report.toDate
+        stage = "${report.name} : "+convertDate(report.fromDate) +" - " +convertDate(report.toDate)
+
         activities.each{
             if(dateInSlot(stageStartDate,stageEndDate,it.plannedEndDate)){
                 if(it.progress.equals('planned'))
@@ -618,8 +752,6 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
         }
         return false;
     }
-
-
 
 
 }

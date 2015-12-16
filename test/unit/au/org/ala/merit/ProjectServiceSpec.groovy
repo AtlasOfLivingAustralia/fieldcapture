@@ -1,10 +1,13 @@
 package au.org.ala.merit
 
 import au.org.ala.fieldcapture.ActivityService
+import au.org.ala.fieldcapture.MetadataService
+import au.org.ala.fieldcapture.UserService
 import au.org.ala.fieldcapture.WebService
 import grails.test.mixin.TestFor
 import org.joda.time.Period
 import spock.lang.Specification
+import static au.org.ala.merit.ProjectService.*
 
 /**
  * Tests the ProjectService class.
@@ -12,12 +15,20 @@ import spock.lang.Specification
 @TestFor(ProjectService)
 class ProjectServiceSpec extends Specification {
 
-    def webService = Stub(WebService)
+    WebService webService = Stub(WebService)
+    ReportService reportService = Stub(ReportService)
+    UserService userService = Stub(UserService)
+    MetadataService metadataService = Stub(MetadataService)
 
     def setup() {
         service.webService = webService
         service.activityService = new ActivityService() // This is used to generate activity descriptions.
         service.grailsApplication = [config:[ecodata:[baseUrl:'']]]
+        service.reportService = reportService
+        service.userService = userService
+        service.metadataService = metadataService
+        userService.userIsAlaOrFcAdmin() >> false
+        metadataService.getProgramConfiguration(_,_) >> [reportingPeriod:6, reportingPeriodAlignedToCalendar: true, weekDaysToCompleteReport:43]
     }
 
     def "generate reports with 3 monthly period"() {
@@ -138,7 +149,7 @@ class ProjectServiceSpec extends Specification {
     def "plan should not be submitted if it's already been submitted."(){
         given:
         def projectId = 'project1'
-        def planStatus = "PLAN_SUBMITTED"
+        def planStatus = PLAN_SUBMITTED
         webService.getJson(_) >> [projectId:projectId, planStatus:planStatus]
 
         when:
@@ -152,7 +163,7 @@ class ProjectServiceSpec extends Specification {
     def "plan should not be approved if it's already been approved."(){
         given:
         def projectId = 'project1'
-        def planStatus = "PLAN_APPROVED"
+        def planStatus = PLAN_APPROVED
         webService.getJson(_) >> [projectId:projectId, planStatus:planStatus]
 
         when:
@@ -165,7 +176,7 @@ class ProjectServiceSpec extends Specification {
     def "plan should not be rejected if it's not been approved."(){
         given:
         def projectId = 'project1'
-        def planStatus = "PLAN_NOT_APPROVED"
+        def planStatus = PLAN_NOT_APPROVED
         webService.getJson(_) >> [projectId:projectId, planStatus:planStatus]
 
         when:
@@ -175,5 +186,64 @@ class ProjectServiceSpec extends Specification {
         result.error == "Invalid plan status"
     }
 
+    def "a project's start date cannot be changed if the project has a submitted MERI plan"() {
+        given:
+        def projectId = 'project1'
+        def newStartDate = '2015-06-01T00:00Z'
+        reportService.includesSubmittedOrApprovedReports(_) >> false
+        reportService.getReportsForProject(_) >> []
+        webService.getJson(_) >> [projectId:projectId, planStatus:PLAN_SUBMITTED, plannedStartDate: '2015-07-01T00:00Z']
+
+        when:
+        def result = service.changeProjectStartDate(projectId, newStartDate, false)
+
+        then:
+        result.error != null
+    }
+
+    def "a project's start date cannot be changed if the project has an approved MERI plan"() {
+        given:
+        def projectId = 'project1'
+        def newStartDate = '2015-06-01T00:00Z'
+        reportService.includesSubmittedOrApprovedReports(_) >> false
+        reportService.getReportsForProject(_) >> []
+        webService.getJson(_) >> [projectId:projectId, planStatus:PLAN_APPROVED, plannedStartDate: '2015-07-01T00:00Z']
+
+        when:
+        def result = service.changeProjectStartDate(projectId, newStartDate, false)
+
+        then:
+        result.error != null
+    }
+
+    def "a project's start date cannot be changed if the project has a submitted or approved report"() {
+        given:
+        def projectId = 'project1'
+        def newStartDate = '2015-06-01T00:00Z'
+        reportService.includesSubmittedOrApprovedReports(_) >> true
+        reportService.getReportsForProject(_) >> [[publicationStatus:ReportService.REPORT_APPROVED]]
+        webService.getJson(_) >> [projectId:projectId, planStatus:PLAN_NOT_APPROVED, plannedStartDate: '2015-07-01T00:00Z', plannedEndDate:'2016-12-31T00:00Z']
+
+        when:
+        def result = service.changeProjectStartDate(projectId, newStartDate, false)
+
+        then:
+        result.error != null
+    }
+
+    def "a project's end date cannot be changed to fall within a period containing a submitted or approved report"() {
+        given:
+        def projectId = 'project1'
+        def newStartDate = '2015-07-01T00:00Z'
+        reportService.includesSubmittedOrApprovedReports(_) >> true
+        reportService.getReportsForProject(_) >> [[publicationStatus:ReportService.REPORT_APPROVED]]
+        webService.getJson(_) >> [projectId:projectId, planStatus:PLAN_NOT_APPROVED, plannedStartDate: '2015-07-01T00:00Z', plannedEndDate:'2016-12-31T00:00Z']
+        webService.doPost(_, _) >> [resp:[status:200]]
+        when:
+        def result = service.changeProjectStartDate(projectId, newStartDate, false)
+
+        then:
+        result.error != null
+    }
 
 }

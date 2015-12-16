@@ -1,0 +1,260 @@
+{
+  "statistics": {
+    "ts1": {
+      "config": "5",
+      "title": "Threatened Species Strategy",
+      "label": "Protecting threatened species",
+      "units": "Projects",
+      "type": "projectCount",
+      "projectFilter": [
+        "meriPlanAssetFacet:Threatened Species"
+      ]
+    },
+    "r1": {
+      "config": "5",
+      "title": "Reef",
+      "label": "improving management practice to protect the reef",
+      "units": "Farmers ",
+      "type": "score",
+      "projectFilter": [
+      ],
+      "searchTerm":"associatedProgramFacet:\"Reef Trust\" OR associatedProgramFacet:\"Reef Rescue\"",
+      "scoreLabel": "Total No. of farming entities adopting sustainable practice change"
+    },
+    "r2": {
+      "config": "4",
+      "title": "Reef",
+      "label": "Of rubbish prevented from entering the reef",
+      "units": "Tonnes",
+      "type": "score",
+      "projectFilter": [
+        "associatedProgramFacet:Reef Trust",
+        "associatedSubProgramFacet:Reef Trust Phase 1 Investment"
+      ],
+      "scoreLabel": "Weight of debris removed (Tonnes)"
+    },
+    "r3": {
+      "config": "4",
+      "title": "Reef",
+      "label": "to reduce erosion of waterways",
+      "units": "Km of fencing",
+      "type": "score",
+      "projectFilter": [
+      ],
+      "searchTerm":"associatedProgramFacet:\"Reef Trust\" OR associatedProgramFacet:\"Reef Rescue\"",
+      "scoreLabel": "Total length of fence (Km)"
+    },
+    "r4": {
+      "config": "4",
+      "title": "Reef",
+      "label": "high-value reef treated for Crown of Thorns Starfish",
+      "units": "Ha",
+      "type": "score",
+      "projectFilter": [
+        "associatedProgramFacet:Reef Trust"
+      ],
+      "scoreLabel": "Treated area (Ha) by species",
+      "resultFilter": "Acanthaster planci"
+    },
+    "i1": {
+      "config": "1",
+      "title": "Indigenous",
+      "label": "Indigenous people employed to deliver projects",
+      "units": "",
+      "type": "score",
+      "scoreLabel": "Total No. of Indigenous people employed"
+    },
+    "i2": {
+      "config": "1",
+      "title": "Indigenous",
+      "label": "Indigenous people working on country",
+      "units": "",
+      "type": "score",
+      "scoreLabel": "No. of on-country visits involving both older and younger people together"
+    },
+    "nlp1": {
+      "config": "5",
+      "title": "National Landcare Programme",
+      "label": "Supporting sustainable agriculture",
+      "units": "Projects",
+      "type": "investmentProjectCount",
+      "projectFilter": [
+        "associatedProgramFacet:National Landcare Programme"
+      ],
+      "investmentTypeFilter": "Farmers and fishers are increasing their long term returns through better management of the natural resource base"
+    },
+    "nlp4": {
+      "config": "5",
+      "title": "National Landcare Programme",
+      "label": "Using Indigenous ecological knowledge",
+      "units": "Projects",
+      "type": "projectCount",
+      "searchTerm":"meriPlanAssetFacet:\"Indigenous Cultural Values\" OR meriPlanAssetFacet:\"Indigenous Ecological Knowledge\"",
+      "projectFilter": [
+        "associatedProgramFacet:National Landcare Programme"
+      ]
+    },
+    "nlp5": {
+      "config": "5",
+      "title": "National Landcare Programme",
+      "label": "Protecting threatened species",
+      "units": "Projects",
+      "type": "projectCount",
+      "projectFilter": [
+        "associatedProgramFacet:National Landcare Programme",
+        "meriPlanAssetFacet:Threatened Species"
+      ]
+    },
+    "nlp7": {
+      "config": "6",
+      "title": "National Landcare Programme",
+      "label": "That support World Heritage Areas",
+      "units": "Projects",
+      "type": "projectCount",
+      "projectFilter": [
+        "associatedProgramFacet:National Landcare Programme",
+        "meriPlanAssetFacet:World Heritage area"
+      ]
+    },
+    "nlp9": {
+      "config": "2",
+      "title": "National Landcare Programme",
+      "label": "Targeted for weed control",
+      "units": "Ha",
+      "type": "outputTarget",
+      "projectFilter": [
+        "associatedProgramFacet:National Landcare Programme"
+      ],
+      "scoreLabel":"Total new area treated (Ha)"
+    },
+    "nlp10": {
+      "config": "2",
+      "title": "National Landcare Programme",
+      "label": "Weeds managed by community groups",
+      "units": "Ha",
+      "type": "score",
+      "projectFilter": [
+        "associatedProgramFacet:National Landcare Programme"
+      ],
+      "scoreLabel": "No. of activities treating weeds by type of delivery partner",
+      "resultFilter": "Local Landcare, 'Friends of', community, or farmer group"
+    },
+    "nlp11": {
+      "config": "3",
+      "title": "National Landcare Programme",
+      "label": "participating in projects",
+      "units": "Volunteers",
+      "type": "score",
+      "projectFilter": [
+        "associatedProgramFacet:National Landcare Programme"
+      ],
+      "scoreLabel": "No of volunteers participating in project activities"
+    },
+    "nlp12": {
+      "config": "3",
+      "title": "20 Million Trees",
+      "label": "planned for planting",
+      "units": "Trees",
+      "type": "outputTarget",
+      "projectFilter": [
+        "associatedProgramFacet:National Landcare Programme"
+      ],
+      "scoreLabel": "No. of plants planted > 2 metres in height"
+    },
+    "nlp13": {
+      "config": "6",
+      "title": "National Landcare Programme",
+      "label": "Targeted for pest animal control",
+      "units": "Ha",
+      "type": "outputTarget",
+      "projectFilter": [
+        "associatedProgramFacet:National Landcare Programme"
+      ],
+      "scoreLabel": "Area covered (Ha) by pest treatment actions"
+    },
+    "all1": {
+      "config": "3",
+      "title": "All programmes",
+      "label": "Managed for invasive weeds",
+      "units": "Ha",
+      "type": "score",
+      "scoreLabel": "Total new area treated (Ha)"
+    },
+    "all2": {
+      "config": "6",
+      "title": "All programmes",
+      "label": "Treated for felius catus",
+      "units": "Ha",
+      "type": "score",
+      "scoreLabel": "Treated area (Ha) by species",
+      "resultFilter": "Felis catus"
+    },
+    "ga1": {
+      "config": "3",
+      "title": "Green Army",
+      "label": "planted by Green Army teams",
+      "units": "Plants",
+      "type": "score",
+      "scoreLabel": "Number of plants planted",
+      "projectFilter": [
+        "associatedProgramFacet:Green Army"
+      ]
+    },
+    "ga2": {
+      "config": "2",
+      "title": "Green Army",
+      "label": "Volume of debris removed by Green Army teams",
+      "units": "m<super>3</super>",
+      "type": "score",
+      "scoreLabel": "Volume of debris removed (m3)",
+      "projectFilter": [
+        "associatedProgramFacet:Green Army"
+      ]
+    },
+    "ga3": {
+      "config": "2",
+      "title": "Green Army",
+      "label": "Managed for weeds by Green Army teams",
+      "units": "Ha",
+      "type": "score",
+      "scoreLabel": "Total new area treated (Ha)",
+      "projectFilter": [
+        "associatedProgramFacet:Green Army"
+      ]
+    }
+  },
+  "groups": [
+    [
+      "ts1",
+      "all1",
+      "r2",
+      "ga1",
+      "all2",
+      "r1"
+    ],
+    [
+      "r4",
+      "nlp11",
+      "nlp1",
+      "nlp4",
+      "ga3",
+      "i1"
+    ],
+    [
+      "nlp5",
+      "nlp7",
+      "nlp9",
+      "nlp10",
+      "r4",
+      "nlp12"
+    ],
+    [
+      "ga2",
+      "r3",
+      "i1",
+      "nlp13",
+      "nlp4",
+      "nlp11"
+    ]
+  ]
+}

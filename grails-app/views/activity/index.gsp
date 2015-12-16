@@ -21,7 +21,7 @@
         projectViewUrl: "${createLink(controller: 'project', action: 'index')}/",
         siteViewUrl: "${createLink(controller: 'site', action: 'index')}/",
         bieUrl: "${grailsApplication.config.bie.baseURL}",
-        imageLocation:"${resource(dir:'/images/filetypes')}",
+        imageLocation:"${resource(dir:'/images')}",
         speciesProfileUrl: "${createLink(controller: 'proxy', action: 'speciesProfile')}"
         },
         here = document.location.href;
@@ -29,7 +29,7 @@
     <r:require modules="knockout,jqueryValidationEngine,datepicker,jQueryFileUploadUI,mapWithFeatures,species,activity,attachDocuments,imageViewer"/>
 </head>
 <body>
-<div class="container-fluid validationEngineContainer" id="validation-container">
+<div class="${containerType} validationEngineContainer" id="validation-container">
     <div id="koActivityMainBlock">
         <g:if test="${!printView}">
             <ul class="breadcrumb">
@@ -79,32 +79,6 @@
             </g:if>
         </div>
 
-        <g:if env="development" test="${!printView}">
-            <div class="expandable-debug">
-                <hr />
-                <h3>Debug</h3>
-                <div>
-                    <h4>KO model</h4>
-                    <pre data-bind="text:ko.toJSON($root,null,2)"></pre>
-                    <h4>Activity</h4>
-                    <pre>${activity?.encodeAsHTML()}</pre>
-                    <h4>Site</h4>
-                    <pre>${site?.encodeAsHTML()}</pre>
-                    <h4>Sites</h4>
-                    <pre>${(sites as JSON).toString()}</pre>
-                    <h4>Project</h4>
-                    <pre>${project?.encodeAsHTML()}</pre>
-                    <h4>Activity model</h4>
-                    <pre>${metaModel}</pre>
-                    <h4>Output models</h4>
-                    <pre>${outputModels}</pre>
-                    <h4>Themes</h4>
-                    <pre>${themes.toString()}</pre>
-                    <h4>Map features</h4>
-                    <pre>${mapFeatures.toString()}</pre>
-                </div>
-            </div>
-        </g:if>
     </div>
 <!-- ko stopBinding: true -->
     <g:each in="${metaModel?.outputs}" var="outputName">
@@ -117,8 +91,13 @@
         </g:if>
         <div class="output-block" id="ko${blockId}">
             <h3>${outputName}</h3>
-            <!-- add the dynamic components -->
-            <md:modelView model="${model}" site="${site}"/>
+            <div data-bind="if:outputNotCompleted">
+                <label class="checkbox" ><input type="checkbox" disabled="disabled" data-bind="checked:outputNotCompleted"> <span data-bind="text:transients.questionText"></span> </label>
+            </div>
+            <g:if test="${!output.outputNotCompleted}">
+                <!-- add the dynamic components -->
+                <md:modelView model="${model}" site="${site}"/>
+            </g:if>
             <r:script>
         $(function(){
 
@@ -128,14 +107,22 @@
             // load dynamic models - usually objects in a list
                 <md:jsModelObjects model="${model}" site="${site}" speciesLists="${speciesLists}" viewModelInstance="${blockId}ViewModelInstance"/>
 
-                this[viewModelName] = function (site) {
+                this[viewModelName] = function (site, config, outputNotCompleted) {
                     var self = this;
                     self.name = "${output.name}";
-                self.outputId = "${output.outputId}";
-                self.data = {};
-                self.transients = {};
-                 self.transients.selectedSite = ko.observable(site);
-                self.transients.dummy = ko.observable();
+                    self.outputId = "${output.outputId}";
+                    self.data = {};
+                    self.transients = {};
+                    var notCompleted = outputNotCompleted;
+
+                    if (notCompleted === undefined) {
+                        notCompleted = config.collapsedByDefault;
+                    }
+                    self.transients.selectedSite = ko.observable(site);
+                    self.outputNotCompleted = ko.observable(notCompleted);
+                    self.transients.optional = config.optional || false;
+                    self.transients.questionText = config.optionalQuestionText || 'No '+self.name+' was completed during this activity';
+                    self.transients.dummy = ko.observable();
 
                 // add declarations for dynamic data
                 <md:jsViewModel model="${model}" output="${output.name}" viewModelInstance="${blockId}ViewModelInstance"/>
@@ -160,8 +147,10 @@
                 self.transients.dummy.notifySubscribers();
             };
         };
+        var config = ${fc.modelAsJavascript(model:metaModel.outputConfig?.find{it.outputName == outputName}, default:'{}')};
+        var outputNotCompleted = ${output.outputNotCompleted?:'undefined'};
 
-        window[viewModelInstance] = new this[viewModelName](site);
+        window[viewModelInstance] = new this[viewModelName](site, config, outputNotCompleted);
         window[viewModelInstance].loadData(${output.data ?: '{}'}, <fc:modelAsJavascript model="${activity.documents}"/>);
 
             ko.applyBindings(window[viewModelInstance], document.getElementById("ko${blockId}"));

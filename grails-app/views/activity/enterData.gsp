@@ -22,16 +22,16 @@
         siteViewUrl: "${createLink(controller: 'site', action: 'index')}/",
         bieUrl: "${grailsApplication.config.bie.baseURL}",
         speciesProfileUrl: "${createLink(controller: 'proxy', action: 'speciesProfile')}",
-        documentUpdateUrl: "${g.createLink(controller:"proxy", action:"documentUpdate")}",
-        documentDeleteUrl: "${g.createLink(controller:"proxy", action:"deleteDocument")}",
-        imageLocation:"${resource(dir:'/images/filetypes')}"
+        documentUpdateUrl: "${g.createLink(controller:"document", action:"documentUpdate")}",
+        documentDeleteUrl: "${g.createLink(controller:"document", action:"deleteDocument")}",
+        imageLocation:"${resource(dir:'/images')}"
         },
         here = document.location.href;
     </r:script>
     <r:require modules="knockout,jqueryValidationEngine,datepicker,jQueryFileUploadUI,activity,mapWithFeatures,attachDocuments,species,amplify,imageViewer"/>
 </head>
 <body>
-<div class="container-fluid validationEngineContainer" id="validation-container">
+<div class="${containerType} validationEngineContainer" id="validation-container">
 <div id="koActivityMainBlock">
     <g:if test="${!printView}">
         <ul class="breadcrumb">
@@ -86,10 +86,8 @@
                 <div class="span1">
                     Site:
                 </div>
-                <div class="span2">
+                <div class="span8">
                     <fc:select data-bind='options:transients.project.sites,optionsText:"name",optionsValue:"siteId",value:siteId,optionsCaption:"Choose a site..."' printable="${printView}"/>
-                </div>
-                <div class="span6">
                     Leave blank if this activity is not associated with a specific site.
                 </div>
             </div>
@@ -197,7 +195,7 @@
 </script>
 <!-- ko stopBinding: true -->
 <g:each in="${metaModel?.outputs}" var="outputName">
-        <g:if test="${outputName != 'Photo Points'}">
+    <g:if test="${outputName != 'Photo Points'}">
     <g:set var="blockId" value="${fc.toSingleWord([name: outputName])}"/>
     <g:set var="model" value="${outputModels[outputName]}"/>
     <g:set var="output" value="${activity.outputs.find {it.name == outputName}}"/>
@@ -207,8 +205,13 @@
     <md:modelStyles model="${model}" edit="true"/>
     <div class="output-block" id="ko${blockId}">
         <h3 data-bind="css:{modified:dirtyFlag.isDirty},attr:{title:'Has been modified'}">${outputName}</h3>
+        <div data-bind="if:transients.optional">
+            <label class="checkbox" ><input type="checkbox" data-bind="checked:outputNotCompleted"> <span data-bind="text:transients.questionText"></span> </label>
+        </div>
+        <div id="${blockId}-content" data-bind="visible:!outputNotCompleted()">
         <!-- add the dynamic components -->
         <md:modelView model="${model}" site="${site}" edit="true" output="${output.name}" printable="${printView}" />
+        </div>
         <r:script>
         $(function(){
 
@@ -218,13 +221,21 @@
             // load dynamic models - usually objects in a list
             <md:jsModelObjects model="${model}" site="${site}" speciesLists="${speciesLists}" edit="true" viewModelInstance="${blockId}ViewModelInstance"/>
 
-                this[viewModelName] = function () {
+                this[viewModelName] = function (site, config, outputNotCompleted) {
                 var self = this;
                 self.name = "${output.name}";
                 self.outputId = "${output.outputId}";
 
                 self.data = {};
                 self.transients = {};
+                var notCompleted = outputNotCompleted;
+
+                if (notCompleted === undefined) {
+                    notCompleted = config.collapsedByDefault;
+                }
+                self.outputNotCompleted = ko.observable(notCompleted);
+                self.transients.optional = config.optional || false;
+                self.transients.questionText = config.optionalQuestionText || 'Not applicable';
                 self.transients.dummy = ko.observable();
 
                 // add declarations for dynamic data
@@ -243,6 +254,9 @@
                 self.modelForSaving = function () {
                     // get model as a plain javascript object
                     var jsData = ko.mapping.toJS(self, {'ignore':['transients']});
+                    if (self.outputNotCompleted()) {
+                        jsData.data = {};
+                    }
 
                     // get rid of any transient observables
                     return self.removeBeforeSave(jsData);
@@ -287,7 +301,9 @@
 
             };
 
-            window[viewModelInstance] = new this[viewModelName](site);
+            var config = ${fc.modelAsJavascript(model:metaModel.outputConfig?.find{it.outputName == outputName}, default:'{}')};
+            var outputNotCompleted = ${output.outputNotCompleted?:'undefined'};
+            window[viewModelInstance] = new this[viewModelName](site, config, outputNotCompleted);
 
             var output = ${output.data ?: '{}'};
 
@@ -390,6 +406,33 @@
             });
             return dirty;
         };
+
+        this.validate = function() {
+            var valid = $('#validation-container').validationEngine('validate');
+            if (valid) {
+                // Check that forms with multiple optional sections have at least one of those sections completed.
+                var optionalCount = 0;
+                var notCompletedCount = 0;
+                $.each(self.subscribers, function(i, obj) {
+                    if (obj.model !== 'activityModel' && obj.model !== 'photoPoints') {
+                        if (obj.model.transients.optional) {
+                            optionalCount++;
+                            if (obj.model.outputNotCompleted()) {
+                                notCompletedCount++;
+                            }
+                        }
+                    }
+                });
+                if (optionalCount > 1 && notCompletedCount == optionalCount) {
+                   valid = false;
+                   bootbox.alert("<p>To 'Save changes', the mandatory fields of at least one section of this form must be completed.</p>"+
+                        "<p>If all sections are 'Not applicable' please contact your grant manager to discuss alternate form options</p>");
+                }
+            }
+
+            return valid;
+        };
+
         /**
          * Makes an ajax call to save any sections that have been modified. This includes the activity
          * itself and each output.
@@ -405,7 +448,7 @@
 
             var activityData, outputs = [], photoPoints;
 
-            if ($('#validation-container').validationEngine('validate')) {
+            if (self.validate()) {
                 // Don't allow another save to be initiated.
                 blockUIWithMessage("Saving activity data...");
 

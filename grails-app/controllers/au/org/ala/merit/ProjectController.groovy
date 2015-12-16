@@ -8,20 +8,35 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
     static defaultAction = "index"
     static ignore = ['action','controller','id']
 
+    ReportService reportService
+    BlogService blogService
+
     /** Overrides the projectContent method in the fieldcapture controller to include the MERI plan and risks and threats content */
     protected Map projectContent(project, user, programs) {
         def program = programs.programs.find{it.name == project.associatedProgram}
         def meriPlanVisible = program?.optionalProjectContent?.contains('MERI Plan')
         def meriPlanEnabled = user?.hasViewAccess || ((project.associatedProgram == 'National Landcare Programme' && project.associatedSubProgram == 'Regional Funding'))
         def meriPlanVisibleToUser = project.planStatus == 'approved' || user?.isAdmin || user?.isCaseManager
-        def model = [overview:[label:'Overview', visible: true, default:true, type:'tab'],
+
+        def publicImages = project.documents.findAll{it.public == true && it.thirdPartyConsentDeclarationMade == true && it.type == 'image'}
+        def blog = blogService.getProjectBlog(project)
+        def hasNewsAndEvents = blog.find{it.type == 'News and Events'}
+        def hasProjectStories = blog.find{it.type == 'Project Stories'}
+
+        hasNewsAndEvents = hasNewsAndEvents || project.newsAndEvents
+        hasProjectStories = hasProjectStories || project.projectStories
+
+        def imagesModel = publicImages.collect {[name:it.name, projectName:project.name, url:it.url]}
+        boolean canChangeProjectDates = projectService.canChangeProjectDates(project)
+
+        def model = [overview:[label:'Overview', visible: true, default:true, type:'tab', publicImages:imagesModel, displayTargets:false, displayOutcomes:false, blog:blog, hasNewsAndEvents:hasNewsAndEvents, hasProjectStories:hasProjectStories, canChangeProjectDates:canChangeProjectDates],
          documents:[label:'Documents', visible: true, type:'tab'],
          details:[label:'MERI Plan', disabled:!user?.hasViewAccess, disabled:!meriPlanEnabled, visible:meriPlanVisible, meriPlanVisibleToUser:meriPlanVisibleToUser, type:'tab'],
-         plan:[label:'Activities', visible:true, disabled:!user?.hasViewAccess, type:'tab'],
+         plan:[label:'Activities', visible:true, disabled:!user?.hasViewAccess, type:'tab', reports:reportService.getReportsForProject(project.projectId)],
          risksAndThreats:[label:'Risks and Threats', disabled:!user?.hasViewAccess, visible:user?.hasViewAccess && program?.optionalProjectContent?.contains('Risks and Threats')],
          site:[label:'Sites', visible: true, disabled:!user?.hasViewAccess, type:'tab'],
          dashboard:[label:'Dashboard', visible: true, disabled:!user?.hasViewAccess, type:'tab'],
-         admin:[label:'Admin', visible:(user?.isAdmin || user?.isCaseManager), type:'tab']]
+         admin:[label:'Admin', visible:(user?.isAdmin || user?.isCaseManager), type:'tab', canChangeProjectDates: canChangeProjectDates]]
 
         return [view:'index', model:model]
     }
@@ -97,6 +112,13 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
     }
 
     @PreAuthorise(accessLevel = 'admin')
+    def regenerateStageReports(String id) {
+
+        projectService.generateProjectStageReports(id)
+        render status:200, text:'ok'
+    }
+
+    @PreAuthorise(accessLevel = 'admin')
 	def previewStageReport(){
         String projectId =  params.id
         String stageName = params.stageName
@@ -127,4 +149,17 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
 			render status:400, text: 'Required params not provided: id, stageName, status'
 		}
 	}
+
+    @PreAuthorise(accessLevel = 'admin')
+    def reportingHistory(String id) {
+
+        def reportingHistory = reportService.getReportingHistoryForProject(id)
+
+        render view:'/report/_reportingHistory', model:[reportingHistory:reportingHistory]
+    }
+
+    def mine() {
+        forward controller: 'user', action:'index'
+    }
+
 }

@@ -28,9 +28,13 @@
 <head>
     <title><g:layoutTitle /></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <r:require modules="nrmSkin, jquery_cookie"/>
+    <r:require modules="newSkin, nrmSkin, jquery_cookie"/>
     <r:layoutResources/>
+    <link href="https://fonts.googleapis.com/css?family=Oswald:300" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400italic,600,700" rel="stylesheet" type="text/css">
+    %{--<link rel="stylesheet" href="http://merit.giraffedesign.com.au/css/global-styles.css">--}%
     <g:layoutHead />
+    <g:set var="containerType" scope="request" value="${containerType?:'container'}"/>
 </head>
 <body class="${pageProperty(name:'body.class')}" id="${pageProperty(name:'body.id')}" onload="${pageProperty(name:'body.onload')}">
 <g:set var="introText"><fc:getSettingContent settingType="${SettingPageType.INTRO}"/></g:set>
@@ -41,12 +45,12 @@
     </div>
 </g:if>
 
-<div id="body-wrapper">
+<div class="page-header">
     <g:if test="${hubConfig.bannerUrl}">
         <div class="navbar navbar-inverse navbar-static-top" id="header" style="background:url(${hubConfig.bannerUrl}) repeat-x">
     </g:if>
     <g:else>
-    <div class="navbar navbar-inverse navbar-static-top" id="header">
+        <div class="navbar navbar-inverse navbar-static-top" id="header">
     </g:else>
     <g:if test="${fc.currentUserDisplayName()}">
         <div id="logout-warning" class="row-fluid hide">
@@ -55,117 +59,100 @@
                 <fc:loginInNewWindow>Click here to login again (opens a new window)</fc:loginInNewWindow>
             </div>
         </div>
-        <script type="text/javascript">
-            $(function() {
-                $('#logout-btn').click(function() {
-                    console.log('logout');
-                    if (window.localStorage) {
-                        window.localStorage.setItem('logout', new Date().getTime());
-                    }
-                });
-                $('#logout-warning a').click(function(){ $('#logout-warning').hide(); });
-                window.addEventListener('storage', function(e) {
-                    console.log(e);
-                    if (e.key == 'logout') {
-                        $('#logout-warning').show();
-                    }
-                });
-            });
-        </script>
     </g:if>
-       %{--<div class="navbar-inner">--}%
-            <div class="container-fluid">
-                <g:if test="${hubConfig.logoUrl}">
-                <div class="nav logo">
 
-                    <a href="${createLink(controller:"home")}">
-                        <img src="${hubConfig.logoUrl}" alt="${hubConfig.title}" />
-                    </a>
-                </div>
+        <div class="${containerType}">
+            <g:if test="${hubConfig.logoUrl}">
+            <div class="nav logo">
+
+                <a href="${createLink(controller:"home")}">
+                    %{--<img src="${hubConfig.logoUrl}" alt="${hubConfig.title}" />--}%
+                <r:img dir="images" file="ag-Inline_W.png" alt="${hubConfig.title}" />
+                </a>
+
+                <g:if test="${hubConfig.title}"><span class="merit">${hubConfig.title}</span></g:if>
+            </div>
+            </g:if>
+            <div class="navbar-form pull-right nav-collapse collapse">
+                <g:if test="${fc.currentUserDisplayName()}">
+                    <div class="greeting text-right">G'day <fc:currentUserDisplayName/></div>
                 </g:if>
-                <div class="nav-collapse collapse pull-right">
-                    <g:if test="${hubConfig.title}"><span class="merit">${hubConfig.title}</span></g:if>
-                    <g:form controller="search" method="GET" class="search merit">
-                        <p>
-                            <label for="keywords"><span class="hide">Full text search</span><input type="text" name="query" id="keywords" value="${params.query}"></label>
-                            <input type="hidden" name="collection" value="agencies">
-                            <input type="hidden" name="profile" value="nrm_env">
-                            <input type="hidden" name="form" value="simple">
-                            <input type="submit" value="search" class="search button">
-                        </p>
-                    </g:form>
-                </div>
-            </div><!--/.container-fluid -->
 
-        %{--</div><!--/.navbar-inner -->--}%
+                <div class="btn-group pull-right login-logout">
+                    <fc:loginLogoutButton logoutUrl="${createLink(controller:'logout', action:'logout')}" logoutReturnToUrl="${createLink(controller: "home", absolute: true)}" cssClass="${loginBtnCss}"/>
+                </div>
+
+            </div>
+
+        </div><!--/.container -->
+
+
     </div><!--/.navbar -->
 
-    <div id="dcNav" class="clearfix ">
+    <div class="page-header-menu">
+        <div class="${containerType}">
+            <div class="nav-collapse collapse pull-right">
 
-        <div class="navbar navbar-inverse container-fluid ">
-            %{--<a href="${g.createLink(uri:"/")}" class="brand">MERI data capture prototype</a>--}%
-            <ul class="nav">
-                <li><a href="/fieldcapture/" class="active hidden-desktop"><i class="icon-home">&nbsp;</i>&nbsp;Home</a></li>
-            </ul>
-            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </a>
-            <div class="nav-collapse collapse">
-                <ul class="nav">
-                    <fc:navbar active="${pageProperty(name: 'page.topLevelNav')}" items="${['home', 'about', 'help', 'contacts']}"/>
-                </ul>
-                <div class="navbar-form pull-right nav-collapse collapse">
-                    <span id="buttonBar">
-                        <g:render template="/layouts/nrmUserButtons"/>
-                        <g:pageProperty name="page.buttonBar"/>
-                    </span>
-                </div>
+                <g:form controller="search" method="GET" class="search merit">
+                    <p>
+                        <label for="keywords"><span class="hide">Full text search</span><input aria-label="Search MERIT" type="text" name="query" id="keywords" placeholder="Search MERIT" value="${params.query}"></label>
+                        <input type="hidden" name="collection" value="agencies">
+                        <input type="hidden" name="profile" value="nrm_env">
+                        <input type="hidden" name="form" value="simple">
+                        <input type="submit" value="search" class="search button">
+                    </p>
+                </g:form>
             </div>
-        </div><!-- /.navbar-inner -->
-    </div>
 
-    <div id="content" class="clearfix">
-        <g:layoutBody />
-    </div><!-- /#content -->
+            <div id="dcNav" class="clearfix ">
 
-    <div id="footer">
-        <div id="footer-wrapper">
-            <div class="container-fluid">
-                <fc:footerContent />
-            </div>
-            <div class="container-fluid">
-                <div class="large-space-before">
-                    <button class="btn btn-mini" id="toggleFluid">toggle fixed/fluid width</button>
-                    <g:if test="${userLoggedIn && introText}">
-                        <button class="btn btn-mini" type="button" data-toggle="modal" data-target="#introPopup">display user intro</button>
-                    </g:if>
+                <div class="navbar navbar-inverse">
+
+                    <ul class="nav">
+                        <li><a href="/fieldcapture/" class="active hidden-desktop"><i class="icon-home">&nbsp;</i>&nbsp;Home</a></li>
+                    </ul>
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+                    <div class="nav-collapse collapse">
+                        <ul class="nav">
+                            <fc:navbar active="${pageProperty(name: 'page.topLevelNav')}" items="${['home', 'projectExplorer', 'about', 'help', 'contacts']}"/>
+                        </ul>
+                        <div class="navbar-form pull-right nav-collapse collapse">
+                            <span id="buttonBar">
+                                <g:render template="/layouts/nrmUserButtons"/>
+                                <g:pageProperty name="page.buttonBar"/>
+                            </span>
+                        </div>
+                    </div>
+                </div><!-- /.navbar-inner -->
             </div>
         </div>
+    </div>
+</div>
 
-    </div>
-</div><!-- /#body-wrapper -->
-<g:if test="${userLoggedIn && introText}">
-    %{-- User Intro Popup --}%
-    <div id="introPopup" class="modal hide fade">
-        <div class="modal-header hide">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h3>User Introduction</h3>
+<div id="content" class="clearfix">
+    <g:layoutBody />
+</div><!-- /#content -->
+
+<div id="footer">
+    <div id="footer-wrapper">
+        <div class="${containerType}">
+            <fc:footerContent />
         </div>
-        <div class="modal-body">
-            ${introText}
-        </div>
-        <div class="modal-footer">
-            <label for="hideIntro" class="pull-left">
-                <g:checkBox name="hideIntro" style="margin:0;"/>&nbsp;
-                Do not display this message again (current browser only)
-            </label>
-            <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-            %{--<a href="#" class="btn btn-primary">Save changes</a>--}%
+        <div class="${containerType}">
+            <div class="large-space-before">
+                <button class="btn btn-mini" id="toggleFluid">toggle fixed/fluid width</button>
+                <g:if test="${userLoggedIn && introText}">
+                    <button class="btn btn-mini" type="button" data-toggle="modal" data-target="#introPopup">display user intro</button>
+                </g:if>
         </div>
     </div>
-</g:if>
+
+</div>
+
 <r:script>
     // Prevent console.log() killing IE
     if (typeof console == "undefined") {
@@ -185,7 +172,7 @@
         });
 
         $(".btnProfile").click(function (e) {
-            window.location = "${createLink(controller: 'myProfile')}";
+            window.location = "${createLink(controller: 'project', action:'mine')}";
         });
 
         $("#toggleFluid").click(function(el){
@@ -209,28 +196,15 @@
     }); // end document ready
 
 </r:script>
-<g:if test="${userLoggedIn}">
+
+<g:if test="${grailsApplication.config.bugherd.integration}">
     <r:script>
-        $(document).ready(function (e) {
-            // Show introduction popup (with cookie check)
-            var cookieName = "hide-intro";
-            var introCookie = $.cookie(cookieName);
-            //  document.referrer is empty following login from AUTH
-            if (!introCookie && !document.referrer) {
-                $('#introPopup').modal('show');
-            } else {
-                $('#hideIntro').prop('checked', true);
-            }
-            // console.log("referrer", document.referrer);
-            // don't show popup if user has clicked checkbox on popup
-            $('#hideIntro').click(function() {
-                if ($(this).is(':checked')) {
-                    $.cookie(cookieName, 1);
-                } else {
-                    $.removeCookie(cookieName);
-                }
-            });
-        }); // end document ready
+        (function (d, t) {
+            var bh = d.createElement(t), s = d.getElementsByTagName(t)[0];
+            bh.type = 'text/javascript';
+            bh.src = '//www.bugherd.com/sidebarv2.js?apikey=cqoc7xdguryihxalktg0mg';
+            s.parentNode.insertBefore(bh, s);
+        })(document, 'script');
     </r:script>
 </g:if>
 <!-- current env = ${grails.util.Environment.getCurrent().name} -->

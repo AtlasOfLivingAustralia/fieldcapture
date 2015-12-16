@@ -8,7 +8,7 @@ import org.joda.time.Period
 
 class ReportController extends au.org.ala.fieldcapture.ReportController {
 
-    def activityService, projectService, organisationService, commonService
+    def activityService, projectService, organisationService, commonService, statisticsFactory
 
     static defaultAction = "dashboard"
 
@@ -256,6 +256,13 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
 
         adHocReports
 
+    }
+
+    def statisticsReport() {
+        int exclude = session.lastGroup?:-1
+        def statistics = statisticsFactory.randomGroup(exclude)
+        session.lastGroup = statistics.group
+        render view:'_statistics', layout:'ajax', model:[statistics:statistics.statistics]
     }
 
 }
