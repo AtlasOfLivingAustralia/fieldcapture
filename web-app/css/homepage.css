@@ -159,9 +159,6 @@ a.show-more-stats {
 .sp-selected-button {
 }
 
-.slider-pro img.sp-image,.slider-pro img.sp-thumbnail {
-    width: 100% !important;
-}
 
 .sp-white {
     background-color: transparent;
@@ -181,11 +178,6 @@ a.show-more-stats {
 
 
 
-
-
-
-
-
 #latest-news h4,#help-links h4 {
     font-size: 24px;
     font-weight: 600;
@@ -194,21 +186,9 @@ a.show-more-stats {
 }
 
 
-
 #poi-slider {
     height: 470px;
-    max-width: 100% !important;
 }
-
-#poi-slider .sp-image-container {
-    width: 100% !important;
-}
-
-#poi-slider .sp-slide {
-    width: 100% !important;
-}
-
-
 
 #help-links {
     margin-bottom: 30px;
