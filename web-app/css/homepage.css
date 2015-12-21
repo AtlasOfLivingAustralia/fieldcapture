@@ -38,7 +38,7 @@
 
 .statistics .stat-1 {
     background-color: #aa6cc2;
-    background-image: url(../images/agreement.png);
+    background-image: url(../images/users6.png);
 }
 
 .statistics .stat-2 {
@@ -58,7 +58,7 @@
 
 .statistics .stat-5 {
     background-color: #f26e83;
-    background-image: url(../images/users6.png);
+    background-image: url(../images/agreement.png);
 }
 
 .statistics .stat-6 {
@@ -159,9 +159,6 @@ a.show-more-stats {
 .sp-selected-button {
 }
 
-.slider-pro img.sp-image,.slider-pro img.sp-thumbnail {
-    width: 100% !important;
-}
 
 .sp-white {
     background-color: transparent;
@@ -181,11 +178,6 @@ a.show-more-stats {
 
 
 
-
-
-
-
-
 #latest-news h4,#help-links h4 {
     font-size: 24px;
     font-weight: 600;
@@ -194,21 +186,9 @@ a.show-more-stats {
 }
 
 
-
 #poi-slider {
     height: 470px;
-    max-width: 100% !important;
 }
-
-#poi-slider .sp-image-container {
-    width: 100% !important;
-}
-
-#poi-slider .sp-slide {
-    width: 100% !important;
-}
-
-
 
 #help-links {
     margin-bottom: 30px;
