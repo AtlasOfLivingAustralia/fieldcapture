@@ -48,7 +48,7 @@
                     <g:set var="max" value="${5}"/>
                     <g:if test="${fn != 'class' && f?.terms?.size() > 0}">
                         <g:set var="fName"><g:message code="label.${fn}" default="${fn?.capitalize()}"/></g:set>
-                        <div><h4 id="facet-list-${j}-header" style="display:inline-block">${fName}</h4><a class="accordian-toggle" data-toggle="collapse" data-target="#facet-list-${j}"><i style="float:right; margin-top:10px;" class="fa fa-plus"></i></a></div>
+                        <div><h4 id="facet-list-${j}-header" style="display:inline-block">${fName}</h4><a class="accordian-toggle pointer" data-toggle="collapse" data-target="#facet-list-${j}"><i style="float:right; margin-top:10px;" class="fa fa-plus"></i></a></div>
                         <div id="facet-list-${j}" data-name="${fn}" class="collapse">
                             <ul role="group" aria-labelledby="facet-list-${j}-header" style="list-style-type: none;" class="facetValues">
                                 <g:each var="t" in="${f.terms}" status="i">
