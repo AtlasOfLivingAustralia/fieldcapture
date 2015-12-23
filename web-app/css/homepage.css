@@ -143,6 +143,12 @@ a.show-more-stats {
     height: 50px !important;
 }
 
+.sp-caption-container h3 {
+    white-space:nowrap;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+}
+
 .slider-pro p.sp-layer {
     padding-left: 20px !important;
     top: 50px !important;
