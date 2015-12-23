@@ -606,13 +606,13 @@ var Report = function(report) {
     };
 
     self.isDue = function() {
-        return  report.publicationStatus != 'pendingApproval' &&
+        return report.activityCount > 0 && report.publicationStatus != 'pendingApproval' &&
             report.publicationStatus != 'published' &&
             toDate < now && (!dueDate || dueDate >= now); // Due date is temporarily optional.
     };
 
     self.isOverdue = function() {
-        return  report.publicationStatus != 'pendingApproval' &&
+        return report.activityCount > 0 && report.publicationStatus != 'pendingApproval' &&
             report.publicationStatus != 'published' &&
             dueDate && dueDate < now;
     };
@@ -628,12 +628,17 @@ var Report = function(report) {
             }
             return status;
         }
-        if (self.isCurrent()) {
-            return name + ' in progress';
-        }
         if (self.isSubmitted()) {
             return name + ' submitted for approval';
         }
+
+        if (self.isCurrent()) {
+            return name + ' in progress';
+        }
+        if (report.activityCount == 0) {
+            return name + ' has no activities to report';
+        }
+
         return '';
     };
 
@@ -683,6 +688,7 @@ var ProjectReportsViewModel = function(project) {
     self.associatedSubProgram = project.associatedSubProgram;
     self.submittedReportCount = 0;
     self.recommendAsCaseStudy = ko.observable(project.promoteOnHomepage);
+    self.activityCount = project.activityCount || 0;
 
     self.reports = [];
     self.extendedStatus = [];
