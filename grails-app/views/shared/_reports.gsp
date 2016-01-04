@@ -16,11 +16,18 @@
         position: relative;
     }
 
+    td .layout-container em {
+        margin-right:1.5em;
+        display: block;
+    }
+
     td .see-more {
         position: absolute;
         top:3px;
         right:0;
     }
+
+
 
 </style>
 <table id="report" class="table">
@@ -66,7 +73,7 @@
             <td data-bind="text:meriPlanStatus()"></td>
             <td data-bind="click:toggleHistory">
                 <div class="layout-container">
-                    <em data-bind="visible:!historyVisible()">Show history <i class="see-more icon-plus pointer"></i></em><em data-bind="visible:historyVisible()">Hide history <i class="icon-minus see-more pointer"></i></em>
+                    <em data-bind="visible:!historyVisible()">Show history </em><i class="see-more icon-plus pointer"></i><em data-bind="visible:historyVisible()">Hide history </em><i class="icon-minus see-more pointer"></i>
                 </div>
             </td>
             <g:if test="${allowProjectRecommendation}">
