@@ -33,13 +33,16 @@ class BlogService {
         Map blogSetting = settingService.getJson(SITE_BLOG_KEY)
 
         List<Map> blog = blogSetting?.blog?:[]
+        blog = blog.sort{it.date}.reverse()
         attachImages(blog)
         blog
     }
 
     List<Map> getProjectBlog(Map project) {
         List<Map> blog = project?.blog?:[]
+        blog = blog.sort{it.date}.reverse()
         attachImages(blog)
+
         blog
     }
 
