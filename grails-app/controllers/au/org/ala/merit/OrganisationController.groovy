@@ -124,7 +124,13 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
         def announcementsByProject = request.JSON
         announcementsByProject.each { project ->
             def projectAnnouncements = project.announcements.collect {[scheduledDate:it.eventDate, name:it.eventName, type:it.eventType, description: it.eventDescription, grantAnnouncementDate:it.grantAnnouncementDate, funding:it.funding]}
-            projectService.update(project.projectId, [custom:[details:[events:projectAnnouncements]]])
+            def projectDetails = projectService.get(project.projectId)
+            def meriPlan = projectDetails.custom ?: [:]
+            if (!meriPlan.details) {
+                meriPlan.details = [:]
+            }
+            meriPlan.details.events = projectAnnouncements
+            projectService.update(project.projectId, [custom:meriPlan])
         }
         Object resp = [status:200, message:'success']
         respond(resp)
