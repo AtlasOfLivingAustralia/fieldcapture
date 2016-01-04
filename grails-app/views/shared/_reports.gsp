@@ -34,7 +34,9 @@
             <th class="sorting">Current Report Status</th>
             <th class="sorting">Current Phase</th>
             <th class="sorting">Reporting History</th>
+            <g:if test="${allowProjectRecommendation}">
             <th>Recommend as case study (tick box)</th>
+            </g:if>
         </tr>
     </thead>
     <tbody data-bind="foreach:projects">
@@ -67,7 +69,9 @@
                     <em data-bind="visible:!historyVisible()">Show history <i class="see-more icon-plus pointer"></i></em><em data-bind="visible:historyVisible()">Hide history <i class="icon-minus see-more pointer"></i></em>
                 </div>
             </td>
+            <g:if test="${allowProjectRecommendation}">
             <td><label class="checkbox"><input type="checkbox" data-bind="checked:recommendAsCaseStudy"><span data-bind="visible:savingCaseStudy"><r:img dir="images" file="ajax-saver.gif" alt="saving icon"/> saving</span></label></td>
+            </g:if>
         </tr>
 </tbody>
 </table>

@@ -7,7 +7,7 @@ import org.codehaus.groovy.grails.web.json.JSONArray
  */
 class UserController extends au.org.ala.fieldcapture.UserController {
 
-    def reportService
+    ReportService reportService
 
     protected Map assembleUserData(user) {
 
@@ -19,6 +19,7 @@ class UserController extends au.org.ala.fieldcapture.UserController {
             project.project.reports = reportsByProject[project.project.projectId]? new JSONArray(reportsByProject[project.project.projectId]):new JSONArray()
         }
 
+        userData.allowProjectRecommendation = userService.userIsSiteAdmin()
         userData
     }
 
