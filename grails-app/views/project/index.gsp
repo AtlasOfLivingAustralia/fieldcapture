@@ -210,6 +210,9 @@
                             </g:if>
 
                             <li><a href="#projectDetails" id="projectDetails-tab" data-toggle="tab"><i class="icon-chevron-right"></i> MERI Plan</a></li>
+                            <g:if test="${projectContent.admin.showAnnouncementsTab}">
+                                <li><a href="#alternateAnnouncements" id="alternateAnnouncements-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Project Announcements</a></li>
+                            </g:if>
                             <li><a href="#editProjectBlog" id="editProjectBlog-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Edit Project Blog</a></li>
                             <g:if test="${project.newsAndEvents}">
                                 <li><a href="#editNewsAndEvents" id="editNewsAndEvents-tab" data-toggle="tab"><i class="icon-chevron-right"></i> News and events</a></li>
@@ -254,6 +257,12 @@
                                     </div>
                                 </div>
                             </div>
+                            <g:if test="${projectContent.admin.showAnnouncementsTab}">
+                                <div id="alternateAnnouncements" class="pill-pane">
+                                    <div id="announcement-result-placeholder"></div>
+                                    <g:render template="announcements" model="[project: project]"/>
+                                </div>
+                            </g:if>
                             <div id="editProjectBlog" class="pill-pane">
                                 <h3>Edit Project Blog</h3>
                                 <g:render template="/blog/blogSummary" model="${[blog:project.blog?:[]]}"/>
@@ -261,9 +270,6 @@
                             <g:if test="${project.newsAndEvents}">
                             <div id="editNewsAndEvents" class="pill-pane">
                                 <g:render plugin="fieldcapture-plugin"  template="editProjectContent" model="${[attributeName:'newsAndEvents', header:'News and events']}"/>
-                                <hr/>
-                                <div id="announcement-result-placeholder"></div>
-                                <g:render template="announcements" model="[project: project]"/>
                             </div>
                             </g:if>
                             <g:if test="${project.projectStories}">
@@ -416,37 +422,15 @@
 				    document.location.reload(true);
 				};
 
-				self.saveAnnouncements= function(){
+				self.saveAnnouncements = function(){
 
 				    if (!$('#risks-announcements').validationEngine('validate')) {
 				        return;
 				    }
-				    var tmp = {};
-					self.details.status('active');
-					tmp['details'] =  ko.mapping.toJS(self.details);
-					var jsData = {"custom": tmp};
-                       var json = JSON.stringify(jsData, function (key, value) {
-                           return value === undefined ? "" : value;
-                       });
-                     var id = "${project?.projectId}";
- 					   $.ajax({
-                         url: "${createLink(action: 'ajaxUpdate', id: project.projectId)}",
-                         type: 'POST',
-                         data: json,
-                         contentType: 'application/json',
-                         success: function (data) {
-                             if (data.error) {
-                                 showAlert("Failed to save project announcement: " + data.detail + ' \n' + data.error,
-                                     "alert-error","announcement-result-placeholder");
-                             } else {
-                                 showAlert("Projects announcements saved","alert-success","announcement-result-placeholder");
-                             }
-                         },
-                         error: function (data) {
-                             var status = data.status;
-                             alert('An unhandled error occurred: ' + data.status);
-                         }
-                     });
+                    self.details.saveWithErrorDetection(function() {
+                        $(document).scrollTop(400);
+                        showAlert("Announcements saved", "alert-success", 'announcement-result-placeholder');
+                    });
 				};
 
 				// Save project details
