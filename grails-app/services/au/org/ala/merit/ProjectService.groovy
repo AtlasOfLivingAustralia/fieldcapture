@@ -650,16 +650,14 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
                 stageReportActivityModel.outputs.each { outputType ->
                     def output = activity.outputs?.find { it.name == outputType }
                     def type = metadataService.annotatedOutputDataModel(outputType)
+
                     append(html,"<b> $output.name: </b> <br>");
-                    output.data?.each{ k, v ->
-                        def label = "Result"
-                        type.each{ view ->
-                            if(view.name.equals(k)){
-                                label = view.label;
-                            }
-                        }
-                        append(html,"${label}:- ${v}<br>");
+                    type.each { field ->
+                        def label = field.label ?:field.name
+                        def value = output.data[field.name]
+                        append(html,"<em>${label}</em>:- ${value?:''}<br>");
                     }
+
                     append(html,"<br>");
                 }
 			}
