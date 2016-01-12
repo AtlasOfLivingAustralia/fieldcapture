@@ -96,7 +96,7 @@ class ActivityController {
             def model = activityModel(activity, activity.projectId)
 
             model.putAll(determineValidationDates(model.project))
-            model.activityTypes = metadataService.activityTypesList()
+            model.activityTypes = metadataService.activityTypesList(model.project?.associatedProgram, model.project?.associatedSubProgram)
             model.hasPhotopointData = activity.documents?.find {it.poiId}
             model
         } else {
@@ -218,9 +218,9 @@ class ActivityController {
     def createPlan(String siteId, String projectId) {
         def activity = [activityId: "", siteId: siteId, projectId: projectId]
         def model = [activity: activity, returnTo: params.returnTo, create: true,
-                     activityTypes: projectService.activityTypesList(projectId),
                      projectStages:projectStages()]
         model.project = projectId ? projectService.get(projectId) : null
+        model.activityTypes = metadataService.activityTypesList(model.project?.associatedProgram, model.project?.associatedSubProgram)
         model.site = siteId ? siteService.get(siteId) : null
         if (projectId) {
             model.themes = metadataService.getThemesForProject(model.project)
