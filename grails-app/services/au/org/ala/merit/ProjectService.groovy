@@ -13,6 +13,7 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
     def reportService
 
     static final String FINAL_REPORT_ACTIVITY_TYPE = 'Outcomes, Evaluation and Learning - final report'
+    static final String STAGE_REPORT_ACTIVITY_TYPE = 'Progress, Outcomes and Learning - stage report'
     static final String OUTCOMES_OUTPUT_TYPE = 'Outcomes'
     static final String COMPLETE = 'completed'
 
@@ -638,24 +639,27 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
         append(html,'<p align="left">_________________________________________________________________________________________________________</p>')
         append(html,'<br>')
         append(html,'<h2><font>Summary of Project Progress and Issues</font></h2>')
-        
-		project?.activities?.each {
-			if(it.type.equals('Progress, Outcomes and Learning - stage report') &&
-                    dateInSlot(stageStartDate,stageEndDate,it.plannedEndDate)){
-				it.outputs?.each{
-					def type = metadataService.annotatedOutputDataModel("$it.name")
-					append(html,"<b> $it.name: </b> <br>");
-					it.data?.each{ k, v ->
-						def label = "Result"
-						type.each{ view ->
-							if(view.name.equals(k)){
-								label = view.label;
-							}
-						}
-						append(html,"${label}:- ${v}<br>");
-					}
-					append(html,"<br>");
-				}
+
+
+        def stageReportActivityModel = metadataService.getActivityModel(STAGE_REPORT_ACTIVITY_TYPE)
+
+		project?.activities?.each { activity ->
+			if(activity.type.equals(STAGE_REPORT_ACTIVITY_TYPE) &&
+                    dateInSlot(stageStartDate, stageEndDate, activity.plannedEndDate)){
+
+                stageReportActivityModel.outputs.each { outputType ->
+                    def output = activity.outputs?.find { it.name == outputType }
+                    def type = metadataService.annotatedOutputDataModel(outputType)
+
+                    append(html,"<b> ${outputType}: </b> <br>");
+                    type.each { field ->
+                        def label = field.label ?:field.name
+                        def value = output?.data ? output.data[field.name] : ''
+                        append(html,"<em>${label}</em>:- ${value?:''}<br>");
+                    }
+
+                    append(html,"<br>");
+                }
 			}
         }
 				

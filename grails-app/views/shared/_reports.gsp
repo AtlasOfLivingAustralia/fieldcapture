@@ -9,6 +9,26 @@
     .late {
         color:red;
     }
+
+    td .layout-container {
+        width:100%;
+        height:100%;
+        position: relative;
+    }
+
+    td .layout-container em {
+        margin-right:1.5em;
+        display: block;
+    }
+
+    td .see-more {
+        position: absolute;
+        top:3px;
+        right:0;
+    }
+
+
+
 </style>
 <table id="report" class="table">
     <thead>
@@ -21,7 +41,9 @@
             <th class="sorting">Current Report Status</th>
             <th class="sorting">Current Phase</th>
             <th class="sorting">Reporting History</th>
+            <g:if test="${allowProjectRecommendation}">
             <th>Recommend as case study (tick box)</th>
+            </g:if>
         </tr>
     </thead>
     <tbody data-bind="foreach:projects">
@@ -36,19 +58,27 @@
                 <span data-bind="text:organisationName"></span>
                 <!-- /ko -->
             </td>
-            <td style="position:relative;">
-                <div data-bind="text:currentStatus, css:{late:isOverdue}" style="margin-right:2em;"></div><i style="position:absolute; right:1em; top:10px;" class="fa" data-bind="visible:extendedStatus.length>0, click:toggleExtendedStatus, css:{'fa-plus':!extendedStatusVisible(), 'fa-minus':extendedStatusVisible()}"></i>
+            <td>
+                <div class="layout-container">
+                <div data-bind="text:currentStatus, css:{late:isOverdue}" style="margin-right:2em;"></div><i class="see-more fa pointer" data-bind="visible:extendedStatus.length>0, click:toggleExtendedStatus, css:{'fa-plus':!extendedStatusVisible(), 'fa-minus':extendedStatusVisible()}"></i>
                 <ul class="unstyled" data-bind="visible:extendedStatusVisible">
                     <!-- ko foreach:extendedStatus -->
                     <hr/>
                     <li data-bind="text:$data"></li>
                     <!-- /ko -->
                 </ul>
+                </div>
 
             </td>
             <td data-bind="text:meriPlanStatus()"></td>
-            <td data-bind="click:toggleHistory"><em data-bind="visible:!historyVisible()">Show history <i class="icon-plus"></i></em><em data-bind="visible:historyVisible()">Hide history <i class="icon-minus"></i></em></td>
+            <td data-bind="click:toggleHistory">
+                <div class="layout-container">
+                    <em data-bind="visible:!historyVisible()">Show history </em><i class="see-more icon-plus pointer"></i><em data-bind="visible:historyVisible()">Hide history </em><i class="icon-minus see-more pointer"></i>
+                </div>
+            </td>
+            <g:if test="${allowProjectRecommendation}">
             <td><label class="checkbox"><input type="checkbox" data-bind="checked:recommendAsCaseStudy"><span data-bind="visible:savingCaseStudy"><r:img dir="images" file="ajax-saver.gif" alt="saving icon"/> saving</span></label></td>
+            </g:if>
         </tr>
 </tbody>
 </table>

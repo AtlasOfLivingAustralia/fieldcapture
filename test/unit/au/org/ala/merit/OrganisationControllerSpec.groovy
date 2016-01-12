@@ -318,6 +318,7 @@ class OrganisationControllerSpec extends Specification {
         def testOrg = testOrganisation(true)
         testOrg.projects = [[projectId:'1234', associatedProgram:'Program 1']]
         organisationService.get(_,_) >> testOrg
+        projectService.get('1') >> [projectId:'1', custom:[details:[:]]]
         setupOrganisationAdmin()
 
         def announcements = [[projectId:'1', announcements:[[eventName:'project 1 event2'], [eventName:'project 1 event 2']]]]

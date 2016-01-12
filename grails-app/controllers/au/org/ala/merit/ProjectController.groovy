@@ -26,6 +26,8 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
         hasNewsAndEvents = hasNewsAndEvents || project.newsAndEvents
         hasProjectStories = hasProjectStories || project.projectStories
 
+        def showAnnouncementsTab = projectService.isMeriPlanSubmittedOrApproved(project)
+
         def imagesModel = publicImages.collect {[name:it.name, projectName:project.name, url:it.url]}
         boolean canChangeProjectDates = projectService.canChangeProjectDates(project)
 
@@ -36,7 +38,7 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
          risksAndThreats:[label:'Risks and Threats', disabled:!user?.hasViewAccess, visible:user?.hasViewAccess && program?.optionalProjectContent?.contains('Risks and Threats')],
          site:[label:'Sites', visible: true, disabled:!user?.hasViewAccess, type:'tab'],
          dashboard:[label:'Dashboard', visible: true, disabled:!user?.hasViewAccess, type:'tab'],
-         admin:[label:'Admin', visible:(user?.isAdmin || user?.isCaseManager), type:'tab', canChangeProjectDates: canChangeProjectDates]]
+         admin:[label:'Admin', visible:(user?.isAdmin || user?.isCaseManager), type:'tab', canChangeProjectDates: canChangeProjectDates, showAnnouncementsTab:showAnnouncementsTab]]
 
         return [view:'index', model:model]
     }
