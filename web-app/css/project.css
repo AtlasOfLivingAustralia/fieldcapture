@@ -75,7 +75,7 @@
 	color: #fff;
 }
 
-.blog-section img {
+.blog-section .blog-image {
 	width: 300px;
 	height: auto;
 	border-radius: 4px;
