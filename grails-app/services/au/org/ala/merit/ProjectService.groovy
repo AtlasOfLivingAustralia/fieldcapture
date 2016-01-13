@@ -36,15 +36,20 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
         TimeZone.setDefault(TimeZone.getTimeZone('UTC'))
         projectDetails?.custom?.details?.lastUpdated = new Date().format("yyyy-MM-dd'T'HH:mm:ss'Z'")
 
-        // Changing project dates requires some extra validation and updates to the stage reports
-        String plannedStartDate = projectDetails.remove('plannedStartDate')
-        String plannedEndDate = projectDetails.remove('plannedEndDate')
-
         def resp = [:]
-        if (plannedStartDate || plannedEndDate) {
-            def currentProject = get(id)
-            if (currentProject.plannedStartDate != plannedStartDate || currentProject.plannedEndDate != plannedEndDate) {
-                resp = changeProjectDates(id, plannedStartDate, plannedEndDate, false)
+
+        // Changing project dates requires some extra validation and updates to the stage reports.  Only
+        // do this check for existing projects for which the planned start and/or end date is being changed
+        if (id) {
+
+            String plannedStartDate = projectDetails.remove('plannedStartDate')
+            String plannedEndDate = projectDetails.remove('plannedEndDate')
+
+            if (id && (plannedStartDate || plannedEndDate)) {
+                def currentProject = get(id)
+                if (currentProject.plannedStartDate != plannedStartDate || currentProject.plannedEndDate != plannedEndDate) {
+                    resp = changeProjectDates(id, plannedStartDate, plannedEndDate, false)
+                }
             }
         }
         if (projectDetails) {
@@ -404,7 +409,7 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
             period = period as Integer
         }
 
-        def alignedToCalendar = programConfig.reportingPeriodAlignedToCalendar
+        def alignedToCalendar = programConfig.reportingPeriodAlignedToCalendar ?: false
 
         reportService.regenerateAllStageReportsForProject(projectId, period, alignedToCalendar)
 
