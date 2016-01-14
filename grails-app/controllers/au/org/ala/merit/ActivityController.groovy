@@ -475,8 +475,10 @@ class ActivityController {
                 // This is returned to the browswer as a text response due to workaround the warning
                 // displayed by IE8/9 when JSON is returned from an iframe submit.
                 response.setContentType('text/plain;charset=UTF8')
-                def resultJson = result as JSON
-                render resultJson.toString()
+                JSON.use("clientSideFormattedDates") {
+                    def resultJson = result as JSON
+                    render resultJson.toString()
+                }
             }
         }
         else {
