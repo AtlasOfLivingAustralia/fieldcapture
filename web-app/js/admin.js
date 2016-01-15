@@ -66,7 +66,7 @@ var ImageGallery = function() {
         $.post( url, {document:JSON.stringify({documentId:doc.documentId, labels:doc.labels()})}).fail(function() {
             alert("There was an error saving your change.");
         });
-    }
+    };
     self.refreshPage(0);
 
 };
