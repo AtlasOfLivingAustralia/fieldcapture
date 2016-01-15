@@ -12,8 +12,8 @@ modules = {
     }
 
 
-    admin {
-        dependsOn 'application'
+    merit_admin {
+        dependsOn 'application', 'admin'
         resource url: 'js/admin.js'
     }
 

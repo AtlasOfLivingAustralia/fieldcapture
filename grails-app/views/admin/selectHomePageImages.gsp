@@ -11,7 +11,7 @@
             returnTo: "${params.returnTo}"
             };
     </r:script>
-    <r:require modules="knockout,admin"/>
+    <r:require modules="knockout,merit_admin"/>
 
 </head>
 
