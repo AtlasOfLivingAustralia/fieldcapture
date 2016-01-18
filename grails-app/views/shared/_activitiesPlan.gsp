@@ -76,7 +76,7 @@
                         <th style="width:68px;">Actions</th>
                         <th style="min-width:64px">From</th>
                         <th style="min-width:64px">To</th>
-                        <th style="width:25%;" id="description-column">Description</th>
+                        <th style="width:25%;" id="description-column">Description<i class="fa fa-expand pull-right" data-bind="click:toggleDescriptions, css:{'fa-expand':!descriptionExpanded(), 'fa-compress':descriptionExpanded()}"></i></th>
                         <th>Activity</th>
                         <g:if test="${showSites}">
                             <th>Site</th>
@@ -1019,6 +1019,11 @@
                     document.location.href = fcConfig.siteViewUrl + '/' + siteId;
                 }
             };
+            self.descriptionExpanded = ko.observable(false);
+            self.toggleDescriptions = function() {
+                self.descriptionExpanded(!self.descriptionExpanded());
+                adjustTruncations();
+            };
 
             var minProjectStart = '2013-01-01T13:00:00Z', canModifyProjectStart = false;
             $.each(programModel.programs, function(i, program) {
@@ -1373,19 +1378,26 @@
                     };
                     $span.data('truncation',original);
                 }
-                var cellWidth = $span.parent().width(),
-                    isTruncated = original.text !== text;
-                if (cellWidth > 0 && textWidth > cellWidth) {
-                    $span.attr('title',original.text);
-                    $span.html(truncate(cellWidth, original.textWidth, original.text));
-                } else if (isTruncated && cellWidth > textWidth + 4) {
-                    // check whether the text can be fully expanded
-                    if (original.textWidth < cellWidth) {
-                        $span.html(original.text);
-                        $span.removeAttr('title');
-                    } else {
+                if (!planViewModel.descriptionExpanded()) {
+                    var cellWidth = $span.parent().width(),
+                        isTruncated = original.text !== text;
+
+                    if (cellWidth > 0 && textWidth > cellWidth) {
+                        $span.attr('title',original.text);
                         $span.html(truncate(cellWidth, original.textWidth, original.text));
+                    } else if (isTruncated && cellWidth > textWidth + 4) {
+                        // check whether the text can be fully expanded
+                        if (original.textWidth < cellWidth) {
+                            $span.html(original.text);
+                            $span.removeAttr('title');
+                        } else {
+                            $span.html(truncate(cellWidth, original.textWidth, original.text));
+                        }
                     }
+                }
+                else {
+                    $span.html(original.text);
+                    $span.removeAttr('title');
                 }
             });
         }

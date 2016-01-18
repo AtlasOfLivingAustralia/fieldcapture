@@ -427,10 +427,6 @@ ul#adminNav li.active a {
 }
 
 
-
-
-
-
 .btn-primary {
 	background-color: #44b6ae;
 	border-color: #44b6ae;
@@ -441,6 +437,12 @@ ul#adminNav li.active a {
 	background-color: #36918b;
 	border-color: #36918b;
 	color: #fff;
+}
+
+.btn-primary[disabled]:hover {
+	color: #333;
+	background-color: #e6e6e6;
+	border-color: #adadad;
 }
 
 .label-success,.badge-success {
@@ -457,6 +459,11 @@ ul#adminNav li.active a {
 	background-color: #158f76;
 	border-color: #158f76;
 	color: #fff;
+}
+.btn-success[disabled]:hover {
+	color: #333;
+	background-color: #e6e6e6;
+	border-color: #adadad;
 }
 
 .label-info,.badge-info {
@@ -491,6 +498,12 @@ ul#adminNav li.active a {
 	color: #fff;
 }
 
+.btn-warning[disabled]:hover {
+	color: #333;
+	background-color: #e6e6e6;
+	border-color: #adadad;
+}
+
 .btn-danger {
 	background-color: #f26e83;
 	border-color: #ea5460;
@@ -501,6 +514,12 @@ ul#adminNav li.active a {
 	background-color: #c9302c;
 	border-color: #ac2925;
 	color: #fff;
+}
+
+.btn-danger[disabled]:hover {
+	color: #333;
+	background-color: #e6e6e6;
+	border-color: #adadad;
 }
 
 button#risks-cancel {
