@@ -610,7 +610,7 @@
         });
 
         $(".clearFacet").click(function(e){
-       	 window.location.href ="${grailsApplication.config.grails.serverURL}";
+       	 window.location.href ="${g.createLink(controller:'home', action:'projectExplorer')}";
         });
 
         $(".facetSearch").click(function(e){
