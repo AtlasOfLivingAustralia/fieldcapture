@@ -156,10 +156,8 @@
       "label": "planned for planting",
       "units": "Trees",
       "type": "outputTarget",
-      "projectFilter": [
-        "associatedProgramFacet:National Landcare Programme"
-      ],
-      "scoreLabel": "No. of plants planted > 2 metres in height"
+      "searchTerm":"associatedProgramFacet:\"20 Million Trees Service Providers\" OR (associatedProgramFacet:\"National Landcare Programme\" AND associatedSubProgramFacet:\"20 Million Trees Grants\")",
+      "scoreLabel": "Total No. of plants surviving with mature height > 2 metres"
     },
     "nlp13": {
       "config": "6",
