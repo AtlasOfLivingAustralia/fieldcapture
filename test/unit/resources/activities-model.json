@@ -2097,7 +2097,7 @@
                     "displayType": "",
                     "name": "totalNumberGrown",
                     "aggregationType": "SUM",
-                    "label": "Total No. of plants grown and ready for planting ",
+                    "label": "Total No. of plants grown and ready for planting",
                     "gmsId": "PPRP"
                 },
                 {
