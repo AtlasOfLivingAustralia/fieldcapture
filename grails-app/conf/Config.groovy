@@ -288,6 +288,10 @@ if (!logging.dir) {
 }
 def loggingDir = logging.dir
 
+if(!new File(loggingDir).exists()){
+    loggingDir = "/tmp"
+}
+
 log4j = {
     appenders {
         environments{
