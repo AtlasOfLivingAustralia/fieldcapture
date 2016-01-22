@@ -90,14 +90,14 @@
         var organisationId = '${organisation.organisationId}';
         var projectList = <fc:modelAsJavascript model="${projectList}"/>
         var columns =  [
-            {id:'grantID', name:'Grant ID', width:80, field:'grantId'},
-            {id:'projectName', name:'Project Name '+helpHover('Please select the project your announcement is for from the list'), width:200, field:'name', options:projectList, optionLabel:'name', optionValue:'name', editor: ComboBoxEditor, validationRules:'validate[required]'},
-            {id:'type', name:'${g.message(code:'announcements.type')} '+helpHover('${g.message(code:'announcements.type.help')}'), width:90, field:'eventType', formatter:optionsFormatter, editor: SelectEditor, options:[{label:'', value:''},{label:'1: funding announcements', value:'1: funding announcements'}, {label:'2: non-funding opportunities', value:'2: non-funding opportunities'}], validationRules:'validate[required]'},
-            {id:'event', name:'${g.message(code:'announcements.name')} '+helpHover('${g.message(code:'announcements.name.help')}'), width:200, field:'eventName', editor: Slick.Editors.Text},
-            {id:'grantOpeningDate', name:'${g.message(code:'announcements.scheduledDate')} '+helpHover('${g.message(code:'announcements.scheduledDate.help')}'), width:80, field:'eventDate', formatter:dateFormatter, editor: DateEditor2},
-            {id:'date', name:'${g.message(code:'announcements.when')} '+helpHover('${g.message(code:'announcements.when.help')}'), width:80, field:'grantAnnouncementDate', editor: Slick.Editors.Text},
-            {id:'value', name:'${g.message(code:'announcements.funding')} '+helpHover('${g.message(code:'announcements.funding.help')}'), width:100, editor:CurrencyEditor, field:'funding', validationRules:'validate[custom[number]]'},
-            {id:'eventDescription', name:'${g.message(code:'announcements.description')} '+helpHover('${g.message(code:'announcements.description.help')}'), width:200, field:'eventDescription', maxlength:1000, editor: Slick.Editors.LongText},
+            {id:'grantID', name:'Grant ID', width:80, field:'grantId', sortable:true},
+            {id:'projectName', name:'Project Name '+helpHover('Please select the project your announcement is for from the list'), width:200, field:'name', options:projectList, optionLabel:'name', optionValue:'name', editor: ComboBoxEditor, validationRules:'validate[required]', sortable:true},
+            {id:'type', name:'${g.message(code:'announcements.type')} '+helpHover('${g.message(code:'announcements.type.help')}'), width:90, field:'eventType', formatter:optionsFormatter, editor: SelectEditor, options:[{label:'', value:''},{label:'1: funding announcements', value:'1: funding announcements'}, {label:'2: non-funding opportunities', value:'2: non-funding opportunities'}], validationRules:'validate[required]', sortable:true},
+            {id:'event', name:'${g.message(code:'announcements.name')} '+helpHover('${g.message(code:'announcements.name.help')}'), width:200, field:'eventName', editor: Slick.Editors.Text, sortable:true},
+            {id:'grantOpeningDate', name:'${g.message(code:'announcements.scheduledDate')} '+helpHover('${g.message(code:'announcements.scheduledDate.help')}'), width:80, field:'eventDate', formatter:dateFormatter, editor: DateEditor2, sortable:true},
+            {id:'date', name:'${g.message(code:'announcements.when')} '+helpHover('${g.message(code:'announcements.when.help')}'), width:80, field:'grantAnnouncementDate', editor: Slick.Editors.Text, sortable:true},
+            {id:'value', name:'${g.message(code:'announcements.funding')} '+helpHover('${g.message(code:'announcements.funding.help')}'), width:100, editor:CurrencyEditor, field:'funding', validationRules:'validate[custom[number]]', sortable:true},
+            {id:'eventDescription', name:'${g.message(code:'announcements.description')} '+helpHover('${g.message(code:'announcements.description.help')}'), width:200, field:'eventDescription', maxlength:1000, editor: Slick.Editors.LongText, sortable:true},
             {id:'controls', name:helpHover('Use + to add a new announcement for the project.  Use - to remove the announcement.'), width:35, minWidth:35, formatter:controlsFormatter}
             ];
 
@@ -110,7 +110,8 @@
             explicitInitialization:true,
             enableColumnReorder:false,
             enableTextSelectionOnCells:true,
-            editFocusRight:true
+            editFocusRight:true,
+            multiColumnSort: true
         };
 
 

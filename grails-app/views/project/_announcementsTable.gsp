@@ -6,7 +6,7 @@
         </b>
     </label>
 
-    <table class="table" style="width: 100%;" >
+    <table class="announcements-table table" style="width: 100%;" >
         <thead>
         <tr>
             <th></th>
