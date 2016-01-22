@@ -97,14 +97,12 @@
 						<thead>
 						<tr>
 							<th></th>
-							<th>Type of event</th>
-							<th>Name of funding announcement or non-funding opportunity</th>
-							<th>Scheduled date for:<br/>
-								1 - Announcing the opening of the grant round;<br/>
-								2 - Non-funding opportunities</th>
-							<th>When will successful applicants be announced</th>
-							<th>Total value of funding announcement</th>
-							<th>Information about this funding announcement or non-funding opportunity</th>
+							<th><g:message code="announcements.type"/></th>
+							<th><g:message code="announcements.name"/></th>
+							<th><g:message code="announcements.scheduledDate"/>/th>
+							<th><g:message code="announcements.when"/></th>
+							<th><g:message code="announcements.funding"/></th>
+							<th><g:message code="announcements.description"/></th>
 						</tr>
 						</thead>
 						<tbody data-bind="foreach : details.events">
