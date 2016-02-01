@@ -174,7 +174,7 @@ class GmsMapper {
                 project.orgIdSvcProvider = serviceProviderOrganisation.organisationId
             }
             else {
-                errors << "No (service provider) organisation exists with name ${project.serviceProviderOrganisation}"
+                errors << "No (service provider) organisation exists with name ${project.serviceProviderName}"
             }
         }
         errors.addAll(result.errors)
