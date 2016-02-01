@@ -1,6 +1,7 @@
 package au.org.ala.merit
 
 import au.org.ala.fieldcapture.DocumentService
+import au.org.ala.fieldcapture.UserService
 import grails.converters.JSON
 import static org.apache.commons.httpclient.HttpStatus.*
 
@@ -8,6 +9,8 @@ class BlogController {
 
     BlogService blogService
     DocumentService documentService
+    UserService userService
+    ProjectService projectService
 
     def create() {
         render view:'create', model:[blogEntry:[projectId:params.projectId]]
@@ -21,6 +24,21 @@ class BlogController {
 
     def update(String id) {
         Map blogEntry = request.JSON
+
+        String projectId = blogEntry.projectId
+        if (!projectId) {
+            if (!userService.userIsSiteAdmin()) {
+                render status: 401, text: "You don't have permission to save this blog entry."
+                return
+            }
+        }
+        else {
+
+            if (!projectService.isUserAdminForProject(userService.user?.userId, projectId)) {
+                render status: 401, text: "You don't have permission to make blog entries for this project."
+                return
+            }
+        }
 
         Map image = blogEntry.remove('image')
 
