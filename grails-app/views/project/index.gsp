@@ -552,7 +552,7 @@
 	                            return value === undefined ? "" : value;
 	                     });
 					 $.post(
-			            "${createLink(controller:"proxy", action:"documentUpdate")}",
+			            fcConfig.documentUpdateUrl,
 			            {document:json},
 			            function(result) {
 	                        showAlert("Project end date saved","alert-success","save-settings-result-placeholder");
