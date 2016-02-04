@@ -48,7 +48,7 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
             if (id && (plannedStartDate || plannedEndDate)) {
                 def currentProject = get(id)
                 if (currentProject.plannedStartDate != plannedStartDate || currentProject.plannedEndDate != plannedEndDate) {
-                    resp = changeProjectDates(id, plannedStartDate, plannedEndDate, false)
+                    resp = changeProjectDates(id, plannedStartDate ?: currentProject.plannedStartDate, plannedEndDate ?: currentProject.plannedEndDate, false)
                 }
             }
         }
@@ -293,13 +293,13 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
      * @param updateActivities set to true if existing activities should be modified to fit into the new schedule
      */
     def changeProjectDates(String projectId, String plannedStartDate, String plannedEndDate, boolean updateActivities = true) {
-        Map message
+        Map response
         def project = get(projectId)
         def previousStartDate = DateUtils.parse(project.plannedStartDate)
         def newStartDate = DateUtils.parse(plannedStartDate)
         def daysStartChanged = Days.daysBetween(previousStartDate, newStartDate).days
         // This check is to allow for time zone changes.
-        if (daysStartChanged <= 1) {
+        if (Math.abs(daysStartChanged) <= 1) {
             plannedStartDate = project.plannedStartDate
         }
 
@@ -323,44 +323,40 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
             log.info("Project duration changing by a factor of ${scale}")
 
             // The update method in this class treats dates specially and delegates the updates to this method.
-            def resp = super.update(projectId, [plannedStartDate:plannedStartDate, plannedEndDate:plannedEndDate])
+            response = super.update(projectId, [plannedStartDate:plannedStartDate, plannedEndDate:plannedEndDate])
 
             generateProjectStageReports(projectId)
-            if (resp.resp && !resp.resp.error && updateActivities) {
+            if (response.resp && !response.resp.error) {
 
-                def activities = activityService.activitiesForProject(projectId)
-                activities.each { activity ->
-                    if (!activityService.isReport(activity)) {
-                        def newActivityStartDate = DateUtils.format(DateUtils.parse(activity.plannedStartDate).plusDays(daysStartChanged))
-                        def daysToChangeEndDate = (int)Math.round(daysStartChanged * scale)
-                        def newActivityEndDate = DateUtils.format(DateUtils.parse(activity.plannedEndDate).plusDays(daysToChangeEndDate))
+                if (updateActivities) {
+                    def activities = activityService.activitiesForProject(projectId)
+                    activities.each { activity ->
+                        if (!activityService.isReport(activity)) {
+                            def newActivityStartDate = DateUtils.format(DateUtils.parse(activity.plannedStartDate).plusDays(daysStartChanged))
+                            def daysToChangeEndDate = (int)Math.round(daysStartChanged * scale)
+                            def newActivityEndDate = DateUtils.format(DateUtils.parse(activity.plannedEndDate).plusDays(daysToChangeEndDate))
 
-                        // Account for any rounding errors that would result in the activity falling outside the project date range.
-                        if (newActivityStartDate < plannedStartDate) {
-                            newActivityStartDate = plannedStartDate
-                        }
-                        if (newActivityEndDate > plannedEndDate) {
-                            newActivityEndDate = plannedEndDate
-                        }
-                        if (newActivityStartDate > newActivityEndDate) {
-                            newActivityStartDate = newActivityEndDate
-                        }
+                            // Account for any rounding errors that would result in the activity falling outside the project date range.
+                            if (newActivityStartDate < plannedStartDate) {
+                                newActivityStartDate = plannedStartDate
+                            }
+                            if (newActivityEndDate > plannedEndDate) {
+                                newActivityEndDate = plannedEndDate
+                            }
+                            if (newActivityStartDate > newActivityEndDate) {
+                                newActivityStartDate = newActivityEndDate
+                            }
 
-                        activityService.update(activity.activityId, [activityId:activity.activityId, plannedStartDate:newActivityStartDate, plannedEndDate:newActivityEndDate])
+                            activityService.update(activity.activityId, [activityId:activity.activityId, plannedStartDate:newActivityStartDate, plannedEndDate:newActivityEndDate])
+                        }
                     }
-
                 }
-
-                message = [message:'success']
-            }
-            else {
-                message = [error:"Update failed: ${resp?.resp?.error}"]
             }
         }
         else {
-            message = [error: validationResult]
+            response = [resp:[error: validationResult]]
         }
-        message
+        response
     }
 
     boolean isMeriPlanSubmittedOrApproved(Map project) {

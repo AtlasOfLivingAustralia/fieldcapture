@@ -50,7 +50,6 @@ class GmsMapperSpec extends Specification {
         0 == project.funding
         'not approved' == project.planStatus
 
-        // TODO check timeline
         and: "sites are mapped correctly"
         def sites = projectDetails.sites
         // Ignoring for the moment, not sure how to handle the kml transformation, probably out of scope of the mapper.
@@ -61,13 +60,14 @@ class GmsMapperSpec extends Specification {
         3 == activities.size()
 
         def expectedTypes = ['Revegetation', 'Weed Treatment', 'Plant Propagation']
+        def expectedDescriptions = ['Test activity', 'Activity 2', 'Activity 3']
+        def expectedTheme = "Protect and conserve Australias natural, historic and Indigenous heritage."
         activities.eachWithIndex { activity, i ->
-            expectedTypes[i] == activity.type
-            "Activity ${i+1}" == activity.description
-            expectedStartDate == activity.plannedStartDate
-            expectedEndDate == activity.plannedEndDate
-            'Protect and conserve Australia\u2019s natural, historic and Indigenous heritage.' == activity.mainTheme
-
+            assert expectedTypes[i] == activity.type
+            assert expectedDescriptions[i] == activity.description
+            assert expectedStartDate == activity.plannedStartDate
+            assert expectedEndDate == activity.plannedEndDate
+            assert expectedTheme == activity.mainTheme
         }
 
         and: "output targets are mapped correctly"
@@ -75,13 +75,13 @@ class GmsMapperSpec extends Specification {
         def outputTargets = project.outputTargets
         4 == outputTargets.size()
         def expectedOutputs = ['Revegetation Details', 'Revegetation Details', 'Weed Treatment Details', 'Plant Propagation Details']
-        def expectedScores = ['Area of revegetation works (Ha)', 'Number of plants planted', 'Total area treated (Ha)', 'Total No. of plants grown and ready for planting']
+        def expectedScores = ['Area of revegetation works (Ha)', 'Number of plants planted', 'Total new area treated (Ha)', 'Total No. of plants grown and ready for planting']
         def expectedTargets = [150, 1500, 1.5, 500]
 
         outputTargets.eachWithIndex { outputTarget, i ->
-            expectedOutputs[i] == outputTarget.outputLabel
-            expectedScores[i] == outputTarget.scoreLabel
-            expectedTargets[i] == outputTarget.target
+            assert expectedOutputs[i] == outputTarget.outputLabel
+            assert expectedScores[i] == outputTarget.scoreLabel
+            assert expectedTargets[i] == outputTarget.target
 
         }
 

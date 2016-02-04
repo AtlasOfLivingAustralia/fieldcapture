@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat
  */
 class GmsMapper {
 
-    public static final List GMS_COLUMNS = ['PROGRAM_NM',	'ROUND_NM',	'APP_ID', 'EXTERNAL_ID', 'APP_NM', 'APP_DESC',	'START_DT',	'FINISH_DT', 'FUNDING',	'APPLICANT_NAME', 'ORG_TRADING_NAME', 'APPLICANT_EMAIL', 'AUTHORISEDP_CONTACT_TYPE', 'AUTHORISEDP_EMAIL', 'GRANT_MGR_EMAIL', 'GRANT_MGR_EMAIL_2','DATA_TYPE', 'ENV_DATA_TYPE',	'PGAT_PRIORITY', 'PGAT_GOAL_CATEGORY',	'PGAT_GOALS', 'PGAT_OTHER_DETAILS','PGAT_PRIMARY_ACTIVITY','PGAT_ACTIVITY_DELIVERABLE_GMS_CODE','PGAT_ACTIVITY_DELIVERABLE','PGAT_ACTIVITY_TYPE','PGAT_ACTIVITY_UNIT','PGAT_UOM', 'UNITS_COMPLETED', 'EDITOR_EMAIL', 'EDITOR_EMAIL_2']
+    public static final List GMS_COLUMNS = ['PROGRAM_NM',	'ROUND_NM',	'APP_ID', 'EXTERNAL_ID', 'APP_NM', 'APP_DESC',	'START_DT',	'FINISH_DT', 'FUNDING',	'APPLICANT_NAME', 'ORG_TRADING_NAME', 'APPLICANT_EMAIL', 'AUTHORISEDP_CONTACT_TYPE', 'AUTHORISEDP_EMAIL', 'GRANT_MGR_EMAIL', 'GRANT_MGR_EMAIL_2','DATA_TYPE', 'ENV_DATA_TYPE',	'PGAT_PRIORITY', 'PGAT_GOAL_CATEGORY',	'PGAT_GOALS', 'PGAT_OTHER_DETAILS','PGAT_PRIMARY_ACTIVITY','PGAT_ACTIVITY_DELIVERABLE_GMS_CODE','PGAT_ACTIVITY_DELIVERABLE','PGAT_ACTIVITY_TYPE','PGAT_ACTIVITY_UNIT','PGAT_ACTIVITY_DESCRIPTION','PGAT_UOM', 'UNITS_COMPLETED', 'EDITOR_EMAIL', 'EDITOR_EMAIL_2']
 
     // These identify the data contained in the row.
     static final LOCATION_DATA_TYPE = 'Location Data'
@@ -77,6 +77,7 @@ class GmsMapper {
 
     def activityMapping = [
             PGAT_ACTIVITY_DELIVERABLE:[name:'type', type:'string'],
+            PGAT_ACTIVITY_DESCRIPTION:[name:'description', type:'string'],
             PGAT_ACTIVITY_DELIVERABLE_GMS_CODE:[name:'code', type:'string'],
             START_DT:[name:'plannedStartDate',type:'date'],
             FINISH_DT:[name:'plannedEndDate', type:'date']
@@ -173,7 +174,7 @@ class GmsMapper {
                 project.orgIdSvcProvider = serviceProviderOrganisation.organisationId
             }
             else {
-                errors << "No (service provider) organisation exists with name ${project.serviceProviderOrganisation}"
+                errors << "No (service provider) organisation exists with name ${project.serviceProviderName}"
             }
         }
         errors.addAll(result.errors)
@@ -244,14 +245,17 @@ class GmsMapper {
             }
 
             if (mappedActivity.code) {
+                println mappedActivity
                 def activityType = gmsCodeToActivityType[mappedActivity.code]
                 if (activityType) {
                     if (!activities.find{it.type == activityType}) {
                         activity.type = activityType
                         activity.plannedStartDate = mappedActivity.plannedStartDate
                         activity.plannedEndDate = mappedActivity.plannedEndDate
-
-                        activity.description = 'Activity ' + (activities.size() + 1)
+                        activity.description = mappedActivity.description
+                        if (!activity.description) {
+                            activity.description = 'Activity ' + (activities.size() + 1)
+                        }
                         if (mainTheme) {
                             activity.mainTheme = mainTheme
                         }

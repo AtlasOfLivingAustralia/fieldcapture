@@ -289,7 +289,7 @@
 </script>
 
 <script id="stageNotApprovedTmpl" type="text/html">
-<br/><span class="badge badge-warning">Report not submittted</span>
+<br/><span class="badge badge-warning">Report not submitted</span>
 <!-- Disable button for editor with help text -->
 <g:if test="${user?.isAdmin}">
     <br/>
@@ -822,7 +822,7 @@
             });
 
 			this.previewStage = function(){
-				var status = "Report not submittted";
+				var status = "Report not submitted";
 				if (!self.isReportable) {
                    status = "Report not reportable";
                 }

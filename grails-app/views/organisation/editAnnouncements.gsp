@@ -15,11 +15,47 @@
     <r:require modules="knockout,jqueryValidationEngine,datepicker,slickgrid,jQueryFileUpload,jQueryFileDownload,amplify,merit_projects"/>
     <style type="text/css">
     input.editor-text {box-sizing:border-box; width: 100%;}
-    .slick-column-name { white-space: normal; }
+    .slick-column-name { white-space: normal; margin-right: 5px; display: block; }
     .slick-header-column.ui-state-default { background: #d9edf7; height: 100%; font-weight: bold;}
     .slick-header { background: #d9edf7; }
     .slick-column-name a { background: 0}
+    .slick-sort-indicator { position: absolute; right: 5px; top: 2px; display: block; background:none; }
+    .slick-sort-indicator:after {
+        content: '\f0dc';
+        font-family: FontAwesome;
+        font-style: normal;
+        font-size: larger;
+        left:0px;
+        position:absolute;
+        top:0;
+        right:5px;
+        color: lightgrey;
+    }
 
+    .slick-sort-indicator-asc:after {
+
+        content: '\f0de';
+        font-family: FontAwesome;
+        font-style: normal;
+        font-size: larger;
+        left:0px;
+        position:absolute;
+        top:0;
+        right:5px;
+        color: #444444;
+    }
+    .slick-sort-indicator-desc:after {
+        color: #444444;
+        content: '\f0dd';
+        font-family: FontAwesome;
+        font-style: normal;
+        font-size: larger;
+        left:0px;
+        position:absolute;
+        top:0;
+        right:5px;
+
+    }
     </style>
 </head>
 
@@ -90,14 +126,14 @@
         var organisationId = '${organisation.organisationId}';
         var projectList = <fc:modelAsJavascript model="${projectList}"/>
         var columns =  [
-            {id:'grantID', name:'Grant ID', width:80, field:'grantId'},
-            {id:'projectName', name:'Project Name '+helpHover('Please select the project your announcement is for from the list'), width:200, field:'name', options:projectList, optionLabel:'name', optionValue:'name', editor: ComboBoxEditor, validationRules:'validate[required]'},
-            {id:'type', name:'Type of event '+helpHover('For category 1, funding announcements -  include all funding announcements including: opening of grant rounds, EOI rounds, tenders, and announcements of successful applicants. For category 2, non-funding opportunities -  include all non-funding opportunities such as: field days, community planting day, workshops and other community engagement activities'), width:90, field:'eventType', formatter:optionsFormatter, editor: SelectEditor, options:[{label:'', value:''},{label:'1: funding announcements', value:'1: funding announcements'}, {label:'2: non-funding opportunities', value:'2: non-funding opportunities'}], validationRules:'validate[required]'},
-            {id:'event', name:'Name of funding announcement or non-funding opportunity '+helpHover('Enter the name of your funding announcement or non-funding opportunity, for example ‘The Dandenong Ranges bushfire recovery community grants’ or ‘Improving wetlands and woodlands programme  EOI’ or for a non-funding opportunity– ‘the Namoi community tree planting day’'), width:200, field:'eventName', editor: Slick.Editors.Text},
-            {id:'grantOpeningDate', name:'Scheduled date for:<br/>1 - Announcing the opening of the grant round;<br/>2 - Non-funding opportunities '+helpHover('Enter the scheduled date for the funding announcement or other non-funding opportunity. If the date is TBC, please enter an indicative date and provide further explanation in the ‘Information about this funding announcement or non-funding opportunity’ column'), width:80, field:'eventDate', formatter:dateFormatter, editor: DateEditor2},
-            {id:'date', name:'When will successful applicants be announced '+helpHover('If this is a funding announcement, please provide a two week window of when you anticipate the announcement of the successful funding recipients will occur, for example “12/07/2015 – 26/07/2015”'), width:80, field:'grantAnnouncementDate', editor: Slick.Editors.Text},
-            {id:'value', name:'Total value of funding announcement '+helpHover('Provide a total dollar figure of the specific funding announcement eg $10,000 (GST exclusive).'), width:100, editor:CurrencyEditor, field:'funding', validationRules:'validate[custom[number]]'},
-            {id:'eventDescription', name:'Information about this funding announcement or non-funding opportunity '+helpHover('(150 word limit) Provide a description of the funding announcement or the non-funding opportunity, i.e. ‘grants from $x - $y are available under the x local programme to undertake A to achieve B’, or ‘targeted EOIs are being invited under the x local programme to undertake A to achieve B. Please note - Information about the successful applicants will be collected separately. For non-funding opportunities, please provide information that sets the context for the event, ie ‘a work shop will be held at location x to showcase how sustainable agricultural processes can benefit riparian health and improved water quality’ or ‘a field day will be held at x to provide community with access to information on revegetation and soil health’.'), width:200, field:'eventDescription', maxlength:1000, editor: Slick.Editors.LongText},
+            {id:'grantID', name:'Grant ID', width:80, field:'grantId', sortable:true},
+            {id:'projectName', name:'Project Name '+helpHover('Please select the project your announcement is for from the list'), width:200, field:'name', options:projectList, optionLabel:'name', optionValue:'name', editor: ComboBoxEditor, validationRules:'validate[required]', sortable:true},
+            {id:'type', name:'${g.message(code:'announcements.type')} '+helpHover('${g.message(code:'announcements.type.help')}'), width:90, field:'eventType', formatter:optionsFormatter, editor: SelectEditor, options:[{label:'', value:''},{label:'1: funding announcements', value:'1: funding announcements'}, {label:'2: non-funding opportunities', value:'2: non-funding opportunities'}], validationRules:'validate[required]', sortable:true},
+            {id:'event', name:'${g.message(code:'announcements.name')} '+helpHover('${g.message(code:'announcements.name.help')}'), width:200, field:'eventName', editor: Slick.Editors.Text, sortable:true},
+            {id:'grantOpeningDate', name:'${g.message(code:'announcements.scheduledDate')} '+helpHover('${g.message(code:'announcements.scheduledDate.help')}'), width:80, field:'eventDate', formatter:dateFormatter, editor: DateEditor2, sortable:true},
+            {id:'date', name:'${g.message(code:'announcements.when')} '+helpHover('${g.message(code:'announcements.when.help')}'), width:80, field:'grantAnnouncementDate', editor: Slick.Editors.Text, sortable:true},
+            {id:'value', name:'${g.message(code:'announcements.funding')} '+helpHover('${g.message(code:'announcements.funding.help')}'), width:100, editor:CurrencyEditor, field:'funding', validationRules:'validate[custom[number]]', sortable:true},
+            {id:'eventDescription', name:'${g.message(code:'announcements.description')} '+helpHover('${g.message(code:'announcements.description.help')}'), width:200, field:'eventDescription', maxlength:1000, editor: Slick.Editors.LongText, sortable:true},
             {id:'controls', name:helpHover('Use + to add a new announcement for the project.  Use - to remove the announcement.'), width:35, minWidth:35, formatter:controlsFormatter}
             ];
 
@@ -110,7 +146,8 @@
             explicitInitialization:true,
             enableColumnReorder:false,
             enableTextSelectionOnCells:true,
-            editFocusRight:true
+            editFocusRight:true,
+            multiColumnSort: true
         };
 
 
