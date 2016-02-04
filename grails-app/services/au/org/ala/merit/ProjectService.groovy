@@ -298,10 +298,6 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
         def previousStartDate = DateUtils.parse(project.plannedStartDate)
         def newStartDate = DateUtils.parse(plannedStartDate)
         def daysStartChanged = Days.daysBetween(previousStartDate, newStartDate).days
-        // This check is to allow for time zone changes.
-        if (Math.abs(daysStartChanged) <= 1) {
-            plannedStartDate = project.plannedStartDate
-        }
 
         String validationResult = validateProjectDates(project, plannedStartDate)
         if (validationResult == null) {
