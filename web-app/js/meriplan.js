@@ -796,6 +796,9 @@ var ProjectReportsViewModel = function(project) {
     }();
 
     self.meriPlanStatus = function() {
+        if (project.status == 'Completed') {
+            return 'Complete';
+        }
         if (project.planStatus === 'approved') {
             return 'Reporting phase';
         }
