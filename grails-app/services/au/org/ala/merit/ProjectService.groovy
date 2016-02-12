@@ -513,7 +513,7 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
 
         def project = param.project
         def activities = param.activities
-        def stageName = param.stageName
+        def report = param.report
         def status = param.status
 
         def stage = ''
@@ -526,10 +526,8 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
         def stageEndDate = ''
 
         org.codehaus.groovy.runtime.NullObject.metaClass.toString = {return ''}
-        def report = project.reports.find{it.name == stageName}
-        if (!report) {
-            throw new IllegalArgumentException("Invalid report : "+stageName)
-        }
+
+        def stageName = report.name
         stageStartDate = report.fromDate
         stageEndDate = report.toDate
         stage = "${report.name} : "+convertDate(report.fromDate) +" - " +convertDate(report.toDate)

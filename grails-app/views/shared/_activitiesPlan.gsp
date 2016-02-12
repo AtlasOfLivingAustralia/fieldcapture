@@ -833,7 +833,7 @@
                 	status = "Report submitted";
                 }
 				var url = '${createLink(controller:'project', action:'previewStageReport')}';
-                window.open(url+'?id='+self.projectId +'&stageName='+stageLabel+'&status='+status, '_blank');
+                window.open(url+'?id='+self.projectId +'&reportId='+stage.reportId+'&status='+status, '_blank');
 			};
             this.canEditActivity = ko.computed(function () {
                 return !self.isReadOnly() && planViewModel.planStatus() === 'not approved';

@@ -123,23 +123,20 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
     @PreAuthorise(accessLevel = 'admin')
 	def previewStageReport(){
         String projectId =  params.id
-        String stageName = params.stageName
+        String reportId = params.reportId
         String status = params.status
 		
-		if(stageName && projectId && status) {
+		if(reportId && projectId && status) {
 			def project = projectService.get(projectId, 'all')
 			def activities = activityService.activitiesForProject(projectId);
-			boolean invalidStage = true;
 			if (project && !project.error) {
-				project.timeline?.each{
-					if(it.name.equals(stageName)){
-						def param  = [project: project, activities:activities, stageName:stageName, status:status]
-						def htmlContent = projectService.createHTMLStageReport(param)
-						invalidStage = false;
-						render text: htmlContent, contentType:"text", encoding:"UTF-8";
-					}
-				}
-				if(invalidStage){
+                def report = project.reports?.find{it.reportId == reportId}
+                if (report) {
+                    def param  = [project: project, activities:activities, report:report, status:status]
+                    def htmlContent = projectService.createHTMLStageReport(param)
+                    render text: htmlContent, contentType:"text", encoding:"UTF-8";
+                }
+				else {
 					render status:400, text: 'Invalid stage'
 				}
 			}
@@ -148,7 +145,7 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
 			}
 		}
 		else{
-			render status:400, text: 'Required params not provided: id, stageName, status'
+			render status:400, text: 'Required params not provided: id, reportId, status'
 		}
 	}
 
