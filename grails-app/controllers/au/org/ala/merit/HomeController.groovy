@@ -5,6 +5,7 @@ import au.org.ala.fieldcapture.SettingPageType
 import au.org.ala.fieldcapture.SettingService
 import au.org.ala.fieldcapture.hub.HubSettings
 import grails.converters.JSON
+import org.apache.commons.lang.StringUtils
 
 class HomeController {
 
@@ -134,7 +135,7 @@ class HomeController {
     def geoService() {
         params.max = params.max?:9999
         if(params.geo){
-            params.facets = SettingService.getHubConfig().availableFacets.join(',')
+            params.facets = StringUtils.join(SettingService.getHubConfig().availableFacets, ',')
             render searchService.allProjectsWithSites(params) as JSON
         } else {
             render searchService.allProjects(params) as JSON
