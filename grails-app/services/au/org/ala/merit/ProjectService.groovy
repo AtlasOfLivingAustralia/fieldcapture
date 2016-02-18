@@ -151,16 +151,13 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
 		//generate stage report and attach to the project
 		def projectAll = get(projectId, 'all')
 		readyForSubmit = false;
-        if (projectAll.reports?.find{it.name == stageDetails.stage}) {
-            readyForSubmit = true
-        }
-
-		if (!readyForSubmit) {
-			return [error:'Invalid stage']
+        Map report = projectAll.reports?.find{it.reportId == stageDetails.reportId}
+        if (!report) {
+            return [error:'Invalid stage']
 		}
 		
 		def stageName = stageDetails.stage;
-		def param  = [project: projectAll, activities:activities, stageName:stageName, status:"Report submitted"]
+		def param  = [project: projectAll, activities:activities, report:report, status:"Report submitted"]
 		def htmlTxt = createHTMLStageReport(param)
 		def dateWithTime = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss")
 		def name = projectAll?.grantId + '_' + stageName + '_' + dateWithTime.format(new Date()) + ".pdf"
