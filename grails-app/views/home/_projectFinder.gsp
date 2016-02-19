@@ -235,7 +235,7 @@
                                 <div class="alert">Please do not run more than one download at a time as they can place a lot of load on the system</div>
                                 <h3>Download data for a filtered selection of projects</h3>
 
-                                <table style="width: 50%;">
+                                <table style="width: 100%;">
                                     <thead>
                                     <tr>
                                         <th colspan="2"><b>Summary data (Actvity Output scores)</b></th>
@@ -252,7 +252,7 @@
                                     </tr>
                                     </tbody>
                                 </table>
-                                <table style="width: 50%;">
+                                <table style="width: 100%;">
                                     <thead>
                                     <tr>
                                         <th colspan="2"><b>All data (Project, Site, Activity & Output)</b></th>
@@ -261,7 +261,9 @@
                                     <tbody>
                                     <tr>
                                         <td width="50%">
-                                            <a target="_blank" href="${grailsApplication.config.grails.serverURL}/search/downloadAllData<fc:formatParams params="${params}"/>&view=xlsx">XLSX</a>
+
+                                            <g:render template="downloadAllAsXlsx"/>
+
                                         </td>
                                         <td width="50%">
                                             <a target="_blank" href="${grailsApplication.config.grails.serverURL}/search/downloadAllData<fc:formatParams params="${params}"/>view=json">JSON</a>
@@ -270,7 +272,7 @@
                                     </tbody>
                                 </table>
 
-                                <table style="width: 50%;">
+                                <table style="width: 100%;">
                                     <thead>
                                     <tr>
                                         <th><b>Site data (Project Sites)</b></th>
