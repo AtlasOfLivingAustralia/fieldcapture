@@ -69,11 +69,15 @@ class HomeController {
 
         def resp = searchService.HomePageFacets(params)
 
-        [  facetsList: facetsList,
+        def model = [  facetsList: facetsList,
            mapFacets: mapFacets,
            geographicFacets:selectedGeographicFacets,
            description: settingService.getSettingText(SettingPageType.DESCRIPTION),
            results: resp ]
+        if (userService.userIsAlaOrFcAdmin()) {
+            model.activityTypes = metadataService.activityTypesList()
+        }
+        model
     }
 
     def publicHome() {
