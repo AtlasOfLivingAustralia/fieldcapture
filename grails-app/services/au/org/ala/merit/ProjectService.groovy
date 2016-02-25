@@ -151,16 +151,13 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
 		//generate stage report and attach to the project
 		def projectAll = get(projectId, 'all')
 		readyForSubmit = false;
-        if (projectAll.reports?.find{it.name == stageDetails.stage}) {
-            readyForSubmit = true
-        }
-
-		if (!readyForSubmit) {
-			return [error:'Invalid stage']
+        Map report = projectAll.reports?.find{it.reportId == stageDetails.reportId}
+        if (!report) {
+            return [error:'Invalid stage']
 		}
 		
 		def stageName = stageDetails.stage;
-		def param  = [project: projectAll, activities:activities, stageName:stageName, status:"Report submitted"]
+		def param  = [project: projectAll, activities:activities, report:report, status:"Report submitted"]
 		def htmlTxt = createHTMLStageReport(param)
 		def dateWithTime = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss")
 		def name = projectAll?.grantId + '_' + stageName + '_' + dateWithTime.format(new Date()) + ".pdf"
@@ -298,10 +295,6 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
         def previousStartDate = DateUtils.parse(project.plannedStartDate)
         def newStartDate = DateUtils.parse(plannedStartDate)
         def daysStartChanged = Days.daysBetween(previousStartDate, newStartDate).days
-        // This check is to allow for time zone changes.
-        if (Math.abs(daysStartChanged) <= 1) {
-            plannedStartDate = project.plannedStartDate
-        }
 
         String validationResult = validateProjectDates(project, plannedStartDate)
         if (validationResult == null) {
@@ -517,7 +510,7 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
 
         def project = param.project
         def activities = param.activities
-        def stageName = param.stageName
+        def report = param.report
         def status = param.status
 
         def stage = ''
@@ -530,10 +523,8 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
         def stageEndDate = ''
 
         org.codehaus.groovy.runtime.NullObject.metaClass.toString = {return ''}
-        def report = project.reports.find{it.name == stageName}
-        if (!report) {
-            throw new IllegalArgumentException("Invalid report : "+stageName)
-        }
+
+        def stageName = report.name
         stageStartDate = report.fromDate
         stageEndDate = report.toDate
         stage = "${report.name} : "+convertDate(report.fromDate) +" - " +convertDate(report.toDate)
