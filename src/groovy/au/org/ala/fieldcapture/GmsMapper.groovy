@@ -248,20 +248,19 @@ class GmsMapper {
                 println mappedActivity
                 def activityType = gmsCodeToActivityType[mappedActivity.code]
                 if (activityType) {
-                    if (!activities.find{it.type == activityType}) {
-                        activity.type = activityType
-                        activity.plannedStartDate = mappedActivity.plannedStartDate
-                        activity.plannedEndDate = mappedActivity.plannedEndDate
-                        activity.description = mappedActivity.description
-                        if (!activity.description) {
-                            activity.description = 'Activity ' + (activities.size() + 1)
-                        }
-                        if (mainTheme) {
-                            activity.mainTheme = mainTheme
-                        }
 
-                        activities << activity
+                    activity.type = activityType
+                    activity.plannedStartDate = mappedActivity.plannedStartDate
+                    activity.plannedEndDate = mappedActivity.plannedEndDate
+                    activity.description = mappedActivity.description
+                    if (!activity.description) {
+                        activity.description = 'Activity ' + (activities.size() + 1)
                     }
+                    if (mainTheme) {
+                        activity.mainTheme = mainTheme
+                    }
+
+                    activities << activity
 
                     def targetResult = mapTarget(activityRow)
                     def target = targetResult.mappedData
@@ -269,8 +268,22 @@ class GmsMapper {
                     if (!project.outputTargets) {
                         project.outputTargets = []
                     }
-                    if (target) {
-                        project.outputTargets << target
+                    if (target && target.scoreLabel && target.target) {
+                        def existingTarget = project.outputTargets.find({it.scoreLabel == target.scoreLabel})
+                        if (existingTarget) {
+
+                            try {
+                                double existingTargetValue = convertDecimal(existingTarget.target)
+                                double newTargetValue = convertDecimal(target.target)
+                                existingTarget.target = existingTargetValue+newTargetValue
+                            }
+                            catch (NumberFormatException e) {
+                                errors << [error:"Error converting target to a number: "+e.message]
+                            }
+                        }
+                        else {
+                            project.outputTargets << target
+                        }
                     }
                 }
                 else {
