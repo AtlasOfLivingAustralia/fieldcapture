@@ -34,8 +34,10 @@ class ActivityController {
                 }
             }
             model.themes = metadataService.getThemesForProject(model.project)
-
+            Map stageReport = reportService.findReportForDate(activity.plannedEndDate, model.project.reports?:[])
+            model.activity.projectStage = stageReport ? stageReport.name : ''
         }
+
         model
     }
 

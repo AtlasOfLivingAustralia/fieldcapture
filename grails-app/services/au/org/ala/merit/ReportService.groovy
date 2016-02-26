@@ -191,6 +191,15 @@ class ReportService {
 
     }
 
+    /**
+     * Returns the report that spans the period including the supplied date
+     * @param isoDate an ISO8601 formatted date string.
+     * @param reports the reports to check.
+     */
+    Map findReportForDate(String isoDate, List<Map> reports) {
+        reports.find{it.fromDate < isoDate && it.toDate >= isoDate}
+    }
+
     public Number filteredProjectCount(List<String> filter, String searchTerm) {
         def result = searchService.allProjects([fq:filter], searchTerm)
         result?.hits?.total ?: 0
