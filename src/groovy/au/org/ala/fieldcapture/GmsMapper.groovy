@@ -245,7 +245,7 @@ class GmsMapper {
             }
 
             if (mappedActivity.code) {
-                println mappedActivity
+
                 def activityType = gmsCodeToActivityType[mappedActivity.code]
                 if (activityType) {
 
@@ -268,7 +268,7 @@ class GmsMapper {
                     if (!project.outputTargets) {
                         project.outputTargets = []
                     }
-                    if (target && target.scoreLabel && target.target) {
+                    if (target && target.scoreLabel && (target.target || target.progressToDate)) {
                         def existingTarget = project.outputTargets.find({it.scoreLabel == target.scoreLabel})
                         if (existingTarget) {
 
