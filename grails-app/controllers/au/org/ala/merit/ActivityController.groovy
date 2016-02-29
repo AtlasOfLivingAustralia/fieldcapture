@@ -16,7 +16,7 @@ class ActivityController {
 
     private Map activityModel(activity, projectId) {
         // pass the activity
-        def model = [activity: activity, returnTo: params.returnTo, projectStages:projectStages()]
+        def model = [activity: activity, returnTo: params.returnTo]
 
         // the site
         model.site = model.activity?.siteId ? siteService.get(model.activity.siteId, [view:'brief']) : null
@@ -97,27 +97,12 @@ class ActivityController {
             }
             def model = activityModel(activity, activity.projectId)
 
-            model.putAll(determineValidationDates(model.project))
             model.activityTypes = metadataService.activityTypesList(model.project?.associatedProgram, model.project?.associatedSubProgram)
             model.hasPhotopointData = activity.documents?.find {it.poiId}
             model
         } else {
             forward(action: 'list', model: [error: 'no such id'])
         }
-    }
-
-    private Map determineValidationDates(Map project) {
-        def model = [:]
-        def lastSubmittedOrApprovedReportEndDate = reportService.latestSubmittedOrApprovedReportDate(project.reports)
-        if (lastSubmittedOrApprovedReportEndDate) {
-            model.earliestEndDate = DateUtils.displayFormat(DateUtils.parse(lastSubmittedOrApprovedReportEndDate).plusDays(1))
-        } else {
-            model.earliestEndDate = DateUtils.isoToDisplayFormat(project.plannedStartDate)
-        }
-        model.lastSubmittedOrApprovedReportEndDate = lastSubmittedOrApprovedReportEndDate
-        model.earliestStartDate = DateUtils.isoToDisplayFormat(project.plannedStartDate)
-        model.latestEndDate = DateUtils.isoToDisplayFormat(project.plannedEndDate)
-        model
     }
 
     /**
@@ -219,8 +204,7 @@ class ActivityController {
     @PreAuthorise(projectIdParam = 'projectId')
     def createPlan(String siteId, String projectId) {
         def activity = [activityId: "", siteId: siteId, projectId: projectId]
-        def model = [activity: activity, returnTo: params.returnTo, create: true,
-                     projectStages:projectStages()]
+        def model = [activity: activity, returnTo: params.returnTo, create: true]
         model.project = projectId ? projectService.get(projectId) : null
         model.activityTypes = metadataService.activityTypesList(model.project?.associatedProgram, model.project?.associatedSubProgram)
         model.site = siteId ? siteService.get(siteId) : null
@@ -231,7 +215,6 @@ class ActivityController {
             model.sites = siteService.list().collect({[name:it.name,siteId:it.siteId]})
             model.projects = projectService.list().collect({[name:it.name,projectId:it.projectId]})
         }
-        model.putAll(determineValidationDates(model.project))
 
         model
     }
@@ -361,10 +344,6 @@ class ActivityController {
         // but for now just go home
         log.debug('redirecting to home')
         redirect(controller: 'home')
-    }
-
-    def projectStages() {
-        return ["Stage 1", "Stage 2", "Stage 3", "Stage 4", "Stage 5", "Stage 6", "Stage 7", "Stage 8", "Stage 9", "Stage 10"]
     }
 
     /* Parse the xlsx output data and pass it back to the client. */
