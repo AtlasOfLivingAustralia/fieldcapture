@@ -388,7 +388,7 @@
                 }
 
                 var activityStage = findStage(endDate);
-                if (activityStage.publicationStatus == 'published' || activityStage.publicationStatus == 'pendingApproval') {
+                if (activityStage && activityStage.publicationStatus == 'published' || activityStage.publicationStatus == 'pendingApproval') {
                     return "The activity end date cannot fall into a submitted or approved stage";
                 }
                 return undefined; // This is how a successful validation is flagged.
