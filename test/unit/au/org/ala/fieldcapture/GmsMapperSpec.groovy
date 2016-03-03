@@ -93,6 +93,35 @@ class GmsMapperSpec extends Specification {
 
     }
 
+    def "a seperate activity will be created per distinct type description and dates"() {
+
+        setup:
+        CSVMapReader reader = new CSVMapReader(new InputStreamReader(getClass().getResourceAsStream('/resources/gmsMappingTestData2.csv'), 'cp1252'))
+        def rows = reader.readAll()
+
+        when:
+        def projectDetails = gmsMapper.mapProject(rows)
+
+        then: "only 2 revegetation activities should be created"
+        def activities = projectDetails.activities
+        2 == activities.findAll{it.type == 'Revegetation'}.size()
+
+        and: "the output targets from the revegetation activities should be summed where they are the same type"
+        // output targets
+        def outputTargets = projectDetails.project.outputTargets
+        2 == outputTargets.size()
+        def expectedOutputs = ['Revegetation Details', 'Revegetation Details']
+        def expectedScores = ['Area of revegetation works (Ha)', 'Number of plants planted']
+        def expectedTargets = [750, 1500]
+
+        outputTargets.eachWithIndex { outputTarget, i ->
+            assert expectedOutputs[i] == outputTarget.outputLabel
+            assert expectedScores[i] == outputTarget.scoreLabel
+            assert expectedTargets[i] == outputTarget.target
+
+        }
+    }
+
     /**
      * Tests a project maps correctly.  No errors are present in the test data for this test.
      */
