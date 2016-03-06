@@ -181,7 +181,7 @@
     "all2": {
       "config": "6",
       "title": "All programmes",
-      "label": "Treated for felius catus",
+      "label": "Treated for felis catus",
       "units": "Ha",
       "type": "score",
       "scoreLabel": "Treated area (Ha) by species",

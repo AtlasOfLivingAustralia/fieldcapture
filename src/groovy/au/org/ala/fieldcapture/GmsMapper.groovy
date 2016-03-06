@@ -245,16 +245,19 @@ class GmsMapper {
             }
 
             if (mappedActivity.code) {
-                println mappedActivity
+
                 def activityType = gmsCodeToActivityType[mappedActivity.code]
                 if (activityType) {
-                    if (!activities.find{it.type == activityType}) {
-                        activity.type = activityType
-                        activity.plannedStartDate = mappedActivity.plannedStartDate
-                        activity.plannedEndDate = mappedActivity.plannedEndDate
-                        activity.description = mappedActivity.description
+
+                    activity.type = activityType
+                    activity.plannedStartDate = mappedActivity.plannedStartDate
+                    activity.plannedEndDate = mappedActivity.plannedEndDate
+                    activity.description = mappedActivity.description
+
+                    if (!findActivity(activities, activity)) {
                         if (!activity.description) {
                             activity.description = 'Activity ' + (activities.size() + 1)
+                            activity.defaultDescriptionApplied = true // To allow comparsions where description was ommitted.
                         }
                         if (mainTheme) {
                             activity.mainTheme = mainTheme
@@ -269,8 +272,22 @@ class GmsMapper {
                     if (!project.outputTargets) {
                         project.outputTargets = []
                     }
-                    if (target) {
-                        project.outputTargets << target
+                    if (target && target.scoreLabel && (target.target || target.progressToDate)) {
+                        def existingTarget = project.outputTargets.find({it.scoreLabel == target.scoreLabel})
+                        if (existingTarget) {
+
+                            try {
+                                double existingTargetValue = convertDecimal(existingTarget.target)
+                                double newTargetValue = convertDecimal(target.target)
+                                existingTarget.target = existingTargetValue+newTargetValue
+                            }
+                            catch (NumberFormatException e) {
+                                errors << [error:"Error converting target to a number: "+e.message]
+                            }
+                        }
+                        else {
+                            project.outputTargets << target
+                        }
                     }
                 }
                 else {
@@ -282,8 +299,23 @@ class GmsMapper {
             }
 
         }
+        activities.each {
+            it.remove('defaultDescriptionApplied')
+        }
         activities
 
+    }
+
+    private Map findActivity(List activities, Map activity) {
+        println activities
+        println activity
+
+        activities.find {
+            it.type == activity.type &&
+            ((it.description == activity.description) || (it.defaultDescriptionApplied && !activity.description)) &&
+            it.plannedStartDate == activity.plannedStartDate &&
+            it.plannedEndDate == activity.plannedEndDate
+        }
     }
 
     static def riskMatrix = [

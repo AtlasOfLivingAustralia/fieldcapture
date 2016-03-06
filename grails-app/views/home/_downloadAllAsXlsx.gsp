@@ -12,7 +12,14 @@
         </g:each>
     </ul>
 
-    <strong>Activites</strong>
+    <strong>MERI Plan</strong>
+    <ul class="unstyled">
+        <g:each in="${['Outcomes', 'Monitoring', 'Project Partnerships', 'Project Implementation', 'Key Evaluation Question', 'Priorities', 'Budget', 'Risks and Threats', 'WHS and Case Study', 'Attachments']}" var="name">
+            <li><label class="checkbox"><input type="checkbox" name="tabs" value="${name}" data-validation-engine="validate[minCheckbox[1]]">${name}</label></li>
+        </g:each>
+    </ul>
+
+    <strong>Activity Data</strong><br/>
 
     <g:each in="${activityTypes}" var="category">
         <strong>${category.name}</strong>

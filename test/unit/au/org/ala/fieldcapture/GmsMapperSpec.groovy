@@ -57,10 +57,10 @@ class GmsMapperSpec extends Specification {
         and: "activities are mapped correctly"
         // Input data contains 4 output targets which can be mapped to 3 activities
         def activities = projectDetails.activities
-        3 == activities.size()
+        5 == activities.size()
 
-        def expectedTypes = ['Revegetation', 'Weed Treatment', 'Plant Propagation']
-        def expectedDescriptions = ['Test activity', 'Activity 2', 'Activity 3']
+        def expectedTypes = ['Revegetation', 'Revegetation', 'Revegetation', 'Weed Treatment', 'Plant Propagation']
+        def expectedDescriptions = ['Test activity', 'Test activity 2', 'Third revegetation activity', 'Activity 4', 'Activity 5']
         def expectedTheme = "Protect and conserve Australias natural, historic and Indigenous heritage."
         activities.eachWithIndex { activity, i ->
             assert expectedTypes[i] == activity.type
@@ -76,7 +76,7 @@ class GmsMapperSpec extends Specification {
         4 == outputTargets.size()
         def expectedOutputs = ['Revegetation Details', 'Revegetation Details', 'Weed Treatment Details', 'Plant Propagation Details']
         def expectedScores = ['Area of revegetation works (Ha)', 'Number of plants planted', 'Total new area treated (Ha)', 'Total No. of plants grown and ready for planting']
-        def expectedTargets = [150, 1500, 1.5, 500]
+        def expectedTargets = [400, 1500, 1.5, 500]
 
         outputTargets.eachWithIndex { outputTarget, i ->
             assert expectedOutputs[i] == outputTarget.outputLabel
@@ -91,6 +91,35 @@ class GmsMapperSpec extends Specification {
         project.grantManagerEmail == "gm@test.com"
         project.grantManagerEmail2 == "gm2@test.com"
 
+    }
+
+    def "a seperate activity will be created per distinct type description and dates"() {
+
+        setup:
+        CSVMapReader reader = new CSVMapReader(new InputStreamReader(getClass().getResourceAsStream('/resources/gmsMappingTestData2.csv'), 'cp1252'))
+        def rows = reader.readAll()
+
+        when:
+        def projectDetails = gmsMapper.mapProject(rows)
+
+        then: "only 2 revegetation activities should be created"
+        def activities = projectDetails.activities
+        2 == activities.findAll{it.type == 'Revegetation'}.size()
+
+        and: "the output targets from the revegetation activities should be summed where they are the same type"
+        // output targets
+        def outputTargets = projectDetails.project.outputTargets
+        2 == outputTargets.size()
+        def expectedOutputs = ['Revegetation Details', 'Revegetation Details']
+        def expectedScores = ['Area of revegetation works (Ha)', 'Number of plants planted']
+        def expectedTargets = [750, 1500]
+
+        outputTargets.eachWithIndex { outputTarget, i ->
+            assert expectedOutputs[i] == outputTarget.outputLabel
+            assert expectedScores[i] == outputTarget.scoreLabel
+            assert expectedTargets[i] == outputTarget.target
+
+        }
     }
 
     /**

@@ -54,8 +54,8 @@ class HomeController {
     }
 
     private Map projectExplorerModel() {
-        def facetsList = SettingService.getHubConfig().availableFacets
-        def mapFacets = SettingService.getHubConfig().availableMapFacets
+        def facetsList = new ArrayList(SettingService.getHubConfig().availableFacets)
+        def mapFacets = new ArrayList(SettingService.getHubConfig().availableMapFacets)
 
         if(!userService.userIsAlaOrFcAdmin() && !userService.userHasReadOnlyAccess()) {
             def adminFacetList = SettingService.getHubConfig().adminFacets
