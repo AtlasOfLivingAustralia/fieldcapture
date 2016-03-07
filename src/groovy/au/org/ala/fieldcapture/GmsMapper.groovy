@@ -307,8 +307,6 @@ class GmsMapper {
     }
 
     private Map findActivity(List activities, Map activity) {
-        println activities
-        println activity
 
         activities.find {
             it.type == activity.type &&

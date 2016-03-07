@@ -326,20 +326,19 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
                     activities.each { activity ->
                         if (!activityService.isReport(activity)) {
                             def newActivityStartDate = DateUtils.format(DateUtils.parse(activity.plannedStartDate).plusDays(daysStartChanged))
-                            def daysToChangeEndDate = (int)Math.round(daysStartChanged * scale)
+                            def daysToChangeEndDate = (int)Math.round(Math.abs(daysStartChanged) * scale)
                             def newActivityEndDate = DateUtils.format(DateUtils.parse(activity.plannedEndDate).plusDays(daysToChangeEndDate))
 
                             // Account for any rounding errors that would result in the activity falling outside the project date range.
+                            if (newActivityStartDate > newActivityEndDate) {
+                                newActivityStartDate = newActivityEndDate
+                            }
                             if (newActivityStartDate < plannedStartDate) {
                                 newActivityStartDate = plannedStartDate
                             }
                             if (newActivityEndDate > plannedEndDate) {
                                 newActivityEndDate = plannedEndDate
                             }
-                            if (newActivityStartDate > newActivityEndDate) {
-                                newActivityStartDate = newActivityEndDate
-                            }
-
                             activityService.update(activity.activityId, [activityId:activity.activityId, plannedStartDate:newActivityStartDate, plannedEndDate:newActivityEndDate])
                         }
                     }
