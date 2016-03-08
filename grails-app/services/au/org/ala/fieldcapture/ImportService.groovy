@@ -1703,6 +1703,10 @@ class ImportService {
                     return
                 }
 
+                // More often than not we get shapefiles with app ids in the grant id column.
+                if (!grantId.endsWith("G")) {
+                    grantId = grantId + "G"
+                }
                 def project = findProjectByGrantAndExternalId(grantId, externalId)
 
                 if (!project) {
