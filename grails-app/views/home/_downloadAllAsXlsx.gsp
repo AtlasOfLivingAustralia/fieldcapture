@@ -20,7 +20,9 @@
     </ul>
 
     <strong>Activity Data</strong><br/>
-
+    <ul class="unstyled">
+        <li><label class="checkbox"><input type="checkbox" name="tabs" value="Activity Summary">Activity Summary</label></li>
+    </ul>
     <g:each in="${activityTypes}" var="category">
         <strong>${category.name}</strong>
         <ul class="unstyled">
