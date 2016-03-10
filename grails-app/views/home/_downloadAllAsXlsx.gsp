@@ -38,8 +38,19 @@
 <r:script>
 
 $(function() {
+   var disabled = false;
    $('#downloadXlsxButton').click(function() {
-       $('#downloadTabSelection').submit();
+       if (!disabled) {
+           disabled = true;
+
+           $('#downloadXlsxButton').prop('disabled', true);
+           var url = "${g.createLink(controller: 'search', action: 'downloadAllData')}";
+           bootbox.alert("Your download will be emailed to you when it is complete.");
+           $.post(url,  $('#downloadTabSelection').serializeArray()).done(function() {
+               disabled = false;
+               $('#downloadXlsxButton').prop('disabled', false);
+           });
+       }
    });
 });
 </r:script>
