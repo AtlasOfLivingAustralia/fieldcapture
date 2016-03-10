@@ -20,7 +20,9 @@
     </ul>
 
     <strong>Activity Data</strong><br/>
-
+    <ul class="unstyled">
+        <li><label class="checkbox"><input type="checkbox" name="tabs" value="Activity Summary">Activity Summary</label></li>
+    </ul>
     <g:each in="${activityTypes}" var="category">
         <strong>${category.name}</strong>
         <ul class="unstyled">
@@ -36,8 +38,19 @@
 <r:script>
 
 $(function() {
+   var disabled = false;
    $('#downloadXlsxButton').click(function() {
-       $('#downloadTabSelection').submit();
+       if (!disabled) {
+           disabled = true;
+
+           $('#downloadXlsxButton').prop('disabled', true);
+           var url = "${g.createLink(controller: 'search', action: 'downloadAllData')}";
+           bootbox.alert("The download may take several minutes to complete.  Once it is complete, an email will be sent to your registed email address.");
+           $.post(url,  $('#downloadTabSelection').serializeArray()).done(function() {
+               disabled = false;
+               $('#downloadXlsxButton').prop('disabled', false);
+           });
+       }
    });
 });
 </r:script>
