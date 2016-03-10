@@ -45,7 +45,7 @@ $(function() {
 
            $('#downloadXlsxButton').prop('disabled', true);
            var url = "${g.createLink(controller: 'search', action: 'downloadAllData')}";
-           bootbox.alert("Your download will be emailed to you when it is complete.");
+           bootbox.alert("The download may take several minutes to complete.  Once it is complete, an email will be sent to your registed email address.");
            $.post(url,  $('#downloadTabSelection').serializeArray()).done(function() {
                disabled = false;
                $('#downloadXlsxButton').prop('disabled', false);
