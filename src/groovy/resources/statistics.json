@@ -136,7 +136,7 @@
       "projectFilter": [
         "associatedProgramFacet:National Landcare Programme"
       ],
-      "scoreLabel": "No. of activities treating weeds by type of delivery partner",
+      "scoreLabel": "Total area (Ha.) of weed treatment by main activity partner",
       "resultFilter": "Local Landcare, 'Friends of', community, or farmer group"
     },
     "nlp11": {
@@ -242,7 +242,7 @@
       "nlp5",
       "nlp7",
       "nlp9",
-      "nlp10",
+      "ga3",
       "r4",
       "nlp12"
     ],
