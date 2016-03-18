@@ -9,7 +9,7 @@
             <span data-bind="visible:!organisationId(),text:organisationName"></span>
         </h4>
     </div>
-    <div class="clearfix" data-bind="visible:serviceProviderName()">
+    <div class="clearfix" data-bind="visible:orgIdSvcProvider() || serviceProviderName()">
         <h4>
             Service provider:
             <a data-bind="visible:orgIdSvcProvider(),attr:{href:fcConfig.organisationLinkBaseUrl+'/'+orgIdSvcProvider()}">

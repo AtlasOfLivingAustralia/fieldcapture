@@ -396,7 +396,6 @@
                 self.promote = [{id: 'yes', name:'Yes'},{id:'no',name:'No'}];
 				self.promoteOnHomepage = ko.observable(project.promoteOnHomepage);
 				self.planStatus = ko.observable(project.planStatus);
-                self.serviceProviderName = ko.observable(project.serviceProviderName);
                 self.mapLoaded = ko.observable(false);
 				self.transients.variation = ko.observable();
 
@@ -612,6 +611,7 @@
                             contractEndDate: self.contractEndDate(),
                             organisationId: self.organisationId(),
                             organisationName: self.organisationName(),
+                            orgIdSvcProvider: self.orgIdSvcProvider(),
                             serviceProviderName: self.serviceProviderName(),
                             associatedProgram: self.associatedProgram(),
                             associatedSubProgram: self.associatedSubProgram(),
