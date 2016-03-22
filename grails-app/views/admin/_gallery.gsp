@@ -5,7 +5,7 @@
     <!-- ko foreach: images -->
 
         <div class="imgCon">
-            <a class="cbLink" rel="thumbs" href="" id="thumb">
+            <a class="cbLink" rel="thumbs" id="thumb" data-bind="attr:{href:ref}">
                 <img src="" data-bind="attr:{src:thumbnailUrl, title:name}" class="image thumbnail"/>
                 <i class="approval-status fa fa-3x pull-right" data-bind="css:{'fa-thumbs-up':approved, 'fa-thumbs-down':rejected}"></i>
                 <div class="meta brief"><span data-bind="text:name"></span> </div>
