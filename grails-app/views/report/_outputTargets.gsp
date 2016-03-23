@@ -47,7 +47,7 @@
                         "sExtends":    "collection",
                         "sButtonText": "Save",
                         "aButtons":    [
-                            {"sExtends":"csv",  "sFileName":"Annoucements-${suffix}.csv"}, {"sExtends":"xls",  "sFileName":"Annoucements-${suffix}.xls"}, {"sExtends":"pdf",  "sFileName":"Annoucements-${suffix}.pdf"} ]
+                            {"sExtends":"csv",  "sFileName":"Announcements-${suffix}.csv"}, {"sExtends":"xls",  "sFileName":"Announcements-${suffix}.xls"}, {"sExtends":"pdf",  "sFileName":"Announcements-${suffix}.pdf"} ]
                     }
                 ]
             }
