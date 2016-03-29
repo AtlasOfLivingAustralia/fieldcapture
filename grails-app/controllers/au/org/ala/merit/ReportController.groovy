@@ -55,19 +55,9 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
                         def electorates = new HashSet()
                         def nrms = new HashSet()
                         project.sites.each {
-                            if (it.extent?.geometry?.state) {
-                                def state = it.extent?.geometry?.state
-                                state = g.message(code: 'label.' + state, default: state)
-                                states.add(state)
-                            }
-                            if (it.extent?.geometry?.elect) {
-                                def electorate = it.extent?.geometry?.elect
-                                electorate = g.message(code: 'label.' + electorate, default: electorate)
-                                electorates.add(electorate)
-                            }
-                            if (it.extent?.geometry?.nrm) {
-                                nrms.add(it.extent.geometry.nrm)
-                            }
+                            addGeographicFacets(states, it.extent?.geometry?.state)
+                            addGeographicFacets(electorates, it.extent?.geometry?.elect)
+                            addGeographicFacets(nrms, it.extent?.geometry?.nrm)
                         }
                         announcement.state = states.join(', ')
                         announcement.electorate = electorates.join(', ')
@@ -79,6 +69,19 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
         }
 
         render view:'_announcements', model:[events:events]
+    }
+
+    private addGeographicFacets(Set results, def source) {
+        if (!source) {
+            return
+        }
+        if (!(source instanceof List)) {
+            source = [source]
+        }
+        source.each { facet ->
+            String label = g.message(code: 'label.' + facet, default: facet)
+            results.add(label)
+        }
     }
 
     def greenArmyReport() {
