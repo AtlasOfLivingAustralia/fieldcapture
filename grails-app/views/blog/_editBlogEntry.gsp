@@ -18,6 +18,16 @@
         </div>
     </div>
 
+    <div class="control-group">
+        <label class="control-label span3"
+               for="keepOnTop">Keep on top: <fc:iconHelp>Normally, blog entries are sorted by date.  Checking this box will keep this entry above others that do not have this box checked.</fc:iconHelp></label>
+        <div class="span9">
+            <div class="input-append">
+                <input type="checkbox" id="keepOnTop" data-bind="checked:keepOnTop"/>
+            </div>
+        </div>
+    </div>
+
     <div class="control-group required">
         <label class="control-label span3"
                for="title">Title: <fc:iconHelp>The title of this blog entry</fc:iconHelp></label>
