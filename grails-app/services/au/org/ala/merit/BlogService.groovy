@@ -33,17 +33,21 @@ class BlogService {
         Map blogSetting = settingService.getJson(SITE_BLOG_KEY)
 
         List<Map> blog = blogSetting?.blog?:[]
-        blog = blog.sort{it.date}.reverse()
-        attachImages(blog)
+        process(blog)
         blog
     }
 
     List<Map> getProjectBlog(Map project) {
         List<Map> blog = project?.blog?:[]
-        blog = blog.sort{it.date}.reverse()
-        attachImages(blog)
+        process(blog)
 
         blog
+    }
+
+    private void process(List<Map> blog) {
+
+        blog.sort{a, b -> b.keepOnTop <=> a.keepOnTop ?: b.date <=> a.date}
+        attachImages(blog)
     }
 
     def update(String id, Map blogEntry) {

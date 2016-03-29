@@ -45,6 +45,7 @@
         var blogEntryViewModel = new EditableBlogEntryViewModel(blogEntry, '.validationEngineContainer');
 
         ko.applyBindings(blogEntryViewModel);
+        $('.helphover').popover({animation: true, trigger:'hover'});
     });
 
 
