@@ -56,7 +56,7 @@
             <g:if test="${grailsApplication.config.simulateCaseManager}">
                 <span class="pull-right">
                     <label class="checkbox inline" style="font-size:0.8em;">
-                        <input data-bind="checked:userIsCaseManager" type="checkbox"> Impersonate case manager
+                        <input data-bind="checked:userIsCaseManager" type="checkbox"> Impersonate grant manager
                     </label>
                 </span>
             </g:if>
@@ -254,11 +254,11 @@
     <span class="badge badge-info" style="font-size:13px;">This plan has been submitted for approval</span>
 </span>
 <span data-bind="visible:!userIsCaseManager()" class="span8">
-    <span>Your plan is locked until it is approved by your case manager. Once your plan is approved
+    <span>Your plan is locked until it is approved by your grant manager. Once your plan is approved
     you can start entering activity information.</span>
 </span>
 <span data-bind="visible:userIsCaseManager" class="span8">
-    <span>Case manager actions: </span>
+    <span>Grant manager actions: </span>
     <span class="btn-group">
         <button type="button" data-bind="click:approvePlan" class="btn btn-success"><i class="icon-ok icon-white"></i> Approve plan</button>
         <button type="button" data-bind="click:rejectPlan" class="btn btn-danger"><i class="icon-remove icon-white"></i> Reject plan</button>
@@ -275,7 +275,7 @@
     cancelled or deferred) you can submit the stage for validation by clicking the 'report' button.</span>
 </span>
 <span data-bind="visible:userIsCaseManager" class="span8">
-    <span>Case manager actions: </span>
+    <span>Grant manager actions: </span>
     <span class="btn-group">
         <button type="button" data-bind="click:modifyPlan" class="btn btn-info" title="Allow the user to vary and re-submit the plan">
             <i class="icon-repeat icon-white"></i> Modify plan
@@ -334,7 +334,7 @@
 <span class="badge badge-info" style="font-size:13px;">Report submitted</span>
 <g:if test="${user?.isCaseManager}">
     <br/>
-    <span>Case manager actions: </span>
+    <span>Grant manager actions: </span>
     <br/>
     <span class="btn-group">
         <button type="button" data-bind="click:$parents[1].approveStage" class="btn btn-success"><i class="icon-ok icon-white"></i> Approve</button>
@@ -353,7 +353,7 @@
 <span class="badge badge-info" style="font-size:13px;">Report submitted</span>
 <g:if test="${user?.isCaseManager}">
     <br/>
-    <span>Case manager actions: </span>
+    <span>Grant manager actions: </span>
     <br/>
     <span class="btn-group">
         <button type="button" data-bind="click:$parents[1].approveStage" class="btn btn-success"><i class="icon-ok icon-white"></i> Approve</button>
@@ -1172,7 +1172,7 @@
                 })
                 .fail(function (data) {
                     if (data.status === 401) {
-                        showAlert("Unable to approve plan. You do not have case manager rights for this project.",
+                        showAlert("Unable to approve plan. You do not have grant manager rights for this project.",
                             "alert-error","status-update-error-placeholder");
                     } else {
                         showAlert("Unable to approve plan. An unhandled error occurred: " + data.status,
@@ -1195,7 +1195,7 @@
                 })
                 .fail(function (data) {
                     if (data.status === 401) {
-                        showAlert("Unable to reject plan. You do not have case manager rights for this project.",
+                        showAlert("Unable to reject plan. You do not have grant manager rights for this project.",
                             "alert-error","status-update-error-placeholder");
                     } else {
                         showAlert("Unable to reject plan. An unhandled error occurred: " + data.status,
@@ -1220,7 +1220,7 @@
                 })
                 .fail(function (data) {
                     if (data.status === 401) {
-                        showAlert("Unable to modify plan. You do not have case manager rights for this project.",
+                        showAlert("Unable to modify plan. You do not have grant manager rights for this project.",
                             "alert-error","status-update-error-placeholder");
                     } else {
                         showAlert("Unable to modify plan. An unhandled error occurred: " + data.status,
