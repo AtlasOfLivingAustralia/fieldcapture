@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import au.org.ala.fieldcapture.ActivityService
 import au.org.ala.fieldcapture.DateUtils
 import au.org.ala.fieldcapture.PreAuthorise
 import grails.converters.JSON
@@ -203,7 +204,7 @@ class ActivityController {
      */
     @PreAuthorise(projectIdParam = 'projectId')
     def createPlan(String siteId, String projectId) {
-        def activity = [activityId: "", siteId: siteId, projectId: projectId]
+        def activity = [activityId: "", siteId: siteId, projectId: projectId, progress: ActivityService.PROGRESS_PLANNED]
         def model = [activity: activity, returnTo: params.returnTo, create: true]
         model.project = projectId ? projectService.get(projectId) : null
         model.activityTypes = metadataService.activityTypesList(model.project?.associatedProgram, model.project?.associatedSubProgram)
