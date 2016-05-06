@@ -257,10 +257,10 @@ class ReportService {
 
         def results = searchService.reportOnScores([score], filter)
 
-        def result = results.outputData?.find {it.groupTitle == score}
+        def result = results.outputData?.find {it.label == score}
         def value = 0
-        if (result && result.results) {
-            value = result.results[0].result
+        if (result) {
+            value = result.result ?: 0
         }
         value as Number
 
@@ -269,10 +269,10 @@ class ReportService {
     public Number filterGroupedScore(String score, String groupToFilter, List<String> filters = null) {
         def results = searchService.reportOnScores([score], filters)
         def value = 0
-        if (results.outputData && results.outputData[0].results) {
-            def result = results.outputData[0].results.find{it.group == groupToFilter}
+        if (results.outputData && results.outputData[0].groups) {
+            def result = results.outputData[0].groups.find{it.group == groupToFilter}
             if (result) {
-                value = result.result
+                value = result.results[0].result
             }
             else {
                 def section = results.outputData[0].results.find{it.result && it.result[groupToFilter]}
