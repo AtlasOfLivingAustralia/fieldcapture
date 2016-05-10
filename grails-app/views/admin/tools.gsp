@@ -330,10 +330,10 @@
         <td><button disabled id="btnBulkUploadSites" class="btn btn-small btn-info" title="Bulk load sites">Bulk load sites</button>
         </td>
         <td>
-            Bulk creates organisations and updates projects.
+
         <p><g:uploadForm class="bulkUploadSites" action="bulkUploadSites">
             <div><input id="bulkUploadSites" type="file" name="shapefile"/></div>
-
+            Bulk loads sites from a shapefile.
         </g:uploadForm>
 
         </p>
@@ -343,7 +343,7 @@
         <td><button disabled id="btnCreateOrgs" class="btn btn-small btn-info" title="Bulk create organisations">Bulk create organisations</button>
         </td>
         <td>
-            Bulk loads sites from a shapefile.
+            Bulk creates organisations and updates projects.
         <p><g:uploadForm class="createOrgs" action="createMissingOrganisations">
             <div><input id="createOrgs" type="file" name="orgData"/></div>
 
