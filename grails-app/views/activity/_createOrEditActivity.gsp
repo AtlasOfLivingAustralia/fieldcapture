@@ -348,7 +348,7 @@
                         }
                         else {
                             var endDate = moment(matchingStage.toDate).subtract(1, 'days');
-                            self.plannedEndDate(endDate.toISOString());
+                            self.plannedEndDate(endDate.toDate().toISOStringNoMillis());
                         }
 
                     }
