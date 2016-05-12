@@ -1,6 +1,8 @@
 package au.org.ala.merit
 
 import au.org.ala.fieldcapture.DateUtils
+import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 import org.joda.time.Period
 
 
@@ -37,14 +39,14 @@ class ReportService {
 
         def reports = (project.reports?:[]).sort{it.toDate}
 
-        def startDate = DateUtils.parse(project.plannedStartDate)
-        def endDate = DateUtils.parse(project.plannedEndDate)
+        DateTime startDate = DateUtils.parse(project.plannedStartDate).withZone(DateTimeZone.default)
+        DateTime endDate = DateUtils.parse(project.plannedEndDate).withZone(DateTimeZone.default)
 
-        def periodStartDate = null
-        def stage = 1
+        DateTime periodStartDate = null
+        int stage = 1
         for (int i=reports.size()-1; i>=0; i--) {
             if (isSubmittedOrApproved(reports[i])) {
-                periodStartDate = DateUtils.parse(reports[i].toDate)
+                periodStartDate = DateUtils.parse(reports[i].toDate).withZone(DateTimeZone.default)
                 stage = i+2 // Start at the stage after the submitted or approved one
                 break
             }
@@ -60,19 +62,19 @@ class ReportService {
         }
 
         log.info "Regenerating stages starting from stage: "+stage+ ", starting from: "+periodStartDate+" ending at: "+endDate
-        while (periodStartDate < endDate) {
+        while (periodStartDate < endDate.minusDays(1)) {
             def periodEndDate = periodStartDate.plus(period)
 
             def report = [
-                    fromDate:DateUtils.format(periodStartDate),
-                    toDate:DateUtils.format(periodEndDate),
+                    fromDate:DateUtils.format(periodStartDate.withZone(DateTimeZone.UTC)),
+                    toDate:DateUtils.format(periodEndDate.withZone(DateTimeZone.UTC)),
                     type:'Activity',
                     projectId:projectId,
                     name:'Stage '+stage,
                     description:'Stage '+stage+' for '+project.name
             ]
             if (weekDaysToCompleteReport) {
-                report.dueDate = DateUtils.format(periodEndDate.plusDays(weekDaysToCompleteReport))
+                report.dueDate = DateUtils.format(periodEndDate.plusDays(weekDaysToCompleteReport).withZone(DateTimeZone.UTC))
             }
 
             if (reports.size() >= stage) {
