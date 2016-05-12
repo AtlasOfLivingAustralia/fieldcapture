@@ -27,10 +27,10 @@ class ReportServiceSpec extends Specification {
     }
 
     def reports() {
-        [[reportId:'1', fromDate: '2015-01-01T00:00:00Z', toDate: '2015-07-01T00:00:00Z', dueDate: '2015-08-13T00:00:00Z', type: 'Activity', name: 'Stage 1', description: "Stage 1 for project", projectId: 'p1'],
-         [reportId:'2', fromDate: '2015-07-01T00:00:00Z', toDate: '2016-01-01T00:00:00Z', dueDate: '2016-02-13T00:00:00Z', type: 'Activity', name: 'Stage 2', description: "Stage 2 for project", projectId: 'p1'],
-         [reportId:'3', fromDate: '2016-01-01T00:00:00Z', toDate: '2016-07-01T00:00:00Z', dueDate: '2016-08-13T00:00:00Z', type: 'Activity', name: 'Stage 3', description: "Stage 3 for project", projectId: 'p1'],
-         [reportId:'4', fromDate: '2016-07-01T00:00:00Z', toDate: '2017-01-01T00:00:00Z', dueDate: '2017-02-13T00:00:00Z', type: 'Activity', name: 'Stage 4', description: "Stage 4 for project", projectId: 'p1']]
+        [[reportId:'1', fromDate: '2014-12-31T13:00:00Z', toDate: '2015-06-30T14:00:00Z', dueDate: '2015-08-12T14:00:00Z', type: 'Activity', name: 'Stage 1', description: "Stage 1 for project", projectId: 'p1'],
+         [reportId:'2', fromDate: '2015-06-30T14:00:00Z', toDate: '2015-12-31T13:00:00Z', dueDate: '2016-02-12T13:00:00Z', type: 'Activity', name: 'Stage 2', description: "Stage 2 for project", projectId: 'p1'],
+         [reportId:'3', fromDate: '2015-12-31T13:00:00Z', toDate: '2016-06-30T14:00:00Z', dueDate: '2016-08-12T14:00:00Z', type: 'Activity', name: 'Stage 3', description: "Stage 3 for project", projectId: 'p1'],
+         [reportId:'4', fromDate: '2016-06-30T14:00:00Z', toDate: '2016-12-31T13:00:00Z', dueDate: '2017-02-12T13:00:00Z', type: 'Activity', name: 'Stage 4', description: "Stage 4 for project", projectId: 'p1']]
 
     }
 
@@ -48,10 +48,10 @@ class ReportServiceSpec extends Specification {
 
         then:
         0 * webService.doDelete(*_)
-        1 * webService.doPost(_, [fromDate: '2015-01-01T00:00:00Z', toDate: '2015-07-01T00:00:00Z', dueDate: '2015-08-13T00:00:00Z', type: 'Activity', name: 'Stage 1', description: "Stage 1 for project", projectId: 'p1'])
-        1 * webService.doPost(_, [fromDate: '2015-07-01T00:00:00Z', toDate: '2016-01-01T00:00:00Z', dueDate: '2016-02-13T00:00:00Z', type: 'Activity', name: 'Stage 2', description: "Stage 2 for project", projectId: 'p1'])
-        1 * webService.doPost(_, [fromDate: '2016-01-01T00:00:00Z', toDate: '2016-07-01T00:00:00Z', dueDate: '2016-08-13T00:00:00Z', type: 'Activity', name: 'Stage 3', description: "Stage 3 for project", projectId: 'p1'])
-        1 * webService.doPost(_, [fromDate: '2016-07-01T00:00:00Z', toDate: '2017-01-01T00:00:00Z', dueDate: '2017-02-13T00:00:00Z', type: 'Activity', name: 'Stage 4', description: "Stage 4 for project", projectId: 'p1'])
+        1 * webService.doPost(_, [fromDate: '2014-12-31T13:00:00Z', toDate: '2015-06-30T14:00:00Z', dueDate: '2015-08-12T14:00:00Z', type: 'Activity', name: 'Stage 1', description: "Stage 1 for project", projectId: 'p1'])
+        1 * webService.doPost(_, [fromDate: '2015-06-30T14:00:00Z', toDate: '2015-12-31T13:00:00Z', dueDate: '2016-02-12T13:00:00Z', type: 'Activity', name: 'Stage 2', description: "Stage 2 for project", projectId: 'p1'])
+        1 * webService.doPost(_, [fromDate: '2015-12-31T13:00:00Z', toDate: '2016-06-30T14:00:00Z', dueDate: '2016-08-12T14:00:00Z', type: 'Activity', name: 'Stage 3', description: "Stage 3 for project", projectId: 'p1'])
+        1 * webService.doPost(_, [fromDate: '2016-06-30T14:00:00Z', toDate: '2016-12-31T13:00:00Z', dueDate: '2017-02-12T13:00:00Z', type: 'Activity', name: 'Stage 4', description: "Stage 4 for project", projectId: 'p1'])
         0 * webService._
     }
 
@@ -66,11 +66,11 @@ class ReportServiceSpec extends Specification {
 
         then:
         0 * webService.doDelete(*_)
-        1 * webService.doPost(_, [reportId:'1', fromDate: '2014-07-01T00:00:00Z', toDate: '2015-01-01T00:00:00Z', dueDate: '2015-02-13T00:00:00Z', type: 'Activity', name: 'Stage 1', description: "Stage 1 for project", projectId: 'p1'])
-        1 * webService.doPost(_, [reportId:'2', fromDate: '2015-01-01T00:00:00Z', toDate: '2015-07-01T00:00:00Z', dueDate: '2015-08-13T00:00:00Z', type: 'Activity', name: 'Stage 2', description: "Stage 2 for project", projectId: 'p1'])
-        1 * webService.doPost(_, [reportId:'3', fromDate: '2015-07-01T00:00:00Z', toDate: '2016-01-01T00:00:00Z', dueDate: '2016-02-13T00:00:00Z', type: 'Activity', name: 'Stage 3', description: "Stage 3 for project", projectId: 'p1'])
-        1 * webService.doPost(_, [reportId:'4', fromDate: '2016-01-01T00:00:00Z', toDate: '2016-07-01T00:00:00Z', dueDate: '2016-08-13T00:00:00Z', type: 'Activity', name: 'Stage 4', description: "Stage 4 for project", projectId: 'p1'])
-        1 * webService.doPost(_, [fromDate: '2016-07-01T00:00:00Z', toDate: '2017-01-01T00:00:00Z', dueDate: '2017-02-13T00:00:00Z', type: 'Activity', name: 'Stage 5', description: "Stage 5 for project", projectId: 'p1'])
+        1 * webService.doPost(_, [reportId:'1', fromDate: '2014-06-30T14:00:00Z', toDate: '2014-12-31T13:00:00Z', dueDate: '2015-02-12T13:00:00Z', type: 'Activity', name: 'Stage 1', description: "Stage 1 for project", projectId: 'p1'])
+        1 * webService.doPost(_, [reportId:'2', fromDate: '2014-12-31T13:00:00Z', toDate: '2015-06-30T14:00:00Z', dueDate: '2015-08-12T14:00:00Z', type: 'Activity', name: 'Stage 2', description: "Stage 2 for project", projectId: 'p1'])
+        1 * webService.doPost(_, [reportId:'3', fromDate: '2015-06-30T14:00:00Z', toDate: '2015-12-31T13:00:00Z', dueDate: '2016-02-12T13:00:00Z', type: 'Activity', name: 'Stage 3', description: "Stage 3 for project", projectId: 'p1'])
+        1 * webService.doPost(_, [reportId:'4', fromDate: '2015-12-31T13:00:00Z', toDate: '2016-06-30T14:00:00Z', dueDate: '2016-08-12T14:00:00Z', type: 'Activity', name: 'Stage 4', description: "Stage 4 for project", projectId: 'p1'])
+        1 * webService.doPost(_, [fromDate: '2016-06-30T14:00:00Z', toDate: '2016-12-31T13:00:00Z', dueDate: '2017-02-12T13:00:00Z', type: 'Activity', name: 'Stage 5', description: "Stage 5 for project", projectId: 'p1'])
         0 * webService._
     }
 
@@ -85,9 +85,9 @@ class ReportServiceSpec extends Specification {
         service.regenerateAllStageReportsForProject('p1', 6, true, 43)
 
         then:
-        1 * webService.doPost(_, [reportId:'1', fromDate: '2015-07-01T00:00:00Z', toDate: '2016-01-01T00:00:00Z', dueDate: '2016-02-13T00:00:00Z', type: 'Activity', name: 'Stage 1', description: "Stage 1 for project", projectId: 'p1'])
-        1 * webService.doPost(_, [reportId:'2', fromDate: '2016-01-01T00:00:00Z', toDate: '2016-07-01T00:00:00Z', dueDate: '2016-08-13T00:00:00Z', type: 'Activity', name: 'Stage 2', description: "Stage 2 for project", projectId: 'p1'])
-        1 * webService.doPost(_, [reportId:'3', fromDate: '2016-07-01T00:00:00Z', toDate: '2017-01-01T00:00:00Z', dueDate: '2017-02-13T00:00:00Z', type: 'Activity', name: 'Stage 3', description: "Stage 3 for project", projectId: 'p1'])
+        1 * webService.doPost(_, [reportId:'1', fromDate: '2015-06-30T14:00:00Z', toDate: '2015-12-31T13:00:00Z', dueDate: '2016-02-12T13:00:00Z', type: 'Activity', name: 'Stage 1', description: "Stage 1 for project", projectId: 'p1'])
+        1 * webService.doPost(_, [reportId:'2', fromDate: '2015-12-31T13:00:00Z', toDate: '2016-06-30T14:00:00Z', dueDate: '2016-08-12T14:00:00Z', type: 'Activity', name: 'Stage 2', description: "Stage 2 for project", projectId: 'p1'])
+        1 * webService.doPost(_, [reportId:'3', fromDate: '2016-06-30T14:00:00Z', toDate: '2016-12-31T13:00:00Z', dueDate: '2017-02-12T13:00:00Z', type: 'Activity', name: 'Stage 3', description: "Stage 3 for project", projectId: 'p1'])
         1 * webService.doDelete({ it.endsWith('/report/4')})
         0 * webService._
 
@@ -105,14 +105,14 @@ class ReportServiceSpec extends Specification {
 
         then: "a new report should be added at the end of the project"
 
-        1 * webService.doPost(_, [fromDate: '2017-01-01T00:00:00Z', toDate: '2017-07-01T00:00:00Z', dueDate: '2017-08-13T00:00:00Z', type: 'Activity', name: 'Stage 5', description: "Stage 5 for project", projectId: 'p1'])
+        1 * webService.doPost(_, [fromDate: '2016-12-31T13:00:00Z', toDate: '2017-06-30T14:00:00Z', dueDate: '2017-08-12T14:00:00Z', type: 'Activity', name: 'Stage 5', description: "Stage 5 for project", projectId: 'p1'])
         0 * webService._
 
     }
 
     void "reports can be removed correctly when a project end date is moved backwards"() {
         setup:
-        def project = project('2015-01-01T00:00:00Z', '2016-07-01T00:00:00Z')
+        def project = project('2015-01-01T00:00:00Z', '2016-06-30T14:00:00Z')
         project.reports = reports()
 
         projectService.get(_, _) >> project
@@ -136,7 +136,7 @@ class ReportServiceSpec extends Specification {
         service.regenerateAllStageReportsForProject('p1', 6, true, 43)
 
         then: "a new report should be added to the end"
-        1 * webService.doPost({it.endsWith('/report/')}, [fromDate: '2017-01-01T00:00:00Z', toDate: '2017-07-01T00:00:00Z', type: 'Activity', name: 'Stage 5', description: "Stage 5 for project", projectId: 'p1', dueDate: '2017-08-13T00:00:00Z'])
+        1 * webService.doPost({it.endsWith('/report/')}, [fromDate: '2016-12-31T13:00:00Z', toDate: '2017-06-30T14:00:00Z', type: 'Activity', name: 'Stage 5', description: "Stage 5 for project", projectId: 'p1', dueDate: '2017-08-12T14:00:00Z'])
 
         0 * webService._
     }
@@ -162,7 +162,7 @@ class ReportServiceSpec extends Specification {
 
     void "no approved or submitted reports can be deleted regardless of the new end date"() {
         setup:
-        def project = project('2015-01-01T00:00:00Z', '2016-01-01T00:00:00Z')
+        def project = project('2015-01-01T00:00:00Z', '2015-12-31T13:00:00Z')
         project.reports = reports()
         project.reports[0].publicationStatus = ReportService.REPORT_APPROVED
         project.reports[1].publicationStatus = ReportService.REPORT_APPROVED
