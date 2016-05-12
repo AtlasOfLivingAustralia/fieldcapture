@@ -27,7 +27,7 @@
     </div>
     <div class="clearfix" data-bind="visible:funding()">
         <h4>
-            Approved funding (GST inclusive): <span data-bind="text:funding.formattedCurrency"></span>
+            Approved funding (GST exclusive): <span data-bind="text:funding.formattedCurrency"></span>
         </h4>
 
     </div>
