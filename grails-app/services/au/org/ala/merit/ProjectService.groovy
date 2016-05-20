@@ -15,6 +15,7 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
     static final String FINAL_REPORT_ACTIVITY_TYPE = 'Outcomes, Evaluation and Learning - final report'
     static final String STAGE_REPORT_ACTIVITY_TYPE = 'Progress, Outcomes and Learning - stage report'
     static final String OUTCOMES_OUTPUT_TYPE = 'Outcomes'
+    static final String STAGE_OUTCOMES_OUTPUT_TYPE = ''
     static final String COMPLETE = 'completed'
 
     static dateWithTime = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss")
@@ -491,17 +492,27 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
             def activity = project.activities?.find { it.type == FINAL_REPORT_ACTIVITY_TYPE }
 
             if (activity) {
-                activity = activityService.get(activity.activityId)
-                def outcomeOutput = activity?.outputs?.find { it.name == OUTCOMES_OUTPUT_TYPE }
-
-                outcomes = [environmentalOutcomes: outcomeOutput?.data?.projectEnvironmentalOutcomes,
-                            economicOutcomes     : outcomeOutput?.data?.projectEconomicOutcomes,
-                            socialOutcomes       : outcomeOutput?.data?.projectSocialOutcomes]
+                outcomes = getOutcomes(activity.activityId, OUTCOMES_OUTPUT_TYPE)
             }
+        }
+        if (!outcomes) {
+            Map activity = project.activities?.max{ reportService.isSubmittedOrApproved(it) ? it.plannedEndDate : ''}
 
+            if (activity) {
+                outcomes = getOutcomes(activity.activityId, STAGE_OUTCOMES_OUTPUT_TYPE)
+            }
         }
         outcomes
 
+    }
+
+    private Map getOutcomes(String activityId, String outputType) {
+        Map activity = activityService.get(activity.activityId)
+        def outcomeOutput = activity?.outputs?.find { it.name == outputType }
+
+        [environmentalOutcomes: outcomeOutput?.data?.projectEnvironmentalOutcomes,
+         economicOutcomes     : outcomeOutput?.data?.projectEconomicOutcomes,
+         socialOutcomes       : outcomeOutput?.data?.projectSocialOutcomes]
     }
 
 

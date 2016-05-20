@@ -1,6 +1,6 @@
 
 
-var ActivityViewModel = function(activity) {
+var GreenArmyActivityViewModel = function(activity) {
     var self = this;
     $.extend(self, activity);
 
@@ -31,7 +31,7 @@ var ReportViewModel = function(report) {
     self.activitiesVisible = ko.observable(false);
     self.activities = [];
     $.each(report.activities, function(i, activity) {
-        self.activities.push(new ActivityViewModel(activity));
+        self.activities.push(new GreenArmyActivityViewModel(activity));
     });
     self.editable = (report.bulkEditable || self.activities.length == 1) && (report.publicationStatus != 'published' && report.publicationStatus != 'pendingApproval');
 
