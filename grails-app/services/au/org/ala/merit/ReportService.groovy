@@ -162,6 +162,10 @@ class ReportService {
         history
     }
 
+    Map findMostRecentlySubmittedOrApprovedReport(List reports) {
+        reports.max{ isSubmittedOrApproved(it) ? it.toDate : ''}
+    }
+
     def submit(String reportId) {
         webService.doPost(grailsApplication.config.ecodata.baseUrl+"report/submit/${reportId}", [:])
     }

@@ -121,6 +121,53 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
     }
 
     @PreAuthorise(accessLevel = 'admin')
+    def projectReport(String id) {
+        Map project = projectService.get(id, 'all')
+        List publicImages = project.documents.findAll{it.public == true && it.thirdPartyConsentDeclarationMade == true && it.type == 'image'}
+
+        Map<String, Map<String, Integer>> activityCountByStage = new TreeMap()
+        project.reports?.each { Map report ->
+            List activities = project.activities?.findAll{it.plannedEndDate > report.fromDate && it.plannedEndDate <= report.toDate}
+            Map<String, List> activitiesByProgress = activities?.groupBy{it.progress?it.progress:'planned'}
+
+            activityCountByStage << [(report.name):new TreeMap()]
+            activitiesByProgress.each{ status, activityList ->
+                activityCountByStage[report.name].put(status, activityList?activityList.size():0)
+            }
+        }
+
+        Map activitiesModel = metadataService.activitiesModel()
+        Set activityModels = new HashSet()
+        Map outputModels = [:]
+        project.activities?.each { activity ->
+            Map activityModel = activitiesModel.activities.find{it.name == activity.type}
+            activityModels << activityModel
+            activityModel.outputs.each { outputName ->
+                outputModels << [(outputName):metadataService.getDataModelFromOutputName(outputName)]
+
+            }
+        }
+
+        Map<String, List> activitiesByStage = project.activities.groupBy {
+            reportService.findReportForDate(it.plannedEndDate, project.reports)?.name ?: ''
+        }
+
+        Map latestStageReport = project.activities?.find {
+            it.type == ProjectService.STAGE_REPORT_ACTIVITY_TYPE && reportService.isSubmittedOrApproved(it)
+        }?.max { it.plannedEndDate }
+
+        Map stageReportModel = activitiesModel.activities.find {it.name == ProjectService.STAGE_REPORT_ACTIVITY_TYPE}
+
+        List outcomes = project.custom?.details?.objectives?.rows1?.findAll{it.description}
+
+
+        [project:project, images:publicImages, activityCountByStage:activityCountByStage, outcomes:outcomes, metrics: projectService.summary(id),
+        activityModels:activityModels, activitiesByStage:activitiesByStage, outputModels:outputModels, stageReportModel:stageReportModel, latestStageReport:latestStageReport]
+    }
+
+
+
+    @PreAuthorise(accessLevel = 'admin')
 	def previewStageReport(){
         String projectId =  params.id
         String reportId = params.reportId

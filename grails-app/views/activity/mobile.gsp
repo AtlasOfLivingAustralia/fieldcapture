@@ -153,6 +153,8 @@
         <!-- add the dynamic components -->
             <md:modelView model="${model}" site="${site}" edit="true" disableTableUpload="true" output="${outputName}" />
         </div>
+        <g:render template="/output/outputJSModel" plugin="fieldcapture-plugin" model="${[viewModelInstance:blockId+'ViewModel', edit:true]}"></g:render>
+
         <r:script>
         $(function(){
 
@@ -174,6 +176,7 @@
                 if (notCompleted === undefined) {
                     notCompleted = config.collapsedByDefault;
                 }
+                self.transients.selectedSite = ko.observable(site);
                 self.outputNotCompleted = ko.observable(notCompleted);
                 self.transients.optional = config.optional || false;
                 self.transients.questionText = config.optionalQuestionText || 'Not applicable';
