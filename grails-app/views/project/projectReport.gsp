@@ -7,91 +7,27 @@
     <r:script disposition="head">
     var fcConfig = {
         serverUrl: "${grailsApplication.config.grails.serverURL}",
-        projectUpdateUrl: "${createLink(action: 'ajaxUpdate', id: project.projectId)}",
-        sitesDeleteUrl: "${createLink(controller: 'site', action: 'ajaxDeleteSitesFromProject', id:project.projectId)}",
-        siteDeleteUrl: "${createLink(controller: 'site', action: 'ajaxDeleteSiteFromProject', id:project.projectId)}",
         siteViewUrl: "${createLink(controller: 'site', action: 'index')}",
-        siteEditUrl: "${createLink(controller: 'site', action: 'edit')}",
-        removeSiteUrl: "${createLink(controller: 'site', action: '')}",
-        activityEditUrl: "${createLink(controller: 'activity', action: 'edit')}",
-        activityEnterDataUrl: "${createLink(controller: 'activity', action: 'enterData')}",
-        activityPrintUrl: "${createLink(controller: 'activity', action: 'print')}",
-        activityCreateUrl: "${createLink(controller: 'activity', action: 'createPlan')}",
-        activityUpdateUrl: "${createLink(controller: 'activity', action: 'ajaxUpdate')}",
-        activityDeleteUrl: "${createLink(controller: 'activity', action: 'ajaxDelete')}",
         activityViewUrl: "${createLink(controller: 'activity', action: 'index')}",
-        siteCreateUrl: "${createLink(controller: 'site', action: 'createForProject', params: [projectId:project.projectId])}",
-        siteSelectUrl: "${createLink(controller: 'site', action: 'select', params:[projectId:project.projectId])}&returnTo=${createLink(controller: 'project', action: 'index', id: project.projectId)}",
-        siteUploadUrl: "${createLink(controller: 'site', action: 'uploadShapeFile', params:[projectId:project.projectId])}&returnTo=${createLink(controller: 'project', action: 'index', id: project.projectId)}",
-        starProjectUrl: "${createLink(controller: 'project', action: 'starProject')}",
-        addUserRoleUrl: "${createLink(controller: 'user', action: 'addUserAsRoleToProject')}",
-        removeUserWithRoleUrl: "${createLink(controller: 'user', action: 'removeUserWithRole')}",
-        projectMembersUrl: "${createLink(controller: 'project', action: 'getMembersForProjectId')}",
         spatialBaseUrl: "${grailsApplication.config.spatial.baseUrl}",
         spatialWmsCacheUrl: "${grailsApplication.config.spatial.wms.cache.url}",
         spatialWmsUrl: "${grailsApplication.config.spatial.wms.url}",
-        sldPolgonDefaultUrl: "${grailsApplication.config.sld.polgon.default.url}",
-        sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}",
         organisationLinkBaseUrl: "${createLink(controller:'organisation', action:'index')}",
         imageLocation:"${resource(dir:'/images')}",
-        documentUpdateUrl: "${createLink(controller:"document", action:"documentUpdate")}",
-        documentDeleteUrl: "${createLink(controller:"document", action:"deleteDocument")}",
-        pdfgenUrl: "${createLink(controller: 'resource', action: 'pdfUrl')}",
-        pdfViewer: "${createLink(controller: 'resource', action: 'viewer')}",
-        imgViewer: "${createLink(controller: 'resource', action: 'imageviewer')}",
-        audioViewer: "${createLink(controller: 'resource', action: 'audioviewer')}",
-        videoViewer: "${createLink(controller: 'resource', action: 'videoviewer')}",
-        errorViewer: "${createLink(controller: 'resource', action: 'error')}",
-        createBlogEntryUrl: "${createLink(controller: 'blog', action:'create', params:[projectId:project.projectId, returnTo:createLink(controller: 'project', action: 'index', id: project.projectId)])}%23overview",
-        editBlogEntryUrl: "${createLink(controller: 'blog', action:'edit', params:[projectId:project.projectId, returnTo:createLink(controller: 'project', action: 'index', id: project.projectId)])}%23overview",
-        deleteBlogEntryUrl: "${createLink(controller: 'blog', action:'delete', params:[projectId:project.projectId])}",
-        shapefileDownloadUrl: "${createLink(controller:'project', action:'downloadShapefile', id:project.projectId)}",
-        regenerateStageReportsUrl: "${createLink(controller:'project', action:'regenerateStageReports', id:project.projectId)}",
         returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
-
     },
         here = window.location.href;
 
     </r:script>
 
 
-    <r:require modules="knockout, activity, jqueryValidationEngine"/>
+    <r:require modules="knockout, activity, jqueryValidationEngine, merit_projects"/>
 </head>
 <body>
 <div class="container">
 
-    <ul class="breadcrumb">
-        <li>
-            <g:link controller="home">Home</g:link> <span class="divider">/</span>
-        </li>
-        <li class="active">Projects <span class="divider">/</span></li>
-        <li class="active" data-bind="text:name"></li>
-    </ul>
 
-    <div class="row-fluid">
-        <div class="row-fluid">
-            <div class="clearfix">
-                <h1 class="pull-left" data-bind="text:name"></h1>
-                <g:if test="${flash.errorMessage || flash.message}">
-                    <div class="span5">
-                        <div class="alert alert-error">
-                            <button class="close" onclick="$('.alert').fadeOut();" href="#">×</button>
-                            ${flash.errorMessage?:flash.message}
-                        </div>
-                    </div>
-                </g:if>
-                <div class="pull-right">
-                    <g:set var="disabled">${(!user) ? "disabled='disabled' title='login required'" : ''}</g:set>
-                    <g:if test="${isProjectStarredByUser}">
-                        <button class="btn" id="starBtn"><i class="icon-star"></i> <span>Remove from favourites</span></button>
-                    </g:if>
-                    <g:else>
-                        <button class="btn" id="starBtn" ${disabled}><i class="icon-star-empty"></i> <span>Add to favourites</span></button>
-                    </g:else>
-                </div>
-            </div>
-        </div>
-    </div>
+    <h1>MERIT Project Summary</h1>
 
     <div class="overview">
         <div class="row-fluid">
@@ -143,24 +79,24 @@
             <div class="span3 title">Summary generated</div>
             <div class="span9"><g:formatDate format="yyyy-MM-dd HH:mm:ss" date="${new Date()}"/></div>
         </div>
-        <div class="row-fluid">
+        <div class="row-fluid" id="report-status">
             <div class="span3 title">Current report status</div>
-            <div class="span9">maybe use knockout logic for this....</div>
+            <div class="span9" data-bind="text:currentStatus"></div>
         </div>
 
     </div>
 
-    <h1>Project Overview</h1>
+    <h3>Project Overview</h3>
     <p>${project.description}</p>
 
-    <h1>Main project images</h1>
+    <h3>Main project images</h3>
 
         <g:each in="${images}" var="image">
             <img src="${image.thumbnailUrl?:image.url}"/>
         </g:each>
     </p>
 
-    <h1>Number of activities</h1>
+    <h3>Number of activities</h3>
     <table class="table table-striped">
         <thead>
             <tr>
@@ -182,7 +118,7 @@
         </tbody>
     </table>
 
-    <h1>Supporting documents</h1>
+    <h3>Supporting documents</h3>
     <table class="table table-striped">
         <thead>
         <tr>
@@ -203,8 +139,8 @@
 
 
     <g:if test="${outcomes}">
-    <h1>Project outcomes</h1>
-    <table>
+    <h3>Project outcomes</h3>
+    <table class="table table-striped">
         <thead>
         <tr>
             <th>Outcomes</th>
@@ -245,62 +181,116 @@
         </div>
     </g:if>
 
-    <h1>Summary of project progress and issues</h1>
-
-    <h1>Project risk</h1>
-
-    <h1>Progress against each activity</h1>
-
     <g:each in="${outputModels}" var="outputModel">
         <g:render template="/output/outputJSModel" plugin="fieldcapture-plugin"
                   model="${[model:outputModel.value, outputName:outputModel.key, edit:false, speciesLists:[]]}"></g:render>
     </g:each>
 
+    <g:if test="${latestStageReport}">
 
-    <g:each in="${project.activities}" var="activity">
-        <g:set var="activityModel" value="${activityModels.find{it.name == activity.type}}"/>
-        <g:each in="${activityModel.outputs}" var="outputName">
-            <g:set var="blockId" value="${activity.activityId+fc.toSingleWord([name: outputName])}"/>
-            <g:set var="model" value="${outputModels[outputName]}"/>
-            <g:set var="output" value="${activity.outputs.find {it.name == outputName}}"/>
-            <g:if test="${!output}">
-                <g:set var="output" value="[name: outputName]"/>
-            </g:if>
-            <div class="output-block" id="ko${blockId}">
-                <h3>${outputName}</h3>
-                <div data-bind="if:outputNotCompleted">
-                    <label class="checkbox" ><input type="checkbox" disabled="disabled" data-bind="checked:outputNotCompleted"> <span data-bind="text:transients.questionText"></span> </label>
-                </div>
-                <g:if test="${!output.outputNotCompleted}">
-                    <!-- add the dynamic components -->
-                    <md:modelView model="${model}" site="${site}"/>
-                </g:if>
-                <r:script>
-        $(function(){
-
-            var viewModelName = "${fc.toSingleWord(name:outputName)}ViewModel";
-            var viewModelInstance = "${blockId}Instance";
-
-            var output = <fc:modelAsJavascript model="${output}"/>;
-            var config = ${fc.modelAsJavascript(model:activityModel.outputConfig?.find{it.outputName == outputName}, default:'{}')};
-
-            window[viewModelInstance] = new window[viewModelName](output, site, config);
-            window[viewModelInstance].loadData(output.data || {}, <fc:modelAsJavascript model="${activity.documents}"/>);
-
-            ko.applyBindings(window[viewModelInstance], document.getElementById("ko${blockId}"));
-        });
-
-                </r:script>
-            </div>
-
+        <h3>Summary of project progress and issues</h3>
+        <g:each in="${stageReportModel.outputs}" var="outputName">
+            <g:render template="/output/readOnlyOutput"
+                  model="${[activity:latestStageReport,
+                            outputModel:outputModels[outputName],
+                            outputName:outputName,
+                            activityModel:stageReportModel]}"
+                  plugin="fieldcapture-plugin"></g:render>
         </g:each>
 
+    </g:if>
+
+    <g:if test="${project.risks?.rows}">
+    <h3>Project risk</h3>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Type of threat / risk</th>
+            <th>Description</th>
+            <th>Likelihood</th>
+            <th>Consequence</th>
+            <th>Risk rating</th>
+            <th>Current control / <br/>Contingency strategy</th>
+            <th>Residual risk</th>
+        </tr>
+        </thead>
+        <tbody>
+        <g:each in="${project.risks.rows}" var="risk">
+            <tr>
+                <td>${risk.threat}</td>
+                <td>${risk.description}</td>
+                <td>${risk.likelihood}</td>
+                <td>${risk.consequence}</td>
+                <td>${risk.riskRating}</td>
+                <td>${risk.currentControl}</td>
+                <td>${risk.residualRisk}</td>
+            </tr>
+        </g:each>
+
+        </tbody>
+    </table>
+    </g:if>
+
+    <h3>Progress against each activity</h3>
+
+    <g:each in="${activitiesByStage}" var="activitiesForStage">
+        <h3>${activitiesForStage.key}</h3>
+        <g:each in="${activitiesForStage.value}" var="activity">
+            <div class="activity-header">
+                <div class="row-fluid">
+                    <div class="span3 title">Activity type</div>
+                    <div class="span9">${activity.type}</div>
+                </div>
+                <div class="row-fluid">
+                    <div class="span3 title">Status</div>
+                    <div class="span9">${activity.progress}</div>
+                </div>
+                <div class="row-fluid">
+                    <div class="span3 title">Description</div>
+                    <div class="span9">${activity.description}</div>
+                </div>
+                <div class="row-fluid">
+                    <div class="span3 title">Major theme</div>
+                    <div class="span9">${activity.theme}</div>
+                </div>
+                <div class="row-fluid">
+                    <div class="span3 title">Start date</div>
+                    <div class="span9">${DateUtils.isoToDisplayFormat(activity.startDate ?: activity.plannedStartDate)}</div>
+                </div>
+                <div class="row-fluid">
+                    <div class="span3 title">End date</div>
+                    <div class="span9">${DateUtils.isoToDisplayFormat(activity.endDate ?: activity.plannedEndDate)}</div>
+                </div>
+            </div>
+            <g:set var="activityModel" value="${activityModels.find{it.name == activity.type}}"/>
+            <g:each in="${activityModel.outputs}" var="outputName">
+                <g:if test="${outputName != 'Photo Points'}">
+                    <g:render template="/output/readOnlyOutput"
+                              model="${[activity:activity,
+                                        outputModel:outputModels[outputName],
+                                        outputName:outputName,
+                                        activityModel:activityModel]}"
+                              plugin="fieldcapture-plugin"></g:render>
+                </g:if>
+
+            </g:each>
+
+        </g:each>
     </g:each>
 
 
 
 
-
 </div>
+<r:script>
+    $(function() {
+
+        var reports = <fc:modelAsJavascript model="${project.reports}"/>;
+        var reportVM = new ProjectReportsViewModel({reports:reports});
+        ko.applyBindings(reportVM, document.getElementById('report-status'));
+
+    });
+</r:script>
 </body>
 </html>

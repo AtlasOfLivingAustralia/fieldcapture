@@ -139,7 +139,7 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
         Map activitiesModel = metadataService.activitiesModel()
         Set activityModels = new HashSet()
         Map outputModels = [:]
-        project.activities.each { activity ->
+        project.activities?.each { activity ->
             Map activityModel = activitiesModel.activities.find{it.name == activity.type}
             activityModels << activityModel
             activityModel.outputs.each { outputName ->
@@ -148,12 +148,21 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
             }
         }
 
+        Map<String, List> activitiesByStage = project.activities.groupBy {
+            reportService.findReportForDate(it.plannedEndDate, project.reports)?.name ?: ''
+        }
 
+        Map latestStageReport = project.activities?.find {
+            it.type == ProjectService.STAGE_REPORT_ACTIVITY_TYPE && reportService.isSubmittedOrApproved(it)
+        }?.max { it.plannedEndDate }
+
+        Map stageReportModel = activitiesModel.activities.find {it.name == ProjectService.STAGE_REPORT_ACTIVITY_TYPE}
 
         List outcomes = project.custom?.details?.objectives?.rows1?.findAll{it.description}
 
+
         [project:project, images:publicImages, activityCountByStage:activityCountByStage, outcomes:outcomes, metrics: projectService.summary(id),
-        activityModels:activityModels, outputModels:outputModels]
+        activityModels:activityModels, activitiesByStage:activitiesByStage, outputModels:outputModels, stageReportModel:stageReportModel, latestStageReport:latestStageReport]
     }
 
 

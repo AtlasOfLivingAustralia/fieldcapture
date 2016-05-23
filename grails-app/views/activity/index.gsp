@@ -82,40 +82,19 @@
     </div>
 <!-- ko stopBinding: true -->
     <g:each in="${metaModel?.outputs}" var="outputName">
+
         <g:if test="${outputName != 'Photo Points'}">
-        <g:set var="blockId" value="${fc.toSingleWord([name: outputName])}"/>
-        <g:set var="model" value="${outputModels[outputName]}"/>
-        <g:set var="output" value="${activity.outputs.find {it.name == outputName}}"/>
-        <g:if test="${!output}">
-            <g:set var="output" value="[name: outputName]"/>
-        </g:if>
-        <div class="output-block" id="ko${blockId}">
-            <h3>${outputName}</h3>
-            <div data-bind="if:outputNotCompleted">
-                <label class="checkbox" ><input type="checkbox" disabled="disabled" data-bind="checked:outputNotCompleted"> <span data-bind="text:transients.questionText"></span> </label>
-            </div>
-            <g:if test="${!output.outputNotCompleted}">
-                <!-- add the dynamic components -->
-                <md:modelView model="${model}" site="${site}"/>
-            </g:if>
-            <g:render template="/output/outputJSModel" plugin="fieldcapture-plugin" model="${[viewModelInstance:blockId+'ViewModel', edit:true, outputName:output.name]}"></g:render>
-            <r:script>
-        $(function(){
+            <g:render template="/output/outputJSModel" plugin="fieldcapture-plugin"
+                      model="${[viewModelInstance:activity.activityId+fc.toSingleWord([name: outputName])+'ViewModel',
+                                edit:false, model:outputModels[outputName],
+                                outputName:outputName]}"></g:render>
+            <g:render template="/output/readOnlyOutput"
+                      model="${[activity:activity,
+                                outputModel:outputModels[outputName],
+                                outputName:outputName,
+                                activityModel:metaModel]}"
+                      plugin="fieldcapture-plugin"></g:render>
 
-            var viewModelName = "${blockId}ViewModel";
-            var viewModelInstance = viewModelName + "Instance";
-
-            var output = <fc:modelAsJavascript model="${output}"/>;
-            var config = ${fc.modelAsJavascript(model:metaModel.outputConfig?.find{it.outputName == outputName}, default:'{}')};
-
-            window[viewModelInstance] = new window[viewModelName](output, site, config);
-            window[viewModelInstance].loadData(output.data || {}, <fc:modelAsJavascript model="${activity.documents}"/>);
-
-            ko.applyBindings(window[viewModelInstance], document.getElementById("ko${blockId}"));
-        });
-
-            </r:script>
-        </div>
         </g:if>
     </g:each>
 <!-- /ko -->
