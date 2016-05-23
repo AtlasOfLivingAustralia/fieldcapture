@@ -152,7 +152,7 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
             reportService.findReportForDate(it.plannedEndDate, project.reports)?.name ?: ''
         }
 
-        Map latestStageReport = project.activities?.find {
+        Map latestStageReport = project.activities?.findAll {
             it.type == ProjectService.STAGE_REPORT_ACTIVITY_TYPE && reportService.isSubmittedOrApproved(it)
         }?.max { it.plannedEndDate }
 

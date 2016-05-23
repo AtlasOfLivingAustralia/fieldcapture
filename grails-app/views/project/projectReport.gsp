@@ -50,10 +50,10 @@
         </div>
         <div class="row-fluid">
             <div class="span3 title">Funding</div>
-            <g:set var="funding" value="${(project.funding?:project.custom?.details?.budget?.overallTotal)}"/>
+            <g:set var="funding" value="${(project.custom?.details?.budget?.overallTotal?:project.funding)}"/>
             <div class="span9">
                 <g:if test="${funding}">
-                    <g:formatNumber type="currency" number=""/>
+                    <g:formatNumber type="currency" number="${funding}"/>
                 </g:if>
             </div>
         </div>
@@ -191,7 +191,8 @@
         <h3>Summary of project progress and issues</h3>
         <g:each in="${stageReportModel.outputs}" var="outputName">
             <g:render template="/output/readOnlyOutput"
-                  model="${[activity:latestStageReport,
+                  model="${[divId:'latest-stage-report-'+outputName,
+                            activity:latestStageReport,
                             outputModel:outputModels[outputName],
                             outputName:outputName,
                             activityModel:stageReportModel]}"
