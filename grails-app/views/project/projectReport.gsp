@@ -1,8 +1,8 @@
-<%@ page import="au.org.ala.fieldcapture.DateUtils" contentType="text/html;charset=UTF-8" %>
+<%@ page import="au.org.ala.fieldcapture.ActivityService; au.org.ala.fieldcapture.DateUtils" contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
+    <meta name="layout" content="${(grailsApplication.config.layout.skin?:'main')+'Print'}"/>
     <title>Report | Project | MERIT</title>
     <r:script disposition="head">
     var fcConfig = {
@@ -19,7 +19,10 @@
         here = window.location.href;
 
     </r:script>
-
+    <style type="text/css">
+        .title { font-weight: bold;}
+        .generated-by { border-top: 2px solid; padding-top: 15px;}
+    </style>
 
     <r:require modules="knockout, activity, jqueryValidationEngine, merit_projects"/>
 </head>
@@ -89,28 +92,30 @@
     <h3>Project Overview</h3>
     <p>${project.description}</p>
 
+    <g:if test="${images}">
     <h3>Main project images</h3>
 
         <g:each in="${images}" var="image">
             <img src="${image.thumbnailUrl?:image.url}"/>
         </g:each>
-    </p>
+    </g:if>
 
     <h3>Number of activities</h3>
+
     <table class="table table-striped">
         <thead>
             <tr>
-                <g:each in="${activityCountByStage}" var="entry">
-                    <th colspan="2">${entry.key}</th>
+                <g:each in="${['', 'Planned', 'Started', 'Finished', 'Deferred', 'Cancelled']}" var="progress">
+                    <th>${progress}</th>
                 </g:each>
             </tr>
         </thead>
         <tbody>
-            <g:each in="${['Planned', 'Started', 'Finished', 'Deferred', 'Cancelled']}" var="progress">
+            <g:each in="${orderedStageNames}" var="stage">
                 <tr>
-                    <g:each in="${activityCountByStage}" var="entry">
-                        <td>${progress}</td>
-                        <td>${entry.value[progress.toLowerCase()]?:0}</td>
+                    <th>${stage}</th>
+                    <g:each in="${['Planned', 'Started', 'Finished', 'Deferred', 'Cancelled']}" var="progress">
+                        <td>${activityCountByStage[stage][progress.toLowerCase()]?:0}</td>
                     </g:each>
                 </tr>
             </g:each>
@@ -118,6 +123,8 @@
         </tbody>
     </table>
 
+
+    <g:if test="${project.documents}">
     <h3>Supporting documents</h3>
     <table class="table table-striped">
         <thead>
@@ -136,6 +143,7 @@
 
         </tbody>
     </table>
+    </g:if>
 
 
     <g:if test="${outcomes}">
@@ -160,8 +168,8 @@
     </g:if>
 
     <g:if test="${metrics.targets}">
-        <h4>Progress against output targets</h4>
-        <div class="row-fluid">
+        <h3>Progress against output targets</h3>
+        <div class="row-fluid" id="dashboard">
             <div class="span4">
                 <g:set var="count" value="${metrics.targets.size()}"/>
                 <g:each in="${metrics.targets?.entrySet()}" var="metric" status="i">
@@ -233,54 +241,66 @@
     </table>
     </g:if>
 
-    <h3>Progress against each activity</h3>
 
-    <g:each in="${activitiesByStage}" var="activitiesForStage">
-        <h3>${activitiesForStage.key}</h3>
-        <g:each in="${activitiesForStage.value}" var="activity">
-            <div class="activity-header">
-                <div class="row-fluid">
-                    <div class="span3 title">Activity type</div>
-                    <div class="span9">${activity.type}</div>
-                </div>
-                <div class="row-fluid">
-                    <div class="span3 title">Status</div>
-                    <div class="span9">${activity.progress}</div>
-                </div>
-                <div class="row-fluid">
-                    <div class="span3 title">Description</div>
-                    <div class="span9">${activity.description}</div>
-                </div>
-                <div class="row-fluid">
-                    <div class="span3 title">Major theme</div>
-                    <div class="span9">${activity.theme}</div>
-                </div>
-                <div class="row-fluid">
-                    <div class="span3 title">Start date</div>
-                    <div class="span9">${DateUtils.isoToDisplayFormat(activity.startDate ?: activity.plannedStartDate)}</div>
-                </div>
-                <div class="row-fluid">
-                    <div class="span3 title">End date</div>
-                    <div class="span9">${DateUtils.isoToDisplayFormat(activity.endDate ?: activity.plannedEndDate)}</div>
-                </div>
-            </div>
-            <g:set var="activityModel" value="${activityModels.find{it.name == activity.type}}"/>
-            <g:each in="${activityModel.outputs}" var="outputName">
-                <g:if test="${outputName != 'Photo Points'}">
-                    <g:render template="/output/readOnlyOutput"
-                              model="${[activity:activity,
-                                        outputModel:outputModels[outputName],
-                                        outputName:outputName,
-                                        activityModel:activityModel]}"
-                              plugin="fieldcapture-plugin"></g:render>
-                </g:if>
+    <g:if test="${activitiesByStage}">
+        <h3>Progress against each activity</h3>
 
+        <g:each in="${orderedStageNames}" var="stage">
+            <g:if test="${activitiesByStage[stage]}">
+            <h3>${stage}</h3>
+            <g:each in="${activitiesByStage[stage]}" var="activity">
+                <div class="activity-header">
+                    <div class="row-fluid">
+                        <div class="span3 title">Activity type</div>
+                        <div class="span9">${activity.type}</div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span3 title">Status</div>
+                        <div class="span9">${activity.progress}</div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span3 title">Description</div>
+                        <div class="span9">${activity.description}</div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span3 title">Major theme</div>
+                        <div class="span9">${activity.theme}</div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span3 title">Start date</div>
+                        <div class="span9">${DateUtils.isoToDisplayFormat(activity.startDate ?: activity.plannedStartDate)}</div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span3 title">End date</div>
+                        <div class="span9">${DateUtils.isoToDisplayFormat(activity.endDate ?: activity.plannedEndDate)}</div>
+                    </div>
+                </div>
+                <g:set var="activityModel" value="${activityModels.find{it.name == activity.type}}"/>
+                <g:each in="${activityModel.outputs}" var="outputName">
+                    <g:if test="${outputName != 'Photo Points'}">
+                        <g:render template="/output/readOnlyOutput"
+                                  model="${[activity:activity,
+                                            outputModel:outputModels[outputName],
+                                            outputName:outputName,
+                                            activityModel:activityModel]}"
+                                  plugin="fieldcapture-plugin"></g:render>
+                    </g:if>
+
+                </g:each>
             </g:each>
-
+            </g:if>
         </g:each>
-    </g:each>
+    </g:if>
 
 
+    <div class="row-fluid generated-by">
+        <div class="span3">Summary generated by:</div>
+        <div class="span9"><fc:currentUserDisplayName></fc:currentUserDisplayName></div>
+    </div>
+    <div class="row-fluid">
+        <div class="span3">Position / role:</div>
+        <div class="span9">${role}</div>
+    </div>
 
 
 </div>
