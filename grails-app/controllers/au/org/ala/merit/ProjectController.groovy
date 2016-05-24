@@ -123,7 +123,13 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
     @PreAuthorise(accessLevel = 'admin')
     def projectReport(String id) {
         Map project = projectService.get(id, 'all')
+        final int MAX_IMAGES = 6
         List publicImages = project.documents.findAll{it.public == true && it.thirdPartyConsentDeclarationMade == true && it.type == 'image'}
+        if (publicImages.size() > MAX_IMAGES) {
+            publicImages = publicImages.subList(0, MAX_IMAGES)
+        }
+
+        List orderedStageNames = project.reports?.sort{it.toDate}.collect{it.name}
 
         Map<String, Map<String, Integer>> activityCountByStage = new TreeMap()
         project.reports?.each { Map report ->
@@ -148,8 +154,27 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
             }
         }
 
-        Map<String, List> activitiesByStage = project.activities.groupBy {
-            reportService.findReportForDate(it.plannedEndDate, project.reports)?.name ?: ''
+        Map activitiesByStage = [:].withDefault{[]}
+        project.activities?.each { activity ->
+            if (activityService.isFinished(activity)) {
+                Map report = reportService.findReportForDate(activity.plannedEndDate, project.reports)
+                if (report && report.name) {
+                    activitiesByStage[report.name] << activity
+                }
+            }
+        }
+        String role
+        if (userService.userIsAlaOrFcAdmin()) {
+            role = 'MERIT Administrator and authorised representative of Commonwealth Department of Environment'
+        }
+        else if (userService.isUserCaseManagerForProject(userService.getCurrentUserId(), id)) {
+            role = 'MERIT Grant Manager and authorised representative of Commonwealth Department of Environment'
+        }
+        else if (userService.isUserAdminForProject(userService.getCurrentUserId(), id)) {
+            role = 'MERIT Project Administrator and authorised representative of Commonwealth Department of Environment'
+        }
+        else {
+            role = 'MERIT user'
         }
 
         Map latestStageReport = project.activities?.findAll {
@@ -160,9 +185,8 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
 
         List outcomes = project.custom?.details?.objectives?.rows1?.findAll{it.description}
 
-
-        [project:project, images:publicImages, activityCountByStage:activityCountByStage, outcomes:outcomes, metrics: projectService.summary(id),
-        activityModels:activityModels, activitiesByStage:activitiesByStage, outputModels:outputModels, stageReportModel:stageReportModel, latestStageReport:latestStageReport]
+        [project:project, role:role, images:publicImages, activityCountByStage:activityCountByStage, outcomes:outcomes, metrics: projectService.summary(id),
+        activityModels:activityModels, orderedStageNames:orderedStageNames, activitiesByStage:activitiesByStage, outputModels:outputModels, stageReportModel:stageReportModel, latestStageReport:latestStageReport]
     }
 
 
