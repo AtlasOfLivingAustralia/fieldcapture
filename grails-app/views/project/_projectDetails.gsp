@@ -216,7 +216,8 @@
 	    	</div>
 		</div>
 		</g:if>
-		
+
+		<g:if test="${projectContent.risksAndThreats.visible}">
 		<div class="row-fluid space-after">
 			<div class="required">
 			        <div id="project-risks-threats" class="well well-small">
@@ -265,6 +266,7 @@
 		        </div>
 			    </div>
 		</div>
+		</g:if>
 
 				
 		<div class="row-fluid space-after">
