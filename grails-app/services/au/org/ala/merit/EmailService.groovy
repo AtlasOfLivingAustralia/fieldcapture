@@ -102,7 +102,7 @@ class EmailService extends au.org.ala.fieldcapture.EmailService {
         )
     }
 
-    def sendGreenArmyReportSubmittedEmail(organisationId, reportDetails) {
+    def sendOrganisationReportSubmittedEmail(organisationId, reportDetails) {
 
         def emailAddresses = getOrganisationEmailAddresses(organisationId)
         def ccEmails = addDefaultsToCC([], emailAddresses)
@@ -118,7 +118,7 @@ class EmailService extends au.org.ala.fieldcapture.EmailService {
     }
 
 
-    def sendGreenArmyReportApprovedEmail(organisationId, reportDetails) {
+    def sendOrganisationReportApprovedEmail(organisationId, reportDetails) {
         def emailAddresses = getOrganisationEmailAddresses(organisationId)
         def ccEmails = addDefaultsToCC(emailAddresses.grantManagerEmails, emailAddresses)
 
@@ -134,7 +134,7 @@ class EmailService extends au.org.ala.fieldcapture.EmailService {
 
     }
 
-    def sendGreenArmyReportRejectedEmail(organisationId, reportDetails) {
+    def sendOrganisationReportRejectedEmail(organisationId, reportDetails) {
 
         def emailAddresses = getOrganisationEmailAddresses(organisationId)
         def ccEmails = addDefaultsToCC(emailAddresses.grantManagerEmails, emailAddresses)

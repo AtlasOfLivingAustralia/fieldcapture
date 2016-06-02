@@ -135,6 +135,14 @@ class ReportService {
         return report.publicationStatus == REPORT_SUBMITTED || report.publicationStatus == REPORT_APPROVED
     }
 
+    Map get(String reportId) {
+        if (!reportId) {
+            throw new IllegalArgumentException("Missing parameter reportId")
+        }
+        def resp = webService.getJson(grailsApplication.config.ecodata.baseUrl+"report/${reportId}")
+        resp
+    }
+
     def delete(String reportId) {
         if (!reportId) {
             throw new IllegalArgumentException("Missing parameter reportId")
@@ -170,12 +178,12 @@ class ReportService {
         webService.doPost(grailsApplication.config.ecodata.baseUrl+"report/submit/${reportId}", [:])
     }
 
-    def approve(String reportId) {
-        webService.doPost(grailsApplication.config.ecodata.baseUrl+"report/approve/${reportId}", [:])
+    def approve(String reportId, String reason) {
+        webService.doPost(grailsApplication.config.ecodata.baseUrl+"report/approve/${reportId}", [comment:reason])
     }
 
-    def reject(String reportId) {
-        webService.doPost(grailsApplication.config.ecodata.baseUrl+"report/returnForRework/${reportId}", [:])
+    def reject(String reportId, String reason) {
+        webService.doPost(grailsApplication.config.ecodata.baseUrl+"report/returnForRework/${reportId}", [comment:reason])
     }
 
     def create(report) {
@@ -195,6 +203,16 @@ class ReportService {
             return reports.resp.projectReports.groupBy{it.projectId}
         }
 
+    }
+
+    def findReportsForOrganisation(String organisationId) {
+
+        def reports = webService.doPost(grailsApplication.config.ecodata.baseUrl+"organisation/${organisationId}/reports", [:])
+
+        if (reports.resp && !reports.error) {
+            return reports.resp
+        }
+        return []
     }
 
     /**

@@ -8,7 +8,7 @@ import org.joda.time.Period
 
 class ReportController extends au.org.ala.fieldcapture.ReportController {
 
-    def activityService, projectService, organisationService, commonService, statisticsFactory
+    def activityService, projectService, organisationService, commonService, statisticsFactory, reportService
 
     static defaultAction = "dashboard"
 
@@ -266,6 +266,82 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
         def statistics = statisticsFactory.randomGroup(exclude)
         session.lastGroup = statistics.group
         render view:'_statistics', layout:'ajax', model:[statistics:statistics.statistics]
+    }
+
+    def performanceReport(String id) {
+
+        Map report = reportService.get(id)
+        List themes = ["Regional NRM Organisation Governance", "Australian Government NRM Delivery"]
+
+        List sections = [
+            [title:"1. Organisational Governance",
+             theme:themes[0],
+             questions:[
+                 [text:"1.1\tThe regional NRM organisation is complying with governance responsibilities according to its statutory/incorporation or other legal obligations, including Work, Health and Safety obligations.",name:'1_1'],
+                 [text:"1.2\tThe regional NRM organisation has a process in place for formally reviewing the performance and composition of the regional NRM organisation’s board of directors.",name:'1_2'],
+                 [text:"1.3\tThe regional NRM organisation has organisational decision making processes that are transparent and communicated regularly with the local community.",name:'1_3'],
+                 [text:"1.4\tThe regional NRM organisation ensures all staff and board of directors demonstrate Indigenous cultural awareness.",name:'1_4'],
+                 [text:"1.5\tThe regional NRM organisation regularly communicates organisational and project performance achievements.",name:'1_5']],
+            additionalPracticeQuestion:[text:"1.6\tThe regional NRM organisation has met all the expected practices and has additional practices in place.",name:'1_6']],
+            [title:"2. Financial Governance",
+             theme:themes[0],
+             questions:[
+                     [text:"2.1\tThe regional NRM organisation is complying with financial responsibilities according to its statutory/incorporation or other legal obligations.",name:'2_1'],
+                     [text:"2.2\tThe regional NRM organisation is complying with Australian Government NRM contractual obligations for project financial reporting and management, accurately and on time, including acquittal of funding as required.",name:'2_2'],
+                     [text:"2.3\tThe regional NRM organisation has annual financial reports that are publicly available.",name:'2_3']],
+             additionalPracticeQuestion:[text:"2.4\tThe regional NRM organisation has met all the expected practices and has additional practices in place.",name:'2_4']],
+            [title:"3. Regional NRM plans",
+             theme:themes[1],
+             questions:[
+                    [text:"3.1\tThe regional NRM organisation has a regional NRM plan that provides the strategic direction to NRM activity within the region based on best available scientific, economic and social information.",name:'3_1'],
+                    [text:"3.2\tThe regional NRM organisation has a regional NRM plan that demonstrates strategic alignment with Australian Government and state/territory NRM policies and priorities.",name:'3_2'],
+                    [text:"3.3\tThe regional NRM organisation has a regional NRM plan that has been developed with comprehensive and documented participation of the local community.",name:'3_3'],
+                    [text:"3.4\tThe regional NRM organisation has a regional NRM plan with clear priorities, outcomes and activities to achieve those outcomes.",name:'3_4'],
+                    [text:"3.5\tThe regional NRM organisation has a regional NRM plan that clearly articulates Indigenous land and sea management aspirations and participation and identifies strategies to implement them.",name:'3_5']],
+             additionalPracticeQuestion:[text:"3.6\tThe regional NRM organisation has a regional NRM plan that has met all the expected practices and has additional practices in place.",name:'3_6']],
+            [title:"4. Local community participation and engagement",
+             theme:themes[1],
+             questions:[
+                     [text:"4.1\tThe regional NRM organisation has a current community participation plan and a current Indigenous participation plan.",name:'4_1'],
+                     [text:"4.2\tThe regional NRM organisation has an established process in place that allows the local community to participate in priority setting and/or decision making.",name:'4_2'],
+                     [text:"4.3\tThe regional NRM organisation is actively building the capacity of the local community to participate in NRM through funding support for training, on ground projects and related activities.",name:'4_3'],
+                     [text:"4.4\tThe regional NRM organisation is actively supporting increased participation of Indigenous people in the planning and delivery of NRM projects and investment.",name:'4_4']],
+             additionalPracticeQuestion:[text:"4.5\tThe regional NRM organisation has met all the expected practices and has additional practices in place.",name:'4_5']],
+            [title:"5. Monitoring, Evaluation, Reporting and Improvement ",
+             theme:themes[1],
+             questions:[
+                     [text:"5.1\tThe regional NRM organisation is providing comprehensive, accurate and timely project MERI plans and MERIT reporting.",name:'5_1'],
+                     [text:"5.2\tThe regional NRM organisation is implementing processes to ensure that MERI activities are adequately resourced by appropriately skilled and informed staff.",name:'5_2'],
+                     [text:"5.3\tThe regional NRM organisation is demonstrating and communicating progress towards NRM project outcomes through regular monitoring, evaluation and reporting of project performance and the use of results to guide improved practice.",name:'5_3']],
+             additionalPracticeQuestion:[text:"5.4\tThe regional NRM organisation has met all the expected practices and has additional practices in place. ",name:'5_4']]
+        ]
+
+        Map sectionsByTheme = sections.groupBy{it.theme}
+        sectionsByTheme.each { String k, List v ->
+            v.sort{it.title}
+        }
+
+        String outputName = 'Revegetation Details'
+        [themes:themes, sectionsByTheme:sectionsByTheme, report:report]
+
+    }
+
+    def update(String id) {
+        Map report = request.JSON
+
+        reportService.update(report)
+    }
+
+    def submitPerformanceReport(String reportId) {
+
+    }
+
+    def approvePerformanceReport(String reportId) {
+
+    }
+
+    def returnPerformanceReport(String reportId) {
+
     }
 
 }
