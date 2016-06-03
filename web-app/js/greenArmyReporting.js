@@ -23,8 +23,10 @@ var ReportViewModel = function(report) {
     self.description = report.description || report.name;
     self.fromDate = ko.observable(report.fromDate).extend({simpleDate:false});
     self.toDate =  ko.observable(report.toDate).extend({simpleDate:false});
-    self.dueDate = ko.observable(report.dueDate).extend({simpleDate:false})
+    self.dueDate = ko.observable(report.dueDate).extend({simpleDate:false});
+    self.progress = ko.observable(report.progress || 'planned');
     self.editUrl = '';
+    self.viewUrl = fcConfig.organisationReportUrl + '?&reportId='+report.reportId;
     self.percentComplete = function() {
         if (report.count == 0) {
             return 0;
@@ -51,13 +53,17 @@ var ReportViewModel = function(report) {
     self.title = 'Expand the activity list to complete the reports';
     if (self.editable) {
         self.title = 'Click to complete the report';
-        self.editUrl = fcConfig.organisationReportUrl + '?reportId='+report.reportId;
+        self.editUrl = fcConfig.organisationReportUrl + '?edit=true&reportId='+report.reportId;
     }
+
+    self.viewable = self.progress() == 'finished';
 
     self.isReportable = function() {
         return (report.toDate < new Date().toISOStringNoMillis());
     };
-    self.complete = (report.finishedCount == report.count);
+    self.complete = ko.computed(function() {
+        return self.isReportable() && self.progress() == 'finished' && self.editable;
+    });
     self.approvalTemplate = function() {
         if (!self.isReportable()) {
             return 'notReportable';
@@ -156,6 +162,10 @@ var ReportsViewModel = function(reports, projects, availableReports) {
 
     self.editReport = function(report) {
         window.location = report.editUrl;
+    };
+
+    self.viewReport = function(report) {
+        window.open(report.viewUrl, 'view-report');
     };
 
     self.viewAllReports = function(report) {

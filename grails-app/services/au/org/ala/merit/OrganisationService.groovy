@@ -22,7 +22,7 @@ class OrganisationService extends au.org.ala.fieldcapture.OrganisationService {
             [type: 'Performance expectations framework - self assessment worksheet', period: Period.years(1), bulkEditable: true, businessDaysToCompleteReport:5, adhoc:true]
     ]
 
-    def activityService, messageSource, emailService, reportService
+    def activityService, emailService, reportService, groovyPageRenderer, documentService
 
     /** Overrides the parent to add Green Army reports to the results */
     def get(String id, view = '') {
@@ -118,6 +118,10 @@ class OrganisationService extends au.org.ala.fieldcapture.OrganisationService {
         Map resp = reportService.submit(reportId)
 
         // Create a PDF & document also.
+        Map model = reportService.performanceReportModel(reportId)
+        String reportDoc = groovyPageRenderer.render(view:'/report/performanceReportView', model:model)
+        def doc = [name:model.report.name, organisationId:model.organisationId, reportId:reportId, saveAs:'pdf', type:'pdf', role:'report',filename:organisation.name + ' - ' + model.report.name, readOnly:true, public:false]
+        documentService.createTextDocument(doc, reportDoc)
 
         if (!resp.error) {
             emailService.sendOrganisationReportSubmittedEmail(organisationId, [organisation:organisation])

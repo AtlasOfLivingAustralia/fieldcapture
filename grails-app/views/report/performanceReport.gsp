@@ -10,35 +10,10 @@
         };
     </script>
     <r:require modules="knockout, activity, jqueryValidationEngine, merit_projects"/>
-    <style type="text/css">
-        .title-row {
-            background-color: #f5f5f5;
-        }
-        .header th {
-            white-space: normal;
-        }
-
-    td.question {
-        width:45%;
-    }
-    td.meets-expectations {
-        width:5%;
-    }
-    td.evidence {
-        width:45%;
-    }
-    td textarea {
-        width:100%;
-        box-sizing: border-box;
-        height: 5em;
-    }
-
-
-    </style>
 </head>
 
 <body>
-<div class="${containerType} validationEngineContainer">
+<div class="${containerType} validationEngineContainer performance-report">
     <ul class="breadcrumb">
         <li><g:link controller="home">Home</g:link> <span class="divider">/</span></li>
         <li><a class="clickable" href="${g.createLink(controller:'organisation', action:'index', id:report.organisationId)}">Organisation</a> <span class="divider">/</span></li>
@@ -71,7 +46,9 @@
                 <th colspan="4">${theme}</th>
             </tr>
             <g:each in="${sectionsByTheme[theme]}" var="section">
+
                 <g:render template="performanceSelfAssessmentSection" model="${section}"></g:render>
+
             </g:each>
         </g:each>
     </table>
@@ -93,6 +70,7 @@
         autoSaveModel(self, url);
 
         self.reportId = '${report.reportId}';
+        self.progress = 'finished'; // If the report can be validated and saved it is complete.
         self.data = {};
         <g:each in="${themes}" var="theme">
         <g:each in="${sectionsByTheme[theme]}" var="section">
@@ -135,6 +113,7 @@
     $('.validationEngineContainer').validationEngine();
 
 </r:script>
+
 
 </body>
 </html>

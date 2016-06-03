@@ -25,8 +25,8 @@
 
         <tr>
             <td>
-                %{--<button type="button" class="btn btn-container" data-bind="click:$root.viewAllReports"><i data-bind="css:{'icon-plus':!activitiesVisible(), 'icon-minus':activitiesVisible()}" title="List all project reports"></i></button>--}%
-                <button type="button" class="btn btn-container" data-bind="visible:editable, click:$root.editReport"><i class="icon-edit" data-bind="attr:{title:title}" title="Complete this report"></i></button>
+                <button type="button" class="btn btn-container" data-bind="visible:editable, click:$root.editReport"><i class="icon-edit" title="Complete this report"></i></button>
+                <button type="button" class="btn btn-container" data-bind="visible:viewable, click:$root.viewReport"><i class="icon-eye-open" title="View this report"></i></button>
             </td>
             <td><a data-bind="visible:editable, attr:{href:editUrl, title:title}" title="Edit reports for all projects in spreadsheet format"><span data-bind="text:description"></span></a>
                 <span data-bind="visible:!editable, text:description"></span>
@@ -99,15 +99,15 @@
                         </div>
 
                         <div class="control-group">
-                            <label class="control-label" for="from">From</label>
+                            <label class="control-label" for="fromDate">From</label>
 
                             <div class="controls">
-                                <fc:datePicker targetField="fromDate.date" name="fromDate" data-validation-engine="validate[required]" printable="${printView}"/>
+                                <fc:datePicker  targetField="fromDate.date" name="fromDate" data-validation-engine="validate[required]" printable="${printView}"/>
                             </div>
                         </div>
 
                         <div class="control-group">
-                            <label class="control-label" for="to">To</label>
+                            <label class="control-label" for="toDate">To</label>
 
                             <div class="controls">
                                 <fc:datePicker targetField="toDate.date" name="toDate" data-validation-engine="validate[required]" printable="${printView}"/>
@@ -133,25 +133,30 @@
 <span class="badge badge-warning">Report not submitted</span><br/>
 </script>
 <script id="notApproved" type="text/html">
-<span class="badge badge-warning">Report not submitted</span><br/>
+    <p><span class="badge badge-warning">Report not submitted</span></p>
+
 <g:if test="${isAdmin || fc.userIsAlaOrFcAdmin()}">
+    <p>
     <button class="btn btn-success btn-small" data-bind="enable:complete,click:submitReport" title="All project reports must be complete and marked as 'finished' before you can submit this report.">Submit report</button>
+    </p>
 </g:if>
 </script>
 <script id="approved" type="text/html">
-<span class="badge badge-success">Report approved</span>
+<p><span class="badge badge-success">Report approved</span></p>
 
 <g:if test="${fc.userIsAlaOrFcAdmin()}">
-    <br/>
+    <p>
     Withdrawal reason:
     <div>
         <textarea style="width:90%;" data-bind="value:reason" data-validation-engine="validate[required]"></textarea>
     </div>
     <button type="button" data-bind="click:rejectReport" class="btn btn-danger"><i class="icon-remove icon-white"></i> Withdraw approval</button></g:if>
+    </p>
 </script>
 <script id="submitted" type="text/html">
-<span class="badge badge-info">Report submitted</span>
-<g:if test="${isGrantManager || fc.userIsAlaOrFcAdmin()}"><br/>
+<p><span class="badge badge-info">Report submitted</span></p>
+<g:if test="${isGrantManager || fc.userIsAlaOrFcAdmin()}">
+    <p>
     Confirm / More Information Reason:
     <div>
     <textarea style="width:90%;" data-bind="value:reason" data-validation-engine="validate[required]"></textarea>
@@ -160,6 +165,7 @@
         <button type="button" data-bind="click:approveReport" class="btn btn-success"><i class="icon-ok icon-white"></i> Confirm</button>
         <button type="button" data-bind="click:rejectReport" class="btn btn-danger"><i class="icon-remove icon-white"></i> More Information Required</button>
     </span>
+    </p>
 </g:if>
 </script>
 </div>
