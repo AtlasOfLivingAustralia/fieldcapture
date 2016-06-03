@@ -6,7 +6,8 @@
     <title>Performance Report | MERIT</title>
     <script type="text/javascript">
         fcConfig = {
-            saveReportUrl:'${g.createLink(controller:'report', action:'update', id:report.reportId)}'
+            saveReportUrl:'${g.createLink(controller:'report', action:'update', id:report.reportId)}',
+            returnToUrl:'${params.returnTo ?: g.createLink(controller:'organisation', action:'index', id:report.organisationId)}'
         };
     </script>
     <r:require modules="knockout, activity, jqueryValidationEngine, merit_projects"/>
@@ -67,7 +68,7 @@
         var self = this;
 
         var url = config.saveReportUrl+'/';
-        autoSaveModel(self, url);
+        autoSaveModel(self, url, {blockUIOnSave:true});
 
         self.reportId = '${report.reportId}';
         self.progress = 'finished'; // If the report can be validated and saved it is complete.
@@ -86,7 +87,9 @@
 
         self.save = function() {
            if ($('.validationEngineContainer').validationEngine('validate')) {
-                self.saveWithErrorDetection();
+                self.saveWithErrorDetection(function() {
+                    window.location = config.returnToUrl;
+                });
            };
         };
 

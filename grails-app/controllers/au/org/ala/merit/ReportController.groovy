@@ -2,6 +2,7 @@ package au.org.ala.merit
 
 import au.org.ala.fieldcapture.DateUtils
 import au.org.ala.fieldcapture.GmsMapper
+import grails.converters.JSON
 import org.joda.time.DateTime
 import org.joda.time.Interval
 import org.joda.time.Period
@@ -285,7 +286,9 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
     def update(String id) {
         Map report = request.JSON
 
-        reportService.update(report)
+        Map result = reportService.update(report)
+
+        render result as JSON
     }
 
 }
