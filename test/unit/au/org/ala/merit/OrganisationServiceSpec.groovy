@@ -19,11 +19,13 @@ class OrganisationServiceSpec extends Specification {
 	def activityService = Mock(ActivityService)
     def projectService = Mock(ProjectService)
 	def webService = Stub(WebService)
+	def reportService = Stub(ReportService)
 
 	def setup() {
         service.projectService = projectService
 		service.activityService = activityService
 		service.webService = webService
+		service.reportService = reportService
 	}
 
 
@@ -37,29 +39,6 @@ class OrganisationServiceSpec extends Specification {
 
 		then:
 		1 * activityService.search([type:['t1', 't2'], projectId:['1', '2', '3'], dateProperty:'plannedEndDate', startDate:"2014-01-01T00:00:00+0000", endDate:'2016-02-28T00:00:00+0000'])
-	}
-
-	void "organisational level reports should be grouped based on report type and reporting period"() {
-
-		given:
-		def organisation = organisationWithProjects()
-		def reportConf
-		use (TimeCategory) {
-			 reportConf = [
-				[type: 't1', period: Period.months(1)],
-				[type: 't2', period: Period.months(3)]]
-		}
-		activityService.search(_) >> [resp:[activities:organisationActivities(organisation)]]
-
-		when:
-		def reports = service.getReportsForOrganisation(organisation, reportConf)
-		def reportsByType = reports.groupBy{it.type}
-
-        then: "2 years, 3 months of monthly reports, the first activity finishes on the 1st of Feb so isn't reportable until Feb"
-		reportsByType['t1'].size() == 26
-
-		and: "9 quarterly reports"
-		reportsByType['t2'].size() == 9
 	}
 
 	void "the projects for an organisation should include projects for which the organisation is the service provider"() {
