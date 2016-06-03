@@ -8,7 +8,7 @@ import org.joda.time.Period
 
 class ReportController extends au.org.ala.fieldcapture.ReportController {
 
-    def activityService, projectService, organisationService, commonService, statisticsFactory
+    def activityService, projectService, organisationService, commonService, statisticsFactory, reportService
 
     static defaultAction = "dashboard"
 
@@ -266,6 +266,26 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
         def statistics = statisticsFactory.randomGroup(exclude)
         session.lastGroup = statistics.group
         render view:'_statistics', layout:'ajax', model:[statistics:statistics.statistics]
+    }
+
+    def performanceReport(String id) {
+
+        Map model = reportService.performanceReportModel(id)
+
+        boolean edit = params.edit
+        if (reportService.isSubmittedOrApproved(model.report)) {
+            edit = false
+        }
+        String view = edit ? 'performanceReport' : 'performanceReportView'
+
+        render view: view, model:model
+
+    }
+
+    def update(String id) {
+        Map report = request.JSON
+
+        reportService.update(report)
     }
 
 }
