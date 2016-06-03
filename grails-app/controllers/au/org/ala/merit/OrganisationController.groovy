@@ -38,7 +38,7 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
         def orgRole = members.find { it.userId == user?.userId } ?: [:]
         def hasAdminAccess = userService.userIsSiteAdmin() || orgRole.role == RoleService.PROJECT_ADMIN_ROLE
 
-        def reportingVisible = organisation.reports && hasAdminAccess || userService.userHasReadOnlyAccess()
+        def reportingVisible = (organisation.reports && (hasAdminAccess || userService.userHasReadOnlyAccess())) || userService.userIsAlaOrFcAdmin()
 
         def dashboardReports = [[name:'dashboard', label:'Activity Outputs']]
         if (hasAdminAccess) {
@@ -234,7 +234,7 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
     def editOrganisationReport(String reportId) {
         Map report = reportService.get(reportId)
         if (organisationService.isUserAdminForOrganisation(report.organisationId)) {
-            chain(controller: 'report', action:'performanceReport', id:reportId)
+            chain(controller: 'report', action:'performanceReport', id:reportId, params:[edit:params.edit])
         }
         else {
             flash.message = "You don't have permission to edit the report"
