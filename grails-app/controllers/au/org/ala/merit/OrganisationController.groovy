@@ -44,6 +44,12 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
         if (hasAdminAccess) {
             dashboardReports += [name:'announcements', label:'Announcements']
         }
+        if (reportingVisible) {
+            // We need at least one finished report to show data.
+            if (organisation.reports?.find{it.progress == 'finished'}) {
+                dashboardReports += [name: 'performanceAssessmentSummary', label: 'Performance Assessment Summary']
+            }
+        }
 
         [about     : [label: 'About', visible: true, stopBinding: false, type:'tab'],
          reporting : [label: 'Reporting', visible: reportingVisible, stopBinding:true, default:reportingVisible, type: 'tab'],

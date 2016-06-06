@@ -85,6 +85,26 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
         }
     }
 
+    def performanceAssessmentSummaryReport() {
+        String organisationId = params.organisationId
+
+        List reports = reportService.findReportsForOrganisation(organisationId)
+        reports = reports.findAll{it.progress == 'finished'}.sort{it.fromDate}.reverse()
+
+        if (reports.size()) {
+            Map model = reportService.performanceReportModel(reports[0].reportId)
+            if (reports.size() > 1) {
+                model.previousReport = reports[1]
+            }
+            render view:'_performanceAssessmentSummary', model:model
+        }
+        else {
+            render view:'_noReportData'
+        }
+
+
+    }
+
     def greenArmyReport() {
 
         Integer financialYear = params.getInt('financialYear')

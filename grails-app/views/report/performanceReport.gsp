@@ -82,8 +82,19 @@
         self.data.meetsExpectation${section.additionalPracticeQuestion.name} = ko.observable();
         self.data.evidenceFor${section.additionalPracticeQuestion.name} = ko.observable();
 
+        self.data.${section.name}OverallRating = ko.computed(function() {
+            <g:each in="${section.questions}" var="question">
+            if (self.data.meetsExpectation${question.name}() != 'Yes') {
+                return 0;;
+            }
+            </g:each>
+            return (self.data.meetsExpectation${section.additionalPracticeQuestion.name}() != 'Yes') ? 1 : 2;
+        });
+
         </g:each>
         </g:each>
+
+
 
         self.save = function() {
            if ($('.validationEngineContainer').validationEngine('validate')) {
