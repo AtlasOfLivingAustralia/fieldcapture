@@ -435,4 +435,26 @@ class ReportService {
 
         [themes:themes, sectionsByTheme:sectionsByTheme, report:report]
     }
+
+    Map performanceReport(int year, String state) {
+        List scores = [[name:'regionalNRMPlans', property:'regionalNRMPlansOverallRating'],
+                       [name:'localCommunityParticipationAndEngagement', property:'localCommunityParticipationAndEngagementOverallRating'],
+                       [name:'organisationalGovernance', property:'organisationalGovernanceOverallRating'],
+                       [name:'financialGovernance', property:'financialGovernanceOverallRating'],
+                       [name:'meri', property:'meriOverallRating']]
+
+
+        List<Map> aggregations = []
+        scores.each {
+            aggregations << [type:'HISTOGRAM', label:it.name, property:'data.'+it.property]
+        }
+        Map filter = state?[type:'DISCRETE', property:'data.state']:[:]
+        Map config = [groups:filter, childAggregations: aggregations, label:'Performance assessment by state']
+
+        Map searchCriteria = [type:'Performance Management Framework - Self Assessment', dateProperty:'toDate', 'startDate':(year-1)+'-07-01T10:00:00Z', 'endDate':year+'-07-01T10:00:00Z']
+
+        String url =  grailsApplication.config.ecodata.baseUrl+"report/runReport"
+
+        webService.doPost(url, [searchCriteria: searchCriteria, reportConfig: config])
+    }
 }

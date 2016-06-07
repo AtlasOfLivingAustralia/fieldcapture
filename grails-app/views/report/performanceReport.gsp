@@ -73,6 +73,7 @@
         self.reportId = '${report.reportId}';
         self.progress = 'finished'; // If the report can be validated and saved it is complete.
         self.data = {};
+        self.data.state = '${state?:''}'; // For ease of reporting.
         <g:each in="${themes}" var="theme">
         <g:each in="${sectionsByTheme[theme]}" var="section">
         <g:each in="${section.questions}" var="question">

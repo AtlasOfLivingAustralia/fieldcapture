@@ -105,6 +105,77 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
 
     }
 
+    def performanceAssessmentComparisonReport() {
+
+        List years = []
+        int firstYear = 2015
+        DateTime date = new DateTime()
+
+        while (date.getYear() >= firstYear) {
+            years << date.getYear()
+            date = date.minusYears(1)
+        }
+
+        List states = ['', 'ACT / NSW', 'Vic', 'WA / NT', 'SA', 'Tas', 'Qld']
+
+        String organisationId = params.organisationId
+        String state = params.state ?: ""
+        int year = params.year ? Integer.parseInt(params.year) : years[0]
+
+        Map comparison = reportService.performanceReport(year, state)
+
+        Map resultsForState
+        if (state == 'ACT / NSW') {
+            resultsForState = mergeResults("ACT", "NSW", comparison.resp?.groups)
+        }
+        else if (state == 'WA / NT') {
+            resultsForState = mergeResults("WA", "NT", comparison.resp?.groups)
+        }
+        else {
+            resultsForState = comparison.resp?.groups?.find{it.group == state} ?: [:]
+        }
+
+
+        List reports = reportService.findReportsForOrganisation(organisationId)
+        reports = reports.findAll{it.progress == 'finished'}.sort{it.fromDate}.reverse()
+
+        if (reports.size()) {
+            Map model = reportService.performanceReportModel(reports[0].reportId)
+            model.results = resultsForState?.results ?: [:]
+            model.states = states
+            model.years = years
+            model.state = state
+            model.year = year
+
+            render view:'_performanceAssessmentComparison', model:model
+        }
+        else {
+            render view:'_noReportData'
+        }
+    }
+
+    Map mergeResults(String state1, String state2, List results) {
+        Map state1Results = results.find{it.group == state1} ?: [:]
+        Map state2Results = results.find{it.group == state2} ?: [:]
+
+        Set keys = state1Results.keySet() + state2Results.keySet()
+
+        Map merged = [:]
+        keys.each { key ->
+            if (state1Results[key] && state2Results[key]) {
+                merged[key] = state1Results[key] + state2Results[key]
+            }
+            else if (state1Results[key]) {
+                merged[key] = state1Results[key]
+            }
+            else if (state2Results[key]) {
+                merged[key] = state2Results[key]
+            }
+        }
+        merged
+
+    }
+
     def greenArmyReport() {
 
         Integer financialYear = params.getInt('financialYear')
@@ -292,6 +363,7 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
     def performanceReport(String id) {
 
         Map model = reportService.performanceReportModel(id)
+        model.state = params.state ?: 'Unknown'
 
         boolean edit = params.edit
         if (reportService.isSubmittedOrApproved(model.report)) {

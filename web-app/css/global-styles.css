@@ -684,3 +684,7 @@ button#risks-cancel:hover {
 	right:10px;
 
 }
+
+.comparison.match {
+	background-color: yellow;
+}
