@@ -219,7 +219,7 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
      * @param stageDetails details of the activities, specifically a list of activity ids.
      */
     def rejectStageReport(projectId, stageDetails) {
-        reportService.reject(stageDetails.reportId, stageDetails.reason)
+        reportService.reject(stageDetails.reportId, stageDetails.category, stageDetails.reason)
         def result = activityService.rejectActivitiesForPublication(stageDetails.activityIds)
 
         // TODO Send a message to GMS.  Delete previous approval document (only an issue for withdrawal of approval)?

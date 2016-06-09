@@ -182,8 +182,8 @@ class ReportService {
         webService.doPost(grailsApplication.config.ecodata.baseUrl+"report/approve/${reportId}", [comment:reason])
     }
 
-    def reject(String reportId, String reason) {
-        webService.doPost(grailsApplication.config.ecodata.baseUrl+"report/returnForRework/${reportId}", [comment:reason])
+    def reject(String reportId, String category, String reason) {
+        webService.doPost(grailsApplication.config.ecodata.baseUrl+"report/returnForRework/${reportId}", [comment:reason, category:category])
     }
 
     def create(report) {

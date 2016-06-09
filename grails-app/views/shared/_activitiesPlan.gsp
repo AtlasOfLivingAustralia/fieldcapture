@@ -379,6 +379,10 @@
         <h3><span data-bind="text:title"></span> reason</h3>
     </div>
     <div class="modal-body">
+        <p data-bind="visible:rejectionCategories">
+            Rejection Category:<br/>
+            <select data-bind="options:rejectionCategories, value:rejectionCategory"></select>
+        </p>
         <p>Please enter a reason.  This reason will be included in the email sent to the project administrator(s).</p>
         <textarea rows="5" style="width:97%" data-bind="textInput:reason"></textarea>
     </div>
@@ -681,7 +685,7 @@
             }
         };
 
-        var PlanStage = function (stage, activities, planViewModel, isCurrentStage, project,today) {
+        var PlanStage = function (stage, activities, planViewModel, isCurrentStage, project,today, rejectionCategories) {
             var stageLabel = stage.name;
 
             // Note that the two $ transforms used to extract activities are not combined because we
@@ -770,14 +774,16 @@
 
             };
 
-            this.approveOrRejectStage = function(url, title, buttonText) {
+            this.approveOrRejectStage = function(url, title, buttonText, rejectionCategories) {
                 var $reasonModal = $('#reason-modal');
                 var reasonViewModel = {
                     reason: ko.observable(),
+                    rejectionCategories:rejectionCategories,
+                    rejectionCategory: ko.observable(),
                     title:title,
                     buttonText: buttonText,
                     submit:function() {
-                        self.updateStageStatus(url, this.reason());
+                        self.updateStageStatus(url, this.reason(), this.rejectionCategory());
                     }
                 }
                 ko.applyBindings(reasonViewModel, $reasonModal[0]);
@@ -794,20 +800,21 @@
             };
             this.rejectStage = function() {
                 var url = '${createLink(controller:'project', action:'ajaxRejectReport')}/';
-                self.approveOrRejectStage(url, 'Rejection', 'Reject');
+                self.approveOrRejectStage(url, 'Rejection', 'Reject', rejectionCategories);
             };
             
             this.variationModal = function() {
                 $('#variation').modal("show");
             };
 
-            this.updateStageStatus = function(url, reason) {
+            this.updateStageStatus = function(url, reason, rejectionCategory) {
                 var payload = {};
                 payload.activityIds = $.map(self.activities, function(act, i) {
                     return act.activityId;
                 });
                 payload.stage = stageLabel;
                 payload.reason = reason || '';
+                payload.category = rejectionCategory;
                 payload.reportId = stage.reportId;
                 payload.projectId = self.projectId;
                 $.ajax({
@@ -992,7 +999,7 @@
             return clone;
         };
 
-        function PlanViewModel(activities, reports, outputTargets, project, programModel, today) {
+        function PlanViewModel(activities, reports, outputTargets, project, programModel, today, config) {
             var self = this;
             this.userIsCaseManager = ko.observable(${user?.isCaseManager});
             this.planStatus = ko.observable(project.planStatus || 'not approved');
@@ -1020,7 +1027,7 @@
 
                 // group activities by stage
                 $.each(reports, function (index, stageReport) {
-                    stages.push(new PlanStage(stageReport, activities, self, stageReport.name === self.currentProjectStage, project,today));
+                    stages.push(new PlanStage(stageReport, activities, self, stageReport.name === self.currentProjectStage, project,today, config.rejectionCategories));
                 });
 
                 return stages;
@@ -1378,7 +1385,8 @@
             ${project.outputTargets ?: '{}'},
             checkAndUpdateProject(${project}, null, programModel),
             programModel,
-            today
+            today,
+            {rejectionCategories: ['Minor', 'Moderate', 'Major'] }
         );
         ko.applyBindings(planViewModel, document.getElementById('planContainer'));
 
