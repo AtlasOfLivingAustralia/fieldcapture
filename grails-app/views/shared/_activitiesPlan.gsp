@@ -373,6 +373,23 @@
 <g:render template="/shared/declaration"/>
 
 <!-- ko stopBinding: true -->
+<div id="reason-modal" class="modal hide fade">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3><span data-bind="text:title"></span> reason</h3>
+    </div>
+    <div class="modal-body">
+        <p>Please enter a reason.  This reason will be included in the email sent to the project administrator(s).</p>
+        <textarea rows="5" style="width:97%" data-bind="textInput:reason"></textarea>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-success" data-bind="click:submit, text:buttonText, enable:reason" data-dismiss="modal" aria-hidden="true"></button>
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+    </div>
+</div>
+<!-- /ko -->
+
+<!-- ko stopBinding: true -->
 <div id="attachReasonDocument" class="modal fade" style="display:none;">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -679,6 +696,7 @@
             this.projectId = project.projectId;
             this.planViewModel = planViewModel;
 
+
             // sort activities by assigned sequence or date created (as a proxy for sequence).
             // CG - still needs to be addressed properly.
             activitiesInThisStage.sort(function (a,b) {
@@ -746,12 +764,25 @@
                     submitReport : function() {
                         self.submitStage();
                     }
-            };
-            ko.applyBindings(declarationViewModel, declaration);
-            $(declaration).modal({ backdrop: 'static', keyboard: true, show: true }).on('hidden', function() {ko.cleanNode(declaration);});
+                };
+                ko.applyBindings(declarationViewModel, declaration);
+                $(declaration).modal({ backdrop: 'static', keyboard: true, show: true }).on('hidden', function() {ko.cleanNode(declaration);});
 
             };
 
+            this.approveOrRejectStage = function(url, title, buttonText) {
+                var $reasonModal = $('#reason-modal');
+                var reasonViewModel = {
+                    reason: ko.observable(),
+                    title:title,
+                    buttonText: buttonText,
+                    submit:function() {
+                        self.updateStageStatus(url, this.reason());
+                    }
+                }
+                ko.applyBindings(reasonViewModel, $reasonModal[0]);
+                $reasonModal.modal({backdrop: 'static', keyboard:true, show:true}).on('hidden', function() {ko.cleanNode($reasonModal[0])});
+            };
 
             this.submitStage = function() {
                 var url = '${createLink(controller:'project', action:'ajaxSubmitReport')}/';
@@ -759,23 +790,24 @@
             };
             this.approveStage = function () {
                 var url = '${createLink(controller:'project', action:'ajaxApproveReport')}/';
-                self.updateStageStatus(url);
+                self.approveOrRejectStage(url, 'Approval', 'Approve');
             };
             this.rejectStage = function() {
                 var url = '${createLink(controller:'project', action:'ajaxRejectReport')}/';
-                self.updateStageStatus(url);
+                self.approveOrRejectStage(url, 'Rejection', 'Reject');
             };
             
             this.variationModal = function() {
                 $('#variation').modal("show");
             };
 
-            this.updateStageStatus = function(url) {
+            this.updateStageStatus = function(url, reason) {
                 var payload = {};
                 payload.activityIds = $.map(self.activities, function(act, i) {
                     return act.activityId;
                 });
                 payload.stage = stageLabel;
+                payload.reason = reason || '';
                 payload.reportId = stage.reportId;
                 payload.projectId = self.projectId;
                 $.ajax({
