@@ -382,6 +382,7 @@ class ReportService {
 
         List sections = [
                 [title:"1. Organisational Governance",
+                 name:"organisationalGovernance",
                  theme:themes[0],
                  questions:[
                          [text:"1.1\tThe regional NRM organisation is complying with governance responsibilities according to its statutory/incorporation or other legal obligations, including Work, Health and Safety obligations.",name:'1_1'],
@@ -391,6 +392,7 @@ class ReportService {
                          [text:"1.5\tThe regional NRM organisation regularly communicates organisational and project performance achievements.",name:'1_5']],
                  additionalPracticeQuestion:[text:"1.6\tThe regional NRM organisation has met all the expected practices and has additional practices in place.",name:'1_6']],
                 [title:"2. Financial Governance",
+                 name:"financialGovernance",
                  theme:themes[0],
                  questions:[
                          [text:"2.1\tThe regional NRM organisation is complying with financial responsibilities according to its statutory/incorporation or other legal obligations.",name:'2_1'],
@@ -399,6 +401,7 @@ class ReportService {
                  additionalPracticeQuestion:[text:"2.4\tThe regional NRM organisation has met all the expected practices and has additional practices in place.",name:'2_4']],
                 [title:"3. Regional NRM plans",
                  theme:themes[1],
+                 name:"regionalNRMPlans",
                  questions:[
                          [text:"3.1\tThe regional NRM organisation has a regional NRM plan that provides the strategic direction to NRM activity within the region based on best available scientific, economic and social information.",name:'3_1'],
                          [text:"3.2\tThe regional NRM organisation has a regional NRM plan that demonstrates strategic alignment with Australian Government and state/territory NRM policies and priorities.",name:'3_2'],
@@ -408,6 +411,7 @@ class ReportService {
                  additionalPracticeQuestion:[text:"3.6\tThe regional NRM organisation has a regional NRM plan that has met all the expected practices and has additional practices in place.",name:'3_6']],
                 [title:"4. Local community participation and engagement",
                  theme:themes[1],
+                 name:"localCommunityParticipationAndEngagement",
                  questions:[
                          [text:"4.1\tThe regional NRM organisation has a current community participation plan and a current Indigenous participation plan.",name:'4_1'],
                          [text:"4.2\tThe regional NRM organisation has an established process in place that allows the local community to participate in priority setting and/or decision making.",name:'4_2'],
@@ -415,6 +419,7 @@ class ReportService {
                          [text:"4.4\tThe regional NRM organisation is actively supporting increased participation of Indigenous people in the planning and delivery of NRM projects and investment.",name:'4_4']],
                  additionalPracticeQuestion:[text:"4.5\tThe regional NRM organisation has met all the expected practices and has additional practices in place.",name:'4_5']],
                 [title:"5. Monitoring, Evaluation, Reporting and Improvement ",
+                 name:"meri",
                  theme:themes[1],
                  questions:[
                          [text:"5.1\tThe regional NRM organisation is providing comprehensive, accurate and timely project MERI plans and MERIT reporting.",name:'5_1'],
@@ -429,5 +434,27 @@ class ReportService {
         }
 
         [themes:themes, sectionsByTheme:sectionsByTheme, report:report]
+    }
+
+    Map performanceReport(int year, String state) {
+        List scores = [[name:'regionalNRMPlans', property:'regionalNRMPlansOverallRating'],
+                       [name:'localCommunityParticipationAndEngagement', property:'localCommunityParticipationAndEngagementOverallRating'],
+                       [name:'organisationalGovernance', property:'organisationalGovernanceOverallRating'],
+                       [name:'financialGovernance', property:'financialGovernanceOverallRating'],
+                       [name:'meri', property:'meriOverallRating']]
+
+
+        List<Map> aggregations = []
+        scores.each {
+            aggregations << [type:'HISTOGRAM', label:it.name, property:'data.'+it.property]
+        }
+        Map filter = state?[type:'DISCRETE', property:'data.state']:[:]
+        Map config = [groups:filter, childAggregations: aggregations, label:'Performance assessment by state']
+
+        Map searchCriteria = [type:'Performance Management Framework - Self Assessment', dateProperty:'toDate', 'startDate':(year-1)+'-07-01T10:00:00Z', 'endDate':year+'-07-01T10:00:00Z']
+
+        String url =  grailsApplication.config.ecodata.baseUrl+"report/runReport"
+
+        webService.doPost(url, [searchCriteria: searchCriteria, reportConfig: config])
     }
 }

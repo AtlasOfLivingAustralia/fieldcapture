@@ -665,3 +665,26 @@ button#risks-cancel:hover {
 	box-sizing: border-box;
 	height: 5em;
 }
+.rating-container {
+	position: relative;
+}
+.rating.up:after {
+	font-family: FontAwesome;
+	color: green;
+	content: "\f062";
+	position:absolute;
+	right:10px;
+
+}
+.rating.down:after  {
+	font-family: FontAwesome;
+	color: red;
+	content: "\f063";
+	position:absolute;
+	right:10px;
+
+}
+
+.comparison.match {
+	background-color: yellow;
+}

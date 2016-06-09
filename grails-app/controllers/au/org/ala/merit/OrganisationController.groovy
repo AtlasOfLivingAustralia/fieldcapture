@@ -44,6 +44,14 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
         if (hasAdminAccess) {
             dashboardReports += [name:'announcements', label:'Announcements']
         }
+        if (reportingVisible) {
+            // We need at least one finished report to show data.
+            if (organisation.reports?.find{it.progress == 'finished'}) {
+                dashboardReports += [name: 'performanceAssessmentSummary', label: 'Performance Assessment Summary']
+                dashboardReports += [name: 'performanceAssessmentComparison', label: 'Performance Assessment Comparison']
+
+            }
+        }
 
         [about     : [label: 'About', visible: true, stopBinding: false, type:'tab'],
          reporting : [label: 'Reporting', visible: reportingVisible, stopBinding:true, default:reportingVisible, type: 'tab'],
@@ -233,8 +241,9 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
 
     def editOrganisationReport(String reportId) {
         Map report = reportService.get(reportId)
+        Map organisation = organisationService.get(report.organisationId)
         if (organisationService.isUserAdminForOrganisation(report.organisationId)) {
-            chain(controller: 'report', action:'performanceReport', id:reportId, params:[edit:params.edit])
+            chain(controller: 'report', action:'performanceReport', id:reportId, params:[edit:params.edit, state:organisation.state])
         }
         else {
             flash.message = "You don't have permission to edit the report"

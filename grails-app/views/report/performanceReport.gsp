@@ -73,6 +73,7 @@
         self.reportId = '${report.reportId}';
         self.progress = 'finished'; // If the report can be validated and saved it is complete.
         self.data = {};
+        self.data.state = '${state?:''}'; // For ease of reporting.
         <g:each in="${themes}" var="theme">
         <g:each in="${sectionsByTheme[theme]}" var="section">
         <g:each in="${section.questions}" var="question">
@@ -82,8 +83,19 @@
         self.data.meetsExpectation${section.additionalPracticeQuestion.name} = ko.observable();
         self.data.evidenceFor${section.additionalPracticeQuestion.name} = ko.observable();
 
+        self.data.${section.name}OverallRating = ko.computed(function() {
+            <g:each in="${section.questions}" var="question">
+            if (self.data.meetsExpectation${question.name}() != 'Yes') {
+                return 0;;
+            }
+            </g:each>
+            return (self.data.meetsExpectation${section.additionalPracticeQuestion.name}() != 'Yes') ? 1 : 2;
+        });
+
         </g:each>
         </g:each>
+
+
 
         self.save = function() {
            if ($('.validationEngineContainer').validationEngine('validate')) {
