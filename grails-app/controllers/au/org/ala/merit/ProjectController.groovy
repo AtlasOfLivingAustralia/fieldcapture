@@ -185,6 +185,9 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
 
         List outcomes = project.custom?.details?.objectives?.rows1?.findAll{it.description}
 
+        project.documents = project.documents?.findAll{!(it.role in ['stageReport', 'approval', 'deferReason'])}
+        project.documents?.sort{it.stage}
+
         [project:project, role:role, images:publicImages, activityCountByStage:activityCountByStage, outcomes:outcomes, metrics: projectService.summary(id),
         activityModels:activityModels, orderedStageNames:orderedStageNames, activitiesByStage:activitiesByStage, outputModels:outputModels, stageReportModel:stageReportModel, latestStageReport:latestStageReport]
     }
