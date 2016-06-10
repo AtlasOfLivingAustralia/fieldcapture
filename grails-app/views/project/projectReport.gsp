@@ -131,6 +131,7 @@
         <tr>
             <th>Name</th>
             <th>Type</th>
+            <th>Stage</th>
         </tr>
         </thead>
         <tbody>
@@ -138,6 +139,7 @@
             <tr>
                 <td>${document.name?:document.filename}</td>
                 <td><fc:documentType document="${document}"/></td>
+                <td>${document.stage ? "Stage "+document.stage : ''}</td>
             </tr>
         </g:each>
 
