@@ -22,6 +22,21 @@
     <style type="text/css">
         .title { font-weight: bold;}
         .generated-by { border-top: 2px solid; padding-top: 15px;}
+        .activity-title {
+            border-top: 4px solid black;
+            background-color: #d9edf7;
+            border-bottom: 1px solid;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+        .output-block > h3 {
+            font-size:large;
+        }
+    .output-section.stage-title {
+        padding:10px;
+        border-top: 4px solid black;
+    }
+
     </style>
 
     <r:require modules="knockout, activity, jqueryValidationEngine, merit_projects"/>
@@ -249,8 +264,13 @@
 
         <g:each in="${orderedStageNames}" var="stage">
             <g:if test="${activitiesByStage[stage]}">
-            <h3>${stage}</h3>
+            <div class="output-section stage-title">
+                <h3>${stage}</h3>
+            </div>
             <g:each in="${activitiesByStage[stage]}" var="activity">
+                <div class="activity-title">
+                <h3>${activity.description}</h3>
+                </div>
                 <div class="activity-header">
                     <div class="row-fluid">
                         <div class="span3 title">Activity type</div>
@@ -289,6 +309,7 @@
                     </g:if>
 
                 </g:each>
+
             </g:each>
             </g:if>
         </g:each>

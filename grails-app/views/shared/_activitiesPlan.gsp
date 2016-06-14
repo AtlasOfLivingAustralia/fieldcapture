@@ -45,6 +45,14 @@
                 </div>
             </div>
 
+            <div class="project-report" data-bind="visible:!canModifyProjectStart || !isPlanEditable()">
+                <span class="pull-right form-actions form-inline">
+                    From: <select style="width:auto;" data-bind="value:reportFromStage, options:reportableStages"></select> -
+                    To: <select style="width:auto;" data-bind="value:reportToStage, options:reportableToStages"></select>
+
+                    <button class="btn btn-info" data-bind="click:generateProjectReport">Generate Report</button><fc:iconHelp>Generates a project report covering activities from the selected stages.  The report will open in a new window.</fc:iconHelp> </span>
+            </div>
+
         </g:if>
 
 
@@ -1089,6 +1097,41 @@
                 $('#changeProjectDates').modal({backdrop:'static'});
                 $('#projectDatesForm').validationEngine();
             };
+            var defaultReportStage = self.currentProjectStage;
+            if (defaultReportStage == 'unknown' && self.stages) {
+                defaultReportStage = self.stages[self.stages.length-1].label;
+            }
+            self.reportFromStage = ko.observable(defaultReportStage);
+            self.reportToStage = ko.observable(defaultReportStage);
+
+            self.reportableStages = ko.computed(function() {
+                var stages = [];
+                $.each(self.stages || [], function(i, stage) {
+                    if (stage.isReportable) {
+                        stages.push(stage.label);
+                    }
+                });
+                return stages;
+            });
+            self.reportableToStages = ko.computed(function() {
+                var stages = [];
+                var started = false;
+                $.each(self.stages || [], function(i, stage) {
+                    if (stage.label == self.reportFromStage()) {
+                        started = true;
+                    }
+                    if (stage.isReportable && started) {
+                        stages.push(stage.label);
+                    }
+
+                });
+                return stages;
+            });
+            self.generateProjectReport = function() {
+                var url = fcConfig.projectReportUrl + '?fromStage='+self.reportFromStage()+'&toStage='+self.reportToStage();
+                window.open(url,'project-report');
+            };
+
             self.plannedStartDate.subscribeChanged(function(oldStartDate, newStartDate) {
 
                 if (self.autoUpdateEndDate()) {
