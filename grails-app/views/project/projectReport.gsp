@@ -176,7 +176,13 @@
         <g:each in="${outcomes}" var="outcome">
             <tr>
                 <td>${outcome.description}</td>
-                <td>${outcome.assets}</td>
+                <td>
+                    <ul>
+                    <g:each in="${outcome.assets}" var="asset">
+                        <li>${asset}</li>
+                    </g:each>
+                    </ul>
+                </td>
             </tr>
         </g:each>
 
