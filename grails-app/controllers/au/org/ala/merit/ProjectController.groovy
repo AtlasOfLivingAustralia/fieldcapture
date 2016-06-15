@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import au.org.ala.fieldcapture.AuditService
 import au.org.ala.fieldcapture.PreAuthorise
 import grails.converters.JSON
 
@@ -202,8 +203,10 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
         project.documents = project.documents?.findAll{!(it.role in ['stageReport', 'approval', 'deferReason']) && (it.stage? it.stage in reportedStages : it.lastUpdated <= toDate)}
         project.documents?.sort{it.stage}
 
+        Map risksComparison = projectService.compareProjectRisks(id, toDate, fromDate)
+
         [project:project, role:role, images:publicImages, activityCountByStage:activityCountByStage, outcomes:outcomes, metrics: projectService.summary(id),
-        activityModels:activityModels, orderedStageNames:reportedStages, activitiesByStage:activitiesByStage, outputModels:outputModels, stageReportModel:stageReportModel, latestStageReport:latestStageReport]
+        activityModels:activityModels, orderedStageNames:reportedStages, activitiesByStage:activitiesByStage, outputModels:outputModels, stageReportModel:stageReportModel, latestStageReport:latestStageReport, risksComparison: risksComparison]
     }
 
 

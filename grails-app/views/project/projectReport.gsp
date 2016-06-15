@@ -39,7 +39,7 @@
 
     </style>
 
-    <r:require modules="knockout, activity, jqueryValidationEngine, merit_projects"/>
+    <r:require modules="knockout, activity, jqueryValidationEngine, merit_projects, pretty_text_diff"/>
 </head>
 <body>
 <div class="container">
@@ -264,6 +264,46 @@
     </table>
     </g:if>
 
+    <g:if test="${risksComparison.baseline?.rows || risksComparison.comparison?.rows}">
+        <h3>Project risk changes</h3>
+        <g:if test="${risksComparison.comparison}">
+            Comparing edit made on ${au.org.ala.fieldcapture.DateUtils.displayFormatWithTime(risksComparison.comparisonDate)}
+            to edit made on ${au.org.ala.fieldcapture.DateUtils.displayFormatWithTime(risksComparison.baselineDate)}
+        </g:if>
+        <g:elseif test="${risksComparison.baseline}">
+            Risks and threats first entered during the period of this report, last edited at: ${au.org.ala.fieldcapture.DateUtils.displayFormatWithTime(risksComparison.baselineDate)}
+        </g:elseif>
+
+        <table class="table table-striped risks-comparison">
+            <thead>
+            <tr>
+                <th>Type of threat / risk</th>
+                <th>Description</th>
+                <th>Likelihood</th>
+                <th>Consequence</th>
+                <th>Risk rating</th>
+                <th>Current control / <br/>Contingency strategy</th>
+                <th>Residual risk</th>
+            </tr>
+            </thead>
+            <tbody>
+            <g:set var="max" value="${Math.max(risksComparison.baseline.rows.size(), risksComparison.comparison?.rows?.size()?:0)}"/>
+            <g:each in="${(0..<max)}" var="i">
+                <tr>
+                    <td><fc:renderComparison changed="${risksComparison.baseline?.rows ?: []}" i="${i}" original="${risksComparison.comparison?.rows ?: []}" property="threat"/> </td>
+                    <td><fc:renderComparison changed="${risksComparison.baseline?.rows ?: []}" i="${i}" original="${risksComparison.comparison?.rows ?: []}" property="description"/></td>
+                    <td><fc:renderComparison changed="${risksComparison.baseline?.rows ?: []}" i="${i}" original="${risksComparison.comparison?.rows ?: []}" property="likelihood"/></td>
+                    <td><fc:renderComparison changed="${risksComparison.baseline?.rows ?: []}" i="${i}" original="${risksComparison.comparison?.rows ?: []}" property="consequence"/></td>
+                    <td><fc:renderComparison changed="${risksComparison.baseline?.rows ?: []}" i="${i}" original="${risksComparison.comparison?.rows ?: []}" property="riskRating"/></td>
+                    <td><fc:renderComparison changed="${risksComparison.baseline?.rows ?: []}" i="${i}" original="${risksComparison.comparison?.rows ?: []}" property="currentControl"/></td>
+                    <td><fc:renderComparison changed="${risksComparison.baseline?.rows ?: []}" i="${i}" original="${risksComparison.comparison?.rows ?: []}" property="residualRisk"/></td>
+                </tr>
+            </g:each>
+
+            </tbody>
+        </table>
+    </g:if>
+
 
     <g:if test="${activitiesByStage}">
         <h3>Progress against each activity</h3>
@@ -339,6 +379,8 @@
         var reports = <fc:modelAsJavascript model="${project.reports}"/>;
         var reportVM = new ProjectReportsViewModel({reports:reports});
         ko.applyBindings(reportVM, document.getElementById('report-status'));
+
+        $(".risks-comparison td").prettyTextDiff({cleanup: true});
 
     });
 </r:script>
