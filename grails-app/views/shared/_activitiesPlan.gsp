@@ -46,11 +46,52 @@
             </div>
 
             <div class="project-report" data-bind="visible:!canModifyProjectStart || !isPlanEditable()">
-                <span class="pull-right form-actions form-inline">
-                    From: <select style="width:auto;" data-bind="value:reportFromStage, options:reportableStages"></select> -
-                    To: <select style="width:auto;" data-bind="value:reportToStage, options:reportableToStages"></select>
+                <span class="pull-right">
+                    <button class="btn btn-info" data-bind="click:configureProjectReport">Project Report</button><fc:iconHelp>Generate a project report covering activities from the selected stages.  The report will open in a new window.</fc:iconHelp> </span>
+                </span>
+            </div>
+            <div class="modal hide" id="projectReportOptions">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Project Report Options</h4>
+                        </div>
 
-                    <button class="btn btn-info" data-bind="click:generateProjectReport">Generate Report</button><fc:iconHelp>Generates a project report covering activities from the selected stages.  The report will open in a new window.</fc:iconHelp> </span>
+                        <div class="modal-body">
+                            <form class="form-horizontal">
+                                <div class="control-group">
+                                    <label class="control-label" for="fromStage">From: </label>
+                                    <div class="controls">
+                                        <select id="fromStage" data-bind="value:reportFromStage, options:reportableStages"></select>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="toStage">To: </label>
+                                    <div class="controls">
+                                        <select id="toStage" data-bind="value:reportToStage, options:reportableToStages"></select>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Included content: </label>
+                                    <div class="controls">
+                                        <!-- ko foreach:projectReportSections -->
+                                            <label class="checkbox"><input type="checkbox" data-bind="checkedValue: $data, checked: $parent.reportIncludedSections"><span data-bind="text:$data"></span></label>
+                                        <!-- /ko -->
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer control-group">
+                        <div class="controls">
+                            <button type="button" class="btn btn-success"
+                                    data-bind="click:generateProjectReport">Generate Report</button>
+                            <button class="btn" data-bind="click:cancelGenerateReport">Cancel</button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
         </g:if>
@@ -1101,8 +1142,13 @@
             if (defaultReportStage == 'unknown' && self.stages) {
                 defaultReportStage = self.stages[self.stages.length-1].label;
             }
+            self.configureProjectReport = function() {
+                $('#projectReportOptions').modal({backdrop:'static'});
+            }
             self.reportFromStage = ko.observable(defaultReportStage);
             self.reportToStage = ko.observable(defaultReportStage);
+            self.projectReportSections = ['Images', 'Activity Summary', 'Documents', 'Outcomes', 'Output Targets', 'Progress Summary', 'Project Risks', 'Project Risk Changes', 'Activity Details'];
+            self.reportIncludedSections = ko.observableArray(self.projectReportSections);
 
             self.reportableStages = ko.computed(function() {
                 var stages = [];
@@ -1128,9 +1174,18 @@
                 return stages;
             });
             self.generateProjectReport = function() {
+
                 var url = fcConfig.projectReportUrl + '?fromStage='+self.reportFromStage()+'&toStage='+self.reportToStage();
+                for (var i=0; i<self.reportIncludedSections().length; i++) {
+                    url+='&section='+self.reportIncludedSections()[i];
+                }
                 window.open(url,'project-report');
+                $('#projectReportOptions').modal('hide');
             };
+            self.cancelGenerateReport = function() {
+                $('#projectReportOptions').modal('hide');
+            }
+
 
             self.plannedStartDate.subscribeChanged(function(oldStartDate, newStartDate) {
 
