@@ -168,7 +168,7 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
                     outputModels << [(outputName):metadataService.getDataModelFromOutputName(outputName)]
 
                 }
-                if (activityService.isFinished(activity)) {
+                if (activityService.isStartedOrFinished(activity)) {
                     Map report = reportService.findReportForDate(activity.plannedEndDate, project.reports)
                     if (report && report.name) {
                         activitiesByStage[report.name] << activity

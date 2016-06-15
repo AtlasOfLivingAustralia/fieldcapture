@@ -234,7 +234,7 @@
 
     </g:if>
 
-    <g:if test="${project.risks?.rows && ('Risks' in content)}">
+    <g:if test="${project.risks?.rows && ('Project Risks' in content)}">
     <h3>Project risks</h3>
 
     <table class="table table-striped">
@@ -317,7 +317,7 @@
             </div>
             <g:each in="${activitiesByStage[stage]}" var="activity">
                 <div class="activity-title">
-                <h3>${activity.description}</h3>
+                <h3>${activity.description ?: activity.type}</h3>
                 </div>
                 <div class="activity-header">
                     <div class="row-fluid">
