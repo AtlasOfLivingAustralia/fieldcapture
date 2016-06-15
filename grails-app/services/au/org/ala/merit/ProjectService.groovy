@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat
 
 class ProjectService extends au.org.ala.fieldcapture.ProjectService {
 
-    def reportService
+    def reportService, auditService
 
     static final String FINAL_REPORT_ACTIVITY_TYPE = 'Outcomes, Evaluation and Learning - final report'
     static final String STAGE_REPORT_ACTIVITY_TYPE = 'Progress, Outcomes and Learning - stage report'
@@ -759,5 +759,18 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
         return false;
     }
 
+    Map compareProjectRisks(String projectId, String baselineDate, String beforeDate) {
+        Map toCompare = auditService.compareProjectEntity(projectId, baselineDate, beforeDate, 'risks')
 
+        Map baseline = null
+        Map comparison = null
+        if (toCompare.baseline && toCompare.baseline.entity.risks) {
+            baseline = toCompare.baseline.entity.risks
+        }
+        if (toCompare.comparison && toCompare.comparison.entity.risks) {
+            comparison = toCompare.comparison.entity.risks
+        }
+        [baselineDate: toCompare.baseline?.date, baseline:baseline, comparisonDate: toCompare.comparison?.date, comparison:comparison]
+
+    }
 }
