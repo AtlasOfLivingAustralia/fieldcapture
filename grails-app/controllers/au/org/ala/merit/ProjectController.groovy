@@ -205,7 +205,7 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
 
         Map risksComparison = projectService.compareProjectRisks(id, toDate, fromDate)
 
-        [project:project, role:role, images:publicImages, activityCountByStage:activityCountByStage, outcomes:outcomes, metrics: projectService.summary(id),
+        [project:project, content:params.sections, role:role, images:publicImages, activityCountByStage:activityCountByStage, outcomes:outcomes, metrics: projectService.summary(id),
         activityModels:activityModels, orderedStageNames:reportedStages, activitiesByStage:activitiesByStage, outputModels:outputModels, stageReportModel:stageReportModel, latestStageReport:latestStageReport, risksComparison: risksComparison]
     }
 

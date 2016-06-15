@@ -107,7 +107,7 @@
     <h3>Project Overview</h3>
     <p>${project.description}</p>
 
-    <g:if test="${images}">
+    <g:if test="${images && ('Images' in content)}">
     <h3>Main project images</h3>
 
         <g:each in="${images}" var="image">
@@ -115,6 +115,7 @@
         </g:each>
     </g:if>
 
+    <g:if test="${'Activity Summary' in content}">
     <h3>Number of activities</h3>
 
     <table class="table table-striped">
@@ -137,9 +138,10 @@
 
         </tbody>
     </table>
+    </g:if>
 
 
-    <g:if test="${project.documents}">
+    <g:if test="${project.documents  && ('Documents' in content)}">
     <h3>Supporting documents</h3>
     <table class="table table-striped">
         <thead>
@@ -163,7 +165,7 @@
     </g:if>
 
 
-    <g:if test="${outcomes}">
+    <g:if test="${outcomes && ('Outcomes' in content)}">
     <h3>Project outcomes</h3>
     <table class="table table-striped">
         <thead>
@@ -190,7 +192,7 @@
     </table>
     </g:if>
 
-    <g:if test="${metrics.targets}">
+    <g:if test="${metrics.targets  && ('Output Targets' in content)}">
         <h3>Progress against output targets</h3>
         <div class="row-fluid" id="dashboard">
             <div class="span4">
@@ -217,7 +219,7 @@
                   model="${[model:outputModel.value, outputName:outputModel.key, edit:false, speciesLists:[]]}"></g:render>
     </g:each>
 
-    <g:if test="${latestStageReport}">
+    <g:if test="${latestStageReport && ('Progress Summary' in content)}">
 
         <h3>Summary of project progress and issues</h3>
         <g:each in="${stageReportModel.outputs}" var="outputName">
@@ -232,8 +234,8 @@
 
     </g:if>
 
-    <g:if test="${project.risks?.rows}">
-    <h3>Project risk</h3>
+    <g:if test="${project.risks?.rows && ('Risks' in content)}">
+    <h3>Project risks</h3>
 
     <table class="table table-striped">
         <thead>
@@ -264,7 +266,7 @@
     </table>
     </g:if>
 
-    <g:if test="${risksComparison.baseline?.rows || risksComparison.comparison?.rows}">
+    <g:if test="${(risksComparison.baseline?.rows || risksComparison.comparison?.rows) && ('Project Risk Changes' in content)}">
         <h3>Project risk changes</h3>
         <g:if test="${risksComparison.comparison}">
             Comparing edit made on ${au.org.ala.fieldcapture.DateUtils.displayFormatWithTime(risksComparison.comparisonDate)}
@@ -305,7 +307,7 @@
     </g:if>
 
 
-    <g:if test="${activitiesByStage}">
+    <g:if test="${activitiesByStage && ('Activity Details' in content)}">
         <h3>Progress against each activity</h3>
 
         <g:each in="${orderedStageNames}" var="stage">
