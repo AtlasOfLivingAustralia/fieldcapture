@@ -46,6 +46,13 @@
 
 
     <h1>MERIT Project Summary</h1>
+    <g:if test="${params.fromStage == params.toStage}">
+        <h3>${params.toStage}</h3>
+    </g:if>
+    <g:else>
+        <h3>${params.fromStage} to ${params.toStage}</h3>
+    </g:else>
+    <h3></h3>
 
     <div class="overview">
         <div class="row-fluid">
@@ -194,6 +201,7 @@
 
     <g:if test="${metrics.targets  && ('Output Targets' in content)}">
         <h3>Progress against output targets</h3>
+        <p>Note this is the current project progress, not the progress made during the selected stage(s).</p>
         <div class="row-fluid" id="dashboard">
             <div class="span4">
                 <g:set var="count" value="${metrics.targets.size()}"/>
@@ -234,9 +242,9 @@
 
     </g:if>
 
-    <g:if test="${project.risks?.rows && ('Project Risks' in content)}">
+    <g:if test="${risksComparison.baseline?.rows && ('Project Risks' in content)}">
     <h3>Project risks</h3>
-
+    <p>Note this is the risk information as it appeared at the end of the selected stage(s).</p>
     <table class="table table-striped">
         <thead>
         <tr>
@@ -250,7 +258,7 @@
         </tr>
         </thead>
         <tbody>
-        <g:each in="${project.risks.rows}" var="risk">
+        <g:each in="${risksComparison.baseline?.rows}" var="risk">
             <tr>
                 <td>${risk.threat}</td>
                 <td>${risk.description}</td>
