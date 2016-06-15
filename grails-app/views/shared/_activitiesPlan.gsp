@@ -1177,7 +1177,7 @@
 
                 var url = fcConfig.projectReportUrl + '?fromStage='+self.reportFromStage()+'&toStage='+self.reportToStage();
                 for (var i=0; i<self.reportIncludedSections().length; i++) {
-                    url+='&section='+self.reportIncludedSections()[i];
+                    url+='&sections='+self.reportIncludedSections()[i];
                 }
                 window.open(url,'project-report');
                 $('#projectReportOptions').modal('hide');
