@@ -36,6 +36,14 @@
     <h2>Performance expectations framework</h2>
     <h3>Self assessment worksheet</h3>
 
+    <br/>
+    <div class="row-fluid">
+        <div class="form-inline span12">
+            <label>Who is the authorised person completing this self assessment?</label> &nbsp;${report.data.whoCompletedForm}
+        </div>
+    </div>
+    <br/>
+
     <table class="row-fluid header" data-bind="with:data">
         <thead>
             <tr>
@@ -60,6 +68,26 @@
             </g:each>
         </g:each>
     </table>
+
+    <br/>
+
+    <div class="row-fluid">
+        <div class="span7">
+            <label>Are there any areas of the performance expectations your region would like peer assistance in meeting?</label>
+        </div>
+        <div class="span5">
+            <span class="model-text-value">${report.data.peerAssistanceRequired}</span>
+        </div>
+    </div>
+
+    <div class="row-fluid">
+        <div class="span7">
+            <label>Are there any areas of the performance expectations your region would be able to provide peer assistance on?</label>
+        </div>
+        <div class="span5">
+            <span class="model-text-value">${report.data.peerAssistanceOffered}</span>
+        </div>
+    </div>
 </div>
 
 </body>

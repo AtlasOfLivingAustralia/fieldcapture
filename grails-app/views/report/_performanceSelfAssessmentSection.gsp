@@ -8,7 +8,7 @@
     </g:if>
     <td class="question">${question.text}</td>
     <td class="meets-expectations">
-        <select data-validation-engine="validate[required]" data-bind="value:meetsExpectation${question.name}, options:['', 'Yes', 'No']"></select>
+        <select data-validation-engine="validate[required]" data-bind="value:meetsExpectation${question.name}, options:['', 'N/A', 'Yes', 'No']"></select>
     </td>
     <td class="evidence">
         <textarea data-validation-engine="validate[required,maxSize[2000]]" data-bind="textInput:evidenceFor${question.name}"></textarea>
@@ -19,7 +19,7 @@
     <td>Additional practices</td>
     <td>${additionalPracticeQuestion.text}</td>
     <td>
-        <select data-validation-engine="validate[required]" data-bind="value:meetsExpectation${additionalPracticeQuestion.name}, options:['', 'Yes', 'No']"></select>
+        <select data-validation-engine="validate[required]" data-bind="value:meetsExpectation${additionalPracticeQuestion.name}, options:['', 'N/A', 'Yes', 'No']"></select>
     </td>
     <td>
         <textarea data-validation-engine="validate[required,maxSize[2000]]" data-bind="value:evidenceFor${additionalPracticeQuestion.name}"></textarea>
