@@ -108,8 +108,8 @@ class EmailService extends au.org.ala.fieldcapture.EmailService {
         def ccEmails = addDefaultsToCC([], emailAddresses)
 
         createAndSend(
-                SettingPageType.GREEN_ARMY_REPORT_SUBMITTED_EMAIL_SUBJECT_LINE,
-                SettingPageType.GREEN_ARMY_REPORT_SUBMITTED_EMAIL,
+                SettingPageType.PERFORMANCE_REPORT_SUBMITTED_EMAIL_SUBJECT_LINE,
+                SettingPageType.PERFORMANCE_REPORT_SUBMITTED_EMAIL,
                 reportDetails,
                 emailAddresses.grantManagerEmails,
                 emailAddresses.userEmail,
@@ -124,8 +124,8 @@ class EmailService extends au.org.ala.fieldcapture.EmailService {
 
 
         createAndSend(
-                SettingPageType.GREEN_ARMY_REPORT_APPROVED_EMAIL_SUBJECT_LINE,
-                SettingPageType.GREEN_ARMY_REPORT_APPROVED_EMAIL,
+                SettingPageType.PERFORMANCE_REPORT_APPROVED_EMAIL_SUBJECT_LINE,
+                SettingPageType.PERFORMANCE_REPORT_APPROVED_EMAIL,
                 reportDetails,
                 emailAddresses.adminEmails,
                 emailAddresses.userEmail,
@@ -140,8 +140,8 @@ class EmailService extends au.org.ala.fieldcapture.EmailService {
         def ccEmails = addDefaultsToCC(emailAddresses.grantManagerEmails, emailAddresses)
 
         createAndSend(
-                SettingPageType.GREEN_ARMY_REPORT_REJECTED_EMAIL_SUBJECT_LINE,
-                SettingPageType.GREEN_ARMY_REPORT_REJECTED_EMAIL,
+                SettingPageType.PERFORMANCE_REPORT_REJECTED_EMAIL_SUBJECT_LINE,
+                SettingPageType.PERFORMANCE_REPORT_REJECTED_EMAIL,
                 reportDetails,
                 emailAddresses.adminEmails,
                 emailAddresses.userEmail,
