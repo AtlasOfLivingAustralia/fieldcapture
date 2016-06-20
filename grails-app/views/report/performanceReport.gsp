@@ -24,8 +24,18 @@
     </ul>
     <g:render template="/shared/flashScopeMessage" plugin="fieldcapture-plugin"/>
 
-    <h2>Performance expectations framework</h2>
-    <h3>Self assessment worksheet</h3>
+    <h3>${report.name}</h3>
+
+    <br/>
+    <div class="row-fluid">
+        <div class="form-inline span12">
+            <label for="whoCompletedForm" class="control-label">Who is the authorised person completing this self assessment?</label>
+            &nbsp;
+            <input id="whoCompletedForm" type="text" class="input-xlarge" data-bind="textInput:data.whoCompletedForm" data-validation-engine="validate[required]">
+
+        </div>
+    </div>
+    <br/>
 
     <table class="row-fluid header" data-bind="with:data">
         <thead>
@@ -35,7 +45,7 @@
                 <th>Evidence</th>
             </tr>
             <tr>
-                <th>Yes, No</th>
+                <th>Yes, No, N/A</th>
                 <th>Cite evidence</th>
             </tr>
         </thead>
@@ -48,11 +58,31 @@
             </tr>
             <g:each in="${sectionsByTheme[theme]}" var="section">
 
-                <g:render template="performanceSelfAssessmentSection" model="${section}"></g:render>
+                <g:render template="/report/performanceSelfAssessmentSection" model="${section}"></g:render>
 
             </g:each>
         </g:each>
     </table>
+
+    <br/>
+
+    <div class="row-fluid">
+        <div class="span7">
+            <label for="peerAssistanceRequired">Are there any areas of the performance expectations your region would like peer assistance in meeting?</label>
+        </div>
+        <div class="span5">
+            <textarea id="peerAssistanceRequired" type="text" data-bind="textInput:data.peerAssistanceRequired"></textarea>
+        </div>
+    </div>
+
+    <div class="row-fluid">
+        <div class="span7">
+            <label for="peerAssistanceOffered">Are there any areas of the performance expectations your region would be able to provide peer assistance on?</label>
+        </div>
+        <div class="span5">
+            <textarea id="peerAssistanceOffered" type="text" data-bind="textInput:data.peerAssistanceOffered"></textarea>
+        </div>
+    </div>
 
     <div class="form-actions">
 
@@ -74,6 +104,10 @@
         self.progress = 'finished'; // If the report can be validated and saved it is complete.
         self.data = {};
         self.data.state = '${state?:''}'; // For ease of reporting.
+        self.data.whoCompletedForm = ko.observable();
+        self.data.peerAssistanceRequired = ko.observable();
+        self.data.peerAssistanceOffered = ko.observable();
+
         <g:each in="${themes}" var="theme">
         <g:each in="${sectionsByTheme[theme]}" var="section">
         <g:each in="${section.questions}" var="question">
@@ -85,11 +119,11 @@
 
         self.data.${section.name}OverallRating = ko.computed(function() {
             <g:each in="${section.questions}" var="question">
-            if (self.data.meetsExpectation${question.name}() != 'Yes') {
+            if (self.data.meetsExpectation${question.name}() == 'No') {
                 return 0;;
             }
             </g:each>
-            return (self.data.meetsExpectation${section.additionalPracticeQuestion.name}() != 'Yes') ? 1 : 2;
+            return (self.data.meetsExpectation${section.additionalPracticeQuestion.name}() == 'No') ? 1 : 2;
         });
 
         </g:each>
@@ -105,7 +139,14 @@
            };
         };
 
+        self.cancel = function() {
+            window.location = config.returnToUrl;
+        }
+
         self.load = function(data) {
+           self.data.whoCompletedForm(data.whoCompletedForm || '');
+           self.data.peerAssistanceRequired(data.peerAssistanceRequired || '');
+           self.data.peerAssistanceOffered(data.peerAssistanceOffered || '');
     <g:each in="${themes}" var="theme">
         <g:each in="${sectionsByTheme[theme]}" var="section">
             <g:each in="${section.questions}" var="question">

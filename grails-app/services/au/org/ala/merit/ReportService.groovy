@@ -451,7 +451,7 @@ class ReportService {
         Map filter = state?[type:'DISCRETE', property:'data.state']:[:]
         Map config = [groups:filter, childAggregations: aggregations, label:'Performance assessment by state']
 
-        Map searchCriteria = [type:'Performance Management Framework - Self Assessment', dateProperty:'toDate', 'startDate':(year-1)+'-07-01T10:00:00Z', 'endDate':year+'-07-01T10:00:00Z']
+        Map searchCriteria = [type:'Performance Management Framework - Self Assessment', publicationStatus:REPORT_APPROVED, dateProperty:'toDate', 'startDate':(year-1)+'-07-01T10:00:00Z', 'endDate':year+'-07-01T10:00:00Z']
 
         String url =  grailsApplication.config.ecodata.baseUrl+"report/runReport"
 

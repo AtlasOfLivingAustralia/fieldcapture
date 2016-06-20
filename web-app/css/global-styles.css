@@ -660,11 +660,14 @@ button#risks-cancel:hover {
 .performance-report td.evidence {
 	width:45%;
 }
-.performance-report td textarea {
+
+.performance-report  textarea {
 	width:100%;
 	box-sizing: border-box;
 	height: 5em;
 }
+
+
 .rating-container {
 	position: relative;
 }
