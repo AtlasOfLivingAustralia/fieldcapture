@@ -117,12 +117,6 @@ class OrganisationService extends au.org.ala.fieldcapture.OrganisationService {
         Map organisation = get(organisationId)
         Map resp = reportService.submit(reportId)
 
-        // Create a PDF & document also.
-        Map model = reportService.performanceReportModel(reportId)
-        String reportDoc = groovyPageRenderer.render(view:'/report/performanceReportView', model:model)
-        def doc = [name:model.report.name, organisationId:model.organisationId, reportId:reportId, saveAs:'pdf', type:'pdf', role:'report',filename:organisation.name + ' - ' + model.report.name, readOnly:true, public:false]
-        documentService.createTextDocument(doc, reportDoc)
-
         if (!resp.error) {
             emailService.sendOrganisationReportSubmittedEmail(organisationId, [organisation:organisation])
         }
@@ -150,7 +144,7 @@ class OrganisationService extends au.org.ala.fieldcapture.OrganisationService {
         Map resp = reportService.reject(reportId, category, reason)
 
         if (!resp.error) {
-            emailService.sendOrganisationReportRejectedEmail(organisationId, [organisation:organisation])
+            emailService.sendOrganisationReportRejectedEmail(organisationId, [organisation:organisation, reason:reason])
         }
         else {
             return [success:false, error:resp.error]

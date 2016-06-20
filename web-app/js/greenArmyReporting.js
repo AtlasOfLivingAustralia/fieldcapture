@@ -122,11 +122,23 @@ var ReportViewModel = function(report) {
         $(declaration).modal({ backdrop: 'static', keyboard: true, show: true }).on('hidden', function() {ko.cleanNode(declaration);});
 
     };
-    self.rejectReport = function(data, event) {
 
-        if ($('.validationEngineContainer').validationEngine('attach').validationEngine('validate')) {
-            self.changeReportStatus(fcConfig.rejectReportUrl, 'reject', 'Rejecting report...', 'Report rejected.');
-        }
+    this.rejectReport = function() {
+        var $reasonModal = $('#reason-modal');
+        var reasonViewModel = {
+            reason: self.reason,
+            rejectionCategories: ['Minor', 'Moderate', 'Major'],
+            rejectionCategory: self.category,
+            title:'Return report',
+            buttonText: 'Return',
+            submit:function() {
+                if ($('.validationEngineContainer').validationEngine('attach').validationEngine('validate')) {
+                    self.changeReportStatus(fcConfig.rejectReportUrl, 'return', 'Returning report...', 'Report returned.');
+                }
+            }
+        };
+        ko.applyBindings(reasonViewModel, $reasonModal[0]);
+        $reasonModal.modal({backdrop: 'static', keyboard:true, show:true}).on('hidden', function() {ko.cleanNode($reasonModal[0])});
     };
 };
 
@@ -238,6 +250,11 @@ var ReportsViewModel = function(reports, projects, availableReports) {
             var toDate = moment(self.toDate());
 
             return fromDate.get('year') + ' / ' + toDate.get('year') + ' ' + self.type();
+        });
+
+        self.dueDate = ko.computed(function() {
+            var toDate = moment(self.toDate()).add(1, 'months').add(15, 'days');
+            return toDate.toDate().toISOStringNoMillis();
         });
 
         self.save = function() {

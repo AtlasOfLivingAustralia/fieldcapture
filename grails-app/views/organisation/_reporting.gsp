@@ -148,22 +148,13 @@
 
 <g:if test="${fc.userIsAlaOrFcAdmin()}">
     <p>
-    Withdrawal reason:
-    <div class="validationEngineContainer">
-        <textarea style="width:90%;" data-bind="value:reason" data-validation-engine="validate[required]"></textarea>
-    </div>
     <button type="button" data-bind="click:rejectReport" class="btn btn-danger"><i class="icon-remove icon-white"></i> Withdraw approval</button></g:if>
     </p>
 </script>
 <script id="submitted" type="text/html">
 <p><span class="badge badge-info">Report submitted</span></p>
 <g:if test="${isGrantManager || fc.userIsAlaOrFcAdmin()}">
-    <p>
-    Confirm / More Information Reason:
-    <div class="validationEngineContainer">
 
-    <textarea style="width:90%;" data-bind="value:reason" data-validation-engine="validate[required]"></textarea>
-    </div>
     <span class="btn-group">
         <button type="button" data-bind="click:approveReport" class="btn btn-success"><i class="icon-ok icon-white"></i> Confirm</button>
         <button type="button" data-bind="click:rejectReport" class="btn btn-danger"><i class="icon-remove icon-white"></i> More Information Required</button>
@@ -172,6 +163,27 @@
 </g:if>
 </script>
 </div>
+
+<!-- ko stopBinding: true -->
+<div id="reason-modal" class="modal hide fade">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3><span data-bind="text:title"></span> reason</h3>
+    </div>
+    <div class="modal-body">
+        <p data-bind="visible:rejectionCategories">
+            Rejection Category:<br/>
+            <select data-bind="options:rejectionCategories, value:rejectionCategory"></select>
+        </p>
+        <p>Please enter a reason.  This reason will be included in the email sent to the project administrator(s).</p>
+        <textarea rows="5" style="width:97%" data-bind="textInput:reason"></textarea>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-success" data-bind="click:submit, text:buttonText, enable:reason" data-dismiss="modal" aria-hidden="true"></button>
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+    </div>
+</div>
+<!-- /ko -->
 
 <r:script type="text/javascript">
 
