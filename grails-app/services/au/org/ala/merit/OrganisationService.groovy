@@ -117,8 +117,10 @@ class OrganisationService extends au.org.ala.fieldcapture.OrganisationService {
         Map organisation = get(organisationId)
         Map resp = reportService.submit(reportId)
 
+        Map report = reportService.get(reportId)
+
         if (!resp.error) {
-            emailService.sendOrganisationReportSubmittedEmail(organisationId, [organisation:organisation])
+            emailService.sendOrganisationReportSubmittedEmail(organisationId, [organisation:organisation, report:report])
         }
         else {
             return [success:false, error:resp.error]
@@ -130,8 +132,10 @@ class OrganisationService extends au.org.ala.fieldcapture.OrganisationService {
         Map organisation = get(organisationId)
         Map resp = reportService.approve(reportId, reason)
 
+        Map report = reportService.get(reportId)
+
         if (!resp.error) {
-            emailService.sendOrganisationReportApprovedEmail(organisationId, [organisation:organisation])
+            emailService.sendOrganisationReportApprovedEmail(organisationId, [organisation:organisation, report:report, reason: reason])
         }
         else {
             return [success:false, error:resp.error]
@@ -143,8 +147,10 @@ class OrganisationService extends au.org.ala.fieldcapture.OrganisationService {
         Map organisation = get(organisationId)
         Map resp = reportService.reject(reportId, category, reason)
 
+        Map report = reportService.get(reportId)
+
         if (!resp.error) {
-            emailService.sendOrganisationReportRejectedEmail(organisationId, [organisation:organisation, reason:reason])
+            emailService.sendOrganisationReportRejectedEmail(organisationId, [organisation:organisation, report:report, reason:reason])
         }
         else {
             return [success:false, error:resp.error]
