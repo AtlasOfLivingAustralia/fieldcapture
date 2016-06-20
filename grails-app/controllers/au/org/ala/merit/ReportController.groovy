@@ -86,23 +86,51 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
     }
 
     def performanceAssessmentSummaryReport() {
+
         String organisationId = params.organisationId
 
         List reports = reportService.findReportsForOrganisation(organisationId)
+
         reports = reports.findAll{it.progress == 'finished'}.sort{it.fromDate}.reverse()
 
+
         if (reports.size()) {
-            Map model = reportService.performanceReportModel(reports[0].reportId)
-            if (reports.size() > 1) {
-                model.previousReport = reports[1]
+            int index = 0
+            if (params.year) {
+                int year = Integer.parseInt(params.year)
+                reports.eachWithIndex{ Map report, int i ->
+                    DateTime date = DateUtils.parse(report.toDate)
+                    if (date.getYear() == year) {
+                        index = i
+                    }
+                }
+            }
+            Map model = reportService.performanceReportModel(reports[index].reportId)
+            model.years = years(reports)
+            model.year = params.year
+
+            if (reports.size() > index) {
+                model.previousReport = reports[index+1]
             }
             render view:'_performanceAssessmentSummary', model:model
         }
         else {
             render view:'_noReportData'
         }
+    }
+
+    private List years(List reports) {
+        List years = []
 
 
+        reports.each { report ->
+            DateTime date = DateUtils.parse(report.toDate)
+            if (!years.contains(date.getYear())) {
+                years << date.getYear()
+            }
+        }
+
+        years
     }
 
     def performanceAssessmentComparisonReport() {
@@ -141,6 +169,7 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
 
         if (reports.size()) {
             Map model = reportService.performanceReportModel(reports[0].reportId)
+            model.years = years(reports)
             model.results = resultsForState?.results ?: [:]
             model.states = states
             model.years = years
@@ -154,7 +183,7 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
         }
     }
 
-    Map mergeResults(String state1, String state2, List results) {
+    private Map mergeResults(String state1, String state2, List results) {
         Map state1Results = results.find{it.group == state1} ?: [:]
         Map state2Results = results.find{it.group == state2} ?: [:]
 
