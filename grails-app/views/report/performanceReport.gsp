@@ -24,8 +24,7 @@
     </ul>
     <g:render template="/shared/flashScopeMessage" plugin="fieldcapture-plugin"/>
 
-    <h2>Performance expectations framework</h2>
-    <h3>Self assessment worksheet</h3>
+    <h3>${report.name}</h3>
 
     <br/>
     <div class="row-fluid">
@@ -59,7 +58,7 @@
             </tr>
             <g:each in="${sectionsByTheme[theme]}" var="section">
 
-                <g:render template="performanceSelfAssessmentSection" model="${section}"></g:render>
+                <g:render template="/report/performanceSelfAssessmentSection" model="${section}"></g:render>
 
             </g:each>
         </g:each>

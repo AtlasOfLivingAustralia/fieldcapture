@@ -145,9 +145,9 @@ class OrganisationService extends au.org.ala.fieldcapture.OrganisationService {
         return [success:true]
     }
 
-    def rejectReport(String organisationId, String reportId, String reason) {
+    def rejectReport(String organisationId, String reportId, String reason, String category) {
         Map organisation = get(organisationId)
-        Map resp = reportService.reject(reportId, reason)
+        Map resp = reportService.reject(reportId, category, reason)
 
         if (!resp.error) {
             emailService.sendOrganisationReportRejectedEmail(organisationId, [organisation:organisation])

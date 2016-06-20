@@ -19,7 +19,7 @@ modules = {
 
     newSkin {
         dependsOn 'nrmSkin'
-        resource url: 'css/global-styles.css'
+        resource url: 'css/global-styles.css', attrs:[media:'screen,print']
     }
 
     homepage {

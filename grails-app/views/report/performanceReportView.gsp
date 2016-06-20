@@ -1,40 +1,31 @@
 
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page import="au.org.ala.fieldcapture.DateUtils" contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
     <meta name="layout" content="${(grailsApplication.config.layout.skin?:'main')+'Print'}"/>
     <title>Performance Report | MERIT</title>
-    <%-- styles are inline for the benefit of PDF generation --%>
+    <%-- Override the bootstrap print style that sets background: transparent !important  --%>
     <style type="text/css">
-    .performance-report .title-row {
-        background-color: #f5f5f5;
-    }
-    .performance-report .header th {
-        white-space: normal;
-    }
-
-    .performance-report td.question {
-        width:45%;
-    }
-    .performance-report td.meets-expectations {
-        width:5%;
-    }
-    .performance-report td.evidence {
-        width:45%;
-    }
-    .performance-report td textarea {
-        width:100%;
-        box-sizing: border-box;
-        height: 5em;
-    }
+        .performance-report .title-row {
+            background-color: #f5f5f5 !important;
+        }
+        table thead th {
+            background-color: #d9edf7 !important;
+        }
     </style>
 </head>
 
 <body>
 <div class="${containerType} validationEngineContainer performance-report">
 
-    <h2>Performance expectations framework</h2>
-    <h3>Self assessment worksheet</h3>
+    <h3>${report.name}</h3>
+
+    <h4>${organisation.name}</h4>
+    <hr/>
+    <g:if test="${submittingUserName}">
+        Report submitted by ${submittingUserName} at ${submissionDate}
+        <hr/>
+    </g:if>
 
     <br/>
     <div class="row-fluid">

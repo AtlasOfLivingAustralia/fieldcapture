@@ -28,7 +28,7 @@ import java.text.SimpleDateFormat
  */
 class OrganisationController extends au.org.ala.fieldcapture.OrganisationController {
 
-    def activityService, metadataService, projectService, excelImportService, reportService
+    def activityService, metadataService, projectService, excelImportService, reportService, pdfConverterService, authService
 
 
     protected Map content(organisation) {
@@ -243,13 +243,44 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
         Map report = reportService.get(reportId)
         Map organisation = organisationService.get(report.organisationId)
         if (organisationService.isUserAdminForOrganisation(report.organisationId)) {
-            chain(controller: 'report', action:'performanceReport', id:reportId, params:[edit:params.edit, state:organisation.state])
+            Map model = reportService.performanceReportModel(reportId)
+            model.state = organisation.state ?: 'Unknown'
+            model.organisation = organisation
+
+            boolean edit = params.edit
+            if (reportService.isSubmittedOrApproved(model.report)) {
+                model.submittingUserName = authService.getUserForUserId(model.report.submittedBy)?.displayName ?: 'Unknown user'
+                model.submissionDate = DateUtils.displayFormatWithTime(model.report.dateSubmitted)
+                edit = false
+            }
+            String view = edit ? '/report/performanceReport' : '/report/performanceReportView'
+
+            render view: view, model:model
         }
         else {
             flash.message = "You don't have permission to edit the report"
             chain(action:'index', id: report.organisationId)
         }
     }
+
+    def performanceReportPDF(String id) {
+        Map report = reportService.get(id)
+        if (organisationService.isUserAdminForOrganisation(report.organisationId)) {
+
+            Map model = reportService.performanceReportModel(id)
+            model.edit = false
+
+            String page = g.include(controller:'organisation', action:'editOrganisationReport', id:id, params:[edit:false, reportId:id])
+
+            response.setContentType('application/pdf')
+            pdfConverterService.convertToPDF(page, response.outputStream)
+        }
+        else {
+            flash.message = "You don't have permission to view the report"
+            chain(action:'index', id: report.organisationId)
+        }
+    }
+
 
     def createAdHocReport(String id) {
 
@@ -302,7 +333,7 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
         }
         def reportDetails = request.JSON
 
-        def result = organisationService.rejectReport(id, reportDetails.reportId, reportDetails.reason)
+        def result = organisationService.rejectReport(id, reportDetails.reportId, reportDetails.category, reportDetails.reason)
 
         render result as JSON
     }

@@ -27,8 +27,10 @@
             <td>
                 <button type="button" class="btn btn-container" data-bind="visible:editable, click:$root.editReport"><i class="icon-edit" title="Complete this report"></i></button>
                 <button type="button" class="btn btn-container" data-bind="visible:viewable, click:$root.viewReport"><i class="icon-eye-open" title="View this report"></i></button>
+                <button type="button" class="btn btn-container" data-bind="visible:viewable, click:$root.downloadReport"><i class="icon-download" title="Download a PDF of this report"></i></button>
+
             </td>
-            <td><a data-bind="visible:editable, attr:{href:editUrl, title:title}" title="Edit reports for all projects in spreadsheet format"><span data-bind="text:description"></span></a>
+            <td><a data-bind="visible:editable, attr:{href:editUrl, title:title}" title="Complete this report"><span data-bind="text:description"></span></a>
                 <span data-bind="visible:!editable, text:description"></span>
             </td>
             <td data-bind="text:period"></td>
@@ -147,7 +149,7 @@
 <g:if test="${fc.userIsAlaOrFcAdmin()}">
     <p>
     Withdrawal reason:
-    <div>
+    <div class="validationEngineContainer">
         <textarea style="width:90%;" data-bind="value:reason" data-validation-engine="validate[required]"></textarea>
     </div>
     <button type="button" data-bind="click:rejectReport" class="btn btn-danger"><i class="icon-remove icon-white"></i> Withdraw approval</button></g:if>
@@ -158,7 +160,8 @@
 <g:if test="${isGrantManager || fc.userIsAlaOrFcAdmin()}">
     <p>
     Confirm / More Information Reason:
-    <div>
+    <div class="validationEngineContainer">
+
     <textarea style="width:90%;" data-bind="value:reason" data-validation-engine="validate[required]"></textarea>
     </div>
     <span class="btn-group">
