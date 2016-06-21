@@ -86,23 +86,51 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
     }
 
     def performanceAssessmentSummaryReport() {
+
         String organisationId = params.organisationId
 
         List reports = reportService.findReportsForOrganisation(organisationId)
+
         reports = reports.findAll{it.progress == 'finished'}.sort{it.fromDate}.reverse()
 
+
         if (reports.size()) {
-            Map model = reportService.performanceReportModel(reports[0].reportId)
-            if (reports.size() > 1) {
-                model.previousReport = reports[1]
+            int index = 0
+            if (params.year) {
+                int year = Integer.parseInt(params.year)
+                reports.eachWithIndex{ Map report, int i ->
+                    DateTime date = DateUtils.parse(report.toDate)
+                    if (date.getYear() == year) {
+                        index = i
+                    }
+                }
+            }
+            Map model = reportService.performanceReportModel(reports[index].reportId)
+            model.years = reportYears(reports)
+            model.year = params.year
+
+            if (reports.size() > index) {
+                model.previousReport = reports[index+1]
             }
             render view:'_performanceAssessmentSummary', model:model
         }
         else {
             render view:'_noReportData'
         }
+    }
+
+    private List reportYears(List reports) {
+        List years = []
 
 
+        reports.each { report ->
+            DateTime date = DateUtils.parse(report.toDate)
+            if (!years.contains(date.getYear())) {
+                years << date.getYear()
+            }
+        }
+
+        years
     }
 
     def performanceAssessmentComparisonReport() {
@@ -116,7 +144,7 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
             date = date.minusYears(1)
         }
 
-        List states = ['', 'ACT / NSW', 'Vic', 'WA / NT', 'SA', 'Tas', 'Qld']
+        List states = ['', 'ACT / NSW', 'VIC', 'WA / NT', 'SA', 'TAS', 'QLD']
 
         String organisationId = params.organisationId
         String state = params.state ?: ""
@@ -135,26 +163,25 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
             resultsForState = comparison.resp?.groups?.find{it.group == state} ?: [:]
         }
 
-
-        List reports = reportService.findReportsForOrganisation(organisationId)
-        reports = reports.findAll{it.progress == 'finished'}.sort{it.fromDate}.reverse()
-
-        if (reports.size()) {
-            Map model = reportService.performanceReportModel(reports[0].reportId)
-            model.results = resultsForState?.results ?: [:]
-            model.states = states
-            model.years = years
-            model.state = state
-            model.year = year
-
-            render view:'_performanceAssessmentComparison', model:model
+        List reports = []
+        if (organisationId) {
+            reports = reportService.findReportsForOrganisation(organisationId)
+            reports = reports.findAll{it.progress == 'finished'}.sort{it.fromDate}.reverse()
         }
-        else {
-            render view:'_noReportData'
-        }
+
+        String reportId = reports?reports[0].reportId : ''
+        Map model = reportService.performanceReportModel(reportId)
+        model.years = reportYears(reports)
+        model.results = resultsForState?.results ?: [:]
+        model.states = states
+        model.years = years
+        model.state = state
+        model.year = year
+
+        render view:'_performanceAssessmentComparison', model:model
     }
 
-    Map mergeResults(String state1, String state2, List results) {
+    private Map mergeResults(String state1, String state2, List results) {
         Map state1Results = results.find{it.group == state1} ?: [:]
         Map state2Results = results.find{it.group == state2} ?: [:]
 

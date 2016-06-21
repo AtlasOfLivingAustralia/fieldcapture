@@ -1,4 +1,10 @@
-<table class="row-fluid performance-report">
+<div id="performance-report">
+<div class="row-fluid">
+    <span class="span3">
+        <label for="year">Year: </label><g:select id="selectedYear" name="year" from="${years}" value="${year}"></g:select>
+    </span>
+</div>
+<table class="row-fluid">
     <thead>
     <tr>
         <th colspan="3">Result of self assessment</th>
@@ -37,3 +43,18 @@
     </tbody>
 
 </table>
+
+<script>
+    $('#selectedYear').change(function(e) {
+        e.preventDefault();
+        var data =  $('#selectedYear').serialize();
+
+        $('#performance-report').html('');
+        $('.loading-message').show();
+        $.get(fcConfig.performanceAssessmentSummaryReportUrl, data, function(data) {
+            $('.loading-message').hide();
+            $('#performance-report').html(data);
+        });
+    });
+</script>
+</div>

@@ -2,13 +2,13 @@
 
 <form id="performance-report-form" class="form-actions">
 
-    <strong>Compare your performance to:</strong>
+    <strong>Compare performance:</strong>
     <div class="row-fluid">
         <span class="span3">
             <label for="year">Year: </label><g:select name="year" from="${years}" value="${year}"></g:select>
         </span>
         <span class="span3">
-            <label for="state">State: </label><g:select name="state" from="${states}" value="${state}"></g:select>
+            <label for="state">State: (leave blank for Australia) </label><g:select name="state" from="${states}" value="${state}"></g:select>
         </span>
 
     </div>
@@ -31,6 +31,7 @@
 
 </form>
 
+<g:if test="${results || report}">
 <table class="row-fluid performance-report">
     <thead>
     <tr>
@@ -50,7 +51,7 @@
                 <li>Meets all expected practices and has advanced practices</li>
             </ul>
         </th>
-        <th>You verse ${state?:'All'}</th>
+        <th>You verse ${state?:'All'} <fc:iconHelp>Only approved reports are included in the counts in this column.  Cells in yellow indicate the values selected by this organisation</fc:iconHelp></th>
     </tr>
     <g:each in="${themes}" var="theme">
         <g:each in="${sectionsByTheme[theme]}" var="section" status="i">
@@ -83,4 +84,9 @@
     </tbody>
 
 </table>
+</g:if>
+<g:else>
+    <g:render template="noReportData"/>
+</g:else>
+
 </div>
