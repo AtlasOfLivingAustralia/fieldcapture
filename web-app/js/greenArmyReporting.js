@@ -152,14 +152,14 @@ var ReportsViewModel = function(reports, projects, availableReports) {
     self.filteredReports = ko.computed(function() {
 
         var filteredReports = [];
-        var nextMonth = moment().add(1, 'months').format();
+        var now = moment().toDate().toISOStringNoMillis();
 
         $.each(self.allReports(), function(i, report) {
             if (self.hideApprovedReports() && report.publicationStatus === 'published') {
                 return;
             }
 
-            if (self.hideFutureReports() && report.dueDate > nextMonth) {
+            if (self.hideFutureReports() && report.fromDate > now) {
                 return;
             }
             filteredReports.push(new ReportViewModel(report));
