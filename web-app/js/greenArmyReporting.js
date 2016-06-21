@@ -172,7 +172,6 @@ var ReportsViewModel = function(reports, projects, availableReports) {
             }
             return result;
         });
-        console.log(filteredReports);
         return filteredReports;
     });
 
