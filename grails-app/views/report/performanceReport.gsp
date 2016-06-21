@@ -25,6 +25,7 @@
     <g:render template="/shared/flashScopeMessage" plugin="fieldcapture-plugin"/>
 
     <h3>${report.name}</h3>
+    <h4>${organisation.name}</h4>
 
     <br/>
     <div class="row-fluid">
