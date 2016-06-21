@@ -144,7 +144,7 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
             date = date.minusYears(1)
         }
 
-        List states = ['', 'ACT / NSW', 'Vic', 'WA / NT', 'SA', 'Tas', 'Qld']
+        List states = ['', 'ACT / NSW', 'VIC', 'WA / NT', 'SA', 'TAS', 'QLD']
 
         String organisationId = params.organisationId
         String state = params.state ?: ""
