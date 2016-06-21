@@ -119,6 +119,17 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
         }
     }
 
+    private Map reportForYear(int year, List reports) {
+        int index = -1
+        reports.eachWithIndex{ Map report, int i ->
+            DateTime date = DateUtils.parse(report.toDate)
+            if (date.getYear() == year) {
+                index = i
+            }
+        }
+        return index >= 0 ? reports[index] : null
+    }
+
     private List reportYears(List reports) {
         List years = []
 
@@ -164,12 +175,16 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
         }
 
         List reports = []
+        String reportId = null
         if (organisationId) {
             reports = reportService.findReportsForOrganisation(organisationId)
             reports = reports.findAll{it.progress == 'finished'}.sort{it.fromDate}.reverse()
+            if (reports) {
+                Map report = reportForYear(year, reports)
+                reportId = report ? report.reportId : ''
+            }
         }
 
-        String reportId = reports?reports[0].reportId : ''
         Map model = reportService.performanceReportModel(reportId)
         model.years = reportYears(reports)
         model.results = resultsForState?.results ?: [:]
