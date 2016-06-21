@@ -106,7 +106,7 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
                 }
             }
             Map model = reportService.performanceReportModel(reports[index].reportId)
-            model.years = years(reports)
+            model.years = reportYears(reports)
             model.year = params.year
 
             if (reports.size() > index) {
@@ -119,7 +119,7 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
         }
     }
 
-    private List years(List reports) {
+    private List reportYears(List reports) {
         List years = []
 
 
@@ -163,24 +163,22 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
             resultsForState = comparison.resp?.groups?.find{it.group == state} ?: [:]
         }
 
-
-        List reports = reportService.findReportsForOrganisation(organisationId)
-        reports = reports.findAll{it.progress == 'finished'}.sort{it.fromDate}.reverse()
-
-        if (reports.size()) {
-            Map model = reportService.performanceReportModel(reports[0].reportId)
-            model.years = years(reports)
-            model.results = resultsForState?.results ?: [:]
-            model.states = states
-            model.years = years
-            model.state = state
-            model.year = year
-
-            render view:'_performanceAssessmentComparison', model:model
+        List reports = []
+        if (organisationId) {
+            reports = reportService.findReportsForOrganisation(organisationId)
+            reports = reports.findAll{it.progress == 'finished'}.sort{it.fromDate}.reverse()
         }
-        else {
-            render view:'_noReportData'
-        }
+
+        String reportId = reports?reports[0].reportId : ''
+        Map model = reportService.performanceReportModel(reportId)
+        model.years = reportYears(reports)
+        model.results = resultsForState?.results ?: [:]
+        model.states = states
+        model.years = years
+        model.state = state
+        model.year = year
+
+        render view:'_performanceAssessmentComparison', model:model
     }
 
     private Map mergeResults(String state1, String state2, List results) {

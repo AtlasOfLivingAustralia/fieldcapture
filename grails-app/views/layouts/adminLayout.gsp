@@ -58,6 +58,7 @@
                         <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'editHelpLinks')}" title="Help Resources"/>
                         <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'editSiteBlog')}" title="Site Blog"/>
                         <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'selectHomePageImages')}" title="Home Page Images"/>
+                        <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'adminReports')}" title="Performance Self Assessment Comparison"/>
                     </g:if>
                     <g:if test="${fc.userInRole(role: grailsApplication.config.security.cas.alaAdminRole)}">
                         <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'tools')}" title="Tools" />

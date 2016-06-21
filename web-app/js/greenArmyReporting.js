@@ -150,9 +150,7 @@ var ReportsViewModel = function(reports, projects, availableReports) {
     self.hideFutureReports = ko.observable(true);
 
     self.filteredReports = ko.computed(function() {
-        if (!self.hideApprovedReports() && !self.hideFutureReports()) {
-            return self.allReports();
-        }
+
         var filteredReports = [];
         var nextMonth = moment().add(1, 'months').format();
 
@@ -174,6 +172,7 @@ var ReportsViewModel = function(reports, projects, availableReports) {
             }
             return result;
         });
+        console.log(filteredReports);
         return filteredReports;
     });
 

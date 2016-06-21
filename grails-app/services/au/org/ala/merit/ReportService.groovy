@@ -377,7 +377,11 @@ class ReportService {
     }
 
     Map performanceReportModel(String id) {
-        Map report = get(id)
+        Map report = null
+        if (id) {
+            report = get(id)
+        }
+
         List themes = ["Regional NRM Organisation Governance", "Australian Government NRM Delivery"]
 
         List sections = [

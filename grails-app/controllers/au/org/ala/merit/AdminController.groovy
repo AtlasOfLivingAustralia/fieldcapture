@@ -329,5 +329,9 @@ class AdminController extends au.org.ala.fieldcapture.AdminController {
     def selectHomePageImages() {
     }
 
+    def adminReports() {
+        [reports:[[name: 'performanceAssessmentComparison', label: 'Performance Assessment Comparison']]]
+    }
+
 
 }
