@@ -9,7 +9,7 @@ import org.joda.time.Period
 
 class ReportController extends au.org.ala.fieldcapture.ReportController {
 
-    def activityService, projectService, organisationService, commonService, statisticsFactory, reportService, authService
+    def activityService, projectService, organisationService, commonService, statisticsFactory, reportService, userService
 
     static defaultAction = "dashboard"
 
@@ -155,9 +155,14 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
             date = date.minusYears(1)
         }
 
+        String organisationId = params.organisationId
+
         List states = ['', 'ACT / NSW', 'VIC', 'WA / NT', 'SA', 'TAS', 'QLD']
 
-        String organisationId = params.organisationId
+        if (userService.userIsAlaOrFcAdmin() && !organisationId) {
+            states = ['', 'ACT',  'NSW', 'VIC', 'WA', 'NT', 'SA', 'TAS', 'QLD']
+        }
+
         String state = params.state ?: ""
         int year = params.year ? Integer.parseInt(params.year) : years[0]
 
