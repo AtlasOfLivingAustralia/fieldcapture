@@ -47,14 +47,14 @@
 
             <div class="project-report" data-bind="visible:!canModifyProjectStart || !isPlanEditable()">
                 <span class="pull-right">
-                    <button class="btn btn-info" data-bind="click:configureProjectReport">Project Report</button><fc:iconHelp>Generate a project report covering activities from the selected stages.  The report will open in a new window.</fc:iconHelp> </span>
+                    <button class="btn btn-info" data-bind="click:configureProjectReport">Project Summary</button><fc:iconHelp>Generate a project summary...</fc:iconHelp> </span>
                 </span>
             </div>
             <div class="modal hide" id="projectReportOptions">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h4 class="modal-title">Project Report Options</h4>
+                            <h4 class="modal-title">Project Summary Options</h4>
                         </div>
 
                         <div class="modal-body">
@@ -72,10 +72,15 @@
                                     </div>
                                 </div>
                                 <div class="control-group">
-                                    <label class="control-label">Included content: </label>
+                                    <label class="control-label">Optional content: </label>
                                     <div class="controls">
                                         <!-- ko foreach:projectReportSections -->
-                                            <label class="checkbox"><input type="checkbox" data-bind="checkedValue: $data, checked: $parent.reportIncludedSections"><span data-bind="text:$data"></span></label>
+                                            <label class="checkbox"><input type="checkbox" data-bind="checkedValue: $data.value, checked: $parent.reportIncludedSections">
+                                                <span data-bind="text:$data.text"></span>
+                                                <!-- ko if:$data.help -->
+                                                    <i class="icon-question-sign" data-bind="popover:{content:$data.help, placement:'top'}"></i>
+                                                <!-- /ko -->
+                                            </label>
                                         <!-- /ko -->
                                     </div>
                                 </div>
@@ -1130,8 +1135,22 @@
             }
             self.reportFromStage = ko.observable(defaultReportStage);
             self.reportToStage = ko.observable(defaultReportStage);
-            self.projectReportSections = ['Images', 'Activity Summary', 'Documents', 'Outcomes', 'Output Targets', 'Outputs without targets', 'Progress Summary', 'Project Risks', 'Project Risk Changes', 'Activity Details'];
-            self.reportIncludedSections = ko.observableArray(self.projectReportSections);
+            self.projectReportSections = [
+               {value:'Images', text:'Images'},
+               {value:'Activity status summary', text:'Activity status summary'},
+               {value:'Supporting documents', text:'Supporting documents'},
+               {value:'Project outcomes', text:'Project outcomes'},
+               {value:'Progress against output targets', text: 'Progress against output targets'},
+               {value:'Progress of outputs without targets', text:'Progress of outputs without targets'},
+               {value:'Stage report', text:'Stage report', help:'Displays the most recent ‘Progress, Outcomes and Learning - stage report’ or ‘Outcomes, Evaluation and Learning - final report’ form for the period selected.' },
+               {value:'Project risks', text:'Project risks'},
+               {value:'Project risks changes', text:'Project risks changes', help:'Displays all risks created or modified in the reporting period selected.'},
+               {value:'Progress against activities', text:'Progress against activities', help:'Includes all activity reporting data for the selected stage(s).'}];
+
+            self.reportIncludedSections = ko.observableArray();
+            for (var i=0; i<self.projectReportSections.length; i++) {
+                self.reportIncludedSections.push(self.projectReportSections[i].value);
+            }
 
             self.reportableStages = ko.computed(function() {
                 var stages = [];

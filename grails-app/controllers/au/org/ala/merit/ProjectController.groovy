@@ -139,8 +139,6 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
             publicImages = publicImages.subList(0, MAX_IMAGES)
         }
 
-        List orderedStageNames = project.reports?.sort{it.toDate}.collect{it.name}
-
         Map<String, Map<String, Integer>> activityCountByStage = new TreeMap()
         project.reports?.each { Map report ->
             if (report.fromDate >= fromDate && report.toDate <= toDate) {
@@ -190,11 +188,17 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
             role = 'MERIT user'
         }
 
-        Map latestStageReport = project.activities?.findAll {
-            it.type == ProjectService.STAGE_REPORT_ACTIVITY_TYPE && reportService.isSubmittedOrApproved(it) && it.plannedEndDate <= toDate
-        }?.max { it.plannedEndDate }
+        // Use the final report if available, otherwise fall back to the stage report.
+        Map stageReportModel = null
+        Map latestStageReport = getMostRecentActivityBefore(project.activities, ProjectService.FINAL_REPORT_ACTIVITY_TYPE ,toDate)
 
-        Map stageReportModel = activitiesModel.activities.find {it.name == ProjectService.STAGE_REPORT_ACTIVITY_TYPE}
+        if (!latestStageReport) {
+            latestStageReport = getMostRecentActivityBefore(project.activities, ProjectService.STAGE_REPORT_ACTIVITY_TYPE ,toDate)
+            stageReportModel = activitiesModel.activities.find {it.name == ProjectService.STAGE_REPORT_ACTIVITY_TYPE}
+        }
+        else {
+            stageReportModel = activitiesModel.activities.find {it.name == ProjectService.FINAL_REPORT_ACTIVITY_TYPE}
+        }
 
         List outcomes = project.custom?.details?.objectives?.rows1?.findAll{it.description}
 
@@ -206,6 +210,12 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
 
         [project:project, content:params.sections, role:role, images:publicImages, activityCountByStage:activityCountByStage, outcomes:outcomes, metrics: projectService.summary(id),
         activityModels:activityModels, orderedStageNames:reportedStages, activitiesByStage:activitiesByStage, outputModels:outputModels, stageReportModel:stageReportModel, latestStageReport:latestStageReport, risksComparison: risksComparison]
+    }
+
+    private Map getMostRecentActivityBefore(List activities, String activityType, String isoEndDate) {
+        activities?.findAll {
+            it.type == ProjectService.STAGE_REPORT_ACTIVITY_TYPE && reportService.isSubmittedOrApproved(it) && it.plannedEndDate <= isoEndDate
+        }?.max { it.plannedEndDate }
     }
 
 
