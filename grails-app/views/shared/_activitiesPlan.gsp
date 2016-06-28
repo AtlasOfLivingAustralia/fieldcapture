@@ -47,14 +47,14 @@
 
             <div class="project-report" data-bind="visible:!canModifyProjectStart || !isPlanEditable()">
                 <span class="pull-right">
-                    <button class="btn btn-info" data-bind="click:configureProjectReport">Project Report</button><fc:iconHelp>Generate a project report covering activities from the selected stages.  The report will open in a new window.</fc:iconHelp> </span>
+                    <button class="btn btn-info" data-bind="click:configureProjectReport">Project Summary</button><fc:iconHelp>Generate a project summary...</fc:iconHelp> </span>
                 </span>
             </div>
             <div class="modal hide" id="projectReportOptions">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h4 class="modal-title">Project Report Options</h4>
+                            <h4 class="modal-title">Project Summary Options</h4>
                         </div>
 
                         <div class="modal-body">
@@ -72,7 +72,7 @@
                                     </div>
                                 </div>
                                 <div class="control-group">
-                                    <label class="control-label">Included content: </label>
+                                    <label class="control-label">Optional content: </label>
                                     <div class="controls">
                                         <!-- ko foreach:projectReportSections -->
                                             <label class="checkbox"><input type="checkbox" data-bind="checkedValue: $data, checked: $parent.reportIncludedSections"><span data-bind="text:$data"></span></label>
@@ -1130,7 +1130,7 @@
             }
             self.reportFromStage = ko.observable(defaultReportStage);
             self.reportToStage = ko.observable(defaultReportStage);
-            self.projectReportSections = ['Images', 'Activity Summary', 'Documents', 'Outcomes', 'Output Targets', 'Outputs without targets', 'Progress Summary', 'Project Risks', 'Project Risk Changes', 'Activity Details'];
+            self.projectReportSections = ['Images', 'Activity status summary', 'Supporting documents', 'Project outcomes', 'Progress against output targets', 'Progress of outputs without targets', 'Stage report', 'Project risks', 'Project risks changes', 'Progress against activities'];
             self.reportIncludedSections = ko.observableArray(self.projectReportSections);
 
             self.reportableStages = ko.computed(function() {

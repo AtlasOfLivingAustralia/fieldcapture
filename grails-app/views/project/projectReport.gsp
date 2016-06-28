@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta name="layout" content="${(grailsApplication.config.layout.skin?:'main')+'Print'}"/>
-    <title>Report | Project | MERIT</title>
+    <title>Project Summary | Project | MERIT</title>
     <script type="text/javascript" src="//www.google.com/jsapi"></script>
     <r:script disposition="head">
     var fcConfig = {
@@ -45,7 +45,7 @@
 <div class="container">
 
 
-    <h1>MERIT Project Summary</h1>
+    <h1>Project Summary</h1>
     <g:if test="${params.fromStage == params.toStage}">
         <h3>${params.toStage}</h3>
     </g:if>
@@ -132,8 +132,8 @@
         </g:each>
     </g:if>
 
-    <g:if test="${'Activity Summary' in content}">
-    <h3>Number of activities</h3>
+    <g:if test="${'Activity status summary' in content}">
+    <h3>Activity status summary</h3>
 
     <table class="table table-striped">
         <thead>
@@ -158,7 +158,7 @@
     </g:if>
 
 
-    <g:if test="${project.documents  && ('Documents' in content)}">
+    <g:if test="${project.documents  && ('Supporting documents' in content)}">
     <h3>Supporting documents</h3>
     <table class="table table-striped">
         <thead>
@@ -182,7 +182,7 @@
     </g:if>
 
 
-    <g:if test="${outcomes && ('Outcomes' in content)}">
+    <g:if test="${outcomes && ('Project outcomes' in content)}">
     <h3>Project outcomes</h3>
     <table class="table table-striped">
         <thead>
@@ -209,7 +209,7 @@
     </table>
     </g:if>
 
-    <g:if test="${metrics.targets  && ('Output Targets' in content)}">
+    <g:if test="${metrics.targets  && ('Progress against output targets' in content)}">
         <h3>Progress against output targets</h3>
         <p>Note this is the current project progress, not the progress made during the selected stage(s).</p>
         <div class="row-fluid dashboard">
@@ -231,8 +231,8 @@
             </div>
         </div>
     </g:if>
-    <g:if test="${metrics.other  && ('Outputs without targets' in content)}">
-        <h3>Progress of Outputs without targets</h3>
+    <g:if test="${metrics.other  && ('Progress of outputs without targets' in content)}">
+        <h3>Progress of outputs without targets</h3>
         <p>Note this is the current project progress, not the progress made during the selected stage(s).</p>
         <div class="row-fluid outputs-without-targets dashboard">
             <g:each in="${metrics.other?.entrySet()}" var="metric" status="i">
@@ -253,9 +253,9 @@
                   model="${[model:outputModel.value, outputName:outputModel.key, edit:false, speciesLists:[]]}"></g:render>
     </g:each>
 
-    <g:if test="${latestStageReport && ('Progress Summary' in content)}">
+    <g:if test="${latestStageReport && ('Stage report' in content)}">
 
-        <h3>Summary of project progress and issues</h3>
+        <h3>Stage report</h3>
         <g:each in="${stageReportModel.outputs}" var="outputName">
             <g:render template="/output/readOnlyOutput"
                   model="${[divId:'latest-stage-report-'+outputName,
@@ -268,7 +268,7 @@
 
     </g:if>
 
-    <g:if test="${risksComparison.baseline?.rows && ('Project Risks' in content)}">
+    <g:if test="${risksComparison.baseline?.rows && ('Project risks' in content)}">
     <h3>Project risks</h3>
     <p>Note this is the risk information as it appeared at the end of the selected stage(s).</p>
     <table class="table table-striped">
@@ -300,8 +300,8 @@
     </table>
     </g:if>
 
-    <g:if test="${(risksComparison.baseline?.rows || risksComparison.comparison?.rows) && ('Project Risk Changes' in content)}">
-        <h3>Project risk changes</h3>
+    <g:if test="${(risksComparison.baseline?.rows || risksComparison.comparison?.rows) && ('Project risks changes' in content)}">
+        <h3>Project risks changes</h3>
         <g:if test="${risksComparison.comparison}">
             Comparing edit made on ${au.org.ala.fieldcapture.DateUtils.displayFormatWithTime(risksComparison.comparisonDate)}
             to edit made on ${au.org.ala.fieldcapture.DateUtils.displayFormatWithTime(risksComparison.baselineDate)}
@@ -341,8 +341,8 @@
     </g:if>
 
 
-    <g:if test="${activitiesByStage && ('Activity Details' in content)}">
-        <h3>Progress against each activity</h3>
+    <g:if test="${activitiesByStage && ('Progress against activities' in content)}">
+        <h3>Progress against activities</h3>
 
         <g:each in="${orderedStageNames}" var="stage">
             <g:if test="${activitiesByStage[stage]}">
