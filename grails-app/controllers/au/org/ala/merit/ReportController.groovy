@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import au.org.ala.fieldcapture.ActivityService
 import au.org.ala.fieldcapture.DateUtils
 import au.org.ala.fieldcapture.GmsMapper
 import grails.converters.JSON
@@ -91,7 +92,7 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
 
         List reports = reportService.findReportsForOrganisation(organisationId)
 
-        reports = reports.findAll{it.progress == 'finished'}.sort{it.fromDate}.reverse()
+        reports = reports.findAll{it.progress == ActivityService.PROGRESS_FINISHED}.sort{it.fromDate}.reverse()
 
 
         if (reports.size()) {
@@ -413,6 +414,48 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
         Map result = reportService.update(report)
 
         render result as JSON
+    }
+
+    def doSomeStuff() {
+        List dataModel = []
+        List viewModel = []
+        Map model = reportService.performanceReportModel('')
+        model.sectionsByTheme.each { String theme, List sections ->
+            sections.each { section ->
+                section.questions.each { question ->
+
+                    dataModel << [
+                            name:"meetsExpectations"+question.name,
+                            description:question.text,
+                            dataType:"text",
+                            validate:"required",
+                            constraints:["N/A","Yes","No"]
+                    ]
+                    dataModel << [
+                            name:"evidenceFor"+question.name,
+                            description:question.text,
+                            dataType:"text",
+                            validate:"required,maxSize[2000]"
+                    ]
+
+                    viewModel << [
+                            source:"meetsExpectations"+question.name,
+                            preLabel:question.text+' ( N/A, Yes, No )'
+                    ]
+
+                    viewModel << [
+                            source:"evidenceFor"+question.name,
+                            preLabel:question.text+' ( Please provide evidence )'
+                    ]
+
+                }
+            }
+        }
+
+        Map result = [dataModel:dataModel,viewModel:viewModel]
+
+        render result as JSON
+
     }
 
 }
