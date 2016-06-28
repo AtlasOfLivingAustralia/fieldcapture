@@ -42,7 +42,7 @@
         <thead>
             <tr>
                 <th rowspan="2" colspan="2">Performance expectation framework</th>
-                <th>Meet expection?</th>
+                <th>Meet expectation?</th>
                 <th>Evidence</th>
             </tr>
             <tr>

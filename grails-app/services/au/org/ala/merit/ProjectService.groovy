@@ -39,6 +39,8 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
 
         def resp = [:]
 
+        Boolean updateActivities = Boolean.valueOf(projectDetails.remove('changeActivityDates'))
+
         // Changing project dates requires some extra validation and updates to the stage reports.  Only
         // do this check for existing projects for which the planned start and/or end date is being changed
         if (id) {
@@ -46,10 +48,11 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
             String plannedStartDate = projectDetails.remove('plannedStartDate')
             String plannedEndDate = projectDetails.remove('plannedEndDate')
 
+
             if (id && (plannedStartDate || plannedEndDate)) {
                 def currentProject = get(id)
                 if (currentProject.plannedStartDate != plannedStartDate || currentProject.plannedEndDate != plannedEndDate) {
-                    resp = changeProjectDates(id, plannedStartDate ?: currentProject.plannedStartDate, plannedEndDate ?: currentProject.plannedEndDate, false)
+                    resp = changeProjectDates(id, plannedStartDate ?: currentProject.plannedStartDate, plannedEndDate ?: currentProject.plannedEndDate, updateActivities)
                 }
             }
         }
