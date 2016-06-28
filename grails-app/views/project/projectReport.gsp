@@ -4,6 +4,7 @@
 <head>
     <meta name="layout" content="${(grailsApplication.config.layout.skin?:'main')+'Print'}"/>
     <title>Report | Project | MERIT</title>
+    <script type="text/javascript" src="//www.google.com/jsapi"></script>
     <r:script disposition="head">
     var fcConfig = {
         serverUrl: "${grailsApplication.config.grails.serverURL}",
@@ -202,7 +203,7 @@
     <g:if test="${metrics.targets  && ('Output Targets' in content)}">
         <h3>Progress against output targets</h3>
         <p>Note this is the current project progress, not the progress made during the selected stage(s).</p>
-        <div class="row-fluid" id="dashboard">
+        <div class="row-fluid dashboard">
             <div class="span4">
                 <g:set var="count" value="${metrics.targets.size()}"/>
                 <g:each in="${metrics.targets?.entrySet()}" var="metric" status="i">
@@ -219,6 +220,21 @@
                     </div>
                 </g:each>
             </div>
+        </div>
+    </g:if>
+    <g:if test="${metrics.other  && ('Outputs without targets' in content)}">
+        <h3>Progress of Outputs without targets</h3>
+        <div class="row-fluid outputs-without-targets dashboard">
+            <g:each in="${metrics.other?.entrySet()}" var="metric" status="i">
+
+                <div class="well well-small">
+                    <h3>${metric.key}</h3>
+                    <g:each in="${metric.value}" var="score">
+                        <fc:renderScore score="${score}"></fc:renderScore>
+                    </g:each>
+                </div><!-- /.well -->
+
+            </g:each>
         </div>
     </g:if>
 
@@ -392,7 +408,17 @@
 
         $(".risks-comparison td").prettyTextDiff({cleanup: true});
 
+        var content = $('.outputs-without-targets');
+        var columnized = content.find('.column').length > 0;
+        if (!columnized){
+            content.columnize({ columns: 2, lastNeverTallest:true, accuracy: 10 });
+        }
+
+        // We need to reinitialise the popovers as the content has been moved by the columnizer.
+        $('.helphover').data('popover', null);
+        $('.helphover').popover({container:'body', animation: true, trigger:'hover'});
     });
+
 </r:script>
 </body>
 </html>

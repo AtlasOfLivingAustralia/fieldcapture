@@ -1147,7 +1147,7 @@
             }
             self.reportFromStage = ko.observable(defaultReportStage);
             self.reportToStage = ko.observable(defaultReportStage);
-            self.projectReportSections = ['Images', 'Activity Summary', 'Documents', 'Outcomes', 'Output Targets', 'Progress Summary', 'Project Risks', 'Project Risk Changes', 'Activity Details'];
+            self.projectReportSections = ['Images', 'Activity Summary', 'Documents', 'Outcomes', 'Output Targets', 'Outputs without targets', 'Progress Summary', 'Project Risks', 'Project Risk Changes', 'Activity Details'];
             self.reportIncludedSections = ko.observableArray(self.projectReportSections);
 
             self.reportableStages = ko.computed(function() {

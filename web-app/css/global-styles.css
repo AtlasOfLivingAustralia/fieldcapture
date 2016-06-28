@@ -204,7 +204,7 @@ span.merit {
 	padding: 0;
 }
 
-#dashboard .well {
+#dashboard .well, .dashboard .well {
 	border-radius: 4px;
 	padding: 19px;
 	background-color: #f5f5f5;
