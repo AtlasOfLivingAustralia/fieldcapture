@@ -108,7 +108,7 @@
         var url = config.saveReportUrl+'/';
 
         self.reportId = '${report.reportId}';
-        self.progress = 'finished'; // If the report can be validated and saved it is complete.
+        self.progress = 'started'; // If the report can be validated and saved it is complete.
         self.data = {};
         self.data.state = '${state?:''}'; // For ease of reporting.
         self.data.whoCompletedForm = ko.observable();
@@ -140,11 +140,22 @@
 
 
         self.save = function() {
-           if ($('.validationEngineContainer').validationEngine('validate')) {
-                self.saveWithErrorDetection(function() {
+            var valid = $('.validationEngineContainer').validationEngine('validate');
+            if (valid) {
+                self.progress = 'finished';
+            }
+            else {
+                self.progress = 'started';
+            }
+            self.saveWithErrorDetection(function() {
+                if (valid) {
                     window.location = config.returnToUrl;
-                });
-           };
+                }
+                else {
+                    $.unblockUI();
+                }
+            });
+
         };
 
         self.cancel = function() {
