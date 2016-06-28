@@ -1,29 +1,5 @@
 <style type="text/css">
-#floating-save {
-	position: fixed;
-	bottom:0;
-	left:0;
-	width:100%;
-	height:40px;
-}
-#floating-save .transparent-background {
-	background-color:#000000;
-	opacity: 0.2;
-}
-#floating-save div {
-	width: 100%;
-	height:30px;
 
-	position: absolute;
-	top: 0;
-	left:0;
-	padding-top: 5px;
-	padding-bottom:5px;
-	text-align:center;
-}
-#floating-save button {
-	top:5px;
-}
 #announcements th, #risks-announcements th {
 	white-space: normal;
 }

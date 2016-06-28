@@ -91,7 +91,14 @@
         <buttom type="button" id="cancel" data-bind="click:cancel" class="btn btn" title="Cancel edits and return to previous page">Cancel</buttom>
 
     </div>
+
+    <div id="floating-save" style="display:none;">
+        <div class="transparent-background"></div>
+        <div><button class="right btn btn-info" data-bind="click: save">Save changes</button></div>
+    </div>
+
 </div>
+
 
 <r:script>
 
@@ -99,15 +106,15 @@
         var self = this;
 
         var url = config.saveReportUrl+'/';
-        autoSaveModel(self, url, {blockUIOnSave:true});
 
         self.reportId = '${report.reportId}';
-        self.progress = 'finished'; // If the report can be validated and saved it is complete.
+        self.progress = 'started'; // If the report can be validated and saved it is complete.
         self.data = {};
         self.data.state = '${state?:''}'; // For ease of reporting.
         self.data.whoCompletedForm = ko.observable();
         self.data.peerAssistanceRequired = ko.observable();
         self.data.peerAssistanceOffered = ko.observable();
+        self.dirtyFlag = ko.dirtyFlag(self, false);
 
         <g:each in="${themes}" var="theme">
         <g:each in="${sectionsByTheme[theme]}" var="section">
@@ -133,11 +140,22 @@
 
 
         self.save = function() {
-           if ($('.validationEngineContainer').validationEngine('validate')) {
-                self.saveWithErrorDetection(function() {
+            var valid = $('.validationEngineContainer').validationEngine('validate');
+            if (valid) {
+                self.progress = 'finished';
+            }
+            else {
+                self.progress = 'started';
+            }
+            self.saveWithErrorDetection(function() {
+                if (valid) {
                     window.location = config.returnToUrl;
-                });
-           };
+                }
+                else {
+                    $.unblockUI();
+                }
+            });
+
         };
 
         self.cancel = function() {
@@ -159,15 +177,38 @@
             self.data.evidenceFor${section.additionalPracticeQuestion.name}(data.evidenceFor${section.additionalPracticeQuestion.name});
         </g:each>
     </g:each>
+
+            self.dirtyFlag.reset();
         };
 
+         autoSaveModel(self, url, {blockUIOnSave:true, preventNavigationIfDirty:true});
 
     };
     var report = <fc:modelAsJavascript model="${report}"/>;
     var viewModel = new ViewModel(fcConfig);
-    viewModel.load(report.data || {});
     ko.applyBindings(viewModel);
+    viewModel.load(report.data || {});
+
     $('.validationEngineContainer').validationEngine();
+
+    $('#save').appear().on('appear', function() {
+        $('#floating-save').slideUp(400);
+    }).on('disappear', function() {
+        if (viewModel.dirtyFlag.isDirty()) {
+            $('#floating-save').slideDown(400);
+        }
+        else {
+            $('#floating-save').slideUp(400);
+        }
+    });
+    viewModel.dirtyFlag.isDirty.subscribe(function(dirty) {
+        if (dirty && !$('#floating-save').is(':appeared')) {
+           $('#floating-save').slideDown(400);
+        }
+        else {
+            $('#floating-save').slideUp(400);
+        }
+    });
 
 </r:script>
 
