@@ -57,9 +57,9 @@ grails.project.dependency.resolution = {
     }
 
     dependencies {
-        build "com.openhtmltopdf:openhtmltopdf-core:0.0.1-RC2"
-        build "com.openhtmltopdf:openhtmltopdf-pdfbox:0.0.1-RC2"
-        build "com.openhtmltopdf:openhtmltopdf-jsoup-dom-converter:0.0.1-RC2"
+        compile "com.openhtmltopdf:openhtmltopdf-core:0.0.1-RC2"
+        compile "com.openhtmltopdf:openhtmltopdf-pdfbox:0.0.1-RC2"
+        compile "com.openhtmltopdf:openhtmltopdf-jsoup-dom-converter:0.0.1-RC2"
     }
 
     plugins {
