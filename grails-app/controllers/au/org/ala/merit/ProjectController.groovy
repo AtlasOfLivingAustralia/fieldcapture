@@ -199,6 +199,9 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
         else {
             stageReportModel = activitiesModel.activities.find {it.name == ProjectService.FINAL_REPORT_ACTIVITY_TYPE}
         }
+        if (!activityModels.find{it.name == stageReportModel.name}) {
+            activityModels << stageReportModel
+        }
 
         List outcomes = project.custom?.details?.objectives?.rows1?.findAll{it.description}
 
@@ -214,7 +217,7 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
 
     private Map getMostRecentActivityBefore(List activities, String activityType, String isoEndDate) {
         activities?.findAll {
-            it.type == ProjectService.STAGE_REPORT_ACTIVITY_TYPE && reportService.isSubmittedOrApproved(it) && it.plannedEndDate <= isoEndDate
+            it.type == activityType && reportService.isSubmittedOrApproved(it) && it.plannedEndDate <= isoEndDate
         }?.max { it.plannedEndDate }
     }
 
