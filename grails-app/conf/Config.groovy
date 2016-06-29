@@ -229,6 +229,7 @@ if (!grails.cache.ehcache) {
         }
     }
 }
+pdfbox.fontcache="/data/${appName}/cache/"
 
 // Markdown configuration to match behaviour of the JavaScript editor.
 markdown.hardwraps = true
