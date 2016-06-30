@@ -265,8 +265,6 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
 
     def performanceReportPDF(String id) {
         Map report = reportService.get(id)
-        // Otherwise defaults to user.home which is not writable by default.
-        System.setProperty('pdfbox.fontcache', grailsApplication.config.pdfbox.fontcache)
 
         if (organisationService.isUserAdminForOrganisation(report.organisationId)) {
 
