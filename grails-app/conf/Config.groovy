@@ -406,7 +406,7 @@ log4j = {
             'grails.app.filters.au.org.ala.fieldcapture'
     ]
 
-    debug 'grails.app.controllers.au.org.ala','ala','au.org.ala.web' // 'au.org.ala.cas.client',
+    debug 'grails.app.controllers.au.org.ala','ala','au.org.ala.web','org.xhtmlrenderer' // 'au.org.ala.cas.client',
 
     error  'org.codehaus.groovy.grails.web.servlet',        // controllers
            'org.codehaus.groovy.grails.web.pages',          // GSP
