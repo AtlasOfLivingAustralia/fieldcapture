@@ -334,7 +334,7 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
         }
         def reportDetails = request.JSON
 
-        def result = organisationService.rejectReport(id, reportDetails.reportId, reportDetails.category, reportDetails.reason)
+        def result = organisationService.rejectReport(id, reportDetails.reportId, reportDetails.reason, reportDetails.category)
 
         render result as JSON
     }

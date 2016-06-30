@@ -416,10 +416,10 @@
         <h3><span data-bind="text:title"></span> reason</h3>
     </div>
     <div class="modal-body">
-        <p data-bind="visible:rejectionCategories">
-            Rejection Category:<br/>
-            <select data-bind="options:rejectionCategories, value:rejectionCategory"></select>
-        </p>
+        %{--<p data-bind="visible:rejectionCategories">--}%
+            %{--Rejection Category:<br/>--}%
+            %{--<select data-bind="options:rejectionCategories, value:rejectionCategory"></select>--}%
+        %{--</p>--}%
         <p>Please enter a reason.  This reason will be included in the email sent to the project administrator(s).</p>
         <textarea rows="5" style="width:97%" data-bind="textInput:reason"></textarea>
     </div>
@@ -833,7 +833,7 @@
             };
             this.approveStage = function () {
                 var url = '${createLink(controller:'project', action:'ajaxApproveReport')}/';
-                self.approveOrRejectStage(url, 'Approval', 'Approve');
+                self.updateStageStatus(url, '', '');
             };
             this.rejectStage = function() {
                 var url = '${createLink(controller:'project', action:'ajaxRejectReport')}/';
