@@ -1,11 +1,24 @@
 package au.org.ala.merit
 
 import com.openhtmltopdf.DOMBuilder
+import com.openhtmltopdf.log4j.Log4JXRLogger
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder
+import com.openhtmltopdf.util.XRLog
 import org.jsoup.Jsoup
+
+import javax.annotation.PostConstruct
+
 
 class PdfConverterService {
     def grailsApplication
+
+    @PostConstruct
+    void init() {
+        // PDF converter initialisation
+        System.setProperty('pdfbox.fontcache', grailsApplication.config.pdfbox.fontcache)
+        XRLog.setLoggingEnabled(true);
+        XRLog.setLoggerImpl(new Log4JXRLogger());
+    }
 
     def convertToPDF(String page, OutputStream out) {
         PdfRendererBuilder builder = new PdfRendererBuilder();
