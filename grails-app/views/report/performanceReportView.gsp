@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta name="layout" content="${(grailsApplication.config.layout.skin?:'main')+'Print'}"/>
-    <title>Performance Report | MERIT</title>
+    <title>${report.name}</title>
     <%-- Override the bootstrap print style that sets background: transparent !important  --%>
     <style type="text/css">
         .performance-report .title-row {
