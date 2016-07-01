@@ -158,30 +158,6 @@
     </g:if>
 
 
-    <g:if test="${project.documents  && ('Supporting documents' in content)}">
-    <h3>Supporting documents</h3>
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Stage</th>
-        </tr>
-        </thead>
-        <tbody>
-        <g:each in="${project.documents}" var="document">
-            <tr>
-                <td>${document.name?:document.filename}</td>
-                <td><fc:documentType document="${document}"/></td>
-                <td>${document.stage ? "Stage "+document.stage : ''}</td>
-            </tr>
-        </g:each>
-
-        </tbody>
-    </table>
-    </g:if>
-
-
     <g:if test="${outcomes && ('Project outcomes' in content)}">
     <h3>Project outcomes</h3>
     <table class="table table-striped">
@@ -391,6 +367,29 @@
             </g:each>
             </g:if>
         </g:each>
+    </g:if>
+
+    <g:if test="${project.documents  && ('Supporting documents' in content)}">
+        <h3>Supporting documents</h3>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Stage</th>
+            </tr>
+            </thead>
+            <tbody>
+            <g:each in="${project.documents}" var="document">
+                <tr>
+                    <td>${document.name?:document.filename}</td>
+                    <td><fc:documentType document="${document}"/></td>
+                    <td>${document.stage ? "Stage "+document.stage : ''}</td>
+                </tr>
+            </g:each>
+
+            </tbody>
+        </table>
     </g:if>
 
 </div>
