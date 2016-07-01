@@ -39,6 +39,8 @@ if (Environment.current == Environment.DEVELOPMENT) {
     grails.plugin.location.'fieldcapture-test' = testPluginLocation
 
 }
+def openhtmltopdfversion = '0.0.1-RC4'
+
 grails.project.dependency.resolver = "maven"
 grails.project.dependency.resolution = {
     // inherit Grails' default dependencies
@@ -57,7 +59,10 @@ grails.project.dependency.resolution = {
     }
 
     dependencies {
-
+        compile "com.openhtmltopdf:openhtmltopdf-core:${openhtmltopdfversion}"
+        compile "com.openhtmltopdf:openhtmltopdf-pdfbox:${openhtmltopdfversion}"
+        compile "com.openhtmltopdf:openhtmltopdf-jsoup-dom-converter:${openhtmltopdfversion}"
+        compile "com.openhtmltopdf:openhtmltopdf-log4j:${openhtmltopdfversion}"
     }
 
     plugins {
@@ -75,7 +80,7 @@ grails.project.dependency.resolution = {
         //test ":karma-test-runner:0.2.4"
 
         if (Environment.current != Environment.DEVELOPMENT) {
-            compile ":fieldcapture-plugin:1.6.3"
+            compile ":fieldcapture-plugin:1.7"
             test ":fieldcapture-test:0.1-SNAPSHOT"
         }
 

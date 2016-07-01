@@ -28,7 +28,7 @@ import java.text.SimpleDateFormat
  */
 class OrganisationController extends au.org.ala.fieldcapture.OrganisationController {
 
-    def activityService, metadataService, projectService, excelImportService
+    def activityService, metadataService, projectService, excelImportService, reportService, pdfConverterService, authService
 
 
     protected Map content(organisation) {
@@ -38,14 +38,23 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
         def orgRole = members.find { it.userId == user?.userId } ?: [:]
         def hasAdminAccess = userService.userIsSiteAdmin() || orgRole.role == RoleService.PROJECT_ADMIN_ROLE
 
-        def reportingVisible = organisation.reports && hasAdminAccess || userService.userHasReadOnlyAccess()
+        def reportingVisible = organisation.state && ((organisation.reports && (hasAdminAccess || userService.userHasReadOnlyAccess())) || userService.userIsAlaOrFcAdmin())
 
         def dashboardReports = [[name:'dashboard', label:'Activity Outputs']]
         if (hasAdminAccess) {
             dashboardReports += [name:'announcements', label:'Announcements']
         }
+        if (reportingVisible) {
+            // We need at least one finished report to show data.
+            if (organisation.reports?.find{it.progress == 'finished'}) {
+                dashboardReports += [name: 'performanceAssessmentSummary', label: 'Performance Assessment Summary']
+                dashboardReports += [name: 'performanceAssessmentComparison', label: 'Performance Assessment Comparison']
+
+            }
+        }
 
         [about     : [label: 'About', visible: true, stopBinding: false, type:'tab'],
+         reporting : [label: 'Reporting', visible: reportingVisible, stopBinding:true, default:reportingVisible, type: 'tab'],
          projects  : [label: 'Projects', visible: true, default:!reportingVisible, stopBinding:true, type: 'tab', disableProjectCreation:true],
          sites     : [label: 'Sites', visible: true, type: 'tab', stopBinding:true, projectCount:organisation.projects?.size()?:0, showShapefileDownload:hasAdminAccess],
          dashboard : [label: 'Dashboard', visible: true, stopBinding:true, type: 'tab', template:'/shared/dashboard', reports:dashboardReports],
@@ -230,106 +239,66 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
 
     }
 
-    def createAdHocReport() {
-        def supportedTypes = organisationService.getSupportedAdHocReports(params.projectId)
+    def editOrganisationReport(String reportId) {
+        Map report = reportService.get(reportId)
+        Map organisation = organisationService.get(report.organisationId)
+        if (organisationService.isUserAdminForOrganisation(report.organisationId)) {
+            Map model = reportService.performanceReportModel(reportId)
+            model.state = organisation.state ?: 'Unknown'
+            model.organisation = organisation
 
-        if (params.type in supportedTypes) {
-
-            def activity = [projectId: params.projectId, type: params.type, description: params.type, plannedStartDate: params.plannedStartDate, plannedEndDate: params.plannedEndDate]
-
-            def response = activityService.create(activity)
-            if (response.resp.activityId) {
-                chain(controller: 'activity', action: 'enterData', id: response.resp.activityId, params:[returnTo:params.returnTo])
+            boolean edit = params.edit
+            if (reportService.isSubmittedOrApproved(model.report)) {
+                model.submittingUserName = authService.getUserForUserId(model.report.submittedBy)?.displayName ?: 'Unknown user'
+                model.submissionDate = DateUtils.displayFormatWithTime(model.report.dateSubmitted)
+                edit = false
             }
+            String view = edit ? '/report/performanceReport' : '/report/performanceReportView'
+
+            render view: view, model:model
         }
         else {
-            // Go back to where we were before.
-            render ''
+            flash.message = "You don't have permission to edit the report"
+            chain(action:'index', id: report.organisationId)
         }
     }
 
-    /** Temporary method to prepopulate Green Army projects and reporting activities */
-    def prepopGreenArmy() {
+    def performanceReportPDF(String id) {
+        Map report = reportService.get(id)
 
+        if (organisationService.isUserAdminForOrganisation(report.organisationId)) {
 
-        def resp = projectService.search([associatedProgram:'Green Army', view:'flat'])
+            Map model = reportService.performanceReportModel(id)
+            model.edit = false
 
-        if (resp?.resp?.projects) {
-            def projects = resp.resp.projects
-            def projectsByOrg = projects.groupBy{it.serviceProviderName}
+            String page = g.include(controller:'organisation', action:'editOrganisationReport', id:id, params:[edit:false, reportId:id])
 
-            projectsByOrg.each{org, orgProjects ->
-                if (!org) {
-                    return
-                }
-                def reportProjectName = org+' Green Army Quarterly Reporting'
-                def orgReportProject = orgProjects.find{ it.name == reportProjectName }
-                if (!orgReportProject) {
-                    orgReportProject = [
-                            externalId:org+'-Report',
-                            name:reportProjectName,
-                            plannedStartDate:orgProjects.min{it.plannedStartDate}.plannedStartDate,
-                            plannedEndDate:orgProjects.max{it.plannedEndDate}.plannedEndDate,
-                            associatedProgram:'Green Army',
-                            description:'This project is to support the reporting requirements of the Green Army Programme',
-                            organisationName:org,
-                            serviceProviderName:org
-                    ]
-                    def result = projectService.create(orgReportProject)
-                    orgReportProject.projectId = result.resp.projectId
-
-                }
-                projectService.createReportingActivitiesForProject(orgReportProject.projectId, [[period: Period.months(3), type:'Green Army - Quarterly project report']])
-
-                orgProjects.each { project ->
-                    if (project.projectId == orgReportProject.projectId) {
-                        return
-                    }
-
-                    projectService.createReportingActivitiesForProject(project.projectId, [[period: Period.months(1), type:'Green Army - Monthly project status report']])
-                }
-            }
-
-
-            render projectsByOrg as JSON
+            response.setContentType('application/pdf')
+            pdfConverterService.convertToPDF(page, response.outputStream)
         }
-
-
+        else {
+            flash.message = "You don't have permission to view the report"
+            chain(action:'index', id: report.organisationId)
+        }
     }
 
-    def importGreenArmyMonthlyReports() {
 
-        response.setContentType('text/plain')
+    def createAdHocReport(String id) {
 
-        def sheets = ['Jul14', 'Aug14', 'Sep14', 'Oct14', 'Nov14', 'Dec14', 'Jan15', 'Feb15']
-        if (request.respondsTo('getFile')) {
-            def file = request.getFile('gaData')
-            if (file) {
-                Workbook workbook = WorkbookFactory.create(file.inputStream)
-
-                for (String sheetName in sheets) {
-                    println sheetName
-                    println '***********************************'
-                    Sheet sheet = workbook.getSheet(sheetName)
-
-                    // The data we care about starts at row 12 (1 based)
-                    int rowIndex = 11
-                    Row row = sheet.getRow(rowIndex++)
-                    def hasData = true
-                    while (hasData) {
-                        hasData = processRow(sheet, row)
-
-                        row = sheet.getRow(rowIndex++)
-                    }
-
-
-                }
-
-            }
+        Map report = request.getJSON()
+        report.organisationId = id
+        if (!report.name) {
+            report.name = '2016 perf report'
         }
-        render "done"
-    }
 
+        def response = reportService.create(report)
+        if (response.resp.error) {
+            flash.message = "Error creating report: ${response.resp.error}"
+        }
+
+        chain(action:'index', id: report.organisationId)
+
+    }
 
     def ajaxSubmitReport(String id) {
 
@@ -339,7 +308,7 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
         }
         def reportDetails = request.JSON
 
-        def result = organisationService.submitReport(id, reportDetails.activityIds)
+        def result = organisationService.submitReport(id, reportDetails.reportId)
 
         render result as JSON
     }
@@ -352,7 +321,7 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
         }
         def reportDetails = request.JSON
 
-        def result = organisationService.approveReport(id, reportDetails.activityIds)
+        def result = organisationService.approveReport(id, reportDetails.reportId, reportDetails.reason)
 
         render result as JSON
     }
@@ -365,283 +334,12 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
         }
         def reportDetails = request.JSON
 
-        def result = organisationService.rejectReport(id, reportDetails.activityIds)
+        def result = organisationService.rejectReport(id, reportDetails.reportId, reportDetails.reason, reportDetails.category)
 
         render result as JSON
     }
 
 
-
-    private def processRow(Sheet sheet, Row row) {
-
-        def cell = row.getCell(0)
-
-        if (cell.getCachedFormulaResultType() != Cell.CELL_TYPE_STRING) {
-            return false
-        }
-        def projectId =  cell.getStringCellValue().substring(0, 12)
-
-        def resp = projectService.search([grantId:projectId, view:'all'])
-
-        def projects = resp?.resp?.projects
-        if (!projects) {
-            //println "No projects found with id ${projectId}\n\n"
-            return true
-        }
-        else if (projects.size() > 1) {
-            println "Muliple projects found with id ${projectId}\n\n"
-            return true
-        }
-
-        def project = projects[0]
-
-        def previouslyCompleted = row.getCell(3).getStringCellValue() == 'YES'
-        if (previouslyCompleted) {
-            println "Project ${projectId} previously completed\n\n"
-            return true
-        }
-
-
-        def agreementDate = getCellValue(row, 5)
-
-        if (agreementDate && (agreementDate instanceof Number)) {
-            if (agreementDate instanceof Number) {
-                def agreementDateString = excelDateToISODateString(agreementDate)
-
-                if (project.serviceProviderAgreementDate != agreementDateString) {
-                    // set the agreement date.
-                    println "Setting ${projectId} agreement date to ${agreementDateString}\n"
-                    projectService.update(project.projectId, [serviceProviderAgreementDate: agreementDateString])
-                }
-            }
-        }
-
-        def commencementDate = getCellValue(row, 7)
-        def actualCommencementDate = getCellValue(row, 9)
-        if ((commencementDate && (commencementDate instanceof Number) || (actualCommencementDate && actualCommencementDate instanceof Number))) {
-            def commencementDateString = ''
-            if (commencementDate && (commencementDate instanceof Number)) {
-                commencementDateString = excelDateToISODateString(commencementDate)
-            }
-
-            def actualCommencementDateString = ''
-            if (actualCommencementDate && (actualCommencementDate instanceof Number)) {
-                actualCommencementDateString = excelDateToISODateString(actualCommencementDate)
-            }
-
-            def startDateString = actualCommencementDateString ?: commencementDateString
-
-            if (startDateString != project.plannedStartDate) {
-                println "Project ${projectId} actual commencement date  ${startDateString} plannedStartDate ${project.plannedStartDate}\n"
-
-                println "****************************Updating project dates and activities!!! ${project.grantId} ${project.projectId}**********************************"
-
-
-                def originalStartDate = DateUtils.parse(project.plannedStartDate)
-                def originalEndDate = DateUtils.parse(project.plannedEndDate)
-
-                def originalDuration = new Interval(originalStartDate, originalEndDate).toDuration()
-
-                def startDate = DateUtils.parse(startDateString)
-
-                def endDate = startDate.plus(originalDuration)
-
-                def endDateString = DateUtils.format(endDate.toDateTimeISO())
-
-                projectService.update(project.projectId, [plannedStartDate: startDateString, plannedEndDate: endDateString])
-
-                updateActivities(project, [], startDateString, endDateString)
-
-                // Reload the updated project
-                project = projectService.get(project.projectId, 'all')
-            }
-        }
-
-        def continuingProject = getCellValue(row, 11)
-        def completed = getCellValue(row, 13)
-        def onTrack = getCellValue(row, 15)
-
-
-        def participantsCommenced = getCellValue(row, 17)
-        def notComplete = getCellValue(row, 19)
-        def completedProjects = getCellValue(row, 21)
-        def commencedTraining = getCellValue(row, 23)
-        def commencedNonAcceditedTraining = getCellValue(row, 25)
-        if (commencedNonAcceditedTraining) {
-            println "Project ${projectId} has non accredited training\n"
-        }
-        def exitedTraining = getCellValue(row, 27)
-        def completedTraining = getCellValue(row, 29)
-
-        def projectStatus
-        if (continuingProject == 'NO') {
-            projectStatus = 'Commenced'
-        }
-        else if (completed == 'YES') {
-            projectStatus = 'Completed'
-        }
-        else if (onTrack == 'YES') {
-            projectStatus = 'Progressing - on schedule'
-        }
-        else {
-            projectStatus = 'Progressing - behind schedule'
-        }
-
-        def outputData = [
-                trainingCommencingNonaccredited:commencedNonAcceditedTraining ?: 0,
-                trainingCommencedAccredited:commencedTraining ?: 0,
-                trainingNoExited:exitedTraining  ?: 0,
-                totalParticipantsCompleted:completedProjects  ?: 0,
-                totalParticipantsNotCompleted:notComplete  ?: 0,
-                totalParticipantsCommenced:participantsCommenced  ?: 0,
-                trainingNoCompleted:completedTraining  ?: 0,
-                projectStatus:projectStatus
-        ]
-        if (continuingProject) {
-            loadReportData(sheet.sheetName, project, outputData)
-        }
-
-        return true
-    }
-
-    def TAB_DATE_FORMAT =  DateTimeFormat.forPattern("MMMyy")
-
-    private loadReportData(month, project, outputData) {
-
-        DateTime date = TAB_DATE_FORMAT.parseDateTime(month).plusDays(1)
-        Interval interval = new Interval(date, Period.months(1))
-        def monthlyReports = project.activities.findAll {it.type == 'Green Army - Monthly project status report'}
-
-        def reports = monthlyReports.findAll {
-            def plannedEndDate = DateUtils.parse(it.plannedEndDate)
-            return interval.contains(plannedEndDate)
-        }
-
-        if (reports.size() == 0) {
-            println "No report found for project ${project.projectId}, ${project.plannedStartDate} for month ${month}"
-            return
-        }
-
-        def report = reports[0]
-        if (reports.size() > 1) {
-            println "Multiple reports found for project ${project.projectId}, for month ${month} : ${reports.collect{it.activityId}}"
-        }
-
-
-        if (!report.outputs) {
-            report.outputs = []
-        }
-
-        def output = report.outputs.find{it.name == 'Monthly Status Report Data'}
-
-        if (!output) {
-            output = [name:'Monthly Status Report Data', activityId:report.activityId, data:[:]]
-            report.outputs << output
-        }
-
-        output.data.putAll(outputData)
-
-        activityService.update(report.activityId, [activityId:report.activityId, progress:'finished', outputs:report.outputs])
-
-
-    }
-
-
-    private def getCellValue(Row row, int columnIndex) {
-        Cell cell = row.getCell(columnIndex)
-        if (cell.getCellType() == Cell.CELL_TYPE_BLANK) {
-            return ''
-        }
-        if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
-            return cell.getStringCellValue()
-        }
-        if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
-            return cell.getNumericCellValue()
-        }
-        if (cell.getCellType() == Cell.CELL_TYPE_FORMULA) {
-            int type =  cell.getCachedFormulaResultType()
-            if (type == Cell.CELL_TYPE_STRING) {
-                return cell.getStringCellValue()
-            }
-            if (type == Cell.CELL_TYPE_NUMERIC) {
-                return cell.getNumericCellValue()
-            }
-        }
-
-        throw new Exception("Don't know what to do with cell of type: ${cell.getCellType()}")
-
-    }
-
-    private String excelDateToISODateString(date) {
-        final long DAYS_FROM_1900_TO_1970 = 25569
-        // In Excel, the date is number of days since 1900
-        long days = date as Long
-        long millisSince1970 = (days - DAYS_FROM_1900_TO_1970) * 24l * 60l * 60l * 1000l
-        def dateTime = new DateTime(millisSince1970)
-        dateTime = dateTime.toDateTime(DateTimeZone.UTC)
-        return DateUtils.format(dateTime)
-    }
-
-
-    def processGreenArmyProjectData() {
-        def results = []
-        if (request instanceof MultipartHttpServletRequest) {
-            def file = request.getFile('gaProjectData')
-
-            if (file) {
-
-                def reader = new InputStreamReader(file.inputStream, 'cp1252')
-
-                new CSVMapReader(reader).eachWithIndex { rowMap, i ->
-                    results << processAnotherTypeOfGreenArmyDataLoad(rowMap)
-                }
-
-            }
-        }
-        render results as JSON
-    }
-
-    private def processAnotherTypeOfGreenArmyDataLoad(projectDetails) {
-
-        def errors = []
-        def results = []
-        def resp = projectService.search([grantId:projectDetails.grantId, view:'all'])
-        def projects = resp?.resp?.projects
-        if (!projects) {
-            errors << 'Failed to find project with grant id = '+projectDetails.grantId
-            return [grantId:projectDetails.grantId, error:errors]
-        }
-        else if (projects.size() > 1) {
-            errors << "Muliple projects found with grant id = ${projectDetails.grantId}\n\n"
-            return [grantId:projectDetails.grantId, error:errors]
-        }
-
-        def project = projects[0]
-
-        def plannedStartDate = projectDetails.plannedStartDate
-        def plannedEndDate = projectDetails.plannedEndDate
-        def workOrderId = projectDetails.workOrderId
-
-        SimpleDateFormat inputFormat = new SimpleDateFormat("dd/MM/yyyy")
-        plannedStartDate = DateUtils.format(new DateTime(inputFormat.parse(plannedStartDate)).toDateTime(DateTimeZone.UTC))
-        plannedEndDate =  DateUtils.format(new DateTime(inputFormat.parse(plannedEndDate)).toDateTime(DateTimeZone.UTC))
-
-
-        if (plannedStartDate != project.plannedStartDate) {
-            results << "Project ${project.grantId} actual commencement date  ${plannedStartDate} plannedStartDate ${project.plannedStartDate}\n"
-        }
-
-        def newDetails= [plannedStartDate: plannedStartDate, contractStartDate: plannedStartDate, plannedEndDate: plannedEndDate, contractEndDate: plannedEndDate, workOrderId: workOrderId]
-        resp = projectService.update(project.projectId, newDetails)
-        if (!resp || resp.error) {
-            errors << "Unable to update project ${project.grantId} : ${resp?.error}"
-        }
-        else {
-            updateActivities(project, errors, plannedStartDate, plannedEndDate)
-        }
-        return [error:errors, results:results]
-
-    }
 
     private void updateActivities(project, errors, plannedStartDate, plannedEndDate) {
         def activitiesWithDefaultDates = project.activities.findAll {

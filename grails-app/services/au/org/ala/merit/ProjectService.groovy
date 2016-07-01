@@ -10,11 +10,12 @@ import java.text.SimpleDateFormat
 
 class ProjectService extends au.org.ala.fieldcapture.ProjectService {
 
-    def reportService
+    def reportService, auditService
 
     static final String FINAL_REPORT_ACTIVITY_TYPE = 'Outcomes, Evaluation and Learning - final report'
     static final String STAGE_REPORT_ACTIVITY_TYPE = 'Progress, Outcomes and Learning - stage report'
     static final String OUTCOMES_OUTPUT_TYPE = 'Outcomes'
+    static final String STAGE_OUTCOMES_OUTPUT_TYPE = ''
     static final String COMPLETE = 'completed'
 
     static dateWithTime = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss")
@@ -38,6 +39,8 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
 
         def resp = [:]
 
+        Boolean updateActivities = Boolean.valueOf(projectDetails.remove('changeActivityDates'))
+
         // Changing project dates requires some extra validation and updates to the stage reports.  Only
         // do this check for existing projects for which the planned start and/or end date is being changed
         if (id) {
@@ -45,10 +48,11 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
             String plannedStartDate = projectDetails.remove('plannedStartDate')
             String plannedEndDate = projectDetails.remove('plannedEndDate')
 
+
             if (id && (plannedStartDate || plannedEndDate)) {
                 def currentProject = get(id)
                 if (currentProject.plannedStartDate != plannedStartDate || currentProject.plannedEndDate != plannedEndDate) {
-                    resp = changeProjectDates(id, plannedStartDate ?: currentProject.plannedStartDate, plannedEndDate ?: currentProject.plannedEndDate, false)
+                    resp = changeProjectDates(id, plannedStartDate ?: currentProject.plannedStartDate, plannedEndDate ?: currentProject.plannedEndDate, updateActivities)
                 }
             }
         }
@@ -195,7 +199,7 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
         //Update project status to completed
         int published = 0;
         int validActivities = 0
-        reportService.approve(stageDetails.reportId)
+        reportService.approve(stageDetails.reportId, stageDetails.reason)
 
         def activities = activityService.activitiesForProject(projectId)
 
@@ -218,7 +222,7 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
      * @param stageDetails details of the activities, specifically a list of activity ids.
      */
     def rejectStageReport(projectId, stageDetails) {
-        reportService.reject(stageDetails.reportId)
+        reportService.reject(stageDetails.reportId, stageDetails.category, stageDetails.reason)
         def result = activityService.rejectActivitiesForPublication(stageDetails.activityIds)
 
         // TODO Send a message to GMS.  Delete previous approval document (only an issue for withdrawal of approval)?
@@ -491,17 +495,27 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
             def activity = project.activities?.find { it.type == FINAL_REPORT_ACTIVITY_TYPE }
 
             if (activity) {
-                activity = activityService.get(activity.activityId)
-                def outcomeOutput = activity?.outputs?.find { it.name == OUTCOMES_OUTPUT_TYPE }
-
-                outcomes = [environmentalOutcomes: outcomeOutput?.data?.projectEnvironmentalOutcomes,
-                            economicOutcomes     : outcomeOutput?.data?.projectEconomicOutcomes,
-                            socialOutcomes       : outcomeOutput?.data?.projectSocialOutcomes]
+                outcomes = getOutcomes(activity.activityId, OUTCOMES_OUTPUT_TYPE)
             }
+        }
+        if (!outcomes) {
+            Map activity = project.activities?.max{ reportService.isSubmittedOrApproved(it) ? it.plannedEndDate : ''}
 
+            if (activity) {
+                outcomes = getOutcomes(activity.activityId, STAGE_OUTCOMES_OUTPUT_TYPE)
+            }
         }
         outcomes
 
+    }
+
+    private Map getOutcomes(String activityId, String outputType) {
+        Map activity = activityService.get(activity.activityId)
+        def outcomeOutput = activity?.outputs?.find { it.name == outputType }
+
+        [environmentalOutcomes: outcomeOutput?.data?.projectEnvironmentalOutcomes,
+         economicOutcomes     : outcomeOutput?.data?.projectEconomicOutcomes,
+         socialOutcomes       : outcomeOutput?.data?.projectSocialOutcomes]
     }
 
 
@@ -748,5 +762,18 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
         return false;
     }
 
+    Map compareProjectRisks(String projectId, String baselineDate, String beforeDate) {
+        Map toCompare = auditService.compareProjectEntity(projectId, baselineDate, beforeDate, 'risks')
 
+        Map baseline = null
+        Map comparison = null
+        if (toCompare.baseline && toCompare.baseline.entity.risks) {
+            baseline = toCompare.baseline.entity.risks
+        }
+        if (toCompare.comparison && toCompare.comparison.entity.risks) {
+            comparison = toCompare.comparison.entity.risks
+        }
+        [baselineDate: toCompare.baseline?.date, baseline:baseline, comparisonDate: toCompare.comparison?.date, comparison:comparison]
+
+    }
 }

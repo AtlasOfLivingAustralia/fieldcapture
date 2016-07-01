@@ -102,14 +102,14 @@ class EmailService extends au.org.ala.fieldcapture.EmailService {
         )
     }
 
-    def sendGreenArmyReportSubmittedEmail(organisationId, reportDetails) {
+    def sendOrganisationReportSubmittedEmail(organisationId, reportDetails) {
 
         def emailAddresses = getOrganisationEmailAddresses(organisationId)
         def ccEmails = addDefaultsToCC([], emailAddresses)
 
         createAndSend(
-                SettingPageType.GREEN_ARMY_REPORT_SUBMITTED_EMAIL_SUBJECT_LINE,
-                SettingPageType.GREEN_ARMY_REPORT_SUBMITTED_EMAIL,
+                SettingPageType.PERFORMANCE_REPORT_SUBMITTED_EMAIL_SUBJECT_LINE,
+                SettingPageType.PERFORMANCE_REPORT_SUBMITTED_EMAIL,
                 reportDetails,
                 emailAddresses.grantManagerEmails,
                 emailAddresses.userEmail,
@@ -118,14 +118,14 @@ class EmailService extends au.org.ala.fieldcapture.EmailService {
     }
 
 
-    def sendGreenArmyReportApprovedEmail(organisationId, reportDetails) {
+    def sendOrganisationReportApprovedEmail(organisationId, reportDetails) {
         def emailAddresses = getOrganisationEmailAddresses(organisationId)
         def ccEmails = addDefaultsToCC(emailAddresses.grantManagerEmails, emailAddresses)
 
 
         createAndSend(
-                SettingPageType.GREEN_ARMY_REPORT_APPROVED_EMAIL_SUBJECT_LINE,
-                SettingPageType.GREEN_ARMY_REPORT_APPROVED_EMAIL,
+                SettingPageType.PERFORMANCE_REPORT_APPROVED_EMAIL_SUBJECT_LINE,
+                SettingPageType.PERFORMANCE_REPORT_APPROVED_EMAIL,
                 reportDetails,
                 emailAddresses.adminEmails,
                 emailAddresses.userEmail,
@@ -134,14 +134,14 @@ class EmailService extends au.org.ala.fieldcapture.EmailService {
 
     }
 
-    def sendGreenArmyReportRejectedEmail(organisationId, reportDetails) {
+    def sendOrganisationReportRejectedEmail(organisationId, reportDetails) {
 
         def emailAddresses = getOrganisationEmailAddresses(organisationId)
         def ccEmails = addDefaultsToCC(emailAddresses.grantManagerEmails, emailAddresses)
 
         createAndSend(
-                SettingPageType.GREEN_ARMY_REPORT_REJECTED_EMAIL_SUBJECT_LINE,
-                SettingPageType.GREEN_ARMY_REPORT_REJECTED_EMAIL,
+                SettingPageType.PERFORMANCE_REPORT_REJECTED_EMAIL_SUBJECT_LINE,
+                SettingPageType.PERFORMANCE_REPORT_REJECTED_EMAIL,
                 reportDetails,
                 emailAddresses.adminEmails,
                 emailAddresses.userEmail,

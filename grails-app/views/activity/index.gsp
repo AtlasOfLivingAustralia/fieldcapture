@@ -82,82 +82,19 @@
     </div>
 <!-- ko stopBinding: true -->
     <g:each in="${metaModel?.outputs}" var="outputName">
+
         <g:if test="${outputName != 'Photo Points'}">
-        <g:set var="blockId" value="${fc.toSingleWord([name: outputName])}"/>
-        <g:set var="model" value="${outputModels[outputName]}"/>
-        <g:set var="output" value="${activity.outputs.find {it.name == outputName}}"/>
-        <g:if test="${!output}">
-            <g:set var="output" value="[name: outputName]"/>
-        </g:if>
-        <div class="output-block" id="ko${blockId}">
-            <h3>${outputName}</h3>
-            <div data-bind="if:outputNotCompleted">
-                <label class="checkbox" ><input type="checkbox" disabled="disabled" data-bind="checked:outputNotCompleted"> <span data-bind="text:transients.questionText"></span> </label>
-            </div>
-            <g:if test="${!output.outputNotCompleted}">
-                <!-- add the dynamic components -->
-                <md:modelView model="${model}" site="${site}"/>
-            </g:if>
-            <r:script>
-        $(function(){
+            <g:render template="/output/outputJSModel" plugin="fieldcapture-plugin"
+                      model="${[viewModelInstance:activity.activityId+fc.toSingleWord([name: outputName])+'ViewModel',
+                                edit:false, model:outputModels[outputName],
+                                outputName:outputName]}"></g:render>
+            <g:render template="/output/readOnlyOutput"
+                      model="${[activity:activity,
+                                outputModel:outputModels[outputName],
+                                outputName:outputName,
+                                activityModel:metaModel]}"
+                      plugin="fieldcapture-plugin"></g:render>
 
-            var viewModelName = "${blockId}ViewModel",
-                viewModelInstance = viewModelName + "Instance";
-
-            // load dynamic models - usually objects in a list
-                <md:jsModelObjects model="${model}" site="${site}" speciesLists="${speciesLists}" viewModelInstance="${blockId}ViewModelInstance"/>
-
-                this[viewModelName] = function (site, config, outputNotCompleted) {
-                    var self = this;
-                    self.name = "${output.name}";
-                    self.outputId = "${output.outputId}";
-                    self.data = {};
-                    self.transients = {};
-                    var notCompleted = outputNotCompleted;
-
-                    if (notCompleted === undefined) {
-                        notCompleted = config.collapsedByDefault;
-                    }
-                    self.transients.selectedSite = ko.observable(site);
-                    self.outputNotCompleted = ko.observable(notCompleted);
-                    self.transients.optional = config.optional || false;
-                    self.transients.questionText = config.optionalQuestionText || 'No '+self.name+' was completed during this activity';
-                    self.transients.dummy = ko.observable();
-
-                // add declarations for dynamic data
-                <md:jsViewModel model="${model}" output="${output.name}" viewModelInstance="${blockId}ViewModelInstance"/>
-
-                // this will be called when generating a savable model to remove transient properties
-                self.removeBeforeSave = function (jsData) {
-                    // add code to remove any transients added by the dynamic tags
-                <md:jsRemoveBeforeSave model="${model}"/>
-                delete jsData.activityType;
-                delete jsData.transients;
-                return jsData;
-                };
-
-                self.loadData = function (data, documents) {
-                    // load dynamic data
-                <md:jsLoadModel model="${model}"/>
-
-                // if there is no data in tables then add an empty row for the user to add data
-                if (typeof self.addRow === 'function' && self.rowCount() === 0) {
-                    self.addRow();
-                }
-                self.transients.dummy.notifySubscribers();
-            };
-        };
-        var config = ${fc.modelAsJavascript(model:metaModel.outputConfig?.find{it.outputName == outputName}, default:'{}')};
-        var outputNotCompleted = ${output.outputNotCompleted?:'undefined'};
-
-        window[viewModelInstance] = new this[viewModelName](site, config, outputNotCompleted);
-        window[viewModelInstance].loadData(${output.data ?: '{}'}, <fc:modelAsJavascript model="${activity.documents}"/>);
-
-            ko.applyBindings(window[viewModelInstance], document.getElementById("ko${blockId}"));
-        });
-
-            </r:script>
-        </div>
         </g:if>
     </g:each>
 <!-- /ko -->
@@ -191,54 +128,12 @@
             document.location.href = returnTo;
         });
 
-        function ViewModel (act, site, project, metaModel) {
-            var self = this;
-            self.activityId = act.activityId;
-            self.description = ko.observable(act.description);
-            self.notes = ko.observable(act.notes);
-            self.startDate = ko.observable(act.startDate || act.plannedStartDate).extend({simpleDate: false});
-            self.endDate = ko.observable(act.endDate || act.plannedEndDate).extend({simpleDate: false});
-            self.eventPurpose = ko.observable(act.eventPurpose);
-            self.fieldNotes = ko.observable(act.fieldNotes);
-            self.associatedProgram = ko.observable(act.associatedProgram);
-            self.associatedSubProgram = ko.observable(act.associatedSubProgram);
-            self.projectStage = ko.observable(act.projectStage || "");
-            self.progress = ko.observable(act.progress || 'started');
-            self.mainTheme = ko.observable(act.mainTheme);
-            self.type = ko.observable(act.type);
-            self.siteId = ko.observable(act.siteId);
-            self.projectId = act.projectId;
-            self.transients = {};
-            self.transients.site = site;
-            self.transients.project = project;
-            self.transients.metaModel = metaModel || {};
-            self.transients.activityProgressValues = ['planned','started','finished'];
-            self.transients.themes = $.map(${themes}, function (obj, i) { return obj.name });
-            self.goToProject = function () {
-                if (self.projectId) {
-                    document.location.href = fcConfig.projectViewUrl + self.projectId;
-                }
-            };
-            self.goToSite = function () {
-                if (self.siteId()) {
-                    document.location.href = fcConfig.siteViewUrl + self.siteId();
-                }
-            };
-            self.notImplemented = function () {
-                alert("Not implemented yet.")
-            };
-
-            if (metaModel.supportsPhotoPoints) {
-                self.transients.photoPointModel = ko.observable(new PhotoPointViewModel(site, act));
-            }
-        }
-
-
-        var viewModel = new ViewModel(
+        var viewModel = new ActivityViewModel(
             ${(activity as JSON).toString()},
             ${site ?: 'null'},
             ${project ?: 'null'},
-            ${metaModel ?: 'null'});
+            ${metaModel ?: 'null'},
+            ${themes ?: 'null'});
 
         ko.applyBindings(viewModel);
 

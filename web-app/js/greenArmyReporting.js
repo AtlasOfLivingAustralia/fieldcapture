@@ -1,9 +1,13 @@
 
 
-var ActivityViewModel = function(activity) {
+var GreenArmyActivityViewModel = function(activity) {
     var self = this;
     $.extend(self, activity);
 
+    self.name = activity.name;
+    self.description = activity.description;
+    self.projectId = activity.projectId;
+    self.progress = activity.progress;
     self.publicationStatus = activity.publicationStatus ? activity.publicationStatus : 'unpublished';
     self.editable = (self.publicationStatus == 'unpublished');
     self.activityDetailsUrl = self.editable ? fcConfig.activityEditUrl+'/'+activity.activityId+'?returnTo='+fcConfig.organisationViewUrl :
@@ -16,8 +20,14 @@ var ReportViewModel = function(report) {
     $.extend(this, report);
     var self = this;
 
-    self.dueDate = ko.observable(report.dueDate).extend({simpleDate:false})
+    self.description = report.description || report.name;
+    self.fromDate = ko.observable(report.fromDate).extend({simpleDate:false});
+    self.toDate =  ko.observable(report.toDate).extend({simpleDate:false});
+    self.dueDate = ko.observable(report.dueDate).extend({simpleDate:false});
+    self.progress = ko.observable(report.progress || 'planned');
     self.editUrl = '';
+    self.viewUrl = fcConfig.organisationReportUrl + '?&reportId='+report.reportId;
+    self.downloadUrl = fcConfig.organisationReportPDFUrl+'/'+report.reportId;
     self.percentComplete = function() {
         if (report.count == 0) {
             return 0;
@@ -25,29 +35,37 @@ var ReportViewModel = function(report) {
         return report.finishedCount / report.count * 100;
     }();
 
+    self.reason = ko.observable();
+    self.category = ko.observable();
+
+    self.period = ko.computed(function() {
+        return self.fromDate.formattedDate() + ' - ' + self.toDate.formattedDate();
+    });
+
     self.toggleActivities = function() {
         self.activitiesVisible(!self.activitiesVisible());
     };
     self.activitiesVisible = ko.observable(false);
     self.activities = [];
-    $.each(report.activities, function(i, activity) {
-        self.activities.push(new ActivityViewModel(activity));
+    $.each(report.activities || [], function(i, activity) {
+        self.activities.push(new GreenArmyActivityViewModel(activity));
     });
-    self.editable = (report.bulkEditable || self.activities.length == 1) && (report.publicationStatus != 'published' && report.publicationStatus != 'pendingApproval');
+    self.editable = (report.bulkEditable || self.activities.length == 0 || self.activities.length == 1) && (report.publicationStatus != 'published' && report.publicationStatus != 'pendingApproval');
 
     self.title = 'Expand the activity list to complete the reports';
-    if (report.bulkEditable) {
-        self.title = 'Click to complete the reports in a spreadsheet format';
-        self.editUrl = fcConfig.organisationReportUrl + '?type='+report.type+'&plannedStartDate='+report.plannedStartDate+'&plannedEndDate='+report.plannedEndDate+'&returnTo='+fcConfig.returnTo;
-    }
-    else if (self.editable) {
+    if (self.editable) {
         self.title = 'Click to complete the report';
-        self.editUrl = fcConfig.activityEditUrl + '/' + self.activities[0].activityId + '?returnTo='+fcConfig.organisationViewUrl;
+        self.editUrl = fcConfig.organisationReportUrl + '?edit=true&reportId='+report.reportId;
     }
+
+    self.viewable = self.progress() == 'finished';
+
     self.isReportable = function() {
-        return (report.plannedEndDate < new Date().toISOStringNoMillis());
+        return (report.toDate < new Date().toISOStringNoMillis());
     };
-    self.complete = (report.finishedCount == report.count);
+    self.complete = ko.computed(function() {
+        return self.isReportable() && self.progress() == 'finished' && self.editable;
+    });
     self.approvalTemplate = function() {
         if (!self.isReportable()) {
             return 'notReportable';
@@ -66,8 +84,7 @@ var ReportViewModel = function(report) {
 
     self.changeReportStatus = function(url, action, blockingMessage, successMessage) {
         blockUIWithMessage(blockingMessage);
-        var activityIds = $.map(self.activities, function(activity) {return activity.activityId;});
-        var json = JSON.stringify({activityIds:activityIds});
+        var json = JSON.stringify({reportId:report.reportId, category:self.category(), reason:self.reason()});
         $.ajax({
             url: url,
             type: 'POST',
@@ -88,7 +105,7 @@ var ReportViewModel = function(report) {
                 }
             }
         });
-    }
+    };
     self.approveReport = function() {
         self.changeReportStatus(fcConfig.approveReportUrl, 'approve', 'Approving report...', 'Report approved.');
     };
@@ -105,12 +122,27 @@ var ReportViewModel = function(report) {
         $(declaration).modal({ backdrop: 'static', keyboard: true, show: true }).on('hidden', function() {ko.cleanNode(declaration);});
 
     };
-    self.rejectReport = function() {
-        self.changeReportStatus(fcConfig.rejectReportUrl, 'reject', 'Rejecting report...', 'Report rejected.');
+
+    this.rejectReport = function() {
+        var $reasonModal = $('#reason-modal');
+        var reasonViewModel = {
+            reason: self.reason,
+            rejectionCategories: ['Minor', 'Moderate', 'Major'],
+            rejectionCategory: self.category,
+            title:'Return report',
+            buttonText: 'Return',
+            submit:function() {
+                if ($('.validationEngineContainer').validationEngine('attach').validationEngine('validate')) {
+                    self.changeReportStatus(fcConfig.rejectReportUrl, 'return', 'Returning report...', 'Report returned.');
+                }
+            }
+        };
+        ko.applyBindings(reasonViewModel, $reasonModal[0]);
+        $reasonModal.modal({backdrop: 'static', keyboard:true, show:true}).on('hidden', function() {ko.cleanNode($reasonModal[0])});
     };
 };
 
-var ReportsViewModel = function(reports, projects) {
+var ReportsViewModel = function(reports, projects, availableReports) {
     var self = this;
     self.projects = projects;
     self.allReports = ko.observableArray(reports);
@@ -118,18 +150,16 @@ var ReportsViewModel = function(reports, projects) {
     self.hideFutureReports = ko.observable(true);
 
     self.filteredReports = ko.computed(function() {
-        if (!self.hideApprovedReports() && !self.hideFutureReports()) {
-            return self.allReports();
-        }
+
         var filteredReports = [];
-        var nextMonth = moment().add(1, 'months').format();
+        var now = moment().toDate().toISOStringNoMillis();
 
         $.each(self.allReports(), function(i, report) {
             if (self.hideApprovedReports() && report.publicationStatus === 'published') {
                 return;
             }
 
-            if (self.hideFutureReports() && report.dueDate > nextMonth) {
+            if (self.hideFutureReports() && report.fromDate > now) {
                 return;
             }
             filteredReports.push(new ReportViewModel(report));
@@ -147,6 +177,14 @@ var ReportsViewModel = function(reports, projects) {
 
     self.editReport = function(report) {
         window.location = report.editUrl;
+    };
+
+    self.viewReport = function(report) {
+        window.open(report.viewUrl, 'view-report');
+    };
+
+    self.downloadReport = function(report) {
+        window.open(report.downloadUrl, 'download-report');
     };
 
     self.viewAllReports = function(report) {
@@ -182,40 +220,46 @@ var ReportsViewModel = function(reports, projects) {
     // Data model for the new report dialog.
     var AdHocReportViewModel = function() {
 
+        var defaultFromDate = '2014-07-01T10:00:00Z';
+        var defaultToDate = '2015-07-01T10:00:00Z';
+        if (reports && reports.length) {
+            for (var i=0; i<reports.length; i++) {
+                if (reports[i].toDate > defaultToDate) {
+                    defaultToDate = reports[i].toDate;
+                    defaultFromDate = reports[i].fromDate;
+                }
+            }
+        }
+        defaultFromDate = moment(defaultFromDate).add(1, 'years').toDate().toISOStringNoMillis();
+        defaultToDate = moment(defaultToDate).add(1, 'years').toDate().toISOStringNoMillis();
+
         var self = this;
-        self.project =ko.observable();
         self.type = ko.observable();
 
-        self.projectId = ko.computed(function() {
-            if (self.project()) {
-                return self.project().projectId;
-            }
-        });
-        self.plannedStartDate = ko.computed(function() {
-            if (self.project()) {
-                return self.project().plannedStartDate;
-            }
-        });
-        self.plannedEndDate = ko.computed(function() {
-            if (self.project()) {
-                return self.project().plannedEndDate;
-            }
-        });
-        self.availableReports = ko.observableArray([]);
+        self.organisationId = ko.observable();
 
-        self.project.subscribe(function(project) {
-            $.get(fcConfig.adHocReportsUrl+'/'+project.projectId).done(function(data) {
-                self.availableReports(data);
-            })
+        self.fromDate = ko.observable(defaultFromDate).extend({simpleDate:false});
+        self.toDate = ko.observable(defaultToDate).extend({simpleDate:false});
 
+        self.availableReports = availableReports;
+
+        self.name = ko.computed(function() {
+            var fromDate = moment(self.fromDate());
+            var toDate = moment(self.toDate());
+
+            return fromDate.get('year') + ' / ' + toDate.get('year') + ' ' + self.type();
+        });
+
+        self.dueDate = ko.computed(function() {
+            var toDate = moment(self.toDate()).add(1, 'months').add(15, 'days');
+            return toDate.toDate().toISOStringNoMillis();
         });
 
         self.save = function() {
-            var reportDetails = ko.mapping.toJS(this, {'ignore':['project', 'save']});
+            var reportDetails = JSON.stringify(ko.mapping.toJS(this, {'ignore':['project', 'save', 'availableReports']}));
 
-            var reportUrl = fcConfig.reportCreateUrl + '?' + $.param(reportDetails) + '&returnTo='+fcConfig.organisationViewUrl;
-
-            window.location.href = reportUrl;
+            var reportUrl = fcConfig.reportCreateUrl;
+            $.ajax({method:'POST', url:reportUrl, data:reportDetails, success:function() {window.location.reload()}, contentType:'application/json'});
         };
     };
     self.newReport = new AdHocReportViewModel();

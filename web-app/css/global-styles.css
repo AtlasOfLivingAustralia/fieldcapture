@@ -204,7 +204,7 @@ span.merit {
 	padding: 0;
 }
 
-#dashboard .well {
+#dashboard .well, .dashboard .well {
 	border-radius: 4px;
 	padding: 19px;
 	background-color: #f5f5f5;
@@ -631,10 +631,6 @@ button#risks-cancel:hover {
 
 
 
-
-
-
-
 @media (max-width: 767px) {
 
     body {
@@ -646,4 +642,82 @@ button#risks-cancel:hover {
         min-height: 130px !important;
         background-image: none !important;
     }
+}
+
+.performance-report .title-row {
+	background-color: #f5f5f5;
+}
+.performance-report .header th {
+	white-space: normal;
+}
+
+.performance-report td.question {
+	width:45%;
+}
+.performance-report td.meets-expectations {
+	width:5%;
+}
+.performance-report td.evidence {
+	width:45%;
+}
+
+.performance-report  textarea {
+	width:100%;
+	box-sizing: border-box;
+	height: 5em;
+}
+
+
+.rating-container {
+	position: relative;
+}
+.rating.up:after {
+	font-family: FontAwesome;
+	color: green;
+	content: "\f062";
+	position:absolute;
+	right:10px;
+
+}
+.rating.down:after  {
+	font-family: FontAwesome;
+	color: red;
+	content: "\f063";
+	position:absolute;
+	right:10px;
+
+}
+
+.comparison.match {
+	background-color: yellow;
+}
+
+.model-text-value {
+	white-space: pre-wrap;
+}
+
+#floating-save {
+	position: fixed;
+	bottom:0;
+	left:0;
+	width:100%;
+	height:40px;
+}
+#floating-save .transparent-background {
+	background-color:#000000;
+	opacity: 0.2;
+}
+#floating-save div {
+	width: 100%;
+	height:30px;
+
+	position: absolute;
+	top: 0;
+	left:0;
+	padding-top: 5px;
+	padding-bottom:5px;
+	text-align:center;
+}
+#floating-save button {
+	top:5px;
 }

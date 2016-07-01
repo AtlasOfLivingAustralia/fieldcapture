@@ -48,6 +48,7 @@
         deleteBlogEntryUrl: "${createLink(controller: 'blog', action:'delete', params:[projectId:project.projectId])}",
         shapefileDownloadUrl: "${createLink(controller:'project', action:'downloadShapefile', id:project.projectId)}",
         regenerateStageReportsUrl: "${createLink(controller:'project', action:'regenerateStageReports', id:project.projectId)}",
+        projectReportUrl:"${createLink(controller:'project', action:'projectReport', id:project.projectId)}",
         returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
 
     },
@@ -398,6 +399,10 @@
 				self.planStatus = ko.observable(project.planStatus);
                 self.mapLoaded = ko.observable(false);
 				self.transients.variation = ko.observable();
+				self.changeActivityDates = ko.observable(false);
+				self.contractDatesFixed.subscribe(function() {
+				    self.changeActivityDates(!self.contractDatesFixed());
+				});
 
                 self.allYears = function(startYear) {
 		            var currentYear = new Date().getFullYear(), years = [];
@@ -617,7 +622,8 @@
                             associatedSubProgram: self.associatedSubProgram(),
                             funding: new Number(self.funding()),
                             status:self.status(),
-                            promoteOnHomepage:self.promoteOnHomepage()
+                            promoteOnHomepage:self.promoteOnHomepage(),
+                            changeActivityDates:self.changeActivityDates()
                         };
 
                         // this call to stringify will make sure that undefined values are propagated to

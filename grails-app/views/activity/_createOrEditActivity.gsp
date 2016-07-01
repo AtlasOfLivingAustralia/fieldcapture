@@ -344,10 +344,11 @@
                     if (matchingStage) {
                         self.plannedStartDate(matchingStage.fromDate);
                         if (matchingStage.toDate > project.plannedEndDate) {
-                            self.plannedEndDate(project.plannedEndDate)
+                            self.plannedEndDate(project.plannedEndDate);
                         }
                         else {
-                            self.plannedEndDate(matchingStage.toDate);
+                            var endDate = moment(matchingStage.toDate).subtract(1, 'days');
+                            self.plannedEndDate(endDate.toDate().toISOStringNoMillis());
                         }
 
                     }

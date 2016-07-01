@@ -45,6 +45,60 @@
                 </div>
             </div>
 
+            <div class="project-report" data-bind="visible:!canModifyProjectStart || !isPlanEditable()">
+                <span class="pull-right">
+                    <button class="btn btn-info" data-bind="click:configureProjectReport">Project Summary</button><fc:iconHelp>Generate a project summary...</fc:iconHelp> </span>
+                </span>
+            </div>
+            <div class="modal hide" id="projectReportOptions">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Project Summary Options</h4>
+                        </div>
+
+                        <div class="modal-body">
+                            <form class="form-horizontal">
+                                <div class="control-group">
+                                    <label class="control-label" for="fromStage">From: </label>
+                                    <div class="controls">
+                                        <select id="fromStage" data-bind="value:reportFromStage, options:reportableStages"></select>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="toStage">To: </label>
+                                    <div class="controls">
+                                        <select id="toStage" data-bind="value:reportToStage, options:reportableToStages"></select>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Optional content: </label>
+                                    <div class="controls">
+                                        <!-- ko foreach:projectReportSections -->
+                                            <label class="checkbox"><input type="checkbox" data-bind="checkedValue: $data.value, checked: $parent.reportIncludedSections">
+                                                <span data-bind="text:$data.text"></span>
+                                                <!-- ko if:$data.help -->
+                                                    <i class="icon-question-sign" data-bind="popover:{content:$data.help, placement:'top'}"></i>
+                                                <!-- /ko -->
+                                            </label>
+                                        <!-- /ko -->
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer control-group">
+                        <div class="controls">
+                            <button type="button" class="btn btn-success"
+                                    data-bind="click:generateProjectReport">Generate Report</button>
+                            <button class="btn" data-bind="click:cancelGenerateReport">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </g:if>
 
 
@@ -299,15 +353,11 @@
             click:$parents[1].submitReport,
             attr:{title:($parents[1].readyForApproval() && $parents[1].riskAndDetailsActive()) ?'Submit this stage for implementation approval.':'* Report cannot be submitted while activities are still open. \n* Project details and risk table information are mandatory for report submission.'}"
     >Submit report</button>
-    <br/>
-    <button  class="btn btn-link" data-bind="click:$parents[1].previewStage" type="button"><i class="icon-eye-open"></i>Preview</button>
 </g:if>
 <g:else>
     <g:if test="${user?.isEditor}">
         <br/>
         <button type="button" class="btn btn-success btn-small" style="margin-top:4px;" disabled="disabled" title="Your Editor access level does not allow submitting of a report, this is an administrator user role. Contact your Administrator or Grant Manager if access upgrade is required">Submit report</button>
-        <br/>
-        <button  class="btn btn-link" data-bind="click:$parents[1].previewStage" type="button"><i class="icon-eye-open"></i>Preview</button>
     </g:if>
 </g:else>
 <br/>
@@ -322,11 +372,6 @@
     <button type="button" data-bind="click:$parents[1].rejectStage" class="btn btn-danger"><i class="icon-remove icon-white"></i> Withdraw approval</button>
 </g:if>
 
-<g:if test="${user?.isAdmin}">
-
-    <br/>
-    <button  class="btn btn-link" data-bind="click:$parents[1].previewStage" type="button"><i class="icon-eye-open"></i>Preview</button>
-</g:if>
 </script>
 
 <script id="stageSubmittedTmpl" type="text/html">
@@ -340,10 +385,6 @@
         <button type="button" data-bind="click:$parents[1].approveStage" class="btn btn-success"><i class="icon-ok icon-white"></i> Approve</button>
         <button type="button" data-bind="click:$parents[1].rejectStage" class="btn btn-danger"><i class="icon-remove icon-white"></i> Reject</button>
     </span>
-</g:if>
-<g:if test="${user?.isAdmin}">
-    <br/>
-    <button  class="btn btn-link" data-bind="click:$parents[1].previewStage" type="button"><i class="icon-eye-open"></i>Preview</button>
 </g:if>
 
 </script>
@@ -361,16 +402,33 @@
         <button type="button" data-bind="click:$parents[1].variationModal" class="btn btn-warning"><i class="icon-remove icon-white"></i> Variation</button>
     </span>
 </g:if>
-<g:if test="${user?.isAdmin}">
-    <br/>
-	<button  class="btn btn-link" data-bind="click:$parents[1].previewStage" type="button"><i class="icon-eye-open"></i>Preview</button>
-</g:if>
 
 </script>
 
 <!-- /ko -->
 
 <g:render template="/shared/declaration"/>
+
+<!-- ko stopBinding: true -->
+<div id="reason-modal" class="modal hide fade">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3><span data-bind="text:title"></span> reason</h3>
+    </div>
+    <div class="modal-body">
+        %{--<p data-bind="visible:rejectionCategories">--}%
+            %{--Rejection Category:<br/>--}%
+            %{--<select data-bind="options:rejectionCategories, value:rejectionCategory"></select>--}%
+        %{--</p>--}%
+        <p>Please enter a reason.  This reason will be included in the email sent to the project administrator(s).</p>
+        <textarea rows="5" style="width:97%" data-bind="textInput:reason"></textarea>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-success" data-bind="click:submit, text:buttonText, enable:reason" data-dismiss="modal" aria-hidden="true"></button>
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+    </div>
+</div>
+<!-- /ko -->
 
 <!-- ko stopBinding: true -->
 <div id="attachReasonDocument" class="modal fade" style="display:none;">
@@ -664,7 +722,7 @@
             }
         };
 
-        var PlanStage = function (stage, activities, planViewModel, isCurrentStage, project,today) {
+        var PlanStage = function (stage, activities, planViewModel, isCurrentStage, project,today, rejectionCategories) {
             var stageLabel = stage.name;
 
             // Note that the two $ transforms used to extract activities are not combined because we
@@ -678,6 +736,7 @@
             this.isReportable = isStageReportable(project,stage);
             this.projectId = project.projectId;
             this.planViewModel = planViewModel;
+
 
             // sort activities by assigned sequence or date created (as a proxy for sequence).
             // CG - still needs to be addressed properly.
@@ -746,12 +805,27 @@
                     submitReport : function() {
                         self.submitStage();
                     }
-            };
-            ko.applyBindings(declarationViewModel, declaration);
-            $(declaration).modal({ backdrop: 'static', keyboard: true, show: true }).on('hidden', function() {ko.cleanNode(declaration);});
+                };
+                ko.applyBindings(declarationViewModel, declaration);
+                $(declaration).modal({ backdrop: 'static', keyboard: true, show: true }).on('hidden', function() {ko.cleanNode(declaration);});
 
             };
 
+            this.approveOrRejectStage = function(url, title, buttonText, rejectionCategories) {
+                var $reasonModal = $('#reason-modal');
+                var reasonViewModel = {
+                    reason: ko.observable(),
+                    rejectionCategories:rejectionCategories,
+                    rejectionCategory: ko.observable(),
+                    title:title,
+                    buttonText: buttonText,
+                    submit:function() {
+                        self.updateStageStatus(url, this.reason(), this.rejectionCategory());
+                    }
+                }
+                ko.applyBindings(reasonViewModel, $reasonModal[0]);
+                $reasonModal.modal({backdrop: 'static', keyboard:true, show:true}).on('hidden', function() {ko.cleanNode($reasonModal[0])});
+            };
 
             this.submitStage = function() {
                 var url = '${createLink(controller:'project', action:'ajaxSubmitReport')}/';
@@ -759,23 +833,25 @@
             };
             this.approveStage = function () {
                 var url = '${createLink(controller:'project', action:'ajaxApproveReport')}/';
-                self.updateStageStatus(url);
+                self.updateStageStatus(url, '', '');
             };
             this.rejectStage = function() {
                 var url = '${createLink(controller:'project', action:'ajaxRejectReport')}/';
-                self.updateStageStatus(url);
+                self.approveOrRejectStage(url, 'Rejection', 'Reject', rejectionCategories);
             };
             
             this.variationModal = function() {
                 $('#variation').modal("show");
             };
 
-            this.updateStageStatus = function(url) {
+            this.updateStageStatus = function(url, reason, rejectionCategory) {
                 var payload = {};
                 payload.activityIds = $.map(self.activities, function(act, i) {
                     return act.activityId;
                 });
                 payload.stage = stageLabel;
+                payload.reason = reason || '';
+                payload.category = rejectionCategory;
                 payload.reportId = stage.reportId;
                 payload.projectId = self.projectId;
                 $.ajax({
@@ -960,7 +1036,7 @@
             return clone;
         };
 
-        function PlanViewModel(activities, reports, outputTargets, project, programModel, today) {
+        function PlanViewModel(activities, reports, outputTargets, project, programModel, today, config) {
             var self = this;
             this.userIsCaseManager = ko.observable(${user?.isCaseManager});
             this.planStatus = ko.observable(project.planStatus || 'not approved');
@@ -988,7 +1064,7 @@
 
                 // group activities by stage
                 $.each(reports, function (index, stageReport) {
-                    stages.push(new PlanStage(stageReport, activities, self, stageReport.name === self.currentProjectStage, project,today));
+                    stages.push(new PlanStage(stageReport, activities, self, stageReport.name === self.currentProjectStage, project,today, config.rejectionCategories));
                 });
 
                 return stages;
@@ -1050,6 +1126,69 @@
                 $('#changeProjectDates').modal({backdrop:'static'});
                 $('#projectDatesForm').validationEngine();
             };
+            var defaultReportStage = self.currentProjectStage;
+            if (defaultReportStage == 'unknown' && self.stages) {
+                defaultReportStage = self.stages[self.stages.length-1].label;
+            }
+            self.configureProjectReport = function() {
+                $('#projectReportOptions').modal({backdrop:'static'});
+            }
+            self.reportFromStage = ko.observable(defaultReportStage);
+            self.reportToStage = ko.observable(defaultReportStage);
+            self.projectReportSections = [
+               {value:'Images', text:'Images'},
+               {value:'Activity status summary', text:'Activity status summary'},
+               {value:'Supporting documents', text:'Supporting documents'},
+               {value:'Project outcomes', text:'Project outcomes'},
+               {value:'Progress against output targets', text: 'Progress against output targets'},
+               {value:'Progress of outputs without targets', text:'Progress of outputs without targets'},
+               {value:'Stage report', text:'Stage report', help:'Displays the most recent ‘Progress, Outcomes and Learning - stage report’ or ‘Outcomes, Evaluation and Learning - final report’ form for the period selected.' },
+               {value:'Project risks', text:'Project risks'},
+               {value:'Project risks changes', text:'Project risks changes', help:'Displays all risks created or modified in the reporting period selected.'},
+               {value:'Progress against activities', text:'Progress against activities', help:'Includes all activity reporting data for the selected stage(s).'}];
+
+            self.reportIncludedSections = ko.observableArray();
+            for (var i=0; i<self.projectReportSections.length; i++) {
+                self.reportIncludedSections.push(self.projectReportSections[i].value);
+            }
+
+            self.reportableStages = ko.computed(function() {
+                var stages = [];
+                $.each(self.stages || [], function(i, stage) {
+                    if (stage.isReportable) {
+                        stages.push(stage.label);
+                    }
+                });
+                return stages;
+            });
+            self.reportableToStages = ko.computed(function() {
+                var stages = [];
+                var started = false;
+                $.each(self.stages || [], function(i, stage) {
+                    if (stage.label == self.reportFromStage()) {
+                        started = true;
+                    }
+                    if (stage.isReportable && started) {
+                        stages.push(stage.label);
+                    }
+
+                });
+                return stages;
+            });
+            self.generateProjectReport = function() {
+
+                var url = fcConfig.projectReportUrl + '?fromStage='+self.reportFromStage()+'&toStage='+self.reportToStage();
+                for (var i=0; i<self.reportIncludedSections().length; i++) {
+                    url+='&sections='+self.reportIncludedSections()[i];
+                }
+                window.open(url,'project-report');
+                $('#projectReportOptions').modal('hide');
+            };
+            self.cancelGenerateReport = function() {
+                $('#projectReportOptions').modal('hide');
+            }
+
+
             self.plannedStartDate.subscribeChanged(function(oldStartDate, newStartDate) {
 
                 if (self.autoUpdateEndDate()) {
@@ -1346,7 +1485,8 @@
             ${project.outputTargets ?: '{}'},
             checkAndUpdateProject(${project}, null, programModel),
             programModel,
-            today
+            today,
+            {rejectionCategories: ['Minor', 'Moderate', 'Major'] }
         );
         ko.applyBindings(planViewModel, document.getElementById('planContainer'));
 

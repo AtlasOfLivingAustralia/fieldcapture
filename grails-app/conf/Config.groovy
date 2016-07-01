@@ -229,6 +229,7 @@ if (!grails.cache.ehcache) {
         }
     }
 }
+pdfbox.fontcache="/data/${appName}/cache/"
 
 // Markdown configuration to match behaviour of the JavaScript editor.
 markdown.hardwraps = true
@@ -417,5 +418,6 @@ log4j = {
            'org.codehaus.groovy.grails.orm.hibernate',      // hibernate integration
            'org.springframework',
            'org.hibernate',
-           'net.sf.ehcache.hibernate'
+           'net.sf.ehcache.hibernate',
+           'org.xhtmlrenderer'
 }

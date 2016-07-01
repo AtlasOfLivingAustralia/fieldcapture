@@ -23,7 +23,7 @@
     <ul class="unstyled">
         <li><label class="checkbox"><input type="checkbox" name="tabs" value="Activity Summary">Activity Summary</label></li>
     </ul>
-    <g:each in="${activityTypes}" var="category">
+    <g:each in="${activityTypes + [name:'Special', list:[[name:'Upload of stage 1 and 2 reporting data']]]}" var="category">
         <strong>${category.name}</strong>
         <ul class="unstyled">
             <g:each in="${category.list}" var="type">

@@ -1,10 +1,8 @@
 package au.org.ala.merit
 
-import au.org.ala.fieldcapture.DateUtils
 import org.joda.time.DateTime
 import org.joda.time.DateTimeConstants
 import org.joda.time.DateTimeZone
-import org.joda.time.Interval
 import org.joda.time.Period
 
 
@@ -21,14 +19,10 @@ class OrganisationService extends au.org.ala.fieldcapture.OrganisationService {
     // This is the behaviour we want for green army.  it may be extendible to other programs (e.g.
     // biodiversity fund has a stage report and end of project report)
     private static def GREEN_ARMY_REPORT_CONFIG = [
-            [type: 'Green Army - Monthly project status report', period: Period.months(1), bulkEditable: true, businessDaysToCompleteReport:5],
-            [type: 'Green Army - Quarterly project report', period: Period.months(3), bulkEditable: false, businessDaysToCompleteReport:10],
-            [type: 'Green Army - Site Visit Checklist', period: Period.months(1), bulkEditable: false, adhoc: true, grantManagerOnly:true],
-            [type: 'Green Army - Desktop Audit Checklist', period: Period.months(1), bulkEditable: false, adhoc: true, grantManagerOnly:true],
-            [type: 'Green Army - Change or Absence of Team Supervisor', period: Period.months(1), bulkEditable: false, adhoc: true]
+            [type: 'Performance expectations framework - self assessment worksheet', period: Period.years(1), bulkEditable: true, businessDaysToCompleteReport:5, adhoc:true]
     ]
 
-    def activityService, messageSource, emailService
+    def activityService, emailService, reportService, groovyPageRenderer, documentService
 
     /** Overrides the parent to add Green Army reports to the results */
     def get(String id, view = '') {
@@ -99,43 +93,7 @@ class OrganisationService extends au.org.ala.fieldcapture.OrganisationService {
      */
     def getReportsForOrganisation(organisation, reportConf) {
 
-        def activities = findActivitiesForOrganisation(organisation, reportConf.collect {it.type})
-        if (!activities) {
-            return []
-        }
-
-        def reports = []
-        def activitiesByType = activities.groupBy {it.type}
-
-        reportConf.each { conf ->
-            def activitiesOfType = activitiesByType[conf.type]
-            if (!activitiesOfType) {
-                return
-            }
-            def firstActivityByEndDate = activitiesOfType.min{it.plannedEndDate}.plannedEndDate
-            def startDate = DateUtils.alignToPeriod(DateUtils.parse(firstActivityByEndDate), conf.period)
-
-            Map<Interval, List> activitiesByPeriod = DateUtils.groupByDateRange(activitiesOfType, {it.plannedEndDate}, conf.period, startDate)
-
-            activitiesByPeriod.each { interval, activitiesInInterval ->
-
-                if (activitiesInInterval) {
-                    def publicationStatus = activitiesInInterval.min(APPROVAL_STATUS_COMPARATOR).publicationStatus
-                    def approvalStatus = messageSource.getMessage("report.publicationStatus."+publicationStatus, null, "Report not submitted", Locale.default)
-                    def finishedCount = activitiesInInterval.count { it.progress == 'finished' }
-
-                    def report = [type: conf.type, programme:'Green Army - Green Army Round 1',
-                                  plannedStartDate: DateUtils.format(interval.start), plannedEndDate: DateUtils.format(interval.end), dueDate: DateUtils.format(calculateDueDate(conf, interval.end)),
-                                  count: activitiesInInterval.size(), finishedCount:finishedCount, publicationStatus:publicationStatus,
-                                  approvalStatus:approvalStatus, bulkEditable: conf.bulkEditable, activities:activitiesInInterval]
-                    report.description = activityService.defaultDescription(report)
-                    reports << report
-                }
-            }
-        }
-
-        reports
-
+        reportService.findReportsForOrganisation(organisation.organisationId)
     }
 
     def calculateDueDate(reportConfig, DateTime monthEndDate) {
@@ -154,19 +112,15 @@ class OrganisationService extends au.org.ala.fieldcapture.OrganisationService {
         return dueDate.withZone(DateTimeZone.UTC)
     }
 
-    def submitReport(organisationId, activityIds) {
-        def resp = activityService.search([activityId:activityIds])
-        def organisation = get(organisationId, 'flat')
-        def activities = resp?.resp?.activities?:[]
-        def readyForSubmit = activities.findAll{it.complete}.size() == activityIds.size()
+    Map submitReport(String organisationId, String reportId) {
 
-        if (!readyForSubmit) {
-            return [error:'All activities must be finished, deferred or cancelled']
-        }
+        Map organisation = get(organisationId)
+        Map resp = reportService.submit(reportId)
 
-        resp = activityService.submitActivitiesForPublication(activityIds)
+        Map report = reportService.get(reportId)
+
         if (!resp.error) {
-            emailService.sendGreenArmyReportSubmittedEmail(organisationId, [organisation:organisation])
+            emailService.sendOrganisationReportSubmittedEmail(organisationId, [organisation:organisation, report:report])
         }
         else {
             return [success:false, error:resp.error]
@@ -174,19 +128,14 @@ class OrganisationService extends au.org.ala.fieldcapture.OrganisationService {
         return [success:true]
     }
 
-    def approveReport(organisationId, activityIds) {
-        def resp = activityService.search([activityId:activityIds])
-        def organisation = get(organisationId, 'flat')
-        def activities = resp?.resp?.activities?:[]
-        def readyForApproval = activities.findAll{it.complete && it.publicationStatus == 'pendingApproval'}.size() == activityIds.size()
+    Map approveReport(String organisationId, String reportId, String reason) {
+        Map organisation = get(organisationId)
+        Map resp = reportService.approve(reportId, reason)
 
-        if (!readyForApproval) {
-            return [error:'All activities must be complete and submitted for approval']
-        }
+        Map report = reportService.get(reportId)
 
-        resp = activityService.approveActivitiesForPublication(activityIds)
         if (!resp.error) {
-            emailService.sendGreenArmyReportApprovedEmail(organisationId, [organisation:organisation])
+            emailService.sendOrganisationReportApprovedEmail(organisationId, [organisation:organisation, report:report, reason: reason])
         }
         else {
             return [success:false, error:resp.error]
@@ -194,19 +143,14 @@ class OrganisationService extends au.org.ala.fieldcapture.OrganisationService {
         return [success:true]
     }
 
-    def rejectReport(organisationId, activityIds) {
-        def resp = activityService.search([activityId:activityIds])
-        def organisation = get(organisationId, 'flat')
-        def activities = resp?.resp?.activities?:[]
-        def readyForApproval = activities.findAll{it.complete}.size() == activityIds.size()
+    def rejectReport(String organisationId, String reportId, String reason, String category) {
+        Map organisation = get(organisationId)
+        Map resp = reportService.reject(reportId, category, reason)
 
-        if (!readyForApproval) {
-            return [error:'All activities must be complete']
-        }
+        Map report = reportService.get(reportId)
 
-        resp = activityService.rejectActivitiesForPublication(activityIds)
         if (!resp.error) {
-            emailService.sendGreenArmyReportRejectedEmail(organisationId, [organisation:organisation])
+            emailService.sendOrganisationReportRejectedEmail(organisationId, [organisation:organisation, report:report, reason:reason])
         }
         else {
             return [success:false, error:resp.error]

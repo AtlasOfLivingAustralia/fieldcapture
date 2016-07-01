@@ -221,7 +221,7 @@
                         </span>
                     </div>
                 </div>
-                <g:if test="${fc.userIsSiteAdmin()}">
+                <g:if test="${fc.userIsAlaOrFcAdmin()}">
                     <div class="accordion-group">
                         <div class="accordian-heading">
                             <a class="accordian-toggle" id="downloadView-heading" href="#downloadView" data-toggle="collapse" data-parent="#project-display-options"><span>Download</span><i style="padding-left:50px; padding-top:5px;" class="fa fa-plus pull-right"></i></a>

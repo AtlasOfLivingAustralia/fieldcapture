@@ -209,105 +209,22 @@
             <label class="checkbox" ><input type="checkbox" data-bind="checked:outputNotCompleted"> <span data-bind="text:transients.questionText"></span> </label>
         </div>
         <div id="${blockId}-content" data-bind="visible:!outputNotCompleted()">
-        <!-- add the dynamic components -->
-        <md:modelView model="${model}" site="${site}" edit="true" output="${output.name}" printable="${printView}" />
+            <!-- add the dynamic components -->
+            <md:modelView model="${model}" site="${site}" edit="true" output="${output.name}" printable="${printView}" />
         </div>
+        <g:render template="/output/outputJSModel" plugin="fieldcapture-plugin" model="${[viewModelInstance:blockId+'ViewModel', edit:true, model:model, outputName:output.name]}"></g:render>
+
         <r:script>
         $(function(){
 
             var viewModelName = "${blockId}ViewModel",
                 viewModelInstance = viewModelName + "Instance";
 
-            // load dynamic models - usually objects in a list
-            <md:jsModelObjects model="${model}" site="${site}" speciesLists="${speciesLists}" edit="true" viewModelInstance="${blockId}ViewModelInstance"/>
-
-                this[viewModelName] = function (site, config, outputNotCompleted) {
-                var self = this;
-                self.name = "${output.name}";
-                self.outputId = "${output.outputId}";
-
-                self.data = {};
-                self.transients = {};
-                var notCompleted = outputNotCompleted;
-
-                if (notCompleted === undefined) {
-                    notCompleted = config.collapsedByDefault;
-                }
-                self.outputNotCompleted = ko.observable(notCompleted);
-                self.transients.optional = config.optional || false;
-                self.transients.questionText = config.optionalQuestionText || 'Not applicable';
-                self.transients.dummy = ko.observable();
-
-                // add declarations for dynamic data
-            <md:jsViewModel model="${model}"  output="${output.name}"  edit="true" viewModelInstance="${blockId}ViewModelInstance"/>
-
-                // this will be called when generating a savable model to remove transient properties
-                self.removeBeforeSave = function (jsData) {
-                // add code to remove any transients added by the dynamic tags
-                    <md:jsRemoveBeforeSave model="${model}"/>
-                        delete jsData.activityType;
-                        delete jsData.transients;
-                        return jsData;
-                };
-
-                // this returns a JS object ready for saving
-                self.modelForSaving = function () {
-                    // get model as a plain javascript object
-                    var jsData = ko.mapping.toJS(self, {'ignore':['transients']});
-                    if (self.outputNotCompleted()) {
-                        jsData.data = {};
-                    }
-
-                    // get rid of any transient observables
-                    return self.removeBeforeSave(jsData);
-                };
-
-                // this is a version of toJSON that just returns the model as it will be saved
-                // it is used for detecting when the model is modified (in a way that should invoke a save)
-                // the ko.toJSON conversion is preserved so we can use it to view the active model for debugging
-                self.modelAsJSON = function () {
-                    return JSON.stringify(self.modelForSaving());
-                };
-
-                self.loadData = function (data, documents) {
-                    // load dynamic data
-                    <md:jsLoadModel model="${model}"/>
-
-                    // if there is no data in tables then add an empty row for the user to add data
-                    if (typeof self.addRow === 'function' && self.rowCount() === 0) {
-                        self.addRow();
-                    }
-                    self.transients.dummy.notifySubscribers();
-                };
-
-                self.attachDocument = function(target) {
-                    var url = fcConfig.documentUpdateUrl;
-                    showDocumentAttachInModal(url, new DocumentViewModel({role:'information'},{key:'activityId', value:'${activity.activityId}'}), '#attachDocument')
-                        .done(
-                        function(result){
-                            target(new DocumentViewModel(result))
-                            });
-                };
-                self.editDocumentMetadata = function(document) {
-                    var url = fcConfig.documentUpdateUrl + "/" + document.documentId;
-                    showDocumentAttachInModal(url, document, '#attachDocument');
-                };
-                self.deleteDocument = function(document) {
-                    document.status('deleted');
-                    var url = fcConfig.documentDeleteUrl+'/'+document.documentId;
-                    $.post(url, {}, function() {});
-
-                };
-
-            };
-
+            var output = <fc:modelAsJavascript model="${output}"/>;
             var config = ${fc.modelAsJavascript(model:metaModel.outputConfig?.find{it.outputName == outputName}, default:'{}')};
-            var outputNotCompleted = ${output.outputNotCompleted?:'undefined'};
-            window[viewModelInstance] = new this[viewModelName](site, config, outputNotCompleted);
 
-            var output = ${output.data ?: '{}'};
-
-            window[viewModelInstance].loadData(output, activity.documents);
+            window[viewModelInstance] = new window[viewModelName](output, site, config);
+            window[viewModelInstance].loadData(output.data || {}, activity.documents);
 
             // dirtyFlag must be defined after data is loaded
             window[viewModelInstance].dirtyFlag = ko.simpleDirtyFlag(window[viewModelInstance], false);

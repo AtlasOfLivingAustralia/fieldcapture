@@ -1,14 +1,16 @@
 package au.org.ala.merit
 
+import au.org.ala.fieldcapture.ActivityService
 import au.org.ala.fieldcapture.DateUtils
 import au.org.ala.fieldcapture.GmsMapper
+import grails.converters.JSON
 import org.joda.time.DateTime
 import org.joda.time.Interval
 import org.joda.time.Period
 
 class ReportController extends au.org.ala.fieldcapture.ReportController {
 
-    def activityService, projectService, organisationService, commonService, statisticsFactory
+    def activityService, projectService, organisationService, commonService, statisticsFactory, reportService, userService
 
     static defaultAction = "dashboard"
 
@@ -82,6 +84,144 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
             String label = g.message(code: 'label.' + facet, default: facet)
             results.add(label)
         }
+    }
+
+    def performanceAssessmentSummaryReport() {
+
+        String organisationId = params.organisationId
+
+        List reports = reportService.findReportsForOrganisation(organisationId)
+
+        reports = reports.findAll{it.progress == ActivityService.PROGRESS_FINISHED}.sort{it.fromDate}.reverse()
+
+
+        if (reports.size()) {
+            int index = 0
+            if (params.year) {
+                int year = Integer.parseInt(params.year)
+                reports.eachWithIndex{ Map report, int i ->
+                    DateTime date = DateUtils.parse(report.toDate)
+                    if (date.getYear() == year) {
+                        index = i
+                    }
+                }
+            }
+            Map model = reportService.performanceReportModel(reports[index].reportId)
+            model.years = reportYears(reports)
+            model.year = params.year
+
+            if (reports.size() > index) {
+                model.previousReport = reports[index+1]
+            }
+            render view:'_performanceAssessmentSummary', model:model
+        }
+        else {
+            render view:'_noReportData'
+        }
+    }
+
+    private Map reportForYear(int year, List reports) {
+        int index = -1
+        reports.eachWithIndex{ Map report, int i ->
+            DateTime date = DateUtils.parse(report.toDate)
+            if (date.getYear() == year) {
+                index = i
+            }
+        }
+        return index >= 0 ? reports[index] : null
+    }
+
+    private List reportYears(List reports) {
+        List years = []
+
+
+        reports.each { report ->
+            DateTime date = DateUtils.parse(report.toDate)
+            if (!years.contains(date.getYear())) {
+                years << date.getYear()
+            }
+        }
+
+        years
+    }
+
+    def performanceAssessmentComparisonReport() {
+
+        List years = []
+        int firstYear = 2015
+        DateTime date = new DateTime()
+
+        while (date.getYear() >= firstYear) {
+            years << date.getYear()
+            date = date.minusYears(1)
+        }
+
+        String organisationId = params.organisationId
+
+        List states = ['', 'ACT / NSW', 'VIC', 'WA / NT', 'SA', 'TAS', 'QLD']
+
+        if (userService.userIsAlaOrFcAdmin() && !organisationId) {
+            states = ['', 'ACT',  'NSW', 'VIC', 'WA', 'NT', 'SA', 'TAS', 'QLD']
+        }
+
+        String state = params.state ?: ""
+        int year = params.year ? Integer.parseInt(params.year) : years[0]
+
+        Map comparison = reportService.performanceReport(year, state)
+
+        Map resultsForState
+        if (state == 'ACT / NSW') {
+            resultsForState = mergeResults("ACT", "NSW", comparison.resp?.groups)
+        }
+        else if (state == 'WA / NT') {
+            resultsForState = mergeResults("WA", "NT", comparison.resp?.groups)
+        }
+        else {
+            resultsForState = comparison.resp?.groups?.find{it.group == state} ?: [:]
+        }
+
+        List reports = []
+        String reportId = null
+        if (organisationId) {
+            reports = reportService.findReportsForOrganisation(organisationId)
+            reports = reports.findAll{it.progress == 'finished'}.sort{it.fromDate}.reverse()
+            if (reports) {
+                Map report = reportForYear(year, reports)
+                reportId = report ? report.reportId : ''
+            }
+        }
+
+        Map model = reportService.performanceReportModel(reportId)
+        model.years = reportYears(reports)
+        model.results = resultsForState?.results ?: [:]
+        model.states = states
+        model.years = years
+        model.state = state
+        model.year = year
+
+        render view:'_performanceAssessmentComparison', model:model
+    }
+
+    private Map mergeResults(String state1, String state2, List results) {
+        Map state1Results = results.find{it.group == state1} ?: [:]
+        Map state2Results = results.find{it.group == state2} ?: [:]
+
+        Set keys = state1Results.keySet() + state2Results.keySet()
+
+        Map merged = [:]
+        keys.each { key ->
+            if (state1Results[key] && state2Results[key]) {
+                merged[key] = state1Results[key] + state2Results[key]
+            }
+            else if (state1Results[key]) {
+                merged[key] = state1Results[key]
+            }
+            else if (state2Results[key]) {
+                merged[key] = state2Results[key]
+            }
+        }
+        merged
+
     }
 
     def greenArmyReport() {
@@ -266,6 +406,56 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
         def statistics = statisticsFactory.randomGroup(exclude)
         session.lastGroup = statistics.group
         render view:'_statistics', layout:'ajax', model:[statistics:statistics.statistics]
+    }
+
+    def update(String id) {
+        Map report = request.JSON
+
+        Map result = reportService.update(report)
+
+        render result as JSON
+    }
+
+    def doSomeStuff() {
+        List dataModel = []
+        List viewModel = []
+        Map model = reportService.performanceReportModel('')
+        model.sectionsByTheme.each { String theme, List sections ->
+            sections.each { section ->
+                section.questions.each { question ->
+
+                    dataModel << [
+                            name:"meetsExpectations"+question.name,
+                            description:question.text,
+                            dataType:"text",
+                            validate:"required",
+                            constraints:["N/A","Yes","No"]
+                    ]
+                    dataModel << [
+                            name:"evidenceFor"+question.name,
+                            description:question.text,
+                            dataType:"text",
+                            validate:"required,maxSize[2000]"
+                    ]
+
+                    viewModel << [
+                            source:"meetsExpectations"+question.name,
+                            preLabel:question.text+' ( N/A, Yes, No )'
+                    ]
+
+                    viewModel << [
+                            source:"evidenceFor"+question.name,
+                            preLabel:question.text+' ( Please provide evidence )'
+                    ]
+
+                }
+            }
+        }
+
+        Map result = [dataModel:dataModel,viewModel:viewModel]
+
+        render result as JSON
+
     }
 
 }
