@@ -16,7 +16,7 @@
 </tr>
 </g:each>
 <tr>
-    <td>Advanced practices</td>
+    <td>Additional practices</td>
     <td>${additionalPracticeQuestion.text}</td>
     <td>
         <select data-validation-engine="validate[required]" data-bind="value:meetsExpectation${additionalPracticeQuestion.name}, options:${fc.modelAsJavascript(model: additionalPracticeQuestion.constraints)}"></select>
