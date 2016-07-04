@@ -17,7 +17,7 @@
 </tr>
 </g:each>
 <tr>
-    <td>Advanced practices</td>
+    <td>Additional practices</td>
     <td>${additionalPracticeQuestion.text}</td>
     <td>
         ${data['meetsExpectation' + additionalPracticeQuestion.name] ?: ''}
