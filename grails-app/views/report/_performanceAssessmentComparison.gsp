@@ -48,7 +48,7 @@
             <ul>
                 <li>Still to meet all expected practices</li>
                 <li>Meets all expected practices; and</li>
-                <li>Meets all expected practices and has advanced practices</li>
+                <li>Meets all expected practices and has additional practices</li>
             </ul>
         </th>
         <th>You verse ${state?:'All'} <fc:iconHelp>Only approved reports are included in the counts in this column.  Cells in yellow indicate the values selected by this organisation</fc:iconHelp></th>
