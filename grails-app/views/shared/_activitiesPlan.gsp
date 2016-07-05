@@ -47,7 +47,7 @@
 
             <div class="project-report" data-bind="visible:!canModifyProjectStart || !isPlanEditable()">
                 <span class="pull-right">
-                    <button class="btn btn-info" data-bind="click:configureProjectReport">Project Summary</button><fc:iconHelp>Generate a project summary...</fc:iconHelp> </span>
+                    <button class="btn btn-info" data-bind="click:configureProjectReport">Project Summary</button><fc:iconHelp>Generate a project summary covering activities from the selected stages. The report will open in a new window.</fc:iconHelp> </span>
                 </span>
             </div>
             <div class="modal hide" id="projectReportOptions">
@@ -1155,9 +1155,7 @@
             self.reportableStages = ko.computed(function() {
                 var stages = [];
                 $.each(self.stages || [], function(i, stage) {
-                    if (stage.isReportable) {
-                        stages.push(stage.label);
-                    }
+                    stages.push(stage.label);
                 });
                 return stages;
             });
@@ -1168,7 +1166,7 @@
                     if (stage.label == self.reportFromStage()) {
                         started = true;
                     }
-                    if (stage.isReportable && started) {
+                    if (started) {
                         stages.push(stage.label);
                     }
 
