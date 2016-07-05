@@ -156,21 +156,38 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
         Map activitiesModel = metadataService.activitiesModel()
         Set activityModels = new HashSet()
         Map outputModels = [:]
+
+        // Use the final report if available, otherwise fall back to the stage report.
+        Map stageReportModel = null
+        Map latestStageReport = getMostRecentActivityBefore(project.activities, ProjectService.FINAL_REPORT_ACTIVITY_TYPE ,toDate)
+
+        if (!latestStageReport) {
+            latestStageReport = getMostRecentActivityBefore(project.activities, ProjectService.STAGE_REPORT_ACTIVITY_TYPE ,toDate)
+            stageReportModel = activitiesModel.activities.find {it.name == ProjectService.STAGE_REPORT_ACTIVITY_TYPE}
+        }
+        else {
+            stageReportModel = activitiesModel.activities.find {it.name == ProjectService.FINAL_REPORT_ACTIVITY_TYPE}
+        }
+        if (!activityModels.find{it.name == stageReportModel.name}) {
+            activityModels << stageReportModel
+        }
         Map activitiesByStage = [:].withDefault{[]}
         project.activities?.each { activity ->
             if (activity.plannedEndDate >= fromDate && activity.plannedEndDate <= toDate) {
                 Map activityModel = activitiesModel.activities.find{it.name == activity.type}
                 activityModels << activityModel
-                activityModel.outputs.each { outputName ->
-                    outputModels << [(outputName):metadataService.getDataModelFromOutputName(outputName)]
-
-                }
                 if (activityService.isStartedOrFinished(activity)) {
                     Map report = reportService.findReportForDate(activity.plannedEndDate, project.reports)
                     if (report && report.name) {
                         activitiesByStage[report.name] << activity
                     }
                 }
+            }
+        }
+        activityModels.each { activityModel ->
+            activityModel.outputs.each { outputName ->
+                outputModels << [(outputName):metadataService.getDataModelFromOutputName(outputName)]
+
             }
         }
 
@@ -188,20 +205,7 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
             role = 'MERIT user'
         }
 
-        // Use the final report if available, otherwise fall back to the stage report.
-        Map stageReportModel = null
-        Map latestStageReport = getMostRecentActivityBefore(project.activities, ProjectService.FINAL_REPORT_ACTIVITY_TYPE ,toDate)
 
-        if (!latestStageReport) {
-            latestStageReport = getMostRecentActivityBefore(project.activities, ProjectService.STAGE_REPORT_ACTIVITY_TYPE ,toDate)
-            stageReportModel = activitiesModel.activities.find {it.name == ProjectService.STAGE_REPORT_ACTIVITY_TYPE}
-        }
-        else {
-            stageReportModel = activitiesModel.activities.find {it.name == ProjectService.FINAL_REPORT_ACTIVITY_TYPE}
-        }
-        if (!activityModels.find{it.name == stageReportModel.name}) {
-            activityModels << stageReportModel
-        }
 
         List outcomes = project.custom?.details?.objectives?.rows1?.findAll{it.description}
 
