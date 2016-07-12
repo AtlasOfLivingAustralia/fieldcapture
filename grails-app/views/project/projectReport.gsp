@@ -36,7 +36,9 @@
         padding:10px;
         border-top: 4px solid black;
     }
-
+        tr {
+            page-break-inside: avoid;
+        }
     </style>
 
     <r:require modules="knockout, activity, jqueryValidationEngine, merit_projects, pretty_text_diff"/>
@@ -216,7 +218,9 @@
                 <div class="well well-small">
                     <h3>${metric.key}</h3>
                     <g:each in="${metric.value}" var="score">
-                        <fc:renderScore score="${score}"></fc:renderScore>
+                                <fc:renderScore score="${score}"></fc:renderScore>
+
+
                     </g:each>
                 </div><!-- /.well -->
 
@@ -405,13 +409,13 @@
         var content = $('.outputs-without-targets');
         var columnized = content.find('.column').length > 0;
         if (!columnized){
-            content.columnize({ columns: 2, lastNeverTallest:true, accuracy: 10 });
+            //content.columnize({ columns: 2, lastNeverTallest:true, accuracy: 10 });
         }
 
         // We need to reinitialise the popovers as the content has been moved by the columnizer.
         $('.helphover').data('popover', null);
         $('.helphover').popover({container:'body', animation: true, trigger:'hover'});
-    });
+        });
 
 </r:script>
 </body>
