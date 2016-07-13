@@ -608,7 +608,7 @@
                 alert("Not implemented yet.")
             };
 
-            self.dirtyFlag = ko.dirtyFlag(self, false);
+            self.selfDirtyFlag = ko.dirtyFlag(self, false);
 
             // make sure progress moves to started if we save any data (unless already finished)
             // (do this here so the model becomes dirty)
@@ -633,18 +633,26 @@
                 }
             };
 
-            /**
-            *  Takes into account changes to the photo point photo's as the default knockout dependency
-            *  detection misses edits to some of the fields.
-            */
-            self.transients.isDirty = function() {
-                var dirty = self.dirtyFlag.isDirty();
-                if (!dirty && metaModel.supportsPhotoPoints) {
-                    dirty = self.transients.photoPointModel().isDirty();
-                }
-                return dirty;
-            };
 
+            /**
+             *  Takes into account changes to the photo point photo's as the default knockout dependency
+             *  detection misses edits to some of the fields.
+             */
+            self.dirtyFlag = {
+                isDirty: ko.computed(function() {
+                    var dirty = self.selfDirtyFlag.isDirty();
+                    if (!dirty && metaModel.supportsPhotoPoints) {
+                        dirty = self.transients.photoPointModel().dirtyFlag.isDirty();
+                    }
+                    return dirty;
+                }),
+                reset: function() {
+                    self.selfDirtyFlag.reset();
+                    if (metaModel.supportsPhotoPoints) {
+                        self.transients.photoPointModel().dirtyFlag.reset();
+                    }
+                }
+            };
         };
 
         var site = JSON.parse('${(site as JSON).toString().encodeAsJavaScript()}');
@@ -660,9 +668,13 @@
             viewModel.transients.markedAsFinished(newProgress == 'finished');
         </g:if>
 
+        viewModel.dirtyFlag.isDirty.subscribe(function(newValue) {
+            console.log("Dirty changed: "+newValue);
+        });
+
         ko.applyBindings(viewModel);
 
-        master.register('activityModel', viewModel.modelForSaving, viewModel.transients.isDirty, viewModel.dirtyFlag.reset);
+        master.register('activityModel', viewModel.modelForSaving, viewModel.dirtyFlag.isDirty, viewModel.dirtyFlag.reset);
     });
 </r:script>
 </body>
