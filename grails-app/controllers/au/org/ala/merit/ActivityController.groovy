@@ -129,10 +129,6 @@ class ActivityController {
                 chain(action:'index', id:id)
                 return
             }
-            // pass the activity
-            if (params.progress) {
-                activity.progress = params.progress
-            }
 
             activityAndOutputModel(activity, activity.projectId)
 
