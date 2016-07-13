@@ -449,7 +449,7 @@
                         $.unblockUI();
                     }
                     if (!valid) {
-                        var message = 'Your data have been saved, but the activity cannot be finished until all of the validation messages have been addressed.';
+                        var message = 'Your changes have been saved and you can remain in this activity form, or you can exit this page without losing data. Please note that you cannot mark this activitiy as finished until all mandatory fields have been completed though.';
                         bootbox.alert(message, function() {
                             self.validate();
                         });
