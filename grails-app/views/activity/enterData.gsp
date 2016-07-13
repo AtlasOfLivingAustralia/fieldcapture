@@ -366,79 +366,97 @@
 
             var activityData, outputs = [], photoPoints;
 
-            if (self.validate()) {
-                // Don't allow another save to be initiated.
-                blockUIWithMessage("Saving activity data...");
+            var valid = self.validate();
 
-                $.each(this.subscribers, function(i, obj) {
-                    if (obj.isDirty()) {
-                        if (obj.model === 'activityModel') {
-                            activityData = obj.get();
-                        } else if (obj.model === 'photoPoints') {
-                            photoPoints = obj.get();
-                        }
-                        else {
-                            outputs.push(obj.get());
-                        }
+
+            // Don't allow another save to be initiated.
+            blockUIWithMessage("Saving activity data...");
+
+            $.each(this.subscribers, function(i, obj) {
+                if (obj.isDirty()) {
+                    if (obj.model === 'activityModel') {
+                        activityData = obj.get();
+                    } else if (obj.model === 'photoPoints') {
+                        photoPoints = obj.get();
                     }
-                });
-                if (outputs.length === 0 && activityData === undefined && photoPoints === undefined) {
-                    alert("Nothing to save.");
-                    $.unblockUI();
-                    return;
+                    else {
+                        outputs.push(obj.get());
+                    }
                 }
+            });
+            if (outputs.length === 0 && activityData === undefined && photoPoints === undefined) {
+                alert("Nothing to save.");
+                $.unblockUI();
+                return;
+            }
 
 
-                if (activityData === undefined) { activityData = {}}
-                activityData.outputs = outputs;
+            if (activityData === undefined) {
+                activityData = {};
+            }
+            if (!valid) {
+                activityData.progress = 'started';
+            }
+            activityData.outputs = outputs;
 
-                var toSave = JSON.stringify(activityData);
-                amplify.store('activity-${activity.activityId}', toSave);
-                var unblock = true;
-                $.ajax({
-                    url: "${createLink(action: 'ajaxUpdate', id: activity.activityId)}",
-                    type: 'POST',
-                    data: toSave,
-                    contentType: 'application/json',
-                    success: function (data) {
-                        var errorText = "";
-                        if (data.errors) {
-                            errorText = "<span class='label label-important'>Important</span><h4>There was an error while trying to save your changes.</h4>";
-                            $.each(data.errors, function (i, error) {
-                                errorText += "<p>Saving <b>" +
+            var toSave = JSON.stringify(activityData);
+            amplify.store('activity-${activity.activityId}', toSave);
+            var unblock = true;
+            $.ajax({
+                url: "${createLink(action: 'ajaxUpdate', id: activity.activityId)}",
+                type: 'POST',
+                data: toSave,
+                contentType: 'application/json',
+                success: function (data) {
+                    var errorText = "";
+                    if (data.errors) {
+                        errorText = "<span class='label label-important'>Important</span><h4>There was an error while trying to save your changes.</h4>";
+                        $.each(data.errors, function (i, error) {
+                            errorText += "<p>Saving <b>" +
 (error.name === 'activity' ? 'the activity context' : error.name) +
 "</b> threw the following error:<br><blockquote>" + error.error + "</blockquote></p>";
-                            });
-                            errorText += "<p>Any other changes should have been saved.</p>";
-                            bootbox.alert(errorText);
-                        } else {
+                        });
+                        errorText += "<p>Any other changes should have been saved.</p>";
+                        bootbox.alert(errorText);
+                    } else {
+
+                        blockUIWithMessage("Activity data saved.")
+                        self.reset();
+                        if (valid) {
                             unblock = false; // We will be transitioning off this page.
-                            blockUIWithMessage("Activity data saved.")
-                            self.reset();
                             self.saved();
                         }
-                        amplify.store('activity-${activity.activityId}', null);
-                    },
-                    error: function (jqXHR, status, error) {
 
-                        // This is to detect a redirect to CAS response due to session timeout, which is not
-                        // 100% reliable using ajax (e.g. no network will give the same response).
-                        if (jqXHR.readyState == 0) {
 
-                            bootbox.alert($('#timeoutMessage').html());
-                        }
-                        else {
-                            alert('An unhandled error occurred: ' + error);
-                        }
-
-                    },
-                    complete: function () {
-                        if (unblock) {
-                            $.unblockUI();
-                        }
                     }
-                });
-            }
+                    amplify.store('activity-${activity.activityId}', null);
+                },
+                error: function (jqXHR, status, error) {
+
+                    // This is to detect a redirect to CAS response due to session timeout, which is not
+                    // 100% reliable using ajax (e.g. no network will give the same response).
+                    if (jqXHR.readyState == 0) {
+
+                        bootbox.alert($('#timeoutMessage').html());
+                    }
+                    else {
+                        alert('An unhandled error occurred: ' + error);
+                    }
+
+                },
+                complete: function () {
+                    if (unblock) {
+                        $.unblockUI();
+                    }
+                    if (!valid) {
+                        var message = 'Your data have been saved, but the activity cannot be finished until all of the validation messages have been addressed.';
+                        bootbox.alert(message, function() {
+                            self.validate();
+                        });
+                    }
+                }
+            });
+
 
         };
         this.saved = function () {
@@ -636,6 +654,11 @@
             site,
             ${project ? "JSON.parse('${project.toString().encodeAsJavaScript()}')": 'null'},
             metaModel);
+
+        <g:if test="${params.progress}">
+            var newProgress = '${params.progress}';
+            viewModel.transients.markedAsFinished(newProgress == 'finished');
+        </g:if>
 
         ko.applyBindings(viewModel);
 
