@@ -314,6 +314,28 @@
                 reset: resetMethod
 
             });
+            if (ko.isObservable(isDirtyMethod)) {
+                isDirtyMethod.subscribe(function() {
+                    self.dirtyCheck();
+                });
+            }
+        };
+
+        self.dirtyCheck = function() {
+            self.dirtyFlag.isDirty(self.isDirty());
+        };
+
+        /**
+         *  Takes into account changes to the photo point photo's as the default knockout dependency
+         *  detection misses edits to some of the fields.
+         */
+        self.dirtyFlag = {
+            isDirty: ko.observable(false),
+            reset: function() {
+                $.each(this.subscribers, function(i, obj) {
+                    obj.reset();
+                });
+            }
         };
 
         // master isDirty flag for the whole page - can control button enabling
@@ -351,6 +373,48 @@
             return valid;
         };
 
+        this.modelAsJS = function(valid) {
+            var activityData, outputs = [];
+            $.each(this.subscribers, function(i, obj) {
+                if (obj.isDirty()) {
+                    if (obj.model === 'activityModel') {
+                        activityData = obj.get();
+                    }
+                    else {
+                        outputs.push(obj.get());
+                    }
+                }
+            });
+
+            if (valid != undefined) {
+                if (!valid) {
+                    if (!activityData) {
+                        activityData = {};
+                    }
+                    activityData.progress = 'started';
+                }
+            }
+
+
+            if (activityData === undefined && outputs.length == 0) {
+                return undefined;
+            }
+            if (!activityData) {
+                activityData = {};
+            }
+            if (outputs.length > 0) {
+                activityData.outputs = outputs;
+
+            }
+            return activityData;
+
+        }
+        this.modelAsJSON = function(valid) {
+            var jsData = this.modelAsJS(valid);
+
+            return JSON.stringify(activityData);
+        }
+
         /**
          * Makes an ajax call to save any sections that have been modified. This includes the activity
          * itself and each output.
@@ -364,42 +428,19 @@
          */
         this.save = function () {
 
-            var activityData, outputs = [], photoPoints;
-
             var valid = self.validate();
 
+            var jsData = this.modelAsJS(valid);
+
+            if (jsData === undefined) {
+                alert("Nothing to save.");
+                return;
+            }
 
             // Don't allow another save to be initiated.
             blockUIWithMessage("Saving activity data...");
 
-            $.each(this.subscribers, function(i, obj) {
-                if (obj.isDirty()) {
-                    if (obj.model === 'activityModel') {
-                        activityData = obj.get();
-                    } else if (obj.model === 'photoPoints') {
-                        photoPoints = obj.get();
-                    }
-                    else {
-                        outputs.push(obj.get());
-                    }
-                }
-            });
-            if (outputs.length === 0 && activityData === undefined && photoPoints === undefined) {
-                alert("Nothing to save.");
-                $.unblockUI();
-                return;
-            }
-
-
-            if (activityData === undefined) {
-                activityData = {};
-            }
-            if (!valid) {
-                activityData.progress = 'started';
-            }
-            activityData.outputs = outputs;
-
-            var toSave = JSON.stringify(activityData);
+            var toSave = JSON.stringify(jsData);
             amplify.store('activity-${activity.activityId}', toSave);
             var unblock = true;
             $.ajax({
@@ -531,7 +572,7 @@
 
             self.confirmSiteChange = function() {
 
-                if (metaModel.supportsSites && metaModel.supportsPhotoPoints && self.transients.photoPointModel().isDirty()) {
+                if (metaModel.supportsSites && metaModel.supportsPhotoPoints && self.transients.photoPointModel().dirtyFlag.isDirty()) {
                     return window.confirm(
                         "This activity has photos attached to photo points.\n  Changing the site will delete these photos.\n  This cannot be undone.  Are you sure?"
                     );
@@ -663,16 +704,13 @@
             ${project ? "JSON.parse('${project.toString().encodeAsJavaScript()}')": 'null'},
             metaModel);
 
-        <g:if test="${params.progress}">
-            var newProgress = '${params.progress}';
-            viewModel.transients.markedAsFinished(newProgress == 'finished');
-        </g:if>
-
-        viewModel.dirtyFlag.isDirty.subscribe(function(newValue) {
-            console.log("Dirty changed: "+newValue);
-        });
-
         ko.applyBindings(viewModel);
+        viewModel.dirtyFlag.reset();
+
+    <g:if test="${params.progress}">
+        var newProgress = '${params.progress}';
+            viewModel.transients.markedAsFinished(newProgress == 'finished');
+    </g:if>
 
         master.register('activityModel', viewModel.modelForSaving, viewModel.dirtyFlag.isDirty, viewModel.dirtyFlag.reset);
     });
