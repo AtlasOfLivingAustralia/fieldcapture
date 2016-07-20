@@ -249,13 +249,15 @@
             var savedOutput = null;
             if (savedData) {
                 var outputData = $.parseJSON(savedData);
-                $.each(outputData.outputs, function(i, tmpOutput) {
-                    if (tmpOutput.name === '${output.name}') {
-                        if (tmpOutput.data) {
-                            savedOutput = tmpOutput.data;
+                if (outputData.outputs) {
+                    $.each(outputData.outputs, function(i, tmpOutput) {
+                        if (tmpOutput.name === '${output.name}') {
+                            if (tmpOutput.data) {
+                                savedOutput = tmpOutput.data;
+                            }
                         }
-                    }
-                });
+                    });
+                }
             }
             if (savedOutput) {
                 window[viewModelInstance].loadData(savedOutput);
@@ -332,7 +334,7 @@
         self.dirtyFlag = {
             isDirty: ko.observable(false),
             reset: function() {
-                $.each(this.subscribers, function(i, obj) {
+                $.each(self.subscribers, function(i, obj) {
                     obj.reset();
                 });
             }
@@ -402,10 +404,8 @@
             if (!activityData) {
                 activityData = {};
             }
-            if (outputs.length > 0) {
-                activityData.outputs = outputs;
+            activityData.outputs = outputs;
 
-            }
             return activityData;
 
         }
@@ -460,9 +460,10 @@
                         errorText += "<p>Any other changes should have been saved.</p>";
                         bootbox.alert(errorText);
                     } else {
-
+                        self.cancelAutosave();
+                        self.dirtyFlag.reset();
                         blockUIWithMessage("Activity data saved.")
-                        self.reset();
+
                         if (valid) {
                             unblock = false; // We will be transitioning off this page.
                             self.saved();
@@ -503,16 +504,11 @@
         this.saved = function () {
             document.location.href = returnTo;
         };
-        this.reset = function () {
-            $.each(this.subscribers, function(i, obj) {
-                if (obj.isDirty()) {
-                    obj.reset();
-                }
-            });
-        };
+        autoSaveModel(self, null, {preventNavigationIfDirty:true});
     };
 
     var master = new Master();
+
     var activity = JSON.parse('${(activity as JSON).toString().encodeAsJavaScript()}');
 
     $(function(){
