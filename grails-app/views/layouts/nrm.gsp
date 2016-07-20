@@ -78,7 +78,7 @@
                 </g:if>
 
                 <div class="btn-group pull-right login-logout">
-                    <fc:loginLogoutButton logoutUrl="${createLink(controller:'logout', action:'logout')}" logoutReturnToUrl="${createLink(uri:request.forwardURI.substring(request.contextPath.length()), absolute:true)}" cssClass="${loginBtnCss}"/>
+                    <fc:loginLogoutButton logoutUrl="${createLink(controller:'logout', action:'logout')}" cssClass="${loginBtnCss}"/>
                 </div>
 
             </div>

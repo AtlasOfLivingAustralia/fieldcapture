@@ -249,13 +249,15 @@
             var savedOutput = null;
             if (savedData) {
                 var outputData = $.parseJSON(savedData);
-                $.each(outputData.outputs, function(i, tmpOutput) {
-                    if (tmpOutput.name === '${output.name}') {
-                        if (tmpOutput.data) {
-                            savedOutput = tmpOutput.data;
+                if (outputData.outputs) {
+                    $.each(outputData.outputs, function(i, tmpOutput) {
+                        if (tmpOutput.name === '${output.name}') {
+                            if (tmpOutput.data) {
+                                savedOutput = tmpOutput.data;
+                            }
                         }
-                    }
-                });
+                    });
+                }
             }
             if (savedOutput) {
                 window[viewModelInstance].loadData(savedOutput);
@@ -314,6 +316,28 @@
                 reset: resetMethod
 
             });
+            if (ko.isObservable(isDirtyMethod)) {
+                isDirtyMethod.subscribe(function() {
+                    self.dirtyCheck();
+                });
+            }
+        };
+
+        self.dirtyCheck = function() {
+            self.dirtyFlag.isDirty(self.isDirty());
+        };
+
+        /**
+         *  Takes into account changes to the photo point photo's as the default knockout dependency
+         *  detection misses edits to some of the fields.
+         */
+        self.dirtyFlag = {
+            isDirty: ko.observable(false),
+            reset: function() {
+                $.each(self.subscribers, function(i, obj) {
+                    obj.reset();
+                });
+            }
         };
 
         // master isDirty flag for the whole page - can control button enabling
@@ -351,6 +375,46 @@
             return valid;
         };
 
+        this.modelAsJS = function(valid) {
+            var activityData, outputs = [];
+            $.each(this.subscribers, function(i, obj) {
+                if (obj.isDirty()) {
+                    if (obj.model === 'activityModel') {
+                        activityData = obj.get();
+                    }
+                    else {
+                        outputs.push(obj.get());
+                    }
+                }
+            });
+
+            if (valid != undefined) {
+                if (!valid) {
+                    if (!activityData) {
+                        activityData = {};
+                    }
+                    activityData.progress = 'started';
+                }
+            }
+
+
+            if (activityData === undefined && outputs.length == 0) {
+                return undefined;
+            }
+            if (!activityData) {
+                activityData = {};
+            }
+            activityData.outputs = outputs;
+
+            return activityData;
+
+        }
+        this.modelAsJSON = function(valid) {
+            var jsData = this.modelAsJS(valid);
+
+            return JSON.stringify(activityData);
+        }
+
         /**
          * Makes an ajax call to save any sections that have been modified. This includes the activity
          * itself and each output.
@@ -364,42 +428,19 @@
          */
         this.save = function () {
 
-            var activityData, outputs = [], photoPoints;
-
             var valid = self.validate();
 
+            var jsData = this.modelAsJS(valid);
+
+            if (jsData === undefined) {
+                alert("Nothing to save.");
+                return;
+            }
 
             // Don't allow another save to be initiated.
             blockUIWithMessage("Saving activity data...");
 
-            $.each(this.subscribers, function(i, obj) {
-                if (obj.isDirty()) {
-                    if (obj.model === 'activityModel') {
-                        activityData = obj.get();
-                    } else if (obj.model === 'photoPoints') {
-                        photoPoints = obj.get();
-                    }
-                    else {
-                        outputs.push(obj.get());
-                    }
-                }
-            });
-            if (outputs.length === 0 && activityData === undefined && photoPoints === undefined) {
-                alert("Nothing to save.");
-                $.unblockUI();
-                return;
-            }
-
-
-            if (activityData === undefined) {
-                activityData = {};
-            }
-            if (!valid) {
-                activityData.progress = 'started';
-            }
-            activityData.outputs = outputs;
-
-            var toSave = JSON.stringify(activityData);
+            var toSave = JSON.stringify(jsData);
             amplify.store('activity-${activity.activityId}', toSave);
             var unblock = true;
             $.ajax({
@@ -419,9 +460,10 @@
                         errorText += "<p>Any other changes should have been saved.</p>";
                         bootbox.alert(errorText);
                     } else {
-
+                        self.cancelAutosave();
+                        self.dirtyFlag.reset();
                         blockUIWithMessage("Activity data saved.")
-                        self.reset();
+
                         if (valid) {
                             unblock = false; // We will be transitioning off this page.
                             self.saved();
@@ -449,7 +491,7 @@
                         $.unblockUI();
                     }
                     if (!valid) {
-                        var message = 'Your data have been saved, but the activity cannot be finished until all of the validation messages have been addressed.';
+                        var message = 'Your changes have been saved and you can remain in this activity form, or you can exit this page without losing data. Please note that you cannot mark this activitiy as finished until all mandatory fields have been completed though.';
                         bootbox.alert(message, function() {
                             self.validate();
                         });
@@ -462,16 +504,11 @@
         this.saved = function () {
             document.location.href = returnTo;
         };
-        this.reset = function () {
-            $.each(this.subscribers, function(i, obj) {
-                if (obj.isDirty()) {
-                    obj.reset();
-                }
-            });
-        };
+        autoSaveModel(self, null, {preventNavigationIfDirty:true});
     };
 
     var master = new Master();
+
     var activity = JSON.parse('${(activity as JSON).toString().encodeAsJavaScript()}');
 
     $(function(){
@@ -531,7 +568,7 @@
 
             self.confirmSiteChange = function() {
 
-                if (metaModel.supportsSites && metaModel.supportsPhotoPoints && self.transients.photoPointModel().isDirty()) {
+                if (metaModel.supportsSites && metaModel.supportsPhotoPoints && self.transients.photoPointModel().dirtyFlag.isDirty()) {
                     return window.confirm(
                         "This activity has photos attached to photo points.\n  Changing the site will delete these photos.\n  This cannot be undone.  Are you sure?"
                     );
@@ -608,7 +645,7 @@
                 alert("Not implemented yet.")
             };
 
-            self.dirtyFlag = ko.dirtyFlag(self, false);
+            self.selfDirtyFlag = ko.dirtyFlag(self, false);
 
             // make sure progress moves to started if we save any data (unless already finished)
             // (do this here so the model becomes dirty)
@@ -633,18 +670,26 @@
                 }
             };
 
-            /**
-            *  Takes into account changes to the photo point photo's as the default knockout dependency
-            *  detection misses edits to some of the fields.
-            */
-            self.transients.isDirty = function() {
-                var dirty = self.dirtyFlag.isDirty();
-                if (!dirty && metaModel.supportsPhotoPoints) {
-                    dirty = self.transients.photoPointModel().isDirty();
-                }
-                return dirty;
-            };
 
+            /**
+             *  Takes into account changes to the photo point photo's as the default knockout dependency
+             *  detection misses edits to some of the fields.
+             */
+            self.dirtyFlag = {
+                isDirty: ko.computed(function() {
+                    var dirty = self.selfDirtyFlag.isDirty();
+                    if (!dirty && metaModel.supportsPhotoPoints) {
+                        dirty = self.transients.photoPointModel().dirtyFlag.isDirty();
+                    }
+                    return dirty;
+                }),
+                reset: function() {
+                    self.selfDirtyFlag.reset();
+                    if (metaModel.supportsPhotoPoints) {
+                        self.transients.photoPointModel().dirtyFlag.reset();
+                    }
+                }
+            };
         };
 
         var site = JSON.parse('${(site as JSON).toString().encodeAsJavaScript()}');
@@ -655,14 +700,15 @@
             ${project ? "JSON.parse('${project.toString().encodeAsJavaScript()}')": 'null'},
             metaModel);
 
-        <g:if test="${params.progress}">
-            var newProgress = '${params.progress}';
-            viewModel.transients.markedAsFinished(newProgress == 'finished');
-        </g:if>
-
         ko.applyBindings(viewModel);
+        viewModel.dirtyFlag.reset();
 
-        master.register('activityModel', viewModel.modelForSaving, viewModel.transients.isDirty, viewModel.dirtyFlag.reset);
+    <g:if test="${params.progress}">
+        var newProgress = '${params.progress}';
+            viewModel.transients.markedAsFinished(newProgress == 'finished');
+    </g:if>
+
+        master.register('activityModel', viewModel.modelForSaving, viewModel.dirtyFlag.isDirty, viewModel.dirtyFlag.reset);
     });
 </r:script>
 </body>
