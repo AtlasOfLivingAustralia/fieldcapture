@@ -130,7 +130,9 @@ class ActivityController {
                 return
             }
 
-            activityAndOutputModel(activity, activity.projectId)
+            Map model = activityAndOutputModel(activity, activity.projectId)
+            model.earliestStartDate = DateUtils.displayFormat(DateUtils.parse(model.project.plannedStartDate))
+            model
 
         } else {
             forward(action: 'list', model: [error: 'no such id'])

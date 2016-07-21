@@ -40,7 +40,6 @@
             <li><a data-bind="click:goToProject" class="clickable">Project</a> <span class="divider">/</span></li>
             <li class="active">
                 <span data-bind="text:type"></span>
-                <span data-bind="text:startDate.formattedDate"></span><span data-bind="visible:endDate">/</span><span data-bind="text:endDate.formattedDate"></span>
             </li>
         </ul>
     </g:if>
@@ -148,12 +147,12 @@
                     </label>
                     <g:if test="${printView}">
                         <div class="row-fluid">
-                            <fc:datePicker targetField="startDate.date" name="startDate" data-validation-engine="validate[required]" printable="${printView}"/>
+                            <fc:datePicker targetField="startDate.date" name="startDate" data-validation-engine="validate[required,funcCall[validateDateField]]" printable="${printView}"/>
                         </div>
                     </g:if>
                     <g:else>
                         <div class="input-append">
-                            <fc:datePicker targetField="startDate.date" name="startDate" data-validation-engine="validate[required]" printable="${printView}"/>
+                            <fc:datePicker targetField="startDate.date" name="startDate" data-validation-engine="validate[required,funcCall[validateDateField]]" printable="${printView}"/>
                         </div>
                     </g:else>
                 </div>
@@ -301,6 +300,13 @@
 <r:script>
 
     var returnTo = "${returnTo}";
+    function validateDateField(dateField) {
+        var date = stringToDate($(dateField).val());
+
+        if (!isValidDate(date)) {
+            return "Date must be in the format dd-MM-YYYY";
+        };
+    }
 
     /* Master controller for page. This handles saving each model as required. */
     var Master = function () {
@@ -412,7 +418,7 @@
         this.modelAsJSON = function(valid) {
             var jsData = this.modelAsJS(valid);
 
-            return JSON.stringify(activityData);
+            return jsData ? JSON.stringify(jsData) : undefined;
         }
 
         /**
