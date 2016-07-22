@@ -320,7 +320,6 @@
                 get: getMethod,
                 isDirty: isDirtyMethod,
                 reset: resetMethod
-
             });
             if (ko.isObservable(isDirtyMethod)) {
                 isDirtyMethod.subscribe(function() {
@@ -355,6 +354,17 @@
             return dirty;
         };
 
+        this.activityData = function() {
+            var activityData = undefined;
+            $.each(self.subscribers, function(i, obj) {
+                if (obj.model == 'activityModel') {
+                    activityData = obj.get();
+                    return false;
+                }
+            });
+            return activityData;
+        };
+
         this.validate = function() {
             var valid = $('#validation-container').validationEngine('validate');
             if (valid) {
@@ -362,7 +372,7 @@
                 var optionalCount = 0;
                 var notCompletedCount = 0;
                 $.each(self.subscribers, function(i, obj) {
-                    if (obj.model !== 'activityModel' && obj.model !== 'photoPoints') {
+                    if (obj.model !== 'activityModel') {
                         if (obj.model.transients.optional) {
                             optionalCount++;
                             if (obj.model.outputNotCompleted()) {
@@ -381,7 +391,7 @@
             return valid;
         };
 
-        this.modelAsJS = function(valid) {
+        this.modelAsJS = function() {
             var activityData, outputs = [];
             $.each(this.subscribers, function(i, obj) {
                 if (obj.isDirty()) {
@@ -394,16 +404,6 @@
                 }
             });
 
-            if (valid != undefined) {
-                if (!valid) {
-                    if (!activityData) {
-                        activityData = {};
-                    }
-                    activityData.progress = 'started';
-                }
-            }
-
-
             if (activityData === undefined && outputs.length == 0) {
                 return undefined;
             }
@@ -415,8 +415,8 @@
             return activityData;
 
         }
-        this.modelAsJSON = function(valid) {
-            var jsData = this.modelAsJS(valid);
+        this.modelAsJSON = function() {
+            var jsData = this.modelAsJS();
 
             return jsData ? JSON.stringify(jsData) : undefined;
         }
@@ -436,11 +436,19 @@
 
             var valid = self.validate();
 
-            var jsData = this.modelAsJS(valid);
+            var jsData = self.modelAsJS();
 
             if (jsData === undefined) {
                 alert("Nothing to save.");
                 return;
+            }
+
+            // We can't allow an activity that failed validation to be marked as finished.
+            if (!valid) {
+                if (!jsData.progress || jsData.progress === 'finished') {
+                    jsData.progress = 'started';
+                    jsData.activityId = jsData.activityId || self.activityData().activityId;
+                }
             }
 
             // Don't allow another save to be initiated.
@@ -616,9 +624,9 @@
                 };
             }
 
-            self.modelForSaving = function () {
+            self.modelForSaving = function (valid) {
                 // get model as a plain javascript object
-                var jsData = ko.mapping.toJS(self, {'ignore':['transients']});
+                var jsData = ko.mapping.toJS(self, {'ignore':['transients', 'dirtyFlag']});
                 if (metaModel.supportsPhotoPoints) {
                     jsData.photoPoints = self.transients.photoPointModel().modelForSaving();
                 }
@@ -676,7 +684,6 @@
                 }
             };
 
-
             /**
              *  Takes into account changes to the photo point photo's as the default knockout dependency
              *  detection misses edits to some of the fields.
@@ -707,7 +714,11 @@
             metaModel);
 
         ko.applyBindings(viewModel);
-        viewModel.dirtyFlag.reset();
+        // We need to reset the dirty flag after binding but doing so can miss a transition from planned -> started
+        // as the "mark activity as finished" will have already updated the progress to started.
+        if (activity.progress == viewModel.progress()) {
+            viewModel.dirtyFlag.reset();
+        }
 
     <g:if test="${params.progress}">
         var newProgress = '${params.progress}';
