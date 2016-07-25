@@ -7,7 +7,7 @@
     </g:each>
     <strong>Project Information</strong>
     <ul class="unstyled">
-        <g:each in="${['Projects', 'Output Targets', 'Sites', 'Reports', 'Documents']}" var="name">
+        <g:each in="${['Projects', 'Output Targets', 'Sites', 'Reports', 'Report Summary', 'Documents']}" var="name">
             <li><label class="checkbox"><input type="checkbox" name="tabs" value="${name}" data-validation-engine="validate[minCheckbox[1]]">${name}</label></li>
         </g:each>
     </ul>

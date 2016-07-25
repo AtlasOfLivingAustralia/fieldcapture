@@ -283,12 +283,12 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
                     scores[score][program] = [:]
                 }
                 scores[score][program]['target'] = target
-                def programOutputs = results.scores.outputData.find{it.group == program}
+                def programOutputs = results?.scores?.outputData?.groups?.find{it.group == program}
                 if (programOutputs) {
-                    def outputScore = programOutputs.results.find{it.score.label == score}
+                    def outputScore = programOutputs.results.find{it.label == score}
                     if (outputScore) {
-                        if (outputScore.results) {
-                            scores[score][program]['value'] = outputScore.results[0].result
+                        if (outputScore.result) {
+                            scores[score][program]['value'] = outputScore.result
                         }
                     }
                 }

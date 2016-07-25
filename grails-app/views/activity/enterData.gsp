@@ -24,6 +24,7 @@
         speciesProfileUrl: "${createLink(controller: 'proxy', action: 'speciesProfile')}",
         documentUpdateUrl: "${g.createLink(controller:"document", action:"documentUpdate")}",
         documentDeleteUrl: "${g.createLink(controller:"document", action:"deleteDocument")}",
+        imageUploadUrl: "${createLink(controller: 'image', action: 'upload')}",
         imageLocation:"${resource(dir:'/images')}"
         },
         here = document.location.href;
@@ -39,7 +40,6 @@
             <li><a data-bind="click:goToProject" class="clickable">Project</a> <span class="divider">/</span></li>
             <li class="active">
                 <span data-bind="text:type"></span>
-                <span data-bind="text:startDate.formattedDate"></span><span data-bind="visible:endDate">/</span><span data-bind="text:endDate.formattedDate"></span>
             </li>
         </ul>
     </g:if>
@@ -147,12 +147,12 @@
                     </label>
                     <g:if test="${printView}">
                         <div class="row-fluid">
-                            <fc:datePicker targetField="startDate.date" name="startDate" data-validation-engine="validate[required]" printable="${printView}"/>
+                            <fc:datePicker targetField="startDate.date" name="startDate" data-validation-engine="validate[required,funcCall[validateDateField]]" printable="${printView}"/>
                         </div>
                     </g:if>
                     <g:else>
                         <div class="input-append">
-                            <fc:datePicker targetField="startDate.date" name="startDate" data-validation-engine="validate[required]" printable="${printView}"/>
+                            <fc:datePicker targetField="startDate.date" name="startDate" data-validation-engine="validate[required,funcCall[validateDateField]]" printable="${printView}"/>
                         </div>
                     </g:else>
                 </div>
@@ -248,13 +248,15 @@
             var savedOutput = null;
             if (savedData) {
                 var outputData = $.parseJSON(savedData);
-                $.each(outputData.outputs, function(i, tmpOutput) {
-                    if (tmpOutput.name === '${output.name}') {
-                        if (tmpOutput.data) {
-                            savedOutput = tmpOutput.data;
+                if (outputData.outputs) {
+                    $.each(outputData.outputs, function(i, tmpOutput) {
+                        if (tmpOutput.name === '${output.name}') {
+                            if (tmpOutput.data) {
+                                savedOutput = tmpOutput.data;
+                            }
                         }
-                    }
-                });
+                    });
+                }
             }
             if (savedOutput) {
                 window[viewModelInstance].loadData(savedOutput);
@@ -298,6 +300,13 @@
 <r:script>
 
     var returnTo = "${returnTo}";
+    function validateDateField(dateField) {
+        var date = stringToDate($(dateField).val());
+
+        if (!isValidDate(date)) {
+            return "Date must be in the format dd-MM-YYYY";
+        };
+    }
 
     /* Master controller for page. This handles saving each model as required. */
     var Master = function () {
@@ -311,8 +320,29 @@
                 get: getMethod,
                 isDirty: isDirtyMethod,
                 reset: resetMethod
-
             });
+            if (ko.isObservable(isDirtyMethod)) {
+                isDirtyMethod.subscribe(function() {
+                    self.dirtyCheck();
+                });
+            }
+        };
+
+        self.dirtyCheck = function() {
+            self.dirtyFlag.isDirty(self.isDirty());
+        };
+
+        /**
+         *  Takes into account changes to the photo point photo's as the default knockout dependency
+         *  detection misses edits to some of the fields.
+         */
+        self.dirtyFlag = {
+            isDirty: ko.observable(false),
+            reset: function() {
+                $.each(self.subscribers, function(i, obj) {
+                    obj.reset();
+                });
+            }
         };
 
         // master isDirty flag for the whole page - can control button enabling
@@ -324,6 +354,17 @@
             return dirty;
         };
 
+        this.activityData = function() {
+            var activityData = undefined;
+            $.each(self.subscribers, function(i, obj) {
+                if (obj.model == 'activityModel') {
+                    activityData = obj.get();
+                    return false;
+                }
+            });
+            return activityData;
+        };
+
         this.validate = function() {
             var valid = $('#validation-container').validationEngine('validate');
             if (valid) {
@@ -331,7 +372,7 @@
                 var optionalCount = 0;
                 var notCompletedCount = 0;
                 $.each(self.subscribers, function(i, obj) {
-                    if (obj.model !== 'activityModel' && obj.model !== 'photoPoints') {
+                    if (obj.model !== 'activityModel') {
                         if (obj.model.transients.optional) {
                             optionalCount++;
                             if (obj.model.outputNotCompleted()) {
@@ -350,6 +391,36 @@
             return valid;
         };
 
+        this.modelAsJS = function() {
+            var activityData, outputs = [];
+            $.each(this.subscribers, function(i, obj) {
+                if (obj.isDirty()) {
+                    if (obj.model === 'activityModel') {
+                        activityData = obj.get();
+                    }
+                    else {
+                        outputs.push(obj.get());
+                    }
+                }
+            });
+
+            if (activityData === undefined && outputs.length == 0) {
+                return undefined;
+            }
+            if (!activityData) {
+                activityData = {};
+            }
+            activityData.outputs = outputs;
+
+            return activityData;
+
+        }
+        this.modelAsJSON = function() {
+            var jsData = this.modelAsJS();
+
+            return jsData ? JSON.stringify(jsData) : undefined;
+        }
+
         /**
          * Makes an ajax call to save any sections that have been modified. This includes the activity
          * itself and each output.
@@ -363,96 +434,95 @@
          */
         this.save = function () {
 
-            var activityData, outputs = [], photoPoints;
+            var valid = self.validate();
 
-            if (self.validate()) {
-                // Don't allow another save to be initiated.
-                blockUIWithMessage("Saving activity data...");
+            var jsData = self.modelAsJS();
 
-                $.each(this.subscribers, function(i, obj) {
-                    if (obj.isDirty()) {
-                        if (obj.model === 'activityModel') {
-                            activityData = obj.get();
-                        } else if (obj.model === 'photoPoints') {
-                            photoPoints = obj.get();
-                        }
-                        else {
-                            outputs.push(obj.get());
-                        }
-                    }
-                });
-                if (outputs.length === 0 && activityData === undefined && photoPoints === undefined) {
-                    alert("Nothing to save.");
-                    $.unblockUI();
-                    return;
+            if (jsData === undefined) {
+                alert("Nothing to save.");
+                return;
+            }
+
+            // We can't allow an activity that failed validation to be marked as finished.
+            if (!valid) {
+                if (!jsData.progress || jsData.progress === 'finished') {
+                    jsData.progress = 'started';
+                    jsData.activityId = jsData.activityId || self.activityData().activityId;
                 }
+            }
 
+            // Don't allow another save to be initiated.
+            blockUIWithMessage("Saving activity data...");
 
-                if (activityData === undefined) { activityData = {}}
-                activityData.outputs = outputs;
-
-                var toSave = JSON.stringify(activityData);
-                amplify.store('activity-${activity.activityId}', toSave);
-                var unblock = true;
-                $.ajax({
-                    url: "${createLink(action: 'ajaxUpdate', id: activity.activityId)}",
-                    type: 'POST',
-                    data: toSave,
-                    contentType: 'application/json',
-                    success: function (data) {
-                        var errorText = "";
-                        if (data.errors) {
-                            errorText = "<span class='label label-important'>Important</span><h4>There was an error while trying to save your changes.</h4>";
-                            $.each(data.errors, function (i, error) {
-                                errorText += "<p>Saving <b>" +
+            var toSave = JSON.stringify(jsData);
+            amplify.store('activity-${activity.activityId}', toSave);
+            var unblock = true;
+            $.ajax({
+                url: "${createLink(action: 'ajaxUpdate', id: activity.activityId)}",
+                type: 'POST',
+                data: toSave,
+                contentType: 'application/json',
+                success: function (data) {
+                    var errorText = "";
+                    if (data.errors) {
+                        errorText = "<span class='label label-important'>Important</span><h4>There was an error while trying to save your changes.</h4>";
+                        $.each(data.errors, function (i, error) {
+                            errorText += "<p>Saving <b>" +
 (error.name === 'activity' ? 'the activity context' : error.name) +
 "</b> threw the following error:<br><blockquote>" + error.error + "</blockquote></p>";
-                            });
-                            errorText += "<p>Any other changes should have been saved.</p>";
-                            bootbox.alert(errorText);
-                        } else {
+                        });
+                        errorText += "<p>Any other changes should have been saved.</p>";
+                        bootbox.alert(errorText);
+                    } else {
+                        self.cancelAutosave();
+                        self.dirtyFlag.reset();
+                        blockUIWithMessage("Activity data saved.")
+
+                        if (valid) {
                             unblock = false; // We will be transitioning off this page.
-                            blockUIWithMessage("Activity data saved.")
-                            self.reset();
                             self.saved();
                         }
-                        amplify.store('activity-${activity.activityId}', null);
-                    },
-                    error: function (jqXHR, status, error) {
 
-                        // This is to detect a redirect to CAS response due to session timeout, which is not
-                        // 100% reliable using ajax (e.g. no network will give the same response).
-                        if (jqXHR.readyState == 0) {
 
-                            bootbox.alert($('#timeoutMessage').html());
-                        }
-                        else {
-                            alert('An unhandled error occurred: ' + error);
-                        }
-
-                    },
-                    complete: function () {
-                        if (unblock) {
-                            $.unblockUI();
-                        }
                     }
-                });
-            }
+                    amplify.store('activity-${activity.activityId}', null);
+                },
+                error: function (jqXHR, status, error) {
+
+                    // This is to detect a redirect to CAS response due to session timeout, which is not
+                    // 100% reliable using ajax (e.g. no network will give the same response).
+                    if (jqXHR.readyState == 0) {
+
+                        bootbox.alert($('#timeoutMessage').html());
+                    }
+                    else {
+                        alert('An unhandled error occurred: ' + error);
+                    }
+
+                },
+                complete: function () {
+                    if (unblock) {
+                        $.unblockUI();
+                    }
+                    if (!valid) {
+                        var message = 'Your changes have been saved and you can remain in this activity form, or you can exit this page without losing data. Please note that you cannot mark this activitiy as finished until all mandatory fields have been completed though.';
+                        bootbox.alert(message, function() {
+                            self.validate();
+                        });
+                    }
+                }
+            });
+
 
         };
         this.saved = function () {
             document.location.href = returnTo;
         };
-        this.reset = function () {
-            $.each(this.subscribers, function(i, obj) {
-                if (obj.isDirty()) {
-                    obj.reset();
-                }
-            });
-        };
+        autoSaveModel(self, null, {preventNavigationIfDirty:true});
     };
 
     var master = new Master();
+
     var activity = JSON.parse('${(activity as JSON).toString().encodeAsJavaScript()}');
 
     $(function(){
@@ -512,7 +582,7 @@
 
             self.confirmSiteChange = function() {
 
-                if (metaModel.supportsSites && metaModel.supportsPhotoPoints && self.transients.photoPointModel().isDirty()) {
+                if (metaModel.supportsSites && metaModel.supportsPhotoPoints && self.transients.photoPointModel().dirtyFlag.isDirty()) {
                     return window.confirm(
                         "This activity has photos attached to photo points.\n  Changing the site will delete these photos.\n  This cannot be undone.  Are you sure?"
                     );
@@ -554,9 +624,9 @@
                 };
             }
 
-            self.modelForSaving = function () {
+            self.modelForSaving = function (valid) {
                 // get model as a plain javascript object
-                var jsData = ko.mapping.toJS(self, {'ignore':['transients']});
+                var jsData = ko.mapping.toJS(self, {'ignore':['transients', 'dirtyFlag']});
                 if (metaModel.supportsPhotoPoints) {
                     jsData.photoPoints = self.transients.photoPointModel().modelForSaving();
                 }
@@ -589,7 +659,7 @@
                 alert("Not implemented yet.")
             };
 
-            self.dirtyFlag = ko.dirtyFlag(self, false);
+            self.selfDirtyFlag = ko.dirtyFlag(self, false);
 
             // make sure progress moves to started if we save any data (unless already finished)
             // (do this here so the model becomes dirty)
@@ -615,17 +685,24 @@
             };
 
             /**
-            *  Takes into account changes to the photo point photo's as the default knockout dependency
-            *  detection misses edits to some of the fields.
-            */
-            self.transients.isDirty = function() {
-                var dirty = self.dirtyFlag.isDirty();
-                if (!dirty && metaModel.supportsPhotoPoints) {
-                    dirty = self.transients.photoPointModel().isDirty();
+             *  Takes into account changes to the photo point photo's as the default knockout dependency
+             *  detection misses edits to some of the fields.
+             */
+            self.dirtyFlag = {
+                isDirty: ko.computed(function() {
+                    var dirty = self.selfDirtyFlag.isDirty();
+                    if (!dirty && metaModel.supportsPhotoPoints) {
+                        dirty = self.transients.photoPointModel().dirtyFlag.isDirty();
+                    }
+                    return dirty;
+                }),
+                reset: function() {
+                    self.selfDirtyFlag.reset();
+                    if (metaModel.supportsPhotoPoints) {
+                        self.transients.photoPointModel().dirtyFlag.reset();
+                    }
                 }
-                return dirty;
             };
-
         };
 
         var site = JSON.parse('${(site as JSON).toString().encodeAsJavaScript()}');
@@ -637,8 +714,18 @@
             metaModel);
 
         ko.applyBindings(viewModel);
+        // We need to reset the dirty flag after binding but doing so can miss a transition from planned -> started
+        // as the "mark activity as finished" will have already updated the progress to started.
+        if (activity.progress == viewModel.progress()) {
+            viewModel.dirtyFlag.reset();
+        }
 
-        master.register('activityModel', viewModel.modelForSaving, viewModel.transients.isDirty, viewModel.dirtyFlag.reset);
+    <g:if test="${params.progress}">
+        var newProgress = '${params.progress}';
+            viewModel.transients.markedAsFinished(newProgress == 'finished');
+    </g:if>
+
+        master.register('activityModel', viewModel.modelForSaving, viewModel.dirtyFlag.isDirty, viewModel.dirtyFlag.reset);
     });
 </r:script>
 </body>
