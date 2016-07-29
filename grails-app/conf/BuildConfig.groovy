@@ -68,6 +68,8 @@ grails.project.dependency.resolution = {
     plugins {
         // The plugins are mostly defined in the fieldcapture-hubs-plugin
 
+        runtime ":ala-ws-security:1.5-SNAPSHOT"
+
         build ":tomcat:7.0.55"
 
         runtime ":jquery:1.11.1" // Override jquery as 1.8.3 was being pulled in from somewhere
@@ -77,10 +79,11 @@ grails.project.dependency.resolution = {
 
         build ":release:3.0.1"
 
+
         //test ":karma-test-runner:0.2.4"
 
         if (Environment.current != Environment.DEVELOPMENT) {
-            compile ":fieldcapture-plugin:1.7.1-SNAPSHOT"
+            compile ":fieldcapture-plugin:1.7.2-SNAPSHOT"
             test ":fieldcapture-test:0.1-SNAPSHOT"
         }
 
