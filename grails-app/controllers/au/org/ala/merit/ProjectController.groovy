@@ -125,107 +125,25 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
         String fromStage = params.fromStage
         String toStage = params.toStage
 
+        projectService.projectReportModel(id, fromStage, toStage, params.getList("sections"))
+    }
+
+    @PreAuthorise(accessLevel = 'admin')
+    def projectReportPDF(String id) {
+
+        List sections = new ArrayList(params.getList("sections"))
+        sections.remove("Progress against output targets") // The google charts don't render properly at the moment in the PDF
+
+        String reportUrl = g.createLink(controller:'report', action:'projectReportCallback', id:id, absolute: true, params:[fromStage:params.fromStage, toStage:params.toStage, sections:sections])
+        String url = grailsApplication.config.pdfgen.baseURL+'api/pdf'+commonService.buildUrlParamsFromMap(docUrl:reportUrl)
+        webService.proxyGetRequest(response, url, false, false, 10*60*1000)
+    }
+
+    @PreAuthorise(accessLevel = 'admin')
+    def meriPlan(String id) {
         Map project = projectService.get(id, 'all')
-
-        // Determine date range for data to include.
-        String fromDate = project.reports?.find { it.name == fromStage }?.fromDate
-        String toDate = project.reports?.find { it.name == toStage }?.toDate
-
-        List reportedStages = []
-
-        final int MAX_IMAGES = 6
-        List publicImages = project.documents.findAll{it.public == true && it.thirdPartyConsentDeclarationMade == true && it.type == 'image'}
-        if (publicImages.size() > MAX_IMAGES) {
-            publicImages = publicImages.subList(0, MAX_IMAGES)
-        }
-
-        Map<String, Map<String, Integer>> activityCountByStage = new TreeMap()
-        project.reports?.each { Map report ->
-            if (report.fromDate >= fromDate && report.toDate <= toDate) {
-                List activities = project.activities?.findAll{it.plannedEndDate > report.fromDate && it.plannedEndDate <= report.toDate}
-                Map<String, List> activitiesByProgress = activities?.groupBy{it.progress?it.progress:'planned'}
-
-                activityCountByStage << [(report.name):new TreeMap()]
-                activitiesByProgress.each{ status, activityList ->
-                    activityCountByStage[report.name].put(status, activityList?activityList.size():0)
-                }
-                reportedStages << report.name
-            }
-        }
-
-        Map activitiesModel = metadataService.activitiesModel()
-        Set activityModels = new HashSet()
-        Map outputModels = [:]
-
-        // Use the final report if available, otherwise fall back to the stage report.
-        Map stageReportModel = null
-        Map latestStageReport = getMostRecentActivityBefore(project.activities, ProjectService.FINAL_REPORT_ACTIVITY_TYPE ,toDate)
-
-        if (!latestStageReport) {
-            latestStageReport = getMostRecentActivityBefore(project.activities, ProjectService.STAGE_REPORT_ACTIVITY_TYPE ,toDate)
-            stageReportModel = activitiesModel.activities.find {it.name == ProjectService.STAGE_REPORT_ACTIVITY_TYPE}
-        }
-        else {
-            stageReportModel = activitiesModel.activities.find {it.name == ProjectService.FINAL_REPORT_ACTIVITY_TYPE}
-        }
-        if (!activityModels.find{it.name == stageReportModel.name}) {
-            activityModels << stageReportModel
-        }
-        Map activitiesByStage = [:].withDefault{[]}
-        project.activities?.each { activity ->
-            if (activity.plannedEndDate >= fromDate && activity.plannedEndDate <= toDate) {
-                Map activityModel = activitiesModel.activities.find{it.name == activity.type}
-                activityModels << activityModel
-                if (activityService.isStartedOrFinished(activity)) {
-                    Map report = reportService.findReportForDate(activity.plannedEndDate, project.reports)
-                    if (report && report.name) {
-                        activitiesByStage[report.name] << activity
-                    }
-                }
-            }
-        }
-        activityModels.each { activityModel ->
-            activityModel.outputs.each { outputName ->
-                outputModels << [(outputName):metadataService.getDataModelFromOutputName(outputName)]
-
-            }
-        }
-
-        String role
-        if (userService.userIsAlaOrFcAdmin()) {
-            role = 'MERIT Administrator and authorised representative of Commonwealth Department of Environment'
-        }
-        else if (userService.isUserCaseManagerForProject(userService.getCurrentUserId(), id)) {
-            role = 'MERIT Grant Manager and authorised representative of Commonwealth Department of Environment'
-        }
-        else if (userService.isUserAdminForProject(userService.getCurrentUserId(), id)) {
-            role = 'MERIT Project Administrator and authorised representative of Commonwealth Department of Environment'
-        }
-        else {
-            role = 'MERIT user'
-        }
-
-
-
-        List outcomes = project.custom?.details?.objectives?.rows1?.findAll{it.description}
-
-
-        project.documents = project.documents?.findAll{!(it.role in ['stageReport', 'approval', 'deferReason']) && (it.stage? it.stage in reportedStages : it.lastUpdated <= toDate)}
-        project.documents?.sort{it.stage}
-
-        Map risksComparison = projectService.compareProjectRisks(id, toDate, fromDate)
-
-        [project:project, content:params.sections, role:role, images:publicImages, activityCountByStage:activityCountByStage, outcomes:outcomes, metrics: projectService.summary(id),
-        activityModels:activityModels, orderedStageNames:reportedStages, activitiesByStage:activitiesByStage, outputModels:outputModels, stageReportModel:stageReportModel, latestStageReport:latestStageReport, risksComparison: risksComparison]
+        render view:'meriPlanReadOnly', model:[project:project, themes:metadataService.getThemesForProject(project)]
     }
-
-    private Map getMostRecentActivityBefore(List activities, String activityType, String isoEndDate) {
-        activities?.findAll {
-            it.type == activityType && reportService.isSubmittedOrApproved(it) && it.plannedEndDate <= isoEndDate
-        }?.max { it.plannedEndDate }
-    }
-
-
 
     @PreAuthorise(accessLevel = 'admin')
 	def previewStageReport(){
