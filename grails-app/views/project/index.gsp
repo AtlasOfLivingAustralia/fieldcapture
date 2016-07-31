@@ -49,6 +49,8 @@
         shapefileDownloadUrl: "${createLink(controller:'project', action:'downloadShapefile', id:project.projectId)}",
         regenerateStageReportsUrl: "${createLink(controller:'project', action:'regenerateStageReports', id:project.projectId)}",
         projectReportUrl:"${createLink(controller:'project', action:'projectReport', id:project.projectId)}",
+        projectReportPDFUrl:"${createLink(controller:'project', action:'projectReportPDF', id:project.projectId)}",
+        meriPlanPDFUrl:"${createLink(controller:'project', action:'meriPlanPDF', id:project.projectId)}",
         returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
 
     },
@@ -424,6 +426,11 @@
 				    self.details.cancelAutosave();
 
 				    document.location.reload(true);
+				};
+
+				self.meriPlanPDF = function() {
+                    var url = fcConfig.meriPlanPDFUrl;
+                    window.open(url,'meri-plan-report');
 				};
 
 				self.saveAnnouncements = function(){
