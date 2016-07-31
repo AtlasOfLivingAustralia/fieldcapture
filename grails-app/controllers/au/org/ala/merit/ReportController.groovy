@@ -431,4 +431,14 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
         render view:'/project/projectReport', model: model
     }
 
+    /**
+     * Provides a way for the pdf generation service to callback into MERIT without requiring user credentials.
+     * (It uses an IP filter / API Key instead).
+     */
+    @RequireApiKey
+    def meriPlanReportCallback(String id) {
+        Map project = projectService.get(id, 'all')
+        render view:'/project/meriPlanReadOnly', model:[project:project, themes:metadataService.getThemesForProject(project)]
+    }
+
 }

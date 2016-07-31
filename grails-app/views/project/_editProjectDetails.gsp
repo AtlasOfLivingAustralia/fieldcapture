@@ -368,6 +368,8 @@
 
 			<button type="button" data-bind="click: saveProjectDetails, disable: isProjectDetailsLocked()" id="project-details-save" class="btn btn-primary">Save changes</button>
 			<button type="button" id="details-cancel" class="btn" data-bind="click: cancelProjectDetailsEdits">Cancel</button>
+			<button type="button" id="details-pdf" class="btn" data-bind="click: meriPlanPDF">Generate PDF</button>
+
 
 			<!--  Admin - submit to approval. -->
 			<div data-bind="if: userIsAdmin()">

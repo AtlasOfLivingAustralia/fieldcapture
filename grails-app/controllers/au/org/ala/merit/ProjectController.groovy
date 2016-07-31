@@ -136,13 +136,33 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
 
         String reportUrl = g.createLink(controller:'report', action:'projectReportCallback', id:id, absolute: true, params:[fromStage:params.fromStage, toStage:params.toStage, sections:sections])
         String url = grailsApplication.config.pdfgen.baseURL+'api/pdf'+commonService.buildUrlParamsFromMap(docUrl:reportUrl)
-        webService.proxyGetRequest(response, url, false, false, 10*60*1000)
+        Map result
+        try {
+            result = webService.proxyGetRequest(response, url, false, false, 10*60*1000)
+        }
+        catch (Exception e) {
+            result = [error:e.message]
+        }
+        if (result.error) {
+            render view:'/error', model:[error:"An error occurred generating the project report."]
+        }
+
     }
 
     @PreAuthorise(accessLevel = 'admin')
-    def meriPlan(String id) {
-        Map project = projectService.get(id, 'all')
-        render view:'meriPlanReadOnly', model:[project:project, themes:metadataService.getThemesForProject(project)]
+    def meriPlanPDF(String id) {
+        String reportUrl = g.createLink(controller:'report', action:'meriPlanReportCallback', id:id, absolute: true)
+        String url = grailsApplication.config.pdfgen.baseURL+'api/pdf'+commonService.buildUrlParamsFromMap(docUrl:reportUrl)
+        Map result
+        try {
+            result = webService.proxyGetRequest(response, url, false, false, 10*60*1000)
+        }
+        catch (Exception e) {
+            result = [error:e.message]
+        }
+        if (result.error) {
+            render view:'/error', model:[error:"An error occurred generating the MERI plan report."]
+        }
     }
 
     @PreAuthorise(accessLevel = 'admin')

@@ -92,7 +92,9 @@
                     <div class="modal-footer control-group">
                         <div class="controls">
                             <button type="button" class="btn btn-success"
-                                    data-bind="click:generateProjectReport">Generate Report</button>
+                                    data-bind="click:generateProjectReportHTML">Generate Report (HTML)</button>
+                            <button type="button" class="btn btn-success"
+                                    data-bind="click:generateProjectReportPDF">Generate Report (PDF)</button>
                             <button class="btn" data-bind="click:cancelGenerateReport">Cancel</button>
                         </div>
                     </div>
@@ -1173,15 +1175,22 @@
                 });
                 return stages;
             });
-            self.generateProjectReport = function() {
+            self.generateProjectReport = function(url) {
 
-                var url = fcConfig.projectReportUrl + '?fromStage='+self.reportFromStage()+'&toStage='+self.reportToStage();
+                var url = url + '?fromStage='+self.reportFromStage()+'&toStage='+self.reportToStage();
                 for (var i=0; i<self.reportIncludedSections().length; i++) {
                     url+='&sections='+self.reportIncludedSections()[i];
                 }
                 window.open(url,'project-report');
                 $('#projectReportOptions').modal('hide');
             };
+            self.generateProjectReportHTML = function() {
+                self.generateProjectReport(fcConfig.projectReportUrl);
+            };
+            self.generateProjectReportPDF = function() {
+                self.generateProjectReport(fcConfig.projectReportPDFUrl);
+            };
+
             self.cancelGenerateReport = function() {
                 $('#projectReportOptions').modal('hide');
             }
