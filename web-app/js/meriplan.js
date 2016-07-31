@@ -7,13 +7,15 @@ function MERIPlan(project, themes, key) {
    if(!project.custom){ project.custom = {};}
    if(!project.custom.details){project.custom.details = {};}
 
-   var savedProjectCustomDetails = amplify.store(key);
-   if (savedProjectCustomDetails) {
-      var restored = JSON.parse(savedProjectCustomDetails);
-      if (restored.custom) {
-         $('#restoredData').show();
-         project.custom.details = restored.custom.details;
-      }
+   if (key) {
+       var savedProjectCustomDetails = amplify.store(key);
+       if (savedProjectCustomDetails) {
+          var restored = JSON.parse(savedProjectCustomDetails);
+          if (restored.custom) {
+             $('#restoredData').show();
+             project.custom.details = restored.custom.details;
+          }
+       }
    }
 
    self.details = new DetailsViewModel(project.custom.details, getBudgetHeaders(project));

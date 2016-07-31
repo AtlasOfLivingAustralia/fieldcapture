@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import au.ala.org.ws.security.RequireApiKey
 import au.org.ala.fieldcapture.ActivityService
 import au.org.ala.fieldcapture.DateUtils
 import au.org.ala.fieldcapture.GmsMapper
@@ -416,46 +417,18 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
         render result as JSON
     }
 
-    def doSomeStuff() {
-        List dataModel = []
-        List viewModel = []
-        Map model = reportService.performanceReportModel('')
-        model.sectionsByTheme.each { String theme, List sections ->
-            sections.each { section ->
-                section.questions.each { question ->
+    /**
+     * Provides a way for the pdf generation service to callback into MERIT without requiring user credentials.
+     * (It uses an IP filter / API Key instead).
+     */
+    @RequireApiKey
+    def projectReportCallback(String id) {
+        String fromStage = params.fromStage
+        String toStage = params.toStage
 
-                    dataModel << [
-                            name:"meetsExpectations"+question.name,
-                            description:question.text,
-                            dataType:"text",
-                            validate:"required",
-                            constraints:["N/A","Yes","No"]
-                    ]
-                    dataModel << [
-                            name:"evidenceFor"+question.name,
-                            description:question.text,
-                            dataType:"text",
-                            validate:"required,maxSize[2000]"
-                    ]
+        Map model = projectService.projectReportModel(id, fromStage, toStage, params.getList("sections"))
 
-                    viewModel << [
-                            source:"meetsExpectations"+question.name,
-                            preLabel:question.text+' ( N/A, Yes, No )'
-                    ]
-
-                    viewModel << [
-                            source:"evidenceFor"+question.name,
-                            preLabel:question.text+' ( Please provide evidence )'
-                    ]
-
-                }
-            }
-        }
-
-        Map result = [dataModel:dataModel,viewModel:viewModel]
-
-        render result as JSON
-
+        render view:'/project/projectReport', model: model
     }
 
 }
