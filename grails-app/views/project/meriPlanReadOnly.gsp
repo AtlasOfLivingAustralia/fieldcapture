@@ -38,7 +38,7 @@
 </head>
 <body>
 <div class="container">
-    <g:render template="projectDetails" model="[project: project]"/>
+    <g:render template="/project/projectDetails" model="[project: project]"/>
     <r:script>
     $(function() {
         var project = <fc:modelAsJavascript model="${project}"/>;
