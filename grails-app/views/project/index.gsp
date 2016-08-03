@@ -148,7 +148,7 @@
         <div class="tab-pane" id="details">
             <g:if test="${projectContent.details.meriPlanVisibleToUser}">
                 <!-- Project Details -->
-                <g:render template="projectDetails" model="[project: project, includeRisksAndThreats:projectContent.risksAndThreats.visible]"/>
+                <g:render template="projectDetails" model="[project: project, risksAndThreatsVisible:projectContent.details.risksAndThreatsVisible]"/>
 
                 <div class="row-fluid space-after">
                     <div class="span6">
