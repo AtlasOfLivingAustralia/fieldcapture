@@ -377,7 +377,6 @@
                     <r:script>
                         $(function() {
                             var activity = <fc:modelAsJavascript model="${activity}"></fc:modelAsJavascript>;
-                            console.log(activity.site);
                             ko.applyBindings(new PhotoPointViewModel(activity.site, activity, {}), document.getElementById('photopoints-${activity.activityId}'));
                         });
                     </r:script>
