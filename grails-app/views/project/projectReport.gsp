@@ -367,6 +367,21 @@
                     </g:if>
 
                 </g:each>
+                <g:if test="${activityModel.supportsPhotoPoints}">
+                    <div id="photopoints-${activity.activityId}" class="output-block">
+                        <h3>Photo Points</h3>
+
+                        <g:render template="/site/photoPoints" plugin="fieldcapture-plugin" model="${[readOnly:true]}"></g:render>
+
+                    </div>
+                    <r:script>
+                        $(function() {
+                            var activity = <fc:modelAsJavascript model="${activity}"></fc:modelAsJavascript>;
+                            console.log(activity.site);
+                            ko.applyBindings(new PhotoPointViewModel(activity.site, activity, {}), document.getElementById('photopoints-${activity.activityId}'));
+                        });
+                    </r:script>
+                </g:if>
 
             </g:each>
             </g:if>
