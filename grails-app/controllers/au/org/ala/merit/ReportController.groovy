@@ -427,6 +427,7 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
         String toStage = params.toStage
 
         Map model = projectService.projectReportModel(id, fromStage, toStage, params.getList("sections"))
+        model.printable = 'pdf'
 
         render view:'/project/projectReport', model: model
     }
