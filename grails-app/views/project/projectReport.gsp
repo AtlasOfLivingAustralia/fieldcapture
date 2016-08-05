@@ -202,7 +202,7 @@
                     <div class="well">
                         <h3>${metric.key}</h3>
                         <g:each in="${metric.value}" var="score">
-                            <fc:renderScore score="${score}"></fc:renderScore>
+                            <fc:renderScore score="${score}" printable="${printable}"></fc:renderScore>
                         </g:each>
                     </div>
                 </g:each>
@@ -212,13 +212,13 @@
     <g:if test="${metrics.other  && ('Progress of outputs without targets' in content)}">
         <h3>Progress of outputs without targets</h3>
         <p>Note this is the current project progress, not the progress made during the selected stage(s).</p>
-        <div class="row-fluid outputs-without-targets dashboard">
+        <div class="outputs-without-targets dashboard">
             <g:each in="${metrics.other?.entrySet()}" var="metric" status="i">
 
-                <div class="well well-small">
+                <div class="row-fluid well well-small">
                     <h3>${metric.key}</h3>
                     <g:each in="${metric.value}" var="score">
-                                <fc:renderScore score="${score}"></fc:renderScore>
+                                <fc:renderScore score="${score}" printable="${printable}"></fc:renderScore>
 
 
                     </g:each>
@@ -230,7 +230,7 @@
 
     <g:each in="${outputModels}" var="outputModel">
         <g:render template="/output/outputJSModel" plugin="fieldcapture-plugin"
-                  model="${[model:outputModel.value, outputName:outputModel.key, edit:false, speciesLists:[]]}"></g:render>
+                  model="${[model:outputModel.value, outputName:outputModel.key, edit:false, speciesLists:[], printable:printable]}"></g:render>
     </g:each>
 
     <g:if test="${latestStageReport && ('Stage report' in content)}">
@@ -242,7 +242,8 @@
                             activity:latestStageReport,
                             outputModel:outputModels[outputName],
                             outputName:outputName,
-                            activityModel:stageReportModel]}"
+                            activityModel:stageReportModel,
+                            printable:printable]}"
                   plugin="fieldcapture-plugin"></g:render>
         </g:each>
 
@@ -367,6 +368,20 @@
                     </g:if>
 
                 </g:each>
+                <g:if test="${activityModel.supportsPhotoPoints}">
+                    <div id="photopoints-${activity.activityId}" class="output-block">
+                        <h3>Photo Points</h3>
+
+                        <g:render template="/site/photoPoints" plugin="fieldcapture-plugin" model="${[readOnly:true]}"></g:render>
+
+                    </div>
+                    <r:script>
+                        $(function() {
+                            var activity = <fc:modelAsJavascript model="${activity}"></fc:modelAsJavascript>;
+                            ko.applyBindings(new PhotoPointViewModel(activity.site, activity, {}), document.getElementById('photopoints-${activity.activityId}'));
+                        });
+                    </r:script>
+                </g:if>
 
             </g:each>
             </g:if>

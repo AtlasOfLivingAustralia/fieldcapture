@@ -826,6 +826,9 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
         }
         Map activitiesByStage = [:].withDefault{[]}
         project.activities?.each { activity ->
+            if (activity.siteId) {
+                activity.site = siteService.get(activity.siteId)
+            }
             if (activity.plannedEndDate >= fromDate && activity.plannedEndDate <= toDate) {
                 Map activityModel = activitiesModel.activities.find{it.name == activity.type}
                 activityModels << activityModel
