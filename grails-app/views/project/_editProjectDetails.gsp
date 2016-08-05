@@ -6,6 +6,11 @@
 
 </style>
 
+<div style="float: right">
+
+</div>
+
+
 <!--  Case manager actions -->
 <div class="row-fluid space-after" data-bind="visible: userIsCaseManager() && (planStatus() == 'approved' || planStatus() == 'submitted')">
 	<div class="span6 required">
@@ -33,6 +38,10 @@
 	</div>
 </div>
 <g:if test="${projectContent.details.visible}">
+	<div class="form-actions">
+		<b>Admin actions:</b>
+		<button type="button" id="details-pdf" class="btn btn-info" data-bind="click: meriPlanPDF">Generate PDF</button>
+	</div>
 
 	<div class="row-fluid">
 	<div class="control-group">
@@ -42,14 +51,17 @@
 		<div style="float: right;" data-bind="if: planStatus() == 'approved'">
 			<span class="badge badge-success" style="font-size: 13px;">This plan has been approved</span>
 			<span data-bind="if:detailsLastUpdated"> <br/>Last update date : <span data-bind="text:detailsLastUpdated.formattedDate"></span></span>
+
 		</div>
 		<div style="float: right;" data-bind="if: planStatus() == '' || planStatus() == 'not approved' ">
 			<span class="badge badge-warning" style="font-size: 13px;">This plan is not yet approved</span>
 			<span data-bind="if:detailsLastUpdated"><br/>Last update date :  <span data-bind="text:detailsLastUpdated.formattedDate"></span></span>
+
 		</div>
 		<div style="float: right;" data-bind="if: planStatus() == 'submitted'">
 			<span class="badge badge-info" style="font-size: 13px;">This plan has been submitted for approval</span>
 			<span data-bind="if:detailsLastUpdated"><br/>Last update date :  <span data-bind="text:detailsLastUpdated.formattedDate"></span></span>
+
 		</div>
 
 	</div>
@@ -368,8 +380,6 @@
 
 			<button type="button" data-bind="click: saveProjectDetails, disable: isProjectDetailsLocked()" id="project-details-save" class="btn btn-primary">Save changes</button>
 			<button type="button" id="details-cancel" class="btn" data-bind="click: cancelProjectDetailsEdits">Cancel</button>
-			<button type="button" id="details-pdf" class="btn" data-bind="click: meriPlanPDF">Generate PDF</button>
-
 
 			<!--  Admin - submit to approval. -->
 			<div data-bind="if: userIsAdmin()">

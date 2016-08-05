@@ -160,6 +160,7 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
             result = webService.proxyGetRequest(response, url, false, false, 10*60*1000)
         }
         catch (Exception e) {
+            log.error("Error generating the PDF of the MERI plan: ", e)
             result = [error:e.message]
         }
         if (result.error) {
