@@ -144,6 +144,7 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
         }
         catch (Exception e) {
             result = [error:e.message]
+            log.error("Error generating PDF for project ${id}: ",e)
         }
         if (result.error) {
             render view:'/error', model:[error:"An error occurred generating the project report."]

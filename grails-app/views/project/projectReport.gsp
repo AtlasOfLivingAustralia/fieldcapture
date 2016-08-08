@@ -36,9 +36,10 @@
         padding:10px;
         border-top: 4px solid black;
     }
-        tr {
+        tr, .chart {
             page-break-inside: avoid;
         }
+
     </style>
 
     <r:require modules="knockout, activity, jqueryValidationEngine, merit_projects, pretty_text_diff"/>
