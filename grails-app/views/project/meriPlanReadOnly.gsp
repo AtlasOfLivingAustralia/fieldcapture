@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta name="layout" content="${(grailsApplication.config.layout.skin?:'main')+'Print'}"/>
-    <title>Project Summary | Project | MERIT</title>
+    <title>MERI Plan - ${project.name}</title>
     <script type="text/javascript" src="//www.google.com/jsapi"></script>
     <r:script disposition="head">
     var fcConfig = {
