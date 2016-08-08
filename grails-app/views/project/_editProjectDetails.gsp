@@ -3,12 +3,7 @@
 #announcements th, #risks-announcements th {
 	white-space: normal;
 }
-
 </style>
-
-<div style="float: right">
-
-</div>
 
 
 <!--  Case manager actions -->
@@ -27,7 +22,7 @@
 		</div>
 		<div data-bind="if: planStatus() == 'submitted'">
 			<div class="form-actions" >
-				<b>Case manager actions:</b>
+				<b>Grant manager actions:</b>
 				<span class="btn-group">
 					<button type="button" data-bind="click:approvePlan" class="btn btn-success"><i class="icon-ok icon-white"></i> Approve</button>
 					<button type="button" data-bind="click:rejectPlan" class="btn btn-danger"><i class="icon-remove icon-white"></i> Reject</button>
@@ -37,10 +32,43 @@
 
 	</div>
 </div>
+<div class="save-details-result-placeholder"></div>
 <g:if test="${projectContent.details.visible}">
-	<div class="form-actions">
-		<b>Admin actions:</b>
-		<button type="button" id="details-pdf" class="btn btn-info" data-bind="click: meriPlanPDF">Generate PDF</button>
+	<div class="row-fluid space-after">
+		<div class="span6">
+			<div class="form-actions">
+				<div>
+					<label><input class="pull-left" type="checkbox"  data-bind="checked: details.caseStudy, disable: isProjectDetailsLocked()" />
+					<span>&nbsp;Are you willing for your project to be used as a case study by the Department?</span></label>
+				</div>
+				<br/>
+
+				<button type="button" data-bind="click: saveProjectDetails, disable: isProjectDetailsLocked()" class="btn btn-primary">Save changes</button>
+				<button type="button" class="btn" data-bind="click: cancelProjectDetailsEdits">Cancel</button>
+				<button type="button" class="btn btn-info" data-bind="click: meriPlanPDF">Generate PDF</button>
+
+				<!--  Admin - submit to approval. -->
+				<div data-bind="if: userIsAdmin()">
+					<div data-bind="if: planStatus() == 'not approved' || planStatus() == ''">
+						<hr/>
+						<b>Admin actions:</b>
+						<ul>
+							<li>Build your project by adding MERI plan details, activities and project targets information.</li>
+						</ul>
+						<button type="button" data-bind="click: saveAndSubmitChanges" class="btn btn-info">Submit for approval</button>
+					</div>
+					<div data-bind="if: planStatus() == 'submitted' || planStatus() == 'approved'">
+						<hr/>
+						<b>Admin:</b>
+						<ul>
+							<li>Your project is locked until it is approved by your case manager.</li>
+							<li>Once your plan is approved you can start editing MERI plan information.</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+		</div>
 	</div>
 
 	<div class="row-fluid">
@@ -367,19 +395,20 @@
 
 </g:else>
 
-<div id="save-details-result-placeholder"></div>
+<div class="save-details-result-placeholder"></div>
 
 <div class="row-fluid space-after">
 	<div class="span6">
 		<div class="form-actions">
 			<div>
-				<input class="pull-left" type="checkbox"  data-bind="checked: details.caseStudy, disable: isProjectDetailsLocked()" />
-				<span>&nbsp;Are you willing for your project to be used as a case study by the Department?</span>
+				<label><input class="pull-left" type="checkbox"  data-bind="checked: details.caseStudy, disable: isProjectDetailsLocked()" />
+				<span>&nbsp;Are you willing for your project to be used as a case study by the Department?</span></label>
 			</div>
 			<br/>
 
-			<button type="button" data-bind="click: saveProjectDetails, disable: isProjectDetailsLocked()" id="project-details-save" class="btn btn-primary">Save changes</button>
-			<button type="button" id="details-cancel" class="btn" data-bind="click: cancelProjectDetailsEdits">Cancel</button>
+			<button type="button" data-bind="click: saveProjectDetails, disable: isProjectDetailsLocked()" class="btn btn-primary">Save changes</button>
+			<button type="button" class="btn" data-bind="click: cancelProjectDetailsEdits">Cancel</button>
+			<button type="button" class="btn btn-info" data-bind="click: meriPlanPDF">Generate PDF</button>
 
 			<!--  Admin - submit to approval. -->
 			<div data-bind="if: userIsAdmin()">
