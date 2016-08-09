@@ -137,7 +137,7 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
         sections.remove("Progress against output targets") // The google charts don't render properly at the moment in the PDF
 
         String reportUrl = g.createLink(controller:'report', action:'projectReportCallback', id:id, absolute: true, params:[fromStage:params.fromStage, toStage:params.toStage, sections:sections])
-        String url = grailsApplication.config.pdfgen.baseURL+'api/pdf'+commonService.buildUrlParamsFromMap(docUrl:reportUrl)
+        String url = grailsApplication.config.pdfgen.baseURL+'api/pdf'+commonService.buildUrlParamsFromMap(docUrl:reportUrl, cacheable:false)
         Map result
         try {
             result = webService.proxyGetRequest(response, url, false, false, 10*60*1000)
@@ -155,7 +155,7 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
     @PreAuthorise(accessLevel = 'admin')
     def meriPlanPDF(String id) {
         String reportUrl = g.createLink(controller:'report', action:'meriPlanReportCallback', id:id, absolute: true)
-        String url = grailsApplication.config.pdfgen.baseURL+'api/pdf'+commonService.buildUrlParamsFromMap(docUrl:reportUrl)
+        String url = grailsApplication.config.pdfgen.baseURL+'api/pdf'+commonService.buildUrlParamsFromMap(docUrl:reportUrl, cacheable:false)
         Map result
         try {
             result = webService.proxyGetRequest(response, url, false, false, 10*60*1000)
