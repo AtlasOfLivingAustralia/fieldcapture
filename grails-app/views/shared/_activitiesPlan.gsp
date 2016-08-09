@@ -1147,7 +1147,7 @@
                {value:'Stage report', text:'Stage report', help:'Displays the most recent ‘Progress, Outcomes and Learning’ activity for the period selected. If you have selected the Progress against activities option below, this will already include the ‘Progress, Outcomes and Learning’ activity.', default:false },
                {value:'Project risks', text:'Project risks', default:true},
                {value:'Project risks changes', text:'Project risks changes', help:'Displays all risks created or modified in the reporting period selected.', default:false},
-               {value:'Progress against activities', text:'Progress against activities', help:'Includes all activity reporting data for the selected stage(s).', default:true}];
+               {value:'Progress against activities', text:'Progress against activities', help:'Includes all activity reporting data for the selected stage(s).  This will only display started or finished activities.', default:true}];
 
             self.reportIncludedSections = ko.observableArray();
             for (var i=0; i<self.projectReportSections.length; i++) {
