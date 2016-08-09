@@ -87,7 +87,7 @@
             }
         </style>
 
-    <r:require modules="gmap3,mapWithFeatures,knockout,datepicker,amplify,imageViewer, jqueryValidationEngine, merit_projects, attachDocuments, wmd"/>
+    <r:require modules="gmap3,mapWithFeatures,knockout,datepicker,amplify,imageViewer, jqueryValidationEngine, merit_projects, attachDocuments, wmd, jquery_bootstrap_datatable"/>
 </head>
 <body>
 <div id="spinner" class="spinner" style="position: fixed;top: 50%;left: 50%;margin-left: -50px;margin-top: -50px;text-align:center;z-index:1234;overflow: auto;width: 100px;height: 102px;">
@@ -681,6 +681,21 @@
 
             viewModel.loadPrograms(programs);
             ko.applyBindings(viewModel);
+
+            var table = $("#docs-table").DataTable(
+                {
+                    "columnDefs": [
+                        {"type": "alt-string", "targets": 0},
+                        {"width":"6em", "targets": [3]},
+                        {"width":"4em", "targets": [2]}],
+                     "order":[[2, 'desc'], [3, 'desc']],
+                     "select":"single"
+                });
+
+            $("#docs-table tr").on('click', function(e) {
+                $("#docs-table tr.info").removeClass('info');
+                $(e.currentTarget).addClass("info");
+            });
 
             autoSaveModel(
                 viewModel.details,
