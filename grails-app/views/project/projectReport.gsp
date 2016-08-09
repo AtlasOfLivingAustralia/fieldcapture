@@ -36,7 +36,7 @@
         padding:10px;
         border-top: 4px solid black;
     }
-        tr, .chart {
+        tr, .chart, .chart-plus-title {
             page-break-inside: avoid;
         }
 
