@@ -75,7 +75,7 @@
                                     <label class="control-label">Optional content: </label>
                                     <div class="controls">
                                         <!-- ko foreach:projectReportSections -->
-                                            <label class="checkbox"><input type="checkbox" data-bind="checkedValue: $data.value, checked: $parent.reportIncludedSections">
+                                            <label class="checkbox"><input type="checkbox" data-bind="checkedValue: $data.value, checked: $parent.reportIncludedSections, disable:$parent.disabledSection($data)">
                                                 <span data-bind="text:$data.text"></span>
                                                 <!-- ko if:$data.help -->
                                                     <i class="icon-question-sign" data-bind="popover:{content:$data.help, placement:'top'}"></i>
@@ -1138,21 +1138,34 @@
             self.reportFromStage = ko.observable(defaultReportStage);
             self.reportToStage = ko.observable(defaultReportStage);
             self.projectReportSections = [
-               {value:'Images', text:'Images'},
-               {value:'Activity status summary', text:'Activity status summary'},
-               {value:'Supporting documents', text:'Supporting documents'},
-               {value:'Project outcomes', text:'Project outcomes'},
-               {value:'Progress against output targets', text: 'Progress against output targets'},
-               {value:'Progress of outputs without targets', text:'Progress of outputs without targets'},
-               {value:'Stage report', text:'Stage report', help:'Displays the most recent ‘Progress, Outcomes and Learning - stage report’ or ‘Outcomes, Evaluation and Learning - final report’ form for the period selected.' },
-               {value:'Project risks', text:'Project risks'},
-               {value:'Project risks changes', text:'Project risks changes', help:'Displays all risks created or modified in the reporting period selected.'},
-               {value:'Progress against activities', text:'Progress against activities', help:'Includes all activity reporting data for the selected stage(s).'}];
+               {value:'Images', text:'Images', default:true},
+               {value:'Activity status summary', text:'Activity status summary', default:true},
+               {value:'Supporting documents', text:'Supporting documents', default:true},
+               {value:'Project outcomes', text:'Project outcomes', default:true},
+               {value:'Progress against output targets', text: 'Progress against output targets', default:true},
+               {value:'Progress of outputs without targets', text:'Progress of outputs without targets', default:true},
+               {value:'Stage report', text:'Stage report', help:'Displays the most recent ‘Progress, Outcomes and Learning’ activity for the period selected. If you have selected the Progress against activities option below, this will already include the ‘Progress, Outcomes and Learning’ activity.', default:false },
+               {value:'Project risks', text:'Project risks', default:true},
+               {value:'Project risks changes', text:'Project risks changes', help:'Displays all risks created or modified in the reporting period selected.', default:false},
+               {value:'Progress against activities', text:'Progress against activities', help:'Includes all activity reporting data for the selected stage(s).', default:true}];
 
             self.reportIncludedSections = ko.observableArray();
             for (var i=0; i<self.projectReportSections.length; i++) {
-                self.reportIncludedSections.push(self.projectReportSections[i].value);
+                if (self.projectReportSections[i].default) {
+                    self.reportIncludedSections.push(self.projectReportSections[i].value);
+                }
             }
+            self.disabledSection = function(section) {
+                return section.value == 'Stage report' && self.reportIncludedSections.indexOf('Progress against activities') >= 0;
+            };
+            self.reportIncludedSections.subscribe(function() {
+                if (self.reportIncludedSections.indexOf('Progress against activities') >= 0) {
+                    if (self.reportIncludedSections.indexOf('Stage report') >= 0) {
+                        self.reportIncludedSections.splice(self.reportIncludedSections.indexOf('Stage report'), 1);
+                    }
+                }
+            });
+
 
             self.reportableStages = ko.computed(function() {
                 var stages = [];
