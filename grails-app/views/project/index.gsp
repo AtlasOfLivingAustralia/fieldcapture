@@ -406,6 +406,7 @@
 				    self.changeActivityDates(!self.contractDatesFixed());
 				});
 
+
                 self.allYears = function(startYear) {
 		            var currentYear = new Date().getFullYear(), years = [];
 		            startYear = startYear || 2010;
@@ -689,13 +690,51 @@
                         {"width":"6em", "targets": [3]},
                         {"width":"4em", "targets": [2]}],
                      "order":[[2, 'desc'], [3, 'desc']],
-                     "select":"single"
+                     "dom":
+                        "<'row-fluid'<'span5'l><'span7'f>r>" +
+                        "<'row-fluid'<'span12't>>" +
+                        "<'row-fluid'<'span6'i><'span6'p>>"
+
                 });
 
             $("#docs-table tr").on('click', function(e) {
                 $("#docs-table tr.info").removeClass('info');
                 $(e.currentTarget).addClass("info");
             });
+
+            function searchStage(searchString) {
+                table.columns(2).search(searchString, true).draw();
+            }
+
+            $("input[name='stage-filter']").click(function(e) {
+                var searchString = '';
+                $("input[name='stage-filter']").each(function(val) {
+                    var $el = $(this);
+
+                    if ($el.is(":checked")) {
+                        if (searchString) {
+                            searchString += '|';
+                        }
+
+                        searchString += $el.val();
+                    }
+                });
+
+                searchStage(searchString);
+
+            });
+
+            $('#filter-by-stage a').on('click', function (event) {
+                $(this).parent().toggleClass('open');
+            });
+            $('body').on('click', function(e) {
+                if (!$('#filter-by-stage').is(e.target)
+                    && $('#filter-by-stage').has(e.target).length === 0
+                    && $('.open').has(e.target).length === 0
+                ) {
+                    $('#filter-by-stage').removeClass('open');
+                }
+            })
 
             autoSaveModel(
                 viewModel.details,
