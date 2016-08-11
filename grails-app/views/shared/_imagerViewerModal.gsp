@@ -22,7 +22,6 @@
 
         var beforeHandler = function () {
 
-            console.log(this);
             var knockoutModel = ko.dataFor(this.element.get(0));
             if (knockoutModel && knockoutModel.imageId) {
                 this.height = $(window).height() * 0.8;

@@ -49,6 +49,8 @@
         shapefileDownloadUrl: "${createLink(controller:'project', action:'downloadShapefile', id:project.projectId)}",
         regenerateStageReportsUrl: "${createLink(controller:'project', action:'regenerateStageReports', id:project.projectId)}",
         projectReportUrl:"${createLink(controller:'project', action:'projectReport', id:project.projectId)}",
+        projectReportPDFUrl:"${createLink(controller:'project', action:'projectReportPDF', id:project.projectId)}",
+        meriPlanPDFUrl:"${createLink(controller:'project', action:'meriPlanPDF', id:project.projectId)}",
         returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
 
     },
@@ -85,7 +87,7 @@
             }
         </style>
 
-    <r:require modules="gmap3,mapWithFeatures,knockout,datepicker,amplify,imageViewer, jqueryValidationEngine, merit_projects, attachDocuments, wmd"/>
+    <r:require modules="gmap3,mapWithFeatures,knockout,datepicker,amplify,imageViewer, jqueryValidationEngine, merit_projects, attachDocuments, wmd, jquery_bootstrap_datatable"/>
 </head>
 <body>
 <div id="spinner" class="spinner" style="position: fixed;top: 50%;left: 50%;margin-left: -50px;margin-top: -50px;text-align:center;z-index:1234;overflow: auto;width: 100px;height: 102px;">
@@ -146,7 +148,7 @@
         <div class="tab-pane" id="details">
             <g:if test="${projectContent.details.meriPlanVisibleToUser}">
                 <!-- Project Details -->
-                <g:render template="projectDetails" model="[project: project]"/>
+                <g:render template="projectDetails" model="[project: project, risksAndThreatsVisible:projectContent.details.risksAndThreatsVisible]"/>
 
                 <div class="row-fluid space-after">
                     <div class="span6">
@@ -404,6 +406,7 @@
 				    self.changeActivityDates(!self.contractDatesFixed());
 				});
 
+
                 self.allYears = function(startYear) {
 		            var currentYear = new Date().getFullYear(), years = [];
 		            startYear = startYear || 2010;
@@ -424,6 +427,11 @@
 				    self.details.cancelAutosave();
 
 				    document.location.reload(true);
+				};
+
+				self.meriPlanPDF = function() {
+                    var url = fcConfig.meriPlanPDFUrl;
+                    window.open(url,'meri-plan-report');
 				};
 
 				self.saveAnnouncements = function(){
@@ -675,6 +683,59 @@
             viewModel.loadPrograms(programs);
             ko.applyBindings(viewModel);
 
+            var table = $("#docs-table").DataTable(
+                {
+                    "columnDefs": [
+                        {"type": "alt-string", "targets": 0},
+                        {"width":"6em", "targets": [3]},
+                        {"width":"4em", "targets": [2]}],
+                     "order":[[2, 'desc'], [3, 'desc']],
+                     "dom":
+                        "<'row-fluid'<'span5'l><'span7'f>r>" +
+                        "<'row-fluid'<'span12't>>" +
+                        "<'row-fluid'<'span6'i><'span6'p>>"
+
+                });
+
+            $("#docs-table tr").on('click', function(e) {
+                $("#docs-table tr.info").removeClass('info');
+                $(e.currentTarget).addClass("info");
+            });
+
+            function searchStage(searchString) {
+                table.columns(2).search(searchString, true).draw();
+            }
+
+            $("input[name='stage-filter']").click(function(e) {
+                var searchString = '';
+                $("input[name='stage-filter']").each(function(val) {
+                    var $el = $(this);
+
+                    if ($el.is(":checked")) {
+                        if (searchString) {
+                            searchString += '|';
+                        }
+
+                        searchString += $el.val();
+                    }
+                });
+
+                searchStage(searchString);
+
+            });
+
+            $('#filter-by-stage a').on('click', function (event) {
+                $(this).parent().toggleClass('open');
+            });
+            $('body').on('click', function(e) {
+                if (!$('#filter-by-stage').is(e.target)
+                    && $('#filter-by-stage').has(e.target).length === 0
+                    && $('.open').has(e.target).length === 0
+                ) {
+                    $('#filter-by-stage').removeClass('open');
+                }
+            })
+
             autoSaveModel(
                 viewModel.details,
                 '${createLink(action: 'ajaxUpdate', id: project.projectId)}',
@@ -682,7 +743,7 @@
                     storageKey:PROJECT_DETAILS_KEY,
                     autoSaveIntervalInSeconds:${grailsApplication.config.fieldcapture.autoSaveIntervalInSeconds?:60},
                     restoredDataWarningSelector:'#restoredData',
-                    resultsMessageId:'save-details-result-placeholder',
+                    resultsMessageSelector:'.save-details-result-placeholder',
                     timeoutMessageSelector:'#timeoutMessage',
                     errorMessage:"Failed to save MERI Plan: ",
                     successMessage: 'MERI Plan saved',
@@ -716,7 +777,7 @@
                     storageKey:PROJECT_RISKS_KEY,
                     autoSaveIntervalInSeconds:${grailsApplication.config.fieldcapture.autoSaveIntervalInSeconds?:60},
                     restoredDataWarningSelector:'#restoredRisksData',
-                    resultsMessageId:'summary-result-placeholder',
+                    resultsMessageSelector:'#summary-result-placeholder',
                     timeoutMessageSelector:'#timeoutMessage',
                     errorMessage:"Failed to save risks details: ",
                     successMessage: 'Successfully saved',

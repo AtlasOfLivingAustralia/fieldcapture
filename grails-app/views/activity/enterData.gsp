@@ -293,6 +293,7 @@
 
 <g:render template="/shared/imagerViewerModal" model="[readOnly:false]"></g:render>
 <g:render template="/shared/documentTemplate" plugin="fieldcapture-plugin"></g:render>
+<g:render template="/shared/imagerViewerModal"></g:render>
 
 %{--The modal view containing the contents for a modal dialog used to attach a document--}%
 <g:render template="/shared/attachDocument" plugin="fieldcapture-plugin"/>
