@@ -424,8 +424,7 @@
 					<hr/>
 					<b>Admin:</b>
 					<ul>
-						<li>Your project is locked until it is approved by your case manager.</li>
-						<li>Once your plan is approved you can start editing MERI plan information.</li>
+						<li>You will not be able to report activity data until your MERI plan has been approved by your case manager.</li>
 					</ul>
 				</div>
 			</div>
