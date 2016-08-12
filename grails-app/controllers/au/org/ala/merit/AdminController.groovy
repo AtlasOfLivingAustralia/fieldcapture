@@ -9,7 +9,6 @@ import org.springframework.web.multipart.MultipartHttpServletRequest
 @PreAuthorise(accessLevel = 'officer', redirectController = "home")
 class AdminController extends au.org.ala.fieldcapture.AdminController {
 
-    OrganisationService organisationService
     BlogService blogService
 
     def gmsProjectImport() {
