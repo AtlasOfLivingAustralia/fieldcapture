@@ -407,7 +407,7 @@
 
 			<button type="button" data-bind="click: saveProjectDetails, disable: isProjectDetailsLocked()" class="btn btn-primary">Save changes</button>
 			<button type="button" class="btn" data-bind="click: cancelProjectDetailsEdits">Cancel</button>
-			<button type="button" class="btn btn-info" data-bind="click: meriPlanPDF">Generate PDF</button>
+			<g:if test="${projectContent.details.visible}"><button type="button" class="btn btn-info" data-bind="click: meriPlanPDF">Generate PDF</button></g:if>
 
 			<!--  Admin - submit to approval. -->
 			<div data-bind="if: userIsAdmin()">
