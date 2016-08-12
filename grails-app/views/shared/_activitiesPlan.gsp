@@ -663,7 +663,7 @@
                     if ((newValue === 'started' || newValue === 'finished')) {
                         blockUIWithMessage('Loading activity form...');
                         var url = fcConfig.activityEnterDataUrl;
-                        document.location.href = url + "/" + self.activityId + "?returnTo=" + here + '&progress='+newValue;
+                        document.location.href = url + "/" + self.activityId + "?returnTo=" + encodeURIComponent(here) + '&progress='+newValue;
                     }
                     else {
                         self.saveProgress({progress: newValue, activityId: self.activityId});
@@ -936,17 +936,17 @@
                 } else if (self.canEditOutputData()) {
                     url = fcConfig.activityEnterDataUrl;
                     document.location.href = url + "/" + activity.activityId +
-                        "?returnTo=" + here;
+                        "?returnTo=" + encodeURIComponent(here);
                 } else if (self.canEditActivity()) {
                     url = fcConfig.activityEditUrl;
                     document.location.href = url + "/" + activity.activityId +
-                        "?returnTo=" + here;
+                        "?returnTo=" + encodeURIComponent(here);
                 }
             };
             this.viewActivity = function(activity) {
                 url = fcConfig.activityViewUrl;
                 document.location.href = url + "/" + activity.activityId +
-                        "?returnTo=" + here;
+                        "?returnTo=" + encodeURIComponent(here);
             };
             this.printActivity = function(activity) {
                 open(fcConfig.activityPrintUrl + "/" + activity.activityId, "fieldDataPrintWindow");
@@ -1083,7 +1083,7 @@
                 var context = '',
                     projectId = project.projectId,
                     siteId = "${site?.siteId}",
-                    returnTo = '?returnTo=' + document.location.href;
+                    returnTo = '?returnTo=' + encodeURIComponent(document.location.href);
                 if (projectId) {
                     context = '&projectId=' + projectId;
                 } else if (siteId) {
