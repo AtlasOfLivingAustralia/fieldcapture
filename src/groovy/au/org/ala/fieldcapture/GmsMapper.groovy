@@ -149,6 +149,7 @@ class GmsMapper {
         def project = result.mappedData
         project.projectType = 'works'
         project.isMERIT = true
+        project.origin = 'merit'
 
         def program = programModel.programs.find {it.name == project.associatedProgram}
         if (!program) {

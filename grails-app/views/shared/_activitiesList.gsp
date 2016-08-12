@@ -157,7 +157,7 @@
                 var context = '',
                     projectId = "${project?.projectId}",
                     siteId = "${site?.siteId}",
-                    returnTo = '?returnTo=' + document.location.href;
+                    returnTo = '?returnTo=' + encodeURIComponent(document.location.href);
                 if (projectId) {
                     context = '&projectId=' + projectId;
                 } else if (siteId) {
