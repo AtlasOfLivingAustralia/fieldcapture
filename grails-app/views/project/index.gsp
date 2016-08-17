@@ -151,11 +151,11 @@
                 <g:render template="projectDetails" model="[project: project, risksAndThreatsVisible:projectContent.details.risksAndThreatsVisible]"/>
 
                 <div class="row-fluid space-after">
-                    <div class="span6">
+                    <div class="span12">
                         <div class="well well-small">
                             <label><b>MERI attachments:</b></label>
                             <g:render plugin="fieldcapture-plugin" template="/shared/listDocuments"
-                                  model="[useExistingModel: true,editable:false, filterBy: 'programmeLogic', ignore: '', imageUrl:resource(dir:'/images'),containerId:'overviewDocumentList']"/>
+                                  model="[useExistingModel: true,editable:false, filterBy: 'programmeLogic', ignore: '', imageUrl:resource(dir:'/images'),containerId:'meriPlanDocumentList']"/>
                         </div>
                     </div>
                 </div>
@@ -683,58 +683,6 @@
             viewModel.loadPrograms(programs);
             ko.applyBindings(viewModel);
 
-            var table = $("#docs-table").DataTable(
-                {
-                    "columnDefs": [
-                        {"type": "alt-string", "targets": 0},
-                        {"width":"6em", "targets": [3]},
-                        {"width":"4em", "targets": [2]}],
-                     "order":[[2, 'desc'], [3, 'desc']],
-                     "dom":
-                        "<'row-fluid'<'span5'l><'span7'f>r>" +
-                        "<'row-fluid'<'span12't>>" +
-                        "<'row-fluid'<'span6'i><'span6'p>>"
-
-                });
-
-            $("#docs-table tr").on('click', function(e) {
-                $("#docs-table tr.info").removeClass('info');
-                $(e.currentTarget).addClass("info");
-            });
-
-            function searchStage(searchString) {
-                table.columns(2).search(searchString, true).draw();
-            }
-
-            $("input[name='stage-filter']").click(function(e) {
-                var searchString = '';
-                $("input[name='stage-filter']").each(function(val) {
-                    var $el = $(this);
-
-                    if ($el.is(":checked")) {
-                        if (searchString) {
-                            searchString += '|';
-                        }
-
-                        searchString += $el.val();
-                    }
-                });
-
-                searchStage(searchString);
-
-            });
-
-            $('#filter-by-stage a').on('click', function (event) {
-                $(this).parent().toggleClass('open');
-            });
-            $('body').on('click', function(e) {
-                if (!$('#filter-by-stage').is(e.target)
-                    && $('#filter-by-stage').has(e.target).length === 0
-                    && $('.open').has(e.target).length === 0
-                ) {
-                    $('#filter-by-stage').removeClass('open');
-                }
-            })
 
             autoSaveModel(
                 viewModel.details,
@@ -848,7 +796,14 @@
                 var documentsInitialised = false;
                 if(tab == "#documents" && !documentsInitialised){
                     documentsInitialised = true;
+                    initialiseDocumentTable('#overviewDocumentList');
                 }
+
+                var meriPlanInitialised = false;
+                if (tab == '#details' && !meriPlanInitialised) {
+                    meriPlanInitialised = true;
+                    initialiseDocumentTable('#meriPlanDocumentList');
+                };
             });
 
             var newsAndEventsInitialised = false;
