@@ -756,6 +756,8 @@
             // and handle tab-specific initialisations
             var planTabInitialised = false;
             var dashboardInitialised = false;
+            var documentsInitialised = false;
+            var meriPlanInitialised = false;
 
             $('#projectTabs a[data-toggle="tab"]').on('shown', function (e) {
                 var tab = e.currentTarget.hash;
@@ -793,13 +795,11 @@
                     dashboardInitialised;
                 }
 
-                var documentsInitialised = false;
                 if(tab == "#documents" && !documentsInitialised){
                     documentsInitialised = true;
                     initialiseDocumentTable('#overviewDocumentList');
                 }
 
-                var meriPlanInitialised = false;
                 if (tab == '#details' && !meriPlanInitialised) {
                     meriPlanInitialised = true;
                     initialiseDocumentTable('#meriPlanDocumentList');
