@@ -256,6 +256,15 @@ class ActivityController {
         if (id) {
             def activity = activityService.get(id)
             projectId = activity.projectId
+            postBody.outputs?.each { output ->
+                def matchingOutput = activity.outputs?.find{it.name == output.name}
+                if (matchingOutput) {
+                    if (matchingOutput.outputId != output.outputId) {
+                        log.warn("Update for activity: "+id+" contains outputs which have the same type but different IDs")
+                    }
+                    output.outputId = matchingOutput.outputId
+                }
+            }
         }
         else {
             projectId = values.projectId
