@@ -53,7 +53,7 @@
 						<hr/>
 						<b>Admin actions:</b>
 						<ul>
-							<li>Build your project by adding MERI plan details, activities and project targets information.</li>
+							<li>You will not be able to report activity data until your MERI plan has been approved by your case manager.</li>
 						</ul>
 						<button type="button" data-bind="click: saveAndSubmitChanges" class="btn btn-info">Submit for approval</button>
 					</div>
@@ -61,8 +61,7 @@
 						<hr/>
 						<b>Admin:</b>
 						<ul>
-							<li>Your project is locked until it is approved by your case manager.</li>
-							<li>Once your plan is approved you can start editing MERI plan information.</li>
+							<li>You will not be able to report activity data until your MERI plan has been approved by your case manager.</li>
 						</ul>
 					</div>
 				</div>
@@ -408,7 +407,7 @@
 
 			<button type="button" data-bind="click: saveProjectDetails, disable: isProjectDetailsLocked()" class="btn btn-primary">Save changes</button>
 			<button type="button" class="btn" data-bind="click: cancelProjectDetailsEdits">Cancel</button>
-			<button type="button" class="btn btn-info" data-bind="click: meriPlanPDF">Generate PDF</button>
+			<g:if test="${projectContent.details.visible}"><button type="button" class="btn btn-info" data-bind="click: meriPlanPDF">Generate PDF</button></g:if>
 
 			<!--  Admin - submit to approval. -->
 			<div data-bind="if: userIsAdmin()">
@@ -416,7 +415,7 @@
 					<hr/>
 					<b>Admin actions:</b>
 					<ul>
-						<li>Build your project by adding MERI plan details, activities and project targets information.</li>
+						<li>You will not be able to report activity data until your MERI plan has been approved by your case manager.</li>
 					</ul>
 					<button type="button" data-bind="click: saveAndSubmitChanges" class="btn btn-info">Submit for approval</button>
 				</div>
@@ -424,8 +423,7 @@
 					<hr/>
 					<b>Admin:</b>
 					<ul>
-						<li>Your project is locked until it is approved by your case manager.</li>
-						<li>Once your plan is approved you can start editing MERI plan information.</li>
+						<li>You will not be able to report activity data until your MERI plan has been approved by your case manager.</li>
 					</ul>
 				</div>
 			</div>

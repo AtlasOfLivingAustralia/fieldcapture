@@ -81,3 +81,15 @@
 .project-report .form-actions {
 	margin-top:0px;
 }
+
+.docs-table th {
+	white-space: normal;
+}
+.docs-table .media-object {
+	width:32px;
+	min-width: 32px;
+	height: 32px;
+}
+#filter-by-stage {
+	margin-bottom: 5px;
+}

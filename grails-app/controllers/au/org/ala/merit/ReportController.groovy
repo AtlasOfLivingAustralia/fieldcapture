@@ -439,7 +439,7 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
     @RequireApiKey
     def meriPlanReportCallback(String id) {
         Map project = projectService.get(id, 'all')
-        render view:'/project/meriPlanReadOnly', model:[project:project, themes:metadataService.getThemesForProject(project)]
+        render view:'/project/meriPlanReadOnly', model:[project:project, themes:metadataService.getThemesForProject(project), user:[isAdmin:true]]
     }
 
 }
