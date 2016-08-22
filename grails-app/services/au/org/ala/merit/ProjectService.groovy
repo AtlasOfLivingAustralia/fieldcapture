@@ -160,12 +160,16 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
             return [error:'Invalid stage']
 		}
 		
-		def stageName = stageDetails.stage;
+		String stageName = stageDetails.stage;
+        String stageNum = ''
+        if (stageName.indexOf('Stage ') == 0) {
+            stageNum = stageName.substring('Stage '.length(), stageName.length())
+        }
 		def param  = [project: projectAll, activities:activities, report:report, status:"Report submitted"]
 		def htmlTxt = createHTMLStageReport(param)
 		def dateWithTime = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss")
 		def name = projectAll?.grantId + '_' + stageName + '_' + dateWithTime.format(new Date()) + ".pdf"
-		def doc = [name:name, projectId:projectId, saveAs:'pdf', type:'pdf', role:'stageReport',filename:name, readOnly:true, public:false]
+		def doc = [name:name, projectId:projectId, saveAs:'pdf', type:'pdf', role:'stageReport',filename:name, readOnly:true, public:false, stage:stageNum]
 		documentService.createTextDocument(doc, htmlTxt)
         def result = activityService.submitActivitiesForPublication(stageDetails.activityIds)
         reportService.submit(stageDetails.reportId)
