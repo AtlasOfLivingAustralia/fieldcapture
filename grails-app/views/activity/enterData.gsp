@@ -212,7 +212,7 @@
             <!-- add the dynamic components -->
             <md:modelView model="${model}" site="${site}" edit="true" output="${output.name}" printable="${printView}" />
         </div>
-        <g:render template="/output/outputJSModel" plugin="fieldcapture-plugin" model="${[viewModelInstance:blockId+'ViewModel', edit:true, model:model, outputName:output.name]}"></g:render>
+        <g:render template="/output/outputJSModel" plugin="fieldcapture-plugin" model="${[viewModelInstance:blockId+'ViewModel', edit:true, activityId:activity.activityId, model:model, outputName:output.name]}"></g:render>
 
         <r:script>
         $(function(){
