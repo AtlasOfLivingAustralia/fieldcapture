@@ -125,7 +125,7 @@
       "projectFilter": [
         "associatedProgramFacet:National Landcare Programme"
       ],
-      "scoreLabel":"Total new area treated (Ha)"
+      "scoreLabel":"Total new area treated for weeds (Ha)"
     },
     "nlp10": {
       "config": "2",
@@ -176,7 +176,7 @@
       "label": "Managed for invasive weeds",
       "units": "Ha",
       "type": "score",
-      "scoreLabel": "Total new area treated (Ha)"
+      "scoreLabel": "Total new area treated for weeds (Ha)"
     },
     "all2": {
       "config": "6",
@@ -215,7 +215,7 @@
       "label": "Managed for weeds by Green Army teams",
       "units": "Ha",
       "type": "score",
-      "scoreLabel": "Total new area treated (Ha)",
+      "scoreLabel": "Total new area treated for weeds (Ha)",
       "projectFilter": [
         "associatedProgramFacet:Green Army"
       ]
