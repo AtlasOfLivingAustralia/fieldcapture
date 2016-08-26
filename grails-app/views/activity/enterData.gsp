@@ -222,6 +222,10 @@
 
             var output = <fc:modelAsJavascript model="${output}"/>;
             var config = ${fc.modelAsJavascript(model:metaModel.outputConfig?.find{it.outputName == outputName}, default:'{}')};
+            config.projectId = '${project?project.projectId:''}';
+            config.stage = stageNumberFromStage('${activity.projectStage}');
+            config.activityId = '${activity.activityId}';
+
 
             window[viewModelInstance] = new window[viewModelName](output, site, config);
             window[viewModelInstance].loadData(output.data || {}, activity.documents);
