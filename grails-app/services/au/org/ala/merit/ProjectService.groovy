@@ -690,7 +690,7 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
         append(html,'<br>')
         append(html,'<p align="left">_________________________________________________________________________________________________________</p>')
         append(html,'<br>')
-        append(html,'<h2><font color="">Project Against Each Activity</font></h2>')
+        append(html,'<h2><font color="">Progress Against Each Activity</font></h2>')
 
         int i=0;
         project?.activities?.each{
