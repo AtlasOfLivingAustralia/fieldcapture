@@ -721,3 +721,36 @@ button#risks-cancel:hover {
 #floating-save button {
 	top:5px;
 }
+.table thead th.sorting, .table thead th.sorting_asc, .table thead th.sorting_desc {
+	background-image: none;
+	position: relative;
+}
+
+.table thead th.sorting:after {
+	font-family: FontAwesome;
+	content: "\f0dc";
+	position: absolute;
+	right: 5px;
+	top: 5px;
+	color: rgba(51,122,183,0.5);
+
+}
+.table thead th.sorting_asc:after {
+	font-family: FontAwesome;
+	font-size: large;
+	content: "\f0de";
+	position: absolute;
+	right: 5px;
+	top: 5px;
+	color: #337ab7;
+
+}
+.table thead th.sorting_desc:after {
+	font-family: FontAwesome;
+	font-size: large;
+	content: "\f0dd";
+	position: absolute;
+	right: 5px;
+	top: 5px;
+	color: #337ab7;
+}
