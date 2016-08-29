@@ -356,32 +356,43 @@
                         <div class="span3 title">End date</div>
                         <div class="span9">${DateUtils.isoToDisplayFormat(activity.endDate ?: activity.plannedEndDate)}</div>
                     </div>
-                </div>
-                <g:set var="activityModel" value="${activityModels.find{it.name == activity.type}}"/>
-                <g:each in="${activityModel.outputs}" var="outputName">
-                    <g:if test="${outputName != 'Photo Points'}">
-                        <g:render template="/output/readOnlyOutput"
-                                  model="${[activity:activity,
-                                            outputModel:outputModels[outputName],
-                                            outputName:outputName,
-                                            activityModel:activityModel]}"
-                                  plugin="fieldcapture-plugin"></g:render>
+                    <g:if test="${activity.reason}">
+                        <div class="row-fluid">
+                            <div class="span3 title">Reason</div>
+                            <div class="span9">${activity.reason}</div>
+                        </div>
                     </g:if>
 
-                </g:each>
-                <g:if test="${activityModel.supportsPhotoPoints}">
-                    <div id="photopoints-${activity.activityId}" class="output-block">
-                        <h3>Photo Points</h3>
+                </div>
+                <g:if test="${activity.progress == 'started' || activity.progress == 'finished'}">
+                    <g:set var="activityModel" value="${activityModels.find{it.name == activity.type}}"/>
+                    <g:each in="${activityModel.outputs}" var="outputName">
+                        <g:if test="${outputName != 'Photo Points'}">
+                            <g:render template="/output/readOnlyOutput"
+                                      model="${[activity:activity,
+                                                outputModel:outputModels[outputName],
+                                                outputName:outputName,
+                                                activityModel:activityModel]}"
+                                      plugin="fieldcapture-plugin"></g:render>
+                        </g:if>
 
-                        <g:render template="/site/photoPoints" plugin="fieldcapture-plugin" model="${[readOnly:true]}"></g:render>
+                    </g:each>
+                    <g:if test="${activityModel.supportsPhotoPoints}">
+                        <div id="photopoints-${activity.activityId}" class="output-block">
+                            <h3>Photo Points</h3>
 
-                    </div>
-                    <r:script>
-                        $(function() {
-                            var activity = <fc:modelAsJavascript model="${activity}"></fc:modelAsJavascript>;
-                            ko.applyBindings(new PhotoPointViewModel(activity.site, activity, {}), document.getElementById('photopoints-${activity.activityId}'));
-                        });
-                    </r:script>
+                            <g:render template="/site/photoPoints" plugin="fieldcapture-plugin" model="${[readOnly:true]}"></g:render>
+
+                        </div>
+                        <r:script>
+                            $(function() {
+                                var activity = <fc:modelAsJavascript model="${activity}"></fc:modelAsJavascript>;
+                                ko.applyBindings(new PhotoPointViewModel(activity.site, activity, {}), document.getElementById('photopoints-${activity.activityId}'));
+                            });
+                        </r:script>
+                    </g:if>
+                </g:if>
+                <g:if test="${activity.progress == 'deferred' || activity.progress == 'cancelled'}">
                 </g:if>
 
             </g:each>
