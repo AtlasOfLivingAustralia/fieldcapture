@@ -690,7 +690,7 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
         append(html,'<br>')
         append(html,'<p align="left">_________________________________________________________________________________________________________</p>')
         append(html,'<br>')
-        append(html,'<h2><font color="">Project Against Each Activity</font></h2>')
+        append(html,'<h2><font color="">Progress Against Each Activity</font></h2>')
 
         int i=0;
         project?.activities?.each{
@@ -833,14 +833,17 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
             if (activity.siteId) {
                 activity.site = siteService.get(activity.siteId)
             }
+            if (activityService.isDeferredOrCancelled(activity)) {
+                Map searchResults = documentService.search([activityId:activity.activityId])
+                Map document = searchResults?.documents?.find{it.role = 'deferReason'}
+                activity.reason = document?.notes
+            }
             if (activity.plannedEndDate >= fromDate && activity.plannedEndDate <= toDate) {
                 Map activityModel = activitiesModel.activities.find{it.name == activity.type}
                 activityModels << activityModel
-                if (activityService.isStartedOrFinished(activity)) {
-                    Map report = reportService.findReportForDate(activity.plannedEndDate, project.reports)
-                    if (report && report.name) {
-                        activitiesByStage[report.name] << activity
-                    }
+                Map report = reportService.findReportForDate(activity.plannedEndDate, project.reports)
+                if (report && report.name) {
+                    activitiesByStage[report.name] << activity
                 }
             }
         }
@@ -865,18 +868,24 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
             role = 'MERIT user'
         }
 
-
-
         List outcomes = project.custom?.details?.objectives?.rows1?.findAll{it.description}
-
 
         project.documents = project.documents?.findAll{!(it.role in ['stageReport', 'approval', 'deferReason']) && (it.stage? it.stage in reportedStages : it.lastUpdated <= toDate)}
         project.documents?.sort{it.stage}
 
-        Map risksComparison = compareProjectRisks(id, toDate, fromDate)
+
+        Map risksComparison = [:]
+        if (contentToInclude.contains('Project risks changes') || contentToInclude.contains('Project risks')) {
+            risksComparison = compareProjectRisks(id, toDate, fromDate)
+        }
+
+        Map metrics = [:]
+        if (contentToInclude.contains('Progress against output targets') || contentToInclude.contains('Progress of outputs without targets')) {
+            metrics = summary(id)
+        }
 
         [project:project, content:contentToInclude, role:role, images:publicImages, activityCountByStage:activityCountByStage,
-         outcomes:outcomes, metrics: summary(id), activityModels:activityModels, orderedStageNames:reportedStages,
+         outcomes:outcomes, metrics: metrics, activityModels:activityModels, orderedStageNames:reportedStages,
          activitiesByStage:activitiesByStage, outputModels:outputModels, stageReportModel:stageReportModel,
          latestStageReport:latestStageReport, risksComparison: risksComparison]
     }
