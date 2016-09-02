@@ -784,6 +784,45 @@
                     var mapFeatures = $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
                     var sitesViewModel = new SitesViewModel(project.sites, map, mapFeatures, ${user?.isEditor?:false});
                     ko.applyBindings(sitesViewModel, document.getElementById('sitesList'));
+                    var tableApi = $('#sites-table').DataTable( {
+                        "columnDefs": [
+                        {
+                            "targets": 0,
+                            "orderable": false,
+                            "searchable": false,
+                            "width":"2em"
+                        },
+                        {
+                            "targets": 1,
+                            "orderable": false,
+                            "searchable": false,
+                            "width":"4em"
+                        },
+                        {
+                            "targets":3,
+                            "sort":4,
+                            "width":"8em"
+                        },
+                        {
+                            "targets":4,
+                            "visible":false
+
+                        }
+                        ],
+                        "order":[3, "desc"],
+                        "language": {
+                            "search":'<div class="input-prepend"><span class="add-on"><i class="fa fa-search"></i></span>_INPUT_</div>',
+                            "searchPlaceholder":"Search sites..."
+
+                        }
+                        }
+                    );
+                     $('#select-all-sites').change(function() {
+                        var checkbox = this;
+                        // This lets knockout update the bindings correctly.
+                        $('#sites-table tbody tr :checkbox').trigger('click');
+                    });
+
 
                 }
                 if (tab === '#plan' && !planTabInitialised) {
