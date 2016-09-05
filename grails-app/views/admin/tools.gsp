@@ -30,6 +30,12 @@
             });
         });
 
+        $('#btnClearStatistics').click(function(e) {
+            e.preventDefault();
+            var url = "${createLink(controller:'admin', action:'clearStatistics')}";
+            $.post(url).done(function() { document.location.reload(); }).fail(function(result) { alert(result); });
+        });
+
         $("#btnLoadProjectData").click(function(e) {
             e.preventDefault();
 
@@ -216,6 +222,14 @@
         <td>
             Removes all cached values for metadata requests and causes the metadata to be requested
             from the source at the next attempt to use the metadata.
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <button id="btnClearStatistics" class="btn btn-small btn-info">Clear Statistics</button>
+        </td>
+        <td>
+            Causes a re-read of the home page statistics configuration and clears it's cache.
         </td>
     </tr>
     <tr>

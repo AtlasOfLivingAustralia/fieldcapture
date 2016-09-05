@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest
 class AdminController extends au.org.ala.fieldcapture.AdminController {
 
     BlogService blogService
+    StatisticsFactory statisticsFactory
 
     def gmsProjectImport() {
         render(view:'import', model:[:])
@@ -330,6 +331,11 @@ class AdminController extends au.org.ala.fieldcapture.AdminController {
 
     def adminReports() {
         [reports:[[name: 'performanceAssessmentComparison', label: 'Performance Assessment Comparison']]]
+    }
+
+    def clearStatistics() {
+        statisticsFactory.clearConfig()
+        render status:200, text:'OK'
     }
 
 
