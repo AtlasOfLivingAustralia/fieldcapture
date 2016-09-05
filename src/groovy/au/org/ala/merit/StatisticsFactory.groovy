@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired
 class StatisticsFactory {
 
     private static final String DEFAULT_CONFIG = "/resources/statistics.json"
-    private static final String STATISTICS_CONFIG_KEY = 'merit.statistics.config'
+    private static final String STATISTICS_CONFIG_KEY = 'meritstatistics.config'
     private static final String CACHE_KEY_PREFIX = 'statistics.'
 
     Map config
@@ -23,7 +23,10 @@ class StatisticsFactory {
     public StatisticsFactory() {}
 
     private void initialize() {
-        config = settingsService.getJson(STATISTICS_CONFIG_KEY)
+        String result = settingsService.get(STATISTICS_CONFIG_KEY)
+        if (result) {
+            config = JSON.parse(result)
+        }
         if (!config) {
             config = readConfig()
         }
@@ -32,6 +35,11 @@ class StatisticsFactory {
     private Map readConfig() {
         def configAsString = getClass().getResource(DEFAULT_CONFIG).text
         JSON.parse(configAsString)
+    }
+
+    public synchronized void clearConfig() {
+        config = null
+        cacheService.clear(CACHE_KEY_PREFIX)
     }
 
     public synchronized List<Map> getStatisticsGroup(int groupNumber) {
