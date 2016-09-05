@@ -814,15 +814,32 @@
                             "search":'<div class="input-prepend"><span class="add-on"><i class="fa fa-search"></i></span>_INPUT_</div>',
                             "searchPlaceholder":"Search sites..."
 
-                        }
+                        },
+                        "searchDelay":350
                         }
                     );
-                     $('#select-all-sites').change(function() {
+
+                    var visibleIndicies = function() {
+                        var settings = tableApi.settings()[0];
+                        var start = settings._iDisplayStart;
+                        var count = settings._iDisplayLength;
+
+                        var visibleIndicies = [];
+                        for (var i=start; i<Math.min(start+count, settings.aiDisplay.length); i++) {
+                            visibleIndicies.push(settings.aiDisplay[i]);
+                        }
+                        return visibleIndicies;
+                    };
+                    $('#sites-table').dataTable().on('draw.dt', function(e) {
+
+                        sitesViewModel.sitesFiltered(visibleIndicies());
+                    });
+                    $('#select-all-sites').change(function() {
                         var checkbox = this;
                         // This lets knockout update the bindings correctly.
                         $('#sites-table tbody tr :checkbox').trigger('click');
                     });
-
+                    sitesViewModel.sitesFiltered(visibleIndicies());
 
                 }
                 if (tab === '#plan' && !planTabInitialised) {
