@@ -30,11 +30,11 @@ class OrganisationService extends au.org.ala.fieldcapture.OrganisationService {
         def organisation = super.get(id, 'flat')
 
         def projects = []
-        def resp = projectService.search(organisationId: id, view:'enhanced')
+        def resp = projectService.search(organisationId: id, isMERIT:true, view:'enhanced')
         if (resp?.resp?.projects) {
             projects += resp.resp.projects
         }
-        resp = projectService.search(orgIdSvcProvider: id, view:'enhanced')
+        resp = projectService.search(orgIdSvcProvider: id, isMERIT:true, view:'enhanced')
         if (resp?.resp?.projects) {
             projects += resp.resp.projects.findAll{!projects.find{project -> project.projectId == it.projectId} }
         }

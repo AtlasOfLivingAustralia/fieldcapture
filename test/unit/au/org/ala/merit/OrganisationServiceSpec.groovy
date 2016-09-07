@@ -56,8 +56,8 @@ class OrganisationServiceSpec extends Specification {
         def projects = organisation.projects
 
         then:
-        1 * projectService.search([organisationId:orgId, view:'enhanced']) >> [resp:[projects:organisationProjects]]
-        1 * projectService.search([orgIdSvcProvider:orgId, view:'enhanced']) >> [resp:[projects:[]]]
+        1 * projectService.search([organisationId:orgId, view:'enhanced', isMERIT:true]) >> [resp:[projects:organisationProjects]]
+        1 * projectService.search([orgIdSvcProvider:orgId, view:'enhanced', isMERIT:true]) >> [resp:[projects:[]]]
 
         projects.size() == organisationProjects.size()
         projects == organisationProjects
@@ -68,8 +68,8 @@ class OrganisationServiceSpec extends Specification {
 
 
         then:
-        1 * projectService.search([organisationId:orgId, view:'enhanced']) >> [resp:[projects:[]]]
-        1 * projectService.search([orgIdSvcProvider:orgId, view:'enhanced']) >> [resp:[projects:serviceProviderProjects]]
+        1 * projectService.search([organisationId:orgId, view:'enhanced', isMERIT:true]) >> [resp:[projects:[]]]
+        1 * projectService.search([orgIdSvcProvider:orgId, view:'enhanced', isMERIT:true]) >> [resp:[projects:serviceProviderProjects]]
 
         projects.size() == serviceProviderProjects.size()
         projects == serviceProviderProjects
@@ -79,8 +79,8 @@ class OrganisationServiceSpec extends Specification {
         projects = organisation.projects
 
         then: "both sets of projects should be returned"
-        1 * projectService.search([organisationId:orgId, view:'enhanced']) >> [resp:[projects:organisationProjects]]
-        1 * projectService.search([orgIdSvcProvider:orgId, view:'enhanced']) >> [resp:[projects:serviceProviderProjects]]
+        1 * projectService.search([organisationId:orgId, view:'enhanced', isMERIT:true]) >> [resp:[projects:organisationProjects]]
+        1 * projectService.search([orgIdSvcProvider:orgId, view:'enhanced', isMERIT:true]) >> [resp:[projects:serviceProviderProjects]]
 
         projects.size() == serviceProviderProjects.size() + organisationProjects.size()
         projects ==  organisationProjects + serviceProviderProjects
@@ -90,8 +90,8 @@ class OrganisationServiceSpec extends Specification {
         projects = organisation.projects
 
         then: "there should be no duplicate projects returned"
-        1 * projectService.search([organisationId:orgId, view:'enhanced']) >> [resp:[projects:organisationProjectsWithDuplicates]]
-        1 * projectService.search([orgIdSvcProvider:orgId, view:'enhanced']) >> [resp:[projects:serviceProviderProjects]]
+        1 * projectService.search([organisationId:orgId, view:'enhanced', isMERIT:true]) >> [resp:[projects:organisationProjectsWithDuplicates]]
+        1 * projectService.search([orgIdSvcProvider:orgId, view:'enhanced', isMERIT:true]) >> [resp:[projects:serviceProviderProjects]]
 
         projects.size() == serviceProviderProjects.size() + organisationProjects.size()
         projects.sort{it.projectId} == (organisationProjects + serviceProviderProjects).sort{it.projectId}

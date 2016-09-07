@@ -7,7 +7,8 @@
     <r:script disposition="head">
         fcConfig = {
             performanceComparisonReportUrl: "${g.createLink(controller: 'report', action: 'performanceAssessmentComparisonReport')}",
-            dashboardUrl: "${g.createLink(controller: 'report', action: 'loadReport')}"
+            dashboardUrl: "${g.createLink(controller: 'report', action: 'loadReport')}",
+            organisationDataDownloadUrl: "${g.createLink(controller:'search', action:'downloadOrganisationData')}"
 
 
         }
@@ -17,6 +18,11 @@
 
 <body>
 <h3>Administrator Reports</h3>
+
+<h4>Organisation data download: </h4>
+
+<a id="orgDataDownload" class="btn" href="#">Download Organisation Report Data</a>
+
 
 <g:render template="/shared/dashboard" plugin="fieldcapture-plugin"/>
 
@@ -47,6 +53,13 @@
             });
 
         }).trigger('change');
+
+        $('#orgDataDownload').click(function() {
+            $.get(fcConfig.organisationDataDownloadUrl).done(function(data) {
+               bootbox.alert("Your download will be emailed to you when it is complete.");
+            });
+        });
+
     });
 
 </r:script>
