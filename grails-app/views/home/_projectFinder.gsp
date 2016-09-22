@@ -281,7 +281,7 @@
                                     <tbody>
                                     <tr>
                                         <td width="100%">
-                                            <a target="_blank" href='<g:createLink controller="search" action="downloadShapefile" params="${params}"/>'>Shapefile</a>
+                                            <a id="shapefile-download" target="_blank" href='<g:createLink controller="search" action="downloadShapefile" params="${params}"/>'>Shapefile</a>
                                         </td>
                                     </tr>
                                     </tbody>
@@ -636,6 +636,17 @@
             sortList($list, "sortcount", ">");
             $(this).find("i").addClass("icon-flipped180");
         });
+
+        $('#shapefile-download').click(function(e) {
+            e.preventDefault();
+            var url = $('#shapefile-download').attr('href');
+            $.get(url).done(function() {
+                bootbox.alert("The download may take several minutes to complete.  Once it is complete, an email will be sent to your registed email address.")
+            }).fail(function() {
+                bootbox.alert("There was an error requesting the download");
+            });
+
+        })
     });
 
     /**
