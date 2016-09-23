@@ -870,7 +870,7 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
 
         List outcomes = project.custom?.details?.objectives?.rows1?.findAll{it.description}
 
-        project.documents = project.documents?.findAll{!(it.role in ['stageReport', 'approval', 'deferReason']) && (it.stage? it.stage in reportedStages : it.lastUpdated <= toDate)}
+        project.documents = project.documents?.findAll{!(it.role in ['stageReport', 'approval', 'deferReason']) && (it.stage? ("Stage "+it.stage) in reportedStages : (it.lastUpdated <= toDate && it.lastUpdated >= fromDate))}
         project.documents?.sort{it.stage}
 
 
