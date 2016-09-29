@@ -717,6 +717,8 @@
             });
         };
         ko.applyBindings(new DatePickerModel(), document.getElementById('facet-dates'));
+
+        $('.helphover').popover({animation: true, trigger:'hover', container:'body'});
     });
 
     /**
