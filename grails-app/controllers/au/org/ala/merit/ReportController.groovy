@@ -5,6 +5,7 @@ import au.org.ala.fieldcapture.ActivityService
 import au.org.ala.fieldcapture.DateUtils
 import au.org.ala.fieldcapture.GmsMapper
 import grails.converters.JSON
+import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
 import org.joda.time.DateTime
 import org.joda.time.Interval
 import org.joda.time.Period
@@ -35,7 +36,7 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
 
     def announcementsReport() {
 
-        def newParams = [max:1500] + params
+        def newParams = params.clone() + [max:1500]
         newParams.query = "docType:project"
         def results = searchService.allProjects(newParams, newParams.query)
         def projects = results.hits?.hits?.findAll{it._source.custom?.details?.events}.collect{it._source}
@@ -266,11 +267,7 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
     }
 
     def outputTargetsReport() {
-        def url = grailsApplication.config.ecodata.baseUrl + 'search/targetsReport' + commonService.buildUrlParamsFromMap(params)
-
-        def results = cacheService.get("outputTargets-"+params, {
-            webService.getJson(url, 300000)
-        })
+        def results = searchService.outputTargetsReport(params)
 
         def scores = [:]
         def distinctPrograms = new HashSet()

@@ -765,6 +765,12 @@
             <g:set var="fqList" value="${[params.fq].flatten()}"/>
             params += "&fq=${fqList.collect{it.encodeAsURL()}.join('&fq=')}";
         </g:if>
+        <g:if test="${params.fromDate}">
+            params += '&fromDate='+'${params.fromDate}';
+        </g:if>
+        <g:if test="${params.toDate}">
+            params += '&toDate='+'${params.toDate}';
+        </g:if>
 
         $.post(url, params, function(data1) {
             //console.log("getJSON data", data);
