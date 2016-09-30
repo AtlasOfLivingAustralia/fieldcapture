@@ -43,14 +43,14 @@
                 <g:set var="baseUrl"><fc:formatParams params="${params}" requiredParams="${reqParams}"/></g:set>
                 <g:set var="fqLink" value="${baseUrl?:"?"}"/>
             <!-- fqLink = ${fqLink} -->
-                <div><h4 id="facet-dates-header" style="display:inline-block">Project Dates <fc:iconHelp helpTextCode="project.dates.help"/> </h4><a class="accordian-toggle pointer" data-toggle="collapse" data-target="#facet-dates"><i style="float:right; margin-top:10px;" class="fa fa-plus"></i></a></div>
-                <div id="facet-dates" data-name="projectDates" class="collapse">
-                    <div><select style="width:100%;" data-bind="options:ranges, optionsText:'display', value:selectedRange"></select></div>
-                    <div><div style="width:4em; display:inline-block;">From:</div> <div class="input-append"><fc:datePicker targetField="fromDate.date" class="input-small" name="fromDate"/></div></div>
-                    <div><div style="width:4em; display:inline-block;">To:</div> <div class="input-append"><fc:datePicker targetField="toDate.date" class="input-append input-small" name="toDate"/></div></div>
-                    <div><button data-bind="click:clearDates, enable:fromDate() || toDate()" class="btn" style="margin-left:4em;"><i class="fa fa-remove"></i> Clear dates</button></div>
+                %{--<div><h4 id="facet-dates-header" style="display:inline-block">Project Dates <fc:iconHelp helpTextCode="project.dates.help"/> </h4><a class="accordian-toggle pointer" data-toggle="collapse" data-target="#facet-dates"><i style="float:right; margin-top:10px;" class="fa fa-plus"></i></a></div>--}%
+                %{--<div id="facet-dates" data-name="projectDates" class="collapse">--}%
+                    %{--<div><select style="width:100%;" data-bind="options:ranges, optionsText:'display', value:selectedRange"></select></div>--}%
+                    %{--<div><div style="width:4em; display:inline-block;">From:</div> <div class="input-append"><fc:datePicker targetField="fromDate.date" class="input-small" name="fromDate"/></div></div>--}%
+                    %{--<div><div style="width:4em; display:inline-block;">To:</div> <div class="input-append"><fc:datePicker targetField="toDate.date" class="input-append input-small" name="toDate"/></div></div>--}%
+                    %{--<div><button data-bind="click:clearDates, enable:fromDate() || toDate()" class="btn" style="margin-left:4em;"><i class="fa fa-remove"></i> Clear dates</button></div>--}%
 
-                </div>
+                %{--</div>--}%
                 <g:each var="fn" in="${facetsList}" status="j">
                     <g:set var="f" value="${results.facets.get(fn)}"/>
                     <g:set var="max" value="${5}"/>
