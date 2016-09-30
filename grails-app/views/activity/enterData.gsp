@@ -25,7 +25,10 @@
         documentUpdateUrl: "${g.createLink(controller:"document", action:"documentUpdate")}",
         documentDeleteUrl: "${g.createLink(controller:"document", action:"deleteDocument")}",
         imageUploadUrl: "${createLink(controller: 'image', action: 'upload')}",
-        imageLocation:"${resource(dir:'/images')}"
+        imageLocation:"${resource(dir:'/images')}",
+        savePhotoPointUrl:"${createLink(controller:'site', action:'ajaxUpdatePOI')}",
+        deletePhotoPointUrl:"${createLink(controller:'site', action:'ajaxDeletePOI')}",
+
         },
         here = document.location.href;
     </r:script>
@@ -176,7 +179,7 @@
 
         </div>
 
-        <div class="span3">
+        <div class="span3" id="map-holder">
             <div id="smallMap" style="width:100%"></div>
         </div>
 

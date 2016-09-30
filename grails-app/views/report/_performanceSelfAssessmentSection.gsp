@@ -11,7 +11,7 @@
         <select data-validation-engine="validate[required]" data-bind="value:meetsExpectation${question.name}, options:${fc.modelAsJavascript(model: question.constraints)}"></select>
     </td>
     <td class="evidence">
-        <textarea maxlength="2000" data-validation-engine="validate[required,maxSize[2000]]" data-bind="textInput:evidenceFor${question.name}" data-prompt-position="topRight:-110"></textarea>
+        <textarea data-validation-engine="validate[required]" data-bind="textInput:evidenceFor${question.name}" data-prompt-position="topRight:-110"></textarea>
     </td>
 </tr>
 </g:each>
@@ -22,6 +22,6 @@
         <select data-validation-engine="validate[required]" data-bind="value:meetsExpectation${additionalPracticeQuestion.name}, options:${fc.modelAsJavascript(model: additionalPracticeQuestion.constraints)}"></select>
     </td>
     <td>
-        <textarea maxlength="2000" data-validation-engine="validate[required,maxSize[2000]]" data-bind="value:evidenceFor${additionalPracticeQuestion.name}" data-prompt-position="topRight:-110"></textarea>
+        <textarea data-validation-engine="validate[required]" data-bind="value:evidenceFor${additionalPracticeQuestion.name}" data-prompt-position="topRight:-110"></textarea>
     </td>
 </tr>

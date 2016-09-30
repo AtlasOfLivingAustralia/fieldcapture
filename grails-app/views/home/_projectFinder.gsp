@@ -12,7 +12,7 @@
 <g:elseif test="${results?.hits?.total?:0 > 0}">
     <div class="row-fluid ">
         <div id="facetsCol" class="well well-small" style="display:none;">
-            <g:set var="reqParams" value="sort,order,max,fq"/>
+            <g:set var="reqParams" value="sort,order,max,fq,fromDate,toDate"/>
             <div class="visible-phone pull-right" style="margin-top: 5px;">
                 <a href="#" id="toggleFacetDisplay" rel="facetsContent" role="button" class="btn btn-small btn-inverse" style="color:white;">
                     <span>show</span> options&nbsp;
@@ -43,6 +43,14 @@
                 <g:set var="baseUrl"><fc:formatParams params="${params}" requiredParams="${reqParams}"/></g:set>
                 <g:set var="fqLink" value="${baseUrl?:"?"}"/>
             <!-- fqLink = ${fqLink} -->
+                %{--<div><h4 id="facet-dates-header" style="display:inline-block">Project Dates <fc:iconHelp helpTextCode="project.dates.help"/> </h4><a class="accordian-toggle pointer" data-toggle="collapse" data-target="#facet-dates"><i style="float:right; margin-top:10px;" class="fa fa-plus"></i></a></div>--}%
+                %{--<div id="facet-dates" data-name="projectDates" class="collapse">--}%
+                    %{--<div><select style="width:100%;" data-bind="options:ranges, optionsText:'display', value:selectedRange"></select></div>--}%
+                    %{--<div><div style="width:4em; display:inline-block;">From:</div> <div class="input-append"><fc:datePicker targetField="fromDate.date" class="input-small" name="fromDate"/></div></div>--}%
+                    %{--<div><div style="width:4em; display:inline-block;">To:</div> <div class="input-append"><fc:datePicker targetField="toDate.date" class="input-append input-small" name="toDate"/></div></div>--}%
+                    %{--<div><button data-bind="click:clearDates, enable:fromDate() || toDate()" class="btn" style="margin-left:4em;"><i class="fa fa-remove"></i> Clear dates</button></div>--}%
+
+                %{--</div>--}%
                 <g:each var="fn" in="${facetsList}" status="j">
                     <g:set var="f" value="${results.facets.get(fn)}"/>
                     <g:set var="max" value="${5}"/>
@@ -281,7 +289,7 @@
                                     <tbody>
                                     <tr>
                                         <td width="100%">
-                                            <a target="_blank" href='<g:createLink controller="search" action="downloadShapefile" params="${params}"/>'>Shapefile</a>
+                                            <a id="shapefile-download" target="_blank" href='<g:createLink controller="search" action="downloadShapefile" params="${params}"/>'>Shapefile</a>
                                         </td>
                                     </tr>
                                     </tbody>
@@ -636,6 +644,81 @@
             sortList($list, "sortcount", ">");
             $(this).find("i").addClass("icon-flipped180");
         });
+
+        $('#shapefile-download').click(function(e) {
+            e.preventDefault();
+            var url = $('#shapefile-download').attr('href');
+            $.get(url).done(function() {
+                bootbox.alert("The download may take several minutes to complete.  Once it is complete, an email will be sent to your registed email address.")
+            }).fail(function() {
+                bootbox.alert("There was an error requesting the download");
+            });
+
+        });
+
+        var urlWithoutDates = '<fc:formatParams params="${params}" requiredParams="sort,order,max,fq"/>';
+        var fromDate = '${params.fromDate?:''}';
+        var toDate = '${params.toDate?:''}';
+        var DatePickerModel = function() {
+            var formatString = 'YYYY-MM-DD';
+            var self = this;
+            var date = moment('2011-07-01T00:00:00+10:00');
+            var end = moment('2021-01-01T00:00:00+11:00');
+
+            self.ranges = [{display:'select date range', from:undefined, to:undefined}];
+            while (date.isBefore(end)) {
+                var rangeEnd = moment(date).add(6, 'months');
+                self.ranges.push({from:date.format(formatString), to:rangeEnd.format(formatString), display:date.format("MMM YYYY")+' - '+rangeEnd.format("MMM YYYY")});
+
+                date = rangeEnd;
+            }
+            self.selectedRange = ko.observable();
+            self.fromDate = ko.observable().extend({simpleDate:false});
+            if (fromDate) {
+                self.fromDate(moment(fromDate).format());
+            }
+            self.toDate = ko.observable().extend({simpleDate:false});
+            if (toDate) {
+                self.toDate(moment(toDate).format());
+            }
+
+            self.clearDates = function() {
+                if (!urlWithoutDates) {
+                    urlWithoutDates = '?';
+                }
+                document.location.href = urlWithoutDates;
+            };
+
+            var reloadWithDates = function(fromDate, toDate) {
+
+                if (fromDate) {
+                    urlWithoutDates += urlWithoutDates?'&':'?';
+                    urlWithoutDates += 'fromDate='+moment(fromDate).format(formatString);
+                }
+                if (toDate) {
+                    urlWithoutDates += urlWithoutDates?'&':'?';
+                    urlWithoutDates += 'toDate='+moment(toDate).format(formatString);
+                }
+                document.location.href = urlWithoutDates;
+            }
+            self.fromDate.subscribe(function() {
+                reloadWithDates(self.fromDate(), self.toDate());
+            });
+            self.toDate.subscribe(function(toDate) {
+                reloadWithDates(self.fromDate(), self.toDate());
+            });
+
+            self.selectedRange.subscribe(function(value) {
+
+                if (value.from) {
+                    reloadWithDates(value.from, value.to);
+                }
+
+            });
+        };
+        ko.applyBindings(new DatePickerModel(), document.getElementById('facet-dates'));
+
+        $('.helphover').popover({animation: true, trigger:'hover', container:'body'});
     });
 
     /**
@@ -683,6 +766,12 @@
         <g:if test="${params.fq}">
             <g:set var="fqList" value="${[params.fq].flatten()}"/>
             params += "&fq=${fqList.collect{it.encodeAsURL()}.join('&fq=')}";
+        </g:if>
+        <g:if test="${params.fromDate}">
+            params += '&fromDate='+'${params.fromDate}';
+        </g:if>
+        <g:if test="${params.toDate}">
+            params += '&toDate='+'${params.toDate}';
         </g:if>
 
         $.post(url, params, function(data1) {

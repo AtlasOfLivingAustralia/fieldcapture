@@ -133,10 +133,7 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
     @PreAuthorise(accessLevel = 'admin')
     def projectReportPDF(String id) {
 
-        List sections = new ArrayList(params.getList("sections"))
-        sections.remove("Progress against output targets") // The google charts don't render properly at the moment in the PDF
-
-        String reportUrl = g.createLink(controller:'report', action:'projectReportCallback', id:id, absolute: true, params:[fromStage:params.fromStage, toStage:params.toStage, sections:sections])
+        String reportUrl = g.createLink(controller:'report', action:'projectReportCallback', id:id, absolute: true, params:[fromStage:params.fromStage, toStage:params.toStage, sections:params.sections])
         String url = grailsApplication.config.pdfgen.baseURL+'api/pdf'+commonService.buildUrlParamsFromMap(docUrl:reportUrl, cacheable:false)
         Map result
         try {

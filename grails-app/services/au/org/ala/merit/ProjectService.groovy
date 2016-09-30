@@ -10,6 +10,31 @@ import java.text.SimpleDateFormat
 
 class ProjectService extends au.org.ala.fieldcapture.ProjectService {
 
+    static Closure documentStageComparitor = {a, b ->
+        String stageA = a.stage
+        String stageB = b.stage
+        if (!stageA && !stageB) {
+            return 0
+        }
+        else if (!stageA) {
+            return 1
+        }
+        else if (!stageB) {
+            return -1
+        }
+        else {
+            try {
+                int stageNumA = Integer.parseInt(stageA)
+                int stageNumB = Integer.parseInt(stageB)
+                return stageNumA - stageNumB
+            }
+            catch (NumberFormatException e) {
+                return 0
+            }
+
+        }
+        return a.stage<=>b.stage
+    }
     def reportService, auditService
 
     static final String FINAL_REPORT_ACTIVITY_TYPE = 'Outcomes, Evaluation and Learning - final report'
@@ -870,8 +895,8 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
 
         List outcomes = project.custom?.details?.objectives?.rows1?.findAll{it.description}
 
-        project.documents = project.documents?.findAll{!(it.role in ['stageReport', 'approval', 'deferReason']) && (it.stage? it.stage in reportedStages : it.lastUpdated <= toDate)}
-        project.documents?.sort{it.stage}
+        project.documents = project.documents?.findAll{!(it.role in ['stageReport', 'approval', 'deferReason']) && (("Stage "+it.stage) in reportedStages || !it.stage)}
+        project.documents = project.documents?.sort(documentStageComparitor)
 
 
         Map risksComparison = [:]
@@ -895,5 +920,4 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
             it.type == activityType && reportService.isSubmittedOrApproved(it) && it.plannedEndDate <= isoEndDate
         }?.max { it.plannedEndDate }
     }
-
 }

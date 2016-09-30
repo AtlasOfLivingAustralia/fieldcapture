@@ -5,6 +5,12 @@
     <g:each in="${params.getList("fq")}" var="selectedFacet">
         <input type="hidden" name="fq" value="${selectedFacet}">
     </g:each>
+    <g:if test="${params.fromDate}">
+        <input type="hidden" name="fromDate" value="${params.fromDate}">
+    </g:if>
+    <g:if test="${params.toDate}">
+        <input type="hidden" name="toDate" value="${params.toDate}">
+    </g:if>
     <strong>Project Information</strong>
     <ul class="unstyled">
         <g:each in="${['Projects', 'Output Targets', 'Sites', 'Reports', 'Report Summary', 'Documents']}" var="name">
