@@ -185,12 +185,27 @@
                                         <p>If you wish to defer or cancel a planned activity you must provide an explanation. Your case
                                         manager will use this information when assessing your report.</p>
                                         <p>You can simply refer to a document that has been uploaded to the project if you like.</p>
-                                        <textarea data-bind="value:notes,hasFocus:true" name="reason" rows=4 cols="80" class="validate[required]"></textarea>
+                                        <textarea data-bind="value:notes,hasFocus:true" name="reason" rows=4 cols="80" class="validate[required]" style="width:95%;"></textarea>
                                     </div>
                                     <div class="modal-footer">
                                         <button class="btn" data-bind="click: $parent.displayReasonModal.cancelReasonModal" data-dismiss="modal" aria-hidden="true">Discard status change</button>
                                         <button class="btn btn-primary" data-bind="click:$parent.displayReasonModal.saveReasonDocument">Save reason</button>
                                     </div></form>
+                            </div>
+
+                            <div id="viewActivityStatusReason" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+                                 data-bind="showModal:displayReasonModalReadOnly(),with:deferReason">
+                                <div class="reasonModalForm">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                                                data-bind="click:function() {$parent.displayReasonModalReadOnly(false);}">×</button>
+                                        <h3>Reason for deferring or cancelling an activity</h3>
+                                    </div>
+                                    <div class="modal-body">
+
+                                        <textarea readonly="readonly" data-bind="value:notes,hasFocus:true" name="reason" rows=4 cols="80" class="validate[required]" style="width:95%;"></textarea>
+                                    </div>
+                                </div>
                             </div>
 
                         </td>
@@ -285,7 +300,7 @@
 <!-- ko with: deferReason -->
 <span data-bind="visible: $parent.progress()=='deferred' || $parent.progress()=='cancelled'">
     <i class="icon-list-alt"
-       data-bind="popover: {title: 'Reason for deferral', content: notes, placement: 'left'}">
+       data-bind="popover: {title: 'Reason for deferral', content: notes, placement: 'left'}, click:function() {$parent.displayReasonModalReadOnly(true);}">
     </i>
 </span>
 <!-- /ko -->
@@ -612,7 +627,10 @@
             this.publicationStatus = act.publicationStatus ? act.publicationStatus : 'unpublished';
             this.deferReason = ko.observable(undefined); // a reason document or undefined
             // the following handles the modal dialog for deferral/cancel reasons
+            this.displayReasonModalReadOnly = ko.observable(false);
+
             this.displayReasonModal = ko.observable(false);
+
             this.displayReasonModal.trigger = ko.observable();
             this.displayReasonModal.needsToBeSaved = true; // prevents unnecessary saves when a change to progress is reverted
             this.displayReasonModal.closeReasonModal = function() {
