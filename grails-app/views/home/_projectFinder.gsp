@@ -43,14 +43,14 @@
                 <g:set var="baseUrl"><fc:formatParams params="${params}" requiredParams="${reqParams}"/></g:set>
                 <g:set var="fqLink" value="${baseUrl?:"?"}"/>
             <!-- fqLink = ${fqLink} -->
-                %{--<div><h4 id="facet-dates-header" style="display:inline-block">Project Dates <fc:iconHelp helpTextCode="project.dates.help"/> </h4><a class="accordian-toggle pointer" data-toggle="collapse" data-target="#facet-dates"><i style="float:right; margin-top:10px;" class="fa fa-plus"></i></a></div>--}%
-                %{--<div id="facet-dates" data-name="projectDates" class="collapse">--}%
-                    %{--<div><select style="width:100%;" data-bind="options:ranges, optionsText:'display', value:selectedRange"></select></div>--}%
-                    %{--<div><div style="width:4em; display:inline-block;">From:</div> <div class="input-append"><fc:datePicker targetField="fromDate.date" class="input-small" name="fromDate"/></div></div>--}%
-                    %{--<div><div style="width:4em; display:inline-block;">To:</div> <div class="input-append"><fc:datePicker targetField="toDate.date" class="input-append input-small" name="toDate"/></div></div>--}%
-                    %{--<div><button data-bind="click:clearDates, enable:fromDate() || toDate()" class="btn" style="margin-left:4em;"><i class="fa fa-remove"></i> Clear dates</button></div>--}%
+                <div><h4 id="facet-dates-header" style="display:inline-block">Project Dates <fc:iconHelp helpTextCode="project.dates.help"/> </h4><a class="accordian-toggle pointer" data-toggle="collapse" data-target="#facet-dates"><i style="float:right; margin-top:10px;" class="fa fa-plus"></i></a></div>
+                <div id="facet-dates" data-name="projectDates" class="collapse validationEngineContainer">
+                    <div><select style="width:100%;" data-bind="options:ranges, optionsText:'display', value:selectedRange"></select></div>
+                    <div><div style="width:4em; display:inline-block;">From:</div> <div class="input-append"><fc:datePicker targetField="fromDate.date" class="input-small" name="fromDate" data-validation-engine="validate[date]"/></div></div>
+                    <div><div style="width:4em; display:inline-block;">To:</div> <div class="input-append"><fc:datePicker targetField="toDate.date" class="input-append input-small" name="toDate" data-validation-engine="validate[date,future[fromDate]]"/></div></div>
+                    <div><button data-bind="click:clearDates, enable:fromDate() || toDate()" class="btn" style="margin-left:4em;"><i class="fa fa-remove"></i> Clear dates</button></div>
 
-                %{--</div>--}%
+                </div>
                 <g:each var="fn" in="${facetsList}" status="j">
                     <g:set var="f" value="${results.facets.get(fn)}"/>
                     <g:set var="max" value="${5}"/>
@@ -689,23 +689,41 @@
                 document.location.href = urlWithoutDates;
             };
 
-            var reloadWithDates = function(fromDate, toDate) {
+            var validateAndReload = function(newFromDate, newToDate) {
 
-                if (fromDate) {
-                    urlWithoutDates += urlWithoutDates?'&':'?';
-                    urlWithoutDates += 'fromDate='+moment(fromDate).format(formatString);
+                var parsedNewFromDate = moment(newFromDate);
+                var parsedNewToDate = moment(newToDate);
+                var parsedFromDate = moment(fromDate);
+                var parsedToDate = moment(toDate);
+
+                if (parsedFromDate.isSame(parsedNewFromDate) && parsedToDate.isSame(parsedNewToDate)) {
+                   return;
                 }
-                if (toDate) {
+
+                if ($('#facet-dates').validationEngine('validate')) {
+                    reloadWithDates(newFromDate, newToDate);
+                }
+            }
+
+            var reloadWithDates = function(newFromDate, newToDate) {
+                var parsedNewFromDate = moment(newFromDate);
+                var parsedNewToDate = moment(newToDate);
+                if (newFromDate && parsedNewFromDate.isValid()) {
                     urlWithoutDates += urlWithoutDates?'&':'?';
-                    urlWithoutDates += 'toDate='+moment(toDate).format(formatString);
+                    urlWithoutDates += 'fromDate='+moment(newFromDate).format(formatString);
+                }
+                if (newToDate && parsedNewToDate.isValid()) {
+                    urlWithoutDates += urlWithoutDates?'&':'?';
+                    urlWithoutDates += 'toDate='+moment(newToDate).format(formatString);
                 }
                 document.location.href = urlWithoutDates;
             }
-            self.fromDate.subscribe(function() {
-                reloadWithDates(self.fromDate(), self.toDate());
+
+            self.fromDate.subscribe(function(a, b) {
+                validateAndReload(self.fromDate(), self.toDate());
             });
             self.toDate.subscribe(function(toDate) {
-                reloadWithDates(self.fromDate(), self.toDate());
+                validateAndReload(self.fromDate(), self.toDate());
             });
 
             self.selectedRange.subscribe(function(value) {
@@ -717,6 +735,7 @@
             });
         };
         ko.applyBindings(new DatePickerModel(), document.getElementById('facet-dates'));
+        $('#facet-dates').validationEngine('attach', {scroll:false});
 
         $('.helphover').popover({animation: true, trigger:'hover', container:'body'});
     });
