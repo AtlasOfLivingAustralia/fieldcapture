@@ -156,7 +156,7 @@
                             <button type="button" class="btn btn-container" data-bind="click:$parent.editActivity, enable:$parent.canEditActivity()||$parent.canEditOutputData()"><i class="icon-edit" title="Edit Activity"></i></button>
                             <button type="button" class="btn btn-container" data-bind="click:$parent.viewActivity"><i class="icon-eye-open" title="View Activity"></i></button>
                             <button type="button" class="btn btn-container" data-bind="click:$parent.printActivity, enable:$parent.canPrintActivity"><i class="icon-print" title="Print activity"></i></button>
-                            <button type="button" class="btn btn-container" data-bind="click:del, enable:$parent.canDeleteActivity"><i class="icon-remove" title="Delete activity"></i></button>
+                            <button type="button" class="btn btn-container" data-bind="click:$root.deleteActivity, enable:$parent.canDeleteActivity"><i class="icon-remove" title="Delete activity"></i></button>
                         </td>
                         <td><span data-bind="text:plannedStartDate.formattedDate"></span></td>
                         <td><span data-bind="text:plannedEndDate.formattedDate"></span></td>
@@ -712,21 +712,7 @@
                     }
                 });
             };
-            this.del = function () {
-                // confirm first
-                bootbox.confirm("Delete this activity? Are you sure?", function(result) {
-                    if (result) {
-                        $.getJSON(fcConfig.activityDeleteUrl + '/' + self.activityId,
-                            function (data) {
-                                if (data.code < 400) {
-                                    document.location.reload();
-                                } else {
-                                    alert("Failed to delete activity - error " + data.code);
-                                }
-                            });
-                    }
-                });
-            };
+
 
             var reasonDocs = $.grep(act.documents, function(document) {
                 return document.role === 'deferReason';
@@ -969,91 +955,6 @@
             this.printActivity = function(activity) {
                 open(fcConfig.activityPrintUrl + "/" + activity.activityId, "fieldDataPrintWindow");
             };
-        };
-
-        /* data structures for handling output targets */
-        var Output = function (name, scores, existingTargets, root) {
-            var self = this;
-            this.name = name;
-            this.outcomeTarget = ko.observable(function () {
-                // find any existing outcome value for this output
-                var outcomeValue = "";
-                $.each(existingTargets, function (j, existingTarget) {
-                    if (existingTarget.outcomeTarget && existingTarget.outputLabel === self.name) {
-                        outcomeValue = existingTarget.outcomeTarget;
-                        return false; // end the loop
-                    }
-                });
-                return outcomeValue;
-            }());
-            this.outcomeTarget.subscribe(function() {
-                if (root.canEditOutputTargets()) {
-                    self.isSaving(true);
-                    root.saveOutputTargets();
-                }
-            });
-            this.scores = $.map(scores, function (score, index) {
-                var targetValue = 0;
-                $.each(existingTargets, function(j, existingTarget) {
-                    if (existingTarget.scoreLabel === score.label) {
-                        targetValue = existingTarget.target;
-                        return false; // end the loop
-                    }
-                });
-                return new OutputTarget(score, targetValue, index === 0, root);
-            });
-            this.isSaving = ko.observable(false);
-        };
-        Output.prototype.toJSON = function () {
-            // we need to produce a flat target structure (for backwards compatibility)
-            var self = this,
-            targets = $.map(this.scores, function (score) {
-                var js = score.toJSON();
-                js.outputLabel = self.name;
-                return js;
-            });
-            // add the outcome target
-            targets.push({outputLabel:self.name, outcomeTarget: self.outcomeTarget()});
-            return targets;
-        };
-        Output.prototype.clearSaving = function () {
-            this.isSaving(false);
-            $.each(this.scores, function (i, score) { score.isSaving(false) });
-        };
-
-        var OutputTarget = function (target, value, isFirst, root) {
-            var self = this;
-            this.scoreName = target.name;
-            this.scoreLabel = target.label;
-            this.target = ko.observable(value).extend({numericString:1});
-            this.isSaving = ko.observable(false);
-            this.isFirst = isFirst;
-            this.units = target.units;
-            this.target.subscribe(function() {
-                if (root.canEditOutputTargets()) {
-                    self.isSaving(true);
-                    root.saveOutputTargets();
-                }
-            });
-        };
-        OutputTarget.prototype.toJSON = function () {
-            var clone = ko.toJS(this);
-            delete clone.isSaving;
-            delete clone.isFirst;
-            return clone;
-        };
-
-        var Outcome = function (target) {
-            var self = this;
-            this.outputLabel = target.outputLabel;
-            this.outcomeText = target.outcomeText;
-            this.isSaving = ko.observable(false);
-        };
-
-        Outcome.prototype.toJSON = function () {
-            var clone = ko.toJS(this);
-            delete clone.isSaving;
-            return clone;
         };
 
         function PlanViewModel(activities, reports, outputTargets, project, programModel, today, config) {
@@ -1443,6 +1344,7 @@
             };
             self.outputTargets = ko.observableArray([]);
             self.saveOutputTargets = function() {
+                var result;
                 if (self.canEditOutputTargets()) {
                     if ($('#outputTargetsContainer').validationEngine('validate')) {
                         var targets = [];
@@ -1452,7 +1354,7 @@
                         var project = {projectId:'${project.projectId}', outputTargets:targets};
                         var json = JSON.stringify(project);
                         var id = "${'/' + project.projectId}";
-                        $.ajax({
+                        result = $.ajax({
                             url: "${createLink(action: 'ajaxUpdate')}" + id,
                             type: 'POST',
                             data: json,
@@ -1474,6 +1376,7 @@
                                 });
                             }
                         });
+                        return result;
                     } else {
                         // clear the saving indicator when validation fails
                         $.each(self.outputTargets(), function (i, target) {
@@ -1481,16 +1384,6 @@
                         });
                     }
                 }
-            };
-            self.addOutputTarget = function(target) {
-                var newOutputTarget = new OutputTarget(target);
-                self.outputTargets.push(newOutputTarget);
-                newOutputTarget.target.subscribe(function() {
-                    if (self.canEditOutputTargets()) {
-                        newOutputTarget.isSaving(true);
-                        self.saveOutputTargets();
-                    }
-                });
             };
 
             // metadata for setting up the output targets
@@ -1512,6 +1405,47 @@
                     }
                 });
             }();
+
+            self.deleteActivity = function (activity) {
+                // confirm first
+                // If the activitity is the only way to contribute to an output target, we need to warn the user
+                // and clear the target if necessary.
+                var targets = new OutputTargets(activities, self.outputTargets(), self.targetMetadata)
+
+                var message = "Delete this activity? Are you sure?";
+                if (!targets.safeToRemove(activity.type)) {
+                    message = "An output target exists for this activity.  If you delete it the output target will be removed.  Are you sure?";
+                }
+
+                bootbox.confirm(message, function(result) {
+                    if (result) {
+                        $.getJSON(fcConfig.activityDeleteUrl + '/' + activity.activityId,
+                            function (data) {
+                                if (data.code < 400) {
+                                    if (targets.onlyActivityOfType(activity.type)) {
+                                        targets.removeTargetsAssociatedWithActivityType(activity.type, self.outputTargets());
+                                        var result = self.saveOutputTargets();
+                                        if (result) {
+                                            result.done(function() {
+                                                document.location.reload();
+                                            })
+                                        }
+                                        else {
+                                            document.location.reload();
+                                        }
+                                    }
+                                    else {
+                                        document.location.reload();
+                                    }
+
+
+                                } else {
+                                    alert("Failed to delete activity - error " + data.code);
+                                }
+                            });
+                    }
+                });
+            };
         }
 		var today = '${today}';
 		var programModel = <fc:modelAsJavascript model="${programs}"/>;
