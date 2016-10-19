@@ -145,7 +145,9 @@
                     <tr>
                         <!-- ko with:isFirst -->
                         <td data-bind="attr:{rowspan:$parents[1].activities.length}" class="stage-display">
-                            <span data-bind="text:$parents[1].label%{--, blah:console.log(ko.toJS($data))--}%"></span>
+                            <span data-bind="text:$parents[1].label"></span>
+                            <br/>
+                            <span data-bind="text:$parents[1].datesLabel"></span>
                             <br data-bind="visible:$parents[1].isCurrentStage">
                             <span data-bind="visible:$parents[1].isCurrentStage" class="badge badge-info">Current stage</span>
 
@@ -727,6 +729,7 @@
                     return act.plannedEndDate > stage.fromDate &&  act.plannedEndDate <= stage.toDate;
                 });
             this.label = stageLabel;
+            this.datesLabel = convertToSimpleDate(stage.fromDate, false) + ' - ' + convertToSimpleDate(stage.toDate, false);
             this.isCurrentStage = isCurrentStage;
             this.isReportable = isStageReportable(project,stage);
             this.projectId = project.projectId;
