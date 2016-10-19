@@ -28,6 +28,11 @@
                 <strong>Warning!</strong> This activity has data recorded.  Changing the type of the activity will cause this data to be lost!
             </div>
         </div>
+        <div class="row-fluid" data-bind="visible:transients.targetsWarning()" style="display:none">
+        <div class="alert alert-error">
+            <strong>Warning!</strong> There are output targets defined that require activities of this type.  Changing the type of this activity will cause the targets to be deleted!
+        </div>
+    </div>
 
 
         <div class="row-fluid">
@@ -79,7 +84,7 @@
                 <fc:iconHelp title="Planned end date" printable="${printView}">Date the activity is intended to finish.</fc:iconHelp>
                 </label>
                 <div class="input-append">
-                    <fc:datePicker targetField="plannedEndDate.date" name="plannedEndDate" data-validation-engine="validate[required,future[plannedStartDate],funcCall[master.validateEndDate]]" printable="${printView}" />
+                    <fc:datePicker targetField="plannedEndDate.date" name="plannedEndDate" data-validation-engine="validate[required,future[plannedStartDate],funcCall[validateEndDate]]" printable="${printView}" />
                 </div>
             </div>
         </div>
@@ -91,12 +96,11 @@
 
 </div>
 
-</div>
 
 <g:if test="${!printView}">
     <div class="form-actions">
-        <button type="button" id="save" class="btn btn-primary">Save changes</button>
-        <button type="button" id="cancel" class="btn">Cancel</button>
+        <button type="button" id="save" class="btn btn-primary" data-bind="click:save">Save changes</button>
+        <button type="button" id="cancel" class="btn" data-bind="click:cancel">Cancel</button>
     </div>
 </g:if>
 
@@ -108,118 +112,14 @@
 
     var returnTo = "${returnTo}";
 
-    /* Master controller for page. This handles saving each model as required. */
-    var Master = function () {
-        var self = this;
-        this.subscribers = [];
-        // client models register their name and methods to participate in saving
-        self.register = function (modelInstanceName, getMethod, isDirtyMethod, resetMethod) {
-            self.subscribers.push({
-                model: modelInstanceName,
-                get: getMethod,
-                isDirty: isDirtyMethod,
-                reset: resetMethod
-            });
-        };
-        // master isDirty flag for the whole page - can control button enabling
-        this.isDirty  = function () {
-            var dirty = false;
-            $.each(this.subscribers, function(i, obj) {
-                dirty = dirty || obj.isDirty();
-            });
-            return dirty;
-        };
-        /**
-         * Makes an ajax call to save any sections that have been modified. This includes the activity
-         * itself and each output.
-         *
-         * Modified outputs are injected as a list into the activity object. If there is nothing to save
-         * in the activity itself, then the root is an object that is empty except for the outputs list.
-         *
-         * NOTE that the model for each section must register itself to be included in this save.
-         *
-         * Validates the entire page before saving.
-         */
-        this.save = function () {
-            var activityData, outputs = [];
-            if ($('#validation-container').validationEngine('validate')) {
-                $.each(this.subscribers, function(i, obj) {
-                    if (obj.isDirty()) {
-                        if (obj.model === 'activityModel') {
-                            activityData = obj.get();
-                        } else {
-                            outputs.push(obj.get());
-                        }
-                    }
-                });
-                if (outputs.length === 0 && activityData === undefined) {
-                    alert("Nothing to save.");
-                    return;
-                }
-                if (activityData === undefined) { activityData = {}}
-                activityData.outputs = outputs;
-                $.ajax({
-                    url: "${createLink(action: 'ajaxUpdate', id: activity.activityId)}",
-                    type: 'POST',
-                    data: JSON.stringify(activityData),
-                    contentType: 'application/json',
-                    success: function (data) {
-                        var errorText = "";
-                        if (data.errors) {
-                            errorText = "<span class='label label-important'>Important</span><h4>There was an error while trying to save your changes.</h4>";
-                            $.each(data.errors, function (i, error) {
-                                errorText += "<p>Saving <b>" +
-(error.name === 'activity' ? 'the activity context' : error.name) +
-"</b> threw the following error:<br><blockquote>" + error.error + "</blockquote></p>";
-                            });
-                            errorText += "<p>Any other changes should have been saved.</p>";
-                            bootbox.alert(errorText);
-                        } else {
-                            self.reset();
-                            self.saved();
-                        }
-                    },
-                    error: function (data) {
-                        var status = data.status;
-                        alert('An unhandled error occurred: ' + data.status);
-                    }
-                });
-            }
-
-        };
-        this.saved = function () {
-            document.location.href = returnTo;
-        };
-        this.reset = function () {
-            $.each(this.subscribers, function(i, obj) {
-                if (obj.isDirty()) {
-                    obj.reset();
-                }
-            });
-        };
-    };
-
-    var master = new Master();
-
     $(function(){
 
         $('#validation-container').validationEngine('attach', {scroll: false});
 
         $('.helphover').popover({animation: true, trigger:'hover'});
 
-        $('#save').click(function () {
-            master.save();
-        });
 
-        $('#cancel').click(function () {
-            document.location.href = returnTo;
-        });
-
-        $('#reset').click(function () {
-            master.reset();
-        });
-
-        function ViewModel (act, site, project, activityTypes, themes) {
+        function ViewModel (act, site, project, activityTypes, themes, targetMetadata) {
             var self = this;
 
             self.activityId = act.activityId;
@@ -242,6 +142,14 @@
             self.transients.site = ko.observable(site);
             self.transients.project = project;
             self.transients.themes = $.map(themes, function (obj, i) { return obj.name });
+            self.transients.targetsWarning = ko.computed(function() {
+                if (self.type() == act.type || !act.type) {
+                    return false;
+                }
+                var outputTargets = new OutputTargets(project.activities || [], project.outputTargets, false, targetMetadata, {saveOutputTargetsUrl:fcConfig.saveOuputTargetsUrl});
+
+                return !outputTargets.safeToRemove(act.type);
+            });
             self.transients.typeWarning = ko.computed(function() {
                 if (act.outputs === undefined || act.outputs.length == 0) {
                     return false;
@@ -395,6 +303,79 @@
                 return undefined; // This is how a successful validation is flagged.
             };
 
+            /**
+             * Makes an ajax call to save any sections that have been modified. This includes the activity
+             * itself and each output.
+             *
+             * Modified outputs are injected as a list into the activity object. If there is nothing to save
+             * in the activity itself, then the root is an object that is empty except for the outputs list.
+             *
+             * NOTE that the model for each section must register itself to be included in this save.
+             *
+             * Validates the entire page before saving.
+             */
+            self.save = function () {
+
+                if ($('#validation-container').validationEngine('validate')) {
+
+                    if (!self.dirtyFlag.isDirty()) {
+                        alert("Nothing to save.");
+                        return;
+                    }
+
+                    var activityData = self.modelAsJSON();
+                    $.ajax({
+                        url: "${createLink(action: 'ajaxUpdate', id: activity.activityId)}",
+                        type: 'POST',
+                        data: activityData,
+                        contentType: 'application/json',
+                        success: function (data) {
+                            var errorText = "";
+                            if (data.errors) {
+                                errorText = "<span class='label label-important'>Important</span><h4>There was an error while trying to save your changes.</h4>";
+                                $.each(data.errors, function (i, error) {
+                                    errorText += "<p>Saving <b>" +
+    (error.name === 'activity' ? 'the activity context' : error.name) +
+    "</b> threw the following error:<br><blockquote>" + error.error + "</blockquote></p>";
+                                });
+                                errorText += "<p>Any other changes should have been saved.</p>";
+                                bootbox.alert(errorText);
+                            } else {
+
+                                if (act.type && act.type != self.type()) {
+                                    var outputTargets = new OutputTargets(project.activities || [], project.outputTargets, false, targetMetadata, {saveTargetsUrl:fcConfig.saveOuputTargetsUrl});
+                                    if (outputTargets.onlyActivityOfType(act.type)) {
+                                        outputTargets.removeTargetsAssociatedWithActivityType(act.type);
+                                        outputTargets.saveOutputTargets().always(self.saved);
+                                    }
+                                    else {
+                                        self.saved();
+                                    }
+
+                                }
+                                else {
+                                    self.saved();
+                                }
+
+                            }
+                        },
+                        error: function (data) {
+                            var status = data.status;
+                            alert('An unhandled error occurred: ' + data.status);
+                        }
+                    });
+                }
+
+            };
+            self.saved = function () {
+                document.location.href = returnTo;
+            };
+
+            self.cancel = function() {
+                document.location.href = returnTo;
+            };
+
+
         };
 
 
@@ -403,7 +384,8 @@
     ${site ?: 'null'},
     ${project ?: 'null'},
     ${(activityTypes as JSON).toString()},
-    ${themes});
+    ${themes},
+     ${fc.modelAsJavascript(model:outputTargetMetadata ?: [:])});
 
 
         var mapFeatures = $.parseJSON('${mapFeatures?mapFeatures.encodeAsJavaScript():"{}"}');
@@ -423,9 +405,7 @@
         );
 
         ko.applyBindings(viewModel,document.getElementById('koActivityMainBlock'));
-        master.validateEndDate = viewModel.validatePlannedEndDate; // Needs to be resolvable from the global scope
-
-        master.register('activityModel', viewModel.modelForSaving, viewModel.dirtyFlag.isDirty, viewModel.dirtyFlag.reset);
+        window.validateEndDate = viewModel.validatePlannedEndDate; // Needs to be resolvable from the global scope
 
     });
 </r:script>

@@ -19,7 +19,8 @@
         activityUpdateUrl: "${createLink(controller: 'activity', action: 'ajaxUpdate')}",
         activityDeleteUrl: "${createLink(controller: 'activity', action: 'ajaxDelete')}",
         projectViewUrl: "${createLink(controller: 'project', action: 'index')}/",
-        siteViewUrl: "${createLink(controller: 'site', action: 'index')}/"
+        siteViewUrl: "${createLink(controller: 'site', action: 'index')}/",
+        saveOuputTargetsUrl: "${createLink(controller:'project', action:'ajaxUpdate', id:activity.projectId)}"
         },
         here = document.location.href;
     </r:script>
@@ -42,5 +43,6 @@
 
         <g:render template="createOrEditActivity"/>
     </div>
+</div>
 </body>
 </html>

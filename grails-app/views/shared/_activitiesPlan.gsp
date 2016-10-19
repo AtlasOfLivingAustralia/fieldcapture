@@ -254,17 +254,6 @@
 
     </form>
 
-    <g:if env="development">
-        <hr />
-        <div class="expandable-debug">
-            <h3>Plan Debug</h3>
-            <div>
-                <h4>Target metadata</h4>
-                <pre data-bind="text:ko.toJSON(targetMetadata,null,2)"></pre>
-            </div>
-        </div>
-    </g:if>
-
 </div>
 
 <script id="updateStatusTmpl" type="text/html">
@@ -957,8 +946,9 @@
             };
         };
 
-        function PlanViewModel(activities, reports, outputTargets, project, programModel, today, config) {
+        function PlanViewModel(activities, reports, outputTargets, targetMetadata, project, programModel, today, config) {
             var self = this;
+
             this.userIsCaseManager = ko.observable(${user?.isCaseManager});
             this.planStatus = ko.observable(project.planStatus || 'not approved');
             this.planStatusTemplateName = ko.computed(function () {
@@ -1342,41 +1332,15 @@
                 // don't return any data if there is no valid end date because the lib will throw an error
                 return hasAnyValidPlannedEndDate ? values : [];
             };
-            self.outputTargets = ko.observableArray([]);
+
+            var outputTargetHelper = new OutputTargets(activities, outputTargets, self.canEditOutputTargets, targetMetadata, config);
+            $.extend(self, outputTargetHelper);
             self.saveOutputTargets = function() {
                 var result;
                 if (self.canEditOutputTargets()) {
                     if ($('#outputTargetsContainer').validationEngine('validate')) {
-                        var targets = [];
-                        $.each(self.outputTargets(), function (i, target) {
-                            $.merge(targets, target.toJSON());
-                        });
-                        var project = {projectId:'${project.projectId}', outputTargets:targets};
-                        var json = JSON.stringify(project);
-                        var id = "${'/' + project.projectId}";
-                        result = $.ajax({
-                            url: "${createLink(action: 'ajaxUpdate')}" + id,
-                            type: 'POST',
-                            data: json,
-                            contentType: 'application/json',
-                            success: function (data) {
-                                if (data.error) {
-                                    alert(data.detail + ' \n' + data.error);
-                                }
-                            },
-                            error: function (data) {
-                                var status = data.status;
-                                alert('An unhandled error occurred: ' + data.status);
-                            },
-                            complete: function(data) {
-                                $.each(self.outputTargets(), function(i, target) {
-                                    // The timeout is here to ensure the save indicator is visible long enough for the
-                                    // user to notice.
-                                    setTimeout(function(){target.clearSaving();}, 1000);
-                                });
-                            }
-                        });
-                        return result;
+                        return outputTargetHelper.saveOutputTargets();
+
                     } else {
                         // clear the saving indicator when validation fails
                         $.each(self.outputTargets(), function (i, target) {
@@ -1386,34 +1350,13 @@
                 }
             };
 
-            // metadata for setting up the output targets
-            self.targetMetadata = ${outputTargetMetadata as grails.converters.JSON};
-
-            self.loadOutputTargets = function () {
-                var activityTypes = {},  // this just saves us checking multiple activities of the same type
-                    uniqueOutputs = {};  // this ensures each output is unique
-                // collect the metadata for the unique outputs for the current set of activities
-                $.each(activities, function (i, activity) {
-                    if (!activityTypes[activity.type] && self.targetMetadata[activity.type]) {
-                        activityTypes[activity.type] = true;
-                        $.each(self.targetMetadata[activity.type], function(outputName, scores) {
-                            if (!uniqueOutputs[outputName]) {
-                                uniqueOutputs[outputName] = true;
-                                self.outputTargets.push(new Output(outputName, scores, outputTargets, self));
-                            }
-                        });
-                    }
-                });
-            }();
-
             self.deleteActivity = function (activity) {
                 // confirm first
                 // If the activitity is the only way to contribute to an output target, we need to warn the user
                 // and clear the target if necessary.
-                var targets = new OutputTargets(activities, self.outputTargets(), self.targetMetadata)
 
                 var message = "Delete this activity? Are you sure?";
-                if (!targets.safeToRemove(activity.type)) {
+                if (!self.safeToRemove(activity.type)) {
                     message = "An output target exists for this activity.  If you delete it the output target will be removed.  Are you sure?";
                 }
 
@@ -1422,8 +1365,8 @@
                         $.getJSON(fcConfig.activityDeleteUrl + '/' + activity.activityId,
                             function (data) {
                                 if (data.code < 400) {
-                                    if (targets.onlyActivityOfType(activity.type)) {
-                                        targets.removeTargetsAssociatedWithActivityType(activity.type, self.outputTargets());
+                                    if (self.onlyActivityOfType(activity.type)) {
+                                        self.removeTargetsAssociatedWithActivityType(activity.type);
                                         var result = self.saveOutputTargets();
                                         if (result) {
                                             result.done(function() {
@@ -1455,10 +1398,11 @@
             ${activities ?: []},
             reports,
             ${project.outputTargets ?: '{}'},
+            ${outputTargetMetadata as grails.converters.JSON},
             checkAndUpdateProject(${project}, null, programModel),
             programModel,
             today,
-            {rejectionCategories: ['Minor', 'Moderate', 'Major'] }
+            {rejectionCategories: ['Minor', 'Moderate', 'Major'], saveTargetsUrl:fcConfig.projectUpdateUrl }
         );
         ko.applyBindings(planViewModel, document.getElementById('planContainer'));
 

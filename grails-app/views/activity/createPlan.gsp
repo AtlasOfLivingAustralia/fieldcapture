@@ -33,5 +33,6 @@
         </ul>
         <g:render template="createOrEditActivity"/>
     </div>
+</div>
 </body>
 </html>
