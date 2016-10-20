@@ -244,6 +244,8 @@ class ActivityController {
         //log.debug "Params:"
         //params.each { log.debug it }
 
+        List duplicateStages = postBody.remove('duplicateStages')
+
         def values = [:]
         // filter params to remove keys in the ignore list - MEW don't know if this is required
         postBody.each { k, v ->
@@ -290,6 +292,20 @@ class ActivityController {
         if (!result) {
             def photoPoints = values.remove('photoPoints')
             result = activityService.update(id, values)
+
+            if (duplicateStages) {
+                List reports = reportService.getReportsForProject(projectId)
+                duplicateStages.each { String stage ->
+                    Map report = reports.find{ it.name == stage }
+                    if (report) {
+                        values.plannedStartDate = report.fromDate
+                        values.plannedEndDate = DateUtils.dayBefore(report.toDate)
+
+                        result = activityService.update(id, values)
+                    }
+                }
+            }
+
             if (photoPoints) {
                 updatePhotoPoints(id ?: result.activityId, photoPoints)
             }

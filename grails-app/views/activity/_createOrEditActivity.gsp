@@ -1,4 +1,9 @@
 <%@ page import="grails.converters.JSON" %>
+<style type="text/css">
+    .disabled {
+        opacity: 0.5;
+    }
+</style>
 <div class="row-fluid title-block well well-small input-block-level">
     <div class="span12 title-attribute">
         <h1><span data-bind="click:goToProject" class="clickable">${project?.name?.encodeAsHTML() ?: 'no project defined!!'}</span></h1>
@@ -76,7 +81,7 @@
                 <fc:iconHelp title="Planned start date" printable="${printView}">Date the activity is intended to start.</fc:iconHelp>
                 </label>
                 <div class="input-append">
-                    <fc:datePicker targetField="plannedStartDate.date" name="plannedStartDate" data-validation-engine="validate[required,future[${earliestStartDate}]]" printable="${printView}"/>
+                    <fc:datePicker targetField="plannedStartDate.date" class="input-medium" name="plannedStartDate" data-validation-engine="validate[required,future[${earliestStartDate}]]" printable="${printView}"/>
                 </div>
             </div>
             <div class="span4">
@@ -84,11 +89,33 @@
                 <fc:iconHelp title="Planned end date" printable="${printView}">Date the activity is intended to finish.</fc:iconHelp>
                 </label>
                 <div class="input-append">
-                    <fc:datePicker targetField="plannedEndDate.date" name="plannedEndDate" data-validation-engine="validate[required,future[plannedStartDate],funcCall[validateEndDate]]" printable="${printView}" />
+                    <fc:datePicker targetField="plannedEndDate.date" class="input-medium" name="plannedEndDate" data-validation-engine="validate[required,future[plannedStartDate],funcCall[validateEndDate]]" printable="${printView}" />
                 </div>
             </div>
         </div>
 
+        <!-- ko if:!activityId -->
+        <hr/>
+
+        <h4>Create a duplicate of this activity in other stages</h4>
+        <div class="row-fluid">
+
+            <label for="stage">Stage(s)
+            <fc:iconHelp title="Stage" printable="${printView}">For each stage selected, a new activity will be created.  All details (including the site) except the stage dates will be duplicated in each activity.</fc:iconHelp>
+            </label>
+            <ul class="unstyled" data-bind="foreach: transients.stages">
+                <!-- ko if:$data -->
+                <li>
+                    <label class="checkbox" data-bind="css:{'disabled':$parent.projectStage() == $data}">
+                        <input type="checkbox" class="checkbox" data-bind="attr: { value: $data }, checked: $parent.duplicateStages, enable: $data != $parent.projectStage()" data-validation-engine="min"/>
+                        <span data-bind="text: $data"></span>
+                    </label>
+                </li>
+                <!-- /ko -->
+            </ul>
+
+        </div>
+        <!-- /ko -->
     </div>
     <div class="span3">
         <div id="smallMap" style="width:100%"></div>
@@ -138,6 +165,7 @@
             self.type = ko.observable(act.type);
             self.siteId = ko.observable(act.siteId);
             self.projectId = act.projectId;
+            self.duplicateStages = ko.observableArray();
             self.transients = {};
             self.transients.site = ko.observable(site);
             self.transients.project = project;
@@ -258,7 +286,10 @@
                             var endDate = moment(matchingStage.toDate).subtract(1, 'days');
                             self.plannedEndDate(endDate.toDate().toISOStringNoMillis());
                         }
-
+                        var index = self.duplicateStages.indexOf(newStage);
+                        if (index >= 0) {
+                            self.duplicateStages.splice(index, 1);
+                        }
                     }
 
                     ignoreStageChanges = false;
