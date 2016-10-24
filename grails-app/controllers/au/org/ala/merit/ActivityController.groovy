@@ -509,4 +509,22 @@ class ActivityController {
 
         shortName
     }
+
+    /**
+     * Returns an excel template that can be used to populate a table of data in an output form.
+     */
+    def excelOutputTemplate() {
+
+        String url =  "${grailsApplication.config.ecodata.baseUrl}metadata/excelOutputTemplate"
+
+        if (params.data) {
+            webService.proxyPostRequest(response, url, [listName:params.listName, type:params.type, data:params.data])
+        }
+        else {
+            url += "?type=${params.type?.encodeAsURL()}&listName=${params.listName?.encodeAsURL()}"
+            webService.proxyGetRequest(response, url)
+        }
+
+        return null
+    }
 }
