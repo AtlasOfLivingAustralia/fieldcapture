@@ -3,7 +3,7 @@
     <g:if test="${blog.size() > 0}">
         <ul class="unstyled" data-bind="foreach:entries">
             <li>
-                <img data-bind="visible:imageUrl(), attr:{src:imageUrl}" class="pull-left" width="50" height="50">
+                <img data-bind="visible:imageUrl(), attr:{src:imageThumbnailUrl}" class="pull-left" width="50" height="50">
                 <i class="blog-icon floatleft fa fa-3x" data-bind="visible:stockIcon(), css:stockIcon"></i>
                 <div>
                     <div class="row-fluid">

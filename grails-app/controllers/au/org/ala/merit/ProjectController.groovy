@@ -30,7 +30,7 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
 
         def showAnnouncementsTab = projectService.isMeriPlanSubmittedOrApproved(project)
 
-        def imagesModel = publicImages.collect {[name:it.name, projectName:project.name, url:it.url]}
+        def imagesModel = publicImages.collect {[name:it.name, projectName:project.name, url:it.url, thumbnailUrl:it.thumbnailUrl]}
         boolean canChangeProjectDates = projectService.canChangeProjectDates(project)
 
         def model = [overview:[label:'Overview', visible: true, default:true, type:'tab', publicImages:imagesModel, displayTargets:false, displayOutcomes:false, blog:blog, hasNewsAndEvents:hasNewsAndEvents, hasProjectStories:hasProjectStories, canChangeProjectDates:canChangeProjectDates],
