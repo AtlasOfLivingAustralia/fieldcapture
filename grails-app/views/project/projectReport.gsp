@@ -42,7 +42,7 @@
 
     </style>
 
-    <r:require modules="knockout, activity, jqueryValidationEngine, merit_projects, pretty_text_diff"/>
+    <r:require modules="knockout, activity, jqueryValidationEngine, merit_projects, pretty_text_diff,jQueryFileDownload"/>
 </head>
 <body>
 <div class="container">

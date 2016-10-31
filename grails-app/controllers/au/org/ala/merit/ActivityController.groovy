@@ -97,6 +97,9 @@ class ActivityController {
                 return
             }
             def model = activityModel(activity, activity.projectId)
+            // Need these to decide if output targets need to be removed if an activity type is changed.
+            model.project.activities = activityService.activitiesForProject(activity.projectId)
+            model.outputTargetMetadata = metadataService.getOutputTargetsByOutputByActivity()
 
             model.activityTypes = metadataService.activityTypesList(model.project?.associatedProgram, model.project?.associatedSubProgram)
             model.hasPhotopointData = activity.documents?.find {it.poiId}
@@ -241,6 +244,8 @@ class ActivityController {
         //log.debug "Params:"
         //params.each { log.debug it }
 
+        List duplicateStages = postBody.remove('duplicateStages')
+
         def values = [:]
         // filter params to remove keys in the ignore list - MEW don't know if this is required
         postBody.each { k, v ->
@@ -287,6 +292,20 @@ class ActivityController {
         if (!result) {
             def photoPoints = values.remove('photoPoints')
             result = activityService.update(id, values)
+
+            if (duplicateStages) {
+                List reports = reportService.getReportsForProject(projectId)
+                duplicateStages.each { String stage ->
+                    Map report = reports.find{ it.name == stage }
+                    if (report) {
+                        values.plannedStartDate = report.fromDate
+                        values.plannedEndDate = DateUtils.dayBefore(report.toDate)
+
+                        result = activityService.update(id, values)
+                    }
+                }
+            }
+
             if (photoPoints) {
                 updatePhotoPoints(id ?: result.activityId, photoPoints)
             }
@@ -489,5 +508,23 @@ class ActivityController {
         shortName = shortName.replaceAll('[^a-zA-z0-9 ]', '')
 
         shortName
+    }
+
+    /**
+     * Returns an excel template that can be used to populate a table of data in an output form.
+     */
+    def excelOutputTemplate() {
+
+        String url =  "${grailsApplication.config.ecodata.baseUrl}metadata/excelOutputTemplate"
+
+        if (params.data) {
+            webService.proxyPostRequest(response, url, [listName:params.listName, type:params.type, data:params.data])
+        }
+        else {
+            url += "?type=${params.type?.encodeAsURL()}&listName=${params.listName?.encodeAsURL()}"
+            webService.proxyGetRequest(response, url)
+        }
+
+        return null
     }
 }
