@@ -189,9 +189,10 @@
                 <!-- ko stopBinding:true -->
                 <g:render plugin="fieldcapture-plugin" template="/site/sitesList" model="${[editable:user?.isEditor]}"/>
                 <!-- /ko -->
+                <h2>Points of interest on project sites</h2>
                 <g:each in="${project.sites}" var="site">
                     <g:if test="${site.poi}">
-                        <h2>Points of interest on project sites</h2>
+                        <h4>${site.name}</h4>
                         <g:each in="${site.poi}" var="poi">
                             <div class="row-fluid">
                                 <h4>${poi.name?.encodeAsHTML()}</h4>
