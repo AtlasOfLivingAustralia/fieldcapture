@@ -37,7 +37,6 @@
 
     .photo-slider{
         overflow: hidden;
-        height: 240px;
         position: relative;
         padding: 10px;
         background: #444d58;
@@ -50,14 +49,12 @@
         width:auto;
         width:auto;
     }
-    .photo-slider a {
-        height:200px;
-    }
+
     .photo-slider p {
         padding-left:10px;
-        height: 20px;
         background-color:lightgrey;
         color:black;
+        margin-bottom:0px;
     }
     </style>
     <r:require modules="knockout,mapWithFeatures,amplify,imageViewer"/>
@@ -177,6 +174,7 @@
         <g:each in="${site.poi}" var="poi">
         <div class="row-fluid">
             <h4>${poi.name?.encodeAsHTML()}</h4>
+            <g:if test="${poi.description}">${poi.description}</g:if>
             <g:if test="${poi.photos}"><g:render template="sitePhotos" model="${[photos:poi.photos]}"></g:render></g:if> </h4>
 
         </div>
@@ -249,7 +247,16 @@
             viewModel.renderPOIs();
 
              $( '.photo-slider' ).mThumbnailScroller({theme:'hover-classic'});
-                $('.photo-slider .fancybox').fancybox();
+             $('.photo-slider .fancybox').fancybox(
+                {
+                    helpers : {
+                        title: {
+                            type: 'inside'
+                        }
+                    },
+                    nextEffect:'fade',
+                    previousEffect:'fade'
+                });
         });
 
 </r:script>
