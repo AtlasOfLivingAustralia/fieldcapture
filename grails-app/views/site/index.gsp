@@ -19,44 +19,6 @@
             },
             here = "${createLink(controller:'site', action:'index', id:site.siteId)}";
     </r:script>
-    <style type="text/css">
-
-    .photo-slider li{ margin: 0 4px; }
-    .photo-slider li a{
-    display: block;
-    border: 7px solid rgba(255,255,255,.1);
-    }
-    /*.photo-slider ul{*/
-    /*opacity: 0;*/
-    /*-webkit-transition: opacity 1s ease-out;*/
-    /*-moz-transition: opacity 1s ease-out;*/
-    /*-ms-transition: opacity 1s ease-out;*/
-    /*-o-transition: opacity 1s ease-out;*/
-    /*transition: opacity 1s ease-out;*/
-    /*}*/
-
-    .photo-slider{
-        overflow: hidden;
-        position: relative;
-        padding: 10px;
-        background: #444d58;
-        margin: 10px auto;
-        width: 100%;
-        box-sizing: border-box;
-    }
-    .photo-slider img {
-        height: 180px;
-        width:auto;
-        width:auto;
-    }
-
-    .photo-slider p {
-        padding-left:10px;
-        background-color:lightgrey;
-        color:black;
-        margin-bottom:0px;
-    }
-    </style>
     <r:require modules="knockout,mapWithFeatures,amplify,imageViewer"/>
 </head>
 <body>

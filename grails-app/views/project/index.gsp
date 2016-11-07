@@ -189,6 +189,19 @@
                 <!-- ko stopBinding:true -->
                 <g:render plugin="fieldcapture-plugin" template="/site/sitesList" model="${[editable:user?.isEditor]}"/>
                 <!-- /ko -->
+                <g:each in="${project.sites}" var="site">
+                    <g:if test="${site.poi}">
+                        <h2>Points of interest on project sites</h2>
+                        <g:each in="${site.poi}" var="poi">
+                            <div class="row-fluid">
+                                <h4>${poi.name?.encodeAsHTML()}</h4>
+                            <g:if test="${poi.description}">${poi.description}</g:if>
+                            <g:if test="${poi.photos}"><g:render template="/site/sitePhotos" model="${[photos:poi.photos]}"></g:render></g:if> </h4>
+
+                            </div>
+                        </g:each>
+                    </g:if>
+                </g:each>
 
             </div>
 
@@ -840,6 +853,17 @@
                         $('#sites-table tbody tr :checkbox').trigger('click');
                     });
                     sitesViewModel.sitesFiltered(visibleIndicies());
+                    $( '.photo-slider' ).mThumbnailScroller({theme:'hover-classic'});
+                    $('.photo-slider .fancybox').fancybox(
+                        {
+                            helpers : {
+                                title: {
+                                    type: 'inside'
+                                }
+                            },
+                            nextEffect:'fade',
+                            previousEffect:'fade'
+                       });
 
                 }
                 if (tab === '#plan' && !planTabInitialised) {

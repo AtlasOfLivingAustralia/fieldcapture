@@ -754,3 +754,31 @@ button#risks-cancel:hover {
 	top: 5px;
 	color: #337ab7;
 }
+
+.photo-slider li{ margin: 0 4px; }
+.photo-slider li a{
+	display: block;
+	border: 7px solid rgba(255,255,255,.1);
+}
+
+.photo-slider{
+	overflow: hidden;
+	position: relative;
+	padding: 10px;
+	background: #444d58;
+	margin: 10px auto;
+	width: 100%;
+	box-sizing: border-box;
+}
+.photo-slider img {
+	height: 180px;
+	width:auto;
+	width:auto;
+}
+
+.photo-slider p {
+	padding-left:10px;
+	background-color:lightgrey;
+	color:black;
+	margin-bottom:0px;
+}
