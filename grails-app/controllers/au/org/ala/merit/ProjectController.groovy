@@ -15,7 +15,7 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
     protected Map projectContent(project, user, programs) {
 
         project.sites?.each { site ->
-            siteService.addPhotoPointPhotosForSite(site, project.activities)
+            siteService.addPhotoPointPhotosForSite(site, project.activities, [project])
         }
 
         def meriPlanVisible = metadataService.isOptionalContent('MERI Plan', project.associatedProgram, project.associatedSubProgram)
