@@ -209,16 +209,26 @@
             viewModel.renderPOIs();
 
              $( '.photo-slider' ).mThumbnailScroller({theme:'hover-classic'});
-             $('.photo-slider .fancybox').fancybox(
-                {
-                    helpers : {
-                        title: {
-                            type: 'inside'
+             $('.photo-slider .fancybox').fancybox({
+                 helpers : {
+                    title: {
+                        type: 'inside'
+                    }
+                 },
+                 beforeLoad: function() {
+                    var el, id = $(this.element).data('caption');
+
+                    if (id) {
+                        el = $('#' + id);
+
+                        if (el.length) {
+                            this.title = el.html();
                         }
-                    },
-                    nextEffect:'fade',
-                    previousEffect:'fade'
-                });
+                    }
+                 },
+                 nextEffect:'fade',
+                 previousEffect:'fade'
+             });
         });
 
 </r:script>

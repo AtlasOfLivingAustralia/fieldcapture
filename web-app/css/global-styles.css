@@ -756,10 +756,7 @@ button#risks-cancel:hover {
 }
 
 .photo-slider li{ margin: 0 4px; }
-.photo-slider li a{
-	display: block;
-	border: 7px solid rgba(255,255,255,.1);
-}
+
 
 .photo-slider{
 	overflow: hidden;

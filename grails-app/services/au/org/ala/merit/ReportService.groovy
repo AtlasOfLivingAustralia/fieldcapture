@@ -229,6 +229,11 @@ class ReportService {
         result?.hits?.total ?: 0
     }
 
+    Map findReportForActivity(Map activity) {
+        List reports = getReportsForProject(activity.projectId)
+        findReportForDate(activity.plannedEndDate, reports)
+    }
+
     public Map<String, Number> filteredInvestment(List<String> filter, String searchTerm = null, String investmentType = null) {
 
         int BATCH_SIZE = 100

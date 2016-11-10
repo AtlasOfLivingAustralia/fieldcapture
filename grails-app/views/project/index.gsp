@@ -192,10 +192,10 @@
                 <h2>Points of interest on project sites</h2>
                 <g:each in="${project.sites}" var="site">
                     <g:if test="${site.poi}">
-                        <h4>${site.name}</h4>
+                        <h3>Site: ${site.name}</h3>
                         <g:each in="${site.poi}" var="poi">
                             <div class="row-fluid">
-                                <h4>${poi.name?.encodeAsHTML()}</h4>
+                                <h4>Photopoint: ${poi.name?.encodeAsHTML()}</h4>
                             <g:if test="${poi.description}">${poi.description}</g:if>
                             <g:if test="${poi.photos}"><g:render template="/site/sitePhotos" model="${[photos:poi.photos]}"></g:render></g:if> </h4>
 
@@ -855,16 +855,26 @@
                     });
                     sitesViewModel.sitesFiltered(visibleIndicies());
                     $( '.photo-slider' ).mThumbnailScroller({theme:'hover-classic'});
-                    $('.photo-slider .fancybox').fancybox(
-                        {
-                            helpers : {
-                                title: {
-                                    type: 'inside'
+                    $('.photo-slider .fancybox').fancybox({
+                        helpers : {
+                            title: {
+                                type: 'inside'
+                            }
+                        },
+                        beforeLoad: function() {
+                            var el, id = $(this.element).data('caption');
+
+                            if (id) {
+                                el = $('#' + id);
+
+                                if (el.length) {
+                                    this.title = el.html();
                                 }
-                            },
-                            nextEffect:'fade',
-                            previousEffect:'fade'
-                       });
+                            }
+                        },
+                        nextEffect:'fade',
+                        previousEffect:'fade'
+                    });
 
                 }
                 if (tab === '#plan' && !planTabInitialised) {
