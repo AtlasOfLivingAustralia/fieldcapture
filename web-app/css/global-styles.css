@@ -762,7 +762,8 @@ button#risks-cancel:hover {
 	overflow: hidden;
 	position: relative;
 	padding: 10px;
-	background: #444d58;
+	background: #f6f6f6;
+	border: 1px solid lightgrey;
 	margin: 10px auto;
 	width: 100%;
 	box-sizing: border-box;
