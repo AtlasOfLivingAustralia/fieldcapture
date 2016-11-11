@@ -128,6 +128,7 @@
 
                 <!-- ko foreach:stages -->
 
+                <div data-bind="visible:showEmptyStages || activities.length > 0">
                 <div class="stage-header">
 
                     <i data-bind="css:{'fa-plus-square-o':collapsed, 'fa-minus-square-o':!collapsed()}, click:toggleActivities" class="fa"></i> &nbsp; <b style="font-size: 20px;" data-bind="text:label"></b> - <span data-bind="text:datesLabel"></span>
@@ -224,6 +225,7 @@
                     </tbody>
 
                 </table>
+                </div>
                 <!-- /ko -->
 
 
@@ -728,7 +730,8 @@
             }
         };
 
-        var PlanStage = function (stage, activities, planViewModel, isCurrentStage, project,today, rejectionCategories) {
+        var PlanStage = function (stage, activities, planViewModel, isCurrentStage, project,today, rejectionCategories, showEmptyStages) {
+
             var stageLabel = stage.name;
 
             // Note that the two $ transforms used to extract activities are not combined because we
@@ -743,7 +746,7 @@
             this.isReportable = isStageReportable(project,stage);
             this.projectId = project.projectId;
             this.planViewModel = planViewModel;
-
+            this.showEmptyStages = showEmptyStages;
 
 
 
@@ -973,7 +976,7 @@
 
         function PlanViewModel(activities, reports, outputTargets, targetMetadata, project, programModel, today, config) {
             var self = this;
-
+            var showEmptyStages = project.associatedProgram != 'Green Army';
             this.userIsCaseManager = ko.observable(${user?.isCaseManager});
             this.planStatus = ko.observable(project.planStatus || 'not approved');
             this.planStatusTemplateName = ko.computed(function () {
@@ -1000,7 +1003,7 @@
 
                 // group activities by stage
                 $.each(reports, function (index, stageReport) {
-                    stages.push(new PlanStage(stageReport, activities, self, stageReport.name === self.currentProjectStage, project,today, config.rejectionCategories));
+                    stages.push(new PlanStage(stageReport, activities, self, stageReport.name === self.currentProjectStage, project,today, config.rejectionCategories, showEmptyStages));
                 });
 
                 return stages;
