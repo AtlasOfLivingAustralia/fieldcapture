@@ -93,3 +93,10 @@
 #filter-by-stage {
 	margin-bottom: 5px;
 }
+
+.stage-header {
+	background-color: #d9edf7;
+	border: 1px solid #ddd;
+	border-bottom: 1px solid grey;
+	padding:10px;
+}
