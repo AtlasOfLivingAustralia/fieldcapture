@@ -125,35 +125,38 @@
 
         <div class="tab-content" style="padding:0;border:none;overflow:visible">
             <div class="tab-pane active" id="tablePlan">
-                <table class="table table-condensed" id="activities">
+
+                <!-- ko foreach:stages -->
+
+                <div class="stage-header">
+
+                    <i data-bind="css:{'fa-plus-square-o':collapsed, 'fa-minus-square-o':!collapsed()}, click:toggleActivities" class="fa"></i> &nbsp; <b style="font-size: 20px;" data-bind="text:label"></b> - <span data-bind="text:datesLabel"></span>
+
+
+                    <div class="pull-right">
+                        <span data-bind="visible:isCurrentStage"></span>
+                        <span data-bind="visible:isCurrentStage" class="badge badge-info">Current stage</span>
+
+                        <span data-bind="template:stageStatusTemplateName"></span>
+                    </div>
+                </div>
+                <table class="table table-condensed" data-bind="visible:!collapsed()">
                     <thead>
-                    <tr data-bind="visible: stages.length > 0">
-                        <th style="width:15%;">Stage</th>
-                        <th style="width:68px;">Actions</th>
-                        <th style="min-width:64px">From</th>
-                        <th style="min-width:64px">To</th>
-                        <th style="width:25%;" id="description-column">Description<i class="fa fa-expand pull-right" data-bind="click:toggleDescriptions, css:{'fa-expand':!descriptionExpanded(), 'fa-compress':descriptionExpanded()}"></i></th>
-                        <th>Activity</th>
-                        <g:if test="${showSites}">
-                            <th>Site</th>
-                        </g:if>
-                        <th>Status</th>
+
+                    <tr>
+                        <th style="min-width:68px; width:5%;">Actions</th>
+                        <th style="min-width:90px; width:5%;">From</th>
+                        <th style="min-width:90px; width:5%">To</th>
+                        <th style="width:40%;" class="description-column">Description<i class="fa fa-expand pull-right" data-bind="click:$parent.toggleDescriptions, css:{'fa-expand':!$parent.descriptionExpanded(), 'fa-compress':$parent.descriptionExpanded()}"></i></th>
+                        <th style="width:25%;">Activity</th>
+                        <th style="width:15%">Site</th>
+                        <th style="width:5%; min-width:90px;">Status</th>
                     </tr>
                     </thead>
-                    <!-- ko foreach:stages -->
+
                     <tbody data-bind="foreach:activities, css:{activeStage:isCurrentStage, inactiveStage: !isCurrentStage}" id="activityList">
                     <tr>
-                        <!-- ko with:isFirst -->
-                        <td data-bind="attr:{rowspan:$parents[1].activities.length}" class="stage-display">
-                            <span data-bind="text:$parents[1].label"></span>
-                            <br/>
-                            <span data-bind="text:$parents[1].datesLabel"></span>
-                            <br data-bind="visible:$parents[1].isCurrentStage">
-                            <span data-bind="visible:$parents[1].isCurrentStage" class="badge badge-info">Current stage</span>
 
-                            <span data-bind="template:$parents[1].stageStatusTemplateName"/>
-                        </td>
-                        <!-- /ko -->
                         <td>
                             <button type="button" class="btn btn-container" data-bind="click:$parent.editActivity, enable:$parent.canEditActivity()||$parent.canEditOutputData()"><i class="icon-edit" title="Edit Activity"></i></button>
                             <button type="button" class="btn btn-container" data-bind="click:$parent.viewActivity"><i class="icon-eye-open" title="View Activity"></i></button>
@@ -213,8 +216,18 @@
                         </td>
                     </tr>
                     </tbody>
-                    <!-- /ko -->
+
                 </table>
+                <!-- /ko -->
+
+
+
+
+
+
+
+
+
             </div>
             <div class="tab-pane" id="ganttPlan" style="overflow:hidden;">
                 <div id="gantt-container"></div>
@@ -351,15 +364,15 @@
 </script>
 
 <script id="stageNotApprovedTmpl" type="text/html">
-<br/><span class="badge badge-warning">Report not submitted</span>
+<span class="badge badge-warning">Report not submitted</span>
 <!-- Disable button for editor with help text -->
 <g:if test="${user?.isAdmin}">
-    <br/>
-    <button type="button" class="btn btn-success btn-small" style="margin-top:4px;"
+
+    <button type="button" class="btn btn-success btn-small"
             data-bind="
-            disable:!$parents[1].readyForApproval() || !$parents[2].isApproved() || !$parents[1].riskAndDetailsActive(),
-            click:$parents[1].submitReport,
-            attr:{title:($parents[1].readyForApproval() && $parents[1].riskAndDetailsActive()) ?'Submit this stage for implementation approval.':'* Report cannot be submitted while activities are still open. \n* Project details and risk table information are mandatory for report submission.'}"
+            disable:!readyForApproval() || isApproved() || !riskAndDetailsActive(),
+            click:submitReport,
+            attr:{title:(readyForApproval() && riskAndDetailsActive()) ?'Submit this stage for implementation approval.':'* Report cannot be submitted while activities are still open. \n* Project details and risk table information are mandatory for report submission.'}"
     >Submit report</button>
 </g:if>
 <g:else>
@@ -372,42 +385,39 @@
 </script>
 
 <script id="stageApprovedTmpl" type="text/html">
-<br/>
+
 <span class="badge badge-success">Report Approved</span>
 
 <g:if test="${fc.userInRole(role: grailsApplication.config.security.cas.adminRole) || fc.userInRole(role: grailsApplication.config.security.cas.alaAdminRole)}">
-    <br/>
-    <button type="button" data-bind="click:$parents[1].rejectStage" class="btn btn-danger"><i class="icon-remove icon-white"></i> Withdraw approval</button>
+    <button type="button" data-bind="click:rejectStage" class="btn btn-danger"><i class="icon-remove icon-white"></i> Withdraw approval</button>
 </g:if>
 
 </script>
 
 <script id="stageSubmittedTmpl" type="text/html">
-<br/>
 <span class="badge badge-info" style="font-size:13px;">Report submitted</span>
 <g:if test="${user?.isCaseManager}">
-    <br/>
+
     <span>Grant manager actions: </span>
-    <br/>
     <span class="btn-group">
-        <button type="button" data-bind="click:$parents[1].approveStage" class="btn btn-success"><i class="icon-ok icon-white"></i> Approve</button>
-        <button type="button" data-bind="click:$parents[1].rejectStage" class="btn btn-danger"><i class="icon-remove icon-white"></i> Reject</button>
+        <button type="button" data-bind="click:approveStage" class="btn btn-success"><i class="icon-ok icon-white"></i> Approve</button>
+        <button type="button" data-bind="click:rejectStage" class="btn btn-danger"><i class="icon-remove icon-white"></i> Reject</button>
     </span>
 </g:if>
 
 </script>
 
 <script id="stageSubmittedVariationTmpl" type="text/html">
-<br/>
+
 <span class="badge badge-info" style="font-size:13px;">Report submitted</span>
 <g:if test="${user?.isCaseManager}">
-    <br/>
+
     <span>Grant manager actions: </span>
-    <br/>
+
     <span class="btn-group">
-        <button type="button" data-bind="click:$parents[1].approveStage" class="btn btn-success"><i class="icon-ok icon-white"></i> Approve</button>
-        <button type="button" data-bind="click:$parents[1].rejectStage" class="btn btn-danger"><i class="icon-remove icon-white"></i> Reject</button>
-        <button type="button" data-bind="click:$parents[1].variationModal" class="btn btn-warning"><i class="icon-remove icon-white"></i> Variation</button>
+        <button type="button" data-bind="click:approveStage" class="btn btn-success"><i class="icon-ok icon-white"></i> Approve</button>
+        <button type="button" data-bind="click:rejectStage" class="btn btn-danger"><i class="icon-remove icon-white"></i> Reject</button>
+        <button type="button" data-bind="click:variationModal" class="btn btn-warning"><i class="icon-remove icon-white"></i> Variation</button>
     </span>
 </g:if>
 
@@ -736,6 +746,8 @@
             this.planViewModel = planViewModel;
 
 
+
+
             // sort activities by assigned sequence or date created (as a proxy for sequence).
             // CG - still needs to be addressed properly.
             activitiesInThisStage.sort(function (a,b) {
@@ -947,6 +959,10 @@
             this.printActivity = function(activity) {
                 open(fcConfig.activityPrintUrl + "/" + activity.activityId, "fieldDataPrintWindow");
             };
+            this.collapsed = ko.observable(self.isApproved());
+            this.toggleActivities = function() {
+                self.collapsed(!self.collapsed());
+            }
         };
 
         function PlanViewModel(activities, reports, outputTargets, targetMetadata, project, programModel, today, config) {
@@ -1482,6 +1498,8 @@
         drawGanttChart(planViewModel.getGanttData());
 
         $('#outputTargetsContainer').validationEngine('attach', {scroll:false});
+
+       // $('#activities').DataTable({fixedHeader:{header:true}});
 
     });
 
