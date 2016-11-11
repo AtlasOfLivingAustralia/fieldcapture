@@ -85,6 +85,10 @@
               width: 100%;
               height: 300px;
             }
+
+            #sites-table tbody tr:hover {
+                background-color: #d9edf7;
+            }
         </style>
 
     <r:require modules="gmap3,mapWithFeatures,knockout,datepicker,amplify,imageViewer, jqueryValidationEngine, merit_projects, attachDocuments, wmd, jquery_bootstrap_datatable"/>
@@ -845,15 +849,26 @@
                         return visibleIndicies;
                     };
                     $('#sites-table').dataTable().on('draw.dt', function(e) {
-
                         sitesViewModel.sitesFiltered(visibleIndicies());
                     });
+                    $('#sites-table tbody').on( 'mouseenter', 'td', function () {
+                            var table = $('#sites-table').DataTable();
+                            var rowIdx = table.cell(this).index().row;
+                            sitesViewModel.highlightSite(rowIdx);
+
+                        } ).on('mouseleave', 'td', function() {
+                            var table = $('#sites-table').DataTable();
+                            var rowIdx = table.cell(this).index().row;
+                            sitesViewModel.unHighlightSite(rowIdx);
+                        });
                     $('#select-all-sites').change(function() {
                         var checkbox = this;
                         // This lets knockout update the bindings correctly.
                         $('#sites-table tbody tr :checkbox').trigger('click');
                     });
                     sitesViewModel.sitesFiltered(visibleIndicies());
+
+
                     $( '.photo-slider' ).mThumbnailScroller({theme:'hover-classic'});
                     $('.photo-slider .fancybox').fancybox({
                         helpers : {
