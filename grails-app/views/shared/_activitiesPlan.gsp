@@ -140,6 +140,7 @@
                         <span data-bind="template:stageStatusTemplateName"></span>
                     </div>
                 </div>
+
                 <table class="table table-condensed" data-bind="visible:!collapsed()">
                     <thead>
 
@@ -154,7 +155,8 @@
                     </tr>
                     </thead>
 
-                    <tbody data-bind="foreach:activities, css:{activeStage:isCurrentStage, inactiveStage: !isCurrentStage}" id="activityList">
+                    <tbody data-bind="css:{activeStage:isCurrentStage, inactiveStage: !isCurrentStage}" id="activityList">
+                    <!-- ko foreach:activities -->
                     <tr>
 
                         <td>
@@ -215,17 +217,14 @@
 
                         </td>
                     </tr>
+                    <!-- /ko -->
+                    <tr data-bind="visible:activities.length == 0">
+                        <td colspan="7">No activities defined for this stage</td>
+                    </tr>
                     </tbody>
 
                 </table>
                 <!-- /ko -->
-
-
-
-
-
-
-
 
 
             </div>
@@ -959,9 +958,16 @@
             this.printActivity = function(activity) {
                 open(fcConfig.activityPrintUrl + "/" + activity.activityId, "fieldDataPrintWindow");
             };
-            this.collapsed = ko.observable(self.isApproved());
+            var key = project.projectId+'-'+stageLabel+'-collapsed';
+            var collapsed = amplify.store(key);
+            if (collapsed == undefined || collapsed == null) {
+                collasped = self.isApproved();
+            }
+
+            this.collapsed = ko.observable(collapsed);
             this.toggleActivities = function() {
                 self.collapsed(!self.collapsed());
+                amplify.store(key, self.collapsed());
             }
         };
 
