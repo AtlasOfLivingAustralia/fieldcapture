@@ -527,4 +527,23 @@ class ActivityController {
 
         return null
     }
+
+
+
+    def activitiesWithStage(String id) {
+        List reports = reportService.getReportsForProject(id)
+        List activities = activityService.activitiesForProject(id)
+        reports.sort {it.toDate}
+        reports.eachWithIndex{ report, i ->
+            report.order = i
+        }
+        activities.each { activity ->
+            Map report = reportService.findReportForDate(activity.plannedEndDate, reports)
+            activity.stage = report?report.name:''
+            activity.stageOrder = report?report.order: 0
+
+        }
+        render activities as JSON
+    }
+
 }
