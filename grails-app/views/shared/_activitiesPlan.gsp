@@ -1,4 +1,4 @@
-<r:require modules="datepicker, jqueryGantt, jqueryValidationEngine, attachDocuments"/>
+<r:require modules="datepicker, jqueryGantt, jqueryValidationEngine, attachDocuments, activity"/>
 <r:script>
     var PROJECT_STATE = {approved:'approved',submitted:'submitted',planned:'not approved'};
     var ACTIVITY_STATE = {planned:'planned',started:'started',finished:'finished',deferred:'deferred',cancelled:'cancelled'};
@@ -748,40 +748,7 @@
             this.planViewModel = planViewModel;
             this.showEmptyStages = showEmptyStages;
 
-
-
-            // sort activities by assigned sequence or date created (as a proxy for sequence).
-            // CG - still needs to be addressed properly.
-            activitiesInThisStage.sort(function (a,b) {
-                if (a.sequence !== undefined && b.sequence !== undefined) {
-                    return a.sequence - b.sequence;
-                }
-
-                if (a.plannedStartDate != b.plannedStartDate) {
-                     return a.plannedStartDate < b.plannedStartDate ? -1 : (a.plannedStartDate > b.plannedStartDate ? 1 : 0);
-                }
-                var numericActivity = /[Aa]ctivity (\d+)(\w)?.*/;
-                var first = numericActivity.exec(a.description);
-                var second = numericActivity.exec(b.description);
-                if (first && second) {
-                    var firstNum = Number(first[1]);
-                    var secondNum = Number(second[1]);
-                    if (firstNum == secondNum) {
-                        // This is to catch activities of the form Activity 1a, Activity 1b etc.
-                        if (first.length == 3 && second.length == 3) {
-                            return first[2] > second[2] ? 1 : (first[2] < second[2] ? -1 : 0);
-                        }
-                    }
-                    return  firstNum - secondNum;
-                }
-                else {
-                    if (a.dateCreated !== undefined && b.dateCreated !== undefined && a.dateCreated != b.dateCreated) {
-                        return a.dateCreated < b.dateCreated ? 1 : -1;
-                    }
-                    return a.description > b.description ? 1 : (a.description < b.description ? -1 : 0);
-                }
-
-            });
+            sortActivities(activitiesInThisStage);
             this.activities = $.map(activitiesInThisStage, function (act, index) {
                 act.projectStage = stageLabel;
                 return new PlannedActivity(act, index === 0, project);
