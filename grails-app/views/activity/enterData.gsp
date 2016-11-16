@@ -292,6 +292,8 @@
             <input data-bind="checked:transients.markedAsFinished" type="checkbox"> Mark this activity as finished.
         </label>
     </div>
+    <div id="saved-nav-message-holder"></div>
+    <g:render template="navigation"></g:render>
 </g:if>
 
 </div>
@@ -464,7 +466,6 @@
 
             var toSave = JSON.stringify(jsData);
             amplify.store('activity-${activity.activityId}', toSave);
-            var unblock = true;
             $.ajax({
                 url: "${createLink(action: 'ajaxUpdate', id: activity.activityId)}",
                 type: 'POST',
@@ -485,13 +486,6 @@
                         self.cancelAutosave();
                         self.dirtyFlag.reset();
                         blockUIWithMessage("Activity data saved.")
-
-                        if (valid) {
-                            unblock = false; // We will be transitioning off this page.
-                            self.saved();
-                        }
-
-
                     }
                     amplify.store('activity-${activity.activityId}', null);
                 },
@@ -509,23 +503,26 @@
 
                 },
                 complete: function () {
-                    if (unblock) {
-                        $.unblockUI();
-                    }
+                    $.unblockUI();
+
                     if (!valid) {
                         var message = 'Your changes have been saved and you can remain in this activity form, or you can exit this page without losing data. Please note that you cannot mark this activitiy as finished until all mandatory fields have been completed though.';
                         bootbox.alert(message, function() {
                             self.validate();
                         });
                     }
+                    else {
+                        showAlert("Your data has been saved.  Please select one of the the navigation options below to continue.", "alert-info", 'saved-nav-message-holder');
+                        $("html, body").animate({
+							scrollTop: $('#saved-nav-message-holder').offset().top + 'px'
+						});
+                    }
                 }
             });
 
 
         };
-        this.saved = function () {
-            document.location.href = returnTo;
-        };
+
         autoSaveModel(self, null, {preventNavigationIfDirty:true});
     };
 
@@ -734,6 +731,12 @@
     </g:if>
 
         master.register('activityModel', viewModel.modelForSaving, viewModel.dirtyFlag.isDirty, viewModel.dirtyFlag.reset);
+
+        var url = '${g.createLink(controller: 'activity', action:'activitiesWithStage', id:activity.projectId)}';
+        var activityUrl = '${g.createLink(controller:'activity', action:'enterData')}';
+        var activityId = '${activity.activityId}';
+        var projectId = '${activity.projectId}';
+        ko.applyBindings(new ActivityNavigationViewModel(projectId, activityId, {navigationUrl:url, activityUrl:activityUrl, returnTo:returnTo}), document.getElementById('activity-nav'));
     });
 </r:script>
 </body>
