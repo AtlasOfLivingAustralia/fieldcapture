@@ -8,7 +8,7 @@
         <!-- ko if:!hasPrevious() -->
         <button class="btn pull-left" disabled="disabled"><i class="fa fa-arrow-left fa-2x text-center"></i></button>
         <!-- /ko -->
-        <button type="button" id="cancel" class="btn" style="position:absolute; left:45%;"><i class="fa fa-level-up fa-2x text-center" style="vertical-align: middle;"></i> &nbsp; Return to project</button>
+        <a class="btn" data-bind="attr:{href:returnUrl}" style="position:absolute; left:45%;"><i class="fa fa-level-up fa-2x text-center" style="vertical-align: middle;"></i> &nbsp; Return to project</a>
         <!-- ko if:hasNext() -->
         <a class="btn pull-right" data-bind="attr:{href:nextActivityUrl()},  popover:{title:nextActivity().type, placement:'left', content:nextActivity().description, autoShow:true}"><span data-bind="text:nextActivity().type" style="vertical-align: middle;"></span> &nbsp; <i class="fa fa-arrow-right fa-2x text-center" style="vertical-align: middle;"></i></a>
         <!-- /ko -->
