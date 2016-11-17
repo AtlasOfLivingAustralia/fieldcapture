@@ -516,6 +516,13 @@
                         $("html, body").animate({
 							scrollTop: $('#saved-nav-message-holder').offset().top + 'px'
 						});
+						var $nav = $('#activity-nav');
+
+						var oldBorder = $('#activity-nav').css('border');
+						$nav.css('border', '2px solid black');
+						setTimeout(function() {
+						    $nav.css('border', oldBorder);
+						}, 5000);
                     }
                 }
             });
