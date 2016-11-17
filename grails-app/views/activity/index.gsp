@@ -107,8 +107,14 @@
 
         </div>
     </g:if>
-    <g:render template="navigation"></g:render>
-
+    <g:if test="${showNav}">
+        <g:render template="navigation"></g:render>
+    </g:if>
+    <g:else>
+        <div class="form-actions">
+            <button type="button" id="cancel" class="btn">return</button>
+        </div>
+    </g:else>
 
 </div>
 

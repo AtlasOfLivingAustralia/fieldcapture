@@ -66,7 +66,11 @@ class ActivityController {
                 redirect(controller:'project', action:'index', id: activity.projectId)
             }
 
-            activityAndOutputModel(activity, activity.projectId)
+            Map model = activityAndOutputModel(activity, activity.projectId)
+            if (params.returnTo && params.returnTo.indexOf('project') > 0) {
+                model.showNav = true
+            }
+            model
         } else {
             forward(action: 'list', model: [error: 'no such id'])
         }
