@@ -109,6 +109,13 @@
     </g:if>
     <g:if test="${showNav}">
         <g:render template="navigation"></g:render>
+        <r:script>
+        var url = '${g.createLink(controller: 'activity', action:'activitiesWithStage', id:activity.projectId)}';
+        var activityUrl = '${g.createLink(controller:'activity', action:'index')}';
+        var activityId = '${activity.activityId}';
+        var projectId = '${activity.projectId}';
+        ko.applyBindings(new ActivityNavigationViewModel(projectId, activityId, {navigationUrl:url, activityUrl:activityUrl, returnTo:returnTo}), document.getElementById('activity-nav'));
+        </r:script>
     </g:if>
     <g:else>
         <div class="form-actions">
@@ -155,12 +162,6 @@
                 mapFeatures
             );
         }
-
-        var url = '${g.createLink(controller: 'activity', action:'activitiesWithStage', id:activity.projectId)}';
-        var activityUrl = '${g.createLink(controller:'activity', action:'index')}';
-        var activityId = '${activity.activityId}';
-        var projectId = '${activity.projectId}';
-        ko.applyBindings(new ActivityNavigationViewModel(projectId, activityId, {navigationUrl:url, activityUrl:activityUrl, returnTo:returnTo}), document.getElementById('activity-nav'));
     });
 </r:script>
 </body>
