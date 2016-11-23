@@ -66,7 +66,11 @@ class ActivityController {
                 redirect(controller:'project', action:'index', id: activity.projectId)
             }
 
-            activityAndOutputModel(activity, activity.projectId)
+            Map model = activityAndOutputModel(activity, activity.projectId)
+            if (params.returnTo && params.returnTo.indexOf('project') > 0) {
+                model.showNav = true
+            }
+            model
         } else {
             forward(action: 'list', model: [error: 'no such id'])
         }
@@ -527,4 +531,23 @@ class ActivityController {
 
         return null
     }
+
+
+
+    def activitiesWithStage(String id) {
+        List reports = reportService.getReportsForProject(id)
+        List activities = activityService.activitiesForProject(id)
+        reports.sort {it.toDate}
+        reports.eachWithIndex{ report, i ->
+            report.order = i
+        }
+        activities.each { activity ->
+            Map report = reportService.findReportForDate(activity.plannedEndDate, reports)
+            activity.stage = report?report.name:''
+            activity.stageOrder = report?report.order: 0
+
+        }
+        render activities as JSON
+    }
+
 }

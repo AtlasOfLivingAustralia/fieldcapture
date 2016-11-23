@@ -85,6 +85,10 @@
               width: 100%;
               height: 300px;
             }
+
+            #sites-table tbody tr:hover {
+                background-color: #d9edf7;
+            }
         </style>
 
     <r:require modules="gmap3,mapWithFeatures,knockout,datepicker,amplify,imageViewer, jqueryValidationEngine, merit_projects, attachDocuments, wmd, jquery_bootstrap_datatable"/>
@@ -189,6 +193,20 @@
                 <!-- ko stopBinding:true -->
                 <g:render plugin="fieldcapture-plugin" template="/site/sitesList" model="${[editable:user?.isEditor]}"/>
                 <!-- /ko -->
+                <h2>Points of interest on project sites</h2>
+                <g:each in="${project.sites}" var="site">
+                    <g:if test="${site.poi}">
+                        <h3>Site: ${site.name}</h3>
+                        <g:each in="${site.poi}" var="poi">
+                            <div class="row-fluid">
+                                <h4>Photopoint: ${poi.name?.encodeAsHTML()}</h4>
+                            <g:if test="${poi.description}">${poi.description}</g:if>
+                            <g:if test="${poi.photos}"><g:render template="/site/sitePhotos" model="${[photos:poi.photos]}"></g:render></g:if> </h4>
+
+                            </div>
+                        </g:each>
+                    </g:if>
+                </g:each>
 
             </div>
 
@@ -831,15 +849,47 @@
                         return visibleIndicies;
                     };
                     $('#sites-table').dataTable().on('draw.dt', function(e) {
-
                         sitesViewModel.sitesFiltered(visibleIndicies());
                     });
+                    $('#sites-table tbody').on( 'mouseenter', 'td', function () {
+                            var table = $('#sites-table').DataTable();
+                            var rowIdx = table.cell(this).index().row;
+                            sitesViewModel.highlightSite(rowIdx);
+
+                        } ).on('mouseleave', 'td', function() {
+                            var table = $('#sites-table').DataTable();
+                            var rowIdx = table.cell(this).index().row;
+                            sitesViewModel.unHighlightSite(rowIdx);
+                        });
                     $('#select-all-sites').change(function() {
                         var checkbox = this;
                         // This lets knockout update the bindings correctly.
                         $('#sites-table tbody tr :checkbox').trigger('click');
                     });
                     sitesViewModel.sitesFiltered(visibleIndicies());
+
+
+                    $( '.photo-slider' ).mThumbnailScroller({theme:'hover-classic'});
+                    $('.photo-slider .fancybox').fancybox({
+                        helpers : {
+                            title: {
+                                type: 'inside'
+                            }
+                        },
+                        beforeLoad: function() {
+                            var el, id = $(this.element).data('caption');
+
+                            if (id) {
+                                el = $('#' + id);
+
+                                if (el.length) {
+                                    this.title = el.html();
+                                }
+                            }
+                        },
+                        nextEffect:'fade',
+                        previousEffect:'fade'
+                    });
 
                 }
                 if (tab === '#plan' && !planTabInitialised) {

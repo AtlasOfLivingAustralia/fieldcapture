@@ -14,6 +14,10 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
     /** Overrides the projectContent method in the fieldcapture controller to include the MERI plan and risks and threats content */
     protected Map projectContent(project, user, programs) {
 
+        project.sites?.each { site ->
+            siteService.addPhotoPointPhotosForSite(site, project.activities, [project])
+        }
+
         def meriPlanVisible = metadataService.isOptionalContent('MERI Plan', project.associatedProgram, project.associatedSubProgram)
         def risksAndThreatsVisible = metadataService.isOptionalContent('Risks and Threats', project.associatedProgram, project.associatedSubProgram)
         def canViewRisks = risksAndThreatsVisible && (user?.hasViewAccess || user?.isEditor)

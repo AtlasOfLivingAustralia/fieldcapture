@@ -1,9 +1,14 @@
-<r:require modules="datepicker, jqueryGantt, jqueryValidationEngine, attachDocuments"/>
+<r:require modules="datepicker, jqueryGantt, jqueryValidationEngine, attachDocuments, activity"/>
 <r:script>
     var PROJECT_STATE = {approved:'approved',submitted:'submitted',planned:'not approved'};
     var ACTIVITY_STATE = {planned:'planned',started:'started',finished:'finished',deferred:'deferred',cancelled:'cancelled'};
 
 </r:script>
+<style type="text/css">
+    a.icon-link {
+        color: black;
+    }
+</style>
 <!-- This section is bound to a secondary KO viewModel. The following line prevents binding
          to the main viewModel. -->
 <!-- ko stopBinding: true -->
@@ -125,51 +130,62 @@
 
         <div class="tab-content" style="padding:0;border:none;overflow:visible">
             <div class="tab-pane active" id="tablePlan">
-                <table class="table table-condensed" id="activities">
+
+                <!-- ko foreach:stages -->
+
+                <div data-bind="visible:showEmptyStages || activities.length > 0">
+                <div class="stage-header">
+
+                    <i data-bind="css:{'fa-plus-square-o':collapsed, 'fa-minus-square-o':!collapsed()}, click:toggleActivities" class="fa"></i> &nbsp; <b style="font-size: 20px;" data-bind="text:label"></b> - <span data-bind="text:datesLabel"></span>
+
+
+                    <div class="pull-right">
+                        <span data-bind="visible:isCurrentStage"></span>
+                        <span data-bind="visible:isCurrentStage" class="badge badge-info">Current stage</span>
+
+                        <span data-bind="template:stageStatusTemplateName"></span>
+                    </div>
+                </div>
+
+                <table class="table table-condensed" data-bind="visible:!collapsed()">
                     <thead>
-                    <tr data-bind="visible: stages.length > 0">
-                        <th style="width:15%;">Stage</th>
-                        <th style="width:68px;">Actions</th>
-                        <th style="min-width:64px">From</th>
-                        <th style="min-width:64px">To</th>
-                        <th style="width:25%;" id="description-column">Description<i class="fa fa-expand pull-right" data-bind="click:toggleDescriptions, css:{'fa-expand':!descriptionExpanded(), 'fa-compress':descriptionExpanded()}"></i></th>
-                        <th>Activity</th>
-                        <g:if test="${showSites}">
-                            <th>Site</th>
-                        </g:if>
-                        <th>Status</th>
+
+                    <tr>
+                        <th style="min-width:68px; width:5%;">Actions</th>
+                        <th style="min-width:90px; width:5%;">From</th>
+                        <th style="min-width:90px; width:5%">To</th>
+                        <th style="width:40%;" class="description-column">Description<i class="fa fa-expand pull-right" data-bind="click:$parent.toggleDescriptions, css:{'fa-expand':!$parent.descriptionExpanded(), 'fa-compress':$parent.descriptionExpanded()}"></i></th>
+                        <th style="width:25%;">Activity</th>
+                        <th style="width:15%">Site</th>
+                        <th style="width:5%; min-width:90px;">Status</th>
                     </tr>
                     </thead>
-                    <!-- ko foreach:stages -->
-                    <tbody data-bind="foreach:activities, css:{activeStage:isCurrentStage, inactiveStage: !isCurrentStage}" id="activityList">
-                    <tr>
-                        <!-- ko with:isFirst -->
-                        <td data-bind="attr:{rowspan:$parents[1].activities.length}" class="stage-display">
-                            <span data-bind="text:$parents[1].label"></span>
-                            <br/>
-                            <span data-bind="text:$parents[1].datesLabel"></span>
-                            <br data-bind="visible:$parents[1].isCurrentStage">
-                            <span data-bind="visible:$parents[1].isCurrentStage" class="badge badge-info">Current stage</span>
 
-                            <span data-bind="template:$parents[1].stageStatusTemplateName"/>
-                        </td>
-                        <!-- /ko -->
+                    <tbody data-bind="css:{activeStage:isCurrentStage, inactiveStage: !isCurrentStage}" id="activityList">
+                    <!-- ko foreach:activities -->
+                    <tr>
+
                         <td>
-                            <button type="button" class="btn btn-container" data-bind="click:$parent.editActivity, enable:$parent.canEditActivity()||$parent.canEditOutputData()"><i class="icon-edit" title="Edit Activity"></i></button>
-                            <button type="button" class="btn btn-container" data-bind="click:$parent.viewActivity"><i class="icon-eye-open" title="View Activity"></i></button>
-                            <button type="button" class="btn btn-container" data-bind="click:$parent.printActivity, enable:$parent.canPrintActivity"><i class="icon-print" title="Print activity"></i></button>
-                            <button type="button" class="btn btn-container" data-bind="click:$root.deleteActivity, enable:$parent.canDeleteActivity"><i class="icon-remove" title="Delete activity"></i></button>
+                            <!-- ko if:$parent.canEditActivity()||$parent.canEditOutputData() -->
+                            <a class="icon-link" data-bind="attr:{href:editActivityUrl()}"><i class="fa fa-edit" title="Edit Activity"></i></a>
+                            <!-- /ko -->
+                            <!-- ko if:!$parent.canEditActivity() && !$parent.canEditOutputData() -->
+                            <button class="btn btn-container" disabled="disabled"><i class="fa fa-edit" title="This activity is not editable"></i></button>
+                            <!-- /ko -->
+                            <a class="icon-link" data-bind="attr:{href:viewActivityUrl()}"><i class="fa fa-eye" title="View Activity"></i></a>
+                            <a class="icon-link" data-bind="attr:{href:printActivityUrl()}" target="activity-print"><i class="fa fa-print" title="Open a blank printable version activity"></i></a>
+                            <button type="button" class="btn btn-container" data-bind="click:$root.deleteActivity, enable:$parent.canDeleteActivity"><i class="fa fa-remove" title="Delete activity"></i></button>
                         </td>
                         <td><span data-bind="text:plannedStartDate.formattedDate"></span></td>
                         <td><span data-bind="text:plannedEndDate.formattedDate"></span></td>
                         <td>
-                            <span class="truncate" data-bind="text:description,click:$parent.editActivity, css:{clickable:true}"></span>
+                            <span class="truncate" data-bind="text:description"></span>
                         </td>
                         <td>
-                            <span data-bind="text:type,click:$parent.editActivity, css:{clickable:true}"></span>
+                            <a data-bind="attr:{href:editActivityUrl()}"><span data-bind="text:type"></span></a>
                         </td>
                         <g:if test="${showSites}">
-                            <td><a class="clickable" data-bind="text:siteName,click:$parents[1].openSite"></a></td>
+                            <td><a class="clickable" data-bind="text:siteName,attr:{href:siteUrl()}"></a></td>
                         </g:if>
                         <td>
                             <span data-bind="template:$parent.canUpdateStatus() ? 'updateStatusTmpl' : 'viewStatusTmpl'"></span>
@@ -212,9 +228,17 @@
 
                         </td>
                     </tr>
-                    </tbody>
                     <!-- /ko -->
+                    <tr data-bind="visible:activities.length == 0">
+                        <td colspan="7">No activities defined for this stage</td>
+                    </tr>
+                    </tbody>
+
                 </table>
+                </div>
+                <!-- /ko -->
+
+
             </div>
             <div class="tab-pane" id="ganttPlan" style="overflow:hidden;">
                 <div id="gantt-container"></div>
@@ -351,15 +375,15 @@
 </script>
 
 <script id="stageNotApprovedTmpl" type="text/html">
-<br/><span class="badge badge-warning">Report not submitted</span>
+<span class="badge badge-warning">Report not submitted</span>
 <!-- Disable button for editor with help text -->
 <g:if test="${user?.isAdmin}">
-    <br/>
-    <button type="button" class="btn btn-success btn-small" style="margin-top:4px;"
+
+    <button type="button" class="btn btn-success btn-small"
             data-bind="
-            disable:!$parents[1].readyForApproval() || !$parents[2].isApproved() || !$parents[1].riskAndDetailsActive(),
-            click:$parents[1].submitReport,
-            attr:{title:($parents[1].readyForApproval() && $parents[1].riskAndDetailsActive()) ?'Submit this stage for implementation approval.':'* Report cannot be submitted while activities are still open. \n* Project details and risk table information are mandatory for report submission.'}"
+            disable:!readyForApproval() || isApproved() || !riskAndDetailsActive(),
+            click:submitReport,
+            attr:{title:(readyForApproval() && riskAndDetailsActive()) ?'Submit this stage for implementation approval.':'* Report cannot be submitted while activities are still open. \n* Project details and risk table information are mandatory for report submission.'}"
     >Submit report</button>
 </g:if>
 <g:else>
@@ -372,42 +396,39 @@
 </script>
 
 <script id="stageApprovedTmpl" type="text/html">
-<br/>
+
 <span class="badge badge-success">Report Approved</span>
 
 <g:if test="${fc.userInRole(role: grailsApplication.config.security.cas.adminRole) || fc.userInRole(role: grailsApplication.config.security.cas.alaAdminRole)}">
-    <br/>
-    <button type="button" data-bind="click:$parents[1].rejectStage" class="btn btn-danger"><i class="icon-remove icon-white"></i> Withdraw approval</button>
+    <button type="button" data-bind="click:rejectStage" class="btn btn-danger"><i class="icon-remove icon-white"></i> Withdraw approval</button>
 </g:if>
 
 </script>
 
 <script id="stageSubmittedTmpl" type="text/html">
-<br/>
 <span class="badge badge-info" style="font-size:13px;">Report submitted</span>
 <g:if test="${user?.isCaseManager}">
-    <br/>
+
     <span>Grant manager actions: </span>
-    <br/>
     <span class="btn-group">
-        <button type="button" data-bind="click:$parents[1].approveStage" class="btn btn-success"><i class="icon-ok icon-white"></i> Approve</button>
-        <button type="button" data-bind="click:$parents[1].rejectStage" class="btn btn-danger"><i class="icon-remove icon-white"></i> Reject</button>
+        <button type="button" data-bind="click:approveStage" class="btn btn-success"><i class="icon-ok icon-white"></i> Approve</button>
+        <button type="button" data-bind="click:rejectStage" class="btn btn-danger"><i class="icon-remove icon-white"></i> Reject</button>
     </span>
 </g:if>
 
 </script>
 
 <script id="stageSubmittedVariationTmpl" type="text/html">
-<br/>
+
 <span class="badge badge-info" style="font-size:13px;">Report submitted</span>
 <g:if test="${user?.isCaseManager}">
-    <br/>
+
     <span>Grant manager actions: </span>
-    <br/>
+
     <span class="btn-group">
-        <button type="button" data-bind="click:$parents[1].approveStage" class="btn btn-success"><i class="icon-ok icon-white"></i> Approve</button>
-        <button type="button" data-bind="click:$parents[1].rejectStage" class="btn btn-danger"><i class="icon-remove icon-white"></i> Reject</button>
-        <button type="button" data-bind="click:$parents[1].variationModal" class="btn btn-warning"><i class="icon-remove icon-white"></i> Variation</button>
+        <button type="button" data-bind="click:approveStage" class="btn btn-success"><i class="icon-ok icon-white"></i> Approve</button>
+        <button type="button" data-bind="click:rejectStage" class="btn btn-danger"><i class="icon-remove icon-white"></i> Reject</button>
+        <button type="button" data-bind="click:variationModal" class="btn btn-warning"><i class="icon-remove icon-white"></i> Variation</button>
     </span>
 </g:if>
 
@@ -599,7 +620,7 @@
 
     $(window).load(function () {
 
-        var PlannedActivity = function (act, isFirst, project) {
+        var PlannedActivity = function (act, isFirst, project, stage) {
             var self = this;
             this.activityId = act.activityId;
             this.isFirst = isFirst ? this : undefined;
@@ -716,10 +737,34 @@
             };
             this.isSubmitted = function() {
                 return this.publicationStatus == 'pendingApproval';
-            }
+            };
+
+            this.editActivityUrl = function () {
+                var url;
+                if (stage.isReadOnly() || (self.isSubmitted() || self.isApproved())) {
+                    return self.viewActivityUrl();
+                } else if (stage.canEditOutputData()) {
+                    url = fcConfig.activityEnterDataUrl + "/" + self.activityId + "?returnTo=" + encodeURIComponent(here);
+                } else if (stage.canEditActivity()) {
+                    url = fcConfig.activityEditUrl + "/" + self.activityId + "?returnTo=" + encodeURIComponent(here);
+                }
+                return url;
+            };
+            this.viewActivityUrl = function() {
+                return fcConfig.activityViewUrl + "/" + self.activityId + "?returnTo=" + encodeURIComponent(here);
+            };
+            this.printActivityUrl = function() {
+                return fcConfig.activityPrintUrl + "/" + self.activityId;
+            };
+            this.siteUrl = function () {
+                if (act.siteId !== '') {
+                    return fcConfig.siteViewUrl + '/' + act.siteId;
+                }
+            };
         };
 
-        var PlanStage = function (stage, activities, planViewModel, isCurrentStage, project,today, rejectionCategories) {
+        var PlanStage = function (stage, activities, planViewModel, isCurrentStage, project,today, rejectionCategories, showEmptyStages, userIsEditor) {
+
             var stageLabel = stage.name;
 
             // Note that the two $ transforms used to extract activities are not combined because we
@@ -734,43 +779,12 @@
             this.isReportable = isStageReportable(project,stage);
             this.projectId = project.projectId;
             this.planViewModel = planViewModel;
+            this.showEmptyStages = showEmptyStages;
 
-
-            // sort activities by assigned sequence or date created (as a proxy for sequence).
-            // CG - still needs to be addressed properly.
-            activitiesInThisStage.sort(function (a,b) {
-                if (a.sequence !== undefined && b.sequence !== undefined) {
-                    return a.sequence - b.sequence;
-                }
-
-                if (a.plannedStartDate != b.plannedStartDate) {
-                     return a.plannedStartDate < b.plannedStartDate ? -1 : (a.plannedStartDate > b.plannedStartDate ? 1 : 0);
-                }
-                var numericActivity = /[Aa]ctivity (\d+)(\w)?.*/;
-                var first = numericActivity.exec(a.description);
-                var second = numericActivity.exec(b.description);
-                if (first && second) {
-                    var firstNum = Number(first[1]);
-                    var secondNum = Number(second[1]);
-                    if (firstNum == secondNum) {
-                        // This is to catch activities of the form Activity 1a, Activity 1b etc.
-                        if (first.length == 3 && second.length == 3) {
-                            return first[2] > second[2] ? 1 : (first[2] < second[2] ? -1 : 0);
-                        }
-                    }
-                    return  firstNum - secondNum;
-                }
-                else {
-                    if (a.dateCreated !== undefined && b.dateCreated !== undefined && a.dateCreated != b.dateCreated) {
-                        return a.dateCreated < b.dateCreated ? 1 : -1;
-                    }
-                    return a.description > b.description ? 1 : (a.description < b.description ? -1 : 0);
-                }
-
-            });
+            sortActivities(activitiesInThisStage);
             this.activities = $.map(activitiesInThisStage, function (act, index) {
                 act.projectStage = stageLabel;
-                return new PlannedActivity(act, index === 0, project);
+                return new PlannedActivity(act, index === 0, project, self);
             });
 
             this.isApproved = function() {
@@ -876,8 +890,8 @@
             };
 
             this.isReadOnly = ko.computed(function() {
-                var isEditor = ${user?.isEditor?'true':'false'};
-                return !isEditor || self.isSubmitted() || self.isApproved();
+
+                return !userIsEditor || self.isSubmitted() || self.isApproved();
             });
             this.stageStatusTemplateName = ko.computed(function(){
 				if (!self.isReportable) {
@@ -925,33 +939,22 @@
                 return !self.isReadOnly() && planViewModel.planStatus() === 'approved';
             });
 
-            this.editActivity = function (activity) {
-                var url;
-                if (self.isReadOnly() || (activity.publicationStatus == 'pendingApproval' || activity.publicationStatus == 'published')) {
-                    self.viewActivity(activity);
-                } else if (self.canEditOutputData()) {
-                    url = fcConfig.activityEnterDataUrl;
-                    document.location.href = url + "/" + activity.activityId +
-                        "?returnTo=" + encodeURIComponent(here);
-                } else if (self.canEditActivity()) {
-                    url = fcConfig.activityEditUrl;
-                    document.location.href = url + "/" + activity.activityId +
-                        "?returnTo=" + encodeURIComponent(here);
-                }
-            };
-            this.viewActivity = function(activity) {
-                url = fcConfig.activityViewUrl;
-                document.location.href = url + "/" + activity.activityId +
-                        "?returnTo=" + encodeURIComponent(here);
-            };
-            this.printActivity = function(activity) {
-                open(fcConfig.activityPrintUrl + "/" + activity.activityId, "fieldDataPrintWindow");
-            };
+            var key = project.projectId+'-'+stageLabel+'-collapsed';
+            var collapsed = amplify.store(key);
+            if (collapsed == undefined || collapsed == null) {
+                collasped = self.isApproved();
+            }
+
+            this.collapsed = ko.observable(collapsed);
+            this.toggleActivities = function() {
+                self.collapsed(!self.collapsed());
+                amplify.store(key, self.collapsed());
+            }
         };
 
-        function PlanViewModel(activities, reports, outputTargets, targetMetadata, project, programModel, today, config) {
+        function PlanViewModel(activities, reports, outputTargets, targetMetadata, project, programModel, today, config, userIsEditor) {
             var self = this;
-
+            var showEmptyStages = project.associatedProgram != 'Green Army';
             this.userIsCaseManager = ko.observable(${user?.isCaseManager});
             this.planStatus = ko.observable(project.planStatus || 'not approved');
             this.planStatusTemplateName = ko.computed(function () {
@@ -967,8 +970,8 @@
                 return self.planStatus()==='not approved'
             });
             this.canEditOutputTargets = ko.computed(function() {
-                var isEditor = ${user?.isEditor?'true':'false'};
-                return isEditor && self.planStatus() === 'not approved';
+
+                return userIsEditor && self.planStatus() === 'not approved';
             });
             //this.currentDate = ko.observable("2014-02-03T00:00:00Z"); // mechanism for testing behaviour at different dates
             this.currentDate = ko.observable(new Date().toISOStringNoMillis()); // mechanism for testing behaviour at different dates
@@ -978,7 +981,7 @@
 
                 // group activities by stage
                 $.each(reports, function (index, stageReport) {
-                    stages.push(new PlanStage(stageReport, activities, self, stageReport.name === self.currentProjectStage, project,today, config.rejectionCategories));
+                    stages.push(new PlanStage(stageReport, activities, self, stageReport.name === self.currentProjectStage, project,today, config.rejectionCategories, showEmptyStages, userIsEditor));
                 });
 
                 return stages;
@@ -1003,12 +1006,7 @@
                 }
                 document.location.href = fcConfig.activityCreateUrl + returnTo + context;
             };
-            self.openSite = function () {
-                var siteId = this.siteId;
-                if (siteId !== '') {
-                    document.location.href = fcConfig.siteViewUrl + '/' + siteId;
-                }
-            };
+
             self.descriptionExpanded = ko.observable(false);
             self.toggleDescriptions = function() {
                 self.descriptionExpanded(!self.descriptionExpanded());
@@ -1396,6 +1394,7 @@
 		var today = '${today}';
 		var programModel = <fc:modelAsJavascript model="${programs}"/>;
         var reports = <fc:modelAsJavascript model="${reports}"/>;
+        var userIsEditor = ${user?.isEditor?'true':'false'};
 
         var planViewModel = new PlanViewModel(
             ${activities ?: []},
@@ -1405,7 +1404,8 @@
             checkAndUpdateProject(${project}, null, programModel),
             programModel,
             today,
-            {rejectionCategories: ['Minor', 'Moderate', 'Major'], saveTargetsUrl:fcConfig.projectUpdateUrl }
+            {rejectionCategories: ['Minor', 'Moderate', 'Major'], saveTargetsUrl:fcConfig.projectUpdateUrl },
+            userIsEditor
         );
         ko.applyBindings(planViewModel, document.getElementById('planContainer'));
 
@@ -1482,6 +1482,8 @@
         drawGanttChart(planViewModel.getGanttData());
 
         $('#outputTargetsContainer').validationEngine('attach', {scroll:false});
+
+       // $('#activities').DataTable({fixedHeader:{header:true}});
 
     });
 

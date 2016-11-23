@@ -8,7 +8,7 @@
     </g:if>
     <g:else>
         <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
-        <title>Edit | ${activity.type} | Field Capture</title>
+        <title>View | ${activity.type} | Field Capture</title>
     </g:else>
 
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
@@ -23,7 +23,8 @@
         bieUrl: "${grailsApplication.config.bie.baseURL}",
         imageLocation:"${resource(dir:'/images')}",
         imageUploadUrl: "${createLink(controller: 'image', action: 'upload')}",
-        speciesProfileUrl: "${createLink(controller: 'proxy', action: 'speciesProfile')}"
+        speciesProfileUrl: "${createLink(controller: 'proxy', action: 'speciesProfile')}",
+        returnTo: "${returnTo}"
         },
         here = document.location.href;
     </r:script>
@@ -107,10 +108,22 @@
 
         </div>
     </g:if>
+    <g:if test="${showNav}">
+        <g:render template="navigation"></g:render>
+        <r:script>
+        var url = '${g.createLink(controller: 'activity', action:'activitiesWithStage', id:activity.projectId)}';
+        var activityUrl = '${g.createLink(controller:'activity', action:'index')}';
+        var activityId = '${activity.activityId}';
+        var projectId = '${activity.projectId}';
+        ko.applyBindings(new ActivityNavigationViewModel(projectId, activityId, {navigationUrl:url, activityUrl:activityUrl, returnTo:fcConfig.returnTo}), document.getElementById('activity-nav'));
+        </r:script>
+    </g:if>
+    <g:else>
+        <div class="form-actions">
+            <button type="button" id="cancel" class="btn">return</button>
+        </div>
+    </g:else>
 
-    <div class="form-actions">
-        <button type="button" id="cancel" class="btn">return</button>
-    </div>
 </div>
 
 <!-- templates -->
@@ -118,8 +131,6 @@
 <g:render template="/shared/imagerViewerModal" model="[readOnly:false]"></g:render>
 
 <r:script>
-
-    var returnTo = "${returnTo}";
 
     $(function(){
 
