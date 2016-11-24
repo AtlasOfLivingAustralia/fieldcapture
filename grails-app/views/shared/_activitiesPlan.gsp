@@ -894,6 +894,9 @@
                 return !userIsEditor || self.isSubmitted() || self.isApproved();
             });
             this.stageStatusTemplateName = ko.computed(function(){
+                if (!self.activities || self.activities.length == 0) {
+                    return 'stageNotReportableTmpl';
+                }
 				if (!self.isReportable) {
                     return 'stageNotReportableTmpl';
                 }
