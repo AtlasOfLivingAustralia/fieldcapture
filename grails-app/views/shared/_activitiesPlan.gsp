@@ -776,6 +776,7 @@
             this.label = stageLabel;
             var fromDateLabel = stage.fromDate < project.plannedStartDate ? project.plannedStartDate : stage.fromDate;
             var toDateLabel = stage.toDate > project.plannedEndDate ? project.plannedEndDate : stage.toDate;
+
             this.datesLabel = convertToSimpleDate(fromDateLabel, false) + ' - ' + convertToSimpleDate(toDateLabel, false);
             this.isCurrentStage = isCurrentStage;
             this.isReportable = isStageReportable(project,stage);
