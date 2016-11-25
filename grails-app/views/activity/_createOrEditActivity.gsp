@@ -207,7 +207,9 @@
             });
             self.transients.stages = [''];
             $.each(project.reports, function(i, report) {
-                self.transients.stages.push(report.name);
+                if (!report.publicationStatus || report.publicationStatus == 'unpublished') {
+                    self.transients.stages.push(report.name);
+                }
             });
 
             self.siteId = ko.observable(act.siteId);
