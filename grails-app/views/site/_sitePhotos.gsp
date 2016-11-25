@@ -21,17 +21,18 @@
                     </g:if>
                 </p>
             </div>
-            <li>
+            <li class="thumb">
                 <a class="fancybox" rel="group" href="${image.url}" title="${title}" data-caption="caption-${i}" aria-label="Show full size images in popup window"><img src="${image.thumbnailUrl?:image.url}" aria-label="${title ?:"Un-captioned site image"}"/></a>
                 <g:set var="activityLink" value="${image.activity?g.createLink(controller: 'activity', action:'index', id:image.activity.activityId):'#'}"/>
                 <a href="${activityLink}">
-                <p class="caption large"><b>${image.name}</b><br/>
+                <div class="caption large">
+                    <div style="text-overflow: ellipsis; height: 40px; overflow-y:hidden;"><b>${image.name}</b></div>
                     <b>Date taken: </b>${au.org.ala.fieldcapture.DateUtils.isoToDisplayFormat(image.dateTaken)}
                     <g:if test="${image.activity}">
                         ( ${image.stage} )
                         <br/><b>Activity type: </b> ${image.activity.type}
                     </g:if>
-                </p>
+                </div>
                 </a>
             </li>
         </g:each>

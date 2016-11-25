@@ -362,7 +362,7 @@
             }
         }
 
-        $(window).load(function () {
+        $(function () {
             var PROJECT_DETAILS_KEY = 'project.custom.details.${project.projectId}';
             var PROJECT_RISKS_KEY = 'project.risks.${project.projectId}';
 
@@ -889,6 +889,12 @@
                         },
                         nextEffect:'fade',
                         previousEffect:'fade'
+                    });
+                    $(window).load(function() {
+                         $('.photo-slider .thumb').each(function() {
+                            var $caption = $(this).find('.caption');
+                            $caption.outerWidth($(this).find('img').width());
+                         });
                     });
 
                 }
