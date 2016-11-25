@@ -894,6 +894,9 @@
                 return !userIsEditor || self.isSubmitted() || self.isApproved();
             });
             this.stageStatusTemplateName = ko.computed(function(){
+                if (!self.activities || self.activities.length == 0) {
+                    return 'stageNotReportableTmpl';
+                }
 				if (!self.isReportable) {
                     return 'stageNotReportableTmpl';
                 }
@@ -942,7 +945,7 @@
             var key = project.projectId+'-'+stageLabel+'-collapsed';
             var collapsed = amplify.store(key);
             if (collapsed == undefined || collapsed == null) {
-                collasped = self.isApproved();
+                collapsed = self.isApproved();
             }
 
             this.collapsed = ko.observable(collapsed);
