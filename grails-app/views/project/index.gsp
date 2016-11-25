@@ -362,7 +362,7 @@
             }
         }
 
-        $(window).load(function () {
+        $(function () {
             var PROJECT_DETAILS_KEY = 'project.custom.details.${project.projectId}';
             var PROJECT_RISKS_KEY = 'project.risks.${project.projectId}';
 
