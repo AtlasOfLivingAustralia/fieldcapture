@@ -774,7 +774,9 @@
                     return act.plannedEndDate > stage.fromDate &&  act.plannedEndDate <= stage.toDate;
                 });
             this.label = stageLabel;
-            this.datesLabel = convertToSimpleDate(stage.fromDate, false) + ' - ' + convertToSimpleDate(stage.toDate, false);
+            var fromDateLabel = stage.fromDate < project.plannedStartDate ? project.plannedStartDate : stage.fromDate;
+            var toDateLabel = stage.toDate > project.plannedEndDate ? project.plannedEndDate : stage.toDate;
+            this.datesLabel = convertToSimpleDate(fromDateLabel, false) + ' - ' + convertToSimpleDate(toDateLabel, false);
             this.isCurrentStage = isCurrentStage;
             this.isReportable = isStageReportable(project,stage);
             this.projectId = project.projectId;
@@ -984,7 +986,9 @@
 
                 // group activities by stage
                 $.each(reports, function (index, stageReport) {
-                    stages.push(new PlanStage(stageReport, activities, self, stageReport.name === self.currentProjectStage, project,today, config.rejectionCategories, showEmptyStages, userIsEditor));
+                    if (stageReport.fromDate < project.plannedEndDate && stageReport.toDate > project.plannedStartDate) {
+                        stages.push(new PlanStage(stageReport, activities, self, stageReport.name === self.currentProjectStage, project,today, config.rejectionCategories, showEmptyStages, userIsEditor));
+                    }
                 });
 
                 return stages;
