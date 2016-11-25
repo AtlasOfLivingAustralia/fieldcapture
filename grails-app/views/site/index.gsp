@@ -229,6 +229,12 @@
                  nextEffect:'fade',
                  previousEffect:'fade'
              });
+             $(window).load(function() {
+                 $('.photo-slider .thumb').each(function() {
+                    var $caption = $(this).find('.caption');
+                    $caption.outerWidth($(this).find('img').width());
+                 });
+             });
         });
 
 </r:script>
