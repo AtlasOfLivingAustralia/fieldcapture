@@ -945,7 +945,7 @@
             var key = project.projectId+'-'+stageLabel+'-collapsed';
             var collapsed = amplify.store(key);
             if (collapsed == undefined || collapsed == null) {
-                collasped = self.isApproved();
+                collapsed = self.isApproved();
             }
 
             this.collapsed = ko.observable(collapsed);
