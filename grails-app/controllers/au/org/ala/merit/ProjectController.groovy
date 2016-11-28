@@ -13,9 +13,6 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
 
     /** Overrides the projectContent method in the fieldcapture controller to include the MERI plan and risks and threats content */
     protected Map projectContent(project, user, programs) {
-
-        siteService.addPhotoPointPhotosForSites(project.sites?:[], project.activities, [project])
-
         def meriPlanVisible = metadataService.isOptionalContent('MERI Plan', project.associatedProgram, project.associatedSubProgram)
         def risksAndThreatsVisible = metadataService.isOptionalContent('Risks and Threats', project.associatedProgram, project.associatedSubProgram)
         def canViewRisks = risksAndThreatsVisible && (user?.hasViewAccess || user?.isEditor)
@@ -46,6 +43,19 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
 
         return [view:'index', model:model]
     }
+
+    @PreAuthorise(accessLevel = 'admin')
+    def projectSitePhotos(String id) {
+
+        Map project = projectService.get(id)
+        List activities = activityService.activitiesForProject(id)
+        siteService.addPhotoPointPhotosForSites(project.sites?:[], activities, [project])
+
+        render template: 'sitePhotoPoints', model:[project:project]
+
+    }
+
+
 
     @PreAuthorise(accessLevel = 'admin')
     def ajaxSubmitReport(String id) {
