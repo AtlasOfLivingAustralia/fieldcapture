@@ -618,7 +618,7 @@
         }
     }
 
-    $(window).load(function () {
+    $(function () {
 
         var PlannedActivity = function (act, isFirst, project, stage) {
             var self = this;
