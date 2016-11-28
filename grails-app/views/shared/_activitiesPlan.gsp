@@ -582,11 +582,11 @@
         return target;
     };
 
-    var sites = ${sites ?: []};
-    function lookupSiteName (siteId) {
+
+    function lookupSiteName (siteId, siteList) {
         var site;
         if (siteId !== undefined && siteId !== '') {
-            site = $.grep(sites, function(obj, i) {
+            site = $.grep(siteList, function(obj, i) {
                     return (obj.siteId === siteId);
             });
             if (site.length > 0) {
@@ -618,14 +618,14 @@
         }
     }
 
-    $(window).load(function () {
+    $(function () {
 
         var PlannedActivity = function (act, isFirst, project, stage) {
             var self = this;
             this.activityId = act.activityId;
             this.isFirst = isFirst ? this : undefined;
             this.siteId = act.siteId;
-            this.siteName = lookupSiteName(act.siteId);
+            this.siteName = lookupSiteName(act.siteId, project.sites);
             this.type = act.type;
             this.projectStage = act.projectStage;
             this.description = act.description;
@@ -1405,11 +1405,11 @@
         var userIsEditor = ${user?.isEditor?'true':'false'};
 
         var planViewModel = new PlanViewModel(
-            ${activities ?: []},
+            fcConfig.project.activities || [],
             reports,
-            ${project.outputTargets ?: '{}'},
+            fcConfig.project.outputTargets || {},
             ${outputTargetMetadata as grails.converters.JSON},
-            checkAndUpdateProject(${project}, null, programModel),
+            checkAndUpdateProject(fcConfig.project, null, programModel),
             programModel,
             today,
             {rejectionCategories: ['Minor', 'Moderate', 'Major'], saveTargetsUrl:fcConfig.projectUpdateUrl },

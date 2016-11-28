@@ -38,7 +38,7 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
         def model = [overview:[label:'Overview', visible: true, default:true, type:'tab', publicImages:imagesModel, displayTargets:false, displayOutcomes:false, blog:blog, hasNewsAndEvents:hasNewsAndEvents, hasProjectStories:hasProjectStories, canChangeProjectDates:canChangeProjectDates],
          documents:[label:'Documents', visible: true, type:'tab'],
          details:[label:'MERI Plan', disabled:!user?.hasViewAccess, disabled:!meriPlanEnabled, visible:meriPlanVisible, meriPlanVisibleToUser:meriPlanVisibleToUser, risksAndThreatsVisible:canViewRisks, type:'tab'],
-         plan:[label:'Activities', visible:true, disabled:!user?.hasViewAccess, type:'tab', reports:reportService.getReportsForProject(project.projectId)],
+         plan:[label:'Activities', visible:true, disabled:!user?.hasViewAccess, type:'tab', reports:project.reports],
          risksAndThreats:[label:'Risks and Threats', disabled:!user?.hasViewAccess, visible:user?.hasViewAccess && risksAndThreatsVisible],
          site:[label:'Sites', visible: true, disabled:!user?.hasViewAccess, type:'tab'],
          dashboard:[label:'Dashboard', visible: true, disabled:!user?.hasViewAccess, type:'tab'],

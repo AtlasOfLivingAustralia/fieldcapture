@@ -56,6 +56,7 @@
     },
         here = window.location.href;
 
+        fcConfig.project = <fc:renderProject project="${project}"/>;
     </r:script>
 
 
@@ -689,12 +690,12 @@
             } // end of view model
 
             var programs = <fc:modelAsJavascript model="${programs}"/>;
-            var project = <fc:modelAsJavascript model="${project}"/>;
+            var project = fcConfig.project;
 
             var viewModel = new ViewModel(
                 checkAndUpdateProject(project, undefined, programs),
-                ${project.sites},
-                ${activities ?: []},
+                project.sites,
+                project.activities || [],
                 ${user?.isEditor?:false},
                 ${themes});
 
