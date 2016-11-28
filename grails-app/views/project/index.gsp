@@ -51,6 +51,7 @@
         projectReportUrl:"${createLink(controller:'project', action:'projectReport', id:project.projectId)}",
         projectReportPDFUrl:"${createLink(controller:'project', action:'projectReportPDF', id:project.projectId)}",
         meriPlanPDFUrl:"${createLink(controller:'project', action:'meriPlanPDF', id:project.projectId)}",
+        sitesPhotoPointsUrl:"${createLink(controller:'project', action:'projectSitePhotos', id:project.projectId)}",
         returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
 
     },
@@ -194,20 +195,8 @@
                 <!-- ko stopBinding:true -->
                 <g:render plugin="fieldcapture-plugin" template="/site/sitesList" model="${[editable:user?.isEditor]}"/>
                 <!-- /ko -->
-                <h2>Points of interest on project sites</h2>
-                <g:each in="${project.sites}" var="site">
-                    <g:if test="${site.poi}">
-                        <h3>Site: ${site.name}</h3>
-                        <g:each in="${site.poi}" var="poi">
-                            <div class="row-fluid">
-                                <h4>Photopoint: ${poi.name?.encodeAsHTML()}</h4>
-                            <g:if test="${poi.description}">${poi.description}</g:if>
-                            <g:if test="${poi.photos}"><g:render template="/site/sitePhotos" model="${[photos:poi.photos]}"></g:render></g:if> </h4>
+                <div id="site-photo-points"></div>
 
-                            </div>
-                        </g:each>
-                    </g:if>
-                </g:each>
 
             </div>
 
@@ -870,33 +859,42 @@
                     sitesViewModel.sitesFiltered(visibleIndicies());
 
 
-                    $( '.photo-slider' ).mThumbnailScroller({theme:'hover-classic'});
-                    $('.photo-slider .fancybox').fancybox({
-                        helpers : {
-                            title: {
-                                type: 'inside'
-                            }
-                        },
-                        beforeLoad: function() {
-                            var el, id = $(this.element).data('caption');
+                    $.get(fcConfig.sitesPhotoPointsUrl).done(function(data) {
 
-                            if (id) {
-                                el = $('#' + id);
+                        $('#site-photo-points').append($(data));
+                        $('#site-photo-points img').on('load', function() {
 
-                                if (el.length) {
-                                    this.title = el.html();
+                            var parent = $(this).parents('.thumb');
+                            var $caption = $(parent).find('.caption');
+                            $caption.outerWidth($(this).width());
+
+                        });
+                        $( '.photo-slider' ).mThumbnailScroller({theme:'hover-classic'});
+                        $('.photo-slider .fancybox').fancybox({
+                            helpers : {
+                                title: {
+                                    type: 'inside'
                                 }
-                            }
-                        },
-                        nextEffect:'fade',
-                        previousEffect:'fade'
+                            },
+                            beforeLoad: function() {
+                                var el, id = $(this.element).data('caption');
+
+                                if (id) {
+                                    el = $('#' + id);
+
+                                    if (el.length) {
+                                        this.title = el.html();
+                                    }
+                                }
+                            },
+                            nextEffect:'fade',
+                            previousEffect:'fade'
+                        });
+                        $(window).load(function() {
+
+                        });
                     });
-                    $(window).load(function() {
-                         $('.photo-slider .thumb').each(function() {
-                            var $caption = $(this).find('.caption');
-                            $caption.outerWidth($(this).find('img').width());
-                         });
-                    });
+
 
                 }
                 if (tab === '#plan' && !planTabInitialised) {
