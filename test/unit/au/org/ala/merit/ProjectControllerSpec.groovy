@@ -42,6 +42,7 @@ class ProjectControllerSpec extends Specification {
         userServiceStub.isProjectStarredByUser(_, _) >> [isProjectStarredByUser:true]
         roleServiceStub.getRoles() >> []
         reportServiceStub.getReportsForProject(_) >> []
+        activityServiceStub.activitiesForProject(_) >> []
 
     }
 
@@ -50,7 +51,7 @@ class ProjectControllerSpec extends Specification {
 
         setup:
         def projectId = '1234'
-        projectServiceStub.get(projectId, _) >> [projectId:projectId, associatedProgram:"Test"]
+        projectServiceStub.get(projectId, _) >> project(projectId)
         projectServiceStub.programsModel() >> [programs:[[name:'Test', optionalProjectContent:[]]]]
 
         when: "something"
@@ -66,7 +67,7 @@ class ProjectControllerSpec extends Specification {
 
         setup:
         def projectId = '1234'
-        projectServiceStub.get(projectId, _) >> [projectId:projectId, associatedProgram:"Test"]
+        projectServiceStub.get(projectId, _) >> project(projectId)
         projectServiceStub.programsModel() >> [programs:[[name:'Test', optionalProjectContent:['Risks and Threats', 'MERI Plan']]]]
         userServiceStub.getUser() >> null
 
@@ -89,7 +90,7 @@ class ProjectControllerSpec extends Specification {
 
     def "the admin content should be enabled for project admins"() {
         def projectId = '1234'
-        projectServiceStub.get(projectId, _) >> [projectId:projectId, associatedProgram:"Test"]
+        projectServiceStub.get(projectId, _) >> project(projectId)
         projectServiceStub.programsModel() >> [programs:[[name:'Test', optionalProjectContent:['Risks and Threats', 'MERI Plan']]]]
 
         stubProjectAdmin('1234', projectId)
@@ -105,7 +106,7 @@ class ProjectControllerSpec extends Specification {
 
     def "the admin content should be enabled for grant managers"() {
         def projectId = '1234'
-        projectServiceStub.get(projectId, _) >> [projectId:projectId, associatedProgram:"Test"]
+        projectServiceStub.get(projectId, _) >> project(projectId)
         projectServiceStub.programsModel() >> [programs:[[name:'Test', optionalProjectContent:['Risks and Threats', 'MERI Plan']]]]
 
         stubGrantManager('1234', projectId)
@@ -121,7 +122,7 @@ class ProjectControllerSpec extends Specification {
 
     def "the admin content should be not present for project editors"() {
         def projectId = '1234'
-        projectServiceStub.get(projectId, _) >> [projectId:projectId, associatedProgram:"Test"]
+        projectServiceStub.get(projectId, _) >> project(projectId)
         projectServiceStub.programsModel() >> [programs:[[name:'Test', optionalProjectContent:['Risks and Threats', 'MERI Plan']]]]
         stubProjectEditor('1234', projectId)
 
@@ -154,5 +155,9 @@ class ProjectControllerSpec extends Specification {
         projectServiceStub.canUserEditProject(userId, projectId) >> editor
         projectServiceStub.canUserViewProject(userId, projectId) >> canView
 
+    }
+
+    private def project(String projectId) {
+        [projectId:projectId, associatedProgram:"Test"]
     }
 }

@@ -301,10 +301,10 @@ class ActivityController {
                 List reports = reportService.getReportsForProject(projectId)
                 duplicateStages.each { String stage ->
                     Map report = reports.find{ it.name == stage }
-                    if (report) {
+                    if (report && !reportService.isSubmittedOrApproved(report)) {
                         values.plannedStartDate = report.fromDate
                         values.plannedEndDate = DateUtils.dayBefore(report.toDate)
-
+                        log.info("Creating duplicate activity for stage "+stage+" for project "+projectId)
                         result = activityService.update(id, values)
                     }
                 }

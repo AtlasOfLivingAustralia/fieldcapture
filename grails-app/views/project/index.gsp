@@ -51,11 +51,13 @@
         projectReportUrl:"${createLink(controller:'project', action:'projectReport', id:project.projectId)}",
         projectReportPDFUrl:"${createLink(controller:'project', action:'projectReportPDF', id:project.projectId)}",
         meriPlanPDFUrl:"${createLink(controller:'project', action:'meriPlanPDF', id:project.projectId)}",
+        sitesPhotoPointsUrl:"${createLink(controller:'project', action:'projectSitePhotos', id:project.projectId)}",
         returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
 
     },
         here = window.location.href;
 
+        fcConfig.project = <fc:renderProject project="${project}"/>;
     </r:script>
 
 
@@ -193,20 +195,8 @@
                 <!-- ko stopBinding:true -->
                 <g:render plugin="fieldcapture-plugin" template="/site/sitesList" model="${[editable:user?.isEditor]}"/>
                 <!-- /ko -->
-                <h2>Points of interest on project sites</h2>
-                <g:each in="${project.sites}" var="site">
-                    <g:if test="${site.poi}">
-                        <h3>Site: ${site.name}</h3>
-                        <g:each in="${site.poi}" var="poi">
-                            <div class="row-fluid">
-                                <h4>Photopoint: ${poi.name?.encodeAsHTML()}</h4>
-                            <g:if test="${poi.description}">${poi.description}</g:if>
-                            <g:if test="${poi.photos}"><g:render template="/site/sitePhotos" model="${[photos:poi.photos]}"></g:render></g:if> </h4>
+                <div id="site-photo-points"></div>
 
-                            </div>
-                        </g:each>
-                    </g:if>
-                </g:each>
 
             </div>
 
@@ -362,7 +352,7 @@
             }
         }
 
-        $(window).load(function () {
+        $(function () {
             var PROJECT_DETAILS_KEY = 'project.custom.details.${project.projectId}';
             var PROJECT_RISKS_KEY = 'project.risks.${project.projectId}';
 
@@ -689,12 +679,12 @@
             } // end of view model
 
             var programs = <fc:modelAsJavascript model="${programs}"/>;
-            var project = <fc:modelAsJavascript model="${project}"/>;
+            var project = fcConfig.project;
 
             var viewModel = new ViewModel(
                 checkAndUpdateProject(project, undefined, programs),
-                ${project.sites},
-                ${activities ?: []},
+                project.sites,
+                project.activities || [],
                 ${user?.isEditor?:false},
                 ${themes});
 
@@ -869,27 +859,42 @@
                     sitesViewModel.sitesFiltered(visibleIndicies());
 
 
-                    $( '.photo-slider' ).mThumbnailScroller({theme:'hover-classic'});
-                    $('.photo-slider .fancybox').fancybox({
-                        helpers : {
-                            title: {
-                                type: 'inside'
-                            }
-                        },
-                        beforeLoad: function() {
-                            var el, id = $(this.element).data('caption');
+                    $.get(fcConfig.sitesPhotoPointsUrl).done(function(data) {
 
-                            if (id) {
-                                el = $('#' + id);
+                        $('#site-photo-points').append($(data));
+                        $('#site-photo-points img').on('load', function() {
 
-                                if (el.length) {
-                                    this.title = el.html();
+                            var parent = $(this).parents('.thumb');
+                            var $caption = $(parent).find('.caption');
+                            $caption.outerWidth($(this).width());
+
+                        });
+                        $( '.photo-slider' ).mThumbnailScroller({theme:'hover-classic'});
+                        $('.photo-slider .fancybox').fancybox({
+                            helpers : {
+                                title: {
+                                    type: 'inside'
                                 }
-                            }
-                        },
-                        nextEffect:'fade',
-                        previousEffect:'fade'
+                            },
+                            beforeLoad: function() {
+                                var el, id = $(this.element).data('caption');
+
+                                if (id) {
+                                    el = $('#' + id);
+
+                                    if (el.length) {
+                                        this.title = el.html();
+                                    }
+                                }
+                            },
+                            nextEffect:'fade',
+                            previousEffect:'fade'
+                        });
+                        $(window).load(function() {
+
+                        });
                     });
+
 
                 }
                 if (tab === '#plan' && !planTabInitialised) {

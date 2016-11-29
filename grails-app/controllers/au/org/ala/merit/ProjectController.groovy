@@ -13,11 +13,6 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
 
     /** Overrides the projectContent method in the fieldcapture controller to include the MERI plan and risks and threats content */
     protected Map projectContent(project, user, programs) {
-
-        project.sites?.each { site ->
-            siteService.addPhotoPointPhotosForSite(site, project.activities, [project])
-        }
-
         def meriPlanVisible = metadataService.isOptionalContent('MERI Plan', project.associatedProgram, project.associatedSubProgram)
         def risksAndThreatsVisible = metadataService.isOptionalContent('Risks and Threats', project.associatedProgram, project.associatedSubProgram)
         def canViewRisks = risksAndThreatsVisible && (user?.hasViewAccess || user?.isEditor)
@@ -40,7 +35,7 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
         def model = [overview:[label:'Overview', visible: true, default:true, type:'tab', publicImages:imagesModel, displayTargets:false, displayOutcomes:false, blog:blog, hasNewsAndEvents:hasNewsAndEvents, hasProjectStories:hasProjectStories, canChangeProjectDates:canChangeProjectDates],
          documents:[label:'Documents', visible: true, type:'tab'],
          details:[label:'MERI Plan', disabled:!user?.hasViewAccess, disabled:!meriPlanEnabled, visible:meriPlanVisible, meriPlanVisibleToUser:meriPlanVisibleToUser, risksAndThreatsVisible:canViewRisks, type:'tab'],
-         plan:[label:'Activities', visible:true, disabled:!user?.hasViewAccess, type:'tab', reports:reportService.getReportsForProject(project.projectId)],
+         plan:[label:'Activities', visible:true, disabled:!user?.hasViewAccess, type:'tab', reports:project.reports],
          risksAndThreats:[label:'Risks and Threats', disabled:!user?.hasViewAccess, visible:user?.hasViewAccess && risksAndThreatsVisible],
          site:[label:'Sites', visible: true, disabled:!user?.hasViewAccess, type:'tab'],
          dashboard:[label:'Dashboard', visible: true, disabled:!user?.hasViewAccess, type:'tab'],
@@ -48,6 +43,19 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
 
         return [view:'index', model:model]
     }
+
+    @PreAuthorise(accessLevel = 'admin')
+    def projectSitePhotos(String id) {
+
+        Map project = projectService.get(id)
+        List activities = activityService.activitiesForProject(id)
+        siteService.addPhotoPointPhotosForSites(project.sites?:[], activities, [project])
+
+        render template: 'sitePhotoPoints', model:[project:project]
+
+    }
+
+
 
     @PreAuthorise(accessLevel = 'admin')
     def ajaxSubmitReport(String id) {

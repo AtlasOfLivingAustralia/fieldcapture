@@ -582,11 +582,11 @@
         return target;
     };
 
-    var sites = ${sites ?: []};
-    function lookupSiteName (siteId) {
+
+    function lookupSiteName (siteId, siteList) {
         var site;
         if (siteId !== undefined && siteId !== '') {
-            site = $.grep(sites, function(obj, i) {
+            site = $.grep(siteList, function(obj, i) {
                     return (obj.siteId === siteId);
             });
             if (site.length > 0) {
@@ -618,14 +618,14 @@
         }
     }
 
-    $(window).load(function () {
+    $(function () {
 
         var PlannedActivity = function (act, isFirst, project, stage) {
             var self = this;
             this.activityId = act.activityId;
             this.isFirst = isFirst ? this : undefined;
             this.siteId = act.siteId;
-            this.siteName = lookupSiteName(act.siteId);
+            this.siteName = lookupSiteName(act.siteId, project.sites);
             this.type = act.type;
             this.projectStage = act.projectStage;
             this.description = act.description;
@@ -774,7 +774,10 @@
                     return act.plannedEndDate > stage.fromDate &&  act.plannedEndDate <= stage.toDate;
                 });
             this.label = stageLabel;
-            this.datesLabel = convertToSimpleDate(stage.fromDate, false) + ' - ' + convertToSimpleDate(stage.toDate, false);
+            var fromDateLabel = stage.fromDate < project.plannedStartDate ? project.plannedStartDate : stage.fromDate;
+            var toDateLabel = stage.toDate > project.plannedEndDate ? project.plannedEndDate : stage.toDate;
+
+            this.datesLabel = convertToSimpleDate(fromDateLabel, false) + ' - ' + convertToSimpleDate(toDateLabel, false);
             this.isCurrentStage = isCurrentStage;
             this.isReportable = isStageReportable(project,stage);
             this.projectId = project.projectId;
@@ -894,6 +897,9 @@
                 return !userIsEditor || self.isSubmitted() || self.isApproved();
             });
             this.stageStatusTemplateName = ko.computed(function(){
+                if (!self.activities || self.activities.length == 0) {
+                    return 'stageNotReportableTmpl';
+                }
 				if (!self.isReportable) {
                     return 'stageNotReportableTmpl';
                 }
@@ -942,7 +948,7 @@
             var key = project.projectId+'-'+stageLabel+'-collapsed';
             var collapsed = amplify.store(key);
             if (collapsed == undefined || collapsed == null) {
-                collasped = self.isApproved();
+                collapsed = self.isApproved();
             }
 
             this.collapsed = ko.observable(collapsed);
@@ -981,7 +987,9 @@
 
                 // group activities by stage
                 $.each(reports, function (index, stageReport) {
-                    stages.push(new PlanStage(stageReport, activities, self, stageReport.name === self.currentProjectStage, project,today, config.rejectionCategories, showEmptyStages, userIsEditor));
+                    if (stageReport.fromDate < project.plannedEndDate && stageReport.toDate > project.plannedStartDate) {
+                        stages.push(new PlanStage(stageReport, activities, self, stageReport.name === self.currentProjectStage, project,today, config.rejectionCategories, showEmptyStages, userIsEditor));
+                    }
                 });
 
                 return stages;
@@ -1397,11 +1405,11 @@
         var userIsEditor = ${user?.isEditor?'true':'false'};
 
         var planViewModel = new PlanViewModel(
-            ${activities ?: []},
+            fcConfig.project.activities || [],
             reports,
-            ${project.outputTargets ?: '{}'},
+            fcConfig.project.outputTargets || {},
             ${outputTargetMetadata as grails.converters.JSON},
-            checkAndUpdateProject(${project}, null, programModel),
+            checkAndUpdateProject(fcConfig.project, null, programModel),
             programModel,
             today,
             {rejectionCategories: ['Minor', 'Moderate', 'Major'], saveTargetsUrl:fcConfig.projectUpdateUrl },
