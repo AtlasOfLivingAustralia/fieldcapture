@@ -195,7 +195,9 @@
                 <!-- ko stopBinding:true -->
                 <g:render plugin="fieldcapture-plugin" template="/site/sitesList" model="${[editable:user?.isEditor]}"/>
                 <!-- /ko -->
-                <div id="site-photo-points"></div>
+                <div id="site-photo-points">
+                    <a href="#"><i>Click to view photo points and photos</i></a>
+                </div>
 
 
             </div>
@@ -858,44 +860,45 @@
                     });
                     sitesViewModel.sitesFiltered(visibleIndicies());
 
+                    $('#site-photo-points a').click(function(e) {
+                        e.preventDefault();
+                        $('#site-photo-points').html('<r:img id="img-spinner" width="50" height="50" dir="images" file="loading.gif" alt="Loading"/>');
+                        $.get(fcConfig.sitesPhotoPointsUrl).done(function(data) {
 
-                    $.get(fcConfig.sitesPhotoPointsUrl).done(function(data) {
+                            $('#site-photo-points').html($(data));
+                            $('#site-photo-points img').on('load', function() {
 
-                        $('#site-photo-points').append($(data));
-                        $('#site-photo-points img').on('load', function() {
+                                var parent = $(this).parents('.thumb');
+                                var $caption = $(parent).find('.caption');
+                                $caption.outerWidth($(this).width());
 
-                            var parent = $(this).parents('.thumb');
-                            var $caption = $(parent).find('.caption');
-                            $caption.outerWidth($(this).width());
-
-                        });
-                        $( '.photo-slider' ).mThumbnailScroller({theme:'hover-classic'});
-                        $('.photo-slider .fancybox').fancybox({
-                            helpers : {
-                                title: {
-                                    type: 'inside'
-                                }
-                            },
-                            beforeLoad: function() {
-                                var el, id = $(this.element).data('caption');
-
-                                if (id) {
-                                    el = $('#' + id);
-
-                                    if (el.length) {
-                                        this.title = el.html();
+                            });
+                            $( '.photo-slider' ).mThumbnailScroller({theme:'hover-classic'});
+                            $('.photo-slider .fancybox').fancybox({
+                                helpers : {
+                                    title: {
+                                        type: 'inside'
                                     }
-                                }
-                            },
-                            nextEffect:'fade',
-                            previousEffect:'fade'
-                        });
-                        $(window).load(function() {
+                                },
+                                beforeLoad: function() {
+                                    var el, id = $(this.element).data('caption');
 
+                                    if (id) {
+                                        el = $('#' + id);
+
+                                        if (el.length) {
+                                            this.title = el.html();
+                                        }
+                                    }
+                                },
+                                nextEffect:'fade',
+                                previousEffect:'fade'
+                            });
+                            $(window).load(function() {
+
+                            });
                         });
                     });
-
-
                 }
                 if (tab === '#plan' && !planTabInitialised) {
                     $.event.trigger({type:'planTabShown'});
