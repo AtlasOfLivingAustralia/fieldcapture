@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import au.org.ala.fieldcapture.CacheService
 import au.org.ala.fieldcapture.PreAuthorise
 import grails.converters.JSON
 
@@ -10,6 +11,7 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
 
     ReportService reportService
     BlogService blogService
+    CacheService cacheService
 
     /** Overrides the projectContent method in the fieldcapture controller to include the MERI plan and risks and threats content */
     protected Map projectContent(project, user, programs) {
@@ -28,6 +30,7 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
         hasProjectStories = hasProjectStories || project.projectStories
 
         def showAnnouncementsTab = projectService.isMeriPlanSubmittedOrApproved(project)
+        List<Map> scores = outputTargetScores()
 
         def imagesModel = publicImages.collect {[name:it.name, projectName:project.name, url:it.url, thumbnailUrl:it.thumbnailUrl]}
         boolean canChangeProjectDates = projectService.canChangeProjectDates(project)
@@ -35,13 +38,22 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
         def model = [overview:[label:'Overview', visible: true, default:true, type:'tab', publicImages:imagesModel, displayTargets:false, displayOutcomes:false, blog:blog, hasNewsAndEvents:hasNewsAndEvents, hasProjectStories:hasProjectStories, canChangeProjectDates:canChangeProjectDates],
          documents:[label:'Documents', visible: true, type:'tab'],
          details:[label:'MERI Plan', disabled:!user?.hasViewAccess, disabled:!meriPlanEnabled, visible:meriPlanVisible, meriPlanVisibleToUser:meriPlanVisibleToUser, risksAndThreatsVisible:canViewRisks, type:'tab'],
-         plan:[label:'Activities', visible:true, disabled:!user?.hasViewAccess, type:'tab', reports:project.reports],
+         plan:[label:'Activities', visible:true, disabled:!user?.hasViewAccess, type:'tab', reports:project.reports, scores:scores],
          risksAndThreats:[label:'Risks and Threats', disabled:!user?.hasViewAccess, visible:user?.hasViewAccess && risksAndThreatsVisible],
          site:[label:'Sites', visible: true, disabled:!user?.hasViewAccess, type:'tab'],
          dashboard:[label:'Dashboard', visible: true, disabled:!user?.hasViewAccess, type:'tab'],
          admin:[label:'Admin', visible:(user?.isAdmin || user?.isCaseManager), type:'tab', canChangeProjectDates: canChangeProjectDates, showAnnouncementsTab:showAnnouncementsTab]]
 
         return [view:'index', model:model]
+    }
+
+    private List<Map> outputTargetScores() {
+        cacheService.get('output-targets', {
+            List<Map> scores = metadataService.getScores(false)
+            scores.findAll { it.isOutputTarget }.collect {
+                [scoreId: it.scoreId, label: it.label, entityTypes: it.entityTypes, description: it.description, outputType: it.outputType]
+            }
+        })
     }
 
     @PreAuthorise(accessLevel = 'admin')

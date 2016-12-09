@@ -178,7 +178,7 @@
             <div class="tab-pane" id="plan">
             <!-- PLANS -->
                 <g:render template="/shared/activitiesPlan"
-                    model="[activities:activities ?: [], sites:project.sites ?: [], showSites:true, reports:projectContent.plan?.reports]"/>
+                    model="[activities:activities ?: [], sites:project.sites ?: [], showSites:true, reports:projectContent.plan?.reports, scores:projectContent.plan.scores]"/>
                 <g:if test="${user?.isCaseManager}">
                     <div class="validationEngineContainer" id="grantmanager-validation">
                         <g:render template="grantManagerSettings" model="[project:project]"/>
