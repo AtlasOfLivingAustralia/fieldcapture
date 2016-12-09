@@ -30,7 +30,7 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
         hasProjectStories = hasProjectStories || project.projectStories
 
         def showAnnouncementsTab = projectService.isMeriPlanSubmittedOrApproved(project)
-        List<Map> scores = outputTargetScores()
+        List<Map> scores = metadataService.getOutputTargetScores()
 
         def imagesModel = publicImages.collect {[name:it.name, projectName:project.name, url:it.url, thumbnailUrl:it.thumbnailUrl]}
         boolean canChangeProjectDates = projectService.canChangeProjectDates(project)
@@ -45,15 +45,6 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
          admin:[label:'Admin', visible:(user?.isAdmin || user?.isCaseManager), type:'tab', canChangeProjectDates: canChangeProjectDates, showAnnouncementsTab:showAnnouncementsTab]]
 
         return [view:'index', model:model]
-    }
-
-    private List<Map> outputTargetScores() {
-        cacheService.get('output-targets', {
-            List<Map> scores = metadataService.getScores(false)
-            scores.findAll { it.isOutputTarget }.collect {
-                [scoreId: it.scoreId, label: it.label, entityTypes: it.entityTypes, description: it.description, outputType: it.outputType]
-            }
-        })
     }
 
     @PreAuthorise(accessLevel = 'admin')
