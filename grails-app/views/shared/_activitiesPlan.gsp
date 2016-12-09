@@ -1408,7 +1408,7 @@
             fcConfig.project.activities || [],
             reports,
             fcConfig.project.outputTargets || {},
-            ${outputTargetMetadata as grails.converters.JSON},
+            ${scores as grails.converters.JSON},
             checkAndUpdateProject(fcConfig.project, null, programModel),
             programModel,
             today,

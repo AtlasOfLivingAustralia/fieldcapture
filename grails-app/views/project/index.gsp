@@ -52,6 +52,7 @@
         projectReportPDFUrl:"${createLink(controller:'project', action:'projectReportPDF', id:project.projectId)}",
         meriPlanPDFUrl:"${createLink(controller:'project', action:'meriPlanPDF', id:project.projectId)}",
         sitesPhotoPointsUrl:"${createLink(controller:'project', action:'projectSitePhotos', id:project.projectId)}",
+        organisationSearchUrl: "${createLink(controller: 'organisation', action: 'search')}",
         returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
 
     },
@@ -177,7 +178,7 @@
             <div class="tab-pane" id="plan">
             <!-- PLANS -->
                 <g:render template="/shared/activitiesPlan"
-                    model="[activities:activities ?: [], sites:project.sites ?: [], showSites:true, reports:projectContent.plan?.reports]"/>
+                    model="[activities:activities ?: [], sites:project.sites ?: [], showSites:true, reports:projectContent.plan?.reports, scores:projectContent.plan.scores]"/>
                 <g:if test="${user?.isCaseManager}">
                     <div class="validationEngineContainer" id="grantmanager-validation">
                         <g:render template="grantManagerSettings" model="[project:project]"/>
@@ -195,7 +196,9 @@
                 <!-- ko stopBinding:true -->
                 <g:render plugin="fieldcapture-plugin" template="/site/sitesList" model="${[editable:user?.isEditor]}"/>
                 <!-- /ko -->
-                <div id="site-photo-points"></div>
+                <div id="site-photo-points">
+                    <a href="#"><i>Click to view photo points and photos</i></a>
+                </div>
 
 
             </div>
@@ -413,8 +416,13 @@
 				self.contractDatesFixed.subscribe(function() {
 				    self.changeActivityDates(!self.contractDatesFixed());
 				});
+				self.transients.selectOrganisation = function(data){
+				    self.transients.organisation({organisationId:data.source.organisationId, name:data.label});
+				};
 
-
+                self.transients.selectServiceProviderOrganisation = function(data){
+				    self.transients.serviceProviderOrganisation({organisationId:data.source.organisationId, name:data.label});
+				};
                 self.allYears = function(startYear) {
 		            var currentYear = new Date().getFullYear(), years = [];
 		            startYear = startYear || 2010;
@@ -858,44 +866,45 @@
                     });
                     sitesViewModel.sitesFiltered(visibleIndicies());
 
+                    $('#site-photo-points a').click(function(e) {
+                        e.preventDefault();
+                        $('#site-photo-points').html('<r:img id="img-spinner" width="50" height="50" dir="images" file="loading.gif" alt="Loading"/>');
+                        $.get(fcConfig.sitesPhotoPointsUrl).done(function(data) {
 
-                    $.get(fcConfig.sitesPhotoPointsUrl).done(function(data) {
+                            $('#site-photo-points').html($(data));
+                            $('#site-photo-points img').on('load', function() {
 
-                        $('#site-photo-points').append($(data));
-                        $('#site-photo-points img').on('load', function() {
+                                var parent = $(this).parents('.thumb');
+                                var $caption = $(parent).find('.caption');
+                                $caption.outerWidth($(this).width());
 
-                            var parent = $(this).parents('.thumb');
-                            var $caption = $(parent).find('.caption');
-                            $caption.outerWidth($(this).width());
-
-                        });
-                        $( '.photo-slider' ).mThumbnailScroller({theme:'hover-classic'});
-                        $('.photo-slider .fancybox').fancybox({
-                            helpers : {
-                                title: {
-                                    type: 'inside'
-                                }
-                            },
-                            beforeLoad: function() {
-                                var el, id = $(this.element).data('caption');
-
-                                if (id) {
-                                    el = $('#' + id);
-
-                                    if (el.length) {
-                                        this.title = el.html();
+                            });
+                            $( '.photo-slider' ).mThumbnailScroller({theme:'hover-classic'});
+                            $('.photo-slider .fancybox').fancybox({
+                                helpers : {
+                                    title: {
+                                        type: 'inside'
                                     }
-                                }
-                            },
-                            nextEffect:'fade',
-                            previousEffect:'fade'
-                        });
-                        $(window).load(function() {
+                                },
+                                beforeLoad: function() {
+                                    var el, id = $(this.element).data('caption');
 
+                                    if (id) {
+                                        el = $('#' + id);
+
+                                        if (el.length) {
+                                            this.title = el.html();
+                                        }
+                                    }
+                                },
+                                nextEffect:'fade',
+                                previousEffect:'fade'
+                            });
+                            $(window).load(function() {
+
+                            });
                         });
                     });
-
-
                 }
                 if (tab === '#plan' && !planTabInitialised) {
                     $.event.trigger({type:'planTabShown'});
