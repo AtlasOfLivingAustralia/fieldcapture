@@ -52,6 +52,7 @@
         projectReportPDFUrl:"${createLink(controller:'project', action:'projectReportPDF', id:project.projectId)}",
         meriPlanPDFUrl:"${createLink(controller:'project', action:'meriPlanPDF', id:project.projectId)}",
         sitesPhotoPointsUrl:"${createLink(controller:'project', action:'projectSitePhotos', id:project.projectId)}",
+        organisationSearchUrl: "${createLink(controller: 'organisation', action: 'search')}",
         returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
 
     },
@@ -177,7 +178,7 @@
             <div class="tab-pane" id="plan">
             <!-- PLANS -->
                 <g:render template="/shared/activitiesPlan"
-                    model="[activities:activities ?: [], sites:project.sites ?: [], showSites:true, reports:projectContent.plan?.reports]"/>
+                    model="[activities:activities ?: [], sites:project.sites ?: [], showSites:true, reports:projectContent.plan?.reports, scores:projectContent.plan.scores]"/>
                 <g:if test="${user?.isCaseManager}">
                     <div class="validationEngineContainer" id="grantmanager-validation">
                         <g:render template="grantManagerSettings" model="[project:project]"/>
@@ -415,8 +416,13 @@
 				self.contractDatesFixed.subscribe(function() {
 				    self.changeActivityDates(!self.contractDatesFixed());
 				});
+				self.transients.selectOrganisation = function(data){
+				    self.transients.organisation({organisationId:data.source.organisationId, name:data.label});
+				};
 
-
+                self.transients.selectServiceProviderOrganisation = function(data){
+				    self.transients.serviceProviderOrganisation({organisationId:data.source.organisationId, name:data.label});
+				};
                 self.allYears = function(startYear) {
 		            var currentYear = new Date().getFullYear(), years = [];
 		            startYear = startYear || 2010;

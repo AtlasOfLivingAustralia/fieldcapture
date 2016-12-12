@@ -103,7 +103,7 @@ class ActivityController {
             def model = activityModel(activity, activity.projectId)
             // Need these to decide if output targets need to be removed if an activity type is changed.
             model.project.activities = activityService.activitiesForProject(activity.projectId)
-            model.outputTargetMetadata = metadataService.getOutputTargetsByOutputByActivity()
+            model.outputTargetMetadata = metadataService.getOutputTargetScores()
 
             model.activityTypes = metadataService.activityTypesList(model.project?.associatedProgram, model.project?.associatedSubProgram)
             model.hasPhotopointData = activity.documents?.find {it.poiId}
