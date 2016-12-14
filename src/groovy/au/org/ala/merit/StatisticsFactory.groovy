@@ -82,7 +82,13 @@ class StatisticsFactory {
 
         Statistic statistic = create(typeConfig.remove('type'), typeConfig)
 
-        displayProps.value = statistic.statistic
+        try {
+            displayProps.value = statistic.statistic
+        }
+        catch (Exception e) {
+            e.printStackTrace()
+            displayProps.value = 0
+        }
 
         displayProps
     }

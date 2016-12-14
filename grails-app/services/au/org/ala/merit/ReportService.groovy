@@ -284,7 +284,7 @@ class ReportService {
         def result = results.outputData?.find {it.label == score}
         def value = 0
         if (result) {
-            value = result.result ?: 0
+            value = result.result?.result ?: 0
         }
         value as Number
 
@@ -293,8 +293,8 @@ class ReportService {
     public Number filterGroupedScore(String score, String groupToFilter, List<String> filters = null) {
         def results = searchService.reportOnScores([score], filters)
         def value = 0
-        if (results.outputData && results.outputData[0].groups) {
-            def result = results.outputData[0].groups.find{it.group == groupToFilter}
+        if (results.outputData && results.outputData[0].result?.groups) {
+            def result = results.outputData[0].result.groups.find{it.group == groupToFilter}
             if (result) {
                 value = result.results[0].result
             }

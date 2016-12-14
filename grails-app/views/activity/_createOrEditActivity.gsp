@@ -106,7 +106,7 @@
             <ul class="unstyled" data-bind="foreach: transients.stages">
                 <!-- ko if:$data -->
                 <li>
-                    <label class="checkbox" data-bind="css:{'disabled':$parent.projectStage() == $data}">
+                    <label class="checkbox" style="display:inline-block;" data-bind="css:{'disabled':$parent.projectStage() == $data}">
                         <input type="checkbox" class="checkbox" data-bind="attr: { value: $data }, checked: $parent.duplicateStages, enable: $data != $parent.projectStage()" data-validation-engine="min"/>
                         <span data-bind="text: $data"></span>
                     </label>
