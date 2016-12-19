@@ -54,12 +54,11 @@ class ReportService {
 
         if (!periodStartDate) {
             periodStartDate = startDate
-
-            if (alignToCalendar) {
-                periodStartDate = DateUtils.alignToPeriod(periodStartDate, period)
-            }
-
         }
+        if (alignToCalendar) {
+            periodStartDate = DateUtils.alignToPeriod(periodStartDate, period)
+        }
+
 
         log.info "Regenerating stages starting from stage: "+stage+ ", starting from: "+periodStartDate+" ending at: "+endDate
         while (periodStartDate < endDate.minusDays(1)) {
