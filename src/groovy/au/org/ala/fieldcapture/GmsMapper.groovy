@@ -44,6 +44,8 @@ class GmsMapper {
 
     private def organisations
 
+    private List<Map> scores
+
     def projectMapping = [
             (GRANT_ID_COLUMN):[name:'grantId', type:'string'],
             APP_NM:[name:'name', type:'string'],
@@ -105,14 +107,16 @@ class GmsMapper {
         this.activitiesModel = []
         this.programModel = []
         this.organisations = []
+        this.scores = []
         includeProgress = false
     }
 
-    public GmsMapper(activitiesModel, programModel, organisations, includeProgress = false) {
+    public GmsMapper(activitiesModel, programModel, organisations, List<Map> scores, includeProgress = false) {
         this.activitiesModel = activitiesModel
         this.programModel = programModel
         this.includeProgress = includeProgress
         this.organisations = organisations
+        this.scores = scores
     }
 
     def validateHeaders(projectRows) {
@@ -364,25 +368,21 @@ class GmsMapper {
         }
         def result = [:]
 
-        def outputName, score
-        activitiesModel.outputs.find { output ->
-            score = output.scores?.find{
-                it.gmsId?.split('\\s')?.contains(code)
-            }
-            outputName = output.name
-            return score
-        }
+        def outputName
+        Map score = scores.find { it.externalId?.split('\\s')?.contains(code) }
 
         if (!score) {
+            println "No mapping for score ${code}, row: ${rowMap.index}"
+
             errors << "No mapping for score ${code}, row: ${rowMap.index}"
         }
         else {
             if (includeProgress) {
-                result << [target: target.target, outputLabel:outputName, scoreLabel:score.label, scoreName:score.name, units:score.units, progressToDate:target.progressToDate]
+                result << [target: target.target, scoreId:score.scoreId, outputLabel:score.outputType, scoreLabel:score.label, units:score.units, progressToDate:target.progressToDate]
             }
             else {
                 if (score.isOutputTarget) {
-                    result << [target: target.target, outputLabel:outputName, scoreLabel:score.label, scoreName:score.name, units:score.units]
+                    result << [target: target.target, scoreId:score.scoreId, outputLabel:score.outputType, scoreLabel:score.label, units:score.units]
                 }
                 else {
                     errors << "Warning: score ${code} is not an output target"

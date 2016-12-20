@@ -15,10 +15,17 @@ class GmsMapperSpec extends Specification {
 
     def gmsMapper = new GmsMapper()
 
+    def scores = [
+            [scoreId:'1', label:'Area of revegetation works (Ha)', units:'Ha', externalId:'RVA', isOutputTarget:true],
+            [scoreId:'2', label:'Number of plants planted', units:'', externalId:'RVN', isOutputTarget:true],
+            [scoreId:'3', label:'Total new area treated for weeds (Ha)', units:'Ha', externalId:'WDT', isOutputTarget:true],
+            [scoreId:'4', label:'Total No. of plants grown and ready for planting', units:'', externalId:'PPRP', isOutputTarget:true]
+
+    ]
     def activitiesModel
     def setup() {
         activitiesModel = JSON.parse(new InputStreamReader(getClass().getResourceAsStream('/resources/activities-model.json')))
-        gmsMapper = new GmsMapper(activitiesModel, [:], [])
+        gmsMapper = new GmsMapper(activitiesModel, [:], [], scores)
     }
 
     /**
@@ -74,12 +81,12 @@ class GmsMapperSpec extends Specification {
         // output targets
         def outputTargets = project.outputTargets
         4 == outputTargets.size()
-        def expectedOutputs = ['Revegetation Details', 'Revegetation Details', 'Weed Treatment Details', 'Plant Propagation Details']
-        def expectedScores = ['Area of revegetation works (Ha)', 'Number of plants planted', 'Total new area treated (Ha)', 'Total No. of plants grown and ready for planting']
+        def expectedScoreIds = ['1', '2', '3', '4']
+        def expectedScores = ['Area of revegetation works (Ha)', 'Number of plants planted', 'Total new area treated for weeds (Ha)', 'Total No. of plants grown and ready for planting']
         def expectedTargets = [400, 1500, 1.5, 500]
 
         outputTargets.eachWithIndex { outputTarget, i ->
-            assert expectedOutputs[i] == outputTarget.outputLabel
+            assert expectedScoreIds[i] == outputTarget.scoreId
             assert expectedScores[i] == outputTarget.scoreLabel
             assert expectedTargets[i] == outputTarget.target
 
@@ -110,12 +117,12 @@ class GmsMapperSpec extends Specification {
         // output targets
         def outputTargets = projectDetails.project.outputTargets
         2 == outputTargets.size()
-        def expectedOutputs = ['Revegetation Details', 'Revegetation Details']
+        def expectedScoreIds = ['1', '2']
         def expectedScores = ['Area of revegetation works (Ha)', 'Number of plants planted']
         def expectedTargets = [750, 1500]
 
         outputTargets.eachWithIndex { outputTarget, i ->
-            assert expectedOutputs[i] == outputTarget.outputLabel
+            assert expectedScoreIds[i] == outputTarget.scoreId
             assert expectedScores[i] == outputTarget.scoreLabel
             assert expectedTargets[i] == outputTarget.target
 

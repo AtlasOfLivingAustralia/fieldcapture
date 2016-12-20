@@ -1192,7 +1192,7 @@ class ImportService {
         cacheService.clear(PROJECTS_CACHE_KEY)
         def reader = new InputStreamReader(csv, charEncoding)
         try {
-            def mapper = new GmsMapper(metadataService.activitiesModel(), metadataService.programsModel(), metadataService.organisationList()?.list)
+            def mapper = new GmsMapper(metadataService.activitiesModel(), metadataService.programsModel(), metadataService.organisationList()?.list, metadataService.outputTargetScores())
             def first = true
             def prevGrantId = null
             def prevExternalId = null
@@ -1235,7 +1235,7 @@ class ImportService {
 
     def mapProjectRows(projectRows, status) {
 
-        def mapper = new GmsMapper(metadataService.activitiesModel(), metadataService.programsModel(), metadataService.organisationList()?.list)
+        def mapper = new GmsMapper(metadataService.activitiesModel(), metadataService.programsModel(), metadataService.organisationList()?.list, metadataService.outputTargetScores())
         def projectDetails = mapper.mapProject(projectRows)
         def grantId = projectDetails.project.grantId?:'<not mapped>'
         def externalId = projectDetails.project.externalId?:'<not mapped>'
@@ -1245,7 +1245,7 @@ class ImportService {
 
     def importAll(projectRows, status) {
 
-        def mapper = new GmsMapper(metadataService.activitiesModel(), metadataService.programsModel(), metadataService.organisationList()?.list)
+        def mapper = new GmsMapper(metadataService.activitiesModel(), metadataService.programsModel(), metadataService.organisationList()?.list, metadataService.outputTargetScores())
         def projectDetails = mapper.mapProject(projectRows)
 
         def grantId = projectDetails.project.grantId?:'<not mapped>'
@@ -1392,7 +1392,7 @@ class ImportService {
 
 
         def activitiesModel = metadataService.activitiesModel()
-        def mapper = new GmsMapper(activitiesModel, [:], [], true)
+        def mapper = new GmsMapper(activitiesModel, [:], [], metadataService.outputTargetScores(), true)
         def projectDetails = mapper.mapProject(projectRows)
 
         //errors.addAll(projectDetails.errors)
