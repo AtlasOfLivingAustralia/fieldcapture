@@ -218,12 +218,13 @@
                 <div class="row-fluid">
                     <div class="span2 large-space-before">
                         <ul id="adminNav" class="nav nav-tabs nav-stacked ">
-                            <g:if test="${fc.userInRole(role: grailsApplication.config.security.cas.alaAdminRole) || fc.userInRole(role: grailsApplication.config.security.cas.adminRole)}">
+                            <g:if test="${fc.userIsAlaOrFcAdmin()}">
                                 <li ${activeClass}><a href="#settings" id="settings-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Project settings</a></li>
                                 <g:set var="activeClass" value=""/>
                             </g:if>
-
+                            <g:if test="${user.isAdmin || user.isCaseManager}">
                             <li><a href="#projectDetails" id="projectDetails-tab" data-toggle="tab"><i class="icon-chevron-right"></i> MERI Plan</a></li>
+                            </g:if>
                             <g:if test="${projectContent.admin.showAnnouncementsTab}">
                                 <li><a href="#alternateAnnouncements" id="alternateAnnouncements-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Project Announcements</a></li>
                             </g:if>
@@ -234,10 +235,12 @@
                             <g:if test="${project.projectStories}">
                                 <li><a href="#editProjectStories" id="editProjectStories-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Project stories</a></li>
                             </g:if>
-                            <li ${activeClass}><a href="#permissions" id="permissions-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Project access</a></li>
-                            <li><a href="#species" id="species-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Species of interest</a></li>
-                            <li><a href="#edit-documents" id="edit-documents-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Documents</a></li>
-                            <g:if test="${fc.userInRole(role: grailsApplication.config.security.cas.alaAdminRole) || fc.userInRole(role: grailsApplication.config.security.cas.adminRole)}">
+                            <g:if test="${user.isAdmin || user.isCaseManager}">
+                                <li ${activeClass}><a href="#permissions" id="permissions-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Project access</a></li>
+                                <li><a href="#species" id="species-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Species of interest</a></li>
+                                <li><a href="#edit-documents" id="edit-documents-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Documents</a></li>
+                            </g:if>
+                            <g:if test="${fc.userIsAlaOrFcAdmin()}">
                                 <li><a href="#project-audit" id="project-audit-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Audit</a></li>
                             </g:if>
                         </ul>
@@ -245,7 +248,7 @@
                     <div class="span10">
                         <div class="pill-content">
                             <g:set var="activeClass" value="active"/>
-                            <g:if test="${fc.userInRole(role: grailsApplication.config.security.cas.alaAdminRole) || fc.userInRole(role: grailsApplication.config.security.cas.adminRole)}">
+                            <g:if test="${fc.userIsAlaOrFcAdmin()}">
                                 <!-- PROJECT SETTINGS -->
                                 <div id="settings" class="pill-pane ${activeClass}">
                                     <h3>Project Settings</h3>
@@ -261,16 +264,18 @@
                             </g:if>
 
                             <!-- PROJECT DETAILS -->
-                            <div id="projectDetails" class="pill-pane">
-                                <!-- Edit project details -->
-                                <h3>MERI Plan</h3>
-                                <g:render template="/shared/restoredData" plugin="fieldcapture-plugin" model="[id:'restoredData', saveButton:'Save', cancelButton:'Cancel']"/>
-                                <div class="row-fluid">
-                                    <div class="validationEngineContainer" id="project-details-validation">
-                                        <g:render template="editProjectDetails" model="[project: project]"/>
+                            <g:if test="${user.isAdmin || user.isCaseManager}">
+                                <div id="projectDetails" class="pill-pane">
+                                    <!-- Edit project details -->
+                                    <h3>MERI Plan</h3>
+                                    <g:render template="/shared/restoredData" plugin="fieldcapture-plugin" model="[id:'restoredData', saveButton:'Save', cancelButton:'Cancel']"/>
+                                    <div class="row-fluid">
+                                        <div class="validationEngineContainer" id="project-details-validation">
+                                            <g:render template="editProjectDetails" model="[project: project]"/>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            </g:if>
                             <g:if test="${projectContent.admin.showAnnouncementsTab}">
                                 <div id="alternateAnnouncements" class="pill-pane">
                                     <div id="announcement-result-placeholder"></div>
@@ -291,34 +296,36 @@
                                     <g:render plugin="fieldcapture-plugin" template="editProjectContent" model="${[attributeName:'projectStories', header:'Project stories']}"/>
                                 </div>
                             </g:if>
-                            <div id="permissions" class="pill-pane ${activeClass}">
-                                <h3>Project Access</h3>
-                                <h4>Add Permissions</h4>
-                                <g:render plugin="fieldcapture-plugin" template="/admin/addPermissions" model="[addUserUrl:g.createLink(controller:'user', action:'addUserAsRoleToProject'), entityId:project.projectId]"/>
-                                <g:render plugin="fieldcapture-plugin" template="/admin/permissionTable" model="[loadPermissionsUrl:g.createLink(controller:'project', action:'getMembersForProjectId', id:project.projectId), removeUserUrl:g.createLink(controller:'user', action:'removeUserWithRoleFromProject'), entityId:project.projectId, user:user]"/>
-                            </div>
-                            <!-- SPECIES -->
-                            %{--<div class="border-divider large-space-before">&nbsp;</div>--}%
-                            <div id="species" class="pill-pane">
-                                %{--<a name="species"></a>--}%
-                                <g:render plugin="fieldcapture-plugin"  template="/species/species" model="[project:project, activityTypes:activityTypes]"/>
-                            </div>
-                            <!-- DOCUMENTS -->
-                            <div id="edit-documents" class="pill-pane">
-                                <h3>Project Documents</h3>
-                                <div class="row-fluid">
-                                    <div class="span10">
-                                        <g:render plugin="fieldcapture-plugin" template="/shared/editDocuments"
-                                                  model="[useExistingModel: true,editable:true, filterBy: 'all', ignore: '', imageUrl:resource(dir:'/images/filetypes'),containerId:'adminDocumentList']"/>
+                            <g:if test="${user.isAdmin || user.isCaseManager}">
+                                <div id="permissions" class="pill-pane ${activeClass}">
+                                    <h3>Project Access</h3>
+                                    <h4>Add Permissions</h4>
+                                    <g:render plugin="fieldcapture-plugin" template="/admin/addPermissions" model="[addUserUrl:g.createLink(controller:'user', action:'addUserAsRoleToProject'), entityId:project.projectId]"/>
+                                    <g:render plugin="fieldcapture-plugin" template="/admin/permissionTable" model="[loadPermissionsUrl:g.createLink(controller:'project', action:'getMembersForProjectId', id:project.projectId), removeUserUrl:g.createLink(controller:'user', action:'removeUserWithRoleFromProject'), entityId:project.projectId, user:user]"/>
+                                </div>
+                                <!-- SPECIES -->
+                                %{--<div class="border-divider large-space-before">&nbsp;</div>--}%
+                                <div id="species" class="pill-pane">
+                                    %{--<a name="species"></a>--}%
+                                    <g:render plugin="fieldcapture-plugin"  template="/species/species" model="[project:project, activityTypes:activityTypes]"/>
+                                </div>
+                                <!-- DOCUMENTS -->
+                                <div id="edit-documents" class="pill-pane">
+                                    <h3>Project Documents</h3>
+                                    <div class="row-fluid">
+                                        <div class="span10">
+                                            <g:render plugin="fieldcapture-plugin" template="/shared/editDocuments"
+                                                      model="[useExistingModel: true,editable:true, filterBy: 'all', ignore: '', imageUrl:resource(dir:'/images/filetypes'),containerId:'adminDocumentList']"/>
+                                        </div>
+                                    </div>
+                                    %{--The modal view containing the contents for a modal dialog used to attach a document--}%
+                                    <g:render plugin="fieldcapture-plugin" template="/shared/attachDocument"/>
+                                    <div class="row-fluid attachDocumentModal">
+                                        <button class="btn" id="doAttach" data-bind="click:attachDocument">Attach Document</button>
                                     </div>
                                 </div>
-                                %{--The modal view containing the contents for a modal dialog used to attach a document--}%
-                                <g:render plugin="fieldcapture-plugin" template="/shared/attachDocument"/>
-                                <div class="row-fluid attachDocumentModal">
-                                    <button class="btn" id="doAttach" data-bind="click:attachDocument">Attach Document</button>
-                                </div>
-                            </div>
-                            <g:if test="${fc.userInRole(role: grailsApplication.config.security.cas.alaAdminRole) || fc.userInRole(role: grailsApplication.config.security.cas.adminRole)}">
+                            </g:if>
+                            <g:if test="${fc.userIsAlaOrFcAdmin()}">
                                 <!-- Audit -->
                                 <div id="project-audit" class="pill-pane">
                                     <g:render template="/project/audit" plugin="fieldcapture-plugin"/>
@@ -1026,7 +1033,7 @@
         }
 </r:script>
 
-<g:if test="${user?.isAdmin || user?.isCaseManager}">
+<g:if test="${user?.isEditor}">
     <r:script>
         // Admin JS code only exposed to admin users
         $(function () {
@@ -1045,7 +1052,9 @@
                 }
             });
 
+            <g:if test="${user.isAdmin || user.isCaseManager}">
             populatePermissionsTable();
+            </g:if>
         });
 
     </r:script>
