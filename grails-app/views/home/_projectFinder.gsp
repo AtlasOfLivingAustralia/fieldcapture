@@ -208,8 +208,8 @@
                     <div class="accordian-body collapse" id="reportView">
                         <span class="span4 facet-holder"></span>
 
-                        <span class="span8">
-                            <div class="row-fluid">
+                        <span class="span8" style="overflow-x:scroll">
+                            <div class="row-fluid" >
                                 <g:if test="${fc.userIsAlaOrFcAdmin()}">
                                     <span class="span12">
                                         <h4>Report: </h4>
