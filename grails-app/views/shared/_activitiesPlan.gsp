@@ -300,7 +300,7 @@
 <!-- ko with: deferReason -->
 <span data-bind="visible: $parent.progress()=='deferred' || $parent.progress()=='cancelled'">
     <i class="icon-list-alt"
-       data-bind="popover: {title: 'Reason for deferral<br><small>(Click icon to edit reason.)</small>', content: notes, placement: 'left'}, click:$parent.displayReasonModal.editReason">
+       data-bind="popover: {title: $parent.deferReasonHelpText, content: notes, placement: 'left'}, click:$parent.displayReasonModal.editReason">
     </i>
 </span>
 <!-- /ko -->
@@ -315,7 +315,7 @@
 <!-- ko with: deferReason -->
 <span data-bind="visible: $parent.progress()=='deferred' || $parent.progress()=='cancelled'">
     <i class="icon-list-alt"
-       data-bind="popover: {title: 'Reason for deferral', content: notes, placement: 'left'}, click:function() {$parent.displayReasonModalReadOnly(true);}">
+       data-bind="popover: {title: $parent.deferReasonHelpText, content: notes, placement: 'left'}, click:function() {$parent.displayReasonModalReadOnly(true);}">
     </i>
 </span>
 <!-- /ko -->
@@ -640,6 +640,20 @@
             this.deferReason = ko.observable(undefined); // a reason document or undefined
             // the following handles the modal dialog for deferral/cancel reasons
             this.displayReasonModalReadOnly = ko.observable(false);
+            this.deferReasonHelpText = ko.observable(function() {
+                var helpText;
+                if (self.progress() == 'deferred') {
+                    helpText = 'Reason for deferral';
+                }
+                else if (self.progress() == 'cancelled') {
+                    helpText = 'Reason for cancellation';
+                }
+                if (stage.canUpdateStatus()) {
+                    helpText += '<br><small>(Click icon to edit reason.)</small>';
+                }
+                return helpText;
+
+            });
 
             this.displayReasonModal = ko.observable(false);
 
