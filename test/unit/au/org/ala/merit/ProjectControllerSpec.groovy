@@ -120,7 +120,7 @@ class ProjectControllerSpec extends Specification {
         !model.projectContent.admin.disabled
     }
 
-    def "the admin content should be not present for project editors"() {
+    def "the admin content should be present for project editors (to edit blog)"() {
         def projectId = '1234'
         projectServiceStub.get(projectId, _) >> project(projectId)
         projectServiceStub.programsModel() >> [programs:[[name:'Test', optionalProjectContent:['Risks and Threats', 'MERI Plan']]]]
@@ -130,9 +130,9 @@ class ProjectControllerSpec extends Specification {
         when: "retrieving the project index page"
         controller.index(projectId)
 
-        then: "The admin tab is not visible"
+        then: "The admin tab is visible"
         view == '/project/index'
-        !model.projectContent.admin.visible
+        model.projectContent.admin.visible
     }
 
 
