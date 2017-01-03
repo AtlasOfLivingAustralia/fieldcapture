@@ -73,20 +73,24 @@
             "order":[[typeColumn, 'asc'], [scheduledDateColumn, 'asc']],
             "autoWidth": false,
             "columns": columns,
-            "dom": 'Tlfrtip',
-            tableTools: {
-                "sSwfPath": "${grailsApplication.config.contextPath}/swf/copy_csv_xls_pdf.swf",
-                "aButtons": [
-                    "copy",
-                    "print",
-                    {
-                        "sExtends":    "collection",
-                        "sButtonText": "Save",
-                        "aButtons":    [
-                            {"sExtends":"csv",  "sFileName":"Annoucements-${suffix}.csv"}, {"sExtends":"xls",  "sFileName":"Annoucements-${suffix}.xls"}, {"sExtends":"pdf",  "sFileName":"Annoucements-${suffix}.pdf"} ]
-                    }
-                ]
-            }
+            "dom": 'Brtip',
+
+            buttons: [
+                'copyHtml5',
+                {
+                    extend: 'excelHtml5',
+                    title: 'Output targets '+date
+                },
+                {
+                    extend: 'pdfHtml5',
+                    title: 'Output targets '+date
+                },
+                {
+                    extend: 'csvHtml5',
+                    title: 'Output targets '+date
+                }
+            ]
+
         });
 
 
