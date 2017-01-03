@@ -37,7 +37,7 @@
             "order":[[0, 'asc']],
             "autoWidth":false,
             "columns": columns,
-            "dom": 'Brtip',
+            "dom": 'Blfrtip',
 
             buttons: [
                 'copyHtml5',

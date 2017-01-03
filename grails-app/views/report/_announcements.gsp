@@ -73,7 +73,7 @@
             "order":[[typeColumn, 'asc'], [scheduledDateColumn, 'asc']],
             "autoWidth": false,
             "columns": columns,
-            "dom": 'Brtip',
+            "dom": 'Blfrtip',
 
             buttons: [
                 'copyHtml5',
