@@ -39,6 +39,11 @@
         </ul>
     </g:each>
 
+    <strong>Output Data</strong><br/>
+    <ul class="unstyled">
+        <li><label class="checkbox"><input type="checkbox" name="tabs" value="Participant Information" data-validation-engine="validate[minCheckbox[1]]">Participant Information</label></li>
+    </ul>
+
 </form>
 
 <r:script>
