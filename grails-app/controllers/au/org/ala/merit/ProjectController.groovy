@@ -42,7 +42,7 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
          risksAndThreats:[label:'Risks and Threats', disabled:!user?.hasViewAccess, visible:user?.hasViewAccess && risksAndThreatsVisible],
          site:[label:'Sites', visible: true, disabled:!user?.hasViewAccess, type:'tab'],
          dashboard:[label:'Dashboard', visible: true, disabled:!user?.hasViewAccess, type:'tab'],
-         admin:[label:'Admin', visible:user?.isEditor, type:'tab', canChangeProjectDates: canChangeProjectDates, showAnnouncementsTab:showAnnouncementsTab]]
+         admin:[label:'Admin', visible:user?.isEditor || user?.isAdmin || user?.isCaseManager, type:'tab', canChangeProjectDates: canChangeProjectDates, showAnnouncementsTab:showAnnouncementsTab]]
 
         return [view:'index', model:model]
     }
