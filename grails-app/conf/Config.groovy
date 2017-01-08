@@ -191,13 +191,13 @@ if(!upload.extensions.blacklist){
     upload.extensions.blacklist = ['exe','js','php','asp','aspx','com','bat']
 }
 if(!google.maps.url){
-    google.maps.url = "//maps.google.com/maps/api/js?sensor=false&language=en"
+    google.maps.url = "https://maps.googleapis.com/maps/api/js?language=en"
 }
 if(!google.geocode.url){
     google.geocode.url = "https://maps.googleapis.com/maps/api/geocode/json?sensor=false&latlng="
 }
 if(!google.drawmaps.url){
-    google.drawmaps.url = "//maps.google.com/maps/api/js?sensor=false&libraries=drawing,geometry"
+    google.drawmaps.url = "https://maps.googleapis.com/maps/api/js?libraries=drawing,geometry"
 }
 if (!user.registration.url) {
     user.registration.url = 'https://auth.ala.org.au/userdetails/registration/createAccount'
