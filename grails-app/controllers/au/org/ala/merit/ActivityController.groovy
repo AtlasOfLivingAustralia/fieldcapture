@@ -295,45 +295,38 @@ class ActivityController {
 
         if (!result) {
             def photoPoints = values.remove('photoPoints')
-            result = activityService.update(id, values)
+            Map activityResult = activityService.update(id, values)
+            if (activityResult.error) {
+                result = activityResult
+            }
+            else {
+                result.activity = activityResult.resp
+            }
 
             if (duplicateStages) {
-                List reports = reportService.getReportsForProject(projectId)
-                duplicateStages.each { String stage ->
-                    Map report = reports.find{ it.name == stage }
-                    if (report && !reportService.isSubmittedOrApproved(report)) {
-                        values.plannedStartDate = report.fromDate
-                        values.plannedEndDate = DateUtils.dayBefore(report.toDate)
-                        log.info("Creating duplicate activity for stage "+stage+" for project "+projectId)
-                        result = activityService.update(id, values)
-                    }
-                }
+                activityService.duplicateActivity(projectId, duplicateStages, values)
             }
 
             if (photoPoints) {
-                updatePhotoPoints(id ?: result.activityId, photoPoints)
+                result.photoPoints = updatePhotoPoints(id ?: result.activityId, photoPoints)
             }
 
         }
         //log.debug "result is " + result
 
-        if (result.error) {
-            render result as JSON
-        } else {
-            //log.debug "json result is " + (result as JSON)
-            render result.resp as JSON
-        }
+        render result as JSON
     }
 
-    private def updatePhotoPoints(activityId, photoPoints) {
+    private Map updatePhotoPoints(activityId, photoPoints) {
 
+        Map result = [:]
         def allPhotos = photoPoints.photos?:[]
 
         // If new photo points were defined, add them to the site.
         if (photoPoints.photoPoints) {
             photoPoints.photoPoints.each { photoPoint ->
                 def photos = photoPoint.remove('photos')
-                def result = siteService.addPhotoPoint(photoPoints.siteId, photoPoint)
+                result = siteService.addPhotoPoint(photoPoints.siteId, photoPoint)
 
                 if (!result.error) {
                     photos.each { photo ->
@@ -344,12 +337,24 @@ class ActivityController {
             }
         }
 
-        allPhotos.each { photo ->
+        allPhotos.eachWithIndex { photo, i ->
+
+            // Used to correlate response with the request, particularly in the case of new documents which
+            // do not have a documentId assigned yet.
+            String clientId = photo.remove('clientId') ?: i
 
             photo.activityId = activityId
-            documentService.saveStagedImageDocument(photo)
 
+            Map docResponse = documentService.saveStagedImageDocument(photo)
+            if (!docResponse.error) {
+                result[clientId] = docResponse.resp
+            }
+            else {
+                result[clientId] = docResponse.error
+            }
         }
+
+        result
     }
 
     def delete(String id) {
