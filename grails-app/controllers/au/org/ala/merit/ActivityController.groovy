@@ -4,6 +4,7 @@ import au.org.ala.fieldcapture.ActivityService
 import au.org.ala.fieldcapture.DateUtils
 import au.org.ala.fieldcapture.PreAuthorise
 import grails.converters.JSON
+import org.apache.commons.httpclient.HttpStatus
 import org.apache.poi.ss.usermodel.Workbook
 import org.apache.poi.ss.usermodel.WorkbookFactory
 import org.apache.poi.ss.util.CellReference
@@ -278,18 +279,17 @@ class ActivityController {
         else {
             projectId = values.projectId
         }
-        if (!projectId) {
-            response.status = 400
-            flash.message = "No project id supplied for activity: ${id}"
-            result = [status: 400, error: flash.message]
-        }
 
-        // check user has permissions to edit/update site - user must have 'editor' access to
-        // ALL linked projects to proceed.
-        if (!projectService.canUserEditProject(userService.getCurrentUserId(), projectId)) {
+        if (!projectId) {
+            response.status = HttpStatus.SC_BAD_REQUEST
+            flash.message = "No project id supplied for activity: ${id}"
+            result = [status: HttpStatus.SC_BAD_REQUEST, error: flash.message]
+        }
+        // check user has permissions to create or edit the activity.
+        else if (!projectService.canUserEditProject(userService.getCurrentUserId(), projectId)) {
             flash.message = "Error: access denied: User does not have <b>editor</b> permission for projectId ${projectId}"
-            response.status = 401
-            result = [status:401, error: flash.message]
+            response.status = HttpStatus.SC_UNAUTHORIZED
+            result = [status:HttpStatus.SC_UNAUTHORIZED, error: flash.message]
             //render result as JSON
         }
 
