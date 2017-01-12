@@ -4,6 +4,7 @@ import au.org.ala.fieldcapture.ActivityService
 import au.org.ala.fieldcapture.DateUtils
 import au.org.ala.fieldcapture.PreAuthorise
 import grails.converters.JSON
+import org.apache.commons.httpclient.HttpStatus
 import org.apache.poi.ss.usermodel.Workbook
 import org.apache.poi.ss.usermodel.WorkbookFactory
 import org.apache.poi.ss.util.CellReference
@@ -278,62 +279,54 @@ class ActivityController {
         else {
             projectId = values.projectId
         }
-        if (!projectId) {
-            response.status = 400
-            flash.message = "No project id supplied for activity: ${id}"
-            result = [status: 400, error: flash.message]
-        }
 
-        // check user has permissions to edit/update site - user must have 'editor' access to
-        // ALL linked projects to proceed.
-        if (!projectService.canUserEditProject(userService.getCurrentUserId(), projectId)) {
+        if (!projectId) {
+            response.status = HttpStatus.SC_BAD_REQUEST
+            flash.message = "No project id supplied for activity: ${id}"
+            result = [status: HttpStatus.SC_BAD_REQUEST, error: flash.message]
+        }
+        // check user has permissions to create or edit the activity.
+        else if (!projectService.canUserEditProject(userService.getCurrentUserId(), projectId)) {
             flash.message = "Error: access denied: User does not have <b>editor</b> permission for projectId ${projectId}"
-            response.status = 401
-            result = [status:401, error: flash.message]
+            response.status = HttpStatus.SC_UNAUTHORIZED
+            result = [status:HttpStatus.SC_UNAUTHORIZED, error: flash.message]
             //render result as JSON
         }
 
         if (!result) {
             def photoPoints = values.remove('photoPoints')
-            result = activityService.update(id, values)
+            Map activityResult = activityService.update(id, values)
+            if (activityResult.error) {
+                result = activityResult
+            }
+            else {
+                result.activity = activityResult.resp
+            }
 
             if (duplicateStages) {
-                List reports = reportService.getReportsForProject(projectId)
-                duplicateStages.each { String stage ->
-                    Map report = reports.find{ it.name == stage }
-                    if (report && !reportService.isSubmittedOrApproved(report)) {
-                        values.plannedStartDate = report.fromDate
-                        values.plannedEndDate = DateUtils.dayBefore(report.toDate)
-                        log.info("Creating duplicate activity for stage "+stage+" for project "+projectId)
-                        result = activityService.update(id, values)
-                    }
-                }
+                activityService.duplicateActivity(projectId, duplicateStages, values)
             }
 
             if (photoPoints) {
-                updatePhotoPoints(id ?: result.activityId, photoPoints)
+                result.photoPoints = updatePhotoPoints(id ?: result.activityId, photoPoints)
             }
 
         }
         //log.debug "result is " + result
 
-        if (result.error) {
-            render result as JSON
-        } else {
-            //log.debug "json result is " + (result as JSON)
-            render result.resp as JSON
-        }
+        render result as JSON
     }
 
-    private def updatePhotoPoints(activityId, photoPoints) {
+    private Map updatePhotoPoints(activityId, photoPoints) {
 
+        Map result = [:]
         def allPhotos = photoPoints.photos?:[]
 
         // If new photo points were defined, add them to the site.
         if (photoPoints.photoPoints) {
             photoPoints.photoPoints.each { photoPoint ->
                 def photos = photoPoint.remove('photos')
-                def result = siteService.addPhotoPoint(photoPoints.siteId, photoPoint)
+                result = siteService.addPhotoPoint(photoPoints.siteId, photoPoint)
 
                 if (!result.error) {
                     photos.each { photo ->
@@ -344,12 +337,24 @@ class ActivityController {
             }
         }
 
-        allPhotos.each { photo ->
+        allPhotos.eachWithIndex { photo, i ->
+
+            // Used to correlate response with the request, particularly in the case of new documents which
+            // do not have a documentId assigned yet.
+            String clientId = photo.remove('clientId') ?: i
 
             photo.activityId = activityId
-            documentService.saveStagedImageDocument(photo)
 
+            Map docResponse = documentService.saveStagedImageDocument(photo)
+            if (!docResponse.error) {
+                result[clientId] = docResponse.resp
+            }
+            else {
+                result[clientId] = docResponse.error
+            }
         }
+
+        result
     }
 
     def delete(String id) {
