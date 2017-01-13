@@ -1,12 +1,19 @@
 package au.org.ala.merit
 
 import au.org.ala.fieldcapture.ActivityService
+import au.org.ala.fieldcapture.DocumentService
 import au.org.ala.fieldcapture.MetadataService
 import au.org.ala.fieldcapture.UserService
 import au.org.ala.fieldcapture.WebService
+import grails.converters.JSON
 import grails.test.mixin.TestFor
+import org.codehaus.groovy.grails.web.converters.marshaller.json.CollectionMarshaller
+import org.codehaus.groovy.grails.web.converters.marshaller.json.MapMarshaller
 import org.joda.time.Period
 import spock.lang.Specification
+
+import javax.swing.text.Document
+
 import static au.org.ala.merit.ProjectService.*
 
 /**
@@ -15,18 +22,28 @@ import static au.org.ala.merit.ProjectService.*
 @TestFor(ProjectService)
 class ProjectServiceSpec extends Specification {
 
-    WebService webService = Stub(WebService)
-    ReportService reportService = Stub(ReportService)
+    WebService webService = Mock(WebService)
+    ReportService reportService = Mock(ReportService)
     UserService userService = Stub(UserService)
     MetadataService metadataService = Stub(MetadataService)
+    ActivityService activityService = Mock(ActivityService)
+    DocumentService documentService = Mock(DocumentService)
+    EmailService emailService = Mock(EmailService)
 
     def setup() {
+        JSON.registerObjectMarshaller(new MapMarshaller())
+        JSON.registerObjectMarshaller(new CollectionMarshaller())
         service.webService = webService
-        service.activityService = new ActivityService() // This is used to generate activity descriptions.
+        // Delegate activity description to the implementation in the ActivityService while retaining the ability to mock other methods.
+        au.org.ala.merit.ActivityService realService = new au.org.ala.merit.ActivityService()
+        activityService.defaultDescription(_ as Map) >> {Map activity -> realService.defaultDescription(activity) }
         service.grailsApplication = [config:[ecodata:[baseUrl:'']]]
         service.reportService = reportService
         service.userService = userService
         service.metadataService = metadataService
+        service.activityService = activityService
+        service.documentService = documentService
+        service.emailService = emailService
         userService.userIsAlaOrFcAdmin() >> false
         metadataService.getProgramConfiguration(_,_) >> [reportingPeriod:6, reportingPeriodAlignedToCalendar: true, weekDaysToCompleteReport:43]
     }
@@ -244,6 +261,36 @@ class ProjectServiceSpec extends Specification {
 
         then:
         result.error != null
+    }
+
+    def "a project should only be marked as completed when the final stage report is approved"(String reportId, boolean shouldComplete) {
+        given:
+        def projectId = 'project1'
+        def reason = null
+        def activityIds = ['a1', 'a2']
+        def stageReportDetails = [activityIds:activityIds, reportId:reportId, stage:'Stage 2', reason:reason]
+        reportService.getReportsForProject(projectId) >>[
+                [reportId:'r1', publicationStatus:ReportService.REPORT_APPROVED, name:'Stage 1', fromDate: '2015-07-01T00:00Z', toDate: '2016-01-01T00:00Z'],
+                [reportId:'r2', publicationStatus:ReportService.REPORT_NOT_APPROVED, name:'Stage 2', fromDate: '2016-01-01T00:00Z', toDate: '2017-01-01T00:00Z']]
+        webService.getJson(_) >> [projectId:projectId, planStatus:PLAN_NOT_APPROVED, plannedStartDate: '2015-07-01T00:00Z', plannedEndDate:'2016-12-31T00:00Z']
+
+        when:
+
+        service.approveStageReport(projectId, stageReportDetails)
+
+        then:
+        1 * activityService.approveActivitiesForPublication(activityIds) >> [resp:[status:200]]
+        1 * documentService.createTextDocument(_, _)
+        1 * emailService.sendReportApprovedEmail(projectId, stageReportDetails)
+        1 * reportService.approve(reportId, reason)
+        if (shouldComplete) {
+            1 * webService.doPost(_, [status:'completed'])
+        }
+
+        where:
+        reportId | shouldComplete
+        'r1'     | false
+        'r2'     | true
     }
 
 }

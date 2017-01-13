@@ -230,13 +230,11 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
         int validActivities = 0
         reportService.approve(stageDetails.reportId, stageDetails.reason)
 
-        def activities = activityService.activitiesForProject(projectId)
-
         // Close the project when the last stage report is approved.
         // Some projects have extra stage reports after the end date due to legacy data so this checks we've got the last stage within the project dates.
         def lastReport = project.reports?.max{it.fromDate < project.plannedEndDate ? it.fromDate : project.plannedStartDate}
 
-        if(lastReport == stageDetails.reportId){
+        if(lastReport && lastReport.reportId == stageDetails.reportId){
             def values = [:]
             values["status"] = "completed"
             update(projectId, values)
