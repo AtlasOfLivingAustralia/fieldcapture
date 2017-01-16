@@ -1192,7 +1192,7 @@ class ImportService {
         cacheService.clear(PROJECTS_CACHE_KEY)
         def reader = new InputStreamReader(csv, charEncoding)
         try {
-            def mapper = new GmsMapper(metadataService.activitiesModel(), metadataService.programsModel(), metadataService.organisationList()?.list)
+            def mapper = new GmsMapper(metadataService.activitiesModel(), metadataService.programsModel(), metadataService.organisationList()?.list, metadataService.getOutputTargetScores())
             def first = true
             def prevGrantId = null
             def prevExternalId = null
@@ -1235,7 +1235,7 @@ class ImportService {
 
     def mapProjectRows(projectRows, status) {
 
-        def mapper = new GmsMapper(metadataService.activitiesModel(), metadataService.programsModel(), metadataService.organisationList()?.list)
+        def mapper = new GmsMapper(metadataService.activitiesModel(), metadataService.programsModel(), metadataService.organisationList()?.list, metadataService.getOutputTargetScores())
         def projectDetails = mapper.mapProject(projectRows)
         def grantId = projectDetails.project.grantId?:'<not mapped>'
         def externalId = projectDetails.project.externalId?:'<not mapped>'
@@ -1245,7 +1245,7 @@ class ImportService {
 
     def importAll(projectRows, status) {
 
-        def mapper = new GmsMapper(metadataService.activitiesModel(), metadataService.programsModel(), metadataService.organisationList()?.list)
+        def mapper = new GmsMapper(metadataService.activitiesModel(), metadataService.programsModel(), metadataService.organisationList()?.list, metadataService.getOutputTargetScores())
         def projectDetails = mapper.mapProject(projectRows)
 
         def grantId = projectDetails.project.grantId?:'<not mapped>'
@@ -1392,7 +1392,7 @@ class ImportService {
 
 
         def activitiesModel = metadataService.activitiesModel()
-        def mapper = new GmsMapper(activitiesModel, [:], [], true)
+        def mapper = new GmsMapper(activitiesModel, [:], [], metadataService.getOutputTargetScores(), true)
         def projectDetails = mapper.mapProject(projectRows)
 
         //errors.addAll(projectDetails.errors)
@@ -1492,7 +1492,7 @@ class ImportService {
             }
 
             // we know our special output has a flat mapping structure
-            values << [outputName: target.outputLabel, scoreLabel: target.scoreLabel, score:target.progressToDate]
+            values << [scoreId: target.scoreId, scoreLabel: target.scoreLabel, score:target.progressToDate]
         }
 
         if (!values) {

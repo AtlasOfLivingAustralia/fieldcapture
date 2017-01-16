@@ -36,41 +36,6 @@
             $.post(url).done(function() { document.location.reload(); }).fail(function(result) { alert(result); });
         });
 
-        $("#btnLoadProjectData").click(function(e) {
-            e.preventDefault();
-
-            // HTML 5 only...
-            %{--var data = new FormData();--}%
-            %{--data.append('projectData', $('#fileSelector')[0].files[0]);--}%
-
-            %{--$.ajax({--}%
-            %{--url: "${createLink(controller: 'project', action:'loadProjectData')}",--}%
-            %{--done: function(result) {--}%
-            %{--document.location.reload();--}%
-            %{--},--}%
-            %{--error: function (result) {--}%
-            %{--var error = JSON.parse(result.responseText)--}%
-            %{--alert(error.error);--}%
-            %{--},--}%
-            %{--type:"POST",--}%
-            %{--processData: false,--}%
-            %{--contentType: false,--}%
-            %{--cache: false,--}%
-            %{--data: data--}%
-            %{--});--}%
-            $('form.loadProjectData').submit();
-        });
-
-        $("#projectData").change(function() {
-            if ($("#projectData").val()) {
-                $("#btnLoadProjectData").removeAttr("disabled");
-            }
-            else {
-                $("#btnLoadProjectData").attr("disabled", "disabled");
-            }
-
-        }).trigger('change');
-
         $("#btnLoadActivityData").click(function(e) {
             e.preventDefault();
 
@@ -130,36 +95,6 @@
 
         $("#generateReports").click(function(e) {
             $('#projectActivitiesForm').submit();
-        });
-
-        $("#gaData").change(function() {
-            if ($("#gaData").val()) {
-                $("#btnGaData").removeAttr("disabled");
-            }
-            else {
-                $("#btnGaData").attr("disabled", "disabled");
-            }
-
-        }).trigger('change');
-
-        $('#btnGaData').click(function(e) {
-            e.preventDefault();
-            $('form.gaData').submit();
-        });
-
-        $("#gaProjectData").change(function() {
-            if ($("#gaProjectData").val()) {
-                $("#btnGaProjectData").removeAttr("disabled");
-            }
-            else {
-                $("#btnGaProjectData").attr("disabled", "disabled");
-            }
-
-        }).trigger('change');
-
-        $('#btnGaProjectData').click(function(e) {
-            e.preventDefault();
-            $('form.gaProjectData').submit();
         });
 
         $("#bulkUploadSites").change(function() {
@@ -232,27 +167,7 @@
             Causes a re-read of the home page statistics configuration and clears it's cache.
         </td>
     </tr>
-    <tr>
-        <td>
-            <a style="color:white" class="btn btn-small btn-info" href="${createLink(controller:'admin', action:'gmsProjectImport')}">Import GMS project data</a>
-        </td>
-        <td>
-            Imports projects from the GMS using the new format.
-        </td>
-    </tr>
-    <tr>
-        <td><button disabled id="btnLoadProjectData" class="btn btn-small btn-info" title="Load project data">Load Projects from CSV</button>
-        </td>
-        <td>
-            Loads (or reloads) project information from a csv file.
-            <p><g:uploadForm class="loadProjectData" controller="admin" action="importProjectData">
-               <div><input id="projectData" type="file" accept="text/csv" name="projectData"/></div>
-               <div><input type="checkbox" name="importWithErrors">Force import (even with validation errors)</div>
-              </g:uploadForm>
 
-           </p>
-        </td>
-    </tr>
     <tr>
         <td><button disabled id="btnLoadActivityData" class="btn btn-small btn-info" title="Load project aggregrate data">Load Summary Activity Data from CSV</button>
         </td>
@@ -312,32 +227,6 @@
                 Activity Type <input type="text" name="activityType"><br/>
                 Period (months) <input type="text" name="period">
             </g:form>
-        </td>
-    </tr>
-    <tr>
-        <td><button disabled id="btnGaData" class="btn btn-small btn-info" title="Load Green Army reporting data">Load Green Army Reporting Data</button>
-        </td>
-        <td>
-            Loads Green army reporting data
-        <p><g:uploadForm class="gaData" controller="organisation" action="importGreenArmyMonthlyReports">
-            <div><input id="gaData" type="file" name="gaData"/></div>
-            <div><input type="checkbox" name="preview" checked="checked">Preview errors only, don't actually modify anything</div>
-        </g:uploadForm>
-
-        </p>
-        </td>
-    </tr>
-    <tr>
-        <td><button disabled id="btnGaProjectData" class="btn btn-small btn-info" title="Load Green Army project data">Load Green Army Project Data</button>
-        </td>
-        <td>
-            Loads Green army project data
-        <p><g:uploadForm class="gaProjectData" controller="organisation" action="processGreenArmyProjectData">
-            <div><input id="gaProjectData" type="file" name="gaProjectData"/></div>
-            <div><input type="checkbox" name="preview" checked="checked">Preview errors only, don't actually modify anything</div>
-        </g:uploadForm>
-
-        </p>
         </td>
     </tr>
     <tr>

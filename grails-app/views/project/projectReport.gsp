@@ -422,6 +422,7 @@
             </tbody>
         </table>
     </g:if>
+    <g:render template="/shared/documentTemplate" plugin="fieldcapture-plugin"/>
 
 </div>
 <r:script>

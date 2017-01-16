@@ -324,12 +324,13 @@
         this.subscribers = [];
 
         // client models register their name and methods to participate in saving
-        self.register = function (modelInstanceName, getMethod, isDirtyMethod, resetMethod) {
+        self.register = function (modelInstanceName, getMethod, isDirtyMethod, resetMethod, saveCallback) {
             this.subscribers.push({
                 model: modelInstanceName,
                 get: getMethod,
                 isDirty: isDirtyMethod,
-                reset: resetMethod
+                reset: resetMethod,
+                saveCallback: saveCallback
             });
             if (ko.isObservable(isDirtyMethod)) {
                 isDirtyMethod.subscribe(function() {
@@ -356,7 +357,7 @@
         };
 
         // master isDirty flag for the whole page - can control button enabling
-        this.isDirty  = function () {
+        self.isDirty  = function () {
             var dirty = false;
             $.each(this.subscribers, function(i, obj) {
                 dirty = dirty || obj.isDirty();
@@ -364,7 +365,7 @@
             return dirty;
         };
 
-        this.activityData = function() {
+        self.activityData = function() {
             var activityData = undefined;
             $.each(self.subscribers, function(i, obj) {
                 if (obj.model == 'activityModel') {
@@ -375,7 +376,7 @@
             return activityData;
         };
 
-        this.validate = function() {
+        self.validate = function() {
             var valid = $('#validation-container').validationEngine('validate');
             if (valid) {
                 // Check that forms with multiple optional sections have at least one of those sections completed.
@@ -401,7 +402,7 @@
             return valid;
         };
 
-        this.modelAsJS = function() {
+        self.modelAsJS = function() {
             var activityData, outputs = [];
             $.each(this.subscribers, function(i, obj) {
                 if (obj.isDirty()) {
@@ -425,10 +426,22 @@
             return activityData;
 
         }
-        this.modelAsJSON = function() {
+        self.modelAsJSON = function() {
             var jsData = this.modelAsJS();
 
             return jsData ? JSON.stringify(jsData) : undefined;
+        }
+
+        self.displayErrors = function(errors) {
+            var errorText =
+                "<span class='label label-important'>Important</span><h4>There was an error while trying to save your changes.</h4>";
+
+            $.each(errors, function (i, error) {
+                errorText += "<p>Saving <b>" +  (error.name === 'activity' ? 'the activity context' : error.name) +
+                    "</b> threw the following error:<br><blockquote>" + error.error + "</blockquote></p>";
+            });
+            errorText += "<p>Any other changes should have been saved.</p>";
+            bootbox.alert(errorText);
         }
 
         /**
@@ -442,7 +455,7 @@
          *
          * Validates the entire page before saving.
          */
-        this.save = function () {
+        self.save = function () {
 
             var valid = self.validate();
 
@@ -473,19 +486,13 @@
                 contentType: 'application/json',
                 success: function (data) {
                     var errorText = "";
-                    if (data.errors) {
-                        errorText = "<span class='label label-important'>Important</span><h4>There was an error while trying to save your changes.</h4>";
-                        $.each(data.errors, function (i, error) {
-                            errorText += "<p>Saving <b>" +
-(error.name === 'activity' ? 'the activity context' : error.name) +
-"</b> threw the following error:<br><blockquote>" + error.error + "</blockquote></p>";
-                        });
-                        errorText += "<p>Any other changes should have been saved.</p>";
-                        bootbox.alert(errorText);
+                    if (data.error || data.errors) {
+                        self.displayErrors(data.errors || [data.error]);
                     } else {
                         self.cancelAutosave();
                         self.dirtyFlag.reset();
-                        blockUIWithMessage("Activity data saved.")
+                        blockUIWithMessage("Activity data saved.");
+                        self.performSaveCallbacks(data);
                     }
                     amplify.store('activity-${activity.activityId}', null);
                 },
@@ -498,7 +505,7 @@
                         bootbox.alert($('#timeoutMessage').html());
                     }
                     else {
-                        alert('An unhandled error occurred: ' + error);
+                        self.displayErrors(['An unhandled error occurred: ' + error]);
                     }
 
                 },
@@ -529,6 +536,16 @@
 
 
         };
+
+        self.performSaveCallbacks = function(saveResponse) {
+            if (saveResponse) {
+                $.each(this.subscribers, function(i, obj) {
+                    if (obj.saveCallback) {
+                        obj.saveCallback(saveResponse);
+                    }
+                });
+            }
+        }
 
         autoSaveModel(self, null, {preventNavigationIfDirty:true});
     };
@@ -696,6 +713,13 @@
                 }
             };
 
+            self.updateIdsAfterSave = function(saveResult) {
+                if (metaModel.supportsPhotoPoints) {
+                    self.transients.photoPointModel().updatePhotoPointDocumentIds(saveResult.photoPoints);
+
+                }
+            };
+
             /**
              *  Takes into account changes to the photo point photo's as the default knockout dependency
              *  detection misses edits to some of the fields.
@@ -737,7 +761,7 @@
             viewModel.transients.markedAsFinished(newProgress == 'finished');
     </g:if>
 
-        master.register('activityModel', viewModel.modelForSaving, viewModel.dirtyFlag.isDirty, viewModel.dirtyFlag.reset);
+        master.register('activityModel', viewModel.modelForSaving, viewModel.dirtyFlag.isDirty, viewModel.dirtyFlag.reset, viewModel.updateIdsAfterSave);
 
         var url = '${g.createLink(controller: 'activity', action:'activitiesWithStage', id:activity.projectId)}';
         var activityUrl = '${g.createLink(controller:'activity', action:'enterData')}';

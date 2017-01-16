@@ -34,7 +34,7 @@ class BlogController {
         }
         else {
 
-            if (!projectService.isUserAdminForProject(userService.user?.userId, projectId)) {
+            if (!projectService.canUserEditProject(userService.user?.userId, projectId)) {
                 render status: 401, text: "You don't have permission to make blog entries for this project."
                 return
             }

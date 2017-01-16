@@ -22,7 +22,7 @@
     $(function() {
 
 
-
+        var date = moment().format('YYYY-MM-DD');
         var scores = <fc:modelAsJavascript model="${scores}"></fc:modelAsJavascript>;
         var columns =  [
             {title:'Output Target measure', width:'200px', data:'score'}
@@ -37,20 +37,23 @@
             "order":[[0, 'asc']],
             "autoWidth":false,
             "columns": columns,
-            "dom": 'Tlfrtip',
-            tableTools: {
-                "sSwfPath": "${grailsApplication.config.contextPath}/swf/copy_csv_xls_pdf.swf",
-                "aButtons": [
-                    "copy",
-                    "print",
-                    {
-                        "sExtends":    "collection",
-                        "sButtonText": "Save",
-                        "aButtons":    [
-                            {"sExtends":"csv",  "sFileName":"Announcements-${suffix}.csv"}, {"sExtends":"xls",  "sFileName":"Announcements-${suffix}.xls"}, {"sExtends":"pdf",  "sFileName":"Announcements-${suffix}.pdf"} ]
-                    }
-                ]
-            }
+            "dom": 'Blfrtip',
+
+            buttons: [
+                'copyHtml5',
+                {
+                    extend: 'excelHtml5',
+                    title: 'Output targets '+date
+                },
+                {
+                    extend: 'pdfHtml5',
+                    title: 'Output targets '+date
+                },
+                {
+                    extend: 'csvHtml5',
+                    title: 'Output targets '+date
+                }
+            ]
         });
 
 

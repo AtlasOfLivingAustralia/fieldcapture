@@ -29,7 +29,7 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
         hasNewsAndEvents = hasNewsAndEvents || project.newsAndEvents
         hasProjectStories = hasProjectStories || project.projectStories
 
-        def showAnnouncementsTab = projectService.isMeriPlanSubmittedOrApproved(project)
+        def showAnnouncementsTab = (user?.isAdmin || user?.isCaseManager) && projectService.isMeriPlanSubmittedOrApproved(project)
         List<Map> scores = metadataService.getOutputTargetScores()
 
         def imagesModel = publicImages.collect {[name:it.name, projectName:project.name, url:it.url, thumbnailUrl:it.thumbnailUrl]}
@@ -42,7 +42,7 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
          risksAndThreats:[label:'Risks and Threats', disabled:!user?.hasViewAccess, visible:user?.hasViewAccess && risksAndThreatsVisible],
          site:[label:'Sites', visible: true, disabled:!user?.hasViewAccess, type:'tab'],
          dashboard:[label:'Dashboard', visible: true, disabled:!user?.hasViewAccess, type:'tab'],
-         admin:[label:'Admin', visible:(user?.isAdmin || user?.isCaseManager), type:'tab', canChangeProjectDates: canChangeProjectDates, showAnnouncementsTab:showAnnouncementsTab]]
+         admin:[label:'Admin', visible:user?.isEditor || user?.isAdmin || user?.isCaseManager, type:'tab', canChangeProjectDates: canChangeProjectDates, showAnnouncementsTab:showAnnouncementsTab]]
 
         return [view:'index', model:model]
     }

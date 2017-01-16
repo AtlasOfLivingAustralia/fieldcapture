@@ -23,13 +23,14 @@ class ImportServiceSpec extends Specification {
 
         def metadataServiceStub = Stub(MetadataService)
         metadataServiceStub.activitiesModel() >> activitiesModel
+        metadataServiceStub.getOutputTargetScores() >> [[externalId:'RVA', scoreId:1, label:'label 1']]
         importService.metadataService = metadataServiceStub
     }
 
     def "MERIT should be able to load summary activity score information into a project using CSV formatted data"() {
 
         setup:
-        def score = findScoreByGmsCode('RVA')
+        def score = [externalId:'RVA', scoreId:1, label:'label 1']
         def project = buildTestProject()
         projectServiceStub.list(_) >> [project]
         projectServiceStub.get(_,_) >> project
@@ -53,7 +54,7 @@ class ImportServiceSpec extends Specification {
         def output = activity.outputs[0]
         output.name == ImportService.SUMMARY_OUTPUT_NAME
         output.data.scores.size() == 1
-        output.data.scores[0].outputName == score.outputName
+        output.data.scores[0].scoreId == score.scoreId
         output.data.scores[0].scoreLabel == score.label
         output.data.scores[0].score == 2000
 
@@ -70,17 +71,5 @@ class ImportServiceSpec extends Specification {
         ]
     }
 
-    private Map findScoreByGmsCode(String code) {
-        def score = null
-        activitiesModel.outputs.find { output ->
-            score = output.scores?.find{
-                it.gmsId?.split('\\s')?.contains(code)
-            }
-            if (score != null) {
-                score.outputName = output.name
-            }
-            score != null
-        }
-        score
-    }
+
 }
