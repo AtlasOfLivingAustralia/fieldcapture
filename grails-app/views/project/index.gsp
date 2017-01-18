@@ -311,7 +311,12 @@
                                 </div>
                                 <!-- DOCUMENTS -->
                                 <div id="edit-documents" class="pill-pane">
-                                    <h3>Project Documents</h3>
+                                    <div class="span10 attachDocumentModal">
+                                    <h3 style="display:inline-block">Project Documents</h3>
+                                        <button class="btn btn-info pull-right" style="margin-top:20px;" id="doAttach" data-bind="click:attachDocument">Attach Document</button>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <hr/>
                                     <div class="row-fluid">
                                         <div class="span10">
                                             <g:render plugin="fieldcapture-plugin" template="/shared/editDocuments"
@@ -320,9 +325,7 @@
                                     </div>
                                     %{--The modal view containing the contents for a modal dialog used to attach a document--}%
                                     <g:render plugin="fieldcapture-plugin" template="/shared/attachDocument"/>
-                                    <div class="row-fluid attachDocumentModal">
-                                        <button class="btn" id="doAttach" data-bind="click:attachDocument">Attach Document</button>
-                                    </div>
+
                                 </div>
                             </g:if>
                             <g:if test="${fc.userIsAlaOrFcAdmin()}">
@@ -343,7 +346,32 @@
     <g:render template="/shared/unsavedChanges" plugin="fieldcapture-plugin" model="${[id:'risksUnsavedChanges', unsavedData:'Risks & Threats']}"/>
 
 </div>
+<g:if test="${user?.isEditor}">
+    <r:script>
+        // Admin JS code only exposed to admin users
+        $(function () {
+            // remember state of admin nav (vertical tabs)
+            $('#adminNav a[data-toggle="tab"]').on('shown', function (e) {
+                var tab = e.currentTarget.hash;
+                amplify.store('project-admin-tab-state', tab);
+            });
+            $('#admin-tab').on('shown', function() {
+                var storedAdminTab = amplify.store('project-admin-tab-state');
+                // restore state if saved
+                if (storedAdminTab === '') {
+                    $('#permissions-tab').tab('show');
+                } else {
+                    $(storedAdminTab + "-tab").tab('show');
+                }
+            });
 
+            <g:if test="${user.isAdmin || user.isCaseManager}">
+        populatePermissionsTable();
+    </g:if>
+        });
+
+    </r:script>
+</g:if>
 <r:script>
         var organisations = <fc:modelAsJavascript model="${organisations}"/>;
 
@@ -1033,31 +1061,6 @@
         }
 </r:script>
 
-<g:if test="${user?.isEditor}">
-    <r:script>
-        // Admin JS code only exposed to admin users
-        $(function () {
-            // remember state of admin nav (vertical tabs)
-            $('#adminNav a[data-toggle="tab"]').on('shown', function (e) {
-                var tab = e.currentTarget.hash;
-                amplify.store('project-admin-tab-state', tab);
-            });
-            $('#admin-tab').on('shown', function() {
-                var storedAdminTab = amplify.store('project-admin-tab-state');
-                // restore state if saved
-                if (storedAdminTab === '') {
-                    $('#permissions-tab').tab('show');
-                } else {
-                    $(storedAdminTab + "-tab").tab('show');
-                }
-            });
 
-            <g:if test="${user.isAdmin || user.isCaseManager}">
-            populatePermissionsTable();
-            </g:if>
-        });
-
-    </r:script>
-</g:if>
 </body>
 </html>
