@@ -311,7 +311,12 @@
                                 </div>
                                 <!-- DOCUMENTS -->
                                 <div id="edit-documents" class="pill-pane">
-                                    <h3>Project Documents</h3>
+                                    <div class="span10 attachDocumentModal">
+                                    <h3 style="display:inline-block">Project Documents</h3>
+                                        <button class="btn btn-info pull-right" style="margin-top:20px;" id="doAttach" data-bind="click:attachDocument">Attach Document</button>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <hr/>
                                     <div class="row-fluid">
                                         <div class="span10">
                                             <g:render plugin="fieldcapture-plugin" template="/shared/editDocuments"
@@ -320,9 +325,7 @@
                                     </div>
                                     %{--The modal view containing the contents for a modal dialog used to attach a document--}%
                                     <g:render plugin="fieldcapture-plugin" template="/shared/attachDocument"/>
-                                    <div class="row-fluid attachDocumentModal">
-                                        <button class="btn" id="doAttach" data-bind="click:attachDocument">Attach Document</button>
-                                    </div>
+
                                 </div>
                             </g:if>
                             <g:if test="${fc.userIsAlaOrFcAdmin()}">
