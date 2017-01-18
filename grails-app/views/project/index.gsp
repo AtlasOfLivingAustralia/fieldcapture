@@ -346,7 +346,32 @@
     <g:render template="/shared/unsavedChanges" plugin="fieldcapture-plugin" model="${[id:'risksUnsavedChanges', unsavedData:'Risks & Threats']}"/>
 
 </div>
+<g:if test="${user?.isEditor}">
+    <r:script>
+        // Admin JS code only exposed to admin users
+        $(function () {
+            // remember state of admin nav (vertical tabs)
+            $('#adminNav a[data-toggle="tab"]').on('shown', function (e) {
+                var tab = e.currentTarget.hash;
+                amplify.store('project-admin-tab-state', tab);
+            });
+            $('#admin-tab').on('shown', function() {
+                var storedAdminTab = amplify.store('project-admin-tab-state');
+                // restore state if saved
+                if (storedAdminTab === '') {
+                    $('#permissions-tab').tab('show');
+                } else {
+                    $(storedAdminTab + "-tab").tab('show');
+                }
+            });
 
+            <g:if test="${user.isAdmin || user.isCaseManager}">
+        populatePermissionsTable();
+    </g:if>
+        });
+
+    </r:script>
+</g:if>
 <r:script>
         var organisations = <fc:modelAsJavascript model="${organisations}"/>;
 
@@ -1036,31 +1061,6 @@
         }
 </r:script>
 
-<g:if test="${user?.isEditor}">
-    <r:script>
-        // Admin JS code only exposed to admin users
-        $(function () {
-            // remember state of admin nav (vertical tabs)
-            $('#adminNav a[data-toggle="tab"]').on('shown', function (e) {
-                var tab = e.currentTarget.hash;
-                amplify.store('project-admin-tab-state', tab);
-            });
-            $('#admin-tab').on('shown', function() {
-                var storedAdminTab = amplify.store('project-admin-tab-state');
-                // restore state if saved
-                if (storedAdminTab === '') {
-                    $('#permissions-tab').tab('show');
-                } else {
-                    $(storedAdminTab + "-tab").tab('show');
-                }
-            });
 
-            <g:if test="${user.isAdmin || user.isCaseManager}">
-            populatePermissionsTable();
-            </g:if>
-        });
-
-    </r:script>
-</g:if>
 </body>
 </html>
