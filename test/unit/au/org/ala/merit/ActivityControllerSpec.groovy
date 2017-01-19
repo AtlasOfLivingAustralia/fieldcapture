@@ -1,6 +1,7 @@
 package au.org.ala.merit
 
 import au.org.ala.fieldcapture.DocumentService
+import au.org.ala.fieldcapture.MetadataService
 import au.org.ala.fieldcapture.UserService
 import grails.converters.JSON
 import grails.test.mixin.TestFor
@@ -17,12 +18,16 @@ class ActivityControllerSpec extends Specification {
     def projectService = Mock(ProjectService)
     def userService = Mock(UserService)
     def documentService = Mock(DocumentService)
+    def metadataService = Mock(MetadataService)
+    def reportService = Mock(ReportService)
 
     def setup() {
         controller.activityService = activityService
         controller.projectService = projectService
         controller.userService = userService
         controller.documentService = documentService
+        controller.metadataService = metadataService
+        controller.reportService = reportService
     }
 
     def "Non-project members cannot edit activities"() {
@@ -123,6 +128,49 @@ class ActivityControllerSpec extends Specification {
         response.json.activity.message == 'created'
         response.json.activity.activityId == '1234'
         response.json.photoPoints['1'].documentId == 'd1234'
+    }
+
+    def "Activity types for selection are restricted by programme / subprogramme"() {
+
+        setup:
+        String projectId = 'p1234'
+        String activityId = 'a1234'
+        activityService.get(activityId) >> [projectId:projectId, activityId:activityId, type:'activity 1']
+        projectService.canUserEditProject(_, projectId) >> true
+        projectService.get(projectId) >> [projectId:projectId, associatedProgram:'Programme 1', associatedSubProgram:'Sub-Programme 1']
+        def activityTypes = [[name:'category 1', list:[[name:'activity 1', description:'description 1'], [name:'activity 2', description:'description 2']]]]
+
+        userService.getCurrentUserId() >> "1234"
+
+        when:
+        def model = controller.edit(activityId)
+
+        then:
+        response.status == HttpStatus.SC_OK
+        1 * metadataService.activityTypesList('Programme 1', 'Sub-Programme 1') >> activityTypes
+        model.activityTypes == activityTypes
+    }
+
+    def "The activity type of the activity being edited will be available for selection, even if it is not normally associated with the project's programme or subprogramme"() {
+
+        setup:
+        String projectId = 'p1234'
+        String activityId = 'a1234'
+        activityService.get(activityId) >> [projectId:projectId, activityId:activityId, type:'activity 3']
+        projectService.canUserEditProject(_, projectId) >> true
+        projectService.get(projectId) >> [projectId:projectId, associatedProgram:'Programme 1', associatedSubProgram:'Sub-Programme 1']
+        def activityTypes = [[name:'category 1', list:[[name:'activity 1', description:'description 1'], [name:'activity 2', description:'description 2']]]]
+        def extraActivityType = [name:'Current Activity', list:[[name:"activity 3", description: "The current activity type of the activity being edited"]]]
+
+        userService.getCurrentUserId() >> "1234"
+
+        when:
+        def model = controller.edit(activityId)
+
+        then:
+        response.status == HttpStatus.SC_OK
+        1 * metadataService.activityTypesList('Programme 1', 'Sub-Programme 1') >> activityTypes
+        model.activityTypes == activityTypes.plus(0, extraActivityType)
     }
 
 }
