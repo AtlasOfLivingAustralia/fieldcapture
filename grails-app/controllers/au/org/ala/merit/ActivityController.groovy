@@ -107,6 +107,15 @@ class ActivityController {
             model.outputTargetMetadata = metadataService.getOutputTargetScores()
 
             model.activityTypes = metadataService.activityTypesList(model.project?.associatedProgram, model.project?.associatedSubProgram)
+
+            // If changes are made to the programme model or there are special activities, it's possible that
+            // the type of the Activity being edited isn't actually in the available activity types list.  In this
+            // case we need to add it.
+            def typeListContainsActivityType = model.activityTypes?.find{category -> category.list.find{it.name == activity.type}}
+            if (!typeListContainsActivityType) {
+                model.activityTypes = [[name:'Current Activity', list:[[name:activity.type, description:'The current activity type of the activity being edited']]]] + (model.activityTypes?:[])
+            }
+
             model.hasPhotopointData = activity.documents?.find {it.poiId}
             model
         } else {
