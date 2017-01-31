@@ -369,7 +369,7 @@ class GmsMapper {
         def result = [:]
 
         def outputName
-        Map score = scores.find { it.externalId?.split('\\s')?.contains(code) }
+        Map score = scores.find { println it.externalId;  it.externalId ? it.externalId.split('\\s')?.contains(code) : false }
 
         if (!score) {
             println "No mapping for score ${code}, row: ${rowMap.index}"
