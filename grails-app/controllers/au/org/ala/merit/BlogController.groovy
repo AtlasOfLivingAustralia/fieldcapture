@@ -57,10 +57,7 @@ class BlogController {
     }
 
     def update(String id) {
-        if (!id) {
-            render status:400, text:"id is a required parameter"
-            return
-        }
+
         Map blogEntry = request.JSON
         String projectId = blogEntry.projectId
 
