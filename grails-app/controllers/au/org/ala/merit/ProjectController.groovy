@@ -2,6 +2,7 @@ package au.org.ala.merit
 
 import au.org.ala.fieldcapture.CacheService
 import au.org.ala.fieldcapture.PreAuthorise
+import au.org.ala.merit.command.ReportCommand
 import grails.converters.JSON
 
 class ProjectController extends au.org.ala.fieldcapture.ProjectController {
@@ -58,8 +59,6 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
 
     }
 
-
-
     @PreAuthorise(accessLevel = 'admin')
     def ajaxSubmitReport(String id) {
 
@@ -87,6 +86,23 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
         def result = projectService.rejectStageReport(id, reportDetails)
 
         render result as JSON
+
+    }
+
+    /**
+     * Deletes all of the activities in the stage.
+     * @param id the project id
+     */
+    @PreAuthorise(accessLevel = 'siteAdmin')
+    def ajaxDeleteReportActivities(String id, ReportCommand reportDetails) {
+
+        if (reportDetails.hasErrors()) {
+            respond reportDetails.errors, formats:['json']
+        }
+        else {
+            Map result = projectService.deleteReportActivities(reportDetails.reportId, reportDetails.activityIds)
+            render result as JSON
+        }
 
     }
 

@@ -32,8 +32,8 @@ class ImportServiceSpec extends Specification {
         setup:
         def score = [externalId:'RVA', scoreId:1, label:'label 1']
         def project = buildTestProject()
-        projectServiceStub.list(_) >> [project]
         projectServiceStub.get(_,_) >> project
+        projectServiceStub.search(_) >> [resp:[projects:[project]]]
 
         def data = "${project.grantId},${project.externalId},${GmsMapper.ACTIVITY_DATA_TYPE},${GmsMapper.ACTIVITY_DATA_SUB_TYPE},RVA,2000"
         def input = new ByteArrayInputStream((HEADER_ROW+"\n"+data).getBytes('UTF-8'))

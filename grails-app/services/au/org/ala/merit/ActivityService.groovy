@@ -114,6 +114,15 @@ class ActivityService {
 
     }
 
+    /**
+     * Soft deletes the activities identified by id.
+     * @param activityIds the activities to delete.
+     * @return the response from ecodata.
+     */
+    Map bulkDeleteActivities(List<String> activityIds) {
+        bulkUpdateActivities(activityIds, [status:'deleted'])
+    }
+
     def bulkUpdateActivities(activityIds, props) {
         def ids = activityIds.collect{"id=${it}"}.join('&')
         webService.doPost(grailsApplication.config.ecodata.baseUrl + "activities/?$ids", props)

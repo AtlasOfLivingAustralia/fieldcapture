@@ -1,8 +1,10 @@
 package au.org.ala.merit
 
 import au.org.ala.fieldcapture.DateUtils
+import au.org.ala.merit.command.ReportCommand
 import grails.converters.JSON
 import org.apache.commons.lang.CharUtils
+import org.apache.http.HttpStatus
 import org.joda.time.Days
 import org.joda.time.Interval
 
@@ -39,6 +41,7 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
 
     static final String FINAL_REPORT_ACTIVITY_TYPE = 'Outcomes, Evaluation and Learning - final report'
     static final String STAGE_REPORT_ACTIVITY_TYPE = 'Progress, Outcomes and Learning - stage report'
+    static final String REDUCED_STAGE_REPORT_ACTIVITY_TYPE = 'Stage Report'
     static final String OUTCOMES_OUTPUT_TYPE = 'Outcomes'
     static final String STAGE_OUTCOMES_OUTPUT_TYPE = ''
     static final String COMPLETE = 'completed'
@@ -261,6 +264,24 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
         }
 
         result
+    }
+
+    /**
+     * Deletes the activities associated with a report.
+     */
+    Map deleteReportActivities(String reportId, List<String> activityIds) {
+
+        Map report = reportService.get(reportId)
+
+        Map result
+        if (!reportService.isSubmittedOrApproved(report)) {
+            result = activityService.bulkDeleteActivities(activityIds)
+        }
+        else {
+            result = [status:HttpStatus.SC_BAD_REQUEST, error:"Cannot delete submitted or approved stages"]
+        }
+        return result
+
     }
 
     /**
@@ -913,6 +934,19 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
          latestStageReport:latestStageReport, risksComparison: risksComparison]
     }
 
+
+    private Map findStageReport(List activities, List reports) {
+
+        List<String> reportTypes = [FINAL_REPORT_ACTIVITY_TYPE, REDUCED_STAGE_REPORT_ACTIVITY_TYPE, STAGE_REPORT_ACTIVITY_TYPE]
+        reports.findResult { report ->
+            if (reportService.isSubmittedOrApproved(report)) {
+                Map activity = reportTypes.findResult { type ->
+                    activities?.findAll{it.type == type && it.progress == ActivityService.PROGRESS_FINISHED && it.plannedEndDate > report.fromDate && it.plannedEndDate <= report.toDate}?.max{it.plannedEndDate}
+                }
+            }
+            activity
+        }
+    }
     private Map getMostRecentActivityBefore(List activities, String activityType, String isoEndDate) {
         activities?.findAll {
             it.type == activityType && reportService.isSubmittedOrApproved(it) && it.plannedEndDate <= isoEndDate

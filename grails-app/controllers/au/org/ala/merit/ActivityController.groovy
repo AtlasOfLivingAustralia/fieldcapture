@@ -458,6 +458,7 @@ class ActivityController {
                 if (listName) {
                     model = model.find { it.name == listName }?.columns
                 }
+                model = model.findAll{!it.computed}
                 int index = 0;
                 def columnMap = model.collectEntries {
                     def colString = CellReference.convertNumToColString(index++)

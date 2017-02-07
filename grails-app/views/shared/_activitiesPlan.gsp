@@ -371,7 +371,9 @@
 </script>
 
 <script id="stageNotReportableTmpl" type="text/html">
-
+    <g:if test="${fc.userIsAlaOrFcAdmin()}">
+        <button type="button" class="btn btn-danger btn-small" title="Delete all activities in this stage" data-bind="visible:activities.length > 0, click:deleteStage">Delete stage</button>
+    </g:if>
 </script>
 
 <script id="stageNotApprovedTmpl" type="text/html">
@@ -392,6 +394,9 @@
         <button type="button" class="btn btn-success btn-small" style="margin-top:4px;" disabled="disabled" title="Your Editor access level does not allow submitting of a report, this is an administrator user role. Contact your Administrator or Grant Manager if access upgrade is required">Submit report</button>
     </g:if>
 </g:else>
+<g:if test="${fc.userIsAlaOrFcAdmin()}">
+    <button type="button" class="btn btn-danger btn-small" title="Delete all activities in this stage" data-bind="visible:activities.length > 0, click:deleteStage">Delete stage</button>
+</g:if>
 <br/>
 </script>
 
@@ -870,6 +875,15 @@
                 var url = '${createLink(controller:'project', action:'ajaxRejectReport')}/';
                 self.approveOrRejectStage(url, 'Rejection', 'Reject', rejectionCategories);
             };
+            this.deleteStage = function() {
+                bootbox.confirm('<span class="label label-important">Warning!</span>  This will delete all of the activities in this stage.  This operation cannot be undone!', function(result) {
+                    if (result) {
+                        var url = '${createLink(controller: 'project', action: 'ajaxDeleteReportActivities')}/';
+                        self.updateStageStatus(url);
+                    }
+                });
+
+            }
             
             this.variationModal = function() {
                 $('#variation').modal("show");

@@ -470,6 +470,21 @@
 			    self.years = self.allYears();
 
 
+                self.validateProjectEndDate = function() {
+
+                    var endDate = self.plannedEndDate();
+                    if (endDate <= self.plannedStartDate()) {
+                        return "The project end date must be after the start date";
+                    }
+                    if (project.activities && !self.changeActivityDates()) {
+                        var lastActivityDate = _.reduce(project.activities, function(max, activity) { return activity.plannedEndDate > max ? activity.plannedEndDate : max; }, project.plannedStartDate);
+                        if (endDate < lastActivityDate) {
+                            return "The project end date must be after the last activity in the project ( "+convertToSimpleDate(lastActivityDate)+ " )";
+                        }
+                    }
+
+                };
+
 				self.saveProjectDetails = function(){
 					self.saveProject(false);
 				};
@@ -734,6 +749,7 @@
             viewModel.loadPrograms(programs);
             ko.applyBindings(viewModel);
 
+            window.validateProjectEndDate = viewModel.validateProjectEndDate;
 
             autoSaveModel(
                 viewModel.details,
