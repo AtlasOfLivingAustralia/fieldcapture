@@ -4,8 +4,8 @@ import au.ala.org.ws.security.RequireApiKey
 import au.org.ala.fieldcapture.ActivityService
 import au.org.ala.fieldcapture.DateUtils
 import au.org.ala.fieldcapture.GmsMapper
+import au.org.ala.merit.command.ProjectSummaryReportCommand
 import grails.converters.JSON
-import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
 import org.joda.time.DateTime
 import org.joda.time.Interval
 import org.joda.time.Period
@@ -419,11 +419,9 @@ class ReportController extends au.org.ala.fieldcapture.ReportController {
      * (It uses an IP filter / API Key instead).
      */
     @RequireApiKey
-    def projectReportCallback(String id) {
-        String fromStage = params.fromStage
-        String toStage = params.toStage
+    def projectReportCallback(String id, ProjectSummaryReportCommand projectSummaryReportCommand) {
 
-        Map model = projectService.projectReportModel(id, fromStage, toStage, params.getList("sections"))
+        Map model = projectSummaryReportCommand()
         model.printable = 'pdf'
 
         render view:'/project/projectReport', model: model
