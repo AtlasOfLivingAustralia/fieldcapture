@@ -2,6 +2,7 @@ package au.org.ala.merit
 
 import au.org.ala.fieldcapture.CacheService
 import au.org.ala.fieldcapture.PreAuthorise
+import au.org.ala.merit.command.ProjectSummaryReportCommand
 import au.org.ala.merit.command.ReportCommand
 import grails.converters.JSON
 
@@ -154,11 +155,8 @@ class ProjectController extends au.org.ala.fieldcapture.ProjectController {
     }
 
     @PreAuthorise(accessLevel = 'admin')
-    def projectReport(String id) {
-        String fromStage = params.fromStage
-        String toStage = params.toStage
-
-        projectService.projectReportModel(id, fromStage, toStage, params.getList("sections"))
+    def projectReport(String id, ProjectSummaryReportCommand projectSummaryReportCommand) {
+        projectSummaryReportCommand()
     }
 
     @PreAuthorise(accessLevel = 'admin')
