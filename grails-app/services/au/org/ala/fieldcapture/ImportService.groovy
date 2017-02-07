@@ -449,9 +449,17 @@ class ImportService {
     }
 
     def findProjectByGrantAndExternalId(grantId, externalId) {
-        // Cache projects temporarily to avoid this query.
-        def allProjects = cacheService.get(PROJECTS_CACHE_KEY) { [projects:projectService.list(true)] }
-        return allProjects.projects.find{it.grantId?.equalsIgnoreCase(grantId) && (it.externalId ?: '').equalsIgnoreCase(externalId ?: '')}
+        Map resp = projectService.search(grantId:grantId, externalId:externalId)
+        if (resp?.resp?.projects) {
+            if (resp.resp.projects.size() ==1) {
+                return resp.resp.projects[0]
+            }
+            else {
+                log.warn("Multiple projects found with the same grant and external id! ${grantId}, ${externalId}")
+            }
+
+        }
+        return null
     }
 
     def findProjectsByOriginalProjectId(projectId) {
