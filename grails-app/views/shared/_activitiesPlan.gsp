@@ -1014,11 +1014,21 @@
             this.currentProjectStage = findStageFromDate(reports,this.currentDate());
             this.loadActivities = function (activities) {
                 var stages = [];
+                var unallocatedActivities = _.clone(activities);  // Activities are removed from this array when added to a stage.
 
                 // group activities by stage
                 $.each(reports, function (index, stageReport) {
                     if (stageReport.fromDate < project.plannedEndDate && stageReport.toDate > project.plannedStartDate) {
-                        stages.push(new PlanStage(stageReport, activities, self, stageReport.name === self.currentProjectStage, project,today, config.rejectionCategories, showEmptyStages, userIsEditor));
+                        var stage = new PlanStage(stageReport, unallocatedActivities, self, stageReport.name === self.currentProjectStage, project,today, config.rejectionCategories, showEmptyStages, userIsEditor);
+                        stages.push(stage);
+
+                        // Remove any activities that have been allocated to the stage.
+                        unallocatedActivities = _.reject(unallocatedActivities, function(activity) {
+                            var activityAllocatedToStage = _.find(stage.activities, function(stageActivity) {
+                                return stageActivity.activityId == activity.activityId;
+                            });
+                            return activityAllocatedToStage;
+                        });
                     }
                 });
 
