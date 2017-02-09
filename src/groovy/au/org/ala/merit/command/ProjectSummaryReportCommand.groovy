@@ -144,7 +144,7 @@ class ProjectSummaryReportCommand {
 
     private Map findStageReport(List activities, List reports) {
 
-        List<String> reportTypes = [ActivityService.FINAL_REPORT_ACTIVITY_TYPE, ActivityService.REDUCED_STAGE_REPORT_ACTIVITY_TYPE, ActivityService.STAGE_REPORT_ACTIVITY_TYPE]
+        List<String> reportTypes = [ActivityService.FINAL_REPORT_ACTIVITY_TYPE, ActivityService.REDUCED_STAGE_REPORT_ACTIVITY_TYPE, ActivityService.STAGE_REPORT_ACTIVITY_TYPE, ActivityService.ALG_FINAL_REPORT, ActivityService.ALG_PROGRESS_REPORT]
         List reportsNewestFirst = reports?.reverse() ?:[]
         reportsNewestFirst.findResult { report ->
             Map activity = null
