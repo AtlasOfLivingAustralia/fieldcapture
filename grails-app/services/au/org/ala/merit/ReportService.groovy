@@ -55,17 +55,21 @@ class ReportService {
         if (!periodStartDate) {
             periodStartDate = startDate
         }
+
+        // The first period start date  (to be modified) should be aligned to the end date of the previous report or
+        // the project start date if it is the first report.
+        DateTime reportFromDate = periodStartDate
+
         if (alignToCalendar) {
             periodStartDate = DateUtils.alignToPeriod(periodStartDate, period)
         }
-
 
         log.info "Regenerating stages starting from stage: "+stage+ ", starting from: "+periodStartDate+" ending at: "+endDate
         while (periodStartDate < endDate.minusDays(1)) {
             def periodEndDate = periodStartDate.plus(period)
 
             def report = [
-                    fromDate:DateUtils.format(periodStartDate.withZone(DateTimeZone.UTC)),
+                    fromDate:DateUtils.format(reportFromDate.withZone(DateTimeZone.UTC)),
                     toDate:DateUtils.format(periodEndDate.withZone(DateTimeZone.UTC)),
                     type:'Activity',
                     projectId:projectId,
@@ -93,6 +97,7 @@ class ReportService {
             }
             stage++
             periodStartDate = periodEndDate
+            reportFromDate = periodStartDate
         }
 
         // Delete any left over reports.
