@@ -237,6 +237,7 @@
     <g:if test="${latestStageReport && ('Stage report' in content)}">
 
         <h3>Stage report</h3>
+        (${DateUtils.isoToDisplayFormat(latestStageReport.plannedStartDate)} - ${DateUtils.isoToDisplayFormat(latestStageReport.plannedEndDate)})
         <g:each in="${stageReportModel.outputs}" var="outputName">
             <g:render template="/output/readOnlyOutput"
                   model="${[divId:'latest-stage-report-'+outputName,

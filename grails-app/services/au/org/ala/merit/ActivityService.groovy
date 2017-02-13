@@ -15,6 +15,12 @@ class ActivityService {
     public static final String PROGRESS_DEFERRED = 'deferred'
     public static final String PROGRESS_CANCELLED = 'cancelled'
 
+    static final String FINAL_REPORT_ACTIVITY_TYPE = 'Outcomes, Evaluation and Learning - final report'
+    static final String STAGE_REPORT_ACTIVITY_TYPE = 'Progress, Outcomes and Learning - stage report'
+    static final String REDUCED_STAGE_REPORT_ACTIVITY_TYPE = 'Stage Report'
+    static final String ALG_PROGRESS_REPORT = '25th Anniversary Landcare Grants - Progress Report'
+    static final String ALG_FINAL_REPORT = '25th Anniversary Landcare Grants - Final Report'
+
     private static def PROGRESS = [PROGRESS_PLANNED, PROGRESS_STARTED, PROGRESS_FINISHED, PROGRESS_CANCELLED, PROGRESS_DEFERRED]
 
     public static Comparator<String> PROGRESS_COMPARATOR = {a,b -> PROGRESS.indexOf(a) <=> PROGRESS.indexOf(b)}
