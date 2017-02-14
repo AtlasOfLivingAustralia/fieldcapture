@@ -741,7 +741,10 @@
             };
         };
 
-        var site = JSON.parse('${(site as JSON).toString().encodeAsJavaScript()}');
+        var site = null;
+        <g:if test="${site}">
+        site = JSON.parse('${(site as JSON).toString().encodeAsJavaScript()}');
+        </g:if>
         var metaModel = ${metaModel};
         var viewModel = new ViewModel(
             activity,
