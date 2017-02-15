@@ -28,7 +28,8 @@
         imageLocation:"${resource(dir:'/images')}",
         savePhotoPointUrl:"${createLink(controller:'site', action:'ajaxUpdatePOI')}",
         deletePhotoPointUrl:"${createLink(controller:'site', action:'ajaxDeletePOI')}",
-
+        downloadTemplateUrl:"${createLink(controller: 'activity', action:'excelOutputTemplate')}",
+        project:${fc.modelAsJavascript(model:project)}
         },
         here = document.location.href;
     </r:script>
@@ -50,33 +51,6 @@
     <div data-bind="template: {name:headerTemplate, afterRender:initialiseMap}">
 
     </div>
-
-    <g:if env="development" test="${!printView}">
-        <div class="expandable-debug">
-            <hr />
-            <h3>Debug</h3>
-            <div>
-                <h4>KO model</h4>
-                <pre data-bind="text:ko.toJSON($root.modelForSaving(),null,2)"></pre>
-                <h4>Activity</h4>
-                <pre>${activity?.encodeAsHTML()}</pre>
-                <h4>Site</h4>
-                <pre>${site?.encodeAsHTML()}</pre>
-                <h4>Sites</h4>
-                <pre>${(sites as JSON).toString()}</pre>
-                <h4>Project</h4>
-                <pre>${project?.encodeAsHTML()}</pre>
-                <h4>Activity model</h4>
-                <pre>${metaModel}</pre>
-                <h4>Output models</h4>
-                <pre>${outputModels?.encodeAsHTML()}</pre>
-                <h4>Themes</h4>
-                <pre>${themes.toString()}</pre>
-                <h4>Map features</h4>
-                <pre>${mapFeatures.toString()}</pre>
-            </div>
-        </div>
-    </g:if>
 </div>
 
 <script type="text/html" id="activityHeader">
@@ -225,13 +199,14 @@
 
             var output = <fc:modelAsJavascript model="${output}"/>;
             var config = ${fc.modelAsJavascript(model:metaModel.outputConfig?.find{it.outputName == outputName}, default:'{}')};
+            config.model = ${fc.modelAsJavascript(model:model)};
             config.projectId = '${project?project.projectId:''}';
             config.stage = stageNumberFromStage('${activity.projectStage}');
             config.activityId = '${activity.activityId}';
 
 
-            window[viewModelInstance] = new window[viewModelName](output, site, config);
-            window[viewModelInstance].loadData(output.data || {}, activity.documents);
+            window[viewModelInstance] = new window[viewModelName](output, fcConfig.project, config);
+            window[viewModelInstance].loadData(output.data, activity.documents);
 
             // dirtyFlag must be defined after data is loaded
             window[viewModelInstance].dirtyFlag = ko.simpleDirtyFlag(window[viewModelInstance], false);
@@ -749,7 +724,7 @@
         var viewModel = new ViewModel(
             activity,
             site,
-            ${project ? "JSON.parse('${project.toString().encodeAsJavaScript()}')": 'null'},
+            fcConfig.project,
             metaModel);
 
         ko.applyBindings(viewModel);

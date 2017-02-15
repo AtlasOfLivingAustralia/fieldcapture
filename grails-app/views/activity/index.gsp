@@ -24,6 +24,7 @@
         imageLocation:"${resource(dir:'/images')}",
         imageUploadUrl: "${createLink(controller: 'image', action: 'upload')}",
         speciesProfileUrl: "${createLink(controller: 'proxy', action: 'speciesProfile')}",
+        project:${fc.modelAsJavascript(model:project)},
         returnTo: "${returnTo}"
         },
         here = document.location.href;
@@ -143,7 +144,7 @@
         var viewModel = new ActivityViewModel(
             ${(activity as JSON).toString()},
             ${site ?: 'null'},
-            ${project ?: 'null'},
+            fcConfig.project,
             ${metaModel ?: 'null'},
             ${themes ?: 'null'});
 
