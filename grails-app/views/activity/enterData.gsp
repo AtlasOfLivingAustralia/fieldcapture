@@ -1,4 +1,4 @@
-<%@ page import="grails.converters.JSON; org.codehaus.groovy.grails.web.json.JSONArray" contentType="text/html;charset=UTF-8" %>
+<%@ page import="au.org.ala.fieldcapture.ActivityService; grails.converters.JSON; org.codehaus.groovy.grails.web.json.JSONArray" contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/html">
 <head>
@@ -195,7 +195,7 @@
         $(function(){
 
             var viewModelName = "${blockId}ViewModel",
-                viewModelInstance = viewModelName + "Instance";
+                elementId = "ko${blockId}";
 
             var output = <fc:modelAsJavascript model="${output}"/>;
             var config = ${fc.modelAsJavascript(model:metaModel.outputConfig?.find{it.outputName == outputName}, default:'{}')};
@@ -203,46 +203,9 @@
             config.projectId = '${project?project.projectId:''}';
             config.stage = stageNumberFromStage('${activity.projectStage}');
             config.activityId = '${activity.activityId}';
+            config.disablePrepop = ${activity.progress == au.org.ala.fieldcapture.ActivityService.PROGRESS_FINISHED};
 
-
-            window[viewModelInstance] = new window[viewModelName](output, fcConfig.project, config);
-            window[viewModelInstance].loadData(output.data, activity.documents);
-
-            // dirtyFlag must be defined after data is loaded
-            window[viewModelInstance].dirtyFlag = ko.simpleDirtyFlag(window[viewModelInstance], false);
-
-            ko.applyBindings(window[viewModelInstance], document.getElementById("ko${blockId}"));
-
-            // this resets the baseline for detecting changes to the model
-            // - shouldn't be required if everything behaves itself but acts as a backup for
-            //   any binding side-effects
-            // - note that it is not foolproof as applying the bindings happens asynchronously and there
-            //   is no easy way to detect its completion
-            window[viewModelInstance].dirtyFlag.reset();
-
-            // register with the master controller so this model can participate in the save cycle
-            master.register(window[viewModelInstance], window[viewModelInstance].modelForSaving,
-                    window[viewModelInstance].dirtyFlag.isDirty, window[viewModelInstance].dirtyFlag.reset);
-
-            // Check for locally saved data for this output - this will happen in the event of a session timeout
-            // for example.
-            var savedData = amplify.store('activity-${activity.activityId}');
-            var savedOutput = null;
-            if (savedData) {
-                var outputData = $.parseJSON(savedData);
-                if (outputData.outputs) {
-                    $.each(outputData.outputs, function(i, tmpOutput) {
-                        if (tmpOutput.name === '${output.name}') {
-                            if (tmpOutput.data) {
-                                savedOutput = tmpOutput.data;
-                            }
-                        }
-                    });
-                }
-            }
-            if (savedOutput) {
-                window[viewModelInstance].loadData(savedOutput);
-            }
+            initialiseOutputViewModel(viewModelName, elementId, activity, output, config);
         });
 
         </r:script>
