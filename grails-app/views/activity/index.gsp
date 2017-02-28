@@ -24,6 +24,7 @@
         imageLocation:"${resource(dir:'/images')}",
         imageUploadUrl: "${createLink(controller: 'image', action: 'upload')}",
         speciesProfileUrl: "${createLink(controller: 'proxy', action: 'speciesProfile')}",
+        excelOutputTemplateUrl:"${createLink(controller: 'activity', action:'excelOutputTemplate')}",
         project:${fc.modelAsJavascript(model:project)},
         returnTo: "${returnTo}"
         },
