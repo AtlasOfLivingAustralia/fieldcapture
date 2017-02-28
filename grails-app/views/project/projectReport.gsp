@@ -348,7 +348,7 @@
                     </div>
                     <div class="row-fluid">
                         <div class="span3 title">Major theme</div>
-                        <div class="span9">${activity.theme}</div>
+                        <div class="span9">${activity.mainTheme}</div>
                     </div>
                     <div class="row-fluid">
                         <div class="span3 title">Start date</div>
