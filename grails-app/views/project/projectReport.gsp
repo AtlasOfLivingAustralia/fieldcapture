@@ -15,6 +15,7 @@
         spatialWmsUrl: "${grailsApplication.config.spatial.wms.url}",
         organisationLinkBaseUrl: "${createLink(controller:'organisation', action:'index')}",
         imageLocation:"${resource(dir:'/images')}",
+        excelOutputTemplateUrl:"${createLink(controller: 'activity', action:'excelOutputTemplate')}",
         returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
     },
         here = window.location.href;

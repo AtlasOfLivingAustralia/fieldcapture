@@ -28,7 +28,8 @@
         imageLocation:"${resource(dir:'/images')}",
         savePhotoPointUrl:"${createLink(controller:'site', action:'ajaxUpdatePOI')}",
         deletePhotoPointUrl:"${createLink(controller:'site', action:'ajaxDeletePOI')}",
-        downloadTemplateUrl:"${createLink(controller: 'activity', action:'excelOutputTemplate')}",
+        excelOutputTemplateUrl:"${createLink(controller: 'activity', action:'excelOutputTemplate')}",
+        excelDataUploadUrl:"${createLink(controller:'activity', action:'ajaxUpload')}",
         project:${fc.modelAsJavascript(model:project)}
         },
         here = document.location.href;
@@ -204,6 +205,8 @@
             config.stage = stageNumberFromStage('${activity.projectStage}');
             config.activityId = '${activity.activityId}';
             config.disablePrepop = ${activity.progress == au.org.ala.fieldcapture.ActivityService.PROGRESS_FINISHED};
+            config.excelDataUploadUrl = fcConfig.excelDataUploadUrl;
+            config.excelOutputTemplateUrl = fcConfig.excelOutputTemplateUrl;
 
             initialiseOutputViewModel(viewModelName, elementId, activity, output, config);
         });
