@@ -485,6 +485,21 @@
 
                 };
 
+                self.validateProjectStartDate = function() {
+
+                    var startDate = self.plannedStartDate();
+                    if (startDate >= self.plannedEndDate()) {
+                        return "The project start date must be before the end date";
+                    }
+                    if (project.activities && !self.changeActivityDates()) {
+                        var firstActivityDate = _.reduce(project.activities, function(min, activity) { return activity.plannedEndDate < min ? activity.plannedEndDate : min; }, project.plannedEndDate);
+                        if (startDate > firstActivityDate) {
+                            return "The project start date must be before the first activity in the project ( "+convertToSimpleDate(firstActivityDate)+ " )";
+                        }
+                    }
+
+                };
+
 				self.saveProjectDetails = function(){
 					self.saveProject(false);
 				};
@@ -750,6 +765,7 @@
             ko.applyBindings(viewModel);
 
             window.validateProjectEndDate = viewModel.validateProjectEndDate;
+            window.validateProjectStartDate = viewModel.validateProjectStartDate;
 
             autoSaveModel(
                 viewModel.details,
