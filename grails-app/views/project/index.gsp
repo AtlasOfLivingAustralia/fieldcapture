@@ -865,7 +865,7 @@
                         mapOptions
                     );
                     var mapFeatures = $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
-                    var sitesViewModel = new SitesViewModel(project.sites, map, mapFeatures, ${user?.isEditor?:false});
+                    var sitesViewModel = new SitesViewModel(project.sites, map, mapFeatures, ${user?.isEditor?:false}, project.projectId);
                     ko.applyBindings(sitesViewModel, document.getElementById('sitesList'));
                     var tableApi = $('#sites-table').DataTable( {
                         "columnDefs": [

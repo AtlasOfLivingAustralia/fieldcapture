@@ -26,9 +26,9 @@
             <g:if test="${project}">
                 <li><a data-bind="click:goToProject" class="clickable">Project</a> <span class="divider">/</span></li>
             </g:if>
-            <g:elseif test="${site}">
+            <g:if test="${site}">
                 <li><a data-bind="click:goToSite" class="clickable">Site</a> <span class="divider">/</span></li>
-            </g:elseif>
+            </g:if>
             <li class="active">Create new activity</li>
         </ul>
         <g:render template="createOrEditActivity"/>
