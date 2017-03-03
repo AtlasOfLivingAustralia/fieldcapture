@@ -2,11 +2,11 @@ package au.org.ala.merit.command
 
 import au.org.ala.fieldcapture.DocumentService
 import au.org.ala.fieldcapture.MetadataService
-import au.org.ala.fieldcapture.SiteService
 import au.org.ala.fieldcapture.UserService
 import au.org.ala.merit.ActivityService
 import au.org.ala.merit.ProjectService
 import au.org.ala.merit.ReportService
+import au.org.ala.merit.SiteService
 
 
 /**
