@@ -156,7 +156,7 @@
                         <th style="min-width:90px; width:5%">To</th>
                         <th style="width:40%;" class="description-column">Description<i class="fa fa-expand pull-right" data-bind="click:$parent.toggleDescriptions, css:{'fa-expand':!$parent.descriptionExpanded(), 'fa-compress':$parent.descriptionExpanded()}"></i></th>
                         <th style="width:25%;">Activity</th>
-                        <th style="width:15%">Site</th>
+                        <g:if test="${showSites}"><th style="width:15%">Site</th></g:if>
                         <th style="width:5%; min-width:90px;">Status</th>
                     </tr>
                     </thead>
@@ -372,7 +372,7 @@
 
 <script id="stageNotReportableTmpl" type="text/html">
     <g:if test="${fc.userIsAlaOrFcAdmin()}">
-        <button type="button" class="btn btn-danger btn-small" title="Delete all activities in this stage" data-bind="visible:activities.length > 0, click:deleteStage">Delete stage</button>
+        <button type="button" class="btn delete-stage btn-small" title="Delete all activities in this stage" data-bind="visible:activities.length > 0, click:deleteStage">Delete stage</button>
     </g:if>
 </script>
 
@@ -395,7 +395,7 @@
     </g:if>
 </g:else>
 <g:if test="${fc.userIsAlaOrFcAdmin()}">
-    <button type="button" class="btn btn-danger btn-small" title="Delete all activities in this stage" data-bind="visible:activities.length > 0, click:deleteStage">Delete stage</button>
+    <button type="button" class="btn delete-stage btn-small" title="Delete all activities in this stage" data-bind="visible:activities.length > 0, click:deleteStage">Delete stage</button>
 </g:if>
 <br/>
 </script>
