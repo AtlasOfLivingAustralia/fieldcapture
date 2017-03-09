@@ -9,6 +9,7 @@
     var fcConfig = {
         serverUrl: "${grailsApplication.config.grails.serverURL}",
         projectUpdateUrl: "${createLink(action: 'ajaxUpdate', id: project.projectId)}",
+        updateProjectDatesUrl: "${createLink(controller: 'project', action: 'updateProjectDates')}/",
         sitesDeleteUrl: "${createLink(controller: 'site', action: 'ajaxDeleteSitesFromProject', id:project.projectId)}",
         siteDeleteUrl: "${createLink(controller: 'site', action: 'ajaxDeleteSiteFromProject', id:project.projectId)}",
         siteViewUrl: "${createLink(controller: 'site', action: 'index')}",
@@ -48,11 +49,16 @@
         deleteBlogEntryUrl: "${createLink(controller: 'blog', action:'delete', params:[projectId:project.projectId])}",
         shapefileDownloadUrl: "${createLink(controller:'project', action:'downloadShapefile', id:project.projectId)}",
         regenerateStageReportsUrl: "${createLink(controller:'project', action:'regenerateStageReports', id:project.projectId)}",
+        previewStageReportUrl: "${createLink(controller:'project', action:'previewStageReport')}",
         projectReportUrl:"${createLink(controller:'project', action:'projectReport', id:project.projectId)}",
         projectReportPDFUrl:"${createLink(controller:'project', action:'projectReportPDF', id:project.projectId)}",
         meriPlanPDFUrl:"${createLink(controller:'project', action:'meriPlanPDF', id:project.projectId)}",
         sitesPhotoPointsUrl:"${createLink(controller:'project', action:'projectSitePhotos', id:project.projectId)}",
         organisationSearchUrl: "${createLink(controller: 'organisation', action: 'search')}",
+        submitReportUrl: "${createLink(controller: 'project', action: 'ajaxSubmitReport')}/",
+        approveReportUrl: "${createLink(controller: 'project', action: 'ajaxApproveReport')}/",
+        rejectReportUrl: "${createLink(controller: 'project', action: 'ajaxRejectReport')}/",
+        deleteActivitiesUrl: "${createLink(controller: 'project', action: 'ajaxDeleteReportActivities')}/",
         returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
 
     },
