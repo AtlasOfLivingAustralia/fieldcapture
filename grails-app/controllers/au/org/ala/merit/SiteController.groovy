@@ -51,28 +51,31 @@ class SiteController {
 
             boolean hasActivities = site.activities ? true : false
 
-            if (hasActivities) {
-                siteService.addPhotoPointPhotosForSites([site], site.activities, site.projects)
-            }
-
             // Tracks navigation and provides context to the "create activity" feature on the site page.
-            Map project = null
+            Map selectedProject = null
             if (params.projectId) {
-                project = site.projects.find{it.projectId = params.projectId}
+                selectedProject = site.projects.find{it.projectId == params.projectId}
             }
             else if (site.projects?.size() == 1) {
-                project = site.projects[0]
+                selectedProject = site.projects[0]
+            }
+
+            if (selectedProject) {
+                site.activities = site.activities?.findAll{it.projectId == selectedProject.projectId}
+            }
+
+            if (hasActivities) {
+                siteService.addPhotoPointPhotosForSites([site], site.activities, selectedProject?[selectedProject]:site.projects)
             }
 
             Map tabs = [
-                    projects:[visible:true, label:'Projects', type:'tab', projects:site.projects, default:!hasActivities],
-                    activities:[visible:true, label:'Activities', type:'tab', activities: site.activities, default:hasActivities, project:project],
+                    activities:[visible:true, label:'Activities', type:'tab', activities: site.activities, default:true, project:selectedProject],
                     pois:[visible:true, label:'Photos', type:'tab', site:site]
             ]
 
             [site: site,
              tabs:tabs,
-             project:project,
+             project:selectedProject,
              mapFeatures: siteService.getMapFeatures(site)]
 
         } else {
