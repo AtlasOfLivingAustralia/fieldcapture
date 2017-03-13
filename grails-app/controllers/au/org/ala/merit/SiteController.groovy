@@ -62,6 +62,8 @@ class SiteController {
 
             if (selectedProject) {
                 site.activities = site.activities?.findAll{it.projectId == selectedProject.projectId}
+                selectedProject = projectService.get(selectedProject.projectId)
+
             }
 
             if (hasActivities) {
@@ -69,7 +71,9 @@ class SiteController {
             }
 
             Map tabs = [
-                    activities:[visible:true, label:'Activities', type:'tab', activities: site.activities, default:true, project:selectedProject],
+                    activities:[visible:true, label:'Activities', type:'tab', default:true, project:selectedProject, template:'activitiesPlan', stopBinding:true,
+                               reports:selectedProject.reports,
+                                         scores:metadataService.outputTargetScores, activities:site.activities, programs:metadataService.programsModel()],
                     pois:[visible:true, label:'Photos', type:'tab', site:site]
             ]
 

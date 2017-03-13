@@ -219,6 +219,9 @@
             }
             viewModel.renderPOIs();
 
+
+
+
              $( '.photo-slider' ).mThumbnailScroller({theme:'hover-classic'});
              $('.photo-slider .fancybox').fancybox({
                  helpers : {
