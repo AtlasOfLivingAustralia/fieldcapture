@@ -17,6 +17,7 @@
             sldPolgonDefaultUrl: "${grailsApplication.config.sld.polgon.default.url}",
             sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}",
             activityCreateUrl: "${createLink(controller: 'activity', action: 'createPlan')}",
+            featureService: "${createLink(controller: 'proxy', action:'feature')}"
             },
             here = encodeURIComponent(document.location.href);
     </r:script>
@@ -134,14 +135,27 @@
         </div>
     </div>
 
-    <div class="row-fluid">
-        <ul class="nav nav-tabs big-tabs">
-            <fc:tabList tabs="${tabs}"/>
-        </ul>
-    </div>
-    <div class="tab-content">
-        <fc:tabContent tabs="${tabs}"/>
-    </div>
+    <g:if test="${site.projects}">
+        <div class="row-fluid">
+            <g:if test="${site.projects.size() > 1}">
+                <h3>Filter by project</h3>
+                <g:select id="selectedProject" class="input-xxlarge" name="projectId" from="${site.projects}" noSelection="${['null':'All projects...']}" optionKey="projectId" optionValue="name" value="${project?.projectId}"></g:select>
+            </g:if>
+            <g:else>
+                <h3>Filter by project</h3>
+                <g:select id="selectedProject" class="input-xxlarge" name="projectId" from="${site.projects}" optionKey="projectId" optionValue="name" value="${project?.projectId}"></g:select>
+            </g:else>
+        </div>
+
+        <div class="row-fluid">
+            <ul class="nav nav-tabs big-tabs">
+                <fc:tabList tabs="${tabs}"/>
+            </ul>
+        </div>
+        <div class="tab-content">
+            <fc:tabContent tabs="${tabs}"/>
+        </div>
+    </g:if>
 
     <div class="row-fluid">
         <div class="span12 metadata">
@@ -175,10 +189,18 @@
 
         $(function(){
 
+            var site = <fc:modelAsJavascript model="${site}"/>;
+            $('#selectedProject').change(function() {
+                var projectId = $(this).val();
+                var url = fcConfig.siteViewUrl+'/'+site.siteId;
+                if (projectId) {
+                    url += '?projectId='+projectId;
+                }
+                document.location.href = url;
+            });
 
-            var viewModel  = new SiteViewModelWithMapIntegration(${site}, '${project?project.projectId:'undefined'}');
+            var viewModel  = new SiteViewModelWithMapIntegration(site, '${project?project.projectId:'undefined'}');
             ko.applyBindings(viewModel);
-
 
             var mapFeatures = $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
 
@@ -196,6 +218,9 @@
                 $('#siteNotDefined').show();
             }
             viewModel.renderPOIs();
+
+
+
 
              $( '.photo-slider' ).mThumbnailScroller({theme:'hover-classic'});
              $('.photo-slider .fancybox').fancybox({
@@ -218,13 +243,14 @@
                  nextEffect:'fade',
                  previousEffect:'fade'
              });
-             $(window).load(function() {
-                 $('.photo-slider .thumb').each(function() {
-                    var $caption = $(this).find('.caption');
-                    $caption.outerWidth($(this).find('img').width());
-                 });
-             });
+
         });
+        $(window).load(function() {
+             $('.photo-slider .thumb').each(function() {
+                var $caption = $(this).find('.caption');
+                $caption.outerWidth($(this).find('img').width());
+             });
+         });
 
 </r:script>
 </body>
