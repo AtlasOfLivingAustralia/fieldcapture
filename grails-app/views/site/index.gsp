@@ -10,18 +10,23 @@
             serverUrl: "${grailsApplication.config.grails.serverURL}",
             siteDeleteUrl: "${createLink(controller: 'site', action: 'ajaxDelete')}",
             siteViewUrl: "${createLink(controller: 'site', action: 'index')}",
+            activityEditUrl: "${createLink(controller: 'activity', action: 'edit')}",
+            activityEnterDataUrl: "${createLink(controller: 'activity', action: 'enterData')}",
+            activityPrintUrl: "${createLink(controller: 'activity', action: 'print')}",
+            activityCreateUrl: "${createLink(controller: 'activity', action: 'createPlan')}",
+            activityUpdateUrl: "${createLink(controller: 'activity', action: 'ajaxUpdate')}",
+            activityDeleteUrl: "${createLink(controller: 'activity', action: 'ajaxDelete')}",
             activityViewUrl: "${createLink(controller: 'activity', action: 'index')}",
             spatialBaseUrl: "${grailsApplication.config.spatial.baseUrl}",
             spatialWmsCacheUrl: "${grailsApplication.config.spatial.wms.cache.url}",
             spatialWmsUrl: "${grailsApplication.config.spatial.wms.url}",
             sldPolgonDefaultUrl: "${grailsApplication.config.sld.polgon.default.url}",
             sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}",
-            activityCreateUrl: "${createLink(controller: 'activity', action: 'createPlan')}",
             featureService: "${createLink(controller: 'proxy', action:'feature')}"
             },
             here = encodeURIComponent(document.location.href);
     </r:script>
-    <r:require modules="knockout,mapWithFeatures,amplify,imageViewer"/>
+    <r:require modules="knockout,mapWithFeatures,amplify,imageViewer,jqueryGantt"/>
 </head>
 <body>
 <div class="${containerType}">
@@ -61,10 +66,6 @@
                         <g:if test="${site?.extent?.geometry?.pid}">
                             <a href="${grailsApplication.config.spatial.baseUrl}/?pid=${site.extent.geometry.pid}" class="btn"><i class="fa fa-external-link"></i> View in Spatial Portal</a>
                         </g:if>
-                        <g:if test="${project}">
-                            <a href="#" class="btn" data-bind="click:newActivity"><i class="fa fa-plus"></i> New Activity</a>
-                        </g:if>
-
                     </span>
                 </div>
             </div>
@@ -218,9 +219,6 @@
                 $('#siteNotDefined').show();
             }
             viewModel.renderPOIs();
-
-
-
 
              $( '.photo-slider' ).mThumbnailScroller({theme:'hover-classic'});
              $('.photo-slider .fancybox').fancybox({

@@ -23,7 +23,7 @@ var today = '${today}';
                 project,
                 programModel,
                 today,
-                {rejectionCategories: ['Minor', 'Moderate', 'Major'], saveTargetsUrl:fcConfig.projectUpdateUrl },
+                {rejectionCategories: ['Minor', 'Moderate', 'Major'], saveTargetsUrl:fcConfig.projectUpdateUrl, showEmptyStages:false, defaultSiteId: '${site.siteId}' },
                 userIsEditor
             );
             if (planViewModel.stages) {
@@ -33,6 +33,9 @@ var today = '${today}';
             }
 
             ko.applyBindings(planViewModel, document.getElementById('activities-plan'));
+
+            // the following draws the gantt chart
+            planViewModel.refreshGantChart();
 
     });
 

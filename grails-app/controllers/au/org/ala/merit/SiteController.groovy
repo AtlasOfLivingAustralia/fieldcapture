@@ -60,20 +60,12 @@ class SiteController {
                 selectedProject = site.projects[0]
             }
 
-            if (selectedProject) {
-                site.activities = site.activities?.findAll{it.projectId == selectedProject.projectId}
-                selectedProject = projectService.get(selectedProject.projectId)
-
-            }
-
             if (hasActivities) {
                 siteService.addPhotoPointPhotosForSites([site], site.activities, selectedProject?[selectedProject]:site.projects)
             }
 
             Map tabs = [
-                    activities:[visible:true, label:'Activities', type:'tab', default:true, project:selectedProject, template:'activitiesPlan', stopBinding:true,
-                               reports:selectedProject.reports,
-                                         scores:metadataService.outputTargetScores, activities:site.activities, programs:metadataService.programsModel()],
+                    activities: projectActivitiesTab(selectedProject, site),
                     pois:[visible:true, label:'Photos', type:'tab', site:site]
             ]
 
@@ -86,6 +78,25 @@ class SiteController {
             flash.message = "No site exists with id: ${id}"
             redirect(controller:'home', action:'index')
         }
+    }
+
+    private Map projectActivitiesTab(Map selectedProject, Map site) {
+
+        site.activities = site.activities?.findAll{it.projectId == selectedProject.projectId}
+        Map project = projectService.get(selectedProject.projectId)
+        def user = userService.getUser()
+        if (user) {
+            user = user.properties
+            user.isAdmin = projectService.isUserAdminForProject(user.userId, selectedProject.projectId)?:false
+            user.isCaseManager = projectService.isUserCaseManagerForProject(user.userId, selectedProject.projectId)?:false
+            user.isEditor = projectService.canUserEditProject(user.userId, selectedProject.projectId)?:false
+            user.hasViewAccess = projectService.canUserViewProject(user.userId, selectedProject.projectId)?:false
+        }
+
+        [visible:true, label:'Activities', type:'tab', default:true, project:project, template:'activitiesPlan', stopBinding:true,
+                    reports:project.reports,
+                    scores:metadataService.outputTargetScores, activities:site.activities, programs:metadataService.programsModel(), user:user]
+
     }
 
     def edit(String id) {
