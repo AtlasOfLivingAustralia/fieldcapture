@@ -634,7 +634,9 @@ button#risks-cancel:hover {
 
 }
 
-
+a.icon-link {
+	color:black;
+}
 
 @media (max-width: 767px) {
 
