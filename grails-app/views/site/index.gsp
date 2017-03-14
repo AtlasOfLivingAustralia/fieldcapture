@@ -24,7 +24,7 @@
             sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}",
             featureService: "${createLink(controller: 'proxy', action:'feature')}"
             },
-            here = encodeURIComponent(document.location.href);
+            here = window.location.href;
     </r:script>
     <r:require modules="knockout,mapWithFeatures,amplify,imageViewer,jqueryGantt"/>
 </head>
