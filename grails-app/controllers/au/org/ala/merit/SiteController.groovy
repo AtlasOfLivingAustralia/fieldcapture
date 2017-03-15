@@ -82,10 +82,9 @@ class SiteController {
 
     private Map projectActivitiesTab(Map selectedProject, Map site) {
 
-        Map activitiesTabProperties = [visible:true, label:'Activities', type:'tab', default:true]
+        Map activitiesTabProperties = [visible:true, label:'Activities', type:'tab', default:true, activities:site.activities]
         if (selectedProject) {
 
-            site.activities = site.activities?.findAll{it.projectId == selectedProject.projectId}
             Map project = projectService.get(selectedProject.projectId)
             def user = userService.getUser()
             if (user) {
@@ -97,11 +96,10 @@ class SiteController {
             }
 
             activitiesTabProperties.putAll([visible:true, label:'Activities', type:'tab', default:true, project:project, template:'activitiesPlan', stopBinding:true,
-                        reports:project.reports,
-                        scores:metadataService.outputTargetScores, activities:site.activities, programs:metadataService.programsModel(), user:user])
+                        reports:project.reports, scores:metadataService.outputTargetScores, activities:activityService.activitiesForProject(project.projectId), user:user])
         }
         else {
-            activitiesTabProperties.putAll(template: 'activities', activities:site.activities)
+            activitiesTabProperties.putAll(template: 'activities')
         }
         activitiesTabProperties
     }
