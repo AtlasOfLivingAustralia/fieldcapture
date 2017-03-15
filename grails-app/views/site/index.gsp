@@ -26,7 +26,7 @@
             },
             here = window.location.href;
     </r:script>
-    <r:require modules="knockout,mapWithFeatures,amplify,imageViewer,jqueryGantt"/>
+    <r:require modules="knockout,mapWithFeatures,amplify,imageViewer,jqueryGantt,merit_projects"/>
 </head>
 <body>
 <div class="${containerType}">

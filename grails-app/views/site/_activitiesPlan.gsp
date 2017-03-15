@@ -3,6 +3,29 @@
 
 <script id="stageNotReportableTmpl" type="text/html">
 </script>
+
+
+<script id="stageNotApprovedTmpl" type="text/html">
+<span class="badge badge-warning">Report not submitted</span>
+</script>
+
+<script id="stageApprovedTmpl" type="text/html">
+<span class="badge badge-success">Report Approved</span>
+</script>
+
+<script id="stageSubmittedTmpl" type="text/html">
+<span class="badge badge-info" style="font-size:13px;">Report submitted</span>
+</script>
+
+
+
+<script id="stageSubmittedVariationTmpl" type="text/html">
+
+<span class="badge badge-info" style="font-size:13px;">Report submitted</span>
+
+</script>
+
+
 <r:script>
 
 $(function() {
@@ -26,11 +49,7 @@ var today = '${today}';
                 {rejectionCategories: ['Minor', 'Moderate', 'Major'], saveTargetsUrl:fcConfig.projectUpdateUrl, showEmptyStages:false, defaultSiteId: '${site.siteId}' },
                 userIsEditor
             );
-            if (planViewModel.stages) {
-                for (var i=0; i<planViewModel.stages.length; i++) {
-                    planViewModel.stages[i].stageStatusTemplateName = 'stageNotReportableTmpl'; // Disable reporting options.
-                }
-            }
+
 
             ko.applyBindings(planViewModel, document.getElementById('activities-plan'));
 

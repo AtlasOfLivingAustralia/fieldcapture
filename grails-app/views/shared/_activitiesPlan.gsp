@@ -300,7 +300,7 @@
         var reports = <fc:modelAsJavascript model="${reports}"/>;
         var userIsEditor = ${user?.isEditor?'true':'false'};
 
-        var planViewModel = new PlanViewModel(
+        var planViewModel = new ProjectActivitiesTabViewModel(
             fcConfig.project.activities || [],
             reports,
             fcConfig.project.outputTargets || {},
