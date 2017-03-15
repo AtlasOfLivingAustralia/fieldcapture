@@ -82,21 +82,28 @@ class SiteController {
 
     private Map projectActivitiesTab(Map selectedProject, Map site) {
 
-        site.activities = site.activities?.findAll{it.projectId == selectedProject.projectId}
-        Map project = projectService.get(selectedProject.projectId)
-        def user = userService.getUser()
-        if (user) {
-            user = user.properties
-            user.isAdmin = projectService.isUserAdminForProject(user.userId, selectedProject.projectId)?:false
-            user.isCaseManager = projectService.isUserCaseManagerForProject(user.userId, selectedProject.projectId)?:false
-            user.isEditor = projectService.canUserEditProject(user.userId, selectedProject.projectId)?:false
-            user.hasViewAccess = projectService.canUserViewProject(user.userId, selectedProject.projectId)?:false
+        Map activitiesTabProperties = [visible:true, label:'Activities', type:'tab', default:true]
+        if (selectedProject) {
+
+            site.activities = site.activities?.findAll{it.projectId == selectedProject.projectId}
+            Map project = projectService.get(selectedProject.projectId)
+            def user = userService.getUser()
+            if (user) {
+                user = user.properties
+                user.isAdmin = projectService.isUserAdminForProject(user.userId, selectedProject.projectId)?:false
+                user.isCaseManager = projectService.isUserCaseManagerForProject(user.userId, selectedProject.projectId)?:false
+                user.isEditor = projectService.canUserEditProject(user.userId, selectedProject.projectId)?:false
+                user.hasViewAccess = projectService.canUserViewProject(user.userId, selectedProject.projectId)?:false
+            }
+
+            activitiesTabProperties.putAll([visible:true, label:'Activities', type:'tab', default:true, project:project, template:'activitiesPlan', stopBinding:true,
+                        reports:project.reports,
+                        scores:metadataService.outputTargetScores, activities:site.activities, programs:metadataService.programsModel(), user:user])
         }
-
-        [visible:true, label:'Activities', type:'tab', default:true, project:project, template:'activitiesPlan', stopBinding:true,
-                    reports:project.reports,
-                    scores:metadataService.outputTargetScores, activities:site.activities, programs:metadataService.programsModel(), user:user]
-
+        else {
+            activitiesTabProperties.putAll(template: 'activities', activities:site.activities)
+        }
+        activitiesTabProperties
     }
 
     def edit(String id) {
