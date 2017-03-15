@@ -313,77 +313,13 @@
         );
         ko.applyBindings(planViewModel, document.getElementById('planContainer'));
 
-        // the following code handles resize-sensitive truncation of the description field
-        $.fn.textWidth = function(text, font) {
-            if (!$.fn.textWidth.fakeEl) $.fn.textWidth.fakeEl = $('<span>').hide().appendTo(document.body);
-            $.fn.textWidth.fakeEl.html(text || this.val() || this.text()).css('font', font || this.css('font'));
-            return $.fn.textWidth.fakeEl.width();
-        };
-
-        function adjustTruncations () {
-            function truncate (cellWidth, originalTextWidth, originalText) {
-                var fractionThatFits = cellWidth/originalTextWidth,
-                    truncationPoint = Math.floor(originalText.length * fractionThatFits) - 4;
-                return originalText.substr(0,truncationPoint) + '..';
-            }
-            $('.truncate').each( function () {
-                var $span = $(this),
-                    text = $span.html(),
-                    textWidth = $span.textWidth(),
-                    textLength = text.length,
-                    original = $span.data('truncation');
-                // store original values if first time in
-                if (original === undefined) {
-                    original = {
-                        text: text,
-                        textWidth: textWidth,
-                        textLength: textLength
-                    };
-                    $span.data('truncation',original);
-                }
-                if (!planViewModel.descriptionExpanded()) {
-                    var cellWidth = $span.parent().width(),
-                        isTruncated = original.text !== text;
-
-                    if (cellWidth > 0 && textWidth > cellWidth) {
-                        $span.attr('title',original.text);
-                        $span.html(truncate(cellWidth, original.textWidth, original.text));
-                    } else if (isTruncated && cellWidth > textWidth + 4) {
-                        // check whether the text can be fully expanded
-                        if (original.textWidth < cellWidth) {
-                            $span.html(original.text);
-                            $span.removeAttr('title');
-                        } else {
-                            $span.html(truncate(cellWidth, original.textWidth, original.text));
-                        }
-                    }
-                }
-                else {
-                    $span.html(original.text);
-                    $span.removeAttr('title');
-                }
-            });
-        }
-
-        // throttle the resize events so it doesn't go crazy
-        (function() {
-             var timer;
-             $(window).resize(function () {
-                 if(timer) {
-                     clearTimeout(timer);
-                 }
-                 timer = setTimeout(adjustTruncations, 50);
-             });
-        }());
-
         // only initialise truncation when the table is visible else we will get 0 widths
         $(document).on('planTabShown', function () {
             // initial adjustments
-            adjustTruncations();
+            planViewModel.adjustTruncations();
+            planViewModel.refreshGantChart();
         });
 
-        // the following draws the gantt chart
-        planViewModel.refreshGantChart();
 
         $('#outputTargetsContainer').validationEngine('attach', {scroll:false});
 
