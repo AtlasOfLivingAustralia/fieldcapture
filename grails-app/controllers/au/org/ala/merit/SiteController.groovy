@@ -43,29 +43,34 @@ class SiteController {
     def index(String id) {
         def site = siteService.get(id)
         if (site) {
+
+            def user = userService.getUser()
+
             // permissions check - can't use annotation as we have to know the projectId in order to lookup access right
             if (!isUserMemberOfSiteProjects(site)) {
                 flash.message = "Access denied: User does not have permission to view site: ${id}"
                 redirect(controller:'home', action:'index')
             }
 
-            boolean hasActivities = site.activities ? true : false
+            List userProjects = site.projects?.findAll { projectService.canUserViewProject(user?.userId, it.projectId) }
 
             // Tracks navigation and provides context to the "create activity" feature on the site page.
             Map selectedProject = null
             if (params.projectId) {
-                selectedProject = site.projects.find{it.projectId == params.projectId}
+                selectedProject = userProjects.find{it.projectId == params.projectId}
             }
-            else if (site.projects?.size() == 1) {
-                selectedProject = site.projects[0]
+            else if (userProjects.size() == 1) {
+                selectedProject = userProjects[0]
             }
 
-            if (hasActivities) {
-                siteService.addPhotoPointPhotosForSites([site], site.activities, selectedProject?[selectedProject]:site.projects)
+            // Filter visible activities to those the user has access to.
+            List activities = site.activities?.findAll{activity -> userProjects.find{it.projectId == activity.projectId}}
+            if (activities) {
+                siteService.addPhotoPointPhotosForSites([site], activities, selectedProject?[selectedProject]:userProjects)
             }
 
             Map tabs = [
-                    activities: projectActivitiesTab(selectedProject, site),
+                    activities: projectActivitiesTab(selectedProject, site, activities),
                     pois:[visible:true, label:'Photos', type:'tab', site:site]
             ]
 
@@ -80,9 +85,9 @@ class SiteController {
         }
     }
 
-    private Map projectActivitiesTab(Map selectedProject, Map site) {
+    private Map projectActivitiesTab(Map selectedProject, Map site, List activities) {
 
-        Map activitiesTabProperties = [visible:true, label:'Activities', type:'tab', default:true, activities:site.activities]
+        Map activitiesTabProperties = [visible:true, label:'Activities', type:'tab', default:true, activities:activities]
         if (selectedProject) {
 
             Map project = projectService.get(selectedProject.projectId)

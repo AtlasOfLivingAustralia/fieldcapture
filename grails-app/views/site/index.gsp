@@ -36,7 +36,7 @@
         </li>
         <g:if test="${project}">
             <li>
-                    <a href="${g.createLink(controller:'project', action:'index', id:project.projectId)}">Project </a> <span class="divider">/</span>
+                <a href="${g.createLink(controller:'project', action:'index', id:project.projectId)}">Project </a> <span class="divider">/</span>
             </li>
         </g:if>
         <li class="active">${site.name?.encodeAsHTML()}</li>
@@ -55,7 +55,7 @@
             <div class="row-fluid" style="padding-bottom: 10px;">
                 <div class="span12">
 
-                    Actions:
+                    Site Actions:
                     <span class="btn-group">
                         <g:link action="edit" id="${site.siteId}" class="btn"><i class="fa fa-edit"></i> Edit Site</g:link>
 
@@ -69,9 +69,10 @@
                     </span>
                 </div>
             </div>
+
             <div>
                 <div class="clearfix">
-                    <h1 class="pull-left">${site?.name?.encodeAsHTML()}</h1>
+                    <h3>Site: ${site?.name?.encodeAsHTML()}</h3>
 
                 </div>
                 <g:if test="${site.description?.encodeAsHTML()}">
@@ -80,7 +81,6 @@
                     </div>
                 </g:if>
             </div>
-
             <p>
                 <span class="label label-info">External Id:</span> ${site.externalId?:'Not specified'}
                 <span class="label label-info">Type:</span> ${site.type?:'Not specified'}
@@ -138,16 +138,18 @@
 
     <g:if test="${site.projects}">
         <div class="row-fluid">
-            <g:if test="${site.projects.size() > 1}">
-                <h3>Filter by project</h3>
-                <g:select id="selectedProject" class="input-xxlarge" name="projectId" from="${site.projects}" noSelection="${['null':'All projects...']}" optionKey="projectId" optionValue="name" value="${project?.projectId}"></g:select>
+            <hr/>
+            <g:if test="${project}">
+                <h3>Project: ${project.name.encodeAsHTML()}</h3>
             </g:if>
             <g:else>
-                <h3>Filter by project</h3>
-                <g:select id="selectedProject" class="input-xxlarge" name="projectId" from="${site.projects}" optionKey="projectId" optionValue="name" value="${project?.projectId}"></g:select>
+                <g:if test="${site.projects.size() > 1}">
+                    <h3>Filter by project</h3>
+                    <g:select id="selectedProject" class="input-xxlarge" name="projectId" from="${site.projects}" noSelection="${['null':'All projects...']}" optionKey="projectId" optionValue="name" value="${project?.projectId}"></g:select>
+                </g:if>
+
             </g:else>
         </div>
-
         <div class="row-fluid">
             <ul class="nav nav-tabs big-tabs">
                 <fc:tabList tabs="${tabs}"/>
