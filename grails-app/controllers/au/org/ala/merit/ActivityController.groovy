@@ -9,6 +9,7 @@ import org.apache.poi.ss.usermodel.Workbook
 import org.apache.poi.ss.usermodel.WorkbookFactory
 import org.apache.poi.ss.util.CellReference
 import org.codehaus.groovy.grails.web.json.JSONArray
+import org.codehaus.groovy.grails.web.mapping.LinkGenerator
 
 class ActivityController {
 
@@ -68,9 +69,7 @@ class ActivityController {
             }
 
             Map model = activityAndOutputModel(activity, activity.projectId)
-            if (params.returnTo && params.returnTo.indexOf('project') > 0) {
-                model.showNav = true
-            }
+            model.putAll(getNavOptions(params.returnTo))
             model
         } else {
             forward(action: 'list', model: [error: 'no such id'])
@@ -149,11 +148,28 @@ class ActivityController {
 
             Map model = activityAndOutputModel(activity, activity.projectId)
             model.earliestStartDate = DateUtils.displayFormat(DateUtils.parse(model.project.plannedStartDate))
+
+            model.putAll(getNavOptions(params.returnTo))
+
             model
 
         } else {
             forward(action: 'list', model: [error: 'no such id'])
         }
+    }
+
+    private Map getNavOptions(String returnToUrl) {
+        Map options = [:]
+        if (returnToUrl) {
+            options.showNav = true
+            if (returnToUrl.indexOf('/project') > 0) {
+                options.navContext = 'project'
+            }
+            else if (returnToUrl.indexOf('/site') > 0) {
+                options.navContext = 'site'
+            }
+        }
+        options
     }
 
     def print(String id) {
@@ -552,6 +568,10 @@ class ActivityController {
     def activitiesWithStage(String id) {
         List reports = reportService.getReportsForProject(id)
         List activities = activityService.activitiesForProject(id)
+
+        if (params.siteId) {
+            activities = activities.findAll {it.siteId == params.siteId}
+        }
         reports.sort {it.toDate}
         reports.eachWithIndex{ report, i ->
             report.order = i
