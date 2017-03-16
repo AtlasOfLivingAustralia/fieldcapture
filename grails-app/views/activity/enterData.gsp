@@ -711,7 +711,11 @@
         var activityUrl = '${g.createLink(controller:'activity', action:'enterData')}';
         var activityId = '${activity.activityId}';
         var projectId = '${activity.projectId}';
-        ko.applyBindings(new ActivityNavigationViewModel(projectId, activityId, {navigationUrl:url, activityUrl:activityUrl, returnTo:returnTo}), document.getElementById('activity-nav'));
+        var siteId = '${activity.siteId?:""}';
+        var options = {navigationUrl:url, activityUrl:activityUrl, returnTo:returnTo};
+        options.navContext = '${navContext}';
+
+        ko.applyBindings(new ActivityNavigationViewModel(projectId, activityId, siteId, options), document.getElementById('activity-nav'));
     });
 </r:script>
 </body>
