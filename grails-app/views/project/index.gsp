@@ -9,6 +9,7 @@
     var fcConfig = {
         serverUrl: "${grailsApplication.config.grails.serverURL}",
         projectUpdateUrl: "${createLink(action: 'ajaxUpdate', id: project.projectId)}",
+        updateProjectDatesUrl: "${createLink(controller: 'project', action: 'updateProjectDates')}/",
         sitesDeleteUrl: "${createLink(controller: 'site', action: 'ajaxDeleteSitesFromProject', id:project.projectId)}",
         siteDeleteUrl: "${createLink(controller: 'site', action: 'ajaxDeleteSiteFromProject', id:project.projectId)}",
         siteViewUrl: "${createLink(controller: 'site', action: 'index')}",
@@ -48,11 +49,16 @@
         deleteBlogEntryUrl: "${createLink(controller: 'blog', action:'delete', params:[projectId:project.projectId])}",
         shapefileDownloadUrl: "${createLink(controller:'project', action:'downloadShapefile', id:project.projectId)}",
         regenerateStageReportsUrl: "${createLink(controller:'project', action:'regenerateStageReports', id:project.projectId)}",
+        previewStageReportUrl: "${createLink(controller:'project', action:'previewStageReport')}",
         projectReportUrl:"${createLink(controller:'project', action:'projectReport', id:project.projectId)}",
         projectReportPDFUrl:"${createLink(controller:'project', action:'projectReportPDF', id:project.projectId)}",
         meriPlanPDFUrl:"${createLink(controller:'project', action:'meriPlanPDF', id:project.projectId)}",
         sitesPhotoPointsUrl:"${createLink(controller:'project', action:'projectSitePhotos', id:project.projectId)}",
         organisationSearchUrl: "${createLink(controller: 'organisation', action: 'search')}",
+        submitReportUrl: "${createLink(controller: 'project', action: 'ajaxSubmitReport')}/",
+        approveReportUrl: "${createLink(controller: 'project', action: 'ajaxApproveReport')}/",
+        rejectReportUrl: "${createLink(controller: 'project', action: 'ajaxRejectReport')}/",
+        deleteActivitiesUrl: "${createLink(controller: 'project', action: 'ajaxDeleteReportActivities')}/",
         returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
 
     },
@@ -485,6 +491,21 @@
 
                 };
 
+                self.validateProjectStartDate = function() {
+
+                    var startDate = self.plannedStartDate();
+                    if (startDate >= self.plannedEndDate()) {
+                        return "The project start date must be before the end date";
+                    }
+                    if (project.activities && !self.changeActivityDates()) {
+                        var firstActivityDate = _.reduce(project.activities, function(min, activity) { return activity.plannedEndDate < min ? activity.plannedEndDate : min; }, project.plannedEndDate);
+                        if (startDate > firstActivityDate) {
+                            return "The project start date must be before the first activity in the project ( "+convertToSimpleDate(firstActivityDate)+ " )";
+                        }
+                    }
+
+                };
+
 				self.saveProjectDetails = function(){
 					self.saveProject(false);
 				};
@@ -750,6 +771,7 @@
             ko.applyBindings(viewModel);
 
             window.validateProjectEndDate = viewModel.validateProjectEndDate;
+            window.validateProjectStartDate = viewModel.validateProjectStartDate;
 
             autoSaveModel(
                 viewModel.details,
@@ -849,7 +871,7 @@
                         mapOptions
                     );
                     var mapFeatures = $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
-                    var sitesViewModel = new SitesViewModel(project.sites, map, mapFeatures, ${user?.isEditor?:false});
+                    var sitesViewModel = new SitesViewModel(project.sites, map, mapFeatures, ${user?.isEditor?:false}, project.projectId);
                     ko.applyBindings(sitesViewModel, document.getElementById('sitesList'));
                     var tableApi = $('#sites-table').DataTable( {
                         "columnDefs": [

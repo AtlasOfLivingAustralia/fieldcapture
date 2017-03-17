@@ -212,7 +212,7 @@
                 }
             });
 
-            self.siteId = ko.observable(act.siteId);
+            self.siteId = ko.observable();
 
             self.siteId.subscribe(function(siteId) {
 
@@ -235,8 +235,12 @@
                 }
             };
             self.goToSite = function () {
-                if (self.siteId()) {
-                    document.location.href = fcConfig.siteViewUrl + self.siteId();
+               if (self.siteId()) {
+                    var url = fcConfig.siteViewUrl + self.siteId();
+                    if (self.projectId) {
+                        url += '?projectId='+self.projectId;
+                    }
+                    document.location.href = url;
                 }
             };
             self.modelForSaving = function () {
@@ -411,9 +415,10 @@
 
         };
 
+        var activity = ${fc.modelAsJavascript([model:activity?:[:]])};
 
         var viewModel = new ViewModel(
-    ${fc.modelAsJavascript([model:activity?:[:]])},
+    activity,
     ${site ?: 'null'},
     ${project ?: 'null'},
     ${(activityTypes as JSON).toString()},
@@ -439,6 +444,10 @@
 
         ko.applyBindings(viewModel,document.getElementById('koActivityMainBlock'));
         window.validateEndDate = viewModel.validatePlannedEndDate; // Needs to be resolvable from the global scope
+
+        if (activity.siteId) {
+            viewModel.siteId(activity.siteId);
+        }
 
     });
 </r:script>

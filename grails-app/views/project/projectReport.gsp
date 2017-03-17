@@ -15,6 +15,7 @@
         spatialWmsUrl: "${grailsApplication.config.spatial.wms.url}",
         organisationLinkBaseUrl: "${createLink(controller:'organisation', action:'index')}",
         imageLocation:"${resource(dir:'/images')}",
+        excelOutputTemplateUrl:"${createLink(controller: 'activity', action:'excelOutputTemplate')}",
         returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
     },
         here = window.location.href;
@@ -347,7 +348,7 @@
                     </div>
                     <div class="row-fluid">
                         <div class="span3 title">Major theme</div>
-                        <div class="span9">${activity.theme}</div>
+                        <div class="span9">${activity.mainTheme}</div>
                     </div>
                     <div class="row-fluid">
                         <div class="span3 title">Start date</div>

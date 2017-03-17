@@ -24,6 +24,8 @@
         imageLocation:"${resource(dir:'/images')}",
         imageUploadUrl: "${createLink(controller: 'image', action: 'upload')}",
         speciesProfileUrl: "${createLink(controller: 'proxy', action: 'speciesProfile')}",
+        excelOutputTemplateUrl:"${createLink(controller: 'activity', action:'excelOutputTemplate')}",
+        project:${fc.modelAsJavascript(model:project)},
         returnTo: "${returnTo}"
         },
         here = document.location.href;
@@ -115,7 +117,12 @@
         var activityUrl = '${g.createLink(controller:'activity', action:'index')}';
         var activityId = '${activity.activityId}';
         var projectId = '${activity.projectId}';
-        ko.applyBindings(new ActivityNavigationViewModel(projectId, activityId, {navigationUrl:url, activityUrl:activityUrl, returnTo:fcConfig.returnTo}), document.getElementById('activity-nav'));
+        var siteId = '${activity.siteId?:""}';
+        var options = {navigationUrl:url, activityUrl:activityUrl, returnTo:fcConfig.returnTo};
+        options.navContext = '${navContext}';
+
+
+        ko.applyBindings(new ActivityNavigationViewModel(projectId, activityId, siteId, options), document.getElementById('activity-nav'));
         </r:script>
     </g:if>
     <g:else>
@@ -143,7 +150,7 @@
         var viewModel = new ActivityViewModel(
             ${(activity as JSON).toString()},
             ${site ?: 'null'},
-            ${project ?: 'null'},
+            fcConfig.project,
             ${metaModel ?: 'null'},
             ${themes ?: 'null'});
 

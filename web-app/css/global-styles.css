@@ -539,6 +539,11 @@ button#risks-cancel:hover {
 	text-decoration: none;
 }
 
+.btn.delete-stage {
+	color: #ffffff;
+	background-color: #222222;
+	text-shadow: none;
+}
 
 
 
@@ -629,7 +634,9 @@ button#risks-cancel:hover {
 
 }
 
-
+a.icon-link {
+	color:black;
+}
 
 @media (max-width: 767px) {
 

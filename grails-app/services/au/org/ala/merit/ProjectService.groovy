@@ -536,7 +536,7 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
     Map<String, String> getProjectOutcomes(Map project) {
         def outcomes = [:]
         if (COMPLETE.equalsIgnoreCase(project.status)) {
-            def activity = project.activities?.find { it.type == FINAL_REPORT_ACTIVITY_TYPE }
+            def activity = project.activities?.find { it.type == ActivityService.FINAL_REPORT_ACTIVITY_TYPE }
 
             if (activity) {
                 outcomes = getOutcomes(activity.activityId, OUTCOMES_OUTPUT_TYPE)
@@ -690,10 +690,10 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
         append(html,'<h2><font>Summary of Project Progress and Issues</font></h2>')
 
 
-        def stageReportActivityModel = metadataService.getActivityModel(STAGE_REPORT_ACTIVITY_TYPE)
+        def stageReportActivityModel = metadataService.getActivityModel(ActivityService.STAGE_REPORT_ACTIVITY_TYPE)
 
 		project?.activities?.each { activity ->
-			if(activity.type.equals(STAGE_REPORT_ACTIVITY_TYPE) &&
+			if(activity.type.equals(ActivityService.STAGE_REPORT_ACTIVITY_TYPE) &&
                     dateInSlot(stageStartDate, stageEndDate, activity.plannedEndDate)){
 
                 stageReportActivityModel.outputs.each { outputType ->

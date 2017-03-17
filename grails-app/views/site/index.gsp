@@ -10,16 +10,23 @@
             serverUrl: "${grailsApplication.config.grails.serverURL}",
             siteDeleteUrl: "${createLink(controller: 'site', action: 'ajaxDelete')}",
             siteViewUrl: "${createLink(controller: 'site', action: 'index')}",
+            activityEditUrl: "${createLink(controller: 'activity', action: 'edit')}",
+            activityEnterDataUrl: "${createLink(controller: 'activity', action: 'enterData')}",
+            activityPrintUrl: "${createLink(controller: 'activity', action: 'print')}",
+            activityCreateUrl: "${createLink(controller: 'activity', action: 'createPlan')}",
+            activityUpdateUrl: "${createLink(controller: 'activity', action: 'ajaxUpdate')}",
+            activityDeleteUrl: "${createLink(controller: 'activity', action: 'ajaxDelete')}",
             activityViewUrl: "${createLink(controller: 'activity', action: 'index')}",
             spatialBaseUrl: "${grailsApplication.config.spatial.baseUrl}",
             spatialWmsCacheUrl: "${grailsApplication.config.spatial.wms.cache.url}",
             spatialWmsUrl: "${grailsApplication.config.spatial.wms.url}",
             sldPolgonDefaultUrl: "${grailsApplication.config.sld.polgon.default.url}",
-            sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}"
+            sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}",
+            featureService: "${createLink(controller: 'proxy', action:'feature')}"
             },
-            here = "${createLink(controller:'site', action:'index', id:site.siteId)}";
+            here = window.location.href;
     </r:script>
-    <r:require modules="knockout,mapWithFeatures,amplify,imageViewer"/>
+    <r:require modules="knockout,mapWithFeatures,amplify,imageViewer,jqueryGantt,merit_projects"/>
 </head>
 <body>
 <div class="${containerType}">
@@ -27,7 +34,11 @@
         <li>
             <g:link controller="home">Home</g:link> <span class="divider">/</span>
         </li>
-        <li class="active">Sites <span class="divider">/</span></li>
+        <g:if test="${project}">
+            <li>
+                <a href="${g.createLink(controller:'project', action:'index', id:project.projectId)}">Project </a> <span class="divider">/</span>
+            </li>
+        </g:if>
         <li class="active">${site.name?.encodeAsHTML()}</li>
     </ul>
     <div class="row-fluid space-after">
@@ -41,10 +52,28 @@
                 </div>
             </g:if>
 
+            <div class="row-fluid" style="padding-bottom: 10px;">
+                <div class="span12">
+
+                    Site Actions:
+                    <span class="btn-group">
+                        <g:link action="edit" id="${site.siteId}" class="btn"><i class="fa fa-edit"></i> Edit Site</g:link>
+
+                        <a href="${g.createLink(action:'downloadShapefile', id:site.siteId)}" class="btn">
+                            <i class="fa fa-download"></i>
+                            Download ShapeFile
+                        </a>
+                        <g:if test="${site?.extent?.geometry?.pid}">
+                            <a href="${grailsApplication.config.spatial.baseUrl}/?pid=${site.extent.geometry.pid}" class="btn"><i class="fa fa-external-link"></i> View in Spatial Portal</a>
+                        </g:if>
+                    </span>
+                </div>
+            </div>
+
             <div>
                 <div class="clearfix">
-                    <h1 class="pull-left">${site?.name?.encodeAsHTML()}</h1>
-                    <g:link style="margin-bottom:10px;" action="edit" id="${site.siteId}" class="btn pull-right title-edit">Edit site</g:link>
+                    <h3>Site: ${site?.name?.encodeAsHTML()}</h3>
+
                 </div>
                 <g:if test="${site.description?.encodeAsHTML()}">
                     <div class="clearfix well well-small">
@@ -52,7 +81,6 @@
                     </div>
                 </g:if>
             </div>
-
             <p>
                 <span class="label label-info">External Id:</span> ${site.externalId?:'Not specified'}
                 <span class="label label-info">Type:</span> ${site.type?:'Not specified'}
@@ -99,58 +127,36 @@
                 ${site.notes?.encodeAsHTML()}
             </div>
 
-            <g:if test="${site.projects}">
-                <div>
-                    <h2>Projects associated with this site</h2>
-                    <ul style="list-style: none;margin:13px 0;">
-                        <g:each in="${site.projects}" var="p" status="count">
-                            <li>
-                                <g:link controller="project" action="index" id="${p.projectId}">${p.name?.encodeAsHTML()}</g:link>
-                                <g:if test="${count < site.projects.size() - 1}">, </g:if>
-                            </li>
-                        </g:each>
-                    </ul>
-                </div>
-            </g:if>
-
         </div>
         <div class="span6">
             <div id="siteNotDefined" class="hide pull-right">
                 <span class="label label-important">This site does not have a georeference associated with it.</span>
             </div>
             <div id="smallMap" style="width:100%;height:500px;"></div>
-
-            <div style="margin-top:20px;" class="pull-right">
-                <a href="${g.createLink(action:'downloadShapefile', id:site.siteId)}" class="btn">
-                    <i class="icon-download"></i>
-                    Download ShapeFile
-                </a>
-                <g:if test="${site?.extent?.geometry?.pid}">
-                    <a href="${grailsApplication.config.spatial.baseUrl}/?pid=${site.extent.geometry.pid}" class="btn">View in Spatial Portal</a>
-                </g:if>
-            </div>
         </div>
     </div>
-    <g:if test="${site.poi}">
-        <h2>Points of interest at this site</h2>
-        <g:each in="${site.poi}" var="poi">
-        <div class="row-fluid">
-            <h4>${poi.name?.encodeAsHTML()}</h4>
-            <g:if test="${poi.description}">${poi.description}</g:if>
-            <g:if test="${poi.photos}"><g:render template="sitePhotos" model="${[photos:poi.photos]}"></g:render></g:if> </h4>
 
+    <g:if test="${site.projects}">
+        <div class="row-fluid">
+            <hr/>
+            <g:if test="${project}">
+                <h3>Project: ${project.name.encodeAsHTML()}</h3>
+            </g:if>
+            <g:else>
+                <g:if test="${site.projects.size() > 1}">
+                    <h3>Filter by project</h3>
+                    <g:select id="selectedProject" class="input-xxlarge" name="projectId" from="${site.projects}" noSelection="${['null':'All projects...']}" optionKey="projectId" optionValue="name" value="${project?.projectId}"></g:select>
+                </g:if>
+
+            </g:else>
         </div>
-        </g:each>
-    </g:if>
-
-    <g:if test="${site.activities}">
-        <h2>Activities at this site</h2>
         <div class="row-fluid">
-            <!-- ACTIVITIES -->
-            <div class="tab-pane active" id="activity">
-                <g:render template="/shared/activitiesListReadOnly" plugin="fieldcapture-plugin"
-                          model="[activities:site.activities ?: [], sites:[], showSites:false]"/>
-            </div>
+            <ul class="nav nav-tabs big-tabs">
+                <fc:tabList tabs="${tabs}"/>
+            </ul>
+        </div>
+        <div class="tab-content">
+            <fc:tabContent tabs="${tabs}"/>
         </div>
     </g:if>
 
@@ -186,10 +192,18 @@
 
         $(function(){
 
+            var site = <fc:modelAsJavascript model="${site}"/>;
+            $('#selectedProject').change(function() {
+                var projectId = $(this).val();
+                var url = fcConfig.siteViewUrl+'/'+site.siteId;
+                if (projectId) {
+                    url += '?projectId='+projectId;
+                }
+                document.location.href = url;
+            });
 
-            var viewModel  = new SiteViewModelWithMapIntegration(${site});
+            var viewModel  = new SiteViewModelWithMapIntegration(site, '${project?project.projectId:'undefined'}');
             ko.applyBindings(viewModel);
-
 
             var mapFeatures = $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
 
@@ -229,13 +243,14 @@
                  nextEffect:'fade',
                  previousEffect:'fade'
              });
-             $(window).load(function() {
-                 $('.photo-slider .thumb').each(function() {
-                    var $caption = $(this).find('.caption');
-                    $caption.outerWidth($(this).find('img').width());
-                 });
-             });
+
         });
+        $(window).load(function() {
+             $('.photo-slider .thumb').each(function() {
+                var $caption = $(this).find('.caption');
+                $caption.outerWidth($(this).find('img').width());
+             });
+         });
 
 </r:script>
 </body>

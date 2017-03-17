@@ -1,4 +1,4 @@
-<%@ page import="grails.converters.JSON; org.codehaus.groovy.grails.web.json.JSONArray" contentType="text/html;charset=UTF-8" %>
+<%@ page import="au.org.ala.fieldcapture.ActivityService; grails.converters.JSON; org.codehaus.groovy.grails.web.json.JSONArray" contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/html">
 <head>
@@ -28,7 +28,9 @@
         imageLocation:"${resource(dir:'/images')}",
         savePhotoPointUrl:"${createLink(controller:'site', action:'ajaxUpdatePOI')}",
         deletePhotoPointUrl:"${createLink(controller:'site', action:'ajaxDeletePOI')}",
-
+        excelOutputTemplateUrl:"${createLink(controller: 'activity', action:'excelOutputTemplate')}",
+        excelDataUploadUrl:"${createLink(controller:'activity', action:'ajaxUpload')}",
+        project:${fc.modelAsJavascript(model:project)}
         },
         here = document.location.href;
     </r:script>
@@ -50,33 +52,6 @@
     <div data-bind="template: {name:headerTemplate, afterRender:initialiseMap}">
 
     </div>
-
-    <g:if env="development" test="${!printView}">
-        <div class="expandable-debug">
-            <hr />
-            <h3>Debug</h3>
-            <div>
-                <h4>KO model</h4>
-                <pre data-bind="text:ko.toJSON($root.modelForSaving(),null,2)"></pre>
-                <h4>Activity</h4>
-                <pre>${activity?.encodeAsHTML()}</pre>
-                <h4>Site</h4>
-                <pre>${site?.encodeAsHTML()}</pre>
-                <h4>Sites</h4>
-                <pre>${(sites as JSON).toString()}</pre>
-                <h4>Project</h4>
-                <pre>${project?.encodeAsHTML()}</pre>
-                <h4>Activity model</h4>
-                <pre>${metaModel}</pre>
-                <h4>Output models</h4>
-                <pre>${outputModels?.encodeAsHTML()}</pre>
-                <h4>Themes</h4>
-                <pre>${themes.toString()}</pre>
-                <h4>Map features</h4>
-                <pre>${mapFeatures.toString()}</pre>
-            </div>
-        </div>
-    </g:if>
 </div>
 
 <script type="text/html" id="activityHeader">
@@ -221,53 +196,19 @@
         $(function(){
 
             var viewModelName = "${blockId}ViewModel",
-                viewModelInstance = viewModelName + "Instance";
+                elementId = "ko${blockId}";
 
             var output = <fc:modelAsJavascript model="${output}"/>;
             var config = ${fc.modelAsJavascript(model:metaModel.outputConfig?.find{it.outputName == outputName}, default:'{}')};
+            config.model = ${fc.modelAsJavascript(model:model)};
             config.projectId = '${project?project.projectId:''}';
             config.stage = stageNumberFromStage('${activity.projectStage}');
             config.activityId = '${activity.activityId}';
+            config.disablePrepop = ${activity.progress == au.org.ala.fieldcapture.ActivityService.PROGRESS_FINISHED};
+            config.excelDataUploadUrl = fcConfig.excelDataUploadUrl;
+            config.excelOutputTemplateUrl = fcConfig.excelOutputTemplateUrl;
 
-
-            window[viewModelInstance] = new window[viewModelName](output, site, config);
-            window[viewModelInstance].loadData(output.data || {}, activity.documents);
-
-            // dirtyFlag must be defined after data is loaded
-            window[viewModelInstance].dirtyFlag = ko.simpleDirtyFlag(window[viewModelInstance], false);
-
-            ko.applyBindings(window[viewModelInstance], document.getElementById("ko${blockId}"));
-
-            // this resets the baseline for detecting changes to the model
-            // - shouldn't be required if everything behaves itself but acts as a backup for
-            //   any binding side-effects
-            // - note that it is not foolproof as applying the bindings happens asynchronously and there
-            //   is no easy way to detect its completion
-            window[viewModelInstance].dirtyFlag.reset();
-
-            // register with the master controller so this model can participate in the save cycle
-            master.register(window[viewModelInstance], window[viewModelInstance].modelForSaving,
-                    window[viewModelInstance].dirtyFlag.isDirty, window[viewModelInstance].dirtyFlag.reset);
-
-            // Check for locally saved data for this output - this will happen in the event of a session timeout
-            // for example.
-            var savedData = amplify.store('activity-${activity.activityId}');
-            var savedOutput = null;
-            if (savedData) {
-                var outputData = $.parseJSON(savedData);
-                if (outputData.outputs) {
-                    $.each(outputData.outputs, function(i, tmpOutput) {
-                        if (tmpOutput.name === '${output.name}') {
-                            if (tmpOutput.data) {
-                                savedOutput = tmpOutput.data;
-                            }
-                        }
-                    });
-                }
-            }
-            if (savedOutput) {
-                window[viewModelInstance].loadData(savedOutput);
-            }
+            initialiseOutputViewModel(viewModelName, elementId, activity, output, config);
         });
 
         </r:script>
@@ -741,12 +682,15 @@
             };
         };
 
-        var site = JSON.parse('${(site as JSON).toString().encodeAsJavaScript()}');
+        var site = null;
+        <g:if test="${site}">
+        site = JSON.parse('${(site as JSON).toString().encodeAsJavaScript()}');
+        </g:if>
         var metaModel = ${metaModel};
         var viewModel = new ViewModel(
             activity,
             site,
-            ${project ? "JSON.parse('${project.toString().encodeAsJavaScript()}')": 'null'},
+            fcConfig.project,
             metaModel);
 
         ko.applyBindings(viewModel);
@@ -767,7 +711,11 @@
         var activityUrl = '${g.createLink(controller:'activity', action:'enterData')}';
         var activityId = '${activity.activityId}';
         var projectId = '${activity.projectId}';
-        ko.applyBindings(new ActivityNavigationViewModel(projectId, activityId, {navigationUrl:url, activityUrl:activityUrl, returnTo:returnTo}), document.getElementById('activity-nav'));
+        var siteId = '${activity.siteId?:""}';
+        var options = {navigationUrl:url, activityUrl:activityUrl, returnTo:returnTo};
+        options.navContext = '${navContext}';
+
+        ko.applyBindings(new ActivityNavigationViewModel(projectId, activityId, siteId, options), document.getElementById('activity-nav'));
     });
 </r:script>
 </body>
