@@ -82,7 +82,7 @@ class HomeController {
 
     def publicHome() {
 
-        def statistics = statisticsFactory.randomGroup()
+        def statistics = statisticsFactory.randomGroup(session.lastGroup ?: -1)
         session.lastGroup = statistics.group // So we can request more stats and not get 2 in a row the same
         def images = reportService.homePageImages()
 

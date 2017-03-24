@@ -3,6 +3,7 @@ package au.org.ala.merit
 import au.com.bytecode.opencsv.CSVReader
 import au.org.ala.fieldcapture.PreAuthorise
 import grails.converters.JSON
+import grails.plugin.cache.GrailsCacheManager
 import org.joda.time.Period
 import org.springframework.web.multipart.MultipartHttpServletRequest
 
@@ -10,7 +11,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest
 class AdminController extends au.org.ala.fieldcapture.AdminController {
 
     BlogService blogService
-    StatisticsFactory statisticsFactory
+    GrailsCacheManager grailsCacheManager
 
     def gmsProjectImport() {
         render(view:'import', model:[:])
@@ -333,10 +334,17 @@ class AdminController extends au.org.ala.fieldcapture.AdminController {
         [reports:[[name: 'performanceAssessmentComparison', label: 'Performance Assessment Comparison']]]
     }
 
-    def clearStatistics() {
-        statisticsFactory.clearConfig()
-        render status:200, text:'OK'
+    def cacheManagement() {
+        [cacheRegions:grailsCacheManager.getCacheNames()]
     }
 
+    def clearCache() {
+        if (params.cache) {
+            grailsCacheManager.destroyCache(params.cache)
+
+        }
+
+        redirect action: 'cacheManagement'
+    }
 
 }

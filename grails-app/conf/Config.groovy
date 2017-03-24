@@ -222,12 +222,67 @@ if (!pdfgen.baseURL){
 if (!grails.cache.ehcache) {
     grails {
         cache {
+            enabled = true
             ehcache {
                 cacheManagerName = appName + '-ehcache'
-                reloadable = false
+                reloadable = true
+                diskStore = '/data/${appName}/ehcache'
             }
         }
     }
+}
+grails.cache.config = {
+
+    provider {
+        name "${appName}-ehcache"
+    }
+    diskStore {
+        path "/data/${appName}/ehcache"
+    }
+    cache {
+        name 'homePageImages'
+        overflowToDisk false
+        maxElementsInMemory 1
+        timeToLiveSeconds 600
+    }
+    cache {
+        name 'homePageBlog'
+        maxElementsInMemory 1
+        overflowToDisk false
+        timeToLiveSeconds  60*60
+    }
+    cache {
+        name 'homePageDocuments'
+        eternal true
+        overflowToDisk false
+        maxElementsInMemory 1
+        timeToLiveSeconds 60*60*24
+    }
+    cache {
+        name 'homePageStatistics'
+        eternal true
+        overflowToDisk true
+        diskPersistent true
+        maxElementsInMemory 10
+        maxElementsOnDisk 10
+    }
+
+    cache {
+        name 'userProfile'
+        eternal false
+        overflowToDisk false
+        maxElementsInMemory 200
+    }
+
+    cache {
+        name 'userDetailsCache'
+        timeToLiveSeconds 60*60*24
+        maxElementsInMemory 2000
+        maxElementsOnDisk 2000
+        overflowToDisk true
+        diskPersistent true
+    }
+
 }
 pdfbox.fontcache="/data/${appName}/cache/"
 
@@ -406,7 +461,7 @@ log4j = {
             'grails.app.filters.au.org.ala.fieldcapture'
     ]
 
-    debug 'grails.app.controllers.au.org.ala','ala','au.org.ala.web' // 'au.org.ala.cas.client',
+    debug 'grails.app.controllers.au.org.ala','ala','au.org.ala.web' // ,'grails.plugin.cache', 'au.org.ala.cas.client',
 
     error  'org.codehaus.groovy.grails.web.servlet',        // controllers
            'org.codehaus.groovy.grails.web.pages',          // GSP

@@ -4,6 +4,7 @@ import au.org.ala.fieldcapture.DateUtils
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.joda.time.Period
+import org.springframework.cache.annotation.Cacheable
 
 
 class ReportService {
@@ -357,6 +358,7 @@ class ReportService {
         documentService.search(criteria)
     }
 
+    @Cacheable('homePageImages')
     List homePageImages() {
         def max = 5
         def criteria = [
