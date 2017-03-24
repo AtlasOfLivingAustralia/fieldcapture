@@ -3,15 +3,19 @@ package au.org.ala.merit
 import au.org.ala.fieldcapture.DocumentService
 import au.org.ala.fieldcapture.SettingService
 import grails.converters.JSON
+import grails.plugin.cache.GrailsCacheManager
 import org.codehaus.groovy.grails.web.json.JSONArray
 import org.codehaus.groovy.grails.web.json.JSONObject
+import org.springframework.cache.annotation.Cacheable
 
 class BlogService {
 
+    public static final String HOMEPAGE_BLOG_CACHE_REGION = 'homePageBlog'
     private static final String SITE_BLOG_KEY = 'merit.site.blog'
     ProjectService projectService
     DocumentService documentService
     SettingService settingService
+    GrailsCacheManager grailsCacheManager
 
     Map get(String projectId, String blogEntryId) {
         List<Map> blog
@@ -29,6 +33,7 @@ class BlogService {
         return blogEntry
     }
 
+    @Cacheable(BlogService.HOMEPAGE_BLOG_CACHE_REGION)
     List<Map> getSiteBlog() {
         Map blogSetting = settingService.getJson(SITE_BLOG_KEY)
 
@@ -85,6 +90,8 @@ class BlogService {
     }
 
     private def deleteSiteBlogEntry(String id) {
+        grailsCacheManager.destroyCache(HOMEPAGE_BLOG_CACHE_REGION)
+
         List blog = getSiteBlog()
 
         deleteBlogEntry(blog, id)
@@ -101,6 +108,8 @@ class BlogService {
     }
 
     def updateSiteBlog(String id, Map blogEntry) {
+
+        grailsCacheManager.destroyCache(HOMEPAGE_BLOG_CACHE_REGION)
 
         List blog = getSiteBlog()
 
