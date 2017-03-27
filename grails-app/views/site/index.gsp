@@ -85,7 +85,7 @@
                 <span class="label label-info">External Id:</span> ${site.externalId?:'Not specified'}
                 <span class="label label-info">Type:</span> ${site.type?:'Not specified'}
                 <span class="label label-info">Area:</span>
-                <g:set var="areaHa" value="${site?.extent?.geometry?.area ? site?.extent?.geometry?.area * 100 : (site?.extent?.geometry?.aream2) ? site?.extent?.geometry?.aream2 / 10000 : null}"/>
+                <g:set var="areaHa" value="${site?.extent?.geometry?.aream2 ? site?.extent?.geometry?.aream2 / 10000 : (site?.extent?.geometry?.area) ? site?.extent?.geometry?.area * 100 : null}"/>
                 <g:if test="${areaHa}">
                     <g:formatNumber number="${areaHa}" format="#.0"/> Ha
                 </g:if>
