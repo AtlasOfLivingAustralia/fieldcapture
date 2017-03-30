@@ -64,6 +64,7 @@
                     <g:if test="${fc.userInRole(role: grailsApplication.config.security.cas.alaAdminRole)}">
                         <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'tools')}" title="Tools" />
                         <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'settings')}" title="Settings" />
+                        <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'cacheManagement')}" title="Caches" />
                     </g:if>
                 </ul>
                 <div style="text-align: center; margin-top: 30px;"><g:pageProperty name="page.adminButtonBar"/></div>

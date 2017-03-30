@@ -1,24 +1,24 @@
 package au.org.ala.merit
 
-import au.org.ala.fieldcapture.CacheService
-import au.org.ala.fieldcapture.SearchService
 import au.org.ala.fieldcapture.SettingService
 import grails.converters.JSON
+import grails.plugin.cache.GrailsCacheManager
 import org.springframework.beans.factory.annotation.Autowired
+
 
 class StatisticsFactory {
 
+    private static final String STATISTICS_CACHE_REGION = 'homePageStatistics'
     private static final String DEFAULT_CONFIG = "/resources/statistics.json"
     private static final String STATISTICS_CONFIG_KEY = 'meritstatistics.config'
-    private static final String CACHE_KEY_PREFIX = 'statistics.'
 
     Map config
     @Autowired
     ReportService reportService
     @Autowired
-    CacheService cacheService
-    @Autowired
     SettingService settingsService
+    @Autowired
+    GrailsCacheManager grailsCacheManager
 
     public StatisticsFactory() {}
 
@@ -39,7 +39,7 @@ class StatisticsFactory {
 
     public synchronized void clearConfig() {
         config = null
-        cacheService.clear(CACHE_KEY_PREFIX)
+        grailsCacheManager.destroyCache(STATISTICS_CACHE_REGION)
     }
 
     public synchronized List<Map> getStatisticsGroup(int groupNumber) {
@@ -47,12 +47,16 @@ class StatisticsFactory {
         if (config == null) {
             initialize()
         }
-        cacheService.get(CACHE_KEY_PREFIX + groupNumber, {
-            this.config.groups[groupNumber].collect { statisticName ->
+
+        List<Map> statistics = grailsCacheManager.getCache(STATISTICS_CACHE_REGION).get(groupNumber)?.get()
+        if (!statistics) {
+            statistics = this.config.groups[groupNumber].collect { statisticName ->
                 Map statistic = config.statistics[statisticName]
                 evaluateStatistic(statistic)
             }
-        }, 1)
+            grailsCacheManager.getCache(STATISTICS_CACHE_REGION).put(groupNumber, statistics)
+        }
+        statistics
     }
 
     public Map randomGroup(int exclude = -1) {
