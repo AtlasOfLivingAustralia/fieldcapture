@@ -1,12 +1,19 @@
 package au.org.ala.merit
 
 import au.org.ala.fieldcapture.SettingService
+import org.apache.log4j.Logger
+
+import static au.org.ala.merit.ScheduledJobContext.*
 import grails.converters.JSON
 import grails.plugin.cache.GrailsCacheManager
+import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.scheduling.annotation.Scheduled
 
 
 class StatisticsFactory {
+
+    private Logger log = Logger.getLogger(StatisticsFactory.class)
 
     private static final String STATISTICS_CACHE_REGION = 'homePageStatistics'
     private static final String DEFAULT_CONFIG = "/resources/statistics.json"
@@ -16,14 +23,16 @@ class StatisticsFactory {
     @Autowired
     ReportService reportService
     @Autowired
-    SettingService settingsService
+    SettingService settingService
     @Autowired
     GrailsCacheManager grailsCacheManager
+    @Autowired
+    GrailsApplication grailsApplication
 
     public StatisticsFactory() {}
 
     private void initialize() {
-        String result = settingsService.get(STATISTICS_CONFIG_KEY)
+        String result = settingService.get(STATISTICS_CONFIG_KEY)
         if (result) {
             config = JSON.parse(result)
         }
@@ -95,6 +104,23 @@ class StatisticsFactory {
         }
 
         displayProps
+    }
+
+    // Refresh the statistics every day at midnight
+    @Scheduled(cron="0 0 0 * * *")
+    public void reloadStatistics() {
+        withUser([name:"statisticsTask"]) {
+            settingService.withDefaultHub {
+
+                log.info("Reloading homepage statistics...")
+
+                clearConfig()
+
+                for (int i=0; i<getGroupCount(); i++) {
+                    getStatisticsGroup(i)
+                }
+            }
+        }
     }
 
     private Statistic create(String type, Map properties) {
