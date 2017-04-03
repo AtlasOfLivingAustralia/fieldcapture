@@ -272,10 +272,14 @@ class ProjectService  {
             }
         }
         if (projectDetails) {
-            resp = super.update(id, projectDetails)
+            resp = updateUnchecked(id, projectDetails)
         }
 
         return resp
+    }
+
+    private void updateUnchecked(String id, Map projectDetails) {
+        webService.doPost(grailsApplication.config.ecodata.baseUrl + 'project/' + id, projectDetails)
     }
 
     /**
@@ -494,7 +498,7 @@ class ProjectService  {
             def newEndDate = DateUtils.format(DateUtils.parse(project.plannedEndDate).plusDays(daysChanged))
 
             // The update method in this class treats dates specially and delegates the updates to the changeProjectDates method.
-            def resp = super.update(projectId, [plannedStartDate: plannedStartDate, plannedEndDate: newEndDate])
+            def resp = updateUnchecked(projectId, [plannedStartDate: plannedStartDate, plannedEndDate: newEndDate])
             generateProjectStageReports(projectId)
             if (resp.resp && !resp.resp.error && updateActivities) {
 
@@ -555,7 +559,7 @@ class ProjectService  {
             log.info("Project duration changing by a factor of ${scale}")
 
             // The update method in this class treats dates specially and delegates the updates to this method.
-            response = super.update(projectId, [plannedStartDate:plannedStartDate, plannedEndDate:plannedEndDate])
+            response = updateUnchecked(projectId, [plannedStartDate:plannedStartDate, plannedEndDate:plannedEndDate])
 
             generateProjectStageReports(projectId)
             if (response.resp && !response.resp.error) {
