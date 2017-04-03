@@ -30,6 +30,7 @@
         deletePhotoPointUrl:"${createLink(controller:'site', action:'ajaxDeletePOI')}",
         excelOutputTemplateUrl:"${createLink(controller: 'activity', action:'excelOutputTemplate')}",
         excelDataUploadUrl:"${createLink(controller:'activity', action:'ajaxUpload')}",
+        speciesSearchUrl:"${createLink(controller:'project', action:'searchSpecies', id:activity.projectId, params:[surveyName:metaModel.name])}",
         project:${fc.modelAsJavascript(model:project)}
         },
         here = document.location.href;
@@ -207,6 +208,7 @@
             config.disablePrepop = ${activity.progress == au.org.ala.fieldcapture.ActivityService.PROGRESS_FINISHED};
             config.excelDataUploadUrl = fcConfig.excelDataUploadUrl;
             config.excelOutputTemplateUrl = fcConfig.excelOutputTemplateUrl;
+            config.speciesSearchUrl = fcConfig.speciesSearchUrl + '&output='+ output.name;
 
             initialiseOutputViewModel(viewModelName, elementId, activity, output, config);
         });
