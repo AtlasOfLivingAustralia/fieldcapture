@@ -283,6 +283,13 @@ grails.cache.config = {
         diskPersistent true
     }
 
+    cache {
+        name 'speciesFieldConfig'
+        timeToLiveSeconds 60*60*24
+        maxElementsInMemory 2000
+        maxElementsOnDisk 2000
+    }
+
 }
 pdfbox.fontcache="/data/${appName}/cache/"
 
