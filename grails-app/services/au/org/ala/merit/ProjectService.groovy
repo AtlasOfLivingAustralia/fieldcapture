@@ -278,7 +278,7 @@ class ProjectService  {
         return resp
     }
 
-    private void updateUnchecked(String id, Map projectDetails) {
+    private updateUnchecked(String id, Map projectDetails) {
         webService.doPost(grailsApplication.config.ecodata.baseUrl + 'project/' + id, projectDetails)
     }
 
@@ -636,7 +636,7 @@ class ProjectService  {
 
     def generateProjectStageReports(String projectId) {
         def project = get(projectId)
-        def programConfig = metadataService.getProgramConfiguration(project)
+        def programConfig = getProgramConfiguration(project)
 
         def period = programConfig.reportingPeriod
         if (period) {
