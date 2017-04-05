@@ -1025,7 +1025,10 @@ class ProjectService  {
 
         Map speciesFieldsSettings = project.speciesFieldsSettings
         if (!project.speciesFieldsSettings) {
-            speciesFieldsSettings = getProgramConfiguration(project).speciesFieldsSettings
+            Map programConfig = getProgramConfiguration(project)
+            if (programConfig && programConfig.speciesFieldsSettings) { // Handle JSON$Null (otherwise it will attempt to cast to a Map)
+                speciesFieldsSettings = programConfig.speciesFieldsSettings
+            }
         }
 
         def survey = speciesFieldsSettings?.surveysConfig?.find {
