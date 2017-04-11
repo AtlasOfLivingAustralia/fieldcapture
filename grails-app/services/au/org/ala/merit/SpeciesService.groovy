@@ -246,4 +246,22 @@ class SpeciesService {
 
         result
     }
+
+    /**
+     * Returns a thumbnail image for the supplied GUID.
+     * @param id the species GUID.
+     * @return
+     */
+    String speciesImageThumbnailUrl(String id) {
+
+        Map profile = speciesProfile(id)
+        return profile.thumbnail
+    }
+
+    Map speciesProfile(String id) {
+
+        // While the BIE is in the process of being cut over to the new version we have to handle both APIs.
+        def url = "${grailsApplication.config.bie.baseURL}/ws/species/shortProfile/${id}"
+        webService.getJson(url)
+    }
 }
