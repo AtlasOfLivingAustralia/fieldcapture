@@ -11,6 +11,38 @@
         <title>Edit | ${activity.type} | Field Capture</title>
     </g:else>
 
+    <style>
+
+        .select2-rendered__match {
+            font-weight: bold;
+
+        }
+        .select2-selection.select2-selection--single {
+            border:none;
+        }
+
+        .select2-results__group {
+            background-color: #eeeeee;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            font-size: 14px;
+            border-radius: 4px;
+            border: 1px solid #cccccc;
+            color: #555555;
+        }
+        .input-append .select2-container--default .select2-selection--single .select2-selection__rendered {
+            border-radius: 4px 0 0 4px;
+        }
+        .input-prepend .select2-container--default .select2-selection--single .select2-selection__rendered {
+            border-radius: 0 4px 4px 0;
+        }
+        .input-prepend.input-append .select2-container--default .select2-selection--single .select2-selection__rendered {
+            border-radius: 0;
+        }
+
+    </style>
+
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jstimezonedetect/1.0.4/jstz.min.js"></script>
     <r:script disposition="head">
@@ -30,12 +62,20 @@
         deletePhotoPointUrl:"${createLink(controller:'site', action:'ajaxDeletePOI')}",
         excelOutputTemplateUrl:"${createLink(controller: 'activity', action:'excelOutputTemplate')}",
         excelDataUploadUrl:"${createLink(controller:'activity', action:'ajaxUpload')}",
+        searchBieUrl:"${createLink(controller:'species', action:'searchBie')}",
+        speciesListUrl:"${createLink(controller:'proxy', action:'speciesItemsForList')}",
         speciesSearchUrl:"${createLink(controller:'project', action:'searchSpecies', id:activity.projectId, params:[surveyName:metaModel.name])}",
         project:${fc.modelAsJavascript(model:project)}
         },
         here = document.location.href;
     </r:script>
     <r:require modules="knockout,jqueryValidationEngine,datepicker,jQueryFileUploadUI,activity,mapWithFeatures,attachDocuments,species,amplify,imageViewer,jQueryFileDownload"/>
+    <r:script>
+
+
+
+
+</r:script>
 </head>
 <body>
 <div class="${containerType} validationEngineContainer" id="validation-container">
@@ -499,6 +539,8 @@
 
     $(function(){
 
+
+
         $('#validation-container').validationEngine('attach', {scroll: true});
 
         $('.helphover').popover({animation: true, trigger:'hover'});
@@ -718,6 +760,8 @@
         options.navContext = '${navContext}';
 
         ko.applyBindings(new ActivityNavigationViewModel(projectId, activityId, siteId, options), document.getElementById('activity-nav'));
+
+
     });
 </r:script>
 </body>
