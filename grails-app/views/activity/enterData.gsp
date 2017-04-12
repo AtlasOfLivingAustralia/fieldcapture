@@ -65,6 +65,7 @@
         searchBieUrl:"${createLink(controller:'species', action:'searchBie')}",
         speciesListUrl:"${createLink(controller:'proxy', action:'speciesItemsForList')}",
         speciesSearchUrl:"${createLink(controller:'project', action:'searchSpecies', id:activity.projectId, params:[surveyName:metaModel.name])}",
+        speciesImageUrl:"${createLink(controller:'species', action:'speciesImage')}",
         project:${fc.modelAsJavascript(model:project)}
         },
         here = document.location.href;
@@ -249,6 +250,10 @@
             config.excelDataUploadUrl = fcConfig.excelDataUploadUrl;
             config.excelOutputTemplateUrl = fcConfig.excelOutputTemplateUrl;
             config.speciesSearchUrl = fcConfig.speciesSearchUrl + '&output='+ output.name;
+            config.speciesListUrl = fcConfig.speciesListUrl;
+            config.searchBieUrl = fcConfig.searchBieUrl;
+            config.speciesImageUrl = fcConfig.speciesImageUrl;
+            config.speciesConfig = <fc:modelAsJavascript model="${speciesConfig}"/>;
 
             initialiseOutputViewModel(viewModelName, elementId, activity, output, config);
         });

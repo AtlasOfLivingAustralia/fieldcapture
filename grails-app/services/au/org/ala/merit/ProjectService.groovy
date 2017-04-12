@@ -1019,6 +1019,52 @@ class ProjectService  {
 
     }
 
+    private Map defaultSpeciesSettings(Map project) {
+        Map defaultConfig
+        if (project.listId) {
+
+            defaultConfig = [
+                    "type": "GROUP_OF_SPECIES",
+                    "speciesLists":[ [dataResourceUid:project.listId]],
+                    "speciesDisplayFormat" : "SCIENTIFICNAME(COMMONNAME)"
+            ]
+        }
+        else {
+            defaultConfig = [
+                    "type" : "ALL_SPECIES",
+                    "speciesDisplayFormat" : "SCIENTIFICNAME(COMMONNAME)"
+            ]
+        }
+        defaultConfig
+    }
+
+
+    @Cacheable('speciesFieldConfig')
+    public Map findSpeciesFieldConfigForActivity(String projectId, String surveyName) {
+        def project = get(projectId)
+
+        Map speciesFieldsSettings = project.speciesFieldsSettings
+        if (!project.speciesFieldsSettings) {
+            Map programConfig = getProgramConfiguration(project)
+            if (programConfig && programConfig.speciesFieldsSettings) { // Handle JSON$Null (otherwise it will attempt to cast to a Map)
+                speciesFieldsSettings = programConfig.speciesFieldsSettings
+            }
+        }
+
+        Map surveyConfig = speciesFieldsSettings?.surveysConfig?.find {
+            it.name == surveyName
+        }
+
+        Map defaultConfig
+        if (speciesFieldsSettings?.defaultSpeciesConfig) {
+            defaultConfig = speciesFieldsSettings?.defaultSpeciesConfig
+        }
+        else {
+            defaultConfig = defaultSpeciesSettings(project)
+        }
+        [surveyConfig:surveyConfig, defaultSpeciesConfig:defaultConfig]
+    }
+
     @Cacheable('speciesFieldConfig')
     private Map findSpeciesFieldConfig(String projectId, String surveyName, String dataFieldName, String output) {
         def project = get(projectId)
@@ -1047,20 +1093,7 @@ class ProjectService  {
             speciesFieldConfig = speciesFieldsSettings?.defaultSpeciesConfig
         }
         else {
-            if (project.listId) {
-
-                speciesFieldConfig = [
-                        "type": "GROUP_OF_SPECIES",
-                        "speciesLists":[ [dataResourceUid:project.listId]],
-                        "speciesDisplayFormat" : "SCIENTIFICNAME(COMMONNAME)"
-                ]
-            }
-            else {
-                speciesFieldConfig = [
-                        "type" : "ALL_SPECIES",
-                        "speciesDisplayFormat" : "SCIENTIFICNAME(COMMONNAME)"
-                ]
-            }
+            speciesFieldConfig = defaultSpeciesSettings(project)
 
         }
         speciesFieldConfig

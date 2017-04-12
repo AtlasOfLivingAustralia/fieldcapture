@@ -34,6 +34,7 @@ class ActivityController {
             if (model.project.listId) {
                 model.speciesLists.add model.project.listId
             }
+            model.speciesConfig = projectService.findSpeciesFieldConfigForActivity(activity.projectId, activity.type)
 
             model.themes = metadataService.getThemesForProject(model.project)
             Map stageReport = reportService.findReportForDate(activity.plannedEndDate, model.project.reports?:[])
