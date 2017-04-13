@@ -13,6 +13,15 @@
 
     <style>
 
+        .select2-container--default .select2-results > .select2-results__options {
+            max-height: 400px;
+        }
+
+        .select2-container--default .select2-results__option .select2-results__option {
+            padding-left: 5px;
+            padding-bottom: 5px;
+        }
+
         .select2-rendered__match {
             font-weight: bold;
 
@@ -25,6 +34,39 @@
             background-color: #eeeeee;
         }
 
+        .scientific-name {
+            font-style: italic;
+        }
+
+        .select2-results .species-image-holder {
+            width: 70px;
+            height: 70px;
+            line-height: 70px;
+            padding-right: 5px;
+            display: inline-block;
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        .select2-results .name-holder {
+            margin: 0;
+            position: absolute;               /* 2 */
+            top: 50%;                         /* 3 */
+            transform: translate(0, -50%);
+            left: 85px;
+
+        }
+
+        .select2-results .species-result {
+            position: relative;
+            width: 350px;
+            height:70px;
+        }
+
+        .select2-results .name-holder div {
+
+        }
         .select2-container--default .select2-selection--single .select2-selection__rendered {
             font-size: 14px;
             border-radius: 4px;
@@ -65,6 +107,8 @@
         searchBieUrl:"${createLink(controller:'species', action:'searchBie')}",
         speciesListUrl:"${createLink(controller:'proxy', action:'speciesItemsForList')}",
         speciesSearchUrl:"${createLink(controller:'project', action:'searchSpecies', id:activity.projectId, params:[surveyName:metaModel.name])}",
+        speciesImageUrl:"${createLink(controller:'species', action:'speciesImage')}",
+        noImageUrl: "${resource(dir:'images', file:'nophoto.png')}",
         project:${fc.modelAsJavascript(model:project)}
         },
         here = document.location.href;
@@ -241,14 +285,14 @@
 
             var output = <fc:modelAsJavascript model="${output}"/>;
             var config = ${fc.modelAsJavascript(model:metaModel.outputConfig?.find{it.outputName == outputName}, default:'{}')};
+            config = _.extend(config, fcConfig);
             config.model = ${fc.modelAsJavascript(model:model)};
             config.projectId = '${project?project.projectId:''}';
             config.stage = stageNumberFromStage('${activity.projectStage}');
             config.activityId = '${activity.activityId}';
             config.disablePrepop = ${activity.progress == au.org.ala.fieldcapture.ActivityService.PROGRESS_FINISHED};
-            config.excelDataUploadUrl = fcConfig.excelDataUploadUrl;
-            config.excelOutputTemplateUrl = fcConfig.excelOutputTemplateUrl;
             config.speciesSearchUrl = fcConfig.speciesSearchUrl + '&output='+ output.name;
+            config.speciesConfig =<fc:modelAsJavascript model="${speciesConfig}"/>;
 
             initialiseOutputViewModel(viewModelName, elementId, activity, output, config);
         });

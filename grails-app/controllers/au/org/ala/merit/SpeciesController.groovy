@@ -9,6 +9,7 @@ class SpeciesController {
     SpeciesService speciesService
     WebService webService
 
+
     def speciesProfile(String id) {
 
         Map result = speciesService.speciesProfile(id)
@@ -18,8 +19,14 @@ class SpeciesController {
     def speciesImage(String id) {
 
         String url = speciesService.speciesImageThumbnailUrl(id)
+        if (url) {
+            webService.proxyGetRequest(response, url)
+        }
+        else {
+            String noImageUrl = g.resource(dir:'images', file:'nophoto.png', absolute:true)
+            response.sendRedirect(noImageUrl)
+        }
 
-        webService.proxyGetRequest(response, url)
     }
 
     def searchBie() {
