@@ -59,6 +59,7 @@ class StatisticsFactory {
 
         List<Map> statistics = grailsCacheManager.getCache(STATISTICS_CACHE_REGION).get(groupNumber)?.get()
         if (!statistics) {
+            log.info("Cache miss for homepage stats, key: ${groupNumber}")
             statistics = this.config.groups[groupNumber].collect { statisticName ->
                 Map statistic = config.statistics[statisticName]
                 evaluateStatistic(statistic)
