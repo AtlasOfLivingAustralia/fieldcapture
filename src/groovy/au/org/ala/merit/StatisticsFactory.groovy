@@ -1,6 +1,10 @@
 package au.org.ala.merit
 
 import au.org.ala.fieldcapture.SettingService
+import net.sf.ehcache.CacheException
+import net.sf.ehcache.Ehcache
+import net.sf.ehcache.Element
+import net.sf.ehcache.event.CacheEventListener
 import org.apache.log4j.Logger
 
 import static au.org.ala.merit.ScheduledJobContext.*
@@ -39,6 +43,43 @@ class StatisticsFactory {
         if (!config) {
             config = readConfig()
         }
+        Ehcache ehcache = grailsCacheManager.getCache(STATISTICS_CACHE_REGION).getNativeCache()
+        ehcache.getCacheEventNotificationService().registerListener(new CacheEventListener() {
+            @Override
+            void notifyElementRemoved(Ehcache cache, Element element) throws CacheException {
+                log.debug("${cache.name}: Removed: ${element.objectKey}")
+            }
+
+            @Override
+            void notifyElementPut(Ehcache cache, Element element) throws CacheException {
+                log.debug("${cache.name}: Put: ${element.objectKey}")
+            }
+
+            @Override
+            void notifyElementUpdated(Ehcache cache, Element element) throws CacheException {
+                log.debug("${cache.name}: Updated: ${element.objectKey}")
+            }
+
+            @Override
+            void notifyElementExpired(Ehcache cache, Element element) {
+                log.debug("${cache.name}: Expired: ${element.objectKey}")
+            }
+
+            @Override
+            void notifyElementEvicted(Ehcache cache, Element element) {
+                log.debug("${cache.name}: Evicted: ${element.objectKey}")
+            }
+
+            @Override
+            void notifyRemoveAll(Ehcache cache) {
+                log.debug("${cache.name}: Removed all: ${cache.name}")
+            }
+
+            @Override
+            void dispose() {
+                log.debug("Dispose: ${cache.name}")
+            }
+        })
     }
 
     private Map readConfig() {
