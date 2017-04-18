@@ -77,7 +77,7 @@ class StatisticsFactory {
 
             @Override
             void dispose() {
-                log.debug("Dispose: ${cache.name}")
+                log.debug("Dispose")
             }
         })
     }
