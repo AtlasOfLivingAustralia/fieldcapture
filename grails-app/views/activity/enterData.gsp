@@ -584,9 +584,6 @@
     $(function(){
 
 
-
-        $('#validation-container').validationEngine('attach', {scroll: true});
-
         $('.helphover').popover({animation: true, trigger:'hover'});
 
         $('#save').click(function () {
@@ -804,6 +801,9 @@
         options.navContext = '${navContext}';
 
         ko.applyBindings(new ActivityNavigationViewModel(projectId, activityId, siteId, options), document.getElementById('activity-nav'));
+
+        $('#validation-container').validationEngine('attach', {scroll: true});
+
 
 
     });
