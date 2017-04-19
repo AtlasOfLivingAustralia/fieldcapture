@@ -261,7 +261,6 @@ grails.cache.config = {
     cache {
         name 'homePageStatistics'
         eternal true
-        overflowToDisk true
         diskPersistent true
         maxElementsInMemory 10
         maxElementsOnDisk 10
@@ -278,9 +277,7 @@ grails.cache.config = {
         name 'userDetailsCache'
         timeToLiveSeconds 60*60*24
         maxElementsInMemory 2000
-        maxElementsOnDisk 2000
-        overflowToDisk true
-        diskPersistent true
+        overflowToDisk false
     }
 
     cache {
