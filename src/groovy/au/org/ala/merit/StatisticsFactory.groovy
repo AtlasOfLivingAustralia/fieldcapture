@@ -6,6 +6,7 @@ import net.sf.ehcache.Ehcache
 import net.sf.ehcache.Element
 import net.sf.ehcache.event.CacheEventListener
 import org.apache.log4j.Logger
+import org.springframework.cache.Cache
 
 import static au.org.ala.merit.ScheduledJobContext.*
 import grails.converters.JSON
@@ -89,7 +90,8 @@ class StatisticsFactory {
 
     public synchronized void clearConfig() {
         config = null
-        grailsCacheManager.destroyCache(STATISTICS_CACHE_REGION)
+        Cache cache = grailsCacheManager.getCache(STATISTICS_CACHE_REGION)
+        cache.clear()
     }
 
     public synchronized List<Map> getStatisticsGroup(int groupNumber) {
