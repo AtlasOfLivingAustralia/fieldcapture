@@ -166,11 +166,13 @@
             <!-- Common activity fields -->
 
             <div class="row-fluid space-after">
+                <!-- ko if:transients.themes.length -->
                 <div class="span6">
                     <label for="theme">Major theme</label>
                     <select id="theme" data-bind="value:mainTheme, options:transients.themes, optionsCaption:'Choose..'" class="input-xlarge">
                     </select>
                 </div>
+                <!-- /ko -->
                 <div class="span6">
                     <label class="for-readonly">Description</label>
                     <span class="readonly-text" data-bind="text:description"></span>
