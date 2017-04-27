@@ -505,6 +505,19 @@ class ActivityController {
 
                     }
                 }
+                // Multiselect correction
+                List stringLists = model.findAll {it.dataType == 'stringList'}
+                stringLists?.each { dataItem ->
+                    data.each { row ->
+                        String values = row[dataItem.name]
+
+                        if (values) {
+                            row[dataItem.name] = values.split(',')
+                        }
+
+                    }
+                }
+
 
                 def result
                 if (!data) {

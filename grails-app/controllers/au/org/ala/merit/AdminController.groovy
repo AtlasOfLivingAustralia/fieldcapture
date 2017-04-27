@@ -340,8 +340,7 @@ class AdminController extends au.org.ala.fieldcapture.AdminController {
 
     def clearCache() {
         if (params.cache) {
-            grailsCacheManager.destroyCache(params.cache)
-
+            grailsCacheManager.getCache(params.cache).clear()
         }
 
         redirect action: 'cacheManagement'
