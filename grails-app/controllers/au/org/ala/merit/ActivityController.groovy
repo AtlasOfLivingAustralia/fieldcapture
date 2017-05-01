@@ -31,11 +31,11 @@ class ActivityController {
         // Add the species lists that are relevant to this activity.
         model.speciesLists = new JSONArray()
         if (model.project) {
-            model.project.speciesLists?.each { list ->
-                if (list.purpose == activity.type) {
-                    model.speciesLists.add(list)
-                }
+            if (model.project.listId) {
+                model.speciesLists.add model.project.listId
             }
+            model.speciesConfig = projectService.findSpeciesFieldConfigForActivity(activity.projectId, activity.type)
+
             model.themes = metadataService.getThemesForProject(model.project)
             Map stageReport = reportService.findReportForDate(activity.plannedEndDate, model.project.reports?:[])
             model.activity.projectStage = stageReport ? stageReport.name : ''
@@ -505,6 +505,19 @@ class ActivityController {
 
                     }
                 }
+                // Multiselect correction
+                List stringLists = model.findAll {it.dataType == 'stringList'}
+                stringLists?.each { dataItem ->
+                    data.each { row ->
+                        String values = row[dataItem.name]
+
+                        if (values) {
+                            row[dataItem.name] = values.split(',')
+                        }
+
+                    }
+                }
+
 
                 def result
                 if (!data) {

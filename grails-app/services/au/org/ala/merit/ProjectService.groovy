@@ -1,15 +1,17 @@
 package au.org.ala.merit
 
 import au.org.ala.fieldcapture.DateUtils
+import au.org.ala.fieldcapture.RoleService
 import grails.converters.JSON
 import org.apache.commons.lang.CharUtils
 import org.apache.http.HttpStatus
 import org.joda.time.Days
 import org.joda.time.Interval
+import org.springframework.cache.annotation.Cacheable
 
 import java.text.SimpleDateFormat
 
-class ProjectService extends au.org.ala.fieldcapture.ProjectService {
+class ProjectService  {
 
     static Closure documentStageComparitor = {a, b ->
         String stageA = a.stage
@@ -36,7 +38,6 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
         }
         return a.stage<=>b.stage
     }
-    def reportService, auditService
 
     static final String OUTCOMES_OUTPUT_TYPE = 'Outcomes'
     static final String STAGE_OUTCOMES_OUTPUT_TYPE = ''
@@ -50,11 +51,201 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
     static final String PLAN_NOT_APPROVED = 'not approved'
     static final String PLAN_SUBMITTED = 'submitted'
 
-    @Override
+
+    def webService, grailsApplication, siteService, activityService, emailService, documentService, userService, metadataService, settingService, reportService, auditService, speciesService
+
+    def list(brief = false, citizenScienceOnly = false) {
+        def params = brief ? '?brief=true' : ''
+        if (citizenScienceOnly) params += (brief ? '&' : '?') + 'citizenScienceOnly=true'
+        def resp = webService.getJson(grailsApplication.config.ecodata.baseUrl + 'project/' + params, 30000)
+        resp.list
+    }
+
     def get(id, levelOfDetail = "", includeDeleted = false) {
-        def project = super.get(id, levelOfDetail, includeDeleted)
+
+        def params = '?'
+
+        params += levelOfDetail ? "view=${levelOfDetail}&" : ''
+        params += "includeDeleted=${includeDeleted}"
+        Map project = webService.getJson(grailsApplication.config.ecodata.baseUrl + 'project/' + id + params)
         project.reports = reportService.getReportsForProject(id)
         project
+
+    }
+
+    def getRich(id) {
+        get(id, 'rich')
+    }
+
+    def getActivities(project) {
+        def list = []
+        project.sites.each { site ->
+            siteService.get(site.siteId)?.activities?.each { act ->
+                list << activityService.constructName(act)
+            }
+        }
+        list
+    }
+
+    /**
+     * Creates a new project and adds the user as a project admin.
+     */
+    def create(props) {
+
+        def activities = props.remove('selectedActivities')
+
+        // create a project in ecodata
+        def result = webService.doPost(grailsApplication.config.ecodata.baseUrl + 'project/', props)
+        if (result?.resp?.projectId) {
+            def projectId = result.resp.projectId
+            // Add the user who created the project as an admin of the project
+            userService.addUserAsRoleToProject(userService.getUser().userId, projectId, RoleService.PROJECT_ADMIN_ROLE)
+            if (activities) {
+                settingService.updateProjectSettings(projectId, [allowedActivities: activities])
+            }
+        }
+
+        result
+    }
+
+    /**
+     * This does a 'soft' delete. The record is marked as inactive but not removed from the DB.
+     * @param id the record to delete
+     * @return the returned status
+     */
+    def delete(id) {
+        webService.doDelete(grailsApplication.config.ecodata.baseUrl + 'project/' + id)
+    }
+
+    /**
+     * This does a 'hard' delete. The record is removed from the DB.
+     * @param id the record to destroy
+     * @return the returned status
+     */
+    def destroy(id) {
+        webService.doDelete(grailsApplication.config.ecodata.baseUrl + 'project/' + id + '?destroy=true')
+    }
+
+    /**
+     * Retrieves a summary of project metrics (including planned output targets)
+     * and groups them by output type.
+     * @param id the id of the project to get summary information for.
+     * @return TODO document this structure.
+     */
+    def summary(String id) {
+        def scores = webService.getJson(grailsApplication.config.ecodata.baseUrl + 'project/projectMetrics/' + id)
+
+        def scoresWithTargetsByOutput = [:]
+        def scoresWithoutTargetsByOutputs = [:]
+        if (scores && scores instanceof List) {  // If there was an error, it would be returning a map containing the error.
+            // There are some targets that have been saved as Strings instead of numbers.
+            scoresWithTargetsByOutput = scores.grep{ it.target && it.target != "0" }.groupBy { it.outputType }
+            scoresWithoutTargetsByOutputs = scores.grep{ it.result && it.result.count && (it.result.result || it.result.groups) && (!it.target || it.target == "0") }.groupBy { it.outputType }
+        }
+        [targets:scoresWithTargetsByOutput, other:scoresWithoutTargetsByOutputs]
+    }
+
+    def search(params) {
+        webService.doPost(grailsApplication.config.ecodata.baseUrl + 'project/search', params)
+    }
+
+    /**
+     * Get the list of users (members) who have any level of permission for the requested projectId
+     *
+     * @param projectId
+     * @return
+     */
+    def getMembersForProjectId(projectId) {
+        def url = grailsApplication.config.ecodata.baseUrl + "permissions/getMembersForProject/${projectId}"
+        webService.getJson(url)
+    }
+
+    /**
+     * Does the current user have permission to administer the requested projectId?
+     * Checks for the ADMIN role in CAS and then checks the UserPermission
+     * lookup in ecodata.
+     *
+     * @param userId
+     * @param projectId
+     * @return boolean
+     */
+    def isUserAdminForProject(userId, projectId) {
+        def userIsAdmin
+
+        if (userService.userIsSiteAdmin()) {
+            userIsAdmin = true
+        } else {
+            def url = grailsApplication.config.ecodata.baseUrl + "permissions/isUserAdminForProject?projectId=${projectId}&userId=${userId}"
+            userIsAdmin = webService.getJson(url)?.userIsAdmin  // either will be true or false
+        }
+
+        userIsAdmin
+    }
+
+    /**
+     * Does the current user have caseManager permission for the requested projectId?
+     *
+     * @param userId
+     * @param projectId
+     * @return
+     */
+    def isUserCaseManagerForProject(userId, projectId) {
+        def url = grailsApplication.config.ecodata.baseUrl + "permissions/isUserCaseManagerForProject?projectId=${projectId}&userId=${userId}"
+        webService.getJson(url)?.userIsCaseManager // either will be true or false
+    }
+
+    /**
+     * Does the current user have permission to view details of the requested projectId?
+     * @param userId the user to test.
+     * @param the project to test.
+     */
+    def canUserViewProject(userId, projectId) {
+
+        def userCanView
+        if (userService.userIsSiteAdmin() || userService.userHasReadOnlyAccess()) {
+            userCanView = true
+        }
+        else {
+            userCanView = canUserEditProject(userId, projectId)
+        }
+        userCanView
+    }
+
+    /**
+     * Returns the programs model for use by a particular project.  At the moment, this method just delegates to the metadataservice,
+     * however a per organisation programs model is something being discussed.
+     */
+    def programsModel() {
+        metadataService.programsModel()
+    }
+
+    /**
+     * Returns a filtered list of activities for use by a project
+     */
+    public List activityTypesList(String projectId) {
+        def projectSettings = settingService.getProjectSettings(projectId)
+        def activityTypes = metadataService.activityTypesList()
+
+        def allowedActivities = activityTypes
+        if (projectSettings?.allowedActivities) {
+
+            allowedActivities = []
+            activityTypes.each { category ->
+                def matchingActivities = []
+                category.list.each { nameAndDescription ->
+                    if (nameAndDescription.name in projectSettings.allowedActivities) {
+                        matchingActivities << nameAndDescription
+                    }
+                }
+                if (matchingActivities) {
+                    allowedActivities << [name:category.name, list:matchingActivities]
+                }
+            }
+
+        }
+
+        allowedActivities
+
     }
 
     def update(String id, Map projectDetails) {
@@ -81,10 +272,14 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
             }
         }
         if (projectDetails) {
-            resp = super.update(id, projectDetails)
+            resp = updateUnchecked(id, projectDetails)
         }
 
         return resp
+    }
+
+    private updateUnchecked(String id, Map projectDetails) {
+        webService.doPost(grailsApplication.config.ecodata.baseUrl + 'project/' + id, projectDetails)
     }
 
     /**
@@ -303,7 +498,7 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
             def newEndDate = DateUtils.format(DateUtils.parse(project.plannedEndDate).plusDays(daysChanged))
 
             // The update method in this class treats dates specially and delegates the updates to the changeProjectDates method.
-            def resp = super.update(projectId, [plannedStartDate: plannedStartDate, plannedEndDate: newEndDate])
+            def resp = updateUnchecked(projectId, [plannedStartDate: plannedStartDate, plannedEndDate: newEndDate])
             generateProjectStageReports(projectId)
             if (resp.resp && !resp.resp.error && updateActivities) {
 
@@ -364,7 +559,7 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
             log.info("Project duration changing by a factor of ${scale}")
 
             // The update method in this class treats dates specially and delegates the updates to this method.
-            response = super.update(projectId, [plannedStartDate:plannedStartDate, plannedEndDate:plannedEndDate])
+            response = updateUnchecked(projectId, [plannedStartDate:plannedStartDate, plannedEndDate:plannedEndDate])
 
             generateProjectStageReports(projectId)
             if (response.resp && !response.resp.error) {
@@ -435,10 +630,13 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
         return !reportService.includesSubmittedOrApprovedReports(project.reports)
     }
 
+    Map getProgramConfiguration(Map project) {
+        metadataService.getProgramConfiguration(project.associatedProgram, project.associatedSubProgram)
+    }
 
     def generateProjectStageReports(String projectId) {
         def project = get(projectId)
-        def programConfig = metadataService.getProgramConfiguration(project.associatedProgram, project.associatedSubProgram)
+        def programConfig = getProgramConfiguration(project)
 
         def period = programConfig.reportingPeriod
         if (period) {
@@ -819,6 +1017,104 @@ class ProjectService extends au.org.ala.fieldcapture.ProjectService {
         }
         [baselineDate: toCompare.baseline?.date, baseline:baseline, comparisonDate: toCompare.comparison?.date, comparison:comparison]
 
+    }
+
+    private Map defaultSpeciesSettings(Map project) {
+        Map defaultConfig
+        if (project.listId) {
+
+            defaultConfig = [
+                    "type": "GROUP_OF_SPECIES",
+                    "speciesLists":[ [dataResourceUid:project.listId]],
+                    "speciesDisplayFormat" : "SCIENTIFICNAME(COMMONNAME)"
+            ]
+        }
+        else {
+            defaultConfig = [
+                    "type" : "ALL_SPECIES",
+                    "speciesDisplayFormat" : "SCIENTIFICNAME(COMMONNAME)"
+            ]
+        }
+        defaultConfig
+    }
+
+
+    @Cacheable('speciesFieldConfig')
+    public Map findSpeciesFieldConfigForActivity(String projectId, String surveyName) {
+        def project = get(projectId)
+
+        Map speciesFieldsSettings = project.speciesFieldsSettings
+        if (!project.speciesFieldsSettings) {
+            Map programConfig = getProgramConfiguration(project)
+            if (programConfig && programConfig.speciesFieldsSettings) { // Handle JSON$Null (otherwise it will attempt to cast to a Map)
+                speciesFieldsSettings = programConfig.speciesFieldsSettings
+            }
+        }
+
+        Map surveyConfig = speciesFieldsSettings?.surveysConfig?.find {
+            it.name == surveyName
+        }
+
+        Map defaultConfig
+        if (speciesFieldsSettings?.defaultSpeciesConfig) {
+            defaultConfig = speciesFieldsSettings?.defaultSpeciesConfig
+        }
+        else {
+            defaultConfig = defaultSpeciesSettings(project)
+        }
+        [surveyConfig:surveyConfig, defaultSpeciesConfig:defaultConfig]
+    }
+
+    @Cacheable('speciesFieldConfig')
+    private Map findSpeciesFieldConfig(String projectId, String surveyName, String dataFieldName, String output) {
+        def project = get(projectId)
+
+        Map speciesFieldsSettings = project.speciesFieldsSettings
+        if (!project.speciesFieldsSettings) {
+            Map programConfig = getProgramConfiguration(project)
+            if (programConfig && programConfig.speciesFieldsSettings) { // Handle JSON$Null (otherwise it will attempt to cast to a Map)
+                speciesFieldsSettings = programConfig.speciesFieldsSettings
+            }
+        }
+
+        def survey = speciesFieldsSettings?.surveysConfig?.find {
+            it.name == surveyName
+        }
+
+        def specificFieldDefinition = survey?.speciesFields?.find {
+            it.dataFieldName == dataFieldName && it.output == output
+        }
+
+        Map speciesFieldConfig
+        if (specificFieldDefinition && specificFieldDefinition?.config?.type != "DEFAULT_SPECIES") {
+            speciesFieldConfig = specificFieldDefinition.config
+        }
+        else if (speciesFieldsSettings?.defaultSpeciesConfig) {
+            speciesFieldConfig = speciesFieldsSettings?.defaultSpeciesConfig
+        }
+        else {
+            speciesFieldConfig = defaultSpeciesSettings(project)
+
+        }
+        speciesFieldConfig
+    }
+
+    /**
+    * Searches for a species name taking into account the species constraints setup for the survey.
+    * @param id the id of the Project being completed
+    * @param q query string to search for
+    * @param limit the maximum number of results to return
+    * @param output Identity of field for specific configuration.
+    * @param dataFieldName Identity of field for specific configuration.
+    * @param surveyName Identity of field for specific configuration
+    * @return json structure containing search results suitable for use by the species autocomplete widget on a survey form.
+    */
+    def searchSpecies(String id, String q, Integer limit, String output, String dataFieldName, String surveyName){
+        Map speciesFieldConfig = findSpeciesFieldConfig(id, surveyName, dataFieldName, output)
+
+        def result = speciesService.searchSpeciesForConfig(speciesFieldConfig, q, limit)
+        speciesService.formatSpeciesNameForSurvey(speciesFieldConfig.speciesDisplayFormat , result)
+        result
     }
 
 }

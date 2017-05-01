@@ -30,11 +30,22 @@
         deletePhotoPointUrl:"${createLink(controller:'site', action:'ajaxDeletePOI')}",
         excelOutputTemplateUrl:"${createLink(controller: 'activity', action:'excelOutputTemplate')}",
         excelDataUploadUrl:"${createLink(controller:'activity', action:'ajaxUpload')}",
+        searchBieUrl:"${createLink(controller:'species', action:'searchBie')}",
+        speciesListUrl:"${createLink(controller:'proxy', action:'speciesItemsForList')}",
+        speciesSearchUrl:"${createLink(controller:'project', action:'searchSpecies', id:activity.projectId, params:[surveyName:metaModel.name])}",
+        speciesImageUrl:"${createLink(controller:'species', action:'speciesImage')}",
+        noImageUrl: "${resource(dir:'images', file:'nophoto.png')}",
         project:${fc.modelAsJavascript(model:project)}
         },
         here = document.location.href;
     </r:script>
     <r:require modules="knockout,jqueryValidationEngine,datepicker,jQueryFileUploadUI,activity,mapWithFeatures,attachDocuments,species,amplify,imageViewer,jQueryFileDownload"/>
+    <r:script>
+
+
+
+
+</r:script>
 </head>
 <body>
 <div class="${containerType} validationEngineContainer" id="validation-container">
@@ -81,11 +92,13 @@
             <!-- Common activity fields -->
 
             <div class="row-fluid space-after">
+                <!-- ko if:transients.themes.length -->
                 <div class="span6">
                     <label for="theme">Major theme</label>
                     <select id="theme" data-bind="value:mainTheme, options:transients.themes, optionsCaption:'Choose..'" class="input-xlarge">
                     </select>
                 </div>
+                <!-- /ko -->
                 <div class="span6">
                     <label class="for-readonly">Description</label>
                     <span class="readonly-text" data-bind="text:description"></span>
@@ -200,13 +213,14 @@
 
             var output = <fc:modelAsJavascript model="${output}"/>;
             var config = ${fc.modelAsJavascript(model:metaModel.outputConfig?.find{it.outputName == outputName}, default:'{}')};
+            config = _.extend(config, fcConfig);
             config.model = ${fc.modelAsJavascript(model:model)};
             config.projectId = '${project?project.projectId:''}';
             config.stage = stageNumberFromStage('${activity.projectStage}');
             config.activityId = '${activity.activityId}';
             config.disablePrepop = ${activity.progress == au.org.ala.fieldcapture.ActivityService.PROGRESS_FINISHED};
-            config.excelDataUploadUrl = fcConfig.excelDataUploadUrl;
-            config.excelOutputTemplateUrl = fcConfig.excelOutputTemplateUrl;
+            config.speciesSearchUrl = fcConfig.speciesSearchUrl + '&output='+ output.name;
+            config.speciesConfig =<fc:modelAsJavascript model="${speciesConfig}"/>;
 
             initialiseOutputViewModel(viewModelName, elementId, activity, output, config);
         });
@@ -497,7 +511,6 @@
 
     $(function(){
 
-        $('#validation-container').validationEngine('attach', {scroll: true});
 
         $('.helphover').popover({animation: true, trigger:'hover'});
 
@@ -716,6 +729,11 @@
         options.navContext = '${navContext}';
 
         ko.applyBindings(new ActivityNavigationViewModel(projectId, activityId, siteId, options), document.getElementById('activity-nav'));
+
+        $('#validation-container').validationEngine('attach', {scroll: true});
+
+
+
     });
 </r:script>
 </body>

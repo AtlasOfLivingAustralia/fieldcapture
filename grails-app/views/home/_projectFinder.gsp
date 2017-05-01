@@ -12,7 +12,7 @@
 <g:elseif test="${results?.hits?.total?:0 > 0}">
     <div class="row-fluid ">
         <div id="facetsCol" class="well well-small" style="display:none;">
-            <g:set var="reqParams" value="sort,order,max,fq,fromDate,toDate"/>
+            <g:set var="reqParams" value="query,sort,order,max,fq,fromDate,toDate"/>
             <div class="visible-phone pull-right" style="margin-top: 5px;">
                 <a href="#" id="toggleFacetDisplay" rel="facetsContent" role="button" class="btn btn-small btn-inverse" style="color:white;">
                     <span>show</span> options&nbsp;
@@ -776,7 +776,7 @@
         if (projectListIds.length > 0) {
             params += "&ids=" + projectListIds.join(",");
         } else {
-            params += "&query=class:au.org.ala.ecodata.Project";
+            params += "&query="+encodeURIComponent('${params.query ? params.query.replace("'", "\\'") : "*:*"}');
         }
         if (facetFilters) {
             params += "&fq=" + facetFilters.join("&fq=");

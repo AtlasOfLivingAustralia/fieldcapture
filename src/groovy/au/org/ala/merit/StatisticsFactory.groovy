@@ -1,12 +1,24 @@
 package au.org.ala.merit
 
 import au.org.ala.fieldcapture.SettingService
+import net.sf.ehcache.CacheException
+import net.sf.ehcache.Ehcache
+import net.sf.ehcache.Element
+import net.sf.ehcache.event.CacheEventListener
+import org.apache.log4j.Logger
+import org.springframework.cache.Cache
+
+import static au.org.ala.merit.ScheduledJobContext.*
 import grails.converters.JSON
 import grails.plugin.cache.GrailsCacheManager
+import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.scheduling.annotation.Scheduled
 
 
 class StatisticsFactory {
+
+    private Logger log = Logger.getLogger(StatisticsFactory.class)
 
     private static final String STATISTICS_CACHE_REGION = 'homePageStatistics'
     private static final String DEFAULT_CONFIG = "/resources/statistics.json"
@@ -16,20 +28,59 @@ class StatisticsFactory {
     @Autowired
     ReportService reportService
     @Autowired
-    SettingService settingsService
+    SettingService settingService
     @Autowired
     GrailsCacheManager grailsCacheManager
+    @Autowired
+    GrailsApplication grailsApplication
 
     public StatisticsFactory() {}
 
     private void initialize() {
-        String result = settingsService.get(STATISTICS_CONFIG_KEY)
+        String result = settingService.get(STATISTICS_CONFIG_KEY)
         if (result) {
             config = JSON.parse(result)
         }
         if (!config) {
             config = readConfig()
         }
+        Ehcache ehcache = grailsCacheManager.getCache(STATISTICS_CACHE_REGION).getNativeCache()
+        ehcache.getCacheEventNotificationService().registerListener(new CacheEventListener() {
+            @Override
+            void notifyElementRemoved(Ehcache cache, Element element) throws CacheException {
+                log.debug("${cache.name}: Removed: ${element.objectKey}")
+            }
+
+            @Override
+            void notifyElementPut(Ehcache cache, Element element) throws CacheException {
+                log.debug("${cache.name}: Put: ${element.objectKey}")
+            }
+
+            @Override
+            void notifyElementUpdated(Ehcache cache, Element element) throws CacheException {
+                log.debug("${cache.name}: Updated: ${element.objectKey}")
+            }
+
+            @Override
+            void notifyElementExpired(Ehcache cache, Element element) {
+                log.debug("${cache.name}: Expired: ${element.objectKey}")
+            }
+
+            @Override
+            void notifyElementEvicted(Ehcache cache, Element element) {
+                log.debug("${cache.name}: Evicted: ${element.objectKey}")
+            }
+
+            @Override
+            void notifyRemoveAll(Ehcache cache) {
+                log.debug("${cache.name}: Removed all: ${cache.name}")
+            }
+
+            @Override
+            void dispose() {
+                log.debug("Dispose")
+            }
+        })
     }
 
     private Map readConfig() {
@@ -39,7 +90,8 @@ class StatisticsFactory {
 
     public synchronized void clearConfig() {
         config = null
-        grailsCacheManager.destroyCache(STATISTICS_CACHE_REGION)
+        Cache cache = grailsCacheManager.getCache(STATISTICS_CACHE_REGION)
+        cache.clear()
     }
 
     public synchronized List<Map> getStatisticsGroup(int groupNumber) {
@@ -50,6 +102,7 @@ class StatisticsFactory {
 
         List<Map> statistics = grailsCacheManager.getCache(STATISTICS_CACHE_REGION).get(groupNumber)?.get()
         if (!statistics) {
+            log.info("Cache miss for homepage stats, key: ${groupNumber}")
             statistics = this.config.groups[groupNumber].collect { statisticName ->
                 Map statistic = config.statistics[statisticName]
                 evaluateStatistic(statistic)
@@ -95,6 +148,23 @@ class StatisticsFactory {
         }
 
         displayProps
+    }
+
+    // Refresh the statistics every day at midnight
+    @Scheduled(cron="0 3 0 * * *")
+    public void reloadStatistics() {
+        withUser([name:"statisticsTask"]) {
+            settingService.withDefaultHub {
+
+                log.info("Reloading homepage statistics...")
+
+                clearConfig()
+
+                for (int i=0; i<getGroupCount(); i++) {
+                    getStatisticsGroup(i)
+                }
+            }
+        }
     }
 
     private Statistic create(String type, Map properties) {
