@@ -467,9 +467,9 @@ log4j = {
 
     debug 'grails.app.controllers.au.org.ala',
             'ala','au.org.ala.web',
-            'au.org.ala.merit',
-            'grails.plugin.cache',
-            'net.sf.ehcache' //, 'au.org.ala.cas.client',
+            'au.org.ala.merit'
+            //'grails.plugin.cache',
+            //'net.sf.ehcache', 'au.org.ala.cas.client',
 
     error  'org.codehaus.groovy.grails.web.servlet',        // controllers
            'org.codehaus.groovy.grails.web.pages',          // GSP
