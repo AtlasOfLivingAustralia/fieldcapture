@@ -1021,20 +1021,20 @@ class ProjectService  {
 
     private Map defaultSpeciesSettings(Map project) {
         Map defaultConfig
-        if (project.listId) {
-
-            defaultConfig = [
-                    "type": "GROUP_OF_SPECIES",
-                    "speciesLists":[ [dataResourceUid:project.listId]],
-                    "speciesDisplayFormat" : "SCIENTIFICNAME(COMMONNAME)"
-            ]
-        }
-        else {
+//        if (project.listId) {
+//
+//            defaultConfig = [
+//                    "type": "GROUP_OF_SPECIES",
+//                    "speciesLists":[ [dataResourceUid:project.listId]],
+//                    "speciesDisplayFormat" : "SCIENTIFICNAME(COMMONNAME)"
+//            ]
+//        }
+//        else {
             defaultConfig = [
                     "type" : "ALL_SPECIES",
                     "speciesDisplayFormat" : "SCIENTIFICNAME(COMMONNAME)"
             ]
-        }
+//        }
         defaultConfig
     }
 
