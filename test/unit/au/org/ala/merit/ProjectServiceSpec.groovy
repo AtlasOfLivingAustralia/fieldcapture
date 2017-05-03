@@ -2,7 +2,7 @@ package au.org.ala.merit
 
 import au.org.ala.fieldcapture.ActivityService
 import au.org.ala.fieldcapture.DocumentService
-import au.org.ala.fieldcapture.MetadataService
+import au.org.ala.merit.MetadataService
 import au.org.ala.fieldcapture.UserService
 import au.org.ala.fieldcapture.WebService
 import grails.converters.JSON
