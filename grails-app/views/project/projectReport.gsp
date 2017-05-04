@@ -16,6 +16,8 @@
         organisationLinkBaseUrl: "${createLink(controller:'organisation', action:'index')}",
         imageLocation:"${resource(dir:'/images')}",
         excelOutputTemplateUrl:"${createLink(controller: 'activity', action:'excelOutputTemplate')}",
+        speciesProfileUrl: "${createLink(controller: 'species', action: 'speciesProfile')}",
+        bieUrl: "${grailsApplication.config.bie.baseURL}",
         returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
     },
         here = window.location.href;
@@ -43,7 +45,7 @@
 
     </style>
 
-    <r:require modules="knockout, activity, jqueryValidationEngine, merit_projects, pretty_text_diff,jQueryFileDownload"/>
+    <r:require modules="knockout, activity, jqueryValidationEngine, merit_projects, pretty_text_diff,jQueryFileDownload,species"/>
 </head>
 <body>
 <div class="container">
