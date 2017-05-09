@@ -399,9 +399,8 @@ class ReportController {
         return cutoff.year
     }
 
-    private List availableYears() {
+    private List availableYears(int first = 2014) {
         def availableYears = []
-        int first = 2014
         int year = first
         int current = DateUtils.currentFinancialYear()
         while (year <= current) {
@@ -512,6 +511,44 @@ class ReportController {
     def meriPlanReportCallback(String id) {
         Map project = projectService.get(id, 'all')
         render view:'/project/meriPlanReadOnly', model:[project:project, themes:metadataService.getThemesForProject(project), user:[isAdmin:true]]
+    }
+
+    def reef2050PlanActionReport(Integer year) {
+
+        List years = availableYears(2015)
+        year = year ?: years[years.size()-1].value
+
+        Map model = reportService.reef2050PlanActionReport(year)
+        model.years = years
+        model.year = year
+
+        Map actionStatusCounts = model.actionStatus?.result?.result ?: [:]
+
+        model.status = [
+            [count:actionStatusCounts["Completed"]?:0, description:"<strong>are completed or in place</strong> (implementation is full completed OR initial implementation has been completed, but part of the action is ongoing)", class:"status-1"],
+            [count:actionStatusCounts["In place"]?:0, description:"<strong>are completed or in place</strong> (implementation is full completed OR initial implementation has been completed, but part of the action is ongoing)", class:"status-1"],
+            [count:actionStatusCounts["On track / Underway"]?:0, description:"<strong>are on track/underway</strong> (implementation is meeting expected milestones and progress is being made)", class:"status-2"],
+            [count:actionStatusCounts["Delayed or limited progress"]?:0, description:"<strong>are delayed/limited progress</strong> (major implementation milestones have been delayed by less than 6 months, or only superficial progress has been made)", class:"status-3"],
+            [count:actionStatusCounts["Significant delays or no progress"]?:0, description:"<strong>are significant delays or no progress</strong> (major implementation milestones have been delayed for longer than six months or no progress has been made)", class:"status-4"],
+            [count:actionStatusCounts["Not yet due"]?:0, description:"<strong>are not yet due</strong> (implementation is not yet due to commence)", class:"status-5"]
+        ]
+
+
+        model.themes = [
+                "Water quality",
+                "Biodiversity",
+                "Ecosystem health",
+                "Heritage",
+                "Community benefits",
+                "Economic benefits",
+                "Governance"
+        ]
+
+        model.themes.each {
+
+        }
+
+        model
     }
 
 }

@@ -13,6 +13,8 @@ class ReportService {
     public static final String REPORT_SUBMITTED = 'pendingApproval'
     public static final String REPORT_NOT_APPROVED = 'unpublished'
 
+    public static final String REEF_2050_PLAN_ACTION_REPORTING_ACTIVITY_TYPE = 'Reef 2050 Plan Action Reporting'
+
     def grailsApplication
     def webService
     def userService
@@ -22,6 +24,7 @@ class ReportService {
     def commonService
     def documentService
     def metadataService
+    def activityService
 
     private static int DEFAULT_REPORT_DAYS_TO_COMPLETE = 43
 
@@ -467,5 +470,57 @@ class ReportService {
         String url =  grailsApplication.config.ecodata.baseUrl+"report/runReport"
 
         webService.doPost(url, [searchCriteria: searchCriteria, reportConfig: config])
+    }
+
+
+    Map reef2050PlanActionReport(int year) {
+
+        Map searchCriteria = [type:REEF_2050_PLAN_ACTION_REPORTING_ACTIVITY_TYPE, publicationStatus:REPORT_APPROVED, dateProperty:'plannedEndDate', 'startDate':year+'-07-01T10:00:00Z', 'endDate':(year+1)+'-07-01T10:00:00Z']
+
+        Map resp = activityService.search(searchCriteria)
+        if (resp.error) {
+            return [error:resp.error]
+        }
+
+        List activities = resp.resp.activities
+
+        // Merge into a single list of actions.
+
+        List<Map> allActions = []
+        activities.each { activity ->
+            Map output = activity.outputs?activity.outputs[0]:[:]
+            List actions = output.data?.actions
+            Map commonData = [reportingLeadAgency:output.data.reportingLeadAgency, agencyContact:output.data.agencyContact, webLink:output.data.webLink]
+            actions = actions.collect{it+commonData}
+            allActions.addAll(actions)
+        }
+
+        List dateBuckets = [year+'-06-30T14:00:00Z', (year+1)+'-06-30T14:00:00Z']
+        Map countByStatus = [type:'HISTOGRAM', label:'Action status', property:'data.actions.status']
+        Map dateGroupingConfig = [groups:[type:'date', buckets:dateBuckets, format:'YYYY', property:'activity.plannedEndDate'],
+                                  childAggregations: [countByStatus, [label:'Action Status By Theme', groups:[type:'discrete', property:'data.actions.theme'], childAggregations: [countByStatus]]]]
+        Map activityTypeFilter = [type:'DISCRETE', filterValue: REEF_2050_PLAN_ACTION_REPORTING_ACTIVITY_TYPE, property:'activity.type']
+        Map config = [filter:activityTypeFilter, childAggregations: [dateGroupingConfig], label:'Action Status by Year']
+
+        String url =  grailsApplication.config.ecodata.baseUrl+"search/activityReport"
+        List searchCriteriaForReport = ["associatedSubProgramFacet:"+REEF_2050_PLAN_ACTION_REPORTING_ACTIVITY_TYPE]
+
+        Map report = webService.doPost(url, [fq:searchCriteriaForReport, reportConfig: config])
+        Map actionStatus = [label:"Action Status"]
+        Map actionStatusByTheme = [:]
+        if (!report.error) {
+            report = report.resp.results
+            Map reportForYear = report?.groups?.find{it.group.startsWith(Integer.toString(year))}
+            if (reportForYear) {
+
+                actionStatus.result = reportForYear.results[0]
+                reportForYear.results[1]?.groups?.each { group ->
+                    actionStatusByTheme[group.group] = [label: group.group + " - Action Status", result:group.results[0]]
+                }
+            }
+        }
+
+        [actions:allActions, actionStatus:actionStatus, actionStatusByTheme:actionStatusByTheme]
+
     }
 }
