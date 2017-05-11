@@ -68,6 +68,8 @@
                 break;
             }
         }
+        var dateSuffix = '${suffix}';
+        var title = 'Output targets - '+dateSuffix;
         $('#announcementsTable').dataTable({
             "data": events,
             "order":[[typeColumn, 'asc'], [scheduledDateColumn, 'asc']],
@@ -79,15 +81,11 @@
                 'copyHtml5',
                 {
                     extend: 'excelHtml5',
-                    title: 'Output targets '+date
-                },
-                {
-                    extend: 'pdfHtml5',
-                    title: 'Output targets '+date
+                    title: title
                 },
                 {
                     extend: 'csvHtml5',
-                    title: 'Output targets '+date
+                    title: title
                 }
             ]
 
