@@ -28,5 +28,10 @@ modules = {
         resource url:'css/project-explorer.css'
     }
 
+    reports {
+        dependsOn 'application', 'newSkin'
+        resource url:'css/reef2050DashboardReport.css'
+    }
+
 
 }
