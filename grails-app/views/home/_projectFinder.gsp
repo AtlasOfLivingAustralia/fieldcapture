@@ -1,4 +1,35 @@
 <%@ page import="au.org.ala.fieldcapture.SettingPageType" %>
+<style type="text/css">
+.facet-collapse {
+    height: auto;
+    width: auto;
+}
+
+
+.facet-collapse.width {
+    position: relative;
+    width: 0;
+    overflow: hidden;
+    -webkit-transition: width 0.25s ease;
+    -moz-transition: width 0.25s ease;
+    -o-transition: width 0.25s ease;
+    transition: width 0.25s ease;
+}
+
+.facet-collapse.in.width {
+    width: auto;
+    -webkit-transition: width 0.25s ease;
+    -moz-transition: width 0.25s ease;
+    -o-transition: width 0.25s ease;
+    transition: width 0.25s ease;
+}
+
+.facet-collapse.in.height {
+    height: auto;
+}
+
+</style>
+
 <div id="projectExplorer">
 <g:if test="${flash.error || results.error}">
     <g:set var="error" value="${flash.error?:results.error}"/>
@@ -206,18 +237,30 @@
                         <a class="accordian-toggle" id="reportView-heading" href="#reportView" data-toggle="collapse" data-parent="#project-display-options">Dashboard<i style="padding-left:50px; padding-top:5px;" class="fa fa-plus pull-right"></i></a>
                     </div>
                     <div class="accordian-body collapse" id="reportView">
-                        <span class="span4 facet-holder"></span>
+                        <div class="span4 facet-holder" style="display:none;" data-hidden="true"></div>
 
-                        <span class="span8" style="overflow-x:scroll">
+                        <div style="overflow-x:scroll">
+
+                            <div class="row-fluid" style="margin-top:5px;">
+                                <button class="btn facets-toggle"><i class="fa fa-bars"></i></button> <span> Found ${projectCount} projects.</span>
+                            </div>
                             <div class="row-fluid" >
                                 <g:if test="${fc.userIsAlaOrFcAdmin()}">
                                     <span class="span12">
                                         <h4>Report: </h4>
-                                        <select id="dashboardType" name="dashboardType"><option value="dashboard">Activity Outputs</option><option value="announcements">Announcements</option><option value="outputTargets">Output Targets By Programme</option></select>
+                                        <select id="dashboardType" name="dashboardType">
+                                            <option value="dashboard">Activity Outputs</option>
+                                            <option value="announcements">Announcements</option>
+                                            <option value="outputTargets">Output Targets By Programme</option>
+                                            <option value="reef2050PlanAction">Reef 2050 Plan Dashboard</option>
+                                        </select>
                                     </span>
                                 </g:if>
                                 <g:else>
-                                    <select id="dashboardType" name="dashboardType" style="display:none"><option value="dashboard">Activity Outputs</option></select>
+                                    <select id="dashboardType" name="dashboardType" style="display:none">
+                                        <option value="dashboard">Activity Outputs</option>
+                                        <option value="reef2050PlanAction">Reef 2050 Plan Dashboard</option>
+                                    </select>
                                 </g:else>
                             </div>
                             <div class="loading-message">
@@ -226,7 +269,7 @@
                             <div id="dashboard-content">
 
                             </div>
-                        </span>
+                        </div>
                     </div>
                 </div>
                 <g:if test="${fc.userIsAlaOrFcAdmin()}">
@@ -654,6 +697,29 @@
                 bootbox.alert("There was an error requesting the download");
             });
 
+        });
+
+
+        function toggleFacets() {
+
+            var $holder = $('#facetsCol').parent();
+            var hidden = $holder.data('hidden');
+            $holder.data('hidden', !hidden);
+            var $content = $holder.next();
+            if (!hidden) {
+                $holder.animate({width:'toggle'}, 200, 'swing', function() {
+                    $content.removeClass('span8');
+                });
+            }
+            else {
+                $holder.animate({width:'toggle'}, 200, 'swing', function() {
+                   $content.addClass('span8');
+
+                });
+            }
+        }
+        $('.facets-toggle').click(function(e) {
+           toggleFacets();
         });
 
         var urlWithoutDates = '<fc:formatParams params="${params}" requiredParams="sort,order,max,fq"/>';
