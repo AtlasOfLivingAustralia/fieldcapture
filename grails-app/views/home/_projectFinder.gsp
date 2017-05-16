@@ -381,13 +381,18 @@
             };
         })();
 
+        var loadReportRequest = null;
         var loadReport = function(reportType) {
             var $content = $('#dashboard-content');
             var $loading = $('.loading-message');
             $content.hide();
             $loading.show();
+            if (loadReportRequest) {
+                loadReportRequest.abort();
+            }
 
-            $.get(fcConfig.dashboardUrl,{report:reportType}, function(data) {
+            loadReportRequest = $.get(fcConfig.dashboardUrl,{report:reportType}, function(data) {
+                loadReportRequest = null;
                 $content.show();
                 $loading.hide();
                 $content.html(data);
