@@ -41,6 +41,7 @@
     </div>
 </g:if>
 <g:elseif test="${results?.hits?.total?:0 > 0}">
+
     <div class="row-fluid ">
         <div id="facetsCol" class="well well-small" style="display:none;">
             <g:set var="reqParams" value="query,sort,order,max,fq,fromDate,toDate"/>
@@ -147,6 +148,12 @@
                         <span class="span4 facet-holder"></span>
 
                         <span class="span8">
+                            <div class="row-fluid">
+                                <g:if test="${params.query}">
+                                    Showing the results of the search "<b>${params.query}</b>".<br/>
+                                </g:if>
+                                Found <strong>${projectCount}</strong> projects.
+                            </div>
                             <g:render template="/shared/sites" plugin="fieldcapture-plugin" model="${[projectCount:results?.hits?.total?:0]}"/>
                         </span>
                     </div>
@@ -159,6 +166,12 @@
                         <span class="span4 facet-holder"></span>
 
                         <span class="span8">
+                            <div class="row-fluid">
+                                <g:if test="${params.query}">
+                                    Showing the results of the search "<b>${params.query}</b>".<br/>
+                                </g:if>
+                                Found <strong>${projectCount}</strong> projects.
+                            </div>
 
                             <div class="scroll-list clearfix" id="projectList">
                                 <table class="table table-bordered table-hover" id="projectTable" data-sort="lastUpdated" data-order="DESC" data-offset="0" data-max="10">
@@ -176,16 +189,6 @@
                                     <div class="btn-group">
                                         <button class="btn btn-small prev"><i class="icon-chevron-left"></i>&nbsp;previous</button>
                                         <button class="btn btn-small next">next&nbsp;<i class="icon-chevron-right"></i></button>
-                                    </div>
-                                    <span id="project-filter-warning" class="label filter-label label-warning hide pull-left">Filtered</span>
-                                    <div class="control-group pull-right dataTables_filter">
-                                        <div class="input-append">
-                                            <g:textField class="filterinput input-medium" data-target="project"
-                                                         title="Type a few characters to restrict the list." name="projects"
-                                                         placeholder="filter"/>
-                                            <button type="button" class="btn clearFilterBtn"
-                                                    title="clear"><i class="icon-remove"></i></button>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -240,9 +243,12 @@
                         <div class="span4 facet-holder" style="display:none;" data-hidden="true"></div>
 
                         <div style="overflow-x:scroll">
-
                             <div class="row-fluid" style="margin-top:5px;">
-                                <button class="btn facets-toggle"><i class="fa fa-bars"></i></button> <span> Found ${projectCount} projects.</span>
+                                <button class="btn facets-toggle"><i class="fa fa-bars"></i></button> <span>
+                                <g:if test="${params.query}">
+                                Showing the results of the search "<b>${params.query}</b>".<br/>
+                                </g:if>
+                                Found ${projectCount} projects.</span>
                             </div>
                             <div class="row-fluid" >
                                 <g:if test="${fc.userIsAlaOrFcAdmin()}">
@@ -281,6 +287,13 @@
                             <span class="span4 facet-holder"></span>
 
                             <span class="span8">
+
+                                <div class="row-fluid">
+                                    <g:if test="${params.query}">
+                                        Showing the results of the search "<b>${params.query}</b>".<br/>
+                                    </g:if>
+                                    Found <strong>${projectCount}</strong> projects.
+                                </div>
 
 
                                 <div class="alert">Please do not run more than one download at a time as they can place a lot of load on the system</div>
