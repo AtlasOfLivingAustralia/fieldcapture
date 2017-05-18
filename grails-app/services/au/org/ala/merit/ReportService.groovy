@@ -484,13 +484,17 @@ class ReportService {
 
         List activities = resp.resp.activities
 
+        List projectIds = activities.collect{it.projectId}.unique()
+        List projects = projectService.search([projectId:projectIds, view:'flat'])?.resp?.projects ?: []
+
         // Merge into a single list of actions.
 
         List<Map> allActions = []
         activities.each { activity ->
             Map output = activity.outputs?activity.outputs[0]:[:]
             List actions = output.data?.actions
-            Map commonData = [reportingLeadAgency:output.data.reportingLeadAgency, agencyContact:output.data.agencyContact, webLink:output.data.webLink]
+            Map project = projects.find{it.projectId == activity.projectId}
+            Map commonData = [organisationId:project?.organisationId, reportingLeadAgency:project?.organisationName, agencyContact:output.data.agencyContact, webLink:output.data.webLink]
             actions = actions.collect{it+commonData}
             allActions.addAll(actions)
         }
