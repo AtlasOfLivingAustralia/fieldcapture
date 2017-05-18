@@ -101,7 +101,7 @@
                     <tr>Action summary</tr>
                     <tr>
                         <th>Action ID</th>
-                        <th>Action description</th>
+                        <th>Action</th>
                         <th>Lead Agency</th>
                         <th>Status</th>
                         <th>Description</th>
@@ -117,7 +117,15 @@
             <tr>
                 <td>${action.actionId}</td>
                 <td>${action.actionDescription}</td>
-                <td>${action.reportingLeadAgency}</td>
+                <td>
+                    <g:if test="${action.organisationId}">
+                        <g:link controller="organisation" action="index" id="${action.organisationId}">${action.reportingLeadAgency}</g:link>
+                    </g:if>
+                    <g:else>
+                        ${action.reportingLeadAgency}
+                    </g:else>
+
+                </td>
                 <td>${action.status}</td>
                 <td>${action.description}</td>
                 <td>${action.progress}</td>
