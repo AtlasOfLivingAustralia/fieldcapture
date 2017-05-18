@@ -3,6 +3,7 @@ package au.org.ala.merit.command
 import au.org.ala.fieldcapture.DocumentService
 import au.org.ala.fieldcapture.UserService
 import au.org.ala.merit.ActivityService
+import au.org.ala.merit.BlogService
 import au.org.ala.merit.MetadataService
 import au.org.ala.merit.ProjectService
 import au.org.ala.merit.ReportService
@@ -22,6 +23,7 @@ class ProjectSummaryReportCommand {
     MetadataService metadataService
     UserService userService
     SiteService siteService
+    BlogService blogService
 
     // Report parameters
     String id
@@ -42,6 +44,17 @@ class ProjectSummaryReportCommand {
         String toDate = project.reports?.find { it.name == toStage }?.toDate
 
         List reportedStages = []
+
+        List<Map> blog = blogService.getProjectBlog(project)
+        if (fromDate && toDate) {
+            blog = blog.findAll{it.date > fromDate && it.date <= toDate}
+        }
+        else if (fromDate) {
+            blog = blog.findAll{it.date > fromDate}
+        }
+        else if (toDate) {
+            blog = blog.findAll{it.date <= toDate}
+        }
 
         final int MAX_IMAGES = 6
         List publicImages = project.documents.findAll{it.public == true && it.thirdPartyConsentDeclarationMade == true && it.type == 'image'}
@@ -138,7 +151,7 @@ class ProjectSummaryReportCommand {
         [project:project, content:contentToInclude, role:role, images:publicImages, activityCountByStage:activityCountByStage,
          outcomes:outcomes, metrics: metrics, activityModels:activityModels, orderedStageNames:reportedStageNames,
          activitiesByStage:activitiesByStage, outputModels:outputModels, stageReportModel:stageReportModel,
-         latestStageReport:latestStageReport, risksComparison: risksComparison]
+         latestStageReport:latestStageReport, risksComparison: risksComparison, blog:blog]
     }
 
 

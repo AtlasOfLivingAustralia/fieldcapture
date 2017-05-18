@@ -138,6 +138,10 @@
         </g:each>
     </g:if>
 
+    <g:if test="${'Blog' in content && blog}">
+        <g:render template="/shared/blog"/>
+    </g:if>
+
     <g:if test="${'Activity status summary' in content}">
     <h3>Activity status summary</h3>
 
