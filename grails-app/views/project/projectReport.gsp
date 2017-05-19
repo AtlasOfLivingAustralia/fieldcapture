@@ -139,7 +139,21 @@
     </g:if>
 
     <g:if test="${'Blog' in content && blog}">
-        <g:render template="/shared/blog"/>
+        <g:if test="${blog.find{it.type == 'News and Events'}}">
+            <h3>News & events</h3>
+            <div class="blog-section">
+                <g:render template="/shared/blog" model="${[blog:blog, type:'News and Events']}"/>
+            </div>
+        </g:if>
+
+        <g:if test="${blog.find{it.type == 'Project Stories'}}">
+            <div class="row-fluid">
+                <h3>Project stories</h3>
+                <div class="blog-section">
+                    <g:render template="/shared/blog" model="${[blog:blog, type:'Project Stories']}"/>
+                </div>
+            </div>
+        </g:if>
     </g:if>
 
     <g:if test="${'Activity status summary' in content}">
