@@ -173,11 +173,12 @@ class ReportController {
 
         reports = reports.findAll{it.progress == ActivityService.PROGRESS_FINISHED}.sort{it.fromDate}.reverse()
 
-
         if (reports.size()) {
             int index = 0
+            int version = 2
             if (params.year) {
                 int year = Integer.parseInt(params.year)
+                version = year > 2016 ? 2 : 1
                 reports.eachWithIndex{ Map report, int i ->
                     DateTime date = DateUtils.parse(report.toDate)
                     if (date.getYear() == year) {
@@ -185,9 +186,10 @@ class ReportController {
                     }
                 }
             }
-            Map model = reportService.performanceReportModel(reports[index].reportId)
+            Map model = reportService.performanceReportModel(reports[index].reportId, version)
             model.years = reportYears(reports)
             model.year = params.year
+            model.version = version
 
             if (reports.size() > index) {
                 model.previousReport = reports[index+1]
@@ -270,14 +272,15 @@ class ReportController {
             }
         }
 
-        Map model = reportService.performanceReportModel(reportId)
+        int version = year > 2016 ? 2 : 1
+        Map model = reportService.performanceReportModel(reportId, version)
         model.years = reportYears(reports)
         model.results = resultsForState?.results ?: [:]
         model.states = states
         model.years = years
         model.state = state
         model.year = year
-
+        model.version = version
         render view:'_performanceAssessmentComparison', model:model
     }
 
