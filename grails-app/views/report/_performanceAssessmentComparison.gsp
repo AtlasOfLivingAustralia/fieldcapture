@@ -53,18 +53,19 @@
         </th>
         <th>You verse ${state?:'All'} <fc:iconHelp>Only approved reports are included in the counts in this column.  Cells in yellow indicate the values selected by this organisation</fc:iconHelp></th>
     </tr>
+    <g:set var="ratings" value="${version == 1 ? ['0', '1', '2'] : ['0', '1']}"/>
     <g:each in="${themes}" var="theme">
         <g:each in="${sectionsByTheme[theme]}" var="section" status="i">
-            <g:each in="${['0','1','2']}" var="rating" status="j">
+            <g:each in="${ratings}" var="rating" status="j">
                 <tr>
                     <g:if test="${i == 0 && j == 0}">
-                        <td rowspan="${sectionsByTheme[theme].size() * 3}" class="title-row">
+                        <td rowspan="${sectionsByTheme[theme].size() * ratings.size()}" class="title-row">
                             ${theme}
                         </td>
                     </g:if>
 
                     <g:if test="${j == 0}">
-                    <td rowspan="3">
+                    <td rowspan="${ratings.size()}">
                         ${section.title}
                     </td>
                     </g:if>

@@ -244,9 +244,10 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
 
     def editOrganisationReport(String reportId) {
         Map report = reportService.get(reportId)
+        int version = report.toDate < "2017-01-01T00:00:00Z" ? 1 : 2
         Map organisation = organisationService.get(report.organisationId)
         if (organisationService.isUserAdminForOrganisation(report.organisationId)) {
-            Map model = reportService.performanceReportModel(reportId)
+            Map model = reportService.performanceReportModel(reportId, version)
             model.state = organisation.state ?: 'Unknown'
             model.organisation = organisation
 
@@ -271,7 +272,8 @@ class OrganisationController extends au.org.ala.fieldcapture.OrganisationControl
 
         if (organisationService.isUserAdminForOrganisation(report.organisationId)) {
 
-            Map model = reportService.performanceReportModel(id)
+            int version = report.toDate < "2017-01-01T00:00:00Z" ? 1 : 2
+            Map model = reportService.performanceReportModel(id, version)
             model.edit = false
 
             String page = g.include(controller:'organisation', action:'editOrganisationReport', id:id, params:[edit:false, reportId:id])
