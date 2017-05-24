@@ -9,8 +9,10 @@ import org.joda.time.Period
 /**
  * Extends the plugin OrganisationService to provide Green Army reporting capability.
  */
-class OrganisationService extends au.org.ala.fieldcapture.OrganisationService {
+class OrganisationService {
 
+
+    def grailsApplication, webService, metadataService, projectService, userService, searchService, activityService, emailService, reportService, documentService
 
     private static def APPROVAL_STATUS = ['unpublished', 'pendingApproval', 'published']
 
@@ -22,12 +24,11 @@ class OrganisationService extends au.org.ala.fieldcapture.OrganisationService {
             [type: 'Performance expectations framework - self assessment worksheet', period: Period.years(1), bulkEditable: true, businessDaysToCompleteReport:5, adhoc:true]
     ]
 
-    def activityService, emailService, reportService, groovyPageRenderer, documentService
-
     /** Overrides the parent to add Green Army reports to the results */
     def get(String id, view = '') {
 
-        def organisation = super.get(id, 'flat')
+        String url = "${grailsApplication.config.ecodata.baseUrl}organisation/$id?view=$view"
+        Map organisation = webService.getJson(url)
 
         def projects = []
         def resp = projectService.search(organisationId: id, isMERIT:true, view:'enhanced')
@@ -43,6 +44,119 @@ class OrganisationService extends au.org.ala.fieldcapture.OrganisationService {
             organisation.reports = getReportsForOrganisation(organisation, getReportConfig(id))
         }
         organisation
+    }
+
+    def getByName(orgName) {
+        // The result of the service call will be a JSONArray if it's successful
+        return list().list.find({ it.name == orgName })
+    }
+
+    def getNameFromId(orgId) {
+        // The result of the service call will be a JSONArray if it's successful
+        return orgId ? list().list.find({ it.organisationId == orgId })?.name : ''
+    }
+
+    def list() {
+        metadataService.organisationList()
+    }
+
+    def update(id, organisation) {
+
+        def url = "${grailsApplication.config.ecodata.baseUrl}organisation/$id"
+        def result = webService.doPost(url, organisation)
+        metadataService.clearOrganisationList()
+        result
+
+    }
+
+    def isUserAdminForOrganisation(organisationId) {
+        def userIsAdmin
+
+        if (!userService.user) {
+            return false
+        }
+        if (userService.userIsSiteAdmin()) {
+            userIsAdmin = true
+        } else {
+            userIsAdmin = userService.isUserAdminForOrganisation(userService.user.userId, organisationId)
+        }
+
+        userIsAdmin
+    }
+
+    def isUserGrantManagerForOrganisation(organisationId) {
+        def userIsAdmin
+
+        if (!userService.user) {
+            return false
+        }
+        if (userService.userIsSiteAdmin()) {
+            userIsAdmin = true
+        } else {
+            userIsAdmin = userService.isUserGrantManagerForOrganisation(userService.user.userId, organisationId)
+        }
+
+        userIsAdmin
+    }
+
+    /**
+     * Get the list of users (members) who have any level of permission for the requested organisationId
+     *
+     * @param organisationId the organisationId of interest.
+     */
+    def getMembersOfOrganisation(organisationId) {
+        def url = grailsApplication.config.ecodata.baseUrl + "permissions/getMembersForOrganisation/${organisationId}"
+        webService.getJson(url)
+    }
+
+    /**
+     * Adds a user with the supplied role to the identified organisation.
+     * Adds the same user with the same role to all of the organisation's projects.
+     *
+     * @param userId the id of the user to add permissions for.
+     * @param organisationId the organisation to add permissions for.
+     * @param role the role to assign to the user.
+     */
+    def addUserAsRoleToOrganisation(String userId, String organisationId, String role) {
+
+        def organisation = get(organisationId, 'flat')
+        def resp = userService.addUserAsRoleToOrganisation(userId, organisationId, role)
+        organisation.projects.each {
+            userService.addUserAsRoleToProject(userId, it.projectId, role)
+        }
+        resp
+    }
+
+    /**
+     * Removes the user access with the supplied role from the identified organisation.
+     * Removes the same user from all of the organisation's projects.
+     *
+     * @param userId the id of the user to remove permissions for.
+     * @param organisationId the organisation to remove permissions for.
+
+     */
+    def removeUserWithRoleFromOrganisation(String userId, String organisationId, String role) {
+        def organisation = get(organisationId, 'flat')
+        userService.removeUserWithRoleFromOrganisation(userId, organisationId, role)
+        organisation.projects.each {
+            userService.removeUserWithRole(it.projectId, userId, role)
+        }
+    }
+
+    def search(Integer offset = 0, Integer max = 100, String searchTerm = null, String sort = null) {
+        Map params = [
+                offset:offset,
+                max:max,
+                query:searchTerm,
+                fq:"className:au.org.ala.ecodata.Organisation"
+        ]
+        if (sort) {
+            params.sort = sort
+        }
+        def results = searchService.fulltextSearch(
+                params, false
+        )
+        results
     }
 
     /** May be useful to make this configurable per org or something? */
