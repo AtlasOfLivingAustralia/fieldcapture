@@ -154,7 +154,7 @@ class OrganisationService {
             params.sort = sort
         }
         def results = searchService.fulltextSearch(
-                params, true
+                params, false
         )
         results
     }
