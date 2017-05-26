@@ -121,8 +121,10 @@ class OrganisationService {
 
         def organisation = get(organisationId, 'flat')
         def resp = userService.addUserAsRoleToOrganisation(userId, organisationId, role)
-        organisation.projects.each {
-            userService.addUserAsRoleToProject(userId, it.projectId, role)
+        organisation.projects.each { project ->
+            if (project.isMERIT) {
+                userService.addUserAsRoleToProject(userId, project.projectId, role)
+            }
         }
         resp
     }
@@ -138,8 +140,10 @@ class OrganisationService {
     def removeUserWithRoleFromOrganisation(String userId, String organisationId, String role) {
         def organisation = get(organisationId, 'flat')
         userService.removeUserWithRoleFromOrganisation(userId, organisationId, role)
-        organisation.projects.each {
-            userService.removeUserWithRole(it.projectId, userId, role)
+        organisation.projects.each { project ->
+            if (project.isMERIT) {
+                userService.removeUserWithRole(project.projectId, userId, role)
+            }
         }
     }
 

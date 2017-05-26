@@ -439,6 +439,20 @@
                 }).trigger('change');
             }
         };
+
+        var expandedToggles = amplify.store('facetToggleState') || [];
+        function restoreFacetSelections() {
+
+            if ($('#facetsContent').is(':visible')) {
+                if (expandedToggles) {
+                    for (var i=0; i<expandedToggles.length; i++) {
+                        $('[data-name="'+expandedToggles[i]+'"]').collapse('show');
+                    }
+                }
+            }
+
+        }
+
         // retain accordian state for future re-visits
         $('#project-display-options').on('shown', function (e) {
             // Because the facets use accordion and are inside the main accordion view we need to filter them out.
@@ -453,9 +467,16 @@
         });
         $('#project-display-options').on('show', function (e) {
 
-            var section = '#'+e.target.id;
-            $('#facetsCol').appendTo($(section).find('.facet-holder'));
-            $('#facetsCol').show();
+            // Because the facets use accordion and are inside the main accordion view we need to filter them out.
+            var $target = $(e.target);
+            if ($target.hasClass('accordian-body')) {
+
+                var section = '#'+e.target.id;
+                $('#facetsCol').appendTo($(section).find('.facet-holder'));
+                $('#facetsCol').show();
+                restoreFacetSelections();
+            }
+
         });
         $('#project-display-options').on('hidden', function (e) {
             var targetId = e.target.id;
@@ -470,13 +491,6 @@
         $('#project-display-options '+storedTab).collapse({parent:'#project-display-options'});
         $('#project-display-options '+storedTab).collapse('show');
 
-
-        var expandedToggles = amplify.store('facetToggleState') || [];
-        if (expandedToggles) {
-            for (var i=0; i<expandedToggles.length; i++) {
-                $('[data-name="'+expandedToggles[i]+'"]').collapse('show');
-            }
-        }
         // Remember facet toggle state.
         $('#facetsContent').on('shown', function (e) {
             var facetName = $(e.target).data('name');
@@ -500,8 +514,6 @@
             $('[data-target="#'+e.target.id+'"] i').removeClass('fa-minus').addClass('fa-plus');
 
         });
-
-
 
         // project list filter
         $('.filterinput').keyup(function() {
@@ -732,6 +744,7 @@
             else {
                 $holder.animate({width:'toggle'}, 200, 'swing', function() {
                    $content.addClass('span8');
+                   restoreFacetSelections();
 
                 });
             }
