@@ -21,6 +21,9 @@ div.report-section {
     padding: 5px;
 }
 
+.action-table {
+    overflow: auto;
+}
 .action-table th {
     white-space: normal;
 }

@@ -95,7 +95,7 @@
     <h3>Action summary</h3>
 
         <div class="row-fluid">
-            <div class="span12" style="overflow-x:scroll;">
+            <div class="span12">
                 <table class="action-table table table-striped">
                     <thead>
                     <tr>Action summary</tr>
