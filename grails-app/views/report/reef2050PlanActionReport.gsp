@@ -130,7 +130,8 @@
                 <td>
                 <g:if test="${action.webLinks}">
                     <g:each in="${action.webLinks}" var="webLink" status="i">
-                    <a href="${webLink}" title="${webLink}" target="_blank">[${i}] </a>
+                    <a href="${webLink}" title="${webLink}" target="_blank">${i+1}</a><g:if test="${i < action.webLinks.size()-1}">, </g:if>
+
                     </g:each>
                 </g:if>
                 </td>
