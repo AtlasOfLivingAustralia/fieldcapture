@@ -2,6 +2,7 @@ package au.org.ala.merit
 
 import au.org.ala.fieldcapture.ActivityService
 import au.org.ala.fieldcapture.DateUtils
+import au.org.ala.fieldcapture.UserService
 import au.org.ala.fieldcapture.WebService
 import grails.converters.JSON
 import grails.test.mixin.TestFor
@@ -20,12 +21,14 @@ class OrganisationServiceSpec extends Specification {
     def projectService = Mock(ProjectService)
 	def webService = Stub(WebService)
 	def reportService = Stub(ReportService)
+	def userService = Mock(UserService)
 
 	def setup() {
         service.projectService = projectService
 		service.activityService = activityService
 		service.webService = webService
 		service.reportService = reportService
+		service.userService = userService
 	}
 
 
@@ -97,6 +100,38 @@ class OrganisationServiceSpec extends Specification {
         projects.sort{it.projectId} == (organisationProjects + serviceProviderProjects).sort{it.projectId}
 
     }
+
+	def "User permissions on an organisation should cascade to the organisations projects"() {
+
+		setup:
+		String orgId = '1234'
+		Map organisation = [organisationId:orgId, name:'name', description:'description']
+		List organisationProjects = ['5', '6', '7', '8', '9'].collect{[projectId:it, name:'p'+it, isMERIT:(Integer.parseInt(it) %2 == 0)]}
+
+		webService.getJson(_) >> organisation
+		projectService.search([organisationId:orgId, view:'enhanced', isMERIT:true]) >> [resp:[projects:organisationProjects]]
+		projectService.search([orgIdSvcProvider:orgId, view:'enhanced', isMERIT:true]) >> [resp:[projects:[]]]
+
+		String userId = 'u1'
+
+		when: "A user is added as admin to the organisation"
+		service.addUserAsRoleToOrganisation(userId, orgId, 'admin')
+
+		then: "the user should be added to the organisation and only the MERIT projects run by the organisation"
+		1 * userService.addUserAsRoleToOrganisation(userId, orgId, 'admin')
+		1 * userService.addUserAsRoleToProject(userId, '6', 'admin')
+		1 * userService.addUserAsRoleToProject(userId, '8', 'admin')
+		0 * userService._
+
+		when:"A user is removed as admin to the organisation"
+		service.removeUserWithRoleFromOrganisation(userId, orgId, 'admin')
+
+		then: "the user should be removed from the organisation and only the MERIT projects run by the organisation"
+		1 * userService.removeUserWithRoleFromOrganisation(userId, orgId, 'admin')
+		1 * userService.removeUserWithRole('6', userId, 'admin')
+		1 * userService.removeUserWithRole('8', userId, 'admin')
+		0 * userService._
+	}
 
 	def organisationActivities(organisation) {
 

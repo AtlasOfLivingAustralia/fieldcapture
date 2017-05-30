@@ -1,4 +1,35 @@
 <%@ page import="au.org.ala.fieldcapture.SettingPageType" %>
+<style type="text/css">
+.facet-collapse {
+    height: auto;
+    width: auto;
+}
+
+
+.facet-collapse.width {
+    position: relative;
+    width: 0;
+    overflow: hidden;
+    -webkit-transition: width 0.25s ease;
+    -moz-transition: width 0.25s ease;
+    -o-transition: width 0.25s ease;
+    transition: width 0.25s ease;
+}
+
+.facet-collapse.in.width {
+    width: auto;
+    -webkit-transition: width 0.25s ease;
+    -moz-transition: width 0.25s ease;
+    -o-transition: width 0.25s ease;
+    transition: width 0.25s ease;
+}
+
+.facet-collapse.in.height {
+    height: auto;
+}
+
+</style>
+
 <div id="projectExplorer">
 <g:if test="${flash.error || results.error}">
     <g:set var="error" value="${flash.error?:results.error}"/>
@@ -10,6 +41,7 @@
     </div>
 </g:if>
 <g:elseif test="${results?.hits?.total?:0 > 0}">
+
     <div class="row-fluid ">
         <div id="facetsCol" class="well well-small" style="display:none;">
             <g:set var="reqParams" value="query,sort,order,max,fq,fromDate,toDate"/>
@@ -116,6 +148,12 @@
                         <span class="span4 facet-holder"></span>
 
                         <span class="span8">
+                            <div class="row-fluid">
+                                <g:if test="${params.query}">
+                                    Showing the results of the search "<b>${params.query}</b>".<br/>
+                                </g:if>
+                                Found <strong>${projectCount}</strong> projects.
+                            </div>
                             <g:render template="/shared/sites" plugin="fieldcapture-plugin" model="${[projectCount:results?.hits?.total?:0]}"/>
                         </span>
                     </div>
@@ -128,6 +166,12 @@
                         <span class="span4 facet-holder"></span>
 
                         <span class="span8">
+                            <div class="row-fluid">
+                                <g:if test="${params.query}">
+                                    Showing the results of the search "<b>${params.query}</b>".<br/>
+                                </g:if>
+                                Found <strong>${projectCount}</strong> projects.
+                            </div>
 
                             <div class="scroll-list clearfix" id="projectList">
                                 <table class="table table-bordered table-hover" id="projectTable" data-sort="lastUpdated" data-order="DESC" data-offset="0" data-max="10">
@@ -145,16 +189,6 @@
                                     <div class="btn-group">
                                         <button class="btn btn-small prev"><i class="icon-chevron-left"></i>&nbsp;previous</button>
                                         <button class="btn btn-small next">next&nbsp;<i class="icon-chevron-right"></i></button>
-                                    </div>
-                                    <span id="project-filter-warning" class="label filter-label label-warning hide pull-left">Filtered</span>
-                                    <div class="control-group pull-right dataTables_filter">
-                                        <div class="input-append">
-                                            <g:textField class="filterinput input-medium" data-target="project"
-                                                         title="Type a few characters to restrict the list." name="projects"
-                                                         placeholder="filter"/>
-                                            <button type="button" class="btn clearFilterBtn"
-                                                    title="clear"><i class="icon-remove"></i></button>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -206,18 +240,33 @@
                         <a class="accordian-toggle" id="reportView-heading" href="#reportView" data-toggle="collapse" data-parent="#project-display-options">Dashboard<i style="padding-left:50px; padding-top:5px;" class="fa fa-plus pull-right"></i></a>
                     </div>
                     <div class="accordian-body collapse" id="reportView">
-                        <span class="span4 facet-holder"></span>
+                        <div class="span4 facet-holder" style="display:none;" data-hidden="true"></div>
 
-                        <span class="span8" style="overflow-x:scroll">
+                        <div style="overflow-x:scroll">
+                            <div class="row-fluid" style="margin-top:5px;">
+                                <button class="btn facets-toggle"><i class="fa fa-bars"></i></button> <span>
+                                <g:if test="${params.query}">
+                                Showing the results of the search "<b>${params.query}</b>".<br/>
+                                </g:if>
+                                Found ${projectCount} projects.</span>
+                            </div>
                             <div class="row-fluid" >
                                 <g:if test="${fc.userIsAlaOrFcAdmin()}">
                                     <span class="span12">
                                         <h4>Report: </h4>
-                                        <select id="dashboardType" name="dashboardType"><option value="dashboard">Activity Outputs</option><option value="announcements">Announcements</option><option value="outputTargets">Output Targets By Programme</option></select>
+                                        <select id="dashboardType" name="dashboardType">
+                                            <option value="dashboard">Activity Outputs</option>
+                                            <option value="announcements">Announcements</option>
+                                            <option value="outputTargets">Output Targets By Programme</option>
+                                            <option value="reef2050PlanAction">Reef 2050 Plan Dashboard</option>
+                                        </select>
                                     </span>
                                 </g:if>
                                 <g:else>
-                                    <select id="dashboardType" name="dashboardType" style="display:none"><option value="dashboard">Activity Outputs</option></select>
+                                    <select id="dashboardType" name="dashboardType" style="display:none">
+                                        <option value="dashboard">Activity Outputs</option>
+                                        <option value="reef2050PlanAction">Reef 2050 Plan Dashboard</option>
+                                    </select>
                                 </g:else>
                             </div>
                             <div class="loading-message">
@@ -226,7 +275,7 @@
                             <div id="dashboard-content">
 
                             </div>
-                        </span>
+                        </div>
                     </div>
                 </div>
                 <g:if test="${fc.userIsAlaOrFcAdmin()}">
@@ -238,6 +287,13 @@
                             <span class="span4 facet-holder"></span>
 
                             <span class="span8">
+
+                                <div class="row-fluid">
+                                    <g:if test="${params.query}">
+                                        Showing the results of the search "<b>${params.query}</b>".<br/>
+                                    </g:if>
+                                    Found <strong>${projectCount}</strong> projects.
+                                </div>
 
 
                                 <div class="alert">Please do not run more than one download at a time as they can place a lot of load on the system</div>
@@ -338,13 +394,18 @@
             };
         })();
 
+        var loadReportRequest = null;
         var loadReport = function(reportType) {
             var $content = $('#dashboard-content');
             var $loading = $('.loading-message');
             $content.hide();
             $loading.show();
+            if (loadReportRequest) {
+                loadReportRequest.abort();
+            }
 
-            $.get(fcConfig.dashboardUrl,{report:reportType}, function(data) {
+            loadReportRequest = $.get(fcConfig.dashboardUrl,{report:reportType}, function(data) {
+                loadReportRequest = null;
                 $content.show();
                 $loading.hide();
                 $content.html(data);
@@ -378,6 +439,20 @@
                 }).trigger('change');
             }
         };
+
+        var expandedToggles = amplify.store('facetToggleState') || [];
+        function restoreFacetSelections() {
+
+            if ($('#facetsContent').is(':visible')) {
+                if (expandedToggles) {
+                    for (var i=0; i<expandedToggles.length; i++) {
+                        $('[data-name="'+expandedToggles[i]+'"]').collapse('show');
+                    }
+                }
+            }
+
+        }
+
         // retain accordian state for future re-visits
         $('#project-display-options').on('shown', function (e) {
             // Because the facets use accordion and are inside the main accordion view we need to filter them out.
@@ -392,9 +467,16 @@
         });
         $('#project-display-options').on('show', function (e) {
 
-            var section = '#'+e.target.id;
-            $('#facetsCol').appendTo($(section).find('.facet-holder'));
-            $('#facetsCol').show();
+            // Because the facets use accordion and are inside the main accordion view we need to filter them out.
+            var $target = $(e.target);
+            if ($target.hasClass('accordian-body')) {
+
+                var section = '#'+e.target.id;
+                $('#facetsCol').appendTo($(section).find('.facet-holder'));
+                $('#facetsCol').show();
+                restoreFacetSelections();
+            }
+
         });
         $('#project-display-options').on('hidden', function (e) {
             var targetId = e.target.id;
@@ -409,13 +491,6 @@
         $('#project-display-options '+storedTab).collapse({parent:'#project-display-options'});
         $('#project-display-options '+storedTab).collapse('show');
 
-
-        var expandedToggles = amplify.store('facetToggleState') || [];
-        if (expandedToggles) {
-            for (var i=0; i<expandedToggles.length; i++) {
-                $('[data-name="'+expandedToggles[i]+'"]').collapse('show');
-            }
-        }
         // Remember facet toggle state.
         $('#facetsContent').on('shown', function (e) {
             var facetName = $(e.target).data('name');
@@ -439,8 +514,6 @@
             $('[data-target="#'+e.target.id+'"] i').removeClass('fa-minus').addClass('fa-plus');
 
         });
-
-
 
         // project list filter
         $('.filterinput').keyup(function() {
@@ -654,6 +727,30 @@
                 bootbox.alert("There was an error requesting the download");
             });
 
+        });
+
+
+        function toggleFacets() {
+
+            var $holder = $('#facetsCol').parent();
+            var hidden = $holder.data('hidden');
+            $holder.data('hidden', !hidden);
+            var $content = $holder.next();
+            if (!hidden) {
+                $holder.animate({width:'toggle'}, 200, 'swing', function() {
+                    $content.removeClass('span8');
+                });
+            }
+            else {
+                $holder.animate({width:'toggle'}, 200, 'swing', function() {
+                   $content.addClass('span8');
+                   restoreFacetSelections();
+
+                });
+            }
+        }
+        $('.facets-toggle').click(function(e) {
+           toggleFacets();
         });
 
         var urlWithoutDates = '<fc:formatParams params="${params}" requiredParams="sort,order,max,fq"/>';

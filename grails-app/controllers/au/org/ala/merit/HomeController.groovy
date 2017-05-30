@@ -73,7 +73,9 @@ class HomeController {
            mapFacets: mapFacets,
            geographicFacets:selectedGeographicFacets,
            description: settingService.getSettingText(SettingPageType.DESCRIPTION),
-           results: resp ]
+           results: resp,
+           projectCount: resp?.hits?.total ?: 0
+        ]
         if (userService.userIsAlaOrFcAdmin()) {
             model.activityTypes = metadataService.activityTypesList()
         }

@@ -16,6 +16,8 @@
         organisationLinkBaseUrl: "${createLink(controller:'organisation', action:'index')}",
         imageLocation:"${resource(dir:'/images')}",
         excelOutputTemplateUrl:"${createLink(controller: 'activity', action:'excelOutputTemplate')}",
+        speciesProfileUrl: "${createLink(controller: 'species', action: 'speciesProfile')}",
+        bieUrl: "${grailsApplication.config.bie.baseURL}",
         returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
     },
         here = window.location.href;
@@ -43,7 +45,7 @@
 
     </style>
 
-    <r:require modules="knockout, activity, jqueryValidationEngine, merit_projects, pretty_text_diff,jQueryFileDownload"/>
+    <r:require modules="knockout, activity, jqueryValidationEngine, merit_projects, pretty_text_diff,jQueryFileDownload,species"/>
 </head>
 <body>
 <div class="container">
@@ -134,6 +136,24 @@
         <g:each in="${images}" var="image">
             <img src="${image.thumbnailUrl?:image.url}"/>
         </g:each>
+    </g:if>
+
+    <g:if test="${'Blog' in content && blog}">
+        <g:if test="${blog.find{it.type == 'News and Events'}}">
+            <h3>News & events</h3>
+            <div class="blog-section">
+                <g:render template="/shared/blog" model="${[blog:blog, type:'News and Events']}"/>
+            </div>
+        </g:if>
+
+        <g:if test="${blog.find{it.type == 'Project Stories'}}">
+            <div class="row-fluid">
+                <h3>Project stories</h3>
+                <div class="blog-section">
+                    <g:render template="/shared/blog" model="${[blog:blog, type:'Project Stories']}"/>
+                </div>
+            </div>
+        </g:if>
     </g:if>
 
     <g:if test="${'Activity status summary' in content}">

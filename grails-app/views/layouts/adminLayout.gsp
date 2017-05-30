@@ -51,7 +51,6 @@
         <div class="row-fluid">
             <div class="span3">
                 <ul class="nav nav-list nav-stacked nav-tabs">
-                    <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'users')}" title="Users" />
                     <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'audit')}" title="Audit" />
                     <g:if test="${fc.userInRole(role: grailsApplication.config.security.cas.adminRole) || fc.userInRole(role: grailsApplication.config.security.cas.alaAdminRole)}">
                         <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'staticPages')}" title="Static pages" />

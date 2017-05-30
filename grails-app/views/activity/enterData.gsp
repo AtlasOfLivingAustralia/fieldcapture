@@ -21,7 +21,7 @@
         projectViewUrl: "${createLink(controller: 'project', action: 'index')}/",
         siteViewUrl: "${createLink(controller: 'site', action: 'index')}/",
         bieUrl: "${grailsApplication.config.bie.baseURL}",
-        speciesProfileUrl: "${createLink(controller: 'proxy', action: 'speciesProfile')}",
+        speciesProfileUrl: "${createLink(controller: 'species', action: 'speciesProfile')}",
         documentUpdateUrl: "${g.createLink(controller:"document", action:"documentUpdate")}",
         documentDeleteUrl: "${g.createLink(controller:"document", action:"deleteDocument")}",
         imageUploadUrl: "${createLink(controller: 'image', action: 'upload')}",

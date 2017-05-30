@@ -59,7 +59,7 @@
             </tr>
             <g:each in="${sectionsByTheme[theme]}" var="section">
 
-                <g:render template="/report/performanceSelfAssessmentSection" model="${section}"></g:render>
+                <g:render template="/report/performanceSelfAssessmentSection" model="${[section:section, version:version]}"></g:render>
 
             </g:each>
         </g:each>
