@@ -134,7 +134,13 @@
                     </g:each>
                 </g:if>
                 </td>
-                <td>${action.supportingAgenciesAndPartners?action.supportingAgenciesAndPartners.join(', '):''}</td>
+                <td>
+                    <g:if test="${action.supportingAgenciesAndPartners}">
+                    <g:each in="${action.supportingAgenciesAndPartners}" var="org">
+                        ${org}
+                    </g:each>
+                    </g:if>
+                </td>
             </tr>
         </g:each>
         </tbody>
