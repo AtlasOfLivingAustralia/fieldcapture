@@ -107,9 +107,7 @@
                         <th>Description</th>
                         <th>Progress</th>
                         <th>Weblink</th>
-                        <th>Supporting Agencies</th>
-                        <th>Contributing Partners</th>
-                        <th>Priority</th>
+                        <th>Supporting Agencies and Partners</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -129,10 +127,14 @@
                 <td>${action.status}</td>
                 <td>${action.description}</td>
                 <td>${action.progress}</td>
-            <td><g:if test="${action.webLink}"><a href="${action.webLink}">${action.webLink}</a></td></g:if>
-                <td>${action.supportingAgencies?.join(', ')}</td>
-                <td>${action.contributingPartners?.join(', ')}</td>
-                <td>${action.priority}</td>
+                <td>
+                <g:if test="${action.webLinks}">
+                    <g:each in="${action.webLinks}" var="webLink" status="i">
+                    <a href="${webLink}" title="${webLink}" target="_blank">[${i}] </a>
+                    </g:each>
+                </g:if>
+                </td>
+                <td>${action.supportingAgenciesAndPartners?action.supportingAgenciesAndPartners.join(', '):''}</td>
             </tr>
         </g:each>
         </tbody>
