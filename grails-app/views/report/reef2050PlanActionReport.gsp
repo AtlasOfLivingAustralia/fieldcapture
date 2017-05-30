@@ -136,9 +136,8 @@
                 </td>
                 <td>
                     <g:if test="${action.supportingAgenciesAndPartners}">
-                    <g:each in="${action.supportingAgenciesAndPartners}" var="org">
-                        ${org}
-                    </g:each>
+                        %{--This is because action.supportingAgenciesAndPartners is a JSONArray which will quote strings when peforming a join--}%
+                        ${new ArrayList(action.supportingAgenciesAndPartners).join(', ')}
                     </g:if>
                 </td>
             </tr>
