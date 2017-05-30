@@ -499,7 +499,9 @@ class ReportService {
             Map output = activity.outputs?activity.outputs[0]:[:]
             List actions = output.data?.actions
             Map project = projects.find{it.projectId == activity.projectId}
-            Map commonData = [organisationId:project?.organisationId, reportingLeadAgency:project?.organisationName, agencyContact:output.data.agencyContact, webLink:output.data.webLink]
+            List agencyContacts = output.data.agencyContacts ? output.data.agencyContacts.collect{it.agencyContact}:[]
+            List webLinks = output.data.webLinks ? output.data.webLinks.collect{it.webLink}:[]
+            Map commonData = [organisationId:project?.organisationId, reportingLeadAgency:project?.organisationName, agencyContacts:agencyContacts, webLinks:webLinks]
             actions = actions.collect{it+commonData}
             allActions.addAll(actions)
         }
