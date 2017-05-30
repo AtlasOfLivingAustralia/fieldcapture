@@ -1,6 +1,7 @@
 package au.org.ala.merit
 
 import au.org.ala.fieldcapture.DateUtils
+import grails.converters.JSON
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.joda.time.Period
@@ -485,7 +486,10 @@ class ReportService {
 
         Map searchCriteria = [type:REEF_2050_PLAN_ACTION_REPORTING_ACTIVITY_TYPE, publicationStatus:REPORT_APPROVED, dateProperty:'plannedEndDate', 'startDate':startDate, 'endDate':endDate]
 
-        Map resp = activityService.search(searchCriteria)
+        Map resp
+        JSON.use("nullSafe") {
+            resp = activityService.search(searchCriteria)
+        }
         if (resp.error) {
             return [error:resp.error]
         }
