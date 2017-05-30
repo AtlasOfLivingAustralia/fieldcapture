@@ -480,7 +480,10 @@ class ReportService {
 
     Map reef2050PlanActionReport(int year) {
 
-        Map searchCriteria = [type:REEF_2050_PLAN_ACTION_REPORTING_ACTIVITY_TYPE, publicationStatus:REPORT_APPROVED, dateProperty:'plannedEndDate', 'startDate':year+'-07-01T10:00:00Z', 'endDate':(year+1)+'-07-01T10:00:00Z']
+        String startDate = year+'-06-30T14:00:00Z'
+        String endDate = (year+1)+'-06-30T14:00:00Z'
+
+        Map searchCriteria = [type:REEF_2050_PLAN_ACTION_REPORTING_ACTIVITY_TYPE, publicationStatus:REPORT_APPROVED, dateProperty:'plannedEndDate', 'startDate':startDate, 'endDate':endDate]
 
         Map resp = activityService.search(searchCriteria)
         if (resp.error) {
@@ -506,7 +509,7 @@ class ReportService {
             allActions.addAll(actions)
         }
 
-        List dateBuckets = [year+'-06-30T14:00:00Z', (year+1)+'-06-30T14:00:00Z']
+        List dateBuckets = [startDate, endDate]
         Map countByStatus = [type:'HISTOGRAM', label:'Action status', property:'data.actions.status']
         Map dateGroupingConfig = [groups:[type:'date', buckets:dateBuckets, format:'YYYY', property:'activity.plannedEndDate'],
                                   childAggregations: [countByStatus, [label:'Action Status By Theme', groups:[type:'discrete', property:'data.actions.theme'], childAggregations: [countByStatus]]]]
