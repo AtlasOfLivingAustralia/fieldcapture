@@ -36,7 +36,10 @@
                 ${section.title}
             </td>
             <td class="rating-container">
-                <span class="rating ${fc.comparisonClass(current:report.data[section.name + 'OverallRating'], previous:(previousReport && previousReport.data) ? previousReport.data[section.name + 'OverallRating'] : null)}"><g:message code="performance.rating.${report.data[section.name + 'OverallRating']}"/></span>
+                <g:set var="currentRating" value="${report.data[section.name + 'OverallRating'] > 0 ? 1: 0}"/>
+                <g:set var="previousRating" value="${(previousReport && previousReport.data) ? (previousReport.data[section.name + 'OverallRating']  > 0 ? 1 : 0) : null}"/>
+
+                <span class="rating ${fc.comparisonClass(current:currentRating, previous:previousRating)}"><g:message code="performance.rating.${report.data[section.name + 'OverallRating']}"/></span>
             </td>
         </g:each>
     </g:each>
