@@ -544,7 +544,6 @@
 					}
 				};
 
-				// Modify plan
 				self.saveStatus = function (url) {
 	                var payload = {projectId: project.projectId};
 	                return $.ajax({
@@ -581,72 +580,72 @@
             	};
 
             	self.modifyPlan = function () {
-                // should we check that status is 'approved'?
-                self.saveStatus('${g.createLink(action:'ajaxRejectPlan', id:project.projectId)}')
-                .done(function (data) {
-                    if (data.error) {
-                        showAlert("Unable to modify plan. An unhandled error occurred: " + data.detail + ' \n' + data.error,
-                            "alert-error","status-update-error-placeholder");
-                    } else {
-                        location.reload();
-                    }
-                })
-                .fail(function (data) {
-                    if (data.status === 401) {
-                        showAlert("Unable to modify plan. You do not have case manager rights for this project.",
-                            "alert-error","status-update-error-placeholder");
-                    } else {
-                        showAlert("Unable to modify plan. An unhandled error occurred: " + data.status,
-                            "alert-error","status-update-error-placeholder");
-                    }
-                });
-          	  };
-			// approve plan and handle errors
-            self.approvePlan = function () {
-                // should we check that status is 'submitted'?
-                self.saveStatus('${g.createLink(action:'ajaxApprovePlan', id:project.projectId)}')
-                .done(function (data) {
-                    if (data.error) {
-                        showAlert("Unable to approve plan. An unhandled error occurred: " + data.detail + ' \n' + data.error,
-                            "alert-error","status-update-error-placeholder");
-                    } else {
-                        location.reload();
-                    }
-                })
-                .fail(function (data) {
-                    if (data.status === 401) {
-                        showAlert("Unable to approve plan. You do not have case manager rights for this project.",
-                            "alert-error","status-update-error-placeholder");
-                    } else {
-                        showAlert("Unable to approve plan. An unhandled error occurred: " + data.status,
-                            "alert-error","status-update-error-placeholder");
-                    }
-                });
-            };
-            // reject plan and handle errors
-            self.rejectPlan = function () {
-                // should we check that status is 'submitted'?
-                self.saveStatus('${g.createLink(action:'ajaxRejectPlan', id:project.projectId)}')
-                .done(function (data) {
-                    if (data.error) {
-                        showAlert("Unable to reject plan. An unhandled error occurred: " + data.detail + ' \n' + data.error,
-                            "alert-error","status-update-error-placeholder");
-                    } else {
-                        location.reload();
-                    }
-                })
-                .fail(function (data) {
-                    if (data.status === 401) {
-                        showAlert("Unable to reject plan. You do not have case manager rights for this project.",
-                            "alert-error","status-update-error-placeholder");
-                    } else {
-                        showAlert("Unable to reject plan. An unhandled error occurred: " + data.status,
-                            "alert-error","status-update-error-placeholder");
-                    }
-                });
-          	  };
+                    // should we check that status is 'approved'?
+                    self.saveStatus('${g.createLink(action:'ajaxRejectPlan', id:project.projectId)}').done(function (data) {
+                        if (data.error) {
+                            showAlert("Unable to modify plan. An unhandled error occurred: " + data.detail + ' \n' + data.error,
+                                "alert-error","status-update-error-placeholder");
+                        } else {
+                            location.reload();
+                        }
+                    })
+                    .fail(function (data) {
+                        if (data.status === 401) {
+                            showAlert("Unable to modify plan. You do not have case manager rights for this project.",
+                                "alert-error","status-update-error-placeholder");
+                        } else {
+                            showAlert("Unable to modify plan. An unhandled error occurred: " + data.status,
+                                "alert-error","status-update-error-placeholder");
+                        }
+                    });
+          	    };
+			    // approve plan and handle errors
+                self.approvePlan = function () {
+                    // should we check that status is 'submitted'?
+                    self.saveStatus('${g.createLink(action:'ajaxApprovePlan', id:project.projectId)}')
+                    .done(function (data) {
+                        if (data.error) {
+                            showAlert("Unable to approve plan. An unhandled error occurred: " + data.detail + ' \n' + data.error,
+                                "alert-error","status-update-error-placeholder");
+                        } else {
+                            location.reload();
+                        }
+                    })
+                    .fail(function (data) {
+                        if (data.status === 401) {
+                            showAlert("Unable to approve plan. You do not have case manager rights for this project.",
+                                "alert-error","status-update-error-placeholder");
+                        } else {
+                            showAlert("Unable to approve plan. An unhandled error occurred: " + data.status,
+                                "alert-error","status-update-error-placeholder");
+                        }
+                    });
+                };
+                // reject plan and handle errors
+                self.rejectPlan = function () {
+                    // should we check that status is 'submitted'?
+                    self.saveStatus('${g.createLink(action:'ajaxRejectPlan', id:project.projectId)}')
+                    .done(function (data) {
+                        if (data.error) {
+                            showAlert("Unable to reject plan. An unhandled error occurred: " + data.detail + ' \n' + data.error,
+                                "alert-error","status-update-error-placeholder");
+                        } else {
+                            location.reload();
+                        }
+                    })
+                    .fail(function (data) {
+                        if (data.status === 401) {
+                            showAlert("Unable to reject plan. You do not have case manager rights for this project.",
+                                "alert-error","status-update-error-placeholder");
+                        } else {
+                            showAlert("Unable to reject plan. An unhandled error occurred: " + data.status,
+                                "alert-error","status-update-error-placeholder");
+                        }
+                    });
+                };
 
-               self.uploadVariationDoc = function(doc){
+
+                self.uploadVariationDoc = function(doc){
 	               	 var json = JSON.stringify(doc, function (key, value) {
 	                            return value === undefined ? "" : value;
 	                     });
