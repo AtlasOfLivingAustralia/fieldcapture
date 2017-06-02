@@ -892,4 +892,124 @@ var ProjectReportingViewModel = function(projects) {
     for (var i=0; i<projects.length; i++) {
         self.projects.push(new ProjectReportsViewModel(projects[i].project));
     }
-}
+};
+
+var MERIPlanActions = function(project, options) {
+
+    var self = this;
+    var defaults = {
+        submitPlanUrl : fcConfig.submitPlanUrl,
+        modifyPlanUrl : fcConfig.modifyPlanUrl,
+        approvalPlanUrl : fcConfig.approvePlanUrl,
+        rejectPlanUrl : fcConfig.rejectPlanUrl
+    };
+
+    var config = _.defaults(options, defaults);
+
+    self.saveStatus = function (url, declaration) {
+        var payload = {projectId: project.projectId};
+        if (declaration) {
+            payload.declaration = declaration;
+        }
+        return $.ajax({
+            url: url,
+            type: 'POST',
+            data: JSON.stringify(payload),
+            contentType: 'application/json'
+        }).done(function (data) {
+            if (data.error) {
+                bootbox.alert("Unable to modify plan.\n" + data.error);
+            } else {
+                location.reload();
+            }
+        }).fail(function (data) {
+            if (data.status === 401) {
+                bootbox.alert("Unable to modify plan. You may not have the correct permissions.");
+            } else {
+                bootbox.alert("Unable to modify plan. An unhandled error occurred: " + data.status);
+            }
+        });
+    };
+
+    self.submitChanges = function () {
+        self.saveStatus(config.submitPlanUrl);
+    };
+
+    self.modifyPlan = function () {
+        self.saveStatus(config.modifyPlanUrl);
+    };
+    // approve plan and handle errors
+    self.approvePlan = function () {
+        self.saveStatus(config.approvalPlanUrl);
+    };
+    // reject plan and handle errors
+    self.rejectPlan = function () {
+        self.saveStatus(config.rejectPlanUrl);
+    };
+
+    self.finishCorrections = function() {
+        self.saveStatus(config.finishedCorrectingPlanUrl);
+    };
+
+    self.unlockPlanForCorrection = function() {
+
+        var $declaration = $(config.declarationModalSelector);
+        var declarationViewModel = {
+
+            termsAccepted : ko.observable(false),
+            submitReport : function() {
+                var declarationText = $declaration.find('declaration-text').text();
+                self.saveStatus(config.unlockPlanForCorrectionUrl, declarationText );
+            }
+        };
+        ko.applyBindings(declarationViewModel, $declaration[0]);
+        $declaration.modal({ backdrop: 'static', keyboard: true, show: true }).on('hidden', function() {ko.cleanNode($declaration[0]);});
+    };
+
+    self.meriGrantManagerActionsTemplate = ko.pureComputed(function() {
+        var planStatus = ko.utils.unwrapObservable(project.planStatus);
+        var projectStatus = ko.utils.unwrapObservable(project.status);
+
+        var template = 'editablePlanTmpl';
+        if ('completed' == projectStatus.toLowerCase()) {
+            template = planStatus == 'unlocked' ? 'unlockedProjectTmpl' : 'completedProjectTmpl';
+        }
+        else {
+            if (planStatus == 'approved') {
+                template = 'approvedPlanTmpl';
+            }
+            else if (planStatus == 'submitted') {
+                template = 'submittedPlanTmpl';
+            }
+        }
+        return template;
+    });
+
+    self.meriPlanStatus = ko.pureComputed(function() {
+        var planStatus = ko.utils.unwrapObservable(project.planStatus);
+        var projectStatus = ko.utils.unwrapObservable(project.status);
+
+        var result = {
+            text: 'This plan is not yet approved',
+            badgeClass: 'badge-warning'
+        };
+        if ('completed' == projectStatus.toLowerCase()) {
+            if (planStatus == 'unlocked') {
+                result = {text:'The plan has been unlocked for data correction', badgeClass:'badge-warning'};
+            }
+            else {
+                result = {text:'This project is complete', badgeClass:'badge-info'};
+            }
+        }
+        else {
+            if (planStatus == 'approved') {
+                result = {text: 'This plan has been approved', badgeClass:'badge-success'};
+            }
+            else if (planStatus == 'submitted') {
+                result =  {text: 'This plan has been submitted for approval', badgeClass:'badge-info'};
+            }
+        }
+        return result;
+    });
+
+};

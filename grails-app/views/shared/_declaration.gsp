@@ -1,16 +1,16 @@
 <!-- ko stopBinding: true -->
-<div id="declaration" class="modal hide fade">
+<div id="${divId ?: 'declaration'}" class="modal hide fade">
     <g:set var="legalDeclaration"><fc:getSettingContent settingType="${declarationType ?: au.org.ala.fieldcapture.SettingPageType.DECLARATION}"/></g:set>
     <div class="modal-header hide">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h3>Declaration</h3>
     </div>
-    <div class="modal-body">
+    <div class="modal-body declaration-text">
         ${legalDeclaration}
     </div>
     <div class="modal-footer">
-        <label for="acceptTerms" class="pull-left">
-            <g:checkBox name="acceptTerms" data-bind="checked:termsAccepted" style="margin:0;"/>&nbsp;
+        <label class="pull-left">
+            <input type="checkbox" name="acceptTerms" data-bind="checked:termsAccepted" style="margin:0;"/>&nbsp;
             I agree with the above declaration.
         </label>
         <button class="btn btn-success" data-bind="click:submitReport, enable:termsAccepted" data-dismiss="modal" aria-hidden="true">Submit</button>

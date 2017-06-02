@@ -5,35 +5,76 @@
 }
 </style>
 
-
-<!--  Case manager actions -->
-<div class="row-fluid space-after" data-bind="visible: userIsCaseManager() && (planStatus() == 'approved' || planStatus() == 'submitted')">
-	<div class="span6 required">
-		<div data-bind="if: planStatus() == 'approved'">
-			<div class="form-actions">
-				<b>Grant manager actions:</b>
-				<button type="button" data-bind="click: modifyPlan"  id="modify-plan" class="btn btn-info">Modify MERI Plan</button>
-				<br/><br/>
-				<ul>
-					<li>"Modify MERI Plan" will allow project admin's to edit MERI plan information. </li>
-					<li>Modifying the MERI plan will change the state of the project to "Not approved".</li>
-				</ul>
-			</div>
-		</div>
-		<div data-bind="if: planStatus() == 'submitted'">
-			<div class="form-actions" >
-				<b>Grant manager actions:</b>
-				<span class="btn-group">
-					<button type="button" data-bind="click:approvePlan" class="btn btn-success"><i class="icon-ok icon-white"></i> Approve</button>
-					<button type="button" data-bind="click:rejectPlan" class="btn btn-danger"><i class="icon-remove icon-white"></i> Reject</button>
-				</span>
-			</div>
-		</div>
-
+<script id="submittedPlanTmpl" type="text/html">
+<div class="span6 required">
+	<div class="form-actions" >
+		<b>Grant manager actions:</b>
+		<span class="btn-group">
+			<button type="button" data-bind="click:approvePlan" class="btn btn-success"><i class="fa fa-check icon-white"></i> Approve</button>
+			<button type="button" data-bind="click:rejectPlan" class="btn btn-danger"><i class="fa fa-cross icon-white"></i> Reject</button>
+		</span>
 	</div>
 </div>
-<div class="save-details-result-placeholder"></div>
+</script>
+<script id="approvedPlanTmpl" type="text/html">
+<div class="span6 required">
+	<div class="form-actions">
+		<b>Grant manager actions:</b>
+		<button type="button" data-bind="click: modifyPlan"  id="modify-plan" class="btn btn-info">Modify MERI Plan</button>
+		<br/><br/>
+		<ul>
+			<li>"Modify MERI Plan" will allow project admin's to edit MERI plan information. </li>
+			<li>Modifying the MERI plan will change the state of the project to "Not approved".</li>
+		</ul>
+	</div>
+</div>
+</script>
+<script id="editablePlanTmpl">
+
+</script>
+<script id="completedProjectTmpl" type="text/html">
+<div class="span6 required">
+	<div class="form-actions" >
+		<b>Grant manager actions:</b>
+		<span class="btn-group">
+			<button type="button" data-bind="click:unlockPlanForCorrection" class="btn btn-danger"><i class="fa fa-unlock"></i> Unlock plan for correction</button>
+		</span>
+	</div>
+</div>
+</script>
+<script id="unlockedProjectTmpl" type="text/html">
+<div class="span6 required">
+	<div class="form-actions" >
+		<b>Grant manager actions:</b>
+		<span class="btn-group">
+			<button type="button" data-bind="click:finishCorrections" class="btn btn-success"><i class="fa fa-lock icon-white"></i> Finished corrections</button>
+		</span>
+	</div>
+</div>
+</script>
+
+<g:render template="/shared/declaration" model="[divId:'unlockPlan', declarationType:au.org.ala.fieldcapture.SettingPageType.UNLOCK_PLAN_DECLARATION]"/>
+
+<div class="row-fluid">
+	<div class="control-group">
+		<div>
+			<span class="badge" style="font-size: 13px;" data-bind="text:meriPlanStatus().text, css:meriPlanStatus().badgeClass">This plan has been approved</span>
+			<span data-bind="if:detailsLastUpdated"> <br/>Last update date : <span data-bind="text:detailsLastUpdated.formattedDate"></span></span>
+
+		</div>
+	</div>
+</div>
+
+<!--  Case manager actions -->
+<div class="row-fluid space-after" data-bind="visible: userIsCaseManager()">
+	<div data-bind="template:meriGrantManagerActionsTemplate"></div>
+</div>
+
 <g:if test="${projectContent.details.visible}">
+	<div class="save-details-result-placeholder"></div>
+	<div style="float: left;" class="controls">
+		<b>From: </b><span data-bind="text: plannedStartDate.formattedDate"></span>  <b>To: </b> <span data-bind="text: plannedEndDate.formattedDate"></span>
+	</div>
 	<div class="row-fluid space-after">
 		<div class="span6">
 			<div class="form-actions">
@@ -70,29 +111,6 @@
 		</div>
 	</div>
 
-	<div class="row-fluid">
-	<div class="control-group">
-		<div style="float: left;" class="controls">
-			<b>From: </b><span data-bind="text: plannedStartDate.formattedDate"></span>  <b>To: </b> <span data-bind="text: plannedEndDate.formattedDate"></span>
-		</div>
-		<div style="float: right;" data-bind="if: planStatus() == 'approved'">
-			<span class="badge badge-success" style="font-size: 13px;">This plan has been approved</span>
-			<span data-bind="if:detailsLastUpdated"> <br/>Last update date : <span data-bind="text:detailsLastUpdated.formattedDate"></span></span>
-
-		</div>
-		<div style="float: right;" data-bind="if: planStatus() == '' || planStatus() == 'not approved' ">
-			<span class="badge badge-warning" style="font-size: 13px;">This plan is not yet approved</span>
-			<span data-bind="if:detailsLastUpdated"><br/>Last update date :  <span data-bind="text:detailsLastUpdated.formattedDate"></span></span>
-
-		</div>
-		<div style="float: right;" data-bind="if: planStatus() == 'submitted'">
-			<span class="badge badge-info" style="font-size: 13px;">This plan has been submitted for approval</span>
-			<span data-bind="if:detailsLastUpdated"><br/>Last update date :  <span data-bind="text:detailsLastUpdated.formattedDate"></span></span>
-
-		</div>
-
-	</div>
-</div>
 
 <div class="row-fluid space-after">
 	<div>
@@ -376,23 +394,6 @@
 </div>
 
 </g:if>
-<g:else>
-	<div>
-		<div data-bind="if: planStatus() == 'approved'">
-			<span class="badge badge-success" style="font-size: 13px;">This plan has been approved</span>
-			<span data-bind="if:detailsLastUpdated"> <br/>Last update date : <span data-bind="text:detailsLastUpdated.formattedDate"></span></span>
-		</div>
-		<div data-bind="if: planStatus() == '' || planStatus() == 'not approved' ">
-			<span class="badge badge-warning" style="font-size: 13px;">This plan is not yet approved</span>
-			<span data-bind="if:detailsLastUpdated"><br/>Last update date :  <span data-bind="text:detailsLastUpdated.formattedDate"></span></span>
-		</div>
-		<div data-bind="if: planStatus() == 'submitted'">
-			<span class="badge badge-info" style="font-size: 13px;">This plan has been submitted for approval</span>
-			<span data-bind="if:detailsLastUpdated"><br/>Last update date :  <span data-bind="text:detailsLastUpdated.formattedDate"></span></span>
-		</div>
-	</div>
-
-</g:else>
 
 <div class="save-details-result-placeholder"></div>
 
@@ -415,7 +416,7 @@
 					<hr/>
 					<b>Admin actions:</b>
 					<ul>
-						<li>You will not be able to report activity data until your MERI plan has been approved by your case manager.</li>
+						<li>You will not be able to report activity data until your MERI plan has been approved by your grant manager.</li>
 					</ul>
 					<button type="button" data-bind="click: saveAndSubmitChanges" class="btn btn-info">Submit for approval</button>
 				</div>
@@ -423,7 +424,7 @@
 					<hr/>
 					<b>Admin:</b>
 					<ul>
-						<li>You will not be able to report activity data until your MERI plan has been approved by your case manager.</li>
+						<li>You will not be able to report activity data until your MERI plan has been approved by your grant manager.</li>
 					</ul>
 				</div>
 			</div>

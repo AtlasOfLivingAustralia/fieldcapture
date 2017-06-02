@@ -50,7 +50,7 @@ class ProjectService  {
     static final String PLAN_APPROVED = 'approved'
     static final String PLAN_NOT_APPROVED = 'not approved'
     static final String PLAN_SUBMITTED = 'submitted'
-
+    static final String PLAN_UNLOCKED = 'unlocked for correction'
 
     def webService, grailsApplication, siteService, activityService, emailService, documentService, userService, metadataService, settingService, reportService, auditService, speciesService
 
@@ -348,6 +348,40 @@ class ProjectService  {
             }
         }
         return [error:'Invalid plan status']
+    }
+
+    Map unlockPlanForCorrection(String projectId, String approvalText) {
+        Map project = get(projectId)
+        if (project.status == COMPLETE && project.planStatus != PLAN_APPROVED) {
+            Map resp = update(projectId, [planStatus:PLAN_UNLOCKED])
+
+            if (resp.resp && !resp.resp.error) {
+                Map doc = [name:"Approval to correct project information for "+project.projectId, projectId:projectId, type:'text', role:'approval',filename:name, readOnly:true, public:false]
+                String user = userService.getCurrentUserDisplayName()
+                String content = "User ${user} has unlocked project "+project.projectId+" for correction. \nDeclaration:\n"+approvalText
+                documentService.createTextDocument(content, doc)
+
+                return [message:'success']
+            }
+            else {
+                return [error:"Update failed: ${resp?.resp?.error}"]
+            }
+        }
+        return [error:'Cannot unlock the plan: invalid project status']
+    }
+
+    Map finishedCorrectingPlan(String projectId) {
+        Map project = get(projectId)
+        if (project.status == COMPLETE && project.planStatus == PLAN_UNLOCKED) {
+            Map resp = update(projectId, [planStatus:PLAN_APPROVED])
+            if (resp.resp && !resp.resp.error) {
+                return [message:'success']
+            }
+            else {
+                return [error:"Update failed: ${resp?.resp?.error}"]
+            }
+        }
+        return [error:'Cannot finish correcting the plan: invalid project status']
     }
 
     /**
