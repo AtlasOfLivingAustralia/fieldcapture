@@ -50,7 +50,7 @@ class ProjectService  {
     static final String PLAN_APPROVED = 'approved'
     static final String PLAN_NOT_APPROVED = 'not approved'
     static final String PLAN_SUBMITTED = 'submitted'
-
+    static final String PLAN_UNLOCKED = 'unlocked for correction'
 
     def webService, grailsApplication, siteService, activityService, emailService, documentService, userService, metadataService, settingService, reportService, auditService, speciesService
 
@@ -124,6 +124,10 @@ class ProjectService  {
      */
     def destroy(id) {
         webService.doDelete(grailsApplication.config.ecodata.baseUrl + 'project/' + id + '?destroy=true')
+    }
+
+    private boolean isComplete(Map project) {
+        return COMPLETE.equalsIgnoreCase(project.status)
     }
 
     /**
@@ -350,6 +354,40 @@ class ProjectService  {
         return [error:'Invalid plan status']
     }
 
+    Map unlockPlanForCorrection(String projectId, String approvalText) {
+        Map project = get(projectId)
+        if (isComplete(project) && project.planStatus == PLAN_APPROVED) {
+            Map resp = update(projectId, [planStatus:PLAN_UNLOCKED])
+
+            if (resp.resp && !resp.resp.error) {
+                Map doc = [name:"Approval to correct project information for "+project.projectId, projectId:projectId, type:'text', role:'approval',filename:project.projectId+'-correction-approval.txt', readOnly:true, public:false]
+                String user = userService.getCurrentUserDisplayName()
+                String content = "User ${user} has unlocked project "+project.projectId+" for correction. \nDeclaration:\n"+approvalText
+                documentService.createTextDocument(doc, content)
+
+                return [message:'success']
+            }
+            else {
+                return [error:"Update failed: ${resp?.resp?.error}"]
+            }
+        }
+        return [error:'Cannot unlock the plan: invalid project status']
+    }
+
+    Map finishedCorrectingPlan(String projectId) {
+        Map project = get(projectId)
+        if (isComplete(project) && project.planStatus == PLAN_UNLOCKED) {
+            Map resp = update(projectId, [planStatus:PLAN_APPROVED])
+            if (resp.resp && !resp.resp.error) {
+                return [message:'success']
+            }
+            else {
+                return [error:"Update failed: ${resp?.resp?.error}"]
+            }
+        }
+        return [error:'Cannot finish correcting the plan: invalid project status']
+    }
+
     /**
      * Submits a report of the activities performed during a specific time period (a project stage).
      * @param projectId the project the performing the activities.
@@ -430,7 +468,7 @@ class ProjectService  {
 
         if(lastReport && lastReport.reportId == stageDetails.reportId){
             def values = [:]
-            values["status"] = "completed"
+            values["status"] = COMPLETE
             update(projectId, values)
         }
 
@@ -733,7 +771,7 @@ class ProjectService  {
      */
     Map<String, String> getProjectOutcomes(Map project) {
         def outcomes = [:]
-        if (COMPLETE.equalsIgnoreCase(project.status)) {
+        if (isComplete(project)) {
             def activity = project.activities?.find { it.type == ActivityService.FINAL_REPORT_ACTIVITY_TYPE }
 
             if (activity) {
@@ -749,6 +787,19 @@ class ProjectService  {
         }
         outcomes
 
+    }
+
+    boolean canEditActivity(Map activity) {
+        Map project = get(activity.projectId)
+        // We allow activities to be edited if the project has been unlocked for post-aquittal data correction.
+        if (isComplete(project)) {
+            return project.planStatus == PLAN_UNLOCKED
+        }
+
+        // Activities in a submitted or approved report cannot be edited
+        Map report = reportService.findReportForDate(activity.plannedEndDate, project.reports)
+
+        return !reportService.isSubmittedOrApproved(report)
     }
 
     private Map getOutcomes(String activityId, String outputType) {

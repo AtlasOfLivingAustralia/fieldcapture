@@ -392,6 +392,19 @@ class ProjectController {
         render result as JSON
     }
 
+    @PreAuthorise(accessLevel = 'caseManager')
+    def ajaxUnlockPlanForCorrection(String id) {
+        def result = projectService.unlockPlanForCorrection(id, params.declaration)
+        render result as JSON
+    }
+
+    @PreAuthorise(accessLevel = 'caseManager')
+    def ajaxFinishedCorrectingPlan(String id) {
+        def result = projectService.finishedCorrectingPlan(id)
+        render result as JSON
+    }
+
+
     @PreAuthorise(accessLevel = 'admin')
     def updateProjectStartDate(String id) {
         def payload = request.getJSON()

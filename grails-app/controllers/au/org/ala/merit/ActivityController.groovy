@@ -96,7 +96,7 @@ class ActivityController {
                 redirect(controller:'project', action:'index', id: activity.projectId)
                 return
             }
-            else if (activity.publicationStatus == 'published' || activity.publicationStatus == 'pendingApproval') {
+            else if (!activityService.canEditActivity(activity)) {
                 chain(action:'index', id:id)
                 return
             }
@@ -141,7 +141,7 @@ class ActivityController {
                 flash.message = "Access denied: User does not have <b>editor</b> permission for projectId ${activity.projectId}"
                 redirect(controller:'project', action:'index', id: activity.projectId)
             }
-            else if (activity.publicationStatus == 'published' || activity.publicationStatus == 'pendingApproval') {
+            else if (!activityService.canEditActivity(activity)) {
                 chain(action:'index', id:id)
                 return
             }
@@ -288,8 +288,9 @@ class ActivityController {
         def result = [:]
 
         def projectId
+
         if (id) {
-            def activity = activityService.get(id)
+            Map activity = activityService.get(id)
             projectId = activity.projectId
             postBody.outputs?.each { output ->
                 def matchingOutput = activity.outputs?.find{it.name == output.name}
@@ -316,6 +317,9 @@ class ActivityController {
             response.status = HttpStatus.SC_UNAUTHORIZED
             result = [status:HttpStatus.SC_UNAUTHORIZED, error: flash.message]
             //render result as JSON
+        }
+        else if (!activityService.canEditActivity(values)) {
+            result = [status:HttpStatus.SC_BAD_REQUEST, error: "Project status does not allow activity to be editable."]
         }
 
         if (!result) {
