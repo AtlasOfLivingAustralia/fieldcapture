@@ -904,6 +904,7 @@ var MERIPlanActions = function(project, options) {
         rejectPlanUrl : fcConfig.rejectPlanUrl
     };
 
+    var UNLOCKED_PLAN_STATUS = 'unlocked for correction';
     var config = _.defaults(options, defaults);
 
     self.saveStatus = function (url, declaration) {
@@ -972,7 +973,7 @@ var MERIPlanActions = function(project, options) {
 
         var template = 'editablePlanTmpl';
         if ('completed' == projectStatus.toLowerCase()) {
-            template = planStatus == 'unlocked' ? 'unlockedProjectTmpl' : 'completedProjectTmpl';
+            template = planStatus == UNLOCKED_PLAN_STATUS ? 'unlockedProjectTmpl' : 'completedProjectTmpl';
         }
         else {
             if (planStatus == 'approved') {
@@ -994,7 +995,7 @@ var MERIPlanActions = function(project, options) {
             badgeClass: 'badge-warning'
         };
         if ('completed' == projectStatus.toLowerCase()) {
-            if (planStatus == 'unlocked') {
+            if (planStatus == UNLOCKED_PLAN_STATUS) {
                 result = {text:'The plan has been unlocked for data correction', badgeClass:'badge-warning'};
             }
             else {

@@ -58,7 +58,7 @@
 <div class="row-fluid">
 	<div class="control-group">
 		<div>
-			<span class="badge" style="font-size: 13px;" data-bind="text:meriPlanStatus().text, css:meriPlanStatus().badgeClass">This plan has been approved</span>
+			<span class="badge" style="font-size: 13px;" data-bind="text:meriPlanStatus().text, css:meriPlanStatus().badgeClass"></span>
 			<span data-bind="if:detailsLastUpdated"> <br/>Last update date : <span data-bind="text:detailsLastUpdated.formattedDate"></span></span>
 
 		</div>
@@ -72,9 +72,7 @@
 
 <g:if test="${projectContent.details.visible}">
 	<div class="save-details-result-placeholder"></div>
-	<div style="float: left;" class="controls">
-		<b>From: </b><span data-bind="text: plannedStartDate.formattedDate"></span>  <b>To: </b> <span data-bind="text: plannedEndDate.formattedDate"></span>
-	</div>
+
 	<div class="row-fluid space-after">
 		<div class="span6">
 			<div class="form-actions">
@@ -109,6 +107,10 @@
 			</div>
 
 		</div>
+	</div>
+
+	<div class="controls">
+		<b>From: </b><span data-bind="text: plannedStartDate.formattedDate"></span>  <b>To: </b> <span data-bind="text: plannedEndDate.formattedDate"></span>
 	</div>
 
 

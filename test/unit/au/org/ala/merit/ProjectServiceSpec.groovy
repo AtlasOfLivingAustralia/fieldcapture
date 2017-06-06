@@ -293,4 +293,120 @@ class ProjectServiceSpec extends Specification {
         'r2'     | true
     }
 
+    def "only completed projects with approved plans can be unlocked for correction"(String projectStatus, String planStatus) {
+        given:
+        String projectId = 'project1'
+        String declarationText = 'declaration'
+
+        when:
+        webService.getJson(_) >> [projectId:projectId, planStatus:planStatus, status:projectStatus, plannedStartDate: '2015-07-01T00:00Z', plannedEndDate:'2016-12-31T00:00Z']
+        Map result = service.unlockPlanForCorrection(projectId, declarationText)
+
+        then:
+        result.error
+
+        where:
+        projectStatus | planStatus
+        'active'      | 'approved'
+        'active'      | 'submitted'
+        'active'      | 'not approved'
+        'completed'   | 'submitted'
+        'completed'   | 'not approved'
+    }
+
+    def "the declaration should be recorded when a plan is unlocked for correction"() {
+        given:
+        String projectId = 'project1'
+        String declarationText = 'declaration'
+
+        when:
+        webService.getJson(_) >> [projectId:projectId, planStatus:ProjectService.PLAN_APPROVED, status:ProjectService.COMPLETE, plannedStartDate: '2015-07-01T00:00Z', plannedEndDate:'2016-12-31T00:00Z']
+        Map result = service.unlockPlanForCorrection(projectId, declarationText)
+
+        then:
+        1 * webService.doPost({it.endsWith("project/${projectId}")}, [planStatus:ProjectService.PLAN_UNLOCKED]) >> [resp:[status:200]]
+        1 * documentService.createTextDocument({it.projectId == projectId}, {it.contains(declarationText)})
+
+    }
+
+    def "only unlocked projects can be locked after corrections are finished"(String projectStatus, String planStatus) {
+        given:
+        String projectId = 'project1'
+
+        when:
+        webService.getJson(_) >> [projectId:projectId, planStatus:planStatus, status:projectStatus, plannedStartDate: '2015-07-01T00:00Z', plannedEndDate:'2016-12-31T00:00Z']
+        Map result = service.finishedCorrectingPlan(projectId)
+
+        then:
+        result.error
+
+        where:
+        projectStatus | planStatus
+        'active'      | 'approved'
+        'active'      | 'submitted'
+        'active'      | 'not approved'
+        'completed'   | 'submitted'
+        'completed'   | 'not approved'
+    }
+
+    def "unlocked projects can be locked after corrections are finished"() {
+        given:
+        String projectId = 'project1'
+
+        when:
+        webService.getJson(_) >> [projectId:projectId, planStatus:ProjectService.PLAN_UNLOCKED, status:ProjectService.COMPLETE, plannedStartDate: '2015-07-01T00:00Z', plannedEndDate:'2016-12-31T00:00Z']
+        Map result = service.finishedCorrectingPlan(projectId)
+
+        then:
+        1 * webService.doPost({it.endsWith("project/${projectId}")}, [planStatus:ProjectService.PLAN_APPROVED]) >> [resp:[status:200]]
+
+    }
+
+    def "activities in unlocked projects can be edited"() {
+        when:
+        String projectId = 'project1'
+        String endDate = '2016-12-31T13:00:00Z'
+        Map activity = [projectId:projectId, plannedEndDate: endDate]
+        webService.getJson(_) >> [projectId:projectId, planStatus:ProjectService.PLAN_UNLOCKED, status:ProjectService.COMPLETE, plannedStartDate: '2015-07-01T00:00Z', plannedEndDate:'2016-12-31T00:00Z', reports:[]]
+
+        then:
+        service.canEditActivity(activity) == true
+    }
+
+    def "activities in complete projects (that are not unlocked) cannot be edited"() {
+        when:
+        String projectId = 'project1'
+        String endDate = '2016-12-31T13:00:00Z'
+        Map activity = [projectId:projectId, plannedEndDate: endDate]
+        webService.getJson(_) >> [projectId:projectId, planStatus:ProjectService.PLAN_APPROVED, status:ProjectService.COMPLETE, plannedStartDate: '2015-07-01T00:00Z', plannedEndDate:'2016-12-31T00:00Z', reports:[]]
+
+        then:
+        service.canEditActivity(activity) == false
+    }
+
+    def "activities in approved or submitted stages cannot be edited"() {
+        setup:
+        String projectId = 'project1'
+        String endDate = '2016-12-31T13:00:00Z'
+        Map activity = [projectId:projectId, plannedEndDate: endDate]
+        webService.getJson(_) >> [projectId:projectId, planStatus:ProjectService.PLAN_APPROVED, status:'active', plannedStartDate: '2015-07-01T00:00Z', plannedEndDate:'2016-12-31T00:00Z']
+        reportService.getReportsForProject(projectId) >> []
+        reportService.findReportForDate(endDate, []) >> [:]
+
+        when:
+        boolean canEdit = service.canEditActivity(activity)
+
+        then:
+        1 * reportService.isSubmittedOrApproved(_) >> true
+        canEdit == false
+
+        when:
+        canEdit = service.canEditActivity(activity)
+
+        then:
+        1 * reportService.isSubmittedOrApproved(_) >> false
+        canEdit == true
+    }
+
+
 }

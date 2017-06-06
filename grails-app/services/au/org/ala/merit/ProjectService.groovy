@@ -126,6 +126,10 @@ class ProjectService  {
         webService.doDelete(grailsApplication.config.ecodata.baseUrl + 'project/' + id + '?destroy=true')
     }
 
+    private boolean isComplete(Map project) {
+        return COMPLETE.equalsIgnoreCase(project.status)
+    }
+
     /**
      * Retrieves a summary of project metrics (including planned output targets)
      * and groups them by output type.
@@ -352,14 +356,14 @@ class ProjectService  {
 
     Map unlockPlanForCorrection(String projectId, String approvalText) {
         Map project = get(projectId)
-        if (project.status == COMPLETE && project.planStatus != PLAN_APPROVED) {
+        if (isComplete(project) && project.planStatus == PLAN_APPROVED) {
             Map resp = update(projectId, [planStatus:PLAN_UNLOCKED])
 
             if (resp.resp && !resp.resp.error) {
-                Map doc = [name:"Approval to correct project information for "+project.projectId, projectId:projectId, type:'text', role:'approval',filename:name, readOnly:true, public:false]
+                Map doc = [name:"Approval to correct project information for "+project.projectId, projectId:projectId, type:'text', role:'approval',filename:project.projectId+'-correction-approval.txt', readOnly:true, public:false]
                 String user = userService.getCurrentUserDisplayName()
                 String content = "User ${user} has unlocked project "+project.projectId+" for correction. \nDeclaration:\n"+approvalText
-                documentService.createTextDocument(content, doc)
+                documentService.createTextDocument(doc, content)
 
                 return [message:'success']
             }
@@ -372,7 +376,7 @@ class ProjectService  {
 
     Map finishedCorrectingPlan(String projectId) {
         Map project = get(projectId)
-        if (project.status == COMPLETE && project.planStatus == PLAN_UNLOCKED) {
+        if (isComplete(project) && project.planStatus == PLAN_UNLOCKED) {
             Map resp = update(projectId, [planStatus:PLAN_APPROVED])
             if (resp.resp && !resp.resp.error) {
                 return [message:'success']
@@ -464,7 +468,7 @@ class ProjectService  {
 
         if(lastReport && lastReport.reportId == stageDetails.reportId){
             def values = [:]
-            values["status"] = "completed"
+            values["status"] = COMPLETE
             update(projectId, values)
         }
 
@@ -767,7 +771,7 @@ class ProjectService  {
      */
     Map<String, String> getProjectOutcomes(Map project) {
         def outcomes = [:]
-        if (COMPLETE.equalsIgnoreCase(project.status)) {
+        if (isComplete(project)) {
             def activity = project.activities?.find { it.type == ActivityService.FINAL_REPORT_ACTIVITY_TYPE }
 
             if (activity) {
@@ -783,6 +787,19 @@ class ProjectService  {
         }
         outcomes
 
+    }
+
+    boolean canEditActivity(Map activity) {
+        Map project = get(activity.projectId)
+        // We allow activities to be edited if the project has been unlocked for post-aquittal data correction.
+        if (isComplete(project)) {
+            return project.planStatus == PLAN_UNLOCKED
+        }
+
+        // Activities in a submitted or approved report cannot be edited
+        Map report = reportService.findReportForDate(activity.plannedEndDate, project.reports)
+
+        return !reportService.isSubmittedOrApproved(report)
     }
 
     private Map getOutcomes(String activityId, String outputType) {
