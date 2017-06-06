@@ -7,7 +7,7 @@ import org.joda.time.format.DateTimeFormat
 
 class ActivityService {
 
-    def webService, grailsApplication, metadataService, reportService
+    def webService, grailsApplication, metadataService, reportService, projectService
 
     public static final String PROGRESS_PLANNED = 'planned'
     public static final String PROGRESS_FINISHED = 'finished'
@@ -174,6 +174,10 @@ class ActivityService {
 
     boolean isDeferredOrCancelled(activity) {
         return isDeferred(activity) || isCancelled(activity)
+    }
+
+    boolean canEditActivity(Map activity) {
+        projectService.canEditActivity(activity)
     }
 
     /**

@@ -1,7 +1,7 @@
 <r:require modules="datepicker, jqueryGantt, jqueryValidationEngine, attachDocuments, activity"/>
 <r:script>
-    var PROJECT_STATE = {approved:'approved',submitted:'submitted',planned:'not approved'};
-    var ACTIVITY_STATE = {planned:'planned',started:'started',finished:'finished',deferred:'deferred',cancelled:'cancelled'};
+    var PROJECT_STATE = {approved:'approved',submitted:'submitted',planned:'not approved',unlockedforcorrection:'unlocked for correction'};
+    var ACTIVITY_STATE = {planned:'planned',started:'started',finished:'finished',deferred:'deferred',cancelled:'cancelled',corrected:'corrected'};
 
 </r:script>
 <style type="text/css">
@@ -11,6 +11,7 @@
 </style>
 <!-- This section is bound to a secondary KO viewModel. The following line prevents binding
          to the main viewModel. -->
+<span class="badge" style="font-size: 13px;" data-bind="text:meriPlanStatus().text, css:meriPlanStatus().badgeClass"></span>
 <!-- ko stopBinding: true -->
 <div class="row-fluid" id="planContainer">
 

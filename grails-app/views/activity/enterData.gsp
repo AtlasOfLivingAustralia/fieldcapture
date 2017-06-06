@@ -113,7 +113,7 @@
                 <div class="span6">
                     <label class="for-readonly inline">Activity progress</label>
                     <button type="button" class="btn btn-small"
-                            data-bind="css: {'btn-warning':progress()=='planned','btn-success':progress()=='started','btn-info':progress()=='finished','btn-danger':progress()=='deferred','btn-inverse':progress()=='cancelled'}"
+                            data-bind="activityProgress:progress"
                             style="line-height:16px;cursor:default;color:white">
                         <span data-bind="text: progress"></span>
                     </button>
@@ -243,7 +243,7 @@
     <div class="form-actions">
         <button type="button" id="save" class="btn btn-primary">Save changes</button>
         <button type="button" id="cancel" class="btn">Cancel</button>
-        <label class="checkbox inline">
+        <label class="checkbox inline" data-bind="visible:progress() != 'corrected'">
             <input data-bind="checked:transients.markedAsFinished" type="checkbox"> Mark this activity as finished.
         </label>
     </div>
@@ -715,7 +715,12 @@
 
     <g:if test="${params.progress}">
         var newProgress = '${params.progress}';
+        if (newProgress == 'corrected') {
+            viewModel.progress(newProgress);
+        }
+        else {
             viewModel.transients.markedAsFinished(newProgress == 'finished');
+        }
     </g:if>
 
         master.register('activityModel', viewModel.modelForSaving, viewModel.dirtyFlag.isDirty, viewModel.dirtyFlag.reset, viewModel.updateIdsAfterSave);

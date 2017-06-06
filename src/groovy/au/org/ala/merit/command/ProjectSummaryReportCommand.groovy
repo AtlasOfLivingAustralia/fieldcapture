@@ -8,12 +8,14 @@ import au.org.ala.merit.MetadataService
 import au.org.ala.merit.ProjectService
 import au.org.ala.merit.ReportService
 import au.org.ala.merit.SiteService
+import grails.validation.Validateable
 
 
 /**
  * Handles a request for a project summary report.  Assembles data from various services to produce the model
  * required for the report.
  */
+@Validateable
 class ProjectSummaryReportCommand {
 
     DocumentService documentService

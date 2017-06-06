@@ -149,10 +149,7 @@
 
                         <span class="span8">
                             <div class="row-fluid">
-                                <g:if test="${params.query}">
-                                    Showing the results of the search "<b>${params.query}</b>".<br/>
-                                </g:if>
-                                Found <strong>${projectCount}</strong> projects.
+                                <g:render template="searchResultsSummary"/>
                             </div>
                             <g:render template="/shared/sites" plugin="fieldcapture-plugin" model="${[projectCount:results?.hits?.total?:0]}"/>
                         </span>
@@ -167,10 +164,7 @@
 
                         <span class="span8">
                             <div class="row-fluid">
-                                <g:if test="${params.query}">
-                                    Showing the results of the search "<b>${params.query}</b>".<br/>
-                                </g:if>
-                                Found <strong>${projectCount}</strong> projects.
+                                <g:render template="searchResultsSummary"/>
                             </div>
 
                             <div class="scroll-list clearfix" id="projectList">
@@ -245,10 +239,7 @@
                         <div style="overflow-x:scroll">
                             <div class="row-fluid" style="margin-top:5px;">
                                 <button class="btn facets-toggle"><i class="fa fa-bars"></i></button> <span>
-                                <g:if test="${params.query}">
-                                Showing the results of the search "<b>${params.query}</b>".<br/>
-                                </g:if>
-                                Found ${projectCount} projects.</span>
+                                <g:render template="searchResultsSummary"/>
                             </div>
                             <div class="row-fluid" >
                                 <g:if test="${fc.userIsAlaOrFcAdmin()}">
@@ -289,10 +280,7 @@
                             <span class="span8">
 
                                 <div class="row-fluid">
-                                    <g:if test="${params.query}">
-                                        Showing the results of the search "<b>${params.query}</b>".<br/>
-                                    </g:if>
-                                    Found <strong>${projectCount}</strong> projects.
+                                    <g:render template="searchResultsSummary"/>
                                 </div>
 
 
