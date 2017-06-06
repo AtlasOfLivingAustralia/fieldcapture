@@ -79,6 +79,7 @@ class ActivityControllerSpec extends Specification {
         controller.ajaxUpdate(activityId)
 
         then:
+        1 * activityService.canEditActivity(_) >> true
         1 * activityService.update(activityId, activityData) >> [resp:[message:'updated'], statusCode:HttpStatus.SC_OK]
         response.status == HttpStatus.SC_OK
         response.json.activity.message == 'updated'
@@ -98,6 +99,7 @@ class ActivityControllerSpec extends Specification {
         controller.ajaxUpdate(activityId)
 
         then:
+        1 * activityService.canEditActivity(_) >> true
         1 * activityService.update('', activityData) >> [resp:[message:'created', activityId:'1234'], statusCode:HttpStatus.SC_OK]
         response.status == HttpStatus.SC_OK
         response.json.activity.message == 'created'
@@ -122,6 +124,7 @@ class ActivityControllerSpec extends Specification {
         controller.ajaxUpdate(activityId)
 
         then:
+        1 * activityService.canEditActivity(_) >> true
         1 * activityService.update(activityId, activityData) >> [resp:[message:'created', activityId:'1234'], statusCode:HttpStatus.SC_OK]
         1 * documentService.saveStagedImageDocument([name:"photo 1", poiId:'poi 1', activityId:activityId]) >> [resp:[message:'created', documentId:'d1234']]
         response.status == HttpStatus.SC_OK
@@ -146,6 +149,7 @@ class ActivityControllerSpec extends Specification {
         def model = controller.edit(activityId)
 
         then:
+        1 * activityService.canEditActivity(_) >> true
         response.status == HttpStatus.SC_OK
         1 * metadataService.activityTypesList('Programme 1', 'Sub-Programme 1') >> activityTypes
         model.activityTypes == activityTypes
@@ -168,6 +172,7 @@ class ActivityControllerSpec extends Specification {
         def model = controller.edit(activityId)
 
         then:
+        1 * activityService.canEditActivity(_) >> true
         response.status == HttpStatus.SC_OK
         1 * metadataService.activityTypesList('Programme 1', 'Sub-Programme 1') >> activityTypes
         model.activityTypes == activityTypes.plus(0, extraActivityType)
