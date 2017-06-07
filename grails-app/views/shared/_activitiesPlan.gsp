@@ -209,9 +209,9 @@
 
     <button type="button" class="btn btn-success btn-small"
             data-bind="
-            disable:!readyForApproval() || isApproved() || !riskAndDetailsActive(),
+            enable:canSubmitReport,
             click:submitReport,
-            attr:{title:(readyForApproval() && riskAndDetailsActive()) ?'Submit this stage for implementation approval.':'* Report cannot be submitted while activities are still open. \n* Project details and risk table information are mandatory for report submission.'}"
+            attr:{title:submitReportHelp}"
     >Submit report</button>
 </g:if>
 <g:else>
@@ -231,7 +231,7 @@
 <span class="badge badge-success">Report Approved</span>
 
 <g:if test="${fc.userInRole(role: grailsApplication.config.security.cas.adminRole) || fc.userInRole(role: grailsApplication.config.security.cas.alaAdminRole)}">
-    <button type="button" data-bind="click:rejectStage" class="btn btn-danger"><i class="icon-remove icon-white"></i> Withdraw approval</button>
+    <button type="button" data-bind="enable:canRejectStage, click:rejectStage" class="btn btn-danger"><i class="icon-remove icon-white"></i> Withdraw approval</button>
 </g:if>
 
 </script>
@@ -242,8 +242,8 @@
 
     <span>Grant manager actions: </span>
     <span class="btn-group">
-        <button type="button" data-bind="click:approveStage" class="btn btn-success"><i class="icon-ok icon-white"></i> Approve</button>
-        <button type="button" data-bind="click:rejectStage" class="btn btn-danger"><i class="icon-remove icon-white"></i> Reject</button>
+        <button type="button" data-bind="enable:canApproveStage, click:approveStage" class="btn btn-success"><i class="icon-ok icon-white"></i> Approve</button>
+        <button type="button" data-bind="enable:canRejectStage, click:rejectStage" class="btn btn-danger"><i class="icon-remove icon-white"></i> Reject</button>
     </span>
 </g:if>
 
@@ -257,9 +257,9 @@
     <span>Grant manager actions: </span>
 
     <span class="btn-group">
-        <button type="button" data-bind="click:approveStage" class="btn btn-success"><i class="icon-ok icon-white"></i> Approve</button>
-        <button type="button" data-bind="click:rejectStage" class="btn btn-danger"><i class="icon-remove icon-white"></i> Reject</button>
-        <button type="button" data-bind="click:variationModal" class="btn btn-warning"><i class="icon-remove icon-white"></i> Variation</button>
+        <button type="button" data-bind="enable:canApproveStage, click:approveStage" class="btn btn-success"><i class="icon-ok icon-white"></i> Approve</button>
+        <button type="button" data-bind="enable:canRejectStage, click:rejectStage" class="btn btn-danger"><i class="icon-remove icon-white"></i> Reject</button>
+        <button type="button" data-bind="enable:canApproveStage, click:variationModal" class="btn btn-warning"><i class="icon-remove icon-white"></i> Variation</button>
     </span>
 </g:if>
 
