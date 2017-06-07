@@ -11,7 +11,7 @@
 		<b>Grant manager actions:</b>
 		<span class="btn-group">
 			<button type="button" data-bind="click:approvePlan" class="btn btn-success"><i class="fa fa-check icon-white"></i> Approve</button>
-			<button type="button" data-bind="click:rejectPlan" class="btn btn-danger"><i class="fa fa-cross icon-white"></i> Reject</button>
+			<button type="button" data-bind="click:rejectPlan" class="btn btn-danger"><i class="fa fa-remove icon-white"></i> Reject</button>
 		</span>
 	</div>
 </div>
@@ -34,12 +34,12 @@
 </script>
 <script id="completedProjectTmpl" type="text/html">
 <div class="span6 required">
-	<div class="form-actions" >
-		<b>Grant manager actions:</b>
-		<span class="btn-group">
-			<button type="button" data-bind="click:unlockPlanForCorrection" class="btn btn-danger"><i class="fa fa-unlock"></i> Unlock plan for correction</button>
-		</span>
-	</div>
+	%{--<div class="form-actions" >--}%
+		%{--<b>Grant manager actions:</b>--}%
+		%{--<span class="btn-group">--}%
+			%{--<button type="button" data-bind="click:unlockPlanForCorrection" class="btn btn-danger"><i class="fa fa-unlock"></i> Unlock plan for correction</button>--}%
+		%{--</span>--}%
+	%{--</div>--}%
 </div>
 </script>
 <script id="unlockedProjectTmpl" type="text/html">

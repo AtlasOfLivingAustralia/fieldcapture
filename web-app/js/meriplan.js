@@ -1,6 +1,12 @@
 /*
    Script for handling Project MERI Plan
  */
+PlanStatus = {
+    SUBMITTED : 'submitted',
+    APPROVED : 'approved',
+    NOT_APPROVED : 'not approved',
+    UNLOCKED : 'unlocked'
+};
 
 function MERIPlan(project, themes, key) {
    var self = this;
@@ -24,7 +30,7 @@ function MERIPlan(project, themes, key) {
       return (project['custom']['details'].status == 'active');
    });
    self.isProjectDetailsLocked = ko.computed (function (){
-      return (project.planStatus == 'approved' || project.planStatus =='submitted');
+      return (project.planStatus == PlanStatus.APPROVED || project.planStatus == PlanStatus.SUBMITTED);
    });
 
    self.projectThemes =  $.map(themes, function(theme, i) { return theme.name; });
@@ -904,7 +910,6 @@ var MERIPlanActions = function(project, options) {
         rejectPlanUrl : fcConfig.rejectPlanUrl
     };
 
-    var UNLOCKED_PLAN_STATUS = 'unlocked for correction';
     var config = _.defaults(options, defaults);
 
     self.saveStatus = function (url, declaration) {
@@ -973,13 +978,13 @@ var MERIPlanActions = function(project, options) {
 
         var template = 'editablePlanTmpl';
         if ('completed' == projectStatus.toLowerCase()) {
-            template = planStatus == UNLOCKED_PLAN_STATUS ? 'unlockedProjectTmpl' : 'completedProjectTmpl';
+            template = planStatus == PlanStatus.UNLOCKED ? 'unlockedProjectTmpl' : 'completedProjectTmpl';
         }
         else {
-            if (planStatus == 'approved') {
+            if (planStatus == PlanStatus.APPROVED) {
                 template = 'approvedPlanTmpl';
             }
-            else if (planStatus == 'submitted') {
+            else if (planStatus == PlanStatus.SUBMITTED) {
                 template = 'submittedPlanTmpl';
             }
         }
@@ -995,7 +1000,7 @@ var MERIPlanActions = function(project, options) {
             badgeClass: 'badge-warning'
         };
         if ('completed' == projectStatus.toLowerCase()) {
-            if (planStatus == UNLOCKED_PLAN_STATUS) {
+            if (planStatus == PlanStatus.UNLOCKED) {
                 result = {text:'The plan has been unlocked for data correction', badgeClass:'badge-warning'};
             }
             else {
@@ -1003,10 +1008,10 @@ var MERIPlanActions = function(project, options) {
             }
         }
         else {
-            if (planStatus == 'approved') {
+            if (planStatus == PlanStatus.APPROVED) {
                 result = {text: 'This plan has been approved', badgeClass:'badge-success'};
             }
-            else if (planStatus == 'submitted') {
+            else if (planStatus == PlanStatus.SUBMITTED) {
                 result =  {text: 'This plan has been submitted for approval', badgeClass:'badge-info'};
             }
         }
