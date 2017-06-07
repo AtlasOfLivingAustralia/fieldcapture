@@ -107,7 +107,7 @@
                         <th>Description</th>
                         <th>Progress</th>
                         <th>Weblink</th>
-                        <th>Supporting Agencies and Partners</th>
+                        <th>Delivery Partners</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -136,9 +136,9 @@
                 </g:if>
                 </td>
                 <td>
-                    <g:if test="${action.supportingAgenciesAndPartners}">
-                        %{--This is because action.supportingAgenciesAndPartners is a JSONArray which will quote strings when peforming a join--}%
-                        ${new ArrayList(action.supportingAgenciesAndPartners).join(', ')}
+                    <g:if test="${action.deliveryPartners}">
+                        %{--This is because action.deliveryPartners is a JSONArray which will quote strings when peforming a join--}%
+                        ${new ArrayList(action.deliveryPartners).join(', ')}
                     </g:if>
                 </td>
             </tr>
