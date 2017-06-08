@@ -544,7 +544,7 @@ class ReportController {
         List availablePeriods = availablePeriods(2016, Period.months(6))
         Map period
         if (!periodValue) {
-            period = availablePeriods[availablePeriods.size()-1]
+            period = availablePeriods[0]
         }
         else {
             period = availablePeriods.find{it.value == periodValue}
