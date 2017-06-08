@@ -479,10 +479,7 @@ class ReportService {
     }
 
 
-    Map reef2050PlanActionReport(int year) {
-
-        String startDate = year+'-06-30T14:00:00Z'
-        String endDate = (year+1)+'-06-30T14:00:00Z'
+    Map reef2050PlanActionReport(String startDate, String endDate) {
 
         Map searchCriteria = [type:REEF_2050_PLAN_ACTION_REPORTING_ACTIVITY_TYPE, publicationStatus:REPORT_APPROVED, dateProperty:'plannedEndDate', 'startDate':startDate, 'endDate':endDate]
 
@@ -509,13 +506,18 @@ class ReportService {
             List agencyContacts = output.data.agencyContacts ? output.data.agencyContacts.collect{it.agencyContact}:[]
             List webLinks = output.data.webLinks ? output.data.webLinks.collect{it.webLink}:[]
             Map commonData = [organisationId:project?.organisationId, reportingLeadAgency:project?.organisationName, agencyContacts:agencyContacts, webLinks:webLinks]
-            actions = actions.collect{it+commonData}
+            actions = actions.collect{
+                if (it.webLinks) {
+                    it.webLinks = it.webLinks.split(/(;|,|\n|\s)/)?.findAll{it}
+                }
+                commonData+it
+            }
             allActions.addAll(actions)
         }
-
+        String format = 'YYYY-MM'
         List dateBuckets = [startDate, endDate]
         Map countByStatus = [type:'HISTOGRAM', label:'Action status', property:'data.actions.status']
-        Map dateGroupingConfig = [groups:[type:'date', buckets:dateBuckets, format:'YYYY', property:'activity.plannedEndDate'],
+        Map dateGroupingConfig = [groups:[type:'date', buckets:dateBuckets, format:format, property:'activity.plannedEndDate'],
                                   childAggregations: [countByStatus, [label:'Action Status By Theme', groups:[type:'discrete', property:'data.actions.theme'], childAggregations: [countByStatus]]]]
         Map activityTypeFilter = [type:'DISCRETE', filterValue: REEF_2050_PLAN_ACTION_REPORTING_ACTIVITY_TYPE, property:'activity.type']
         Map config = [filter:activityTypeFilter, childAggregations: [dateGroupingConfig], label:'Action Status by Year']
@@ -528,7 +530,9 @@ class ReportService {
         Map actionStatusByTheme = [:]
         if (!report.error) {
             report = report.resp.results
-            Map reportForYear = report?.groups?.find{it.group.startsWith(Integer.toString(year))}
+            String startDateMatcher = startDate.substring(0, format.length())
+
+            Map reportForYear = report?.groups?.find{it.group.startsWith(startDateMatcher)}
             if (reportForYear) {
 
                 actionStatus.result = reportForYear.results[0]

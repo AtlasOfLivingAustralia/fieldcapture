@@ -22,10 +22,10 @@
         <form>
             <div class="row-fluid">
                 <span class="span3">
-                    <label for="year">Select the financial year to view:</label><g:select name="year" from="${years}"
+                    <label>Select the period to view:<g:select name="periodValue" from="${periods}"
                                                                                           optionValue="label"
                                                                                           optionKey="value"
-                                                                                          value="${year}"></g:select>
+                                                                                          value="${period.value}"></g:select></label>
                 </span>
             </div>
 
@@ -36,13 +36,13 @@
     </div>
 
     <g:if test="${!actions}">
-        <strong>No data was found for the selected year.</strong>
+        <strong>No data was found for the selected reporting period.</strong>
     </g:if>
     <g:else>
 
         <h3>Reef 2050 Plan Action Reporting</h3>
 
-        <p>Results for the financial year ${year} / ${year + 1}.  Please note this report ignores any facet selection you may have made.</p>
+        <p>Results for the period ${period.label}.  Please note this report ignores any facet selection you may have made.</p>
 
         <div class="report-section">
             <h3>Action count by status</h3>
@@ -130,7 +130,7 @@
                 <td>
                 <g:if test="${action.webLinks}">
                     <g:each in="${action.webLinks}" var="webLink" status="i">
-                    <a href="${webLink}" title="${webLink}" target="_blank">${i+1}</a><g:if test="${i < action.webLinks.size()-1}">, </g:if>
+                    <a href="${webLink?.trim()}" title="${webLink?.trim()}" target="_blank">${i+1}</a><g:if test="${i < action.webLinks.size()-1}">, </g:if>
 
                     </g:each>
                 </g:if>

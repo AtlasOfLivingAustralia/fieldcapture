@@ -8,8 +8,11 @@ import au.org.ala.fieldcapture.GmsMapper
 import au.org.ala.merit.command.ProjectSummaryReportCommand
 import grails.converters.JSON
 import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 import org.joda.time.Interval
 import org.joda.time.Period
+import org.joda.time.format.DateTimeFormat
+import org.joda.time.format.DateTimeFormatter
 
 class ReportController {
 
@@ -516,14 +519,41 @@ class ReportController {
         render view:'/project/meriPlanReadOnly', model:[project:project, themes:metadataService.getThemesForProject(project), user:[isAdmin:true]]
     }
 
-    def reef2050PlanActionReport(Integer year) {
 
-        List years = availableYears(2015)
-        year = year ?: years[years.size()-1].value
+    private List availablePeriods(int startYear, Period period) {
 
-        Map model = reportService.reef2050PlanActionReport(year)
-        model.years = years
-        model.year = year
+        List availablePeriods = []
+        DateTime first = DateUtils.parse(startYear+"-01-01T00:00:00Z").withZone(DateTimeZone.UTC)
+        DateTime now = DateUtils.now().withZone(DateTimeZone.UTC)
+
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("MMM-yyyy").withZone(DateTimeZone.UTC)
+        DateTime current = DateUtils.alignToPeriod(now, period)
+        while (current.isAfter(first)) {
+            DateTime periodStart = current.minus(period)
+            String label = formatter.print(periodStart) + " - " + formatter.print(current)
+            String value = DateUtils.format(periodStart) + ',' + DateUtils.format(current)
+            availablePeriods << [label:label, value:value]
+
+            current = periodStart
+        }
+        availablePeriods
+    }
+
+    def reef2050PlanActionReport(String periodValue) {
+
+        List availablePeriods = availablePeriods(2016, Period.months(6))
+        Map period
+        if (!periodValue) {
+            period = availablePeriods[0]
+        }
+        else {
+            period = availablePeriods.find{it.value == periodValue}
+        }
+        String[] startAndEnd = period.value.split(',')
+
+        Map model = reportService.reef2050PlanActionReport(startAndEnd[0], startAndEnd[1])
+        model.periods = availablePeriods
+        model.period = period
 
         Map actionStatusCounts = model.actionStatus?.result?.result ?: [:]
         mergeCompletedOrInPlaceCategories(actionStatusCounts)
