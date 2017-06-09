@@ -276,7 +276,7 @@ class ActivityController {
 
         List duplicateStages = postBody.remove('duplicateStages')
 
-        def values = [:]
+        Map values = [:]
         // filter params to remove keys in the ignore list - MEW don't know if this is required
         postBody.each { k, v ->
             if (!(k in ignore)) {
@@ -285,12 +285,12 @@ class ActivityController {
         }
         log.debug (values as JSON).toString()
 
-        def result = [:]
+        Map result = [:]
 
-        def projectId
-
+        String projectId
+        Map activity = values
         if (id) {
-            Map activity = activityService.get(id)
+            activity = activityService.get(id)
             projectId = activity.projectId
             postBody.outputs?.each { output ->
                 def matchingOutput = activity.outputs?.find{it.name == output.name}
@@ -318,7 +318,7 @@ class ActivityController {
             result = [status:HttpStatus.SC_UNAUTHORIZED, error: flash.message]
             //render result as JSON
         }
-        else if (!activityService.canEditActivity(values)) {
+        else if (!activityService.canEditActivity(activity)) {
             result = [status:HttpStatus.SC_BAD_REQUEST, error: "Project status does not allow activity to be editable."]
         }
 

@@ -77,7 +77,7 @@ class OrganisationController {
             dashboardReports += [name:'announcements', label:'Announcements']
         }
         // The dashboards are being temporarily disabled. See #1008.
-
+        /*
         if (reportingVisible) {
             // We need at least one finished report to show data.
             if (organisation.reports?.find{it.progress == 'finished'}) {
@@ -86,6 +86,7 @@ class OrganisationController {
 
             }
         }
+        */
 
         [about     : [label: 'About', visible: true, stopBinding: false, type:'tab'],
          reporting : [label: 'Reporting', visible: reportingVisible, stopBinding:true, default:reportingVisible, type: 'tab'],
