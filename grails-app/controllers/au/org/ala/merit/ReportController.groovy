@@ -539,21 +539,9 @@ class ReportController {
         availablePeriods
     }
 
-    def reef2050PlanActionReport(String periodValue) {
+    def reef2050PlanActionReport() {
 
-        List availablePeriods = availablePeriods(2016, Period.months(6))
-        Map period
-        if (!periodValue) {
-            period = availablePeriods[0]
-        }
-        else {
-            period = availablePeriods.find{it.value == periodValue}
-        }
-        String[] startAndEnd = period.value.split(',')
-
-        Map model = reportService.reef2050PlanActionReport(startAndEnd[0], startAndEnd[1])
-        model.periods = availablePeriods
-        model.period = period
+        Map model = reportService.reef2050PlanActionReport()
 
         Map actionStatusCounts = model.actionStatus?.result?.result ?: [:]
         mergeCompletedOrInPlaceCategories(actionStatusCounts)
