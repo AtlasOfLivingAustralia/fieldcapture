@@ -267,13 +267,15 @@ class SiteController {
 
     def createSitesFromShapefile() {
         def siteData = request.JSON
-        def progress = [total:siteData.sites.size(), uploaded:0]
+        Map progress = [total:siteData.sites.size(), uploaded:0].asSynchronized()
 
         try {
             session.uploadProgress = progress
 
-            siteData.sites.each {
-                siteService.createSiteFromUploadedShapefile(siteData.shapeFileId, it.id, it.externalId, it.name, it.description?:'No description supplied', siteData.projectId)
+            while (!progress.cancelling && progress.uploaded < progress.total) {
+                Map site = siteData.sites[progress.uploaded]
+                Thread.sleep(6000)
+                //siteService.createSiteFromUploadedShapefile(siteData.shapeFileId, site.id, site.externalId, site.name, site.description?:'No description supplied', siteData.projectId)
                 progress.uploaded = progress.uploaded + 1
             }
         }
@@ -286,12 +288,15 @@ class SiteController {
     }
 
     def siteUploadProgress() {
-        def progress = session.uploadProgress?:[:]
+        Map progress = session.uploadProgress?:[:]
         render progress as JSON
     }
 
-
-
+    def cancelSiteUpload() {
+        Map progress = session.uploadProgress?:[:]
+        progress.cancelling = true
+        render progress as JSON
+    }
 
     def createGeometryForGrantId(String grantId, String geometryPid, Double centroidLat, Double centroidLong) {
         def projects = importService.allProjectsWithGrantId(grantId)

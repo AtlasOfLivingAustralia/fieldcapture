@@ -15,12 +15,13 @@
                 sldPolgonDefaultUrl: "${grailsApplication.config.sld.polgon.default.url}",
                 sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}",
                 saveSitesUrl: "${createLink(action: 'createSitesFromShapefile')}",
-                siteUploadProgressUrl: "${createLink(action: 'siteUploadProgress')}"
+                siteUploadProgressUrl: "${createLink(action: 'siteUploadProgress')}",
+                cancelSiteUploadUrl: "${createLink(action:'cancelSiteUpload')}"
 
             },
             returnTo = "${params.returnTo}";
     </r:script>
-    <r:require modules="knockout,mapWithFeatures,amplify,jqueryValidationEngine"/>
+    <r:require modules="knockout,mapWithFeatures,amplify,jqueryValidationEngine,siteUpload"/>
 </head>
 <body>
 <div class="${containerType} validationEngineContainer" id="validation-container">
@@ -158,6 +159,9 @@
                     <div class="bar" data-bind="style:{width:progress}"></div>
                 </div>
             </div>
+            <div class="modal-footer">
+                <button class="btn btn-warning" data-bind="click:cancelUpload">Cancel</button>
+            </div>
         </div>
     </div>
 </div>
@@ -165,172 +169,43 @@
 
 <r:script>
 <g:if test="${shapeFileId}">
-var SiteViewModel = function(shape) {
-    var self = this;
+$(function() {
 
-    self.id = shape.id;
-    self.name = ko.observable();
-    self.description = ko.observable();
-    self.externalId = ko.observable();
-    self.selected = ko.observable(true);
-
-    self.attributes = shape.values;
-
-    self.toJS = function() {
-        return {
-            id: self.id,
-            name: self.name(),
-            description: self.description(),
-            externalId: self.externalId()
-        };
-    };
-};
-
-var SiteUploadViewModel = function() {
-    var self = this;
     var attributeNames = $.parseJSON('${(attributeNames as JSON).encodeAsJavaScript()}');
     var shapes = $.parseJSON('${(shapes as JSON).encodeAsJavaScript()}');
+    var shapeFileId = '${shapeFileId.encodeAsJavaScript()}';
+    var projectId = '${projectId}';
+    var options = {
+        siteUploadUrl: fcConfig.siteUploadUrl,
+        saveSitesUrl: fcConfig.saveSitesUrl,
+        siteUploadProgressUrl: fcConfig.siteUploadProgressUrl,
+        cancelSiteUploadUrl: fcConfig.cancelSiteUploadUrl,
+        validationContainerSelector: '#sites-container',
+        progressSelector: '#uploadProgress',
+        returnToUrl: '${params.returnTo}'
+        };
 
-    self.nameAttribute = ko.observable('');
-    self.descriptionAttribute = ko.observable('');
-    self.externalIdAttribute = ko.observable('');
-
-    self.attributeNames = ko.observableArray(attributeNames);
-    self.sites = ko.observableArray([]);
-    self.selectAll = ko.observable(true);
-    self.progress = ko.observable('0%');
-    self.progressText = ko.observable('');
-    self.selectedCount = ko.observable(0);
-    self.selectAll.subscribe(function(newValue) {
-        $.each(self.sites(), function(i, site) {site.selected(newValue);});
-    });
-
-    self.nameAttribute.subscribe(function(newValue) {
-        $.each(self.sites(), function(i, site) {
-            if (newValue) {
-                site.name(site.attributes[newValue]);
-            }
-            else {
-                site.name('Site '+(i+1));
-            }
-        });
-    });
-    self.descriptionAttribute.subscribe(function(newValue) {
-        $.each(self.sites(), function(i, site) {site.description(site.attributes[newValue]);});
-    });
-    self.externalIdAttribute.subscribe(function(newValue) {
-        $.each(self.sites(), function(i, site) {site.externalId(site.attributes[newValue]);});
-    });
-
-    self.save = function() {
-        if (!$('#sites-container').validationEngine('validate')) {
-            return;
-        }
-        var payload = {};
-        payload.shapeFileId = '${shapeFileId.encodeAsJavaScript()}';
-        payload.projectId = '${projectId}';
-        payload.sites = [];
-        $.each(self.sites(), function(i, site) {
-            if (site.selected()) {
-                payload.sites.push(site.toJS());
-            }
-        });
-
-        $.ajax({
-               url: fcConfig.saveSitesUrl,
-               type: 'POST',
-               contentType: 'application/json',
-               data: JSON.stringify(payload),
-               success: function (data) {
-                    self.progressText('Uploaded '+payload.sites.length+' of '+payload.sites.length+' sites');
-                    self.progress('100%');
-                    setTimeout(function() {
-                        $('#uploadProgress').modal('hide');
-                        document.location.href = "${params.returnTo}";
-                    }, 1000);
-
-               },
-               error: function () {
-                   $('#uploadProgress').modal('hide');
-
-                   alert('There was a problem uploading sites.');
-               }
-          });
-          self.progressText('Uploaded 0 of '+payload.sites.length+' sites');
-          $('#uploadProgress').modal({backdrop:'static'});
-          setTimeout(self.showProgress, 2000);
-
-
-    };
-
-    self.showProgress = function() {
-        $.get(fcConfig.siteUploadProgressUrl, function(progress) {
-            var finished = false;
-            if (progress && progress.uploaded !== undefined) {
-                var progressPercent = Math.round(progress.uploaded/progress.total * 100)+'%';
-                self.progress(progressPercent);
-                self.progressText('Uploaded '+progress.uploaded+' of '+progress.total+' sites '+progressPercent);
-
-                finished = progress.finished;
-            }
-            if (!finished) {
-                setTimeout(self.showProgress, 2000);
-            }
-        });
-    }
-
-    self.countSelectedSites = function() {
-        var count = 0;
-        $.each(self.sites(), function(i, site) {
-            if (site.selected()) {
-                count++;
-            }
-        });
-        self.selectedCount(count);
-    };
-
-    self.cancel = function() {
-        document.location.href = "${params.returnTo}";
-    }
-
-    $.each(shapes, function(i, obj) {
-        var site = new SiteViewModel(obj);
-        site.selected.subscribe(self.countSelectedSites);
-        self.sites.push(site);
-    });
-     $.each(attributeNames, function(i, name) {
-        if (name.toUpperCase() === 'NAME') {
-            self.nameAttribute(name);
-        }
-    });
-
-    $.each(attributeNames, function(i, name) {
-        if (name.toUpperCase() === 'DESCRIPTION') {
-            self.descriptionAttribute(name);
-        }
-    });
-    self.countSelectedSites();
-
-}
-$('#uploadProgress').modal({backdrop:'static', show:false});
-$('#sites-container').validationEngine();
-ko.applyBindings(new SiteUploadViewModel());
+    $('#uploadProgress').modal({backdrop:'static', show:false});
+    $('#sites-container').validationEngine();
+    ko.applyBindings(new SiteUploadViewModel(attributeNames, shapes, projectId, shapeFileId, options));
+});
 </g:if>
 <g:else>
+    $(function() {
+        $('#uploadShapeFile').click(function() {
+            $(this).attr('disabled','disabled');
+            $('#shapeFileUpload').submit();
+        });
+        $("#shapefile").change(function() {
+            if ($("#shapefile").val()) {
+                $("#uploadShapeFile").removeAttr("disabled");
+            }
+            else {
+                $("#uploadShapeFile").attr("disabled", "disabled");
+            }
 
-    $('#uploadShapeFile').click(function() {
-        $(this).attr('disabled','disabled');
-        $('#shapeFileUpload').submit();
+        }).trigger('change');
     });
-    $("#shapefile").change(function() {
-        if ($("#shapefile").val()) {
-            $("#uploadShapeFile").removeAttr("disabled");
-        }
-        else {
-            $("#uploadShapeFile").attr("disabled", "disabled");
-        }
-
-    }).trigger('change');
 </g:else>
 </r:script>
 
