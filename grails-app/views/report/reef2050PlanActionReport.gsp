@@ -18,31 +18,18 @@
         </div>
     </g:if>
 
+    <h3>Reef 2050 Plan Action Reporting</h3>
     <div class="well">
-        <form>
-            <div class="row-fluid">
-                <span class="span3">
-                    <label>Select the period to view:<g:select name="periodValue" from="${periods}"
-                                                                                          optionValue="label"
-                                                                                          optionKey="value"
-                                                                                          value="${period.value}"></g:select></label>
-                </span>
-            </div>
-
-            <div class="row-fluid">
-                <button type="submit" class="btn btn-success bottom">Update</button>
-            </div>
-        </form>
+       <strong>Progress on Reef 2050 Plan to <g:formatDate date="${au.org.ala.fieldcapture.DateUtils.parse(endDate).toDate()}" format="MMMM yyyy"/></strong>
+        <p>
+        Please note this report ignores any facet selection you may have made.
+        </p>
     </div>
 
     <g:if test="${!actions}">
-        <strong>No data was found for the selected reporting period.</strong>
+        <strong>No data was found.</strong>
     </g:if>
     <g:else>
-
-        <h3>Reef 2050 Plan Action Reporting</h3>
-
-        <p>Results for the period ${period.label}.  Please note this report ignores any facet selection you may have made.</p>
 
         <div class="report-section">
             <h3>Action count by status</h3>

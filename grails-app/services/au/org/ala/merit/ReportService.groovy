@@ -479,9 +479,9 @@ class ReportService {
     }
 
 
-    Map reef2050PlanActionReport(String startDate, String endDate) {
+    Map reef2050PlanActionReport() {
 
-        Map searchCriteria = [type:REEF_2050_PLAN_ACTION_REPORTING_ACTIVITY_TYPE, publicationStatus:REPORT_APPROVED, dateProperty:'plannedEndDate', 'startDate':startDate, 'endDate':endDate]
+        Map searchCriteria = [type:REEF_2050_PLAN_ACTION_REPORTING_ACTIVITY_TYPE, publicationStatus:REPORT_APPROVED]
 
         Map resp
         JSON.use("nullSafe") {
@@ -492,6 +492,15 @@ class ReportService {
         }
 
         List activities = resp.resp.activities
+        if (!activities) {
+            return [actions:[], actionStatus: [:], actionStatusByTheme: [:]]
+        }
+        String mostRecent = activities.max{it.plannedEndDate}.plannedEndDate
+        Period period = Period.months(6)
+        DateTime periodStart = DateUtils.alignToPeriod(DateUtils.parse(mostRecent), period)
+        activities = activities.findAll{DateUtils.parse(it.plannedEndDate).isAfter(periodStart)}
+        String startDate = DateUtils.format(periodStart)
+        String endDate = DateUtils.format(periodStart.plus(period))
 
         List projectIds = activities.collect{it.projectId}.unique()
         List projects = projectService.search([projectId:projectIds, view:'flat'])?.resp?.projects ?: []
@@ -542,7 +551,7 @@ class ReportService {
             }
         }
 
-        [actions:allActions, actionStatus:actionStatus, actionStatusByTheme:actionStatusByTheme]
+        [actions:allActions, actionStatus:actionStatus, actionStatusByTheme:actionStatusByTheme, endDate:endDate]
 
     }
 }
