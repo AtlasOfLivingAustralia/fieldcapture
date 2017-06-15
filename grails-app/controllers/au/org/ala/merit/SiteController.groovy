@@ -274,8 +274,7 @@ class SiteController {
 
             while (!progress.cancelling && progress.uploaded < progress.total) {
                 Map site = siteData.sites[progress.uploaded]
-                Thread.sleep(6000)
-                //siteService.createSiteFromUploadedShapefile(siteData.shapeFileId, site.id, site.externalId, site.name, site.description?:'No description supplied', siteData.projectId)
+                siteService.createSiteFromUploadedShapefile(siteData.shapeFileId, site.id, site.externalId, site.name, site.description?:'No description supplied', siteData.projectId)
                 progress.uploaded = progress.uploaded + 1
             }
         }
