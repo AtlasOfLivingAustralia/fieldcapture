@@ -1060,13 +1060,17 @@ class ProjectService  {
 
         Map baseline = null
         Map comparison = null
+        Map mostRecentEditBeforeOrOnBaselineDate = null
         if (toCompare.baseline && toCompare.baseline.entity.risks) {
             baseline = toCompare.baseline.entity.risks
         }
         if (toCompare.comparison && toCompare.comparison.entity.risks) {
             comparison = toCompare.comparison.entity.risks
         }
-        [baselineDate: toCompare.baseline?.date, baseline:baseline, comparisonDate: toCompare.comparison?.date, comparison:comparison]
+        if (toCompare.mostRecentEditBeforeOrOnBaselineDate && toCompare.mostRecentEditBeforeOrOnBaselineDate.entity.risks) {
+            mostRecentEditBeforeOrOnBaselineDate = toCompare.mostRecentEditBeforeOrOnBaselineDate.entity.risks
+        }
+        [baselineDate: toCompare.baseline?.date, baseline:baseline, comparisonDate: toCompare.comparison?.date, comparison:comparison, mostRecentEditBeforeOrOnBaselineDate:mostRecentEditBeforeOrOnBaselineDate]
 
     }
 
