@@ -61,7 +61,8 @@ var ReportViewModel = function(report) {
     self.viewable = self.progress() == 'finished';
 
     self.isReportable = function() {
-        return (report.toDate < new Date().toISOStringNoMillis());
+        var reportableDate = report.submissionDate || report.toDate;
+        return (reportableDate < new Date().toISOStringNoMillis());
     };
     self.complete = ko.computed(function() {
         return self.isReportable() && self.progress() == 'finished' && self.editable;
