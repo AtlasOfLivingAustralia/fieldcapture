@@ -697,7 +697,7 @@ var Report = function(report) {
         return result;
     };
 
-}
+};
 
 
 var ProjectReportsViewModel = function(project) {
@@ -815,6 +815,8 @@ var ProjectReportsViewModel = function(project) {
         }
         return 'Planning phase';
     };
+
+    self.currentReport = currentReport;
 
 
     self.getHistory = function() {
