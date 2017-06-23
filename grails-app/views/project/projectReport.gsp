@@ -272,76 +272,94 @@
 
     </g:if>
 
-    <g:if test="${risksComparison.baseline?.rows && ('Project risks' in content)}">
-    <h3>Project risks</h3>
-    <p>Note this is the risk information as it appeared at the end of the selected stage(s).</p>
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>Type of threat / risk</th>
-            <th>Description</th>
-            <th>Likelihood</th>
-            <th>Consequence</th>
-            <th>Risk rating</th>
-            <th>Current control / <br/>Contingency strategy</th>
-            <th>Residual risk</th>
-        </tr>
-        </thead>
-        <tbody>
-        <g:each in="${risksComparison.baseline?.rows}" var="risk">
-            <tr>
-                <td>${risk.threat}</td>
-                <td>${risk.description}</td>
-                <td>${risk.likelihood}</td>
-                <td>${risk.consequence}</td>
-                <td>${risk.riskRating}</td>
-                <td>${risk.currentControl}</td>
-                <td>${risk.residualRisk}</td>
-            </tr>
-        </g:each>
+    <g:if test="${('Project risks' in content)}">
+        <h3>Project risks</h3>
 
-        </tbody>
-    </table>
+        <g:if test="${risksComparison.mostRecentEditBeforeOrOnBaselineDate?.rows}">
+
+            <p>Note this is the risk information as it appeared at the end of the selected stage(s).</p>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Type of threat / risk</th>
+                    <th>Description</th>
+                    <th>Likelihood</th>
+                    <th>Consequence</th>
+                    <th>Risk rating</th>
+                    <th>Current control / <br/>Contingency strategy</th>
+                    <th>Residual risk</th>
+                </tr>
+                </thead>
+                <tbody>
+                <g:each in="${risksComparison.mostRecentEditBeforeOrOnBaselineDate?.rows}" var="risk">
+                    <tr>
+                        <td>${risk.threat}</td>
+                        <td>${risk.description}</td>
+                        <td>${risk.likelihood}</td>
+                        <td>${risk.consequence}</td>
+                        <td>${risk.riskRating}</td>
+                        <td>${risk.currentControl}</td>
+                        <td>${risk.residualRisk}</td>
+                    </tr>
+                </g:each>
+
+                </tbody>
+            </table>
+        </g:if>
+        <g:else>
+            No risks were recorded for this project as of the end of the selected stage(s).
+        </g:else>
     </g:if>
 
-    <g:if test="${(risksComparison.baseline?.rows || risksComparison.comparison?.rows) && ('Project risks changes' in content)}">
+    <g:if test="${'Project risks changes' in content}">
         <h3>Project risks changes</h3>
-        <g:if test="${risksComparison.comparison}">
-            Comparing edit made on ${au.org.ala.fieldcapture.DateUtils.displayFormatWithTime(risksComparison.comparisonDate)}
-            to edit made on ${au.org.ala.fieldcapture.DateUtils.displayFormatWithTime(risksComparison.baselineDate)}
+        <g:if test="${(risksComparison.baseline?.rows || risksComparison.comparison?.rows)}">
+
+            <g:if test="${risksComparison.comparison && risksComparison.comparison != risksComparison.baseline}">
+                Comparing risks and threats as of ${au.org.ala.fieldcapture.DateUtils.displayFormatWithTime(risksComparison.comparisonDate)}
+                with risks and threats as of ${au.org.ala.fieldcapture.DateUtils.displayFormatWithTime(risksComparison.baselineDate)}
+            </g:if>
+            <g:elseif test="${risksComparison.baseline && risksComparison.comparison != risksComparison.baseline}">
+                Risks and threats first entered during the period of this report, last edited at: ${au.org.ala.fieldcapture.DateUtils.displayFormatWithTime(risksComparison.baselineDate)}
+            </g:elseif>
+
+            <g:if test="${risksComparison.comparison == risksComparison.baseline}">
+                <p>No changes made during the selected period.</p>
+            </g:if>
+            <g:else>
+                <table class="table table-striped risks-comparison">
+                    <thead>
+                    <tr>
+                        <th>Type of threat / risk</th>
+                        <th>Description</th>
+                        <th>Likelihood</th>
+                        <th>Consequence</th>
+                        <th>Risk rating</th>
+                        <th>Current control / <br/>Contingency strategy</th>
+                        <th>Residual risk</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <g:set var="max" value="${Math.max(risksComparison.baseline.rows.size(), risksComparison.comparison?.rows?.size()?:0)}"/>
+                    <g:each in="${(0..<max)}" var="i">
+                        <tr>
+                            <td><fc:renderComparison changed="${risksComparison.baseline?.rows ?: []}" i="${i}" original="${risksComparison.comparison?.rows ?: []}" property="threat"/> </td>
+                            <td><fc:renderComparison changed="${risksComparison.baseline?.rows ?: []}" i="${i}" original="${risksComparison.comparison?.rows ?: []}" property="description"/></td>
+                            <td><fc:renderComparison changed="${risksComparison.baseline?.rows ?: []}" i="${i}" original="${risksComparison.comparison?.rows ?: []}" property="likelihood"/></td>
+                            <td><fc:renderComparison changed="${risksComparison.baseline?.rows ?: []}" i="${i}" original="${risksComparison.comparison?.rows ?: []}" property="consequence"/></td>
+                            <td><fc:renderComparison changed="${risksComparison.baseline?.rows ?: []}" i="${i}" original="${risksComparison.comparison?.rows ?: []}" property="riskRating"/></td>
+                            <td><fc:renderComparison changed="${risksComparison.baseline?.rows ?: []}" i="${i}" original="${risksComparison.comparison?.rows ?: []}" property="currentControl"/></td>
+                            <td><fc:renderComparison changed="${risksComparison.baseline?.rows ?: []}" i="${i}" original="${risksComparison.comparison?.rows ?: []}" property="residualRisk"/></td>
+                        </tr>
+                    </g:each>
+
+                    </tbody>
+                </table>
+            </g:else>
         </g:if>
-        <g:elseif test="${risksComparison.baseline}">
-            Risks and threats first entered during the period of this report, last edited at: ${au.org.ala.fieldcapture.DateUtils.displayFormatWithTime(risksComparison.baselineDate)}
-        </g:elseif>
-
-        <table class="table table-striped risks-comparison">
-            <thead>
-            <tr>
-                <th>Type of threat / risk</th>
-                <th>Description</th>
-                <th>Likelihood</th>
-                <th>Consequence</th>
-                <th>Risk rating</th>
-                <th>Current control / <br/>Contingency strategy</th>
-                <th>Residual risk</th>
-            </tr>
-            </thead>
-            <tbody>
-            <g:set var="max" value="${Math.max(risksComparison.baseline.rows.size(), risksComparison.comparison?.rows?.size()?:0)}"/>
-            <g:each in="${(0..<max)}" var="i">
-                <tr>
-                    <td><fc:renderComparison changed="${risksComparison.baseline?.rows ?: []}" i="${i}" original="${risksComparison.comparison?.rows ?: []}" property="threat"/> </td>
-                    <td><fc:renderComparison changed="${risksComparison.baseline?.rows ?: []}" i="${i}" original="${risksComparison.comparison?.rows ?: []}" property="description"/></td>
-                    <td><fc:renderComparison changed="${risksComparison.baseline?.rows ?: []}" i="${i}" original="${risksComparison.comparison?.rows ?: []}" property="likelihood"/></td>
-                    <td><fc:renderComparison changed="${risksComparison.baseline?.rows ?: []}" i="${i}" original="${risksComparison.comparison?.rows ?: []}" property="consequence"/></td>
-                    <td><fc:renderComparison changed="${risksComparison.baseline?.rows ?: []}" i="${i}" original="${risksComparison.comparison?.rows ?: []}" property="riskRating"/></td>
-                    <td><fc:renderComparison changed="${risksComparison.baseline?.rows ?: []}" i="${i}" original="${risksComparison.comparison?.rows ?: []}" property="currentControl"/></td>
-                    <td><fc:renderComparison changed="${risksComparison.baseline?.rows ?: []}" i="${i}" original="${risksComparison.comparison?.rows ?: []}" property="residualRisk"/></td>
-                </tr>
-            </g:each>
-
-            </tbody>
-        </table>
+        <g:else>
+            No risks were recorded for this project up to the end of the selected stage(s).
+        </g:else>
     </g:if>
 
 

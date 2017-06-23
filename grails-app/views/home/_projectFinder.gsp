@@ -168,11 +168,11 @@
                             </div>
 
                             <div class="scroll-list clearfix" id="projectList">
-                                <table class="table table-bordered table-hover" id="projectTable" data-sort="lastUpdated" data-order="DESC" data-offset="0" data-max="10">
+                                <table class="table table-bordered table-hover" id="projectTable" data-offset="0" data-max="25">
                                     <thead>
                                     <tr>
                                         <th width="85%" data-sort="nameSort" scope="col" data-order="ASC" class="header">Project name</th>
-                                        <th width="15%" data-sort="lastUpdated" scope="col"  data-order="DESC" class="header headerSortUp">Last&nbsp;updated&nbsp;</th>
+                                        <th width="15%" data-sort="lastUpdated" scope="col"  data-order="DESC" class="header">Last&nbsp;updated&nbsp;</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -852,16 +852,26 @@
     * @param facetFilters (an array)
     */
     function updateProjectTable(facetFilters) {
-        var url = "${createLink(controller:'nocas', action:'geoService')}"; //?sort=lastUpdated&order=DESC";
+        var url = "${createLink(controller:'nocas', action:'geoService')}";
         var sort = $('#projectTable').data("sort");
         var order = $('#projectTable').data("order");
         var offset = $('#projectTable').data("offset");
-        var params = "max=10&sort="+sort+"&order="+order+"&offset="+offset;
+        var params = "max=10&offset="+offset;
+
+        var query = '${params.query ? params.query.replace("'", "\\'") : ""}';
+        if (sort) {
+            params += "&sort="+sort+"&order="+order;
+        }
+        else if (!query) {
+            // Sort by date if no query term has been entered.
+            var defaultSort = "&sort=lastUpdated&order=DESC";
+            params += defaultSort;
+        }
 
         if (projectListIds.length > 0) {
             params += "&ids=" + projectListIds.join(",");
         } else {
-            params += "&query="+encodeURIComponent('${params.query ? params.query.replace("'", "\\'") : "*:*"}');
+            params += "&query="+encodeURIComponent(query || '*:*');
         }
         if (facetFilters) {
             params += "&fq=" + facetFilters.join("&fq=");

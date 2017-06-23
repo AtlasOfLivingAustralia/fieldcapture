@@ -570,7 +570,8 @@ class ActivityController {
         String url =  "${grailsApplication.config.ecodata.baseUrl}metadata/excelOutputTemplate"
 
         if (params.data) {
-            webService.proxyPostRequest(response, url, [listName:params.listName, type:params.type, data:params.data])
+            webService.proxyPostRequest(response, url,
+                    [listName:params.listName, type:params.type, data:params.data, editMode:params.editMode, allowExtraRows:params.allowExtraRows])
         }
         else {
             url += "?type=${params.type?.encodeAsURL()}&listName=${params.listName?.encodeAsURL()}"

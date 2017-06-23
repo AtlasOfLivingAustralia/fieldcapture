@@ -5,7 +5,7 @@ PlanStatus = {
     SUBMITTED : 'submitted',
     APPROVED : 'approved',
     NOT_APPROVED : 'not approved',
-    UNLOCKED : 'unlocked'
+    UNLOCKED : 'unlocked for correction'
 };
 
 function MERIPlan(project, themes, key) {
