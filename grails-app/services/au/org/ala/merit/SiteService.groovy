@@ -5,6 +5,7 @@ import com.vividsolutions.jts.geom.Point
 import com.vividsolutions.jts.io.WKTReader
 import grails.converters.JSON
 import org.codehaus.groovy.grails.web.mapping.LinkGenerator
+import org.geotools.geojson.geom.GeometryJSON
 import org.geotools.kml.v22.KMLConfiguration
 import org.geotools.xml.Parser
 import org.opengis.feature.simple.SimpleFeature
@@ -212,10 +213,10 @@ class SiteService {
 
         def result = webService.doPost(url, site)
         if (!result.error) {
-            def id = result.resp.id
+            String pid = result.resp.id
 
-            Point centriod = calculateSiteCentroid(id)
-            createSite(projectId, name, description, externalId, id, centriod.getY(), centriod.getX())
+            Map geometry = siteGeometry(pid)
+            createSite(projectId, name, description, externalId, pid, geometry)
         }
     }
 
@@ -240,7 +241,7 @@ class SiteService {
      * @param kml the KML that defines the sites to be created
      * @param projectId the project the sites will be assigned to.
      */
-    def createSitesFromKml(kml, projectId) {
+    def createSitesFromKml(String kml, String projectId) {
 
         def url = "${grailsApplication.config.spatial.layersUrl}/shape/upload/wkt"
         def userId = userService.getUser().userId
@@ -258,13 +259,15 @@ class SiteService {
             def description = placemark.getAttribute('description')
 
             Geometry geom = placemark.getDefaultGeometry()
+            Map geojson = JSON.parse(new GeometryJSON().toString(geom))
+
             def site = [name:name, description: description, user_id:userId, api_key:grailsApplication.config.api_key, wkt:geom.toText()]
 
             def result = webService.doPost(url, site)
             if (!result.error) {
                 def id = result.resp.id
                 if (!result.resp.error) {
-                    sites << createSite(projectId, name, description, '', id, geom.centroid.getY(), geom.centroid.getX())
+                    sites << createSite(projectId, name, description, '', id, geojson)
                 }
             }
 
@@ -290,20 +293,14 @@ class SiteService {
     }
 
 
-    /** Returns the centroid (as a Point) of a site in the spatial portal */
-    def calculateSiteCentroid(spatialPortalSiteId) {
-
-        def getWktUrl = "${grailsApplication.config.spatial.baseUrl}/ws/shape/wkt"
-        def wkt = webService.get("${getWktUrl}/${spatialPortalSiteId}")
-        Geometry geom = new WKTReader().read(wkt)
-        return geom.getCentroid()
+    Map siteGeometry(String spatialPortalSiteId) {
+        def getGeoJsonUrl = "${grailsApplication.config.spatial.baseUrl}/ws/shape/geojson"
+        webService.getJson("${getGeoJsonUrl}/${spatialPortalSiteId}")
     }
 
-    def createSite(projectId, name, description, externalId, geometryPid, centroidLat, centroidLong) {
-        def metadata = metadataService.getLocationMetadataForPoint(centroidLat, centroidLong)
-        def strLat =  "" + centroidLat + ""
-        def strLon = "" + centroidLong + ""
-        def values = [extent: [source: 'pid', geometry: [pid: geometryPid, type: 'pid', state: metadata.state, nrm: metadata.nrm, lga: metadata.lga, locality: metadata.locality, mvg: metadata.mvg, mvs: metadata.mvs, centre: [strLon, strLat]]], projects: [projectId], name: name, description: description, externalId:externalId, visibility:'private']
+    def createSite(String projectId, String name, String description, String externalId, String geometryPid, Map geometry) {
+        geometry.pid = geometryPid
+        def values = [extent: [source: 'pid', geometry: geometry, pid:geometryPid], projects: [projectId], name: name, description: description, externalId:externalId, visibility:'private']
         return create(values)
     }
 
