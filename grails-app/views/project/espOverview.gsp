@@ -65,7 +65,7 @@
         rejectPlanUrl : "${createLink(controller:'project', action:'ajaxRejectPlan', id:project.projectId)}",
         unlockPlanForCorrectionUrl : "${createLink(controller:'project', action:'ajaxUnlockPlanForCorrection', id:project.projectId)}",
         finishedCorrectingPlanUrl : "${createLink(controller:'project', action:'ajaxFinishedCorrectingPlan', id:project.projectId)}",
-featuresService: "${createLink(controller: 'proxy', action: 'features')}",
+        featuresService: "${createLink(controller: 'proxy', action: 'features')}",
             featureService: "${createLink(controller: 'proxy', action: 'feature')}",
             spatialWms: "${grailsApplication.config.spatial.geoserverUrl}",
             spatialBaseUrl: "${grailsApplication.config.spatial.baseURL}",
@@ -135,12 +135,12 @@ featuresService: "${createLink(controller: 'proxy', action: 'features')}",
                     <li data-bind="visible:hasAdministrativeReports"><i data-bind="css:{'fa-check-square-o':finishedAdminReporting, 'fa-square-o':!finishedAdminReporting}" class="fa fa-square-o"></i> Administrative reporting complete <i class="fa fa-question-circle" data-bind="popover:{content:adminReportingHelp}"></i></li>
                     <li><i data-bind="css:{'fa-check-square-o':finishedActivityReporting, 'fa-square-o':!finishedActivityReporting}" class="fa fa-square-o"></i> Progress reporting complete for all sites <i class="fa fa-question-circle" data-bind="popover:{content:activityReportingHelp}"></i></li>
                     <li><i data-bind="css:{'fa-check-square-o':currentStage.isSubmitted(), 'fa-square-o':!currentStage.isSubmitted()}" class="fa fa-square-o"></i> Report submitted <i class="fa fa-question-circle" data-bind="popover:{content:submitReportHelp}"></i></li>
-                    <li><i data-bind="css:{'fa-check-square-o':currentStage.isApproved(), 'fa-square-o':!currentStage.isApproved()}" class="fa fa-square-o"></i> Report approved <i class="fa fa-question-circle" data-bind="popover:{content:approveReportHelp}"></i></li>
+                    %{--<li><i data-bind="css:{'fa-check-square-o':currentStage.isApproved(), 'fa-square-o':!currentStage.isApproved()}" class="fa fa-square-o"></i> Report approved <i class="fa fa-question-circle" data-bind="popover:{content:approveReportHelp}"></i></li>--}%
                 </ul>
                 <strong>Actions: </strong>
                 <div>
                     <button class="btn btn-success" data-bind="visible:hasAdministrativeReports, enable:!currentStage.isReadOnly(), click:administrativeReporting, attr:{title:administrativeReportButtonHelp}">Administrative reporting</button>
-                    <button class="btn btn-success" data-bind="enable:currentStage.canSubmitReport(), click:currentStage.submitReport, attr:{title:submitReportHelp}">Submit all reports for grant manager approval</button>
+                    <button class="btn btn-success" data-bind="enable:canSubmitReport(), click:currentStage.submitReport, attr:{title:submitReportHelp}">Submit for grant manager approval</button>
                 </div>
             </div>
         </div>
@@ -163,11 +163,18 @@ featuresService: "${createLink(controller: 'proxy', action: 'features')}",
 
 <div>
     <strong data-bind="text:name"></strong>
-    <p>Click the site to update your management progress for this site.  If you have finished reporting for the year, make sure you tick the finished reporting checkbox at the bottom of the form.</p>
+    <div data-bind="visible:reportingComplete">
+        <p>You have finished reporting for this site.</p>
+    </div>
+    <div data-bind="visible:!reportingComplete">
+        <p>Click the site to update your management progress for this site.  If you have finished reporting for the year, make sure you tick the finished reporting checkbox at the bottom of the form.</p>
+    </div>
 
 </div>
 
 </script>
+
+<g:render template="/shared/declaration"/>
 <!-- /ko -->
 
 <r:script>
@@ -185,18 +192,13 @@ $(function() {
         zoomLimit:16,
         highlightOnHover:true,
         features:[],
-        featureService: "${createLink(controller: 'proxy', action:'feature')}",
-        wmsServer: "${grailsApplication.config.spatial.geoserverUrl}"
+        featureService: fcConfig.featureService,
+        wmsServer:fcConfig.spatialWms,
+        mapContainer: "map"
     };
 
-    var map = init_map_with_features({
-            mapContainer: "map",
-            scrollwheel: false,
-            featureService: "${createLink(controller: 'proxy', action:'feature')}",
-            wmsServer: "${grailsApplication.config.spatial.geoserverUrl}"
-        },
-        mapOptions
-    );
+    var map = init_map_with_features(mapOptions, {});
+
     var sitesViewModel = new SitesViewModel(project.sites, map, mapFeatures, ${user?.isEditor?:false}, project.projectId);
     var reportsViewModel = new ProjectReportsViewModel(project);
     var planViewModel = new PlanViewModel(project.activities, project.reports, [], {}, project, null, fcConfig, true, false);
@@ -210,45 +212,73 @@ $(function() {
     ko.applyBindings(sitesViewModel, document.getElementById('map'));
     sitesViewModel.displayAllSites();
 
-    _.each(map.featureIndex, function(features, siteId) {
 
-        var site = sitesViewModel.getSiteById(siteId);
+    var SiteStatusModel = function(site, currentStage, map) {
+        var self = this;
+        self.name = site.name;
 
-        // TODO this is fragile - the bounds calculation only really works for Polygon objects. Ideally we store the
-        // bounds with the site as we use them a lot and they can easily be cacluated at create / edit time as we
-        // already calculate the centroids.
-        var bounds = sitesViewModel.getSiteBounds(siteId);
-        var east = bounds.getNorthEast().lng();
-        var west = bounds.getSouthWest().lng();
-        var middle = west + (east - west)/2;
-        var topCentre = {lat:bounds.getNorthEast().lat(), lng:middle};
-
-        var siteInfo = document.getElementById('info-window-template');
-        ko.applyBindings({name:site.name}, siteInfo);
-        var popup = new google.maps.InfoWindow({content:siteInfo.innerHTML, position:topCentre});
-        ko.cleanNode(siteInfo);
-
-        var feature = features[0];
-
-        var nextActivity = _.find(currentStage.activities, function(activity) {
-            return activity.siteId == site.siteId && activity.progress != 'finished';
+        var incompleteActivities = _.filter(currentStage.activities, function(activity) {
+            return activity.siteId == site.siteId && !activity.isComplete();
         });
+        self.reportingComplete = incompleteActivities.length == 0;
 
+        // No support currently for multipolygons
+        var feature = map.featureIndex[site.siteId] && map.featureIndex[site.siteId][0];
 
-        google.maps.event.clearInstanceListeners(feature);
-        google.maps.event.addListener(feature, 'mouseover', function (event) {
-            popup.open(map.map, feature);
-        });
-        if (nextActivity) {
-            google.maps.event.addListener(feature, 'click', function(event) {
-                window.location.href = currentStage.editActivityUrl(nextActivity.activityId);
-            });
+        var bounds = sitesViewModel.getSiteBounds(site.siteId);
+
+        /**
+         * Calculates a position for the info window located in the top middle of the sites bounds.
+         * @param bounds a LatLngBounds object containing the bounds of the site.
+         * @return a lat lng literal representing the top middle of the sites bounds.
+         */
+        function calculateInfoWindowPosition(bounds) {
+            var east = bounds.getNorthEast().lng();
+            var west = bounds.getSouthWest().lng();
+            var middle = west + (east - west)/2;
+            return {lat:bounds.getNorthEast().lat(), lng:middle};
+        };
+
+        function getSiteInfoHtml() {
+            var siteInfoTemplate = document.getElementById('info-window-template');
+            ko.applyBindings(self, siteInfoTemplate);
+            var siteInfoHtml = siteInfoTemplate.innerHTML;
+            ko.cleanNode(siteInfoTemplate);
+            return siteInfoHtml;
         }
 
+        var featureDisplayOptions = {strokeColor:'#BB4411',fillColor:'#aabbcc',fillOpacity:0.3,strokeWeight:1,zIndex:1,editable:false};
+        if (self.reportingComplete) {
+            featureDisplayOptions = {strokeColor:'green',fillColor:'green',fillOpacity:0.3,strokeWeight:1,zIndex:1,editable:false};
+        }
+        feature.setOptions(featureDisplayOptions);
+
+        google.maps.event.clearInstanceListeners(feature);
+        var siteInfoWindow = new google.maps.InfoWindow({content:getSiteInfoHtml(), position:calculateInfoWindowPosition(bounds)});
+
+        google.maps.event.addListener(feature, 'mouseover', function (event) {
+            siteInfoWindow.open(map.map, feature);
+        });
         google.maps.event.addListener(feature, 'mouseout', function (event) {
-            popup.close();
+            siteInfoWindow.close();
         });
 
+
+        var activity = incompleteActivities.length >= 0 ? incompleteActivities[0] : null;
+        if (!activity) {
+            activity = _.find(currentStage.activities, function(activity) {
+                return activity.siteId == site.siteId;
+            });
+        }
+        if (activity) {
+            google.maps.event.addListener(feature, 'click', function(event) {
+                window.location.href = activity.editActivityUrl();
+            });
+        }
+    };
+
+    _.each(sitesViewModel.sites, function(site) {
+        new SiteStatusModel(site, currentStage, map);
     });
 
     var SimplifiedReportingViewModel = function() {
@@ -287,6 +317,9 @@ $(function() {
             if (self.currentReport.isSubmitted() || self.currentReport.isApproved()) {
                 return "You have submitted your report for this year"
             }
+            else if (!self.currentStage.isReportable) {
+                return "Your report can't be submitted until "+convertToSimpleDate(currentStage.toDateLabel, false);
+            }
             else if (self.currentStage.canSubmitReport()) {
                 return "Press the 'Submit reports for approval' button the 'Actions:' section below to submit your report to your grant manager."
             }
@@ -294,6 +327,10 @@ $(function() {
         });
         self.approveReportHelp = ko.pureComputed(function() {
             return "Once your reports are submitted, your grant manager will review and approve them or return them to you with comments for further work."
+        });
+
+        self.canSubmitReport = ko.pureComputed(function() {
+            return self.currentReport.isReportable && self.currentReport.canSubmitReport();
         });
 
         self.administrativeReporting = function() {
