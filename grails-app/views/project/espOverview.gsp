@@ -247,7 +247,7 @@ $(function() {
             return siteInfoHtml;
         }
 
-        var featureDisplayOptions = {strokeColor:'#BB4411',fillColor:'#aabbcc',fillOpacity:0.3,strokeWeight:1,zIndex:1,editable:false};
+        var featureDisplayOptions = {strokeColor:'#BB4411',fillColor:'#BB4411',fillOpacity:0.3,strokeWeight:1,zIndex:1,editable:false};
         if (self.reportingComplete) {
             featureDisplayOptions = {strokeColor:'green',fillColor:'green',fillOpacity:0.3,strokeWeight:1,zIndex:1,editable:false};
         }
