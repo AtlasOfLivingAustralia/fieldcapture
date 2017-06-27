@@ -15,6 +15,24 @@ class ProjectController {
     def projectService, metadataService, organisationService, commonService, activityService, userService, webService, roleService, grailsApplication
     def siteService, documentService, reportService, blogService
 
+
+    def espOverview(String id) {
+        Map project = projectService.get(id, 'all')
+        if (!project || project.error) {
+            flash.message = "Project not found with id: ${id}"
+            if (project?.error) {
+                flash.message += "<br/>${project.error}"
+                log.warn project.error
+            }
+            redirect(controller: 'home', model: [error: flash.message])
+        }
+        else {
+
+            boolean reportingVisible = !projectService.isComplete(project) && projectService.isMeriPlanSubmittedOrApproved(project)
+            render model:[project:project, metrics: projectService.summary(id), mapFeatures: commonService.getMapFeatures(project), reportingVisible:reportingVisible], view:'espOverview'
+        }
+    }
+
     def index(String id) {
         def project = projectService.get(id, 'brief')
         def roles = roleService.getRoles()

@@ -126,7 +126,7 @@ class ProjectService  {
         webService.doDelete(grailsApplication.config.ecodata.baseUrl + 'project/' + id + '?destroy=true')
     }
 
-    private boolean isComplete(Map project) {
+    boolean isComplete(Map project) {
         return COMPLETE.equalsIgnoreCase(project.status)
     }
 
