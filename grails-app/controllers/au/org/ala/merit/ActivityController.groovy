@@ -571,7 +571,7 @@ class ActivityController {
 
         if (params.data) {
             webService.proxyPostRequest(response, url,
-                    [listName:params.listName, type:params.type, data:params.data, editMode:params.editMode, allowExtraRows:params.allowExtraRows])
+                    [listName:params.listName, type:params.type, data:params.data, editMode:params.editMode, allowExtraRows:params.allowExtraRows, autosizeColumns:false])
         }
         else {
             url += "?type=${params.type?.encodeAsURL()}&listName=${params.listName?.encodeAsURL()}"
