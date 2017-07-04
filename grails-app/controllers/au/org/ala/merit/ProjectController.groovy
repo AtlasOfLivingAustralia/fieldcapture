@@ -1,7 +1,5 @@
 package au.org.ala.merit
 
-import au.org.ala.fieldcapture.DateUtils
-import au.org.ala.fieldcapture.PreAuthorise
 import au.org.ala.merit.command.ProjectSummaryReportCommand
 import au.org.ala.merit.command.ReportCommand
 import grails.converters.JSON

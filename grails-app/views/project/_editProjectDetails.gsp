@@ -53,7 +53,7 @@
 </div>
 </script>
 
-<g:render template="/shared/declaration" model="[divId:'unlockPlan', declarationType:au.org.ala.fieldcapture.SettingPageType.UNLOCK_PLAN_DECLARATION]"/>
+<g:render template="/shared/declaration" model="[divId:'unlockPlan', declarationType:au.org.ala.merit.SettingPageType.UNLOCK_PLAN_DECLARATION]"/>
 
 <div class="row-fluid">
 	<div class="control-group">

@@ -113,7 +113,7 @@
         </div>
     </div>
 
-    <g:render template="/shared/timeoutMessage" plugin="fieldcapture-plugin" model="${[newWindow:true]}"/>
+    <g:render template="/shared/timeoutMessage" model="${[newWindow:true]}"/>
 
 <r:script>
     $(function() {

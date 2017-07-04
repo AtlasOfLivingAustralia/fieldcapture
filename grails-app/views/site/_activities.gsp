@@ -5,7 +5,7 @@
     <div class="row-fluid">
         <!-- ACTIVITIES -->
         <div class="tab-pane active" id="activity">
-            <g:render template="/shared/activitiesListReadOnly" plugin="fieldcapture-plugin"
+            <g:render template="/shared/activitiesListReadOnly"
                       model="[activities:activities ?: [], sites:[], showSites:false]"/>
         </div>
     </div>

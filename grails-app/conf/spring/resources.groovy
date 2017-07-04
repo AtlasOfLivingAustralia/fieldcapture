@@ -1,4 +1,4 @@
-import au.org.ala.fieldcapture.hub.HubAwareLinkGenerator
+import au.org.ala.merit.hub.HubAwareLinkGenerator
 import au.org.ala.merit.StatisticsFactory
 
 // Place your Spring DSL code here

@@ -1,4 +1,4 @@
-<%@ page import="au.org.ala.fieldcapture.DateUtils" %>
+<%@ page import="au.org.ala.merit.DateUtils" %>
 <html>
 
 <head>
@@ -20,7 +20,7 @@
             <tr>
                 <td>${change.name}</td>
                 <td>${change.status}</td>
-                <td>${au.org.ala.fieldcapture.DateUtils.isoToDisplayFormat(change.date)}</td>
+                <td>${au.org.ala.merit.DateUtils.isoToDisplayFormat(change.date)}</td>
                 <td>${change.who}</td>
             </tr>
         </g:each>

@@ -1,4 +1,4 @@
-<%@ page import="au.org.ala.fieldcapture.ActivityService; grails.converters.JSON; org.codehaus.groovy.grails.web.json.JSONArray" contentType="text/html;charset=UTF-8" %>
+<%@ page import="au.org.ala.merit.ActivityService; grails.converters.JSON; org.codehaus.groovy.grails.web.json.JSONArray" contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/html">
 <head>
@@ -203,7 +203,7 @@
             <!-- add the dynamic components -->
             <md:modelView model="${model}" site="${site}" edit="true" output="${output.name}" printable="${printView}" />
         </div>
-        <g:render template="/output/outputJSModel" plugin="fieldcapture-plugin" model="${[viewModelInstance:blockId+'ViewModel', edit:true, activityId:activity.activityId, model:model, outputName:output.name]}"></g:render>
+        <g:render template="/output/outputJSModel" plugin="ecodata-client-plugin" model="${[viewModelInstance:blockId+'ViewModel', edit:true, activityId:activity.activityId, model:model, outputName:output.name]}"></g:render>
 
         <r:script>
         $(function(){
@@ -218,7 +218,7 @@
             config.projectId = '${project?project.projectId:''}';
             config.stage = stageNumberFromStage('${activity.projectStage}');
             config.activityId = '${activity.activityId}';
-            config.disablePrepop = ${activity.progress == au.org.ala.fieldcapture.ActivityService.PROGRESS_FINISHED};
+            config.disablePrepop = ${activity.progress == au.org.ala.merit.ActivityService.PROGRESS_FINISHED};
             config.speciesSearchUrl = fcConfig.speciesSearchUrl + '&output='+ output.name;
             config.speciesConfig =<fc:modelAsJavascript model="${speciesConfig}"/>;
 
@@ -235,7 +235,7 @@
     <div class="output-block" data-bind="with:transients.photoPointModel">
         <h3>Photo Points</h3>
 
-         <g:render template="/site/photoPoints" plugin="fieldcapture-plugin"></g:render>
+         <g:render template="/site/photoPoints"></g:render>
 
     </div>
     </g:if>
@@ -253,14 +253,14 @@
 
 </div>
 
-<g:render template="/shared/timeoutMessage" plugin="fieldcapture-plugin" model="${[url:createLink(action:'enterData', id:activity.activityId, params: [returnTo:returnTo])]}"/>
+<g:render template="/shared/timeoutMessage" model="${[url:createLink(action:'enterData', id:activity.activityId, params: [returnTo:returnTo])]}"/>
 
 <g:render template="/shared/imagerViewerModal" model="[readOnly:false]"></g:render>
-<g:render template="/shared/documentTemplate" plugin="fieldcapture-plugin"></g:render>
+<g:render template="/shared/documentTemplate"></g:render>
 <g:render template="/shared/imagerViewerModal"></g:render>
 
 %{--The modal view containing the contents for a modal dialog used to attach a document--}%
-<g:render template="/shared/attachDocument" plugin="fieldcapture-plugin"/>
+<g:render template="/shared/attachDocument"/>
 
 <r:script>
 

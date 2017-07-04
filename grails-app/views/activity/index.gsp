@@ -88,7 +88,7 @@
     <g:each in="${metaModel?.outputs}" var="outputName">
 
         <g:if test="${outputName != 'Photo Points'}">
-            <g:render template="/output/outputJSModel" plugin="fieldcapture-plugin"
+            <g:render template="/output/outputJSModel" plugin="ecodata-client-plugin"
                       model="${[viewModelInstance:activity.activityId+fc.toSingleWord([name: outputName])+'ViewModel',
                                 edit:false, model:outputModels[outputName],
                                 outputName:outputName]}"></g:render>
@@ -97,7 +97,7 @@
                                 outputModel:outputModels[outputName],
                                 outputName:outputName,
                                 activityModel:metaModel]}"
-                      plugin="fieldcapture-plugin"></g:render>
+                      plugin="ecodata-client-plugin"></g:render>
 
         </g:if>
     </g:each>
@@ -106,7 +106,7 @@
         <div class="output-block" data-bind="with:transients.photoPointModel">
             <h3>Photo Points</h3>
 
-            <g:render template="/site/photoPoints" plugin="fieldcapture-plugin" model="${[readOnly:true]}"></g:render>
+            <g:render template="/site/photoPoints" model="${[readOnly:true]}"></g:render>
 
         </div>
     </g:if>
@@ -134,7 +134,7 @@
 </div>
 
 <!-- templates -->
-<g:render template="/shared/documentTemplate" plugin="fieldcapture-plugin"/>
+<g:render template="/shared/documentTemplate"/>
 <g:render template="/shared/imagerViewerModal" model="[readOnly:false]"></g:render>
 
 <r:script>

@@ -1,9 +1,7 @@
 package au.org.ala.merit
 
-import au.org.ala.fieldcapture.PreAuthorise
-import au.org.ala.fieldcapture.SettingPageType
-import au.org.ala.fieldcapture.SettingService
-import au.org.ala.fieldcapture.hub.HubSettings
+import au.org.ala.merit.SettingPageType
+import au.org.ala.merit.hub.HubSettings
 import grails.converters.JSON
 import org.apache.commons.lang.StringUtils
 

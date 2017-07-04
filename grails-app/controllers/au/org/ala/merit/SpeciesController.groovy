@@ -1,6 +1,5 @@
 package au.org.ala.merit
 
-import au.org.ala.fieldcapture.WebService
 import grails.converters.JSON
 
 
