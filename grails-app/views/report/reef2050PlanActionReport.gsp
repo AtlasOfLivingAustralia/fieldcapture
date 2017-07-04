@@ -19,17 +19,18 @@
     </g:if>
 
     <h3>Reef 2050 Plan Action Reporting</h3>
-    <div class="well">
-       <strong>Progress on Reef 2050 Plan to <g:formatDate date="${au.org.ala.fieldcapture.DateUtils.parse(endDate).toDate()}" format="MMMM yyyy"/></strong>
-        <p>
-        Please note this report ignores any facet selection you may have made.
-        </p>
-    </div>
-
     <g:if test="${!actions}">
         <strong>No data was found.</strong>
     </g:if>
+
     <g:else>
+
+        <div class="well">
+            <strong>Progress on Reef 2050 Plan to <g:formatDate date="${au.org.ala.fieldcapture.DateUtils.parse(endDate).toDate()}" format="MMMM yyyy"/></strong>
+            <p>
+                Please note this report ignores any facet selection you may have made.
+            </p>
+        </div>
 
         <div class="report-section">
             <h3>Action count by status</h3>
@@ -134,16 +135,16 @@
     </table>
 </div>
 </div>
+        <script type="text/javascript">
+            $('table.action-table').dataTable({
+                "lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "All"] ]
+            });
+        </script>
 
     </g:else>
 
 </div>
 
-<script type="text/javascript">
-    $('table.action-table').dataTable({
-        "lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "All"] ]
-    });
-</script>
 
 </body>
 </html>

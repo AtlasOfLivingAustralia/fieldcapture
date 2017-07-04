@@ -58,11 +58,14 @@ grails.project.dependency.resolution = {
         mavenRepo "http://nexus.ala.org.au/content/groups/public/"
     }
 
+    def geoToolsVersion = "11.1"
+
     dependencies {
         compile "com.openhtmltopdf:openhtmltopdf-core:${openhtmltopdfversion}"
         compile "com.openhtmltopdf:openhtmltopdf-pdfbox:${openhtmltopdfversion}"
         compile "com.openhtmltopdf:openhtmltopdf-jsoup-dom-converter:${openhtmltopdfversion}"
         compile "com.openhtmltopdf:openhtmltopdf-log4j:${openhtmltopdfversion}"
+        compile "org.geotools:gt-geojson:${geoToolsVersion}"
     }
 
     plugins {
@@ -79,11 +82,10 @@ grails.project.dependency.resolution = {
 
         build ":release:3.0.1"
 
-
         //test ":karma-test-runner:0.2.4"
 
         if (Environment.current != Environment.DEVELOPMENT) {
-            compile ":fieldcapture-plugin:1.15"
+            compile ":fieldcapture-plugin:1.16-SNAPSHOT"
             test ":fieldcapture-test:0.1-SNAPSHOT"
         }
 
