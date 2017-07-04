@@ -1,18 +1,11 @@
 package au.org.ala.merit
 
-import au.org.ala.fieldcapture.ActivityService
-import au.org.ala.fieldcapture.DocumentService
-import au.org.ala.merit.MetadataService
-import au.org.ala.fieldcapture.UserService
-import au.org.ala.fieldcapture.WebService
 import grails.converters.JSON
 import grails.test.mixin.TestFor
 import org.codehaus.groovy.grails.web.converters.marshaller.json.CollectionMarshaller
 import org.codehaus.groovy.grails.web.converters.marshaller.json.MapMarshaller
 import org.joda.time.Period
 import spock.lang.Specification
-
-import javax.swing.text.Document
 
 import static au.org.ala.merit.ProjectService.*
 
