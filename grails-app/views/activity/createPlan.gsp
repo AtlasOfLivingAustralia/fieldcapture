@@ -1,4 +1,4 @@
-<%@ page import="au.org.ala.fieldcapture.DateUtils; grails.converters.JSON; org.codehaus.groovy.grails.web.json.JSONArray" contentType="text/html;charset=UTF-8" %>
+<%@ page import="au.org.ala.merit.DateUtils; grails.converters.JSON; org.codehaus.groovy.grails.web.json.JSONArray" contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>
 <html>
 <head>

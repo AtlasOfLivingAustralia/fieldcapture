@@ -27,7 +27,7 @@
 
 <a id="userDownload" class="btn">Download MERIT User List</a>
 
-<g:render template="/shared/dashboard" plugin="fieldcapture-plugin"/>
+<g:render template="/shared/dashboard"/>
 
 </body>
 <r:script>

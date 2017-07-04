@@ -1,6 +1,6 @@
 package au.org.ala.merit
 
-import au.org.ala.fieldcapture.DateUtils
+import au.org.ala.merit.DateUtils
 import org.joda.time.DateTime
 import org.joda.time.Period
 import org.joda.time.format.DateTimeFormat

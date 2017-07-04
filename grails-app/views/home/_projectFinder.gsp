@@ -1,4 +1,4 @@
-<%@ page import="au.org.ala.fieldcapture.SettingPageType" %>
+<%@ page import="au.org.ala.merit.SettingPageType" %>
 <style type="text/css">
 .facet-collapse {
     height: auto;
@@ -151,7 +151,7 @@
                             <div class="row-fluid">
                                 <g:render template="searchResultsSummary"/>
                             </div>
-                            <g:render template="/shared/sites" plugin="fieldcapture-plugin" model="${[projectCount:results?.hits?.total?:0]}"/>
+                            <g:render template="/shared/sites" model="${[projectCount:results?.hits?.total?:0]}"/>
                         </span>
                     </div>
                 </div>

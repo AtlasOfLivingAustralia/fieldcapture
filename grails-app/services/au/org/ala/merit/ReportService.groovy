@@ -1,6 +1,5 @@
 package au.org.ala.merit
 
-import au.org.ala.fieldcapture.DateUtils
 import grails.converters.JSON
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
@@ -516,7 +515,7 @@ class ReportService {
             List webLinks = output.data.webLinks ? output.data.webLinks.collect{it.webLink}:[]
             Map commonData = [organisationId:project?.organisationId, reportingLeadAgency:project?.organisationName, agencyContacts:agencyContacts, webLinks:webLinks]
             actions = actions.collect{
-                if (it.webLinks) {
+                if (it.webLinks && it.webLinks instanceof String) {
                     it.webLinks = it.webLinks.split(/(;|,|\n|\s)/)?.findAll{it}
                 }
                 commonData+it

@@ -1,7 +1,5 @@
 package au.org.ala.merit
 
-import au.org.ala.fieldcapture.DocumentService
-import au.org.ala.fieldcapture.UserService
 import grails.converters.JSON
 import org.apache.commons.httpclient.HttpStatus
 

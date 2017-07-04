@@ -420,14 +420,12 @@ log4j = {
     environments {
         development {
             all additivity: false, stdout: [
-                    'grails.app.controllers.au.org.ala.fieldcapture',
                     'grails.app.controllers.au.org.ala.merit',
-                    'grails.app.domain.au.org.ala.fieldcapture',
-                    'grails.app.services.au.org.ala.fieldcapture',
+                    'grails.app.domain.au.org.ala.merit',
                     'grails.app.services.au.org.ala.merit',
-                    'grails.app.taglib.au.org.ala.fieldcapture',
-                    'grails.app.conf.au.org.ala.fieldcapture',
-                    'grails.app.filters.au.org.ala.fieldcapture',
+                    'grails.app.taglib.au.org.ala.merit',
+                    'grails.app.conf.au.org.ala.merit',
+                    'grails.app.filters.au.org.ala.merit',
                     'au.org.ala.cas.client',
                     'au.org.ala.merit.SessionLogger'
 

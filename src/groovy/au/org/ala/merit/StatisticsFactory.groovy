@@ -1,6 +1,6 @@
 package au.org.ala.merit
 
-import au.org.ala.fieldcapture.SettingService
+import au.org.ala.merit.SettingService
 import net.sf.ehcache.CacheException
 import net.sf.ehcache.Ehcache
 import net.sf.ehcache.Element

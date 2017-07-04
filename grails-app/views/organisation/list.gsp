@@ -11,7 +11,7 @@
             createOrganisationUrl: "${createLink(controller: 'organisation', action: 'create')}",
             viewOrganisationUrl: "${createLink(controller: 'organisation', action: 'index')}",
             organisationSearchUrl: "${createLink(controller: 'organisation', action: 'search')}",
-            noLogoImageUrl: "${r.resource(dir:'images', file:'no-image-2.png', plugin:'fieldcapture-plugin')}"
+            noLogoImageUrl: "${r.resource(dir:'images', file:'no-image-2.png')}"
             };
     </r:script>
     <r:require modules="knockout,mapWithFeatures,amplify,organisation"/>
@@ -37,7 +37,7 @@
         </g:if>
     </div>
 </g:if>
-    <fc:getSettingContent settingType="${au.org.ala.fieldcapture.SettingPageType.ORGANISATION_LIST_PAGE_HEADER}"/>
+    <fc:getSettingContent settingType="${au.org.ala.merit.SettingPageType.ORGANISATION_LIST_PAGE_HEADER}"/>
     <g:if test="${fc.userIsAlaOrFcAdmin()}">
         <a href="${g.createLink(action:'create')}"><button class="btn btn-info pull-right">Create Organisation</button></a>
     </g:if>

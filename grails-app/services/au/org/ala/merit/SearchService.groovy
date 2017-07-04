@@ -1,7 +1,6 @@
 package au.org.ala.merit
 
-import au.org.ala.fieldcapture.SettingService
-import au.org.ala.fieldcapture.hub.HubSettings
+import au.org.ala.merit.hub.HubSettings
 import groovy.json.JsonSlurper
 import org.apache.commons.lang.StringUtils
 

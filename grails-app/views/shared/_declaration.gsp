@@ -1,6 +1,6 @@
 <!-- ko stopBinding: true -->
 <div id="${divId ?: 'declaration'}" class="modal hide fade">
-    <g:set var="legalDeclaration"><fc:getSettingContent settingType="${declarationType ?: au.org.ala.fieldcapture.SettingPageType.DECLARATION}"/></g:set>
+    <g:set var="legalDeclaration"><fc:getSettingContent settingType="${declarationType ?: au.org.ala.merit.SettingPageType.DECLARATION}"/></g:set>
     <div class="modal-header hide">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h3>Declaration</h3>

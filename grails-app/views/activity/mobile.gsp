@@ -153,7 +153,7 @@
         <!-- add the dynamic components -->
             <md:modelView model="${model}" site="${site}" edit="true" disableTableUpload="true" output="${outputName}" />
         </div>
-        <g:render template="/output/outputJSModel" plugin="fieldcapture-plugin" model="${[viewModelInstance:blockId+'ViewModel', edit:true]}"></g:render>
+        <g:render template="/output/outputJSModel" plugin="ecodata-client-plugin" model="${[viewModelInstance:blockId+'ViewModel', edit:true]}"></g:render>
 
         <r:script>
         $(function(){

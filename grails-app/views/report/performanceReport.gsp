@@ -22,7 +22,7 @@
             ${report.name}
         </li>
     </ul>
-    <g:render template="/shared/flashScopeMessage" plugin="fieldcapture-plugin"/>
+    <g:render template="/shared/flashScopeMessage"/>
 
     <h3>${report.name}</h3>
     <h4>${organisation.name}</h4>

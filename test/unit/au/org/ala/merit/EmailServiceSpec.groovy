@@ -1,6 +1,5 @@
 package au.org.ala.merit
 
-import au.org.ala.fieldcapture.UserDetails
 import grails.test.mixin.TestFor
 import spock.lang.Specification
 

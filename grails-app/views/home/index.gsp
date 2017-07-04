@@ -1,4 +1,4 @@
-<%@ page import="grails.converters.JSON; au.org.ala.fieldcapture.SettingPageType" contentType="text/html;charset=UTF-8" %>
+<%@ page import="grails.converters.JSON; au.org.ala.merit.SettingPageType" contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/html">
 <head>

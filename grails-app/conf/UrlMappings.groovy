@@ -1,4 +1,4 @@
-import au.org.ala.fieldcapture.SettingService
+import au.org.ala.merit.SettingService
 import org.codehaus.groovy.grails.commons.spring.GrailsWebApplicationContext
 
 class UrlMappings {

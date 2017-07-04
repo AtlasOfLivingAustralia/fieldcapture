@@ -1,9 +1,6 @@
 package au.org.ala.merit
 
 import au.ala.org.ws.security.RequireApiKey
-import au.org.ala.fieldcapture.ActivityService
-import au.org.ala.fieldcapture.DashboardTagLib
-import au.org.ala.fieldcapture.DateUtils
 import au.org.ala.fieldcapture.GmsMapper
 import au.org.ala.merit.command.ProjectSummaryReportCommand
 import grails.converters.JSON

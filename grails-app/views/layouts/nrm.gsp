@@ -19,7 +19,7 @@
   Date: 08/07/13
 --%>
 <%@ page contentType="text/html;charset=UTF-8" %>
-<%@ page import="au.org.ala.fieldcapture.SettingPageType" %>
+<%@ page import="au.org.ala.merit.SettingPageType" %>
 <!DOCTYPE html>
 <!--[if IE 7]><html lang="en" class="ie ie7"><![endif]-->
 <!--[if IE 8]><html lang="en" class="ie ie8"><![endif]-->

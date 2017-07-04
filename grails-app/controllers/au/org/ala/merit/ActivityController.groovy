@@ -1,15 +1,12 @@
 package au.org.ala.merit
 
-import au.org.ala.fieldcapture.ActivityService
-import au.org.ala.fieldcapture.DateUtils
-import au.org.ala.fieldcapture.PreAuthorise
 import grails.converters.JSON
 import org.apache.commons.httpclient.HttpStatus
 import org.apache.poi.ss.usermodel.Workbook
 import org.apache.poi.ss.usermodel.WorkbookFactory
 import org.apache.poi.ss.util.CellReference
 import org.codehaus.groovy.grails.web.json.JSONArray
-import org.codehaus.groovy.grails.web.mapping.LinkGenerator
+
 
 class ActivityController {
 

@@ -1,7 +1,7 @@
 package au.org.ala.merit.command
 
-import au.org.ala.fieldcapture.DocumentService
-import au.org.ala.fieldcapture.UserService
+import au.org.ala.merit.DocumentService
+import au.org.ala.merit.UserService
 import au.org.ala.merit.ActivityService
 import au.org.ala.merit.BlogService
 import au.org.ala.merit.MetadataService
