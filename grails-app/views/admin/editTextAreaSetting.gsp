@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
 	<head>
 		<meta name="layout" content="${layout?:'adminLayout'}"/>
@@ -16,7 +16,7 @@
                         output: "copy_html",
                         button_bar: "notes-button-bar",
                         preview: "notes-preview",
-                        helpLink: "${g.resource(dir:"wmd", file:"markdownhelp.html"}"
+                        helpLink: "${g.resource(dir:"wmd", file:"markdownhelp.html")}"
                     });
                 });
         </r:script>
@@ -50,8 +50,6 @@
                                 <button class="btn btn-primary">Save</button>
                             </div>
                         </g:if>
-                        <g:else>
-                        </g:else>
                     </g:form>
                 </div>
             </div>
