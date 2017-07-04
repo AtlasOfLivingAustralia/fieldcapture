@@ -1,7 +1,6 @@
 package au.org.ala.merit
 
 import au.ala.org.ws.security.RequireApiKey
-import au.org.ala.fieldcapture.GmsMapper
 import au.org.ala.merit.command.ProjectSummaryReportCommand
 import grails.converters.JSON
 import org.joda.time.DateTime
