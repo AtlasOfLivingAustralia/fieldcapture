@@ -1,4 +1,4 @@
-package au.org.ala.fieldcapture
+package au.org.ala.merit
 
 import org.apache.commons.validator.EmailValidator
 

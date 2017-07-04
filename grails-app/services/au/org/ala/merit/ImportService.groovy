@@ -1,4 +1,4 @@
-package au.org.ala.fieldcapture
+package au.org.ala.merit
 import au.com.bytecode.opencsv.CSVReader
 import org.apache.commons.lang.StringUtils
 import org.grails.plugins.csv.CSVMapReader

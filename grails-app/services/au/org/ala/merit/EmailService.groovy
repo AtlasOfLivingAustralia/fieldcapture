@@ -1,6 +1,5 @@
 package au.org.ala.merit
 
-import au.org.ala.merit.SettingPageType
 
 /**
  * Sends email messages on behalf of MERIT users to notify interested parties of project lifecycle changes.
@@ -55,10 +54,10 @@ class EmailService {
 
     def sortEmailAddressesByRole(members) {
         def user = userService.getUser()
-        def caseManagerEmails = members.findAll{it.role == RoleService.GRANT_MANAGER_ROLE}.collect{it.userName}
+        def grantManagerEmails = members.findAll{it.role == RoleService.GRANT_MANAGER_ROLE}.collect{it.userName}
         def adminEmails = members.findAll{it.role == RoleService.PROJECT_ADMIN_ROLE && it.userName != user.userName}.collect{it.userName}
 
-        [userEmail:user.userName, grantManagerEmails:caseManagerEmails, adminEmails:adminEmails]
+        [userEmail:user.userName, grantManagerEmails:grantManagerEmails, adminEmails:adminEmails]
     }
 
     def sendReportSubmittedEmail(projectId, stageDetails) {
@@ -214,8 +213,8 @@ class EmailService {
     }
 
     def getProjectEmailAddresses(projectId) {
-        def emailAddresses = getProjectEmailAddresses(projectId)
-
+        def members = projectService.getMembersForProjectId(projectId)
+        def emailAddresses = sortEmailAddressesByRole(members)
         if (!emailAddresses.grantManagerEmails) {
             emailAddresses.grantManagerEmails = [grailsApplication.config.merit.support.email]
         }
@@ -223,7 +222,8 @@ class EmailService {
     }
 
     def getOrganisationEmailAddresses(organisationId) {
-        def emailAddresses = getOrganisationEmailAddresses(organisationId)
+        def members = organisationService.getMembersOfOrganisation(organisationId)
+        def emailAddresses = sortEmailAddressesByRole(members)
 
         if (!emailAddresses.grantManagerEmails) {
             emailAddresses.grantManagerEmails = [grailsApplication.config.merit.support.email]

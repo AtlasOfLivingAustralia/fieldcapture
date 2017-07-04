@@ -1,9 +1,5 @@
 package au.org.ala.merit
 
-import au.org.ala.fieldcapture.DocumentService
-import au.org.ala.fieldcapture.RoleService
-import au.org.ala.fieldcapture.SearchService
-import au.org.ala.fieldcapture.UserService
 import grails.converters.JSON
 import grails.test.mixin.TestFor
 import org.grails.plugins.excelimport.ExcelImportService
@@ -16,7 +12,7 @@ import spock.lang.Specification
 @TestFor(OrganisationController)
 class OrganisationControllerSpec extends Specification {
 
-    def organisationService = Mock(au.org.ala.fieldcapture.OrganisationService)
+    def organisationService = Mock(OrganisationService)
     def searchService = Stub(SearchService)
     def documentService = Mock(DocumentService)
     def roleService = Stub(RoleService)

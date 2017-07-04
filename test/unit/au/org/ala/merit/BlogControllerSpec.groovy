@@ -1,6 +1,6 @@
 package au.org.ala.merit
 
-import au.org.ala.fieldcapture.UserService
+import au.org.ala.merit.UserService
 import grails.test.mixin.TestFor
 import org.apache.commons.httpclient.HttpStatus
 import spock.lang.Specification

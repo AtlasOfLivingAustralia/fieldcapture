@@ -1,4 +1,4 @@
-package au.org.ala.fieldcapture
+package au.org.ala.merit
 
 import grails.converters.JSON
 import spock.lang.Specification

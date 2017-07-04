@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import grails.plugin.mail.MailService
 import grails.test.mixin.TestFor
 import spock.lang.Specification
 
@@ -9,11 +10,11 @@ import spock.lang.Specification
 @TestFor(EmailService)
 class EmailServiceSpec extends Specification {
 
-    def organisationService = Mock(au.org.ala.fieldcapture.OrganisationService)
-    def projectService = Stub(au.org.ala.fieldcapture.ProjectService)
-    def userService = Stub(au.org.ala.fieldcapture.UserService)
-    def settingService = Mock(au.org.ala.fieldcapture.SettingService)
-    def mailService = Mock(grails.plugin.mail.MailService)
+    def organisationService = Mock(OrganisationService)
+    def projectService = Stub(ProjectService)
+    def userService = Stub(UserService)
+    def settingService = Mock(SettingService)
+    def mailService = Mock(MailService)
     def meritEmail = 'merit@test.com'
 
     // Test data.
