@@ -2,7 +2,7 @@ package au.org.ala.merit
 
 import grails.converters.JSON
 import grails.test.mixin.TestFor
-import org.apache.commons.httpclient.HttpStatus
+import org.apache.http.HttpStatus
 import spock.lang.Specification
 
 /**
