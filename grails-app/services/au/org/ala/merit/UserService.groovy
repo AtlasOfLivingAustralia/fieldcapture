@@ -33,7 +33,7 @@ class UserService {
         def user
 
         if (u?.userId) {
-            user = new UserDetails(u.userDisplayName, u.email, u.userId)
+            user = new UserDetails(u.displayName, u.email, u.userId)
         }
 
         return user

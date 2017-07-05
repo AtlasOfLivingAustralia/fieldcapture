@@ -288,6 +288,15 @@ grails.cache.config = {
     }
 
 }
+security {
+    cas {
+        appServerName = 'http://devt.ala.org.au:8080' // or similar, up to the request path part
+        // service = 'http://devt.ala.org.au:8080' // optional, if set it will always be used as the return path from CAS
+        uriFilterPattern = '.*/user/.*,.*/site/(?!index).*,.*/project/(?!index).*,.*/activity/(?!index).*,.*/output/(?!index).*,.*/image/(?!index).*,.*/admin/.*,.*/proxy/speciesListPost,.*/document/documentUpdate,.*/document/deleteDocument,.*/document/downloadProjectDataFile/.*,.*/home/advanced,.*/organisation/(?!index).*,.*/organisation/(?!list).*,.*/blog/.*,.*/report/performanceAssessmentSummaryReport,.*/report/performanceAssessmentComparisonReport.*,.*/report/update.*'
+        uriExclusionFilterPattern = '/assets/.*,/images/.*,/css/.*,/js/.*,/less/.*' // this is the default value
+        authenticateOnlyIfLoggedInPattern =  '/,/;.*,/[A-Za-z0-9]+/?,.*/project/index.*,.*/site/index.*,.*/activity/index.*,.*/output/index.*,.*/ajax/keepSessionAlive,.*/search/.*,.*/home/.*,.*/organisation/index.*,.*/organisation/list.*,.*/report/loadReport.*'
+    }
+}
 pdfbox.fontcache="/data/${appName}/cache/"
 
 // Markdown configuration to match behaviour of the JavaScript editor.
@@ -303,7 +312,8 @@ environments {
         layout.skin = "nrm"
         security.cas.appServerName = serverName
         security.cas.contextPath = "/" + appName
-        ecodata.baseUrl = 'http://devt.ala.org.au:8080/ecodata/ws/'
+        //ecodata.baseUrl = 'http://devt.ala.org.au:8080/ecodata/ws/'
+        ecodata.baseUrl = 'http://192.168.0.13:8080/ecodata/ws/'
         //ecodata.baseUrl = 'http://ecodata-test.ala.org.au/ws/'
 
         upload.images.url = grails.serverURL+'/image/'
