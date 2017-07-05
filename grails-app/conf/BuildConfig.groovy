@@ -32,8 +32,8 @@ if (Environment.current == Environment.DEVELOPMENT) {
             stream -> props.load(stream)
         }
     }
-    def pluginLocation = props.getProperty("ecodata-forms-plugin.location") ?: '../ecodata-forms-plugin'
-    grails.plugin.location.'ecodata-forms-plugin' = pluginLocation
+    def pluginLocation = props.getProperty("ecodata-client-plugin.location") ?: '../ecodata-client-plugin'
+    grails.plugin.location.'ecodata-client-plugin' = pluginLocation
 
     def testPluginLocation = props.getProperty("fieldcapture-test-plugin.location") ?: '../fieldcapture-test-plugin'
     grails.plugin.location.'fieldcapture-test' = testPluginLocation
@@ -95,7 +95,7 @@ grails.project.dependency.resolution = {
 
         runtime ":lesscss-resources:1.3.3"
 
-        build ":release:3.0.1"
+        build ":release:3.1.2"
 
         runtime ":jquery:1.11.1"
         //compile ':asset-pipeline:1.9.9'
@@ -107,7 +107,7 @@ grails.project.dependency.resolution = {
         runtime (":rest:0.8") {
             excludes "httpclient", "httpcore"
         }
-        compile ":ala-auth:1.3.4"
+        compile ":ala-auth:2.1.3"
         runtime ":csv:0.3.1"
         runtime ":lesscss-resources:1.3.3"
         compile ":markdown:1.1.1"

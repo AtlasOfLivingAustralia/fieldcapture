@@ -11,7 +11,7 @@
     <content tag="pageTitle">Users</content>
 
     <div class="container">
-        <div class="well">Logged in user is <b class="tooltips" title="${user}">${user.userDisplayName}</b></div>
+        <div class="well">Logged in user is <b class="tooltips" title="${user}">${user.displayName}</b></div>
 
         <div>
             <g:render template="addPermissions" model="[projects:projects]"/>
