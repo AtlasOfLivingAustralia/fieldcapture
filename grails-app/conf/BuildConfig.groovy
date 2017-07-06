@@ -32,8 +32,8 @@ if (Environment.current == Environment.DEVELOPMENT) {
             stream -> props.load(stream)
         }
     }
-    def pluginLocation = props.getProperty("ecodata-forms-plugin.location") ?: '../ecodata-forms-plugin'
-    grails.plugin.location.'ecodata-forms-plugin' = pluginLocation
+    def pluginLocation = props.getProperty("ecodata-client-plugin.location") ?: '../ecodata-client-plugin'
+    grails.plugin.location.'ecodata-client-plugin' = pluginLocation
 
     def testPluginLocation = props.getProperty("fieldcapture-test-plugin.location") ?: '../fieldcapture-test-plugin'
     grails.plugin.location.'fieldcapture-test' = testPluginLocation
