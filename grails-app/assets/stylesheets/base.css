@@ -1,0 +1,10 @@
+/*
+This is a comment block in the top of a css file
+*= require_tree bootstrap
+*= require capture.css
+*= require global-styles.css
+*= require_self
+*/
+.test {
+    background: blue;
+}
