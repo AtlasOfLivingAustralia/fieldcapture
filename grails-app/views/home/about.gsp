@@ -2,10 +2,10 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-  <meta name="layout" content="${hubConfig.skin}"/>
+  <meta name="layout" content="${hubConfig.skin}_assets"/>
   <title>${settingType.title?:'About'} | Field Capture</title>
-  <r:script disposition="head">
-    var fcConfig = {
+  <script>
+    window.fcConfig = {
         baseUrl: "${grailsApplication.config.grails.serverURL}",
         spatialBaseUrl: "${grailsApplication.config.spatial.baseUrl}",
         spatialWmsCacheUrl: "${grailsApplication.config.spatial.wms.cache.url}",
@@ -13,7 +13,8 @@
         sldPolgonDefaultUrl: "${grailsApplication.config.sld.polgon.default.url}",
         sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}"
     }
-  </r:script>
+  </script>
+  <asset:stylesheet src="base.css"/>
 </head>
 <body>
     <div id="wrapper" class="${containerType}">
@@ -49,4 +50,5 @@
         </div><!-- /.row-fluid  -->
     </div>
 </body>
+<asset:javascript src="base.js"/>
 </html>

@@ -1,0 +1,78 @@
+.currency-input {
+    width:100%;
+
+}
+.currency-input input {
+    width: 50px;
+}
+.select2-container--default .select2-results > .select2-results__options {
+    max-height: 400px;
+}
+
+.select2-container--default .select2-results__option .select2-results__option {
+    padding-left: 5px;
+    padding-bottom: 5px;
+}
+
+.select2-rendered__match {
+    font-weight: bold;
+
+}
+.select2-selection.select2-selection--single {
+    border:none;
+}
+
+.select2-results__group {
+    background-color: #eeeeee;
+}
+
+.scientific-name {
+    font-style: italic;
+}
+
+/** Override the select2 width determination (which doesn't work properly in tables) */
+.select2-search--inline .select2-search__field {
+    width:100% !important;
+}
+
+.select2-results .species-image-holder {
+    width: 70px;
+    height: 70px;
+    line-height: 70px;
+    padding-right: 5px;
+    display: inline-block;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.select2-results .name-holder {
+    margin: 0;
+    position: absolute;               /* 2 */
+    top: 50%;                         /* 3 */
+    transform: translate(0, -50%);
+    left: 85px;
+
+}
+
+.select2-results .species-result {
+    position: relative;
+    width: 350px;
+    height:70px;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    font-size: 14px;
+    border-radius: 4px;
+    border: 1px solid #cccccc;
+    color: #555555;
+}
+.input-append .select2-container--default .select2-selection--single .select2-selection__rendered {
+    border-radius: 4px 0 0 4px;
+}
+.input-prepend .select2-container--default .select2-selection--single .select2-selection__rendered {
+    border-radius: 0 4px 4px 0;
+}
+.input-prepend.input-append .select2-container--default .select2-selection--single .select2-selection__rendered {
+    border-radius: 0;
+}
