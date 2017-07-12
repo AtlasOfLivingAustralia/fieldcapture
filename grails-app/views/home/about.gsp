@@ -2,7 +2,8 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-  <meta name="layout" content="${hubConfig.skin}_assets"/>
+  <g:set var="layoutName" value="${hubConfig.skin}_assets"/>
+  <meta name="layout" content="${layoutName}"/>
   <title>${settingType.title?:'About'} | Field Capture</title>
   <script>
     window.fcConfig = {
@@ -23,8 +24,8 @@
                 <h1>${settingType.title?:'About the website'}
                     <g:if test="${fc.userInRole(role: grailsApplication.config.security.cas.alaAdminRole) || fc.userInRole(role: grailsApplication.config.security.cas.adminRole)}">
                         <span style="display: inline-block; margin: 0 10px;">
-                            <a href="${g.createLink(controller:"admin",action:"editSettingText", id: settingType.name, params: [layout:"nrm",returnUrl: g.createLink(controller: params.controller, action: params.action, id: params.id, absolute: true)])}"
-                               class="btn btn-small"><i class="icon-edit"></i> Edit</a>
+                            <a href="${g.createLink(controller:"admin",action:"editSettingText", id: settingType.name, params: [layout:layoutName,returnUrl: g.createLink(controller: params.controller, action: params.action, id: params.id, absolute: true)])}"
+                               class="btn"><i class="fa fa-edit"></i> Edit</a>
                         </span>
                     </g:if>
                 </h1>
@@ -40,8 +41,8 @@
             <g:set var="newsText"><fc:getSettingContent settingType="${SettingPageType.NEWS}"/></g:set>
             <div class="span5 well well-small">
                 <g:if test="${fc.userInRole(role: grailsApplication.config.security.cas.alaAdminRole) || fc.userInRole(role: grailsApplication.config.security.cas.adminRole)}">
-                    <a href="${g.createLink(controller:"admin",action:"editSettingText", id: SettingPageType.NEWS.name, params: [layout:"nrm",returnUrl: g.createLink(controller: params.controller, action: params.action, absolute: true)])}"
-                       class="btn btn-small pull-right"><i class="icon-edit"></i> Edit</a>
+                    <a href="${g.createLink(controller:"admin",action:"editSettingText", id: SettingPageType.NEWS.name, params: [layout:layoutName,returnUrl: g.createLink(controller: params.controller, action: params.action, absolute: true)])}"
+                       class="btn pull-right"><i class="fa fa-edit"></i> Edit</a>
                 </g:if>
                 ${newsText}
             </div>
@@ -49,6 +50,7 @@
 
         </div><!-- /.row-fluid  -->
     </div>
+    <asset:javascript src="base.js"/>
 </body>
-<asset:javascript src="base.js"/>
+
 </html>

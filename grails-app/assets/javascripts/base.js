@@ -1,4 +1,4 @@
 //= require jquery
-//= require vendor/jquery.cookie.js
-//= require_tree vendor/bootstrap
+//= require jquery-cookie/jquery.cookie.js
+//= require bootstrap/js/bootstrap.js
 
