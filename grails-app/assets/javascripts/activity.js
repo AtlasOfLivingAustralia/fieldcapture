@@ -1,3 +1,15 @@
+//= require expr-eval/1.0/parser
+//= require fancybox/jquery.fancybox
+//= require select2/4.0.3/js/select2.full
+//= require typeahead/0.11.1/bloodhound
+//= require jquery-ui/jquery-ui-1.9.2.custom.min.js
+//= require attach-document.js
+//= require forms.js
+//= require wms
+//= require mapWithFeatures.js
+//= require document.js
+//= require_self
+
 function ActivityViewModel (act, site, project, metaModel, themes) {
     var self = this;
     self.activityId = act.activityId;

@@ -7,13 +7,12 @@
         <title>Print | ${activity.type} | Field Capture</title>
     </g:if>
     <g:else>
-        <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
+        <meta name="layout" content="${hubConfig.skin}_assets"/>
         <title>Edit | ${activity.type} | Field Capture</title>
     </g:else>
 
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jstimezonedetect/1.0.4/jstz.min.js"></script>
-    <r:script disposition="head">
+    <script type="text/javascript">
     var fcConfig = {
         serverUrl: "${grailsApplication.config.grails.serverURL}",
         activityUpdateUrl: "${createLink(controller: 'activity', action: 'ajaxUpdate')}",
@@ -25,7 +24,7 @@
         documentUpdateUrl: "${g.createLink(controller:"document", action:"documentUpdate")}",
         documentDeleteUrl: "${g.createLink(controller:"document", action:"deleteDocument")}",
         imageUploadUrl: "${createLink(controller: 'image', action: 'upload')}",
-        imageLocation:"${resource(dir:'/images')}",
+        imageLocation:"${assetPath(src:'/images')}",
         savePhotoPointUrl:"${createLink(controller:'site', action:'ajaxUpdatePOI')}",
         deletePhotoPointUrl:"${createLink(controller:'site', action:'ajaxDeletePOI')}",
         excelOutputTemplateUrl:"${createLink(controller: 'activity', action:'excelOutputTemplate')}",
@@ -34,18 +33,15 @@
         speciesListUrl:"${createLink(controller:'proxy', action:'speciesItemsForList')}",
         speciesSearchUrl:"${createLink(controller:'project', action:'searchSpecies', id:activity.projectId, params:[surveyName:metaModel.name])}",
         speciesImageUrl:"${createLink(controller:'species', action:'speciesImage')}",
-        noImageUrl: "${resource(dir:'images', file:'nophoto.png')}",
+        noImageUrl: "${assetPath(src:'nophoto.png')}",
         project:${fc.modelAsJavascript(model:project)}
         },
         here = document.location.href;
-    </r:script>
-    <r:require modules="knockout,jqueryValidationEngine,datepicker,jQueryFileUploadUI,activity,mapWithFeatures,attachDocuments,species,amplify,imageViewer,jQueryFileDownload"/>
-    <r:script>
+    </script>
+    %{--<r:require modules="knockout,jqueryValidationEngine,datepicker,jQueryFileUploadUI,activity,mapWithFeatures,attachDocuments,species,amplify,imageViewer,jQueryFileDownload"/>--}%
+    <asset:stylesheet src="common.css"/>
+    <asset:stylesheet src="activity.css"/>
 
-
-
-
-</r:script>
 </head>
 <body>
 <div class="${containerType} validationEngineContainer" id="validation-container">
@@ -205,7 +201,7 @@
         </div>
         <g:render template="/output/outputJSModel" plugin="ecodata-client-plugin" model="${[viewModelInstance:blockId+'ViewModel', edit:true, activityId:activity.activityId, model:model, outputName:output.name]}"></g:render>
 
-        <r:script>
+        <asset:script>
         $(function(){
 
             var viewModelName = "${blockId}ViewModel",
@@ -222,10 +218,10 @@
             config.speciesSearchUrl = fcConfig.speciesSearchUrl + '&output='+ output.name;
             config.speciesConfig =<fc:modelAsJavascript model="${speciesConfig}"/>;
 
-            initialiseOutputViewModel(viewModelName, elementId, activity, output, config);
+            ecodata.forms.initialiseOutputViewModel(viewModelName, elementId, activity, output, config);
         });
 
-        </r:script>
+        </asset:script>
     </div>
         </g:if>
 </g:each>
@@ -255,14 +251,13 @@
 
 <g:render template="/shared/timeoutMessage" model="${[url:createLink(action:'enterData', id:activity.activityId, params: [returnTo:returnTo])]}"/>
 
-<g:render template="/shared/imagerViewerModal" model="[readOnly:false]"></g:render>
 <g:render template="/shared/documentTemplate"></g:render>
 <g:render template="/shared/imagerViewerModal"></g:render>
 
 %{--The modal view containing the contents for a modal dialog used to attach a document--}%
 <g:render template="/shared/attachDocument"/>
 
-<r:script>
+<asset:script>
 
     var returnTo = "${returnTo}";
     function validateDateField(dateField) {
@@ -740,6 +735,9 @@
 
 
     });
-</r:script>
+</asset:script>
+<asset:javascript src="common.js"/>
+<asset:javascript src="activity.js"/>
+<asset:deferredScripts/>
 </body>
 </html>

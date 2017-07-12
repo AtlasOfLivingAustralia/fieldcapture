@@ -1,4 +1,8 @@
-/* Documents specific styles */
+/*
+*= require base
+*= require bootstrap-datepicker/css/datepicker
+*= require jquery.validationEngine/validationEngine.jquery
+*/
 
 .nav-list.fc-docs-list {
     width: 100%;

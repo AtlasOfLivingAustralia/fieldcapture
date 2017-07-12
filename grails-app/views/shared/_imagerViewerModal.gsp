@@ -1,6 +1,6 @@
 
 
-<r:script>
+<asset:script>
 
     $(function () {
 
@@ -43,4 +43,4 @@
 
         $('.imageList a[target="_photo"]').attr('rel', 'gallery').fancybox({type:'html', nextEffect:'fade', preload:0, 'prevEffect':'fade', beforeLoad:beforeHandler, afterShow:function(){ initViewer($.fancybox.current.element.get(0));}});
     });
-</r:script>
+</asset:script>
