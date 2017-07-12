@@ -139,7 +139,7 @@
 
 <g:if test="${isAdmin || fc.userIsAlaOrFcAdmin()}">
     <p>
-    <button class="btn btn-success btn-small" data-bind="enable:complete,click:submitReport" title="All project reports must be complete and marked as 'finished' before you can submit this report.">Submit report</button>
+    <button class="btn btn-success btn-small" data-bind="enable:complete,click:submitReport" title="All fields in the Self Assessment form must be completed before it can be submitted.">Submit report</button>
     </p>
 </g:if>
 </script>
