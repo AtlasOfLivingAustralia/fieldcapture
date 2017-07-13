@@ -21,7 +21,7 @@
 
             };
     </r:script>
-    <r:require modules="knockout,jqueryValidationEngine,amplify,organisation"/>
+    <r:require modules="knockout,jqueryValidationEngine,amplify,organisation,attachDocuments"/>
 
 
 </head>

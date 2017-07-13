@@ -98,7 +98,13 @@ grails.project.dependency.resolution = {
         build ":release:3.1.2"
 
         runtime ":jquery:1.11.1"
-        //compile ':asset-pipeline:1.9.9'
+        compile ":asset-pipeline:2.13.1"
+        // Uncomment these to enable additional asset-pipeline capabilities
+        //compile ":sass-asset-pipeline:2.13.1"
+        compile ":less-asset-pipeline:2.13.1"
+        //compile ":coffee-asset-pipeline:2.13.1"
+        //compile ":handlebars-asset-pipeline:2.13.1"
+
         // required by the cached-resources plugin
         runtime ":cache-headers:1.1.6"
         if (Environment.current == Environment.PRODUCTION) {
@@ -123,9 +129,6 @@ grails.project.dependency.resolution = {
         compile ":excel-export:0.2.0"
         compile ":excel-import:1.0.1"
 
-        compile (":images-client-plugin:0.2.3") {
-            exclude "ala-web-theme"
-        }
         compile ':cookie:1.4'
 
         if (Environment.current != Environment.DEVELOPMENT) {
