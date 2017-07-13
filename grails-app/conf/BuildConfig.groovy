@@ -129,9 +129,6 @@ grails.project.dependency.resolution = {
         compile ":excel-export:0.2.0"
         compile ":excel-import:1.0.1"
 
-        compile (":images-client-plugin:0.2.3") {
-            exclude "ala-web-theme"
-        }
         compile ':cookie:1.4'
 
         if (Environment.current != Environment.DEVELOPMENT) {

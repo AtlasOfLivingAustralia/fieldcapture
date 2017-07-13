@@ -252,7 +252,6 @@
 <g:render template="/shared/timeoutMessage" model="${[url:createLink(action:'enterData', id:activity.activityId, params: [returnTo:returnTo])]}"/>
 
 <g:render template="/shared/documentTemplate"></g:render>
-<g:render template="/shared/imagerViewerModal"></g:render>
 
 %{--The modal view containing the contents for a modal dialog used to attach a document--}%
 <g:render template="/shared/attachDocument"/>
@@ -732,7 +731,7 @@
 
         $('#validation-container').validationEngine('attach', {scroll: true});
 
-
+        $('.imageList a[target="_photo"]').attr('rel', 'gallery').fancybox({type:'image', autoSize:true, nextEffect:'fade', preload:0, 'prevEffect':'fade'});
 
     });
 </asset:script>

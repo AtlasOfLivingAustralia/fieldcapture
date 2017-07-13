@@ -7,13 +7,13 @@
         <title>Print | ${activity.type} | Field Capture</title>
     </g:if>
     <g:else>
-        <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
+        <meta name="layout" content="${hubConfig.skin}_assets"/>
         <title>View | ${activity.type} | Field Capture</title>
     </g:else>
 
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jstimezonedetect/1.0.4/jstz.min.js"></script>
-    <r:script disposition="head">
+    <script>
     var fcConfig = {
         serverUrl: "${grailsApplication.config.grails.serverURL}",
         activityUpdateUrl: "${createLink(controller: 'activity', action: 'ajaxUpdate')}",
@@ -21,7 +21,7 @@
         projectViewUrl: "${createLink(controller: 'project', action: 'index')}/",
         siteViewUrl: "${createLink(controller: 'site', action: 'index')}/",
         bieUrl: "${grailsApplication.config.bie.baseURL}",
-        imageLocation:"${resource(dir:'/images')}",
+        imageLocation:"${assetPath(src:'/')}",
         imageUploadUrl: "${createLink(controller: 'image', action: 'upload')}",
         speciesProfileUrl: "${createLink(controller: 'species', action: 'speciesProfile')}",
         excelOutputTemplateUrl:"${createLink(controller: 'activity', action:'excelOutputTemplate')}",
@@ -29,8 +29,10 @@
         returnTo: "${returnTo}"
         },
         here = document.location.href;
-    </r:script>
-    <r:require modules="knockout,jqueryValidationEngine,datepicker,jQueryFileUploadUI,mapWithFeatures,species,activity,attachDocuments,imageViewer,jQueryFileDownload"/>
+    </script>
+    %{--<r:require modules="knockout,jqueryValidationEngine,datepicker,jQueryFileUploadUI,mapWithFeatures,species,activity,attachDocuments,imageViewer,jQueryFileDownload"/>--}%
+    <asset:stylesheet src="common.css"/>
+    <asset:stylesheet src="activity.css"/>
 </head>
 <body>
 <div class="${containerType} validationEngineContainer" id="validation-container">
@@ -112,7 +114,7 @@
     </g:if>
     <g:if test="${showNav}">
         <g:render template="navigation"></g:render>
-        <r:script>
+        <asset:script>
         var url = '${g.createLink(controller: 'activity', action:'activitiesWithStage', id:activity.projectId)}';
         var activityUrl = '${g.createLink(controller:'activity', action:'index')}';
         var activityId = '${activity.activityId}';
@@ -123,7 +125,7 @@
 
 
         ko.applyBindings(new ActivityNavigationViewModel(projectId, activityId, siteId, options), document.getElementById('activity-nav'));
-        </r:script>
+        </asset:script>
     </g:if>
     <g:else>
         <div class="form-actions">
@@ -135,9 +137,11 @@
 
 <!-- templates -->
 <g:render template="/shared/documentTemplate"/>
-<g:render template="/shared/imagerViewerModal" model="[readOnly:false]"></g:render>
+<asset:javascript src="common.js"/>
+<asset:javascript src="activity.js"/>
+<asset:deferredScripts/>
 
-<r:script>
+<script>
 
     $(function(){
 
@@ -168,7 +172,9 @@
                 mapFeatures
             );
         }
+        $('.imageList a[target="_photo"]').attr('rel', 'gallery').fancybox({type:'image', autoSize:true, nextEffect:'fade', preload:0, 'prevEffect':'fade'});
+
     });
-</r:script>
+</script>
 </body>
 </html>
