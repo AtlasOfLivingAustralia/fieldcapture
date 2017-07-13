@@ -4,6 +4,7 @@
 //= require typeahead/0.11.1/bloodhound
 //= require jquery-ui/jquery-ui-1.9.2.custom.min.js
 //= require attach-document.js
+//= require jquery.fileDownload/jQuery.fileDownload
 //= require forms.js
 //= require wms
 //= require mapWithFeatures.js

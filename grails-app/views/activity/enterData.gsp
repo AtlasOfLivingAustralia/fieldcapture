@@ -24,7 +24,7 @@
         documentUpdateUrl: "${g.createLink(controller:"document", action:"documentUpdate")}",
         documentDeleteUrl: "${g.createLink(controller:"document", action:"deleteDocument")}",
         imageUploadUrl: "${createLink(controller: 'image', action: 'upload')}",
-        imageLocation:"${assetPath(src:'/images')}",
+        imageLocation:"${assetPath(src:'/')}",
         savePhotoPointUrl:"${createLink(controller:'site', action:'ajaxUpdatePOI')}",
         deletePhotoPointUrl:"${createLink(controller:'site', action:'ajaxDeletePOI')}",
         excelOutputTemplateUrl:"${createLink(controller: 'activity', action:'excelOutputTemplate')}",
