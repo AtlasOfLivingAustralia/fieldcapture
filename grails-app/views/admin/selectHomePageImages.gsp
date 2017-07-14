@@ -3,15 +3,15 @@
 <head>
     <meta name="layout" content="adminLayout"/>
     <title>Edit | Home Page Images  Admin | MERIT</title>
-    <r:script disposition="head">
+    <script>
         var fcConfig = {
             serverUrl: "${grailsApplication.config.grails.serverURL}",
             homePageImagesUrl: "${g.createLink(controller: 'search', action: 'findPotentialHomePageImages')}",
             documentUpdateUrl: "${createLink(controller:"document", action:"documentUpdate")}",
             returnTo: "${params.returnTo}"
             };
-    </r:script>
-    <r:require modules="knockout,merit_admin"/>
+    </script>
+    <asset:stylesheet src="common.css"/>
 
 </head>
 
@@ -21,5 +21,8 @@
 
     <g:render template="gallery"/>
 </div>
+<asset:javascript src="common.js"/>
+<asset:javascript src="admin.js"/>
+<asset:deferredScripts/>
 </body>
 </html>

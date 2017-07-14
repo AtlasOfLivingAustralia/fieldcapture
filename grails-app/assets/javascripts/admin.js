@@ -1,3 +1,6 @@
+//= require pagination.js
+//= require_self
+
 var ApprovableImage = function(doc) {
     var self = this;
     var APPROVED = 'hp-y';

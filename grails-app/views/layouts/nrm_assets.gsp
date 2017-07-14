@@ -26,6 +26,7 @@
 <!--[if IE 9]><html lang="en" class="ie ie9"><![endif]-->
 <!--[if !IE]><!--><html lang="en"><!--<![endif]-->
 <head>
+    <link href="${grailsApplication.config.ala.baseURL?:'http://www.ala.org.au'}/wp-content/themes/ala2011/images/favicon.ico" rel="shortcut icon" />
     <title><g:layoutTitle /></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css?family=Oswald:300" rel="stylesheet" type="text/css">

@@ -4,7 +4,7 @@
 <head>
     <meta name="layout" content="adminLayout"/>
     <title>Import Projects | Admin | Field Capture</title>
-    <r:script disposition="head">
+    <script>
             var fcConfig = {
                 serverUrl: "${grailsApplication.config.grails.serverURL}",
                 importUrl: "${createLink(action: 'importProjectData')}",
@@ -12,8 +12,9 @@
                 importProgressUrl: "${createLink(action: 'importStatus')}"
             },
             returnTo = "${params.returnTo}";
-    </r:script>
-    <r:require modules="knockout,jqueryValidationEngine,jQueryFileUploadUI"/>
+    </script>
+    <asset:stylesheet src="common.css"/>
+    <asset:stylesheet src="fileupload-9.0.0/jquery.fileupload-ui.css"/>
 </head>
 
 <body>
@@ -75,7 +76,10 @@
 <script id="template-upload" type="text/x-tmpl">{% %}</script>
 <script id="template-download" type="text/x-tmpl">{% %}</script>
 
-<r:script>
+<asset:javascript src="common.js"/>
+<asset:javascript src="attach-document.js"/>
+
+<script>
 
     var SiteUploadViewModel = function () {
         var self = this;
@@ -179,6 +183,6 @@
         }
     };
     ko.applyBindings(new SiteUploadViewModel());
-</r:script>
+</script>
 </body>
 </html>

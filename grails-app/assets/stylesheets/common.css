@@ -2,6 +2,7 @@
 *= require base
 *= require bootstrap-datepicker/css/datepicker
 *= require jquery.validationEngine/validationEngine.jquery
+*= require wmd/wmd.css
 */
 
 .nav-list.fc-docs-list {

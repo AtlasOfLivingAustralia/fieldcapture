@@ -759,7 +759,7 @@ class FCTagLib {
         } else {
             mb.span() {
                 mb.strong() {
-                    mkp.yield(object?.toString())
+                    mkp.yield(object?object.toString():'null')
                 }
             }
 

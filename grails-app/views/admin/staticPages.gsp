@@ -19,6 +19,7 @@
     <head>
         <meta name="layout" content="adminLayout"/>
         <title>Static pages | Admin | Data capture | Atlas of Living Australia</title>
+        <asset:stylesheet src="base.css"/>
     </head>
 
     <body>
@@ -55,6 +56,6 @@
                 </g:each>
             </tbody>
         </table>
-
+        <asset:javascript src="base.js"/>
     </body>
 </html>

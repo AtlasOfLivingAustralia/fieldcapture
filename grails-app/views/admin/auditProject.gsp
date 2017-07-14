@@ -4,11 +4,10 @@
 	<head>
 		<meta name="layout" content="adminLayout"/>
 		<title>Admin - Audit Project | Data capture | Atlas of Living Australia</title>
-		<style type="text/css" media="screen">
-		</style>
+		<asset:stylesheet src="audit.css"/>
 	</head>
 	<body>
-        <r:require modules="jquery_bootstrap_datatable"/>
+
         <g:set var="searchTerm" value="${params.searchTerm}"/>
 
         <div class="row">
@@ -26,6 +25,8 @@
     <g:set var="returnTo" value="${createLink(action:'auditProject', id:project.projectId, params:[searchTerm:params.searchTerm])}"/>
 
     <g:render template="auditMessageList"></g:render>
+
+    <asset:javascript src="audit.js"/>
 
     </body>
 </html>

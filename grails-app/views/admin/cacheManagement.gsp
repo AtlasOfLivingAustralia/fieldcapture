@@ -3,7 +3,7 @@
 <head>
     <meta name="layout" content="adminLayout"/>
     <title>Cache Management |  Admin | MERIT</title>
-
+    <asset:stylesheet src="base.css"/>
 </head>
 
 <body>
@@ -17,5 +17,6 @@
     </ul>
 
 </div>
+<asset:javascript src="base.js"/>
 </body>
 </html>

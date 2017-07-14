@@ -14,4 +14,6 @@
 //= require fieldcapture-application
 //= require knockout-dates
 //= require knockout-custom-bindings
+//= require wmd/wmd.js
+//= require wmd/showdown.js
 

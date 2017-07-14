@@ -6,9 +6,9 @@
 		<title>Admin - Audit Message Detail | Data capture | Atlas of Living Australia</title>
 		<style type="text/css" media="screen">
 		</style>
+        <asset:stylesheet src="audit.css"/>
 	</head>
 	<body>
-        <r:require modules="pretty_text_diff"/>
         <h4>Audit ${message?.entityType?.substring(message?.entityType?.lastIndexOf('.')+1)}: ${message?.entity?.name} ${message?.entity?.type} </h4>
         <g:set var="projectId" value="${params.projectId}"/>
         <g:set var="searchTerm" value="${params.searchTerm}"/>
@@ -68,9 +68,8 @@
                             <tr>
                                 <td>${obj.key}</td>
                                 <td wrap class="diff1"></td>
-                                <td style="display:none" class="original"> ${(compare ? compare?.entity[obj.key] : "")}</td>
-                                <td style="display:none" class="changed">${obj.value}</td>
-
+                                <td style="display:none" class="original">${ compare?.entity[(obj.key)]}</td>
+                                <td style="display:none" class="changed">${message.entity[(obj.key)]}</td>
                             </tr>
                         </g:each>
                         </tbody>
@@ -101,25 +100,25 @@
 
     </div>
 
+
+    <asset:javascript src="audit.js"/>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $( "#ids").hide();
+            $("#wrapper tr").prettyTextDiff({
+                cleanup: true,
+                diffContainer: ".diff1"
+            });
+            $("#formatedJSON tr").prettyTextDiff({
+                cleanup: true,
+                diffContainer: ".diff1"
+            });
+
+            $( "#toggle-ids" ).click(function() {
+                $( "#ids" ).toggle();
+            });
+
+        });
+    </script>
     </body>
 </html>
-
-<r:script type="text/javascript">
-    $(document).ready(function() {
-        $( "#ids").hide();
-        $("#wrapper tr").prettyTextDiff({
-            cleanup: true,
-            diffContainer: ".diff1"
-        });
-        $("#formatedJSON tr").prettyTextDiff({
-            cleanup: true,
-            diffContainer: ".diff1"
-        });
-
-        $( "#toggle-ids" ).click(function() {
-            $( "#ids" ).toggle();
-        });
-
-
-    });
-</r:script>

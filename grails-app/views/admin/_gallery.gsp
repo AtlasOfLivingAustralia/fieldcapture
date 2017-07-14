@@ -20,7 +20,7 @@
     <g:render template="/shared/pagination"/>
 </div>
 
-<r:script>
+<asset:script>
     $(function() {
 
         var imageGallery = new ImageGallery();
@@ -32,4 +32,4 @@
         });
 
     });
-</r:script>
+</asset:script>
