@@ -2,11 +2,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
-    <meta name="layout" content="${hubConfig.skin}"/>
+    <meta name="layout" content="${hubConfig.skin}_assets"/>
     <title> Upload | Sites | Field Capture</title>
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
-    <r:script disposition="head">
+    <script>
             var fcConfig = {
                 serverUrl: "${grailsApplication.config.grails.serverURL}",
                 spatialBaseUrl: "${grailsApplication.config.spatial.baseUrl}",
@@ -20,8 +19,8 @@
 
             },
             returnTo = "${params.returnTo}";
-    </r:script>
-    <r:require modules="knockout,mapWithFeatures,amplify,jqueryValidationEngine,siteUpload"/>
+    </script>
+    <asset:stylesheet src="common.css"/>
 </head>
 <body>
 <div class="${containerType} validationEngineContainer" id="validation-container">
@@ -165,9 +164,8 @@
         </div>
     </div>
 </div>
-</body>
 
-<r:script>
+<asset:script>
 <g:if test="${shapeFileId}">
 $(function() {
 
@@ -207,6 +205,9 @@ $(function() {
         }).trigger('change');
     });
 </g:else>
-</r:script>
-
+</asset:script>
+<asset:javascript src="common.js"/>
+<asset:javascript src="site-upload.js"/>
+<asset:deferredScripts/>
+</body>
 </html>

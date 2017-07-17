@@ -26,7 +26,7 @@
 </script>
 
 
-<r:script>
+<asset:script>
 
 $(function() {
 
@@ -66,4 +66,4 @@ var today = '${today}';
 
     });
 
-</r:script>
+</asset:script>

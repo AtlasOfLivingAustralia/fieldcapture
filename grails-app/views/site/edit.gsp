@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta name="layout" content="${hubConfig.skin}"/>
+  <meta name="layout" content="${hubConfig.skin}_assets"/>
   <title> ${create ? 'New' : ('Edit | ' + site?.name?.encodeAsHTML())} | Sites | Field Capture</title>
   <style type="text/css">
     legend {
@@ -19,7 +19,7 @@
     }
     .no-border { border-top: none !important; }
   </style>
-    <r:script disposition="head">
+    <script>
     var fcConfig = {
         spatialService: '${createLink(controller:'proxy',action:'feature')}',
         intersectService: "${createLink(controller: 'proxy', action: 'intersect')}",
@@ -45,8 +45,9 @@
         },
         here = window.location.href;
 
-    </r:script>
-  <r:require modules="knockout, jqueryValidationEngine, amplify, drawmap, projects"/>
+    </script>
+    <asset:stylesheet src="common.css"/>
+    <asset:stylesheet src="project.css"/>
 </head>
 <body>
     <div class="${containerType} validationEngineContainer" id="validation-container">
@@ -67,15 +68,15 @@
             </g:else>
         </ul>
 
-        <bs:form action="update" inline="true">
-            <g:render template="map" />
-            <div class="row-fluid">
-                <div class="form-actions span12">
-                    <button type="button" id="save" class="btn btn-primary">Save changes</button>
-                    <button type="button" id="cancel" class="btn">Cancel</button>
-                </div>
+
+        <g:render template="map" />
+        <div class="row-fluid">
+            <div class="form-actions span12">
+                <button type="button" id="save" class="btn btn-primary">Save changes</button>
+                <button type="button" id="cancel" class="btn">Cancel</button>
             </div>
-        </bs:form>
+        </div>
+
     </div>
     <g:if env="development">
     <div class="${containerType}">
@@ -98,7 +99,7 @@
     </div>
     </g:if>
 
-<r:script>
+<asset:script>
     $(function(){
 
         $('#validation-container').validationEngine('attach', {scroll: false});
@@ -145,7 +146,10 @@
             }
         });
     });
-</r:script>
+</asset:script>
+<asset:javascript src="common.js"/>
+<asset:javascript src="edit-site-manifest.js"/>
+<asset:deferredScripts/>
 
 </body>
 </html>
