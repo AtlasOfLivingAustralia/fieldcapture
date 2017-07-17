@@ -1,4 +1,4 @@
-package fieldcapture
+package au.org.ala.merit
 
 import au.org.ala.cas.util.AuthenticationCookieUtils
 import au.org.ala.merit.SettingPageType

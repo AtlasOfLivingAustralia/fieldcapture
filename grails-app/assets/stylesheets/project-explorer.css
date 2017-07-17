@@ -46,3 +46,31 @@
 #reports a {
     font-weight: 600;
 }
+
+.facet-collapse {
+    height: auto;
+    width: auto;
+}
+
+
+.facet-collapse.width {
+    position: relative;
+    width: 0;
+    overflow: hidden;
+    -webkit-transition: width 0.25s ease;
+    -moz-transition: width 0.25s ease;
+    -o-transition: width 0.25s ease;
+    transition: width 0.25s ease;
+}
+
+.facet-collapse.in.width {
+    width: auto;
+    -webkit-transition: width 0.25s ease;
+    -moz-transition: width 0.25s ease;
+    -o-transition: width 0.25s ease;
+    transition: width 0.25s ease;
+}
+
+.facet-collapse.in.height {
+    height: auto;
+}

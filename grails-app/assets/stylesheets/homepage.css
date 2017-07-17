@@ -1,3 +1,11 @@
+/*
+*= require project-explorer.css
+*= require jquery.dataTables/dataTables.bootstrap.css
+*= require jquery.dataTables/dataTables.tableTools.css
+*= require slider-pro-master/css/slider-pro.min.css
+*= require reef2050DashboardReport.css
+*= require_self
+*/
 .statistics .stat {
     font-family: 'Oswald',sans-serif;
     background-color: #E5E5E5;

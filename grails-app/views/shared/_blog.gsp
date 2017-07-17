@@ -12,7 +12,7 @@
 
 </div>
 <!-- /ko -->
-<r:script>
+<asset:script>
     $(function() {
 
         var blog = <fc:modelAsJavascript model="${blog}" default="[]"/>;
@@ -23,4 +23,4 @@
         var blogViewModel = new BlogViewModel(blog, '${type}');
         ko.applyBindings(blogViewModel, document.getElementById('${blogId}'));
     });
-</r:script>
+</asset:script>

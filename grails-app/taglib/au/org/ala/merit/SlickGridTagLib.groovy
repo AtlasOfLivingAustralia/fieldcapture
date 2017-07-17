@@ -1,4 +1,4 @@
-package fieldcapture
+package au.org.ala.merit
 
 import grails.converters.JSON
 

@@ -1,6 +1,5 @@
 package au.org.ala.merit
 
-import fieldcapture.FCTagLib
 import grails.test.mixin.TestFor
 import spock.lang.Specification
 
