@@ -2,10 +2,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="layout" content="${hubConfig.skin}"/>
+    <meta name="layout" content="${hubConfig.skin}_assets"/>
     <title>Edit | ${organisation.name.encodeAsHTML()} | Field Capture</title>
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
-    <r:script disposition="head">
+    <script>
         var fcConfig = {
             serverUrl: "${grailsApplication.config.grails.serverURL}",
             viewProjectUrl: "${createLink(controller:'project', action:'index')}",
@@ -20,8 +20,9 @@
             returnTo: "${params.returnTo?:createLink(action:'index', id:organisation.organisationId)}"
 
             };
-    </r:script>
-    <r:require modules="knockout,jqueryValidationEngine,amplify,organisation,attachDocuments"/>
+    </script>
+    <asset:stylesheet src="common.css"/>
+    <asset:stylesheet src="fileupload-9.0.0/jquery.fileupload-ui.css"/>
 
 
 </head>
@@ -47,7 +48,7 @@
 
 </div>
 
-<r:script>
+<asset:script>
 
    $(function () {
         var organisation = <fc:modelAsJavascript model="${organisation}"/>;
@@ -95,7 +96,12 @@
     });
 
 
-</r:script>
+</asset:script>
+
+<asset:javascript src="common.js"/>
+<asset:javascript src="attach-document-no-ui.js"/>
+<asset:javascript src="organisation.js"/>
+<asset:deferredScripts/>
 
 </body>
 </html>

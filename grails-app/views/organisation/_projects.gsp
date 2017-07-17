@@ -21,7 +21,7 @@
     </div>
 </g:else>
 
-<r:script>
+<asset:script>
 $(function() {
     var projects = fcConfig.projects;
     $.each(projects, function(i, project) {
@@ -226,4 +226,4 @@ $(function() {
         }
     });
 });
-</r:script>
+</asset:script>

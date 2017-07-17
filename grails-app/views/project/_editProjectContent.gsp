@@ -31,7 +31,7 @@
 </div>
 <!-- /ko -->
 
-<r:script>
+<asset:script>
      window.${attributeName}ViewModel = function(project, initialValue) {
         var self = this;
         setup_wmd({
@@ -91,4 +91,4 @@
         };
     }
 
-</r:script>
+</asset:script>

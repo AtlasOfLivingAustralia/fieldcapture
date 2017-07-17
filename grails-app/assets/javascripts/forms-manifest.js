@@ -1,0 +1,10 @@
+//= require expr-eval/1.0/parser
+//= require fancybox/jquery.fancybox
+//= require select2/4.0.3/js/select2.full
+//= require typeahead/0.11.1/bloodhound
+//= require attach-document.js
+//= require jquery.fileDownload/jQuery.fileDownload
+//= require forms.js
+//= require wms
+//= require mapWithFeatures.js
+//= require activity.js

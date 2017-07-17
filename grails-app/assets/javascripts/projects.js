@@ -1,3 +1,25 @@
+//= require jquery.dataTables/jquery.dataTables.js
+//= require jquery.dataTables/jquery.dataTables.bootstrap.js
+//= require jquery.dataTables/dataTables.tableTools.js
+//= require wms
+//= require mapWithFeatures.js
+//= require fancybox/jquery.fancybox
+//= require bootstrap-combobox/bootstrap-combobox.js
+//= require jquery.shorten/jquery.shorten.js
+//= require jquery.appear/jquery.appear.js
+//= require thumbnail.scroller/2.0.3/jquery.mThumbnailScroller.js
+//= require jquery.columnizer/jquery.columnizer.js
+//= require jquery-gantt/js/jquery.fn.gantt.min.js
+//= require attach-document.js
+//= require jquery.fileDownload/jQuery.fileDownload
+//= require meriplan.js
+//= require risks.js
+//= require sites.js
+//= require activity.js
+//= require projectActivityPlan.js
+//= require projectActivity.js
+//= require_self
+
 /*
     Utilities for managing project representations.
  */

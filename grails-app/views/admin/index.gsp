@@ -3,9 +3,9 @@
 	<head>
 		<meta name="layout" content="adminLayout"/>
 		<title>Admin | Data capture | Atlas of Living Australia</title>
-		<style type="text/css" media="screen">
-		</style>
+		<asset:stylesheet src="base.css"/>
 	</head>
 	<body>
+	<asset:javascript src="base.js"/>
   </body>
 </html>

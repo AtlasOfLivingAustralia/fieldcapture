@@ -11,9 +11,11 @@
 //= require jquery.blockUI/jquery.blockUI
 //= require momentjs/moment.min.js
 //= require momentjs/moment-timezone-with-data.min.js
+//= require vkbeautify/vkbeautify.0.99.00.beta.js
 //= require fieldcapture-application
 //= require knockout-dates
 //= require knockout-custom-bindings
 //= require wmd/wmd.js
 //= require wmd/showdown.js
+//= require pagination.js
 

@@ -138,7 +138,7 @@
 <!-- templates -->
 <g:render template="/shared/documentTemplate"/>
 <asset:javascript src="common.js"/>
-<asset:javascript src="activity.js"/>
+<asset:javascript src="forms-manifest.js"/>
 <asset:deferredScripts/>
 
 <script>

@@ -28,7 +28,7 @@
 </div>
 <!-- /ko -->
 
-<r:script>
+<asset:script>
   $(function() {
     var EditorViewModel = function() {
         var self = this;
@@ -72,4 +72,4 @@
     });
 
 
-</r:script>
+</asset:script>

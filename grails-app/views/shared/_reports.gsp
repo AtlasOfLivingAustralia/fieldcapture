@@ -1,4 +1,3 @@
-<r:require modules="jquery_bootstrap_datatable, merit_projects"/>
 <style type="text/css">
     #report th, #report td {
         white-space: normal;
@@ -85,7 +84,7 @@
 
 <table id="dataTable" data-bind="delegatedHandler: 'click'"></table>
 
-<r:script>
+<asset:script>
 $(function() {
 
 
@@ -97,4 +96,4 @@ $(function() {
     var table = $('#report').DataTable({displayLength:50, order:[[1,'asc']]});
 
 });
-</r:script>
+</asset:script>

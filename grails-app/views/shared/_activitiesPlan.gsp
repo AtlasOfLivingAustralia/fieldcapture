@@ -1,9 +1,9 @@
-<r:require modules="datepicker, jqueryGantt, jqueryValidationEngine, attachDocuments, activity"/>
-<r:script>
+%{--<r:require modules="datepicker, jqueryGantt, jqueryValidationEngine, attachDocuments, activity"/>--}%
+<asset:script>
     var PROJECT_STATE = {approved:'approved',submitted:'submitted',planned:'not approved',unlockedforcorrection:'unlocked for correction'};
     var ACTIVITY_STATE = {planned:'planned',started:'started',finished:'finished',deferred:'deferred',cancelled:'cancelled',corrected:'corrected'};
 
-</r:script>
+</asset:script>
 <style type="text/css">
     a.icon-link {
         color: black;
@@ -291,7 +291,7 @@
 <!-- /ko -->
 
 
-<r:script>
+<asset:script>
 
 
     $(function () {
@@ -326,4 +326,4 @@
 
     });
 
-</r:script>
+</asset:script>
