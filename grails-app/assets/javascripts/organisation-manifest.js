@@ -7,4 +7,5 @@
 //= require fancybox/jquery.fancybox
 //= require sites.js
 //= require greenArmyReporting.js
+//= require document.js
 //= require organisation.js

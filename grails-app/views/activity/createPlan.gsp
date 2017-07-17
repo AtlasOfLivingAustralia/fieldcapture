@@ -2,20 +2,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="layout" content="${hubConfig.skin}"/>
+    <meta name="layout" content="${hubConfig.skin}_assets"/>
     <title>Create | Activity | Field Capture</title>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jstimezonedetect/1.0.4/jstz.min.js"></script>
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
 
-    <r:script disposition="head">
+    <script disposition="head">
     var fcConfig = {
         serverUrl: "${grailsApplication.config.grails.serverURL}",
         projectViewUrl: "${createLink(controller: 'project', action: 'index')}/",
         siteViewUrl: "${createLink(controller: 'site', action: 'index')}/"
         },
         here = document.location.href;
-    </r:script>
-    <r:require modules="knockout,jqueryValidationEngine,datepicker,jQueryFileUploadUI,mapWithFeatures"/>
+    </script>
+    <asset:stylesheet src="common.css"/>
 
 </head>
 <body>
@@ -34,5 +33,8 @@
         <g:render template="createOrEditActivity"/>
     </div>
 </div>
+<asset:javascript src="common.js"/>
+<asset:javascript src="forms-manifest.js"/>
+<asset:deferredScripts/>
 </body>
 </html>

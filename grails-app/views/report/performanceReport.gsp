@@ -10,7 +10,7 @@
             returnToUrl:'${params.returnTo ?: g.createLink(controller:'organisation', action:'index', id:report.organisationId)}'
         };
     </script>
-    <r:require modules="knockout, activity, jqueryValidationEngine, merit_projects"/>
+    <asset:stylesheet src="common.css"/>
 </head>
 
 <body>
@@ -100,7 +100,7 @@
 </div>
 
 
-<r:script>
+<asset:script>
 
     var ViewModel = function(config) {
         var self = this;
@@ -210,8 +210,10 @@
         }
     });
 
-</r:script>
-
+</asset:script>
+<asset:javascript src="common.js"/>
+<asset:javascript src="jquery.appear/jquery.appear.js"/>
+<asset:deferredScripts/>
 
 </body>
 </html>
