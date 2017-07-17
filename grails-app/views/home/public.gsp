@@ -20,7 +20,6 @@
         };
     </script>
     <script type="text/javascript" src="//www.google.com/jsapi"></script>
-    %{--<r:require modules="application, sliderpro, knockout,mapWithFeatures,wmd,jquery_bootstrap_datatable,js_iso8601,amplify,homepage"/>--}%
     <asset:stylesheet src="common.css"/>
     <asset:stylesheet src="homepage.css"/>
 </head>

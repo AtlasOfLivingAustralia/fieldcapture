@@ -38,7 +38,6 @@
         },
         here = document.location.href;
     </script>
-    %{--<r:require modules="knockout,jqueryValidationEngine,datepicker,jQueryFileUploadUI,activity,mapWithFeatures,attachDocuments,species,amplify,imageViewer,jQueryFileDownload"/>--}%
     <asset:stylesheet src="common.css"/>
     <asset:stylesheet src="activity.css"/>
 

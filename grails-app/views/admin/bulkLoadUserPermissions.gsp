@@ -4,13 +4,13 @@
     <head>
         <meta name="layout" content="adminLayout"/>
         <title>Users | Admin | Data capture | Atlas of Living Australia</title>
+        <asset:stylesheet src="base.css"/>
     </head>
 
     <body>
-        <r:require module="jqueryValidationEngine"/>
         <content tag="pageTitle">Users - Bulk Load User Permissions</content>
         <div class="container">
-            <div class="well">Logged in user is <b class="tooltips" title="${user}">${user.userDisplayName}</b></div>
+            <div class="well">Logged in user is <b class="tooltips" title="${user}">${user.displayName}</b></div>
             <div>
                 <p>
                     Upload a csv whose first row contains column headers, and has at least the following 5 columns (in any order):
@@ -54,12 +54,6 @@
             </div>
             </g:if>
         </div>
+        <asset:javascript src="base.js"/>
     </body>
 </html>
-
-<r:script type="text/javascript">
-
-    $(document).ready(function() {
-    }); // end document.ready
-
-</r:script>

@@ -969,7 +969,6 @@ function DateEditor2(args) {
     };
 
     this.destroy = function () {
-        $.datepicker.dpDiv.stop(true, true);
         self.$element.datepicker("hide");
         self.$element.datepicker("destroy");
         self.$element.remove();

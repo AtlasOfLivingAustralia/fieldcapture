@@ -107,7 +107,6 @@
             }
         </style>
 
-    %{--<r:require modules="gmap3,mapWithFeatures,knockout,datepicker,amplify,imageViewer, jqueryValidationEngine, merit_projects, attachDocuments, wmd, jquery_bootstrap_datatable"/>--}%
     <asset:stylesheet src="common.css"/>
     <asset:stylesheet src="project.css"/>
 </head>

@@ -22,7 +22,7 @@
     <script type="text/javascript" src="//www.google.com/jsapi"></script>
     <asset:stylesheet src="common.css"/>
     <asset:stylesheet src="homepage.css"/>
-    %{--<r:require modules="knockout,mapWithFeatures,jquery_bootstrap_datatable,js_iso8601,amplify,homepage,datepicker,jqueryValidationEngine"/>--}%
+
 </head>
 <body>
 <div id="wrapper" class="${containerType}">

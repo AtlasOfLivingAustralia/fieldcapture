@@ -1,9 +1,9 @@
 <html>
 <head>
-    <meta name="layout" content="${hubConfig.skin}"/>
+    <meta name="layout" content="${hubConfig.skin}_assets"/>
     <title>Edit | Announcements | Field Capture</title>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jstimezonedetect/1.0.4/jstz.min.js"></script>
-    <r:script disposition="head">
+    <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
+    <script>
     var fcConfig = {
         organisationViewUrl: "${createLink(controller:'organisation', action:'index', id:organisation.organisationId)}",
         saveAnnouncementsUrl: "${createLink(controller:'organisation', action:'saveAnnouncements', id:organisation.organisationId, params:[format:'json'])}",
@@ -11,52 +11,11 @@
         returnTo: "${params.returnTo}"
         },
         here = document.location.href;
-    </r:script>
-    <r:require modules="knockout,jqueryValidationEngine,datepicker,slickgrid,jQueryFileUpload,jQueryFileDownload,amplify,merit_projects"/>
-    <style type="text/css">
-    input.editor-text {box-sizing:border-box; width: 100%;}
-    .slick-column-name { white-space: normal; margin-right: 5px; display: block; }
-    .slick-header-column.ui-state-default { background: #d9edf7; height: 100%; font-weight: bold;}
-    .slick-header { background: #d9edf7; }
-    .slick-column-name a { background: 0}
-    .slick-sort-indicator { position: absolute; right: 5px; top: 2px; display: block; background:none; }
-    .slick-sort-indicator:after {
-        content: '\f0dc';
-        font-family: FontAwesome;
-        font-style: normal;
-        font-size: larger;
-        left:0px;
-        position:absolute;
-        top:0;
-        right:5px;
-        color: lightgrey;
-    }
+    </script>
 
-    .slick-sort-indicator-asc:after {
+    <asset:stylesheet src="common.css"/>
+    <asset:stylesheet src="editAnnouncements.css"/>
 
-        content: '\f0de';
-        font-family: FontAwesome;
-        font-style: normal;
-        font-size: larger;
-        left:0px;
-        position:absolute;
-        top:0;
-        right:5px;
-        color: #444444;
-    }
-    .slick-sort-indicator-desc:after {
-        color: #444444;
-        content: '\f0dd';
-        font-family: FontAwesome;
-        font-style: normal;
-        font-size: larger;
-        left:0px;
-        position:absolute;
-        top:0;
-        right:5px;
-
-    }
-    </style>
 </head>
 
 <body>
@@ -115,7 +74,7 @@
 
     <g:render template="/shared/timeoutMessage" model="${[newWindow:true]}"/>
 
-<r:script>
+<asset:script>
     $(function() {
 
         function controlsFormatter() {
@@ -196,7 +155,12 @@
         });
 
     });
-</r:script>
+</asset:script>
 </div>
+
+<asset:javascript src="common.js"/>
+<asset:javascript src="editAnnouncements.js"/>
+<asset:deferredScripts/>
+
 </body>
 </html>

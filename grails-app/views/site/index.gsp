@@ -26,7 +26,6 @@
             },
             here = window.location.href;
     </script>
-    %{--<r:require modules="knockout,mapWithFeatures,amplify,imageViewer,jqueryGantt,merit_projects"/>--}%
     <asset:stylesheet src="common.css"/>
     <asset:stylesheet src="project.css"/>
 </head>

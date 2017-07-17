@@ -1,4 +1,3 @@
-%{--<r:require modules="datepicker, jqueryGantt, jqueryValidationEngine, attachDocuments, activity"/>--}%
 <asset:script>
     var PROJECT_STATE = {approved:'approved',submitted:'submitted',planned:'not approved',unlockedforcorrection:'unlocked for correction'};
     var ACTIVITY_STATE = {planned:'planned',started:'started',finished:'finished',deferred:'deferred',cancelled:'cancelled',corrected:'corrected'};
