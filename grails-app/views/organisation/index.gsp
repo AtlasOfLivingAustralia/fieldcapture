@@ -55,7 +55,7 @@
 <body>
 
 <div class="${containerType}">
-    <g:render template="banner" model="${[imageUrl:assetPath(src:'/filetypes')]}"/>
+    <g:render template="banner" model="${[imageUrl:assetPath(src:'filetypes')]}"/>
 
     <div id="organisationDetails" style="display:none;">
 

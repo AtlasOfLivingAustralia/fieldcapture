@@ -80,7 +80,7 @@ grails.project.dependency.resolution = {
         compile "org.codehaus.groovy.modules.http-builder:http-builder:0.7.1"
         compile "org.apache.httpcomponents:httpcore:4.4.1"
         compile "org.apache.httpcomponents:httpclient:4.4.1"
-
+        build "com.google.guava:guava:21.0"
     }
 
     plugins {
@@ -94,10 +94,10 @@ grails.project.dependency.resolution = {
         build ":release:3.1.2"
 
         runtime ":jquery:1.11.1"
-        compile ":asset-pipeline:2.13.1"
+        compile ":asset-pipeline:2.14.1"
         // Uncomment these to enable additional asset-pipeline capabilities
         //compile ":sass-asset-pipeline:2.13.1"
-        compile ":less-asset-pipeline:2.13.1"
+        compile ":less-asset-pipeline:2.14.1"
         //compile ":coffee-asset-pipeline:2.13.1"
         //compile ":handlebars-asset-pipeline:2.13.1"
 

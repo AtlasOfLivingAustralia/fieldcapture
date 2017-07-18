@@ -11,6 +11,7 @@
 <head>
     <meta name="layout" content="${hubConfig.skin}"/>
     <title>Search Results | Field Capture</title>
+    <asset:stylesheet src="base.css"/>
 </head>
 <body>
 <div id="wrapper" class="${containerType}">
@@ -185,10 +186,11 @@
     </g:else>
 
 </div>
-<r:script>
+<asset:javascript src="base.js"/>
+<script>
     $(window).load(function () {
         $('.tooltips').tooltip({placement: "right"});
     });
-</r:script>
+</script>
 </body>
 </html>

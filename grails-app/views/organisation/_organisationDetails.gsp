@@ -39,7 +39,7 @@
                 </div>
             </div>
             <g:render template="/shared/editSocialMediaLinks"
-                      model="${[entity:'organisation',imageUrl:assetPath(src:'/filetypes')]}"/>
+                      model="${[entity:'organisation',imageUrl:assetPath(src:'filetypes')]}"/>
         </div>
     </div>
 

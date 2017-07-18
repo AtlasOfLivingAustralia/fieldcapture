@@ -246,7 +246,7 @@
 </div>
 <!-- /ko -->
 
-<r:script>
+<asset:script>
 function initSiteViewModel() {
     var siteViewModel;
 
@@ -301,4 +301,4 @@ function initSiteViewModel() {
 
     return siteViewModel;
 }
-</r:script>
+</asset:script>

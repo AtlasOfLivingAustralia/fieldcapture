@@ -1,5 +1,5 @@
 //= require base.js
-//= require js-iso8601/js-iso8601.min.js
+//= require js-iso8601/js-iso8601.js
 //= require underscorejs/1.8.3/underscore
 //= require amplifyjs/amplify.min.js
 //= require bootstrap-datepicker/js/bootstrap-datepicker.js

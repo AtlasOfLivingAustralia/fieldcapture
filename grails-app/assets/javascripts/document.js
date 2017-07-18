@@ -38,7 +38,12 @@ function DocumentViewModel (doc, owner, settings) {
     // the notes field can be used as a pseudo-document (eg a deferral reason) or just for additional metadata
     this.notes = ko.observable(doc.notes);
     this.filetypeImg = function () {
-        return self.settings.imageLocation + '/filetypes/' + iconnameFromFilename(self.filename());
+        var prefix = self.settings.imageLocation;
+
+        if (prefix.charAt(prefix.length - 1) != '/') {
+            prefix += '/';
+        }
+        return prefix + 'filetypes/' + iconnameFromFilename(self.filename());
     };
     this.iconImgUrl = function() {
         if (self.type == 'image' || (self.contentType() && self.contentType().indexOf('image') == 0)) {

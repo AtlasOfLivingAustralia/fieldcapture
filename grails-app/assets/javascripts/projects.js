@@ -9,7 +9,7 @@
 //= require jquery.appear/jquery.appear.js
 //= require thumbnail.scroller/2.0.3/jquery.mThumbnailScroller.js
 //= require jquery.columnizer/jquery.columnizer.js
-//= require jquery-gantt/js/jquery.fn.gantt.min.js
+//= require jquery-gantt/js/jquery.fn.gantt.js
 //= require attach-document.js
 //= require jquery.fileDownload/jQuery.fileDownload
 //= require meriplan.js
