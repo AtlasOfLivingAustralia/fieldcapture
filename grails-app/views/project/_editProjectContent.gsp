@@ -40,7 +40,7 @@
             output: "${attributeName}Output",
             button_bar: "${attributeName}-button-bar",
             preview: "${attributeName}-preview",
-            helpLink: "${g.resource(dir:"wmd", file:"markdownhelp.html")}"
+            helpLink: "${assetPath(src:"wmd/markdownhelp.html")}"
         });
 
         self.message = ko.observable('');

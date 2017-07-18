@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="layout" content="${hubConfig.skin}_assets"/>
+    <meta name="layout" content="${hubConfig.skin}"/>
     <title>Organisations | Field Capture</title>
     <script>
         var fcConfig = {

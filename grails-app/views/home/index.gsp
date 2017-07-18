@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/html">
 <head>
     <g:set var="containerType" scope="request" value="container"/>
-    <meta name="layout" content="${hubConfig.skin}_assets"/>
+    <meta name="layout" content="${hubConfig.skin}"/>
     <title>Home | Field Capture</title>
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}&libraries=visualization"></script>
     <script>

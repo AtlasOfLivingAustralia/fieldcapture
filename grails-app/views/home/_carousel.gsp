@@ -2,7 +2,7 @@
 	<div class="sp-slides">
 		<g:each in="${promotionalProjects}" var="p">
 				<!--  Use this image, in case  if client wants to promote the project that has no primary project image. -->
-				<g:set var="url" value="${resource(dir: 'images/promotional/'+((int)10 + Math.random() * 3)+'.jpg')}" />
+				<g:set var="url" value="${assetPath(src: '/promotional/'+((int)10 + Math.random() * 3)+'.jpg')}" />
 				
 				<g:each in="${p.documents}" var="doc">
 					<g:if test="${doc.isPrimaryProjectImage}">

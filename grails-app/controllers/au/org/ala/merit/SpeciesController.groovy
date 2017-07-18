@@ -8,7 +8,6 @@ class SpeciesController {
     SpeciesService speciesService
     WebService webService
 
-
     def speciesProfile(String id) {
 
         Map result = speciesService.speciesProfile(id)
@@ -22,7 +21,8 @@ class SpeciesController {
             webService.proxyGetRequest(response, url)
         }
         else {
-            String noImageUrl = g.resource(dir:'images', file:'nophoto.png', absolute:true)
+
+            String noImageUrl = asset.assetPath(src:'nophoto.png', absolute:true)
             response.sendRedirect(noImageUrl)
         }
 

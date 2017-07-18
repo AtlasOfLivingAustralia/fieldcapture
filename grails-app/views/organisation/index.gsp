@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="layout" content="${hubConfig.skin}_assets"/>
+    <meta name="layout" content="${hubConfig.skin}"/>
     <title>${organisation.name.encodeAsHTML()} | Field Capture</title>
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}&libraries=visualization"></script>
     <script type="text/javascript" src="//www.google.com/jsapi"></script>
@@ -22,8 +22,8 @@
             organisationReportUrl: "${g.createLink(action:'editOrganisationReport')}",
             organisationReportPDFUrl: "${g.createLink(action:'performanceReportPDF')}",
             organisationMembersUrl: "${loadPermissionsUrl}",
-            imageLocation:"${resource(dir:'/images')}",
-            logoLocation:"${resource(dir:'/images/filetypes')}",
+            imageLocation:"${assetPath(src:'/')}",
+            logoLocation:"${assetPath(src:'/filetypes')}",
             adHocReportsUrl: '${g.createLink(action:"getAdHocReportTypes")}',
             dashboardUrl: "${g.createLink(controller: 'report', action: 'loadReport', params:[fq:'organisationFacet:'+organisation.name, organisationId:organisation.organisationId])}",
             performanceComparisonReportUrl: "${g.createLink(controller: 'report', action: 'performanceAssessmentComparisonReport', params:[organisationId:organisation.organisationId])}",

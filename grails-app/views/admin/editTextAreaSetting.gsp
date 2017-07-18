@@ -50,7 +50,7 @@
                 output: "copy_html",
                 button_bar: "notes-button-bar",
                 preview: "notes-preview",
-                helpLink: "${g.resource(dir:"wmd", file:"markdownhelp.html")}"
+                helpLink: "${assetPath(src:"wmd/markdownhelp.html")}"
             });
         });
     </script>

@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
-    <meta name="layout" content="${hubConfig.skin}_assets"/>
+    <meta name="layout" content="${hubConfig.skin}"/>
     <title>My Projects | Field Capture</title>
     <script>
     var fcConfig = {

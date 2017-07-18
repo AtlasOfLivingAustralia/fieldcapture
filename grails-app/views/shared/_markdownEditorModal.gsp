@@ -39,7 +39,7 @@
             output: "editorOutput",
             button_bar: "editor-button-bar",
             preview: "",
-            helpLink: "${g.resource(dir:"wmd", file:"markdownhelp.html")}"
+            helpLink: "${assetPath(src:"wmd/markdownhelp.html")}"
         });
 
         self.title = ko.observable();

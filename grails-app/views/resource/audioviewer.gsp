@@ -5,7 +5,7 @@
     <title>Audio Player</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
-    <script src="${g.resource(dir: 'vendor/audiojs/', file: 'audio.min.js')}"></script>
+    <asset:javascript src="audiojs/audio.min.js"/>
     <script>
         audiojs.events.ready(function() {
             audiojs.createAll();

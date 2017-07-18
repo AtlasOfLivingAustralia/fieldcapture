@@ -3,7 +3,7 @@
 <head>
     <g:set var="containerType" scope="request" value="container"/>
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}&libraries=visualization"></script>
-    <meta name="layout" content="${hubConfig.skin}_assets"/>
+    <meta name="layout" content="${hubConfig.skin}"/>
     <title>Home | MERIT</title>
     <script>
         var fcConfig = {

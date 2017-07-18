@@ -2,7 +2,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-  <g:set var="layoutName" value="${hubConfig.skin}_assets"/>
+  <g:set var="layoutName" value="${hubConfig.skin}"/>
   <meta name="layout" content="${layoutName}"/>
   <title>${settingType.title?:'About'} | Field Capture</title>
   <script>

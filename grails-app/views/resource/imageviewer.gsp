@@ -4,8 +4,7 @@
 <head>
     <title>Image viewer</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <r:require module="leaflet" />
-    <r:layoutResources disposition="head" />
+    <asset:stylesheet src="leaflet/0.7.3/leaflet.css"/>
     <style>
     body {
         padding: 0;
@@ -23,7 +22,8 @@
 <body>
 <div id="image-map"></div>
 
-<r:script>
+<asset:javascript src="leaflet/0.7.3/leaflet.js"/>
+<script>
     // Using leaflet.js to pan and zoom a big image.
     // See also: http://kempe.net/blog/2014/06/14/leaflet-pan-zoom-image.html
 
@@ -79,7 +79,7 @@
     };
     img.src = file;
 
-</r:script>
-<r:layoutResources disposition="defer" />
+</script>
+
 </body>
 </html>

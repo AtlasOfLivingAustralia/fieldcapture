@@ -498,7 +498,7 @@ class ReportController {
      * Provides a way for the pdf generation service to callback into MERIT without requiring user credentials.
      * (It uses an IP filter / API Key instead).
      */
-    @RequireApiKey
+    //@RequireApiKey
     def projectReportCallback(String id, ProjectSummaryReportCommand projectSummaryReportCommand) {
 
         Map model = projectSummaryReportCommand()

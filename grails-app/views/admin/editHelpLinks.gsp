@@ -8,7 +8,7 @@
         fcConfig = {
            documentBulkUpdateUrl: "${g.createLink(controller:"document", action:"bulkUpdate")}",
            documentDeleteUrl: "${g.createLink(controller:"document", action:"deleteDocument")}",
-           imageLocation:"${resource(dir:'/images')}"
+           imageLocation:"${assetPath(src:'/')}"
         }
     </script>
     <asset:stylesheet src="common.css"/>

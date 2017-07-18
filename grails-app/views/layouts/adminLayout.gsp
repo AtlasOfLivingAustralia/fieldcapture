@@ -1,4 +1,4 @@
-<g:applyLayout name="${hubConfig.skin}_assets">
+<g:applyLayout name="${hubConfig.skin}">
     <head>
         <title><g:layoutTitle /></title>
         <g:layoutHead/>

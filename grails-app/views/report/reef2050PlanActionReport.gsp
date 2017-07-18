@@ -3,7 +3,7 @@
 <head>
     <title>Reef 2050 Action Status</title>
     <title></title>
-    <link href="${g.resource(dir:'css', file:'reef2050DashboardReport.css')}" type="text/css" rel="stylesheet">
+    <asset:stylesheet src="reef2050DashboardReport.css"/>
 </head>
 
 <body>
