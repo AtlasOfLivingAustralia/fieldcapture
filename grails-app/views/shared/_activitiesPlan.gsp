@@ -128,7 +128,7 @@
                 <td data-bind="attr:{rowspan:$parents[1].scores.length}">
                     <textarea data-bind="visible:$root.canEditOutputTargets(),value:$parents[1].outcomeTarget" rows="3" cols="80" style="width:90%"></textarea>
                     <span data-bind="visible:!$root.canEditOutputTargets(),text:$parents[1].outcomeTarget" style="white-space: pre-wrap;"></span>
-                    <span class="save-indicator" data-bind="visible:$parents[1].isSaving"><r:img dir="images" file="ajax-saver.gif" alt="saving icon"/> saving</span>
+                    <span class="save-indicator" data-bind="visible:$parents[1].isSaving"><asset:image src="ajax-saver.gif" alt="saving icon"/> saving</span>
                 </td>
                 <!-- /ko -->
                 <td><span data-bind="text:scoreLabel"></span></td>
@@ -136,7 +136,7 @@
                     <input type="text" class="input-mini" data-bind="visible:$root.canEditOutputTargets(),value:target" data-validation-engine="validate[required,custom[number]]"/>
                     <span data-bind="visible:!$root.canEditOutputTargets(),text:target"></span>
                     <span data-bind="text:units"></span>
-                    <span class="save-indicator" data-bind="visible:isSaving"><r:img dir="images" file="ajax-saver.gif" alt="saving icon"/> saving</span>
+                    <span class="save-indicator" data-bind="visible:isSaving"><asset:image src="ajax-saver.gif" alt="saving icon"/> saving</span>
                 </td>
 
             </tr>

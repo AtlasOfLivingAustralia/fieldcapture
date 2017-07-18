@@ -76,7 +76,7 @@
                 </div>
             </td>
             <g:if test="${allowProjectRecommendation}">
-            <td><label class="checkbox"><input type="checkbox" data-bind="checked:recommendAsCaseStudy"><span data-bind="visible:savingCaseStudy"><r:img dir="images" file="ajax-saver.gif" alt="saving icon"/> saving</span></label></td>
+            <td><label class="checkbox"><input type="checkbox" data-bind="checked:recommendAsCaseStudy"><span data-bind="visible:savingCaseStudy"><asset:image src="ajax-saver.gif" alt="saving icon"/> saving</span></label></td>
             </g:if>
         </tr>
 </tbody>

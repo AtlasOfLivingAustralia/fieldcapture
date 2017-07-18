@@ -852,7 +852,7 @@
 
                     $('#site-photo-points a').click(function(e) {
                         e.preventDefault();
-                        $('#site-photo-points').html('<r:img id="img-spinner" width="50" height="50" dir="images" file="loading.gif" alt="Loading"/>');
+                        $('#site-photo-points').html('<asset:image id="img-spinner" width="50" height="50" src="loading.gif" alt="Loading"/>');
                         $.get(fcConfig.sitesPhotoPointsUrl).done(function(data) {
 
                             $('#site-photo-points').html($(data));

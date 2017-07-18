@@ -91,10 +91,6 @@ grails.project.dependency.resolution = {
         build ":tomcat:$tomcatVersion"
 
         runtime ":jquery:1.11.1" // Override jquery as 1.8.3 was being pulled in from somewhere
-        compile ":resources:1.2.14"
-
-        runtime ":lesscss-resources:1.3.3"
-
         build ":release:3.1.2"
 
         runtime ":jquery:1.11.1"
@@ -105,27 +101,17 @@ grails.project.dependency.resolution = {
         //compile ":coffee-asset-pipeline:2.13.1"
         //compile ":handlebars-asset-pipeline:2.13.1"
 
-        // required by the cached-resources plugin
-        runtime ":cache-headers:1.1.6"
-        if (Environment.current == Environment.PRODUCTION) {
-            runtime ":cached-resources:1.0"
-        }
         runtime (":rest:0.8") {
             excludes "httpclient", "httpcore"
         }
         compile ":ala-auth:2.1.3"
         runtime ":csv:0.3.1"
-        runtime ":lesscss-resources:1.3.3"
         compile ":markdown:1.1.1"
-        compile ":resources:1.2.14"
-
-
         compile ':cache:1.1.8'
         compile ":cache-ehcache:1.0.5"
 
         compile ":google-visualization:1.0.1"
         compile ":mail:1.0.6"
-
         compile ":excel-export:0.2.0"
         compile ":excel-import:1.0.1"
 

@@ -8,7 +8,7 @@
     <script>
         var fcConfig = {
             projectExplorerAjaxUrl:'${g.createLink(action:'ajaxProjectExplorer')}',
-            spinnerIcon:'${r.img(dir: "images", file:"spinner.gif")}',
+            spinnerIcon:'${asset.image(src:"spinner.gif")}',
             spatialBaseUrl: "${grailsApplication.config.spatial.baseUrl}",
             spatialWmsCacheUrl: "${grailsApplication.config.spatial.wms.cache.url}",
             spatialWmsUrl: "${grailsApplication.config.spatial.wms.url}",
