@@ -10,6 +10,7 @@
 //= require thumbnail.scroller/2.0.3/jquery.mThumbnailScroller.js
 //= require jquery.columnizer/jquery.columnizer.js
 //= require jquery-gantt/js/jquery.fn.gantt.js
+//= require knockout-repeat/2.1/knockout-repeat.js
 //= require attach-document.js
 //= require jquery.fileDownload/jQuery.fileDownload
 //= require meriplan.js
