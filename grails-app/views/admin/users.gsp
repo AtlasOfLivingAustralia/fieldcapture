@@ -4,10 +4,10 @@
     <head>
         <meta name="layout" content="adminLayout"/>
         <title>Users | Admin | Data capture | Atlas of Living Australia</title>
+        <asset:stylesheet src="common.css"/>
     </head>
 
     <body>
-    <r:require module="jqueryValidationEngine"/>
     <content tag="pageTitle">Users</content>
 
     <div class="container">
@@ -37,10 +37,9 @@
             </div>
         </div>
         </div>
-    </body>
-</html>
 
-<r:script type="text/javascript">
+
+<asset:script type="text/javascript">
 
     $(document).ready(function() {
 
@@ -83,4 +82,8 @@
         html += "</tbody></table>";
         return html;
     }
-</r:script>
+</asset:script>
+    <asset:javascript src="common.js"/>
+    <asset:deferredScripts/>
+    </body>
+</html>

@@ -23,7 +23,7 @@
 
 
 </div>
-<r:script>
+<asset:script>
     $(function() {
         $( '#poi-slider' ).sliderPro({
             arrows: false,
@@ -36,4 +36,4 @@
             buttons:true
         });
     });
-</r:script>
+</asset:script>

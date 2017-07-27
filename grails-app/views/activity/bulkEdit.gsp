@@ -4,8 +4,8 @@
 <head>
   <meta name="layout" content="${hubConfig.skin}"/>
   <title>Create | Activity | Field Capture</title>
-  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jstimezonedetect/1.0.4/jstz.min.js"></script>
-  <r:script disposition="head">
+  <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
+  <script>
     var fcConfig = {
         organisationViewUrl: "${createLink(controller:'organisation', action:'index', id:organisation.organisationId)}",
         serverUrl: "${grailsApplication.config.grails.serverURL}",
@@ -15,8 +15,10 @@
         returnTo: "${params.returnTo}"
         },
         here = document.location.href;
-  </r:script>
-  <r:require modules="knockout,jqueryValidationEngine,datepicker,slickgrid,jQueryFileUpload,jQueryFileDownload,amplify"/>
+  </script>
+  <asset:stylesheet src="common.css"/>
+  <asset:stylesheet src="editAnnouncements.css"/>
+
     <style type="text/css">
         input.editor-text {box-sizing:border-box; width: 100%;}
         .slick-column-name { white-space: normal; }
@@ -86,7 +88,7 @@
 
 <g:render template="/shared/timeoutMessage" model="${[url:loginUrl]}"/>
 
-<r:script>
+<asset:script>
 
     $(function () {
     // Override the behaviour of the default to prevent spurious focus events from triggering change dection (as the value changes from 0 to "0")
@@ -534,7 +536,11 @@
         });
     });
 
-</r:script>
+</asset:script>
+<asset:javascript src="common.js"/>
+<asset:javascript src="editAnnouncements.js"/>
+<asset:deferredScripts/>
+
 
 </body>
 </html>

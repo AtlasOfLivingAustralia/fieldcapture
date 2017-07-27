@@ -3,8 +3,7 @@
 <head>
     <meta name="layout" content="adminLayout"/>
     <title>Admin Reports | Admin | Data capture | Atlas of Living Australia</title>
-    <r:require modules="knockout,jqueryValidationEngine,wmd"/>
-    <r:script disposition="head">
+    <script>
         fcConfig = {
             performanceComparisonReportUrl: "${g.createLink(controller: 'report', action: 'performanceAssessmentComparisonReport')}",
             dashboardUrl: "${g.createLink(controller: 'report', action: 'loadReport')}",
@@ -12,7 +11,8 @@
             userDownloadUrl: "${g.createLink(controller:'search', action:'downloadUserData')}"
 
         }
-    </r:script>
+    </script>
+    <asset:stylesheet src="common.css"/>
     <g:set var="here" value="${g.createLink(action:'editSiteBlog')}"/>
 </head>
 
@@ -29,8 +29,8 @@
 
 <g:render template="/shared/dashboard"/>
 
-</body>
-<r:script>
+<asset:javascript src="common.js"/>
+<script>
     $(function() {
         var SELECTED_REPORT_KEY = 'selectedAdminReport';
         var selectedReport = amplify.store(SELECTED_REPORT_KEY);
@@ -71,5 +71,6 @@
 
     });
 
-</r:script>
+</script>
+</body>
 </html>

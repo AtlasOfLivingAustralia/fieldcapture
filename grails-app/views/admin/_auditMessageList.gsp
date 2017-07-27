@@ -34,16 +34,3 @@
         <div>No messages found!</div>
     </g:else>
 </div>
-
-<r:script type="text/javascript">
-    $(document).ready(function() {
-        $('#audit-message-list').DataTable({
-            "order": [[ 0, "desc" ]],
-            "aoColumnDefs": [{ "sType": "date-uk", "aTargets": [0] }],
-            "oLanguage": {
-                "sSearch": "Search: "
-            }
-        });
-        $('.dataTables_filter input').attr("placeholder", "Date, Action, Type, Name, User");
-    });
-</r:script>

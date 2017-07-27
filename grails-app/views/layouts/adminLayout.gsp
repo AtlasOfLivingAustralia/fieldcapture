@@ -1,6 +1,7 @@
 <g:applyLayout name="${hubConfig.skin}">
     <head>
         <title><g:layoutTitle /></title>
+        <g:layoutHead/>
         <style type="text/css">
 
         .icon-chevron-right {

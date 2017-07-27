@@ -8,7 +8,7 @@
     <script type="text/javascript" src="//www.google.com/jsapi"></script>
     <g:set var="loadPermissionsUrl" value="${createLink(controller: 'organisation', action: 'getMembersForOrganisation', id:organisation.organisationId)}"/>
 
-    <r:script disposition="head">
+    <script>
         var fcConfig = {
             serverUrl: "${grailsApplication.config.grails.serverURL}",
             viewProjectUrl: "${createLink(controller:'project', action:'index')}",
@@ -22,8 +22,8 @@
             organisationReportUrl: "${g.createLink(action:'editOrganisationReport')}",
             organisationReportPDFUrl: "${g.createLink(action:'performanceReportPDF')}",
             organisationMembersUrl: "${loadPermissionsUrl}",
-            imageLocation:"${resource(dir:'/images')}",
-            logoLocation:"${resource(dir:'/images/filetypes')}",
+            imageLocation:"${assetPath(src:'/')}",
+            logoLocation:"${assetPath(src:'/filetypes')}",
             adHocReportsUrl: '${g.createLink(action:"getAdHocReportTypes")}',
             dashboardUrl: "${g.createLink(controller: 'report', action: 'loadReport', params:[fq:'organisationFacet:'+organisation.name, organisationId:organisation.organisationId])}",
             performanceComparisonReportUrl: "${g.createLink(controller: 'report', action: 'performanceAssessmentComparisonReport', params:[organisationId:organisation.organisationId])}",
@@ -38,7 +38,7 @@
             dashboardCategoryUrl: "${g.createLink(controller: 'report', action: 'activityOutputs', params: [fq:'organisationFacet:'+organisation.name])}",
             projects : <fc:modelAsJavascript model="${organisation.projects}"/>
             };
-    </r:script>
+    </script>
     <style type="text/css">
         #projectList th {
             white-space: normal;
@@ -50,12 +50,12 @@
             margin: 5px 0;
         }
     </style>
-    <r:require modules="wmd,knockout,mapWithFeatures,amplify,organisation,projects,jquery_bootstrap_datatable,datepicker,jqueryValidationEngine,slickgrid,sliderpro"/>
+    <asset:stylesheet src="common.css"/>
 </head>
 <body>
 
 <div class="${containerType}">
-    <g:render template="banner" model="${[imageUrl:resource(dir:'/images/filetypes')]}"/>
+    <g:render template="banner" model="${[imageUrl:assetPath(src:'filetypes')]}"/>
 
     <div id="organisationDetails" style="display:none;">
 
@@ -71,14 +71,14 @@
             </div>
         </div>
         <div id="loading" class="text-center">
-            <r:img width="50px" dir="images" file="loading.gif" alt="loading icon"/>
+            <asset:image width="50px" src="loading.gif" alt="loading icon"/>
         </div>
     </div>
 </div>
 
 <g:render template="/shared/declaration" model="${[declarationType:au.org.ala.merit.SettingPageType.ORGANISATION_DECLARATION]}"/>
 
-<r:script>
+<asset:script>
 
     $(function () {
 
@@ -159,7 +159,11 @@
         </g:if>
     });
 
-</r:script>
+</asset:script>
+
+<asset:javascript src="common.js"/>
+<asset:javascript src="organisation-manifest.js"/>
+<asset:deferredScripts/>
 
 </body>
 

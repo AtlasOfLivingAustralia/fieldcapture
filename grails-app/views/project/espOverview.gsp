@@ -2,10 +2,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
+    <meta name="layout" content="${hubConfig.skin}"/>
     <title>${project?.name.encodeAsHTML()} | Project | Field Capture</title>
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
-    <r:script disposition="head">
+    <script>
     var fcConfig = {
         serverUrl: "${grailsApplication.config.grails.serverURL}",
         projectUpdateUrl: "${createLink(action: 'ajaxUpdate', id: project.projectId)}",
@@ -35,7 +35,7 @@
         sldPolgonDefaultUrl: "${grailsApplication.config.sld.polgon.default.url}",
         sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}",
         organisationLinkBaseUrl: "${createLink(controller:'organisation', action:'index')}",
-        imageLocation:"${resource(dir:'/images')}",
+        imageLocation:"${assetPath(src:'/')}",
         documentUpdateUrl: "${createLink(controller:"document", action:"documentUpdate")}",
         documentDeleteUrl: "${createLink(controller:"document", action:"deleteDocument")}",
         pdfgenUrl: "${createLink(controller: 'resource', action: 'pdfUrl')}",
@@ -78,9 +78,9 @@
         here = window.location.href;
 
 
-    </r:script>
+    </script>
 
-    <r:require modules="gmap3,mapWithFeatures,knockout,merit_projects,activity"/>
+    <asset:stylesheet src="common.css"/>
 </head>
 <body>
 <div class="${containerType}">
@@ -177,7 +177,7 @@
 <g:render template="/shared/declaration"/>
 <!-- /ko -->
 
-<r:script>
+<asset:script>
         var organisations = <fc:modelAsJavascript model="${organisations}"/>;
 var sites = JSON.parse('${(sites as grails.converters.JSON).toString()}');
 
@@ -363,8 +363,10 @@ $(function() {
 
 });
 
-</r:script>
-
+</asset:script>
+<asset:javascript src="common.js"/>
+<asset:javascript src="projects.js"/>
+<asset:deferredScripts/>
 
 </body>
 </html>

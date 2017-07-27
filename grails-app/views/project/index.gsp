@@ -2,10 +2,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
+    <meta name="layout" content="${hubConfig.skin}"/>
     <title>${project?.name.encodeAsHTML()} | Project | Field Capture</title>
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
-    <r:script disposition="head">
+    <script>
     var fcConfig = {
         serverUrl: "${grailsApplication.config.grails.serverURL}",
         projectUpdateUrl: "${createLink(action: 'ajaxUpdate', id: project.projectId)}",
@@ -35,7 +35,7 @@
         sldPolgonDefaultUrl: "${grailsApplication.config.sld.polgon.default.url}",
         sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}",
         organisationLinkBaseUrl: "${createLink(controller:'organisation', action:'index')}",
-        imageLocation:"${resource(dir:'/images')}",
+        imageLocation:"${assetPath(src:'/')}",
         documentUpdateUrl: "${createLink(controller:"document", action:"documentUpdate")}",
         documentDeleteUrl: "${createLink(controller:"document", action:"deleteDocument")}",
         pdfgenUrl: "${createLink(controller: 'resource', action: 'pdfUrl')}",
@@ -72,7 +72,7 @@
         here = window.location.href;
 
         fcConfig.project = <fc:renderProject project="${project}"/>;
-    </r:script>
+    </script>
 
 
         <style>
@@ -107,11 +107,12 @@
             }
         </style>
 
-    <r:require modules="gmap3,mapWithFeatures,knockout,datepicker,amplify,imageViewer, jqueryValidationEngine, merit_projects, attachDocuments, wmd, jquery_bootstrap_datatable"/>
+    <asset:stylesheet src="common.css"/>
+    <asset:stylesheet src="project.css"/>
 </head>
 <body>
 <div id="spinner" class="spinner" style="position: fixed;top: 50%;left: 50%;margin-left: -50px;margin-top: -50px;text-align:center;z-index:1234;overflow: auto;width: 100px;height: 102px;">
-    <r:img id="img-spinner" width="50" height="50" dir="images" file="loading.gif" alt="Loading"/>
+    <asset:image id="img-spinner" width="50" height="50" src="loading.gif" alt="Loading"/>
 </div>
 <div class="${containerType}">
 
@@ -175,7 +176,7 @@
                         <div class="well well-small">
                             <label><b>MERI attachments:</b></label>
                             <g:render template="/shared/listDocuments"
-                                  model="[useExistingModel: true,editable:false, filterBy: 'programmeLogic', ignore: '', imageUrl:resource(dir:'/images'),containerId:'meriPlanDocumentList']"/>
+                                  model="[useExistingModel: true,editable:false, filterBy: 'programmeLogic', ignore: '', imageUrl:assetPath(src:'/'),containerId:'meriPlanDocumentList']"/>
                         </div>
                     </div>
                 </div>
@@ -333,7 +334,7 @@
                                     <div class="row-fluid">
                                         <div class="span10">
                                             <g:render template="/shared/editDocuments"
-                                                      model="[useExistingModel: true,editable:true, filterBy: 'all', ignore: '', imageUrl:resource(dir:'/images/filetypes'),containerId:'adminDocumentList']"/>
+                                                      model="[useExistingModel: true,editable:true, filterBy: 'all', ignore: '', imageUrl:assetPath(src:'filetypes'),containerId:'adminDocumentList']"/>
                                         </div>
                                     </div>
                                     %{--The modal view containing the contents for a modal dialog used to attach a document--}%
@@ -360,7 +361,7 @@
 
 </div>
 <g:if test="${user?.isEditor}">
-    <r:script>
+    <asset:script>
         // Admin JS code only exposed to admin users
         $(function () {
             // remember state of admin nav (vertical tabs)
@@ -383,9 +384,9 @@
     </g:if>
         });
 
-    </r:script>
+    </asset:script>
 </g:if>
-<r:script>
+<asset:script>
         var organisations = <fc:modelAsJavascript model="${organisations}"/>;
 
        // custom validator to ensure that only one of two fields is populated
@@ -851,7 +852,7 @@
 
                     $('#site-photo-points a').click(function(e) {
                         e.preventDefault();
-                        $('#site-photo-points').html('<r:img id="img-spinner" width="50" height="50" dir="images" file="loading.gif" alt="Loading"/>');
+                        $('#site-photo-points').html('<asset:image id="img-spinner" width="50" height="50" src="loading.gif" alt="Loading"/>');
                         $.get(fcConfig.sitesPhotoPointsUrl).done(function(data) {
 
                             $('#site-photo-points').html($(data));
@@ -978,8 +979,9 @@
         });// end window.load
 
 
-</r:script>
-
-
+</asset:script>
+<asset:javascript src="common.js"/>
+<asset:javascript src="projects.js"/>
+<asset:deferredScripts/>
 </body>
 </html>

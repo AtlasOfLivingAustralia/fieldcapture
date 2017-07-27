@@ -30,22 +30,22 @@ http://sourceforge.net/adobe/cmap/wiki/License/
             (typeof window !== 'undefined' ? window : this).PDFJS = {};
         }
 
-        PDFJS.cMapUrl = '${g.resource(dir: 'vendor/pdfjs/1.1.215/viewer/cmaps')}';
-        PDFJS.imageResourcesPath = '${g.resource(dir: 'vendor/pdfjs/1.1.215/viewer/images')}';
-        PDFJS.workerSrc = '${g.resource(dir: 'vendor/pdfjs/1.1.215/', file: 'pdf.worker.js')}';
+        PDFJS.cMapUrl = '${assetPath('pdfjs/1.1.215/viewer/cmaps')}';
+        PDFJS.imageResourcesPath = '${assetPath('/pdfjs/1.1.215/viewer/images')}';
+        PDFJS.workerSrc = '${assetPath('pdfjs/1.1.215/pdf.worker.js')}';
     </script>
 
-    <link rel="stylesheet" href="${g.resource(dir:'vendor/pdfjs/1.1.215/viewer/', file: 'viewer.css')}"/>
+    <asset:stylesheet src="pdfjs/1.1.215/viewer/viewer.css"/>
 
-    <script type="text/javascript" src="${g.resource(dir: 'vendor/pdfjs/1.1.215/viewer/', file:'compatibility.js')}"></script>
+    <asset:javascript src="pdfjs/1.1.215/viewer/compatibility.js"/>
 
     <!-- This snippet is used in production (included from viewer.html) -->
-    <link rel="resource" type="application/l10n" href="${g.resource(dir:'vendor/pdfjs/1.1.215/viewer/locale/', file: 'locale.properties')}"/>
-    <script type="text/javascript" src="${g.resource(dir: 'vendor/pdfjs/1.1.215/viewer/', file:'l10n.js')}"></script>
-    <script type="text/javascript" src="${g.resource(dir: 'vendor/pdfjs/1.1.215/', file:'pdf.js')}"></script>
+    <link rel="resource" type="application/l10n" href="${assetPath('pdfjs/1.1.215/viewer/locale/locale.properties')}"/>
+    <asset:javascript src="pdfjs.1.215/viewer/l10n.js"/>
+    <asset:javascript src="pdfjs/1.1.215/pdf.js"/>
 
-    <script type="text/javascript" src="${g.resource(dir: 'vendor/pdfjs/1.1.215/viewer/', file:'debugger.js')}"></script>
-    <script type="text/javascript" src="${g.resource(dir: 'vendor/pdfjs/1.1.215/viewer/', file:'viewer.js')}"></script>
+    <asset:javascript src="pdfjs/1.1.215/viewer/debugger.js"/>
+    <asset:javascript src="pdfjs/1.1.215/viewer/viewer.js"/>
 
 </head>
 

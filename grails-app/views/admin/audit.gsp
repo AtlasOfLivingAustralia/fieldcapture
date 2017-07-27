@@ -5,16 +5,16 @@
 		<title>Admin - Audit | Data capture | Atlas of Living Australia</title>
 		<style type="text/css" media="screen">
 		</style>
-        <r:script disposition="head">
+        <script disposition="head">
             var fcConfig = {
                 projectSearchUrl:"${createLink(controller:'admin', action:'auditProjectSearch')}",
                 organisationSearchUrl:"${createLink(controller:'admin', action:'auditOrganisationSearch')}",
                 settingSearchUrl:"${createLink(controller:'admin', action:'auditSettings')}"
             };
-        </r:script>
+        </script>
+        <asset:stylesheet src="audit.css"/>
 	</head>
 	<body>
-        <r:require modules="jquery_bootstrap_datatable"/>
         <h3>Audit</h3>
         <form class="form-inline">
             Search for a :
@@ -46,56 +46,9 @@
         </div>
         </g:if>
 
+        <asset:javascript src="audit.js"/>
+
     </body>
 </html>
 
-<r:script>
-
-    $(document).ready(function() {
-
-        $('#results-list').DataTable({
-            "bSort": false,
-            "oLanguage": {
-             "sSearch": "Search: "
-            }
-        });
-        $('.dataTables_filter input').attr("placeholder", "Name or Description");
-
-        $("#btnSearch").click(function(e) {
-            e.preventDefault();
-            doAuditSearch()
-        });
-
-        $("#searchType").change(function() {
-            var searchType = $("#searchType").val();
-            $('#searchTerm').prop('disabled', searchType == 'Setting / Site Blog');
-        })
-
-    });
-
-
-    function doAuditSearch() {
-        var searchTerm = $("#searchTerm").val();
-
-        var searchType = $("#searchType").val();
-
-        var url;
-        switch (searchType) {
-        case 'Project':
-            url = fcConfig.projectSearchUrl;
-            break;
-        case 'Organisation':
-            url = fcConfig.organisationSearchUrl;
-            break;
-        default:
-            url = fcConfig.settingSearchUrl;
-        }
-
-        if (searchTerm || searchType == 'Setting / Site Blog') {
-            window.location = url+"?searchTerm=" + searchTerm;
-        }
-    }
-
-
-</r:script>
 

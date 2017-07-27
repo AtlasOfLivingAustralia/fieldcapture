@@ -31,7 +31,7 @@
         </select>
     </span>
     <span class="span8"></span>
-    <span class="span1"><r:img dir="images" file="green_army_logo.png" alt="Green Army Logo"/></span>
+    <span class="span1"><asset:image src="green_army_logo.png" alt="Green Army Logo"/></span>
 </div>
 
 <g:set var="tabConfig" value="${[[name:'Jul',template:'monthly',title:'July',yearModifier:0], [name:'Aug',template:'monthly', title:'August',yearModifier:0], [name:'Sep',template:'monthly', title:'September',yearModifier:0], [name:'Oct',template:'monthly', title:'October',yearModifier:0], [name:'Nov',template:'monthly',title:'November',yearModifier:0], [name:'Dec',template:'monthly',title:'December',yearModifier:0], [name:'Jan',template:'monthly',title:'January',yearModifier:1], [name:'Feb',template:'monthly', title:'February',yearModifier:1], [name:'Mar',template:'monthly',title:'March',yearModifier:1], [name:'Apr',template:'monthly', title:'April', yearModifier:1], [name:'May',template:'monthly', title:'May',yearModifier:1], [name:'Jun',template:'monthly', title:'June',yearModifier:1],

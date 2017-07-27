@@ -3,23 +3,24 @@
 <head>
     <meta name="layout" content="adminLayout"/>
     <title>Edit Help Links | Admin | Data capture | Atlas of Living Australia</title>
-    <r:require modules="knockout,jqueryValidationEngine"/>
-    <r:script disposition="head">
+
+    <script>
         fcConfig = {
            documentBulkUpdateUrl: "${g.createLink(controller:"document", action:"bulkUpdate")}",
            documentDeleteUrl: "${g.createLink(controller:"document", action:"deleteDocument")}",
-           imageLocation:"${resource(dir:'/images')}"
+           imageLocation:"${assetPath(src:'/')}"
         }
-    </r:script>
+    </script>
+    <asset:stylesheet src="common.css"/>
 </head>
 
 <body>
 <h3>Edit Help Resource Links</h3>
 
 <div class="help-resource-titles row-fluid">
-    <h4 class="span2">Document Type</h4>
-    <h4 class="span4">Title</h4>
-    <h4 class="span4">URL</h4>
+    <div class="span2 strong">Document Type</div>
+    <div class="span4 strong">Title</div>
+    <div class="span4 strong">URL</div>
 </div>
 <div id="help-resources" class="validationEngineContainer" data-bind="foreach:helpLinks">
 
@@ -38,14 +39,16 @@
     <button type="button" id="cancel" data-bind="click:cancel" class="btn">Cancel</button>
 </div>
 
-<r:script>
+<asset:javascript src="common.js"/>
+<asset:javascript src="attach-document.js"/>
+<script>
     $(function() {
         var links = <fc:modelAsJavascript model="${helpLinks}" default="[]"/>;
         var helpViewModel = new HelpLinksViewModel(links, '#help-resources');
 
         ko.applyBindings(helpViewModel);
     });
-</r:script>
+</script>
 
 </body>
 </html>

@@ -19,7 +19,7 @@
                     </g:if>
                 </g:each>
             </select>
-            <r:img style="display:none;" id="map-colorby-status" width="23" height="23" dir="images" file="loading-1.gif" alt="Loading"/>
+            <asset:image style="display:none;" id="map-colorby-status" width="23" height="23" src="loading-1.gif" alt="Loading"/>
             <div id="legend-table">
                 <table style="opacity:1.0; filter:alpha(opacity=50); border: none; font-size : 80%; display:inline-block;" id="legend-1" >
                     <tbody>
@@ -35,7 +35,7 @@
 
 </div>
 
-<r:script>
+<asset:script>
 
     function generateMap(facetList, markBy, mapOptions) {
 
@@ -403,4 +403,4 @@
         return (function(h){return '#000000'.substr(0,7-h.length)+h})((~~(Math.random()*(1<<24))).toString(16));
     }
 
-</r:script>
+</asset:script>

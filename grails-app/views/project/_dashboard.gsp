@@ -31,7 +31,7 @@
     <p>No activities or output targets have been defined for this project.</p>
 </g:else>
 
-<script>
+<asset:script>
 
     $(document).on('dashboardShown', function () {
 
@@ -45,5 +45,5 @@
         $('.helphover').data('popover', null);
         $('.helphover').popover({container:'body', animation: true, trigger:'hover'});
     });
-</script>
+</asset:script>
 

@@ -4,6 +4,7 @@
     <head>
         <meta name="layout" content="adminLayout"/>
         <title>Settings | Admin | Data capture | Atlas of Living Australia</title>
+        <asset:stylesheet src="base.css"/>
     </head>
 
     <body>
@@ -66,5 +67,6 @@
             </tbody>
         </table>
 
+    <asset:javascript src="base.js"/>
     </body>
 </html>

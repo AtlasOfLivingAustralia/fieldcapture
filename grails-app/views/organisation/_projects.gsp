@@ -21,7 +21,7 @@
     </div>
 </g:else>
 
-<r:script>
+<asset:script>
 $(function() {
     var projects = fcConfig.projects;
     $.each(projects, function(i, project) {
@@ -102,7 +102,7 @@ $(function() {
         var saveDate = function(isoDate) {
             cell.removeClass('editing');
             span.remove();
-            var spinner = $('<r:img dir="images" file="ajax-saver.gif" alt="saving icon"/>').css('margin-left', '10px');
+            var spinner = $('<asset:image src="ajax-saver.gif" alt="saving icon"/>').css('margin-left', '10px');
             cell.append(spinner);
             current.show();
             var project = projects[apiCell.index().row];
@@ -226,4 +226,4 @@ $(function() {
         }
     });
 });
-</r:script>
+</asset:script>

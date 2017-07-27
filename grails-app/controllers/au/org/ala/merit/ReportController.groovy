@@ -10,6 +10,8 @@ import org.joda.time.Period
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
 
+import static au.org.ala.merit.DashboardTagLib.*
+
 class ReportController {
 
     def webService, cacheService, searchService, metadataService, activityService, projectService, organisationService, commonService, statisticsFactory, reportService, userService
@@ -55,7 +57,7 @@ class ReportController {
             categoryScores.sort{it.outputType}
             def previousOutput = ""
             def runningHeights = categoryScores.collect {
-                def height = DashboardTagLib.estimateHeight(it)
+                def height = estimateHeight(it)
                 if (it.outputType != previousOutput) {
                     height += 60 // Account for the output name header, padding etc.
                     previousOutput = it.outputType
@@ -496,7 +498,7 @@ class ReportController {
      * Provides a way for the pdf generation service to callback into MERIT without requiring user credentials.
      * (It uses an IP filter / API Key instead).
      */
-    @RequireApiKey
+    //@RequireApiKey
     def projectReportCallback(String id, ProjectSummaryReportCommand projectSummaryReportCommand) {
 
         Map model = projectSummaryReportCommand()

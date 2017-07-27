@@ -49,7 +49,7 @@
 
 </form>
 
-<r:script>
+<asset:script>
 
 $(function() {
    var disabled = false;
@@ -67,4 +67,4 @@ $(function() {
        }
    });
 });
-</r:script>
+</asset:script>

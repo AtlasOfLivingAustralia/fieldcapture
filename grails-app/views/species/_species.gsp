@@ -1,4 +1,3 @@
-<r:require modules="jquery_ui"/>
 <!-- This section is bound to a secondary KO viewModel. The following line prevents binding
          to the main viewModel. -->
 <!-- ko stopBinding: true -->
@@ -50,7 +49,7 @@
         </form>
     </div><!-- /.row-fluid -->
 </div>
-<r:script>
+<asset:script>
     $(window).load(function(){
         // click event for submit species List
         $("#submitSpeciesList").click(function(e) {
@@ -101,5 +100,5 @@
 
     });
 
-</r:script>
+</asset:script>
 <!-- /ko -->

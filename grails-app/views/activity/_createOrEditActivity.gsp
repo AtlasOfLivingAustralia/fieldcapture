@@ -135,7 +135,7 @@
 
 <!-- templates -->
 
-<r:script>
+<asset:script>
 
     var returnTo = "${returnTo}";
 
@@ -450,4 +450,4 @@
         }
 
     });
-</r:script>
+</asset:script>

@@ -26,7 +26,7 @@
 
 <!-- /ko -->
 
-<r:script>
+<asset:script>
 
             /**
             * This populates the "Project Members" table via an AJAX call
@@ -148,4 +148,4 @@
                 });
             });
 
-</r:script>
+</asset:script>

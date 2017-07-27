@@ -3,18 +3,20 @@
 <head>
     <meta name="layout" content="${hubConfig.skin}"/>
     <title>My Projects | Field Capture</title>
-    <r:script disposition="head">
+    <script>
     var fcConfig = {
         serverUrl: "${grailsApplication.config.grails.serverURL}",
         projectViewUrl: "${createLink(controller:'project', action:'index')}",
         projectUpdateUrl: "${createLink(controller:'project', action:'ajaxUpdate')}",
         projectReportsUrl:"${createLink(controller: 'project', action:'reportingHistory')}",
         organisationViewUrl: "${createLink(controller:'organisation', action:'index')}",
-        imageLocation:"${resource(dir:'images')}"
+        imageLocation:"${assetPath(src:'/')}"
         },
         here = window.location.href;
 
-    </r:script>
+    </script>
+    <asset:stylesheet src="common.js"/>
+    <asset:stylesheet src="project.css"/>
 </head>
 <body>
 <div id="wrapper" class="${containerType}">
@@ -85,10 +87,13 @@
     </g:else>
 
 </div>
-<r:script>
+<asset:javascript src="common.js"/>
+<asset:javascript src="my-projects.js"/>
+<asset:deferredScripts/>
+<script>
     $(window).load(function () {
         $('.tooltips').tooltip({placement: "right"});
     });
-</r:script>
+</script>
 </body>
 </html>

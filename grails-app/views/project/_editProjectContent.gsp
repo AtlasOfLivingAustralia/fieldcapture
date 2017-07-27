@@ -31,7 +31,7 @@
 </div>
 <!-- /ko -->
 
-<r:script>
+<asset:script>
      window.${attributeName}ViewModel = function(project, initialValue) {
         var self = this;
         setup_wmd({
@@ -40,7 +40,7 @@
             output: "${attributeName}Output",
             button_bar: "${attributeName}-button-bar",
             preview: "${attributeName}-preview",
-            helpLink: "${g.resource(dir:"wmd", file:"markdownhelp.html")}"
+            helpLink: "${assetPath(src:"wmd/markdownhelp.html")}"
         });
 
         self.message = ko.observable('');
@@ -91,4 +91,4 @@
         };
     }
 
-</r:script>
+</asset:script>

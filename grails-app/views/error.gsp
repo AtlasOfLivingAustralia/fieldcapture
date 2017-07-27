@@ -3,7 +3,7 @@
 	<head>
 		<title>Grails Runtime Exception</title>
 		<meta name="layout" content="nrm">
-		<link rel="stylesheet" href="${resource(dir: 'css', file: 'errors.css')}" type="text/css">
+		<link rel="stylesheet" href="${assetPath(src: 'errors.css')}" type="text/css">
 	</head>
 	<body>
     <div id="wrapper" class="${containerType}">

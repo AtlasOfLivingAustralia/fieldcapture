@@ -3,29 +3,16 @@
 	<head>
 		<meta name="layout" content="${layout?:'adminLayout'}"/>
 		<title>Static pages - Edit ${settingTitle} | Data capture | Atlas of Living Australia</title>
-		<style type="text/css" media="screen">
-		</style>
+        <asset:stylesheet src="editSetting.css"/>
 	</head>
 	<body>
-        <r:require modules="wmd" />
-        <r:script>
-                $(document).ready(function (e) {
-                    setup_wmd({
-                        output_format: "markdown",
-                        input: "textValue",
-                        output: "copy_html",
-                        button_bar: "notes-button-bar",
-                        preview: "notes-preview",
-                        helpLink: "${g.resource(dir:"wmd", file:"markdownhelp.html")}"
-                    });
-                });
-        </r:script>
+
         <content tag="pageTitle">Static pages</content>
-        <div id="wrapper" class="${container}">
+        <div id="wrapper" class="${containerType}">
             <div class="row-fluid">
                 <div class="span12" id="">
                     <g:if test="${!ajax}">
-                        <a href="${returnUrl}" class="btn"><i class="icon-hand-left"></i> back to ${returnLabel}</a>
+                        <a href="${returnUrl}" class="btn"><i class="fa fa-hand-o-left"></i> back to ${returnLabel}</a>
                         <h3>Edit &quot;${settingTitle}&quot; content</h3>
                     </g:if>
                     <g:form id="saveSettingContent" controller="admin" action="saveTextAreaSetting">
@@ -54,5 +41,18 @@
                 </div>
             </div>
         </div>
+    <asset:javascript src="editSetting.js"/>
+    <script>
+        $(document).ready(function (e) {
+            setup_wmd({
+                output_format: "markdown",
+                input: "textValue",
+                output: "copy_html",
+                button_bar: "notes-button-bar",
+                preview: "notes-preview",
+                helpLink: "${assetPath(src:"wmd/markdownhelp.html")}"
+            });
+        });
+    </script>
     </body>
 </html>

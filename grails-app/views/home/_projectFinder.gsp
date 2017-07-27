@@ -1,34 +1,4 @@
 <%@ page import="au.org.ala.merit.SettingPageType" %>
-<style type="text/css">
-.facet-collapse {
-    height: auto;
-    width: auto;
-}
-
-
-.facet-collapse.width {
-    position: relative;
-    width: 0;
-    overflow: hidden;
-    -webkit-transition: width 0.25s ease;
-    -moz-transition: width 0.25s ease;
-    -o-transition: width 0.25s ease;
-    transition: width 0.25s ease;
-}
-
-.facet-collapse.in.width {
-    width: auto;
-    -webkit-transition: width 0.25s ease;
-    -moz-transition: width 0.25s ease;
-    -o-transition: width 0.25s ease;
-    transition: width 0.25s ease;
-}
-
-.facet-collapse.in.height {
-    height: auto;
-}
-
-</style>
 
 <div id="projectExplorer">
 <g:if test="${flash.error || results.error}">
@@ -261,7 +231,7 @@
                                 </g:else>
                             </div>
                             <div class="loading-message">
-                                <r:img dir="images" file="loading.gif" alt="saving icon"/> Loading...
+                                <asset:image dir="images" src="loading.gif" alt="saving icon"/> Loading...
                             </div>
                             <div id="dashboard-content">
 
@@ -357,7 +327,7 @@
 </g:else>
 </div>
 
-<r:script>
+<asset:script>
     var projectListIds = [], facetList = [], mapDataHasChanged = false, mapBounds, projectSites; // globals
 
     $(function () {
@@ -959,4 +929,4 @@
             $('#projectTable tbody').append($tr);
         });
     }
-</r:script>
+</asset:script>

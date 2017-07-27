@@ -55,7 +55,7 @@
                     <div class="row-fluid">
                         <div class="span10">
                             <g:render template="/shared/editDocuments"
-                                    model="[useExistingModel: true,editable:true, filterBy: 'all', ignore: '', imageUrl:resource(dir:'/images'),containerId:'adminDocumentList']"/>
+                                    model="[useExistingModel: true,editable:true, filterBy: 'all', ignore: '', imageUrl:assetPath(src:'/'),containerId:'adminDocumentList']"/>
                         </div>
                     </div>
                     %{--The modal view containing the contents for a modal dialog used to attach a document--}%

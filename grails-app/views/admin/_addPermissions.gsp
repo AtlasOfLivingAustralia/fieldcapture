@@ -44,7 +44,7 @@
         </li>
     </ul>
 </div>
-<r:script>
+<asset:script>
     $(document).ready(function() {
         // combobox plugin enhanced select
         $(".combobox").combobox();
@@ -118,4 +118,4 @@
         }
 
     }
-</r:script>
+</asset:script>

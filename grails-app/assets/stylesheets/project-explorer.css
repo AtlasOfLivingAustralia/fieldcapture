@@ -1,0 +1,76 @@
+.accordion-group {
+    border-color: #ddd;
+    padding: 10px 15px;
+    margin-bottom: 5px;
+}
+
+.accordian-heading a {
+    color: #333;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+#facetsCol h3 {
+    font-size: 18px;
+    margin-bottom: 10px !important;
+    margin-top: 20px;
+}
+
+
+#facetsContent h4 {
+    font-size: 14px;
+}
+
+
+
+#projectTable td {
+    background-color: transparent;
+}
+
+.table-hover tbody tr:hover > td,.table-hover tbody tr:hover > th {
+    background-color: transparent;
+}
+
+#reports .accordion-heading {
+    background-color: transparent;
+}
+
+.accordion-heading .accordion-toggle {
+    padding: 0;
+}
+
+#reports .outputData {
+    margin-top: 0;
+}
+
+#reports a {
+    font-weight: 600;
+}
+
+.facet-collapse {
+    height: auto;
+    width: auto;
+}
+
+
+.facet-collapse.width {
+    position: relative;
+    width: 0;
+    overflow: hidden;
+    -webkit-transition: width 0.25s ease;
+    -moz-transition: width 0.25s ease;
+    -o-transition: width 0.25s ease;
+    transition: width 0.25s ease;
+}
+
+.facet-collapse.in.width {
+    width: auto;
+    -webkit-transition: width 0.25s ease;
+    -moz-transition: width 0.25s ease;
+    -o-transition: width 0.25s ease;
+    transition: width 0.25s ease;
+}
+
+.facet-collapse.in.height {
+    height: auto;
+}

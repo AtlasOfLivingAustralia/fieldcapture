@@ -15,7 +15,7 @@
             </div>
             <div id="${categoryContent}" class="outputData accordian-body collapse" data-category="${category}">
                 <div class="accordian-inner row-fluid">
-                    <r:img width="50" height="50" dir="images" file="loading.gif" alt="saving icon"/> Loading...
+                    <asset:image width="50" height="50" src="loading.gif" alt="saving icon"/> Loading...
                 </div>
             </div>
 
@@ -41,7 +41,7 @@
 
     $(function() {
         var loadingTemplate = '<div class="accordian-inner row-fluid">'+
-            '<r:img width="50" height="50" dir="images" file="loading.gif" alt="saving icon"/> Loading...'+
+            '<asset:image width="50" height="50" src="loading.gif" alt="saving icon"/> Loading...'+
             '</div>';
         $('#reports .collapse').on('show', function() {
             var $div = $(this);

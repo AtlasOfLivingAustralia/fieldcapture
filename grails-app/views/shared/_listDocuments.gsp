@@ -100,7 +100,7 @@
 </script>
 
 <g:render template="/shared/documentTemplate"></g:render>
-<r:script>
+<asset:script>
     var imageLocation = "${imageUrl}",
         useExistingModel = ${useExistingModel};
 
@@ -113,4 +113,4 @@
         }
     });
 
-</r:script>
+</asset:script>

@@ -4,7 +4,7 @@
 <head>
     <meta name="layout" content="adminLayout"/>
     <title>Import Projects | Admin | Field Capture</title>
-    <r:script disposition="head">
+    <script>
             var fcConfig = {
                 serverUrl: "${grailsApplication.config.grails.serverURL}",
                 importUrl: "${createLink(action: 'importProjectData')}",
@@ -12,8 +12,9 @@
                 importProgressUrl: "${createLink(action: 'importStatus')}"
             },
             returnTo = "${params.returnTo}";
-    </r:script>
-    <r:require modules="knockout,jqueryValidationEngine,jQueryFileUploadUI"/>
+    </script>
+    <asset:stylesheet src="common.css"/>
+    <asset:stylesheet src="fileupload-9.0.0/jquery.fileupload-ui.css"/>
 </head>
 
 <body>
@@ -75,7 +76,10 @@
 <script id="template-upload" type="text/x-tmpl">{% %}</script>
 <script id="template-download" type="text/x-tmpl">{% %}</script>
 
-<r:script>
+<asset:javascript src="common.js"/>
+<asset:javascript src="attach-document-no-ui.js"/>
+
+<script>
 
     var SiteUploadViewModel = function () {
         var self = this;
@@ -92,10 +96,21 @@
         self.uploadOptions = {
             url: fcConfig.importUrl,
             done: function (e, data) {
-                console.log(data.result);
+
                 if (data.result) {
-                    self.progressDetail(data.result.projects);
-                    self.progressSummary('Processed ' + data.result.projects.length + ' projects');
+                    var result;
+                    // Because of the iframe upload, the result will be returned as a query object wrapping a document containing
+                    // the text in a <pre></pre> block.  If the fileupload-ui script is included, the data will be extracted
+                    // before this callback is invoked, thus the check.*
+                    if (data.result instanceof jQuery) {
+                        var resultText = $('pre', data.result).text();
+                        result = JSON.parse(resultText);
+                    }
+                    else {
+                        result = data.result;
+                    }
+                    self.progressDetail(result.projects);
+                    self.progressSummary('Processed ' + result.projects.length + ' projects');
                     if (self.preview()) {
                         self.preview(false);
                         self.finishedPreview(true);
@@ -179,6 +194,6 @@
         }
     };
     ko.applyBindings(new SiteUploadViewModel());
-</r:script>
+</script>
 </body>
 </html>

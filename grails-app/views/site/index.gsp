@@ -5,7 +5,7 @@
     <meta name="layout" content="${hubConfig.skin}"/>
     <title>${site?.name?.encodeAsHTML()} | Field Capture</title>
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
-    <r:script disposition="head">
+    <script disposition="head">
         var fcConfig = {
             serverUrl: "${grailsApplication.config.grails.serverURL}",
             siteDeleteUrl: "${createLink(controller: 'site', action: 'ajaxDelete')}",
@@ -25,8 +25,9 @@
             featureService: "${createLink(controller: 'proxy', action:'feature')}"
             },
             here = window.location.href;
-    </r:script>
-    <r:require modules="knockout,mapWithFeatures,amplify,imageViewer,jqueryGantt,merit_projects"/>
+    </script>
+    <asset:stylesheet src="common.css"/>
+    <asset:stylesheet src="project.css"/>
 </head>
 <body>
 <div class="${containerType}">
@@ -187,7 +188,7 @@
         </div>
     </g:if>
 </div>
-<r:script>
+<asset:script>
 
 
         $(function(){
@@ -252,6 +253,10 @@
              });
          });
 
-</r:script>
+</asset:script>
+<asset:javascript src="common.js"/>
+<asset:javascript src="projects.js"/>
+<asset:deferredScripts/>
+
 </body>
 </html>

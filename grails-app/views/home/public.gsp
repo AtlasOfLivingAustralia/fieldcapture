@@ -3,12 +3,12 @@
 <head>
     <g:set var="containerType" scope="request" value="container"/>
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}&libraries=visualization"></script>
-    <meta name="layout" content="${grailsApplication.config.layout.skin ?: 'main'}"/>
+    <meta name="layout" content="${hubConfig.skin}"/>
     <title>Home | MERIT</title>
-    <r:script disposition="head">
+    <script>
         var fcConfig = {
             projectExplorerAjaxUrl:'${g.createLink(action:'ajaxProjectExplorer')}',
-            spinnerIcon:'${r.img(dir: "images", file:"spinner.gif")}',
+            spinnerIcon:'${asset.image(src:"spinner.gif")}',
             spatialBaseUrl: "${grailsApplication.config.spatial.baseUrl}",
             spatialWmsCacheUrl: "${grailsApplication.config.spatial.wms.cache.url}",
             spatialWmsUrl: "${grailsApplication.config.spatial.wms.url}",
@@ -18,10 +18,10 @@
             dashboardUrl: "${g.createLink(controller: 'report', action: 'loadReport', params: params+[showOrganisations:true])}",%{--// Hack for the announcements report to distinguish it from the report on the org page.--}%
             dashboardCategoryUrl: "${g.createLink(controller: 'report', action: 'activityOutputs', params: params+[showOrganisations:true])}"
         };
-    </r:script>
+    </script>
     <script type="text/javascript" src="//www.google.com/jsapi"></script>
-    <r:require modules="application, sliderpro, knockout,mapWithFeatures,wmd,jquery_bootstrap_datatable,js_iso8601,amplify,homepage"/>
-
+    <asset:stylesheet src="common.css"/>
+    <asset:stylesheet src="homepage.css"/>
 </head>
 
 <body>
@@ -52,7 +52,10 @@
     </a>
 </div>
 
-<r:script>
+<asset:javascript src="common.js"/>
+<asset:javascript src="homepage.js"/>
+<asset:deferredScripts/>
+<script>
             $(function() {
 
                 var url = '${g.createLink(controller:'report', action:'statisticsReport')}';
@@ -79,7 +82,7 @@
                 //});
             });
 
-</r:script>
+</script>
 </body>
 
 </html>
