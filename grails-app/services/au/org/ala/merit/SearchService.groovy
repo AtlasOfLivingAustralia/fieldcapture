@@ -124,7 +124,7 @@ class SearchService {
     }
 
     private void configureProjectQuery(params, boolean useDefaultFacetQuery = true) {
-        params.flimit = 999
+        params.flimit = 1500
         params.fsort = "term"
         //params.offset = 0
         params.query = params.query ?: "docType:project"
