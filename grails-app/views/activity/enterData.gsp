@@ -217,7 +217,7 @@
             config.speciesSearchUrl = fcConfig.speciesSearchUrl + '&output='+ output.name;
             config.speciesConfig =<fc:modelAsJavascript model="${speciesConfig}"/>;
 
-            ecodata.forms.initialiseOutputViewModel(viewModelName, elementId, activity, output, config);
+            ecodata.forms.initialiseOutputViewModel(viewModelName, config.model.dataModel, elementId, activity, output, config);
         });
 
         </asset:script>
@@ -255,7 +255,9 @@
 %{--The modal view containing the contents for a modal dialog used to attach a document--}%
 <g:render template="/shared/attachDocument"/>
 
-<asset:script>
+<asset:javascript src="common.js"/>
+<asset:javascript src="forms-manifest.js"/>
+<script type="text/javascript">
 
     var returnTo = "${returnTo}";
     function validateDateField(dateField) {
@@ -386,7 +388,7 @@
 
             $.each(errors, function (i, error) {
                 errorText += "<p>Saving <b>" +  (error.name === 'activity' ? 'the activity context' : error.name) +
-                    "</b> threw the following error:<br><blockquote>" + error.error + "</blockquote></p>";
+"</b> threw the following error:<br><blockquote>" + error.error + "</blockquote></p>";
             });
             errorText += "<p>Any other changes should have been saved.</p>";
             bootbox.alert(errorText);
@@ -689,10 +691,10 @@
         };
 
         var site = null;
-        <g:if test="${site}">
+    <g:if test="${site}">
         site = JSON.parse('${(site as JSON).toString().encodeAsJavaScript()}');
-        </g:if>
-        var metaModel = ${metaModel};
+    </g:if>
+    var metaModel = ${metaModel};
         var viewModel = new ViewModel(
             activity,
             site,
@@ -716,9 +718,9 @@
         }
     </g:if>
 
-        master.register('activityModel', viewModel.modelForSaving, viewModel.dirtyFlag.isDirty, viewModel.dirtyFlag.reset, viewModel.updateIdsAfterSave);
+    master.register('activityModel', viewModel.modelForSaving, viewModel.dirtyFlag.isDirty, viewModel.dirtyFlag.reset, viewModel.updateIdsAfterSave);
 
-        var url = '${g.createLink(controller: 'activity', action:'activitiesWithStage', id:activity.projectId)}';
+    var url = '${g.createLink(controller: 'activity', action:'activitiesWithStage', id:activity.projectId)}';
         var activityUrl = '${g.createLink(controller:'activity', action:'enterData')}';
         var activityId = '${activity.activityId}';
         var projectId = '${activity.projectId}';
@@ -733,9 +735,7 @@
         $('.imageList a[target="_photo"]').attr('rel', 'gallery').fancybox({type:'image', autoSize:true, nextEffect:'fade', preload:0, 'prevEffect':'fade'});
 
     });
-</asset:script>
-<asset:javascript src="common.js"/>
-<asset:javascript src="forms-manifest.js"/>
+</script>
 <asset:deferredScripts/>
 </body>
 </html>
