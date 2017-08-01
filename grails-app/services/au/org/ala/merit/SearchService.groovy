@@ -13,6 +13,8 @@ class SearchService {
     def grailsApplication
     def elasticBaseUrl
 
+    private static final int FACET_LIMIT = 1500
+
     @PostConstruct
     private void init() {
         elasticBaseUrl = grailsApplication.config.ecodata.baseUrl + 'search/elastic'
@@ -47,7 +49,7 @@ class SearchService {
         params.max = params.max?:10
         params.query = params.query?:"*:*"
         params.highlight = params.highlight?:true
-        params.flimit = 999
+        params.flimit = FACET_LIMIT
         params.fsort = "term"
         def url = elasticBaseUrl + commonService.buildUrlParamsFromMap(params)
         webService.getJson(url)
@@ -56,7 +58,7 @@ class SearchService {
     def allGeoPoints(params) {
         addDefaultFacetQuery(params)
         params.max = 9999
-        params.flimit = 999
+        params.flimit = FACET_LIMIT
         params.fsort = "term"
         params.offset = 0
         params.query = "geo.loc.lat:*"
@@ -93,7 +95,7 @@ class SearchService {
     def allSites(params) {
         addDefaultFacetQuery(params)
         //params.max = 9999
-        params.flimit = 999
+        params.flimit = FACET_LIMIT
         params.fsort = "term"
         //params.offset = 0
 //        params.query = "docType:site"
@@ -124,7 +126,7 @@ class SearchService {
     }
 
     private void configureProjectQuery(params, boolean useDefaultFacetQuery = true) {
-        params.flimit = 999
+        params.flimit = FACET_LIMIT
         params.fsort = "term"
         //params.offset = 0
         params.query = params.query ?: "docType:project"
