@@ -264,7 +264,7 @@ grails.cache.config = {
     }
 
     cache {
-        name 'userProfile'
+        name 'userProfileCache'
         eternal false
         overflowToDisk false
         maxElementsInMemory 200
