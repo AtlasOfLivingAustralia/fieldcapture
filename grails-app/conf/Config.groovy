@@ -433,7 +433,6 @@ log4j = {
                     'grails.app.taglib.au.org.ala.merit',
                     'grails.app.conf.au.org.ala.merit',
                     'grails.app.filters.au.org.ala.merit',
-                    'au.org.ala.cas.client',
                     'au.org.ala.merit.SessionLogger'
 
             ]
