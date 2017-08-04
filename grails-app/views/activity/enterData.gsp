@@ -55,130 +55,128 @@
         </ul>
     </g:if>
 
-    <div data-bind="template: {name:headerTemplate, afterRender:initialiseMap}">
+    <g:if test="${activity.type == 'Report'}">
 
-    </div>
+        <div class="row-fluid title-block well well-small input-block-level">
+            <div class="span12 title-attribute">
+                <h1><span data-bind="click:goToProject" class="clickable">${project?.name?.encodeAsHTML() ?: 'no project defined!!'}</span></h1>
+                <h3 data-bind="css:{modified:dirtyFlag.isDirty},attr:{title:'Has been modified'}">Activity: <span data-bind="text:type"></span></h3>
+                <h4><span>${project.associatedProgram?.encodeAsHTML()}</span> <span>${project.associatedSubProgram?.encodeAsHTML()}</span></h4>
+                <h4>Report period from <span data-bind="text:plannedStartDate.formattedDate"></span> to <span data-bind="text:plannedEndDate.formattedDate"></span> </h4>
+            </div>
+        </div>
+
+    </g:if>
+    <g:else>
+        <div class="row-fluid title-block well well-small input-block-level">
+            <div class="span12 title-attribute">
+                <h1><span data-bind="click:goToProject" class="clickable">${project?.name?.encodeAsHTML() ?: 'no project defined!!'}</span></h1>
+                <g:if test="${metaModel.supportsSites}">
+                    <div class="row-fluid">
+                        <div class="span1">
+                            Site:
+                        </div>
+                        <div class="span8">
+                            <fc:select data-bind='options:transients.project.sites,optionsText:"name",optionsValue:"siteId",value:siteId,optionsCaption:"Choose a site..."' printable="${printView}"/>
+                            Leave blank if this activity is not associated with a specific site.
+                        </div>
+                    </div>
+                </g:if>
+                <h3 data-bind="css:{modified:dirtyFlag.isDirty},attr:{title:'Has been modified'}">Activity: <span data-bind="text:type"></span></h3>
+                <h4><span>${project.associatedProgram?.encodeAsHTML()}</span> <span>${project.associatedSubProgram?.encodeAsHTML()}</span></h4>
+            </div>
+        </div>
+
+
+        <div class="row-fluid">
+            <div class="span9">
+                <!-- Common activity fields -->
+
+                <div class="row-fluid space-after">
+                    <!-- ko if:transients.themes.length -->
+                    <div class="span6">
+                        <label for="theme">Major theme</label>
+                        <select id="theme" data-bind="value:mainTheme, options:transients.themes, optionsCaption:'Choose..'" class="input-xlarge">
+                        </select>
+                    </div>
+                    <!-- /ko -->
+                    <div class="span6">
+                        <label class="for-readonly">Description</label>
+                        <span class="readonly-text" data-bind="text:description"></span>
+                    </div>
+                </div>
+
+                <div class="row-fluid space-after">
+                    <div class="span6">
+                        <label class="for-readonly inline">Project stage</label>
+                        <span class="readonly-text" data-bind="text:projectStage"></span>
+                    </div>
+                    <div class="span6">
+                        <label class="for-readonly inline">Activity progress</label>
+                        <button type="button" class="btn btn-small"
+                                data-bind="activityProgress:progress"
+                                style="line-height:16px;cursor:default;color:white">
+                            <span data-bind="text: progress"></span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="row-fluid space-after">
+                    <div class="span6">
+                        <label class="for-readonly inline">Planned start date</label>
+                        <span class="readonly-text" data-bind="text:plannedStartDate.formattedDate"></span>
+                    </div>
+                    <div class="span6">
+                        <label class="for-readonly inline">Planned end date</label>
+                        <span class="readonly-text" data-bind="text:plannedEndDate.formattedDate"></span>
+                    </div>
+                </div>
+
+                <div class="row-fluid">
+                    <div class="span6 required">
+                        <label for="startDate"><b>Actual start date</b>
+                            <fc:iconHelp title="Start date" printable="${printView}">Date the activity was started.</fc:iconHelp>
+                        </label>
+                        <g:if test="${printView}">
+                            <div class="row-fluid">
+                                <fc:datePicker targetField="startDate.date" name="startDate" data-validation-engine="validate[required,funcCall[validateDateField]]" printable="${printView}"/>
+                            </div>
+                        </g:if>
+                        <g:else>
+                            <div class="input-append">
+                                <fc:datePicker targetField="startDate.date" name="startDate" data-validation-engine="validate[required,funcCall[validateDateField]]" printable="${printView}"/>
+                            </div>
+                        </g:else>
+                    </div>
+                    <div class="span6 required">
+                        <label for="endDate"><b>Actual end date</b>
+                            <fc:iconHelp title="End date" printable="${printView}">Date the activity finished.</fc:iconHelp>
+                        </label>
+                        <g:if test="${printView}">
+                            <div class="row-fluid">
+                                <fc:datePicker targetField="endDate.date" name="endDate" data-validation-engine="validate[future[startDate]]" printable="${printView}" />
+                            </div>
+                        </g:if>
+                        <g:else>
+                            <div class="input-append">
+                                <fc:datePicker targetField="endDate.date" name="endDate" data-validation-engine="validate[future[startDate]]" printable="${printView}" />
+                            </div>
+                        </g:else>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <div class="span3" id="map-holder">
+                <div id="smallMap" style="width:100%"></div>
+            </div>
+
+        </div>
+    </g:else>
+
 </div>
 
-<script type="text/html" id="activityHeader">
-
-    <div class="row-fluid title-block well well-small input-block-level">
-        <div class="span12 title-attribute">
-            <h1><span data-bind="click:goToProject" class="clickable">${project?.name?.encodeAsHTML() ?: 'no project defined!!'}</span></h1>
-            <g:if test="${metaModel.supportsSites}">
-            <div class="row-fluid">
-                <div class="span1">
-                    Site:
-                </div>
-                <div class="span8">
-                    <fc:select data-bind='options:transients.project.sites,optionsText:"name",optionsValue:"siteId",value:siteId,optionsCaption:"Choose a site..."' printable="${printView}"/>
-                    Leave blank if this activity is not associated with a specific site.
-                </div>
-            </div>
-            </g:if>
-            <h3 data-bind="css:{modified:dirtyFlag.isDirty},attr:{title:'Has been modified'}">Activity: <span data-bind="text:type"></span></h3>
-            <h4><span>${project.associatedProgram?.encodeAsHTML()}</span> <span>${project.associatedSubProgram?.encodeAsHTML()}</span></h4>
-        </div>
-    </div>
-
-
-    <div class="row-fluid">
-        <div class="span9">
-            <!-- Common activity fields -->
-
-            <div class="row-fluid space-after">
-                <!-- ko if:transients.themes.length -->
-                <div class="span6">
-                    <label for="theme">Major theme</label>
-                    <select id="theme" data-bind="value:mainTheme, options:transients.themes, optionsCaption:'Choose..'" class="input-xlarge">
-                    </select>
-                </div>
-                <!-- /ko -->
-                <div class="span6">
-                    <label class="for-readonly">Description</label>
-                    <span class="readonly-text" data-bind="text:description"></span>
-                </div>
-            </div>
-
-            <div class="row-fluid space-after">
-                <div class="span6">
-                    <label class="for-readonly inline">Project stage</label>
-                    <span class="readonly-text" data-bind="text:projectStage"></span>
-                </div>
-                <div class="span6">
-                    <label class="for-readonly inline">Activity progress</label>
-                    <button type="button" class="btn btn-small"
-                            data-bind="activityProgress:progress"
-                            style="line-height:16px;cursor:default;color:white">
-                        <span data-bind="text: progress"></span>
-                    </button>
-                </div>
-            </div>
-
-            <div class="row-fluid space-after">
-                <div class="span6">
-                    <label class="for-readonly inline">Planned start date</label>
-                    <span class="readonly-text" data-bind="text:plannedStartDate.formattedDate"></span>
-                </div>
-                <div class="span6">
-                    <label class="for-readonly inline">Planned end date</label>
-                    <span class="readonly-text" data-bind="text:plannedEndDate.formattedDate"></span>
-                </div>
-            </div>
-
-            <div class="row-fluid">
-                <div class="span6 required">
-                    <label for="startDate"><b>Actual start date</b>
-                        <fc:iconHelp title="Start date" printable="${printView}">Date the activity was started.</fc:iconHelp>
-                    </label>
-                    <g:if test="${printView}">
-                        <div class="row-fluid">
-                            <fc:datePicker targetField="startDate.date" name="startDate" data-validation-engine="validate[required,funcCall[validateDateField]]" printable="${printView}"/>
-                        </div>
-                    </g:if>
-                    <g:else>
-                        <div class="input-append">
-                            <fc:datePicker targetField="startDate.date" name="startDate" data-validation-engine="validate[required,funcCall[validateDateField]]" printable="${printView}"/>
-                        </div>
-                    </g:else>
-                </div>
-                <div class="span6 required">
-                    <label for="endDate"><b>Actual end date</b>
-                        <fc:iconHelp title="End date" printable="${printView}">Date the activity finished.</fc:iconHelp>
-                    </label>
-                    <g:if test="${printView}">
-                        <div class="row-fluid">
-                            <fc:datePicker targetField="endDate.date" name="endDate" data-validation-engine="validate[future[startDate]]" printable="${printView}" />
-                        </div>
-                    </g:if>
-                    <g:else>
-                        <div class="input-append">
-                            <fc:datePicker targetField="endDate.date" name="endDate" data-validation-engine="validate[future[startDate]]" printable="${printView}" />
-                        </div>
-                    </g:else>
-                </div>
-            </div>
-
-
-        </div>
-
-        <div class="span3" id="map-holder">
-            <div id="smallMap" style="width:100%"></div>
-        </div>
-
-    </div>
-</script>
-<script type="text/html" id="reportHeader">
-<div class="row-fluid title-block well well-small input-block-level">
-    <div class="span12 title-attribute">
-        <h1><span data-bind="click:goToProject" class="clickable">${project?.name?.encodeAsHTML() ?: 'no project defined!!'}</span></h1>
-        <h3 data-bind="css:{modified:dirtyFlag.isDirty},attr:{title:'Has been modified'}">Activity: <span data-bind="text:type"></span></h3>
-        <h4><span>${project.associatedProgram?.encodeAsHTML()}</span> <span>${project.associatedSubProgram?.encodeAsHTML()}</span></h4>
-        <h4>Report period from <span data-bind="text:plannedStartDate.formattedDate"></span> to <span data-bind="text:plannedEndDate.formattedDate"></span> </h4>
-    </div>
-</div>
-
-</script>
 <!-- ko stopBinding: true -->
 <g:each in="${metaModel?.outputs}" var="outputName">
     <g:if test="${outputName != 'Photo Points'}">
@@ -329,9 +327,11 @@
         self.validate = function() {
             var valid = $('#validation-container').validationEngine('validate');
             if (valid) {
+
                 // Check that forms with multiple optional sections have at least one of those sections completed.
                 var optionalCount = 0;
                 var notCompletedCount = 0;
+                var warnings = [];
                 $.each(self.subscribers, function(i, obj) {
                     if (obj.model !== 'activityModel') {
                         if (obj.model.transients.optional) {
@@ -340,6 +340,7 @@
                                 notCompletedCount++;
                             }
                         }
+                        warnings = warnings.concat(obj.model.checkWarnings());
                     }
                 });
                 if (optionalCount > 1 && notCompletedCount == optionalCount) {
@@ -347,6 +348,10 @@
                    bootbox.alert("<p>To 'Save changes', the mandatory fields of at least one section of this form must be completed.</p>"+
                         "<p>If all sections are 'Not applicable' please contact your grant manager to discuss alternate form options</p>");
                 }
+                else if (warnings.length > 0) {
+                    bootbox.alert("<p>You have active warnings on this form.  Please check that the values entered are correct.</p>");
+                }
+
             }
 
             return valid;
@@ -375,12 +380,12 @@
 
             return activityData;
 
-        }
+        };
         self.modelAsJSON = function() {
             var jsData = this.modelAsJS();
 
             return jsData ? JSON.stringify(jsData) : undefined;
-        }
+        };
 
         self.displayErrors = function(errors) {
             var errorText =
@@ -392,7 +397,7 @@
             });
             errorText += "<p>Any other changes should have been saved.</p>";
             bootbox.alert(errorText);
-        }
+        };
 
         /**
          * Makes an ajax call to save any sections that have been modified. This includes the activity
@@ -495,7 +500,7 @@
                     }
                 });
             }
-        }
+        };
 
         autoSaveModel(self, null, {preventNavigationIfDirty:true});
     };
@@ -551,12 +556,6 @@
             self.transients.markedAsFinished.subscribe(function (finished) {
                 self.progress(finished ? 'finished' : 'started');
             });
-            self.headerTemplate = function(something) {
-                if (metaModel.type === 'Report') {
-                    return 'reportHeader';
-                }
-                return 'activityHeader';
-            };
 
             self.confirmSiteChange = function() {
 
@@ -644,7 +643,7 @@
             self.progress(self.transients.markedAsFinished() ? 'finished' : 'started');
 
             self.initialiseMap = function() {
-                if (metaModel.supportsSites) {
+                if (metaModel.type !== 'Report' && metaModel.supportsSites) {
                     var mapFeatures = $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
                     if (!mapFeatures) {
                         mapFeatures = {zoomToBounds: true, zoomLimit: 15, highlightOnHover: true, features: []};
@@ -702,6 +701,7 @@
             metaModel);
 
         ko.applyBindings(viewModel);
+        viewModel.initialiseMap();
         // We need to reset the dirty flag after binding but doing so can miss a transition from planned -> started
         // as the "mark activity as finished" will have already updated the progress to started.
         if (activity.progress == viewModel.progress()) {
