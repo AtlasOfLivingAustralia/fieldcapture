@@ -103,9 +103,6 @@
         </div>
     </div>
 
-
-
-
     <h2>${project.name}</h2>
     <g:if test="${flash.errorMessage || flash.message}">
         <div class="span5">
@@ -117,42 +114,59 @@
     </g:if>
     <p>${project.description}</p>
 
-    <div class="row-fluid">
-        <div id="map" class="span12" style="height:500px; width:100%"></div>
-    </div>
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#mysites" data-toggle="tab">My Sites</a></li>
+        <g:each in="${project.sites}" var="site" status="i">
+            <li><a href="#site${i}">${site.name}</a></li>
+        </g:each>
+    </ul>
 
-    <g:if test="${reportingVisible}">
-    <div id="reporting">
-        <h3>Reporting</h3>
-        <div class="row-fluid">
-            <div class="form-actions span12">
-                <strong>Current reporting period: <span data-bind="text:currentStage.datesLabel"></span></strong>
-                <p>
-                    <strong>Status:</strong> <span data-bind="text:currentReport.status()"></span>
-                </p>
-                <strong>Checklist: </strong>
-                <ul class="unstyled">
-                    <li data-bind="visible:hasAdministrativeReports"><i data-bind="css:{'fa-check-square-o':finishedAdminReporting, 'fa-square-o':!finishedAdminReporting}" class="fa fa-square-o"></i> Administrative reporting complete <i class="fa fa-question-circle" data-bind="popover:{content:adminReportingHelp}"></i></li>
-                    <li><i data-bind="css:{'fa-check-square-o':finishedActivityReporting, 'fa-square-o':!finishedActivityReporting}" class="fa fa-square-o"></i> Progress reporting complete for all sites <i class="fa fa-question-circle" data-bind="popover:{content:activityReportingHelp}"></i></li>
-                    <li><i data-bind="css:{'fa-check-square-o':currentStage.isSubmitted(), 'fa-square-o':!currentStage.isSubmitted()}" class="fa fa-square-o"></i> Report submitted <i class="fa fa-question-circle" data-bind="popover:{content:submitReportHelp}"></i></li>
-                    %{--<li><i data-bind="css:{'fa-check-square-o':currentStage.isApproved(), 'fa-square-o':!currentStage.isApproved()}" class="fa fa-square-o"></i> Report approved <i class="fa fa-question-circle" data-bind="popover:{content:approveReportHelp}"></i></li>--}%
-                </ul>
-                <strong>Actions: </strong>
-                <div>
-                    <button class="btn btn-success" data-bind="visible:hasAdministrativeReports, enable:!currentStage.isReadOnly(), click:administrativeReporting, attr:{title:administrativeReportButtonHelp}">Administrative reporting</button>
-                    <button class="btn btn-success" data-bind="enable:canSubmitReport(), click:currentStage.submitReport, attr:{title:submitReportHelp}">Submit for grant manager approval</button>
+
+    <div class="tab-content">
+        <div class="tab-pane active" id="mysites">
+            <div class="row-fluid">
+                <div id="map" class="span12" style="height:500px; width:100%"></div>
+            </div>
+
+            <g:if test="${reportingVisible}">
+                <div id="reporting">
+                    <h3>Reporting</h3>
+                    <div class="row-fluid">
+                        <div class="form-actions span12">
+                            <strong>Current reporting period: <span data-bind="text:currentStage.datesLabel"></span></strong>
+                            <p>
+                                <strong>Status:</strong> <span data-bind="text:currentReport.status()"></span>
+                            </p>
+                            <strong>Checklist: </strong>
+                            <ul class="unstyled">
+                                <li data-bind="visible:hasAdministrativeReports"><i data-bind="css:{'fa-check-square-o':finishedAdminReporting, 'fa-square-o':!finishedAdminReporting}" class="fa fa-square-o"></i> Administrative reporting complete <i class="fa fa-question-circle" data-bind="popover:{content:adminReportingHelp}"></i></li>
+                                <li><i data-bind="css:{'fa-check-square-o':finishedActivityReporting, 'fa-square-o':!finishedActivityReporting}" class="fa fa-square-o"></i> Progress reporting complete for all sites <i class="fa fa-question-circle" data-bind="popover:{content:activityReportingHelp}"></i></li>
+                                <li><i data-bind="css:{'fa-check-square-o':currentStage.isSubmitted(), 'fa-square-o':!currentStage.isSubmitted()}" class="fa fa-square-o"></i> Report submitted <i class="fa fa-question-circle" data-bind="popover:{content:submitReportHelp}"></i></li>
+                                %{--<li><i data-bind="css:{'fa-check-square-o':currentStage.isApproved(), 'fa-square-o':!currentStage.isApproved()}" class="fa fa-square-o"></i> Report approved <i class="fa fa-question-circle" data-bind="popover:{content:approveReportHelp}"></i></li>--}%
+                            </ul>
+                            <strong>Actions: </strong>
+                            <div>
+                                <button class="btn btn-success" data-bind="visible:hasAdministrativeReports, enable:!currentStage.isReadOnly(), click:administrativeReporting, attr:{title:administrativeReportButtonHelp}">Administrative reporting</button>
+                                <button class="btn btn-success" data-bind="enable:canSubmitReport(), click:currentStage.submitReport, attr:{title:submitReportHelp}">Submit for grant manager approval</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </g:if>
+
+            <h3>Dashboard</h3>
+            <div class="row-fluid">
+                <div class="span12 form-actions">
+                    <g:render template="dashboard"/>
                 </div>
             </div>
         </div>
+        <g:each in="${project.sites}" var="site" status="i">
+            <div class="tab-pane" id="site${i}">This is site report</div>
+        </g:each>
     </div>
-    </g:if>
 
-    <h3>Dashboard</h3>
-    <div class="row-fluid">
-        <div class="span12 form-actions">
-            <g:render template="dashboard"/>
-        </div>
-    </div>
+
 
 </div>
 
@@ -177,196 +191,61 @@
 <g:render template="/shared/declaration"/>
 <!-- /ko -->
 
-<asset:script>
-        var organisations = <fc:modelAsJavascript model="${organisations}"/>;
-var sites = JSON.parse('${(sites as grails.converters.JSON).toString()}');
-
-var features = <fc:modelAsJavascript model="${mapFeatures}"/>;
-
-$(function() {
-    var project = <fc:renderProject project="${project}"/>;
-    var mapFeatures = $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
-
-    var mapOptions = {
-        zoomToBounds:true,
-        zoomLimit:16,
-        highlightOnHover:true,
-        features:[],
-        featureService: fcConfig.featureService,
-        wmsServer:fcConfig.spatialWms,
-        mapContainer: "map"
-    };
-
-    var map = init_map_with_features(mapOptions, {});
-
-    var sitesViewModel = new SitesViewModel(project.sites, map, mapFeatures, ${user?.isEditor?:false}, project.projectId);
-    var reportsViewModel = new ProjectReportsViewModel(project);
-    var planViewModel = new PlanViewModel(project.activities, project.reports, [], {}, project, null, fcConfig, true, false);
-
-    var currentReport = reportsViewModel.currentReport;
-
-    var currentStage = _.find(planViewModel.stages, function(stage) {
-        return stage.toDate == currentReport.toDate;
-    });
-
-    ko.applyBindings(sitesViewModel, document.getElementById('map'));
-    sitesViewModel.displayAllSites();
-
-
-    var SiteStatusModel = function(site, currentStage, map) {
-        var self = this;
-        self.name = site.name;
-
-        var incompleteActivities = _.filter(currentStage.activities, function(activity) {
-            return activity.siteId == site.siteId && !activity.isComplete();
-        });
-        self.reportingComplete = incompleteActivities.length == 0;
-
-        // No support currently for multipolygons
-        var feature = map.featureIndex[site.siteId] && map.featureIndex[site.siteId][0];
-
-        var bounds = sitesViewModel.getSiteBounds(site.siteId);
-
-        /**
-         * Calculates a position for the info window located in the top middle of the sites bounds.
-         * @param bounds a LatLngBounds object containing the bounds of the site.
-         * @return a lat lng literal representing the top middle of the sites bounds.
-         */
-        function calculateInfoWindowPosition(bounds) {
-            var east = bounds.getNorthEast().lng();
-            var west = bounds.getSouthWest().lng();
-            var middle = west + (east - west)/2;
-            return {lat:bounds.getNorthEast().lat(), lng:middle};
-        };
-
-        function getSiteInfoHtml() {
-            var siteInfoTemplate = document.getElementById('info-window-template');
-            ko.applyBindings(self, siteInfoTemplate);
-            var siteInfoHtml = siteInfoTemplate.innerHTML;
-            ko.cleanNode(siteInfoTemplate);
-            return siteInfoHtml;
-        }
-
-        var featureDisplayOptions = {strokeColor:'#BB4411',fillColor:'#BB4411',fillOpacity:0.3,strokeWeight:1,zIndex:1,editable:false};
-        if (self.reportingComplete) {
-            featureDisplayOptions = {strokeColor:'green',fillColor:'green',fillOpacity:0.3,strokeWeight:1,zIndex:1,editable:false};
-        }
-        feature.setOptions(featureDisplayOptions);
-
-        google.maps.event.clearInstanceListeners(feature);
-        var siteInfoWindow = new google.maps.InfoWindow({content:getSiteInfoHtml(), position:calculateInfoWindowPosition(bounds)});
-
-        google.maps.event.addListener(feature, 'mouseover', function (event) {
-            siteInfoWindow.open(map.map, feature);
-        });
-        google.maps.event.addListener(feature, 'mouseout', function (event) {
-            siteInfoWindow.close();
-        });
-
-
-        var activity = incompleteActivities.length >= 0 ? incompleteActivities[0] : null;
-        if (!activity) {
-            activity = _.find(currentStage.activities, function(activity) {
-                return activity.siteId == site.siteId;
-            });
-        }
-        if (activity) {
-            google.maps.event.addListener(feature, 'click', function(event) {
-                window.location.href = activity.editActivityUrl();
-            });
-        }
-    };
-
-    _.each(sitesViewModel.sites, function(site) {
-        new SiteStatusModel(site, currentStage, map);
-    });
-
-    var SimplifiedReportingViewModel = function() {
-        var self = this;
-
-        function isAdminActivity(activity) {
-            return !activity.siteId;
-        }
-        self.finishedReporting = currentStage.canSubmitReport();
-        self.finishedAdminReporting = _.every(currentStage.activities, function(activity) {
-            return !isAdminActivity(activity) || activity.isComplete();
-        });
-        self.finishedActivityReporting = _.every(currentStage.activities, function(activity) {
-            return isAdminActivity(activity) || activity.isComplete();
-        });
-
-        self.hasAdministrativeReports = _.some(currentStage.activities, function(activity) {
-            return isAdminActivity(activity);
-        });
-
-        self.currentStage = currentStage;
-        self.currentReport = currentReport;
-        self.adminReportingHelp = ko.pureComputed(function() {
-            if (self.finishedAdminReporting) {
-                return "You have completed your administrive reporting requirements for this year"
-            }
-            return "Press the 'Administrative Reporting' button in the 'Actions:' section below to complete your administrative reporting.";
-        });
-        self.activityReportingHelp = ko.pureComputed(function() {
-            if (self.finishedActivityReporting) {
-                return "You have completed your site based reporting requirements for this period"
-            }
-            return "Click on a site to update your progress on the site.  When you have finished data entry for the year, please ensure the 'finished' checkbox on each reporting form is ticked.";
-        });
-        self.submitReportHelp = ko.pureComputed(function() {
-            if (self.currentReport.isSubmitted() || self.currentReport.isApproved()) {
-                return "You have submitted your report for this year"
-            }
-            else if (!self.currentStage.isReportable) {
-                return "Your report can't be submitted until "+convertToSimpleDate(currentStage.toDateLabel, false);
-            }
-            else if (self.currentStage.canSubmitReport()) {
-                return "Press the 'Submit reports for approval' button the 'Actions:' section below to submit your report to your grant manager."
-            }
-            return "Your site and administrative reports need to be marked as 'Finished' before you can submit your report.  You can mark a report as finished by opening the report and checking the 'Finished' button at the bottom of the page.";
-        });
-        self.approveReportHelp = ko.pureComputed(function() {
-            return "Once your reports are submitted, your grant manager will review and approve them or return them to you with comments for further work."
-        });
-
-        self.canSubmitReport = ko.pureComputed(function() {
-            return self.currentReport.isReportable && self.currentReport.canSubmitReport();
-        });
-
-        self.administrativeReporting = function() {
-            var nextActivity = _.find(currentStage.activities, function(activity) {
-                return isAdminActivity(activity) && !activity.isComplete();
-            });
-            // Default the form to finished.
-            if (nextActivity.progress() == ActivityProgress.finished) {
-                document.location.href = nextActivity.editActivityUrl();
-            }
-            else {
-                // This will set the progress and open the form.
-                nextActivity.progress(ActivityProgress.finished);
-            }
-        };
-
-        self.administrativeReportButtonHelp = ko.pureComputed(function() {
-            if (currentStage.isReadOnly()) {
-                return "Once your reports have been submitted or approved they can no longer be edited.";
-            }
-            else {
-                return "Click to complete your administrative reporting for the year."
-            }
-        });
-
-    };
-
-    ko.applyBindings(new SimplifiedReportingViewModel(), document.getElementById('reporting'));
-
-
-});
-
-</asset:script>
 <asset:javascript src="common.js"/>
 <asset:javascript src="projects.js"/>
+<asset:javascript src="esp-overview.js"/>
 <asset:deferredScripts/>
+
+<script type="text/javascript">
+    var organisations = <fc:modelAsJavascript model="${organisations}"/>;
+    var sites = JSON.parse('${(sites as grails.converters.JSON).toString()}');
+
+    var features = <fc:modelAsJavascript model="${mapFeatures}"/>;
+
+    $(function() {
+        var project = <fc:renderProject project="${project}"/>;
+        var mapFeatures = $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
+        var userIsEditor = ${user?.isEditor?:false};
+
+        var mapOptions = {
+            zoomToBounds:true,
+            zoomLimit:16,
+            highlightOnHover:true,
+            features:[],
+            featureService: fcConfig.featureService,
+            wmsServer:fcConfig.spatialWms,
+            mapContainer: "map"
+        };
+
+        var map = init_map_with_features(mapOptions, {});
+
+        var sitesViewModel = new SitesViewModel(project.sites, map, mapFeatures, userIsEditor, project.projectId);
+        var reportsViewModel = new ProjectReportsViewModel(project);
+        var planViewModel = new PlanViewModel(project.activities, project.reports, [], {}, project, null, fcConfig, true, false);
+
+        var currentReport = reportsViewModel.currentReport;
+
+        var currentStage = _.find(planViewModel.stages, function(stage) {
+            return stage.toDate == currentReport.toDate;
+        });
+
+        ko.applyBindings(sitesViewModel, document.getElementById('map'));
+        sitesViewModel.displayAllSites();
+
+        _.each(sitesViewModel.sites, function(site) {
+            new SiteStatusModel(site, currentStage, map, sitesViewModel);
+        });
+
+        ko.applyBindings(new SimplifiedReportingViewModel(currentStage, currentReport), document.getElementById('reporting'));
+        $('.nav a').click(function() {
+            var tabContentTarget = $(this).attr('href');
+            $.get(fcConfig.activityEnterDataUrl+'/bbe23720-20db-4b8b-9c2e-7f81f63cf70a', function(data) {
+                $(tabContentTarget).html(data);
+            });
+        });
+    });
+
+</script>
 
 </body>
 </html>
