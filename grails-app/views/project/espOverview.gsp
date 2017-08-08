@@ -71,7 +71,7 @@
             spatialBaseUrl: "${grailsApplication.config.spatial.baseURL}",
             spatialWmsCacheUrl: "${grailsApplication.config.spatial.wms.cache.url}",
             spatialWmsUrl: "${grailsApplication.config.spatial.wms.url}",
-
+        tabbedActivityUrl: "${createLink(controller: 'activity', action:'ajaxLoadActivityForm')}",
         returnTo: "${createLink(controller: 'project', action: 'espOverview', id: project.projectId)}"
 
     },
@@ -119,6 +119,8 @@
         <g:each in="${project.sites}" var="site" status="i">
             <li><a href="#site${i}">${site.name}</a></li>
         </g:each>
+        <li><a href="#species-tab" data-toggle="tab">Species Records</a></li>
+        <li><a href="#reporting-tab" data-toggle="tab">Submission</a></li>
     </ul>
 
 
@@ -128,6 +130,24 @@
                 <div id="map" class="span12" style="height:500px; width:100%"></div>
             </div>
 
+
+
+            <h3>Dashboard</h3>
+            <div class="row-fluid">
+                <div class="span12 form-actions">
+                    <g:render template="dashboard"/>
+                </div>
+            </div>
+        </div>
+        <g:each in="${project.sites}" var="site" status="i">
+            <div class="tab-pane" id="site${i}">
+
+            </div>
+        </g:each>
+        <div class="tab-pane" id="species-tab">
+
+        </div>
+        <div class="tab-pane" id="reporting-tab">
             <g:if test="${reportingVisible}">
                 <div id="reporting">
                     <h3>Reporting</h3>
@@ -153,17 +173,7 @@
                     </div>
                 </div>
             </g:if>
-
-            <h3>Dashboard</h3>
-            <div class="row-fluid">
-                <div class="span12 form-actions">
-                    <g:render template="dashboard"/>
-                </div>
-            </div>
         </div>
-        <g:each in="${project.sites}" var="site" status="i">
-            <div class="tab-pane" id="site${i}">This is site report</div>
-        </g:each>
     </div>
 
 
@@ -238,10 +248,15 @@
 
         ko.applyBindings(new SimplifiedReportingViewModel(currentStage, currentReport), document.getElementById('reporting'));
         $('.nav a').click(function() {
+            $(this).tab('show');
             var tabContentTarget = $(this).attr('href');
-            $.get(fcConfig.activityEnterDataUrl+'/bbe23720-20db-4b8b-9c2e-7f81f63cf70a', function(data) {
-                $(tabContentTarget).html(data);
-            });
+            if (tabContentTarget.indexOf('#site') === 0) {
+                $.get(fcConfig.tabbedActivityUrl+'/bbe23720-20db-4b8b-9c2e-7f81f63cf70a', function(data) {
+                    $(tabContentTarget).html(data);
+                });
+            }
+
+
         });
     });
 

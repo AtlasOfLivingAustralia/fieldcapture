@@ -248,6 +248,11 @@ class ActivityController {
         model
     }
 
+    def ajaxLoadActivityForm(String id) {
+        render model:enterData(id), view:"_tabbedActivity"
+    }
+
+
     /**
      * Updates existing or creates new activity.
      *
