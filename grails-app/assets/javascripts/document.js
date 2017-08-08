@@ -502,7 +502,7 @@ function initialiseDocumentTable(containerSelector) {
             "columnDefs": [
                 {"type": "alt-string", "targets": 0},
                 {"width":"6em", orderData:[4], "targets": [3]},
-                {"width":"4em", "targets": [2]},
+                {"width":"3em", "targets": [2]},
                 {"visible":false, "targets": [4]}
             ],
             "order":[[2, 'desc'], [3, 'desc']],

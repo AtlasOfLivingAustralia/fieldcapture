@@ -30,9 +30,9 @@ http://sourceforge.net/adobe/cmap/wiki/License/
             (typeof window !== 'undefined' ? window : this).PDFJS = {};
         }
 
-        PDFJS.cMapUrl = '${assetPath('pdfjs/1.1.215/viewer/cmaps')}';
-        PDFJS.imageResourcesPath = '${assetPath('/pdfjs/1.1.215/viewer/images')}';
-        PDFJS.workerSrc = '${assetPath('pdfjs/1.1.215/pdf.worker.js')}';
+        PDFJS.cMapUrl = '${assetPath(src:'pdfjs/1.1.215/viewer/cmaps')}';
+        PDFJS.imageResourcesPath = '${assetPath(src:'/pdfjs/1.1.215/viewer/images')}';
+        PDFJS.workerSrc = '${assetPath(src:'pdfjs/1.1.215/pdf.worker.js')}';
     </script>
 
     <asset:stylesheet src="pdfjs/1.1.215/viewer/viewer.css"/>
@@ -40,8 +40,8 @@ http://sourceforge.net/adobe/cmap/wiki/License/
     <asset:javascript src="pdfjs/1.1.215/viewer/compatibility.js"/>
 
     <!-- This snippet is used in production (included from viewer.html) -->
-    <link rel="resource" type="application/l10n" href="${assetPath('pdfjs/1.1.215/viewer/locale/locale.properties')}"/>
-    <asset:javascript src="pdfjs.1.215/viewer/l10n.js"/>
+    <link rel="resource" type="application/l10n" href="${assetPath(src:'pdfjs/1.1.215/viewer/locale/locale.properties')}"/>
+    <asset:javascript src="pdfjs/1.1.215/viewer/l10n.js"/>
     <asset:javascript src="pdfjs/1.1.215/pdf.js"/>
 
     <asset:javascript src="pdfjs/1.1.215/viewer/debugger.js"/>

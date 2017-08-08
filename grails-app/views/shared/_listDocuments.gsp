@@ -17,15 +17,15 @@
         </div>
         <div></div>
         %{-- The use of the width attribute (as opposed to a css style) is to allow for correct resizing behaviour of the DataTable --}%
-        <table class="docs-table table" width="100%">
+        <table class="docs-table table" width="100%" style="table-layout:fixed">
             <thead>
             <tr>
+                <th style="width:35px"></th>
+                <th style="width:50%">Name</th>
+                <th style="width:5%">Stage</th>
+                <th style="width:20%">Date last updated</th>
                 <th></th>
-                <th>Name</th>
-                <th>Stage</th>
-                <th>Date last updated</th>
-                <th></th>
-                <th></th>
+                <th style="width:2em"></th>
             </tr>
 
             </thead>
@@ -40,7 +40,7 @@
                         <img class="media-object" data-bind="attr:{src:iconImgUrl(), alt:contentType, title:name}" alt="document icon">
                         <!-- /ko -->
                     </td>
-                    <td>
+                    <td style="word-wrap:break-word">
                          <span data-bind="text:name() || filename()"></span>
                     </td>
                     <td>
