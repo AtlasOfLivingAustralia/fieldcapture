@@ -311,10 +311,8 @@
     <g:each in="${metaModel?.outputs}" var="outputName">
         <g:set var="blockId" value="${fc.toSingleWord([name: outputName])}"/>
         <g:set var="model" value="${outputModels[outputName]}"/>
-        <g:set var="output" value="${activity.outputs.find {it.name == outputName}}"/>
-        <g:if test="${!output}">
-            <g:set var="output" value="[name: outputName]"/>
-        </g:if>
+        <g:set var="output" value="${activity.outputs.find {it.name == outputName} ?: [name: outputName]}"/>
+
         var viewModelName = "${blockId}ViewModel",
             elementId = "ko${blockId}";
 
