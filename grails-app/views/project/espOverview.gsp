@@ -114,14 +114,14 @@
     </g:if>
     <p>${project.description}</p>
 
-    <ul class="nav nav-tabs">
-        <li class="active"><a href="#mysites" data-toggle="tab">My Sites</a></li>
-        <g:each in="${project.sites}" var="site" status="i">
-            <li><a href="#site${i}">${site.name}</a></li>
-        </g:each>
-        <li><a href="#species-tab" data-toggle="tab">Species Records</a></li>
-        <li><a href="#reporting-tab" data-toggle="tab">Submission</a></li>
-    </ul>
+    %{--<ul class="nav nav-tabs">--}%
+        %{--<li class="active"><a href="#mysites" data-toggle="tab">My Sites</a></li>--}%
+        %{--<g:each in="${project.sites}" var="site" status="i">--}%
+            %{--<li><a href="#site${i}">${site.name}</a></li>--}%
+        %{--</g:each>--}%
+        %{--<li><a href="#species-tab" data-toggle="tab">Species Records</a></li>--}%
+        %{--<li><a href="#reporting-tab" data-toggle="tab">Submission</a></li>--}%
+    %{--</ul>--}%
 
 
     <div class="tab-content">
@@ -130,24 +130,6 @@
                 <div id="map" class="span12" style="height:500px; width:100%"></div>
             </div>
 
-
-
-            <h3>Dashboard</h3>
-            <div class="row-fluid">
-                <div class="span12 form-actions">
-                    <g:render template="dashboard"/>
-                </div>
-            </div>
-        </div>
-        <g:each in="${project.sites}" var="site" status="i">
-            <div class="tab-pane" id="site${i}">
-
-            </div>
-        </g:each>
-        <div class="tab-pane" id="species-tab">
-
-        </div>
-        <div class="tab-pane" id="reporting-tab">
             <g:if test="${reportingVisible}">
                 <div id="reporting">
                     <h3>Reporting</h3>
@@ -173,7 +155,25 @@
                     </div>
                 </div>
             </g:if>
+
+            <h3>Dashboard</h3>
+            <div class="row-fluid">
+                <div class="span12 form-actions">
+                    <g:render template="dashboard"/>
+                </div>
+            </div>
         </div>
+        %{--<g:each in="${project.sites}" var="site" status="i">--}%
+            %{--<div class="tab-pane" id="site${i}">--}%
+
+            %{--</div>--}%
+        %{--</g:each>--}%
+        %{--<div class="tab-pane" id="species-tab">--}%
+
+        %{--</div>--}%
+        %{--<div class="tab-pane" id="reporting-tab">--}%
+
+        %{--</div>--}%
     </div>
 
 
