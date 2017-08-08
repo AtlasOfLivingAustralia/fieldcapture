@@ -1,3 +1,6 @@
+//= require enterActivityData.js
+//= require_self
+
 var SiteStatusModel = function(site, currentStage, map, sitesViewModel) {
     var self = this;
     self.name = site.name;

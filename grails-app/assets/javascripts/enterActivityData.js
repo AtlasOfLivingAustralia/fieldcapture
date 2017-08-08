@@ -259,7 +259,7 @@ var Master = function (activityId, config) {
 };
 
 
-function ActivityHeaderViewModel (act, site, project, metaModel, themes, config) {
+function ActivityHeaderViewModel (activity, site, project, metaModel, themes, config) {
     var self = this;
 
     var defaults = {
@@ -271,18 +271,18 @@ function ActivityHeaderViewModel (act, site, project, metaModel, themes, config)
     var options = _.extend({}, defaults, config);
 
     var mapInitialised = false;
-    self.activityId = act.activityId;
-    self.description = ko.observable(act.description);
-    self.notes = ko.observable(act.notes);
-    self.startDate = ko.observable(act.startDate).extend({simpleDate: false});
-    self.endDate = ko.observable(act.endDate || act.plannedEndDate).extend({simpleDate: false});
-    self.plannedStartDate = ko.observable(act.plannedStartDate).extend({simpleDate: false});
-    self.plannedEndDate = ko.observable(act.plannedEndDate).extend({simpleDate: false});
-    self.projectStage = ko.observable(act.projectStage || "");
-    self.progress = ko.observable(act.progress);
-    self.mainTheme = ko.observable(act.mainTheme);
-    self.type = ko.observable(act.type);
-    self.projectId = act.projectId;
+    self.activityId = activity.activityId;
+    self.description = ko.observable(activity.description);
+    self.notes = ko.observable(activity.notes);
+    self.startDate = ko.observable(activity.startDate).extend({simpleDate: false});
+    self.endDate = ko.observable(activity.endDate || activity.plannedEndDate).extend({simpleDate: false});
+    self.plannedStartDate = ko.observable(activity.plannedStartDate).extend({simpleDate: false});
+    self.plannedEndDate = ko.observable(activity.plannedEndDate).extend({simpleDate: false});
+    self.projectStage = ko.observable(activity.projectStage || "");
+    self.progress = ko.observable(activity.progress);
+    self.mainTheme = ko.observable(activity.mainTheme);
+    self.type = ko.observable(activity.type);
+    self.projectId = activity.projectId;
     self.transients = {};
     self.transients.site = ko.observable(site);
     self.transients.project = project;
@@ -290,7 +290,7 @@ function ActivityHeaderViewModel (act, site, project, metaModel, themes, config)
     self.transients.metaModel = metaModel || {};
     self.transients.activityProgressValues = ['planned','started','finished'];
     self.transients.themes = $.map(themes, function (obj, i) { return obj.name });
-    self.transients.markedAsFinished = ko.observable(act.progress === 'finished');
+    self.transients.markedAsFinished = ko.observable(activity.progress === 'finished');
     self.transients.markedAsFinished.subscribe(function (finished) {
         self.progress(finished ? 'finished' : 'started');
     });
@@ -304,7 +304,7 @@ function ActivityHeaderViewModel (act, site, project, metaModel, themes, config)
         }
         return true;
     };
-    self.siteId = ko.vetoableObservable(act.siteId, self.confirmSiteChange);
+    self.siteId = ko.vetoableObservable(activity.siteId, self.confirmSiteChange);
 
     self.siteId.subscribe(function(siteId) {
 
