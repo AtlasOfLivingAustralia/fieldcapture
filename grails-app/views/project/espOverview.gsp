@@ -114,48 +114,36 @@
     </g:if>
     <p>${project.description}</p>
 
-    %{--<ul class="nav nav-tabs">--}%
-        %{--<li class="active"><a href="#mysites" data-toggle="tab">My Sites</a></li>--}%
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#mysites" data-toggle="tab">My Sites</a></li>
         %{--<g:each in="${project.sites}" var="site" status="i">--}%
             %{--<li><a href="#site${i}">${site.name}</a></li>--}%
         %{--</g:each>--}%
-        %{--<li><a href="#species-tab" data-toggle="tab">Species Records</a></li>--}%
-        %{--<li><a href="#reporting-tab" data-toggle="tab">Submission</a></li>--}%
-    %{--</ul>--}%
+        <li><a href="#species-records-tab" data-toggle="tab">Species Records</a></li>
+        <li><a href="#dashboard-tab" data-toggle="tab">Dashboard</a></li>
+        <li><a href="#photographs-tab" data-toggle="tab">Photographs</a></li>
+        <li><a href="#reporting-tab" data-toggle="tab">Submission</a></li>
+    </ul>
 
 
     <div class="tab-content">
         <div class="tab-pane active" id="mysites">
+
             <div class="row-fluid">
                 <div id="map" class="span12" style="height:500px; width:100%"></div>
             </div>
+            <p>Click on a site to fill out the report for that site.</p>
+            <p>Green sites have finished reports.  Red sites have unfinished reports.</p>
+        </div>
+        %{--<g:each in="${project.sites}" var="site" status="i">--}%
+            %{--<div class="tab-pane" id="site${i}">--}%
 
-            <g:if test="${reportingVisible}">
-                <div id="reporting">
-                    <h3>Reporting</h3>
-                    <div class="row-fluid">
-                        <div class="form-actions span12">
-                            <strong>Current reporting period: <span data-bind="text:currentStage.datesLabel"></span></strong>
-                            <p>
-                                <strong>Status:</strong> <span data-bind="text:currentReport.status()"></span>
-                            </p>
-                            <strong>Checklist: </strong>
-                            <ul class="unstyled">
-                                <li data-bind="visible:hasAdministrativeReports"><i data-bind="css:{'fa-check-square-o':finishedAdminReporting, 'fa-square-o':!finishedAdminReporting}" class="fa fa-square-o"></i> Administrative reporting complete <i class="fa fa-question-circle" data-bind="popover:{content:adminReportingHelp}"></i></li>
-                                <li><i data-bind="css:{'fa-check-square-o':finishedActivityReporting, 'fa-square-o':!finishedActivityReporting}" class="fa fa-square-o"></i> Progress reporting complete for all sites <i class="fa fa-question-circle" data-bind="popover:{content:activityReportingHelp}"></i></li>
-                                <li><i data-bind="css:{'fa-check-square-o':currentStage.isSubmitted(), 'fa-square-o':!currentStage.isSubmitted()}" class="fa fa-square-o"></i> Report submitted <i class="fa fa-question-circle" data-bind="popover:{content:submitReportHelp}"></i></li>
-                                %{--<li><i data-bind="css:{'fa-check-square-o':currentStage.isApproved(), 'fa-square-o':!currentStage.isApproved()}" class="fa fa-square-o"></i> Report approved <i class="fa fa-question-circle" data-bind="popover:{content:approveReportHelp}"></i></li>--}%
-                            </ul>
-                            <strong>Actions: </strong>
-                            <div>
-                                <button class="btn btn-success" data-bind="visible:hasAdministrativeReports, enable:!currentStage.isReadOnly(), click:administrativeReporting, attr:{title:administrativeReportButtonHelp}">Administrative reporting</button>
-                                <button class="btn btn-success" data-bind="enable:canSubmitReport(), click:currentStage.submitReport, attr:{title:submitReportHelp}">Submit for grant manager approval</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </g:if>
+            %{--</div>--}%
+        %{--</g:each>--}%
+        <div class="tab-pane" id="species-records-tab">
 
+        </div>
+        <div class="tab-pane" id="dashboard-tab">
             <h3>Dashboard</h3>
             <div class="row-fluid">
                 <div class="span12 form-actions">
@@ -163,17 +151,41 @@
                 </div>
             </div>
         </div>
-        %{--<g:each in="${project.sites}" var="site" status="i">--}%
-            %{--<div class="tab-pane" id="site${i}">--}%
+        <div class="tab-pane" id="photographs-tab">
+            <div id="site-photo-points"></div>
 
-            %{--</div>--}%
-        %{--</g:each>--}%
-        %{--<div class="tab-pane" id="species-tab">--}%
+        </div>
+        <div class="tab-pane" id="reporting-tab">
+            <div id="reporting">
+                <g:if test="${reportingVisible}">
 
-        %{--</div>--}%
-        %{--<div class="tab-pane" id="reporting-tab">--}%
 
-        %{--</div>--}%
+                <h3>Reporting</h3>
+                <div class="row-fluid">
+                    <div class="form-actions span12">
+                        <strong>Current reporting period: <span data-bind="text:currentStage.datesLabel"></span></strong>
+                        <p>
+                            <strong>Status:</strong> <span data-bind="text:currentReport.status()"></span>
+                        </p>
+                        <strong>Checklist: </strong>
+                        <ul class="unstyled">
+                            <li data-bind="visible:hasAdministrativeReports"><i data-bind="css:{'fa-check-square-o':finishedAdminReporting, 'fa-square-o':!finishedAdminReporting}" class="fa fa-square-o"></i> Administrative reporting complete <i class="fa fa-question-circle" data-bind="popover:{content:adminReportingHelp}"></i></li>
+                            <li><i data-bind="css:{'fa-check-square-o':finishedActivityReporting, 'fa-square-o':!finishedActivityReporting}" class="fa fa-square-o"></i> Progress reporting complete for all sites <i class="fa fa-question-circle" data-bind="popover:{content:activityReportingHelp}"></i></li>
+                            <li><i data-bind="css:{'fa-check-square-o':currentStage.isSubmitted(), 'fa-square-o':!currentStage.isSubmitted()}" class="fa fa-square-o"></i> Report submitted <i class="fa fa-question-circle" data-bind="popover:{content:submitReportHelp}"></i></li>
+                            %{--<li><i data-bind="css:{'fa-check-square-o':currentStage.isApproved(), 'fa-square-o':!currentStage.isApproved()}" class="fa fa-square-o"></i> Report approved <i class="fa fa-question-circle" data-bind="popover:{content:approveReportHelp}"></i></li>--}%
+                        </ul>
+                        <strong>Actions: </strong>
+                        <div>
+                            <button class="btn btn-success" data-bind="visible:hasAdministrativeReports, enable:!currentStage.isReadOnly(), click:administrativeReporting, attr:{title:administrativeReportButtonHelp}">Administrative reporting</button>
+                            <button class="btn btn-success" data-bind="enable:canSubmitReport(), click:currentStage.submitReport, attr:{title:submitReportHelp}">Submit for grant manager approval</button>
+                        </div>
+                    </div>
+                </div>
+
+                </g:if>
+
+            </div>
+        </div>
     </div>
 
 
@@ -255,7 +267,42 @@
                     $(tabContentTarget).html(data);
                 });
             }
+            if (tabContentTarget == '#photographs-tab') {
+                $('#site-photo-points').html('<asset:image id="img-spinner" width="50" height="50" src="loading.gif" alt="Loading"/>');
+                $.get(fcConfig.sitesPhotoPointsUrl).done(function (data) {
 
+                    $('#site-photo-points').html($(data));
+                    $('#site-photo-points img').on('load', function () {
+
+                        var parent = $(this).parents('.thumb');
+                        var $caption = $(parent).find('.caption');
+                        $caption.outerWidth($(this).width());
+
+                    });
+                    $('.photo-slider').mThumbnailScroller({theme: 'hover-classic'});
+                    $('.photo-slider .fancybox').fancybox({
+                        helpers: {
+                            title: {
+                                type: 'inside'
+                            }
+                        },
+                        beforeLoad: function () {
+                            var el, id = $(this.element).data('caption');
+
+                            if (id) {
+                                el = $('#' + id);
+
+                                if (el.length) {
+                                    this.title = el.html();
+                                }
+                            }
+                        },
+                        nextEffect: 'fade',
+                        previousEffect: 'fade'
+                    });
+
+                });
+            }
 
         });
     });
