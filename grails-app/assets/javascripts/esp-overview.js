@@ -67,9 +67,12 @@ var SiteStatusModel = function(site, currentStage, map, sitesViewModel) {
 
 var SimplifiedReportingViewModel = function(currentStage, currentReport) {
     var self = this;
-
+    var OPTIONAL_REPORT_TYPE = 'ESP Optional Reporting';
     function isAdminActivity(activity) {
         return !activity.siteId;
+    }
+    function isOptionalReport(activity) {
+        return activity.type == OPTIONAL_REPORT_TYPE;
     }
     self.finishedReporting = currentStage.canSubmitReport();
     self.finishedAdminReporting = _.every(currentStage.activities, function(activity) {
@@ -83,13 +86,21 @@ var SimplifiedReportingViewModel = function(currentStage, currentReport) {
         return isAdminActivity(activity);
     });
 
+    self.administrativeReport = _.find(currentStage.activities, function(activity) {
+        return isAdminActivity(activity);
+    });
+
+    self.optionalReport = _.find(currentStage.activities, function(activity) {
+        return isOptionalReport(activity);
+    });
+
     self.currentStage = currentStage;
     self.currentReport = currentReport;
     self.adminReportingHelp = ko.pureComputed(function() {
         if (self.finishedAdminReporting) {
-            return "You have completed your administrive reporting requirements for this year"
+            return "You have completed your administrative reporting requirements for this year"
         }
-        return "Press the 'Administrative Reporting' button in the 'Actions:' section below to complete your administrative reporting.";
+        return "Complete and save the form below to finish your reporting for this year.";
     });
     self.activityReportingHelp = ko.pureComputed(function() {
         if (self.finishedActivityReporting) {

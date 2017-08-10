@@ -22,7 +22,8 @@
             spatialWmsUrl: "${grailsApplication.config.spatial.wms.url}",
             sldPolgonDefaultUrl: "${grailsApplication.config.sld.polgon.default.url}",
             sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}",
-            featureService: "${createLink(controller: 'proxy', action:'feature')}"
+            featureService: "${createLink(controller: 'proxy', action:'feature')}",
+            sitesPhotoPointsUrl:"${createLink(controller:'project', action:'projectSitePhotos', id:project.projectId)}",
             },
             here = window.location.href;
     </script>
@@ -223,35 +224,17 @@
             }
             viewModel.renderPOIs();
 
-             $( '.photo-slider' ).mThumbnailScroller({theme:'hover-classic'});
-             $('.photo-slider .fancybox').fancybox({
-                 helpers : {
-                    title: {
-                        type: 'inside'
-                    }
-                 },
-                 beforeLoad: function() {
-                    var el, id = $(this.element).data('caption');
+            var poisInitialised = false;
+            $('#pois-tab').on('shown', function() {
+                if (!poisInitialised) {
+                    poisInitialised = true;
+                    loadAndConfigureSitePhotoPoints('#pois');
+                }
+            });
 
-                    if (id) {
-                        el = $('#' + id);
-
-                        if (el.length) {
-                            this.title = el.html();
-                        }
-                    }
-                 },
-                 nextEffect:'fade',
-                 previousEffect:'fade'
-             });
 
         });
-        $(window).load(function() {
-             $('.photo-slider .thumb').each(function() {
-                var $caption = $(this).find('.caption');
-                $caption.outerWidth($(this).find('img').width());
-             });
-         });
+
 
 </asset:script>
 <asset:javascript src="common.js"/>

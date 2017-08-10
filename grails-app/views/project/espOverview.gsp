@@ -81,6 +81,7 @@
     </script>
 
     <asset:stylesheet src="common.css"/>
+    <asset:stylesheet src="project.css"/>
 </head>
 <body>
 <div class="${containerType}">
@@ -141,7 +142,9 @@
             %{--</div>--}%
         %{--</g:each>--}%
         <div class="tab-pane" id="species-records-tab">
+            <div id="species-form">
 
+            </div>
         </div>
         <div class="tab-pane" id="dashboard-tab">
             <h3>Dashboard</h3>
@@ -161,26 +164,30 @@
 
 
                 <h3>Reporting</h3>
-                <div class="row-fluid">
-                    <div class="form-actions span12">
-                        <strong>Current reporting period: <span data-bind="text:currentStage.datesLabel"></span></strong>
-                        <p>
-                            <strong>Status:</strong> <span data-bind="text:currentReport.status()"></span>
-                        </p>
-                        <strong>Checklist: </strong>
-                        <ul class="unstyled">
-                            <li data-bind="visible:hasAdministrativeReports"><i data-bind="css:{'fa-check-square-o':finishedAdminReporting, 'fa-square-o':!finishedAdminReporting}" class="fa fa-square-o"></i> Administrative reporting complete <i class="fa fa-question-circle" data-bind="popover:{content:adminReportingHelp}"></i></li>
-                            <li><i data-bind="css:{'fa-check-square-o':finishedActivityReporting, 'fa-square-o':!finishedActivityReporting}" class="fa fa-square-o"></i> Progress reporting complete for all sites <i class="fa fa-question-circle" data-bind="popover:{content:activityReportingHelp}"></i></li>
-                            <li><i data-bind="css:{'fa-check-square-o':currentStage.isSubmitted(), 'fa-square-o':!currentStage.isSubmitted()}" class="fa fa-square-o"></i> Report submitted <i class="fa fa-question-circle" data-bind="popover:{content:submitReportHelp}"></i></li>
-                            %{--<li><i data-bind="css:{'fa-check-square-o':currentStage.isApproved(), 'fa-square-o':!currentStage.isApproved()}" class="fa fa-square-o"></i> Report approved <i class="fa fa-question-circle" data-bind="popover:{content:approveReportHelp}"></i></li>--}%
-                        </ul>
-                        <strong>Actions: </strong>
-                        <div>
-                            <button class="btn btn-success" data-bind="visible:hasAdministrativeReports, enable:!currentStage.isReadOnly(), click:administrativeReporting, attr:{title:administrativeReportButtonHelp}">Administrative reporting</button>
-                            <button class="btn btn-success" data-bind="enable:canSubmitReport(), click:currentStage.submitReport, attr:{title:submitReportHelp}">Submit for grant manager approval</button>
+                    <div class="row-fluid">
+                        <div class="form-actions span12">
+                            <strong>Current reporting period: <span data-bind="text:currentStage.datesLabel"></span></strong>
+                            <p>
+                                <strong>Status:</strong> <span data-bind="text:currentReport.status()"></span>
+                            </p>
+                            <strong>Checklist: </strong>
+                            <ul class="unstyled">
+                                <li><i data-bind="css:{'fa-check-square-o':finishedActivityReporting, 'fa-square-o':!finishedActivityReporting}" class="fa fa-square-o"></i> Progress reporting complete for all sites <i class="fa fa-question-circle" data-bind="popover:{content:activityReportingHelp}"></i></li>
+                                <li data-bind="visible:hasAdministrativeReports"><i data-bind="css:{'fa-check-square-o':finishedAdminReporting, 'fa-square-o':!finishedAdminReporting}" class="fa fa-square-o"></i> Administrative reporting complete <i class="fa fa-question-circle" data-bind="popover:{content:adminReportingHelp}"></i></li>
+                                <li><i data-bind="css:{'fa-check-square-o':currentStage.isSubmitted(), 'fa-square-o':!currentStage.isSubmitted()}" class="fa fa-square-o"></i> Report submitted <i class="fa fa-question-circle" data-bind="popover:{content:submitReportHelp}"></i></li>
+                                %{--<li><i data-bind="css:{'fa-check-square-o':currentStage.isApproved(), 'fa-square-o':!currentStage.isApproved()}" class="fa fa-square-o"></i> Report approved <i class="fa fa-question-circle" data-bind="popover:{content:approveReportHelp}"></i></li>--}%
+                            </ul>
+                            <strong>Actions: </strong>
+                            <div>
+                                <button class="btn btn-success" data-bind="enable:canSubmitReport(), click:currentStage.submitReport, attr:{title:submitReportHelp}">Submit for grant manager approval</button>
+                            </div>
                         </div>
                     </div>
-                </div>
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <div id="admin-form"></div>
+                        </div>
+                    </div>
 
                 </g:if>
 
@@ -258,49 +265,38 @@
             new SiteStatusModel(site, currentStage, map, sitesViewModel);
         });
 
-        ko.applyBindings(new SimplifiedReportingViewModel(currentStage, currentReport), document.getElementById('reporting'));
+        var simplifiedReportingViewModel = new SimplifiedReportingViewModel(currentStage, currentReport);
+
+        ko.applyBindings(simplifiedReportingViewModel, document.getElementById('reporting'));
+        var photosInitialised = false;
         $('.nav a').click(function() {
             $(this).tab('show');
             var tabContentTarget = $(this).attr('href');
-            if (tabContentTarget.indexOf('#site') === 0) {
-                $.get(fcConfig.tabbedActivityUrl+'/bbe23720-20db-4b8b-9c2e-7f81f63cf70a', function(data) {
-                    $(tabContentTarget).html(data);
-                });
+            if (tabContentTarget === '#reporting-tab') {
+                var activity = simplifiedReportingViewModel.administrativeReport;
+                if (activity) {
+                    $.get(fcConfig.tabbedActivityUrl+'/'+activity.activityId, function(data) {
+                        $(tabContentTarget + ' #admin-form').html(data);
+                    });
+                }
+
             }
-            if (tabContentTarget == '#photographs-tab') {
-                $('#site-photo-points').html('<asset:image id="img-spinner" width="50" height="50" src="loading.gif" alt="Loading"/>');
+            else if (tabContentTarget = '#species-records-tab') {
+                var activity = simplifiedReportingViewModel.optionalReport;
+                if (activity) {
+                    $.get(fcConfig.tabbedActivityUrl+'/'+activity.activityId, function(data) {
+                        $(tabContentTarget + ' #species-form').html(data);
+                    });
+                }
+            }
+            if (!photosInitialised && tabContentTarget == '#photographs-tab') {
+                photosInitialised = true;
+                var photoPointsSelector = '#site-photo-points';
+                $(photoPointsSelector).html('<asset:image id="img-spinner" width="50" height="50" src="loading.gif" alt="Loading"/>');
                 $.get(fcConfig.sitesPhotoPointsUrl).done(function (data) {
 
-                    $('#site-photo-points').html($(data));
-                    $('#site-photo-points img').on('load', function () {
-
-                        var parent = $(this).parents('.thumb');
-                        var $caption = $(parent).find('.caption');
-                        $caption.outerWidth($(this).width());
-
-                    });
-                    $('.photo-slider').mThumbnailScroller({theme: 'hover-classic'});
-                    $('.photo-slider .fancybox').fancybox({
-                        helpers: {
-                            title: {
-                                type: 'inside'
-                            }
-                        },
-                        beforeLoad: function () {
-                            var el, id = $(this.element).data('caption');
-
-                            if (id) {
-                                el = $('#' + id);
-
-                                if (el.length) {
-                                    this.title = el.html();
-                                }
-                            }
-                        },
-                        nextEffect: 'fade',
-                        previousEffect: 'fade'
-                    });
-
+                    $(photoPointsSelector).html($(data));
+                    loadAndConfigureSitePhotoPoints(photoPointsSelector);
                 });
             }
 
