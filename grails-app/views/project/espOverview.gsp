@@ -268,36 +268,48 @@
         var simplifiedReportingViewModel = new SimplifiedReportingViewModel(currentStage, currentReport);
 
         ko.applyBindings(simplifiedReportingViewModel, document.getElementById('reporting'));
-        var photosInitialised = false;
+
+        var tabs = {
+
+            'reporting-tab': {
+                initialiser: function() {
+                    var activity = simplifiedReportingViewModel.administrativeReport;
+                    if (activity) {
+                        $.get(fcConfig.tabbedActivityUrl+'/'+activity.activityId, function(data) {
+                            $('#admin-form').html(data);
+                        });
+                    }
+                }
+            },
+            'species-records-tab': {
+                initialiser: function() {
+                    var activity = simplifiedReportingViewModel.optionalReport;
+                    if (activity) {
+                        $.get(fcConfig.tabbedActivityUrl+'/'+activity.activityId, function(data) {
+                            $('#species-form').html(data);
+                        });
+                    }
+                }
+            },
+            'photographs-tab': {
+                initialiser: function() {
+                    var photoPointsSelector = '#site-photo-points';
+                    $(photoPointsSelector).html('<asset:image id="img-spinner" width="50" height="50" src="loading.gif" alt="Loading"/>');
+                    $.get(fcConfig.sitesPhotoPointsUrl).done(function (data) {
+                        $(photoPointsSelector).html($(data));
+                        loadAndConfigureSitePhotoPoints(photoPointsSelector);
+                    });
+                }
+            }
+
+        };
         $('.nav a').click(function() {
             $(this).tab('show');
             var tabContentTarget = $(this).attr('href');
-            if (tabContentTarget === '#reporting-tab') {
-                var activity = simplifiedReportingViewModel.administrativeReport;
-                if (activity) {
-                    $.get(fcConfig.tabbedActivityUrl+'/'+activity.activityId, function(data) {
-                        $(tabContentTarget + ' #admin-form').html(data);
-                    });
-                }
-
-            }
-            else if (tabContentTarget = '#species-records-tab') {
-                var activity = simplifiedReportingViewModel.optionalReport;
-                if (activity) {
-                    $.get(fcConfig.tabbedActivityUrl+'/'+activity.activityId, function(data) {
-                        $(tabContentTarget + ' #species-form').html(data);
-                    });
-                }
-            }
-            if (!photosInitialised && tabContentTarget == '#photographs-tab') {
-                photosInitialised = true;
-                var photoPointsSelector = '#site-photo-points';
-                $(photoPointsSelector).html('<asset:image id="img-spinner" width="50" height="50" src="loading.gif" alt="Loading"/>');
-                $.get(fcConfig.sitesPhotoPointsUrl).done(function (data) {
-
-                    $(photoPointsSelector).html($(data));
-                    loadAndConfigureSitePhotoPoints(photoPointsSelector);
-                });
+            var tab = tabContentTarget.substring(1, tabContentTarget.length);
+            if (tabs[tab] && !tabs[tab].initialised) {
+                tabs[tab].initialised = true;
+                tabs[tab].initialiser();
             }
 
         });
