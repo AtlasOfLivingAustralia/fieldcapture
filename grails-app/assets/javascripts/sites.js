@@ -1068,3 +1068,40 @@ function representsRectangle(path) {
     }
     return true
 }
+
+/**
+ *
+ * Fetches the site photo point display template and configures the dynamic behaviour after it loads.
+ * @param targetElementSelector the selector of the element to attach the downloaded html.
+ */
+function loadAndConfigureSitePhotoPoints(targetElementSelector) {
+
+    $(targetElementSelector + ' img').on('load', function () {
+
+        var parent = $(this).parents('.thumb');
+        var $caption = $(parent).find('.caption');
+        $caption.outerWidth($(this).width());
+
+    });
+    $(targetElementSelector + ' .photo-slider').mThumbnailScroller({theme: 'hover-classic'});
+    $(targetElementSelector + ' .photo-slider .fancybox').fancybox({
+        helpers: {
+            title: {
+                type: 'inside'
+            }
+        },
+        beforeLoad: function () {
+            var el, id = $(this.element).data('caption');
+
+            if (id) {
+                el = $('#' + id);
+
+                if (el.length) {
+                    this.title = el.html();
+                }
+            }
+        },
+        nextEffect: 'fade',
+        previousEffect: 'fade'
+    });
+}
