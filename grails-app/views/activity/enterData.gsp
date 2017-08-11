@@ -309,19 +309,21 @@
         outputModelConfig = _.extend(fcConfig, outputModelConfig);
 
     <g:each in="${metaModel?.outputs}" var="outputName">
-        <g:set var="blockId" value="${fc.toSingleWord([name: outputName])}"/>
-        <g:set var="model" value="${outputModels[outputName]}"/>
-        <g:set var="output" value="${activity.outputs.find {it.name == outputName} ?: [name: outputName]}"/>
+        <g:if test="${outputName != 'Photo Points'}">
+            <g:set var="blockId" value="${fc.toSingleWord([name: outputName])}"/>
+            <g:set var="model" value="${outputModels[outputName]}"/>
+            <g:set var="output" value="${activity.outputs.find {it.name == outputName} ?: [name: outputName]}"/>
 
-        var viewModelName = "${blockId}ViewModel",
-            elementId = "ko${blockId}";
+            var viewModelName = "${blockId}ViewModel",
+                elementId = "ko${blockId}";
 
-        var output = <fc:modelAsJavascript model="${output}"/>;
-        var config = ${fc.modelAsJavascript(model:metaModel.outputConfig?.find{it.outputName == outputName}, default:'{}')};
-        config.model = ${fc.modelAsJavascript(model:model)},
-        config = _.extend({}, outputModelConfig, config);
+            var output = <fc:modelAsJavascript model="${output}"/>;
+            var config = ${fc.modelAsJavascript(model:metaModel.outputConfig?.find{it.outputName == outputName}, default:'{}')};
+            config.model = ${fc.modelAsJavascript(model:model)},
+            config = _.extend({}, outputModelConfig, config);
 
-        initialiseOutputViewModel(viewModelName, config.model.dataModel, elementId, activity, output, master, config);
+            initialiseOutputViewModel(viewModelName, config.model.dataModel, elementId, activity, output, master, config);
+        </g:if>
     </g:each>
 
         ko.applyBindings(new ActivityNavigationViewModel(projectId, activityId, siteId, options), document.getElementById('activity-nav'));
