@@ -25,9 +25,16 @@ class ProjectController {
             redirect(controller: 'home', model: [error: flash.message])
         }
         else {
+            Map projectArea = null
+            if (project.sites) {
+                projectArea = project.sites?.find({it.type == 'projectArea'})
+                if (!projectArea) {
+                    projectArea = project.sites[0]
+                }
+            }
 
             boolean reportingVisible = !projectService.isComplete(project) && projectService.isMeriPlanSubmittedOrApproved(project)
-            render model:[project:project, metrics: projectService.summary(id), mapFeatures: commonService.getMapFeatures(project), reportingVisible:reportingVisible], view:'espOverview'
+            render model:[project:project, metrics: projectService.summary(id), mapFeatures: commonService.getMapFeatures(project), reportingVisible:reportingVisible, projectArea:projectArea], view:'espOverview'
         }
     }
 

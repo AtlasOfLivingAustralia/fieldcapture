@@ -54,7 +54,7 @@
         var activity = JSON.parse('${(activity as JSON).toString().encodeAsJavaScript()}');
 
 
-        var master = new Master(activity.activityId, {saveActivityUrl: fcConfig.saveActivityUrl});
+        var master = new Master(activity.activityId, {saveActivityUrl: fcConfig.saveActivityUrl+'/'+activity.activityId});
 
         $('.helphover').popover({animation: true, trigger:'hover'});
 

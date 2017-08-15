@@ -114,13 +114,29 @@
         </div>
     </g:if>
     <p>${project.description}</p>
+    <div class="row-fluid">
+        <span class="span6">
+            <span class="label label-info label-small">Project ID:</span> ${project.grantId}<br/>
+            <span class="label label-info label-small">Reporting Period:</span> <span data-bind="text:currentStage.datesLabel"></span>
+        </span>
+        <span class="span6">
+            <g:if test="${projectArea}">
+                <ul class="unstyled">
+                    <li><fc:siteFacet site="${projectArea}" facet="nrm" label="State / Territory"/></li>
+
+                    <li><fc:siteFacet site="${projectArea}" facet="nrm" label="NRM"/></li>
+                    <li><fc:siteFacet site="${projectArea}" facet="cmz" label="CMZ"/></li>
+                </ul>
+
+            </g:if>
+        </span>
+    </div>
+
+
 
     <ul class="nav nav-tabs">
         <li class="active"><a href="#mysites" data-toggle="tab">My Sites</a></li>
-        %{--<g:each in="${project.sites}" var="site" status="i">--}%
-            %{--<li><a href="#site${i}">${site.name}</a></li>--}%
-        %{--</g:each>--}%
-        <li><a href="#species-records-tab" data-toggle="tab">Species Records</a></li>
+        <li><a href="#species-records-tab" data-toggle="tab">My Species Records</a></li>
         <li><a href="#dashboard-tab" data-toggle="tab">Dashboard</a></li>
         <li><a href="#photographs-tab" data-toggle="tab">Photographs</a></li>
         <li><a href="#reporting-tab" data-toggle="tab">Submission</a></li>
@@ -129,18 +145,14 @@
 
     <div class="tab-content">
         <div class="tab-pane active" id="mysites">
-
             <div class="row-fluid">
+                <!-- ko stopBinding:true -->
                 <div id="map" class="span12" style="height:500px; width:100%"></div>
+                <!-- /ko -->
             </div>
             <p>Click on a site to fill out the report for that site.</p>
             <p>Green sites have finished reports.  Red sites have unfinished reports.</p>
         </div>
-        %{--<g:each in="${project.sites}" var="site" status="i">--}%
-            %{--<div class="tab-pane" id="site${i}">--}%
-
-            %{--</div>--}%
-        %{--</g:each>--}%
         <div class="tab-pane" id="species-records-tab">
             <div id="species-form">
 
@@ -159,39 +171,13 @@
 
         </div>
         <div class="tab-pane" id="reporting-tab">
-            <div id="reporting">
-                <g:if test="${reportingVisible}">
-
-
-                <h3>Reporting</h3>
-                    <div class="row-fluid">
-                        <div class="form-actions span12">
-                            <strong>Current reporting period: <span data-bind="text:currentStage.datesLabel"></span></strong>
-                            <p>
-                                <strong>Status:</strong> <span data-bind="text:currentReport.status()"></span>
-                            </p>
-                            <strong>Checklist: </strong>
-                            <ul class="unstyled">
-                                <li><i data-bind="css:{'fa-check-square-o':finishedActivityReporting, 'fa-square-o':!finishedActivityReporting}" class="fa fa-square-o"></i> Progress reporting complete for all sites <i class="fa fa-question-circle" data-bind="popover:{content:activityReportingHelp}"></i></li>
-                                <li data-bind="visible:hasAdministrativeReports"><i data-bind="css:{'fa-check-square-o':finishedAdminReporting, 'fa-square-o':!finishedAdminReporting}" class="fa fa-square-o"></i> Administrative reporting complete <i class="fa fa-question-circle" data-bind="popover:{content:adminReportingHelp}"></i></li>
-                                <li><i data-bind="css:{'fa-check-square-o':currentStage.isSubmitted(), 'fa-square-o':!currentStage.isSubmitted()}" class="fa fa-square-o"></i> Report submitted <i class="fa fa-question-circle" data-bind="popover:{content:submitReportHelp}"></i></li>
-                                %{--<li><i data-bind="css:{'fa-check-square-o':currentStage.isApproved(), 'fa-square-o':!currentStage.isApproved()}" class="fa fa-square-o"></i> Report approved <i class="fa fa-question-circle" data-bind="popover:{content:approveReportHelp}"></i></li>--}%
-                            </ul>
-                            <strong>Actions: </strong>
-                            <div>
-                                <button class="btn btn-success" data-bind="enable:canSubmitReport(), click:currentStage.submitReport, attr:{title:submitReportHelp}">Submit for grant manager approval</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row-fluid">
-                        <div class="span12">
-                            <div id="admin-form"></div>
-                        </div>
-                    </div>
-
-                </g:if>
+            <div id="admin-form">
 
             </div>
+            <div class="form-actions">
+                <button>Submit</button>
+            </div>
+
         </div>
     </div>
 
@@ -233,6 +219,10 @@
 
     $(function() {
         var project = <fc:renderProject project="${project}"/>;
+
+        var simplifiedReportingViewModel = new SimplifiedReportingViewModel(project, fcConfig);
+        ko.applyBindings(simplifiedReportingViewModel);
+
         var mapFeatures = $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
         var userIsEditor = ${user?.isEditor?:false};
 
@@ -249,25 +239,16 @@
         var map = init_map_with_features(mapOptions, {});
 
         var sitesViewModel = new SitesViewModel(project.sites, map, mapFeatures, userIsEditor, project.projectId);
-        var reportsViewModel = new ProjectReportsViewModel(project);
-        var planViewModel = new PlanViewModel(project.activities, project.reports, [], {}, project, null, fcConfig, true, false);
-
-        var currentReport = reportsViewModel.currentReport;
-
-        var currentStage = _.find(planViewModel.stages, function(stage) {
-            return stage.toDate == currentReport.toDate;
-        });
 
         ko.applyBindings(sitesViewModel, document.getElementById('map'));
         sitesViewModel.displayAllSites();
 
         _.each(sitesViewModel.sites, function(site) {
-            new SiteStatusModel(site, currentStage, map, sitesViewModel);
+            new SiteStatusModel(site, simplifiedReportingViewModel.currentStage, map, sitesViewModel);
         });
 
-        var simplifiedReportingViewModel = new SimplifiedReportingViewModel(currentStage, currentReport);
 
-        ko.applyBindings(simplifiedReportingViewModel, document.getElementById('reporting'));
+
 
         var tabs = {
 
