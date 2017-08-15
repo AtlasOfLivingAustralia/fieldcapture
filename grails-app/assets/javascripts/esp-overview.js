@@ -65,8 +65,18 @@ var SiteStatusModel = function(site, currentStage, map, sitesViewModel) {
     }
 };
 
-var SimplifiedReportingViewModel = function(currentStage, currentReport) {
+var SimplifiedReportingViewModel = function(project, config) {
     var self = this;
+
+    var reportsViewModel = new ProjectReportsViewModel(project);
+    var planViewModel = new PlanViewModel(project.activities, project.reports, [], {}, project, null, config, true, false);
+    var currentReport = reportsViewModel.currentReport;
+
+    var currentStage = _.find(planViewModel.stages, function(stage) {
+        return stage.toDate == currentReport.toDate;
+    });
+
+
     var OPTIONAL_REPORT_TYPE = 'ESP Optional Reporting';
     function isAdminActivity(activity) {
         return !activity.siteId;
@@ -150,5 +160,12 @@ var SimplifiedReportingViewModel = function(currentStage, currentReport) {
             return "Click to complete your administrative reporting for the year."
         }
     });
+
+};
+
+var ESPActivity = function(activity) {
+    self.progress = 'finished';
+    self.outputs = [];
+
 
 };
