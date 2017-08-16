@@ -1,5 +1,6 @@
 <%@ page import="au.org.ala.merit.ActivityService; grails.converters.JSON; org.codehaus.groovy.grails.web.json.JSONArray" contentType="text/html;charset=UTF-8" %>
 
+<div id="activity-${activity.activityId}" class="validationEngineContainer">
 <!-- ko stopBinding: true -->
 <g:each in="${metaModel?.outputs}" var="outputName">
     <g:if test="${outputName != 'Photo Points'}">
@@ -34,7 +35,7 @@
 
     </div>
 </g:if>
-<g:if test="${!printView}">
+<g:if test="${params.includeFormActions}">
     <div class="form-actions">
         <button type="button" id="save" class="btn btn-primary">Save changes</button>
         <button type="button" id="cancel" class="btn">Cancel</button>
@@ -44,6 +45,7 @@
     </div>
 
 </g:if>
+</div>
 
 <asset:deferredScripts/>
 
@@ -52,9 +54,10 @@
     $(function(){
         var returnTo = "${returnTo}";
         var activity = JSON.parse('${(activity as JSON).toString().encodeAsJavaScript()}');
+        var formSelector = '#activity-'+activity.activityId;
 
 
-        var master = new Master(activity.activityId, {saveActivityUrl: fcConfig.saveActivityUrl+'/'+activity.activityId});
+        var master = new Master(activity.activityId, {saveActivityUrl: fcConfig.saveActivityUrl+'/'+activity.activityId, validationContainerSelector:formSelector});
 
         $('.helphover').popover({animation: true, trigger:'hover'});
 
@@ -78,7 +81,6 @@
         </g:if>
         var metaModel = ${metaModel};
         var themes = ${themes};
-        var mapFeatures = $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
         var viewModel = new ActivityHeaderViewModel(activity, site, fcConfig.project, metaModel, themes);
 
         %{--ko.applyBindings(viewModel);--}%
@@ -89,25 +91,23 @@
             %{--viewModel.dirtyFlag.reset();--}%
         %{--}--}%
 
-        %{--<g:if test="${params.progress}">--}%
-        %{--var newProgress = '${params.progress}';--}%
-        %{--if (newProgress == 'corrected') {--}%
-            %{--viewModel.progress(newProgress);--}%
-        %{--}--}%
-        %{--else {--}%
-            %{--viewModel.transients.markedAsFinished(newProgress == 'finished');--}%
-        %{--}--}%
-        %{--</g:if>--}%
+        <g:if test="${params.progress}">
+        var newProgress = '${params.progress}';
+        if (newProgress == 'corrected') {
+            viewModel.progress(newProgress);
+        }
+        else {
+            viewModel.transients.markedAsFinished(newProgress == 'finished');
+        }
+        </g:if>
 
         master.register('activityModel', viewModel.modelForSaving, viewModel.dirtyFlag.isDirty, viewModel.dirtyFlag.reset, viewModel.updateIdsAfterSave);
 
-        var url = '${g.createLink(controller: 'activity', action:'activitiesWithStage', id:activity.projectId)}';
-        var activityUrl = '${g.createLink(controller:'activity', action:'enterData')}';
+        // export the model so it can be used on the page in which this tabbed activity is being displayed.
+        ecodata.forms[activity.activityId] = master;
+
         var activityId = '${activity.activityId}';
         var projectId = '${activity.projectId}';
-        var siteId = '${activity.siteId?:""}';
-        var options = {navigationUrl:url, activityUrl:activityUrl, returnTo:returnTo};
-        options.navContext = '${navContext}';
 
         var outputModelConfig = {
             projectId:projectId,
@@ -119,23 +119,23 @@
         outputModelConfig = _.extend(fcConfig, outputModelConfig);
 
         <g:each in="${metaModel?.outputs}" var="outputName">
-        <g:set var="blockId" value="${fc.toSingleWord([name: outputName])}"/>
-        <g:set var="model" value="${outputModels[outputName]}"/>
-        <g:set var="output" value="${activity.outputs.find {it.name == outputName} ?: [name: outputName]}"/>
+            <g:set var="blockId" value="${fc.toSingleWord([name: outputName])}"/>
+            <g:set var="model" value="${outputModels[outputName]}"/>
+            <g:set var="output" value="${activity.outputs.find {it.name == outputName} ?: [name: outputName]}"/>
 
-        var viewModelName = "${blockId}ViewModel",
-            elementId = "ko${blockId}";
+            var viewModelName = "${blockId}ViewModel",
+                elementId = "ko${blockId}";
 
-        var output = <fc:modelAsJavascript model="${output}"/>;
-        var config = ${fc.modelAsJavascript(model:metaModel.outputConfig?.find{it.outputName == outputName}, default:'{}')};
-        config.model = ${fc.modelAsJavascript(model:model)},
-            config = _.extend({}, outputModelConfig, config);
+            var output = <fc:modelAsJavascript model="${output}"/>;
+            var config = ${fc.modelAsJavascript(model:metaModel.outputConfig?.find{it.outputName == outputName}, default:'{}')};
+            config.model = ${fc.modelAsJavascript(model:model)},
+                config = _.extend({}, outputModelConfig, config);
 
-        initialiseOutputViewModel(viewModelName, config.model.dataModel, elementId, activity, output, master, config);
+            initialiseOutputViewModel(viewModelName, config.model.dataModel, elementId, activity, output, master, config);
         </g:each>
 
 
-
+        $(formSelector).validationEngine('attach', {scroll: true});
         $('.imageList a[target="_photo"]').attr('rel', 'gallery').fancybox({type:'image', autoSize:true, nextEffect:'fade', preload:0, 'prevEffect':'fade'});
 
     });

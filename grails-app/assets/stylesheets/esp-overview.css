@@ -1,0 +1,7 @@
+/*
+ *= require project.css
+ *= require_self
+ */
+.tab-content .output-block {
+    border-top: none;
+}

@@ -72,6 +72,7 @@
             spatialWmsCacheUrl: "${grailsApplication.config.spatial.wms.cache.url}",
             spatialWmsUrl: "${grailsApplication.config.spatial.wms.url}",
         tabbedActivityUrl: "${createLink(controller: 'activity', action:'ajaxLoadActivityForm')}",
+        dashboardUrl:"${createLink(action:'projectDashboard', id:project.projectId)}",
         returnTo: "${createLink(controller: 'project', action: 'espOverview', id: project.projectId)}"
 
     },
@@ -81,7 +82,7 @@
     </script>
 
     <asset:stylesheet src="common.css"/>
-    <asset:stylesheet src="project.css"/>
+    <asset:stylesheet src="esp-overview.css"/>
 </head>
 <body>
 <div class="${containerType}">
@@ -94,6 +95,9 @@
             <li class="active">Project</li>
         </ul>
         <div class="pull-right">
+            <g:if test="${fc.userIsSiteAdmin()}">
+                <button class="btn"><a href="${createLink(action:'index', id:project.projectId, params:[template:'index'])}">Grant Manager View</a></button>
+            </g:if>
             <g:set var="disabled">${(!user) ? "disabled='disabled' title='login required'" : ''}</g:set>
             <g:if test="${isProjectStarredByUser}">
                 <button class="btn" id="starBtn"><i class="icon-star"></i> <span>Remove from favourites</span></button>
@@ -161,8 +165,7 @@
         <div class="tab-pane" id="dashboard-tab">
             <h3>Dashboard</h3>
             <div class="row-fluid">
-                <div class="span12 form-actions">
-                    <g:render template="dashboard"/>
+                <div id="dashboard">
                 </div>
             </div>
         </div>
@@ -171,17 +174,20 @@
 
         </div>
         <div class="tab-pane" id="reporting-tab">
-            <div id="admin-form">
-
+            <div class="alert" data-bind="visible:!canSubmitReport()">
+                Please complete your site and species reporting before submitting your report.
             </div>
-            <div class="form-actions">
-                <button>Submit</button>
+            <div data-bind="visible:canSubmitReport">
+                <div id="admin-form">
+
+                </div>
+                <div class="form-actions">
+                    <button class="btn" data-bind="enable:canSubmitReport, click:submitReport">Submit</button>
+                </div>
             </div>
 
         </div>
     </div>
-
-
 
 </div>
 
@@ -247,52 +253,49 @@
             new SiteStatusModel(site, simplifiedReportingViewModel.currentStage, map, sitesViewModel);
         });
 
+        var adminActivityId = simplifiedReportingViewModel.administrativeReport && simplifiedReportingViewModel.administrativeReport.activityId || '';
+        var speciesActivityId = simplifiedReportingViewModel.optionalReport && simplifiedReportingViewModel.optionalReport.activityId || '';
 
-
-
+        var photopointSelector = '#site-photo-points';
         var tabs = {
-
             'reporting-tab': {
-                initialiser: function() {
-                    var activity = simplifiedReportingViewModel.administrativeReport;
-                    if (activity) {
-                        $.get(fcConfig.tabbedActivityUrl+'/'+activity.activityId, function(data) {
-                            $('#admin-form').html(data);
-                        });
-                    }
-                }
+                selector:'#admin-form',
+                url:fcConfig.tabbedActivityUrl+'/'+adminActivityId+'?progress=finished'
             },
             'species-records-tab': {
-                initialiser: function() {
-                    var activity = simplifiedReportingViewModel.optionalReport;
-                    if (activity) {
-                        $.get(fcConfig.tabbedActivityUrl+'/'+activity.activityId, function(data) {
-                            $('#species-form').html(data);
-                        });
-                    }
-                }
+                selector:'#species-form',
+                url:fcConfig.tabbedActivityUrl+'/'+speciesActivityId + '?includeFormActions=true&progress=finished'
             },
             'photographs-tab': {
+                selector:photopointSelector,
+                url:fcConfig.sitesPhotoPointsUrl,
                 initialiser: function() {
-                    var photoPointsSelector = '#site-photo-points';
-                    $(photoPointsSelector).html('<asset:image id="img-spinner" width="50" height="50" src="loading.gif" alt="Loading"/>');
-                    $.get(fcConfig.sitesPhotoPointsUrl).done(function (data) {
-                        $(photoPointsSelector).html($(data));
-                        loadAndConfigureSitePhotoPoints(photoPointsSelector);
-                    });
+                    loadAndConfigureSitePhotoPoints(photopointSelector);
                 }
+            },
+            'dashboard-tab': {
+                selector:'#dashboard',
+                url:fcConfig.dashboardUrl
             }
-
         };
         $('.nav a').click(function() {
             $(this).tab('show');
-            var tabContentTarget = $(this).attr('href');
-            var tab = tabContentTarget.substring(1, tabContentTarget.length);
-            if (tabs[tab] && !tabs[tab].initialised) {
-                tabs[tab].initialised = true;
-                tabs[tab].initialiser();
-            }
 
+            var tabContentTarget = $(this).attr('href');
+            var tabId = tabContentTarget.substring(1, tabContentTarget.length);
+            var tab = tabs[tabId];
+            if (tab && !tab.initialised) {
+                tab.initialised = true;
+                // Get the remote content
+                $(tab.selector).html('<asset:image id="img-spinner" width="50" height="50" src="loading.gif" alt="Loading"/>');
+
+                $.get(tab.url, function(data) {
+                    $(tab.selector).html(data);
+                    if (tab.initialiser) {
+                        tab.initialiser();
+                    }
+                });
+            }
         });
     });
 

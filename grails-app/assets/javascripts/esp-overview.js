@@ -1,4 +1,5 @@
 //= require enterActivityData.js
+//= require keydragzoom/keydragzoom.js
 //= require_self
 
 var SiteStatusModel = function(site, currentStage, map, sitesViewModel) {
@@ -77,9 +78,10 @@ var SimplifiedReportingViewModel = function(project, config) {
     });
 
 
-    var OPTIONAL_REPORT_TYPE = 'ESP Optional Reporting';
+    var OPTIONAL_REPORT_TYPE = 'ESP Species';
+    var ADMIN_REPORT_TYPE = 'ESP Overview';
     function isAdminActivity(activity) {
-        return !activity.siteId;
+        return activity.type == ADMIN_REPORT_TYPE;
     }
     function isOptionalReport(activity) {
         return activity.type == OPTIONAL_REPORT_TYPE;
@@ -160,6 +162,16 @@ var SimplifiedReportingViewModel = function(project, config) {
             return "Click to complete your administrative reporting for the year."
         }
     });
+
+    self.submitReport = function() {
+        // gotta do our thing!
+        $('#reporting-tab').validationEngine('validate');
+        ecodata.forms[self.administrativeReport.activityId].save();
+
+        // if the save worked.
+        currentStage.submitReport();
+
+    };
 
 };
 
