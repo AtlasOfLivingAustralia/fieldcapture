@@ -68,7 +68,9 @@ class ProjectService  {
         params += levelOfDetail ? "view=${levelOfDetail}&" : ''
         params += "includeDeleted=${includeDeleted}"
         Map project = webService.getJson(grailsApplication.config.ecodata.baseUrl + 'project/' + id + params)
-        project.reports = reportService.getReportsForProject(id)
+        if (!project.reports) {
+            project.reports = reportService.getReportsForProject(id)
+        }
         project
 
     }

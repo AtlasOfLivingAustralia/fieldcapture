@@ -1,4 +1,5 @@
 //= require enterActivityData.js
+//= require keydragzoom/keydragzoom.js
 //= require_self
 
 var SiteStatusModel = function(site, currentStage, map, sitesViewModel) {
@@ -160,6 +161,16 @@ var SimplifiedReportingViewModel = function(project, config) {
             return "Click to complete your administrative reporting for the year."
         }
     });
+
+    self.submitReport = function() {
+        // gotta do our thing!
+        $('#reporting-tab').validationEngine('validate');
+        ecodata.forms[self.administrativeReport.activityId].save();
+
+        // if the save worked.
+        currentStage.submitReport();
+
+    };
 
 };
 

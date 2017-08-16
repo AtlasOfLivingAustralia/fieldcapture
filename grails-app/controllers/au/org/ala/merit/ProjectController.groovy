@@ -14,32 +14,20 @@ class ProjectController {
     def siteService, documentService, reportService, blogService
 
 
-    def espOverview(String id) {
-        Map project = projectService.get(id, 'all')
-        if (!project || project.error) {
-            flash.message = "Project not found with id: ${id}"
-            if (project?.error) {
-                flash.message += "<br/>${project.error}"
-                log.warn project.error
-            }
-            redirect(controller: 'home', model: [error: flash.message])
-        }
-        else {
-            Map projectArea = null
-            if (project.sites) {
-                projectArea = project.sites?.find({it.type == 'projectArea'})
-                if (!projectArea) {
-                    projectArea = project.sites[0]
-                }
-            }
+    private def espOverview(Map project) {
 
-            boolean reportingVisible = !projectService.isComplete(project) && projectService.isMeriPlanSubmittedOrApproved(project)
-            render model:[project:project, metrics: projectService.summary(id), mapFeatures: commonService.getMapFeatures(project), reportingVisible:reportingVisible, projectArea:projectArea], view:'espOverview'
+        Map projectArea = null
+        if (project.sites) {
+            projectArea = project.sites?.find({it.type == 'projectArea'})
+            if (!projectArea) {
+                projectArea = project.sites[0]
+            }
         }
+        render model:[project:project, mapFeatures: commonService.getMapFeatures(project), projectArea:projectArea], view:'espOverview'
     }
 
     def index(String id) {
-        def project = projectService.get(id, 'brief')
+        def project = projectService.get(id, 'all')
         def roles = roleService.getRoles()
 
         if (!project || project.error) {
@@ -49,6 +37,8 @@ class ProjectController {
                 log.warn project.error
             }
             redirect(controller: 'home', model: [error: flash.message])
+        } else if (project.associatedSubProgram == 'ESP Test') {
+            espOverview(project)
         } else {
             project.sites?.sort {it.name}
             project.projectSite = project.sites?.find{it.siteId == project.projectSiteId}
@@ -65,12 +55,10 @@ class ProjectController {
                 user.hasViewAccess = projectService.canUserViewProject(user.userId, id)?:false
             }
             def programs = projectService.programsModel()
-            def activities = activityService.activitiesForProject(id)
-            project.activities = activities
             def content = projectContent(project, user, programs)
 
             def model = [project: project,
-                         activities: activities,
+                         activities: project.activities,
                          mapFeatures: commonService.getMapFeatures(project),
                          isProjectStarredByUser: userService.isProjectStarredByUser(user?.userId?:"0", project.projectId)?.isProjectStarredByUser,
                          user: user,
@@ -130,6 +118,15 @@ class ProjectController {
          admin:[label:'Admin', visible:user?.isEditor || user?.isAdmin || user?.isCaseManager, type:'tab', canChangeProjectDates: canChangeProjectDates, showAnnouncementsTab:showAnnouncementsTab]]
 
         return [view:'index', model:model]
+    }
+
+    /**
+     * Designed for an ajax call - this returns only a template not a full HTML page.
+     * @param id the project ID.
+     */
+    @PreAuthorise
+    def projectDashboard(String id) {
+        render template: 'dashboard', model:[metrics: projectService.summary(id)]
     }
 
     @PreAuthorise
@@ -503,7 +500,7 @@ class ProjectController {
         String projectId =  params.id
         String reportId = params.reportId
         String status = params.status
-		
+
 		if(reportId && projectId && status) {
 			def project = projectService.get(projectId, 'all')
 			def activities = activityService.activitiesForProject(projectId);
