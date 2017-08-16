@@ -35,7 +35,7 @@
 
     </div>
 </g:if>
-<g:if test="${includeFormActions}">
+<g:if test="${params.includeFormActions}">
     <div class="form-actions">
         <button type="button" id="save" class="btn btn-primary">Save changes</button>
         <button type="button" id="cancel" class="btn">Cancel</button>
@@ -91,15 +91,15 @@
             %{--viewModel.dirtyFlag.reset();--}%
         %{--}--}%
 
-        %{--<g:if test="${params.progress}">--}%
-        %{--var newProgress = '${params.progress}';--}%
-        %{--if (newProgress == 'corrected') {--}%
-            %{--viewModel.progress(newProgress);--}%
-        %{--}--}%
-        %{--else {--}%
-            %{--viewModel.transients.markedAsFinished(newProgress == 'finished');--}%
-        %{--}--}%
-        %{--</g:if>--}%
+        <g:if test="${params.progress}">
+        var newProgress = '${params.progress}';
+        if (newProgress == 'corrected') {
+            viewModel.progress(newProgress);
+        }
+        else {
+            viewModel.transients.markedAsFinished(newProgress == 'finished');
+        }
+        </g:if>
 
         master.register('activityModel', viewModel.modelForSaving, viewModel.dirtyFlag.isDirty, viewModel.dirtyFlag.reset, viewModel.updateIdsAfterSave);
 

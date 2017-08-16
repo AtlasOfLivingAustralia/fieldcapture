@@ -95,6 +95,9 @@
             <li class="active">Project</li>
         </ul>
         <div class="pull-right">
+            <g:if test="${fc.userIsSiteAdmin()}">
+                <button class="btn"><a href="${createLink(action:'index', id:project.projectId, params:[template:'index'])}">Grant Manager View</a></button>
+            </g:if>
             <g:set var="disabled">${(!user) ? "disabled='disabled' title='login required'" : ''}</g:set>
             <g:if test="${isProjectStarredByUser}">
                 <button class="btn" id="starBtn"><i class="icon-star"></i> <span>Remove from favourites</span></button>
@@ -250,18 +253,18 @@
             new SiteStatusModel(site, simplifiedReportingViewModel.currentStage, map, sitesViewModel);
         });
 
-        var adminUrl = simplifiedReportingViewModel.administrativeReport && simplifiedReportingViewModel.administrativeReport.activityId || '';
-        var speciesReportUrl = simplifiedReportingViewModel.optionalReport && simplifiedReportingViewModel.optionalReport.activityId || '';
+        var adminActivityId = simplifiedReportingViewModel.administrativeReport && simplifiedReportingViewModel.administrativeReport.activityId || '';
+        var speciesActivityId = simplifiedReportingViewModel.optionalReport && simplifiedReportingViewModel.optionalReport.activityId || '';
 
         var photopointSelector = '#site-photo-points';
         var tabs = {
             'reporting-tab': {
                 selector:'#admin-form',
-                url:fcConfig.tabbedActivityUrl+'/'+adminUrl
+                url:fcConfig.tabbedActivityUrl+'/'+adminActivityId+'?progress=finished'
             },
             'species-records-tab': {
                 selector:'#species-form',
-                url:fcConfig.tabbedActivityUrl+'/'+speciesReportUrl
+                url:fcConfig.tabbedActivityUrl+'/'+speciesActivityId + '?includeFormActions=true&progress=finished'
             },
             'photographs-tab': {
                 selector:photopointSelector,

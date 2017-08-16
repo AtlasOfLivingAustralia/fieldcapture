@@ -78,9 +78,10 @@ var SimplifiedReportingViewModel = function(project, config) {
     });
 
 
-    var OPTIONAL_REPORT_TYPE = 'ESP Optional Reporting';
+    var OPTIONAL_REPORT_TYPE = 'ESP Species';
+    var ADMIN_REPORT_TYPE = 'ESP Overview';
     function isAdminActivity(activity) {
-        return !activity.siteId;
+        return activity.type == ADMIN_REPORT_TYPE;
     }
     function isOptionalReport(activity) {
         return activity.type == OPTIONAL_REPORT_TYPE;
