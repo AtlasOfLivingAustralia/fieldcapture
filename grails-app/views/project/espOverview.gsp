@@ -8,27 +8,11 @@
     <script>
     var fcConfig = {
         serverUrl: "${grailsApplication.config.grails.serverURL}",
-        projectUpdateUrl: "${createLink(action: 'ajaxUpdate', id: project.projectId)}",
-        updateProjectDatesUrl: "${createLink(controller: 'project', action: 'updateProjectDates')}/",
-        sitesDeleteUrl: "${createLink(controller: 'site', action: 'ajaxDeleteSitesFromProject', id:project.projectId)}",
-        siteDeleteUrl: "${createLink(controller: 'site', action: 'ajaxDeleteSiteFromProject', id:project.projectId)}",
-        siteViewUrl: "${createLink(controller: 'site', action: 'index')}",
-        siteEditUrl: "${createLink(controller: 'site', action: 'edit')}",
-        removeSiteUrl: "${createLink(controller: 'site', action: '')}",
         activityEditUrl: "${createLink(controller: 'activity', action: 'edit')}",
         activityEnterDataUrl: "${createLink(controller: 'activity', action: 'enterData')}",
-        activityPrintUrl: "${createLink(controller: 'activity', action: 'print')}",
-        activityCreateUrl: "${createLink(controller: 'activity', action: 'createPlan')}",
         activityUpdateUrl: "${createLink(controller: 'activity', action: 'ajaxUpdate')}",
-        activityDeleteUrl: "${createLink(controller: 'activity', action: 'ajaxDelete')}",
         activityViewUrl: "${createLink(controller: 'activity', action: 'index')}",
-        siteCreateUrl: "${createLink(controller: 'site', action: 'createForProject', params: [projectId:project.projectId])}",
-        siteSelectUrl: "${createLink(controller: 'site', action: 'select', params:[projectId:project.projectId, returnTo:createLink(controller: 'project', action: 'index', id: project.projectId)])}",
-        siteUploadUrl: "${createLink(controller: 'site', action: 'uploadShapeFile', params:[projectId:project.projectId, returnTo:createLink(controller: 'project', action: 'index', id: project.projectId)])}",
         starProjectUrl: "${createLink(controller: 'project', action: 'starProject')}",
-        addUserRoleUrl: "${createLink(controller: 'user', action: 'addUserAsRoleToProject')}",
-        removeUserWithRoleUrl: "${createLink(controller: 'user', action: 'removeUserWithRole')}",
-        projectMembersUrl: "${createLink(controller: 'project', action: 'getMembersForProjectId')}",
         spatialBaseUrl: "${grailsApplication.config.spatial.baseUrl}",
         spatialWmsCacheUrl: "${grailsApplication.config.spatial.wms.cache.url}",
         spatialWmsUrl: "${grailsApplication.config.spatial.wms.url}",
@@ -38,41 +22,22 @@
         imageLocation:"${assetPath(src:'/')}",
         documentUpdateUrl: "${createLink(controller:"document", action:"documentUpdate")}",
         documentDeleteUrl: "${createLink(controller:"document", action:"deleteDocument")}",
-        pdfgenUrl: "${createLink(controller: 'resource', action: 'pdfUrl')}",
-        pdfViewer: "${createLink(controller: 'resource', action: 'viewer')}",
-        imgViewer: "${createLink(controller: 'resource', action: 'imageviewer')}",
-        audioViewer: "${createLink(controller: 'resource', action: 'audioviewer')}",
-        videoViewer: "${createLink(controller: 'resource', action: 'videoviewer')}",
-        errorViewer: "${createLink(controller: 'resource', action: 'error')}",
-        createBlogEntryUrl: "${createLink(controller: 'blog', action:'create', params:[projectId:project.projectId, returnTo:createLink(controller: 'project', action: 'index', id: project.projectId, fragment: 'overview')])}",
-        editBlogEntryUrl: "${createLink(controller: 'blog', action:'edit', params:[projectId:project.projectId, returnTo:createLink(controller: 'project', action: 'index', id: project.projectId, fragment: 'overview')])}",
-        deleteBlogEntryUrl: "${createLink(controller: 'blog', action:'delete', params:[projectId:project.projectId])}",
-        shapefileDownloadUrl: "${createLink(controller:'project', action:'downloadShapefile', id:project.projectId)}",
-        regenerateStageReportsUrl: "${createLink(controller:'project', action:'regenerateStageReports', id:project.projectId)}",
-        previewStageReportUrl: "${createLink(controller:'project', action:'previewStageReport')}",
-        projectReportUrl:"${createLink(controller:'project', action:'projectReport', id:project.projectId)}",
-        projectReportPDFUrl:"${createLink(controller:'project', action:'projectReportPDF', id:project.projectId)}",
-        meriPlanPDFUrl:"${createLink(controller:'project', action:'meriPlanPDF', id:project.projectId)}",
         sitesPhotoPointsUrl:"${createLink(controller:'project', action:'projectSitePhotos', id:project.projectId)}",
-        organisationSearchUrl: "${createLink(controller: 'organisation', action: 'search')}",
-        submitReportUrl: "${createLink(controller: 'project', action: 'ajaxSubmitReport')}/",
-        approveReportUrl: "${createLink(controller: 'project', action: 'ajaxApproveReport')}/",
-        rejectReportUrl: "${createLink(controller: 'project', action: 'ajaxRejectReport')}/",
-        deleteActivitiesUrl: "${createLink(controller: 'project', action: 'ajaxDeleteReportActivities')}/",
-        submitPlanUrl : "${createLink(controller:'project', action:'ajaxSubmitPlan', id:project.projectId)}",
-        modifyPlanUrl : "${createLink(controller:'project', action:'ajaxRejectPlan', id:project.projectId)}",
-        approvalPlanUrl : "${createLink(controller:'project', action:'ajaxApprovePlan', id:project.projectId)}",
-        rejectPlanUrl : "${createLink(controller:'project', action:'ajaxRejectPlan', id:project.projectId)}",
-        unlockPlanForCorrectionUrl : "${createLink(controller:'project', action:'ajaxUnlockPlanForCorrection', id:project.projectId)}",
-        finishedCorrectingPlanUrl : "${createLink(controller:'project', action:'ajaxFinishedCorrectingPlan', id:project.projectId)}",
+        submitReportUrl: "${createLink(controller: 'project', action: 'ajaxSubmitReport')}/", approveReportUrl: "${createLink(controller: 'project', action: 'ajaxApproveReport')}/",
         featuresService: "${createLink(controller: 'proxy', action: 'features')}",
-            featureService: "${createLink(controller: 'proxy', action: 'feature')}",
-            spatialWms: "${grailsApplication.config.spatial.geoserverUrl}",
-            spatialBaseUrl: "${grailsApplication.config.spatial.baseURL}",
-            spatialWmsCacheUrl: "${grailsApplication.config.spatial.wms.cache.url}",
-            spatialWmsUrl: "${grailsApplication.config.spatial.wms.url}",
+        featureService: "${createLink(controller: 'proxy', action: 'feature')}",
+        spatialWms: "${grailsApplication.config.spatial.geoserverUrl}",
+        spatialBaseUrl: "${grailsApplication.config.spatial.baseURL}",
+        spatialWmsCacheUrl: "${grailsApplication.config.spatial.wms.cache.url}",
+        spatialWmsUrl: "${grailsApplication.config.spatial.wms.url}",
         tabbedActivityUrl: "${createLink(controller: 'activity', action:'ajaxLoadActivityForm')}",
         dashboardUrl:"${createLink(action:'projectDashboard', id:project.projectId)}",
+        searchBieUrl:"${createLink(controller:'species', action:'searchBie')}",
+        speciesListUrl:"${createLink(controller:'proxy', action:'speciesItemsForList')}",
+        speciesSearchUrl:"${createLink(controller:'project', action:'searchSpecies', id:project.projectId)}",
+        speciesImageUrl:"${createLink(controller:'species', action:'speciesImage')}",
+        speciesProfileUrl: "${createLink(controller: 'species', action: 'speciesProfile')}",
+
         returnTo: "${createLink(controller: 'project', action: 'espOverview', id: project.projectId)}"
 
     },
@@ -146,6 +111,7 @@
         <li><a href="#reporting-tab" data-toggle="tab">Submission</a></li>
     </ul>
 
+    <div id="saved-nav-message-holder"></div>
 
     <div class="tab-content">
         <div class="tab-pane active" id="mysites">
@@ -253,18 +219,24 @@
             new SiteStatusModel(site, simplifiedReportingViewModel.currentStage, map, sitesViewModel);
         });
 
-        var adminActivityId = simplifiedReportingViewModel.administrativeReport && simplifiedReportingViewModel.administrativeReport.activityId || '';
-        var speciesActivityId = simplifiedReportingViewModel.optionalReport && simplifiedReportingViewModel.optionalReport.activityId || '';
+        var adminActivity = simplifiedReportingViewModel.administrativeReport && simplifiedReportingViewModel.administrativeReport;
+        var speciesActivity = simplifiedReportingViewModel.optionalReport && simplifiedReportingViewModel.optionalReport;
 
         var photopointSelector = '#site-photo-points';
         var tabs = {
             'reporting-tab': {
                 selector:'#admin-form',
-                url:fcConfig.tabbedActivityUrl+'/'+adminActivityId+'?progress=finished'
+                url:fcConfig.tabbedActivityUrl+'/'+adminActivity.activityId,
+                initialiser: function() {
+                    initialiseESPActivity(adminActivity);
+                }
             },
             'species-records-tab': {
                 selector:'#species-form',
-                url:fcConfig.tabbedActivityUrl+'/'+speciesActivityId + '?includeFormActions=true&progress=finished'
+                url:fcConfig.tabbedActivityUrl+'/'+speciesActivity.activityId+'?includeFormActions=true',
+                initialiser: function() {
+                    initialiseESPActivity(speciesActivity);
+                }
             },
             'photographs-tab': {
                 selector:photopointSelector,
