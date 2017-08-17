@@ -140,15 +140,21 @@
 
         </div>
         <div class="tab-pane" id="reporting-tab">
-            <div class="alert" data-bind="visible:!canSubmitReport()">
-                Please complete your site and species reporting before submitting your report.
+            <div class="well" data-bind="visible:!canViewSubmissionReport()">
+                    <div class="form-actions">
+                    Before you can submit your form you must:
+                    <ul>
+                        <li>Complete your activity reporting for each of your sites.</li>
+                        <li>Complete or mark as not applicable your optional "My Species Records" tab.</li>
+                    </ul>
+                    Please note that the report will not be able to be submitted until the end of the year.
+                    </div>
             </div>
-            <div data-bind="visible:canSubmitReport">
+            <div data-bind="visible:canViewSubmissionReport()">
                 <div id="admin-form">
-
                 </div>
                 <div class="form-actions">
-                    <button class="btn" data-bind="enable:canSubmitReport, click:submitReport">Submit</button>
+                    <button class="btn" data-bind="enable:canViewSubmissionReport(), click:submitReport">Submit</button>
                 </div>
             </div>
 

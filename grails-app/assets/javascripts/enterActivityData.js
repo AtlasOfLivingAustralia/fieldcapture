@@ -162,7 +162,7 @@ var Master = function (activityId, config) {
      *
      * Validates the entire page before saving.
      */
-    self.save = function () {
+    self.save = function (saveCallback) {
 
         var valid = self.validate();
 
@@ -200,7 +200,7 @@ var Master = function (activityId, config) {
                     self.cancelAutosave();
                     self.dirtyFlag.reset();
                     blockUIWithMessage("Activity data saved.");
-                    self.performSaveCallbacks(data);
+                    self.performSaveCallbacks(data, valid, saveCallback);
                 }
                 amplify.store(activityStorageKey, null);
             },
@@ -245,13 +245,16 @@ var Master = function (activityId, config) {
 
     };
 
-    self.performSaveCallbacks = function(saveResponse) {
+    self.performSaveCallbacks = function(saveResponse, valid, saveCallback) {
         if (saveResponse) {
             $.each(this.subscribers, function(i, obj) {
                 if (obj.saveCallback) {
                     obj.saveCallback(saveResponse);
                 }
             });
+        }
+        if (saveCallback) {
+            saveCallback(valid, saveResponse);
         }
     };
 

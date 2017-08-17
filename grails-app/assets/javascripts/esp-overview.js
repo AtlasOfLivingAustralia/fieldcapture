@@ -163,14 +163,19 @@ var SimplifiedReportingViewModel = function(project, config) {
         }
     });
 
+    self.canViewSubmissionReport = function() {
+        return _.every(currentStage.activities, function(activity) {
+            return isAdminActivity(activity) || activity.progress() == 'finished';
+        });
+    };
+
     self.submitReport = function() {
-        // gotta do our thing!
-        $('#reporting-tab').validationEngine('validate');
-        ecodata.forms[self.administrativeReport.activityId].save();
+        ecodata.forms[self.administrativeReport.activityId].save(function(valid, data) {
+            if (valid && data && !data.error) {
+                currentStage.submitReport();
+            }
 
-        // if the save worked.
-        currentStage.submitReport();
-
+        });
     };
 
 };

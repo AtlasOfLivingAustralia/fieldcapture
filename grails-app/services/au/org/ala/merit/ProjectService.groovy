@@ -71,6 +71,9 @@ class ProjectService  {
         if (!project.reports) {
             project.reports = reportService.getReportsForProject(id)
         }
+        else {
+            project.reports.sort ({ it.toDate })
+        }
         project
 
     }
