@@ -22,14 +22,6 @@ class ImageController {
 
     static defaultAction = "get"
 
-    def test() {}
-
-    def exif() {
-        def f = new File("/data/sightings/DSCN6487.jpg")
-        def result = getExifMetadata(f)
-        render result as JSON
-    }
-
     private Map getExifMetadata(file) {
         def exif = [:]
         try {
@@ -105,10 +97,6 @@ class ImageController {
         }
         return ""
     }
-
-    def sample() {}
-
-    def demo() {}
 
     /**
      * Uploads the image to the ALA image service.
@@ -210,7 +198,7 @@ class ImageController {
         render '{"deleted":true}'
     }
 
-    def encodeImageURL(prefix, filename) {
+    private def encodeImageURL(prefix, filename) {
         def encodedFileName = filename.encodeAsURL().replaceAll('\\+', '%20')
         URI uri = new URI(prefix + encodedFileName)
         return uri.toURL();
@@ -221,7 +209,6 @@ class ImageController {
      * The content type of the file is derived purely from the file extension.
      */
     def get() {
-
         File f = new File(fullPath(params.id))
         if (!f.exists()) {
             response.status = 404
