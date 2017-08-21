@@ -182,14 +182,17 @@ var SimplifiedReportingViewModel = function(project, config) {
 
 initialiseESPActivity = function(activity) {
     var master = ecodata.forms[activity.activityId];
-    var activityData = {
-        activityId:activity.activityId,
-        startDate:activity.plannedStartDate,
-        endDate:activity.plannedEndDate,
-        progress:'finished'
-    };
+    if (master) {
+        var activityData = {
+            activityId:activity.activityId,
+            startDate:activity.plannedStartDate,
+            endDate:activity.plannedEndDate,
+            progress:'finished'
+        };
 
-    master.register('activityModel', function() { return activityData; }, function() { return true }, function(){}, false);
+        master.register('activityModel', function() { return activityData; }, function() { return true }, function(){}, false);
+
+    }
 
 
 };

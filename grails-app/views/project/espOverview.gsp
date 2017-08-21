@@ -140,20 +140,30 @@
 
         </div>
         <div class="tab-pane" id="reporting-tab">
-            <div class="well" data-bind="visible:!canViewSubmissionReport()">
-                    <div class="form-actions">
+            <div data-bind="visible:!canViewSubmissionReport()">
+                <div class="form-actions">
                     Before you can submit your form you must:
                     <ul>
                         <li>Complete your activity reporting for each of your sites.</li>
                         <li>Complete or mark as not applicable your optional "My Species Records" tab.</li>
                     </ul>
                     Please note that the report will not be able to be submitted until the end of the year.
-                    </div>
+                </div>
+            </div>
+            <div data-bind="visible:currentReport.isSubmitted()">
+                <div class="alert alert-info">
+                    You have submitted your report for approval by your grant manager.  Please contact your grant manager if you need to make further edits to your report.
+                </div>
+            </div>
+            <div data-bind="visible:currentReport.isApproved()">
+                <div class="alert alert-success">
+                    Your report has been approved by your grant manager.
+                </div>
             </div>
             <div data-bind="visible:canViewSubmissionReport()">
                 <div id="admin-form">
                 </div>
-                <div class="form-actions">
+                <div class="form-actions" data-bind="visible:!currentReport.isSubmitted() && !currentReport.isApproved()">
                     <button class="btn" data-bind="enable:canViewSubmissionReport(), click:submitReport">Submit</button>
                 </div>
             </div>

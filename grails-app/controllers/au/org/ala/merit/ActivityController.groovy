@@ -249,7 +249,33 @@ class ActivityController {
     }
 
     def ajaxLoadActivityForm(String id) {
-        render model:enterData(id), view:"_tabbedActivity"
+
+        def activity = activityService.get(id)
+
+        if (activity) {
+            // permissions check
+            def userId = userService.getCurrentUserId()
+            if (!projectService.canUserEditProject(userId, activity.projectId)) {
+
+                if (projectService.canUserViewProject(userId, activity.projectId)) {
+                    render model:activityAndOutputModel(activity, activity.projectId), view:'_readOnlyTabbedActivity'
+                }
+                else {
+                    render status:401, text:"You don't have permission to view activity with id: ${id}"
+                }
+            }
+            else if (!activityService.canEditActivity(activity)) {
+                render model:activityAndOutputModel(activity, activity.projectId), view:'_readOnlyTabbedActivity'
+            }
+            else {
+                render model:activityAndOutputModel(activity, activity.projectId), view:"_tabbedActivity"
+            }
+
+
+        } else {
+            render status:404, text:"No activity exists with id: ${id}"
+        }
+
     }
 
 
