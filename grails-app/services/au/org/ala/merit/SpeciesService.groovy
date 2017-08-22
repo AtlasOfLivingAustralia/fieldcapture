@@ -4,7 +4,7 @@ class SpeciesService {
 
     def webService, grailsApplication
 
-    def searchForSpecies(searchTerm, limit = 10, listId = null) {
+    def searchForSpecies(searchTerm, String fq = null, limit = 10, listId = null) {
 
         // Try the project species list first.
         if (listId) {
@@ -13,7 +13,7 @@ class SpeciesService {
                 return results
             }
         }
-        def results = searchBie(searchTerm, limit)
+        def results = searchBie(searchTerm, fq, limit)
 
         // standardise output
         // Handle some unhelpful results from the BIE.
@@ -83,13 +83,21 @@ class SpeciesService {
         return results
     }
 
-    def searchBie(searchTerm, limit) {
+    def searchBie(String searchTerm, String fq, limit) {
         if (!limit) {
             limit = 10
         }
         def encodedQuery = URLEncoder.encode(searchTerm ?: '', "UTF-8")
-        def url = "${grailsApplication.config.bie.baseURL}/ws/search/auto.jsonp?q=${encodedQuery}&limit=${limit}&idxType=TAXON"
+        String url = "${grailsApplication.config.bie.baseURL}/ws"
+        if (fq) {
+            String encodedFacetQuery = URLEncoder.encode(fq, 'UTF-8')
+            url += "/search.json?q=${encodedQuery}&fq=${encodedFacetQuery}&pageSize=${limit}"
+        }
+        else {
+            def encodedFq = URLEncoder.encode(fq ?: '', "UTF-8")
+            url += "/search/auto.jsonp?q=${encodedQuery}&limit=${limit}&idxType=TAXON"
 
+        }
         webService.getJson(url)
     }
 
@@ -197,7 +205,7 @@ class SpeciesService {
                 break
 
             case 'ALL_SPECIES':
-                result = searchForSpecies(q, limit)
+                result = searchForSpecies(q, speciesConfig?.fq, limit)
                 break
 
             case 'GROUP_OF_SPECIES':
