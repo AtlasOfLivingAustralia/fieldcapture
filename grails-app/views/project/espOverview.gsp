@@ -1,4 +1,4 @@
-<%@ page import="grails.converters.JSON" contentType="text/html;charset=UTF-8" %>
+<%@ page import="au.org.ala.merit.SettingPageType; grails.converters.JSON" contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -190,7 +190,7 @@
 
 </script>
 
-<g:render template="/shared/declaration"/>
+<g:render template="/shared/declaration" model="${[declarationType:au.org.ala.merit.SettingPageType.ESP_DECLARATION]}"/>
 <!-- /ko -->
 
 <asset:javascript src="common.js"/>

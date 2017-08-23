@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page import="au.org.ala.merit.ProjectController" contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -137,6 +137,9 @@
                     </div>
                 </g:if>
                 <div class="pull-right">
+                    <g:if test="${project.associatedSubProgram == au.org.ala.merit.ProjectController.ESP_SUBPROGRAM && user?.isEditor}">
+                        <button class="btn"><a href="${createLink(action:'index', id:project.projectId)}">User View</a></button>
+                    </g:if>
                     <g:set var="disabled">${(!user) ? "disabled='disabled' title='login required'" : ''}</g:set>
                     <g:if test="${isProjectStarredByUser}">
                         <button class="btn" id="starBtn"><i class="icon-star"></i> <span>Remove from favourites</span></button>
