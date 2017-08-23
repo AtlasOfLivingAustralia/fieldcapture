@@ -36,8 +36,7 @@
         speciesListUrl:"${createLink(controller:'proxy', action:'speciesItemsForList')}",
         speciesSearchUrl:"${createLink(controller:'project', action:'searchSpecies', id:project.projectId)}",
         speciesImageUrl:"${createLink(controller:'species', action:'speciesImage')}",
-        speciesProfileUrl: "${createLink(controller: 'species', action: 'speciesProfile')}",
-
+        speciesProfileUrl: "${createLink(controller: 'species', action: 'speciesProfile')}", imageUploadUrl: "${createLink(controller: 'image', action: 'upload')}",
         returnTo: "${createLink(controller: 'project', action: 'espOverview', id: project.projectId)}"
 
     },
@@ -104,11 +103,11 @@
 
 
     <ul class="nav nav-tabs">
-        <li class="active"><a href="#mysites" data-toggle="tab">My Sites</a></li>
-        <li><a href="#species-records-tab" data-toggle="tab">My Species Records</a></li>
-        <li><a href="#dashboard-tab" data-toggle="tab">Dashboard</a></li>
-        <li><a href="#photographs-tab" data-toggle="tab">Photographs</a></li>
-        <li><a href="#reporting-tab" data-toggle="tab">Submission</a></li>
+        <li class="active"><a href="#mysites">My Sites</a></li>
+        <li><a href="#species-records-tab">My Species Records</a></li>
+        <li><a href="#dashboard-tab">Dashboard</a></li>
+        <li><a href="#photographs-tab">Photographs</a></li>
+        <li><a href="#reporting-tab">Submission</a></li>
     </ul>
 
     <div id="saved-nav-message-holder"></div>
