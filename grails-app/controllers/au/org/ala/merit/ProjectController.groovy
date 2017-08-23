@@ -138,7 +138,7 @@ class ProjectController {
             return template
         }
 
-        return project.associatedSubProgram == ESP_SUBPROGRAM && user.isEditor ? ESP_TEMPLATE : null
+        return project.associatedSubProgram == ESP_SUBPROGRAM && user?.isEditor ? ESP_TEMPLATE : null
     }
     /**
      * Designed for an ajax call - this returns only a template not a full HTML page.
