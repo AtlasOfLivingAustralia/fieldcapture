@@ -30,7 +30,7 @@ class SpeciesController {
 
     def searchBie() {
 
-        Map results = speciesService.searchBie(params.q, params.limit ?: 10)
+        Map results = speciesService.searchBie(params.q, params.fq, params.limit ?: 10)
         println results
         render results as JSON
     }
