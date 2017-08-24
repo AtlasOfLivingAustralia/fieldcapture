@@ -23,6 +23,7 @@ class ImportService {
     /** The current format location data is supplied in */
     def locationRegExp = /lat. = ([\-0-9\.]*)\nlong. = ([\-0-9\.]*)\nLocation Description = (.*)lat\. =.*/
 
+    def reportService
     def projectService
     def siteService
     def metadataService
@@ -1696,6 +1697,7 @@ class ImportService {
             }
 
             def grantIdAttribute = "GRANT_ID"
+            def backupGrantIdAttribute = "APP_ID"
             def externalIdAttribute = "EXTERNAL_I"
             def siteNameAttribute = "SITE_NAME"
             def siteDescriptionAttribute = "SITE_DESCR"
@@ -1703,6 +1705,10 @@ class ImportService {
             shapes.each { shape ->
 
                 def grantId = shape.attributes[grantIdAttribute]
+                // Often we receive shapefiles with an APP_ID but no GRANT_ID.
+                if (!grantId) {
+                    grantId = shape.attributes[backupGrantIdAttribute]
+                }
                 def externalId = shape.attributes[externalIdAttribute]
 
 
@@ -1746,6 +1752,149 @@ class ImportService {
         else {
             return [success:false, message:"Invalid shapefile: ${result.error}"]
         }
+    }
+
+    /**
+     * Bulk imports sites for many projects.  The supplied shapefile must have attributes GRANT_ID and EXTERNAL_I
+     */
+    def bulkImportESPSites(shapefile) {
+        def result =  siteService.uploadShapefile(shapefile)
+
+        cacheService.clear(PROJECTS_CACHE_KEY)
+
+        def errors = []
+        def sites = []
+        if (!result.error && result.content.size() > 1) {
+            def now = DateUtils.displayFormat(new DateTime())
+            def projectsWithSites = [:]
+            def content = result.content
+            def shapeFileId = content.remove('shp_id')
+
+            def shapes = content.collect { key, value ->
+                [id: (key), attributes: (value)]
+            }
+
+            def grantIdAttribute = "GRANT_ID"
+            def backupGrantIdAttribute = "APP_ID"
+            def externalIdAttribute = "PropertyID"
+            def siteNameAttribute = "SITE_DESC"
+            def siteDescriptionAttribute = "SITE_DESC"
+            def siteTypeAttribute = "SITE_TYPE"
+
+            shapes.each { shape ->
+
+                def grantId = shape.attributes[grantIdAttribute]
+                // Often we receive shapefiles with an APP_ID but no GRANT_ID.
+                if (!grantId) {
+                    grantId = shape.attributes[backupGrantIdAttribute]
+                }
+                def externalId = shape.attributes[externalIdAttribute]
+
+
+                if (!grantId && !externalId) {
+                    errors << "Shape is missing GRANT_ID and EXTERNAL_I attributes: ${shape.attributes}"
+                    return
+                }
+
+                def project = findProjectByGrantAndExternalId(grantId, externalId)
+
+                if (!project) {
+                    project = createESPProject(grantId, externalId)
+                    projectsWithSites[project.projectId] = project
+                }
+
+                def projectDetails = projectsWithSites[project.projectId]
+                if (!projectDetails.sites) {
+                    projectDetails.sites = []
+                }
+
+                int siteNumber = projectDetails.sites ? projectDetails.sites.size() +1 : 1
+                def name = shape.attributes[siteNameAttribute]?:"${project.grantId} - Site ${siteNumber}"
+                def description = shape.attributes[siteDescriptionAttribute] ?: "Imported on ${now}"
+                def siteExternalId = shapeFileId+'-'+shape.id
+
+                def resp = siteService.createSiteFromUploadedShapefile(shapeFileId, shape.id, siteExternalId, name, description, project.projectId)
+
+                if (resp?.resp.siteId) {
+                    projectDetails.sites << [siteId:resp.resp.siteId, name:name, description:description]
+                    sites << name
+
+                    String type = shape.attributes[siteDescriptionAttribute]
+                    String activityType = type.toUpperCase().startsWith("P") ? "ESP PMU or Zone reporting" : "ESP SMU Reporting"
+
+                    projectDetails.reports.each { report ->
+                        Map activity = [
+                                projectId:project.projectId,
+                                plannedStartDate: report.fromDate,
+                                plannedEndDate: report.toDate,
+                                startDate: report.fromDate,
+                                endDate: report.toDate,
+                                type:activityType,
+                                progress: ActivityService.PROGRESS_PLANNED,
+                                name:description+" Report",
+                                siteId:resp.resp.siteId
+                        ]
+                        activityService.create(activity)
+                    }
+
+                }
+                else {
+                    errors << resp
+                }
+
+            }
+            return [success:true, message:[errors:errors, sites:sites]]
+
+        }
+        else {
+            return [success:false, message:"Invalid shapefile: ${result.error}"]
+        }
+    }
+
+    private Map createESPProject(String grantId, String externalId) {
+        Map project = [
+                grantId:grantId,
+                externalId:externalId,
+                plannedStartDate:'2016-06-30T14:00:00Z',
+                plannedEndDate: '2018-06-30T14:00:00Z',
+                associatedProgram:"Environmental Stewardship",
+                associatedSubProgram:"ESP Test",
+                description:"ESP online reporting test",
+                name:"ESP - "+externalId,
+                planStatus:'approved']
+        projectService.update('', project)
+        project = findProjectByGrantAndExternalId(grantId, externalId)
+        projectService.generateProjectStageReports(project.projectId)
+        project = projectService.get(project.projectId)
+
+        List activitiesToCreate = [
+                [
+                        type:'ESP Species',
+                        name:'Species Sightings for '+project.externalId
+                ],
+                [
+                        type:'ESP Overview',
+                        name:'Submission report for '+project.externalId
+                ]
+
+        ]
+
+        // Create standard reports
+        project.reports.each { report ->
+            activitiesToCreate.each { activityType ->
+                Map activity = [
+                        projectId:project.projectId,
+                        plannedStartDate: report.fromDate,
+                        plannedEndDate: report.toDate,
+                        type:activityType.type,
+                        progress: ActivityService.PROGRESS_PLANNED,
+                        name:activityType.name]
+                activityService.create(activity)
+
+            }
+
+        }
+        project
     }
 
 }
