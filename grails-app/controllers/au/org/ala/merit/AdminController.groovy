@@ -722,4 +722,22 @@ class AdminController {
         redirect action: 'cacheManagement'
     }
 
+    def bulkUploadESPSites() {
+
+        if (request.respondsTo('getFile')) {
+            def f = request.getFile('shapefile')
+
+            def result =  importService.bulkImportESPSites(f)
+
+            flash.message = result.message
+            render view:'tools'
+
+
+        } else {
+            flash.message = 'No shapefile attached'
+            render view:'tools'
+        }
+    }
+
+
 }

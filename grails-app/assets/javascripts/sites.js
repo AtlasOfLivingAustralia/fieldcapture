@@ -990,19 +990,30 @@ var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId)
         });
     };
 
+    function updateBounds(coordinates, bounds) {
+        if (coordinates && _.isArray(coordinates)) {
+            for (var i=0; i<coordinates.length; i++) {
+                updateBounds(coordinates[i], bounds);
+            }
+        }
+        else {
+            if (coordinates && coordinates.lat) {
+                bounds.extend(coordinates);
+            }
+        }
+    }
     self.getSiteBounds = function(siteId) {
         // Only works for polygon sites.
         var site = self.getSiteById(siteId);
         var bounds = new google.maps.LatLngBounds();
 
         if (site && site.extent && site.extent.geometry && site.extent.geometry.coordinates) {
-            var coords = site.extent.geometry.coordinates[0];
-            for (var i=0; i<coords.length; i++) {
-                bounds.extend(coords[i]);
-            }
+            updateBounds(site.extent.geometry.coordinates, bounds);
         }
         return bounds;
     };
+
+
 
     self.displaySites();
 };

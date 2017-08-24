@@ -20,7 +20,6 @@ var SiteStatusModel = function(site, currentStage, map, sitesViewModel) {
     });
     self.reportingComplete = incompleteActivities.length == 0;
 
-    // No support currently for multipolygons
     var feature = map.featureIndex[site.siteId] && map.featureIndex[site.siteId][0];
 
     var bounds = sitesViewModel.getSiteBounds(site.siteId);
@@ -55,9 +54,11 @@ var SiteStatusModel = function(site, currentStage, map, sitesViewModel) {
     var siteInfoWindow = new google.maps.InfoWindow({content:getSiteInfoHtml(), position:calculateInfoWindowPosition(bounds)});
 
     google.maps.event.addListener(feature, 'mouseover', function (event) {
+        feature.setOptions({fillOpacity:0.8});
         siteInfoWindow.open(map.map, feature);
     });
     google.maps.event.addListener(feature, 'mouseout', function (event) {
+        feature.setOptions({fillOpacity:0.3});
         siteInfoWindow.close();
     });
 

@@ -84,13 +84,13 @@
     <p>${project.description}</p>
     <div class="row-fluid">
         <span class="span6">
-            <span class="label label-info label-small">Project ID:</span> ${project.grantId}<br/>
+            <span class="label label-info label-small">Project ID:</span> ${project.externalId}<br/>
             <span class="label label-info label-small">Reporting Period:</span> <span data-bind="text:currentStage.datesLabel"></span>
         </span>
         <span class="span6">
             <g:if test="${projectArea}">
                 <ul class="unstyled">
-                    <li><fc:siteFacet site="${projectArea}" facet="nrm" label="State / Territory"/></li>
+                    <li><fc:siteFacet site="${projectArea}" facet="state" label="State / Territory"/></li>
 
                     <li><fc:siteFacet site="${projectArea}" facet="nrm" label="NRM"/></li>
                     <li><fc:siteFacet site="${projectArea}" facet="cmz" label="CMZ"/></li>

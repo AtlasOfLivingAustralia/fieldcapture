@@ -108,6 +108,21 @@
             $('form.bulkUploadSites').submit();
         });
 
+        $("#bulkUploadESPSites").change(function() {
+            if ($("#bulkUploadESPSites").val()) {
+                $("#btnBulkUploadESPSites").removeAttr("disabled");
+            }
+            else {
+                $("#btnBulkUploadESPSites").attr("disabled", "disabled");
+            }
+
+        }).trigger('change');
+
+        $('#btnBulkUploadESPSites').click(function(e) {
+            e.preventDefault();
+            $('form.bulkUploadESPSites').submit();
+        });
+
         $("#createOrgs").change(function() {
             if ($("#createOrgs").val()) {
                 $("#btnCreateOrgs").removeAttr("disabled");
@@ -224,6 +239,19 @@
 
         <p><g:uploadForm class="bulkUploadSites" action="bulkUploadSites">
             <div><input id="bulkUploadSites" type="file" name="shapefile"/></div>
+            Bulk loads sites from a shapefile.
+        </g:uploadForm>
+
+        </p>
+        </td>
+    </tr>
+    <tr>
+        <td><button disabled id="btnBulkUploadESPSites" class="btn btn-small btn-info" title="Bulk load ESP sites">Bulk load ESP sites</button>
+        </td>
+        <td>
+
+        <p><g:uploadForm class="bulkUploadESPSites" action="bulkUploadESPSites">
+            <div><input id="bulkUploadESPSites" type="file" name="shapefile"/></div>
             Bulk loads sites from a shapefile.
         </g:uploadForm>
 
