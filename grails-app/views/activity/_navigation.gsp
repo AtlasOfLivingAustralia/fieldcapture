@@ -1,4 +1,5 @@
 <!-- ko stopBinding:true -->
+<div id="saved-nav-message-holder"></div>
 <div class="form-actions" id="activity-nav">
 
     <div class="row-fluid" style="position:relative">
