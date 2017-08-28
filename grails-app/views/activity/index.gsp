@@ -35,6 +35,11 @@
 </head>
 <body>
 <div class="${containerType} validationEngineContainer" id="validation-container">
+    <g:if test="${activity.lock}">
+        <div class="alert alert-error">
+            This form has been locked for editing by <fc:userDisplayName userId="${activity.lock.userId}" defaultValue="an unknown user"/> since ${au.org.ala.merit.DateUtils.displayFormatWithTime(activity.lock.dateCreated)}
+        </div>
+    </g:if>
     <div id="koActivityMainBlock">
         <g:if test="${!printView}">
             <ul class="breadcrumb">
@@ -123,7 +128,7 @@
         options.navContext = '${navContext}';
 
 
-        ko.applyBindings(new ActivityNavigationViewModel(projectId, activityId, siteId, options), document.getElementById('activity-nav'));
+        ko.applyBindings(new ActivityNavigationViewModel('stayOnPage', projectId, activityId, siteId, options), document.getElementById('activity-nav'));
         </asset:script>
     </g:if>
     <g:else>

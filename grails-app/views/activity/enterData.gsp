@@ -282,7 +282,8 @@
         var siteId = '${activity.siteId?:""}';
         var options = {navigationUrl:url, activityUrl:activityUrl, returnTo:returnTo};
         options.navContext = '${navContext}';
-        var activityNavigationModel = new ActivityNavigationViewModel(projectId, activityId, siteId, options)
+        var navigationMode = '${navigationMode}';
+        var activityNavigationModel = new ActivityNavigationViewModel(navigationMode, projectId, activityId, siteId, options);
 
 
         var outputModelConfig = {
@@ -321,11 +322,7 @@
         });
 
         $('#cancel').click(function () {
-            document.location.href = returnTo;
-        });
-
-        $('#reset').click(function () {
-            master.reset();
+            activityNavigationModel.cancel();
         });
 
         $('#validation-container').validationEngine('attach', {scroll: true});

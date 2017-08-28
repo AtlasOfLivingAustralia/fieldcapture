@@ -488,7 +488,8 @@ function sortActivities(activities) {
 
 var ActivityNavigationViewModel = function(navigationMode, projectId, activityId, siteId, config) {
     var self = this;
-    navigationMode = navigationMode || 'stayOnPage';
+
+    self.stayOnPage = (navigationMode == 'stayOnPage');
 
     self.activities = ko.observableArray();
 
@@ -555,6 +556,14 @@ var ActivityNavigationViewModel = function(navigationMode, projectId, activityId
         });
     }
 
+    self.cancel = function() {
+        self.return();
+    };
+
+    self.return = function() {
+        document.location.href = self.returnUrl;
+    };
+
     self.activities.subscribe(function(activities) {
 
         self.stages(_.uniq(_.pluck(activities, 'stage')));
@@ -568,22 +577,27 @@ var ActivityNavigationViewModel = function(navigationMode, projectId, activityId
 
     self.afterSave = function(valid, saveResponse) {
         if (valid) {
-            showAlert("Your data has been saved.  Please select one of the the navigation options below to continue.", "alert-info", 'saved-nav-message-holder');
-            $("html, body").animate({
-                scrollTop: $(options.savedNavMessageSelector).offset().top + 'px'
-            });
-            var $nav = $(options.activityNavSelector);
 
-            var oldBorder = $nav.css('border');
-            $nav.css('border', '2px solid black');
-            setTimeout(function () {
-                $nav.css('border', oldBorder);
-            }, 5000);
+            if (self.stayOnPage) {
+                showAlert("Your data has been saved.  Please select one of the the navigation options below to continue.", "alert-info", 'saved-nav-message-holder');
+                $("html, body").animate({
+                    scrollTop: $(options.savedNavMessageSelector).offset().top + 'px'
+                });
+                var $nav = $(options.activityNavSelector);
+
+                var oldBorder = $nav.css('border');
+                $nav.css('border', '2px solid black');
+                setTimeout(function () {
+                    $nav.css('border', oldBorder);
+                }, 5000);
+            }
+            else {
+                self.return();
+            }
         }
-
     };
 
-    if (navigationMode == 'stayOnPage') {
+    if (self.stayOnPage) {
         var navActivitiesUrl = config.navigationUrl;
         if (config.navContext == 'site' && siteId) {
             navActivitiesUrl += '?siteId='+siteId;
