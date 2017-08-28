@@ -193,16 +193,23 @@ var Master = function (activityId, config) {
             data: toSave,
             contentType: 'application/json',
             success: function (data) {
-                var errorText = "";
+
                 if (data.error || data.errors) {
                     self.displayErrors(data.errors || [data.error]);
                 } else {
                     self.cancelAutosave();
                     self.dirtyFlag.reset();
                     blockUIWithMessage("Activity data saved.");
+                    amplify.store(activityStorageKey, null);
+
+                    if (!valid) {
+                        var message = 'Your changes have been saved and you can remain in this activity form, or you can exit this page without losing data. Please note that you cannot mark this activity as finished until all mandatory fields have been completed.';
+                        bootbox.alert(message, function () {
+                            self.validate();
+                        });
+                    }
                     self.performSaveCallbacks(data, valid, saveCallback);
                 }
-                amplify.store(activityStorageKey, null);
             },
             error: function (jqXHR, status, error) {
 
@@ -219,26 +226,6 @@ var Master = function (activityId, config) {
             },
             complete: function () {
                 $.unblockUI();
-
-                if (!valid) {
-                    var message = 'Your changes have been saved and you can remain in this activity form, or you can exit this page without losing data. Please note that you cannot mark this activitiy as finished until all mandatory fields have been completed though.';
-                    bootbox.alert(message, function() {
-                        self.validate();
-                    });
-                }
-                else {
-                    showAlert("Your data has been saved.  Please select one of the the navigation options below to continue.", "alert-info", 'saved-nav-message-holder');
-                    $("html, body").animate({
-                        scrollTop: $(options.savedNavMessageSelector).offset().top + 'px'
-                    });
-                    var $nav = $(options.activityNavSelector);
-
-                    var oldBorder = $nav.css('border');
-                    $nav.css('border', '2px solid black');
-                    setTimeout(function() {
-                        $nav.css('border', oldBorder);
-                    }, 5000);
-                }
             }
         });
 

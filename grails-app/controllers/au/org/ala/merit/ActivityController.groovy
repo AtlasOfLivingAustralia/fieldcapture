@@ -66,7 +66,7 @@ class ActivityController {
             }
 
             Map model = activityAndOutputModel(activity, activity.projectId)
-            model.putAll(getNavOptions(params.returnTo))
+            model.putAll(getNavOptions(params.returnTo,[navigationMode:'stayOnPage']))
             model
         } else {
             forward(action: 'list', model: [error: 'no such id'])
@@ -127,7 +127,7 @@ class ActivityController {
         def activity = activityService.get(id)
         if (activity) {
             // permissions check
-            def userId = userService.getCurrentUserId()
+            String userId = userService.getCurrentUserId()
             if (!projectService.canUserEditProject(userId, activity.projectId)) {
 
                 if (projectService.canUserViewProject(userId, activity.projectId)) {
@@ -142,11 +142,24 @@ class ActivityController {
                 chain(action:'index', id:id)
                 return
             }
+            else if (activity.lock && activity.lock.userId != userId) {
+                chain(action:'index', id:id)
+            }
 
             Map model = activityAndOutputModel(activity, activity.projectId)
+
+            Map programConfig = projectService.getProgramConfiguration(model.project)
+            // Temporary until we add this to the program config.
+            programConfig.requiresActivityLocking = programConfig.name == 'Reef 2050 Plan Action Reporting'
+            programConfig.navigationMode = (programConfig.name == 'Reef 2050 Plan Action Reporting' || programConfig.name == 'ESP Test') ? 'returnToProject' : 'stayOnPage'
+
+            if (!activity.lock && programConfig.requiresActivityLocking) {
+                Map result = activityService.lock(activity)
+            }
             model.earliestStartDate = DateUtils.displayFormat(DateUtils.parse(model.project.plannedStartDate))
 
-            model.putAll(getNavOptions(params.returnTo))
+
+            model.putAll(getNavOptions(params.returnTo, programConfig))
 
             model
 
@@ -155,8 +168,8 @@ class ActivityController {
         }
     }
 
-    private Map getNavOptions(String returnToUrl) {
-        Map options = [:]
+    private Map getNavOptions(String returnToUrl, Map programConfig) {
+        Map options = [navigationMode:programConfig.navigationMode?:'stayOnPage']
         if (returnToUrl) {
             options.showNav = true
             if (returnToUrl.indexOf('/project') > 0) {

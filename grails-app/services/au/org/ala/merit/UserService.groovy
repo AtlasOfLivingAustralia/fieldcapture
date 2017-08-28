@@ -39,6 +39,10 @@ class UserService {
         return user
     }
 
+    def lookupUser(String userId) {
+        authService.getUserForUserId(userId, false)
+    }
+
     def userInRole(role) {
         authService.userInRole(role)
     }

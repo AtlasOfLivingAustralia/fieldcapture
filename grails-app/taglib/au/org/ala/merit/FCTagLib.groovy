@@ -418,6 +418,16 @@ class FCTagLib {
         }
     }
 
+    def userDisplayName = { attrs, body ->
+        def user = userService.lookupUser(attrs.userId)
+        if (user) {
+            out << user.displayName
+        }
+        else {
+            out << attrs.defaultValue ?: ''
+        }
+    }
+
     /**
      * FC version of loginlogout taglib from ala-web-theme. Adds icon and button to link
      *

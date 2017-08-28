@@ -221,7 +221,7 @@
             <input data-bind="checked:transients.markedAsFinished" type="checkbox"> Mark this activity as finished.
         </label>
     </div>
-    <div id="saved-nav-message-holder"></div>
+
     <g:render template="navigation"></g:render>
 </g:if>
 
@@ -245,22 +245,6 @@
 
 
         var master = new Master(activity.activityId, {saveActivityUrl: fcConfig.saveActivityUrl});
-
-        $('.helphover').popover({animation: true, trigger:'hover'});
-
-        $('#save').click(function () {
-            master.save();
-        });
-
-        $('#cancel').click(function () {
-            document.location.href = returnTo;
-        });
-
-        $('#reset').click(function () {
-            master.reset();
-        });
-
-
 
         var site = null;
     <g:if test="${site}">
@@ -298,6 +282,9 @@
         var siteId = '${activity.siteId?:""}';
         var options = {navigationUrl:url, activityUrl:activityUrl, returnTo:returnTo};
         options.navContext = '${navContext}';
+        var navigationMode = '${navigationMode}';
+        var activityNavigationModel = new ActivityNavigationViewModel(navigationMode, projectId, activityId, siteId, options);
+
 
         var outputModelConfig = {
           projectId:projectId,
@@ -326,7 +313,17 @@
         </g:if>
     </g:each>
 
-        ko.applyBindings(new ActivityNavigationViewModel(projectId, activityId, siteId, options), document.getElementById('activity-nav'));
+        ko.applyBindings(activityNavigationModel, document.getElementById('activity-nav'));
+
+        $('.helphover').popover({animation: true, trigger:'hover'});
+
+        $('#save').click(function () {
+            master.save(activityNavigationModel.afterSave);
+        });
+
+        $('#cancel').click(function () {
+            activityNavigationModel.cancel();
+        });
 
         $('#validation-container').validationEngine('attach', {scroll: true});
 
