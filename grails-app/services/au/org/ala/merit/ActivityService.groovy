@@ -7,7 +7,7 @@ import org.joda.time.format.DateTimeFormat
 
 class ActivityService {
 
-    def webService, grailsApplication, metadataService, reportService, projectService
+    def webService, grailsApplication, metadataService, reportService, projectService, emailService
 
     public static final String PROGRESS_PLANNED = 'planned'
     public static final String PROGRESS_FINISHED = 'finished'
@@ -152,9 +152,19 @@ class ActivityService {
         webService.doPost(grailsApplication.config.ecodata.baseUrl+path,[:])
     }
 
-    Map unlock(String activityId) {
+    Map unlock(String activityId, Boolean force = false) {
         String path = "lock/unlock/"+activityId
-        webService.doPost(grailsApplication.config.ecodata.baseUrl+path,[:])
+        webService.doPost(grailsApplication.config.ecodata.baseUrl+path,[force:force])
+    }
+
+    void stealLock(String activityId, String activityUrl) {
+        Map activity = get(activityId)
+        Map result = [error:'No lock']
+        if (activity.lock) {
+            result = unlock(activityId, true)
+            emailService.sendLockStolenEmail(activity.lock, activityUrl)
+        }
+        result
     }
 
     def isReport(activity) {

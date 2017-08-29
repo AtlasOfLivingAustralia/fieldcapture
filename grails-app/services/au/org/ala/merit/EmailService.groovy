@@ -1,5 +1,7 @@
 package au.org.ala.merit
 
+import org.codehaus.groovy.grails.web.mapping.LinkGenerator
+
 
 /**
  * Sends email messages on behalf of MERIT users to notify interested parties of project lifecycle changes.
@@ -7,7 +9,7 @@ package au.org.ala.merit
  */
 class EmailService {
 
-    def projectService, userService, mailService, settingService, grailsApplication, organisationService
+    def projectService, userService, mailService, settingService, grailsApplication, organisationService, grailsLinkGenerator
 
     def createAndSend(mailSubjectTemplate, mailTemplate, model, recipient, sender, ccList) {
         def systemEmailAddress = grailsApplication.config.fieldcapture.system.email.address
@@ -198,6 +200,19 @@ class EmailService {
                 emailAddresses.adminEmails,
                 emailAddresses.userEmail,
                 ccEmails
+        )
+    }
+
+    def sendLockStolenEmail(Map lock, String url) {
+        def currentUser = userService.lookupUser(userService.currentUserId)
+        def userHoldingLock = userService.lookupUser(lock.userId)
+        createAndSend(
+                SettingPageType.LOCK_STOLEN_EMAIL_SUBJECT,
+                SettingPageType.LOCK_STOLEN_EMAIL,
+                [user:currentUser.displayName, url:url],
+                [userHoldingLock.email],
+                [currentUser.email],
+                []
         )
     }
 
