@@ -43,7 +43,7 @@
             <div class="control-group">
                 <div class="controls">
                     <button id="submitSpeciesList" class="btn btn-primary">${project.listId ? "Update" : "Submit"}</button>
-                    <g:img dir="images" file="spinner.gif" id="spinner1" class="hide spinner" alt="spinner icon"/>
+                    <asset:image src="spinner.gif" id="spinner1" class="hide spinner" alt="spinner icon"/>
                 </div>
             </div>
         </form>

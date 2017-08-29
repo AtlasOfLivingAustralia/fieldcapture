@@ -26,7 +26,7 @@
     <div class="control-group">
         <div class="controls">
             <button id="addUserRoleBtn" class="btn btn-primary">Submit</button>
-            <g:img dir="images" file="spinner.gif" id="spinner1" class="hide spinner" alt="spinner icon"/>
+            <asset:image src="spinner.gif" id="spinner1" class="hide spinner" alt="spinner icon"/>
         </div>
     </div>
 </form>

@@ -11,7 +11,7 @@
                 <td class="clickable memEditRole"><i class="icon-edit tooltips" title="edit this user and role combination"></i></td>
                 <td class="clickable memRemoveRole"><i class="icon-remove tooltips" title="remove this user and role combination"></i></td>
             </tr>
-            <tr id="spinnerRow"><td colspan="5">loading data... <g:img dir="images" file="spinner.gif" id="spinner2" class="spinner" alt="spinner icon"/></td></tr>
+            <tr id="spinnerRow"><td colspan="5">loading data... <asset:image src="spinner.gif" id="spinner2" class="spinner" alt="spinner icon"/></td></tr>
             <tr id="messageRow" class="hide"><td colspan="5">No project members set</td></tr>
             </tbody>
         </table>
