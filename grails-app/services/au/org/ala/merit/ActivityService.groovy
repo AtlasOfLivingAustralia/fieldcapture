@@ -69,7 +69,7 @@ class ActivityService {
     }
 
     def update(id, body) {
-        webService.doPost(grailsApplication.config.ecodata.baseUrl + 'activity/' + id, body)
+        webService.doPost(grailsApplication.config.ecodata.baseUrl + 'activity/' + id+'?lock=true', body)
     }
 
     def delete(id) {
@@ -145,6 +145,16 @@ class ActivityService {
 
         }
         webService.doPost(grailsApplication.config.ecodata.baseUrl+'activity/search/', modifiedCriteria)
+    }
+
+    Map lock(Map activity) {
+        String path = "lock/lock/"+activity.activityId
+        webService.doPost(grailsApplication.config.ecodata.baseUrl+path,[:])
+    }
+
+    Map unlock(String activityId) {
+        String path = "lock/unlock/"+activityId
+        webService.doPost(grailsApplication.config.ecodata.baseUrl+path,[:])
     }
 
     def isReport(activity) {

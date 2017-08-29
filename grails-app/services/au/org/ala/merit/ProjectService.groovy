@@ -1,7 +1,5 @@
 package au.org.ala.merit
 
-import au.org.ala.merit.DateUtils
-import au.org.ala.merit.RoleService
 import grails.converters.JSON
 import org.apache.commons.lang.CharUtils
 import org.apache.http.HttpStatus

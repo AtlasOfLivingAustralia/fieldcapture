@@ -36,7 +36,8 @@
         noImageUrl: "${assetPath(src:'nophoto.png')}",
         project:${fc.modelAsJavascript(model:project)},
         featureServiceUrl:"${createLink(controller: 'proxy', action: 'feature')}",
-        wmsServiceUrl:"${grailsApplication.config.spatial.geoserverUrl}"
+        wmsServiceUrl:"${grailsApplication.config.spatial.geoserverUrl}",
+        unlockActivityUrl:"${createLink(controller:'activity', action:'ajaxUnlock')}"
         },
         here = document.location.href;
     </script>
@@ -243,6 +244,15 @@
         var returnTo = "${returnTo}";
         var activity = JSON.parse('${(activity as JSON).toString().encodeAsJavaScript()}');
 
+        // Release the lock when leaving the page.  async:false is deprecated but is still the easiest solution to achieve
+        // an unconditional lock release when leaving a page.
+        var locked = ${locked};
+        if (locked) {
+            var unlockActivity = function() {
+                $.ajax(fcConfig.unlockActivityUrl+'/'+activityId, {async:false});
+            };
+            window.onunload = unlockActivity;
+        }
 
         var master = new Master(activity.activityId, {saveActivityUrl: fcConfig.saveActivityUrl});
 
@@ -284,7 +294,6 @@
         options.navContext = '${navContext}';
         var navigationMode = '${navigationMode}';
         var activityNavigationModel = new ActivityNavigationViewModel(navigationMode, projectId, activityId, siteId, options);
-
 
         var outputModelConfig = {
           projectId:projectId,

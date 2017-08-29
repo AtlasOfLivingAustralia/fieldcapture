@@ -217,7 +217,44 @@ function blockUIWithMessage(message) {
         } });
 }
 
+var unloadHandler = function() {
 
+    var callbacks = [];
+    var runCallbacks = function(e) {
+        // If we haven't been passed the event get the window.event
+        e = e || window.event;
+
+        return _.find(callbacks, function(callback) {
+            return callback.callback(e);
+        });
+    };
+
+
+    function addCallback(callback, order) {
+        var item = {
+            order:order,
+            callback:callback
+        };
+        callbacks.push(item);
+        _.sortBy(callbacks, 'order');
+        if (callbacks.length == 1) {
+            window.onbeforeunload = runCallbacks;
+        }
+    }
+
+    function removeCallback(callback) {
+        callbacks = _.filter(callbacks, function(item) { return item.callback !== callback});
+        if (callbacks.length == 0) {
+            window.beforeunload = null;
+        }
+    }
+
+    return {
+        addCallback:addCallback,
+        removeCallback:removeCallback
+    };
+
+}();
 
 /**
  * Attaches a simple dirty flag (one shot change detection) to the supplied model, then once the model changes,
@@ -263,8 +300,6 @@ function autoSaveModel(viewModel, saveUrl, options) {
 
 
     function confirmOnPageExit(e) {
-        // If we haven't been passed the event get the window.event
-        e = e || window.event;
 
         // For IE6-8 and Firefox prior to version 4
         if (e) {
@@ -297,7 +332,7 @@ function autoSaveModel(viewModel, saveUrl, options) {
         autosaving = false;
         deleteAutoSaveData();
         if (config.preventNavigationIfDirty) {
-            window.onbeforeunload = null;
+            unloadHandler.removeCallback(onunloadHandler);
         }
     };
 
@@ -310,7 +345,7 @@ function autoSaveModel(viewModel, saveUrl, options) {
                 autosaving = true;
 
                 if (config.preventNavigationIfDirty) {
-                    window.onbeforeunload = onunloadHandler;
+                    unloadHandler.addCallback(onunloadHandler, 0);
                 }
                 window.setTimeout(autoSaveModel, config.autoSaveIntervalInSeconds*1000);
             }
@@ -369,7 +404,7 @@ function autoSaveModel(viewModel, saveUrl, options) {
             })
             .fail(function (data) {
                 if (config.preventNavigationIfDirty) {
-                    window.onbeforeunload = null;
+                    unloadHandler.removeCallback(onunloadHandler);
                 }
                 if (config.blockUIOnSave) {
                     $.unblockUI();
@@ -378,7 +413,7 @@ function autoSaveModel(viewModel, saveUrl, options) {
                 if (message) {
                     bootbox.alert(message, function() {
                         if (config.preventNavigationIfDirty) {
-                            window.onbeforeunload = onunloadHandler;
+                            unloadHandler.addCallback(onunloadHandler, 0);
                         }
                     });
                 }
