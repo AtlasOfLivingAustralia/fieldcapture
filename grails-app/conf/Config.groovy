@@ -215,7 +215,9 @@ if(!app.default.hub) {
 if (!pdfgen.baseURL){
     pdfgen.baseURL="http://pdfgen.ala.org.au/"
 }
-
+if (!userDetailsById.path) {
+    userDetailsById.path = "getUserDetails"
+}
 if (!grails.cache.ehcache) {
     grails {
         cache {

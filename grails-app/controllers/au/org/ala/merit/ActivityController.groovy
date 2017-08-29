@@ -153,8 +153,10 @@ class ActivityController {
             programConfig.requiresActivityLocking = programConfig.name == 'Reef 2050 Plan Action Reporting'
             programConfig.navigationMode = (programConfig.name == 'Reef 2050 Plan Action Reporting' || programConfig.name == 'ESP Test') ? 'returnToProject' : 'stayOnPage'
 
+            model.locked = activity.lock ? true : false
             if (!activity.lock && programConfig.requiresActivityLocking) {
                 Map result = activityService.lock(activity)
+                model.locked = true
             }
             model.earliestStartDate = DateUtils.displayFormat(DateUtils.parse(model.project.plannedStartDate))
 
@@ -442,6 +444,11 @@ class ActivityController {
         def respCode = activityService.delete(id)
         def resp = [code: respCode.toString()]
         //log.debug "response = ${resp}"
+        render resp as JSON
+    }
+
+    def ajaxUnlock(String id) {
+        Map resp  = activityService.unlock(id)
         render resp as JSON
     }
 
