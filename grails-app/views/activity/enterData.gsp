@@ -292,6 +292,9 @@
         var siteId = '${activity.siteId?:""}';
         var options = {navigationUrl:url, activityUrl:activityUrl, returnTo:returnTo};
         options.navContext = '${navContext}';
+        options.activityNavSelector = '#activity-nav';
+        options.savedNavMessageSelector = '#saved-nav-message-holder';
+
         var navigationMode = '${navigationMode}';
         var activityNavigationModel = new ActivityNavigationViewModel(navigationMode, projectId, activityId, siteId, options);
 

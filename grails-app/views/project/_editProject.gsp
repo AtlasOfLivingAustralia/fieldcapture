@@ -1,3 +1,4 @@
+<%@ page import="au.org.ala.merit.ProjectService" %>
 <div class="row-fluid">
     <div class="control-group">
         <label for="name" class="control-label">Project name</label>
@@ -170,7 +171,12 @@
         <label>Project status
         	<fc:iconHelp title="Project status">Project status.</fc:iconHelp>
         </label>
-        <select class="input-xlarge" id="projectState" data-bind="options:projectStatus, optionsText: 'name', optionsValue: 'id', value:status"></select>
+        <g:if test="${ProjectService.PLAN_UNLOCKED == project.planStatus}">
+            <select class="input-xlarge" id="projectState" data-bind="options:projectStatus, optionsText: 'name', optionsValue: 'id', value:status" disabled="disabled"></select>
+        </g:if>
+        <g:else>
+            <select class="input-xlarge" id="projectState" data-bind="options:projectStatus, optionsText: 'name', optionsValue: 'id', value:status"></select>
+        </g:else>
     </div>
     <div class="span4">
 
