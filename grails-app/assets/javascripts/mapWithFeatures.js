@@ -196,7 +196,7 @@
                     self.featureBounds.extend(f.getBounds().getSouthWest());
                     self.addFeature(f, loc, iw);
                     loaded = true;
-                } else if (loc.type.toLowerCase() === 'polygon' || loc.type.toLowerCase() === 'multipolygon') {
+                } else if (loc.type.toLowerCase() === 'polygon') {
                     var points;
                     var paths = geojsonToPaths(loc.coordinates[0]);
                     f = new google.maps.Polygon({
@@ -212,7 +212,29 @@
                     $.each(points, function (i,obj) {self.featureBounds.extend(obj);});
                     self.addFeature(f, loc, iw);
                     loaded = true;
-                } else if (loc.type.toLowerCase() === 'pid') {
+                } else if (loc.type.toLowerCase() === 'multipolygon') {
+
+                    $.each(loc.coordinates, function(i, coords) {
+                        var points;
+
+                        var paths = geojsonToPaths(coords);
+                        f = new google.maps.Polygon({
+                            paths: paths,
+                            map: self.map,
+                            title: 'polygon name',
+                            editable: false
+                        });
+                        f.setOptions(self.overlayOptions);
+                        // flatten arrays to array of points
+                        points = [].concat.apply([], paths);
+                        // extend bounds by each point
+                        $.each(points, function (i,obj) {self.featureBounds.extend(obj);});
+                        self.addFeature(f, loc, iw);
+                    });
+                    loaded = true;
+
+                }
+                else if (loc.type.toLowerCase() === 'pid') {
                     //load the overlay instead
                     var pid = loc.pid;
                     //console.log('Loading PID: ' + pid);
