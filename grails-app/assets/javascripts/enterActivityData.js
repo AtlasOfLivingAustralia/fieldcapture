@@ -17,8 +17,6 @@ var Master = function (activityId, config) {
     var defaults = {
         validationContainerSelector:'#validation-container',
         timeoutMessageSelector:'#timeoutMessage',
-        activityNavSelector:'#activity-nav',
-        savedNavMessageSelector:'#saved-nav-message-holder',
         activityUpdateUrl:fcConfig.activityUpdateUrl
     };
     var options = _.extend({}, defaults, config);
