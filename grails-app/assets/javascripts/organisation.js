@@ -77,7 +77,7 @@ OrganisationViewModel = function (props) {
     }
 
     self.toJS = function(includeDocuments) {
-        var ignore = self.ignore.concat(['breadcrumbName', 'orgTypeDisplayOnly', 'collectoryInstitutionId']);
+        var ignore = self.ignore.concat(['breadcrumbName', 'orgTypeDisplayOnly', 'collectoryInstitutionId', 'projects']);
         var js = ko.mapping.toJS(self, {include:['documents'], ignore:ignore} );
         if (includeDocuments) {
             js.documents = ko.toJS(self.documents);
