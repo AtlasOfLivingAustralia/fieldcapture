@@ -1,6 +1,12 @@
 package au.org.ala.merit
 import au.com.bytecode.opencsv.CSVReader
+import com.vividsolutions.jts.geom.Geometry
+import com.vividsolutions.jts.geom.GeometryCollection
+import com.vividsolutions.jts.geom.GeometryFactory
+import com.vividsolutions.jts.geom.Point
+import grails.converters.JSON
 import org.apache.commons.lang.StringUtils
+import org.geotools.geojson.geom.GeometryJSON
 import org.grails.plugins.csv.CSVMapReader
 import org.joda.time.DateTime
 
@@ -1836,19 +1842,74 @@ class ImportService {
                         ]
                         activityService.create(activity)
                     }
-
                 }
                 else {
                     errors << resp
                 }
-
             }
+            projectsWithSites.each { projectId, value ->
+                Map prj = projectService.get(projectId)
+
+                prj.sites.each { site ->
+                    siteService.addPhotoPoint(site.siteId, createPhotoPoint(site))
+                }
+
+                Map siteCoords = createProjectArea(prj.sites)
+                String projectAreaSiteName = "Project area for "+prj.name
+                Map projectArea = [extent: [source: 'drawn', geometry: siteCoords], projects: [projectId], name: projectAreaSiteName, description: projectAreaSiteName, externalId:'', type:'projectArea', visibility:'private']
+                siteService.create(projectArea)
+
+                prj = projectService.get(projectId)
+                createActivities(prj)
+            }
+
             return [success:true, message:[errors:errors, sites:sites]]
 
         }
         else {
             return [success:false, message:"Invalid shapefile: ${result.error}"]
         }
+    }
+
+    /**
+     * Create photopoint for site
+     * @param site
+     */
+    private Map createPhotoPoint(Map site) {
+        Map photopoint = null
+        if (site && site.extent && site.extent.geometry) {
+            String json = ([type:site.extent.geometry.type, coordinates:site.extent.geometry.coordinates] as JSON).toString()
+            Geometry geometry = new GeometryJSON().read(json)
+            Point centroid = geometry.centroid
+
+            photopoint = [
+                    name : "${site.name} photo point",
+                    geometry : [
+                            bearing : 0,
+                            coordinates : [centroid.y, centroid.x],
+                            decimalLongitude : centroid.x,
+                            decimalLatitude : centroid.y,
+                            type : "Point"
+                    ],
+                    type : "photopoint"
+            ]
+
+        }
+        photopoint
+    }
+
+    private Map createProjectArea(List<Map> sites) {
+        Geometry[] geom = sites.collect { site ->
+            String json = ([type:site.extent.geometry.type, coordinates:site.extent.geometry.coordinates] as JSON).toString()
+            new GeometryJSON().read(json)
+        }.toArray(new Geometry[sites.size()])
+
+        StringWriter out = new StringWriter()
+        new GeometryJSON().write(new GeometryCollection(geom, new GeometryFactory()).convexHull(), out)
+
+        println out.toString()
+
+        return JSON.parse(out.toString())
     }
 
     private Map createESPProject(String grantId, String externalId) {
@@ -1867,14 +1928,22 @@ class ImportService {
         projectService.generateProjectStageReports(project.projectId)
         project = projectService.get(project.projectId)
 
+
+        project
+    }
+
+    private void createActivities(Map project) {
+        String projectAreaId = project.sites.find{it.type == 'projectArea'}.siteId
         List activitiesToCreate = [
                 [
                         type:'ESP Species',
-                        name:'Species Sightings for '+project.externalId
+                        name:'Species Sightings for '+project.externalId,
+                        siteId:projectAreaId
                 ],
                 [
                         type:'ESP Overview',
-                        name:'Submission report for '+project.externalId
+                        name:'Submission report for '+project.externalId,
+                        siteId:null
                 ]
 
         ]
@@ -1883,6 +1952,7 @@ class ImportService {
         project.reports.each { report ->
             activitiesToCreate.each { activityType ->
                 Map activity = [
+                        siteId:activityType.siteId,
                         projectId:project.projectId,
                         plannedStartDate: report.fromDate,
                         plannedEndDate: report.toDate,
@@ -1894,7 +1964,6 @@ class ImportService {
             }
 
         }
-        project
     }
 
 }

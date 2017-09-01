@@ -225,7 +225,9 @@
 
         var map = init_map_with_features(mapOptions, {});
 
-        var sitesViewModel = new SitesViewModel(project.sites, map, mapFeatures, userIsEditor, project.projectId);
+        // Don't draw the project area on the homepage.
+        var worksSites = _.filter(project.sites, function(site) { return site.type != 'projectArea'; });
+        var sitesViewModel = new SitesViewModel(worksSites, map, mapFeatures, userIsEditor, project.projectId);
 
         ko.applyBindings(sitesViewModel, document.getElementById('map'));
         sitesViewModel.displayAllSites();
