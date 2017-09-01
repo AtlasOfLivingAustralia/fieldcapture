@@ -236,7 +236,7 @@ var unloadHandler = function() {
             callback:callback
         };
         callbacks.push(item);
-        _.sortBy(callbacks, 'order');
+        callbacks = _.sortBy(callbacks, 'order');
         if (callbacks.length == 1) {
             window.onbeforeunload = runCallbacks;
         }
