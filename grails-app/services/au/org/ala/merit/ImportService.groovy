@@ -1922,7 +1922,8 @@ class ImportService {
                 associatedSubProgram:"ESP Test",
                 description:"ESP online reporting test",
                 name:"ESP - "+externalId,
-                planStatus:'approved']
+                planStatus:'approved',
+                isMERIT:true]
         projectService.update('', project)
         project = findProjectByGrantAndExternalId(grantId, externalId)
         projectService.generateProjectStageReports(project.projectId)
