@@ -81,7 +81,15 @@
                     url: '${removeUserUrl}',
                     data: {userId: userId, role: role, entityId: "${entityId}" }
                 })
-                .done(function(result) { updateStatusMessage2("user was removed."); })
+                .done(function(result) {
+                    if (result.error) {
+                        var message = result.detail || result.error;
+                        bootbox.alert(message);
+                    }
+                    else {
+                        updateStatusMessage2("user was removed.");
+                    }
+                 })
                 .fail(function(jqXHR, textStatus, errorThrown) { alert(jqXHR.responseText); })
                 .always(function(result) {
                     $("#spinner1").hide();

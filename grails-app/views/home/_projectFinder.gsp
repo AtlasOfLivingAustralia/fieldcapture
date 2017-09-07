@@ -826,7 +826,8 @@
         var sort = $('#projectTable').data("sort");
         var order = $('#projectTable').data("order");
         var offset = $('#projectTable').data("offset");
-        var params = "max=10&offset="+offset;
+        var max = $('#projectTable').data("max");
+        var params = "max="+max+"&offset="+offset;
 
         var query = '${params.query ? params.query.replace("'", "\\'") : ""}';
         if (sort) {
