@@ -885,7 +885,7 @@
                     } else {
                         $('#paginateTable .prev').removeClass("disabled");
                     }
-                    if (offset >= (total - 10) ) {
+                    if (offset >= (total - max) ) {
                         $('#paginateTable .next').addClass("disabled");
                     } else {
                         $('#paginateTable .next').removeClass("disabled");
