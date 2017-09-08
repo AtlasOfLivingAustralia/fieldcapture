@@ -1,7 +1,5 @@
 package au.org.ala.merit
 
-import au.org.ala.fieldcapture.DocumentService
-import au.org.ala.fieldcapture.SettingService
 import grails.converters.JSON
 import grails.plugin.cache.GrailsCacheManager
 import org.codehaus.groovy.grails.web.json.JSONArray

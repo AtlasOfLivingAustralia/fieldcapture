@@ -1,15 +1,12 @@
 package au.org.ala.merit
 
-import au.org.ala.fieldcapture.ActivityService
-import au.org.ala.fieldcapture.DateUtils
-import au.org.ala.fieldcapture.PreAuthorise
 import grails.converters.JSON
-import org.apache.commons.httpclient.HttpStatus
+import org.apache.http.HttpStatus
 import org.apache.poi.ss.usermodel.Workbook
 import org.apache.poi.ss.usermodel.WorkbookFactory
 import org.apache.poi.ss.util.CellReference
 import org.codehaus.groovy.grails.web.json.JSONArray
-import org.codehaus.groovy.grails.web.mapping.LinkGenerator
+
 
 class ActivityController {
 
@@ -69,7 +66,7 @@ class ActivityController {
             }
 
             Map model = activityAndOutputModel(activity, activity.projectId)
-            model.putAll(getNavOptions(params.returnTo))
+            model.putAll(getNavOptions(params.returnTo,[navigationMode:'stayOnPage']))
             model
         } else {
             forward(action: 'list', model: [error: 'no such id'])
@@ -130,7 +127,7 @@ class ActivityController {
         def activity = activityService.get(id)
         if (activity) {
             // permissions check
-            def userId = userService.getCurrentUserId()
+            String userId = userService.getCurrentUserId()
             if (!projectService.canUserEditProject(userId, activity.projectId)) {
 
                 if (projectService.canUserViewProject(userId, activity.projectId)) {
@@ -145,11 +142,26 @@ class ActivityController {
                 chain(action:'index', id:id)
                 return
             }
+            else if (activity.lock && activity.lock.userId != userId) {
+                chain(action:'index', id:id)
+            }
 
             Map model = activityAndOutputModel(activity, activity.projectId)
+
+            Map programConfig = projectService.getProgramConfiguration(model.project)
+            // Temporary until we add this to the program config.
+            programConfig.requiresActivityLocking = programConfig.name == 'Reef 2050 Plan Action Reporting'
+            programConfig.navigationMode = (programConfig.name == 'Reef 2050 Plan Action Reporting' || programConfig.name == 'ESP Test') ? 'returnToProject' : 'stayOnPage'
+
+            model.locked = activity.lock != null
+            if (!activity.lock && programConfig.requiresActivityLocking) {
+                Map result = activityService.lock(activity)
+                model.locked = true
+            }
             model.earliestStartDate = DateUtils.displayFormat(DateUtils.parse(model.project.plannedStartDate))
 
-            model.putAll(getNavOptions(params.returnTo))
+
+            model.putAll(getNavOptions(params.returnTo, programConfig))
 
             model
 
@@ -158,8 +170,8 @@ class ActivityController {
         }
     }
 
-    private Map getNavOptions(String returnToUrl) {
-        Map options = [:]
+    private Map getNavOptions(String returnToUrl, Map programConfig) {
+        Map options = [navigationMode:programConfig.navigationMode?:'stayOnPage']
         if (returnToUrl) {
             options.showNav = true
             if (returnToUrl.indexOf('/project') > 0) {
@@ -250,6 +262,37 @@ class ActivityController {
 
         model
     }
+
+    def ajaxLoadActivityForm(String id) {
+
+        def activity = activityService.get(id)
+
+        if (activity) {
+            // permissions check
+            def userId = userService.getCurrentUserId()
+            if (!projectService.canUserEditProject(userId, activity.projectId)) {
+
+                if (projectService.canUserViewProject(userId, activity.projectId)) {
+                    render model:activityAndOutputModel(activity, activity.projectId), view:'_readOnlyTabbedActivity'
+                }
+                else {
+                    render status:401, text:"You don't have permission to view activity with id: ${id}"
+                }
+            }
+            else if (!activityService.canEditActivity(activity)) {
+                render model:activityAndOutputModel(activity, activity.projectId), view:'_readOnlyTabbedActivity'
+            }
+            else {
+                render model:activityAndOutputModel(activity, activity.projectId), view:"_tabbedActivity"
+            }
+
+
+        } else {
+            render status:404, text:"No activity exists with id: ${id}"
+        }
+
+    }
+
 
     /**
      * Updates existing or creates new activity.
@@ -402,6 +445,16 @@ class ActivityController {
         def resp = [code: respCode.toString()]
         //log.debug "response = ${resp}"
         render resp as JSON
+    }
+
+    def ajaxUnlock(String id) {
+        Map resp  = activityService.unlock(id)
+        render resp as JSON
+    }
+
+    def overrideLockAndEdit(String id) {
+        Map resp  = activityService.stealLock(id, g.createLink(controller:'activity', action:'index', id:id, absolute: true))
+        chain(action:'enterData', id:id)
     }
 
     def list() {

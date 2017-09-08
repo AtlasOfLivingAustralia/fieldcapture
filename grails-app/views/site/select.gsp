@@ -2,10 +2,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta name="layout" content="${hubConfig.skin}"/>
+  <meta name="layout" content="${hubConfig.skin}_asset"/>
   <title>Add existing site | Field Capture</title>
   <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
-    <r:script disposition="head">
+    <script>
         var fcConfig = {
             serverUrl: "${grailsApplication.config.grails.serverURL}",
             siteDeleteUrl: "${createLink(controller: 'site', action: 'ajaxDelete')}",
@@ -19,8 +19,8 @@
             sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}"
         },
         returnTo = "${params.returnTo}";
-    </r:script>
-  <r:require modules="knockout,mapWithFeatures,amplify"/>
+    </script>
+    <asset:stylesheet src="common.css"/>
 </head>
 <body>
     <div class="${containerType}">
@@ -110,8 +110,8 @@
         </div>
         </g:if>
     </div>
-</body>
-<r:script>
+
+<asset:script>
     var siteModel = null;
     $(function(){
         function SiteSelectModel () {
@@ -312,6 +312,8 @@
         $('#paginateTable .prev').click(paginatePrev)
     });
 
-</r:script>
-
+</asset:script>
+<asset:javascript src="common.js"/>
+<asset:deferredScripts/>
+</body>
 </html>

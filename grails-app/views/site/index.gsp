@@ -5,7 +5,7 @@
     <meta name="layout" content="${hubConfig.skin}"/>
     <title>${site?.name?.encodeAsHTML()} | Field Capture</title>
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
-    <r:script disposition="head">
+    <script disposition="head">
         var fcConfig = {
             serverUrl: "${grailsApplication.config.grails.serverURL}",
             siteDeleteUrl: "${createLink(controller: 'site', action: 'ajaxDelete')}",
@@ -22,11 +22,13 @@
             spatialWmsUrl: "${grailsApplication.config.spatial.wms.url}",
             sldPolgonDefaultUrl: "${grailsApplication.config.sld.polgon.default.url}",
             sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}",
-            featureService: "${createLink(controller: 'proxy', action:'feature')}"
+            featureService: "${createLink(controller: 'proxy', action:'feature')}",
+            sitesPhotoPointsUrl:"${createLink(controller:'project', action:'projectSitePhotos', id:project.projectId)}",
             },
             here = window.location.href;
-    </r:script>
-    <r:require modules="knockout,mapWithFeatures,amplify,imageViewer,jqueryGantt,merit_projects"/>
+    </script>
+    <asset:stylesheet src="common.css"/>
+    <asset:stylesheet src="project.css"/>
 </head>
 <body>
 <div class="${containerType}">
@@ -187,7 +189,7 @@
         </div>
     </g:if>
 </div>
-<r:script>
+<asset:script>
 
 
         $(function(){
@@ -222,36 +224,22 @@
             }
             viewModel.renderPOIs();
 
-             $( '.photo-slider' ).mThumbnailScroller({theme:'hover-classic'});
-             $('.photo-slider .fancybox').fancybox({
-                 helpers : {
-                    title: {
-                        type: 'inside'
-                    }
-                 },
-                 beforeLoad: function() {
-                    var el, id = $(this.element).data('caption');
+            var poisInitialised = false;
+            $('#pois-tab').on('shown', function() {
+                if (!poisInitialised) {
+                    poisInitialised = true;
+                    loadAndConfigureSitePhotoPoints('#pois');
+                }
+            });
 
-                    if (id) {
-                        el = $('#' + id);
-
-                        if (el.length) {
-                            this.title = el.html();
-                        }
-                    }
-                 },
-                 nextEffect:'fade',
-                 previousEffect:'fade'
-             });
 
         });
-        $(window).load(function() {
-             $('.photo-slider .thumb').each(function() {
-                var $caption = $(this).find('.caption');
-                $caption.outerWidth($(this).find('img').width());
-             });
-         });
 
-</r:script>
+
+</asset:script>
+<asset:javascript src="common.js"/>
+<asset:javascript src="projects.js"/>
+<asset:deferredScripts/>
+
 </body>
 </html>

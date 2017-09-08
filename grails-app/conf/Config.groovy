@@ -60,11 +60,8 @@ grails.mime.types = [
 
 // URL Mapping Cache Max Size, defaults to 5000
 //grails.urlmapping.cache.maxsize = 1000
-
-// What URL patterns should be processed by the resources plugin
-grails.resources.resourceLocatorEnabled = true
-grails.resources.adhoc.patterns = ['/images/*', '/css/*', '/js/*', '/plugins/*', '/vendor/*']
-grails.resources.adhoc.includes = ['/images/**', '/css/**', '/js/**', '/plugins/**', '/bootstrap/**', '/bootstrap-datepicker/**', '/fancybox/**', '/fuelux/**', '/slickgrid/**', '/slider-pro-master/**', '/vendor/**']
+grails.assets.excludes = ["bootstrap/less/**"]
+grails.assets.minifyOptions.excludes = ["**/*.min.js"]
 
 // The default codec used to encode data with ${}
 grails.views.default.codec = "none" // none, html, base64
@@ -218,7 +215,9 @@ if(!app.default.hub) {
 if (!pdfgen.baseURL){
     pdfgen.baseURL="http://pdfgen.ala.org.au/"
 }
-
+if (!userDetailsById.path) {
+    userDetailsById.path = "getUserDetails"
+}
 if (!grails.cache.ehcache) {
     grails {
         cache {
@@ -267,7 +266,7 @@ grails.cache.config = {
     }
 
     cache {
-        name 'userProfile'
+        name 'userProfileCache'
         eternal false
         overflowToDisk false
         maxElementsInMemory 200
@@ -288,6 +287,15 @@ grails.cache.config = {
     }
 
 }
+security {
+    cas {
+        appServerName = 'http://devt.ala.org.au:8080' // or similar, up to the request path part
+        // service = 'http://devt.ala.org.au:8080' // optional, if set it will always be used as the return path from CAS
+        uriFilterPattern = '.*/user/.*,.*/site/(?!index).*,.*/project/(?!index).*,.*/activity/(?!index).*,.*/output/(?!index).*,.*/image/delete.*,.*/image/upload.*,.*/admin/.*,.*/proxy/speciesListPost,.*/document/documentUpdate,.*/document/deleteDocument,.*/document/downloadProjectDataFile/.*,.*/home/advanced,.*/organisation/(?!index).*,.*/organisation/(?!list).*,.*/blog/.*,.*/report/performanceAssessmentSummaryReport,.*/report/performanceAssessmentComparisonReport.*,.*/report/update.*'
+        uriExclusionFilterPattern = '/assets/.*,/images/.*,/css/.*,/js/.*,/less/.*' // this is the default value
+        authenticateOnlyIfLoggedInPattern =  '/,/;.*,/[A-Za-z0-9]+/?,.*/project/index.*,.*/site/index.*,.*/activity/index.*,.*/output/index.*,.*/ajax/keepSessionAlive,.*/image/.*,.*/search/.*,.*/home/.*,.*/organisation/index.*,.*/organisation/list.*,.*/report/loadReport.*'
+    }
+}
 pdfbox.fontcache="/data/${appName}/cache/"
 
 // Markdown configuration to match behaviour of the JavaScript editor.
@@ -304,6 +312,7 @@ environments {
         security.cas.appServerName = serverName
         security.cas.contextPath = "/" + appName
         ecodata.baseUrl = 'http://devt.ala.org.au:8080/ecodata/ws/'
+        //ecodata.baseUrl = 'http://192.168.0.13:8080/ecodata/ws/'
         //ecodata.baseUrl = 'http://ecodata-test.ala.org.au/ws/'
 
         upload.images.url = grails.serverURL+'/image/'
@@ -322,9 +331,9 @@ environments {
         security.cas.appServerName="${serverName}"
         security.cas.contextPath="/${appName}"
         security.cas.casServerName="${casBaseUrl}"
-        security.cas.uriFilterPattern=".*/user/.*,.*/site/(?!index).*,.*/project/(?!index).*,.*/activity/(?!index).*,.*/output/(?!index).*,.*/image/(?!index).*,.*/admin/.*,i.*/proxy/speciesListPost,.*/document/(?!index),.*/home/advanced,.*/organisation/(?!index).*,.*/organisation/(?!list).*"
+        security.cas.uriFilterPattern=".*/user/.*,.*/site/(?!index).*,.*/project/(?!index).*,.*/activity/(?!index).*,.*/output/(?!index).*,.*/image/delete.*,.*/image/upload.*,.*/admin/.*,i.*/proxy/speciesListPost,.*/document/(?!index),.*/home/advanced,.*/organisation/(?!index).*,.*/organisation/(?!list).*"
         security.cas.uriExclusionFilterPattern="/images.*,/css.*,/js.*,/less.*"
-        security.cas.authenticateOnlyIfLoggedInPattern="/,/;.*,/[A-Za-z0-9]+/?,.*/project/index.*,.*/site/index.*,.*/activity/index.*,.*/output/index.*,.*/ajax/keepSessionAlive,.*/search/.*,.*/home/.*,.*/organisation/index.*,.*/organisation/list.*,.*/document/index.*"
+        security.cas.authenticateOnlyIfLoggedInPattern="/,/;.*,/[A-Za-z0-9]+/?,.*/project/index.*,.*/site/index.*,.*/activity/index.*,.*/output/index.*,*/image/.*,.*/ajax/keepSessionAlive,.*/search/.*,.*/home/.*,.*/organisation/index.*,.*/organisation/list.*,.*/document/index.*"
         gateway="true"
         security.cas.casServerUrlPrefix="${casBaseUrl}/cas"
         security.cas.loginUrl="${security.cas.casServerUrlPrefix}/login"
@@ -420,15 +429,12 @@ log4j = {
     environments {
         development {
             all additivity: false, stdout: [
-                    'grails.app.controllers.au.org.ala.fieldcapture',
                     'grails.app.controllers.au.org.ala.merit',
-                    'grails.app.domain.au.org.ala.fieldcapture',
-                    'grails.app.services.au.org.ala.fieldcapture',
+                    'grails.app.domain.au.org.ala.merit',
                     'grails.app.services.au.org.ala.merit',
-                    'grails.app.taglib.au.org.ala.fieldcapture',
-                    'grails.app.conf.au.org.ala.fieldcapture',
-                    'grails.app.filters.au.org.ala.fieldcapture',
-                    'au.org.ala.cas.client',
+                    'grails.app.taglib.au.org.ala.merit',
+                    'grails.app.conf.au.org.ala.merit',
+                    'grails.app.filters.au.org.ala.merit',
                     'au.org.ala.merit.SessionLogger'
 
             ]
@@ -468,8 +474,9 @@ log4j = {
     debug 'grails.app.controllers.au.org.ala',
             'ala','au.org.ala.web',
             'au.org.ala.merit'
+            //'au.org.ala.cas.client'
             //'grails.plugin.cache',
-            //'net.sf.ehcache', 'au.org.ala.cas.client',
+            //'net.sf.ehcache'
 
     error  'org.codehaus.groovy.grails.web.servlet',        // controllers
            'org.codehaus.groovy.grails.web.pages',          // GSP

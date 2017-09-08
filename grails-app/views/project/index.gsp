@@ -1,11 +1,11 @@
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page import="au.org.ala.merit.ProjectController" contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
+    <meta name="layout" content="${hubConfig.skin}"/>
     <title>${project?.name.encodeAsHTML()} | Project | Field Capture</title>
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
-    <r:script disposition="head">
+    <script>
     var fcConfig = {
         serverUrl: "${grailsApplication.config.grails.serverURL}",
         projectUpdateUrl: "${createLink(action: 'ajaxUpdate', id: project.projectId)}",
@@ -35,7 +35,7 @@
         sldPolgonDefaultUrl: "${grailsApplication.config.sld.polgon.default.url}",
         sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}",
         organisationLinkBaseUrl: "${createLink(controller:'organisation', action:'index')}",
-        imageLocation:"${resource(dir:'/images')}",
+        imageLocation:"${assetPath(src:'/')}",
         documentUpdateUrl: "${createLink(controller:"document", action:"documentUpdate")}",
         documentDeleteUrl: "${createLink(controller:"document", action:"deleteDocument")}",
         pdfgenUrl: "${createLink(controller: 'resource', action: 'pdfUrl')}",
@@ -72,7 +72,7 @@
         here = window.location.href;
 
         fcConfig.project = <fc:renderProject project="${project}"/>;
-    </r:script>
+    </script>
 
 
         <style>
@@ -107,11 +107,12 @@
             }
         </style>
 
-    <r:require modules="gmap3,mapWithFeatures,knockout,datepicker,amplify,imageViewer, jqueryValidationEngine, merit_projects, attachDocuments, wmd, jquery_bootstrap_datatable"/>
+    <asset:stylesheet src="common.css"/>
+    <asset:stylesheet src="project.css"/>
 </head>
 <body>
 <div id="spinner" class="spinner" style="position: fixed;top: 50%;left: 50%;margin-left: -50px;margin-top: -50px;text-align:center;z-index:1234;overflow: auto;width: 100px;height: 102px;">
-    <r:img id="img-spinner" width="50" height="50" dir="images" file="loading.gif" alt="Loading"/>
+    <asset:image id="img-spinner" width="50" height="50" src="loading.gif" alt="Loading"/>
 </div>
 <div class="${containerType}">
 
@@ -136,6 +137,9 @@
                     </div>
                 </g:if>
                 <div class="pull-right">
+                    <g:if test="${project.associatedSubProgram == au.org.ala.merit.ProjectController.ESP_SUBPROGRAM && user?.isEditor}">
+                        <button class="btn"><a href="${createLink(action:'index', id:project.projectId)}">User View</a></button>
+                    </g:if>
                     <g:set var="disabled">${(!user) ? "disabled='disabled' title='login required'" : ''}</g:set>
                     <g:if test="${isProjectStarredByUser}">
                         <button class="btn" id="starBtn"><i class="icon-star"></i> <span>Remove from favourites</span></button>
@@ -161,7 +165,7 @@
 
         <div class="tab-pane" id="documents">
             <!-- Project Documents -->
-            <g:render plugin="fieldcapture-plugin" template="docs"/>
+            <g:render template="docs"/>
         </div>
 
         <g:if test="${projectContent.details.visible && !projectContent.details.disabled}">
@@ -174,8 +178,8 @@
                     <div class="span12">
                         <div class="well well-small">
                             <label><b>MERI attachments:</b></label>
-                            <g:render plugin="fieldcapture-plugin" template="/shared/listDocuments"
-                                  model="[useExistingModel: true,editable:false, filterBy: 'programmeLogic', ignore: '', imageUrl:resource(dir:'/images'),containerId:'meriPlanDocumentList']"/>
+                            <g:render template="/shared/listDocuments"
+                                  model="[useExistingModel: true,editable:false, filterBy: 'programmeLogic', ignore: '', imageUrl:assetPath(src:'/'),containerId:'meriPlanDocumentList']"/>
                         </div>
                     </div>
                 </div>
@@ -207,7 +211,7 @@
             <div class="tab-pane" id="site">
                 <!-- SITES -->
                 <!-- ko stopBinding:true -->
-                <g:render plugin="fieldcapture-plugin" template="/site/sitesList" model="${[editable:user?.isEditor]}"/>
+                <g:render template="/site/sitesList" model="${[editable:user?.isEditor]}"/>
                 <!-- /ko -->
                 <div id="site-photo-points">
                     <a href="#"><i>Click to view photo points and photos</i></a>
@@ -218,7 +222,7 @@
 
             <div class="tab-pane" id="dashboard">
                 <!-- DASHBOARD -->
-                <g:render plugin="fieldcapture-plugin" template="dashboard"/>
+                <g:render template="dashboard"/>
             </div>
 
 
@@ -268,7 +272,7 @@
                                     <div class="row-fluid">
                                         <div id="save-result-placeholder"></div>
                                         <div class="span10 validationEngineContainer" id="settings-validation">
-                                            <g:render plugin="fieldcapture-plugin" template="editProject"
+                                            <g:render template="editProject"
                                                       model="[project: project, canChangeProjectDates:projectContent.admin.canChangeProjectDates]"/>
                                         </div>
                                     </div>
@@ -281,7 +285,7 @@
                                 <div id="projectDetails" class="pill-pane">
                                     <!-- Edit project details -->
                                     <h3>MERI Plan</h3>
-                                    <g:render template="/shared/restoredData" plugin="fieldcapture-plugin" model="[id:'restoredData', saveButton:'Save', cancelButton:'Cancel']"/>
+                                    <g:render template="/shared/restoredData" model="[id:'restoredData', saveButton:'Save', cancelButton:'Cancel']"/>
                                     <div class="row-fluid">
                                         <div class="validationEngineContainer" id="project-details-validation">
                                             <g:render template="editProjectDetails" model="[project: project]"/>
@@ -301,26 +305,26 @@
                             </div>
                             <g:if test="${project.newsAndEvents}">
                             <div id="editNewsAndEvents" class="pill-pane">
-                                <g:render plugin="fieldcapture-plugin"  template="editProjectContent" model="${[attributeName:'newsAndEvents', header:'News and events']}"/>
+                                <g:render template="editProjectContent" model="${[attributeName:'newsAndEvents', header:'News and events']}"/>
                             </div>
                             </g:if>
                             <g:if test="${project.projectStories}">
                                 <div id="editProjectStories" class="pill-pane">
-                                    <g:render plugin="fieldcapture-plugin" template="editProjectContent" model="${[attributeName:'projectStories', header:'Project stories']}"/>
+                                    <g:render template="editProjectContent" model="${[attributeName:'projectStories', header:'Project stories']}"/>
                                 </div>
                             </g:if>
                             <g:if test="${user.isAdmin || user.isCaseManager}">
                                 <div id="permissions" class="pill-pane ${activeClass}">
                                     <h3>Project Access</h3>
                                     <h4>Add Permissions</h4>
-                                    <g:render plugin="fieldcapture-plugin" template="/admin/addPermissions" model="[addUserUrl:g.createLink(controller:'user', action:'addUserAsRoleToProject'), entityId:project.projectId]"/>
-                                    <g:render plugin="fieldcapture-plugin" template="/admin/permissionTable" model="[loadPermissionsUrl:g.createLink(controller:'project', action:'getMembersForProjectId', id:project.projectId), removeUserUrl:g.createLink(controller:'user', action:'removeUserWithRoleFromProject'), entityId:project.projectId, user:user]"/>
+                                    <g:render template="/admin/addPermissions" model="[addUserUrl:g.createLink(controller:'user', action:'addUserAsRoleToProject'), entityId:project.projectId]"/>
+                                    <g:render template="/admin/permissionTable" model="[loadPermissionsUrl:g.createLink(controller:'project', action:'getMembersForProjectId', id:project.projectId), removeUserUrl:g.createLink(controller:'user', action:'removeUserWithRoleFromProject'), entityId:project.projectId, user:user]"/>
                                 </div>
                                 <!-- SPECIES -->
                                 %{--<div class="border-divider large-space-before">&nbsp;</div>--}%
                                 <div id="species" class="pill-pane">
                                     %{--<a name="species"></a>--}%
-                                    <g:render plugin="fieldcapture-plugin"  template="/species/species" model="[project:project, activityTypes:activityTypes]"/>
+                                    <g:render template="/species/species" model="[project:project, activityTypes:activityTypes]"/>
                                 </div>
                                 <!-- DOCUMENTS -->
                                 <div id="edit-documents" class="pill-pane">
@@ -332,19 +336,19 @@
                                     <hr/>
                                     <div class="row-fluid">
                                         <div class="span10">
-                                            <g:render plugin="fieldcapture-plugin" template="/shared/editDocuments"
-                                                      model="[useExistingModel: true,editable:true, filterBy: 'all', ignore: '', imageUrl:resource(dir:'/images/filetypes'),containerId:'adminDocumentList']"/>
+                                            <g:render template="/shared/editDocuments"
+                                                      model="[useExistingModel: true,editable:true, filterBy: 'all', ignore: '', imageUrl:assetPath(src:'filetypes'),containerId:'adminDocumentList']"/>
                                         </div>
                                     </div>
                                     %{--The modal view containing the contents for a modal dialog used to attach a document--}%
-                                    <g:render plugin="fieldcapture-plugin" template="/shared/attachDocument"/>
+                                    <g:render template="/shared/attachDocument"/>
 
                                 </div>
                             </g:if>
                             <g:if test="${fc.userIsSiteAdmin()}">
                                 <!-- Audit -->
                                 <div id="project-audit" class="pill-pane">
-                                    <g:render template="/project/audit" plugin="fieldcapture-plugin"/>
+                                    <g:render template="/project/audit"/>
                                 </div>
                             </g:if>
                         </div>
@@ -354,13 +358,13 @@
         </g:if>
     </div>
 
-    <g:render template="/shared/timeoutMessage" plugin="fieldcapture-plugin" model="${[url:grailsApplication.config.security.cas.loginUrl+'?service='+createLink(action:'index', id:project.projectId, absolute: true)]}"/>
-    <g:render template="/shared/unsavedChanges" plugin="fieldcapture-plugin" model="${[id:'meriPlanUnsavedChanges', unsavedData:'MERI Plan']}"/>
-    <g:render template="/shared/unsavedChanges" plugin="fieldcapture-plugin" model="${[id:'risksUnsavedChanges', unsavedData:'Risks & Threats']}"/>
+    <g:render template="/shared/timeoutMessage" model="${[url:grailsApplication.config.security.cas.loginUrl+'?service='+createLink(action:'index', id:project.projectId, absolute: true)]}"/>
+    <g:render template="/shared/unsavedChanges" model="${[id:'meriPlanUnsavedChanges', unsavedData:'MERI Plan']}"/>
+    <g:render template="/shared/unsavedChanges" model="${[id:'risksUnsavedChanges', unsavedData:'Risks & Threats']}"/>
 
 </div>
 <g:if test="${user?.isEditor}">
-    <r:script>
+    <asset:script>
         // Admin JS code only exposed to admin users
         $(function () {
             // remember state of admin nav (vertical tabs)
@@ -383,9 +387,9 @@
     </g:if>
         });
 
-    </r:script>
+    </asset:script>
 </g:if>
-<r:script>
+<asset:script>
         var organisations = <fc:modelAsJavascript model="${organisations}"/>;
 
        // custom validator to ensure that only one of two fields is populated
@@ -851,7 +855,7 @@
 
                     $('#site-photo-points a').click(function(e) {
                         e.preventDefault();
-                        $('#site-photo-points').html('<r:img id="img-spinner" width="50" height="50" dir="images" file="loading.gif" alt="Loading"/>');
+                        $('#site-photo-points').html('<asset:image id="img-spinner" width="50" height="50" src="loading.gif" alt="Loading"/>');
                         $.get(fcConfig.sitesPhotoPointsUrl).done(function(data) {
 
                             $('#site-photo-points').html($(data));
@@ -978,8 +982,9 @@
         });// end window.load
 
 
-</r:script>
-
-
+</asset:script>
+<asset:javascript src="common.js"/>
+<asset:javascript src="projects.js"/>
+<asset:deferredScripts/>
 </body>
 </html>

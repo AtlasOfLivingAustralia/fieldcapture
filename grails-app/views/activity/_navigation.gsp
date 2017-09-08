@@ -1,5 +1,6 @@
 <!-- ko stopBinding:true -->
-<div class="form-actions" id="activity-nav">
+<div id="saved-nav-message-holder"></div>
+<div class="form-actions" id="activity-nav" data-bind="visible:stayOnPage">
 
     <div class="row-fluid" style="position:relative">
         <!-- ko if:hasPrevious() -->

@@ -1,86 +1,52 @@
-<%@ page import="grails.converters.JSON" contentType="text/html;charset=UTF-8" %>
+<%@ page import="au.org.ala.merit.SettingPageType; grails.converters.JSON" contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
+    <meta name="layout" content="${hubConfig.skin}"/>
     <title>${project?.name.encodeAsHTML()} | Project | Field Capture</title>
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
-    <r:script disposition="head">
+    <script>
     var fcConfig = {
         serverUrl: "${grailsApplication.config.grails.serverURL}",
-        projectUpdateUrl: "${createLink(action: 'ajaxUpdate', id: project.projectId)}",
-        updateProjectDatesUrl: "${createLink(controller: 'project', action: 'updateProjectDates')}/",
-        sitesDeleteUrl: "${createLink(controller: 'site', action: 'ajaxDeleteSitesFromProject', id:project.projectId)}",
-        siteDeleteUrl: "${createLink(controller: 'site', action: 'ajaxDeleteSiteFromProject', id:project.projectId)}",
-        siteViewUrl: "${createLink(controller: 'site', action: 'index')}",
-        siteEditUrl: "${createLink(controller: 'site', action: 'edit')}",
-        removeSiteUrl: "${createLink(controller: 'site', action: '')}",
         activityEditUrl: "${createLink(controller: 'activity', action: 'edit')}",
         activityEnterDataUrl: "${createLink(controller: 'activity', action: 'enterData')}",
-        activityPrintUrl: "${createLink(controller: 'activity', action: 'print')}",
-        activityCreateUrl: "${createLink(controller: 'activity', action: 'createPlan')}",
         activityUpdateUrl: "${createLink(controller: 'activity', action: 'ajaxUpdate')}",
-        activityDeleteUrl: "${createLink(controller: 'activity', action: 'ajaxDelete')}",
         activityViewUrl: "${createLink(controller: 'activity', action: 'index')}",
-        siteCreateUrl: "${createLink(controller: 'site', action: 'createForProject', params: [projectId:project.projectId])}",
-        siteSelectUrl: "${createLink(controller: 'site', action: 'select', params:[projectId:project.projectId, returnTo:createLink(controller: 'project', action: 'index', id: project.projectId)])}",
-        siteUploadUrl: "${createLink(controller: 'site', action: 'uploadShapeFile', params:[projectId:project.projectId, returnTo:createLink(controller: 'project', action: 'index', id: project.projectId)])}",
         starProjectUrl: "${createLink(controller: 'project', action: 'starProject')}",
-        addUserRoleUrl: "${createLink(controller: 'user', action: 'addUserAsRoleToProject')}",
-        removeUserWithRoleUrl: "${createLink(controller: 'user', action: 'removeUserWithRole')}",
-        projectMembersUrl: "${createLink(controller: 'project', action: 'getMembersForProjectId')}",
         spatialBaseUrl: "${grailsApplication.config.spatial.baseUrl}",
         spatialWmsCacheUrl: "${grailsApplication.config.spatial.wms.cache.url}",
         spatialWmsUrl: "${grailsApplication.config.spatial.wms.url}",
         sldPolgonDefaultUrl: "${grailsApplication.config.sld.polgon.default.url}",
         sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}",
         organisationLinkBaseUrl: "${createLink(controller:'organisation', action:'index')}",
-        imageLocation:"${resource(dir:'/images')}",
+        imageLocation:"${assetPath(src:'/')}",
         documentUpdateUrl: "${createLink(controller:"document", action:"documentUpdate")}",
         documentDeleteUrl: "${createLink(controller:"document", action:"deleteDocument")}",
-        pdfgenUrl: "${createLink(controller: 'resource', action: 'pdfUrl')}",
-        pdfViewer: "${createLink(controller: 'resource', action: 'viewer')}",
-        imgViewer: "${createLink(controller: 'resource', action: 'imageviewer')}",
-        audioViewer: "${createLink(controller: 'resource', action: 'audioviewer')}",
-        videoViewer: "${createLink(controller: 'resource', action: 'videoviewer')}",
-        errorViewer: "${createLink(controller: 'resource', action: 'error')}",
-        createBlogEntryUrl: "${createLink(controller: 'blog', action:'create', params:[projectId:project.projectId, returnTo:createLink(controller: 'project', action: 'index', id: project.projectId, fragment: 'overview')])}",
-        editBlogEntryUrl: "${createLink(controller: 'blog', action:'edit', params:[projectId:project.projectId, returnTo:createLink(controller: 'project', action: 'index', id: project.projectId, fragment: 'overview')])}",
-        deleteBlogEntryUrl: "${createLink(controller: 'blog', action:'delete', params:[projectId:project.projectId])}",
-        shapefileDownloadUrl: "${createLink(controller:'project', action:'downloadShapefile', id:project.projectId)}",
-        regenerateStageReportsUrl: "${createLink(controller:'project', action:'regenerateStageReports', id:project.projectId)}",
-        previewStageReportUrl: "${createLink(controller:'project', action:'previewStageReport')}",
-        projectReportUrl:"${createLink(controller:'project', action:'projectReport', id:project.projectId)}",
-        projectReportPDFUrl:"${createLink(controller:'project', action:'projectReportPDF', id:project.projectId)}",
-        meriPlanPDFUrl:"${createLink(controller:'project', action:'meriPlanPDF', id:project.projectId)}",
         sitesPhotoPointsUrl:"${createLink(controller:'project', action:'projectSitePhotos', id:project.projectId)}",
-        organisationSearchUrl: "${createLink(controller: 'organisation', action: 'search')}",
-        submitReportUrl: "${createLink(controller: 'project', action: 'ajaxSubmitReport')}/",
-        approveReportUrl: "${createLink(controller: 'project', action: 'ajaxApproveReport')}/",
-        rejectReportUrl: "${createLink(controller: 'project', action: 'ajaxRejectReport')}/",
-        deleteActivitiesUrl: "${createLink(controller: 'project', action: 'ajaxDeleteReportActivities')}/",
-        submitPlanUrl : "${createLink(controller:'project', action:'ajaxSubmitPlan', id:project.projectId)}",
-        modifyPlanUrl : "${createLink(controller:'project', action:'ajaxRejectPlan', id:project.projectId)}",
-        approvalPlanUrl : "${createLink(controller:'project', action:'ajaxApprovePlan', id:project.projectId)}",
-        rejectPlanUrl : "${createLink(controller:'project', action:'ajaxRejectPlan', id:project.projectId)}",
-        unlockPlanForCorrectionUrl : "${createLink(controller:'project', action:'ajaxUnlockPlanForCorrection', id:project.projectId)}",
-        finishedCorrectingPlanUrl : "${createLink(controller:'project', action:'ajaxFinishedCorrectingPlan', id:project.projectId)}",
+        submitReportUrl: "${createLink(controller: 'project', action: 'ajaxSubmitReport')}/", approveReportUrl: "${createLink(controller: 'project', action: 'ajaxApproveReport')}/",
         featuresService: "${createLink(controller: 'proxy', action: 'features')}",
-            featureService: "${createLink(controller: 'proxy', action: 'feature')}",
-            spatialWms: "${grailsApplication.config.spatial.geoserverUrl}",
-            spatialBaseUrl: "${grailsApplication.config.spatial.baseURL}",
-            spatialWmsCacheUrl: "${grailsApplication.config.spatial.wms.cache.url}",
-            spatialWmsUrl: "${grailsApplication.config.spatial.wms.url}",
-
+        featureService: "${createLink(controller: 'proxy', action: 'feature')}",
+        spatialWms: "${grailsApplication.config.spatial.geoserverUrl}",
+        spatialBaseUrl: "${grailsApplication.config.spatial.baseURL}",
+        spatialWmsCacheUrl: "${grailsApplication.config.spatial.wms.cache.url}",
+        spatialWmsUrl: "${grailsApplication.config.spatial.wms.url}",
+        tabbedActivityUrl: "${createLink(controller: 'activity', action:'ajaxLoadActivityForm')}",
+        dashboardUrl:"${createLink(action:'projectDashboard', id:project.projectId)}",
+        searchBieUrl:"${createLink(controller:'species', action:'searchBie')}",
+        speciesListUrl:"${createLink(controller:'proxy', action:'speciesItemsForList')}",
+        speciesSearchUrl:"${createLink(controller:'project', action:'searchSpecies', id:project.projectId)}",
+        speciesImageUrl:"${createLink(controller:'species', action:'speciesImage')}",
+        speciesProfileUrl: "${createLink(controller: 'species', action: 'speciesProfile')}", imageUploadUrl: "${createLink(controller: 'image', action: 'upload')}",
         returnTo: "${createLink(controller: 'project', action: 'espOverview', id: project.projectId)}"
 
     },
         here = window.location.href;
 
 
-    </r:script>
+    </script>
 
-    <r:require modules="gmap3,mapWithFeatures,knockout,merit_projects,activity"/>
+    <asset:stylesheet src="common.css"/>
+    <asset:stylesheet src="esp-overview.css"/>
 </head>
 <body>
 <div class="${containerType}">
@@ -93,6 +59,9 @@
             <li class="active">Project</li>
         </ul>
         <div class="pull-right">
+            <g:if test="${fc.userIsSiteAdmin()}">
+                <button class="btn"><a href="${createLink(action:'index', id:project.projectId, params:[template:'index'])}">Grant Manager View</a></button>
+            </g:if>
             <g:set var="disabled">${(!user) ? "disabled='disabled' title='login required'" : ''}</g:set>
             <g:if test="${isProjectStarredByUser}">
                 <button class="btn" id="starBtn"><i class="icon-star"></i> <span>Remove from favourites</span></button>
@@ -102,9 +71,6 @@
             </g:else>
         </div>
     </div>
-
-
-
 
     <h2>${project.name}</h2>
     <g:if test="${flash.errorMessage || flash.message}">
@@ -116,41 +82,91 @@
         </div>
     </g:if>
     <p>${project.description}</p>
-
     <div class="row-fluid">
-        <div id="map" class="span12" style="height:500px; width:100%"></div>
+        <span class="span6">
+            <span class="label label-info label-small">Project ID:</span> ${project.externalId}<br/>
+            <span class="label label-info label-small">Reporting Period:</span> <span data-bind="text:currentStage.datesLabel"></span>
+        </span>
+        <span class="span6">
+            <g:if test="${projectArea}">
+                <ul class="unstyled">
+                    <li><fc:siteFacet site="${projectArea}" facet="state" label="State / Territory"/></li>
+
+                    <li><fc:siteFacet site="${projectArea}" facet="nrm" label="NRM"/></li>
+                    <li><fc:siteFacet site="${projectArea}" facet="cmz" label="CMZ"/></li>
+                </ul>
+
+            </g:if>
+        </span>
     </div>
 
-    <g:if test="${reportingVisible}">
-    <div id="reporting">
-        <h3>Reporting</h3>
-        <div class="row-fluid">
-            <div class="form-actions span12">
-                <strong>Current reporting period: <span data-bind="text:currentStage.datesLabel"></span></strong>
-                <p>
-                    <strong>Status:</strong> <span data-bind="text:currentReport.status()"></span>
-                </p>
-                <strong>Checklist: </strong>
-                <ul class="unstyled">
-                    <li data-bind="visible:hasAdministrativeReports"><i data-bind="css:{'fa-check-square-o':finishedAdminReporting, 'fa-square-o':!finishedAdminReporting}" class="fa fa-square-o"></i> Administrative reporting complete <i class="fa fa-question-circle" data-bind="popover:{content:adminReportingHelp}"></i></li>
-                    <li><i data-bind="css:{'fa-check-square-o':finishedActivityReporting, 'fa-square-o':!finishedActivityReporting}" class="fa fa-square-o"></i> Progress reporting complete for all sites <i class="fa fa-question-circle" data-bind="popover:{content:activityReportingHelp}"></i></li>
-                    <li><i data-bind="css:{'fa-check-square-o':currentStage.isSubmitted(), 'fa-square-o':!currentStage.isSubmitted()}" class="fa fa-square-o"></i> Report submitted <i class="fa fa-question-circle" data-bind="popover:{content:submitReportHelp}"></i></li>
-                    %{--<li><i data-bind="css:{'fa-check-square-o':currentStage.isApproved(), 'fa-square-o':!currentStage.isApproved()}" class="fa fa-square-o"></i> Report approved <i class="fa fa-question-circle" data-bind="popover:{content:approveReportHelp}"></i></li>--}%
-                </ul>
-                <strong>Actions: </strong>
-                <div>
-                    <button class="btn btn-success" data-bind="visible:hasAdministrativeReports, enable:!currentStage.isReadOnly(), click:administrativeReporting, attr:{title:administrativeReportButtonHelp}">Administrative reporting</button>
-                    <button class="btn btn-success" data-bind="enable:canSubmitReport(), click:currentStage.submitReport, attr:{title:submitReportHelp}">Submit for grant manager approval</button>
+
+
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#mysites">My Sites</a></li>
+        <li><a href="#species-records-tab">My Species Records</a></li>
+        <li><a href="#dashboard-tab">Dashboard</a></li>
+        <li><a href="#photographs-tab">Photographs</a></li>
+        <li><a href="#reporting-tab">Submission</a></li>
+    </ul>
+
+    <div id="saved-nav-message-holder"></div>
+
+    <div class="tab-content">
+        <div class="tab-pane active" id="mysites">
+            <div class="row-fluid">
+                <!-- ko stopBinding:true -->
+                <div id="map" class="span12" style="height:500px; width:100%"></div>
+                <!-- /ko -->
+            </div>
+            <p>Click on a site to fill out the report for that site.</p>
+            <p>Green sites have finished reports.  Red sites have unfinished reports.</p>
+        </div>
+        <div class="tab-pane" id="species-records-tab">
+            <div id="species-form">
+
+            </div>
+        </div>
+        <div class="tab-pane" id="dashboard-tab">
+            <h3>Dashboard</h3>
+            <div class="row-fluid">
+                <div id="dashboard">
                 </div>
             </div>
         </div>
-    </div>
-    </g:if>
+        <div class="tab-pane" id="photographs-tab">
+            <div id="site-photo-points"></div>
 
-    <h3>Dashboard</h3>
-    <div class="row-fluid">
-        <div class="span12 form-actions">
-            <g:render template="dashboard"/>
+        </div>
+        <div class="tab-pane" id="reporting-tab">
+            <div data-bind="visible:!canViewSubmissionReport()">
+                <div class="form-actions">
+                    Before you can submit your form you must:
+                    <ul>
+                        <li>Complete your activity reporting for each of your sites.</li>
+                        <li>Complete or mark as not applicable your optional "My Species Records" tab.</li>
+                    </ul>
+                    Please note that the report will not be able to be submitted until the end of the year.
+                </div>
+            </div>
+            <div data-bind="visible:currentReport.isSubmitted()">
+                <div class="alert alert-info">
+                    You have submitted your report for approval by your grant manager.  Please contact your grant manager if you need to make further edits to your report.
+                </div>
+            </div>
+            <div data-bind="visible:currentReport.isApproved()">
+                <div class="alert alert-success">
+                    Your report has been approved by your grant manager.
+                </div>
+            </div>
+            <div data-bind="visible:canViewSubmissionReport()">
+                <div id="admin-form">
+                </div>
+                <div class="form-actions" data-bind="visible:!currentReport.isSubmitted() && !currentReport.isApproved()">
+                    <button class="btn" data-bind="enable:canViewSubmissionReport(), click:submitReport">Submit</button>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -174,197 +190,105 @@
 
 </script>
 
-<g:render template="/shared/declaration"/>
+<g:render template="/shared/declaration" model="${[declarationType:au.org.ala.merit.SettingPageType.ESP_DECLARATION]}"/>
 <!-- /ko -->
 
-<r:script>
-        var organisations = <fc:modelAsJavascript model="${organisations}"/>;
-var sites = JSON.parse('${(sites as grails.converters.JSON).toString()}');
+<asset:javascript src="common.js"/>
+<asset:javascript src="projects.js"/>
+<asset:javascript src="esp-overview.js"/>
+<asset:deferredScripts/>
 
-var features = <fc:modelAsJavascript model="${mapFeatures}"/>;
+<script type="text/javascript">
+    var organisations = <fc:modelAsJavascript model="${organisations}"/>;
+    var sites = JSON.parse('${(sites as grails.converters.JSON).toString()}');
 
-$(function() {
-    var project = <fc:renderProject project="${project}"/>;
-    var mapFeatures = $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
+    var features = <fc:modelAsJavascript model="${mapFeatures}"/>;
 
-    var mapOptions = {
-        zoomToBounds:true,
-        zoomLimit:16,
-        highlightOnHover:true,
-        features:[],
-        featureService: fcConfig.featureService,
-        wmsServer:fcConfig.spatialWms,
-        mapContainer: "map"
-    };
+    $(function() {
+        var project = <fc:renderProject project="${project}"/>;
 
-    var map = init_map_with_features(mapOptions, {});
+        var simplifiedReportingViewModel = new SimplifiedReportingViewModel(project, fcConfig);
+        ko.applyBindings(simplifiedReportingViewModel);
 
-    var sitesViewModel = new SitesViewModel(project.sites, map, mapFeatures, ${user?.isEditor?:false}, project.projectId);
-    var reportsViewModel = new ProjectReportsViewModel(project);
-    var planViewModel = new PlanViewModel(project.activities, project.reports, [], {}, project, null, fcConfig, true, false);
+        var mapFeatures = $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
+        var userIsEditor = ${user?.isEditor?:false};
 
-    var currentReport = reportsViewModel.currentReport;
-
-    var currentStage = _.find(planViewModel.stages, function(stage) {
-        return stage.toDate == currentReport.toDate;
-    });
-
-    ko.applyBindings(sitesViewModel, document.getElementById('map'));
-    sitesViewModel.displayAllSites();
-
-
-    var SiteStatusModel = function(site, currentStage, map) {
-        var self = this;
-        self.name = site.name;
-
-        var incompleteActivities = _.filter(currentStage.activities, function(activity) {
-            return activity.siteId == site.siteId && !activity.isComplete();
-        });
-        self.reportingComplete = incompleteActivities.length == 0;
-
-        // No support currently for multipolygons
-        var feature = map.featureIndex[site.siteId] && map.featureIndex[site.siteId][0];
-
-        var bounds = sitesViewModel.getSiteBounds(site.siteId);
-
-        /**
-         * Calculates a position for the info window located in the top middle of the sites bounds.
-         * @param bounds a LatLngBounds object containing the bounds of the site.
-         * @return a lat lng literal representing the top middle of the sites bounds.
-         */
-        function calculateInfoWindowPosition(bounds) {
-            var east = bounds.getNorthEast().lng();
-            var west = bounds.getSouthWest().lng();
-            var middle = west + (east - west)/2;
-            return {lat:bounds.getNorthEast().lat(), lng:middle};
+        var mapOptions = {
+            zoomToBounds:true,
+            zoomLimit:16,
+            highlightOnHover:true,
+            features:[],
+            featureService: fcConfig.featureService,
+            wmsServer:fcConfig.spatialWms,
+            mapContainer: "map"
         };
 
-        function getSiteInfoHtml() {
-            var siteInfoTemplate = document.getElementById('info-window-template');
-            ko.applyBindings(self, siteInfoTemplate);
-            var siteInfoHtml = siteInfoTemplate.innerHTML;
-            ko.cleanNode(siteInfoTemplate);
-            return siteInfoHtml;
-        }
+        var map = init_map_with_features(mapOptions, {});
 
-        var featureDisplayOptions = {strokeColor:'#BB4411',fillColor:'#BB4411',fillOpacity:0.3,strokeWeight:1,zIndex:1,editable:false};
-        if (self.reportingComplete) {
-            featureDisplayOptions = {strokeColor:'green',fillColor:'green',fillOpacity:0.3,strokeWeight:1,zIndex:1,editable:false};
-        }
-        feature.setOptions(featureDisplayOptions);
+        // Don't draw the project area on the homepage.
+        var worksSites = _.filter(project.sites, function(site) { return site.type != 'projectArea'; });
+        var sitesViewModel = new SitesViewModel(worksSites, map, mapFeatures, userIsEditor, project.projectId);
 
-        google.maps.event.clearInstanceListeners(feature);
-        var siteInfoWindow = new google.maps.InfoWindow({content:getSiteInfoHtml(), position:calculateInfoWindowPosition(bounds)});
+        ko.applyBindings(sitesViewModel, document.getElementById('map'));
+        sitesViewModel.displayAllSites();
 
-        google.maps.event.addListener(feature, 'mouseover', function (event) {
-            siteInfoWindow.open(map.map, feature);
-        });
-        google.maps.event.addListener(feature, 'mouseout', function (event) {
-            siteInfoWindow.close();
+        _.each(sitesViewModel.sites, function(site) {
+            new SiteStatusModel(site, simplifiedReportingViewModel.currentStage, map, sitesViewModel);
         });
 
+        var adminActivity = simplifiedReportingViewModel.administrativeReport && simplifiedReportingViewModel.administrativeReport;
+        var speciesActivity = simplifiedReportingViewModel.optionalReport && simplifiedReportingViewModel.optionalReport;
 
-        var activity = incompleteActivities.length >= 0 ? incompleteActivities[0] : null;
-        if (!activity) {
-            activity = _.find(currentStage.activities, function(activity) {
-                return activity.siteId == site.siteId;
-            });
-        }
-        if (activity) {
-            google.maps.event.addListener(feature, 'click', function(event) {
-                window.location.href = activity.editActivityUrl();
-            });
-        }
-    };
-
-    _.each(sitesViewModel.sites, function(site) {
-        new SiteStatusModel(site, currentStage, map);
-    });
-
-    var SimplifiedReportingViewModel = function() {
-        var self = this;
-
-        function isAdminActivity(activity) {
-            return !activity.siteId;
-        }
-        self.finishedReporting = currentStage.canSubmitReport();
-        self.finishedAdminReporting = _.every(currentStage.activities, function(activity) {
-            return !isAdminActivity(activity) || activity.isComplete();
-        });
-        self.finishedActivityReporting = _.every(currentStage.activities, function(activity) {
-            return isAdminActivity(activity) || activity.isComplete();
-        });
-
-        self.hasAdministrativeReports = _.some(currentStage.activities, function(activity) {
-            return isAdminActivity(activity);
-        });
-
-        self.currentStage = currentStage;
-        self.currentReport = currentReport;
-        self.adminReportingHelp = ko.pureComputed(function() {
-            if (self.finishedAdminReporting) {
-                return "You have completed your administrive reporting requirements for this year"
-            }
-            return "Press the 'Administrative Reporting' button in the 'Actions:' section below to complete your administrative reporting.";
-        });
-        self.activityReportingHelp = ko.pureComputed(function() {
-            if (self.finishedActivityReporting) {
-                return "You have completed your site based reporting requirements for this period"
-            }
-            return "Click on a site to update your progress on the site.  When you have finished data entry for the year, please ensure the 'finished' checkbox on each reporting form is ticked.";
-        });
-        self.submitReportHelp = ko.pureComputed(function() {
-            if (self.currentReport.isSubmitted() || self.currentReport.isApproved()) {
-                return "You have submitted your report for this year"
-            }
-            else if (!self.currentStage.isReportable) {
-                return "Your report can't be submitted until "+convertToSimpleDate(currentStage.toDateLabel, false);
-            }
-            else if (self.currentStage.canSubmitReport()) {
-                return "Press the 'Submit reports for approval' button the 'Actions:' section below to submit your report to your grant manager."
-            }
-            return "Your site and administrative reports need to be marked as 'Finished' before you can submit your report.  You can mark a report as finished by opening the report and checking the 'Finished' button at the bottom of the page.";
-        });
-        self.approveReportHelp = ko.pureComputed(function() {
-            return "Once your reports are submitted, your grant manager will review and approve them or return them to you with comments for further work."
-        });
-
-        self.canSubmitReport = ko.pureComputed(function() {
-            return self.currentReport.isReportable && self.currentReport.canSubmitReport();
-        });
-
-        self.administrativeReporting = function() {
-            var nextActivity = _.find(currentStage.activities, function(activity) {
-                return isAdminActivity(activity) && !activity.isComplete();
-            });
-            // Default the form to finished.
-            if (nextActivity.progress() == ActivityProgress.finished) {
-                document.location.href = nextActivity.editActivityUrl();
-            }
-            else {
-                // This will set the progress and open the form.
-                nextActivity.progress(ActivityProgress.finished);
+        var photopointSelector = '#site-photo-points';
+        var tabs = {
+            'reporting-tab': {
+                selector:'#admin-form',
+                url:fcConfig.tabbedActivityUrl+'/'+adminActivity.activityId,
+                initialiser: function() {
+                    initialiseESPActivity(adminActivity);
+                }
+            },
+            'species-records-tab': {
+                selector:'#species-form',
+                url:fcConfig.tabbedActivityUrl+'/'+speciesActivity.activityId+'?includeFormActions=true',
+                initialiser: function() {
+                    initialiseESPActivity(speciesActivity);
+                }
+            },
+            'photographs-tab': {
+                selector:photopointSelector,
+                url:fcConfig.sitesPhotoPointsUrl,
+                initialiser: function() {
+                    loadAndConfigureSitePhotoPoints(photopointSelector);
+                }
+            },
+            'dashboard-tab': {
+                selector:'#dashboard',
+                url:fcConfig.dashboardUrl
             }
         };
+        $('.nav a').click(function() {
+            $(this).tab('show');
 
-        self.administrativeReportButtonHelp = ko.pureComputed(function() {
-            if (currentStage.isReadOnly()) {
-                return "Once your reports have been submitted or approved they can no longer be edited.";
-            }
-            else {
-                return "Click to complete your administrative reporting for the year."
+            var tabContentTarget = $(this).attr('href');
+            var tabId = tabContentTarget.substring(1, tabContentTarget.length);
+            var tab = tabs[tabId];
+            if (tab && !tab.initialised) {
+                tab.initialised = true;
+                // Get the remote content
+                $(tab.selector).html('<asset:image id="img-spinner" width="50" height="50" src="loading.gif" alt="Loading"/>');
+
+                $.get(tab.url, function(data) {
+                    $(tab.selector).html(data);
+                    if (tab.initialiser) {
+                        tab.initialiser();
+                    }
+                });
             }
         });
+    });
 
-    };
-
-    ko.applyBindings(new SimplifiedReportingViewModel(), document.getElementById('reporting'));
-
-
-});
-
-</r:script>
-
+</script>
 
 </body>
 </html>

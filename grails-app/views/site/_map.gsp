@@ -85,48 +85,43 @@
                             <ul id="control-buttons">
                                 <li class="active" id="pointer" title="Drag to move. Double click or use the zoom control to zoom.">
                                     <a href="javascript:void(0);" class="btn active draw-tool-btn">
-                                    %{--<img src="${resource(dir:'bootstrap/img',file:'pointer.png')}" alt="pointer"/>--}%
-                                    <img src="${resource(dir:'images',file:'glyphicons_347_hand_up.png')}" alt="center and radius"/>
+                                    <img src="${assetPath(src:'glyphicons_347_hand_up.png')}" alt="center and radius"/>
                                     <span class="drawButtonLabel">Move & zoom</span>
                                     </a>
                                 </li>
                                 <li id="circle" title="Click at centre and drag the desired radius. Values can be adjusted in the boxes.">
                                     <a href="javascript:void(0);" class="btn draw-tool-btn">
-                                    %{--<img src="${resource(dir:'images/map',file:'circle.png')}" alt="center and radius"/>--}%
-                                    <img src="${resource(dir:'images',file:'glyphicons_095_vector_path_circle.png')}" alt="center and radius"/>
+                                    <img src="${assetPath(src:'glyphicons_095_vector_path_circle.png')}" alt="center and radius"/>
                                     <span class="drawButtonLabel">Draw circle</span>
                                     </a>
                                 </li>
                                 <li id="rectangle" title="Click and drag a rectangle.">
                                     <a href="javascript:void(0);" class="btn draw-tool-btn">
-                                    %{--<img src="${resource(dir:'images/map',file:'rectangle.png')}" alt="rectangle"/>--}%
-                                    <img src="${resource(dir:'images',file:'glyphicons_094_vector_path_square.png')}" alt="rectangle"/>
+                                    <img src="${assetPath(src:'glyphicons_094_vector_path_square.png')}" alt="rectangle"/>
                                     <span class="drawButtonLabel">Draw rect</span>
                                     </a>
                                 </li>
                                 <li id="polygon" title="Click any number of times to draw a polygon. Double click to close the polygon.">
                                     <a href="javascript:void(0);" class="btn draw-tool-btn">
-                                    %{--<img src="${resource(dir:'images/map',file:'polygon.png')}" alt="polygon"/>--}%
-                                    <img src="${resource(dir:'images',file:'glyphicons_096_vector_path_polygon.png')}" alt="polygon"/>
+                                    <img src="${assetPath(src:'glyphicons_096_vector_path_polygon.png')}" alt="polygon"/>
                                     <span class="drawButtonLabel">Draw polygon</span>
                                     </a>
                                 </li>
                                 <li id="clear" title="Clear the region from the map.">
                                     <a href="javascript:void(0);" class="btn draw-tool-btn">
-                                    %{--<img src="${resource(dir:'images/map',file:'clear.png')}" alt="clear"/>--}%
-                                    <img src="${resource(dir:'images',file:'glyphicons_016_bin.png')}" alt="clear"/>
+                                    <img src="${assetPath(src:'glyphicons_016_bin.png')}" alt="clear"/>
                                     <span class="drawButtonLabel">Clear</span>
                                     </a>
                                 </li>
                                 <li id="reset" title="Zoom and centre on Australia.">
                                     <a href="javascript:void(0);" class="btn draw-tool-btn">
-                                    <img src="${resource(dir:'images',file:'reset.png')}" alt="reset map"/>
+                                    <img src="${assetPath(src:'reset.png')}" alt="reset map"/>
                                     <span class="drawButtonLabel">Reset</span>
                                     </a>
                                 </li>
                                 <li id="zoomToExtent" title="Zoom to extent of drawn shape.">
                                     <a href="javascript:zoomToShapeBounds();" class="btn draw-tool-btn">
-                                    <img src="${resource(dir:'images',file:'glyphicons_186_move.png')}" alt="zoom to extent of drawn shape"/>
+                                    <img src="${assetPath(src:'glyphicons_186_move.png')}" alt="zoom to extent of drawn shape"/>
                                     <span class="drawButtonLabel">Zoom</span>
                                     </a>
                                 </li>
@@ -330,7 +325,7 @@
 </div>
 <!-- /ko -->
 
-<r:script>
+<asset:script>
 function initSiteViewModel() {
     var siteViewModel;
 
@@ -385,4 +380,4 @@ function initSiteViewModel() {
 
     return siteViewModel;
 }
-</r:script>
+</asset:script>

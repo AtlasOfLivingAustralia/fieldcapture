@@ -1,11 +1,5 @@
 package au.org.ala.merit
 
-import au.org.ala.fieldcapture.ActivityService
-import au.org.ala.fieldcapture.CommonService
-import au.org.ala.merit.MetadataService
-import au.org.ala.fieldcapture.RoleService
-import au.org.ala.fieldcapture.SiteService
-import au.org.ala.fieldcapture.UserService
 import grails.test.mixin.TestFor
 import spock.lang.Specification
 

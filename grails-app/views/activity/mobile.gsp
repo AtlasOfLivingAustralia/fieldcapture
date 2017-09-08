@@ -5,18 +5,16 @@
 
     <meta name="layout" content="mobile"/>
 
-    <r:script disposition="head">
+    <script>
     var fcConfig = {
         bieUrl: <g:if test="${params.android}">"${grailsApplication.config.bie.baseURL}"</g:if><g:else>"#"</g:else>,
         speciesProfileUrl: "${createLink(controller: 'proxy', action: 'speciesProfile', absolute:true)}",
         googleStaticUrl:"http://maps.googleapis.com/maps/api/staticmap?maptype=terrian&zoom=12&sensor=false&size=350x250&markers=color:red%7C"
         },
         here = document.location.href;
-    </r:script>
-    <r:require modules="knockout,jqueryValidationEngine,datepicker,jQueryFileUploadUI,mapWithFeatures,activity,attachDocuments,species,amplify,imageViewer"/>
-    <g:if test="${params.newSkin}">
-        <r:require module="newSkin"/>
-    </g:if>
+    </script>
+    <asset:stylesheet src="common.css"/>
+    <asset:stylesheet src="activity.css"/>
 </if>
 </head>
 <body>
@@ -153,9 +151,9 @@
         <!-- add the dynamic components -->
             <md:modelView model="${model}" site="${site}" edit="true" disableTableUpload="true" output="${outputName}" />
         </div>
-        <g:render template="/output/outputJSModel" plugin="fieldcapture-plugin" model="${[viewModelInstance:blockId+'ViewModel', edit:true]}"></g:render>
+        <g:render template="/output/outputJSModel" plugin="ecodata-client-plugin" model="${[viewModelInstance:blockId+'ViewModel', edit:true]}"></g:render>
 
-        <r:script>
+        <asset:script>
         $(function(){
 
             var viewModelName = "${blockId}ViewModel",
@@ -260,7 +258,7 @@
             window[viewModelInstance].dirtyFlag.isDirty, window[viewModelInstance].dirtyFlag.reset);
         });
 
-        </r:script>
+        </asset:script>
     </div>
     </g:if>
 </g:each>
@@ -268,7 +266,7 @@
 
 </div>
 
-<r:script>
+<asset:script>
 
 
     /* Master controller for page. This handles saving each model as required. */
@@ -551,7 +549,10 @@ $('[data-bind^=datepicker]').datepicker().on('hide', function() {
 });
 
 
-</r:script>
+</asset:script>
+<asset:javascript src="common.js"/>
+<asset:javascript src="forms-manifest.js"/>
+<asset:deferredScripts/>
 
 </body>
 </html>

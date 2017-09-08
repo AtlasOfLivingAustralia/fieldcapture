@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="layout" content="${(grailsApplication.config.layout.skin?:'main')+'Print'}"/>
+    <meta name="layout" content="nrmPrint"/>
     <title>MERI Plan - ${project.name}</title>
-    <script type="text/javascript" src="//www.google.com/jsapi"></script>
-    <r:script disposition="head">
+    <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
+    <script>
     var fcConfig = {
         serverUrl: "${grailsApplication.config.grails.serverURL}",
-        imageLocation:"${resource(dir:'/images')}",
+        imageLocation:"${assetPath(src:'/')}",
         returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
     },
         here = window.location.href;
 
-    </r:script>
+    </script>
     <style type="text/css">
     .title { font-weight: bold;}
     .activity-title {
@@ -34,19 +34,23 @@
     }
     </style>
 
-    <r:require modules="knockout, activity, jqueryValidationEngine, merit_projects, pretty_text_diff"/>
+    <asset:stylesheet src="common.css"/>
+    <asset:stylesheet src="project.css"/>
 </head>
 <body>
 <div class="container">
     <g:render template="/project/projectDetails" model="[project: project]"/>
-    <r:script>
+    <asset:script>
     $(function() {
         var project = <fc:modelAsJavascript model="${project}"/>;
         var themes = <fc:modelAsJavascript model="${themes}"/>;
         var viewModel = new MERIPlan(project, themes, '');
         ko.applyBindings(viewModel);
     });
-    </r:script>
+    </asset:script>
 </div>
+<asset:javascript src="common.js"/>
+<asset:javascript src="projects.js"/>
+<asset:deferredScripts/>
 </body>
 </html>

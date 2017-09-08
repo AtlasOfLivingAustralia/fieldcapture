@@ -1,6 +1,6 @@
 package au.org.ala.merit
 
-import au.org.ala.fieldcapture.DateUtils
+import au.org.ala.merit.DateUtils
 import org.apache.poi.ss.usermodel.Sheet
 import org.apache.poi.ss.usermodel.Workbook
 import org.apache.poi.ss.usermodel.WorkbookFactory

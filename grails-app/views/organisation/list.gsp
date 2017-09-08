@@ -4,18 +4,16 @@
 <head>
     <meta name="layout" content="${hubConfig.skin}"/>
     <title>Organisations | Field Capture</title>
-    <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
-    <r:script disposition="head">
+    <script>
         var fcConfig = {
             serverUrl: "${grailsApplication.config.grails.serverURL}",
             createOrganisationUrl: "${createLink(controller: 'organisation', action: 'create')}",
             viewOrganisationUrl: "${createLink(controller: 'organisation', action: 'index')}",
             organisationSearchUrl: "${createLink(controller: 'organisation', action: 'search')}",
-            noLogoImageUrl: "${r.resource(dir:'images', file:'no-image-2.png', plugin:'fieldcapture-plugin')}"
+            noLogoImageUrl: "${assetPath(src:'no-image-2.png')}"
             };
-    </r:script>
-    <r:require modules="knockout,mapWithFeatures,amplify,organisation"/>
-
+    </script>
+    <asset:stylesheet src="common.css"/>
 </head>
 
 <body>
@@ -37,7 +35,7 @@
         </g:if>
     </div>
 </g:if>
-    <fc:getSettingContent settingType="${au.org.ala.fieldcapture.SettingPageType.ORGANISATION_LIST_PAGE_HEADER}"/>
+    <fc:getSettingContent settingType="${au.org.ala.merit.SettingPageType.ORGANISATION_LIST_PAGE_HEADER}"/>
     <g:if test="${fc.userIsAlaOrFcAdmin()}">
         <a href="${g.createLink(action:'create')}"><button class="btn btn-info pull-right">Create Organisation</button></a>
     </g:if>
@@ -76,7 +74,7 @@
 </div>
 
 
-<r:script>
+<asset:script>
 
     $(function () {
 
@@ -87,7 +85,10 @@
 
 });
 
-</r:script>
+</asset:script>
+<asset:javascript src="common.js"/>
+<asset:javascript src="organisation.js"/>
+<asset:deferredScripts/>
 
 </body>
 

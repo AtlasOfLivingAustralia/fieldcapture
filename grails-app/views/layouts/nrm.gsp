@@ -19,17 +19,16 @@
   Date: 08/07/13
 --%>
 <%@ page contentType="text/html;charset=UTF-8" %>
-<%@ page import="au.org.ala.fieldcapture.SettingPageType" %>
+<%@ page import="au.org.ala.merit.SettingPageType" %>
 <!DOCTYPE html>
 <!--[if IE 7]><html lang="en" class="ie ie7"><![endif]-->
 <!--[if IE 8]><html lang="en" class="ie ie8"><![endif]-->
 <!--[if IE 9]><html lang="en" class="ie ie9"><![endif]-->
 <!--[if !IE]><!--><html lang="en"><!--<![endif]-->
 <head>
+    <link href="${grailsApplication.config.ala.baseURL?:'http://www.ala.org.au'}/wp-content/themes/ala2011/images/favicon.ico" rel="shortcut icon" />
     <title><g:layoutTitle /></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <r:require modules="newSkin, nrmSkin, jquery_cookie"/>
-    <r:layoutResources/>
     <link href="https://fonts.googleapis.com/css?family=Oswald:300" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400italic,600,700" rel="stylesheet" type="text/css">
     <g:layoutHead />
@@ -60,33 +59,33 @@
         </div>
     </g:if>
 
-        <div class="${containerType}">
-            <g:if test="${hubConfig.logoUrl}">
+    <div class="${containerType}">
+        <g:if test="${hubConfig.logoUrl}">
             <div class="nav logo">
 
                 <a href="${createLink(controller:"home")}">
                     %{--<img src="${hubConfig.logoUrl}" alt="${hubConfig.title}" />--}%
-                <r:img dir="images" file="ag-Inline_W.png" alt="${hubConfig.title}" />
+                    <asset:image src="ag-Inline_W.png" alt="${hubConfig.title}" />
                 </a>
 
                 <g:if test="${hubConfig.title}"><span class="merit">${hubConfig.title}</span></g:if>
             </div>
+        </g:if>
+        <div class="navbar-form pull-right nav-collapse collapse">
+            <g:if test="${fc.currentUserDisplayName()}">
+                <div class="greeting text-right">G'day <fc:currentUserDisplayName/></div>
             </g:if>
-            <div class="navbar-form pull-right nav-collapse collapse">
-                <g:if test="${fc.currentUserDisplayName()}">
-                    <div class="greeting text-right">G'day <fc:currentUserDisplayName/></div>
-                </g:if>
 
-                <div class="btn-group pull-right login-logout">
-                    <fc:loginLogoutButton logoutUrl="${createLink(controller:'logout', action:'logout')}" cssClass="${loginBtnCss}"/>
-                </div>
-
+            <div class="btn-group pull-right login-logout">
+                <fc:loginLogoutButton logoutUrl="${createLink(controller:'logout', action:'logout')}" cssClass="${loginBtnCss}"/>
             </div>
 
-        </div><!--/.container -->
+        </div>
+
+    </div><!--/.container -->
 
 
-    </div><!--/.navbar -->
+</div><!--/.navbar -->
 
     <div class="page-header-menu">
         <div class="${containerType}">
@@ -129,98 +128,97 @@
     </div>
 </div>
 
-<div id="content" class="clearfix">
-    <g:layoutBody />
-</div><!-- /#content -->
+    <div id="content" class="clearfix">
+        <g:layoutBody />
+    </div><!-- /#content -->
 
-<div id="footer">
-    <div id="footer-wrapper">
-        <div class="${containerType}">
-            <fc:footerContent />
+    <div id="footer">
+        <div id="footer-wrapper">
+            <div class="${containerType}">
+                <fc:footerContent />
+            </div>
+            <div class="${containerType}">
+                <div class="large-space-before">
+                    <button class="btn btn-mini" id="toggleFluid">toggle fixed/fluid width</button>
+                    <g:if test="${userLoggedIn && introText}">
+                        <button class="btn btn-mini" type="button" data-toggle="modal" data-target="#introPopup">display user intro</button>
+                    </g:if>
+                </div>
+            </div>
+
         </div>
-        <div class="${containerType}">
-            <div class="large-space-before">
-                <button class="btn btn-mini" id="toggleFluid">toggle fixed/fluid width</button>
-                <g:if test="${userLoggedIn && introText}">
-                    <button class="btn btn-mini" type="button" data-toggle="modal" data-target="#introPopup">display user intro</button>
-                </g:if>
-        </div>
-    </div>
 
-</div>
-
-<r:script>
-    // Prevent console.log() killing IE
-    if (typeof console == "undefined") {
-        this.console = {log: function() {}};
-    }
-
-    $(document).ready(function (e) {
-
-        $.ajaxSetup({ cache: false });
-
-        $("#btnLogout").click(function (e) {
-            window.location = "${createLink(controller: 'logout', action:'index')}";
-        });
-
-        $(".btnAdministration").click(function (e) {
-            window.location = "${createLink(controller: 'admin')}";
-        });
-
-        $(".btnProfile").click(function (e) {
-            window.location = "${createLink(controller: 'project', action:'mine')}";
-        });
-
-        $("#toggleFluid").click(function(el){
-            var fluidNo = $('div.container-fluid').length;
-            var fixNo = $('div.container').length;
-            //console.log("counts", fluidNo, fixNo);
-            if (fluidNo > fixNo) {
-                $('div.container-fluid').addClass('container').removeClass('container-fluid');
-            } else {
-                $('div.container').addClass('container-fluid').removeClass('container');
+        <script>
+            // Prevent console.log() killing IE
+            if (typeof console == "undefined") {
+                this.console = {log: function() {}};
             }
-        });
 
-        // Set up a timer that will periodically poll the server to keep the session alive
-        var intervalSeconds = 5 * 60;
+            $(document).ready(function (e) {
 
-        setInterval(function() {
-            $.ajax("${createLink(controller: 'ajax', action:'keepSessionAlive')}").done(function(data) {});
-        }, intervalSeconds * 1000);
+                $.ajaxSetup({ cache: false });
 
-    }); // end document ready
+                $("#btnLogout").click(function (e) {
+                    window.location = "${createLink(controller: 'logout', action:'index')}";
+                });
 
-</r:script>
+                $(".btnAdministration").click(function (e) {
+                    window.location = "${createLink(controller: 'admin')}";
+                });
 
-<g:if test="${grailsApplication.config.bugherd.integration}">
-    <r:script>
-        (function (d, t) {
-            var bh = d.createElement(t), s = d.getElementsByTagName(t)[0];
-            bh.type = 'text/javascript';
-            bh.src = '//www.bugherd.com/sidebarv2.js?apikey=cqoc7xdguryihxalktg0mg';
-            s.parentNode.insertBefore(bh, s);
-        })(document, 'script');
-    </r:script>
-</g:if>
-<!-- current env = ${grails.util.Environment.getCurrent().name} -->
-<g:if test="${ grails.util.Environment.getCurrent().name =~ /test|prod/ }">
-    <r:script type="text/javascript">
+                $(".btnProfile").click(function (e) {
+                    window.location = "${createLink(controller: 'project', action:'mine')}";
+                });
 
-        var _gaq = _gaq || [];
-        _gaq.push(['_setAccount', 'UA-4355440-1']);
-        _gaq.push(['_setDomainName', 'ala.org.au']);
-        _gaq.push(['_trackPageview']);
+                $("#toggleFluid").click(function(el){
+                    var fluidNo = $('div.container-fluid').length;
+                    var fixNo = $('div.container').length;
+                    //console.log("counts", fluidNo, fixNo);
+                    if (fluidNo > fixNo) {
+                        $('div.container-fluid').addClass('container').removeClass('container-fluid');
+                    } else {
+                        $('div.container').addClass('container-fluid').removeClass('container');
+                    }
+                });
 
-        (function() {
-            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-        })();
+                // Set up a timer that will periodically poll the server to keep the session alive
+                var intervalSeconds = 5 * 60;
 
-    </r:script>
-</g:if>
+                setInterval(function() {
+                    $.ajax("${createLink(controller: 'ajax', action:'keepSessionAlive')}").done(function(data) {});
+                }, intervalSeconds * 1000);
 
-<r:layoutResources/>
+            }); // end document ready
+
+        </script>
+
+        <g:if test="${grailsApplication.config.bugherd.integration}">
+            <script>
+                (function (d, t) {
+                    var bh = d.createElement(t), s = d.getElementsByTagName(t)[0];
+                    bh.type = 'text/javascript';
+                    bh.src = '//www.bugherd.com/sidebarv2.js?apikey=cqoc7xdguryihxalktg0mg';
+                    s.parentNode.insertBefore(bh, s);
+                })(document, 'script');
+            </script>
+        </g:if>
+    <!-- current env = ${grails.util.Environment.getCurrent().name} -->
+        <g:if test="${ grails.util.Environment.getCurrent().name =~ /test|prod/ }">
+            <script type="text/javascript">
+
+                var _gaq = _gaq || [];
+                _gaq.push(['_setAccount', 'UA-4355440-1']);
+                _gaq.push(['_setDomainName', 'ala.org.au']);
+                _gaq.push(['_trackPageview']);
+
+                (function() {
+                    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+                })();
+
+            </script>
+        </g:if>
+
 </body>
 </html>

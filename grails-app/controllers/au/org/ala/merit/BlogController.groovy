@@ -1,11 +1,7 @@
 package au.org.ala.merit
 
-import au.org.ala.fieldcapture.DocumentService
-import au.org.ala.fieldcapture.UserService
 import grails.converters.JSON
-import org.apache.commons.httpclient.HttpStatus
-
-import static org.apache.commons.httpclient.HttpStatus.*
+import static org.apache.http.HttpStatus.*
 
 class BlogController {
 
@@ -62,7 +58,7 @@ class BlogController {
         String projectId = blogEntry.projectId
 
         if (!authorized(projectId)) {
-            render status: HttpStatus.SC_UNAUTHORIZED, text: "No permission"
+            render status: SC_UNAUTHORIZED, text: "No permission"
         }
         else {
             Map image = blogEntry.remove('image')
@@ -91,7 +87,7 @@ class BlogController {
         }
         String projectId = params.projectId
         if (!authorized(projectId)) {
-            render status: HttpStatus.SC_UNAUTHORIZED, text: "No permission"
+            render status: SC_UNAUTHORIZED, text: "No permission"
         }
         else {
             def result = blogService.delete(params.projectId, id)

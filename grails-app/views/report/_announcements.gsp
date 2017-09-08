@@ -19,7 +19,7 @@
 <table id="announcementsTable" class="table table-striped">
 
 </table>
-    <g:set var="suffix" value="${au.org.ala.fieldcapture.DateUtils.displayFormat(new org.joda.time.DateTime())}"/>
+    <g:set var="suffix" value="${au.org.ala.merit.DateUtils.displayFormat(new org.joda.time.DateTime())}"/>
     <script type="text/javascript">
     $(function() {
 

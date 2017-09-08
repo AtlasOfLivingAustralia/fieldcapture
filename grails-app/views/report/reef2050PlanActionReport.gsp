@@ -3,7 +3,7 @@
 <head>
     <title>Reef 2050 Action Status</title>
     <title></title>
-    <link href="${g.resource(dir:'css', file:'reef2050DashboardReport.css')}" type="text/css" rel="stylesheet">
+    <asset:stylesheet src="reef2050DashboardReport.css"/>
 </head>
 
 <body>
@@ -26,7 +26,7 @@
     <g:else>
 
         <div class="well">
-            <strong>Progress on Reef 2050 Plan to <g:formatDate date="${au.org.ala.fieldcapture.DateUtils.parse(endDate).toDate()}" format="MMMM yyyy"/></strong>
+            <strong>Progress on Reef 2050 Plan to <g:formatDate date="${au.org.ala.merit.DateUtils.parse(endDate).toDate()}" format="MMMM yyyy"/></strong>
             <p>
                 Please note this report ignores any facet selection you may have made.
             </p>

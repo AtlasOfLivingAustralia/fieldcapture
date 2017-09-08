@@ -1,9 +1,5 @@
 package au.org.ala.merit
 
-import au.org.ala.fieldcapture.ActivityService
-import au.org.ala.fieldcapture.DateUtils
-import au.org.ala.fieldcapture.UserService
-import au.org.ala.fieldcapture.WebService
 import grails.converters.JSON
 import grails.test.mixin.TestFor
 import groovy.time.TimeCategory

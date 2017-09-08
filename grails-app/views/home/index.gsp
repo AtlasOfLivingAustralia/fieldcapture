@@ -1,12 +1,12 @@
-<%@ page import="grails.converters.JSON; au.org.ala.fieldcapture.SettingPageType" contentType="text/html;charset=UTF-8" %>
+<%@ page import="grails.converters.JSON; au.org.ala.merit.SettingPageType" contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/html">
 <head>
     <g:set var="containerType" scope="request" value="container"/>
-    <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
+    <meta name="layout" content="${hubConfig.skin}"/>
     <title>Home | Field Capture</title>
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}&libraries=visualization"></script>
-    <r:script disposition="head">
+    <script>
     var fcConfig = {
         baseUrl: "${grailsApplication.config.grails.serverURL}",
         spatialBaseUrl: "${grailsApplication.config.spatial.baseUrl}",
@@ -18,9 +18,11 @@
         dashboardUrl: "${g.createLink(controller: 'report', action: 'loadReport', params: params+[showOrganisations:true])}",%{--// Hack for the announcements report to distinguish it from the report on the org page.--}%
         dashboardCategoryUrl: "${g.createLink(controller: 'report', action: 'activityOutputs', params: params+[showOrganisations:true])}"
         };
-    </r:script>
+    </script>
     <script type="text/javascript" src="//www.google.com/jsapi"></script>
-    <r:require modules="knockout,mapWithFeatures,jquery_bootstrap_datatable,js_iso8601,amplify,homepage,datepicker,jqueryValidationEngine"/>
+    <asset:stylesheet src="common.css"/>
+    <asset:stylesheet src="homepage.css"/>
+
 </head>
 <body>
 <div id="wrapper" class="${containerType}">
@@ -53,6 +55,9 @@
     <g:render template="projectFinder"/>
 </div>
 
+<asset:javascript src="common.js"/>
+<asset:javascript src="homepage.js"/>
 
+<asset:deferredScripts/>
 </body>
 </html>

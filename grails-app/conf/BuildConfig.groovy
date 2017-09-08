@@ -32,8 +32,8 @@ if (Environment.current == Environment.DEVELOPMENT) {
             stream -> props.load(stream)
         }
     }
-    def pluginLocation = props.getProperty("fieldcapture-hubs-plugin.location") ?: '../fieldcapture-hubs/fieldcapture-hubs-plugin'
-    grails.plugin.location.'fieldcapture-plugin' = pluginLocation
+    def pluginLocation = props.getProperty("ecodata-client-plugin.location") ?: '../ecodata-client-plugin'
+    grails.plugin.location.'ecodata-client-plugin' = pluginLocation
 
     def testPluginLocation = props.getProperty("fieldcapture-test-plugin.location") ?: '../fieldcapture-test-plugin'
     grails.plugin.location.'fieldcapture-test' = testPluginLocation
@@ -59,6 +59,11 @@ grails.project.dependency.resolution = {
     }
 
     def geoToolsVersion = "11.1"
+    def tomcatVersion = '7.0.55'
+    def metadataExtractorVersion = "2.6.2"
+    def imgscalrVersion = "4.2"
+    def httpmimeVersion = "4.2.1"
+    def jtsVersion = "1.8"
 
     dependencies {
         compile "com.openhtmltopdf:openhtmltopdf-core:${openhtmltopdfversion}"
@@ -66,6 +71,16 @@ grails.project.dependency.resolution = {
         compile "com.openhtmltopdf:openhtmltopdf-jsoup-dom-converter:${openhtmltopdfversion}"
         compile "com.openhtmltopdf:openhtmltopdf-log4j:${openhtmltopdfversion}"
         compile "org.geotools:gt-geojson:${geoToolsVersion}"
+        compile "com.drewnoakes:metadata-extractor:${metadataExtractorVersion}"
+        compile "org.imgscalr:imgscalr-lib:${imgscalrVersion}"
+        compile "org.apache.httpcomponents:httpmime:${httpmimeVersion}"
+        compile "com.vividsolutions:jts:${jtsVersion}"
+        compile "org.geotools.xsd:gt-xsd-kml:${geoToolsVersion}"
+        compile "joda-time:joda-time:2.3"
+        compile "org.codehaus.groovy.modules.http-builder:http-builder:0.7.1"
+        compile "org.apache.httpcomponents:httpcore:4.4.1"
+        compile "org.apache.httpcomponents:httpclient:4.4.1"
+        build "com.google.guava:guava:21.0"
     }
 
     plugins {
@@ -73,19 +88,37 @@ grails.project.dependency.resolution = {
 
         runtime ":ala-ws-security:1.5-SNAPSHOT"
 
-        build ":tomcat:7.0.55"
+        build ":tomcat:$tomcatVersion"
 
         runtime ":jquery:1.11.1" // Override jquery as 1.8.3 was being pulled in from somewhere
-        compile ":resources:1.2.14"
+        build ":release:3.1.2"
 
-        runtime ":lesscss-resources:1.3.3"
+        runtime ":jquery:1.11.1"
+        compile ":asset-pipeline:2.14.1"
+        // Uncomment these to enable additional asset-pipeline capabilities
+        //compile ":sass-asset-pipeline:2.13.1"
+        compile ":less-asset-pipeline:2.14.1"
+        //compile ":coffee-asset-pipeline:2.13.1"
+        //compile ":handlebars-asset-pipeline:2.13.1"
 
-        build ":release:3.0.1"
+        runtime (":rest:0.8") {
+            excludes "httpclient", "httpcore"
+        }
+        compile ":ala-auth:2.1.3"
+        runtime ":csv:0.3.1"
+        compile ":markdown:1.1.1"
+        compile ':cache:1.1.8'
+        compile ":cache-ehcache:1.0.5"
 
-        //test ":karma-test-runner:0.2.4"
+        compile ":google-visualization:1.0.1"
+        compile ":mail:1.0.6"
+        compile ":excel-export:0.2.0"
+        compile ":excel-import:1.0.1"
+
+        compile ':cookie:1.4'
 
         if (Environment.current != Environment.DEVELOPMENT) {
-            compile ":fieldcapture-plugin:1.16"
+            compile ":ecodata-client-plugin:0.1"
             test ":fieldcapture-test:0.1-SNAPSHOT"
         }
 

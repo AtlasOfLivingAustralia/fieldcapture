@@ -4,9 +4,11 @@
 <head>
     <meta name="layout" content="adminLayout"/>
     <title>Tools | Admin | Data capture | Atlas of Living Australia</title>
+    <asset:stylesheet src="base.css"/>
 </head>
 
 <body>
+<asset:javascript src="base.js"/>
 <script type="text/javascript">
 
     $(document).ready(function() {
@@ -104,6 +106,21 @@
         $('#btnBulkUploadSites').click(function(e) {
             e.preventDefault();
             $('form.bulkUploadSites').submit();
+        });
+
+        $("#bulkUploadESPSites").change(function() {
+            if ($("#bulkUploadESPSites").val()) {
+                $("#btnBulkUploadESPSites").removeAttr("disabled");
+            }
+            else {
+                $("#btnBulkUploadESPSites").attr("disabled", "disabled");
+            }
+
+        }).trigger('change');
+
+        $('#btnBulkUploadESPSites').click(function(e) {
+            e.preventDefault();
+            $('form.bulkUploadESPSites').submit();
         });
 
         $("#createOrgs").change(function() {
@@ -222,6 +239,19 @@
 
         <p><g:uploadForm class="bulkUploadSites" action="bulkUploadSites">
             <div><input id="bulkUploadSites" type="file" name="shapefile"/></div>
+            Bulk loads sites from a shapefile.
+        </g:uploadForm>
+
+        </p>
+        </td>
+    </tr>
+    <tr>
+        <td><button disabled id="btnBulkUploadESPSites" class="btn btn-small btn-info" title="Bulk load ESP sites">Bulk load ESP sites</button>
+        </td>
+        <td>
+
+        <p><g:uploadForm class="bulkUploadESPSites" action="bulkUploadESPSites">
+            <div><input id="bulkUploadESPSites" type="file" name="shapefile"/></div>
             Bulk loads sites from a shapefile.
         </g:uploadForm>
 

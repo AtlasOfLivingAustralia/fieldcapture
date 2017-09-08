@@ -1,6 +1,5 @@
 package au.org.ala.merit
 
-import au.org.ala.fieldcapture.WebService
 import grails.converters.JSON
 
 
@@ -8,7 +7,6 @@ class SpeciesController {
 
     SpeciesService speciesService
     WebService webService
-
 
     def speciesProfile(String id) {
 
@@ -23,7 +21,8 @@ class SpeciesController {
             webService.proxyGetRequest(response, url)
         }
         else {
-            String noImageUrl = g.resource(dir:'images', file:'nophoto.png', absolute:true)
+
+            String noImageUrl = asset.assetPath(src:'nophoto.png', absolute:true)
             response.sendRedirect(noImageUrl)
         }
 
@@ -31,7 +30,7 @@ class SpeciesController {
 
     def searchBie() {
 
-        Map results = speciesService.searchBie(params.q, params.limit ?: 10)
+        Map results = speciesService.searchBie(params.q, params.fq, params.limit ?: 10)
         println results
         render results as JSON
     }

@@ -7,13 +7,13 @@
         <title>Print | ${activity.type} | Field Capture</title>
     </g:if>
     <g:else>
-        <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
+        <meta name="layout" content="${hubConfig.skin}"/>
         <title>View | ${activity.type} | Field Capture</title>
     </g:else>
 
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jstimezonedetect/1.0.4/jstz.min.js"></script>
-    <r:script disposition="head">
+    <script>
     var fcConfig = {
         serverUrl: "${grailsApplication.config.grails.serverURL}",
         activityUpdateUrl: "${createLink(controller: 'activity', action: 'ajaxUpdate')}",
@@ -21,7 +21,7 @@
         projectViewUrl: "${createLink(controller: 'project', action: 'index')}/",
         siteViewUrl: "${createLink(controller: 'site', action: 'index')}/",
         bieUrl: "${grailsApplication.config.bie.baseURL}",
-        imageLocation:"${resource(dir:'/images')}",
+        imageLocation:"${assetPath(src:'/')}",
         imageUploadUrl: "${createLink(controller: 'image', action: 'upload')}",
         speciesProfileUrl: "${createLink(controller: 'species', action: 'speciesProfile')}",
         excelOutputTemplateUrl:"${createLink(controller: 'activity', action:'excelOutputTemplate')}",
@@ -29,11 +29,23 @@
         returnTo: "${returnTo}"
         },
         here = document.location.href;
-    </r:script>
-    <r:require modules="knockout,jqueryValidationEngine,datepicker,jQueryFileUploadUI,mapWithFeatures,species,activity,attachDocuments,imageViewer,jQueryFileDownload"/>
+    </script>
+    <asset:stylesheet src="common.css"/>
+    <asset:stylesheet src="activity.css"/>
 </head>
 <body>
 <div class="${containerType} validationEngineContainer" id="validation-container">
+    <g:if test="${activity.lock}">
+        <div class="alert alert-error">
+            This form has been locked for editing by <fc:userDisplayName userId="${activity.lock.userId}" defaultValue="an unknown user"/> since ${au.org.ala.merit.DateUtils.displayFormatWithTime(activity.lock.dateCreated)}
+            <p>
+                To edit anyway, click the button below.  Note that if the user is currently making edits, those edits may be lost.
+            </p>
+            <p>
+                <a class="btn" href="${createLink(controller:'activity', action:'overrideLockAndEdit', id:activity.activityId)}">Edit Anyway</a>
+            </p>
+        </div>
+    </g:if>
     <div id="koActivityMainBlock">
         <g:if test="${!printView}">
             <ul class="breadcrumb">
@@ -88,7 +100,7 @@
     <g:each in="${metaModel?.outputs}" var="outputName">
 
         <g:if test="${outputName != 'Photo Points'}">
-            <g:render template="/output/outputJSModel" plugin="fieldcapture-plugin"
+            <g:render template="/output/outputJSModel" plugin="ecodata-client-plugin"
                       model="${[viewModelInstance:activity.activityId+fc.toSingleWord([name: outputName])+'ViewModel',
                                 edit:false, model:outputModels[outputName],
                                 outputName:outputName]}"></g:render>
@@ -97,7 +109,7 @@
                                 outputModel:outputModels[outputName],
                                 outputName:outputName,
                                 activityModel:metaModel]}"
-                      plugin="fieldcapture-plugin"></g:render>
+                      plugin="ecodata-client-plugin"></g:render>
 
         </g:if>
     </g:each>
@@ -106,13 +118,13 @@
         <div class="output-block" data-bind="with:transients.photoPointModel">
             <h3>Photo Points</h3>
 
-            <g:render template="/site/photoPoints" plugin="fieldcapture-plugin" model="${[readOnly:true]}"></g:render>
+            <g:render template="/site/photoPoints" model="${[readOnly:true]}"></g:render>
 
         </div>
     </g:if>
     <g:if test="${showNav}">
         <g:render template="navigation"></g:render>
-        <r:script>
+        <asset:script>
         var url = '${g.createLink(controller: 'activity', action:'activitiesWithStage', id:activity.projectId)}';
         var activityUrl = '${g.createLink(controller:'activity', action:'index')}';
         var activityId = '${activity.activityId}';
@@ -122,8 +134,8 @@
         options.navContext = '${navContext}';
 
 
-        ko.applyBindings(new ActivityNavigationViewModel(projectId, activityId, siteId, options), document.getElementById('activity-nav'));
-        </r:script>
+        ko.applyBindings(new ActivityNavigationViewModel('stayOnPage', projectId, activityId, siteId, options), document.getElementById('activity-nav'));
+        </asset:script>
     </g:if>
     <g:else>
         <div class="form-actions">
@@ -134,10 +146,12 @@
 </div>
 
 <!-- templates -->
-<g:render template="/shared/documentTemplate" plugin="fieldcapture-plugin"/>
-<g:render template="/shared/imagerViewerModal" model="[readOnly:false]"></g:render>
+<g:render template="/shared/documentTemplate"/>
+<asset:javascript src="common.js"/>
+<asset:javascript src="forms-manifest.js"/>
+<asset:deferredScripts/>
 
-<r:script>
+<script>
 
     $(function(){
 
@@ -168,7 +182,9 @@
                 mapFeatures
             );
         }
+        $('.imageList a[target="_photo"]').attr('rel', 'gallery').fancybox({type:'image', autoSize:true, nextEffect:'fade', preload:0, 'prevEffect':'fade'});
+
     });
-</r:script>
+</script>
 </body>
 </html>

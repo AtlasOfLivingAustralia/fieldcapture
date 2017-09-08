@@ -1,7 +1,5 @@
 package au.org.ala.merit
 
-import au.org.ala.fieldcapture.DateUtils
-import au.org.ala.fieldcapture.PreAuthorise
 import au.org.ala.merit.command.ProjectSummaryReportCommand
 import au.org.ala.merit.command.ReportCommand
 import grails.converters.JSON
@@ -10,32 +8,39 @@ import org.joda.time.DateTime
 class ProjectController {
 
     static defaultAction = "index"
-    static ignore = ['action','controller','id']
+    static ignore = ['action', 'controller', 'id']
+    static String ESP_TEMPLATE = "esp"
+    static String ESP_SUBPROGRAM = "ESP Test"
 
     def projectService, metadataService, organisationService, commonService, activityService, userService, webService, roleService, grailsApplication
     def siteService, documentService, reportService, blogService
 
 
-    def espOverview(String id) {
-        Map project = projectService.get(id, 'all')
-        if (!project || project.error) {
-            flash.message = "Project not found with id: ${id}"
-            if (project?.error) {
-                flash.message += "<br/>${project.error}"
-                log.warn project.error
-            }
-            redirect(controller: 'home', model: [error: flash.message])
-        }
-        else {
+    private def espOverview(Map project, Map user) {
 
-            boolean reportingVisible = !projectService.isComplete(project) && projectService.isMeriPlanSubmittedOrApproved(project)
-            render model:[project:project, metrics: projectService.summary(id), mapFeatures: commonService.getMapFeatures(project), reportingVisible:reportingVisible], view:'espOverview'
+        Map projectArea = null
+        if (project.sites) {
+            projectArea = project.sites?.find({ it.type == 'projectArea' })
+            if (!projectArea) {
+                projectArea = project.sites[0]
+            }
         }
+        render model: [project: project, user:user, mapFeatures: commonService.getMapFeatures(project), projectArea: projectArea], view: 'espOverview'
     }
 
     def index(String id) {
-        def project = projectService.get(id, 'brief')
-        def roles = roleService.getRoles()
+        def project = projectService.get(id, 'all')
+        def user = userService.getUser()
+
+        if (user) {
+            user = user.properties
+            user.isAdmin = projectService.isUserAdminForProject(user.userId, id) ?: false
+            user.isCaseManager = projectService.isUserCaseManagerForProject(user.userId, id) ?: false
+            user.isEditor = projectService.canUserEditProject(user.userId, id) ?: false
+            user.hasViewAccess = projectService.canUserViewProject(user.userId, id) ?: false
+        }
+
+        String template = projectTemplate(project, user, params.template)
 
         if (!project || project.error) {
             flash.message = "Project not found with id: ${id}"
@@ -45,50 +50,47 @@ class ProjectController {
             }
             redirect(controller: 'home', model: [error: flash.message])
         } else {
-            project.sites?.sort {it.name}
-            project.projectSite = project.sites?.find{it.siteId == project.projectSiteId}
+            if (template == ESP_TEMPLATE) {
+                espOverview(project, user)
+            } else {
 
-            def user = userService.getUser()
-            def members = projectService.getMembersForProjectId(id)
-            def admins = members.findAll{ it.role == "admin" }.collect{ it.userName }.join(",") // comma separated list of user email addresses
+                project.sites?.sort { it.name }
+                project.projectSite = project.sites?.find { it.siteId == project.projectSiteId }
+                def roles = roleService.getRoles()
 
-            if (user) {
-                user = user.properties
-                user.isAdmin = projectService.isUserAdminForProject(user.userId, id)?:false
-                user.isCaseManager = projectService.isUserCaseManagerForProject(user.userId, id)?:false
-                user.isEditor = projectService.canUserEditProject(user.userId, id)?:false
-                user.hasViewAccess = projectService.canUserViewProject(user.userId, id)?:false
+                def members = projectService.getMembersForProjectId(id)
+                def admins = members.findAll { it.role == "admin" }.collect { it.userName }.join(",")
+                // comma separated list of user email addresses
+
+                def programs = projectService.programsModel()
+                def content = projectContent(project, user, programs)
+
+                def model = [project               : project,
+                             activities            : project.activities,
+                             mapFeatures           : commonService.getMapFeatures(project),
+                             isProjectStarredByUser: userService.isProjectStarredByUser(user?.userId ?: "0", project.projectId)?.isProjectStarredByUser,
+                             user                  : user,
+                             roles                 : roles,
+                             admins                : admins,
+                             activityTypes         : projectService.activityTypesList(),
+                             metrics               : projectService.summary(id),
+                             outputTargetMetadata  : metadataService.getOutputTargetsByOutputByActivity(),
+                             organisations         : organisationList(project),
+                             programs              : programs,
+                             today                 : DateUtils.format(new DateTime()),
+                             themes                : metadataService.getThemesForProject(project),
+                             projectContent        : content.model
+                ]
+
+                render view: content.view, model: model
             }
-            def programs = projectService.programsModel()
-            def activities = activityService.activitiesForProject(id)
-            project.activities = activities
-            def content = projectContent(project, user, programs)
-
-            def model = [project: project,
-                         activities: activities,
-                         mapFeatures: commonService.getMapFeatures(project),
-                         isProjectStarredByUser: userService.isProjectStarredByUser(user?.userId?:"0", project.projectId)?.isProjectStarredByUser,
-                         user: user,
-                         roles: roles,
-                         admins: admins,
-                         activityTypes: projectService.activityTypesList(),
-                         metrics: projectService.summary(id),
-                         outputTargetMetadata: metadataService.getOutputTargetsByOutputByActivity(),
-                         organisations: organisationList(project),
-                         programs: programs,
-                         today:DateUtils.format(new DateTime()),
-                         themes:metadataService.getThemesForProject(project),
-                         projectContent:content.model
-            ]
-
-            render view:content.view, model:model
         }
     }
 
     protected List organisationList(Map project) {
-        List organisations = [[name:project.organisationName, organisationId:project.organisationId]]
+        List organisations = [[name: project.organisationName, organisationId: project.organisationId]]
         if (project.serviceProviderName) {
-            organisations << [name:project.serviceProviderName, organisationId:project.orgIdSvcProvider]
+            organisations << [name: project.serviceProviderName, organisationId: project.orgIdSvcProvider]
         }
 
         organisations
@@ -101,10 +103,12 @@ class ProjectController {
         def meriPlanEnabled = user?.hasViewAccess || ((project.associatedProgram == 'National Landcare Programme' && project.associatedSubProgram == 'Regional Funding'))
         def meriPlanVisibleToUser = project.planStatus == 'approved' || user?.isAdmin || user?.isCaseManager
 
-        def publicImages = project.documents.findAll{it.public == true && it.thirdPartyConsentDeclarationMade == true && it.type == 'image'}
+        def publicImages = project.documents.findAll {
+            it.public == true && it.thirdPartyConsentDeclarationMade == true && it.type == 'image'
+        }
         def blog = blogService.getProjectBlog(project)
-        def hasNewsAndEvents = blog.find{it.type == 'News and Events'}
-        def hasProjectStories = blog.find{it.type == 'Project Stories'}
+        def hasNewsAndEvents = blog.find { it.type == 'News and Events' }
+        def hasProjectStories = blog.find { it.type == 'Project Stories' }
 
         hasNewsAndEvents = hasNewsAndEvents || project.newsAndEvents
         hasProjectStories = hasProjectStories || project.projectStories
@@ -112,19 +116,38 @@ class ProjectController {
         def showAnnouncementsTab = (user?.isAdmin || user?.isCaseManager) && projectService.isMeriPlanSubmittedOrApproved(project)
         List<Map> scores = metadataService.getOutputTargetScores()
 
-        def imagesModel = publicImages.collect {[name:it.name, projectName:project.name, url:it.url, thumbnailUrl:it.thumbnailUrl]}
+        def imagesModel = publicImages.collect {
+            [name: it.name, projectName: project.name, url: it.url, thumbnailUrl: it.thumbnailUrl]
+        }
         boolean canChangeProjectDates = projectService.canChangeProjectDates(project)
 
-        def model = [overview:[label:'Overview', visible: true, default:true, type:'tab', publicImages:imagesModel, displayTargets:false, displayOutcomes:false, blog:blog, hasNewsAndEvents:hasNewsAndEvents, hasProjectStories:hasProjectStories, canChangeProjectDates:canChangeProjectDates],
-         documents:[label:'Documents', visible: true, type:'tab'],
-         details:[label:'MERI Plan', disabled:!user?.hasViewAccess, disabled:!meriPlanEnabled, visible:meriPlanVisible, meriPlanVisibleToUser:meriPlanVisibleToUser, risksAndThreatsVisible:canViewRisks, type:'tab'],
-         plan:[label:'Activities', visible:true, disabled:!user?.hasViewAccess, type:'tab', reports:project.reports, scores:scores],
-         risksAndThreats:[label:'Risks and Threats', disabled:!user?.hasViewAccess, visible:user?.hasViewAccess && risksAndThreatsVisible],
-         site:[label:'Sites', visible: true, disabled:!user?.hasViewAccess, type:'tab'],
-         dashboard:[label:'Dashboard', visible: true, disabled:!user?.hasViewAccess, type:'tab'],
-         admin:[label:'Admin', visible:user?.isEditor || user?.isAdmin || user?.isCaseManager, type:'tab', canChangeProjectDates: canChangeProjectDates, showAnnouncementsTab:showAnnouncementsTab]]
+        def model = [overview       : [label: 'Overview', visible: true, default: true, type: 'tab', publicImages: imagesModel, displayTargets: false, displayOutcomes: false, blog: blog, hasNewsAndEvents: hasNewsAndEvents, hasProjectStories: hasProjectStories, canChangeProjectDates: canChangeProjectDates],
+                     documents      : [label: 'Documents', visible: true, type: 'tab'],
+                     details        : [label: 'MERI Plan', disabled: !user?.hasViewAccess, disabled: !meriPlanEnabled, visible: meriPlanVisible, meriPlanVisibleToUser: meriPlanVisibleToUser, risksAndThreatsVisible: canViewRisks, type: 'tab'],
+                     plan           : [label: 'Activities', visible: true, disabled: !user?.hasViewAccess, type: 'tab', reports: project.reports, scores: scores],
+                     risksAndThreats: [label: 'Risks and Threats', disabled: !user?.hasViewAccess, visible: user?.hasViewAccess && risksAndThreatsVisible],
+                     site           : [label: 'Sites', visible: true, disabled: !user?.hasViewAccess, type: 'tab'],
+                     dashboard      : [label: 'Dashboard', visible: true, disabled: !user?.hasViewAccess, type: 'tab'],
+                     admin          : [label: 'Admin', visible: user?.isEditor || user?.isAdmin || user?.isCaseManager, type: 'tab', canChangeProjectDates: canChangeProjectDates, showAnnouncementsTab: showAnnouncementsTab]]
 
-        return [view:'index', model:model]
+        return [view: 'index', model: model]
+    }
+
+    private String projectTemplate(Map project, Map user, String template) {
+        if (template) {
+            return template
+        }
+        Map config = projectService.getProgramConfiguration(project)
+
+        return config.projectTemplate == ESP_TEMPLATE && user?.isEditor ? ESP_TEMPLATE : null
+    }
+    /**
+     * Designed for an ajax call - this returns only a template not a full HTML page.
+     * @param id the project ID.
+     */
+    @PreAuthorise
+    def projectDashboard(String id) {
+        render template: 'dashboard', model: [metrics: projectService.summary(id)]
     }
 
     @PreAuthorise
@@ -140,12 +163,12 @@ class ProjectController {
 
         if (project) {
             def siteInfo = siteService.getRaw(project.projectSiteId)
-            [project: project,
-             siteDocuments: siteInfo.documents?:'[]',
-             site: siteInfo.site,
+            [project          : project,
+             siteDocuments    : siteInfo.documents ?: '[]',
+             site             : siteInfo.site,
              userOrganisations: groupedOrganisations.user ?: [],
-             organisations: groupedOrganisations.other ?: [],
-             programs: metadataService.programsModel()]
+             organisations    : groupedOrganisations.other ?: [],
+             programs         : metadataService.programsModel()]
         } else {
             forward(action: 'list', model: [error: 'no such id'])
         }
@@ -176,7 +199,7 @@ class ProjectController {
         def userId = userService.getUser()?.userId
         if (id) {
             if (!projectService.canUserEditProject(userId, id)) {
-                render status:401, text: "User ${userId} does not have edit permissions for project ${id}"
+                render status: 401, text: "User ${userId} does not have edit permissions for project ${id}"
                 log.debug "user not caseManager"
                 return
             }
@@ -184,7 +207,7 @@ class ProjectController {
             if (values.containsKey("planStatus") && values.planStatus =~ /approved/) {
                 // check to see if user has caseManager permissions
                 if (!projectService.isUserCaseManagerForProject(userId, id)) {
-                    render status:401, text: "User does not have caseManager permissions for project"
+                    render status: 401, text: "User does not have caseManager permissions for project"
                     log.warn "User ${userId} who is not a caseManager attempting to change planStatus for project ${id}"
                     return
                 }
@@ -199,7 +222,7 @@ class ProjectController {
         def projectSite = values.remove("projectSite")
         def documents = values.remove('documents')
         def links = values.remove('links')
-        def result = id? projectService.update(id, values): projectService.create(values)
+        def result = id ? projectService.update(id, values) : projectService.create(values)
         log.debug "result is " + result
         if (documents && !result.error) {
             if (!id) id = result.resp.projectId
@@ -225,7 +248,7 @@ class ProjectController {
                 projectSite.projects += id
             def siteResult = siteService.updateRaw(values.projectSiteId, projectSite)
             if (siteResult.status == 'error')
-                result = [error:'SiteService failed']
+                result = [error: 'SiteService failed']
             else if (siteResult.status == 'created') {
                 def updateResult = projectService.update(id, [projectSiteId: siteResult.id])
                 if (updateResult.error) result = updateResult
@@ -238,8 +261,6 @@ class ProjectController {
             render result.resp as JSON
         }
     }
-
-
 
 
     @PreAuthorise
@@ -258,7 +279,7 @@ class ProjectController {
     def species(String id) {
         def project = projectService.get(id, 'brief')
         def activityTypes = metadataService.activityTypesList();
-        render view:'/species/select', model: [project:project, activityTypes:activityTypes]
+        render view: '/species/select', model: [project: project, activityTypes: activityTypes]
     }
 
     /**
@@ -278,10 +299,10 @@ class ProjectController {
             } else if (act == "remove") {
                 render userService.removeStarProjectForUser(userId, projectId) as JSON
             } else {
-                render status:400, text: 'Required endpoint (path) must be one of: add | remove'
+                render status: 400, text: 'Required endpoint (path) must be one of: add | remove'
             }
         } else {
-            render status:400, text: 'Required params not provided: userId, projectId'
+            render status: 400, text: 'Required params not provided: userId, projectId'
         }
     }
 
@@ -293,44 +314,43 @@ class ProjectController {
             if (projectService.isUserAdminForProject(adminUserId, projectId) || projectService.isUserCaseManagerForProject(adminUserId, projectId)) {
                 render projectService.getMembersForProjectId(projectId) as JSON
             } else {
-                render status:403, text: 'Permission denied'
+                render status: 403, text: 'Permission denied'
             }
         } else if (adminUserId) {
-            render status:400, text: 'Required params not provided: id'
+            render status: 400, text: 'Required params not provided: id'
         } else if (projectId) {
-            render status:403, text: 'User not logged-in or does not have permission'
+            render status: 403, text: 'User not logged-in or does not have permission'
         } else {
-            render status:500, text: 'Unexpected error'
+            render status: 500, text: 'Unexpected error'
         }
     }
 
-    @PreAuthorise(accessLevel = 'siteAdmin', redirectController ='home', redirectAction = 'index')
+    @PreAuthorise(accessLevel = 'siteAdmin', redirectController = 'home', redirectAction = 'index')
     def downloadProjectData() {
         String projectId = params.id
 
         if (!projectId) {
-            render status:400, text: 'Required params not provided: id'
-        }
-        else{
+            render status: 400, text: 'Required params not provided: id'
+        } else {
             def path = "project/downloadProjectData/${projectId}"
 
             if (params.view == 'xlsx' || params.view == 'json') {
                 path += ".${params.view}"
-            }else{
+            } else {
                 path += ".json"
             }
             def url = grailsApplication.config.ecodata.baseUrl + path
-            webService.proxyGetRequest(response, url, true, true,120000)
+            webService.proxyGetRequest(response, url, true, true, 120000)
         }
     }
 
-    @PreAuthorise(accessLevel = 'admin', redirectController ='home', redirectAction = 'index')
+    @PreAuthorise(accessLevel = 'admin', redirectController = 'home', redirectAction = 'index')
     def downloadShapefile(String id) {
 
         def url = grailsApplication.config.ecodata.baseUrl + "project/${id}.shp"
-        def resp = webService.proxyGetRequest(response, url, true, true,960000)
+        def resp = webService.proxyGetRequest(response, url, true, true, 960000)
         if (resp.status != 200) {
-            render view:'/error', model:[error:resp.error]
+            render view: '/error', model: [error: resp.error]
         }
     }
 
@@ -339,9 +359,9 @@ class ProjectController {
 
         Map project = projectService.get(id)
         List activities = activityService.activitiesForProject(id)
-        siteService.addPhotoPointPhotosForSites(project.sites?:[], activities, [project])
+        siteService.addPhotoPointPhotosForSites(project.sites ?: [], activities, [project])
 
-        render template: 'sitePhotoPoints', model:[project:project]
+        render template: 'sitePhotoPoints', model: [project: project]
 
     }
 
@@ -383,9 +403,8 @@ class ProjectController {
     def ajaxDeleteReportActivities(String id, ReportCommand reportDetails) {
 
         if (reportDetails.hasErrors()) {
-            respond reportDetails.errors, formats:['json']
-        }
-        else {
+            respond reportDetails.errors, formats: ['json']
+        } else {
             Map result = projectService.deleteReportActivities(reportDetails.reportId, reportDetails.activityIds)
             render result as JSON
         }
@@ -427,7 +446,7 @@ class ProjectController {
     def updateProjectStartDate(String id) {
         def payload = request.getJSON()
         if (!payload.plannedStartDate) {
-            render status:400, text:"Missing parameter plannedStartDate"
+            render status: 400, text: "Missing parameter plannedStartDate"
             return
         }
         def result = projectService.changeProjectStartDate(id, payload.plannedStartDate)
@@ -438,7 +457,7 @@ class ProjectController {
     def updateProjectDates(String id) {
         def payload = request.getJSON()
         if (!payload.plannedStartDate || !payload.plannedEndDate) {
-            render status:400, text:"Missing parameters plannedStartDate, plannedEndDate"
+            render status: 400, text: "Missing parameters plannedStartDate, plannedEndDate"
             return
         }
         def result = projectService.changeProjectDates(id, payload.plannedStartDate, payload.plannedEndDate)
@@ -449,7 +468,7 @@ class ProjectController {
     def regenerateStageReports(String id) {
 
         projectService.generateProjectStageReports(id)
-        render status:200, text:'ok'
+        render status: 200, text: 'ok'
     }
 
     @PreAuthorise(accessLevel = 'admin')
@@ -460,83 +479,95 @@ class ProjectController {
     @PreAuthorise(accessLevel = 'admin')
     def projectReportPDF(String id) {
 
-        String reportUrl = g.createLink(controller:'report', action:'projectReportCallback', id:id, absolute: true, params:[fromStage:params.fromStage, toStage:params.toStage, sections:params.sections])
-        String url = grailsApplication.config.pdfgen.baseURL+'api/pdf'+commonService.buildUrlParamsFromMap(docUrl:reportUrl, cacheable:false)
+        String reportUrl = g.createLink(controller: 'report', action: 'projectReportCallback', id: id, absolute: true, params: [fromStage: params.fromStage, toStage: params.toStage, sections: params.sections])
+        String url = grailsApplication.config.pdfgen.baseURL + 'api/pdf' + commonService.buildUrlParamsFromMap(docUrl: reportUrl, cacheable: false)
         Map result
         try {
-            result = webService.proxyGetRequest(response, url, false, false, 10*60*1000)
+            result = webService.proxyGetRequest(response, url, false, false, 10 * 60 * 1000)
         }
         catch (Exception e) {
-            result = [error:e.message]
-            log.error("Error generating PDF for project ${id}: ",e)
+            result = [error: e.message]
+            log.error("Error generating PDF for project ${id}: ", e)
         }
         if (result.error) {
-            render view:'/error', model:[error:"An error occurred generating the project report."]
+            render view: '/error', model: [error: "An error occurred generating the project report."]
         }
 
     }
 
     @PreAuthorise(accessLevel = 'admin')
     def meriPlanPDF(String id) {
-        String reportUrl = g.createLink(controller:'report', action:'meriPlanReportCallback', id:id, absolute: true)
-        String url = grailsApplication.config.pdfgen.baseURL+'api/pdf'+commonService.buildUrlParamsFromMap(docUrl:reportUrl, cacheable:false)
+        String reportUrl = g.createLink(controller: 'report', action: 'meriPlanReportCallback', id: id, absolute: true)
+        String url = grailsApplication.config.pdfgen.baseURL + 'api/pdf' + commonService.buildUrlParamsFromMap(docUrl: reportUrl, cacheable: false)
         Map result
         try {
-            result = webService.proxyGetRequest(response, url, false, false, 10*60*1000)
+            result = webService.proxyGetRequest(response, url, false, false, 10 * 60 * 1000)
         }
         catch (Exception e) {
             log.error("Error generating the PDF of the MERI plan: ", e)
-            result = [error:e.message]
+            result = [error: e.message]
         }
         if (result.error) {
-            render view:'/error', model:[error:"An error occurred generating the MERI plan report."]
+            render view: '/error', model: [error: "An error occurred generating the MERI plan report."]
         }
     }
 
     @PreAuthorise(accessLevel = 'admin')
-	def previewStageReport(){
-        String projectId =  params.id
+    def previewStageReport() {
+        String projectId = params.id
         String reportId = params.reportId
         String status = params.status
-		
-		if(reportId && projectId && status) {
-			def project = projectService.get(projectId, 'all')
-			def activities = activityService.activitiesForProject(projectId);
-			if (project && !project.error) {
-                def report = project.reports?.find{it.reportId == reportId}
+
+        if (reportId && projectId && status) {
+            def project = projectService.get(projectId, 'all')
+            def activities = activityService.activitiesForProject(projectId);
+            if (project && !project.error) {
+                def report = project.reports?.find { it.reportId == reportId }
                 if (report) {
-                    def param  = [project: project, activities:activities, report:report, status:status]
+                    def param = [project: project, activities: activities, report: report, status: status]
                     def htmlContent = projectService.createHTMLStageReport(param)
-                    render text: htmlContent, contentType:"text", encoding:"UTF-8";
+                    render text: htmlContent, contentType: "text", encoding: "UTF-8";
+                } else {
+                    render status: 400, text: 'Invalid stage'
                 }
-				else {
-					render status:400, text: 'Invalid stage'
-				}
-			}
-			else{
-				render status:400, text: 'Invalid project'
-			}
-		}
-		else{
-			render status:400, text: 'Required params not provided: id, reportId, status'
-		}
-	}
+            } else {
+                render status: 400, text: 'Invalid project'
+            }
+        } else {
+            render status: 400, text: 'Required params not provided: id, reportId, status'
+        }
+    }
 
     @PreAuthorise(accessLevel = 'admin')
     def reportingHistory(String id) {
 
         def reportingHistory = reportService.getReportingHistoryForProject(id)
 
-        render view:'/report/_reportingHistory', model:[reportingHistory:reportingHistory]
+        render view: '/report/_reportingHistory', model: [reportingHistory: reportingHistory]
     }
 
     def mine() {
-        forward controller: 'user', action:'index'
+        forward controller: 'user', action: 'index'
     }
 
-    def searchSpecies(String id, String q, Integer limit, String output, String dataFieldName, String surveyName){
+    def searchSpecies(String id, String q, Integer limit, String output, String dataFieldName, String surveyName) {
 
         def result = projectService.searchSpecies(id, q, limit, output, dataFieldName, surveyName)
         render result as JSON
+    }
+
+    @PreAuthorise(accessLevel = 'editor')
+    def searchActivities(String id) {
+
+        Map criteria = request.JSON
+        if (!criteria.projectId) {
+            criteria.projectId = id
+        }
+        Map result = activityService.search(criteria)
+        List activities = []
+        if (result && result.resp) {
+            activities = result.resp.activities ?: []
+        }
+        render activities as JSON
     }
 }

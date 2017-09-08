@@ -1,11 +1,12 @@
-<%@ page import="au.org.ala.fieldcapture.ActivityService; au.org.ala.fieldcapture.DateUtils" contentType="text/html;charset=UTF-8" %>
+<%@ page import="au.org.ala.merit.ActivityService; au.org.ala.merit.DateUtils" contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="layout" content="${(grailsApplication.config.layout.skin?:'main')+'Print'}"/>
+    <meta name="layout" content="nrmPrint"/>
     <title>Project Summary | Project | MERIT</title>
     <script type="text/javascript" src="//www.google.com/jsapi"></script>
-    <r:script disposition="head">
+    <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
+    <script>
     var fcConfig = {
         serverUrl: "${grailsApplication.config.grails.serverURL}",
         siteViewUrl: "${createLink(controller: 'site', action: 'index')}",
@@ -14,7 +15,7 @@
         spatialWmsCacheUrl: "${grailsApplication.config.spatial.wms.cache.url}",
         spatialWmsUrl: "${grailsApplication.config.spatial.wms.url}",
         organisationLinkBaseUrl: "${createLink(controller:'organisation', action:'index')}",
-        imageLocation:"${resource(dir:'/images')}",
+        imageLocation:"${assetPath(src:'/')}",
         excelOutputTemplateUrl:"${createLink(controller: 'activity', action:'excelOutputTemplate')}",
         speciesProfileUrl: "${createLink(controller: 'species', action: 'speciesProfile')}",
         bieUrl: "${grailsApplication.config.bie.baseURL}",
@@ -22,30 +23,10 @@
     },
         here = window.location.href;
 
-    </r:script>
-    <style type="text/css">
-        .title { font-weight: bold;}
-        .activity-title {
-            border-top: 4px solid black;
-            background-color: #d9edf7;
-            border-bottom: 1px solid;
-            padding-bottom: 10px;
-            margin-bottom: 10px;
-        }
-        .output-block > h3 {
-            font-size:large;
-        }
-    .output-section.stage-title {
-        padding:10px;
-        border-top: 4px solid black;
-    }
-        tr, .chart, .chart-plus-title {
-            page-break-inside: avoid;
-        }
+    </script>
 
-    </style>
-
-    <r:require modules="knockout, activity, jqueryValidationEngine, merit_projects, pretty_text_diff,jQueryFileDownload,species"/>
+    <asset:stylesheet src="common.css"/>
+    <asset:stylesheet src="project-report-manifest.css"/>
 </head>
 <body>
 <div class="container">
@@ -90,11 +71,11 @@
         </div>
         <div class="row-fluid">
             <div class="span3 title">Project start</div>
-            <div class="span9"><g:formatDate format="dd MMM yyyy" date="${au.org.ala.fieldcapture.DateUtils.parse(project.plannedStartDate).toDate()}"/></div>
+            <div class="span9"><g:formatDate format="dd MMM yyyy" date="${au.org.ala.merit.DateUtils.parse(project.plannedStartDate).toDate()}"/></div>
         </div>
         <div class="row-fluid">
             <div class="span3 title">Project finish</div>
-            <div class="span9"><g:formatDate format="dd MMM yyyy" date="${au.org.ala.fieldcapture.DateUtils.parse(project.plannedEndDate).toDate()}"/></div>
+            <div class="span9"><g:formatDate format="dd MMM yyyy" date="${au.org.ala.merit.DateUtils.parse(project.plannedEndDate).toDate()}"/></div>
         </div>
         <div class="row-fluid">
             <div class="span3 title">Grant ID</div>
@@ -251,7 +232,7 @@
     </g:if>
 
     <g:each in="${outputModels}" var="outputModel">
-        <g:render template="/output/outputJSModel" plugin="fieldcapture-plugin"
+        <g:render template="/output/outputJSModel" plugin="ecodata-client-plugin"
                   model="${[model:outputModel.value, outputName:outputModel.key, edit:false, speciesLists:[], printable:printable]}"></g:render>
     </g:each>
 
@@ -267,7 +248,7 @@
                             outputName:outputName,
                             activityModel:stageReportModel,
                             printable:printable]}"
-                  plugin="fieldcapture-plugin"></g:render>
+                  plugin="ecodata-client-plugin"></g:render>
         </g:each>
 
     </g:if>
@@ -316,11 +297,11 @@
         <g:if test="${(risksComparison.baseline?.rows || risksComparison.comparison?.rows)}">
 
             <g:if test="${risksComparison.comparison && risksComparison.comparison != risksComparison.baseline}">
-                Comparing risks and threats as of ${au.org.ala.fieldcapture.DateUtils.displayFormatWithTime(risksComparison.comparisonDate)}
-                with risks and threats as of ${au.org.ala.fieldcapture.DateUtils.displayFormatWithTime(risksComparison.baselineDate)}
+                Comparing risks and threats as of ${au.org.ala.merit.DateUtils.displayFormatWithTime(risksComparison.comparisonDate)}
+                with risks and threats as of ${au.org.ala.merit.DateUtils.displayFormatWithTime(risksComparison.baselineDate)}
             </g:if>
             <g:elseif test="${risksComparison.baseline && risksComparison.comparison != risksComparison.baseline}">
-                Risks and threats first entered during the period of this report, last edited at: ${au.org.ala.fieldcapture.DateUtils.displayFormatWithTime(risksComparison.baselineDate)}
+                Risks and threats first entered during the period of this report, last edited at: ${au.org.ala.merit.DateUtils.displayFormatWithTime(risksComparison.baselineDate)}
             </g:elseif>
 
             <g:if test="${risksComparison.comparison == risksComparison.baseline}">
@@ -413,7 +394,7 @@
                                                 outputModel:outputModels[outputName],
                                                 outputName:outputName,
                                                 activityModel:activityModel]}"
-                                      plugin="fieldcapture-plugin"></g:render>
+                                      plugin="ecodata-client-plugin"></g:render>
                         </g:if>
 
                     </g:each>
@@ -421,15 +402,15 @@
                         <div id="photopoints-${activity.activityId}" class="output-block">
                             <h3>Photo Points</h3>
 
-                            <g:render template="/site/photoPoints" plugin="fieldcapture-plugin" model="${[readOnly:true]}"></g:render>
+                            <g:render template="/site/photoPoints" model="${[readOnly:true]}"></g:render>
 
                         </div>
-                        <r:script>
+                        <asset:script>
                             $(function() {
                                 var activity = <fc:modelAsJavascript model="${activity}"></fc:modelAsJavascript>;
                                 ko.applyBindings(new PhotoPointViewModel(activity.site, activity, {}), document.getElementById('photopoints-${activity.activityId}'));
                             });
-                        </r:script>
+                        </asset:script>
                     </g:if>
                 </g:if>
                 <g:if test="${activity.progress == 'deferred' || activity.progress == 'cancelled'}">
@@ -462,10 +443,10 @@
             </tbody>
         </table>
     </g:if>
-    <g:render template="/shared/documentTemplate" plugin="fieldcapture-plugin"/>
+    <g:render template="/shared/documentTemplate"/>
 
 </div>
-<r:script>
+<asset:script>
     $(function() {
 
         var reports = <fc:modelAsJavascript model="${project.reports}"/>;
@@ -485,6 +466,10 @@
         $('.helphover').popover({container:'body', animation: true, trigger:'hover'});
         });
 
-</r:script>
+</asset:script>
+
+<asset:javascript src="common.js"/>
+<asset:javascript src="project-report-manifest.js"/>
+<asset:deferredScripts/>
 </body>
 </html>

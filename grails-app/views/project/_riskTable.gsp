@@ -1,5 +1,5 @@
 <label><h4>Project risks & threats <span style="color: red;"><b>*</b></span></h4></label>
-<g:render template="/shared/restoredData" plugin="fieldcapture-plugin" model="[id:'restoredRiskData', saveButton:'Save risks & threats', cancelButton:'Cancel edits to risks & threats']"/>
+<g:render template="/shared/restoredData" model="[id:'restoredRiskData', saveButton:'Save risks & threats', cancelButton:'Cancel edits to risks & threats']"/>
 
 <div class="row-fluid space-after">
 	<div class="required">

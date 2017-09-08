@@ -99,7 +99,7 @@
         <div class="span9">
             <label id="thirdPartyDeclarationText" class="checkbox" for="declaration">
                 <input id="declaration" type="checkbox" name="thirdPartyConsentDeclarationMade" data-validation-engine="validate[required]" data-bind="checked:thirdPartyConsentDeclarationMade">
-                <fc:getSettingContent settingType="${au.org.ala.fieldcapture.SettingPageType.THIRD_PARTY_PHOTO_CONSENT_DECLARATION}"/>
+                <fc:getSettingContent settingType="${au.org.ala.merit.SettingPageType.THIRD_PARTY_PHOTO_CONSENT_DECLARATION}"/>
             </label>
         </div>
     </div>
@@ -122,5 +122,5 @@
     </div>
     <!-- /ko -->
 </form>
-<g:render template="/shared/attachDocument" plugin="fieldcapture-plugin"/>
-<g:render template="/shared/markdownEditorModal" plugin="fieldcapture-plugin"/>
+<g:render template="/shared/attachDocument"/>
+<g:render template="/shared/markdownEditorModal"/>

@@ -185,10 +185,10 @@
 </div>
 <!-- /ko -->
 
-<r:script type="text/javascript">
+<asset:script type="text/javascript">
 
 $(function() {
     var reports = <fc:modelAsJavascript model="${organisation.reports}"/>;
     ko.applyBindings(new ReportsViewModel(reports, fcConfig.projects, ['Performance Management Framework - Self Assessment']), document.getElementById('reporting-content'));
 });
-</r:script>
+</asset:script>

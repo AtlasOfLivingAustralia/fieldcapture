@@ -1,13 +1,13 @@
 package au.org.ala.merit
 
-import au.org.ala.fieldcapture.DateUtils
+import au.org.ala.merit.DateUtils
 import org.joda.time.DateTime
 import org.joda.time.Period
 import org.joda.time.format.DateTimeFormat
 
 class ActivityService {
 
-    def webService, grailsApplication, metadataService, reportService, projectService
+    def webService, grailsApplication, metadataService, reportService, projectService, emailService
 
     public static final String PROGRESS_PLANNED = 'planned'
     public static final String PROGRESS_FINISHED = 'finished'
@@ -69,7 +69,7 @@ class ActivityService {
     }
 
     def update(id, body) {
-        webService.doPost(grailsApplication.config.ecodata.baseUrl + 'activity/' + id, body)
+        webService.doPost(grailsApplication.config.ecodata.baseUrl + 'activity/' + id+'?lock=true', body)
     }
 
     def delete(id) {
@@ -145,6 +145,26 @@ class ActivityService {
 
         }
         webService.doPost(grailsApplication.config.ecodata.baseUrl+'activity/search/', modifiedCriteria)
+    }
+
+    Map lock(Map activity) {
+        String path = "lock/lock/"+activity.activityId
+        webService.doPost(grailsApplication.config.ecodata.baseUrl+path,[:])
+    }
+
+    Map unlock(String activityId, Boolean force = false) {
+        String path = "lock/unlock/"+activityId
+        webService.doPost(grailsApplication.config.ecodata.baseUrl+path,[force:force])
+    }
+
+    void stealLock(String activityId, String activityUrl) {
+        Map activity = get(activityId)
+        Map result = [error:'No lock']
+        if (activity.lock) {
+            result = unlock(activityId, true)
+            emailService.sendLockStolenEmail(activity.lock, activityUrl)
+        }
+        result
     }
 
     def isReport(activity) {

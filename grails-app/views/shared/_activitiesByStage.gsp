@@ -241,7 +241,7 @@
             </li>
         </ul>
     </div>
-    <span class="save-indicator" data-bind="visible:isSaving"><r:img dir="images" file="ajax-saver.gif" alt="saving icon"/> saving</span>
+    <span class="save-indicator" data-bind="visible:isSaving"><asset:image src="ajax-saver.gif" alt="saving icon"/> saving</span>
     <!-- ko with: deferReason -->
     <span data-bind="visible: $parent.progress()=='deferred' || $parent.progress()=='cancelled'">
         <i class="icon-list-alt"

@@ -1,11 +1,8 @@
 package au.org.ala.merit
 
-import au.org.ala.fieldcapture.DocumentService
-import au.org.ala.merit.MetadataService
-import au.org.ala.fieldcapture.UserService
 import grails.converters.JSON
 import grails.test.mixin.TestFor
-import org.apache.commons.httpclient.HttpStatus
+import org.apache.http.HttpStatus
 import spock.lang.Specification
 
 /**
