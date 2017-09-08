@@ -137,8 +137,9 @@ class ProjectController {
         if (template) {
             return template
         }
+        Map config = projectService.getProgramConfiguration(project)
 
-        return project.associatedSubProgram == ESP_SUBPROGRAM && user?.isEditor ? ESP_TEMPLATE : null
+        return config.projectTemplate == ESP_TEMPLATE && user?.isEditor ? ESP_TEMPLATE : null
     }
     /**
      * Designed for an ajax call - this returns only a template not a full HTML page.
@@ -553,5 +554,20 @@ class ProjectController {
 
         def result = projectService.searchSpecies(id, q, limit, output, dataFieldName, surveyName)
         render result as JSON
+    }
+
+    @PreAuthorise(accessLevel = 'editor')
+    def searchActivities(String id) {
+
+        Map criteria = request.JSON
+        if (!criteria.projectId) {
+            criteria.projectId = id
+        }
+        Map result = activityService.search(criteria)
+        List activities = []
+        if (result && result.resp) {
+            activities = result.resp.activities ?: []
+        }
+        render activities as JSON
     }
 }
