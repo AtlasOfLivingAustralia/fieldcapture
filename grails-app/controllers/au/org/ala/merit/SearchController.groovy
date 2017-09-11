@@ -22,7 +22,7 @@ class SearchController {
      */
     def species(String q, Integer limit) {
 
-        render speciesService.searchForSpecies(q, limit, params.listId) as JSON
+        render speciesService.searchForSpecies(q, null, limit, params.listId) as JSON
 
     }
 
