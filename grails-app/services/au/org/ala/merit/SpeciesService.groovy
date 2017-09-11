@@ -47,7 +47,7 @@ class SpeciesService {
      * @return the matching taxa, or null if not match was found.
      */
     def searchByScientificName(scientificName, listId = null) {
-        def results = searchForSpecies(scientificName, 10, listId)
+        def results = searchForSpecies(scientificName, null, 10, listId)
         return results.autoCompleteList?.find {it.name.equalsIgnoreCase(scientificName)}
     }
 
@@ -201,11 +201,11 @@ class SpeciesService {
         def result
         switch (speciesConfig?.type) {
             case 'SINGLE_SPECIES':
-                result = searchForSpecies(speciesConfig?.singleSpecies?.name, 1)
+                result = searchForSpecies(speciesConfig?.singleSpecies?.name, null, 1)
                 break
 
             case 'ALL_SPECIES':
-                result = searchForSpecies(q, speciesConfig?.fq, limit)
+                result = searchForSpecies(q, speciesConfig?.fq, null, limit)
                 break
 
             case 'GROUP_OF_SPECIES':
