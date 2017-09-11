@@ -1,8 +1,10 @@
 package au.org.ala.merit
 
+import asset.pipeline.grails.utils.net.HttpServletRequests
 import org.springframework.web.context.request.AbstractRequestAttributes
 import org.springframework.web.context.request.RequestContextHolder
 
+import javax.servlet.http.HttpServletRequest
 import java.security.Principal
 
 /**
@@ -57,6 +59,10 @@ class ScheduledJobContext {
         private Principal principal
         public Principal getUserPrincipal() {
             return principal
+        }
+
+        public HttpServletRequest getRequest() {
+            return null
         }
 
         public void setUserAttributes(Map attributes) {
