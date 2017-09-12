@@ -39,7 +39,7 @@
         <div class="alert alert-error">
             This form has been locked for editing by <fc:userDisplayName userId="${activity.lock.userId}" defaultValue="an unknown user"/> since ${au.org.ala.merit.DateUtils.displayFormatWithTime(activity.lock.dateCreated)}
             <p>
-                To edit anyway, click the button below.  Note that if the user is currently making edits, those edits may be lost.
+                To edit anyway, click the button below.  Note that if the user is currently making edits, those edits will be lost.
             </p>
             <p>
                 <a class="btn" href="${createLink(controller:'activity', action:'overrideLockAndEdit', id:activity.activityId)}">Edit Anyway</a>
