@@ -103,11 +103,11 @@
 
 
     <ul class="nav nav-tabs">
-        <li class="active"><a href="#mysites">My Sites</a></li>
+        <li class="active"><a href="#mysites">My ESP Sites</a></li>
         <li><a href="#species-records-tab">My Species Records</a></li>
         <li><a href="#dashboard-tab">Dashboard</a></li>
         <li><a href="#photographs-tab">Photographs</a></li>
-        <li><a href="#reporting-tab">Submission</a></li>
+        <li><a href="#reporting-tab">Annual Report Submission</a></li>
     </ul>
 
     <div id="saved-nav-message-holder"></div>
