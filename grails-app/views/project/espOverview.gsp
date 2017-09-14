@@ -107,6 +107,7 @@
         <li><a href="#species-records-tab">My Species Records</a></li>
         <li><a href="#dashboard-tab">Dashboard</a></li>
         <li><a href="#photographs-tab">Photographs</a></li>
+        <li><a href="#documents-tab">Documents</a></li>
         <li><a href="#reporting-tab">Annual Report Submission</a></li>
     </ul>
 
@@ -137,6 +138,12 @@
         <div class="tab-pane" id="photographs-tab">
             <div id="site-photo-points"></div>
 
+        </div>
+        <div class="tab-pane" id="documents-tab">
+            <!-- Project Documents -->
+            <!-- ko stopBinding:true -->
+            <g:render template="docs"/>
+            <!-- /ko -->
         </div>
         <div class="tab-pane" id="reporting-tab">
             <div data-bind="visible:!canViewSubmissionReport()">
@@ -241,20 +248,6 @@
 
         var photopointSelector = '#site-photo-points';
         var tabs = {
-            'reporting-tab': {
-                selector:'#admin-form',
-                url:fcConfig.tabbedActivityUrl+'/'+adminActivity.activityId,
-                initialiser: function() {
-                    initialiseESPActivity(adminActivity);
-                }
-            },
-            'species-records-tab': {
-                selector:'#species-form',
-                url:fcConfig.tabbedActivityUrl+'/'+speciesActivity.activityId+'?includeFormActions=true',
-                initialiser: function() {
-                    initialiseESPActivity(speciesActivity);
-                }
-            },
             'photographs-tab': {
                 selector:photopointSelector,
                 url:fcConfig.sitesPhotoPointsUrl,
@@ -265,8 +258,39 @@
             'dashboard-tab': {
                 selector:'#dashboard',
                 url:fcConfig.dashboardUrl
+            },
+            'documents-tab': {
+                initialiser: function() {
+                    var selector = '#documents';
+                    var documentsModel = new Documents();
+                    var docs = _.map(project.documents || [], function(document) {
+                        return new DocumentViewModel(document);
+                    });
+                    documentsModel.documents(docs);
+                    ko.applyBindings(documentsModel, $(selector)[0]);
+                    initialiseDocumentTable(selector);
+                }
             }
         };
+        if (adminActivity) {
+            tabs['reporting-tab'] = {
+                selector: '#admin-form',
+                url: fcConfig.tabbedActivityUrl + '/' + adminActivity.activityId,
+                initialiser: function () {
+                    initialiseESPActivity(adminActivity);
+                }
+            }
+        }
+        if (speciesActivity) {
+            tabs['species-records-tab'] = {
+                selector:'#species-form',
+                url:fcConfig.tabbedActivityUrl+'/'+speciesActivity.activityId+'?includeFormActions=true',
+                initialiser: function() {
+                    initialiseESPActivity(speciesActivity);
+                }
+            }
+        }
+
         $('.nav a').click(function() {
             $(this).tab('show');
 
@@ -276,14 +300,20 @@
             if (tab && !tab.initialised) {
                 tab.initialised = true;
                 // Get the remote content
-                $(tab.selector).html('<asset:image id="img-spinner" width="50" height="50" src="loading.gif" alt="Loading"/>');
+                if (tab.url) {
+                    $(tab.selector).html('<asset:image id="img-spinner" width="50" height="50" src="loading.gif" alt="Loading"/>');
 
-                $.get(tab.url, function(data) {
-                    $(tab.selector).html(data);
-                    if (tab.initialiser) {
-                        tab.initialiser();
-                    }
-                });
+                    $.get(tab.url, function(data) {
+                        $(tab.selector).html(data);
+                        if (tab.initialiser) {
+                            tab.initialiser();
+                        }
+                    });
+                }
+                else {
+                    tab.initialiser();
+                }
+
             }
         });
     });
