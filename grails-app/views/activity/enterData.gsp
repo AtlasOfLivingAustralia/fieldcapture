@@ -77,6 +77,11 @@
                     </div>
                 </div>
             </div>
+            <g:if test="${metaModel.supportsSites && activity.siteId}">
+            <div class="span3" id="map-holder">
+                <div id="smallMap" style="width:100%"></div>
+            </div>
+            </g:if>
         </div>
 
     </g:if>
