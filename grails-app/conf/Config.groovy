@@ -131,10 +131,10 @@ if (!sld.polgon.highlight.url) {
     sld.polgon.highlight.url = "http://fish.ala.org.au/data/fc-highlight.sld"
 }
 if (!lists.baseURL) {
-    lists.baseURL = "http://lists.ala.org.au"
+    lists.baseURL = "https://lists.ala.org.au"
 }
 if (!bie.baseURL) {
-    bie.baseURL = "http://bie.ala.org.au"
+    bie.baseURL = "https://bie.ala.org.au"
 }
 if (!regions.baseURL) {
     regions.baseURL = 'http://regions.ala.org.au/regions/'

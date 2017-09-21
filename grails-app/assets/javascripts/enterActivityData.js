@@ -355,7 +355,7 @@ function ActivityHeaderViewModel (activity, site, project, metaModel, themes, co
     self.progress(self.transients.markedAsFinished() ? 'finished' : 'started');
 
     self.initialiseMap = function(mapFeatures) {
-        if (metaModel.type !== 'Report' && metaModel.supportsSites) {
+        if (metaModel.supportsSites) {
             if (!mapFeatures) {
                 mapFeatures = {zoomToBounds: true, zoomLimit: 15, highlightOnHover: true, features: []};
             }
