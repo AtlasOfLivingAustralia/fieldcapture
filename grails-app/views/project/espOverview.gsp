@@ -146,13 +146,36 @@
             <!-- /ko -->
         </div>
         <div class="tab-pane" id="reporting-tab">
+            <div>
+                <h4>Report status</h4>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Site </th><th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <!-- ko foreach:siteReports() -->
+                        <tr>
+                            <td><a data-bind="attr:{href:activityId}"><span data-bind="text:description"></span></a></td>
+                            <td><button type="button" class="btn btn-small"   data-bind="activityProgress:progress">
+                                <span data-bind="text: progress"></span>
+                            </button>
+                            </td>
+                        </tr>
+                    <!-- /ko -->
+                    </tbody>
+                </table>
+            </div>
             <div data-bind="visible:!canViewSubmissionReport()">
                 <div class="form-actions">
                     Before you can submit your form you must:
+                    <br/>
                     <ul>
-                        <li>Complete your activity reporting for each of your sites.</li>
+                        <li>Complete your activity reporting for each of your sites (all reports above should be marked as finished)</li>
                         <li>Complete or mark as not applicable your optional "My Species Records" tab.</li>
                     </ul>
+                    <br/>
                     Please note that the report will not be able to be submitted until the end of the year.
                 </div>
             </div>
