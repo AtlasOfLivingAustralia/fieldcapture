@@ -13,6 +13,7 @@ class ActivityController {
     def activityService, siteService, projectService, metadataService, userService, excelImportService, webService, grailsApplication, speciesService, documentService, reportService
 
     static ignore = ['action','controller','id']
+    static allowedMethods = [ajaxUnlock:'POST']
 
     private Map activityModel(activity, projectId) {
         // pass the activity
@@ -448,7 +449,10 @@ class ActivityController {
     }
 
     def ajaxUnlock(String id) {
-        Map resp  = activityService.unlock(id)
+        // We force the unlock if the user is not logged in, but don't send an email.  This is to catch the
+        // scenario where the user exits the page by logging out or lets their session time out before exiting the
+        // page.
+        Map resp  = activityService.unlock(id, userService.getCurrentUserId() ? false : true )
         render resp as JSON
     }
 

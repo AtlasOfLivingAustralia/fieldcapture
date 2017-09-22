@@ -418,6 +418,13 @@ class FCTagLib {
         }
     }
 
+    def currentUserId = { attrs, body ->
+        def userId = userService.currentUserId
+        if (userId) {
+            out << userId
+        }
+    }
+
     def userDisplayName = { attrs, body ->
         def user = userService.lookupUser(attrs.userId)
         if (user) {
