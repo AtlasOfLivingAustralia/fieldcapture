@@ -37,7 +37,7 @@
         project:${fc.modelAsJavascript(model:project)},
         featureServiceUrl:"${createLink(controller: 'proxy', action: 'feature')}",
         wmsServiceUrl:"${grailsApplication.config.spatial.geoserverUrl}",
-        unlockActivityUrl:"${createLink(controller:'activity', action:'ajaxUnlock')}"
+        unlockActivityUrl:"${createLink(controller:'activity', action:'ajaxUnlock')}/<fc:currentUserId/>"
         },
         here = document.location.href;
     </script>
@@ -264,7 +264,7 @@
         var locked = ${locked};
         if (locked) {
             var unlockActivity = function() {
-                $.ajax(fcConfig.unlockActivityUrl+'/'+activityId, {async:false});
+                $.ajax(fcConfig.unlockActivityUrl+'/'+activityId, {method:'POST', async:false});
             };
             window.onunload = unlockActivity;
         }

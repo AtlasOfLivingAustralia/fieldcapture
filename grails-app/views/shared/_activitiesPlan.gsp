@@ -305,7 +305,7 @@
             reports,
             fcConfig.project.outputTargets || {},
             ${scores as grails.converters.JSON},
-            checkAndUpdateProject(fcConfig.project, null, programModel),
+            fcConfig.project,
             programModel,
             today,
             {rejectionCategories: ['Minor', 'Moderate', 'Major'], saveTargetsUrl:fcConfig.projectUpdateUrl },
