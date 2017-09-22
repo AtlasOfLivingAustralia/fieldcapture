@@ -1841,7 +1841,7 @@ class ImportService {
                                 endDate: report.toDate,
                                 type:activityType,
                                 progress: ActivityService.PROGRESS_PLANNED,
-                                name:description+" Report",
+                                description:description+" Report",
                                 siteId:resp.resp.siteId
                         ]
                         activityService.create(activity)

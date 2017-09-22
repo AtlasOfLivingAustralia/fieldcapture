@@ -116,6 +116,12 @@ var SimplifiedReportingViewModel = function(project, config) {
         return isOptionalReport(activity);
     });
 
+    self.siteReports = function() {
+        return _.filter(currentStage.activities, function(activity) {
+            return !isAdminActivity(activity) && !isOptionalReport(activity);
+        })
+    };
+
     self.currentStage = currentStage;
     self.currentReport = currentReport;
     self.adminReportingHelp = ko.pureComputed(function() {
