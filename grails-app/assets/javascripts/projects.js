@@ -289,6 +289,11 @@ function ProjectViewModel(project, isUserEditor, organisations) {
         var org = self.transients.organisation();
         return org? org.name: project.organisationName;
     });
+    self.transients.organisation.subscribe(function(org) {
+        if (org && org.organisationId) {
+            self.organisationId(org.organisationId);
+        }
+    });
 
     self.orgIdSvcProvider = ko.observable(project.orgIdSvcProvider);
     self.transients.serviceProviderOrganisation = ko.observable(organisationsMap[self.orgIdSvcProvider()]);
