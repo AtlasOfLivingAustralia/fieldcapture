@@ -573,7 +573,10 @@ class ActivityController {
                         String values = row[dataItem.name]
 
                         if (values) {
-                            row[dataItem.name] = values.split(',')
+                            // lists are treated as comma separated.  Do a bit of cleanup (trim and remove duplicates).
+                            row[dataItem.name] = Arrays.asList(values.split(','))
+                            row[dataItem.name] = row[dataItem.name].collect{it?.trim()}.unique()
+
                         }
 
                     }
