@@ -580,12 +580,14 @@ function ProjectActivitiesTabViewModel(activities, reports, outputTargets, targe
         });
         return stages;
     });
+    self.orientation = ko.observable('portrait');
     self.generateProjectReport = function(url) {
 
         var url = url + '?fromStage='+self.reportFromStage()+'&toStage='+self.reportToStage();
         for (var i=0; i<self.reportIncludedSections().length; i++) {
             url+='&sections='+self.reportIncludedSections()[i];
         }
+        url+='&orientation='+self.orientation();
         window.open(url,'project-report');
         $('#projectReportOptions').modal('hide');
     };
