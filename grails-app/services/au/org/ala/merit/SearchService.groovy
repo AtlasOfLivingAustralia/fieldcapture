@@ -220,7 +220,7 @@ class SearchService {
 
         configureProjectQuery(params)
         List facets = params.getList("fq")
-        facets << "className:au.org.ala.ecodata.Project"
+        facets += "className:au.org.ala.ecodata.Project"
 
         def url = grailsApplication.config.ecodata.baseUrl + path +  commonService.buildUrlParamsFromMap(params)
         webService.doPostWithParams(url, [:]) // POST because the URL can get long.

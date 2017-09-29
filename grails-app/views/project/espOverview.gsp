@@ -103,11 +103,12 @@
 
 
     <ul class="nav nav-tabs">
-        <li class="active"><a href="#mysites">My Sites</a></li>
+        <li class="active"><a href="#mysites">My ESP Sites</a></li>
         <li><a href="#species-records-tab">My Species Records</a></li>
         <li><a href="#dashboard-tab">Dashboard</a></li>
         <li><a href="#photographs-tab">Photographs</a></li>
-        <li><a href="#reporting-tab">Submission</a></li>
+        <li><a href="#documents-tab">Documents</a></li>
+        <li><a href="#reporting-tab">Annual Report Submission</a></li>
     </ul>
 
     <div id="saved-nav-message-holder"></div>
@@ -138,14 +139,43 @@
             <div id="site-photo-points"></div>
 
         </div>
+        <div class="tab-pane" id="documents-tab">
+            <!-- Project Documents -->
+            <!-- ko stopBinding:true -->
+            <g:render template="docs"/>
+            <!-- /ko -->
+        </div>
         <div class="tab-pane" id="reporting-tab">
+            <div>
+                <h4>Report status</h4>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Site </th><th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <!-- ko foreach:siteReports() -->
+                        <tr>
+                            <td><a data-bind="attr:{href:activityId}"><span data-bind="text:description"></span></a></td>
+                            <td><button type="button" class="btn btn-small"   data-bind="activityProgress:progress">
+                                <span data-bind="text: progress"></span>
+                            </button>
+                            </td>
+                        </tr>
+                    <!-- /ko -->
+                    </tbody>
+                </table>
+            </div>
             <div data-bind="visible:!canViewSubmissionReport()">
                 <div class="form-actions">
                     Before you can submit your form you must:
+                    <br/>
                     <ul>
-                        <li>Complete your activity reporting for each of your sites.</li>
+                        <li>Complete your activity reporting for each of your sites (all reports above should be marked as finished)</li>
                         <li>Complete or mark as not applicable your optional "My Species Records" tab.</li>
                     </ul>
+                    <br/>
                     Please note that the report will not be able to be submitted until the end of the year.
                 </div>
             </div>
@@ -241,20 +271,6 @@
 
         var photopointSelector = '#site-photo-points';
         var tabs = {
-            'reporting-tab': {
-                selector:'#admin-form',
-                url:fcConfig.tabbedActivityUrl+'/'+adminActivity.activityId,
-                initialiser: function() {
-                    initialiseESPActivity(adminActivity);
-                }
-            },
-            'species-records-tab': {
-                selector:'#species-form',
-                url:fcConfig.tabbedActivityUrl+'/'+speciesActivity.activityId+'?includeFormActions=true',
-                initialiser: function() {
-                    initialiseESPActivity(speciesActivity);
-                }
-            },
             'photographs-tab': {
                 selector:photopointSelector,
                 url:fcConfig.sitesPhotoPointsUrl,
@@ -265,8 +281,39 @@
             'dashboard-tab': {
                 selector:'#dashboard',
                 url:fcConfig.dashboardUrl
+            },
+            'documents-tab': {
+                initialiser: function() {
+                    var selector = '#documents';
+                    var documentsModel = new Documents();
+                    var docs = _.map(project.documents || [], function(document) {
+                        return new DocumentViewModel(document);
+                    });
+                    documentsModel.documents(docs);
+                    ko.applyBindings(documentsModel, $(selector)[0]);
+                    initialiseDocumentTable(selector);
+                }
             }
         };
+        if (adminActivity) {
+            tabs['reporting-tab'] = {
+                selector: '#admin-form',
+                url: fcConfig.tabbedActivityUrl + '/' + adminActivity.activityId,
+                initialiser: function () {
+                    initialiseESPActivity(adminActivity);
+                }
+            }
+        }
+        if (speciesActivity) {
+            tabs['species-records-tab'] = {
+                selector:'#species-form',
+                url:fcConfig.tabbedActivityUrl+'/'+speciesActivity.activityId+'?includeFormActions=true',
+                initialiser: function() {
+                    initialiseESPActivity(speciesActivity);
+                }
+            }
+        }
+
         $('.nav a').click(function() {
             $(this).tab('show');
 
@@ -276,14 +323,20 @@
             if (tab && !tab.initialised) {
                 tab.initialised = true;
                 // Get the remote content
-                $(tab.selector).html('<asset:image id="img-spinner" width="50" height="50" src="loading.gif" alt="Loading"/>');
+                if (tab.url) {
+                    $(tab.selector).html('<asset:image id="img-spinner" width="50" height="50" src="loading.gif" alt="Loading"/>');
 
-                $.get(tab.url, function(data) {
-                    $(tab.selector).html(data);
-                    if (tab.initialiser) {
-                        tab.initialiser();
-                    }
-                });
+                    $.get(tab.url, function(data) {
+                        $(tab.selector).html(data);
+                        if (tab.initialiser) {
+                            tab.initialiser();
+                        }
+                    });
+                }
+                else {
+                    tab.initialiser();
+                }
+
             }
         });
     });

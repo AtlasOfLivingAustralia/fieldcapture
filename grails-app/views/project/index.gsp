@@ -675,7 +675,7 @@
             var project = fcConfig.project;
 
             var viewModel = new ViewModel(
-                checkAndUpdateProject(project, undefined, programs),
+                project,
                 project.sites,
                 project.activities || [],
                 ${user?.isEditor?:false},

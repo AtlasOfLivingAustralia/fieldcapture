@@ -1783,7 +1783,7 @@ class ImportService {
             def grantIdAttribute = "GRANT_ID"
             def backupGrantIdAttribute = "APP_ID"
             def externalIdAttribute = "PropertyID"
-            def siteNameAttribute = "SITE_DESC"
+            def siteNameAttribute = "Name_Site"
             def siteDescriptionAttribute = "SITE_DESC"
             def siteTypeAttribute = "SITE_TYPE"
 
@@ -1807,6 +1807,10 @@ class ImportService {
                 if (!project) {
                     project = createESPProject(grantId, externalId)
                     projectsWithSites[project.projectId] = project
+                }
+                else if (!projectsWithSites[project.projectId]) {
+                    errors << "Already processed project: "+grantId+", "+externalId
+                    return
                 }
 
                 def projectDetails = projectsWithSites[project.projectId]
@@ -1837,7 +1841,7 @@ class ImportService {
                                 endDate: report.toDate,
                                 type:activityType,
                                 progress: ActivityService.PROGRESS_PLANNED,
-                                name:description+" Report",
+                                description:description+" Report",
                                 siteId:resp.resp.siteId
                         ]
                         activityService.create(activity)

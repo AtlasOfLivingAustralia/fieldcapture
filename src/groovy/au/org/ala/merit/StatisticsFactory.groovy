@@ -1,19 +1,14 @@
 package au.org.ala.merit
 
-import au.org.ala.merit.SettingService
-import net.sf.ehcache.CacheException
-import net.sf.ehcache.Ehcache
-import net.sf.ehcache.Element
-import net.sf.ehcache.event.CacheEventListener
-import org.apache.log4j.Logger
-import org.springframework.cache.Cache
-
-import static au.org.ala.merit.ScheduledJobContext.*
 import grails.converters.JSON
 import grails.plugin.cache.GrailsCacheManager
+import org.apache.log4j.Logger
 import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.cache.Cache
 import org.springframework.scheduling.annotation.Scheduled
+
+import static au.org.ala.merit.ScheduledJobContext.withUser
 
 
 class StatisticsFactory {
@@ -44,43 +39,6 @@ class StatisticsFactory {
         if (!config) {
             config = readConfig()
         }
-        Ehcache ehcache = grailsCacheManager.getCache(STATISTICS_CACHE_REGION).getNativeCache()
-        ehcache.getCacheEventNotificationService().registerListener(new CacheEventListener() {
-            @Override
-            void notifyElementRemoved(Ehcache cache, Element element) throws CacheException {
-                log.debug("${cache.name}: Removed: ${element.objectKey}")
-            }
-
-            @Override
-            void notifyElementPut(Ehcache cache, Element element) throws CacheException {
-                log.debug("${cache.name}: Put: ${element.objectKey}")
-            }
-
-            @Override
-            void notifyElementUpdated(Ehcache cache, Element element) throws CacheException {
-                log.debug("${cache.name}: Updated: ${element.objectKey}")
-            }
-
-            @Override
-            void notifyElementExpired(Ehcache cache, Element element) {
-                log.debug("${cache.name}: Expired: ${element.objectKey}")
-            }
-
-            @Override
-            void notifyElementEvicted(Ehcache cache, Element element) {
-                log.debug("${cache.name}: Evicted: ${element.objectKey}")
-            }
-
-            @Override
-            void notifyRemoveAll(Ehcache cache) {
-                log.debug("${cache.name}: Removed all: ${cache.name}")
-            }
-
-            @Override
-            void dispose() {
-                log.debug("Dispose")
-            }
-        })
     }
 
     private Map readConfig() {
@@ -150,7 +108,7 @@ class StatisticsFactory {
         displayProps
     }
 
-    // Refresh the statistics every day at midnight
+    // Refresh the statistics every day at 3am
     @Scheduled(cron="0 3 0 * * *")
     public void reloadStatistics() {
         withUser([name:"statisticsTask"]) {

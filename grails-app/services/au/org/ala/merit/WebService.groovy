@@ -136,7 +136,7 @@ class WebService {
         wr.flush()
         wr.close()
 
-        def headers = [HttpHeaders.CONTENT_DISPOSITION, HttpHeaders.TRANSFER_ENCODING]
+        def headers = [HttpHeaders.CONTENT_DISPOSITION]
         response.setContentType(conn.getContentType())
         response.setContentLength(conn.getContentLength())
 
