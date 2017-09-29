@@ -480,7 +480,11 @@ class ProjectController {
     def projectReportPDF(String id) {
 
         String reportUrl = g.createLink(controller: 'report', action: 'projectReportCallback', id: id, absolute: true, params: [fromStage: params.fromStage, toStage: params.toStage, sections: params.sections])
-        String url = grailsApplication.config.pdfgen.baseURL + 'api/pdf' + commonService.buildUrlParamsFromMap(docUrl: reportUrl, cacheable: false)
+        Map pdfGenParams = [docUrl: reportUrl, cacheable: false]
+        if (params.orientation == 'landscape') {
+            pdfGenParams.options = '-O landscape'
+        }
+        String url = grailsApplication.config.pdfgen.baseURL + 'api/pdf' + commonService.buildUrlParamsFromMap(pdfGenParams)
         Map result
         try {
             result = webService.proxyGetRequest(response, url, false, false, 10 * 60 * 1000)

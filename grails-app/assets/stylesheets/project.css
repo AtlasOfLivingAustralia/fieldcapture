@@ -111,3 +111,7 @@
 	border-bottom: 1px solid grey;
 	padding:10px;
 }
+
+.modal-body {
+	max-height:500px;
+}

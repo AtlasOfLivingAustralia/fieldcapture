@@ -89,13 +89,25 @@
                                         <!-- /ko -->
                                     </div>
                                 </div>
+                                <div class="control-group">
+                                    <label class="control-label">PDF Orientation: <fc:iconHelp>If your PDF includes activities with wide tables, the Landscape setting may improve the result.  This setting has no effect on the HTML view. </fc:iconHelp></label>
+                                    <div class="controls">
+                                        <select data-bind="value:orientation">
+                                            <option value="portrait">Portrait</option>
+                                            <option value="landscape">Landscape</option>
+                                        </select>
+                                    </div>
+                                </div>
 
                             </form>
                         </div>
 
                     </div>
+
                     <div class="modal-footer control-group">
+
                         <div class="controls">
+
                             <button type="button" class="btn btn-success"
                                     data-bind="click:generateProjectReportHTML">Generate Report (HTML)</button>
                             <button type="button" class="btn btn-success"
