@@ -1124,7 +1124,7 @@ class ProjectService  {
     }
 
     @Cacheable('speciesFieldConfig')
-    private Map findSpeciesFieldConfig(String projectId, String surveyName, String dataFieldName, String output) {
+    Map findSpeciesFieldConfig(String projectId, String surveyName, String dataFieldName, String output) {
         def project = get(projectId)
 
         Map speciesFieldsSettings = project.speciesFieldsSettings
@@ -1159,17 +1159,10 @@ class ProjectService  {
 
     /**
     * Searches for a species name taking into account the species constraints setup for the survey.
-    * @param id the id of the Project being completed
-    * @param q query string to search for
-    * @param limit the maximum number of results to return
-    * @param output Identity of field for specific configuration.
-    * @param dataFieldName Identity of field for specific configuration.
-    * @param surveyName Identity of field for specific configuration
+    *
     * @return json structure containing search results suitable for use by the species autocomplete widget on a survey form.
     */
-    def searchSpecies(String id, String q, Integer limit, String output, String dataFieldName, String surveyName){
-        Map speciesFieldConfig = findSpeciesFieldConfig(id, surveyName, dataFieldName, output)
-
+    def searchSpecies(Map speciesFieldConfig, String q, Integer limit){
         def result = speciesService.searchSpeciesForConfig(speciesFieldConfig, q, limit)
         speciesService.formatSpeciesNameForSurvey(speciesFieldConfig.speciesDisplayFormat , result)
         result
