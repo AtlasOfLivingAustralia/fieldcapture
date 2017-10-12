@@ -554,9 +554,20 @@ class ProjectController {
         forward controller: 'user', action: 'index'
     }
 
+    /**
+    * @param id the id of the Project being completed
+    * @param q query string to search for
+    * @param limit the maximum number of results to return
+    * @param output Identity of field for specific configuration.
+    * @param dataFieldName Identity of field for specific configuration.
+    * @param surveyName Identity of field for specific configuration
+    */
     def searchSpecies(String id, String q, Integer limit, String output, String dataFieldName, String surveyName) {
 
-        def result = projectService.searchSpecies(id, q, limit, output, dataFieldName, surveyName)
+        // Making a separate call to retrieve the config allows the caching annotation to work.
+        Map speciesFieldConfig = projectService.findSpeciesFieldConfig(id, surveyName, dataFieldName, output)
+
+        def result = projectService.searchSpecies(speciesFieldConfig, q, limit)
         render result as JSON
     }
 

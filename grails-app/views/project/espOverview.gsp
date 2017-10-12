@@ -115,13 +115,14 @@
 
     <div class="tab-content">
         <div class="tab-pane active" id="mysites">
+            <p>Click on a site to fill out the report for that site.</p>
+            <p>Green sites have finished reports.  Red sites have unfinished reports.</p>
             <div class="row-fluid">
                 <!-- ko stopBinding:true -->
                 <div id="map" class="span12" style="height:500px; width:100%"></div>
                 <!-- /ko -->
             </div>
-            <p>Click on a site to fill out the report for that site.</p>
-            <p>Green sites have finished reports.  Red sites have unfinished reports.</p>
+
         </div>
         <div class="tab-pane" id="species-records-tab">
             <div id="species-form">
