@@ -226,7 +226,6 @@
                                 <g:else>
                                     <select id="dashboardType" name="dashboardType" style="display:none">
                                         <option value="dashboard">Activity Outputs</option>
-                                        <option value="reef2050PlanAction">Reef 2050 Plan Dashboard</option>
                                     </select>
                                 </g:else>
                             </div>
