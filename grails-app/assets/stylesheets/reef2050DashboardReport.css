@@ -22,8 +22,21 @@ div.report-section {
 }
 
 .action-table {
-    overflow: auto;
+    table-layout:fixed;
+    width: 100%;
 }
 .action-table th {
     white-space: normal;
 }
+.action-table td, .action-table th {
+    word-wrap: break-word;
+}
+
+.action-table .actionId { width: 6%; }
+.action-table .action { width: 10%; }
+.action-table .leadAgency { width: 10%; }
+.action-table .status { width: 8%; }
+.action-table .description { width: 24%; }
+.action-table .progress { width: 28%; }
+.action-table .webLink { width: 6%; }
+.action-table .deliveryPartners { width: 8%; }

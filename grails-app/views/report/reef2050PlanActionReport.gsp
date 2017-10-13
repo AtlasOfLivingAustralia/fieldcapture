@@ -54,7 +54,7 @@
                 </div>
 
                 <div class="span5">
-                    <fc:renderScore score="${actionStatus}" omitTitle="true" minResults="1"
+                    <fc:renderScore score="${actionStatus}" omitTitle="true" minResults="1" chartOptions="${[pieSliceText: 'value']}"
                                     sliceColoursByTitle="${statusColours}"/>
                 </div>
 
@@ -71,7 +71,7 @@
                     <div class="span1" style="width:12%; text-align:center">
                         <div style="height: 2em;"><strong>${theme.key}</strong></div>
                         <fc:renderScore score="${theme.value}" minResults="1" sliceColoursByTitle="${statusColours}"
-                                        chartOptions="${[width: '100%', height: '100%', legend: 'none', chartArea: [width: '90%', height: '100%']]}"
+                                        chartOptions="${[width: '100%', height: '100%', legend: 'none', pieSliceText: 'value', chartArea: [width: '90%', height: '100%']]}"
                                         omitTitle="true"/>
 
                     </div>
@@ -85,25 +85,26 @@
         <div class="row-fluid">
             <div class="span12">
                 <table class="action-table table table-striped">
+
                     <thead>
-                    <tr>Action summary</tr>
+
                     <tr>
-                        <th>Action ID</th>
-                        <th>Action</th>
-                        <th>Lead Agency</th>
-                        <th>Status</th>
-                        <th>Description</th>
-                        <th>Progress</th>
-                        <th>Weblink</th>
-                        <th>Delivery Partners</th>
+                        <th class="actionId">Action ID</th>
+                        <th class="action">Action</th>
+                        <th class="leadAgency">Lead Agency</th>
+                        <th class="status">Status</th>
+                        <th class="description">Description</th>
+                        <th class="progress">Progress</th>
+                        <th class="weblink">Weblink</th>
+                        <th class="deliveryPartners">Delivery Partners</th>
                     </tr>
                     </thead>
                     <tbody>
         <g:each in="${actions}" var="action">
             <tr>
-                <td>${action.actionId}</td>
-                <td>${action.actionDescription}</td>
-                <td>
+                <td class="actionId">${action.actionId}</td>
+                <td class="action">${action.actionDescription}</td>
+                <td class="leadAgency">
                     <g:if test="${action.organisationId}">
                         <g:link controller="organisation" action="index" id="${action.organisationId}">${action.reportingLeadAgency}</g:link>
                     </g:if>
@@ -112,10 +113,10 @@
                     </g:else>
 
                 </td>
-                <td>${action.status}</td>
-                <td>${action.description}</td>
-                <td>${action.progress}</td>
-                <td>
+                <td class="status">${action.status}</td>
+                <td class="description">${action.description}</td>
+                <td class="progress">${action.progress}</td>
+                <td class="weblink">
                 <g:if test="${action.webLinks}">
                     <g:each in="${action.webLinks}" var="webLink" status="i">
                     <a href="${webLink?.trim()}" title="${webLink?.trim()}" target="_blank">${i+1}</a><g:if test="${i < action.webLinks.size()-1}">, </g:if>
@@ -123,7 +124,7 @@
                     </g:each>
                 </g:if>
                 </td>
-                <td>
+                <td class="deliveryPartners">
                     <g:if test="${action.deliveryPartners}">
                         %{--This is because action.deliveryPartners is a JSONArray which will quote strings when peforming a join--}%
                         ${new ArrayList(action.deliveryPartners).join(', ')}
@@ -137,7 +138,10 @@
 </div>
         <script type="text/javascript">
             $('table.action-table').dataTable({
-                "lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "All"] ]
+                "lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "All"] ],
+
+                "autoWidth":false,
+                "scrollX":false
             });
         </script>
 
