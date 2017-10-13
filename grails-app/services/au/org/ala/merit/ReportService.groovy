@@ -508,7 +508,7 @@ class ReportService {
 
         List<Map> allActions = []
         activities.each { activity ->
-            Map output = activity.outputs?activity.outputs[0]:[:]
+            Map output = activity.outputs?activity.outputs[0]:[data:[:]]
             List actions = output.data?.actions
             Map project = projects.find{it.projectId == activity.projectId}
             List agencyContacts = output.data.agencyContacts ? output.data.agencyContacts.collect{it.agencyContact}:[]

@@ -9,7 +9,7 @@
     </div>
 
     <g:if test="${!readOnly}">
-    All points of interest associated with the site will display here. Only attach photos to the photo points relevant to this activity.
+    All points of interest associated with the site will display here. Please only attach photos that have been taken from your site photo-point(s).
     </g:if>
     <table id="photoPointTable" class="table table-bordered photoPoints imageList">
         <thead>
