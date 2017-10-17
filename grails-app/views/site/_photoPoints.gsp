@@ -10,6 +10,7 @@
 
     <g:if test="${!readOnly}">
     All points of interest associated with the site will display here. Please only attach photos that have been taken from your site photo-point(s).
+        <br/><b>Please note</b> that the photograph must be taken from the exact same location, direction and when possible at the same month and time of year
     </g:if>
     <table id="photoPointTable" class="table table-bordered photoPoints imageList">
         <thead>
