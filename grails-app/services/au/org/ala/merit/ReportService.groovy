@@ -6,6 +6,9 @@ import org.joda.time.DateTimeZone
 import org.joda.time.Period
 import org.springframework.cache.annotation.Cacheable
 
+import java.text.DecimalFormat
+import java.util.regex.Matcher
+
 
 class ReportService {
 
@@ -478,9 +481,13 @@ class ReportService {
     }
 
 
-    Map reef2050PlanActionReport() {
+    Map reef2050PlanActionReport(boolean approvedActivitiesOnly = true) {
 
-        Map searchCriteria = [type:REEF_2050_PLAN_ACTION_REPORTING_ACTIVITY_TYPE, publicationStatus:REPORT_APPROVED]
+
+        Map searchCriteria = [type:REEF_2050_PLAN_ACTION_REPORTING_ACTIVITY_TYPE]
+        if (approvedActivitiesOnly) {
+            searchCriteria.publicationStatus = REPORT_APPROVED
+        }
 
         Map resp
         JSON.use("nullSafe") {
@@ -518,6 +525,8 @@ class ReportService {
                 if (it.webLinks && it.webLinks instanceof String) {
                     it.webLinks = it.webLinks.split(/(;|,|\n|\s)/)?.findAll{it}
                 }
+                it.sortableActionId = makeSortableActionId(it.actionId)
+
                 commonData+it
             }
             allActions.addAll(actions)
@@ -533,7 +542,7 @@ class ReportService {
         String url =  grailsApplication.config.ecodata.baseUrl+"search/activityReport"
         List searchCriteriaForReport = ["associatedSubProgramFacet:"+REEF_2050_PLAN_ACTION_REPORTING_ACTIVITY_TYPE]
 
-        Map report = webService.doPost(url, [fq:searchCriteriaForReport, reportConfig: config])
+        Map report = webService.doPost(url, [fq:searchCriteriaForReport, reportConfig: config, approvedActivitiesOnly:approvedActivitiesOnly])
         Map actionStatus = [label:"Action Status"]
         Map actionStatusByTheme = [:]
         if (!report.error) {
@@ -551,6 +560,30 @@ class ReportService {
         }
 
         [actions:allActions, actionStatus:actionStatus, actionStatusByTheme:actionStatusByTheme, endDate:endDate]
+
+    }
+
+    private String makeSortableActionId(String actionId) {
+
+        try {
+            Matcher groups = (actionId =~ /(.*?)(\d+)(.*)/)
+
+            if (!groups.lookingAt() || (groups[0].size() != 4)) {
+                log.warn("Action id: " + actionId + " does not match the expected pattern")
+                return actionId
+            }
+            String sortableActionId = groups[0][1]
+            DecimalFormat decimalFormat = new DecimalFormat("000")
+            sortableActionId += decimalFormat.format(Integer.parseInt(groups[0][2]))
+            if (groups[0].size() == 4) {
+                sortableActionId += groups[0][3]
+            }
+            return sortableActionId
+        }
+        catch (Exception e) {
+            log.error(e, "Error attempting to match actionId: ${actionId}")
+            return actionId
+        }
 
     }
 }
