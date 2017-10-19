@@ -498,7 +498,7 @@ class ReportController {
      * Provides a way for the pdf generation service to callback into MERIT without requiring user credentials.
      * (It uses an IP filter / API Key instead).
      */
-    //@RequireApiKey
+    @RequireApiKey
     def projectReportCallback(String id, ProjectSummaryReportCommand projectSummaryReportCommand) {
 
         Map model = projectSummaryReportCommand()
@@ -539,7 +539,8 @@ class ReportController {
 
     def reef2050PlanActionReport() {
 
-        Map model = reportService.reef2050PlanActionReport()
+        boolean approvedOnly = !(params.includeUnapproved && userService.userIsAlaOrFcAdmin())
+        Map model = reportService.reef2050PlanActionReport(approvedOnly)
 
         Map actionStatusCounts = model.actionStatus?.result?.result ?: [:]
         mergeCompletedOrInPlaceCategories(actionStatusCounts)

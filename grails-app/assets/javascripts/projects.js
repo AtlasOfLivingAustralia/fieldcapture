@@ -1001,9 +1001,9 @@ function OutputTargets(activities, targets, targetsEditable, scores, config) {
  *
  * @param boolean isProjectStarredByUser
  */
-function toggleStarred(isProjectStarredByUser) {
+function toggleStarred(isProjectStarredByUser, userId, projectId) {
     var basUrl = fcConfig.starProjectUrl;
-    var query = "?userId=${user?.userId}&projectId=${project?.projectId}";
+    var query = "?userId="+userId+"&projectId="+projectId;
     if (isProjectStarredByUser) {
         // remove star
         $.getJSON(basUrl + "/remove" + query, function(data) {

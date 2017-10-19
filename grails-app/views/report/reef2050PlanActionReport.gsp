@@ -90,6 +90,7 @@
 
                     <tr>
                         <th class="actionId">Action ID</th>
+                        <th class="hidden"></th>
                         <th class="action">Action</th>
                         <th class="leadAgency">Lead Agency</th>
                         <th class="status">Status</th>
@@ -103,6 +104,7 @@
         <g:each in="${actions}" var="action">
             <tr>
                 <td class="actionId">${action.actionId}</td>
+                <td class="hidden">${action.sortableActionId}</td>
                 <td class="action">${action.actionDescription}</td>
                 <td class="leadAgency">
                     <g:if test="${action.organisationId}">
@@ -139,7 +141,9 @@
         <script type="text/javascript">
             $('table.action-table').dataTable({
                 "lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "All"] ],
-
+                "columnDefs": [{
+                    "orderData": 1, "targets": 0
+                }],
                 "autoWidth":false,
                 "scrollX":false
             });
