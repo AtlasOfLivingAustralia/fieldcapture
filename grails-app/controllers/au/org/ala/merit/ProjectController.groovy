@@ -25,7 +25,16 @@ class ProjectController {
                 projectArea = project.sites[0]
             }
         }
-        render model: [project: project, user:user, mapFeatures: commonService.getMapFeatures(project), projectArea: projectArea], view: 'espOverview'
+        boolean isProjectStarredByUser = false
+        if (user) {
+            isProjectStarredByUser = userService.isProjectStarredByUser(user?.userId ?: "0", project.projectId)?.isProjectStarredByUser
+        }
+        render model: [
+                project: project,
+                user:user,
+                mapFeatures: commonService.getMapFeatures(project),
+                projectArea: projectArea,
+                isProjectStarredByUser: isProjectStarredByUser], view: 'espOverview'
     }
 
     def index(String id) {
