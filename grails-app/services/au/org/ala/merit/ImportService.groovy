@@ -1874,7 +1874,8 @@ class ImportService {
             }
             projectsWithSites.each { projectId, prj ->
 
-
+                // Re-query the project to get details for all of the sites.
+                prj = projectService.get(prj.projectId, 'all')
                 prj.sites?.each { site ->
                     if (!site.poi || site.poi.size() == 0) {
                         siteService.addPhotoPoint(site.siteId, createPhotoPoint(site))
@@ -1973,7 +1974,6 @@ class ImportService {
                 [
                         type:'ESP Overview',
                         name:'Submission report for '+project.externalId,
-                        siteId:null
                 ]
 
         ]
@@ -1983,13 +1983,16 @@ class ImportService {
             activitiesToCreate.each { activityType ->
                 if (!project.activities.find{it.type == activityType && it.plannedStartDate == report.fromDate && it.plannedEndDate == report.toDate}) {
                     Map activity = [
-                            siteId          : activityType.siteId,
                             projectId       : project.projectId,
                             plannedStartDate: report.fromDate,
                             plannedEndDate  : report.toDate,
                             type            : activityType.type,
                             progress        : ActivityService.PROGRESS_PLANNED,
                             name            : activityType.name]
+                    if (activityType.siteId) {
+                        activity.siteId = activityType.siteId
+                    }
+
                     activityService.create(activity)
                 }
 
