@@ -476,7 +476,7 @@ class ImportService {
                 return resp.resp.projects[0]
             }
             else {
-                log.warn("Multiple projects found with the same grant and external id! ${grantId}, ${externalId}")
+                log.warn("Multiple projects found with the same grant id! ${grantId}")
             }
 
         }
@@ -1816,7 +1816,8 @@ class ImportService {
                 // Looks like the external ids aren't going to match for the ESP import...
                 def project = findProjectByGrantId(grantId)
                 if (!project) {
-                    errors << "No project found with grantId=${grantId}"
+                    println "No project found with grantId=${grantId}  - ${shape.attributes['Status']}, ${shape.attributes['Note']}"
+                    errors << "No project found with grantId=${grantId} - ${shape.attributes['Status']}, ${shape.attributes['Note']}"
                     return
                 }
 
@@ -1859,7 +1860,7 @@ class ImportService {
                                 plannedStartDate: report.fromDate,
                                 plannedEndDate: report.toDate,
                                 startDate: report.fromDate,
-                                endDate: report.toDate,
+                                endDate: DateUtils.format(DateUtils.parse(report.toDate).minusDays(1)),
                                 type:activityType,
                                 progress: ActivityService.PROGRESS_PLANNED,
                                 description:description+" Report",
@@ -1891,6 +1892,8 @@ class ImportService {
                     prj = projectService.get(prj.projectId, 'all')
                 }
                 createActivities(prj)
+
+                projectService.update(projectId, [planStatus:ProjectService.PLAN_APPROVED])
             }
 
             return [success:true, message:[errors:errors, sites:sites]]
@@ -1968,12 +1971,12 @@ class ImportService {
         List activitiesToCreate = [
                 [
                         type:'ESP Species',
-                        name:'Species Sightings for '+project.externalId,
+                        description:'Species Sightings for '+project.externalId,
                         siteId:projectAreaId
                 ],
                 [
                         type:'ESP Overview',
-                        name:'Submission report for '+project.externalId,
+                        description:'Submission report for '+project.externalId,
                 ]
 
         ]
@@ -1981,11 +1984,12 @@ class ImportService {
         // Create standard reports
         project.reports.each { report ->
             activitiesToCreate.each { activityType ->
-                if (!project.activities.find{it.type == activityType && it.plannedStartDate == report.fromDate && it.plannedEndDate == report.toDate}) {
+                String endDate = DateUtils.format(DateUtils.parse(report.toDate).minusDays(1))
+                if (!project.activities.find{it.type == activityType && it.plannedStartDate == report.fromDate && it.plannedEndDate == endDate}) {
                     Map activity = [
                             projectId       : project.projectId,
                             plannedStartDate: report.fromDate,
-                            plannedEndDate  : report.toDate,
+                            plannedEndDate  : endDate,
                             type            : activityType.type,
                             progress        : ActivityService.PROGRESS_PLANNED,
                             name            : activityType.name]
