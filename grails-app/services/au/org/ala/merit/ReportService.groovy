@@ -488,6 +488,9 @@ class ReportService {
         if (approvedActivitiesOnly) {
             searchCriteria.publicationStatus = REPORT_APPROVED
         }
+        else {
+            searchCriteria.progress = ActivityService.PROGRESS_FINISHED
+        }
 
         Map resp
         JSON.use("nullSafe") {
@@ -531,6 +534,8 @@ class ReportService {
             }
             allActions.addAll(actions)
         }
+        allActions.sort{it.sortableActionId}
+
         String format = 'YYYY-MM'
         List dateBuckets = [startDate, endDate]
         Map countByStatus = [type:'HISTOGRAM', label:'Action status', property:'data.actions.status']
