@@ -1,4 +1,4 @@
-<%@ page import="grails.converters.JSON; org.codehaus.groovy.grails.web.json.JSONArray" contentType="text/html;charset=UTF-8" %>
+<%@ page import="au.org.ala.merit.ActivityService; grails.converters.JSON; org.codehaus.groovy.grails.web.json.JSONArray" contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/html">
 <head>
@@ -108,7 +108,8 @@
                       model="${[activity:activity,
                                 outputModel:outputModels[outputName],
                                 outputName:outputName,
-                                activityModel:metaModel]}"
+                                activityModel:metaModel,
+                                disablePrepop: activity.progress != au.org.ala.merit.ActivityService.PROGRESS_PLANNED]}"
                       plugin="ecodata-client-plugin"></g:render>
 
         </g:if>

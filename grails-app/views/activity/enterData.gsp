@@ -37,7 +37,8 @@
         project:${fc.modelAsJavascript(model:project)},
         featureServiceUrl:"${createLink(controller: 'proxy', action: 'feature')}",
         wmsServiceUrl:"${grailsApplication.config.spatial.geoserverUrl}",
-        unlockActivityUrl:"${createLink(controller:'activity', action:'ajaxUnlock')}/<fc:currentUserId/>"
+        unlockActivityUrl:"${createLink(controller:'activity', action:'ajaxUnlock')}/<fc:currentUserId/>",
+        projectActivitiesUrl:"${createLink(controller:'project', action:'searchActivities', id:activity.projectId)}"
         },
         here = document.location.href;
     </script>
@@ -269,7 +270,7 @@
             window.onunload = unlockActivity;
         }
 
-        var master = new Master(activity.activityId, {saveActivityUrl: fcConfig.saveActivityUrl});
+        var master = new Master(activity.activityId, {activityUpdateUrl: fcConfig.activityUpdateUrl});
 
         var site = null;
     <g:if test="${site}">
