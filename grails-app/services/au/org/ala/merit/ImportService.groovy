@@ -1992,7 +1992,7 @@ class ImportService {
                             plannedEndDate  : endDate,
                             type            : activityType.type,
                             progress        : ActivityService.PROGRESS_PLANNED,
-                            name            : activityType.name]
+                            description     : activityType.description]
                     if (activityType.siteId) {
                         activity.siteId = activityType.siteId
                     }
