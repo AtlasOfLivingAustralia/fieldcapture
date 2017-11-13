@@ -583,7 +583,11 @@ class ProjectController {
     @PreAuthorise(accessLevel = 'editor')
     def searchActivities(String id) {
 
-        Map criteria = request.JSON
+        if (!id) {
+            render status:400, error:'Project id must be supplied'
+            return
+        }
+        Map criteria = params.findAll{!ignore.contains(it.key)}
         if (!criteria.projectId) {
             criteria.projectId = id
         }
