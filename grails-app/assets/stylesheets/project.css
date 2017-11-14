@@ -115,3 +115,9 @@
 .modal-body {
 	max-height:500px;
 }
+
+.btn.activity-progress .caret {
+	margin-top:6px;
+	position: absolute;
+	right: 10px;
+}
