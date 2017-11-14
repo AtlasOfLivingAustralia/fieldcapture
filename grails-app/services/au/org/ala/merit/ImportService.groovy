@@ -1855,12 +1855,16 @@ class ImportService {
 
                     // Create the specific activity type for the site.
                     project.reports.each { report ->
+                        String endDate = DateUtils.format(DateUtils.parse(report.toDate).minusDays(1))
+                        if (endDate > project.plannedEndDate) {
+                            endDate = project.plannedEndDate
+                        }
                         Map activity = [
                                 projectId:project.projectId,
                                 plannedStartDate: report.fromDate,
-                                plannedEndDate: report.toDate,
+                                plannedEndDate: endDate,
                                 startDate: report.fromDate,
-                                endDate: DateUtils.format(DateUtils.parse(report.toDate).minusDays(1)),
+                                endDate: endDate,
                                 type:activityType,
                                 progress: ActivityService.PROGRESS_PLANNED,
                                 description:description+" Report",
@@ -1985,11 +1989,16 @@ class ImportService {
         project.reports.each { report ->
             activitiesToCreate.each { activityType ->
                 String endDate = DateUtils.format(DateUtils.parse(report.toDate).minusDays(1))
+                if (endDate > project.plannedEndDate) {
+                    endDate = project.plannedEndDate
+                }
                 if (!project.activities.find{it.type == activityType && it.plannedStartDate == report.fromDate && it.plannedEndDate == endDate}) {
                     Map activity = [
                             projectId       : project.projectId,
                             plannedStartDate: report.fromDate,
                             plannedEndDate  : endDate,
+                            startDate       : report.fromDate,
+                            endDate         : endDate,
                             type            : activityType.type,
                             progress        : ActivityService.PROGRESS_PLANNED,
                             description     : activityType.description]
