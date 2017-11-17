@@ -957,7 +957,7 @@
             // Star button click event
             $("#starBtn").click(function(e) {
                 var isStarred = ($("#starBtn i").attr("class") == "icon-star");
-                toggleStarred(isStarred);
+                toggleStarred(isStarred, '${user?.userId?:''}', '${project.projectId}');
             });
 
             // BS tooltip

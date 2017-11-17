@@ -90,11 +90,12 @@
 
                     <tr>
                         <th class="actionId">Action ID</th>
+                        <th class="hidden"></th>
                         <th class="action">Action</th>
                         <th class="leadAgency">Lead Agency</th>
                         <th class="status">Status</th>
                         <th class="description">Description</th>
-                        <th class="progress">Progress</th>
+                        <th class="actionProgress">Progress</th>
                         <th class="weblink">Weblink</th>
                         <th class="deliveryPartners">Delivery Partners</th>
                     </tr>
@@ -103,6 +104,7 @@
         <g:each in="${actions}" var="action">
             <tr>
                 <td class="actionId">${action.actionId}</td>
+                <td class="hidden">${action.sortableActionId}</td>
                 <td class="action">${action.actionDescription}</td>
                 <td class="leadAgency">
                     <g:if test="${action.organisationId}">
@@ -115,7 +117,7 @@
                 </td>
                 <td class="status">${action.status}</td>
                 <td class="description">${action.description}</td>
-                <td class="progress">${action.progress}</td>
+                <td class="actionProgress">${action.progress}</td>
                 <td class="weblink">
                 <g:if test="${action.webLinks}">
                     <g:each in="${action.webLinks}" var="webLink" status="i">
@@ -139,7 +141,9 @@
         <script type="text/javascript">
             $('table.action-table').dataTable({
                 "lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "All"] ],
-
+                "columnDefs": [{
+                    "orderData": 1, "targets": 0
+                }],
                 "autoWidth":false,
                 "scrollX":false
             });

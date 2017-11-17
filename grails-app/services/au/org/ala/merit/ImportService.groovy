@@ -469,15 +469,23 @@ class ImportService {
         return null
     }
 
+    def findProjectByGrantId(grantId) {
+        Map resp = projectService.search(grantId:grantId)
+        if (resp?.resp?.projects) {
+            if (resp.resp.projects.size() ==1) {
+                return resp.resp.projects[0]
+            }
+            else {
+                log.warn("Multiple projects found with the same grant id! ${grantId}")
+            }
+
+        }
+        return null
+    }
+
     def findProjectsByOriginalProjectId(projectId) {
         def allProjects = cacheService.get(PROJECTS_CACHE_KEY) { [projects:projectService.list(true)] }
         return allProjects.projects.findAll{it.originalProjectId == projectId}
-    }
-
-    def findProjectByGrantId(grantId) {
-        // Cache projects temporarily to avoid this query.
-        def allProjects = cacheService.get(PROJECTS_CACHE_KEY) { [projects:projectService.list(true)] }
-        return allProjects.projects.find{it.grantId?.equalsIgnoreCase(grantId)}
     }
 
     def allProjectsWithGrantId(grantId) {
@@ -1780,9 +1788,9 @@ class ImportService {
                 [id: (key), attributes: (value)]
             }
 
-            def grantIdAttribute = "GRANT_ID"
+            def grantIdAttribute = "Grant_ID"
             def backupGrantIdAttribute = "APP_ID"
-            def externalIdAttribute = "PropertyID"
+            def externalIdAttribute = "Name_Site"
             def siteNameAttribute = "Name_Site"
             def siteDescriptionAttribute = "SITE_DESC"
             def siteTypeAttribute = "SITE_TYPE"
@@ -1796,49 +1804,67 @@ class ImportService {
                 }
                 def externalId = shape.attributes[externalIdAttribute]
 
+                if (grantId && !grantId.endsWith("G")) {
+                    grantId+="G"
+                }
 
                 if (!grantId && !externalId) {
                     errors << "Shape is missing GRANT_ID and EXTERNAL_I attributes: ${shape.attributes}"
                     return
                 }
 
-                def project = findProjectByGrantAndExternalId(grantId, externalId)
-
+                // Looks like the external ids aren't going to match for the ESP import...
+                def project = findProjectByGrantId(grantId)
                 if (!project) {
-                    project = createESPProject(grantId, externalId)
-                    projectsWithSites[project.projectId] = project
-                }
-                else if (!projectsWithSites[project.projectId]) {
-                    errors << "Already processed project: "+grantId+", "+externalId
+                    println "No project found with grantId=${grantId}  - ${shape.attributes['Status']}, ${shape.attributes['Note']}"
+                    errors << "No project found with grantId=${grantId} - ${shape.attributes['Status']}, ${shape.attributes['Note']}"
                     return
                 }
 
-                def projectDetails = projectsWithSites[project.projectId]
-                if (!projectDetails.sites) {
-                    projectDetails.sites = []
+                // Make sure we have all sites & activities that have already been created.
+                if (!projectsWithSites[project.projectId]) {
+                    project = projectService.get(project.projectId, 'all')
+                    if (!project.sites) {
+                        project.sites = []
+                    }
+                    projectsWithSites[project.projectId] = project
+                }
+                else {
+                    project = projectsWithSites[project.projectId]
                 }
 
-                int siteNumber = projectDetails.sites ? projectDetails.sites.size() +1 : 1
+
+                int siteNumber = project.sites ? project.sites.size() +1 : 1
                 def name = shape.attributes[siteNameAttribute]?:"${project.grantId} - Site ${siteNumber}"
                 def description = shape.attributes[siteDescriptionAttribute] ?: "Imported on ${now}"
-                def siteExternalId = shapeFileId+'-'+shape.id
+                def siteExternalId = shape.attributes[externalIdAttribute] ?: name
 
+                if (project.sites.find{it.name == name}) {
+                    errors << "Already processed site: ${name}"
+                    return
+                }
+                // Else create the site.
                 def resp = siteService.createSiteFromUploadedShapefile(shapeFileId, shape.id, siteExternalId, name, description, project.projectId)
 
                 if (resp?.resp.siteId) {
-                    projectDetails.sites << [siteId:resp.resp.siteId, name:name, description:description]
+                    project.sites << [siteId:resp.resp.siteId, name:name, description:description]
                     sites << name
 
                     String type = shape.attributes[siteDescriptionAttribute]
                     String activityType = type.toUpperCase().startsWith("P") ? "ESP PMU or Zone reporting" : "ESP SMU Reporting"
 
-                    projectDetails.reports.each { report ->
+                    // Create the specific activity type for the site.
+                    project.reports.each { report ->
+                        String endDate = DateUtils.format(DateUtils.parse(report.toDate).minusDays(1))
+                        if (endDate > project.plannedEndDate) {
+                            endDate = project.plannedEndDate
+                        }
                         Map activity = [
                                 projectId:project.projectId,
                                 plannedStartDate: report.fromDate,
-                                plannedEndDate: report.toDate,
+                                plannedEndDate: endDate,
                                 startDate: report.fromDate,
-                                endDate: report.toDate,
+                                endDate: endDate,
                                 type:activityType,
                                 progress: ActivityService.PROGRESS_PLANNED,
                                 description:description+" Report",
@@ -1851,20 +1877,27 @@ class ImportService {
                     errors << resp
                 }
             }
-            projectsWithSites.each { projectId, value ->
-                Map prj = projectService.get(projectId)
+            projectsWithSites.each { projectId, prj ->
 
-                prj.sites.each { site ->
-                    siteService.addPhotoPoint(site.siteId, createPhotoPoint(site))
+                // Re-query the project to get details for all of the sites.
+                prj = projectService.get(prj.projectId, 'all')
+                prj.sites?.each { site ->
+                    if (!site.poi || site.poi.size() == 0) {
+                        siteService.addPhotoPoint(site.siteId, createPhotoPoint(site))
+                    }
                 }
+                if (!prj.sites?.find{it.type == 'projectArea'}) {
+                    Map siteCoords = createProjectArea(prj.sites)
+                    String projectAreaSiteName = "Project area for "+prj.name
+                    Map projectArea = [extent: [source: 'drawn', geometry: siteCoords], projects: [projectId], name: projectAreaSiteName, description: projectAreaSiteName, externalId:'', type:'projectArea', visibility:'private']
+                    siteService.create(projectArea)
 
-                Map siteCoords = createProjectArea(prj.sites)
-                String projectAreaSiteName = "Project area for "+prj.name
-                Map projectArea = [extent: [source: 'drawn', geometry: siteCoords], projects: [projectId], name: projectAreaSiteName, description: projectAreaSiteName, externalId:'', type:'projectArea', visibility:'private']
-                siteService.create(projectArea)
-
-                prj = projectService.get(projectId)
+                    // Re-query the project to pick up the new project area site.
+                    prj = projectService.get(prj.projectId, 'all')
+                }
                 createActivities(prj)
+
+                projectService.update(projectId, [planStatus:ProjectService.PLAN_APPROVED])
             }
 
             return [success:true, message:[errors:errors, sites:sites]]
@@ -1942,13 +1975,12 @@ class ImportService {
         List activitiesToCreate = [
                 [
                         type:'ESP Species',
-                        name:'Species Sightings for '+project.externalId,
+                        description:'Species Sightings for '+project.externalId,
                         siteId:projectAreaId
                 ],
                 [
                         type:'ESP Overview',
-                        name:'Submission report for '+project.externalId,
-                        siteId:null
+                        description:'Submission report for '+project.externalId,
                 ]
 
         ]
@@ -1956,15 +1988,26 @@ class ImportService {
         // Create standard reports
         project.reports.each { report ->
             activitiesToCreate.each { activityType ->
-                Map activity = [
-                        siteId:activityType.siteId,
-                        projectId:project.projectId,
-                        plannedStartDate: report.fromDate,
-                        plannedEndDate: report.toDate,
-                        type:activityType.type,
-                        progress: ActivityService.PROGRESS_PLANNED,
-                        name:activityType.name]
-                activityService.create(activity)
+                String endDate = DateUtils.format(DateUtils.parse(report.toDate).minusDays(1))
+                if (endDate > project.plannedEndDate) {
+                    endDate = project.plannedEndDate
+                }
+                if (!project.activities.find{it.type == activityType && it.plannedStartDate == report.fromDate && it.plannedEndDate == endDate}) {
+                    Map activity = [
+                            projectId       : project.projectId,
+                            plannedStartDate: report.fromDate,
+                            plannedEndDate  : endDate,
+                            startDate       : report.fromDate,
+                            endDate         : endDate,
+                            type            : activityType.type,
+                            progress        : ActivityService.PROGRESS_PLANNED,
+                            description     : activityType.description]
+                    if (activityType.siteId) {
+                        activity.siteId = activityType.siteId
+                    }
+
+                    activityService.create(activity)
+                }
 
             }
 

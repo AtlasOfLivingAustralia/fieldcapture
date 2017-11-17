@@ -19,11 +19,7 @@ var SiteStatusModel = function(site, currentStage, map, sitesViewModel) {
         return activity.siteId == site.siteId && !activity.isComplete();
     });
     self.reportingComplete = incompleteActivities.length == 0;
-
-    var feature = map.featureIndex[site.siteId] && map.featureIndex[site.siteId][0];
-
     var bounds = sitesViewModel.getSiteBounds(site.siteId);
-
     /**
      * Calculates a position for the info window located in the top middle of the sites bounds.
      * @param bounds a LatLngBounds object containing the bounds of the site.
@@ -43,37 +39,48 @@ var SiteStatusModel = function(site, currentStage, map, sitesViewModel) {
         ko.cleanNode(siteInfoTemplate);
         return siteInfoHtml;
     }
-
     var featureDisplayOptions = {strokeColor:'#BB4411',fillColor:'#BB4411',fillOpacity:0.3,strokeWeight:1,zIndex:1,editable:false};
     if (self.reportingComplete) {
         featureDisplayOptions = {strokeColor:'green',fillColor:'green',fillOpacity:0.3,strokeWeight:1,zIndex:1,editable:false};
     }
-    feature.setOptions(featureDisplayOptions);
-
-    google.maps.event.clearInstanceListeners(feature);
-    var siteInfoWindow = new google.maps.InfoWindow({content:getSiteInfoHtml(), position:calculateInfoWindowPosition(bounds)});
-
-    google.maps.event.addListener(feature, 'mouseover', function (event) {
-        feature.setOptions({fillOpacity:0.8});
-        siteInfoWindow.open(map.map, feature);
-    });
-    google.maps.event.addListener(feature, 'mouseout', function (event) {
-        feature.setOptions({fillOpacity:0.3});
-        siteInfoWindow.close();
-    });
-
-
     var activity = incompleteActivities.length >= 0 ? incompleteActivities[0] : null;
     if (!activity) {
         activity = _.find(currentStage.activities, function(activity) {
             return activity.siteId == site.siteId;
         });
     }
-    if (activity) {
-        google.maps.event.addListener(feature, 'click', function(event) {
-            window.location.href = activity.editActivityUrl();
+    var siteInfoWindow = new google.maps.InfoWindow({content:getSiteInfoHtml(), position:calculateInfoWindowPosition(bounds)});
+
+    var features = map.featureIndex[site.siteId];
+    if (_.isArray(features)) {
+
+        _.each(features, function(feature) {
+            feature.setOptions(featureDisplayOptions);
+
+            google.maps.event.clearInstanceListeners(feature);
+
+            google.maps.event.addListener(feature, 'mouseover', function (event) {
+                siteInfoWindow.open(map.map, feature);
+                _.each(features, function(feature) {
+                    feature.setOptions({fillOpacity: 0.8});
+
+                });
+            });
+            google.maps.event.addListener(feature, 'mouseout', function (event) {
+                _.each(features, function(feature) {
+                    feature.setOptions({fillOpacity: 0.3});
+                });
+                siteInfoWindow.close();
+            });
+
+            if (activity) {
+                google.maps.event.addListener(feature, 'click', function(event) {
+                    window.location.href = activity.editActivityUrl();
+                });
+            }
         });
     }
+
 };
 
 var SimplifiedReportingViewModel = function(project, config) {
