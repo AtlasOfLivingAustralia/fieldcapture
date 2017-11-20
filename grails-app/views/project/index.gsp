@@ -74,39 +74,6 @@
         fcConfig.project = <fc:renderProject project="${project}"/>;
     </script>
 
-
-        <style>
-           .thumbnail-image-container > img {
-               width: 300px;
-               height: auto;
-            }
-            .thumbnail-image-container {
-                width: 300px;
-                height: 280px;
-                overflow:hidden;
-            }
-            .thumbnail-container {
-                height:300px;
-                position:relative;
-            }
-            .thumbnail-container .caption {
-                position: absolute;
-                bottom:0;
-                padding-bottom:0;
-                margin-bottom:0;
-            }
-
-            #public-images-slider{
-              overflow: auto;
-              width: 100%;
-              height: 300px;
-            }
-
-            #sites-table tbody tr:hover {
-                background-color: #d9edf7;
-            }
-        </style>
-
     <asset:stylesheet src="common.css"/>
     <asset:stylesheet src="project.css"/>
 </head>

@@ -219,3 +219,10 @@ initialiseESPActivity = function(activity) {
 
 
 };
+
+initialisePhotos = function(photoPointSelector, photosSelector) {
+
+    loadAndConfigureSitePhotoPoints(photoPointSelector);
+    $(photosSelector).mThumbnailScroller({});
+    $(photosSelector + ' .fancybox').fancybox();
+}

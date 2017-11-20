@@ -368,9 +368,24 @@ class ProjectController {
 
         Map project = projectService.get(id)
         List activities = activityService.activitiesForProject(id)
-        siteService.addPhotoPointPhotosForSites(project.sites ?: [], activities, [project])
+        int count = siteService.addPhotoPointPhotosForSites(project.sites ?: [], activities, [project])
 
-        render template: 'sitePhotoPoints', model: [project: project]
+        render template: 'sitePhotoPoints', model: [project: project, photoCount:count]
+
+    }
+
+    @PreAuthorise(accessLevel = 'admin')
+    def espPhotos(String id) {
+
+        Map project = projectService.get(id)
+        List activities = activityService.activitiesForProject(id)
+        int count = siteService.addPhotoPointPhotosForSites(project.sites ?: [], activities, [project])
+
+        List activityIds = activities?.collect{it.activityId}
+        Map searchResults = documentService.search(activityId:activityIds, role:'surveyImage')
+        List documents = searchResults.documents
+
+        render template: 'espPhotos', model: [project: project, photos:documents, photoPointCount:count]
 
     }
 

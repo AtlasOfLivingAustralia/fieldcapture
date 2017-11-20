@@ -53,11 +53,20 @@ class SiteService {
         return null
     }
 
-    void addPhotoPointPhotosForSites(List<Map> sites, List activities, List projects) {
+    /**
+     * For each POI on each supplied site, any photo point photo's taken at that location for any of the supplied
+     * location will be added to that POI as a "photos" attribute.
+     * @param sites the sites to attach photos to
+     * @param activities used for photo metadata
+     * @param projects restricts the photos to the supplied projects, also used for photo metadata
+     * @return the number of photos attached to POIs
+     */
+    int addPhotoPointPhotosForSites(List<Map> sites, List activities, List projects) {
 
         long start = System.currentTimeMillis()
         List siteIds = sites.collect{it.siteId}
         List pois = sites.collect{it.poi?it.poi.collect{poi->poi.poiId}:[]}.flatten()
+        int count = 0
         if (pois) {
 
 
@@ -89,12 +98,14 @@ class SiteService {
                         }
                         poi.photos?.sort{it.dateTaken || ''}
                         poi.photos = poi.photos?.findAll{it.projectId} // Remove photos not associated with a supplied project
+                        count += poi.photos?poi.photos.size():0
                     }
                 }
             }
         }
         long end = System.currentTimeMillis()
         log.debug "Photopoint initialisation took ${(end-start)} millis"
+        count
     }
 
     def injectLocationMetadata(List sites) {
