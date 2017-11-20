@@ -22,7 +22,7 @@
         imageLocation:"${assetPath(src:'/')}",
         documentUpdateUrl: "${createLink(controller:"document", action:"documentUpdate")}",
         documentDeleteUrl: "${createLink(controller:"document", action:"deleteDocument")}",
-        sitesPhotoPointsUrl:"${createLink(controller:'project', action:'projectSitePhotos', id:project.projectId)}",
+        espPhotosUrl:"${createLink(controller:'project', action:'espPhotos', id:project.projectId)}",
         submitReportUrl: "${createLink(controller: 'project', action: 'ajaxSubmitReport')}/", approveReportUrl: "${createLink(controller: 'project', action: 'ajaxApproveReport')}/",
         featuresService: "${createLink(controller: 'proxy', action: 'features')}",
         featureService: "${createLink(controller: 'proxy', action: 'feature')}",
@@ -138,7 +138,6 @@
         </div>
         <div class="tab-pane" id="photographs-tab">
             <div id="site-photo-points"></div>
-
         </div>
         <div class="tab-pane" id="documents-tab">
             <!-- Project Documents -->
@@ -274,9 +273,9 @@
         var tabs = {
             'photographs-tab': {
                 selector:photopointSelector,
-                url:fcConfig.sitesPhotoPointsUrl,
+                url:fcConfig.espPhotosUrl,
                 initialiser: function() {
-                    loadAndConfigureSitePhotoPoints(photopointSelector);
+                    initialisePhotos(photopointSelector, '#public-images-slider');
                 }
             },
             'dashboard-tab': {

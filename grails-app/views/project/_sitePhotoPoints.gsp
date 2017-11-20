@@ -1,4 +1,4 @@
-<h2>Points of interest on project sites</h2>
+<h2>Photo points</h2>
 <g:each in="${project.sites}" var="site">
     <g:if test="${site.poi}">
         <h3>Site: ${site.name}</h3>
