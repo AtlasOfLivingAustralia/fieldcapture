@@ -12,9 +12,8 @@ class NoCacheFilterFilters {
     private static final String HEADER_CACHE_CONTROL = "Cache-Control";
 
     def filters = {
-        all(controller: '*', action: '*') {
+        all(controller: '*', action: '*', controllerExclude: 'species') {
             before = {
-
                 if (grailsApplication.config.app.view.nocache) {
 
                     response.setHeader(HEADER_PRAGMA, "no-cache");
