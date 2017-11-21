@@ -1,0 +1,14 @@
+/*
+*= require slider-pro-master/css/slider-pro.min.css
+*= require_self
+*/
+
+#projectList th {
+    white-space: normal;
+}
+.admin-action {
+    width:7em;
+}
+.smallFont {
+    margin: 5px 0;
+}

@@ -5,6 +5,7 @@
 //= require mapWithFeatures.js
 //= require bootstrap-combobox/bootstrap-combobox.js
 //= require fancybox/jquery.fancybox
+//= require slider-pro-master/js/jquery.sliderPro.min.js
 //= require sites.js
 //= require greenArmyReporting.js
 //= require document.js
