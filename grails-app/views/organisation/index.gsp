@@ -39,18 +39,8 @@
             projects : <fc:modelAsJavascript model="${organisation.projects}"/>
             };
     </script>
-    <style type="text/css">
-        #projectList th {
-            white-space: normal;
-        }
-        .admin-action {
-            width:7em;
-        }
-        .smallFont {
-            margin: 5px 0;
-        }
-    </style>
     <asset:stylesheet src="common.css"/>
+    <asset:stylesheet src="organisation.css" />
 </head>
 <body>
 
