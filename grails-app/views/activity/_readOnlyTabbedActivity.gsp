@@ -10,7 +10,8 @@
                   model="${[activity:activity,
                             outputModel:outputModels[outputName],
                             outputName:outputName,
-                            activityModel:metaModel]}"
+                            activityModel:metaModel,
+                            disablePrepop: activity.progress != au.org.ala.merit.ActivityService.PROGRESS_PLANNED]]}"
                   plugin="ecodata-client-plugin"></g:render>
 
     </g:if>
