@@ -247,7 +247,8 @@
                             outputModel:outputModels[outputName],
                             outputName:outputName,
                             activityModel:stageReportModel,
-                            printable:printable]}"
+                            printable:printable,
+                            disablePrepop: true]}"
                   plugin="ecodata-client-plugin"></g:render>
         </g:each>
 
@@ -393,7 +394,8 @@
                                       model="${[activity:activity,
                                                 outputModel:outputModels[outputName],
                                                 outputName:outputName,
-                                                activityModel:activityModel]}"
+                                                activityModel:activityModel,
+                                                disablePrepop:true]}"
                                       plugin="ecodata-client-plugin"></g:render>
                         </g:if>
 
