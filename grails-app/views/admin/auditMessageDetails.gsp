@@ -68,7 +68,7 @@
                             <tr>
                                 <td>${obj.key}</td>
                                 <td wrap class="diff1"></td>
-                                <td style="display:none" class="original">${ compare?.entity[(obj.key)]}</td>
+                                <td style="display:none" class="original">${ compare && compare.entity ? compare.entity[(obj.key)] : ''}</td>
                                 <td style="display:none" class="changed">${message.entity[(obj.key)]}</td>
                             </tr>
                         </g:each>
