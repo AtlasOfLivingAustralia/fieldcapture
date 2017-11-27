@@ -18,7 +18,7 @@
 <body>
 <div class="row-fluid">
     <h3>Nominate Images for Display on the Home Page</h3>
-
+    Sort by: <select data-bind="value:sort"><option value="labels">Thumbs</option><option value="lastUpdated">Date</option></select>
     <g:render template="gallery"/>
 </div>
 <asset:javascript src="common.js"/>
