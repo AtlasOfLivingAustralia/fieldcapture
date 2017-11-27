@@ -347,7 +347,7 @@ class ReportService {
         searchService.allProjects(searchParams, queryString)
     }
 
-    Map findPotentialHomePageImages(Integer max = 10, Integer offset = 0) {
+    Map findPotentialHomePageImages(Integer max = 10, Integer offset = 0, String sort = 'dateCreated') {
 
         def projectIds = findHomePageNominatedProjects(10000, 0, true)?.hits.hits.collect{it._id}
 
@@ -358,7 +358,7 @@ class ReportService {
                 max:max,
                 offset:offset,
                 projectId:projectIds,
-                sort:'dateCreated',
+                sort:sort,
                 order:'desc'
         ]
         documentService.search(criteria)
