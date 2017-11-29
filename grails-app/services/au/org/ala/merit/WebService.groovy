@@ -318,9 +318,10 @@ class WebService {
      * @param contentType the mime type of the content being posted (e.g. image/png)
      * @param originalFilename the original file name of the data to be posted
      * @param fileParamName the name of the HTTP parameter that will be used for the post.
+     * @param successHandler optional callback for a successful service invocation.  If not supplied, a Map will be returned.
      * @return [status:<request status>, content:<The response content from the server, assumed to be JSON>
      */
-    def postMultipart(url, Map params, InputStream contentIn, contentType, originalFilename, fileParamName = 'files') {
+    def postMultipart(url, Map params, InputStream contentIn, contentType, originalFilename, fileParamName = 'files', Closure successHandler = null) {
 
         def result = [:]
         def user = userService.getUser()
@@ -344,13 +345,16 @@ class WebService {
             }
             request.setEntity(content)
 
-            Closure resposeHandler =
-
-            response.success = {resp, message ->
-                result.status = resp.status
-                result.statusCode = resp.status
-                result.content = message
-                result.resp = message
+            if (successHandler) {
+                response.success = successHandler
+            }
+            else {
+                response.success = {resp, message ->
+                    result.status = resp.status
+                    result.statusCode = resp.status
+                    result.content = message
+                    result.resp = message
+                }
             }
 
             response.failure = {resp, message ->
