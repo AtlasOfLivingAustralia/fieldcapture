@@ -7,6 +7,7 @@ import com.drew.metadata.Metadata
 import com.drew.metadata.exif.ExifSubIFDDirectory
 import com.drew.metadata.exif.GpsDirectory
 import grails.converters.JSON
+import groovyx.net.http.HttpResponseDecorator
 import org.apache.commons.io.FilenameUtils
 import org.imgscalr.Scalr
 import org.springframework.web.multipart.MultipartFile
@@ -157,12 +158,14 @@ class ImageController {
                 BufferedImage img = ImageIO.read(f)
                 BufferedImage tn = Scalr.resize(img, 300, Scalr.OP_ANTIALIAS)
                 File tnFile = new File(colDir, thumbFilename)
-                try {
-                    def success = ImageIO.write(tn, ext, tnFile)
-                    log.debug "Thumbnailing: " + success
-                } catch(IOException e) {
-                    e.printStackTrace()
-                    log.error "Write error for " + tnFile.getPath() + ": " + e.getMessage()
+
+                Closure saveThumbnail = { HttpResponseDecorator resp, Object parsedData ->
+                    if (parsedData instanceof InputStream) {
+                        new FileOutputStream(tnFile).withStream { it << parsedData }
+                    }
+                }
+                f.withInputStream { fileIn ->
+                    webService.postMultipart(grailsApplication.config.ecodata.baseUrl+"document/createThumbnail", [:], fileIn, request.contentType, f.name,  'image', saveThumbnail)
                 }
 
                 def md = [
