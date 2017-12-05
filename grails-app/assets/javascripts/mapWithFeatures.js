@@ -88,7 +88,7 @@
                 this.highlightOnHover = features.highlightOnHover;
             }
             if (options.polygonMarkerAreaKm2 !== undefined) {
-                this.polygonMarkerAreaKm2 = this.polygonMarkerAreaKm2;
+                this.polygonMarkerAreaKm2 = options.polygonMarkerAreaKm2;
             }
             this.map = new google.maps.Map(document.getElementById(this.containerId), {
                 zoom: 3,
