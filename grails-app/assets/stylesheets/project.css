@@ -111,9 +111,11 @@
 	border-bottom: 1px solid grey;
 	padding:10px;
 }
+@media (min-height: 800px) {
 
-.modal-body {
-	max-height:500px;
+	.modal-body {
+		max-height: 500px;
+	}
 }
 
 .btn.activity-progress .caret {
