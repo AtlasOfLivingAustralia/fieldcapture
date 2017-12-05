@@ -364,7 +364,8 @@ function ActivityHeaderViewModel (activity, site, project, metaModel, themes, co
                     zoomToBounds:true,
                     zoomLimit:16,
                     featureService: options.featureServiceUrl,
-                    wmsServer: options.wmsServerUrl
+                    wmsServer: options.wmsServerUrl,
+                    polygonMarkerAreaKm2:-1
                 },
                 mapFeatures
             );

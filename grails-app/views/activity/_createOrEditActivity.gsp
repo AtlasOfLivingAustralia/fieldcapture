@@ -437,7 +437,8 @@
                 zoomToBounds:true,
                 zoomLimit:16,
                 featureService: "${createLink(controller: 'proxy', action:'feature')}",
-                wmsServer: "${grailsApplication.config.spatial.geoserverUrl}"
+                wmsServer: "${grailsApplication.config.spatial.geoserverUrl}",
+                polygonMarkerAreaKm2:-1
             },
             mapFeatures
         );
