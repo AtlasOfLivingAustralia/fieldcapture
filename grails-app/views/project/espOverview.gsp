@@ -60,7 +60,7 @@
         </ul>
         <div class="pull-right">
             <g:if test="${fc.userIsSiteAdmin()}">
-                <button class="btn"><a href="${createLink(action:'index', id:project.projectId, params:[template:'index'])}">Grant Manager View</a></button>
+                <a class="btn" href="${createLink(action:'index', id:project.projectId, params:[template:'index'])}">Grant Manager View</a>
             </g:if>
             <g:set var="disabled">${(!user) ? "disabled='disabled' title='login required'" : ''}</g:set>
             <g:if test="${isProjectStarredByUser}">
