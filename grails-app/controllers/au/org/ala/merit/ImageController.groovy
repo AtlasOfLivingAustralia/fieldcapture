@@ -7,6 +7,7 @@ import com.drew.metadata.Metadata
 import com.drew.metadata.exif.ExifSubIFDDirectory
 import com.drew.metadata.exif.GpsDirectory
 import grails.converters.JSON
+import groovyx.net.http.HttpResponseDecorator
 import org.apache.commons.io.FilenameUtils
 import org.imgscalr.Scalr
 import org.springframework.web.multipart.MultipartFile
@@ -144,8 +145,6 @@ class ImageController {
                 filename = nextUniqueFileName(FilenameUtils.getBaseName(filename)+'.'+ext)
 
                 def thumbFilename = FilenameUtils.removeExtension(filename) + "-thumb." + ext
-                //println "filename=${filename}"
-
                 def colDir = new File(grailsApplication.config.upload.images.path as String)
                 colDir.mkdirs()
                 File f = new File(fullPath(filename))
@@ -153,17 +152,9 @@ class ImageController {
                 file.transferTo(f)
                 def exifMd = getExifMetadata(f)
 
-                // thumbnail it
-                BufferedImage img = ImageIO.read(f)
-                BufferedImage tn = Scalr.resize(img, 300, Scalr.OP_ANTIALIAS)
                 File tnFile = new File(colDir, thumbFilename)
-                try {
-                    def success = ImageIO.write(tn, ext, tnFile)
-                    log.debug "Thumbnailing: " + success
-                } catch(IOException e) {
-                    e.printStackTrace()
-                    log.error "Write error for " + tnFile.getPath() + ": " + e.getMessage()
-                }
+
+                boolean thumbCreated = createThumbnail(f, tnFile)
 
                 def md = [
                         name: filename,
@@ -180,7 +171,7 @@ class ImageController {
                         bearing: exifMd.bearing,
                         bearingRef: exifMd.bearingRef,
                         url: encodeImageURL(grailsApplication.config.upload.images.url,filename),
-                        thumbnail_url: encodeImageURL(grailsApplication.config.upload.images.url, thumbFilename),
+                        thumbnail_url: encodeImageURL(grailsApplication.config.upload.images.url, thumbCreated?thumbFilename:filename),
                         delete_url: encodeImageURL(grailsApplication.config.grails.serverURL+"/image/delete?filename=", filename),
                         delete_type: 'DELETE']
                 result = [files:[md]]
@@ -191,6 +182,26 @@ class ImageController {
         response.addHeader('Content-Type','text/plain')
         def json = result as JSON
         render json.toString()
+    }
+
+    /**
+     * Delegates to ecodata to generate a thumbnail of the supplied image.
+     * @param image the file to create a thumbnail of
+     * @param tnFile the desired output file
+     * @return true if the thumbail was generated.
+     */
+    private boolean createThumbnail(File image, File thumbnailFile) {
+        Closure saveThumbnail = { HttpResponseDecorator resp, Object parsedData ->
+            if (parsedData instanceof InputStream) {
+                new FileOutputStream(thumbnailFile).withStream { it << parsedData }
+            }
+        }
+        image.withInputStream { fileIn ->
+            webService.postMultipart(grailsApplication.config.ecodata.baseUrl + "document/createThumbnail", [:], fileIn, request.contentType, image.name, 'image', saveThumbnail)
+        }
+
+        return thumbnailFile.exists()
+
     }
 
     def delete = {

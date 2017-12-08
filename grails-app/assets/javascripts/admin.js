@@ -41,12 +41,12 @@ var ApprovableImage = function(doc) {
 var ImageGallery = function() {
     var self = this;
     self.pagination = new PaginationViewModel({}, self);
-
+    self.sort = ko.observable('labels');
     self.images = ko.observableArray([]);
 
     self.refreshPage = function(offset) {
         var url = fcConfig.homePageImagesUrl;
-        $.get(url, {offset:offset, max:self.pagination.resultsPerPage()}, function(data) {
+        $.get(url, {offset:offset, max:self.pagination.resultsPerPage(), sort:self.sort()}, function(data) {
             self.images($.map(data.documents, function(doc) {
                 return new ApprovableImage(doc);
             }));
@@ -71,5 +71,8 @@ var ImageGallery = function() {
         });
     };
     self.refreshPage(0);
+    self.sort.subscribe(function() {
+        self.refreshPage(0);
+    });
 
 };

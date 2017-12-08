@@ -44,6 +44,7 @@
     </div>
 </div>
 <asset:javascript src="common.js"/>
+<asset:javascript src="projects.js"/>
 <asset:javascript src="forms-manifest.js"/>
 <asset:deferredScripts/>
 </body>

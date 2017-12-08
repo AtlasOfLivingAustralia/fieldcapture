@@ -104,8 +104,8 @@
                     </div>
                 </g:if>
                 <div class="pull-right">
-                    <g:if test="${project.associatedSubProgram == au.org.ala.merit.ProjectController.ESP_SUBPROGRAM && user?.isEditor}">
-                        <button class="btn"><a href="${createLink(action:'index', id:project.projectId)}">User View</a></button>
+                    <g:if test="${user?.isEditor && hasCustomTemplate}">
+                        <a class="btn"  href="${createLink(action:'index', id:project.projectId)}">User View</a>
                     </g:if>
                     <g:set var="disabled">${(!user) ? "disabled='disabled' title='login required'" : ''}</g:set>
                     <g:if test="${isProjectStarredByUser}">

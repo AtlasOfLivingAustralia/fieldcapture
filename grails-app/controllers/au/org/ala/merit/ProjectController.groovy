@@ -10,7 +10,6 @@ class ProjectController {
     static defaultAction = "index"
     static ignore = ['action', 'controller', 'id']
     static String ESP_TEMPLATE = "esp"
-    static String ESP_SUBPROGRAM = "ESP Test"
 
     def projectService, metadataService, organisationService, commonService, activityService, userService, webService, roleService, grailsApplication
     def siteService, documentService, reportService, blogService
@@ -88,7 +87,8 @@ class ProjectController {
                              programs              : programs,
                              today                 : DateUtils.format(new DateTime()),
                              themes                : metadataService.getThemesForProject(project),
-                             projectContent        : content.model
+                             projectContent        : content.model,
+                             hasCustomTemplate     : projectService.getProgramConfiguration(project)?.projectTemplate
                 ]
 
                 render view: content.view, model: model
