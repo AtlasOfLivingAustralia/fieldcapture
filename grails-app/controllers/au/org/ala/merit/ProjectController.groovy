@@ -135,7 +135,7 @@ class ProjectController {
 
         def model = [overview       : [label: 'Overview', visible: !meriView, default: !meriView, type: 'tab', publicImages: imagesModel, displayTargets: false, displayOutcomes: false, blog: blog, hasNewsAndEvents: hasNewsAndEvents, hasProjectStories: hasProjectStories, canChangeProjectDates: canChangeProjectDates],
                      documents      : [label: 'Documents', visible: !meriView, type: 'tab'],
-                     details        : [label: 'MERI Plan', disabled: !meriView && !meriPlanEnabled, visible: meriView || meriPlanVisible, meriPlanVisibleToUser: meriView || meriPlanVisibleToUser, risksAndThreatsVisible: canViewRisks, type: 'tab'],
+                     details        : [label: 'MERI Plan', default: meriView, disabled: !meriView && !meriPlanEnabled, visible: meriView || meriPlanVisible, meriPlanVisibleToUser: meriView || meriPlanVisibleToUser, risksAndThreatsVisible: canViewRisks, type: 'tab'],
                      plan           : [label: 'Activities', visible: !meriView, disabled: !user?.hasViewAccess, type: 'tab', reports: project.reports, scores: scores],
                      risksAndThreats: [label: 'Risks and Threats', disabled: !user?.hasViewAccess, visible: !meriView && user?.hasViewAccess && risksAndThreatsVisible],
                      site           : [label: 'Sites', visible: !meriView, disabled: !user?.hasViewAccess, type: 'tab'],
