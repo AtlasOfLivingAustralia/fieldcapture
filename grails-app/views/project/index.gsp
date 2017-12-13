@@ -943,7 +943,11 @@
 
             initialiseOverview();
             if (storedTab !== '') {
-                $(storedTab + '-tab').tab('show');
+                var $toInit = $(storedTab + '-tab');
+                if ($toInit.is(':enabled')) {
+                    $toInit.tab('show');
+                }
+
             }
 
         });// end window.load
