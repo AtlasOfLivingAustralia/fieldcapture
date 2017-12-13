@@ -104,7 +104,7 @@
                     </div>
                 </g:if>
                 <div class="pull-right">
-                    <g:if test="${user?.isEditor && hasCustomTemplate}">
+                    <g:if test="${user?.isCaseManager && hasCustomTemplate}">
                         <a class="btn"  href="${createLink(action:'index', id:project.projectId)}">User View</a>
                     </g:if>
                     <g:set var="disabled">${(!user) ? "disabled='disabled' title='login required'" : ''}</g:set>
@@ -126,7 +126,7 @@
 
 
     <div class="tab-content" style="overflow:visible;display:none">
-        <div class="tab-pane active" id="overview">
+        <div class="tab-pane ${projectContent.overview.default?'active':''}" id="overview">
             <g:render template="overview" model="${projectContent.overview}"/>
         </div>
 
@@ -136,7 +136,7 @@
         </div>
 
         <g:if test="${projectContent.details.visible && !projectContent.details.disabled}">
-        <div class="tab-pane" id="details">
+        <div class="tab-pane ${projectContent.details.default?'active':''}" id="details">
             <g:if test="${projectContent.details.meriPlanVisibleToUser}">
                 <!-- Project Details -->
                 <g:render template="projectDetails" model="[project: project, risksAndThreatsVisible:projectContent.details.risksAndThreatsVisible]"/>
@@ -330,7 +330,7 @@
     <g:render template="/shared/unsavedChanges" model="${[id:'risksUnsavedChanges', unsavedData:'Risks & Threats']}"/>
 
 </div>
-<g:if test="${user?.isEditor}">
+<g:if test="${user?.isEditor && projectContent.admin.visible}">
     <asset:script>
         // Admin JS code only exposed to admin users
         $(function () {
