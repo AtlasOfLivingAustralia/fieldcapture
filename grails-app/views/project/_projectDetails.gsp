@@ -88,7 +88,7 @@
 		</div>
 
 
-		<g:if test="${user?.isAdmin}">
+		<g:if test="${announcementsVisible && user?.isAdmin}">
 		<div class="row-fluid space-after">
 			<div class="well well-small">
 				<div id="project-keq" class="announcements well well-small">
