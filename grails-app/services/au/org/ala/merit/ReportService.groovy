@@ -1,6 +1,7 @@
 package au.org.ala.merit
 
 import grails.converters.JSON
+import org.apache.commons.io.FilenameUtils
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.joda.time.Period
@@ -18,6 +19,8 @@ class ReportService {
 
     public static final String REEF_2050_PLAN_ACTION_REPORTING_ACTIVITY_TYPE = 'Reef 2050 Plan Action Reporting'
 
+    public static final int HOME_PAGE_IMAGE_SIZE = 500
+
     def grailsApplication
     def webService
     def userService
@@ -28,6 +31,8 @@ class ReportService {
     def documentService
     def metadataService
     def activityService
+    def imageService
+    def grailsLinkGenerator
 
     private static int DEFAULT_REPORT_DAYS_TO_COMPLETE = 43
 
@@ -385,7 +390,29 @@ class ReportService {
         def projectIds = images.collect {it.projectId}
         def projects = projectService.search([projectId:projectIds])?.resp?.projects ?: []
 
+        images.each { document ->
+            Map thumbDetails = createCustomThumbnail(document)
+            if (thumbDetails.thumbnailFile.exists()) {
+                document.url = grailsLinkGenerator.link(controller: 'image', id:thumbDetails.fileName)
+            }
+        }
+
         images.collect {[name:it.name, attribution:it.attribution, projectName:projects.find{project -> it.projectId == project.projectId}?.name?:'', url:it.url, projectId:it.projectId]}
+    }
+
+    private Map createCustomThumbnail(Map document) {
+        String thumbName = document.documentId+'-thumb-500.'+FilenameUtils.getExtension(document.filename)
+        File homePageThumb = new File(imageService.fullPath(thumbName))
+        try {
+            if (!homePageThumb.exists() && document.url) {
+                imageService.createThumbnail(new URL(document.url).openStream(), homePageThumb, document.contentType, HOME_PAGE_IMAGE_SIZE)
+            }
+        }
+        catch (Exception e) {
+            log.warn("Unable to create thumbnail: ${homePageThumb}")
+        }
+
+        [thumbnailFile:homePageThumb, fileName:thumbName]
     }
 
     Map performanceReportModel(String id, int version) {

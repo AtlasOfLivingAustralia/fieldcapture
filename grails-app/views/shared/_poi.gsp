@@ -4,7 +4,7 @@
         <g:each in="${images}" var="image">
             <div class="sp-slide">
 
-                <img class="sp-image" src="${image.url}" title="${image.name?:"Un-captioned image for project ${image.projectName}"}"/>
+                <img class="sp-image" data-src="${image.url}" title="${image.name?:"Un-captioned image for project ${image.projectName}"}"/>
 
                 <div class="sp-caption">
                     <g:if test="${image.name}"><h3 class="image-caption"><fc:truncate value="${image.name}" maxLength="45"/></h3></g:if>
