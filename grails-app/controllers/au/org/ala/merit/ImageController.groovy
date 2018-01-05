@@ -1,79 +1,18 @@
 package au.org.ala.merit
 
-import com.drew.imaging.ImageMetadataReader
-import com.drew.lang.GeoLocation
-import com.drew.metadata.Directory
-import com.drew.metadata.Metadata
-import com.drew.metadata.exif.ExifSubIFDDirectory
-import com.drew.metadata.exif.GpsDirectory
 import grails.converters.JSON
-import groovyx.net.http.HttpResponseDecorator
 import org.apache.commons.io.FilenameUtils
-import org.imgscalr.Scalr
 import org.springframework.web.multipart.MultipartFile
 
-import javax.imageio.ImageIO
-import java.awt.image.BufferedImage
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 
 class ImageController {
 
-    def webService
+    WebService webService
+    ImageService imageService
 
     static defaultAction = "get"
-
-    private Map getExifMetadata(file) {
-        def exif = [:]
-        try {
-            Metadata metadata = ImageMetadataReader.readMetadata(file);
-
-            Directory directory = metadata.getDirectory(ExifSubIFDDirectory.class)
-            if (directory) {
-                Date date = directory.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL)
-                exif.date = date
-            }
-
-            Directory gpsDirectory = metadata.getDirectory(GpsDirectory.class)
-            if (gpsDirectory) {
-                /*gpsDirectory.getTags().each {
-                    println it.getTagType()
-                    println it.getTagName()
-                    println it.getTagTypeHex()
-                    println it.getDescription()
-                    println it.toString()
-                }*/
-                //def lat = gpsDirectory.getRationalArray(GpsDirectory.TAG_GPS_LATITUDE)
-                //def lng = gpsDirectory.getRationalArray(GpsDirectory.TAG_GPS_LONGITUDE)
-                GeoLocation loc = gpsDirectory.getGeoLocation()
-                if (loc) {
-                    exif.latitude = gpsDirectory.getDescription(GpsDirectory.TAG_GPS_LATITUDE)
-                    exif.longitude = gpsDirectory.getDescription(GpsDirectory.TAG_GPS_LONGITUDE)
-                    exif.bearing = gpsDirectory.getDescription(GpsDirectory.TAG_GPS_IMG_DIRECTION)
-                    exif.bearingRef = gpsDirectory.getDescription(GpsDirectory.TAG_GPS_IMG_DIRECTION_REF)
-                    // Avoiding the conversion from magnetic to true north
-                    if (exif.bearingRef && exif.bearingRef.startsWith("T")) {
-                        if (exif.bearing && exif.bearing.endsWith(" degrees")) {
-                            try {
-                                exif.decBearing = Double.parseDouble(exif.bearing.substring(0, exif.bearing.indexOf(" degrees")))
-                            }
-                            catch (Exception e) {
-                                log.warn("Non numberic bearing in EXIF: "+exif.bearing)
-                            }
-
-                        }
-                    }
-                    exif.decLat = loc.latitude
-                    exif.decLng = loc.longitude
-                }
-            }
-        } catch (Exception e){
-            //this will be thrown if its a PNG....
-            log.debug(e.getMessage(),e)
-        }
-
-        return exif
-    }
 
     private isoDateStrToDate(date) {
         if (date) {
@@ -99,39 +38,6 @@ class ImageController {
         return ""
     }
 
-    /**
-     * Uploads the image to the ALA image service.
-     * @return
-     */
-    def uploadNew() {
-        if (request.respondsTo('getFile')) {
-            def url = grailsApplication.config.ala.image.service.url + 'ws/uploadImage'
-
-            def params = [synchronousThumbnail:'true']
-            MultipartFile file = request.getFile('files')
-
-            def result = webService.postMultipart(url, params, file, 'image')
-            if (result.content) {
-                def detailsUrl = "${grailsApplication.config.ala.image.service.url}ws/getImageInfo?id=${result.content.imageId}"
-                def imageDetails = webService.getJson(detailsUrl)
-                def thumbnailUrl = imageDetails.imageUrl.replace("/original", "/thumbnail")
-
-                def md = [
-                        name         : imageDetails.orignalFileName,
-                        size         : imageDetails.sizeInBytes,
-                        id           : result.content.imageId,
-                        url          : imageDetails.imageUrl,
-                        thumbnail_url: thumbnailUrl,
-                        delete_url   : grailsApplication.config.grails.serverURL + '/image/delete?id='+result.content.imageId,
-                        delete_type  : 'DELETE']
-                result = [files: [md]]
-            }
-            response.addHeader('Content-Type','text/plain')
-            def json = result as JSON
-            render json.toString()
-        }
-    }
-
     def upload() {
         log.debug "-------------------------------upload action"
         params.each { log.debug it }
@@ -140,68 +46,48 @@ class ImageController {
             MultipartFile file = request.getFile('files')
             //println "file is " + file
             if (file?.size) {  // will only have size if a file was selected
-                def filename = file.getOriginalFilename().replaceAll(' ','_')
+                def filename = file.getOriginalFilename().replaceAll(' ', '_')
                 def ext = FilenameUtils.getExtension(filename)
-                filename = nextUniqueFileName(FilenameUtils.getBaseName(filename)+'.'+ext)
+                filename = imageService.nextUniqueFileName(FilenameUtils.getBaseName(filename) + '.' + ext)
 
                 def thumbFilename = FilenameUtils.removeExtension(filename) + "-thumb." + ext
                 def colDir = new File(grailsApplication.config.upload.images.path as String)
                 colDir.mkdirs()
-                File f = new File(fullPath(filename))
+                File f = new File(imageService.fullPath(filename))
                 //println "saving ${filename} to ${f.absoluteFile}"
                 file.transferTo(f)
-                def exifMd = getExifMetadata(f)
+                def exifMd = imageService.getExifMetadata(f)
 
                 File tnFile = new File(colDir, thumbFilename)
 
-                boolean thumbCreated = createThumbnail(f, tnFile)
+                boolean thumbCreated = imageService.createThumbnail(f, tnFile, request.contentType)
 
                 def md = [
-                        name: filename,
-                        size: file.size,
-                        isoDate: exifMd.date,
-                        contentType: file.contentType,
-                        date: isoDateStrToDate(exifMd.date) ?: 'Not available',
-                        time: isoDateStrToTime((exifMd.date)),
-                        decimalLatitude: doubleToString(exifMd.decLat),
-                        decimalLongitude: doubleToString(exifMd.decLng),
-                        decimalBearing: doubleToString(exifMd.decBearing),
-                        verbatimLatitude: exifMd.latitude,
+                        name             : filename,
+                        size             : file.size,
+                        isoDate          : exifMd.date,
+                        contentType      : file.contentType,
+                        date             : isoDateStrToDate(exifMd.date) ?: 'Not available',
+                        time             : isoDateStrToTime((exifMd.date)),
+                        decimalLatitude  : doubleToString(exifMd.decLat),
+                        decimalLongitude : doubleToString(exifMd.decLng),
+                        decimalBearing   : doubleToString(exifMd.decBearing),
+                        verbatimLatitude : exifMd.latitude,
                         verbatimLongitude: exifMd.longitude,
-                        bearing: exifMd.bearing,
-                        bearingRef: exifMd.bearingRef,
-                        url: encodeImageURL(grailsApplication.config.upload.images.url,filename),
-                        thumbnail_url: encodeImageURL(grailsApplication.config.upload.images.url, thumbCreated?thumbFilename:filename),
-                        delete_url: encodeImageURL(grailsApplication.config.grails.serverURL+"/image/delete?filename=", filename),
-                        delete_type: 'DELETE']
-                result = [files:[md]]
+                        bearing          : exifMd.bearing,
+                        bearingRef       : exifMd.bearingRef,
+                        url              : imageService.encodeImageURL(grailsApplication.config.upload.images.url, filename),
+                        thumbnail_url    : imageService.encodeImageURL(grailsApplication.config.upload.images.url, thumbCreated ? thumbFilename : filename),
+                        delete_url       : imageService.encodeImageURL(grailsApplication.config.grails.serverURL + "/image/delete?filename=", filename),
+                        delete_type      : 'DELETE']
+                result = [files: [md]]
             }
         }
         log.debug result
 
-        response.addHeader('Content-Type','text/plain')
+        response.addHeader('Content-Type', 'text/plain')
         def json = result as JSON
         render json.toString()
-    }
-
-    /**
-     * Delegates to ecodata to generate a thumbnail of the supplied image.
-     * @param image the file to create a thumbnail of
-     * @param tnFile the desired output file
-     * @return true if the thumbail was generated.
-     */
-    private boolean createThumbnail(File image, File thumbnailFile) {
-        Closure saveThumbnail = { HttpResponseDecorator resp, Object parsedData ->
-            if (parsedData instanceof InputStream) {
-                new FileOutputStream(thumbnailFile).withStream { it << parsedData }
-            }
-        }
-        image.withInputStream { fileIn ->
-            webService.postMultipart(grailsApplication.config.ecodata.baseUrl + "document/createThumbnail", [:], fileIn, request.contentType, image.name, 'image', saveThumbnail)
-        }
-
-        return thumbnailFile.exists()
-
     }
 
     def delete = {
@@ -209,18 +95,12 @@ class ImageController {
         render '{"deleted":true}'
     }
 
-    private def encodeImageURL(prefix, filename) {
-        def encodedFileName = filename.encodeAsURL().replaceAll('\\+', '%20')
-        URI uri = new URI(prefix + encodedFileName)
-        return uri.toURL();
-    }
-
     /**
      * A convenience method to help serve files in the dev. environment.
      * The content type of the file is derived purely from the file extension.
      */
     def get() {
-        File f = new File(fullPath(params.id))
+        File f = new File(imageService.fullPath(params.id))
         if (!f.exists()) {
             response.status = 404
             return
@@ -228,31 +108,11 @@ class ImageController {
 
         def ext = FilenameUtils.getExtension(params.id)
 
-        response.contentType = 'image/'+ext
+        response.contentType = 'image/' + ext
         response.outputStream << new FileInputStream(f)
         response.outputStream.flush()
 
     }
 
-    /**
-     * We are preserving the file name so the URLs look nicer and the file extension isn't lost.
-     * As filename are not guaranteed to be unique, we are pre-pending the file with a counter if necessary to
-     * make it unique.
-     */
-    private String nextUniqueFileName(filename) {
-        int counter = 0;
-        String newFilename = filename
-        File f = new File(fullPath(newFilename))
-        while (f.exists()) {
-            newFilename = "${counter}_${filename}"
-            counter++;
-            f = new File(fullPath(newFilename))
-        }
-        return newFilename;
-    }
 
-    String fullPath(filename) {
-
-        return grailsApplication.config.upload.images.path + File.separator  + filename
-    }
 }
