@@ -2,6 +2,7 @@ package au.org.ala.merit
 
 import grails.converters.JSON
 import org.apache.commons.io.FilenameUtils
+import org.springframework.http.HttpHeaders
 import org.springframework.web.multipart.MultipartFile
 
 import java.text.DecimalFormat
@@ -96,7 +97,6 @@ class ImageController {
     }
 
     /**
-     * A convenience method to help serve files in the dev. environment.
      * The content type of the file is derived purely from the file extension.
      */
     def get() {
@@ -108,6 +108,10 @@ class ImageController {
 
         def ext = FilenameUtils.getExtension(params.id)
 
+        long ONE_WEEK_IN_SECONDS = 60*60*24*7
+        response.setHeader(HttpHeaders.PRAGMA, "")
+        response.setDateHeader(HttpHeaders.EXPIRES, ONE_WEEK_IN_SECONDS*1000+System.currentTimeMillis())
+        response.setHeader(HttpHeaders.CACHE_CONTROL, "max-age="+ONE_WEEK_IN_SECONDS)
         response.contentType = 'image/' + ext
         response.outputStream << new FileInputStream(f)
         response.outputStream.flush()

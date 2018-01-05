@@ -369,7 +369,7 @@ class ReportService {
         documentService.search(criteria)
     }
 
-    //@Cacheable('homePageImages')
+    @Cacheable('homePageImages')
     List homePageImages() {
         def max = 5
         def criteria = [
