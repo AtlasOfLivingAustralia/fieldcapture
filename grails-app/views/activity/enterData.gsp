@@ -64,7 +64,7 @@
         <div class="row-fluid title-block well well-small input-block-level">
             <div class="span9 title-attribute">
                 <h1><span data-bind="click:goToProject" class="clickable">${project?.name?.encodeAsHTML() ?: 'no project defined!!'}</span></h1>
-                <h3 data-bind="css:{modified:dirtyFlag.isDirty},attr:{title:'Has been modified'}">Activity: <span data-bind="text:type"></span></h3>
+                <h3 data-bind="css:{modified:dirtyFlag.isDirty},attr:{title:'Has been modified'}">Activity: <span data-bind="text:description"></span></h3>
                 <g:if test="${metaModel.supportsSites && activity.siteId && site}">
                     <h3>Site: ${site.name}</h3>
                 </g:if>
