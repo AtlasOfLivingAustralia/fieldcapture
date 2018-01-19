@@ -555,7 +555,8 @@ class ReportController {
 
     @RequireApiKey
     def reef2050PlanActionReportCallback() {
-        Map model = reef2050PlanActionReportModel()
+        boolean approvedOnly = params.getBoolean('approvedOnly', true)
+        Map model = reef2050PlanActionReportModel(approvedOny)
         render view:'reef2050PlanActionReportPrintable', model:model
     }
 
