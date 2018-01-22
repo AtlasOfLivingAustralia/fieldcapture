@@ -598,7 +598,7 @@ class ReportController {
     }
 
     def reef2050PlanActionReport() {
-        reef2050PlanActionReportModel()
+        reef2050PlanActionReportModel(true)
     }
 
     /**
