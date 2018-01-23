@@ -27,6 +27,10 @@
 
 <a id="userDownload" class="btn">Download MERIT User List</a>
 
+<h4>Reef 2050 Plan Action Report</h4>
+<a id="reef2050PlanActionReport" class="btn" href="${g.createLink(controller:'report', action:'reef2050PlanActionReportPreview', params:[approvedOnly:false])}">Reef 2050 Plan Action Report</a>
+<a id="reef2050PlanActionReportPDF" class="btn" href="${g.createLink(controller:'report', action:'reef2050PlanActionReportPDF')}">Reef 2050 Plan Action Report as PDF (approved data only)</a>
+
 <g:render template="/shared/dashboard"/>
 
 <asset:javascript src="common.js"/>

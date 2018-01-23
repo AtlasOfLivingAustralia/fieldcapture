@@ -58,7 +58,7 @@ class ProjectController {
             }
             redirect(controller: 'home', model: [error: flash.message])
         } else {
-            if (template == ESP_TEMPLATE) {
+            if (template == ESP_TEMPLATE && user?.isEditor) {
                 espOverview(project, user)
             } else {
 
@@ -71,7 +71,8 @@ class ProjectController {
                 // comma separated list of user email addresses
 
                 def programs = projectService.programsModel()
-                def content = projectContent(project, user, programs)
+
+                def content = projectContent(project, user, template)
 
                 def model = [project               : project,
                              activities            : project.activities,
@@ -105,7 +106,9 @@ class ProjectController {
         organisations
     }
 
-    protected Map projectContent(project, user, programs) {
+    protected Map projectContent(Map project, user, String template) {
+
+        boolean meriView = template == 'meri'
         def meriPlanVisible = metadataService.isOptionalContent('MERI Plan', project.associatedProgram, project.associatedSubProgram)
         def risksAndThreatsVisible = metadataService.isOptionalContent('Risks and Threats', project.associatedProgram, project.associatedSubProgram)
         def canViewRisks = risksAndThreatsVisible && (user?.hasViewAccess || user?.isEditor)
@@ -130,14 +133,14 @@ class ProjectController {
         }
         boolean canChangeProjectDates = projectService.canChangeProjectDates(project)
 
-        def model = [overview       : [label: 'Overview', visible: true, default: true, type: 'tab', publicImages: imagesModel, displayTargets: false, displayOutcomes: false, blog: blog, hasNewsAndEvents: hasNewsAndEvents, hasProjectStories: hasProjectStories, canChangeProjectDates: canChangeProjectDates],
-                     documents      : [label: 'Documents', visible: true, type: 'tab'],
-                     details        : [label: 'MERI Plan', disabled: !user?.hasViewAccess, disabled: !meriPlanEnabled, visible: meriPlanVisible, meriPlanVisibleToUser: meriPlanVisibleToUser, risksAndThreatsVisible: canViewRisks, type: 'tab'],
-                     plan           : [label: 'Activities', visible: true, disabled: !user?.hasViewAccess, type: 'tab', reports: project.reports, scores: scores],
-                     risksAndThreats: [label: 'Risks and Threats', disabled: !user?.hasViewAccess, visible: user?.hasViewAccess && risksAndThreatsVisible],
-                     site           : [label: 'Sites', visible: true, disabled: !user?.hasViewAccess, type: 'tab'],
-                     dashboard      : [label: 'Dashboard', visible: true, disabled: !user?.hasViewAccess, type: 'tab'],
-                     admin          : [label: 'Admin', visible: user?.isEditor || user?.isAdmin || user?.isCaseManager, type: 'tab', canChangeProjectDates: canChangeProjectDates, showAnnouncementsTab: showAnnouncementsTab]]
+        def model = [overview       : [label: 'Overview', visible: !meriView, default: !meriView, type: 'tab', publicImages: imagesModel, displayTargets: false, displayOutcomes: false, blog: blog, hasNewsAndEvents: hasNewsAndEvents, hasProjectStories: hasProjectStories, canChangeProjectDates: canChangeProjectDates],
+                     documents      : [label: 'Documents', visible: !meriView, type: 'tab'],
+                     details        : [label: 'MERI Plan', default: meriView, disabled: !meriView && !meriPlanEnabled, visible: meriView || meriPlanVisible, meriPlanVisibleToUser: meriView || meriPlanVisibleToUser, risksAndThreatsVisible: canViewRisks, announcementsVisible: !meriView, type: 'tab'],
+                     plan           : [label: 'Activities', visible: !meriView, disabled: !user?.hasViewAccess, type: 'tab', reports: project.reports, scores: scores],
+                     risksAndThreats: [label: 'Risks and Threats', disabled: !user?.hasViewAccess, visible: !meriView && user?.hasViewAccess && risksAndThreatsVisible],
+                     site           : [label: 'Sites', visible: !meriView, disabled: !user?.hasViewAccess, type: 'tab'],
+                     dashboard      : [label: 'Dashboard', visible: !meriView, disabled: !user?.hasViewAccess, type: 'tab'],
+                     admin          : [label: 'Admin', visible: !meriView && (user?.isEditor || user?.isAdmin || user?.isCaseManager), type: 'tab', canChangeProjectDates: canChangeProjectDates, showAnnouncementsTab: showAnnouncementsTab]]
 
         return [view: 'index', model: model]
     }
@@ -148,7 +151,7 @@ class ProjectController {
         }
         Map config = projectService.getProgramConfiguration(project)
 
-        return config.projectTemplate == ESP_TEMPLATE && user?.isEditor ? ESP_TEMPLATE : null
+        return config.projectTemplate
     }
     /**
      * Designed for an ajax call - this returns only a template not a full HTML page.

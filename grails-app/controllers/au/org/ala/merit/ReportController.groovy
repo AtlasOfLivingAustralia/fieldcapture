@@ -555,12 +555,21 @@ class ReportController {
 
     @RequireApiKey
     def reef2050PlanActionReportCallback() {
-        Map model = reef2050PlanActionReportModel()
+        boolean approvedOnly = params.getBoolean('approvedOnly', true)
+        Map model = reef2050PlanActionReportModel(approvedOny)
         render view:'reef2050PlanActionReportPrintable', model:model
     }
 
-    private Map reef2050PlanActionReportModel() {
-        boolean approvedOnly = false //!(userService.userIsAlaOrFcAdmin())
+    def reef2050PlanActionReportPreview() {
+        boolean approvedOnly = params.getBoolean('approvedOnly', true)
+        Map model = reef2050PlanActionReportModel(approvedOnly)
+        render view:'reef2050PlanActionReportPrintable', model:model
+    }
+
+    private Map reef2050PlanActionReportModel(boolean approvedOnly) {
+       if (!userService.userIsAlaOrFcAdmin()) {
+           approvedOnly = true
+       }
         Map model = reportService.reef2050PlanActionReport(approvedOnly)
 
         Map actionStatusCounts = model.actionStatus?.result?.result ?: [:]
@@ -589,7 +598,7 @@ class ReportController {
     }
 
     def reef2050PlanActionReport() {
-        reef2050PlanActionReportModel()
+        reef2050PlanActionReportModel(true)
     }
 
     /**
