@@ -328,6 +328,25 @@
 </div>
 
 <asset:script>
+
+    var sectionMapping = {
+        projects:'#projectsView',
+        map:'#accordionMapView',
+        dashboard:'#reportView',
+        download:'#downloadView'
+    };
+
+    var reportMapping = {
+        activities:'dashboard',
+        reef2050:'reef2050PlanAction'
+    };
+    <g:if test="${fc.userIsAlaOrFcAdmin()}">
+        reportMapping['announcements']='announcements';
+        reportMapping['targets']='outputTargets';
+    </g:if>
+    var selectedSection = sectionMapping['${params.section?:''}'];
+    var selectedReport = reportMapping['${params.subsection?:''}'];
+
     var projectListIds = [], facetList = [], mapDataHasChanged = false, mapBounds, projectSites; // globals
 
     $(function () {
@@ -385,7 +404,7 @@
             }
             else if (section === '#reportView' && !initialisedReport) {
                 initialisedReport = true;
-                var reportType = amplify.store('report-type-state');
+                var reportType = selectedReport || amplify.store('report-type-state');
                 var $reportSelector = $('#dashboardType');
                 if (reportType) {
                     $reportSelector.val(reportType);
@@ -442,7 +461,7 @@
         });
 
         // re-establish the previous view state
-        var storedTab = amplify.store(VIEW_STATE_KEY) || '#accordionMapView';
+        var storedTab = selectedSection || amplify.store(VIEW_STATE_KEY) || '#accordionMapView';
         if (!$('#project-display-options '+storedTab)[0]) {
             storedTab = '#accordionMapView';
         }
