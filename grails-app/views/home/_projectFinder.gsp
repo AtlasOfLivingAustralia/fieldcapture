@@ -43,7 +43,7 @@
             </g:if>
             <div id="facetsContent" class="hidden-phone">
                 <g:set var="baseUrl"><fc:formatParams params="${params}" requiredParams="${reqParams}"/></g:set>
-                <g:set var="fqLink" value="${baseUrl?:"?"}"/>
+                <g:set var="fqLink" value="${g.createLink(controller: 'home', action: 'projectExplorer') + (baseUrl?:"?")}"/>
             <!-- fqLink = ${fqLink} -->
                 <div><h4 id="facet-dates-header" style="display:inline-block">Project Dates <fc:iconHelp helpTextCode="project.dates.help"/> </h4><a class="accordian-toggle pointer" data-toggle="collapse" data-target="#facet-dates"><i style="float:right; margin-top:10px;" class="fa fa-plus"></i></a></div>
                 <div id="facet-dates" data-name="projectDates" class="collapse validationEngineContainer">
@@ -328,6 +328,25 @@
 </div>
 
 <asset:script>
+
+    var sectionMapping = {
+        projects:'#projectsView',
+        map:'#accordionMapView',
+        dashboard:'#reportView',
+        download:'#downloadView'
+    };
+
+    var reportMapping = {
+        activities:'dashboard',
+        reef2050:'reef2050PlanAction'
+    };
+    <g:if test="${fc.userIsAlaOrFcAdmin()}">
+        reportMapping['announcements']='announcements';
+        reportMapping['targets']='outputTargets';
+    </g:if>
+    var selectedSection = sectionMapping['${params.section?:''}'];
+    var selectedReport = reportMapping['${params.subsection?:''}'];
+
     var projectListIds = [], facetList = [], mapDataHasChanged = false, mapBounds, projectSites; // globals
 
     $(function () {
@@ -385,7 +404,7 @@
             }
             else if (section === '#reportView' && !initialisedReport) {
                 initialisedReport = true;
-                var reportType = amplify.store('report-type-state');
+                var reportType = selectedReport || amplify.store('report-type-state');
                 var $reportSelector = $('#dashboardType');
                 if (reportType) {
                     $reportSelector.val(reportType);
@@ -442,7 +461,7 @@
         });
 
         // re-establish the previous view state
-        var storedTab = amplify.store(VIEW_STATE_KEY) || '#accordionMapView';
+        var storedTab = selectedSection || amplify.store(VIEW_STATE_KEY) || '#accordionMapView';
         if (!$('#project-display-options '+storedTab)[0]) {
             storedTab = '#accordionMapView';
         }
@@ -650,8 +669,9 @@
             $(this).find("i").addClass("icon-flipped180");
         });
 
+        var projectExplorerUrl = '${g.createLink(controller:'home', action:'projectExplorer')}';
         $(".clearFacet").click(function(e){
-       	 window.location.href ="${g.createLink(controller:'home', action:'projectExplorer')}";
+       	 window.location.href = projectExplorerUrl;
         });
 
         $(".facetSearch").click(function(e){
@@ -662,7 +682,7 @@
 		        }
 		    });
 			var url = "${baseUrl?:"?"}";
-		    window.location.href = url + "&" + data.join('&');
+		    window.location.href = projectExplorerUrl + url + "&" + data.join('&');
         });
 
         // sort facets in popups by count

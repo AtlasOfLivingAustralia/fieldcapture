@@ -94,10 +94,10 @@ grails.views.default.codec = "none"
  *  EXTERNAL SERVERS
  \******************************************************************************/
 if (!biocache.baseURL) {
-    biocache.baseURL = "http://biocache.ala.org.au/"
+    biocache.baseURL = "https://biocache.ala.org.au/"
 }
 if (!ala.baseURL) {
-    ala.baseURL = "http://www.ala.org.au"
+    ala.baseURL = "https://www.ala.org.au"
 }
 if (!collectory.baseURL) {
     collectory.baseURL = "http://collections-dev.ala.org.au/"
@@ -107,7 +107,7 @@ if (!headerAndFooter.baseURL) {
 }
 // spatial services
 if(!spatial.baseUrl){
-    spatial.baseUrl = "http://spatial-dev.ala.org.au"
+    spatial.baseUrl = "https://spatial-dev.ala.org.au"
 }
 if(!spatial.layersUrl){
     spatial.layersUrl = spatial.baseUrl + "/layers-service"
@@ -293,7 +293,7 @@ security {
         // service = 'http://devt.ala.org.au:8080' // optional, if set it will always be used as the return path from CAS
         uriFilterPattern = '.*/user/.*,.*/site/(?!index).*,.*/project/(?!index).*,.*/activity/(?!ajaxUnlock).*,.*/output/(?!index).*,.*/image/delete.*,.*/image/upload.*,.*/admin/.*,.*/proxy/speciesListPost,.*/document/documentUpdate,.*/document/deleteDocument,.*/document/downloadProjectDataFile/.*,.*/home/advanced,.*/organisation/(?!index).*,.*/organisation/(?!list).*,.*/blog/.*,.*/report/performanceAssessmentSummaryReport,.*/report/performanceAssessmentComparisonReport.*,.*/report/update.*'
         uriExclusionFilterPattern = '/assets/.*,/images/.*,/css/.*,/js/.*,/less/.*' // this is the default value
-        authenticateOnlyIfLoggedInPattern =  '/,/;.*,/[A-Za-z0-9]+/?,.*/project/index.*,.*/site/index.*,.*/activity/ajaxUnlock.*,.*/output/index.*,.*/ajax/keepSessionAlive,.*/image/.*,.*/search/.*,.*/home/.*,.*/organisation/index.*,.*/organisation/list.*,.*/report/loadReport.*'
+        authenticateOnlyIfLoggedInPattern =  '/,/;.*,/[A-Za-z0-9]+/?,.*/project/index.*,.*/site/index.*,.*/activity/ajaxUnlock.*,.*/output/index.*,.*/ajax/keepSessionAlive,.*/image/.*,.*/search/.*,.*/home/.*,.*/organisation/index.*,.*/organisation/list.*,.*/report/loadReport.*,.*/report/reef2050PlanActionReport.*,.*/explore.*'
     }
 }
 pdfbox.fontcache="/data/${appName}/cache/"

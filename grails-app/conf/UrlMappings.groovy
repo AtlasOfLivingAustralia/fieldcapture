@@ -74,6 +74,12 @@ class UrlMappings {
             controller = 'activity'
             action = 'ajaxUnlock'
         }
+
+        "/explore/$section/$subsection?" {
+            controller = 'home'
+            action = 'projectExplorer'
+        }
+
         "500"(controller:'error', action:'response500')
         "404"(controller:'error', action:'response404')
         "/$hub?/$controller/ws/$action/$id" {
