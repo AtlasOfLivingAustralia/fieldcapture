@@ -43,7 +43,7 @@
             </g:if>
             <div id="facetsContent" class="hidden-phone">
                 <g:set var="baseUrl"><fc:formatParams params="${params}" requiredParams="${reqParams}"/></g:set>
-                <g:set var="fqLink" value="${baseUrl?:"?"}"/>
+                <g:set var="fqLink" value="${g.createLink(controller: 'home', action: 'projectExplorer') + (baseUrl?:"?")}"/>
             <!-- fqLink = ${fqLink} -->
                 <div><h4 id="facet-dates-header" style="display:inline-block">Project Dates <fc:iconHelp helpTextCode="project.dates.help"/> </h4><a class="accordian-toggle pointer" data-toggle="collapse" data-target="#facet-dates"><i style="float:right; margin-top:10px;" class="fa fa-plus"></i></a></div>
                 <div id="facet-dates" data-name="projectDates" class="collapse validationEngineContainer">
@@ -669,8 +669,9 @@
             $(this).find("i").addClass("icon-flipped180");
         });
 
+        var projectExplorerUrl = '${g.createLink(controller:'home', action:'projectExplorer')}';
         $(".clearFacet").click(function(e){
-       	 window.location.href ="${g.createLink(controller:'home', action:'projectExplorer')}";
+       	 window.location.href = projectExplorerUrl;
         });
 
         $(".facetSearch").click(function(e){
@@ -681,7 +682,7 @@
 		        }
 		    });
 			var url = "${baseUrl?:"?"}";
-		    window.location.href = url + "&" + data.join('&');
+		    window.location.href = projectExplorerUrl + url + "&" + data.join('&');
         });
 
         // sort facets in popups by count
