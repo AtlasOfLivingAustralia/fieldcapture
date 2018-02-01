@@ -88,7 +88,7 @@ grails.project.dependency.resolution = {
     plugins {
         // The plugins are mostly defined in the fieldcapture-hubs-plugin
 
-        runtime ":ala-ws-security:1.5-SNAPSHOT"
+        runtime ":ala-ws-security:1.4"
 
         build ":tomcat:$tomcatVersion"
 
@@ -120,7 +120,7 @@ grails.project.dependency.resolution = {
         compile ':cookie:1.4'
 
         if (Environment.current != Environment.DEVELOPMENT) {
-            compile ":ecodata-client-plugin:0.4"
+            compile ":ecodata-client-plugin:0.5-SNAPSHOT"
             test ":fieldcapture-test:0.1-SNAPSHOT"
         }
 
