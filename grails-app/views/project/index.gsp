@@ -770,8 +770,9 @@
                         },
                         {
                             "targets":3,
-                            "sort":4,
-                            "width":"8em"
+                            "orderData":[4],
+                            "width":"8em",
+                            "orderable":true
                         },
                         {
                             "targets":4,

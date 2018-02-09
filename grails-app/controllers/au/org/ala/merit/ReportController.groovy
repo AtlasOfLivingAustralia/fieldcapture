@@ -538,8 +538,12 @@ class ReportController {
     }
 
     def reef2050PlanActionReportPDF() {
-        String reportUrl = g.createLink(controller: 'report', action: 'reef2050PlanActionReportCallback', absolute: true)
-        String url = grailsApplication.config.pdfgen.baseURL + 'api/pdf' + commonService.buildUrlParamsFromMap(docUrl: reportUrl, cacheable: false, options : '-O landscape --default-header -L 5 -R 5 -T 5 -B 5')
+        boolean approvedOnly = params.getBoolean('approvedOnly', true)
+        if (!userService.userIsAlaOrFcAdmin()) {
+            approvedOnly = true
+        }
+        String reportUrl = g.createLink(controller: 'report', action: 'reef2050PlanActionReportCallback', absolute: true, params:[approvedOnly:approvedOnly])
+        String url = grailsApplication.config.pdfgen.baseURL + 'api/pdf' + commonService.buildUrlParamsFromMap(docUrl: reportUrl, cacheable: false, options : '-O landscape -L 5 -R 5 -T 5 -B 5')
         Map result
         try {
             result = webService.proxyGetRequest(response, url, false, false, 10 * 60 * 1000)
@@ -553,23 +557,23 @@ class ReportController {
         }
     }
 
-    @RequireApiKey
     def reef2050PlanActionReportCallback() {
-        boolean approvedOnly = params.getBoolean('approvedOnly', true)
-        Map model = reef2050PlanActionReportModel(approvedOny)
-        render view:'reef2050PlanActionReportPrintable', model:model
-    }
-
-    def reef2050PlanActionReportPreview() {
         boolean approvedOnly = params.getBoolean('approvedOnly', true)
         Map model = reef2050PlanActionReportModel(approvedOnly)
         render view:'reef2050PlanActionReportPrintable', model:model
     }
 
+    def reef2050PlanActionReportPreview() {
+        boolean approvedOnly = params.getBoolean('approvedOnly', true)
+        if (!userService.userIsAlaOrFcAdmin()) {
+            approvedOnly = true
+        }
+        Map model = reef2050PlanActionReportModel(approvedOnly)
+        render view:'reef2050PlanActionReportPrintable', model:model
+    }
+
     private Map reef2050PlanActionReportModel(boolean approvedOnly) {
-       if (!userService.userIsAlaOrFcAdmin()) {
-           approvedOnly = true
-       }
+
         Map model = reportService.reef2050PlanActionReport(approvedOnly)
 
         Map actionStatusCounts = model.actionStatus?.result?.result ?: [:]

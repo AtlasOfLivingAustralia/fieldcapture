@@ -13,13 +13,13 @@
         }
     </script>
     <asset:stylesheet src="common.css"/>
-    <g:set var="here" value="${g.createLink(action:'editSiteBlog')}"/>
+    <g:set var="here" value="${g.createLink(action: 'editSiteBlog')}"/>
 </head>
 
 <body>
 <h3>Administrator Reports</h3>
 
-<h4>Organisation data download: </h4>
+<h4>Organisation data download:</h4>
 
 <a id="orgDataDownload" class="btn" href="#">Download Organisation Report Data</a>
 
@@ -28,22 +28,51 @@
 <a id="userDownload" class="btn">Download MERIT User List</a>
 
 <h4>Reef 2050 Plan Action Report</h4>
-<a id="reef2050PlanActionReport" class="btn" href="${g.createLink(controller:'report', action:'reef2050PlanActionReportPreview', params:[approvedOnly:false])}">Reef 2050 Plan Action Report</a>
-<a id="reef2050PlanActionReportPDF" class="btn" href="${g.createLink(controller:'report', action:'reef2050PlanActionReportPDF')}">Reef 2050 Plan Action Report as PDF (approved data only)</a>
+
+<div class="row-fluid">
+    <div class="span2">
+        <strong>All Data:</strong>
+    </div>
+
+    <div class="span6">
+        <a class="btn"
+           href="${g.createLink(controller: 'report', action: 'reef2050PlanActionReportPreview', params: [approvedOnly: false])}">Reef 2050 Plan Action Report</a>
+        <span> </span>
+        <a class="btn"
+           href="${g.createLink(controller: 'report', action: 'reef2050PlanActionReportPDF', params: [approvedOnly: false])}">Reef 2050 Plan Action Report as PDF</a>
+    </div>
+
+</div>
+
+<div>
+    <div class="span2">
+        <strong>Approved data only:</strong>
+    </div>
+
+    <div class="span6">
+        <a class="btn"
+           href="${g.createLink(controller: 'report', action: 'reef2050PlanActionReportPreview')}">Reef 2050 Plan Action Report</a>
+
+        <span> </span>
+        <a class="btn"
+           href="${g.createLink(controller: 'report', action: 'reef2050PlanActionReportPDF')}">Reef 2050 Plan Action Report as PDF</a>
+    </div>
+
+</div>
 
 <g:render template="/shared/dashboard"/>
 
 <asset:javascript src="common.js"/>
 <script>
-    $(function() {
+    $(function () {
         var SELECTED_REPORT_KEY = 'selectedAdminReport';
         var selectedReport = amplify.store(SELECTED_REPORT_KEY);
         var $dashboardType = $('#dashboardType');
-        if (!$dashboardType.find('option[value='+selectedReport+']')[0]) {
+        if (!$dashboardType.find('option[value=' + selectedReport + ']')[0]) {
             selectedReport = 'performanceAssessmentComparison';
         }
         $dashboardType.val(selectedReport);
-        $dashboardType.change(function(e) {
+        $dashboardType.change(function (e) {
             var $content = $('#dashboard-content');
             var $loading = $('.loading-message');
             $content.hide();
@@ -51,24 +80,24 @@
 
             var reportType = $dashboardType.val();
 
-            $.get(fcConfig.dashboardUrl, {report:reportType}).done(function(data) {
+            $.get(fcConfig.dashboardUrl, {report: reportType}).done(function (data) {
                 $content.html(data);
                 $loading.hide();
                 $content.show();
-                $('#dashboard-content .helphover').popover({animation: true, trigger:'hover', container:'body'});
+                $('#dashboard-content .helphover').popover({animation: true, trigger: 'hover', container: 'body'});
                 amplify.store(SELECTED_REPORT_KEY, reportType);
             });
 
         }).trigger('change');
 
-        $('#orgDataDownload').click(function() {
-            $.get(fcConfig.organisationDataDownloadUrl).done(function(data) {
-               bootbox.alert("Your download will be emailed to you when it is complete.");
+        $('#orgDataDownload').click(function () {
+            $.get(fcConfig.organisationDataDownloadUrl).done(function (data) {
+                bootbox.alert("Your download will be emailed to you when it is complete.");
             });
         });
 
-        $('#userDownload').click(function() {
-            $.get(fcConfig.userDownloadUrl).done(function(data) {
+        $('#userDownload').click(function () {
+            $.get(fcConfig.userDownloadUrl).done(function (data) {
                 bootbox.alert("Your download will be emailed to you when it is complete.");
             });
         });

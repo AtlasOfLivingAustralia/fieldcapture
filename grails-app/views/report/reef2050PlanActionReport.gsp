@@ -96,7 +96,7 @@
                         <th class="status">Status</th>
                         <th class="description">Description</th>
                         <th class="actionProgress">Progress</th>
-                        <th class="weblink">Weblink</th>
+                        <th class="webLink">Web Link</th>
                         <th class="deliveryPartners">Delivery Partners</th>
                     </tr>
                     </thead>
@@ -118,7 +118,7 @@
                 <td class="status">${action.status}</td>
                 <td class="description">${action.description}</td>
                 <td class="actionProgress">${action.progress}</td>
-                <td class="weblink">
+                <td class="webLink">
                 <g:if test="${action.webLinks}">
                     <g:each in="${action.webLinks}" var="webLink" status="i">
                     <a href="${webLink?.trim()}" title="${webLink?.trim()}" target="_blank">${i+1}</a><g:if test="${i < action.webLinks.size()-1}">, </g:if>
@@ -139,6 +139,10 @@
 </div>
 </div>
         <script type="text/javascript">
+
+            $.fn.dataTableExt.oStdClasses.sPageButtonActive = "currentStep";
+            $.fn.dataTableExt.oStdClasses.sPaging = "pagination ";
+
             $('table.action-table').dataTable({
                 "lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "All"] ],
                 "columnDefs": [{
