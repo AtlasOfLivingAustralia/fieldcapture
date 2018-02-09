@@ -35,11 +35,11 @@ div.report-section {
 .action-table .actionId { width: 5%; }
 .action-table .action { width: 10%; }
 .action-table .leadAgency { width: 8%; }
-.action-table .status { width: 7%; }
+.action-table .status { width: 8%; }
 .action-table .description { width: 20%; white-space: pre-wrap; }
 .action-table .actionProgress { width: 45%; white-space: pre-wrap; }
 .action-table .webLink { width: 6%; }
-.action-table .deliveryPartners { width: 8%; }
+.action-table .deliveryPartners { width: 9%; }
 
 .status-row { height: 60px; }
 .themeActions {

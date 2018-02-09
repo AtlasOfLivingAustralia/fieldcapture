@@ -96,7 +96,7 @@
                         <th class="status">Status</th>
                         <th class="description">Description</th>
                         <th class="actionProgress">Progress</th>
-                        <th class="webLink">Weblink</th>
+                        <th class="webLink">Web Link</th>
                         <th class="deliveryPartners">Delivery Partners</th>
                     </tr>
                     </thead>
@@ -139,6 +139,10 @@
 </div>
 </div>
         <script type="text/javascript">
+
+            $.fn.dataTableExt.oStdClasses.sPageButtonActive = "currentStep";
+            $.fn.dataTableExt.oStdClasses.sPaging = "pagination ";
+
             $('table.action-table').dataTable({
                 "lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "All"] ],
                 "columnDefs": [{
