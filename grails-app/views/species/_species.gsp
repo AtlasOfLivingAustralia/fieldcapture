@@ -24,22 +24,7 @@
                     <textarea id="speciesList" rows="10" class="input-block-level validate[required]"></textarea>
                 </div>
             </div>
-            <div class="control-group hide">
-                <label class="control-label" for="purpose">Used for</label>
-                <div class="controls">
-                    %{--<g:select name="purpose" from="${activityTypes}" noSelection="['':'']"/>--}%
-                    <select id="purpose" name="purpose" class="validate[required] input-xlarge" >
-                        <option value="">-- select an activity or assessment type --</option>
-                        <g:each in="${activityTypes}" var="t" status="i">
-                            <optgroup label="${t.name}">
-                                <g:each in="${t.list}" var="opt">
-                                    <option value="${opt.name}">${opt.name}</option>
-                                </g:each>
-                            </optgroup>
-                        </g:each>
-                    </select>
-                </div>
-            </div>
+
             <div class="control-group">
                 <div class="controls">
                     <button id="submitSpeciesList" class="btn btn-primary">${project.listId ? "Update" : "Submit"}</button>

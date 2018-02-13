@@ -133,14 +133,15 @@ class ProjectController {
         }
         boolean canChangeProjectDates = projectService.canChangeProjectDates(project)
 
+        boolean adminTabVisible = user?.isEditor || user?.isAdmin || user?.isCaseManager
+
         def model = [overview       : [label: 'Overview', visible: !meriView, default: !meriView, type: 'tab', publicImages: imagesModel, displayTargets: false, displayOutcomes: false, blog: blog, hasNewsAndEvents: hasNewsAndEvents, hasProjectStories: hasProjectStories, canChangeProjectDates: canChangeProjectDates],
-                     documents      : [label: 'Documents', visible: !meriView, type: 'tab'],
-                     details        : [label: 'MERI Plan', default: meriView, disabled: !meriView && !meriPlanEnabled, visible: meriView || meriPlanVisible, meriPlanVisibleToUser: meriView || meriPlanVisibleToUser, risksAndThreatsVisible: canViewRisks, announcementsVisible: !meriView, type: 'tab'],
-                     plan           : [label: 'Activities', visible: !meriView, disabled: !user?.hasViewAccess, type: 'tab', reports: project.reports, scores: scores],
-                     risksAndThreats: [label: 'Risks and Threats', disabled: !user?.hasViewAccess, visible: !meriView && user?.hasViewAccess && risksAndThreatsVisible],
-                     site           : [label: 'Sites', visible: !meriView, disabled: !user?.hasViewAccess, type: 'tab'],
+                     documents      : [label: 'Documents', visible: !meriView, type: 'tab', user:user, template:'docs'],
+                     details        : [label: 'MERI Plan', default: meriView, disabled: !meriView && !meriPlanEnabled, visible: meriView || meriPlanVisible, meriPlanVisibleToUser: meriView || meriPlanVisibleToUser, risksAndThreatsVisible: canViewRisks, announcementsVisible: !meriView, project:project, type: 'tab', template:'viewMeriPlan'],
+                     plan           : [label: 'Activities', visible: !meriView, disabled: !user?.hasViewAccess, type: 'tab', template:'projectActivities', grantManagerSettingsVisible:user?.isCaseManager, project:project, reports: project.reports, scores: scores, risksAndThreatsVisible: !meriView && user?.hasViewAccess && risksAndThreatsVisible],
+                     site           : [label: 'Sites', visible: !meriView, disabled: !user?.hasViewAccess, editable:user?.isEditor, type: 'tab', template:'projectSites'],
                      dashboard      : [label: 'Dashboard', visible: !meriView, disabled: !user?.hasViewAccess, type: 'tab'],
-                     admin          : [label: 'Admin', visible: !meriView && (user?.isEditor || user?.isAdmin || user?.isCaseManager), type: 'tab', canChangeProjectDates: canChangeProjectDates, showAnnouncementsTab: showAnnouncementsTab]]
+                     admin          : [label: 'Admin', visible: !meriView && adminTabVisible, user:user, type: 'tab', template:'projectAdmin', project:project, canChangeProjectDates: canChangeProjectDates, showAnnouncementsTab: showAnnouncementsTab]]
 
         return [view: 'index', model: model]
     }
