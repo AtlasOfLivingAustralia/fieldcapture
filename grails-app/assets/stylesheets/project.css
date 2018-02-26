@@ -153,3 +153,7 @@
 #sites-table tbody tr:hover {
 	background-color: #d9edf7;
 }
+
+.report-prototype th {
+	white-space: normal;
+}

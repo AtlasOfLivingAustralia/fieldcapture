@@ -5,6 +5,7 @@
 <head>
     <meta name="layout" content="${hubConfig.skin}"/>
     <title>Not Found</title>
+    <asset:stylesheet src="common.css"/>
 </head>
 
 <body>
@@ -14,4 +15,5 @@
 </div>
 </div>
 </body>
+<asset:javascript src="common"/>
 </html>
