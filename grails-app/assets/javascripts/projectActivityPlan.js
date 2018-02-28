@@ -849,7 +849,7 @@ function PlanViewModel(activities, reports, outputTargets, targetMetadata, proje
 };
 
 
-function ProjectReportingViewModel(project, today, config) {
+function ProjectReportingTabViewModel(project, today, config) {
     var self = this;
 
     self.planStatus = ko.observable(PlanStatus.APPROVED);
