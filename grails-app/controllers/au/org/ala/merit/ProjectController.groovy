@@ -48,8 +48,6 @@ class ProjectController {
             user.hasViewAccess = projectService.canUserViewProject(user.userId, id) ?: false
         }
 
-        String template = projectTemplate(project, user, params.template)
-
         if (!project || project.error) {
             flash.message = "Project not found with id: ${id}"
             if (project?.error) {
@@ -58,6 +56,7 @@ class ProjectController {
             }
             redirect(controller: 'home', model: [error: flash.message])
         } else {
+            String template = projectTemplate(project, user, params.template)
             if (template == ESP_TEMPLATE && user?.isEditor) {
                 espOverview(project, user)
             } else {
@@ -108,7 +107,6 @@ class ProjectController {
 
     protected Map projectContent(Map project, user, String template) {
 
-        boolean meriView = template == 'meri'
         def meriPlanVisible = metadataService.isOptionalContent('MERI Plan', project.associatedProgram, project.associatedSubProgram)
         def risksAndThreatsVisible = metadataService.isOptionalContent('Risks and Threats', project.associatedProgram, project.associatedSubProgram)
         def canViewRisks = risksAndThreatsVisible && (user?.hasViewAccess || user?.isEditor)
@@ -133,15 +131,24 @@ class ProjectController {
         }
         boolean canChangeProjectDates = projectService.canChangeProjectDates(project)
 
-        def model = [overview       : [label: 'Overview', visible: !meriView, default: !meriView, type: 'tab', publicImages: imagesModel, displayTargets: false, displayOutcomes: false, blog: blog, hasNewsAndEvents: hasNewsAndEvents, hasProjectStories: hasProjectStories, canChangeProjectDates: canChangeProjectDates],
-                     documents      : [label: 'Documents', visible: !meriView, type: 'tab'],
-                     details        : [label: 'MERI Plan', default: meriView, disabled: !meriView && !meriPlanEnabled, visible: meriView || meriPlanVisible, meriPlanVisibleToUser: meriView || meriPlanVisibleToUser, risksAndThreatsVisible: canViewRisks, announcementsVisible: !meriView, type: 'tab'],
-                     plan           : [label: 'Activities', visible: !meriView, disabled: !user?.hasViewAccess, type: 'tab', reports: project.reports, scores: scores],
-                     risksAndThreats: [label: 'Risks and Threats', disabled: !user?.hasViewAccess, visible: !meriView && user?.hasViewAccess && risksAndThreatsVisible],
-                     site           : [label: 'Sites', visible: !meriView, disabled: !user?.hasViewAccess, type: 'tab'],
-                     dashboard      : [label: 'Dashboard', visible: !meriView, disabled: !user?.hasViewAccess, type: 'tab'],
-                     admin          : [label: 'Admin', visible: !meriView && (user?.isEditor || user?.isAdmin || user?.isCaseManager), type: 'tab', canChangeProjectDates: canChangeProjectDates, showAnnouncementsTab: showAnnouncementsTab]]
+        boolean adminTabVisible = user?.isEditor || user?.isAdmin || user?.isCaseManager
 
+        def model = [overview       : [label: 'Overview', visible: true, default: true, type: 'tab', publicImages: imagesModel, displayTargets: false, displayOutcomes: false, blog: blog, hasNewsAndEvents: hasNewsAndEvents, hasProjectStories: hasProjectStories, canChangeProjectDates: canChangeProjectDates],
+                     documents      : [label: 'Documents', visible: true, type: 'tab', user:user, template:'docs'],
+                     details        : [label: 'MERI Plan', default: false, disabled: !meriPlanEnabled, visible: meriPlanVisible, meriPlanVisibleToUser: meriPlanVisibleToUser, risksAndThreatsVisible: canViewRisks, announcementsVisible: true, project:project, type: 'tab', template:'viewMeriPlan'],
+                     plan           : [label: 'Activities', visible: true, disabled: !user?.hasViewAccess, type: 'tab', template:'projectActivities', grantManagerSettingsVisible:user?.isCaseManager, project:project, reports: project.reports, scores: scores, risksAndThreatsVisible: user?.hasViewAccess && risksAndThreatsVisible],
+                     site           : [label: 'Sites', visible: true, disabled: !user?.hasViewAccess, editable:user?.isEditor, type: 'tab', template:'projectSites'],
+                     dashboard      : [label: 'Dashboard', visible: true, disabled: !user?.hasViewAccess, type: 'tab'],
+                     admin          : [label: 'Admin', visible: adminTabVisible, user:user, type: 'tab', template:'projectAdmin', project:project, canChangeProjectDates: canChangeProjectDates, showAnnouncementsTab: showAnnouncementsTab]]
+
+        if (template == 'meri') {
+            model = [details:model.details]
+        }
+        else if (template == 'nrm2') {
+            Map reportingTab = [label: 'Reporting', visible:user?.hasViewAccess, type:'tab', template:'projectReporting', reports:project.reports, stopBinding:true]
+            model = [overview:model.overview, documents:model.documents, details:model.details, site:model.site, reporting:reportingTab, plan:model.plan, admin:model.admin]
+
+        }
         return [view: 'index', model: model]
     }
 
@@ -615,5 +622,34 @@ class ProjectController {
             activities = result.resp.activities ?: []
         }
         render activities as JSON
+    }
+
+    def reportPrototype(String id) {
+        Map project = projectService.get(id, 'all')
+        if (!project) {
+            render status:404, error:'No project found'
+            return
+        }
+            /* 13 */List activityTypes = [
+                'Controlling Pest Animals', 'Removing pest weeds', 'Improving hydrological regimes',
+                'Remediating riparian and aquatic areas', 'Revegetating habitat', 'Managing fire regimes',
+                'Protecting habitat by controlling access', 'Habitat augmentation', 'Establishing and maintaining feral free enclosures',
+                'Establishing and maintaining ex-situ breeding sites and/or populations', 'Undertaking emergency interventions to prevent extinctions',
+                'Managing diseases', 'Fencing']
+
+            List serviceCategories = [
+                    'Ramsar Services', 'Threatened Species Services', 'World Heritage Services', 'Threatened Ecological Communities Services'
+            ]
+
+            Map activitiesByCategory = [
+                    /* 5 */ 'Ramsar Services':['Controlling Pest Animals', 'Removing Pest Weeds', 'Improving hydrological regimes', 'Remediating riparian and aquiatic areas', 'Fencing'],
+                    /* 10 */ 'Threatened Species Services':['Controlling Pest Animals', 'Removing pest weeds', 'Revegetating habitat', 'Managing fire regimes', 'Protecting habitat by controlling access', 'Habitat augmentation', 'Establishing and maintaining feral free enclosures', 'Establishing and maintaining ex-situ breeding sites', 'Undertaking emergency interventions to prevent extinction', 'Fencing'],
+                    /* 5 */ 'World heritage Services':['Controlling Pest Animals', 'Removing pest weeds', 'Protecting habitat by controlling access', 'Managing diseases', 'Fencing'],
+                    /* 7 */'Threatened Ecological Community Services':['Controlling Pest Animals', 'Removing pest weeds', 'Improving hydrological regimes', 'Revegetating habitat', 'Managing fire regimes', 'Protecting habitat by controlling access', 'Managing diseases', 'Fencing']
+            ]
+
+
+
+        [activityTypes:activityTypes, project:project, sites:project.sites]
     }
 }

@@ -54,7 +54,7 @@ class ProjectControllerSpec extends Specification {
         then: "something"
         view == '/project/index'
         model.projectContent.details.visible == false
-        model.projectContent.risksAndThreats.visible == false
+        model.projectContent.plan.risksAndThreatsVisible == false
     }
 
     def "most content is disabled if the user is not logged in"() {
@@ -74,7 +74,6 @@ class ProjectControllerSpec extends Specification {
         !model.projectContent.documents.disabled
         model.projectContent.plan.disabled == true
         model.projectContent.details.disabled == true
-        model.projectContent.risksAndThreats.disabled == true
         model.projectContent.site.disabled == true
         model.projectContent.dashboard.disabled == true
 
