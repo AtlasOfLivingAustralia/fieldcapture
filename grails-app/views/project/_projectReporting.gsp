@@ -20,8 +20,8 @@
         <tr>
             <td><i class="fa fa-edit" data-bind="click:$parent.openReport"></i></td>
             <td data-bind="text:label"></td>
-            <td data-bind="text:'Progress Report'"></td>
-            <td data-bind="text:datesLabel"></td>
+            <td data-bind="text:reportType"></td>
+            <td data-bind="text:convertToSimpleDate(toDateLabel)"></td>
             <td data-bind="text:''"></td>
         </tr>
         <!-- /ko -->
