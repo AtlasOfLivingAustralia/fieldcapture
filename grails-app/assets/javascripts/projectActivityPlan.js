@@ -861,6 +861,7 @@ function ProjectReportingViewModel(project, today, config) {
         $.each(reports, function (index, stageReport) {
             if (stageReport.fromDate < project.plannedEndDate && stageReport.toDate > project.plannedStartDate) {
                 var stage = new PlanStage(stageReport, unallocatedActivities, self, stageReport.name === self.currentProjectStage, project, today, [], true, false);
+
                 stages.push(stage);
 
                 // Remove any activities that have been allocated to the stage.
@@ -870,6 +871,13 @@ function ProjectReportingViewModel(project, today, config) {
                     });
                     return activityAllocatedToStage;
                 });
+
+                if (stage.activities && stage.activities.length == 1) {
+                    stage.reportType = stage.activities[0].type;
+                }
+                else {
+                    stage.reportType = "Default";
+                }
             }
         });
 
@@ -877,7 +885,6 @@ function ProjectReportingViewModel(project, today, config) {
     };
 
     self.openReport = function(data) {
-        console.log(data);
         if (data.activities && data.activities.length == 1) {
             // Report with a single activity, use that...
             document.location.href = config.activityEnterDataUrl+'/'+data.activities[0].activityId;
@@ -888,5 +895,4 @@ function ProjectReportingViewModel(project, today, config) {
     };
     self.reports = self.loadActivities(project.activities, project.reports);
 
-    console.log(self.reports);
 }

@@ -685,8 +685,9 @@ class ProjectService  {
         }
 
         def alignedToCalendar = programConfig.reportingPeriodAlignedToCalendar ?: false
+        String reportNamePrefix = programConfig.reportNamePrefix ?: 'Stage'
 
-        reportService.regenerateAllStageReportsForProject(projectId, period, alignedToCalendar)
+        reportService.regenerateAllStageReportsForProject(projectId, period, alignedToCalendar, null, reportNamePrefix)
 
 
     }
