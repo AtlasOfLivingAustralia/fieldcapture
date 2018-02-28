@@ -37,7 +37,7 @@
             openReportUrl: '${createLink([controller:'project', action:'reportPrototype', id:project.projectId])}'
         };
         _.extend(config, fcConfig);
-        var viewModel = new ProjectReportingViewModel(fcConfig.project, today, config);
+        var viewModel = new ProjectReportingTabViewModel(fcConfig.project, today, config);
         ko.applyBindings(viewModel, document.getElementById('project-reporting'));
     });
 
