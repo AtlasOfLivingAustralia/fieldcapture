@@ -1170,20 +1170,20 @@ class ProjectService  {
     }
 
 
-    List<String> getProjectServices(Map project) {
-        return project.custom?.services ?: [
-                [name:'Controlling Pest Animals'],
-                [name:'Removing pest weeds'],
-                [name:'Improving hydrological regimes'],
-                [name:'Remediating riparian and aquatic areas'],
-                [name:'Revegetating habitat'],
-                [name:'Managing fire regimes'],
-                [name:'Protecting habitat by controlling access'],
-                [name:'Habitat augmentation'],
-                [name:'Establishing and maintaining feral free enclosures'],
-                [name:'Establishing and maintaining ex-situ breeding sites and/or populations'],
-                [name:'Undertaking emergency interventions to prevent extinctions'],
-                [name:'Managing diseases'],
-                [name:'Fencing']]
+    List<Map> getProjectServices() {
+        return [
+                [name:'Controlling Pest Animals', output:'NRM2 - Controlling Pest Animals'],
+                [name:'Removing pest weeds',  output:'NRM2 - Removing Pest Weeds'],
+                [name:'Improving hydrological regimes',  output:'NRM2 - Improving Hydrological Regimes'],
+                [name:'Remediating riparian and aquatic areas',  output:'NRM2 - Remediating Riparian and Aquatic Areas'],
+                [name:'Revegetating habitat',  output:'NRM2 - Revegetating Habitat'],
+                [name:'Managing fire regimes',  output:'NRM2 - Managing Fire Regimes'],
+                [name:'Protecting habitat by controlling access',  output:'NRM2 - Protecting Habitat by Controlling Access'],
+                [name:'Habitat augmentation',  output:'NRM2 - Habitat Augmentation'],
+                [name:'Establishing and maintaining feral free enclosures',  output:'NRM2 - Establishing Feral Free Enclosures'],
+                [name:'Establishing and maintaining ex-situ breeding sites and/or populations',  output:'NRM2 - Establishing ex-situ breeding sites'],
+                [name:'Undertaking emergency interventions to prevent extinctions',  output:''],
+                [name:'Managing diseases',  output:'NRM2 - Managing Diseases'],
+                [name:'Fencing',  output:'NRM2 - Fencing']]
     }
 }

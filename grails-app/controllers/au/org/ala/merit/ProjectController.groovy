@@ -147,7 +147,7 @@ class ProjectController {
         else if (template == 'nrm2') {
             Map reportingTab = [label: 'Reporting', visible:user?.hasViewAccess, type:'tab', template:'projectReporting', reports:project.reports, stopBinding:true]
             model = [overview:model.overview, documents:model.documents, details:model.details, site:model.site, reporting:reportingTab, plan:model.plan, admin:model.admin]
-            model.admin.projectServices = projectService.getProjectServices(project)
+            model.admin.projectServices = projectService.getProjectServices()
 
         }
         return [view: 'index', model: model]
@@ -631,7 +631,7 @@ class ProjectController {
             render status:404, error:'No project found'
             return
         }
-            /* 13 */List activityTypes = projectService.getProjectServices(project)
+            /* 13 */List activityTypes = projectService.getProjectServices()
 
             List serviceCategories = [
                     'Ramsar Services', 'Threatened Species Services', 'World Heritage Services', 'Threatened Ecological Communities Services'
