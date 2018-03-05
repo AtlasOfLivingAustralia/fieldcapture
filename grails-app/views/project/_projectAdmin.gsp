@@ -24,6 +24,7 @@
                 <li><a href="#edit-documents" id="edit-documents-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Documents</a></li>
             </g:if>
             <g:if test="${fc.userIsSiteAdmin()}">
+                <li><a href="#project-services" id="project-services-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Project Services</a></li>
                 <li><a href="#project-audit" id="project-audit-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Audit</a></li>
             </g:if>
         </ul>
@@ -112,6 +113,12 @@
                 </div>
             </g:if>
             <g:if test="${fc.userIsSiteAdmin()}">
+                <!-- Project Services -->
+                <g:if test="${projectServices}">
+                <div id="project-services" class="pill-pane">
+                    <g:render template="/project/editProjectServices"/>
+                </div>
+                </g:if>
                 <!-- Audit -->
                 <div id="project-audit" class="pill-pane">
                     <g:render template="/project/audit"/>

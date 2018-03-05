@@ -411,7 +411,7 @@ class ProjectService  {
         if (!readyForSubmit) {
             return [error:'All activities must be finished, deferred or cancelled']
         }
-		
+
 		//generate stage report and attach to the project
 		def projectAll = get(projectId, 'all')
 		readyForSubmit = false;
@@ -419,7 +419,7 @@ class ProjectService  {
         if (!report) {
             return [error:'Invalid stage']
 		}
-		
+
 		String stageName = stageDetails.stage;
         String stageNum = ''
         if (stageName.indexOf('Stage ') == 0) {
@@ -898,22 +898,22 @@ class ProjectService  {
         append(html,'<table cellpadding="3" border="0">')
         append(html,'<tr><th>Document name</th></tr>')
         project.documents?.each{
-			String name = "Stage ${it.stage}";	
+			String name = "Stage ${it.stage}";
             if("active".equals(it.status) && name.equals(stageName)){
                 append(html,"<tr><td>${it.name}</td></tr>")
             }
         }
         append(html,'</table>')
 		append(html,'<br>')
-		
+
 		// use existing project dashboard calculation to display metrics data.
 		append(html,'<p align="left">_________________________________________________________________________________________________________</p>')
 		append(html,'<br>')
 		append(html,'<h2><font color="">Outputs: Targets Vs Achieved</font></h2>')
 		append(html,'<table cellpadding="3" border="0">')
 		append(html,'<tr><th>Output type</th><th>Output Target Measure</th><th>Output Achieved (project to date)</th><th>Output Target (whole project)</th></tr>')
-		
-		def metrics = summary(project.projectId); 			
+
+		def metrics = summary(project.projectId);
 		metrics?.targets?.each{ k, v->
 			v?.each{ data ->
 				String units = data.score?.units ? data.score.units : '';
@@ -964,7 +964,7 @@ class ProjectService  {
                 }
 			}
         }
-				
+
         append(html,'<br>')
         append(html,'<p align="left">_________________________________________________________________________________________________________</p>')
         append(html,'<br>')
@@ -1169,4 +1169,21 @@ class ProjectService  {
         result
     }
 
+
+    List<String> getProjectServices(Map project) {
+        return project.custom?.services ?: [
+                [name:'Controlling Pest Animals'],
+                [name:'Removing pest weeds'],
+                [name:'Improving hydrological regimes'],
+                [name:'Remediating riparian and aquatic areas'],
+                [name:'Revegetating habitat'],
+                [name:'Managing fire regimes'],
+                [name:'Protecting habitat by controlling access'],
+                [name:'Habitat augmentation'],
+                [name:'Establishing and maintaining feral free enclosures'],
+                [name:'Establishing and maintaining ex-situ breeding sites and/or populations'],
+                [name:'Undertaking emergency interventions to prevent extinctions'],
+                [name:'Managing diseases'],
+                [name:'Fencing']]
+    }
 }
