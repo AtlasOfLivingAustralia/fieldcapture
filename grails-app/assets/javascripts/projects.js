@@ -1042,6 +1042,47 @@ function exclusive (field, rules, i, options) {
     }
 };
 
+function ProjectServicesViewModel(project, config) {
+    var self = this;
+
+    var services = project.services || [];
+    self.services = ko.observableArray(_.clone(services));
+
+    self.projectServicesEdited = ko.computed(function() {
+        return !_.isEqual(services, self.services());
+    });
+
+    self.undoChanges = function() {
+        self.services(_.clone(services));
+    };
+
+    // Save project services only
+    self.saveProjectServices = function() {
+
+        var servicesPayload = JSON.stringify({ services:self.services() });
+        $.ajax({
+            url: config.projectUpdateUrl,
+            type: 'POST',
+            data: servicesPayload,
+            contentType: 'application/json',
+            success: function (data) {
+                if (data.error) {
+                    showAlert("Failed to save services: " + data.detail + ' \n' + data.error,
+                        "alert-error","services-save-result-placeholder");
+                } else {
+                    services = _.clone(self.services());
+                    self.services.notifySubscribers();
+
+                    showAlert("Project services saved","alert-success","services-save-result-placeholder");
+                }
+            },
+            error: function (data) {
+                bootbox.alert('An unhandled error occurred: ' + data.status);
+            }
+        });
+    };
+}
+
 function ProjectPageViewModel(project, sites, activities, userRoles, themes, config) {
     var self = this;
     _.extend(this, new ProjectViewModel(project, userRoles.editor, organisations));

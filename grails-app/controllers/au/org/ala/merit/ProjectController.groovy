@@ -147,6 +147,7 @@ class ProjectController {
         else if (template == 'nrm2') {
             Map reportingTab = [label: 'Reporting', visible:user?.hasViewAccess, type:'tab', template:'projectReporting', reports:project.reports, stopBinding:true]
             model = [overview:model.overview, documents:model.documents, details:model.details, site:model.site, reporting:reportingTab, plan:model.plan, admin:model.admin]
+            model.admin.projectServices = projectService.getProjectServices(project)
 
         }
         return [view: 'index', model: model]
@@ -630,12 +631,7 @@ class ProjectController {
             render status:404, error:'No project found'
             return
         }
-            /* 13 */List activityTypes = [
-                'Controlling Pest Animals', 'Removing pest weeds', 'Improving hydrological regimes',
-                'Remediating riparian and aquatic areas', 'Revegetating habitat', 'Managing fire regimes',
-                'Protecting habitat by controlling access', 'Habitat augmentation', 'Establishing and maintaining feral free enclosures',
-                'Establishing and maintaining ex-situ breeding sites and/or populations', 'Undertaking emergency interventions to prevent extinctions',
-                'Managing diseases', 'Fencing']
+            /* 13 */List activityTypes = projectService.getProjectServices(project)
 
             List serviceCategories = [
                     'Ramsar Services', 'Threatened Species Services', 'World Heritage Services', 'Threatened Ecological Communities Services'
