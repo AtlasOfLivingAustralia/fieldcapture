@@ -146,9 +146,11 @@ class ProjectController {
         }
         else if (template == 'nrm2') {
             Map reportingTab = [label: 'Reporting', visible:user?.hasViewAccess, type:'tab', template:'projectReporting', reports:project.reports, stopBinding:true]
-            model = [overview:model.overview, documents:model.documents, details:model.details, site:model.site, reporting:reportingTab, plan:model.plan, admin:model.admin]
-            model.admin.projectServices = projectService.getProjectServices()
-
+            Map nrm2Model = [overview:model.overview, documents:model.documents, details:model.details, site:model.site, reporting:reportingTab]
+            nrm2Model.plan = [label: 'Report approvals', visible: user?.isCaseManager, type: 'tab', template:'projectActivities', grantManagerSettingsVisible:true, project:project, reports: project.reports, scores: scores, risksAndThreatsVisible: false]
+            nrm2Model.admin = model.admin
+            nrm2Model.admin.projectServices = projectService.getProjectServices()
+            model = nrm2Model
         }
         return [view: 'index', model: model]
     }
