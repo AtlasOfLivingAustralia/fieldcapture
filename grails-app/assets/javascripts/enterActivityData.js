@@ -1,6 +1,6 @@
 //= require forms-manifest.js
 //= require_self
-
+$.fn.select2.defaults.set( "width", "100%" );
 function validateDateField(dateField) {
     var date = stringToDate($(dateField).val());
 
