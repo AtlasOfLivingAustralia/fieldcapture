@@ -1308,8 +1308,8 @@ class ImportService {
                     def sitesCreated = []
 
                     try {
-                        def kml = webService.get(site.kmlUrl, false)
-                        sitesCreated = siteService.createSitesFromKml(kml, projectId)
+                        String kml = webService.get(site.kmlUrl, false)
+                        sitesCreated = siteService.createSitesFromKml(new ByteArrayInputStream(kml.getBytes('UTF-8')), projectId)
                     }
                     catch (Exception e) {
                         log.error("Unable to create sites from ${site.kmlUrl}, message: ${e.getMessage()}", e)

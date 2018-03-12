@@ -10,6 +10,9 @@ import org.geotools.kml.v22.KMLConfiguration
 import org.geotools.xml.Parser
 import org.opengis.feature.simple.SimpleFeature
 
+import java.util.zip.ZipEntry
+import java.util.zip.ZipInputStream
+
 class SiteService {
 
     def webService, grailsApplication, commonService, metadataService, userService, reportService
@@ -227,7 +230,7 @@ class SiteService {
             String pid = result.resp.id
 
             Map geometry = siteGeometry(pid)
-            createSite(projectId, name, description, externalId, pid, geometry)
+            createSite(projectId, name, description, externalId, geometry, 'pid', pid)
         }
     }
 
@@ -252,13 +255,10 @@ class SiteService {
      * @param kml the KML that defines the sites to be created
      * @param projectId the project the sites will be assigned to.
      */
-    def createSitesFromKml(String kml, String projectId) {
-
-        def url = "${grailsApplication.config.spatial.layersUrl}/shape/upload/wkt"
-        def userId = userService.getUser().userId
+    def createSitesFromKml(InputStream kml, String projectId) {
 
         Parser parser = new Parser(new KMLConfiguration())
-        SimpleFeature f = parser.parse(new StringReader(kml))
+        SimpleFeature f = parser.parse(kml)
 
         def placemarks = []
         extractPlacemarks(f, placemarks)
@@ -272,18 +272,21 @@ class SiteService {
             Geometry geom = placemark.getDefaultGeometry()
             Map geojson = JSON.parse(new GeometryJSON().toString(geom))
 
-            def site = [name:name, description: description, user_id:userId, api_key:grailsApplication.config.api_key, wkt:geom.toText()]
-
-            def result = webService.doPost(url, site)
-            if (!result.error) {
-                def id = result.resp.id
-                if (!result.resp.error) {
-                    sites << createSite(projectId, name, description, '', id, geojson)
-                }
-            }
+            sites << createSite(projectId, name, description, null, 'drawn', geojson)
 
         }
         return sites
+    }
+
+    void createSitesFromKmz(String projectId, InputStream kmzIn) {
+        ZipInputStream zis = new ZipInputStream(kmzIn)
+        while (zis.available()) {
+            ZipEntry next = zis.nextEntry
+            if (next.name.endsWith('kml')) {
+                createSitesFromKml(zis, projectId)
+                break
+            }
+        }
     }
 
     /**
@@ -309,9 +312,11 @@ class SiteService {
         webService.getJson("${getGeoJsonUrl}/${spatialPortalSiteId}")
     }
 
-    def createSite(String projectId, String name, String description, String externalId, String geometryPid, Map geometry) {
-        geometry.pid = geometryPid
-        def values = [extent: [source: 'pid', geometry: geometry, pid:geometryPid], projects: [projectId], name: name, description: description, externalId:externalId, visibility:'private']
+    private Map createSite(String projectId, String name, String description, String externalId, String source, Map geometry, String geometryPid = null) {
+        if (geometryPid && !"null".equals(geometryPid)) {
+            geometry.pid = geometryPid
+        }
+        def values = [extent: [source: source, geometry: geometry, pid:geometryPid], projects: [projectId], name: name, description: description, externalId:externalId, visibility:'private']
         return create(values)
     }
 
