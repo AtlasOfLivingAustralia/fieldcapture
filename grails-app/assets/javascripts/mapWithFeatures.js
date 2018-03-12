@@ -629,7 +629,7 @@ function gjToLatLngs(arr) {
 }
 
 function isCoord(arr) {
-    return arr.length === 2 && !isNaN(arr[0]) && !isNaN(arr[1]);
+    return (arr.length === 2 || arr.length === 3) && !isNaN(arr[0]) && !isNaN(arr[1]);
 }
 
 function initialiseState(state) {

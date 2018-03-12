@@ -35,7 +35,7 @@
 
     <g:if test="${!shapeFileId}">
 
-        <h2>Upload a shape file</h2>
+        <h2>Upload project sites from file</h2>
 
         <g:if test="${flash.errorMessage || flash.message}">
             <div class="row-fluid">
@@ -48,21 +48,12 @@
             </div>
         </g:if>
 
-        <div class="row-fluid">
-            <div class="span5">
-                <div class="alert">
-                    <button class="close" onclick="$('.alert').fadeOut();" href="#">×</button>
-                    MERIT no longer requires that shapefiles use the WGS84 CRS.  This feature is currently experimental, so please let us know if you encounter issues when uploading your shapefile.
-                </div>
-            </div>
-        </div>
-
-        <g:uploadForm id="shapeFileUpload" class="loadPlanData" controller="site" action="uploadShapeFile">
+        <g:uploadForm class="upload-sites" controller="site" action="siteUpload">
             <input type="hidden" name="returnTo" value="${returnTo}">
             <input type="hidden" name="projectId" value="${projectId}">
             <label for="shapefile">Attach shape file (zip format)</label>
-            <input id="shapefile" type="file" accept="application/zip" name="shapefile"/>
-            <button id="uploadShapeFile" type="button" class="btn btn-success" onclick="$(this).parent().submit();">Upload Shapefile</button>
+            <input id="shapefile" type="file" accept="application/zip, .kml, .kmz" name="shapefile"/>
+            <button id="uploadShapeFile" type="button" class="btn btn-success" >Upload Shapefile</button>
         </g:uploadForm>
     </g:if>
     <g:else>
@@ -192,7 +183,7 @@ $(function() {
     $(function() {
         $('#uploadShapeFile').click(function() {
             $(this).attr('disabled','disabled');
-            $('#shapeFileUpload').submit();
+            $('.upload-sites').submit();
         });
         $("#shapefile").change(function() {
             if ($("#shapefile").val()) {

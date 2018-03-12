@@ -90,7 +90,7 @@ var SiteViewModel = function (site, feature) {
             switch (extent.source) {
                 case 'point':   self.extent(new PointLocation(extent.geometry)); break;
                 case 'pid':     self.extent(new PidLocation(extent.geometry)); break;
-                case 'upload':  self.extent(new UploadLocation()); break;
+                case 'upload':
                 case 'drawn':   self.extent(new DrawnLocation(extent.geometry)); break;
             }
         } else {
@@ -115,7 +115,7 @@ var SiteViewModel = function (site, feature) {
                     self.extent(new PidLocation({}));
                 }
                 break;
-            case 'upload': self.extent(new UploadLocation({})); break;
+            case 'upload':
             case 'drawn':
                 //breaks the edits....
                 self.extent(new DrawnLocation({}));
@@ -510,9 +510,18 @@ function SiteViewModelWithMapIntegration (siteData, projectId) {
         var currentDrawnShape = ko.toJS(self.extent().geometry);
         //retrieve the current shape if exists
         if(currentDrawnShape !== undefined){
-            if(currentDrawnShape.type == 'Polygon' || currentDrawnShape == 'MultiPolygon'){
+            if(currentDrawnShape.type == 'Polygon') {
                 showOnMap('polygon', geoJsonToPath(currentDrawnShape));
                 zoomToShapeBounds();
+            } else if (currentDrawnShape.type == 'MultiPolygon') {
+                if (currentDrawnShape.coordinates && currentDrawnShape.coordinates.length) {
+                    for (var i = 0; i < currentDrawnShape.coordinates.length; i++) {
+                        if (currentDrawnShape.coordinates[i] && currentDrawnShape.coordinates[i].length) {
+                            showOnMap('polygon', coordArrayToPath(currentDrawnShape.coordinates[i][0]));
+                            zoomToShapeBounds();
+                        }
+                    }
+                }
             } else if(currentDrawnShape.type == 'Circle'){
                 showOnMap('circle', currentDrawnShape.coordinates[1],currentDrawnShape.coordinates[0],currentDrawnShape.radius);
                 zoomToShapeBounds();
@@ -978,7 +987,7 @@ var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId)
     this.addExistingSite = function () {
         document.location.href = fcConfig.siteSelectUrl;
     };
-    this.uploadShapefile = function () {
+    this.uploadSites = function () {
         document.location.href = fcConfig.siteUploadUrl;
     };
     this.downloadShapefile = function() {
