@@ -85,3 +85,13 @@
 .input-prepend.input-append .select2-container--default .select2-selection--single .select2-selection__rendered {
     border-radius: 0;
 }
+
+.output-block h3 {
+    display:inline-block;
+}
+
+.output-block .output-help a {
+    vertical-align: super;
+    color: black;
+}
+

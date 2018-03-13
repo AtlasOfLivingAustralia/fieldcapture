@@ -4,7 +4,7 @@
         <g:set var="blockId" value="${fc.toSingleWord([name: outputName])}"/>
         <g:set var="model" value="${outputModels[outputName]}"/>
 
-        <g:render template="/activity/outputView" model="${[blockId:blockId, outputName:outputName, site:site]}"/>
+        <g:render template="/activity/outputView" model="${[blockId:blockId, outputName:outputName, site:site, model:model]}"/>
         <g:render template="/output/outputJSModel" plugin="ecodata-client-plugin"
                   model="${[viewModelInstance:blockId+'ViewModel', edit:true, activityId:activity.activityId, model:model, outputName:outputName]}"></g:render>
     </g:if>

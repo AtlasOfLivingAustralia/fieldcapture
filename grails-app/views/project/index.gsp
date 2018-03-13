@@ -198,7 +198,7 @@
             var userRoles = {
                 editor:${user?.isEditor?:false},
                 admin:${user?.isAdmin?:false},
-                grantManager:${user?.isGrantManager?:false}
+                grantManager:${user?.isCaseManager?:false}
             };
 
             var config = {
