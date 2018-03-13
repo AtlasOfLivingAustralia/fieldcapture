@@ -188,7 +188,7 @@ class FCTagLib {
                 anchorAttrs << ['data-container':attrs.container]
             }
             mb.a(anchorAttrs) {
-                i(class:'icon-question-sign') {
+                i(class:'fa fa-question-circle') {
                     mkp.yieldUnescaped("&nbsp;")
                 }
             }
