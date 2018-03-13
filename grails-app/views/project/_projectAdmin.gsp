@@ -24,7 +24,7 @@
                 <li><a href="#edit-documents" id="edit-documents-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Documents</a></li>
             </g:if>
             <g:if test="${fc.userIsSiteAdmin()}">
-                <li><a href="#project-services" id="project-services-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Project Services</a></li>
+                <g:if test="${projectServices}"><li><a href="#project-services" id="project-services-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Project Services</a></li></g:if>
                 <li><a href="#project-audit" id="project-audit-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Audit</a></li>
             </g:if>
         </ul>
