@@ -205,15 +205,15 @@
         <div class="controls"><input type="text" data-bind="value:name" data-validation-engine="validate[required]"></div>
     </div>
     <div class="control-group required">
-        <label class="control-label">Date Taken: </label>
+        <label class="control-label">Date Taken: <i class="fa fa-question-circle" data-bind="popover:{container:'body', content:'Please ensure that this information is accurate and the date that the photograph was taken, not the date it was uploaded (unless they are the same date).', placement:'top'}">&nbsp;</i></label>
         <div class="controls"><div class="input-append"><fc:datePicker size="input-small" targetField="dateTaken.date" name="dateTaken" data-validation-engine="validate[required]"/></div></div>
     </div>
     <div class="control-group">
-        <label class="control-label">Attribution <i class="icon-question-sign" data-bind="popover:{content:'The name of the photographer', placement:'top'}">&nbsp;</i>: </label>
+        <label class="control-label">Attribution: <i class="fa fa-question-circle" data-bind="popover:{content:'The name of the photographer', placement:'top'}">&nbsp;</i></label>
         <div class="controls"><input type="text" data-bind="value:attribution"></div>
     </div>
     <div class="control-group">
-        <label class="control-label">Notes: </label>
+        <label class="control-label">Notes: <i class="fa fa-question-circle" data-bind="popover:{content:'Additional notes you would like to supply regarding the photo point or photograph.', placement:'top'}">&nbsp;</i></label>
         <div class="controls"><input type="text" data-bind="value:notes"></div>
     </div>
 
