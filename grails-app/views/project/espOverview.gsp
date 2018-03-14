@@ -151,7 +151,8 @@
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>Site </th><th>Status</th>
+                            <th>Site </th>
+                            <th>Status <fc:iconHelp>Status for all sites must be “finished” before annual report can be submitted.</fc:iconHelp></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -176,7 +177,7 @@
                         <li>Complete or mark as not applicable your optional "My Species Records" tab.</li>
                     </ul>
                     <br/>
-                    Please note that the report will not be able to be submitted until the end of the year.
+                    Please note that the report will not be able to be submitted until the end of the reporting period.
                 </div>
             </div>
             <div data-bind="visible:currentReport.isSubmitted()">
