@@ -204,6 +204,8 @@ var PlanStage = function (stage, activities, planViewModel, isCurrentStage, proj
             return act.plannedEndDate > stage.fromDate &&  act.plannedEndDate <= stage.toDate;
         });
     this.label = stageLabel;
+    self.name = stage.name;
+    self.toDate = stage.toDate;
     self.fromDateLabel = stage.fromDate < project.plannedStartDate ? project.plannedStartDate : stage.fromDate;
     self.toDateLabel = stage.toDate > project.plannedEndDate ? project.plannedEndDate : stage.toDate;
 

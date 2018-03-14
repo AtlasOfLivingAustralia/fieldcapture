@@ -614,6 +614,9 @@ var Report = function(report) {
     var name = report.name;
     var description = report.description;
 
+    self.name = name;
+    self.toDate = report.toDate;
+
     self.isSubmitted = function() {
         return report.publicationStatus == 'pendingApproval';
     };
