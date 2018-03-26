@@ -6,6 +6,7 @@ import org.apache.poi.ss.usermodel.Workbook
 import org.apache.poi.ss.usermodel.WorkbookFactory
 import org.apache.poi.ss.util.CellReference
 import org.codehaus.groovy.grails.web.json.JSONArray
+import org.codehaus.groovy.grails.web.json.JSONObject
 
 
 class ActivityController {
@@ -48,12 +49,23 @@ class ActivityController {
         model
     }
 
-    def addOutputModel(model) {
+    private def addOutputModel(Map model) {
+
         // the activity meta-model
         model.metaModel = metadataService.getActivityModel(model.activity.type)
         // the array of output models
         model.outputModels = model.metaModel?.outputs?.collectEntries {
             [ it, metadataService.getDataModelFromOutputName(it)] }
+
+        List projectServices = model.project?.services
+        if (projectServices) {
+            List services = projectService.getProjectServices()
+            List serviceOutputs = services.findAll{it.name in projectServices}.collect{it.output}
+
+            model.metaModel = new JSONObject(model.metaModel)
+            List existingOutputs = model.activity?.outputs?.collect{it.name}
+            model.metaModel.outputs = model.metaModel.outputs.findAll({ it in serviceOutputs || it in existingOutputs})
+        }
 
     }
 

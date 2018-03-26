@@ -200,40 +200,8 @@
 
 </div>
 
-<!-- ko stopBinding: true -->
-<g:each in="${metaModel?.outputs}" var="outputName">
-    <g:if test="${outputName != 'Photo Points'}">
-        <g:set var="blockId" value="${fc.toSingleWord([name: outputName])}"/>
-        <g:set var="model" value="${outputModels[outputName]}"/>
-        <g:set var="output" value="${activity.outputs.find {it.name == outputName}}"/>
-        <g:if test="${!output}">
-            <g:set var="output" value="[name: outputName]"/>
-        </g:if>
-        <md:modelStyles model="${model}" edit="true"/>
-        <div class="output-block" id="ko${blockId}">
-            <h3 data-bind="css:{modified:dirtyFlag.isDirty},attr:{title:'Has been modified'}">${model?.title ?: outputName}</h3>
-            <div data-bind="if:transients.optional || outputNotCompleted()">
-                <label class="checkbox" ><input type="checkbox" data-bind="checked:outputNotCompleted"> <span data-bind="text:transients.questionText"></span> </label>
-            </div>
-            <div id="${blockId}-content" data-bind="visible:!outputNotCompleted()">
-                <!-- add the dynamic components -->
-                <md:modelView model="${model}" site="${site}" edit="true" output="${output.name}" printable="${printView}" />
-            </div>
-            <g:render template="/output/outputJSModel" plugin="ecodata-client-plugin" model="${[viewModelInstance:blockId+'ViewModel', edit:true, activityId:activity.activityId, model:model, outputName:output.name]}"></g:render>
+<g:render template="activityFormContents"/>
 
-        </div>
-    </g:if>
-</g:each>
-<!-- /ko -->
-
-    <g:if test="${metaModel.supportsPhotoPoints}">
-    <div class="output-block" data-bind="with:transients.photoPointModel">
-        <h3>Photo Points</h3>
-
-         <g:render template="/site/photoPoints"></g:render>
-
-    </div>
-    </g:if>
 <g:if test="${!printView}">
     <div class="form-actions">
         <button type="button" id="save" class="btn btn-primary">Save changes</button>
@@ -254,6 +222,8 @@
 
 %{--The modal view containing the contents for a modal dialog used to attach a document--}%
 <g:render template="/shared/attachDocument"/>
+
+<g:render template="/output/formsTemplates" plugin="ecodata-client-plugin"/>
 
 <asset:javascript src="common.js"/>
 <asset:javascript src="enterActivityData.js"/>

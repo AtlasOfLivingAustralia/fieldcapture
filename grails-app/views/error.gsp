@@ -4,6 +4,7 @@
 		<title>Grails Runtime Exception</title>
 		<meta name="layout" content="nrm">
 		<link rel="stylesheet" href="${assetPath(src: 'errors.css')}" type="text/css">
+        <asset:stylesheet src="common.css"/>
 	</head>
 	<body>
     <div id="wrapper" class="${containerType}">
@@ -19,4 +20,5 @@
         </g:elseif>
         <div class="space-before space-after">&nbsp</div>
 	</body>
+<asset:javascript src="common"/>
 </html>

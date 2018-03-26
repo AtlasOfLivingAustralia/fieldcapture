@@ -411,7 +411,7 @@ class ProjectService  {
         if (!readyForSubmit) {
             return [error:'All activities must be finished, deferred or cancelled']
         }
-		
+
 		//generate stage report and attach to the project
 		def projectAll = get(projectId, 'all')
 		readyForSubmit = false;
@@ -419,7 +419,7 @@ class ProjectService  {
         if (!report) {
             return [error:'Invalid stage']
 		}
-		
+
 		String stageName = stageDetails.stage;
         String stageNum = ''
         if (stageName.indexOf('Stage ') == 0) {
@@ -685,8 +685,9 @@ class ProjectService  {
         }
 
         def alignedToCalendar = programConfig.reportingPeriodAlignedToCalendar ?: false
+        String reportNamePrefix = programConfig.reportNamePrefix ?: 'Stage'
 
-        reportService.regenerateAllStageReportsForProject(projectId, period, alignedToCalendar)
+        reportService.regenerateAllStageReportsForProject(projectId, period, alignedToCalendar, null, reportNamePrefix)
 
 
     }
@@ -897,22 +898,22 @@ class ProjectService  {
         append(html,'<table cellpadding="3" border="0">')
         append(html,'<tr><th>Document name</th></tr>')
         project.documents?.each{
-			String name = "Stage ${it.stage}";	
+			String name = "Stage ${it.stage}";
             if("active".equals(it.status) && name.equals(stageName)){
                 append(html,"<tr><td>${it.name}</td></tr>")
             }
         }
         append(html,'</table>')
 		append(html,'<br>')
-		
+
 		// use existing project dashboard calculation to display metrics data.
 		append(html,'<p align="left">_________________________________________________________________________________________________________</p>')
 		append(html,'<br>')
 		append(html,'<h2><font color="">Outputs: Targets Vs Achieved</font></h2>')
 		append(html,'<table cellpadding="3" border="0">')
 		append(html,'<tr><th>Output type</th><th>Output Target Measure</th><th>Output Achieved (project to date)</th><th>Output Target (whole project)</th></tr>')
-		
-		def metrics = summary(project.projectId); 			
+
+		def metrics = summary(project.projectId);
 		metrics?.targets?.each{ k, v->
 			v?.each{ data ->
 				String units = data.score?.units ? data.score.units : '';
@@ -963,7 +964,7 @@ class ProjectService  {
                 }
 			}
         }
-				
+
         append(html,'<br>')
         append(html,'<p align="left">_________________________________________________________________________________________________________</p>')
         append(html,'<br>')
@@ -1168,4 +1169,21 @@ class ProjectService  {
         result
     }
 
+
+    List<Map> getProjectServices() {
+        return [
+                [name:'Controlling Pest Animals', output:'NRM2 - Controlling Pest Animals'],
+                [name:'Removing pest weeds',  output:'NRM2 - Removing Pest Weeds'],
+                [name:'Improving hydrological regimes',  output:'NRM2 - Improving Hydrological Regimes'],
+                [name:'Remediating riparian and aquatic areas',  output:'NRM2 - Remediating Riparian and Aquatic Areas'],
+                [name:'Revegetating habitat',  output:'NRM2 - Revegetating Habitat'],
+                [name:'Managing fire regimes',  output:'NRM2 - Managing Fire Regimes'],
+                [name:'Protecting habitat by controlling access',  output:'NRM2 - Protecting Habitat by Controlling Access'],
+                [name:'Habitat augmentation',  output:'NRM2 - Habitat Augmentation'],
+                [name:'Establishing and maintaining feral free enclosures',  output:'NRM2 - Establishing Feral Free Enclosures'],
+                [name:'Establishing and maintaining ex-situ breeding sites and/or populations',  output:'NRM2 - Establishing ex-situ breeding sites'],
+                [name:'Undertaking emergency interventions to prevent extinctions',  output:''],
+                [name:'Managing diseases',  output:'NRM2 - Managing Diseases'],
+                [name:'Fencing',  output:'NRM2 - Fencing']]
+    }
 }

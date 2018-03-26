@@ -43,7 +43,7 @@ class ReportService {
      * @param projectId identifies the project.
 
      */
-    def regenerateAllStageReportsForProject(String projectId, Integer periodInMonths = 6, boolean alignToCalendar = false, Integer weekDaysToCompleteReport = null) {
+    def regenerateAllStageReportsForProject(String projectId, Integer periodInMonths = 6, boolean alignToCalendar = false, Integer weekDaysToCompleteReport = null, String reportName = "Stage") {
 
         def project = projectService.get(projectId, 'all')
         log.info("Processing project "+project.name)
@@ -85,8 +85,8 @@ class ReportService {
                     toDate:DateUtils.format(periodEndDate.withZone(DateTimeZone.UTC)),
                     type:'Activity',
                     projectId:projectId,
-                    name:'Stage '+stage,
-                    description:'Stage '+stage+' for '+project.name
+                    name:reportName + ' '+stage,
+                    description:reportName + ' '+stage+' for '+project.name
             ]
             if (weekDaysToCompleteReport) {
                 report.dueDate = DateUtils.format(periodEndDate.plusDays(weekDaysToCompleteReport).withZone(DateTimeZone.UTC))

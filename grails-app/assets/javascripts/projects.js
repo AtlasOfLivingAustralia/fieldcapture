@@ -1026,3 +1026,279 @@ function toggleStarred(isProjectStarredByUser, userId, projectId) {
         }).fail(function(j,t,e){ alert(t + ":" + e);}).done();
     }
 }
+
+// custom validator to ensure that only one of two fields is populated
+function exclusive (field, rules, i, options) {
+    var otherFieldId = rules[i+2], // get the id of the other field
+        otherValue = $('#'+otherFieldId).val(),
+        thisValue = field.val(),
+        message = rules[i+3];
+    // checking thisValue is technically redundant as this validator is only called
+    // if there is a value in the field
+    if (otherValue !== '' && thisValue !== '') {
+        return message;
+    } else {
+        return true;
+    }
+};
+
+function ProjectServicesViewModel(project, config) {
+    var self = this;
+
+    var services = project.services || [];
+    self.services = ko.observableArray(_.clone(services));
+
+    self.projectServicesEdited = ko.computed(function() {
+        return !_.isEqual(services, self.services());
+    });
+
+    self.undoChanges = function() {
+        self.services(_.clone(services));
+    };
+
+    // Save project services only
+    self.saveProjectServices = function() {
+
+        var servicesPayload = JSON.stringify({ services:self.services() });
+        $.ajax({
+            url: config.projectUpdateUrl,
+            type: 'POST',
+            data: servicesPayload,
+            contentType: 'application/json',
+            success: function (data) {
+                if (data.error) {
+                    showAlert("Failed to save services: " + data.detail + ' \n' + data.error,
+                        "alert-error","services-save-result-placeholder");
+                } else {
+                    services = _.clone(self.services());
+                    self.services.notifySubscribers();
+
+                    showAlert("Project services saved","alert-success","services-save-result-placeholder");
+                }
+            },
+            error: function (data) {
+                bootbox.alert('An unhandled error occurred: ' + data.status);
+            }
+        });
+    };
+}
+
+function ProjectPageViewModel(project, sites, activities, userRoles, themes, config) {
+    var self = this;
+    _.extend(this, new ProjectViewModel(project, userRoles.editor, organisations));
+    _.extend(this, new MERIPlan(project, themes, config.PROJECT_DETAILS_KEY));
+    _.extend(this, new Risks(project.risks, config.PROJECT_RISKS_KEY));
+    _.extend(this, new MERIPlanActions(project, _.extend({}, fcConfig, {declarationModalSelector:'#unlockPlan'})));
+
+    self.workOrderId = ko.observable(project.workOrderId);
+    self.userIsCaseManager = ko.observable(userRoles.grantManager);
+    self.userIsAdmin = ko.observable(userRoles.admin);
+    self.promote = [{id: 'yes', name:'Yes'},{id:'no',name:'No'}];
+    self.promoteOnHomepage = ko.observable(project.promoteOnHomepage);
+    self.planStatus = ko.observable(project.planStatus);
+    self.mapLoaded = ko.observable(false);
+    self.transients.variation = ko.observable();
+    self.changeActivityDates = ko.observable(false);
+    self.contractDatesFixed.subscribe(function() {
+        self.changeActivityDates(!self.contractDatesFixed());
+    });
+    self.transients.selectOrganisation = function(data){
+        self.transients.organisation({organisationId:data.source.organisationId, name:data.label});
+    };
+
+    self.transients.selectServiceProviderOrganisation = function(data){
+        self.transients.serviceProviderOrganisation({organisationId:data.source.organisationId, name:data.label});
+    };
+    self.allYears = function(startYear) {
+        var currentYear = new Date().getFullYear(), years = [];
+        startYear = startYear || 2010;
+        while ( startYear <= currentYear+10 ) {
+            years.push(startYear++);
+        }
+        return years;
+    };
+    self.years = [];
+    self.years = self.allYears();
+
+
+    self.validateProjectEndDate = function() {
+
+        var endDate = self.plannedEndDate();
+        if (endDate <= self.plannedStartDate()) {
+            return "The project end date must be after the start date";
+        }
+        if (project.activities && !self.changeActivityDates()) {
+            var lastActivityDate = _.reduce(project.activities, function(max, activity) { return activity.plannedEndDate > max ? activity.plannedEndDate : max; }, project.plannedStartDate);
+            if (endDate < lastActivityDate) {
+                return "The project end date must be after the last activity in the project ( "+convertToSimpleDate(lastActivityDate)+ " )";
+            }
+        }
+
+    };
+
+    self.validateProjectStartDate = function() {
+
+        var startDate = self.plannedStartDate();
+        if (startDate >= self.plannedEndDate()) {
+            return "The project start date must be before the end date";
+        }
+        if (project.activities && !self.changeActivityDates()) {
+            var firstActivityDate = _.reduce(project.activities, function(min, activity) { return activity.plannedEndDate < min ? activity.plannedEndDate : min; }, project.plannedEndDate);
+            if (startDate > firstActivityDate) {
+                return "The project start date must be before the first activity in the project ( "+convertToSimpleDate(firstActivityDate)+ " )";
+            }
+        }
+
+    };
+
+    self.saveProjectDetails = function(){
+        self.saveProject(false);
+    };
+
+    self.cancelProjectDetailsEdits = function() {
+        self.details.cancelAutosave();
+
+        document.location.reload(true);
+    };
+
+    self.meriPlanPDF = function() {
+        var url = config.meriPlanPDFUrl;
+        window.open(url,'meri-plan-report');
+    };
+
+    self.saveAnnouncements = function(){
+
+        if (!$('#risks-announcements').validationEngine('validate')) {
+            return;
+        }
+        self.details.saveWithErrorDetection(function() {
+            $(document).scrollTop(400);
+            showAlert("Announcements saved", "alert-success", 'announcement-result-placeholder');
+        });
+    };
+
+    // Save project details
+    self.saveProject = function(enableSubmit){
+        if ($('#project-details-validation').validationEngine('validate')) {
+            self.details.status('active');
+            self.details.saveWithErrorDetection(function() {
+                if(enableSubmit) {
+                    self.submitChanges();
+                }
+            });
+        }
+    };
+
+    self.saveAndSubmitChanges = function(){
+        self.saveProject(true);
+    };
+
+    self.uploadVariationDoc = function(doc){
+        var json = JSON.stringify(doc, function (key, value) {
+            return value === undefined ? "" : value;
+        });
+        $.post(
+            config.documentUpdateUrl,
+            {document:json},
+            function(result) {
+                showAlert("Project end date saved","alert-success","save-settings-result-placeholder");
+                location.reload();
+            })
+            .fail(function() {
+                alert('Error saving document record');
+            });
+    };
+    self.saveGrantManagerSettings = function () {
+
+        if ($('#grantmanager-validation').validationEngine('validate')) {
+            var doc = {oldDate:project.plannedEndDate, newDate:self.plannedEndDate(),reason:self.transients.variation(),role:"variation",projectId:project.projectId};
+            var jsData = {
+                plannedEndDate: self.plannedEndDate()
+            };
+            var json = JSON.stringify(jsData, function (key, value) {
+                return value === undefined ? "" : value;
+            });
+
+            $.ajax({
+                url: config.projectUpdateUrl,
+                type: 'POST',
+                data: json,
+                contentType: 'application/json',
+                success: function (data) {
+                    if (data.error) {
+                        showAlert("Failed to save settings: " + data.detail + ' \n' + data.error,
+                            "alert-error","save-settings-result-placeholder");
+                    } else {
+                        self.uploadVariationDoc(doc);
+                    }
+                },
+                error: function (data) {
+                    var status = data.status;
+                    alert('An unhandled error occurred: ' + data.status);
+                }
+            });
+        }
+    };
+
+    self.saveSettings = function () {
+        if ($('#settings-validation').validationEngine('validate')) {
+
+            // only collect those fields that can be edited in the settings pane
+            var jsData = {
+                name: self.name(),
+                description: self.description(),
+                externalId: self.externalId(),
+                grantId: self.grantId(),
+                workOrderId: self.workOrderId(),
+                manager: self.manager(),
+                plannedStartDate: self.plannedStartDate(),
+                plannedEndDate: self.plannedEndDate(),
+                contractStartDate: self.contractStartDate(),
+                contractEndDate: self.contractEndDate(),
+                organisationId: self.organisationId(),
+                organisationName: self.organisationName(),
+                orgIdSvcProvider: self.orgIdSvcProvider(),
+                serviceProviderName: self.serviceProviderName(),
+                associatedProgram: self.associatedProgram(),
+                associatedSubProgram: self.associatedSubProgram(),
+                funding: new Number(self.funding()),
+                status:self.status(),
+                promoteOnHomepage:self.promoteOnHomepage(),
+                changeActivityDates:self.changeActivityDates()
+            };
+
+            // this call to stringify will make sure that undefined values are propagated to
+            // the update call - otherwise it is impossible to erase fields
+            var json = JSON.stringify(jsData, function (key, value) {
+                return value === undefined ? "" : value;
+            });
+
+            $.ajax({
+                url: config.projectUpdateUrl,
+                type: 'POST',
+                data: json,
+                contentType: 'application/json',
+                success: function (data) {
+                    if (data.error) {
+                        showAlert("Failed to save settings: " + data.detail + ' \n' + data.error,
+                            "alert-error","save-result-placeholder");
+                    } else {
+                        showAlert("Project settings saved","alert-success","save-result-placeholder");
+                    }
+                },
+                error: function (data) {
+                    var status = data.status;
+                    alert('An unhandled error occurred: ' + data.status);
+                }
+            });
+        }
+    };
+    self.regenerateStageReports = function() {
+        $.ajax(fcConfig.regenerateStageReportsUrl).done(function(data) {
+            document.location.reload();
+        }).fail(function(data) {
+            bootbox.alert('<span class="label label-warning">Error</span> <p>There was an error regenerating the stage reports: '+data+'</p>');
+        });
+    };
+
+} // end of view model

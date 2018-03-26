@@ -25,7 +25,7 @@ div.dataTables_filter input {
 
                     Actions:  <span class="btn-group">
                         <a data-bind="click: $root.addSite" class="btn" title="Create a new site for your project"><i class="fa fa-plus"></i> New</a>
-                        <a data-bind="click: $root.uploadShapefile" type="button" class="btn" title="Create sites for your project by uploading a shapefile"><i class="fa fa-upload"></i> Upload</a>
+                        <a data-bind="click: $root.uploadSites" type="button" class="btn" title="Create sites for your project by uploading a file"><i class="fa fa-upload"></i> Upload</a>
                         <a data-bind="click: $root.downloadShapefile" type="button" class="btn" title="Download your project sites in shapefile format"><i class="fa fa-download"></i> Download</a>
                         <button data-bind="click: $root.removeSelectedSites, enable:$root.selectedSiteIds().length > 0" type="button" class="btn" title="Delete selected sites"><i class="fa fa-trash"></i> Delete</button>
                     </span>

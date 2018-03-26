@@ -71,4 +71,8 @@
 .nav-list>.active>a>div.media-body>a:hover, .nav-list>.active>a>div.media-body>a:focus {
     color: #ddd;
 }
+
+a.helphover, a.helphover:visited {
+    color: black;
+}
 /* End Documents */

@@ -204,6 +204,8 @@ var PlanStage = function (stage, activities, planViewModel, isCurrentStage, proj
             return act.plannedEndDate > stage.fromDate &&  act.plannedEndDate <= stage.toDate;
         });
     this.label = stageLabel;
+    self.name = stage.name;
+    self.toDate = stage.toDate;
     self.fromDateLabel = stage.fromDate < project.plannedStartDate ? project.plannedStartDate : stage.fromDate;
     self.toDateLabel = stage.toDate > project.plannedEndDate ? project.plannedEndDate : stage.toDate;
 
@@ -847,3 +849,52 @@ function PlanViewModel(activities, reports, outputTargets, targetMetadata, proje
         timer = setTimeout(self.adjustTruncations, 50);
     });
 };
+
+
+function ProjectReportingTabViewModel(project, today, config) {
+    var self = this;
+
+    self.planStatus = ko.observable(PlanStatus.APPROVED);
+    self.loadActivities = function (activities, reports) {
+        var stages = [];
+        var unallocatedActivities = _.clone(activities);  // Activities are removed from this array when added to a stage.
+
+        // group activities by stage
+        $.each(reports, function (index, stageReport) {
+            if (stageReport.fromDate < project.plannedEndDate && stageReport.toDate > project.plannedStartDate) {
+                var stage = new PlanStage(stageReport, unallocatedActivities, self, stageReport.name === self.currentProjectStage, project, today, [], true, false);
+
+                stages.push(stage);
+
+                // Remove any activities that have been allocated to the stage.
+                unallocatedActivities = _.reject(unallocatedActivities, function(activity) {
+                    var activityAllocatedToStage = _.find(stage.activities, function(stageActivity) {
+                        return stageActivity.activityId == activity.activityId;
+                    });
+                    return activityAllocatedToStage;
+                });
+
+                if (stage.activities && stage.activities.length == 1) {
+                    stage.reportType = stage.activities[0].type;
+                }
+                else {
+                    stage.reportType = "Default";
+                }
+            }
+        });
+
+        return stages;
+    };
+
+    self.openReport = function(data) {
+        if (data.activities && data.activities.length == 1) {
+            // Report with a single activity, use that...
+            document.location.href = config.activityEnterDataUrl+'/'+data.activities[0].activityId;
+        }
+        else {
+            document.location.href = config.openReportUrl;
+        }
+    };
+    self.reports = self.loadActivities(project.activities, project.reports);
+
+}

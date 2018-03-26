@@ -188,7 +188,7 @@ class FCTagLib {
                 anchorAttrs << ['data-container':attrs.container]
             }
             mb.a(anchorAttrs) {
-                i(class:'icon-question-sign') {
+                i(class:'fa fa-question-circle') {
                     mkp.yieldUnescaped("&nbsp;")
                 }
             }
@@ -724,7 +724,7 @@ class FCTagLib {
         def tabClass = attrs.tabClass ?: 'tab-pane'
         attrs.tabs.each { name, details ->
 
-            if (details.type == 'tab' && details.visible) {
+            if (details.type == 'tab' && details.visible && !details.disabled) {
                 def divClass = details.default ? "${tabClass} active":tabClass
                 if (details.stopBinding) {
                     out << "<!-- ko stopBinding:true -->"

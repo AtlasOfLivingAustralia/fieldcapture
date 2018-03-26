@@ -1,6 +1,14 @@
 package au.org.ala.merit
 import grails.converters.JSON
+import org.apache.commons.io.FilenameUtils
+import org.apache.commons.io.IOUtils
 import org.apache.http.HttpStatus
+import org.apache.tools.ant.taskdefs.GUnzip
+import org.springframework.web.multipart.MultipartFile
+
+import javax.servlet.http.HttpServletRequest
+import java.util.zip.ZipEntry
+import java.util.zip.ZipInputStream
 
 
 class SiteController {
@@ -225,43 +233,90 @@ class SiteController {
         chain(action: 'index', id:  id)
     }
 
-    def uploadShapeFile() {
-        if (!projectService.canUserEditProject(userService.getCurrentUserId(), params.projectId)) {
+    def siteUpload() {
+        String projectId = params.projectId
+        if (!projectService.canUserEditProject(userService.getCurrentUserId(), projectId)) {
             flash.message = "Access denied: User does not have <b>editor</b> permission for projectId ${params.projectId}"
             redirect(url: params.returnTo)
         }
-
         if (request.respondsTo('getFile')) {
-            def f = request.getFile('shapefile')
 
+            MultipartFile file = request.getFile("shapefile")
 
-            def result =  siteService.uploadShapefile(f)
-
-            if (!result.error && result.content.size() > 1) {
-                def content = result.content
-                def shapeFileId = content.remove('shp_id')
-                def firstShape = content["0"]
-                def attributeNames = []
-                firstShape.each {key, value ->
-                    attributeNames << key
-                }
-                def shapes = content.collect {key, value ->
-                    [id:(key), values:(value)]
-                }
-                JSON.use("nullSafe") // JSONNull is rendered as empty string.
-                render view:'upload', model:[projectId: params.projectId, shapeFileId:shapeFileId, shapes:shapes, attributeNames:attributeNames]
+            Map result
+            String extension = FilenameUtils.getExtension(file.originalFilename)
+            switch (extension) {
+                case 'zip':
+                    result = uploadShapeFile(projectId, file)
+                    break
+                case 'kmz':
+                    uploadKmz(projectId, file)
+                    redirect(controller:'project', id:params.projectId)
+                    return
+                case 'kml':
+                    uploadKml(projectId, file)
+                    redirect(controller:'project', id:params.projectId)
+                    return
+                default:
+                    flash.message = "Unsupported file type.  Please attach a shapefile, kmz or kml file"
+                    result = [view:'upload', model:[]]
             }
 
-            else {
-                //flag error for extension
-                def message ='There was an error uploading the shapefile.  Please send an email to support for further assistance.'
+            result.model.putAll([projectId: projectId, returnTo:params.returnTo])
+            render result
 
-                flash.message = "An error was encountered when processing the shapefile: ${message}"
-                render view:'upload', model:[projectId: params.projectId, returnTo:params.returnTo]
+        }
+        else {
+            render view:'upload', model:[projectId: projectId, returnTo:params.returnTo]
+        }
+    }
+
+    private void uploadKmz(String projectId, MultipartFile file) {
+        InputStream kmzIn = file.inputStream
+        try {
+            siteService.createSitesFromKmz(projectId, kmzIn)
+        }
+        finally {
+            IOUtils.closeQuietly(kmzIn)
+        }
+
+    }
+
+    private void uploadKml(String projectId, MultipartFile file) {
+        InputStream kmlIn = file.inputStream
+        try {
+            siteService.createSitesFromKml(kmlIn, projectId)
+        }
+        finally {
+            IOUtils.closeQuietly(kmlIn)
+        }
+    }
+
+    private Map uploadShapeFile(String projectId, MultipartFile file) {
+
+
+        def result =  siteService.uploadShapefile(file)
+
+        if (!result.error && result.content.size() > 1) {
+            def content = result.content
+            def shapeFileId = content.remove('shp_id')
+            def firstShape = content["0"]
+            def attributeNames = []
+            firstShape.each {key, value ->
+                attributeNames << key
             }
+            def shapes = content.collect {key, value ->
+                [id:(key), values:(value)]
+            }
+            JSON.use("nullSafe") // JSONNull is rendered as empty string.
+            return [view:'upload', model:[projectId: projectId, shapeFileId:shapeFileId, shapes:shapes, attributeNames:attributeNames]]
+        }
+        else {
+            //flag error for extension
+            def message ='There was an error uploading the shapefile.  Please send an email to support for further assistance.'
 
-        } else {
-            render view:'upload', model:[projectId: params.projectId, returnTo:params.returnTo]
+            flash.message = "An error was encountered when processing the shapefile: ${message}"
+            return [view:'upload', model:[projectId: projectId, returnTo:params.returnTo]]
         }
     }
 
