@@ -120,7 +120,7 @@ grails.project.dependency.resolution = {
         compile ':cookie:1.4'
 
         if (Environment.current != Environment.DEVELOPMENT) {
-            compile ":ecodata-client-plugin:0.6-SNAPSHOT"
+            compile ":ecodata-client-plugin:0.6"
             test ":fieldcapture-test:0.1-SNAPSHOT"
         }
 
