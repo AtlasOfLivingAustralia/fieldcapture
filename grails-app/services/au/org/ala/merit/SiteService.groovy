@@ -230,7 +230,7 @@ class SiteService {
             String pid = result.resp.id
 
             Map geometry = siteGeometry(pid)
-            createSite(projectId, name, description, externalId, geometry, 'pid', pid)
+            createSite(projectId, name, description, externalId, 'pid', geometry, pid)
         }
     }
 
