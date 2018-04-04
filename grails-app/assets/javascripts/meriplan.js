@@ -123,6 +123,20 @@ function DetailsViewModel(o, period) {
       return new EventsRowViewModel(obj);
    }));
 
+
+    /**
+     * This is to support two views of the objectives but map it to the same data so as to keep consistency
+     * in the downloads and facets.
+     */
+   self.primaryOutcome = ko.computed({
+       read: function() {
+           return self.objectives.rows[0];
+       },
+       write: function(value) {
+           self.objectives.rows.push(value);
+       }
+   });
+
    self.modelAsJSON = function() {
       var tmp = {};
       tmp['details'] =  ko.mapping.toJS(self);

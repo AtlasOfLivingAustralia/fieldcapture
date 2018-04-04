@@ -6,6 +6,7 @@
 *= require fancybox/jquery.fancybox
 *= require jquery-gantt/css/style.css
 *= require gantt.css
+*= require meriplan.css
 *= require_self
 */
 

@@ -19,6 +19,7 @@
 //= require activity.js
 //= require projectActivityPlan.js
 //= require projectActivity.js
+//= require forms-manifest.js
 //= require_self
 
 /*

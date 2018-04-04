@@ -10,6 +10,7 @@ class ProjectController {
     static defaultAction = "index"
     static ignore = ['action', 'controller', 'id']
     static String ESP_TEMPLATE = "esp"
+    static String NRM2_TEMPLATE = "nrm2"
 
     def projectService, metadataService, organisationService, commonService, activityService, userService, webService, roleService, grailsApplication
     def siteService, documentService, reportService, blogService
@@ -139,7 +140,7 @@ class ProjectController {
                      plan           : [label: 'Activities', visible: true, disabled: !user?.hasViewAccess, type: 'tab', template:'projectActivities', grantManagerSettingsVisible:user?.isCaseManager, project:project, reports: project.reports, scores: scores, risksAndThreatsVisible: user?.hasViewAccess && risksAndThreatsVisible],
                      site           : [label: 'Sites', visible: true, disabled: !user?.hasViewAccess, editable:user?.isEditor, type: 'tab', template:'projectSites'],
                      dashboard      : [label: 'Dashboard', visible: true, disabled: !user?.hasViewAccess, type: 'tab'],
-                     admin          : [label: 'Admin', visible: adminTabVisible, user:user, type: 'tab', template:'projectAdmin', project:project, canChangeProjectDates: canChangeProjectDates, showAnnouncementsTab: showAnnouncementsTab]]
+                     admin          : [label: 'Admin', visible: adminTabVisible, user:user, type: 'tab', template:'projectAdmin', project:project, canChangeProjectDates: canChangeProjectDates, showAnnouncementsTab: showAnnouncementsTab, meriPlanTemplate:'meriPlanOriginal']]
 
         if (template == 'meri') {
             model = [details:model.details]
@@ -149,6 +150,7 @@ class ProjectController {
             Map nrm2Model = [overview:model.overview, documents:model.documents, details:model.details, site:model.site, reporting:reportingTab]
             nrm2Model.plan = [label: 'Report approvals', visible: user?.isCaseManager, type: 'tab', template:'projectActivities', grantManagerSettingsVisible:true, project:project, reports: project.reports, scores: scores, risksAndThreatsVisible: false]
             nrm2Model.admin = model.admin
+            nrm2Model.admin.meriPlanTemplate = 'meriPlan'
             nrm2Model.admin.projectServices = projectService.getProjectServices()
             model = nrm2Model
         }
