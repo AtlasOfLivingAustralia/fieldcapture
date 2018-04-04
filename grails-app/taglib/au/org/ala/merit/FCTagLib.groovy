@@ -578,21 +578,19 @@ class FCTagLib {
         def mb = new MarkupBuilder(out)
         // common code as closures
         def maxItemsLink = {
-            mb.p {
+            mb.li (class:'dropdown-item') {
                 a(href: g.createLink(controller: "user"), "[showing top ${maxItems} - see full list]")
             }
         }
         def listItem = { org ->
-            mb.li {
-                span {
-                    a(href: g.createLink(controller: 'organisation', id: org.organisationId), org.name)
-                }
+            mb.li(class:'dropdown-item') {
+                a(href: g.createLink(controller: 'organisation', id: org.organisationId), org.name)
             }
         }
 
         if (user) {
             List memberOrgs = userService.getOrganisationsForUserId(user.userId)
-            mb.ul {
+            mb.ul(class:'dropdown-menu') {
                 memberOrgs.eachWithIndex { org, i ->
                     if (i < maxItems) {
                         if (org && org.organisation){
@@ -600,15 +598,18 @@ class FCTagLib {
                         }
                     }
                 }
+                if (memberOrgs.size() >= maxItems) {
+                    maxItemsLink()
+                }
+                if (memberOrgs.size() == 0) {
+                    mb.li("[You aren't a member of any organisations]")
+                }
+                mb.hr()
+                mb.li(class:'dropdown-item') {
+                    a(href:g.createLink(controller:'organisation', action:'list'), "Find an organisation here")
+                }
             }
-            if (memberOrgs.size() >= maxItems) {
-                maxItemsLink()
-            }
-            if (memberOrgs.size() == 0) {
-                mb.span("[You aren't a member of any organisations]")
-            }
-            mb.hr()
-            mb.a(href:g.createLink(controller:'organisation', action:'list'), "Find an organisation here")
+
 
         } else {
             mb.div { mkp.yield("Error: User not found") }
@@ -708,10 +709,10 @@ class FCTagLib {
                 def liClass = details.default ? 'active':''
                 def linkAttributes = [href:'#'+name, id:name+'-tab']
                 if (!details.disabled) {
-                    linkAttributes << ["data-toggle":"tab"]
+                    linkAttributes << ["data-toggle":"tab", class:'nav-link ']
                 }
 
-                mb.li(class:liClass) {
+                mb.li(class:'nav-item '+liClass) {
                     a(linkAttributes, details.label)
                 }
             }

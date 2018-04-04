@@ -170,6 +170,7 @@ span.merit {
 
 #dcNav .navbar .nav>li>a:hover {
 	color: #fff;
+    background-color: transparent;
 }
 
 #dcNav .navbar .nav>li>a i {
@@ -786,4 +787,72 @@ a.icon-link {
 	background-color:lightgrey;
 	color:black;
 	margin-bottom:0px;
+}
+
+.page-header .dropdown-menu > li > a {
+	white-space: normal;
+	padding: 3px 10px;
+}
+
+.page-header-bs4 .dropdown-menu > li > a {
+	white-space: normal;
+	padding: 3px 0px 0px 3px;
+}
+.page-header-bs4 .dropdown-menu > li  {
+
+	padding: 3px;
+}
+
+/** keep the bs3 header the same as the bs2 one */
+
+.page-header-bs4 .btn-group {
+	margin-left: 5px;
+}
+
+.page-header-bs4 .navbar {
+	border: none;
+	padding-top: 0;
+	padding-bottom: 0;
+	padding-left: 20px;
+}
+
+.page-header-bs4 #keywords {
+
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-left: 6px;
+    padding-right: 30px;
+
+	margin-left:20px;
+    width: 236px;
+}
+
+.page-header-bs4 form.search.merit {
+    position:relative;
+}
+
+.page-header-bs4 #buttonBar .btn {
+	height:32px;
+	font-size: 11.9px;
+}
+
+.page-header-bs4 .page-header-menu {
+	height: 56px;
+}
+
+.page-header-bs4 form.search:after {
+	font-family: FontAwesome;
+	color: #333;
+	content: "\f002";
+	position: absolute;
+	right: 10px;
+	top: 5px;
+}
+
+.page-header-bs4 input.search {
+	z-index: 100;
+}
+
+.page-header-bs4 .login-logout {
+	margin-bottom: 10px;
 }
