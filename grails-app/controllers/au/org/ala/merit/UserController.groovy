@@ -189,5 +189,59 @@ class UserController {
         }
     }
 
+    def getMembersOfProgram(String id) {
+        String userId = userService.getCurrentUserId()
+
+        if (id && userId) {
+            if (userService.isUserAdminForProgram(userId, id) || userService.isUserGrantManagerForProgram(id)) {
+                render userService.getMembersOfProgram(id) as JSON
+            } else {
+                render status: 403, text: 'Permission denied'
+            }
+        } else if (userId) {
+            render status: 400, text: 'Required params not provided: id'
+        } else if (id) {
+            render status: 403, text: 'User not logged-in or does not have permission'
+        } else {
+            render status: 500, text: 'Unexpected error'
+        }
+    }
+
+    def addUserAsRoleToProgram() {
+        String userId = params.userId
+        String programId = params.entityId
+        String role = params.role
+        def adminUser = userService.getUser()
+
+        if (adminUser && userId && programId && role) {
+            if (role == 'caseManager' && !userService.userIsSiteAdmin()) {
+                render status: 403, text: 'Permission denied - ADMIN role required'
+            } else if (userService.isUserAdminForProgram(programId)) {
+                render userService.addUserAsRoleToProgram(userId, programId, role) as JSON
+            } else {
+                render status: 403, text: 'Permission denied'
+            }
+        } else {
+            render status: 400, text: 'Required params not provided: userId, role, projectId'
+        }
+    }
+
+    def removeUserWithRoleFromProgram() {
+        String userId = params.userId
+        String role = params.role
+        String programId = params.entityId
+        def adminUser = userService.getUser()
+
+        if (adminUser && programId && role && userId) {
+            if (userService.isUserAdminForProgram(programId)) {
+                render userService.removeUserWithRoleFromProgram(userId, programId, role) as JSON
+            } else {
+                render status: 403, text: 'Permission denied'
+            }
+        } else {
+            render status: 400, text: 'Required params not provided: userId, organisationId, role'
+        }
+    }
+
 
 }

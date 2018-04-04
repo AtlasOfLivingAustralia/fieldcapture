@@ -1,126 +1,80 @@
-package au.org.ala.merit
-/**
- * Extends the plugin ProgramService to provide Green Army reporting capability.
- */
+package au.org.ala.merit;
+
+import org.codehaus.groovy.grails.commons.GrailsApplication
+
+import java.util.Map
+
 class ProgramService {
 
+    private static final String PROGRAM_DOCUMENT_FILTER = "className:au.org.ala.ecodata.Program"
 
-    def grailsApplication, webService, metadataService, projectService, userService, searchService, activityService, emailService, reportService, documentService
+    GrailsApplication grailsApplication
+    WebService webService
+    MetadataService metadataService
+    ProjectService projectService
+    UserService userService
+    SearchService searchService
 
-    /** Overrides the parent to add Green Army reports to the results */
-    def get(String id, view = '') {
 
-        String url = "${grailsApplication.config.ecodata.baseUrl}program/$id?view=$view"
-        Map program = webService.getJson(url)
-
-        def projects = []
-        def resp = projectService.search(programId: id, isMERIT:true, view:'enhanced')
-        if (resp?.resp?.projects) {
-            projects += resp.resp.projects
-        }
-
-        program.projects = projects
-        program
-    }
-
-    def update(id, Program) {
-        def url = "${grailsApplication.config.ecodata.baseUrl}program/$id"
-        def result = webService.doPost(url, Program)
-        result
-    }
-
-    def isUserAdminForProgram(ProgramId) {
-        def userIsAdmin
-
-        if (!userService.user) {
-            return false
-        }
-        if (userService.userIsSiteAdmin()) {
-            userIsAdmin = true
-        } else {
-            userIsAdmin = userService.isUserAdminForProgram(userService.user.userId, ProgramId)
-        }
-
-        userIsAdmin
-    }
-
-    def isUserGrantManagerForProgram(ProgramId) {
-        def userIsAdmin
-
-        if (!userService.user) {
-            return false
-        }
-        if (userService.userIsSiteAdmin()) {
-            userIsAdmin = true
-        } else {
-            userIsAdmin = userService.isUserGrantManagerForProgram(userService.user.userId, ProgramId)
-        }
-
-        userIsAdmin
-    }
-
-    /**
-     * Get the list of users (members) who have any level of permission for the requested ProgramId
-     *
-     * @param ProgramId the ProgramId of interest.
-     */
-    def getMembersOfProgram(ProgramId) {
-        def url = grailsApplication.config.ecodata.baseUrl + "permissions/getMembersForProgram/${ProgramId}"
+    Map get(String id, String view = '') {
+        def url = "${grailsApplication.config.ecodata.baseUrl}program/" + id + "?view=" + view.encodeAsURL()
         webService.getJson(url)
     }
 
-    /**
-     * Adds a user with the supplied role to the identified Program.
-     * Adds the same user with the same role to all of the Program's projects.
-     *
-     * @param userId the id of the user to add permissions for.
-     * @param ProgramId the Program to add permissions for.
-     * @param role the role to assign to the user.
-     */
-    def addUserAsRoleToProgram(String userId, String ProgramId, String role) {
+    Map getByName(String name) {
 
-        def Program = get(ProgramId, 'flat')
-        def resp = userService.addUserAsRoleToProgram(userId, ProgramId, role)
-        Program.projects.each { project ->
-            if (project.isMERIT) {
-                userService.addUserAsRoleToProject(userId, project.projectId, role)
-            }
+        String url = "${grailsApplication.config.ecodata.baseUrl}program/?name=" + name.encodeAsURL()
+        Map program = webService.getJson(url)
+
+        if(program && program.statusCode == 404) {
+            program = [:]
         }
-        resp
+
+        return program
     }
 
-    /**
-     * Removes the user access with the supplied role from the identified Program.
-     * Removes the same user from all of the Program's projects.
-     *
-     * @param userId the id of the user to remove permissions for.
-     * @param ProgramId the Program to remove permissions for.
+    String validate(Map props, String programId) {
+        String error = null
+        boolean creating = !programId
 
-     */
-    def removeUserWithRoleFromProgram(String userId, String ProgramId, String role) {
-        def Program = get(ProgramId, 'flat')
-        userService.removeUserWithRoleFromProgram(userId, ProgramId, role)
-        Program.projects.each { project ->
-            if (project.isMERIT) {
-                userService.removeUserWithRole(project.projectId, userId, role)
+        if (!creating) {
+            Map existingProgram = get(programId)
+            if (existingProgram?.error) {
+                return "invalid programId"
             }
         }
+
+        if (creating && !props?.description) {
+            //error, no description
+            return "description is missing"
+        }
+
+        if (props.containsKey("name")) {
+            Map existingProgram = getByName(props.name)
+            if ((existingProgram as Boolean) && (creating || existingProgram?.programId != programId)) {
+                return "name is not unique"
+            }
+        } else if (creating) {
+            //error, no project name
+            return "name is missing"
+        }
+
+        error
     }
 
-    def search(Integer offset = 0, Integer max = 100, String searchTerm = null, String sort = null) {
-        Map params = [
-                offset:offset,
-                max:max,
-                query:searchTerm,
-                fq:"className:au.org.ala.ecodata.Program"
-        ]
-        if (sort) {
-            params.sort = sort
+    Map update(String id, Map program) {
+        Map result = [:]
+
+        def error = validate(program, id)
+        if (error) {
+            result.error = error
+            result.detail = ''
+        } else {
+            String url = "${grailsApplication.config.ecodata.baseUrl}program/$id"
+            result = webService.doPost(url, program)
         }
-        def results = searchService.fulltextSearch(
-                params, false
-        )
-        results
+        result
+
     }
 
 }

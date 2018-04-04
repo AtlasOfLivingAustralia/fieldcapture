@@ -215,7 +215,7 @@
             mapBounds = bounds;
             features.length > 0 ? showLegends(legends) : "";
 
-            }).error(function (request, status, error) {
+            }).fail(function (request, status, error) {
                 console.error("AJAX error", status, error);
             });
     }

@@ -173,6 +173,54 @@ class UserService {
         webService.getJson(url)
     }
 
+    /**
+     * Get the list of users (members) who have any level of permission for the requested program
+     *
+     * @param programId the id of the program of interest
+     */
+    Map getMembersOfProgram(String programId) {
+        def url = grailsApplication.config.ecodata.baseUrl + "permissions/getMembersOfProgram/${programId}"
+        webService.getJson(url)
+    }
+
+    def addUserAsRoleToProgram(String userId, String programId, String role) {
+        Map result = checkRoles(userId, role)
+        if (result.error) {
+            return result
+        }
+
+        if (!isUserAdminForProgram(programId)) {
+            return [error:'Permission denied']
+        }
+
+        def url = grailsApplication.config.ecodata.baseUrl + "permissions/addUserAsRoleToProgram?userId=${userId}&programId=${programId}&role=${role}"
+        webService.getJson(url)
+    }
+
+    def removeUserWithRoleFromProgram(String userId, String programId, String role) {
+        def url = grailsApplication.config.ecodata.baseUrl + "permissions/removeUserWithRoleFromOrganisation?organisationId=${programId}&userId=${userId}&role=${role}"
+        webService.getJson(url)
+    }
+
+    List getUserRoles(String userId) {
+        String url = grailsApplication.config.ecodata.baseUrl + "permissions/getRolesForUserId?userId=${userId}"
+        Map result = webService.getJson(url)
+
+        result.roles || []
+    }
+
+    boolean isUserAdminForProgram(String userId, String programId) {
+        List userRoles = getUserRoles(userId)
+        Map programRole =  userRoles.find{it.entityId == programId}
+        return programRole == RoleService.PROJECT_ADMIN_ROLE
+    }
+
+    boolean isUserGrantManagerForProgram(String userId, String programId) {
+        List userRoles = getUserRoles(userId)
+        Map programRole =  userRoles.find{it.entityId == programId}
+        return programRole == RoleService.GRANT_MANAGER_ROLE
+    }
+
     def isUserAdminForProject(userId, projectId) {
         def url = grailsApplication.config.ecodata.baseUrl + "permissions/isUserAdminForProject?projectId=${projectId}&userId=${userId}"
         def results = webService.getJson(url)
