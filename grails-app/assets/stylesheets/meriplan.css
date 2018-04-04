@@ -1,0 +1,15 @@
+#announcements th, #risks-announcements th {
+    white-space: normal;
+}
+
+table tr.header th {
+    border-color: #ddd;
+    background-color: #d9edf7;
+    border: 1px solid #ddd;
+}
+
+
+.meri-plan td textarea, .meri-plan td select {
+    box-sizing: border-box;
+    width: 100%;
+}
