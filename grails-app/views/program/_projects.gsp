@@ -5,7 +5,9 @@
         </thead>
         <tbody>
             <g:each var="project" in="${projects}">
+                <tr>
                 <td><a href="${g.createLink(controller:'project', action:'index', id:project.projectId)}" >${project.name}</a></td>
+                </tr>
             </g:each>
         </tbody>
     </table>
