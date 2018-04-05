@@ -12,6 +12,7 @@ class ProgramController {
     static allowedMethods = [ajaxDelete: "POST", delete: "POST", ajaxUpdate: "POST"]
 
     def programService, searchService, documentService, userService, roleService, commonService, webService
+    ProjectService projectService
     AuthService authService
 
     // Simply forwards to the list view
@@ -51,8 +52,12 @@ class ProgramController {
 
         def hasViewAccess = hasAdminAccess || userService.userHasReadOnlyAccess() || role.role == RoleService.PROJECT_EDITOR_ROLE
 
+        Map result = projectService.search(programId:program.programId)
+        List projects = result.resp?.projects
+
+
         [about   : [label: 'Management Unit', visible: true, stopBinding: false, type: 'tab'],
-         projects: [label: 'Work Order', visible: true, stopBinding: false, type:'tab', projects:program.projects],
+         projects: [label: 'Work Order', visible: true, stopBinding: false, type:'tab', projects:projects],
          sites   : [label: 'Sites', visible: true, stopBinding: true, type:'tab'],
          admin   : [label: 'Admin', visible: hasAdminAccess, type: 'tab']]
     }

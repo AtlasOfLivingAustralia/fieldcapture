@@ -1,11 +1,11 @@
-<g:if test="${program.projects}">
+<g:if test="${projects}">
     <table id="projectList" class="table table-striped">
         <thead>
             <td>Name</td>
         </thead>
         <tbody>
-            <g:each var="project" in="${program.projects}">
-            <td>${project.name}</td>
+            <g:each var="project" in="${projects}">
+                <td><a href="${g.createLink(controller:'project', action:'index', id:project.projectId)}" >${project.name}</a></td>
             </g:each>
         </tbody>
     </table>
