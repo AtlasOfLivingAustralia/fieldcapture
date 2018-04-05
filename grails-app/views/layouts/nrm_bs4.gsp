@@ -162,15 +162,18 @@
             $.ajaxSetup({cache: false});
 
             $("#btnLogout").click(function (e) {
-                window.location = "${createLink(controller: 'logout', action:'index')}";
+                window.location.href = "${createLink(controller: 'logout', action:'index')}";
+                return false;
             });
 
             $(".btnAdministration").click(function (e) {
-                window.location = "${createLink(controller: 'admin')}";
+                window.location.href = "${createLink(controller: 'admin')}";
+                return false;
             });
 
             $(".btnProfile").click(function (e) {
-                window.location = "${createLink(controller: 'project', action:'mine')}";
+                window.location.href = "${createLink(controller: 'project', action:'mine')}";
+                return false;
             });
 
             $("#toggleFluid").click(function (el) {
