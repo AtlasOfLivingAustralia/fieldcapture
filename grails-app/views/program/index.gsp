@@ -7,17 +7,29 @@
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}&libraries=visualization"></script>
     <script type="text/javascript" src="//www.google.com/jsapi"></script>
     <script disposition="head">
-        var fcConfig = {
-
-        };
+        var fcConfig = {};
     </script>
     <asset:stylesheet src="common-bs4.css"/>
-
+    <asset:stylesheet src="program.css"/>
 
 </head>
-<body>
 
-    <div id="programDetails" class="${containerType}">
+<body>
+<div class="container-fluid">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <g:link controller="home">Home</g:link>
+            </li>
+            <li class="breadcrumb-item"> Management Units</li>
+            <li class="breadcrumb-item active"> ${program.name}</li>
+        </ol>
+
+    </nav>
+
+    <h2>${program.name}</h2>
+
+    <div id="programDetails">
 
         <g:render template="/shared/flashScopeMessage"/>
 
@@ -35,9 +47,10 @@
         </div>
     </div>
 
+</div>
 <g:render template="/shared/declaration"/>
 <script type="text/html" id="loading">
-    <asset:image id="img-spinner" width="50" height="50" src="loading.gif" alt="Loading"/>
+<asset:image id="img-spinner" width="50" height="50" src="loading.gif" alt="Loading"/>
 </script>
 
 <asset:script>
@@ -51,13 +64,11 @@
         $('#loading').hide();
     });
 
-
 </asset:script>
 <asset:javascript src="common-bs4.js"/>
 <asset:javascript src="program.js"/>
 <asset:deferredScripts/>
 
 </body>
-
 
 </html>
