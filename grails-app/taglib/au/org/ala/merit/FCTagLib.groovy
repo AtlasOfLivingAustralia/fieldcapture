@@ -883,4 +883,27 @@ class FCTagLib {
         out << '</span>'
         out << '<span class="diff"></span>'
     }
+
+    def status = { attrs ->
+        String statusClass
+        switch (attrs.status?.toLowerCase()) {
+            case 'active':
+                statusClass = 'badge-success'
+                break
+            case 'completed':
+                statusClass = 'badge-info'
+                break
+        }
+
+        MarkupBuilder mb = new MarkupBuilder(out)
+        mb.span(class:'status badge '+statusClass, attrs.status)
+    }
+
+    def projectFunding = { attrs ->
+        Map project = attrs.project
+        out << (project?.custom?.details?.budget?.overallTotal?:project.funding)?:0
+
+    }
+
+    def displayDate = {}
 }

@@ -856,3 +856,7 @@ a.icon-link {
 .page-header-bs4 .login-logout {
 	margin-bottom: 10px;
 }
+
+span.status {
+	text-transform: uppercase;
+}

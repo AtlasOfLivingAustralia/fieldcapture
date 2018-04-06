@@ -113,7 +113,10 @@ ProgramViewModel = function (props, options) {
             initialiser: function () {}
         },
         'projects': {
-            initialiser: function() {}
+            initialiser: function() {
+                $.fn.dataTable.moment( 'dd-MM-yyyy' );
+                $('#projectList').DataTable();
+            }
         },
         'sites': {
             initialiser: function () {
