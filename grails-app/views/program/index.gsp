@@ -34,7 +34,7 @@
         <g:render template="/shared/flashScopeMessage"/>
 
 
-        <ul class="nav nav-tabs" data-tabs="tabs">
+        <ul id="program-tabs" class="nav nav-tabs" data-tabs="tabs">
             <fc:tabList tabs="${content}"/>
         </ul>
 

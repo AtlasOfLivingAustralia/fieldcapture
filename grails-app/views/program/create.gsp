@@ -2,8 +2,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="layout" content="${hubConfig.skin}"/>
-    <title>Create | Program | MERIT</title>
+    <meta name="layout" content="nrm_bs4"/>
+    <title>Edit | Program | MERIT</title>
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
     <script disposition="head">
         var fcConfig = {
@@ -21,13 +21,17 @@
 </head>
 <body>
 <div class="${containerType}">
-    <ul class="breadcrumb">
-        <li>
-            <g:link controller="home">Home</g:link> <span class="divider">/</span>
-        </li>
-        <li class="active"><g:link controller="program" action="list">Programmes</g:link> <span class="divider">/</span></li>
-        <li class="active"><g:message code="program.breadcrumb.create"/></li>
-    </ul>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <g:link controller="home">Home</g:link>
+            </li>
+            <li class="breadcrumb-item"><g:link controller="program" action="list">Programmes</g:link></li>
+            <li class="breadcrumb-item active"> ${program.name}</li>
+            <li class="breadcrumb-item active"><g:message code="program.breadcrumb.create"/></li>
+        </ol>
+
+    </nav>
 
     <g:render template="programDetails"/>
 

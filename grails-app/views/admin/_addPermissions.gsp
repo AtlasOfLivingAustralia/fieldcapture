@@ -1,14 +1,14 @@
 <form class="form-horizontal" id="userAccessForm">
-    <div class="control-group">
-        <label class="control-label" for="emailAddress">User's email address</label>
-        <div class="controls">
-            <input class="input-xlarge validate[required,custom[email]]" id="emailAddress" placeholder="enter a user's email address" type="text"/>
+    <div class="control-group form-group row">
+        <label class="control-label col-form-label col-sm-3" for="emailAddress">User's email address</label>
+        <div class="controls col-sm-9">
+            <input class="input-xlarge form-control validate[required,custom[email]]" id="emailAddress" placeholder="enter a user's email address" type="text"/>
         </div>
     </div>
-    <div class="control-group">
-        <label class="control-label" for="addUserRole">Permission level</label>
-        <div class="controls" id="rolesSelect">
-            <g:render id="addUserRole" template="/admin/userRolesSelect" model="[roles:roles, includeEmptyOption: true]"/>
+    <div class="control-group form-group row">
+        <label class="control-label col-form-label col-sm-3" for="addUserRole">Permission level</label>
+        <div class="controls col-sm-9" id="rolesSelect">
+            <g:render id="addUserRole" template="/admin/userRolesSelect" model="[roles:roles, includeEmptyOption: true, selectClass:'form-control']"/>
         </div>
     </div>
     <g:if test="${entityId}">
@@ -26,16 +26,16 @@
     <div class="control-group">
         <div class="controls">
             <button id="addUserRoleBtn" class="btn btn-primary">Submit</button>
-            <asset:image src="spinner.gif" id="spinner1" class="hide spinner" alt="spinner icon"/>
+            <asset:image src="spinner.gif" id="spinner1" class="hide d-none spinner" alt="spinner icon"/>
         </div>
     </div>
 </form>
-<div id="status" class="offset2 span7 hide alert alert-success">
+<div id="status" class="offset2 span7 hide d-none alert alert-success">
     <button class="close" onclick="$('.alert').fadeOut();" href="#">×</button>
     <span></span>
 </div>
 <div class="clearfix">&nbsp;</div>
-<div class="clearfix hide bbAlert1">
+<div class="clearfix hide d-none bbAlert1">
     The email address did not match a registered user. This may because:
     <ul>
         <li>the email address is incorrect</li>

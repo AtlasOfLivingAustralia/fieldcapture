@@ -3,7 +3,7 @@
 //= require underscorejs/1.8.3/underscore
 //= require amplifyjs/amplify.min.js
 //= require bootstrap-datepicker/js/bootstrap-datepicker.js
-//= require bootbox/bootbox.min.js
+//= require bootbox/4.4.0/bootbox.min.js
 //= require knockout/3.4.0/knockout-3.4.0
 //= require knockout/3.4.0/knockout.mapping-latest
 //= require jquery.validationEngine/jquery.validationEngine

@@ -69,6 +69,7 @@ class ProgramController {
     def edit(String id) {
         Map program = programService.get(id)
 
+
         if (!program || program.error) {
             programNotFound(id, program)
         } else {
@@ -102,7 +103,7 @@ class ProgramController {
         def documents = programDetails.remove('documents')
         def links = programDetails.remove('links')
 
-        String programId = programDetails ?: ''
+        String programId = programDetails?.programId ?: ''
         Map result = programService.update(programId, programDetails)
 
         programId = programId ?: result.resp?.programId

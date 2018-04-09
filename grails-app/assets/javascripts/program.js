@@ -1,7 +1,8 @@
 //= require tab-init.js
 
 //= require mapWithFeatures.js
-//= require sites.js
+//= require sites
+//= require document
 /**
  * Knockout view model for program pages.
  * @param props JSON/javascript representation of the program.
@@ -101,7 +102,7 @@ ProgramViewModel = function (props, options) {
     autoSaveModel(self, config.programSaveUrl,
         {
             blockUIOnSave: true,
-            blockUISaveMessage: 'Saving organisation....',
+            blockUISaveMessage: 'Saving programme....',
             serializeModel: function () {
                 return self.modelAsJSON(true);
             }
@@ -125,11 +126,11 @@ ProgramViewModel = function (props, options) {
         },
         'admin': {
             initialiser: function () {
-
+                populatePermissionsTable();
             }
         }
     };
-    initialiseTabs(tabs, {tabStorageKey:'selected-program-tab'});
+    initialiseTabs(tabs, {tabSelector:'#program-tabs.nav a', tabStorageKey:'selected-program-tab'});
 
     return self;
 

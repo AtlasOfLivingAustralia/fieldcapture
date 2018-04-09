@@ -11,7 +11,8 @@ import static org.apache.http.HttpStatus.SC_OK;
 class DocumentService {
     private static final String HELP_DOCUMENTS_CACHE_REGION = 'homePageDocuments'
 
-    public String ROLE_LOGO = "logo"
+    public static final String TYPE_LINK = "link"
+    public static final String ROLE_LOGO = "logo"
 
     def webService, grailsApplication
 
