@@ -20,6 +20,9 @@ table#projectList .cost {
     width: 15%;
 }
 
+#addSocialMedia {
+    margin-left: -5px; /* offset table cell padding */
+}
 
 
 

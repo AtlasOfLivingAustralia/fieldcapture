@@ -203,10 +203,10 @@ class UserService {
     }
 
     List getUserRoles(String userId) {
-        String url = grailsApplication.config.ecodata.baseUrl + "permissions/getRolesForUserId?userId=${userId}"
+        String url = grailsApplication.config.ecodata.baseUrl + "permissions/getUserRolesForUserId/${userId}"
         Map result = webService.getJson(url)
 
-        result.roles || []
+        result.roles ?: []
     }
 
     boolean isUserAdminForProgram(String userId, String programId) {

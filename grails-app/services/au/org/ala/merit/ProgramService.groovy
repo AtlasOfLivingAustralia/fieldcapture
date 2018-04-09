@@ -1,6 +1,7 @@
 package au.org.ala.merit;
 
 import org.codehaus.groovy.grails.commons.GrailsApplication
+import org.codehaus.groovy.grails.web.json.JSONArray
 
 import java.util.Map
 
@@ -14,14 +15,26 @@ class ProgramService {
     ProjectService projectService
     UserService userService
     SearchService searchService
+    DocumentService documentService
 
 
     Map get(String id, String view = '') {
+
+
         def url = "${grailsApplication.config.ecodata.baseUrl}program/" + id + "?view=" + view.encodeAsURL()
-        webService.getJson(url)
+        Map program = webService.getJson(url)
+        Map results = documentService.search(programId:id)
+        if (results && results.documents) {
+            List categorisedDocs = results.documents.split{it.type == DocumentService.TYPE_LINK}
+
+            program.links = new JSONArray(categorisedDocs[0])
+            program.documents = new JSONArray(categorisedDocs[1])
+        }
+        program
     }
 
     Map getByName(String name) {
+
 
         String url = "${grailsApplication.config.ecodata.baseUrl}program/?name=" + name.encodeAsURL()
         Map program = webService.getJson(url)

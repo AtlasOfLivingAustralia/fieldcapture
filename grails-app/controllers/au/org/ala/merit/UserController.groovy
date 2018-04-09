@@ -193,7 +193,7 @@ class UserController {
         String userId = userService.getCurrentUserId()
 
         if (id && userId) {
-            if (userService.isUserAdminForProgram(userId, id) || userService.isUserGrantManagerForProgram(id)) {
+            if (userService.userIsSiteAdmin() || userService.isUserAdminForProgram(userId, id) || userService.isUserGrantManagerForProgram(userId, id)) {
                 render userService.getMembersOfProgram(id) as JSON
             } else {
                 render status: 403, text: 'Permission denied'
