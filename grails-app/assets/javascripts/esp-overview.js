@@ -95,8 +95,8 @@ var SimplifiedReportingViewModel = function(project, config) {
     });
 
 
-    var OPTIONAL_REPORT_TYPE = 'ESP Species';
-    var ADMIN_REPORT_TYPE = 'ESP Overview';
+    var OPTIONAL_REPORT_TYPE = config.sightingsActivityType || 'ESP Species';
+    var ADMIN_REPORT_TYPE = config.adminActivityType || 'ESP Overview';
     function isAdminActivity(activity) {
         return activity.type == ADMIN_REPORT_TYPE;
     }
