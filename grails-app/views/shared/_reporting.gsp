@@ -2,7 +2,7 @@
 
 <div id="reporting-content">
 
-    <g:if test="${fc.userIsAlaOrFcAdmin()}">
+    <g:if test="${fc.userIsAlaOrFcAdmin() && adHocReportTypes}">
     <div class="control-group" style="margin-bottom: 5px;">
         <span class="controls"><button class="btn btn-success pull-right" style="margin-bottom: 5px;" data-bind="click:addReport"><i class="icon-white icon-plus"></i> New Report</button></span>
     </div>
@@ -96,7 +96,7 @@
                             <label class="control-label" for="reportType">Report Type</label>
 
                             <div class="controls">
-                                <select id="reportType" style="width: 97%;" data-bind="options:availableReports, value:type"></select>
+                                <select id="reportType" style="width: 97%;" data-bind="options:availableReports, optionsText:formatReportType, value:selectedReportType"></select>
                             </div>
                         </div>
 
@@ -188,7 +188,8 @@
 <asset:script type="text/javascript">
 
 $(function() {
-    var reports = <fc:modelAsJavascript model="${organisation.reports}"/>;
-    ko.applyBindings(new ReportsViewModel(reports, fcConfig.projects, ['Performance Management Framework - Self Assessment']), document.getElementById('reporting-content'));
+    var reports = <fc:modelAsJavascript model="${reports}"/>;
+    var addHocReportTypes = <fc:modelAsJavascript model="${adHocReportTypes}"/>;
+    ko.applyBindings(new ReportsViewModel(reports, fcConfig.projects, addHocReportTypes, fcConfig), document.getElementById('reporting-content'));
 });
 </asset:script>

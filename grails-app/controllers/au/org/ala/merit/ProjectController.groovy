@@ -146,7 +146,15 @@ class ProjectController {
             model = [details:model.details]
         }
         else if (template == 'nrm2') {
-            Map reportingTab = [label: 'Reporting', visible:user?.hasViewAccess, type:'tab', template:'projectReporting', reports:project.reports, stopBinding:true]
+            List adHocReportTypes = [
+                    [type:ReportService.REPORT_TYPE_SINGLE_ACTIVITY, activityType:'Prototype 2'],
+                    [type:ReportService.REPORT_TYPE_SINGLE_ACTIVITY, activityType:'Annual Report'],
+                    [type:ReportService.REPORT_TYPE_SINGLE_ACTIVITY, activityType:'Short term outcomes'],
+                    [type:ReportService.REPORT_TYPE_SINGLE_ACTIVITY, activityType:'Medium term outcomes']
+
+            ]
+            Map reportingTab = [label: 'Reporting', visible:user?.hasViewAccess, type:'tab', template:'/shared/reporting', reports:project.reports, stopBinding:true, adHocReportTypes:adHocReportTypes]
+
             Map nrm2Model = [overview:model.overview, documents:model.documents, details:model.details, site:model.site, reporting:reportingTab]
             nrm2Model.plan = [label: 'Report approvals', visible: user?.isCaseManager, type: 'tab', template:'projectActivities', grantManagerSettingsVisible:true, project:project, reports: project.reports, scores: scores, risksAndThreatsVisible: false]
             nrm2Model.admin = model.admin
@@ -629,27 +637,43 @@ class ProjectController {
         render activities as JSON
     }
 
-    def reportPrototype(String id) {
-        Map project = projectService.get(id, 'all')
-        if (!project) {
-            render status:404, error:'No project found'
+    @PreAuthorise(accessLevel = 'editor')
+    def editReport(String id, String reportId) {
+        if (!id || !reportId) {
+            error('An invalid report was selected for data entry', id)
             return
         }
-            /* 13 */List activityTypes = projectService.getProjectServices()
 
-            List serviceCategories = [
-                    'Ramsar Services', 'Threatened Species Services', 'World Heritage Services', 'Threatened Ecological Communities Services'
-            ]
+        Map report = reportService.get(reportId)
 
-            Map activitiesByCategory = [
-                    /* 5 */ 'Ramsar Services':['Controlling Pest Animals', 'Removing Pest Weeds', 'Improving hydrological regimes', 'Remediating riparian and aquiatic areas', 'Fencing'],
-                    /* 10 */ 'Threatened Species Services':['Controlling Pest Animals', 'Removing pest weeds', 'Revegetating habitat', 'Managing fire regimes', 'Protecting habitat by controlling access', 'Habitat augmentation', 'Establishing and maintaining feral free enclosures', 'Establishing and maintaining ex-situ breeding sites', 'Undertaking emergency interventions to prevent extinction', 'Fencing'],
-                    /* 5 */ 'World heritage Services':['Controlling Pest Animals', 'Removing pest weeds', 'Protecting habitat by controlling access', 'Managing diseases', 'Fencing'],
-                    /* 7 */'Threatened Ecological Community Services':['Controlling Pest Animals', 'Removing pest weeds', 'Improving hydrological regimes', 'Revegetating habitat', 'Managing fire regimes', 'Protecting habitat by controlling access', 'Managing diseases', 'Fencing']
-            ]
+        if (report.type != ReportService.REPORT_TYPE_SINGLE_ACTIVITY || !report.activityType) {
+            error("Invalid report type: ${report.type}", id)
+            return
+        }
+        String activityId = report.activityId
+        if (!activityId) {
+            // Create an activity for this report...
+            Map result = reportService.createActivityForReport(report)
+
+            if (result.error) {
+                error(result.error)
+                return
+            }
+            activityId = result.activityId
+        }
+
+        forward(controller: 'activity', action: 'enterData', id: activityId)
+    }
 
 
+    private def error(String message, String projectId) {
+        flash.message = message
+        if (projectId) {
+            redirect(action: 'index', id: projectId)
+        }
+        else {
+            redirect(controller:'home', action:'publicHome')
+        }
 
-        [activityTypes:activityTypes, project:project, sites:project.sites]
     }
 }

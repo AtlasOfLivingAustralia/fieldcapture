@@ -7,6 +7,6 @@
 //= require fancybox/jquery.fancybox
 //= require slider-pro-master/js/jquery.sliderPro.min.js
 //= require sites.js
-//= require greenArmyReporting.js
+//= require reporting.js
 //= require document.js
 //= require organisation.js

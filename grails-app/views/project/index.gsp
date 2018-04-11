@@ -66,6 +66,13 @@
         unlockPlanForCorrectionUrl : "${createLink(controller:'project', action:'ajaxUnlockPlanForCorrection', id:project.projectId)}",
         finishedCorrectingPlanUrl : "${createLink(controller:'project', action:'ajaxFinishedCorrectingPlan', id:project.projectId)}",
 
+        reportCreateUrl:'',
+        viewReportUrl:'',
+        editReportUrl:"${createLink(action:"editReport", id:project.projectId)}",
+        approveReportUrl:'',
+        submitReportUrl:'',
+        rejectReportUrl:'',
+
         returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
 
     },
@@ -530,6 +537,7 @@
 </asset:script>
 <asset:javascript src="common.js"/>
 <asset:javascript src="projects.js"/>
+<asset:javascript src="reporting.js"/>
 <asset:deferredScripts/>
 </body>
 </html>

@@ -21,6 +21,8 @@ class ReportService {
 
     public static final int HOME_PAGE_IMAGE_SIZE = 500
 
+    public static final String REPORT_TYPE_SINGLE_ACTIVITY = 'Single'
+
     def grailsApplication
     def webService
     def userService
@@ -157,6 +159,35 @@ class ReportService {
         }
         def resp = webService.getJson(grailsApplication.config.ecodata.baseUrl+"report/${reportId}")
         resp
+    }
+
+    /**
+     * Creates an activity to collect the required information for the supplied report.
+     *
+     * @param report
+     * @return a Map containing either an "error" key or a single key called activityId containing the activity id of the new activity.
+     */
+    Map createActivityForReport(Map report) {
+        if (!report.type == REPORT_TYPE_SINGLE_ACTIVITY) {
+            throw new IllegalArgumentException("Only reports of type "+REPORT_TYPE_SINGLE_ACTIVITY+" are supported")
+        }
+        if (report.activityId) {
+            throw new IllegalArgumentException("The report already has an activity assigned")
+        }
+        Map result = activityService.create([plannedStartDate:report.fromDate, plannedEndDate:report.toDate, startDate: report.fromDate, endDate:report.toDate, type:report.activityType, projectId:report.projectId, description:report.name])
+        String activityId = result?.resp?.activityId
+        if (!activityId) {
+            return [error:"Unable to create activity: "+result?.error ?: "An unknown error occurred"]
+        }
+
+        result = update([reportId: report.reportId, activityId: activityId])
+
+        if (!result?.resp?.activityId) {
+            return [error:result?.error?:'Failed to update report '+report.name]
+        }
+
+        return [activityId:activityId]
+
     }
 
     def delete(String reportId) {
