@@ -37,6 +37,8 @@
         speciesSearchUrl:"${createLink(controller:'project', action:'searchSpecies', id:project.projectId)}",
         speciesImageUrl:"${createLink(controller:'species', action:'speciesImage')}",
         speciesProfileUrl: "${createLink(controller: 'species', action: 'speciesProfile')}", imageUploadUrl: "${createLink(controller: 'image', action: 'upload')}",
+        sightingsActivityType: "${grailsApplication.config.esp.activities.sightings ?: ""}",
+        adminActivityType: "${grailsApplication.config.esp.activities.admin ?: ""}",
         returnTo: "${createLink(controller: 'project', action: 'espOverview', id: project.projectId)}"
 
     },
