@@ -13,3 +13,40 @@ table tr.header th {
     box-sizing: border-box;
     width: 100%;
 }
+
+.meri-plan th {
+    white-space: normal;
+}
+
+.meri-plan td {
+    width: 100%;
+}
+
+.meri-plan .outcome-priority, .meri-plan .priority {
+    width: 50%;
+}
+.meri-plan .outcome {
+    width: 100%;
+}
+.meri-plan .index {
+    min-width: 1em;
+    width: 1em;
+
+}
+
+.meri-plan td.primary-outcome.priority {
+    padding-right: 1em;
+}
+
+.meri-plan td.index {
+    background-color: #f5f5f5;
+}
+
+.meri-plan .remove {
+    min-width: 1em;
+    width: 1em;
+}
+
+.meri-plan tfoot td {
+    text-align: right;
+}

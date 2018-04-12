@@ -101,6 +101,25 @@ function MERIPlan(project, themes, key) {
       self.details.partnership.rows.remove(partnership);
    };
 
+   self.addSecondaryOutcome = function() {
+       self.details.outcomes.secondaryOutcomes.push(new OutcomeRowViewModel());
+   };
+   self.removeSecondaryOutcome = function(outcome) {
+       self.details.outcomes.secondaryOutcomes.remove(outcome);
+   };
+    self.addMidTermOutcome = function() {
+        self.details.outcomes.midTermOutcomes.push(new OutcomeRowViewModel());
+    };
+    self.removeMidTermOutcome = function(outcome) {
+        self.details.outcomes.midTermOutcomes.remove(outcome);
+    };
+    self.addShortTermOutcome = function() {
+        self.details.outcomes.shortTermOutcomes.push(new OutcomeRowViewModel());
+    };
+    self.removeShortTermOutcome = function(outcome) {
+        self.details.outcomes.shortTermOutcomes.remove(outcome);
+    };
+
 };
 
 function DetailsViewModel(o, period) {
@@ -110,7 +129,8 @@ function DetailsViewModel(o, period) {
    self.policies = ko.observable(o.policies);
    self.caseStudy = ko.observable(o.caseStudy ? o.caseStudy : false);
    self.keq = new GenericViewModel(o.keq);
-   self.objectives = new ObjectiveViewModel(o.objectives);
+   self.objectives = new ObjectiveViewModel(o.objectives); // Used in original MERI plan template
+   self.outcomes = new OutcomesViewModel(o.outcomes); // Use in new MERI plan template
    self.priorities = new GenericViewModel(o.priorities);
    self.implementation = new ImplementationViewModel(o.implementation);
    self.partnership = new GenericViewModel(o.partnership);
@@ -183,6 +203,25 @@ function ObjectiveViewModel(o) {
       return new OutcomeRowViewModel(obj);
    }));
 };
+
+/**
+ * Categories project outcomes into primary, secondary, mid-term and short-term outcomes.
+ * @param outcomes existing outcome data, if any.
+ */
+function OutcomesViewModel(outcomes) {
+    var self = this;
+    if (!outcomes) {
+        outcomes = {};
+    }
+    var outcomeToViewModel = function(outcome) {
+      return new OutcomeRowViewModel(outcome);
+    };
+    self.primaryOutcome = outcomeToViewModel(outcomes.primaryOutcome);
+    self.secondaryOutcomes = ko.observableArray(_.map(outcomes.secondaryOutcomes || [], outcomeToViewModel));
+    self.shortTermOutcomes = ko.observableArray(_.map(outcomes.shortTermOutcomes || [], outcomeToViewModel));
+    self.midTermOutcomes = ko.observableArray(_.map(outcomes.midTermOutcomes || [], outcomeToViewModel()));
+
+}
 
 
 function ImplementationViewModel(o) {
