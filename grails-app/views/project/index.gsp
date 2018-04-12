@@ -65,8 +65,8 @@
         rejectPlanUrl : "${createLink(controller:'project', action:'ajaxRejectPlan', id:project.projectId)}",
         unlockPlanForCorrectionUrl : "${createLink(controller:'project', action:'ajaxUnlockPlanForCorrection', id:project.projectId)}",
         finishedCorrectingPlanUrl : "${createLink(controller:'project', action:'ajaxFinishedCorrectingPlan', id:project.projectId)}",
-
-        reportCreateUrl:'',
+        reportOwner: {projectId:'${project.projectId}'},
+        reportCreateUrl: '${g.createLink( action:'createReport', id:project.projectId)}',
         viewReportUrl:'',
         editReportUrl:"${createLink(action:"editReport", id:project.projectId)}",
         approveReportUrl:'',

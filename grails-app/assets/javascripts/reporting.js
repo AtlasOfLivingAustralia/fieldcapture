@@ -143,7 +143,7 @@ var ReportViewModel = function(report, config) {
     };
 };
 
-var ReportsViewModel = function(reports, projects, availableReports, config) {
+var ReportsViewModel = function(reports, projects, availableReports, reportOwner, config) {
     var self = this;
     self.projects = projects;
     self.allReports = ko.observableArray(reports);
@@ -235,9 +235,9 @@ var ReportsViewModel = function(reports, projects, availableReports, config) {
         defaultToDate = moment(defaultToDate).add(1, 'years').toDate().toISOStringNoMillis();
 
         var self = this;
-        self.type = ko.observable();
+        _.extend(self, reportOwner);
 
-        self.organisationId = ko.observable();
+        self.type = ko.observable();
 
         self.fromDate = ko.observable(defaultFromDate).extend({simpleDate:false});
         self.toDate = ko.observable(defaultToDate).extend({simpleDate:false});
@@ -277,7 +277,7 @@ var ReportsViewModel = function(reports, projects, availableReports, config) {
             var fromDate = moment(self.fromDate());
             var toDate = moment(self.toDate());
 
-            return fromDate.get('year') + ' / ' + toDate.get('year') + ' ' + self.type();
+            return fromDate.get('year') + ' / ' + toDate.get('year') + ' ' + self.formatReportType(self.selectedReportType());
         });
 
         self.dueDate = ko.computed(function() {

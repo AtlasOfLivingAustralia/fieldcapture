@@ -149,14 +149,13 @@ class ProjectController {
             List adHocReportTypes = [
                     [type:ReportService.REPORT_TYPE_SINGLE_ACTIVITY, activityType:'Prototype 2'],
                     [type:ReportService.REPORT_TYPE_SINGLE_ACTIVITY, activityType:'Annual Report'],
-                    [type:ReportService.REPORT_TYPE_SINGLE_ACTIVITY, activityType:'Short term outcomes'],
-                    [type:ReportService.REPORT_TYPE_SINGLE_ACTIVITY, activityType:'Medium term outcomes']
+                    [type:ReportService.REPORT_TYPE_SINGLE_ACTIVITY, activityType:'RLP Short-term outcomes'],
+                    [type:ReportService.REPORT_TYPE_SINGLE_ACTIVITY, activityType:'RLP Mid-term outcomes']
 
             ]
             Map reportingTab = [label: 'Reporting', visible:user?.hasViewAccess, type:'tab', template:'/shared/reporting', reports:project.reports, stopBinding:true, adHocReportTypes:adHocReportTypes]
 
             Map nrm2Model = [overview:model.overview, documents:model.documents, details:model.details, site:model.site, reporting:reportingTab]
-            nrm2Model.plan = [label: 'Report approvals', visible: user?.isCaseManager, type: 'tab', template:'projectActivities', grantManagerSettingsVisible:true, project:project, reports: project.reports, scores: scores, risksAndThreatsVisible: false]
             nrm2Model.admin = model.admin
             nrm2Model.admin.meriPlanTemplate = 'meriPlan'
             nrm2Model.admin.projectServices = projectService.getProjectServices()
@@ -663,6 +662,21 @@ class ProjectController {
         }
 
         forward(controller: 'activity', action: 'enterData', id: activityId)
+    }
+
+    @PreAuthorise(accessLevel = 'caseManager')
+    def createReport(String id) {
+
+        Map report = request.getJSON()
+        report.projectId = id
+
+        def response = reportService.create(report)
+        if (response.resp.error) {
+            flash.message = "Error creating report: ${response.resp.error}"
+        }
+
+        chain(action:'index', id: id)
+
     }
 
 
