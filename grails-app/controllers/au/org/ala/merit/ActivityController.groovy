@@ -57,16 +57,18 @@ class ActivityController {
         model.outputModels = model.metaModel?.outputs?.collectEntries {
             [ it, metadataService.getDataModelFromOutputName(it)] }
 
-        List projectServices = model.project?.services
-        if (projectServices) {
-            List services = projectService.getProjectServices()
-            List serviceOutputs = services.findAll{it.name in projectServices}.collect{it.output}
+        if (model.activity.type == 'Prototype 2') {
 
-            model.metaModel = new JSONObject(model.metaModel)
-            List existingOutputs = model.activity?.outputs?.collect{it.name}
-            model.metaModel.outputs = model.metaModel.outputs.findAll({ it in serviceOutputs || it in existingOutputs})
+            List projectServices = model.project?.services
+            if (projectServices) {
+                List services = projectService.getProjectServices()
+                List serviceOutputs = services.findAll{it.name in projectServices}.collect{it.output}
+
+                model.metaModel = new JSONObject(model.metaModel)
+                List existingOutputs = model.activity?.outputs?.collect{it.name}
+                model.metaModel.outputs = model.metaModel.outputs.findAll({ it in serviceOutputs || it in existingOutputs})
+            }
         }
-
     }
 
     def index(String id) {

@@ -1,42 +1,118 @@
 <div class="meri-plan">
     <h4>Project Outcomes</h4>
 
-    <div class="row-fluid">
-        <div class="span12">
-            <table class="table">
-                <tbody>
-                <tr class="header">
-                    <th>Primary Outcome</th>
-                    <th>Primary Investment Priority</th>
-                </tr>
-                <tr>
-                    <td><select data-bind="options: projectThemes, optionsCaption: 'Please select', disable: isProjectDetailsLocked()"> </select></td>
-                    <td><select></select></td>
-                </tr>
-                <tr class="header">
-                    <th>Secondary Project Outcome</th>
-                    <th>Secondary Investment Priority(ies)</th>
-                </tr>
-                <tr>
-                    <td><select data-bind="options: projectThemes, optionsCaption: 'Please select', disable: isProjectDetailsLocked()"></select></td>
-                    <td><select></select></td>
-                </tr>
-                <tr class="header">
-                    <th colspan="2">Mid-term Project Outcome(s)</th>
-                </tr>
-                <tr>
-                    <td colspan="2"><textarea></textarea></td>
-                </tr>
-                <tr class="header">
-                    <th colspan="2">Short-term Project Outcome(s)</th>
-                </tr>
-                <tr>
-                    <td colspan="2"><textarea></textarea></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+    <table class="table">
+        <thead>
+        <tr class="header">
+            <th class="index"></th>
+            <th class="outcome-priority">Primary Outcome</th>
+            <th class="primary-outcome priority">Primary Investment Priority</th>
+            <th class="remove"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="index">1</td>
+            <td class="outcome-priority"><select
+                    data-bind="value:details.outcomes.primaryOutcome.description, options: projectThemes, optionsCaption: 'Please select', disable: isProjectDetailsLocked()"></select>
+            </td>
+            <td colspan="2" class="priority"><textarea data-bind="value:details.outcomes.primaryOutcome.assets"></textarea></td>
+        </tr>
+
+        </tbody>
+    </table>
+    <table class="table secondary-outcome">
+
+        <thead>
+
+        <tr class="header">
+            <th class="index"></th>
+            <th class="outcome-priority">Secondary Project Outcome</th>
+            <th class="priority">Secondary Investment Priority(ies)</th>
+            <th class="remove"></th>
+        </tr>
+        </thead>
+        <tbody data-bind="foreach:details.outcomes.secondaryOutcomes">
+        <tr>
+            <td class="index" data-bind="text:$index()+1"></td>
+            <td class="outcome-priority"><select
+                    data-bind="options: $root.projectThemes, optionsCaption: 'Please select', disable: $root.isProjectDetailsLocked()"></select>
+            </td>
+            <td class="priority"><textarea data-bind="value:assets"></textarea></td>
+            <td class="remove">
+                <span data-bind="if: $index() && !$parent.isProjectDetailsLocked()">
+                    <i class="fa fa-remove" data-bind="click: $parent.removeSecondaryOutcome"></i>
+                </span>
+            </td>
+        </tr>
+
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="4">
+                <button type="button" class="btn btn-small"
+                        data-bind="disable: isProjectDetailsLocked(), click: addSecondaryOutcome">
+                    <i class="icon-plus"></i> Add a row</button></td>
+        </tr>
+        </tfoot>
+    </table>
+    <table class="table">
+        <thead>
+        <tr class="header">
+            <th class="index"></th>
+            <th class="outcome">Mid-term Project Outcome(s)</th>
+            <th class="remove"></th>
+        </tr>
+        </thead>
+        <tbody data-bind="foreach:details.outcomes.midTermOutcomes">
+        <tr>
+            <td class="index" data-bind="text:$index()+1"></td>
+            <td class="outcome"><textarea data-bind="value:description"></textarea></td>
+            <td class="remove">
+                <span data-bind="if: $index() && !$parent.isProjectDetailsLocked()">
+                    <i class="fa fa-remove" data-bind="click: $parent.removeMidTermOutcome"></i>
+                </span>
+            </td>
+        </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="3">
+                <button type="button" class="btn btn-small"
+                        data-bind="disable: isProjectDetailsLocked(), click: addMidTermOutcome">
+                    <i class="icon-plus"></i> Add a row</button></td>
+        </tr>
+        </tfoot>
+    </table>
+    <table class="table">
+        <thead>
+        <tr class="header">
+            <th class="index"></th>
+            <th class="outcome">Short-term Project Outcome(s)</th>
+            <th class="remove"></th>
+        </tr>
+        </thead>
+        <tbody data-bind="foreach:details.outcomes.shortTermOutcomes">
+        <tr>
+            <td class="index" data-bind="text:$index()+1"></td>
+            <td class="outcome">
+                <textarea data-bind="value:description"></textarea>
+            </td>
+            <td class="remove">
+                <span data-bind="if: $index() && !$parent.isProjectDetailsLocked()"><i class="fa fa-remove" data-bind="click: $parent.removeShortTermOutcome"></i></span>
+            </td>
+        </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="3">
+                <button type="button" class="btn btn-small"
+                        data-bind="disable: isProjectDetailsLocked(), click: addShortTermOutcome">
+                    <i class="icon-plus"></i> Add a row</button></td>
+        </tr>
+        </tfoot>
+    </table>
+
 
     <div class="row-fluid">
         <div class="span12">
@@ -72,7 +148,7 @@
             <table class="table">
                 <thead>
                 <tr>
-                    <th></th>
+                    <th class="index"></th>
                     <th>Project Key evaluation question (KEQ)
                         <fc:iconHelp
                                 title="Project Key evaluation question (KEQ)">List the projects KEQ’s. Add rows as necessary.</fc:iconHelp></th>
@@ -172,5 +248,5 @@
 </div>
 
 <div class="validationEngineContainer" id="risk-validation">
-    <g:render template="riskTable" model="[project:project]"/>
+    <g:render template="riskTable" model="[project: project]"/>
 </div>
