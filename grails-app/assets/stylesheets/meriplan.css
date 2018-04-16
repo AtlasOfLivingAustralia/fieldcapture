@@ -50,3 +50,31 @@ table tr.header th {
 .meri-plan tfoot td {
     text-align: right;
 }
+
+.meri-plan .priority div {
+    width: 100%;
+}
+
+.meri-plan .priority input {
+    width: 90%;
+}
+
+.meri-plan .keq {
+    width: 35%;
+}
+
+.meri-plan .keq-monitoring {
+    width: 65%;
+}
+
+.meri-plan .document-name {
+    width: 32%;
+}
+
+.meri-plan .section {
+    width: 32%;
+}
+
+.meri-plan .alignment {
+    width: 32%;
+}
