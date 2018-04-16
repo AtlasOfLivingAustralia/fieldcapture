@@ -4,10 +4,11 @@
 
     <g:if test="${fc.userIsAlaOrFcAdmin() && adHocReportTypes}">
     <div class="control-group" style="margin-bottom: 5px;">
-        <span class="controls"><button class="btn btn-success pull-right" style="margin-bottom: 5px;" data-bind="click:addReport"><i class="icon-white icon-plus"></i> New Report</button></span>
+         <span class="controls"><button class="btn btn-success pull-right" style="margin-bottom: 5px;" data-bind="click:addReport"><i class="icon-white icon-plus"></i> New Report</button></span>
     </div>
     </g:if>
 
+    <g:if test="${reportsHeader}"><h4 class="header-with-help">Project Reports</h4></g:if>
     <table class="table table-striped" style="width:100%;">
         <thead>
 
