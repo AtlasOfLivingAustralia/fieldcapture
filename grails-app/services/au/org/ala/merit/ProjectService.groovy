@@ -1172,18 +1172,32 @@ class ProjectService  {
 
     List<Map> getProjectServices() {
         return [
-                [name:'Controlling Pest Animals', output:'NRM2 - Controlling Pest Animals'],
-                [name:'Removing pest weeds',  output:'NRM2 - Removing Pest Weeds'],
-                [name:'Improving hydrological regimes',  output:'NRM2 - Improving Hydrological Regimes'],
-                [name:'Remediating riparian and aquatic areas',  output:'NRM2 - Remediating Riparian and Aquatic Areas'],
-                [name:'Revegetating habitat',  output:'NRM2 - Revegetating Habitat'],
-                [name:'Managing fire regimes',  output:'NRM2 - Managing Fire Regimes'],
-                [name:'Protecting habitat by controlling access',  output:'NRM2 - Protecting Habitat by Controlling Access'],
-                [name:'Habitat augmentation',  output:'NRM2 - Habitat Augmentation'],
-                [name:'Establishing and maintaining feral free enclosures',  output:'NRM2 - Establishing Feral Free Enclosures'],
-                [name:'Establishing and maintaining ex-situ breeding sites and/or populations',  output:'NRM2 - Establishing ex-situ breeding sites'],
-                [name:'Undertaking emergency interventions to prevent extinctions',  output:''],
-                [name:'Managing diseases',  output:'NRM2 - Managing Diseases'],
-                [name:'Fencing',  output:'NRM2 - Fencing']]
+                [name:'Controlling Pest Animals', output:'NRM2 - Controlling Pest Animals', id:'1', scoreIds:['b1a1b97d-fcf5-4eb4-9e73-9e2478b77bb4']],
+                [name:'Removing pest weeds',  output:'NRM2 - Removing Pest Weeds', id:'2', scoreIds:['b1a1b97d-fcf5-4eb4-9e73-9e2478b77bb4']],
+                [name:'Improving hydrological regimes',  output:'NRM2 - Improving Hydrological Regimes', id:'3', scoreIds:['b1a1b97d-fcf5-4eb4-9e73-9e2478b77bb4']],
+                [name:'Remediating riparian and aquatic areas',  output:'NRM2 - Remediating Riparian and Aquatic Areas', id:'4', scoreIds:['b1a1b97d-fcf5-4eb4-9e73-9e2478b77bb4']],
+                [name:'Revegetating habitat',  output:'NRM2 - Revegetating Habitat', id:'5', scoreIds:['b1a1b97d-fcf5-4eb4-9e73-9e2478b77bb4']],
+                [name:'Managing fire regimes',  output:'NRM2 - Managing Fire Regimes', id:'6', scoreIds:['b1a1b97d-fcf5-4eb4-9e73-9e2478b77bb4']],
+                [name:'Protecting habitat by controlling access',  output:'NRM2 - Protecting Habitat by Controlling Access', id:'7', scoreIds:['b1a1b97d-fcf5-4eb4-9e73-9e2478b77bb4']],
+                [name:'Habitat augmentation',  output:'NRM2 - Habitat Augmentation', id:'8', scoreIds:['b1a1b97d-fcf5-4eb4-9e73-9e2478b77bb4']],
+                [name:'Establishing and maintaining feral free enclosures',  output:'NRM2 - Establishing Feral Free Enclosures', id:'9', scoreIds:['b1a1b97d-fcf5-4eb4-9e73-9e2478b77bb4']],
+                [name:'Establishing and maintaining ex-situ breeding sites and/or populations',  output:'NRM2 - Establishing ex-situ breeding sites', id:'10', scoreIds:['b1a1b97d-fcf5-4eb4-9e73-9e2478b77bb4']],
+                [name:'Undertaking emergency interventions to prevent extinctions',  output:'', id:'11', scoreIds:['b1a1b97d-fcf5-4eb4-9e73-9e2478b77bb4']],
+                [name:'Managing diseases',  output:'NRM2 - Managing Diseases', id:'12', scoreIds:['b1a1b97d-fcf5-4eb4-9e73-9e2478b77bb4']],
+                [name:'Fencing',  output:'NRM2 - Fencing', id:'13', scoreIds:['b1a1b97d-fcf5-4eb4-9e73-9e2478b77bb4']]
+                ]
+    }
+
+    List<Map> getServiceScoresForProject(String projectId) {
+        Map project = get(projectId, 'flat')
+        List<Map> allServices = getProjectServices()
+
+        List projectServices = allServices?.findAll {it.name in project.services }
+        List scores = metadataService.getScores(false)
+        projectServices.each { service ->
+            service.scores = scores.findAll{it.scoreId in service.scoreIds}
+        }
+
+        projectServices
     }
 }

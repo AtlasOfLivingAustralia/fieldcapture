@@ -72,6 +72,7 @@
         approveReportUrl:'',
         submitReportUrl:'',
         rejectReportUrl:'',
+        projectScoresUrl:"${createLink(action:'serviceScores', id:project.projectId)}",
 
         returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
 
@@ -210,8 +211,10 @@
 
             var config = {
                 meriPlanPDFUrl: fcConfig.meriPlanPDFUrl,
+                saveTargetsUrl: fcConfig.projectUpdateUrl,
                 documentUpdateUrl: fcConfig.documentUpdateUrl,
                 projectUpdateUrl: fcConfig.projectUpdateUrl,
+                projectScoresUrl: fcConfig.projectScoresUrl,
                 PROJECT_DETAILS_KEY:PROJECT_DETAILS_KEY,
                 PROJECT_RISKS_KEY:PROJECT_RISKS_KEY
 
@@ -236,7 +239,7 @@
 
             autoSaveModel(
                 viewModel.details,
-                '${createLink(action: 'ajaxUpdate', id: project.projectId)}',
+                fcConfig.projectUpdateUrl,
                 {
                     storageKey:PROJECT_DETAILS_KEY,
                     autoSaveIntervalInSeconds:${grailsApplication.config.fieldcapture.autoSaveIntervalInSeconds?:60},
@@ -308,6 +311,7 @@
             var dashboardInitialised = false;
             var documentsInitialised = false;
             var meriPlanInitialised = false;
+            var reportingInitialised = false;
 
             $('#projectTabs a[data-toggle="tab"]').on('shown', function (e) {
                 var tab = e.currentTarget.hash;
@@ -459,6 +463,10 @@
                     meriPlanInitialised = true;
                     initialiseDocumentTable('#meriPlanDocumentList');
                 };
+
+                if (tab == '#reporting' && !reportingInitialised) {
+                    viewModel.initialiseReports();
+                }
             });
 
             var newsAndEventsInitialised = false;
@@ -520,7 +528,6 @@
             if (!storedTab) {
                 storedTab = ${user?"amplify.store('project-tab-state')":"'overview'"};
             }
-            var isEditor = ${user?.isEditor?:false};
 
             initialiseOverview();
             if (storedTab !== '') {

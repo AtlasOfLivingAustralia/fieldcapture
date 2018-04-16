@@ -146,6 +146,7 @@ class ProjectController {
             model = [details:model.details]
         }
         else if (template == 'nrm2') {
+            List services = projectService.getProjectServices()
             List adHocReportTypes = [
                     [type:ReportService.REPORT_TYPE_SINGLE_ACTIVITY, activityType:'Prototype 2'],
                     [type:ReportService.REPORT_TYPE_SINGLE_ACTIVITY, activityType:'Annual Report'],
@@ -153,12 +154,12 @@ class ProjectController {
                     [type:ReportService.REPORT_TYPE_SINGLE_ACTIVITY, activityType:'RLP Mid-term outcomes']
 
             ]
-            Map reportingTab = [label: 'Reporting', visible:user?.hasViewAccess, type:'tab', template:'/shared/reporting', reports:project.reports, stopBinding:true, adHocReportTypes:adHocReportTypes]
+            Map reportingTab = [label: 'Reporting', visible:user?.hasViewAccess, type:'tab', template:'projectReporting', reports:project.reports, stopBinding:true, services: services, scores:scores, adHocReportTypes:adHocReportTypes]
 
             Map nrm2Model = [overview:model.overview, documents:model.documents, details:model.details, site:model.site, reporting:reportingTab]
             nrm2Model.admin = model.admin
             nrm2Model.admin.meriPlanTemplate = 'meriPlan'
-            nrm2Model.admin.projectServices = projectService.getProjectServices()
+            nrm2Model.admin.projectServices = services
             model = nrm2Model
         }
         return [view: 'index', model: model]
@@ -291,6 +292,11 @@ class ProjectController {
             //println "json result is " + (result as JSON)
             render result.resp as JSON
         }
+    }
+
+   // @PreAuthorise(accessLevel = 'admin')
+    def serviceScores(String id) {
+        render projectService.getServiceScoresForProject(id) as JSON
     }
 
 

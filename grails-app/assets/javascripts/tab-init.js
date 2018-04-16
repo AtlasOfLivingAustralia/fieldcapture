@@ -36,15 +36,25 @@ function initialiseTabs(tabConfig, options) {
         amplify.store(config.tabStorageKey, tab);
     });
 
-    var storedTab = window.location.hash;
-    if (!storedTab) {
-        storedTab = amplify.store(config.tabStorageKey);
-    }
-
-    if (storedTab) {
-        var $tab = $(storedTab + '-tab');
-        if ($tab[0]) {
-            $tab.tab('show');
+    // Select a tab to display when initialising.
+    var activeTabSelectors = [
+        function() { return window.location.hash; },
+        function() { return amplify.store(config.tabStorageKey); },
+        function() { return _.find(_.values(tabConfig), function(tab) { return tab.default }); },
+        function() { return _.keys(tabConfig)[0]; }
+    ];
+    _.find(activeTabSelectors, function(selector) {
+        var tab = selector();
+        if (tab) {
+            if (!tab.startsWith('#')) {
+                tab = '#'+tab;
+            }
+            var $tab = $(tab + '-tab');
+            if ($tab[0]) {
+                $tab.tab('show');
+                return true; // We've found a tab to show, break from the find.
+            }
         }
-    }
+        return false;
+    });
 }

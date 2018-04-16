@@ -852,9 +852,52 @@ Outcome.prototype.toJSON = function () {
     delete clone.isSaving;
     return clone;
 };
+
+function OutputTargetService(config) {
+    var self = this;
+
+    self.saveOutputTargets = function(outputTargets) {
+        var targets = [];
+        $.each(outputTargets, function (i, target) {
+            $.merge(targets, target.toJSON());
+        });
+
+        var json = JSON.stringify({outputTargets:targets});
+
+        return $.ajax({
+            url: config.saveTargetsUrl,
+            type: 'POST',
+            data: json,
+            contentType: 'application/json',
+            success: function (data) {
+                if (data.error) {
+                    alert(data.detail + ' \n' + data.error);
+                }
+            },
+            error: function (data) {
+                alert('An unhandled error occurred: ' + data.status);
+            },
+            complete: function(data) {
+                $.each(outputTargets, function(i, target) {
+                    // The timeout is here to ensure the save indicator is visible long enough for the
+                    // user to notice.
+                    setTimeout(function(){target.clearSaving();}, 1000);
+                });
+            }
+        });
+
+    };
+
+    self.getScoresForProject = function() {
+        return $.getJSON(config.projectScoresUrl);
+    };
+};
+
 function OutputTargets(activities, targets, targetsEditable, scores, config) {
 
     var self = this;
+    var outputTargetService = new OutputTargetService(config);
+
     var defaults = {
         saveTargetsUrl: fcConfig.projectUpdateUrl
     };
@@ -949,37 +992,9 @@ function OutputTargets(activities, targets, targetsEditable, scores, config) {
     };
 
     self.outputTargets = ko.observableArray([]);
+
     self.saveOutputTargets = function() {
-        var targets = [];
-        $.each(self.outputTargets(), function (i, target) {
-            $.merge(targets, target.toJSON());
-        });
-
-        var json = JSON.stringify({outputTargets:targets});
-
-        return $.ajax({
-            url: options.saveTargetsUrl,
-            type: 'POST',
-            data: json,
-            contentType: 'application/json',
-            success: function (data) {
-                if (data.error) {
-                    alert(data.detail + ' \n' + data.error);
-                }
-            },
-            error: function (data) {
-                var status = data.status;
-                alert('An unhandled error occurred: ' + data.status);
-            },
-            complete: function(data) {
-                $.each(self.outputTargets(), function(i, target) {
-                    // The timeout is here to ensure the save indicator is visible long enough for the
-                    // user to notice.
-                    setTimeout(function(){target.clearSaving();}, 1000);
-                });
-            }
-        });
-
+        outputTargetService.saveOutputTargets(self.outputTargets());
     };
 
     self.loadOutputTargets = function () {
@@ -992,7 +1007,49 @@ function OutputTargets(activities, targets, targetsEditable, scores, config) {
         });
     }();
 
+}
 
+/**
+ * View model for the output targets for a service based projects.
+ * @param services the services being carried out by the project.
+ * @param targets existing target data for the project
+ * @param targetsEditable if the targets are currently editable
+ * @param scores relevant (or all) scores
+ * @param config urls for saving etc.
+ */
+function ServiceTargets(services, targets, targetsEditable, config) {
+
+    var self = this;
+    var outputTargetService = new OutputTargetService(config);
+
+    self.initialising = ko.observable(true);
+    self.outputTargets = ko.observableArray();
+    self.loadOutputTargets = function(services) {
+        _.each(services, function(service) {
+
+            if (service.scores) {
+                self.outputTargets.push(new Output(service.name, service.scores, targets, self));
+            }
+        });
+
+    };
+
+    self.targetsEditable = ko.observable(targetsEditable);
+    self.canEditOutputTargets = function() {
+        return self.targetsEditable;
+    };
+
+    self.saveOutputTargets = function() {
+        outputTargetService.saveOutputTargets(self.outputTargets());
+    };
+
+    outputTargetService.getScoresForProject().always(function() {
+        self.initialising(false)
+    }).done(function(scores) {
+        self.loadOutputTargets(scores);
+    }).fail(function() {
+        bootbox.error("Failed to load project targets");
+    });
 
 }
 
@@ -1299,6 +1356,11 @@ function ProjectPageViewModel(project, sites, activities, userRoles, themes, con
         }).fail(function(data) {
             bootbox.alert('<span class="label label-warning">Error</span> <p>There was an error regenerating the stage reports: '+data+'</p>');
         });
+    };
+
+    self.initialiseReports = function() {
+        var serviceTargetsViewModel = new ServiceTargets(project.services, project.outputTargets, true, config);
+        ko.applyBindings(serviceTargetsViewModel, document.getElementById('serviceTargetsContainer'));
     };
 
 } // end of view model
