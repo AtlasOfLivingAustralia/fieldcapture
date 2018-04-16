@@ -216,10 +216,15 @@ function OutcomesViewModel(outcomes) {
     var outcomeToViewModel = function(outcome) {
       return new OutcomeRowViewModel(outcome);
     };
+    if (!outcomes.primaryOutcome) {
+        outcomes.primaryOutcome = {
+          description:null, assets:['']
+        };
+    }
     self.primaryOutcome = outcomeToViewModel(outcomes.primaryOutcome);
     self.secondaryOutcomes = ko.observableArray(_.map(outcomes.secondaryOutcomes || [], outcomeToViewModel));
     self.shortTermOutcomes = ko.observableArray(_.map(outcomes.shortTermOutcomes || [], outcomeToViewModel));
-    self.midTermOutcomes = ko.observableArray(_.map(outcomes.midTermOutcomes || [], outcomeToViewModel()));
+    self.midTermOutcomes = ko.observableArray(_.map(outcomes.midTermOutcomes || [], outcomeToViewModel));
 
 }
 

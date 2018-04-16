@@ -8,7 +8,6 @@
         <thead>
         <tr>
             <th>Service</th>
-            <th>Output Statement / Description</th>
             <th>Output Target Measure(s)</th>
             <th>Target</th></tr>
         </thead>
@@ -19,11 +18,7 @@
             <td data-bind="attr:{rowspan:$parents[1].scores.length}">
                 <b><span data-bind="text:$parents[1].name"></span></b>
             </td>
-            <td data-bind="attr:{rowspan:$parents[1].scores.length}">
-                <textarea data-bind="visible:$root.canEditOutputTargets(),value:$parents[1].outcomeTarget" rows="3" cols="80" style="width:90%"></textarea>
-                <span data-bind="visible:!$root.canEditOutputTargets(),text:$parents[1].outcomeTarget" style="white-space: pre-wrap;"></span>
-                <span class="save-indicator" data-bind="visible:$parents[1].isSaving"><asset:image src="ajax-saver.gif" alt="saving icon"/> saving</span>
-            </td>
+
             <!-- /ko -->
             <td><span data-bind="text:scoreLabel"></span></td>
             <td>

@@ -142,6 +142,7 @@
     <g:render template="/shared/timeoutMessage" model="${[url:grailsApplication.config.security.cas.loginUrl+'?service='+createLink(action:'index', id:project.projectId, absolute: true)]}"/>
     <g:render template="/shared/unsavedChanges" model="${[id:'meriPlanUnsavedChanges', unsavedData:'MERI Plan']}"/>
     <g:render template="/shared/unsavedChanges" model="${[id:'risksUnsavedChanges', unsavedData:'Risks & Threats']}"/>
+    <g:render template="/output/formsTemplates" plugin="ecodata-client-plugin"/>
 
 </div>
 <g:if test="${user?.isEditor && projectContent.admin?.visible}">
@@ -544,6 +545,7 @@
 </asset:script>
 <asset:javascript src="common.js"/>
 <asset:javascript src="projects.js"/>
+<asset:javascript src="forms-manifest.js"/>
 <asset:javascript src="reporting.js"/>
 <asset:deferredScripts/>
 </body>
