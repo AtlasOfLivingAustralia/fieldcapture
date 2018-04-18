@@ -154,7 +154,9 @@ class ProjectController {
                     [type:ReportService.REPORT_TYPE_SINGLE_ACTIVITY, activityType:'RLP Mid-term outcomes']
 
             ]
+
             model.overview.displayDashboard = true
+            model.overview.services = projectService.getServiceScoresForProject(project.projectId)
             Map reportingTab = [label: 'Reporting', visible:user?.hasViewAccess, type:'tab', template:'projectReporting', reports:project.reports, stopBinding:true, services: services, scores:scores, adHocReportTypes:adHocReportTypes]
 
             Map nrm2Model = [overview:model.overview, documents:model.documents, details:model.details, site:model.site, reporting:reportingTab]

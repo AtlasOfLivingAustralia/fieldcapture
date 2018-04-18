@@ -99,7 +99,7 @@
 </g:if>
 
 <g:if test="${displayDashboard}">
-    <g:render template="dashboard"/>
+    <g:render template="serviceDashboard"/>
 </g:if>
 
 <div class="multimedia" data-bind="if:embeddedVideos">
