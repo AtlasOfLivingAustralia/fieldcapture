@@ -355,6 +355,19 @@ class ReportService {
         value
     }
 
+    Map targetsForScoreIds(List<String> scoreIds, List<String> filters, boolean approvedActivitiesOnly = true) {
+        Map reportParams = [scoreIds: scoreIds, approvedActivitiesOnly: approvedActivitiesOnly]
+        if (filters) {
+            reportParams.fq = filters
+        }
+        def url = grailsApplication.config.ecodata.baseUrl + 'search/targetsReportForScoreIds' + commonService.buildUrlParamsFromMap(reportParams)
+        Map results = webService.getJson(url, 300000)
+        if (!results || !results.targets) {
+            return [:]
+        }
+        return results
+    }
+
     public Number outputTarget(String scoreLabel, List<String> filters) {
         def reportParams = [scores:scoreLabel]
         if (filters) {

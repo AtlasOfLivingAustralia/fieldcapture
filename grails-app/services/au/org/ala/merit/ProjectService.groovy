@@ -1,6 +1,7 @@
 package au.org.ala.merit
 
 import grails.converters.JSON
+import grails.plugin.cache.GrailsCacheManager
 import org.apache.commons.lang.CharUtils
 import org.apache.http.HttpStatus
 import org.joda.time.Days
@@ -40,6 +41,8 @@ class ProjectService  {
     static final String OUTCOMES_OUTPUT_TYPE = 'Outcomes'
     static final String STAGE_OUTCOMES_OUTPUT_TYPE = ''
     static final String COMPLETE = 'completed'
+    static final String PROJECT_SERVICES_CACHE_REGION = 'projectServices'
+    static final String PROJECT_SERVICES_KEY = 'projectServices'
 
     static dateWithTime = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss")
     static dateWithTimeFormat2 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
@@ -51,6 +54,7 @@ class ProjectService  {
     static final String PLAN_UNLOCKED = 'unlocked for correction'
 
     def webService, grailsApplication, siteService, activityService, emailService, documentService, userService, metadataService, settingService, reportService, auditService, speciesService
+    GrailsCacheManager grailsCacheManager
 
     def list(brief = false, citizenScienceOnly = false) {
         def params = brief ? '?brief=true' : ''
@@ -1171,21 +1175,19 @@ class ProjectService  {
 
 
     List<Map> getProjectServices() {
-        return [
-                [name:'Controlling Pest Animals', output:'NRM2 - Controlling Pest Animals', id:'1', scoreIds:['b1a1b97d-fcf5-4eb4-9e73-9e2478b77bb4']],
-                [name:'Removing pest weeds',  output:'NRM2 - Removing Pest Weeds', id:'2', scoreIds:['b1a1b97d-fcf5-4eb4-9e73-9e2478b77bb4']],
-                [name:'Improving hydrological regimes',  output:'NRM2 - Improving Hydrological Regimes', id:'3', scoreIds:['b1a1b97d-fcf5-4eb4-9e73-9e2478b77bb4']],
-                [name:'Remediating riparian and aquatic areas',  output:'NRM2 - Remediating Riparian and Aquatic Areas', id:'4', scoreIds:['b1a1b97d-fcf5-4eb4-9e73-9e2478b77bb4']],
-                [name:'Revegetating habitat',  output:'NRM2 - Revegetating Habitat', id:'5', scoreIds:['b1a1b97d-fcf5-4eb4-9e73-9e2478b77bb4']],
-                [name:'Managing fire regimes',  output:'NRM2 - Managing Fire Regimes', id:'6', scoreIds:['b1a1b97d-fcf5-4eb4-9e73-9e2478b77bb4']],
-                [name:'Protecting habitat by controlling access',  output:'NRM2 - Protecting Habitat by Controlling Access', id:'7', scoreIds:['b1a1b97d-fcf5-4eb4-9e73-9e2478b77bb4']],
-                [name:'Habitat augmentation',  output:'NRM2 - Habitat Augmentation', id:'8', scoreIds:['b1a1b97d-fcf5-4eb4-9e73-9e2478b77bb4']],
-                [name:'Establishing and maintaining feral free enclosures',  output:'NRM2 - Establishing Feral Free Enclosures', id:'9', scoreIds:['b1a1b97d-fcf5-4eb4-9e73-9e2478b77bb4']],
-                [name:'Establishing and maintaining ex-situ breeding sites and/or populations',  output:'NRM2 - Establishing ex-situ breeding sites', id:'10', scoreIds:['b1a1b97d-fcf5-4eb4-9e73-9e2478b77bb4']],
-                [name:'Undertaking emergency interventions to prevent extinctions',  output:'', id:'11', scoreIds:['b1a1b97d-fcf5-4eb4-9e73-9e2478b77bb4']],
-                [name:'Managing diseases',  output:'NRM2 - Managing Diseases', id:'12', scoreIds:['b1a1b97d-fcf5-4eb4-9e73-9e2478b77bb4']],
-                [name:'Fencing',  output:'NRM2 - Fencing', id:'13', scoreIds:['b1a1b97d-fcf5-4eb4-9e73-9e2478b77bb4']]
-                ]
+        List<Map> services = grailsCacheManager.getCache(PROJECT_SERVICES_CACHE_REGION).get(PROJECT_SERVICES_CACHE_REGION)?.get()
+        if (!services) {
+            String servicesJson = settingService.get(PROJECT_SERVICES_KEY)
+            if (servicesJson) {
+                services = JSON.parse(servicesJson)
+            }
+            else {
+                services = JSON.parse(getClass().getResourceAsStream('/services.json'), 'UTF-8')
+            }
+
+            grailsCacheManager.getCache(PROJECT_SERVICES_CACHE_REGION).put(PROJECT_SERVICES_CACHE_REGION, services)
+        }
+        services
     }
 
     List<Map> getServiceScoresForProject(String projectId) {
@@ -1198,6 +1200,22 @@ class ProjectService  {
             service.scores = scores.findAll{it.scoreId in service.scoreIds}
         }
 
+        projectServices
+    }
+
+    List<Map> getServiceDashboardData(String projectId) {
+        Map scores = summary(projectId)
+        List<Map> projectServices = getServiceScoresForProject(projectId)
+
+        projectServices.each { Map service ->
+            service.scores.each { Map score ->
+                scores?.targets?.each { String key, List outputScores ->
+                    Map outputScore = outputScores?.find{it.scoreId == score.scoreId}
+                    score.target = outputScore?.target ?: 0
+                    score.result = outputScore.result ?: [result:0]
+                }
+            }
+        }
         projectServices
     }
 }
