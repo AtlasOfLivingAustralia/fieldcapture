@@ -355,6 +355,32 @@ class ReportService {
         value
     }
 
+    /**
+     * Queries ecodata for all output targets and aggregration results from all projects that match the supplied filters for the
+     * metrics defined by the supplied scoreIds.
+     * @param scoreIds Specifies which scores are of interest.
+     * @param filters Query filters to select projects.
+     * @param approvedActivitiesOnly true if only approved activities should be included in the results.
+     * @return a Map of the form:
+     * [
+     *  metadata:
+     *         project: <number of projects included in the scoring>
+     *         sites: <number of sites counted>
+     *         activities: <number of activities included in the scoring>
+     *         activitiesByType: <map of activity type and count of number of activities of that type>
+     *  scores: [
+     *      scoreId: <id of the score>
+     *           result:
+     *             result: <score / sum>
+     *             count: <count of number of outputs considered in the result>
+     *             label: <score label>
+     *      target: <the sum of output targets for this score over all selected projects>
+     *
+     *  ]
+     * ]
+     * Note that the metadata only relates to the data used to aggregate any activity data in the scores, not the output targets.
+     *
+     */
     Map targetsForScoreIds(List<String> scoreIds, List<String> filters, boolean approvedActivitiesOnly = true) {
         Map reportParams = [scoreIds: scoreIds, approvedActivitiesOnly: approvedActivitiesOnly]
         if (filters) {
@@ -362,10 +388,54 @@ class ReportService {
         }
         def url = grailsApplication.config.ecodata.baseUrl + 'search/targetsReportForScoreIds' + commonService.buildUrlParamsFromMap(reportParams)
         Map results = webService.getJson(url, 300000)
-        if (!results || !results.targets) {
-            return [:]
+        if (!results || !results.targets || results.error) {
+            return []
         }
-        return results
+        List scoresWithTargets = mergeScoresAndTargets(scoreIds, results)
+        return [scores:scoresWithTargets, metadata:results.metadata]
+    }
+
+    /**
+     * Accepts a Map of the form:
+     * * [
+     *     targets:
+     *       (program - subprogram):
+     *          (scoreLabel):
+     *            scoreId: <Id of the score>
+     *            total: <sum of output targets for the score>
+     *            count: <number of projects summed>
+     *     scores:
+     *       metadata:
+     *         project: <number of projects included in the scoring>
+     *         sites: <number of sites counted>
+     *         activities: <number of activities included in the scoring>
+     *         activitiesByType: <map of activity type and count of number of activities of that type>
+     *       outputData: [ <array of considered scores>
+     *           scoreId: <id of the score>
+     *           result:
+     *             result: <score / sum>
+     *             count: <count of number of outputs considered in the result>
+     *             label: <score label>
+     *       ]
+     * ]
+     *
+     * and returns a list containing the contents of the outputData array with and additional target field
+     * which has been matched by score id from the targets key in the Map.
+     */
+    private List mergeScoresAndTargets(List scoreIds, Map scoresAndTargets) {
+        List scoreData = scoresAndTargets.scores?.outputData
+
+        List results = []
+        scoreIds.each { scoreId ->
+            Map score = scoreData?.find{it.scoreId == scoreId} ?: [scoreId:scoreId]
+            scoresAndTargets.targets?.each { program, Map scoreTargets ->
+                Map scoreTarget = scoreTargets?.values()?.find { it.scoreId == scoreId }
+                score.target = scoreTarget?.total ?: 0
+            }
+            results << score
+        }
+
+        results
     }
 
     public Number outputTarget(String scoreLabel, List<String> filters) {

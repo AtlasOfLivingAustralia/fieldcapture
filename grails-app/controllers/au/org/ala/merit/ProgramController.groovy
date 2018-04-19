@@ -14,6 +14,7 @@ class ProgramController {
     def programService, searchService, documentService, userService, roleService, commonService, webService
     ProjectService projectService
     AuthService authService
+    ReportService reportService
 
     // Simply forwards to the list view
     def list() {}
@@ -50,6 +51,7 @@ class ProgramController {
         def role = members.find { it.userId == user?.userId } ?: [:]
         def hasAdminAccess = userService.userIsAlaOrFcAdmin() || role.role == RoleService.PROJECT_ADMIN_ROLE
 
+        List servicesWithScores = programService.serviceScores(program.programId, !hasAdminAccess)
         def hasViewAccess = hasAdminAccess || userService.userHasReadOnlyAccess() || role.role == RoleService.PROJECT_EDITOR_ROLE
 
         Map result = projectService.search(programId:program.programId)
@@ -57,6 +59,7 @@ class ProgramController {
 
 
         [about   : [label: 'Management Unit', visible: true, stopBinding: false, type: 'tab'],
+         dashboard: [label: 'Dashboard', visible: true, stopBinding: true, type: 'tab', services: servicesWithScores, template:'/project/serviceDashboard'],
          projects: [label: 'Work Order', visible: true, stopBinding: false, type:'tab', projects:projects],
          sites   : [label: 'Sites', visible: true, stopBinding: true, type:'tab'],
          admin   : [label: 'Admin', visible: hasAdminAccess, type: 'tab']]

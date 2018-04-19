@@ -1,8 +1,19 @@
 package au.org.ala.merit
 
+import grails.converters.JSON
+import grails.plugin.cache.GrailsCacheManager
+
 class MetadataService {
 
     def grailsApplication, webService, cacheService
+
+    GrailsCacheManager grailsCacheManager
+    SettingService settingService
+
+    static final String PROJECT_SERVICES_CACHE_REGION = 'projectServices'
+    static final String PROJECT_SERVICES_KEY = 'projectServices'
+
+
 
     def activitiesModel() {
         return cacheService.get('activity-model',{
@@ -301,6 +312,27 @@ class MetadataService {
 
             results
         })
+    }
+
+    List<Map> getProjectServices() {
+        List<Map> services = grailsCacheManager.getCache(PROJECT_SERVICES_CACHE_REGION).get(PROJECT_SERVICES_CACHE_REGION)?.get()
+        if (!services) {
+            String servicesJson = settingService.get(PROJECT_SERVICES_KEY)
+            if (servicesJson) {
+                services = JSON.parse(servicesJson)
+            }
+            else {
+                services = JSON.parse(getClass().getResourceAsStream('/services.json'), 'UTF-8')
+            }
+
+            List scores = getScores(false)
+            services.each { service ->
+                service.scores = scores.findAll{it.scoreId in service.scoreIds}
+            }
+
+            grailsCacheManager.getCache(PROJECT_SERVICES_CACHE_REGION).put(PROJECT_SERVICES_CACHE_REGION, services)
+        }
+        services
     }
 
 

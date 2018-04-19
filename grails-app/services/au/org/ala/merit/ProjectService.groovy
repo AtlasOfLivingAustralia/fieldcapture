@@ -1,7 +1,6 @@
 package au.org.ala.merit
 
 import grails.converters.JSON
-import grails.plugin.cache.GrailsCacheManager
 import org.apache.commons.lang.CharUtils
 import org.apache.http.HttpStatus
 import org.joda.time.Days
@@ -41,8 +40,6 @@ class ProjectService  {
     static final String OUTCOMES_OUTPUT_TYPE = 'Outcomes'
     static final String STAGE_OUTCOMES_OUTPUT_TYPE = ''
     static final String COMPLETE = 'completed'
-    static final String PROJECT_SERVICES_CACHE_REGION = 'projectServices'
-    static final String PROJECT_SERVICES_KEY = 'projectServices'
 
     static dateWithTime = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss")
     static dateWithTimeFormat2 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
@@ -54,7 +51,6 @@ class ProjectService  {
     static final String PLAN_UNLOCKED = 'unlocked for correction'
 
     def webService, grailsApplication, siteService, activityService, emailService, documentService, userService, metadataService, settingService, reportService, auditService, speciesService
-    GrailsCacheManager grailsCacheManager
 
     def list(brief = false, citizenScienceOnly = false) {
         def params = brief ? '?brief=true' : ''
@@ -1174,31 +1170,11 @@ class ProjectService  {
     }
 
 
-    List<Map> getProjectServices() {
-        List<Map> services = grailsCacheManager.getCache(PROJECT_SERVICES_CACHE_REGION).get(PROJECT_SERVICES_CACHE_REGION)?.get()
-        if (!services) {
-            String servicesJson = settingService.get(PROJECT_SERVICES_KEY)
-            if (servicesJson) {
-                services = JSON.parse(servicesJson)
-            }
-            else {
-                services = JSON.parse(getClass().getResourceAsStream('/services.json'), 'UTF-8')
-            }
-
-            grailsCacheManager.getCache(PROJECT_SERVICES_CACHE_REGION).put(PROJECT_SERVICES_CACHE_REGION, services)
-        }
-        services
-    }
-
     List<Map> getServiceScoresForProject(String projectId) {
         Map project = get(projectId, 'flat')
-        List<Map> allServices = getProjectServices()
+        List<Map> allServices = metadataService.getProjectServices()
 
         List projectServices = allServices?.findAll {it.name in project.services }
-        List scores = metadataService.getScores(false)
-        projectServices.each { service ->
-            service.scores = scores.findAll{it.scoreId in service.scoreIds}
-        }
 
         projectServices
     }
@@ -1207,15 +1183,24 @@ class ProjectService  {
         Map scores = summary(projectId)
         List<Map> projectServices = getServiceScoresForProject(projectId)
 
+        List dashboard = []
         projectServices.each { Map service ->
+            Map copy = [:]
+            copy.putAll(service)
+            copy.scores = []
+
             service.scores.each { Map score ->
+                Map scoreCopy = [:]
+                scoreCopy.putAll(score)
                 scores?.targets?.each { String key, List outputScores ->
                     Map outputScore = outputScores?.find{it.scoreId == score.scoreId}
-                    score.target = outputScore?.target ?: 0
-                    score.result = outputScore.result ?: [result:0]
+                    scoreCopy.target = outputScore?.target ?: 0
+                    scoreCopy.result = outputScore.result ?: [result:0]
                 }
+                copy.scores << scoreCopy
             }
+            dashboard << copy
         }
-        projectServices
+        dashboard
     }
 }
