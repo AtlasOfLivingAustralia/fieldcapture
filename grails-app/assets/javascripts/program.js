@@ -3,6 +3,8 @@
 //= require mapWithFeatures.js
 //= require sites
 //= require document
+//= require reporting
+
 /**
  * Knockout view model for program pages.
  * @param props JSON/javascript representation of the program.
