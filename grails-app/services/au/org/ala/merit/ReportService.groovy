@@ -389,7 +389,7 @@ class ReportService {
         def url = grailsApplication.config.ecodata.baseUrl + 'search/targetsReportForScoreIds' + commonService.buildUrlParamsFromMap(reportParams)
         Map results = webService.getJson(url, 300000)
         if (!results || !results.targets || results.error) {
-            return []
+            return [scores:scoreIds.collectEntries{scoreId:it}, metadata:[:]]
         }
         List scoresWithTargets = mergeScoresAndTargets(scoreIds, results)
         return [scores:scoresWithTargets, metadata:results.metadata]
