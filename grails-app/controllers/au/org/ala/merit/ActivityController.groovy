@@ -61,7 +61,7 @@ class ActivityController {
 
             List projectServices = model.project?.services
             if (projectServices) {
-                List services = projectService.getProjectServices()
+                List services = metadataService.getProjectServices()
                 List serviceOutputs = services.findAll{it.name in projectServices}.collect{it.output}
 
                 model.metaModel = new JSONObject(model.metaModel)
