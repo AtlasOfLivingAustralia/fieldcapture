@@ -24,5 +24,10 @@ table#projectList .cost {
     margin-left: -5px; /* offset table cell padding */
 }
 
+/** Get rid of extra padding inside tabs when dataTables is applied */
+.dataTables_wrapper.container-fluid {
+    padding-left:0;
+    padding-right:0;
+}
 
 

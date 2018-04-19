@@ -80,6 +80,11 @@
             </td>
         </tr>
         </tbody>
+        <tfoot>
+            <tr data-bind="visible:filteredReports().length == 0">
+                <td colspan="5">No reports found.</td>
+            </tr>
+        </tfoot>
 
     </table>
 

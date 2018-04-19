@@ -1,4 +1,5 @@
 <g:if test="${projects}">
+    <h4>Work order</h4>
     <table id="projectList" class="table table-striped table-bordered">
         <thead class="thead-light">
             <th class="projectId">Project ID</th>
@@ -23,7 +24,17 @@
     </table>
 </g:if>
 <g:else>
-    <div class="row-fluid">
-        <span class="span12"><h4>${program.name} is not currently running any projects.</h4></span>
+    <div class="row">
+        <span class="col-sm"><h4>${program.name} is not currently running any projects.</h4></span>
     </div>
 </g:else>
+
+<!-- ko stopBinding:true -->
+<div class="row">
+    <div class="col-sm">
+        <h4>Core service reporting</h4>
+        <g:render template="/shared/reporting"/>
+
+    </div>
+</div>
+<!-- /ko -->
