@@ -317,7 +317,7 @@ class MetadataService {
     List<Map> getProjectServices() {
         List<Map> services = grailsCacheManager.getCache(PROJECT_SERVICES_CACHE_REGION).get(PROJECT_SERVICES_CACHE_REGION)?.get()
         if (!services) {
-            String servicesJson = settingService.get(PROJECT_SERVICES_KEY)
+            String servicesJson = settingService.getSettingText(SettingPageType.SERVICES)
             if (servicesJson) {
                 services = JSON.parse(servicesJson)
             }
