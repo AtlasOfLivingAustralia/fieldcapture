@@ -80,6 +80,14 @@ class UrlMappings {
             action = 'projectExplorer'
         }
 
+        "/rlp/$action/$id?" {
+            controller = 'program'
+        }
+
+        "/$hub/rlp/$action/$id?" {
+            controller = 'program'
+        }
+
         "500"(controller:'error', action:'response500')
         "404"(controller:'error', action:'response404')
         "/$hub?/$controller/ws/$action/$id" {
