@@ -146,7 +146,7 @@ class ProjectController {
             model = [details:model.details]
         }
         else if (template == 'nrm2') {
-            List services = projectService.getProjectServices()
+            List services = metadataService.getProjectServices()
             List adHocReportTypes = [
                     [type:ReportService.REPORT_TYPE_SINGLE_ACTIVITY, activityType:'Prototype 2'],
                     [type:ReportService.REPORT_TYPE_SINGLE_ACTIVITY, activityType:'Annual Report'],
@@ -156,7 +156,7 @@ class ProjectController {
             ]
 
             model.overview.displayDashboard = true
-            model.overview.services = projectService.getServiceScoresForProject(project.projectId)
+            model.overview.services = projectService.getServiceDashboardData(project.projectId)
             Map reportingTab = [label: 'Reporting', visible:user?.hasViewAccess, type:'tab', template:'projectReporting', reports:project.reports, stopBinding:true, services: services, scores:scores, adHocReportTypes:adHocReportTypes]
 
             Map nrm2Model = [overview:model.overview, documents:model.documents, details:model.details, site:model.site, reporting:reportingTab]
@@ -297,7 +297,7 @@ class ProjectController {
         }
     }
 
-   // @PreAuthorise(accessLevel = 'admin')
+    @PreAuthorise(accessLevel = 'admin')
     def serviceScores(String id) {
         render projectService.getServiceScoresForProject(id) as JSON
     }

@@ -16,6 +16,7 @@ class ProgramService {
     UserService userService
     SearchService searchService
     DocumentService documentService
+    ReportService reportService
 
 
     Map get(String id, String view = '') {
@@ -88,6 +89,33 @@ class ProgramService {
         }
         result
 
+    }
+
+    List serviceScores(String programId, boolean approvedActivitiesOnly = true) {
+        List<Map> allServices = metadataService.getProjectServices()
+        List scoreIds = allServices.collect{it.scoreIds}.flatten()
+
+        Map scoreResults = reportService.targetsForScoreIds(scoreIds, ["programId:${programId}"], approvedActivitiesOnly)
+
+        List deliveredServices = []
+        allServices.each { Map service ->
+            Map copy = [:]
+            copy.putAll(service)
+            copy.scores = []
+            service.scores?.each { score ->
+                Map copiedScore = [:]
+                copiedScore.putAll(score)
+                Map result = scoreResults?.scores?.find{it.scoreId == score.scoreId}
+
+                copiedScore.target = result?.target ?: 0
+                copiedScore.result = result?.result ?: [result:0, count:0]
+
+                copy.scores << copiedScore
+            }
+            deliveredServices << copy
+        }
+
+        deliveredServices
     }
 
 }
