@@ -57,10 +57,15 @@ class ProgramController {
         Map result = projectService.search(programId:program.programId)
         List projects = result.resp?.projects
 
+        List adHocReportTypes = [
+                [type:ReportService.REPORT_TYPE_SINGLE_ACTIVITY, activityType:'Core services monthly report'],
+                [type:ReportService.REPORT_TYPE_SINGLE_ACTIVITY, activityType:'Core services annual report']
+        ]
+
 
         [about   : [label: 'Management Unit', visible: true, stopBinding: false, type: 'tab'],
          dashboard: [label: 'Dashboard', visible: true, stopBinding: true, type: 'tab', services: servicesWithScores, template:'/project/serviceDashboard'],
-         projects: [label: 'Work Order', visible: true, stopBinding: false, type:'tab', projects:projects, reports:program.reports?:[]],
+         projects: [label: 'Work Order', visible: true, stopBinding: false, type:'tab', projects:projects, reports:program.reports?:[], adHocReportTypes:adHocReportTypes],
          sites   : [label: 'Sites', visible: true, stopBinding: true, type:'tab'],
          admin   : [label: 'Admin', visible: hasAdminAccess, type: 'tab']]
     }
@@ -173,6 +178,21 @@ class ProgramController {
 
     def search(Integer offset, Integer max, String searchTerm, String sort) {
         render programService.search(offset, max, searchTerm, sort) as JSON
+    }
+
+    @PreAuthorise(accessLevel = 'caseManager')
+    def createReport(String id) {
+
+        Map report = request.getJSON()
+        report.programId = id
+
+        def response = reportService.create(report)
+        if (response.resp.error) {
+            flash.message = "Error creating report: ${response.resp.error}"
+        }
+
+        chain(action:'index', id: id)
+
     }
 
 }

@@ -262,6 +262,16 @@ class ReportService {
         return []
     }
 
+    def findReportsForProgram(String programId) {
+
+        def reports = webService.doPost(grailsApplication.config.ecodata.baseUrl+"program/${programId}/reports", [:])
+
+        if (reports.resp && !reports.error) {
+            return reports.resp
+        }
+        return []
+    }
+
     /**
      * Returns the report that spans the period including the supplied date
      * @param isoDate an ISO8601 formatted date string.

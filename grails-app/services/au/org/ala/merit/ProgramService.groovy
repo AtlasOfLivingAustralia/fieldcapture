@@ -22,7 +22,7 @@ class ProgramService {
     Map get(String id, String view = '') {
 
 
-        def url = "${grailsApplication.config.ecodata.baseUrl}program/" + id + "?view=" + view.encodeAsURL()
+        String url = "${grailsApplication.config.ecodata.baseUrl}program/" + id + "?view=" + view.encodeAsURL()
         Map program = webService.getJson(url)
         Map results = documentService.search(programId:id)
         if (results && results.documents) {
@@ -31,6 +31,8 @@ class ProgramService {
             program.links = new JSONArray(categorisedDocs[0])
             program.documents = new JSONArray(categorisedDocs[1])
         }
+
+        program.reports = reportService.findReportsForProgram(id)
         program
     }
 

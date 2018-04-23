@@ -7,7 +7,15 @@
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}&libraries=visualization"></script>
     <script type="text/javascript" src="//www.google.com/jsapi"></script>
     <script disposition="head">
-        var fcConfig = {};
+        var fcConfig = {
+            reportOwner: {programId:'${program.programId}'},
+            reportCreateUrl: '${g.createLink( action:'createReport', id:program.programId)}',
+            viewReportUrl:'',
+            editReportUrl:"${createLink(action:"editReport", id:program.programId)}",
+            approveReportUrl:'',
+            submitReportUrl:'',
+            rejectReportUrl:''
+        };
     </script>
     <asset:stylesheet src="common-bs4.css"/>
     <asset:stylesheet src="program.css"/>
