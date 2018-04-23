@@ -26,9 +26,9 @@
 
         <tr>
             <td>
-                <button type="button" class="btn btn-container" data-bind="visible:editable, click:$root.editReport"><i class="icon-edit" title="Complete this report"></i></button>
-                <button type="button" class="btn btn-container" data-bind="visible:viewable, click:$root.viewReport"><i class="icon-eye-open" title="View this report"></i></button>
-                <button type="button" class="btn btn-container" data-bind="visible:viewable, click:$root.downloadReport"><i class="icon-download" title="Download a PDF of this report"></i></button>
+                <button type="button" class="btn btn-container" data-bind="visible:editable, click:$root.editReport"><i class="fa fa-edit" title="Complete this report"></i></button>
+                <button type="button" class="btn btn-container" data-bind="visible:viewable, click:$root.viewReport"><i class="fa fa-eye" title="View this report"></i></button>
+                <button type="button" class="btn btn-container" data-bind="visible:viewable, click:$root.downloadReport"><i class="fa fa-download" title="Download a PDF of this report"></i></button>
 
             </td>
             <td><a data-bind="visible:editable, attr:{href:editUrl, title:title}" title="Complete this report"><span data-bind="text:description"></span></a>
@@ -98,27 +98,27 @@
                 <div class="modal-body">
                     <form class="form-horizontal" id="reportForm">
 
-                        <div class="control-group">
+                        <div class="control-group form-group">
                             <label class="control-label" for="reportType">Report Type</label>
 
                             <div class="controls">
-                                <select id="reportType" style="width: 97%;" data-bind="options:availableReports, optionsText:formatReportType, value:selectedReportType"></select>
+                                <select id="reportType" class="form-control" style="width: 97%;" data-bind="options:availableReports, optionsText:formatReportType, value:selectedReportType"></select>
                             </div>
                         </div>
 
-                        <div class="control-group">
+                        <div class="control-group form-group">
                             <label class="control-label" for="fromDate">From</label>
 
                             <div class="controls">
-                                <fc:datePicker  targetField="fromDate.date" name="fromDate" data-validation-engine="validate[required]" printable="${printView}"/>
+                                <fc:datePicker class="form-control" targetField="fromDate.date" name="fromDate" data-validation-engine="validate[required]" printable="${printView}"/>
                             </div>
                         </div>
 
                         <div class="control-group">
                             <label class="control-label" for="toDate">To</label>
 
-                            <div class="controls">
-                                <fc:datePicker targetField="toDate.date" name="toDate" data-validation-engine="validate[required]" printable="${printView}"/>
+                            <div class="controls form-group">
+                                <fc:datePicker class="form-control" targetField="toDate.date" name="toDate" data-validation-engine="validate[required]" printable="${printView}"/>
                             </div>
                         </div>
                     </form>

@@ -5,11 +5,19 @@ import org.springframework.cache.annotation.CacheEvict
 import org.springframework.cache.annotation.Cacheable
 
 import javax.annotation.PostConstruct
+import javax.management.relation.Role
 
 class UserService {
 
     private static final String USER_PROFILE_CACHE_REGION = 'userProfileCache'
     private static final String USER_ORGANISATIONS_CACHE_KEY_EXPRESSION = '#userId+"_organisations"'
+
+
+    static final String PROJECT = 'au.org.ala.ecodata.Project'
+    static final String ORGANISATION = 'au.org.ala.ecodata.Organisation'
+    static final String PROGRAM = 'au.org.ala.ecodata.Program'
+
+
 
     def grailsApplication, authService, webService, roleService, projectService, organisationService
 
@@ -233,6 +241,23 @@ class UserService {
         return results?.userIsCaseManager
     }
 
+    /**
+     * Does the current user have permission to edit the requested projectId?
+     * Checks for the ADMIN role in CAS and then checks the UserPermission
+     * lookup in ecodata.
+     */
+    def canUserEditProject(userId, projectId) {
+        def userCanEdit
+        if (userIsSiteAdmin()) {
+            userCanEdit = true
+        } else {
+            def url = grailsApplication.config.ecodata.baseUrl + "permissions/canUserEditProject?projectId=${projectId}&userId=${userId}"
+            userCanEdit = webService.getJson(url)?.userIsEditor?:false
+        }
+
+        userCanEdit
+    }
+
     def isUserAdminForOrganisation(userId, organisationId) {
         def url = grailsApplication.config.ecodata.baseUrl + "permissions/isUserAdminForOrganisation?organisationId=${organisationId}&userId=${userId}"
         def results = webService.getJson(url)
@@ -243,6 +268,37 @@ class UserService {
         def url = grailsApplication.config.ecodata.baseUrl + "permissions/isUserGrantManagerForOrganisation?organisationId=${organisationId}&userId=${userId}"
         def results = webService.getJson(url)
         return results?.userIsGrantManager
+    }
+
+    boolean checkRole(String userId, String role, String id, String entityType) {
+        switch (entityType) {
+            case ORGANISATION:
+                break
+
+            case PROGRAM:
+                switch (role) {
+
+                    case RoleService.GRANT_MANAGER_ROLE:
+                        return isUserGrantManagerForProgram(userId, id)
+                    case RoleService.PROJECT_ADMIN_ROLE:
+                        return isUserAdminForProgram(userId, id)
+                    default:
+                        return false
+                }
+            default: // PROJECT is the default
+                switch (role) {
+                    case RoleService.GRANT_MANAGER_ROLE:
+                        return isUserCaseManagerForProject(userId, id)
+                    case RoleService.PROJECT_ADMIN_ROLE:
+                        return isUserAdminForProject(userId, id)
+                    case RoleService.PROJECT_EDITOR_ROLE:
+                        return canUserEditProject(userId, id)
+                    default:
+                        return false
+                }
+
+        }
+
     }
 
     def checkEmailExists(String email) {

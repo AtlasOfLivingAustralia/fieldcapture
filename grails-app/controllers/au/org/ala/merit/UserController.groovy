@@ -53,23 +53,6 @@ class UserController {
         userData
     }
 
-    @PreAuthorise(accessLevel = 'admin', redirectController = "home", projectIdParam = "projectId")
-    def show(String id) {
-        if (id) {
-            def user = userService.getUser() // getUserForUserId(id)
-
-            if (user) {
-                render view: "index", model: assembleUserData(user)
-            } else {
-                flash.message = "No user found for id: ${id}"
-                redirect(controller: 'home')
-            }
-        } else {
-            flash.message = "No user id specified"
-            forward(controller: 'home')
-        }
-    }
-
     // webservices
 
     /**
