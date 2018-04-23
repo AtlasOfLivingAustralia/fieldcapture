@@ -22,17 +22,25 @@ class AclFilterFilters {
                 Class controllerClass = controller?.clazz
                 def method = controllerClass.getMethod(actionName?:"index", [] as Class[])
                 def roles = roleService.getAugmentedRoles()
-
                 if (controllerClass.isAnnotationPresent(PreAuthorise) || method.isAnnotationPresent(PreAuthorise)) {
                     PreAuthorise pa = method.getAnnotation(PreAuthorise)?:controllerClass.getAnnotation(PreAuthorise)
                     def userId = userService.getCurrentUserId()
                     def accessLevel = pa.accessLevel()
-                    def projectId = params[pa.projectIdParam()]
+                    def entityId = params[pa.projectIdParam()]
+
+                    String entity = UserService.PROJECT
+                    switch(controllerClass) {
+                        case ProgramController:
+                            entity = UserService.PROGRAM
+                            break
+                        case OrganisationController:
+                            entity = UserService.ORGANISATION
+                            break
+                    }
 
                     def errorMsg
 
                     if (!roles.contains(accessLevel)) {
-                        //throw new IllegalArgumentException("Unknown accessLevel requested: ${accessLevel}. Must be one of ${roles.join(', ')}")
                         errorMsg = "Unknown accessLevel requested: <code>${accessLevel}</code> from <code>${method}</code>. Must be one of ${roles.join(', ')}"
                         log.error errorMsg
                     }
@@ -58,21 +66,15 @@ class AclFilterFilters {
                                 errorMsg = "Access denied: User does not have <b>admin</b> permission"
                             }
                             break
+
                         case 'caseManager':
-                            if (!(userService.userIsAlaOrFcAdmin() || projectService.isUserCaseManagerForProject(userId, projectId))) {
-                                errorMsg = "Access denied: User does not have <b>grant manager</b> permission ${projectId?'for project':''}"
-                            }
-                            break
                         case 'admin':
-                            if (!(userService.userIsAlaOrFcAdmin() || projectService.isUserAdminForProject(userId, projectId))) {
-                                errorMsg = "Access denied: User does not have <b>admin</b> permission ${projectId?'for project':''}"
-                            }
-                            break
                         case 'editor':
-                            if (!projectService.canUserEditProject(userId, projectId)) {
-                                errorMsg = "Access denied: User does not have <b>editor</b> permission ${projectId?'for project':''}"
+                            if (!(userService.userIsAlaOrFcAdmin() || userService.checkRole(userId, accessLevel, entityId, entity))) {
+                                errorMsg = "Access denied: User does not have <b>${accessLevel}</b> permission"
                             }
                             break
+
                         default:
                             log.warn "Unexpected role: ${accessLevel}"
                     }
@@ -82,7 +84,7 @@ class AclFilterFilters {
                         if (params.returnTo) {
                             redirect(url: params.returnTo)
                         } else {
-                            redirect(controller: pa.redirectController(), action: pa.redirectAction(), id: projectId)
+                            redirect(controller: pa.redirectController(), action: pa.redirectAction(), id: entityId)
                         }
                         return false
                     }
@@ -98,4 +100,7 @@ class AclFilterFilters {
             }
         }
     }
+
+
+
 }
