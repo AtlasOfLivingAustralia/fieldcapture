@@ -174,7 +174,9 @@ class ReportService {
         if (report.activityId) {
             throw new IllegalArgumentException("The report already has an activity assigned")
         }
-        Map result = activityService.create([plannedStartDate:report.fromDate, plannedEndDate:report.toDate, startDate: report.fromDate, endDate:report.toDate, type:report.activityType, projectId:report.projectId, description:report.name])
+        Map activity = [plannedStartDate:report.fromDate, plannedEndDate:report.toDate, startDate: report.fromDate, endDate:report.toDate, type:report.activityType, description:report.name, projectId:report.projectId, programId:report.programId]
+
+        Map result = activityService.create(activity)
         String activityId = result?.resp?.activityId
         if (!activityId) {
             return [error:"Unable to create activity: "+result?.error ?: "An unknown error occurred"]

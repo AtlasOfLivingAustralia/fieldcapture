@@ -7,14 +7,15 @@ import grails.converters.JSON
 /**
  * Processes requests relating to programs
  */
+@PreAuthorise(accessLevel='admin')
 class ProgramController {
 
     static allowedMethods = [ajaxDelete: "POST", delete: "POST", ajaxUpdate: "POST"]
 
     def programService, searchService, documentService, userService, roleService, commonService, webService
     ProjectService projectService
-    AuthService authService
     ReportService reportService
+    ActivityService activityService
 
     // Simply forwards to the list view
     def list() {}
@@ -176,6 +177,17 @@ class ProgramController {
         redirect(controller: 'home', model: [error: flash.message])
     }
 
+    private def error(String message, String programId) {
+        flash.message = message
+        if (programId) {
+            redirect(action: 'index', id: programId)
+        }
+        else {
+            redirect(controller:'home', action:'publicHome')
+        }
+
+    }
+
     def search(Integer offset, Integer max, String searchTerm, String sort) {
         render programService.search(offset, max, searchTerm, sort) as JSON
     }
@@ -193,6 +205,57 @@ class ProgramController {
 
         chain(action:'index', id: id)
 
+    }
+
+    @PreAuthorise(accessLevel = 'editor')
+    def editReport(String id, String reportId) {
+        if (!id || !reportId) {
+            error('An invalid report was selected for data entry', id)
+            return
+        }
+
+        Map report = reportService.get(reportId)
+
+        if (report.type != ReportService.REPORT_TYPE_SINGLE_ACTIVITY || !report.activityType) {
+            error("Invalid report type: ${report.type}", id)
+            return
+        }
+        else if (reportService.isSubmittedOrApproved(report)) {
+            redirect(action:"viewReport", id:id, params:[reportId:reportId])
+            return
+        }
+
+        String activityId = report.activityId
+        if (!activityId) {
+            // Create an activity for this report...
+            Map result = reportService.createActivityForReport(report)
+
+            if (result.error) {
+                error(result.error)
+                return
+            }
+            activityId = result.activityId
+        }
+
+        Map activity = activityService.get(activityId)
+        Map model = activityService.getActivityMetadata(activity.type)
+        model.context = programService.get(id)
+        model.themes = []
+        model.activity = activity
+        model.returnTo = createLink(action:'index', id:id)
+
+        Map programConfig = [:]
+        // Temporary until we add this to the program config.
+        programConfig.requiresActivityLocking = programConfig.name == 'Reef 2050 Plan Action Reporting'
+        programConfig.navigationMode = (programConfig.name == 'Reef 2050 Plan Action Reporting' || programConfig.name == 'ESP Test') ? 'returnToProject' : 'stayOnPage'
+
+        model.locked = activity.lock != null
+        if (!activity.lock && programConfig.requiresActivityLocking) {
+            Map result = activityService.lock(activity)
+            model.locked = true
+        }
+
+        render model:model, view:'/activity/activityReport'
     }
 
 }

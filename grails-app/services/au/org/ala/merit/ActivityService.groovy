@@ -7,7 +7,7 @@ import org.joda.time.format.DateTimeFormat
 
 class ActivityService {
 
-    def webService, grailsApplication, metadataService, reportService, projectService, emailService
+    def webService, grailsApplication, metadataService, reportService, projectService, emailService, userService
 
     public static final String PROGRESS_PLANNED = 'planned'
     public static final String PROGRESS_FINISHED = 'finished'
@@ -196,8 +196,23 @@ class ActivityService {
         return isDeferred(activity) || isCancelled(activity)
     }
 
+    /**
+     * Returns true if this activity is in an editable state.  Activities contained in approved reports or completed projects
+     * are not editable for example.
+     */
     boolean canEditActivity(Map activity) {
         projectService.canEditActivity(activity)
+    }
+
+    Map getActivityMetadata(String activityType) {
+        Map model = [:]
+        // the activity meta-model
+        model.metaModel = metadataService.getActivityModel(activityType)
+        // the array of output models
+        model.outputModels = model.metaModel?.outputs?.collectEntries {
+            [ it, metadataService.getDataModelFromOutputName(it)] }
+
+        model
     }
 
     /**
