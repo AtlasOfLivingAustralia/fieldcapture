@@ -25,7 +25,6 @@
             <input
                    data-bind="value: dollar, numeric: $root.number, disable: $root.isProjectDetailsLocked()"
                    data-validation-engine="validate[custom[number]]"/>
-        </div>
         </td>
         <!-- /ko -->
 

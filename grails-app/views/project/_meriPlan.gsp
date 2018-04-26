@@ -18,7 +18,7 @@
             </td>
             <td colspan="2" class="priority">
                 <multi-input params="values: details.outcomes.primaryOutcome.assets">
-                    <input type="text" data-bind="value:val" class="input-large asset">
+                    <input type="text" data-bind="value:val, disable: $root.isProjectDetailsLocked()" class="input-large asset">
                 </multi-input>
 
             </td>
@@ -41,11 +41,11 @@
         <tr>
             <td class="index" data-bind="text:$index()+1"></td>
             <td class="outcome-priority"><select
-                    data-bind="options: $root.projectThemes, optionsCaption: 'Please select', disable: $root.isProjectDetailsLocked()"></select>
+                    data-bind="value:description, options: $root.projectThemes, optionsCaption: 'Please select', disable: $root.isProjectDetailsLocked()"></select>
             </td>
             <td class="priority">
                 <multi-input params="values:assets">
-                    <input type="text" data-bind="value:val" class="input-large asset">
+                    <input type="text" data-bind="value:val, disable: $root.isProjectDetailsLocked()" class="input-large asset">
                 </multi-input>
             </td>
             <td class="remove">
@@ -76,7 +76,7 @@
         <tbody data-bind="foreach:details.outcomes.midTermOutcomes">
         <tr>
             <td class="index" data-bind="text:$index()+1"></td>
-            <td class="outcome"><textarea data-bind="value:description"></textarea></td>
+            <td class="outcome"><textarea data-bind="value:description, disable: $parent.isProjectDetailsLocked()"></textarea></td>
             <td class="remove">
                 <span data-bind="if: $index() && !$parent.isProjectDetailsLocked()">
                     <i class="fa fa-remove" data-bind="click: $parent.removeMidTermOutcome"></i>
@@ -105,7 +105,7 @@
         <tr>
             <td class="index" data-bind="text:$index()+1"></td>
             <td class="outcome">
-                <textarea data-bind="value:description"></textarea>
+                <textarea data-bind="value:description, disable: $parent.isProjectDetailsLocked()"></textarea>
             </td>
             <td class="remove">
                 <span data-bind="if: $index() && !$parent.isProjectDetailsLocked()"><i class="fa fa-remove"
@@ -133,19 +133,19 @@
                     <th>Project rationale</th>
                 </tr>
                 <tr>
-                    <td><textarea></textarea></td>
+                    <td><textarea data-bind="value:details.rationale, disable: isProjectDetailsLocked()"></textarea></td>
                 </tr>
                 <tr class="header">
                     <th>Project methodology</th>
                 </tr>
                 <tr>
-                    <td><textarea></textarea></td>
+                    <td><textarea data-bind="value:details.projectMethodology, disable: isProjectDetailsLocked()"></textarea></td>
                 </tr>
                 <tr class="header">
                     <th>Monitoring methodology</th>
                 </tr>
                 <tr>
-                    <td><textarea></textarea></td>
+                    <td><textarea data-bind="value:details.monitoringMethodology, disable: isProjectDetailsLocked()"></textarea></td>
                 </tr>
                 </tbody>
             </table>
@@ -172,7 +172,7 @@
         <tr>
             <td class="index"><span data-bind="text:$index()+1"></span></td>
             <td class="keq">
-                <textarea style="width: 97%;" rows="3" class="input-xlarge"
+                <textarea rows="3"
                           data-bind="value: data1, disable: $parent.isProjectDetailsLocked()">
                 </textarea>
             </td>

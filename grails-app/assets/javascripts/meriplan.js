@@ -136,6 +136,9 @@ function DetailsViewModel(o, period) {
    self.partnership = new GenericViewModel(o.partnership);
    self.lastUpdated = o.lastUpdated ? o.lastUpdated : moment().format();
    self.budget = new BudgetViewModel(o.budget, period);
+   self.rationale = ko.observable(o.rationale);
+   self.projectMethodology = ko.observable(o.projectMethodology);
+   self.monitoringMethodology = ko.observable(o.monitoringMethodology);
 
    var row = [];
    o.events ? row = o.events : row.push(ko.mapping.toJS(new EventsRowViewModel()));
