@@ -27,12 +27,7 @@ class ActivityController {
         // the project
         model.project = projectId ? projectService.get(model.activity.projectId) : null
 
-        // Add the species lists that are relevant to this activity.
-        model.speciesLists = new JSONArray()
         if (model.project) {
-            if (model.project.listId) {
-                model.speciesLists.add model.project.listId
-            }
             model.speciesConfig = projectService.findSpeciesFieldConfigForActivity(activity.projectId, activity.type)
 
             model.themes = metadataService.getThemesForProject(model.project)
@@ -51,11 +46,7 @@ class ActivityController {
 
     private def addOutputModel(Map model) {
 
-        // the activity meta-model
-        model.metaModel = metadataService.getActivityModel(model.activity.type)
-        // the array of output models
-        model.outputModels = model.metaModel?.outputs?.collectEntries {
-            [ it, metadataService.getDataModelFromOutputName(it)] }
+        model.putAll(activityService.getActivityMetadata(model.activity.type))
 
         if (model.activity.type == 'Prototype 2') {
 
@@ -130,9 +121,11 @@ class ActivityController {
             model.hasPhotopointData = activity.documents?.find {it.poiId}
             model
         } else {
-            forward(action: 'list', model: [error: 'no such id'])
+            forward(controller:'home', action: 'publicHome', model: [error: 'no such id'])
         }
     }
+
+
 
     /**
      * A page for entering output data for an activity. Limited activity data can also be updated.

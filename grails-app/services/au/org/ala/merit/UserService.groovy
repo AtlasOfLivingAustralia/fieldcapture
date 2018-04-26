@@ -218,15 +218,53 @@ class UserService {
     }
 
     boolean isUserAdminForProgram(String userId, String programId) {
-        List userRoles = getUserRoles(userId)
-        Map programRole =  userRoles.find{it.entityId == programId}
-        return programRole == RoleService.PROJECT_ADMIN_ROLE
+        Map programRole = getProgramRole(userId, programId)
+        return programRole && programRole.accessLevel == RoleService.PROJECT_ADMIN_ROLE
     }
 
     boolean isUserGrantManagerForProgram(String userId, String programId) {
+        Map programRole = getProgramRole(userId, programId)
+        return programRole && programRole.accessLevel == RoleService.GRANT_MANAGER_ROLE
+    }
+
+    private Map getProgramRole(String userId, String programId) {
         List userRoles = getUserRoles(userId)
         Map programRole =  userRoles.find{it.entityId == programId}
-        return programRole == RoleService.GRANT_MANAGER_ROLE
+        programRole
+    }
+
+    /**
+     * Does the current user have permission to edit the requested program report?
+     * Checks for the ADMIN role in CAS and then checks the UserPermission
+     * lookup in ecodata.
+     */
+    boolean canUserEditProgramReport(String userId, String programId) {
+        boolean userCanEdit
+        if (userIsSiteAdmin()) {
+            userCanEdit = true
+        } else {
+            Map programRole = getProgramRole(userId, programId)
+            userCanEdit = (programRole != null) // Any assigned role on the program is OK?
+        }
+
+        userCanEdit
+    }
+
+    /**
+     * Does the current user have permission to view the requested program report?
+     * Checks for the ADMIN role in CAS and then checks the UserPermission
+     * lookup in ecodata.
+     */
+    boolean canUserViewProgramReport(String userId, String programId) {
+        boolean userCanEdit
+        if (userIsSiteAdmin() || userHasReadOnlyAccess()) {
+            userCanEdit = true
+        } else {
+            Map programRole = getProgramRole(userId, programId)
+            userCanEdit = (programRole != null) // Any assigned role on the program is OK?
+        }
+
+        userCanEdit
     }
 
     def isUserAdminForProject(userId, projectId) {
