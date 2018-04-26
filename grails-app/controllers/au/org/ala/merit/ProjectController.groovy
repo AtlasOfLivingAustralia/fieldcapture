@@ -136,7 +136,7 @@ class ProjectController {
 
         def model = [overview       : [label: 'Overview', visible: true, default: true, type: 'tab', publicImages: imagesModel, displayTargets: false, displayOutcomes: false, blog: blog, hasNewsAndEvents: hasNewsAndEvents, hasProjectStories: hasProjectStories, canChangeProjectDates: canChangeProjectDates],
                      documents      : [label: 'Documents', visible: true, type: 'tab', user:user, template:'docs'],
-                     details        : [label: 'MERI Plan', default: false, disabled: !meriPlanEnabled, visible: meriPlanVisible, meriPlanVisibleToUser: meriPlanVisibleToUser, risksAndThreatsVisible: canViewRisks, announcementsVisible: true, project:project, type: 'tab', template:'viewMeriPlan'],
+                     details        : [label: 'MERI Plan', default: false, disabled: !meriPlanEnabled, visible: meriPlanVisible, meriPlanVisibleToUser: meriPlanVisibleToUser, risksAndThreatsVisible: canViewRisks, announcementsVisible: true, project:project, type: 'tab', template:'viewMeriPlan', meriPlanTemplate:'projectDetails'],
                      plan           : [label: 'Activities', visible: true, disabled: !user?.hasViewAccess, type: 'tab', template:'projectActivities', grantManagerSettingsVisible:user?.isCaseManager, project:project, reports: project.reports, scores: scores, risksAndThreatsVisible: user?.hasViewAccess && risksAndThreatsVisible],
                      site           : [label: 'Sites', visible: true, disabled: !user?.hasViewAccess, editable:user?.isEditor, type: 'tab', template:'projectSites'],
                      dashboard      : [label: 'Dashboard', visible: true, disabled: !user?.hasViewAccess, type: 'tab'],
@@ -157,6 +157,7 @@ class ProjectController {
 
             model.overview.displayDashboard = true
             model.overview.services = projectService.getServiceDashboardData(project.projectId)
+            model.details.meriPlanTemplate = 'meriPlanView'
             Map reportingTab = [label: 'Reporting', visible:user?.hasViewAccess, type:'tab', template:'projectReporting', reports:project.reports, stopBinding:true, services: services, scores:scores, adHocReportTypes:adHocReportTypes]
 
             Map nrm2Model = [overview:model.overview, documents:model.documents, details:model.details, site:model.site, reporting:reportingTab]

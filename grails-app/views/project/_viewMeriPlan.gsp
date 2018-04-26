@@ -1,6 +1,6 @@
 <g:if test="${meriPlanVisibleToUser}">
     <!-- Project Details -->
-    <g:render template="projectDetails" model="[project: project, risksAndThreatsVisible:risksAndThreatsVisible, announcementsVisible:announcementsVisible]"/>
+    <g:render template="${meriPlanTemplate}" model="[project: project, risksAndThreatsVisible:risksAndThreatsVisible, announcementsVisible:announcementsVisible]"/>
 
     <div class="row-fluid space-after">
         <div class="span12">
