@@ -195,57 +195,58 @@
         </tr>
         </tfoot>
     </table>
-</div>
 
 
 
-<h4>National and regional priorities</h4>
 
-<table class="table">
-    <thead>
-    <tr>
-        <th class="index"></th>
-        <th class="document-name">Document name <fc:iconHelp
-                title="Document name">List the name of the National or Regional plan the project is addressing.</fc:iconHelp></th>
-        <th class="section">Relevant section <fc:iconHelp
-                title="Relevant section">What section (target/outcomes/objective etc) of the plan is being addressed?</fc:iconHelp></th>
-        <th class="alignment">Explanation of strategic alignment <fc:iconHelp
-                title="Explanation of strategic alignment">In what way will the project deliver against this section? Keep the response brief, 1 to 2 sentences should be adequate.</fc:iconHelp></th>
-        <th class="remove"></th>
-    </tr>
-    </thead>
-    <tbody data-bind="foreach : details.priorities.rows">
-    <tr>
-        <td class="index"><span data-bind="text:$index()+1"></span></td>
-        <td class="document-name"><textarea style="width: 97%;" class="input-xlarge"
-                                  data-bind="value: data1, disable: $parent.isProjectDetailsLocked()"
-                                  rows="3"></textarea></td>
-        <td class="section"><textarea style="width: 97%;" class="input-xlarge"
-                                  data-bind="value: data2, disable: $parent.isProjectDetailsLocked()"
-                                  rows="5"></textarea></td>
-        <td class="alignment"><textarea style="width: 97%;" class="input-xlarge"
-                                  data-bind="value: data3, disable: $parent.isProjectDetailsLocked()"
-                                  rows="5"></textarea></td>
-        <td class="remove">
-            <span data-bind="if: $index() && !$parent.isProjectDetailsLocked()"><i class="icon-remove"
-                                                                                   data-bind="click: $parent.removeNationalAndRegionalPriorities"></i>
-            </span>
-        </td>
-    </tr>
-    </tbody>
-    <tfoot>
-    <tr>
+    <h4>National and regional priorities</h4>
 
-        <td colspan="5">
-            <button type="button" class="btn btn-small"
-                    data-bind="disable: isProjectDetailsLocked(), click: addNationalAndRegionalPriorities">
-                <i class="icon-plus"></i> Add a row</button></td>
-    </tr>
-    </tfoot>
-</table>
+    <table class="table">
+        <thead>
+        <tr>
+            <th class="index"></th>
+            <th class="document-name">Document name <fc:iconHelp
+                    title="Document name">List the name of the National or Regional plan the project is addressing.</fc:iconHelp></th>
+            <th class="section">Relevant section <fc:iconHelp
+                    title="Relevant section">What section (target/outcomes/objective etc) of the plan is being addressed?</fc:iconHelp></th>
+            <th class="alignment">Explanation of strategic alignment <fc:iconHelp
+                    title="Explanation of strategic alignment">In what way will the project deliver against this section? Keep the response brief, 1 to 2 sentences should be adequate.</fc:iconHelp></th>
+            <th class="remove"></th>
+        </tr>
+        </thead>
+        <tbody data-bind="foreach : details.priorities.rows">
+        <tr>
+            <td class="index"><span data-bind="text:$index()+1"></span></td>
+            <td class="document-name"><textarea style="width: 97%;" class="input-xlarge"
+                                                data-bind="value: data1, disable: $parent.isProjectDetailsLocked()"
+                                                rows="3"></textarea></td>
+            <td class="section"><textarea style="width: 97%;" class="input-xlarge"
+                                          data-bind="value: data2, disable: $parent.isProjectDetailsLocked()"
+                                          rows="5"></textarea></td>
+            <td class="alignment"><textarea style="width: 97%;" class="input-xlarge"
+                                            data-bind="value: data3, disable: $parent.isProjectDetailsLocked()"
+                                            rows="5"></textarea></td>
+            <td class="remove">
+                <span data-bind="if: $index() && !$parent.isProjectDetailsLocked()"><i class="icon-remove"
+                                                                                       data-bind="click: $parent.removeNationalAndRegionalPriorities"></i>
+                </span>
+            </td>
+        </tr>
+        </tbody>
+        <tfoot>
+        <tr>
 
-<div class="row-fluid">
-    <div class="span12">
-        <g:render template="budgetTable"/>
+            <td colspan="5">
+                <button type="button" class="btn btn-small"
+                        data-bind="disable: isProjectDetailsLocked(), click: addNationalAndRegionalPriorities">
+                    <i class="icon-plus"></i> Add a row</button></td>
+        </tr>
+        </tfoot>
+    </table>
+
+    <div class="row-fluid">
+        <div class="span12">
+            <g:render template="serviceBudgetTable"/>
+        </div>
     </div>
 </div>
