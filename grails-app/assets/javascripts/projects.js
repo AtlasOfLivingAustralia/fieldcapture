@@ -294,6 +294,7 @@ function ProjectViewModel(project, isUserEditor, organisations) {
             self.organisationId(org.organisationId);
         }
     });
+    self.transients.services = project.services || [];
 
     self.orgIdSvcProvider = ko.observable(project.orgIdSvcProvider);
     self.transients.serviceProviderOrganisation = ko.observable(organisationsMap[self.orgIdSvcProvider()]);
