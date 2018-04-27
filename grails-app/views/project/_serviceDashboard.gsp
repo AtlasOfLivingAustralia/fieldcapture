@@ -1,6 +1,9 @@
 <div id="services-dashboard">
 
-    <g:each in="${services}" var="service" status="i">
+    <g:if test="${servicesDashboard.planning}">
+        <b>Please note this project is currently in a planning phase so delivery against the targets below has not yet begun</b>
+    </g:if>
+    <g:each in="${servicesDashboard.services}" var="service" status="i">
 
         <div class="statistics stat-1">
             <h3>${service.name}</h3>

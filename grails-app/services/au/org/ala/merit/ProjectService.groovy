@@ -398,6 +398,8 @@ class ProjectService  {
      */
     def submitStageReport(projectId, stageDetails) {
 
+        stageDetails.projectId = projectId
+
         def activities = activityService.activitiesForProject(projectId);
 
         def allowedStates = ['finished', 'deferred', 'cancelled']
@@ -1179,11 +1181,19 @@ class ProjectService  {
         projectServices
     }
 
-    List<Map> getServiceDashboardData(String projectId) {
+    /**
+     * Returns a map of the form:
+     * [
+     *     planning: true/false,
+     *     services: [ <list of scores and targets for each of the project services> ]
+     * ]
+     */
+    Map getServiceDashboardData(String projectId) {
         Map scores = summary(projectId)
         List<Map> projectServices = getServiceScoresForProject(projectId)
 
-        List dashboard = []
+        Map dashboard = [services:[], planning:false]
+        int deliveredAgainstTargets = 0
         projectServices.each { Map service ->
             Map copy = [:]
             copy.putAll(service)
@@ -1196,11 +1206,15 @@ class ProjectService  {
                     Map outputScore = outputScores?.find{it.scoreId == score.scoreId}
                     scoreCopy.target = outputScore?.target ?: 0
                     scoreCopy.result = outputScore.result ?: [result:0]
+
+                    deliveredAgainstTargets += scoreCopy.result?.result ?: 0
                 }
                 copy.scores << scoreCopy
             }
-            dashboard << copy
+            dashboard.services << copy
         }
+        // Once more than one target has been delivered against, the project is considered to be out of planning mode.
+        dashboard.planning = deliveredAgainstTargets < 2
         dashboard
     }
 }
