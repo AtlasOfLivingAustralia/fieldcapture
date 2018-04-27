@@ -36,7 +36,6 @@ class ProgramController {
             String orgRole = members.find { it.userId == userId }
 
             [program  : program,
-             //dashboard     : dashboard,
              roles         : roles,
              user          : user,
              isAdmin       : orgRole?.role == RoleService.PROJECT_ADMIN_ROLE,
@@ -65,7 +64,7 @@ class ProgramController {
 
 
         [about   : [label: 'Management Unit', visible: true, stopBinding: false, type: 'tab'],
-         dashboard: [label: 'Dashboard', visible: true, stopBinding: true, type: 'tab', services: servicesWithScores, template:'/project/serviceDashboard'],
+         dashboard: [label: 'Dashboard', visible: true, stopBinding: true, type: 'tab', servicesDashboard:[planning:false, services:servicesWithScores], template:'/project/serviceDashboard'],
          projects: [label: 'Work Order', visible: true, stopBinding: false, type:'tab', projects:projects, reports:program.reports?:[], adHocReportTypes:adHocReportTypes],
          sites   : [label: 'Sites', visible: true, stopBinding: true, type:'tab'],
          admin   : [label: 'Admin', visible: hasAdminAccess, type: 'tab']]
@@ -216,33 +215,13 @@ class ProgramController {
 
         Map report = reportService.get(reportId)
 
-        if (report.type != ReportService.REPORT_TYPE_SINGLE_ACTIVITY || !report.activityType) {
-            error("Invalid report type: ${report.type}", id)
-            return
-        }
-        else if (reportService.isSubmittedOrApproved(report)) {
-            redirect(action:"viewReport", id:id, params:[reportId:reportId])
-            return
-        }
-
-        String activityId = report.activityId
-        if (!activityId) {
-            // Create an activity for this report...
-            Map result = reportService.createActivityForReport(report)
-
-            if (result.error) {
-                error(result.error)
-                return
-            }
-            activityId = result.activityId
-        }
-
-        Map activity = activityService.get(activityId)
+        Map activity = activityService.get(report.activityId)
         Map model = activityService.getActivityMetadata(activity.type)
         model.context = programService.get(id)
         model.themes = []
         model.activity = activity
         model.returnTo = createLink(action:'index', id:id)
+        model.contextViewUrl = model.returnTo
 
         Map programConfig = [:]
         // Temporary until we add this to the program config.

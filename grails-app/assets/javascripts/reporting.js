@@ -27,7 +27,7 @@ var ReportViewModel = function(report, config) {
     self.progress = ko.observable(report.progress || 'planned');
     self.editUrl = '';
     self.viewUrl = config.viewReportUrl + '?&reportId='+report.reportId;
-    self.downloadUrl = config.reportPDFUrl+'/'+report.reportId;
+    self.downloadUrl = config.reportPDFUrl ? config.reportPDFUrl +'/'+report.reportId : null;
     self.percentComplete = function() {
         if (report.count == 0) {
             return 0;
@@ -126,7 +126,8 @@ var ReportViewModel = function(report, config) {
     };
 
     this.rejectReport = function() {
-        var $reasonModal = $('#reason-modal');
+        var reasonModalSelector = config.reasonModalSelector || '#reason-modal';
+        var $reasonModal = $(reasonModalSelector);
         var reasonViewModel = {
             reason: self.reason,
             rejectionCategories: ['Minor', 'Moderate', 'Major'],
@@ -134,9 +135,7 @@ var ReportViewModel = function(report, config) {
             title:'Return report',
             buttonText: 'Return',
             submit:function() {
-                if ($('.validationEngineContainer').validationEngine('attach').validationEngine('validate')) {
-                    self.changeReportStatus(config.rejectReportUrl, 'return', 'Returning report...', 'Report returned.');
-                }
+                self.changeReportStatus(config.rejectReportUrl, 'return', 'Returning report...', 'Report returned.');
             }
         };
         ko.applyBindings(reasonViewModel, $reasonModal[0]);

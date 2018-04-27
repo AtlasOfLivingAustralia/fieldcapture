@@ -156,7 +156,7 @@ class ProjectController {
             ]
 
             model.overview.displayDashboard = true
-            model.overview.services = projectService.getServiceDashboardData(project.projectId)
+            model.overview.servicesDashboard = projectService.getServiceDashboardData(project.projectId)
             model.details.meriPlanTemplate = 'meriPlanView'
             Map reportingTab = [label: 'Reporting', visible:user?.hasViewAccess, type:'tab', template:'projectReporting', reports:project.reports, stopBinding:true, services: services, scores:scores, adHocReportTypes:adHocReportTypes]
 
