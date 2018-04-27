@@ -652,26 +652,24 @@ class ProjectController {
             error('An invalid report was selected for data entry', id)
             return
         }
-
         Map report = reportService.get(reportId)
+        if (reportService.isSubmittedOrApproved(report)) {
+            redirect action:'viewReport', id:id, params:[reportId:reportId]
+        }
+        else {
+            forward(controller: 'activity', action: 'enterData', id: report.activityId, params:[returnTo:createLink(action:'index', id:id)])
+        }
+    }
 
-        if (report.type != ReportService.REPORT_TYPE_SINGLE_ACTIVITY || !report.activityType) {
-            error("Invalid report type: ${report.type}", id)
+    @PreAuthorise(accessLevel = 'editor')
+    def viewReport(String id, String reportId) {
+        if (!id || !reportId) {
+            error('An invalid report was selected for data entry', id)
             return
         }
-        String activityId = report.activityId
-        if (!activityId) {
-            // Create an activity for this report...
-            Map result = reportService.createActivityForReport(report)
+        Map report = reportService.get(reportId)
 
-            if (result.error) {
-                error(result.error)
-                return
-            }
-            activityId = result.activityId
-        }
-
-        forward(controller: 'activity', action: 'enterData', id: activityId)
+        forward(controller: 'activity', action: 'index', id: report.activityId, params:[returnTo:createLink(action:'index', id:id)])
     }
 
     @PreAuthorise(accessLevel = 'caseManager')

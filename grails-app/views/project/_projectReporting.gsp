@@ -1,5 +1,6 @@
 <g:set var="reportsHeader" value="Project Reports"/>
 <g:render template="/shared/reporting"></g:render>
+<g:render template="/shared/declaration"/>
 
 <br/>
 <g:render template="serviceTargets"></g:render>
@@ -8,6 +9,8 @@
 <div class="validationEngineContainer" id="risk-validation">
     <g:render template="riskTable" model="[project: project]"/>
 </div>
+
+
 
 
 <asset:script>

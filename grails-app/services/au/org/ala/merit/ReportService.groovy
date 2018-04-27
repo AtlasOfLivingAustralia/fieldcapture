@@ -153,12 +153,16 @@ class ReportService {
         return report.publicationStatus == REPORT_SUBMITTED || report.publicationStatus == REPORT_APPROVED
     }
 
+    /**
+     * Returns the report with the supplied id as a Map.
+     * @param reportId the reportId of the report to get.
+     */
     Map get(String reportId) {
         if (!reportId) {
             throw new IllegalArgumentException("Missing parameter reportId")
         }
-        def resp = webService.getJson(grailsApplication.config.ecodata.baseUrl+"report/${reportId}")
-        resp
+        Map report = webService.getJson(grailsApplication.config.ecodata.baseUrl+"report/${reportId}")
+        report
     }
 
     /**
