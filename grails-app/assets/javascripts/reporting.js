@@ -85,7 +85,8 @@ var ReportViewModel = function(report, config) {
 
     self.changeReportStatus = function(url, action, blockingMessage, successMessage) {
         blockUIWithMessage(blockingMessage);
-        var json = JSON.stringify({reportId:report.reportId, category:self.category(), reason:self.reason()});
+        var payload = {reportId:report.reportId, stage: report.name, category:self.category(), reason:self.reason(), activityIds:[report.activityId]}
+        var json = JSON.stringify(payload);
         $.ajax({
             url: url,
             type: 'POST',
