@@ -674,23 +674,87 @@ class ProjectService  {
     }
 
     Map getProgramConfiguration(Map project) {
-        metadataService.getProgramConfiguration(project.associatedProgram, project.associatedSubProgram)
+
+        Map programConfig
+
+        /** TODO allow this to be configured properly */
+        if (project.programId) {
+            programConfig = [
+                    projectTemplate:'nrm2',
+                    reports:[[
+                        type:ReportService.REPORT_TYPE_SINGLE_ACTIVITY,
+                        activityType:'Prototype 2',
+                        period:6,
+                        firstReportingDate: project.plannedStartDate,
+                        reportNameTemplate: "Milestone %d",
+                        reportDescriptionTemplate: "Milestone %d for ${project.name}",
+                    ],
+                    [
+                        type:ReportService.REPORT_TYPE_SINGLE_ACTIVITY,
+                        activityType:'NRM2 Annual Report',
+                        period:12,
+                        alignToCalendar: true,
+                        reportNameTemplate: 'Annual Report %2$tY - %3$tY',
+                        reportDescriptionTemplate: "Annual Report %2\$tY - %3\$tY for ${project.name}"
+                    ]]
+            ]
+        }
+        else {
+            programConfig = metadataService.getProgramConfiguration(project.associatedProgram, project.associatedSubProgram)
+            programConfig.reports = [
+                    [
+                            type:ReportService.REPORT_TYPE_STAGE_REPORT,
+                            period: programConfig.period,
+                            alignToCalendar: programConfig.alignToCalendar,
+                            reportNameTemplate: "Stage %1d",
+                            reportDescriptionTemplate: "Stage %1d for ${project.name}"
+                    ]
+            ]
+
+        }
+
+        programConfig
+
+    }
+
+    private void generateProjectReports(Map reportConfig, Map project) {
+        def period = reportConfig.period
+        if (period) {
+            period = period as Integer
+        }
+        boolean alignedToCalendar = reportConfig.reportingPeriodAlignedToCalendar ?: false
+
+        List reportsOfType = project.reports?.findAll{it.type == reportConfig.type && it.activityType == reportConfig.activityType}
+        Map prototypeReport = [
+                type:reportConfig.type,
+                activityType:reportConfig.activityType,
+                name:reportConfig.reportNameTemplate,
+                description:reportConfig.reportDescriptionTemplate,
+                projectId:project.projectId
+        ]
+        reportService.regenerateAllReports(reportsOfType, prototypeReport, project.plannedStartDate, project.plannedEndDate, period, alignedToCalendar, reportConfig.weekDaysToCompleteReport)
+
     }
 
     def generateProjectStageReports(String projectId) {
         def project = get(projectId)
         def programConfig = getProgramConfiguration(project)
 
-        def period = programConfig.reportingPeriod
-        if (period) {
-            period = period as Integer
+        if (programConfig.reports) {
+
+            programConfig.reports.each {reportConfig ->
+                generateProjectReports(reportConfig, project)
+            }
         }
+        else {
+            def period = programConfig.reportingPeriod
+            if (period) {
+                period = period as Integer
+            }
 
-        def alignedToCalendar = programConfig.reportingPeriodAlignedToCalendar ?: false
-        String reportNamePrefix = programConfig.reportNamePrefix ?: 'Stage'
-
-        reportService.regenerateAllStageReportsForProject(projectId, period, alignedToCalendar, null, reportNamePrefix)
-
+            def alignedToCalendar = programConfig.reportingPeriodAlignedToCalendar ?: false
+            reportService.regenerateAllStageReportsForProject(projectId, period, alignedToCalendar, null)
+        }
 
     }
 

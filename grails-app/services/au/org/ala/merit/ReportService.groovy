@@ -23,6 +23,8 @@ class ReportService {
     public static final int HOME_PAGE_IMAGE_SIZE = 500
 
     public static final String REPORT_TYPE_SINGLE_ACTIVITY = 'Single'
+    public static final String REPORT_TYPE_STAGE_REPORT = 'Activity'
+
 
     def grailsApplication
     def webService
@@ -77,8 +79,8 @@ class ReportService {
             report.putAll([
                     fromDate:DateUtils.format(reportInterval.start.withZone(DateTimeZone.UTC)),
                     toDate:DateUtils.format(reportInterval.end.withZone(DateTimeZone.UTC)),
-                    name:sprintf(prototypeReport.name, (index+1), reportInterval.start, reportInterval.end),
-                    description:sprintf(prototypeReport.description, (index+1), reportInterval.start, reportInterval.end)
+                    name:sprintf(prototypeReport.name, (index+1), reportInterval.start.toDate(), reportInterval.end.toDate()),
+                    description:sprintf(prototypeReport.description, (index+1), reportInterval.start.toDate(), reportInterval.end.toDate())
             ])
 
             if (weekDaysToCompleteReport) {
@@ -146,7 +148,7 @@ class ReportService {
      * Activities will only be created when no reporting activity of the correct type exists within each period.
      * @param projectId identifies the project.
      */
-    void regenerateAllStageReportsForProject(String projectId, Integer periodInMonths = 6, boolean alignToCalendar = false, Integer weekDaysToCompleteReport = null, String reportName = "Stage") {
+    void regenerateAllStageReportsForProject(String projectId, Integer periodInMonths = 6, boolean alignToCalendar = false, Integer weekDaysToCompleteReport = null) {
         Map project = projectService.get(projectId, 'all')
         Map prototype = [
                 type:'Activity',
