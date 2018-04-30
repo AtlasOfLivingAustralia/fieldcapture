@@ -4,6 +4,7 @@ import grails.converters.JSON
 import org.apache.commons.io.FilenameUtils
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
+import org.joda.time.Interval
 import org.joda.time.Period
 import org.springframework.cache.annotation.Cacheable
 
@@ -38,14 +39,132 @@ class ReportService {
 
     private static int DEFAULT_REPORT_DAYS_TO_COMPLETE = 43
 
+    private DateTime toDateInLocalTime(String isoDate) {
+        return DateUtils.parse(isoDate).withZone(DateTimeZone.default)
+    }
+
+    /**
+     * Regenerates a list of reports according the supplied configuration.  Note that all reports
+     * supplied to this method must be unapproved and are assumed to be sorted in date order.
+     *
+     * @param reports any existing reports, these will be edited and deleted as necessary.
+     * @param prototypeReport properties to use when creating a new report. (minus dates)
+     * @param firstPeriodEnd an ISO formatted Date indicating the to date of the first report to be regenerated
+     * @param periodEnd an ISO formatted Date indicating the end of the period covered by the reports
+     * @param periodInMonths the reporting period for each report (from fromDate to toDate)
+     * @param alignToCalendar whether we want reports aligned to the calendar or not.
+     * @param weekDaysToCompleteReport used to set the due date for the report
+     */
+    private void regenerateReportsFromDate(List reports, int startIndex, Map prototypeReport, String firstReportEnd, String periodStart, String periodEnd, Integer periodInMonths = 6, Integer weekDaysToCompleteReport = null) {
+        log.info "regenerateReportsFromDate: ${reports.size()}, ${startIndex}, ${firstReportEnd}, ${periodStart}, ${periodEnd}"
+
+        if (reports.findIndexOf(startIndex, {isSubmittedOrApproved(it)}) >= startIndex) {
+            throw new IllegalArgumentException("Cannot modify a submitted or approved report.")
+        }
+
+        Period period = Period.months(periodInMonths)
+
+        DateTime firstReportEndDate = toDateInLocalTime(firstReportEnd)
+        DateTime endDate = toDateInLocalTime(periodEnd)
+
+        int index = startIndex
+        Interval reportInterval = new Interval(toDateInLocalTime(periodStart), firstReportEndDate)
+
+        log.info "Regenerating reports starting at index: "+index+" from: "+reportInterval.start+" ending at: "+reportInterval.end
+        while (reportInterval.start < endDate.minusDays(1)) {
+
+            Map report = prototypeReport.clone()
+            report.putAll([
+                    fromDate:DateUtils.format(reportInterval.start.withZone(DateTimeZone.UTC)),
+                    toDate:DateUtils.format(reportInterval.end.withZone(DateTimeZone.UTC)),
+                    name:sprintf(prototypeReport.name, (index+1), reportInterval.start, reportInterval.end),
+                    description:sprintf(prototypeReport.description, (index+1), reportInterval.start, reportInterval.end)
+            ])
+
+            if (weekDaysToCompleteReport) {
+                report.dueDate = DateUtils.format(reportInterval.end.plusDays(weekDaysToCompleteReport).withZone(DateTimeZone.UTC))
+            }
+
+            if (reports.size() > index) {
+                report.reportId = reports[index].reportId
+                // Only do the update if the report details have changed.
+                if (!report.equals(reports[index])) {
+                    log.info("name: " + reports[index].name + " - " + report.name)
+                    log.info("fromDate: " + reports[index].fromDate + " - " + report.fromDate)
+                    log.info("toDate: " + reports[index].toDate + " - " + report.toDate)
+                    update(report)
+                }
+            }
+            else {
+                log.info("Creating report "+report.name)
+                create(report)
+            }
+            index++
+            reportInterval = new Interval(reportInterval.end, reportInterval.end.plus(period))
+        }
+
+        // Delete any left over reports.
+        for (int i=index; i<reports.size(); i++) {
+            log.info("Deleting report "+reports[i].name)
+            delete(reports[i].reportId)
+        }
+        log.info("***********")
+    }
+
+    void regenerateAllReports(List reports, Map prototypeReport, String periodStart, String periodEnd, Integer periodInMonths = 6, boolean alignToCalendar = false, Integer weekDaysToCompleteReport = null) {
+
+        // Ensure the reports are sorted in Date order
+        reports = (reports?:[]).sort{it.toDate}
+
+        Period period = Period.months(periodInMonths)
+
+        String startISODate
+        DateTime periodStartDate
+
+        int index = reports.findLastIndexOf {isSubmittedOrApproved(it)}
+        if (index >= 0){
+            startISODate = reports[index].toDate
+            periodStartDate = toDateInLocalTime(startISODate)
+        }
+        else {
+            startISODate = periodStart
+            periodStartDate = toDateInLocalTime(startISODate)
+            if (alignToCalendar) {
+                periodStartDate = DateUtils.alignToPeriod(periodStartDate, period)
+            }
+        }
+
+        regenerateReportsFromDate(reports, Math.max(index+1, 0), prototypeReport, DateUtils.format(periodStartDate.plus(period)), startISODate, periodEnd, periodInMonths, weekDaysToCompleteReport)
+
+    }
+
+
+
     /**
      * This method supports automatically creating reporting activities for a project that re-occur at defined intervals.
      * e.g. a stage report once every 6 months or a green army monthly report once per month.
      * Activities will only be created when no reporting activity of the correct type exists within each period.
      * @param projectId identifies the project.
-
      */
-    def regenerateAllStageReportsForProject(String projectId, Integer periodInMonths = 6, boolean alignToCalendar = false, Integer weekDaysToCompleteReport = null, String reportName = "Stage") {
+    void regenerateAllStageReportsForProject(String projectId, Integer periodInMonths = 6, boolean alignToCalendar = false, Integer weekDaysToCompleteReport = null, String reportName = "Stage") {
+        Map project = projectService.get(projectId, 'all')
+        Map prototype = [
+                type:'Activity',
+                projectId:projectId,
+                name:"Stage %1d",
+                description: "Stage %1d for ${project.name}"
+        ]
+
+        regenerateAllReports(project.reports ?: [], prototype, project.plannedStartDate, project.plannedEndDate, periodInMonths,alignToCalendar, weekDaysToCompleteReport)
+    }
+
+    /**
+     * This method supports automatically creating reporting activities for a project that re-occur at defined intervals.
+     * e.g. a stage report once every 6 months or a green army monthly report once per month.
+     * Activities will only be created when no reporting activity of the correct type exists within each period.
+     * @param projectId identifies the project.
+     */
+    def regenerateAllStageReportsForProjectOriginalVersion(String projectId, Integer periodInMonths = 6, boolean alignToCalendar = false, Integer weekDaysToCompleteReport = null, String reportName = "Stage") {
 
         def project = projectService.get(projectId, 'all')
         log.info("Processing project "+project.name)
@@ -123,24 +242,6 @@ class ReportService {
     }
 
     /**
-     * Returns the latest date at which a period exists that is covered by an approved or submitted stage report.
-     * @param reports the reports to check.
-     * @return a ISO 8601 formatted date string
-     */
-    public String latestSubmittedOrApprovedReportDate(List<Map> reports) {
-        String lastSubmittedOrApprovedReportEndDate = null
-        reports?.each { report ->
-            if (isSubmittedOrApproved(report)) {
-                if (report.toDate > lastSubmittedOrApprovedReportEndDate) {
-                    lastSubmittedOrApprovedReportEndDate = report.toDate
-                }
-            }
-        }
-        return lastSubmittedOrApprovedReportEndDate
-    }
-
-
-    /**
      * Returns true if any report in the supplied list has been submitted or approval or approved.
      * @param reports the List of reports to check
      * @return true if any report in the supplied list has been submitted or approval or approved.
@@ -165,36 +266,6 @@ class ReportService {
         report
     }
 
-    /**
-     * Creates an activity to collect the required information for the supplied report.
-     *
-     * @param report
-     * @return a Map containing either an "error" key or a single key called activityId containing the activity id of the new activity.
-     */
-    Map createActivityForReport(Map report) {
-        if (!report.type == REPORT_TYPE_SINGLE_ACTIVITY) {
-            throw new IllegalArgumentException("Only reports of type "+REPORT_TYPE_SINGLE_ACTIVITY+" are supported")
-        }
-        if (report.activityId) {
-            throw new IllegalArgumentException("The report already has an activity assigned")
-        }
-        Map activity = [plannedStartDate:report.fromDate, plannedEndDate:report.toDate, startDate: report.fromDate, endDate:report.toDate, type:report.activityType, description:report.name, projectId:report.projectId, programId:report.programId]
-
-        Map result = activityService.create(activity)
-        String activityId = result?.resp?.activityId
-        if (!activityId) {
-            return [error:"Unable to create activity: "+result?.error ?: "An unknown error occurred"]
-        }
-
-        result = update([reportId: report.reportId, activityId: activityId])
-
-        if (!result?.resp?.activityId) {
-            return [error:result?.error?:'Failed to update report '+report.name]
-        }
-
-        return [activityId:activityId]
-
-    }
 
     def delete(String reportId) {
         if (!reportId) {

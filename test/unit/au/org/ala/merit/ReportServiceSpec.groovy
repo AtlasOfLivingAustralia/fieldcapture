@@ -158,6 +158,28 @@ class ReportServiceSpec extends Specification {
 
     }
 
+    void "Can add a report to the end of a project with all approved reports when an extension to the end date is granted"() {
+        setup:
+        def project = project('2015-01-01T00:00:00Z', '2017-01-07T00:00:00Z')
+        project.reports = reports()
+        project.reports[0].publicationStatus = ReportService.REPORT_APPROVED
+        project.reports[1].publicationStatus = ReportService.REPORT_APPROVED
+        project.reports[2].publicationStatus = ReportService.REPORT_APPROVED
+        project.reports[3].publicationStatus = ReportService.REPORT_APPROVED
+
+        projectService.get(_, _) >> project
+
+        when:
+        service.regenerateAllStageReportsForProject('p1', 6, true, 43)
+
+        then: "a new report is added to the end of the schedule"
+        1 * webService.doPost({it.endsWith('/report/')}, [fromDate: '2016-12-31T13:00:00Z', toDate: '2017-06-30T14:00:00Z', type: 'Activity', name: 'Stage 5', description: "Stage 5 for project", dueDate:'2017-08-12T14:00:00Z', projectId: 'p1'])
+
+        and: "no other reports should not be changed"
+        0 * webService._
+
+    }
+
     void "no approved or submitted reports can be deleted regardless of the new end date"() {
         setup:
         def project = project('2015-01-01T00:00:00Z', '2015-12-31T13:00:00Z')
@@ -193,10 +215,10 @@ class ReportServiceSpec extends Specification {
         service.regenerateAllStageReportsForProject('p1', 6, true)
 
         then: "report 2 is realigned with a from date matching report 1 end date and an end date aligned to australian time"
-        1 * webService.doPost({it.endsWith('/report/2')}, [fromDate: '2016-07-01T00:00:00Z', toDate: '2016-12-31T13:00:00Z', type: 'Activity', name: 'Stage 2', description: 'Stage 2 for project', projectId: 'p1', reportId:'2'])
+        1 * webService.doPost({it.endsWith('/report/2')}, [fromDate: '2016-07-01T00:00:00Z', toDate: '2016-12-31T23:00:00Z', type: 'Activity', name: 'Stage 2', description: 'Stage 2 for project', projectId: 'p1', reportId:'2'])
 
         and: "a new report is added to cover the project end date extension"
-        1 * webService.doPost({it.endsWith('/report/')}, [fromDate: '2016-12-31T13:00:00Z', toDate: '2017-06-30T14:00:00Z', type: 'Activity', name: 'Stage 3', description: "Stage 3 for project", projectId: 'p1'])
+        1 * webService.doPost({it.endsWith('/report/')}, [fromDate: '2016-12-31T23:00:00Z', toDate: '2017-07-01T00:00:00Z', type: 'Activity', name: 'Stage 3', description: "Stage 3 for project", projectId: 'p1'])
 
         and: "the first report is not modified because it is approved"
         0 * webService._
