@@ -146,20 +146,6 @@ function DetailsViewModel(o, period) {
       return new EventsRowViewModel(obj);
    }));
 
-
-    /**
-     * This is to support two views of the objectives but map it to the same data so as to keep consistency
-     * in the downloads and facets.
-     */
-   self.primaryOutcome = ko.computed({
-       read: function() {
-           return self.objectives.rows[0];
-       },
-       write: function(value) {
-           self.objectives.rows.push(value);
-       }
-   });
-
    self.modelAsJSON = function() {
       var tmp = {};
       tmp['details'] =  ko.mapping.toJS(self);
@@ -219,12 +205,14 @@ function OutcomesViewModel(outcomes) {
     var outcomeToViewModel = function(outcome) {
       return new OutcomeRowViewModel(outcome);
     };
+
     if (!outcomes.primaryOutcome) {
         outcomes.primaryOutcome = {
-          description:null, assets:['']
+          description:null, asset:''
         };
     }
-    self.primaryOutcome = outcomeToViewModel(outcomes.primaryOutcome);
+    self.primaryOutcome = { description: ko.observable(outcomes.primaryOutcome.description),
+                            asset: ko.observable(outcomes.primaryOutcome.asset)};
     self.secondaryOutcomes = ko.observableArray(_.map(outcomes.secondaryOutcomes || [], outcomeToViewModel));
     self.shortTermOutcomes = ko.observableArray(_.map(outcomes.shortTermOutcomes || [], outcomeToViewModel));
     self.midTermOutcomes = ko.observableArray(_.map(outcomes.midTermOutcomes || [], outcomeToViewModel));

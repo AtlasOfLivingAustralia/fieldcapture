@@ -17,10 +17,7 @@
                     data-bind="value:details.outcomes.primaryOutcome.description, options: projectThemes, optionsCaption: 'Please select', disable: isProjectDetailsLocked()"></select>
             </td>
             <td colspan="2" class="priority">
-                <multi-input params="values: details.outcomes.primaryOutcome.assets">
-                    <input type="text" data-bind="value:val, disable: $root.isProjectDetailsLocked()" class="input-large asset">
-                </multi-input>
-
+                <input type="text" data-bind="value:details.outcomes.primaryOutcome.asset, disable: $root.isProjectDetailsLocked()" class="input-large asset">
             </td>
         </tr>
 
@@ -249,4 +246,7 @@
             <g:render template="serviceBudgetTable"/>
         </div>
     </div>
+
+    <h4>Project risks & threats <span style="color: red;"><b>*</b></span></h4>
+    <g:render template="risksAndThreats"/>
 </div>
