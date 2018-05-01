@@ -246,4 +246,7 @@
             <g:render template="serviceBudgetTable"/>
         </div>
     </div>
+
+    <h4>Project risks & threats <span style="color: red;"><b>*</b></span></h4>
+    <g:render template="risksAndThreats"/>
 </div>
