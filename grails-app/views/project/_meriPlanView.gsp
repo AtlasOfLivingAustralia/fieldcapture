@@ -15,10 +15,10 @@
             <td class="outcome-priority"><span
                     data-bind="text:details.outcomes.primaryOutcome.description"></span>
             </td>
-            <td colspan="2" class="priority">
-                <ul data-bind="foreach:details.outcomes.primaryOutcome.assets">
-                    <li data-bind="text:$data"></li>
-                </ul>
+            <td class="priority">
+                <span data-bind="text:details.outcomes.primaryOutcome.asset">
+
+                </span>
             </td>
         </tr>
 
@@ -44,11 +44,6 @@
                 <ul data-bind="foreach:assets">
                     <li data-bind="text:$data"></li>
                 </ul>
-            </td>
-            <td class="remove">
-                <span data-bind="if: $index() && !$parent.isProjectDetailsLocked()">
-                    <i class="fa fa-remove" data-bind="click: $parent.removeSecondaryOutcome"></i>
-                </span>
             </td>
         </tr>
 
