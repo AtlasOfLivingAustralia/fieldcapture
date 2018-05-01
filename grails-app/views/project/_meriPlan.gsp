@@ -5,8 +5,8 @@
         <thead>
         <tr class="header">
             <th class="index"></th>
-            <th class="outcome-priority">Primary Outcome</th>
-            <th class="primary-outcome priority">Primary Investment Priority</th>
+            <th class="outcome-priority required">Primary Outcome</th>
+            <th class="primary-outcome priority required">Primary Investment Priority</th>
             <th class="remove"></th>
         </tr>
         </thead>
@@ -14,10 +14,10 @@
         <tr>
             <td class="index">1</td>
             <td class="outcome-priority"><select
-                    data-bind="value:details.outcomes.primaryOutcome.description, options: projectThemes, optionsCaption: 'Please select', disable: isProjectDetailsLocked()"></select>
+                    data-validation-engine="validate[required]" data-bind="value:details.outcomes.primaryOutcome.description, options: projectThemes, optionsCaption: 'Please select', disable: isProjectDetailsLocked()" ></select>
             </td>
             <td colspan="2" class="priority">
-                <input type="text" data-bind="value:details.outcomes.primaryOutcome.asset, disable: $root.isProjectDetailsLocked()" class="input-large asset">
+                <input type="text" data-validation-engine="validate[required]" data-bind="value:details.outcomes.primaryOutcome.asset, disable: $root.isProjectDetailsLocked()" class="input-large asset">
             </td>
         </tr>
 
@@ -46,7 +46,7 @@
                 </multi-input>
             </td>
             <td class="remove">
-                <span data-bind="if: $index() && !$parent.isProjectDetailsLocked()">
+                <span data-bind="if:!$parent.isProjectDetailsLocked()">
                     <i class="fa fa-remove" data-bind="click: $parent.removeSecondaryOutcome"></i>
                 </span>
             </td>
@@ -75,7 +75,7 @@
             <td class="index" data-bind="text:$index()+1"></td>
             <td class="outcome"><textarea data-bind="value:description, disable: $parent.isProjectDetailsLocked()"></textarea></td>
             <td class="remove">
-                <span data-bind="if: $index() && !$parent.isProjectDetailsLocked()">
+                <span data-bind="if: !$parent.isProjectDetailsLocked()">
                     <i class="fa fa-remove" data-bind="click: $parent.removeMidTermOutcome"></i>
                 </span>
             </td>
@@ -94,7 +94,7 @@
         <thead>
         <tr class="header">
             <th class="index"></th>
-            <th class="outcome">Short-term Project Outcome(s)</th>
+            <th class="outcome required">Short-term Project Outcome(s)</th>
             <th class="remove"></th>
         </tr>
         </thead>
@@ -102,7 +102,7 @@
         <tr>
             <td class="index" data-bind="text:$index()+1"></td>
             <td class="outcome">
-                <textarea data-bind="value:description, disable: $parent.isProjectDetailsLocked()"></textarea>
+                <textarea data-validation-engine="validate[required]" data-bind="value:description, disable: $parent.isProjectDetailsLocked()"></textarea>
             </td>
             <td class="remove">
                 <span data-bind="if: $index() && !$parent.isProjectDetailsLocked()"><i class="fa fa-remove"
@@ -126,23 +126,23 @@
         <div class="span12">
             <table class="table">
                 <tbody>
-                <tr class="header">
+                <tr class="header required">
                     <th>Project rationale</th>
                 </tr>
                 <tr>
-                    <td><textarea data-bind="value:details.rationale, disable: isProjectDetailsLocked()"></textarea></td>
+                    <td><textarea data-validation-engine="validate[required]" data-bind="value:details.rationale, disable: isProjectDetailsLocked()"></textarea></td>
                 </tr>
-                <tr class="header">
+                <tr class="header required">
                     <th>Project methodology</th>
                 </tr>
                 <tr>
-                    <td><textarea data-bind="value:details.projectMethodology, disable: isProjectDetailsLocked()"></textarea></td>
+                    <td><textarea  data-validation-engine="validate[required]" data-bind="value:details.projectMethodology, disable: isProjectDetailsLocked()"></textarea></td>
                 </tr>
-                <tr class="header">
+                <tr class="header required">
                     <th>Monitoring methodology</th>
                 </tr>
                 <tr>
-                    <td><textarea data-bind="value:details.monitoringMethodology, disable: isProjectDetailsLocked()"></textarea></td>
+                    <td><textarea data-validation-engine="validate[required]" data-bind="value:details.monitoringMethodology, disable: isProjectDetailsLocked()"></textarea></td>
                 </tr>
                 </tbody>
             </table>
