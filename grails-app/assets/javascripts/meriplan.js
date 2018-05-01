@@ -211,6 +211,11 @@ function OutcomesViewModel(outcomes) {
           description:null, asset:''
         };
     }
+    if (!outcomes.shortTermOutcomes) {
+        outcomes.shortTermOutcomes = [{
+            description:null, assets:[]
+        }];
+    }
     self.primaryOutcome = { description: ko.observable(outcomes.primaryOutcome.description),
                             asset: ko.observable(outcomes.primaryOutcome.asset)};
     self.secondaryOutcomes = ko.observableArray(_.map(outcomes.secondaryOutcomes || [], outcomeToViewModel));
