@@ -126,20 +126,20 @@
         <div class="span12">
             <table class="table">
                 <tbody>
-                <tr class="header required">
-                    <th>Project rationale</th>
+                <tr class="header">
+                    <th class="required">Project rationale</th>
                 </tr>
                 <tr>
                     <td><textarea data-validation-engine="validate[required]" data-bind="value:details.rationale, disable: isProjectDetailsLocked()"></textarea></td>
                 </tr>
                 <tr class="header required">
-                    <th>Project methodology</th>
+                    <th class="required">Project methodology</th>
                 </tr>
                 <tr>
                     <td><textarea  data-validation-engine="validate[required]" data-bind="value:details.projectMethodology, disable: isProjectDetailsLocked()"></textarea></td>
                 </tr>
                 <tr class="header required">
-                    <th>Monitoring methodology</th>
+                    <th class="required">Monitoring methodology</th>
                 </tr>
                 <tr>
                     <td><textarea data-validation-engine="validate[required]" data-bind="value:details.monitoringMethodology, disable: isProjectDetailsLocked()"></textarea></td>
