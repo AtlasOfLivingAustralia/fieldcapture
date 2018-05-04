@@ -1,106 +1,75 @@
 [
   {
-    "name": "Controlling Pest Animals",
-    "output": "NRM2 - Controlling Pest Animals",
-    "id": "1",
-    "scoreIds": [
-      "b1a1b97d-fcf5-4eb4-9e73-9e2478b77bb4"
-    ]
+    "name": "Publications",
+    "output": "RLP - Publications",
+    "id": 1,
+    "scoreIds": []
   },
   {
-    "name": "Removing pest weeds",
-    "output": "NRM2 - Removing Pest Weeds",
-    "id": "2",
-    "scoreIds": [
-      "b1a1b97d-fcf5-4eb4-9e73-9e2478b77bb4"
-    ]
+    "name": "Habitat assessment",
+    "output": "RLP - Habitat assessment",
+    "id": 2,
+    "scoreIds": []
   },
   {
-    "name": "Improving hydrological regimes",
-    "output": "NRM2 - Improving Hydrological Regimes",
-    "id": "3",
-    "scoreIds": [
-      "b1a1b97d-fcf5-4eb4-9e73-9e2478b77bb4"
-    ]
+    "name": "Flora survey",
+    "output": "RLP - Flora survey",
+    "id": 3,
+    "scoreIds": []
   },
   {
-    "name": "Remediating riparian and aquatic areas",
-    "output": "NRM2 - Remediating Riparian and Aquatic Areas",
-    "id": "4",
-    "scoreIds": [
-      "b1a1b97d-fcf5-4eb4-9e73-9e2478b77bb4"
-    ]
+    "name": "Fauna survey",
+    "output": "RLP - Fauna survey",
+    "id": 4,
+    "scoreIds": []
   },
   {
-    "name": "Revegetating habitat",
-    "output": "NRM2 - Revegetating Habitat",
-    "id": "5",
-    "scoreIds": [
-      "b1a1b97d-fcf5-4eb4-9e73-9e2478b77bb4"
-    ]
+    "name": "Pest animal management",
+    "output": "RLP - Pest animal management",
+    "id": 5,
+    "scoreIds": []
   },
   {
-    "name": "Managing fire regimes",
-    "output": "NRM2 - Managing Fire Regimes",
-    "id": "6",
-    "scoreIds": [
-      "b1a1b97d-fcf5-4eb4-9e73-9e2478b77bb4"
-    ]
+    "name": "Weed treatment and removal",
+    "output": "RLP - Weed treatment",
+    "id": 6,
+    "scoreIds": []
   },
   {
-    "name": "Protecting habitat by controlling access",
-    "output": "NRM2 - Protecting Habitat by Controlling Access",
-    "id": "7",
-    "scoreIds": [
-      "b1a1b97d-fcf5-4eb4-9e73-9e2478b77bb4"
-    ]
+    "name": "Plant propagation",
+    "output": "RLP - Plant propagation",
+    "id": 7,
+    "scoreIds": []
   },
   {
-    "name": "Habitat augmentation",
-    "output": "NRM2 - Habitat Augmentation",
-    "id": "8",
-    "scoreIds": [
-      "b1a1b97d-fcf5-4eb4-9e73-9e2478b77bb4"
-    ]
+    "name": "Revegetation",
+    "output": "RLP - Revegetation",
+    "id": 8,
+    "scoreIds": []
   },
   {
-    "name": "Establishing and maintaining feral free enclosures",
-    "output": "NRM2 - Establishing Feral Free Enclosures",
-    "id": "9",
-    "scoreIds": [
-      "b1a1b97d-fcf5-4eb4-9e73-9e2478b77bb4"
-    ]
+    "name": "Seed Collection and Provenance",
+    "output": "RLP - Seed collection and provenance",
+    "id": 9,
+    "scoreIds": []
   },
   {
-    "name": "Establishing and maintaining ex-situ breeding sites and/or populations",
-    "output": "NRM2 - Establishing ex-situ breeding sites",
-    "id": "10",
-    "scoreIds": [
-      "b1a1b97d-fcf5-4eb4-9e73-9e2478b77bb4"
-    ]
+    "name": "Structural modification - aquatic systems",
+    "output": "RLP - Structural modification - aquatic systems",
+    "id": 10,
+    "scoreIds": []
   },
   {
-    "name": "Undertaking emergency interventions to prevent extinctions",
-    "output": "",
-    "id": "11",
-    "scoreIds": [
-      "b1a1b97d-fcf5-4eb4-9e73-9e2478b77bb4"
-    ]
-  },
-  {
-    "name": "Managing diseases",
-    "output": "NRM2 - Managing Diseases",
-    "id": "12",
-    "scoreIds": [
-      "b1a1b97d-fcf5-4eb4-9e73-9e2478b77bb4"
-    ]
+    "name": "Erosion",
+    "output": "RLP - Erosion",
+    "id": 11,
+    "scoreIds": []
   },
   {
     "name": "Fencing",
-    "output": "NRM2 - Fencing",
-    "id": "13",
-    "scoreIds": [
-      "b1a1b97d-fcf5-4eb4-9e73-9e2478b77bb4"
-    ]
+    "output": "RLP - Fencing",
+    "id": 12,
+    "scoreIds": []
   }
+
 ]
