@@ -294,7 +294,6 @@ function ProjectViewModel(project, isUserEditor, organisations) {
             self.organisationId(org.organisationId);
         }
     });
-    self.transients.services = project.services || [];
 
     self.orgIdSvcProvider = ko.observable(project.orgIdSvcProvider);
     self.transients.serviceProviderOrganisation = ko.observable(organisationsMap[self.orgIdSvcProvider()]);
@@ -1011,50 +1010,6 @@ function OutputTargets(activities, targets, targetsEditable, scores, config) {
 }
 
 /**
- * View model for the output targets for a service based projects.
- * @param services the services being carried out by the project.
- * @param targets existing target data for the project
- * @param targetsEditable if the targets are currently editable
- * @param scores relevant (or all) scores
- * @param config urls for saving etc.
- */
-function ServiceTargets(services, targets, targetsEditable, config) {
-
-    var self = this;
-    var outputTargetService = new OutputTargetService(config);
-
-    self.initialising = ko.observable(true);
-    self.outputTargets = ko.observableArray();
-    self.loadOutputTargets = function(services) {
-        _.each(services, function(service) {
-
-            if (service.scores) {
-                self.outputTargets.push(new Output(service.name, service.scores, targets, self));
-            }
-        });
-
-    };
-
-    self.targetsEditable = ko.observable(targetsEditable);
-    self.canEditOutputTargets = function() {
-        return self.targetsEditable;
-    };
-
-    self.saveOutputTargets = function() {
-        outputTargetService.saveOutputTargets(self.outputTargets());
-    };
-
-    outputTargetService.getScoresForProject().always(function() {
-        self.initialising(false)
-    }).done(function(scores) {
-        self.loadOutputTargets(scores);
-    }).fail(function() {
-        bootbox.error("Failed to load project targets");
-    });
-
-}
-
-/**
  * Star/Unstar project for user - send AJAX and update UI
  *
  * @param boolean isProjectStarredByUser
@@ -1141,11 +1096,12 @@ function ProjectServicesViewModel(project, config) {
     };
 }
 
-function ProjectPageViewModel(project, sites, activities, userRoles, themes, config) {
+function ProjectPageViewModel(project, sites, activities, userRoles, config) {
     var self = this;
+
     _.extend(this, new ProjectViewModel(project, userRoles.editor, organisations));
-    _.extend(this, new MERIPlan(project, themes, config.PROJECT_DETAILS_KEY));
-    _.extend(this, new Risks(project.risks, config.PROJECT_RISKS_KEY));
+    _.extend(this, new MERIPlan(project, config));
+    _.extend(this, new Risks(project.risks, config.risksStorageKey));
     _.extend(this, new MERIPlanActions(project, _.extend({}, fcConfig, {declarationModalSelector:'#unlockPlan'})));
 
     self.workOrderId = ko.observable(project.workOrderId);

@@ -13,11 +13,24 @@
         <tbody>
         <tr>
             <td class="index">1</td>
-            <td class="outcome-priority"><select
-                    data-validation-engine="validate[required]" data-bind="value:details.outcomes.primaryOutcome.description, options: projectThemes, optionsCaption: 'Please select', disable: isProjectDetailsLocked()" ></select>
+            <td class="outcome-priority">
+                <select data-validation-engine="validate[required]" data-bind="value:details.outcomes.primaryOutcome.asset, optionsCaption: 'Please select', disable: isProjectDetailsLocked()" >
+                    <g:each in="${config.outcomes}" var="outcome">
+                       <option>${outcome}</option>
+
+                    </g:each>
+                </select>
             </td>
             <td colspan="2" class="priority">
-                <input type="text" data-validation-engine="validate[required]" data-bind="value:details.outcomes.primaryOutcome.asset, disable: $root.isProjectDetailsLocked()" class="input-large asset">
+                <select class="asset" data-validation-engine="validate[required]" data-bind="value:details.outcomes.primaryOutcome.asset, optionsCaption: 'Please select', disable: isProjectDetailsLocked()" >
+                    <g:each in="${config.assets.groupBy{a -> a.category}}" var="category">
+                        <optgroup label="${category.key}">
+                            <g:each in="${category.value}" var="asset">
+                                <option>${asset.asset}</option>
+                            </g:each>
+                        </optgroup>
+                    </g:each>
+                </select>
             </td>
         </tr>
 

@@ -213,20 +213,25 @@
                 documentUpdateUrl: fcConfig.documentUpdateUrl,
                 projectUpdateUrl: fcConfig.projectUpdateUrl,
                 projectScoresUrl: fcConfig.projectScoresUrl,
-                PROJECT_DETAILS_KEY:PROJECT_DETAILS_KEY,
-                PROJECT_RISKS_KEY:PROJECT_RISKS_KEY
+                meriStorageKey:PROJECT_DETAILS_KEY,
+                risksStorageKey:PROJECT_RISKS_KEY
 
             };
 
             var programs = <fc:modelAsJavascript model="${programs}"/>;
             var project = fcConfig.project;
 
+            var themes = ${config.themes?:[]};
+            config.themes = themes;
+            var services = ${config.services?:[]};
+            config.services = services;
+            config.useServices = services.length > 0;
+            var outcomesAndAssets = ${assetsByOutcome ?: []};
             var viewModel = new ProjectPageViewModel(
                 project,
                 project.sites,
                 project.activities || [],
                 userRoles,
-                ${themes},
                 config);
 
             viewModel.loadPrograms(programs);

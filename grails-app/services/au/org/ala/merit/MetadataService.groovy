@@ -64,6 +64,8 @@ class MetadataService {
             if (subProgram.overridesProgramData) {
                 config.putAll(subProgram)
             }
+            config.themes = subProgram.themes ?: [] // Themes are only configured on subprograms at the moment.
+
         }
 
         config
@@ -146,8 +148,7 @@ class MetadataService {
         })
     }
 
-    boolean isOptionalContent(String contentName, String program, String subProgram = '') {
-        Map config = getProgramConfiguration(program, subProgram)
+    boolean isOptionalContent(String contentName, Map config) {
         return contentName in (config.optionalProjectContent?:[])
     }
 
@@ -220,7 +221,14 @@ class MetadataService {
         return outputTargetMetadata
     }
 
+    def clearCache(boolean clearEcodataCache = true) {
+        cacheService.clear()
+        if (clearEcodataCache) {
+            this.clearEcodataCache()
+        }
 
+
+    }
 
     def clearEcodataCache() {
         webService.get(grailsApplication.config.ecodata.baseUrl + "admin/clearMetadataCache")

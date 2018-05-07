@@ -12,7 +12,6 @@ class ProgramService {
     GrailsApplication grailsApplication
     WebService webService
     MetadataService metadataService
-    ProjectService projectService
     UserService userService
     SearchService searchService
     DocumentService documentService
