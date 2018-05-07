@@ -57,7 +57,8 @@ class ProjectController {
             }
             redirect(controller: 'home', model: [error: flash.message])
         } else {
-            String template = projectTemplate(project, user, params.template)
+            Map config = projectService.getProgramConfiguration(project)
+            String template = projectTemplate(config, params.template)
             if (template == ESP_TEMPLATE && user?.isEditor) {
                 espOverview(project, user)
             } else {
@@ -72,7 +73,7 @@ class ProjectController {
 
                 def programs = projectService.programsModel()
 
-                def content = projectContent(project, user, template)
+                def content = projectContent(project, user, template, config)
 
                 def model = [project               : project,
                              activities            : project.activities,
@@ -87,7 +88,8 @@ class ProjectController {
                              organisations         : organisationList(project),
                              programs              : programs,
                              today                 : DateUtils.format(new DateTime()),
-                             themes                : metadataService.getThemesForProject(project),
+                             themes                : config.themes,
+                             config                : config,
                              projectContent        : content.model,
                              hasCustomTemplate     : projectService.getProgramConfiguration(project)?.projectTemplate
                 ]
@@ -106,10 +108,13 @@ class ProjectController {
         organisations
     }
 
-    protected Map projectContent(Map project, user, String template) {
+    protected Map projectContent(Map project, user, String template, Map config) {
+        project.themes = config.themes ?: []
+        project.assets = config.assets ?: []
+        project.outcomes = config.outcomes ?: []
 
-        def meriPlanVisible = metadataService.isOptionalContent('MERI Plan', project.associatedProgram, project.associatedSubProgram)
-        def risksAndThreatsVisible = metadataService.isOptionalContent('Risks and Threats', project.associatedProgram, project.associatedSubProgram)
+        def meriPlanVisible = metadataService.isOptionalContent('MERI Plan', config)
+        def risksAndThreatsVisible = metadataService.isOptionalContent('Risks and Threats', config)
         def canViewRisks = risksAndThreatsVisible && (user?.hasViewAccess || user?.isEditor)
         def meriPlanEnabled = user?.hasViewAccess || ((project.associatedProgram == 'National Landcare Programme' && project.associatedSubProgram == 'Regional Funding'))
         def meriPlanVisibleToUser = project.planStatus == 'approved' || user?.isAdmin || user?.isCaseManager
@@ -136,17 +141,17 @@ class ProjectController {
 
         def model = [overview       : [label: 'Overview', visible: true, default: true, type: 'tab', publicImages: imagesModel, displayTargets: false, displayOutcomes: false, blog: blog, hasNewsAndEvents: hasNewsAndEvents, hasProjectStories: hasProjectStories, canChangeProjectDates: canChangeProjectDates],
                      documents      : [label: 'Documents', visible: true, type: 'tab', user:user, template:'docs'],
-                     details        : [label: 'MERI Plan', default: false, disabled: !meriPlanEnabled, visible: meriPlanVisible, meriPlanVisibleToUser: meriPlanVisibleToUser, risksAndThreatsVisible: canViewRisks, announcementsVisible: true, project:project, type: 'tab', template:'viewMeriPlan', meriPlanTemplate:'projectDetails'],
+                     details        : [label: 'MERI Plan', default: false, disabled: !meriPlanEnabled, visible: meriPlanVisible, meriPlanVisibleToUser: meriPlanVisibleToUser, risksAndThreatsVisible: canViewRisks, announcementsVisible: true, project:project, type: 'tab', template:'viewMeriPlan', meriPlanTemplate:'projectDetails', config:config],
                      plan           : [label: 'Activities', visible: true, disabled: !user?.hasViewAccess, type: 'tab', template:'projectActivities', grantManagerSettingsVisible:user?.isCaseManager, project:project, reports: project.reports, scores: scores, risksAndThreatsVisible: user?.hasViewAccess && risksAndThreatsVisible],
                      site           : [label: 'Sites', visible: true, disabled: !user?.hasViewAccess, editable:user?.isEditor, type: 'tab', template:'projectSites'],
                      dashboard      : [label: 'Dashboard', visible: true, disabled: !user?.hasViewAccess, type: 'tab'],
-                     admin          : [label: 'Admin', visible: adminTabVisible, user:user, type: 'tab', template:'projectAdmin', project:project, canChangeProjectDates: canChangeProjectDates, showAnnouncementsTab: showAnnouncementsTab, meriPlanTemplate:'meriPlanOriginal']]
+                     admin          : [label: 'Admin', visible: adminTabVisible, user:user, type: 'tab', template:'projectAdmin', project:project, canChangeProjectDates: canChangeProjectDates, showAnnouncementsTab: showAnnouncementsTab, meriPlanTemplate:'meriPlanOriginal', config:config]]
 
         if (template == 'meri') {
             model = [details:model.details]
         }
         else if (template == 'nrm2') {
-            List services = metadataService.getProjectServices()
+
             List adHocReportTypes = [
                     [type:ReportService.REPORT_TYPE_SINGLE_ACTIVITY, activityType:'Prototype 2'],
                     [type:ReportService.REPORT_TYPE_SINGLE_ACTIVITY, activityType:'Annual Report'],
@@ -158,22 +163,21 @@ class ProjectController {
             model.overview.displayDashboard = true
             model.overview.servicesDashboard = projectService.getServiceDashboardData(project.projectId)
             model.details.meriPlanTemplate = 'meriPlanView'
-            Map reportingTab = [label: 'Reporting', visible:user?.hasViewAccess, type:'tab', template:'projectReporting', reports:project.reports, stopBinding:true, services: services, scores:scores, adHocReportTypes:adHocReportTypes]
+            Map reportingTab = [label: 'Reporting', visible:user?.hasViewAccess, type:'tab', template:'projectReporting', reports:project.reports, stopBinding:true, services: config.services, scores:scores, adHocReportTypes:adHocReportTypes]
 
             Map nrm2Model = [overview:model.overview, documents:model.documents, details:model.details, site:model.site, reporting:reportingTab]
             nrm2Model.admin = model.admin
             nrm2Model.admin.meriPlanTemplate = 'meriPlan'
-            nrm2Model.admin.projectServices = services
+            nrm2Model.admin.projectServices = config.services
             model = nrm2Model
         }
         return [view: 'index', model: model]
     }
 
-    private String projectTemplate(Map project, Map user, String template) {
+    private String projectTemplate(Map config, String template) {
         if (template) {
             return template
         }
-        Map config = projectService.getProgramConfiguration(project)
 
         return config.projectTemplate
     }
@@ -651,6 +655,9 @@ class ProjectController {
         if (!id || !reportId) {
             error('An invalid report was selected for data entry', id)
             return
+        }
+        if (params.clearCache) {
+            metadataService.clearCache()
         }
         Map report = reportService.get(reportId)
         if (reportService.isSubmittedOrApproved(report)) {

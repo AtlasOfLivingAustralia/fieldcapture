@@ -50,7 +50,7 @@ class ProjectService  {
     static final String PLAN_SUBMITTED = 'submitted'
     static final String PLAN_UNLOCKED = 'unlocked for correction'
 
-    def webService, grailsApplication, siteService, activityService, emailService, documentService, userService, metadataService, settingService, reportService, auditService, speciesService
+    def webService, grailsApplication, siteService, activityService, emailService, documentService, userService, metadataService, settingService, reportService, auditService, speciesService, programService
 
     def list(brief = false, citizenScienceOnly = false) {
         def params = brief ? '?brief=true' : ''
@@ -679,6 +679,7 @@ class ProjectService  {
 
         /** TODO allow this to be configured properly */
         if (project.programId) {
+            Map program = programService.get(project.programId)
             programConfig = [
                     projectTemplate:'nrm2',
                     reports:[[
@@ -696,8 +697,15 @@ class ProjectService  {
                         alignToCalendar: true,
                         reportNameTemplate: 'Annual Report %2$tY - %3$tY',
                         reportDescriptionTemplate: "Annual Report %2\$tY - %3\$tY for ${project.name}"
-                    ]]
+                    ]],
+                    services: metadataService.getProjectServices(),
+                    assets:[],
+                    outcomes:[]
             ]
+            programConfig.optionalProjectContent = ['MERI Plan', 'Risks and Threats']
+            programConfig.assets = program.assets ?: [[category:'Ramsar', asset:'asset 1'], [category:'Threatened Species', asset:'asset 2']]
+            programConfig.outcomes = program.outcomes ?: ['Outcome 1', 'Outcome 2', 'Outcome']
+            programConfig.themes = program.themes ?: []
         }
         else {
             programConfig = metadataService.getProgramConfiguration(project.associatedProgram, project.associatedSubProgram)

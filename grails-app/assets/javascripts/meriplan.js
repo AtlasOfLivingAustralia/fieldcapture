@@ -8,13 +8,13 @@ PlanStatus = {
     UNLOCKED : 'unlocked for correction'
 };
 
-function MERIPlan(project, themes, key) {
+function MERIPlan(project, config) {
    var self = this;
    if(!project.custom){ project.custom = {};}
    if(!project.custom.details){project.custom.details = {};}
 
-   if (key) {
-       var savedProjectCustomDetails = amplify.store(key);
+   if (config.meriStorageKey) {
+       var savedProjectCustomDetails = amplify.store(config.meriStorageKey);
        if (savedProjectCustomDetails) {
           var restored = JSON.parse(savedProjectCustomDetails);
           if (restored.custom) {
@@ -24,7 +24,7 @@ function MERIPlan(project, themes, key) {
        }
    }
 
-   self.details = new DetailsViewModel(project.custom.details, getBudgetHeaders(project));
+   self.details = new DetailsViewModel(project.custom.details, getBudgetHeaders(project), config);
    self.detailsLastUpdated = ko.observable(project.custom.details.lastUpdated).extend({simpleDate: true});
    self.isProjectDetailsSaved = ko.computed (function (){
       return (project['custom']['details'].status == 'active');
@@ -33,7 +33,7 @@ function MERIPlan(project, themes, key) {
       return (project.planStatus == PlanStatus.APPROVED || project.planStatus == PlanStatus.SUBMITTED);
    });
 
-   self.projectThemes =  $.map(themes, function(theme, i) { return theme.name; });
+   self.projectThemes =  $.map(config.themes, function(theme, i) { return theme.name; });
    self.projectThemes.push("MERI & Admin");
    self.projectThemes.push("Others");
 
@@ -122,7 +122,7 @@ function MERIPlan(project, themes, key) {
 
 };
 
-function DetailsViewModel(o, period) {
+function DetailsViewModel(o, period, config) {
    var self = this;
    self.status = ko.observable(o.status);
    self.obligations = ko.observable(o.obligations);
@@ -136,6 +136,9 @@ function DetailsViewModel(o, period) {
    self.partnership = new GenericViewModel(o.partnership);
    self.lastUpdated = o.lastUpdated ? o.lastUpdated : moment().format();
    self.budget = new BudgetViewModel(o.budget, period);
+   if (config.useServices) {
+       self.services = new ServicesViewModel(o.services, config.services, self.budget);
+   }
    self.rationale = ko.observable(o.rationale);
    self.projectMethodology = ko.observable(o.projectMethodology);
    self.monitoringMethodology = ko.observable(o.monitoringMethodology);
@@ -156,6 +159,108 @@ function DetailsViewModel(o, period) {
       return json;
    };
 };
+
+function ServicesViewModel(projectServices, allServices, budgetViewModel) {
+    var self = this;
+
+    var ServiceBudgetRow = function(serviceId, i) {
+        var row = this;
+        row.serviceId = ko.observable(serviceId || null);
+        row.budget = budgetViewModel.rows().length > i ? budgetViewModel.rows()[i] : null;
+        row.serviceId.subscribe(function(id) {
+            if (id) {
+                var selectedService = _.find(allServices, function(service) {
+                    return service.id == id;
+                });
+
+                row.budget.shortLabel = selectedService ? selectedService.name : 'Unknown service';
+            }
+        });
+        row.selectableServices = self.availableServices(i);
+    };
+
+    self.budget = budgetViewModel;
+    self.services = ko.observableArray();
+    self.addService = function() {
+        budgetViewModel.addRow();
+        self.services.push(new ServiceBudgetRow(null, self.services().length));
+    };
+    self.removeService = function(service) {
+        self.service.remove(service);
+    };
+
+    if (!projectServices) {
+        projectServices = [];
+    }
+
+    if (projectServices.length != budgetViewModel.rows().length) {
+        console.log("Warning: Number of budget rows doesn't match number of service rows.");
+        budgetViewModel.rows([]);
+    }
+
+    /** Enforces that each service is only selected once in the table */
+    self.availableServices = function(i) {
+        return _.reject(allServices, function(service) {
+            return _.find(self.services(), function(usedService, allSelected, index) {
+                return i != index && usedService.serviceId() == service.id;
+            })
+        })
+    };
+
+    for (var i=0; i<projectServices.length; i++) {
+        self.services.push(new ServiceBudgetRow(projectServices[i], i));
+    }
+
+    self.toJSON = function() {
+        return _.map(self.services(), function(service) { return service.serviceId() });
+    };
+}
+
+/**
+ * View model for the output targets for a service based projects.
+ * @param services the services being carried out by the project.
+ * @param targets existing target data for the project
+ * @param targetsEditable if the targets are currently editable
+ * @param scores relevant (or all) scores
+ * @param config urls for saving etc.
+ */
+function ServiceTargets(services, targets, targetsEditable, config) {
+
+    var self = this;
+    var outputTargetService = new OutputTargetService(config);
+
+    self.services = ko.observableArray(services);
+    self.initialising = ko.observable(true);
+    self.outputTargets = ko.observableArray();
+    self.loadOutputTargets = function(services) {
+        _.each(services, function(service) {
+
+            if (service.scores) {
+                self.outputTargets.push(new Output(service.name, service.scores, targets, self));
+            }
+        });
+
+    };
+
+    self.targetsEditable = ko.observable(targetsEditable);
+    self.canEditOutputTargets = function() {
+        return self.targetsEditable;
+    };
+
+    self.saveOutputTargets = function() {
+        outputTargetService.saveOutputTargets(self.outputTargets());
+    };
+
+    outputTargetService.getScoresForProject().always(function() {
+        self.initialising(false)
+    }).done(function(scores) {
+        self.loadOutputTargets(scores);
+    }).fail(function() {
+        bootbox.error("Failed to load project targets");
+    });
+
+};
+
 
 function GenericViewModel(o) {
    var self = this;
@@ -302,6 +407,10 @@ function BudgetViewModel(o, period){
       allBudgetTotal.push(new BudgetTotalViewModel(this.rows, i));
    }
    self.columnTotal = ko.observableArray(allBudgetTotal);
+
+   self.addRow = function() {
+       self.rows.push(new BudgetRowViewModel({},period));
+   }
 };
 
 function BudgetTotalViewModel (rows, index){
