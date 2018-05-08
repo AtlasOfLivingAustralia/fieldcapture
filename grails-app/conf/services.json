@@ -70,6 +70,83 @@
     "output": "RLP - Fencing",
     "id": 12,
     "scoreIds": []
+  },
+  {
+    "name": "Water quality survey",
+    "output": "RLP - Water quality survey",
+    "id":13,
+    "scoreIds":[]
+  },
+  {
+    "name": "Social survey",
+    "output": "RLP - Social survey",
+    "id":14,
+    "scoreIds":[]
+  },
+  {
+    "name": "Ecological burn",
+    "output": "RLP - Ecological burn",
+    "id":15,
+    "scoreIds":[]
+  },
+  {
+    "name": "Hazard reduction burn",
+    "output": "RLP - Hazard reduction burn",
+    "id":16,
+    "scoreIds":[]
+  },
+  {
+    "name":"Management plan development",
+    "output":"RLP - Management plan development",
+    "id":17,
+    "scoreIds":[]
+  },
+  {
+    "name":"Community engagement (environment)",
+    "output":"RLP - Community engagement - environment",
+    "id":18,
+    "scoreIds":[]
+  },
+  {
+    "name":"Community engagement (agriculture)",
+    "output":"RLP - Community engagement - agriculture",
+    "id":19,
+    "scoreIds":[]
+  },
+  {
+    "name":"Grazing management",
+    "output":"RLP - Grazing management",
+    "id":20,
+    "scoreIds":[]
+  },
+  {
+    "name":"Access control",
+    "output":"RLP - Access control",
+    "id":21,
+    "scoreIds":[]
+  },
+  {
+    "name":"Managing disease",
+    "output":"RLP - Disease management",
+    "id":22,
+    "scoreIds":[]
+  },
+  {
+    "name":"Conservation agreements",
+    "output":"RLP - Conservation agreements",
+    "id":23,
+    "scoreIds":[]
+  },
+  {
+    "name":"Conservation actions",
+    "output":"RLP - Conservation actions",
+    "id":24,
+    "scoreIds":[]
+  },
+  {
+    "name":"Removal of debris",
+    "output":"RLP - Removal of debris",
+    "id":25,
+    "scoreIds":[]
   }
-
 ]
