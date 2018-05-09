@@ -1,7 +1,7 @@
 <div class="row-fluid space-after">
     <div class="required">
         <div id="project-risks-threats" class="well well-small">
-            <label><b>Project risks & threats</b></label>
+            <h4>Project risks & threats</h4>
             <div align="right">
                 <b> Overall project risk profile : <span data-bind="text: risks.overallRisk, css: overAllRiskHighlight" ></span></b>
             </div>

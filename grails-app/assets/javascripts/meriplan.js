@@ -137,7 +137,7 @@ function DetailsViewModel(o, period, config) {
    self.lastUpdated = o.lastUpdated ? o.lastUpdated : moment().format();
    self.budget = new BudgetViewModel(o.budget, period);
    if (config.useServices) {
-       self.services = new ServicesViewModel(o.services, config.services, self.budget);
+       self.services = new ServicesViewModel(o.services, config.services, self.budget, o.outputTargets);
    }
    self.rationale = ko.observable(o.rationale);
    self.projectMethodology = ko.observable(o.projectMethodology);
@@ -151,7 +151,8 @@ function DetailsViewModel(o, period, config) {
 
    self.modelAsJSON = function() {
       var tmp = {};
-      tmp['details'] =  ko.mapping.toJS(self);
+      tmp.details =  ko.mapping.toJS(self);
+
       var jsData = {"custom": tmp};
       var json = JSON.stringify(jsData, function (key, value) {
          return value === undefined ? "" : value;
@@ -163,56 +164,111 @@ function DetailsViewModel(o, period, config) {
 function ServicesViewModel(projectServices, allServices, budgetViewModel) {
     var self = this;
 
-    var ServiceBudgetRow = function(serviceId, i) {
+    if (!projectServices) {
+        projectServices = {
+            serviceIds: [],
+            targets:[]
+        };
+    }
+
+    var ServiceTarget = function(service, score, currentTarget) {
+        var target = this;
+        target.target = ko.observable(currentTarget);
+        target.score = score;
+        target.serviceName = service;
+
+        target.toJSON = function() {
+            return {
+              projectTarget:target.target(),
+              scoreId:score.scoreId
+            };
+        };
+    };
+
+    var ServiceRow = function(serviceId, i) {
         var row = this;
+        row.index = i;
         row.serviceId = ko.observable(serviceId || null);
         row.budget = budgetViewModel.rows().length > i ? budgetViewModel.rows()[i] : null;
-        row.serviceId.subscribe(function(id) {
+        row.targets = ko.observableArray();
+
+        function updateFromService(id) {
+            row.targets([]);
             if (id) {
                 var selectedService = _.find(allServices, function(service) {
                     return service.id == id;
                 });
 
                 row.budget.shortLabel = selectedService ? selectedService.name : 'Unknown service';
+                if (selectedService) {
+                    _.each(selectedService.scores, function(score) {
+                        var target = 0;
+                        var existingTarget = _.find(projectServices.targets, function(target) {
+                            return target.scoreId == score.scoreId;
+                        });
+                        if (existingTarget && existingTarget.projectTarget) {
+                            target = existingTarget.projectTarget;
+                        }
+                        row.targets.push(new ServiceTarget(selectedService.name, score, target));
+                    });
+                }
+
             }
+        }
+        row.serviceId.subscribe(function(id) {
+            updateFromService(id);
         });
-        row.selectableServices = self.availableServices(i);
+        row.selectableServices = ko.computed(function() {
+            return self.availableServices(row.serviceId());
+        });
+        updateFromService(serviceId);
     };
 
     self.budget = budgetViewModel;
     self.services = ko.observableArray();
     self.addService = function() {
         budgetViewModel.addRow();
-        self.services.push(new ServiceBudgetRow(null, self.services().length));
+        self.services.push(new ServiceRow(null, self.services().length));
     };
     self.removeService = function(service) {
-        self.service.remove(service);
+        budgetViewModel.rows.remove(service.budget);
+        self.services.remove(service);
     };
 
-    if (!projectServices) {
-        projectServices = [];
-    }
-
-    if (projectServices.length != budgetViewModel.rows().length) {
-        console.log("Warning: Number of budget rows doesn't match number of service rows.");
+    if (projectServices.serviceIds.length != budgetViewModel.rows().length) {
         budgetViewModel.rows([]);
+        projectServices.serviceIds = [];
     }
 
-    /** Enforces that each service is only selected once in the table */
-    self.availableServices = function(i) {
+    /** Enforces that each service is only selected once in the table.  Ensures that the currently selected
+     * service is always available in the returned list. */
+    self.availableServices = function(serviceId) {
         return _.reject(allServices, function(service) {
-            return _.find(self.services(), function(usedService, allSelected, index) {
-                return i != index && usedService.serviceId() == service.id;
+            return _.find(self.services(), function(usedService) {
+                return usedService.serviceId() == service.id && !(service.id == serviceId);
             })
-        })
+        });
     };
 
-    for (var i=0; i<projectServices.length; i++) {
-        self.services.push(new ServiceBudgetRow(projectServices[i], i));
+    for (var i=0; i<projectServices.serviceIds.length; i++) {
+        self.services.push(new ServiceRow(projectServices.serviceIds[i], i));
     }
+
+    self.outputTargets = function() {
+        var outputTargets = [];
+        _.each(self.services(), function(service) {
+            _.each(service.targets(), function(target) {
+                outputTargets.push(target.toJSON());
+            });
+        });
+        return outputTargets;
+    };
 
     self.toJSON = function() {
-        return _.map(self.services(), function(service) { return service.serviceId() });
+        return {
+            serviceIds : _.map(self.services(), function(service) { return service.serviceId() }),
+            targets: self.outputTargets()
+        }
     };
 }
 

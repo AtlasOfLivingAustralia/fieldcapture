@@ -95,3 +95,15 @@ table tr.header th {
 .meri-plan .budget-cell input {
     width: 100%;
 }
+
+.meri-plan #serviceTargetsContainer td.service {
+    width: 20%;
+}
+.meri-plan #serviceTargetsContainer td.score {
+    width: 60%;
+}
+
+.meri-plan #serviceTargetsContainer td.target {
+    width: 20%;
+}
+

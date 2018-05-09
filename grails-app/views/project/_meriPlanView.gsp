@@ -165,7 +165,8 @@
 
     <!-- Budget table -->
 
-    <label><b>Project Budget</b></label>
+    <h4>Project Services</h4>
+    <label><b>Budget</b></label>
     <table class="table budget-table">
         <thead>
         <tr>
@@ -211,6 +212,45 @@
 
         </tfoot>
     </table>
+
+    <!-- ko with:details.services -->
+    <div id="serviceTargetsContainer">
+
+        <b class="header-with-help">Targets</b>
+
+        <table id="outputTargets" class="table">
+            <thead>
+            <tr>
+                <th class="service">Service</th>
+                <th class="score">Target Measure(s)</th>
+                <th class="target">Target</th></tr>
+            </thead>
+            <!-- ko foreach:services -->
+
+            <tbody>
+
+            <tr data-bind="foreach:targets">
+                <!-- ko if:!$index() -->
+                <td class="service" data-bind="attr:{rowspan:$parent.targets().length}">
+                    <span data-bind="text:serviceName"></span>
+                </td>
+                <!-- /ko -->
+
+                <td class="score"><span data-bind="text:score.label"></span></td>
+                <td class="target">
+                    <span data-bind="text:target"></span>
+                    <span data-bind="text:score.units"></span>
+                </td>
+
+            </tr>
+
+
+            </tbody>
+            <!-- /ko -->
+        </table>
+
+    </div>
+    <!-- /ko -->
 
     <g:if test="${risksAndThreatsVisible}">
         <g:render template="risksAndThreatsReadOnly"/>
