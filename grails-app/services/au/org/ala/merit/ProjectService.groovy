@@ -1276,8 +1276,9 @@ class ProjectService  {
                 scoreCopy.putAll(score)
                 scores?.targets?.each { String key, List outputScores ->
                     Map outputScore = outputScores?.find{it.scoreId == score.scoreId}
+
                     scoreCopy.target = outputScore?.target ?: 0
-                    scoreCopy.result = outputScore.result ?: [result:0]
+                    scoreCopy.result = outputScore?.result ?: [result:0]
 
                     deliveredAgainstTargets += scoreCopy.result?.result ?: 0
                 }

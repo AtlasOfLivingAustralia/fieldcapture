@@ -770,7 +770,7 @@ function CreateEditProjectViewModel(project, isUserEditor, userOrganisations, or
 
 
 /* data structures for handling output targets */
-Output = function (name, scores, existingTargets, root) {
+Output = function (name, scores, existingTargets, changeCallback) {
     var self = this;
     this.name = name;
     this.outcomeTarget = ko.observable(function () {
@@ -785,9 +785,8 @@ Output = function (name, scores, existingTargets, root) {
         return outcomeValue;
     }());
     this.outcomeTarget.subscribe(function() {
-        if (root.targetsEditable()) {
-            self.isSaving(true);
-            root.saveOutputTargets();
+        if (_.isFunction(changeCallback)) {
+            changeCallback(self);
         }
     });
     this.scores = $.map(scores, function (score, index) {
@@ -796,7 +795,14 @@ Output = function (name, scores, existingTargets, root) {
         if (matchingTarget) {
             targetValue = matchingTarget.target;
         }
-        return new OutputTarget(score, name, targetValue, index === 0, root);
+        var target =  new OutputTarget(score, name, targetValue, index === 0);
+        target.target.subscribe(function() {
+            if (_.isFunction(changeCallback)) {
+                changeCallback(self);
+            }
+
+        });
+        return target;
     });
     this.isSaving = ko.observable(false);
 };
@@ -817,7 +823,7 @@ Output.prototype.clearSaving = function () {
     $.each(this.scores, function (i, score) { score.isSaving(false) });
 };
 
-OutputTarget = function (score, outputName, value, isFirst, root) {
+OutputTarget = function (score, outputName, value, isFirst) {
     var self = this;
     this.outputLabel = outputName;
     this.scoreLabel = score.label;
@@ -826,12 +832,6 @@ OutputTarget = function (score, outputName, value, isFirst, root) {
     this.isFirst = isFirst;
     this.units = score.units;
     this.scoreId = score.scoreId;
-    this.target.subscribe(function() {
-        if (root.targetsEditable()) {
-            self.isSaving(true);
-            root.saveOutputTargets();
-        }
-    });
 };
 OutputTarget.prototype.toJSON = function () {
     var clone = ko.toJS(this);
@@ -997,13 +997,19 @@ function OutputTargets(activities, targets, targetsEditable, scores, config) {
         outputTargetService.saveOutputTargets(self.outputTargets());
     };
 
+    function onChange(output) {
+        if (self.targetsEditable()) {
+            output.isSaving(true);
+            self.saveOutputTargets();
+        }
+    }
     self.loadOutputTargets = function () {
         var scoresByOutputType = _.groupBy(relevantScores, function(score) {
             return score.outputType;
         });
         _.each(scoresByOutputType, function(scoresForOutputType, outputType) {
 
-            self.outputTargets.push(new Output(outputType, scoresForOutputType, targets, self));
+            self.outputTargets.push(new Output(outputType, scoresForOutputType, targets, onChange));
         });
     }();
 

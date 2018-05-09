@@ -24,7 +24,7 @@
 
         <!-- ko foreach: budget.costs -->
         <td class="budget-cell">
-            <input
+            <input type="number"
                    data-bind="value: dollar, numeric: $root.number, disable: $root.isProjectDetailsLocked()"
                    data-validation-engine="validate[custom[number]]"/>
         </td>
@@ -64,6 +64,6 @@
     </tfoot>
 </table>
 
-<b>Targets</b>
-
 <!-- /ko -->
+
+<g:render template="serviceTargets"/>
