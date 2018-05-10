@@ -24,7 +24,7 @@ function MERIPlan(project, config) {
        }
    }
 
-   self.details = new DetailsViewModel(project.custom.details, getBudgetHeaders(project), config);
+   self.details = new DetailsViewModel(project.custom.details, project, config);
    self.detailsLastUpdated = ko.observable(project.custom.details.lastUpdated).extend({simpleDate: true});
    self.isProjectDetailsSaved = ko.computed (function (){
       return (project['custom']['details'].status == 'active');
@@ -122,8 +122,9 @@ function MERIPlan(project, config) {
 
 };
 
-function DetailsViewModel(o, period, config) {
+function DetailsViewModel(o, project, config) {
    var self = this;
+   var period = getBudgetHeaders(project);
    self.status = ko.observable(o.status);
    self.obligations = ko.observable(o.obligations);
    self.policies = ko.observable(o.policies);
@@ -137,7 +138,7 @@ function DetailsViewModel(o, period, config) {
    self.lastUpdated = o.lastUpdated ? o.lastUpdated : moment().format();
    self.budget = new BudgetViewModel(o.budget, period);
    if (config.useServices) {
-       self.services = new ServicesViewModel(o.services, config.services, self.budget, o.outputTargets);
+       self.services = new ServicesViewModel(o.serviceIds, config.services, self.budget, project.outputTargets);
    }
    self.rationale = ko.observable(o.rationale);
    self.projectMethodology = ko.observable(o.projectMethodology);
@@ -150,26 +151,36 @@ function DetailsViewModel(o, period, config) {
    }));
 
    self.modelAsJSON = function() {
-      var tmp = {};
-      tmp.details =  ko.mapping.toJS(self);
+       var tmp = {};
+       tmp.details =  ko.mapping.toJS(self);
 
-      var jsData = {"custom": tmp};
-      var json = JSON.stringify(jsData, function (key, value) {
-         return value === undefined ? "" : value;
-      });
-      return json;
+       var jsData = {"custom": tmp};
+
+       // For compatibility with other projects, move the targets to the top level of the data structure, if they
+       // are in the MERI plan.
+       if (config.useServices) {
+           var serviceData = tmp.details.services.toJSON();
+           jsData.outputTargets = serviceData.targets;
+           tmp.details.serviceIds = serviceData.serviceIds;
+           delete tmp.details.services;
+       }
+
+       var json = JSON.stringify(jsData, function (key, value) {
+          return value === undefined ? "" : value;
+       });
+       return json;
    };
 };
 
-function ServicesViewModel(projectServices, allServices, budgetViewModel) {
+function ServicesViewModel(serviceIds, allServices, budgetViewModel, outputTargets) {
     var self = this;
 
-    if (!projectServices) {
-        projectServices = {
-            serviceIds: [],
-            targets:[]
-        };
-    }
+    // Output targets are not stored inside the MERI plan for compatibility with other MERIT projects.
+    var serviceModel = {
+        serviceIds: serviceIds || [],
+        targets: outputTargets || []
+    };
+
 
     var ServiceTarget = function(service, score, currentTarget) {
         var target = this;
@@ -179,7 +190,7 @@ function ServicesViewModel(projectServices, allServices, budgetViewModel) {
 
         target.toJSON = function() {
             return {
-              projectTarget:target.target(),
+              target:target.target(),
               scoreId:score.scoreId
             };
         };
@@ -203,11 +214,11 @@ function ServicesViewModel(projectServices, allServices, budgetViewModel) {
                 if (selectedService) {
                     _.each(selectedService.scores, function(score) {
                         var target = 0;
-                        var existingTarget = _.find(projectServices.targets, function(target) {
+                        var existingTarget = _.find(serviceModel.targets, function(target) {
                             return target.scoreId == score.scoreId;
                         });
-                        if (existingTarget && existingTarget.projectTarget) {
-                            target = existingTarget.projectTarget;
+                        if (existingTarget && existingTarget.target) {
+                            target = existingTarget.target;
                         }
                         row.targets.push(new ServiceTarget(selectedService.name, score, target));
                     });
@@ -235,9 +246,9 @@ function ServicesViewModel(projectServices, allServices, budgetViewModel) {
         self.services.remove(service);
     };
 
-    if (projectServices.serviceIds.length != budgetViewModel.rows().length) {
+    if (serviceModel.serviceIds.length != budgetViewModel.rows().length) {
         budgetViewModel.rows([]);
-        projectServices.serviceIds = [];
+        serviceModel.serviceIds = [];
     }
 
     /** Enforces that each service is only selected once in the table.  Ensures that the currently selected
@@ -250,8 +261,8 @@ function ServicesViewModel(projectServices, allServices, budgetViewModel) {
         });
     };
 
-    for (var i=0; i<projectServices.serviceIds.length; i++) {
-        self.services.push(new ServiceRow(projectServices.serviceIds[i], i));
+    for (var i=0; i<serviceModel.serviceIds.length; i++) {
+        self.services.push(new ServiceRow(serviceModel.serviceIds[i], i));
     }
 
     self.outputTargets = function() {
