@@ -50,7 +50,7 @@ class ActivityController {
 
         if (model.activity.type == 'Prototype 2') {
 
-            List projectServices = model.project?.custom?.details?.services.serviceIds
+            List projectServices = model.project?.custom?.details?.services?.serviceIds
             if (projectServices) {
                 List services = metadataService.getProjectServices()
                 List serviceOutputs = services.findAll{it.id in projectServices}.collect{it.output}
