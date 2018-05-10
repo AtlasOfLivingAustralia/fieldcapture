@@ -1322,8 +1322,6 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
     };
 
     self.initialiseReports = function() {
-        var serviceTargetsViewModel = new ServiceTargets(project.services, project.outputTargets, true, config);
-        ko.applyBindings(serviceTargetsViewModel, document.getElementById('serviceTargetsContainer'));
     };
 
 } // end of view model
