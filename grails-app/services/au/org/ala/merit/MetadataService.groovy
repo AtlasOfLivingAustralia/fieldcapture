@@ -335,7 +335,7 @@ class MetadataService {
 
             List scores = getScores(false)
             services.each { service ->
-                service.scores = scores.findAll{it.scoreId in service.scoreIds}
+                service.scores = new JSONArray(scores.findAll{it.scoreId in service.scoreIds})
             }
 
             grailsCacheManager.getCache(PROJECT_SERVICES_CACHE_REGION).put(PROJECT_SERVICES_CACHE_REGION, services)
