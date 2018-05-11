@@ -227,9 +227,9 @@
             </thead>
             <!-- ko foreach:services -->
 
-            <tbody>
+            <tbody data-bind="foreach:targets">
 
-            <tr data-bind="foreach:targets">
+            <tr>
                 <!-- ko if:!$index() -->
                 <td class="service" data-bind="attr:{rowspan:$parent.targets().length}">
                     <span data-bind="text:serviceName"></span>
