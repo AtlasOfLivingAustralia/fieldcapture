@@ -1107,7 +1107,6 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
 
     _.extend(this, new ProjectViewModel(project, userRoles.editor, organisations));
     _.extend(this, new MERIPlan(project, config));
-    _.extend(this, new Risks(project.risks, config.risksStorageKey));
     _.extend(this, new MERIPlanActions(project, _.extend({}, fcConfig, {declarationModalSelector:'#unlockPlan'})));
 
     self.workOrderId = ko.observable(project.workOrderId);
@@ -1201,6 +1200,8 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
     self.saveProject = function(enableSubmit){
         if ($('#project-details-validation').validationEngine('validate')) {
             self.details.status('active');
+
+            self.risks.saveWithErrorDetection(function() {});
             self.details.saveWithErrorDetection(function() {
                 if(enableSubmit) {
                     self.submitChanges();

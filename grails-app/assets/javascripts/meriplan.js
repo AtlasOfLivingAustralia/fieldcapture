@@ -23,8 +23,8 @@ function MERIPlan(project, config) {
           }
        }
    }
-
-   self.details = new DetailsViewModel(project.custom.details, project, config);
+    _.extend(self, new Risks(project.risks, config.risksStorageKey));
+   self.details = new DetailsViewModel(project.custom.details, project, self.risks, config);
    self.detailsLastUpdated = ko.observable(project.custom.details.lastUpdated).extend({simpleDate: true});
    self.isProjectDetailsSaved = ko.computed (function (){
       return (project['custom']['details'].status == 'active');
@@ -122,7 +122,7 @@ function MERIPlan(project, config) {
 
 };
 
-function DetailsViewModel(o, project, config) {
+function DetailsViewModel(o, project, risks, config) {
    var self = this;
    var period = getBudgetHeaders(project);
    self.status = ko.observable(o.status);
@@ -160,6 +160,8 @@ function DetailsViewModel(o, project, config) {
        // are in the MERI plan.
        if (config.useServices) {
            var serviceData = tmp.details.services.toJSON();
+           jsData.risks = ko.mapping.toJS(risks);
+
            jsData.outputTargets = serviceData.targets;
            tmp.details.serviceIds = serviceData.serviceIds;
            delete tmp.details.services;

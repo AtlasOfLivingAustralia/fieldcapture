@@ -1248,7 +1248,7 @@ class ProjectService  {
         Map project = get(projectId, 'flat')
         List<Map> allServices = metadataService.getProjectServices()
 
-        List projectServices = allServices?.findAll {it.name in project.services }
+        List projectServices = allServices?.findAll {it.id in project.custom?.details?.serviceIds }
 
         projectServices
     }
@@ -1261,7 +1261,7 @@ class ProjectService  {
      * ]
      */
     Map getServiceDashboardData(String projectId) {
-        Map scores = summary(projectId)
+        Map scoreSummary = summary(projectId)
         List<Map> projectServices = getServiceScoresForProject(projectId)
 
         Map dashboard = [services:[], planning:false]
@@ -1274,14 +1274,13 @@ class ProjectService  {
             service.scores.each { Map score ->
                 Map scoreCopy = [:]
                 scoreCopy.putAll(score)
-                scores?.targets?.each { String key, List outputScores ->
-                    Map outputScore = outputScores?.find{it.scoreId == score.scoreId}
 
-                    scoreCopy.target = outputScore?.target ?: 0
-                    scoreCopy.result = outputScore?.result ?: [result:0]
+                Map scoreData = findScore(score.scoreId, scoreSummary?.targets)
+                scoreCopy.target = scoreData?.target ?: 0
+                scoreCopy.result = scoreData?.result ?: [result:0]
 
-                    deliveredAgainstTargets += scoreCopy.result?.result ?: 0
-                }
+                deliveredAgainstTargets += scoreCopy.result?.result ?: 0
+
                 copy.scores << scoreCopy
             }
             dashboard.services << copy
@@ -1289,5 +1288,14 @@ class ProjectService  {
         // Once more than one target has been delivered against, the project is considered to be out of planning mode.
         dashboard.planning = deliveredAgainstTargets < 2
         dashboard
+    }
+
+    private Map findScore(String scoreId, Map scoresWithTargets) {
+        Map scoreData = null
+        scoresWithTargets?.find { String key, List outputScores ->
+            scoreData = outputScores?.find{it.scoreId == scoreId}
+        }
+
+        scoreData
     }
 }
