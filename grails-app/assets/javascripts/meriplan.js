@@ -131,7 +131,7 @@ function DetailsViewModel(o, project, risks, config) {
    self.caseStudy = ko.observable(o.caseStudy ? o.caseStudy : false);
    self.keq = new GenericViewModel(o.keq);
    self.objectives = new ObjectiveViewModel(o.objectives); // Used in original MERI plan template
-   self.outcomes = new OutcomesViewModel(o.outcomes); // Use in new MERI plan template
+   self.outcomes = new OutcomesViewModel(o.outcomes, project); // Use in new MERI plan template
    self.priorities = new GenericViewModel(o.priorities);
    self.implementation = new ImplementationViewModel(o.implementation);
    self.partnership = new GenericViewModel(o.partnership);
@@ -371,7 +371,7 @@ function ObjectiveViewModel(o) {
  * Categories project outcomes into primary, secondary, mid-term and short-term outcomes.
  * @param outcomes existing outcome data, if any.
  */
-function OutcomesViewModel(outcomes) {
+function OutcomesViewModel(outcomes, project) {
     var self = this;
     if (!outcomes) {
         outcomes = {};
@@ -390,6 +390,31 @@ function OutcomesViewModel(outcomes) {
             description:null, assets:[]
         }];
     }
+
+    self.selectableOutcomes = _.map(project.outcomes, function(outcome) {
+        return outcome.outcome;
+    });
+
+    self.outcomePriorities = function(outcomeText) {
+
+        var outcome = _.find(project.outcomes, function(outcome) {
+            return outcome.outcome == outcomeText;
+        });
+        if (!outcome) {
+            return [];
+        }
+        var priorities = [];
+        _.each(project.priorities, function(priority) {
+            _.each(outcome.priorities, function(outcomePriority) {
+                if (priority.category == outcomePriority.category) {
+                    priorities.push(priority.priority);
+                }
+            });
+
+        });
+        return priorities;
+    };
+
     self.primaryOutcome = { description: ko.observable(outcomes.primaryOutcome.description),
                             asset: ko.observable(outcomes.primaryOutcome.asset)};
     self.secondaryOutcomes = ko.observableArray(_.map(outcomes.secondaryOutcomes || [], outcomeToViewModel));

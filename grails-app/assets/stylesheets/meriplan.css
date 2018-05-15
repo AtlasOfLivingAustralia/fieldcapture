@@ -107,3 +107,8 @@ table tr.header th {
     width: 20%;
 }
 
+.meri-plan td .select2.select2-container {
+    width: 100% !important;
+}
+
+

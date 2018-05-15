@@ -14,22 +14,11 @@
         <tr>
             <td class="index">1</td>
             <td class="outcome-priority">
-                <select data-validation-engine="validate[required]" data-bind="value:details.outcomes.primaryOutcome.asset, optionsCaption: 'Please select', disable: isProjectDetailsLocked()" >
-                    <g:each in="${config.outcomes}" var="outcome">
-                       <option>${outcome}</option>
-
-                    </g:each>
+                <select data-validation-engine="validate[required]" data-bind="options:details.outcomes.selectableOutcomes, value:details.outcomes.primaryOutcome.description, optionsCaption: 'Please select', disable: isProjectDetailsLocked()" >
                 </select>
             </td>
             <td colspan="2" class="priority">
-                <select class="asset" data-validation-engine="validate[required]" data-bind="value:details.outcomes.primaryOutcome.asset, optionsCaption: 'Please select', disable: isProjectDetailsLocked()" >
-                    <g:each in="${config.assets.groupBy{a -> a.category}}" var="category">
-                        <optgroup label="${category.key}">
-                            <g:each in="${category.value}" var="asset">
-                                <option>${asset.asset}</option>
-                            </g:each>
-                        </optgroup>
-                    </g:each>
+                <select style="width:100%" class="asset" data-validation-engine="validate[required]" data-bind="options:details.outcomes.outcomePriorities(details.outcomes.primaryOutcome.description()), optionsCaption: 'Please select', value:details.outcomes.primaryOutcome.asset, disable: isProjectDetailsLocked()" >
                 </select>
             </td>
         </tr>
@@ -51,12 +40,10 @@
         <tr>
             <td class="index" data-bind="text:$index()+1"></td>
             <td class="outcome-priority"><select
-                    data-bind="value:description, options: $root.projectThemes, optionsCaption: 'Please select', disable: $root.isProjectDetailsLocked()"></select>
+                    data-bind="value:description, options: $parent.details.outcomes.selectableOutcomes, optionsCaption: 'Please select', disable: $root.isProjectDetailsLocked()"></select>
             </td>
             <td class="priority">
-                <multi-input params="values:assets">
-                    <input type="text" data-bind="value:val, disable: $root.isProjectDetailsLocked()" class="input-large asset">
-                </multi-input>
+                <select multiple="multiple" data-bind="options:$root.details.outcomes.outcomePriorities(description()), multiSelect2:{value:assets, tags:false}, disable: $root.isProjectDetailsLocked()" class="input-large asset"></select>
             </td>
             <td class="remove">
                 <span data-bind="if:!$parent.isProjectDetailsLocked()">

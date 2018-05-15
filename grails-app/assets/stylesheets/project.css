@@ -7,6 +7,7 @@
 *= require jquery-gantt/css/style.css
 *= require gantt.css
 *= require meriplan.css
+*= require select2/4.0.3/css/select2
 *= require_self
 */
 
