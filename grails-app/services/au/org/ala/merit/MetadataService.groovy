@@ -324,8 +324,8 @@ class MetadataService {
     }
 
     List<Map> getProjectServices() {
-        List<Map> services = grailsCacheManager.getCache(PROJECT_SERVICES_CACHE_REGION).get(PROJECT_SERVICES_CACHE_REGION)?.get()
-        if (!services) {
+        cacheService.get(PROJECT_SERVICES_KEY, {
+            List services
             String servicesJson = settingService.getSettingText(SettingPageType.SERVICES)
             if (servicesJson) {
                 services = JSON.parse(servicesJson)
@@ -339,9 +339,8 @@ class MetadataService {
                 service.scores = new JSONArray(scores.findAll{it.outputType == service.output})
             }
 
-            grailsCacheManager.getCache(PROJECT_SERVICES_CACHE_REGION).put(PROJECT_SERVICES_CACHE_REGION, services)
-        }
-        services
+            services
+        })
     }
 
 
