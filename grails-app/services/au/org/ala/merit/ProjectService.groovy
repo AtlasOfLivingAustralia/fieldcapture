@@ -703,8 +703,8 @@ class ProjectService  {
                     outcomes:[]
             ]
             programConfig.optionalProjectContent = ['MERI Plan', 'Risks and Threats']
-            programConfig.assets = program.assets ?: [[category:'Ramsar', asset:'asset 1'], [category:'Threatened Species', asset:'asset 2']]
-            programConfig.outcomes = program.outcomes ?: ['Outcome 1', 'Outcome 2', 'Outcome']
+            programConfig.priorities = program.priorities ?: [[category:'Ramsar', asset:'asset 1'], [category:'Threatened Species', asset:'asset 2']]
+            programConfig.outcomes = program.outcomes ?: ['Outcome 1':'', 'Outcome 2':'', 'Outcome 3':'']
             programConfig.themes = program.themes ?: []
         }
         else {

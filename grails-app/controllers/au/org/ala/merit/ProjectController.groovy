@@ -3,6 +3,8 @@ package au.org.ala.merit
 import au.org.ala.merit.command.ProjectSummaryReportCommand
 import au.org.ala.merit.command.ReportCommand
 import grails.converters.JSON
+import org.codehaus.groovy.grails.web.json.JSONArray
+import org.codehaus.groovy.grails.web.json.JSONObject
 import org.joda.time.DateTime
 
 class ProjectController {
@@ -109,9 +111,10 @@ class ProjectController {
     }
 
     protected Map projectContent(Map project, user, String template, Map config) {
-        project.themes = config.themes ?: []
+        project.themes = new JSONArray(config.themes ?: [])
         project.assets = config.assets ?: []
-        project.outcomes = config.outcomes ?: []
+        project.priorities = new JSONArray(config.priorities ?: [])
+        project.outcomes = new JSONArray(config.outcomes ?: [])
 
         def meriPlanVisible = metadataService.isOptionalContent('MERI Plan', config)
         def risksAndThreatsVisible = metadataService.isOptionalContent('Risks and Threats', config)
