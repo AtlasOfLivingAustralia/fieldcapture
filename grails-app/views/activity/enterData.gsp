@@ -244,13 +244,20 @@
             window.onunload = unlockActivity;
         }
 
-        var master = new Master(activity.activityId, {activityUpdateUrl: fcConfig.activityUpdateUrl});
+        var metaModel = ${metaModel};
+        var minOptionalSections = 1;
+        if (!_.isUndefined(metaModel.minOptionalSectionsCompleted)) {
+            minOptionalSections = metaModel.minOptionalSectionsCompleted;
+        }
+        var master = new Master(activity.activityId,
+            {activityUpdateUrl: fcConfig.activityUpdateUrl,
+                minOptionalSectionsCompleted: minOptionalSections});
 
         var site = null;
     <g:if test="${site}">
         site = JSON.parse('${(site as JSON).toString().encodeAsJavaScript()}');
     </g:if>
-        var metaModel = ${metaModel};
+
         var themes = ${themes};
         var mapFeatures = $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
         var viewModel = new ActivityHeaderViewModel(activity, site, fcConfig.project, metaModel, themes);
