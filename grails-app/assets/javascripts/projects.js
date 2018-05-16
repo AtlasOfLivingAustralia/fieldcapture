@@ -11,7 +11,7 @@
 //= require jquery.columnizer/jquery.columnizer.js
 //= require jquery-gantt/js/jquery.fn.gantt.js
 //= require knockout-repeat/2.1/knockout-repeat.js
-//= require attach-document.js
+//= require attach-document-no-ui.js
 //= require jquery.fileDownload/jQuery.fileDownload
 //= require meriplan.js
 //= require risks.js
@@ -19,6 +19,8 @@
 //= require activity.js
 //= require projectActivityPlan.js
 //= require projectActivity.js
+//= require select2/4.0.3/js/select2.full
+//= require forms-knockout-bindings.js
 //= require_self
 
 /*
@@ -657,9 +659,18 @@ function ProjectViewModel(project, isUserEditor, organisations) {
     }
 };
 
-function newDocumentDefaults(project) {
+function newDocumentDefaults(project, stageReportPrefix) {
     var reports = project.reports || [];
-    var maxStages = reports.length;
+    var stageRegexp = new RegExp(stageReportPrefix+'(\d+)');
+    var stageCount = 0;
+    for (var i=0; i<reports.length; i++) {
+        var match = stageRegexp.exec(reports[i].name);
+        if (match) {
+            stageCount++;
+        }
+    }
+
+    var maxStages = stageCount;
     var currentStage  = findStageFromDate(reports, new Date().toISOStringNoMillis());
     currentStage = stageNumberFromStage(currentStage);
 

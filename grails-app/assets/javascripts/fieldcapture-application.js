@@ -1151,7 +1151,7 @@ $(function() {
 });
 
 function stageNumberFromStage(stage) {
-    var stageRegexp = /Stage (\d+)/;
+    var stageRegexp = /.+ (\d+)/;
     var match = stageRegexp.exec(stage);
     if (match) {
         stage = match[1];

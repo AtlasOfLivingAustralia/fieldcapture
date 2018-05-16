@@ -17,7 +17,8 @@ var Master = function (activityId, config) {
     var defaults = {
         validationContainerSelector:'#validation-container',
         timeoutMessageSelector:'#timeoutMessage',
-        activityUpdateUrl:fcConfig.activityUpdateUrl
+        activityUpdateUrl:fcConfig.activityUpdateUrl,
+        minOptionalSectionsCompleted: 1
     };
     var options = _.extend({}, defaults, config);
 
@@ -93,7 +94,8 @@ var Master = function (activityId, config) {
                     warnings = warnings.concat(obj.model.checkWarnings());
                 }
             });
-            if (optionalCount > 1 && notCompletedCount == optionalCount) {
+            var completed = optionalCount - notCompletedCount;
+            if (optionalCount > 1 && completed < config.minOptionalSectionsCompleted) {
                 valid = false;
                 bootbox.alert("<p>To 'Save changes', the mandatory fields of at least one section of this form must be completed.</p>"+
                     "<p>If all sections are 'Not applicable' please contact your grant manager to discuss alternate form options</p>");
