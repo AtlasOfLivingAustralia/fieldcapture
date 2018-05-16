@@ -65,7 +65,7 @@ class ProgramController {
 
         [about   : [label: 'Management Unit', visible: true, stopBinding: false, type: 'tab'],
          dashboard: [label: 'Dashboard', visible: true, stopBinding: true, type: 'tab', servicesDashboard:[planning:false, services:servicesWithScores], template:'/project/serviceDashboard'],
-         projects: [label: 'Work Order', visible: true, stopBinding: false, type:'tab', projects:projects, reports:program.reports?:[], adHocReportTypes:adHocReportTypes],
+         projects: [label: 'Work Order', visible: true, stopBinding: false, type:'tab', projects:projects, reports:program.reports?:[], adHocReportTypes:adHocReportTypes, hideDueDate:true],
          sites   : [label: 'Sites', visible: true, stopBinding: true, type:'tab'],
          admin   : [label: 'Admin', visible: hasAdminAccess, type: 'tab']]
     }
