@@ -20,6 +20,7 @@ class ProgramController {
     // Simply forwards to the list view
     def list() {}
 
+    @PreAuthorise(accessLevel='siteAdmin')
     def index(String id) {
         def program = programService.get(id)
 
@@ -105,13 +106,14 @@ class ProgramController {
         }
     }
 
-    def ajaxUpdate() {
+    @PreAuthorise(accessLevel = 'admin')
+    def ajaxUpdate(String id) {
         def programDetails = request.JSON
 
         def documents = programDetails.remove('documents')
         def links = programDetails.remove('links')
 
-        String programId = programDetails?.programId ?: ''
+        String programId = id ?: ''
         Map result = programService.update(programId, programDetails)
 
         programId = programId ?: result.resp?.programId

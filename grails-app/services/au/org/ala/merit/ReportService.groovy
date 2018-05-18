@@ -56,8 +56,9 @@ class ReportService {
      * @param periodInMonths the reporting period for each report (from fromDate to toDate)
      * @param alignToCalendar whether we want reports aligned to the calendar or not.
      * @param weekDaysToCompleteReport used to set the due date for the report
+     * @param ownerName used as a parameter when evaluating the report name and description
      */
-    private void regenerateReportsFromDate(List reports, int startIndex, Map prototypeReport, String firstReportEnd, String periodStart, String periodEnd, Integer periodInMonths = 6, Integer weekDaysToCompleteReport = null) {
+    private void regenerateReportsFromDate(List reports, int startIndex, Map prototypeReport, String firstReportEnd, String periodStart, String periodEnd, Integer periodInMonths = 6, Integer weekDaysToCompleteReport = null, String ownerName = "") {
         log.info "regenerateReportsFromDate: ${reports.size()}, ${startIndex}, ${firstReportEnd}, ${periodStart}, ${periodEnd}"
 
         if (reports.findIndexOf(startIndex, {isSubmittedOrApproved(it)}) >= startIndex) {
@@ -79,8 +80,8 @@ class ReportService {
             report.putAll([
                     fromDate:DateUtils.format(reportInterval.start.withZone(DateTimeZone.UTC)),
                     toDate:DateUtils.format(reportInterval.end.withZone(DateTimeZone.UTC)),
-                    name:sprintf(prototypeReport.name, (index+1), reportInterval.start.toDate(), reportInterval.end.toDate()),
-                    description:sprintf(prototypeReport.description, (index+1), reportInterval.start.toDate(), reportInterval.end.toDate())
+                    name:sprintf(prototypeReport.name, (index+1), reportInterval.start.toDate(), reportInterval.end.toDate(), ownerName),
+                    description:sprintf(prototypeReport.description, (index+1), reportInterval.start.toDate(), reportInterval.end.toDate(), ownerName)
             ])
 
             if (weekDaysToCompleteReport) {
@@ -113,7 +114,7 @@ class ReportService {
         log.info("***********")
     }
 
-    void regenerateAllReports(List reports, Map prototypeReport, String periodStart, String periodEnd, Integer periodInMonths = 6, boolean alignToCalendar = false, Integer weekDaysToCompleteReport = null) {
+    void regenerateAllReports(List reports, Map prototypeReport, String periodStart, String periodEnd, Integer periodInMonths = 6, boolean alignToCalendar = false, Integer weekDaysToCompleteReport = null, String ownerName = "") {
 
         // Ensure the reports are sorted in Date order
         reports = (reports?:[]).sort{it.toDate}
@@ -136,7 +137,7 @@ class ReportService {
             }
         }
 
-        regenerateReportsFromDate(reports, Math.max(index+1, 0), prototypeReport, DateUtils.format(periodStartDate.plus(period)), startISODate, periodEnd, periodInMonths, weekDaysToCompleteReport)
+        regenerateReportsFromDate(reports, Math.max(index+1, 0), prototypeReport, DateUtils.format(periodStartDate.plus(period)), startISODate, periodEnd, periodInMonths, weekDaysToCompleteReport, ownerName)
 
     }
 
@@ -153,11 +154,11 @@ class ReportService {
         Map prototype = [
                 type:'Activity',
                 projectId:projectId,
-                name:"Stage %1d",
-                description: "Stage %1d for ${project.name}"
+                name:"Stage %1\$d",
+                description: "Stage %1\$d for %4\$s"
         ]
 
-        regenerateAllReports(project.reports ?: [], prototype, project.plannedStartDate, project.plannedEndDate, periodInMonths,alignToCalendar, weekDaysToCompleteReport)
+        regenerateAllReports(project.reports ?: [], prototype, project.plannedStartDate, project.plannedEndDate, periodInMonths ?: 6,alignToCalendar, weekDaysToCompleteReport, project.name)
     }
 
     /**

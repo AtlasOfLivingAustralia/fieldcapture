@@ -14,7 +14,8 @@
             editReportUrl:"${createLink(action:"editReport", id:program.programId)}",
             approveReportUrl:'',
             submitReportUrl:'',
-            rejectReportUrl:''
+            rejectReportUrl:'',
+            programSaveUrl: "${createLink(action:'ajaxUpdate', id:program.programId)}"
         };
     </script>
     <asset:stylesheet src="common-bs4.css"/>
@@ -66,7 +67,7 @@
     $(function () {
 
         var program =<fc:modelAsJavascript model="${program}"/>;
-        var programViewModel = new ProgramViewModel(program);
+        var programViewModel = new ProgramPageViewModel(program, fcConfig);
 
         ko.applyBindings(programViewModel);
         $('#loading').hide();
