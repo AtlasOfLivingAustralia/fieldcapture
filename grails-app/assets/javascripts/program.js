@@ -110,9 +110,49 @@ ProgramViewModel = function (props, options) {
             }
         });
 
+
+
+    return self;
+};
+
+var ProgramPageViewModel = function(props, options) {
+    var self = this;
+    _.extend(self, new ProgramViewModel(props, options));
+
+
+    console.log(props.config);
+    self.config = ko.observable(vkbeautify.json(props.config));
+    self.firstMilestoneDate = ko.observable();
+    self.milestonePeriod = ko.observable();
+    self.coreServicesPeriod = ko.observable();
+
+    self.saveProgramConfiguration = function() {
+        var config = self.config();
+
+        try {
+            config = JSON.parse(config);
+        }
+        catch (e) {
+            bootbox.alert("Invalid JSON");
+            return;
+        }
+
+        var json = {config: config};
+        $.ajax({
+            url: options.programSaveUrl,
+            type: 'POST',
+            data: JSON.stringify(json),
+            dataType:'json',
+            contentType: 'application/json'
+        }).done(function () {
+            bootbox.alert("Program configuration saved");
+        }).fail(function() {
+            bootbox.alert("Save failed");
+        });
+    };
+
     var tabs = {
         'about': {
-
             initialiser: function () {}
         },
         'projects': {
@@ -132,8 +172,6 @@ ProgramViewModel = function (props, options) {
             }
         }
     };
+
     initialiseTabs(tabs, {tabSelector:'#program-tabs.nav a', tabStorageKey:'selected-program-tab'});
-
-    return self;
-
 };

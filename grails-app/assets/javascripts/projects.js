@@ -664,9 +664,8 @@ function newDocumentDefaults(project, stageReportPrefix) {
     var stageRegexp = new RegExp(stageReportPrefix+'(\d+)');
     var stageCount = 0;
     for (var i=0; i<reports.length; i++) {
-        var match = stageRegexp.exec(reports[i].name);
-        if (match) {
-            stageCount++;
+        if (reports[i].type == 'Activity') {
+            stageCount++
         }
     }
 

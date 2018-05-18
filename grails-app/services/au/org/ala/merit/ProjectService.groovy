@@ -3,8 +3,10 @@ package au.org.ala.merit
 import grails.converters.JSON
 import org.apache.commons.lang.CharUtils
 import org.apache.http.HttpStatus
+import org.joda.time.DateTime
 import org.joda.time.Days
 import org.joda.time.Interval
+import org.joda.time.Period
 import org.springframework.cache.annotation.Cacheable
 
 import java.text.SimpleDateFormat
@@ -677,31 +679,10 @@ class ProjectService  {
 
         Map programConfig
 
-        /** TODO allow this to be configured properly */
         if (project.programId) {
             Map program = programService.get(project.programId)
-            programConfig = [
-                    projectTemplate:'nrm2',
-                    reports:[[
-                        type:ReportService.REPORT_TYPE_SINGLE_ACTIVITY,
-                        activityType:'Prototype 2',
-                        period:6,
-                        firstReportingDate: project.plannedStartDate,
-                        reportNameTemplate: "Milestone %d",
-                        reportDescriptionTemplate: "Milestone %d for ${project.name}",
-                    ],
-                    [
-                        type:ReportService.REPORT_TYPE_SINGLE_ACTIVITY,
-                        activityType:'NRM2 Annual Report',
-                        period:12,
-                        alignToCalendar: true,
-                        reportNameTemplate: 'Annual Report %2$tY - %3$tY',
-                        reportDescriptionTemplate: "Annual Report %2\$tY - %3\$tY for ${project.name}"
-                    ]],
-                    services: metadataService.getProjectServices(),
-                    assets:[],
-                    outcomes:[]
-            ]
+            programConfig = program.config
+            programConfig.services = metadataService.getProjectServices()
             programConfig.optionalProjectContent = ['MERI Plan', 'Risks and Threats']
             programConfig.priorities = program.priorities ?: []
             programConfig.outcomes = program.outcomes ?: []
@@ -709,7 +690,7 @@ class ProjectService  {
         }
         else {
             programConfig = metadataService.getProgramConfiguration(project.associatedProgram, project.associatedSubProgram)
-            programConfig.reports = [
+            programConfig.projectReports = [
                     [
                             type:ReportService.REPORT_TYPE_STAGE_REPORT,
                             period: programConfig.period,
@@ -726,11 +707,18 @@ class ProjectService  {
     }
 
     private void generateProjectReports(Map reportConfig, Map project) {
-        def period = reportConfig.period
+        int DEFAULT_REPORTING_PERIOD = 6
+        def period = reportConfig.period ?: DEFAULT_REPORTING_PERIOD
         if (period) {
             period = period as Integer
         }
         boolean alignedToCalendar = reportConfig.reportingPeriodAlignedToCalendar ?: false
+
+        String startDate = project.plannedStartDate
+        if (reportConfig.firstReportDueDate) {
+            DateTime firstDueDate = DateUtils.parse(reportConfig.firstReportPeriodEnd)
+            startDate = DateUtils.format(firstDueDate.minus(Period.months(period)))
+        }
 
         List reportsOfType = project.reports?.findAll{it.type == reportConfig.type && it.activityType == reportConfig.activityType}
         Map prototypeReport = [
@@ -740,7 +728,7 @@ class ProjectService  {
                 description:reportConfig.reportDescriptionTemplate,
                 projectId:project.projectId
         ]
-        reportService.regenerateAllReports(reportsOfType, prototypeReport, project.plannedStartDate, project.plannedEndDate, period, alignedToCalendar, reportConfig.weekDaysToCompleteReport)
+        reportService.regenerateAllReports(reportsOfType, prototypeReport, startDate, project.plannedEndDate, period, alignedToCalendar, reportConfig.weekDaysToCompleteReport, project.name)
 
     }
 
@@ -748,9 +736,9 @@ class ProjectService  {
         def project = get(projectId)
         def programConfig = getProgramConfiguration(project)
 
-        if (programConfig.reports) {
+        if (programConfig.projectReports) {
 
-            programConfig.reports.each {reportConfig ->
+            programConfig.projectReports.each {reportConfig ->
                 generateProjectReports(reportConfig, project)
             }
         }

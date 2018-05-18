@@ -2,7 +2,10 @@
     <div class="nav flex-column nav-pills col-3">
         <a class="nav-link active" data-toggle="pill" href="#edit-program-details" role="tab">Edit</a>
         <a class="nav-link" data-toggle="pill" href="#program-permissions" role="tab">Permissions</a>
-
+        <a class="nav-link" data-toggle="pill" href="#reporting" role="tab">Reporting</a>
+        <g:if test="${fc.userIsAlaOrFcAdmin()}">
+            <a class="nav-link" data-toggle="pill" href="#config" role="tab">Configuration</a>
+        </g:if>
     </div>
 
     <div class="tab-content col-9">
@@ -49,5 +52,33 @@
                     entityId          : program.programId, user: user]"/>
 
         </div>
+
+        <div class="tab-pane" id="reporting">
+            <form>
+                <div class="form-group">
+                    <label for="first-reporting-date">Date first milestone report is due</label>
+                    <fc:datePicker class="form-control" targetField="firstMilestoneDate" id="first-reporting-date"/>
+
+                </div>
+                <div class="form-group">
+                    <label for="milestone-reporting-period">Reporting period (months)</label>
+                    <input type="number" class="form-control" id="milestone-reporting-period">
+
+                </div>
+                <div class="form-group">
+                    <label for="core-services-reporting-period">Core services reporting period (months)</label>
+                    <input type="number" class="form-control" id="core-services-reporting-period">
+                </div>
+            </form>
+        </div>
+        <g:if test="${fc.userIsAlaOrFcAdmin()}">
+        <div class="tab-pane" id="config">
+            <h4 style="display:inline-block">Program configuration</h4> <button class="btn btn-success float-right" data-bind="click:saveProgramConfiguration">Save Configuration</button>
+
+            <textarea rows="80" style="width:100%" data-bind="value:config">
+
+            </textarea>
+        </div>
+        </g:if>
     </div>
 </div>
