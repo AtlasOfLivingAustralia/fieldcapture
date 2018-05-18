@@ -158,8 +158,12 @@ class ActivityController {
 
             Map programConfig = projectService.getProgramConfiguration(model.project)
             // Temporary until we add this to the program config.
-            programConfig.requiresActivityLocking = programConfig.name == 'Reef 2050 Plan Action Reporting'
-            programConfig.navigationMode = (programConfig.name == 'Reef 2050 Plan Action Reporting' || programConfig.name == 'ESP Test') ? 'returnToProject' : 'stayOnPage'
+            if (programConfig.requiredActivityLocking == null) {
+                programConfig.requiresActivityLocking = programConfig.name == 'Reef 2050 Plan Action Reporting'
+            }
+            if (programConfig.navigationMode == null) {
+                programConfig.navigationMode = (programConfig.name == 'Reef 2050 Plan Action Reporting' || programConfig.name == 'ESP Test') ? 'returnToProject' : 'stayOnPage'
+            }
 
             model.locked = activity.lock != null
             if (!activity.lock && programConfig.requiresActivityLocking) {
