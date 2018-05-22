@@ -52,7 +52,8 @@ class ProjectService  {
     static final String PLAN_SUBMITTED = 'submitted'
     static final String PLAN_UNLOCKED = 'unlocked for correction'
 
-    def webService, grailsApplication, siteService, activityService, emailService, documentService, userService, metadataService, settingService, reportService, auditService, speciesService, programService
+    def webService, grailsApplication, siteService, activityService, emailService, documentService, userService, metadataService, settingService, reportService, auditService, speciesService
+    ProjectConfigurationService projectConfigurationService
 
     def list(brief = false, citizenScienceOnly = false) {
         def params = brief ? '?brief=true' : ''
@@ -676,48 +677,27 @@ class ProjectService  {
     }
 
     Map getProgramConfiguration(Map project) {
-
-        Map programConfig
-
-        if (project.programId) {
-            Map program = programService.get(project.programId)
-            programConfig = program.config
-            programConfig.services = metadataService.getProjectServices()
-            programConfig.optionalProjectContent = ['MERI Plan', 'Risks and Threats']
-            programConfig.priorities = program.priorities ?: []
-            programConfig.outcomes = program.outcomes ?: []
-            programConfig.themes = program.themes ?: []
-        }
-        else {
-            programConfig = metadataService.getProgramConfiguration(project.associatedProgram, project.associatedSubProgram)
-            programConfig.projectReports = [
-                    [
-                            type:ReportService.REPORT_TYPE_STAGE_REPORT,
-                            period: programConfig.period,
-                            alignToCalendar: programConfig.alignToCalendar,
-                            reportNameTemplate: "Stage %1d",
-                            reportDescriptionTemplate: "Stage %1d for ${project.name}"
-                    ]
-            ]
-
-        }
-
-        programConfig
-
+        projectConfigurationService.getProjectConfiguration(project)
     }
 
-    private void generateProjectReports(Map reportConfig, Map project) {
+    void generateProjectReports(Map reportConfig, Map project) {
         int DEFAULT_REPORTING_PERIOD = 6
         def period = reportConfig.period ?: DEFAULT_REPORTING_PERIOD
-        if (period) {
-            period = period as Integer
-        }
+        period = period as Integer
+
         boolean alignedToCalendar = reportConfig.reportingPeriodAlignedToCalendar ?: false
 
         String startDate = project.plannedStartDate
-        if (reportConfig.firstReportDueDate) {
-            DateTime firstDueDate = DateUtils.parse(reportConfig.firstReportPeriodEnd)
-            startDate = DateUtils.format(firstDueDate.minus(Period.months(period)))
+        // The first milestone date can apply to the whole program so may be before the project starts.
+        // If so, we align the reporting with this date, but don't start until it aligns with the project timeframe
+        if (reportConfig.firstMilestoneDate) {
+            DateTime firstEndDate = DateUtils.parse(reportConfig.firstMilestoneDate)
+            DateTime projectStart = DateUtils.parse(startDate)
+            Period p = Period.months(period)
+            while (firstEndDate < projectStart) {
+                firstEndDate = firstEndDate.plus(p)
+            }
+            startDate = DateUtils.format(firstEndDate.minus(p))
         }
 
         List reportsOfType = project.reports?.findAll{it.type == reportConfig.type && it.activityType == reportConfig.activityType}

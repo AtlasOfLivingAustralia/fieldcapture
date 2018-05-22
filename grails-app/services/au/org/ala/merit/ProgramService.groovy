@@ -2,6 +2,7 @@ package au.org.ala.merit;
 
 import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.codehaus.groovy.grails.web.json.JSONArray
+import org.joda.time.DateTime
 
 import java.util.Map
 
@@ -16,12 +17,12 @@ class ProgramService {
     SearchService searchService
     DocumentService documentService
     ReportService reportService
+    ProjectService projectService
 
 
     Map get(String id, String view = '') {
 
-
-        String url = "${grailsApplication.config.ecodata.baseUrl}program/" + id + "?view=" + view.encodeAsURL()
+        String url = "${grailsApplication.config.ecodata.baseUrl}program/$id?view=" + view.encodeAsURL()
         Map program = webService.getJson(url)
         Map results = documentService.search(programId:id)
         if (results && results.documents) {
@@ -38,7 +39,7 @@ class ProgramService {
     Map getByName(String name) {
 
 
-        String url = "${grailsApplication.config.ecodata.baseUrl}program/?name=" + name.encodeAsURL()
+        String url = "${grailsApplication.config.ecodata.baseUrl}program?name=" + name.encodeAsURL()
         Map program = webService.getJson(url)
 
         if(program && program.statusCode == 404) {
@@ -117,6 +118,29 @@ class ProgramService {
         }
 
         deliveredServices
+    }
+
+    void regenerateActivityReports(String id) {
+        Map program = get(id)
+        Map activityReportConfig = program.config?.projectReports?.find{it.type==ReportService.REPORT_TYPE_STAGE_REPORT}
+        if (activityReportConfig) {
+            List projects = getProgramProjects(id)
+            projects?.each{ project ->
+                project.reports = reportService.getReportsForProject(id) ?: []
+                projectService.generateProjectReports(activityReportConfig, project)
+            }
+        }
+    }
+
+    List<Map> getProgramProjects(String id) {
+        String url = "${grailsApplication.config.ecodata.baseUrl}program/$id/projects"
+        Map resp = webService.getJson(url)
+
+        if (resp?.projects) {
+            return resp.projects
+        }
+        return resp
+
     }
 
 }

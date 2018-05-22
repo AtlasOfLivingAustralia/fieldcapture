@@ -57,18 +57,19 @@
             <form>
                 <div class="form-group">
                     <label for="first-reporting-date">Date first milestone report is due</label>
-                    <fc:datePicker class="form-control" targetField="firstMilestoneDate" id="first-reporting-date"/>
+                    <fc:datePicker class="form-control" targetField="firstMilestoneDate.date" id="first-reporting-date" data-validation-engine="validate[required]"/>
 
                 </div>
                 <div class="form-group">
                     <label for="milestone-reporting-period">Reporting period (months)</label>
-                    <input type="number" class="form-control" id="milestone-reporting-period">
+                    <input type="number" class="form-control" data-bind="value:milestonePeriod" id="milestone-reporting-period" data-validation-engine="validate[required,custom[integer]]">
 
                 </div>
                 <div class="form-group">
                     <label for="core-services-reporting-period">Core services reporting period (months)</label>
-                    <input type="number" class="form-control" id="core-services-reporting-period">
+                    <input type="number" class="form-control"  id="core-services-reporting-period">
                 </div>
+                <button class="btn btn-primary" data-bind="click:saveReportingConfiguration">Save</button>
             </form>
         </div>
         <g:if test="${fc.userIsAlaOrFcAdmin()}">

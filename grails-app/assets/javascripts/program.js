@@ -119,15 +119,78 @@ var ProgramPageViewModel = function(props, options) {
     var self = this;
     _.extend(self, new ProgramViewModel(props, options));
 
+    var config = props.config || {};
 
-    console.log(props.config);
-    self.config = ko.observable(vkbeautify.json(props.config));
-    self.firstMilestoneDate = ko.observable();
-    self.milestonePeriod = ko.observable();
+    self.config = ko.observable(vkbeautify.json(config));
+
+    /**
+     * Returns the currently configured activity report configuration.
+     * Side effect: it is created if it doesn't exist.
+     */
+    var getActivityReportConfig = function() {
+        var activityReportConfig;
+        if (!config.projectReports) {
+            config.projectReports = [];
+        }
+        activityReportConfig = _.find(config.projectReports, function(report) {
+            return report.type == 'Activity';
+        });
+        if (!activityReportConfig) {
+            activityReportConfig = {type:'Activity'};
+            config.projectReports.push(activityReportConfig);
+        }
+
+        return activityReportConfig;
+    };
+
+    var activityReportConfig = getActivityReportConfig();
+
+    self.firstMilestoneDate = ko.observable(activityReportConfig.firstMilestoneDate).extend({simpleDate:false});
+    self.milestonePeriod = ko.observable(activityReportConfig.period);
     self.coreServicesPeriod = ko.observable();
 
+    self.saveReportingConfiguration = function() {
+
+        if ($(options.reportingConfigSelector).validationEngine('validate')) {
+            activityReportConfig.firstMilestoneDate = self.firstMilestoneDate();
+            activityReportConfig.period = self.milestonePeriod();
+            self.saveConfig(config, function() {
+                self.regenerateReports();
+            });
+        }
+
+    };
+
+    self.saveConfig = function(config, successCallback) {
+        var json = {config: config};
+        $.ajax({
+            url: options.programSaveUrl,
+            type: 'POST',
+            data: JSON.stringify(json),
+            dataType:'json',
+            contentType: 'application/json'
+        }).done(function (data) {
+            bootbox.alert("Program configuration saved");
+            if (_.isFunction(successCallback)) {
+                successCallback(data);
+            }
+        }).fail(function() {
+            bootbox.alert("Save failed");
+        });
+    };
+
+    self.regenerateReports = function() {
+        $.ajax({
+            url: options.regenerateProgramReportsUrl,
+            type: 'POST',
+            dataType:'json',
+            contentType: 'application/json'
+        }).fail(function() {
+            bootbox.alert("Failed to regenerate program reports");
+        });
+    };
+
     self.saveProgramConfiguration = function() {
-        var config = self.config();
 
         try {
             config = JSON.parse(config);
@@ -136,19 +199,8 @@ var ProgramPageViewModel = function(props, options) {
             bootbox.alert("Invalid JSON");
             return;
         }
+        self.saveConfig(config);
 
-        var json = {config: config};
-        $.ajax({
-            url: options.programSaveUrl,
-            type: 'POST',
-            data: JSON.stringify(json),
-            dataType:'json',
-            contentType: 'application/json'
-        }).done(function () {
-            bootbox.alert("Program configuration saved");
-        }).fail(function() {
-            bootbox.alert("Save failed");
-        });
     };
 
     var tabs = {
@@ -169,6 +221,7 @@ var ProgramPageViewModel = function(props, options) {
         'admin': {
             initialiser: function () {
                 populatePermissionsTable();
+                $(options.reportingConfigSelector).validationEngine();
             }
         }
     };

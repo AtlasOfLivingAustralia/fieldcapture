@@ -1,8 +1,8 @@
 package au.org.ala.merit
 
 
-import au.org.ala.web.AuthService
 import grails.converters.JSON
+import org.apache.http.HttpStatus
 
 /**
  * Processes requests relating to programs
@@ -238,5 +238,18 @@ class ProgramController {
 
         render model:model, view:'/activity/activityReport'
     }
+
+    def regenerateProgramReports(String id) {
+        Map resp
+        if (!id) {
+             resp = [status:HttpStatus.SC_NOT_FOUND]
+        }
+        else {
+            programService.regenerateActivityReports(id)
+            resp = [status:HttpStatus.SC_OK]
+        }
+        render resp as JSON
+    }
+
 
 }
