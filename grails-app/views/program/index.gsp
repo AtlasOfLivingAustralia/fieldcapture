@@ -15,6 +15,7 @@
             approveReportUrl:'',
             submitReportUrl:'',
             rejectReportUrl:'',
+            regenerateProgramReportsUrl:"${createLink(action:"regenerateProgramReports", id:program.programId)}",
             programSaveUrl: "${createLink(action:'ajaxUpdate', id:program.programId)}"
         };
     </script>
@@ -67,7 +68,8 @@
     $(function () {
 
         var program =<fc:modelAsJavascript model="${program}"/>;
-        var programViewModel = new ProgramPageViewModel(program, fcConfig);
+        var config = _.extend({reportingConfigSelector:'#reporting form'}, fcConfig);
+        var programViewModel = new ProgramPageViewModel(program, config);
 
         ko.applyBindings(programViewModel);
         $('#loading').hide();
