@@ -65,10 +65,6 @@
                     <input type="number" class="form-control" data-bind="value:milestonePeriod" id="milestone-reporting-period" data-validation-engine="validate[required,custom[integer]]">
 
                 </div>
-                <div class="form-group">
-                    <label for="core-services-reporting-period">Core services reporting period (months)</label>
-                    <input type="number" class="form-control"  id="core-services-reporting-period">
-                </div>
                 <button class="btn btn-primary" data-bind="click:saveReportingConfiguration">Save</button>
             </form>
         </div>
