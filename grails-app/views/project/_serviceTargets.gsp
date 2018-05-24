@@ -8,7 +8,7 @@
         <th class="service">Service</th>
         <th class="score">Target measure</th>
         <!-- ko foreach: periods -->
-        <th class="budget-cell"><div data-bind="text:$data"></div>$</th>
+        <th class="budget-cell"><div data-bind="text:$data"></div></th>
         <!-- /ko -->
         <th class="budget-cell">Overall Target</th>
         <th class="remove"></th>
@@ -18,10 +18,12 @@
     <tr>
         <td class="index"><span data-bind="text:$index()+1"></span></td>
         <td class="service">
-            <select data-bind="options: selectableServices, optionsText:'name', optionsCaption: 'Please select', value:service, disable: $root.isProjectDetailsLocked()"></select>
+            <select data-bind="options: selectableServices, optionsText:'name', optionsValue:'id', optionsCaption: 'Please select', value:serviceId, disable: $root.isProjectDetailsLocked()"
+                    data-validation-engine="validate[required]"></select>
         </td>
         <td class="score">
-            <select data-bind="options: selectableScores, optionsText:'label', optionsCaption: 'Please select', value:score, disable: $root.isProjectDetailsLocked()"></select>
+            <select data-bind="options: selectableScores, optionsText:'label', optionsValue:'scoreId', optionsCaption: 'Please select', value:scoreId, disable: $root.isProjectDetailsLocked()"
+                    data-validation-engine="validate[required]"></select>
         </td>
 
         <!-- ko foreach: periodTargets -->
@@ -33,7 +35,8 @@
         <!-- /ko -->
 
         <td class="budget-cell">
-            <input type="number"data-bind="value: target, disable: $root.isProjectDetailsLocked()">
+            <input type="number" data-bind="value: target, disable: $root.isProjectDetailsLocked()"
+                   data-validation-engine="validate[min[0.01]]">
         </td>
         <td class="remove">
             <span data-bind="if: $index() && !$root.isProjectDetailsLocked()"><i class="icon-remove"
