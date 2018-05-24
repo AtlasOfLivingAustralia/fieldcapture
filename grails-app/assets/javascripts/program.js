@@ -147,7 +147,6 @@ var ProgramPageViewModel = function(props, options) {
 
     self.firstMilestoneDate = ko.observable(activityReportConfig.firstMilestoneDate).extend({simpleDate:false});
     self.milestonePeriod = ko.observable(activityReportConfig.period);
-    self.coreServicesPeriod = ko.observable();
 
     self.saveReportingConfiguration = function() {
 

@@ -138,7 +138,7 @@ function DetailsViewModel(o, project, risks, config) {
    self.lastUpdated = o.lastUpdated ? o.lastUpdated : moment().format();
    self.budget = new BudgetViewModel(o.budget, period);
    if (config.useServices) {
-       self.services = new ServicesViewModel(o.serviceIds, config.services, self.budget, project.outputTargets);
+       self.services = new ServicesViewModel(o.serviceIds, config.services, project.outputTargets, period);
    }
    self.rationale = ko.observable(o.rationale);
    self.projectMethodology = ko.observable(o.projectMethodology);
@@ -174,7 +174,15 @@ function DetailsViewModel(o, project, risks, config) {
    };
 };
 
-function ServicesViewModel(serviceIds, allServices, budgetViewModel, outputTargets) {
+/**
+ * The view model responsible for managing the selection of project services and their output targets.
+ *
+ * @param serviceIds Array of the ids of the current services being used by the project
+ * @param allServices Array containing the full list of available services
+ * @param outputTargets The current project targets
+ * @param periods An array of periods, each of which require a target to be set
+ */
+function ServicesViewModel(serviceIds, allServices, outputTargets, periods) {
     var self = this;
 
     // Output targets are not stored inside the MERI plan for compatibility with other MERIT projects.
@@ -183,103 +191,133 @@ function ServicesViewModel(serviceIds, allServices, budgetViewModel, outputTarge
         targets: outputTargets || []
     };
 
-
-    var ServiceTarget = function(service, score, currentTarget) {
+    var ServiceTarget = function(service, score) {
         var target = this;
-        target.target = ko.observable(currentTarget);
-        target.score = score;
-        target.serviceName = service;
+
+        target.service = ko.observable(service);
+        target.score = ko.observable(score);
+
+        target.target = ko.observable();
+
+        target.periodTargets = _.map(periods, function(period) { return {period:period, target: ko.observable(0) } });
+
+        target.updateTargets = function() {
+
+            var currentTarget = _.find(outputTargets, function(outputTarget) {
+                return target.score() && target.score().scoreId == outputTarget.scoreId;
+            });
+            _.each(periods, function(period, i) {
+                var periodTarget = 0;
+                if (currentTarget) {
+                    var currentPeriodTarget = _.find(currentTarget.periodTargets || [], function (periodTarget) {
+                        return periodTarget.period == period;
+                    }) || {};
+                    periodTarget = currentPeriodTarget.target;
+                }
+                target.periodTargets[i].target(periodTarget || 0);
+            });
+            target.target(currentTarget ? currentTarget.target || 0 : 0);
+        };
 
         target.toJSON = function() {
             return {
               target:target.target(),
-              scoreId:score.scoreId
+              scoreId:target.score() ? target.score().scoreId : null,
+              periodTargets: ko.toJS(target.periodTargets)
             };
         };
-    };
 
-    var ServiceRow = function(serviceId, i) {
-        var row = this;
-        row.index = i;
-        row.serviceId = ko.observable(serviceId || null);
-        row.budget = budgetViewModel.rows().length > i ? budgetViewModel.rows()[i] : null;
-        row.targets = ko.observableArray();
+        target.selectableScores = ko.computed(function() {
+            if (!target.service()) {
+                return [];
+            }
 
-        function updateFromService(id) {
-            row.targets([]);
-            if (id) {
-                var selectedService = _.find(allServices, function(service) {
-                    return service.id == id;
+            var availableScores = self.availableScoresForService(target.service());
+            if (target.score()) {
+                availableScores.push(target.score());
+            }
+
+            return availableScores;
+        });
+        target.selectableServices = ko.pureComputed(function() {
+            var services = self.availableServices();
+            if (target.service()) {
+                var found = _.find(services, function(service) {
+                    return service.id == target.service().id;
                 });
-
-                row.budget.shortLabel = selectedService ? selectedService.name : 'Unknown service';
-                if (selectedService) {
-                    _.each(selectedService.scores, function(score) {
-                        var target = 0;
-                        var existingTarget = _.find(serviceModel.targets, function(target) {
-                            return target.scoreId == score.scoreId;
-                        });
-                        if (existingTarget && existingTarget.target) {
-                            target = existingTarget.target;
-                        }
-                        row.targets.push(new ServiceTarget(selectedService.name, score, target));
-                    });
+                if (!found) {
+                    services.push(target.service());
                 }
 
             }
-        }
-        row.serviceId.subscribe(function(id) {
-            updateFromService(id);
+            return services;
+
         });
-        row.selectableServices = ko.computed(function() {
-            return self.availableServices(row.serviceId());
+
+        target.score.subscribe(function() {
+            target.updateTargets();
         });
-        updateFromService(serviceId);
+
+        target.updateTargets();
     };
 
-    self.budget = budgetViewModel;
+    self.periods = periods;
+
     self.services = ko.observableArray();
     self.addService = function() {
-        budgetViewModel.addRow();
-        self.services.push(new ServiceRow(null, self.services().length));
+        self.services.push(new ServiceTarget());
     };
     self.removeService = function(service) {
-        budgetViewModel.rows.remove(service.budget);
         self.services.remove(service);
     };
 
-    if (serviceModel.serviceIds.length != budgetViewModel.rows().length) {
-        budgetViewModel.rows([]);
-        serviceModel.serviceIds = [];
-    }
-
-    /** Enforces that each service is only selected once in the table.  Ensures that the currently selected
-     * service is always available in the returned list. */
-    self.availableServices = function(serviceId) {
+    /**
+     * Once all of the scores for a service have been assigned targets, don't allow new rows to select that score.
+     */
+    self.availableServices = function() {
         return _.reject(allServices, function(service) {
-            return _.find(self.services(), function(usedService) {
-                return usedService.serviceId() == service.id && !(service.id == serviceId);
+            return self.availableScoresForService(service).length == 0;
+        });
+    };
+
+    self.availableScoresForService = function(service) {
+        if (!service || !service.scores) {
+            return [];
+        }
+        return _.reject(service.scores, function(score) {
+            return _.find(self.services(), function(target) {
+                return target.score() ? target.score().scoreId == score.scoreId : false;
             })
         });
     };
 
-    for (var i=0; i<serviceModel.serviceIds.length; i++) {
-        self.services.push(new ServiceRow(serviceModel.serviceIds[i], i));
+    // Populate the model from existing data.
+    for (var i=0; i<outputTargets.length; i++) {
+
+        var score = null;
+        var service = _.find(allServices, function(service) {
+            return _.find(service.scores, function(serviceScore) {
+                if (serviceScore.scoreId == outputTargets[i].scoreId) {
+                    score = serviceScore;
+                };
+                return score;
+            })
+        });
+
+        self.services.push(new ServiceTarget(service, score));
     }
 
     self.outputTargets = function() {
         var outputTargets = [];
-        _.each(self.services(), function(service) {
-            _.each(service.targets(), function(target) {
-                outputTargets.push(target.toJSON());
-            });
+        _.each(self.services(), function(target) {
+            outputTargets.push(target.toJSON());
         });
         return outputTargets;
     };
 
     self.toJSON = function() {
         return {
-            serviceIds : _.map(self.services(), function(service) { return service.serviceId() }),
+            serviceIds : _.unique(_.map(self.services(), function(service) { return service.serviceId })),
             targets: self.outputTargets()
         }
     };
