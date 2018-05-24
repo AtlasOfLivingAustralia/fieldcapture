@@ -163,93 +163,45 @@
 
     </table>
 
-    <!-- Budget table -->
-
+    <!-- ko with:details.services -->
     <h4>Project Services</h4>
-    <label><b>Budget</b></label>
+
     <table class="table budget-table">
         <thead>
         <tr>
             <th class="index"></th>
             <th class="service">Service</th>
-            <!-- ko foreach: details.budget.headers -->
-            <th class="budget-cell"><div data-bind="text:data"></div>$</th>
+            <th class="score">Target measure</th>
+            <!-- ko foreach: periods -->
+            <th class="budget-cell"><div data-bind="text:$data"></div>$</th>
             <!-- /ko -->
-            <th class="budget-cell">Total</th>
+            <th class="budget-cell">Overall Target</th>
         </tr>
         </thead>
-        <tbody data-bind="foreach : details.budget.rows">
+        <tbody data-bind="foreach : services">
         <tr>
             <td class="index"><span data-bind="text:$index()+1"></span></td>
             <td class="service">
-                <span data-bind="text:shortLabel"></span>
+                <span data-bind="text:service().name"></span>
+            </td>
+            <td class="score">
+                <span data-bind="text:score().label"></span>
             </td>
 
-            <!-- ko foreach: costs -->
+            <!-- ko foreach: periodTargets -->
             <td class="budget-cell">
-                <span data-bind="text: dollar"/>
+                <span data-bind="text: target"/>
             </td>
             <!-- /ko -->
 
             <td class="budget-cell">
-                <span data-bind="text: rowTotal.formattedCurrency, disable: $parent.isProjectDetailsLocked()"></span>
+            <span data-bind="text: target"></span>
             </td>
 
         </tr>
         </tbody>
-        <tfoot>
-        <tr>
-            <td class="index"></td>
-            <td><b>Total</b></td>
-
-            <!-- ko foreach: details.budget.columnTotal -->
-            <td class="budget-cell"><span data-bind="text:data.formattedCurrency"></span>
-            </td>
-            <!-- /ko -->
-            <td class="budget-cell"><b><span
-                    data-bind="text:details.budget.overallTotal.formattedCurrency"></span></b></td>
-        </tr>
-
-        </tfoot>
     </table>
 
-    <!-- ko with:details.services -->
-    <div id="serviceTargetsContainer">
-
-        <b class="header-with-help">Targets</b>
-
-        <table id="outputTargets" class="table">
-            <thead>
-            <tr>
-                <th class="service">Service</th>
-                <th class="score">Target Measure(s)</th>
-                <th class="target">Target</th></tr>
-            </thead>
-            <!-- ko foreach:services -->
-
-            <tbody data-bind="foreach:targets">
-
-            <tr>
-                <!-- ko if:!$index() -->
-                <td class="service" data-bind="attr:{rowspan:$parent.targets().length}">
-                    <span data-bind="text:serviceName"></span>
-                </td>
-                <!-- /ko -->
-
-                <td class="score"><span data-bind="text:score.label"></span></td>
-                <td class="target">
-                    <span data-bind="text:target"></span>
-                    <span data-bind="text:score.units"></span>
-                </td>
-
-            </tr>
-
-
-            </tbody>
-            <!-- /ko -->
-        </table>
-
-    </div>
     <!-- /ko -->
 
     <g:if test="${risksAndThreatsVisible}">

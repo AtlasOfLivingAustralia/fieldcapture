@@ -243,7 +243,7 @@
 
     <div class="row-fluid">
         <div class="span12">
-            <g:render template="serviceBudgetTable"/>
+            <g:render template="serviceTargets"/>
         </div>
     </div>
 
