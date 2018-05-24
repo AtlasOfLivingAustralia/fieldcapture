@@ -194,8 +194,8 @@ function ServicesViewModel(serviceIds, allServices, outputTargets, periods) {
     var ServiceTarget = function(service, score) {
         var target = this;
 
-        target.service = ko.observable(service);
-        target.score = ko.observable(score);
+        target.serviceId = ko.observable(service ? service.id : null);
+        target.scoreId = ko.observable(score ? score.scoreId : null);
 
         target.target = ko.observable();
 
@@ -204,7 +204,7 @@ function ServicesViewModel(serviceIds, allServices, outputTargets, periods) {
         target.updateTargets = function() {
 
             var currentTarget = _.find(outputTargets, function(outputTarget) {
-                return target.score() && target.score().scoreId == outputTarget.scoreId;
+                return target.scoreId()  == outputTarget.scoreId;
             });
             _.each(periods, function(period, i) {
                 var periodTarget = 0;
@@ -222,18 +222,34 @@ function ServicesViewModel(serviceIds, allServices, outputTargets, periods) {
         target.toJSON = function() {
             return {
               target:target.target(),
-              scoreId:target.score() ? target.score().scoreId : null,
+              scoreId:target.scoreId(),
               periodTargets: ko.toJS(target.periodTargets)
             };
         };
 
-        target.selectableScores = ko.computed(function() {
-            if (!target.service()) {
+        target.service = function() {
+            return _.find(allServices, function(service) {
+                return service.id == target.serviceId();
+            })
+        };
+
+        target.score = function() {
+            var score = null;
+            var service = target.service();
+            if (service) {
+                score = _.find(service.scores, function(score) {
+                    return score.scoreId == target.scoreId();
+                });
+            }
+            return score;
+        };
+
+        target.selectableScores = ko.pureComputed(function() {
+            if (!target.serviceId()) {
                 return [];
             }
-
             var availableScores = self.availableScoresForService(target.service());
-            if (target.score()) {
+            if (target.scoreId()) {
                 availableScores.push(target.score());
             }
 
@@ -241,9 +257,9 @@ function ServicesViewModel(serviceIds, allServices, outputTargets, periods) {
         });
         target.selectableServices = ko.pureComputed(function() {
             var services = self.availableServices();
-            if (target.service()) {
+            if (target.serviceId()) {
                 var found = _.find(services, function(service) {
-                    return service.id == target.service().id;
+                    return service.id == target.serviceId();
                 });
                 if (!found) {
                     services.push(target.service());
@@ -254,7 +270,7 @@ function ServicesViewModel(serviceIds, allServices, outputTargets, periods) {
 
         });
 
-        target.score.subscribe(function() {
+        target.scoreId.subscribe(function() {
             target.updateTargets();
         });
 
@@ -317,7 +333,7 @@ function ServicesViewModel(serviceIds, allServices, outputTargets, periods) {
 
     self.toJSON = function() {
         return {
-            serviceIds : _.unique(_.map(self.services(), function(service) { return service.serviceId })),
+            serviceIds : _.unique(_.map(self.services(), function(service) { return service.serviceId() })),
             targets: self.outputTargets()
         }
     };

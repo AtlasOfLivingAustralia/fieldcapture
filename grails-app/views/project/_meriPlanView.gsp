@@ -173,7 +173,7 @@
             <th class="service">Service</th>
             <th class="score">Target measure</th>
             <!-- ko foreach: periods -->
-            <th class="budget-cell"><div data-bind="text:$data"></div>$</th>
+            <th class="budget-cell"><div data-bind="text:$data"></div></th>
             <!-- /ko -->
             <th class="budget-cell">Overall Target</th>
         </tr>
@@ -182,10 +182,10 @@
         <tr>
             <td class="index"><span data-bind="text:$index()+1"></span></td>
             <td class="service">
-                <span data-bind="text:service().name"></span>
+                <span data-bind="text:service() ? service().name : ''"></span>
             </td>
             <td class="score">
-                <span data-bind="text:score().label"></span>
+                <span data-bind="text:score() ? score().label : ''"></span>
             </td>
 
             <!-- ko foreach: periodTargets -->
