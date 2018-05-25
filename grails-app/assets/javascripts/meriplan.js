@@ -153,7 +153,8 @@ function DetailsViewModel(o, project, risks, config) {
 
    self.rationale = ko.observable(o.rationale);
    self.projectMethodology = ko.observable(o.projectMethodology);
-   self.baseline = new BaselineViewModel(o.baseline);
+   self.baseline = new GenericViewModel(o.baseline, ['baseline' , 'method']);
+   self.threats = new GenericViewModel(o.threats, ['threat', 'intervention']);
 
    var row = [];
    o.events ? row = o.events : row.push(ko.mapping.toJS(new EventsRowViewModel()));
@@ -396,44 +397,28 @@ function ServiceTargets(services, targets, targetsEditable, config) {
 
 };
 
-function BaselineViewModel(baseline) {
-    var self = this;
-    if (!baseline) {
-        baseline = {};
-    }
-    self.newRow = function(row) {
-        return new GenericRowViewModel(row, ['baseline' , 'method'])
-    };
 
-    self.rows = ko.observableArray();
-    self.addBaseline = function() {
-        self.rows.push(self.newRow());
-    };
-    self.removeBaseline = function(row) {
-        self.rows.remove(row);
-    };
-
-    // Initialisation
-    if (baseline.rows) {
-        for (var i=0; i<baseline.rows.length; i++) {
-            self.rows.push(self.newRow(baseline.rows[i]));
-        }
-    }
-    else {
-        self.rows.push(self.newRow());
-    }
-}
-
-
-function GenericViewModel(o) {
+function GenericViewModel(o, propertyNames) {
    var self = this;
    if(!o) o = {};
    self.description = ko.observable(o.description);
+    self.newRow = function(row) {
+        return new GenericRowViewModel(row, propertyNames)
+    };
    var row = [];
-   o.rows ? row = o.rows : row.push(ko.mapping.toJS(new GenericRowViewModel()));
+   o.rows ? row = o.rows : row.push(ko.mapping.toJS(self.newRow()));
+
+
    self.rows = ko.observableArray($.map(row, function (obj,i) {
-      return new GenericRowViewModel(obj);
+      return self.newRow(obj);
    }));
+    self.addRow = function() {
+        self.rows.push(self.newRow());
+    };
+    self.removeRow = function(row) {
+        self.rows.remove(row);
+    };
+
 };
 
 function GenericRowViewModel(o, propertyNames) {

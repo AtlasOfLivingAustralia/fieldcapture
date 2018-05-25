@@ -96,6 +96,16 @@ table tr.header th {
     width: 100%;
 }
 
+.meri-plan .threat {
+    width: 50%;
+}
+.meri-plan .intervention {
+    width: 50%;
+}
+.meri-plan .baseline {
+    width: 50%;
+}
+
 .meri-plan #serviceTargetsContainer td.service {
     width: 20%;
 }
