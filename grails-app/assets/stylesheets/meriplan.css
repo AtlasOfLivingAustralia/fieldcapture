@@ -90,6 +90,7 @@ table tr.header th {
 
 .meri-plan .budget-cell {
     width: 10%;
+    min-width: 4em;
 }
 
 .meri-plan .budget-cell input {

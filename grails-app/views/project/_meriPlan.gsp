@@ -100,7 +100,7 @@
         <tbody data-bind="foreach:details.outcomes.secondaryOutcomes">
         <tr>
             <td class="index" data-bind="text:$index()+1"></td>
-            <td class="outcome-priority"><select
+            <td class="outcome-priority"><select data-validation-engine="validate[required]"
                     data-bind="value:description, options: $parent.details.outcomes.selectableOutcomes, optionsCaption: 'Please select', disable: $root.isProjectDetailsLocked()"></select>
             </td>
             <td class="priority">
@@ -134,19 +134,19 @@
                     <th class="required">Project description</th>
                 </tr>
                 <tr>
-                    <td><textarea rows="5"  data-validation-engine="validate[required]" data-bind="value:details.description, disable: isProjectDetailsLocked()"></textarea></td>
+                    <td><textarea rows="5"  data-validation-engine="validate[required,maxSize[450]]" data-bind="value:details.description, disable: isProjectDetailsLocked()"></textarea></td>
                 </tr>
                 <tr class="header required">
-                    <th class="required">Project methodology</th>
+                    <th class="required">Project methodology <fc:iconHelp>Describe the project methodology and how this aligns with the services being delivered through this project.</fc:iconHelp></th>
                 </tr>
                 <tr>
-                    <td><textarea rows="5" data-validation-engine="validate[required]" data-bind="value:details.implementation.description, disable: isProjectDetailsLocked()"></textarea></td>
+                    <td><textarea rows="5" data-validation-engine="validate[required,maxSize[4000]]" data-bind="value:details.implementation.description, disable: isProjectDetailsLocked()"></textarea></td>
                 </tr>
                 <tr class="header">
-                    <th class="required">Project rationale</th>
+                    <th class="required">Project rationale <fc:iconHelp>TBA</fc:iconHelp></th>
                 </tr>
                 <tr>
-                    <td><textarea rows="5" data-validation-engine="validate[required]" data-bind="value:details.rationale, disable: isProjectDetailsLocked()"></textarea></td>
+                    <td><textarea rows="5" data-validation-engine="validate[required,maxSize[4000]]" data-bind="value:details.rationale, disable: isProjectDetailsLocked()"></textarea></td>
                 </tr>
                 </tbody>
             </table>
@@ -156,8 +156,8 @@
     <table class="table">
         <thead>
         <th class="index"></th>
-        <th class="threat required">Key threat(s) or key threatening processes</th>
-        <th class="intervention required">Interventions to address threats</th>
+        <th class="threat required">Key threat(s) or key threatening processes <fc:iconHelp>Describe the key threats (or key threatening processes) to the primary investment priority</fc:iconHelp></th>
+        <th class="intervention required">Interventions to address threats <fc:iconHelp>Describe the proposed interventions to address the threat and how this will deliver on the 5 year outcome.</fc:iconHelp></th>
         <th class="remove"></th>
         </thead>
         <tbody data-bind="foreach: rows">
@@ -189,7 +189,7 @@
     </table>
     <!-- /ko -->
 
-    <h4>Monitoring methodology</h4>
+    <h4 class="header-with-help">Monitoring methodology</h4><fc:iconHelp>Describe the project baseline(s) units of measure or data which will be used to report progress towards this project's outcomes (short-term, mid-term and 5 year program outcome), and the monitoring design.</fc:iconHelp>
     <!-- ko with:details.baseline -->
     <table class="table">
         <thead>
@@ -270,25 +270,25 @@
         <thead>
         <tr>
             <th class="index"></th>
-            <th class="document-name">Document name <fc:iconHelp
+            <th class="document-name required">Document name <fc:iconHelp
                     title="Document name">List the name of the National or Regional plan the project is addressing.</fc:iconHelp></th>
-            <th class="section">Relevant section <fc:iconHelp
+            <th class="section required">Relevant section <fc:iconHelp
                     title="Relevant section">What section (target/outcomes/objective etc) of the plan is being addressed?</fc:iconHelp></th>
-            <th class="alignment">Explanation of strategic alignment <fc:iconHelp
-                    title="Explanation of strategic alignment">In what way will the project deliver against this section? Keep the response brief, 1 to 2 sentences should be adequate.</fc:iconHelp></th>
+            <th class="alignment required">Explanation of strategic alignment <fc:iconHelp
+                    title="Explanation of strategic alignment">Explain how the project design and delivery align with the relevant section of the document</fc:iconHelp></th>
             <th class="remove"></th>
         </tr>
         </thead>
         <tbody data-bind="foreach : details.priorities.rows">
         <tr>
             <td class="index"><span data-bind="text:$index()+1"></span></td>
-            <td class="document-name"><textarea style="width: 97%;" class="input-xlarge"
+            <td class="document-name"><textarea style="width: 97%;" class="input-xlarge" data-validation-engine="validate[required]"
                                                 data-bind="value: data1, disable: $parent.isProjectDetailsLocked()"
                                                 rows="3"></textarea></td>
-            <td class="section"><textarea style="width: 97%;" class="input-xlarge"
+            <td class="section"><textarea style="width: 97%;" class="input-xlarge" data-validation-engine="validate[required]"
                                           data-bind="value: data2, disable: $parent.isProjectDetailsLocked()"
                                           rows="5"></textarea></td>
-            <td class="alignment"><textarea style="width: 97%;" class="input-xlarge"
+            <td class="alignment"><textarea style="width: 97%;" class="input-xlarge" data-validation-engine="validate[required]"
                                             data-bind="value: data3, disable: $parent.isProjectDetailsLocked()"
                                             rows="5"></textarea></td>
             <td class="remove">

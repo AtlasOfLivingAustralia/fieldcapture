@@ -220,7 +220,7 @@
             <th class="index"></th>
             <th class="service">Service</th>
             <th class="score">Target measure</th>
-            <th class="budget-cell">Overall Target</th>
+            <th class="budget-cell">Total</th>
             <!-- ko foreach: periods -->
             <th class="budget-cell"><div data-bind="text:$data"></div></th>
             <!-- /ko -->
