@@ -1211,7 +1211,6 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
         if ($('#project-details-validation').validationEngine('validate')) {
             self.details.status('active');
 
-            self.risks.saveWithErrorDetection(function() {});
             self.details.saveWithErrorDetection(function() {
                 if(enableSubmit) {
                     self.submitChanges();

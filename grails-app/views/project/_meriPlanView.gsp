@@ -89,22 +89,22 @@
             <table class="table">
                 <tbody>
                 <tr class="header">
-                    <th>Project rationale</th>
+                    <th>Project description</th>
                 </tr>
                 <tr>
-                    <td><span data-bind="text:details.rationale"></span></td>
+                    <td><span data-bind="text:description"></span></td>
                 </tr>
                 <tr class="header">
                     <th>Project methodology</th>
                 </tr>
                 <tr>
-                    <td><span data-bind="text:details.projectMethodology"></span></td>
+                    <td><span data-bind="text:details.implementation.description"></span></td>
                 </tr>
                 <tr class="header">
-                    <th>Monitoring methodology</th>
+                    <th>Project rationale</th>
                 </tr>
                 <tr>
-                    <td><span data-bind="text:details.monitoringMethodology"></span></td>
+                    <td><span data-bind="text:details.rationale"></span></td>
                 </tr>
                 </tbody>
             </table>
@@ -142,13 +142,19 @@
     <table class="table budget-table">
         <thead>
         <tr>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th data-bind="attr:{colspan:periods.length+1}">Minimum targets</th>
+        </tr>
+        <tr>
             <th class="index"></th>
             <th class="service">Service</th>
             <th class="score">Target measure</th>
+            <th class="budget-cell">Overall Target</th>
             <!-- ko foreach: periods -->
             <th class="budget-cell"><div data-bind="text:$data"></div></th>
             <!-- /ko -->
-            <th class="budget-cell">Overall Target</th>
         </tr>
         </thead>
         <tbody data-bind="foreach : services">
@@ -160,16 +166,15 @@
             <td class="score">
                 <span data-bind="text:score() ? score().label : ''"></span>
             </td>
+            <td class="budget-cell">
+                <span data-bind="text: target"></span>
+            </td>
 
             <!-- ko foreach: periodTargets -->
             <td class="budget-cell">
                 <span data-bind="text: target"/>
             </td>
             <!-- /ko -->
-
-            <td class="budget-cell">
-            <span data-bind="text: target"></span>
-            </td>
 
         </tr>
         </tbody>
