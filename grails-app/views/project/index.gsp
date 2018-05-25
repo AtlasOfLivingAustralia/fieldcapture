@@ -225,7 +225,7 @@
             config.themes = themes;
             var services = ${config.services?:[]};
             config.services = services;
-            config.useServices = services.length > 0;
+            config.useRlpTemplate = services.length > 0;
             var outcomesAndAssets = ${assetsByOutcome ?: []};
             var viewModel = new ProjectPageViewModel(
                 project,

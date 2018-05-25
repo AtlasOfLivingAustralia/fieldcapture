@@ -23,23 +23,26 @@ function MERIPlan(project, config) {
           }
        }
    }
-    _.extend(self, new Risks(project.risks, config.risksStorageKey));
+   var disableFlag = ko.observable(false);
+   self.isProjectDetailsLocked = ko.computed (function (){
+       return (project.planStatus == PlanStatus.APPROVED || project.planStatus == PlanStatus.SUBMITTED);
+   });
+   if (config.useRlpTemplate) {
+       disableFlag = self.isProjectDetailsLocked;
+   }
+
+    _.extend(self, new Risks(project.risks, disableFlag, config.risksStorageKey));
    self.details = new DetailsViewModel(project.custom.details, project, self.risks, config);
    self.detailsLastUpdated = ko.observable(project.custom.details.lastUpdated).extend({simpleDate: true});
    self.isProjectDetailsSaved = ko.computed (function (){
       return (project['custom']['details'].status == 'active');
    });
-   self.isProjectDetailsLocked = ko.computed (function (){
-      return (project.planStatus == PlanStatus.APPROVED || project.planStatus == PlanStatus.SUBMITTED);
-   });
+
 
    self.projectThemes =  $.map(config.themes, function(theme, i) { return theme.name; });
    self.projectThemes.push("MERI & Admin");
    self.projectThemes.push("Others");
 
-   self.likelihoodOptions = ['Almost Certain', 'Likely', 'Possible', 'Unlikely', 'Remote'];
-   self.consequenceOptions = ['Insignificant', 'Minor', 'Moderate', 'Major', 'Extreme'];
-   self.ratingOptions = ['High', 'Significant', 'Medium', 'Low'];
    self.obligationOptions = ['Yes', 'No'];
    self.threatOptions = ['Blow-out in cost of project materials', 'Changes to regional boundaries affecting the project area', 'Co-investor withdrawal / investment reduction',
       'Lack of delivery partner capacity', 'Lack of delivery partner / landholder interest in project activities', 'Organisational restructure / loss of corporate knowledge', 'Organisational risk (strategic, operational, resourcing and project levels)',
@@ -125,6 +128,16 @@ function MERIPlan(project, config) {
 function DetailsViewModel(o, project, risks, config) {
    var self = this;
    var period = getBudgetHeaders(project);
+   if (config.useRlpTemplate) {
+        self.services = new ServicesViewModel(o.serviceIds, config.services, project.outputTargets, period);
+        self.description = ko.observable(project.description);
+        // Initialise with 2 KEQ rows
+        if (!o.keq) {
+            o.keq = {
+                rows:new Array(2)
+            }
+        }
+   }
    self.status = ko.observable(o.status);
    self.obligations = ko.observable(o.obligations);
    self.policies = ko.observable(o.policies);
@@ -137,12 +150,10 @@ function DetailsViewModel(o, project, risks, config) {
    self.partnership = new GenericViewModel(o.partnership);
    self.lastUpdated = o.lastUpdated ? o.lastUpdated : moment().format();
    self.budget = new BudgetViewModel(o.budget, period);
-   if (config.useServices) {
-       self.services = new ServicesViewModel(o.serviceIds, config.services, project.outputTargets, period);
-   }
+
    self.rationale = ko.observable(o.rationale);
    self.projectMethodology = ko.observable(o.projectMethodology);
-   self.monitoringMethodology = ko.observable(o.monitoringMethodology);
+   self.baseline = new BaselineViewModel(o.baseline);
 
    var row = [];
    o.events ? row = o.events : row.push(ko.mapping.toJS(new EventsRowViewModel()));
@@ -158,11 +169,12 @@ function DetailsViewModel(o, project, risks, config) {
 
        // For compatibility with other projects, move the targets to the top level of the data structure, if they
        // are in the MERI plan.
-       if (config.useServices) {
+       if (config.useRlpTemplate) {
            var serviceData = tmp.details.services.toJSON();
            jsData.risks = ko.mapping.toJS(risks);
 
            jsData.outputTargets = serviceData.targets;
+           jsData.description = self.description(); // This field comes from the
            tmp.details.serviceIds = serviceData.serviceIds;
            delete tmp.details.services;
        }
@@ -384,6 +396,34 @@ function ServiceTargets(services, targets, targetsEditable, config) {
 
 };
 
+function BaselineViewModel(baseline) {
+    var self = this;
+    if (!baseline) {
+        baseline = {};
+    }
+    self.newRow = function(row) {
+        return new GenericRowViewModel(row, ['baseline' , 'method'])
+    };
+
+    self.rows = ko.observableArray();
+    self.addBaseline = function() {
+        self.rows.push(self.newRow());
+    };
+    self.removeBaseline = function(row) {
+        self.rows.remove(row);
+    };
+
+    // Initialisation
+    if (baseline.rows) {
+        for (var i=0; i<baseline.rows.length; i++) {
+            self.rows.push(self.newRow(baseline.rows[i]));
+        }
+    }
+    else {
+        self.rows.push(self.newRow());
+    }
+}
+
 
 function GenericViewModel(o) {
    var self = this;
@@ -396,12 +436,15 @@ function GenericViewModel(o) {
    }));
 };
 
-function GenericRowViewModel(o) {
+function GenericRowViewModel(o, propertyNames) {
    var self = this;
    if(!o) o = {};
-   self.data1 = ko.observable(o.data1);
-   self.data2 = ko.observable(o.data2);
-   self.data3 = ko.observable(o.data3);
+   if (!propertyNames || propertyNames.length == 0) {
+       propertyNames = ['data1', 'data2', 'data3'];
+   }
+   for (var i=0; i<propertyNames.length; i++) {
+       self[propertyNames[i]] = ko.observable(o[propertyNames[i]]);
+   }
 };
 
 function ObjectiveViewModel(o) {

@@ -1,6 +1,5 @@
 <div class="meri-plan">
     <h4>Project Outcomes</h4>
-
     <table class="table">
         <thead>
         <tr class="header">
@@ -25,6 +24,68 @@
 
         </tbody>
     </table>
+
+    <table class="table">
+        <thead>
+        <tr class="header">
+            <th class="index"></th>
+            <th class="outcome required">Short-term Project Outcome(s)</th>
+            <th class="remove"></th>
+        </tr>
+        </thead>
+        <tbody data-bind="foreach:details.outcomes.shortTermOutcomes">
+        <tr>
+            <td class="index" data-bind="text:$index()+1"></td>
+            <td class="outcome">
+                <textarea data-validation-engine="validate[required]" data-bind="value:description, disable: $parent.isProjectDetailsLocked()"></textarea>
+            </td>
+            <td class="remove">
+                <span data-bind="if: $index() && !$parent.isProjectDetailsLocked()"><i class="fa fa-remove"
+                                                                                       data-bind="click: $parent.removeShortTermOutcome"></i>
+                </span>
+            </td>
+        </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="3">
+                <button type="button" class="btn btn-small"
+                        data-bind="disable: isProjectDetailsLocked(), click: addShortTermOutcome">
+                    <i class="icon-plus"></i> Add a row</button></td>
+        </tr>
+        </tfoot>
+    </table>
+
+    <table class="table">
+        <thead>
+        <tr class="header">
+            <th class="index"></th>
+            <th class="outcome">Mid-term Project Outcome(s)</th>
+            <th class="remove"></th>
+        </tr>
+        </thead>
+        <tbody data-bind="foreach:details.outcomes.midTermOutcomes">
+        <tr>
+            <td class="index" data-bind="text:$index()+1"></td>
+            <td class="outcome"><textarea data-bind="value:description, disable: $parent.isProjectDetailsLocked()"></textarea></td>
+            <td class="remove">
+                <span data-bind="if: !$parent.isProjectDetailsLocked()">
+                    <i class="fa fa-remove" data-bind="click: $parent.removeMidTermOutcome"></i>
+                </span>
+            </td>
+        </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="3">
+                <button type="button" class="btn btn-small"
+                        data-bind="disable: isProjectDetailsLocked(), click: addMidTermOutcome">
+                    <i class="icon-plus"></i> Add a row</button></td>
+        </tr>
+        </tfoot>
+    </table>
+
+    <h4>Additional project benefits</h4>
     <table class="table secondary-outcome">
 
         <thead>
@@ -62,106 +123,80 @@
         </tr>
         </tfoot>
     </table>
-    <table class="table">
-        <thead>
-        <tr class="header">
-            <th class="index"></th>
-            <th class="outcome">Mid-term Project Outcome(s)</th>
-            <th class="remove"></th>
-        </tr>
-        </thead>
-        <tbody data-bind="foreach:details.outcomes.midTermOutcomes">
-        <tr>
-            <td class="index" data-bind="text:$index()+1"></td>
-            <td class="outcome"><textarea data-bind="value:description, disable: $parent.isProjectDetailsLocked()"></textarea></td>
-            <td class="remove">
-                <span data-bind="if: !$parent.isProjectDetailsLocked()">
-                    <i class="fa fa-remove" data-bind="click: $parent.removeMidTermOutcome"></i>
-                </span>
-            </td>
-        </tr>
-        </tbody>
-        <tfoot>
-        <tr>
-            <td colspan="3">
-                <button type="button" class="btn btn-small"
-                        data-bind="disable: isProjectDetailsLocked(), click: addMidTermOutcome">
-                    <i class="icon-plus"></i> Add a row</button></td>
-        </tr>
-        </tfoot>
-    </table>
-    <table class="table">
-        <thead>
-        <tr class="header">
-            <th class="index"></th>
-            <th class="outcome required">Short-term Project Outcome(s)</th>
-            <th class="remove"></th>
-        </tr>
-        </thead>
-        <tbody data-bind="foreach:details.outcomes.shortTermOutcomes">
-        <tr>
-            <td class="index" data-bind="text:$index()+1"></td>
-            <td class="outcome">
-                <textarea data-validation-engine="validate[required]" data-bind="value:description, disable: $parent.isProjectDetailsLocked()"></textarea>
-            </td>
-            <td class="remove">
-                <span data-bind="if: $index() && !$parent.isProjectDetailsLocked()"><i class="fa fa-remove"
-                                                                                       data-bind="click: $parent.removeShortTermOutcome"></i>
-                </span>
-            </td>
-        </tr>
-        </tbody>
-        <tfoot>
-        <tr>
-            <td colspan="3">
-                <button type="button" class="btn btn-small"
-                        data-bind="disable: isProjectDetailsLocked(), click: addShortTermOutcome">
-                    <i class="icon-plus"></i> Add a row</button></td>
-        </tr>
-        </tfoot>
-    </table>
 
-
+    <h4>Project details</h4>
     <div class="row-fluid">
         <div class="span12">
             <table class="table">
                 <tbody>
+
+                <tr class="header required">
+                    <th class="required">Project description</th>
+                </tr>
+                <tr>
+                    <td><textarea rows="5"  data-validation-engine="validate[required]" data-bind="value:details.description, disable: isProjectDetailsLocked()"></textarea></td>
+                </tr>
+                <tr class="header required">
+                    <th class="required">Project methodology</th>
+                </tr>
+                <tr>
+                    <td><textarea rows="5" data-validation-engine="validate[required]" data-bind="value:details.implementation.description, disable: isProjectDetailsLocked()"></textarea></td>
+                </tr>
                 <tr class="header">
                     <th class="required">Project rationale</th>
                 </tr>
                 <tr>
                     <td><textarea data-validation-engine="validate[required]" data-bind="value:details.rationale, disable: isProjectDetailsLocked()"></textarea></td>
                 </tr>
-                <tr class="header required">
-                    <th class="required">Project methodology</th>
-                </tr>
-                <tr>
-                    <td><textarea  data-validation-engine="validate[required]" data-bind="value:details.projectMethodology, disable: isProjectDetailsLocked()"></textarea></td>
-                </tr>
-                <tr class="header required">
-                    <th class="required">Monitoring methodology</th>
-                </tr>
-                <tr>
-                    <td><textarea data-validation-engine="validate[required]" data-bind="value:details.monitoringMethodology, disable: isProjectDetailsLocked()"></textarea></td>
-                </tr>
                 </tbody>
             </table>
         </div>
     </div>
 
+    <h4>Monitoring methodology</h4>
+    <!-- ko with:details.baseline -->
+    <table class="table">
+        <thead>
+        <th class="index"></th>
+        <th class="keq required">Project baseline</th>
+        <th class="keq-monitoring required">Describe the method used to obtain the baseline</th>
+        <th class="remove"></th>
+        </thead>
+        <tbody data-bind="foreach: rows">
+            <tr>
+                <td class="index"><span data-bind="text:$index()+1"></span></td>
+                <td class="keq">
+                    <textarea rows="4" data-validation-engine="validate[required]"
+                              data-bind="value: baseline, disable: $root.isProjectDetailsLocked()">
+                    </textarea>
+                </td>
+                <td class="keq-monitoring"><textarea data-validation-engine="validate[required]"
+                        data-bind="value: method, disable: $root.isProjectDetailsLocked()"
+                        rows="4"></textarea></td>
+                <td class="remove">
+                    <span data-bind="if: $index() && !$root.isProjectDetailsLocked()"><i class="icon-remove"
+                                                                                           data-bind="click: $parent.removeBaseline"></i>
+                    </span>
+                </td>
+            </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="4">
+                <button type="button" class="btn btn-small"
+                        data-bind="disable: $root.isProjectDetailsLocked(), click: addBaseline">
+                    <i class="icon-plus"></i> Add a row</button></td>
+        </tr>
+        </tfoot>
+    </table>
+    <!-- /ko -->
 
-    <h4>Key evaluation question <fc:iconHelp
-            title="Key evaluation question">Please list the Key Evaluation Questions for your project. Evaluation questions should cover the effectiveness of the project and whether it delivered what was intended; the impact of the project; the efficiency of the delivery mechanism/s; and the appropriateness of the methodology. These need to be answerable within the resources and time available to the project.</fc:iconHelp></h4>
     <table class="table">
         <thead>
         <tr>
             <th class="index"></th>
-            <th class="keq">Project Key evaluation question (KEQ)
-                <fc:iconHelp
-                        title="Project Key evaluation question (KEQ)">List the projects KEQ’s. Add rows as necessary.</fc:iconHelp></th>
-            <th class="keq-monitoring">How will KEQ be monitored
-                <fc:iconHelp
-                        title="How will KEQ be monitored">Briefly describe how the project will ensure that evaluation questions will be addressed in a timely and appropriate manner.</fc:iconHelp></th>
+            <th class="keq required">Project monitoring indicators</th>
+            <th class="keq-monitoring required">Project monitoring indicator approach</th>
             <th class="remove"></th>
         </tr>
         </thead>
@@ -169,15 +204,15 @@
         <tr>
             <td class="index"><span data-bind="text:$index()+1"></span></td>
             <td class="keq">
-                <textarea rows="3"
+                <textarea rows="4" data-validation-engine="validate[required]"
                           data-bind="value: data1, disable: $parent.isProjectDetailsLocked()">
                 </textarea>
             </td>
-            <td class="keq-monitoring"><textarea
+            <td class="keq-monitoring"><textarea data-validation-engine="validate[required]"
                     data-bind="value: data2, disable: $parent.isProjectDetailsLocked()"
-                    rows="5"></textarea></td>
+                    rows="4"></textarea></td>
             <td class="remove">
-                <span data-bind="if: $index() && !$parent.isProjectDetailsLocked()"><i class="icon-remove"
+                <span data-bind="if: $index() > 1 && !$parent.isProjectDetailsLocked()"><i class="icon-remove"
                                                                                        data-bind="click: $parent.removeKEQ"></i>
                 </span>
             </td>
@@ -193,10 +228,7 @@
         </tfoot>
     </table>
 
-
-
-
-    <h4>National and regional priorities</h4>
+    <h4>Relevant national and regional plans</h4>
 
     <table class="table">
         <thead>

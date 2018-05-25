@@ -24,31 +24,7 @@
 
         </tbody>
     </table>
-    <table class="table secondary-outcome">
 
-        <thead>
-
-        <tr class="header">
-            <th class="index"></th>
-            <th class="outcome-priority">Secondary Project Outcome</th>
-            <th class="priority">Secondary Investment Priority(ies)</th>
-        </tr>
-        </thead>
-        <tbody data-bind="foreach:details.outcomes.secondaryOutcomes">
-        <tr>
-            <td class="index" data-bind="text:$index()+1"></td>
-            <td class="outcome-priority"><span
-                    data-bind="text:description"></span>
-            </td>
-            <td class="priority">
-                <ul data-bind="foreach:assets">
-                    <li data-bind="text:$data"></li>
-                </ul>
-            </td>
-        </tr>
-
-        </tbody>
-    </table>
     <table class="table">
         <thead>
         <tr class="header">
@@ -80,65 +56,62 @@
         </tbody>
     </table>
 
+    <h4>Additional project benefits</h4>
+    <table class="table secondary-outcome">
 
+        <thead>
+
+        <tr class="header">
+            <th class="index"></th>
+            <th class="outcome-priority">Secondary Project Outcome</th>
+            <th class="priority">Secondary Investment Priority(ies)</th>
+        </tr>
+        </thead>
+        <tbody data-bind="foreach:details.outcomes.secondaryOutcomes">
+        <tr>
+            <td class="index" data-bind="text:$index()+1"></td>
+            <td class="outcome-priority"><span
+                    data-bind="text:description"></span>
+            </td>
+            <td class="priority">
+                <ul data-bind="foreach:assets">
+                    <li data-bind="text:$data"></li>
+                </ul>
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+
+    <h4>Project details</h4>
     <div class="row-fluid">
         <div class="span12">
             <table class="table">
                 <tbody>
+                <tr class="header">
+                    <th>Project description</th>
+                </tr>
+                <tr>
+                    <td><span data-bind="text:description"></span></td>
+                </tr>
+                <tr class="header">
+                    <th>Project methodology</th>
+                </tr>
+                <tr>
+                    <td><span data-bind="text:details.implementation.description"></span></td>
+                </tr>
                 <tr class="header">
                     <th>Project rationale</th>
                 </tr>
                 <tr>
                     <td><span data-bind="text:details.rationale"></span></td>
                 </tr>
-                <tr class="header">
-                    <th>Project methodology</th>
-                </tr>
-                <tr>
-                    <td><span data-bind="text:details.projectMethodology"></span></td>
-                </tr>
-                <tr class="header">
-                    <th>Monitoring methodology</th>
-                </tr>
-                <tr>
-                    <td><span data-bind="text:details.monitoringMethodology"></span></td>
-                </tr>
                 </tbody>
             </table>
         </div>
     </div>
 
-
-    <h4>Key evaluation question <fc:iconHelp
-            title="Key evaluation question">Please list the Key Evaluation Questions for your project. Evaluation questions should cover the effectiveness of the project and whether it delivered what was intended; the impact of the project; the efficiency of the delivery mechanism/s; and the appropriateness of the methodology. These need to be answerable within the resources and time available to the project.</fc:iconHelp></h4>
-    <table class="table">
-        <thead>
-        <tr>
-            <th class="index"></th>
-            <th class="keq">Project Key evaluation question (KEQ)
-                <fc:iconHelp
-                        title="Project Key evaluation question (KEQ)">List the projects KEQ’s. Add rows as necessary.</fc:iconHelp></th>
-            <th class="keq-monitoring">How will KEQ be monitored
-                <fc:iconHelp
-                        title="How will KEQ be monitored">Briefly describe how the project will ensure that evaluation questions will be addressed in a timely and appropriate manner.</fc:iconHelp></th>
-
-        </tr>
-        </thead>
-        <tbody data-bind="foreach : details.keq.rows">
-        <tr>
-            <td class="index"><span data-bind="text:$index()+1"></span></td>
-            <td class="keq">
-                <span data-bind="text: data1"></span>
-            </td>
-            <td class="keq-monitoring"><span data-bind="text: data2"></span></td>
-        </tr>
-        </tbody>
-    </table>
-
-
-
-
-    <h4>National and regional priorities</h4>
+    <h4>Relevant national and regional plans</h4>
 
     <table class="table">
         <thead>
@@ -169,13 +142,19 @@
     <table class="table budget-table">
         <thead>
         <tr>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th data-bind="attr:{colspan:periods.length+1}">Minimum targets</th>
+        </tr>
+        <tr>
             <th class="index"></th>
             <th class="service">Service</th>
             <th class="score">Target measure</th>
+            <th class="budget-cell">Overall Target</th>
             <!-- ko foreach: periods -->
             <th class="budget-cell"><div data-bind="text:$data"></div></th>
             <!-- /ko -->
-            <th class="budget-cell">Overall Target</th>
         </tr>
         </thead>
         <tbody data-bind="foreach : services">
@@ -187,16 +166,15 @@
             <td class="score">
                 <span data-bind="text:score() ? score().label : ''"></span>
             </td>
+            <td class="budget-cell">
+                <span data-bind="text: target"></span>
+            </td>
 
             <!-- ko foreach: periodTargets -->
             <td class="budget-cell">
                 <span data-bind="text: target"/>
             </td>
             <!-- /ko -->
-
-            <td class="budget-cell">
-            <span data-bind="text: target"></span>
-            </td>
 
         </tr>
         </tbody>

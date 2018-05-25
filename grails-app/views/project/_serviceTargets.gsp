@@ -4,13 +4,17 @@
 <table class="table budget-table">
     <thead>
     <tr>
+        <th colspan="3"></th>
+        <th data-bind="attr:{colspan:periods.length+2}">Minimum targets</th>
+    </tr>
+    <tr>
         <th class="index"></th>
         <th class="service">Service</th>
         <th class="score">Target measure</th>
+        <th class="budget-cell">Overall Target</th>
         <!-- ko foreach: periods -->
         <th class="budget-cell"><div data-bind="text:$data"></div></th>
         <!-- /ko -->
-        <th class="budget-cell">Overall Target</th>
         <th class="remove"></th>
     </tr>
     </thead>
@@ -25,6 +29,10 @@
             <select data-bind="options: selectableScores, optionsText:'label', optionsValue:'scoreId', optionsCaption: 'Please select', value:scoreId, disable: $root.isProjectDetailsLocked()"
                     data-validation-engine="validate[required]"></select>
         </td>
+        <td class="budget-cell">
+            <input type="number" data-bind="value: target, disable: $root.isProjectDetailsLocked()"
+                   data-validation-engine="validate[min[0.01]]">
+        </td>
 
         <!-- ko foreach: periodTargets -->
         <td class="budget-cell">
@@ -34,10 +42,7 @@
         </td>
         <!-- /ko -->
 
-        <td class="budget-cell">
-            <input type="number" data-bind="value: target, disable: $root.isProjectDetailsLocked()"
-                   data-validation-engine="validate[min[0.01]]">
-        </td>
+
         <td class="remove">
             <span data-bind="if: $index() && !$root.isProjectDetailsLocked()"><i class="icon-remove"
                                                                                  data-bind="click: $parent.removeService"></i>
