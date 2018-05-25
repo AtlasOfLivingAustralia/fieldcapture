@@ -111,6 +111,75 @@
         </div>
     </div>
 
+    <!-- ko with:details.threats -->
+    <table class="table">
+        <thead>
+        <th class="index"></th>
+        <th class="threat required">Key threat(s) or key threatening processes</th>
+        <th class="intervention required">Interventions to address threats</th>
+        </thead>
+        <tbody data-bind="foreach: rows">
+        <tr>
+            <td class="index"><span data-bind="text:$index()+1"></span></td>
+            <td class="threat">
+                <span adata-bind="text: threat">
+                </span>
+            </td>
+            <td class="intervention">
+                <span data-bind="value: intervention"></span>
+            </td>
+        </tr>
+        </tbody>
+
+    </table>
+    <!-- /ko -->
+
+    <h4>Monitoring methodology</h4>
+    <!-- ko with:details.baseline -->
+    <table class="table">
+        <thead>
+        <th class="index"></th>
+        <th class="baseline required">Project baseline</th>
+        <th class="baseline required">Describe the method used to obtain the baseline</th>
+        </thead>
+        <tbody data-bind="foreach: rows">
+        <tr>
+            <td class="index"><span data-bind="text:$index()+1"></span></td>
+            <td class="baseline">
+                <span data-bind="text: baseline"></span>
+            </td>
+            <td class="baseline">
+                <span data-bind="text: method"></span>
+            </td>
+
+        </tr>
+        </tbody>
+
+    </table>
+    <!-- /ko -->
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th class="index"></th>
+            <th class="baseline required">Project monitoring indicators</th>
+            <th class="baseline required">Project monitoring indicator approach</th>
+        </tr>
+        </thead>
+        <tbody data-bind="foreach : details.keq.rows">
+        <tr>
+            <td class="index"><span data-bind="text:$index()+1"></span></td>
+            <td class="baseline">
+                <span data-bind="text: data1">
+                </span>
+            </td>
+            <td class="baseline">
+                <span data-bind="value: data2"></span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
     <h4>Relevant national and regional plans</h4>
 
     <table class="table">

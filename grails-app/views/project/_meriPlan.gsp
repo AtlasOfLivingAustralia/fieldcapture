@@ -146,36 +146,72 @@
                     <th class="required">Project rationale</th>
                 </tr>
                 <tr>
-                    <td><textarea data-validation-engine="validate[required]" data-bind="value:details.rationale, disable: isProjectDetailsLocked()"></textarea></td>
+                    <td><textarea rows="5" data-validation-engine="validate[required]" data-bind="value:details.rationale, disable: isProjectDetailsLocked()"></textarea></td>
                 </tr>
                 </tbody>
             </table>
         </div>
     </div>
+    <!-- ko with:details.threats -->
+    <table class="table">
+        <thead>
+        <th class="index"></th>
+        <th class="threat required">Key threat(s) or key threatening processes</th>
+        <th class="intervention required">Interventions to address threats</th>
+        <th class="remove"></th>
+        </thead>
+        <tbody data-bind="foreach: rows">
+        <tr>
+            <td class="index"><span data-bind="text:$index()+1"></span></td>
+            <td class="threat">
+                <textarea rows="4" data-validation-engine="validate[required]"
+                          data-bind="value: threat, disable: $root.isProjectDetailsLocked()">
+                </textarea>
+            </td>
+            <td class="intervention"><textarea data-validation-engine="validate[required]"
+                                                 data-bind="value: intervention, disable: $root.isProjectDetailsLocked()"
+                                                 rows="4"></textarea></td>
+            <td class="remove">
+                <span data-bind="if: $index() && !$root.isProjectDetailsLocked()"><i class="icon-remove"
+                                                                                     data-bind="click: $parent.removeRow"></i>
+                </span>
+            </td>
+        </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="4">
+                <button type="button" class="btn btn-small"
+                        data-bind="disable: $root.isProjectDetailsLocked(), click: addRow">
+                    <i class="icon-plus"></i> Add a row</button></td>
+        </tr>
+        </tfoot>
+    </table>
+    <!-- /ko -->
 
     <h4>Monitoring methodology</h4>
     <!-- ko with:details.baseline -->
     <table class="table">
         <thead>
         <th class="index"></th>
-        <th class="keq required">Project baseline</th>
-        <th class="keq-monitoring required">Describe the method used to obtain the baseline</th>
+        <th class="baseline required">Project baseline</th>
+        <th class="baseline required">Describe the method used to obtain the baseline</th>
         <th class="remove"></th>
         </thead>
         <tbody data-bind="foreach: rows">
             <tr>
                 <td class="index"><span data-bind="text:$index()+1"></span></td>
-                <td class="keq">
+                <td class="baseline">
                     <textarea rows="4" data-validation-engine="validate[required]"
                               data-bind="value: baseline, disable: $root.isProjectDetailsLocked()">
                     </textarea>
                 </td>
-                <td class="keq-monitoring"><textarea data-validation-engine="validate[required]"
+                <td class="baseline"><textarea data-validation-engine="validate[required]"
                         data-bind="value: method, disable: $root.isProjectDetailsLocked()"
                         rows="4"></textarea></td>
                 <td class="remove">
                     <span data-bind="if: $index() && !$root.isProjectDetailsLocked()"><i class="icon-remove"
-                                                                                           data-bind="click: $parent.removeBaseline"></i>
+                                                                                           data-bind="click: $parent.removeRow"></i>
                     </span>
                 </td>
             </tr>
@@ -184,7 +220,7 @@
         <tr>
             <td colspan="4">
                 <button type="button" class="btn btn-small"
-                        data-bind="disable: $root.isProjectDetailsLocked(), click: addBaseline">
+                        data-bind="disable: $root.isProjectDetailsLocked(), click: addRow">
                     <i class="icon-plus"></i> Add a row</button></td>
         </tr>
         </tfoot>
@@ -195,20 +231,20 @@
         <thead>
         <tr>
             <th class="index"></th>
-            <th class="keq required">Project monitoring indicators</th>
-            <th class="keq-monitoring required">Project monitoring indicator approach</th>
+            <th class="baseline required">Project monitoring indicators</th>
+            <th class="baseline required">Project monitoring indicator approach</th>
             <th class="remove"></th>
         </tr>
         </thead>
         <tbody data-bind="foreach : details.keq.rows">
         <tr>
             <td class="index"><span data-bind="text:$index()+1"></span></td>
-            <td class="keq">
+            <td class="baseline">
                 <textarea rows="4" data-validation-engine="validate[required]"
                           data-bind="value: data1, disable: $parent.isProjectDetailsLocked()">
                 </textarea>
             </td>
-            <td class="keq-monitoring"><textarea data-validation-engine="validate[required]"
+            <td class="baseline"><textarea data-validation-engine="validate[required]"
                     data-bind="value: data2, disable: $parent.isProjectDetailsLocked()"
                     rows="4"></textarea></td>
             <td class="remove">
