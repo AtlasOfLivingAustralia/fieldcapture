@@ -105,7 +105,7 @@ function MERIPlan(project, config) {
    };
 
    self.addSecondaryOutcome = function() {
-       self.details.outcomes.secondaryOutcomes.push(new OutcomeRowViewModel());
+       self.details.outcomes.secondaryOutcomes.push(new SingleAssetOutcomeViewModel());
    };
    self.removeSecondaryOutcome = function(outcome) {
        self.details.outcomes.secondaryOutcomes.remove(outcome);
@@ -198,11 +198,8 @@ function DetailsViewModel(o, project, risks, config) {
 function ServicesViewModel(serviceIds, allServices, outputTargets, periods) {
     var self = this;
 
-    // Output targets are not stored inside the MERI plan for compatibility with other MERIT projects.
-    var serviceModel = {
-        serviceIds: serviceIds || [],
-        targets: outputTargets || []
-    };
+    allServices = allServices || [];
+    outputTargets = outputTargets || [];
 
     var ServiceTarget = function(service, score) {
         var target = this;
@@ -497,9 +494,8 @@ function OutcomesViewModel(outcomes, project) {
         return priorities;
     };
 
-    self.primaryOutcome = { description: ko.observable(outcomes.primaryOutcome.description),
-                            asset: ko.observable(outcomes.primaryOutcome.asset)};
-    self.secondaryOutcomes = ko.observableArray(_.map(outcomes.secondaryOutcomes || [], outcomeToViewModel));
+    self.primaryOutcome = new SingleAssetOutcomeViewModel(outcomes.primaryOutcome);
+    self.secondaryOutcomes = ko.observableArray(_.map(outcomes.secondaryOutcomes || [], function(outcome) {return new SingleAssetOutcomeViewModel(outcome)}));
     self.shortTermOutcomes = ko.observableArray(_.map(outcomes.shortTermOutcomes || [], outcomeToViewModel));
     self.midTermOutcomes = ko.observableArray(_.map(outcomes.midTermOutcomes || [], outcomeToViewModel));
 
@@ -530,6 +526,21 @@ function OutcomeRowViewModel(o) {
    self.description = ko.observable(o.description);
    if(!o.assets) o.assets = [];
    self.assets = ko.observableArray(o.assets);
+};
+
+function SingleAssetOutcomeViewModel(o) {
+    var self = this;
+    if(!o) o = {};
+    self.description = ko.observable(o.description);
+    if(!o.assets) o.assets = [];
+    self.asset = ko.observable(o.assets[0]);
+
+    self.toJSON = function() {
+        return {
+            description:self.description(),
+            assets:[self.asset()]
+        }
+    };
 };
 
 function BudgetViewModel(o, period){

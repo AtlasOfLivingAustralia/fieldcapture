@@ -39,7 +39,7 @@ class ProgramService {
     Map getByName(String name) {
 
 
-        String url = "${grailsApplication.config.ecodata.baseUrl}program?name=" + name.encodeAsURL()
+        String url = "${grailsApplication.config.ecodata.baseUrl}program/findByName?name=" + name.encodeAsURL()
         Map program = webService.getJson(url)
 
         if(program && program.statusCode == 404) {
@@ -118,6 +118,14 @@ class ProgramService {
         }
 
         deliveredServices
+    }
+
+    void regenerateProgramReports(String id) {
+        Map program = get(id)
+        Map programReportConfig = program.config?.programReports
+        programReportConfig?.each { reportConfig ->
+
+        }
     }
 
     void regenerateActivityReports(String id) {

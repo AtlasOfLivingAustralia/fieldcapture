@@ -93,7 +93,7 @@ class ProjectController {
                              themes                : config.themes,
                              config                : config,
                              projectContent        : content.model,
-                             hasCustomTemplate     : projectService.getProgramConfiguration(project)?.projectTemplate
+                             hasCustomTemplate     : config?.projectTemplate
                 ]
 
                 render view: content.view, model: model

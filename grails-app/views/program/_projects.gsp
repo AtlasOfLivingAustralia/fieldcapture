@@ -12,7 +12,7 @@
         <tbody>
             <g:each var="project" in="${projects}">
                 <tr>
-                    <td class="projectId"><a href="${g.createLink(controller:'project', action:'index', id:project.projectId)}" >${project.externalId}</a></td>
+                    <td class="projectId"><a href="${g.createLink(controller:'project', action:'index', id:project.projectId)}" >${project.externalId ?: project.grantId}</a></td>
                     <td class="name">${project.name}</td>
                     <td class="startDate"><fc:formatDateString date="${project.plannedStartDate}" format="dd-MM-yyyy"/></td>
                     <td class="endDate"><fc:formatDateString date="${project.plannedEndDate}" format="dd-MM-yyyy"/></td>

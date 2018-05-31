@@ -104,7 +104,7 @@
                     data-bind="value:description, options: $parent.details.outcomes.selectableOutcomes, optionsCaption: 'Please select', disable: $root.isProjectDetailsLocked()"></select>
             </td>
             <td class="priority">
-                <select multiple="multiple" data-bind="options:$root.details.outcomes.outcomePriorities(description()), multiSelect2:{value:assets, tags:false}, disable: $root.isProjectDetailsLocked()" class="input-large asset"></select>
+                <select data-bind="value:asset, options:$root.details.outcomes.outcomePriorities(description()), optionsCaption: 'Please select', disable: $root.isProjectDetailsLocked()" class="input-large asset"></select>
             </td>
             <td class="remove">
                 <span data-bind="if:!$parent.isProjectDetailsLocked()">
@@ -118,7 +118,7 @@
         <tr>
             <td colspan="4">
                 <button type="button" class="btn btn-small"
-                        data-bind="disable: isProjectDetailsLocked(), click: addSecondaryOutcome">
+                        data-bind="disable: details.outcomes.secondaryOutcomes().length >= 3 || isProjectDetailsLocked(), click: addSecondaryOutcome">
                     <i class="icon-plus"></i> Add a row</button></td>
         </tr>
         </tfoot>
@@ -142,12 +142,14 @@
                 <tr>
                     <td><textarea rows="5" data-validation-engine="validate[required,maxSize[4000]]" data-bind="value:details.implementation.description, disable: isProjectDetailsLocked()"></textarea></td>
                 </tr>
+                <!-- ko if:false -->
                 <tr class="header">
                     <th class="required">Project rationale <fc:iconHelp>TBA</fc:iconHelp></th>
                 </tr>
                 <tr>
                     <td><textarea rows="5" data-validation-engine="validate[required,maxSize[4000]]" data-bind="value:details.rationale, disable: isProjectDetailsLocked()"></textarea></td>
                 </tr>
+                <!-- /ko -->
                 </tbody>
             </table>
         </div>
