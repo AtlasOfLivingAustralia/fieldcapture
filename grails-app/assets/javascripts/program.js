@@ -192,7 +192,7 @@ var ProgramPageViewModel = function(props, options) {
     self.saveProgramConfiguration = function() {
 
         try {
-            config = JSON.parse(config);
+            config = JSON.parse(self.config());
         }
         catch (e) {
             bootbox.alert("Invalid JSON");

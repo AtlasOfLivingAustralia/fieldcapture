@@ -42,6 +42,7 @@ class ImportService {
     def roleEditor = "editor"
     def roleAdmin = "admin"
     def roleGrantManager = "caseManager"
+    def programService
 
     /**
      * Looks for columns "Grant ID","Sub-project ID","Recipient email 1","Recipient email 2","Grant manager email" and
@@ -1209,13 +1210,19 @@ class ImportService {
 
     def gmsImport(InputStream csv, status, preview, charEncoding = 'Cp1252') {
 
-        def action = preview?{rows -> mapProjectRows(rows, status)}:{rows -> importAll(rows, status)}
+        Map programs = [:].withDefault{name ->
+            Map program = programService.getByName(name)
+            program?.programId
+        }
+        def mapper = new GmsMapper(metadataService.activitiesModel(), metadataService.programsModel(), metadataService.organisationList()?.list, metadataService.getOutputTargetScores(), programs)
+
+        def action = preview?{rows -> mapProjectRows(rows, status, mapper)}:{rows -> importAll(rows, status, mapper)}
 
         def result = [:]
         cacheService.clear(PROJECTS_CACHE_KEY)
         def reader = new InputStreamReader(csv, charEncoding)
         try {
-            def mapper = new GmsMapper(metadataService.activitiesModel(), metadataService.programsModel(), metadataService.organisationList()?.list, metadataService.getOutputTargetScores())
+
             def first = true
             def prevGrantId = null
             def prevExternalId = null
@@ -1256,9 +1263,8 @@ class ImportService {
         result
     }
 
-    def mapProjectRows(projectRows, status) {
+    def mapProjectRows(projectRows, status, GmsMapper mapper) {
 
-        def mapper = new GmsMapper(metadataService.activitiesModel(), metadataService.programsModel(), metadataService.organisationList()?.list, metadataService.getOutputTargetScores())
         def projectDetails = mapper.mapProject(projectRows)
         def grantId = projectDetails.project.grantId?:'<not mapped>'
         def externalId = projectDetails.project.externalId?:'<not mapped>'
@@ -1266,9 +1272,8 @@ class ImportService {
         status << [grantId:grantId, externalId:externalId, success:projectDetails.errors.size() == 0, errors:projectDetails.errors]
     }
 
-    def importAll(projectRows, status) {
+    def importAll(projectRows, status, GmsMapper mapper) {
 
-        def mapper = new GmsMapper(metadataService.activitiesModel(), metadataService.programsModel(), metadataService.organisationList()?.list, metadataService.getOutputTargetScores())
         def projectDetails = mapper.mapProject(projectRows)
 
         def grantId = projectDetails.project.grantId?:'<not mapped>'
@@ -1415,7 +1420,7 @@ class ImportService {
 
 
         def activitiesModel = metadataService.activitiesModel()
-        def mapper = new GmsMapper(activitiesModel, [:], [], metadataService.getOutputTargetScores(), true)
+        def mapper = new GmsMapper(activitiesModel, [:], [], metadataService.getOutputTargetScores(), [:], true)
         def projectDetails = mapper.mapProject(projectRows)
 
         //errors.addAll(projectDetails.errors)
