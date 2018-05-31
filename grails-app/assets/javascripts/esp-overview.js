@@ -9,6 +9,7 @@
 //= require projectActivity.js
 //= require enterActivityData.js
 //= require keydragzoom/keydragzoom.js
+//= require forms.js
 //= require_self
 
 var SiteStatusModel = function(site, currentStage, map, sitesViewModel) {
