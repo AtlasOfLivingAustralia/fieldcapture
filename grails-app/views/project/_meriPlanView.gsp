@@ -74,9 +74,8 @@
                     data-bind="text:description"></span>
             </td>
             <td class="priority">
-                <ul data-bind="foreach:assets">
-                    <li data-bind="text:$data"></li>
-                </ul>
+                <span data-bind="text:asset">
+                </span>
             </td>
         </tr>
 
@@ -100,12 +99,12 @@
                 <tr>
                     <td><span data-bind="text:details.implementation.description"></span></td>
                 </tr>
-                <tr class="header">
-                    <th>Project rationale</th>
-                </tr>
-                <tr>
-                    <td><span data-bind="text:details.rationale"></span></td>
-                </tr>
+                %{--<tr class="header">--}%
+                    %{--<th>Project rationale</th>--}%
+                %{--</tr>--}%
+                %{--<tr>--}%
+                    %{--<td><span data-bind="text:details.rationale"></span></td>--}%
+                %{--</tr>--}%
                 </tbody>
             </table>
         </div>
