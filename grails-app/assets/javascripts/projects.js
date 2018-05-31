@@ -19,8 +19,6 @@
 //= require activity.js
 //= require projectActivityPlan.js
 //= require projectActivity.js
-//= require select2/4.0.3/js/select2.full
-//= require forms-knockout-bindings.js
 //= require_self
 
 /*

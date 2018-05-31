@@ -548,6 +548,8 @@
 <asset:javascript src="common.js"/>
 <asset:javascript src="projects.js"/>
 <asset:javascript src="reporting.js"/>
+<asset:javascript src="select2/4.0.3/js/select2.full"/>
+<asset:javascript src="forms-knockout-bindings.js"/>
 <asset:deferredScripts/>
 </body>
 </html>
