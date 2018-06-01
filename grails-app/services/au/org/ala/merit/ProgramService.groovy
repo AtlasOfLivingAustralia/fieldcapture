@@ -145,7 +145,7 @@ class ProgramService {
         Map resp = webService.getJson(url)
 
         if (resp?.projects) {
-            return resp.projects
+            return resp.projects.projects
         }
         return resp
 

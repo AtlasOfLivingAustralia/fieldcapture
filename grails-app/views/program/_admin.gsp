@@ -21,16 +21,6 @@
                 <div class="col-sm-10">Edit the programme details and content</div>
             </div>
 
-            <g:if test="${fc.userIsAlaOrFcAdmin()}">
-                <div class="row">
-                    <div class="col-sm-2">
-                        <button class="admin-action btn btn-small btn-danger" data-bind="click:deleteProgram"><i class="fa fa-remove"></i> Delete</button>
-                    </div>
-                    <div class="col-sm-10">
-                        Delete this program from the system. <strong>This cannot be undone</strong>
-                    </div>
-                </div>
-            </g:if>
         </div>
 
 
@@ -56,15 +46,18 @@
         <div class="tab-pane" id="reporting">
             <form>
                 <div class="form-group">
-                    <label for="first-reporting-date">Date first milestone report is due</label>
-                    <fc:datePicker class="form-control" targetField="firstMilestoneDate.date" id="first-reporting-date" data-validation-engine="validate[required]"/>
+                    <label for="core-services-group">Core services reporting group</label>
+                    <select class="form-control" id="core-services-group" data-bind="value:coreServicesPeriod, options:coreServicesOptions, optionsText:'label', optionsValue:'label', optionsCaption:'Please select'" data-validation-engine="validate[required]"></select>
 
                 </div>
+
                 <div class="form-group">
-                    <label for="milestone-reporting-period">Reporting period (months)</label>
-                    <input type="number" class="form-control" data-bind="value:milestonePeriod" id="milestone-reporting-period" data-validation-engine="validate[required,custom[integer]]">
+                    <label for="progress-reporting-group">Project progress reporting group</label>
+                    <select class="form-control" id="progress-reporting-group" data-bind="value:activityReportingPeriod, options:activityReportingOptions, optionsText:'label', optionsValue:'label', optionsCaption:'Please select'" data-validation-engine="validate[required]"></select>
 
                 </div>
+
+
                 <button class="btn btn-primary" data-bind="click:saveReportingConfiguration">Save</button>
             </form>
         </div>

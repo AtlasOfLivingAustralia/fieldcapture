@@ -19,7 +19,7 @@ class ProjectConfigurationService {
 
         if (project.programId) {
             Map program = programService.get(project.programId)
-            programConfig = program.config ?: [:]
+            programConfig = program.inheritedConfig ?: [:]
             programConfig.services = metadataService.getProjectServices()
             programConfig.optionalProjectContent = ['MERI Plan', 'Risks and Threats']
             programConfig.priorities = program.priorities ?: []

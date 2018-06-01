@@ -14,7 +14,7 @@ import static au.org.ala.merit.DashboardTagLib.*
 
 class ReportController {
 
-    def webService, cacheService, searchService, metadataService, activityService, projectService, organisationService, commonService, statisticsFactory, reportService, userService
+    def webService, cacheService, searchService, metadataService, activityService, projectService, organisationService, commonService, statisticsFactory, reportService, userService, projectConfigurationService
 
     static defaultAction = "dashboard"
 
@@ -514,7 +514,10 @@ class ReportController {
     @RequireApiKey
     def meriPlanReportCallback(String id) {
         Map project = projectService.get(id, 'all')
-        render view:'/project/meriPlanReadOnly', model:[project:project, themes:metadataService.getThemesForProject(project), user:[isAdmin:true]]
+        Map config = projectConfigurationService.getProjectConfiguration(project)
+        String meriPlanTemplate = config.meriPlanTemplate ?: 'meriPlanOriginal'
+
+        render view:'/project/meriPlanReadOnly', model:[project:project, meriPlanTemplate:meriPlanTemplate, themes:metadataService.getThemesForProject(project), user:[isAdmin:true]]
     }
 
 
