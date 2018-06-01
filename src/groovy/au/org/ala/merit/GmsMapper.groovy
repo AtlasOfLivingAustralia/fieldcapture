@@ -162,17 +162,27 @@ class GmsMapper {
         project.isMERIT = true
         project.origin = 'merit'
 
-        def program = programModel.programs.find {it.name == project.associatedProgram}
-        if (!program) {
-            errors << "Programme ${project.associatedProgram} doesn't match an existing MERIT programme"
+        if (project.programName) {
+            String programName = project.remove('programName')
+            project.programId = programs[programName]
+            if (!project.programId) {
+                errors << "No management unit exists with name: ${programName}"
+            }
         }
         else {
-            if (project.associatedSubProgram) {
-                if (!program.subprograms.find{it.name == project.associatedSubProgram}) {
-                    errors << "Sub-programme ${project.associatedSubProgram} doesn't match any MERIT programme"
+            def program = programModel.programs.find {it.name == project.associatedProgram}
+            if (!program) {
+                errors << "Programme ${project.associatedProgram} doesn't match an existing MERIT programme"
+            }
+            else {
+                if (project.associatedSubProgram) {
+                    if (!program.subprograms.find{it.name == project.associatedSubProgram}) {
+                        errors << "Sub-programme ${project.associatedSubProgram} doesn't match any MERIT programme"
+                    }
                 }
             }
         }
+
         def organisation = organisations.find{it.name == project.organisationName}
         if (organisation) {
             project.organisationId = organisation.organisationId
@@ -189,13 +199,7 @@ class GmsMapper {
                 errors << "No (service provider) organisation exists with name ${project.serviceProviderName}"
             }
         }
-        if (project.programName) {
-            String programName = project.remove('programName')
-            project.programId = programs[programName]
-            if (!project.programId) {
-                errors << "No management unit exists with name: ${programName}"
-            }
-        }
+
         errors.addAll(result.errors)
         project.planStatus = 'not approved'
 
