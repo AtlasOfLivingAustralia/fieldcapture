@@ -16,6 +16,7 @@ class ProgramController {
     ProjectService projectService
     ReportService reportService
     ActivityService activityService
+    ProjectConfigurationService projectConfigurationService
 
     // Simply forwards to the list view
     def list() {}
@@ -66,7 +67,7 @@ class ProgramController {
 
         [about   : [label: 'Management Unit', visible: true, stopBinding: false, type: 'tab'],
          dashboard: [label: 'Dashboard', visible: true, stopBinding: true, type: 'tab', servicesDashboard:[planning:false, services:servicesWithScores], template:'/project/serviceDashboard'],
-         projects: [label: 'Work Order', visible: true, stopBinding: false, type:'tab', projects:projects, reports:program.reports?:[], adHocReportTypes:adHocReportTypes, hideDueDate:true],
+         projects: [label: 'Reporting', visible: true, stopBinding: false, type:'tab', projects:projects, reports:program.reports?:[], adHocReportTypes:adHocReportTypes, hideDueDate:true],
          sites   : [label: 'Sites', visible: true, stopBinding: true, type:'tab'],
          admin   : [label: 'Admin', visible: hasAdminAccess, type: 'tab']]
     }
@@ -219,16 +220,19 @@ class ProgramController {
 
         Map activity = activityService.get(report.activityId)
         Map model = activityService.getActivityMetadata(activity.type)
-        model.context = programService.get(id)
+
+        Map program = programService.get(id)
+        model.context = program
         model.themes = []
         model.activity = activity
         model.returnTo = createLink(action:'index', id:id)
         model.contextViewUrl = model.returnTo
 
-        Map programConfig = [:]
+        Map programConfig = program.config
+
         // Temporary until we add this to the program config.
-        programConfig.requiresActivityLocking = programConfig.name == 'Reef 2050 Plan Action Reporting'
-        programConfig.navigationMode = (programConfig.name == 'Reef 2050 Plan Action Reporting' || programConfig.name == 'ESP Test') ? 'returnToProject' : 'stayOnPage'
+        programConfig.requiresActivityLocking = programConfig.requiresActivityLocking
+        programConfig.navigationMode = programConfig.navigationMode ?: 'stayOnPage'
 
         model.locked = activity.lock != null
         if (!activity.lock && programConfig.requiresActivityLocking) {
@@ -237,6 +241,17 @@ class ProgramController {
         }
 
         render model:model, view:'/activity/activityReport'
+    }
+
+    @PreAuthorise(accessLevel = 'editor')
+    def saveReport(String id, String reportId) {
+        if (!id || !reportId) {
+            error('An invalid report was selected for data entry', id)
+            return
+        }
+
+
+
     }
 
     def regenerateProgramReports(String id) {

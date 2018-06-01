@@ -1,5 +1,5 @@
 <g:if test="${projects}">
-    <h4>Work order</h4>
+    <h4>Project reporting</h4>
     <table id="projectList" class="table table-striped table-bordered">
         <thead class="thead-light">
             <th class="projectId">Project ID</th>
@@ -7,7 +7,6 @@
             <th class="startDate">Start Date</th>
             <th class="endDate">End Date</th>
             <th class="statusCol">Status</th>
-            <th class="cost">Cost (GST exclusive)</th>
         </thead>
         <tbody>
             <g:each var="project" in="${projects}">
@@ -17,7 +16,6 @@
                     <td class="startDate"><fc:formatDateString date="${project.plannedStartDate}" format="dd-MM-yyyy"/></td>
                     <td class="endDate"><fc:formatDateString date="${project.plannedEndDate}" format="dd-MM-yyyy"/></td>
                     <td class="statusCol"><fc:status status="${project.status}"/></td>
-                    <td class="cost"><g:formatNumber number="${fc.projectFunding(project:project)}" maxFractionDigits="0"/></td>
                 </tr>
             </g:each>
         </tbody>

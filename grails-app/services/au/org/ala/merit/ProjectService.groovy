@@ -700,13 +700,14 @@ class ProjectService  {
             startDate = DateUtils.format(firstEndDate.minus(p))
         }
 
-        List reportsOfType = project.reports?.findAll{it.type == reportConfig.type && it.activityType == reportConfig.activityType}
+        List reportsOfType = project.reports?.findAll{it.category == reportConfig.category}
         Map prototypeReport = [
                 type:reportConfig.type,
                 activityType:reportConfig.activityType,
                 name:reportConfig.reportNameTemplate,
                 description:reportConfig.reportDescriptionTemplate,
-                projectId:project.projectId
+                projectId:project.projectId,
+                category:reportConfig.category
         ]
         reportService.regenerateAllReports(reportsOfType, prototypeReport, startDate, project.plannedEndDate, period, alignedToCalendar, reportConfig.weekDaysToCompleteReport, project.name)
 

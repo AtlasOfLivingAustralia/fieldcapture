@@ -218,6 +218,8 @@ if (!pdfgen.baseURL){
 if (!userDetailsById.path) {
     userDetailsById.path = "getUserDetails"
 }
+esp.activities.admin = 'ESP Annual Report Submission'
+
 if (!grails.cache.ehcache) {
     grails {
         cache {

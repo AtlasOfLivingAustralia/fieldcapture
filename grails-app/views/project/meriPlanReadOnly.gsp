@@ -39,7 +39,7 @@
 </head>
 <body>
 <div class="container">
-    <g:render template="/project/projectDetails" model="[project: project]"/>
+    <g:render template="${meriPlanTemplate}" model="[project: project]"/>
     <asset:script>
     $(function() {
         var project = <fc:modelAsJavascript model="${project}"/>;

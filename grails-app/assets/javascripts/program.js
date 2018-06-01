@@ -142,22 +142,57 @@ var ProgramPageViewModel = function(props, options) {
 
         return activityReportConfig;
     };
+    var getProgramReportConfig = function() {
+        if (!config.programReports || config.programReports.length == 0) {
+            config.programReports = [{type:'Administrative', category:'Core Services'}];
+        }
+        return config.programReports[0];
+    };
 
     var activityReportConfig = getActivityReportConfig();
+    var programReportConfig = getProgramReportConfig();
 
-    self.firstMilestoneDate = ko.observable(activityReportConfig.firstMilestoneDate).extend({simpleDate:false});
-    self.milestonePeriod = ko.observable(activityReportConfig.period);
+    self.coreServicesOptions = [
+        {label:'Monthly', firstMilestoneDate:'2018-07-31T14:00:00Z', period:1},
+        {label:"Quarterly - Group A (First period ends September 30)", firstMilestoneDate:'2018-09-30T14:00:00Z', period:3},
+        {label:"Quarterly - Group B (First period ends August 31)", firstMilestoneDate:'2018-08-31T14:00:00Z', period:3},
+        {label:"Half-yearly", firstMilestoneDate:'2019-01-31T13:00:00Z', period:6}];
+
+    var currentOption = _.find(self.coreServicesOptions, function(option) {
+        return option.firstMilestoneDate == programReportConfig.firstMilestoneDate;
+    });
+    self.coreServicesPeriod = ko.observable(currentOption ? currentOption.label : null);
+
+
+    self.activityReportingOptions = [
+        {label:"Quarterly - Group C (First period ends September 30)", firstMilestoneDate:'2018-09-30T14:00:00Z', period:3},
+        {label:"Quarterly - Group D (First period ends October 31)", firstMilestoneDate:'2018-10-31T13:00:00Z', period:3},
+        {label:"Half-yearly", firstMilestoneDate:'2019-02-28T13:00:00Z', period:6}];
+
+    currentOption = _.find(self.activityReportingOptions, function(option) {
+        return option.firstMilestoneDate == activityReportConfig.firstMilestoneDate;
+    });
+    self.activityReportingPeriod = ko.observable(currentOption ? currentOption.label : null);
 
     self.saveReportingConfiguration = function() {
 
         if ($(options.reportingConfigSelector).validationEngine('validate')) {
-            activityReportConfig.firstMilestoneDate = self.firstMilestoneDate();
-            activityReportConfig.period = self.milestonePeriod();
+            var selectedCoreServicesPeriod = _.find(self.coreServicesOptions, function(option) {
+                return option.label == self.coreServicesPeriod();
+            });
+            programReportConfig.firstMilestoneDate = selectedCoreServicesPeriod.firstMilestoneDate;
+            programReportConfig.period = selectedCoreServicesPeriod.period;
+
+            var selectedActivityReportingPeriod = _.find(self.activityReportingOptions, function(option) {
+                return option.label == self.activityReportingPeriod();
+            });
+            activityReportConfig.firstMilestoneDate = selectedActivityReportingPeriod.firstMilestoneDate;
+            activityReportConfig.period = selectedActivityReportingPeriod.period;
+
             self.saveConfig(config, function() {
                 self.regenerateReports();
             });
         }
-
     };
 
     self.saveConfig = function(config, successCallback) {
