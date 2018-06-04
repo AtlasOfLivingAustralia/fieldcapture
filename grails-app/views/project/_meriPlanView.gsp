@@ -1,257 +1,243 @@
-<div class="meri-plan">
-    <h4>Project Outcomes</h4>
+<style type="text/css">
+.announcements th {
+	white-space: normal;
+}
+</style>
+<div data-bind="ifnot: details.status() == 'active'">
+	<h4>MERI Plan not available.</h4>
+</div>
 
-    <table class="table">
-        <thead>
-        <tr class="header">
-            <th class="index"></th>
-            <th class="outcome-priority">Primary Outcome</th>
-            <th class="primary-outcome priority">Primary Investment Priority</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td class="index">1</td>
-            <td class="outcome-priority"><span
-                    data-bind="text:details.outcomes.primaryOutcome.description"></span>
-            </td>
-            <td class="priority">
-                <span data-bind="text:details.outcomes.primaryOutcome.asset">
+<div data-bind="if: details.status() == 'active'">
+	<span style="float:right;" data-bind="if:detailsLastUpdated">Last update date : <span data-bind="text:detailsLastUpdated.formattedDate"></span></span>
+		<h3>MERI Plan Information</h3>
+		<div class="row-fluid space-after">
+			    <div class="span6">
+			        <div id="project-objectives" class="well well-small">
+			 			<label><b>Project Outcomes:</b></label>
+						<table style="width: 100%;">
+					        <thead>
+					            <tr>
+					            	<th></th>
+					                <th>Outcomes</th>
+					                <th>Asset(s) addressed</th>
+					            </tr>
+					        </thead>
+						<tbody data-bind="foreach : details.objectives.rows1">
+							<tr>
+				            	<td><span data-bind="text: $index()+1"></span></td>
+				            	<td><span data-bind="text:description"></span></td>
+				            	<td><label data-bind="text:assets"></label></td>
+				            </tr>
+						</tbody>		
+						</table>	
+						
+						<table style="width: 100%;">
+					        <thead>
+					            <tr>
+					            	<th></th>
+					                <th>Monitoring indicator</th>
+					                <th>Monitoring approach</th>
+					            </tr>
+					        </thead>
+						<tbody data-bind="foreach : details.objectives.rows">
+							<tr>
+				            	<td><span data-bind="text: $index()+1"></span></td>
+				            	<td><span data-bind="text:data1"></span></td>
+				            	<td><label data-bind="text:data2"></label></td>
+				            </tr>
+						</tbody>		
+						</table>			 			
+			        </div>
+			    </div>
+			    <div class="span6">
+		        <div id="project-partnership" class="well well-small">
+		 			<label><b>Project partnership:</b></label> 
+		 			<table style="width: 100%;">
+					        <thead>
+					            <tr>
+					            	<th></th>
+					                <th>Partner name</th>
+					                <th>Nature of partnership</th>
+					                <th>Type of organisation</th>
+					            </tr>
+					        </thead>
+						<tbody data-bind="foreach : details.partnership.rows">
+							<tr>
+				            	<td><span data-bind="text: $index()+1"></span></td>
+				            	<td><span data-bind="text:data1"></span></td>
+				            	<td><label data-bind="text:data2"></label></td>
+				            	<td><label data-bind="text:data3"></label></td>
+				            </tr>
+						</tbody>		
+					</table>			
+		        </div>
+	        </div>
+		</div>
+		
+		<div class="row-fluid space-after">
+		    <div class="span6">
+		        <div id="project-implementation" class="well well-small">
+		 			<label><b>Project implementation / delivery mechanism:</b></label>
+		 			<span style="white-space: pre-wrap;" data-bind="text: details.implementation.description"> </span>
+		        </div>
+		    </div>
+		    
+		    <div class="span6">
 
-                </span>
-            </td>
-        </tr>
+		    </div>
+		</div>
 
-        </tbody>
-    </table>
 
-    <table class="table">
-        <thead>
-        <tr class="header">
-            <th class="index"></th>
-            <th class="outcome">Mid-term Project Outcome(s)</th>
-        </tr>
-        </thead>
-        <tbody data-bind="foreach:details.outcomes.midTermOutcomes">
-        <tr>
-            <td class="index" data-bind="text:$index()+1"></td>
-            <td class="outcome"><span data-bind="text:description"></span></td>
-        </tr>
-        </tbody>
-    </table>
-    <table class="table">
-        <thead>
-        <tr class="header">
-            <th class="index"></th>
-            <th class="outcome">Short-term Project Outcome(s)</th>
-        </tr>
-        </thead>
-        <tbody data-bind="foreach:details.outcomes.shortTermOutcomes">
-        <tr>
-            <td class="index" data-bind="text:$index()+1"></td>
-            <td class="outcome">
-                <span data-bind="text:description"></span>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+		<g:if test="${announcementsVisible && user?.isAdmin}">
+		<div class="row-fluid space-after">
+			<div class="well well-small">
+				<div id="project-keq" class="announcements well well-small">
+					<label><b>Projects Announcements</b></label>
+					<table style="width: 100%; ">
+						<thead>
+						<tr>
+							<th></th>
+							<th><g:message code="announcements.type"/></th>
+							<th><g:message code="announcements.name"/></th>
+							<th><g:message code="announcements.scheduledDate"/>/th>
+							<th><g:message code="announcements.when"/></th>
+							<th><g:message code="announcements.funding"/></th>
+							<th><g:message code="announcements.description"/></th>
+						</tr>
+						</thead>
+						<tbody data-bind="foreach : details.events">
+						<tr>
+							<td><span data-bind="text: $index()+1"></span></td>
+							<td width="12%"> <span data-bind="text:type"></span></td>
+							<td width="18%"> <span data-bind="text: name"></span></td>
+							<td width="12%"> <span data-bind="text:scheduledDate.formattedDate"></span></td>
+							<td width="12%"> <span data-bind="text:grantAnnouncementDate"></span></td>
+							<td width="12%"> <span data-bind="text:funding"></span></td>
+							<td width="28%"> <span data-bind="text: description"></span></td>
+						</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		</g:if>
 
-    <h4>Additional project benefits</h4>
-    <table class="table secondary-outcome">
+		<div class="row-fluid space-after">
+			<div class="well well-small">
+ 				<label><b>Key evaluation question</b></label>
+	 			<table style="width: 100%;">
+			        <thead>
+			            <tr>
+			            	<th></th>
+			                <th>Project Key evaluation question (KEQ)</th>
+			                <th>How will KEQ be monitored </th>
+			            </tr>
+			        </thead>
+					<tbody data-bind="foreach : details.keq.rows">
+						<tr>
+			            	<td><span data-bind="text: $index()+1"></span></td>
+			            	<td><span data-bind="text:data1"></span></td>
+			            	<td><label data-bind="text:data2"></label></td>
+			            </tr>
+					</tbody>		
+				</table>
+			</div>
+		</div>		
+		
+		<div class="row-fluid space-after">
+			<div id="national-priorities" class="well well-small">
+	 			<label><b>National and regional priorities:</b></label>
+	 			<table style="width: 100%;">
+			        <thead>
+			            <tr>
+			            	<th></th>
+			                <th>Document name</th>
+			                <th>Relevant section</th>
+			                <th>Explanation of strategic alignment</th>
+			            </tr>
+			        </thead>
+				<tbody data-bind="foreach : details.priorities.rows">
+					<tr>
+		            	<td><span data-bind="text: $index()+1"></span></td>
+		            	<td><span data-bind="text: data1"></span></td>
+		            	<td><label data-bind="text: data2"></label></td>
+		            	<td><label data-bind="text: data3"></label></td>
+		            </tr>
+				</tbody>		
+				</table>
+			</div>
+		</div>
 
-        <thead>
+	<g:if test="${user?.isAdmin}">
+		<div class="row-fluid space-after">
+			<div class="required">
+	        <div id="keq" class="well well-small">
+	 			<label><b>Project Budget</b></label>
+			    <table style="width: 100%;">
+			        <thead>
+			            <tr>
+			            	<th width="2%"></th>
+			                <th width="12%">Investment/Priority Area</th>
+			                <th width="12%">Description</th>
+			                <!-- ko foreach: details.budget.headers -->
+			                	<th style="text-align: center;" width="10%" ><div style="text-align: center;" data-bind="text:data"></div>$</th>
+			                <!-- /ko -->
+							<th  style="text-align: center;" width="10%">Total</th>
+							
+			            </tr>
+			        </thead>
+			        <tbody data-bind="foreach : details.budget.rows">
+			                <tr>
+			                	<td><span data-bind="text:$index()+1"></span></td>
+			                    <td><span style="width: 97%;" data-bind="text:shortLabel"> </span></td>
+			                   	<td><div style="text-align: left;"><span style="width: 90%;" data-bind="text: description"></span></div></td>
+							
+								<!-- ko foreach: costs -->
+		                    	<td><div style="text-align: center;"><span style="width: 90%;" data-bind="text: dollar.formattedCurrency"></span></div></td>
+		                    	<!-- /ko -->
+			                    
+			                    <td style="text-align: center;" ><span style="width: 90%;" data-bind="text: rowTotal.formattedCurrency"></span></td>
+			                    
+			                </tr>
+					 </tbody>
+ 					<tfoot>
+           				<tr>
+           					<td></td>
+           					<td></td>
+							<td style="text-align: right;" ><b>Total </b></td>
+							 <!-- ko foreach: details.budget.columnTotal -->
+								<td style="text-align: center;" width="10%"><span data-bind="text:data.formattedCurrency"></span></td>
+							<!-- /ko -->
+							<td style="text-align: center;"><b><span data-bind="text:details.budget.overallTotal.formattedCurrency"></span></b></td>
+                   		</tr>
+					</tfoot>
+			    </table>
+	        </div>
+	    	</div>
+		</div>
+		</g:if>
 
-        <tr class="header">
-            <th class="index"></th>
-            <th class="outcome-priority">Secondary Project Outcome</th>
-            <th class="priority">Secondary Investment Priority(ies)</th>
-        </tr>
-        </thead>
-        <tbody data-bind="foreach:details.outcomes.secondaryOutcomes">
-        <tr>
-            <td class="index" data-bind="text:$index()+1"></td>
-            <td class="outcome-priority"><span
-                    data-bind="text:description"></span>
-            </td>
-            <td class="priority">
-                <span data-bind="text:asset">
-                </span>
-            </td>
-        </tr>
+		<g:if test="${risksAndThreatsVisible}">
+			<g:render template="risksAndThreatsReadOnly"/>
+		</g:if>
 
-        </tbody>
-    </table>
-
-    <h4>Project details</h4>
-    <div class="row-fluid">
-        <div class="span12">
-            <table class="table">
-                <tbody>
-                <tr class="header">
-                    <th>Project description</th>
-                </tr>
-                <tr>
-                    <td><span data-bind="text:description"></span></td>
-                </tr>
-                <tr class="header">
-                    <th>Project methodology</th>
-                </tr>
-                <tr>
-                    <td><span data-bind="text:details.implementation.description"></span></td>
-                </tr>
-                %{--<tr class="header">--}%
-                    %{--<th>Project rationale</th>--}%
-                %{--</tr>--}%
-                %{--<tr>--}%
-                    %{--<td><span data-bind="text:details.rationale"></span></td>--}%
-                %{--</tr>--}%
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <!-- ko with:details.threats -->
-    <table class="table">
-        <thead>
-        <th class="index"></th>
-        <th class="threat required">Key threat(s) or key threatening processes</th>
-        <th class="intervention required">Interventions to address threats</th>
-        </thead>
-        <tbody data-bind="foreach: rows">
-        <tr>
-            <td class="index"><span data-bind="text:$index()+1"></span></td>
-            <td class="threat">
-                <span adata-bind="text: threat">
-                </span>
-            </td>
-            <td class="intervention">
-                <span data-bind="value: intervention"></span>
-            </td>
-        </tr>
-        </tbody>
-
-    </table>
-    <!-- /ko -->
-
-    <h4>Monitoring methodology</h4>
-    <!-- ko with:details.baseline -->
-    <table class="table">
-        <thead>
-        <th class="index"></th>
-        <th class="baseline required">Project baseline</th>
-        <th class="baseline required">Describe the method used to obtain the baseline</th>
-        </thead>
-        <tbody data-bind="foreach: rows">
-        <tr>
-            <td class="index"><span data-bind="text:$index()+1"></span></td>
-            <td class="baseline">
-                <span data-bind="text: baseline"></span>
-            </td>
-            <td class="baseline">
-                <span data-bind="text: method"></span>
-            </td>
-
-        </tr>
-        </tbody>
-
-    </table>
-    <!-- /ko -->
-
-    <table class="table">
-        <thead>
-        <tr>
-            <th class="index"></th>
-            <th class="baseline required">Project monitoring indicators</th>
-            <th class="baseline required">Project monitoring indicator approach</th>
-        </tr>
-        </thead>
-        <tbody data-bind="foreach : details.keq.rows">
-        <tr>
-            <td class="index"><span data-bind="text:$index()+1"></span></td>
-            <td class="baseline">
-                <span data-bind="text: data1">
-                </span>
-            </td>
-            <td class="baseline">
-                <span data-bind="value: data2"></span>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-
-    <h4>Relevant national and regional plans</h4>
-
-    <table class="table">
-        <thead>
-        <tr>
-            <th class="index"></th>
-            <th class="document-name">Document name <fc:iconHelp
-                    title="Document name">List the name of the National or Regional plan the project is addressing.</fc:iconHelp></th>
-            <th class="section">Relevant section <fc:iconHelp
-                    title="Relevant section">What section (target/outcomes/objective etc) of the plan is being addressed?</fc:iconHelp></th>
-            <th class="alignment">Explanation of strategic alignment <fc:iconHelp
-                    title="Explanation of strategic alignment">In what way will the project deliver against this section? Keep the response brief, 1 to 2 sentences should be adequate.</fc:iconHelp></th>
-        </tr>
-        </thead>
-        <tbody data-bind="foreach : details.priorities.rows">
-        <tr>
-            <td class="index"><span data-bind="text:$index()+1"></span></td>
-            <td class="document-name"><span data-bind="text: data1"></span></td>
-            <td class="section"><span data-bind="text: data2"></span></td>
-            <td class="alignment"><span data-bind="text: data3"></span></td>
-        </tr>
-        </tbody>
-
-    </table>
-
-    <!-- ko with:details.services -->
-    <h4>Project Services</h4>
-
-    <table class="table budget-table">
-        <thead>
-        <tr>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th data-bind="attr:{colspan:periods.length+1}">Minimum targets</th>
-        </tr>
-        <tr>
-            <th class="index"></th>
-            <th class="service">Service</th>
-            <th class="score">Target measure</th>
-            <th class="budget-cell">Total</th>
-            <!-- ko foreach: periods -->
-            <th class="budget-cell"><div data-bind="text:$data"></div></th>
-            <!-- /ko -->
-        </tr>
-        </thead>
-        <tbody data-bind="foreach : services">
-        <tr>
-            <td class="index"><span data-bind="text:$index()+1"></span></td>
-            <td class="service">
-                <span data-bind="text:service() ? service().name : ''"></span>
-            </td>
-            <td class="score">
-                <span data-bind="text:score() ? score().label : ''"></span>
-            </td>
-            <td class="budget-cell">
-                <span data-bind="text: target"></span>
-            </td>
-
-            <!-- ko foreach: periodTargets -->
-            <td class="budget-cell">
-                <span data-bind="text: target"/>
-            </td>
-            <!-- /ko -->
-
-        </tr>
-        </tbody>
-    </table>
-
-    <!-- /ko -->
-
-    <g:if test="${risksAndThreatsVisible}">
-        <g:render template="risksAndThreatsReadOnly"/>
-    </g:if>
-
+				
+		<div class="row-fluid space-after">
+			<div class="span6">
+	        	<div class="well well-small">
+		        	<label><b>Workplace Health and Safety</b></label>
+		 			<div>1. Are you aware of, and compliant with, your workplace health and safety legislation and obligations: <b><span data-bind="text: details.obligations"></span></b></div>
+		 			<div>2. Do you have appropriate policies and procedures in place that are commensurate with your project activities: <b><span data-bind="text: details.policies"></span></b></div>
+	        	</div>
+	        </div>
+	        <div class="span6">
+	        	<div class="well well-small">
+		        	<span><b>&nbsp;Are you willing for your project to be used as a case study by the Department?</b></span>
+		        	<input class="pull-left" type="checkbox"  data-bind="checked: details.caseStudy, disable: true" />
+	        	</div>
+	        </div>	
+		</div>
+		
+	
+	
 </div>

@@ -517,7 +517,7 @@ class ReportController {
         Map config = projectConfigurationService.getProjectConfiguration(project)
         String meriPlanTemplate = config.meriPlanTemplate ?: 'meriPlanOriginal'
 
-        render view:'/project/meriPlanReadOnly', model:[project:project, meriPlanTemplate:meriPlanTemplate, themes:metadataService.getThemesForProject(project), user:[isAdmin:true]]
+        render view:'/project/meriPlanReport', model:[project:project, meriPlanTemplate:'/project/'+meriPlanTemplate+'View', themes:metadataService.getThemesForProject(project), user:[isAdmin:true]]
     }
 
 
