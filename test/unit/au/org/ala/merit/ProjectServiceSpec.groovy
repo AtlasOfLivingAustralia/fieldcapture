@@ -407,9 +407,9 @@ class ProjectServiceSpec extends Specification {
     def "reports can be generated using a program wide date of first milestone"(String firstMilestoneDate, String expectedStartDate) {
 
         setup:
-        Map reportConfig = [type:'Activity', period:6, reportingPeriodAlignedToCalendar: false, weekDaysToCompleteReport: 0, reportNameTemplate:'test', reportDescriptionTemplate:'test', firstMilestoneDate:firstMilestoneDate]
+        Map reportConfig = [type:'Activity', period:6, reportingPeriodAlignedToCalendar: false, weekDaysToCompleteReport: 0, reportNameTemplate:'test', reportDescriptionTemplate:'test', firstMilestoneDate:firstMilestoneDate, category:'c']
         Map project = [projectId:'p1', name:'project', status: 'active',  plannedStartDate: '2015-07-01T00:00:00Z', plannedEndDate:'2016-12-31T00:00:00Z', reports:[]]
-        Map prototypeReport = [type:reportConfig.type, activityType: null, name:reportConfig.reportNameTemplate, description: reportConfig.reportDescriptionTemplate, projectId:'p1']
+        Map prototypeReport = [type:reportConfig.type, activityType: null, name:reportConfig.reportNameTemplate, description: reportConfig.reportDescriptionTemplate, projectId:'p1', category:'c']
 
         when:
         service.generateProjectReports(reportConfig, project)
