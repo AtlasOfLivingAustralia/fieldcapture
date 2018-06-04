@@ -515,9 +515,9 @@ class ReportController {
     def meriPlanReportCallback(String id) {
         Map project = projectService.get(id, 'all')
         Map config = projectConfigurationService.getProjectConfiguration(project)
-        String meriPlanTemplate = config.meriPlanTemplate ?: 'meriPlanOriginal'
+        String meriPlanTemplate = config.meriPlanTemplate ?: 'meriPlan'
 
-        render view:'/project/meriPlanReport', model:[project:project, meriPlanTemplate:'/project/'+meriPlanTemplate+'View', themes:metadataService.getThemesForProject(project), user:[isAdmin:true]]
+        render view:'/project/meriPlanReport', model:[project:project, config:config, meriPlanTemplate:'/project/'+meriPlanTemplate+'View', themes:metadataService.getThemesForProject(project), user:[isAdmin:true]]
     }
 
 

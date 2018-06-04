@@ -1,12 +1,14 @@
 function Risks(risks, disableFlag, key) {
     var self = this;
 
-    var savedRisks = amplify.store(key);
-    if (savedRisks) {
-        var restored = JSON.parse(savedRisks);
-        if (restored.risks) {
-            $('#restoredRiskData').show();
-            risks = restored.risks;
+    if (key) {
+        var savedRisks = amplify.store(key);
+        if (savedRisks) {
+            var restored = JSON.parse(savedRisks);
+            if (restored.risks) {
+                $('#restoredRiskData').show();
+                risks = restored.risks;
+            }
         }
     }
 

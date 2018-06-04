@@ -20,7 +20,9 @@
             </g:if>
             <g:if test="${user.isAdmin || user.isCaseManager}">
                 <li ${activeClass}><a href="#permissions" id="permissions-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Project access</a></li>
+                <g:if test="${showSpecies}">
                 <li><a href="#species" id="species-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Species of interest</a></li>
+                </g:if>
                 <li><a href="#edit-documents" id="edit-documents-tab" data-toggle="tab"><i class="icon-chevron-right"></i> Documents</a></li>
             </g:if>
             <g:if test="${fc.userIsSiteAdmin()}">
@@ -46,7 +48,7 @@
                 <g:set var="activeClass" value=""/>
             </g:if>
 
-        <!-- PROJECT DETAILS -->
+        <!-- MERI PLAN -->
             <g:if test="${user.isAdmin || user.isCaseManager}">
                 <div id="projectDetails" class="pill-pane">
                     <!-- Edit project details -->
@@ -54,7 +56,7 @@
                     <g:render template="/shared/restoredData" model="[id:'restoredData', saveButton:'Save', cancelButton:'Cancel']"/>
                     <div class="row-fluid">
                         <div class="validationEngineContainer" id="project-details-validation">
-                            <g:render template="editProjectDetails" model="[project: project]"/>
+                            <g:render template="editMeriPlan" model="[project: project]"/>
                         </div>
                     </div>
                 </div>
@@ -87,11 +89,13 @@
                     <g:render template="/admin/permissionTable" model="[loadPermissionsUrl:g.createLink(controller:'project', action:'getMembersForProjectId', id:project.projectId), removeUserUrl:g.createLink(controller:'user', action:'removeUserWithRoleFromProject'), entityId:project.projectId, user:user]"/>
                 </div>
                 <!-- SPECIES -->
+                <g:if test="${showSpecies}">
             %{--<div class="border-divider large-space-before">&nbsp;</div>--}%
                 <div id="species" class="pill-pane">
                     %{--<a name="species"></a>--}%
                     <g:render template="/species/species" model="[project:project]"/>
                 </div>
+                </g:if>
                 <!-- DOCUMENTS -->
                 <div id="edit-documents" class="pill-pane">
                     <div class="span10 attachDocumentModal">

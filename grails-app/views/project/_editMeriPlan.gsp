@@ -54,7 +54,6 @@
 		<div>
 			<span class="badge" style="font-size: 13px;" data-bind="text:meriPlanStatus().text, css:meriPlanStatus().badgeClass"></span>
 			<span data-bind="if:detailsLastUpdated"> <br/>Last update date : <span data-bind="text:detailsLastUpdated.formattedDate"></span></span>
-
 		</div>
 	</div>
 </div>
@@ -66,7 +65,6 @@
 
 <g:if test="${projectContent.details.visible}">
 	<div class="save-details-result-placeholder"></div>
-
 	<div class="row-fluid space-after">
 		<div class="span6">
 			<div class="form-actions">
@@ -85,7 +83,7 @@
 					<div data-bind="if: planStatus() == 'not approved' || planStatus() == ''">
 						<hr/>
 						<b>Admin actions:</b>
-						<g:if test="${showActivityWarning}">
+						<g:if test="${showMERIActivityWarning}">
 						<ul>
 							<li>You will not be able to report activity data until your MERI plan has been approved by your case manager.</li>
 						</ul>
@@ -93,9 +91,10 @@
 						<button type="button" data-bind="click: saveAndSubmitChanges" class="btn btn-info">Submit for approval</button>
 					</div>
 					<div data-bind="if: planStatus() == 'submitted' || planStatus() == 'approved'">
+                        <g:if test="${showMERIActivityWarning}">
 						<hr/>
+
 						<b>Admin:</b>
-						<g:if test="${showActivityWarning}">
 						<ul>
 							<li>You will not be able to report activity data until your MERI plan has been approved by your case manager.</li>
 						</ul>
@@ -142,9 +141,9 @@
 					<button type="button" data-bind="click: saveAndSubmitChanges" class="btn btn-info">Submit for approval</button>
 				</div>
 				<div data-bind="if: planStatus() == 'submitted' || planStatus() == 'approved'">
-					<hr/>
+                    <g:if test="${showMERIActivityWarning}">
+                    <hr/>
 					<b>Admin:</b>
-					<g:if test="${showActivityWarning}">
 					<ul>
 						<li>You will not be able to report activity data until your MERI plan has been approved by your grant manager.</li>
 					</ul>

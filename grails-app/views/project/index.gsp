@@ -92,7 +92,15 @@
         <li>
             <g:link controller="home">Home</g:link> <span class="divider">/</span>
         </li>
-        <li class="active">Projects <span class="divider">/</span></li>
+        <li>
+        <g:if test="${config?.program}">
+            <g:link controller="program" action="index" id="${config.program.programId}"> ${config.program.name} </g:link>
+        </g:if>
+        <g:else>
+            Projects
+        </g:else>
+        <span class="divider"> / </span>
+        </li>
         <li class="active" data-bind="text:name"></li>
     </ul>
 

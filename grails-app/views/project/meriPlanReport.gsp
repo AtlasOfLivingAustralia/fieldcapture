@@ -43,8 +43,16 @@
     <asset:script>
     $(function() {
         var project = <fc:modelAsJavascript model="${project}"/>;
-        var themes = <fc:modelAsJavascript model="${themes}"/>;
-        var viewModel = new MERIPlan(project, themes, '');
+
+        var config = [];
+        var themes = ${config.themes?:[]};
+        config.themes = themes;
+        var services = ${config.services?:[]};
+        config.services = services;
+        config.useRlpTemplate = services.length > 0;
+        var outcomesAndAssets = ${assetsByOutcome ?: []};
+        var viewModel = new MERIPlan(project, config);
+        viewModel.description = project.description;
         ko.applyBindings(viewModel);
     });
     </asset:script>
