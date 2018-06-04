@@ -25,6 +25,7 @@ class ProjectConfigurationService {
             programConfig.priorities = program.priorities ?: []
             programConfig.outcomes = program.outcomes ?: []
             programConfig.themes = program.themes ?: []
+            programConfig.program = program
         }
         else {
             programConfig = metadataService.getProgramConfiguration(project.associatedProgram, project.associatedSubProgram)
