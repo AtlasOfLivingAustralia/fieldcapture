@@ -85,17 +85,21 @@
 					<div data-bind="if: planStatus() == 'not approved' || planStatus() == ''">
 						<hr/>
 						<b>Admin actions:</b>
+						<g:if test="${showActivityWarning}">
 						<ul>
 							<li>You will not be able to report activity data until your MERI plan has been approved by your case manager.</li>
 						</ul>
+						</g:if>
 						<button type="button" data-bind="click: saveAndSubmitChanges" class="btn btn-info">Submit for approval</button>
 					</div>
 					<div data-bind="if: planStatus() == 'submitted' || planStatus() == 'approved'">
 						<hr/>
 						<b>Admin:</b>
+						<g:if test="${showActivityWarning}">
 						<ul>
 							<li>You will not be able to report activity data until your MERI plan has been approved by your case manager.</li>
 						</ul>
+						</g:if>
 					</div>
 				</div>
 			</div>
@@ -130,17 +134,21 @@
 				<div data-bind="if: planStatus() == 'not approved' || planStatus() == ''">
 					<hr/>
 					<b>Admin actions:</b>
+					<g:if test="${showActivityWarning}">
 					<ul>
 						<li>You will not be able to report activity data until your MERI plan has been approved by your grant manager.</li>
 					</ul>
+					</g:if>
 					<button type="button" data-bind="click: saveAndSubmitChanges" class="btn btn-info">Submit for approval</button>
 				</div>
 				<div data-bind="if: planStatus() == 'submitted' || planStatus() == 'approved'">
 					<hr/>
 					<b>Admin:</b>
+					<g:if test="${showActivityWarning}">
 					<ul>
 						<li>You will not be able to report activity data until your MERI plan has been approved by your grant manager.</li>
 					</ul>
+					</g:if>
 				</div>
 			</div>
 		</div>
