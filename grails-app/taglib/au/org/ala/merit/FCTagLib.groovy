@@ -187,6 +187,9 @@ class FCTagLib {
             if (attrs.container) {
                 anchorAttrs << ['data-container':attrs.container]
             }
+            if (attrs.html) {
+                anchorAttrs << ['data-html':'true']
+            }
             mb.a(anchorAttrs) {
                 i(class:'fa fa-question-circle') {
                     mkp.yieldUnescaped("&nbsp;")
