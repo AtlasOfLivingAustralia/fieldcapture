@@ -169,6 +169,9 @@ var ReportsViewModel = function(reports, projects, availableReports, reportOwner
 
             var result = ( ( r1.dueDate() == r2.dueDate() ) ? 0 : ( ( r1.dueDate() > r2.dueDate() ) ? 1 : -1 ) );
             if (result === 0) {
+                result = ( ( r1.toDate() == r2.toDate() ) ? 0 : ( ( r1.toDate() > r2.toDate() ) ? 1 : -1 ) );
+            }
+            if (result === 0) {
                 result = ( ( r1.type == r2.type ) ? 0 : ( ( r1.type > r2.type ) ? 1 : -1 ) );
             }
             return result;
