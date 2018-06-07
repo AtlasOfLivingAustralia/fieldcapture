@@ -4,14 +4,15 @@
 <table class="table budget-table">
     <thead>
     <tr>
-        <th colspan="3"></th>
-        <th data-bind="attr:{colspan:periods.length+2}">Minimum targets</th>
+        <th class="index" rowspan="2"></th>
+        <th class="service required" rowspan="2">Service</th>
+        <th class="score required" rowspan="2">Target measure</th>
+        <th class="budget-cell required" rowspan="2">Total to be delivered<fc:iconHelp html="true">The overall total of Project Services specified in the Project Work Order to be delivered during the project delivery period.
+            <b>Note: this is not necessarily the sum of the minimum annual targets set out for the service</b></fc:iconHelp></th>
+        <th data-bind="attr:{colspan:periods.length+1}">Minimum annual targets <fc:iconHelp>Specify the minimum total target for each Project Service to be delivered each financial year. </fc:iconHelp></th>
     </tr>
     <tr>
-        <th class="index"></th>
-        <th class="service required">Service</th>
-        <th class="score required">Target measure</th>
-        <th class="budget-cell required">Total <fc:iconHelp>The total amount to be delivered across the length of the project.</fc:iconHelp></th>
+
         <!-- ko foreach: periods -->
         <th class="budget-cell"><div data-bind="text:$data"></div></th>
         <!-- /ko -->
@@ -53,7 +54,7 @@
     <tfoot>
 
     <tr>
-        <td colspan="6">
+        <td data-bind="attr:{colspan:periods.length+5}">
             <button type="button" class="btn btn-small"
                     data-bind="disable: $parent.isProjectDetailsLocked(), click: addService">
                 <i class="icon-plus"></i> Add a row</button>

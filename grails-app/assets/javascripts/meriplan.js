@@ -123,6 +123,15 @@ function MERIPlan(project, config) {
         self.details.outcomes.shortTermOutcomes.remove(outcome);
     };
 
+    self.isAgricultureProject = ko.computed(function() {
+        var agricultureOutcomeStartIndex = 4;
+        var selectedPrimaryOutcome = self.details.outcomes.primaryOutcome.description();
+        var selectedOutcomeIndex = _.findIndex(project.outcomes, function(outcome) {
+            return outcome.outcome == selectedPrimaryOutcome;
+        });
+        return selectedOutcomeIndex >= agricultureOutcomeStartIndex;
+    });
+
 };
 
 function DetailsViewModel(o, project, risks, config) {
@@ -134,7 +143,7 @@ function DetailsViewModel(o, project, risks, config) {
         // Initialise with 2 KEQ rows
         if (!o.keq) {
             o.keq = {
-                rows:new Array(2)
+                rows:new Array(1)
             }
         }
    }
@@ -317,6 +326,8 @@ function ServicesViewModel(serviceIds, allServices, outputTargets, periods) {
         });
     };
 
+
+
     // Populate the model from existing data.
     for (var i=0; i<outputTargets.length; i++) {
 
@@ -332,7 +343,9 @@ function ServicesViewModel(serviceIds, allServices, outputTargets, periods) {
 
         self.services.push(new ServiceTarget(service, score));
     }
-
+    if (!outputTargets || outputTargets.length == 0) {
+        self.addService();
+    }
     self.outputTargets = function() {
         var outputTargets = [];
         _.each(self.services(), function(target) {
@@ -469,6 +482,11 @@ function OutcomesViewModel(outcomes, project) {
             description:null, assets:[]
         }];
     }
+    if (!outcomes.secondaryOutcomes) {
+        outcomes.secondaryOutcomes = [{
+            description:null, asset:''
+        }]
+    }
 
     self.selectableOutcomes = _.map(project.outcomes, function(outcome) {
         return outcome.outcome;
@@ -496,7 +514,7 @@ function OutcomesViewModel(outcomes, project) {
 
     self.primaryOutcome = new SingleAssetOutcomeViewModel(outcomes.primaryOutcome);
     self.secondaryOutcomes = ko.observableArray(_.map(outcomes.secondaryOutcomes || [], function(outcome) {return new SingleAssetOutcomeViewModel(outcome)}));
-    self.shortTermOutcomes = ko.observableArray(_.map(outcomes.shortTermOutcomes || [], outcomeToViewModel));
+    self.shortTermOutcomes = ko.observableArray(_.map(outcomes.shortTermOutcomes || [], function(outcome) {return new SingleAssetOutcomeViewModel(outcome)}));
     self.midTermOutcomes = ko.observableArray(_.map(outcomes.midTermOutcomes || [], outcomeToViewModel));
 
 }
@@ -532,13 +550,28 @@ function SingleAssetOutcomeViewModel(o) {
     var self = this;
     if(!o) o = {};
     self.description = ko.observable(o.description);
-    if(!o.assets) o.assets = [];
-    self.asset = ko.observable(o.assets[0]);
+    if(!o.assets || !_.isArray(o.assets)) o.assets = [];
+    self.assets = ko.observableArray(o.assets);
 
+    self.asset = ko.pureComputed({
+        read: function() {
+            if (self.assets().length == 0) {
+                return undefined;
+            }
+            return self.assets()[0];
+        },
+        write: function (value) {
+            self.assets([value]);
+        },
+        owner: self
+    });
+    self.description.subscribe(function() {
+        self.assets([]);
+    });
     self.toJSON = function() {
         return {
             description:self.description(),
-            assets:[self.asset()]
+            assets:self.assets()
         }
     };
 };

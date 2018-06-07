@@ -1029,3 +1029,7 @@ input[type="checkbox"] { -webkit-appearance: checkbox; !important }
 .nav-list > .active i {
     color: #ffffff;
 }
+
+.table th .popover {
+    font-weight: normal;
+}
