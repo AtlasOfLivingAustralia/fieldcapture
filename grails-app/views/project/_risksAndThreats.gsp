@@ -59,9 +59,9 @@
         </tbody>
         <tfoot>
         <tr>
-            <td colspan="0" style="text-align:left;">
+            <td colspan="8" style="text-align:right;">
                 <button type="button" class="btn btn-small" data-bind="click: addRisks, disable:risksDisabled">
-                    <i class="icon-plus"></i> Add a row</button></td>
+                    <i class="fa fa-plus"></i> Add a row</button></td>
         </tr>
         </tfoot>
 

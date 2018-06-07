@@ -1,11 +1,11 @@
 <div class="meri-plan">
-    <h4>Project Outcomes</h4>
+    <h4>Program Outcome</h4>
     <table class="table">
         <thead>
         <tr class="header">
             <th class="index"></th>
-            <th class="outcome-priority required">Primary Outcome</th>
-            <th class="primary-outcome priority required">Primary Investment Priority</th>
+            <th class="outcome-priority required">Primary Regional Land Partnerships outcome</th>
+            <th class="primary-outcome priority required">Primary Investment Priority <fc:iconHelp html="true" container="body">Enter the primary investment priority/ies for the primary outcome. (drop down list in MERIT) <br/>For outcomes 1-4, only one primary investment priority can be selected.<br/>For outcomes 5-6, up to 5 primary investment priorities can be selected</fc:iconHelp></th>
             <th class="remove"></th>
         </tr>
         </thead>
@@ -15,21 +15,76 @@
             <td class="outcome-priority">
                 <select data-validation-engine="validate[required]" data-bind="options:details.outcomes.selectableOutcomes, value:details.outcomes.primaryOutcome.description, optionsCaption: 'Please select', disable: isProjectDetailsLocked()" >
                 </select>
+
             </td>
             <td colspan="2" class="priority">
+                <!-- ko if:!$root.isAgricultureProject() -->
+
                 <select style="width:100%" class="asset" data-validation-engine="validate[required]" data-bind="options:details.outcomes.outcomePriorities(details.outcomes.primaryOutcome.description()), optionsCaption: 'Please select', value:details.outcomes.primaryOutcome.asset, disable: isProjectDetailsLocked()" >
                 </select>
+                <!-- /ko -->
+                <!-- ko if:$root.isAgricultureProject() -->
+                <select size="5" multiple="multiple" style="width:100%" class="asset" data-validation-engine="validate[required]" data-bind="options:details.outcomes.outcomePriorities(details.outcomes.primaryOutcome.description()), selectedOptions:details.outcomes.primaryOutcome.assets, disable: isProjectDetailsLocked()" >
+                </select>
+                <!-- /ko -->
             </td>
         </tr>
 
         </tbody>
     </table>
 
+    <h4>Additional benefits</h4>
+    <table class="table secondary-outcome">
+
+        <thead>
+
+        <tr class="header">
+            <th class="index"></th>
+            <th class="outcome-priority">Secondary Regional Land Partnerships outcome(s)</th>
+            <th class="priority">Secondary Investment Priorities <fc:iconHelp container="body">Other investment priorities that will benefit from the project.</fc:iconHelp></th>
+            <th class="remove"></th>
+        </tr>
+        </thead>
+        <tbody data-bind="foreach:details.outcomes.secondaryOutcomes">
+        <tr>
+            <td class="index" data-bind="text:$index()+1"></td>
+            <td class="outcome-priority"><select data-validation-engine="validate[required]"
+                                                 data-bind="value:description, options: $parent.details.outcomes.selectableOutcomes, optionsCaption: 'Please select', disable: $root.isProjectDetailsLocked()"></select>
+            </td>
+            <td class="priority">
+                <select data-bind="value:asset, options:$root.details.outcomes.outcomePriorities(description()), optionsCaption: 'Please select', disable: $root.isProjectDetailsLocked()" class="input-large asset"></select>
+            </td>
+            <td class="remove">
+                <span data-bind="if:$index() && !$parent.isProjectDetailsLocked()">
+                    <i class="fa fa-remove" data-bind="click: $parent.removeSecondaryOutcome"></i>
+                </span>
+            </td>
+        </tr>
+
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="4">
+                <button type="button" class="btn btn-small"
+                        data-bind="disable: details.outcomes.secondaryOutcomes().length >= 5 || isProjectDetailsLocked(), click: addSecondaryOutcome">
+                    <i class="fa fa-plus"></i> Add a row</button></td>
+        </tr>
+        </tfoot>
+    </table>
+
+    <h4>Project outcomes</h4>
     <table class="table">
         <thead>
         <tr class="header">
             <th class="index"></th>
-            <th class="outcome required">Short-term Project Outcome(s)</th>
+            <th class="outcome required">Short-term outcome statement/s <fc:iconHelp html="true" container="body">Short-term outcomes should:
+                <ul>
+                    <li>Contribute to the 5-year Outcome (e.g. what degree of impact you are expecting from this Project’s interventions).</li>
+                    <li>Outline the degree of impact having undertaken the Services for up to 3 years, for example "area of relevant vegetation type has increased".</li>
+                    <li>Be expressed as a SMART statement. SMART stands for Specific, Measurable, Attainable, Realistic, and Time-bound. Ensure the outcomes are measurable with consideration to the baseline and proposed monitoring regime.</li>
+                </ul>
+                <b>Please note: </b>for Projects three years or less in duration, a short-term Project outcome achievable at the Project’s completion must be set.
+            </fc:iconHelp> </th>
             <th class="remove"></th>
         </tr>
         </thead>
@@ -51,7 +106,7 @@
             <td colspan="3">
                 <button type="button" class="btn btn-small"
                         data-bind="disable: isProjectDetailsLocked(), click: addShortTermOutcome">
-                    <i class="icon-plus"></i> Add a row</button></td>
+                    <i class="fa fa-plus"></i> Add a row</button></td>
         </tr>
         </tfoot>
     </table>
@@ -60,7 +115,14 @@
         <thead>
         <tr class="header">
             <th class="index"></th>
-            <th class="outcome">Mid-term Project Outcome(s)</th>
+            <th class="outcome">Medium-term outcome statement/s <fc:iconHelp html="true" container="body">Medium-term Project outcomes should:
+            <ul>
+                <li>Contribute to the 5-year Outcome and relate to the short-term outcome. </li>
+                <li>Outline the degree of impact having undertaken the Services for up to 5 years, such as "Reduce woody weed cover to less than 5% in 400 hectares of remnant native vegetation within the Ramsar site by 2023" Or "Increase average annual groundcover by 20% on 400 hectares of grazing land by 2023"</li>
+                <li>Be expressed as a SMART Statement. SMART stands for Specific, Measurable, Attainable, Realistic, and Time-bound. Ensure the proposed outcomes are measurable with consideration to the baseline and proposed monitoring regime.</li>
+            </ul>
+                <b>Please note</b>: Projects more than 3 years in duration must set medium-term Project outcomes achievable at the Project's completion.
+            </fc:iconHelp></th>
             <th class="remove"></th>
         </tr>
         </thead>
@@ -80,49 +142,12 @@
             <td colspan="3">
                 <button type="button" class="btn btn-small"
                         data-bind="disable: isProjectDetailsLocked(), click: addMidTermOutcome">
-                    <i class="icon-plus"></i> Add a row</button></td>
+                    <i class="fa fa-plus"></i> Add a row</button></td>
         </tr>
         </tfoot>
     </table>
 
-    <h4>Additional project benefits</h4>
-    <table class="table secondary-outcome">
 
-        <thead>
-
-        <tr class="header">
-            <th class="index"></th>
-            <th class="outcome-priority">Secondary Project Outcome</th>
-            <th class="priority">Secondary Investment Priority(ies)</th>
-            <th class="remove"></th>
-        </tr>
-        </thead>
-        <tbody data-bind="foreach:details.outcomes.secondaryOutcomes">
-        <tr>
-            <td class="index" data-bind="text:$index()+1"></td>
-            <td class="outcome-priority"><select data-validation-engine="validate[required]"
-                    data-bind="value:description, options: $parent.details.outcomes.selectableOutcomes, optionsCaption: 'Please select', disable: $root.isProjectDetailsLocked()"></select>
-            </td>
-            <td class="priority">
-                <select data-bind="value:asset, options:$root.details.outcomes.outcomePriorities(description()), optionsCaption: 'Please select', disable: $root.isProjectDetailsLocked()" class="input-large asset"></select>
-            </td>
-            <td class="remove">
-                <span data-bind="if:!$parent.isProjectDetailsLocked()">
-                    <i class="fa fa-remove" data-bind="click: $parent.removeSecondaryOutcome"></i>
-                </span>
-            </td>
-        </tr>
-
-        </tbody>
-        <tfoot>
-        <tr>
-            <td colspan="4">
-                <button type="button" class="btn btn-small"
-                        data-bind="disable: details.outcomes.secondaryOutcomes().length >= 3 || isProjectDetailsLocked(), click: addSecondaryOutcome">
-                    <i class="icon-plus"></i> Add a row</button></td>
-        </tr>
-        </tfoot>
-    </table>
 
     <h4>Project details</h4>
     <div class="row-fluid">
@@ -131,34 +156,31 @@
                 <tbody>
 
                 <tr class="header required">
-                    <th class="required">Project description</th>
+                    <th class="required">Project description (1000 character limit [approx. 150 words]) <fc:iconHelp>Project description will be visible on project overview page in MERIT.</fc:iconHelp></th>
                 </tr>
                 <tr>
-                    <td><textarea rows="5"  data-validation-engine="validate[required,maxSize[450]]" data-bind="value:details.description, disable: isProjectDetailsLocked()"></textarea></td>
+                    <td><textarea rows="5"  data-validation-engine="validate[required,maxSize[1000]]" data-bind="value:details.description, disable: isProjectDetailsLocked()"></textarea></td>
                 </tr>
-                <tr class="header required">
-                    <th class="required">Project methodology <fc:iconHelp>Describe the project methodology and how this aligns with the services being delivered through this project.</fc:iconHelp></th>
-                </tr>
-                <tr>
-                    <td><textarea rows="5" data-validation-engine="validate[required,maxSize[4000]]" data-bind="value:details.implementation.description, disable: isProjectDetailsLocked()"></textarea></td>
-                </tr>
-                <!-- ko if:false -->
+
+                <!-- ko if:isAgricultureProject() -->
                 <tr class="header">
-                    <th class="required">Project rationale <fc:iconHelp>TBA</fc:iconHelp></th>
+                    <th class="required">Project rationale (3000 character limit [approx 500 words]) <fc:iconHelp>Provide a rationale for addressing the targeted investment priorities including how the actions will contribute to achieving the 5 year outcomes</fc:iconHelp></th>
                 </tr>
                 <tr>
-                    <td><textarea rows="5" data-validation-engine="validate[required,maxSize[4000]]" data-bind="value:details.rationale, disable: isProjectDetailsLocked()"></textarea></td>
+                    <td><textarea rows="5" data-validation-engine="validate[required,maxSize[3000]]" data-bind="value:details.rationale, disable: isProjectDetailsLocked()"></textarea></td>
                 </tr>
                 <!-- /ko -->
                 </tbody>
             </table>
         </div>
     </div>
+
+    <!-- ko if:!isAgricultureProject() -->
     <!-- ko with:details.threats -->
     <table class="table">
         <thead>
         <th class="index"></th>
-        <th class="threat required">Key threat(s) or key threatening processes <fc:iconHelp>Describe the key threats (or key threatening processes) to the primary investment priority</fc:iconHelp></th>
+        <th class="threat required">Key threat(s) and/or key threatening processes <fc:iconHelp>Describe the key threats (or key threatening processes) to the primary investment priority</fc:iconHelp></th>
         <th class="intervention required">Interventions to address threats <fc:iconHelp>Describe the proposed interventions to address the threat and how this will deliver on the 5 year outcome.</fc:iconHelp></th>
         <th class="remove"></th>
         </thead>
@@ -185,11 +207,25 @@
             <td colspan="4">
                 <button type="button" class="btn btn-small"
                         data-bind="disable: $root.isProjectDetailsLocked(), click: addRow">
-                    <i class="icon-plus"></i> Add a row</button></td>
+                    <i class="fa fa-plus"></i> Add a row</button></td>
         </tr>
         </tfoot>
     </table>
     <!-- /ko -->
+    <!-- /ko -->
+
+    <table class="table">
+        <thead>
+        <tr class="header required">
+            <th class="required">Project methodology (3000 character limit [approx 500 words]) <fc:iconHelp>Describe the methodology that will be used to achieve the project outcomes</fc:iconHelp></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td><textarea rows="5" data-validation-engine="validate[required,maxSize[3000]]" data-bind="value:details.implementation.description, disable: isProjectDetailsLocked()"></textarea></td>
+        </tr>
+        </tbody>
+    </table>
 
     <h4 class="header-with-help">Monitoring methodology</h4><fc:iconHelp>Describe the project baseline(s) units of measure or data which will be used to report progress towards this project's outcomes (short-term, mid-term and 5 year program outcome), and the monitoring design.</fc:iconHelp>
     <!-- ko with:details.baseline -->
@@ -197,7 +233,7 @@
         <thead>
         <th class="index"></th>
         <th class="baseline required">Project baseline</th>
-        <th class="baseline required">Describe the method used to obtain the baseline</th>
+        <th class="baseline required">Describe the method used to obtain the baseline, or how the baseline will be established <fc:iconHelp>Describe the project baseline(s) units of measure or data which will be used to report progress towards this project's outcomes (short-term, medium-term and 5 year program outcome), and the monitoring design.</fc:iconHelp></th>
         <th class="remove"></th>
         </thead>
         <tbody data-bind="foreach: rows">
@@ -223,7 +259,7 @@
             <td colspan="4">
                 <button type="button" class="btn btn-small"
                         data-bind="disable: $root.isProjectDetailsLocked(), click: addRow">
-                    <i class="icon-plus"></i> Add a row</button></td>
+                    <i class="fa fa-plus"></i> Add a row</button></td>
         </tr>
         </tfoot>
     </table>
@@ -234,7 +270,7 @@
         <tr>
             <th class="index"></th>
             <th class="baseline required">Project monitoring indicators</th>
-            <th class="baseline required">Project monitoring indicator approach</th>
+            <th class="baseline required">Describe the project monitoring indicator approach</th>
             <th class="remove"></th>
         </tr>
         </thead>
@@ -261,7 +297,7 @@
             <td colspan="4">
                 <button type="button" class="btn btn-small"
                         data-bind="disable: isProjectDetailsLocked(), click: addKEQ">
-                    <i class="icon-plus"></i> Add a row</button></td>
+                    <i class="fa fa-plus"></i> Add a row</button></td>
         </tr>
         </tfoot>
     </table>
@@ -306,7 +342,7 @@
             <td colspan="5">
                 <button type="button" class="btn btn-small"
                         data-bind="disable: isProjectDetailsLocked(), click: addNationalAndRegionalPriorities">
-                    <i class="icon-plus"></i> Add a row</button></td>
+                    <i class="fa fa-plus"></i> Add a row</button></td>
         </tr>
         </tfoot>
     </table>

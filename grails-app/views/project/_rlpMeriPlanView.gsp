@@ -1,11 +1,10 @@
 <div class="meri-plan">
-    <h4>Project Outcomes</h4>
-
+    <h4>Progrm Outcome</h4>
     <table class="table">
         <thead>
         <tr class="header">
             <th class="index"></th>
-            <th class="outcome-priority">Primary Outcome</th>
+            <th class="outcome-priority">Primary Regional Land Partnerships outcome</th>
             <th class="primary-outcome priority">Primary Investment Priority</th>
         </tr>
         </thead>
@@ -16,55 +15,29 @@
                     data-bind="text:details.outcomes.primaryOutcome.description"></span>
             </td>
             <td class="priority">
-                <span data-bind="text:details.outcomes.primaryOutcome.asset">
+                <!-- ko if:!isAgricultureProject() -->
+                <span data-bind="text:details.outcomes.primaryOutcome.asset"></span>
+                <!-- /ko -->
+                <!-- ko: if:isAgricultureProject() -->
+                <ul data-bind="foreach:details.outcomes.primaryOutcome.assets">
+                    <li data-bind="text:$data"></li>
+                </ul>
+                <!-- /ko -->
 
-                </span>
             </td>
         </tr>
 
         </tbody>
     </table>
-
-    <table class="table">
-        <thead>
-        <tr class="header">
-            <th class="index"></th>
-            <th class="outcome">Mid-term Project Outcome(s)</th>
-        </tr>
-        </thead>
-        <tbody data-bind="foreach:details.outcomes.midTermOutcomes">
-        <tr>
-            <td class="index" data-bind="text:$index()+1"></td>
-            <td class="outcome"><span data-bind="text:description"></span></td>
-        </tr>
-        </tbody>
-    </table>
-    <table class="table">
-        <thead>
-        <tr class="header">
-            <th class="index"></th>
-            <th class="outcome">Short-term Project Outcome(s)</th>
-        </tr>
-        </thead>
-        <tbody data-bind="foreach:details.outcomes.shortTermOutcomes">
-        <tr>
-            <td class="index" data-bind="text:$index()+1"></td>
-            <td class="outcome">
-                <span data-bind="text:description"></span>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-
-    <h4>Additional project benefits</h4>
+    <h4>Additional benefits</h4>
     <table class="table secondary-outcome">
 
         <thead>
 
         <tr class="header">
             <th class="index"></th>
-            <th class="outcome-priority">Secondary Project Outcome</th>
-            <th class="priority">Secondary Investment Priority(ies)</th>
+            <th class="outcome-priority">Secondary Regional Land Partnerships outcome(s)</th>
+            <th class="priority">Secondary Investment Priorities</th>
         </tr>
         </thead>
         <tbody data-bind="foreach:details.outcomes.secondaryOutcomes">
@@ -82,6 +55,42 @@
         </tbody>
     </table>
 
+    <h4>Project outcomes</h4>
+    <table class="table">
+        <thead>
+        <tr class="header">
+            <th class="index"></th>
+            <th class="outcome">Short-term outcome statement/s</th>
+        </tr>
+        </thead>
+        <tbody data-bind="foreach:details.outcomes.shortTermOutcomes">
+        <tr>
+            <td class="index" data-bind="text:$index()+1"></td>
+            <td class="outcome">
+                <span data-bind="text:description"></span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <table class="table">
+        <thead>
+        <tr class="header">
+            <th class="index"></th>
+            <th class="outcome">Medium-term outcome statement/s</th>
+        </tr>
+        </thead>
+        <tbody data-bind="foreach:details.outcomes.midTermOutcomes">
+        <tr>
+            <td class="index" data-bind="text:$index()+1"></td>
+            <td class="outcome"><span data-bind="text:description"></span></td>
+        </tr>
+        </tbody>
+    </table>
+
+
+
+
     <h4>Project details</h4>
     <div class="row-fluid">
         <div class="span12">
@@ -93,28 +102,25 @@
                 <tr>
                     <td><span data-bind="text:description"></span></td>
                 </tr>
+                <!-- ko if:isAgricultureProject -->
                 <tr class="header">
-                    <th>Project methodology</th>
+                    <th>Project rationale</th>
                 </tr>
                 <tr>
-                    <td><span data-bind="text:details.implementation.description"></span></td>
+                    <td><span data-bind="text:details.rationale"></span></td>
                 </tr>
-                %{--<tr class="header">--}%
-                    %{--<th>Project rationale</th>--}%
-                %{--</tr>--}%
-                %{--<tr>--}%
-                    %{--<td><span data-bind="text:details.rationale"></span></td>--}%
-                %{--</tr>--}%
+                <!-- /ko -->
                 </tbody>
             </table>
         </div>
     </div>
 
+    <!-- ko if:!isAgricultureProject() -->
     <!-- ko with:details.threats -->
     <table class="table">
         <thead>
         <th class="index"></th>
-        <th class="threat required">Key threat(s) or key threatening processes</th>
+        <th class="threat required">Key threat(s) and/or key threatening processes</th>
         <th class="intervention required">Interventions to address threats</th>
         </thead>
         <tbody data-bind="foreach: rows">
@@ -132,6 +138,20 @@
 
     </table>
     <!-- /ko -->
+    <!-- /ko -->
+
+    <table class="table">
+        <thead>
+        <tr class="header required">
+            <th>Project methodology</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td><span data-bind="text:details.implementation.description, disable: isProjectDetailsLocked()"></span></td>
+        </tr>
+        </tbody>
+    </table>
 
     <h4>Monitoring methodology</h4>
     <!-- ko with:details.baseline -->
@@ -139,7 +159,7 @@
         <thead>
         <th class="index"></th>
         <th class="baseline required">Project baseline</th>
-        <th class="baseline required">Describe the method used to obtain the baseline</th>
+        <th class="baseline required">The method used to obtain the baseline, or how the baseline will be established</th>
         </thead>
         <tbody data-bind="foreach: rows">
         <tr>
@@ -205,21 +225,18 @@
     </table>
 
     <!-- ko with:details.services -->
-    <h4>Project Services</h4>
+    <h4>Project services and minimum targets</h4>
 
     <table class="table budget-table">
         <thead>
         <tr>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th data-bind="attr:{colspan:periods.length+1}">Minimum targets</th>
+            <th class="index" rowspan="2"></th>
+            <th class="service" rowspan="2">Service</th>
+            <th class="score" rowspan="2">Target measure</th>
+            <th class="budget-cell" rowspan="2">Total to be delivered</th>
+            <th data-bind="attr:{colspan:periods.length+1}">Minimum annual targets</th>
         </tr>
         <tr>
-            <th class="index"></th>
-            <th class="service">Service</th>
-            <th class="score">Target measure</th>
-            <th class="budget-cell">Total</th>
             <!-- ko foreach: periods -->
             <th class="budget-cell"><div data-bind="text:$data"></div></th>
             <!-- /ko -->
