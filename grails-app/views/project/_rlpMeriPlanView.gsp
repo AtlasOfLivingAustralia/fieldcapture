@@ -18,7 +18,7 @@
                 <!-- ko if:!isAgricultureProject() -->
                 <span data-bind="text:details.outcomes.primaryOutcome.asset"></span>
                 <!-- /ko -->
-                <!-- ko: if:isAgricultureProject() -->
+                <!-- ko if:isAgricultureProject() -->
                 <ul data-bind="foreach:details.outcomes.primaryOutcome.assets">
                     <li data-bind="text:$data"></li>
                 </ul>
@@ -89,31 +89,35 @@
     </table>
 
 
-
-
     <h4>Project details</h4>
-    <div class="row-fluid">
-        <div class="span12">
-            <table class="table">
-                <tbody>
-                <tr>
-                    <th>Project description</th>
-                </tr>
-                <tr>
-                    <td><span data-bind="text:description"></span></td>
-                </tr>
-                <!-- ko if:isAgricultureProject -->
-                <tr class="header">
-                    <th>Project rationale</th>
-                </tr>
-                <tr>
-                    <td><span data-bind="text:details.rationale"></span></td>
-                </tr>
-                <!-- /ko -->
-                </tbody>
-            </table>
-        </div>
-    </div>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Project description</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td><span data-bind="text:description"></span></td>
+        </tr>
+        </tbody>
+    </table>
+    <!-- ko if:isAgricultureProject -->
+    <table class="table">
+       <thead>
+        <tr class="header">
+            <th>Project rationale</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td><span data-bind="text:details.rationale"></span></td>
+        </tr>
+        </tbody>
+
+    </table>
+    <!-- /ko -->
 
     <!-- ko if:!isAgricultureProject() -->
     <!-- ko with:details.threats -->
