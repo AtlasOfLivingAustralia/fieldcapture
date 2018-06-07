@@ -9,6 +9,8 @@
     </g:if>
 
     <g:if test="${reportsHeader}"><h4 class="header-with-help">Project Reports</h4></g:if>
+
+
     <table class="table table-striped" style="width:100%;">
         <thead>
 
@@ -17,14 +19,14 @@
             <th>Report</th>
             <th>Period
                 <g:if test="${hideDueDate}">
-                <br/><label for="hide-future-reports"><input id="hide-future-reports" type="checkbox" data-bind="checked:hideFutureReports"> Current reports only</label>
+                <br/><label><input class="hide-future-reports" type="checkbox" data-bind="checked:hideFutureReports"> Current reports only</label>
                 </g:if>
             </th>
             <g:if test="${!hideDueDate}">
-            <th>Date Due<br/><label for="hide-future-reports"><input id="hide-future-reports" type="checkbox" data-bind="checked:hideFutureReports"> Current reports only</label>
+            <th>Date Due<br/><label><input class="hide-future-reports" type="checkbox" data-bind="checked:hideFutureReports"> Current reports only</label>
             </th>
             </g:if>
-            <th>Status<br/><label for="hide-approved-reports"><input id="hide-approved-reports" type="checkbox" data-bind="checked:hideApprovedReports"> Hide approved reports</label></th>
+            <th>Status<br/><label><input class="hide-approved-reports" type="checkbox" data-bind="checked:hideApprovedReports"> Hide approved reports</label></th>
         </tr>
         </thead>
         <tbody data-bind="foreach:{ data:filteredReports, as:'report' }">

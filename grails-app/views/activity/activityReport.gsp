@@ -15,10 +15,8 @@
     <script type="text/javascript">
         var fcConfig = {
                 serverUrl: "${grailsApplication.config.grails.serverURL}",
-                activityUpdateUrl: "${createLink(controller: 'activity', action: 'ajaxUpdate', id: activity.activityId)}",
-                activityDeleteUrl: "${createLink(action:'delete',id:activity.activityId, params:[returnTo:grailsApplication.config.grails.serverURL + '/' + returnTo])}",
+                activityUpdateUrl: "${saveReportUrl}",
                 contextViewUrl: "${contextViewUrl}/",
-                siteViewUrl: "${createLink(controller: 'site', action: 'index')}/",
                 bieUrl: "${grailsApplication.config.bie.baseURL}",
                 speciesProfileUrl: "${createLink(controller: 'species', action: 'speciesProfile')}",
                 documentUpdateUrl: "${g.createLink(controller:"document", action:"documentUpdate")}",
@@ -35,8 +33,6 @@
                 speciesImageUrl:"${createLink(controller:'species', action:'speciesImage')}",
                 noImageUrl: "${assetPath(src:'nophoto.png')}",
                 context:${fc.modelAsJavascript(model:context)},
-                featureServiceUrl:"${createLink(controller: 'proxy', action: 'feature')}",
-                wmsServiceUrl:"${grailsApplication.config.spatial.geoserverUrl}",
                 unlockActivityUrl:"${createLink(controller:'activity', action:'ajaxUnlock')}/<fc:currentUserId/>"
             },
             here = document.location.href;

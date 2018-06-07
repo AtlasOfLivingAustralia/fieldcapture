@@ -120,11 +120,28 @@ class ProgramService {
         deliveredServices
     }
 
+
+    void regenerateReports(String id) {
+        regenerateProgramReports(id)
+        regenerateActivityReports(id)
+    }
+
     void regenerateProgramReports(String id) {
         Map program = get(id)
-        Map programReportConfig = program.config?.programReports
+        List programReportConfig = program.config?.programReports
         programReportConfig?.each { reportConfig ->
+            List relevantReports = program.reports?.findAll{it.category == reportConfig.category}
 
+            Map prototype = [
+                    category: reportConfig.category,
+                    type: reportConfig.type,
+                    activityType: reportConfig.activityType,
+                    programId:program.programId,
+                    name:reportConfig.reportNameTemplate,
+                    description:reportConfig.reportDescriptionTemplate
+            ]
+            String startDateIso = reportConfig.firstMilestoneDate ?: program.startDate
+            reportService.regenerateAllReports(relevantReports, prototype, startDateIso, program.endDate, reportConfig.period, Boolean.valueOf(reportConfig.alignToCalendar), reportConfig.weekDaysToCompleteReport, program.name)
         }
     }
 
@@ -132,23 +149,18 @@ class ProgramService {
         Map program = get(id)
         Map activityReportConfig = program.config?.projectReports?.find{it.type==ReportService.REPORT_TYPE_STAGE_REPORT}
         if (activityReportConfig) {
-            List projects = getProgramProjects(id)
-            projects?.each{ project ->
+            Map projects = getProgramProjects(id)
+            projects?.projects?.each{ project ->
                 project.reports = reportService.getReportsForProject(id) ?: []
                 projectService.generateProjectReports(activityReportConfig, project)
             }
         }
     }
 
-    List<Map> getProgramProjects(String id) {
+    Map getProgramProjects(String id) {
         String url = "${grailsApplication.config.ecodata.baseUrl}program/$id/projects"
         Map resp = webService.getJson(url)
-
-        if (resp?.projects) {
-            return resp.projects.projects
-        }
         return resp
-
     }
 
 }

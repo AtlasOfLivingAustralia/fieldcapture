@@ -244,7 +244,7 @@ var ProgramPageViewModel = function(props, options) {
         'projects': {
             initialiser: function() {
                 $.fn.dataTable.moment( 'dd-MM-yyyy' );
-                $('#projectList').DataTable();
+                $('#projectList').DataTable({displayLength:25, order:[[2, 'asc'], [3, 'asc']]});
             }
         },
         'sites': {

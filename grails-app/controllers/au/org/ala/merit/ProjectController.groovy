@@ -157,18 +157,10 @@ class ProjectController {
         }
         else if (template == RLP_TEMPLATE) {
 
-            List adHocReportTypes = [
-                    [type:ReportService.REPORT_TYPE_SINGLE_ACTIVITY, activityType:'Prototype 2'],
-                    [type:ReportService.REPORT_TYPE_SINGLE_ACTIVITY, activityType:'Annual Report'],
-                    [type:ReportService.REPORT_TYPE_SINGLE_ACTIVITY, activityType:'RLP Short-term outcomes'],
-                    [type:ReportService.REPORT_TYPE_SINGLE_ACTIVITY, activityType:'RLP Mid-term outcomes']
-
-            ]
-
             model.overview.displayDashboard = true
             model.overview.servicesDashboard = projectService.getServiceDashboardData(project.projectId)
             model.details.meriPlanTemplate = RLP_MERI_PLAN_TEMPLATE+'View'
-            Map reportingTab = [label: 'Reporting', visible:user?.hasViewAccess, type:'tab', template:'projectReporting', reports:project.reports, stopBinding:true, services: config.services, scores:scores, adHocReportTypes:adHocReportTypes, hideDueDate:true]
+            Map reportingTab = [label: 'Reporting', visible:user?.hasViewAccess, type:'tab', template:'projectReporting', reports:project.reports, stopBinding:true, services: config.services, scores:scores, hideDueDate:true]
 
             Map rlpModel = [overview:model.overview, documents:model.documents, details:model.details, site:model.site, reporting:reportingTab]
             rlpModel.admin = model.admin

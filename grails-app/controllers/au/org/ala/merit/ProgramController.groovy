@@ -12,7 +12,7 @@ class ProgramController {
 
     static allowedMethods = [ajaxDelete: "POST", delete: "POST", ajaxUpdate: "POST"]
 
-    def programService, searchService, documentService, userService, roleService, commonService, webService
+    def programService, searchService, documentService, userService, roleService, commonService, webService, siteService
     ProjectService projectService
     ReportService reportService
     ActivityService activityService
@@ -59,15 +59,9 @@ class ProgramController {
         Map result = projectService.search(programId:program.programId)
         List projects = result.resp?.projects
 
-        List adHocReportTypes = [
-                [type:ReportService.REPORT_TYPE_SINGLE_ACTIVITY, activityType:'Core services monthly report'],
-                [type:ReportService.REPORT_TYPE_SINGLE_ACTIVITY, activityType:'Core services annual report']
-        ]
-
-
         [about   : [label: 'Management Unit', visible: true, stopBinding: false, type: 'tab'],
          dashboard: [label: 'Dashboard', visible: true, stopBinding: true, type: 'tab', servicesDashboard:[planning:false, services:servicesWithScores], template:'/project/serviceDashboard'],
-         projects: [label: 'Reporting', visible: true, stopBinding: false, type:'tab', projects:projects, reports:program.reports?:[], adHocReportTypes:adHocReportTypes, hideDueDate:true],
+         projects: [label: 'Reporting', visible: true, stopBinding: false, type:'tab', projects:projects, reports:program.reports?:[], hideDueDate:true],
          sites   : [label: 'Sites', visible: true, stopBinding: true, type:'tab'],
          admin   : [label: 'Admin', visible: hasAdminAccess, type: 'tab']]
     }
@@ -240,6 +234,8 @@ class ProgramController {
             model.locked = true
         }
 
+        model.saveReportUrl = createLink(controller:'program', action:'saveReport', id:id, params:[reportId:report.reportId])
+
         render model:model, view:'/activity/activityReport'
     }
 
@@ -250,7 +246,18 @@ class ProgramController {
             return
         }
 
+        Map report = reportService.get(reportId)
+        if (reportService.isSubmittedOrApproved(report)) {
+            return 'error'
+        }
 
+        Map activityData = request.JSON
+        Map result = activityService.update(report.activityId, activityData)
+
+        // TODO handle photopoints, but will have to be adjusted for multi-site
+        Map photoPoints = activityData.remove('photoPoints')
+
+        render result as JSON
 
     }
 
@@ -260,7 +267,7 @@ class ProgramController {
              resp = [status:HttpStatus.SC_NOT_FOUND]
         }
         else {
-            programService.regenerateActivityReports(id)
+            programService.regenerateReports(id)
             resp = [status:HttpStatus.SC_OK]
         }
         render resp as JSON
