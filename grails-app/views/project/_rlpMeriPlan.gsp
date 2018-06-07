@@ -355,4 +355,6 @@
 
     <h4>Project risks & threats <span style="color: red;"><b>*</b></span></h4>
     <g:render template="risksAndThreats"/>
+
+    <g:render template="/shared/declaration" model="[divId:'meriSubmissionDeclaration', declarationType:au.org.ala.merit.SettingPageType.RLP_DECLARATION]"/>
 </div>

@@ -1115,7 +1115,9 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
 
     _.extend(this, new ProjectViewModel(project, userRoles.editor, organisations));
     _.extend(this, new MERIPlan(project, config));
-    _.extend(this, new MERIPlanActions(project, _.extend({}, fcConfig, {declarationModalSelector:'#unlockPlan'})));
+
+    var actionsConfig = _.extend({}, fcConfig, {declarationModalSelector:'#unlockPlan', meriSubmissionDeclarationSelector:'#meriSubmissionDeclaration'});
+    _.extend(this, new MERIPlanActions(project, actionsConfig));
 
     self.workOrderId = ko.observable(project.workOrderId);
     self.userIsCaseManager = ko.observable(userRoles.grantManager);
