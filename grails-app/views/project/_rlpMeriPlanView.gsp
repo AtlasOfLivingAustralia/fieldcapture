@@ -1,8 +1,8 @@
 <div class="meri-plan">
-    <h4>Progrm Outcome</h4>
+    <h4>Program Outcome</h4>
     <table class="table">
         <thead>
-        <tr class="header">
+        <tr>
             <th class="index"></th>
             <th class="outcome-priority">Primary Regional Land Partnerships outcome</th>
             <th class="primary-outcome priority">Primary Investment Priority</th>
@@ -34,7 +34,7 @@
 
         <thead>
 
-        <tr class="header">
+        <tr>
             <th class="index"></th>
             <th class="outcome-priority">Secondary Regional Land Partnerships outcome(s)</th>
             <th class="priority">Secondary Investment Priorities</th>
@@ -58,7 +58,7 @@
     <h4>Project outcomes</h4>
     <table class="table">
         <thead>
-        <tr class="header">
+        <tr>
             <th class="index"></th>
             <th class="outcome">Short-term outcome statement/s</th>
         </tr>
@@ -75,7 +75,7 @@
 
     <table class="table">
         <thead>
-        <tr class="header">
+        <tr>
             <th class="index"></th>
             <th class="outcome">Medium-term outcome statement/s</th>
         </tr>
@@ -96,7 +96,7 @@
         <div class="span12">
             <table class="table">
                 <tbody>
-                <tr class="header">
+                <tr>
                     <th>Project description</th>
                 </tr>
                 <tr>
@@ -142,7 +142,7 @@
 
     <table class="table">
         <thead>
-        <tr class="header required">
+        <tr>
             <th>Project methodology</th>
         </tr>
         </thead>
