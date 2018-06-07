@@ -17,7 +17,8 @@
         <tr>
             <th>Actions</th>
             <th>Report</th>
-            <th>Period
+            <th>Period start</th>
+            <th>Period end
                 <g:if test="${hideDueDate}">
                 <br/><label><input class="hide-future-reports" type="checkbox" data-bind="checked:hideFutureReports"> Current reports only</label>
                 </g:if>
@@ -41,7 +42,8 @@
             <td><a data-bind="visible:editable, attr:{href:editUrl, title:title}" title="Complete this report"><span data-bind="text:description"></span></a>
                 <span data-bind="visible:!editable, text:description"></span>
             </td>
-            <td data-bind="text:period"></td>
+            <td data-bind="text:fromDate.formattedDate"></td>
+            <td data-bind="text:toDate.formattedDate">
             <g:if test="${!hideDueDate}">
             <td data-bind="text:dueDate.formattedDate()"></td>
             </g:if>
