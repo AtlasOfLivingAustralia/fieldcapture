@@ -1326,7 +1326,25 @@ var MERIPlanActions = function(project, options) {
     };
 
     self.submitChanges = function () {
-        self.saveStatus(config.submitPlanUrl);
+
+
+        var $declaration = $(config.meriSubmissionDeclarationSelector);
+        if ($declaration[0]) {
+            var declarationViewModel = {
+
+                termsAccepted : ko.observable(false),
+                submitReport : function() {
+                    var declarationText = $declaration.find('declaration-text').text();
+                    self.saveStatus(config.submitPlanUrl, declarationText );
+                }
+            };
+            ko.applyBindings(declarationViewModel, $declaration[0]);
+            $declaration.modal({ backdrop: 'static', keyboard: true, show: true }).on('hidden', function() {ko.cleanNode($declaration[0]);});
+
+        }
+        else {
+            self.saveStatus(config.submitPlanUrl);
+        }
     };
 
     self.modifyPlan = function () {

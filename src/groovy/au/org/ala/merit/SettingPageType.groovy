@@ -59,8 +59,8 @@ enum SettingPageType {
     DASHBOARD_EXPLANATION('dashboardExplanation', 'Header text under the dashboard report', 'fielddata.dashboardExplanation'),
     UNLOCK_PLAN_DECLARATION('unlockPlanDeclaration', 'Declaration', 'fielddata.unlockPlanDeclaration.text'),
     LOCK_STOLEN_EMAIL_SUBJECT('lockStolenSubject', 'Subject line when someone overrides a lock', 'fielddata.lock.subject'),
-    LOCK_STOLEN_EMAIL('lockStolenEmail', 'Email content when someone overrides a lock', 'fielddata.lock.body')
-
+    LOCK_STOLEN_EMAIL('lockStolenEmail', 'Email content when someone overrides a lock', 'fielddata.lock.body'),
+    RLP_DECLARATION('rlpDeclaration', 'Declaration when submitting RLP reports or MERI Plan', 'fielddata.rlp.declaration')
     String name
     String title
     String key
