@@ -381,4 +381,54 @@ class SiteService {
         }
         resp
     }
+
+    /**
+     * Creates and or updates photopoints and photos.
+     * @param siteId the site to add photopoints and photos to.
+     * @param ownerProperties Identifies the entity that the photos are related to.  Will be added to the created document (e.g. activityId:'1235')
+     * @param photoPoints
+     * @return a Map that contains the success/failure for each photo update.  If the client supplied a "clientId"
+     * for the photo it will be used as the key, otherwise it will be the index of the photo in the supplied array.
+     */
+    Map updatePhotoPoints(String siteId, Map ownerProperties, List photosToUpdate, List photoPointsToCreate) {
+
+        Map result = [:]
+        def allPhotos = photosToUpdate?:[]
+
+        // If new photo points were defined, add them to the site.
+        if (photoPointsToCreate) {
+            photoPointsToCreate.each { photoPoint ->
+                def photos = photoPoint.remove('photos')
+                result = addPhotoPoint(siteId, photoPoint)
+
+                // Assign the new photopoint poiId to each photo to be attached to the new photopoint.
+                if (!result.error) {
+                    photos.each { photo ->
+                        photo.poiId = result?.resp?.poiId
+                        allPhotos << photo
+                    }
+                }
+            }
+        }
+
+        allPhotos.eachWithIndex { photo, i ->
+
+            // Used to correlate response with the request, particularly in the case of new documents which
+            // do not have a documentId assigned yet.
+            String clientId = photo.remove('clientId') ?: i
+
+            photo.putAll(ownerProperties)
+
+            Map docResponse = documentService.saveStagedImageDocument(photo)
+            if (!docResponse.error) {
+                result[clientId] = docResponse.resp
+            }
+            else {
+                result[clientId] = docResponse.error
+            }
+        }
+
+        result
+    }
+
 }

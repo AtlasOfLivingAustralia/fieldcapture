@@ -347,15 +347,6 @@ class ActivityController {
         if (id) {
             activity = activityService.get(id)
             projectId = activity.projectId
-            postBody.outputs?.each { output ->
-                def matchingOutput = activity.outputs?.find{it.name == output.name}
-                if (matchingOutput) {
-                    if (matchingOutput.outputId != output.outputId) {
-                        log.warn("Update for activity: "+id+" contains outputs which have the same type but different IDs")
-                    }
-                    output.outputId = matchingOutput.outputId
-                }
-            }
         }
         else {
             projectId = values.projectId
@@ -392,53 +383,14 @@ class ActivityController {
             }
 
             if (photoPoints) {
-                result.photoPoints = updatePhotoPoints(id ?: result.activityId, photoPoints)
+                Map photoOwner = [activityId:id ?: result.activityId]
+                result.photoPoints = siteService.updatePhotoPoints(photoPoints.siteId, photoOwner, photoPoints.photos, photoPoints.photoPoints)
             }
 
         }
         //log.debug "result is " + result
 
         render result as JSON
-    }
-
-    private Map updatePhotoPoints(activityId, photoPoints) {
-
-        Map result = [:]
-        def allPhotos = photoPoints.photos?:[]
-
-        // If new photo points were defined, add them to the site.
-        if (photoPoints.photoPoints) {
-            photoPoints.photoPoints.each { photoPoint ->
-                def photos = photoPoint.remove('photos')
-                result = siteService.addPhotoPoint(photoPoints.siteId, photoPoint)
-
-                if (!result.error) {
-                    photos.each { photo ->
-                        photo.poiId = result?.resp?.poiId
-                        allPhotos << photo
-                    }
-                }
-            }
-        }
-
-        allPhotos.eachWithIndex { photo, i ->
-
-            // Used to correlate response with the request, particularly in the case of new documents which
-            // do not have a documentId assigned yet.
-            String clientId = photo.remove('clientId') ?: i
-
-            photo.activityId = activityId
-
-            Map docResponse = documentService.saveStagedImageDocument(photo)
-            if (!docResponse.error) {
-                result[clientId] = docResponse.resp
-            }
-            else {
-                result[clientId] = docResponse.error
-            }
-        }
-
-        result
     }
 
     def delete(String id) {

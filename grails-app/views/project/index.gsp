@@ -234,6 +234,7 @@
             var services = ${config.services?:[]};
             config.services = services;
             config.useRlpTemplate = services.length > 0;
+
             var outcomesAndAssets = ${assetsByOutcome ?: []};
             var viewModel = new ProjectPageViewModel(
                 project,
