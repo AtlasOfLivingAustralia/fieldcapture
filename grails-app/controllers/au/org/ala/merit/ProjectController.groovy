@@ -157,7 +157,7 @@ class ProjectController {
         }
         else if (template == RLP_TEMPLATE) {
 
-            model.overview.displayDashboard = true
+            model.overview.template = 'rlpOverview'
             model.overview.servicesDashboard = projectService.getServiceDashboardData(project.projectId)
             model.details.meriPlanTemplate = RLP_MERI_PLAN_TEMPLATE+'View'
             Map reportingTab = [label: 'Reporting', visible:user?.hasViewAccess, type:'tab', template:'projectReporting', reports:project.reports, stopBinding:true, services: config.services, scores:scores, hideDueDate:true]
