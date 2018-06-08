@@ -12,9 +12,9 @@
             reportCreateUrl: '${g.createLink( action:'createReport', id:program.programId)}',
             viewReportUrl:'',
             editReportUrl:"${createLink(action:"editReport", id:program.programId)}",
-            approveReportUrl:'',
-            submitReportUrl:'',
-            rejectReportUrl:'',
+            approveReportUrl:"${createLink(action:"ajaxApproveReport", id:program.programId)}",
+            submitReportUrl:"${createLink(action:"ajaxSubmitReport", id:program.programId)}",
+            rejectReportUrl:"${createLink(action:"ajaxRejectReport", id:program.programId)}",
             regenerateProgramReportsUrl:"${createLink(action:"regenerateProgramReports", id:program.programId)}",
             programSaveUrl: "${createLink(action:'ajaxUpdate', id:program.programId)}"
         };
@@ -58,7 +58,7 @@
     </div>
 
 </div>
-<g:render template="/shared/declaration"/>
+<g:render template="/shared/reportRejectionModalBs4"/>
 <script type="text/html" id="loading">
 <asset:image id="img-spinner" width="50" height="50" src="loading.gif" alt="Loading"/>
 </script>

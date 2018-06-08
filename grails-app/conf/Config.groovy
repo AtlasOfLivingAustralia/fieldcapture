@@ -219,6 +219,7 @@ if (!userDetailsById.path) {
     userDetailsById.path = "getUserDetails"
 }
 esp.activities.admin = 'ESP Annual Report Submission'
+rlp.servicesReport = 'RLP Output Report'
 
 if (!grails.cache.ehcache) {
     grails {

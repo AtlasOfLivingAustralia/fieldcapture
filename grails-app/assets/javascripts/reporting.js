@@ -121,7 +121,8 @@ var ReportViewModel = function(report, config) {
             }
         };
         ko.applyBindings(declarationViewModel, declaration);
-        $(declaration).modal({ backdrop: 'static', keyboard: true, show: true }).on('hidden', function() {ko.cleanNode(declaration);});
+        var unbind = function() {ko.cleanNode(declaration)};
+        $(declaration).modal({ backdrop: 'static', keyboard: true, show: true }).on('hidden', unbind).on('hidden.bs.modal', unbind);
 
     };
 

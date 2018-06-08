@@ -48,7 +48,7 @@ class ActivityController {
 
         model.putAll(activityService.getActivityMetadata(model.activity.type))
 
-        if (model.activity.type == 'Prototype 2') {
+        if (model.activity.type == grailsApplication.config.rlp.servicesReport) {
 
             List projectServices = model.project?.custom?.details?.serviceIds
             if (projectServices) {
