@@ -261,6 +261,37 @@ class ProgramController {
 
     }
 
+    @PreAuthorise(accessLevel = 'admin')
+    def ajaxSubmitReport(String id) {
+
+        def reportDetails = request.JSON
+
+        def result = programService.submitReport(id, reportDetails.reportId)
+
+        render result as JSON
+    }
+
+    @PreAuthorise(accessLevel = 'caseManager')
+    def ajaxApproveReport(String id) {
+
+        def reportDetails = request.JSON
+
+        def result = programService.approveReport(id, reportDetails.reportId, reportDetails.reason)
+
+        render result as JSON
+    }
+
+    @PreAuthorise(accessLevel = 'caseManager')
+    def ajaxRejectReport(String id) {
+
+        def reportDetails = request.JSON
+
+        def result = programService.rejectReport(id, reportDetails.reportId, reportDetails.reason, reportDetails.category)
+
+        render result as JSON
+    }
+
+
     def regenerateProgramReports(String id) {
         Map resp
         if (!id) {

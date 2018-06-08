@@ -38,6 +38,7 @@ class ReportService {
     def activityService
     def imageService
     def grailsLinkGenerator
+    def emailService
 
     private static int DEFAULT_REPORT_DAYS_TO_COMPLETE = 43
 
@@ -301,12 +302,78 @@ class ReportService {
         reports.max{ isSubmittedOrApproved(it) ? it.toDate : ''}
     }
 
+    /**
+     * Submits a report and sends an email notifying relevant users this action has occurred.
+     * @param reportId The id of the report to submit.
+     * @param reportOwner Properties of the entity that "owns" the report (e.g. the Project, Organisation, Program).
+     * @param ownerUsersAndRoles Users to be notified of the action.
+     * @param emailSubject Template for the email subject line.
+     * @param emailBody Template for the email body.
+     */
+    Map submitReport(String reportId, Map reportOwner, List ownerUsersAndRoles, SettingPageType emailSubject, SettingPageType emailBody) {
+
+        Map resp = submit(reportId)
+        Map report = get(reportId)
+
+        if (!resp.error) {
+            emailService.sendAdminInitiatedEmail(emailSubject, emailBody, [owner:reportOwner, report:report], ownerUsersAndRoles)
+        }
+        else {
+            return [success:false, error:resp.error]
+        }
+        return [success:true]
+    }
+
     def submit(String reportId) {
         webService.doPost(grailsApplication.config.ecodata.baseUrl+"report/submit/${reportId}", [:])
     }
 
+    /**
+     * Approves a report and sends an email notifying relevant users this action has occurred.
+     * @param reportId The id of the report to approve.
+     * @param reportOwner Properties of the entity that "owns" the report (e.g. the Project, Organisation, Program).
+     * @param ownerUsersAndRoles Users to be notified of the action.
+     * @param emailSubject Template for the email subject line.
+     * @param emailBody Template for the email body.
+     */
+    Map approveReport(String reportId, String reason, Map reportOwner, List ownerUsersAndRoles, SettingPageType emailSubject, SettingPageType emailBody) {
+
+        Map resp = approve(reportId, reason)
+        Map report = get(reportId)
+
+        if (!resp.error) {
+            emailService.sendGrantManagerInitiatedEmail(emailSubject, emailBody, [owner:reportOwner, report:report, reason:reason], ownerUsersAndRoles)
+        }
+        else {
+            return [success:false, error:resp.error]
+        }
+        return [success:true]
+    }
+
     def approve(String reportId, String reason) {
         webService.doPost(grailsApplication.config.ecodata.baseUrl+"report/approve/${reportId}", [comment:reason])
+    }
+
+    /**
+     * Rejects/returns a report and sends an email notifying relevant users this action has occurred.
+     * @param reportId The id of the report to reject.
+     * @param reportOwner Properties of the entity that "owns" the report (e.g. the Project, Organisation, Program).
+     * @param ownerUsersAndRoles Users to be notified of the action.
+     * @param emailSubject Template for the email subject line.
+     * @param emailBody Template for the email body.
+     */
+    Map rejectReport(String reportId, String reason, Map reportOwner, List ownerUsersAndRoles, SettingPageType emailSubject, SettingPageType emailBody) {
+
+        Map resp = reject(reportId, "", reason)
+        Map report = get(reportId)
+
+        if (!resp.error) {
+            emailService.sendGrantManagerInitiatedEmail(emailSubject, emailBody, [owner:reportOwner, report:report, reason:reason], ownerUsersAndRoles)
+        }
+        else {
+            return [success:false, error:resp.error]
+        }
+        return [success:true]
     }
 
     def reject(String reportId, String category, String reason) {

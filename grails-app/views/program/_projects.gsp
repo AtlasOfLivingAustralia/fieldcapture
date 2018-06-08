@@ -35,4 +35,5 @@
 
     </div>
 </div>
+<g:render template="/shared/declaration_bs4" model="${[declarationType:au.org.ala.merit.SettingPageType.RLP_REPORT_DECLARATION]}"/>
 <!-- /ko -->

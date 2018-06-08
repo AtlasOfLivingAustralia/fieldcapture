@@ -18,6 +18,7 @@ class ProgramService {
     DocumentService documentService
     ReportService reportService
     ProjectService projectService
+    EmailService emailService
 
 
     Map get(String id, String view = '') {
@@ -161,6 +162,34 @@ class ProgramService {
         String url = "${grailsApplication.config.ecodata.baseUrl}program/$id/projects"
         Map resp = webService.getJson(url)
         return resp
+    }
+
+    Map submitReport(String programId, String reportId) {
+
+        Map program = get(programId)
+        List members = getMembersOfProgram(programId)
+
+        return reportService.submitReport(reportId, program, members, SettingPageType.RLP_REPORT_SUBMITTED_EMAIL_SUBJECT, SettingPageType.RLP_REPORT_SUBMITTED_EMAIL_BODY)
+    }
+
+    Map approveReport(String programId, String reportId, String reason) {
+        Map program = get(programId)
+        List members = getMembersOfProgram(programId)
+
+        return reportService.approveReport(reportId, reason, program, members, SettingPageType.RLP_REPORT_APPROVED_EMAIL_SUBJECT, SettingPageType.RLP_REPORT_APPROVED_EMAIL_BODY)
+    }
+
+    def rejectReport(String programId, String reportId, String reason, String category) {
+        Map program = get(programId)
+        List members = getMembersOfProgram(programId)
+
+        return reportService.rejectReport(reportId, reason, program, members, SettingPageType.RLP_REPORT_RETURNED_EMAIL_SUBJECT, SettingPageType.RLP_REPORT_RETURNED_EMAIL_BODY)
+    }
+
+    List getMembersOfProgram(String programId) {
+        Map resp = userService.getMembersOfProgram(programId)
+
+        resp?.members ?: []
     }
 
 }

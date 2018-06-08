@@ -60,7 +60,14 @@ enum SettingPageType {
     UNLOCK_PLAN_DECLARATION('unlockPlanDeclaration', 'Declaration', 'fielddata.unlockPlanDeclaration.text'),
     LOCK_STOLEN_EMAIL_SUBJECT('lockStolenSubject', 'Subject line when someone overrides a lock', 'fielddata.lock.subject'),
     LOCK_STOLEN_EMAIL('lockStolenEmail', 'Email content when someone overrides a lock', 'fielddata.lock.body'),
-    RLP_DECLARATION('rlpDeclaration', 'Declaration when submitting RLP reports or MERI Plan', 'fielddata.rlp.declaration')
+    RLP_MERI_DECLARATION('rlpDeclaration', 'Declaration when submitting RLP reports or MERI Plan', 'fielddata.rlp.meri.declaration'),
+    RLP_REPORT_DECLARATION('rlpDeclaration', 'Declaration when submitting RLP reports or MERI Plan', 'fielddata.rlp.report.declaration'),
+    RLP_REPORT_SUBMITTED_EMAIL_SUBJECT('rlpReportSubmittedEmailSubject', 'RLP Report submitted email subject line text', 'fielddata.rlp.report.submitted.emailSubject'),
+    RLP_REPORT_SUBMITTED_EMAIL_BODY('rlpReportSubmittedEmailBody', 'RLP Report submitted email subject body text', 'fielddata.rlp.report.submitted.emailBody'),
+    RLP_REPORT_APPROVED_EMAIL_SUBJECT('rlpReportApprovedEmailSubject', 'RLP Report approved email subject line text', 'fielddata.rlp.report.approved.emailSubject'),
+    RLP_REPORT_APPROVED_EMAIL_BODY('rlpReportApprovedEmailBody', 'RLP Report approved email subject body text', 'fielddata.rlp.report.approved.emailBody'),
+    RLP_REPORT_RETURNED_EMAIL_SUBJECT('rlpReportReturnedEmailSubject', 'RLP Report returned email subject line text', 'fielddata.rlp.report.returned.emailSubject'),
+    RLP_REPORT_RETURNED_EMAIL_BODY('rlpReportReturnedEmailBody', 'RLP Report returned email subject body text', 'fielddata.rlp.report.returned.emailBody')
     String name
     String title
     String key
