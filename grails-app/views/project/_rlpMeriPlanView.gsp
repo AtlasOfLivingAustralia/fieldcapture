@@ -3,14 +3,12 @@
     <table class="table">
         <thead>
         <tr>
-            <th class="index"></th>
             <th class="outcome-priority">Primary Regional Land Partnerships outcome</th>
             <th class="primary-outcome priority">Primary Investment Priority</th>
         </tr>
         </thead>
         <tbody>
         <tr>
-            <td class="index">1</td>
             <td class="outcome-priority"><span
                     data-bind="text:details.outcomes.primaryOutcome.description"></span>
             </td>
@@ -35,14 +33,12 @@
         <thead>
 
         <tr>
-            <th class="index"></th>
             <th class="outcome-priority">Secondary Regional Land Partnerships outcome(s)</th>
             <th class="priority">Secondary Investment Priorities</th>
         </tr>
         </thead>
         <tbody data-bind="foreach:details.outcomes.secondaryOutcomes">
         <tr>
-            <td class="index" data-bind="text:$index()+1"></td>
             <td class="outcome-priority"><span
                     data-bind="text:description"></span>
             </td>

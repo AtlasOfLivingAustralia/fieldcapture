@@ -207,7 +207,8 @@ function DetailsViewModel(o, project, risks, config) {
 function ServicesViewModel(serviceIds, allServices, outputTargets, periods) {
     var self = this;
 
-    allServices = allServices || [];
+    allServices = _.sortBy(allServices || [], function(service) {return service.name});
+
     outputTargets = outputTargets || [];
 
     var ServiceTarget = function(service, score) {
@@ -272,7 +273,7 @@ function ServicesViewModel(serviceIds, allServices, outputTargets, periods) {
                 availableScores.push(target.score());
             }
 
-            return availableScores;
+            return _.sortBy(availableScores, function(score) { return score.label });
         });
         target.selectableServices = ko.pureComputed(function() {
             var services = self.availableServices();

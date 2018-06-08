@@ -3,7 +3,6 @@
     <table class="table">
         <thead>
         <tr class="header">
-            <th class="index"></th>
             <th class="outcome-priority required">Primary Regional Land Partnerships outcome</th>
             <th class="primary-outcome priority required">Primary Investment Priority <fc:iconHelp html="true" container="body">Enter the primary investment priority/ies for the primary outcome. (drop down list in MERIT) <br/>For outcomes 1-4, only one primary investment priority can be selected.<br/>For outcomes 5-6, up to 5 primary investment priorities can be selected</fc:iconHelp></th>
             <th class="remove"></th>
@@ -11,7 +10,6 @@
         </thead>
         <tbody>
         <tr>
-            <td class="index">1</td>
             <td class="outcome-priority">
                 <select data-validation-engine="validate[required]" data-bind="options:details.outcomes.selectableOutcomes, value:details.outcomes.primaryOutcome.description, optionsCaption: 'Please select', disable: isProjectDetailsLocked()" >
                 </select>
@@ -39,7 +37,6 @@
         <thead>
 
         <tr class="header">
-            <th class="index"></th>
             <th class="outcome-priority">Secondary Regional Land Partnerships outcome(s)</th>
             <th class="priority">Secondary Investment Priorities <fc:iconHelp container="body">Other investment priorities that will benefit from the project.</fc:iconHelp></th>
             <th class="remove"></th>
@@ -47,7 +44,6 @@
         </thead>
         <tbody data-bind="foreach:details.outcomes.secondaryOutcomes">
         <tr>
-            <td class="index" data-bind="text:$index()+1"></td>
             <td class="outcome-priority"><select data-validation-engine="validate[required]"
                                                  data-bind="value:description, options: $parent.details.outcomes.selectableOutcomes, optionsCaption: 'Please select', disable: $root.isProjectDetailsLocked()"></select>
             </td>
@@ -64,7 +60,7 @@
         </tbody>
         <tfoot>
         <tr>
-            <td colspan="4">
+            <td colspan="3">
                 <button type="button" class="btn btn-small"
                         data-bind="disable: details.outcomes.secondaryOutcomes().length >= 5 || isProjectDetailsLocked(), click: addSecondaryOutcome">
                     <i class="fa fa-plus"></i> Add a row</button></td>
