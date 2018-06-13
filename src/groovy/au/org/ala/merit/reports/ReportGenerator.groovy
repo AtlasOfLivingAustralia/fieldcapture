@@ -6,6 +6,7 @@ import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.joda.time.Interval
 import org.joda.time.Period
+import org.joda.time.PeriodType
 
 
 /** Responsible for generating a list of reports for an entity from configuration (e.g. Project, Organisation, Program */
@@ -29,15 +30,41 @@ class ReportGenerator {
         DateTime endDate = reportOwner.periodEnd.withZone(DateTimeZone.default)
 
         int sequenceNo = startingSequenceNo
-        Interval reportInterval = determineFirstReportInterval(reportConfig, reportOwner, latestApprovedReportPeriodEnd)
 
         List<Map> reports = []
-        log.info "Regenerating reports starting at sequence: "+sequenceNo+" from: "+reportInterval.start+" ending at: "+reportInterval.end
-        while (reportInterval.start < endDate.minusDays(DATE_FUDGE_FACTOR)) {
 
-            reports << createReport(reportConfig, reportOwner, sequenceNo, reportInterval)
-            sequenceNo++
-            reportInterval = new Interval(reportInterval.end, reportInterval.end.plus(period))
+        if (reportConfig.multiple) {
+            Interval reportInterval = determineFirstReportInterval(reportConfig, reportOwner, latestApprovedReportPeriodEnd)
+
+            log.info "Regenerating reports starting at sequence: "+sequenceNo+" from: "+reportInterval.start+" ending at: "+reportInterval.end
+
+            while (reportInterval.start < endDate.minusDays(DATE_FUDGE_FACTOR)) {
+
+                reports << createReport(reportConfig, reportOwner, sequenceNo, reportInterval)
+                sequenceNo++
+                reportInterval = new Interval(reportInterval.end, reportInterval.end.plus(period))
+            }
+        }
+        else {
+
+            // Single reports are aligned with the owner dates.
+            DateTime start = reportOwner.periodStart.withZone(DateTimeZone.default)
+            DateTime end = endDate
+            if (reportConfig.reportingPeriodInMonths) {
+                end = start.plus(period)
+            }
+            Interval reportInterval = new Interval(start, end)
+
+            // If the report minimumPeriodInMonths has been specified, only create the report if the owner duration
+            // is greater than the minimum period.
+            if (!reportConfig.minimumPeriodInMonths || reportInterval.toPeriod(PeriodType.months()).getMonths() >= reportConfig.minimumPeriodInMonths) {
+                log.info("Regenerating a single report from "+reportInterval.start+" to "+reportInterval.end)
+                reports << createReport(reportConfig, reportOwner, 1, reportInterval)
+            }
+            else{
+                log.info("Not regenerating report "+reportConfig.category+" because owner duration too short: "+reportInterval.toPeriod(PeriodType.months()).getMonths() +" < "+reportConfig.minimumPeriodInMonths)
+            }
+
         }
 
         // Align the report end dates to the owning entities date constraints
@@ -47,7 +74,6 @@ class ReportGenerator {
 
         reports
     }
-
 
     private Map createReport(ReportConfig reportConfig, ReportOwner reportOwner, int sequenceNo, Interval reportInterval) {
 

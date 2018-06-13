@@ -133,10 +133,10 @@ var ProgramPageViewModel = function(props, options) {
             config.projectReports = [];
         }
         activityReportConfig = _.find(config.projectReports, function(report) {
-            return report.type == 'Activity';
+            return report.reportType == 'Activity';
         });
         if (!activityReportConfig) {
-            activityReportConfig = {type:'Activity'};
+            activityReportConfig = {reportType:'Activity'};
             config.projectReports.push(activityReportConfig);
         }
 

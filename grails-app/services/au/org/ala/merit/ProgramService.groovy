@@ -147,7 +147,7 @@ class ProgramService {
 
     void regenerateActivityReports(String id) {
         Map program = get(id)
-        Map activityReportConfig = program.config?.projectReports?.find{it.type==ReportService.REPORT_TYPE_STAGE_REPORT}
+        Map activityReportConfig = program.config?.projectReports?.find{it.reportType==ReportService.REPORT_TYPE_STAGE_REPORT}
         if (activityReportConfig) {
             Map projects = getProgramProjects(id)
             projects?.projects?.each{ project ->
