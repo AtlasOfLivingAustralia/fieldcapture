@@ -1,5 +1,7 @@
-package au.org.ala.merit;
+package au.org.ala.merit
 
+import au.org.ala.merit.reports.ReportConfig
+import au.org.ala.merit.reports.ReportOwner;
 import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.codehaus.groovy.grails.web.json.JSONArray
 import org.joda.time.DateTime
@@ -130,19 +132,16 @@ class ProgramService {
     void regenerateProgramReports(String id) {
         Map program = get(id)
         List programReportConfig = program.config?.programReports
-        programReportConfig?.each { reportConfig ->
+        ReportOwner owner = new ReportOwner(
+                id:[programId:program.programId],
+                name:program.name,
+                periodStart:program.startDate,
+                periodEnd:program.endDate
+        )
+        programReportConfig?.each {
+            ReportConfig reportConfig = new ReportConfig(it)
             List relevantReports = program.reports?.findAll{it.category == reportConfig.category}
-
-            Map prototype = [
-                    category: reportConfig.category,
-                    type: reportConfig.type,
-                    activityType: reportConfig.activityType,
-                    programId:program.programId,
-                    name:reportConfig.reportNameTemplate,
-                    description:reportConfig.reportDescriptionTemplate
-            ]
-            String startDateIso = reportConfig.firstMilestoneDate ?: program.startDate
-            reportService.regenerateAllReports(relevantReports, prototype, startDateIso, program.endDate, reportConfig.period, Boolean.valueOf(reportConfig.alignToCalendar), reportConfig.weekDaysToCompleteReport, program.name)
+            reportService.regenerateReports(relevantReports, reportConfig, owner)
         }
     }
 
@@ -183,7 +182,8 @@ class ProgramService {
         Map program = get(programId)
         List members = getMembersOfProgram(programId)
 
-        return reportService.rejectReport(reportId, reason, program, members, SettingPageType.RLP_REPORT_RETURNED_EMAIL_SUBJECT, SettingPageType.RLP_REPORT_RETURNED_EMAIL_BODY)
+        return reportService.rejectReport(reportId, reason, program, members, SettingPageType.RLP_REPORT_RETURNED_EMAIL_SUBJECT, SettingPageType.RLP_REPORT_RETURNED_EMAIL_BODY
+        )
     }
 
     List getMembersOfProgram(String programId) {

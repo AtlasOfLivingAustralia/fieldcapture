@@ -1,5 +1,7 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.reports.ReportConfig
+import au.org.ala.merit.reports.ReportOwner
 import grails.converters.JSON
 import grails.test.mixin.TestFor
 import org.codehaus.groovy.grails.web.converters.marshaller.json.CollectionMarshaller
@@ -403,29 +405,5 @@ class ProjectServiceSpec extends Specification {
         1 * reportService.isSubmittedOrApproved(_) >> false
         canEdit == true
     }
-
-    def "reports can be generated using a program wide date of first milestone"(String firstMilestoneDate, String expectedStartDate) {
-
-        setup:
-        Map reportConfig = [type:'Activity', period:6, reportingPeriodAlignedToCalendar: false, weekDaysToCompleteReport: 0, reportNameTemplate:'test', reportDescriptionTemplate:'test', firstMilestoneDate:firstMilestoneDate, category:'c']
-        Map project = [projectId:'p1', name:'project', status: 'active',  plannedStartDate: '2015-07-01T00:00:00Z', plannedEndDate:'2016-12-31T00:00:00Z', reports:[]]
-        Map prototypeReport = [type:reportConfig.type, activityType: null, name:reportConfig.reportNameTemplate, description: reportConfig.reportDescriptionTemplate, projectId:'p1', category:'c']
-
-        when:
-        service.generateProjectReports(reportConfig, project)
-
-        then:
-        1 * reportService.regenerateAllReports([], prototypeReport, expectedStartDate, project.plannedEndDate, reportConfig.period, reportConfig.reportingPeriodAlignedToCalendar, reportConfig.weekDaysToCompleteReport, project.name)
-
-        where:
-        firstMilestoneDate     | expectedStartDate
-        ''                     | '2015-07-01T00:00:00Z'
-        '2015-07-05T00:00:00Z' | '2015-01-05T00:00:00Z'
-        '2016-12-31T00:00:00Z' | '2016-06-30T00:00:00Z'
-        '2014-02-01T00:00:00Z' | '2015-02-01T00:00:00Z'
-
-    }
-
-
 
 }
