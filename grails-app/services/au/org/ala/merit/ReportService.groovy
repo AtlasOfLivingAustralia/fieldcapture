@@ -1,5 +1,8 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.reports.ReportConfig
+import au.org.ala.merit.reports.ReportGenerator
+import au.org.ala.merit.reports.ReportOwner
 import grails.converters.JSON
 import org.apache.commons.io.FilenameUtils
 import org.joda.time.DateTime
@@ -142,7 +145,58 @@ class ReportService {
 
     }
 
+    void regenerateReports(List existingReports, ReportConfig reportConfig, ReportOwner reportOwner) {
+        // Ensure the reports are sorted in Date order
+        existingReports = (existingReports?:[]).sort{it.toDate}
 
+
+        int index = existingReports.findLastIndexOf {isSubmittedOrApproved(it)}
+        DateTime latestApprovedReportPeriodEnd = null
+        if (index >= 0) {
+            latestApprovedReportPeriodEnd = DateUtils.parse(existingReports[index].toDate)
+        }
+        index++ // Start at the report after the submitted/approved one (or index 0 if none was found)
+
+        int sequenceNo = index + 1
+        List reports = new ReportGenerator().generateReports(reportConfig, reportOwner, sequenceNo, latestApprovedReportPeriodEnd)
+
+        for (Map report: reports) {
+            // Update or create new reports
+            if (existingReports.size() > index) {
+                report.reportId = existingReports[index].reportId
+                // Only do the update if the report details have changed.
+                if (needsRegeneration(report, existingReports[index])) {
+                    log.info("name: " + existingReports[index].name + " - " + report.name)
+                    log.info("fromDate: " + existingReports[index].fromDate + " - " + report.fromDate)
+                    log.info("toDate: " + existingReports[index].toDate + " - " + report.toDate)
+                    update(report)
+                }
+            }
+            else {
+                log.info("Creating report "+report.name)
+                create(report)
+            }
+            index++
+
+        }
+
+        // Delete any left over reports.
+        for (int i=index; i<existingReports.size(); i++) {
+            log.info("Deleting report " + existingReports[i].name)
+            delete(existingReports[i].reportId)
+        }
+
+    }
+
+    boolean needsRegeneration(Map report1, Map report2) {
+        return report1.fromDate != report2.fromDate ||
+               report1.toDate != report2.toDate ||
+               report1.name != report2.name ||
+               report1.description != report2.description ||
+               report1.type != report2.type ||
+               report1.activityType != report2.activityType ||
+               report1.category != report2.category
+    }
 
     /**
      * This method supports automatically creating reporting activities for a project that re-occur at defined intervals.
@@ -152,97 +206,24 @@ class ReportService {
      */
     void regenerateAllStageReportsForProject(String projectId, Integer periodInMonths = 6, boolean alignToCalendar = false, Integer weekDaysToCompleteReport = null) {
         Map project = projectService.get(projectId, 'all')
-        Map prototype = [
-                type:'Activity',
-                projectId:projectId,
-                name:"Stage %1\$d",
-                description: "Stage %1\$d for %4\$s"
-        ]
 
-        regenerateAllReports(project.reports ?: [], prototype, project.plannedStartDate, project.plannedEndDate, periodInMonths ?: 6,alignToCalendar, weekDaysToCompleteReport, project.name)
-    }
+        ReportConfig reportConfig = new ReportConfig(
+            reportingPeriodInMonths: periodInMonths,
+                reportsAlignedToCalendar: alignToCalendar,
+                reportNameFormat:"Stage %1\$d",
+                reportDescriptionFormat: "Stage %1\$d for %4\$s",
+                reportType:'Activity',
+                category:"Stage reports",
+                weekDaysToCompleteReport: weekDaysToCompleteReport
+        )
+        ReportOwner reportOwner = new ReportOwner(
+                id:[projectId:projectId],
+                name:project.name,
+                periodStart:project.plannedStartDate,
+                periodEnd:project.plannedEndDate
+        )
 
-    /**
-     * This method supports automatically creating reporting activities for a project that re-occur at defined intervals.
-     * e.g. a stage report once every 6 months or a green army monthly report once per month.
-     * Activities will only be created when no reporting activity of the correct type exists within each period.
-     * @param projectId identifies the project.
-     */
-    def regenerateAllStageReportsForProjectOriginalVersion(String projectId, Integer periodInMonths = 6, boolean alignToCalendar = false, Integer weekDaysToCompleteReport = null, String reportName = "Stage") {
-
-        def project = projectService.get(projectId, 'all')
-        log.info("Processing project "+project.name)
-        def period = Period.months(periodInMonths)
-
-        def reports = (project.reports?:[]).sort{it.toDate}
-
-        DateTime startDate = DateUtils.parse(project.plannedStartDate).withZone(DateTimeZone.default)
-        DateTime endDate = DateUtils.parse(project.plannedEndDate).withZone(DateTimeZone.default)
-
-        DateTime periodStartDate = null
-        int stage = 1
-        for (int i=reports.size()-1; i>=0; i--) {
-            if (isSubmittedOrApproved(reports[i])) {
-                periodStartDate = DateUtils.parse(reports[i].toDate).withZone(DateTimeZone.default)
-                stage = i+2 // Start at the stage after the submitted or approved one
-                break
-            }
-        }
-
-        if (!periodStartDate) {
-            periodStartDate = startDate
-        }
-
-        // The first period start date  (to be modified) should be aligned to the end date of the previous report or
-        // the project start date if it is the first report.
-        DateTime reportFromDate = periodStartDate
-
-        if (alignToCalendar) {
-            periodStartDate = DateUtils.alignToPeriod(periodStartDate, period)
-        }
-
-        log.info "Regenerating stages starting from stage: "+stage+ ", starting from: "+periodStartDate+" ending at: "+endDate
-        while (periodStartDate < endDate.minusDays(1)) {
-            def periodEndDate = periodStartDate.plus(period)
-
-            def report = [
-                    fromDate:DateUtils.format(reportFromDate.withZone(DateTimeZone.UTC)),
-                    toDate:DateUtils.format(periodEndDate.withZone(DateTimeZone.UTC)),
-                    type:'Activity',
-                    projectId:projectId,
-                    name:reportName + ' '+stage,
-                    description:reportName + ' '+stage+' for '+project.name
-            ]
-            if (weekDaysToCompleteReport) {
-                report.dueDate = DateUtils.format(periodEndDate.plusDays(weekDaysToCompleteReport).withZone(DateTimeZone.UTC))
-            }
-
-            if (reports.size() >= stage) {
-                report.reportId = reports[stage-1].reportId
-                // Only do the update if the report details have changed.
-                if (!report.equals(reports[stage-1])) {
-                    log.info("Updating report " + report.name + " for project " + project.projectId)
-                    log.info("name: " + reports[stage - 1].name + " - " + report.name)
-                    log.info("fromDate: " + reports[stage - 1].fromDate + " - " + report.fromDate)
-                    log.info("toDate: " + reports[stage - 1].toDate + " - " + report.toDate)
-                    update(report)
-                }
-            }
-            else {
-                log.info("Creating report "+report.name+" for project "+project.projectId)
-                create(report)
-            }
-            stage++
-            periodStartDate = periodEndDate
-            reportFromDate = periodStartDate
-        }
-
-        // Delete any left over reports.
-        for (int i=stage-1; i<reports.size(); i++) {
-            log.info("Deleting report "+reports[i].name+" for project "+project.projectId)
-            delete(reports[i].reportId)
-        }
-        log.info("***********")
+        regenerateReports(project.reports ?: [], reportConfig, reportOwner)
     }
 
     /**

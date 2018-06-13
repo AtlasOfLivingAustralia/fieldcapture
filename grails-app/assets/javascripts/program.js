@@ -153,24 +153,24 @@ var ProgramPageViewModel = function(props, options) {
     var programReportConfig = getProgramReportConfig();
 
     self.coreServicesOptions = [
-        {label:'Monthly', firstMilestoneDate:'2018-07-31T14:00:00Z', period:1},
-        {label:"Quarterly - Group A (First period ends September 30)", firstMilestoneDate:'2018-09-30T14:00:00Z', period:3},
-        {label:"Quarterly - Group B (First period ends August 31)", firstMilestoneDate:'2018-08-31T14:00:00Z', period:3},
-        {label:"Half-yearly", firstMilestoneDate:'2019-01-31T13:00:00Z', period:6}];
+        {label:'Monthly', firstReportingPeriodEnd:'2018-07-31T14:00:00Z', reportingPeriodInMonths:1},
+        {label:"Quarterly - Group A (First period ends September 30)", firstReportingPeriodEnd:'2018-09-30T14:00:00Z', reportingPeriodInMonths:3},
+        {label:"Quarterly - Group B (First period ends August 31)", firstReportingPeriodEnd:'2018-08-31T14:00:00Z', reportingPeriodInMonths:3},
+        {label:"Half-yearly", firstReportingPeriodEnd:'2019-01-31T13:00:00Z', reportingPeriodInMonths:6}];
 
     var currentOption = _.find(self.coreServicesOptions, function(option) {
-        return option.firstMilestoneDate == programReportConfig.firstMilestoneDate;
+        return option.firstReportingPeriodEnd == programReportConfig.firstReportingPeriodEnd;
     });
     self.coreServicesPeriod = ko.observable(currentOption ? currentOption.label : null);
 
 
     self.activityReportingOptions = [
-        {label:"Quarterly - Group C (First period ends September 30)", firstMilestoneDate:'2018-09-30T14:00:00Z', period:3},
-        {label:"Quarterly - Group D (First period ends October 31)", firstMilestoneDate:'2018-10-31T13:00:00Z', period:3},
-        {label:"Half-yearly", firstMilestoneDate:'2019-02-28T13:00:00Z', period:6}];
+        {label:"Quarterly - Group C (First period ends September 30)", firstReportingPeriodEnd:'2018-09-30T14:00:00Z', reportingPeriodInMonths:3},
+        {label:"Quarterly - Group D (First period ends October 31)", firstReportingPeriodEnd:'2018-10-31T13:00:00Z', reportingPeriodInMonths:3},
+        {label:"Half-yearly", firstReportingPeriodEnd:'2019-02-28T13:00:00Z', reportingPeriodInMonths:6}];
 
     currentOption = _.find(self.activityReportingOptions, function(option) {
-        return option.firstMilestoneDate == activityReportConfig.firstMilestoneDate;
+        return option.firstReportingPeriodEnd == activityReportConfig.firstReportingPeriodEnd;
     });
     self.activityReportingPeriod = ko.observable(currentOption ? currentOption.label : null);
 
@@ -180,14 +180,14 @@ var ProgramPageViewModel = function(props, options) {
             var selectedCoreServicesPeriod = _.find(self.coreServicesOptions, function(option) {
                 return option.label == self.coreServicesPeriod();
             });
-            programReportConfig.firstMilestoneDate = selectedCoreServicesPeriod.firstMilestoneDate;
-            programReportConfig.period = selectedCoreServicesPeriod.period;
+            programReportConfig.firstReportingPeriodEnd = selectedCoreServicesPeriod.firstReportingPeriodEnd;
+            programReportConfig.reportingPeriodInMonths = selectedCoreServicesPeriod.reportingPeriodInMonths;
 
             var selectedActivityReportingPeriod = _.find(self.activityReportingOptions, function(option) {
                 return option.label == self.activityReportingPeriod();
             });
-            activityReportConfig.firstMilestoneDate = selectedActivityReportingPeriod.firstMilestoneDate;
-            activityReportConfig.period = selectedActivityReportingPeriod.period;
+            activityReportConfig.firstReportingPeriodEnd = selectedActivityReportingPeriod.firstReportingPeriodEnd;
+            activityReportConfig.reportingPeriodInMonths = selectedActivityReportingPeriod.reportingPeriodInMonths;
 
             self.saveConfig(config, function() {
                 self.regenerateReports();

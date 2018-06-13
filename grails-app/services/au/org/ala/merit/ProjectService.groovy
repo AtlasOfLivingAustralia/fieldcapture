@@ -1,5 +1,7 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.reports.ReportConfig
+import au.org.ala.merit.reports.ReportOwner
 import grails.converters.JSON
 import org.apache.commons.lang.CharUtils
 import org.apache.http.HttpStatus
@@ -681,35 +683,18 @@ class ProjectService  {
     }
 
     void generateProjectReports(Map reportConfig, Map project) {
-        int DEFAULT_REPORTING_PERIOD = 6
-        def period = reportConfig.period ?: DEFAULT_REPORTING_PERIOD
-        period = period as Integer
 
-        boolean alignedToCalendar = reportConfig.reportingPeriodAlignedToCalendar ?: false
-
-        String startDate = project.plannedStartDate
-        // The first milestone date can apply to the whole program so may be before the project starts.
-        // If so, we align the reporting with this date, but don't start until it aligns with the project timeframe
-        if (reportConfig.firstMilestoneDate) {
-            DateTime firstEndDate = DateUtils.parse(reportConfig.firstMilestoneDate)
-            DateTime projectStart = DateUtils.parse(startDate)
-            Period p = Period.months(period)
-            while (firstEndDate < projectStart) {
-                firstEndDate = firstEndDate.plus(p)
-            }
-            startDate = DateUtils.format(firstEndDate.minus(p))
-        }
+        ReportOwner reportOwner = new ReportOwner(
+                id:[projectId:project.projectId],
+                name:project.name,
+                periodStart:project.plannedStartDate,
+                periodEnd:project.plannedEndDate
+        )
+        ReportConfig rc = new ReportConfig(reportConfig)
 
         List reportsOfType = project.reports?.findAll{it.category == reportConfig.category}
-        Map prototypeReport = [
-                type:reportConfig.type,
-                activityType:reportConfig.activityType,
-                name:reportConfig.reportNameTemplate,
-                description:reportConfig.reportDescriptionTemplate,
-                projectId:project.projectId,
-                category:reportConfig.category
-        ]
-        reportService.regenerateAllReports(reportsOfType, prototypeReport, startDate, project.plannedEndDate, period, alignedToCalendar, reportConfig.weekDaysToCompleteReport, project.name)
+
+        reportService.regenerateReports(reportsOfType, rc, reportOwner)
 
     }
 
