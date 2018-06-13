@@ -10,8 +10,7 @@ div.dataTables_filter input {
         <g:if test="${editable}">
             <div class="btn-group btn-group-horizontal ">
                 <button data-bind="click: $root.addSite" type="button" class="btn">Add new ${wordForSite}</button>
-                <button data-bind="click: $root.addExistingSite" type="button" class="btn">Add existing ${wordForSite}</button>
-                <button data-bind="click: $root.uploadShapefile" type="button" class="btn">Upload ${wordForSite}s from shapefile</button>
+                <button data-bind="click: $root.uploadSites" type="button" class="btn">Upload ${wordForSite}s from shapefile</button>
             </div>
         </g:if>
     </div>
