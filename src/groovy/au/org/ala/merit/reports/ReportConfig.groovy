@@ -45,6 +45,16 @@ class ReportConfig {
 
     String category = null
 
+    /** Multiple reports should be generated from this configuration if they fit into the owner's time constraints.
+     * If this value is false, the single report will be aligned with the owners time constraints */
+    boolean multiple = true
+
+    /**
+     * For reports with multiple=false and no reportingPeriodInMonths supplied, this property acts to suppress
+     * the creation of reports for owners with durations less than this value.
+     */
+    Integer minimumPeriodInMonths = null
+
 
     DateTime getFirstReportingPeriodEnd() {
         firstReportingPeriodEnd ? DateUtils.parse(firstReportingPeriodEnd) : null
