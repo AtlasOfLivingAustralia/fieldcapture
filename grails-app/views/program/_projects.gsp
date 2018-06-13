@@ -28,12 +28,7 @@
 </g:else>
 
 <!-- ko stopBinding:true -->
-<div class="row">
-    <div class="col-sm">
-        <h4>Core service reporting</h4>
-        <g:render template="/shared/reporting"/>
+<g:render template="/shared/categorizedReporting"/>
 
-    </div>
-</div>
 <g:render template="/shared/declaration_bs4" model="${[declarationType:au.org.ala.merit.SettingPageType.RLP_REPORT_DECLARATION]}"/>
 <!-- /ko -->

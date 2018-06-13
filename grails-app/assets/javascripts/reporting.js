@@ -302,3 +302,21 @@ var ReportsViewModel = function(reports, projects, availableReports, reportOwner
 
 };
 
+var CategorisedReportsViewModel = function(allReports, projects, availableReports, reportOwner, config) {
+
+    var self = this;
+    var categorizedReports = _.groupBy(allReports, function(report) {
+         return report.category;
+    });
+
+    self.reportsByCategory = [];
+
+    _.each(categorizedReports, function(reports, category) {
+        self.reportsByCategory.push({
+            title:category,
+            model:new ReportsViewModel(reports, projects, availableReports, reportOwner, config)
+        });
+    });
+
+}
+
