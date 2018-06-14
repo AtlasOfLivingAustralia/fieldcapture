@@ -23,6 +23,7 @@ var ReportViewModel = function(report, config) {
     self.description = report.description || report.name;
     self.fromDate = ko.observable(report.fromDate).extend({simpleDate:false});
     self.toDate =  ko.observable(report.toDate).extend({simpleDate:false});
+    self.toDateLabel = convertToSimpleDate(moment(report.toDate).subtract(1, 'hours').toDate(), false);
     self.dueDate = ko.observable(report.dueDate).extend({simpleDate:false});
     self.progress = ko.observable(report.progress || 'planned');
     self.editUrl = '';

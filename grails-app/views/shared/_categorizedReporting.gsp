@@ -93,7 +93,7 @@
             <span data-bind="visible:!editable, text:description"></span>
         </td>
         <td class="report-start" data-bind="text:fromDate.formattedDate"></td>
-    <td class="report-end" data-bind="text:toDate.formattedDate">
+    <td class="report-end" data-bind="text:toDateLabel">
         <g:if test="${!hideDueDate}">
             <td class="report-due" data-bind="text:dueDate.formattedDate()"></td>
         </g:if>
