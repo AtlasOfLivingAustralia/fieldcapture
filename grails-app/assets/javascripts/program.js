@@ -189,32 +189,29 @@ var ProgramPageViewModel = function(props, options) {
             activityReportConfig.firstReportingPeriodEnd = selectedActivityReportingPeriod.firstReportingPeriodEnd;
             activityReportConfig.reportingPeriodInMonths = selectedActivityReportingPeriod.reportingPeriodInMonths;
 
-            self.saveConfig(config, function() {
-                self.regenerateReports();
+            blockUIWithMessage("Saving configuration...");
+            self.saveConfig(config).done(function() {
+                blockUIWithMessage("Regenerating reports...");
+                self.regenerateReports().done(window.location.reload()).fail($.unblockUI());
             });
         }
     };
 
-    self.saveConfig = function(config, successCallback) {
+    self.saveConfig = function(config) {
         var json = {config: config};
-        $.ajax({
+        return $.ajax({
             url: options.programSaveUrl,
             type: 'POST',
             data: JSON.stringify(json),
             dataType:'json',
             contentType: 'application/json'
-        }).done(function (data) {
-            bootbox.alert("Program configuration saved");
-            if (_.isFunction(successCallback)) {
-                successCallback(data);
-            }
         }).fail(function() {
             bootbox.alert("Save failed");
         });
     };
 
     self.regenerateReports = function() {
-        $.ajax({
+        return $.ajax({
             url: options.regenerateProgramReportsUrl,
             type: 'POST',
             dataType:'json',
@@ -222,6 +219,7 @@ var ProgramPageViewModel = function(props, options) {
         }).fail(function() {
             bootbox.alert("Failed to regenerate program reports");
         });
+
     };
 
     self.saveProgramConfiguration = function() {
@@ -233,7 +231,9 @@ var ProgramPageViewModel = function(props, options) {
             bootbox.alert("Invalid JSON");
             return;
         }
-        self.saveConfig(config);
+        self.saveConfig(config).done(function (data) {
+            bootbox.alert("Program configuration saved");
+        });
 
     };
 

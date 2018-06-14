@@ -6,6 +6,9 @@
 
         <div data-bind="template:{name:'reportTable', data:model}"></div>
     </div>
+    <div data-bind="if:reportsByCategory.length == 0">
+        No reports found.
+    </div>
 
 </div>
 
