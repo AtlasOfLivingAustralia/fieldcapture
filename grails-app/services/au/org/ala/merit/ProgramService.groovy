@@ -151,7 +151,7 @@ class ProgramService {
         if (activityReportConfig) {
             Map projects = getProgramProjects(id)
             projects?.projects?.each{ project ->
-                project.reports = reportService.getReportsForProject(id) ?: []
+                project.reports = reportService.getReportsForProject(project.projectId)
                 projectService.generateProjectReports(activityReportConfig, project)
             }
         }

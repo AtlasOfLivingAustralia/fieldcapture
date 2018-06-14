@@ -313,11 +313,13 @@ var CategorisedReportsViewModel = function(allReports, order, projects, availabl
 
     _.each(order, function(category) {
         var reports = categorizedReports[category];
-        self.reportsByCategory.push({
-            title:category,
-            model:new ReportsViewModel(reports, projects, availableReports, reportOwner, config)
-        });
-    });
+        if (reports && reports.length > 0) {
+            self.reportsByCategory.push({
+                title:category,
+                model:new ReportsViewModel(reports, projects, availableReports, reportOwner, config)
+            });
+        }
 
-}
+    });
+};
 
