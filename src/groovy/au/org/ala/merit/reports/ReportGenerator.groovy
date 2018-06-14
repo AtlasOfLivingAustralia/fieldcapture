@@ -79,14 +79,16 @@ class ReportGenerator {
 
         DateTime startDate = reportInterval.start
         DateTime endDate = reportInterval.end
+        String toDate = DateUtils.format(endDate.withZone(DateTimeZone.UTC))
         Map report = [
                 fromDate:DateUtils.format(startDate.withZone(DateTimeZone.UTC)),
-                toDate:DateUtils.format(endDate.withZone(DateTimeZone.UTC)),
+                toDate:toDate,
                 name:sprintf(reportConfig.reportNameFormat, sequenceNo, startDate.toDate(), endDate.toDate(), reportOwner.name),
                 description:sprintf(reportConfig.reportDescriptionFormat, sequenceNo, startDate.toDate(), endDate.toDate(), reportOwner.name),
                 category:reportConfig.category,
                 type:reportConfig.reportType,
-                activityType:reportConfig.activityType
+                activityType:reportConfig.activityType,
+                submissionDate:toDate
         ]
         report.putAll(reportOwner.id)
 
