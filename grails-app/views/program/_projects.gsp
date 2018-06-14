@@ -1,5 +1,5 @@
 <g:if test="${projects}">
-    <h4>Project reporting</h4>
+    <h3>Project reporting</h3>
     <table id="projectList" class="table table-striped table-bordered">
         <thead class="thead-light">
             <th class="projectId">Project ID</th>

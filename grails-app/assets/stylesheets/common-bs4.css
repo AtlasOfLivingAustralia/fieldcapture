@@ -83,3 +83,20 @@ a.helphover, a.helphover:visited {
     padding-left: 5px;
     margin-top: -30px;
 }
+
+
+table td.report-actions, table th.report-actions {
+    width:10%;
+}
+table td.report-name, table th.report-name {
+    width:45%;
+}
+table td.report-start, table th.report-start {
+    width:15%;
+}
+table td.report-end, table th.report-end {
+    width:15%;
+}
+table td.report-status, table th.report-status {
+    width:15%;
+}

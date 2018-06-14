@@ -54,28 +54,28 @@
     <thead>
 
     <tr>
-        <th>Actions</th>
-        <th>Report</th>
-        <th>Period start</th>
-        <th>Period end
+        <th class="report-actions">Actions</th>
+        <th class="report-name">Report</th>
+        <th class="report-start">Period start</th>
+        <th class="report-end">Period end
             <g:if test="${hideDueDate}">
                 <br/><label><input class="hide-future-reports" type="checkbox"
                                    data-bind="checked:hideFutureReports"> Current reports only</label>
             </g:if>
         </th>
         <g:if test="${!hideDueDate}">
-            <th>Date Due<br/><label><input class="hide-future-reports" type="checkbox"
+            <th class="report-due">Date Due<br/><label><input class="hide-future-reports" type="checkbox"
                                            data-bind="checked:hideFutureReports"> Current reports only</label>
             </th>
         </g:if>
-        <th>Status<br/><label><input class="hide-approved-reports" type="checkbox"
+        <th class="report-status">Status<br/><label><input class="hide-approved-reports" type="checkbox"
                                      data-bind="checked:hideApprovedReports"> Hide approved reports</label></th>
     </tr>
     </thead>
     <tbody data-bind="foreach:{ data:filteredReports, as:'report' }">
 
     <tr>
-        <td>
+        <td class="report-actions">
             <button type="button" class="btn btn-container" data-bind="visible:editable, click:$root.editReport"><i
                     class="fa fa-edit" title="Complete this report"></i></button>
             <button type="button" class="btn btn-container" data-bind="visible:viewable, click:$root.viewReport"><i
@@ -85,16 +85,16 @@
                     class="fa fa-download" title="Download a PDF of this report"></i></button>
 
         </td>
-        <td><a data-bind="visible:editable, attr:{href:editUrl, title:title}" title="Complete this report"><span
+        <td class="report-name"><a data-bind="visible:editable, attr:{href:editUrl, title:title}" title="Complete this report"><span
                 data-bind="text:description"></span></a>
             <span data-bind="visible:!editable, text:description"></span>
         </td>
-        <td data-bind="text:fromDate.formattedDate"></td>
-    <td data-bind="text:toDate.formattedDate">
+        <td class="report-start" data-bind="text:fromDate.formattedDate"></td>
+    <td class="report-end" data-bind="text:toDate.formattedDate">
         <g:if test="${!hideDueDate}">
-            <td data-bind="text:dueDate.formattedDate()"></td>
+            <td class="report-due" data-bind="text:dueDate.formattedDate()"></td>
         </g:if>
-        <td data-bind="template:approvalTemplate()">
+        <td class="report-status" data-bind="template:approvalTemplate()">
 
             <span class="label"
                   data-bind="text:approvalStatus, css:{'label-success':approvalStatus=='Report approved', 'label-info':approvalStatus=='Report submitted', 'label-warning':approvalStatus == 'Report not submitted'}"></span>
@@ -119,6 +119,7 @@
         var reports = <fc:modelAsJavascript model="${reports ?: []}"/>;
     var addHocReportTypes = <fc:modelAsJavascript model="${adHocReportTypes}"/>;
     var reportOwner = fcConfig.reportOwner;
-    ko.applyBindings(new CategorisedReportsViewModel(reports, fcConfig.projects, addHocReportTypes, reportOwner, fcConfig), document.getElementById('reporting-content'));
+    var order = <fc:modelAsJavascript model="${reportOrder}"/>;
+    ko.applyBindings(new CategorisedReportsViewModel(reports, order, fcConfig.projects, addHocReportTypes, reportOwner, fcConfig), document.getElementById('reporting-content'));
 });
 </asset:script>

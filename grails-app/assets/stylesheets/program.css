@@ -2,21 +2,18 @@ table#projectList th {
     white-space: normal;
 }
 table#projectList .projectId {
-    width: 15%;
+    width: 10%;
 }
 table#projectList .name {
-    width: 30%;
+    width: 45%;
 }
 table#projectList .startDate {
-    width: 13%;
+    width: 15%;
 }
 table#projectList .endDate {
-    width: 13%;
+    width: 15%;
 }
 table#projectList .statusCol {
-    width: 14%;
-}
-table#projectList .cost {
     width: 15%;
 }
 
