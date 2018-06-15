@@ -87,9 +87,11 @@ class ReportGenerator {
                 description:sprintf(reportConfig.reportDescriptionFormat, sequenceNo, startDate.toDate(), endDate.toDate(), reportOwner.name),
                 category:reportConfig.category,
                 type:reportConfig.reportType,
-                activityType:reportConfig.activityType,
                 submissionDate:toDate
         ]
+        if (reportConfig.activityType) {
+            report.activityType = reportConfig.activityType
+        }
         report.putAll(reportOwner.id)
 
 

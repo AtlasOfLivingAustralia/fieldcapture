@@ -242,6 +242,34 @@ class ProgramController {
     }
 
     @PreAuthorise(accessLevel = 'editor')
+    def viewReport(String id, String reportId) {
+        if (!id || !reportId) {
+            error('An invalid report was selected for viewing', id)
+            return
+        }
+
+        Map report = reportService.get(reportId)
+
+        Map activity = activityService.get(report.activityId)
+        Map model = activityService.getActivityMetadata(activity.type)
+
+        Map program = programService.get(id)
+        model.context = program
+        model.themes = []
+        model.activity = activity
+        model.returnTo = createLink(action:'index', id:id)
+        model.contextViewUrl = model.returnTo
+
+        Map programConfig = program.config
+
+        // Temporary until we add this to the program config.
+        programConfig.requiresActivityLocking = programConfig.requiresActivityLocking
+        programConfig.navigationMode = programConfig.navigationMode ?: 'stayOnPage'
+
+        render model:model, view:'/activity/index'
+    }
+
+    @PreAuthorise(accessLevel = 'editor')
     def saveReport(String id, String reportId) {
         if (!id || !reportId) {
             error('An invalid report was selected for data entry', id)
@@ -294,6 +322,7 @@ class ProgramController {
     }
 
 
+    @PreAuthorise(accessLevel = 'caseManager')
     def regenerateProgramReports(String id) {
         Map resp
         if (!id) {
