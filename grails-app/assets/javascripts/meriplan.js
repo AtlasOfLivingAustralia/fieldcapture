@@ -290,6 +290,10 @@ function ServicesViewModel(serviceIds, allServices, outputTargets, periods) {
 
         });
 
+        target.serviceId.subscribe(function() {
+            target.scoreId(null);
+        });
+
         target.scoreId.subscribe(function() {
             target.updateTargets();
         });
