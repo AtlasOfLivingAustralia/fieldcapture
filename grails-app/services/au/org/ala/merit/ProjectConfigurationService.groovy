@@ -31,13 +31,22 @@ class ProjectConfigurationService {
             programConfig = metadataService.getProgramConfiguration(project.associatedProgram, project.associatedSubProgram)
 
             // Default configuration for project stage reports.
+
+            Integer reportingPeriodInMonths = 6 // Default period
+            try {
+                reportingPeriodInMonths = Integer.parseInt(programConfig.period)
+            }
+            catch (Exception e) {
+                log.warn("Invalid period specified in program: "+programConfig.reportingPeriodInMonths)
+            }
+
             programConfig.projectReports = [
                     [
-                            type:ReportService.REPORT_TYPE_STAGE_REPORT,
-                            period: programConfig.period,
-                            alignToCalendar: programConfig.alignToCalendar,
-                            reportNameTemplate: "Stage %1d",
-                            reportDescriptionTemplate: "Stage %1d for ${project.name}"
+                            reportType:ReportService.REPORT_TYPE_STAGE_REPORT,
+                            reportingPeriodInMonths: reportingPeriodInMonths,
+                            reportsAlignedToCalendar: Boolean.valueOf(programConfig.alignToCalendar),
+                            reportNameFormat: "Stage %1d",
+                            reportDescriptionFormat: "Stage %1d for ${project.name}"
                     ]
             ]
 
