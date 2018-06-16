@@ -70,6 +70,7 @@ class ReportGenerator {
         // Align the report end dates to the owning entities date constraints
         if (reports) {
             reports[-1].toDate = DateUtils.format(reportOwner.periodEnd.withZone(DateTimeZone.UTC))
+            reports[-1].submissionDate = reports[-1].toDate
         }
 
         reports
