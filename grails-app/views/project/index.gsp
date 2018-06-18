@@ -62,6 +62,7 @@
         reportCreateUrl: '${g.createLink( action:'createReport', id:project.projectId)}',
         viewReportUrl:'${createLink(action:"viewReport", id:project.projectId)}',
         editReportUrl:"${createLink(action:"editReport", id:project.projectId)}",
+        reportPDFUrl:"${createLink(action:"reportPDF", id:project.projectId)}",
         deleteActivitiesUrl: "${createLink(controller: 'project', action: 'ajaxDeleteReportActivities', id:project.projectId)}/",
         submitPlanUrl : "${createLink(controller:'project', action:'ajaxSubmitPlan', id:project.projectId)}",
         modifyPlanUrl : "${createLink(controller:'project', action:'ajaxRejectPlan', id:project.projectId)}",

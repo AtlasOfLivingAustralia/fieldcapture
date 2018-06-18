@@ -26,9 +26,9 @@ var ReportViewModel = function(report, config) {
     self.toDateLabel = convertToSimpleDate(moment(report.toDate).subtract(1, 'hours').toDate(), false);
     self.dueDate = ko.observable(report.dueDate).extend({simpleDate:false});
     self.progress = ko.observable(report.progress || 'planned');
-    self.editUrl = '';
+    self.editUrl = config.editReportUrl + '?&reportId='+report.reportId;;
     self.viewUrl = config.viewReportUrl + '?&reportId='+report.reportId;
-    self.downloadUrl = config.reportPDFUrl ? config.reportPDFUrl +'/'+report.reportId : null;
+    self.downloadUrl = config.reportPDFUrl ? config.reportPDFUrl +'?reportId='+report.reportId : null;
     self.percentComplete = function() {
         if (report.count == 0) {
             return 0;
