@@ -7,7 +7,6 @@ import org.apache.http.HttpStatus
 /**
  * Processes requests relating to programs
  */
-@PreAuthorise(accessLevel='admin')
 class ProgramController {
 
     static allowedMethods = [ajaxDelete: "POST", delete: "POST", ajaxUpdate: "POST"]
@@ -16,12 +15,9 @@ class ProgramController {
     ProjectService projectService
     ReportService reportService
     ActivityService activityService
-    ProjectConfigurationService projectConfigurationService
+    PdfGenerationService pdfGenerationService
 
-    // Simply forwards to the list view
-    def list() {}
-
-    @PreAuthorise(accessLevel='siteAdmin')
+    @PreAuthorise(accessLevel='editor')
     def index(String id) {
         def program = programService.get(id)
 
@@ -68,10 +64,12 @@ class ProgramController {
          admin   : [label: 'Admin', visible: hasAdminAccess, type: 'tab']]
     }
 
+    @PreAuthorise(accessLevel='siteAdmin')
     def create() {
         [program: [:], isNameEditable:true]
     }
 
+    @PreAuthorise(accessLevel='admin')
     def edit(String id) {
         Map program = programService.get(id)
 
@@ -83,6 +81,7 @@ class ProgramController {
         }
     }
 
+    @PreAuthorise(accessLevel='siteAdmin')
     def delete(String id) {
         if (userService.isUserAdminForProgram(id)) {
             programService.update(id, [status: 'deleted'])
@@ -92,6 +91,7 @@ class ProgramController {
         redirect action: 'list'
     }
 
+    @PreAuthorise(accessLevel='siteAdmin')
     def ajaxDelete(String id) {
 
         if (userService.isUserAdminForProgram(id)) {
@@ -139,23 +139,21 @@ class ProgramController {
      * by an organisation.
      * @param id the organisationId of the organisation.
      */
+    @PreAuthorise(accessLevel='admin')
     def downloadShapefile(String id) {
 
         def userId = userService.getCurrentUserId()
 
         if (id && userId) {
-            if (programService.isUserAdminForOrganisation(id) || programService.isUserGrantManagerForOrganisation(id)) {
-                def organisation = programService.get(id)
-                def params = [fq: 'organisationFacet:' + organisation.name, query: "docType:project"]
 
-                def url = grailsApplication.config.ecodata.service.url + '/search/downloadShapefile' + commonService.buildUrlParamsFromMap(params)
-                def resp = webService.proxyGetRequest(response, url, true, true, 960000)
-                if (resp.status != 200) {
-                    render view: '/error', model: [error: resp.error]
-                }
-            } else {
-                render status: 403, text: 'Permission denied'
+            def params = [fq: 'programId:' + id, query: "docType:project"]
+
+            def url = grailsApplication.config.ecodata.service.url + '/search/downloadShapefile' + commonService.buildUrlParamsFromMap(params)
+            def resp = webService.proxyGetRequest(response, url, true, true, 960000)
+            if (resp.status != 200) {
+                render view: '/error', model: [error: resp.error]
             }
+
         } else {
             render status: 400, text: 'Missing parameter organisationId'
         }
@@ -248,25 +246,61 @@ class ProgramController {
             return
         }
 
+        Map model = viewReportModel(reportId)
+
+        render model:model, view:'/activity/activityReportView'
+    }
+
+    @PreAuthorise(accessLevel = 'editor')
+    def reportPDF(String id, String reportId) {
+
+        if (!id || !reportId) {
+            error('An invalid report was selected for download', id)
+            return
+        }
+        Map reportUrlConfig = [action: 'viewReportCallback', id: id, params:[reportId:reportId]]
+
+        Map pdfGenParams = [:]
+        if (params.orientation) {
+            pdfGenParams.orientation = params.orientation
+        }
+        boolean result = pdfGenerationService.generatePDF(reportUrlConfig, pdfGenParams, response)
+        if (!result) {
+            render view: '/error', model: [error: "An error occurred generating the project report."]
+        }
+    }
+
+    private Map viewReportModel(String reportId) {
         Map report = reportService.get(reportId)
 
         Map activity = activityService.get(report.activityId)
         Map model = activityService.getActivityMetadata(activity.type)
 
-        Map program = programService.get(id)
+        String programId = report.programId
+        Map program = programService.get(programId)
         model.context = program
         model.themes = []
         model.activity = activity
-        model.returnTo = createLink(action:'index', id:id)
+        model.returnTo = createLink(action:'index', id:programId)
         model.contextViewUrl = model.returnTo
+        model
+    }
 
-        Map programConfig = program.config
+    /**
+     * This is designed as a callback from the PDF generation service.  It produces a HTML report that will
+     * be converted into PDF.
+     * @param id the project id
+     */
+    def viewReportCallback(String id, String reportId) {
 
-        // Temporary until we add this to the program config.
-        programConfig.requiresActivityLocking = programConfig.requiresActivityLocking
-        programConfig.navigationMode = programConfig.navigationMode ?: 'stayOnPage'
-
-        render model:model, view:'/activity/index'
+        if (pdfGenerationService.authorizePDF(request)) {
+            Map model = viewReportModel(reportId)
+            model.printView = true
+            render view:'/activity/activityReportView', model:model
+        }
+        else {
+            render status:HttpStatus.SC_UNAUTHORIZED
+        }
     }
 
     @PreAuthorise(accessLevel = 'editor')

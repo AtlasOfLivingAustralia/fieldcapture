@@ -79,13 +79,13 @@
 
     <tr>
         <td class="report-actions">
-            <button type="button" class="btn btn-container" data-bind="visible:editable, click:$root.editReport"><i
-                    class="fa fa-edit" title="Complete this report"></i></button>
-            <button type="button" class="btn btn-container" data-bind="visible:viewable, click:$root.viewReport"><i
-                    class="fa fa-eye" title="View this report"></i></button>
-            <button type="button" class="btn btn-container"
-                    data-bind="visible:viewable && report.downloadUrl, click:$root.downloadReport"><i
-                    class="fa fa-download" title="Download a PDF of this report"></i></button>
+            <a class="btn btn-container" data-bind="attr:{href:editUrl}, visible:editable"><i
+                    class="fa fa-edit" title="Complete this report"></i></a>
+            <a class="btn btn-container" data-bind="attr:{href:viewUrl}, visible:viewable"><i
+                    class="fa fa-eye" title="View this report"></i></a>
+            <a target="print-report" class="btn btn-container"
+                    data-bind="attr:{href:downloadUrl}, visible:viewable"><i
+                    class="fa fa-download" title="Download a PDF of this report"></i></a>
 
         </td>
         <td class="report-name"><a data-bind="visible:editable, attr:{href:editUrl, title:title}" title="Complete this report"><span

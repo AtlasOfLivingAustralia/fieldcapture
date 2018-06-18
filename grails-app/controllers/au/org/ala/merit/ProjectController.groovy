@@ -3,6 +3,7 @@ package au.org.ala.merit
 import au.org.ala.merit.command.ProjectSummaryReportCommand
 import au.org.ala.merit.command.ReportCommand
 import grails.converters.JSON
+import org.apache.http.HttpStatus
 import org.codehaus.groovy.grails.web.json.JSONArray
 import org.joda.time.DateTime
 
@@ -17,7 +18,7 @@ class ProjectController {
     static String MERI_PLAN_TEMPLATE = "meriPlan"
 
     def projectService, metadataService, organisationService, commonService, activityService, userService, webService, roleService, grailsApplication
-    def siteService, documentService, reportService, blogService
+    def siteService, documentService, reportService, blogService, pdfGenerationService
 
 
     private def espOverview(Map project, Map user) {
@@ -678,6 +679,49 @@ class ProjectController {
         Map report = reportService.get(reportId)
 
         forward(controller: 'activity', action: 'index', id: report.activityId, params:[returnTo:createLink(action:'index', id:id)])
+    }
+
+    @PreAuthorise(accessLevel = 'editor')
+    def reportPDF(String id, String reportId) {
+        if (!id || !reportId) {
+            error('An invalid report was selected for download', id)
+            return
+        }
+
+        Map reportUrlConfig = [action: 'viewReportCallback', id: id, params:[reportId:reportId]]
+
+        Map pdfGenParams = [:]
+        if (params.orientation) {
+            pdfGenParams.orientation = params.orientation
+        }
+        boolean result = pdfGenerationService.generatePDF(reportUrlConfig, pdfGenParams, response)
+        if (!result) {
+            render view: '/error', model: [error: "An error occurred generating the project report."]
+        }
+    }
+
+    /**
+     * This is designed as a callback from the PDF generation service.  It produces a HTML report that will
+     * be converted into PDF.
+     * @param id the project id
+     */
+    def viewReportCallback(String id, String reportId) {
+
+        if (pdfGenerationService.authorizePDF(request)) {
+            Map report = reportService.get(reportId)
+            Map activity = activityService.get(report.activityId)
+            Map model = activityService.getActivityMetadata(activity.type)
+            model.activity = activity
+            model.context = projectService.get(id)
+            model.themes = []
+            model.printView = true
+            model.report = report
+
+            render view:'/activity/activityReportView', model:model
+        }
+        else {
+            render status:HttpStatus.SC_UNAUTHORIZED
+        }
     }
 
     @PreAuthorise(accessLevel = 'caseManager')
