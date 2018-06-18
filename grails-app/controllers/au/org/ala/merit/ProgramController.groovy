@@ -73,11 +73,10 @@ class ProgramController {
     def edit(String id) {
         Map program = programService.get(id)
 
-
         if (!program || program.error) {
             programNotFound(id, program)
         } else {
-            [program: program, isNameEditable:true]
+            [program: program, isNameEditable:userService.userIsAlaOrFcAdmin()]
         }
     }
 

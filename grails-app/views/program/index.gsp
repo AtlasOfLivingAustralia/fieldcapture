@@ -8,15 +8,15 @@
     <script type="text/javascript" src="//www.google.com/jsapi"></script>
     <script disposition="head">
         var fcConfig = {
-            reportOwner: {programId:'${program.programId}'},
+            reportOwner: {programId: '${program.programId}'},
             reportCreateUrl: '${g.createLink( action:'createReport', id:program.programId)}',
-            viewReportUrl:'${createLink(action:"viewReport", id:program.programId)}',
-            editReportUrl:"${createLink(action:"editReport", id:program.programId)}",
-            reportPDFUrl:"${createLink(action:"reportPDF", id:program.programId)}",
-            approveReportUrl:"${createLink(action:"ajaxApproveReport", id:program.programId)}",
-            submitReportUrl:"${createLink(action:"ajaxSubmitReport", id:program.programId)}",
-            rejectReportUrl:"${createLink(action:"ajaxRejectReport", id:program.programId)}",
-            regenerateProgramReportsUrl:"${createLink(action:"regenerateProgramReports", id:program.programId)}",
+            viewReportUrl: '${createLink(action:"viewReport", id:program.programId)}',
+            editReportUrl: "${createLink(action:"editReport", id:program.programId)}",
+            reportPDFUrl: "${createLink(action:"reportPDF", id:program.programId)}",
+            approveReportUrl: "${createLink(action:"ajaxApproveReport", id:program.programId)}",
+            submitReportUrl: "${createLink(action:"ajaxSubmitReport", id:program.programId)}",
+            rejectReportUrl: "${createLink(action:"ajaxRejectReport", id:program.programId)}",
+            regenerateProgramReportsUrl: "${createLink(action:"regenerateProgramReports", id:program.programId)}",
             programSaveUrl: "${createLink(action:'ajaxUpdate', id:program.programId)}"
         };
     </script>
@@ -32,15 +32,27 @@
             <li class="breadcrumb-item">
                 <g:link controller="home">Home</g:link>
             </li>
-            <li class="breadcrumb-item"> Management Units</li>
-            <li class="breadcrumb-item active"> ${program.name}</li>
+            <li class="breadcrumb-item">Management Units</li>
+            <li class="breadcrumb-item active">${program.name}</li>
         </ol>
 
     </nav>
 
-    <h2>${program.name}</h2>
+    <div class="banner">
+        <span data-bind="visible:logoUrl"><img class="logo" data-bind="attr:{'src':logoUrl}"></span>
 
-    <div id="programDetails">
+        <div class="pull-right" style="vertical-align: middle;">
+            <span data-bind="foreach:transients.socialMedia">
+                <a data-bind="attr:{href:link.url}"><img data-bind="attr:{src:logo('${assetPath(src:'filetypes')}')}"/></a>
+            </span>
+        </div>
+
+        <div class="header-text">
+            <h2>${program.name}</h2>
+        </div>
+    </div>
+
+    <div id="programDetails" class="clearfix">
 
         <g:render template="/shared/flashScopeMessage"/>
 
@@ -73,6 +85,7 @@
         var programViewModel = new ProgramPageViewModel(program, config);
 
         ko.applyBindings(programViewModel);
+        programViewModel.initialise(); // Needs to happen after data binding.
         $('#loading').hide();
     });
 

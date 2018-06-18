@@ -756,6 +756,10 @@ function Documents(options) {
         var logoDocument = self.findDocumentByRole(self.documents(), 'logo');
         return logoDocument ? logoDocument.url : (config.noImageUrl ? config.noImageUrl : null);
     });
+    self.logoUrlProvided = ko.pureComputed(function() {
+        var logoDocument = self.findDocumentByRole(self.documents(), 'logo');
+        return logoDocument && logoDocument.url;
+    });
     self.bannerUrl = ko.pureComputed(function() {
         var bannerDocument = self.findDocumentByRole(self.documents(), 'banner');
         return bannerDocument ? bannerDocument.url : (config.noImageUrl ? config.noImageUrl : null);

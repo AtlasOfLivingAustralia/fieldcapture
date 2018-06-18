@@ -1,5 +1,5 @@
 //= require tab-init.js
-
+//= require slider-pro-master/js/jquery.sliderPro.min.js
 //= require mapWithFeatures.js
 //= require sites
 //= require document
@@ -239,7 +239,22 @@ var ProgramPageViewModel = function(props, options) {
 
     var tabs = {
         'about': {
-            initialiser: function () {}
+            initialiser: function () {
+                if (self.mainImageUrl()) {
+                    $('#carousel').sliderPro({
+                        width: '100%',
+                        height: 'auto',
+                        autoHeight: true,
+                        arrows: false, // at the moment we only support 1 image
+                        buttons: false,
+                        waitForLayers: true,
+                        fade: true,
+                        autoplay: false,
+                        autoScaleLayers: false,
+                        touchSwipe: false // at the moment we only support 1 image
+                    });
+                }
+            }
         },
         'projects': {
             initialiser: function() {
@@ -260,5 +275,7 @@ var ProgramPageViewModel = function(props, options) {
         }
     };
 
-    initialiseTabs(tabs, {tabSelector:'#program-tabs.nav a', tabStorageKey:'selected-program-tab'});
+    self.initialise = function() {
+        initialiseTabs(tabs, {tabSelector:'#program-tabs.nav a', tabStorageKey:'selected-program-tab'});
+    };
 };

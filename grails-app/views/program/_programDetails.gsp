@@ -51,7 +51,7 @@
             <g:message code="program.logo.extra"/><br/>
 
             <div class="well" style="padding:0;width:200px;height:150px;line-height:146px;display:inline-block">
-                <img style="max-width:100%;max-height:100%" alt="No image provided" data-bind="attr:{src:logoUrl}">
+                <img style="max-width:100%;max-height:100%" data-bind="attr:{src:logoUrl()}">
             </div>
 
             <div data-bind="visible:logoUrl()"><g:message code="organisation.logo.visible"/></div>
@@ -62,10 +62,10 @@
                   data-role="logo"
                   data-owner-type="programId"
                   data-owner-id="${program?.programId}"
-                  data-bind="stagedImageUpload:documents, visible:!logoUrl()"><i class="icon-plus"></i> <input
+                  data-bind="stagedImageUpload:documents, visible:!logoUrlProvided()"><i class="icon-plus"></i> <input
                     id="logo" type="file" name="files"><span>Attach</span></span>
 
-            <button class="btn main-image-button" data-bind="click:removeLogoImage, visible:logoUrl()"><i
+            <button class="btn main-image-button" data-bind="click:removeLogoImage, visible:logoUrlProvided()"><i
                     class="icon-minus"></i> Remove</button>
         </span>
     </div>
