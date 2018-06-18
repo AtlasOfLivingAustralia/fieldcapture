@@ -1,4 +1,3 @@
-<h3>${program.name}</h3>
 <div id="carousel" class="slider-pro row-fluid" data-bind="visible:mainImageUrl()" style="margin-bottom:20px;">
     <div class="sp-slides">
         <div class="sp-slide">
