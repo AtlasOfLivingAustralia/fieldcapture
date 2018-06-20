@@ -197,16 +197,16 @@ class UserService {
             return result
         }
 
-        if (!isUserAdminForProgram(programId)) {
+        if (!(userIsSiteAdmin() || isUserAdminForProgram(currentUserId, programId))) {
             return [error:'Permission denied']
         }
 
-        def url = grailsApplication.config.ecodata.baseUrl + "permissions/addUserAsRoleToProgram?userId=${userId}&programId=${programId}&role=${role}"
+        def url = grailsApplication.config.ecodata.baseUrl + "permissions/addUserWithRoleToProgram?userId=${userId}&programId=${programId}&role=${role}"
         webService.getJson(url)
     }
 
     def removeUserWithRoleFromProgram(String userId, String programId, String role) {
-        def url = grailsApplication.config.ecodata.baseUrl + "permissions/removeUserWithRoleFromOrganisation?organisationId=${programId}&userId=${userId}&role=${role}"
+        def url = grailsApplication.config.ecodata.baseUrl + "permissions/removeUserWithRoleFromProgram?programId=${programId}&userId=${userId}&role=${role}"
         webService.getJson(url)
     }
 

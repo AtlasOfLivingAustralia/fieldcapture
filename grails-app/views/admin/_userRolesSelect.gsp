@@ -1,4 +1,4 @@
-<select name="role" id="addUserRole" class="validate[required] ${selectClass}" data-errormessage-value-missing="Role is required!">
+<select name="role" id="addUserRole" class="validate[required] ${selectClass}" data-errormessage-value-missing="Role is required!" <g:if test="${hide}">style="display:none;"</g:if>>
     <g:if test="${includeEmptyOption}"><option value="">-- select a permission level --</option></g:if>
     <g:set var="userIsSiteAdmin"><fc:userIsSiteAdmin /></g:set>
     <g:each var="role" in="${roles}">

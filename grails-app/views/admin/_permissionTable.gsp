@@ -7,9 +7,9 @@
             <tr class="hide d-none">
                 <td class="memUserId"></td>
                 <td class="memUserName"></td>
-                <td class="memUserRole"><span style="white-space: nowrap">&nbsp;</span><g:render template="/admin/userRolesSelect" model="[roles:roles, selectClass:'hide']"/></td>
-                <td class="clickable memEditRole"><i class="icon-edit tooltips" title="edit this user and role combination"></i></td>
-                <td class="clickable memRemoveRole"><i class="icon-remove tooltips" title="remove this user and role combination"></i></td>
+                <td class="memUserRole"><span style="white-space: nowrap">&nbsp;</span><g:render template="/admin/userRolesSelect" model="[roles:roles, hide:true]"/></td>
+                <td class="clickable memEditRole"><i class="fa fa-edit tooltips" title="edit this user and role combination"></i></td>
+                <td class="clickable memRemoveRole"><i class="fa fa-remove tooltips" title="remove this user and role combination"></i></td>
             </tr>
             <tr id="spinnerRow"><td colspan="5">loading data... <asset:image src="spinner.gif" id="spinner2" class="spinner" alt="spinner icon"/></td></tr>
             <tr id="messageRow" class="hide"><td colspan="5">No project members set</td></tr>
@@ -46,7 +46,7 @@
                         $("#messageRow").hide();
                         $.each(data, function(i, el) {
                             var $clone = $('.membersTbody tr.hide').clone();
-                            $clone.removeClass("hide");
+                            $clone.removeClass("hide").removeClass("d-none");
                             $clone.addClass("cloned");
                             $clone.data("userid", el.userId);
                             $clone.data("role", el.role);
