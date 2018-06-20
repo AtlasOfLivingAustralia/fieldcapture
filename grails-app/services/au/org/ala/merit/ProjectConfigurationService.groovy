@@ -34,17 +34,18 @@ class ProjectConfigurationService {
 
             Integer reportingPeriodInMonths = 6 // Default period
             try {
-                reportingPeriodInMonths = Integer.parseInt(programConfig.period)
+                reportingPeriodInMonths = Integer.parseInt(programConfig.reportingPeriod)
             }
             catch (Exception e) {
-                log.warn("Invalid period specified in program: "+programConfig.reportingPeriodInMonths)
+                log.warn("Invalid period specified in program: "+programConfig.reportingPeriod)
             }
 
             programConfig.projectReports = [
                     [
+                            weekDaysToCompleteReport:programConfig.weekDaysToCompleteReport,
                             reportType:ReportService.REPORT_TYPE_STAGE_REPORT,
                             reportingPeriodInMonths: reportingPeriodInMonths,
-                            reportsAlignedToCalendar: Boolean.valueOf(programConfig.alignToCalendar),
+                            reportsAlignedToCalendar: Boolean.valueOf(programConfig.reportingPeriodAlignedToCalendar),
                             reportNameFormat: "Stage %1d",
                             reportDescriptionFormat: "Stage %1d for ${project.name}"
                     ]
