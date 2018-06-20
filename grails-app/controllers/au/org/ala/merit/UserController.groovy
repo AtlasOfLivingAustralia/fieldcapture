@@ -177,7 +177,9 @@ class UserController {
 
         if (id && userId) {
             if (userService.userIsSiteAdmin() || userService.isUserAdminForProgram(userId, id) || userService.isUserGrantManagerForProgram(userId, id)) {
-                render userService.getMembersOfProgram(id) as JSON
+                Map result = userService.getMembersOfProgram(id)
+                List members = result?.members ?: []
+                render members as JSON
             } else {
                 render status: 403, text: 'Permission denied'
             }
@@ -199,7 +201,7 @@ class UserController {
         if (adminUser && userId && programId && role) {
             if (role == 'caseManager' && !userService.userIsSiteAdmin()) {
                 render status: 403, text: 'Permission denied - ADMIN role required'
-            } else if (userService.isUserAdminForProgram(programId)) {
+            } else if (userService.userIsSiteAdmin() || userService.isUserAdminForProgram(adminUser.userId, programId)) {
                 render userService.addUserAsRoleToProgram(userId, programId, role) as JSON
             } else {
                 render status: 403, text: 'Permission denied'
@@ -216,7 +218,7 @@ class UserController {
         def adminUser = userService.getUser()
 
         if (adminUser && programId && role && userId) {
-            if (userService.isUserAdminForProgram(programId)) {
+            if (userService.userIsSiteAdmin() || userService.isUserAdminForProgram(adminUser.userId, programId)) {
                 render userService.removeUserWithRoleFromProgram(userId, programId, role) as JSON
             } else {
                 render status: 403, text: 'Permission denied'

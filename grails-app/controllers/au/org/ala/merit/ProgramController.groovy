@@ -27,7 +27,7 @@ class ProgramController {
             def roles = roleService.getRoles()
             // Get dashboard information for the response.
 
-            Map members = userService.getMembersOfProgram(id).members ?: [:]
+            List members = userService.getMembersOfProgram(id).members ?: [:]
             def user = userService.getUser()
             def userId = user?.userId
 
