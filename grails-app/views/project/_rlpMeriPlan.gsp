@@ -349,7 +349,7 @@
         </div>
     </div>
 
-    <h4>Project risks & threats <span style="color: red;"><b>*</b></span></h4>
+    <h4 class="header-with-help">Project risks & threats <span style="color: red;"><b>*</b></span> </h4><fc:iconHelp>Please enter the details of risks and threats to the project and the mitigation strategies being used to address them.</fc:iconHelp>
     <g:render template="risksAndThreats"/>
 
     <g:render template="/shared/declaration" model="[divId:'meriSubmissionDeclaration', declarationType:au.org.ala.merit.SettingPageType.RLP_MERI_DECLARATION]"/>
