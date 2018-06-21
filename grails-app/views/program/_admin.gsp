@@ -2,7 +2,9 @@
     <div class="nav flex-column nav-pills col-3">
         <a class="nav-link active" data-toggle="pill" href="#edit-program-details" role="tab">Edit</a>
         <a class="nav-link" data-toggle="pill" href="#program-permissions" role="tab">Permissions</a>
-        <a class="nav-link" data-toggle="pill" href="#reporting" role="tab">Reporting</a>
+        <g:if test="${fc.userIsSiteAdmin()}">
+                <a class="nav-link" data-toggle="pill" href="#reporting" role="tab">Reporting</a>
+        </g:if>
         <g:if test="${fc.userIsAlaOrFcAdmin()}">
             <a class="nav-link" data-toggle="pill" href="#config" role="tab">Configuration</a>
         </g:if>
@@ -43,6 +45,7 @@
 
         </div>
 
+        <g:if test="${fc.userIsSiteAdmin()}">
         <div class="tab-pane" id="reporting">
             <form>
                 <div class="form-group">
@@ -61,6 +64,7 @@
                 <button class="btn btn-primary" data-bind="click:saveReportingConfiguration">Save</button>
             </form>
         </div>
+        </g:if>
         <g:if test="${fc.userIsAlaOrFcAdmin()}">
         <div class="tab-pane" id="config">
             <h4 style="display:inline-block">Program configuration</h4> <button class="btn btn-success float-right" data-bind="click:saveProgramConfiguration">Save Configuration</button>

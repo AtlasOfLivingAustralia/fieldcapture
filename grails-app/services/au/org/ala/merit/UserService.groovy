@@ -219,12 +219,17 @@ class UserService {
 
     boolean isUserAdminForProgram(String userId, String programId) {
         Map programRole = getProgramRole(userId, programId)
-        return programRole && programRole.accessLevel == RoleService.PROJECT_ADMIN_ROLE
+        return programRole && programRole.role == RoleService.PROJECT_ADMIN_ROLE
+    }
+
+    boolean isUserEditorForProgram(String userId, String programId) {
+        Map programRole = getProgramRole(userId, programId)
+        return programRole && programRole.role == RoleService.PROJECT_EDITOR_ROLE
     }
 
     boolean isUserGrantManagerForProgram(String userId, String programId) {
         Map programRole = getProgramRole(userId, programId)
-        return programRole && programRole.accessLevel == RoleService.GRANT_MANAGER_ROLE
+        return programRole && programRole.role == RoleService.GRANT_MANAGER_ROLE
     }
 
     private Map getProgramRole(String userId, String programId) {
@@ -320,6 +325,8 @@ class UserService {
                         return isUserGrantManagerForProgram(userId, id)
                     case RoleService.PROJECT_ADMIN_ROLE:
                         return isUserAdminForProgram(userId, id)
+                    case RoleService.PROJECT_EDITOR_ROLE:
+                        return isUserAdminForProgram(userId, id) || isUserEditorForProgram(userId, id)
                     default:
                         return false
                 }
