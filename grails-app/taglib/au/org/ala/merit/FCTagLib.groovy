@@ -183,7 +183,7 @@ class FCTagLib {
             else {
                 helpText = body()
             }
-            Map anchorAttrs = [href:'#', class:'helphover', 'data-original-title':title, 'data-placement':'top', 'data-content':helpText, 'data-trigger':'click']
+            Map anchorAttrs = [href:'javascript:void(0);', class:'helphover', 'data-original-title':title, 'data-placement':'top', 'data-content':helpText, 'data-trigger':'click']
             if (attrs.container) {
                 anchorAttrs << ['data-container':attrs.container]
             }

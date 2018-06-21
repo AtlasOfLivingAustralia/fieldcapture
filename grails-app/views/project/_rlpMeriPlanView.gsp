@@ -127,11 +127,11 @@
         <tr>
             <td class="index"><span data-bind="text:$index()+1"></span></td>
             <td class="threat">
-                <span adata-bind="text: threat">
+                <span data-bind="text: threat">
                 </span>
             </td>
             <td class="intervention">
-                <span data-bind="value: intervention"></span>
+                <span data-bind="text: intervention"></span>
             </td>
         </tr>
         </tbody>
