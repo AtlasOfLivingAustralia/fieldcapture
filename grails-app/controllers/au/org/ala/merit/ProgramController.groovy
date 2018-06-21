@@ -31,26 +31,22 @@ class ProgramController {
             def user = userService.getUser()
             def userId = user?.userId
 
-            String orgRole = members.find { it.userId == userId }
+            Map programRole = members.find { it.userId == userId }
 
             [program  : program,
              roles         : roles,
              user          : user,
-             isAdmin       : orgRole?.role == RoleService.PROJECT_ADMIN_ROLE,
-             isGrantManager: orgRole?.role == RoleService.GRANT_MANAGER_ROLE,
-             content       : content(program)]
+             isAdmin       : programRole?.role == RoleService.PROJECT_ADMIN_ROLE,
+             isGrantManager: programRole?.role == RoleService.GRANT_MANAGER_ROLE,
+             content       : content(program, programRole)]
         }
     }
 
-    protected Map content(Map program) {
+    protected Map content(Map program, Map userRole) {
 
-        def user = userService.getUser()
-        def members =[] //programService.getMembersOfOrganisation(program.programId)
-        def role = members.find { it.userId == user?.userId } ?: [:]
-        def hasAdminAccess = userService.userIsAlaOrFcAdmin() || role.role == RoleService.PROJECT_ADMIN_ROLE
+        def hasAdminAccess = userService.userIsSiteAdmin() || userRole?.role == RoleService.PROJECT_ADMIN_ROLE
 
         List servicesWithScores = programService.serviceScores(program.programId, !hasAdminAccess)
-        def hasViewAccess = hasAdminAccess || userService.userHasReadOnlyAccess() || role.role == RoleService.PROJECT_EDITOR_ROLE
 
         Map result = projectService.search(programId:program.programId)
         List projects = result.resp?.projects
