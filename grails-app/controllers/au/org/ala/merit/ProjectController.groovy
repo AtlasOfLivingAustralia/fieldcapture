@@ -54,7 +54,9 @@ class ProjectController {
             user.hasViewAccess = projectService.canUserViewProject(user.userId, id) ?: false
         }
 
-        if (!project || project.error) {
+        Map config = projectService.getProgramConfiguration(project)
+
+        if (!project || project.error || (config?.visibility == 'private' && !user?.hasViewAccess)) {
             flash.message = "Project not found with id: ${id}"
             if (project?.error) {
                 flash.message += "<br/>${project.error}"
@@ -62,7 +64,7 @@ class ProjectController {
             }
             redirect(controller: 'home', model: [error: flash.message])
         } else {
-            Map config = projectService.getProgramConfiguration(project)
+
             String template = projectTemplate(config, params.template)
             if (template == ESP_TEMPLATE && user?.isEditor) {
                 espOverview(project, user)
