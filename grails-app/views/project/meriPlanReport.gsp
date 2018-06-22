@@ -39,7 +39,8 @@
 </head>
 <body>
 <div class="container">
-    <g:render template="${meriPlanTemplate}" model="[project: project]"/>
+    <g:render template="${headerTemplate}" model="${[project:project]}"/>
+    <g:render template="${meriPlanTemplate}" model="${[project: project]}"/>
     <asset:script>
     $(function() {
         var project = <fc:modelAsJavascript model="${project}"/>;

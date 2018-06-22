@@ -543,39 +543,22 @@ class ProjectController {
     @PreAuthorise(accessLevel = 'admin')
     def projectReportPDF(String id) {
 
-        String reportUrl = g.createLink(controller: 'report', action: 'projectReportCallback', id: id, absolute: true, params: [fromStage: params.fromStage, toStage: params.toStage, sections: params.sections])
-        Map pdfGenParams = [docUrl: reportUrl, cacheable: false]
+        Map reportUrlConfig = [controller: 'report', action: 'projectReportCallback', id: id, absolute: true, params: [fromStage: params.fromStage, toStage: params.toStage, sections: params.sections]]
+        Map pdfGenParams = [:]
         if (params.orientation == 'landscape') {
             pdfGenParams.options = '-O landscape'
         }
-        String url = grailsApplication.config.pdfgen.baseURL + 'api/pdf' + commonService.buildUrlParamsFromMap(pdfGenParams)
-        Map result
-        try {
-            result = webService.proxyGetRequest(response, url, false, false, 10 * 60 * 1000)
-        }
-        catch (Exception e) {
-            result = [error: e.message]
-            log.error("Error generating PDF for project ${id}: ", e)
-        }
-        if (result.error) {
+        boolean result = pdfGenerationService.generatePDF(reportUrlConfig, pdfGenParams, response)
+        if (!result) {
             render view: '/error', model: [error: "An error occurred generating the project report."]
         }
-
     }
 
     @PreAuthorise(accessLevel = 'admin')
     def meriPlanPDF(String id) {
-        String reportUrl = g.createLink(controller: 'report', action: 'meriPlanReportCallback', id: id, absolute: true)
-        String url = grailsApplication.config.pdfgen.baseURL + 'api/pdf' + commonService.buildUrlParamsFromMap(docUrl: reportUrl, cacheable: false)
-        Map result
-        try {
-            result = webService.proxyGetRequest(response, url, false, false, 10 * 60 * 1000)
-        }
-        catch (Exception e) {
-            log.error("Error generating the PDF of the MERI plan: ", e)
-            result = [error: e.message]
-        }
-        if (result.error) {
+        Map reportUrlConfig = [controller: 'report', action: 'meriPlanReportCallback', id: id, absolute: true]
+        boolean result = pdfGenerationService.generatePDF(reportUrlConfig, [:], response)
+        if (!result) {
             render view: '/error', model: [error: "An error occurred generating the MERI plan report."]
         }
     }

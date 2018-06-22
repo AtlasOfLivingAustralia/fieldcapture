@@ -3,6 +3,7 @@ package au.org.ala.merit
 import au.ala.org.ws.security.RequireApiKey
 import au.org.ala.merit.command.ProjectSummaryReportCommand
 import grails.converters.JSON
+import org.apache.http.HttpStatus
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.joda.time.Interval
@@ -14,7 +15,7 @@ import static au.org.ala.merit.DashboardTagLib.*
 
 class ReportController {
 
-    def webService, cacheService, searchService, metadataService, activityService, projectService, organisationService, commonService, statisticsFactory, reportService, userService, projectConfigurationService
+    def webService, cacheService, searchService, metadataService, activityService, projectService, organisationService, commonService, statisticsFactory, reportService, userService, projectConfigurationService, pdfGenerationService
 
     static defaultAction = "dashboard"
 
@@ -501,10 +502,15 @@ class ReportController {
     @RequireApiKey
     def projectReportCallback(String id, ProjectSummaryReportCommand projectSummaryReportCommand) {
 
-        Map model = projectSummaryReportCommand()
-        model.printable = 'pdf'
+        if (pdfGenerationService.authorizePDF(request)) {
+            Map model = projectSummaryReportCommand()
+            model.printable = 'pdf'
+            render view:'/project/projectReport', model: model
+        }
+        else {
+            render status:HttpStatus.SC_UNAUTHORIZED
+        }
 
-        render view:'/project/projectReport', model: model
     }
 
     /**
@@ -513,11 +519,16 @@ class ReportController {
      */
     @RequireApiKey
     def meriPlanReportCallback(String id) {
-        Map project = projectService.get(id, 'all')
-        Map config = projectConfigurationService.getProjectConfiguration(project)
-        String meriPlanTemplate = config.meriPlanTemplate ?: 'meriPlan'
+        if (pdfGenerationService.authorizePDF(request)) {
+            Map project = projectService.get(id, 'all')
+            Map config = projectConfigurationService.getProjectConfiguration(project)
+            String meriPlanTemplate = config.meriPlanTemplate ?: 'meriPlan'
 
-        render view:'/project/meriPlanReport', model:[project:project, config:config, meriPlanTemplate:'/project/'+meriPlanTemplate+'View', themes:metadataService.getThemesForProject(project), user:[isAdmin:true]]
+            render view:'/project/meriPlanReport', model:[project:project, config:config, headerTemplate:'/project/'+meriPlanTemplate+'Header', meriPlanTemplate:'/project/'+meriPlanTemplate+'View', themes:metadataService.getThemesForProject(project), user:[isAdmin:true]]
+        }
+        else {
+            render status:HttpStatus.SC_UNAUTHORIZED
+        }
     }
 
 
