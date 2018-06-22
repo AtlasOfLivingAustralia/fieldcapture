@@ -168,21 +168,21 @@ class ProgramService {
         Map program = get(programId)
         List members = getMembersOfProgram(programId)
 
-        return reportService.submitReport(reportId, program, members, SettingPageType.RLP_REPORT_SUBMITTED_EMAIL_SUBJECT, SettingPageType.RLP_REPORT_SUBMITTED_EMAIL_BODY)
+        return reportService.submitReport(reportId, program, members, SettingPageType.RLP_CORE_SERVICES_REPORT_SUBMITTED_EMAIL_SUBJECT, SettingPageType.RLP_CORE_SERVICES_REPORT_SUBMITTED_EMAIL_BODY)
     }
 
     Map approveReport(String programId, String reportId, String reason) {
         Map program = get(programId)
         List members = getMembersOfProgram(programId)
 
-        return reportService.approveReport(reportId, reason, program, members, SettingPageType.RLP_REPORT_APPROVED_EMAIL_SUBJECT, SettingPageType.RLP_REPORT_APPROVED_EMAIL_BODY)
+        return reportService.approveReport(reportId, reason, program, members, SettingPageType.RLP_CORE_SERVICES_REPORT_APPROVED_EMAIL_SUBJECT, SettingPageType.RLP_CORE_SERVICES_REPORT_APPROVED_EMAIL_BODY)
     }
 
     def rejectReport(String programId, String reportId, String reason, String category) {
         Map program = get(programId)
         List members = getMembersOfProgram(programId)
 
-        return reportService.rejectReport(reportId, reason, program, members, SettingPageType.RLP_REPORT_RETURNED_EMAIL_SUBJECT, SettingPageType.RLP_REPORT_RETURNED_EMAIL_BODY
+        return reportService.rejectReport(reportId, reason, program, members, SettingPageType.RLP_CORE_SERVICES_REPORT_RETURNED_EMAIL_SUBJECT, SettingPageType.RLP_CORE_SERVICES_REPORT_RETURNED_EMAIL_BODY
         )
     }
 

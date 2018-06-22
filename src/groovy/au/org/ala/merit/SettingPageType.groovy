@@ -67,7 +67,14 @@ enum SettingPageType {
     RLP_REPORT_APPROVED_EMAIL_SUBJECT('rlpReportApprovedEmailSubject', 'RLP Report approved email subject line text', 'fielddata.rlp.report.approved.emailSubject'),
     RLP_REPORT_APPROVED_EMAIL_BODY('rlpReportApprovedEmailBody', 'RLP Report approved email subject body text', 'fielddata.rlp.report.approved.emailBody'),
     RLP_REPORT_RETURNED_EMAIL_SUBJECT('rlpReportReturnedEmailSubject', 'RLP Report returned email subject line text', 'fielddata.rlp.report.returned.emailSubject'),
-    RLP_REPORT_RETURNED_EMAIL_BODY('rlpReportReturnedEmailBody', 'RLP Report returned email subject body text', 'fielddata.rlp.report.returned.emailBody')
+    RLP_REPORT_RETURNED_EMAIL_BODY('rlpReportReturnedEmailBody', 'RLP Report returned email subject body text', 'fielddata.rlp.report.returned.emailBody'),
+    RLP_CORE_SERVICES_REPORT_SUBMITTED_EMAIL_SUBJECT('rlpCSReportSubmittedEmailSubject', 'RLP Core Services Report submitted email subject line text', 'fielddata.rlp.cs_report.submitted.emailSubject'),
+    RLP_CORE_SERVICES_REPORT_SUBMITTED_EMAIL_BODY('rlpCSReportSubmittedEmailBody', 'RLP Core Services Report submitted email subject body text', 'fielddata.rlp.cs_report.submitted.emailBody'),
+    RLP_CORE_SERVICES_REPORT_APPROVED_EMAIL_SUBJECT('rlpCSReportApprovedEmailSubject', 'RLP Core Services Report approved email subject line text', 'fielddata.rlp.cs_report.approved.emailSubject'),
+    RLP_CORE_SERVICES_REPORT_APPROVED_EMAIL_BODY('rlpCSReportApprovedEmailBody', 'RLP Core Services Report approved email subject body text', 'fielddata.rlp.cs_report.approved.emailBody'),
+    RLP_CORE_SERVICES_REPORT_RETURNED_EMAIL_SUBJECT('rlpCSReportReturnedEmailSubject', 'RLP Core Services Report returned email subject line text', 'fielddata.rlp.cs_report.returned.emailSubject'),
+    RLP_CORE_SERVICES_REPORT_RETURNED_EMAIL_BODY('rlpCSReportReturnedEmailBody', 'RLP Core Services Report returned email subject body text', 'fielddata.rlp.cs_report.returned.emailBody')
+
     String name
     String title
     String key
