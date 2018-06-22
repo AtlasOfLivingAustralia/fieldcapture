@@ -393,7 +393,7 @@ class MobileController {
         if (!result.statusCode && result.resp?.status == 'success') {
             // success!
             params = [userName:username]
-            url = grailsApplication.config.userDetails.url+"getUserDetails"
+            url = grailsApplication.config.userDetails.url+"/userDetails/getUserDetails"
             result = webService.doPostWithParams(url, params)
             if (!result.statusCode && result.resp) {
                 return new UserDetails(result.resp.firstName+result.resp.lastName, result.resp.userName, result.resp.userId)
