@@ -114,7 +114,7 @@ class FCTagLib {
         /**
             <input data-bind="datepicker:startDate.date" name="startDate" id="startDate" type="text" size="16"
                 data-validation-engine="validate[required]" class="input-xlarge"/>
-            <span class="add-on open-datepicker"><i class="icon-th"></i></span>
+            <span class="add-on open-datepicker"><i class="fa fa-th"></i></span>
          */
 
         def mb = new MarkupBuilder(out)
@@ -144,7 +144,7 @@ class FCTagLib {
             }
 
             mb.span(class:'add-on open-datepicker') {
-                mb.i(class:'icon-th') {
+                mb.i(class:'fa fa-th') {
                     mkp.yieldUnescaped("&nbsp;")
                 }
             }

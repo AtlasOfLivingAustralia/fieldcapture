@@ -49,6 +49,19 @@
         <div class="tab-pane" id="reporting">
             <form>
                 <div class="form-group">
+                    <label for="start-date">Start date</label>
+                    <div>
+                    <fc:datePicker class="form-control" id="start-date" targetField="startDate.date" validation-engine="validate[required]"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="end-date">End date</label>
+                    <div>
+                    <fc:datePicker class="form-control" id="end-date" targetField="endDate.date" validation-engine="validate[required]"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
                     <label for="core-services-group">Core services reporting group</label>
                     <select class="form-control" id="core-services-group" data-bind="value:coreServicesPeriod, options:coreServicesOptions, optionsText:'label', optionsValue:'label', optionsCaption:'Please select'" data-validation-engine="validate[required]"></select>
 
