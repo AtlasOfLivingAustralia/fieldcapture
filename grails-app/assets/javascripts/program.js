@@ -173,6 +173,8 @@ var ProgramPageViewModel = function(props, options) {
         return option.firstReportingPeriodEnd == activityReportConfig.firstReportingPeriodEnd;
     });
     self.activityReportingPeriod = ko.observable(currentOption ? currentOption.label : null);
+    self.startDate = ko.observable(props.startDate).extend({simpleDate:false});
+    self.endDate = ko.observable(props.endDate).extend({simpleDate:false});
 
     self.saveReportingConfiguration = function() {
 
@@ -192,13 +194,21 @@ var ProgramPageViewModel = function(props, options) {
             blockUIWithMessage("Saving configuration...");
             self.saveConfig(config).done(function() {
                 blockUIWithMessage("Regenerating reports...");
-                self.regenerateReports().done(window.location.reload()).fail($.unblockUI());
+                self.regenerateReports().done(function() {
+                    window.location.reload();
+                }).fail(function() {
+                    $.unblockUI();
+                });
             });
         }
     };
 
     self.saveConfig = function(config) {
-        var json = {config: config};
+        var json = {
+            config: config,
+            startDate:self.startDate(),
+            endDate:self.endDate()
+        };
         return $.ajax({
             url: options.programSaveUrl,
             type: 'POST',

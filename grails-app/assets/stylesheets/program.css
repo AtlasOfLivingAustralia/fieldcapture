@@ -32,4 +32,9 @@ table#projectList .statusCol {
     padding-right:0;
 }
 
+form #start-date, form #end-date {
+    width: 12em;
+    display:inline-block;
+}
+
 
