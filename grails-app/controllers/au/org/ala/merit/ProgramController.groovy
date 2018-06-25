@@ -53,11 +53,14 @@ class ProgramController {
 
         List reportOrder = program.config?.programReports?.collect{it.category} ?: []
 
-        boolean sitesVisible = program.inheritedConfig?.visibility != 'private'
+        // If the program is not visible, there is no point showing the dashboard or sites as both of these rely on
+        // data in the search index to produce.
+        boolean programVisible = program.inheritedConfig?.visibility != 'private'
+
         [about   : [label: 'Management Unit', visible: true, stopBinding: false, type: 'tab'],
-         dashboard: [label: 'Dashboard', visible: true, stopBinding: true, type: 'tab', servicesDashboard:[planning:false, services:servicesWithScores], template:'/project/serviceDashboard'],
+         dashboard: [label: 'Dashboard', visible: programVisible, stopBinding: true, type: 'tab', servicesDashboard:[planning:false, services:servicesWithScores], template:'/project/serviceDashboard'],
          projects: [label: 'Reporting', visible: true, stopBinding: false, type:'tab', projects:projects, reports:program.reports?:[], reportOrder:reportOrder, hideDueDate:true],
-         sites   : [label: 'Sites', visible: sitesVisible, stopBinding: true, type:'tab'],
+         sites   : [label: 'Sites', visible: programVisible, stopBinding: true, type:'tab'],
          admin   : [label: 'Admin', visible: hasAdminAccess, type: 'tab']]
     }
 

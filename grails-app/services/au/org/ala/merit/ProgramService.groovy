@@ -98,7 +98,7 @@ class ProgramService {
 
     List serviceScores(String programId, boolean approvedActivitiesOnly = true) {
         List<Map> allServices = metadataService.getProjectServices()
-        List scoreIds = allServices.collect{it.scoreIds}.flatten()
+        List scoreIds = allServices.collect{it.scores?.collect{score -> score.scoreId}}.flatten()
 
         Map scoreResults = reportService.targetsForScoreIds(scoreIds, ["programId:${programId}"], approvedActivitiesOnly)
 
