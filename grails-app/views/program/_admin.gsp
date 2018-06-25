@@ -51,13 +51,13 @@
                 <div class="form-group">
                     <label for="start-date">Start date</label>
                     <div>
-                    <fc:datePicker class="form-control" id="start-date" targetField="startDate.date" validation-engine="validate[required]"/>
+                    <fc:datePicker class="form-control" id="start-date" name="start-date" targetField="startDate.date" data-validation-engine="validate[required,future[30-06-2018]]"/>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="end-date">End date</label>
                     <div>
-                    <fc:datePicker class="form-control" id="end-date" targetField="endDate.date" validation-engine="validate[required]"/>
+                    <fc:datePicker class="form-control" id="end-date" name="end-date" targetField="endDate.date" data-validation-engine="validate[required,future[start-date]]"/>
                     </div>
                 </div>
 
