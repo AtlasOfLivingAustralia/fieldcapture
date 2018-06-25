@@ -48,8 +48,8 @@ class ProgramController {
 
         List servicesWithScores = programService.serviceScores(program.programId, !hasAdminAccess)
 
-        Map result = projectService.search(programId:program.programId)
-        List projects = result.resp?.projects
+        Map result = programService.getProgramProjects(program.programId)
+        List projects = result?.projects
 
         List reportOrder = program.config?.programReports?.collect{it.category} ?: []
 
@@ -363,6 +363,42 @@ class ProgramController {
             resp = [status:HttpStatus.SC_OK]
         }
         render resp as JSON
+    }
+
+    @PreAuthorise(accessLevel = 'admin')
+    def addUserAsRoleToProgram() {
+        String userId = params.userId
+        String programId = params.entityId
+        String role = params.role
+
+        if (userId && programId && role) {
+            if (role == 'caseManager' && !userService.userIsSiteAdmin()) {
+                render status: 403, text: 'Permission denied - Case/Grant Manager role required'
+            } else {
+                render programService.addUserAsRoleToProgram(userId, programId, role) as JSON
+            }
+        } else {
+            render status: 400, text: 'Required params not provided: userId, role, projectId'
+        }
+    }
+
+    @PreAuthorise(accessLevel = 'admin')
+    def removeUserWithRoleFromProgram() {
+        String userId = params.userId
+        String role = params.role
+        String programId = params.entityId
+
+
+        if (programId && role && userId) {
+            if (role == RoleService.GRANT_MANAGER_ROLE && !userService.userIsSiteAdmin()) {
+                render status: 403, text: 'Permission denied - Case/Grant Manager role required'
+            }
+            else {
+                render programService.removeUserWithRoleFromProgram(userId, programId, role) as JSON
+            }
+        } else {
+            render status: 400, text: 'Required params not provided: userId, organisationId, role'
+        }
     }
 
 

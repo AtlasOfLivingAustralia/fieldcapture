@@ -158,7 +158,7 @@ class ProgramService {
     }
 
     Map getProgramProjects(String id) {
-        String url = "${grailsApplication.config.ecodata.baseUrl}program/$id/projects"
+        String url = "${grailsApplication.config.ecodata.baseUrl}program/$id/projects?view=flat"
         Map resp = webService.getJson(url)
         return resp
     }
@@ -190,6 +190,44 @@ class ProgramService {
         Map resp = userService.getMembersOfProgram(programId)
 
         resp?.members ?: []
+    }
+
+    /**
+     * Adds a user with the supplied role to the identified program.
+     * Adds the same user with the same role to all of the program's projects.
+     *
+     * @param userId the id of the user to add permissions for.
+     * @param programId the program to add permissions for.
+     * @param role the role to assign to the user.
+     */
+    def addUserAsRoleToProgram(String userId, String programId, String role) {
+
+        Map resp = userService.addUserAsRoleToProgram(userId, programId, role)
+        Map projects = getProgramProjects(programId)
+        projects?.projects?.each { project ->
+            if (project.isMERIT) {
+                userService.addUserAsRoleToProject(userId, project.projectId, role)
+            }
+        }
+        resp
+    }
+
+    /**
+     * Removes the user access with the supplied role from the identified program.
+     * Removes the same user from all of the program's projects.
+     *
+     * @param userId the id of the user to remove permissions for.
+     * @param programId the program to remove permissions for.
+
+     */
+    def removeUserWithRoleFromProgram(String userId, String programId, String role) {
+        userService.removeUserWithRoleFromProgram(userId, programId, role)
+        Map projects = getProgramProjects(programId)
+        projects?.projects?.each { project ->
+            if (project.isMERIT) {
+                userService.removeUserWithRole(project.projectId, userId, role)
+            }
+        }
     }
 
 }
