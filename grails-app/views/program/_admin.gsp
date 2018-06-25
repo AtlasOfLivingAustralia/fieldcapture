@@ -35,12 +35,12 @@
                 </div>
             </div>
             <g:render template="/admin/addPermissions"
-                      model="[addUserUrl: g.createLink(controller: 'user', action: 'addUserAsRoleToProgram'), entityType: 'au.org.ala.ecodata.Program', entityId: program.programId]"/>
+                      model="[addUserUrl: g.createLink(controller: 'program', action: 'addUserAsRoleToProgram'), entityType: 'au.org.ala.ecodata.Program', entityId: program.programId]"/>
 
             <h4>Current Programme Permissions</h4>
             <g:render template="/admin/permissionTable" model="[
                     loadPermissionsUrl: g.createLink(controller: 'user', action: 'getMembersOfProgram', id: program.programId),
-                    removeUserUrl     : g.createLink(controller: 'user', action: 'removeUserWithRoleFromProgram'),
+                    removeUserUrl     : g.createLink(controller: 'program', action: 'removeUserWithRoleFromProgram', id:program.programId),
                     entityId          : program.programId, user: user]"/>
 
         </div>

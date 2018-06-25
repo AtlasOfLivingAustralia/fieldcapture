@@ -192,41 +192,7 @@ class UserController {
         }
     }
 
-    def addUserAsRoleToProgram() {
-        String userId = params.userId
-        String programId = params.entityId
-        String role = params.role
-        def adminUser = userService.getUser()
 
-        if (adminUser && userId && programId && role) {
-            if (role == 'caseManager' && !userService.userIsSiteAdmin()) {
-                render status: 403, text: 'Permission denied - ADMIN role required'
-            } else if (userService.userIsSiteAdmin() || userService.isUserAdminForProgram(adminUser.userId, programId)) {
-                render userService.addUserAsRoleToProgram(userId, programId, role) as JSON
-            } else {
-                render status: 403, text: 'Permission denied'
-            }
-        } else {
-            render status: 400, text: 'Required params not provided: userId, role, projectId'
-        }
-    }
-
-    def removeUserWithRoleFromProgram() {
-        String userId = params.userId
-        String role = params.role
-        String programId = params.entityId
-        def adminUser = userService.getUser()
-
-        if (adminUser && programId && role && userId) {
-            if (userService.userIsSiteAdmin() || userService.isUserAdminForProgram(adminUser.userId, programId)) {
-                render userService.removeUserWithRoleFromProgram(userId, programId, role) as JSON
-            } else {
-                render status: 403, text: 'Permission denied'
-            }
-        } else {
-            render status: 400, text: 'Required params not provided: userId, organisationId, role'
-        }
-    }
 
 
 }
