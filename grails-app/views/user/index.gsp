@@ -31,39 +31,25 @@
     </g:if>
     <g:else>
 
+
         <h2>My Projects</h2>
         <g:render template="/shared/reports"/>
         <div class="row-fluid ">
-            <div class="span8">
-
-                <h4>Pages recently edited by you</h4>
-                <g:if test="${recentEdits}">
-                    <table class="table table-striped table-bordered table-condensed">
-                        <thead>
-                        <tr>
-                            <th>Page</th>
-                            <th>Name</th>
-                            <th>Date</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <g:each var="p" in="${recentEdits}">
-                            <tr>
-                                <td><g:message code="label.${p.entityType}" default="${p.entityType}"/></td>
-                                <td><g:link controller="${fc.getControllerNameFromEntityType(entityType: p.entityType)}" id="${p.entityId}">${p.entity?.name?:p.entity?.type?:p.entity?.key}</g:link></td>
-                                <td><fc:formatDateString date="${p.date}" inputFormat="yyyy-MM-dd'T'HH:mm:ss'Z'"/></td>
-                            </tr>
+            <div class="span6">
+                <g:if test="${memberPrograms}">
+                    <h4>My Management Units</h4>
+                    <ul>
+                        <g:each in="${memberPrograms}" var="program">
+                            <li><a href="${createLink(controller:'rlp', action:'index', id:program.programId)}">${program.name}</a></li>
                         </g:each>
-                        </tbody>
-                    </table>
+
+                    </ul>
                 </g:if>
-                <g:else>
-                    [ No edits found in audit log ]
-                </g:else>
+
             </div>
-            <div class="span4">
+            <div class="span6">
                 <g:if test="${memberOrganisations}">
-                    <h4>Your organisations</h4>
+                    <h4>My Organisations</h4>
                     <ul>
                         <g:each var="p" in="${memberOrganisations}">
                             <li><g:link controller="organisation" id="${p.organisation?.organisationId}">${p.organisation?.name}</g:link></li>
@@ -71,7 +57,7 @@
                     </ul>
                 </g:if>
 
-                <h4>Favourite Projects</h4>
+                <h4>My Favourite Projects</h4>
                 <g:if test="${starredProjects}">
                     <ul>
                         <g:each var="p" in="${starredProjects}">
