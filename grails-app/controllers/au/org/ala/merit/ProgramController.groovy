@@ -25,7 +25,6 @@ class ProgramController {
             programNotFound(id, program)
         } else {
             def roles = roleService.getRoles()
-            // Get dashboard information for the response.
 
             List members = userService.getMembersOfProgram(id).members ?: []
             def user = userService.getUser()
@@ -45,9 +44,6 @@ class ProgramController {
     protected Map content(Map program, Map userRole) {
 
         def hasAdminAccess = userService.userIsSiteAdmin() || userRole?.role == RoleService.PROJECT_ADMIN_ROLE
-
-        List servicesWithScores = programService.serviceScores(program.programId, !hasAdminAccess)
-
         Map result = programService.getProgramProjects(program.programId)
         List projects = result?.projects
 
@@ -56,6 +52,10 @@ class ProgramController {
         // If the program is not visible, there is no point showing the dashboard or sites as both of these rely on
         // data in the search index to produce.
         boolean programVisible = program.inheritedConfig?.visibility != 'private'
+        List servicesWithScores = null
+        if (programVisible) {
+            servicesWithScores = programService.serviceScores(program.programId, !hasAdminAccess)
+        }
 
         [about   : [label: 'Management Unit', visible: true, stopBinding: false, type: 'tab'],
          dashboard: [label: 'Dashboard', visible: programVisible, stopBinding: true, type: 'tab', servicesDashboard:[planning:false, services:servicesWithScores], template:'/project/serviceDashboard'],

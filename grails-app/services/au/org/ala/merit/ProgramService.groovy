@@ -115,9 +115,16 @@ class ProgramService {
                 copiedScore.target = result?.target ?: 0
                 copiedScore.result = result?.result ?: [result:0, count:0]
 
-                copy.scores << copiedScore
+                // We only want to report on services that are going to be delivered by this program.
+                if (copiedScore.target) {
+                    copy.scores << copiedScore
+                }
+
             }
-            deliveredServices << copy
+            if (copy.scores) {
+                deliveredServices << copy
+            }
+
         }
 
         deliveredServices

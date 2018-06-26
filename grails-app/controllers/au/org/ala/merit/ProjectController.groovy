@@ -161,7 +161,7 @@ class ProjectController {
         else if (template == RLP_TEMPLATE) {
 
             model.overview.template = 'rlpOverview'
-            model.overview.servicesDashboard = projectService.getServiceDashboardData(project.projectId)
+            model.overview.servicesDashboard = projectService.getServiceDashboardData(project.projectId, !user?.hasViewAccess)
             model.details.meriPlanTemplate = RLP_MERI_PLAN_TEMPLATE+'View'
 
             List reportOrder = config?.projectReports?.collect{it.category} ?: []

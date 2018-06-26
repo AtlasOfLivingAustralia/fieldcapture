@@ -37,4 +37,22 @@ form #start-date, form #end-date {
     display:inline-block;
 }
 
+.progress {
+    background-color: #f7f7f7;
+    height:20px;
+    margin-bottom: 20px;
+    border: 1px solid #9f9f9f;
+}
+
+.progress .bar {
+    background-image: none;
+    background-color: #02baf2;
+}
+
+.progress-info .bar,.progress .bar-info {
+    background-image: none;
+    background-color: #02baf2;
+}
+
+
 
