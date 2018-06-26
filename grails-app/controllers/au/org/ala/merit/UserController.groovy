@@ -34,12 +34,17 @@ class UserController {
     }
 
     protected Map assembleUserData(user) {
-        def recentEdits = []//userService.getRecentEditsForUserId(user.userId)
         def memberOrganisations = userService.getOrganisationsForUserId(user.userId)
         def memberProjects = userService.getProjectsForUserId(user.userId)
         def starredProjects = userService.getStarredProjectsForUserId(user.userId)
+        def programs = userService.getProgramsForUserId(user.userId)
 
-        Map userData = [user: user, recentEdits: recentEdits, memberProjects: memberProjects, memberOrganisations:memberOrganisations, starredProjects: starredProjects]
+        Map userData = [
+                user: user,
+                memberProjects: memberProjects,
+                memberOrganisations:memberOrganisations,
+                memberPrograms:programs,
+                starredProjects: starredProjects]
 
         def reportsByProject = reportService.findReportsForUser(user.userId)
 
