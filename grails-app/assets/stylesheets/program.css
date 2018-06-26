@@ -41,7 +41,8 @@ form #start-date, form #end-date {
     background-color: #f7f7f7;
     height:20px;
     margin-bottom: 20px;
-    border: 1px solid #9f9f9f;
+    border: 1px solid #bfbfbf;
+    margin-top: 5px;
 }
 
 .progress .bar {

@@ -1038,6 +1038,6 @@ input[type="checkbox"] { -webkit-appearance: checkbox; !important }
 .dashboard-section {
     background-color: #f0f0f0;
     padding-top:5px;
-    border: 1px solid #d3d3d3;
+    border: 1px solid #bfbfbf;
     border-radius: 3px;
 }
