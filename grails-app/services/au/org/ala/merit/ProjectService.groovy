@@ -54,7 +54,7 @@ class ProjectService  {
     static final String PLAN_SUBMITTED = 'submitted'
     static final String PLAN_UNLOCKED = 'unlocked for correction'
 
-    def webService, grailsApplication, siteService, activityService, emailService, documentService, userService, metadataService, settingService, reportService, auditService, speciesService
+    def webService, grailsApplication, siteService, activityService, emailService, documentService, userService, metadataService, settingService, reportService, auditService, speciesService, commonService
     ProjectConfigurationService projectConfigurationService
 
     def list(brief = false, citizenScienceOnly = false) {
@@ -144,9 +144,16 @@ class ProjectService  {
      * @param id the id of the project to get summary information for.
      * @return TODO document this structure.
      */
-    def summary(String id) {
-        def scores = webService.getJson(grailsApplication.config.ecodata.baseUrl + 'project/projectMetrics/' + id)
+    def summary(String id, boolean approvedDataOnly = false, List scoreIds = null) {
 
+        String url = grailsApplication.config.ecodata.baseUrl + 'project/projectMetrics/' + id+"?approvedDataOnly="+approvedDataOnly
+        if (scoreIds) {
+            scoreIds.each{scoreId ->
+                url+="&scoreIds="+scoreId
+            }
+        }
+        Map result = webService.doPostWithParams(url, [:])
+        def scores = result?.resp
         def scoresWithTargetsByOutput = [:]
         def scoresWithoutTargetsByOutputs = [:]
         if (scores && scores instanceof List) {  // If there was an error, it would be returning a map containing the error.
@@ -1214,9 +1221,12 @@ class ProjectService  {
      *     services: [ <list of scores and targets for each of the project services> ]
      * ]
      */
-    Map getServiceDashboardData(String projectId) {
-        Map scoreSummary = summary(projectId)
+    Map getServiceDashboardData(String projectId, boolean approvedDataOnly) {
+
         List<Map> projectServices = getServiceScoresForProject(projectId)
+        List scoreIds = projectServices.collect{it.scores?.collect{score -> score.scoreId}}.flatten()
+
+        Map scoreSummary = summary(projectId, approvedDataOnly, scoreIds)
 
         Map dashboard = [services:[], planning:false]
         int deliveredAgainstTargets = 0

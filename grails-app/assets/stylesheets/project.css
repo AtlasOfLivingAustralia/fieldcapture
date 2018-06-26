@@ -22,6 +22,10 @@
 	box-shadow: inset 0 1px 1px rgba(0,0,0,0.05);
 }
 
+.progress {
+	border: 1px solid #9f9f9f;
+}
+
 .progress .bar {
 	background-image: none;
 	background-color: #02baf2;
