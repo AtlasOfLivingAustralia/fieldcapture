@@ -77,6 +77,7 @@
 
 </div>
 
+<g:if test="${!hidePrograms}">
 <div class="alert alert-block">You cannot change the start date or programme for a project with submitted or approved reports or MERI plan.</div>
 
 <div class="row-fluid">
@@ -90,6 +91,10 @@
         <select data-bind="value:associatedSubProgram,options:transients.subprogramsToDisplay,optionsCaption: 'Choose...',,enable:${canChangeProjectDates?:'false'}"></select>
     </div>
 </div>
+</g:if>
+<g:else>
+    <div class="alert alert-block">You cannot change the start date for a project with submitted or approved reports or MERI plan.</div>
+</g:else>
 
 <div class="row-fluid">
     <div class="span4">
