@@ -282,6 +282,7 @@ class ProgramController {
         model.activity = activity
         model.returnTo = createLink(action:'index', id:programId)
         model.contextViewUrl = model.returnTo
+        model.mapFeatures = '{}'
         model
     }
 

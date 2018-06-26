@@ -11,6 +11,7 @@
         <title>View | ${activity.type} | MERIT</title>
     </g:else>
 
+    <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
     <script>
     var fcConfig = {
         serverUrl: "${grailsApplication.config.grails.serverURL}",
@@ -157,7 +158,7 @@
         $('.helphover').popover({animation: true, trigger:'hover'});
 
         $('#cancel').click(function () {
-            document.location.href = returnTo;
+            document.location.href = fcConfig.returnTo;
         });
 
         var viewModel = new ActivityViewModel(
