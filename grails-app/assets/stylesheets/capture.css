@@ -1034,3 +1034,10 @@ input[type="checkbox"] { -webkit-appearance: checkbox; !important }
 .table th .popover {
     font-weight: normal;
 }
+
+.dashboard-section {
+    background-color: #f0f0f0;
+    padding-top:5px;
+    border: 1px solid #d3d3d3;
+    border-radius: 3px;
+}
