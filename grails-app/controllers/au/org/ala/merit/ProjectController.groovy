@@ -173,6 +173,7 @@ class ProjectController {
             rlpModel.admin.projectServices = config.services
             rlpModel.admin.showMERIActivityWarning = false
             rlpModel.admin.showSpecies = false
+            rlpModel.admin.hidePrograms = true
             model = rlpModel
         }
         return [view: 'index', model: model]
