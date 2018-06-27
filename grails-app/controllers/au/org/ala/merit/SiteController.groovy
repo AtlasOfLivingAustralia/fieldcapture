@@ -13,7 +13,7 @@ import java.util.zip.ZipInputStream
 
 class SiteController {
 
-    def siteService, projectService, activityService, metadataService, userService, searchService, importService, webService
+    def siteService, projectService, activityService, metadataService, userService, searchService, importService, webService, projectConfigurationService
 
     static defaultAction = "index"
 
@@ -95,25 +95,26 @@ class SiteController {
 
     private Map projectActivitiesTab(Map selectedProject, Map site, List activities) {
 
-        Map activitiesTabProperties = [visible:true, label:'Activities', type:'tab', default:true, activities:activities]
+        Map activitiesTabProperties = [visible:true, label:'Activities', type:'tab', default:true, activities:activities, template:'activities']
         if (selectedProject) {
 
             Map project = projectService.get(selectedProject.projectId)
-            def user = userService.getUser()
-            if (user) {
-                user = user.properties
-                user.isAdmin = projectService.isUserAdminForProject(user.userId, selectedProject.projectId)?:false
-                user.isCaseManager = projectService.isUserCaseManagerForProject(user.userId, selectedProject.projectId)?:false
-                user.isEditor = projectService.canUserEditProject(user.userId, selectedProject.projectId)?:false
-                user.hasViewAccess = projectService.canUserViewProject(user.userId, selectedProject.projectId)?:false
-            }
+            Map config = projectConfigurationService.getProjectConfiguration(project)
+            if (config.projectTemplate != ProjectController.RLP_TEMPLATE) {
+                def user = userService.getUser()
+                if (user) {
+                    user = user.properties
+                    user.isAdmin = projectService.isUserAdminForProject(user.userId, selectedProject.projectId)?:false
+                    user.isCaseManager = projectService.isUserCaseManagerForProject(user.userId, selectedProject.projectId)?:false
+                    user.isEditor = projectService.canUserEditProject(user.userId, selectedProject.projectId)?:false
+                    user.hasViewAccess = projectService.canUserViewProject(user.userId, selectedProject.projectId)?:false
+                }
 
-            activitiesTabProperties.putAll([visible:true, label:'Activities', type:'tab', default:true, project:project, template:'activitiesPlan', stopBinding:true,
-                        reports:project.reports, scores:metadataService.outputTargetScores, activities:activityService.activitiesForProject(project.projectId), user:user])
+                activitiesTabProperties.putAll([visible:true, label:'Activities', type:'tab', default:true, project:project, template:'activitiesPlan', stopBinding:true,
+                                                reports:project.reports, scores:metadataService.outputTargetScores, activities:activityService.activitiesForProject(project.projectId), user:user])
+            }
         }
-        else {
-            activitiesTabProperties.putAll(template: 'activities')
-        }
+
         activitiesTabProperties
     }
 
