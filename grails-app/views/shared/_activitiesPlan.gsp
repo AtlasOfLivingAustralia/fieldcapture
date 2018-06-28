@@ -321,7 +321,7 @@
             fcConfig.project,
             programModel,
             today,
-            {rejectionCategories: ['Minor', 'Moderate', 'Major'], saveTargetsUrl:fcConfig.projectUpdateUrl },
+            {rejectionCategories: ['Minor', 'Moderate', 'Major'], saveTargetsUrl:fcConfig.projectUpdateUrl, updateProjectDatesUrl:fcConfig.updateProjectDatesUrl },
             userIsEditor
         );
         ko.applyBindings(planViewModel, document.getElementById('planContainer'));

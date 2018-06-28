@@ -952,11 +952,8 @@ class ProjectService  {
 		metrics?.targets?.each{ k, v->
 			v?.each{ data ->
 				String units = data.score?.units ? data.score.units : '';
-				double total = 0.0;
-				data.results?.each { result ->
-					total = total + result.result;
-				}
-				append(html,"<tr><td>${data.score?.outputName}</td><td>${data.score?.label}</td><td>${total}</td><td>${data.target} ${units}</td></tr>")
+				double total = data.result?.result ?: 0.0
+				append(html,"<tr><td>${data.outputType}</td><td>${data.label}</td><td>${total}</td><td>${data.target} ${units}</td></tr>")
 			}
 		}
 		append(html,'</table>')
