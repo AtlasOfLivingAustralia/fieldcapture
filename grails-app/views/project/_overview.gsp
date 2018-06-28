@@ -98,6 +98,10 @@
     </div>
 </g:if>
 
+<g:if test="${displayDashboard}">
+    <g:render template="serviceDashboard"/>
+</g:if>
+
 <div class="multimedia" data-bind="if:embeddedVideos">
     <h3>Multimedia</h3>
         <div class="row-fluid" data-bind="repeat:{foreach:embeddedVideos, step:2}" >

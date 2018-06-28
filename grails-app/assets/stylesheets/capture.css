@@ -877,23 +877,24 @@ input[type="checkbox"] { -webkit-appearance: checkbox; !important }
     background-repeat: no-repeat;
     background-position: right;
     background-color: #f0f0e8;
-    padding-left:20px;
     padding-right:20px;
+    margin-bottom:10px;
 }
 
 .banner .header-text {
     float:left;
-    margin-left:10px;
 }
 .banner .header-text h2,.header-text h4 {
     margin-top: 0;
-    margin-bottom: 0;
+    //margin-bottom: 0;
 }
 
 .banner .logo {
     height:110px;
     margin-bottom:10px;
     float:left;
+    padding-left:10px;
+    margin-right:10px;
 }
 
 .links-table {
@@ -1028,4 +1029,15 @@ input[type="checkbox"] { -webkit-appearance: checkbox; !important }
 
 .nav-list > .active i {
     color: #ffffff;
+}
+
+.table th .popover {
+    font-weight: normal;
+}
+
+.dashboard-section {
+    background-color: #f0f0f0;
+    padding-top:5px;
+    border: 1px solid #bfbfbf;
+    border-radius: 3px;
 }

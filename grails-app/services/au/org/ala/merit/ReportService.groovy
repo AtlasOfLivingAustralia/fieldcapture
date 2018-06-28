@@ -1,9 +1,13 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.reports.ReportConfig
+import au.org.ala.merit.reports.ReportGenerator
+import au.org.ala.merit.reports.ReportOwner
 import grails.converters.JSON
 import org.apache.commons.io.FilenameUtils
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
+import org.joda.time.Interval
 import org.joda.time.Period
 import org.springframework.cache.annotation.Cacheable
 
@@ -21,6 +25,10 @@ class ReportService {
 
     public static final int HOME_PAGE_IMAGE_SIZE = 500
 
+    public static final String REPORT_TYPE_SINGLE_ACTIVITY = 'Single'
+    public static final String REPORT_TYPE_STAGE_REPORT = 'Activity'
+
+
     def grailsApplication
     def webService
     def userService
@@ -33,110 +41,190 @@ class ReportService {
     def activityService
     def imageService
     def grailsLinkGenerator
+    def emailService
 
     private static int DEFAULT_REPORT_DAYS_TO_COMPLETE = 43
+
+    private DateTime toDateInLocalTime(String isoDate) {
+        return DateUtils.parse(isoDate).withZone(DateTimeZone.default)
+    }
+
+    /**
+     * Regenerates a list of reports according the supplied configuration.  Note that all reports
+     * supplied to this method must be unapproved and are assumed to be sorted in date order.
+     *
+     * @param reports any existing reports, these will be edited and deleted as necessary.
+     * @param prototypeReport properties to use when creating a new report. (minus dates)
+     * @param firstPeriodEnd an ISO formatted Date indicating the to date of the first report to be regenerated
+     * @param periodEnd an ISO formatted Date indicating the end of the period covered by the reports
+     * @param periodInMonths the reporting period for each report (from fromDate to toDate)
+     * @param alignToCalendar whether we want reports aligned to the calendar or not.
+     * @param weekDaysToCompleteReport used to set the due date for the report
+     * @param ownerName used as a parameter when evaluating the report name and description
+     */
+    private void regenerateReportsFromDate(List reports, int startIndex, Map prototypeReport, String firstReportEnd, String periodStart, String periodEnd, Integer periodInMonths = 6, Integer weekDaysToCompleteReport = null, String ownerName = "") {
+        log.info "regenerateReportsFromDate: ${reports.size()}, ${startIndex}, ${firstReportEnd}, ${periodStart}, ${periodEnd}"
+
+        if (reports.findIndexOf(startIndex, {isSubmittedOrApproved(it)}) >= startIndex) {
+            throw new IllegalArgumentException("Cannot modify a submitted or approved report.")
+        }
+
+        Period period = Period.months(periodInMonths)
+
+        DateTime firstReportEndDate = toDateInLocalTime(firstReportEnd)
+        DateTime endDate = toDateInLocalTime(periodEnd)
+
+        int index = startIndex
+        Interval reportInterval = new Interval(toDateInLocalTime(periodStart), firstReportEndDate)
+
+        log.info "Regenerating reports starting at index: "+index+" from: "+reportInterval.start+" ending at: "+reportInterval.end
+        while (reportInterval.start < endDate.minusDays(1)) {
+
+            Map report = prototypeReport.clone()
+            report.putAll([
+                    fromDate:DateUtils.format(reportInterval.start.withZone(DateTimeZone.UTC)),
+                    toDate:DateUtils.format(reportInterval.end.withZone(DateTimeZone.UTC)),
+                    name:sprintf(prototypeReport.name, (index+1), reportInterval.start.toDate(), reportInterval.end.toDate(), ownerName),
+                    description:sprintf(prototypeReport.description, (index+1), reportInterval.start.toDate(), reportInterval.end.toDate(), ownerName)
+            ])
+
+            if (weekDaysToCompleteReport) {
+                report.dueDate = DateUtils.format(reportInterval.end.plusDays(weekDaysToCompleteReport).withZone(DateTimeZone.UTC))
+            }
+
+            if (reports.size() > index) {
+                report.reportId = reports[index].reportId
+                // Only do the update if the report details have changed.
+                if (!report.equals(reports[index])) {
+                    log.info("name: " + reports[index].name + " - " + report.name)
+                    log.info("fromDate: " + reports[index].fromDate + " - " + report.fromDate)
+                    log.info("toDate: " + reports[index].toDate + " - " + report.toDate)
+                    update(report)
+                }
+            }
+            else {
+                log.info("Creating report "+report.name)
+                create(report)
+            }
+            index++
+            reportInterval = new Interval(reportInterval.end, reportInterval.end.plus(period))
+        }
+
+        // Delete any left over reports.
+        for (int i=index; i<reports.size(); i++) {
+            log.info("Deleting report "+reports[i].name)
+            delete(reports[i].reportId)
+        }
+        log.info("***********")
+    }
+
+    void regenerateAllReports(List reports, Map prototypeReport, String periodStart, String periodEnd, Integer periodInMonths = 6, boolean alignToCalendar = false, Integer weekDaysToCompleteReport = null, String ownerName = "") {
+
+        // Ensure the reports are sorted in Date order
+        reports = (reports?:[]).sort{it.toDate}
+
+        Period period = Period.months(periodInMonths)
+
+        String startISODate
+        DateTime periodStartDate
+
+        int index = reports.findLastIndexOf {isSubmittedOrApproved(it)}
+        if (index >= 0){
+            startISODate = reports[index].toDate
+            periodStartDate = toDateInLocalTime(startISODate)
+        }
+        else {
+            startISODate = periodStart
+            periodStartDate = toDateInLocalTime(startISODate)
+            if (alignToCalendar) {
+                periodStartDate = DateUtils.alignToPeriod(periodStartDate, period)
+            }
+        }
+
+        regenerateReportsFromDate(reports, Math.max(index+1, 0), prototypeReport, DateUtils.format(periodStartDate.plus(period)), startISODate, periodEnd, periodInMonths, weekDaysToCompleteReport, ownerName)
+
+    }
+
+    void regenerateReports(List existingReports, ReportConfig reportConfig, ReportOwner reportOwner) {
+        // Ensure the reports are sorted in Date order
+        existingReports = (existingReports?:[]).sort{it.toDate}
+
+
+        int index = existingReports.findLastIndexOf {isSubmittedOrApproved(it)}
+        DateTime latestApprovedReportPeriodEnd = null
+        if (index >= 0) {
+            latestApprovedReportPeriodEnd = DateUtils.parse(existingReports[index].toDate)
+        }
+        index++ // Start at the report after the submitted/approved one (or index 0 if none was found)
+
+        int sequenceNo = index + 1
+        List reports = new ReportGenerator().generateReports(reportConfig, reportOwner, sequenceNo, latestApprovedReportPeriodEnd)
+
+        for (Map report: reports) {
+            // Update or create new reports
+            if (existingReports.size() > index) {
+                report.reportId = existingReports[index].reportId
+                // Only do the update if the report details have changed.
+                if (needsRegeneration(report, existingReports[index])) {
+                    log.info("name: " + existingReports[index].name + " - " + report.name)
+                    log.info("fromDate: " + existingReports[index].fromDate + " - " + report.fromDate)
+                    log.info("toDate: " + existingReports[index].toDate + " - " + report.toDate)
+                    update(report)
+                }
+            }
+            else {
+                log.info("Creating report "+report.name)
+                create(report)
+            }
+            index++
+
+        }
+
+        // Delete any left over reports.
+        for (int i=index; i<existingReports.size(); i++) {
+            log.info("Deleting report " + existingReports[i].name)
+            delete(existingReports[i].reportId)
+        }
+
+    }
+
+    boolean needsRegeneration(Map report1, Map report2) {
+        return report1.fromDate != report2.fromDate ||
+               report1.toDate != report2.toDate ||
+               report1.name != report2.name ||
+               report1.description != report2.description ||
+               report1.type != report2.type ||
+               report1.activityType != report2.activityType ||
+               report1.category != report2.category
+    }
 
     /**
      * This method supports automatically creating reporting activities for a project that re-occur at defined intervals.
      * e.g. a stage report once every 6 months or a green army monthly report once per month.
      * Activities will only be created when no reporting activity of the correct type exists within each period.
      * @param projectId identifies the project.
-
      */
-    def regenerateAllStageReportsForProject(String projectId, Integer periodInMonths = 6, boolean alignToCalendar = false, Integer weekDaysToCompleteReport = null, String reportName = "Stage") {
+    void regenerateAllStageReportsForProject(String projectId, Integer periodInMonths = 6, boolean alignToCalendar = false, Integer weekDaysToCompleteReport = null) {
+        Map project = projectService.get(projectId, 'all')
 
-        def project = projectService.get(projectId, 'all')
-        log.info("Processing project "+project.name)
-        def period = Period.months(periodInMonths)
+        ReportConfig reportConfig = new ReportConfig(
+            reportingPeriodInMonths: periodInMonths,
+                reportsAlignedToCalendar: alignToCalendar,
+                reportNameFormat:"Stage %1\$d",
+                reportDescriptionFormat: "Stage %1\$d for %4\$s",
+                reportType:'Activity',
+                category:"Stage reports",
+                weekDaysToCompleteReport: weekDaysToCompleteReport
+        )
+        ReportOwner reportOwner = new ReportOwner(
+                id:[projectId:projectId],
+                name:project.name,
+                periodStart:project.plannedStartDate,
+                periodEnd:project.plannedEndDate
+        )
 
-        def reports = (project.reports?:[]).sort{it.toDate}
-
-        DateTime startDate = DateUtils.parse(project.plannedStartDate).withZone(DateTimeZone.default)
-        DateTime endDate = DateUtils.parse(project.plannedEndDate).withZone(DateTimeZone.default)
-
-        DateTime periodStartDate = null
-        int stage = 1
-        for (int i=reports.size()-1; i>=0; i--) {
-            if (isSubmittedOrApproved(reports[i])) {
-                periodStartDate = DateUtils.parse(reports[i].toDate).withZone(DateTimeZone.default)
-                stage = i+2 // Start at the stage after the submitted or approved one
-                break
-            }
-        }
-
-        if (!periodStartDate) {
-            periodStartDate = startDate
-        }
-
-        // The first period start date  (to be modified) should be aligned to the end date of the previous report or
-        // the project start date if it is the first report.
-        DateTime reportFromDate = periodStartDate
-
-        if (alignToCalendar) {
-            periodStartDate = DateUtils.alignToPeriod(periodStartDate, period)
-        }
-
-        log.info "Regenerating stages starting from stage: "+stage+ ", starting from: "+periodStartDate+" ending at: "+endDate
-        while (periodStartDate < endDate.minusDays(1)) {
-            def periodEndDate = periodStartDate.plus(period)
-
-            def report = [
-                    fromDate:DateUtils.format(reportFromDate.withZone(DateTimeZone.UTC)),
-                    toDate:DateUtils.format(periodEndDate.withZone(DateTimeZone.UTC)),
-                    type:'Activity',
-                    projectId:projectId,
-                    name:reportName + ' '+stage,
-                    description:reportName + ' '+stage+' for '+project.name
-            ]
-            if (weekDaysToCompleteReport) {
-                report.dueDate = DateUtils.format(periodEndDate.plusDays(weekDaysToCompleteReport).withZone(DateTimeZone.UTC))
-            }
-
-            if (reports.size() >= stage) {
-                report.reportId = reports[stage-1].reportId
-                // Only do the update if the report details have changed.
-                if (!report.equals(reports[stage-1])) {
-                    log.info("Updating report " + report.name + " for project " + project.projectId)
-                    log.info("name: " + reports[stage - 1].name + " - " + report.name)
-                    log.info("fromDate: " + reports[stage - 1].fromDate + " - " + report.fromDate)
-                    log.info("toDate: " + reports[stage - 1].toDate + " - " + report.toDate)
-                    update(report)
-                }
-            }
-            else {
-                log.info("Creating report "+report.name+" for project "+project.projectId)
-                create(report)
-            }
-            stage++
-            periodStartDate = periodEndDate
-            reportFromDate = periodStartDate
-        }
-
-        // Delete any left over reports.
-        for (int i=stage-1; i<reports.size(); i++) {
-            log.info("Deleting report "+reports[i].name+" for project "+project.projectId)
-            delete(reports[i].reportId)
-        }
-        log.info("***********")
+        regenerateReports(project.reports ?: [], reportConfig, reportOwner)
     }
-
-    /**
-     * Returns the latest date at which a period exists that is covered by an approved or submitted stage report.
-     * @param reports the reports to check.
-     * @return a ISO 8601 formatted date string
-     */
-    public String latestSubmittedOrApprovedReportDate(List<Map> reports) {
-        String lastSubmittedOrApprovedReportEndDate = null
-        reports?.each { report ->
-            if (isSubmittedOrApproved(report)) {
-                if (report.toDate > lastSubmittedOrApprovedReportEndDate) {
-                    lastSubmittedOrApprovedReportEndDate = report.toDate
-                }
-            }
-        }
-        return lastSubmittedOrApprovedReportEndDate
-    }
-
 
     /**
      * Returns true if any report in the supplied list has been submitted or approval or approved.
@@ -151,13 +239,18 @@ class ReportService {
         return report.publicationStatus == REPORT_SUBMITTED || report.publicationStatus == REPORT_APPROVED
     }
 
+    /**
+     * Returns the report with the supplied id as a Map.
+     * @param reportId the reportId of the report to get.
+     */
     Map get(String reportId) {
         if (!reportId) {
             throw new IllegalArgumentException("Missing parameter reportId")
         }
-        def resp = webService.getJson(grailsApplication.config.ecodata.baseUrl+"report/${reportId}")
-        resp
+        Map report = webService.getJson(grailsApplication.config.ecodata.baseUrl+"report/${reportId}")
+        report
     }
+
 
     def delete(String reportId) {
         if (!reportId) {
@@ -190,12 +283,78 @@ class ReportService {
         reports.max{ isSubmittedOrApproved(it) ? it.toDate : ''}
     }
 
+    /**
+     * Submits a report and sends an email notifying relevant users this action has occurred.
+     * @param reportId The id of the report to submit.
+     * @param reportOwner Properties of the entity that "owns" the report (e.g. the Project, Organisation, Program).
+     * @param ownerUsersAndRoles Users to be notified of the action.
+     * @param emailSubject Template for the email subject line.
+     * @param emailBody Template for the email body.
+     */
+    Map submitReport(String reportId, Map reportOwner, List ownerUsersAndRoles, SettingPageType emailSubject, SettingPageType emailBody) {
+
+        Map resp = submit(reportId)
+        Map report = get(reportId)
+
+        if (!resp.error) {
+            emailService.sendAdminInitiatedEmail(emailSubject, emailBody, [owner:reportOwner, report:report], ownerUsersAndRoles)
+        }
+        else {
+            return [success:false, error:resp.error]
+        }
+        return [success:true]
+    }
+
     def submit(String reportId) {
         webService.doPost(grailsApplication.config.ecodata.baseUrl+"report/submit/${reportId}", [:])
     }
 
+    /**
+     * Approves a report and sends an email notifying relevant users this action has occurred.
+     * @param reportId The id of the report to approve.
+     * @param reportOwner Properties of the entity that "owns" the report (e.g. the Project, Organisation, Program).
+     * @param ownerUsersAndRoles Users to be notified of the action.
+     * @param emailSubject Template for the email subject line.
+     * @param emailBody Template for the email body.
+     */
+    Map approveReport(String reportId, String reason, Map reportOwner, List ownerUsersAndRoles, SettingPageType emailSubject, SettingPageType emailBody) {
+
+        Map resp = approve(reportId, reason)
+        Map report = get(reportId)
+
+        if (!resp.error) {
+            emailService.sendGrantManagerInitiatedEmail(emailSubject, emailBody, [owner:reportOwner, report:report, reason:reason], ownerUsersAndRoles)
+        }
+        else {
+            return [success:false, error:resp.error]
+        }
+        return [success:true]
+    }
+
     def approve(String reportId, String reason) {
         webService.doPost(grailsApplication.config.ecodata.baseUrl+"report/approve/${reportId}", [comment:reason])
+    }
+
+    /**
+     * Rejects/returns a report and sends an email notifying relevant users this action has occurred.
+     * @param reportId The id of the report to reject.
+     * @param reportOwner Properties of the entity that "owns" the report (e.g. the Project, Organisation, Program).
+     * @param ownerUsersAndRoles Users to be notified of the action.
+     * @param emailSubject Template for the email subject line.
+     * @param emailBody Template for the email body.
+     */
+    Map rejectReport(String reportId, String reason, Map reportOwner, List ownerUsersAndRoles, SettingPageType emailSubject, SettingPageType emailBody) {
+
+        Map resp = reject(reportId, "", reason)
+        Map report = get(reportId)
+
+        if (!resp.error) {
+            emailService.sendGrantManagerInitiatedEmail(emailSubject, emailBody, [owner:reportOwner, report:report, reason:reason], ownerUsersAndRoles)
+        }
+        else {
+            return [success:false, error:resp.error]
+        }
+        return [success:true]
     }
 
     def reject(String reportId, String category, String reason) {
@@ -224,6 +383,16 @@ class ReportService {
     def findReportsForOrganisation(String organisationId) {
 
         def reports = webService.doPost(grailsApplication.config.ecodata.baseUrl+"organisation/${organisationId}/reports", [:])
+
+        if (reports.resp && !reports.error) {
+            return reports.resp
+        }
+        return []
+    }
+
+    def findReportsForProgram(String programId) {
+
+        def reports = webService.doPost(grailsApplication.config.ecodata.baseUrl+"program/${programId}/reports", [:])
 
         if (reports.resp && !reports.error) {
             return reports.resp
@@ -322,6 +491,89 @@ class ReportService {
             }
         }
         value
+    }
+
+    /**
+     * Queries ecodata for all output targets and aggregration results from all projects that match the supplied filters for the
+     * metrics defined by the supplied scoreIds.
+     * @param scoreIds Specifies which scores are of interest.
+     * @param filters Query filters to select projects.
+     * @param approvedActivitiesOnly true if only approved activities should be included in the results.
+     * @return a Map of the form:
+     * [
+     *  metadata:
+     *         project: <number of projects included in the scoring>
+     *         sites: <number of sites counted>
+     *         activities: <number of activities included in the scoring>
+     *         activitiesByType: <map of activity type and count of number of activities of that type>
+     *  scores: [
+     *      scoreId: <id of the score>
+     *           result:
+     *             result: <score / sum>
+     *             count: <count of number of outputs considered in the result>
+     *             label: <score label>
+     *      target: <the sum of output targets for this score over all selected projects>
+     *
+     *  ]
+     * ]
+     * Note that the metadata only relates to the data used to aggregate any activity data in the scores, not the output targets.
+     *
+     */
+    Map targetsForScoreIds(List<String> scoreIds, List<String> filters, boolean approvedActivitiesOnly = true) {
+        Map reportParams = [scoreIds: scoreIds, approvedActivitiesOnly: approvedActivitiesOnly]
+        if (filters) {
+            reportParams.fq = filters
+        }
+        def url = grailsApplication.config.ecodata.baseUrl + 'search/targetsReportForScoreIds' + commonService.buildUrlParamsFromMap(reportParams)
+        Map results = webService.getJson(url, 300000)
+        if (!results || !results.targets || results.error) {
+            return [scores:scoreIds.collect{[scoreId:it]}, metadata:[:]]
+        }
+        List scoresWithTargets = mergeScoresAndTargets(scoreIds, results)
+        return [scores:scoresWithTargets, metadata:results.metadata]
+    }
+
+    /**
+     * Accepts a Map of the form:
+     * * [
+     *     targets:
+     *       (program - subprogram):
+     *          (scoreLabel):
+     *            scoreId: <Id of the score>
+     *            total: <sum of output targets for the score>
+     *            count: <number of projects summed>
+     *     scores:
+     *       metadata:
+     *         project: <number of projects included in the scoring>
+     *         sites: <number of sites counted>
+     *         activities: <number of activities included in the scoring>
+     *         activitiesByType: <map of activity type and count of number of activities of that type>
+     *       outputData: [ <array of considered scores>
+     *           scoreId: <id of the score>
+     *           result:
+     *             result: <score / sum>
+     *             count: <count of number of outputs considered in the result>
+     *             label: <score label>
+     *       ]
+     * ]
+     *
+     * and returns a list containing the contents of the outputData array with and additional target field
+     * which has been matched by score id from the targets key in the Map.
+     */
+    private List mergeScoresAndTargets(List scoreIds, Map scoresAndTargets) {
+        List scoreData = scoresAndTargets.scores?.outputData
+
+        List results = []
+        scoreIds.each { scoreId ->
+            Map score = scoreData?.find{it.scoreId == scoreId} ?: [scoreId:scoreId]
+            scoresAndTargets.targets?.each { program, Map scoreTargets ->
+                Map scoreTarget = scoreTargets?.values()?.find { it.scoreId == scoreId }
+                score.target = scoreTarget?.total ?: 0
+            }
+            results << score
+        }
+
+        results
     }
 
     public Number outputTarget(String scoreLabel, List<String> filters) {

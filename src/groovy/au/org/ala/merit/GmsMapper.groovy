@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat
  */
 class GmsMapper {
 
-    public static final List GMS_COLUMNS = ['PROGRAM_NM',	'ROUND_NM',	'APP_ID', 'EXTERNAL_ID', 'APP_NM', 'APP_DESC',	'START_DT',	'FINISH_DT', 'FUNDING',	'APPLICANT_NAME', 'ORG_TRADING_NAME', 'APPLICANT_EMAIL', 'AUTHORISEDP_CONTACT_TYPE', 'AUTHORISEDP_EMAIL', 'GRANT_MGR_EMAIL', 'GRANT_MGR_EMAIL_2','DATA_TYPE', 'ENV_DATA_TYPE',	'PGAT_PRIORITY', 'PGAT_GOAL_CATEGORY',	'PGAT_GOALS', 'PGAT_OTHER_DETAILS','PGAT_PRIMARY_ACTIVITY','PGAT_ACTIVITY_DELIVERABLE_GMS_CODE','PGAT_ACTIVITY_DELIVERABLE','PGAT_ACTIVITY_TYPE','PGAT_ACTIVITY_UNIT','PGAT_ACTIVITY_DESCRIPTION','PGAT_UOM', 'UNITS_COMPLETED', 'EDITOR_EMAIL', 'EDITOR_EMAIL_2']
+    public static final List GMS_COLUMNS = ['PROGRAM_NM',	'ROUND_NM',	'APP_ID', 'EXTERNAL_ID', 'APP_NM', 'APP_DESC',	'START_DT',	'FINISH_DT', 'FUNDING',	'APPLICANT_NAME', 'ORG_TRADING_NAME', 'MANAGEMENT_UNIT', 'APPLICANT_EMAIL', 'AUTHORISEDP_CONTACT_TYPE', 'AUTHORISEDP_EMAIL', 'GRANT_MGR_EMAIL', 'GRANT_MGR_EMAIL_2','DATA_TYPE', 'ENV_DATA_TYPE',	'PGAT_PRIORITY', 'PGAT_GOAL_CATEGORY',	'PGAT_GOALS', 'PGAT_OTHER_DETAILS','PGAT_PRIMARY_ACTIVITY','PGAT_ACTIVITY_DELIVERABLE_GMS_CODE','PGAT_ACTIVITY_DELIVERABLE','PGAT_ACTIVITY_TYPE','PGAT_ACTIVITY_UNIT','PGAT_ACTIVITY_DESCRIPTION','PGAT_UOM', 'UNITS_COMPLETED', 'EDITOR_EMAIL', 'EDITOR_EMAIL_2']
 
     // These identify the data contained in the row.
     static final LOCATION_DATA_TYPE = 'Location Data'
@@ -24,6 +24,7 @@ class GmsMapper {
     static final DATA_TYPE_COLUMN = 'DATA_TYPE'
     static final DATA_SUB_TYPE_COLUMN = 'ENV_DATA_TYPE'
     static final REPORTING_THEME_COLUMN = 'PGAT_PRIORITY'
+
 
     static MERIT_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
 
@@ -46,6 +47,9 @@ class GmsMapper {
 
     private List<Map> scores
 
+    /** Map of program name to program id */
+    private Map programs
+
     def projectMapping = [
             (GRANT_ID_COLUMN):[name:'grantId', type:'string'],
             APP_NM:[name:'name', type:'string'],
@@ -67,7 +71,8 @@ class GmsMapper {
             APPLICANT_EMAIL:[name:'applicantEmail', type:'email'],
             ADMIN_EMAIL:[name:'adminEmail2', type:'email'],
             EDITOR_EMAIL:[name:'editorEmail', type:'email'],
-            EDITOR_EMAIL_2:[name:'editorEmail2', type:'email']
+            EDITOR_EMAIL_2:[name:'editorEmail2', type:'email'],
+            MANAGEMENT_UNIT:[name:'programName', type:'string']
     ]
 
     def siteMapping = [
@@ -108,15 +113,17 @@ class GmsMapper {
         this.programModel = []
         this.organisations = []
         this.scores = []
+        this.programs = [:]
         includeProgress = false
     }
 
-    public GmsMapper(activitiesModel, programModel, organisations, List<Map> scores, includeProgress = false) {
+    public GmsMapper(activitiesModel, programModel, organisations, List<Map> scores, Map programs = [:], includeProgress = false) {
         this.activitiesModel = activitiesModel
         this.programModel = programModel
         this.includeProgress = includeProgress
         this.organisations = organisations
         this.scores = scores
+        this.programs = programs
     }
 
     def validateHeaders(projectRows) {
@@ -155,17 +162,27 @@ class GmsMapper {
         project.isMERIT = true
         project.origin = 'merit'
 
-        def program = programModel.programs.find {it.name == project.associatedProgram}
-        if (!program) {
-            errors << "Programme ${project.associatedProgram} doesn't match an existing MERIT programme"
+        if (project.programName) {
+            String programName = project.remove('programName')
+            project.programId = programs[programName]
+            if (!project.programId) {
+                errors << "No management unit exists with name: ${programName}"
+            }
         }
         else {
-            if (project.associatedSubProgram) {
-                if (!program.subprograms.find{it.name == project.associatedSubProgram}) {
-                    errors << "Sub-programme ${project.associatedSubProgram} doesn't match any MERIT programme"
+            def program = programModel.programs.find {it.name == project.associatedProgram}
+            if (!program) {
+                errors << "Programme ${project.associatedProgram} doesn't match an existing MERIT programme"
+            }
+            else {
+                if (project.associatedSubProgram) {
+                    if (!program.subprograms.find{it.name == project.associatedSubProgram}) {
+                        errors << "Sub-programme ${project.associatedSubProgram} doesn't match any MERIT programme"
+                    }
                 }
             }
         }
+
         def organisation = organisations.find{it.name == project.organisationName}
         if (organisation) {
             project.organisationId = organisation.organisationId
@@ -182,6 +199,7 @@ class GmsMapper {
                 errors << "No (service provider) organisation exists with name ${project.serviceProviderName}"
             }
         }
+
         errors.addAll(result.errors)
         project.planStatus = 'not approved'
 

@@ -1,14 +1,18 @@
-function Risks(risks, key) {
+function Risks(risks, disableFlag, key) {
     var self = this;
 
-    var savedRisks = amplify.store(key);
-    if (savedRisks) {
-        var restored = JSON.parse(savedRisks);
-        if (restored.risks) {
-            $('#restoredRiskData').show();
-            risks = restored.risks;
+    if (key) {
+        var savedRisks = amplify.store(key);
+        if (savedRisks) {
+            var restored = JSON.parse(savedRisks);
+            if (restored.risks) {
+                $('#restoredRiskData').show();
+                risks = restored.risks;
+            }
         }
     }
+
+    self.risksDisabled = disableFlag;
 
     self.risks = new RisksViewModel(risks);
 
@@ -19,9 +23,13 @@ function Risks(risks, key) {
         self.risks.rows.remove(risk);
     };
 
+    self.likelihoodOptions = ['Almost Certain', 'Likely', 'Possible', 'Unlikely', 'Remote'];
+    self.consequenceOptions = ['Insignificant', 'Minor', 'Moderate', 'Major', 'Extreme'];
+    self.ratingOptions = ['High', 'Significant', 'Medium', 'Low'];
     self.overAllRiskHighlight = ko.computed(function () {
         return getClassName(self.risks.overallRisk());
     });
+
 
     self.saveRisks = function(){
         if (!$('#risk-validation').validationEngine('validate'))
@@ -36,6 +44,7 @@ function RisksViewModel (risks) {
     self.overallRisk = ko.observable();
     self.status = ko.observable();
     self.rows = ko.observableArray();
+
     self.load = function(risks) {
         if (!risks) {
             risks = {};

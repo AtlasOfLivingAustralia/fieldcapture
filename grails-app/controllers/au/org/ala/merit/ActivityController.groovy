@@ -27,12 +27,7 @@ class ActivityController {
         // the project
         model.project = projectId ? projectService.get(model.activity.projectId) : null
 
-        // Add the species lists that are relevant to this activity.
-        model.speciesLists = new JSONArray()
         if (model.project) {
-            if (model.project.listId) {
-                model.speciesLists.add model.project.listId
-            }
             model.speciesConfig = projectService.findSpeciesFieldConfigForActivity(activity.projectId, activity.type)
 
             model.themes = metadataService.getThemesForProject(model.project)
@@ -51,22 +46,20 @@ class ActivityController {
 
     private def addOutputModel(Map model) {
 
-        // the activity meta-model
-        model.metaModel = metadataService.getActivityModel(model.activity.type)
-        // the array of output models
-        model.outputModels = model.metaModel?.outputs?.collectEntries {
-            [ it, metadataService.getDataModelFromOutputName(it)] }
+        model.putAll(activityService.getActivityMetadata(model.activity.type))
 
-        List projectServices = model.project?.services
-        if (projectServices) {
-            List services = projectService.getProjectServices()
-            List serviceOutputs = services.findAll{it.name in projectServices}.collect{it.output}
+        if (model.activity.type == grailsApplication.config.rlp.servicesReport) {
 
-            model.metaModel = new JSONObject(model.metaModel)
-            List existingOutputs = model.activity?.outputs?.collect{it.name}
-            model.metaModel.outputs = model.metaModel.outputs.findAll({ it in serviceOutputs || it in existingOutputs})
+            List projectServices = model.project?.custom?.details?.serviceIds
+            if (projectServices) {
+                List services = metadataService.getProjectServices()
+                List serviceOutputs = services.findAll{it.id in projectServices}.collect{it.output}
+
+                model.metaModel = new JSONObject(model.metaModel)
+                List existingOutputs = model.activity?.outputs?.collect{it.name}
+                model.metaModel.outputs = model.metaModel.outputs.findAll({ it in serviceOutputs || it in existingOutputs})
+            }
         }
-
     }
 
     def index(String id) {
@@ -128,9 +121,11 @@ class ActivityController {
             model.hasPhotopointData = activity.documents?.find {it.poiId}
             model
         } else {
-            forward(action: 'list', model: [error: 'no such id'])
+            forward(controller:'home', action: 'publicHome', model: [error: 'no such id'])
         }
     }
+
+
 
     /**
      * A page for entering output data for an activity. Limited activity data can also be updated.
@@ -163,8 +158,12 @@ class ActivityController {
 
             Map programConfig = projectService.getProgramConfiguration(model.project)
             // Temporary until we add this to the program config.
-            programConfig.requiresActivityLocking = programConfig.name == 'Reef 2050 Plan Action Reporting'
-            programConfig.navigationMode = (programConfig.name == 'Reef 2050 Plan Action Reporting' || programConfig.name == 'ESP Test') ? 'returnToProject' : 'stayOnPage'
+            if (programConfig.requiredActivityLocking == null) {
+                programConfig.requiresActivityLocking = programConfig.name == 'Reef 2050 Plan Action Reporting'
+            }
+            if (programConfig.navigationMode == null) {
+                programConfig.navigationMode = (programConfig.name == 'Reef 2050 Plan Action Reporting' || programConfig.name == 'ESP Test') ? 'returnToProject' : 'stayOnPage'
+            }
 
             model.locked = activity.lock != null
             if (!activity.lock && programConfig.requiresActivityLocking) {
@@ -348,15 +347,6 @@ class ActivityController {
         if (id) {
             activity = activityService.get(id)
             projectId = activity.projectId
-            postBody.outputs?.each { output ->
-                def matchingOutput = activity.outputs?.find{it.name == output.name}
-                if (matchingOutput) {
-                    if (matchingOutput.outputId != output.outputId) {
-                        log.warn("Update for activity: "+id+" contains outputs which have the same type but different IDs")
-                    }
-                    output.outputId = matchingOutput.outputId
-                }
-            }
         }
         else {
             projectId = values.projectId
@@ -393,53 +383,14 @@ class ActivityController {
             }
 
             if (photoPoints) {
-                result.photoPoints = updatePhotoPoints(id ?: result.activityId, photoPoints)
+                Map photoOwner = [activityId:id ?: result.activityId]
+                result.photoPoints = siteService.updatePhotoPoints(photoPoints.siteId, photoOwner, photoPoints.photos, photoPoints.photoPoints)
             }
 
         }
         //log.debug "result is " + result
 
         render result as JSON
-    }
-
-    private Map updatePhotoPoints(activityId, photoPoints) {
-
-        Map result = [:]
-        def allPhotos = photoPoints.photos?:[]
-
-        // If new photo points were defined, add them to the site.
-        if (photoPoints.photoPoints) {
-            photoPoints.photoPoints.each { photoPoint ->
-                def photos = photoPoint.remove('photos')
-                result = siteService.addPhotoPoint(photoPoints.siteId, photoPoint)
-
-                if (!result.error) {
-                    photos.each { photo ->
-                        photo.poiId = result?.resp?.poiId
-                        allPhotos << photo
-                    }
-                }
-            }
-        }
-
-        allPhotos.eachWithIndex { photo, i ->
-
-            // Used to correlate response with the request, particularly in the case of new documents which
-            // do not have a documentId assigned yet.
-            String clientId = photo.remove('clientId') ?: i
-
-            photo.activityId = activityId
-
-            Map docResponse = documentService.saveStagedImageDocument(photo)
-            if (!docResponse.error) {
-                result[clientId] = docResponse.resp
-            }
-            else {
-                result[clientId] = docResponse.error
-            }
-        }
-
-        result
     }
 
     def delete(String id) {

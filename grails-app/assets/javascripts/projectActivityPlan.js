@@ -326,7 +326,7 @@ var PlanStage = function (stage, activities, planViewModel, isCurrentStage, proj
         payload.reportId = stage.reportId;
         payload.projectId = self.projectId;
         $.ajax({
-            url: url + self.projectId,
+            url: url,
             type: 'POST',
             data: JSON.stringify(payload),
             contentType: 'application/json',

@@ -114,7 +114,7 @@ class FCTagLib {
         /**
             <input data-bind="datepicker:startDate.date" name="startDate" id="startDate" type="text" size="16"
                 data-validation-engine="validate[required]" class="input-xlarge"/>
-            <span class="add-on open-datepicker"><i class="icon-th"></i></span>
+            <span class="add-on open-datepicker"><i class="fa fa-th"></i></span>
          */
 
         def mb = new MarkupBuilder(out)
@@ -144,7 +144,7 @@ class FCTagLib {
             }
 
             mb.span(class:'add-on open-datepicker') {
-                mb.i(class:'icon-th') {
+                mb.i(class:'fa fa-th') {
                     mkp.yieldUnescaped("&nbsp;")
                 }
             }
@@ -183,9 +183,12 @@ class FCTagLib {
             else {
                 helpText = body()
             }
-            Map anchorAttrs = [href:'#', class:'helphover', 'data-original-title':title, 'data-placement':'top', 'data-content':helpText]
+            Map anchorAttrs = [href:'javascript:void(0);', class:'helphover', 'data-original-title':title, 'data-placement':'top', 'data-content':helpText, 'data-trigger':'click']
             if (attrs.container) {
                 anchorAttrs << ['data-container':attrs.container]
+            }
+            if (attrs.html) {
+                anchorAttrs << ['data-html':'true']
             }
             mb.a(anchorAttrs) {
                 i(class:'fa fa-question-circle') {
@@ -578,21 +581,19 @@ class FCTagLib {
         def mb = new MarkupBuilder(out)
         // common code as closures
         def maxItemsLink = {
-            mb.p {
+            mb.li (class:'dropdown-item') {
                 a(href: g.createLink(controller: "user"), "[showing top ${maxItems} - see full list]")
             }
         }
         def listItem = { org ->
-            mb.li {
-                span {
-                    a(href: g.createLink(controller: 'organisation', id: org.organisationId), org.name)
-                }
+            mb.li(class:'dropdown-item') {
+                a(href: g.createLink(controller: 'organisation', id: org.organisationId), org.name)
             }
         }
 
         if (user) {
             List memberOrgs = userService.getOrganisationsForUserId(user.userId)
-            mb.ul {
+            mb.ul(class:'dropdown-menu') {
                 memberOrgs.eachWithIndex { org, i ->
                     if (i < maxItems) {
                         if (org && org.organisation){
@@ -600,15 +601,18 @@ class FCTagLib {
                         }
                     }
                 }
+                if (memberOrgs.size() >= maxItems) {
+                    maxItemsLink()
+                }
+                if (memberOrgs.size() == 0) {
+                    mb.li("[You aren't a member of any organisations]")
+                }
+                mb.hr()
+                mb.li(class:'dropdown-item') {
+                    a(href:g.createLink(controller:'organisation', action:'list'), "Find an organisation here")
+                }
             }
-            if (memberOrgs.size() >= maxItems) {
-                maxItemsLink()
-            }
-            if (memberOrgs.size() == 0) {
-                mb.span("[You aren't a member of any organisations]")
-            }
-            mb.hr()
-            mb.a(href:g.createLink(controller:'organisation', action:'list'), "Find an organisation here")
+
 
         } else {
             mb.div { mkp.yield("Error: User not found") }
@@ -708,10 +712,10 @@ class FCTagLib {
                 def liClass = details.default ? 'active':''
                 def linkAttributes = [href:'#'+name, id:name+'-tab']
                 if (!details.disabled) {
-                    linkAttributes << ["data-toggle":"tab"]
+                    linkAttributes << ["data-toggle":"tab", class:'nav-link ']
                 }
 
-                mb.li(class:liClass) {
+                mb.li(class:'nav-item '+liClass) {
                     a(linkAttributes, details.label)
                 }
             }
@@ -882,4 +886,27 @@ class FCTagLib {
         out << '</span>'
         out << '<span class="diff"></span>'
     }
+
+    def status = { attrs ->
+        String statusClass
+        switch (attrs.status?.toLowerCase()) {
+            case 'active':
+                statusClass = 'badge-success'
+                break
+            case 'completed':
+                statusClass = 'badge-info'
+                break
+        }
+
+        MarkupBuilder mb = new MarkupBuilder(out)
+        mb.span(class:'status badge '+statusClass, attrs.status)
+    }
+
+    def projectFunding = { attrs ->
+        Map project = attrs.project
+        out << (project?.custom?.details?.budget?.overallTotal?:project.funding)?:0
+
+    }
+
+    def displayDate = {}
 }

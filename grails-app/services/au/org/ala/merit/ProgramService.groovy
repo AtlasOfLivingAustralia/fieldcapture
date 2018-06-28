@@ -1,87 +1,217 @@
 package au.org.ala.merit
-/**
- * Extends the plugin ProgramService to provide Green Army reporting capability.
- */
+
+import au.org.ala.merit.reports.ReportConfig
+import au.org.ala.merit.reports.ReportOwner;
+import org.codehaus.groovy.grails.commons.GrailsApplication
+import org.codehaus.groovy.grails.web.json.JSONArray
+import org.joda.time.DateTime
+
+import java.util.Map
+
 class ProgramService {
 
+    private static final String PROGRAM_DOCUMENT_FILTER = "className:au.org.ala.ecodata.Program"
 
-    def grailsApplication, webService, metadataService, projectService, userService, searchService, activityService, emailService, reportService, documentService
+    GrailsApplication grailsApplication
+    WebService webService
+    MetadataService metadataService
+    UserService userService
+    SearchService searchService
+    DocumentService documentService
+    ReportService reportService
+    ProjectService projectService
+    EmailService emailService
 
-    /** Overrides the parent to add Green Army reports to the results */
-    def get(String id, view = '') {
 
-        String url = "${grailsApplication.config.ecodata.baseUrl}program/$id?view=$view"
+    Map get(String id, String view = '') {
+
+        String url = "${grailsApplication.config.ecodata.baseUrl}program/$id?view=" + view.encodeAsURL()
         Map program = webService.getJson(url)
+        Map results = documentService.search(programId:id)
+        if (results && results.documents) {
+            List categorisedDocs = results.documents.split{it.type == DocumentService.TYPE_LINK}
 
-        def projects = []
-        def resp = projectService.search(programId: id, isMERIT:true, view:'enhanced')
-        if (resp?.resp?.projects) {
-            projects += resp.resp.projects
+            program.links = new JSONArray(categorisedDocs[0])
+            program.documents = new JSONArray(categorisedDocs[1])
         }
 
-        program.projects = projects
+        program.reports = reportService.findReportsForProgram(id)
         program
     }
 
-    def update(id, Program) {
-        def url = "${grailsApplication.config.ecodata.baseUrl}program/$id"
-        def result = webService.doPost(url, Program)
+    Map getByName(String name) {
+
+
+        String url = "${grailsApplication.config.ecodata.baseUrl}program/findByName?name=" + name.encodeAsURL()
+        Map program = webService.getJson(url)
+
+        if(program && program.statusCode == 404) {
+            program = [:]
+        }
+
+        return program
+    }
+
+    String validate(Map props, String programId) {
+        String error = null
+        boolean creating = !programId
+
+        if (!creating) {
+            Map existingProgram = get(programId)
+            if (existingProgram?.error) {
+                return "invalid programId"
+            }
+        }
+
+        if (creating && !props?.description) {
+            //error, no description
+            return "description is missing"
+        }
+
+        if (props.containsKey("name")) {
+            Map existingProgram = getByName(props.name)
+            if ((existingProgram as Boolean) && (creating || existingProgram?.programId != programId)) {
+                return "name is not unique"
+            }
+        } else if (creating) {
+            //error, no project name
+            return "name is missing"
+        }
+
+        error
+    }
+
+    Map update(String id, Map program) {
+        Map result = [:]
+
+        def error = validate(program, id)
+        if (error) {
+            result.error = error
+            result.detail = ''
+        } else {
+            String url = "${grailsApplication.config.ecodata.baseUrl}program/$id"
+            result = webService.doPost(url, program)
+        }
         result
+
     }
 
-    def isUserAdminForProgram(ProgramId) {
-        def userIsAdmin
+    List serviceScores(String programId, boolean approvedActivitiesOnly = true) {
+        List<Map> allServices = metadataService.getProjectServices()
+        List scoreIds = allServices.collect{it.scores?.collect{score -> score.scoreId}}.flatten()
 
-        if (!userService.user) {
-            return false
-        }
-        if (userService.userIsSiteAdmin()) {
-            userIsAdmin = true
-        } else {
-            userIsAdmin = userService.isUserAdminForProgram(userService.user.userId, ProgramId)
+        Map scoreResults = reportService.targetsForScoreIds(scoreIds, ["programId:${programId}"], approvedActivitiesOnly)
+
+        List deliveredServices = []
+        allServices.each { Map service ->
+            Map copy = [:]
+            copy.putAll(service)
+            copy.scores = []
+            service.scores?.each { score ->
+                Map copiedScore = [:]
+                copiedScore.putAll(score)
+                Map result = scoreResults?.scores?.find{it.scoreId == score.scoreId}
+
+                copiedScore.target = result?.target ?: 0
+                copiedScore.result = result?.result ?: [result:0, count:0]
+
+                // We only want to report on services that are going to be delivered by this program.
+                if (copiedScore.target) {
+                    copy.scores << copiedScore
+                }
+
+            }
+            if (copy.scores) {
+                deliveredServices << copy
+            }
+
         }
 
-        userIsAdmin
+        deliveredServices
     }
 
-    def isUserGrantManagerForProgram(ProgramId) {
-        def userIsAdmin
 
-        if (!userService.user) {
-            return false
-        }
-        if (userService.userIsSiteAdmin()) {
-            userIsAdmin = true
-        } else {
-            userIsAdmin = userService.isUserGrantManagerForProgram(userService.user.userId, ProgramId)
-        }
+    void regenerateReports(String id) {
+        regenerateProgramReports(id)
+        regenerateActivityReports(id)
+    }
 
-        userIsAdmin
+    void regenerateProgramReports(String id) {
+        Map program = get(id)
+        List programReportConfig = program.config?.programReports
+        ReportOwner owner = new ReportOwner(
+                id:[programId:program.programId],
+                name:program.name,
+                periodStart:program.startDate,
+                periodEnd:program.endDate
+        )
+        programReportConfig?.each {
+            ReportConfig reportConfig = new ReportConfig(it)
+            List relevantReports = program.reports?.findAll{it.category == reportConfig.category}
+            reportService.regenerateReports(relevantReports, reportConfig, owner)
+        }
+    }
+
+    void regenerateActivityReports(String id) {
+        Map program = get(id)
+        Map activityReportConfig = program.config?.projectReports?.find{it.reportType==ReportService.REPORT_TYPE_STAGE_REPORT}
+        if (activityReportConfig) {
+            Map projects = getProgramProjects(id)
+            projects?.projects?.each{ project ->
+                project.reports = reportService.getReportsForProject(project.projectId)
+                projectService.generateProjectReports(activityReportConfig, project)
+            }
+        }
+    }
+
+    Map getProgramProjects(String id) {
+        String url = "${grailsApplication.config.ecodata.baseUrl}program/$id/projects?view=flat"
+        Map resp = webService.getJson(url)
+        return resp
+    }
+
+    Map submitReport(String programId, String reportId) {
+
+        Map program = get(programId)
+        List members = getMembersOfProgram(programId)
+
+        return reportService.submitReport(reportId, program, members, SettingPageType.RLP_CORE_SERVICES_REPORT_SUBMITTED_EMAIL_SUBJECT, SettingPageType.RLP_CORE_SERVICES_REPORT_SUBMITTED_EMAIL_BODY)
+    }
+
+    Map approveReport(String programId, String reportId, String reason) {
+        Map program = get(programId)
+        List members = getMembersOfProgram(programId)
+
+        return reportService.approveReport(reportId, reason, program, members, SettingPageType.RLP_CORE_SERVICES_REPORT_APPROVED_EMAIL_SUBJECT, SettingPageType.RLP_CORE_SERVICES_REPORT_APPROVED_EMAIL_BODY)
+    }
+
+    def rejectReport(String programId, String reportId, String reason, String category) {
+        Map program = get(programId)
+        List members = getMembersOfProgram(programId)
+
+        return reportService.rejectReport(reportId, reason, program, members, SettingPageType.RLP_CORE_SERVICES_REPORT_RETURNED_EMAIL_SUBJECT, SettingPageType.RLP_CORE_SERVICES_REPORT_RETURNED_EMAIL_BODY
+        )
+    }
+
+    List getMembersOfProgram(String programId) {
+        Map resp = userService.getMembersOfProgram(programId)
+
+        resp?.members ?: []
     }
 
     /**
-     * Get the list of users (members) who have any level of permission for the requested ProgramId
-     *
-     * @param ProgramId the ProgramId of interest.
-     */
-    def getMembersOfProgram(ProgramId) {
-        def url = grailsApplication.config.ecodata.baseUrl + "permissions/getMembersForProgram/${ProgramId}"
-        webService.getJson(url)
-    }
-
-    /**
-     * Adds a user with the supplied role to the identified Program.
-     * Adds the same user with the same role to all of the Program's projects.
+     * Adds a user with the supplied role to the identified program.
+     * Adds the same user with the same role to all of the program's projects.
      *
      * @param userId the id of the user to add permissions for.
-     * @param ProgramId the Program to add permissions for.
+     * @param programId the program to add permissions for.
      * @param role the role to assign to the user.
      */
-    def addUserAsRoleToProgram(String userId, String ProgramId, String role) {
+    def addUserAsRoleToProgram(String userId, String programId, String role) {
 
-        def Program = get(ProgramId, 'flat')
-        def resp = userService.addUserAsRoleToProgram(userId, ProgramId, role)
-        Program.projects.each { project ->
+        Map resp = userService.addUserAsRoleToProgram(userId, programId, role)
+        Map projects = getProgramProjects(programId)
+        projects?.projects?.each { project ->
             if (project.isMERIT) {
                 userService.addUserAsRoleToProject(userId, project.projectId, role)
             }
@@ -90,37 +220,21 @@ class ProgramService {
     }
 
     /**
-     * Removes the user access with the supplied role from the identified Program.
-     * Removes the same user from all of the Program's projects.
+     * Removes the user access with the supplied role from the identified program.
+     * Removes the same user from all of the program's projects.
      *
      * @param userId the id of the user to remove permissions for.
-     * @param ProgramId the Program to remove permissions for.
+     * @param programId the program to remove permissions for.
 
      */
-    def removeUserWithRoleFromProgram(String userId, String ProgramId, String role) {
-        def Program = get(ProgramId, 'flat')
-        userService.removeUserWithRoleFromProgram(userId, ProgramId, role)
-        Program.projects.each { project ->
+    def removeUserWithRoleFromProgram(String userId, String programId, String role) {
+        userService.removeUserWithRoleFromProgram(userId, programId, role)
+        Map projects = getProgramProjects(programId)
+        projects?.projects?.each { project ->
             if (project.isMERIT) {
                 userService.removeUserWithRole(project.projectId, userId, role)
             }
         }
-    }
-
-    def search(Integer offset = 0, Integer max = 100, String searchTerm = null, String sort = null) {
-        Map params = [
-                offset:offset,
-                max:max,
-                query:searchTerm,
-                fq:"className:au.org.ala.ecodata.Program"
-        ]
-        if (sort) {
-            params.sort = sort
-        }
-        def results = searchService.fulltextSearch(
-                params, false
-        )
-        results
     }
 
 }

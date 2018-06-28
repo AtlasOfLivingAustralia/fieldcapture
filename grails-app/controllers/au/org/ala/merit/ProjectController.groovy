@@ -3,6 +3,8 @@ package au.org.ala.merit
 import au.org.ala.merit.command.ProjectSummaryReportCommand
 import au.org.ala.merit.command.ReportCommand
 import grails.converters.JSON
+import org.apache.http.HttpStatus
+import org.codehaus.groovy.grails.web.json.JSONArray
 import org.joda.time.DateTime
 
 class ProjectController {
@@ -10,9 +12,13 @@ class ProjectController {
     static defaultAction = "index"
     static ignore = ['action', 'controller', 'id']
     static String ESP_TEMPLATE = "esp"
+    static String RLP_TEMPLATE = "rlp"
+    static String MERI_ONLY_TEMPLATE = "meri"
+    static String RLP_MERI_PLAN_TEMPLATE = "rlpMeriPlan"
+    static String MERI_PLAN_TEMPLATE = "meriPlan"
 
     def projectService, metadataService, organisationService, commonService, activityService, userService, webService, roleService, grailsApplication
-    def siteService, documentService, reportService, blogService
+    def siteService, documentService, reportService, blogService, pdfGenerationService
 
 
     private def espOverview(Map project, Map user) {
@@ -48,7 +54,9 @@ class ProjectController {
             user.hasViewAccess = projectService.canUserViewProject(user.userId, id) ?: false
         }
 
-        if (!project || project.error) {
+        Map config = projectService.getProgramConfiguration(project)
+
+        if (!project || project.error || (config?.visibility == 'private' && !user?.hasViewAccess)) {
             flash.message = "Project not found with id: ${id}"
             if (project?.error) {
                 flash.message += "<br/>${project.error}"
@@ -56,7 +64,8 @@ class ProjectController {
             }
             redirect(controller: 'home', model: [error: flash.message])
         } else {
-            String template = projectTemplate(project, user, params.template)
+
+            String template = projectTemplate(config, params.template)
             if (template == ESP_TEMPLATE && user?.isEditor) {
                 espOverview(project, user)
             } else {
@@ -71,7 +80,7 @@ class ProjectController {
 
                 def programs = projectService.programsModel()
 
-                def content = projectContent(project, user, template)
+                def content = projectContent(project, user, template, config)
 
                 def model = [project               : project,
                              activities            : project.activities,
@@ -86,9 +95,10 @@ class ProjectController {
                              organisations         : organisationList(project),
                              programs              : programs,
                              today                 : DateUtils.format(new DateTime()),
-                             themes                : metadataService.getThemesForProject(project),
+                             themes                : config.themes,
+                             config                : config,
                              projectContent        : content.model,
-                             hasCustomTemplate     : projectService.getProgramConfiguration(project)?.projectTemplate
+                             hasCustomTemplate     : config?.projectTemplate
                 ]
 
                 render view: content.view, model: model
@@ -105,10 +115,14 @@ class ProjectController {
         organisations
     }
 
-    protected Map projectContent(Map project, user, String template) {
+    protected Map projectContent(Map project, user, String template, Map config) {
+        project.themes = new JSONArray(config.themes ?: [])
+        project.assets = config.assets ?: []
+        project.priorities = new JSONArray(config.priorities ?: [])
+        project.outcomes = new JSONArray(config.outcomes ?: [])
 
-        def meriPlanVisible = metadataService.isOptionalContent('MERI Plan', project.associatedProgram, project.associatedSubProgram)
-        def risksAndThreatsVisible = metadataService.isOptionalContent('Risks and Threats', project.associatedProgram, project.associatedSubProgram)
+        def meriPlanVisible = metadataService.isOptionalContent('MERI Plan', config)
+        def risksAndThreatsVisible = metadataService.isOptionalContent('Risks and Threats', config)
         def canViewRisks = risksAndThreatsVisible && (user?.hasViewAccess || user?.isEditor)
         def meriPlanEnabled = user?.hasViewAccess || ((project.associatedProgram == 'National Landcare Programme' && project.associatedSubProgram == 'Regional Funding'))
         def meriPlanVisibleToUser = project.planStatus == 'approved' || user?.isAdmin || user?.isCaseManager
@@ -134,32 +148,41 @@ class ProjectController {
         boolean adminTabVisible = user?.isEditor || user?.isAdmin || user?.isCaseManager
 
         def model = [overview       : [label: 'Overview', visible: true, default: true, type: 'tab', publicImages: imagesModel, displayTargets: false, displayOutcomes: false, blog: blog, hasNewsAndEvents: hasNewsAndEvents, hasProjectStories: hasProjectStories, canChangeProjectDates: canChangeProjectDates],
-                     documents      : [label: 'Documents', visible: true, type: 'tab', user:user, template:'docs'],
-                     details        : [label: 'MERI Plan', default: false, disabled: !meriPlanEnabled, visible: meriPlanVisible, meriPlanVisibleToUser: meriPlanVisibleToUser, risksAndThreatsVisible: canViewRisks, announcementsVisible: true, project:project, type: 'tab', template:'viewMeriPlan'],
+                     documents      : [label: 'Documents', visible: true, type: 'tab', user:user, template:'docs', activityPeriodDescriptor:config.activityPeriodDescriptor ?: 'Stage'],
+                     details        : [label: 'MERI Plan', default: false, disabled: !meriPlanEnabled, visible: meriPlanVisible, meriPlanVisibleToUser: meriPlanVisibleToUser, risksAndThreatsVisible: canViewRisks, announcementsVisible: true, project:project, type: 'tab', template:'viewMeriPlan', meriPlanTemplate:MERI_PLAN_TEMPLATE+'View', config:config, activityPeriodDescriptor:config.activityPeriodDescriptor ?: 'Stage'],
                      plan           : [label: 'Activities', visible: true, disabled: !user?.hasViewAccess, type: 'tab', template:'projectActivities', grantManagerSettingsVisible:user?.isCaseManager, project:project, reports: project.reports, scores: scores, risksAndThreatsVisible: user?.hasViewAccess && risksAndThreatsVisible],
                      site           : [label: 'Sites', visible: true, disabled: !user?.hasViewAccess, editable:user?.isEditor, type: 'tab', template:'projectSites'],
                      dashboard      : [label: 'Dashboard', visible: true, disabled: !user?.hasViewAccess, type: 'tab'],
-                     admin          : [label: 'Admin', visible: adminTabVisible, user:user, type: 'tab', template:'projectAdmin', project:project, canChangeProjectDates: canChangeProjectDates, showAnnouncementsTab: showAnnouncementsTab]]
+                     admin          : [label: 'Admin', visible: adminTabVisible, user:user, type: 'tab', template:'projectAdmin', project:project, canChangeProjectDates: canChangeProjectDates, showMERIActivityWarning:true, showAnnouncementsTab: showAnnouncementsTab, showSpecies:true, meriPlanTemplate:MERI_PLAN_TEMPLATE, config:config, activityPeriodDescriptor:config.activityPeriodDescriptor ?: 'Stage']]
 
-        if (template == 'meri') {
+        if (template == MERI_ONLY_TEMPLATE) {
             model = [details:model.details]
         }
-        else if (template == 'nrm2') {
-            Map reportingTab = [label: 'Reporting', visible:user?.hasViewAccess, type:'tab', template:'projectReporting', reports:project.reports, stopBinding:true]
-            Map nrm2Model = [overview:model.overview, documents:model.documents, details:model.details, site:model.site, reporting:reportingTab]
-            nrm2Model.plan = [label: 'Report approvals', visible: user?.isCaseManager, type: 'tab', template:'projectActivities', grantManagerSettingsVisible:true, project:project, reports: project.reports, scores: scores, risksAndThreatsVisible: false]
-            nrm2Model.admin = model.admin
-            nrm2Model.admin.projectServices = projectService.getProjectServices()
-            model = nrm2Model
+        else if (template == RLP_TEMPLATE) {
+
+            model.overview.template = 'rlpOverview'
+            model.overview.servicesDashboard = projectService.getServiceDashboardData(project.projectId, !user?.hasViewAccess)
+            model.details.meriPlanTemplate = RLP_MERI_PLAN_TEMPLATE+'View'
+
+            List reportOrder = config?.projectReports?.collect{it.category} ?: []
+            Map reportingTab = [label: 'Reporting', visible:user?.hasViewAccess, type:'tab', template:'projectReporting', reports:project.reports, reportOrder:reportOrder, stopBinding:true, services: config.services, scores:scores, hideDueDate:true]
+
+            Map rlpModel = [overview:model.overview, documents:model.documents, details:model.details, site:model.site, reporting:reportingTab]
+            rlpModel.admin = model.admin
+            rlpModel.admin.meriPlanTemplate = RLP_MERI_PLAN_TEMPLATE
+            rlpModel.admin.projectServices = config.services
+            rlpModel.admin.showMERIActivityWarning = false
+            rlpModel.admin.showSpecies = false
+            rlpModel.admin.hidePrograms = true
+            model = rlpModel
         }
         return [view: 'index', model: model]
     }
 
-    private String projectTemplate(Map project, Map user, String template) {
+    private String projectTemplate(Map config, String template) {
         if (template) {
             return template
         }
-        Map config = projectService.getProgramConfiguration(project)
 
         return config.projectTemplate
     }
@@ -282,6 +305,11 @@ class ProjectController {
             //println "json result is " + (result as JSON)
             render result.resp as JSON
         }
+    }
+
+    @PreAuthorise(accessLevel = 'admin')
+    def serviceScores(String id) {
+        render projectService.getServiceScoresForProject(id) as JSON
     }
 
 
@@ -516,39 +544,22 @@ class ProjectController {
     @PreAuthorise(accessLevel = 'admin')
     def projectReportPDF(String id) {
 
-        String reportUrl = g.createLink(controller: 'report', action: 'projectReportCallback', id: id, absolute: true, params: [fromStage: params.fromStage, toStage: params.toStage, sections: params.sections])
-        Map pdfGenParams = [docUrl: reportUrl, cacheable: false]
+        Map reportUrlConfig = [controller: 'report', action: 'projectReportCallback', id: id, absolute: true, params: [fromStage: params.fromStage, toStage: params.toStage, sections: params.sections]]
+        Map pdfGenParams = [:]
         if (params.orientation == 'landscape') {
             pdfGenParams.options = '-O landscape'
         }
-        String url = grailsApplication.config.pdfgen.baseURL + 'api/pdf' + commonService.buildUrlParamsFromMap(pdfGenParams)
-        Map result
-        try {
-            result = webService.proxyGetRequest(response, url, false, false, 10 * 60 * 1000)
-        }
-        catch (Exception e) {
-            result = [error: e.message]
-            log.error("Error generating PDF for project ${id}: ", e)
-        }
-        if (result.error) {
+        boolean result = pdfGenerationService.generatePDF(reportUrlConfig, pdfGenParams, response)
+        if (!result) {
             render view: '/error', model: [error: "An error occurred generating the project report."]
         }
-
     }
 
     @PreAuthorise(accessLevel = 'admin')
     def meriPlanPDF(String id) {
-        String reportUrl = g.createLink(controller: 'report', action: 'meriPlanReportCallback', id: id, absolute: true)
-        String url = grailsApplication.config.pdfgen.baseURL + 'api/pdf' + commonService.buildUrlParamsFromMap(docUrl: reportUrl, cacheable: false)
-        Map result
-        try {
-            result = webService.proxyGetRequest(response, url, false, false, 10 * 60 * 1000)
-        }
-        catch (Exception e) {
-            log.error("Error generating the PDF of the MERI plan: ", e)
-            result = [error: e.message]
-        }
-        if (result.error) {
+        Map reportUrlConfig = [controller: 'report', action: 'meriPlanReportCallback', id: id, absolute: true]
+        boolean result = pdfGenerationService.generatePDF(reportUrlConfig, [:], response)
+        if (!result) {
             render view: '/error', model: [error: "An error occurred generating the MERI plan report."]
         }
     }
@@ -627,27 +638,102 @@ class ProjectController {
         render activities as JSON
     }
 
-    def reportPrototype(String id) {
-        Map project = projectService.get(id, 'all')
-        if (!project) {
-            render status:404, error:'No project found'
+    @PreAuthorise(accessLevel = 'editor')
+    def editReport(String id, String reportId) {
+        if (!id || !reportId) {
+            error('An invalid report was selected for data entry', id)
             return
         }
-            /* 13 */List activityTypes = projectService.getProjectServices()
+        if (params.clearCache) {
+            metadataService.clearCache()
+        }
+        Map report = reportService.get(reportId)
+        if (reportService.isSubmittedOrApproved(report)) {
+            redirect action:'viewReport', id:id, params:[reportId:reportId]
+        }
+        else {
+            forward(controller: 'activity', action: 'enterData', id: report.activityId, params:[returnTo:createLink(action:'index', id:id)])
+        }
+    }
 
-            List serviceCategories = [
-                    'Ramsar Services', 'Threatened Species Services', 'World Heritage Services', 'Threatened Ecological Communities Services'
-            ]
+    @PreAuthorise(accessLevel = 'editor')
+    def viewReport(String id, String reportId) {
+        if (!id || !reportId) {
+            error('An invalid report was selected for data entry', id)
+            return
+        }
+        Map report = reportService.get(reportId)
 
-            Map activitiesByCategory = [
-                    /* 5 */ 'Ramsar Services':['Controlling Pest Animals', 'Removing Pest Weeds', 'Improving hydrological regimes', 'Remediating riparian and aquiatic areas', 'Fencing'],
-                    /* 10 */ 'Threatened Species Services':['Controlling Pest Animals', 'Removing pest weeds', 'Revegetating habitat', 'Managing fire regimes', 'Protecting habitat by controlling access', 'Habitat augmentation', 'Establishing and maintaining feral free enclosures', 'Establishing and maintaining ex-situ breeding sites', 'Undertaking emergency interventions to prevent extinction', 'Fencing'],
-                    /* 5 */ 'World heritage Services':['Controlling Pest Animals', 'Removing pest weeds', 'Protecting habitat by controlling access', 'Managing diseases', 'Fencing'],
-                    /* 7 */'Threatened Ecological Community Services':['Controlling Pest Animals', 'Removing pest weeds', 'Improving hydrological regimes', 'Revegetating habitat', 'Managing fire regimes', 'Protecting habitat by controlling access', 'Managing diseases', 'Fencing']
-            ]
+        forward(controller: 'activity', action: 'index', id: report.activityId, params:[returnTo:createLink(action:'index', id:id)])
+    }
+
+    @PreAuthorise(accessLevel = 'editor')
+    def reportPDF(String id, String reportId) {
+        if (!id || !reportId) {
+            error('An invalid report was selected for download', id)
+            return
+        }
+
+        Map reportUrlConfig = [action: 'viewReportCallback', id: id, params:[reportId:reportId]]
+
+        Map pdfGenParams = [:]
+        if (params.orientation) {
+            pdfGenParams.orientation = params.orientation
+        }
+        boolean result = pdfGenerationService.generatePDF(reportUrlConfig, pdfGenParams, response)
+        if (!result) {
+            render view: '/error', model: [error: "An error occurred generating the project report."]
+        }
+    }
+
+    /**
+     * This is designed as a callback from the PDF generation service.  It produces a HTML report that will
+     * be converted into PDF.
+     * @param id the project id
+     */
+    def viewReportCallback(String id, String reportId) {
+
+        if (pdfGenerationService.authorizePDF(request)) {
+            Map report = reportService.get(reportId)
+            Map activity = activityService.get(report.activityId)
+            Map model = activityService.getActivityMetadata(activity.type)
+            model.activity = activity
+            model.context = projectService.get(id)
+            model.themes = []
+            model.printView = true
+            model.report = report
+
+            render view:'/activity/activityReportView', model:model
+        }
+        else {
+            render status:HttpStatus.SC_UNAUTHORIZED
+        }
+    }
+
+    @PreAuthorise(accessLevel = 'caseManager')
+    def createReport(String id) {
+
+        Map report = request.getJSON()
+        report.projectId = id
+
+        def response = reportService.create(report)
+        if (response.resp.error) {
+            flash.message = "Error creating report: ${response.resp.error}"
+        }
+
+        chain(action:'index', id: id)
+
+    }
 
 
+    private def error(String message, String projectId) {
+        flash.message = message
+        if (projectId) {
+            redirect(action: 'index', id: projectId)
+        }
+        else {
+            redirect(controller:'home', action:'publicHome')
+        }
 
-        [activityTypes:activityTypes, project:project, sites:project.sites]
     }
 }

@@ -123,7 +123,7 @@ class DashboardTagLib {
         out << """
             <strong>${score.label}${helpText(score, attrs)}</strong>
             <div class="progress progress-info active " style="position:relative">
-                <div class="bar" style="width: ${percentComplete}%;"></div>
+                <div class="bar progress-bar" style="width: ${percentComplete}%;"></div>
                 <span class="pull-right progress-label ${percentComplete >= 99 ? 'progress-100':''}" style="position:absolute; top:0; right:0;"> ${g.formatNumber(type:'number',number:result, maxFractionDigits: 2, groupingUsed:true)}/${score.target}</span>
             </div>"""
     }
@@ -135,7 +135,7 @@ class DashboardTagLib {
             if (!enoughResults(result.size(), attrs)) {
                 return
             }
-            def chartData = toArray(result)
+            def chartData = toArray(result, attrs.order)
             def chartType = score.displayType?:'piechart'
             drawChart(chartType, score.label, score.label, helpText(score, attrs), [['string', score.label], ['number', 'Count']], chartData, attrs)
         }
@@ -145,11 +145,15 @@ class DashboardTagLib {
         }
     }
 
-    private def toArray(dataMap) {
+    private def toArray(dataMap, List order = null) {
         def chartData = []
         dataMap.each{ key, value ->
             chartData << [key, value]
         }
+        if (order) {
+            chartData.sort{a, b -> order.indexOf(a[0]) <=> order.indexOf(b[0])}
+        }
+
         chartData
     }
 
@@ -163,10 +167,10 @@ class DashboardTagLib {
     private void renderGroupedScore(score, attrs) {
         def result = score.result
         if (result && result.result instanceof Map) {
-            if (!enoughResults(result.result.size(), attrs.minResults)) {
+            if (!enoughResults(result.result.size(), attrs)) {
                 return
             }
-            def chartData = toArray(result.result)
+            def chartData = toArray(result.result, attrs.order)
             def chartType = score.displayType?:'piechart'
             drawChart(chartType, score.label, score.label, helpText(score, attrs), [['string', score.label], ['number', 'Count']], chartData, attrs)
         }
@@ -183,7 +187,7 @@ class DashboardTagLib {
     }
 
     private boolean enoughResults(int resultSize, attrs) {
-        int min = Integer.parseInt(attrs.minResults) ?: 2
+        int min = attrs.minResults ? Integer.parseInt(attrs.minResults) : 2
         return resultSize >= min
     }
 

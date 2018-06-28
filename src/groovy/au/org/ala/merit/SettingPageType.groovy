@@ -55,10 +55,25 @@ enum SettingPageType {
     HELP_LINKS_TITLE('helpLinksTitle', 'Title for the Helpful Links section of the homepage', 'fielddata.helpLinksTitle.text'),
     ORGANISATION_LIST_PAGE_HEADER('organisationListHeader', 'Header content for the organisation list page', 'fielddata.organisationListHeader'),
     HOME_PAGE_STATISTICS('homePageStatistics', 'Configuration for the home page stats', 'statistics.config'),
+    SERVICES('services', 'Configuration for project services', 'services.config'),
     DASHBOARD_EXPLANATION('dashboardExplanation', 'Header text under the dashboard report', 'fielddata.dashboardExplanation'),
     UNLOCK_PLAN_DECLARATION('unlockPlanDeclaration', 'Declaration', 'fielddata.unlockPlanDeclaration.text'),
     LOCK_STOLEN_EMAIL_SUBJECT('lockStolenSubject', 'Subject line when someone overrides a lock', 'fielddata.lock.subject'),
-    LOCK_STOLEN_EMAIL('lockStolenEmail', 'Email content when someone overrides a lock', 'fielddata.lock.body')
+    LOCK_STOLEN_EMAIL('lockStolenEmail', 'Email content when someone overrides a lock', 'fielddata.lock.body'),
+    RLP_MERI_DECLARATION('rlpMeriDeclaration', 'Declaration when submitting RLP reports or MERI Plan', 'fielddata.rlp.meri.declaration'),
+    RLP_REPORT_DECLARATION('rlpReportDeclaration', 'Declaration when submitting RLP reports or MERI Plan', 'fielddata.rlp.report.declaration'),
+    RLP_REPORT_SUBMITTED_EMAIL_SUBJECT('rlpReportSubmittedEmailSubject', 'RLP Report submitted email subject line text', 'fielddata.rlp.report.submitted.emailSubject'),
+    RLP_REPORT_SUBMITTED_EMAIL_BODY('rlpReportSubmittedEmailBody', 'RLP Report submitted email subject body text', 'fielddata.rlp.report.submitted.emailBody'),
+    RLP_REPORT_APPROVED_EMAIL_SUBJECT('rlpReportApprovedEmailSubject', 'RLP Report approved email subject line text', 'fielddata.rlp.report.approved.emailSubject'),
+    RLP_REPORT_APPROVED_EMAIL_BODY('rlpReportApprovedEmailBody', 'RLP Report approved email subject body text', 'fielddata.rlp.report.approved.emailBody'),
+    RLP_REPORT_RETURNED_EMAIL_SUBJECT('rlpReportReturnedEmailSubject', 'RLP Report returned email subject line text', 'fielddata.rlp.report.returned.emailSubject'),
+    RLP_REPORT_RETURNED_EMAIL_BODY('rlpReportReturnedEmailBody', 'RLP Report returned email subject body text', 'fielddata.rlp.report.returned.emailBody'),
+    RLP_CORE_SERVICES_REPORT_SUBMITTED_EMAIL_SUBJECT('rlpCSReportSubmittedEmailSubject', 'RLP Core Services Report submitted email subject line text', 'fielddata.rlp.cs_report.submitted.emailSubject'),
+    RLP_CORE_SERVICES_REPORT_SUBMITTED_EMAIL_BODY('rlpCSReportSubmittedEmailBody', 'RLP Core Services Report submitted email subject body text', 'fielddata.rlp.cs_report.submitted.emailBody'),
+    RLP_CORE_SERVICES_REPORT_APPROVED_EMAIL_SUBJECT('rlpCSReportApprovedEmailSubject', 'RLP Core Services Report approved email subject line text', 'fielddata.rlp.cs_report.approved.emailSubject'),
+    RLP_CORE_SERVICES_REPORT_APPROVED_EMAIL_BODY('rlpCSReportApprovedEmailBody', 'RLP Core Services Report approved email subject body text', 'fielddata.rlp.cs_report.approved.emailBody'),
+    RLP_CORE_SERVICES_REPORT_RETURNED_EMAIL_SUBJECT('rlpCSReportReturnedEmailSubject', 'RLP Core Services Report returned email subject line text', 'fielddata.rlp.cs_report.returned.emailSubject'),
+    RLP_CORE_SERVICES_REPORT_RETURNED_EMAIL_BODY('rlpCSReportReturnedEmailBody', 'RLP Core Services Report returned email subject body text', 'fielddata.rlp.cs_report.returned.emailBody')
 
     String name
     String title

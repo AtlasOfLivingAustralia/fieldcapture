@@ -75,4 +75,21 @@
 a.helphover, a.helphover:visited {
     color: black;
 }
+
+
+table td.report-actions, table th.report-actions {
+    width:5%;
+}
+table td.report-name, table th.report-name {
+    width:50%;
+}
+table td.report-start, table th.report-start {
+    width:15%;
+}
+table td.report-end, table th.report-end {
+    width:15%;
+}
+table td.report-status, table th.report-status {
+    width:15%;
+}
 /* End Documents */

@@ -80,6 +80,7 @@ grails.project.dependency.resolution = {
         compile "org.codehaus.groovy.modules.http-builder:http-builder:0.7.1"
         compile "org.apache.httpcomponents:httpcore:4.4.1"
         compile "org.apache.httpcomponents:httpclient:4.4.1"
+        compile "org.apache.pdfbox:pdfbox:2.0.4"
 //        compile "org.apache.poi:poi:3.17"
 //        compile "org.apache.poi:poi-scratchpad:3.17"
         build "com.google.guava:guava:21.0"
@@ -120,7 +121,7 @@ grails.project.dependency.resolution = {
         compile ':cookie:1.4'
 
         if (Environment.current != Environment.DEVELOPMENT) {
-            compile ":ecodata-client-plugin:0.6"
+            compile ":ecodata-client-plugin:0.7"
             test ":fieldcapture-test:0.1-SNAPSHOT"
         }
 

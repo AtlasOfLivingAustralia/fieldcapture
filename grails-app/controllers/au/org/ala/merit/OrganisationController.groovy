@@ -84,8 +84,10 @@ class OrganisationController {
             }
         }
 
+        List adHocReportTypes =[ [type:'Performance Management Framework - Self Assessment']]
+
         [about     : [label: 'About', visible: true, stopBinding: false, type:'tab'],
-         reporting : [label: 'Reporting', visible: reportingVisible, stopBinding:true, default:reportingVisible, type: 'tab'],
+         reporting : [label: 'Reporting', visible: reportingVisible, stopBinding:true, template:'/shared/reporting', default:reportingVisible, type: 'tab', reports:organisation.reports, adHocReportTypes:adHocReportTypes],
          projects  : [label: 'Projects', visible: true, default:!reportingVisible, stopBinding:true, type: 'tab', disableProjectCreation:true],
          sites     : [label: 'Sites', visible: true, type: 'tab', stopBinding:true, projectCount:organisation.projects?.size()?:0, showShapefileDownload:hasAdminAccess],
          dashboard : [label: 'Dashboard', visible: true, stopBinding:true, type: 'tab', template:'/shared/dashboard', reports:dashboardReports],
@@ -444,7 +446,15 @@ class OrganisationController {
 
     }
 
+    def viewOrganisationReport(String reportId) {
+        viewOrEditOrganisationReport(reportId, false)
+    }
+
     def editOrganisationReport(String reportId) {
+        viewOrEditOrganisationReport(reportId, true)
+    }
+
+    private def viewOrEditOrganisationReport(String reportId, Boolean edit) {
         Map report = reportService.get(reportId)
         int version = report.toDate < "2017-01-01T00:00:00Z" ? 1 : 2
         Map organisation = organisationService.get(report.organisationId)
@@ -453,7 +463,6 @@ class OrganisationController {
             model.state = organisation.state ?: 'Unknown'
             model.organisation = organisation
 
-            boolean edit = params.edit
             if (reportService.isSubmittedOrApproved(model.report)) {
                 model.submittingUserName = authService.getUserForUserId(model.report.submittedBy)?.displayName ?: 'Unknown user'
                 model.submissionDate = DateUtils.displayFormatWithTime(model.report.dateSubmitted)
@@ -478,7 +487,7 @@ class OrganisationController {
             Map model = reportService.performanceReportModel(id, version)
             model.edit = false
 
-            String page = g.include(controller:'organisation', action:'editOrganisationReport', id:id, params:[edit:false, reportId:id])
+            String page = g.include(controller:'organisation', action:'viewOrganisationReport', id:id, params:[reportId:id])
 
             response.setContentType('application/pdf')
             pdfConverterService.convertToPDF(page, response.outputStream)

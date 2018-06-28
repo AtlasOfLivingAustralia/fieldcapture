@@ -549,8 +549,11 @@ var socialMediaRoles = [
     { role: "vimeo", name: "Vimeo" },
     { role: "youtube", name: "You Tube" }
 ];
-function Documents() {
+function Documents(options) {
     var self = this;
+    var defaults = {};
+    var config = _.extend({}, defaults, options);
+
     self.documents = ko.observableArray();
     self.documentFilter = ko.observable('');
     self.documentFilterFieldOptions = [{ label: 'Name', fun: 'name'}, { label: 'Attribution', fun: 'attribution' }, { label: 'Type', fun: 'type' }];
@@ -751,11 +754,15 @@ function Documents() {
 
     self.logoUrl = ko.pureComputed(function() {
         var logoDocument = self.findDocumentByRole(self.documents(), 'logo');
-        return logoDocument ? logoDocument.url : null;
+        return logoDocument ? logoDocument.url : (config.noImageUrl ? config.noImageUrl : null);
+    });
+    self.logoUrlProvided = ko.pureComputed(function() {
+        var logoDocument = self.findDocumentByRole(self.documents(), 'logo');
+        return logoDocument && logoDocument.url;
     });
     self.bannerUrl = ko.pureComputed(function() {
         var bannerDocument = self.findDocumentByRole(self.documents(), 'banner');
-        return bannerDocument ? bannerDocument.url : null;
+        return bannerDocument ? bannerDocument.url : (config.noImageUrl ? config.noImageUrl : null);
     });
 
     self.asBackgroundImage = function(url) {
@@ -1148,7 +1155,7 @@ $(function() {
 });
 
 function stageNumberFromStage(stage) {
-    var stageRegexp = /Stage (\d+)/;
+    var stageRegexp = /.+ (\d+)/;
     var match = stageRegexp.exec(stage);
     if (match) {
         stage = match[1];

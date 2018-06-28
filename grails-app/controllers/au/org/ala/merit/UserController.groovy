@@ -34,12 +34,17 @@ class UserController {
     }
 
     protected Map assembleUserData(user) {
-        def recentEdits = []//userService.getRecentEditsForUserId(user.userId)
         def memberOrganisations = userService.getOrganisationsForUserId(user.userId)
         def memberProjects = userService.getProjectsForUserId(user.userId)
         def starredProjects = userService.getStarredProjectsForUserId(user.userId)
+        def programs = userService.getProgramsForUserId(user.userId)
 
-        Map userData = [user: user, recentEdits: recentEdits, memberProjects: memberProjects, memberOrganisations:memberOrganisations, starredProjects: starredProjects]
+        Map userData = [
+                user: user,
+                memberProjects: memberProjects,
+                memberOrganisations:memberOrganisations,
+                memberPrograms:programs,
+                starredProjects: starredProjects]
 
         def reportsByProject = reportService.findReportsForUser(user.userId)
 
@@ -51,23 +56,6 @@ class UserController {
 
         userData.allowProjectRecommendation = userService.userIsSiteAdmin()
         userData
-    }
-
-    @PreAuthorise(accessLevel = 'admin', redirectController = "home", projectIdParam = "projectId")
-    def show(String id) {
-        if (id) {
-            def user = userService.getUser() // getUserForUserId(id)
-
-            if (user) {
-                render view: "index", model: assembleUserData(user)
-            } else {
-                flash.message = "No user found for id: ${id}"
-                redirect(controller: 'home')
-            }
-        } else {
-            flash.message = "No user id specified"
-            forward(controller: 'home')
-        }
     }
 
     // webservices
@@ -188,6 +176,28 @@ class UserController {
             render status:400, text: 'Required param not provided: email'
         }
     }
+
+    def getMembersOfProgram(String id) {
+        String userId = userService.getCurrentUserId()
+
+        if (id && userId) {
+            if (userService.userIsSiteAdmin() || userService.isUserAdminForProgram(userId, id) || userService.isUserGrantManagerForProgram(userId, id)) {
+                Map result = userService.getMembersOfProgram(id)
+                List members = result?.members ?: []
+                render members as JSON
+            } else {
+                render status: 403, text: 'Permission denied'
+            }
+        } else if (userId) {
+            render status: 400, text: 'Required params not provided: id'
+        } else if (id) {
+            render status: 403, text: 'User not logged-in or does not have permission'
+        } else {
+            render status: 500, text: 'Unexpected error'
+        }
+    }
+
+
 
 
 }

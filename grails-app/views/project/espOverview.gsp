@@ -23,7 +23,8 @@
         documentUpdateUrl: "${createLink(controller:"document", action:"documentUpdate")}",
         documentDeleteUrl: "${createLink(controller:"document", action:"deleteDocument")}",
         espPhotosUrl:"${createLink(controller:'project', action:'espPhotos', id:project.projectId)}",
-        submitReportUrl: "${createLink(controller: 'project', action: 'ajaxSubmitReport')}/", approveReportUrl: "${createLink(controller: 'project', action: 'ajaxApproveReport')}/",
+        submitReportUrl: "${createLink(controller: 'project', action: 'ajaxSubmitReport', id:project.projectId)}/",
+        approveReportUrl: "${createLink(controller: 'project', action: 'ajaxApproveReport', id:project.projectId)}/",
         featuresService: "${createLink(controller: 'proxy', action: 'features')}",
         featureService: "${createLink(controller: 'proxy', action: 'feature')}",
         spatialWms: "${grailsApplication.config.spatial.geoserverUrl}",
@@ -37,6 +38,8 @@
         speciesSearchUrl:"${createLink(controller:'project', action:'searchSpecies', id:project.projectId)}",
         speciesImageUrl:"${createLink(controller:'species', action:'speciesImage')}",
         speciesProfileUrl: "${createLink(controller: 'species', action: 'speciesProfile')}", imageUploadUrl: "${createLink(controller: 'image', action: 'upload')}",
+        sightingsActivityType: "${grailsApplication.config.esp.activities.sightings ?: ""}",
+        adminActivityType: "${grailsApplication.config.esp.activities.admin ?: ""}",
         returnTo: "${createLink(controller: 'project', action: 'espOverview', id: project.projectId)}"
 
     },

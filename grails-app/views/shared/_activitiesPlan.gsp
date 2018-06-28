@@ -311,12 +311,13 @@
 		var programModel = <fc:modelAsJavascript model="${programs}"/>;
         var reports = <fc:modelAsJavascript model="${reports}"/>;
         var userIsEditor = ${user?.isEditor?'true':'false'};
+        var scores = ${scores as grails.converters.JSON};
 
         var planViewModel = new ProjectActivitiesTabViewModel(
             fcConfig.project.activities || [],
             reports,
             fcConfig.project.outputTargets || {},
-            ${scores as grails.converters.JSON},
+            scores,
             fcConfig.project,
             programModel,
             today,

@@ -1,8 +1,20 @@
 package au.org.ala.merit
 
+import grails.converters.JSON
+import grails.plugin.cache.GrailsCacheManager
+import org.codehaus.groovy.grails.web.json.JSONArray
+
 class MetadataService {
 
     def grailsApplication, webService, cacheService
+
+    GrailsCacheManager grailsCacheManager
+    SettingService settingService
+
+    static final String PROJECT_SERVICES_CACHE_REGION = 'projectServices'
+    static final String PROJECT_SERVICES_KEY = 'projectServices'
+
+
 
     def activitiesModel() {
         return cacheService.get('activity-model',{
@@ -53,6 +65,8 @@ class MetadataService {
             if (subProgram.overridesProgramData) {
                 config.putAll(subProgram)
             }
+            config.themes = subProgram.themes ?: [] // Themes are only configured on subprograms at the moment.
+
         }
 
         config
@@ -135,8 +149,7 @@ class MetadataService {
         })
     }
 
-    boolean isOptionalContent(String contentName, String program, String subProgram = '') {
-        Map config = getProgramConfiguration(program, subProgram)
+    boolean isOptionalContent(String contentName, Map config) {
         return contentName in (config.optionalProjectContent?:[])
     }
 
@@ -209,7 +222,14 @@ class MetadataService {
         return outputTargetMetadata
     }
 
+    def clearCache(boolean clearEcodataCache = true) {
+        cacheService.clear()
+        if (clearEcodataCache) {
+            this.clearEcodataCache()
+        }
 
+
+    }
 
     def clearEcodataCache() {
         webService.get(grailsApplication.config.ecodata.baseUrl + "admin/clearMetadataCache")
@@ -300,6 +320,26 @@ class MetadataService {
             }
 
             results
+        })
+    }
+
+    List<Map> getProjectServices() {
+        cacheService.get(PROJECT_SERVICES_KEY, {
+            List services
+            String servicesJson = settingService.getSettingText(SettingPageType.SERVICES)
+            if (servicesJson) {
+                services = JSON.parse(servicesJson)
+            }
+            else {
+                services = JSON.parse(getClass().getResourceAsStream('/services.json'), 'UTF-8')
+            }
+
+            List scores = getScores(false)
+            services.each { service ->
+                service.scores = new JSONArray(scores.findAll{it.outputType == service.output})
+            }
+
+            services
         })
     }
 

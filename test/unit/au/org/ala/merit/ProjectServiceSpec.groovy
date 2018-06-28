@@ -1,5 +1,7 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.reports.ReportConfig
+import au.org.ala.merit.reports.ReportOwner
 import grails.converters.JSON
 import grails.test.mixin.TestFor
 import org.codehaus.groovy.grails.web.converters.marshaller.json.CollectionMarshaller
@@ -22,6 +24,7 @@ class ProjectServiceSpec extends Specification {
     ActivityService activityService = Mock(ActivityService)
     DocumentService documentService = Mock(DocumentService)
     EmailService emailService = Mock(EmailService)
+    ProjectConfigurationService projectConfigurationService = Mock(ProjectConfigurationService)
 
     def setup() {
         JSON.registerObjectMarshaller(new MapMarshaller())
@@ -37,8 +40,10 @@ class ProjectServiceSpec extends Specification {
         service.activityService = activityService
         service.documentService = documentService
         service.emailService = emailService
+        service.projectConfigurationService = projectConfigurationService
         userService.userIsAlaOrFcAdmin() >> false
         metadataService.getProgramConfiguration(_,_) >> [reportingPeriod:6, reportingPeriodAlignedToCalendar: true, weekDaysToCompleteReport:43]
+        projectConfigurationService.getProjectConfiguration(_) >> [reportingPeriod:6, reportingPeriodAlignedToCalendar: true, weekDaysToCompleteReport:43]
     }
 
     def "generate reports with 3 monthly period"() {
@@ -400,6 +405,5 @@ class ProjectServiceSpec extends Specification {
         1 * reportService.isSubmittedOrApproved(_) >> false
         canEdit == true
     }
-
 
 }

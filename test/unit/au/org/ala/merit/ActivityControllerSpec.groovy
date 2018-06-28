@@ -17,6 +17,7 @@ class ActivityControllerSpec extends Specification {
     def documentService = Mock(DocumentService)
     def metadataService = Mock(MetadataService)
     def reportService = Mock(ReportService)
+    def siteService = Mock(SiteService)
 
     def setup() {
         controller.activityService = activityService
@@ -25,6 +26,7 @@ class ActivityControllerSpec extends Specification {
         controller.documentService = documentService
         controller.metadataService = metadataService
         controller.reportService = reportService
+        controller.siteService = siteService
     }
 
     def "Non-project members cannot edit activities"() {
@@ -123,7 +125,7 @@ class ActivityControllerSpec extends Specification {
         then:
         1 * activityService.canEditActivity(_) >> true
         1 * activityService.update(activityId, activityData) >> [resp:[message:'created', activityId:'1234'], statusCode:HttpStatus.SC_OK]
-        1 * documentService.saveStagedImageDocument([name:"photo 1", poiId:'poi 1', activityId:activityId]) >> [resp:[message:'created', documentId:'d1234']]
+        1 * siteService.updatePhotoPoints(null, [activityId:activityId], [[name:"photo 1", poiId:'poi 1', clientId:'1']], null) >> [1:[message:'created', documentId:'d1234']]
         response.status == HttpStatus.SC_OK
         response.json.activity.message == 'created'
         response.json.activity.activityId == '1234'

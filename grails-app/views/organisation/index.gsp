@@ -19,8 +19,9 @@
             organisationEditUrl: '${g.createLink(action:"edit", id:"${organisation.organisationId}")}',
             organisationListUrl: '${g.createLink(action:"list")}',
             organisationViewUrl: '${g.createLink(action:"index", id:"${organisation.organisationId}")}',
-            organisationReportUrl: "${g.createLink(action:'editOrganisationReport')}",
-            organisationReportPDFUrl: "${g.createLink(action:'performanceReportPDF')}",
+            viewReportUrl: "${g.createLink(action:'viewOrganisationReport')}",
+            editReportUrl: "${g.createLink(action:'editOrganisationReport')}",
+            reportPDFUrl: "${g.createLink(action:'performanceReportPDF')}",
             organisationMembersUrl: "${loadPermissionsUrl}",
             imageLocation:"${assetPath(src:'/')}",
             logoLocation:"${assetPath(src:'/filetypes')}",
@@ -36,6 +37,7 @@
             rejectReportUrl: '${g.createLink( action:'ajaxRejectReport', id:"${organisation.organisationId}")}',
             returnTo: '${g.createLink(action:'index', id:"${organisation.organisationId}")}',
             dashboardCategoryUrl: "${g.createLink(controller: 'report', action: 'activityOutputs', params: [fq:'organisationFacet:'+organisation.name])}",
+            reportOwner: {organisationId:'${organisation.organisationId}'},
             projects : <fc:modelAsJavascript model="${organisation.projects}"/>
             };
     </script>
@@ -67,6 +69,7 @@
 </div>
 
 <g:render template="/shared/declaration" model="${[declarationType:au.org.ala.merit.SettingPageType.ORGANISATION_DECLARATION]}"/>
+<g:render template="/shared/reportRejectionModal"/>
 
 <asset:script>
 

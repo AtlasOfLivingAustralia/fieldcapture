@@ -203,6 +203,45 @@ class EmailService {
         )
     }
 
+    def sendAdminInitiatedEmail(SettingPageType subject, SettingPageType bodyTemplate, Map substitutionParams, List userEmailsAndRoles) {
+
+        def emailAddresses = sortEmailAddressesByRole(userEmailsAndRoles)
+
+        if (!emailAddresses.grantManagerEmails) {
+            emailAddresses.grantManagerEmails = [grailsApplication.config.merit.support.email]
+        }
+        def ccEmails = addDefaultsToCC([], emailAddresses)
+
+        createAndSend(
+                subject,
+                bodyTemplate,
+                substitutionParams,
+                emailAddresses.adminEmails,
+                emailAddresses.userEmail,
+                ccEmails
+        )
+    }
+
+
+    def sendGrantManagerInitiatedEmail(SettingPageType subject, SettingPageType bodyTemplate, Map substitutionParams, List userEmailsAndRoles) {
+
+        def emailAddresses = sortEmailAddressesByRole(userEmailsAndRoles)
+
+        if (!emailAddresses.grantManagerEmails) {
+            emailAddresses.grantManagerEmails = [grailsApplication.config.merit.support.email]
+        }
+        def ccEmails = addDefaultsToCC(emailAddresses.grantManagerEmails, emailAddresses)
+
+        createAndSend(
+                subject,
+                bodyTemplate,
+                substitutionParams,
+                emailAddresses.adminEmails,
+                emailAddresses.userEmail,
+                ccEmails
+        )
+    }
+
     def sendLockStolenEmail(Map lock, String url) {
         def currentUser = userService.lookupUser(userService.currentUserId)
         def userHoldingLock = userService.lookupUser(lock.userId)

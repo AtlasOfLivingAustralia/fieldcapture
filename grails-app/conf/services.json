@@ -1,0 +1,186 @@
+[
+   {
+      "output": "RLP - Baseline data",
+      "name": "Collecting, or synthesising baseline data",
+      "id": 1,
+      "categories": ["Project initiation activities"]
+   },
+   {
+      "output": "RLP - Establishing monitoring regimes",
+      "name": "Establishing monitoring regimes",
+      "id": 2,
+      "categories": ["Project initiation activities"]
+   },
+   {
+      "output": "RLP - Identifying sites",
+      "name": "Identifying the location of potential sites",
+      "id": 3,
+      "categories": ["Project initiation activities"]
+   },
+   {
+      "output": "RLP - Obtaining approvals",
+      "name": "Obtaining relevant approvals",
+      "id": 4,
+      "categories": ["Project initiation activities"]
+   },
+   {
+      "output": "RLP - Negotiations",
+      "name": "Negotiating with the Community, landholders, Traditional Owner groups etc.",
+      "id": 5,
+      "categories": ["Project initiation activities"]
+   },
+   {
+      "output": "RLP - Project planning",
+      "name": "Project planning and delivery of documents as required for the delivery of the Project Services and monitoring",
+      "id": 6,
+      "categories": ["Project initiation activities"]
+   },
+   {
+      "output": "RLP - Community engagement (enviro)",
+      "name": "Community/stakeholder engagement (enviro)",
+      "id": 7,
+      "categories": ["Complimentary"]
+   },
+   {
+      "output": "RLP - Community engagement (ag)",
+      "name": "Community/stakeholder engagement (ag)",
+      "id": 8,
+      "categories": ["Complimentary"]
+   },
+   {
+      "output": "RLP - Management plan development",
+      "name": "Developing project/site management plan",
+      "id": 9,
+      "categories": ["Complimentary"]
+   },
+   {
+      "output": "RLP - Publications",
+      "name": "Releasing publications",
+      "id": 10,
+      "categories": ["Complimentary"]
+   },
+   {
+      "output": "RLP - Pest animal management",
+      "name": "Controlling pest animals",
+      "id": 11,
+      "categories": ["Managing threats"]
+   },
+   {
+      "output": "RLP - Weed treatment",
+      "name": "Removing weeds",
+      "id": 12,
+      "categories": ["Managing threats"]
+   },
+   {
+      "output": "RLP - Disease management",
+      "name": "Managing disease",
+      "id": 13,
+      "categories": ["Managing threats"]
+   },
+   {
+      "output": "RLP - Controlling access",
+      "name": "Controlling access",
+      "id": 14,
+      "categories": [
+         "Managing threats",
+         "Improve habitat",
+         "Restore site condition"
+      ]
+   },
+   {
+      "output": "RLP - Fire management",
+      "name": "Implementing fire management actions",
+      "id": 15,
+      "categories": [
+         "Managing threats",
+         "Imroving habitat"
+      ]
+   },
+   {
+      "output": "RLP - Habitat augmentation",
+      "name": "Habitat augmentation",
+      "id": 16,
+      "categories": ["Improving habitat"]
+   },
+   {
+      "output": "RLP - Revegetating habitat",
+      "name": "Revegetating habitat",
+      "id": 17,
+      "categories": [
+         "Improving habitat",
+         "Restore site condition"
+      ]
+   },
+   {
+      "output": "RLP - Improving hydrological regimes",
+      "name": "Improving hydrological regimes",
+      "id": 18,
+      "categories": [
+         "Improving habitat",
+         "Restore site condition"
+      ]
+   },
+   {
+      "output": "RLP - Improving land management practices",
+      "name": "Improving land management practices",
+      "id": 19,
+      "categories": [
+         "Improving habitat",
+         "Restore site condition"
+      ]
+   },
+   {
+      "output": "RLP - Maintaining feral free enclosures",
+      "name": "Establishing and maintaining feral-enclosures",
+      "id": 20,
+      "categories": ["Create safe havens"]
+   },
+   {
+      "output": "RLP - Establishing ex-situ breeding programs",
+      "name": "Establishing ex-situ breeding program",
+      "id": 21,
+      "categories": ["Create safe havens"]
+   },
+   {
+      "output": "RLP - Plant survival survey",
+      "name": "Plant survival survey",
+      "id": 22,
+      "categories": ["Monitoring activities"]
+   },
+   {
+      "output": "RLP - Flora survey",
+      "name": "Flora survey",
+      "id": 23,
+      "categories": ["Monitoring activities"]
+   },
+   {
+      "output": "RLP - Fauna survey",
+      "name": "Fauna survey",
+      "id": 24,
+      "categories": ["Monitoring activities"]
+   },
+   {
+      "output": "RLP - Social survey",
+      "name": "Social survey",
+      "id": 25,
+      "categories": ["Monitoring activities"]
+   },
+   {
+      "output": "RLP - Water quality survey",
+      "name": "Water quality survey",
+      "id": 26,
+      "categories": ["Monitoring activities"]
+   },
+   {
+      "output": "RLP - Weed distribution survey",
+      "name": "Weed distribution survey",
+      "id": 27,
+      "categories": ["Monitoring activities"]
+   },
+   {
+      "output": "RLP - Pest animal survey",
+      "name": "Pest animal survey",
+      "id": 28,
+      "categories": ["Monitoring activities"]
+   }
+]

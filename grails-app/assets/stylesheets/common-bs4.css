@@ -1,0 +1,102 @@
+/*
+*= require base-bs4
+*= require bootstrap-datepicker/css/datepicker
+*= require jquery.validationEngine/validationEngine.jquery
+*= require datatables/1.10.16/css/dataTables.bootstrap4
+*= require datatables/buttons/1.5.1/css/buttons.bootstrap4
+*= require wmd/wmd.css
+*/
+
+.nav-list.fc-docs-list {
+    width: 100%;
+    padding: 0;
+}
+
+.fc-docs-list-well {
+    max-height: 550px;
+    overflow-y: auto;
+}
+
+.fc-docs-list .media-body {
+    line-height: 32px;
+}
+
+.well-small .fc-docs-list.nav-list > li > a,
+.well-small .fc-docs-list.nav-list .nav-header {
+    margin-left: -9px;
+    margin-right: -9px;
+}
+
+.row-fluid [class*="span"].fc-resource-preview-container {
+    position: relative;
+    /*height: 100%;*/
+    min-height: 600px;
+    margin-bottom: 20px;
+}
+
+.well.fc-resource-preview-well {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fc-resource-preview {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.row-eq-height {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.nav-list>.active>a>div.media-body>a {
+    color: #fff;
+    text-shadow: 0 -1px 0 rgba(0,0,0,0.2);
+}
+.nav-list>.active>a>div.media-body>a:hover, .nav-list>.active>a>div.media-body>a:focus {
+    color: #ddd;
+}
+
+a.helphover, a.helphover:visited {
+    color: black;
+}
+
+.breadcrumb {
+    background-color: transparent;
+    padding-left: 5px;
+    margin-top: -30px;
+}
+
+
+table td.report-actions, table th.report-actions {
+    width:10%;
+}
+table td.report-name, table th.report-name {
+    width:45%;
+}
+table td.report-start, table th.report-start {
+    width:15%;
+}
+table td.report-end, table th.report-end {
+    width:15%;
+}
+table td.report-status, table th.report-status {
+    width:15%;
+}

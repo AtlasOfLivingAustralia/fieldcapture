@@ -7,7 +7,7 @@ import org.joda.time.format.DateTimeFormat
 
 class ActivityService {
 
-    def webService, grailsApplication, metadataService, reportService, projectService, emailService
+    def webService, grailsApplication, metadataService, reportService, projectService, emailService, userService
 
     public static final String PROGRESS_PLANNED = 'planned'
     public static final String PROGRESS_FINISHED = 'finished'
@@ -68,8 +68,23 @@ class ActivityService {
         update('', activity)
     }
 
-    def update(id, body) {
-        webService.doPost(grailsApplication.config.ecodata.baseUrl + 'activity/' + id+'?lock=true', body)
+    Map update(String id, Map activity) {
+
+        if (id) {
+            // This check is to prevent multiple outputs of the same type being created for an activity.
+            Map existingActivity = get(id)
+
+            activity.outputs?.each { output ->
+                def matchingOutput = existingActivity.outputs?.find { it.name == output.name }
+                if (matchingOutput) {
+                    if (matchingOutput.outputId != output.outputId) {
+                        log.warn("Update for activity: " + id + " contains outputs which have the same type but different IDs")
+                    }
+                    output.outputId = matchingOutput.outputId
+                }
+            }
+        }
+        webService.doPost(grailsApplication.config.ecodata.baseUrl + 'activity/' + id+'?lock=true', activity)
     }
 
     def delete(id) {
@@ -196,8 +211,23 @@ class ActivityService {
         return isDeferred(activity) || isCancelled(activity)
     }
 
+    /**
+     * Returns true if this activity is in an editable state.  Activities contained in approved reports or completed projects
+     * are not editable for example.
+     */
     boolean canEditActivity(Map activity) {
         projectService.canEditActivity(activity)
+    }
+
+    Map getActivityMetadata(String activityType) {
+        Map model = [:]
+        // the activity meta-model
+        model.metaModel = metadataService.getActivityModel(activityType)
+        // the array of output models
+        model.outputModels = model.metaModel?.outputs?.collectEntries {
+            [ it, metadataService.getDataModelFromOutputName(it)] }
+
+        model
     }
 
     /**

@@ -22,7 +22,7 @@
             <tr>
                 <th style="width:35px"></th>
                 <th style="width:50%">Name</th>
-                <th style="width:5%">Stage</th>
+                <th style="width:20%; min-width:60px;">${activityPeriodDescriptor ?: 'Stage'}</th>
                 <th style="width:20%">Date last updated</th>
                 <th></th>
                 <th style="width:2em"></th>

@@ -11,7 +11,7 @@
 //= require jquery.columnizer/jquery.columnizer.js
 //= require jquery-gantt/js/jquery.fn.gantt.js
 //= require knockout-repeat/2.1/knockout-repeat.js
-//= require attach-document.js
+//= require attach-document-no-ui.js
 //= require jquery.fileDownload/jQuery.fileDownload
 //= require meriplan.js
 //= require risks.js
@@ -657,9 +657,17 @@ function ProjectViewModel(project, isUserEditor, organisations) {
     }
 };
 
-function newDocumentDefaults(project) {
+function newDocumentDefaults(project, stageReportPrefix) {
     var reports = project.reports || [];
-    var maxStages = reports.length;
+    var stageRegexp = new RegExp(stageReportPrefix+'(\d+)');
+    var stageCount = 0;
+    for (var i=0; i<reports.length; i++) {
+        if (reports[i].type == 'Activity') {
+            stageCount++
+        }
+    }
+
+    var maxStages = stageCount;
     var currentStage  = findStageFromDate(reports, new Date().toISOStringNoMillis());
     currentStage = stageNumberFromStage(currentStage);
 
@@ -770,7 +778,7 @@ function CreateEditProjectViewModel(project, isUserEditor, userOrganisations, or
 
 
 /* data structures for handling output targets */
-Output = function (name, scores, existingTargets, root) {
+Output = function (name, scores, existingTargets, changeCallback) {
     var self = this;
     this.name = name;
     this.outcomeTarget = ko.observable(function () {
@@ -785,9 +793,8 @@ Output = function (name, scores, existingTargets, root) {
         return outcomeValue;
     }());
     this.outcomeTarget.subscribe(function() {
-        if (root.targetsEditable()) {
-            self.isSaving(true);
-            root.saveOutputTargets();
+        if (_.isFunction(changeCallback)) {
+            changeCallback(self);
         }
     });
     this.scores = $.map(scores, function (score, index) {
@@ -796,7 +803,14 @@ Output = function (name, scores, existingTargets, root) {
         if (matchingTarget) {
             targetValue = matchingTarget.target;
         }
-        return new OutputTarget(score, name, targetValue, index === 0, root);
+        var target =  new OutputTarget(score, name, targetValue, index === 0);
+        target.target.subscribe(function() {
+            if (_.isFunction(changeCallback)) {
+                changeCallback(self);
+            }
+
+        });
+        return target;
     });
     this.isSaving = ko.observable(false);
 };
@@ -817,7 +831,7 @@ Output.prototype.clearSaving = function () {
     $.each(this.scores, function (i, score) { score.isSaving(false) });
 };
 
-OutputTarget = function (score, outputName, value, isFirst, root) {
+OutputTarget = function (score, outputName, value, isFirst) {
     var self = this;
     this.outputLabel = outputName;
     this.scoreLabel = score.label;
@@ -826,12 +840,6 @@ OutputTarget = function (score, outputName, value, isFirst, root) {
     this.isFirst = isFirst;
     this.units = score.units;
     this.scoreId = score.scoreId;
-    this.target.subscribe(function() {
-        if (root.targetsEditable()) {
-            self.isSaving(true);
-            root.saveOutputTargets();
-        }
-    });
 };
 OutputTarget.prototype.toJSON = function () {
     var clone = ko.toJS(this);
@@ -852,9 +860,52 @@ Outcome.prototype.toJSON = function () {
     delete clone.isSaving;
     return clone;
 };
+
+function OutputTargetService(config) {
+    var self = this;
+
+    self.saveOutputTargets = function(outputTargets) {
+        var targets = [];
+        $.each(outputTargets, function (i, target) {
+            $.merge(targets, target.toJSON());
+        });
+
+        var json = JSON.stringify({outputTargets:targets});
+
+        return $.ajax({
+            url: config.saveTargetsUrl,
+            type: 'POST',
+            data: json,
+            contentType: 'application/json',
+            success: function (data) {
+                if (data.error) {
+                    alert(data.detail + ' \n' + data.error);
+                }
+            },
+            error: function (data) {
+                alert('An unhandled error occurred: ' + data.status);
+            },
+            complete: function(data) {
+                $.each(outputTargets, function(i, target) {
+                    // The timeout is here to ensure the save indicator is visible long enough for the
+                    // user to notice.
+                    setTimeout(function(){target.clearSaving();}, 1000);
+                });
+            }
+        });
+
+    };
+
+    self.getScoresForProject = function() {
+        return $.getJSON(config.projectScoresUrl);
+    };
+};
+
 function OutputTargets(activities, targets, targetsEditable, scores, config) {
 
     var self = this;
+    var outputTargetService = new OutputTargetService(config);
+
     var defaults = {
         saveTargetsUrl: fcConfig.projectUpdateUrl
     };
@@ -949,50 +1000,26 @@ function OutputTargets(activities, targets, targetsEditable, scores, config) {
     };
 
     self.outputTargets = ko.observableArray([]);
+
     self.saveOutputTargets = function() {
-        var targets = [];
-        $.each(self.outputTargets(), function (i, target) {
-            $.merge(targets, target.toJSON());
-        });
-
-        var json = JSON.stringify({outputTargets:targets});
-
-        return $.ajax({
-            url: options.saveTargetsUrl,
-            type: 'POST',
-            data: json,
-            contentType: 'application/json',
-            success: function (data) {
-                if (data.error) {
-                    alert(data.detail + ' \n' + data.error);
-                }
-            },
-            error: function (data) {
-                var status = data.status;
-                alert('An unhandled error occurred: ' + data.status);
-            },
-            complete: function(data) {
-                $.each(self.outputTargets(), function(i, target) {
-                    // The timeout is here to ensure the save indicator is visible long enough for the
-                    // user to notice.
-                    setTimeout(function(){target.clearSaving();}, 1000);
-                });
-            }
-        });
-
+        outputTargetService.saveOutputTargets(self.outputTargets());
     };
 
+    function onChange(output) {
+        if (self.targetsEditable()) {
+            output.isSaving(true);
+            self.saveOutputTargets();
+        }
+    }
     self.loadOutputTargets = function () {
         var scoresByOutputType = _.groupBy(relevantScores, function(score) {
             return score.outputType;
         });
         _.each(scoresByOutputType, function(scoresForOutputType, outputType) {
 
-            self.outputTargets.push(new Output(outputType, scoresForOutputType, targets, self));
+            self.outputTargets.push(new Output(outputType, scoresForOutputType, targets, onChange));
         });
     }();
-
-
 
 }
 
@@ -1083,12 +1110,14 @@ function ProjectServicesViewModel(project, config) {
     };
 }
 
-function ProjectPageViewModel(project, sites, activities, userRoles, themes, config) {
+function ProjectPageViewModel(project, sites, activities, userRoles, config) {
     var self = this;
+
     _.extend(this, new ProjectViewModel(project, userRoles.editor, organisations));
-    _.extend(this, new MERIPlan(project, themes, config.PROJECT_DETAILS_KEY));
-    _.extend(this, new Risks(project.risks, config.PROJECT_RISKS_KEY));
-    _.extend(this, new MERIPlanActions(project, _.extend({}, fcConfig, {declarationModalSelector:'#unlockPlan'})));
+    _.extend(this, new MERIPlan(project, config));
+
+    var actionsConfig = _.extend({}, fcConfig, {declarationModalSelector:'#unlockPlan', meriSubmissionDeclarationSelector:'#meriSubmissionDeclaration'});
+    _.extend(this, new MERIPlanActions(project, actionsConfig));
 
     self.workOrderId = ko.observable(project.workOrderId);
     self.userIsCaseManager = ko.observable(userRoles.grantManager);
@@ -1181,6 +1210,7 @@ function ProjectPageViewModel(project, sites, activities, userRoles, themes, con
     self.saveProject = function(enableSubmit){
         if ($('#project-details-validation').validationEngine('validate')) {
             self.details.status('active');
+
             self.details.saveWithErrorDetection(function() {
                 if(enableSubmit) {
                     self.submitChanges();
@@ -1299,6 +1329,9 @@ function ProjectPageViewModel(project, sites, activities, userRoles, themes, con
         }).fail(function(data) {
             bootbox.alert('<span class="label label-warning">Error</span> <p>There was an error regenerating the stage reports: '+data+'</p>');
         });
+    };
+
+    self.initialiseReports = function() {
     };
 
 } // end of view model

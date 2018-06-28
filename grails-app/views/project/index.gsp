@@ -55,16 +55,22 @@
         meriPlanPDFUrl:"${createLink(controller:'project', action:'meriPlanPDF', id:project.projectId)}",
         sitesPhotoPointsUrl:"${createLink(controller:'project', action:'projectSitePhotos', id:project.projectId)}",
         organisationSearchUrl: "${createLink(controller: 'organisation', action: 'search')}",
-        submitReportUrl: "${createLink(controller: 'project', action: 'ajaxSubmitReport')}/",
-        approveReportUrl: "${createLink(controller: 'project', action: 'ajaxApproveReport')}/",
-        rejectReportUrl: "${createLink(controller: 'project', action: 'ajaxRejectReport')}/",
-        deleteActivitiesUrl: "${createLink(controller: 'project', action: 'ajaxDeleteReportActivities')}/",
+        submitReportUrl: "${createLink(controller: 'project', action: 'ajaxSubmitReport', id:project.projectId)}/",
+        approveReportUrl: "${createLink(controller: 'project', action: 'ajaxApproveReport', id:project.projectId)}/",
+        rejectReportUrl: "${createLink(controller: 'project', action: 'ajaxRejectReport', id:project.projectId)}/",
+        reportOwner: {projectId:'${project.projectId}'},
+        reportCreateUrl: '${g.createLink( action:'createReport', id:project.projectId)}',
+        viewReportUrl:'${createLink(action:"viewReport", id:project.projectId)}',
+        editReportUrl:"${createLink(action:"editReport", id:project.projectId)}",
+        reportPDFUrl:"${createLink(action:"reportPDF", id:project.projectId)}",
+        deleteActivitiesUrl: "${createLink(controller: 'project', action: 'ajaxDeleteReportActivities', id:project.projectId)}/",
         submitPlanUrl : "${createLink(controller:'project', action:'ajaxSubmitPlan', id:project.projectId)}",
         modifyPlanUrl : "${createLink(controller:'project', action:'ajaxRejectPlan', id:project.projectId)}",
         approvalPlanUrl : "${createLink(controller:'project', action:'ajaxApprovePlan', id:project.projectId)}",
         rejectPlanUrl : "${createLink(controller:'project', action:'ajaxRejectPlan', id:project.projectId)}",
         unlockPlanForCorrectionUrl : "${createLink(controller:'project', action:'ajaxUnlockPlanForCorrection', id:project.projectId)}",
         finishedCorrectingPlanUrl : "${createLink(controller:'project', action:'ajaxFinishedCorrectingPlan', id:project.projectId)}",
+        projectScoresUrl:"${createLink(action:'serviceScores', id:project.projectId)}",
 
         returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
 
@@ -87,7 +93,15 @@
         <li>
             <g:link controller="home">Home</g:link> <span class="divider">/</span>
         </li>
-        <li class="active">Projects <span class="divider">/</span></li>
+        <li>
+        <g:if test="${config?.program}">
+            <g:link controller="program" action="index" id="${config.program.programId}"> ${config.program.name} </g:link>
+        </g:if>
+        <g:else>
+            Projects
+        </g:else>
+        <span class="divider"> / </span>
+        </li>
         <li class="active" data-bind="text:name"></li>
     </ul>
 
@@ -134,6 +148,7 @@
     <g:render template="/shared/timeoutMessage" model="${[url:grailsApplication.config.security.cas.loginUrl+'?service='+createLink(action:'index', id:project.projectId, absolute: true)]}"/>
     <g:render template="/shared/unsavedChanges" model="${[id:'meriPlanUnsavedChanges', unsavedData:'MERI Plan']}"/>
     <g:render template="/shared/unsavedChanges" model="${[id:'risksUnsavedChanges', unsavedData:'Risks & Threats']}"/>
+    <g:render template="/output/formsTemplates" plugin="ecodata-client-plugin"/>
 
 </div>
 <g:if test="${user?.isEditor && projectContent.admin?.visible}">
@@ -203,22 +218,30 @@
 
             var config = {
                 meriPlanPDFUrl: fcConfig.meriPlanPDFUrl,
+                saveTargetsUrl: fcConfig.projectUpdateUrl,
                 documentUpdateUrl: fcConfig.documentUpdateUrl,
                 projectUpdateUrl: fcConfig.projectUpdateUrl,
-                PROJECT_DETAILS_KEY:PROJECT_DETAILS_KEY,
-                PROJECT_RISKS_KEY:PROJECT_RISKS_KEY
+                projectScoresUrl: fcConfig.projectScoresUrl,
+                meriStorageKey:PROJECT_DETAILS_KEY,
+                risksStorageKey:PROJECT_RISKS_KEY
 
             };
 
             var programs = <fc:modelAsJavascript model="${programs}"/>;
             var project = fcConfig.project;
 
+            var themes = ${config.themes?:[]};
+            config.themes = themes;
+            var services = ${config.services?:[]};
+            config.services = services;
+            config.useRlpTemplate = services.length > 0;
+
+            var outcomesAndAssets = ${assetsByOutcome ?: []};
             var viewModel = new ProjectPageViewModel(
                 project,
                 project.sites,
                 project.activities || [],
                 userRoles,
-                ${themes},
                 config);
 
             viewModel.loadPrograms(programs);
@@ -229,7 +252,7 @@
 
             autoSaveModel(
                 viewModel.details,
-                '${createLink(action: 'ajaxUpdate', id: project.projectId)}',
+                fcConfig.projectUpdateUrl,
                 {
                     storageKey:PROJECT_DETAILS_KEY,
                     autoSaveIntervalInSeconds:${grailsApplication.config.fieldcapture.autoSaveIntervalInSeconds?:60},
@@ -301,6 +324,7 @@
             var dashboardInitialised = false;
             var documentsInitialised = false;
             var meriPlanInitialised = false;
+            var reportingInitialised = false;
 
             $('#projectTabs a[data-toggle="tab"]').on('shown', function (e) {
                 var tab = e.currentTarget.hash;
@@ -452,6 +476,10 @@
                     meriPlanInitialised = true;
                     initialiseDocumentTable('#meriPlanDocumentList');
                 };
+
+                if (tab == '#reporting' && !reportingInitialised) {
+                    viewModel.initialiseReports();
+                }
             });
 
             var newsAndEventsInitialised = false;
@@ -513,7 +541,6 @@
             if (!storedTab) {
                 storedTab = ${user?"amplify.store('project-tab-state')":"'overview'"};
             }
-            var isEditor = ${user?.isEditor?:false};
 
             initialiseOverview();
             if (storedTab !== '') {
@@ -530,6 +557,9 @@
 </asset:script>
 <asset:javascript src="common.js"/>
 <asset:javascript src="projects.js"/>
+<asset:javascript src="reporting.js"/>
+<asset:javascript src="select2/4.0.3/js/select2.full"/>
+<asset:javascript src="forms-knockout-bindings.js"/>
 <asset:deferredScripts/>
 </body>
 </html>

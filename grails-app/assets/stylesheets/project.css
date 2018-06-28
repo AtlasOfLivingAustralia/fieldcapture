@@ -6,6 +6,8 @@
 *= require fancybox/jquery.fancybox
 *= require jquery-gantt/css/style.css
 *= require gantt.css
+*= require meriplan.css
+*= require select2/4.0.3/css/select2
 *= require_self
 */
 
@@ -18,6 +20,11 @@
 	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.05);
 	-moz-box-shadow: inset 0 1px 1px rgba(0,0,0,0.05);
 	box-shadow: inset 0 1px 1px rgba(0,0,0,0.05);
+}
+
+.progress {
+	border: 1px solid #bfbfbf;
+	margin-top: 5px;
 }
 
 .progress .bar {
@@ -156,4 +163,46 @@
 
 .report-prototype th {
 	white-space: normal;
+}
+
+.statistics {
+	min-height: 120px;
+	background-repeat: no-repeat;
+	background-size: 100px;
+	background-position: 20px 20px;
+	padding-left: 160px;
+	padding-top: 20px;
+	padding-right: 20px;
+	padding-bottom: 20px;
+	border: 2px solid white;
+}
+
+.statistics.stat-1 {
+	background-color: #aa6cc2;
+	background-image: url(../images/users6.png);
+}
+
+.statistics .stat-2 {
+	background-color: #26c281;
+	background-image: url(../images/shovel3.png);
+}
+
+.statistics .stat-3 {
+	background-color: #44b6ae;
+	background-image: url(../images/plant43.png);
+}
+
+.statistics .stat-4 {
+	background-color: #25aed6;
+	background-image: url(../images/beach57.png);
+}
+
+.statistics .stat-5 {
+	background-color: #f26e83;
+	background-image: url(../images/agreement.png);
+}
+
+.statistics .stat-6 {
+	background-color: #e87e04;
+	background-image: url(../images/forest2.png);
 }

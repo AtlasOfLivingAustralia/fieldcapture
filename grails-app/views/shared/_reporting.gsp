@@ -2,11 +2,14 @@
 
 <div id="reporting-content">
 
-    <g:if test="${fc.userIsAlaOrFcAdmin()}">
+    <g:if test="${fc.userIsAlaOrFcAdmin() && adHocReportTypes}">
     <div class="control-group" style="margin-bottom: 5px;">
-        <span class="controls"><button class="btn btn-success pull-right" style="margin-bottom: 5px;" data-bind="click:addReport"><i class="icon-white icon-plus"></i> New Report</button></span>
+         <span class="controls"><button class="btn btn-success pull-right" style="margin-bottom: 5px;" data-bind="click:addReport"><i class="icon-white icon-plus"></i> New Report</button></span>
     </div>
     </g:if>
+
+    <g:if test="${reportsHeader}"><h4 class="header-with-help">Project Reports</h4></g:if>
+
 
     <table class="table table-striped" style="width:100%;">
         <thead>
@@ -14,28 +17,36 @@
         <tr>
             <th>Actions</th>
             <th>Report</th>
-            <th>Period</th>
-            <th>Date Due<br/><label for="hide-future-reports"><input id="hide-future-reports" type="checkbox" data-bind="checked:hideFutureReports"> Current reports only</label>
+            <th>Period start</th>
+            <th>Period end
+                <g:if test="${hideDueDate}">
+                <br/><label><input class="hide-future-reports" type="checkbox" data-bind="checked:hideFutureReports"> Current reports only</label>
+                </g:if>
             </th>
-
-            <th>Status<br/><label for="hide-approved-reports"><input id="hide-approved-reports" type="checkbox" data-bind="checked:hideApprovedReports"> Hide approved reports</label></th>
+            <g:if test="${!hideDueDate}">
+            <th>Date Due<br/><label><input class="hide-future-reports" type="checkbox" data-bind="checked:hideFutureReports"> Current reports only</label>
+            </th>
+            </g:if>
+            <th>Status<br/><label><input class="hide-approved-reports" type="checkbox" data-bind="checked:hideApprovedReports"> Hide approved reports</label></th>
         </tr>
         </thead>
         <tbody data-bind="foreach:{ data:filteredReports, as:'report' }">
 
         <tr>
             <td>
-                <button type="button" class="btn btn-container" data-bind="visible:editable, click:$root.editReport"><i class="icon-edit" title="Complete this report"></i></button>
-                <button type="button" class="btn btn-container" data-bind="visible:viewable, click:$root.viewReport"><i class="icon-eye-open" title="View this report"></i></button>
-                <button type="button" class="btn btn-container" data-bind="visible:viewable, click:$root.downloadReport"><i class="icon-download" title="Download a PDF of this report"></i></button>
+                <button type="button" class="btn btn-container" data-bind="visible:editable, click:$root.editReport"><i class="fa fa-edit" title="Complete this report"></i></button>
+                <button type="button" class="btn btn-container" data-bind="visible:viewable, click:$root.viewReport"><i class="fa fa-eye" title="View this report"></i></button>
+                <button type="button" class="btn btn-container" data-bind="visible:viewable && report.downloadUrl, click:$root.downloadReport"><i class="fa fa-download" title="Download a PDF of this report"></i></button>
 
             </td>
             <td><a data-bind="visible:editable, attr:{href:editUrl, title:title}" title="Complete this report"><span data-bind="text:description"></span></a>
                 <span data-bind="visible:!editable, text:description"></span>
             </td>
-            <td data-bind="text:period"></td>
+            <td data-bind="text:fromDate.formattedDate"></td>
+            <td data-bind="text:toDate.formattedDate">
+            <g:if test="${!hideDueDate}">
             <td data-bind="text:dueDate.formattedDate()"></td>
-
+            </g:if>
             <td data-bind="template:approvalTemplate()">
 
                 <span class="label" data-bind="text:approvalStatus, css:{'label-success':approvalStatus=='Report approved', 'label-info':approvalStatus=='Report submitted', 'label-warning':approvalStatus == 'Report not submitted'}"></span>
@@ -79,6 +90,11 @@
             </td>
         </tr>
         </tbody>
+        <tfoot>
+            <tr data-bind="visible:filteredReports().length == 0">
+                <td colspan="5">No reports found.</td>
+            </tr>
+        </tfoot>
 
     </table>
 
@@ -92,27 +108,27 @@
                 <div class="modal-body">
                     <form class="form-horizontal" id="reportForm">
 
-                        <div class="control-group">
+                        <div class="control-group form-group">
                             <label class="control-label" for="reportType">Report Type</label>
 
                             <div class="controls">
-                                <select id="reportType" style="width: 97%;" data-bind="options:availableReports, value:type"></select>
+                                <select id="reportType" class="form-control" style="width: 97%;" data-bind="options:availableReports, optionsText:formatReportType, value:selectedReportType"></select>
                             </div>
                         </div>
 
-                        <div class="control-group">
+                        <div class="control-group form-group">
                             <label class="control-label" for="fromDate">From</label>
 
                             <div class="controls">
-                                <fc:datePicker  targetField="fromDate.date" name="fromDate" data-validation-engine="validate[required]" printable="${printView}"/>
+                                <fc:datePicker class="form-control" targetField="fromDate.date" name="fromDate" data-validation-engine="validate[required]" printable="${printView}"/>
                             </div>
                         </div>
 
                         <div class="control-group">
                             <label class="control-label" for="toDate">To</label>
 
-                            <div class="controls">
-                                <fc:datePicker targetField="toDate.date" name="toDate" data-validation-engine="validate[required]" printable="${printView}"/>
+                            <div class="controls form-group">
+                                <fc:datePicker class="form-control" targetField="toDate.date" name="toDate" data-validation-engine="validate[required]" printable="${printView}"/>
                             </div>
                         </div>
                     </form>
@@ -139,7 +155,7 @@
 
 <g:if test="${isAdmin || fc.userIsAlaOrFcAdmin()}">
     <p>
-    <button class="btn btn-success btn-small" data-bind="enable:complete,click:submitReport" title="All fields in the Self Assessment form must be completed before it can be submitted.">Submit report</button>
+    <button class="btn btn-success btn-small" data-bind="enable:complete,click:submitReport" title="All fields in the reporting form must be completed before it can be submitted.">Submit report</button>
     </p>
 </g:if>
 </script>
@@ -164,31 +180,12 @@
 </script>
 </div>
 
-<!-- ko stopBinding: true -->
-<div id="reason-modal" class="modal hide fade">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h3><span data-bind="text:title"></span> reason</h3>
-    </div>
-    <div class="modal-body">
-        %{--<p data-bind="visible:rejectionCategories">--}%
-            %{--Rejection Category:<br/>--}%
-            %{--<select data-bind="options:rejectionCategories, value:rejectionCategory"></select>--}%
-        %{--</p>--}%
-        <p>Please enter a reason.  This reason will be included in the email sent to the project administrator(s).</p>
-        <textarea rows="5" style="width:97%" data-bind="textInput:reason"></textarea>
-    </div>
-    <div class="modal-footer">
-        <button class="btn btn-success" data-bind="click:submit, text:buttonText, enable:reason" data-dismiss="modal" aria-hidden="true"></button>
-        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-    </div>
-</div>
-<!-- /ko -->
-
 <asset:script type="text/javascript">
 
 $(function() {
-    var reports = <fc:modelAsJavascript model="${organisation.reports}"/>;
-    ko.applyBindings(new ReportsViewModel(reports, fcConfig.projects, ['Performance Management Framework - Self Assessment']), document.getElementById('reporting-content'));
+    var reports = <fc:modelAsJavascript model="${reports?:[]}"/>;
+    var addHocReportTypes = <fc:modelAsJavascript model="${adHocReportTypes}"/>;
+    var reportOwner = fcConfig.reportOwner;
+    ko.applyBindings(new ReportsViewModel(reports, fcConfig.projects, addHocReportTypes, reportOwner, fcConfig), document.getElementById('reporting-content'));
 });
 </asset:script>

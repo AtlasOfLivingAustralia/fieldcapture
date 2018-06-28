@@ -99,3 +99,8 @@
     color:black;
 }
 
+.output-block table input[type="text"] {
+    width: 100%;
+    box-sizing: border-box;
+    height: 30px;
+}

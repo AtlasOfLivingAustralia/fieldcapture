@@ -1,10 +1,14 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.reports.ReportConfig
+import au.org.ala.merit.reports.ReportOwner
 import grails.converters.JSON
 import org.apache.commons.lang.CharUtils
 import org.apache.http.HttpStatus
+import org.joda.time.DateTime
 import org.joda.time.Days
 import org.joda.time.Interval
+import org.joda.time.Period
 import org.springframework.cache.annotation.Cacheable
 
 import java.text.SimpleDateFormat
@@ -50,7 +54,8 @@ class ProjectService  {
     static final String PLAN_SUBMITTED = 'submitted'
     static final String PLAN_UNLOCKED = 'unlocked for correction'
 
-    def webService, grailsApplication, siteService, activityService, emailService, documentService, userService, metadataService, settingService, reportService, auditService, speciesService
+    def webService, grailsApplication, siteService, activityService, emailService, documentService, userService, metadataService, settingService, reportService, auditService, speciesService, commonService
+    ProjectConfigurationService projectConfigurationService
 
     def list(brief = false, citizenScienceOnly = false) {
         def params = brief ? '?brief=true' : ''
@@ -139,9 +144,16 @@ class ProjectService  {
      * @param id the id of the project to get summary information for.
      * @return TODO document this structure.
      */
-    def summary(String id) {
-        def scores = webService.getJson(grailsApplication.config.ecodata.baseUrl + 'project/projectMetrics/' + id)
+    def summary(String id, boolean approvedDataOnly = false, List scoreIds = null) {
 
+        String url = grailsApplication.config.ecodata.baseUrl + 'project/projectMetrics/' + id+"?approvedDataOnly="+approvedDataOnly
+        if (scoreIds) {
+            scoreIds.each{scoreId ->
+                url+="&scoreIds="+scoreId
+            }
+        }
+        Map result = webService.doPostWithParams(url, [:])
+        def scores = result?.resp
         def scoresWithTargetsByOutput = [:]
         def scoresWithoutTargetsByOutputs = [:]
         if (scores && scores instanceof List) {  // If there was an error, it would be returning a map containing the error.
@@ -397,6 +409,8 @@ class ProjectService  {
      * @param stageDetails details of the activities, specifically a list of activity ids.
      */
     def submitStageReport(projectId, stageDetails) {
+
+        stageDetails.projectId = projectId
 
         def activities = activityService.activitiesForProject(projectId);
 
@@ -672,23 +686,44 @@ class ProjectService  {
     }
 
     Map getProgramConfiguration(Map project) {
-        metadataService.getProgramConfiguration(project.associatedProgram, project.associatedSubProgram)
+        projectConfigurationService.getProjectConfiguration(project)
+    }
+
+    void generateProjectReports(Map reportConfig, Map project) {
+
+        ReportOwner reportOwner = new ReportOwner(
+                id:[projectId:project.projectId],
+                name:project.name,
+                periodStart:project.plannedStartDate,
+                periodEnd:project.plannedEndDate
+        )
+        ReportConfig rc = new ReportConfig(reportConfig)
+
+        List reportsOfType = project.reports?.findAll{it.category == reportConfig.category}
+
+        reportService.regenerateReports(reportsOfType, rc, reportOwner)
+
     }
 
     def generateProjectStageReports(String projectId) {
         def project = get(projectId)
         def programConfig = getProgramConfiguration(project)
 
-        def period = programConfig.reportingPeriod
-        if (period) {
-            period = period as Integer
+        if (programConfig.projectReports) {
+
+            programConfig.projectReports.each {reportConfig ->
+                generateProjectReports(reportConfig, project)
+            }
         }
+        else {
+            def period = programConfig.reportingPeriod
+            if (period) {
+                period = period as Integer
+            }
 
-        def alignedToCalendar = programConfig.reportingPeriodAlignedToCalendar ?: false
-        String reportNamePrefix = programConfig.reportNamePrefix ?: 'Stage'
-
-        reportService.regenerateAllStageReportsForProject(projectId, period, alignedToCalendar, null, reportNamePrefix)
-
+            def alignedToCalendar = programConfig.reportingPeriodAlignedToCalendar ?: false
+            reportService.regenerateAllStageReportsForProject(projectId, period, alignedToCalendar, null)
+        }
 
     }
 
@@ -1170,20 +1205,61 @@ class ProjectService  {
     }
 
 
-    List<Map> getProjectServices() {
-        return [
-                [name:'Controlling Pest Animals', output:'NRM2 - Controlling Pest Animals'],
-                [name:'Removing pest weeds',  output:'NRM2 - Removing Pest Weeds'],
-                [name:'Improving hydrological regimes',  output:'NRM2 - Improving Hydrological Regimes'],
-                [name:'Remediating riparian and aquatic areas',  output:'NRM2 - Remediating Riparian and Aquatic Areas'],
-                [name:'Revegetating habitat',  output:'NRM2 - Revegetating Habitat'],
-                [name:'Managing fire regimes',  output:'NRM2 - Managing Fire Regimes'],
-                [name:'Protecting habitat by controlling access',  output:'NRM2 - Protecting Habitat by Controlling Access'],
-                [name:'Habitat augmentation',  output:'NRM2 - Habitat Augmentation'],
-                [name:'Establishing and maintaining feral free enclosures',  output:'NRM2 - Establishing Feral Free Enclosures'],
-                [name:'Establishing and maintaining ex-situ breeding sites and/or populations',  output:'NRM2 - Establishing ex-situ breeding sites'],
-                [name:'Undertaking emergency interventions to prevent extinctions',  output:''],
-                [name:'Managing diseases',  output:'NRM2 - Managing Diseases'],
-                [name:'Fencing',  output:'NRM2 - Fencing']]
+    List<Map> getServiceScoresForProject(String projectId) {
+        Map project = get(projectId, 'flat')
+        List<Map> allServices = metadataService.getProjectServices()
+
+        List projectServices = allServices?.findAll {it.id in project.custom?.details?.serviceIds }
+
+        projectServices
+    }
+
+    /**
+     * Returns a map of the form:
+     * [
+     *     planning: true/false,
+     *     services: [ <list of scores and targets for each of the project services> ]
+     * ]
+     */
+    Map getServiceDashboardData(String projectId, boolean approvedDataOnly) {
+
+        List<Map> projectServices = getServiceScoresForProject(projectId)
+        List scoreIds = projectServices.collect{it.scores?.collect{score -> score.scoreId}}.flatten()
+
+        Map scoreSummary = summary(projectId, approvedDataOnly, scoreIds)
+
+        Map dashboard = [services:[], planning:false]
+        int deliveredAgainstTargets = 0
+        projectServices.each { Map service ->
+            Map copy = [:]
+            copy.putAll(service)
+            copy.scores = []
+
+            service.scores.each { Map score ->
+                Map scoreCopy = [:]
+                scoreCopy.putAll(score)
+
+                Map scoreData = findScore(score.scoreId, scoreSummary?.targets)
+                scoreCopy.target = scoreData?.target ?: 0
+                scoreCopy.result = scoreData?.result ?: [result:0]
+
+                deliveredAgainstTargets += scoreCopy.result?.result ?: 0
+
+                copy.scores << scoreCopy
+            }
+            dashboard.services << copy
+        }
+        // Once more than one target has been delivered against, the project is considered to be out of planning mode.
+        dashboard.planning = deliveredAgainstTargets < 2
+        dashboard
+    }
+
+    private Map findScore(String scoreId, Map scoresWithTargets) {
+        Map scoreData = null
+        scoresWithTargets?.find { String key, List outputScores ->
+            scoreData = outputScores?.find{it.scoreId == scoreId}
+        }
+
+        scoreData
     }
 }
