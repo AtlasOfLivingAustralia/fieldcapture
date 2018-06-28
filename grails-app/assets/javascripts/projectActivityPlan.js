@@ -502,7 +502,7 @@ function ProjectActivitiesTabViewModel(activities, reports, outputTargets, targe
             var payload = {projectId: project.projectId, plannedStartDate: self.plannedStartDate(), plannedEndDate: self.plannedEndDate()};
             blockUIWithMessage("Updating project dates...");
             $.ajax({
-                url: config.updateProjectDatesUrl + project.projectId,
+                url: options.updateProjectDatesUrl + project.projectId,
                 type: 'POST',
                 data: JSON.stringify(payload),
                 contentType: 'application/json'
