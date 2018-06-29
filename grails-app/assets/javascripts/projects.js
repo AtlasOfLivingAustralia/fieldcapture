@@ -1303,23 +1303,25 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
                 return value === undefined ? "" : value;
             });
 
+            blockUIWithMessage("Saving....");
             $.ajax({
                 url: config.projectUpdateUrl,
                 type: 'POST',
                 data: json,
-                contentType: 'application/json',
-                success: function (data) {
-                    if (data.error) {
-                        showAlert("Failed to save settings: " + data.detail + ' \n' + data.error,
-                            "alert-error","save-result-placeholder");
-                    } else {
-                        showAlert("Project settings saved","alert-success","save-result-placeholder");
-                    }
-                },
-                error: function (data) {
-                    var status = data.status;
-                    alert('An unhandled error occurred: ' + data.status);
+                contentType: 'application/json'
+            }).done(function(data) {
+                if (data.error) {
+                    $.unblockUI();
+                    showAlert("Failed to save settings: " + data.detail + ' \n' + data.error,
+                        "alert-error","save-result-placeholder");
+                } else {
+                    blockUIWithMessage("Refreshing page...");
+                    showAlert("Project settings saved","alert-success","save-result-placeholder");
+                    window.location.reload();
                 }
+            }).fail(function(data) {
+                $.unblockUI();
+                alert('An unhandled error occurred: ' + data.status + " Please refresh the page and try again");
             });
         }
     };
