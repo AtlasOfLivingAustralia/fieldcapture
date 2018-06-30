@@ -334,7 +334,7 @@ environments {
         security.cas.appServerName="${serverName}"
         security.cas.contextPath="/${appName}"
         security.cas.casServerName="${casBaseUrl}"
-        security.cas.uriFilterPattern=".*/user/.*,.*/site/(?!index).*,.*/project/(?!index).*,.*/activity/(?!index).*,.*/output/(?!index).*,.*/image/delete.*,.*/image/upload.*,.*/admin/.*,i.*/proxy/speciesListPost,.*/document/(?!index),.*/home/advanced,.*/organisation/(?!index).*,.*/organisation/(?!list).*"
+        security.cas.uriFilterPattern=".*/user/.*,.*/site/(?!index).*,.*/project/(?!index).*,.*/activity/(?!index).*,.*/output/(?!index).*,.*/image/delete.*,.*/image/upload.*,.*/admin/.*,i.*/proxy/speciesListPost,.*/document/(?!index),.*/home/advanced,.*/organisation/(?!index).*,.*/organisation/(?!list).*,.*/home/login.*"
         security.cas.uriExclusionFilterPattern="/images.*,/css.*,/js.*,/less.*"
         security.cas.authenticateOnlyIfLoggedInPattern="/,/;.*,/[A-Za-z0-9]+/?,.*/project/index.*,.*/site/index.*,.*/activity/index.*,.*/output/index.*,*/image/.*,.*/ajax/keepSessionAlive,.*/search/.*,.*/home/.*,.*/organisation/index.*,.*/organisation/list.*,.*/document/index.*"
         gateway="true"

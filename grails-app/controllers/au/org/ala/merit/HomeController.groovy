@@ -40,6 +40,15 @@ class HomeController {
         publicHome()
     }
 
+    /**
+     * When we press the login button, the CAS service URL will point at this action, which is a protected path
+     * which ensures the CAS ticket validation filter consumes the service ticket.
+     * We then just redirect back to the homepage
+     */
+    def login() {
+        redirect(url:grailsApplication.config.grails.serverURL)
+    }
+
     def projectExplorer() {
 
         def model = projectExplorerModel()
