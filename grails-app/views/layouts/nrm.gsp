@@ -77,7 +77,7 @@
             </g:if>
 
             <div class="btn-group pull-right login-logout">
-                <fc:loginLogoutButton logoutUrl="${createLink(controller:'logout', action:'logout')}" cssClass="${loginBtnCss}"/>
+                <fc:loginLogoutButton loginReturnToUrl="${createLink(controller:'home', action:'login', absolute:true)}" logoutReturnToUrl="${grailsApplication.config.grails.serverURL}" logoutUrl="${createLink(controller:'logout', action:'logout')}" cssClass="${loginBtnCss}"/>
             </div>
 
         </div>
