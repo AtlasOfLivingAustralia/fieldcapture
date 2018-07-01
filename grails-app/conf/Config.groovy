@@ -294,7 +294,7 @@ security {
     cas {
         appServerName = 'http://devt.ala.org.au:8080' // or similar, up to the request path part
         // service = 'http://devt.ala.org.au:8080' // optional, if set it will always be used as the return path from CAS
-        uriFilterPattern = '.*/user/.*,.*/site/(?!index).*,.*/project/(?!(index|viewReportCallback)).*,.*/activity/(?!ajaxUnlock).*,.*/output/(?!index).*,.*/image/delete.*,.*/image/upload.*,.*/admin/.*,.*/proxy/speciesListPost,.*/document/documentUpdate,.*/document/deleteDocument,.*/document/downloadProjectDataFile/.*,.*/home/advanced,.*/organisation/(?!index).*,.*/organisation/(?!list).*,.*/blog/.*,.*/report/performanceAssessmentSummaryReport,.*/report/performanceAssessmentComparisonReport.*,.*/report/update.*,.*/program/(?!viewReportCallback).*,.*/programme/.*,.*/rlp/(?!viewReportCallback).*'
+        uriFilterPattern = '.*/user/.*,.*/site/(?!index).*,.*/project/(?!(index|viewReportCallback)).*,.*/activity/(?!ajaxUnlock).*,.*/output/(?!index).*,.*/image/delete.*,.*/image/upload.*,.*/admin/.*,.*/proxy/speciesListPost,.*/document/documentUpdate,.*/document/deleteDocument,.*/document/downloadProjectDataFile/.*,.*/home/advanced,.*/organisation/(?!index).*,.*/organisation/(?!list).*,.*/blog/.*,.*/report/performanceAssessmentSummaryReport,.*/report/performanceAssessmentComparisonReport.*,.*/report/update.*,.*/program/(?!viewReportCallback).*,.*/programme/.*,.*/rlp/(?!viewReportCallback).*,.*/home/login.*'
         uriExclusionFilterPattern = '/assets/.*,/images/.*,/css/.*,/js/.*,/less/.*' // this is the default value
         authenticateOnlyIfLoggedInPattern =  '/,/;.*,/[A-Za-z0-9]+/?,.*/project/index.*,.*/site/index.*,.*/activity/ajaxUnlock.*,.*/output/index.*,.*/ajax/keepSessionAlive,.*/image/.*,.*/search/.*,.*/home/.*,.*/organisation/index.*,.*/organisation/list.*,.*/report/loadReport.*,.*/report/reef2050PlanActionReport.*,.*/explore.*,.*/rlp/reportPDF.*'
     }
@@ -334,7 +334,7 @@ environments {
         security.cas.appServerName="${serverName}"
         security.cas.contextPath="/${appName}"
         security.cas.casServerName="${casBaseUrl}"
-        security.cas.uriFilterPattern=".*/user/.*,.*/site/(?!index).*,.*/project/(?!index).*,.*/activity/(?!index).*,.*/output/(?!index).*,.*/image/delete.*,.*/image/upload.*,.*/admin/.*,i.*/proxy/speciesListPost,.*/document/(?!index),.*/home/advanced,.*/organisation/(?!index).*,.*/organisation/(?!list).*"
+        security.cas.uriFilterPattern=".*/user/.*,.*/site/(?!index).*,.*/project/(?!index).*,.*/activity/(?!index).*,.*/output/(?!index).*,.*/image/delete.*,.*/image/upload.*,.*/admin/.*,i.*/proxy/speciesListPost,.*/document/(?!index),.*/home/advanced,.*/organisation/(?!index).*,.*/organisation/(?!list).*,.*/home/login.*"
         security.cas.uriExclusionFilterPattern="/images.*,/css.*,/js.*,/less.*"
         security.cas.authenticateOnlyIfLoggedInPattern="/,/;.*,/[A-Za-z0-9]+/?,.*/project/index.*,.*/site/index.*,.*/activity/index.*,.*/output/index.*,*/image/.*,.*/ajax/keepSessionAlive,.*/search/.*,.*/home/.*,.*/organisation/index.*,.*/organisation/list.*,.*/document/index.*"
         gateway="true"
