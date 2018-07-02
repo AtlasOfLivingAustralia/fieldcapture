@@ -222,9 +222,7 @@
                 documentUpdateUrl: fcConfig.documentUpdateUrl,
                 projectUpdateUrl: fcConfig.projectUpdateUrl,
                 projectScoresUrl: fcConfig.projectScoresUrl,
-                meriStorageKey:PROJECT_DETAILS_KEY,
-                risksStorageKey:PROJECT_RISKS_KEY
-
+                meriStorageKey:PROJECT_DETAILS_KEY
             };
 
             var programs = <fc:modelAsJavascript model="${programs}"/>;
@@ -235,6 +233,13 @@
             var services = ${config.services?:[]};
             config.services = services;
             config.useRlpTemplate = services.length > 0;
+            if (!config.useRlpTemplate) {
+               // The RLP template includes Risks in the MERI plan so having separate local storage causes
+               // Issues as it's not cleared on save.
+               config.risksStorageKey = PROJECT_RISKS_KEY;
+            }
+
+            config.riskAndThreatTypes = ${config.riskAndThreatTypes ?: 'null'};
 
             var outcomesAndAssets = ${assetsByOutcome ?: []};
             var viewModel = new ProjectPageViewModel(
