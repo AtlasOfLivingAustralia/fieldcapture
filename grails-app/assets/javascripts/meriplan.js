@@ -17,9 +17,15 @@ function MERIPlan(project, config) {
        var savedProjectCustomDetails = amplify.store(config.meriStorageKey);
        if (savedProjectCustomDetails) {
           var restored = JSON.parse(savedProjectCustomDetails);
+          $('#restoredData').show();
           if (restored.custom) {
-             $('#restoredData').show();
              project.custom.details = restored.custom.details;
+          }
+          if (restored.outputTargets) {
+              project.outputTargets = restored.outputTargets;
+          }
+          if (restored.risks) {
+              project.risks = restored.risks;
           }
        }
    }
@@ -44,10 +50,11 @@ function MERIPlan(project, config) {
    self.projectThemes.push("Others");
 
    self.obligationOptions = ['Yes', 'No'];
-   self.threatOptions = ['Blow-out in cost of project materials', 'Changes to regional boundaries affecting the project area', 'Co-investor withdrawal / investment reduction',
-      'Lack of delivery partner capacity', 'Lack of delivery partner / landholder interest in project activities', 'Organisational restructure / loss of corporate knowledge', 'Organisational risk (strategic, operational, resourcing and project levels)',
-      'Seasonal conditions (eg. drought, flood, etc.)', 'Timeliness of project approvals processes',
-      'Workplace health & safety (eg. Project staff and / or delivery partner injury or death)', 'Land use Conflict'];
+   var defaultRiskAndThreats = ['Blow-out in cost of project materials', 'Changes to regional boundaries affecting the project area', 'Co-investor withdrawal / investment reduction',
+       'Lack of delivery partner capacity', 'Lack of delivery partner / landholder interest in project activities', 'Organisational restructure / loss of corporate knowledge', 'Organisational risk (strategic, operational, resourcing and project levels)',
+       'Seasonal conditions (eg. drought, flood, etc.)', 'Timeliness of project approvals processes',
+       'Workplace health & safety (eg. Project staff and / or delivery partner injury or death)', 'Land use Conflict'];
+   self.threatOptions = config.riskAndThreatTypes || defaultRiskAndThreats;
    self.organisations =['Academic/research institution', 'Australian Government Department', 'Commercial entity', 'Community group',
       'Farm/Fishing Business', 'If other, enter type', 'Indigenous Organisation', 'Individual', 'Local Government', 'Other', 'Primary Industry group',
       'School', 'State Government Organisation', 'Trust'];
