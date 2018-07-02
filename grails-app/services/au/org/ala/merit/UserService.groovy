@@ -223,6 +223,9 @@ class UserService {
     }
 
     boolean isUserAdminForProgram(String userId, String programId) {
+        if (userIsSiteAdmin()) {
+            return true
+        }
         Map programRole = getProgramRole(userId, programId)
         return programRole && programRole.role == RoleService.PROJECT_ADMIN_ROLE
     }
@@ -277,7 +280,11 @@ class UserService {
         userCanEdit
     }
 
-    def isUserAdminForProject(userId, projectId) {
+    boolean isUserAdminForProject(userId, projectId) {
+        if (userIsSiteAdmin()) {
+           return true
+        }
+
         def url = grailsApplication.config.ecodata.baseUrl + "permissions/isUserAdminForProject?projectId=${projectId}&userId=${userId}"
         def results = webService.getJson(url)
         return results?.userIsAdmin

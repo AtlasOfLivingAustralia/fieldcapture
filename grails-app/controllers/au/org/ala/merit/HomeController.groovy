@@ -5,6 +5,8 @@ import au.org.ala.merit.hub.HubSettings
 import grails.converters.JSON
 import org.apache.commons.lang.StringUtils
 
+import javax.servlet.http.Cookie
+
 class HomeController {
 
     def projectService
@@ -46,6 +48,23 @@ class HomeController {
      * We then just redirect back to the homepage
      */
     def login() {
+
+        final String ALA_AUTH = "ALA-Auth"
+        Cookie[] cookies = request.getCookies()
+        boolean found = false
+        for (Cookie cookie:cookies) {
+            if (cookie.name == ALA_AUTH) {
+                found = true
+            }
+        }
+        if (!found) {
+            Cookie alaAuth = new Cookie(ALA_AUTH, userService.getUser().userName)
+            alaAuth.setDomain("ala.org.au")
+            alaAuth.setPath("/")
+            alaAuth.setHttpOnly(true)
+            response.addCookie(alaAuth)
+        }
+
         redirect(url:grailsApplication.config.grails.serverURL)
     }
 
