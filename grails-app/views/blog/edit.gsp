@@ -51,6 +51,7 @@
 
 </asset:script>
 <asset:javascript src="common.js"/>
+<asset:javascript src="blog.js"/>
 <asset:javascript src="attach-document-no-ui.js"/>
 <asset:deferredScripts/>
 

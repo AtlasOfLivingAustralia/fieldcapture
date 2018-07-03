@@ -24,6 +24,7 @@
 <g:render template="/blog/blogSummary"/>
 
 <asset:javascript src="common.js"/>
+<asset:javascript src="blog.js"/>
 <asset:deferredScripts/>
 </body>
 </html>
