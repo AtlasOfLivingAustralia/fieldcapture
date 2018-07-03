@@ -116,10 +116,11 @@ class HomeController {
 
         def helpPage = g.createLink([action:'help'])
         def helpLinks = documentService.findAllHelpResources()
-        helpLinks << [name:'MORE RESOURCES', type:'', url:helpPage]
+        List copyOfLinks = new ArrayList(helpLinks) // The result of the call is cached so we don't want to add elements to it.
+        copyOfLinks << [name:'MORE RESOURCES', type:'', url:helpPage]
         def blog = blogService.getSiteBlog()
 
-        def model = [statistics:statistics.statistics, helpLinks:helpLinks, images:images, blog:blog]
+        def model = [statistics:statistics.statistics, helpLinks:copyOfLinks, images:images, blog:blog]
         if (params.fq) {
             model.putAll(projectExplorerModel())
             model.showProjectExplorer = true
