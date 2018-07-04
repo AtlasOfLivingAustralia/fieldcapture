@@ -17,5 +17,6 @@
 //= require knockout-custom-bindings
 //= require wmd/wmd.js
 //= require wmd/showdown.js
-//= require pagination.js
+//= require pagination
+//= require healthCheck
 

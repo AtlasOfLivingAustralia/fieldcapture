@@ -265,6 +265,9 @@ var unloadHandler = function() {
  */
 function autoSaveModel(viewModel, saveUrl, options) {
 
+    if (!options.healthCheckUrl) {
+        throw "Missing mandatory option: healthCheckUrl"
+    }
     var serializeModel = function() {
         return (typeof viewModel.modelAsJSON === 'function') ? viewModel.modelAsJSON() : ko.toJSON(viewModel);
     };
@@ -355,6 +358,37 @@ function autoSaveModel(viewModel, saveUrl, options) {
         }
     );
 
+    var saveFailureHandler = function (data) {
+        if (config.preventNavigationIfDirty) {
+            unloadHandler.removeCallback(onunloadHandler);
+        }
+        if (config.blockUIOnSave) {
+            $.unblockUI();
+        }
+        var message = $(config.timeoutMessageSelector).html();
+        if (message) {
+            bootbox.alert(message, function() {
+                if (config.preventNavigationIfDirty) {
+                    unloadHandler.addCallback(onunloadHandler, 0);
+                }
+            });
+        }
+    };
+
+    /**
+     * This method:
+     * 1. Saves the model to local storage
+     * 2. Checks to see if the server is available and the user logged in
+     * 3. Saves the model.
+     * 4. Cleans up the local storage.
+     *
+     * If 2. fails, the local storage is not deleted and a message is displayed to the user.
+     *
+     * @param successCallback a callback to be invoked if the save is successful.
+     * @param errorCallback a callback to be invoked if the save fails.
+     *
+     * @return a jquery Deferred object that will be resolved with the combined result of the health check and save result.
+     */
     viewModel.saveWithErrorDetection = function(successCallback, errorCallback) {
         if (config.blockUIOnSave) {
             blockUIWithMessage(config.blockUISaveMessage);
@@ -363,16 +397,27 @@ function autoSaveModel(viewModel, saveUrl, options) {
 
         var json = config.serializeModel();
 
-        // Store data locally in case the save fails.plan
+        // Store data locally in case the save fails.
         amplify.store(config.storageKey, json);
 
-        return $.ajax({
+        var result = $.Deferred();
+        var invokeCallbacksAndRejectResult = function() {
+            if (typeof errorCallback === 'function') {
+                errorCallback(data);
+            }
+            if (typeof config.errorCallback === 'function') {
+                config.errorCallback(data);
+            }
+            result.reject();
+        };
+
+        healthCheck(config.healthCheckUrl).done(function() {
+            $.ajax({
                 url: saveUrl,
                 type: 'POST',
                 data: json,
                 contentType: 'application/json'
             }).done(function (data, textStatus, jqXHR) {
-                console.log(jqXHR.getResponseHeader('Content-Type'));
                 if (data.error) {
                     if (config.blockUIOnSave) {
                         $.unblockUI();
@@ -402,30 +447,11 @@ function autoSaveModel(viewModel, saveUrl, options) {
                         config.successCallback(data);
                     }
                 }
-            })
-            .fail(function (data) {
-                if (config.preventNavigationIfDirty) {
-                    unloadHandler.removeCallback(onunloadHandler);
-                }
-                if (config.blockUIOnSave) {
-                    $.unblockUI();
-                }
-                var message = $(config.timeoutMessageSelector).html();
-                if (message) {
-                    bootbox.alert(message, function() {
-                        if (config.preventNavigationIfDirty) {
-                            unloadHandler.addCallback(onunloadHandler, 0);
-                        }
-                    });
-                }
-                if (typeof errorCallback === 'function') {
-                    errorCallback(data);
-                }
-                if (typeof config.errorCallback === 'function') {
-                    config.errorCallback(data);
-                }
-            });
+                result.resolve();
+            }).fail(saveFailureHandler).fail(invokeCallbacksAndRejectResult);
+        }).fail(saveFailureHandler).fail(invokeCallbacksAndRejectResult);
 
+        return result;
     }
 
 }

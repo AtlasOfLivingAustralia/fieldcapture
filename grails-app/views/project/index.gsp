@@ -71,6 +71,7 @@
         unlockPlanForCorrectionUrl : "${createLink(controller:'project', action:'ajaxUnlockPlanForCorrection', id:project.projectId)}",
         finishedCorrectingPlanUrl : "${createLink(controller:'project', action:'ajaxFinishedCorrectingPlan', id:project.projectId)}",
         projectScoresUrl:"${createLink(action:'serviceScores', id:project.projectId)}",
+        healthCheckUrl:"${createLink(controller:'ajax', action:'keepSessionAlive')}",
 
         returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
 
@@ -267,7 +268,8 @@
                     errorMessage:"Failed to save MERI Plan: ",
                     successMessage: 'MERI Plan saved',
                     preventNavigationIfDirty:true,
-                    defaultDirtyFlag:ko.dirtyFlag
+                    defaultDirtyFlag:ko.dirtyFlag,
+                    healthCheckUrl:fcConfig.healthCheckUrl
                 });
 
 
@@ -289,20 +291,23 @@
                     $('#floating-save').slideUp(400);
                 }
             });
-            autoSaveModel(
-                viewModel.risks,
-                fcConfig.projectUpdateUrl,
-                {
-                    storageKey:PROJECT_RISKS_KEY,
-                    autoSaveIntervalInSeconds:${grailsApplication.config.fieldcapture.autoSaveIntervalInSeconds?:60},
-                    restoredDataWarningSelector:'#restoredRisksData',
-                    resultsMessageSelector:'#summary-result-placeholder',
-                    timeoutMessageSelector:'#timeoutMessage',
-                    errorMessage:"Failed to save risks details: ",
-                    successMessage: 'Successfully saved',
-                    defaultDirtyFlag:ko.dirtyFlag
-                });
+            if (config.risksStorageKey) {
 
+                autoSaveModel(
+                    viewModel.risks,
+                    fcConfig.projectUpdateUrl,
+                    {
+                        storageKey:PROJECT_RISKS_KEY,
+                        autoSaveIntervalInSeconds:${grailsApplication.config.fieldcapture.autoSaveIntervalInSeconds?:60},
+                        restoredDataWarningSelector:'#restoredRisksData',
+                        resultsMessageSelector:'#summary-result-placeholder',
+                        timeoutMessageSelector:'#timeoutMessage',
+                        errorMessage:"Failed to save risks details: ",
+                        successMessage: 'Successfully saved',
+                        defaultDirtyFlag:ko.dirtyFlag,
+                        healthCheckUrl:fcConfig.healthCheckUrl
+                    });
+            }
             var meriPlanVisible = false;
             var risksVisible = false;
             $('a[data-toggle="tab"]').on('show', function(e) {

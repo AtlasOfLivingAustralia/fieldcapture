@@ -107,7 +107,7 @@ if (!headerAndFooter.baseURL) {
 }
 // spatial services
 if(!spatial.baseUrl){
-    spatial.baseUrl = "https://spatial-dev.ala.org.au"
+    spatial.baseUrl = "https://spatial-beta.ala.org.au"
 }
 if(!spatial.layersUrl){
     spatial.layersUrl = spatial.baseUrl + "/layers-service"
@@ -116,10 +116,10 @@ if(!spatial.geoserverUrl){
     spatial.geoserverUrl = spatial.baseUrl + "/geoserver"
 }
 if (!spatial.wms.url) {
-    spatial.wms.url = spatial.baseUrl + "geoserver/ALA/wms?"
+    spatial.wms.url = spatial.baseUrl + "/geoserver/ALA/wms?"
 }
 if (!spatial.wms.cache.url) {
-    spatial.wms.cache.url = spatial.baseUrl + "geoserver/gwc/service/wms?"
+    spatial.wms.cache.url = spatial.baseUrl + "/geoserver/gwc/service/wms?"
 }
 if (!spatial.intersectUrl) {
     spatial.intersectUrl = spatial.baseUrl + '/ws/intersect/'
@@ -294,9 +294,9 @@ security {
     cas {
         appServerName = 'http://devt.ala.org.au:8080' // or similar, up to the request path part
         // service = 'http://devt.ala.org.au:8080' // optional, if set it will always be used as the return path from CAS
-        uriFilterPattern = '.*/user/.*,.*/site/(?!index).*,.*/project/(?!(index|viewReportCallback)).*,.*/activity/(?!ajaxUnlock).*,.*/output/(?!index).*,.*/image/delete.*,.*/image/upload.*,.*/admin/.*,.*/proxy/speciesListPost,.*/document/documentUpdate,.*/document/deleteDocument,.*/document/downloadProjectDataFile/.*,.*/home/advanced,.*/organisation/(?!index).*,.*/organisation/(?!list).*,.*/blog/.*,.*/report/performanceAssessmentSummaryReport,.*/report/performanceAssessmentComparisonReport.*,.*/report/update.*,.*/program/(?!viewReportCallback).*,.*/programme/.*,.*/rlp/(?!viewReportCallback).*,.*/home/login.*'
+        uriFilterPattern = '.*/user/.*,.*/site/(?!index).*,.*/project/(?!(index|viewReportCallback)).*,.*/activity/(?!ajaxUnlock).*,.*/output/(?!index).*,.*/image/delete.*,.*/image/upload.*,.*/admin/.*,.*/proxy/speciesListPost,.*/document/documentUpdate,.*/document/deleteDocument,.*/document/downloadProjectDataFile/.*,.*/home/advanced,.*/organisation/(?!index).*,.*/organisation/(?!list).*,.*/blog/.*,.*/report/performanceAssessmentSummaryReport,.*/report/performanceAssessmentComparisonReport.*,.*/report/update.*,.*/program/(?!viewReportCallback).*,.*/programme/.*,.*/rlp/(?!viewReportCallback).*,.*/home/login.*,.*/ajax/keepSessionAlive'
         uriExclusionFilterPattern = '/assets/.*,/images/.*,/css/.*,/js/.*,/less/.*' // this is the default value
-        authenticateOnlyIfLoggedInPattern =  '/,/;.*,/[A-Za-z0-9]+/?,.*/project/index.*,.*/site/index.*,.*/activity/ajaxUnlock.*,.*/output/index.*,.*/ajax/keepSessionAlive,.*/image/.*,.*/search/.*,.*/home/.*,.*/organisation/index.*,.*/organisation/list.*,.*/report/loadReport.*,.*/report/reef2050PlanActionReport.*,.*/explore.*,.*/rlp/reportPDF.*'
+        authenticateOnlyIfLoggedInPattern =  '/,/;.*,/[A-Za-z0-9]+/?,.*/project/index.*,.*/site/index.*,.*/activity/ajaxUnlock.*,.*/output/index.*,.*/image/.*,.*/search/.*,.*/home/.*,.*/organisation/index.*,.*/organisation/list.*,.*/report/loadReport.*,.*/report/reef2050PlanActionReport.*,.*/explore.*,.*/rlp/reportPDF.*'
     }
 }
 pdfbox.fontcache="/data/${appName}/cache/"
