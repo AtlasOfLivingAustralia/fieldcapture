@@ -160,8 +160,8 @@
       "categories": ["Monitoring activities"]
    },
    {
-      "output": "RLP - Social survey",
-      "name": "Social survey",
+      "output": "RLP - Skills and knowledge survey",
+      "name": "Skills and knowledge survey",
       "id": 25,
       "categories": ["Monitoring activities"]
    },
@@ -181,6 +181,12 @@
       "output": "RLP - Pest animal survey",
       "name": "Pest animal survey",
       "id": 28,
+      "categories": ["Monitoring activities"]
+   },
+   {
+      "output": "RLP - Soil testing",
+      "name": "Soil testing",
+      "id": 29,
       "categories": ["Monitoring activities"]
    }
 ]

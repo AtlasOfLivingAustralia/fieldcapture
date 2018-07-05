@@ -147,6 +147,7 @@ function DetailsViewModel(o, project, risks, config) {
    if (config.useRlpTemplate) {
         self.services = new ServicesViewModel(o.serviceIds, config.services, project.outputTargets, period);
         self.description = ko.observable(project.description);
+        self.projectEvaluationApproach = ko.observable(o.projectEvaluationApproach);
         // Initialise with 2 KEQ rows
         if (!o.keq) {
             o.keq = {

@@ -185,14 +185,26 @@ var Master = function (activityId, config) {
         blockUIWithMessage("Saving activity data...");
 
         var toSave = JSON.stringify(jsData);
-        var activityStorageKey = 'activity-'+options.activityId;
+        var activityStorageKey = 'activity-'+activityId;
         amplify.store(activityStorageKey, toSave);
-        $.ajax({
-            url: options.activityUpdateUrl,
-            type: 'POST',
-            data: toSave,
-            contentType: 'application/json',
-            success: function (data) {
+
+        function handleSessionTimeout() {
+            var unloadHandler = window.onbeforeunload;
+            window.onbeforeunload = null;
+            bootbox.alert($(options.timeoutMessageSelector).html(),
+                function() {
+                    window.onbeforeunload = unloadHandler;
+                });
+        };
+
+        healthCheck(options.healthCheckUrl).done(function() {
+            $.ajax({
+                url: options.activityUpdateUrl,
+                type: 'POST',
+                data: toSave,
+                contentType: 'application/json'
+
+            }).done(function (data) {
 
                 if (data.error || data.errors) {
                     self.displayErrors(data.errors || [data.error]);
@@ -210,26 +222,26 @@ var Master = function (activityId, config) {
                     }
                     self.performSaveCallbacks(data, valid, saveCallback);
                 }
-            },
-            error: function (jqXHR, status, error) {
+            }).fail(function (jqXHR, status, error) {
 
-                // This is to detect a redirect to CAS response due to session timeout, which is not
-                // 100% reliable using ajax (e.g. no network will give the same response).
+                // This is to detect a redirect to CAS response due to she same resession timeout, which is not
+                // 100% reliable using ajax (e.g. no network will give tponse).
                 if (jqXHR.readyState == 0) {
-
-                    bootbox.alert($(options.timeoutMessageSelector).html());
+                    handleSessionTimeout();
                 }
                 else {
                     self.displayErrors(['An unhandled error occurred: ' + error]);
                 }
 
-            },
-            complete: function () {
-                $.unblockUI();
-            }
+            }).always(function() {
+                $.unblockUI()
+            });
+
+        }).fail(function() {
+            handleSessionTimeout();
+        }).always(function () {
+            $.unblockUI();
         });
-
-
     };
 
     self.performSaveCallbacks = function(saveResponse, valid, saveCallback) {
@@ -245,7 +257,7 @@ var Master = function (activityId, config) {
         }
     };
 
-    autoSaveModel(self, null, {preventNavigationIfDirty:true});
+    autoSaveModel(self, null, {preventNavigationIfDirty:true, healthCheckUrl:options.healthCheckUrl});
 };
 
 

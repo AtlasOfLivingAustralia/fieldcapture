@@ -148,7 +148,7 @@
         </thead>
         <tbody>
         <tr>
-            <td><span data-bind="text:details.implementation.description, disable: isProjectDetailsLocked()"></span></td>
+            <td><span data-bind="text:details.implementation.description"></span></td>
         </tr>
         </tbody>
     </table>
@@ -195,6 +195,19 @@
             <td class="baseline">
                 <span data-bind="value: data2"></span>
             </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Project Review, Evaluation and Improvement Methodology and Approach</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td><span data-bind="text:details.projectEvaluationApproach"></span></td>
         </tr>
         </tbody>
     </table>
