@@ -265,9 +265,6 @@ var unloadHandler = function() {
  */
 function autoSaveModel(viewModel, saveUrl, options) {
 
-    if (!options.healthCheckUrl) {
-        throw "Missing mandatory option: healthCheckUrl"
-    }
     var serializeModel = function() {
         return (typeof viewModel.modelAsJSON === 'function') ? viewModel.modelAsJSON() : ko.toJSON(viewModel);
     };
@@ -288,9 +285,14 @@ function autoSaveModel(viewModel, saveUrl, options) {
         serializeModel:serializeModel,
         pageExitMessage: 'You have unsaved data.  If you leave the page this data will be lost.',
         preventNavigationIfDirty: false,
-        defaultDirtyFlag:ko.simpleDirtyFlag
+        defaultDirtyFlag:ko.simpleDirtyFlag,
+        healthCheckUrl:fcConfig  && fcConfig.healthCheckUrl
     };
     var config = $.extend(defaults, options);
+
+    if (!config.healthCheckUrl) {
+        throw "Missing mandatory option: healthCheckUrl"
+    }
 
     var autosaving = false;
 

@@ -35,6 +35,11 @@
           type="text/css">
     <g:layoutHead/>
     <g:set var="containerType" scope="request" value="${containerType ?: 'container'}"/>
+    <script type="text/javascript">
+        if (fcConfig) {
+            fcConfig.healthCheckUrl = "${createLink(controller: 'ajax', action:'keepSessionAlive')}";
+        }
+    </script>
 </head>
 
 <body class="${pageProperty(name: 'body.class')}" id="${pageProperty(name: 'body.id')}"
