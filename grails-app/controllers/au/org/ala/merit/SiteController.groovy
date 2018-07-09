@@ -323,14 +323,17 @@ class SiteController {
 
     def createSitesFromShapefile() {
         def siteData = request.JSON
-        Map progress = [total:siteData.sites.size(), uploaded:0].asSynchronized()
+        Map progress = [total:siteData.sites.size(), uploaded:0, errors:[]].asSynchronized()
 
         try {
             session.uploadProgress = progress
 
             while (!progress.cancelling && progress.uploaded < progress.total) {
                 Map site = siteData.sites[progress.uploaded]
-                siteService.createSiteFromUploadedShapefile(siteData.shapeFileId, site.id, site.externalId, site.name, site.description?:'No description supplied', siteData.projectId)
+                Map result = siteService.createSiteFromUploadedShapefile(siteData.shapeFileId, site.id, site.externalId, site.name, site.description?:'No description supplied', siteData.projectId)
+                if (!result.success) {
+                    progress.errors << result.error
+                }
                 progress.uploaded = progress.uploaded + 1
             }
         }
