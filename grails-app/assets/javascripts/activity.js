@@ -579,6 +579,7 @@ var ActivityNavigationViewModel = function(navigationMode, projectId, activityId
         if (valid) {
 
             if (self.stayOnPage) {
+                $.unblockUI();
                 showAlert("Your data has been saved.  Please select one of the the navigation options below to continue.", "alert-info", 'saved-nav-message-holder');
                 $("html, body").animate({
                     scrollTop: $(config.savedNavMessageSelector).offset().top + 'px'

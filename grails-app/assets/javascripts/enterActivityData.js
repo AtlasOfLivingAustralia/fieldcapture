@@ -207,6 +207,7 @@ var Master = function (activityId, config) {
             }).done(function (data) {
 
                 if (data.error || data.errors) {
+                    $.unblockUI();
                     self.displayErrors(data.errors || [data.error]);
                 } else {
                     self.cancelAutosave();
@@ -215,6 +216,7 @@ var Master = function (activityId, config) {
                     amplify.store(activityStorageKey, null);
 
                     if (!valid) {
+                        $.unblockUI();
                         var message = 'Your changes have been saved and you can remain in this activity form, or you can exit this page without losing data. Please note that you cannot mark this activity as finished until all mandatory fields have been completed.';
                         bootbox.alert(message, function () {
                             self.validate();
@@ -224,6 +226,7 @@ var Master = function (activityId, config) {
                 }
             }).fail(function (jqXHR, status, error) {
 
+                $.unblockUI();
                 // This is to detect a redirect to CAS response due to she same resession timeout, which is not
                 // 100% reliable using ajax (e.g. no network will give tponse).
                 if (jqXHR.readyState == 0) {
@@ -233,14 +236,11 @@ var Master = function (activityId, config) {
                     self.displayErrors(['An unhandled error occurred: ' + error]);
                 }
 
-            }).always(function() {
-                $.unblockUI()
             });
 
         }).fail(function() {
-            handleSessionTimeout();
-        }).always(function () {
             $.unblockUI();
+            handleSessionTimeout();
         });
     };
 
