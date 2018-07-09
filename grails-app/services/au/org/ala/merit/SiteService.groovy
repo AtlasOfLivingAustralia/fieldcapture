@@ -226,11 +226,16 @@ class SiteService {
         def url = "${baseUrl}/${shapeFileId}/${siteId}"
 
         def result = webService.doPost(url, site)
-        if (!result.error) {
+
+        if (!result.error && !result.resp.error) {
             String pid = result.resp.id
 
             Map geometry = siteGeometry(pid)
             createSite(projectId, name, description, externalId, 'pid', geometry, pid)
+            return [success:true]
+        }
+        else {
+            return [success:false, error:"Failed to create site for: $name"]
         }
     }
 

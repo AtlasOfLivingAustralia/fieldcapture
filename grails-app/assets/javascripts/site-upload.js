@@ -31,6 +31,8 @@ var SiteUploadViewModel = function(attributeNames, shapes, projectId, shapeFileI
     self.selectAll = ko.observable(true);
     self.progress = ko.observable('0%');
     self.progressText = ko.observable('');
+    self.progressErrors = ko.observableArray();
+    self.finished = ko.observable(false);
     self.selectedCount = ko.observable(0);
     self.selectAll.subscribe(function(newValue) {
         $.each(self.sites(), function(i, site) {site.selected(newValue);});
@@ -53,6 +55,10 @@ var SiteUploadViewModel = function(attributeNames, shapes, projectId, shapeFileI
         $.each(self.sites(), function(i, site) {site.externalId(site.attributes[newValue]);});
     });
 
+    self.finish = function() {
+        document.location.href = config.returnToUrl;
+    };
+
     self.save = function() {
         if (!$(config.validationContainerSelector).validationEngine('validate')) {
             return;
@@ -71,24 +77,28 @@ var SiteUploadViewModel = function(attributeNames, shapes, projectId, shapeFileI
             url: config.saveSitesUrl,
             type: 'POST',
             contentType: 'application/json',
-            data: JSON.stringify(payload),
-            success: function (data) {
-                if (data && data.progress && !data.progress.cancelling) {
-                    self.progressText('Uploaded ' + payload.sites.length + ' of ' + payload.sites.length + ' sites');
-                    self.progress('100%');
+            data: JSON.stringify(payload)
+        }).done(function (data) {
+            if (data && data.progress && !data.progress.cancelling) {
+                var word = 'Uploaded ';
+                if (data.progress.errors) {
+                    self.progressErrors(data.progress.errors);
+                    word = 'Processed ';
                 }
-                setTimeout(function() {
-                    $(config.progressSelector).modal('hide');
-                    document.location.href = config.returnToUrl;
-                }, 1000);
+                self.progressText(word + payload.sites.length + ' of ' + payload.sites.length + ' sites');
+                self.progress('100%');
 
-            },
-            error: function () {
-                $(config.progressSelector).modal('hide');
-
-                alert('There was a problem uploading sites.');
             }
+
+        }).fail(function () {
+            $(config.progressSelector).modal('hide');
+
+            alert('There was a problem uploading sites.');
+        }).always(function() {
+            self.finished(true);
         });
+
+
         self.progressText('Uploaded 0 of '+payload.sites.length+' sites');
         $(config.progressSelector).modal({backdrop:'static'});
         setTimeout(self.showProgress, 2000);
@@ -100,13 +110,18 @@ var SiteUploadViewModel = function(attributeNames, shapes, projectId, shapeFileI
         $.get(config.siteUploadProgressUrl, function(progress) {
             var finished = false;
             if (progress && progress.uploaded !== undefined) {
+                var word = 'Uploaded ';
+                if (progress.errors) {
+                    self.progressErrors(progress.errors);
+                    word = 'Processed ';
+                }
                 var progressPercent = Math.round(progress.uploaded/progress.total * 100)+'%';
                 self.progress(progressPercent);
                 if (progress.cancelling) {
                     self.progressText("Cancelling upload...");
                 }
                 else {
-                    self.progressText('Uploaded '+progress.uploaded+' of '+progress.total+' sites '+progressPercent);
+                    self.progressText(word+progress.uploaded+' of '+progress.total+' sites '+progressPercent);
                 }
 
                 finished = progress.finished;
