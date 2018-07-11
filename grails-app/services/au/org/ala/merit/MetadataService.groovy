@@ -343,5 +343,18 @@ class MetadataService {
         })
     }
 
+    Map findByName(String name, List model) {
+        Map result = model.find{it.name == name}
+        if (!result) {
+            List nested = model.findAll{it.columns}
+
+            nested.find {
+                result = findByName(name, it.columns)
+            }
+        }
+
+        result
+    }
+
 
 }
