@@ -496,7 +496,7 @@ class ActivityController {
 
                 def model = metadataService.annotatedOutputDataModel(outputName)
                 if (listName) {
-                    model = model.find { it.name == listName }?.columns
+                    model = metadataService.findByName(listName, model)?.columns
                 }
                 model = model.findAll{!it.computed}
                 int index = 0;
