@@ -45,21 +45,7 @@ class ActivityController {
     }
 
     private def addOutputModel(Map model) {
-
         model.putAll(activityService.getActivityMetadata(model.activity.type))
-
-        if (model.activity.type == grailsApplication.config.rlp.servicesReport) {
-
-            List projectServices = model.project?.custom?.details?.serviceIds
-            if (projectServices) {
-                List services = metadataService.getProjectServices()
-                List serviceOutputs = services.findAll{it.id in projectServices}.collect{it.output}
-
-                model.metaModel = new JSONObject(model.metaModel)
-                List existingOutputs = model.activity?.outputs?.collect{it.name}
-                model.metaModel.outputs = model.metaModel.outputs.findAll({ it in serviceOutputs || it in existingOutputs})
-            }
-        }
     }
 
     def index(String id) {

@@ -240,7 +240,7 @@
         var locked = ${locked};
         if (locked) {
             var unlockActivity = function() {
-                $.ajax(fcConfig.unlockActivityUrl+'/'+activityId, {method:'POST', async:false});
+                $.ajax(fcConfig.unlockActivityUrl+'/'+activity.activityId, {method:'POST', async:false});
             };
             window.onunload = unlockActivity;
         }
