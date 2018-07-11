@@ -5,6 +5,7 @@ import au.org.ala.merit.command.ReportCommand
 import grails.converters.JSON
 import org.apache.http.HttpStatus
 import org.codehaus.groovy.grails.web.json.JSONArray
+import org.codehaus.groovy.grails.web.json.JSONObject
 import org.joda.time.DateTime
 
 class ProjectController {
@@ -647,12 +648,23 @@ class ProjectController {
         if (params.clearCache) {
             metadataService.clearCache()
         }
-        Map report = reportService.get(reportId)
-        if (reportService.isSubmittedOrApproved(report)) {
+
+        Map model = activityReportModel(id, reportId, false)
+        if (reportService.isSubmittedOrApproved(model.report)) {
             redirect action:'viewReport', id:id, params:[reportId:reportId]
         }
         else {
-            forward(controller: 'activity', action: 'enterData', id: report.activityId, params:[returnTo:createLink(action:'index', id:id)])
+            Map config = projectService.getProgramConfiguration(model.context)
+
+            model.locked = model.activity.lock != null
+            if (!model.locked && config.requiresActivityLocking) {
+                Map result = activityService.lock(model.activity)
+                model.locked = true
+            }
+
+            model.saveReportUrl = createLink(action:'saveReport', id:id, params:[reportId:model.report.reportId])
+
+            render model:model, view:'/activity/activityReport'
         }
     }
 
@@ -662,9 +674,40 @@ class ProjectController {
             error('An invalid report was selected for data entry', id)
             return
         }
-        Map report = reportService.get(reportId)
+        Map model = activityReportModel(id, reportId, false)
 
-        forward(controller: 'activity', action: 'index', id: report.activityId, params:[returnTo:createLink(action:'index', id:id)])
+        render view:'/activity/activityReportView', model:model
+    }
+
+    @PreAuthorise(accessLevel = 'editor')
+    def saveReport(String id, String reportId) {
+        if (!id || !reportId) {
+            error('An invalid report was selected for editing', id)
+            return
+        }
+
+        Map report = reportService.get(reportId)
+        if (reportService.isSubmittedOrApproved(report)) {
+            response.status = HttpStatus.SC_UNAUTHORIZED
+            Map resp = [message:'Submitted or approved reports cannot be modified']
+            render resp as JSON
+        }
+        else {
+            Map activityData = request.JSON
+            Map result = activityService.update(report.activityId, activityData)
+
+            // TODO handle photopoints, but will have to be adjusted for multi-site
+            Map photoPoints = activityData.remove('photoPoints')
+
+            render result as JSON
+        }
+    }
+
+    @PreAuthorise(accessLevel = 'editor')
+    def overrideLockAndEdit(String id, String reportId) {
+        Map report = reportService.get(reportId)
+        Map resp  = activityService.stealLock(report.activityId, g.createLink(action:'viewReport', id:id, params:[reportId:reportId], absolute: true))
+        chain(action:'editReport', id:id, params:[reportId:reportId])
     }
 
     @PreAuthorise(accessLevel = 'editor')
@@ -694,20 +737,58 @@ class ProjectController {
     def viewReportCallback(String id, String reportId) {
 
         if (pdfGenerationService.authorizePDF(request)) {
-            Map report = reportService.get(reportId)
-            Map activity = activityService.get(report.activityId)
-            Map model = activityService.getActivityMetadata(activity.type)
-            model.activity = activity
-            model.context = projectService.get(id)
-            model.themes = []
-            model.printView = true
-            model.report = report
+            Map model = activityReportModel(id, reportId, true)
 
             render view:'/activity/activityReportView', model:model
         }
         else {
             render status:HttpStatus.SC_UNAUTHORIZED
         }
+    }
+
+    private Map activityReportModel(String projectId, String reportId, boolean printView) {
+        Map report = reportService.get(reportId)
+        Map activity = activityService.get(report.activityId)
+        Map model = activityService.getActivityMetadata(activity.type)
+
+        Map project = projectService.get(projectId)
+        model.metaModel = filterOutputModel(model.metaModel, project, activity)
+
+        model.activity = activity
+        model.context = project
+        model.themes = []
+        model.printView = printView
+        model.report = report
+        model.returnTo = g.createLink(action:'index', id:projectId)
+
+        model
+    }
+
+    /**
+     * If the activity type to be displayed is the RLP Outputs report, only show the outputs that align with
+     * services to be delivered by the model.  This method has a side effect of modifying the
+     * @param model the model containing the activity metaModel and output templates.
+     * @param project the project associated with the report.
+     */
+    private Map filterOutputModel(Map activityModel, Map project, Map existingActivityData) {
+
+        Map filteredModel
+        if (activityModel.name == grailsApplication.config.rlp.servicesReport) {
+
+            List projectServices = project?.custom?.details?.serviceIds
+            if (projectServices) {
+                List services = metadataService.getProjectServices()
+                List serviceOutputs = services.findAll{it.id in projectServices}.collect{it.output}
+
+                filteredModel = new JSONObject(activityModel)
+                List existingOutputs = existingActivityData?.outputs?.collect{it.name}
+                filteredModel.outputs = activityModel.outputs.findAll({ it in serviceOutputs || it in existingOutputs})
+            }
+        }
+        else {
+            filteredModel = activityModel
+        }
+        filteredModel
     }
 
     @PreAuthorise(accessLevel = 'caseManager')

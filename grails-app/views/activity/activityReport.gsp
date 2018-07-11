@@ -202,7 +202,7 @@
             <button type="button" id="save" class="btn btn-primary">Save changes</button>
             <button type="button" id="cancel" class="btn">Cancel</button>
             <label class="checkbox inline" data-bind="visible:progress() != 'corrected'">
-                <input data-bind="checked:transients.markedAsFinished" type="checkbox"> Mark this activity as finished.
+                <input data-bind="checked:transients.markedAsFinished" type="checkbox"> Mark this report as complete.
             </label>
         </div>
 
@@ -234,7 +234,7 @@
         var locked = ${locked};
         if (locked) {
             var unlockActivity = function() {
-                $.ajax(fcConfig.unlockActivityUrl+'/'+activityId, {method:'POST', async:false});
+                $.ajax(fcConfig.unlockActivityUrl+'/'+activity.activityId, {method:'POST', async:false});
             };
             window.onunload = unlockActivity;
         }

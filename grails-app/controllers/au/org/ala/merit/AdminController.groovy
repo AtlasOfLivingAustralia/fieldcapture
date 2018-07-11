@@ -6,6 +6,13 @@ import grails.converters.JSON
 import grails.plugin.cache.GrailsCacheManager
 import grails.util.Environment
 import grails.util.GrailsNameUtils
+import org.apache.poi.ss.usermodel.Row
+import org.apache.poi.ss.usermodel.Sheet
+import org.apache.poi.ss.usermodel.Workbook
+import org.apache.poi.ss.usermodel.WorkbookFactory
+import org.apache.poi.ss.util.CellReference
+import org.grails.plugins.csv.CSVMapReader
+import org.h2.store.fs.FileChannelInputStream
 import org.joda.time.Period
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 import org.springframework.web.multipart.MultipartHttpServletRequest
@@ -739,6 +746,162 @@ class AdminController {
             flash.message = 'No shapefile attached'
             render view:'tools'
         }
+    }
+
+
+    def importOutcomes() {
+        if (request.respondsTo('getFile')) {
+            def f = request.getFile('pdf')
+
+            Workbook workbook = WorkbookFactory.create(f.inputStream)
+
+            Map sheetConfig = [
+                    "Ramsar Wetlands":[1, 1],
+                    "TE Communities":[1, 1],
+                    "World Heritage":[1, 1],
+                    "Soil Priorities":[2, 1],
+                    "TSS Species ":[1, 3]
+            ]
+            sheetConfig.each {k, v ->
+                Sheet sheet = workbook.getSheet(k)
+
+                printOutStuffAboutSheet(sheet, v[0], v[1])
+                println ""
+
+            }
+
+
+            Map result = [message:'ok']
+            flash.message = result.message
+            render view:'tools'
+
+
+        } else {
+            flash.message = 'No shapefile attached'
+            render view:'tools'
+        }
+    }
+
+    private void printOutStuffAboutSheet(Sheet sheet, int startRow, int startColForMu) {
+        Row header = sheet.getRow(startRow)
+        List mus = []
+        int col = 0
+        while (col < header.getLastCellNum()) {
+            if (col > 0) {
+                mus << header.getCell(col)
+            }
+            col++
+        }
+
+        List priorities = []
+        Map prioritiesByMu = [:].withDefault{[]}
+        int rowNum = startRow+1
+        Row row = sheet.getRow(rowNum)
+        String ramsar
+        while (row != null) {
+
+            col = 0
+            while (col < row.getLastCellNum()) {
+
+                String value = row.getCell(col)
+                if (col == 0) {
+                    ramsar = value
+                    priorities << ramsar
+                }
+                else if (col >= startColForMu) {
+                    String mu = mus[col-1]
+                    if (value && value.trim() != '-') {
+                        prioritiesByMu[mu] << ramsar
+                    }
+                }
+                col++
+            }
+            rowNum++
+            row = sheet.getRow(rowNum)
+        }
+
+        println priorities as JSON
+        println mus
+        println prioritiesByMu as JSON
+    }
+
+    def generateServices() {
+        InputStreamReader isr = new InputStreamReader(new FileInputStream("/Users/god08d/Documents/MERIT/services.csv"), 'UTF-8')
+        CSVMapReader csvMapReader = new CSVMapReader(isr)
+
+        List<Map> services = csvMapReader.readAll()
+
+        List<Map> servicesjson = []
+
+        List<Map> scores = []
+
+        List<Map> outputs = []
+
+        services.eachWithIndex { Map service, int i ->
+            println service
+            def categories = service.Category.split(",").findAll()
+            servicesjson << [
+                    name:service.Name.trim(),
+                    output:service.Output.trim(),
+                    id:(i+1),
+                    categories:categories.collect{it.trim()}]
+
+            ['Score 1', 'Score 2', 'Score 3'].each{ score ->
+                if (service[score]) {
+                    scores << [
+                            label:service[score].trim(),
+                            outputType:service.Output.trim(),
+                            category:'RLP',
+                            units:'',
+                            isOutputTarget:true,
+                            status:'active',
+                            entityTypes:['RLP Output Report'],
+                            configuration:[
+                                    label:service[score].trim(),
+                                    filter:[
+                                            filterValue:service.Output.trim(),
+                                            property:'name',
+                                            type:'filter'
+                                    ],
+                                    childAggregations:[
+                                            [
+                                                    "type":service[score+' Method'].trim(),
+                                                    "property":"data."+service[score+' Attribute'].trim()
+                                            ]
+                                    ]
+                            ]
+
+                    ]
+                }
+            }
+
+            File templateFolder = new File("/Users/god08d/projects/chrisala-ecodata/models/"+service.Template.trim())
+
+            if (!templateFolder.exists()) {
+                templateFolder.mkdir()
+            }
+            outputs << [
+                    name:service.Output.trim(),
+                    template:service.Template.trim(),
+                    title:service.Name.trim()
+            ]
+        }
+
+        File servicesFile = new File("/Users/god08d/projects/chrisala-fieldcapture/grails-app/conf/services.json")
+        servicesFile.withWriter "UTF-8", { out ->
+            out << (servicesjson as JSON).toString(true)
+        }
+
+        File scoresFile = new File("/Users/god08d/projects/chrisala-ecodata/scripts/misc/rlpScores.js")
+        scoresFile.withWriter "UTF-8", { out ->
+            out << "scores = "+(scores as JSON).toString(true)
+        }
+
+        File outputFile = new File("/Users/god08d/projects/chrisala-ecodata/scripts/misc/rlpOutputs.json")
+        outputFile.withWriter("UTF-8", { out ->
+            out << (outputs as JSON).toString(true)
+        })
+
     }
 
 
