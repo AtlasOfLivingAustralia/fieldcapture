@@ -38,7 +38,7 @@
                     <div class="control-group">
                         <label class="control-label" for="documentStage">Associate to ${activityPeriodDescriptor ?: 'Stage'}</label>
                         <div class="controls">
-                            <select id="documentStage" style="width: 35%;" data-bind="options:stages, optionsCaption: 'Please select', value:stage" data-validation-engine="validate[required]"></select>
+                            <select id="documentStage" style="width: 35%;" data-bind="options:stages, optionsCaption: 'Please select', value:stage" data-validation-engine="validate[funcCall[validateReportAssociation],required]"></select>
                         </div>
                     </div>
                     <!-- /ko -->
