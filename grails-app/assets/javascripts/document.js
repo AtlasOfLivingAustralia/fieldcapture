@@ -360,12 +360,12 @@ function showDocumentAttachInModal(uploadUrl, documentViewModel, modalSelector, 
 
     function validateReportAssociation(field, rules, i, options) {
         var role = ko.utils.unwrapObservable(documentViewModel.role);
-        var public = ko.utils.unwrapObservable(documentViewModel.public);
+        var documentPublic = ko.utils.unwrapObservable(documentViewModel.public);
         var type = ko.utils.unwrapObservable(documentViewModel.type);
 
         // Blank values won't be validated unless the "required" rule is
         // present so we have to fake it using this custom validation.
-        if (!field.val() && role == 'information' && (type != 'image' || !public)) {
+        if (!field.val() && role == 'information' && (type != 'image' || !documentPublic)) {
             if (rules[rules.length-1] != 'required') {
                 rules.push('required')
             }
