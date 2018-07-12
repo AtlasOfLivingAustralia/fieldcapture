@@ -8,50 +8,50 @@
                     id="overall-risk"></select>
         </span>
     </div>
-    <table style="width:100%;">
+    <table>
         <thead>
         <tr>
-            <th>Type of threat / risk <span style="color: red;"><b>*</b></span></th>
-            <th>Description <span style="color: red;"><b>*</b></span></th>
-            <th>Likelihood <span style="color: red;"><b>*</b></span></th>
-            <th>Consequence <span style="color: red;"><b>*</b></span></th>
-            <th>Risk rating</th>
-            <th>Current control / <br/>Contingency strategy <span style="color: red;"><b>*</b></span></th>
-            <th>Residual risk <span style="color: red;"><b>*</b></span></th>
-            <th></th>
+            <th class="risk-type required">Type of threat / risk </th>
+            <th class="risk-description required">Description </th>
+            <th class="risk-likelihood required">Likelihood </th>
+            <th class="risk-consequence required">Consequence </th>
+            <th class="risk-rating">Risk rating</th>
+            <th class="risk-control required">Current control / <br/>Contingency strategy </th>
+            <th class="residual-risk required">Residual risk </th>
+            <th class="risk-actions"></th>
         </tr>
         </thead>
         <tbody data-bind="foreach : risks.rows">
         <tr>
-            <td width="18%">
-                <select style="width:98%;" data-validation-engine="validate[required]"
+            <td class="risk-type">
+                <select data-validation-engine="validate[required]"
                         data-bind="options: $parent.threatOptions, value: threat, optionsCaption: 'Please select', disable:$parent.risksDisabled"></select>
             </td>
-            <td width="20%">
-                <textarea style="width:97%;" data-validation-engine="validate[required]" class="input-xlarge"
+            <td class="risk-description">
+                <textarea data-validation-engine="validate[required]" class="input-xlarge"
                           data-bind="value: description, disable:$parent.risksDisabled" rows="5"></textarea>
             </td>
-            <td width="10%">
-                <select style="width:98%;" data-validation-engine="validate[required]"
+            <td class="risk-likelihood">
+                <select data-validation-engine="validate[required]"
                         data-bind="options: $parent.likelihoodOptions, value: likelihood, optionsCaption: 'Please select', disable:$parent.risksDisabled"></select>
             </td>
-            <td width="10%">
-                <select style="width:98%;" data-validation-engine="validate[required]"
+            <td class="risk-consequence">
+                <select data-validation-engine="validate[required]"
                         data-bind="options: $parent.consequenceOptions, value: consequence,  optionsCaption: 'Please select', disable:$parent.risksDisabled"></select>
             </td>
-            <td width="8%">
-                <b><span style="width:98%;" data-bind="text:riskRating"></span></b>
+            <td class="risk-rating">
+                <b><span data-bind="text:riskRating"></span></b>
             </td>
-            <td width="20%">
-                <textarea style="width:98%;" data-validation-engine="validate[required]"
+            <td class="risk-control">
+                <textarea data-validation-engine="validate[required]"
                           data-bind="value : currentControl, disable:$parent.risksDisabled" rows="5"></textarea>
             </td>
-            <td width="10%">
+            <td class="residual-risk">
                 <!-- Residual risk -->
-                <select style="width:98%;" data-validation-engine="validate[required]"
+                <select data-validation-engine="validate[required]"
                         data-bind="options: $parent.ratingOptions, value: residualRisk, optionsCaption: 'Please select', disable:$parent.risksDisabled"></select>
             </td>
-            <td width="4%">
+            <td class="risk-actions">
                 <span data-bind="if: $index() && !$parent.risksDisabled()"><i class="icon-remove" data-bind="click: $parent.removeRisk"></i>
                 </span>
             </td>
