@@ -161,4 +161,8 @@ table tr.header th {
     float:right;
 }
 
+span.helphover {
+    border: 2px;
+    background-clip:content-box;
+}
 

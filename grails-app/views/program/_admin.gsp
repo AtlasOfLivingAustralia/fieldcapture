@@ -68,7 +68,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="progress-reporting-group">Project progress reporting group</label>
+                    <label for="progress-reporting-group">Project Output reporting group</label>
                     <select class="form-control" id="progress-reporting-group" data-bind="value:activityReportingPeriod, options:activityReportingOptions, optionsText:'label', optionsValue:'label', optionsCaption:'Please select'" data-validation-engine="validate[required]"></select>
 
                 </div>
