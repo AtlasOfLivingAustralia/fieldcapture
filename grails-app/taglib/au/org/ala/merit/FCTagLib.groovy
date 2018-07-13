@@ -183,14 +183,14 @@ class FCTagLib {
             else {
                 helpText = body()
             }
-            Map anchorAttrs = [href:'javascript:void(0);', class:'helphover', 'data-original-title':title, 'data-placement':'top', 'data-content':helpText, 'data-trigger':'click']
+            Map spanAttrs = [class:'helphover', 'data-original-title':title, 'data-placement':'top', 'data-content':helpText, 'data-trigger':'click']
             if (attrs.container) {
-                anchorAttrs << ['data-container':attrs.container]
+                spanAttrs << ['data-container':attrs.container]
             }
             if (attrs.html) {
-                anchorAttrs << ['data-html':'true']
+                spanAttrs << ['data-html':'true']
             }
-            mb.a(anchorAttrs) {
+            mb.span(spanAttrs) {
                 i(class:'fa fa-question-circle') {
                     mkp.yieldUnescaped("&nbsp;")
                 }
