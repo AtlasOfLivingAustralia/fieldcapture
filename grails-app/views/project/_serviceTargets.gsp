@@ -32,6 +32,8 @@
                     data-validation-engine="validate[required]"></select>
         </td>
         <td class="budget-cell">
+            <input id="minimumTargetsValid" type="text" data-bind="disable: $root.isProjectDetailsLocked(), value:minimumTargetsValid" data-validation-engine="validate[required]" data-errormessage="The sum of the minimum targets must be less than or equal to the overall target">
+
             <input type="number" data-bind="value: target, disable: $root.isProjectDetailsLocked()"
                    data-validation-engine="validate[min[0.01]]">
         </td>
@@ -40,7 +42,7 @@
         <td class="budget-cell">
             <input type="number"
                    data-bind="value: target, disable: $root.isProjectDetailsLocked()"
-                   data-validation-engine="validate[custom[number]]"/>
+                   data-validation-engine="validate[custom[number],min[0]]"/>
         </td>
         <!-- /ko -->
 

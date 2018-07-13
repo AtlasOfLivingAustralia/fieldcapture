@@ -138,6 +138,13 @@ function MERIPlan(project, config) {
         });
         return selectedOutcomeIndex >= agricultureOutcomeStartIndex;
     });
+    self.isAgricultureProject.subscribe(function() {
+        // When this attribute changes, hidden form sections become visible and need help attached.
+        setTimeout(function() {
+            $('.helphover').popover({animation: true, trigger:'hover'});
+        }, 1);
+
+    });
 
 };
 
@@ -228,6 +235,16 @@ function ServicesViewModel(serviceIds, allServices, outputTargets, periods) {
         target.target = ko.observable();
 
         target.periodTargets = _.map(periods, function(period) { return {period:period, target: ko.observable(0) } });
+
+        target.minimumTargetsValid = ko.pureComputed(function() {
+            var sum = 0;
+            _.each(target.periodTargets, function(periodTarget) {
+                if (Number(periodTarget.target())) {
+                    sum += Number(periodTarget.target());
+                }
+            });
+            return sum <= (target.target() || 0) ? 'valid' : '';
+        });
 
         target.updateTargets = function() {
 
