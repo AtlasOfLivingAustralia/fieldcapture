@@ -55,7 +55,10 @@ class ProjectController {
             user.hasViewAccess = projectService.canUserViewProject(user.userId, id) ?: false
         }
 
-        Map config = projectService.getProgramConfiguration(project)
+        Map config
+        if (project && !project.error) {
+            config = projectService.getProgramConfiguration(project)
+        }
 
         if (!project || project.error || (config?.visibility == 'private' && !user?.hasViewAccess)) {
             flash.message = "Project not found with id: ${id}"
