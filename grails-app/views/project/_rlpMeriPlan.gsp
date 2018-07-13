@@ -22,8 +22,12 @@
                 </select>
                 <!-- /ko -->
                 <!-- ko if:$root.isAgricultureProject() -->
-                <select size="5" multiple="multiple" style="width:100%" class="asset" data-errormessage="Please select one or two primary investment priorities" data-validation-engine="validate[required,maxSize[2]]" data-bind="options:details.outcomes.outcomePriorities(details.outcomes.primaryOutcome.description()), selectedOptions:details.outcomes.primaryOutcome.assets, disable: isProjectDetailsLocked()" >
-                </select>
+                <ul class="unstyled" data-bind="foreach:details.outcomes.outcomePriorities(details.outcomes.primaryOutcome.description())">
+                    <li>
+                        <label class="checkbox"><input type="checkbox" name="secondaryPriority" data-validation-engine="validate[minCheckbox[1],maxCheckbox[2]" data-bind="value:$data, checked:$parent.details.outcomes.primaryOutcome.assets, disable: $parent.isProjectDetailsLocked()"> <!--ko text: $data--><!--/ko--></label>
+                    </li>
+                </ul>
+
                 <!-- /ko -->
             </td>
         </tr>

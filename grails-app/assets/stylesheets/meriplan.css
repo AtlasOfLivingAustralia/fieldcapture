@@ -9,7 +9,7 @@ table tr.header th {
 }
 
 
-.meri-plan td textarea, .meri-plan td select, .meri-plan td input {
+.meri-plan td textarea, .meri-plan td select, .meri-plan td input:not([type=checkbox]) {
     box-sizing: border-box;
     width: 100%;
 }
@@ -55,7 +55,7 @@ table tr.header th {
     width: 100%;
 }
 
-.meri-plan .priority input {
+.meri-plan .priority input:not([type=checkbox]) {
     width: 90%;
     height: 30px;
 }
@@ -120,6 +120,35 @@ table tr.header th {
 
 .meri-plan td .select2.select2-container {
     width: 100% !important;
+}
+
+.meri-plan .risk-type {
+    width: 14%;
+}
+.meri-plan .risk-description {
+    width: 23%;
+}
+.meri-plan .risk-likelihood {
+    width: 10%;
+}
+.meri-plan .risk-consequence {
+    width: 10%;
+}
+.meri-plan .risk-rating {
+    width: 10%;
+}
+.meri-plan .risk-control {
+    width: 23%;
+}
+.meri-plan .residual-risk {
+    width: 10%;
+}
+.meri-plan .risk-actions {
+     width: 1em;
+}
+
+#project-risks-threats table {
+    width:100%;
 }
 
 
