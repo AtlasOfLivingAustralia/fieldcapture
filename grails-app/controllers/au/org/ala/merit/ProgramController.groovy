@@ -17,7 +17,7 @@ class ProgramController {
     ActivityService activityService
     PdfGenerationService pdfGenerationService
 
-    @PreAuthorise(accessLevel='editor')
+    @PreAuthorise(accessLevel='editor', redirectController='home')
     def index(String id) {
         def program = programService.get(id)
 
