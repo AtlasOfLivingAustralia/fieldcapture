@@ -763,6 +763,7 @@ class ProjectController {
         model.printView = printView
         model.report = report
         model.returnTo = g.createLink(action:'index', id:projectId)
+        model.contextViewUrl = model.returnTo
 
         model
     }
@@ -775,7 +776,7 @@ class ProjectController {
      */
     private Map filterOutputModel(Map activityModel, Map project, Map existingActivityData) {
 
-        Map filteredModel
+        Map filteredModel = activityModel
         if (activityModel.name == grailsApplication.config.rlp.servicesReport) {
 
             List projectServices = project?.custom?.details?.serviceIds
@@ -787,9 +788,6 @@ class ProjectController {
                 List existingOutputs = existingActivityData?.outputs?.collect{it.name}
                 filteredModel.outputs = activityModel.outputs.findAll({ it in serviceOutputs || it in existingOutputs})
             }
-        }
-        else {
-            filteredModel = activityModel
         }
         filteredModel
     }
