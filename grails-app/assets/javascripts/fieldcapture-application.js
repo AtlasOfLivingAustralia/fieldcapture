@@ -285,9 +285,14 @@ function autoSaveModel(viewModel, saveUrl, options) {
         serializeModel:serializeModel,
         pageExitMessage: 'You have unsaved data.  If you leave the page this data will be lost.',
         preventNavigationIfDirty: false,
-        defaultDirtyFlag:ko.simpleDirtyFlag
+        defaultDirtyFlag:ko.simpleDirtyFlag,
+        healthCheckUrl:fcConfig  && fcConfig.healthCheckUrl
     };
     var config = $.extend(defaults, options);
+
+    if (!config.healthCheckUrl) {
+        throw "Missing mandatory option: healthCheckUrl"
+    }
 
     var autosaving = false;
 
@@ -355,6 +360,37 @@ function autoSaveModel(viewModel, saveUrl, options) {
         }
     );
 
+    var saveFailureHandler = function (data) {
+        if (config.preventNavigationIfDirty) {
+            unloadHandler.removeCallback(onunloadHandler);
+        }
+        if (config.blockUIOnSave) {
+            $.unblockUI();
+        }
+        var message = $(config.timeoutMessageSelector).html();
+        if (message) {
+            bootbox.alert(message, function() {
+                if (config.preventNavigationIfDirty) {
+                    unloadHandler.addCallback(onunloadHandler, 0);
+                }
+            });
+        }
+    };
+
+    /**
+     * This method:
+     * 1. Saves the model to local storage
+     * 2. Checks to see if the server is available and the user logged in
+     * 3. Saves the model.
+     * 4. Cleans up the local storage.
+     *
+     * If 2. fails, the local storage is not deleted and a message is displayed to the user.
+     *
+     * @param successCallback a callback to be invoked if the save is successful.
+     * @param errorCallback a callback to be invoked if the save fails.
+     *
+     * @return a jquery Deferred object that will be resolved with the combined result of the health check and save result.
+     */
     viewModel.saveWithErrorDetection = function(successCallback, errorCallback) {
         if (config.blockUIOnSave) {
             blockUIWithMessage(config.blockUISaveMessage);
@@ -363,15 +399,27 @@ function autoSaveModel(viewModel, saveUrl, options) {
 
         var json = config.serializeModel();
 
-        // Store data locally in case the save fails.plan
+        // Store data locally in case the save fails.
         amplify.store(config.storageKey, json);
 
-        return $.ajax({
+        var result = $.Deferred();
+        var invokeCallbacksAndRejectResult = function() {
+            if (typeof errorCallback === 'function') {
+                errorCallback(data);
+            }
+            if (typeof config.errorCallback === 'function') {
+                config.errorCallback(data);
+            }
+            result.reject();
+        };
+
+        healthCheck(config.healthCheckUrl).done(function() {
+            $.ajax({
                 url: saveUrl,
                 type: 'POST',
                 data: json,
                 contentType: 'application/json'
-            }).done(function (data) {
+            }).done(function (data, textStatus, jqXHR) {
                 if (data.error) {
                     if (config.blockUIOnSave) {
                         $.unblockUI();
@@ -401,30 +449,11 @@ function autoSaveModel(viewModel, saveUrl, options) {
                         config.successCallback(data);
                     }
                 }
-            })
-            .fail(function (data) {
-                if (config.preventNavigationIfDirty) {
-                    unloadHandler.removeCallback(onunloadHandler);
-                }
-                if (config.blockUIOnSave) {
-                    $.unblockUI();
-                }
-                var message = $(config.timeoutMessageSelector).html();
-                if (message) {
-                    bootbox.alert(message, function() {
-                        if (config.preventNavigationIfDirty) {
-                            unloadHandler.addCallback(onunloadHandler, 0);
-                        }
-                    });
-                }
-                if (typeof errorCallback === 'function') {
-                    errorCallback(data);
-                }
-                if (typeof config.errorCallback === 'function') {
-                    config.errorCallback(data);
-                }
-            });
+                result.resolve();
+            }).fail(saveFailureHandler).fail(invokeCallbacksAndRejectResult);
+        }).fail(saveFailureHandler).fail(invokeCallbacksAndRejectResult);
 
+        return result;
     }
 
 }
@@ -949,168 +978,6 @@ function formatDate(t) {
     var dd  = d.getDate().toString();
     return yyyy + "-" + (mm[1]?mm:"0"+mm[0]) + "-" + (dd[1]?dd:"0"+dd[0]);
 };
-
-
-
-var BlogViewModel = function(entries, type) {
-    var self = this;
-    self.entries = ko.observableArray();
-
-    for (var i=0; i<entries.length; i++) {
-        if (!type || entries[i].type == type) {
-            self.entries.push(new BlogEntryViewModel(entries[i]));
-        }
-    }
-};
-
-var BlogEntryViewModel = function(blogEntry) {
-    var self = this;
-    var now = convertToSimpleDate(new Date());
-    self.blogEntryId = ko.observable(blogEntry.blogEntryId);
-    self.projectId = ko.observable(blogEntry.projectId);
-    self.title = ko.observable(blogEntry.title || '');
-    self.date = ko.observable(blogEntry.date || now).extend({simpleDate:false});
-    self.keepOnTop = ko.observable(blogEntry.keepOnTop || false);
-    self.content = ko.observable(blogEntry.content).extend({markdown:true});
-    self.stockIcon = ko.observable(blogEntry.stockIcon);
-    self.documents = ko.observableArray(blogEntry.documents || []);
-    self.viewMoreUrl = ko.observable(blogEntry.viewMoreUrl);
-    self.image = ko.computed(function() {
-        return self.documents()[0];
-    });
-    self.type = ko.observable();
-    self.formattedDate = ko.computed(function() {
-        return moment(self.date()).format('Do MMM YYYY')
-    });
-    self.shortContent = ko.computed(function() {
-        var content = self.content() || '';
-        if (content.length > 60) {
-            content = content.substring(0, 100)+'...';
-        }
-        return content;
-    });
-    self.imageUrl = ko.computed(function() {
-        if (self.image()) {
-            return self.image().url;
-        }
-    });
-    self.imageThumbnailUrl =  ko.computed(function() {
-        if (self.image()) {
-            return self.image().thumbnailUrl || self.image().url;
-        }
-    });
-};
-
-var EditableBlogEntryViewModel = function(blogEntry, options) {
-
-    var defaults = {
-        validationElementSelector:'.validationEngineContainer',
-        types:['News and Events', 'Project Stories', 'Photo'],
-        returnTo:fcConfig.returnTo,
-        blogUpdateUrl:fcConfig.blogUpdateUrl
-    };
-    var config = $.extend(defaults, options);
-    var self = this;
-    var now = convertToSimpleDate(new Date());
-    self.blogEntryId = ko.observable(blogEntry.blogEntryId);
-    self.projectId = ko.observable(blogEntry.projectId || undefined);
-    self.title = ko.observable(blogEntry.title || '');
-    self.date = ko.observable(blogEntry.date || now).extend({simpleDate:false});
-    self.keepOnTop = ko.observable(blogEntry.keepOnTop || false);
-    self.content = ko.observable(blogEntry.content);
-    self.stockIcon = ko.observable(blogEntry.stockImageName);
-    self.documents = ko.observableArray();
-    self.image = ko.observable();
-    self.type = ko.observable(blogEntry.type);
-    self.viewMoreUrl = ko.observable(blogEntry.viewMoreUrl).extend({url:true});
-
-    self.imageUrl = ko.computed(function() {
-        if (self.image()) {
-            return self.image().url;
-        }
-    });
-    self.imageThumbnailUrl =  ko.computed(function() {
-        if (self.image()) {
-            return self.image().thumbnailUrl || self.image().url;
-        }
-    });
-    self.imageId = ko.computed(function() {
-        if (self.image()) {
-           return self.image().documentId;
-        }
-    });
-    self.documents.subscribe(function() {
-        if (self.documents()[0]) {
-           self.image(new DocumentViewModel(self.documents()[0]));
-        }
-        else {
-            self.image(undefined);
-        }
-    });
-    self.removeBlogImage = function() {
-        self.documents([]);
-    };
-
-    self.modelAsJSON = function() {
-        var js = ko.mapping.toJS(self, {ignore:['transients', 'documents', 'image', 'imageUrl']});
-        if (self.image()) {
-            js.image = self.image().modelForSaving();
-        }
-        return JSON.stringify(js);
-    };
-
-    self.editContent = function() {
-        editWithMarkdown('Blog content', self.content);
-    };
-
-    self.save = function() {
-        if ($(config.validationElementSelector).validationEngine('validate')) {
-            self.saveWithErrorDetection(
-                function() {document.location.href = config.returnTo},
-                function(data) {bootbox.alert("Error: "+data.responseText);}
-            );
-        }
-    };
-
-    self.cancel = function() {
-        document.location.href = config.returnTo;
-    };
-
-    self.transients = {};
-    self.transients.blogEntryTypes = config.types;
-
-    if (blogEntry.documents && blogEntry.documents[0]) {
-        self.documents.push(blogEntry.documents[0]);
-    }
-    $(config.validationElementSelector).validationEngine();
-    autoSaveModel(self, config.blogUpdateUrl, {blockUIOnSave:true});
-};
-
-var BlogSummary = function(blogEntries) {
-    var self = this;
-    self.entries = ko.observableArray();
-
-    self.load = function(entries) {
-        self.entries($.map(entries, function(blogEntry) {
-            return new BlogEntryViewModel(blogEntry);
-        }));
-    };
-
-    self.newBlogEntry = function() {
-        document.location.href = fcConfig.createBlogEntryUrl;
-    };
-    self.deleteBlogEntry = function(entry) {
-        var url = fcConfig.deleteBlogEntryUrl+'&id='+entry.blogEntryId();
-        $.post(url).done(function() {
-            document.location.reload();
-        });
-    };
-    self.editBlogEntry = function(entry) {
-        document.location.href = fcConfig.editBlogEntryUrl+'&id='+entry.blogEntryId();
-    };
-    self.load(blogEntries);
-};
-
 
 /**
  * Animates the replacement of an element with a new element obtained via an ajax (GET) call.

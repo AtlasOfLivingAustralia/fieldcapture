@@ -33,6 +33,11 @@
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400italic,600,700" rel="stylesheet" type="text/css">
     <g:layoutHead />
     <g:set var="containerType" scope="request" value="${containerType?:'container'}"/>
+    <script type="text/javascript">
+        if (fcConfig) {
+            fcConfig.healthCheckUrl = "${createLink(controller: 'ajax', action:'keepSessionAlive')}";
+        }
+    </script>
 </head>
 <body class="${pageProperty(name:'body.class')}" id="${pageProperty(name:'body.id')}" onload="${pageProperty(name:'body.onload')}">
 <g:set var="introText"><fc:getSettingContent settingType="${SettingPageType.INTRO}"/></g:set>

@@ -66,14 +66,29 @@ class ReportGenerator {
             }
 
         }
-
-        // Align the report end dates to the owning entities date constraints
-        if (reports) {
-            reports[-1].toDate = DateUtils.format(reportOwner.periodEnd.withZone(DateTimeZone.UTC))
-            reports[-1].submissionDate = reports[-1].toDate
-        }
+        alignEndDates(reports, reportOwner.periodEnd)
 
         reports
+    }
+
+    /**
+     * It will normally make sense to align the final report with the end date of the report owner.
+     * The only case this currently won't be done is for single reports that finish before the project end.
+     * @param reports reports to check
+     * @param ownerEndDate the end date of the report owner (e.g project / program etc)
+     */
+    private void alignEndDates(List<Map> reports, DateTime ownerEndDate) {
+        if (reports) {
+            String finalToDate = DateUtils.format(ownerEndDate.withZone(DateTimeZone.UTC))
+
+            // Don't align the end date if there is only one report and it finishes before the owner end date.
+            // This is to support single reports due on year 3 of the project (specifically the RLP Outcomes 1 Report)
+            if (reports.size() > 1 || reports[-1].toDate > finalToDate) {
+                reports[-1].toDate = finalToDate
+                reports[-1].submissionDate = finalToDate
+            }
+
+        }
     }
 
     private Map createReport(ReportConfig reportConfig, ReportOwner reportOwner, int sequenceNo, Interval reportInterval) {

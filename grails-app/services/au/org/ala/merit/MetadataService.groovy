@@ -114,6 +114,21 @@ class MetadataService {
         })
     }
 
+    /**
+     * Returns a map containing both the activity model and the output model templates for the specified activity type.
+     * @param activityType the type of activity
+     */
+    Map getActivityMetadata(String activityType) {
+        Map model = [:]
+        // the activity meta-model
+        model.metaModel = getActivityModel(activityType)
+        // the array of output models
+        model.outputModels = model.metaModel?.outputs?.collectEntries {
+            [ it, getDataModelFromOutputName(it)] }
+
+        model
+    }
+
     def updateOutputDataModel(model, template) {
         log.debug "updating template ${template}"
         //log.debug "model class is ${model.getClass()}"
@@ -341,6 +356,19 @@ class MetadataService {
 
             services
         })
+    }
+
+    Map findByName(String name, List model) {
+        Map result = model.find{it.name == name}
+        if (!result) {
+            List nested = model.findAll{it.columns}
+
+            nested.find {
+                result = findByName(name, it.columns)
+            }
+        }
+
+        result
     }
 
 

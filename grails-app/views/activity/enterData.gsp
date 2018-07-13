@@ -38,7 +38,8 @@
         featureServiceUrl:"${createLink(controller: 'proxy', action: 'feature')}",
         wmsServiceUrl:"${grailsApplication.config.spatial.geoserverUrl}",
         unlockActivityUrl:"${createLink(controller:'activity', action:'ajaxUnlock')}/<fc:currentUserId/>",
-        projectActivitiesUrl:"${createLink(controller:'project', action:'searchActivities', id:activity.projectId)}"
+        projectActivitiesUrl:"${createLink(controller:'project', action:'searchActivities', id:activity.projectId)}",
+        healthCheckUrl:"${createLink(controller:'ajax', action:'keepSessionAlive')}"
         },
         here = document.location.href;
     </script>
@@ -239,7 +240,7 @@
         var locked = ${locked};
         if (locked) {
             var unlockActivity = function() {
-                $.ajax(fcConfig.unlockActivityUrl+'/'+activityId, {method:'POST', async:false});
+                $.ajax(fcConfig.unlockActivityUrl+'/'+activity.activityId, {method:'POST', async:false});
             };
             window.onunload = unlockActivity;
         }
@@ -251,7 +252,8 @@
         }
         var master = new Master(activity.activityId,
             {activityUpdateUrl: fcConfig.activityUpdateUrl,
-                minOptionalSectionsCompleted: minOptionalSections});
+                minOptionalSectionsCompleted: minOptionalSections,
+                healthCheckUrl:fcConfig.healthCheckUrl});
 
         var site = null;
     <g:if test="${site}">

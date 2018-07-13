@@ -185,16 +185,29 @@ var Master = function (activityId, config) {
         blockUIWithMessage("Saving activity data...");
 
         var toSave = JSON.stringify(jsData);
-        var activityStorageKey = 'activity-'+options.activityId;
+        var activityStorageKey = 'activity-'+activityId;
         amplify.store(activityStorageKey, toSave);
-        $.ajax({
-            url: options.activityUpdateUrl,
-            type: 'POST',
-            data: toSave,
-            contentType: 'application/json',
-            success: function (data) {
+
+        function handleSessionTimeout() {
+            var unloadHandler = window.onbeforeunload;
+            window.onbeforeunload = null;
+            bootbox.alert($(options.timeoutMessageSelector).html(),
+                function() {
+                    window.onbeforeunload = unloadHandler;
+                });
+        };
+
+        healthCheck(options.healthCheckUrl).done(function() {
+            $.ajax({
+                url: options.activityUpdateUrl,
+                type: 'POST',
+                data: toSave,
+                contentType: 'application/json'
+
+            }).done(function (data) {
 
                 if (data.error || data.errors) {
+                    $.unblockUI();
                     self.displayErrors(data.errors || [data.error]);
                 } else {
                     self.cancelAutosave();
@@ -203,6 +216,7 @@ var Master = function (activityId, config) {
                     amplify.store(activityStorageKey, null);
 
                     if (!valid) {
+                        $.unblockUI();
                         var message = 'Your changes have been saved and you can remain in this activity form, or you can exit this page without losing data. Please note that you cannot mark this activity as finished until all mandatory fields have been completed.';
                         bootbox.alert(message, function () {
                             self.validate();
@@ -210,26 +224,24 @@ var Master = function (activityId, config) {
                     }
                     self.performSaveCallbacks(data, valid, saveCallback);
                 }
-            },
-            error: function (jqXHR, status, error) {
+            }).fail(function (jqXHR, status, error) {
 
-                // This is to detect a redirect to CAS response due to session timeout, which is not
-                // 100% reliable using ajax (e.g. no network will give the same response).
+                $.unblockUI();
+                // This is to detect a redirect to CAS response due to she same resession timeout, which is not
+                // 100% reliable using ajax (e.g. no network will give tponse).
                 if (jqXHR.readyState == 0) {
-
-                    bootbox.alert($(options.timeoutMessageSelector).html());
+                    handleSessionTimeout();
                 }
                 else {
                     self.displayErrors(['An unhandled error occurred: ' + error]);
                 }
 
-            },
-            complete: function () {
-                $.unblockUI();
-            }
+            });
+
+        }).fail(function() {
+            $.unblockUI();
+            handleSessionTimeout();
         });
-
-
     };
 
     self.performSaveCallbacks = function(saveResponse, valid, saveCallback) {
@@ -245,7 +257,7 @@ var Master = function (activityId, config) {
         }
     };
 
-    autoSaveModel(self, null, {preventNavigationIfDirty:true});
+    autoSaveModel(self, null, {preventNavigationIfDirty:true, healthCheckUrl:options.healthCheckUrl});
 };
 
 

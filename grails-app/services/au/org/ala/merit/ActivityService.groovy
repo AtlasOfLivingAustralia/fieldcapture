@@ -220,14 +220,7 @@ class ActivityService {
     }
 
     Map getActivityMetadata(String activityType) {
-        Map model = [:]
-        // the activity meta-model
-        model.metaModel = metadataService.getActivityModel(activityType)
-        // the array of output models
-        model.outputModels = model.metaModel?.outputs?.collectEntries {
-            [ it, metadataService.getDataModelFromOutputName(it)] }
-
-        model
+        metadataService.getActivityMetadata(activityType)
     }
 
     /**

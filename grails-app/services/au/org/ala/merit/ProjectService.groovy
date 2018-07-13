@@ -686,6 +686,9 @@ class ProjectService  {
     }
 
     Map getProgramConfiguration(Map project) {
+        if (!project) {
+            return [:]
+        }
         projectConfigurationService.getProjectConfiguration(project)
     }
 

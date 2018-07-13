@@ -29,7 +29,7 @@
         $('.helphover').popover({animation: true, trigger: 'hover'});
 
         $('#save').click(function () {
-            master.save();
+            master.save(function() {$.unblockUI();});
         });
 
         $('#cancel').click(function () {

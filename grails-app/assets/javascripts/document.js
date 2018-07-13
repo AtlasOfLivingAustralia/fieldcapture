@@ -17,7 +17,7 @@ function DocumentViewModel (doc, owner, settings) {
         //Information is the default option.
         roles:  [{id: 'information', name: 'Information'}, {id:'embeddedVideo', name:'Embedded Video'}, {id: 'programmeLogic', name: 'Programme Logic'}],
         stages:[],
-        showSettings: true,
+        showSettings: false,
         thirdPartyDeclarationTextSelector:'#thirdPartyDeclarationText',
         imageLocation: fcConfig.imageLocation
     };
@@ -230,7 +230,11 @@ function DocumentViewModel (doc, owner, settings) {
     };
 
     this.modelForSaving = function() {
-        return ko.mapping.toJS(self, {'ignore':['embeddedVideoVisible','iframe','helper', 'progress', 'hasPreview', 'error', 'fileLabel', 'file', 'complete', 'fileButtonText', 'roles', 'stages','maxStages', 'settings', 'thirdPartyConsentDeclarationRequired', 'saveEnabled', 'saveHelp', 'fileReady']});
+        var result =  ko.mapping.toJS(self, {'ignore':['embeddedVideoVisible','iframe','helper', 'progress', 'hasPreview', 'error', 'fileLabel', 'file', 'complete', 'fileButtonText', 'roles', 'stages','maxStages', 'settings', 'thirdPartyConsentDeclarationRequired', 'saveEnabled', 'saveHelp', 'fileReady']});
+        if (result.stage === undefined) {
+            result.stage = null;
+        }
+        return result;
     };
 
 }
@@ -354,6 +358,25 @@ function showDocumentAttachInModal(uploadUrl, documentViewModel, modalSelector, 
     var $modal = $(modalSelector);
     //var documentViewModel = new DocumentViewModel(document?document:{}, owner);
 
+    function validateReportAssociation(field, rules, i, options) {
+        var role = ko.utils.unwrapObservable(documentViewModel.role);
+        var documentPublic = ko.utils.unwrapObservable(documentViewModel.public);
+        var type = ko.utils.unwrapObservable(documentViewModel.type);
+
+        // Blank values won't be validated unless the "required" rule is
+        // present so we have to fake it using this custom validation.
+        if (!field.val() && role == 'information' && (type != 'image' || !documentPublic)) {
+            if (rules[rules.length-1] != 'required') {
+                rules.push('required')
+            }
+        }
+        else {
+            if (rules[rules.length-1] == 'required') {
+                rules.pop();
+            }
+        }
+    };
+
     attachViewModelToFileUpload(uploadUrl, documentViewModel, fileUploadSelector, previewSelector);
 
     // Used to communicate the result back to the calling process.
@@ -386,7 +409,7 @@ function showDocumentAttachInModal(uploadUrl, documentViewModel, modalSelector, 
                 'required': {'message':'The privacy declaration is required for images viewable by everyone'}
             },
 
-        }, scroll:false, autoPositionUpdate:true, promptPosition:'inline'});
+        }, scroll:false, autoPositionUpdate:true, promptPosition:'inline', customFunctions:{validateReportAssociation:validateReportAssociation}});
     });
 
     return result;

@@ -6,3 +6,4 @@
 //= require wms
 //= require mapWithFeatures.js
 //= require slider-pro-master/js/jquery.sliderPro.min.js
+//= require blog

@@ -57,8 +57,7 @@ class ProgramController {
             servicesWithScores = programService.serviceScores(program.programId, !hasAdminAccess)
         }
 
-        [about   : [label: 'Management Unit', visible: true, stopBinding: false, type: 'tab'],
-         dashboard: [label: 'Dashboard', visible: programVisible, stopBinding: true, type: 'tab', servicesDashboard:[planning:false, services:servicesWithScores], template:'/project/serviceDashboard'],
+        [about   : [label: 'Management Unit Overview', visible: true, stopBinding: false, type: 'tab', servicesDashboard:[visible: programVisible, planning:false, services:servicesWithScores]],
          projects: [label: 'Reporting', visible: true, stopBinding: false, type:'tab', projects:projects, reports:program.reports?:[], reportOrder:reportOrder, hideDueDate:true],
          sites   : [label: 'Sites', visible: programVisible, stopBinding: true, type:'tab'],
          admin   : [label: 'Admin', visible: hasAdminAccess, type: 'tab']]
@@ -223,10 +222,6 @@ class ProgramController {
 
         Map programConfig = program.config
 
-        // Temporary until we add this to the program config.
-        programConfig.requiresActivityLocking = programConfig.requiresActivityLocking
-        programConfig.navigationMode = programConfig.navigationMode ?: 'stayOnPage'
-
         model.locked = activity.lock != null
         if (!activity.lock && programConfig.requiresActivityLocking) {
             Map result = activityService.lock(activity)
@@ -306,22 +301,25 @@ class ProgramController {
     @PreAuthorise(accessLevel = 'editor')
     def saveReport(String id, String reportId) {
         if (!id || !reportId) {
-            error('An invalid report was selected for data entry', id)
+            error('An invalid report was selected for editing', id)
             return
         }
 
         Map report = reportService.get(reportId)
         if (reportService.isSubmittedOrApproved(report)) {
-            return 'error'
+            response.status = HttpStatus.SC_UNAUTHORIZED
+            Map resp = [message:'Submitted or approved reports cannot be modified']
+            render resp as JSON
         }
+        else {
+            Map activityData = request.JSON
+            Map result = activityService.update(report.activityId, activityData)
 
-        Map activityData = request.JSON
-        Map result = activityService.update(report.activityId, activityData)
+            // TODO handle photopoints, but will have to be adjusted for multi-site
+            Map photoPoints = activityData.remove('photoPoints')
 
-        // TODO handle photopoints, but will have to be adjusted for multi-site
-        Map photoPoints = activityData.remove('photoPoints')
-
-        render result as JSON
+            render result as JSON
+        }
 
     }
 

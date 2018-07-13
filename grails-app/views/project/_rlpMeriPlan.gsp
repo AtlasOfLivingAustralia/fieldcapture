@@ -4,7 +4,7 @@
         <thead>
         <tr class="header">
             <th class="outcome-priority required">Primary Regional Land Partnerships outcome</th>
-            <th class="primary-outcome priority required">Primary Investment Priority <fc:iconHelp html="true" container="body">Enter the primary investment priority/ies for the primary outcome. (drop down list in MERIT) <br/>For outcomes 1-4, only one primary investment priority can be selected.<br/>For outcomes 5-6, up to 5 primary investment priorities can be selected</fc:iconHelp></th>
+            <th class="primary-outcome priority required">Primary Investment Priority <fc:iconHelp html="true" container="body">Enter the primary investment priority/ies for the primary outcome. (drop down list in MERIT) <br/>For outcomes 1-4, only one primary investment priority can be selected.<br/>For outcomes 5-6, select one or a maximum of two primary investment priorities</fc:iconHelp></th>
             <th class="remove"></th>
         </tr>
         </thead>
@@ -22,8 +22,12 @@
                 </select>
                 <!-- /ko -->
                 <!-- ko if:$root.isAgricultureProject() -->
-                <select size="5" multiple="multiple" style="width:100%" class="asset" data-validation-engine="validate[required]" data-bind="options:details.outcomes.outcomePriorities(details.outcomes.primaryOutcome.description()), selectedOptions:details.outcomes.primaryOutcome.assets, disable: isProjectDetailsLocked()" >
-                </select>
+                <ul class="unstyled" data-bind="foreach:details.outcomes.outcomePriorities(details.outcomes.primaryOutcome.description())">
+                    <li>
+                        <label class="checkbox"><input type="checkbox" name="secondaryPriority" data-validation-engine="validate[minCheckbox[1],maxCheckbox[2]" data-bind="value:$data, checked:$parent.details.outcomes.primaryOutcome.assets, disable: $parent.isProjectDetailsLocked()"> <!--ko text: $data--><!--/ko--></label>
+                    </li>
+                </ul>
+
                 <!-- /ko -->
             </td>
         </tr>
@@ -160,7 +164,7 @@
 
                 <!-- ko if:isAgricultureProject() -->
                 <tr class="header">
-                    <th class="required">Project rationale (3000 character limit [approx 500 words]) <fc:iconHelp>Provide a rationale for addressing the targeted investment priorities including how the actions will contribute to achieving the 5 year outcomes</fc:iconHelp></th>
+                    <th class="required">Project rationale (3000 character limit [approx 500 words]) <fc:iconHelp>Provide a rationale of why the targeted investment priorities are being addressed and explain (using evidence) how the methodology will address them.</fc:iconHelp></th>
                 </tr>
                 <tr>
                     <td><textarea rows="5" data-validation-engine="validate[required,maxSize[3000]]" data-bind="value:details.rationale, disable: isProjectDetailsLocked()"></textarea></td>
@@ -213,17 +217,17 @@
     <table class="table">
         <thead>
         <tr class="header required">
-            <th class="required">Project methodology (3000 character limit [approx 500 words]) <fc:iconHelp>Describe the methodology that will be used to achieve the project outcomes</fc:iconHelp></th>
+            <th class="required">Project methodology (4000 character limit [approx 650 words]) <fc:iconHelp>Describe the methodology that will be used to achieve the project outcomes. To help demonstrate best practice delivery approaches and cost effectiveness of methodologies used, include details of the specific delivery mechanisms to leverage change (e.g. delivery method, approach and justification, and any assumptions).</fc:iconHelp></th>
         </tr>
         </thead>
         <tbody>
         <tr>
-            <td><textarea rows="5" data-validation-engine="validate[required,maxSize[3000]]" data-bind="value:details.implementation.description, disable: isProjectDetailsLocked()"></textarea></td>
+            <td><textarea rows="5" data-validation-engine="validate[required,maxSize[4000]]" data-bind="value:details.implementation.description, disable: isProjectDetailsLocked()"></textarea></td>
         </tr>
         </tbody>
     </table>
 
-    <h4 class="header-with-help">Monitoring methodology</h4><fc:iconHelp>Describe the project baseline(s) units of measure or data which will be used to report progress towards this project's outcomes (short-term, mid-term and 5 year program outcome), and the monitoring design.</fc:iconHelp>
+    <h4 class="header-with-help">Monitoring methodology</h4><fc:iconHelp>Describe the project baseline(s) units of measure or data which will be used to report progress towards this project's outcomes (short-term, medium-term and 5 year program outcome), and the monitoring design. Refer to the Regional Land Partnerships Evaluation Plan, which provides guidance on baselines and the monitoring indicators for each RLP outcome. Note, other monitoring indicators can also be used.</fc:iconHelp>
     <!-- ko with:details.baseline -->
     <table class="table">
         <thead>
@@ -298,6 +302,21 @@
         </tfoot>
     </table>
 
+    <table class="table">
+        <thead>
+        <tr class="header required">
+            <th class="required">Project Review, Evaluation and Improvement Methodology and Approach (3000 character limit [approx 500 words]) <fc:iconHelp>Outline the methods and processes that will enable adaptive management during this project.</fc:iconHelp></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td><textarea rows="5" data-validation-engine="validate[required,maxSize[3000]]" data-bind="value:details.projectEvaluationApproach, disable: isProjectDetailsLocked()"></textarea></td>
+        </tr>
+        </tbody>
+    </table>
+
+
+
     <h4>Relevant national and regional plans</h4>
 
     <table class="table">
@@ -351,6 +370,11 @@
 
     <h4 class="header-with-help">Project risks & threats <span style="color: red;"><b>*</b></span> </h4><fc:iconHelp>Please enter the details of risks and threats to the project and the mitigation strategies being used to address them.</fc:iconHelp>
     <g:render template="risksAndThreats"/>
+
+    <h4>MERI Attachments</h4>
+    <p>
+        Please attach programme logic to your MERI plan using the documents function on the Admin tab.  A "Document type" of "Programme Logic" should be selected when uploading the document.
+    </p>
 
     <g:render template="/shared/declaration" model="[divId:'meriSubmissionDeclaration', declarationType:au.org.ala.merit.SettingPageType.RLP_MERI_DECLARATION]"/>
 </div>

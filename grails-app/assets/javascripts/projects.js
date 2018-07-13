@@ -19,6 +19,7 @@
 //= require activity.js
 //= require projectActivityPlan.js
 //= require projectActivity.js
+//= require blog
 //= require_self
 
 /*

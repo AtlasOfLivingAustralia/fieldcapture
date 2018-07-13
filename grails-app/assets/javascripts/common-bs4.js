@@ -14,6 +14,7 @@
 //= require vkbeautify/vkbeautify.0.99.00.beta.js
 //= require bootstrap-combobox/bootstrap-combobox
 //= require fieldcapture-application
+//= require healthCheck
 //= require knockout-dates
 //= require knockout-custom-bindings
 //= require wmd/wmd.js

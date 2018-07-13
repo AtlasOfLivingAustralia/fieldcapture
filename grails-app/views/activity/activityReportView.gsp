@@ -38,7 +38,7 @@
                 To edit anyway, click the button below.  Note that if the user is currently making edits, those edits will be lost.
             </p>
             <p>
-                <a class="btn" href="${createLink(controller:'activity', action:'overrideLockAndEdit', id:activity.activityId)}">Edit Anyway</a>
+                <a class="btn" href="${createLink(action:'overrideLockAndEdit', id:id, params:params)}">Edit Anyway</a>
             </p>
         </div>
     </g:if>

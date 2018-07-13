@@ -32,4 +32,9 @@
         <div class="span9"><g:formatDate format="dd MMM yyyy"
                                          date="${au.org.ala.merit.DateUtils.parse(project.plannedEndDate).toDate()}"/></div>
     </div>
+    <div class="row-fluid">
+        <div class="span3 title">MERI Plan generated</div>
+        <div class="span9"><g:formatDate format="yyyy-MM-dd HH:mm:ss" date="${new Date()}"/></div>
+    </div>
+
 </div>

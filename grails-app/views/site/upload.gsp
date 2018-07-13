@@ -144,13 +144,21 @@
                 <div class="modal-title"><strong>Uploading sites...</strong></div>
             </div>
             <div class="modal-body">
+
+                <div class="alert alert-danger" data-bind="visible:progressErrors().length">
+                    <b>Errors</b>
+                    <ul data-bind="foreach:progressErrors">
+                        <li data-bind="text:$data"></li>
+                    </ul>
+                </div>
                 <div data-bind="text:progressText"></div>
                 <div class="progress progress-popup">
                     <div class="bar" data-bind="style:{width:progress}"></div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-warning" data-bind="click:cancelUpload">Cancel</button>
+                <button class="btn btn-warning" data-bind="click:cancelUpload, visible:!finished()">Cancel</button>
+                <button class="btn btn-info" data-bind="visible:finished, click:finish">OK</button>
             </div>
         </div>
     </div>
