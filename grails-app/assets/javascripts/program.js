@@ -85,6 +85,15 @@ ProgramViewModel = function (props, options) {
         }
     };
 
+    self.cancel = function() {
+        var url = config.returnToUrl || config.programViewUrl;
+        if (url) {
+            window.location.href = url;
+        }
+
+    };
+
+
     if (props.documents !== undefined && props.documents.length > 0) {
         $.each(['logo', 'banner', 'mainImage'], function (i, role) {
             var document = self.findDocumentByRole(props.documents, role);

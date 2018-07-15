@@ -12,7 +12,7 @@
             programViewUrl: "${createLink(action:'index')}",
             documentUpdateUrl: "${createLink(controller:"document", action:"documentUpdate")}",
             noImageUrl: "${assetPath(src:'nophoto.png')}",
-            returnToUrl: "${params.returnTo}"
+            returnToUrl: "${params.returnTo ?: createLink(action:'index', id:program.programId)}"
         };
     </script>
     <asset:stylesheet src="common-bs4.css"/>
@@ -40,7 +40,7 @@
 
     <div class="form-actions">
         <button type="button" id="save" data-bind="click:save" class="btn btn-primary">Save</button>
-        <button type="button" id="cancel" class="btn">Cancel</button>
+        <button type="button" id="cancel" class="btn" data-bind="click:cancel">Cancel</button>
     </div>
 </div>
 
@@ -53,11 +53,6 @@
 
         ko.applyBindings(programViewModel);
         $('.validationEngineContainer').validationEngine();
-
-        $("#cancel").on("click", function() {
-            document.location.href = "${params.returnTo}";
-        });
-
     });
 
 
