@@ -1041,3 +1041,9 @@ input[type="checkbox"] { -webkit-appearance: checkbox; !important }
     border: 1px solid #bfbfbf;
     border-radius: 3px;
 }
+
+.disabled-icon .fa {
+    opacity: 0.3;
+    cursor: not-allowed;
+    background-color: transparent;
+}

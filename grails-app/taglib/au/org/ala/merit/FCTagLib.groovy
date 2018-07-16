@@ -183,7 +183,11 @@ class FCTagLib {
             else {
                 helpText = body()
             }
+
             Map spanAttrs = [class:'helphover', 'data-original-title':title, 'data-placement':'top', 'data-content':helpText, 'data-trigger':'click']
+            if (attrs['dynamic-help']) {
+                spanAttrs << ['data-bind':"attr:{'data-content':"+attrs['dynamic-help']+"}"]
+            }
             if (attrs.container) {
                 spanAttrs << ['data-container':attrs.container]
             }
