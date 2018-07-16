@@ -13,10 +13,18 @@
 </div>
 
 <script id="notReportable" type="text/html">
-    <span class="badge badge-warning">Report not submitted</span><br/>
+    <div data-bind="if:isCurrent()">
+        <span class="badge badge-info" data-bind="if:isCurrent()">Current reporting period</span>
+        <fc:iconHelp dynamic-help="currentPeriodHelpText"></fc:iconHelp> <br/>
+    </div>
+
+<span class="badge badge-info" data-bind="if:progress() == 'started'">Reporting form started</span>
+<span class="badge badge-success" data-bind="if:progress() == 'finished'">Reporting form finished</span>
+
 </script>
 
-<script id="notApproved" type="text/html">
+<script id="notSubmitted" type="text/html">
+
     <p><span class="badge badge-warning">Report not submitted</span></p>
 
 <g:if test="${isAdmin || fc.userIsAlaOrFcAdmin()}">
@@ -25,6 +33,7 @@
                 title="All fields in the reporting form must be completed before it can be submitted.">Submit report</button>
     </p>
 </g:if>
+
 </script>
 
 <script id="approved" type="text/html">
@@ -53,39 +62,50 @@
 
 <script id="reportTable" type="text/html">
 
+<label class="checkbox"><input class="hide-future-reports" type="checkbox" data-bind="checked:showAllReports"> Show all reports</label>
+<fc:iconHelp>By default, reports approved more than a week ago and reports for a future reporting period are hidden.  Tick this box to see all reports.</fc:iconHelp>
 <table class="table table-striped" style="width:100%;">
     <thead>
 
     <tr>
-        <th class="report-actions">Actions</th>
+        <th class="report-actions">
+            Actions <fc:iconHelp html="html">Submitted and approved reports cannot be edited<br/>Only reports marked as finished can be viewed or downloaded as a PDF</fc:iconHelp></th>
         <th class="report-name">Report</th>
         <th class="report-start">Period start</th>
         <th class="report-end">Period end
-            <g:if test="${hideDueDate}">
-                <br/><label><input class="hide-future-reports" type="checkbox"
-                                   data-bind="checked:hideFutureReports"> Current reports only</label>
-            </g:if>
         </th>
         <g:if test="${!hideDueDate}">
             <th class="report-due">Date Due<br/><label><input class="hide-future-reports" type="checkbox"
                                            data-bind="checked:hideFutureReports"> Current reports only</label>
             </th>
         </g:if>
-        <th class="report-status">Status<br/><label><input class="hide-approved-reports" type="checkbox"
-                                     data-bind="checked:hideApprovedReports"> Hide approved reports</label></th>
+        <th class="report-status">Status <fc:iconHelp html="html">Reports cannot be submitted until after the end of the reporting period. <br/> Reports must be marked as Finished before they can be submitted. </fc:iconHelp><br/></th>
     </tr>
     </thead>
-    <tbody data-bind="foreach:{ data:filteredReports, as:'report' }">
+    <tbody data-bind="foreach:{ data:filteredReports, as:'report', afterAdd: attachHelp}">
 
     <tr>
         <td class="report-actions">
             <a class="btn btn-container" data-bind="attr:{href:editUrl}, visible:editable"><i
                     class="fa fa-edit" title="Complete this report"></i></a>
+
+            <a class="btn btn-container disabled-icon" data-bind="visible:!editable">
+            <i class="fa fa-edit" title="Submitted or approved reports cannot be edited"></i>
+            </a>
+
             <a class="btn btn-container" data-bind="attr:{href:viewUrl}, visible:viewable"><i
                     class="fa fa-eye" title="View this report"></i></a>
+
+            <a class="btn btn-container disabled-icon" data-bind="visible:!viewable">
+                <i class="fa fa-eye" title="Please mark the report as finished before viewing it"></i>
+            </a>
+
             <a target="print-report" class="btn btn-container"
                     data-bind="attr:{href:downloadUrl}, visible:viewable"><i
                     class="fa fa-download" title="Download a PDF of this report"></i></a>
+            <a class="btn btn-container disabled-icon" data-bind="visible:!viewable">
+                <i class="fa fa-download" title="Please mark the report as finished before generating a PDF"></i>
+            </a>
 
         </td>
         <td class="report-name"><a data-bind="visible:editable, attr:{href:editUrl, title:title}" title="Complete this report"><span

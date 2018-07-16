@@ -5,10 +5,20 @@ function initialiseTabs(tabConfig, options) {
     var defaults = {
       tabSelector: '.nav a',
       initialisingHtmlSelector: '#loading',
-      tabStorageKey:'selected-tab'
+      tabStorageKey:'selected-tab',
+      initialiser:function() {
+          $('.helphover').popover({trigger:'hover'});
+      }
     };
     var config = _.extend({}, defaults, options);
-
+    var initialiseTab = function(tabConfig) {
+        if (_.isFunction(tabConfig.initialiser)) {
+            tabConfig.initialiser();
+        }
+        if (_.isFunction(config.initialiser)) {
+            config.initialiser();
+        }
+    };
     $(config.tabSelector).on('shown.bs.tab', function(e) {
         var tabContentTarget = $(this).attr('href');
         var tabId = tabContentTarget.substring(1, tabContentTarget.length);
@@ -20,15 +30,13 @@ function initialiseTabs(tabConfig, options) {
             if (tab.url) {
                 $(tab.selector).html($(config.initialisingHtmlSelector));
 
-                $.get(tab.url, function(data) {
+                $.get(tab.url).done(function(data) {
                     $(tab.selector).html(data);
-                    if (tab.initialiser) {
-                        tab.initialiser();
-                    }
+                    initialiseTab(tab)
                 });
             }
-            else if (_.isFunction(tab.initialiser)) {
-                tab.initialiser();
+            else {
+                initialiseTab(tab);
             }
 
         }
