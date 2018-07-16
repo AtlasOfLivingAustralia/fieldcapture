@@ -14,8 +14,8 @@
 
 <script id="notReportable" type="text/html">
     <div data-bind="if:isCurrent()">
-        <span class="badge badge-info" data-bind="if:isCurrent()">Current reporting period</span>
-        <fc:iconHelp dynamic-help="currentPeriodHelpText"></fc:iconHelp> <br/>
+        <span><span class="badge badge-info" data-bind="if:isCurrent()">Current reporting period</span>
+            <fc:iconHelp dynamic-help="currentPeriodHelpText"></fc:iconHelp> </span>
     </div>
 
 <span class="badge badge-info" data-bind="if:progress() == 'started'">Reporting form started</span>
@@ -62,7 +62,7 @@
 
 <script id="reportTable" type="text/html">
 
-<label class="checkbox"><input class="hide-future-reports" type="checkbox" data-bind="checked:showAllReports"> Show all reports</label>
+<label class="checkbox label-with-help"><input class="hide-future-reports" type="checkbox" data-bind="checked:showAllReports"> Show all reports</label>
 <fc:iconHelp>By default, reports approved more than a week ago and reports for a future reporting period are hidden.  Tick this box to see all reports.</fc:iconHelp>
 <table class="table table-striped" style="width:100%;">
     <thead>
@@ -75,8 +75,7 @@
         <th class="report-end">Period end
         </th>
         <g:if test="${!hideDueDate}">
-            <th class="report-due">Date Due<br/><label><input class="hide-future-reports" type="checkbox"
-                                           data-bind="checked:hideFutureReports"> Current reports only</label>
+            <th class="report-due">Date Due
             </th>
         </g:if>
         <th class="report-status">Status <fc:iconHelp html="html">Reports cannot be submitted until after the end of the reporting period. <br/> Reports must be marked as Finished before they can be submitted. </fc:iconHelp><br/></th>

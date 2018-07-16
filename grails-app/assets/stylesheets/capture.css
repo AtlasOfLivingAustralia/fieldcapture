@@ -1047,3 +1047,8 @@ input[type="checkbox"] { -webkit-appearance: checkbox; !important }
     cursor: not-allowed;
     background-color: transparent;
 }
+
+
+.label-with-help {
+    display: inline-block;
+}
