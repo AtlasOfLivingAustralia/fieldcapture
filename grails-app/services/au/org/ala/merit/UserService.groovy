@@ -3,9 +3,9 @@ package au.org.ala.merit
 import au.org.ala.web.CASRoles
 import org.springframework.cache.annotation.CacheEvict
 import org.springframework.cache.annotation.Cacheable
+import org.springframework.web.context.request.RequestContextHolder
 
 import javax.annotation.PostConstruct
-import javax.management.relation.Role
 
 class UserService {
 
@@ -29,7 +29,7 @@ class UserService {
     }
 
     def getCurrentUserDisplayName() {
-        getUser()?.displayName?:"" //?:"mark.woolston@csiro.au"
+        getUser()?.displayName?:""
     }
 
     def getCurrentUserId() {
@@ -37,11 +37,17 @@ class UserService {
     }
 
     public UserDetails getUser() {
-        def u = authService.userDetails()
-        def user
 
-        if (u?.userId) {
-            user = new UserDetails(u.displayName, u.email, u.userId)
+        def user = null
+        // Attempting to call authService.userDetails outside of a HTTP request results in an exception
+        // being thrown.  So if there is no HTTP request (as when running the scheduled job that regenerates the homepage statistics)
+        // we just return null.
+        if (RequestContextHolder.currentRequestAttributes().request) {
+            def u = authService.userDetails()
+
+            if (u?.userId) {
+                user = new UserDetails(u.displayName, u.email, u.userId)
+            }
         }
 
         return user
