@@ -53,42 +53,7 @@
             </ul>
         </g:if>
 
-        <div class="row-fluid title-block well well-small input-block-level">
-            <div class="span12 title-attribute">
-                <h1><span data-bind="click:goToProject" class="clickable">${context?.name?.encodeAsHTML() ?: 'no project defined!!'}</span></h1>
-                <g:if test="${site}">
-                    <h2><span data-bind="click:goToSite" class="clickable">Site: ${site.name?.encodeAsHTML()}</span></h2>
-                </g:if>
-                <h3>Activity: <span data-bind="text:type"></span></h3>
-                <h4><span>${context.associatedProgram?.encodeAsHTML()}</span> <span>${context.associatedSubProgram?.encodeAsHTML()}</span></h4>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="${mapFeatures.toString() != '{}' ? 'span9' : 'span12'}" style="font-size: 1.2em">
-                <!-- Common activity fields -->
-                <div class="row-fluid">
-                    <span class="span6"><span class="label">Description:</span> <span data-bind="text:description"></span></span>
-                    <span class="span6"><span class="label">Type:</span> <span data-bind="text:type"></span></span>
-                </div>
-                <div class="row-fluid">
-                    <span class="span6"><span class="label">Starts:</span> <span data-bind="text:startDate.formattedDate"></span></span>
-                    <span class="span6"><span class="label">Ends:</span> <span data-bind="text:endDate.formattedDate"></span></span>
-                </div>
-                <div class="row-fluid">
-                    <span class="span6"><span class="label">Project stage:</span> <span data-bind="text:projectStage"></span></span>
-                    <span class="span6"><span class="label">Major theme:</span> <span data-bind="text:mainTheme"></span></span>
-                </div>
-                <div class="row-fluid">
-                    <span class="span6"><span class="label">Activity status:</span> <span data-bind="text:progress"></span></span>
-                </div>
-            </div>
-            <g:if test="${mapFeatures.toString() != '{}'}">
-                <div class="span3">
-                    <div id="smallMap" style="width:100%"></div>
-                </div>
-            </g:if>
-        </div>
+        <g:render template="${reportHeaderTemplate}"/>
 
     </div>
 <!-- ko stopBinding: true -->

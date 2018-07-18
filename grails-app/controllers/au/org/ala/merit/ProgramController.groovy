@@ -3,6 +3,7 @@ package au.org.ala.merit
 
 import grails.converters.JSON
 import org.apache.http.HttpStatus
+import static ReportService.ReportMode
 
 /**
  * Processes requests relating to programs
@@ -208,29 +209,27 @@ class ProgramController {
             return
         }
 
-        Map report = reportService.get(reportId)
-
-        Map activity = activityService.get(report.activityId)
-        Map model = activityService.getActivityMetadata(activity.type)
-
-        Map program = programService.get(id)
-        model.context = program
-        model.themes = []
-        model.activity = activity
-        model.returnTo = createLink(action:'index', id:id)
-        model.contextViewUrl = model.returnTo
-
-        Map programConfig = program.config
-
-        model.locked = activity.lock != null
-        if (!activity.lock && programConfig.requiresActivityLocking) {
-            Map result = activityService.lock(activity)
-            model.locked = true
+        Map model = activityReportModel(id, reportId, ReportMode.EDIT)
+        if (reportService.isSubmittedOrApproved(model.report)) {
+            redirect action:'viewReport', id:id, params:[reportId:reportId]
         }
+        else {
+            model.saveReportUrl = createLink(controller:'program', action:'saveReport', id:id, params:[reportId:reportId])
+            render model:model, view:'/activity/activityReport'
+        }
+    }
 
-        model.saveReportUrl = createLink(controller:'program', action:'saveReport', id:id, params:[reportId:report.reportId])
+    private Map activityReportModel(String programId, String reportId, ReportMode mode) {
+        Map program = programService.get(programId)
+        Map config = program.config
+        Map model = reportService.activityReportModel(reportId, mode, config)
 
-        render model:model, view:'/activity/activityReport'
+        model.context = program
+        model.returnTo = createLink(action:'index', id:programId)
+        model.contextViewUrl = model.returnTo
+        model.reportHeaderTemplate = '/program/rlpProgramReportHeader'
+
+        model
     }
 
     @PreAuthorise(accessLevel = 'editor')
@@ -240,7 +239,7 @@ class ProgramController {
             return
         }
 
-        Map model = viewReportModel(reportId)
+        Map model = activityReportModel(id, reportId, ReportMode.VIEW)
 
         render model:model, view:'/activity/activityReportView'
     }
@@ -264,23 +263,6 @@ class ProgramController {
         }
     }
 
-    private Map viewReportModel(String reportId) {
-        Map report = reportService.get(reportId)
-
-        Map activity = activityService.get(report.activityId)
-        Map model = activityService.getActivityMetadata(activity.type)
-
-        String programId = report.programId
-        Map program = programService.get(programId)
-        model.context = program
-        model.themes = []
-        model.activity = activity
-        model.returnTo = createLink(action:'index', id:programId)
-        model.contextViewUrl = model.returnTo
-        model.mapFeatures = '{}'
-        model
-    }
-
     /**
      * This is designed as a callback from the PDF generation service.  It produces a HTML report that will
      * be converted into PDF.
@@ -289,8 +271,7 @@ class ProgramController {
     def viewReportCallback(String id, String reportId) {
 
         if (pdfGenerationService.authorizePDF(request)) {
-            Map model = viewReportModel(reportId)
-            model.printView = true
+            Map model = activityReportModel(id, reportId, ReportMode.PRINT)
             render view:'/activity/activityReportView', model:model
         }
         else {

@@ -7,6 +7,7 @@ import org.apache.http.HttpStatus
 import org.codehaus.groovy.grails.web.json.JSONArray
 import org.codehaus.groovy.grails.web.json.JSONObject
 import org.joda.time.DateTime
+import static ReportService.ReportMode
 
 class ProjectController {
 
@@ -652,21 +653,12 @@ class ProjectController {
             metadataService.clearCache()
         }
 
-        Map model = activityReportModel(id, reportId, false)
+        Map model = activityReportModel(id, reportId, ReportMode.EDIT)
         if (reportService.isSubmittedOrApproved(model.report)) {
             redirect action:'viewReport', id:id, params:[reportId:reportId]
         }
         else {
-            Map config = projectService.getProgramConfiguration(model.context)
-
-            model.locked = model.activity.lock != null
-            if (!model.locked && config.requiresActivityLocking) {
-                Map result = activityService.lock(model.activity)
-                model.locked = true
-            }
-
             model.saveReportUrl = createLink(action:'saveReport', id:id, params:[reportId:model.report.reportId])
-
             render model:model, view:'/activity/activityReport'
         }
     }
@@ -677,7 +669,7 @@ class ProjectController {
             error('An invalid report was selected for data entry', id)
             return
         }
-        Map model = activityReportModel(id, reportId, false)
+        Map model = activityReportModel(id, reportId, ReportMode.VIEW)
 
         render view:'/activity/activityReportView', model:model
     }
@@ -740,7 +732,7 @@ class ProjectController {
     def viewReportCallback(String id, String reportId) {
 
         if (pdfGenerationService.authorizePDF(request)) {
-            Map model = activityReportModel(id, reportId, true)
+            Map model = activityReportModel(id, reportId, ReportMode.PRINT)
 
             render view:'/activity/activityReportView', model:model
         }
@@ -749,21 +741,18 @@ class ProjectController {
         }
     }
 
-    private Map activityReportModel(String projectId, String reportId, boolean printView) {
-        Map report = reportService.get(reportId)
-        Map activity = activityService.get(report.activityId)
-        Map model = activityService.getActivityMetadata(activity.type)
+    private Map activityReportModel(String projectId, String reportId, ReportMode mode) {
 
         Map project = projectService.get(projectId)
-        model.metaModel = filterOutputModel(model.metaModel, project, activity)
+        Map config = projectService.getProgramConfiguration(project)
+        Map model = reportService.activityReportModel(reportId, mode, config)
+        model.config = config
+        model.metaModel = filterOutputModel(model.metaModel, project, model.activity)
 
-        model.activity = activity
         model.context = project
-        model.themes = []
-        model.printView = printView
-        model.report = report
         model.returnTo = g.createLink(action:'index', id:projectId)
         model.contextViewUrl = model.returnTo
+        model.reportHeaderTemplate = '/project/rlpProjectReportHeader'
 
         model
     }

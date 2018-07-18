@@ -912,5 +912,35 @@ class FCTagLib {
 
     }
 
+    def reportStatus = { attrs ->
+        if (!attrs.report) {
+            throw new IllegalArgumentException("The report attribute is required")
+        }
+        Map report = attrs.report
+        String status = ""
+        switch (report.publicationStatus) {
+            case 'pendingApproval':
+                status = 'Submitted'
+                break
+            case 'published':
+                status = 'Approved'
+                break
+            default:
+                switch (report.progress) {
+                    case 'started':
+                        status = 'In progress'
+                        break
+                    case 'finished':
+                        status = 'Finished (unsubmitted)'
+                        break
+                    default:
+                        status = 'Not started'
+                }
+        }
+
+        out << status
+
+    }
+
     def displayDate = {}
 }
