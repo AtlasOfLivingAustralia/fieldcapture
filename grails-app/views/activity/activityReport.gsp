@@ -4,11 +4,11 @@
 <head>
     <g:if test="${printView}">
         <meta name="layout" content="nrmPrint"/>
-        <title>Print | ${activity.type} | Field Capture</title>
+        <title>${report.name}</title>
     </g:if>
     <g:else>
         <meta name="layout" content="${hubConfig.skin}"/>
-        <title>Edit | ${activity.type} | Field Capture</title>
+        <title>Edit | ${report.name} | MERIT</title>
     </g:else>
 
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
@@ -50,7 +50,7 @@
                 <li><g:link controller="home">Home</g:link> <span class="divider">/</span></li>
                 <li><a href="${contextViewUrl}">${context.name.encodeAsHTML()}</a> <span class="divider">/</span></li>
                 <li class="active">
-                    <span data-bind="text:type"></span>
+                    ${report.name}
                 </li>
             </ul>
         </g:if>
