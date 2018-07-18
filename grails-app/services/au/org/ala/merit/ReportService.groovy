@@ -28,6 +28,11 @@ class ReportService {
     public static final String REPORT_TYPE_SINGLE_ACTIVITY = 'Single'
     public static final String REPORT_TYPE_STAGE_REPORT = 'Activity'
 
+    static enum ReportMode {
+        VIEW,
+        EDIT,
+        PRINT
+    }
 
     def grailsApplication
     def webService
@@ -868,6 +873,30 @@ class ReportService {
             log.error(e, "Error attempting to match actionId: ${actionId}")
             return actionId
         }
+
+    }
+
+    Map activityReportModel(String reportId, ReportMode mode, Map config) {
+        Map report = get(reportId)
+
+        Map activity = activityService.get(report.activityId)
+        Map model = activityService.getActivityMetadata(activity.type)
+        model.report = report
+        model.activity = activity
+        model.themes = []
+        model.locked = activity.lock != null
+
+        if (mode == ReportMode.EDIT) {
+            if (!activity.lock && config.requiresActivityLocking) {
+                Map result = activityService.lock(activity)
+                model.locked = true
+            }
+        }
+        else if (mode == ReportMode.PRINT) {
+            model.printView = true
+        }
+
+        model
 
     }
 }
