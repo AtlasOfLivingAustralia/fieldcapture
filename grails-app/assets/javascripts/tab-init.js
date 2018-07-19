@@ -54,7 +54,7 @@ function initialiseTabs(tabConfig, options) {
     _.find(activeTabSelectors, function(selector) {
         var tab = selector();
         if (tab) {
-            if (!tab.startsWith('#')) {
+            if (tab.indexOf('#') != 0) {
                 tab = '#'+tab;
             }
             var $tab = $(tab + '-tab');
