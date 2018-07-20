@@ -18,8 +18,8 @@
             <fc:iconHelp dynamic-help="currentPeriodHelpText"></fc:iconHelp> </span>
     </div>
 
-<span class="badge badge-info" data-bind="if:progress() == 'started'">Reporting form started</span>
-<span class="badge badge-success" data-bind="if:progress() == 'finished'">Reporting form finished</span>
+<span class="badge badge-info" data-bind="if:progress() == 'started'">Reporting form incomplete</span>
+<span class="badge badge-success" data-bind="if:progress() == 'finished'">Reporting form complete</span>
 
 </script>
 
@@ -30,8 +30,11 @@
 <g:if test="${isAdmin || fc.userIsAlaOrFcAdmin()}">
     <p>
         <button class="btn btn-success btn-small" data-bind="enable:complete,click:submitReport"
-                title="All fields in the reporting form must be completed before it can be submitted.">Submit report</button>
+                title="The reporting form must be marked as complete before this report can be submitted.">Submit report</button>
     </p>
+    <span class="badge badge-info" data-bind="if:progress() == 'started'">Reporting form incomplete</span>
+    <span class="badge badge-success" data-bind="if:progress() == 'finished'">Reporting form complete</span>
+
 </g:if>
 
 </script>
