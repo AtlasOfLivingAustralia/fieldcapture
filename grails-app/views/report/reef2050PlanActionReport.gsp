@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page import="org.joda.time.DateTimeZone" contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
     <title>Reef 2050 Action Status</title>
@@ -26,7 +26,7 @@
     <g:else>
 
         <div class="well">
-            <strong>Progress on Reef 2050 Plan to <g:formatDate date="${au.org.ala.merit.DateUtils.parse(endDate).toDate()}" format="MMMM yyyy"/></strong>
+            <strong>Progress on Reef 2050 Plan to <g:formatDate date="${endDate}" format="dd MMMM yyyy"/></strong>
             <p>
                 Please note this report ignores any facet selection you may have made.
             </p>
