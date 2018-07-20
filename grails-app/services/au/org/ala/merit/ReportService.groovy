@@ -793,7 +793,8 @@ class ReportService {
         DateTime periodStart = DateUtils.alignToPeriod(DateUtils.parse(mostRecent), period)
         activities = activities.findAll{DateUtils.parse(it.plannedEndDate).isAfter(periodStart)}
         String startDate = DateUtils.format(periodStart)
-        String endDate = DateUtils.format(periodStart.plus(period))
+        DateTime periodEnd = periodStart.plus(period)
+        String endDate = DateUtils.format(periodEnd)
 
         List projectIds = activities.collect{it.projectId}.unique()
         List projects = projectService.search([projectId:projectIds, view:'flat'])?.resp?.projects ?: []
@@ -838,17 +839,18 @@ class ReportService {
             report = report.resp.results
             String startDateMatcher = startDate.substring(0, format.length())
 
-            Map reportForYear = report?.groups?.find{it.group.startsWith(startDateMatcher)}
+            Map reportForYear = report?.groups?.find { it.group.startsWith(startDateMatcher) }
             if (reportForYear) {
 
                 actionStatus.result = reportForYear.results[0]
                 reportForYear.results[1]?.groups?.each { group ->
-                    actionStatusByTheme[group.group] = [label: group.group + " - Action Status", result:group.results[0]]
+                    actionStatusByTheme[group.group] = [label: group.group + " - Action Status", result: group.results[0]]
                 }
             }
         }
-
-        [actions:allActions, actionStatus:actionStatus, actionStatusByTheme:actionStatusByTheme, endDate:endDate]
+        // Fifteen hours are subtracted from the end date to account for both that the reports end on midnight of the next period and may be in UTC timezone.
+        // This is so when it is rendered it will display 30 June / 31 December instead of 1 July / 1 January
+        [actions:allActions, actionStatus:actionStatus, actionStatusByTheme:actionStatusByTheme, endDate:periodEnd.minusHours(15).toDate()]
 
     }
 
