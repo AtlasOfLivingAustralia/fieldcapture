@@ -23,6 +23,8 @@ var ReportViewModel = function(report, config) {
     self.description = report.description || report.name;
     self.fromDate = ko.observable(report.fromDate).extend({simpleDate:false});
     self.toDate =  ko.observable(report.toDate).extend({simpleDate:false});
+    self.submissionDate = ko.observable(report.submissionDate || report.toDate).extend({simpleDate:false});
+    self.submissionDateLabel = convertToSimpleDate(moment(self.submissionDate()).subtract(1, 'hours').toDate(), false);
     self.toDateLabel = convertToSimpleDate(moment(report.toDate).subtract(1, 'hours').toDate(), false);
     self.dueDate = ko.observable(report.dueDate).extend({simpleDate:false});
     self.progress = ko.observable(report.progress || 'planned');
@@ -65,6 +67,13 @@ var ReportViewModel = function(report, config) {
         var reportableDate = report.submissionDate || report.toDate;
         return (reportableDate < new Date().toISOStringNoMillis());
     };
+    self.isCurrent = function() {
+        var now =new Date().toISOStringNoMillis();
+        return report.fromDate <= now && report.toDate >= now;
+    };
+    self.currentPeriodHelpText = ko.computed(function() {
+        return "This report can be submitted on or after "+self.submissionDate.formattedDate();
+    });
     self.complete = ko.computed(function() {
         return self.isReportable() && self.progress() == 'finished' && self.editable;
     });
@@ -74,13 +83,13 @@ var ReportViewModel = function(report, config) {
         }
         switch (report.publicationStatus) {
             case 'unpublished':
-                return 'notApproved';
+                return 'notSubmitted';
             case 'pendingApproval':
                 return 'submitted';
             case 'published':
                 return 'approved';
             default:
-                return 'notApproved';
+                return 'notSubmitted';
         }
     };
 
@@ -151,18 +160,24 @@ var ReportsViewModel = function(reports, projects, availableReports, reportOwner
     self.allReports = ko.observableArray(reports);
     self.hideApprovedReports = ko.observable(true);
     self.hideFutureReports = ko.observable(true);
+    self.showAllReports = ko.observable(false);
+
+    self.attachHelp = function(element) {
+        $(element).find('.helphover').popover({trigger:'hover'});
+    };
 
     self.filteredReports = ko.computed(function() {
 
         var filteredReports = [];
         var now = moment().toDate().toISOStringNoMillis();
+        var oneWeekAgo = moment().subtract(1, 'weeks').toDate().toISOStringNoMillis();
 
         $.each(self.allReports(), function(i, report) {
-            if (self.hideApprovedReports() && report.publicationStatus === 'published') {
+            if (!self.showAllReports() && report.publicationStatus === 'published' && report.dateApproved < oneWeekAgo) {
                 return;
             }
 
-            if (self.hideFutureReports() && report.fromDate > now) {
+            if (!self.showAllReports() && report.fromDate > now) {
                 return;
             }
             filteredReports.push(new ReportViewModel(report, config));

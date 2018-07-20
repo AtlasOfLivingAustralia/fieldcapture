@@ -108,7 +108,8 @@ class StatisticsFactory {
         displayProps
     }
 
-
+    // Refresh the statistics every day after midnight
+    @Scheduled(cron="0 3 0 * * *")
     public void reloadStatistics() {
         withUser([name:"statisticsTask"]) {
             settingService.withDefaultHub {

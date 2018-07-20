@@ -37,7 +37,7 @@
 
     <div class="form-actions">
         <button type="button" id="save" data-bind="click:save" class="btn btn-primary">Create</button>
-        <button type="button" id="cancel" class="btn">Cancel</button>
+        <button type="button" id="cancel" class="btn" data-bind="click:cancel">Cancel</button>
     </div>
 </div>
 
@@ -50,10 +50,6 @@
 
         ko.applyBindings(programViewModel);
         $('.validationEngineContainer').validationEngine();
-
-        $("#cancel").on("click", function() {
-            document.location.href = "${createLink(action:'list')}";
-        });
 
     });
 

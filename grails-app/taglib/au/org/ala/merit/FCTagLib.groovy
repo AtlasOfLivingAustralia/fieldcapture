@@ -183,7 +183,11 @@ class FCTagLib {
             else {
                 helpText = body()
             }
+
             Map spanAttrs = [class:'helphover', 'data-original-title':title, 'data-placement':'top', 'data-content':helpText, 'data-trigger':'click']
+            if (attrs['dynamic-help']) {
+                spanAttrs << ['data-bind':"attr:{'data-content':"+attrs['dynamic-help']+"}"]
+            }
             if (attrs.container) {
                 spanAttrs << ['data-container':attrs.container]
             }
@@ -905,6 +909,36 @@ class FCTagLib {
     def projectFunding = { attrs ->
         Map project = attrs.project
         out << (project?.custom?.details?.budget?.overallTotal?:project.funding)?:0
+
+    }
+
+    def reportStatus = { attrs ->
+        if (!attrs.report) {
+            throw new IllegalArgumentException("The report attribute is required")
+        }
+        Map report = attrs.report
+        String status = ""
+        switch (report.publicationStatus) {
+            case 'pendingApproval':
+                status = 'Submitted'
+                break
+            case 'published':
+                status = 'Approved'
+                break
+            default:
+                switch (report.progress) {
+                    case 'started':
+                        status = 'In progress'
+                        break
+                    case 'finished':
+                        status = 'Finished (unsubmitted)'
+                        break
+                    default:
+                        status = 'Not started'
+                }
+        }
+
+        out << status
 
     }
 

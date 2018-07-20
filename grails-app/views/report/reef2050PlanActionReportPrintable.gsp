@@ -31,8 +31,7 @@
     <g:else>
 
         <div class="well">
-            <strong>Progress on Reef 2050 Plan to <g:formatDate
-                    date="${au.org.ala.merit.DateUtils.parse(endDate).toDate()}" format="MMMM yyyy"/></strong>
+            <strong>Progress on Reef 2050 Plan to <g:formatDate date="${endDate}" format="dd MMMM yyyy"/></strong>
         </div>
 
         <div class="report-section">

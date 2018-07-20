@@ -70,6 +70,10 @@ class UrlMappings {
         "/admin/user/$id"(controller: "user", action: "show") {
 
         }
+        "/$hub/activity/ajaxUnlock/$userId/$id" {
+            controller = 'activity'
+            action = 'ajaxUnlock'
+        }
         "/activity/ajaxUnlock/$userId/$id" {
             controller = 'activity'
             action = 'ajaxUnlock'

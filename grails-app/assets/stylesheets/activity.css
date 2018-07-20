@@ -104,3 +104,7 @@
     box-sizing: border-box;
     height: 30px;
 }
+
+.report-header .header-label {
+    font-weight: bold;
+}
