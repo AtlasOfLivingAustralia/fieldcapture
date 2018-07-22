@@ -196,6 +196,13 @@ var ReportsViewModel = function(reports, projects, availableReports, reportOwner
         return filteredReports;
     });
 
+    self.displayShowAllCheckbox = ko.pureComputed(function() {
+        if (self.showAllReports()) {
+            return true;
+        }
+        return reports.length > self.filteredReports().length;
+    });
+
     self.editReport = function(report) {
         window.location = report.editUrl;
     };
