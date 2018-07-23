@@ -403,7 +403,7 @@ function autoSaveModel(viewModel, saveUrl, options) {
         amplify.store(config.storageKey, json);
 
         var result = $.Deferred();
-        var invokeCallbacksAndRejectResult = function() {
+        var invokeCallbacksAndRejectResult = function(data) {
             if (typeof errorCallback === 'function') {
                 errorCallback(data);
             }
