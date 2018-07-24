@@ -425,7 +425,7 @@ initialiseOutputViewModel = function(outputViewModelName, dataModel, elementId, 
         site:activity.site
     };
     ecodata.forms[viewModelInstance] = new ecodata.forms[outputViewModelName](output, dataModel, context, config);
-    ecodata.forms[viewModelInstance].initialise(output.data);
+    ecodata.forms[viewModelInstance].loadData(output.data);
 
     // dirtyFlag must be defined after data is loaded
     ecodata.forms[viewModelInstance].dirtyFlag = ko.simpleDirtyFlag(ecodata.forms[viewModelInstance], false);
