@@ -9,14 +9,19 @@ table#projectList th {
 table#projectList .projectId {
     width: 10%;
 }
+table#projectList .workOrderId {
+    width: 10%;
+}
 table#projectList .name {
     width: 45%;
 }
 table#projectList .startDate {
-    width: 15%;
+    width: 10%;
+    min-width:4em;
 }
 table#projectList .endDate {
-    width: 15%;
+    width: 10%;
+    min-width:4em;
 }
 table#projectList .statusCol {
     width: 15%;
