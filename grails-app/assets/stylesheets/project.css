@@ -206,3 +206,7 @@
 	background-color: #e87e04;
 	background-image: url(../images/forest2.png);
 }
+
+.overview .header-label {
+	font-weight: bold;
+}
