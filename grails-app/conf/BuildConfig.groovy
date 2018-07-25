@@ -81,8 +81,6 @@ grails.project.dependency.resolution = {
         compile "org.apache.httpcomponents:httpcore:4.4.1"
         compile "org.apache.httpcomponents:httpclient:4.4.1"
         compile "org.apache.pdfbox:pdfbox:2.0.4"
-//        compile "org.apache.poi:poi:3.17"
-//        compile "org.apache.poi:poi-scratchpad:3.17"
         build "com.google.guava:guava:21.0"
     }
 

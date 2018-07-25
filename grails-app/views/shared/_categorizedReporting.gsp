@@ -65,14 +65,16 @@
 
 <script id="reportTable" type="text/html">
 
-<label class="checkbox label-with-help"><input class="hide-future-reports" type="checkbox" data-bind="checked:showAllReports"> Show all reports</label>
-<fc:iconHelp>By default, reports approved more than a week ago and reports for a future reporting period are hidden.  Tick this box to see all reports.</fc:iconHelp>
+<div  data-bind="visible:displayShowAllCheckbox">
+    <label class="checkbox label-with-help"><input class="hide-future-reports" type="checkbox" data-bind="checked:showAllReports"> Show all reports</label>
+    <fc:iconHelp>By default, reports approved more than a week ago and reports for a future reporting period are hidden.  Tick this box to see all reports.</fc:iconHelp>
+</div>
 <table class="table table-striped" style="width:100%;">
     <thead>
 
     <tr>
         <th class="report-actions">
-            Actions <fc:iconHelp html="html">Submitted and approved reports cannot be edited<br/>Only reports marked as finished can be viewed or downloaded as a PDF</fc:iconHelp></th>
+            Actions <fc:iconHelp html="html">Submitted and approved reports cannot be edited<br/>Only reports marked as completed can be viewed or downloaded as a PDF</fc:iconHelp></th>
         <th class="report-name">Report</th>
         <th class="report-start">Period start</th>
         <th class="report-end">Period end
@@ -81,7 +83,7 @@
             <th class="report-due">Date Due
             </th>
         </g:if>
-        <th class="report-status">Status <fc:iconHelp html="html">Reports cannot be submitted until after the end of the reporting period. <br/> Reports must be marked as Finished before they can be submitted. </fc:iconHelp><br/></th>
+        <th class="report-status">Status <fc:iconHelp html="html">Reports cannot be submitted until after the end of the reporting period. <br/> Reports must be marked as complete before they can be submitted. </fc:iconHelp><br/></th>
     </tr>
     </thead>
     <tbody data-bind="foreach:{ data:filteredReports, as:'report', afterAdd: attachHelp}">
@@ -99,14 +101,14 @@
                     class="fa fa-eye" title="View this report"></i></a>
 
             <a class="btn btn-container disabled-icon" data-bind="visible:!viewable">
-                <i class="fa fa-eye" title="Please mark the report as finished before viewing it"></i>
+                <i class="fa fa-eye" title="Please mark the report as complete before viewing it"></i>
             </a>
 
             <a target="print-report" class="btn btn-container"
                     data-bind="attr:{href:downloadUrl}, visible:viewable"><i
                     class="fa fa-download" title="Download a PDF of this report"></i></a>
             <a class="btn btn-container disabled-icon" data-bind="visible:!viewable">
-                <i class="fa fa-download" title="Please mark the report as finished before generating a PDF"></i>
+                <i class="fa fa-download" title="Please mark the report as complete before generating a PDF"></i>
             </a>
 
         </td>

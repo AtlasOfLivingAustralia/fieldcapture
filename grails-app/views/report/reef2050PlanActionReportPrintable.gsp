@@ -2,8 +2,7 @@
 <html>
 <head>
     <meta name="layout" content="nrmPrint"/>
-    <title>Reef 2050 Action Status</title>
-    <title>Reef 2050 Plan July 2017</title>
+    <title>Reef 2050 Plan Action Reporting</title>
     <asset:stylesheet src="reef2050DashboardReport.css"/>
     <script type="text/javascript" src="//www.google.com/jsapi"></script>
     <asset:stylesheet src="common.css"/>

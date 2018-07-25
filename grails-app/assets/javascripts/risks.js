@@ -1,4 +1,4 @@
-function Risks(risks, disableFlag, key) {
+function Risks(risks, riskModel, disableFlag, key) {
     var self = this;
 
     if (key) {
@@ -14,7 +14,7 @@ function Risks(risks, disableFlag, key) {
 
     self.risksDisabled = disableFlag;
 
-    self.risks = new RisksViewModel(risks);
+    self.risks = new RisksViewModel(risks, riskModel);
 
     self.addRisks = function(){
         self.risks.rows.push(new RisksRowViewModel());
@@ -23,9 +23,10 @@ function Risks(risks, disableFlag, key) {
         self.risks.rows.remove(risk);
     };
 
-    self.likelihoodOptions = ['Almost Certain', 'Likely', 'Possible', 'Unlikely', 'Remote'];
-    self.consequenceOptions = ['Insignificant', 'Minor', 'Moderate', 'Major', 'Extreme'];
-    self.ratingOptions = ['High', 'Significant', 'Medium', 'Low'];
+    self.likelihoodOptions = riskModel.likelihoodOptions;
+    self.consequenceOptions = riskModel.consequenceOptions;
+    self.ratingOptions = riskModel.ratingOptions;
+
     self.overAllRiskHighlight = ko.computed(function () {
         return getClassName(self.risks.overallRisk());
     });
@@ -39,7 +40,7 @@ function Risks(risks, disableFlag, key) {
 
 };
 
-function RisksViewModel (risks) {
+function RisksViewModel (risks, riskModel) {
     var self = this;
     self.overallRisk = ko.observable();
     self.status = ko.observable();
@@ -53,11 +54,11 @@ function RisksViewModel (risks) {
         self.status(orBlank(risks.status));
         if (risks.rows) {
             self.rows($.map(risks.rows, function (obj) {
-                return new RisksRowViewModel(obj);
+                return new RisksRowViewModel(obj, riskModel);
             }));
         }
         else {
-            self.rows.push(new RisksRowViewModel());
+            self.rows.push(new RisksRowViewModel({}, riskModel));
         }
     };
     self.modelAsJSON = function() {
@@ -73,7 +74,7 @@ function RisksViewModel (risks) {
     self.load(risks);
 };
 
-function RisksRowViewModel (risksRow) {
+function RisksRowViewModel (risksRow, riskModel) {
     var self = this;
     if(!risksRow) risksRow = {};
     self.threat = ko.observable(risksRow.threat);
@@ -83,36 +84,9 @@ function RisksRowViewModel (risksRow) {
     self.currentControl = ko.observable(risksRow.currentControl);
     self.residualRisk = ko.observable(risksRow.residualRisk);
     self.riskRating = ko.computed(function (){
-        if (self.likelihood() == '' && self.consequence() == '')
-            return;
-
-        var riskCol = ["Insignificant","Minor","Moderate","Major","Extreme"];
-        var riskTable = [
-            ["Almost Certain","Medium","Significant","High","High","High"],
-            ["Likely","Low","Medium","Significant","High","High"],
-            ["Possible","Low","Medium","Medium","Significant","High"],
-            ["Unlikely","Low","Low","Medium","Medium","Significant"],
-            ["Remote","Low","Low","Low","Medium","Medium"]
-        ];
-        var riskRating = "";
-        var riskRowIndex = -1;
-
-        for(var i = 0; i < riskTable.length; i++) {
-            if(riskTable[i][0] == this.likelihood()){
-                riskRowIndex = i;
-                break;
-            }
+        if (self.likelihood() && self.consequence()) {
+            return riskModel.riskRating(self.likelihood(), self.consequence());
         }
-
-        if(riskRowIndex >= 0){
-            for(var i = 0; i < riskCol.length; i++) {
-                if(riskCol[i] == this.consequence()){
-                    riskRating = riskTable[riskRowIndex][i+1];
-                    break;
-                }
-            }
-        }
-        return riskRating;
     }, this);
 };
 
@@ -128,3 +102,56 @@ function getClassName(val){
         className = 'badge badge-success';
     return className;
 }
+
+var RiskModel = function(likelihoodOptions, consequenceOptions, ratingOptions, riskRatingMatrix) {
+
+    var self = this;
+    self.likelihoodOptions = likelihoodOptions;
+    self.consequenceOptions = consequenceOptions;
+    self.ratingOptions = ratingOptions;
+    self.riskRatingMatrix = riskRatingMatrix;
+
+    self.riskRating = function(likelyhood, consequence) {
+        var row = _.indexOf(self.likelihoodOptions, likelyhood);
+        var column = _.indexOf(self.consequenceOptions, consequence);
+
+        if (row >= 0 && column >=0) {
+            return riskRatingMatrix[row][column];
+        }
+        return '';
+
+    }
+};
+
+var meritRiskModel = function() {
+
+    var likelihoodOptions = ['Almost Certain', 'Likely', 'Possible', 'Unlikely', 'Remote'];
+    var consequenceOptions = ['Insignificant', 'Minor', 'Moderate', 'Major', 'Extreme'];
+    var ratingOptions = ['High', 'Significant', 'Medium', 'Low'];
+
+    var riskRatingMatrix = [
+        ["Medium", "Significant", "High",        "High",        "High"],
+        ["Low",    "Medium",      "Significant", "High",        "High"],
+        ["Low",    "Medium",      "Medium",      "Significant", "High"],
+        ["Low",    "Low",         "Medium",      "Medium",      "Significant"],
+        ["Low",    "Low",         "Low",         "Medium",      "Medium"]
+    ];
+
+    return new RiskModel(likelihoodOptions, consequenceOptions, ratingOptions, riskRatingMatrix);
+};
+
+var rlpRiskModel = function() {
+    var likelihoodOptions = ['Highly Likely', 'Likely', 'Possible', 'Unlikely', 'Rare'];
+    var consequenceOptions = ['Minor', 'Moderate', 'High', 'Major', 'Critical'];
+    var ratingOptions = ['Severe', 'High', 'Medium', 'Low'];
+
+    var riskRatingMatrix = [
+        ["Medium", "High",   "High",   "Severe", "Severe"],
+        ["Low",    "Medium", "High",   "High",   "Severe"],
+        ["Low",    "Medium", "Medium", "High",   "Severe"],
+        ["Low",    "Low",    "Medium", "High",   "High"],
+        ["Low",    "Low",    "Low",    "Medium", "High"]
+    ];
+
+    return new RiskModel(likelihoodOptions, consequenceOptions, ratingOptions, riskRatingMatrix);
+};

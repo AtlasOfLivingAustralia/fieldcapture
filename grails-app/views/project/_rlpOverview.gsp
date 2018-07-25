@@ -1,64 +1,70 @@
 <!-- OVERVIEW -->
-<div class="row-fluid">
-    <div class="clearfix" data-bind="visible:associatedProgram()">
-        <h4>
-            Program:
-            <span>Regional Landcare Program</span>
-        </h4>
-    </div>
-    <div class="clearfix">
-        <g:if test="${config?.program}">
-            <h4>Management Unit:
-            <g:link controller="program" action="index" id="${config.program.programId}"> ${config.program.name} </g:link>
-            </h4>
+<div class="overview">
 
-        </g:if>
+    <div class="row-fluid">
+        <div class="span2 header-label">Program</div>
+
+        <div class="span9">Regional Landcare Program</div>
     </div>
-    <div class="clearfix" data-bind="visible:organisationId()||organisationName()">
-        <h4>
-            Service Provider:
+    <div class="row-fluid">
+        <div class="span2 header-label">Management Unit</div>
+
+        <div class="span9"><g:link controller="program" action="index" id="${config.program.programId}"> ${config.program.name} </g:link></div>
+    </div>
+    <div class="row-fluid">
+        <div class="span2 header-label">Service Provider</div>
+        <div class="span9">
             <a data-bind="visible:organisationId(),attr:{href:fcConfig.organisationLinkBaseUrl+'/'+organisationId()}">
                 <span data-bind="text:organisationName"></span>
             </a>
             <span data-bind="visible:!organisationId(),text:organisationName"></span>
-        </h4>
-    </div>
-
-    <div data-bind="visible:plannedStartDate()">
-        <h4>
-            Project start: <span data-bind="text:plannedStartDate.formattedDate"></span>
-            <span data-bind="visible:plannedEndDate()">Project finish: <span data-bind="text:plannedEndDate.formattedDate"></span></span>
-        </h4>
-    </div>
-
-    <div class="clearfix" style="font-size:14px;">
-        <div class="span3" data-bind="visible:status" style="margin-bottom: 0">
-            <span data-bind="if: status().toLowerCase() == 'active'">
-                Project Status:
-                <span style="text-transform:uppercase;" data-bind="text:status" class="badge badge-success" style="font-size: 13px;"></span>
-            </span>
-            <span data-bind="if: status().toLowerCase() == 'completed'">
-                Project Status:
-                <span style="text-transform:uppercase;" data-bind="text:status" class="badge badge-info" style="font-size: 13px;"></span>
-            </span>
-
         </div>
-        <div class="span3" data-bind="visible:grantId" style="margin-bottom: 0">
-            Project ID:
-            <span data-bind="text:grantId"></span>
-        </div>
-        <div class="span3" data-bind="visible:externalId" style="margin-bottom: 0">
-            External Id:
-            <span data-bind="text:externalId"></span>
-        </div>
+    </div>
 
+    <div class="row-fluid">
+        <div class="span2 header-label">Project ID</div>
+
+        <div class="span9">${project.grantId}</div>
     </div>
-    <div data-bind="visible:description()">
-        <p class="well well-small more" data-bind="text:description"></p>
+
+    <div class="row-fluid" data-bind="visible:workOrderId">
+        <div class="span2 header-label">Work Order ID</div>
+
+        <div class="span9">${project.workOrderId}</div>
     </div>
+
+
+    <div class="row-fluid">
+        <div class="span2 header-label">Project start</div>
+
+        <div class="span9 value"><span data-bind="text:plannedStartDate.formattedDate"></span></div>
+    </div>
+
+    <div class="row-fluid">
+        <div class="span2 header-label">Project end</div>
+
+        <div class="span9 value"><span data-bind="text:plannedEndDate.formattedDate"></span></div>
+    </div>
+
+    <div class="row-fluid">
+        <div class="span2 header-label">Project status</div>
+
+        <div class="span9 value">
+            <span style="text-transform:uppercase;" data-bind="text:status" class="badge badge-info" style="font-size: 13px;"></span>
+        </div>
+    </div>
+
+    <div class="row-fluid">
+        <div class="span2 header-label">Project description</div>
+
+        <div class="span9 value">
+            <p class="well well-small more" data-bind="text:description"></p>
+        </div>
+    </div>
+
 </div>
-
-
+<hr/>
+<h2>Service delivery</h2>
 <g:render template="serviceDashboard"/>
 
 

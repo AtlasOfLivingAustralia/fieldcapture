@@ -33,11 +33,16 @@ function MERIPlan(project, config) {
    self.isProjectDetailsLocked = ko.computed (function (){
        return (project.planStatus == PlanStatus.APPROVED || project.planStatus == PlanStatus.SUBMITTED);
    });
+   var riskModel;
    if (config.useRlpTemplate) {
        disableFlag = self.isProjectDetailsLocked;
+       riskModel = rlpRiskModel();
+   }
+   else {
+       riskModel = meritRiskModel();
    }
 
-    _.extend(self, new Risks(project.risks, disableFlag, config.risksStorageKey));
+    _.extend(self, new Risks(project.risks, riskModel, disableFlag, config.risksStorageKey));
    self.details = new DetailsViewModel(project.custom.details, project, self.risks, config);
    self.detailsLastUpdated = ko.observable(project.custom.details.lastUpdated).extend({simpleDate: true});
    self.isProjectDetailsSaved = ko.computed (function (){
