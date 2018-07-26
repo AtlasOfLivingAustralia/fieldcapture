@@ -138,6 +138,21 @@
             $('form.createOrgs').submit();
         });
 
+        $("#importFromPDF").change(function() {
+            if ($("#importFromPDF").val()) {
+                $("#btnImportFromPDF").removeAttr("disabled");
+            }
+            else {
+                $("#btnImportFromPDF").attr("disabled", "disabled");
+            }
+
+        }).trigger('change');
+
+        $('#btnImportFromPDF').click(function(e) {
+            e.preventDefault();
+            $('form.importFromPDF').submit();
+        });
+
     });
 
 </script>
@@ -265,6 +280,19 @@
             Bulk creates organisations and updates projects.
         <p><g:uploadForm class="createOrgs" action="createMissingOrganisations">
             <div><input id="createOrgs" type="file" name="orgData"/></div>
+
+        </g:uploadForm>
+
+        </p>
+        </td>
+    </tr>
+    <tr>
+        <td><button disabled id="btnImportFromPDF" class="btn btn-small btn-info" title="Import a project from PDF">Import from PDF</button>
+        </td>
+        <td>
+            Imports a project from a PDF file.
+        <p><g:uploadForm class="importFromPDF" action="importOutcomes">
+            <div><input id="importFromPDF" type="file" name="pdf"/></div>
 
         </g:uploadForm>
 

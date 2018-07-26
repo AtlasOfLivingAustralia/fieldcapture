@@ -74,9 +74,18 @@ var ReportViewModel = function(report, config) {
     self.currentPeriodHelpText = ko.computed(function() {
         return "This report can be submitted on or after "+self.submissionDate.formattedDate();
     });
-    self.complete = ko.computed(function() {
+    self.complete = ko.pureComputed(function() {
         return self.isReportable() && self.progress() == 'finished' && self.editable;
     });
+
+    self.hasData = ko.pureComputed(function() {
+        return self.progress() == 'finished' || self.progress() == 'started';
+    });
+
+    self.canReset = ko.pureComputed(function() {
+        return self.editable && self.hasData();
+    });
+
     self.approvalTemplate = function() {
         if (!self.isReportable()) {
             return 'notReportable';
@@ -101,20 +110,18 @@ var ReportViewModel = function(report, config) {
             url: url,
             type: 'POST',
             data: json,
-            contentType: 'application/json',
-            success:function() {
+            contentType: 'application/json'
+        }).done(function() {
                 blockUIWithMessage(successMessage);
                 window.location.reload();
-            },
-            error:function(data) {
-                $.unblockUI();
+        }).fail(function(data) {
+            $.unblockUI();
 
-                if (data.status == 401) {
-                    bootbox.alert("You do not have permission to "+action+" this report.");
-                }
-                else {
-                    bootbox.alert('An unhandled error occurred: ' + data.status);
-                }
+            if (data.status == 401) {
+                bootbox.alert("You do not have permission to "+action+" this report.");
+            }
+            else {
+                bootbox.alert('An unhandled error occurred: ' + data.status);
             }
         });
     };
@@ -136,7 +143,7 @@ var ReportViewModel = function(report, config) {
 
     };
 
-    this.rejectReport = function() {
+    self.rejectReport = function() {
         var reasonModalSelector = config.reasonModalSelector || '#reason-modal';
         var $reasonModal = $(reasonModalSelector);
         var reasonViewModel = {
@@ -151,6 +158,28 @@ var ReportViewModel = function(report, config) {
         };
         ko.applyBindings(reasonViewModel, $reasonModal[0]);
         $reasonModal.modal({backdrop: 'static', keyboard:true, show:true}).on('hidden', function() {ko.cleanNode($reasonModal[0])});
+    };
+
+    self.resetReport = function() {
+        bootbox.confirm("<h4>Delete report contents</h4>Are you sure you want to delete the data entered for this report?<br/><b>This action cannot be undone</b>", function(result) {
+            var url = config.resetReportUrl+'?reportId='+report.reportId;
+            if (result) {
+                $.ajax({
+                    url: url,
+                    type: 'POST'
+                }).done(function() {
+                    window.location.reload();
+                }).fail(function(data) {
+                    if (data.status == 401) {
+                        bootbox.alert("You do not have permission to reset this report.");
+                    }
+                    else {
+                        bootbox.alert('An unhandled error occurred: ' + data.status);
+                    }
+                });
+            }
+
+        });
     };
 };
 
@@ -318,7 +347,11 @@ var ReportsViewModel = function(reports, projects, availableReports, reportOwner
 
 
             var reportUrl = config.reportCreateUrl;
-            $.ajax({method:'POST', url:reportUrl, data:reportDetails, success:function() {window.location.reload()}, contentType:'application/json'});
+            $.ajax({
+                method:'POST', url:reportUrl, data:reportDetails, contentType:'application/json'
+            }).done(function() {
+                window.location.reload();
+            });
         };
     };
     self.newReport = new AdHocReportViewModel();

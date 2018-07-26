@@ -90,6 +90,7 @@
                     <h3 id="myModalLabel">Reason for deferring or cancelling an activity</h3>
                 </div>
                 <div class="modal-body">
+                    <p data-bind="visible:$parent.displayReasonModal.showWarning"><b style="color:red;">WARNING: The data recorded for this activity will be deleted</b></p>
                     <p>If you wish to defer or cancel a planned activity you must provide an explanation. Your case
                     manager will use this information when assessing your report.</p>
                     <p>You can simply refer to a document that has been uploaded to the project if you like.</p>

@@ -374,6 +374,15 @@ class ReportService {
         webService.doPost(grailsApplication.config.ecodata.baseUrl+"report/"+report.reportId, report)
     }
 
+    Map reset(String reportId) {
+        Map report = get(reportId)
+        if (isSubmittedOrApproved(report)) {
+            return [success:false, error:"Cannot delete data for an approved or submitted report"]
+        }
+
+        webService.doPost(grailsApplication.config.ecodata.baseUrl+"report/reset/"+report.reportId, [:])
+    }
+
     def findReportsForUser(String userId) {
 
         def reports = webService.doPost(grailsApplication.config.ecodata.baseUrl+"user/${userId}/reports", [:])
