@@ -12,6 +12,7 @@
             reportCreateUrl: '${g.createLink( action:'createReport', id:program.programId)}',
             viewReportUrl: '${createLink(action:"viewReport", id:program.programId)}',
             editReportUrl: "${createLink(action:"editReport", id:program.programId)}",
+            resetReportUrl: "${createLink(action:'resetReport', id:program.programId)}",
             reportPDFUrl: "${createLink(action:"reportPDF", id:program.programId)}",
             approveReportUrl: "${createLink(action:"ajaxApproveReport", id:program.programId)}",
             submitReportUrl: "${createLink(action:"ajaxSubmitReport", id:program.programId)}",
