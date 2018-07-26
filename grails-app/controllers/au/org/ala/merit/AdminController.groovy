@@ -760,7 +760,7 @@ class AdminController {
                     "TE Communities":[1, 1],
                     "World Heritage":[1, 1],
                     "Soil Priorities":[2, 1],
-                    "TSS Species ":[1, 3]
+                    "TSS Species ":[1, 5]
             ]
             sheetConfig.each {k, v ->
                 Sheet sheet = workbook.getSheet(k)
@@ -846,7 +846,7 @@ class AdminController {
                     id:(i+1),
                     categories:categories.collect{it.trim()}]
 
-            ['Score 1', 'Score 2', 'Score 3'].each{ score ->
+            ['Score 1', 'Score 2', 'Score 3', 'Score 4', 'Score 5', 'Score 6'].each{ score ->
                 if (service[score]) {
                     scores << [
                             label:service[score].trim(),
