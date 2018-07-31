@@ -589,29 +589,16 @@ class ProjectService  {
      */
     def changeProjectDates(String projectId, String plannedStartDate, String plannedEndDate, boolean updateActivities = true) {
         Map response
-        def project = get(projectId)
-        def previousStartDate = DateUtils.parse(project.plannedStartDate)
-        def newStartDate = DateUtils.parse(plannedStartDate)
-        def daysStartChanged = Days.daysBetween(previousStartDate, newStartDate).days
+        Map project = get(projectId)
+        DateTime previousStartDate = DateUtils.parse(project.plannedStartDate)
+        DateTime previousEndDate = DateUtils.parse(project.plannedEndDate)
 
-        String validationResult = validateProjectDates(project, plannedStartDate)
+        DateTime newStartDate = DateUtils.parse(plannedStartDate)
+        DateTime newEndDate = DateUtils.parse(plannedEndDate)
+
+
+        String validationResult = validateProjectDates(project, newStartDate, newEndDate)
         if (validationResult == null) {
-
-            def previousEndDate = DateUtils.parse(project.plannedEndDate)
-            def newEndDate = DateUtils.parse(plannedEndDate)
-
-            def previousDuration = Days.daysBetween(previousStartDate, previousEndDate).days
-            def newDuration = Days.daysBetween(newStartDate, newEndDate).days
-
-            if (newDuration <= 0 || previousDuration <= 0) {
-                return [error:"Invalid project dates"]
-            }
-
-            def scale = (double)newDuration / (double)previousDuration
-
-            log.info("Updating start date for project ${projectId} from ${project.plannedStartDate} to ${newStartDate}, ${daysStartChanged} days difference")
-            log.info("Updating end date for project ${projectId} from ${project.plannedEndDate} to ${newEndDate}")
-            log.info("Project duration changing by a factor of ${scale}")
 
             // The update method in this class treats dates specially and delegates the updates to this method.
             response = updateUnchecked(projectId, [plannedStartDate:plannedStartDate, plannedEndDate:plannedEndDate])
@@ -620,26 +607,7 @@ class ProjectService  {
             if (response.resp && !response.resp.error) {
 
                 if (updateActivities) {
-                    def activities = activityService.activitiesForProject(projectId)
-                    activities.each { activity ->
-                        if (!activityService.isReport(activity)) {
-                            def newActivityStartDate = DateUtils.format(DateUtils.parse(activity.plannedStartDate).plusDays(daysStartChanged))
-                            def daysToChangeEndDate = (int)Math.round(Math.abs(daysStartChanged) * scale)
-                            def newActivityEndDate = DateUtils.format(DateUtils.parse(activity.plannedEndDate).plusDays(daysToChangeEndDate))
-
-                            // Account for any rounding errors that would result in the activity falling outside the project date range.
-                            if (newActivityStartDate > newActivityEndDate) {
-                                newActivityStartDate = newActivityEndDate
-                            }
-                            if (newActivityStartDate < plannedStartDate) {
-                                newActivityStartDate = plannedStartDate
-                            }
-                            if (newActivityEndDate > plannedEndDate) {
-                                newActivityEndDate = plannedEndDate
-                            }
-                            activityService.update(activity.activityId, [activityId:activity.activityId, plannedStartDate:newActivityStartDate, plannedEndDate:newActivityEndDate])
-                        }
-                    }
+                    updateActivityDatesToMatchProjectDates(projectId, previousStartDate, previousEndDate, daysStartChanged, scale, plannedStartDate, plannedEndDate)
                 }
             }
         }
@@ -649,8 +617,50 @@ class ProjectService  {
         response
     }
 
+    /**
+     * Modifies project activities to keep the dates in sync with a change to the project dates.  Only used by
+     * Green Army projects.
+     */
+    private void updateActivityDatesToMatchProjectDates(Map project, DateTime previousStartDate, DateTime previousEndDate, DateTime newStartDate, DateTime newEndDate) {
+
+        def daysStartChanged = Days.daysBetween(previousStartDate, newStartDate).days
+        def previousDuration = Days.daysBetween(previousStartDate, previousEndDate).days
+        def newDuration = Days.daysBetween(newStartDate, newEndDate).days
+
+        def scale = (double)newDuration / (double)previousDuration
+
+        log.info("Project duration changing by a factor of ${scale}")
+        log.info("Updating start date for project ${project.projectId} from ${project.plannedStartDate} to ${newStartDate}, ${daysStartChanged} days difference")
+        log.info("Updating end date for project ${project.projectId} from ${project.plannedEndDate} to ${newEndDate}")
+
+        def activities = activityService.activitiesForProject(project.projectId)
+        activities.each { activity ->
+            if (!activityService.isReport(activity)) {
+                def newActivityStartDate = DateUtils.format(DateUtils.parse(activity.plannedStartDate).plusDays(daysStartChanged))
+                def daysToChangeEndDate = (int) Math.round(Math.abs(daysStartChanged) * scale)
+                def newActivityEndDate = DateUtils.format(DateUtils.parse(activity.plannedEndDate).plusDays(daysToChangeEndDate))
+
+                // Account for any rounding errors that would result in the activity falling outside the project date range.
+                if (newActivityStartDate > newActivityEndDate) {
+                    newActivityStartDate = newActivityEndDate
+                }
+                if (newActivityStartDate < project.plannedStartDate) {
+                    newActivityStartDate = project.plannedStartDate
+                }
+                if (newActivityEndDate > project.plannedEndDate) {
+                    newActivityEndDate = project.plannedEndDate
+                }
+                activityService.update(activity.activityId, [activityId: activity.activityId, plannedStartDate: newActivityStartDate, plannedEndDate: newActivityEndDate])
+            }
+        }
+    }
+
     boolean isMeriPlanSubmittedOrApproved(Map project) {
         return (project.planStatus == PLAN_SUBMITTED || project.planStatus == PLAN_APPROVED)
+    }
+
+    private String validateProjectDates(Map project, DateTime plannedStartDate, DateTime plannedEndDate) {
+        return validateProjectDates(project, DateUtils.format(plannedStartDate))
     }
 
     /**
@@ -830,6 +840,27 @@ class ProjectService  {
         outcomes
 
     }
+
+    /**
+     * This method returns the range in which the project end date is allowed to fall.  A null minimum date indicates
+     * any end date is OK (although it will need to be after the new start date which will be validated separately).
+     */
+    String minimumProjectEndDate(Map project, Map projectConfiguration) {
+
+        String minimumDate
+        // If activities are autogenerated, we don't mind deleting planned activities
+        if (projectConfiguration.autogeneratedActivities) {
+            minimumDate = project.reports?.findAll{it.progress != ActivityService.PROGRESS_PLANNED}.max{it.toDate}?.toDate
+        }
+        // Otherwise we don't want to delete any activities
+        else {
+            minimumDate = project.activities?.max{it.plannedEndDate}?.plannedEndDate
+        }
+
+        minimumDate
+
+    }
+
 
     boolean canEditActivity(Map activity) {
         Map project = get(activity.projectId)
