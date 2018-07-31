@@ -1157,10 +1157,10 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
         if (endDate <= self.plannedStartDate()) {
             return "The project end date must be after the start date";
         }
-        if (project.activities && !self.changeActivityDates()) {
-            var lastActivityDate = _.reduce(project.activities, function(max, activity) { return activity.plannedEndDate > max ? activity.plannedEndDate : max; }, project.plannedStartDate);
-            if (endDate < lastActivityDate) {
-                return "The project end date must be after the last activity in the project ( "+convertToSimpleDate(lastActivityDate)+ " )";
+        if (!self.changeActivityDates()) {
+
+            if (config.minimumProjectEndDate && (endDate < config.minimumProjectEndDate)) {
+                return "The project end date must be after "+convertToSimpleDate(config.minimumProjectEndDate);
             }
         }
 

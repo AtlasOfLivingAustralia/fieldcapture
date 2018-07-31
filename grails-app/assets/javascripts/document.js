@@ -17,7 +17,7 @@ function DocumentViewModel (doc, owner, settings) {
         //Information is the default option.
         roles:  [{id: 'information', name: 'Information'}, {id:'embeddedVideo', name:'Embedded Video'}, {id: 'programmeLogic', name: 'Programme Logic'}],
         stages:[],
-        showSettings: false,
+        showSettings: true,
         thirdPartyDeclarationTextSelector:'#thirdPartyDeclarationText',
         imageLocation: fcConfig.imageLocation
     };

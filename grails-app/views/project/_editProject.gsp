@@ -103,7 +103,7 @@
         </label>
         <div class="input-append">
             <g:if test="${canChangeProjectDates}">
-                <fc:datePicker targetField="plannedStartDate.date" name="startDate" data-validation-engine="validate[required, validate[funcCall[validateProjectStartDate]]]" printable="${printView}" size="input-large"/>
+                <fc:datePicker targetField="plannedStartDate.date" name="startDate" data-validation-engine="validate[required, funcCall[validateProjectStartDate]]" printable="${printView}" size="input-large"/>
             </g:if>
             <g:else>
                 <input type="text" data-bind="value:plannedStartDate.formattedDate" disabled="disabled" size="input-large">
