@@ -85,7 +85,7 @@
 
 
                     <div data-bind="visible: !embeddedVideoVisible()">
-                        <div class="control-group"  data-bind="visible:settings.showSettings">
+                        <div class="control-group"  data-bind="visible:false">
                             <label class="control-label" for="documentFile">Image settings</label>
                             <div class="controls">
                                 <label class="checkbox" for="documentRole">

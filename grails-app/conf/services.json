@@ -221,5 +221,11 @@
       "name": "Weed distribution survey",
       "id": 33,
       "categories": ["Monitoring activities"]
+   },
+   {
+      "output": "RLP - Debris removal",
+      "name": "Debris removal",
+      "id": 34,
+      "categories": ["Restoring condition"]
    }
 ]

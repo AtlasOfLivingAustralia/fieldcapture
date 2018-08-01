@@ -169,7 +169,7 @@ var ProgramPageViewModel = function(props, options) {
         {label:"Half-yearly (First period ends 31 January 2019)", firstReportingPeriodEnd:'2019-01-31T13:00:00Z', reportingPeriodInMonths:6}];
 
     var currentOption = _.find(self.coreServicesOptions, function(option) {
-        return option.firstReportingPeriodEnd == programReportConfig.firstReportingPeriodEnd;
+        return option.firstReportingPeriodEnd == programReportConfig.firstReportingPeriodEnd && option.reportingPeriodInMonths == programReportConfig.reportingPeriodInMonths;
     });
     self.coreServicesPeriod = ko.observable(currentOption ? currentOption.label : null);
 
@@ -181,7 +181,7 @@ var ProgramPageViewModel = function(props, options) {
         {label:"Half-yearly - Group F (First period ends 31 March 2019)", firstReportingPeriodEnd:'2019-03-31T13:00:00Z', reportingPeriodInMonths:6}];
 
     currentOption = _.find(self.activityReportingOptions, function(option) {
-        return option.firstReportingPeriodEnd == activityReportConfig.firstReportingPeriodEnd;
+        return option.firstReportingPeriodEnd == activityReportConfig.firstReportingPeriodEnd && option.reportingPeriodInMonths == activityReportConfig.reportingPeriodInMonths;
     });
     self.activityReportingPeriod = ko.observable(currentOption ? currentOption.label : null);
     self.startDate = ko.observable(props.startDate).extend({simpleDate:false});

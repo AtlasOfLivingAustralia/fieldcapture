@@ -99,6 +99,10 @@ var PlannedActivity = function (act, isFirst, project, stage, options) {
         if (!self.displayReasonModal.needsToBeSaved) { return; } // Cancel if value hasn't changed
 
         if (newValue === 'deferred' || newValue === 'cancelled') {
+
+            // If we are changing from started or finished, warn the user that output data will be deleted.
+            self.displayReasonModal.showWarning = self.hasOutputData(self.progress.previous());
+
             // create a reason document if one doesn't exist
             // NOTE that 'deferReason' role is used in both cases, ie refers to cancel reason as well
             if (self.deferReason() === undefined) {
@@ -124,6 +128,10 @@ var PlannedActivity = function (act, isFirst, project, stage, options) {
 
     this.isComplete = function() {
         return [ActivityProgress.finished, ActivityProgress.deferred, ActivityProgress.cancelled].indexOf(self.progress()) >= 0;
+    };
+
+    this.hasOutputData = function(progress) {
+        return _.contains([ActivityProgress.finished, ActivityProgress.started], progress);
     };
 
     this.saveProgress = function(payload) {

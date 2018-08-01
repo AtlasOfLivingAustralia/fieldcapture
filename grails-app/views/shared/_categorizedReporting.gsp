@@ -111,6 +111,13 @@
                 <i class="fa fa-download" title="Please mark the report as complete before generating a PDF"></i>
             </a>
 
+            <g:if test="${fc.userIsAlaOrFcAdmin()}">
+                <a class="btn btn-container pull-right" href="javascript:void(0)" title="Delete all data entered for this report"
+                   data-bind="visible:canReset, click:resetReport"><i class="fa fa-remove" style="color:red;"></i>
+                </a>
+
+            </g:if>
+
         </td>
         <td class="report-name"><a data-bind="visible:editable, attr:{href:editUrl, title:title}" title="Complete this report"><span
                 data-bind="text:description"></span></a>

@@ -58,6 +58,7 @@
         submitReportUrl: "${createLink(controller: 'project', action: 'ajaxSubmitReport', id:project.projectId)}/",
         approveReportUrl: "${createLink(controller: 'project', action: 'ajaxApproveReport', id:project.projectId)}/",
         rejectReportUrl: "${createLink(controller: 'project', action: 'ajaxRejectReport', id:project.projectId)}/",
+        resetReportUrl: "${createLink(controller:'project', action:'resetReport', id:project.projectId)}",
         reportOwner: {projectId:'${project.projectId}'},
         reportCreateUrl: '${g.createLink( action:'createReport', id:project.projectId)}',
         viewReportUrl:'${createLink(action:"viewReport", id:project.projectId)}',
@@ -223,7 +224,8 @@
                 documentUpdateUrl: fcConfig.documentUpdateUrl,
                 projectUpdateUrl: fcConfig.projectUpdateUrl,
                 projectScoresUrl: fcConfig.projectScoresUrl,
-                meriStorageKey:PROJECT_DETAILS_KEY
+                meriStorageKey:PROJECT_DETAILS_KEY,
+                minimumProjectEndDate: ${projectContent.admin.minimumProjectEndDate?'"'+projectContent.admin.minimumProjectEndDate+'"':'null'}
             };
 
             var programs = <fc:modelAsJavascript model="${programs}"/>;
