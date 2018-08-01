@@ -7,6 +7,14 @@
         <div class="span9">${config?.program?.name}</div>
     </div>
 
+    <g:if test="${context.organisationName}">
+    <div class="row-fluid">
+        <div class="span2 header-label">Service provider</div>
+
+        <div class="span9">${context.organisationName}</div>
+    </div>
+    </g:if>
+
     <div class="row-fluid">
         <div class="span2 header-label">Project Name</div>
 

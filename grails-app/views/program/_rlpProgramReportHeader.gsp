@@ -6,6 +6,13 @@
 
         <div class="span9 value">${context.name}</div>
     </div>
+    <g:if test="${context.associatedOrganisations}">
+        <div class="row-fluid">
+            <div class="span2 header-label">Service provider</div>
+
+            <div class="span9 value">${context.associatedOrganisations[0].name}</div>
+        </div>
+    </g:if>
 
     <div class="row-fluid">
         <div class="span2 header-label">Reporting period start</div>

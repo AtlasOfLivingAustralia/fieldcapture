@@ -150,7 +150,7 @@
 <script id="notReportable" type="text/html">
 <span class="badge badge-warning">Report not submitted</span><br/>
 </script>
-<script id="notApproved" type="text/html">
+<script id="notSubmitted" type="text/html">
     <p><span class="badge badge-warning">Report not submitted</span></p>
 
 <g:if test="${isAdmin || fc.userIsAlaOrFcAdmin()}">

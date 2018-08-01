@@ -5,25 +5,25 @@
             <p class="sp-layer sp-white sp-padding"
                data-position="topLeft" data-width="100%" data-bind="visible:url"
                data-show-transition="down" data-show-delay="0" data-hide-transition="up">
-                <strong>Visit us at <a data-bind="attr:{href:url}"><span data-bind="text:url"></span></a></strong>
+                <strong data-bind="visible:url()">Visit us at <a data-bind="attr:{href:url}"><span data-bind="text:url"></span></a></strong>
             </p>
         </div>
     </div>
 </div>
 
-<div id="weburl" data-bind="visible:!mainImageUrl()">
+<div id="weburl" data-bind="visible:!mainImageUrl() && url()">
     <div data-bind="visible:url()"><strong>Visit us at <a data-bind="attr:{href:url}"><span data-bind="text:url"></span></a></strong></div>
 </div>
 
 <div data-bind="visible:description">
-    <div class="span12 well">
-        <div class="well-title">About ${program.name}</div>
+    <div class="well">
+        <div class="well-title">Description</div>
 
         <span data-bind="html:description.markdownToHtml()"></span>
     </div>
 </div>
 
-<g:if test="${servicesDashboard.visible}">
+<g:if test="${servicesDashboard.visible && servicesDashboard.services}">
     <hr/>
     <div class="well-title">Service delivery</div>
     <div id="services-dashboard">

@@ -60,5 +60,14 @@ form #start-date, form #end-date {
     background-color: #02baf2;
 }
 
+.program-organisation {
+    padding-left: 5px;
+    margin-bottom: 5px;
+}
+
+.header-text h2 {
+    padding-left: 3px;
+}
+
 
 
