@@ -2,7 +2,7 @@
 
 <div class="overview">
     <div class="row-fluid">
-        <div class="span3 title">Project Name</div>
+        <div class="span3 title">Project name</div>
 
         <div class="span9">${project.name}</div>
     </div>
@@ -12,6 +12,14 @@
 
         <div class="span9">${config?.program?.name}</div>
     </div>
+
+    <g:if test="${project.organisationName}">
+    <div class="row-fluid">
+        <div class="span3 title">Service provider</div>
+
+        <div class="span9">${project.organisationName}</div>
+    </div>
+    </g:if>
 
     <div class="row-fluid">
         <div class="span3 title">Project ID</div>
