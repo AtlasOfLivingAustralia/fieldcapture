@@ -44,14 +44,30 @@
 
         <div class="pull-right" style="vertical-align: middle;">
             <span data-bind="foreach:transients.socialMedia">
-                <a data-bind="attr:{href:link.url}"><img data-bind="attr:{src:logo('${assetPath(src:'filetypes')}')}"/></a>
+                <a data-bind="attr:{href:link.url}"><img data-bind="attr:{src:logo('${assetPath(src: 'filetypes')}')}"/>
+                </a>
             </span>
         </div>
 
         <div class="header-text">
             <h2>${program.name}</h2>
+            <g:if test="${program.associatedOrganisations}">
+                <g:each in="${program.associatedOrganisations}" var="org">
+                    <div class="program-organisation">
+                        <strong>${org.description}</strong> : <g:if test="${org.organisationId}">
+                        <a href="${createLink(controller: 'organisation', action: 'index', id: org.organisationId)}">${org.name}</a>
+                    </g:if>
+                        <g:else>
+                            ${org.name}
+                        </g:else>
+
+                    </div>
+
+                </g:each>
+            </g:if>
         </div>
     </div>
+
 
     <div id="programDetails" class="clearfix">
 
