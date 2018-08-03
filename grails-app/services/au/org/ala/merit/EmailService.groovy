@@ -1,7 +1,5 @@
 package au.org.ala.merit
 
-import org.codehaus.groovy.grails.web.mapping.LinkGenerator
-
 
 /**
  * Sends email messages on behalf of MERIT users to notify interested parties of project lifecycle changes.
@@ -9,7 +7,7 @@ import org.codehaus.groovy.grails.web.mapping.LinkGenerator
  */
 class EmailService {
 
-    def projectService, userService, mailService, settingService, grailsApplication, organisationService, grailsLinkGenerator
+    def projectService, userService, mailService, settingService, grailsApplication, organisationService
 
     def createAndSend(mailSubjectTemplate, mailTemplate, model, recipient, sender, ccList) {
         def systemEmailAddress = grailsApplication.config.fieldcapture.system.email.address
@@ -109,53 +107,6 @@ class EmailService {
         )
     }
 
-    def sendPlanSubmittedEmail(projectId, planDetails) {
-
-        def emailAddresses = getProjectEmailAddresses(projectId)
-        def ccEmails = addDefaultsToCC([], emailAddresses)
-
-        createAndSend(
-                SettingPageType.PLAN_SUBMITTED_EMAIL_SUBJECT_LINE,
-                SettingPageType.PLAN_SUBMITTED_EMAIL,
-                planDetails,
-                emailAddresses.grantManagerEmails,
-                emailAddresses.userEmail,
-                ccEmails
-        )
-    }
-
-
-    def sendPlanApprovedEmail(projectId, planDetails) {
-        def emailAddresses = getProjectEmailAddresses(projectId)
-        def ccEmails = addDefaultsToCC(emailAddresses.grantManagerEmails, emailAddresses)
-
-
-        createAndSend(
-                SettingPageType.PLAN_APPROVED_EMAIL_SUBJECT_LINE,
-                SettingPageType.PLAN_APPROVED_EMAIL,
-                planDetails,
-                emailAddresses.adminEmails,
-                emailAddresses.userEmail,
-                ccEmails
-        )
-
-    }
-
-    def sendPlanRejectedEmail(projectId, planDetails) {
-
-        def emailAddresses = getProjectEmailAddresses(projectId)
-        def ccEmails = addDefaultsToCC(emailAddresses.grantManagerEmails, emailAddresses)
-
-        createAndSend(
-                SettingPageType.PLAN_REJECTED_EMAIL_SUBJECT_LINE,
-                SettingPageType.PLAN_REJECTED_EMAIL,
-                planDetails,
-                emailAddresses.adminEmails,
-                emailAddresses.userEmail,
-                ccEmails
-        )
-    }
-
     def sendOrganisationReportSubmittedEmail(organisationId, reportDetails) {
 
         def emailAddresses = getOrganisationEmailAddresses(organisationId)
@@ -203,40 +154,36 @@ class EmailService {
         )
     }
 
-    def sendAdminInitiatedEmail(SettingPageType subject, SettingPageType bodyTemplate, Map substitutionParams, List userEmailsAndRoles) {
 
+    void sendEmail(EmailTemplate emailTemplate, Map substitutionParams, List userEmailsAndRoles, String initiatingRole) {
         def emailAddresses = sortEmailAddressesByRole(userEmailsAndRoles)
 
         if (!emailAddresses.grantManagerEmails) {
             emailAddresses.grantManagerEmails = [grailsApplication.config.merit.support.email]
         }
-        def ccEmails = addDefaultsToCC([], emailAddresses)
 
-        createAndSend(
-                subject,
-                bodyTemplate,
-                substitutionParams,
-                emailAddresses.adminEmails,
-                emailAddresses.userEmail,
-                ccEmails
-        )
-    }
-
-
-    def sendGrantManagerInitiatedEmail(SettingPageType subject, SettingPageType bodyTemplate, Map substitutionParams, List userEmailsAndRoles) {
-
-        def emailAddresses = sortEmailAddressesByRole(userEmailsAndRoles)
-
-        if (!emailAddresses.grantManagerEmails) {
-            emailAddresses.grantManagerEmails = [grailsApplication.config.merit.support.email]
+        if (!emailAddresses.adminEmails) {
+            emailAddresses.adminEmails = [grailsApplication.config.merit.support.email]
         }
-        def ccEmails = addDefaultsToCC(emailAddresses.grantManagerEmails, emailAddresses)
+
+        List recipientList
+        List ccEmails
+        if (initiatingRole == RoleService.PROJECT_ADMIN_ROLE) {
+            recipientList = emailAddresses.grantManagerEmails
+            ccEmails = []
+        }
+        else {
+            recipientList = emailAddresses.adminEmails
+            ccEmails = emailAddresses.grantManagerEmails
+        }
+
+        ccEmails = addDefaultsToCC(ccEmails, emailAddresses)
 
         createAndSend(
-                subject,
-                bodyTemplate,
+                emailTemplate.subjectSettingPage,
+                emailTemplate.bodySettingPage,
                 substitutionParams,
-                emailAddresses.adminEmails,
+                recipientList,
                 emailAddresses.userEmail,
                 ccEmails
         )
@@ -260,7 +207,9 @@ class EmailService {
             ccEmails = [ccEmails]
         }
         if (grailsApplication.config.email.copy.merit.support) {
-            ccEmails << grailsApplication.config.merit.support.email
+            if (!ccEmails.contains(grailsApplication.config.merit.support.email)) {
+                ccEmails << grailsApplication.config.merit.support.email
+            }
         }
 
         return ccEmails

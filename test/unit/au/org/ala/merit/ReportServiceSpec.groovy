@@ -12,12 +12,16 @@ class ReportServiceSpec extends Specification {
     def webService = Mock(WebService)
     def projectService = Stub(ProjectService)
     def metadataService = Stub(MetadataService)
+    def activityService = Mock(ActivityService)
+    def emailService = Mock(EmailService)
 
     def setup() {
 
         service.webService = webService
         service.projectService = projectService
         service.metadataService = metadataService
+        service.activityService = activityService
+        service.emailService = emailService
     }
 
     def project(plannedStartDate = '2014-12-31T13:00:00Z', plannedEndDate = '2016-12-31T23:59:59Z') {
@@ -223,5 +227,94 @@ class ReportServiceSpec extends Specification {
         and: "the first report is not modified because it is approved"
         0 * webService._
 
+    }
+
+    def "when a report is submitted, all associated activities should be marked as submitted and an email sent"() {
+
+        setup:
+        String reportId = 'r1'
+        List activities = [[activityId:'a1', progress:ActivityService.PROGRESS_FINISHED], [activityId:'a2', progress:ActivityService.PROGRESS_FINISHED]]
+        List activityIds = activities.collect{it.activityId}
+        EmailTemplate template = EmailTemplate.DEFAULT_REPORT_SUBMITTED_EMAIL_TEMPLATE
+        List roles = []
+
+        when:
+        Map result = service.submitReport(reportId, activityIds, [:], roles, template)
+
+        then:
+        result.success == true
+        1 * activityService.search([activityId:activityIds]) >> [resp:[activities:activities]]
+        1 * webService.getJson({it.endsWith('report/'+reportId)}) >> [reportId:reportId]
+        1 * webService.doPost({it.endsWith('report/submit/'+reportId)}, [:]) >> [:]
+        1 * activityService.submitActivitiesForPublication(activityIds)
+        1 * emailService.sendEmail(template, [reportOwner:[:], report:[reportId:reportId]], roles, RoleService.PROJECT_ADMIN_ROLE)
+
+    }
+
+    def "when a report is approved, all associated activities should be marked as approved and an email sent"() {
+
+        setup:
+        String reportId = 'r1'
+        List activityIds = ['a1', 'a2']
+        EmailTemplate template = EmailTemplate.DEFAULT_REPORT_APPROVED_EMAIL_TEMPLATE
+        List roles = []
+        String reason = ''
+
+        when:
+        Map result = service.approveReport(reportId, activityIds, reason, [:], roles, template)
+
+        then:
+        result.success == true
+        1 * webService.getJson({it.endsWith('report/'+reportId)}) >> [reportId:reportId]
+        1 * webService.doPost({it.endsWith('report/approve/'+reportId)}, [comment:reason]) >> [:]
+        1 * activityService.approveActivitiesForPublication(activityIds)
+        1 * emailService.sendEmail(template, [reportOwner:[:], reason:reason, report:[reportId:reportId]], roles, RoleService.GRANT_MANAGER_ROLE)
+
+    }
+
+    def "when a report is returned, all associated activities should be marked as not published and an email sent"() {
+
+        setup:
+        String reportId = 'r1'
+        List activityIds = ['a1', 'a2']
+        EmailTemplate template = EmailTemplate.DEFAULT_REPORT_RETURNED_EMAIL_TEMPLATE
+        List roles = []
+        String reason = ''
+        String category = ''
+
+        when:
+        Map result = service.rejectReport(reportId, activityIds, reason, [:], roles, template)
+
+        then:
+        result.success == true
+        1 * webService.getJson({it.endsWith('report/'+reportId)}) >> [reportId:reportId]
+        1 * webService.doPost({it.endsWith('report/returnForRework/'+reportId)}, [comment:reason, category:category]) >> [:]
+        1 * activityService.rejectActivitiesForPublication(activityIds)
+        1 * emailService.sendEmail(template, [reportOwner:[:], reason:reason, report:[reportId:reportId]], roles, RoleService.GRANT_MANAGER_ROLE)
+
+    }
+
+    def "A report cannot be submitted if the activities are not all finished, deferred or cancelled"(String progress) {
+        setup:
+        String reportId = 'r1'
+        List activities = [[activityId:'a1', progress:progress], [activityId:'a2', progress:ActivityService.PROGRESS_FINISHED]]
+        List activityIds = activities.collect{it.activityId}
+
+        when:
+        Map result = service.submitReport(reportId, activityIds, [:], [], EmailTemplate.DEFAULT_REPORT_SUBMITTED_EMAIL_TEMPLATE)
+
+        then:
+        1 * activityService.search([activityId:activityIds]) >> [resp:[activities:activities]]
+
+        result.success == false
+        result.error != null
+        0 * webService._
+        0 * activityService._
+        0 * emailService._
+
+        where:
+        progress | _
+        ActivityService.PROGRESS_PLANNED | _
+        ActivityService.PROGRESS_STARTED | _
     }
 }

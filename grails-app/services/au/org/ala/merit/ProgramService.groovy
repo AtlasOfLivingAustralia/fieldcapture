@@ -20,12 +20,10 @@ class ProgramService {
     DocumentService documentService
     ReportService reportService
     ProjectService projectService
-    EmailService emailService
 
 
-    Map get(String id, String view = '') {
-
-        String url = "${grailsApplication.config.ecodata.baseUrl}program/$id?view=" + view.encodeAsURL()
+    Map get(String id) {
+        String url = "${grailsApplication.config.ecodata.baseUrl}program/$id"
         Map program = webService.getJson(url)
         Map results = documentService.search(programId:id)
         if (results && results.documents) {
@@ -41,8 +39,8 @@ class ProgramService {
 
     Map getByName(String name) {
 
-
-        String url = "${grailsApplication.config.ecodata.baseUrl}program/findByName?name=" + name.encodeAsURL()
+        String encodedName = URLEncoder.encode(name, 'UTF-8')
+        String url = "${grailsApplication.config.ecodata.baseUrl}program/findByName?name=$encodedName"
         Map program = webService.getJson(url)
 
         if(program && program.statusCode == 404) {
@@ -171,27 +169,37 @@ class ProgramService {
     }
 
     Map submitReport(String programId, String reportId) {
-
-        Map program = get(programId)
-        List members = getMembersOfProgram(programId)
-
-        return reportService.submitReport(reportId, program, members, SettingPageType.RLP_CORE_SERVICES_REPORT_SUBMITTED_EMAIL_SUBJECT, SettingPageType.RLP_CORE_SERVICES_REPORT_SUBMITTED_EMAIL_BODY)
+        Map reportData = setupReportLifeCycleChange(programId, reportId)
+        return reportService.submitReport(reportId, reportData.reportActivities, reportData.program, reportData.members, EmailTemplate.RLP_CORE_SERVCIES_REPORT_SUBMITTED_EMAIL_TEMPLATE)
     }
 
     Map approveReport(String programId, String reportId, String reason) {
-        Map program = get(programId)
-        List members = getMembersOfProgram(programId)
-
-        return reportService.approveReport(reportId, reason, program, members, SettingPageType.RLP_CORE_SERVICES_REPORT_APPROVED_EMAIL_SUBJECT, SettingPageType.RLP_CORE_SERVICES_REPORT_APPROVED_EMAIL_BODY)
+        Map reportData = setupReportLifeCycleChange(programId, reportId)
+        return reportService.approveReport(reportId, reportData.reportActivities, reason, reportData.program, reportData.members, EmailTemplate.RLP_CORE_SERVICES_REPORT_APPROVED_EMAIL_TEMPLATE)
     }
 
     def rejectReport(String programId, String reportId, String reason, String category) {
+        Map reportData = setupReportLifeCycleChange(programId, reportId)
+
+        return reportService.rejectReport(reportId, reportData.reportActivities, reason, reportData.program, reportData.members, EmailTemplate.RLP_CORE_SERVICES_REPORT_RETURNED_EMAIL_TEMPLATE)
+    }
+
+    /**
+     * Performs the common setup required for a report lifecycle state change (e.g. submit/approve/return)
+     * @param programId the ID of the program that owns the report
+     * @param reportId The report about to undergo a change.
+     * @return a Map with keys [program, reportActivities, programMembers]
+     */
+    private Map setupReportLifeCycleChange(String programId, String reportId) {
         Map program = get(programId)
         List members = getMembersOfProgram(programId)
+        Map report = reportService.get(reportId)
+        // All program reports are of type "Single Activity" at the moment.
+        List reportActivities = [report.activityId]
 
-        return reportService.rejectReport(reportId, reason, program, members, SettingPageType.RLP_CORE_SERVICES_REPORT_RETURNED_EMAIL_SUBJECT, SettingPageType.RLP_CORE_SERVICES_REPORT_RETURNED_EMAIL_BODY
-        )
+        [program:program, reportActivities:reportActivities, members:members]
     }
+
 
     List getMembersOfProgram(String programId) {
         Map resp = userService.getMembersOfProgram(programId)
