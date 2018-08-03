@@ -504,11 +504,12 @@ class ProjectService  {
 
     private boolean isFinalReportApproved(Map project, String approvedReportId) {
         // Close the project when the last stage report is approved.
-        // Some projects have extra stage reports after the end date due to legacy data so this checks we've got the last stage within the project dates.
-        def lastReport = project.reports?.max {
-            it.fromDate < project.plannedEndDate ? it.fromDate : project.plannedStartDate
-        }
-        return lastReport && lastReport.reportId == approvedReportId
+        // Some projects have extra stage reports after the end date due to legacy data so this checks we've got the last stage within the project dates
+        List validReports = project.reports?.findAll{it.fromDate < project.plannedEndDate ? it.fromDate : project.plannedStartDate}
+
+        List incompleteReports = (validReports?.findAll{it.publicationStatus != ReportService.REPORT_APPROVED})?:[]
+
+        return incompleteReports.size() ==1 && incompleteReports[0].reportId == approvedReportId
     }
 
     private void createReportApprovalDocument(Map project, Map reportDetails) {
