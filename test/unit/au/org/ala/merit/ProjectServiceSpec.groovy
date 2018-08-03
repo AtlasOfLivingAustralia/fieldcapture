@@ -296,7 +296,7 @@ class ProjectServiceSpec extends Specification {
         Map project = [projectId: projectId, planStatus: ProjectService.PLAN_APPROVED]
         webService.getJson(_) >> project
         String reportId = 'r1'
-        Map report = [reportId: reportId]
+        Map report = [reportId: reportId, name:'Report 1']
         Map reportDetails = [reportId: reportId, activityIds: ['a1', 'a2']]
         reportService.getReportsForProject(_) >> [report]
 
