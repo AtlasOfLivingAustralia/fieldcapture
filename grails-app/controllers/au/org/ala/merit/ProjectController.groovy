@@ -443,7 +443,7 @@ class ProjectController {
 
         def reportDetails = request.JSON
 
-        def result = projectService.submitStageReport(id, reportDetails)
+        def result = projectService.submitReport(id, reportDetails)
 
         render result as JSON
     }
@@ -453,7 +453,7 @@ class ProjectController {
 
         def reportDetails = request.JSON
 
-        def result = projectService.approveStageReport(id, reportDetails)
+        def result = projectService.approveReport(id, reportDetails)
         render result as JSON
     }
 
@@ -462,7 +462,7 @@ class ProjectController {
 
         def reportDetails = request.JSON
 
-        def result = projectService.rejectStageReport(id, reportDetails)
+        def result = projectService.rejectReport(id, reportDetails)
 
         render result as JSON
 
