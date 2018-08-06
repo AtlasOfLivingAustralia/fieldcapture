@@ -92,4 +92,14 @@ table td.report-end, table th.report-end {
 table td.report-status, table th.report-status {
     width:20%;
 }
+
+.report-category-description u {
+    border: 1px solid grey;
+    background: lightcoral;
+    padding: 5px;
+    border-radius: 4px;
+    text-decoration: none;
+    color: white;
+}
+
 /* End Documents */

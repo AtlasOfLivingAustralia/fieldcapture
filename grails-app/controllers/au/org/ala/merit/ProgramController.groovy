@@ -48,7 +48,7 @@ class ProgramController {
         Map result = programService.getProgramProjects(program.programId)
         List projects = result?.projects
 
-        List reportOrder = program.config?.programReports?.collect{it.category} ?: []
+        List reportOrder = program.config?.programReports?.collect{[category:it.category, description:it.description]} ?: []
 
         // If the program is not visible, there is no point showing the dashboard or sites as both of these rely on
         // data in the search index to produce.

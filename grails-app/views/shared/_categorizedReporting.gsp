@@ -4,6 +4,10 @@
     <div data-bind="foreach:reportsByCategory">
         <h3 data-bind="text:title"></h3>
 
+        <div class="report-category-description" data-bind="if:description">
+            <div data-bind="html:description.markdownToHtml()"></div>
+        </div>
+
         <div data-bind="template:{name:'reportTable', data:model}"></div>
     </div>
     <div data-bind="if:reportsByCategory.length == 0">
