@@ -368,10 +368,11 @@ var CategorisedReportsViewModel = function(allReports, order, projects, availabl
     self.reportsByCategory = [];
 
     _.each(order, function(category) {
-        var reports = categorizedReports[category];
+        var reports = categorizedReports[category.category];
         if (reports && reports.length > 0) {
             self.reportsByCategory.push({
-                title:category,
+                title:category.category,
+                description:ko.observable(category.description).extend({markdown:true}),
                 model:new ReportsViewModel(reports, projects, availableReports, reportOwner, config)
             });
         }
