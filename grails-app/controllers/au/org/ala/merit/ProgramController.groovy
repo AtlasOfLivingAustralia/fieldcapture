@@ -210,10 +210,15 @@ class ProgramController {
         }
 
         Map model = activityReportModel(id, reportId, ReportMode.EDIT)
-        if (reportService.isSubmittedOrApproved(model.report)) {
-            redirect action:'viewReport', id:id, params:[reportId:reportId]
+
+        if (!model.editable) {
+            redirect action:'viewReport', id:id, params:[reportId:reportId, attemptedEdit:true]
         }
         else {
+            if (model.config.requiresActivityLocking) {
+                Map result = reportService.lockForEditing(model.report)
+                model.locked = true
+            }
             model.saveReportUrl = createLink(controller:'program', action:'saveReport', id:id, params:[reportId:reportId])
             render model:model, view:'/activity/activityReport'
         }
@@ -231,14 +236,14 @@ class ProgramController {
 
     private Map activityReportModel(String programId, String reportId, ReportMode mode) {
         Map program = programService.get(programId)
-        Map config = program.config
-        Map model = reportService.activityReportModel(reportId, mode, config)
+        Map config = program.inheritedConfig
+        Map model = reportService.activityReportModel(reportId, mode)
 
         model.context = program
         model.returnTo = createLink(action:'index', id:programId)
         model.contextViewUrl = model.returnTo
         model.reportHeaderTemplate = '/program/rlpProgramReportHeader'
-
+        model.config = config
         model
     }
 

@@ -11,26 +11,30 @@ class ProjectControllerSpec extends Specification {
 
     def userServiceStub = Stub(UserService)
     def metadataServiceStub = Stub(MetadataService)
-    def projectServiceStub = Stub(ProjectService)
+    def projectService = Mock(ProjectService)
     def siteServiceStub = Stub(SiteService)
     def roleServiceStub = Stub(RoleService)
     def activityServiceStub = Stub(ActivityService)
     def commonServiceStub = Stub(CommonService)
     def reportServiceStub = Stub(ReportService)
     def blogService = Stub(BlogService)
+    def reportService = Mock(ReportService)
 
 
     void setup() {
         controller.userService = userServiceStub
         controller.metadataService = metadataServiceStub
-        controller.projectService = projectServiceStub
+        controller.projectService = projectService
         controller.siteService = siteServiceStub
         controller.roleService = roleServiceStub
         controller.activityService = activityServiceStub
         controller.commonService = commonServiceStub
         controller.reportService = reportServiceStub
         controller.blogService = blogService
-        projectServiceStub.getMembersForProjectId(_) >> []
+        controller.reportService = reportService
+
+        projectService.getMembersForProjectId(_) >> []
+        projectService.getProgramConfiguration(_) >> new ProgramConfig([requiresActivityLocking: true])
         metadataServiceStub.organisationList() >> [list:[]]
         userServiceStub.getOrganisationIdsForUserId(_) >> []
         userServiceStub.isProjectStarredByUser(_, _) >> [isProjectStarredByUser:true]
@@ -45,8 +49,8 @@ class ProjectControllerSpec extends Specification {
 
         setup:
         def projectId = '1234'
-        projectServiceStub.get(projectId, _) >> project(projectId)
-        projectServiceStub.programsModel() >> [programs:[[name:'Test', optionalProjectContent:[]]]]
+        projectService.get(projectId, _) >> project(projectId)
+        projectService.programsModel() >> [programs:[[name:'Test', optionalProjectContent:[]]]]
 
         when: "something"
         controller.index(projectId)
@@ -61,8 +65,8 @@ class ProjectControllerSpec extends Specification {
 
         setup:
         def projectId = '1234'
-        projectServiceStub.get(projectId, _) >> project(projectId)
-        projectServiceStub.programsModel() >> [programs:[[name:'Test', optionalProjectContent:['Risks and Threats', 'MERI Plan']]]]
+        projectService.get(projectId, _) >> project(projectId)
+        projectService.programsModel() >> [programs:[[name:'Test', optionalProjectContent:['Risks and Threats', 'MERI Plan']]]]
         userServiceStub.getUser() >> null
 
         when: "retrieving the project index page"
@@ -83,8 +87,8 @@ class ProjectControllerSpec extends Specification {
 
     def "the admin content should be enabled for project admins"() {
         def projectId = '1234'
-        projectServiceStub.get(projectId, _) >> project(projectId)
-        projectServiceStub.programsModel() >> [programs:[[name:'Test', optionalProjectContent:['Risks and Threats', 'MERI Plan']]]]
+        projectService.get(projectId, _) >> project(projectId)
+        projectService.programsModel() >> [programs:[[name:'Test', optionalProjectContent:['Risks and Threats', 'MERI Plan']]]]
 
         stubProjectAdmin('1234', projectId)
 
@@ -99,8 +103,8 @@ class ProjectControllerSpec extends Specification {
 
     def "the admin content should be enabled for grant managers"() {
         def projectId = '1234'
-        projectServiceStub.get(projectId, _) >> project(projectId)
-        projectServiceStub.programsModel() >> [programs:[[name:'Test', optionalProjectContent:['Risks and Threats', 'MERI Plan']]]]
+        projectService.get(projectId, _) >> project(projectId)
+        projectService.programsModel() >> [programs:[[name:'Test', optionalProjectContent:['Risks and Threats', 'MERI Plan']]]]
 
         stubGrantManager('1234', projectId)
 
@@ -115,8 +119,8 @@ class ProjectControllerSpec extends Specification {
 
     def "the admin content should be present for project editors (to edit blog)"() {
         def projectId = '1234'
-        projectServiceStub.get(projectId, _) >> project(projectId)
-        projectServiceStub.programsModel() >> [programs:[[name:'Test', optionalProjectContent:['Risks and Threats', 'MERI Plan']]]]
+        projectService.get(projectId, _) >> project(projectId)
+        projectService.programsModel() >> [programs:[[name:'Test', optionalProjectContent:['Risks and Threats', 'MERI Plan']]]]
         stubProjectEditor('1234', projectId)
 
 
@@ -127,6 +131,94 @@ class ProjectControllerSpec extends Specification {
         view == '/project/index'
         model.projectContent.admin.visible
     }
+
+    def "when viewing a project report, the model will be customized for project reporting"() {
+        setup:
+        String projectId = 'p1'
+        String reportId = 'r1'
+        stubProjectAdmin('1234', projectId)
+        Map project = this.project(projectId, true)
+        projectService.get(projectId) >> project
+        Map activityReportModel = [editable:true, metaModel:[:], outputModels:[:], activity:[activityId:'a1']]
+
+
+        when:
+        controller.viewReport(projectId, reportId)
+
+        then:
+        1 * projectService.getProgramConfiguration(project) >> new ProgramConfig([requiresActivityLocking: true])
+        1 * reportService.activityReportModel(reportId, ReportService.ReportMode.VIEW) >> activityReportModel
+        view == '/activity/activityReportView'
+        model.context == project
+        model.contextViewUrl == '/project/index/'+projectId
+        model.reportHeaderTemplate == '/project/rlpProjectReportHeader'
+    }
+
+    def "when editing a project report, the model will be customized for project reporting"() {
+        setup:
+        String projectId = 'p1'
+        String reportId = 'r1'
+        stubProjectAdmin('1234', projectId)
+        Map project = this.project(projectId, true)
+        projectService.get(projectId) >> project
+        Map activityReportModel = [editable:true, metaModel:[:], outputModels:[:], activity:[activityId:'a1'], report:[activityId:'a1', reportId:reportId]]
+
+
+        when:
+        controller.editReport(projectId, reportId)
+        then:
+        1 * reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT) >> activityReportModel
+        1 * projectService.getProgramConfiguration(project) >> new ProgramConfig([requiresActivityLocking: true])
+        view == '/activity/activityReport'
+        model.context == project
+        model.contextViewUrl == '/project/index/'+projectId
+        model.reportHeaderTemplate == '/project/rlpProjectReportHeader'
+        model.saveReportUrl == '/project/saveReport/'+projectId+'?reportId='+reportId
+    }
+
+    def "if a report is not editable, the program project should present the report view instead"() {
+        setup:
+        String projectId = 'p1'
+        String reportId = 'r1'
+        stubProjectAdmin('1234', projectId)
+        Map project = this.project(projectId, true)
+        projectService.get(projectId) >> project
+        Map activityReportModel = [editable:false, metaModel:[:], outputModels:[:], activity:[activityId:'a1']]
+
+
+        when:
+        reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT) >> activityReportModel
+        controller.editReport(projectId, reportId)
+
+        then: "the report activity should not be locked"
+        // Override the default behaviour from setup
+        1 * projectService.getProgramConfiguration(project) >> new ProgramConfig([requiresActivityLocking: true])
+        0 * reportService.lockForEditing(_)
+
+        and: "the user should be redirected to the report view"
+        response.redirectUrl == '/project/viewReport/'+projectId+"?reportId="+reportId+"&attemptedEdit=true"
+    }
+
+    def "if the project uses pessimistic locking for reports, the report activity should be locked when the report is edited"() {
+        setup:
+        String projectId = 'p1'
+        String reportId = 'r1'
+        stubProjectAdmin('1234', projectId)
+        Map project = this.project(projectId, true)
+        projectService.get(projectId) >> project
+        Map activityReportModel = [editable:true, metaModel:[:], outputModels:[:], activity:[activityId:'a1'], report:project.reports[0]]
+
+
+        when:
+        reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT) >> activityReportModel
+        projectService.getProgramConfiguration(project) >> new ProgramConfig([requiresActivityLocking: true])
+        controller.editReport(projectId, reportId)
+
+        then:
+        1 * reportService.lockForEditing(project.reports[0])
+        view == '/activity/activityReport'
+    }
+
 
 
     private def stubGrantManager(userId, projectId) {
@@ -143,14 +235,19 @@ class ProjectControllerSpec extends Specification {
 
     private def stubUserPermissions(userId, projectId, editor, admin, grantManager, canView) {
         userServiceStub.getUser() >> [userId:userId]
-        projectServiceStub.isUserAdminForProject(userId, projectId) >> admin
-        projectServiceStub.isUserCaseManagerForProject(userId, projectId) >> grantManager
-        projectServiceStub.canUserEditProject(userId, projectId) >> editor
-        projectServiceStub.canUserViewProject(userId, projectId) >> canView
+        projectService.isUserAdminForProject(userId, projectId) >> admin
+        projectService.isUserCaseManagerForProject(userId, projectId) >> grantManager
+        projectService.canUserEditProject(userId, projectId) >> editor
+        projectService.canUserViewProject(userId, projectId) >> canView
 
     }
 
-    private def project(String projectId) {
-        [projectId:projectId, associatedProgram:"Test"]
+    private def project(String projectId, boolean includeReports = false) {
+        Map project = [projectId:projectId, associatedProgram:"Test"]
+
+        if (includeReports) {
+            project.reports = [[type:'report1', reportId:'r1', activityId:'a1'], [type:'report1', reportId:'r2', activityId:'a2']]
+        }
+        project
     }
 }

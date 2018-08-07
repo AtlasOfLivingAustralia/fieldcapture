@@ -162,9 +162,13 @@ class ActivityService {
         webService.doPost(grailsApplication.config.ecodata.baseUrl+'activity/search/', modifiedCriteria)
     }
 
-    Map lock(Map activity) {
-        String path = "lock/lock/"+activity.activityId
+    Map lock(String activityId) {
+        String path = "lock/lock/"+activityId
         webService.doPost(grailsApplication.config.ecodata.baseUrl+path,[:])
+    }
+
+    Map lock(Map activity) {
+        lock(activity.activityId)
     }
 
     Map unlock(String activityId, Boolean force = false) {
