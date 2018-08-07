@@ -3,7 +3,7 @@
     <table id="projectList" class="table table-striped table-bordered">
         <thead class="thead-light">
             <th class="projectId">Project ID</th>
-            <th class="workOrderId">Work Order ID</th>
+            <th class="workOrderId">Internal order number</th>
             <th class="name">Name</th>
             <th class="startDate">Start Date</th>
             <th class="endDate">End Date</th>
