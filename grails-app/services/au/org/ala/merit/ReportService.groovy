@@ -288,6 +288,13 @@ class ReportService {
         reports.max{ isSubmittedOrApproved(it) ? it.toDate : ''}
     }
 
+    Map lockForEditing(Map report) {
+        if (!report.activityId) {
+            throw new IllegalArgumentException("No activity associated with the supploied report")
+        }
+        activityService.lock(report.activityId)
+    }
+    
     /**
      * Submits a report and sends an email notifying relevant users this action has occurred.
      * @param reportId The id of the report to submit.
@@ -913,7 +920,7 @@ class ReportService {
 
     }
 
-    Map activityReportModel(String reportId, ReportMode mode, Map config) {
+    Map activityReportModel(String reportId, ReportMode mode) {
         Map report = get(reportId)
 
         Map activity = activityService.get(report.activityId)
@@ -924,16 +931,24 @@ class ReportService {
         model.locked = activity.lock != null
 
         if (mode == ReportMode.EDIT) {
-            if (!activity.lock && config.requiresActivityLocking) {
-                Map result = activityService.lock(activity)
-                model.locked = true
-            }
+            model.editable = canEdit(userService.currentUserId, report, activity)
         }
         else if (mode == ReportMode.PRINT) {
             model.printView = true
         }
 
         model
+
+    }
+
+    private boolean canEdit(String userId, Map report, Map activity) {
+        // Submitted or approved reports are not editable.
+        if (isSubmittedOrApproved(report)) {
+            return false
+        }
+
+        // If we are using pessimistic locking, the report is not editable if another user holds a lock on the activity.
+        return !activity.lock || (activity.lock.userId == userId)
 
     }
 }
