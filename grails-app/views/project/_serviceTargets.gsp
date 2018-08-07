@@ -7,9 +7,8 @@
         <th class="index" rowspan="2"></th>
         <th class="service required" rowspan="2">Service</th>
         <th class="score required" rowspan="2">Target measure</th>
-        <th class="budget-cell required" rowspan="2">Total to be delivered<fc:iconHelp html="true">The overall total of Project Services specified in the Project Work Order to be delivered during the project delivery period. Note: this is not necessarily the sum of the minimum annual targets set out for the service.
-
-            <b>Note: this is not necessarily the sum of the minimum annual targets set out for the service</b></fc:iconHelp></th>
+        <th class="budget-cell required" rowspan="2">Total to be delivered<fc:iconHelp html="true">The overall total of Project Services to be delivered during the project delivery period.
+            <b>Note: this total is not necessarily the sum of the minimum annual targets set out for the service.</b></fc:iconHelp></th>
         <th data-bind="attr:{colspan:periods.length+1}">Minimum annual targets <fc:iconHelp>Specify the minimum total target for each Project Service to be delivered each financial year. Note: the sum of these targets will not necessarily equal the total services to be delivered.</fc:iconHelp></th>
     </tr>
     <tr>

@@ -29,7 +29,7 @@
     </div>
 
     <div class="row-fluid" data-bind="visible:workOrderId">
-        <div class="span2 header-label">Work Order ID</div>
+        <div class="span2 header-label">Internal order number</div>
 
         <div class="span9">${project.workOrderId}</div>
     </div>

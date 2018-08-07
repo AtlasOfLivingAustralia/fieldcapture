@@ -37,7 +37,7 @@ class UserController {
         def memberOrganisations = userService.getOrganisationsForUserId(user.userId)
         def memberProjects = userService.getProjectsForUserId(user.userId)
         def starredProjects = userService.getStarredProjectsForUserId(user.userId)
-        def programs = userService.getProgramsForUserId(user.userId)
+        def programs = userService.getProgramsForUserId(user.userId)?.sort({it.name})
 
         Map userData = [
                 user: user,

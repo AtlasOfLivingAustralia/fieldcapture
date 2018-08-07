@@ -52,7 +52,7 @@
         </div>
     </div>
     <div class="control-group span4">
-        <label class="control-label" for="workOrderId">Work order id</label>
+        <label class="control-label" for="workOrderId">Work order id / Internal order number</label>
         <div class="controls">
             <g:textField class="" name="workOrderId" data-bind="value:workOrderId"/>
         </div>
