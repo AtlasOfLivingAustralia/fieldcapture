@@ -60,7 +60,7 @@ class ProgramControllerSpec extends Specification {
         String programId = 'p1'
         String reportId = 'r1'
         Map program = testProgram(programId, true)
-        program.config.requiresActivityLocking = true
+        program.inheritedConfig.requiresActivityLocking = true
 
         when:
         reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT) >> [editable:false]
@@ -81,7 +81,7 @@ class ProgramControllerSpec extends Specification {
         Map program = testProgram(programId, true)
 
         when:
-        program.config.requiresActivityLocking = true
+        program.inheritedConfig.requiresActivityLocking = true
         controller.editReport(programId, reportId)
         then:
         1 * reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT) >> [report:program.reports[0], editable:true]
@@ -92,7 +92,7 @@ class ProgramControllerSpec extends Specification {
 
 
     private Map testProgram(String id, boolean includeReports) {
-        Map program = [programId:id, name:'name', config:[:]]
+        Map program = [programId:id, name:'name', config:[:], inheritedConfig:[:]]
         if (includeReports) {
             program.reports = [[type:'report1', reportId:'r1', activityId:'a1'], [type:'report1', reportId:'r2', activityId:'a2']]
         }
