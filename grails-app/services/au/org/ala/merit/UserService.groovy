@@ -1,6 +1,7 @@
 package au.org.ala.merit
 
 import au.org.ala.web.CASRoles
+import grails.plugin.cache.GrailsCacheManager
 import org.springframework.cache.annotation.CacheEvict
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.web.context.request.RequestContextHolder
@@ -10,6 +11,7 @@ import javax.annotation.PostConstruct
 class UserService {
 
     private static final String USER_PROFILE_CACHE_REGION = 'userProfileCache'
+    private static final String USER_DETAILS_CACHE_REGION = 'userDetailsCache'
     private static final String USER_ORGANISATIONS_CACHE_KEY_EXPRESSION = '#userId+"_organisations"'
 
 
@@ -20,6 +22,8 @@ class UserService {
 
 
     def grailsApplication, authService, webService, roleService, projectService, organisationService
+
+    GrailsCacheManager grailsCacheManager
 
     def auditBaseUrl = ""
 
@@ -366,7 +370,35 @@ class UserService {
 
     def checkEmailExists(String email) {
         def user = authService.getUserForEmailAddress(email)
+        if (!user?.userId) {
+            // Don't cache failed lookups - otherwise the user will be unable to get MERIT access until the cache expires
+            // if they create their account after the first attempt to register them with MERIT.
+            clearUserCacheFor(email)
+        }
         return user?.userId
+    }
+
+    /**
+     * Removes cache entries for the supplied email address from the user details cache.
+     * This method makes some assumptions about the cache provider which are correct at this time. (ehcache)
+     * @param email the result to remove from the cache.
+     */
+    private void clearUserCacheFor(String email) {
+        try {
+            def userDetailsCache = grailsCacheManager.getCache(USER_DETAILS_CACHE_REGION)
+            if (userDetailsCache.metaClass.respondsTo(userDetailsCache, "getAllKeys")) {
+                userDetailsCache.allKeys.each {key ->
+                    if (key.simpleKey == email) {
+                        log.info("Evicting userDetailsCache cache entry for user: "+email)
+                        userDetailsCache.evict(key)
+                    }
+                }
+            }
+        }
+        catch (Exception e) {
+            log.error("Failed to remove user with email: "+email+" from the cache. ",e)
+        }
+
     }
 
     Set getAllowedUserRoles(String email) {
