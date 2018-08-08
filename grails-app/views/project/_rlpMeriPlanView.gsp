@@ -193,7 +193,7 @@
                 </span>
             </td>
             <td class="baseline">
-                <span data-bind="value: data2"></span>
+                <span data-bind="text: data2"></span>
             </td>
         </tr>
         </tbody>
