@@ -10,7 +10,6 @@ package au.org.ala.merit
  */
 class ProjectConfigurationService {
 
-
     ProgramService programService
     MetadataService metadataService
 
@@ -19,7 +18,7 @@ class ProjectConfigurationService {
 
         if (project.programId) {
             Map program = programService.get(project.programId)
-            programConfig = program.inheritedConfig ?: [:]
+            programConfig = new ProgramConfig(program.inheritedConfig ?: [:])
             programConfig.services = metadataService.getProjectServices()
             programConfig.optionalProjectContent = ['MERI Plan', 'Risks and Threats']
             programConfig.priorities = program.priorities ?: []
@@ -28,7 +27,8 @@ class ProjectConfigurationService {
             programConfig.program = program
         }
         else {
-            programConfig = metadataService.getProgramConfiguration(project.associatedProgram, project.associatedSubProgram)
+            Map config = metadataService.getProgramConfiguration(project.associatedProgram, project.associatedSubProgram)
+            programConfig = new ProgramConfig(config)
 
             // Default configuration for project stage reports.
 

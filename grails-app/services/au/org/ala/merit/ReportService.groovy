@@ -288,26 +288,56 @@ class ReportService {
         reports.max{ isSubmittedOrApproved(it) ? it.toDate : ''}
     }
 
+    Map lockForEditing(Map report) {
+        if (!report.activityId) {
+            throw new IllegalArgumentException("No activity associated with the supploied report")
+        }
+        activityService.lock(report.activityId)
+    }
+    
     /**
      * Submits a report and sends an email notifying relevant users this action has occurred.
      * @param reportId The id of the report to submit.
+     * @param reportActivityIds The ids of the activities associated with the report.
      * @param reportOwner Properties of the entity that "owns" the report (e.g. the Project, Organisation, Program).
      * @param ownerUsersAndRoles Users to be notified of the action.
-     * @param emailSubject Template for the email subject line.
-     * @param emailBody Template for the email body.
+     * @param emailTemplate The template to use when sending the email
      */
-    Map submitReport(String reportId, Map reportOwner, List ownerUsersAndRoles, SettingPageType emailSubject, SettingPageType emailBody) {
+    Map submitReport(String reportId, List reportActivityIds, Map reportOwner, List ownerUsersAndRoles, EmailTemplate emailTemplate) {
+
+        Map validationResult = validateActivites(reportActivityIds)
+        if (validationResult.error) {
+            return [success:false, error:validationResult.error]
+        }
 
         Map resp = submit(reportId)
         Map report = get(reportId)
 
         if (!resp.error) {
-            emailService.sendAdminInitiatedEmail(emailSubject, emailBody, [owner:reportOwner, report:report], ownerUsersAndRoles)
+            activityService.submitActivitiesForPublication(reportActivityIds)
+            emailService.sendEmail(emailTemplate, [reportOwner:reportOwner, report:report], ownerUsersAndRoles, RoleService.PROJECT_ADMIN_ROLE)
         }
         else {
             return [success:false, error:resp.error]
         }
         return [success:true]
+    }
+
+
+    Map validateActivites(List reportActivityIds) {
+        List allowedStates = [ActivityService.PROGRESS_FINISHED, ActivityService.PROGRESS_DEFERRED, ActivityService.PROGRESS_CANCELLED]
+        Map searchResult = activityService.search([activityId:reportActivityIds])
+
+        List activities = searchResult?.resp?.activities
+        Map result = [:]
+        if (!activities || (activities.size() != reportActivityIds.size())) {
+            result.error = 'Invalid activity ids specified '+reportActivityIds
+        }
+        else if (!activities.every{it.progress in allowedStates}) {
+            result.error = 'All activities must be finished, deferred or cancelled'
+        }
+
+        return result
     }
 
     def submit(String reportId) {
@@ -317,18 +347,20 @@ class ReportService {
     /**
      * Approves a report and sends an email notifying relevant users this action has occurred.
      * @param reportId The id of the report to approve.
+     * @param reportActivityIds The ids of the activities associated with the report.
+     * @param reason an optional reason given with the approval
      * @param reportOwner Properties of the entity that "owns" the report (e.g. the Project, Organisation, Program).
      * @param ownerUsersAndRoles Users to be notified of the action.
-     * @param emailSubject Template for the email subject line.
-     * @param emailBody Template for the email body.
+     * @param emailTemplate The template to use when sending the email
      */
-    Map approveReport(String reportId, String reason, Map reportOwner, List ownerUsersAndRoles, SettingPageType emailSubject, SettingPageType emailBody) {
+    Map approveReport(String reportId,  List reportActivityIds, String reason, Map reportOwner, List ownerUsersAndRoles, EmailTemplate emailTemplate) {
 
         Map resp = approve(reportId, reason)
         Map report = get(reportId)
 
         if (!resp.error) {
-            emailService.sendGrantManagerInitiatedEmail(emailSubject, emailBody, [owner:reportOwner, report:report, reason:reason], ownerUsersAndRoles)
+            activityService.approveActivitiesForPublication(reportActivityIds)
+            emailService.sendEmail(emailTemplate, [reportOwner:reportOwner, report:report, reason:reason], ownerUsersAndRoles, RoleService.GRANT_MANAGER_ROLE)
         }
         else {
             return [success:false, error:resp.error]
@@ -343,18 +375,19 @@ class ReportService {
     /**
      * Rejects/returns a report and sends an email notifying relevant users this action has occurred.
      * @param reportId The id of the report to reject.
+     * @param reportActivityIds The ids of the activities associated with the report.
      * @param reportOwner Properties of the entity that "owns" the report (e.g. the Project, Organisation, Program).
      * @param ownerUsersAndRoles Users to be notified of the action.
-     * @param emailSubject Template for the email subject line.
-     * @param emailBody Template for the email body.
+     * @param emailTemplate The template to use when sending the email
      */
-    Map rejectReport(String reportId, String reason, Map reportOwner, List ownerUsersAndRoles, SettingPageType emailSubject, SettingPageType emailBody) {
+    Map rejectReport(String reportId, List reportActivityIds, String reason, Map reportOwner, List ownerUsersAndRoles, EmailTemplate emailTemplate) {
 
         Map resp = reject(reportId, "", reason)
         Map report = get(reportId)
 
         if (!resp.error) {
-            emailService.sendGrantManagerInitiatedEmail(emailSubject, emailBody, [owner:reportOwner, report:report, reason:reason], ownerUsersAndRoles)
+            activityService.rejectActivitiesForPublication(reportActivityIds)
+            emailService.sendEmail(emailTemplate, [reportOwner:reportOwner, report:report, reason:reason], ownerUsersAndRoles, RoleService.GRANT_MANAGER_ROLE)
         }
         else {
             return [success:false, error:resp.error]
@@ -887,7 +920,7 @@ class ReportService {
 
     }
 
-    Map activityReportModel(String reportId, ReportMode mode, Map config) {
+    Map activityReportModel(String reportId, ReportMode mode) {
         Map report = get(reportId)
 
         Map activity = activityService.get(report.activityId)
@@ -898,16 +931,24 @@ class ReportService {
         model.locked = activity.lock != null
 
         if (mode == ReportMode.EDIT) {
-            if (!activity.lock && config.requiresActivityLocking) {
-                Map result = activityService.lock(activity)
-                model.locked = true
-            }
+            model.editable = canEdit(userService.currentUserId, report, activity)
         }
         else if (mode == ReportMode.PRINT) {
             model.printView = true
         }
 
         model
+
+    }
+
+    private boolean canEdit(String userId, Map report, Map activity) {
+        // Submitted or approved reports are not editable.
+        if (isSubmittedOrApproved(report)) {
+            return false
+        }
+
+        // If we are using pessimistic locking, the report is not editable if another user holds a lock on the activity.
+        return !activity.lock || (activity.lock.userId == userId)
 
     }
 }

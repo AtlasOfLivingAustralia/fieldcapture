@@ -1,11 +1,12 @@
 <!-- OVERVIEW -->
 <div class="overview">
 
-    <div class="row-fluid">
-        <div class="span2 header-label">Program</div>
-
-        <div class="span9">Regional Landcare Program</div>
-    </div>
+    <g:if test="${config.program.parent}">
+        <div class="row-fluid">
+            <div class="span2 header-label">Program</div>
+            <div class="span9">${config.program.parent.name}</div>
+        </div>
+    </g:if>
     <div class="row-fluid">
         <div class="span2 header-label">Management Unit</div>
 
@@ -28,7 +29,7 @@
     </div>
 
     <div class="row-fluid" data-bind="visible:workOrderId">
-        <div class="span2 header-label">Work Order ID</div>
+        <div class="span2 header-label">Internal order number</div>
 
         <div class="span9">${project.workOrderId}</div>
     </div>

@@ -61,12 +61,12 @@
 
                 if (email) {
                     // first check email address is a valid user
-                    $.get("${g.createLink(controller:'user',action:'checkEmailExists')}?email=" + email, function(data) {
+                    $.get("${g.createLink(controller:'user',action:'checkEmailExists')}?email=" + email).done(function(data) {
                         if (data && /^\d+$/.test(data)) {
                             addUserWithRole( data, role, entityId);
                         } else {
                             var $clone = $('.bbAlert1').clone();
-                            bootbox.alert($clone.show());
+                            bootbox.alert($clone.html());
                         }
                     })
                     .fail(function(jqXHR, textStatus, errorThrown) { alert(jqXHR.responseText); })

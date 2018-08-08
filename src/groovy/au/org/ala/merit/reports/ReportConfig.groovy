@@ -45,6 +45,9 @@ class ReportConfig {
 
     String category = null
 
+    /** Short description of this type of report */
+    String description = null
+
     /** Multiple reports should be generated from this configuration if they fit into the owner's time constraints.
      * If this value is false, the single report will be aligned with the owners time constraints */
     boolean multiple = true

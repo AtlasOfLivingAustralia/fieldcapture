@@ -172,7 +172,7 @@ class ProjectController {
             model.overview.servicesDashboard = projectService.getServiceDashboardData(project.projectId, !user?.hasViewAccess)
             model.details.meriPlanTemplate = RLP_MERI_PLAN_TEMPLATE+'View'
 
-            List reportOrder = config?.projectReports?.collect{it.category} ?: []
+            List reportOrder = config?.projectReports?.collect{[category:it.category, description:it.description]} ?: []
             Map reportingTab = [label: 'Reporting', visible:user?.hasViewAccess, type:'tab', template:'projectReporting', reports:project.reports, reportOrder:reportOrder, stopBinding:true, services: config.services, scores:scores, hideDueDate:true]
 
             Map rlpModel = [overview:model.overview, documents:model.documents, details:model.details, site:model.site, reporting:reportingTab]
@@ -443,7 +443,7 @@ class ProjectController {
 
         def reportDetails = request.JSON
 
-        def result = projectService.submitStageReport(id, reportDetails)
+        def result = projectService.submitReport(id, reportDetails)
 
         render result as JSON
     }
@@ -453,7 +453,7 @@ class ProjectController {
 
         def reportDetails = request.JSON
 
-        def result = projectService.approveStageReport(id, reportDetails)
+        def result = projectService.approveReport(id, reportDetails)
         render result as JSON
     }
 
@@ -462,7 +462,7 @@ class ProjectController {
 
         def reportDetails = request.JSON
 
-        def result = projectService.rejectStageReport(id, reportDetails)
+        def result = projectService.rejectReport(id, reportDetails)
 
         render result as JSON
 
@@ -657,10 +657,15 @@ class ProjectController {
         }
 
         Map model = activityReportModel(id, reportId, ReportMode.EDIT)
-        if (reportService.isSubmittedOrApproved(model.report)) {
-            redirect action:'viewReport', id:id, params:[reportId:reportId]
+
+        if (!model.editable) {
+            redirect action:'viewReport', id:id, params:[reportId:reportId, attemptedEdit:true]
         }
         else {
+            if (model.config.requiresActivityLocking) {
+                Map result = reportService.lockForEditing(model.report)
+                model.locked = true
+            }
             model.saveReportUrl = createLink(action:'saveReport', id:id, params:[reportId:model.report.reportId])
             render model:model, view:'/activity/activityReport'
         }
@@ -758,15 +763,14 @@ class ProjectController {
 
         Map project = projectService.get(projectId)
         Map config = projectService.getProgramConfiguration(project)
-        Map model = reportService.activityReportModel(reportId, mode, config)
-        model.config = config
+        Map model = reportService.activityReportModel(reportId, mode)
         model.metaModel = filterOutputModel(model.metaModel, project, model.activity)
 
         model.context = project
         model.returnTo = g.createLink(action:'index', id:projectId)
         model.contextViewUrl = model.returnTo
         model.reportHeaderTemplate = '/project/rlpProjectReportHeader'
-
+        model.config = config
         model
     }
 

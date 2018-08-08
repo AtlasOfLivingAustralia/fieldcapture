@@ -180,6 +180,21 @@ class ProjectService  {
     }
 
     /**
+     * Sends an email related to a project.
+     * @param emailTemplate a closure that will be passed the project configuration and should return an EmailTemplate
+     * @param project the project the email is about.
+     * @param initiatorRole the role of the user that initiated the email - this will determine whether grant managers
+     * or admins will be sent/copied on the email.
+     */
+    private void sendEmail(Closure<ProgramConfig> emailTemplate, Map project, String initiatorRole) {
+
+        ProgramConfig config = projectConfigurationService.getProjectConfiguration(project)
+        List roles = getMembersForProjectId(project.projectId)
+        EmailTemplate template = emailTemplate(config)
+        emailService.sendEmail(template, [project:project], roles, initiatorRole)
+    }
+
+    /**
      * Does the current user have permission to administer the requested projectId?
      * Checks for the ADMIN role in CAS and then checks the UserPermission
      * lookup in ecodata.
@@ -328,7 +343,8 @@ class ProjectService  {
         if (!project.planStatus || project.planStatus == PLAN_NOT_APPROVED) {
             def resp = update(projectId, [planStatus:PLAN_SUBMITTED])
             if (resp.resp && !resp.resp.error) {
-                emailService.sendPlanSubmittedEmail(projectId, [project:project])
+
+                sendEmail({ProgramConfig programConfig -> programConfig.getPlanSubmittedTemplate()}, project, RoleService.PROJECT_ADMIN_ROLE)
                 return [message:'success']
             }
             else {
@@ -343,7 +359,7 @@ class ProjectService  {
         if (project.planStatus == PLAN_SUBMITTED) {
             def resp = update(projectId, [planStatus:PLAN_APPROVED])
             if (resp.resp && !resp.resp.error) {
-                emailService.sendPlanApprovedEmail(projectId, [project:project])
+                sendEmail({ProgramConfig programConfig -> programConfig.getPlanApprovedTemplate()}, project, RoleService.GRANT_MANAGER_ROLE)
                 return [message:'success']
             }
             else {
@@ -359,7 +375,7 @@ class ProjectService  {
         if (project.planStatus in [PLAN_SUBMITTED, PLAN_APPROVED]) {
             def resp = update(projectId, [planStatus:PLAN_NOT_APPROVED])
             if (resp.resp && !resp.resp.error) {
-                emailService.sendPlanRejectedEmail(projectId, [project:project])
+                sendEmail({ProgramConfig programConfig -> programConfig.getPlanReturnedTemplate()}, project, RoleService.GRANT_MANAGER_ROLE)
                 return [message:'success']
             }
             else {
@@ -404,110 +420,123 @@ class ProjectService  {
     }
 
     /**
+     * Retrieves / sets up the data that is required by project report state changes (submission / approval / rejection).
+     */
+    private Map prepareReport(String projectId, Map reportDetails) {
+        reportDetails.projectId = projectId
+
+        Map project = get(projectId, 'all')
+        Map report = project?.reports?.find{it.reportId == reportDetails.reportId}
+        if (!report) {
+            return [error:'Invalid reportId supplied']
+        }
+        ProgramConfig config = projectConfigurationService.getProjectConfiguration(project)
+        List roles = getMembersForProjectId(project.projectId)
+
+        return [project: project, roles: roles, report:report, config: config]
+    }
+
+    /**
      * Submits a report of the activities performed during a specific time period (a project stage).
      * @param projectId the project the performing the activities.
-     * @param stageDetails details of the activities, specifically a list of activity ids.
+     * @param reportDetails details of the report, including the ids of the activities being reported against.
+     * @return a Map containing a boolean flag "success" and a String "error" if success == false
      */
-    def submitStageReport(projectId, stageDetails) {
+    Map submitReport(String projectId, Map reportDetails) {
 
-        stageDetails.projectId = projectId
-
-        def activities = activityService.activitiesForProject(projectId);
-
-        def allowedStates = ['finished', 'deferred', 'cancelled']
-        def readyForSubmit = true
-        stageDetails.activityIds.each { activityId ->
-            def activity = activities.find {it.activityId == activityId}
-            if (!allowedStates.contains(activity?.progress)) {
-                readyForSubmit = false
-            }
-        }
-        if (!readyForSubmit) {
-            return [error:'All activities must be finished, deferred or cancelled']
+        Map reportInformation = prepareReport(projectId, reportDetails)
+        if (reportInformation.error) {
+            return [success:false, error:reportInformation.error]
         }
 
-		//generate stage report and attach to the project
-		def projectAll = get(projectId, 'all')
-		readyForSubmit = false;
-        Map report = projectAll.reports?.find{it.reportId == stageDetails.reportId}
-        if (!report) {
-            return [error:'Invalid stage']
-		}
+        EmailTemplate emailTemplate = ((ProgramConfig)reportInformation.config).getReportSubmittedTemplate()
+        Map result = reportService.submitReport(reportDetails.reportId, reportDetails.activityIds, reportInformation.project, reportInformation.roles, emailTemplate)
+        if (result.success) {
+            createStageReportDocument(reportInformation.project, reportDetails, reportInformation.report)
+        }
+        result
+    }
 
-		String stageName = stageDetails.stage;
+    /**
+     * Creates a PDF document containing details of the report and attaches it as a document to the project.
+     */
+    private void createStageReportDocument(Map project, Map reportDetails, Map report) {
+        String projectId = project.projectId
+
+        String stageName = reportDetails.stage ?: report.name
         String stageNum = ''
         if (stageName.indexOf('Stage ') == 0) {
             stageNum = stageName.substring('Stage '.length(), stageName.length())
         }
-		def param  = [project: projectAll, activities:activities, report:report, status:"Report submitted"]
-		def htmlTxt = createHTMLStageReport(param)
-		def dateWithTime = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss")
-		def name = projectAll?.grantId + '_' + stageName + '_' + dateWithTime.format(new Date()) + ".pdf"
-		def doc = [name:name, projectId:projectId, saveAs:'pdf', type:'pdf', role:'stageReport',filename:name, readOnly:true, public:false, stage:stageNum]
-		documentService.createTextDocument(doc, htmlTxt)
-        def result = activityService.submitActivitiesForPublication(stageDetails.activityIds)
-        reportService.submit(stageDetails.reportId)
-        def project = get(projectId)
-        stageDetails.project = project
-        if (!result.resp.error) {
-            emailService.sendReportSubmittedEmail(projectId, stageDetails)
-        }
-        result
+        def param = [project: project, activities: project.activities, report: report, status: "Report submitted"]
+        def htmlTxt = createHTMLStageReport(param)
+        def dateWithTime = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss")
+        def name = project?.grantId + '_' + stageName + '_' + dateWithTime.format(new Date()) + ".pdf"
+        def doc = [name: name, projectId: projectId, saveAs: 'pdf', type: 'pdf', role: 'stageReport', filename: name, readOnly: true, public: false, stage: stageNum]
+        documentService.createTextDocument(doc, htmlTxt)
     }
 
     /**
-     * Approves a submitted stage report.
-     * @param projectId the project the performing the activities.
-     * @param stageDetails details of the activities, specifically a list of activity ids.
+     * Approves a submitted report.
+     * @param projectId the owner of the report.
+     * @param reportDetails details of the report and the related activities, specifically a list of activity ids.
      */
-    def approveStageReport(projectId, stageDetails) {
-        def result = activityService.approveActivitiesForPublication(stageDetails.activityIds)
+    Map approveReport(String projectId, Map reportDetails) {
 
-        // TODO Send a message to GMS.
-        def project = get(projectId, 'all')
-        def readableId = project.grantId + (project.externalId?'-'+project.externalId:'')
-        def name = "${readableId} ${stageDetails.stage} approval"
-        def doc = [name:name, projectId:projectId, type:'text', role:'approval',filename:name, readOnly:true, public:false, reportId:stageDetails.reportId]
-        documentService.createTextDocument(doc, (project as JSON).toString())
-        stageDetails.project = project
-        if (!result.resp.error) {
-            emailService.sendReportApprovedEmail(projectId, stageDetails)
+        Map reportInformation = prepareReport(projectId, reportDetails)
+        if (reportInformation.error) {
+            return [success:false, error:reportInformation.error]
         }
 
-        //Update project status to completed
-        int published = 0;
-        int validActivities = 0
-        reportService.approve(stageDetails.reportId, stageDetails.reason)
+        EmailTemplate emailTemplate = ((ProgramConfig)reportInformation.config).getReportApprovedTemplate()
+        Map result = reportService.approveReport(reportDetails.reportId, reportDetails.activityIds, reportDetails.reason, reportInformation.project, reportInformation.roles, emailTemplate)
+        if (result && result.success) {
+            createReportApprovalDocument(reportInformation.project, reportDetails)
 
+            // Close the project when the last stage report is approved.
+            if (isFinalReportApproved(reportInformation.project, reportDetails.reportId)) {
+                completeProject(projectId)
+            }
+        }
+
+        result
+    }
+
+    private boolean isFinalReportApproved(Map project, String approvedReportId) {
         // Close the project when the last stage report is approved.
-        // Some projects have extra stage reports after the end date due to legacy data so this checks we've got the last stage within the project dates.
-        def lastReport = project.reports?.max{it.fromDate < project.plannedEndDate ? it.fromDate : project.plannedStartDate}
+        // Some projects have extra stage reports after the end date due to legacy data so this checks we've got the last stage within the project dates
+        List validReports = project.reports?.findAll{it.fromDate < project.plannedEndDate ? it.fromDate : project.plannedStartDate}
 
-        if(lastReport && lastReport.reportId == stageDetails.reportId){
-            def values = [:]
-            values["status"] = COMPLETE
-            update(projectId, values)
-        }
+        List incompleteReports = (validReports?.findAll{it.publicationStatus != ReportService.REPORT_APPROVED})?:[]
 
-        result
+        return incompleteReports.size() ==1 && incompleteReports[0].reportId == approvedReportId
+    }
+
+    private void createReportApprovalDocument(Map project, Map reportDetails) {
+        def readableId = project.grantId + (project.externalId?'-'+project.externalId:'')
+        def name = "${readableId} ${reportDetails.stage} approval"
+        def doc = [name:name, projectId:project.projectId, type:'text', role:'approval',filename:name, readOnly:true, public:false, reportId:reportDetails.reportId]
+        documentService.createTextDocument(doc, (project as JSON).toString())
+    }
+
+    private void completeProject(String projectId) {
+        Map values = [status:COMPLETE]
+        update(projectId, values)
     }
 
     /**
-     * Rejects a submitted stage report.
+     * Rejects / returns for rework a submitted report.
      * @param projectId the project the performing the activities.
-     * @param stageDetails details of the activities, specifically a list of activity ids.
+     * @param reportDetails details of the activities, specifically a list of activity ids.
      */
-    def rejectStageReport(projectId, stageDetails) {
-        reportService.reject(stageDetails.reportId, stageDetails.category, stageDetails.reason)
-        def result = activityService.rejectActivitiesForPublication(stageDetails.activityIds)
-
-        // TODO Send a message to GMS.  Delete previous approval document (only an issue for withdrawal of approval)?
-        def project = get(projectId)
-        stageDetails.project = project
-
-        if (!result.resp.error) {
-            emailService.sendReportRejectedEmail(projectId, stageDetails)
+    def rejectReport(String projectId, Map reportDetails) {
+        Map reportInformation = prepareReport(projectId, reportDetails)
+        if (reportInformation.error) {
+            return [success:false, error:reportInformation.error]
         }
+
+        EmailTemplate emailTemplate = ((ProgramConfig)reportInformation.config).getReportReturnedTemplate()
+        Map result = reportService.rejectReport(reportDetails.reportId, reportDetails.activityIds, reportDetails.reason, reportInformation.project, reportInformation.roles, emailTemplate)
 
         result
     }

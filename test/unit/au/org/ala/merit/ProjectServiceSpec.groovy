@@ -1,16 +1,12 @@
 package au.org.ala.merit
 
-import au.org.ala.merit.reports.ReportConfig
-import au.org.ala.merit.reports.ReportOwner
 import grails.converters.JSON
 import grails.test.mixin.TestFor
 import org.codehaus.groovy.grails.web.converters.marshaller.json.CollectionMarshaller
 import org.codehaus.groovy.grails.web.converters.marshaller.json.MapMarshaller
 import org.joda.time.Period
 import spock.lang.Specification
-
-import static au.org.ala.merit.ProjectService.*
-import static au.org.ala.merit.ProjectService.PLAN_NOT_APPROVED
+import spock.lang.Unroll
 
 /**
  * Tests the ProjectService class.
@@ -44,7 +40,7 @@ class ProjectServiceSpec extends Specification {
         service.projectConfigurationService = projectConfigurationService
         userService.userIsAlaOrFcAdmin() >> false
         metadataService.getProgramConfiguration(_,_) >> [reportingPeriod:6, reportingPeriodAlignedToCalendar: true, weekDaysToCompleteReport:43]
-        projectConfigurationService.getProjectConfiguration(_) >> [reportingPeriod:6, reportingPeriodAlignedToCalendar: true, weekDaysToCompleteReport:43]
+        projectConfigurationService.getProjectConfiguration(_) >> new ProgramConfig([reportingPeriod:6, reportingPeriodAlignedToCalendar: true, weekDaysToCompleteReport:43])
     }
 
     def "generate reports with 3 monthly period"() {
@@ -165,7 +161,7 @@ class ProjectServiceSpec extends Specification {
     def "plan should not be submitted if it's already been submitted."(){
         given:
         def projectId = 'project1'
-        def planStatus = PLAN_SUBMITTED
+        def planStatus = ProjectService.PLAN_SUBMITTED
         webService.getJson(_) >> [projectId:projectId, planStatus:planStatus]
 
         when:
@@ -179,7 +175,7 @@ class ProjectServiceSpec extends Specification {
     def "plan should not be approved if it's already been approved."(){
         given:
         def projectId = 'project1'
-        def planStatus = PLAN_APPROVED
+        def planStatus = ProjectService.PLAN_APPROVED
         webService.getJson(_) >> [projectId:projectId, planStatus:planStatus]
 
         when:
@@ -192,7 +188,7 @@ class ProjectServiceSpec extends Specification {
     def "plan should not be rejected if it's not been approved."(){
         given:
         def projectId = 'project1'
-        def planStatus = PLAN_NOT_APPROVED
+        def planStatus = ProjectService.PLAN_NOT_APPROVED
         webService.getJson(_) >> [projectId:projectId, planStatus:planStatus]
 
         when:
@@ -202,13 +198,174 @@ class ProjectServiceSpec extends Specification {
         result.error == "Invalid plan status"
     }
 
+    def "an email should be sent when a plan is submitted"() {
+        given:
+        def projectId = 'project1'
+        def planStatus = ProjectService.PLAN_NOT_APPROVED
+        List projectRoles = []
+        webService.getJson(_) >> [projectId:projectId, planStatus:planStatus]
+
+        when:
+        def result = service.submitPlan(projectId)
+
+        then:
+        result.message == 'success'
+        1 * webService.doPost({it.endsWith("project/"+projectId)}, [planStatus:ProjectService.PLAN_SUBMITTED]) >> [resp:[status:'ok']]
+        1 * webService.getJson({it.endsWith("permissions/getMembersForProject/"+projectId)}) >> projectRoles
+        1 * emailService.sendEmail(EmailTemplate.DEFAULT_PLAN_SUBMITTED_EMAIL_TEMPLATE,_,projectRoles, RoleService.PROJECT_ADMIN_ROLE)
+    }
+
+    def "an email should be sent when a plan is approved"() {
+        given:
+        def projectId = 'project1'
+        def planStatus = ProjectService.PLAN_SUBMITTED
+        List projectRoles = []
+        webService.getJson(_) >> [projectId:projectId, planStatus:planStatus]
+
+        when:
+        def result = service.approvePlan(projectId)
+
+        then:
+        result.message == 'success'
+        1 * webService.doPost({it.endsWith("project/"+projectId)}, [planStatus:ProjectService.PLAN_APPROVED]) >> [resp:[status:'ok']]
+        1 * webService.getJson({it.endsWith("permissions/getMembersForProject/"+projectId)}) >> projectRoles
+        1 * emailService.sendEmail(EmailTemplate.DEFAULT_PLAN_APPROVED_EMAIL_TEMPLATE,_,projectRoles, RoleService.GRANT_MANAGER_ROLE)
+
+    }
+
+    def "an email should be sent when a plan is returned"() {
+        given:
+        def projectId = 'project1'
+        def planStatus = ProjectService.PLAN_SUBMITTED
+        List projectRoles = []
+        webService.getJson(_) >> [projectId:projectId, planStatus:planStatus]
+
+        when:
+        def result = service.rejectPlan(projectId)
+
+        then:
+        result.message == 'success'
+        1 * webService.doPost({it.endsWith("project/"+projectId)}, [planStatus:ProjectService.PLAN_NOT_APPROVED]) >> [resp:[status:'ok']]
+        1 * webService.getJson({it.endsWith("permissions/getMembersForProject/"+projectId)}) >> projectRoles
+        1 * emailService.sendEmail(EmailTemplate.DEFAULT_PLAN_RETURNED_EMAIL_TEMPLATE,_,projectRoles, RoleService.GRANT_MANAGER_ROLE)
+    }
+
+    @Unroll
+    def "the email template for the plan workflow can be specified by the program configuration"(String initialState, Closure action, EmailTemplate expectedTemplate, String expectedRole) {
+        given:
+        def projectId = 'project1'
+        def planStatus = initialState
+        List projectRoles = []
+        Map project =  [projectId:projectId, planStatus:planStatus]
+        ProgramConfig programConfig = new ProgramConfig([
+                emailTemplates:[
+                        (ProgramConfig.PLAN_SUBMITTED_EMAIL_TEMPLATE_CONFIG_ITEM): EmailTemplate.RLP_PLAN_SUBMITTED_EMAIL_TEMPLATE.name(),
+                        (ProgramConfig.PLAN_APPROVED_EMAIL_TEMPLATE_CONFIG_ITEM) : EmailTemplate.RLP_PLAN_APPROVED_EMAIL_TEMPLATE.name(),
+                        (ProgramConfig.PLAN_RETURNED_EMAIL_TEMPLATE_CONFIG_ITEM) : EmailTemplate.RLP_PLAN_RETURNED_EMAIL_TEMPLATE.name()
+                ]
+        ])
+        webService.getJson(_) >> project
+        Map results = [:]
+        1 * emailService.sendEmail(_,_,_,_) >> {actualTemplate, p , roles, actualRole -> results.actualEmailTemplate = actualTemplate; results.actualRole = actualRole}
+
+        when:
+        action(service, projectId)
+
+        then:
+        1 * projectConfigurationService.getProjectConfiguration(project) >> programConfig
+        1 * webService.doPost({it.endsWith("project/"+projectId)}, _) >> [resp:[status:'ok']]
+        1 * webService.getJson({it.endsWith("permissions/getMembersForProject/"+projectId)}) >> projectRoles
+        results.actualEmailTemplate == expectedTemplate
+        results.actualRole == expectedRole
+
+
+
+        where:
+        initialState                     | action                       | expectedTemplate                                | expectedRole
+        ProjectService.PLAN_NOT_APPROVED | {s, id -> s.submitPlan(id)}  | EmailTemplate.RLP_PLAN_SUBMITTED_EMAIL_TEMPLATE | RoleService.PROJECT_ADMIN_ROLE
+        ProjectService.PLAN_SUBMITTED    | {s, id -> s.approvePlan(id)} | EmailTemplate.RLP_PLAN_APPROVED_EMAIL_TEMPLATE  | RoleService.GRANT_MANAGER_ROLE
+        ProjectService.PLAN_SUBMITTED    | {s, id -> s.rejectPlan(id)}  | EmailTemplate.RLP_PLAN_RETURNED_EMAIL_TEMPLATE  | RoleService.GRANT_MANAGER_ROLE
+        ProjectService.PLAN_APPROVED     | {s, id -> s.rejectPlan(id)}  | EmailTemplate.RLP_PLAN_RETURNED_EMAIL_TEMPLATE  | RoleService.GRANT_MANAGER_ROLE
+    }
+
+
+    def "the project service should delegate to the report service to submit a report"() {
+        given:
+        def projectId = 'project1'
+        List projectRoles = []
+        Map project = [projectId: projectId, planStatus: ProjectService.PLAN_APPROVED]
+        webService.getJson(_) >> project
+        String reportId = 'r1'
+        Map report = [reportId: reportId, name:'Report 1']
+        Map reportDetails = [reportId: reportId, activityIds: ['a1', 'a2']]
+        reportService.getReportsForProject(_) >> [report]
+
+
+        when:
+        def result = service.submitReport(projectId, reportDetails)
+
+        then:
+        result.success == true
+
+        1 * projectConfigurationService.getProjectConfiguration(project) >> new ProgramConfig([:])
+        1 * webService.getJson({ it.endsWith("permissions/getMembersForProject/" + projectId) }) >> projectRoles
+        1 * reportService.submitReport(reportId, reportDetails.activityIds, project, projectRoles, EmailTemplate.DEFAULT_REPORT_SUBMITTED_EMAIL_TEMPLATE) >> [success:true]
+    }
+
+    def "the project service should delegate to the report service to approve a report"() {
+        given:
+        def projectId = 'project1'
+        List projectRoles = []
+        Map project = [projectId: projectId, planStatus: ProjectService.PLAN_APPROVED]
+        webService.getJson(_) >> project
+        String reportId = 'r1'
+        Map report = [reportId: reportId]
+        Map reportDetails = [reportId: reportId, activityIds: ['a1', 'a2'], reason:'unused']
+        reportService.getReportsForProject(_) >> [report]
+
+
+        when:
+        def result = service.approveReport(projectId, reportDetails)
+
+        then:
+        result.success == true
+
+        1 * projectConfigurationService.getProjectConfiguration(project) >> new ProgramConfig([:])
+        1 * webService.getJson({ it.endsWith("permissions/getMembersForProject/" + projectId) }) >> projectRoles
+        1 * reportService.approveReport(reportId, reportDetails.activityIds, reportDetails.reason, project, projectRoles, EmailTemplate.DEFAULT_REPORT_APPROVED_EMAIL_TEMPLATE) >> [success:true]
+    }
+
+    def "the project service should delegate to the report service to return a report"() {
+        given:
+        def projectId = 'project1'
+        List projectRoles = []
+        Map project = [projectId: projectId, planStatus: ProjectService.PLAN_APPROVED]
+        webService.getJson(_) >> project
+        String reportId = 'r1'
+        Map report = [reportId: reportId]
+        Map reportDetails = [reportId: reportId, activityIds: ['a1', 'a2'], reason:'unused']
+        reportService.getReportsForProject(_) >> [report]
+
+
+        when:
+        def result = service.rejectReport(projectId, reportDetails)
+
+        then:
+        result.success == true
+
+        1 * projectConfigurationService.getProjectConfiguration(project) >> new ProgramConfig([:])
+        1 * webService.getJson({ it.endsWith("permissions/getMembersForProject/" + projectId) }) >> projectRoles
+        1 * reportService.rejectReport(reportId, reportDetails.activityIds, reportDetails.reason, project, projectRoles, EmailTemplate.DEFAULT_REPORT_RETURNED_EMAIL_TEMPLATE) >> [success:true]
+    }
+
+
     def "a project's start date cannot be changed if the project has a submitted MERI plan"() {
         given:
         def projectId = 'project1'
         def newStartDate = '2015-06-01T00:00Z'
         reportService.includesSubmittedOrApprovedReports(_) >> false
         reportService.getReportsForProject(_) >> []
-        webService.getJson(_) >> [projectId:projectId, planStatus:PLAN_SUBMITTED, plannedStartDate: '2015-07-01T00:00Z']
+        webService.getJson(_) >> [projectId:projectId, planStatus:ProjectService.PLAN_SUBMITTED, plannedStartDate: '2015-07-01T00:00Z']
 
         when:
         def result = service.changeProjectStartDate(projectId, newStartDate, false)
@@ -223,7 +380,7 @@ class ProjectServiceSpec extends Specification {
         def newStartDate = '2015-06-01T00:00Z'
         reportService.includesSubmittedOrApprovedReports(_) >> false
         reportService.getReportsForProject(_) >> []
-        webService.getJson(_) >> [projectId:projectId, planStatus:PLAN_APPROVED, plannedStartDate: '2015-07-01T00:00Z']
+        webService.getJson(_) >> [projectId:projectId, planStatus:ProjectService.PLAN_APPROVED, plannedStartDate: '2015-07-01T00:00Z']
 
         when:
         def result = service.changeProjectStartDate(projectId, newStartDate, false)
@@ -238,7 +395,7 @@ class ProjectServiceSpec extends Specification {
         def newStartDate = '2015-06-01T00:00Z'
         reportService.includesSubmittedOrApprovedReports(_) >> true
         reportService.getReportsForProject(_) >> [[publicationStatus:ReportService.REPORT_APPROVED]]
-        webService.getJson(_) >> [projectId:projectId, planStatus:PLAN_NOT_APPROVED, plannedStartDate: '2015-07-01T00:00Z', plannedEndDate:'2016-12-31T00:00Z']
+        webService.getJson(_) >> [projectId:projectId, planStatus:ProjectService.PLAN_NOT_APPROVED, plannedStartDate: '2015-07-01T00:00Z', plannedEndDate:'2016-12-31T00:00Z']
 
         when:
         def result = service.changeProjectStartDate(projectId, newStartDate, false)
@@ -253,7 +410,7 @@ class ProjectServiceSpec extends Specification {
         def newStartDate = '2015-07-01T00:00Z'
         reportService.includesSubmittedOrApprovedReports(_) >> true
         reportService.getReportsForProject(_) >> [[publicationStatus:ReportService.REPORT_APPROVED]]
-        webService.getJson(_) >> [projectId:projectId, planStatus:PLAN_NOT_APPROVED, plannedStartDate: '2015-07-01T00:00Z', plannedEndDate:'2016-12-31T00:00Z']
+        webService.getJson(_) >> [projectId:projectId, planStatus:ProjectService.PLAN_NOT_APPROVED, plannedStartDate: '2015-07-01T00:00Z', plannedEndDate:'2016-12-31T00:00Z']
         webService.doPost(_, _) >> [resp:[status:200]]
         when:
         def result = service.changeProjectStartDate(projectId, newStartDate, false)
@@ -263,7 +420,7 @@ class ProjectServiceSpec extends Specification {
     }
 
     def "a project should only be marked as completed when the final stage report is approved"(String reportId, boolean shouldComplete) {
-        given:
+        setup:
         def projectId = 'project1'
         def reason = null
         def activityIds = ['a1', 'a2']
@@ -271,17 +428,16 @@ class ProjectServiceSpec extends Specification {
         reportService.getReportsForProject(projectId) >>[
                 [reportId:'r1', publicationStatus:ReportService.REPORT_APPROVED, name:'Stage 1', fromDate: '2015-07-01T00:00Z', toDate: '2016-01-01T00:00Z'],
                 [reportId:'r2', publicationStatus:ReportService.REPORT_NOT_APPROVED, name:'Stage 2', fromDate: '2016-01-01T00:00Z', toDate: '2017-01-01T00:00Z']]
-        webService.getJson(_) >> [projectId:projectId, planStatus:PLAN_NOT_APPROVED, plannedStartDate: '2015-07-01T00:00Z', plannedEndDate:'2016-12-31T00:00Z']
+        webService.getJson(_) >> [projectId:projectId, planStatus:ProjectService.PLAN_NOT_APPROVED, plannedStartDate: '2015-07-01T00:00Z', plannedEndDate:'2016-12-31T00:00Z']
 
         when:
 
-        service.approveStageReport(projectId, stageReportDetails)
+        service.approveReport(projectId, stageReportDetails)
 
         then:
-        1 * activityService.approveActivitiesForPublication(activityIds) >> [resp:[status:200]]
+        1 * webService.getJson({it.endsWith("permissions/getMembersForProject/"+projectId)}) >> []
         1 * documentService.createTextDocument(_, _)
-        1 * emailService.sendReportApprovedEmail(projectId, stageReportDetails)
-        1 * reportService.approve(reportId, reason)
+        1 * reportService.approveReport(*_) >> [success:true]
         if (shouldComplete) {
             1 * webService.doPost(_, [status:'completed'])
         }
@@ -411,7 +567,7 @@ class ProjectServiceSpec extends Specification {
         setup:
         String projectId = 'project1'
         String endDate = '2016-12-31T13:00:00Z'
-        webService.getJson(_) >> [projectId:projectId, planStatus:ProjectService.PLAN_APPROVED, status:'active', plannedStartDate: '2015-06-30T14:00:00Z', plannedEndDate:'2016-12-31T13:00:00Z', planStatus:PLAN_NOT_APPROVED, status:'active']
+        webService.getJson(_) >> [projectId:projectId, planStatus:ProjectService.PLAN_APPROVED, status:'active', plannedStartDate: '2015-06-30T14:00:00Z', plannedEndDate:'2016-12-31T13:00:00Z', planStatus:ProjectService.PLAN_NOT_APPROVED, status:'active']
         reportService.includesSubmittedOrApprovedReports(_) >> false
         reportService.getReportsForProject(_) >> []
 
