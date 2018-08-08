@@ -17,7 +17,7 @@ function Risks(risks, riskModel, disableFlag, key) {
     self.risks = new RisksViewModel(risks, riskModel);
 
     self.addRisks = function(){
-        self.risks.rows.push(new RisksRowViewModel());
+        self.risks.rows.push(new RisksRowViewModel({}, riskModel));
     };
     self.removeRisk = function(risk) {
         self.risks.rows.remove(risk);
