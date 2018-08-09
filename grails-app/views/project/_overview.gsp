@@ -25,19 +25,23 @@
             <span data-bind="text:associatedSubProgram"></span>
         </h4>
     </div>
-    <div class="clearfix" data-bind="visible:funding()">
+    <g:if test="${!projectContent.overview.fundingHidden}">
+    <div class="clearfix" data-bind="if:funding()">
         <h4>
             Approved funding (GST exclusive): <span data-bind="text:funding.formattedCurrency"></span>
         </h4>
 
     </div>
+    </g:if>
 
+    <g:if test="${!projectContent.overview.datesHidden}">
     <div data-bind="visible:plannedStartDate()">
         <h4>
             Project start: <span data-bind="text:plannedStartDate.formattedDate"></span>
             <span data-bind="visible:plannedEndDate()">Project finish: <span data-bind="text:plannedEndDate.formattedDate"></span></span>
         </h4>
     </div>
+    </g:if>
 
     <div class="clearfix" style="font-size:14px;">
         <div class="span3" data-bind="visible:status" style="margin-bottom: 0">
