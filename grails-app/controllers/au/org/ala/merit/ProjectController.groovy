@@ -74,7 +74,6 @@ class ProjectController {
             if (template == ESP_TEMPLATE && user?.isEditor) {
                 espOverview(project, user)
             } else {
-
                 project.sites?.sort { it.name }
                 project.projectSite = project.sites?.find { it.siteId == project.projectSiteId }
                 def roles = roleService.getRoles()
@@ -183,6 +182,12 @@ class ProjectController {
             rlpModel.admin.showSpecies = false
             rlpModel.admin.hidePrograms = true
             model = rlpModel
+        }
+        else if (config?.projectTemplate == ESP_TEMPLATE && !user?.hasViewAccess) {
+            project.remove('sites')
+            project.remove('activities')
+            model.overview.datesHidden = true
+            model.overview.fundingHidden = true
         }
         return [view: 'index', model: model]
     }
