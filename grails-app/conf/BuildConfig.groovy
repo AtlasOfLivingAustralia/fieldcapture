@@ -35,9 +35,6 @@ if (Environment.current == Environment.DEVELOPMENT) {
     def pluginLocation = props.getProperty("ecodata-client-plugin.location") ?: '../ecodata-client-plugin'
     grails.plugin.location.'ecodata-client-plugin' = pluginLocation
 
-    def testPluginLocation = props.getProperty("fieldcapture-test-plugin.location") ?: '../fieldcapture-test-plugin'
-    grails.plugin.location.'fieldcapture-test' = testPluginLocation
-
 }
 def openhtmltopdfversion = '0.0.1-RC4'
 
@@ -120,7 +117,6 @@ grails.project.dependency.resolution = {
 
         if (Environment.current != Environment.DEVELOPMENT) {
             compile ":ecodata-client-plugin:0.7"
-            test ":fieldcapture-test:0.1-SNAPSHOT"
         }
 
     }
