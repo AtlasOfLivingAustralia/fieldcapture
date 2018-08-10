@@ -39,6 +39,15 @@ if (Environment.current == Environment.DEVELOPMENT) {
     grails.plugin.location.'fieldcapture-test' = testPluginLocation
 
 }
+
+
+clover {
+    on = false // Slows down testing individual classes too much.  Override by passing -clover.on to test-app e.g. grails test-app -clover.on unit:
+    reporttask = { ant, binding, self ->
+        ant.'clover-check'(target: "15%", haltOnFailure: true) { }
+    }
+}
+
 def openhtmltopdfversion = '0.0.1-RC4'
 
 grails.project.dependency.resolver = "maven"
@@ -82,6 +91,7 @@ grails.project.dependency.resolution = {
         compile "org.apache.httpcomponents:httpclient:4.4.1"
         compile "org.apache.pdfbox:pdfbox:2.0.4"
         build "com.google.guava:guava:21.0"
+        test 'org.openclover:clover:4.3.0'
     }
 
     plugins {
@@ -117,6 +127,8 @@ grails.project.dependency.resolution = {
         compile ":excel-import:1.0.1"
 
         compile ':cookie:1.4'
+
+        test 'org.grails.plugins:clover:4.3.0'
 
         if (Environment.current != Environment.DEVELOPMENT) {
             compile ":ecodata-client-plugin:0.7"

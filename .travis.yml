@@ -24,7 +24,7 @@ before_script:
   grep -q "\-SNAPSHOT"; if [ "$?" = "1" ]; then MAVEN_REPO="ala-repo-release"; fi;
 script:
   - npm install --save-dev
-  - grails clean; grails refresh-dependencies --non-interactive && grails test-app :unit --non-interactive --stacktrace && grails prod war --non-interactive
+  - grails clean; grails refresh-dependencies --non-interactive && grails test-app -clover.on :unit --non-interactive --stacktrace && grails prod war --non-interactive
   - '[ "$TRAVIS_PULL_REQUEST" != "false" ] || grails prod maven-deploy --repository=$MAVEN_REPO --non-interactive'
 env:
   global:
