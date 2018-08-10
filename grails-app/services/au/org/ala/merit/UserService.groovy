@@ -370,11 +370,14 @@ class UserService {
 
     def checkEmailExists(String email) {
         def user = authService.getUserForEmailAddress(email)
-        if (!user?.userId) {
+
+        if (!user?.userId || user.locked) {
             // Don't cache failed lookups - otherwise the user will be unable to get MERIT access until the cache expires
             // if they create their account after the first attempt to register them with MERIT.
             clearUserCacheFor(email)
+            user = null
         }
+
         return user?.userId
     }
 
@@ -386,7 +389,7 @@ class UserService {
     private void clearUserCacheFor(String email) {
         try {
             def userDetailsCache = grailsCacheManager.getCache(USER_DETAILS_CACHE_REGION)
-            if (userDetailsCache.metaClass.respondsTo(userDetailsCache, "getAllKeys")) {
+            if (userDetailsCache?.metaClass.respondsTo(userDetailsCache, "getAllKeys")) {
                 userDetailsCache.allKeys.each {key ->
                     if (key.simpleKey == email) {
                         log.info("Evicting userDetailsCache cache entry for user: "+email)
