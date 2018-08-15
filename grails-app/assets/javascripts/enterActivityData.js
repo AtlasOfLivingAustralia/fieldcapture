@@ -425,7 +425,15 @@ initialiseOutputViewModel = function(outputViewModelName, dataModel, elementId, 
         site:activity.site
     };
     ecodata.forms[viewModelInstance] = new ecodata.forms[outputViewModelName](output, dataModel, context, config);
-    ecodata.forms[viewModelInstance].loadData(output.data);
+
+    // Handle both ecodata-forms-plugin 0.7 and 1.0+ without having to revert configuration
+    if (_.isFunction(ecodata.forms[viewModelInstance].initialise)) {
+        ecodata.forms[viewModelInstance].initialise(output.data);
+    }
+    else {
+        ecodata.forms[viewModelInstance].loadData(output.data);
+    }
+
 
     // dirtyFlag must be defined after data is loaded
     ecodata.forms[viewModelInstance].dirtyFlag = ko.simpleDirtyFlag(ecodata.forms[viewModelInstance], false);
