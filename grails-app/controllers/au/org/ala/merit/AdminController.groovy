@@ -825,6 +825,54 @@ class AdminController {
         println prioritiesByMu as JSON
     }
 
+    def buildScore(String output, String label, String method, String property, String filterProperty, String filterValue) {
+        Map score = [
+                label:label.trim(),
+                outputType:output.trim(),
+                category:'RLP',
+                units:'',
+                isOutputTarget:true,
+                status:'active',
+                entityTypes:['RLP Output Report'],
+                configuration:[
+                        label:label.trim(),
+                        filter:[
+                                filterValue:output.trim(),
+                                property:'name',
+                                type:'filter'
+                        ],
+                        childAggregations:[
+
+                        ]
+                ]
+
+        ]
+
+        if (!filterProperty) {
+            score.configuration.childAggregations << [
+                    "type":method.trim(),
+                    "property":"data."+property.trim()
+            ]
+        }
+        else {
+            score.configuration.childAggregations << [
+                    filter: [
+                            type:'filter',
+                            filterValue:filterValue.trim(),
+                            property:'data.'+filterProperty.trim()
+
+                    ],
+                    childAggregations: [
+                            [
+                                    "type":method.trim(),
+                                    "property":"data."+property.trim()
+                            ]
+                    ]
+            ]
+        }
+        score
+    }
+
     def generateServices() {
         InputStreamReader isr = new InputStreamReader(new FileInputStream("/Users/god08d/Documents/MERIT/services.csv"), 'UTF-8')
         CSVMapReader csvMapReader = new CSVMapReader(isr)
@@ -848,30 +896,7 @@ class AdminController {
 
             ['Score 1', 'Score 2', 'Score 3', 'Score 4', 'Score 5', 'Score 6'].each{ score ->
                 if (service[score]) {
-                    scores << [
-                            label:service[score].trim(),
-                            outputType:service.Output.trim(),
-                            category:'RLP',
-                            units:'',
-                            isOutputTarget:true,
-                            status:'active',
-                            entityTypes:['RLP Output Report'],
-                            configuration:[
-                                    label:service[score].trim(),
-                                    filter:[
-                                            filterValue:service.Output.trim(),
-                                            property:'name',
-                                            type:'filter'
-                                    ],
-                                    childAggregations:[
-                                            [
-                                                    "type":service[score+' Method'].trim(),
-                                                    "property":"data."+service[score+' Attribute'].trim()
-                                            ]
-                                    ]
-                            ]
-
-                    ]
+                    scores << buildScore(service.Output, service[score], service[score+' Method'], service[score+' Attribute'], service[score+' Filter'], service[score+' Filter Value'])
                 }
             }
 
