@@ -106,19 +106,27 @@
             window.onunload = unlockActivity;
         }
 
-        var projectArea = JSON.parse('${(projectArea as JSON).toString()}');
-        var features = JSON.parse('${(features as JSON).toString()}');
+        var metaModel = ${metaModel};
 
-        var map = ecodata.forms.featureMap({
-            selectableFeatures:features
-        });
-        map.fitToBoundsOf(projectArea);
+        if (metaModel.supportsSites) {
+
+            var projectArea = JSON.parse('${(projectArea as JSON).toString()}');
+            var features = JSON.parse('${(features as JSON).toString()}');
+
+            var mapOptions = {};
+            if (features && features.type) {
+                mapOptions = {selectableFeatures: features};
+            }
+            var map = ecodata.forms.featureMap(mapOptions);
+            if (projectArea && projectArea.type) {
+                map.fitToBoundsOf(projectArea);
+            }
+        }
 
         $('.geojson-list').css('height','');
 
         var master = new Master(activity.activityId, {activityUpdateUrl: fcConfig.activityUpdateUrl});
 
-        var metaModel = ${metaModel};
         var themes = ${themes};
 
         var viewModel = new ActivityHeaderViewModel(activity,{}, fcConfig.project, metaModel, themes);
