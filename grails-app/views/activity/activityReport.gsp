@@ -106,23 +106,25 @@
             window.onunload = unlockActivity;
         }
 
+        var projectArea = JSON.parse('${(projectArea as JSON).toString()}');
+        var features = JSON.parse('${(features as JSON).toString()}');
+
+        var map = ecodata.forms.featureMap({
+            selectableFeatures:features
+        });
+        map.fitToBoundsOf(projectArea);
+
+        $('.geojson-list').css('height','');
+
         var master = new Master(activity.activityId, {activityUpdateUrl: fcConfig.activityUpdateUrl});
-
-        var site = null;
-        var mapFeatures = null;
-
-        <g:if test="${site}">
-        site = JSON.parse('${(site as JSON).toString().encodeAsJavaScript()}');
-        mapFeatures = $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
-        </g:if>
 
         var metaModel = ${metaModel};
         var themes = ${themes};
 
-        var viewModel = new ActivityHeaderViewModel(activity, site, fcConfig.project, metaModel, themes);
+        var viewModel = new ActivityHeaderViewModel(activity,{}, fcConfig.project, metaModel, themes);
 
         ko.applyBindings(viewModel);
-        viewModel.initialiseMap(mapFeatures);
+
         // We need to reset the dirty flag after binding but doing so can miss a transition from planned -> started
         // as the "mark activity as finished" will have already updated the progress to started.
         if (activity.progress == viewModel.progress()) {

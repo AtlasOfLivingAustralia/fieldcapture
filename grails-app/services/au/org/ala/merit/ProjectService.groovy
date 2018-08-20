@@ -1300,12 +1300,15 @@ class ProjectService  {
                 scoreCopy.putAll(score)
 
                 Map scoreData = findScore(score.scoreId, scoreSummary?.targets)
-                scoreCopy.target = scoreData?.target ?: 0
-                scoreCopy.result = scoreData?.result ?: [result:0]
+                if (scoreData?.target) {
+                    scoreCopy.target = scoreData?.target ?: 0
+                    scoreCopy.result = scoreData?.result ?: [result:0]
 
-                deliveredAgainstTargets += scoreCopy.result?.result ?: 0
+                    deliveredAgainstTargets += scoreCopy.result?.result ?: 0
 
-                copy.scores << scoreCopy
+                    copy.scores << scoreCopy
+                }
+
             }
             dashboard.services << copy
         }
