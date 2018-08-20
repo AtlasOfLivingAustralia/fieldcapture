@@ -16,4 +16,5 @@
 *= require Leaflet.markercluster-0.4.0-hotfix.1/MarkerCluster.css
 *= require Leaflet.markercluster-0.4.0-hotfix.1/MarkerCluster.Default.css
 *= require Map.css
+*= require leaflet-geojson-selector/0.4.0/css/leaflet-geojson-selector.src.css
 */

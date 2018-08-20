@@ -776,6 +776,19 @@ class ProjectController {
         model.contextViewUrl = model.returnTo
         model.reportHeaderTemplate = '/project/rlpProjectReportHeader'
         model.config = config
+
+        if (model.metaModel.supportsSites) {
+            Map projectArea = project.sites?.find{it.type == 'projectArea'}
+            model.projectArea = [type:projectArea.extent.geometry.type, coordinates:projectArea.extent.geometry.coordinates]
+
+            List sitesAsGeojson = project.sites?.collect{
+                [type:"Feature",
+                 geometry:[type:it.extent.geometry.type, coordinates: it.extent.geometry.coordinates],
+                 properties:[name:it.name]
+                ]
+            }
+            model.features = [type:'FeatureCollection', features:sitesAsGeojson]
+        }
         model
     }
 
