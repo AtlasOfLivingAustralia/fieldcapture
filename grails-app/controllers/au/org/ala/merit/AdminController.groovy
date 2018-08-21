@@ -1,7 +1,6 @@
 package au.org.ala.merit
 
 import au.com.bytecode.opencsv.CSVReader
-import au.org.ala.merit.SettingPageType
 import grails.converters.JSON
 import grails.plugin.cache.GrailsCacheManager
 import grails.util.Environment
@@ -10,9 +9,7 @@ import org.apache.poi.ss.usermodel.Row
 import org.apache.poi.ss.usermodel.Sheet
 import org.apache.poi.ss.usermodel.Workbook
 import org.apache.poi.ss.usermodel.WorkbookFactory
-import org.apache.poi.ss.util.CellReference
 import org.grails.plugins.csv.CSVMapReader
-import org.h2.store.fs.FileChannelInputStream
 import org.joda.time.Period
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 import org.springframework.web.multipart.MultipartHttpServletRequest
@@ -891,7 +888,7 @@ class AdminController {
             servicesjson << [
                     name:service.Name.trim(),
                     output:service.Output.trim(),
-                    id:(i+1),
+                    id:Integer.parseInt(service.ID.trim()),
                     categories:categories.collect{it.trim()}]
 
             ['Score 1', 'Score 2', 'Score 3', 'Score 4', 'Score 5', 'Score 6'].each{ score ->
