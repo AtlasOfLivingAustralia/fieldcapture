@@ -36,64 +36,64 @@
    {
       "output": "RLP - Debris removal",
       "name": "Debris removal",
-      "id": 6,
+      "id": 34,
       "categories": ["Restoring condition"]
    },
    {
       "output": "RLP - Management plan development",
       "name": "Developing farm/project/site management plan",
-      "id": 7,
+      "id": 6,
       "categories": ["Complimentary"]
    },
    {
       "output": "RLP - Erosion Management",
       "name": "Erosion management",
-      "id": 8,
+      "id": 7,
       "categories": [
          "Improving habitat",
          "Restore site condition"
       ]
    },
    {
-      "output": "RLP - Establishing Agreeemnts",
-      "name": "Establishing agreements",
-      "id": 9,
+      "output": "RLP - Establishing Agreements",
+      "name": "Establishing and maintaining agreements",
+      "id": 8,
       "categories": ["Project initiation activities"]
    },
    {
       "output": "RLP - Maintaining feral free enclosures",
       "name": "Establishing and maintaining feral-free enclosures",
-      "id": 10,
+      "id": 9,
       "categories": ["Create safe havens"]
    },
    {
       "output": "RLP - Establishing ex-situ breeding programs",
-      "name": "Establishing ex-situ breeding program",
-      "id": 11,
+      "name": "Establishing and maintaining ex-situ breeding programs",
+      "id": 10,
       "categories": ["Create safe havens"]
    },
    {
       "output": "RLP - Establishing monitoring regimes",
       "name": "Establishing monitoring regimes",
-      "id": 12,
+      "id": 11,
       "categories": ["Project initiation activities"]
    },
    {
       "output": "RLP - Farm Management Survey",
       "name": "Farm management survey",
-      "id": 13,
+      "id": 12,
       "categories": ["Monitoring activities"]
    },
    {
       "output": "RLP - Fauna survey",
       "name": "Fauna survey",
-      "id": 14,
+      "id": 13,
       "categories": ["Monitoring activities"]
    },
    {
       "output": "RLP - Fire management",
       "name": "Fire management actions",
-      "id": 15,
+      "id": 14,
       "categories": [
          "Managing threats",
          "Imroving habitat"
@@ -102,25 +102,25 @@
    {
       "output": "RLP - Flora survey",
       "name": "Flora survey",
-      "id": 16,
+      "id": 15,
       "categories": ["Monitoring activities"]
    },
    {
       "output": "RLP - Habitat augmentation",
       "name": "Habitat augmentation",
-      "id": 17,
+      "id": 16,
       "categories": ["Improving habitat"]
    },
    {
       "output": "RLP - Identifying sites",
       "name": "Identifying the location of potential sites",
-      "id": 18,
+      "id": 17,
       "categories": ["Project initiation activities"]
    },
    {
       "output": "RLP - Improving hydrological regimes",
       "name": "Improving hydrological regimes",
-      "id": 19,
+      "id": 18,
       "categories": [
          "Improving habitat",
          "Restore site condition"
@@ -129,7 +129,7 @@
    {
       "output": "RLP - Improving land management practices",
       "name": "Improving land management practices",
-      "id": 20,
+      "id": 19,
       "categories": [
          "Improving habitat",
          "Restore site condition"
@@ -138,43 +138,43 @@
    {
       "output": "RLP - Disease management",
       "name": "Managing disease",
-      "id": 21,
+      "id": 20,
       "categories": ["Managing threats"]
    },
    {
       "output": "RLP - Negotiations",
       "name": "Negotiating with the Community, Landholders, Farmers, Traditional Owner groups, Agriculture industry groups etc.",
-      "id": 22,
+      "id": 21,
       "categories": ["Project initiation activities"]
    },
    {
       "output": "RLP - Obtaining approvals",
       "name": "Obtaining relevant approvals",
-      "id": 23,
+      "id": 22,
       "categories": ["Project initiation activities"]
    },
    {
       "output": "RLP - Pest animal survey",
       "name": "Pest animal survey",
-      "id": 24,
+      "id": 23,
       "categories": ["Monitoring activities"]
    },
    {
       "output": "RLP - Plant survival survey",
       "name": "Plant survival survey",
-      "id": 25,
+      "id": 24,
       "categories": ["Monitoring activities"]
    },
    {
       "output": "RLP - Project planning",
       "name": "Project planning and delivery of documents as required for the delivery of the Project Services and monitoring",
-      "id": 26,
+      "id": 25,
       "categories": ["Project initiation activities"]
    },
    {
       "output": "RLP - Remediating riparian and aquatic areas",
       "name": "Remediating riparian and aquatic areas",
-      "id": 27,
+      "id": 26,
       "categories": [
          "Improving habitat",
          "Restore site condition"
@@ -183,13 +183,22 @@
    {
       "output": "RLP - Weed treatment",
       "name": "Removing weeds",
-      "id": 28,
+      "id": 27,
       "categories": ["Managing threats"]
    },
    {
       "output": "RLP - Revegetating habitat",
       "name": "Revegetating habitat",
-      "id": 29,
+      "id": 28,
+      "categories": [
+         "Improving habitat",
+         "Restore site condition"
+      ]
+   },
+   {
+      "output": "RLP - Site preparation",
+      "name": "Site preparation",
+      "id": 35,
       "categories": [
          "Improving habitat",
          "Restore site condition"
@@ -198,19 +207,19 @@
    {
       "output": "RLP - Skills and knowledge survey",
       "name": "Skills and knowledge survey",
-      "id": 30,
+      "id": 29,
       "categories": ["Monitoring activities"]
    },
    {
       "output": "RLP - Soil testing",
       "name": "Soil testing",
-      "id": 31,
+      "id": 30,
       "categories": ["Monitoring activities"]
    },
    {
       "output": "RLP - Emergency Interventions",
       "name": "Undertaking emergency interventions to prevent extinctions",
-      "id": 32,
+      "id": 31,
       "categories": [
          "Improving habitat",
          "Restore site condition"
@@ -219,13 +228,13 @@
    {
       "output": "RLP - Water quality survey",
       "name": "Water quality survey",
-      "id": 33,
+      "id": 32,
       "categories": ["Monitoring activities"]
    },
    {
       "output": "RLP - Weed distribution survey",
       "name": "Weed distribution survey",
-      "id": 34,
+      "id": 33,
       "categories": ["Monitoring activities"]
    }
 ]
