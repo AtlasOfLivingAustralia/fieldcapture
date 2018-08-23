@@ -779,15 +779,20 @@ class ProjectController {
 
         if (model.metaModel.supportsSites) {
             Map projectArea = project.sites?.find{it.type == 'projectArea'}
-            model.projectArea = [type:projectArea.extent.geometry.type, coordinates:projectArea.extent.geometry.coordinates]
+            if (projectArea) {
+                model.projectArea = [type:projectArea.extent.geometry.type, coordinates:projectArea.extent.geometry.coordinates]
+            }
 
-            List sitesAsGeojson = project.sites?.collect{
+            List sitesAsGeojson = project.sites?.findAll{it.type != 'projectArea'}?.collect{
                 [type:"Feature",
                  geometry:[type:it.extent.geometry.type, coordinates: it.extent.geometry.coordinates],
                  properties:[name:it.name]
                 ]
             }
-            model.features = [type:'FeatureCollection', features:sitesAsGeojson]
+            if (sitesAsGeojson) {
+                model.features = [type:'FeatureCollection', features:sitesAsGeojson]
+            }
+
         }
         model
     }
