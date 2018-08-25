@@ -40,8 +40,25 @@ if (Environment.current == Environment.DEVELOPMENT) {
 
 clover {
     on = false // Slows down testing individual classes too much.  Override by passing -clover.on to test-app e.g. grails test-app -clover.on unit:
+    reports.dir = "target/clover/report"
     reporttask = { ant, binding, self ->
-        ant.'clover-check'(target: "15%", haltOnFailure: true) { }
+        ant.mkdir(dir: "${clover.reports.dir}")
+        ant.'clover-report' {
+
+            ant.current(outfile: "${clover.reports.dir}") {
+                format(type: "html")
+                ant.columns {
+                    lineCount()
+                    complexity()
+                    filteredElements(format: "bar")
+                    uncoveredElements(format: "raw")
+                    totalElements(format: "raw")
+                    totalPercentageCovered()
+                }
+            }
+        }
+        ant.'clover-check'(target: "1%", haltOnFailure: true) { }
+
     }
 }
 
