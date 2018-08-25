@@ -187,6 +187,48 @@ class WebService {
     }
 
     /**
+     * This method is a replacement for getJson but is consistent in it's return type.
+     * It will now always return a Map with a statusCode key and either a resp or error key depending on whether the
+     * call succeeded.
+     * getJson would just return the resp, which could be problematic if the resp was an array as the method would
+     * either return an array if it succeeded or a Map if it did not.
+     * @param url the URL to call.
+     * @param timeout optional timeout on the call.
+     * @return Map containing the status code (statusCode), optionally a response (resp) or an error (error).
+     */
+    Map getJson2(String url, Integer timeout = null) {
+        HttpURLConnection conn = null
+        Map result = [:]
+        try {
+            conn = configureConnection(url, true, timeout)
+            String json = responseText(conn) ?: "{}"
+            result = [statusCode:conn.responseCode, resp:JSON.parse(json)]
+
+        } catch (ConverterException e) {
+            def error = ['error': "Failed to parse json. ${e.getClass()} ${e.getMessage()} URL= ${url}."]
+            log.error error
+            result = [statusCode:conn?.responseCode, error:error]
+        } catch (SocketTimeoutException e) {
+            String error = "Timed out getting json. URL= ${url}."
+            println error
+            result = [statusCode:conn?.responseCode, error:error]
+        } catch (ConnectException ce) {
+            log.info "Exception class = ${ce.getClass().name} - ${ce.getMessage()}"
+            String error = "ecodata service not available. URL= ${url}."
+            println error
+            result = [statusCode:conn?.responseCode, error:error]
+        } catch (Exception e) {
+            log.info "Exception class = ${e.getClass().name} - ${e.getMessage()}"
+            def error = [error: "Failed to get json from web service. ${e.getClass()} ${e.getMessage()} URL= ${url}.",
+                         statusCode: conn?.responseCode?:"",
+                         detail: conn?.errorStream?.text]
+            log.error error
+            result = error
+        }
+        result
+    }
+
+    /**
      * Reads the response from a URLConnection taking into account the character encoding.
      * @param urlConnection the URLConnection to read the response from.
      * @return the contents of the response, as a String.

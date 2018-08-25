@@ -9,6 +9,7 @@ import org.apache.commons.lang.StringUtils
 import org.geotools.geojson.geom.GeometryJSON
 import org.grails.plugins.csv.CSVMapReader
 import org.joda.time.DateTime
+import org.springframework.web.multipart.MultipartFile
 
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
@@ -1057,17 +1058,17 @@ class ImportService {
     /**
      * Bulk imports sites for many projects.  The supplied shapefile must have attributes GRANT_ID and EXTERNAL_I
      */
-    def bulkImportSites(shapefile) {
-        def result =  siteService.uploadShapefile(shapefile)
+    def bulkImportSites(MultipartFile shapefile) {
+        Map result = siteService.uploadShapefile(shapefile)
 
         cacheService.clear(PROJECTS_CACHE_KEY)
 
         def errors = []
         def sites = []
-        if (!result.error && result.content.size() > 1) {
+        if (!result.error && result.resp.size() > 1) {
             def now = DateUtils.displayFormat(new DateTime())
             def projectsWithSites = [:]
-            def content = result.content
+            def content = result.resp
             def shapeFileId = content.remove('shp_id')
 
             def shapes = content.collect { key, value ->
@@ -1114,9 +1115,9 @@ class ImportService {
                     def description = shape.attributes[siteDescriptionAttribute] ?: "Imported on ${now}"
                     def siteExternalId = shapeFileId+'-'+shape.id
 
-                    def resp = siteService.createSiteFromUploadedShapefile(shapeFileId, shape.id, siteExternalId, name, description, project.projectId)
-                    if (resp?.resp.siteId) {
-                        projectDetails.sites << [siteId:resp.resp.siteId, name:name, description:description]
+                    def resp = siteService.createSiteFromUploadedShapefile(shapeFileId, shape.id, siteExternalId, name, description, project.projectId, false)
+                    if (resp?.siteId) {
+                        projectDetails.sites << [siteId:resp.siteId, name:name, description:description]
                         sites << name
                     }
                     else {

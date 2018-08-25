@@ -110,7 +110,7 @@ if(!spatial.baseUrl){
     spatial.baseUrl = "https://spatial-beta.ala.org.au"
 }
 if(!spatial.layersUrl){
-    spatial.layersUrl = spatial.baseUrl + "/layers-service"
+    spatial.layersUrl = spatial.baseUrl + "/ws"
 }
 if(!spatial.geoserverUrl){
     spatial.geoserverUrl = spatial.baseUrl + "/geoserver"
@@ -122,7 +122,7 @@ if (!spatial.wms.cache.url) {
     spatial.wms.cache.url = spatial.baseUrl + "/geoserver/gwc/service/wms?"
 }
 if (!spatial.intersectUrl) {
-    spatial.intersectUrl = spatial.baseUrl + '/ws/intersect/'
+    spatial.intersectUrl = spatial.layersUrl + '/intersect/'
 }
 if (!sld.polgon.default.url) {
     sld.polgon.default.url = "http://fish.ala.org.au/data/alt-dist.sld"

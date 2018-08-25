@@ -340,48 +340,6 @@ class AdminController {
         [message: results?.message, compare: compare?.message, userDetails: userDetails.user]
     }
 
-    def reloadSiteMetadata() {
-        def sites = []
-        if (params.siteId) {
-            sites << siteService.get(params.siteId)
-        }
-        else {
-            sites = siteService.list()
-        }
-
-        for (site in sites) {
-            def siteId = site["siteId"]
-            def geometry = site["extent"]["geometry"]
-            if (geometry)
-                if (geometry.containsKey("centre")) {
-                    def updatedSite = [:]
-                    updatedSite["extent"] = site["extent"]
-                    siteService.update(siteId, updatedSite)
-                }
-
-        }
-        def result = [result: "success"]
-        render result as JSON
-    }
-
-    @PreAuthorise(accessLevel = 'alaAdmin', redirectController = "admin")
-    def assignPOIIds() {
-        def errors = []
-        def count = 0
-        def sites = siteService.list()
-        for (site in sites) {
-            try {
-                siteService.update(site.siteId, [poi:site.poi])
-                count++
-            }
-            catch (Exception e) {
-                errors << e.message
-            }
-        }
-        def result = [count:count, errors:errors]
-        render result as JSON
-    }
-
     @PreAuthorise(accessLevel = 'alaAdmin', redirectController = "admin")
     def migratePhotoPoints() {
         if (params.outputId) {
