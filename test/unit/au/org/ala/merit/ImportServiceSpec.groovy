@@ -1,6 +1,8 @@
 package au.org.ala.merit
 
 import grails.converters.JSON
+import org.apache.http.HttpStatus
+import org.springframework.mock.web.MockMultipartFile
 import spock.lang.Specification
 
 /**
@@ -10,16 +12,18 @@ class ImportServiceSpec extends Specification {
 
     static def HEADER_ROW = "${GmsMapper.GRANT_ID_COLUMN},${GmsMapper.EXTERNAL_ID_COLUMN},${GmsMapper.DATA_TYPE_COLUMN},${GmsMapper.DATA_SUB_TYPE_COLUMN},PGAT_ACTIVITY_DELIVERABLE_GMS_CODE,UNITS_COMPLETED"
 
-    def importService
-    def projectServiceStub = Stub(ProjectService)
+    ImportService importService
+    ProjectService projectService = Mock(ProjectService)
     def activitiesModel = JSON.parse(new InputStreamReader(getClass().getResourceAsStream('/resources/activities-model.json')))
-    def userService = Mock(UserService)
+    UserService userService = Mock(UserService)
+    SiteService siteService = Mock(SiteService)
 
     def setup() {
         importService = new ImportService()
         importService.cacheService = new CacheService()
-        importService.projectService = projectServiceStub
+        importService.projectService = projectService
         importService.userService = userService
+        importService.siteService = siteService
 
         def metadataServiceStub = Stub(MetadataService)
         metadataServiceStub.activitiesModel() >> activitiesModel
@@ -32,8 +36,8 @@ class ImportServiceSpec extends Specification {
         setup:
         def score = [externalId:'RVA', scoreId:1, label:'label 1']
         def project = buildTestProject()
-        projectServiceStub.get(_,_) >> project
-        projectServiceStub.search(_) >> [resp:[projects:[project]]]
+        projectService.get(_,_) >> project
+        projectService.search(_) >> [resp:[projects:[project]]]
 
         def data = "${project.grantId},${project.externalId},${GmsMapper.ACTIVITY_DATA_TYPE},${GmsMapper.ACTIVITY_DATA_SUB_TYPE},RVA,2000"
         def input = new ByteArrayInputStream((HEADER_ROW+"\n"+data).getBytes('UTF-8'))
@@ -59,6 +63,25 @@ class ImportServiceSpec extends Specification {
         output.data.scores[0].score == 2000
 
     }
+
+    def "The import service can bulk import sites for a set of projects"() {
+        setup:
+        MockMultipartFile shapefile = new MockMultipartFile("shapefile", "test.zip", "application/zip", new byte[0])
+        String shapefileId = 's1'
+
+        when:
+        Map result = importService.bulkImportSites(shapefile)
+
+        then:
+        1 * siteService.uploadShapefile(shapefile) >> [statusCode: HttpStatus.SC_OK, resp:[shp_id:shapefileId, "0":["GRANT_ID":"g1", "EXTERNAL_I":"e1"]]]
+        1 * projectService.search([grantId:"g1", externalId:"e1"]) >> [resp:[projects:[[projectId:"p1", grantId: "g1"]]]]
+        1 * projectService.get('p1', _) >> [name:'p1 name', description:'p1 description']
+        1 * siteService.createSiteFromUploadedShapefile(shapefileId, "0", shapefileId+'-0', "g1 - Site 1", _, "p1", false) >> [success:true, siteId:'s1']
+        result.success == true
+        result.message.sites.size() == 1
+    }
+
+
 
     private Map buildTestProject() {
         [
