@@ -19,6 +19,9 @@
         excelOutputTemplateUrl:"${createLink(controller: 'activity', action:'excelOutputTemplate')}",
         speciesProfileUrl: "${createLink(controller: 'species', action: 'speciesProfile')}",
         bieUrl: "${grailsApplication.config.bie.baseURL}",
+        searchBieUrl:"${createLink(controller:'species', action:'searchBie')}",
+        speciesListUrl:"${createLink(controller:'proxy', action:'speciesItemsForList')}",
+        speciesImageUrl:"${createLink(controller:'species', action:'speciesImage')}",
         returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
     },
         here = window.location.href;
