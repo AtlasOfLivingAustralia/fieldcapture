@@ -109,18 +109,23 @@
         var metaModel = ${metaModel};
 
         if (metaModel.supportsSites) {
+            try {
+                var projectArea = JSON.parse('${(projectArea as JSON).toString()}');
+                var features = JSON.parse('${(features as JSON).toString()}');
 
-            var projectArea = JSON.parse('${(projectArea as JSON).toString()}');
-            var features = JSON.parse('${(features as JSON).toString()}');
+                var mapOptions = {};
+                if (features && features.type) {
+                    mapOptions = {selectableFeatures: features};
+                }
+                var map = ecodata.forms.featureMap(mapOptions);
+                if (projectArea && projectArea.type) {
+                    map.fitToBoundsOf(projectArea);
+                }
+            }
+            catch (e) {
+                console.log("Unable to initialise map, could be because no map elements are on display: "+e);
+            }
 
-            var mapOptions = {};
-            if (features && features.type) {
-                mapOptions = {selectableFeatures: features};
-            }
-            var map = ecodata.forms.featureMap(mapOptions);
-            if (projectArea && projectArea.type) {
-                map.fitToBoundsOf(projectArea);
-            }
         }
 
         $('.geojson-list').css('height','');

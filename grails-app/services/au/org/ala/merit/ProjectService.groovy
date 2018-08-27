@@ -391,7 +391,7 @@ class ProjectService  {
             Map resp = update(projectId, [planStatus:PLAN_UNLOCKED])
 
             if (resp.resp && !resp.resp.error) {
-                Map doc = [name:"Approval to correct project information for "+project.projectId, projectId:projectId, type:'text', role:'approval',filename:project.projectId+'-correction-approval.txt', readOnly:true, public:false]
+                Map doc = [name:"Approval to correct project information for "+project.projectId, projectId:projectId, type:'text', role:'approval',filename:project.projectId+'-correction-approval.txt', readOnly:true, "public":false]
                 String user = userService.getCurrentUserDisplayName()
                 String content = "User ${user} has unlocked project "+project.projectId+" for correction. \nDeclaration:\n"+approvalText
                 documentService.createTextDocument(doc, content)
@@ -472,7 +472,7 @@ class ProjectService  {
         def htmlTxt = createHTMLStageReport(param)
         def dateWithTime = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss")
         def name = project?.grantId + '_' + stageName + '_' + dateWithTime.format(new Date()) + ".pdf"
-        def doc = [name: name, projectId: projectId, saveAs: 'pdf', type: 'pdf', role: 'stageReport', filename: name, readOnly: true, public: false, stage: stageNum]
+        def doc = [name: name, projectId: projectId, saveAs: 'pdf', type: 'pdf', role: 'stageReport', filename: name, readOnly: true, "public": false, stage: stageNum]
         documentService.createTextDocument(doc, htmlTxt)
     }
 
@@ -515,7 +515,7 @@ class ProjectService  {
     private void createReportApprovalDocument(Map project, Map reportDetails) {
         def readableId = project.grantId + (project.externalId?'-'+project.externalId:'')
         def name = "${readableId} ${reportDetails.stage} approval"
-        def doc = [name:name, projectId:project.projectId, type:'text', role:'approval',filename:name, readOnly:true, public:false, reportId:reportDetails.reportId]
+        def doc = [name:name, projectId:project.projectId, type:'text', role:'approval',filename:name, readOnly:true, "public":false, reportId:reportDetails.reportId]
         documentService.createTextDocument(doc, (project as JSON).toString())
     }
 
