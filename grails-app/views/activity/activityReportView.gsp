@@ -21,6 +21,10 @@
         imageUploadUrl: "${createLink(controller: 'image', action: 'upload')}",
         speciesProfileUrl: "${createLink(controller: 'species', action: 'speciesProfile')}",
         excelOutputTemplateUrl:"${createLink(controller: 'activity', action:'excelOutputTemplate')}",
+        searchBieUrl: "${createLink(controller:'species', action:'searchBie')}",
+        speciesListUrl: "${createLink(controller:'proxy', action:'speciesItemsForList')}",
+        speciesSearchUrl: "${createLink(controller:'project', action:'searchSpecies', id:activity.projectId, params:[surveyName:metaModel.name])}",
+        speciesImageUrl: "${createLink(controller:'species', action:'speciesImage')}",
         context:${fc.modelAsJavascript(model:context)},
         returnTo: "${returnTo}"
         },
