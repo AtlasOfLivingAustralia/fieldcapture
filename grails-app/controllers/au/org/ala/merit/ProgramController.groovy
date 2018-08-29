@@ -363,7 +363,7 @@ class ProgramController {
         render resp as JSON
     }
 
-    @PreAuthorise(accessLevel = 'admin')
+    @PreAuthorise(accessLevel = 'admin', projectIdParam = 'entityId')
     def addUserAsRoleToProgram() {
         String userId = params.userId
         String programId = params.entityId
@@ -380,7 +380,7 @@ class ProgramController {
         }
     }
 
-    @PreAuthorise(accessLevel = 'admin')
+    @PreAuthorise(accessLevel = 'admin', projectIdParam = 'entityId')
     def removeUserWithRoleFromProgram() {
         String userId = params.userId
         String role = params.role
