@@ -148,7 +148,9 @@
                 <div class="alert alert-danger" data-bind="visible:progressErrors().length">
                     <b>Errors</b>
                     <ul data-bind="foreach:progressErrors">
-                        <li data-bind="text:$data"></li>
+                        <li>
+                           <span data-bind="text:$data.error"></span><span data-bind="if:$data.detail"> <i class="fa fa-question-circle" data-bind="popover:{container:'body', content:$data.detail}"> </i> </span>
+                        </li>
                     </ul>
                 </div>
                 <div data-bind="text:progressText"></div>

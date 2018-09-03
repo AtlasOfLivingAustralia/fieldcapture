@@ -337,7 +337,7 @@ class SiteController {
                     Map site = siteData.sites[progress.uploaded]
                     Map result = siteService.createSiteFromUploadedShapefile(siteData.shapeFileId, site.id, site.externalId, site.name, site.description?:'No description supplied', siteData.projectId, false)
                     if (!result.success) {
-                        progress.errors << result.error
+                        progress.errors << [error:result.error, detail:result.detail]
                     }
                     progress.uploaded = progress.uploaded + 1
                 }

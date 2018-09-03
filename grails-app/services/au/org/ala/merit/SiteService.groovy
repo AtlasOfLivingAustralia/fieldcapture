@@ -251,7 +251,8 @@ class SiteService {
             }
         }
         else {
-            returnValue = [success:false, error:"Failed to create site for: $name"]
+            String detailedError = result.error ?: result.resp.error
+            returnValue = [success:false, error:"Failed to create site for: $name", detail:detailedError]
         }
         returnValue
     }
