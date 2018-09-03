@@ -96,6 +96,24 @@ function convertToSimpleDate(isoDate, includeTime) {
     return date.format(format);
 }
 
+/**
+ * Displays the supplied date as the financial year it falls into.  *Note* this routine will subtract
+ * a day from the supplied date to catch report ranges that start and end on the 1st of July. e.g. 30-06-2017T14:00:00Z - 30-06-2017T14:00:00Z
+ *
+ * @param date the date to format - must be a ISO 8601 formatted string.
+ * @return a String of the form "2016 / 2017"
+ */
+function isoDateToFinancialYear(date) {
+    var parsedDate = moment(date).subtract(1, 'days');
+    var year = parsedDate.year();
+    // If the month is July - December, the financial year ends with the following year
+    if (parsedDate.month() >= 6) {
+        year++;
+    }
+
+    return (year-1) + '/' + year;
+}
+
 function convertToIsoDate(date) {
     if (typeof date === 'string') {
         if (date.length === 20 && date.charAt(19) === 'Z') {
@@ -207,7 +225,6 @@ function stringToDate(date) {
                 }
             }
         });
-
         target.date(target());
         target.formattedDate(target());
 
