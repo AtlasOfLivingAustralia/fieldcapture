@@ -95,7 +95,6 @@ var SimplifiedReportingViewModel = function(project, config) {
         return stage.toDate == currentReport.toDate;
     });
 
-
     var OPTIONAL_REPORT_TYPE = config.sightingsActivityType || 'ESP Species';
     var ADMIN_REPORT_TYPE = config.adminActivityType || 'ESP Overview';
     function isAdminActivity(activity) {
@@ -104,6 +103,12 @@ var SimplifiedReportingViewModel = function(project, config) {
     function isOptionalReport(activity) {
         return activity.type == OPTIONAL_REPORT_TYPE;
     }
+
+    var reportToDate = currentReport.toDate;
+
+    self.reportingFinancialYear = isoDateToFinancialYear(reportToDate);
+    self.dueDate = convertToSimpleDate(reportToDate);
+
     self.finishedReporting = currentStage.canSubmitReport();
     self.finishedAdminReporting = _.every(currentStage.activities, function(activity) {
         return !isAdminActivity(activity) || activity.isComplete();
