@@ -50,6 +50,8 @@
         config.themes = themes;
         var services = ${config.services?:[]};
         config.services = services;
+        var outcomes = ${config.outcomes?:[]};
+        project.outcomes = outcomes;
         config.useRlpTemplate = services.length > 0;
         var outcomesAndAssets = ${assetsByOutcome ?: []};
         var viewModel = new MERIPlan(project, config);
