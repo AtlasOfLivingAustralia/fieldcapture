@@ -102,7 +102,7 @@
     <!-- ko if:isAgricultureProject -->
     <table class="table">
        <thead>
-        <tr class="header">
+        <tr>
             <th>Project rationale</th>
         </tr>
         </thead>
