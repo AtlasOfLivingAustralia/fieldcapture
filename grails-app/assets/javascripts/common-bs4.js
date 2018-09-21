@@ -15,6 +15,7 @@
 //= require bootstrap-combobox/bootstrap-combobox
 //= require fieldcapture-application
 //= require healthCheck
+//= require knockout-utils
 //= require knockout-dates
 //= require knockout-custom-bindings
 //= require wmd/wmd.js

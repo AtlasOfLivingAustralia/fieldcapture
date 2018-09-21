@@ -2,6 +2,8 @@ package au.org.ala.merit
 
 import au.org.ala.merit.command.ProjectSummaryReportCommand
 import au.org.ala.merit.command.ReportCommand
+import au.org.ala.merit.command.SaveReportDataCommand
+
 import grails.converters.JSON
 import org.apache.http.HttpStatus
 import org.codehaus.groovy.grails.web.json.JSONArray
@@ -688,27 +690,17 @@ class ProjectController {
     }
 
     @PreAuthorise(accessLevel = 'editor')
-    def saveReport(String id, String reportId) {
-        if (!id || !reportId) {
-            error('An invalid report was selected for editing', id)
-            return
-        }
+    def saveReport(SaveReportDataCommand saveReportDataCommand) {
 
-        Map report = reportService.get(reportId)
-        if (reportService.isSubmittedOrApproved(report)) {
-            response.status = HttpStatus.SC_UNAUTHORIZED
-            Map resp = [message:'Submitted or approved reports cannot be modified']
-            render resp as JSON
+        Map result
+        if (saveReportDataCommand.report?.projectId != params.id) {
+            result = [status:HttpStatus.SC_UNAUTHORIZED, error:"You do not have permission to save this report"]
         }
         else {
-            Map activityData = request.JSON
-            Map result = activityService.update(report.activityId, activityData)
-
-            // TODO handle photopoints, but will have to be adjusted for multi-site
-            Map photoPoints = activityData.remove('photoPoints')
-
-            render result as JSON
+            result = saveReportDataCommand.save()
         }
+
+        render result as JSON
     }
 
     @PreAuthorise(accessLevel = 'editor')
@@ -783,12 +775,20 @@ class ProjectController {
                 model.projectArea = [type:projectArea.extent.geometry.type, coordinates:projectArea.extent.geometry.coordinates]
             }
 
+            if (model.activity.siteId) {
+                model.reportSite = project.sites?.find{it.siteId == model.activity.siteId}
+            }
+
             List sitesAsGeojson = project.sites?.findAll{it.type != 'projectArea'}?.collect{
+                if (it.type == 'compound') {
+                    return it.features
+                }
+
                 [type:"Feature",
                  geometry:[type:it.extent.geometry.type, coordinates: it.extent.geometry.coordinates],
                  properties:[name:it.name]
                 ]
-            }
+            }.flatten()
             if (sitesAsGeojson) {
                 model.features = [type:'FeatureCollection', features:sitesAsGeojson]
             }

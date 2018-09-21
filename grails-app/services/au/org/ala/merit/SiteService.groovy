@@ -21,6 +21,9 @@ class SiteService {
     public static final String SITE_SOURCE_DRAWN = 'drawn'
     public static final String SITE_SOURCE_SPATIAL_PORTAL = 'pid'
 
+    /** A site with the extent derived from the convex hull of a set of geojson features */
+    public static final String SITE_TYPE_COMPOUND = 'compound'
+
     def projectsForSite(siteId) {
         get(siteId)?.projects
     }

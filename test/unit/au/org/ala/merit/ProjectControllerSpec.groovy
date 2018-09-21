@@ -1,6 +1,8 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.command.SaveReportDataCommand
 import grails.test.mixin.TestFor
+import org.apache.http.HttpStatus
 import spock.lang.Specification
 
 /**
@@ -19,6 +21,8 @@ class ProjectControllerSpec extends Specification {
     def reportServiceStub = Stub(ReportService)
     def blogService = Stub(BlogService)
     def reportService = Mock(ReportService)
+    def activityService = Mock(ActivityService)
+    def siteService = Mock(SiteService)
 
 
     void setup() {
@@ -32,6 +36,8 @@ class ProjectControllerSpec extends Specification {
         controller.reportService = reportServiceStub
         controller.blogService = blogService
         controller.reportService = reportService
+        controller.siteService = siteService
+        controller.activityService = activityService
 
         projectService.getMembersForProjectId(_) >> []
         projectService.getProgramConfiguration(_) >> new ProgramConfig([requiresActivityLocking: true])
@@ -217,6 +223,30 @@ class ProjectControllerSpec extends Specification {
         then:
         1 * reportService.lockForEditing(project.reports[0])
         view == '/activity/activityReport'
+    }
+
+    def "report data shouldn't be saved if the project id of the report doesn't match the project id checked by the annotation"() {
+        setup:
+        Map props = [
+                activityId:'a1',
+                activity:[
+                        test1:'test'
+                ],
+                reportId:'r1',
+                reportService:reportService,
+                activityService: activityService
+
+        ]
+        reportService.get(props.reportId) >> [projectId:'p2']
+        SaveReportDataCommand cmd = new SaveReportDataCommand(props)
+
+        when:
+        params.projectId = 'p1'
+        controller.saveReport(cmd)
+
+        then:
+        response.json.error != null
+        response.json.status == HttpStatus.SC_UNAUTHORIZED
     }
 
 

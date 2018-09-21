@@ -38,15 +38,7 @@ class ProjectSummaryReportCommand {
         projectReportModel(id, fromStage, toStage, sections)
     }
 
-    Map projectReportModel(String id, String fromStage, String toStage, List contentToInclude) {
-        Map project = projectService.get(id, 'all')
-
-        // Determine date range for data to include.
-        String fromDate = project.reports?.find { it.name == fromStage }?.fromDate
-        String toDate = project.reports?.find { it.name == toStage }?.toDate
-
-        List reportedStages = []
-
+    private List<Map> blog(Map project, String fromDate, String toDate) {
         List<Map> blog = blogService.getProjectBlog(project)
         if (fromDate && toDate) {
             blog = blog.findAll{it.date > fromDate && it.date <= toDate}
@@ -57,12 +49,73 @@ class ProjectSummaryReportCommand {
         else if (toDate) {
             blog = blog.findAll{it.date <= toDate}
         }
+        blog
+    }
 
+    private List images(Map project) {
         final int MAX_IMAGES = 6
         List publicImages = project.documents.findAll{it.public == true && it.thirdPartyConsentDeclarationMade == true && it.type == 'image'}
         if (publicImages.size() > MAX_IMAGES) {
             publicImages = publicImages.subList(0, MAX_IMAGES)
         }
+        publicImages
+    }
+
+    private String getUserRole() {
+        String role
+        if (userService.userIsAlaOrFcAdmin()) {
+            role = 'MERIT Administrator and authorised representative of Commonwealth Department of Environment'
+        }
+        else if (userService.isUserCaseManagerForProject(userService.getCurrentUserId(), id)) {
+            role = 'MERIT Grant Manager and authorised representative of Commonwealth Department of Environment'
+        }
+        else if (userService.isUserAdminForProject(userService.getCurrentUserId(), id)) {
+            role = 'MERIT Project Administrator and authorised representative of Commonwealth Department of Environment'
+        }
+        else {
+            role = 'MERIT user'
+        }
+        role
+    }
+
+    private List documents(Map project, List stageNames) {
+        List documents = project.documents?.findAll{!(it.role in ['stageReport', 'approval', 'deferReason']) && (("Stage "+it.stage) in stageNames || !it.stage)}
+        documents = documents?.sort{it.plannedEndDate}.reverse()
+
+        documents
+    }
+
+    private def latestStageReport(Map project, List reportedStages) {
+        // Use the final report if available, otherwise fall back to the stage report.
+        Map stageReportModel = null
+        Map latestStageReport = findStageReport(project.activities, reportedStages)
+        if (latestStageReport){
+            stageReportModel = activitiesModel.activities.find {it.name == latestStageReport.type}
+            if (!activityModels.find{it.name == stageReportModel.name}) {
+                activityModels << stageReportModel
+            }
+        }
+
+        [latestStageReport:latestStageReport, stageReportModel: stageReportModel]
+    }
+
+    Map projectReportModel(String id, String fromStage, String toStage, List contentToInclude) {
+        Map project = projectService.get(id, 'all')
+        Map model = [project:project, role:getUserRole(), content:contentToInclude]
+
+        // Determine date range for data to include.
+        String fromDate = project.reports?.find { it.name == fromStage }?.fromDate
+        String toDate = project.reports?.find { it.name == toStage }?.toDate
+
+        List reportedStages = []
+
+        if ('Blog' in contentToInclude) {
+            model.blog = blog(project, fromDate, toDate)
+        }
+        if ('Images' in contentToInclude) {
+            model.images = images(project)
+        }
+
 
         Map<String, Map<String, Integer>> activityCountByStage = new TreeMap()
         project.reports?.each { Map report ->
@@ -83,16 +136,6 @@ class ProjectSummaryReportCommand {
         Map activitiesModel = metadataService.activitiesModel()
         Set activityModels = new HashSet()
         Map outputModels = [:]
-
-        // Use the final report if available, otherwise fall back to the stage report.
-        Map stageReportModel = null
-        Map latestStageReport = findStageReport(project.activities, reportedStages)
-        if (latestStageReport){
-            stageReportModel = activitiesModel.activities.find {it.name == latestStageReport.type}
-            if (!activityModels.find{it.name == stageReportModel.name}) {
-                activityModels << stageReportModel
-            }
-        }
 
         Map activitiesByStage = [:].withDefault{[]}
         project.activities?.each { activity ->
@@ -120,40 +163,33 @@ class ProjectSummaryReportCommand {
             }
         }
 
-        String role
-        if (userService.userIsAlaOrFcAdmin()) {
-            role = 'MERIT Administrator and authorised representative of Commonwealth Department of Environment'
-        }
-        else if (userService.isUserCaseManagerForProject(userService.getCurrentUserId(), id)) {
-            role = 'MERIT Grant Manager and authorised representative of Commonwealth Department of Environment'
-        }
-        else if (userService.isUserAdminForProject(userService.getCurrentUserId(), id)) {
-            role = 'MERIT Project Administrator and authorised representative of Commonwealth Department of Environment'
-        }
-        else {
-            role = 'MERIT user'
+        if ('Outcomes' in contentToInclude) {
+            model.outcomes = project.custom?.details?.objectives?.rows1?.findAll{it.description}
         }
 
-        List outcomes = project.custom?.details?.objectives?.rows1?.findAll{it.description}
-
-        project.documents = project.documents?.findAll{!(it.role in ['stageReport', 'approval', 'deferReason']) && (("Stage "+it.stage) in reportedStageNames || !it.stage)}
-        project.documents = project.documents?.sort{it.plannedEndDate}.reverse()
-
-
-        Map risksComparison = [:]
-        if (contentToInclude.contains('Project risks changes') || contentToInclude.contains('Project risks')) {
-            risksComparison = projectService.compareProjectRisks(id, toDate, fromDate)
+        if ('Supporting documents' in contentToInclude) {
+            project.documents = documents(project, reportedStageNames)
         }
 
-        Map metrics = [:]
+        if ('Stage report' in contentToInclude) {
+            model.putAll(latestStageReport(project, reportedStages))
+        }
+
+        if (('Project risks changes'in contentToInclude) || ('Project risks' in contentToInclude)) {
+            model.risksComparison = projectService.compareProjectRisks(id, toDate, fromDate)
+        }
+
         if (contentToInclude.contains('Progress against output targets') || contentToInclude.contains('Progress of outputs without targets')) {
-            metrics = projectService.summary(id)
+            model.metrics = projectService.summary(id)
         }
 
-        [project:project, content:contentToInclude, role:role, images:publicImages, activityCountByStage:activityCountByStage,
-         outcomes:outcomes, metrics: metrics, activityModels:activityModels, orderedStageNames:reportedStageNames,
-         activitiesByStage:activitiesByStage, outputModels:outputModels, stageReportModel:stageReportModel,
-         latestStageReport:latestStageReport, risksComparison: risksComparison, blog:blog]
+        model.putAll([
+                activityCountByStage:activityCountByStage,
+                activityModels:activityModels,
+                orderedStageNames:reportedStageNames,
+                activitiesByStage:activitiesByStage,
+                outputModels:outputModels])
+        model
     }
 
 

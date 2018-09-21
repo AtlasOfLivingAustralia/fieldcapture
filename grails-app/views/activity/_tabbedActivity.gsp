@@ -51,7 +51,8 @@
             activityId: activityId,
             stage: stageNumberFromStage('${activity.projectStage}'),
             disablePrepop: ${activity.progress == au.org.ala.merit.ActivityService.PROGRESS_FINISHED},
-            speciesConfig:<fc:modelAsJavascript model="${speciesConfig}"/>
+            speciesConfig:<fc:modelAsJavascript model="${speciesConfig}"/>,
+            recoveryDataStorageKey: 'activity-'+activityId
         };
         outputModelConfig = _.extend(fcConfig, outputModelConfig);
 
@@ -60,15 +61,25 @@
         <g:set var="model" value="${outputModels[outputName]}"/>
         <g:set var="output" value="${activity.outputs.find {it.name == outputName} ?: [name: outputName]}"/>
 
-        var viewModelName = "${blockId}ViewModel",
-            elementId = "ko${blockId}";
+        var blockId = "${blockId}";
+
 
         var output = <fc:modelAsJavascript model="${output}"/>;
         var config = ${fc.modelAsJavascript(model:metaModel.outputConfig?.find{it.outputName == outputName}, default:'{}')};
-        config.model = ${fc.modelAsJavascript(model:model)},
-            config = _.extend({}, outputModelConfig, config);
+        config.model = ${fc.modelAsJavascript(model:model)};
+        config = _.extend({}, outputModelConfig, config);
 
-        initialiseOutputViewModel(viewModelName, config.model.dataModel, elementId, activity, output, master, config);
+        var context = {
+            project:fcConfig.project,
+            activity:activity,
+            documents:activity.documents,
+            site:activity.site
+        };
+
+        var viewModel = ecodata.forms.initialiseOutputViewModel(blockId, config.model.dataModel, output, config, context);
+        // register with the master controller so this model can participate in the save cycle
+        master.register(viewModel, viewModel.modelForSaving, viewModel.dirtyFlag.isDirty, viewModel.dirtyFlag.reset);
+
         </g:each>
 
 
