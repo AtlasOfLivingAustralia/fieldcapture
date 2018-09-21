@@ -693,22 +693,11 @@ class ProjectController {
             error('An invalid report was selected for editing', id)
             return
         }
-
-        Map report = reportService.get(reportId)
-        if (reportService.isSubmittedOrApproved(report)) {
-            response.status = HttpStatus.SC_UNAUTHORIZED
-            Map resp = [message:'Submitted or approved reports cannot be modified']
-            render resp as JSON
-        }
         else {
-            Map activityData = request.JSON
-            Map result = activityService.update(report.activityId, activityData)
-
-            // TODO handle photopoints, but will have to be adjusted for multi-site
-            Map photoPoints = activityData.remove('photoPoints')
-
-            render result as JSON
+            result = saveReportDataCommand.save()
         }
+
+        render result as JSON
     }
 
     @PreAuthorise(accessLevel = 'editor')

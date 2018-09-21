@@ -15,32 +15,6 @@ import java.text.SimpleDateFormat
 
 class ProjectService  {
 
-    static Closure documentStageComparitor = {a, b ->
-        String stageA = a.stage
-        String stageB = b.stage
-        if (!stageA && !stageB) {
-            return 0
-        }
-        else if (!stageA) {
-            return 1
-        }
-        else if (!stageB) {
-            return -1
-        }
-        else {
-            try {
-                int stageNumA = Integer.parseInt(stageA)
-                int stageNumB = Integer.parseInt(stageB)
-                return stageNumA - stageNumB
-            }
-            catch (NumberFormatException e) {
-                return 0
-            }
-
-        }
-        return a.stage<=>b.stage
-    }
-
     static final String OUTCOMES_OUTPUT_TYPE = 'Outcomes'
     static final String STAGE_OUTCOMES_OUTPUT_TYPE = ''
     static final String COMPLETE = 'completed'
