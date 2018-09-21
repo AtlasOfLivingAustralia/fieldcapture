@@ -4,7 +4,7 @@
 //= require amplifyjs/amplify.min.js
 //= require bootstrap-datepicker/js/bootstrap-datepicker.js
 //= require bootbox/bootbox.min.js
-//= require knockout/3.4.0/knockout-3.4.0
+//= require knockout/3.4.0/knockout-3.4.0.debug.js
 //= require knockout/3.4.0/knockout.mapping-latest
 //= require jquery.validationEngine/jquery.validationEngine
 //= require jquery.validationEngine/jquery.validationEngine-en
@@ -13,6 +13,7 @@
 //= require momentjs/moment-timezone-with-data.min.js
 //= require vkbeautify/vkbeautify.0.99.00.beta.js
 //= require fieldcapture-application
+//= require knockout-utils
 //= require knockout-dates
 //= require knockout-custom-bindings
 //= require wmd/wmd.js

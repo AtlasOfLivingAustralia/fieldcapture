@@ -2,6 +2,8 @@ package au.org.ala.merit
 
 import au.org.ala.merit.command.ProjectSummaryReportCommand
 import au.org.ala.merit.command.ReportCommand
+import au.org.ala.merit.command.SaveReportDataCommand
+
 import grails.converters.JSON
 import org.apache.http.HttpStatus
 import org.codehaus.groovy.grails.web.json.JSONArray
@@ -688,10 +690,11 @@ class ProjectController {
     }
 
     @PreAuthorise(accessLevel = 'editor')
-    def saveReport(String id, String reportId) {
-        if (!id || !reportId) {
-            error('An invalid report was selected for editing', id)
-            return
+    def saveReport(SaveReportDataCommand saveReportDataCommand) {
+
+        Map result
+        if (saveReportDataCommand.report?.projectId != params.id) {
+            result = [status:HttpStatus.SC_UNAUTHORIZED, error:"You do not have permission to save this report"]
         }
         else {
             result = saveReportDataCommand.save()
@@ -772,12 +775,20 @@ class ProjectController {
                 model.projectArea = [type:projectArea.extent.geometry.type, coordinates:projectArea.extent.geometry.coordinates]
             }
 
+            if (model.activity.siteId) {
+                model.reportSite = project.sites?.find{it.siteId == model.activity.siteId}
+            }
+
             List sitesAsGeojson = project.sites?.findAll{it.type != 'projectArea'}?.collect{
+                if (it.type == 'compound') {
+                    return it.features
+                }
+
                 [type:"Feature",
                  geometry:[type:it.extent.geometry.type, coordinates: it.extent.geometry.coordinates],
                  properties:[name:it.name]
                 ]
-            }
+            }.flatten()
             if (sitesAsGeojson) {
                 model.features = [type:'FeatureCollection', features:sitesAsGeojson]
             }

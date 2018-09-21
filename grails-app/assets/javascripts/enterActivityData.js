@@ -23,7 +23,7 @@ var Master = function (activityId, config) {
 
     // client models register their name and methods to participate in saving
     self.register = function (modelInstanceName, getMethod, isDirtyMethod, resetMethod, saveCallback) {
-        this.subscribers.push({
+        self.subscribers.push({
             model: modelInstanceName,
             get: getMethod,
             isDirty: isDirtyMethod,
@@ -110,7 +110,7 @@ var Master = function (activityId, config) {
 
     self.modelAsJS = function() {
         var activityData, outputs = [];
-        $.each(this.subscribers, function(i, obj) {
+        $.each(self.subscribers, function(i, obj) {
             if (obj.isDirty()) {
                 if (obj.model === 'activityModel') {
                     activityData = obj.get();
@@ -133,7 +133,7 @@ var Master = function (activityId, config) {
 
     };
     self.modelAsJSON = function() {
-        var jsData = this.modelAsJS();
+        var jsData = self.modelAsJS();
 
         return jsData ? JSON.stringify(jsData) : undefined;
     };
@@ -174,9 +174,8 @@ var Master = function (activityId, config) {
 
         // We can't allow an activity that failed validation to be marked as finished.
         if (!valid) {
-            if (!jsData.progress || jsData.progress === 'finished') {
-                jsData.progress = 'started';
-                jsData.activityId = jsData.activityId || self.activityData().activityId;
+            if (!jsData.activity.progress || jsData.activity.progress === 'finished') {
+                jsData.activity.progress = 'started';
             }
         }
 

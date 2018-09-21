@@ -95,6 +95,16 @@
     $(function () {
         var returnTo = "${returnTo}";
         var activity = JSON.parse('${(activity as JSON).toString().encodeAsJavaScript()}');
+        var reportSite = JSON.parse('${reportSite ? (reportSite as JSON).toString().replace("'", "\\u0027") : '{}'}');
+        var reportId = '${report.reportId}';
+
+        var context = {
+            owner: fcConfig.context,
+            activity: activity,
+            documents: activity.documents,
+            site: activity.site
+        };
+
 
         // Release the lock when leaving the page.  async:false is deprecated but is still the easiest solution to achieve
         // an unconditional lock release when leaving a page.
@@ -108,33 +118,69 @@
 
         var metaModel = ${metaModel};
 
-        if (metaModel.supportsSites) {
-            try {
-                var projectArea = JSON.parse('${(projectArea as JSON).toString()}');
-                var features = JSON.parse('${(features as JSON).toString()}');
+        var ReportMaster = function(reportId, activityId, site, config) {
+            var self = this;
+            Master.call(self, activityId, config);
 
-                var mapOptions = {};
-                if (features && features.type) {
-                    mapOptions = {selectableFeatures: features};
+            var masterToJS = self.modelAsJS;
+            self.modelAsJS = function() {
+
+                var original = masterToJS();
+                if (original) {
+
+                    var payload = {
+                        reportId: reportId,
+                        activityId: activityId,
+                        activity: original,
+                        savedActivity:{activityId:'a2'},
+                        report:{reportId:'r2'}
+                    };
+
+                    // The site can't be dirty unless we've modifed an output.
+                    if (site && site.isDirty()) {
+                        payload.site = site.toSite(reportSite);
+                    }
+
+                    return payload;
+
                 }
+
+            }
+        };
+
+        var master = null;
+        if (metaModel.supportsSites) {
+
+            var projectArea = JSON.parse('${(projectArea as JSON).toString().replace("'", "\\u0027")}');
+            var features = JSON.parse('${(features as JSON).toString().replace("'", "\\u0027")}');
+
+            var mapOptions = {};
+            if (features && features.type) {
+                mapOptions = {selectableFeatures: features};
+            }
+
+            var site = new ecodata.forms.FeatureCollection(reportSite ? reportSite.features : []);
+            context.featureCollection = site;
+            try {
                 var map = ecodata.forms.featureMap(mapOptions);
                 if (projectArea && projectArea.type) {
                     map.fitToBoundsOf(projectArea);
                 }
             }
             catch (e) {
-                console.log("Unable to initialise map, could be because no map elements are on display: "+e);
+                console.log("Unable to initialise map, could be because no map elements are on display: " + e);
             }
 
+            var master = new ReportMaster(reportId, activity.activityId, site, {activityUpdateUrl: fcConfig.activityUpdateUrl});
+        }
+        else {
+            master = new ReportMaster(reportId, activity.activityId, undefined, {activityUpdateUrl: fcConfig.activityUpdateUrl});
         }
 
-        $('.geojson-list').css('height','');
-
-        var master = new Master(activity.activityId, {activityUpdateUrl: fcConfig.activityUpdateUrl});
 
         var themes = ${themes};
 
-        var viewModel = new ActivityHeaderViewModel(activity,{}, fcConfig.project, metaModel, themes);
+        var viewModel = new ActivityHeaderViewModel(activity, {}, fcConfig.context, metaModel, themes);
 
         ko.applyBindings(viewModel);
 
@@ -170,11 +216,10 @@
         var activityNavigationModel = new ActivityNavigationViewModel(navigationMode, projectId, activityId, siteId, options);
 
         var outputModelConfig = {
-            projectId: projectId,
             activityId: activityId,
-            stage: stageNumberFromStage('${activity.projectStage}'),
             disablePrepop: ${activity.progress == au.org.ala.merit.ActivityService.PROGRESS_FINISHED},
-            speciesConfig:<fc:modelAsJavascript model="${speciesConfig}"/>
+            speciesConfig:<fc:modelAsJavascript model="${speciesConfig}"/>,
+            recoveryDataStorageKey: 'activity-' + activityId
         };
         outputModelConfig = _.extend(fcConfig, outputModelConfig);
 
@@ -184,15 +229,19 @@
         <g:set var="model" value="${outputModels[outputName]}"/>
         <g:set var="output" value="${activity.outputs.find {it.name == outputName} ?: [name: outputName]}"/>
 
-        var viewModelName = "${blockId}ViewModel",
-            elementId = "ko${blockId}";
-
+        var blockId = "${blockId}";
         var output = <fc:modelAsJavascript model="${output}"/>;
         var config = ${fc.modelAsJavascript(model:metaModel.outputConfig?.find{it.outputName == outputName}, default:'{}')};
-        config.model = ${fc.modelAsJavascript(model:model)},
-            config = _.extend({}, outputModelConfig, config);
 
-        initialiseOutputViewModel(viewModelName, config.model.dataModel, elementId, activity, output, master, config);
+        config.model = ${fc.modelAsJavascript(model:model)};
+        config.featureCollection = context.featureCollection;
+
+        config = _.extend({}, outputModelConfig, config);
+
+        var viewModel = ecodata.forms.initialiseOutputViewModel(blockId, config.model.dataModel, output, config, context);
+        // register with the master controller so this model can participate in the save cycle
+        master.register(viewModel, viewModel.modelForSaving, viewModel.dirtyFlag.isDirty, viewModel.dirtyFlag.reset);
+
         </g:if>
         </g:each>
 
