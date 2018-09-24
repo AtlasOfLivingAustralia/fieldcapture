@@ -118,36 +118,6 @@
 
         var metaModel = ${metaModel};
 
-        var ReportMaster = function(reportId, activityId, site, config) {
-            var self = this;
-            Master.call(self, activityId, config);
-
-            var masterToJS = self.modelAsJS;
-            self.modelAsJS = function() {
-
-                var original = masterToJS();
-                if (original) {
-
-                    var payload = {
-                        reportId: reportId,
-                        activityId: activityId,
-                        activity: original,
-                        savedActivity:{activityId:'a2'},
-                        report:{reportId:'r2'}
-                    };
-
-                    // The site can't be dirty unless we've modifed an output.
-                    if (site && site.isDirty()) {
-                        payload.site = site.toSite(reportSite);
-                    }
-
-                    return payload;
-
-                }
-
-            }
-        };
-
         var master = null;
         if (metaModel.supportsSites) {
 
@@ -254,6 +224,7 @@
         });
 
         $('#cancel').click(function () {
+            master.deleteSavedData();
             activityNavigationModel.cancel();
         });
 
