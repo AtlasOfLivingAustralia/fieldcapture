@@ -271,7 +271,15 @@ var Master = function (activityId, config) {
     }
 };
 
-var ReportMaster = function(reportId, activityId, site, config) {
+/**
+ * Extends the Master function to support the additional site information that can be recorded in a report form.
+ * @param reportId the id of the report
+ * @param activityId the activity associated with the report.
+ * @param reportSite the site associated with the report
+ * @param featureCollection the object used to track changes to site features
+ * @param config configuration for the Master function
+ */
+var ReportMaster = function(reportId, activityId, reportSite, featureCollection, config) {
     var self = this;
     Master.call(self, activityId, config);
 
@@ -283,14 +291,12 @@ var ReportMaster = function(reportId, activityId, site, config) {
             var payload = {
                 reportId: reportId,
                 activityId: activityId,
-                activity: original,
-                savedActivity:{activityId:'a2'},
-                report:{reportId:'r2'}
+                activity: original
             };
 
-            // The site can't be dirty unless we've modifed an output.
-            if (site && site.isDirty()) {
-                payload.site = site.toSite(reportSite);
+            // The site can't be dirty unless we've modified an output.
+            if (featureCollection && featureCollection.isDirty()) {
+                payload.site = featureCollection.toSite(reportSite);
             }
 
             return payload;

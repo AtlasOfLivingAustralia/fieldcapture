@@ -129,8 +129,8 @@
                 mapOptions = {selectableFeatures: features};
             }
 
-            var site = new ecodata.forms.FeatureCollection(reportSite ? reportSite.features : []);
-            context.featureCollection = site;
+            var formFeatures = new ecodata.forms.FeatureCollection(reportSite ? reportSite.features : []);
+            context.featureCollection = formFeatures;
             try {
                 var map = ecodata.forms.featureMap(mapOptions);
                 if (projectArea && projectArea.type) {
@@ -141,10 +141,10 @@
                 console.log("Unable to initialise map, could be because no map elements are on display: " + e);
             }
 
-            var master = new ReportMaster(reportId, activity.activityId, site, {activityUpdateUrl: fcConfig.activityUpdateUrl});
+            var master = new ReportMaster(reportId, activity.activityId, reportSite, formFeatures, {activityUpdateUrl: fcConfig.activityUpdateUrl});
         }
         else {
-            master = new ReportMaster(reportId, activity.activityId, undefined, {activityUpdateUrl: fcConfig.activityUpdateUrl});
+            master = new ReportMaster(reportId, activity.activityId, undefined, undefined, {activityUpdateUrl: fcConfig.activityUpdateUrl});
         }
 
 
