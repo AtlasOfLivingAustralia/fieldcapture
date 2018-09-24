@@ -342,6 +342,7 @@
         });
 
         $('#cancel').click(function () {
+            master.deleteSavedData();
             activityNavigationModel.cancel();
         });
 
