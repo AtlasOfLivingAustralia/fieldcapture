@@ -59,9 +59,9 @@ class ProgramController {
         }
 
         [about   : [label: 'Management Unit Overview', visible: true, stopBinding: false, type: 'tab', servicesDashboard:[visible: programVisible, planning:false, services:servicesWithScores]],
-         projects: [label: 'Reporting', visible: true, stopBinding: false, type:'tab', projects:projects, reports:program.reports?:[], reportOrder:reportOrder, hideDueDate:true],
-         sites   : [label: 'Sites', visible: programVisible, stopBinding: true, type:'tab'],
-         admin   : [label: 'Admin', visible: hasAdminAccess, type: 'tab']]
+         projects: [label: 'MU Reporting', visible: true, stopBinding: false, type:'tab', projects:projects, reports:program.reports?:[], reportOrder:reportOrder, hideDueDate:true],
+         sites   : [label: 'MU Sites', visible: programVisible, stopBinding: true, type:'tab'],
+         admin   : [label: 'MU Admin', visible: hasAdminAccess, type: 'tab']]
     }
 
     @PreAuthorise(accessLevel='siteAdmin')
