@@ -815,7 +815,13 @@ class ProjectController {
 
                 filteredModel = new JSONObject(activityModel)
                 List existingOutputs = existingActivityData?.outputs?.collect{it.name}
-                filteredModel.outputs = activityModel.outputs.findAll({ it in serviceOutputs || it in existingOutputs})
+                filteredModel.outputs = activityModel.outputs.findAll({ String output ->
+                    boolean isServiceOutput = services.find{it.output == output}
+                    // Include this output if it's not associated with a service,
+                    // Or if it's associated by a service delivered by this project
+                    // Or it has previously had data recorded against it (this can happen if the services change after the report has been completed)
+                    !isServiceOutput || output in serviceOutputs || output in existingOutputs
+                })
             }
         }
         filteredModel

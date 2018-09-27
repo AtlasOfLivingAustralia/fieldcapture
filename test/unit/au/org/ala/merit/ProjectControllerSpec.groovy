@@ -38,6 +38,7 @@ class ProjectControllerSpec extends Specification {
         controller.reportService = reportService
         controller.siteService = siteService
         controller.activityService = activityService
+        controller.grailsApplication = grailsApplication
 
         projectService.getMembersForProjectId(_) >> []
         projectService.getProgramConfiguration(_) >> new ProgramConfig([requiresActivityLocking: true])
@@ -250,6 +251,51 @@ class ProjectControllerSpec extends Specification {
     }
 
 
+    private Map setupMockServices() {
+        Map activityModel = [name:'output', outputs:[]]
+        List services = [1,2,3,4,5,6,7,8,9,10].collect{
+            String output = 'o'+it
+            activityModel.outputs << output
+            [id:it, output:output]
+        }
+        metadataServiceStub.getProjectServices() >> services
+        activityModel
+    }
+
+    def "for the output report, only outputs matching the project services will be displayed"() {
+
+        setup:
+        Map activityModel = setupMockServices()
+        grailsApplication.config = [rlp:[servicesReport:'output']]
+        Map project = [custom:[details:[serviceIds:[1,2,4]]]]
+
+        Map activityData = [:]
+
+        when:
+        Map filteredModel = controller.filterOutputModel(activityModel, project, activityData)
+
+        then:
+        filteredModel.outputs == ['o1', 'o2', 'o4']
+    }
+
+
+    def "for the output report, outputs that are not service outputs will always be displayed"() {
+
+        setup:
+        Map activityModel = setupMockServices()
+        activityModel.outputs << 'non service'
+
+        grailsApplication.config = [rlp:[servicesReport:'output']]
+        Map project = [custom:[details:[serviceIds:[1,2,4]]]]
+
+        Map activityData = [:]
+
+        when:
+        Map filteredModel = controller.filterOutputModel(activityModel, project, activityData)
+
+        then:
+        filteredModel.outputs == ['o1', 'o2', 'o4', 'non service']
+    }
 
     private def stubGrantManager(userId, projectId) {
         stubUserPermissions(userId, projectId, false, false, true, true)
