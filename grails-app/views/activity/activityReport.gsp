@@ -120,7 +120,8 @@
 
         var master = null;
         if (metaModel.supportsSites) {
-
+            // Workaround for problems with IE11 and leaflet draw
+            L.Browser.touch = false;
             var projectArea = JSON.parse('${(projectArea as JSON).toString().replace("'", "\\u0027")}');
             var features = JSON.parse('${(features as JSON).toString().replace("'", "\\u0027")}');
 
