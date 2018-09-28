@@ -34,7 +34,6 @@ if (Environment.current == Environment.DEVELOPMENT) {
     }
     def pluginLocation = props.getProperty("ecodata-client-plugin.location") ?: '../ecodata-client-plugin'
     grails.plugin.location.'ecodata-client-plugin' = pluginLocation
-
 }
 
 
