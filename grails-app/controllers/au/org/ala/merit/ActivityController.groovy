@@ -254,8 +254,9 @@ class ActivityController {
             model.themes = metadataService.getThemesForProject(model.project)
         }
         if (!model.project && !model.site) {
-            model.sites = siteService.list().collect({[name:it.name,siteId:it.siteId]})
-            model.projects = projectService.list().collect({[name:it.name,projectId:it.projectId]})
+            flash.error = "A projectId is required for this operation"
+            redirect(controller:'home', action:'index')
+            return
         }
 
         model

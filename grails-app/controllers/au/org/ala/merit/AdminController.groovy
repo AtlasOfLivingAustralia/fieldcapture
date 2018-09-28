@@ -1,7 +1,6 @@
 package au.org.ala.merit
 
 import au.com.bytecode.opencsv.CSVReader
-import au.org.ala.merit.SettingPageType
 import grails.converters.JSON
 import grails.plugin.cache.GrailsCacheManager
 import grails.util.Environment
@@ -10,9 +9,7 @@ import org.apache.poi.ss.usermodel.Row
 import org.apache.poi.ss.usermodel.Sheet
 import org.apache.poi.ss.usermodel.Workbook
 import org.apache.poi.ss.usermodel.WorkbookFactory
-import org.apache.poi.ss.util.CellReference
 import org.grails.plugins.csv.CSVMapReader
-import org.h2.store.fs.FileChannelInputStream
 import org.joda.time.Period
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 import org.springframework.web.multipart.MultipartHttpServletRequest
@@ -341,48 +338,6 @@ class AdminController {
             }
         }
         [message: results?.message, compare: compare?.message, userDetails: userDetails.user]
-    }
-
-    def reloadSiteMetadata() {
-        def sites = []
-        if (params.siteId) {
-            sites << siteService.get(params.siteId)
-        }
-        else {
-            sites = siteService.list()
-        }
-
-        for (site in sites) {
-            def siteId = site["siteId"]
-            def geometry = site["extent"]["geometry"]
-            if (geometry)
-                if (geometry.containsKey("centre")) {
-                    def updatedSite = [:]
-                    updatedSite["extent"] = site["extent"]
-                    siteService.update(siteId, updatedSite)
-                }
-
-        }
-        def result = [result: "success"]
-        render result as JSON
-    }
-
-    @PreAuthorise(accessLevel = 'alaAdmin', redirectController = "admin")
-    def assignPOIIds() {
-        def errors = []
-        def count = 0
-        def sites = siteService.list()
-        for (site in sites) {
-            try {
-                siteService.update(site.siteId, [poi:site.poi])
-                count++
-            }
-            catch (Exception e) {
-                errors << e.message
-            }
-        }
-        def result = [count:count, errors:errors]
-        render result as JSON
     }
 
     @PreAuthorise(accessLevel = 'alaAdmin', redirectController = "admin")
@@ -825,6 +780,54 @@ class AdminController {
         println prioritiesByMu as JSON
     }
 
+    def buildScore(String output, String label, String method, String property, String filterProperty, String filterValue) {
+        Map score = [
+                label:label.trim(),
+                outputType:output.trim(),
+                category:'RLP',
+                units:'',
+                isOutputTarget:true,
+                status:'active',
+                entityTypes:['RLP Output Report'],
+                configuration:[
+                        label:label.trim(),
+                        filter:[
+                                filterValue:output.trim(),
+                                property:'name',
+                                type:'filter'
+                        ],
+                        childAggregations:[
+
+                        ]
+                ]
+
+        ]
+
+        if (!filterProperty) {
+            score.configuration.childAggregations << [
+                    "type":method.trim(),
+                    "property":"data."+property.trim()
+            ]
+        }
+        else {
+            score.configuration.childAggregations << [
+                    filter: [
+                            type:'filter',
+                            filterValue:filterValue.trim(),
+                            property:'data.'+filterProperty.trim()
+
+                    ],
+                    childAggregations: [
+                            [
+                                    "type":method.trim(),
+                                    "property":"data."+property.trim()
+                            ]
+                    ]
+            ]
+        }
+        score
+    }
+
     def generateServices() {
         InputStreamReader isr = new InputStreamReader(new FileInputStream("/Users/god08d/Documents/MERIT/services.csv"), 'UTF-8')
         CSVMapReader csvMapReader = new CSVMapReader(isr)
@@ -843,35 +846,12 @@ class AdminController {
             servicesjson << [
                     name:service.Name.trim(),
                     output:service.Output.trim(),
-                    id:(i+1),
+                    id:Integer.parseInt(service.ID.trim()),
                     categories:categories.collect{it.trim()}]
 
             ['Score 1', 'Score 2', 'Score 3', 'Score 4', 'Score 5', 'Score 6'].each{ score ->
                 if (service[score]) {
-                    scores << [
-                            label:service[score].trim(),
-                            outputType:service.Output.trim(),
-                            category:'RLP',
-                            units:'',
-                            isOutputTarget:true,
-                            status:'active',
-                            entityTypes:['RLP Output Report'],
-                            configuration:[
-                                    label:service[score].trim(),
-                                    filter:[
-                                            filterValue:service.Output.trim(),
-                                            property:'name',
-                                            type:'filter'
-                                    ],
-                                    childAggregations:[
-                                            [
-                                                    "type":service[score+' Method'].trim(),
-                                                    "property":"data."+service[score+' Attribute'].trim()
-                                            ]
-                                    ]
-                            ]
-
-                    ]
+                    scores << buildScore(service.Output, service[score], service[score+' Method'], service[score+' Attribute'], service[score+' Filter'], service[score+' Filter Value'])
                 }
             }
 

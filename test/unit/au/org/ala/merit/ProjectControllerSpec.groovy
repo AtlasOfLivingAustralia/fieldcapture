@@ -1,6 +1,8 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.command.SaveReportDataCommand
 import grails.test.mixin.TestFor
+import org.apache.http.HttpStatus
 import spock.lang.Specification
 
 /**
@@ -19,6 +21,8 @@ class ProjectControllerSpec extends Specification {
     def reportServiceStub = Stub(ReportService)
     def blogService = Stub(BlogService)
     def reportService = Mock(ReportService)
+    def activityService = Mock(ActivityService)
+    def siteService = Mock(SiteService)
 
 
     void setup() {
@@ -32,6 +36,9 @@ class ProjectControllerSpec extends Specification {
         controller.reportService = reportServiceStub
         controller.blogService = blogService
         controller.reportService = reportService
+        controller.siteService = siteService
+        controller.activityService = activityService
+        controller.grailsApplication = grailsApplication
 
         projectService.getMembersForProjectId(_) >> []
         projectService.getProgramConfiguration(_) >> new ProgramConfig([requiresActivityLocking: true])
@@ -219,7 +226,76 @@ class ProjectControllerSpec extends Specification {
         view == '/activity/activityReport'
     }
 
+    def "report data shouldn't be saved if the project id of the report doesn't match the project id checked by the annotation"() {
+        setup:
+        Map props = [
+                activityId:'a1',
+                activity:[
+                        test1:'test'
+                ],
+                reportId:'r1',
+                reportService:reportService,
+                activityService: activityService
 
+        ]
+        reportService.get(props.reportId) >> [projectId:'p2']
+        SaveReportDataCommand cmd = new SaveReportDataCommand(props)
+
+        when:
+        params.projectId = 'p1'
+        controller.saveReport(cmd)
+
+        then:
+        response.json.error != null
+        response.json.status == HttpStatus.SC_UNAUTHORIZED
+    }
+
+
+    private Map setupMockServices() {
+        Map activityModel = [name:'output', outputs:[]]
+        List services = [1,2,3,4,5,6,7,8,9,10].collect{
+            String output = 'o'+it
+            activityModel.outputs << output
+            [id:it, output:output]
+        }
+        metadataServiceStub.getProjectServices() >> services
+        activityModel
+    }
+
+    def "for the output report, only outputs matching the project services will be displayed"() {
+
+        setup:
+        Map activityModel = setupMockServices()
+        grailsApplication.config = [rlp:[servicesReport:'output']]
+        Map project = [custom:[details:[serviceIds:[1,2,4]]]]
+
+        Map activityData = [:]
+
+        when:
+        Map filteredModel = controller.filterOutputModel(activityModel, project, activityData)
+
+        then:
+        filteredModel.outputs == ['o1', 'o2', 'o4']
+    }
+
+
+    def "for the output report, outputs that are not service outputs will always be displayed"() {
+
+        setup:
+        Map activityModel = setupMockServices()
+        activityModel.outputs << 'non service'
+
+        grailsApplication.config = [rlp:[servicesReport:'output']]
+        Map project = [custom:[details:[serviceIds:[1,2,4]]]]
+
+        Map activityData = [:]
+
+        when:
+        Map filteredModel = controller.filterOutputModel(activityModel, project, activityData)
+
+        then:
+        filteredModel.outputs == ['o1', 'o2', 'o4', 'non service']
+    }
 
     private def stubGrantManager(userId, projectId) {
         stubUserPermissions(userId, projectId, false, false, true, true)

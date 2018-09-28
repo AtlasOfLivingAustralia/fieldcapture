@@ -1,15 +1,11 @@
 package au.org.ala.merit
+
+import au.org.ala.merit.command.CreateSiteFromShapefileCommand
 import grails.converters.JSON
 import org.apache.commons.io.FilenameUtils
 import org.apache.commons.io.IOUtils
 import org.apache.http.HttpStatus
-import org.apache.tools.ant.taskdefs.GUnzip
 import org.springframework.web.multipart.MultipartFile
-
-import javax.servlet.http.HttpServletRequest
-import java.util.zip.ZipEntry
-import java.util.zip.ZipInputStream
-
 
 class SiteController {
 
@@ -240,7 +236,7 @@ class SiteController {
             flash.message = "Access denied: User does not have <b>editor</b> permission for projectId ${params.projectId}"
             redirect(url: params.returnTo)
         }
-        if (request.respondsTo('getFile')) {
+        else if (request.respondsTo('getFile')) {
 
             MultipartFile file = request.getFile("shapefile")
 
@@ -260,7 +256,7 @@ class SiteController {
                     return
                 default:
                     flash.message = "Unsupported file type.  Please attach a shapefile, kmz or kml file"
-                    result = [view:'upload', model:[]]
+                    result = [view:'upload', model:[projectId: projectId, returnTo:params.returnTo]]
             }
 
             result.model.putAll([projectId: projectId, returnTo:params.returnTo])
@@ -298,8 +294,8 @@ class SiteController {
 
         def result =  siteService.uploadShapefile(file)
 
-        if (!result.error && result.content.size() > 1) {
-            def content = result.content
+        if (!result.error && result.resp.size() > 1) {
+            def content = result.resp
             def shapeFileId = content.remove('shp_id')
             def firstShape = content["0"]
             def attributeNames = []
@@ -321,28 +317,39 @@ class SiteController {
         }
     }
 
-    def createSitesFromShapefile() {
-        def siteData = request.JSON
-        Map progress = [total:siteData.sites.size(), uploaded:0, errors:[]].asSynchronized()
+    def createSitesFromShapefile(CreateSiteFromShapefileCommand siteData) {
 
-        try {
-            session.uploadProgress = progress
+        if (siteData.hasErrors()) {
+            flash.message = siteData.errors
+            redirect(url: params.returnTo)
+        }
+        else if (!projectService.canUserEditProject(userService.getCurrentUserId(), siteData.projectId)) {
+            flash.message = "Access denied: User does not have <b>editor</b> permission for projectId ${params.projectId}"
+            redirect(url: params.returnTo)
+        }
+        else {
+            Map progress = [total:siteData.sites.size(), uploaded:0, errors:[]].asSynchronized()
 
-            while (!progress.cancelling && progress.uploaded < progress.total) {
-                Map site = siteData.sites[progress.uploaded]
-                Map result = siteService.createSiteFromUploadedShapefile(siteData.shapeFileId, site.id, site.externalId, site.name, site.description?:'No description supplied', siteData.projectId)
-                if (!result.success) {
-                    progress.errors << result.error
+            try {
+                session.uploadProgress = progress
+
+                while (!progress.cancelling && progress.uploaded < progress.total) {
+                    Map site = siteData.sites[progress.uploaded]
+                    Map result = siteService.createSiteFromUploadedShapefile(siteData.shapeFileId, site.id, site.externalId, site.name, site.description?:'No description supplied', siteData.projectId, false)
+                    if (!result.success) {
+                        progress.errors << [error:result.error, detail:result.detail]
+                    }
+                    progress.uploaded = progress.uploaded + 1
                 }
-                progress.uploaded = progress.uploaded + 1
             }
-        }
-        finally {
-            progress.finished = true
+            finally {
+                progress.finished = true
+            }
+
+            def result = [message:'success', progress:progress]
+            render result as JSON
         }
 
-        def result = [message:'success', progress:progress]
-        render result as JSON
     }
 
     def siteUploadProgress() {

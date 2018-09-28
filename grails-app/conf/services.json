@@ -34,6 +34,12 @@
       "categories": ["Managing threats"]
    },
    {
+      "output": "RLP - Debris removal",
+      "name": "Debris removal",
+      "id": 34,
+      "categories": ["Restoring condition"]
+   },
+   {
       "output": "RLP - Management plan development",
       "name": "Developing farm/project/site management plan",
       "id": 6,
@@ -49,8 +55,8 @@
       ]
    },
    {
-      "output": "RLP - Establishing Agreeemnts",
-      "name": "Establishing agreements",
+      "output": "RLP - Establishing Agreements",
+      "name": "Establishing and maintaining agreements",
       "id": 8,
       "categories": ["Project initiation activities"]
    },
@@ -62,13 +68,13 @@
    },
    {
       "output": "RLP - Establishing ex-situ breeding programs",
-      "name": "Establishing ex-situ breeding program",
+      "name": "Establishing and maintaining breeding programs",
       "id": 10,
       "categories": ["Create safe havens"]
    },
    {
       "output": "RLP - Establishing monitoring regimes",
-      "name": "Establishing monitoring regimes",
+      "name": "Establishing and maintaining monitoring regimes",
       "id": 11,
       "categories": ["Project initiation activities"]
    },
@@ -190,6 +196,15 @@
       ]
    },
    {
+      "output": "RLP - Site preparation",
+      "name": "Site preparation",
+      "id": 35,
+      "categories": [
+         "Improving habitat",
+         "Restore site condition"
+      ]
+   },
+   {
       "output": "RLP - Skills and knowledge survey",
       "name": "Skills and knowledge survey",
       "id": 29,
@@ -221,11 +236,5 @@
       "name": "Weed distribution survey",
       "id": 33,
       "categories": ["Monitoring activities"]
-   },
-   {
-      "output": "RLP - Debris removal",
-      "name": "Debris removal",
-      "id": 34,
-      "categories": ["Restoring condition"]
    }
 ]

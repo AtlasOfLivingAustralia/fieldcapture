@@ -6,4 +6,8 @@
 //= require forms.js
 //= require wms
 //= require mapWithFeatures.js
+//= require leaflet-manifest.js
+//= require modal-fullscreen-bootstrap-2.3.2/js/bootstrap-modal-fullscreen.js
+//= require geojson2svg/1.2.3/geojson2svg
+//= require feature.js
 //= require activity.js

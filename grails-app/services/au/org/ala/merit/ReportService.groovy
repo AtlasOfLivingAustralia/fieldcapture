@@ -657,7 +657,7 @@ class ReportService {
 
         def criteria = [
                 type:'image',
-                public:true,
+                "public":true,
                 thirdPartyConsentDeclarationMade: true,
                 max:max,
                 offset:offset,
@@ -673,7 +673,7 @@ class ReportService {
         def max = 5
         def criteria = [
                 type:'image',
-                public:true,
+                "public":true,
                 thirdPartyConsentDeclarationMade: true,
                 max:1,
                 offset:0,

@@ -15,32 +15,6 @@ import java.text.SimpleDateFormat
 
 class ProjectService  {
 
-    static Closure documentStageComparitor = {a, b ->
-        String stageA = a.stage
-        String stageB = b.stage
-        if (!stageA && !stageB) {
-            return 0
-        }
-        else if (!stageA) {
-            return 1
-        }
-        else if (!stageB) {
-            return -1
-        }
-        else {
-            try {
-                int stageNumA = Integer.parseInt(stageA)
-                int stageNumB = Integer.parseInt(stageB)
-                return stageNumA - stageNumB
-            }
-            catch (NumberFormatException e) {
-                return 0
-            }
-
-        }
-        return a.stage<=>b.stage
-    }
-
     static final String OUTCOMES_OUTPUT_TYPE = 'Outcomes'
     static final String STAGE_OUTCOMES_OUTPUT_TYPE = ''
     static final String COMPLETE = 'completed'
@@ -391,7 +365,7 @@ class ProjectService  {
             Map resp = update(projectId, [planStatus:PLAN_UNLOCKED])
 
             if (resp.resp && !resp.resp.error) {
-                Map doc = [name:"Approval to correct project information for "+project.projectId, projectId:projectId, type:'text', role:'approval',filename:project.projectId+'-correction-approval.txt', readOnly:true, public:false]
+                Map doc = [name:"Approval to correct project information for "+project.projectId, projectId:projectId, type:'text', role:'approval',filename:project.projectId+'-correction-approval.txt', readOnly:true, "public":false]
                 String user = userService.getCurrentUserDisplayName()
                 String content = "User ${user} has unlocked project "+project.projectId+" for correction. \nDeclaration:\n"+approvalText
                 documentService.createTextDocument(doc, content)
@@ -472,7 +446,7 @@ class ProjectService  {
         def htmlTxt = createHTMLStageReport(param)
         def dateWithTime = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss")
         def name = project?.grantId + '_' + stageName + '_' + dateWithTime.format(new Date()) + ".pdf"
-        def doc = [name: name, projectId: projectId, saveAs: 'pdf', type: 'pdf', role: 'stageReport', filename: name, readOnly: true, public: false, stage: stageNum]
+        def doc = [name: name, projectId: projectId, saveAs: 'pdf', type: 'pdf', role: 'stageReport', filename: name, readOnly: true, "public": false, stage: stageNum]
         documentService.createTextDocument(doc, htmlTxt)
     }
 
@@ -515,7 +489,7 @@ class ProjectService  {
     private void createReportApprovalDocument(Map project, Map reportDetails) {
         def readableId = project.grantId + (project.externalId?'-'+project.externalId:'')
         def name = "${readableId} ${reportDetails.stage} approval"
-        def doc = [name:name, projectId:project.projectId, type:'text', role:'approval',filename:name, readOnly:true, public:false, reportId:reportDetails.reportId]
+        def doc = [name:name, projectId:project.projectId, type:'text', role:'approval',filename:name, readOnly:true, "public":false, reportId:reportDetails.reportId]
         documentService.createTextDocument(doc, (project as JSON).toString())
     }
 
@@ -1300,12 +1274,15 @@ class ProjectService  {
                 scoreCopy.putAll(score)
 
                 Map scoreData = findScore(score.scoreId, scoreSummary?.targets)
-                scoreCopy.target = scoreData?.target ?: 0
-                scoreCopy.result = scoreData?.result ?: [result:0]
+                if (scoreData?.target) {
+                    scoreCopy.target = scoreData?.target ?: 0
+                    scoreCopy.result = scoreData?.result ?: [result:0]
 
-                deliveredAgainstTargets += scoreCopy.result?.result ?: 0
+                    deliveredAgainstTargets += scoreCopy.result?.result ?: 0
 
-                copy.scores << scoreCopy
+                    copy.scores << scoreCopy
+                }
+
             }
             dashboard.services << copy
         }

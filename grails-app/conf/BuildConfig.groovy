@@ -34,8 +34,33 @@ if (Environment.current == Environment.DEVELOPMENT) {
     }
     def pluginLocation = props.getProperty("ecodata-client-plugin.location") ?: '../ecodata-client-plugin'
     grails.plugin.location.'ecodata-client-plugin' = pluginLocation
-
 }
+
+
+clover {
+    on = false // Slows down testing individual classes too much.  Override by passing -clover.on to test-app e.g. grails test-app -clover.on unit:
+    reports.dir = "target/clover/report"
+    reporttask = { ant, binding, self ->
+        ant.mkdir(dir: "${clover.reports.dir}")
+        ant.'clover-report' {
+
+            ant.current(outfile: "${clover.reports.dir}") {
+                format(type: "html")
+                ant.columns {
+                    lineCount()
+                    complexity()
+                    filteredElements(format: "bar")
+                    uncoveredElements(format: "raw")
+                    totalElements(format: "raw")
+                    totalPercentageCovered()
+                }
+            }
+        }
+        ant.'clover-check'(target: "1%", haltOnFailure: true) { }
+
+    }
+}
+
 def openhtmltopdfversion = '0.0.1-RC4'
 
 grails.project.dependency.resolver = "maven"
@@ -79,6 +104,7 @@ grails.project.dependency.resolution = {
         compile "org.apache.httpcomponents:httpclient:4.4.1"
         compile "org.apache.pdfbox:pdfbox:2.0.4"
         build "com.google.guava:guava:21.0"
+        test 'org.openclover:clover:4.3.0'
     }
 
     plugins {
@@ -115,8 +141,10 @@ grails.project.dependency.resolution = {
 
         compile ':cookie:1.4'
 
+        test 'org.grails.plugins:clover:4.3.0'
+
         if (Environment.current != Environment.DEVELOPMENT) {
-            compile ":ecodata-client-plugin:0.7"
+            compile ":ecodata-client-plugin:1.1"
         }
 
     }

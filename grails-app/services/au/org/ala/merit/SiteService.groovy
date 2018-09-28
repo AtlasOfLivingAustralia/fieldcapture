@@ -1,14 +1,13 @@
 package au.org.ala.merit
 
 import com.vividsolutions.jts.geom.Geometry
-import com.vividsolutions.jts.geom.Point
-import com.vividsolutions.jts.io.WKTReader
 import grails.converters.JSON
-import org.codehaus.groovy.grails.web.mapping.LinkGenerator
+import org.apache.http.HttpStatus
 import org.geotools.geojson.geom.GeometryJSON
 import org.geotools.kml.v22.KMLConfiguration
 import org.geotools.xml.Parser
 import org.opengis.feature.simple.SimpleFeature
+import org.springframework.web.multipart.MultipartFile
 
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
@@ -17,11 +16,13 @@ class SiteService {
 
     def webService, grailsApplication, commonService, metadataService, userService, reportService
     def documentService
-    LinkGenerator grailsLinkGenerator
+    SpatialService spatialService
 
-    def list() {
-        webService.getJson(grailsApplication.config.ecodata.baseUrl + 'site/').list
-    }
+    public static final String SITE_SOURCE_DRAWN = 'drawn'
+    public static final String SITE_SOURCE_SPATIAL_PORTAL = 'pid'
+
+    /** A site with the extent derived from the convex hull of a set of geojson features */
+    public static final String SITE_TYPE_COMPOUND = 'compound'
 
     def projectsForSite(siteId) {
         get(siteId)?.projects
@@ -201,42 +202,62 @@ class SiteService {
         webService.doPost(grailsApplication.config.ecodata.baseUrl + 'project/updateSites/' + body.projectId, body)
     }
 
-    /** uploads a shapefile to the spatial portal */
-    def uploadShapefile(shapefile) {
-        def userId = userService.getUser().userId
-        def url = "${grailsApplication.config.spatial.layersUrl}/shape/upload/shp?user_id=${userId}&api_key=${grailsApplication.config.api_key}"
-
-        return webService.postMultipart(url, [:], shapefile)
+    /**
+     * Delegates to the SpatialService
+     * @see SpatialService#uploadShapefile(MultipartFile)
+     */
+    Map uploadShapefile(MultipartFile shapefile) {
+        spatialService.uploadShapefile(shapefile)
     }
 
     /**
      * Creates a site for a specified project from the supplied site data.
      * @param shapeFileId the id of the shapefile in the spatial portal
-     * @param siteId the id of the shape to use (as returned by the spatial portal upload)
+     * @param featureId the id of the shapefile feature to use (as returned by the spatial portal upload)
      * @param name the name for the site
      * @param description the description for the site
      * @param projectId the project the site should be associated with.
      */
-    def createSiteFromUploadedShapefile(shapeFileId, siteId, externalId, name, description, projectId) {
-        def baseUrl = "${grailsApplication.config.spatial.layersUrl}/shape/upload/shp"
-        def userId = userService.getUser().userId
+    Map createSiteFromUploadedShapefile(String shapeFileId, String featureId, String externalId, String name, String description, String projectId, boolean persistInSpatialPortal = true) {
 
-        def site = [name:name, description: description, user_id:userId, api_key:grailsApplication.config.api_key]
-
-        def url = "${baseUrl}/${shapeFileId}/${siteId}"
-
-        def result = webService.doPost(url, site)
+        Map returnValue
+        Map result = spatialService.createObjectFromShapefileFeature(shapeFileId, featureId, name, description)
 
         if (!result.error && !result.resp.error) {
             String pid = result.resp.id
+            String source = SITE_SOURCE_SPATIAL_PORTAL
 
-            Map geometry = siteGeometry(pid)
-            createSite(projectId, name, description, externalId, 'pid', geometry, pid)
-            return [success:true]
+            Map geomResult = spatialService.objectGeometry(pid)
+            if (geomResult.statusCode == HttpStatus.SC_OK) {
+                // We use the spatial portal for it's shapefile handling and re-projection to WGS84 but don't want the
+                // site to remain.
+                if (!persistInSpatialPortal && pid) {
+                    Integer resp = spatialService.deleteFromSpatialPortal(pid)
+                    if (resp == HttpStatus.SC_OK) {
+                        pid = null
+                        source = SITE_SOURCE_DRAWN
+                    }
+                }
+                result = createSite(projectId, name, description, externalId, source, geomResult.resp, pid)
+                if (result.statusCode == HttpStatus.SC_OK && result.resp?.siteId) {
+                    returnValue = [success:true, siteId:result.resp.siteId]
+                }
+                else {
+                    returnValue = [success:false, error: "Failed to create site in ecodata: ${result.error}"]
+                }
+            }
+            else {
+                returnValue = [success:false, error:"Failed to retrieve geometry for feature $featureId of shapefile $shapeFileId"]
+            }
+            if (returnValue.success == false) {
+                spatialService.deleteFromSpatialPortal(pid)
+            }
         }
         else {
-            return [success:false, error:"Failed to create site for: $name"]
+            String detailedError = result.error ?: result.resp.error
+            returnValue = [success:false, error:"Failed to create site for: $name", detail:detailedError]
         }
+        returnValue
     }
 
     /**
@@ -309,12 +330,6 @@ class SiteService {
                 extractPlacemarks(feature.getAttribute('Feature'), placemarks)
             }
         }
-    }
-
-
-    Map siteGeometry(String spatialPortalSiteId) {
-        def getGeoJsonUrl = "${grailsApplication.config.spatial.baseUrl}/ws/shape/geojson"
-        webService.getJson("${getGeoJsonUrl}/${spatialPortalSiteId}")
     }
 
     private Map createSite(String projectId, String name, String description, String externalId, String source, Map geometry, String geometryPid = null) {

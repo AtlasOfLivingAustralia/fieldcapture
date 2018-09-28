@@ -1,6 +1,6 @@
 package au.org.ala.merit
 
-
+import au.org.ala.merit.command.SaveReportDataCommand
 import grails.converters.JSON
 import org.apache.http.HttpStatus
 import static ReportService.ReportMode
@@ -59,9 +59,9 @@ class ProgramController {
         }
 
         [about   : [label: 'Management Unit Overview', visible: true, stopBinding: false, type: 'tab', servicesDashboard:[visible: programVisible, planning:false, services:servicesWithScores]],
-         projects: [label: 'Reporting', visible: true, stopBinding: false, type:'tab', projects:projects, reports:program.reports?:[], reportOrder:reportOrder, hideDueDate:true],
-         sites   : [label: 'Sites', visible: programVisible, stopBinding: true, type:'tab'],
-         admin   : [label: 'Admin', visible: hasAdminAccess, type: 'tab']]
+         projects: [label: 'MU Reporting', visible: true, stopBinding: false, type:'tab', projects:projects, reports:program.reports?:[], reportOrder:reportOrder, hideDueDate:true],
+         sites   : [label: 'MU Sites', visible: programVisible, stopBinding: true, type:'tab'],
+         admin   : [label: 'MU Admin', visible: hasAdminAccess, type: 'tab']]
     }
 
     @PreAuthorise(accessLevel='siteAdmin')
@@ -295,27 +295,16 @@ class ProgramController {
     }
 
     @PreAuthorise(accessLevel = 'editor')
-    def saveReport(String id, String reportId) {
-        if (!id || !reportId) {
-            error('An invalid report was selected for editing', id)
-            return
-        }
-
-        Map report = reportService.get(reportId)
-        if (reportService.isSubmittedOrApproved(report)) {
-            response.status = HttpStatus.SC_UNAUTHORIZED
-            Map resp = [message:'Submitted or approved reports cannot be modified']
-            render resp as JSON
+    def saveReport(SaveReportDataCommand saveReportDataCommand) {
+        Map result
+        if (saveReportDataCommand.report?.programId != params.id) {
+            result = [status:HttpStatus.SC_UNAUTHORIZED, error:"You do not have permission to save this report"]
         }
         else {
-            Map activityData = request.JSON
-            Map result = activityService.update(report.activityId, activityData)
-
-            // TODO handle photopoints, but will have to be adjusted for multi-site
-            Map photoPoints = activityData.remove('photoPoints')
-
-            render result as JSON
+            result = saveReportDataCommand.save()
         }
+
+        render result as JSON
 
     }
 
@@ -363,7 +352,7 @@ class ProgramController {
         render resp as JSON
     }
 
-    @PreAuthorise(accessLevel = 'admin')
+    @PreAuthorise(accessLevel = 'admin', projectIdParam = 'entityId')
     def addUserAsRoleToProgram() {
         String userId = params.userId
         String programId = params.entityId
@@ -380,7 +369,7 @@ class ProgramController {
         }
     }
 
-    @PreAuthorise(accessLevel = 'admin')
+    @PreAuthorise(accessLevel = 'admin', projectIdParam = 'entityId')
     def removeUserWithRoleFromProgram() {
         String userId = params.userId
         String role = params.role

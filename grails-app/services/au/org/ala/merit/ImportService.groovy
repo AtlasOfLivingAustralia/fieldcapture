@@ -9,6 +9,7 @@ import org.apache.commons.lang.StringUtils
 import org.geotools.geojson.geom.GeometryJSON
 import org.grails.plugins.csv.CSVMapReader
 import org.joda.time.DateTime
+import org.springframework.web.multipart.MultipartFile
 
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
@@ -900,174 +901,20 @@ class ImportService {
         return activity
     }
 
-    def doNlpMigration(InputStream projects, boolean preview) {
-
-        cacheService.clear(PROJECTS_CACHE_KEY)
-        def reader = new InputStreamReader(projects, 'Cp1252')
-        def errors = []
-        def results = []
-        try {
-            new CSVMapReader(reader).eachWithIndex { rowMap, i ->
-
-                def grantId = rowMap['Grant ID']?.trim()
-                def externalId = rowMap['Current External ID']?.trim()
-                def migrate = rowMap['Migrate shell to NLP'] == 'Y'
-                if (migrate) {
-
-                    def project = findProjectByGrantAndExternalId(grantId, externalId)
-                    if (project) {
-
-                        def alreadyMigrated = findProjectsByOriginalProjectId(project.projectId)
-
-                        if (alreadyMigrated) {
-                            errors << "Project ${grantId}, ${externalId} has already been migrated"
-                        }
-                        else {
-                            def config = [name: rowMap['NLP Project name'],
-                                          migrateSites:rowMap['Migrate Sites to NLP'] == 'Y',
-                                          migrateGrantManagers:rowMap['Migrate Grant Manager'] == 'Y',
-                                          migrateEditors:rowMap['Migrate Editor'] == 'Y' ,
-                                          migrateAdmins:rowMap['Migrate Admin'] == 'Y',
-                                          migrateDocuments:rowMap['Migrate attachments to NLP'] == 'Y',
-                                          migrateActivities:rowMap['Migrate activities to NLP'] == 'Y',
-                                          funding:rowMap['Funding'] as Long,
-                                          preview: preview]
-                            results << migrateToNlp(project.projectId, config)
-                        }
-                    }
-                    else {
-                        errors << "Unable to find existing project with Grant ID=${grantId}, External ID=${externalId}"
-                    }
-                }
-                else {
-                    errors << "Project ${grantId}, ${externalId} specified as not to migrate"
-                }
-
-            }
-        }
-        catch (Exception e) {
-            log.error("Error processing projects to migrate to the NLP", e)
-            errors << e.message
-        }
-        return [errors: errors, results: results]
-    }
-
-    private static def NLP_CHANGE_OVER_DATE = '2014-12-31T14:00:00Z';
-    private def migrateToNlp(projectId, config) {
-        def project = projectService.get(projectId, 'all')
-
-        def sites = project.remove('sites')
-        def activities = project.remove('activities')
-        def documents = project.remove('documents')
-        def users = projectService.getMembersForProjectId(projectId)
-
-        project.remove('projectId')
-        project.remove('outputTargets')
-        def timeline = project.remove('timeline')
-
-        def oldPrjTimeline = []
-        def newPrjTimeline = []
-        int newStage = 1
-        timeline.each {
-            if (it.toDate <= NLP_CHANGE_OVER_DATE) {
-                oldPrjTimeline << it
-            }
-            else {
-                it.name = "Stage ${newStage}"
-                newPrjTimeline << it
-                newStage ++
-            }
-        }
-
-        def toUpdate = [name:'[C4OC] '+project.name, plannedEndDate:NLP_CHANGE_OVER_DATE, timeline:oldPrjTimeline]
-        if (!config.preview) {
-            projectService.update(projectId, toUpdate)
-        }
-        // New project.
-        project.timeline = newPrjTimeline
-        project.name = config.name?:project.name
-        project.originalProjectId = projectId // In case we need this later.
-        project.grantId = 'to be assigned'
-        project.externalId = 'to be assigned'
-        project.funding = config.funding?:0
-        project.plannedStartDate = NLP_CHANGE_OVER_DATE
-        project.associatedProgram = 'National Landcare Programme'
-        project.associatedSubProgram = 'Regional Funding'
-
-        // Save the new project.
-        def newId = 'Temp New ID'
-        if (!config.preview) {
-            newId = projectService.update('', project).resp.projectId
-        }
-
-        def sitesToUpdate = []
-        if (config.migrateSites) {
-            // Add the existing sites to the new project.
-            sitesToUpdate = sites.collect{it.siteId}
-            if (!config.preview) {
-                siteService.updateProjectAssociations([projectId: newId, sites: sitesToUpdate])
-            }
-        }
-
-        def migratedUsers = []
-        // Add existing users to new projects
-        users.each {
-            if ((it.role == 'caseManager' && config.migrateGrantManagers) ||
-                    (it.role == 'editor' && config.migrateEditors) ||
-                    (it.role == 'admin' && config.migrateAdmins)) {
-
-                migratedUsers << it
-                if (!config.preview) {
-                    userService.addUserAsRoleToProject(it.userId, newId, it.role)
-                }
-            }
-        }
-
-        def docsToCopy = []
-        if (config.migrateDocuments) {
-            documents.each { document ->
-                document.documentId = ''
-                document.projectId = newId
-                document.remove('url')
-                document.remove('thumbnailUrl')
-                docsToCopy << document
-                if (!config.preview) {
-                    documentService.updateDocument(document)
-                }
-            }
-        }
-
-        def activitiesToUpdate = []
-
-        if (config.migrateActivities) {
-            def nlpActivities = []
-            activities.each {
-                if (it.plannedEndDate >= NLP_CHANGE_OVER_DATE) {
-                    nlpActivities << it
-                }
-            }
-            activitiesToUpdate = nlpActivities.collect{it.activityId}
-            if (!config.preview) {
-                activityService.bulkUpdateActivities(activitiesToUpdate, [projectId: newId])
-            }
-        }
-        [origProject:toUpdate, newProject:project, sites:sitesToUpdate, activities:activitiesToUpdate, documents:docsToCopy]
-    }
-
     /**
      * Bulk imports sites for many projects.  The supplied shapefile must have attributes GRANT_ID and EXTERNAL_I
      */
-    def bulkImportSites(shapefile) {
-        def result =  siteService.uploadShapefile(shapefile)
+    def bulkImportSites(MultipartFile shapefile) {
+        Map result = siteService.uploadShapefile(shapefile)
 
         cacheService.clear(PROJECTS_CACHE_KEY)
 
         def errors = []
         def sites = []
-        if (!result.error && result.content.size() > 1) {
+        if (!result.error && result.resp.size() > 1) {
             def now = DateUtils.displayFormat(new DateTime())
             def projectsWithSites = [:]
-            def content = result.content
+            def content = result.resp
             def shapeFileId = content.remove('shp_id')
 
             def shapes = content.collect { key, value ->
@@ -1114,9 +961,9 @@ class ImportService {
                     def description = shape.attributes[siteDescriptionAttribute] ?: "Imported on ${now}"
                     def siteExternalId = shapeFileId+'-'+shape.id
 
-                    def resp = siteService.createSiteFromUploadedShapefile(shapeFileId, shape.id, siteExternalId, name, description, project.projectId)
-                    if (resp?.resp.siteId) {
-                        projectDetails.sites << [siteId:resp.resp.siteId, name:name, description:description]
+                    def resp = siteService.createSiteFromUploadedShapefile(shapeFileId, shape.id, siteExternalId, name, description, project.projectId, false)
+                    if (resp?.siteId) {
+                        projectDetails.sites << [siteId:resp.siteId, name:name, description:description]
                         sites << name
                     }
                     else {

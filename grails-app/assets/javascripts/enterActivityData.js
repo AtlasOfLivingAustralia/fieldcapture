@@ -1,6 +1,5 @@
 //= require forms-manifest.js
 //= require_self
-$.fn.select2.defaults.set( "width", "100%" );
 function validateDateField(dateField) {
     var date = stringToDate($(dateField).val());
 
@@ -18,13 +17,16 @@ var Master = function (activityId, config) {
         validationContainerSelector:'#validation-container',
         timeoutMessageSelector:'#timeoutMessage',
         activityUpdateUrl:fcConfig.activityUpdateUrl,
-        minOptionalSectionsCompleted: 1
+        minOptionalSectionsCompleted: 1,
+        activityStorageKey: 'activity-'+activityId
     };
+
     var options = _.extend({}, defaults, config);
+    var activityStorageKey = options.activityStorageKey;
 
     // client models register their name and methods to participate in saving
     self.register = function (modelInstanceName, getMethod, isDirtyMethod, resetMethod, saveCallback) {
-        this.subscribers.push({
+        self.subscribers.push({
             model: modelInstanceName,
             get: getMethod,
             isDirty: isDirtyMethod,
@@ -109,9 +111,9 @@ var Master = function (activityId, config) {
         return valid;
     };
 
-    self.modelAsJS = function() {
+    self.modelAsJS = function(valid) {
         var activityData, outputs = [];
-        $.each(this.subscribers, function(i, obj) {
+        $.each(self.subscribers, function(i, obj) {
             if (obj.isDirty()) {
                 if (obj.model === 'activityModel') {
                     activityData = obj.get();
@@ -130,11 +132,20 @@ var Master = function (activityId, config) {
         }
         activityData.outputs = outputs;
 
+        // We can't allow an activity that failed validation to be marked as finished.
+        if (valid === false) {
+            if (!activityData.progress || activityData.progress === 'finished') {
+                activityData.progress = 'started';
+                // This is needed to ensure the progress field is saved.
+                activityData.activityId = activityData.activityId || self.activityData().activityId;
+            }
+        }
+
         return activityData;
 
     };
     self.modelAsJSON = function() {
-        var jsData = this.modelAsJS();
+        var jsData = self.modelAsJS();
 
         return jsData ? JSON.stringify(jsData) : undefined;
     };
@@ -166,26 +177,18 @@ var Master = function (activityId, config) {
 
         var valid = self.validate();
 
-        var jsData = self.modelAsJS();
+        var jsData = self.modelAsJS(valid);
 
         if (jsData === undefined) {
             alert("Nothing to save.");
             return;
         }
 
-        // We can't allow an activity that failed validation to be marked as finished.
-        if (!valid) {
-            if (!jsData.progress || jsData.progress === 'finished') {
-                jsData.progress = 'started';
-                jsData.activityId = jsData.activityId || self.activityData().activityId;
-            }
-        }
-
         // Don't allow another save to be initiated.
         blockUIWithMessage("Saving activity data...");
 
         var toSave = JSON.stringify(jsData);
-        var activityStorageKey = 'activity-'+activityId;
+
         amplify.store(activityStorageKey, toSave);
 
         function handleSessionTimeout() {
@@ -244,6 +247,10 @@ var Master = function (activityId, config) {
         });
     };
 
+    self.deleteSavedData = function() {
+        amplify.store(activityStorageKey, null);
+    };
+
     self.performSaveCallbacks = function(saveResponse, valid, saveCallback) {
         if (saveResponse) {
             $.each(this.subscribers, function(i, obj) {
@@ -258,6 +265,44 @@ var Master = function (activityId, config) {
     };
 
     autoSaveModel(self, null, {preventNavigationIfDirty:true, healthCheckUrl:options.healthCheckUrl});
+
+    if (amplify.store(activityStorageKey)) {
+        bootbox.alert("Unsaved data has been found for this form.  Please press 'Save' to keep this data or 'Cancel' to discard it");
+    }
+};
+
+/**
+ * Extends the Master function to support the additional site information that can be recorded in a report form.
+ * @param reportId the id of the report
+ * @param activityId the activity associated with the report.
+ * @param reportSite the site associated with the report
+ * @param featureCollection the object used to track changes to site features
+ * @param config configuration for the Master function
+ */
+var ReportMaster = function(reportId, activityId, reportSite, featureCollection, config) {
+    var self = this;
+    Master.call(self, activityId, config);
+
+    var masterToJS = self.modelAsJS;
+    self.modelAsJS = function(valid) {
+
+        var original = masterToJS(valid);
+        if (original) {
+            var payload = {
+                reportId: reportId,
+                activityId: activityId,
+                activity: original
+            };
+
+            // The site can't be dirty unless we've modified an output.
+            if (featureCollection && featureCollection.isDirty()) {
+                payload.site = featureCollection.toSite(reportSite);
+            }
+
+            return payload;
+        }
+
+    }
 };
 
 
@@ -413,53 +458,4 @@ function ActivityHeaderViewModel (activity, site, project, metaModel, themes, co
             }
         }
     };
-};
-
-initialiseOutputViewModel = function(outputViewModelName, dataModel, elementId, activity, output, master, config) {
-    var viewModelInstance = outputViewModelName + 'Instance';
-
-    var context = {
-        project:fcConfig.project,
-        activity:activity,
-        documents:activity.documents,
-        site:activity.site
-    };
-    ecodata.forms[viewModelInstance] = new ecodata.forms[outputViewModelName](output, dataModel, context, config);
-    ecodata.forms[viewModelInstance].loadData(output.data);
-
-    // dirtyFlag must be defined after data is loaded
-    ecodata.forms[viewModelInstance].dirtyFlag = ko.simpleDirtyFlag(ecodata.forms[viewModelInstance], false);
-
-    ko.applyBindings(ecodata.forms[viewModelInstance], document.getElementById(elementId));
-
-    // this resets the baseline for detecting changes to the model
-    // - shouldn't be required if everything behaves itself but acts as a backup for
-    //   any binding side-effects
-    // - note that it is not foolproof as applying the bindings happens asynchronously and there
-    //   is no easy way to detect its completion
-    ecodata.forms[viewModelInstance].dirtyFlag.reset();
-
-    // register with the master controller so this model can participate in the save cycle
-    master.register(ecodata.forms[viewModelInstance], ecodata.forms[viewModelInstance].modelForSaving,
-        ecodata.forms[viewModelInstance].dirtyFlag.isDirty, ecodata.forms[viewModelInstance].dirtyFlag.reset);
-
-    // Check for locally saved data for this output - this will happen in the event of a session timeout
-    // for example.
-    var savedData = amplify.store('activity-' + activity.activityId);
-    var savedOutput = null;
-    if (savedData) {
-        var outputData = $.parseJSON(savedData);
-        if (outputData.outputs) {
-            $.each(outputData.outputs, function (i, tmpOutput) {
-                if (tmpOutput.name === output.name) {
-                    if (tmpOutput.data) {
-                        savedOutput = tmpOutput.data;
-                    }
-                }
-            });
-        }
-    }
-    if (savedOutput) {
-        ecodata.forms[viewModelInstance].loadData(savedOutput);
-    }
 };

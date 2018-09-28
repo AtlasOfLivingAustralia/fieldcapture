@@ -1,6 +1,8 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.command.SaveReportDataCommand
 import grails.test.mixin.TestFor
+import org.apache.http.HttpStatus
 import spock.lang.Specification
 
 @TestFor(ProgramController)
@@ -9,6 +11,7 @@ class ProgramControllerSpec extends Specification {
     ProgramService programService = Mock(ProgramService)
     ReportService reportService = Mock(ReportService)
     UserService userService = Mock(UserService)
+    ActivityService activityService = Mock(ActivityService)
 
     String adminUserId = 'admin'
     String editorUserId = 'editor'
@@ -17,6 +20,7 @@ class ProgramControllerSpec extends Specification {
     def setup() {
         controller.programService = programService
         controller.reportService = reportService
+        controller.activityService = activityService
     }
 
     def "when viewing a program report, the model will be customized for program reporting"() {
@@ -87,6 +91,30 @@ class ProgramControllerSpec extends Specification {
         1 * reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT) >> [report:program.reports[0], editable:true]
         1 * reportService.lockForEditing(program.reports[0])
         view == '/activity/activityReport'
+    }
+
+    def "report data shouldn't be saved if the project id of the report doesn't match the project id checked by the annotation"() {
+        setup:
+        Map props = [
+                activityId:'a1',
+                activity:[
+                        test1:'test'
+                ],
+                reportId:'r1',
+                reportService:reportService,
+                activityService: activityService
+
+        ]
+        reportService.get(props.reportId) >> [programId:'p2']
+        SaveReportDataCommand cmd = new SaveReportDataCommand(props)
+
+        when:
+        params.projectId = 'p1'
+        controller.saveReport(cmd)
+
+        then:
+        response.json.error != null
+        response.json.status == HttpStatus.SC_UNAUTHORIZED
     }
 
 

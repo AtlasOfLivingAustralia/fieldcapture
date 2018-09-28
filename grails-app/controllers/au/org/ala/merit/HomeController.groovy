@@ -21,17 +21,6 @@ class HomeController {
     def statisticsFactory
     def blogService
 
-    @PreAuthorise(accessLevel = 'alaAdmin', redirectController = "admin")
-    def advanced() {
-        [
-                projects   : projectService.list(),
-                sites      : siteService.list(),
-                //sites: siteService.injectLocationMetadata(siteService.list()),
-                activities : activityService.list(),
-                assessments: activityService.assessments(),
-        ]
-    }
-
     def index() {
         HubSettings hubSettings = SettingService.hubConfig
         if (hubSettings.overridesHomePage()) {
