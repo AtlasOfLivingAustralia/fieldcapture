@@ -30,6 +30,7 @@ enum SettingPageType {
     NEWS ("news","News","fielddata.news.text"),
     CONTACTS ("contacts","Contacts","fielddata.contacts.text"),
     INTRO ("intro","User Introduction","fielddata.introduction.text"),
+    REEF_2050_PLAN_REPORT("reef2050PlanReport", "Reef 2050 Plan Stage 3 Report Text", "fielddata.reef2050Plan.report"),
     DECLARATION ('declaration', "Legal Declaration", "fielddata.declaration.text"),
     ESP_DECLARATION('espDeclaration', "Legal Declaration", 'fielddata.espDeclaration.text'),
     ORGANISATION_DECLARATION ('organisation-declaration', "Legal Declaration", "fielddata.organisation.declarationText"),
