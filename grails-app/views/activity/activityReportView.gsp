@@ -26,6 +26,7 @@
         speciesSearchUrl: "${createLink(controller:'project', action:'searchSpecies', id:activity.projectId, params:[surveyName:metaModel.name])}",
         speciesImageUrl: "${createLink(controller:'species', action:'speciesImage')}",
         context:${fc.modelAsJavascript(model:context)},
+        readonly:true,
         returnTo: "${returnTo}"
         },
         here = document.location.href;
@@ -118,7 +119,6 @@
 
 <asset:javascript src="common.js"/>
 <asset:javascript src="forms-manifest.js"/>
-<asset:deferredScripts/>
 
 <script>
 
@@ -130,30 +130,27 @@
             document.location.href = fcConfig.returnTo;
         });
 
+        var metaModel = JSON.parse('${metaModel ? metaModel.toString().replace("'", "\\u0027") : '{}'}');
+
         var viewModel = new ActivityViewModel(
             ${(activity as JSON).toString()},
             ${site ?: 'null'},
             fcConfig.project,
-            ${metaModel ?: 'null'},
+            metaModel,
             ${themes ?: 'null'});
 
         ko.applyBindings(viewModel);
-
-        var mapFeatures = $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
-        if(mapFeatures !=null && mapFeatures.features !== undefined && mapFeatures.features.length >0){
-            init_map_with_features({
-                    mapContainer: "smallMap",
-                    zoomToBounds:true,
-                    zoomLimit:16,
-                    featureService: "${createLink(controller: 'proxy', action:'feature')}",
-                    wmsServer: "${grailsApplication.config.spatial.geoserverUrl}"
-                },
-                mapFeatures
-            );
+        if (metaModel && metaModel.supportsSites) {
+            var reportSite = JSON.parse('${reportSite ? (reportSite as JSON).toString().replace("'", "\\u0027") : '{}'}');
+            var formFeatures = new ecodata.forms.FeatureCollection(reportSite ? reportSite.features : []);
+            fcConfig.featureCollection = formFeatures;
         }
+
         $('.imageList a[target="_photo"]').attr('rel', 'gallery').fancybox({type:'image', autoSize:true, nextEffect:'fade', preload:0, 'prevEffect':'fade'});
 
     });
 </script>
+<asset:deferredScripts/>
+
 </body>
 </html>
