@@ -615,14 +615,12 @@ class ReportController {
     }
 
     def reef2050PlanActionReport() {
-        Map model
+        Map model = reef2050PlanActionReportModel(true)
         String reportStaticText = settingService.getSettingText(SettingPageType.REEF_2050_PLAN_REPORT)
         if (reportStaticText) {
-            model = [reportText:reportStaticText]
+            model.reportText = reportStaticText
         }
-        else {
-            model = reef2050PlanActionReportModel(true)
-        }
+
         model
     }
 
