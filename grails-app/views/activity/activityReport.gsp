@@ -96,6 +96,7 @@
         var returnTo = "${returnTo}";
         var activity = JSON.parse('${(activity as JSON).toString().encodeAsJavaScript()}');
         var reportSite = JSON.parse('${reportSite ? (reportSite as JSON).toString().replace("'", "\\u0027") : '{}'}');
+        var projectArea = '${projectArea ? (projectArea as JSON).toString().replace("'", "\\u0027") : '{}'}';
         var reportId = '${report.reportId}';
 
         var context = {
@@ -122,7 +123,6 @@
         if (metaModel.supportsSites) {
             // Workaround for problems with IE11 and leaflet draw
             L.Browser.touch = false;
-            var projectArea = JSON.parse('${(projectArea as JSON).toString().replace("'", "\\u0027")}');
             var features = {};
 
             var mapOptions = {};
