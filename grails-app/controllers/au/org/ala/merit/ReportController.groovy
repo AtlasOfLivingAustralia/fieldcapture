@@ -15,7 +15,7 @@ import static au.org.ala.merit.DashboardTagLib.*
 
 class ReportController {
 
-    def webService, cacheService, searchService, metadataService, activityService, projectService, organisationService, commonService, statisticsFactory, reportService, userService, projectConfigurationService, pdfGenerationService
+    def webService, cacheService, searchService, metadataService, activityService, projectService, organisationService, commonService, statisticsFactory, reportService, userService, projectConfigurationService, pdfGenerationService, settingService
 
     static defaultAction = "dashboard"
 
@@ -335,8 +335,7 @@ class ReportController {
 
 
         def reports = monthlyAndQuarterlyReports(startDate, endDate)
-        render view:'_greenArmy', model:
-                [
+        render view:'_greenArmy', model: [
                  availableYears:availableYears(),
                  financialYear:financialYear,
                  monthlySummary:monthlySummary,
@@ -616,7 +615,13 @@ class ReportController {
     }
 
     def reef2050PlanActionReport() {
-        reef2050PlanActionReportModel(true)
+        Map model = reef2050PlanActionReportModel(true)
+        String reportStaticText = settingService.getSettingText(SettingPageType.REEF_2050_PLAN_REPORT)
+        if (reportStaticText) {
+            model.reportText = reportStaticText
+        }
+
+        model
     }
 
     /**

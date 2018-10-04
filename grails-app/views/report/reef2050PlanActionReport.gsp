@@ -19,11 +19,15 @@
     </g:if>
 
     <h3>Reef 2050 Plan Action Reporting</h3>
-    <g:if test="${!actions}">
-        <strong>No data was found.</strong>
+    <g:if test="${reportText}">
+        <fc:getSettingContent settingType="${au.org.ala.merit.SettingPageType.REEF_2050_PLAN_REPORT}"/>
     </g:if>
 
-    <g:else>
+
+        <g:if test="${!actions}">
+            <strong>No data was found.</strong>
+        </g:if>
+        <g:else>
 
         <div class="well">
             <strong>Progress on Reef 2050 Plan to <g:formatDate date="${endDate}" format="dd MMMM yyyy"/></strong>
@@ -154,6 +158,7 @@
         </script>
 
     </g:else>
+
 
 </div>
 
