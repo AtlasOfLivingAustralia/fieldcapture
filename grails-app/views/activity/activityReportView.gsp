@@ -57,6 +57,7 @@
                 </li>
             </ul>
         </g:if>
+        <g:render template="/output/mapInDialogViewTemplate" plugin="ecodata-client-plugin"/>
 
         <g:render template="${reportHeaderTemplate}"/>
 

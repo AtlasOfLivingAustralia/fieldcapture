@@ -43,6 +43,8 @@
 </head>
 
 <body>
+<g:render template="/output/mapInDialogEditTemplate" plugin="ecodata-client-plugin"/>
+
 <div class="${containerType} validationEngineContainer" id="validation-container">
     <div id="koActivityMainBlock">
         <g:if test="${!printView}">
