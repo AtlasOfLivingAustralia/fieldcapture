@@ -74,15 +74,20 @@ class ActivityService {
             // This check is to prevent multiple outputs of the same type being created for an activity.
             Map existingActivity = get(id)
 
-            activity.outputs?.each { output ->
-                def matchingOutput = existingActivity.outputs?.find { it.name == output.name }
-                if (matchingOutput) {
-                    if (matchingOutput.outputId != output.outputId) {
-                        log.warn("Update for activity: " + id + " contains outputs which have the same type but different IDs")
+            if (activity.outputs) {
+                activity.outputs = new ArrayList(activity.outputs) // If the array is created from a DataBinding, it creates copies when it iterates and we want inline modifcation.
+                activity.outputs?.each { output ->
+                    def matchingOutput = existingActivity.outputs?.find { it.name == output.name }
+                    if (matchingOutput) {
+                        if (matchingOutput.outputId != output.outputId) {
+                            log.warn("Update for activity: " + id + " contains outputs which have the same type but different IDs")
+                        }
+                        output.outputId = matchingOutput.outputId
+                        println output
                     }
-                    output.outputId = matchingOutput.outputId
                 }
             }
+
         }
         webService.doPost(grailsApplication.config.ecodata.baseUrl + 'activity/' + id+'?lock=true', activity)
     }
