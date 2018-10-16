@@ -42,7 +42,7 @@
 
         <tr class="header">
             <th class="outcome-priority">Secondary Regional Land Partnerships outcome(s)</th>
-            <th class="priority">Secondary Investment Priorities <fc:iconHelp container="body">Other investment priorities that will benefit from the project.</fc:iconHelp></th>
+            <th class="priority">Secondary Investment Priorities <fc:iconHelp container="body">Other investment priorities that will benefit from the project.  Delete the row if there are no secondary outcomes.</fc:iconHelp></th>
             <th class="remove"></th>
         </tr>
         </thead>
