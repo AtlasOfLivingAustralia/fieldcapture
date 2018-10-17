@@ -127,7 +127,7 @@
             L.Browser.touch = false;
             var features = {};
 
-            var mapOptions = {};
+            var mapOptions = {baseLayersName:'Google'};
             if (features && features.type) {
                 mapOptions = {selectableFeatures: features};
             }
