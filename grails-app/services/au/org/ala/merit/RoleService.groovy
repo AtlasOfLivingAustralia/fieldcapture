@@ -9,6 +9,9 @@ class RoleService {
     public static final String PROJECT_ADMIN_ROLE = 'admin'
     public static final String PROJECT_EDITOR_ROLE = 'editor'
 
+    /** MERIT only uses a subset of the roles that ecodata supports */
+    private static final List MERIT_PROJECT_ROLES = [GRANT_MANAGER_ROLE, PROJECT_ADMIN_ROLE, PROJECT_EDITOR_ROLE]
+
 
     private List roles(Boolean clearCache = false) {
         if (clearCache) {
@@ -17,11 +20,13 @@ class RoleService {
         }
 
         def roles = metadataService.getAccessLevels().collect {
-            if (it && it instanceof JSONObject && it.has('name')) {
+            if (it && it instanceof JSONObject && it.has('name') && it.name in MERIT_PROJECT_ROLES) {
                 it.name
             } else {
                 log.warn "Error getting accessLevels: ${it}"
             }
+        }.findAll{
+            it in MERIT_PROJECT_ROLES
         }
 
         return roles?:[]
