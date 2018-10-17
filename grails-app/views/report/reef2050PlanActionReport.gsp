@@ -30,7 +30,7 @@
         <g:else>
 
         <div class="well">
-            <strong>Progress on Reef 2050 Plan to <g:formatDate date="${endDate}" format="dd MMMM yyyy"/></strong>
+            <strong>Progress on Reef 2050 Plan for the period <g:formatDate date="${startDate}" format="MMMM"/> to <g:formatDate date="${endDate}" format="dd MMMM yyyy"/></strong>
             <p>
                 Please note this report ignores any facet selection you may have made.
             </p>
