@@ -20,7 +20,7 @@ class RoleService {
         }
 
         def roles = metadataService.getAccessLevels().collect {
-            if (it && it instanceof JSONObject && it.has('name') && it.name in MERIT_PROJECT_ROLES) {
+            if (it && it instanceof JSONObject && it.has('name') && it.name) {
                 it.name
             } else {
                 log.warn "Error getting accessLevels: ${it}"
