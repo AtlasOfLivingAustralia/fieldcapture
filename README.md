@@ -19,7 +19,7 @@ It is currently in use by the Australian Government Department of the environmen
 ```
 * The application expects any external configuration file to be located in the path below.  An example configuration can be found at: https://github.com/AtlasOfLivingAustralia/ala-install/blob/master/ansible/inventories/vagrant/merit-vagrant
 ```
-/data/fieldcapture/config/fielcapture-config.properties
+/data/fieldcapture/config/fieldcapture-config.properties
 ```
 This configuration file largely specifies URLs to MERIT dependencies.  See https://github.com/AtlasOfLivingAustralia/fieldcapture/wiki/MERIT-Dependencies for information about these.
 Note that you will need to obtain an ALA API key to use ALA services and a Google Maps API key and specify them in this file.
