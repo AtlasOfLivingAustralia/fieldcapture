@@ -42,7 +42,7 @@
 
         <tr class="header">
             <th class="outcome-priority">Secondary Regional Land Partnerships outcome(s)</th>
-            <th class="priority">Secondary Investment Priorities <fc:iconHelp container="body">Other investment priorities that will benefit from the project.</fc:iconHelp></th>
+            <th class="priority">Secondary Investment Priorities <fc:iconHelp container="body">Other investment priorities that will benefit from the project.  Delete the row if there are no secondary outcomes.</fc:iconHelp></th>
             <th class="remove"></th>
         </tr>
         </thead>
@@ -55,7 +55,7 @@
                 <select data-bind="value:asset, options:$root.details.outcomes.outcomePriorities(description()), optionsCaption: 'Please select', disable: $root.isProjectDetailsLocked()" class="input-large asset"></select>
             </td>
             <td class="remove">
-                <span data-bind="if:$index() && !$parent.isProjectDetailsLocked()">
+                <span data-bind="if:!$parent.isProjectDetailsLocked()">
                     <i class="fa fa-remove" data-bind="click: $parent.removeSecondaryOutcome"></i>
                 </span>
             </td>

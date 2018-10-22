@@ -892,7 +892,7 @@ class ReportService {
         }
         // Fifteen hours are subtracted from the end date to account for both that the reports end on midnight of the next period and may be in UTC timezone.
         // This is so when it is rendered it will display 30 June / 31 December instead of 1 July / 1 January
-        [actions:allActions, actionStatus:actionStatus, actionStatusByTheme:actionStatusByTheme, endDate:periodEnd.minusHours(15).toDate()]
+        [actions:allActions, actionStatus:actionStatus, actionStatusByTheme:actionStatusByTheme, endDate:periodEnd.minusHours(15).toDate(), startDate:periodStart.toDate()]
 
     }
 
