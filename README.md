@@ -24,7 +24,7 @@ It is currently in use by the Australian Government Department of the environmen
 This configuration file largely specifies URLs to MERIT dependencies.  See https://github.com/AtlasOfLivingAustralia/fieldcapture/wiki/MERIT-Dependencies for information about these.
 Note that you will need to obtain an ALA API key to use ALA services and a Google Maps API key and specify them in this file.
 
-* Install npm (see https://www.npmjs.com/get-npm)
+* Install npm and nodejs (see https://www.npmjs.com/get-npm)
 * Install the node dependencies for MERIT.  Note these are currently only used for testing.
 
 ```
