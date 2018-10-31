@@ -1182,7 +1182,7 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
     };
 
     self.saveProjectDetails = function(){
-        self.saveProject(false);
+        self.saveMeriPlan(false);
     };
 
     self.cancelProjectDetailsEdits = function() {
@@ -1208,20 +1208,27 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
     };
 
     // Save project details
-    self.saveProject = function(enableSubmit){
-        if ($('#project-details-validation').validationEngine('validate')) {
-            self.details.status('active');
+    self.saveMeriPlan = function(enableSubmit){
+        var valid =  $('#project-details-validation').validationEngine('validate');
 
-            self.details.saveWithErrorDetection(function() {
-                if(enableSubmit) {
+        self.details.status('active');
+
+        self.details.saveWithErrorDetection(function() {
+            if(enableSubmit) {
+                if (valid) {
                     self.submitChanges();
                 }
-            });
-        }
+                else {
+                    bootbox.alert("Your MERI plan cannot be submitted until all validation errors are resolved");
+                }
+
+            }
+        });
+
     };
 
     self.saveAndSubmitChanges = function(){
-        self.saveProject(true);
+        self.saveMeriPlan(true);
     };
 
     self.uploadVariationDoc = function(doc){
