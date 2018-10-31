@@ -52,6 +52,8 @@ class ReportConfig {
      * If this value is false, the single report will be aligned with the owners time constraints */
     boolean multiple = true
 
+    boolean canSubmitDuringReportingPeriod = false
+
     /**
      * For reports with multiple=false and no reportingPeriodInMonths supplied, this property acts to suppress
      * the creation of reports for owners with durations less than this value.
