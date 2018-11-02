@@ -219,7 +219,6 @@ class SearchService {
         }
 
         configureProjectQuery(params)
-        params.report = 'works'
         List facets = params.getList("fq")
         facets += "className:au.org.ala.ecodata.Project"
 
