@@ -200,7 +200,8 @@ class ReportService {
                report1.description != report2.description ||
                report1.type != report2.type ||
                report1.activityType != report2.activityType ||
-               report1.category != report2.category
+               report1.category != report2.category ||
+               report1.submissionDate != report2.submissionDate
     }
 
     /**

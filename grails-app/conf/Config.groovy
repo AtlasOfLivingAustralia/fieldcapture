@@ -210,7 +210,7 @@ if (!fieldcapture.system.email.address) {
     fieldcapture.system.email.address = 'merit@ala.org.au'
 }
 if(!app.default.hub) {
-    app.default.hub = 'default'
+    app.default.hub = 'merit'
 }
 if (!pdfgen.baseURL){
     pdfgen.baseURL="http://pdfgen.ala.org.au/"
