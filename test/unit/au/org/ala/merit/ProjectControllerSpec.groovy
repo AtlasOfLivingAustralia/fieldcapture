@@ -139,6 +139,23 @@ class ProjectControllerSpec extends Specification {
         model.projectContent.admin.visible
     }
 
+    def "the announcements menu shouldn't be shown in RLP projects"() {
+        def projectId = '1234'
+        Map project = project(projectId)
+        project.planStatus = ProjectService.PLAN_APPROVED // The announcements menu items shows only for approved projects
+        projectService.get(projectId, _) >> project
+        projectService.getProgramConfiguration(_) >> new ProgramConfig([template: ProjectController.RLP_TEMPLATE])
+        stubProjectAdmin('1234', projectId)
+
+
+        when: "retrieving the project index page"
+        controller.index(projectId)
+
+        then: "The admin tab does not include the announcements menu item"
+        view == '/project/index'
+        model.projectContent.admin.showAnnouncementsTab == false
+    }
+
     def "when viewing a project report, the model will be customized for project reporting"() {
         setup:
         String projectId = 'p1'
