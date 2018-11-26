@@ -89,7 +89,6 @@
         <span class="span6">
             <span class="label label-info label-small">Project ID:</span> ${project.externalId}<br/>
             <span class="label label-info label-small">Reporting Period:</span> <span data-bind="text:reportingFinancialYear"></span><br/>
-            <span class="label label-info label-small">Due Date:</span> <span data-bind="text:dueDate"></span>
 
         </span>
         <span class="span6">
