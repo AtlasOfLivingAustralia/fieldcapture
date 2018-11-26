@@ -819,7 +819,7 @@ SearchableList = function(list, keys, options) {
 };
 
 function isUrlAndHostValid(url) {
-    var allowedHost = ['fast.wistia.com','embed-ssl.ted.com', 'www.youtube.com', 'player.vimeo.com'];
+    var allowedHost = ['fast.wistia.com','embed-ssl.ted.com', 'www.youtube.com', 'player.vimeo.com', 'www.facebook.com'];
     return (url && isUrlValid(url) && $.inArray(getHostName(url), allowedHost) > -1)
 };
 
@@ -834,7 +834,7 @@ function getHostName(href) {
 };
 
 function buildiFrame(embeddedVideo){
-    var html = $.parseHTML(embeddedVideo);
+    var html = $.parseHTML(embeddedVideo?embeddedVideo.trim():"");
     var iframe = "";
     if(html){
         for(var i = 0; i < html.length; i++){
