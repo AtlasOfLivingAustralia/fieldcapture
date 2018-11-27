@@ -18,12 +18,9 @@ function MERIPlan(project, config) {
        if (savedProjectCustomDetails) {
            var serverUpdate = project.custom.details.lastUpdated;
            var restored = JSON.parse(savedProjectCustomDetails);
-           var userUpdate;
+           var localSave = amplify.store(config.meriStorageKey+"-updated");
            $('#restoredData').show();
            if (restored.custom) {
-               if (restored.custom.details) {
-                   userUpdate = restored.custom.details.lastUpdated;
-               }
                project.custom.details = restored.custom.details;
            }
            if (restored.outputTargets) {
@@ -35,8 +32,8 @@ function MERIPlan(project, config) {
 
 
            var message = "<span class='label label-warning'>Important</span><p>You have unsaved changes on this page.</p>";
-           if (userUpdate && serverUpdate) {
-               var saved = moment(userUpdate);
+           if (localSave && serverUpdate) {
+               var saved = moment(localSave);
                message += "<p>Your unsaved changes were made on <b>"+saved.format("LLLL")+"</b></p><p>The changes we loaded from the server when this page was refreshed were made at <b>"+moment(serverUpdate).format("LLLL")+"</b></p>";
            }
            message += "<p>Please review the changes then press the 'Save changes' button at the bottom of the page if you want to keep your unsaved changes or the 'Cancel' button if you want to discard your changes.</p>";

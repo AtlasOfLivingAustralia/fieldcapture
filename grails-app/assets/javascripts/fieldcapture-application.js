@@ -243,6 +243,7 @@ function autoSaveModel(viewModel, saveUrl, options) {
 
         if (viewModel.dirtyFlag.isDirty()) {
             amplify.store(config.storageKey, serializeModel());
+            amplify.store(config.storageKey+'-updated', new Date().toISOStringNoMillis());
             window.setTimeout(autoSaveModel, config.autoSaveIntervalInSeconds*1000);
         }
     };
@@ -315,6 +316,7 @@ function autoSaveModel(viewModel, saveUrl, options) {
 
         // Store data locally in case the save fails.
         amplify.store(config.storageKey, json);
+        amplify.store(config.storageKey+'-updated', new Date().toISOStringNoMillis());
 
         var result = $.Deferred();
         var invokeCallbacksAndRejectResult = function(data) {
