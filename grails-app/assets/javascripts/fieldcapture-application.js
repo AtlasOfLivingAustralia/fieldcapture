@@ -844,7 +844,7 @@ function buildiFrame(embeddedVideo){
             var attr = $(element).attr('src');
             if(typeof attr !== typeof undefined && attr !== false){
                 var height =  element.getAttribute("height") ?  element.getAttribute("height") : "315";
-                iframe = isUrlAndHostValid(attr)  ? '<iframe width="100%" src ="' +  attr + '" height = "' + height + '"/></iframe>' : "";
+                iframe = isUrlAndHostValid(attr)  ? '<iframe width="560" src ="' +  attr + '" height = "' + height + '"/></iframe>' : "";
             }
             return iframe;
         }
