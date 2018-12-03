@@ -31,7 +31,7 @@ function MERIPlan(project, config) {
            }
 
 
-           var message = "<span class='label label-warning'>Important</span><p>You have unsaved changes on this page.</p>";
+           var message = "<span class='label label-warning'>Important</span><p>You have unsaved MERI Plan changes for this project.</p>";
            if (localSave && serverUpdate) {
                var saved = moment(localSave);
                message += "<p>Your unsaved changes were made on <b>"+saved.format("LLLL")+"</b></p><p>The changes we loaded from the server when this page was refreshed were made at <b>"+moment(serverUpdate).format("LLLL")+"</b></p>";
