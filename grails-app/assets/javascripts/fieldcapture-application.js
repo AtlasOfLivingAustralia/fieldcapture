@@ -243,6 +243,7 @@ function autoSaveModel(viewModel, saveUrl, options) {
 
         if (viewModel.dirtyFlag.isDirty()) {
             amplify.store(config.storageKey, serializeModel());
+            amplify.store(config.storageKey+'-updated', new Date().toISOStringNoMillis());
             window.setTimeout(autoSaveModel, config.autoSaveIntervalInSeconds*1000);
         }
     };
@@ -315,6 +316,7 @@ function autoSaveModel(viewModel, saveUrl, options) {
 
         // Store data locally in case the save fails.
         amplify.store(config.storageKey, json);
+        amplify.store(config.storageKey+'-updated', new Date().toISOStringNoMillis());
 
         var result = $.Deferred();
         var invokeCallbacksAndRejectResult = function(data) {
@@ -819,7 +821,7 @@ SearchableList = function(list, keys, options) {
 };
 
 function isUrlAndHostValid(url) {
-    var allowedHost = ['fast.wistia.com','embed-ssl.ted.com', 'www.youtube.com', 'player.vimeo.com'];
+    var allowedHost = ['fast.wistia.com','embed-ssl.ted.com', 'www.youtube.com', 'player.vimeo.com', 'www.facebook.com'];
     return (url && isUrlValid(url) && $.inArray(getHostName(url), allowedHost) > -1)
 };
 
@@ -834,7 +836,7 @@ function getHostName(href) {
 };
 
 function buildiFrame(embeddedVideo){
-    var html = $.parseHTML(embeddedVideo);
+    var html = $.parseHTML(embeddedVideo?embeddedVideo.trim():"");
     var iframe = "";
     if(html){
         for(var i = 0; i < html.length; i++){
@@ -842,7 +844,7 @@ function buildiFrame(embeddedVideo){
             var attr = $(element).attr('src');
             if(typeof attr !== typeof undefined && attr !== false){
                 var height =  element.getAttribute("height") ?  element.getAttribute("height") : "315";
-                iframe = isUrlAndHostValid(attr)  ? '<iframe width="100%" src ="' +  attr + '" height = "' + height + '"/></iframe>' : "";
+                iframe = isUrlAndHostValid(attr)  ? '<iframe width="560" src ="' +  attr + '" height = "' + height + '"/></iframe>' : "";
             }
             return iframe;
         }

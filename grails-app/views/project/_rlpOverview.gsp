@@ -65,8 +65,6 @@
 
 </div>
 <hr/>
-<h2>Service delivery</h2>
-<g:render template="serviceDashboard"/>
 
 
 <div class="multimedia" data-bind="if:embeddedVideos">
@@ -128,6 +126,9 @@
     </g:if>
 </g:if>
 
+
+<h2>Service delivery</h2>
+<g:render template="serviceDashboard"/>
 
 
 

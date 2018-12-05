@@ -1212,6 +1212,7 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
         var valid =  $('#project-details-validation').validationEngine('validate');
 
         self.details.status('active');
+        self.details.lastUpdated = new Date().toISOStringNoMillis();
 
         self.details.saveWithErrorDetection(function() {
             if(enableSubmit) {

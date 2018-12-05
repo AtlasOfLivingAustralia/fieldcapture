@@ -183,6 +183,7 @@ class ProjectController {
             rlpModel.admin.showMERIActivityWarning = false
             rlpModel.admin.showSpecies = false
             rlpModel.admin.hidePrograms = true
+            rlpModel.admin.showAnnouncementsTab = false
             model = rlpModel
         }
         else if (config?.projectTemplate == ESP_TEMPLATE && !user?.hasViewAccess) {
