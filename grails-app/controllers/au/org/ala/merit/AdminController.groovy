@@ -855,7 +855,7 @@ class AdminController {
                 }
             }
 
-            File templateFolder = new File("/Users/god08d/projects/chrisala-ecodata/models/"+service.Template.trim())
+            File templateFolder = new File("/Users/god08d/projects/ecodata/models/"+service.Template.trim())
 
             if (!templateFolder.exists()) {
                 templateFolder.mkdir()
@@ -867,17 +867,17 @@ class AdminController {
             ]
         }
 
-        File servicesFile = new File("/Users/god08d/projects/chrisala-fieldcapture/grails-app/conf/services.json")
+        File servicesFile = new File("/Users/god08d/projects/fieldcapture/grails-app/conf/services.json")
         servicesFile.withWriter "UTF-8", { out ->
             out << (servicesjson as JSON).toString(true)
         }
 
-        File scoresFile = new File("/Users/god08d/projects/chrisala-ecodata/scripts/misc/rlpScores.js")
+        File scoresFile = new File("/Users/god08d/projects/ecodata/scripts/misc/rlpScores.js")
         scoresFile.withWriter "UTF-8", { out ->
             out << "scores = "+(scores as JSON).toString(true)
         }
 
-        File outputFile = new File("/Users/god08d/projects/chrisala-ecodata/scripts/misc/rlpOutputs.json")
+        File outputFile = new File("/Users/god08d/projects/ecodata/scripts/misc/rlpOutputs.json")
         outputFile.withWriter("UTF-8", { out ->
             out << (outputs as JSON).toString(true)
         })
