@@ -673,6 +673,51 @@ class ProjectServiceSpec extends Specification {
         endDate == '2018-12-31T13:00:00Z'
     }
 
+    def "if the project start date is lenient and there are no approved or submitted reports, the project start date can be changed regardless of the meri plan status"() {
+        setup:
+        Map project = [projectId:'p1', plannedStartDate: '2015-07-01T00:00Z', plannedEndDate:'2016-12-31T00:00Z', planStatus:ProjectService.PLAN_APPROVED]
+
+        webService.getJson(_) >> project
+        reportService.getReportsForProject(project.projectId) >> [[reportId:'r1', publicationStatus:ReportService.REPORT_NOT_APPROVED, fromDate:project.plannedStartDate, toDate:project.plannedEndDate]]
+
+
+        when:
+        String result = service.validateProjectStartDate(project.projectId, '2015-07-03T00:00Z')
+
+        then:
+        1 * projectConfigurationService.getProjectConfiguration(_) >> new ProgramConfig([leniantStartDate:true])
+        result == null
+    }
+
+    def "if the project start date is lenient and there is a submitted report, the start date must not invalidate the submitted report"(reportStatus, date, valid) {
+        setup:
+        Map project = [projectId:'p1', plannedStartDate: '2015-07-01T00:00Z', plannedEndDate:'2016-12-31T00:00Z', planStatus:ProjectService.PLAN_APPROVED]
+
+        boolean submittedOrApproved = (reportStatus == ReportService.REPORT_SUBMITTED || reportStatus == ReportService.REPORT_APPROVED)
+        webService.getJson(_) >> project
+        reportService.getReportsForProject(project.projectId) >> [[reportId:'r1', publicationStatus:reportStatus, fromDate:project.plannedStartDate, toDate:'2015-12-31T00:00Z']]
+        reportService.isSubmittedOrApproved(_) >> submittedOrApproved
+
+        when:
+        String result = service.validateProjectStartDate(project.projectId, date)
+
+        then:
+        1 * reportService.includesSubmittedOrApprovedReports(_) >> submittedOrApproved
+        1 * projectConfigurationService.getProjectConfiguration(_) >> new ProgramConfig([leniantStartDate:true])
+        (result == null) == valid
+
+        where:
+        reportStatus | date | valid
+        ReportService.REPORT_APPROVED | '2015-07-01T00:00Z' | true
+        ReportService.REPORT_APPROVED | '2015-08-01T00:00Z' | true
+        ReportService.REPORT_APPROVED | '2016-01-01T00:00Z' | false
+        ReportService.REPORT_APPROVED | '2015-04-01T00:00Z' | false
+        ReportService.REPORT_SUBMITTED | '2015-07-01T00:00Z' | true
+        ReportService.REPORT_SUBMITTED | '2015-08-01T00:00Z' | true
+        ReportService.REPORT_SUBMITTED | '2016-01-01T00:00Z' | false
+        ReportService.REPORT_SUBMITTED | '2015-04-01T00:00Z' | false
+    }
+
 
     private Map meritProjectConfig() {
         Map reportConfig = [reportType: "Activity",

@@ -73,7 +73,7 @@
         finishedCorrectingPlanUrl : "${createLink(controller:'project', action:'ajaxFinishedCorrectingPlan', id:project.projectId)}",
         projectScoresUrl:"${createLink(action:'serviceScores', id:project.projectId)}",
         healthCheckUrl:"${createLink(controller:'ajax', action:'keepSessionAlive')}",
-
+        projectStartDateValidationUrl:"${createLink(controller:'project', action:'ajaxValidateProjectStartDate', id:project.projectId)}",
         returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
 
     },
@@ -182,6 +182,7 @@
 <asset:script>
         var organisations = <fc:modelAsJavascript model="${organisations}"/>;
 
+        var startDateValidationUrl = fcConfig.projectStartDateValidationUrl;
         $(function () {
             var PROJECT_DETAILS_KEY = 'project.custom.details.${project.projectId}';
             var PROJECT_RISKS_KEY = 'project.risks.${project.projectId}';
@@ -193,7 +194,11 @@
                 showChars: '1000'
             });
 
-            $('#settings-validation').validationEngine();
+            $('#settings-validation').validationEngine({
+                allrules:{
+                    ajaxValidateProjectStartDate: {
+                    url:startDateValidationUrl
+                }}});
             $('#project-details-validation').validationEngine();
             $('#risk-validation').validationEngine();
             $('#grantmanager-validation').validationEngine();

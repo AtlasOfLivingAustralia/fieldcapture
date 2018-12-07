@@ -184,6 +184,7 @@ class ProjectController {
             rlpModel.admin.showSpecies = false
             rlpModel.admin.hidePrograms = true
             rlpModel.admin.showAnnouncementsTab = false
+            rlpModel.admin.canChangeProjectDates = true
             model = rlpModel
         }
         else if (config?.projectTemplate == ESP_TEMPLATE && !user?.hasViewAccess) {
@@ -233,6 +234,26 @@ class ProjectController {
         } else {
             forward(action: 'list', model: [error: 'no such id'])
         }
+    }
+
+    @PreAuthorise(accessLevel='siteAdmin')
+    def ajaxValidateProjectStartDate(String id, String fieldId, String fieldValue) {
+        if (fieldId != 'startDate' || !fieldValue) {
+            render status:400, message:"Invalid date supplied"
+            return
+        }
+
+        try {
+            String isoDate = DateUtils.displayToIsoFormat(fieldValue)
+            String message = projectService.validateProjectStartDate(id, isoDate)
+            List result = [fieldId, message == null, message]
+
+            render result as JSON
+        }
+        catch (Exception e) {
+            render status:400, message:"Invalid date supplied"
+        }
+
     }
 
     /**

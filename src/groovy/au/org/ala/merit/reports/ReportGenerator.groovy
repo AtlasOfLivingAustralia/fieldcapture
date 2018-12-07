@@ -128,9 +128,9 @@ class ReportGenerator {
      * * The configuration can supply the end of the first reporting period directly or specifiy that reports should align to the
      * calendar year.
      */
-    private Interval determineFirstReportInterval(ReportConfig reportConfig, ReportOwner reportOwner, DateTime latestApprovedReportPeriodEnd) {
+    private Interval determineFirstReportInterval(ReportConfig reportConfig, ReportOwner reportOwner, DateTime periodStart) {
 
-        DateTime startConstraint = latestApprovedReportPeriodEnd && latestApprovedReportPeriodEnd > reportOwner.periodStart ? latestApprovedReportPeriodEnd : reportOwner.periodStart
+        DateTime startConstraint = periodStart && periodStart > reportOwner.periodStart ? periodStart : reportOwner.periodStart
         startConstraint = startConstraint.withZone(DateTimeZone.default)
 
         Period period = reportConfig.getReportingPeriod()

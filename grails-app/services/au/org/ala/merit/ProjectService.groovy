@@ -663,7 +663,10 @@ class ProjectService  {
     }
 
     private String validateProjectDates(Map project, DateTime plannedStartDate, DateTime plannedEndDate) {
-        return validateProjectDates(project, DateUtils.format(plannedStartDate))
+        if (plannedStartDate > plannedEndDate) {
+            return "Start date must be before end date"
+        }
+        return validateProjectStartDate(project.projectId, DateUtils.format(plannedStartDate))
     }
 
     /**
@@ -684,6 +687,42 @@ class ProjectService  {
             }
         }
         return result
+    }
+
+    String validateProjectStartDate(String projectId, String plannedStartDate) {
+        Map project = get(projectId, 'all')
+        ProgramConfig config = projectConfigurationService.getProjectConfiguration(project)
+
+        if (!config.leniantStartDate) {
+
+            String message = validateProjectDates(project, plannedStartDate)
+            if (!message) {
+                Map firstActivity = project.activities?.min{it.plannedEndDate}
+                if (firstActivity && plannedStartDate > firstActivity) {
+                    message = "The project start date must be before the first activity in the project ( ${DateUtils.displayFormat(firstActivity.plannedEndDate)} )"
+                }
+            }
+            return message
+        }
+
+        if (reportService.includesSubmittedOrApprovedReports(project.reports)) {
+            // The date must be within the time range defined by the first submitted report.
+            Map reportWithMinToDate = project.reports?.findAll{reportService.isSubmittedOrApproved(it)}.min{it.toDate}
+
+            if (plannedStartDate > reportWithMinToDate.toDate) {
+                return "The project start date must be before ${reportWithMinToDate.toDate}"
+            }
+            Map reportWithMinFromDate = project.reports?.findAll{reportService.isSubmittedOrApproved(it)}.min{it.fromDate}
+            // For some reason, the first report wasn't submitted, so we can change the start date.
+            if (project.plannedStartDate >= reportWithMinFromDate.fromDate) {
+                if (plannedStartDate < reportWithMinFromDate.fromDate) {
+                    return "The project start date must be on or after ${reportWithMinFromDate.fromDate}"
+                }
+
+            }
+        }
+
+        return null
     }
 
     /**
@@ -707,6 +746,8 @@ class ProjectService  {
 
     void generateProjectReports(Map reportConfig, Map project) {
 
+        ProgramConfig config = projectConfigurationService.getProjectConfiguration(project)
+
         ReportOwner reportOwner = new ReportOwner(
                 id:[projectId:project.projectId],
                 name:project.name,
@@ -717,7 +758,15 @@ class ProjectService  {
 
         List reportsOfType = project.reports?.findAll{it.category == reportConfig.category}
 
-        reportService.regenerateReports(reportsOfType, rc, reportOwner)
+        if (config.leniantStartDate) {
+            // Regenerate all reports, even approved ones.
+            reportService.regenerateReports(reportsOfType, rc, reportOwner, -1)
+        }
+        else {
+            // Regenerate reports starting from the first unsubmitted report
+            reportService.regenerateReports(reportsOfType, rc, reportOwner)
+        }
+
 
     }
 

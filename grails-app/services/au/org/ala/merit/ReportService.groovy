@@ -150,12 +150,9 @@ class ReportService {
 
     }
 
-    void regenerateReports(List existingReports, ReportConfig reportConfig, ReportOwner reportOwner) {
-        // Ensure the reports are sorted in Date order
-        existingReports = (existingReports?:[]).sort{it.toDate}
+    void regenerateReports(List existingReports, ReportConfig reportConfig, ReportOwner reportOwner, int startFromReportIndex) {
 
-
-        int index = existingReports.findLastIndexOf {isSubmittedOrApproved(it)}
+        int index = startFromReportIndex
         DateTime latestApprovedReportPeriodEnd = null
         if (index >= 0) {
             latestApprovedReportPeriodEnd = DateUtils.parse(existingReports[index].toDate)
@@ -190,6 +187,15 @@ class ReportService {
             log.info("Deleting report " + existingReports[i].name)
             delete(existingReports[i].reportId)
         }
+    }
+
+    void regenerateReports(List existingReports, ReportConfig reportConfig, ReportOwner reportOwner) {
+        // Ensure the reports are sorted in Date order
+        existingReports = (existingReports?:[]).sort{it.toDate}
+
+        int index = existingReports.findLastIndexOf {isSubmittedOrApproved(it)}
+
+        regenerateReports(existingReports, reportConfig, reportOwner, index)
 
     }
 
