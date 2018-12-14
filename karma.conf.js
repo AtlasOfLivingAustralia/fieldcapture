@@ -15,15 +15,7 @@ module.exports = function (config) {
         // base path that will be used to resolve all patterns (eg. files, exclude)
         basePath: '',
 
-        plugins: [
-            'karma-jquery',
-            'karma-chrome-launcher',
-            'karma-jasmine',
-            'karma-jasmine-jquery',
-            'karma-coverage',
-            'karma-firefox-launcher',
-            'karma-phantomjs-launcher'
-        ],
+        plugins: ['@metahub/karma-jasmine-jquery', 'karma-*'],
 
 
         // frameworks to use
