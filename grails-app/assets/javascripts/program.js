@@ -175,7 +175,7 @@ var ProgramPageViewModel = function(props, options) {
 
     self.activityReportingOptions = [
         {label:"Quarterly (First period ends 30 September 2018)", firstReportingPeriodEnd:'2018-09-30T14:00:00Z', reportingPeriodInMonths:3},
-        {label:"Half-yearly (First period ends 28 February 2019)", firstReportingPeriodEnd:'2018-12-31T13:00:00Z', reportingPeriodInMonths:6}];
+        {label:"Half-yearly (First period ends 31 December 2018)", firstReportingPeriodEnd:'2018-12-31T13:00:00Z', reportingPeriodInMonths:6}];
 
     currentOption = _.find(self.activityReportingOptions, function(option) {
         return option.firstReportingPeriodEnd == activityReportConfig.firstReportingPeriodEnd && option.reportingPeriodInMonths == activityReportConfig.reportingPeriodInMonths;
