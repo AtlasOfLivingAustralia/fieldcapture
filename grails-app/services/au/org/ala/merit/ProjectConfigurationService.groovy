@@ -29,6 +29,7 @@ class ProjectConfigurationService {
         else {
             Map config = metadataService.getProgramConfiguration(project.associatedProgram, project.associatedSubProgram)
             programConfig = new ProgramConfig(config)
+            programConfig.activityBasedReporting = true
 
             // Default configuration for project stage reports.
 

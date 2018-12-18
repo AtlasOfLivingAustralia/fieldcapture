@@ -165,8 +165,7 @@ var ProgramPageViewModel = function(props, options) {
         {label:'Monthly (First period ends 31 July 2018)', firstReportingPeriodEnd:'2018-07-31T14:00:00Z', reportingPeriodInMonths:1},
         {label:'Bi-monthly (First period ends 31 August 2018)', firstReportingPeriodEnd:'2018-08-31T14:00:00Z', reportingPeriodInMonths:2},
         {label:"Quarterly - Group A (First period ends 30 September 2018)", firstReportingPeriodEnd:'2018-09-30T14:00:00Z', reportingPeriodInMonths:3},
-        {label:"Quarterly - Group B (First period ends 31 August 2018)", firstReportingPeriodEnd:'2018-08-31T14:00:00Z', reportingPeriodInMonths:3},
-        {label:"Half-yearly (First period ends 31 January 2019)", firstReportingPeriodEnd:'2019-01-31T13:00:00Z', reportingPeriodInMonths:6}];
+        {label:"Quarterly - Group B (First period ends 31 August 2018)", firstReportingPeriodEnd:'2018-08-31T14:00:00Z', reportingPeriodInMonths:3}];
 
     var currentOption = _.find(self.coreServicesOptions, function(option) {
         return option.firstReportingPeriodEnd == programReportConfig.firstReportingPeriodEnd && option.reportingPeriodInMonths == programReportConfig.reportingPeriodInMonths;
@@ -175,10 +174,8 @@ var ProgramPageViewModel = function(props, options) {
 
 
     self.activityReportingOptions = [
-        {label:"Quarterly - Group C (First period ends 30 September 2018)", firstReportingPeriodEnd:'2018-09-30T14:00:00Z', reportingPeriodInMonths:3},
-        {label:"Quarterly - Group D (First period ends 31 October 2018)", firstReportingPeriodEnd:'2018-10-31T13:00:00Z', reportingPeriodInMonths:3},
-        {label:"Half-yearly - Group E (First period ends 28 February 2019)", firstReportingPeriodEnd:'2019-02-28T13:00:00Z', reportingPeriodInMonths:6},
-        {label:"Half-yearly - Group F (First period ends 31 March 2019)", firstReportingPeriodEnd:'2019-03-31T13:00:00Z', reportingPeriodInMonths:6}];
+        {label:"Quarterly (First period ends 30 September 2018)", firstReportingPeriodEnd:'2018-09-30T14:00:00Z', reportingPeriodInMonths:3},
+        {label:"Half-yearly (First period ends 31 December 2018)", firstReportingPeriodEnd:'2018-12-31T13:00:00Z', reportingPeriodInMonths:6}];
 
     currentOption = _.find(self.activityReportingOptions, function(option) {
         return option.firstReportingPeriodEnd == activityReportConfig.firstReportingPeriodEnd && option.reportingPeriodInMonths == activityReportConfig.reportingPeriodInMonths;

@@ -78,7 +78,9 @@
 </div>
 
 <g:if test="${!hidePrograms}">
+    <g:if test="${!canChangeProjectDates}">
 <div class="alert alert-block">You cannot change the start date or programme for a project with submitted or approved reports or MERI plan.</div>
+</g:if>
 
 <div class="row-fluid">
     <div class="span4">
@@ -93,7 +95,9 @@
 </div>
 </g:if>
 <g:else>
+    <g:if test="${!canChangeProjectDates}">
     <div class="alert alert-block">You cannot change the start date for a project with submitted or approved reports or MERI plan.</div>
+    </g:if>
 </g:else>
 
 <div class="row-fluid">
@@ -103,7 +107,7 @@
         </label>
         <div class="input-append">
             <g:if test="${canChangeProjectDates}">
-                <fc:datePicker targetField="plannedStartDate.date" name="startDate" data-validation-engine="validate[required, funcCall[validateProjectStartDate]]" printable="${printView}" size="input-large"/>
+                <fc:datePicker targetField="plannedStartDate.date" name="startDate" data-validation-engine="validate[required, past[plannedEndDate], ajax[ajaxValidateProjectStartDate]]" printable="${printView}" size="input-large"/>
             </g:if>
             <g:else>
                 <input type="text" data-bind="value:plannedStartDate.formattedDate" disabled="disabled" size="input-large">

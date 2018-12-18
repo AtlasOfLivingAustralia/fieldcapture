@@ -123,6 +123,10 @@ class DateUtils {
         return displayFormat(parse(isoDate))
     }
 
+    static String displayToIsoFormat(String displayDate) {
+        return format(parseDisplayDate(displayDate).withZone(DateTimeZone.UTC))
+    }
+
     /**
      * Groups the supplied data into time intervals defined by the supplied start date and period.
      * If no start date is supplied, it will be set to the earliest date in the supplied data.
