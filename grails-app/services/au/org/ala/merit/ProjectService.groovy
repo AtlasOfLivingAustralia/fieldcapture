@@ -1293,6 +1293,10 @@ class ProjectService  {
 
     List<Map> getServiceScoresForProject(String projectId) {
         Map project = get(projectId, 'flat')
+        getProjectServices(project)
+    }
+
+    List<Map> getProjectServices(Map project) {
         List<Map> allServices = metadataService.getProjectServices()
 
         List projectServices = allServices?.findAll {it.id in project.custom?.details?.serviceIds }

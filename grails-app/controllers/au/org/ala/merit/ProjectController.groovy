@@ -801,22 +801,73 @@ class ProjectController {
                 model.reportSite = project.sites?.find{it.siteId == model.activity.siteId}
             }
 
-            List sitesAsGeojson = project.sites?.findAll{it.type != 'projectArea'}?.collect{
-                if (it.type == 'compound') {
-                    return it.features
-                }
+            Map plannedSites = [
+                    type:"FeatureCollection",
+                    features:[],
+                    properties:[
+                            name:'Planning sites'
+                    ]
+            ]
+            List sitesAsGeojson = [plannedSites]
+            project.sites?.each { site ->
+                if (site.type == 'compound') {
+                    sitesAsGeojson << [
+                            type      : 'FeatureCollection',
+                            features  : site.features,
+                            properties: [name: site.name, id:site.siteId]
+                    ]
 
-                [type:"Feature",
-                 geometry:[type:it.extent.geometry.type, coordinates: it.extent.geometry.coordinates],
-                 properties:[name:it.name]
-                ]
-            }.flatten()
+                }
+                else if (site.type != 'projectArea' && site.extent?.geometry?.coordinates) {
+                    plannedSites.features << [
+                            type:'Feature',
+                            properties:[name:site.name, id:site.siteId],
+                            geometry:site.extent.geometry
+                    ]
+                }
+            }
+
             if (sitesAsGeojson) {
-                model.features = [type:'FeatureCollection', features:sitesAsGeojson]
+                model.features = sitesAsGeojson
             }
 
         }
         model
+    }
+
+    private Map prepopSites(Map project) {
+
+        List siteServices = project.custom.details.siteServices
+
+        // Change from site -> service list to service -> site list
+
+        Map sitesByService = [:].withDefault{[]}
+        siteServices.each { String siteId, List serviceIds ->
+            serviceIds.each{ serviceId ->
+                sitesByService[serviceId] << siteId
+            }
+        }
+
+        Map reportSite = [name:'dalkfdsajlkfads', type:SiteService.SITE_TYPE_COMPOUND, features:[]]
+        reportSite.features << [:] //<each site>
+
+        List outputData = []
+
+        List services = projectService.getProjectServices()
+        services.each { service ->
+            List sites = sitesByService[service.id]
+            if (sites) {
+                outputData << [
+                        name:service.output,
+                        activityId:report.activityId,
+                        data:[
+                                // Find feature data type.  create copy of site from sites.  set ids, add reference
+                        ]
+                ]
+
+            }
+        }
+
     }
 
     /**
@@ -830,15 +881,15 @@ class ProjectController {
         Map filteredModel = activityModel
         if (activityModel.name == grailsApplication.config.rlp.servicesReport) {
 
-            List projectServices = project?.custom?.details?.serviceIds
+            List projectServices = projectService.getProjectServices(project)
             if (projectServices) {
-                List services = metadataService.getProjectServices()
-                List serviceOutputs = services.findAll{it.id in projectServices}.collect{it.output}
+
+                List serviceOutputs = projectServices.collect{it.output}
 
                 filteredModel = new JSONObject(activityModel)
                 List existingOutputs = existingActivityData?.outputs?.collect{it.name}
                 filteredModel.outputs = activityModel.outputs.findAll({ String output ->
-                    boolean isServiceOutput = services.find{it.output == output}
+                    boolean isServiceOutput = projectServices.find{it.output == output}
                     // Include this output if it's not associated with a service,
                     // Or if it's associated by a service delivered by this project
                     // Or it has previously had data recorded against it (this can happen if the services change after the report has been completed)
