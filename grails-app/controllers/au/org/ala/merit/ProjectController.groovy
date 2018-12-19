@@ -792,45 +792,42 @@ class ProjectController {
         model.config = config
 
         if (model.metaModel.supportsSites) {
-            Map projectArea = project.sites?.find{it.type == 'projectArea'}
-            if (projectArea) {
-                model.projectArea = [type:projectArea.extent.geometry.type, coordinates:projectArea.extent.geometry.coordinates]
-            }
-
             if (model.activity.siteId) {
-                model.reportSite = project.sites?.find{it.siteId == model.activity.siteId}
+                model.reportSite = project.sites?.find { it.siteId == model.activity.siteId }
             }
 
-            Map plannedSites = [
-                    type:"FeatureCollection",
-                    features:[],
-                    properties:[
-                            name:'Planning sites'
-                    ]
-            ]
-            List sitesAsGeojson = [plannedSites]
-            project.sites?.each { site ->
-                if (site.type == 'compound') {
-                    sitesAsGeojson << [
-                            type      : 'FeatureCollection',
-                            features  : site.features,
-                            properties: [name: site.name, id:site.siteId]
-                    ]
-
+            Map projectSites = siteService.getProjectSites(projectId)
+            if (projectSites && !projectSites.error) {
+                List sitesAsGeojson = []
+                List sites = projectSites.sites
+                Map projectArea = project.sites?.find { it.type == 'projectArea' }
+                if (projectArea) {
+                    model.projectArea = projectArea
                 }
-                else if (site.type != 'projectArea' && site.extent?.geometry?.coordinates) {
-                    plannedSites.features << [
-                            type:'Feature',
-                            properties:[name:site.name, id:site.siteId],
-                            geometry:site.extent.geometry
-                    ]
+
+                Map plannedSites = [
+                        type:"FeatureCollection",
+                        features:[],
+                        properties:[
+                                name:'Planning sites'
+                        ]
+                ]
+                sites?.each { site ->
+                    if (site.properties?.type == 'compound') {
+                        sitesAsGeojson << site
+                    }
+                    else if (site.properties?.type != 'projectArea') {
+                        plannedSites.features << site
+                    }
                 }
-            }
+                if (plannedSites.features) {
+                    sitesAsGeojson.add(0, plannedSites)
+                }
+                if (sitesAsGeojson) {
+                    model.features = sitesAsGeojson
+                }
 
-            if (sitesAsGeojson) {
-                model.features = sitesAsGeojson
             }
-
         }
         model
     }

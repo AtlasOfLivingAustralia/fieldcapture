@@ -206,6 +206,10 @@ class SiteService {
         spatialService.uploadShapefile(shapefile)
     }
 
+
+    Map getProjectSites(String projectId) {
+        webService.getJson(grailsApplication.config.ecodata.baseUrl + "site/projectSites/$projectId")
+    }
     /**
      * Creates a site for a specified project from the supplied site data.
      * @param shapeFileId the id of the shapefile in the spatial portal
