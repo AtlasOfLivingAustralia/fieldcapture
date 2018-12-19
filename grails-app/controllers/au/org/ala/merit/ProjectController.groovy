@@ -882,18 +882,20 @@ class ProjectController {
         if (activityModel.name == grailsApplication.config.rlp.servicesReport) {
 
             List projectServices = projectService.getProjectServices(project)
+            List allServices = metadataService.getProjectServices()
             if (projectServices) {
 
-                List serviceOutputs = projectServices.collect{it.output}
+                List projectServiceOutputs = projectServices.collect{it.output}
 
                 filteredModel = new JSONObject(activityModel)
                 List existingOutputs = existingActivityData?.outputs?.collect{it.name}
                 filteredModel.outputs = activityModel.outputs.findAll({ String output ->
-                    boolean isServiceOutput = projectServices.find{it.output == output}
+                    boolean isServiceOutput = allServices.find{it.output == output}
+
                     // Include this output if it's not associated with a service,
                     // Or if it's associated by a service delivered by this project
                     // Or it has previously had data recorded against it (this can happen if the services change after the report has been completed)
-                    !isServiceOutput || output in serviceOutputs || output in existingOutputs
+                    !isServiceOutput || output in projectServiceOutputs || output in existingOutputs
                 })
             }
         }

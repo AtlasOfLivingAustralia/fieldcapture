@@ -24,8 +24,13 @@ class ProjectControllerSpec extends Specification {
     def activityService = Mock(ActivityService)
     def siteService = Mock(SiteService)
 
+    ProjectService realProjectService
+
 
     void setup() {
+        realProjectService = new ProjectService()
+        realProjectService.metadataService = metadataServiceStub
+
         controller.userService = userServiceStub
         controller.metadataService = metadataServiceStub
         controller.projectService = projectService
@@ -42,6 +47,7 @@ class ProjectControllerSpec extends Specification {
 
         projectService.getMembersForProjectId(_) >> []
         projectService.getProgramConfiguration(_) >> new ProgramConfig([requiresActivityLocking: true])
+        projectService.getProjectServices(_) >> { project -> println(project); realProjectService.getProjectServices(project)}
         metadataServiceStub.organisationList() >> [list:[]]
         userServiceStub.getOrganisationIdsForUserId(_) >> []
         userServiceStub.isProjectStarredByUser(_, _) >> [isProjectStarredByUser:true]
@@ -283,6 +289,7 @@ class ProjectControllerSpec extends Specification {
 
         setup:
         Map activityModel = setupMockServices()
+
         grailsApplication.config = [rlp:[servicesReport:'output']]
         Map project = [custom:[details:[serviceIds:[1,2,4]]]]
 
