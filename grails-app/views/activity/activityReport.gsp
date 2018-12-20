@@ -132,7 +132,7 @@
 
             var mapOptions = {baseLayersName:'Google'};
             if (features) {
-                mapOptions = {selectableFeatures: features};
+                mapOptions.selectableFeatures = features;
             }
 
             var formFeatures = new ecodata.forms.FeatureCollection(reportSite ? reportSite.features : []);
