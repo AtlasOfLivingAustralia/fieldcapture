@@ -101,6 +101,7 @@
         var projectArea = '${projectArea ? (projectArea as JSON).toString().replace("'", "\\u0027") : '{}'}';
         var reportId = '${report.reportId}';
 
+
         var context = {
             owner: fcConfig.context,
             activity: activity,
@@ -122,23 +123,27 @@
         var metaModel = ${metaModel};
 
         var master = null;
+        var mapPopupSelector = '#map-modal';
         if (metaModel.supportsSites) {
             // Workaround for problems with IE11 and leaflet draw
             L.Browser.touch = false;
-            var features = {};
+            var features = JSON.parse('${(features as JSON).toString().replace("'", "\\u0027")}');
+
 
             var mapOptions = {baseLayersName:'Google'};
-            if (features && features.type) {
-                mapOptions = {selectableFeatures: features};
+            if (features && _.isArray(features)) {
+                mapOptions.selectableFeatures = features;
             }
 
             var formFeatures = new ecodata.forms.FeatureCollection(reportSite ? reportSite.features : []);
             context.featureCollection = formFeatures;
             try {
-                var map = ecodata.forms.featureMap(mapOptions);
+
+                var map = ecodata.forms.maps.featureMap(mapOptions);
                 if (projectArea && projectArea.type) {
                     map.fitToBoundsOf(projectArea);
                 }
+                ko.applyBindings(map, $(mapPopupSelector)[0]);
             }
             catch (e) {
                 console.log("Unable to initialise map, could be because no map elements are on display: " + e);

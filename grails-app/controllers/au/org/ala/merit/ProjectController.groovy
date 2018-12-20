@@ -792,31 +792,79 @@ class ProjectController {
         model.config = config
 
         if (model.metaModel.supportsSites) {
-            Map projectArea = project.sites?.find{it.type == 'projectArea'}
-            if (projectArea) {
-                model.projectArea = [type:projectArea.extent.geometry.type, coordinates:projectArea.extent.geometry.coordinates]
-            }
-
             if (model.activity.siteId) {
-                model.reportSite = project.sites?.find{it.siteId == model.activity.siteId}
+                model.reportSite = project.sites?.find { it.siteId == model.activity.siteId }
             }
 
-            List sitesAsGeojson = project.sites?.findAll{it.type != 'projectArea'}?.collect{
-                if (it.type == 'compound') {
-                    return it.features
+            Map projectSites = siteService.getProjectSites(projectId)
+            if (projectSites && !projectSites.error) {
+                List sitesAsGeojson = []
+                List sites = projectSites.sites
+                Map projectArea = project.sites?.find { it.type == 'projectArea' }
+                if (projectArea) {
+                    model.projectArea = projectArea
                 }
 
-                [type:"Feature",
-                 geometry:[type:it.extent.geometry.type, coordinates: it.extent.geometry.coordinates],
-                 properties:[name:it.name]
+                Map plannedSites = [
+                        type:"FeatureCollection",
+                        features:[],
+                        properties:[
+                                name:'Planning sites'
+                        ]
                 ]
-            }.flatten()
-            if (sitesAsGeojson) {
-                model.features = [type:'FeatureCollection', features:sitesAsGeojson]
-            }
+                sites?.each { site ->
+                    if (site.properties?.type == 'compound') {
+                        sitesAsGeojson << site
+                    }
+                    else if (site.properties?.type != 'projectArea') {
+                        plannedSites.features << site
+                    }
+                }
+                if (plannedSites.features) {
+                    sitesAsGeojson.add(0, plannedSites)
+                }
+                if (sitesAsGeojson) {
+                    model.features = sitesAsGeojson
+                }
 
+            }
         }
         model
+    }
+
+    private Map prepopSites(Map project) {
+
+        List siteServices = project.custom.details.siteServices
+
+        // Change from site -> service list to service -> site list
+
+        Map sitesByService = [:].withDefault{[]}
+        siteServices.each { String siteId, List serviceIds ->
+            serviceIds.each{ serviceId ->
+                sitesByService[serviceId] << siteId
+            }
+        }
+
+        Map reportSite = [name:'dalkfdsajlkfads', type:SiteService.SITE_TYPE_COMPOUND, features:[]]
+        reportSite.features << [:] //<each site>
+
+        List outputData = []
+
+        List services = projectService.getProjectServices()
+        services.each { service ->
+            List sites = sitesByService[service.id]
+            if (sites) {
+                outputData << [
+                        name:service.output,
+                        activityId:report.activityId,
+                        data:[
+                                // Find feature data type.  create copy of site from sites.  set ids, add reference
+                        ]
+                ]
+
+            }
+        }
+
     }
 
     /**
@@ -830,19 +878,21 @@ class ProjectController {
         Map filteredModel = activityModel
         if (activityModel.name == grailsApplication.config.rlp.servicesReport) {
 
-            List projectServices = project?.custom?.details?.serviceIds
+            List projectServices = projectService.getProjectServices(project)
+            List allServices = metadataService.getProjectServices()
             if (projectServices) {
-                List services = metadataService.getProjectServices()
-                List serviceOutputs = services.findAll{it.id in projectServices}.collect{it.output}
+
+                List projectServiceOutputs = projectServices.collect{it.output}
 
                 filteredModel = new JSONObject(activityModel)
                 List existingOutputs = existingActivityData?.outputs?.collect{it.name}
                 filteredModel.outputs = activityModel.outputs.findAll({ String output ->
-                    boolean isServiceOutput = services.find{it.output == output}
+                    boolean isServiceOutput = allServices.find{it.output == output}
+
                     // Include this output if it's not associated with a service,
                     // Or if it's associated by a service delivered by this project
                     // Or it has previously had data recorded against it (this can happen if the services change after the report has been completed)
-                    !isServiceOutput || output in serviceOutputs || output in existingOutputs
+                    !isServiceOutput || output in projectServiceOutputs || output in existingOutputs
                 })
             }
         }
