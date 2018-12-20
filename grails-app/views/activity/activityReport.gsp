@@ -131,7 +131,7 @@
 
 
             var mapOptions = {baseLayersName:'Google'};
-            if (features) {
+            if (features && _.isArray(features)) {
                 mapOptions.selectableFeatures = features;
             }
 
