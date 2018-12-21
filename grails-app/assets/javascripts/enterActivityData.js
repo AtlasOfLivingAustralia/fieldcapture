@@ -294,8 +294,7 @@ var ReportMaster = function(reportId, activityId, reportSite, featureCollection,
                 activity: original
             };
 
-            // The site can't be dirty unless we've modified an output.
-            if (featureCollection && featureCollection.isDirty()) {
+            if (featureCollection) {
                 payload.site = featureCollection.toSite(reportSite);
             }
 
