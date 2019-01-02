@@ -32,8 +32,10 @@
         spatialBaseUrl: "${grailsApplication.config.spatial.baseUrl}",
         spatialWmsCacheUrl: "${grailsApplication.config.spatial.wms.cache.url}",
         spatialWmsUrl: "${grailsApplication.config.spatial.wms.url}",
+        geoserverUrl: "${grailsApplication.config.spatial.geoserverUrl}",
         sldPolgonDefaultUrl: "${grailsApplication.config.sld.polgon.default.url}",
         sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}",
+        featureServiceUrl: "${createLink(controller: 'proxy', action:'feature')}",
         organisationLinkBaseUrl: "${createLink(controller:'organisation', action:'index')}",
         imageLocation:"${assetPath(src:'/')}",
         documentUpdateUrl: "${createLink(controller:"document", action:"documentUpdate")}",
@@ -74,6 +76,7 @@
         projectScoresUrl:"${createLink(action:'serviceScores', id:project.projectId)}",
         healthCheckUrl:"${createLink(controller:'ajax', action:'keepSessionAlive')}",
         projectStartDateValidationUrl:"${createLink(controller:'project', action:'ajaxValidateProjectStartDate', id:project.projectId)}",
+        spinnerUrl:"${asset.assetPath(src:'loading.gif')}",
         returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
 
     },
@@ -315,6 +318,78 @@
                         healthCheckUrl:fcConfig.healthCheckUrl
                     });
             }
+
+            function initialiseOverview() {
+                $( '#public-images-slider' ).mThumbnailScroller({});
+                $('#public-images-slider .fancybox').fancybox();
+            }
+
+            var tabs = {
+                'overview': {
+                    default:true,
+                    initialiser: function () {
+                        initialiseOverview();
+                    }
+                },
+                'plan': {
+                    initialiser: function() {
+                        $.event.trigger({type:'planTabShown'});
+                    }
+                },
+                'dashboard': {
+                    initialiser: function() {
+                        $.event.trigger({type:'dashboardShown'});
+                    }
+                },
+                'documents': {
+                    initialiser: function() {
+                        initialiseDocumentTable('#overviewDocumentList');
+                    }
+                },
+                'site': {
+                    initialiser: function () {
+                        var mapFeatures = $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
+                        var sitesTabOptions = {
+                            featureServiceUrl: fcConfig.featureServiceUrl,
+                            wmsServerUrl: fcConfig.geoserverUrl,
+                            spinnerUrl: fcConfig.spinnerUrl,
+                            mapFeatures: mapFeatures,
+                            sitesPhotoPointsUrl:fcConfig.sitesPhotoPointsUrl,
+                            userIdEditor: userRoles.editor,
+                            bindingElementId:'sitesList',
+                            sitesTableSelector:'#sites-table',
+                            selectAllSelector:'#select-all-sites',
+                            photoPointSelector:'#site-photo-points',
+                            loadingSpinnerSelector:'#img-spinner',
+                            photoScrollerSelector:'.photo-slider'
+
+
+                        };
+                        viewModel.initialiseSitesTab(sitesTabOptions);
+                    }
+                },
+
+                'details': {
+                    initialiser: function () {
+                        initialiseDocumentTable('#meriPlanDocumentList');
+                    }
+                },
+                'reporting': {
+                    initialiser: function () {
+                        viewModel.initialiseReports();
+                    }
+                },
+                'admin': {
+                    initialiser: function () {
+                        populatePermissionsTable();
+                        $(options.reportingConfigSelector).validationEngine();
+                    }
+                }
+            };
+
+            initialiseTabs(tabs, {tabSelector:'.nav-link', tabShownEvent:'shown', tabStorageKey:'project-tab-state', initialisingHtmlSelector:'#spinner'});
+
+
             var meriPlanVisible = false;
             var risksVisible = false;
             $('a[data-toggle="tab"]').on('show', function(e) {
@@ -335,62 +410,6 @@
                 }
             });
 
-         // retain tab state for future re-visits
-            // and handle tab-specific initialisations
-            var planTabInitialised = false;
-            var dashboardInitialised = false;
-            var documentsInitialised = false;
-            var meriPlanInitialised = false;
-            var reportingInitialised = false;
-
-            $('#projectTabs a[data-toggle="tab"]').on('shown', function (e) {
-                var tab = e.currentTarget.hash;
-                amplify.store('project-tab-state', tab);
-                // only init map when the tab is first shown
-                if (tab === '#site' && map === undefined) {
-                    var mapFeatures = $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
-                    var sitesTabOptions = {
-                        featureServiceUrl: "${createLink(controller: 'proxy', action:'feature')}",
-                        wmsServerUrl: "${grailsApplication.config.spatial.geoserverUrl}",
-                        spinnerUrl: "${asset.assetPath(src:'loading.gif')}",
-                        mapFeatures: mapFeatures,
-                        sitesPhotoPointsUrl:fcConfig.sitesPhotoPointsUrl,
-                        userIdEditor: ${user?.isEditor?:false},
-                        bindingElementId:'sitesList',
-                        sitesTableSelector:'#sites-table',
-                        selectAllSelector:'#select-all-sites',
-                        photoPointSelector:'#site-photo-points',
-                        loadingSpinnerSelector:'#img-spinner',
-                        photoScrollerSelector:'.photo-slider'
-
-
-                    };
-                    viewModel.initialiseSitesTab(sitesTabOptions);
-
-                }
-                if (tab === '#plan' && !planTabInitialised) {
-                    $.event.trigger({type:'planTabShown'});
-                    planTabInitialised = true;
-                }
-                if (tab == '#dashboard' && !dashboardInitialised) {
-                    $.event.trigger({type:'dashboardShown'});
-                    dashboardInitialised;
-                }
-
-                if(tab == "#documents" && !documentsInitialised){
-                    documentsInitialised = true;
-                    initialiseDocumentTable('#overviewDocumentList');
-                }
-
-                if (tab == '#details' && !meriPlanInitialised) {
-                    meriPlanInitialised = true;
-                    initialiseDocumentTable('#meriPlanDocumentList');
-                };
-
-                if (tab == '#reporting' && !reportingInitialised) {
-                    viewModel.initialiseReports();
-                }
-            });
 
             var newsAndEventsInitialised = false;
             $('#editNewsAndEvents-tab').on('shown', function() {
@@ -410,18 +429,8 @@
                 }
             });
 
-            var overviewInitialised = false;
-            $('#overview-tab').on('shown', function() {
-                if (!overviewInitialised) {
-                    initialiseOverview();
 
-                    overviewInitialised = true;
-                }
-            });
-            function initialiseOverview() {
-                $( '#public-images-slider' ).mThumbnailScroller({});
-                $('#public-images-slider .fancybox').fancybox();
-            }
+
 
             $('#gotoEditBlog').click(function () {
                 amplify.store('project-admin-tab-state', '#editProjectBlog');
@@ -446,26 +455,13 @@
 			$('.spinner').hide();
         	$('.tab-content').fadeIn();
 
-        	// re-establish the previous tab state
-            var storedTab = window.location.hash;
-            if (!storedTab) {
-                storedTab = ${user?"amplify.store('project-tab-state')":"'overview'"};
-            }
-
-            initialiseOverview();
-            if (storedTab !== '') {
-                var $toInit = $(storedTab + '-tab');
-                if ($toInit.is(':enabled')) {
-                    $toInit.tab('show');
-                }
-
-            }
 
         });// end window.load
 
 
 </asset:script>
 <asset:javascript src="common.js"/>
+<asset:javascript src="tab-init.js"/>
 <asset:javascript src="projects.js"/>
 <asset:javascript src="reporting.js"/>
 <asset:javascript src="select2/4.0.3/js/select2.full"/>
