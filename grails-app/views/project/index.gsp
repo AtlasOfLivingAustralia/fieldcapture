@@ -348,132 +348,25 @@
                 amplify.store('project-tab-state', tab);
                 // only init map when the tab is first shown
                 if (tab === '#site' && map === undefined) {
-                    var mapOptions = {
-                        zoomToBounds:true,
-                        zoomLimit:16,
-                        highlightOnHover:true,
-                        features:[],
-                        featureService: "${createLink(controller: 'proxy', action:'feature')}",
-                        wmsServer: "${grailsApplication.config.spatial.geoserverUrl}"
-                    };
-
-                    map = init_map_with_features({
-                            mapContainer: "map",
-                            scrollwheel: false,
-                            featureService: "${createLink(controller: 'proxy', action:'feature')}",
-                            wmsServer: "${grailsApplication.config.spatial.geoserverUrl}"
-                        },
-                        mapOptions
-                    );
                     var mapFeatures = $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
-                    var sitesViewModel = new SitesViewModel(project.sites, map, mapFeatures, ${user?.isEditor?:false}, project.projectId);
-                    ko.applyBindings(sitesViewModel, document.getElementById('sitesList'));
-                    var tableApi = $('#sites-table').DataTable( {
-                        "columnDefs": [
-                        {
-                            "targets": 0,
-                            "orderable": false,
-                            "searchable": false,
-                            "width":"2em"
-                        },
-                        {
-                            "targets": 1,
-                            "orderable": false,
-                            "searchable": false,
-                            "width":"4em"
-                        },
-                        {
-                            "targets":3,
-                            "orderData":[4],
-                            "width":"8em",
-                            "orderable":true
-                        },
-                        {
-                            "targets":4,
-                            "visible":false
+                    var sitesTabOptions = {
+                        featureServiceUrl: "${createLink(controller: 'proxy', action:'feature')}",
+                        wmsServerUrl: "${grailsApplication.config.spatial.geoserverUrl}",
+                        spinnerUrl: "${asset.assetPath(src:'loading.gif')}",
+                        mapFeatures: mapFeatures,
+                        sitesPhotoPointsUrl:fcConfig.sitesPhotoPointsUrl,
+                        userIdEditor: ${user?.isEditor?:false},
+                        bindingElementId:'sitesList',
+                        sitesTableSelector:'#sites-table',
+                        selectAllSelector:'#select-all-sites',
+                        photoPointSelector:'#site-photo-points',
+                        loadingSpinnerSelector:'#img-spinner',
+                        photoScrollerSelector:'.photo-slider'
 
-                        }
-                        ],
-                        "order":[3, "desc"],
-                        "language": {
-                            "search":'<div class="input-prepend"><span class="add-on"><i class="fa fa-search"></i></span>_INPUT_</div>',
-                            "searchPlaceholder":"Search sites..."
 
-                        },
-                        "searchDelay":350
-                        }
-                    );
-
-                    var visibleIndicies = function() {
-                        var settings = tableApi.settings()[0];
-                        var start = settings._iDisplayStart;
-                        var count = settings._iDisplayLength;
-
-                        var visibleIndicies = [];
-                        for (var i=start; i<Math.min(start+count, settings.aiDisplay.length); i++) {
-                            visibleIndicies.push(settings.aiDisplay[i]);
-                        }
-                        return visibleIndicies;
                     };
-                    $('#sites-table').dataTable().on('draw.dt', function(e) {
-                        sitesViewModel.sitesFiltered(visibleIndicies());
-                    });
-                    $('#sites-table tbody').on( 'mouseenter', 'td', function () {
-                            var table = $('#sites-table').DataTable();
-                            var rowIdx = table.cell(this).index().row;
-                            sitesViewModel.highlightSite(rowIdx);
+                    viewModel.initialiseSitesTab(sitesTabOptions);
 
-                        } ).on('mouseleave', 'td', function() {
-                            var table = $('#sites-table').DataTable();
-                            var rowIdx = table.cell(this).index().row;
-                            sitesViewModel.unHighlightSite(rowIdx);
-                        });
-                    $('#select-all-sites').change(function() {
-                        var checkbox = this;
-                        // This lets knockout update the bindings correctly.
-                        $('#sites-table tbody tr :checkbox').trigger('click');
-                    });
-                    sitesViewModel.sitesFiltered(visibleIndicies());
-
-                    $('#site-photo-points a').click(function(e) {
-                        e.preventDefault();
-                        $('#site-photo-points').html('<asset:image id="img-spinner" width="50" height="50" src="loading.gif" alt="Loading"/>');
-                        $.get(fcConfig.sitesPhotoPointsUrl).done(function(data) {
-
-                            $('#site-photo-points').html($(data));
-                            $('#site-photo-points img').on('load', function() {
-
-                                var parent = $(this).parents('.thumb');
-                                var $caption = $(parent).find('.caption');
-                                $caption.outerWidth($(this).width());
-
-                            });
-                            $( '.photo-slider' ).mThumbnailScroller({theme:'hover-classic'});
-                            $('.photo-slider .fancybox').fancybox({
-                                helpers : {
-                                    title: {
-                                        type: 'inside'
-                                    }
-                                },
-                                beforeLoad: function() {
-                                    var el, id = $(this.element).data('caption');
-
-                                    if (id) {
-                                        el = $('#' + id);
-
-                                        if (el.length) {
-                                            this.title = el.html();
-                                        }
-                                    }
-                                },
-                                nextEffect:'fade',
-                                previousEffect:'fade'
-                            });
-                            $(window).load(function() {
-
-                            });
-                        });
-                    });
                 }
                 if (tab === '#plan' && !planTabInitialised) {
                     $.event.trigger({type:'planTabShown'});
