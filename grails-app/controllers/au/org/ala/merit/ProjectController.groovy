@@ -176,7 +176,7 @@ class ProjectController {
             List reportOrder = config?.projectReports?.collect{[category:it.category, description:it.description]} ?: []
             Map reportingTab = [label: 'Reporting', visible:user?.hasViewAccess, type:'tab', template:'projectReporting', reports:project.reports, reportOrder:reportOrder, stopBinding:true, services: config.services, scores:scores, hideDueDate:true, isAdmin:user?.isAdmin, isGrantManager:user?.isCaseManager]
 
-            Map rlpModel = [overview:model.overview, documents:model.documents, details:model.details, site:model.site, rlpSites:sitesTab, reporting:reportingTab]
+            Map rlpModel = [overview:model.overview, documents:model.documents, details:model.details, site:model.site, reporting:reportingTab]
             rlpModel.admin = model.admin
             rlpModel.admin.meriPlanTemplate = RLP_MERI_PLAN_TEMPLATE
             rlpModel.admin.projectServices = config.services

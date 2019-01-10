@@ -1188,17 +1188,11 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
             highlightOnHover:true,
             features:[],
             featureService: config.featureServiceUrl,
-            wmsServer: config.wmsServerUrl
+            wmsServer: config.wmsServerUrl,
+            leafletIconPath:options.leafletIconPath
         };
 
-        map = init_map_with_features({
-                mapContainer: "map",
-                scrollwheel: false,
-                featureService: config.featureServiceUrl,
-                wmsServer: config.wmsServerUrl
-            },
-            mapOptions
-        );
+        var map = createMap(mapOptions);
 
         var sitesViewModel = new SitesViewModel(project.sites, map, options.mapFeatures, options.userIsEditor, project.projectId);
         ko.applyBindings(sitesViewModel, document.getElementById(options.bindingElementId));

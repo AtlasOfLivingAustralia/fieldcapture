@@ -50,14 +50,17 @@ function initialiseTabs(tabConfig, options) {
         var tabId = tabContentTarget.substring(1, tabContentTarget.length);
 
         var tab = tabConfig[tabId];
-        if (tab && !tab.initialised) {
-            initialiseTab(tab).done(tabShown(tab));
+        if (tab) {
+
+            if (!tab.initialised) {
+                initialiseTab(tab).done(tabShown(tab));
+            }
+            else {
+                tabShown(tab);
+            }
+            var tab = e.currentTarget.hash;
+            amplify.store(config.tabStorageKey, tab);
         }
-        else {
-            tabShown(tab);
-        }
-        var tab = e.currentTarget.hash;
-        amplify.store(config.tabStorageKey, tab);
     });
 
     // Select a tab to display when initialising.

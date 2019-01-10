@@ -77,6 +77,7 @@
         healthCheckUrl:"${createLink(controller:'ajax', action:'keepSessionAlive')}",
         projectStartDateValidationUrl:"${createLink(controller:'project', action:'ajaxValidateProjectStartDate', id:project.projectId)}",
         spinnerUrl:"${asset.assetPath(src:'loading.gif')}",
+        projectSitesUrl:"${createLink(action:'ajaxProjectSites', id:project.projectId)}",
         returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
 
     },
@@ -87,6 +88,8 @@
 
     <asset:stylesheet src="common.css"/>
     <asset:stylesheet src="project.css"/>
+    <asset:stylesheet src="leaflet-manifest.css"/>
+    <asset:stylesheet src="feature.css"/>
 </head>
 <body>
 <div id="spinner" class="spinner" style="position: fixed;top: 50%;left: 50%;margin-left: -50px;margin-top: -50px;text-align:center;z-index:1234;overflow: auto;width: 100px;height: 102px;">
@@ -348,6 +351,8 @@
                 },
                 'site': {
                     initialiser: function () {
+                        L.Browser.touch = false;
+                        var iconPath = '${assetPath(src:'leaflet-0.7.7/images')}';
                         var mapFeatures = $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
                         var sitesTabOptions = {
                             featureServiceUrl: fcConfig.featureServiceUrl,
@@ -361,14 +366,20 @@
                             selectAllSelector:'#select-all-sites',
                             photoPointSelector:'#site-photo-points',
                             loadingSpinnerSelector:'#img-spinner',
-                            photoScrollerSelector:'.photo-slider'
-
-
+                            photoScrollerSelector:'.photo-slider',
+                            leafletIconPath:iconPath
                         };
                         viewModel.initialiseSitesTab(sitesTabOptions);
+                         %{--$.get(fcConfig.projectSitesUrl).done(function(data) {--}%
+                            %{--if (data && data.features) {--}%
+                                %{--sitesTabOptions.mapFeatures = {type:'FeatureCollection', features:data.features};--}%
+                            %{--}--}%
+                        %{--}).always(function() {--}%
+                            %{----}%
+                        %{--});--}%
+
                     }
                 },
-
                 'details': {
                     initialiser: function () {
                         initialiseDocumentTable('#meriPlanDocumentList');
@@ -466,6 +477,8 @@
 <asset:javascript src="reporting.js"/>
 <asset:javascript src="select2/4.0.3/js/select2.full"/>
 <asset:javascript src="forms-knockout-bindings.js"/>
+<asset:javascript src="leaflet-manifest.js"/>
+<asset:javascript src="feature.js"/>
 <asset:deferredScripts/>
 </body>
 </html>

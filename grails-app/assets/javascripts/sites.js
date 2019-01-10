@@ -758,7 +758,161 @@ function SiteViewModelWithMapIntegration (siteData, projectId) {
 
 };
 
+/**
+ * Implements the API that the mapWithFeatures script provides and delegates to the map library provided
+ * by the ALA map plugin.
+ */
+var AlaMapAdapter = function(map, options) {
+    var self = this;
 
+    self.featureIndex = {};
+    self.featureLayer = null;
+    map.getMapImpl().eachLayer(function (layer) {
+        if (layer instanceof L.FeatureGroup) {
+            self.featureLayer = layer;
+        }
+    });
+
+    function getId(feature) {
+        return feature.siteId || feature.id || feature.properties.id || feature.properties.siteId;
+    };
+
+
+    self.addFeature = function(feature) {
+        self.featureLayer.on('layeradd', function(e) {
+            var id = getId(feature);
+            if (!self.featureIndex[id]) {
+                self.featureIndex[id] = [];
+            }
+            self.featureIndex[id].push(e.layer);
+        });
+        L.Icon.Default.imagePath = options.leafletIconPath;
+
+        map.setGeoJSON(feature);
+
+        self.featureLayer.off("layeradd");
+    };
+
+    self.clearFeatures = function() {
+        map.clearMarkers();
+        map.clearLayers();
+    };
+
+    self.replaceAllFeatures = function(features) {
+
+        self.featureIndex = {};
+        _.each(features, function(feature) {
+            self.addFeature(feature);
+        });
+    };
+
+    self.unHighlightFeatureById = function (id) {
+        var layers = self.featureIndex[id];
+
+        _.each(layers, function(layer) {
+            unhighlightLayer(layer);
+        })
+
+    };
+
+    self.highlightFeatureById = function (id) {
+        var layers = self.featureIndex[id];
+
+        _.each(layers, function(layer) {
+            highlightLayer(layer);
+        })
+    };
+
+    function highlightLayer(layer) {
+
+        if (_.isFunction(layer.eachLayer)) { // Layers created from MultiPolygons & MultiPolyLines have nested layers
+            layer.eachLayer(highlightLayer);
+        }
+        else {
+            var options = layer.options;
+            if (!options) {
+                console.log("WARNING: No options for layer: " + layer);
+                return;
+            }
+            if (layer.setStyle) {
+                var style = {
+                    weight: options.weight * 3,
+                    fillOpacity: 1,
+                    color: options.color
+                };
+                layer.setStyle(style);
+                if (layer.bringToFront()) {
+                    layer.bringToFront();
+                }
+            }
+            else if (options.icon) {
+                var icon = options.icon;
+                icon.options.iconSize = [icon.options.iconSize[0] * 1.5, icon.options.iconSize[1] * 1.5];
+                icon.options.iconAnchor = [icon.options.iconAnchor[0] * 1.5, icon.options.iconAnchor[1] * 1.5];
+                layer.setIcon(icon);
+            }
+        }
+    }
+
+    function unhighlightLayer(layer) {
+
+        if (_.isFunction(layer.eachLayer)) { // Layers created from MultiPolygons & MultiPolyLines have nested layers
+            layer.eachLayer(unhighlightLayer);
+        }
+        else {
+
+            if (layer.setStyle) {
+                var options = layer.options;
+                if (options && layer.setStyle) {
+                    var style = {
+                        weight: options.weight / 3,
+                        fillOpacity: 0.2,
+                        color: options.color
+                    };
+                    layer.setStyle(style);
+                }
+            }
+            else if (layer.options && layer.options.icon) {
+                var icon = layer.options.icon;
+                icon.options.iconSize = [icon.options.iconSize[0] / 1.5, icon.options.iconSize[1] / 1.5];
+                icon.options.iconAnchor = [icon.options.iconAnchor[0] / 1.5, icon.options.iconAnchor[1] / 1.5];
+                layer.setIcon(icon);
+            }
+        }
+    }
+
+};
+
+var createMap = function(options) {
+    var map;
+    var mapContainerId = options.mapContainerId || "map";
+    if (options.useAlaMap) {
+        options.drawOptions = {
+            polyline: false,
+            polygon: false,
+            rectangle: false,
+            circle: false,
+            edit: false
+        };
+        options.drawControl = false;
+        options.singleDraw = false;
+        L.Icon.Default.imagePath = options.leafletIconPath;
+        map = new AlaMapAdapter(new ALA.Map(mapContainerId, options), options);
+        L.Icon.Default.imagePath = options.leafletIconPath;
+
+    }
+    else {
+        map = init_map_with_features({
+                mapContainer: mapContainerId,
+                scrollwheel: false,
+                featureService: options.featureServiceUrl,
+                wmsServer: options.wmsServerUrl
+            },
+            options
+        );
+    }
+    return map;
+};
 var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId) {
 
     var self = this;
@@ -768,9 +922,17 @@ var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId)
         features = mapFeatures.features;
     }
 
+    var findFeatureForSite = function(site) {
+        return _.find(features, function(feature) {
+            var id = feature.siteId || feature.id || feature.properties.id || feature.properties.siteId;
+            if (id == site.siteId) {
+                return true;
+            }
+        });
+    };
     self.sites = $.map(sites, function (site, i) {
         var feature = features[i] || site.extent ? site.extent.geometry : null;
-        site.feature = feature;
+        site.feature = feature; //indFeatureForSite(site);
         site.selected = ko.observable(false);
         return site;
     });
@@ -889,6 +1051,13 @@ var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId)
 
                 });
             }
+            var feature =  map.featureIndex[site.siteId];
+            if (feature && feature[0]) {
+                if (site.type == 'compound') {
+                    feature[0].fillColor = '#00ff00';
+                }
+            }
+
         });
 
     };
