@@ -1347,6 +1347,41 @@ class ProjectService  {
         dashboard
     }
 
+    /**
+     * Returns a Map with keys : projectArea (contains the site marked as the project area) and features (a List
+     * of project sites as geo JSON)
+     * @param projectId the id of the project to return sites for.
+     */
+    Map projectSites(String projectId) {
+        Map result = [features:[]]
+        Map projectSites = siteService.getProjectSites(projectId)
+        if (projectSites && !projectSites.error) {
+            List sites = projectSites.sites
+            Map projectArea = projectSites?.find { it.properties?.type == 'projectArea' }
+            if (projectArea) {
+                result.projectArea = projectArea
+            }
+
+            sites?.each { site ->
+                if (site.properties?.type == 'compound') {
+                    site.properties.category = 'Reporting Sites'
+                    result.features << site
+                }
+                else if (site.properties?.type != 'projectArea') {
+                    site.properties.category = 'Planning Sites'
+                    result.features << site
+                }
+            }
+        }
+        else {
+            if (projectSites && projectSites.error) {
+                result.error = projectSites.error
+            }
+
+        }
+        result
+    }
+
     private Map findScore(String scoreId, Map scoresWithTargets) {
         Map scoreData = null
         scoresWithTargets?.find { String key, List outputScores ->

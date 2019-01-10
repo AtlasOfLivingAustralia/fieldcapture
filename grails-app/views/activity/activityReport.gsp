@@ -131,8 +131,25 @@
 
 
             var mapOptions = {baseLayersName:'Google'};
+            var planningSitesCategory = 'Planning Sites';
             if (features && _.isArray(features)) {
-                mapOptions.selectableFeatures = features;
+                var planningFeatures = [];
+                var allFeatures = [];
+                _.each(features, function(feature) {
+                    // Group the planning sites together into a single collection
+                    if (feature.properties && feature.properties.category && feature.properties.category == planningSitesCategory) {
+                        planningFeatures.push(feature);
+                    }
+                    else {
+                        allFeatures.push(feature);
+                    }
+                });
+                if (planningFeatures.length > 0) {
+                    allFeatures.unshift({type:'Feature Collection', features:planningFeatures, properties:{category:planningSitesCategory, name:planningSitesCategory}});
+                }
+                mapOptions.selectableFeatures = allFeatures;
+
+
             }
 
             var formFeatures = new ecodata.forms.FeatureCollection(reportSite ? reportSite.features : []);

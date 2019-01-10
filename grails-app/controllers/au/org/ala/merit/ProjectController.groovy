@@ -176,7 +176,7 @@ class ProjectController {
             List reportOrder = config?.projectReports?.collect{[category:it.category, description:it.description]} ?: []
             Map reportingTab = [label: 'Reporting', visible:user?.hasViewAccess, type:'tab', template:'projectReporting', reports:project.reports, reportOrder:reportOrder, stopBinding:true, services: config.services, scores:scores, hideDueDate:true, isAdmin:user?.isAdmin, isGrantManager:user?.isCaseManager]
 
-            Map rlpModel = [overview:model.overview, documents:model.documents, details:model.details, site:model.site, reporting:reportingTab]
+            Map rlpModel = [overview:model.overview, documents:model.documents, details:model.details, site:model.site, rlpSites:sitesTab, reporting:reportingTab]
             rlpModel.admin = model.admin
             rlpModel.admin.meriPlanTemplate = RLP_MERI_PLAN_TEMPLATE
             rlpModel.admin.projectServices = config.services
@@ -778,6 +778,12 @@ class ProjectController {
         }
     }
 
+    def ajaxProjectSites(String id) {
+        Map result = projectService.projectSites(id)
+
+        render result as JSON
+    }
+
     private Map activityReportModel(String projectId, String reportId, ReportMode mode) {
 
         Map project = projectService.get(projectId)
@@ -796,37 +802,10 @@ class ProjectController {
                 model.reportSite = project.sites?.find { it.siteId == model.activity.siteId }
             }
 
-            Map projectSites = siteService.getProjectSites(projectId)
-            if (projectSites && !projectSites.error) {
-                List sitesAsGeojson = []
-                List sites = projectSites.sites
-                Map projectArea = project.sites?.find { it.type == 'projectArea' }
-                if (projectArea) {
-                    model.projectArea = projectArea
-                }
-
-                Map plannedSites = [
-                        type:"FeatureCollection",
-                        features:[],
-                        properties:[
-                                name:'Planning sites'
-                        ]
-                ]
-                sites?.each { site ->
-                    if (site.properties?.type == 'compound') {
-                        sitesAsGeojson << site
-                    }
-                    else if (site.properties?.type != 'projectArea') {
-                        plannedSites.features << site
-                    }
-                }
-                if (plannedSites.features) {
-                    sitesAsGeojson.add(0, plannedSites)
-                }
-                if (sitesAsGeojson) {
-                    model.features = sitesAsGeojson
-                }
-
+            Map sites = projectService.projectSites(projectId)
+            if (!sites.error) {
+                model.projectArea = sites.projectArea
+                model.features = sites.features
             }
         }
         model
