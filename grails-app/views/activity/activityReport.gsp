@@ -97,8 +97,8 @@
     $(function () {
         var returnTo = "${returnTo}";
         var activity = JSON.parse('${(activity as JSON).toString().encodeAsJavaScript()}');
-        var reportSite = JSON.parse('${reportSite ? (reportSite as JSON).toString().replace("'", "\\u0027") : '{}'}');
-        var projectArea = '${projectArea ? (projectArea as JSON).toString().replace("'", "\\u0027") : '{}'}';
+        var reportSite = ${reportSite?.encodeAsJSON() ?: '{}' };
+        var projectArea = ${projectArea?.encodeAsJSON() ?: '{}'};
         var reportId = '${report.reportId}';
 
 

@@ -342,7 +342,7 @@ function initSiteViewModel() {
     var savedSiteData = {
         siteId: "${site?.siteId}",
         name : "${site?.name?.encodeAsJavaScript()}",
-        externalId : "${site?.externalId}",
+        externalId : "${site?.externalId?.encodeAsJavaScript()}",
         context : "${site?.context}",
         type : "${site?.type}",
         extent: ${site?.extent?:'null'},

@@ -132,17 +132,18 @@
         });
 
         var metaModel = JSON.parse('${metaModel ? metaModel.toString().replace("'", "\\u0027") : '{}'}');
-
+        var activity = JSON.parse('${(activity as JSON).toString().encodeAsJavaScript()}');
+        var site = ${site?.encodeAsJSON() ?: 'null' };
         var viewModel = new ActivityViewModel(
-            ${(activity as JSON).toString()},
-            ${site ?: 'null'},
+            activity,
+            site,
             fcConfig.project,
             metaModel,
             ${themes ?: 'null'});
 
         ko.applyBindings(viewModel);
         if (metaModel && metaModel.supportsSites) {
-            var reportSite = JSON.parse('${reportSite ? (reportSite as JSON).toString().replace("'", "\\u0027") : '{}'}');
+            var reportSite =  ${reportSite?.encodeAsJSON() ?: '{}' };
             var formFeatures = new ecodata.forms.FeatureCollection(reportSite ? reportSite.features : []);
             fcConfig.featureCollection = formFeatures;
         }
