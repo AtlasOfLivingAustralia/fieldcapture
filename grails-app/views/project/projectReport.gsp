@@ -193,7 +193,7 @@
     </table>
     </g:if>
 
-    <g:if test="${metrics.targets  && ('Progress against output targets' in content)}">
+    <g:if test="${metrics?.targets  && ('Progress against output targets' in content)}">
         <h3>Progress against output targets</h3>
         <p>Note this is the current project progress, not the progress made during the selected stage(s).</p>
         <div class="row-fluid dashboard">
@@ -215,7 +215,7 @@
             </div>
         </div>
     </g:if>
-    <g:if test="${metrics.other  && ('Progress of outputs without targets' in content)}">
+    <g:if test="${metrics?.other  && ('Progress of outputs without targets' in content)}">
         <h3>Progress of outputs without targets</h3>
         <p>Note this is the current project progress, not the progress made during the selected stage(s).</p>
         <div class="outputs-without-targets dashboard">
