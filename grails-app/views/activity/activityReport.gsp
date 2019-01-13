@@ -99,6 +99,12 @@
         var activity = JSON.parse('${(activity as JSON).toString().encodeAsJavaScript()}');
         var reportSite = ${reportSite?.encodeAsJSON() ?: '{}' };
         var projectArea = ${projectArea?.encodeAsJSON() ?: '{}'};
+        if (projectArea && projectArea.extent && projectArea.extent.geometry) {
+            projectArea = projectArea.extent.geometry;
+        }
+        else {
+            projectArea = null;
+        }
         var reportId = '${report.reportId}';
 
 

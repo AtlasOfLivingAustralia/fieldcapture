@@ -85,7 +85,7 @@ class ProjectSummaryReportCommand {
         documents
     }
 
-    private def latestStageReport(Map project, List reportedStages) {
+    private def latestStageReport(Map project, List reportedStages, Map activitiesModel, Set activityModels) {
         // Use the final report if available, otherwise fall back to the stage report.
         Map stageReportModel = null
         Map latestStageReport = findStageReport(project.activities, reportedStages)
@@ -172,7 +172,7 @@ class ProjectSummaryReportCommand {
         }
 
         if ('Stage report' in contentToInclude) {
-            model.putAll(latestStageReport(project, reportedStages))
+            model.putAll(latestStageReport(project, reportedStages, activitiesModel, activityModels))
         }
 
         if (('Project risks changes'in contentToInclude) || ('Project risks' in contentToInclude)) {
