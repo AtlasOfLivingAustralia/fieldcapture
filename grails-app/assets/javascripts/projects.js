@@ -1189,7 +1189,8 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
             features:[],
             featureService: config.featureServiceUrl,
             wmsServer: config.wmsServerUrl,
-            leafletIconPath:options.leafletIconPath
+            leafletIconPath:options.leafletIconPath,
+            useAlaMap: config.useAlaMap
         };
 
         var map = createMap(mapOptions);
@@ -1212,18 +1213,33 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
                         "width":"4em"
                     },
                     {
-                        "targets":3,
-                        "orderData":[4],
-                        "width":"8em",
-                        "orderable":true
+                        "targets":2,
+                        "orderable": false,
+                        "searchable": true,
+                        "width": "2em",
+                        "visible":config.showSiteType
+                    },
+                    {
+                        "targets": 3,
+                        "orderable": false,
+                        "searchable": true
+
                     },
                     {
                         "targets":4,
+                        "orderData":[4],
+                        "width":"6em",
+                        "searchable": false,
+                        "orderable":true
+                    },
+                    {
+                        "targets":5,
+                        "searchable": false,
                         "visible":false
 
                     }
                 ],
-                "order":[3, "desc"],
+                "order":[4, "desc"],
                 "language": {
                     "search":'<div class="input-prepend"><span class="add-on"><i class="fa fa-search"></i></span>_INPUT_</div>',
                     "searchPlaceholder":"Search sites..."
@@ -1244,18 +1260,31 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
             }
             return visibleIndicies;
         };
+        sitesViewModel.typeFilter.subscribe(function(filterValue) {
+
+            if (filterValue == 'Both') {
+                filterValue = "";  // Clear the search.
+            }
+            $sitesTable.DataTable().column(2).search(filterValue).draw();
+        });
         $sitesTable.dataTable().on('draw.dt', function(e) {
             sitesViewModel.sitesFiltered(visibleIndicies());
         });
         $sitesTable.find('tbody').on( 'mouseenter', 'td', function () {
             var table = $sitesTable.DataTable();
-            var rowIdx = table.cell(this).index().row;
-            sitesViewModel.highlightSite(rowIdx);
-
+            var index = table.cell(this).index();
+            if (index) {
+                var rowIdx = index.row;
+                sitesViewModel.highlightSite(rowIdx);
+            }
         } ).on('mouseleave', 'td', function() {
             var table = $sitesTable.DataTable();
-            var rowIdx = table.cell(this).index().row;
-            sitesViewModel.unHighlightSite(rowIdx);
+            var index = table.cell(this).index();
+            if (index) {
+                var rowIdx = index.row;
+                sitesViewModel.unHighlightSite(rowIdx);
+            }
+
         });
         $(config.selectAllSelector).change(function() {
             var checkbox = this;

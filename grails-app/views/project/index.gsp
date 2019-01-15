@@ -245,6 +245,8 @@
             var themes = ${config.themes?:[]};
             config.themes = themes;
             var services = ${config.services?:[]};
+            config.useAlaMap = ${Boolean.valueOf(projectContent.site.useAlaMap)};
+            config.showSiteType = ${Boolean.valueOf(projectContent.site.showSiteType)};
             config.services = services;
             config.useRlpTemplate = services.length > 0;
             if (!config.useRlpTemplate) {
@@ -367,16 +369,24 @@
                             photoPointSelector:'#site-photo-points',
                             loadingSpinnerSelector:'#img-spinner',
                             photoScrollerSelector:'.photo-slider',
-                            leafletIconPath:iconPath
+                            leafletIconPath:iconPath,
+                            useAlaMap:config.useAlaMap,
+                            showSiteType:config.showSiteType
                         };
-                        viewModel.initialiseSitesTab(sitesTabOptions);
-                         %{--$.get(fcConfig.projectSitesUrl).done(function(data) {--}%
-                            %{--if (data && data.features) {--}%
-                                %{--sitesTabOptions.mapFeatures = {type:'FeatureCollection', features:data.features};--}%
-                            %{--}--}%
-                        %{--}).always(function() {--}%
-                            %{----}%
-                        %{--});--}%
+                        if (!config.useAlaMap) {
+
+                            viewModel.initialiseSitesTab(sitesTabOptions);
+                        }
+                        else {
+
+                             $.get(fcConfig.projectSitesUrl).done(function(data) {
+                                if (data && data.features) {
+                                    sitesTabOptions.mapFeatures = {type:'FeatureCollection', features:data.features};
+                                }
+                            }).always(function() {
+                                viewModel.initialiseSitesTab(sitesTabOptions);
+                            });
+                        }
 
                     }
                 },

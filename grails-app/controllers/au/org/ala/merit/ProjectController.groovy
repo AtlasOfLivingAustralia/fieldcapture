@@ -173,6 +173,8 @@ class ProjectController {
             model.overview.servicesDashboard = projectService.getServiceDashboardData(project.projectId, !user?.hasViewAccess)
             model.details.meriPlanTemplate = RLP_MERI_PLAN_TEMPLATE+'View'
 
+            model.site.useAlaMap = true
+            model.site.showSiteType = true
             List reportOrder = config?.projectReports?.collect{[category:it.category, description:it.description]} ?: []
             Map reportingTab = [label: 'Reporting', visible:user?.hasViewAccess, type:'tab', template:'projectReporting', reports:project.reports, reportOrder:reportOrder, stopBinding:true, services: config.services, scores:scores, hideDueDate:true, isAdmin:user?.isAdmin, isGrantManager:user?.isCaseManager]
 

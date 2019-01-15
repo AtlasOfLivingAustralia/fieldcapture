@@ -20,7 +20,28 @@ var SiteStatusModel = function(site, currentStage, map, sitesViewModel) {
         return activity.siteId == site.siteId && !activity.isComplete();
     });
     self.reportingComplete = incompleteActivities.length == 0;
-    var bounds = sitesViewModel.getSiteBounds(site.siteId);
+
+
+    function getSiteBounds(siteId) {
+        // Only works for polygon sites.
+        var features = map.featureIndex[siteId];
+
+        var bounds = new google.maps.LatLngBounds();
+        if (features && _.isArray(features)) {
+            for (var i=0; i<features.length; i++) {
+                var feature = features[i];
+                if (feature && _.isFunction(feature.getPath)) {
+                    feature.getPath().forEach(function(element) {
+                        bounds.extend(element)
+                    });
+                }
+            }
+        }
+
+        return bounds;
+    }
+
+    var bounds = getSiteBounds(site.siteId);
     /**
      * Calculates a position for the info window located in the top middle of the sites bounds.
      * @param bounds a LatLngBounds object containing the bounds of the site.

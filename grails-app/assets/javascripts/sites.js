@@ -765,6 +765,23 @@ function SiteViewModelWithMapIntegration (siteData, projectId) {
 var AlaMapAdapter = function(map, options) {
     var self = this;
 
+    var defaults = {
+        styleProperty: 'type',
+        styles: {
+            compound: {
+                color: '#f00',
+                fillOpacity: 0.2,
+                weight: 3
+            },
+            worksArea: {
+                color: '#0f0',
+                fillOpacity: 0.2,
+                weight: 3
+            }
+        }
+    };
+    var options = _.defaults(defaults, options);
+
     self.featureIndex = {};
     self.featureLayer = null;
     map.getMapImpl().eachLayer(function (layer) {
@@ -780,11 +797,19 @@ var AlaMapAdapter = function(map, options) {
 
     self.addFeature = function(feature) {
         self.featureLayer.on('layeradd', function(e) {
+            var layer = e.layer;
             var id = getId(feature);
+            if (options.styleProperty && feature.properties && feature.properties[options.styleProperty]) {
+                var prop = feature.properties[options.styleProperty];
+                if (options.styles[prop] && _.isFunction(layer.setStyle)) {
+                    layer.setStyle(options.styles[prop]);
+                }
+
+            }
             if (!self.featureIndex[id]) {
                 self.featureIndex[id] = [];
             }
-            self.featureIndex[id].push(e.layer);
+            self.featureIndex[id].push(layer);
         });
         L.Icon.Default.imagePath = options.leafletIconPath;
 
@@ -931,9 +956,12 @@ var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId)
         });
     };
     self.sites = $.map(sites, function (site, i) {
-        var feature = features[i] || site.extent ? site.extent.geometry : null;
-        site.feature = feature; //indFeatureForSite(site);
+        site.feature = findFeatureForSite(site) || (site.extent ? site.extent.geometry : null);
         site.selected = ko.observable(false);
+
+        if (!site.type) {
+            site.type = 'worksArea';
+        }
         return site;
     });
     self.selectedSiteIds = ko.computed(function() {
@@ -968,6 +996,9 @@ var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId)
         }
         return '';
     };
+    self.typeOptions = ['Both', 'P', 'R'];
+    self.typeFilter = ko.observable(self.typeOptions[0]);
+
     // Animation callbacks for the lists
     self.showElement = function (elem) {
         if (elem.nodeType === 1) $(elem).hide().slideDown()
@@ -1051,13 +1082,6 @@ var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId)
 
                 });
             }
-            var feature =  map.featureIndex[site.siteId];
-            if (feature && feature[0]) {
-                if (site.type == 'compound') {
-                    feature[0].fillColor = '#00ff00';
-                }
-            }
-
         });
 
     };
@@ -1124,8 +1148,14 @@ var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId)
         });
     };
     this.editSite = function (site) {
-        var url = fcConfig.siteEditUrl + '/' + site.siteId + '?returnTo=' + encodeURIComponent(fcConfig.returnTo);
-        document.location.href = url;
+        if (site.type != 'compound') {
+            var url = fcConfig.siteEditUrl + '/' + site.siteId + '?returnTo=' + encodeURIComponent(fcConfig.returnTo);
+            document.location.href = url;
+        }
+        else {
+            bootbox.alert("This site can be edited via reporting forms only");
+        }
+
     };
     this.deleteSite = function (site) {
         bootbox.confirm("Are you sure you want to remove this site from this project?", function (result) {
@@ -1167,30 +1197,6 @@ var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId)
             map.getAddressById(site.name(), site.setAddress);
         });
     };
-
-    function updateBounds(coordinates, bounds) {
-        if (coordinates && _.isArray(coordinates)) {
-            for (var i=0; i<coordinates.length; i++) {
-                updateBounds(coordinates[i], bounds);
-            }
-        }
-        else {
-            if (coordinates && coordinates.lat) {
-                bounds.extend(coordinates);
-            }
-        }
-    }
-    self.getSiteBounds = function(siteId) {
-        // Only works for polygon sites.
-        var site = self.getSiteById(siteId);
-        var bounds = new google.maps.LatLngBounds();
-
-        if (site && site.extent && site.extent.geometry && site.extent.geometry.coordinates) {
-            updateBounds(site.extent.geometry.coordinates, bounds);
-        }
-        return bounds;
-    };
-
 
 
     self.displaySites();

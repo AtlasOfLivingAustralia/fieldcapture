@@ -37,6 +37,11 @@ div.dataTables_filter input {
                 <tr>
                     <th><input type="checkbox" id="select-all-sites"></th>
                     <th></th>
+                    <th>Type <fc:iconHelp html="true">Planning site (P) or Reporting site (R)</fc:iconHelp><br/>
+                        <select data-bind="value:typeFilter, options:typeOptions">
+
+                        </select>
+                    </th>
                     <th>Name</th>
                     <th>Updated</th>
                     <th></th>
@@ -49,11 +54,14 @@ div.dataTables_filter input {
                     <td>
                         <g:if test="${editable}">
                             <span>
-                                <button type="button" data-bind="click:$root.editSite" class="btn btn-container"><i class="icon-edit" title="Edit ${wordForSite.capitalize()}"></i></button>
+                                <button type="button" data-bind="click:$root.editSite, visible:type != 'compound'" class="btn btn-container"><i class="icon-edit" title="Edit ${wordForSite.capitalize()}"></i></button>
                                 <button type="button" data-bind="click:$root.viewSite" class="btn btn-container"><i class="icon-eye-open" title="View ${wordForSite.capitalize()}"></i></button>
-                                <button type="button" data-bind="click:$root.deleteSite" class="btn btn-container"><i class="icon-remove" title="Delete ${wordForSite.capitalize()}"></i></button>
+                                <button type="button" data-bind="click:$root.deleteSite, visible:type != 'compound'" class="btn btn-container"><i class="icon-remove" title="Delete ${wordForSite.capitalize()}"></i></button>
                             </span>
                         </g:if>
+                    </td>
+                    <td data-bind="text:type == 'compound' ? 'R' : 'P', title:type == 'compound' ? 'Reporting site' :  'Planning site'">
+                    </td>
 
                     <td>
                         <a style="margin-left:10px;" data-bind="text:name, attr: {href:'${createLink(controller: "site", action: "index")}' + '/' + siteId}"></a>
