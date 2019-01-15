@@ -50,7 +50,7 @@ div.dataTables_filter input {
                 </thead>
                 <tbody data-bind="foreach: sites">
                 <tr data-bind="click: $parent.selectDocument">
-                    <th><input type="checkbox" name="select-site" data-bind="checked:selected"></th>
+                    <th><input type="checkbox" name="select-site" data-bind="checked:selected, enable:type != 'compound'"></th>
                     <td>
                         <g:if test="${editable}">
                             <span>

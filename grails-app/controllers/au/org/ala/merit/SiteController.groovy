@@ -124,6 +124,9 @@ class SiteController {
             flash.message = "Access denied: User does not have <b>editor</b> permission to edit site: ${id}"
             redirect(controller:'home', action:'index')
         } else {
+            if (result.site.type == SiteService.SITE_TYPE_COMPOUND) {
+                redirect(action:'index', id:id)
+            }
             result
         }
     }
@@ -154,6 +157,15 @@ class SiteController {
             return
         }
 
+        Map project = projectService.get(id, 'all')
+        List siteIds = payload.siteIds
+
+        project?.sites?.each { site ->
+            if (site.type == SiteService.SITE_TYPE_COMPOUND) {
+                siteIds.remove(site.siteId)
+            }
+        }
+
         Map resp = siteService.deleteSitesFromProject(id, payload.siteIds)
         if (resp.statusCode < 400) {
             render resp.resp as JSON
@@ -170,7 +182,8 @@ class SiteController {
             render status:400, text:'The siteId parameter is mandatory'
             return
         }
-        if (!projectService.canUserEditProject(userService.getCurrentUserId(), projectId)) {
+        Map site = siteService.get(id)
+        if (!projectService.canUserEditProject(userService.getCurrentUserId(), projectId) || site.type == SiteService.SITE_TYPE_COMPOUND) {
             render status:403, text: "Access denied: User does not have permission to edit sites for project: ${projectId}"
             return
         }
@@ -187,7 +200,8 @@ class SiteController {
 
     def ajaxDelete(String id) {
         // permissions check
-        if (!isUserMemberOfSiteProjects(siteService.get(id))) {
+        Map site = siteService.get(id)
+        if (!isUserMemberOfSiteProjects(site) || site.type == SiteService.SITE_TYPE_COMPOUND) {
             render status:403, text: "Access denied: User does not have permission to edit site: ${id}"
             return
         }
@@ -205,9 +219,9 @@ class SiteController {
     def update(String id) {
 
         log.debug("Updating site: " + id)
-
+        Map site = siteService.get(id)
         // permissions check
-        if (!isUserMemberOfSiteProjects(siteService.get(id))) {
+        if (!isUserMemberOfSiteProjects(site) || site.type == SiteService.SITE_TYPE_COMPOUND) {
             render status:403, text: "Access denied: User does not have permission to edit site: ${id}"
             return
         }
