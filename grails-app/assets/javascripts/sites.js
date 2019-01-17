@@ -921,6 +921,8 @@ var createMap = function(options) {
         };
         options.drawControl = false;
         options.singleDraw = false;
+        options.showReset = false;
+        options.showFitBoundsToggle = true;
         L.Icon.Default.imagePath = options.leafletIconPath;
         map = new AlaMapAdapter(new ALA.Map(mapContainerId, options), options);
         L.Icon.Default.imagePath = options.leafletIconPath;
