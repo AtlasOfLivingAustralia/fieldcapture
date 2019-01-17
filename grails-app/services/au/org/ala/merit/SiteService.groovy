@@ -333,10 +333,12 @@ class SiteService {
     }
 
     private Map createSite(String projectId, String name, String description, String externalId, String source, Map geometry, String geometryPid = null) {
+
+        Map values = [type:'worksArea', extent: [source: source, geometry: geometry], projects: [projectId], name: name, description: description, externalId:externalId, visibility:'private']
         if (geometryPid && !"null".equals(geometryPid)) {
-            geometry.pid = geometryPid
+            values.extent.geometry.pid = geometryPid
+            values.extent.pid = geometryPid
         }
-        def values = [extent: [source: source, geometry: geometry, pid:geometryPid], projects: [projectId], name: name, description: description, externalId:externalId, visibility:'private']
         return create(values)
     }
 
