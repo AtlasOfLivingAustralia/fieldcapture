@@ -373,21 +373,19 @@
                             useAlaMap:config.useAlaMap,
                             showSiteType:config.showSiteType
                         };
-                        if (!config.useAlaMap) {
+                        if (config.useAlaMap) {
+                            sitesTabOptions.mapFeatures = {};
+                            var sitesViewModel = viewModel.initialiseSitesTab(sitesTabOptions);
+                            $.get(fcConfig.projectSitesUrl).done(function(data) {
+                                if (data && data.features) {
+                                    sitesViewModel.setFeatures(data.features);
+                                }
+                            });
 
-                            viewModel.initialiseSitesTab(sitesTabOptions);
                         }
                         else {
-
-                             $.get(fcConfig.projectSitesUrl).done(function(data) {
-                                if (data && data.features) {
-                                    sitesTabOptions.mapFeatures = {type:'FeatureCollection', features:data.features};
-                                }
-                            }).always(function() {
-                                viewModel.initialiseSitesTab(sitesTabOptions);
-                            });
+                            viewModel.initialiseSitesTab(sitesTabOptions);
                         }
-
                     }
                 },
                 'details': {

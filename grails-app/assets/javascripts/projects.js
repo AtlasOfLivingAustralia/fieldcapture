@@ -1329,6 +1329,7 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
                 });
             });
         });
+        return sitesViewModel;
     };
 
     self.validateProjectStartDate = function() {

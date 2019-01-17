@@ -784,6 +784,8 @@ var AlaMapAdapter = function(map, options) {
 
     self.featureIndex = {};
     self.featureLayer = null;
+
+    // The Map API doesn't expose the main layer directly so we have to find it.
     map.getMapImpl().eachLayer(function (layer) {
         if (layer instanceof L.FeatureGroup) {
             self.featureLayer = layer;
@@ -944,21 +946,30 @@ var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId)
 
     var self = this;
     // sites
-    var features = [];
+    self.features = [];
     if (mapFeatures.features) {
-        features = mapFeatures.features;
+        self.features = mapFeatures.features;
     }
 
     var findFeatureForSite = function(site) {
-        return _.find(features, function(feature) {
+        return _.find(self.features, function(feature) {
             var id = feature.siteId || feature.id || feature.properties.id || feature.properties.siteId;
             if (id == site.siteId) {
                 return true;
             }
         });
     };
+
+    self.setFeatures = function(features) {
+        self.features = features;
+        _.each(self.sites, function(site) {
+            site.feature = findFeatureForSite(site);
+        });
+        self.displaySites();
+    };
+
     self.sites = $.map(sites, function (site, i) {
-        site.feature = findFeatureForSite(site) || (site.extent ? site.extent.geometry : null);
+        site.feature = findFeatureForSite(site);// || (site.extent ? site.extent.geometry : null);
         site.selected = ko.observable(false);
 
         if (!site.type) {
