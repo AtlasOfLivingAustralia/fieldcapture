@@ -926,6 +926,18 @@ var createMap = function(options) {
         options.showReset = false;
         options.showFitBoundsToggle = true;
         L.Icon.Default.imagePath = options.leafletIconPath;
+        if (options.useGoogleBaseMap) {
+            var googleLayer = new L.Google('ROADMAP', {maxZoom: 21, nativeMaxZoom: 21});
+            var otherLayers = {
+                Roadmap: googleLayer,
+                Hybrid: new L.Google('HYBRID', {maxZoom: 21, nativeMaxZoom: 21}),
+                Terrain: new L.Google('TERRAIN', {maxZoom: 21, nativeMaxZoom: 21})
+            };
+
+            options.baseLayer = googleLayer;
+            options.otherLayers = otherLayers;
+        }
+
         map = new AlaMapAdapter(new ALA.Map(mapContainerId, options), options);
         L.Icon.Default.imagePath = options.leafletIconPath;
 

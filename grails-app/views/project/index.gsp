@@ -78,6 +78,7 @@
         projectStartDateValidationUrl:"${createLink(controller:'project', action:'ajaxValidateProjectStartDate', id:project.projectId)}",
         spinnerUrl:"${asset.assetPath(src:'loading.gif')}",
         projectSitesUrl:"${createLink(action:'ajaxProjectSites', id:project.projectId)}",
+        useGoogleBaseMap: ${env == "production"},
         returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
 
     },
@@ -375,6 +376,7 @@
                         };
                         if (config.useAlaMap) {
                             sitesTabOptions.mapFeatures = {};
+                            sitesTabOptions.useGoogleBaseMap = fcConfig.useGoogleBaseMap;
                             var sitesViewModel = viewModel.initialiseSitesTab(sitesTabOptions);
                             $.get(fcConfig.projectSitesUrl).done(function(data) {
                                 if (data && data.features) {

@@ -1190,7 +1190,8 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
             featureService: config.featureServiceUrl,
             wmsServer: config.wmsServerUrl,
             leafletIconPath:options.leafletIconPath,
-            useAlaMap: config.useAlaMap
+            useAlaMap: config.useAlaMap,
+            useGoogleBaseMap: config.useGoogleBaseMap
         };
 
         var map = createMap(mapOptions);
