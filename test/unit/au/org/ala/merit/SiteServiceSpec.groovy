@@ -40,7 +40,7 @@ class SiteServiceSpec extends Specification {
         and: "the geometry is retrieved from the spatial portal for storage with the site"
         1 * spatialService.objectGeometry(Integer.toString(id)) >> [statusCode: HttpStatus.SC_OK, resp:geojson]
         and: "the site is created in ecodata"
-        1 * webService.doPost("site/", [extent:[source:'pid', pid:Integer.toString(id), geometry:[type:'Point', coordinates:[-35, 100], pid:Integer.toString(id)]], projects:[projectId], name:name, description:description, externalId:externalId, visibility:'private']) >> [statusCode: HttpStatus.SC_OK, resp:[siteId:'site12']]
+        1 * webService.doPost("site/", [extent:[source:'pid', pid:Integer.toString(id), geometry:[type:'Point', coordinates:[-35, 100], pid:Integer.toString(id)]], projects:[projectId], name:name, description:description, type:'worksArea', externalId:externalId, visibility:'private']) >> [statusCode: HttpStatus.SC_OK, resp:[siteId:'site12']]
         and: "the return value contains the siteId of the new site"
         result.success == true
         result.siteId == 'site12'
@@ -67,7 +67,7 @@ class SiteServiceSpec extends Specification {
         and: "the feature is removed from the spatial portal after the geometry is retrieved"
         1 * spatialService.deleteFromSpatialPortal(Integer.toString(id)) >> HttpStatus.SC_OK
         and: "the site is created in ecodata as if it was a drawn shape"
-        1 * webService.doPost("site/", [extent:[source:'drawn', geometry:[type:'Point', coordinates:[-35, 100]], pid:null], projects:[projectId], name:name, description:description, externalId:externalId, visibility:'private']) >> [statusCode: HttpStatus.SC_OK, resp:[siteId:'site12']]
+        1 * webService.doPost("site/", [extent:[source:'drawn', geometry:[type:'Point', coordinates:[-35, 100]]], projects:[projectId], name:name, description:description, type:'worksArea', externalId:externalId, visibility:'private']) >> [statusCode: HttpStatus.SC_OK, resp:[siteId:'site12']]
         and: "the return value contains the siteId of the new site"
         result.success == true
         result.siteId == 'site12'
