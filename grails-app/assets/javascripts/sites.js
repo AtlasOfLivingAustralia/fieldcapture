@@ -1075,6 +1075,11 @@ var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId)
 
         $.each(self.displayedSites(), function(i, site) {
             if (site.poi) {
+                // If we are displaying POIs, we don't need the centroid marker as well, even if the site is small.
+                if (site.feature && site.feature.marker) {
+                    site.feature.marker.setMap(null);
+                    site.feature.marker = null;
+                }
                 $.each(site.poi, function(j, poi) {
                     if (poi.geometry) {
                         self.addMarker(poi.geometry.decimalLatitude, poi.geometry.decimalLongitude, poi.name);
