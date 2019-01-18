@@ -758,20 +758,235 @@ function SiteViewModelWithMapIntegration (siteData, projectId) {
 
 };
 
+/**
+ * Implements the API that the mapWithFeatures script provides and delegates to the map library provided
+ * by the ALA map plugin.
+ */
+var AlaMapAdapter = function(map, options) {
+    var self = this;
 
+    var defaults = {
+        styleProperty: 'type',
+        styles: {
+            compound: {
+                color: '#f00',
+                fillOpacity: 0.2,
+                weight: 3
+            },
+            worksArea: {
+                color: '#0f0',
+                fillOpacity: 0.2,
+                weight: 3
+            }
+        }
+    };
+    var options = _.defaults(defaults, options);
+
+    self.featureIndex = {};
+    self.featureLayer = null;
+
+    // The Map API doesn't expose the main layer directly so we have to find it.
+    map.getMapImpl().eachLayer(function (layer) {
+        if (layer instanceof L.FeatureGroup) {
+            self.featureLayer = layer;
+        }
+    });
+
+    function getId(feature) {
+        return feature.siteId || feature.id || feature.properties.id || feature.properties.siteId;
+    };
+
+
+    self.addFeature = function(feature) {
+        self.featureLayer.on('layeradd', function(e) {
+            var layer = e.layer;
+            var id = getId(feature);
+            if (options.styleProperty && feature.properties && feature.properties[options.styleProperty]) {
+                var prop = feature.properties[options.styleProperty];
+                if (options.styles[prop] && _.isFunction(layer.setStyle)) {
+                    layer.setStyle(options.styles[prop]);
+                }
+
+            }
+            if (!self.featureIndex[id]) {
+                self.featureIndex[id] = [];
+            }
+            self.featureIndex[id].push(layer);
+        });
+        L.Icon.Default.imagePath = options.leafletIconPath;
+
+        map.setGeoJSON(feature);
+
+        self.featureLayer.off("layeradd");
+    };
+
+    self.clearFeatures = function() {
+        map.clearMarkers();
+        map.clearLayers();
+    };
+
+    self.replaceAllFeatures = function(features) {
+
+        self.featureIndex = {};
+        _.each(features, function(feature) {
+            self.addFeature(feature);
+        });
+    };
+
+    self.unHighlightFeatureById = function (id) {
+        var layers = self.featureIndex[id];
+
+        _.each(layers, function(layer) {
+            unhighlightLayer(layer);
+        })
+
+    };
+
+    self.highlightFeatureById = function (id) {
+        var layers = self.featureIndex[id];
+
+        _.each(layers, function(layer) {
+            highlightLayer(layer);
+        })
+    };
+
+    function highlightLayer(layer) {
+
+        if (_.isFunction(layer.eachLayer)) { // Layers created from MultiPolygons & MultiPolyLines have nested layers
+            layer.eachLayer(highlightLayer);
+        }
+        else {
+            var options = layer.options;
+            if (!options) {
+                console.log("WARNING: No options for layer: " + layer);
+                return;
+            }
+            if (layer.setStyle) {
+                var style = {
+                    weight: options.weight * 3,
+                    fillOpacity: 1,
+                    color: options.color
+                };
+                layer.setStyle(style);
+                if (layer.bringToFront()) {
+                    layer.bringToFront();
+                }
+            }
+            else if (options.icon) {
+                var icon = options.icon;
+                icon.options.iconSize = [icon.options.iconSize[0] * 1.5, icon.options.iconSize[1] * 1.5];
+                icon.options.iconAnchor = [icon.options.iconAnchor[0] * 1.5, icon.options.iconAnchor[1] * 1.5];
+                layer.setIcon(icon);
+            }
+        }
+    }
+
+    function unhighlightLayer(layer) {
+
+        if (_.isFunction(layer.eachLayer)) { // Layers created from MultiPolygons & MultiPolyLines have nested layers
+            layer.eachLayer(unhighlightLayer);
+        }
+        else {
+
+            if (layer.setStyle) {
+                var options = layer.options;
+                if (options && layer.setStyle) {
+                    var style = {
+                        weight: options.weight / 3,
+                        fillOpacity: 0.2,
+                        color: options.color
+                    };
+                    layer.setStyle(style);
+                }
+            }
+            else if (layer.options && layer.options.icon) {
+                var icon = layer.options.icon;
+                icon.options.iconSize = [icon.options.iconSize[0] / 1.5, icon.options.iconSize[1] / 1.5];
+                icon.options.iconAnchor = [icon.options.iconAnchor[0] / 1.5, icon.options.iconAnchor[1] / 1.5];
+                layer.setIcon(icon);
+            }
+        }
+    }
+
+};
+
+var createMap = function(options) {
+    var map;
+    var mapContainerId = options.mapContainerId || "map";
+    if (options.useAlaMap) {
+        options.drawOptions = {
+            polyline: false,
+            polygon: false,
+            rectangle: false,
+            circle: false,
+            edit: false
+        };
+        options.drawControl = false;
+        options.singleDraw = false;
+        options.showReset = false;
+        options.showFitBoundsToggle = true;
+        L.Icon.Default.imagePath = options.leafletIconPath;
+        if (options.useGoogleBaseMap) {
+            var googleLayer = new L.Google('ROADMAP', {maxZoom: 21, nativeMaxZoom: 21});
+            var otherLayers = {
+                Roadmap: googleLayer,
+                Hybrid: new L.Google('HYBRID', {maxZoom: 21, nativeMaxZoom: 21}),
+                Terrain: new L.Google('TERRAIN', {maxZoom: 21, nativeMaxZoom: 21})
+            };
+
+            options.baseLayer = googleLayer;
+            options.otherLayers = otherLayers;
+        }
+
+        map = new AlaMapAdapter(new ALA.Map(mapContainerId, options), options);
+        L.Icon.Default.imagePath = options.leafletIconPath;
+
+    }
+    else {
+        map = init_map_with_features({
+                mapContainer: mapContainerId,
+                scrollwheel: false,
+                featureService: options.featureServiceUrl,
+                wmsServer: options.wmsServerUrl
+            },
+            options
+        );
+    }
+    return map;
+};
 var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId) {
 
     var self = this;
     // sites
-    var features = [];
+    self.features = [];
     if (mapFeatures.features) {
-        features = mapFeatures.features;
+        self.features = mapFeatures.features;
     }
 
+    var findFeatureForSite = function(site) {
+        return _.find(self.features, function(feature) {
+            var id = feature.siteId || feature.id || feature.properties.id || feature.properties.siteId;
+            if (id == site.siteId) {
+                return true;
+            }
+        });
+    };
+
+    self.setFeatures = function(features) {
+        self.features = features;
+        _.each(self.sites, function(site) {
+            site.feature = findFeatureForSite(site);
+        });
+        self.displaySites();
+    };
+
     self.sites = $.map(sites, function (site, i) {
-        var feature = features[i] || site.extent ? site.extent.geometry : null;
-        site.feature = feature;
+        site.feature = findFeatureForSite(site);// || (site.extent ? site.extent.geometry : null);
         site.selected = ko.observable(false);
+
+        if (!site.type) {
+            site.type = 'worksArea';
+        }
         return site;
     });
     self.selectedSiteIds = ko.computed(function() {
@@ -806,6 +1021,9 @@ var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId)
         }
         return '';
     };
+    self.typeOptions = ['Both', 'P', 'R'];
+    self.typeFilter = ko.observable(self.typeOptions[0]);
+
     // Animation callbacks for the lists
     self.showElement = function (elem) {
         if (elem.nodeType === 1) $(elem).hide().slideDown()
@@ -882,6 +1100,11 @@ var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId)
 
         $.each(self.displayedSites(), function(i, site) {
             if (site.poi) {
+                // If we are displaying POIs, we don't need the centroid marker as well, even if the site is small.
+                if (site.feature && site.feature.marker) {
+                    site.feature.marker.setMap(null);
+                    site.feature.marker = null;
+                }
                 $.each(site.poi, function(j, poi) {
                     if (poi.geometry) {
                         self.addMarker(poi.geometry.decimalLatitude, poi.geometry.decimalLongitude, poi.name);
@@ -955,8 +1178,14 @@ var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId)
         });
     };
     this.editSite = function (site) {
-        var url = fcConfig.siteEditUrl + '/' + site.siteId + '?returnTo=' + encodeURIComponent(fcConfig.returnTo);
-        document.location.href = url;
+        if (site.type != 'compound') {
+            var url = fcConfig.siteEditUrl + '/' + site.siteId + '?returnTo=' + encodeURIComponent(fcConfig.returnTo);
+            document.location.href = url;
+        }
+        else {
+            bootbox.alert("This site can be edited via reporting forms only");
+        }
+
     };
     this.deleteSite = function (site) {
         bootbox.confirm("Are you sure you want to remove this site from this project?", function (result) {
@@ -998,30 +1227,6 @@ var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId)
             map.getAddressById(site.name(), site.setAddress);
         });
     };
-
-    function updateBounds(coordinates, bounds) {
-        if (coordinates && _.isArray(coordinates)) {
-            for (var i=0; i<coordinates.length; i++) {
-                updateBounds(coordinates[i], bounds);
-            }
-        }
-        else {
-            if (coordinates && coordinates.lat) {
-                bounds.extend(coordinates);
-            }
-        }
-    }
-    self.getSiteBounds = function(siteId) {
-        // Only works for polygon sites.
-        var site = self.getSiteById(siteId);
-        var bounds = new google.maps.LatLngBounds();
-
-        if (site && site.extent && site.extent.geometry && site.extent.geometry.coordinates) {
-            updateBounds(site.extent.geometry.coordinates, bounds);
-        }
-        return bounds;
-    };
-
 
 
     self.displaySites();

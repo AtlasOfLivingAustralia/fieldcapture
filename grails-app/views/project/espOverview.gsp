@@ -40,6 +40,8 @@
         speciesProfileUrl: "${createLink(controller: 'species', action: 'speciesProfile')}", imageUploadUrl: "${createLink(controller: 'image', action: 'upload')}",
         sightingsActivityType: "${grailsApplication.config.esp.activities.sightings ?: ""}",
         adminActivityType: "${grailsApplication.config.esp.activities.admin ?: ""}",
+        excelOutputTemplateUrl: "${createLink(controller: 'activity', action:'excelOutputTemplate')}",
+        excelDataUploadUrl: "${createLink(controller:'activity', action:'ajaxUpload')}",
         returnTo: "${createLink(controller: 'project', action: 'espOverview', id: project.projectId)}"
 
     },

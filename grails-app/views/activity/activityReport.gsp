@@ -99,14 +99,8 @@
         var activity = JSON.parse('${(activity as JSON).toString().encodeAsJavaScript()}');
         var reportSite = ${reportSite?.encodeAsJSON() ?: '{}' };
         var projectArea = ${projectArea?.encodeAsJSON() ?: '{}'};
-        if (projectArea && projectArea.extent && projectArea.extent.geometry) {
-            projectArea = projectArea.extent.geometry;
-        }
-        else {
-            projectArea = null;
-        }
-        var reportId = '${report.reportId}';
 
+        var reportId = '${report.reportId}';
 
         var context = {
             owner: fcConfig.context,
@@ -137,8 +131,25 @@
 
 
             var mapOptions = {baseLayersName:'Google'};
+            var planningSitesCategory = 'Planning Sites';
             if (features && _.isArray(features)) {
-                mapOptions.selectableFeatures = features;
+                var planningFeatures = [];
+                var allFeatures = [];
+                _.each(features, function(feature) {
+                    // Group the planning sites together into a single collection
+                    if (feature.properties && feature.properties.category && feature.properties.category == planningSitesCategory) {
+                        planningFeatures.push(feature);
+                    }
+                    else {
+                        allFeatures.push(feature);
+                    }
+                });
+                if (planningFeatures.length > 0) {
+                    allFeatures.unshift({type:'Feature Collection', features:planningFeatures, properties:{category:planningSitesCategory, name:planningSitesCategory}});
+                }
+                mapOptions.selectableFeatures = allFeatures;
+
+
             }
 
             var formFeatures = new ecodata.forms.FeatureCollection(reportSite ? reportSite.features : []);

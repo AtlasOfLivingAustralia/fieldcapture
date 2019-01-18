@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page import="au.org.ala.merit.SiteService" contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -59,7 +59,9 @@
 
                     Site Actions:
                     <span class="btn-group">
+                        <g:if test="${site.type != au.org.ala.merit.SiteService.SITE_TYPE_COMPOUND}">
                         <g:link action="edit" id="${site.siteId}" class="btn"><i class="fa fa-edit"></i> Edit Site</g:link>
+                        </g:if>
 
                         <a href="${g.createLink(action:'downloadShapefile', id:site.siteId)}" class="btn">
                             <i class="fa fa-download"></i>

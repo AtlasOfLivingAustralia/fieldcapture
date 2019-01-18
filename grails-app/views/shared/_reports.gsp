@@ -93,7 +93,7 @@ $(function() {
 
     ko.applyBindings(viewModel, document.getElementById('report'));
 
-    var table = $('#report').DataTable({displayLength:50, order:[[1,'asc']]});
+    var table = $('#report').DataTable({displayLength:50, order:[[6,'desc']]});
 
 });
 </asset:script>

@@ -1166,6 +1166,173 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
 
     };
 
+    self.initialiseSitesTab = function(options) {
+        var defaults = {
+            featureServiceUrl:fcConfig.featureServiceUrl,
+            wmsServerUrl:fcConfig.wmsServerUrl,
+            sitesPhotoPointsUrl:fcConfig.sitesPhotoPointsUrl,
+            bindingElementId:'sitesList',
+            userIsEditor:false,
+            sitesTableSelector:'#sites-table',
+            selectAllSelector:'#select-all-sites',
+            photoPointSelector:'#site-photo-points',
+            loadingSpinnerSelector:'#img-spinner',
+            photoScrollerSelector:'.photo-slider'
+        };
+
+        var config = _.defaults(options, defaults);
+
+        var mapOptions = {
+            zoomToBounds:true,
+            zoomLimit:16,
+            highlightOnHover:true,
+            features:[],
+            featureService: config.featureServiceUrl,
+            wmsServer: config.wmsServerUrl,
+            leafletIconPath:options.leafletIconPath,
+            useAlaMap: config.useAlaMap,
+            useGoogleBaseMap: config.useGoogleBaseMap
+        };
+
+        var map = createMap(mapOptions);
+
+        var sitesViewModel = new SitesViewModel(project.sites, map, options.mapFeatures, options.userIsEditor, project.projectId);
+        ko.applyBindings(sitesViewModel, document.getElementById(options.bindingElementId));
+        var $sitesTable = $(options.sitesTableSelector);
+        var tableApi = $sitesTable.DataTable( {
+                "columnDefs": [
+                    {
+                        "targets": 0,
+                        "orderable": false,
+                        "searchable": false,
+                        "width":"2em"
+                    },
+                    {
+                        "targets": 1,
+                        "orderable": false,
+                        "searchable": false,
+                        "width":"4em"
+                    },
+                    {
+                        "targets":2,
+                        "orderable": false,
+                        "searchable": true,
+                        "width": "2em",
+                        "visible":config.showSiteType
+                    },
+                    {
+                        "targets": 3,
+                        "orderable": false,
+                        "searchable": true
+
+                    },
+                    {
+                        "targets":4,
+                        "orderData":[4],
+                        "width":"6em",
+                        "searchable": false,
+                        "orderable":true
+                    },
+                    {
+                        "targets":5,
+                        "searchable": false,
+                        "visible":false
+
+                    }
+                ],
+                "order":[4, "desc"],
+                "language": {
+                    "search":'<div class="input-prepend"><span class="add-on"><i class="fa fa-search"></i></span>_INPUT_</div>',
+                    "searchPlaceholder":"Search sites..."
+
+                },
+                "searchDelay":350
+            }
+        );
+
+        var visibleIndicies = function() {
+            var settings = tableApi.settings()[0];
+            var start = settings._iDisplayStart;
+            var count = settings._iDisplayLength;
+
+            var visibleIndicies = [];
+            for (var i=start; i<Math.min(start+count, settings.aiDisplay.length); i++) {
+                visibleIndicies.push(settings.aiDisplay[i]);
+            }
+            return visibleIndicies;
+        };
+        sitesViewModel.typeFilter.subscribe(function(filterValue) {
+
+            if (filterValue == 'Both') {
+                filterValue = "";  // Clear the search.
+            }
+            $sitesTable.DataTable().column(2).search(filterValue).draw();
+        });
+        $sitesTable.dataTable().on('draw.dt', function(e) {
+            sitesViewModel.sitesFiltered(visibleIndicies());
+        });
+        $sitesTable.find('tbody').on( 'mouseenter', 'td', function () {
+            var table = $sitesTable.DataTable();
+            var index = table.cell(this).index();
+            if (index) {
+                var rowIdx = index.row;
+                sitesViewModel.highlightSite(rowIdx);
+            }
+        } ).on('mouseleave', 'td', function() {
+            var table = $sitesTable.DataTable();
+            var index = table.cell(this).index();
+            if (index) {
+                var rowIdx = index.row;
+                sitesViewModel.unHighlightSite(rowIdx);
+            }
+
+        });
+        $(config.selectAllSelector).change(function() {
+            var checkbox = this;
+            // This lets knockout update the bindings correctly.
+            $sitesTable.find('tbody tr :checkbox').trigger('click');
+        });
+        sitesViewModel.sitesFiltered(visibleIndicies());
+        var $sitePhotoPoints = $(config.photoPointSelector);
+        $sitePhotoPoints.find('a').click(function(e) {
+            e.preventDefault();
+            $sitePhotoPoints.html('<image id="img-spinner" width="50" height="50" src="'+config.spinnerUrl+'" alt="Loading"/>');
+            $.get(config.sitesPhotoPointsUrl).done(function(data) {
+
+                $sitePhotoPoints.html($(data));
+                $sitePhotoPoints.find('img').on('load', function() {
+
+                    var parent = $(this).parents('.thumb');
+                    var $caption = $(parent).find('.caption');
+                    $caption.outerWidth($(this).width());
+
+                });
+                $( config.photoScrollerSelector ).mThumbnailScroller({theme:'hover-classic'});
+                $(config.photoScrollerSelector+' .fancybox').fancybox({
+                    helpers : {
+                        title: {
+                            type: 'inside'
+                        }
+                    },
+                    beforeLoad: function() {
+                        var el, id = $(this.element).data('caption');
+
+                        if (id) {
+                            el = $('#' + id);
+
+                            if (el.length) {
+                                this.title = el.html();
+                            }
+                        }
+                    },
+                    nextEffect:'fade',
+                    previousEffect:'fade'
+                });
+            });
+        });
+        return sitesViewModel;
+    };
+
     self.validateProjectStartDate = function() {
 
         var startDate = self.plannedStartDate();

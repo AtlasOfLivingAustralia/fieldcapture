@@ -32,8 +32,10 @@
         spatialBaseUrl: "${grailsApplication.config.spatial.baseUrl}",
         spatialWmsCacheUrl: "${grailsApplication.config.spatial.wms.cache.url}",
         spatialWmsUrl: "${grailsApplication.config.spatial.wms.url}",
+        geoserverUrl: "${grailsApplication.config.spatial.geoserverUrl}",
         sldPolgonDefaultUrl: "${grailsApplication.config.sld.polgon.default.url}",
         sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}",
+        featureServiceUrl: "${createLink(controller: 'proxy', action:'feature')}",
         organisationLinkBaseUrl: "${createLink(controller:'organisation', action:'index')}",
         imageLocation:"${assetPath(src:'/')}",
         documentUpdateUrl: "${createLink(controller:"document", action:"documentUpdate")}",
@@ -74,6 +76,9 @@
         projectScoresUrl:"${createLink(action:'serviceScores', id:project.projectId)}",
         healthCheckUrl:"${createLink(controller:'ajax', action:'keepSessionAlive')}",
         projectStartDateValidationUrl:"${createLink(controller:'project', action:'ajaxValidateProjectStartDate', id:project.projectId)}",
+        spinnerUrl:"${asset.assetPath(src:'loading.gif')}",
+        projectSitesUrl:"${createLink(action:'ajaxProjectSites', id:project.projectId)}",
+        useGoogleBaseMap: ${grails.util.Environment.current == grails.util.Environment.PRODUCTION},
         returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
 
     },
@@ -84,6 +89,8 @@
 
     <asset:stylesheet src="common.css"/>
     <asset:stylesheet src="project.css"/>
+    <asset:stylesheet src="leaflet-manifest.css"/>
+    <asset:stylesheet src="feature.css"/>
 </head>
 <body>
 <div id="spinner" class="spinner" style="position: fixed;top: 50%;left: 50%;margin-left: -50px;margin-top: -50px;text-align:center;z-index:1234;overflow: auto;width: 100px;height: 102px;">
@@ -239,6 +246,8 @@
             var themes = ${config.themes?:[]};
             config.themes = themes;
             var services = ${config.services?:[]};
+            config.useAlaMap = ${Boolean.valueOf(projectContent.site.useAlaMap)};
+            config.showSiteType = ${Boolean.valueOf(projectContent.site.showSiteType)};
             config.services = services;
             config.useRlpTemplate = services.length > 0;
             if (!config.useRlpTemplate) {
@@ -315,6 +324,93 @@
                         healthCheckUrl:fcConfig.healthCheckUrl
                     });
             }
+
+            function initialiseOverview() {
+                $( '#public-images-slider' ).mThumbnailScroller({});
+                $('#public-images-slider .fancybox').fancybox();
+            }
+
+            var tabs = {
+                'overview': {
+                    default:true,
+                    initialiser: function () {
+                        initialiseOverview();
+                    }
+                },
+                'plan': {
+                    initialiser: function() {
+                        $.event.trigger({type:'planTabShown'});
+                    }
+                },
+                'dashboard': {
+                    initialiser: function() {
+                        $.event.trigger({type:'dashboardShown'});
+                    }
+                },
+                'documents': {
+                    initialiser: function() {
+                        initialiseDocumentTable('#overviewDocumentList');
+                    }
+                },
+                'site': {
+                    initialiser: function () {
+                        L.Browser.touch = false;
+                        var iconPath = '${assetPath(src:'leaflet-0.7.7/images')}';
+                        var mapFeatures = $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
+                        var sitesTabOptions = {
+                            featureServiceUrl: fcConfig.featureServiceUrl,
+                            wmsServerUrl: fcConfig.geoserverUrl,
+                            spinnerUrl: fcConfig.spinnerUrl,
+                            mapFeatures: mapFeatures,
+                            sitesPhotoPointsUrl:fcConfig.sitesPhotoPointsUrl,
+                            userIdEditor: userRoles.editor,
+                            bindingElementId:'sitesList',
+                            sitesTableSelector:'#sites-table',
+                            selectAllSelector:'#select-all-sites',
+                            photoPointSelector:'#site-photo-points',
+                            loadingSpinnerSelector:'#img-spinner',
+                            photoScrollerSelector:'.photo-slider',
+                            leafletIconPath:iconPath,
+                            useAlaMap:config.useAlaMap,
+                            showSiteType:config.showSiteType
+                        };
+                        if (config.useAlaMap) {
+                            sitesTabOptions.mapFeatures = {};
+                            sitesTabOptions.useGoogleBaseMap = fcConfig.useGoogleBaseMap;
+                            var sitesViewModel = viewModel.initialiseSitesTab(sitesTabOptions);
+                            $.get(fcConfig.projectSitesUrl).done(function(data) {
+                                if (data && data.features) {
+                                    sitesViewModel.setFeatures(data.features);
+                                }
+                            });
+
+                        }
+                        else {
+                            viewModel.initialiseSitesTab(sitesTabOptions);
+                        }
+                    }
+                },
+                'details': {
+                    initialiser: function () {
+                        initialiseDocumentTable('#meriPlanDocumentList');
+                    }
+                },
+                'reporting': {
+                    initialiser: function () {
+                        viewModel.initialiseReports();
+                    }
+                },
+                'admin': {
+                    initialiser: function () {
+                        populatePermissionsTable();
+                        $(options.reportingConfigSelector).validationEngine();
+                    }
+                }
+            };
+
+            initialiseTabs(tabs, {tabSelector:'.nav-link', tabShownEvent:'shown', tabStorageKey:'project-tab-state', initialisingHtmlSelector:'#spinner'});
+
+
             var meriPlanVisible = false;
             var risksVisible = false;
             $('a[data-toggle="tab"]').on('show', function(e) {
@@ -335,169 +431,6 @@
                 }
             });
 
-         // retain tab state for future re-visits
-            // and handle tab-specific initialisations
-            var planTabInitialised = false;
-            var dashboardInitialised = false;
-            var documentsInitialised = false;
-            var meriPlanInitialised = false;
-            var reportingInitialised = false;
-
-            $('#projectTabs a[data-toggle="tab"]').on('shown', function (e) {
-                var tab = e.currentTarget.hash;
-                amplify.store('project-tab-state', tab);
-                // only init map when the tab is first shown
-                if (tab === '#site' && map === undefined) {
-                    var mapOptions = {
-                        zoomToBounds:true,
-                        zoomLimit:16,
-                        highlightOnHover:true,
-                        features:[],
-                        featureService: "${createLink(controller: 'proxy', action:'feature')}",
-                        wmsServer: "${grailsApplication.config.spatial.geoserverUrl}"
-                    };
-
-                    map = init_map_with_features({
-                            mapContainer: "map",
-                            scrollwheel: false,
-                            featureService: "${createLink(controller: 'proxy', action:'feature')}",
-                            wmsServer: "${grailsApplication.config.spatial.geoserverUrl}"
-                        },
-                        mapOptions
-                    );
-                    var mapFeatures = $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
-                    var sitesViewModel = new SitesViewModel(project.sites, map, mapFeatures, ${user?.isEditor?:false}, project.projectId);
-                    ko.applyBindings(sitesViewModel, document.getElementById('sitesList'));
-                    var tableApi = $('#sites-table').DataTable( {
-                        "columnDefs": [
-                        {
-                            "targets": 0,
-                            "orderable": false,
-                            "searchable": false,
-                            "width":"2em"
-                        },
-                        {
-                            "targets": 1,
-                            "orderable": false,
-                            "searchable": false,
-                            "width":"4em"
-                        },
-                        {
-                            "targets":3,
-                            "orderData":[4],
-                            "width":"8em",
-                            "orderable":true
-                        },
-                        {
-                            "targets":4,
-                            "visible":false
-
-                        }
-                        ],
-                        "order":[3, "desc"],
-                        "language": {
-                            "search":'<div class="input-prepend"><span class="add-on"><i class="fa fa-search"></i></span>_INPUT_</div>',
-                            "searchPlaceholder":"Search sites..."
-
-                        },
-                        "searchDelay":350
-                        }
-                    );
-
-                    var visibleIndicies = function() {
-                        var settings = tableApi.settings()[0];
-                        var start = settings._iDisplayStart;
-                        var count = settings._iDisplayLength;
-
-                        var visibleIndicies = [];
-                        for (var i=start; i<Math.min(start+count, settings.aiDisplay.length); i++) {
-                            visibleIndicies.push(settings.aiDisplay[i]);
-                        }
-                        return visibleIndicies;
-                    };
-                    $('#sites-table').dataTable().on('draw.dt', function(e) {
-                        sitesViewModel.sitesFiltered(visibleIndicies());
-                    });
-                    $('#sites-table tbody').on( 'mouseenter', 'td', function () {
-                            var table = $('#sites-table').DataTable();
-                            var rowIdx = table.cell(this).index().row;
-                            sitesViewModel.highlightSite(rowIdx);
-
-                        } ).on('mouseleave', 'td', function() {
-                            var table = $('#sites-table').DataTable();
-                            var rowIdx = table.cell(this).index().row;
-                            sitesViewModel.unHighlightSite(rowIdx);
-                        });
-                    $('#select-all-sites').change(function() {
-                        var checkbox = this;
-                        // This lets knockout update the bindings correctly.
-                        $('#sites-table tbody tr :checkbox').trigger('click');
-                    });
-                    sitesViewModel.sitesFiltered(visibleIndicies());
-
-                    $('#site-photo-points a').click(function(e) {
-                        e.preventDefault();
-                        $('#site-photo-points').html('<asset:image id="img-spinner" width="50" height="50" src="loading.gif" alt="Loading"/>');
-                        $.get(fcConfig.sitesPhotoPointsUrl).done(function(data) {
-
-                            $('#site-photo-points').html($(data));
-                            $('#site-photo-points img').on('load', function() {
-
-                                var parent = $(this).parents('.thumb');
-                                var $caption = $(parent).find('.caption');
-                                $caption.outerWidth($(this).width());
-
-                            });
-                            $( '.photo-slider' ).mThumbnailScroller({theme:'hover-classic'});
-                            $('.photo-slider .fancybox').fancybox({
-                                helpers : {
-                                    title: {
-                                        type: 'inside'
-                                    }
-                                },
-                                beforeLoad: function() {
-                                    var el, id = $(this.element).data('caption');
-
-                                    if (id) {
-                                        el = $('#' + id);
-
-                                        if (el.length) {
-                                            this.title = el.html();
-                                        }
-                                    }
-                                },
-                                nextEffect:'fade',
-                                previousEffect:'fade'
-                            });
-                            $(window).load(function() {
-
-                            });
-                        });
-                    });
-                }
-                if (tab === '#plan' && !planTabInitialised) {
-                    $.event.trigger({type:'planTabShown'});
-                    planTabInitialised = true;
-                }
-                if (tab == '#dashboard' && !dashboardInitialised) {
-                    $.event.trigger({type:'dashboardShown'});
-                    dashboardInitialised;
-                }
-
-                if(tab == "#documents" && !documentsInitialised){
-                    documentsInitialised = true;
-                    initialiseDocumentTable('#overviewDocumentList');
-                }
-
-                if (tab == '#details' && !meriPlanInitialised) {
-                    meriPlanInitialised = true;
-                    initialiseDocumentTable('#meriPlanDocumentList');
-                };
-
-                if (tab == '#reporting' && !reportingInitialised) {
-                    viewModel.initialiseReports();
-                }
-            });
 
             var newsAndEventsInitialised = false;
             $('#editNewsAndEvents-tab').on('shown', function() {
@@ -517,18 +450,8 @@
                 }
             });
 
-            var overviewInitialised = false;
-            $('#overview-tab').on('shown', function() {
-                if (!overviewInitialised) {
-                    initialiseOverview();
 
-                    overviewInitialised = true;
-                }
-            });
-            function initialiseOverview() {
-                $( '#public-images-slider' ).mThumbnailScroller({});
-                $('#public-images-slider .fancybox').fancybox();
-            }
+
 
             $('#gotoEditBlog').click(function () {
                 amplify.store('project-admin-tab-state', '#editProjectBlog');
@@ -553,30 +476,19 @@
 			$('.spinner').hide();
         	$('.tab-content').fadeIn();
 
-        	// re-establish the previous tab state
-            var storedTab = window.location.hash;
-            if (!storedTab) {
-                storedTab = ${user?"amplify.store('project-tab-state')":"'overview'"};
-            }
-
-            initialiseOverview();
-            if (storedTab !== '') {
-                var $toInit = $(storedTab + '-tab');
-                if ($toInit.is(':enabled')) {
-                    $toInit.tab('show');
-                }
-
-            }
 
         });// end window.load
 
 
 </asset:script>
 <asset:javascript src="common.js"/>
+<asset:javascript src="tab-init.js"/>
 <asset:javascript src="projects.js"/>
 <asset:javascript src="reporting.js"/>
 <asset:javascript src="select2/4.0.3/js/select2.full"/>
 <asset:javascript src="forms-knockout-bindings.js"/>
+<asset:javascript src="leaflet-manifest.js"/>
+<asset:javascript src="feature.js"/>
 <asset:deferredScripts/>
 </body>
 </html>
