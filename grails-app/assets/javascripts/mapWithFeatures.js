@@ -606,6 +606,8 @@
     windows.clearMap = clearMap;
     windows.addMarker = addMarker;
     windows.removeMarkers = removeMarkers;
+    map.addMarker = addMarker;
+    map.removeMarkers = removeMarkers;
     windows.alaMap = map;
 
 
