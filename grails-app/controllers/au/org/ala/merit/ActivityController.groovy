@@ -147,8 +147,8 @@ class ActivityController {
             if (programConfig.requiredActivityLocking == null) {
                 programConfig.requiresActivityLocking = programConfig.name == 'Reef 2050 Plan Action Reporting'
             }
-            if (programConfig.navigationMode == null) {
-                programConfig.navigationMode = (programConfig.name == 'Reef 2050 Plan Action Reporting' || programConfig.name == 'ESP Test') ? 'returnToProject' : 'stayOnPage'
+            if (programConfig.activityNavigationMode == null) {
+                programConfig.activityNavigationMode = (programConfig.name == 'Reef 2050 Plan Action Reporting' || programConfig.name == 'ESP Test') ? 'returnToProject' : 'stayOnPage'
             }
 
             model.locked = activity.lock != null
@@ -169,7 +169,7 @@ class ActivityController {
     }
 
     private Map getNavOptions(String returnToUrl, Map programConfig) {
-        Map options = [navigationMode:programConfig.navigationMode?:'stayOnPage']
+        Map options = [navigationMode:programConfig.activityNavigationMode?:'stayOnPage']
         if (returnToUrl) {
             options.showNav = true
             if (returnToUrl.indexOf('/project') > 0) {
