@@ -81,7 +81,7 @@ class SiteController {
             [site: site,
              tabs:tabs,
              project:selectedProject,
-             mapFeatures: siteService.getMapFeatures(site)]
+             mapFeatures: siteService.getSiteGeoJson(site.siteId)]
 
         } else {
             flash.message = "No site exists with id: ${id}"
