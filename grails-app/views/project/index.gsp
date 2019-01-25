@@ -402,8 +402,8 @@
                 },
                 'admin': {
                     initialiser: function () {
-                        populatePermissionsTable();
-                        $(options.reportingConfigSelector).validationEngine();
+                        //populatePermissionsTable();
+                        //$(options.reportingConfigSelector).validationEngine();
                     }
                 }
             };
