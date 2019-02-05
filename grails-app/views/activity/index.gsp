@@ -29,6 +29,7 @@
         imageUploadUrl: "${createLink(controller: 'image', action: 'upload')}",
         speciesProfileUrl: "${createLink(controller: 'species', action: 'speciesProfile')}",
         excelOutputTemplateUrl:"${createLink(controller: 'activity', action:'excelOutputTemplate')}",
+        imageLeafletViewer: '${createLink(controller: 'resource', action: 'imageviewer', absolute: true)}',
         project:${fc.modelAsJavascript(model:project)},
         returnTo: "${returnTo}"
         },
@@ -189,7 +190,7 @@
                 mapFeatures
             );
         }
-        $('.imageList a[target="_photo"]').attr('rel', 'gallery').fancybox({type:'image', autoSize:true, nextEffect:'fade', preload:0, 'prevEffect':'fade'});
+        $('.imageList a[target="fancybox"]').attr('rel', 'gallery').fancybox({type:'image', autoSize:true, nextEffect:'fade', preload:0, 'prevEffect':'fade'});
 
     });
 </script>
