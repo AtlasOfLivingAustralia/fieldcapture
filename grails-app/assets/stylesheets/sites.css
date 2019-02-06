@@ -1,0 +1,15 @@
+#sitesList div.dataTables_filter input {
+    margin-left:0;
+}
+
+.site-actions {
+    padding-bottom: 10px;
+}
+
+.sites-table {
+    width: 100%;
+}
+
+#sitesList #map {
+    width: 100%;
+}
