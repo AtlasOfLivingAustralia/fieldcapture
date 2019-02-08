@@ -24,11 +24,13 @@
             sldPolgonHighlightUrl: "${grailsApplication.config.sld.polgon.highlight.url}",
             featureService: "${createLink(controller: 'proxy', action:'feature')}",
             sitesPhotoPointsUrl:"${createLink(controller:'project', action:'projectSitePhotos', id:project.projectId)}",
+            useGoogleBaseMap: ${grails.util.Environment.current == grails.util.Environment.PRODUCTION}
             },
             here = window.location.href;
     </script>
     <asset:stylesheet src="common.css"/>
     <asset:stylesheet src="project.css"/>
+    <asset:stylesheet src="leaflet-manifest.css"/>
 </head>
 <body>
 <div class="${containerType}">
@@ -188,25 +190,31 @@
                 document.location.href = url;
             });
 
-            var viewModel  = new SiteViewModelWithMapIntegration(site, '${project?project.projectId:'undefined'}');
-            ko.applyBindings(viewModel);
-
             var mapFeatures = $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
-
-            init_map_with_features({
-                    mapContainer: "smallMap",
-                    zoomToBounds:true,
-                    zoomLimit:16,
-                    featureService: "${createLink(controller:'proxy', action:'feature')}",
-                    wmsServer: "${grailsApplication.config.spatial.geoserverUrl}"
-                },
-                mapFeatures
-            );
-
-            if(mapFeatures.features === undefined || mapFeatures.features.length == 0){
-                $('#siteNotDefined').show();
+            var iconPath = '${assetPath(src:'leaflet-0.7.7/images')}';
+            if (!mapFeatures) {
+                bootBox.showAlert("There was a problem obtaining site data");
             }
-            viewModel.renderPOIs();
+            else {
+
+                var map = createMap({
+                    useAlaMap:true,
+                    mapContainerId:'smallMap',
+                    useGoogleBaseMap:fcConfig.useGoogleBaseMap,
+                    featureService: fcConfig.featureService,
+                    wmsServer: fcConfig.spatialWmsUrl,
+                    leafletIconPath:iconPath
+                });
+
+                map.replaceAllFeatures([mapFeatures]);
+                _.each(site.poi || [], function(poi) {
+                    if (poi.geometry) {
+                        map.addMarker(poi.geometry.decimalLatitude, poi.geometry.decimalLongitude, poi.name);
+                    }
+                });
+
+            }
+
 
             var poisInitialised = false;
             $('#pois-tab').on('shown', function() {
@@ -223,6 +231,7 @@
 </asset:script>
 <asset:javascript src="common.js"/>
 <asset:javascript src="projects.js"/>
+<asset:javascript src="leaflet-manifest.js"/>
 <asset:deferredScripts/>
 
 </body>

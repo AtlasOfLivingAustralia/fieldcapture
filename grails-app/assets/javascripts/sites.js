@@ -780,7 +780,7 @@ var AlaMapAdapter = function(map, options) {
             }
         }
     };
-    var options = _.defaults(defaults, options);
+    var options = _.defaults(options, defaults);
 
     self.featureIndex = {};
     self.featureLayer = null;
@@ -908,6 +908,19 @@ var AlaMapAdapter = function(map, options) {
         }
     }
 
+    self.addMarker = function(lat, lng, name) {
+        // Marker zooming results in the most recent marker added getting a full zoom.
+        // Turn it off while we add POIs
+        options.zoomToObject = false;
+        map.addMarker(lat, lng, name);
+        options.zoomToObject = true;
+    };
+
+    self.removeMarkers = function() {
+        map.clearMarkers();
+    };
+
+
 };
 
 var createMap = function(options) {
@@ -924,6 +937,9 @@ var createMap = function(options) {
         options.drawControl = false;
         options.singleDraw = false;
         options.showReset = false;
+        options.draggableMarkers = false;
+        options.singleMarker = false;
+        options.singleDraw = false;
         options.showFitBoundsToggle = true;
         L.Icon.Default.imagePath = options.leafletIconPath;
         if (options.useGoogleBaseMap) {
@@ -1096,7 +1112,7 @@ var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId)
             return f;
         });
         map.replaceAllFeatures(features);
-        self.removeMarkers();
+        map.removeMarkers();
 
         $.each(self.displayedSites(), function(i, site) {
             if (site.poi) {
@@ -1107,46 +1123,13 @@ var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId)
                 }
                 $.each(site.poi, function(j, poi) {
                     if (poi.geometry) {
-                        self.addMarker(poi.geometry.decimalLatitude, poi.geometry.decimalLongitude, poi.name);
+                        map.addMarker(poi.geometry.decimalLatitude, poi.geometry.decimalLongitude, poi.name);
                     }
 
                 });
             }
         });
 
-    };
-
-    var markersArray = [];
-
-    self.addMarker = function(lat, lng, name) {
-
-        var infowindow = new google.maps.InfoWindow({
-            content: '<span class="poiMarkerPopup">' + name +'</span>'
-        });
-
-        var marker = new google.maps.Marker({
-            position: new google.maps.LatLng(lat,lng),
-            title:name,
-            draggable:false,
-            map:map.map
-        });
-
-        marker.setIcon('https://maps.google.com/mapfiles/marker_yellow.png');
-
-        google.maps.event.addListener(marker, 'click', function() {
-            infowindow.open(map.map, marker);
-        });
-
-        markersArray.push(marker);
-    };
-
-    self.removeMarkers = function() {
-        if (markersArray) {
-            for (var i in markersArray) {
-                markersArray[i].setMap(null);
-            }
-        }
-        markersArray = [];
     };
 
 

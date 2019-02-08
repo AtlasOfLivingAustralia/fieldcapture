@@ -1,8 +1,3 @@
-<style type="text/css">
-div.dataTables_filter input {
-    margin-left:0;
-}
-</style>
 <g:set var="wordForSite" value="${wordForSite?:'site'}"/>
 <div id="sitesList">
     <div data-bind="visible: sites.length == 0">
@@ -19,20 +14,20 @@ div.dataTables_filter input {
     <div class="row-fluid"  data-bind="visible: sites.length > 0">
         <div class="span5">
 
-            <div class="row-fluid" style="padding-bottom: 10px;">
-                <div class="span12">
+            <div class="site-actions">
 
-                    Actions:  <span class="btn-group">
-                        <a data-bind="click: $root.addSite" class="btn" title="Create a new site for your project"><i class="fa fa-plus"></i> New</a>
-                        <a data-bind="click: $root.uploadSites" type="button" class="btn" title="Create sites for your project by uploading a file"><i class="fa fa-upload"></i> Upload</a>
-                        <a data-bind="click: $root.downloadShapefile" type="button" class="btn" title="Download your project sites in shapefile format"><i class="fa fa-download"></i> Download</a>
-                        <button data-bind="click: $root.removeSelectedSites, enable:$root.selectedSiteIds().length > 0" type="button" class="btn" title="Delete selected sites"><i class="fa fa-trash"></i> Delete</button>
-                    </span>
-                </div>
+                Actions:
+                <span class="btn-group">
+                    <a data-bind="click: $root.addSite" class="btn" title="Create a new site for your project"><i class="fa fa-plus"></i> New</a>
+                    <a data-bind="click: $root.uploadSites" type="button" class="btn" title="Create sites for your project by uploading a file"><i class="fa fa-upload"></i> Upload</a>
+                    <a data-bind="click: $root.downloadShapefile" type="button" class="btn" title="Download your project sites in shapefile format"><i class="fa fa-download"></i> Download</a>
+                    <button data-bind="click: $root.removeSelectedSites, enable:$root.selectedSiteIds().length > 0" type="button" class="btn" title="Delete selected sites"><i class="fa fa-trash"></i> Delete</button>
+                </span>
+
             </div>
 
             %{-- The use of the width attribute (as opposed to a css style) is to allow for correct resizing behaviour of the DataTable --}%
-            <table id="sites-table" class="sites-table table" width="100%">
+            <table id="sites-table" class="sites-table table">
                 <thead>
                 <tr>
                     <th><input type="checkbox" id="select-all-sites"></th>
@@ -49,7 +44,7 @@ div.dataTables_filter input {
 
                 </thead>
                 <tbody data-bind="foreach: sites">
-                <tr data-bind="click: $parent.selectDocument">
+                <tr>
                     <th><input type="checkbox" name="select-site" data-bind="checked:selected, enable:type != 'compound'"></th>
                     <td>
                         <g:if test="${editable}">
@@ -64,7 +59,7 @@ div.dataTables_filter input {
                     </td>
 
                     <td>
-                        <a style="margin-left:10px;" data-bind="text:name, attr: {href:'${createLink(controller: "site", action: "index")}' + '/' + siteId}"></a>
+                        <a data-bind="text:name, attr: {href:'${createLink(controller: "site", action: "index")}' + '/' + siteId}"></a>
                     </td>
                     <td>
                         <span data-bind="text:convertToSimpleDate(lastUpdated)"></span>
@@ -82,7 +77,7 @@ div.dataTables_filter input {
 
 
         <div class="span7">
-            <div id="map" style="width:100%"></div>
+            <div id="map"></div>
         </div>
     </div>
 </div>
