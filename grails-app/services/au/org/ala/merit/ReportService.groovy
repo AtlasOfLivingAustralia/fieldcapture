@@ -27,6 +27,7 @@ class ReportService {
 
     public static final String REPORT_TYPE_SINGLE_ACTIVITY = 'Single'
     public static final String REPORT_TYPE_STAGE_REPORT = 'Activity'
+    public static final String REPORT_TYPE_ADJUSTMENT = 'Adjustment'
 
     static enum ReportMode {
         VIEW,
@@ -400,6 +401,63 @@ class ReportService {
             return [success:false, error:resp.error]
         }
         return [success:true]
+    }
+
+    Map createAdjustmentReport(String reportId) {
+        Map toAdjust = get(reportId)
+
+        Map result
+
+        if (isAdjustable(toAdjust)) {
+            List owners = ['projectId', 'programId', 'organisationId']
+            Map adjustmentReport = [
+                    name            : "Adjustment: " + toAdjust.name,
+                    description     : "Adjustment: " + toAdjust.description,
+                    fromDate        : toAdjust.fromDate,
+                    toDate          : toAdjust.toDate,
+                    type            : REPORT_TYPE_ADJUSTMENT,
+                    adjustedReportId: toAdjust.reportId,
+                    category        : "Adjustments",
+                    activityType    : getAdjustmentActivityType(toAdjust)
+            ]
+
+            owners.each { key ->
+                if (toAdjust[key]) {
+                    adjustmentReport[key] = toAdjust[key]
+                }
+            }
+            result = create(adjustmentReport)
+        }
+        else {
+            result = [error:'This report cannot be adjusted']
+        }
+
+        return result
+    }
+
+    String getAdjustmentActivityType(Map report) {
+        return report.activityType + ' Adjustment'
+    }
+
+    boolean isAdjustable(Map report) {
+        String adjustmentReportActivityType = getAdjustmentActivityType(report)
+        Map activity = metadataService.activitiesModel().activities?.find{it.name == adjustmentReportActivityType}
+        return activity != null
+    }
+
+
+    Map scoresForActivity(String projectId, String activityId, List<String> scoreIds = null) {
+        Map filter = [type:'discrete', filterValue: activityId, property:'activity.activityId']
+
+        String url =  grailsApplication.config.ecodata.baseUrl+"project/projectMetrics/"+projectId
+
+        Map params = [aggregationConfig: filter, approvedOnly:false]
+        if (scoreIds) {
+            params.scoreIds = scoreIds
+        }
+        Map report = webService.doPost(url, params)
+
+        return report
     }
 
     def reject(String reportId, String category, String reason) {
