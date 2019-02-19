@@ -175,6 +175,26 @@ var Master = function (activityId, config) {
      */
     self.save = function (saveCallback) {
 
+        function handleSessionTimeout(localStorageFailed) {
+
+            if (!localStorageFailed) {
+
+                var unloadHandler = window.onbeforeunload;
+                window.onbeforeunload = null;
+                bootbox.alert($(options.timeoutMessageSelector).html(),
+                    function() {
+                        window.onbeforeunload = unloadHandler;
+                    });
+            }
+            else {
+                // We weren't able to save the page so we can't give the reload the page instructions.
+                // This is relying on the logout detection in the page template
+                $('#logout-warning').show();
+                bootbox.alert(" <b>Please do not leave this page</b><br/>Your save failed due to a network error or login timeout.  Please open a new tab and log back into MERIT, then attempt to save this data again.");
+            }
+
+        };
+
         var valid = self.validate();
 
         var jsData = self.modelAsJS(valid);
@@ -189,16 +209,13 @@ var Master = function (activityId, config) {
 
         var toSave = JSON.stringify(jsData);
 
-        amplify.store(activityStorageKey, toSave);
-
-        function handleSessionTimeout() {
-            var unloadHandler = window.onbeforeunload;
-            window.onbeforeunload = null;
-            bootbox.alert($(options.timeoutMessageSelector).html(),
-                function() {
-                    window.onbeforeunload = unloadHandler;
-                });
-        };
+        var localStorageFailed = false;
+        try {
+            amplify.store(activityStorageKey, toSave);
+        }
+        catch (e) {
+            localStorageFailed = true;
+        }
 
         healthCheck(options.healthCheckUrl).done(function() {
             $.ajax({
@@ -230,10 +247,10 @@ var Master = function (activityId, config) {
             }).fail(function (jqXHR, status, error) {
 
                 $.unblockUI();
-                // This is to detect a redirect to CAS response due to she same resession timeout, which is not
-                // 100% reliable using ajax (e.g. no network will give tponse).
+                // This is to detect a redirect to CAS response due to she same session timeout, which is not
+                // 100% reliable using ajax (e.g. no network will give the same response).
                 if (jqXHR.readyState == 0) {
-                    handleSessionTimeout();
+                    handleSessionTimeout(localStorageFailed);
                 }
                 else {
                     self.displayErrors(['An unhandled error occurred: ' + error]);
@@ -243,7 +260,7 @@ var Master = function (activityId, config) {
 
         }).fail(function() {
             $.unblockUI();
-            handleSessionTimeout();
+            handleSessionTimeout(localStorageFailed);
         });
     };
 

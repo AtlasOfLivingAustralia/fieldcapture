@@ -442,4 +442,46 @@ class SiteService {
         result
     }
 
+    Map validate(Map site) {
+        // Check it's OK, valid (no duplicate coordinates or self intersection) and not too many points.
+        Map result = [:]
+        int recommendedPointCount = grailsApplication.config.site.pointWarningThreshold ?: 50
+        int count = getPointCount(site)
+        if (count > recommendedPointCount) {
+            result = [warning:"Consider reducing the number of points in this polygon if this site is to be used in reporting as performance may be affected"]
+        }
+        result
+    }
+
+    int getPointCount(Map site) {
+        Map geom = site.extent.geometry
+
+        int count = 0
+        switch (geom.type) {
+            case 'Point':
+                count = 1
+                break
+            case 'MultiPoint':
+            case 'LineString':
+                count = geom.coordinates?.size() ?: 0
+                break
+            case 'Polygon':
+            case 'MultiLineString':
+                for (List coords: geom.coordinates) {
+                    count += coords?.size() ?: 0
+                }
+                break
+            case 'MultiPolygon':
+                for (List coords : geom.coordinates) {
+                    for (List nestedCoords: coords) {
+                        count += nestedCoords?.size() ?: 0
+                    }
+                }
+                break
+        }
+
+        count
+    }
+
+
 }
