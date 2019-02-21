@@ -4,7 +4,8 @@ jdk:
 branches:
   only:
   - master
-  - dev 
+  - dev
+  - /^feature\/.*$/
 before_install:
 - export TZ=Australia/Canberra
 - wget -q https://raw.githubusercontent.com/AtlasOfLivingAustralia/travis-build-configuration/master/ala_common.sh
