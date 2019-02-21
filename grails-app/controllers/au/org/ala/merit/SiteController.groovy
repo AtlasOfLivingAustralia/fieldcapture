@@ -366,6 +366,16 @@ class SiteController {
 
     }
 
+    def validate(String id) {
+        List sites = siteService.getProjectSites(id)
+
+        sites.each { site ->
+            Map result = siteService.validate(site)
+        }
+
+        render view:'/project/projectSites', model:sites
+    }
+
     def siteUploadProgress() {
         Map progress = session.uploadProgress?:[:]
         render progress as JSON

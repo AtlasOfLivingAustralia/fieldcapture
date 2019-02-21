@@ -108,9 +108,16 @@ var SiteStatusModel = function(site, currentStage, map, sitesViewModel) {
 var SimplifiedReportingViewModel = function(project, config) {
     var self = this;
 
-    var reportsViewModel = new ProjectReportsViewModel(project);
+    // Find the oldest report that has not yet been approved to work with.
+    var currentReport = _.find(project.reports || [], function(report) {
+        return report.publicationStatus != 'published';
+    });
+    if (!currentReport) {
+        currentReport = project.reports[project.reports.length-1];
+    }
+    currentReport = new Report(currentReport);
+
     var planViewModel = new PlanViewModel(project.activities, project.reports, [], {}, project, null, config, true, false);
-    var currentReport = reportsViewModel.currentReport;
 
     var currentStage = _.find(planViewModel.stages, function(stage) {
         return stage.toDate == currentReport.toDate;
