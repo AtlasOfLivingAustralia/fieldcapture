@@ -317,4 +317,26 @@ class ReportServiceSpec extends Specification {
         ActivityService.PROGRESS_PLANNED | _
         ActivityService.PROGRESS_STARTED | _
     }
+
+    def "An adjustment report can only be created if the report is configured to allow it"() {
+        setup:
+        String reportId = 'r1'
+        ProgramConfig programConfig = new ProgramConfig([:])
+
+        when:
+        Map result = service.createAdjustmentReport(reportId, "", programConfig)
+
+        then:
+        1 * webService.getJson({it.endsWith('report/'+reportId)}) >> [reportId:reportId, activityType:'type']
+        result.error != null
+
+        when:
+        programConfig.projectReports = [[activityType:'type', adjustmentActivityType:'adjustment']]
+        result = service.createAdjustmentReport(reportId, "", programConfig)
+
+        then:
+        1 * webService.getJson({it.endsWith('report/'+reportId)}) >> [reportId:reportId, activityType:'type']
+        1 * webService.doPost({it.endsWith("report/adjust/"+reportId)}, _) >> [:]
+        result.error == null
+    }
 }
