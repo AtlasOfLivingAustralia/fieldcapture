@@ -785,6 +785,7 @@ class ProjectController {
         }
     }
 
+    @PreAuthorise
     def ajaxProjectSites(String id) {
         Map result = projectService.projectSites(id)
 
@@ -872,8 +873,9 @@ class ProjectController {
     }
 
     @PreAuthorise(accessLevel ='siteAdmin')
-    def adjustReport(String id, String reportId) {
+    def adjustReport(String id) {
 
+        Map reportData = request.JSON
         Map project = projectService.get(id)
         if (!project) {
             render status:404
@@ -881,7 +883,7 @@ class ProjectController {
         else {
             ProgramConfig config = projectService.getProgramConfiguration(project)
 
-            Map result = reportService.createAdjustmentReport(reportId, params.reason, config)
+            Map result = reportService.createAdjustmentReport(reportData.reportId, reportData.reason, config)
             render result as JSON
         }
     }

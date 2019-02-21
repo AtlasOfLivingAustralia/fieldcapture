@@ -150,6 +150,7 @@ var ReportViewModel = function(report, config) {
             reason: self.reason,
             rejectionCategories: ['Minor', 'Moderate', 'Major'],
             rejectionCategory: self.category,
+            explanationText:'',
             title:'Return report',
             buttonText: 'Return',
             submit:function() {
@@ -183,30 +184,20 @@ var ReportViewModel = function(report, config) {
     };
 
     self.adjustReport = function() {
-        bootbox.confirm("<h4>Adjustment</h4>Are you sure you need to adjust the data entered into this report?", function(result) {
-            if (result) {
-                var url = config.adjustReportUrl+'?reportId='+report.reportId;
-                $.ajax({
-                    url: url,
-                    type: 'POST'
-                }).done(function(result) {
-                    if (result && result.error) {
-                        bootbox.alert(result.error);
-                    }
-                    else {
-                        window.location.reload();
-                    }
 
-                }).fail(function(data) {
-                    if (data.status == 401) {
-                        bootbox.alert("You do not have permission to create an adjustment for this report.");
-                    }
-                    else {
-                        bootbox.alert('An unhandled error occurred: ' + data.status);
-                    }
-                });
+        var reasonModalSelector = config.reasonModalSelector || '#reason-modal';
+        var $reasonModal = $(reasonModalSelector);
+        var reasonViewModel = {
+            reason: self.reason,
+            title:'Adjust report',
+            buttonText: 'Create adjustment',
+            explanationText: 'Please enter the reason the adjustment is required',
+            submit:function() {
+                self.changeReportStatus(config.adjustReportUrl, 'return', 'Creating an adjustment for the report...', 'Created adjustment report.');
             }
-        });
+        };
+        ko.applyBindings(reasonViewModel, $reasonModal[0]);
+        $reasonModal.modal({backdrop: 'static', keyboard:true, show:true}).on('hidden', function() {ko.cleanNode($reasonModal[0])});
     };
 };
 
