@@ -3,7 +3,7 @@ package au.org.ala.merit
 import au.org.ala.merit.command.ProjectSummaryReportCommand
 import au.org.ala.merit.command.ReportCommand
 import au.org.ala.merit.command.SaveReportDataCommand
-
+import au.org.ala.merit.reports.ReportConfig
 import grails.converters.JSON
 import org.apache.http.HttpStatus
 import org.codehaus.groovy.grails.web.json.JSONArray
@@ -173,6 +173,10 @@ class ProjectController {
             model.site.showSiteType = true
             List reportOrder = config?.projectReports?.collect{[category:it.category, description:it.description]} ?: []
             reportOrder.push([category:"Adjustments", description:""])
+            project.reports?.each { Map report ->
+                ReportConfig reportConfig = ((ProgramConfig)config).findProjectReportConfigForReport(report)
+                report.isAdjustable = reportConfig?.isAdjustable()
+            }
             Map reportingTab = [label: 'Reporting', visible:user?.hasViewAccess, type:'tab', template:'projectReporting', reports:project.reports, reportOrder:reportOrder, stopBinding:true, services: config.services, scores:scores, hideDueDate:true, isAdmin:user?.isAdmin, isGrantManager:user?.isCaseManager]
 
             Map rlpModel = [overview:model.overview, documents:model.documents, details:model.details, site:model.site, reporting:reportingTab]
@@ -795,7 +799,10 @@ class ProjectController {
         model.metaModel = filterOutputModel(model.metaModel, project, model.activity)
 
         model.context = new HashMap(project)
-        model.context.services = addTargetsData(project, model.report.activityId)
+
+        if (model.report.adjustedReportId) {
+            model.context.services = addTargetsData(model.report)
+        }
 
         model.returnTo = g.createLink(action:'index', id:projectId)
         model.contextViewUrl = model.returnTo
@@ -816,12 +823,17 @@ class ProjectController {
         model
     }
 
-    List addTargetsData(Map project, String activityId) {
-        List result = projectService.getServiceDataForActivity(project.projectId, activityId)
+    private List addTargetsData(Map report) {
+        Map originalReport = reportService.get(report.adjustedReportId)
+
+        List result = projectService.getServiceDataForActivity(report.projectId, originalReport.activityId)
         List allTargetMeasures = []
         result.each { service ->
             service.scores?.each { score ->
-                allTargetMeasures << [name:service.name, targetMeasure:score.label, result:score.data?.result, target:score.target]
+                if (score.target) {
+                    allTargetMeasures << [name:service.name, targetMeasure:score.label, result:score.data?.result, target:score.target, scoreId:score.scoreId]
+                }
+
             }
         }
         return allTargetMeasures
@@ -859,11 +871,19 @@ class ProjectController {
         filteredModel
     }
 
-    @PreAuthorise(accessLevel ='caseManager')
+    @PreAuthorise(accessLevel ='siteAdmin')
     def adjustReport(String id, String reportId) {
 
-        Map result = reportService.createAdjustmentReport(reportId)
-        render result as JSON
+        Map project = projectService.get(id)
+        if (!project) {
+            render status:404
+        }
+        else {
+            ProgramConfig config = projectService.getProgramConfiguration(project)
+
+            Map result = reportService.createAdjustmentReport(reportId, params.reason, config)
+            render result as JSON
+        }
     }
 
     @PreAuthorise(accessLevel = 'caseManager')

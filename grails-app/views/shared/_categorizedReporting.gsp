@@ -44,15 +44,16 @@
 </script>
 
 <script id="approved" type="text/html">
-    <p><span class="badge badge-success">Report approved</span></p>
 
+    <p><span class="badge badge-success">Report approved</span></p>
+    <p data-bind="visible:report.dateAdjusted"><span class="badge badge-important">Report adjusted</span></p>
     <g:if test="${fc.userIsAlaOrFcAdmin()}">
         <p>
         <button type="button" data-bind="click:rejectReport" class="btn btn-danger"><i class="fa fa-remove icon-white"></i> Withdraw approval</button>
         </p>
     </g:if>
     <g:if test="${fc.userIsSiteAdmin()}">
-        <p>
+        <p data-bind="visible:report.isAdjustable && !report.dateAdjusted">
             <button type="button" data-bind="click:adjustReport" class="btn btn-danger"><i class="fa fa-edit"></i> Adjustment required</button>
         </p>
     </g:if>

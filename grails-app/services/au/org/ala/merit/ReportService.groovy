@@ -403,30 +403,24 @@ class ReportService {
         return [success:true]
     }
 
-    Map createAdjustmentReport(String reportId) {
-        Map toAdjust = get(reportId)
+    /**
+     * Creates a report to adjust the data for the supplied report without having to unapprove the original report.
+     * @param reportId the report that needs adjustment
+     * @param reason the reason for the adjustment.
+     * @param config the configuration associated with the project / program the report is for.
+     * @return a Map containing the result of the adjustment, including a error key it if failed.
+     */
+    Map createAdjustmentReport(String reportId, String reason, ProgramConfig config) {
 
         Map result
+        Map toAdjust = get(reportId)
 
-        if (isAdjustable(toAdjust)) {
-            List owners = ['projectId', 'programId', 'organisationId']
-            Map adjustmentReport = [
-                    name            : "Adjustment: " + toAdjust.name,
-                    description     : "Adjustment: " + toAdjust.description,
-                    fromDate        : toAdjust.fromDate,
-                    toDate          : toAdjust.toDate,
-                    type            : REPORT_TYPE_ADJUSTMENT,
-                    adjustedReportId: toAdjust.reportId,
-                    category        : "Adjustments",
-                    activityType    : getAdjustmentActivityType(toAdjust)
-            ]
+        ReportConfig reportConfig = config.findProjectReportConfigForReport(toAdjust)
 
-            owners.each { key ->
-                if (toAdjust[key]) {
-                    adjustmentReport[key] = toAdjust[key]
-                }
-            }
-            result = create(adjustmentReport)
+        if (reportConfig && reportConfig.isAdjustable()) {
+            String url = grailsApplication.config.ecodata.baseUrl+"report/adjust/${reportId}"
+            result = webService.doPost(url, [comment:reason, adjustmentActivityType:reportConfig.adjustmentActivityType])
+
         }
         else {
             result = [error:'This report cannot be adjusted']
@@ -434,17 +428,6 @@ class ReportService {
 
         return result
     }
-
-    String getAdjustmentActivityType(Map report) {
-        return report.activityType + ' Adjustment'
-    }
-
-    boolean isAdjustable(Map report) {
-        String adjustmentReportActivityType = getAdjustmentActivityType(report)
-        Map activity = metadataService.activitiesModel().activities?.find{it.name == adjustmentReportActivityType}
-        return activity != null
-    }
-
 
     Map scoresForActivity(String projectId, String activityId, List<String> scoreIds = null) {
         Map filter = [type:'discrete', filterValue: activityId, property:'activity.activityId']

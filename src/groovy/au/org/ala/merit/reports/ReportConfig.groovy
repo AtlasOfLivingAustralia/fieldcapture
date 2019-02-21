@@ -68,4 +68,15 @@ class ReportConfig {
     Period getReportingPeriod() {
         Period.months(reportingPeriodInMonths)
     }
+
+    /** Specifies the type of activity to be used if an adjustment to this report is required */
+    String adjustmentActivityType
+
+    /**
+     * An adjustable report specifies an activity type (adjustmentActivityType) that can be used to adjust the
+     * contents of the report described by this configuration after it has been approved.
+     */
+    boolean isAdjustable() {
+        return adjustmentActivityType != null
+    }
 }

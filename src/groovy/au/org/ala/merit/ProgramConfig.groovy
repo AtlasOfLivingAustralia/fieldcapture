@@ -85,7 +85,6 @@ class ProgramConfig implements Map {
 
 
 
-
     boolean projectsMustStartAndEndOnContractDates
 
     String projectTemplate
@@ -94,13 +93,17 @@ class ProgramConfig implements Map {
     List<String> activityTypes
     String speciesConfiguration
 
-    // Weird rules for generating reports.
 
-    // 1. Milestone report for every "reporting period"
-    // 1. Annual report for every year
-    // 1. Short term report at end of project for duration < 3 years
-    // 1. Medium term report at end of project for duration > 3 years
-    List<ReportConfig> reportConfig
+    /**
+     * If the supplied report was generated via this program configuration, the configuration used to generate
+     * the report will be returned.  Otherwise this method returns null.
+     * This is currently used to determine if a report is eligible for an adjustment.
+     */
+    ReportConfig findProjectReportConfigForReport(Map report) {
+        Map reportConfig = config.projectReports?.find{it.activityType == report.activityType}
+
+        return reportConfig ? new ReportConfig(reportConfig) : null
+    }
 
     boolean activitiesRequireLocking
     String activityNavigationMode // stay on page or return
