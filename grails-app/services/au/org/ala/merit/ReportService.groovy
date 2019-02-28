@@ -434,13 +434,46 @@ class ReportService {
 
         String url =  grailsApplication.config.ecodata.baseUrl+"project/projectMetrics/"+projectId
 
-        Map params = [aggregationConfig: filter, approvedOnly:false]
+        Map params = [aggregationConfig: filter, approvedOnly:false, includeTargets: false]
         if (scoreIds) {
             params.scoreIds = scoreIds
         }
         Map report = webService.doPost(url, params)
 
+        if (report.resp && report.resp[0]) {
+            // Unpack the grouping information included by the filter.
+            report = [scores:report.resp[0]?.results]
+        }
+
         return report
+    }
+
+
+    Map dateHistogramForScores(String projectId, DateTime startDate, DateTime endDate, Period period, String format, List<String> scoreIds) {
+
+        Map dateGrouping = dateHistogramGroup(startDate, endDate, period, format)
+
+        String url =  grailsApplication.config.ecodata.baseUrl+"project/projectMetrics/"+projectId
+
+        Map params = [aggregationConfig: dateGrouping, approvedOnly:false, scoreIds: scoreIds, includeTargets:false]
+
+        Map report = webService.doPost(url, params)
+
+        return report
+    }
+
+    Map dateHistogramGroup(DateTime startDate, DateTime endDate, Period period, String format = 'YYYY') {
+
+
+        DateTime date = startDate
+        List dateBuckets = [DateUtils.format(date)]
+        while (date.isBefore(endDate)) {
+            date = date.plus(period)
+            dateBuckets.add(DateUtils.format(date))
+        }
+
+        [type:'date', buckets:dateBuckets, format:format, property:'activity.plannedEndDate']
+
     }
 
     def reject(String reportId, String category, String reason) {

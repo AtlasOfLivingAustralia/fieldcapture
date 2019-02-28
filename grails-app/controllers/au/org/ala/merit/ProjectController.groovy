@@ -832,12 +832,25 @@ class ProjectController {
         result.each { service ->
             service.scores?.each { score ->
                 if (score.target) {
-                    allTargetMeasures << [name:service.name, targetMeasure:score.label, result:score.data?.result, target:score.target, scoreId:score.scoreId]
+                    allTargetMeasures << [name:service.name, targetMeasure:score.label, result:score.data?.result, target:score.target, scoreId:score.scoreId, periodTargets:score.periodTargets]
                 }
 
             }
         }
         return allTargetMeasures
+    }
+
+    @PreAuthorise(accessLevel = 'editor')
+    def scoresByFinancialYear(String id) {
+        String financialYearEndDate = params.financialYearEndDate
+        boolean missedTargetsOnly = params.getBoolean("missedTargetsOnly", true)
+
+        DateTime financialYearStart = DateUtils.alignToFinancialYear(DateUtils.parse(financialYearEndDate))
+        String year = financialYearStart.year + "/" + (financialYearStart.year+1)
+
+        List targets = projectService.findMinimumTargets(id, year, missedTargetsOnly)
+        Map results = [projectId:id, targets:targets]
+        render results as JSON
     }
 
     /**

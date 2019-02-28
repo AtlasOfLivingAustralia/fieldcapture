@@ -1370,16 +1370,95 @@ class ProjectService  {
 
         Map results = reportService.scoresForActivity(projectId, activityId, scoreIds)
 
-
         // Attach the data to each service score
         services.each { service ->
             service.scores?.each { score ->
-                Map data = results.resp?.find { it.scoreId == score.scoreId }
+                Map data = results.scores?.find { it.scoreId == score.scoreId }
                 if (data) {
                     score.data = data.result
                 }
             }
         }
+    }
+
+
+    List findMinimumTargets(String projectId, String financialYear, boolean missedTargetsOnly) {
+        Map report = reportProjectPeriodTargets(projectId)
+
+        List targets = []
+        report?.services.each { service ->
+            service.scores?.each { score ->
+                if (score.periodTargets) {
+                    Map target = score.periodTargets.find { it.period == financialYear }
+
+                    if (!missedTargetsOnly || missedTarget(target)) {
+                        targets << [service:service.name, targetMeasure:score.label, projectTarget:score.target, financialYearTarget:target.target, financialYearResult:target.result]
+
+                    }
+
+                }
+            }
+        }
+
+        targets
+    }
+
+
+    private boolean missedTarget(Map targetData) {
+        if (!targetData) {
+            return false
+        }
+        BigDecimal target = new BigDecimal(targetData.target ?: 0)
+        BigDecimal result = new BigDecimal(targetData.result)
+        return target > result
+    }
+
+
+    Map reportProjectPeriodTargets(String projectId) {
+        List services = getProjectServicesWithTargets(projectId)
+        List scoreIds = services.collect { it.scores?.collect { score -> score.scoreId } }.flatten()
+        Map results = scoresByFinancialYear(projectId, scoreIds)
+
+
+
+        services.each { Map service ->
+            service.scores?.each { Map score ->
+                score.periodTargets?.each{ Map period ->
+
+
+                    // Match period format to the report format.  The report uses YYYY - YYYY whereas the period is YYYY/YYYY
+                    if (period.period && period.period.size() >= 4) {
+                        String year = period.period[0..3]
+
+                        results.resp?.each { Map yearGroup ->
+                            if (yearGroup.group && yearGroup.group.size() >= 4) {
+                                String resultYear = yearGroup.group[0..3]
+
+                                // We can match the result to the target for this period.
+                                if (resultYear == year) {
+                                    Map scoreResult = yearGroup.results?.find{it.scoreId == score.scoreId}
+                                    period.result = scoreResult?.result?.result ?: 0
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        [services:services]
+    }
+
+
+    Map scoresByFinancialYear(String projectId, List<String> scoreIds) {
+
+        Map project = get(projectId)
+
+        DateTime start = DateUtils.alignToFinancialYear(DateUtils.parse(project.plannedStartDate))
+
+        Map report = reportService.dateHistogramForScores(projectId, start, DateUtils.parse(project.plannedEndDate), Period.months(12), 'YYYY', scoreIds)
+
+        return report
     }
 
     /**
