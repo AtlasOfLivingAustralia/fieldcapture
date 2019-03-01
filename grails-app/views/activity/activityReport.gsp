@@ -33,6 +33,7 @@
                 speciesImageUrl: "${createLink(controller:'species', action:'speciesImage')}",
                 noImageUrl: "${assetPath(src:'nophoto.png')}",
                 context:${fc.modelAsJavascript(model:context)},
+                prepopUrlPrefix:"${grailsApplication.config.grails.serverURL}",
                 unlockActivityUrl: "${createLink(controller:'activity', action:'ajaxUnlock')}/<fc:currentUserId/>"
             },
             here = document.location.href;
@@ -104,6 +105,7 @@
 
         var context = {
             owner: fcConfig.context,
+            reportId: reportId,
             activity: activity,
             documents: activity.documents,
             site: activity.site

@@ -169,7 +169,7 @@ class ProjectControllerSpec extends Specification {
         stubProjectAdmin('1234', projectId)
         Map project = this.project(projectId, true)
         projectService.get(projectId) >> project
-        Map activityReportModel = [editable:true, metaModel:[:], outputModels:[:], activity:[activityId:'a1']]
+        Map activityReportModel = [editable:true, metaModel:[:], outputModels:[:], activity:[activityId:'a1'], report:[:]]
 
 
         when:
@@ -213,7 +213,7 @@ class ProjectControllerSpec extends Specification {
         stubProjectAdmin('1234', projectId)
         Map project = this.project(projectId, true)
         projectService.get(projectId) >> project
-        Map activityReportModel = [editable:false, metaModel:[:], outputModels:[:], activity:[activityId:'a1']]
+        Map activityReportModel = [editable:false, metaModel:[:], outputModels:[:], activity:[activityId:'a1'], report:[:]]
 
 
         when:

@@ -27,6 +27,7 @@ class ReportService {
 
     public static final String REPORT_TYPE_SINGLE_ACTIVITY = 'Single'
     public static final String REPORT_TYPE_STAGE_REPORT = 'Activity'
+    public static final String REPORT_TYPE_ADJUSTMENT = 'Adjustment'
 
     static enum ReportMode {
         VIEW,
@@ -400,6 +401,79 @@ class ReportService {
             return [success:false, error:resp.error]
         }
         return [success:true]
+    }
+
+    /**
+     * Creates a report to adjust the data for the supplied report without having to unapprove the original report.
+     * @param reportId the report that needs adjustment
+     * @param reason the reason for the adjustment.
+     * @param config the configuration associated with the project / program the report is for.
+     * @return a Map containing the result of the adjustment, including a error key it if failed.
+     */
+    Map createAdjustmentReport(String reportId, String reason, ProgramConfig config) {
+
+        Map result
+        Map toAdjust = get(reportId)
+
+        ReportConfig reportConfig = config.findProjectReportConfigForReport(toAdjust)
+
+        if (reportConfig && reportConfig.isAdjustable()) {
+            String url = grailsApplication.config.ecodata.baseUrl+"report/adjust/${reportId}"
+            result = webService.doPost(url, [comment:reason, adjustmentActivityType:reportConfig.adjustmentActivityType])
+
+        }
+        else {
+            result = [error:'This report cannot be adjusted']
+        }
+
+        return result
+    }
+
+    Map scoresForActivity(String projectId, String activityId, List<String> scoreIds = null) {
+        Map filter = [type:'discrete', filterValue: activityId, property:'activity.activityId']
+
+        String url =  grailsApplication.config.ecodata.baseUrl+"project/projectMetrics/"+projectId
+
+        Map params = [aggregationConfig: filter, approvedOnly:false, includeTargets: false]
+        if (scoreIds) {
+            params.scoreIds = scoreIds
+        }
+        Map report = webService.doPost(url, params)
+
+        if (report.resp && report.resp[0]) {
+            // Unpack the grouping information included by the filter.
+            report = [scores:report.resp[0]?.results]
+        }
+
+        return report
+    }
+
+
+    Map dateHistogramForScores(String projectId, DateTime startDate, DateTime endDate, Period period, String format, List<String> scoreIds) {
+
+        Map dateGrouping = dateHistogramGroup(startDate, endDate, period, format)
+
+        String url =  grailsApplication.config.ecodata.baseUrl+"project/projectMetrics/"+projectId
+
+        Map params = [aggregationConfig: dateGrouping, approvedOnly:false, scoreIds: scoreIds, includeTargets:false]
+
+        Map report = webService.doPost(url, params)
+
+        return report
+    }
+
+    Map dateHistogramGroup(DateTime startDate, DateTime endDate, Period period, String format = 'YYYY') {
+
+
+        DateTime date = startDate
+        List dateBuckets = [DateUtils.format(date)]
+        while (date.isBefore(endDate)) {
+            date = date.plus(period)
+            dateBuckets.add(DateUtils.format(date))
+        }
+
+        [type:'date', buckets:dateBuckets, format:format, property:'activity.plannedEndDate']
+
     }
 
     def reject(String reportId, String category, String reason) {

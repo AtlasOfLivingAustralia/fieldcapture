@@ -74,11 +74,6 @@
     </div>
 </div>
 
-<g:if test="${displayTargets && metrics.targets}">
-    <g:render template="outputTargets" model="${[targets:metrics.targets]}"/>
-</g:if>
-
-
 <g:if test="${displayOutcomes && outcomes}">
     <div id="outcomes">
         <g:if test="${outcomes.environmentalOutcomes}">

@@ -3,7 +3,7 @@ package au.org.ala.merit
 import au.org.ala.merit.command.ProjectSummaryReportCommand
 import au.org.ala.merit.command.ReportCommand
 import au.org.ala.merit.command.SaveReportDataCommand
-
+import au.org.ala.merit.reports.ReportConfig
 import grails.converters.JSON
 import org.apache.http.HttpStatus
 import org.codehaus.groovy.grails.web.json.JSONArray
@@ -57,7 +57,6 @@ class ProjectController {
             user.isEditor = projectService.canUserEditProject(user.userId, id) ?: false
             user.hasViewAccess = projectService.canUserViewProject(user.userId, id) ?: false
         }
-
         Map config
         if (project && !project.error) {
             config = projectService.getProgramConfiguration(project)
@@ -85,7 +84,6 @@ class ProjectController {
                 // comma separated list of user email addresses
 
                 def programs = projectService.programsModel()
-
                 def content = projectContent(project, user, template, config)
 
                 def model = [project               : project,
@@ -96,7 +94,6 @@ class ProjectController {
                              roles                 : roles,
                              admins                : admins,
                              activityTypes         : projectService.activityTypesList(),
-                             metrics               : projectService.summary(id),
                              outputTargetMetadata  : metadataService.getOutputTargetsByOutputByActivity(),
                              organisations         : organisationList(project),
                              programs              : programs,
@@ -106,7 +103,6 @@ class ProjectController {
                              projectContent        : content.model,
                              hasCustomTemplate     : config?.projectTemplate
                 ]
-
                 render view: content.view, model: model
             }
         }
@@ -156,7 +152,7 @@ class ProjectController {
 
         boolean adminTabVisible = user?.isEditor || user?.isAdmin || user?.isCaseManager
 
-        def model = [overview       : [label: 'Overview', visible: true, default: true, type: 'tab', publicImages: imagesModel, displayTargets: false, displayOutcomes: false, blog: blog, hasNewsAndEvents: hasNewsAndEvents, hasProjectStories: hasProjectStories, canChangeProjectDates: canChangeProjectDates],
+        def model = [overview       : [label: 'Overview', visible: true, default: true, type: 'tab', publicImages: imagesModel, displayOutcomes: false, blog: blog, hasNewsAndEvents: hasNewsAndEvents, hasProjectStories: hasProjectStories, canChangeProjectDates: canChangeProjectDates],
                      documents      : [label: 'Documents', visible: true, type: 'tab', user:user, template:'docs', activityPeriodDescriptor:config.activityPeriodDescriptor ?: 'Stage'],
                      details        : [label: 'MERI Plan', default: false, disabled: !meriPlanEnabled, visible: meriPlanVisible, meriPlanVisibleToUser: meriPlanVisibleToUser, risksAndThreatsVisible: canViewRisks, announcementsVisible: true, project:project, type: 'tab', template:'viewMeriPlan', meriPlanTemplate:MERI_PLAN_TEMPLATE+'View', config:config, activityPeriodDescriptor:config.activityPeriodDescriptor ?: 'Stage'],
                      plan           : [label: 'Activities', visible: true, disabled: !user?.hasViewAccess, type: 'tab', template:'projectActivities', grantManagerSettingsVisible:user?.isCaseManager, project:project, reports: project.reports, scores: scores, risksAndThreatsVisible: user?.hasViewAccess && risksAndThreatsVisible],
@@ -176,6 +172,11 @@ class ProjectController {
             model.site.useAlaMap = true
             model.site.showSiteType = true
             List reportOrder = config?.projectReports?.collect{[category:it.category, description:it.description]} ?: []
+            reportOrder.push([category:"Adjustments", description:""])
+            project.reports?.each { Map report ->
+                ReportConfig reportConfig = ((ProgramConfig)config).findProjectReportConfigForReport(report)
+                report.isAdjustable = reportConfig?.isAdjustable()
+            }
             Map reportingTab = [label: 'Reporting', visible:user?.hasViewAccess, type:'tab', template:'projectReporting', reports:project.reports, reportOrder:reportOrder, stopBinding:true, services: config.services, scores:scores, hideDueDate:true, isAdmin:user?.isAdmin, isGrantManager:user?.isCaseManager]
 
             Map rlpModel = [overview:model.overview, documents:model.documents, details:model.details, site:model.site, reporting:reportingTab]
@@ -194,6 +195,10 @@ class ProjectController {
             project.remove('activities')
             model.overview.datesHidden = true
             model.overview.fundingHidden = true
+        }
+        else {
+            def metrics = projectService.summary(project.projectId)
+            model.dashboard.metrics = metrics
         }
         return [view: 'index', model: model]
     }
@@ -780,6 +785,7 @@ class ProjectController {
         }
     }
 
+    @PreAuthorise
     def ajaxProjectSites(String id) {
         Map result = projectService.projectSites(id)
 
@@ -793,7 +799,7 @@ class ProjectController {
         Map model = reportService.activityReportModel(reportId, mode)
         model.metaModel = filterOutputModel(model.metaModel, project, model.activity)
 
-        model.context = project
+        model.context = new HashMap(project)
         model.returnTo = g.createLink(action:'index', id:projectId)
         model.contextViewUrl = model.returnTo
         model.reportHeaderTemplate = '/project/rlpProjectReportHeader'
@@ -813,39 +819,45 @@ class ProjectController {
         model
     }
 
-    private Map prepopSites(Map project) {
+    /**
+     * This method returns project targets as well as the contribution towards those targets from a specific
+     * report.  It is used to create a form which allows adjustments to be recorded against approved reports
+     * that cannot go through a withdrawal and corrections process.
+     */
+    @PreAuthorise(accessLevel = 'editor')
+    def getProjectTargetsForAdjustmentsReport(String id, String reportId) {
+        Map adjustmentsReport = reportService.get(reportId)
+        Map originalReport = reportService.get(adjustmentsReport.adjustedReportId)
 
-        List siteServices = project.custom.details.siteServices
-
-        // Change from site -> service list to service -> site list
-
-        Map sitesByService = [:].withDefault{[]}
-        siteServices.each { String siteId, List serviceIds ->
-            serviceIds.each{ serviceId ->
-                sitesByService[serviceId] << siteId
-            }
-        }
-
-        Map reportSite = [name:'dalkfdsajlkfads', type:SiteService.SITE_TYPE_COMPOUND, features:[]]
-        reportSite.features << [:] //<each site>
-
-        List outputData = []
-
-        List services = projectService.getProjectServices()
-        services.each { service ->
-            List sites = sitesByService[service.id]
-            if (sites) {
-                outputData << [
-                        name:service.output,
-                        activityId:report.activityId,
-                        data:[
-                                // Find feature data type.  create copy of site from sites.  set ids, add reference
-                        ]
-                ]
+        List result = projectService.getServiceDataForActivity(id, originalReport.activityId)
+        List allTargetMeasures = []
+        result.each { service ->
+            service.scores?.each { score ->
+                if (score.target) {
+                    allTargetMeasures << [name:service.name, targetMeasure:score.label, result:score.data?.result, target:score.target, scoreId:score.scoreId, periodTargets:score.periodTargets]
+                }
 
             }
         }
+        Map results = [projectId:id, targets:allTargetMeasures]
+        render results as JSON
+    }
 
+    /**
+     * Used by the RLP annual project report to report against missed minimum annual targets.
+     * @param id the projectId of the project being reported on.
+     */
+    @PreAuthorise(accessLevel = 'editor')
+    def scoresByFinancialYear(String id) {
+        String financialYearEndDate = params.financialYearEndDate
+        boolean missedTargetsOnly = params.getBoolean("missedTargetsOnly", true)
+
+        DateTime financialYearStart = DateUtils.alignToFinancialYear(DateUtils.parse(financialYearEndDate))
+        String year = financialYearStart.year + "/" + (financialYearStart.year+1)
+
+        List targets = projectService.findMinimumTargets(id, year, missedTargetsOnly)
+        Map results = [projectId:id, targets:targets]
+        render results as JSON
     }
 
     /**
@@ -857,7 +869,7 @@ class ProjectController {
     private Map filterOutputModel(Map activityModel, Map project, Map existingActivityData) {
 
         Map filteredModel = activityModel
-        if (activityModel.name == grailsApplication.config.rlp.servicesReport) {
+        if (activityModel?.name == grailsApplication.config.rlp.servicesReport) {
 
             List projectServices = projectService.getProjectServices(project)
             List allServices = metadataService.getProjectServices()
@@ -878,6 +890,22 @@ class ProjectController {
             }
         }
         filteredModel
+    }
+
+    @PreAuthorise(accessLevel ='siteAdmin')
+    def adjustReport(String id) {
+
+        Map reportData = request.JSON
+        Map project = projectService.get(id)
+        if (!project) {
+            render status:404
+        }
+        else {
+            ProgramConfig config = projectService.getProgramConfiguration(project)
+
+            Map result = reportService.createAdjustmentReport(reportData.reportId, reportData.reason, config)
+            render result as JSON
+        }
     }
 
     @PreAuthorise(accessLevel = 'caseManager')

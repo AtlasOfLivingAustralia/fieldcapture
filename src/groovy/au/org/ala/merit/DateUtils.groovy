@@ -24,7 +24,7 @@ class DateUtils {
 
     /**
      * Aligns the supplied DateTime to the start date of the period it falls into.
-     * The period is defined relative to the Calandar year.
+     * The period is defined relative to the Calendar year.
      * For example, a date of 03/1/2014 aligned to a 3 month period falls into the Jan - March period so
      * 01/01/2014 will be returned.
      * @param toAlign the date to align
@@ -44,6 +44,20 @@ class DateUtils {
         }
 
         return interval.getStart()
+    }
+
+    /**
+     * Returns a DateTime representing the start the of financial year which the supplied date falls into.
+     * e.g. if the toAlign date is after June 30 it will return July 1 of the same year, otherwise it returns
+     * July 1 of the previous year.
+     * @param toAlign the date to align to a financial year.
+     */
+    static DateTime alignToFinancialYear(DateTime toAlign) {
+        DateTime financialYear = new DateTime(toAlign.year().get(), DateTimeConstants.JULY, 1, 0, 0, toAlign.getZone())
+        if (toAlign.isBefore(financialYear)) {
+            financialYear = financialYear.minusYears(1)
+        }
+        financialYear
     }
 
     /**
