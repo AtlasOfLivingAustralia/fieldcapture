@@ -1391,7 +1391,7 @@ class ProjectService  {
                 if (score.periodTargets) {
                     Map target = score.periodTargets.find { it.period == financialYear }
 
-                    if (!missedTargetsOnly || missedTarget(target)) {
+                    if (target && !missedTargetsOnly || missedTarget(target)) {
                         targets << [service:service.name, targetMeasure:score.label, projectTarget:score.target, financialYearTarget:target.target, financialYearResult:target.result]
 
                     }
