@@ -105,6 +105,7 @@
 
         var context = {
             owner: fcConfig.context,
+            reportId: reportId,
             activity: activity,
             documents: activity.documents,
             site: activity.site

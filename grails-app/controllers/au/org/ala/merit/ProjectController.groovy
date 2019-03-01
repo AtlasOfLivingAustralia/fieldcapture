@@ -800,11 +800,6 @@ class ProjectController {
         model.metaModel = filterOutputModel(model.metaModel, project, model.activity)
 
         model.context = new HashMap(project)
-
-        if (model.report.adjustedReportId) {
-            model.context.services = addTargetsData(model.report)
-        }
-
         model.returnTo = g.createLink(action:'index', id:projectId)
         model.contextViewUrl = model.returnTo
         model.reportHeaderTemplate = '/project/rlpProjectReportHeader'
@@ -824,10 +819,17 @@ class ProjectController {
         model
     }
 
-    private List addTargetsData(Map report) {
-        Map originalReport = reportService.get(report.adjustedReportId)
+    /**
+     * This method returns project targets as well as the contribution towards those targets from a specific
+     * report.  It is used to create a form which allows adjustments to be recorded against approved reports
+     * that cannot go through a withdrawal and corrections process.
+     */
+    @PreAuthorise(accessLevel = 'editor')
+    def getProjectTargetsForAdjustmentsReport(String id, String reportId) {
+        Map adjustmentsReport = reportService.get(reportId)
+        Map originalReport = reportService.get(adjustmentsReport.adjustedReportId)
 
-        List result = projectService.getServiceDataForActivity(report.projectId, originalReport.activityId)
+        List result = projectService.getServiceDataForActivity(id, originalReport.activityId)
         List allTargetMeasures = []
         result.each { service ->
             service.scores?.each { score ->
@@ -837,9 +839,14 @@ class ProjectController {
 
             }
         }
-        return allTargetMeasures
+        Map results = [projectId:id, targets:allTargetMeasures]
+        render results as JSON
     }
 
+    /**
+     * Used by the RLP annual project report to report against missed minimum annual targets.
+     * @param id the projectId of the project being reported on.
+     */
     @PreAuthorise(accessLevel = 'editor')
     def scoresByFinancialYear(String id) {
         String financialYearEndDate = params.financialYearEndDate
