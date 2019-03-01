@@ -514,6 +514,12 @@ class FCTagLib {
         }
     }
 
+    def userHasReadOnlyAccess = {
+        if (userService.userHasReadOnlyAccess()) {
+            out << true
+        }
+    }
+
     /**
      * Build HTML for drop down menu "My projects"
      */

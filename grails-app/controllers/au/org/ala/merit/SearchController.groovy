@@ -30,7 +30,7 @@ class SearchController {
         render speciesService.searchSpeciesList(sort, max, offset) as JSON
     }
 
-    @PreAuthorise(accessLevel = 'siteAdmin', redirectController ='home', redirectAction = 'index')
+    @PreAuthorise(accessLevel = 'siteReadOnly', redirectController ='home', redirectAction = 'index')
     def downloadAllData() {
         params.put("downloadUrl", g.createLink(controller:'document', action:'downloadProjectDataFile', absolute: true)+'/')
         params.put("systemEmail", grailsApplication.config.fieldcapture.system.email.address)
