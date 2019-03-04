@@ -610,7 +610,7 @@ class ProjectService  {
             if (response.resp && !response.resp.error) {
 
                 if (updateActivities) {
-                    updateActivityDatesToMatchProjectDates(projectId, previousStartDate, previousEndDate, daysStartChanged, scale, plannedStartDate, plannedEndDate)
+                    updateActivityDatesToMatchProjectDates(projectId, previousStartDate, previousEndDate, newStartDate, newEndDate)
                 }
             }
         }
@@ -761,7 +761,7 @@ class ProjectService  {
 
         List reportsOfType = project.reports?.findAll{it.category == reportConfig.category}
 
-        if (config.activityBasedReporting) {
+        if (!config.activityBasedReporting) {
             // Regenerate all reports, even approved ones.
             reportService.regenerateReports(reportsOfType, rc, reportOwner, -1)
         }
