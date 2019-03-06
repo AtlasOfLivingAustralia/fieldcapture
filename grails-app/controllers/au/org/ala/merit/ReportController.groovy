@@ -2,14 +2,13 @@ package au.org.ala.merit
 
 import au.ala.org.ws.security.RequireApiKey
 import au.org.ala.merit.command.ProjectSummaryReportCommand
+import au.org.ala.merit.command.Reef2050PlanActionReportSummaryCommand
 import grails.converters.JSON
 import org.apache.http.HttpStatus
+import org.codehaus.groovy.grails.web.json.JSONArray
 import org.joda.time.DateTime
-import org.joda.time.DateTimeZone
 import org.joda.time.Interval
 import org.joda.time.Period
-import org.joda.time.format.DateTimeFormat
-import org.joda.time.format.DateTimeFormatter
 
 import static au.org.ala.merit.DashboardTagLib.*
 
@@ -531,25 +530,6 @@ class ReportController {
     }
 
 
-    private List availablePeriods(int startYear, Period period) {
-
-        List availablePeriods = []
-        DateTime first = DateUtils.parse(startYear+"-01-01T00:00:00Z").withZone(DateTimeZone.UTC)
-        DateTime now = DateUtils.now().withZone(DateTimeZone.UTC)
-
-        DateTimeFormatter formatter = DateTimeFormat.forPattern("MMM-yyyy").withZone(DateTimeZone.UTC)
-        DateTime current = DateUtils.alignToPeriod(now, period)
-        while (current.isAfter(first)) {
-            DateTime periodStart = current.minus(period)
-            String label = formatter.print(periodStart) + " - " + formatter.print(current)
-            String value = DateUtils.format(periodStart) + ',' + DateUtils.format(current)
-            availablePeriods << [label:label, value:value]
-
-            current = periodStart
-        }
-        availablePeriods
-    }
-
     def reef2050PlanActionReportPDF() {
         boolean approvedOnly = params.getBoolean('approvedOnly', true)
         if (!userService.userIsAlaOrFcAdmin()) {
@@ -637,6 +617,11 @@ class ReportController {
 
         actionStatusCounts["Completed or in place"] = completed + inPlace
 
+    }
+
+    def reef2050PlanActionReportSelection(Reef2050PlanActionReportSummaryCommand command) {
+        List reports = command.reportSummary()
+        [reportConfig:reports.collect{it.toMap()}]
     }
 
 }
