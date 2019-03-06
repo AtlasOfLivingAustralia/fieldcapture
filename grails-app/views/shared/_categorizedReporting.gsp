@@ -17,6 +17,7 @@
 </div>
 
 <script id="notReportable" type="text/html">
+<p data-bind="visible:report.dateAdjusted"><span class="badge badge-important">Report adjusted</span></p>
     <div data-bind="if:isCurrent()">
         <span><span class="badge badge-info" data-bind="if:isCurrent()">Current reporting period</span>
             <fc:iconHelp dynamic-help="currentPeriodHelpText"></fc:iconHelp> </span>
@@ -29,6 +30,7 @@
 
 <script id="notSubmitted" type="text/html">
 
+    <p data-bind="visible:report.dateAdjusted"><span class="badge badge-important">Report adjusted</span></p>
     <p><span class="badge badge-warning">Report not submitted</span></p>
 
 <g:if test="${isAdmin || fc.userIsAlaOrFcAdmin()}">
@@ -63,6 +65,7 @@
 
 <script id="submitted" type="text/html">
     <p><span class="badge badge-info">Report submitted</span></p>
+    <p data-bind="visible:report.dateAdjusted"><span class="badge badge-important">Report adjusted</span></p>
 <g:if test="${isGrantManager || fc.userIsAlaOrFcAdmin()}">
 
     <span class="btn-group">
