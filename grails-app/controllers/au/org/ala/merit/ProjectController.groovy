@@ -172,7 +172,6 @@ class ProjectController {
             model.site.useAlaMap = true
             model.site.showSiteType = true
             List reportOrder = config?.projectReports?.collect{[category:it.category, description:it.description]} ?: []
-            reportOrder.push([category:"Adjustments", description:""])
             project.reports?.each { Map report ->
                 ReportConfig reportConfig = ((ProgramConfig)config).findProjectReportConfigForReport(report)
                 report.isAdjustable = reportConfig?.isAdjustable()

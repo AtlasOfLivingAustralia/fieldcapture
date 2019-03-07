@@ -383,6 +383,23 @@ var CategorisedReportsViewModel = function(allReports, order, projects, availabl
          return report.category;
     });
 
+    var adjustments = categorizedReports['Adjustments'];
+    if (adjustments && adjustments.length) {
+        _.each(adjustments, function(adjustmentReport) {
+            var adjustedReportId = adjustmentReport.adjustedReportId;
+
+            if (adjustedReportId) {
+                _.find(categorizedReports, function(reports, category) {
+                    var matchedReportIndex = _.findIndex(reports, function(report) {
+                        return report.reportId == adjustedReportId;
+                    });
+                    if (matchedReportIndex >= 0) {
+                        reports.splice(matchedReportIndex, 0, adjustmentReport)
+                    }
+                });
+            }
+        });
+    }
     self.reportsByCategory = [];
 
     _.each(order, function(category) {
