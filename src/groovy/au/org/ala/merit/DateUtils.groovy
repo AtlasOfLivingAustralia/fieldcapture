@@ -105,6 +105,12 @@ class DateUtils {
         return DATE_FORMATTER.print(date)
     }
 
+    static String format(DateTime date, String formatString) {
+        DateTimeFormatter formatter = DateTimeFormat.forPattern(formatString).withZone(date.getZone())
+        return formatter.print(date)
+    }
+
+
     static String displayFormat(DateTime date) {
         return DISPLAY_DATE_FORMATTER.print(date)
     }

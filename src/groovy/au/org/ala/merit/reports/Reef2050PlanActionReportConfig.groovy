@@ -21,7 +21,7 @@ class Reef2050PlanActionReportConfig {
     static String SETTINGS_TEXT_REPORT = 'settings'
 
     public static Period REPORTING_PERIOD = Period.months(6)
-    static DateTimeFormatter LABEL_FORMATTER = DateTimeFormat.forPattern("dd MMMM yyyy").withZone(DateTimeZone.default)
+    private static DateTimeFormatter LABEL_FORMATTER = DateTimeFormat.forPattern("dd MMMM yyyy").withZone(DateTimeZone.default)
 
     public static final String REEF_2050_PLAN_ACTION_REPORTING_ACTIVITY_TYPE = 'Reef 2050 Plan Action Reporting'
     public static final String REEF_2050_PLAN_ACTION_REPORTING_2018_ACTIVITY_TYPE = 'Reef 2050 Plan Action Reporting 2018'
@@ -30,6 +30,7 @@ class Reef2050PlanActionReportConfig {
     String periodEnd
 
     static constraints = {
+        periodEnd nullable: false
         type inList: [ REEF_2050_PLAN_ACTION_REPORTING_ACTIVITY_TYPE, REEF_2050_PLAN_ACTION_REPORTING_2018_ACTIVITY_TYPE, SETTINGS_TEXT_REPORT]
     }
 
@@ -49,6 +50,13 @@ class Reef2050PlanActionReportConfig {
 
     String settingsPageKey() {
         return (type == SETTINGS_TEXT_REPORT) ? SettingPageType.REEF_2050_PLAN_REPORT.key : null
+    }
+
+    String periodStart() {
+        DateTime periodEndDate = DateUtils.parse(periodEnd).withZone(DateTimeZone.default)
+        DateTime startDate = DateUtils.alignToPeriod(periodEndDate.minus(REPORTING_PERIOD), REPORTING_PERIOD)
+
+        DateUtils.format(startDate.withZone(DateTimeZone.UTC))
     }
 
     Map toMap() {

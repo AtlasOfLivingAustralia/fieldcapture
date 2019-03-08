@@ -1,12 +1,7 @@
 <html>
 <head>
-    <meta name="layout" content="${grailsApplication.config.layout.skin?:'main'}"/>
     <title>Reef 2050 Action Status</title>
     <title></title>
-    <script type="text/javascript">
-        fcConfig = {};
-    </script>
-    <asset:stylesheet src="common.css"/>
     <asset:stylesheet src="reef2050DashboardReport.css"/>
 </head>
 
@@ -30,22 +25,15 @@
         <select data-bind="options:reportPeriods, optionsText:'label', value:selectedPeriod"></select>
     </div>
 
-
     <div id="reportContents">
 
     </div>
-
-
 
 </g:else>
 
 
 </div>
 
-
-
-<asset:javascript src="common.js"/>
-<asset:javascript src="reef2050Report.js"/>
 <script type="text/javascript">
     var reportConfig = ${reportConfig as grails.converters.JSON};
     var reportUrl = '${g.createLink(controller:'report', action:'reef2050PlanActionReportContents')}';

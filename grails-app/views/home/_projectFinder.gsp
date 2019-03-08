@@ -219,14 +219,14 @@
                                             <option value="dashboard">Activity Outputs</option>
                                             <option value="announcements">Announcements</option>
                                             <option value="outputTargets">Output Targets By Programme</option>
-                                            <option value="reef2050PlanAction">Reef 2050 Plan Dashboard</option>
+                                            <option value="reef2050PlanActionSelection">Reef 2050 Plan Dashboard</option>
                                         </select>
                                     </span>
                                 </g:if>
                                 <g:else>
                                     <select id="dashboardType" name="dashboardType">
                                         <option value="dashboard">Activity Outputs</option>
-                                        <option value="reef2050PlanAction">Reef 2050 Plan Dashboard</option>
+                                        <option value="reef2050PlanActionSelection">Reef 2050 Plan Dashboard</option>
                                     </select>
                                 </g:else>
                             </div>
@@ -322,7 +322,7 @@
 
     var reportMapping = {
         activities:'dashboard',
-        reef2050:'reef2050PlanAction'
+        reef2050:'reef2050PlanActionSelection'
     };
     <g:if test="${fc.userIsAlaOrFcAdmin()}">
         reportMapping['announcements']='announcements';

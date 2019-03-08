@@ -15,7 +15,7 @@ var Reef2050ReportSelectorViewModel = function(reports, options) {
 
     self.selectedPeriod.subscribe(function(period) {
         var reportUrl = config.reportUrl;
-        $.get(reportUrl, {period:period.periodEnd, type:period.type}).done(function(result) {
+        $.get(reportUrl, {periodEnd:period.periodEnd, type:period.type}).done(function(result) {
             $(config.contentSelector).html(result);
 
             if (period.type != 'settingsText') {

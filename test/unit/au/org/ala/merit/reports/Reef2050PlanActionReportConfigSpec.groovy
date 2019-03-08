@@ -51,4 +51,19 @@ class Reef2050PlanActionReportConfigSpec extends Specification{
 
     }
 
+    def "The period start date is calculated from the period end date and the reporting period"() {
+        when:
+        Reef2050PlanActionReportConfig config = new Reef2050PlanActionReportConfig(periodEnd: "2017-12-31T13:00:00Z")
+
+        then:
+        config.periodStart() == "2017-06-30T14:00:00Z"
+
+        when:
+        config.periodEnd = "2017-06-30T14:00:00Z"
+
+        then:
+        config.periodStart() == "2016-12-31T13:00:00Z"
+
+    }
+
 }
