@@ -1187,8 +1187,8 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
             zoomLimit:16,
             highlightOnHover:true,
             features:[],
-            featureService: config.featureServiceUrl,
-            wmsServer: config.wmsServerUrl,
+            featureServiceUrl: config.featureServiceUrl,
+            wmsServerUrl: config.wmsServerUrl,
             leafletIconPath:options.leafletIconPath,
             useAlaMap: config.useAlaMap,
             useGoogleBaseMap: config.useGoogleBaseMap
