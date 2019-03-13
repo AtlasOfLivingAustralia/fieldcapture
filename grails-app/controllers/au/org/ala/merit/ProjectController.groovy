@@ -900,9 +900,7 @@ class ProjectController {
             render status:404
         }
         else {
-            ProgramConfig config = projectService.getProgramConfiguration(project)
-
-            Map result = reportService.createAdjustmentReport(reportData.reportId, reportData.reason, config)
+            Map result = projectService.adjustReport(id, reportData.reportId, reportData.reason)
             render result as JSON
         }
     }

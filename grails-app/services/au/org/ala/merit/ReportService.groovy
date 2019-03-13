@@ -404,13 +404,13 @@ class ReportService {
     }
 
     /**
-     * Creates a report to adjust the data for the supplied report without having to unapprove the original report.
+     * Creates a report to offset the scores produced by the supplied report without having to unapprove the original report and edit the data.
      * @param reportId the report that needs adjustment
      * @param reason the reason for the adjustment.
      * @param config the configuration associated with the project / program the report is for.
      * @return a Map containing the result of the adjustment, including a error key it if failed.
      */
-    Map createAdjustmentReport(String reportId, String reason, ProgramConfig config) {
+    Map createAdjustmentReport(String reportId, String reason, ProgramConfig config, Map reportOwner, List ownerUsersAndRoles, EmailTemplate emailTemplate) {
 
         Map result
         Map toAdjust = get(reportId)
@@ -421,6 +421,13 @@ class ReportService {
             String url = grailsApplication.config.ecodata.baseUrl+"report/adjust/${reportId}"
             result = webService.doPost(url, [comment:reason, adjustmentActivityType:reportConfig.adjustmentActivityType])
 
+            if (result && !result.error) {
+                Map adjustmentReport = result.resp
+                emailService.sendEmail(emailTemplate, [reportOwner:reportOwner, report:toAdjust, adjustmentReport:adjustmentReport, reason:reason], ownerUsersAndRoles, RoleService.GRANT_MANAGER_ROLE)
+            }
+            else {
+                result = [error:result.error]
+            }
         }
         else {
             result = [error:'This report cannot be adjusted']

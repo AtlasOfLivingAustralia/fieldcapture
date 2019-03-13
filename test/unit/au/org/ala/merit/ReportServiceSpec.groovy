@@ -322,21 +322,56 @@ class ReportServiceSpec extends Specification {
         setup:
         String reportId = 'r1'
         ProgramConfig programConfig = new ProgramConfig([:])
+        Map project = [projectId:'p1']
+        EmailTemplate template = EmailTemplate.DEFAULT_REPORT_ADJUSTED_EMAIL_TEMPLATE
+        List roles = []
 
         when:
-        Map result = service.createAdjustmentReport(reportId, "", programConfig)
+        Map result = service.createAdjustmentReport(reportId, "", programConfig, project, roles, template)
 
         then:
         1 * webService.getJson({it.endsWith('report/'+reportId)}) >> [reportId:reportId, activityType:'type']
+        0 * emailService._
         result.error != null
 
+    }
+
+    def "when a report is adjusted, an adjustment report needs to be created and an email sent"() {
+        setup:
+        String reportId = 'r1'
+        ProgramConfig programConfig = new ProgramConfig(projectReports:[[activityType:'type', adjustmentActivityType:'adjustment']])
+        Map project = [projectId:'p1']
+        EmailTemplate template = EmailTemplate.DEFAULT_REPORT_ADJUSTED_EMAIL_TEMPLATE
+        List roles = []
+        String reason = "testing"
+
         when:
-        programConfig.projectReports = [[activityType:'type', adjustmentActivityType:'adjustment']]
-        result = service.createAdjustmentReport(reportId, "", programConfig)
+        Map result = service.createAdjustmentReport(reportId, reason, programConfig, project, roles, template)
 
         then:
         1 * webService.getJson({it.endsWith('report/'+reportId)}) >> [reportId:reportId, activityType:'type']
-        1 * webService.doPost({it.endsWith("report/adjust/"+reportId)}, _) >> [:]
+        1 * webService.doPost({it.endsWith("report/adjust/"+reportId)}, _) >> [resp:[reportId:'r11'], statusCode:200]
+        1 * emailService.sendEmail(template, [reportOwner:project, reason:reason, report:[reportId:reportId, activityType:'type'], adjustmentReport:[reportId:'r11']], roles, RoleService.GRANT_MANAGER_ROLE)
         result.error == null
+    }
+
+    def "only an approved report can be adjusted"() {
+        setup:
+        String reportId = 'r1'
+        ProgramConfig programConfig = new ProgramConfig(projectReports:[[activityType:'type', adjustmentActivityType:'adjustment']])
+        Map project = [projectId:'p1']
+        EmailTemplate template = EmailTemplate.DEFAULT_REPORT_ADJUSTED_EMAIL_TEMPLATE
+        List roles = []
+        String reason = "testing"
+
+        when:
+        Map result = service.createAdjustmentReport(reportId, reason, programConfig, project, roles, template)
+
+        then:
+        1 * webService.getJson({it.endsWith('report/'+reportId)}) >> [reportId:reportId, activityType:'type']
+        1 * webService.doPost({it.endsWith("report/adjust/"+reportId)}, _) >> [error:"report is approved"]
+        0 * emailService._
+
+        result.error != null
     }
 }

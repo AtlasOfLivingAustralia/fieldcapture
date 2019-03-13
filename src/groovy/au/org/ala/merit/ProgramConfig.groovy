@@ -15,6 +15,7 @@ class ProgramConfig implements Map {
     public static final String REPORT_SUBMITTED_EMAIL_TEMPLATE_CONFIG_ITEM = "reportSubmittedEmailTemplate"
     public static final String REPORT_APPROVED_EMAIL_TEMPLATE_CONFIG_ITEM = "reportApprovedEmailTemplate"
     public static final String REPORT_RETURNED_EMAIL_TEMPLATE_CONFIG_ITEM = "reportReturnedEmailTemplate"
+    public static final String REPORT_ADJUSTED_EMAIL_TEMPLATE_CONFIG_ITEM = "reportAdjustedEmailTemplate"
 
     private Logger log = Logger.getLogger(ProgramConfig.class)
 
@@ -69,6 +70,10 @@ class ProgramConfig implements Map {
 
     EmailTemplate getReportReturnedTemplate() {
         emailTemplateWithDefault(REPORT_RETURNED_EMAIL_TEMPLATE_CONFIG_ITEM, EmailTemplate.DEFAULT_REPORT_RETURNED_EMAIL_TEMPLATE)
+    }
+
+    EmailTemplate getReportAdjustedTemplate() {
+        emailTemplateWithDefault(REPORT_ADJUSTED_EMAIL_TEMPLATE_CONFIG_ITEM, EmailTemplate.DEFAULT_REPORT_ADJUSTED_EMAIL_TEMPLATE)
     }
 
     private EmailTemplate emailTemplateWithDefault(String name, EmailTemplate defaultTemplate) {

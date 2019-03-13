@@ -516,6 +516,24 @@ class ProjectService  {
     }
 
     /**
+     * Creates a report to offset the scores produced by the supplied report without having to unapprove the original report and edit the data.
+     * @param projectId the project the report belongs to.
+     * @param reportId identifies the report to adjust
+     * @param adjustmentReason the reason for the adjustment.
+     * @return a Map containing the result of the adjustment, including a error key it if failed.
+     */
+    Map adjustReport(String projectId, String reportId, String adjustmentReason) {
+
+        Map reportInformation = prepareReport(projectId, [reportId:reportId])
+        if (reportInformation.error) {
+            return [success:false, error:reportInformation.error]
+        }
+        EmailTemplate emailTemplate = ((ProgramConfig)reportInformation.config).getReportAdjustedTemplate()
+
+        reportService.createAdjustmentReport(reportId, adjustmentReason, reportInformation.config, reportInformation.project, reportInformation.roles, emailTemplate)
+    }
+
+    /**
      * Deletes the activities associated with a report.
      */
     Map deleteReportActivities(String reportId, List<String> activityIds) {
