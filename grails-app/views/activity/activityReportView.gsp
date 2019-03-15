@@ -28,6 +28,7 @@
         context:${fc.modelAsJavascript(model:context)},
         imageLeafletViewer: '${createLink(controller: 'resource', action: 'imageviewer', absolute: true)}',
         readonly:true,
+        useGoogleBaseMap: ${grails.util.Environment.current == grails.util.Environment.PRODUCTION},
         returnTo: "${returnTo}"
         },
         here = document.location.href;
