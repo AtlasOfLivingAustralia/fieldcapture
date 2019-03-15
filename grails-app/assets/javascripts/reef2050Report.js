@@ -1,10 +1,20 @@
+/**
+ * This view model controls the behaviour of the two places where a Reef 2050 Plan Action Report can be selected:
+ * * the project explorer dashboard and the administrator reports page.
+ * The behaviour of these two places is slightly different.
+ * @param reports the list of available reef 2050 reports
+ * @param options controls the behaviour of this view model.
+ * @constructor
+ */
 var Reef2050ReportSelectorViewModel = function(reports, options) {
     var self = this;
 
     var defaults = {
         reportUrl: fcConfig.reef2050PlanReportUrl,
         contentSelector: '#reportContents',
-        dataTableSelector: 'table.action-table'
+        dataTableSelector: 'table.action-table',
+        showReportInline: true,
+        loadingSelector: '.reef-report-loading'
     };
 
     var config = _.defaults(options, defaults);
@@ -21,9 +31,15 @@ var Reef2050ReportSelectorViewModel = function(reports, options) {
 
     if (options.showReportInline) {
         self.selectedPeriod.subscribe(function(period) {
+
+            $(config.contentSelector).hide();
+            $(config.loadingSelector).show();
+
             var reportUrl = config.reportUrl;
             $.get(reportUrl, {periodEnd:period.periodEnd, type:period.type}).done(function(result) {
-                $(config.contentSelector).html(result);
+                $(config.loadingSelector).hide();
+                $(config.contentSelector).html(result).show();
+
 
                 if (period.type != 'settingsText') {
                     $.fn.dataTableExt.oStdClasses.sPageButtonActive = "currentStep";

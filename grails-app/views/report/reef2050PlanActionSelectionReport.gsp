@@ -32,6 +32,10 @@
 
     </div>
 
+    <div class="reef-report-loading">
+        <asset:image dir="images" src="loading.gif" alt="saving icon"/> Loading...
+    </div>
+
 </g:else>
 
 

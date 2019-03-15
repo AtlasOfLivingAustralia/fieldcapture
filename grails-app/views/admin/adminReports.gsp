@@ -109,7 +109,7 @@
         var reportUrl = '${g.createLink(controller:'report', action:'reef2050PlanActionReport')}';
         var options = {
             reportUrl: reportUrl,
-
+            showReportInline: false
         };
         ko.applyBindings(new Reef2050ReportSelectorViewModel(reportConfig, options), document.getElementById('reef-2050-reports'));
 

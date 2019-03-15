@@ -671,7 +671,10 @@ class AdminController {
     def selectHomePageImages() {
     }
 
+    @PreAuthorise(accessLevel = 'siteAdmin', redirectController = "admin")
     def adminReports(Reef2050PlanActionReportSummaryCommand command) {
+
+        command.approvedActivitiesOnly = false
         List reefReports = command.reportSummary()
         [reports:[[name: 'performanceAssessmentComparison', label: 'Performance Assessment Comparison']], reef2050Reports:reefReports]
     }
