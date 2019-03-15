@@ -72,15 +72,17 @@ enum SettingPageType {
     RLP_REPORT_SUBMITTED_EMAIL_SUBJECT('rlpReportSubmittedEmailSubject', 'RLP Report submitted email subject line text', 'fielddata.rlp.report.submitted.emailSubject'),
     RLP_REPORT_SUBMITTED_EMAIL_BODY('rlpReportSubmittedEmailBody', 'RLP Report submitted email subject body text', 'fielddata.rlp.report.submitted.emailBody'),
     RLP_REPORT_APPROVED_EMAIL_SUBJECT('rlpReportApprovedEmailSubject', 'RLP Report approved email subject line text', 'fielddata.rlp.report.approved.emailSubject'),
-    RLP_REPORT_APPROVED_EMAIL_BODY('rlpReportApprovedEmailBody', 'RLP Report approved email subject body text', 'fielddata.rlp.report.approved.emailBody'),
+    RLP_REPORT_APPROVED_EMAIL_BODY('rlpReportApprovedEmailBody', 'RLP Report approved email body text', 'fielddata.rlp.report.approved.emailBody'),
     RLP_REPORT_RETURNED_EMAIL_SUBJECT('rlpReportReturnedEmailSubject', 'RLP Report returned email subject line text', 'fielddata.rlp.report.returned.emailSubject'),
     RLP_REPORT_RETURNED_EMAIL_BODY('rlpReportReturnedEmailBody', 'RLP Report returned email subject body text', 'fielddata.rlp.report.returned.emailBody'),
     RLP_CORE_SERVICES_REPORT_SUBMITTED_EMAIL_SUBJECT('rlpCSReportSubmittedEmailSubject', 'RLP Core Services Report submitted email subject line text', 'fielddata.rlp.cs_report.submitted.emailSubject'),
-    RLP_CORE_SERVICES_REPORT_SUBMITTED_EMAIL_BODY('rlpCSReportSubmittedEmailBody', 'RLP Core Services Report submitted email subject body text', 'fielddata.rlp.cs_report.submitted.emailBody'),
+    RLP_CORE_SERVICES_REPORT_SUBMITTED_EMAIL_BODY('rlpCSReportSubmittedEmailBody', 'RLP Core Services Report submitted email body text', 'fielddata.rlp.cs_report.submitted.emailBody'),
     RLP_CORE_SERVICES_REPORT_APPROVED_EMAIL_SUBJECT('rlpCSReportApprovedEmailSubject', 'RLP Core Services Report approved email subject line text', 'fielddata.rlp.cs_report.approved.emailSubject'),
-    RLP_CORE_SERVICES_REPORT_APPROVED_EMAIL_BODY('rlpCSReportApprovedEmailBody', 'RLP Core Services Report approved email subject body text', 'fielddata.rlp.cs_report.approved.emailBody'),
+    RLP_CORE_SERVICES_REPORT_APPROVED_EMAIL_BODY('rlpCSReportApprovedEmailBody', 'RLP Core Services Report approved email body text', 'fielddata.rlp.cs_report.approved.emailBody'),
     RLP_CORE_SERVICES_REPORT_RETURNED_EMAIL_SUBJECT('rlpCSReportReturnedEmailSubject', 'RLP Core Services Report returned email subject line text', 'fielddata.rlp.cs_report.returned.emailSubject'),
-    RLP_CORE_SERVICES_REPORT_RETURNED_EMAIL_BODY('rlpCSReportReturnedEmailBody', 'RLP Core Services Report returned email subject body text', 'fielddata.rlp.cs_report.returned.emailBody')
+    RLP_CORE_SERVICES_REPORT_RETURNED_EMAIL_BODY('rlpCSReportReturnedEmailBody', 'RLP Core Services Report returned email body text', 'fielddata.rlp.cs_report.returned.emailBody'),
+    REPORT_ADJUSTED_EMAIL_SUBJECT_LINE('reportAdjustedEmailSubject', 'Report has been adjusted email subject line text', 'fielddata.report.adjusted.emailSubject'),
+    REPORT_ADJUSTED_EMAIL_BODY('reportAdjustedEmailBody', 'Report has been adjusted email body text', 'fielddata.report.adjusted.emailBody')
 
     String name
     String title

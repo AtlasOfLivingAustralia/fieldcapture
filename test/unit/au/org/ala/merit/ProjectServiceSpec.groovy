@@ -718,6 +718,45 @@ class ProjectServiceSpec extends Specification {
         ReportService.REPORT_SUBMITTED | '2015-04-01T00:00Z' | false
     }
 
+    def "When adjusting a report, the report to be adjusted must belong to the specified project"() {
+        setup:
+        String projectId = 'p1'
+        String reportId = 'r1'
+        String reason = "testing"
+
+        when: "an attempt is made to adjust a report for a different project"
+        Map result = service.adjustReport(projectId, reportId, reason)
+
+        then: "A check will be performed to ensure the report belongs to the project"
+        1 * webService.getJson({it.contains("/"+projectId)}) >> [reports:[[reportId:'r2', projectId:'p2', toDate:'2018-06-30T14:00:00Z']]]
+
+        and:"the check will fail so the report will not be adjusted"
+
+        result.success == false
+        result.error != null
+        0 * reportService._
+
+    }
+
+    def "Adjusting a report involves collaboration with the ReportService"() {
+        setup:
+        String projectId = 'p1'
+        String reportId = 'r1'
+        String reason = "testing"
+
+        when: "an attempt is made to adjust a report for a different project"
+        Map result = service.adjustReport(projectId, reportId, reason)
+
+        then: "A check will be performed to ensure the report belongs to the project"
+        1 * webService.getJson({it.contains("/"+projectId)}) >> [projectId:projectId, reports:[[reportId:reportId, projectId:projectId, toDate:'2018-06-30T14:00:00Z']]]
+        1 * webService.getJson('permissions/getMembersForProject/'+projectId) >> []
+        1 * projectConfigurationService.getProjectConfiguration(_) >> new ProgramConfig([:])
+
+        and:"the report service will perform the adjustment"
+        1 * reportService.createAdjustmentReport(reportId, reason, [:], {it.projectId == projectId}, _, EmailTemplate.DEFAULT_REPORT_ADJUSTED_EMAIL_TEMPLATE) >> [success:true]
+        result.error == null
+
+    }
 
     private Map meritProjectConfig() {
         Map reportConfig = [reportType: "Activity",

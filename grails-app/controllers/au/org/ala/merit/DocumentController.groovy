@@ -101,7 +101,7 @@ class DocumentController {
         render status: responseCode
     }
 
-    @PreAuthorise(accessLevel = "siteAdmin")
+    @PreAuthorise(accessLevel = "siteReadOnly")
     def downloadProjectDataFile() {
         if (!params.id) {
             response.setStatus(400)
