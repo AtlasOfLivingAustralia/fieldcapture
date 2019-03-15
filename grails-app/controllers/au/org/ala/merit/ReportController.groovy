@@ -531,12 +531,9 @@ class ReportController {
     }
 
 
-    def reef2050PlanActionReportPDF() {
-        boolean approvedOnly = params.getBoolean('approvedOnly', true)
-        if (!userService.userIsAlaOrFcAdmin()) {
-            approvedOnly = true
-        }
-        String reportUrl = g.createLink(controller: 'report', action: 'reef2050PlanActionReportCallback', absolute: true, params:[approvedOnly:approvedOnly])
+    private def reef2050PlanActionReportPDF(Reef2050PlanActionReportCommand command) {
+
+        String reportUrl = g.createLink(controller: 'report', action: 'reef2050PlanActionReportCallback', absolute: true, params:[approvedOnly:command.approvedActivitiesOnly, periodEnd:command.periodEnd, type:command.type])
         String url = grailsApplication.config.pdfgen.baseURL + 'api/pdf' + commonService.buildUrlParamsFromMap(docUrl: reportUrl, cacheable: false, options : '-O landscape -L 5 -R 5 -T 5 -B 5')
         Map result
         try {
@@ -556,9 +553,14 @@ class ReportController {
         render model:model, view: 'reef2050PlanActionReportPrintable'
     }
 
-    def reef2050PlanActionReportPreview(Reef2050PlanActionReportCommand command) {
-        Map model = command.produceReport()
-        render model:model, view: 'reef2050PlanActionReportPrintable'
+    def reef2050PlanActionReport(Reef2050PlanActionReportCommand command) {
+        if (command.format == 'pdf') {
+            reef2050PlanActionReportPDF(command)
+        }
+        else {
+            Map model = command.produceReport()
+            render model:model, view: 'reef2050PlanActionReportPrintable'
+        }
     }
 
     def reef2050PlanActionSelectionReport(Reef2050PlanActionReportSummaryCommand command) {

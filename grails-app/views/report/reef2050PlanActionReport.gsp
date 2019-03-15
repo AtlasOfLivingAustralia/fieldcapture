@@ -18,10 +18,11 @@
         </div>
     </g:if>
 
-    <h3>Reef 2050 Plan Action Reporting</h3>
+    
     <g:if test="${reportText}">
         <fc:getSettingContent settingType="${au.org.ala.merit.SettingPageType.REEF_2050_PLAN_REPORT}"/>
     </g:if>
+    <g:else>
 
 
         <g:if test="${!actions}">
@@ -156,6 +157,8 @@
                 %{--"scrollX":false--}%
             %{--});--}%
         %{--</script>--}%
+
+    </g:else>
 
     </g:else>
 

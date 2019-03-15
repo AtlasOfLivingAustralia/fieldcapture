@@ -4,6 +4,8 @@ import au.org.ala.merit.ActivityService
 import au.org.ala.merit.DateUtils
 import au.org.ala.merit.ProjectService
 import au.org.ala.merit.ReportService
+import au.org.ala.merit.SettingPageType
+import au.org.ala.merit.SettingService
 import au.org.ala.merit.UserService
 import au.org.ala.merit.reports.Reef2050PlanActionReportConfig
 import grails.converters.JSON
@@ -31,8 +33,13 @@ class Reef2050PlanActionReportCommand extends Reef2050PlanActionReportConfig {
     ProjectService projectService
 
     @Transient
+    SettingService settingService
+
+    @Transient
     UserService userService
 
+
+    String format
     boolean approvedActivitiesOnly = true
 
     static constraints = {
@@ -40,6 +47,7 @@ class Reef2050PlanActionReportCommand extends Reef2050PlanActionReportConfig {
         reportService nullable: true
         projectService nullable: true
         userService nullable: true
+        format nullable: true
         importFrom Reef2050PlanActionReportConfig
     }
 
@@ -53,14 +61,19 @@ class Reef2050PlanActionReportCommand extends Reef2050PlanActionReportConfig {
 
         Map model = [:]
         if (validate()) {
-            List activities = findActivities()
-            List actions = produceActionList(activities)
 
-            DateTime periodEndDate = DateUtils.parse(periodEnd).withZone(DateTimeZone.default)
-            DateTime periodStartDate = DateUtils.parse(periodStart()).withZone(DateTimeZone.default)
-            model =  [endDate:periodEndDate.minusHours(15).toDate(), startDate:periodStartDate.toDate(), actions: actions]
-            model.putAll(actionStatusBreakdownByStatusAndTheme())
-
+            switch (type) {
+                case REEF_2050_PLAN_ACTION_REPORTING_ACTIVITY_TYPE:
+                    model = originalReportModel()
+                    break
+                case REEF_2050_PLAN_ACTION_REPORTING_2018_ACTIVITY_TYPE:
+                    model = originalReportModel()
+                    break
+                case SETTINGS_TEXT_REPORT:
+                    String reportStaticText = settingService.getSettingText(SettingPageType.getForKey(settingsPageKey()))
+                    model.reportText = reportStaticText
+                    break
+            }
         }
         else {
             model.errors = errors
@@ -68,6 +81,16 @@ class Reef2050PlanActionReportCommand extends Reef2050PlanActionReportConfig {
         model
     }
 
+    Map originalReportModel() {
+        List activities = findActivities()
+        List actions = produceActionList(activities)
+
+        DateTime periodEndDate = DateUtils.parse(periodEnd).withZone(DateTimeZone.default)
+        DateTime periodStartDate = DateUtils.parse(periodStart()).withZone(DateTimeZone.default)
+        Map model =  [endDate:periodEndDate.minusHours(15).toDate(), startDate:periodStartDate.toDate(), actions: actions]
+        model.putAll(actionStatusBreakdownByStatusAndTheme())
+        model
+    }
 
     /**
      * Returns a List of activities matching the type and period specified by this configurarion

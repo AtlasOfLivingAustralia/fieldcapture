@@ -1,6 +1,7 @@
 package au.org.ala.merit
 
 import au.com.bytecode.opencsv.CSVReader
+import au.org.ala.merit.command.Reef2050PlanActionReportSummaryCommand
 import grails.converters.JSON
 import grails.plugin.cache.GrailsCacheManager
 import grails.util.Environment
@@ -670,8 +671,9 @@ class AdminController {
     def selectHomePageImages() {
     }
 
-    def adminReports() {
-        [reports:[[name: 'performanceAssessmentComparison', label: 'Performance Assessment Comparison']]]
+    def adminReports(Reef2050PlanActionReportSummaryCommand command) {
+        List reefReports = command.reportSummary()
+        [reports:[[name: 'performanceAssessmentComparison', label: 'Performance Assessment Comparison']], reef2050Reports:reefReports]
     }
 
     def cacheManagement() {

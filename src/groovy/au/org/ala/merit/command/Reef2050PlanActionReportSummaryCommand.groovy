@@ -26,11 +26,13 @@ class Reef2050PlanActionReportSummaryCommand {
         // These represent the previous versions of the reef 2050 report.
         availableReports << new Reef2050PlanActionReportConfig(type: Reef2050PlanActionReportConfig.REEF_2050_PLAN_ACTION_REPORTING_ACTIVITY_TYPE, periodEnd: '2017-06-30T14:00:00Z')
         availableReports << new Reef2050PlanActionReportConfig(type: Reef2050PlanActionReportConfig.REEF_2050_PLAN_ACTION_REPORTING_ACTIVITY_TYPE, periodEnd: '2017-12-31T13:00:00Z')
-        availableReports << new Reef2050PlanActionReportConfig(type: Reef2050PlanActionReportConfig.REEF_2050_PLAN_ACTION_REPORTING_ACTIVITY_TYPE, periodEnd: '2017-12-31T13:00:00Z')
+        availableReports << new Reef2050PlanActionReportConfig(type: Reef2050PlanActionReportConfig.SETTINGS_TEXT_REPORT, periodEnd: '2018-06-30T14:00:00Z')
 
         List moreReports = available2018Reports()
-        println moreReports
         availableReports.addAll(moreReports)
+
+        // Sort by newest first
+        availableReports = availableReports.sort{it.periodEnd}.reverse()
 
         availableReports
     }

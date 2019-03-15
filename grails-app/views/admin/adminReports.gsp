@@ -30,39 +30,42 @@
 <h4>Reef 2050 Plan Action Report</h4>
 
 <div class="row-fluid">
-    <div class="span2">
-        <strong>All Data:</strong>
-    </div>
+    <p>Configure the report options below then press View Report to open the report in a new tab</p>
+    <form class="report-selector form-horizontal">
+        <div class="control-group">
+            <label class="control-label">Select period: </label>
+            <div class="controls">
+                <select data-bind="options:reportPeriods, optionsText:'label', value:selectedPeriod" class="input-xlarge"></select>
+            </div>
 
-    <div class="span6">
-        <a class="btn"
-           href="${g.createLink(controller: 'report', action: 'reef2050PlanActionReportPreview', params: [approvedOnly: false])}">Reef 2050 Plan Action Report</a>
-        <span> </span>
-        <a class="btn"
-           href="${g.createLink(controller: 'report', action: 'reef2050PlanActionReportPDF', params: [approvedOnly: false])}">Reef 2050 Plan Action Report as PDF</a>
-    </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">Report format:</label>
+            <div class="controls">
+                <select classs="controls" data-bind="options:formatOptions, value:format"></select>
+            </div>
+        </div>
+        <div class="control-group">
 
-</div>
+            <div class="controls">
+                <input class="checkbox" type="checkbox" data-bind="value:approvedReportsOnly"> Approved reports only?
+            </div>
+        </div>
 
-<div>
-    <div class="span2">
-        <strong>Approved data only:</strong>
-    </div>
+        <div class="control-group">
+            <div class="controls">
+            <button class="btn btn-success" data-bind="click:go">View Report</button>
+            </div>
+        </div>
 
-    <div class="span6">
-        <a class="btn"
-           href="${g.createLink(controller: 'report', action: 'reef2050PlanActionReportPreview')}">Reef 2050 Plan Action Report</a>
-
-        <span> </span>
-        <a class="btn"
-           href="${g.createLink(controller: 'report', action: 'reef2050PlanActionReportPDF')}">Reef 2050 Plan Action Report as PDF</a>
-    </div>
+    </form>
 
 </div>
 
 <g:render template="/shared/dashboard"/>
 
 <asset:javascript src="common.js"/>
+<asset:javascript src="reef2050Report.js"/>
 <script>
     $(function () {
         var SELECTED_REPORT_KEY = 'selectedAdminReport';
@@ -101,6 +104,14 @@
                 bootbox.alert("Your download will be emailed to you when it is complete.");
             });
         });
+
+        var reportConfig = ${reef2050Reports as grails.converters.JSON};
+        var reportUrl = '${g.createLink(controller:'report', action:'reef2050PlanActionReport')}';
+        var options = {
+            reportUrl: reportUrl,
+
+        };
+        ko.applyBindings(new Reef2050ReportSelectorViewModel(reportConfig, options), document.getElementById('reef-2050-reports'));
 
     });
 
