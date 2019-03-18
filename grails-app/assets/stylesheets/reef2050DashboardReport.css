@@ -41,6 +41,16 @@ div.report-section {
 .action-table .webLink { width: 6%; }
 .action-table .deliveryPartners { width: 9%; }
 
+
+.action-table-2018 .actionId { width: 4em; }
+.action-table-2018 .action { width: 20%; }
+.action-table-2018 .leadAgency { width: 15%; }
+.action-table-2018 .status { width: 8%; }
+.action-table-2018 .actionProgress { width: 38%; white-space: pre-wrap; }
+.action-table-2018 .webLink { width: 6%; }
+.action-table-2018 .deliveryPartners { width: 14%; }
+
+
 .status-row { height: 60px; }
 .themeActions {
     padding-top: 10px;

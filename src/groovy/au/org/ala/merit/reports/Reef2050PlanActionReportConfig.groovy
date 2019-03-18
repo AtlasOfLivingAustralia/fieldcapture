@@ -59,6 +59,14 @@ class Reef2050PlanActionReportConfig {
         DateUtils.format(startDate.withZone(DateTimeZone.UTC))
     }
 
+    void setPeriodEnd(String periodEnd) {
+        this.periodEnd = DateUtils.alignToPeriodEnd(periodEnd, REPORTING_PERIOD)
+    }
+
+    String getPeriodEnd() {
+        periodEnd
+    }
+
     Map toMap() {
         return [type:type, periodEnd:periodEnd, label:label]
     }

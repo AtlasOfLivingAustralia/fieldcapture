@@ -6,7 +6,6 @@ import au.org.ala.merit.command.Reef2050PlanActionReportCommand
 import au.org.ala.merit.command.Reef2050PlanActionReportSummaryCommand
 import grails.converters.JSON
 import org.apache.http.HttpStatus
-import org.codehaus.groovy.grails.web.json.JSONArray
 import org.joda.time.DateTime
 import org.joda.time.Interval
 import org.joda.time.Period
@@ -557,6 +556,11 @@ class ReportController {
         if (command.format == 'pdf') {
             reef2050PlanActionReportPDF(command)
         }
+        else if (command.format == 'dashboard') {
+            Reef2050PlanActionReportSummaryCommand summary = new Reef2050PlanActionReportSummaryCommand(activityService: command.activityService, approvedActivitiesOnly:  command.approvedActivitiesOnly)
+            Map model = [reportConfig:summary.reportSummary().collect{it.toMap()}, approvedActivitiesOnly: command.approvedActivitiesOnly]
+            render model: model, view: 'reef2050PlanAdminDashboardReport'
+        }
         else {
             Map model = command.produceReport()
             render model:model, view: 'reef2050PlanActionReportPrintable'
@@ -570,7 +574,7 @@ class ReportController {
 
     def reef2050PlanActionReportContents(Reef2050PlanActionReportCommand command) {
         Map model = command.produceReport()
-        render model:model, view: 'reef2050PlanActionReport'
+        render model:model, view: '_reef2050PlanActionReport'
     }
 
 }

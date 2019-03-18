@@ -48,7 +48,7 @@
         <div class="control-group">
 
             <div class="controls">
-                <input class="checkbox" type="checkbox" data-bind="value:approvedReportsOnly"> Approved reports only?
+                <input class="checkbox" type="checkbox" data-bind="checked:approvedActivitiesOnly"> Approved reports only?
             </div>
         </div>
 

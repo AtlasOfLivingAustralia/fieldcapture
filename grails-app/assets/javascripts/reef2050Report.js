@@ -12,7 +12,7 @@ var Reef2050ReportSelectorViewModel = function(reports, options) {
     var defaults = {
         reportUrl: fcConfig.reef2050PlanReportUrl,
         contentSelector: '#reportContents',
-        dataTableSelector: 'table.action-table',
+        dataTableSelector: 'table.actions',
         showReportInline: true,
         loadingSelector: '.reef-report-loading'
     };
@@ -22,9 +22,9 @@ var Reef2050ReportSelectorViewModel = function(reports, options) {
     self.reportPeriods = reports;
 
     self.selectedPeriod = ko.observable();
-    self.approvedReportsOnly = ko.observable(true);
+    self.approvedActivitiesOnly = ko.observable(false);
     self.format = ko.observable("html");
-    self.formatOptions = ["html", "pdf"];
+    self.formatOptions = ["html", "pdf", "dashboard"];
 
     self.inline = ko.observable(options.showReportInline);
 
@@ -36,7 +36,7 @@ var Reef2050ReportSelectorViewModel = function(reports, options) {
             $(config.loadingSelector).show();
 
             var reportUrl = config.reportUrl;
-            $.get(reportUrl, {periodEnd:period.periodEnd, type:period.type}).done(function(result) {
+            $.get(reportUrl, {periodEnd:period.periodEnd, type:period.type, approvedActivitiesOnly:self.approvedActivitiesOnly()}).done(function(result) {
                 $(config.loadingSelector).hide();
                 $(config.contentSelector).html(result).show();
 
@@ -45,14 +45,15 @@ var Reef2050ReportSelectorViewModel = function(reports, options) {
                     $.fn.dataTableExt.oStdClasses.sPageButtonActive = "currentStep";
                     $.fn.dataTableExt.oStdClasses.sPaging = "pagination ";
 
-                    $(config.dataTableSelector).dataTable({
+                    var dataTableOptions = {
                         "lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "All"] ],
                         "columnDefs": [{
                             "orderData": 1, "targets": 0
                         }],
                         "autoWidth":false,
                         "scrollX":false
-                    });
+                    };
+                    $(config.dataTableSelector).dataTable(dataTableOptions);
                 }
             });
         });
@@ -61,7 +62,7 @@ var Reef2050ReportSelectorViewModel = function(reports, options) {
         self.go = function() {
             var url = options.reportUrl;
             var period = self.selectedPeriod();
-            url += "?periodEnd="+period.periodEnd+"&type="+period.type+"&format="+self.format()+"&approvedReportsOnly="+self.approvedReportsOnly();
+            url += "?periodEnd="+period.periodEnd+"&type="+period.type+"&format="+self.format()+"&approvedActivitiesOnly="+self.approvedActivitiesOnly();
             window.open(url, "reef2050PlanActionReport");
         };
     }

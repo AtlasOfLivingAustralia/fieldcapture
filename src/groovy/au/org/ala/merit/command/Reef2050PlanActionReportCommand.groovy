@@ -63,15 +63,12 @@ class Reef2050PlanActionReportCommand extends Reef2050PlanActionReportConfig {
         if (validate()) {
 
             switch (type) {
-                case REEF_2050_PLAN_ACTION_REPORTING_ACTIVITY_TYPE:
-                    model = originalReportModel()
-                    break
-                case REEF_2050_PLAN_ACTION_REPORTING_2018_ACTIVITY_TYPE:
-                    model = originalReportModel()
-                    break
                 case SETTINGS_TEXT_REPORT:
                     String reportStaticText = settingService.getSettingText(SettingPageType.getForKey(settingsPageKey()))
                     model.reportText = reportStaticText
+                    break
+                default:
+                    model = originalReportModel()
                     break
             }
         }
@@ -87,7 +84,8 @@ class Reef2050PlanActionReportCommand extends Reef2050PlanActionReportConfig {
 
         DateTime periodEndDate = DateUtils.parse(periodEnd).withZone(DateTimeZone.default)
         DateTime periodStartDate = DateUtils.parse(periodStart()).withZone(DateTimeZone.default)
-        Map model =  [endDate:periodEndDate.minusHours(15).toDate(), startDate:periodStartDate.toDate(), actions: actions]
+        String tableClass = type == REEF_2050_PLAN_ACTION_REPORTING_2018_ACTIVITY_TYPE ? 'action-table-2018' : 'action-table'
+        Map model =  [endDate:periodEndDate.minusHours(15).toDate(), startDate:periodStartDate.toDate(), actions: actions, type:type, tableClass:tableClass]
         model.putAll(actionStatusBreakdownByStatusAndTheme())
         model
     }
@@ -111,11 +109,15 @@ class Reef2050PlanActionReportCommand extends Reef2050PlanActionReportConfig {
         JSON.use("nullSafe") {
             resp = activityService.search(searchCriteria)
         }
+        List activities = []
         if (!resp || resp.error) {
             getErrors().reject("Error finding activities")
         }
+        else {
+            activities =  resp.resp.activities
+        }
+        activities
 
-        resp.resp.activities
     }
 
     /** Transforms the activities into a List of Actions for rendering in the report */
@@ -132,13 +134,12 @@ class Reef2050PlanActionReportCommand extends Reef2050PlanActionReportConfig {
             Map project = projects.find{it.projectId == activity.projectId}
             List agencyContacts = output.data.agencyContacts ? output.data.agencyContacts.collect{it.agencyContact}:[]
             List webLinks = output.data.webLinks ? output.data.webLinks.collect{it.webLink}:[]
-            Map commonData = [organisationId:project?.organisationId, reportingLeadAgency:project?.organisationName, agencyContacts:agencyContacts, webLinks:webLinks]
+            Map commonData = [organisationId:project?.organisationId, reportingAgency:project?.organisationName, agencyContacts:agencyContacts, webLinks:webLinks]
             actions = actions.collect{
                 if (it.webLinks && it.webLinks instanceof String) {
                     it.webLinks = it.webLinks.split(/(;|,|\n|\s)/)?.findAll{it}
                 }
-                it.sortableActionId = makeSortableActionId(it.actionId)
-
+                it.sortableActionId = makeSortableActionId(it)
                 commonData+it
             }
             allActions.addAll(actions)
@@ -154,7 +155,7 @@ class Reef2050PlanActionReportCommand extends Reef2050PlanActionReportConfig {
         Map countByStatus = [type:'HISTOGRAM', label:'Action status', property:'data.actions.status']
         Map dateGroupingConfig = [groups:[type:'date', buckets:dateBuckets, format:format, property:'activity.plannedEndDate'],
                                   childAggregations: [countByStatus, [label:'Action Status By Theme', groups:[type:'discrete', property:'data.actions.theme'], childAggregations: [countByStatus]]]]
-        Map activityTypeFilter = [type:'DISCRETE', filterValue: REEF_2050_PLAN_ACTION_REPORTING_ACTIVITY_TYPE, property:'activity.type']
+        Map activityTypeFilter = [type:'DISCRETE', filterValue: type, property:'activity.type']
         Map config = [filter:activityTypeFilter, childAggregations: [dateGroupingConfig], label:'Action Status by Year']
 
 
@@ -228,26 +229,33 @@ class Reef2050PlanActionReportCommand extends Reef2050PlanActionReportConfig {
      * @param actionId the original action id
      * @return the sortable version of the id.
      */
-    private String makeSortableActionId(String actionId) {
+    private String makeSortableActionId(Map actionData) {
 
-        try {
-            Matcher groups = (actionId =~ /(.*?)(\d+)(.*)/)
+        if (actionData.sortOrder) {
+            return actionData.sortOrder
+        }
+        else {
+            String actionId = actionData.actionId
 
-            if (!groups.lookingAt() || (groups[0].size() != 4)) {
-                log.warn("Action id: " + actionId + " does not match the expected pattern")
+            try {
+                Matcher groups = (actionId =~ /(.*?)(\d+)(.*)/)
+
+                if (!groups.lookingAt() || (groups[0].size() != 4)) {
+                    log.warn("Action id: " + actionId + " does not match the expected pattern")
+                    return actionId
+                }
+                String sortableActionId = groups[0][1]
+                DecimalFormat decimalFormat = new DecimalFormat("000")
+                sortableActionId += decimalFormat.format(Integer.parseInt(groups[0][2]))
+                if (groups[0].size() == 4) {
+                    sortableActionId += groups[0][3]
+                }
+                return sortableActionId
+            }
+            catch (Exception e) {
+                log.error(e, "Error attempting to match actionId: ${actionId}")
                 return actionId
             }
-            String sortableActionId = groups[0][1]
-            DecimalFormat decimalFormat = new DecimalFormat("000")
-            sortableActionId += decimalFormat.format(Integer.parseInt(groups[0][2]))
-            if (groups[0].size() == 4) {
-                sortableActionId += groups[0][3]
-            }
-            return sortableActionId
-        }
-        catch (Exception e) {
-            log.error(e, "Error attempting to match actionId: ${actionId}")
-            return actionId
         }
 
     }

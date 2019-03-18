@@ -3,6 +3,7 @@ package au.org.ala.merit.command
 import au.org.ala.merit.ActivityService
 import au.org.ala.merit.ProjectService
 import au.org.ala.merit.ReportService
+import au.org.ala.merit.SettingService
 import au.org.ala.merit.UserService
 import grails.converters.JSON
 import grails.test.mixin.TestMixin
@@ -17,10 +18,15 @@ class Reef2050PlanActionReportCommandSpec extends Specification {
     ReportService reportService
     ProjectService projectService
     UserService userService
+    SettingService settingService
 
     def setup() {
+        createCommand()
+        JSON.createNamedConfig("nullSafe", { })
+    }
 
-        command = new Reef2050PlanActionReportCommand()
+    private Reef2050PlanActionReportCommand createCommand(Map properties = [:]) {
+        command = new Reef2050PlanActionReportCommand(properties)
         activityService = Mock(ActivityService)
         command.activityService = activityService
         reportService = Mock(ReportService)
@@ -29,31 +35,35 @@ class Reef2050PlanActionReportCommandSpec extends Specification {
         command.projectService = projectService
         userService = Mock(UserService)
         command.userService = userService
+        settingService = Mock(SettingService)
+        command.settingService = settingService
 
-        JSON.createNamedConfig("nullSafe", { })
+        command
     }
 
     def "The command needs a periodEnd and type to be valid"() {
         expect:
-        command.validate() == false
+        createCommand().validate() == false
 
         when:
-        command = new Reef2050PlanActionReportCommand(periodEnd: "2018-01-01T00:00:00Z")
+        command = createCommand(periodEnd: "2018-01-01T00:00:00Z")
 
         then:
         command.validate() == false
 
         when:
-        command = new Reef2050PlanActionReportCommand(type:Reef2050PlanActionReportCommand.REEF_2050_PLAN_ACTION_REPORTING_ACTIVITY_TYPE)
+        command = createCommand(type:Reef2050PlanActionReportCommand.REEF_2050_PLAN_ACTION_REPORTING_ACTIVITY_TYPE)
 
         then:
         command.validate() == false
 
 
         when:
-        command = new Reef2050PlanActionReportCommand(periodEnd: "2018-01-01T00:00:00Z", type:Reef2050PlanActionReportCommand.REEF_2050_PLAN_ACTION_REPORTING_ACTIVITY_TYPE)
-
+        command = createCommand(periodEnd: "2018-01-01T00:00:00Z", type:Reef2050PlanActionReportCommand.REEF_2050_PLAN_ACTION_REPORTING_ACTIVITY_TYPE)
+        command.validate()
         then:
+
+        println command.errors
         command.validate() == true
 
     }
@@ -65,6 +75,7 @@ class Reef2050PlanActionReportCommandSpec extends Specification {
         Map reportModel = command.produceReport()
 
         then:
+        1 * userService.userIsAlaOrFcAdmin() >> true
         1 * activityService.search({ config -> config.type == command.type}) >> [resp:[activities:[]]]
         1 * reportService.runActivityReport(_) >> [resp:[results:[:]]]
 

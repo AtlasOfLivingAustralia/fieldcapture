@@ -1,11 +1,4 @@
-<html>
-<head>
-    <title>Reef 2050 Action Status</title>
-    <title></title>
-    <asset:stylesheet src="reef2050DashboardReport.css"/>
-</head>
 
-<body>
 
 <div id="reef-2050-reports">
 <g:if test="${flash.error || error}">
@@ -47,10 +40,14 @@
     var options = {
         reportUrl: reportUrl,
         contentSelector: '#reportContents',
-        dataTableSelector: 'table.action-table'
+        dataTableSelector: 'table.actions'
     };
-    ko.applyBindings(new Reef2050ReportSelectorViewModel(reportConfig, options), document.getElementById('reef-2050-reports'));
+
+    var viewModel = new Reef2050ReportSelectorViewModel(reportConfig, options);
+    <g:if test="${approvedActivitiesOnly != null}">
+        viewModel.approvedActivitiesOnly(${approvedActivitiesOnly});
+    </g:if>
+    ko.applyBindings(viewModel, document.getElementById('reef-2050-reports'));
+
 
 </script>
-</body>
-</html>

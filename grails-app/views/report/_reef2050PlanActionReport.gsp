@@ -1,37 +1,32 @@
 <%@ page import="org.joda.time.DateTimeZone" contentType="text/html;charset=UTF-8" %>
-<html>
-<head>
-    <title>Reef 2050 Action Status</title>
-    <title></title>
-    <asset:stylesheet src="reef2050DashboardReport.css"/>
-</head>
 
-<body>
 
-    <g:if test="${flash.error || error}">
-        <g:set var="error" value="${flash.error ?: error}"/>
-        <div class="row-fluid">
-            <div class="alert alert-error large-space-before">
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                <span>Error: ${error}</span>
-            </div>
+<g:if test="${flash.error || error}">
+    <g:set var="error" value="${flash.error ?: error}"/>
+    <div class="row-fluid">
+        <div class="alert alert-error large-space-before">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <span>Error: ${error}</span>
         </div>
-    </g:if>
+    </div>
+</g:if>
 
-    
-    <g:if test="${reportText}">
-        <fc:getSettingContent settingType="${au.org.ala.merit.SettingPageType.REEF_2050_PLAN_REPORT}"/>
+
+<g:if test="${reportText}">
+    <markdown:renderHtml text="${reportText}"/>
+</g:if>
+<g:else>
+
+    <g:if test="${!actions}">
+        <strong>No data was found.</strong>
     </g:if>
     <g:else>
 
-
-        <g:if test="${!actions}">
-            <strong>No data was found.</strong>
-        </g:if>
-        <g:else>
-
         <div class="well">
-            <strong>Progress on Reef 2050 Plan for the period <g:formatDate date="${startDate}" format="MMMM"/> to <g:formatDate date="${endDate}" format="dd MMMM yyyy"/></strong>
+            <strong>Progress on Reef 2050 Plan for the period <g:formatDate date="${startDate}"
+                                                                            format="MMMM"/> to <g:formatDate
+                    date="${endDate}" format="dd MMMM yyyy"/></strong>
+
             <p>
                 Please note this report ignores any facet selection you may have made.
             </p>
@@ -59,7 +54,8 @@
                 </div>
 
                 <div class="span5">
-                    <fc:renderScore score="${actionStatus}" omitTitle="true" minResults="1" chartOptions="${[pieSliceText: 'value']}"
+                    <fc:renderScore score="${actionStatus}" omitTitle="true" minResults="1"
+                                    chartOptions="${[pieSliceText: 'value']}"
                                     sliceColoursByTitle="${statusColours}"/>
                 </div>
 
@@ -89,7 +85,7 @@
 
         <div class="row-fluid">
             <div class="span12">
-                <table class="action-table table table-striped">
+                <table class="actions ${tableClass} table table-striped">
 
                     <thead>
 
@@ -99,7 +95,9 @@
                         <th class="action">Action</th>
                         <th class="leadAgency">Lead Agency</th>
                         <th class="status">Status</th>
+                        <g:if test="${type != au.org.ala.merit.reports.Reef2050PlanActionReportConfig.REEF_2050_PLAN_ACTION_REPORTING_2018_ACTIVITY_TYPE}">
                         <th class="description">Description</th>
+                        </g:if>
                         <th class="actionProgress">Progress</th>
                         <th class="webLink">Web Link</th>
                         <th class="deliveryPartners">Delivery Partners</th>
@@ -113,27 +111,31 @@
                 <td class="action">${action.actionDescription}</td>
                 <td class="leadAgency">
                     <g:if test="${action.organisationId}">
-                        <g:link controller="organisation" action="index" id="${action.organisationId}">${action.reportingLeadAgency}</g:link>
+                        <g:link controller="organisation" action="index"
+                                id="${action.organisationId}">${action.reportingAgency}</g:link>
                     </g:if>
                     <g:else>
-                        ${action.reportingLeadAgency}
+                        ${action.reportingAgency}
                     </g:else>
 
                 </td>
                 <td class="status">${action.status}</td>
+                <g:if test="${type != au.org.ala.merit.reports.Reef2050PlanActionReportConfig.REEF_2050_PLAN_ACTION_REPORTING_2018_ACTIVITY_TYPE}">
                 <td class="description">${action.description}</td>
+                </g:if>
                 <td class="actionProgress">${action.progress}</td>
                 <td class="webLink">
-                <g:if test="${action.webLinks}">
-                    <g:each in="${action.webLinks}" var="webLink" status="i">
-                    <a href="${webLink?.trim()}" title="${webLink?.trim()}" target="_blank">${i+1}</a><g:if test="${i < action.webLinks.size()-1}">, </g:if>
+                    <g:if test="${action.webLinks}">
+                        <g:each in="${action.webLinks}" var="webLink" status="i">
+                            <a href="${webLink?.trim()}" title="${webLink?.trim()}" target="_blank">${i + 1}</a><g:if
+                                test="${i < action.webLinks.size() - 1}">,</g:if>
 
-                    </g:each>
-                </g:if>
+                        </g:each>
+                    </g:if>
                 </td>
                 <td class="deliveryPartners">
                     <g:if test="${action.deliveryPartners}">
-                        %{--This is because action.deliveryPartners is a JSONArray which will quote strings when peforming a join--}%
+                    %{--This is because action.deliveryPartners is a JSONArray which will quote strings when peforming a join--}%
                         ${new ArrayList(action.deliveryPartners).join(', ')}
                     </g:if>
                 </td>
@@ -143,28 +145,10 @@
     </table>
 </div>
 </div>
-        %{--<script type="text/javascript">--}%
-
-            %{--$.fn.dataTableExt.oStdClasses.sPageButtonActive = "currentStep";--}%
-            %{--$.fn.dataTableExt.oStdClasses.sPaging = "pagination ";--}%
-
-            %{--$('table.action-table').dataTable({--}%
-                %{--"lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "All"] ],--}%
-                %{--"columnDefs": [{--}%
-                    %{--"orderData": 1, "targets": 0--}%
-                %{--}],--}%
-                %{--"autoWidth":false,--}%
-                %{--"scrollX":false--}%
-            %{--});--}%
-        %{--</script>--}%
 
     </g:else>
 
-    </g:else>
+</g:else>
 
 
 </div>
-
-
-</body>
-</html>
