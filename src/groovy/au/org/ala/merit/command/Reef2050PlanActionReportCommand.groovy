@@ -54,10 +54,15 @@ class Reef2050PlanActionReportCommand extends Reef2050PlanActionReportConfig {
     /**
      * Returns the model required to render the Reef 2050 Plan Action Report.
      */
-    Map produceReport() {
+    Map produceReport(boolean skipUserAccessCheck = false) {
 
-        // Only FC_ADMINs can view unapproved Reef 2050 Plan Action reports.
-        approvedActivitiesOnly = userService.userIsAlaOrFcAdmin() ? approvedActivitiesOnly : true
+        if (!skipUserAccessCheck) {
+            // Only FC_ADMINs can view unapproved Reef 2050 Plan Action reports, however this is also
+            // used by the PDF generation callback which doesn't have access to the user context.
+            // The PDF callback URL gets produced with the user context though so this check has already
+            // been performed.
+            approvedActivitiesOnly = userService.userIsAlaOrFcAdmin() ? approvedActivitiesOnly : true
+        }
 
         Map model = [:]
         if (validate()) {

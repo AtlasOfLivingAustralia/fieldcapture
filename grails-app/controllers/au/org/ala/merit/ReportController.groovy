@@ -529,27 +529,27 @@ class ReportController {
         }
     }
 
-
     private def reef2050PlanActionReportPDF(Reef2050PlanActionReportCommand command) {
+        boolean approvedActivitiesOnly =  userService.userIsAlaOrFcAdmin() ? command.approvedActivitiesOnly : true
+        Map reportUrlConfig = [controller: 'report', action: 'reef2050PlanActionReportCallback', absolute: true, params:[approvedActivitiesOnly:approvedActivitiesOnly, periodEnd:command.periodEnd, type:command.type]]
+        Map pdfGenParams = [orientation:'landscape']
 
-        String reportUrl = g.createLink(controller: 'report', action: 'reef2050PlanActionReportCallback', absolute: true, params:[approvedOnly:command.approvedActivitiesOnly, periodEnd:command.periodEnd, type:command.type])
-        String url = grailsApplication.config.pdfgen.baseURL + 'api/pdf' + commonService.buildUrlParamsFromMap(docUrl: reportUrl, cacheable: false, options : '-O landscape -L 5 -R 5 -T 5 -B 5')
-        Map result
-        try {
-            result = webService.proxyGetRequest(response, url, false, false, 10 * 60 * 1000)
-        }
-        catch (Exception e) {
-            log.error("Error generating the PDF of the Reef 2050 Plan Report: ", e)
-            result = [error: e.message]
-        }
-        if (result.error) {
-            render view: '/error', model: [error: "An error occurred generating the report."]
+        boolean result = pdfGenerationService.generatePDF(reportUrlConfig, pdfGenParams, response)
+        if (!result) {
+            render view: '/error', model: [error: "Arror generating the PDF of the Reef 2050 Plan Report"]
         }
     }
 
+    @RequireApiKey
     def reef2050PlanActionReportCallback(Reef2050PlanActionReportCommand command) {
-        Map model = command.produceReport()
-        render model:model, view: 'reef2050PlanActionReportPrintable'
+        if (pdfGenerationService.authorizePDF(request)) {
+            Map model = command.produceReport(true)
+            render model:model, view: 'reef2050PlanActionReportPrintable'
+        }
+        else {
+            render status:HttpStatus.SC_UNAUTHORIZED
+        }
+
     }
 
     def reef2050PlanActionReport(Reef2050PlanActionReportCommand command) {
