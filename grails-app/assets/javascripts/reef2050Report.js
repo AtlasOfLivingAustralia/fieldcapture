@@ -22,7 +22,7 @@ var Reef2050ReportSelectorViewModel = function(reports, options) {
     self.reportPeriods = reports;
 
     self.selectedPeriod = ko.observable();
-    self.approvedActivitiesOnly = ko.observable(false);
+    self.approvedActivitiesOnly = ko.observable(true);
     self.format = ko.observable("html");
     self.formatOptions = ["html", "pdf", "dashboard"];
 

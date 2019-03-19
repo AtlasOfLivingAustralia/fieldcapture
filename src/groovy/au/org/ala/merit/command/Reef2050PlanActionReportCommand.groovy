@@ -57,7 +57,7 @@ class Reef2050PlanActionReportCommand extends Reef2050PlanActionReportConfig {
     Map produceReport() {
 
         // Only FC_ADMINs can view unapproved Reef 2050 Plan Action reports.
-        approvedActivitiesOnly == userService.userIsAlaOrFcAdmin() ? approvedActivitiesOnly : true
+        approvedActivitiesOnly = userService.userIsAlaOrFcAdmin() ? approvedActivitiesOnly : true
 
         Map model = [:]
         if (validate()) {
