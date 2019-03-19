@@ -569,7 +569,8 @@ class ReportController {
 
     def reef2050PlanActionSelectionReport(Reef2050PlanActionReportSummaryCommand command) {
         List reports = command.reportSummary()
-        [reportConfig:reports.collect{it.toMap()}]
+        Map model = [reportConfig:reports.collect{it.toMap()}]
+        render view:'_reef2050PlanActionSelectionReport', model: model
     }
 
     def reef2050PlanActionReportContents(Reef2050PlanActionReportCommand command) {
