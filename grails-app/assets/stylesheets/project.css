@@ -2,7 +2,7 @@
 *= require jquery.dataTables/dataTables.bootstrap.css
 *= require jquery.dataTables/dataTables.tableTools.css
 *= require thumbnail.scroller/2.0.3/jquery.mThumbnailScroller.css
-*= require fileupload-9.0.0/jquery.fileupload-ui
+*= require blueimp/fileupload-9.28.0/jquery.fileupload
 *= require fancybox/jquery.fancybox
 *= require jquery-gantt/css/style.css
 *= require gantt.css
