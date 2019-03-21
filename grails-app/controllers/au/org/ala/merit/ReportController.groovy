@@ -2,14 +2,13 @@ package au.org.ala.merit
 
 import au.ala.org.ws.security.RequireApiKey
 import au.org.ala.merit.command.ProjectSummaryReportCommand
+import au.org.ala.merit.command.Reef2050PlanActionReportCommand
+import au.org.ala.merit.command.Reef2050PlanActionReportSummaryCommand
 import grails.converters.JSON
 import org.apache.http.HttpStatus
 import org.joda.time.DateTime
-import org.joda.time.DateTimeZone
 import org.joda.time.Interval
 import org.joda.time.Period
-import org.joda.time.format.DateTimeFormat
-import org.joda.time.format.DateTimeFormatter
 
 import static au.org.ala.merit.DashboardTagLib.*
 
@@ -530,113 +529,53 @@ class ReportController {
         }
     }
 
+    private def reef2050PlanActionReportPDF(Reef2050PlanActionReportCommand command) {
+        boolean approvedActivitiesOnly =  userService.userIsAlaOrFcAdmin() ? command.approvedActivitiesOnly : true
+        Map reportUrlConfig = [controller: 'report', action: 'reef2050PlanActionReportCallback', absolute: true, params:[approvedActivitiesOnly:approvedActivitiesOnly, periodEnd:command.periodEnd, type:command.type]]
+        Map pdfGenParams = [orientation:'landscape']
 
-    private List availablePeriods(int startYear, Period period) {
-
-        List availablePeriods = []
-        DateTime first = DateUtils.parse(startYear+"-01-01T00:00:00Z").withZone(DateTimeZone.UTC)
-        DateTime now = DateUtils.now().withZone(DateTimeZone.UTC)
-
-        DateTimeFormatter formatter = DateTimeFormat.forPattern("MMM-yyyy").withZone(DateTimeZone.UTC)
-        DateTime current = DateUtils.alignToPeriod(now, period)
-        while (current.isAfter(first)) {
-            DateTime periodStart = current.minus(period)
-            String label = formatter.print(periodStart) + " - " + formatter.print(current)
-            String value = DateUtils.format(periodStart) + ',' + DateUtils.format(current)
-            availablePeriods << [label:label, value:value]
-
-            current = periodStart
-        }
-        availablePeriods
-    }
-
-    def reef2050PlanActionReportPDF() {
-        boolean approvedOnly = params.getBoolean('approvedOnly', true)
-        if (!userService.userIsAlaOrFcAdmin()) {
-            approvedOnly = true
-        }
-        String reportUrl = g.createLink(controller: 'report', action: 'reef2050PlanActionReportCallback', absolute: true, params:[approvedOnly:approvedOnly])
-        String url = grailsApplication.config.pdfgen.baseURL + 'api/pdf' + commonService.buildUrlParamsFromMap(docUrl: reportUrl, cacheable: false, options : '-O landscape -L 5 -R 5 -T 5 -B 5')
-        Map result
-        try {
-            result = webService.proxyGetRequest(response, url, false, false, 10 * 60 * 1000)
-        }
-        catch (Exception e) {
-            log.error("Error generating the PDF of the Reef 2050 Plan Report: ", e)
-            result = [error: e.message]
-        }
-        if (result.error) {
-            render view: '/error', model: [error: "An error occurred generating the report."]
+        boolean result = pdfGenerationService.generatePDF(reportUrlConfig, pdfGenParams, response)
+        if (!result) {
+            render view: '/error', model: [error: "Arror generating the PDF of the Reef 2050 Plan Report"]
         }
     }
 
-    def reef2050PlanActionReportCallback() {
-        boolean approvedOnly = params.getBoolean('approvedOnly', true)
-        Map model = reef2050PlanActionReportModel(approvedOnly)
-        render view:'reef2050PlanActionReportPrintable', model:model
+    @RequireApiKey
+    def reef2050PlanActionReportCallback(Reef2050PlanActionReportCommand command) {
+        if (pdfGenerationService.authorizePDF(request)) {
+            Map model = command.produceReport(true)
+            render model:model, view: 'reef2050PlanActionReportPrintable'
+        }
+        else {
+            render status:HttpStatus.SC_UNAUTHORIZED
+        }
+
     }
 
-    def reef2050PlanActionReportPreview() {
-        boolean approvedOnly = params.getBoolean('approvedOnly', true)
-        if (!userService.userIsAlaOrFcAdmin()) {
-            approvedOnly = true
+    def reef2050PlanActionReport(Reef2050PlanActionReportCommand command) {
+        if (command.format == 'pdf') {
+            reef2050PlanActionReportPDF(command)
         }
-        Map model = reef2050PlanActionReportModel(approvedOnly)
-        render view:'reef2050PlanActionReportPrintable', model:model
+        else if (command.format == 'dashboard') {
+            Reef2050PlanActionReportSummaryCommand summary = new Reef2050PlanActionReportSummaryCommand(activityService: command.activityService, approvedActivitiesOnly:  command.approvedActivitiesOnly)
+            Map model = [reportConfig:summary.reportSummary().collect{it.toMap()}, approvedActivitiesOnly: command.approvedActivitiesOnly]
+            render model: model, view: 'reef2050PlanAdminDashboardReport'
+        }
+        else {
+            Map model = command.produceReport()
+            render model:model, view: 'reef2050PlanActionReportPrintable'
+        }
     }
 
-    private Map reef2050PlanActionReportModel(boolean approvedOnly) {
-
-        Map model = reportService.reef2050PlanActionReport(approvedOnly)
-
-        Map actionStatusCounts = model.actionStatus?.result?.result ?: [:]
-        mergeCompletedOrInPlaceCategories(actionStatusCounts)
-
-        model.actionStatusByTheme.each { k, v ->
-            mergeCompletedOrInPlaceCategories(v?.result?.result)
-        }
-        // The colours are defined here instead of CSS because they need to be supplied as strings to the chart
-        // which is generated by a taglib.
-        model.status = [
-                [title:"Completed or in place", description:"<strong>are completed or in place</strong> (implementation is full completed OR initial implementation has been completed, but part of the action is ongoing)", countColour:"#4fac52", descriptionColour: "#b8d6af"],
-                [title:"On track / Underway", description:"<strong>are on track/underway</strong> (implementation is meeting expected milestones and progress is being made)", countColour:"#BECC48", descriptionColour: "#E2EAB1"],
-                [title:"Delayed or limited progress", description:"<strong>are delayed/limited progress</strong> (major implementation milestones have been delayed by less than 6 months, or only superficial progress has been made)", countColour:"#FDCC5B", descriptionColour: "#FDECBA"],
-                [title:"Significant delays or no progress", description:"<strong>are significant delays or no progress</strong> (major implementation milestones have been delayed for longer than six months or no progress has been made)", countColour:"#D02431", descriptionColour: "#EAA795"],
-                [title:"Not yet due", description:"<strong>are not yet due</strong> (implementation is not yet due to commence)", countColour:"#8C8C8C", descriptionColour: "#CCCCCC"]
-        ]
-
-        model.statusColours = [:]
-        model.status.each { status ->
-            status.count = actionStatusCounts[status.title]?:0
-            model.statusColours[status.title] = status.countColour
-        }
-
-        model
+    def reef2050PlanActionSelectionReport(Reef2050PlanActionReportSummaryCommand command) {
+        List reports = command.reportSummary()
+        Map model = [reportConfig:reports.collect{it.toMap()}]
+        render view:'_reef2050PlanActionSelectionReport', model: model
     }
 
-    def reef2050PlanActionReport() {
-        Map model = reef2050PlanActionReportModel(true)
-        String reportStaticText = settingService.getSettingText(SettingPageType.REEF_2050_PLAN_REPORT)
-        if (reportStaticText) {
-            model.reportText = reportStaticText
-        }
-
-        model
-    }
-
-    /**
-     *  Mutates the supplied map, removing "Completed" and "In place" keys, replacing with "Completed or in place"
-     *  containing the sum of the values of the removed keys.
-     */
-    private void mergeCompletedOrInPlaceCategories(Map actionStatusCounts) {
-        if (!actionStatusCounts) {
-            return
-        }
-        int completed = actionStatusCounts.remove('Completed') ?: 0
-        int inPlace = actionStatusCounts.remove('In place') ?: 0
-
-        actionStatusCounts["Completed or in place"] = completed + inPlace
-
+    def reef2050PlanActionReportContents(Reef2050PlanActionReportCommand command) {
+        Map model = command.produceReport()
+        render model:model, view: '_reef2050PlanActionReport'
     }
 
 }

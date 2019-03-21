@@ -802,6 +802,11 @@ class ReportService {
         [thumbnailFile:homePageThumb, fileName:thumbName]
     }
 
+    Map runActivityReport(Map reportConfig) {
+        String url =  grailsApplication.config.ecodata.baseUrl+"search/activityReport"
+        webService.doPost(url, reportConfig)
+    }
+
     Map performanceReportModel(String id, int version) {
         Map report = null
         if (id) {
@@ -892,120 +897,6 @@ class ReportService {
         String url =  grailsApplication.config.ecodata.baseUrl+"report/runReport"
 
         webService.doPost(url, [searchCriteria: searchCriteria, reportConfig: config])
-    }
-
-
-    Map reef2050PlanActionReport(boolean approvedActivitiesOnly = true) {
-
-
-        Map searchCriteria = [type:REEF_2050_PLAN_ACTION_REPORTING_ACTIVITY_TYPE]
-        if (approvedActivitiesOnly) {
-            searchCriteria.publicationStatus = REPORT_APPROVED
-        }
-        else {
-            searchCriteria.progress = ActivityService.PROGRESS_FINISHED
-        }
-
-        Map resp
-        JSON.use("nullSafe") {
-            resp = activityService.search(searchCriteria)
-        }
-        if (resp.error) {
-            return [error:resp.error]
-        }
-
-        List activities = resp.resp.activities
-        if (!activities) {
-            return [actions:[], actionStatus: [:], actionStatusByTheme: [:]]
-        }
-        String mostRecent = activities.max{it.plannedEndDate}.plannedEndDate
-        Period period = Period.months(6)
-        DateTime periodStart = DateUtils.alignToPeriod(DateUtils.parse(mostRecent), period)
-        activities = activities.findAll{DateUtils.parse(it.plannedEndDate).isAfter(periodStart)}
-        String startDate = DateUtils.format(periodStart)
-        DateTime periodEnd = periodStart.plus(period)
-        String endDate = DateUtils.format(periodEnd)
-
-        List projectIds = activities.collect{it.projectId}.unique()
-        List projects = projectService.search([projectId:projectIds, view:'flat'])?.resp?.projects ?: []
-
-        // Merge into a single list of actions.
-
-        List<Map> allActions = []
-        activities.each { activity ->
-            Map output = activity.outputs?activity.outputs[0]:[data:[:]]
-            List actions = output.data?.actions
-            Map project = projects.find{it.projectId == activity.projectId}
-            List agencyContacts = output.data.agencyContacts ? output.data.agencyContacts.collect{it.agencyContact}:[]
-            List webLinks = output.data.webLinks ? output.data.webLinks.collect{it.webLink}:[]
-            Map commonData = [organisationId:project?.organisationId, reportingLeadAgency:project?.organisationName, agencyContacts:agencyContacts, webLinks:webLinks]
-            actions = actions.collect{
-                if (it.webLinks && it.webLinks instanceof String) {
-                    it.webLinks = it.webLinks.split(/(;|,|\n|\s)/)?.findAll{it}
-                }
-                it.sortableActionId = makeSortableActionId(it.actionId)
-
-                commonData+it
-            }
-            allActions.addAll(actions)
-        }
-        allActions.sort{it.sortableActionId}
-
-        String format = 'YYYY-MM'
-        List dateBuckets = [startDate, endDate]
-        Map countByStatus = [type:'HISTOGRAM', label:'Action status', property:'data.actions.status']
-        Map dateGroupingConfig = [groups:[type:'date', buckets:dateBuckets, format:format, property:'activity.plannedEndDate'],
-                                  childAggregations: [countByStatus, [label:'Action Status By Theme', groups:[type:'discrete', property:'data.actions.theme'], childAggregations: [countByStatus]]]]
-        Map activityTypeFilter = [type:'DISCRETE', filterValue: REEF_2050_PLAN_ACTION_REPORTING_ACTIVITY_TYPE, property:'activity.type']
-        Map config = [filter:activityTypeFilter, childAggregations: [dateGroupingConfig], label:'Action Status by Year']
-
-        String url =  grailsApplication.config.ecodata.baseUrl+"search/activityReport"
-        List searchCriteriaForReport = ["associatedSubProgramFacet:"+REEF_2050_PLAN_ACTION_REPORTING_ACTIVITY_TYPE]
-
-        Map report = webService.doPost(url, [fq:searchCriteriaForReport, reportConfig: config, approvedActivitiesOnly:approvedActivitiesOnly])
-        Map actionStatus = [label:"Action Status"]
-        Map actionStatusByTheme = [:]
-        if (!report.error) {
-            report = report.resp.results
-            String startDateMatcher = startDate.substring(0, format.length())
-
-            Map reportForYear = report?.groups?.find { it.group.startsWith(startDateMatcher) }
-            if (reportForYear) {
-
-                actionStatus.result = reportForYear.results[0]
-                reportForYear.results[1]?.groups?.each { group ->
-                    actionStatusByTheme[group.group] = [label: group.group + " - Action Status", result: group.results[0]]
-                }
-            }
-        }
-        // Fifteen hours are subtracted from the end date to account for both that the reports end on midnight of the next period and may be in UTC timezone.
-        // This is so when it is rendered it will display 30 June / 31 December instead of 1 July / 1 January
-        [actions:allActions, actionStatus:actionStatus, actionStatusByTheme:actionStatusByTheme, endDate:periodEnd.minusHours(15).toDate(), startDate:periodStart.toDate()]
-
-    }
-
-    private String makeSortableActionId(String actionId) {
-
-        try {
-            Matcher groups = (actionId =~ /(.*?)(\d+)(.*)/)
-
-            if (!groups.lookingAt() || (groups[0].size() != 4)) {
-                log.warn("Action id: " + actionId + " does not match the expected pattern")
-                return actionId
-            }
-            String sortableActionId = groups[0][1]
-            DecimalFormat decimalFormat = new DecimalFormat("000")
-            sortableActionId += decimalFormat.format(Integer.parseInt(groups[0][2]))
-            if (groups[0].size() == 4) {
-                sortableActionId += groups[0][3]
-            }
-            return sortableActionId
-        }
-        catch (Exception e) {
-            log.error(e, "Error attempting to match actionId: ${actionId}")
-            return actionId
-        }
-
     }
 
     Map activityReportModel(String reportId, ReportMode mode) {

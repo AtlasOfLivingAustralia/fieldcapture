@@ -41,6 +41,16 @@ div.report-section {
 .action-table .webLink { width: 6%; }
 .action-table .deliveryPartners { width: 9%; }
 
+
+.action-table-2018 .actionId { width: 4em; }
+.action-table-2018 .action { width: 20%; }
+.action-table-2018 .leadAgency { width: 15%; }
+.action-table-2018 .status { width: 8%; }
+.action-table-2018 .actionProgress { width: 38%; white-space: pre-wrap; }
+.action-table-2018 .webLink { width: 6%; }
+.action-table-2018 .deliveryPartners { width: 14%; }
+
+
 .status-row { height: 60px; }
 .themeActions {
     padding-top: 10px;
@@ -58,4 +68,21 @@ div.report-section {
 
 tr, .chart, .chart-plus-title {
     page-break-inside: avoid;
+}
+
+.reef-report-loading {
+    border: none;
+    padding: 15px;
+    background-color: #000;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    text-align: center;
+    opacity: .5;
+    color: #fff;
+    margin-left: auto;
+    margin-right: auto;
+}
+.reef-report-loading img {
+    width:50px;
+    height:50px;
 }

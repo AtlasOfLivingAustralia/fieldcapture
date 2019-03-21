@@ -56,7 +56,7 @@
 </div>
 
 <asset:javascript src="common.js"/>
-<asset:javascript src="homepage.js"/>
+<asset:javascript src="projectExplorer.js"/>
 
 <asset:deferredScripts/>
 </body>
