@@ -31,7 +31,7 @@ class DateUtils {
      * @param period the period to align to.
      * @return the start date of the period the date falls into.
      */
-    static DateTime alignToPeriod(DateTime toAlign, Period period) {
+    static DateTime alignToPeriod(DateTime toAlign, Period period, int fudgeFactor = 1) {
 
         DateTime periodStart = new DateTime(toAlign.year().get(), DateTimeConstants.JANUARY, 1, 0, 0, toAlign.getZone())
 
@@ -39,11 +39,19 @@ class DateUtils {
 
         // We allow periods one day before the period end to support time zone differences in comparisons (e.g. period in UTC, start date in AEST)
         // Otherwise we get dates like 2015-06-30T14:00 falling into 2015-01-01.
-        while (Days.daysBetween(interval.getEnd(), toAlign).days > -1) {
+        while (Days.daysBetween(interval.getEnd(), toAlign).days > -fudgeFactor) {
             interval = new Interval(interval.getEnd(), period)
         }
 
         return interval.getStart()
+    }
+
+
+    static String alignToPeriodEnd(String toAlign, Period period, DateTimeZone timeZone = DateTimeZone.default) {
+        DateTime date = parse(toAlign).withZone(timeZone)
+        DateTime aligned = alignToPeriod(date, period, 2)
+
+        format(aligned.withZone(DateTimeZone.UTC))
     }
 
     /**
@@ -104,6 +112,12 @@ class DateUtils {
     static String format(DateTime date) {
         return DATE_FORMATTER.print(date)
     }
+
+    static String format(DateTime date, String formatString) {
+        DateTimeFormatter formatter = DateTimeFormat.forPattern(formatString).withZone(date.getZone())
+        return formatter.print(date)
+    }
+
 
     static String displayFormat(DateTime date) {
         return DISPLAY_DATE_FORMATTER.print(date)
