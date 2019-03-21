@@ -8,31 +8,24 @@ import spock.lang.Specification
  */
 class MeriPlanMapperSpec extends Specification {
 
-    MeriPlanMapper importer
+    MeriPlanMapper mapper
 
     void setup() {
-        importer = new MeriPlanMapper()
+        // The mapper needs to be able to turn output target names and service names into score and service ids
+        List services = JSON.parse(getClass().getResourceAsStream('/services.json'), 'UTF-8')
+        Map service = services.find{it.id == 1}
+        service.scores = [[
+                scoreId:"1", label:"Number of baseline data sets collected and/or synthesised"
+        ]]
+        mapper = new MeriPlanMapper(services, [:])
     }
-
-
-//    def "An empty MERI plan can be parsed without errors"() {
-//        setup:
-//        InputStream meriPlanXls = getClass().getResourceAsStream("/resources/emptyMeriPlanImportTest.xlsx")
-//        Map expectedResult = JSON.parse(getClass().getResource("/resources/emptyMeriPlanExpectedResult.json").text)
-//
-//        when:
-//        Map result = importer.importMeriPlan(meriPlanXls)
-//
-//        then:
-//        result == expectedResult
-//    }
 
     def "A full MERI plan can be extracted from an Excel spreadsheet"() {
         setup:
         InputStream meriPlanXls = getClass().getResourceAsStream("/resources/meriPlanImportTest.xlsx")
 
         when:
-        Map result = importer.importMeriPlan(meriPlanXls)
+        Map result = mapper.importMeriPlan(meriPlanXls)
 
         then: "The primary outcomes can be extracted from the sheet"
         result.outcomes.primaryOutcome.description == 'Outcome 1: By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar Sites, through the implementation of priority actions.'
@@ -98,8 +91,64 @@ class MeriPlanMapperSpec extends Specification {
 
         and: "The project evaluation methodology can be extracted from the sheet"
         result.projectEvaluationApproach == "This is the project evaluation approach"
+
+        and: "The regional and national plans data can be extracted from the sheet"
+        result.priorities.rows == [
+                [data1:"Document 1", data2:"Section 1", data3:"Alignment 1"],
+                [data1:"Document 2", data2:"Section 2", data3:"Alignment 2"]
+        ]
+
+        and: "The project services and targets can be extracted from the sheet"
+        result.serviceIds == [1]
+        result.outputTargets == [[scoreId:'1', target: "100", periodTargets:[[period:"2018/2019", target: "1"], [period:"2019/2020", target: "2"], [period:"2020/2021", target: "3"], [period:"2021/2022", target: "4"], [period:"2022/2023", target: "5"]]]]
+
+        and: "The project risks can be extracted from the sheet"
+        result.risks.rows == [
+                [threat:"Natural Environment", description:"Testing description", likelihood:"Unlikely", consequence:"High", riskRating:"High", currentControl:"Testing control", residualRisk:"Medium"]
+        ]
     }
 
 
+    def "Targets can be extracted for a service with a single score when only a numeric target is supplied"() {
+        setup:
+        Map service = [scores:[[label:'Number of baseline data sets collected and/or synthesised', scoreId:'1']]]
+
+        when:
+        Map result = mapper.mapTargets(service, "11")
+
+        then:
+        result.data.size() == 1
+        result.data[0].target == "11"
+        result.data[0].scoreId == "1"
+
+    }
+
+    def "Targets can be extracted for a service with a single score when a decimal target is supplied"() {
+        setup:
+        Map service = [scores:[[label:'Number of baseline data sets collected and/or synthesised', scoreId:'1']]]
+
+        when:
+        Map result = mapper.mapTargets(service, "11.77")
+
+        then:
+        result.data.size() == 1
+        result.data[0].target == "11.77"
+        result.data[0].scoreId == "1"
+
+    }
+
+    def "Targets can be extracted for a service with a single score when a numeric target and score are supplied"() {
+        setup:
+        Map service = [scores:[[label:'Number of baseline data sets collected and/or synthesised', scoreId:'1']]]
+
+        when:
+        Map result = mapper.mapTargets(service, "11 (Number of baseline data sets collected and/or synthesised)")
+
+        then:
+        result.data.size() == 1
+        result.data[0].target == "11"
+        result.data[0].scoreId == "1"
+
+    }
 
 }
