@@ -4,11 +4,14 @@
 module.exports = function (config) {
 
     var sourcePreprocessors = ['coverage'];
+    var reporters = ['progress', 'coverage'];
+
     function isDebug(argument) {
         return argument === '--debug';
     }
     if (process.argv.some(isDebug)) {
         sourcePreprocessors = [];
+        reporters = ['progress'];
     }
     config.set({
 
@@ -57,7 +60,7 @@ module.exports = function (config) {
         // test results reporter to use
         // possible values: 'dots', 'progress'
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-        reporters: ['progress', 'coverage'],
+        reporters: reporters,
 
         coverageReporter: {
             'dir':'./target',
