@@ -516,6 +516,24 @@ class ProjectService  {
     }
 
     /**
+     * Creates a report to offset the scores produced by the supplied report without having to unapprove the original report and edit the data.
+     * @param projectId the project the report belongs to.
+     * @param reportId identifies the report to adjust
+     * @param adjustmentReason the reason for the adjustment.
+     * @return a Map containing the result of the adjustment, including a error key it if failed.
+     */
+    Map adjustReport(String projectId, String reportId, String adjustmentReason) {
+
+        Map reportInformation = prepareReport(projectId, [reportId:reportId])
+        if (reportInformation.error) {
+            return [success:false, error:reportInformation.error]
+        }
+        EmailTemplate emailTemplate = ((ProgramConfig)reportInformation.config).getReportAdjustedTemplate()
+
+        reportService.createAdjustmentReport(reportId, adjustmentReason, reportInformation.config, reportInformation.project, reportInformation.roles, emailTemplate)
+    }
+
+    /**
      * Deletes the activities associated with a report.
      */
     Map deleteReportActivities(String reportId, List<String> activityIds) {
@@ -610,7 +628,7 @@ class ProjectService  {
             if (response.resp && !response.resp.error) {
 
                 if (updateActivities) {
-                    updateActivityDatesToMatchProjectDates(projectId, previousStartDate, previousEndDate, daysStartChanged, scale, plannedStartDate, plannedEndDate)
+                    updateActivityDatesToMatchProjectDates(projectId, previousStartDate, previousEndDate, newStartDate, newEndDate)
                 }
             }
         }
@@ -761,7 +779,7 @@ class ProjectService  {
 
         List reportsOfType = project.reports?.findAll{it.category == reportConfig.category}
 
-        if (config.activityBasedReporting) {
+        if (!config.activityBasedReporting) {
             // Regenerate all reports, even approved ones.
             reportService.regenerateReports(reportsOfType, rc, reportOwner, -1)
         }
@@ -1304,6 +1322,163 @@ class ProjectService  {
         projectServices
     }
 
+
+    /**
+     * Returns a the List of services being delivered by this project with target information for each score.
+     * @param projectId the projectId of the project
+     * @return a data structure similar to:
+     * [
+     *    name:<service name>,
+     *    id:<service id>,
+     *    scores:[
+     *         [
+     *             scoreId:<id>,
+     *             label:<score description>,
+     *             isOutputTarget: <true/false>,
+     *             target:<target defined for this score in the MERI plan, may be null>
+     *             periodTargets: [
+     *                 [
+     *                     period:<string of form year1/year2, eg. 2017/2018, as it appears in the MERI plan>,
+     *                     target:<minimum target for this score during the period>
+     *                 ]
+     *             ]
+     *         ]
+     *    ]
+     * ]
+     *
+     */
+    List<Map> getProjectServicesWithTargets(String projectId) {
+        Map project = get(projectId, 'flat')
+        List<Map> allServices = metadataService.getProjectServices()
+        List projectServices = allServices?.findAll {it.id in project.custom?.details?.serviceIds }
+        List targets = project.outputTargets
+
+        // Make a copy of the services as we are going to augment them with target information.
+        List results = projectServices.collect { service ->
+            [
+                    name:service.name,
+                    id: service.id,
+                    scores: service.scores?.collect { score ->
+                        [scoreId: score.scoreId, label: score.label, isOutputTarget:score.isOutputTarget]
+                    }
+            ]
+        }
+        results.each { service ->
+            service.scores?.each  { score ->
+                Map target = targets.find {it.scoreId == score.scoreId}
+                score.target = target?.target
+                score.periodTargets = target?.periodTargets
+            }
+        }
+
+        results
+    }
+
+    /**
+     * Returns the data structure from getProjectServicesWithTargets, however each score contains information
+     * about the amount the supplied activity contributed to that score under a field named "data".
+     * This is used specifically to pre-prop the output report adjustment form.
+     * @param projectId the project of interest
+     * @param activityId the activity of interest
+     */
+    List<Map> getServiceDataForActivity(String projectId, String activityId) {
+
+        List services = getProjectServicesWithTargets(projectId)
+        List scoreIds = services.collect { it.scores?.collect { score -> score.scoreId } }.flatten()
+
+        Map results = reportService.scoresForActivity(projectId, activityId, scoreIds)
+
+        // Attach the data to each service score
+        services.each { service ->
+            service.scores?.each { score ->
+                Map data = results.scores?.find { it.scoreId == score.scoreId }
+                if (data) {
+                    score.data = data.result
+                }
+            }
+        }
+    }
+
+
+    List findMinimumTargets(String projectId, String financialYear, boolean missedTargetsOnly) {
+        Map report = reportProjectPeriodTargets(projectId)
+
+        List targets = []
+        report?.services.each { service ->
+            service.scores?.each { score ->
+                if (score.periodTargets) {
+                    Map target = score.periodTargets.find { it.period == financialYear }
+
+                    if (target && !missedTargetsOnly || missedTarget(target)) {
+                        targets << [service:service.name, targetMeasure:score.label, projectTarget:score.target, financialYearTarget:target.target, financialYearResult:target.result]
+
+                    }
+
+                }
+            }
+        }
+
+        targets
+    }
+
+
+    private boolean missedTarget(Map targetData) {
+        if (!targetData) {
+            return false
+        }
+        BigDecimal target = new BigDecimal(targetData.target ?: 0)
+        BigDecimal result = new BigDecimal(targetData.result)
+        return target > result
+    }
+
+
+    Map reportProjectPeriodTargets(String projectId) {
+        List services = getProjectServicesWithTargets(projectId)
+        List scoreIds = services.collect { it.scores?.collect { score -> score.scoreId } }.flatten()
+        Map results = scoresByFinancialYear(projectId, scoreIds)
+
+
+
+        services.each { Map service ->
+            service.scores?.each { Map score ->
+                score.periodTargets?.each{ Map period ->
+
+
+                    // Match period format to the report format.  The report uses YYYY - YYYY whereas the period is YYYY/YYYY
+                    if (period.period && period.period.size() >= 4) {
+                        String year = period.period[0..3]
+
+                        results.resp?.each { Map yearGroup ->
+                            if (yearGroup.group && yearGroup.group.size() >= 4) {
+                                String resultYear = yearGroup.group[0..3]
+
+                                // We can match the result to the target for this period.
+                                if (resultYear == year) {
+                                    Map scoreResult = yearGroup.results?.find{it.scoreId == score.scoreId}
+                                    period.result = scoreResult?.result?.result ?: 0
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        [services:services]
+    }
+
+
+    Map scoresByFinancialYear(String projectId, List<String> scoreIds) {
+
+        Map project = get(projectId)
+
+        DateTime start = DateUtils.alignToFinancialYear(DateUtils.parse(project.plannedStartDate))
+
+        Map report = reportService.dateHistogramForScores(projectId, start, DateUtils.parse(project.plannedEndDate), Period.months(12), 'YYYY', scoreIds)
+
+        return report
+    }
+
     /**
      * Returns a map of the form:
      * [
@@ -1313,7 +1488,7 @@ class ProjectService  {
      */
     Map getServiceDashboardData(String projectId, boolean approvedDataOnly) {
 
-        List<Map> projectServices = getServiceScoresForProject(projectId)
+        List<Map> projectServices = getProjectServicesWithTargets(projectId)
         List scoreIds = projectServices.collect{it.scores?.collect{score -> score.scoreId}}.flatten()
 
         Map scoreSummary = summary(projectId, approvedDataOnly, scoreIds)
@@ -1321,26 +1496,25 @@ class ProjectService  {
         Map dashboard = [services:[], planning:false]
         int deliveredAgainstTargets = 0
         projectServices.each { Map service ->
-            Map copy = [:]
-            copy.putAll(service)
-            copy.scores = []
-
+            List scores = []
             service.scores.each { Map score ->
-                Map scoreCopy = [:]
-                scoreCopy.putAll(score)
 
-                Map scoreData = findScore(score.scoreId, scoreSummary?.targets)
-                if (scoreData?.target) {
-                    scoreCopy.target = scoreData?.target ?: 0
-                    scoreCopy.result = scoreData?.result ?: [result:0]
-
-                    deliveredAgainstTargets += scoreCopy.result?.result ?: 0
-
-                    copy.scores << scoreCopy
+                if (score.target) {
+                    Map scoreData = findScore(score.scoreId, scoreSummary?.targets)
+                    if (scoreData?.result) {
+                        score.result = scoreData.result ?: [result:0]
+                        deliveredAgainstTargets += score.result?.result ?: 0
+                    }
+                    scores << score
                 }
-
             }
-            dashboard.services << copy
+            // We only want to display scores with targets on the service dashboard,
+            // some services have more than one target that may be in use by this
+            // project.
+            if (scores) {
+                service.scores = scores
+                dashboard.services << service
+            }
         }
         // Once more than one target has been delivered against, the project is considered to be out of planning mode.
         dashboard.planning = deliveredAgainstTargets < 2

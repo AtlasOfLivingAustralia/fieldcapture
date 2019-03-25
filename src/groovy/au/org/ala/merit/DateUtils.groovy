@@ -24,14 +24,14 @@ class DateUtils {
 
     /**
      * Aligns the supplied DateTime to the start date of the period it falls into.
-     * The period is defined relative to the Calandar year.
+     * The period is defined relative to the Calendar year.
      * For example, a date of 03/1/2014 aligned to a 3 month period falls into the Jan - March period so
      * 01/01/2014 will be returned.
      * @param toAlign the date to align
      * @param period the period to align to.
      * @return the start date of the period the date falls into.
      */
-    static DateTime alignToPeriod(DateTime toAlign, Period period) {
+    static DateTime alignToPeriod(DateTime toAlign, Period period, int fudgeFactor = 1) {
 
         DateTime periodStart = new DateTime(toAlign.year().get(), DateTimeConstants.JANUARY, 1, 0, 0, toAlign.getZone())
 
@@ -39,11 +39,33 @@ class DateUtils {
 
         // We allow periods one day before the period end to support time zone differences in comparisons (e.g. period in UTC, start date in AEST)
         // Otherwise we get dates like 2015-06-30T14:00 falling into 2015-01-01.
-        while (Days.daysBetween(interval.getEnd(), toAlign).days > -1) {
+        while (Days.daysBetween(interval.getEnd(), toAlign).days > -fudgeFactor) {
             interval = new Interval(interval.getEnd(), period)
         }
 
         return interval.getStart()
+    }
+
+
+    static String alignToPeriodEnd(String toAlign, Period period, DateTimeZone timeZone = DateTimeZone.default) {
+        DateTime date = parse(toAlign).withZone(timeZone)
+        DateTime aligned = alignToPeriod(date, period, 2)
+
+        format(aligned.withZone(DateTimeZone.UTC))
+    }
+
+    /**
+     * Returns a DateTime representing the start the of financial year which the supplied date falls into.
+     * e.g. if the toAlign date is after June 30 it will return July 1 of the same year, otherwise it returns
+     * July 1 of the previous year.
+     * @param toAlign the date to align to a financial year.
+     */
+    static DateTime alignToFinancialYear(DateTime toAlign) {
+        DateTime financialYear = new DateTime(toAlign.year().get(), DateTimeConstants.JULY, 1, 0, 0, toAlign.getZone())
+        if (toAlign.isBefore(financialYear)) {
+            financialYear = financialYear.minusYears(1)
+        }
+        financialYear
     }
 
     /**
@@ -90,6 +112,12 @@ class DateUtils {
     static String format(DateTime date) {
         return DATE_FORMATTER.print(date)
     }
+
+    static String format(DateTime date, String formatString) {
+        DateTimeFormatter formatter = DateTimeFormat.forPattern(formatString).withZone(date.getZone())
+        return formatter.print(date)
+    }
+
 
     static String displayFormat(DateTime date) {
         return DISPLAY_DATE_FORMATTER.print(date)

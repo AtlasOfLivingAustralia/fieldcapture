@@ -201,8 +201,8 @@
                     useAlaMap:true,
                     mapContainerId:'smallMap',
                     useGoogleBaseMap:fcConfig.useGoogleBaseMap,
-                    featureService: fcConfig.featureService,
-                    wmsServer: fcConfig.spatialWmsUrl,
+                    featureServiceUrl: fcConfig.featureService,
+                    wmsServerUrl: fcConfig.spatialWmsUrl,
                     leafletIconPath:iconPath
                 });
 

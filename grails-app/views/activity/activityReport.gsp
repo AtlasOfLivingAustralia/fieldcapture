@@ -33,6 +33,8 @@
                 speciesImageUrl: "${createLink(controller:'species', action:'speciesImage')}",
                 noImageUrl: "${assetPath(src:'nophoto.png')}",
                 context:${fc.modelAsJavascript(model:context)},
+                prepopUrlPrefix:"${grailsApplication.config.grails.serverURL}",
+                useGoogleBaseMap: ${grails.util.Environment.current == grails.util.Environment.PRODUCTION},
                 unlockActivityUrl: "${createLink(controller:'activity', action:'ajaxUnlock')}/<fc:currentUserId/>"
             },
             here = document.location.href;
@@ -104,6 +106,7 @@
 
         var context = {
             owner: fcConfig.context,
+            reportId: reportId,
             activity: activity,
             documents: activity.documents,
             site: activity.site
@@ -130,7 +133,7 @@
             var features = ${features?.encodeAsJSON() ?: '[]'}  ;
 
 
-            var mapOptions = {baseLayersName:'Google'};
+            var mapOptions = {useGoogleBaseMap: fcConfig.useGoogleBaseMap};
             var planningSitesCategory = 'Planning Sites';
             if (features && _.isArray(features)) {
                 var planningFeatures = [];

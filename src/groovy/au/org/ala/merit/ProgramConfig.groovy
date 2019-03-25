@@ -15,6 +15,7 @@ class ProgramConfig implements Map {
     public static final String REPORT_SUBMITTED_EMAIL_TEMPLATE_CONFIG_ITEM = "reportSubmittedEmailTemplate"
     public static final String REPORT_APPROVED_EMAIL_TEMPLATE_CONFIG_ITEM = "reportApprovedEmailTemplate"
     public static final String REPORT_RETURNED_EMAIL_TEMPLATE_CONFIG_ITEM = "reportReturnedEmailTemplate"
+    public static final String REPORT_ADJUSTED_EMAIL_TEMPLATE_CONFIG_ITEM = "reportAdjustedEmailTemplate"
 
     private Logger log = Logger.getLogger(ProgramConfig.class)
 
@@ -71,6 +72,10 @@ class ProgramConfig implements Map {
         emailTemplateWithDefault(REPORT_RETURNED_EMAIL_TEMPLATE_CONFIG_ITEM, EmailTemplate.DEFAULT_REPORT_RETURNED_EMAIL_TEMPLATE)
     }
 
+    EmailTemplate getReportAdjustedTemplate() {
+        emailTemplateWithDefault(REPORT_ADJUSTED_EMAIL_TEMPLATE_CONFIG_ITEM, EmailTemplate.DEFAULT_REPORT_ADJUSTED_EMAIL_TEMPLATE)
+    }
+
     private EmailTemplate emailTemplateWithDefault(String name, EmailTemplate defaultTemplate) {
         if (!config.emailTemplates || !config.emailTemplates[name]) {
             return defaultTemplate
@@ -85,7 +90,6 @@ class ProgramConfig implements Map {
 
 
 
-
     boolean projectsMustStartAndEndOnContractDates
 
     String projectTemplate
@@ -94,13 +98,17 @@ class ProgramConfig implements Map {
     List<String> activityTypes
     String speciesConfiguration
 
-    // Weird rules for generating reports.
 
-    // 1. Milestone report for every "reporting period"
-    // 1. Annual report for every year
-    // 1. Short term report at end of project for duration < 3 years
-    // 1. Medium term report at end of project for duration > 3 years
-    List<ReportConfig> reportConfig
+    /**
+     * If the supplied report was generated via this program configuration, the configuration used to generate
+     * the report will be returned.  Otherwise this method returns null.
+     * This is currently used to determine if a report is eligible for an adjustment.
+     */
+    ReportConfig findProjectReportConfigForReport(Map report) {
+        Map reportConfig = config.projectReports?.find{it.activityType == report.activityType}
+
+        return reportConfig ? new ReportConfig(reportConfig) : null
+    }
 
     boolean activitiesRequireLocking
     String activityNavigationMode // stay on page or return

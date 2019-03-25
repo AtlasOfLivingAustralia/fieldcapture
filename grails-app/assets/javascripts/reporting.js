@@ -150,6 +150,7 @@ var ReportViewModel = function(report, config) {
             reason: self.reason,
             rejectionCategories: ['Minor', 'Moderate', 'Major'],
             rejectionCategory: self.category,
+            explanationText:'',
             title:'Return report',
             buttonText: 'Return',
             submit:function() {
@@ -180,6 +181,23 @@ var ReportViewModel = function(report, config) {
             }
 
         });
+    };
+
+    self.adjustReport = function() {
+
+        var reasonModalSelector = config.reasonModalSelector || '#reason-modal';
+        var $reasonModal = $(reasonModalSelector);
+        var reasonViewModel = {
+            reason: self.reason,
+            title:'Adjust report',
+            buttonText: 'Create adjustment',
+            explanationText: 'Please enter the reason the adjustment is required',
+            submit:function() {
+                self.changeReportStatus(config.adjustReportUrl, 'return', 'Creating an adjustment for the report...', 'Created adjustment report.');
+            }
+        };
+        ko.applyBindings(reasonViewModel, $reasonModal[0]);
+        $reasonModal.modal({backdrop: 'static', keyboard:true, show:true}).on('hidden', function() {ko.cleanNode($reasonModal[0])});
     };
 };
 
@@ -365,6 +383,23 @@ var CategorisedReportsViewModel = function(allReports, order, projects, availabl
          return report.category;
     });
 
+    var adjustments = categorizedReports['Adjustments'];
+    if (adjustments && adjustments.length) {
+        _.each(adjustments, function(adjustmentReport) {
+            var adjustedReportId = adjustmentReport.adjustedReportId;
+
+            if (adjustedReportId) {
+                _.find(categorizedReports, function(reports, category) {
+                    var matchedReportIndex = _.findIndex(reports, function(report) {
+                        return report.reportId == adjustedReportId;
+                    });
+                    if (matchedReportIndex >= 0) {
+                        reports.splice(matchedReportIndex, 0, adjustmentReport)
+                    }
+                });
+            }
+        });
+    }
     self.reportsByCategory = [];
 
     _.each(order, function(category) {

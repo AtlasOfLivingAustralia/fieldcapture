@@ -10,7 +10,8 @@
         %{--Rejection Category:<br/>--}%
         %{--<select data-bind="options:rejectionCategories, value:rejectionCategory"></select>--}%
         %{--</p>--}%
-        <p>Please enter a reason.  This reason will be included in the email sent to the project administrator(s).</p>
+        <p data-bind="visible:!explanationText">Please enter a reason.  This reason will be included in the email sent to the project administrator(s).</p>
+        <p data-bind="visible:explanationText, text:explanationText"></p>
         <textarea rows="5" style="width:97%" data-bind="textInput:reason"></textarea>
     </div>
     <div class="modal-footer">

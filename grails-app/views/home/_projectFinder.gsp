@@ -219,14 +219,14 @@
                                             <option value="dashboard">Activity Outputs</option>
                                             <option value="announcements">Announcements</option>
                                             <option value="outputTargets">Output Targets By Programme</option>
-                                            <option value="reef2050PlanAction">Reef 2050 Plan Dashboard</option>
+                                            <option value="reef2050PlanActionSelection">Reef 2050 Plan Dashboard</option>
                                         </select>
                                     </span>
                                 </g:if>
                                 <g:else>
                                     <select id="dashboardType" name="dashboardType">
                                         <option value="dashboard">Activity Outputs</option>
-                                        <option value="reef2050PlanAction">Reef 2050 Plan Dashboard</option>
+                                        <option value="reef2050PlanActionSelection">Reef 2050 Plan Dashboard</option>
                                     </select>
                                 </g:else>
                             </div>
@@ -239,7 +239,7 @@
                         </div>
                     </div>
                 </div>
-                <g:if test="${fc.userIsAlaOrFcAdmin()}">
+                <g:if test="${includeDownloads}">
                     <div class="accordion-group">
                         <div class="accordian-heading">
                             <a class="accordian-toggle" id="downloadView-heading" href="#downloadView" data-toggle="collapse" data-parent="#project-display-options"><span>Download</span><i style="padding-left:50px; padding-top:5px;" class="fa fa-plus pull-right"></i></a>
@@ -257,27 +257,11 @@
                                 <div class="alert">Please do not run more than one download at a time as they can place a lot of load on the system</div>
                                 <h3>Download data for a filtered selection of projects</h3>
 
+
                                 <table style="width: 100%;">
                                     <thead>
                                     <tr>
-                                        <th colspan="2"><b>Summary data (Actvity Output scores)</b></th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td width="50%">
-                                            <a target="_blank" href="${grailsApplication.config.grails.serverURL}/search/downloadSummaryData<fc:formatParams params="${params}"/>&view=xlsx">XLSX</a>
-                                        </td>
-                                        <td width="50%">
-                                            <a target="_blank" href="${grailsApplication.config.grails.serverURL}/search/downloadAllData<fc:formatParams params="${params}"/>&view=json">JSON</a>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                                <table style="width: 100%;">
-                                    <thead>
-                                    <tr>
-                                        <th colspan="2"><b>All data (Project, Site, Activity & Output)</b></th>
+                                        <th colspan="2"><b>Project, Site, Activity & Output</b></th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -338,7 +322,7 @@
 
     var reportMapping = {
         activities:'dashboard',
-        reef2050:'reef2050PlanAction'
+        reef2050:'reef2050PlanActionSelection'
     };
     <g:if test="${fc.userIsAlaOrFcAdmin()}">
         reportMapping['announcements']='announcements';

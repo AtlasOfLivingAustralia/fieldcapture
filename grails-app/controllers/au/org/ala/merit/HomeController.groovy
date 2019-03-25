@@ -1,6 +1,5 @@
 package au.org.ala.merit
 
-import au.org.ala.merit.SettingPageType
 import au.org.ala.merit.hub.HubSettings
 import grails.converters.JSON
 import org.apache.commons.lang.StringUtils
@@ -84,14 +83,17 @@ class HomeController {
 
         def resp = searchService.HomePageFacets(params)
 
+        boolean includeDownloads = userService.userHasReadOnlyAccess() || userService.userIsAlaOrFcAdmin()
         def model = [  facetsList: facetsList,
            mapFacets: mapFacets,
            geographicFacets:selectedGeographicFacets,
            description: settingService.getSettingText(SettingPageType.DESCRIPTION),
            results: resp,
-           projectCount: resp?.hits?.total ?: 0
+           projectCount: resp?.hits?.total ?: 0,
+           includeDownloads: includeDownloads
         ]
-        if (userService.userIsAlaOrFcAdmin()) {
+
+        if (includeDownloads) {
             model.activityTypes = metadataService.activityTypesList()
         }
         model

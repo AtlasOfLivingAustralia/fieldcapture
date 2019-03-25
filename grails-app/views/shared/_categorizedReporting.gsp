@@ -17,6 +17,7 @@
 </div>
 
 <script id="notReportable" type="text/html">
+<p data-bind="visible:report.dateAdjusted"><span class="badge badge-important">Report adjusted</span></p>
     <div data-bind="if:isCurrent()">
         <span><span class="badge badge-info" data-bind="if:isCurrent()">Current reporting period</span>
             <fc:iconHelp dynamic-help="currentPeriodHelpText"></fc:iconHelp> </span>
@@ -29,6 +30,7 @@
 
 <script id="notSubmitted" type="text/html">
 
+    <p data-bind="visible:report.dateAdjusted"><span class="badge badge-important">Report adjusted</span></p>
     <p><span class="badge badge-warning">Report not submitted</span></p>
 
 <g:if test="${isAdmin || fc.userIsAlaOrFcAdmin()}">
@@ -44,23 +46,33 @@
 </script>
 
 <script id="approved" type="text/html">
-    <p><span class="badge badge-success">Report approved</span></p>
 
-<g:if test="${fc.userIsAlaOrFcAdmin()}">
-    <p>
-    <button type="button" data-bind="click:rejectReport" class="btn btn-danger"><i class="icon-remove icon-white"></i> Withdraw approval</button></g:if>
-</p>
+    <p><span class="badge badge-success">Report approved</span></p>
+    <p data-bind="visible:report.dateAdjusted"><span class="badge badge-important">Report adjusted</span></p>
+    <g:if test="${fc.userIsAlaOrFcAdmin()}">
+        <p>
+        <button type="button" data-bind="click:rejectReport" class="btn btn-danger"><i class="fa fa-remove icon-white"></i> Withdraw approval</button>
+        </p>
+    </g:if>
+    <g:if test="${fc.userIsSiteAdmin()}">
+        <p data-bind="visible:report.isAdjustable && !report.dateAdjusted">
+            <button type="button" data-bind="click:adjustReport" class="btn btn-danger"><i class="fa fa-edit"></i> Adjustment required</button>
+        </p>
+    </g:if>
+
+
 </script>
 
 <script id="submitted" type="text/html">
     <p><span class="badge badge-info">Report submitted</span></p>
+    <p data-bind="visible:report.dateAdjusted"><span class="badge badge-important">Report adjusted</span></p>
 <g:if test="${isGrantManager || fc.userIsAlaOrFcAdmin()}">
 
     <span class="btn-group">
         <button type="button" data-bind="click:approveReport" class="btn btn-success"><i
-                class="icon-ok icon-white"></i> Confirm</button>
+                class="fa fa-check icon-white"></i> Confirm</button>
         <button type="button" data-bind="click:rejectReport" class="btn btn-danger"><i
-                class="icon-remove icon-white"></i> More Information Required</button>
+                class="fa fa-remove icon-white"></i> More Information Required</button>
     </span>
     </p>
 </g:if>
