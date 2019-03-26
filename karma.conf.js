@@ -32,8 +32,8 @@ module.exports = function (config) {
         // list of files / patterns to load in the browser
         files: [
             'test/js/util/*.js',
-            'grails-app/assets/vendor/knockout/3.4.0/knockout-3.4.0.js',
-            'grails-app/assets/vendor/knockout/3.4.0/knockout.mapping-latest.js',
+            'grails-app/assets/vendor/knockout/3.5.0/knockout.js',
+            'grails-app/assets/vendor/knockout/3.5.0/knockout.mapping-latest.js',
             'grails-app/assets/vendor/underscorejs/1.8.3/underscore.js',
             'grails-app/assets/vendor/wmd/showdown.js',
             'grails-app/assets/vendor/wmd/wmd.js',
@@ -68,7 +68,7 @@ module.exports = function (config) {
             'type':"text",
             check: {
                 global: {
-                    lines: 10
+                    lines: 17
                 }
             }
         },
