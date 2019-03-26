@@ -53,7 +53,6 @@
         var outcomes = ${config.outcomes?:[]};
         project.outcomes = outcomes;
         config.useRlpTemplate = services.length > 0;
-        var outcomesAndAssets = ${assetsByOutcome ?: []};
         var viewModel = new MERIPlan(project, config);
         viewModel.description = project.description;
         ko.applyBindings(viewModel);

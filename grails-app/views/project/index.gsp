@@ -263,7 +263,6 @@
             config.autoSaveIntervalInSeconds = ${grailsApplication.config.fieldcapture.autoSaveIntervalInSeconds?:60};
             config.riskAndThreatTypes = ${config.riskAndThreatTypes ?: 'null'};
 
-            var outcomesAndAssets = ${assetsByOutcome ?: []};
             var viewModel = new ProjectPageViewModel(
                 project,
                 project.sites,

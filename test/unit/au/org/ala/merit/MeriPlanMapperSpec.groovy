@@ -17,7 +17,8 @@ class MeriPlanMapperSpec extends Specification {
         service.scores = [[
                 scoreId:"1", label:"Number of baseline data sets collected and/or synthesised"
         ]]
-        mapper = new MeriPlanMapper(services, [:])
+
+        mapper = new MeriPlanMapper([services:services, outcomes:programOutcomes(), priorities:priorities()])
     }
 
     def "A full MERI plan can be extracted from an Excel spreadsheet"() {
@@ -27,18 +28,19 @@ class MeriPlanMapperSpec extends Specification {
         when:
         Map result = mapper.importMeriPlan(meriPlanXls)
 
+        List outcomes = programOutcomes().collect{it.outcome}
         then: "The primary outcomes can be extracted from the sheet"
-        result.outcomes.primaryOutcome.description == 'Outcome 1: By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar Sites, through the implementation of priority actions.'
+        result.outcomes.primaryOutcome.description == outcomes[0]
         result.outcomes.primaryOutcome.assets.size() == 1
-        result.outcomes.primaryOutcome.assets[0] == 'Asset 1'
+        result.outcomes.primaryOutcome.assets[0] == 'Another ramsar site'
 
         and: "The secondary outcomes can be extracted from the sheet"
 
         result.outcomes.secondaryOutcomes.size() == 3
         result.outcomes.secondaryOutcomes == [
-                [description:"Outcome 2: By 2023, the trajectory of species targeted under the Threatened Species Strategy, and other EPBC Act priority species, is stabilised or improved.", assets:["Secondary asset 1"]],
-                [description:"Outcome 3: By 2023, invasive species management has reduced threats to the natural heritage Outstanding Universal Value of World Heritage properties through the implementation of priority actions.", assets:["Secondary asset 2"]],
-                [description:"Outcome 4: By 2023, the implementation of priority actions is leading to an improvement in the condition of EPBC Act listed Threatened Ecological Communities.", assets:["Secondary asset 3"]],
+                [description:outcomes[1], assets:["Leipoa ocellata (Malleefowl)"]],
+                [description:outcomes[2], assets:["Secondary asset 2"]],
+                [description:outcomes[3], assets:["Weeping Myall Woodlands"]],
         ]
 
 
@@ -149,6 +151,150 @@ class MeriPlanMapperSpec extends Specification {
         result.data[0].target == "11"
         result.data[0].scoreId == "1"
 
+    }
+    
+    private List programOutcomes() {
+        [
+                [
+                    outcome: "1. By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions",
+                    priorities: [[category: "Ramsar"]],
+                    category: "environment"
+                ],
+                [
+                    outcome: "2. By 2023, the trajectory of species targeted under the Threatened Species Strategy, and other EPBC Act priority species, is stabilised or improved.",
+                    priorities: [[category: "Threatened Species"]],
+                    category: "environment"
+                ],
+                [
+                    outcome: "3. By 2023, invasive species management has reduced threats to the natural heritage Outstanding Universal Value of World Heritage properties through the implementation of priority actions.",
+                    priorities: [[category: "World Heritage Sites"]],
+                    category: "environment"
+                ],
+                [
+                    outcome: "4. By 2023, the implementation of priority actions is leading to an improvement in the condition of EPBC Act listed Threatened Ecological Communities.",
+                    priorities: [[category: "Threatened Ecological Communities"]],
+                    category: "environment"
+                ],
+                [
+                    outcome: "5. By 2023, there is an increase in the awareness and adoption of land management practices that improve and protect the condition of soil, biodiversity and vegetation.",
+                    priorities: [[category: "Land Management"]],
+                    category: "agriculture"
+                ],
+                [
+                    outcome: "6. By 2023, there is an increase in the capacity of agriculture systems to adapt to significant changes in climate and market demands for information on provenance and sustainable production.",
+                    priorities: [[category: "Sustainable Agriculture"]],
+                    category: "agriculture"
+                ]
+        ]
+    }
+
+    private List priorities() {
+        [
+                [
+                    "category" : "Ramsar",
+                    "priority" : "The Macquarie Marshes"
+                ],
+                [
+                        "category" : "Ramsar",
+                        "priority" : "Another ramsar site"
+                ],
+                [
+                    "category" : "Threatened Species",
+                    "priority" : "Anthochaera phrygia (Regent Honeyeater)"
+                ],
+                [
+                    "category" : "Threatened Species",
+                    "priority" : "Botaurus poiciloptilus (Australasian Bittern)"
+                ],
+                [
+                    "category" : "Threatened Species",
+                    "priority" : "Homoranthus darwinioides"
+                ],
+                [
+                    "category" : "Threatened Species",
+                    "priority" : "Lathamus discolor (Swift Parrot)"
+                ],
+                [
+                    "category" : "Threatened Species",
+                    "priority" : "Leipoa ocellata (Malleefowl)"
+                ],
+                [
+                    "category" : "Threatened Species",
+                    "priority" : "Numenius madagascariensis (Eastern Curlew, Far Eastern Curlew)"
+                ],
+                [
+                    "category" : "Threatened Species",
+                    "priority" : "Swainsona recta (Small Purple-pea, Mountain Swainson-pea, Small Purple Pea)"
+                ],
+                [
+                    "category" : "Threatened Ecological Communities",
+                    "priority" : "Coolibah - Black Box Woodlands of the Darling Riverine Plains and the Brigalow Belt South Bioregions"
+                ],
+                [
+                    "category" : "Threatened Ecological Communities",
+                    "priority" : "Grey Box (Eucalyptus microcarpa) Grassy Woodlands and Derived Native Grasslands of South-eastern Australia"
+                ],
+                [
+                    "category" : "Threatened Ecological Communities",
+                    "priority" : "Natural Temperate Grassland of the South Eastern Highlands"
+                ],
+                [
+                    "category" : "Threatened Ecological Communities",
+                    "priority" : "Natural grasslands on basalt and fine-textured alluvial plains of northern New South Wales and southern Queensland"
+                ],
+                [
+                    "category" : "Threatened Ecological Communities",
+                    "priority" : "Weeping Myall Woodlands"
+                ],
+                [
+                    "category" : "Threatened Ecological Communities",
+                    "priority" : "White Box-Yellow Box-Blakely's Red Gum Grassy Woodland and Derived Native Grassland"
+                ],
+                [
+                    "category" : "Soil Quality",
+                    "priority" : "Soil acidification"
+                ],
+                [
+                    "category" : "Soil Quality",
+                    "priority" : "Soil Carbon priority"
+                ],
+                [
+                    "category" : "Soil Quality",
+                    "priority" : "Hillslope erosion priority"
+                ],
+                [
+                    "category" : "Soil Quality",
+                    "priority" : "Wind erosion priority"
+                ],
+                [
+                    "category" : "Land Management",
+                    "priority" : "Soil acidification"
+                ],
+                [
+                    "category" : "Land Management",
+                    "priority" : "Soil carbon"
+                ],
+                [
+                    "category" : "Land Management",
+                    "priority" : "Hillslope erosion"
+                ],
+                [
+                    "category" : "Land Management",
+                    "priority" : "Wind erosion"
+                ],
+                [
+                    "category" : "Land Management",
+                    "priority" : "Native vegetation and biodiversity on-farm"
+                ],
+                [
+                    "category" : "Sustainable Agriculture",
+                    "priority" : "Climate change adaptation"
+                ],
+                [
+                    "category" : "Sustainable Agriculture",
+                    "priority" : "Market traceability"
+                ]
+        ]
     }
 
 }

@@ -621,7 +621,9 @@ class ProjectController {
         if (request.respondsTo('getFile')) {
             def file = request.getFile('meriPlan')
             if (file) {
-                MeriPlanMapper mapper = new MeriPlanMapper(metadataService.getProjectServices(), [:])
+                Map project = projectService.get(id)
+                Map config = projectService.getProgramConfiguration(project)
+                MeriPlanMapper mapper = new MeriPlanMapper(config, [:])
                 result = mapper.importMeriPlan(file.inputStream)
             }
         }

@@ -47,13 +47,10 @@ class MeriPlanMapper {
     private Pattern TARGET_MATCHING_PATTERN = Pattern.compile(/(\d+\.?\d*)(?:[^\(\)\d])?(?:\((.*)\))?/)
 
     /** Required to map service and output target names into scores and service ids */
-    private List serviceConfiguration
+    private Map programConfig
 
-    private Map investmentPriorities
-
-    MeriPlanMapper(List serviceConfiguration, Map investmentPriorities) {
-        this.serviceConfiguration = serviceConfiguration
-        this.investmentPriorities = investmentPriorities
+    MeriPlanMapper(Map programConfig) {
+        this.programConfig = programConfig
     }
 
 
@@ -130,13 +127,15 @@ class MeriPlanMapper {
         Map config = [startRow: 1, cellMapping: [L:[name:"asset"]]]
         List assets = mapSection(config, rows).collect{it.asset}
 
-        Map data = [outcomes: [primaryOutcome: [description: primaryOutcome, assets: assets]]]
+        Map result = postProcessOutcome([description:primaryOutcome, assets: assets])
+
+        Map data = [outcomes: [primaryOutcome: result.outcome]]
         [data:data]
     }
 
     private Map loadSecondaryOutcomes(List<Row> rows) {
         Map config = [startRow:1, cellMapping:[B:[name:"description"], H:[name:"assets"]]]
-        loadOutcomes(rows, config, "secondaryOutcomes")
+        loadOutcomes(rows, config, "secondaryOutcomes", true)
     }
 
     private Map loadShortTermOutcomes(List<Row> rows) {
@@ -200,7 +199,7 @@ class MeriPlanMapper {
 
         // Services need a fair bit of post-processing to be mapped correctly.
         services.each { Map unprocessedService ->
-            Map service = serviceConfiguration.find{it.name == unprocessedService.serviceName}
+            Map service = programConfig.services.find{it.name == unprocessedService.serviceName}
             if (!service) {
                 println "No match for service: "+unprocessedService.serviceName
             }
@@ -284,18 +283,48 @@ class MeriPlanMapper {
     }
 
 
-    private Map loadOutcomes(List<Row> rows, Map config, String outputKey) {
+    private Map loadOutcomes(List<Row> rows, Map config, String outputKey, boolean postProcess = false) {
+        List messages = []
         List outcomes = mapSection(config, rows)
-        outcomes.each {Map outcome ->
-            List availableAssets = investmentPriorities[outcome.description]
+        List processedOutcomes = []
+        outcomes.each { Map outcome ->
             outcome.assets = outcome.assets ? [outcome.assets] : []
-
-            outcome.assets.collect { String asset ->
-                postProcess(asset, [pickList:availableAssets]).processedValue
+            if (postProcess) {
+                Map result = postProcessOutcome(outcome)
+                println result
+                processedOutcomes << result.outcome
+                messages += result.messages
             }
+            else {
+                processedOutcomes << outcome
+            }
+
         }
-        Map data = [outcomes: [(outputKey): outcomes]]
-        [data:data]
+        Map data = [outcomes: [(outputKey): processedOutcomes]]
+        [data:data, messages:messages]
+    }
+
+    private Map postProcessOutcome(Map outcome) {
+        List messages = []
+        List outcomeDescriptions = programConfig.outcomes.collect { it.outcome }
+        Map result = postProcess(outcome.description, [pickList: outcomeDescriptions])
+        outcome.description = result.processedValue
+        if (!result.exactMatch) {
+            messages << "Matched ${result.value} to ${result.processedValue}"
+        }
+
+        Map outcomeConfig = programConfig.outcomes.find { it.outcome == outcome.description }
+
+        List outcomeCategories = outcomeConfig.priorities.collect{it.category}
+        List availableAssets = programConfig.priorities.findAll { it.category in outcomeCategories }.collect{it.priority}
+
+        outcome.assets = outcome.assets.collect { String asset ->
+            Map assetResult = postProcess(asset, [pickList: availableAssets])
+            println "Postprocessing $asset : ${assetResult.processedValue} with list: $availableAssets"
+
+            assetResult.processedValue
+        }
+        [outcome:outcome, messages:messages]
     }
 
     private List mapSection(Map config, List<Row> rows) {
