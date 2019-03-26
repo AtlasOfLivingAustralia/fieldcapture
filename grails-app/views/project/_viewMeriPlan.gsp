@@ -1,6 +1,10 @@
 <g:if test="${meriPlanVisibleToUser}">
     <!-- Project Details -->
+    <!-- ko stopBinding:true -->
+    <div id="view-meri-plan">
     <g:render template="${meriPlanTemplate}" model="[project: project, risksAndThreatsVisible:risksAndThreatsVisible, announcementsVisible:announcementsVisible]"/>
+    </div>
+    <!-- /ko -->
 
     <div class="row-fluid space-after">
         <div class="span12">

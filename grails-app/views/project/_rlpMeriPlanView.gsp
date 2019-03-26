@@ -1,4 +1,4 @@
-<div class="meri-plan">
+<div class="meri-plan" data-bind="let:{details:meriPlan()}">
     <h4>Program Outcome</h4>
     <table class="table">
         <thead>

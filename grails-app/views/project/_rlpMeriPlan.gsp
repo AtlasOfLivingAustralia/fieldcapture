@@ -1,4 +1,4 @@
-<div class="meri-plan">
+<div class="meri-plan"  data-bind="let:{details:meriPlan()}">
     <h4>Program Outcome</h4>
     <table class="table">
         <thead>
@@ -16,12 +16,12 @@
 
             </td>
             <td colspan="2" class="priority">
-                <!-- ko if:!$root.isAgricultureProject() -->
+                <!-- ko if:!isAgricultureProject() -->
 
                 <select style="width:100%" class="asset" data-validation-engine="validate[required]" data-bind="options:details.outcomes.outcomePriorities(details.outcomes.primaryOutcome.description()), optionsCaption: 'Please select', value:details.outcomes.primaryOutcome.asset, disable: isProjectDetailsLocked()" >
                 </select>
                 <!-- /ko -->
-                <!-- ko if:$root.isAgricultureProject() -->
+                <!-- ko if:isAgricultureProject() -->
                 <ul class="unstyled" data-bind="foreach:details.outcomes.outcomePriorities(details.outcomes.primaryOutcome.description())">
                     <li>
                         <label class="checkbox"><input type="checkbox" name="secondaryPriority" data-validation-engine="validate[minCheckbox[1],maxCheckbox[2]" data-bind="value:$data, checked:$parent.details.outcomes.primaryOutcome.assets, disable: $parent.isProjectDetailsLocked()"> <!--ko text: $data--><!--/ko--></label>
@@ -49,10 +49,10 @@
         <tbody data-bind="foreach:details.outcomes.secondaryOutcomes">
         <tr>
             <td class="outcome-priority"><select data-validation-engine="validate[required]"
-                                                 data-bind="value:description, options: $parent.details.outcomes.selectableOutcomes, optionsCaption: 'Please select', disable: $root.isProjectDetailsLocked()"></select>
+                                                 data-bind="value:description, options: details.outcomes.selectableOutcomes, optionsCaption: 'Please select', disable: $parent.isProjectDetailsLocked()"></select>
             </td>
             <td class="priority">
-                <select data-bind="value:asset, options:$root.details.outcomes.outcomePriorities(description()), optionsCaption: 'Please select', disable: $root.isProjectDetailsLocked()" class="input-large asset"></select>
+                <select data-bind="value:asset, options: details.outcomes.outcomePriorities(description()), optionsCaption: 'Please select', disable: $parent.isProjectDetailsLocked()" class="input-large asset"></select>
             </td>
             <td class="remove">
                 <span data-bind="if:!$parent.isProjectDetailsLocked()">

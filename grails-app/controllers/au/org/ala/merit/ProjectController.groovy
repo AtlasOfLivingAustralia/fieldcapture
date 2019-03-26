@@ -9,6 +9,7 @@ import org.apache.http.HttpStatus
 import org.codehaus.groovy.grails.web.json.JSONArray
 import org.codehaus.groovy.grails.web.json.JSONObject
 import org.joda.time.DateTime
+
 import static ReportService.ReportMode
 
 class ProjectController {
@@ -183,10 +184,12 @@ class ProjectController {
             rlpModel.admin.meriPlanTemplate = RLP_MERI_PLAN_TEMPLATE
             rlpModel.admin.projectServices = config.services
             rlpModel.admin.showMERIActivityWarning = false
+            rlpModel.admin.allowMeriPlanUpload = true
             rlpModel.admin.showSpecies = false
             rlpModel.admin.hidePrograms = true
             rlpModel.admin.showAnnouncementsTab = false
             rlpModel.admin.canChangeProjectDates = true
+
             model = rlpModel
         }
         else if (config?.projectTemplate == ESP_TEMPLATE && !user?.hasViewAccess) {
@@ -605,6 +608,29 @@ class ProjectController {
         if (!result) {
             render view: '/error', model: [error: "An error occurred generating the MERI plan report."]
         }
+    }
+
+    /**
+     * Accepts a MERI Plan as an attached file and attempts to convert it into a format compatible with
+     * MERIT.
+     * @param id the id of the project.
+     */
+    @PreAuthorise(accessLevel = 'admin')
+    def uploadMeriPlan(String id) {
+        Map result
+        if (request.respondsTo('getFile')) {
+            def file = request.getFile('meriPlan')
+            if (file) {
+                MeriPlanMapper mapper = new MeriPlanMapper(metadataService.getProjectServices(), [:])
+                result = mapper.importMeriPlan(file.inputStream)
+            }
+        }
+        if (!result) {
+            response.status = HttpStatus.SC_BAD_REQUEST
+            result = [status: HttpStatus.SC_BAD_REQUEST, error:'No file attachment found']
+
+        }
+        render result as JSON
     }
 
     @PreAuthorise(accessLevel = 'admin')

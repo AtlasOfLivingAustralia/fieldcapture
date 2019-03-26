@@ -1,4 +1,4 @@
-<div class="row-fluid space-after">
+<div class="row-fluid space-after" data-bind="let:{details:meriPlan()}">
     <div>
         <div class="well well-small">
             <label><b>Project Outcomes</b></label>
