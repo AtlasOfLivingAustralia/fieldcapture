@@ -356,7 +356,6 @@
                 'site': {
                     initialiser: function () {
                         L.Browser.touch = false;
-                        var iconPath = '${assetPath(src:'leaflet-0.7.7/images')}';
                         var mapFeatures = $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
                         var sitesTabOptions = {
                             featureServiceUrl: fcConfig.featureServiceUrl,
@@ -371,15 +370,15 @@
                             photoPointSelector:'#site-photo-points',
                             loadingSpinnerSelector:'#img-spinner',
                             photoScrollerSelector:'.photo-slider',
-                            leafletIconPath:iconPath,
                             useAlaMap:config.useAlaMap,
                             showSiteType:config.showSiteType
                         };
                         if (config.useAlaMap) {
                             sitesTabOptions.mapFeatures = {};
                             sitesTabOptions.useGoogleBaseMap = fcConfig.useGoogleBaseMap;
-                            var sitesViewModel = viewModel.initialiseSitesTab(sitesTabOptions);
+
                             $.get(fcConfig.projectSitesUrl).done(function(data) {
+                                var sitesViewModel = viewModel.initialiseSitesTab(sitesTabOptions);
                                 if (data && data.features) {
                                     sitesViewModel.setFeatures(data.features);
                                 }
