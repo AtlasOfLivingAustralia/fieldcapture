@@ -5,6 +5,7 @@ import au.org.ala.merit.ReportService
 import au.org.ala.merit.SiteService
 import grails.test.mixin.TestMixin
 import grails.test.mixin.support.GrailsUnitTestMixin
+import org.apache.http.HttpStatus
 import org.grails.databinding.DataBinder
 import org.grails.databinding.SimpleDataBinder
 import org.grails.databinding.SimpleMapDataBindingSource
@@ -120,7 +121,7 @@ class SaveReportDataCommandSpec extends Specification {
                 reportId:'r1'
         ]
         Map r1Report = [reportId:jsonData.reportId, publicationStatus:ReportService.REPORT_NOT_APPROVED, activityId:jsonData.activityId]
-        Map savedActivity = [activityId:jsonData.activityId, publicationStatus: ReportService.REPORT_NOT_APPROVED, progress:ActivityService.PROGRESS_PLANNED, siteId:'s1']
+        Map savedActivity = [activityId:jsonData.activityId, publicationStatus: ReportService.REPORT_NOT_APPROVED, progress:ActivityService.PROGRESS_PLANNED]
         reportService.get(jsonData.reportId) >> r1Report
         activityService.get(jsonData.activityId) >> savedActivity
 
@@ -143,7 +144,16 @@ class SaveReportDataCommandSpec extends Specification {
                 ],
                 reportId:'r1',
                 site:[
-                        siteId:'s1'
+                        siteId:'s1',
+                        features:[
+                                [
+                                        type:'feature',
+                                        geometry:[
+                                                type:'point',
+                                                coordinates:[1, 2]
+                                        ]
+                                ]
+                        ]
                 ]
         ]
         Map r1Report = [reportId:jsonData.reportId, publicationStatus:ReportService.REPORT_NOT_APPROVED, activityId:jsonData.activityId]
@@ -171,7 +181,15 @@ class SaveReportDataCommandSpec extends Specification {
                 ],
                 reportId:'r1',
                 site:[
-                        features:[]
+                        features:[
+                                [
+                                        type:'feature',
+                                        geometry:[
+                                                type:'point',
+                                                coordinates: [1,2]
+                                        ]
+                                ]
+                        ]
                 ]
         ]
         String siteId = 's1'
@@ -200,9 +218,18 @@ class SaveReportDataCommandSpec extends Specification {
                 ],
                 reportId:'r1',
                 site:[
-                        features:[]
+                        features:[
+                                [
+                                        type:'feature',
+                                        geometry:[
+                                                type:'point',
+                                                coordinates: [1,2]
+                                        ]
+                                ]
+                        ]
                 ]
         ]
+
         String siteId = 's1'
         Map r1Report = [reportId:jsonData.reportId, publicationStatus:ReportService.REPORT_NOT_APPROVED, activityId:jsonData.activityId]
         Map savedActivity = [activityId:jsonData.activityId, publicationStatus: ReportService.REPORT_NOT_APPROVED, progress:ActivityService.PROGRESS_PLANNED]
@@ -223,5 +250,43 @@ class SaveReportDataCommandSpec extends Specification {
 
         1 * activityService.update(jsonData.activityId, jsonData.activity)
     }
+
+    def "If an existing report site contains no features it should be deleted"() {
+        setup:
+        String siteId = 's1'
+        Map expectedActivityData = [activityId:'a1', siteId:null, outputs:[[name:'output1', data:[:]]]]
+        Map jsonData = [
+                activityId:'a1',
+                activity:[
+                        siteId:siteId,
+                        outputs:[[name:'output1', data:[:]]]
+                ],
+                reportId:'r1',
+                site:[
+                        siteId:siteId,
+                        features:[]
+                ]
+        ]
+
+        Map r1Report = [reportId:jsonData.reportId, publicationStatus:ReportService.REPORT_NOT_APPROVED, activityId:jsonData.activityId]
+        Map savedActivity = [activityId:jsonData.activityId, publicationStatus: ReportService.REPORT_NOT_APPROVED, progress:ActivityService.PROGRESS_PLANNED, siteId:siteId]
+        reportService.get(jsonData.reportId) >> r1Report
+        activityService.get(jsonData.activityId) >> savedActivity
+
+        when:
+        dataBinder.bind(command, new SimpleMapDataBindingSource(jsonData))
+        command.validate()
+        command.save()
+
+        then:
+        command.hasErrors() == false
+        and: "The activity is updated to remove the site id"
+        1 * activityService.update(jsonData.activityId, expectedActivityData)
+        and: "The site is deleted"
+        1 * siteService.delete(siteId) >> HttpStatus.SC_OK
+
+
+    }
+
 
 }
