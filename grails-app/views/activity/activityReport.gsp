@@ -127,11 +127,10 @@
 
         var master = null;
         var mapPopupSelector = '#map-modal';
+        var features = ${features?.encodeAsJSON() ?: '[]'}  ;
         if (metaModel.supportsSites) {
             // Workaround for problems with IE11 and leaflet draw
             L.Browser.touch = false;
-            var features = ${features?.encodeAsJSON() ?: '[]'}  ;
-
 
             var mapOptions = {useGoogleBaseMap: fcConfig.useGoogleBaseMap};
             var planningSitesCategory = 'Planning Sites';

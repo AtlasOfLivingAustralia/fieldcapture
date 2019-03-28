@@ -340,20 +340,25 @@
                             photoPointSelector:'#site-photo-points',
                             loadingSpinnerSelector:'#img-spinner',
                             photoScrollerSelector:'.photo-slider',
-                            leafletIconPath:fcConfig.leafletIconPath,
                             useAlaMap:config.useAlaMap,
                             showSiteType:config.showSiteType
                         };
                         if (config.useAlaMap) {
                             sitesTabOptions.mapFeatures = {};
                             sitesTabOptions.useGoogleBaseMap = fcConfig.useGoogleBaseMap;
-                            var sitesViewModel = viewModel.initialiseSitesTab(sitesTabOptions);
+                            var sitesList = $('#'+sitesTabOptions.bindingElementId);
+                            sitesList.children().hide();
+                            sitesList.append('<image class="sites-spinner" width="50" height="50" src="'+sitesTabOptions.spinnerUrl+'" alt="Loading"/>');
                             $.get(fcConfig.projectSitesUrl).done(function(data) {
+                                sitesList.children().show();
+                                var sitesViewModel = viewModel.initialiseSitesTab(sitesTabOptions);
+
                                 if (data && data.features) {
                                     sitesViewModel.setFeatures(data.features);
                                 }
-                            });
+                                sitesList.find('.sites-spinner').remove();
 
+                            });
                         }
                         else {
                             viewModel.initialiseSitesTab(sitesTabOptions);

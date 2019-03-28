@@ -312,7 +312,10 @@ var ReportMaster = function(reportId, activityId, reportSite, featureCollection,
             };
 
             if (featureCollection) {
-                payload.site = featureCollection.toSite(reportSite);
+                var siteData = featureCollection.toSite(reportSite);
+                siteData.siteId = null; // The id is ignored by the server which always uses the one in the
+                // attached activity.
+                payload.site = siteData;
             }
 
             return payload;

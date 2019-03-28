@@ -104,42 +104,42 @@ class SaveReportDataCommand {
 
         Map result
         if (hasErrors()) {
-            result = [status: HttpStatus.SC_BAD_REQUEST, error:errors.toString()]
-        }
-        else {
-            if (site) {
-                result = saveReportSite(site.siteId, getReport())
+            result = [status: HttpStatus.SC_BAD_REQUEST, error: errors.toString()]
+        } else {
 
-                if (result?.resp?.siteId) {
-                    activity.siteId = result.resp.siteId
-                    activity.activityId = activityId // ecodata uses this value to determine whether to update the activity or just the outputs, if we have assigned a site we need to update the activity to include that site.
-                }
+            // If the site has no features attached, we want to delete it otherwise we update the site as
+            // well as the activity.
+            Map savedActivity = getSavedActivity()
+            if (site?.features) {
+                String siteId = saveReportSite(getReport())
+                activity.siteId = siteId
 
+            } else if (savedActivity.siteId) {
+                activity.siteId = null
+                deleteReportSite(savedActivity.siteId)
             }
-
+            // Setting the activityId in the payload is necessary for ecodata to update the activity as well as outputs.
+            activity.activityId = activityId
             result = activityService.update(activityId, activity)
         }
 
         result
     }
 
+    private int deleteReportSite(String siteId) {
+        siteService.delete(siteId)
+    }
+
     /**
      * Saves the site data supplied by the client.
-     * @param siteId the siteId of the site.  If null, a value will be obtained from the current activity.  If
-     * still none, a new site will be created and assigned to the activity.
      * @param report the report that is being updated.  Used to set defaults for the site name.
      * @return the result of updating the site.  New sites will return the siteId.
      */
-    private Map saveReportSite(String siteId, Map report) {
+    private String saveReportSite(Map report) {
 
-        if (!siteId) {
-            Map activity = getSavedActivity()
-            if (activity.siteId) {
-                siteId = activity.siteId
-            }
-        }
-        if (siteId) {
-            site.siteId = siteId
+        Map activity = getSavedActivity()
+        if (activity.siteId) {
+            site.siteId = activity.siteId
         }
 
         if (report.projectId) {
@@ -149,7 +149,12 @@ class SaveReportDataCommand {
         site.type = SiteService.SITE_TYPE_COMPOUND
 
 
-        siteService.update(siteId ?:'', site)
+        Map result = siteService.update(site.siteId ?: '', site)
+        String siteId = site.siteId
+        if (!siteId) {
+            siteId = result?.resp?.siteId
+        }
+        siteId
     }
 
 
