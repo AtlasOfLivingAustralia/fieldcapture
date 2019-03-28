@@ -168,7 +168,7 @@ class SaveReportDataCommandSpec extends Specification {
 
         then:
         command.hasErrors() == false
-        1 * siteService.update(jsonData.site.siteId, jsonData.site)
+        1 * siteService.update(jsonData.site.siteId, jsonData.site) >> [resp:[siteId:jsonData.site.siteId]]
         1 * activityService.update(jsonData.activityId, jsonData.activity)
     }
 
@@ -205,7 +205,7 @@ class SaveReportDataCommandSpec extends Specification {
 
         then:
         command.hasErrors() == false
-        1 * siteService.update(siteId, jsonData.site)
+        1 * siteService.update(siteId, jsonData.site) >> [resp:[siteId:siteId]]
         1 * activityService.update(jsonData.activityId, jsonData.activity)
     }
 
