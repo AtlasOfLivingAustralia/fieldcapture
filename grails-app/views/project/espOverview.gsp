@@ -42,6 +42,7 @@
         adminActivityType: "${grailsApplication.config.esp.activities.admin ?: ""}",
         excelOutputTemplateUrl: "${createLink(controller: 'activity', action:'excelOutputTemplate')}",
         excelDataUploadUrl: "${createLink(controller:'activity', action:'ajaxUpload')}",
+        saveReportingDatesUrl:"${createLink(controller:'project', action:'ajaxUpdate', id:project.projectId)}",
         returnTo: "${createLink(controller: 'project', action: 'espOverview', id: project.projectId)}"
 
     },
@@ -91,7 +92,6 @@
         <span class="span6">
             <span class="label label-info label-small">Project ID:</span> ${project.externalId}<br/>
             <span class="label label-info label-small">Reporting Period:</span> <span data-bind="text:reportingFinancialYear"></span><br/>
-
         </span>
         <span class="span6">
             <g:if test="${projectArea}">
@@ -207,6 +207,48 @@
         </div>
     </div>
 
+</div>
+
+<div id="report-selection" class="modal fade" style="display:none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="title">Please enter your reporting dates</h4>
+            </div>
+
+            <div class="modal-body">
+                <p>
+                    As this your first time reporting into the Monitoring, Evaluation, Reporting, Improvement Tool (MERIT), please input the dates for the period against which you are reporting activity.
+                </p>
+
+                <form class="form-horizontal">
+                    <div class="control-group">
+                        <label class="control-label">Reporting period start: </label>
+                        <div class="controls">
+                            <fc:datePicker class="input input-small" targetField="reportingPeriodStart"></fc:datePicker>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Reporting period end: </label>
+                        <div class="controls">
+                            <input type="text" class="input input-small" readonly="readonly" data-bind="value:reportingPeriodEnd.formattedDate">
+                        </div>
+                    </div>
+
+                    <p>
+                        If you do not know or are having any issues with this, please email: <a href="mailto:ESPmonitoring@environment.gov.au">ESPmonitoring@environment.gov.au</a>
+                    </p>
+                </form>
+            </div>
+            <div class="modal-footer control-group">
+                <div class="controls">
+                    <button type="button" class="btn btn-success" data-bind="click:saveReportingDates">OK</button>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
 </div>
 
 <!-- ko stopBinding:true -->

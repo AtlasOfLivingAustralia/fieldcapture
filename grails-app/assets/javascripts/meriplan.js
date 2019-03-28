@@ -1282,7 +1282,6 @@ var Report = function (report) {
     var now = new Date().toISOStringNoMillis();
 
     var self = this;
-
     var fromDate = report.fromDate;
     var toDate = report.toDate;
     var dueDate = report.dueDate;
@@ -1291,6 +1290,8 @@ var Report = function (report) {
 
     self.name = name;
     self.toDate = report.toDate;
+    self.fromDate = report.fromDate;
+    self.reportId = report.reportId;
 
     self.isSubmitted = function () {
         return report.publicationStatus == 'pendingApproval';
