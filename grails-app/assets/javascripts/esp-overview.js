@@ -108,6 +108,13 @@ var SiteStatusModel = function(site, currentStage, map, sitesViewModel) {
 var SimplifiedReportingViewModel = function(project, config) {
     var self = this;
 
+    self.hasCollectedReportingDates = function() {
+        return project.custom && project.custom.reportingPeriodStart && project.custom.reportindPeriodEnd;
+    };
+    var hasSubmittedOrPublishedReport = _.find(project.reports || [], function(report) {
+        return report.publicationStatus == 'published' || report.publicationStatus == 'pendingApproval';
+    });
+
     // Find the oldest report that has not yet been approved to work with.
     var currentReport = _.find(project.reports || [], function(report) {
         return report.publicationStatus != 'published';
@@ -235,11 +242,56 @@ var SimplifiedReportingViewModel = function(project, config) {
         });
     };
 
+    // This is a temporary measure to attempt to collect what dates stewards are reporting against as the
+    // project data is not necessarily correct in all cases.
+    self.reportingPeriodStart = ko.observable(currentReport.fromDate).extend({simpleDate:false});
+    self.reportingPeriodEnd = ko.observable(currentReport.toDate).extend({simpleDate:false});
+    self.reportingPeriodStart.subscribe(function(startDate) {
+        var endDate = convertToIsoDate(moment(startDate).add(1, 'years').toDate());
+        self.reportingPeriodEnd(endDate);
+    });
+    var reportSelectionModalSelector = '#report-selection';
+    self.saveReportingDates = function() {
+        $("#report-selection").modal('hide');
+        blockUIWithMessage("Saving your reporting dates");
+        var data = {
+            custom: {
+                reportingPeriodStart: self.reportingPeriodStart(),
+                reportindPeriodEnd: self.reportingPeriodEnd(),
+                reportId:currentReport.reportId
+            }
+        };
+        $.ajax({
+            url: config.saveReportingDatesUrl,
+            type: "POST",
+            data: JSON.stringify(data),
+            contentType: 'application/json'
+        }).done(function() {
+            window.location.reload();
+        }).fail(function() {
+            $.unblockUI();
+            bootbox.alert("An error occurred when saving your reporting dates.  Please reload your page and try again.  If the error persists, please contact: ESPmonitoring@environment.gov.au", function() {
+                $("#report-selection").modal('show');
+            })
+        })
+    };
+    self.collectReportDates = function() {
+        $(reportSelectionModalSelector).modal({backdrop:'static'});
+    };
+
+    if (!hasSubmittedOrPublishedReport && !self.hasCollectedReportingDates()) {
+        self.collectReportDates();
+    }
+    else {
+        self.reportingFinancialYear = isoDateToFinancialYear(project.custom.reportindPeriodEnd);
+    }
+
 };
 
 initialiseESPActivity = function(activity) {
-    var master = ecodata.forms[activity.activityId];
-    if (master) {
+    var master = null;
+
+    function registerModel(modelMaster) {
         var activityData = {
             activityId:activity.activityId,
             startDate:activity.plannedStartDate,
@@ -247,9 +299,24 @@ initialiseESPActivity = function(activity) {
             progress:'finished'
         };
 
-        master.register('activityModel', function() { return activityData; }, function() { return true }, function(){}, false);
+        modelMaster.register('activityModel', function() { return activityData; }, function() { return true }, function(){}, false);
+    };
 
+    // The ESP activity is loaded via ajax onto a tab, and there appears to be
+    // a race between the script on that page running and the tab shown event firing
+    // (which is what invokes this code).  So we keep waiting until it's done what
+    // we need it to do, which is to add a reference to itself to the global scope for
+    // us to use.
+    function waitForMaster() {
+        master = ecodata.forms[activity.activityId];
+        if (master) {
+            registerModel(master);
+        }
+        else {
+            setTimeout(waitForMaster, 500);
+        }
     }
+    waitForMaster();
 
 
 };

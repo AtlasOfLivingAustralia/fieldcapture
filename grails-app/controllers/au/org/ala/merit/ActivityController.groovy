@@ -158,6 +158,10 @@ class ActivityController {
             }
             model.earliestStartDate = DateUtils.displayFormat(DateUtils.parse(model.project.plannedStartDate))
 
+            // temporary workaround for bad ESP project / report dates
+            if ("Environmental Stewardship" == model.project?.associatedProgram) {
+                model.hideDates = true
+            }
 
             model.putAll(getNavOptions(params.returnTo, programConfig))
 
