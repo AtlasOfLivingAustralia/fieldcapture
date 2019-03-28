@@ -77,7 +77,7 @@
 <asset:javascript src="my-projects.js"/>
 <asset:deferredScripts/>
 <script>
-    $(window).load(function () {
+    $(function () {
         $('.tooltips').tooltip({placement: "right"});
     });
 </script>

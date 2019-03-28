@@ -813,7 +813,6 @@ var AlaMapAdapter = function(map, options) {
             }
             self.featureIndex[id].push(layer);
         });
-        L.Icon.Default.imagePath = options.leafletIconPath;
 
         map.setGeoJSON(feature);
 
@@ -941,7 +940,9 @@ var createMap = function(options) {
         options.singleMarker = false;
         options.singleDraw = false;
         options.showFitBoundsToggle = true;
-        L.Icon.Default.imagePath = options.leafletIconPath;
+        if (options.leafletIconPath) {
+            L.Icon.Default.imagePath = options.leafletIconPath;
+        }
         if (options.useGoogleBaseMap) {
             var googleLayer = new L.Google('ROADMAP', {maxZoom: 21, nativeMaxZoom: 21});
             var otherLayers = {
@@ -955,8 +956,6 @@ var createMap = function(options) {
         }
 
         map = new AlaMapAdapter(new ALA.Map(mapContainerId, options), options);
-        L.Icon.Default.imagePath = options.leafletIconPath;
-
     }
     else {
         map = init_map_with_features({
@@ -1129,6 +1128,7 @@ var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId)
                 });
             }
         });
+
 
     };
 

@@ -863,7 +863,7 @@
             params += '&toDate='+'${params.toDate}';
         </g:if>
 
-        $.post(url, params, function(data1) {
+        $.post(url, params).done(function(data1) {
             //console.log("getJSON data", data);
             var data
             if (data1.resp) {
@@ -899,7 +899,7 @@
                 $('#projectTable tbody').empty();
                 populateTable(data);
             }
-        }).error(function (request, status, error) {
+        }).fail(function (request, status, error) {
             //console.error("AJAX error", status, error);
             $('#paginationInfo').html("AJAX error:" + status + " - " + error);
         });

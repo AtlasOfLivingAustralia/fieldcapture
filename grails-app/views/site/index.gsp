@@ -138,7 +138,7 @@
             <div id="siteNotDefined" class="hide pull-right">
                 <span class="label label-important">This site does not have a georeference associated with it.</span>
             </div>
-            <div id="smallMap" style="width:100%;height:500px;"></div>
+            <m:map id="smallMap" style="width:100%;height:500px;"></m:map>
         </div>
     </div>
 
@@ -191,7 +191,6 @@
             });
 
             var mapFeatures = $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
-            var iconPath = '${assetPath(src:'leaflet-0.7.7/images')}';
             if (!mapFeatures) {
                 bootBox.showAlert("There was a problem obtaining site data");
             }
@@ -202,8 +201,7 @@
                     mapContainerId:'smallMap',
                     useGoogleBaseMap:fcConfig.useGoogleBaseMap,
                     featureServiceUrl: fcConfig.featureService,
-                    wmsServerUrl: fcConfig.spatialWmsUrl,
-                    leafletIconPath:iconPath
+                    wmsServerUrl: fcConfig.spatialWmsUrl
                 });
 
                 map.replaceAllFeatures([mapFeatures]);

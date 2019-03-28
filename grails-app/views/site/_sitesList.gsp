@@ -77,7 +77,7 @@
 
 
         <div class="span7">
-            <div id="map"></div>
+            <m:map id="map" width="100%"></m:map>
         </div>
     </div>
 </div>
