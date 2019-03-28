@@ -71,7 +71,7 @@
                 </g:if>
 
                 <h4><span>${project.associatedProgram?.encodeAsHTML()}</span> <span>${project.associatedSubProgram?.encodeAsHTML()}</span></h4>
-                <h4><span class="readonly-text" data-bind="text:projectStage"></span> from <span data-bind="text:plannedStartDate.formattedDate"></span> to <span data-bind="text:plannedEndDate.formattedDate"></span></h4>
+                <h4><span class="readonly-text" data-bind="text:projectStage"></span> <g:if test="${!hideDates}">from <span data-bind="text:plannedStartDate.formattedDate"></span> to <span data-bind="text:plannedEndDate.formattedDate"></span></g:if></h4>
                 <div class="row-fluid space-after">
                     <div class="span6">
                         <label class="for-readonly inline">Report status</label>
