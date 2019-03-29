@@ -233,7 +233,7 @@
         <thead>
         <th class="index"></th>
         <th class="baseline required">Project baseline</th>
-        <th class="baseline required">Describe the method used to obtain the baseline, or how the baseline will be established <fc:iconHelp>Describe the project baseline(s) units of measure or data which will be used to report progress towards this project's outcomes (short-term, medium-term and 5 year program outcome), and the monitoring design.</fc:iconHelp></th>
+        <th class="baseline-method required">Describe the method used to obtain the baseline, or how the baseline will be established <fc:iconHelp>Describe the project baseline(s) units of measure or data which will be used to report progress towards this project's outcomes (short-term, medium-term and 5 year program outcome), and the monitoring design.</fc:iconHelp></th>
         <th class="remove"></th>
         </thead>
         <tbody data-bind="foreach: rows">
@@ -244,7 +244,7 @@
                               data-bind="value: baseline, disable: $root.isProjectDetailsLocked()">
                     </textarea>
                 </td>
-                <td class="baseline"><textarea data-validation-engine="validate[required]"
+                <td class="baseline-method"><textarea data-validation-engine="validate[required]"
                         data-bind="value: method, disable: $root.isProjectDetailsLocked()"
                         rows="4"></textarea></td>
                 <td class="remove">
@@ -270,7 +270,7 @@
         <tr>
             <th class="index"></th>
             <th class="baseline required">Project monitoring indicators</th>
-            <th class="baseline required">Describe the project monitoring indicator approach</th>
+            <th class="baseline-method required">Describe the project monitoring indicator approach</th>
             <th class="remove"></th>
         </tr>
         </thead>
@@ -282,7 +282,7 @@
                           data-bind="value: data1, disable: $parent.isProjectDetailsLocked()">
                 </textarea>
             </td>
-            <td class="baseline"><textarea data-validation-engine="validate[required]"
+            <td class="baseline-method"><textarea data-validation-engine="validate[required]"
                     data-bind="value: data2, disable: $parent.isProjectDetailsLocked()"
                     rows="4"></textarea></td>
             <td class="remove">
