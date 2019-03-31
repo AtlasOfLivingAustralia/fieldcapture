@@ -69,7 +69,7 @@
 <g:if test="${projectContent.details.visible}">
 	<div class="save-details-result-placeholder"></div>
 	<div class="row-fluid space-after">
-		<div class="span6">
+		<div class="span12">
 			<div class="form-actions">
 				<div>
 					<label><input class="pull-left" type="checkbox"  data-bind="checked: meriPlan().caseStudy, disable: isProjectDetailsLocked()" />
@@ -95,7 +95,7 @@
 						<g:if test="${allowMeriPlanUpload}">
 							<div class="btn fileinput-button"
 								 data-bind="fileUploadNoImage:meriPlanUploadConfig"><i class="icon-plus"></i> <input
-									id="meriPlan" type="file" name="meriPlan"><span>Upload MERI Plan</span></div>
+									type="file" name="meriPlan"><span>Upload MERI Plan</span></div>
 						</g:if>
 						<button type="button" data-bind="click: saveAndSubmitChanges" class="btn btn-info">Submit for approval</button>
 					</div>
@@ -127,7 +127,7 @@
 <div class="save-details-result-placeholder"></div>
 
 <div class="row-fluid space-after">
-	<div class="span6">
+	<div class="span12">
 		<div class="form-actions">
 			<div>
 				<label><input class="pull-left" type="checkbox"  data-bind="checked: meriPlan().caseStudy, disable: isProjectDetailsLocked()" />
@@ -149,6 +149,12 @@
 					<ul>
 						<li>You will not be able to report activity data until your MERI plan has been approved by your grant manager.</li>
 					</ul>
+					</g:if>
+					<g:if test="${allowMeriPlanUpload}">
+						<div class="btn fileinput-button"
+							 data-bind="fileUploadNoImage:meriPlanUploadConfig"><i class="icon-plus"></i>
+							<input type="file" name="meriPlan"><span>Upload MERI Plan</span>
+						</div>
 					</g:if>
 					<button type="button" data-bind="click: saveAndSubmitChanges" class="btn btn-info">Submit for approval</button>
 				</div>

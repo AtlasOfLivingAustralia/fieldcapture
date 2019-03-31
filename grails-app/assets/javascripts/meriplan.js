@@ -55,6 +55,8 @@ function MERIPlan(project, projectService, config) {
             priorities:project.priorities
         };
         self.risks.load(meriPlan.risks);
+        // Detach the old DetailsViewModel from the autosave / window listener routine.
+        self.meriPlan().cancelAutosave();
         self.meriPlan(new DetailsViewModel(meriPlan, projectInfo, getBudgetHeaders(project), self.risks, config));
     };
 
