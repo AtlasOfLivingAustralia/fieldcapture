@@ -282,7 +282,7 @@ var SimplifiedReportingViewModel = function(project, config) {
     if (!hasSubmittedOrPublishedReport && !self.hasCollectedReportingDates()) {
         self.collectReportDates();
     }
-    else {
+    else if (self.hasCollectedReportingDates()) {
         self.reportingFinancialYear = isoDateToFinancialYear(project.custom.reportindPeriodEnd);
     }
 
