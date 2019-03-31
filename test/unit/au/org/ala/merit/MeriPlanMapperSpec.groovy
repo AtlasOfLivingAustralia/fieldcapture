@@ -74,7 +74,7 @@ class MeriPlanMapperSpec extends Specification {
         result.rationale == "This is the project rationale"
 
         and: "The project methodology can be extracted from the sheet"
-        result.projectMethodology == "This is the project methodology"
+        result.implementation.description == "This is the project methodology"
 
         and: "The monitoring baseline can be extracted from the sheet"
         result.baseline.rows == [

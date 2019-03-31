@@ -72,7 +72,7 @@
 		<div class="span6">
 			<div class="form-actions">
 				<div>
-					<label><input class="pull-left" type="checkbox"  data-bind="checked: details.caseStudy, disable: isProjectDetailsLocked()" />
+					<label><input class="pull-left" type="checkbox"  data-bind="checked: meriPlan().caseStudy, disable: isProjectDetailsLocked()" />
 					<span>&nbsp;Are you willing for your project to be used as a case study by the Department?</span></label>
 				</div>
 				<br/>
@@ -130,7 +130,7 @@
 	<div class="span6">
 		<div class="form-actions">
 			<div>
-				<label><input class="pull-left" type="checkbox"  data-bind="checked: details.caseStudy, disable: isProjectDetailsLocked()" />
+				<label><input class="pull-left" type="checkbox"  data-bind="checked: meriPlan().caseStudy, disable: isProjectDetailsLocked()" />
 				<span>&nbsp;Are you willing for your project to be used as a case study by the Department?</span></label>
 			</div>
 			<br/>

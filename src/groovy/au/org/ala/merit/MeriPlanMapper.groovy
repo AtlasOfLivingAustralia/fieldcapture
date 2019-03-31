@@ -165,7 +165,7 @@ class MeriPlanMapper {
 
 
     private Map loadProjectMethodology(List<Row> rows) {
-        [data:[projectMethodology:loadSingleValue(rows, 0, "A")]]
+        [data:[implementation:[description:loadSingleValue(rows, 0, "A")]]]
     }
 
     private Map loadMonitoringBaseline(List<Row> rows) {

@@ -388,8 +388,7 @@
             var meriPlanVisible = false;
             var risksVisible = false;
             $('a[data-toggle="tab"]').on('show', function(e) {
-
-                if (meriPlanVisible && viewModel.meriPlan.details.dirtyFlag.isDirty()) {
+               if (meriPlanVisible && viewModel.meriPlan.meriPlan().dirtyFlag.isDirty()) {
                     e.preventDefault();
                     bootbox.alert($('#meriPlanUnsavedChanges').html());
                 }

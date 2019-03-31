@@ -1,7 +1,9 @@
 <div class="row-fluid space-after" data-bind="if: isProjectDetailsLocked()">
     <div class="validationEngineContainer announcements">
        <!-- ko stopBinding:true -->
-       <div id="edit-announcements">
+
+       <div id="edit-announcements" data-bind="let:{details:meriPlan()}">
+
        <g:render template="announcementsTable" model="${[disableConditionPrefix:'!']}"/>
        </div>
        <!-- /ko -->

@@ -623,7 +623,7 @@ class ProjectController {
             if (file) {
                 Map project = projectService.get(id)
                 Map config = projectService.getProgramConfiguration(project)
-                MeriPlanMapper mapper = new MeriPlanMapper(config, [:])
+                MeriPlanMapper mapper = new MeriPlanMapper(config)
                 result = mapper.importMeriPlan(file.inputStream)
             }
         }

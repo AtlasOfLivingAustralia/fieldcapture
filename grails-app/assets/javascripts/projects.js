@@ -850,6 +850,33 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
 
     };
 
+    self.saveSettings = function () {
+        var jsData = {
+            name: self.name(),
+            description: self.description(),
+            externalId: self.externalId(),
+            grantId: self.grantId(),
+            workOrderId: self.workOrderId(),
+            manager: self.manager(),
+            plannedStartDate: self.plannedStartDate(),
+            plannedEndDate: self.plannedEndDate(),
+            contractStartDate: self.contractStartDate(),
+            contractEndDate: self.contractEndDate(),
+            organisationId: self.organisationId(),
+            organisationName: self.organisationName(),
+            orgIdSvcProvider: self.orgIdSvcProvider(),
+            serviceProviderName: self.serviceProviderName(),
+            associatedProgram: self.associatedProgram(),
+            associatedSubProgram: self.associatedSubProgram(),
+            funding: new Number(self.funding()),
+            status: self.status(),
+            promoteOnHomepage: self.promoteOnHomepage(),
+            changeActivityDates: self.changeActivityDates()
+        };
+        projectService.saveProjectData(jsData);
+
+    };
+
     self.initialiseSitesTab = function(options) {
         var defaults = {
             featureServiceUrl:fcConfig.featureServiceUrl,
@@ -1132,32 +1159,8 @@ function ProjectService(project, options) {
         }
     };
 
-    self.saveSettings = function () {
+    self.saveProjectData = function (jsData) {
         if ($('#settings-validation').validationEngine('validate')) {
-
-            // only collect those fields that can be edited in the settings pane
-            var jsData = {
-                name: self.name(),
-                description: self.description(),
-                externalId: self.externalId(),
-                grantId: self.grantId(),
-                workOrderId: self.workOrderId(),
-                manager: self.manager(),
-                plannedStartDate: self.plannedStartDate(),
-                plannedEndDate: self.plannedEndDate(),
-                contractStartDate: self.contractStartDate(),
-                contractEndDate: self.contractEndDate(),
-                organisationId: self.organisationId(),
-                organisationName: self.organisationName(),
-                orgIdSvcProvider: self.orgIdSvcProvider(),
-                serviceProviderName: self.serviceProviderName(),
-                associatedProgram: self.associatedProgram(),
-                associatedSubProgram: self.associatedSubProgram(),
-                funding: new Number(self.funding()),
-                status:self.status(),
-                promoteOnHomepage:self.promoteOnHomepage(),
-                changeActivityDates:self.changeActivityDates()
-            };
 
             // this call to stringify will make sure that undefined values are propagated to
             // the update call - otherwise it is impossible to erase fields

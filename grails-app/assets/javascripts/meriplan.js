@@ -47,8 +47,15 @@ function MERIPlan(project, projectService, config) {
     };
 
     self.loadMeriPlan = function (meriPlan) {
-        self.meriPlan(new DetailsViewModel(meriPlan, project, self.risks, config));
-        self.meriPlan().description(meriPlan.description);
+        var projectInfo = {
+            projectId:project.projectId,
+            outputTargets:meriPlan.outputTargets,
+            description:meriPlan.description,
+            outcomes:project.outcomes,
+            priorities:project.priorities
+        };
+        self.risks.load(meriPlan.risks);
+        self.meriPlan(new DetailsViewModel(meriPlan, projectInfo, getBudgetHeaders(project), self.risks, config));
     };
 
     self.meriPlanUploadFailed = function () {
@@ -218,7 +225,7 @@ function MERIPlan(project, projectService, config) {
     }
 
     _.extend(self, new Risks(project.risks, riskModel, disableFlag, config.risksStorageKey));
-    var details = new DetailsViewModel(project.custom.details, project, self.risks, config);
+    var details = new DetailsViewModel(project.custom.details, project, getBudgetHeaders(project), self.risks, config);
     self.meriPlan = ko.observable(details);
     self.detailsLastUpdated = ko.observable(project.custom.details.lastUpdated).extend({simpleDate: true});
     self.isProjectDetailsSaved = ko.computed(function () {
@@ -341,10 +348,11 @@ function MERIPlan(project, projectService, config) {
     self.saveMeriPlan = function(enableSubmit){
         var valid =  $('#project-details-validation').validationEngine('validate');
 
-        self.meriPlan().status('active');
-        self.details.lastUpdated = new Date().toISOStringNoMillis();
+        var meriPlan = self.meriPlan();
+        meriPlan.status('active');
+        meriPlan.lastUpdated = new Date().toISOStringNoMillis();
+        meriPlan.saveWithErrorDetection(function() {
 
-        self.meriPlan().saveWithErrorDetection(function() {
             if(enableSubmit) {
                 if (valid) {
                     self.submitChanges();
@@ -352,53 +360,15 @@ function MERIPlan(project, projectService, config) {
                 else {
                     bootbox.alert("Your MERI plan cannot be submitted until all validation errors are resolved");
                 }
-
             }
         });
 
     };
-
-    autoSaveModel(
-        self.meriPlan(),
-        fcConfig.projectUpdateUrl,
-        {
-            storageKey:config.meriStorageKey || 'meriPlan-'+project.projectId,
-            autoSaveIntervalInSeconds:config.autoSaveIntervalInSeconds || 60,
-            restoredDataWarningSelector:'#restoredData',
-            resultsMessageSelector:'.save-details-result-placeholder',
-            timeoutMessageSelector:'#timeoutMessage',
-            errorMessage:"Failed to save MERI Plan: ",
-            successMessage: 'MERI Plan saved',
-            preventNavigationIfDirty:true,
-            defaultDirtyFlag:ko.dirtyFlag,
-            healthCheckUrl:config.healthCheckUrl
-        });
-
-
-    $('#project-details-save').appear().on('appear', function() {
-        $('#floating-save').slideUp(400);
-    }).on('disappear', function() {
-        if (self.meriPlan().dirtyFlag.isDirty()) {
-            $('#floating-save').slideDown(400);
-        }
-        else {
-            $('#floating-save').slideUp(400);
-        }
-    });
-    self.meriPlan().dirtyFlag.isDirty.subscribe(function(dirty) {
-        if (dirty && !$('#floating-save').is(':appeared')) {
-            $('#floating-save').slideDown(400);
-        }
-        else {
-            $('#floating-save').slideUp(400);
-        }
-    });
-
 };
 
-function DetailsViewModel(o, project, risks, config) {
+function DetailsViewModel(o, project, budgetHeaders, risks, config) {
     var self = this;
-    var period = getBudgetHeaders(project);
+    var period = budgetHeaders;
     if (config.useRlpTemplate) {
         self.services = new ServicesViewModel(o.serviceIds, config.services, project.outputTargets, period);
         self.description = ko.observable(project.description);
@@ -416,7 +386,7 @@ function DetailsViewModel(o, project, risks, config) {
     self.caseStudy = ko.observable(o.caseStudy ? o.caseStudy : false);
     self.keq = new GenericViewModel(o.keq);
     self.objectives = new ObjectiveViewModel(o.objectives); // Used in original MERI plan template
-    self.outcomes = new OutcomesViewModel(o.outcomes, project); // Use in new MERI plan template
+    self.outcomes = new OutcomesViewModel(o.outcomes, {outcomes:project.outcomes, priorities:project.priorities}); // Use in new MERI plan template
     self.priorities = new GenericViewModel(o.priorities);
     self.implementation = new ImplementationViewModel(o.implementation);
     self.partnership = new GenericViewModel(o.partnership);
@@ -424,7 +394,6 @@ function DetailsViewModel(o, project, risks, config) {
     self.budget = new BudgetViewModel(o.budget, period);
 
     self.rationale = ko.observable(o.rationale);
-    self.projectMethodology = ko.observable(o.projectMethodology);
     self.baseline = new GenericViewModel(o.baseline, ['baseline', 'method']);
     self.threats = new GenericViewModel(o.threats, ['threat', 'intervention']);
 
@@ -457,6 +426,42 @@ function DetailsViewModel(o, project, risks, config) {
         });
         return json;
     };
+
+    autoSaveModel(
+        self,
+        config.projectUpdateUrl,
+        {
+            storageKey:config.meriStorageKey || 'meriPlan-'+project.projectId,
+            autoSaveIntervalInSeconds:config.autoSaveIntervalInSeconds || 60,
+            restoredDataWarningSelector:'#restoredData',
+            resultsMessageSelector:'.save-details-result-placeholder',
+            timeoutMessageSelector:'#timeoutMessage',
+            errorMessage:"Failed to save MERI Plan: ",
+            successMessage: 'MERI Plan saved',
+            preventNavigationIfDirty:true,
+            defaultDirtyFlag:ko.dirtyFlag,
+            healthCheckUrl:config.healthCheckUrl
+        });
+
+    var $floatingSave = $('#floating-save');
+    $('#project-details-save').appear().on('appear', function() {
+        $floatingSave.slideUp(400);
+    }).on('disappear', function() {
+        if (self.dirtyFlag.isDirty()) {
+            $floatingSave.slideDown(400);
+        }
+        else {
+            $floatingSave.slideUp(400);
+        }
+    });
+    self.dirtyFlag.isDirty.subscribe(function(dirty) {
+        if (dirty && !$floatingSave.is(':appeared')) {
+            $floatingSave.slideDown(400);
+        }
+        else {
+            $floatingSave.slideUp(400);
+        }
+    });
 };
 
 /**
@@ -748,8 +753,9 @@ function ObjectiveViewModel(o) {
 /**
  * Categories project outcomes into primary, secondary, mid-term and short-term outcomes.
  * @param outcomes existing outcome data, if any.
+ * @param config {outcomes:<all available outcomes>, priorities:<priorities selectable by this project>}
  */
-function OutcomesViewModel(outcomes, project) {
+function OutcomesViewModel(outcomes, config) {
     var self = this;
     if (!outcomes) {
         outcomes = {};
@@ -774,20 +780,20 @@ function OutcomesViewModel(outcomes, project) {
         }]
     }
 
-    self.selectableOutcomes = _.map(project.outcomes, function (outcome) {
+    self.selectableOutcomes = _.map(config.outcomes, function (outcome) {
         return outcome.outcome;
     });
 
     self.outcomePriorities = function (outcomeText) {
 
-        var outcome = _.find(project.outcomes, function (outcome) {
+        var outcome = _.find(config.outcomes, function (outcome) {
             return outcome.outcome == outcomeText;
         });
         if (!outcome) {
             return [];
         }
         var priorities = [];
-        _.each(project.priorities, function (priority) {
+        _.each(config.priorities, function (priority) {
             _.each(outcome.priorities, function (outcomePriority) {
                 if (priority.category == outcomePriority.category) {
                     priorities.push(priority.priority);
