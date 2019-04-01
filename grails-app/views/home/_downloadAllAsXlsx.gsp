@@ -32,15 +32,21 @@
     <ul class="unstyled">
         <li><label class="checkbox"><input type="checkbox" name="tabs" value="Activity Summary">Activity Summary</label></li>
     </ul>
-    <g:each in="${activityTypes + [name:'Special', list:[[name:'Upload of stage 1 and 2 reporting data']]]}" var="category">
-        <strong>${category.name}</strong>
-        <ul class="unstyled">
+
+    <g:each in="${activityTypes + [name:'Special', list:[[name:'Upload of stage 1 and 2 reporting data']]]}" var="category" status="i">
+        <div class="space-after">
+        <a class="accordion-toggle"
+           data-bind="toggleVisibility:'#download-category-${i}'">
+        </a> <strong>${category.name}</strong>
+        <ul data-bind="attr:{id:'download-category-${i}'}" class="unstyled">
             <g:each in="${category.list}" var="type">
                 <li><label class="checkbox"><input type="checkbox" name="tabs" value="${type.name}" data-validation-engine="validate[minCheckbox[1]]">${type.name}</label></li>
             </g:each>
 
         </ul>
+        </div>
     </g:each>
+
 
     <strong>Output Data</strong><br/>
     <ul class="unstyled">
@@ -66,5 +72,6 @@ $(function() {
            });
        }
    });
+   ko.applyBindings({}, document.getElementById('downloadTabSelection'));
 });
 </asset:script>

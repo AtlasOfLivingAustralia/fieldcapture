@@ -42,11 +42,10 @@
         contentSelector: '#reportContents',
         dataTableSelector: 'table.actions'
     };
-
-    var viewModel = new Reef2050ReportSelectorViewModel(reportConfig, options);
     <g:if test="${approvedActivitiesOnly != null}">
-        viewModel.approvedActivitiesOnly(${approvedActivitiesOnly});
+    options.approvedActivitiesOnly = ${approvedActivitiesOnly};
     </g:if>
+    var viewModel = new Reef2050ReportSelectorViewModel(reportConfig, options);
     ko.applyBindings(viewModel, document.getElementById('reef-2050-reports'));
 
 
