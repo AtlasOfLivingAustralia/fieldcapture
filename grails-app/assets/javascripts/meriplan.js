@@ -54,10 +54,14 @@ function MERIPlan(project, projectService, config) {
             outcomes:project.outcomes,
             priorities:project.priorities
         };
-        self.risks.load(meriPlan.risks);
+
         // Detach the old DetailsViewModel from the autosave / window listener routine.
         self.meriPlan().cancelAutosave();
+
         self.meriPlan(new DetailsViewModel(meriPlan, projectInfo, getBudgetHeaders(project), self.risks, config));
+        attachFloatingSave();
+
+        self.risks.load(meriPlan.risks);
     };
 
     self.meriPlanUploadFailed = function () {
@@ -366,6 +370,36 @@ function MERIPlan(project, projectService, config) {
         });
 
     };
+
+    var $floatingSave = $('#floating-save');
+    function hideFloatingSave() {
+        if ($floatingSave.is(":appeared")) {
+            $floatingSave.slideUp(400);
+        }
+    }
+    function showFloatingSave() {
+        if (!$floatingSave.is(":appeared")) {
+            $floatingSave.slideDown(400);
+        }
+    }
+
+    var saveSubscription;
+    function attachFloatingSave() {
+        if (saveSubscription) {
+            saveSubscription.dispose();
+        }
+        saveSubscription = self.meriPlan().dirtyFlag.isDirty.subscribe(function(dirty) {
+            if (dirty) {
+                showFloatingSave();
+            }
+            else {
+                hideFloatingSave();
+            }
+        });
+    }
+
+    attachFloatingSave();
+
 };
 
 function DetailsViewModel(o, project, budgetHeaders, risks, config) {
@@ -444,26 +478,6 @@ function DetailsViewModel(o, project, budgetHeaders, risks, config) {
             defaultDirtyFlag:ko.dirtyFlag,
             healthCheckUrl:config.healthCheckUrl
         });
-
-    var $floatingSave = $('#floating-save');
-    $('#project-details-save').appear().on('appear', function() {
-        $floatingSave.slideUp(400);
-    }).on('disappear', function() {
-        if (self.dirtyFlag.isDirty()) {
-            $floatingSave.slideDown(400);
-        }
-        else {
-            $floatingSave.slideUp(400);
-        }
-    });
-    self.dirtyFlag.isDirty.subscribe(function(dirty) {
-        if (dirty && !$floatingSave.is(':appeared')) {
-            $floatingSave.slideDown(400);
-        }
-        else {
-            $floatingSave.slideUp(400);
-        }
-    });
 };
 
 /**
