@@ -1081,7 +1081,7 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
         if (!$('#risks-announcements').validationEngine('validate')) {
             return;
         }
-        self.details.saveWithErrorDetection(function() {
+        self.meriPlan.meriPlan().saveWithErrorDetection(function() {
             $(document).scrollTop(400);
             showAlert("Announcements saved", "alert-success", 'announcement-result-placeholder');
         });
