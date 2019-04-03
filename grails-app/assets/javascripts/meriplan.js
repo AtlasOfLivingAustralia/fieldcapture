@@ -57,11 +57,10 @@ function MERIPlan(project, projectService, config) {
 
         // Detach the old DetailsViewModel from the autosave / window listener routine.
         self.meriPlan().cancelAutosave();
-
         self.meriPlan(new DetailsViewModel(meriPlan, projectInfo, getBudgetHeaders(project), self.risks, config));
-        attachFloatingSave();
-
         self.risks.load(meriPlan.risks);
+        self.attachFloatingSave();
+
     };
 
     self.meriPlanUploadFailed = function () {
@@ -372,33 +371,50 @@ function MERIPlan(project, projectService, config) {
     };
 
     var $floatingSave = $('#floating-save');
+    var floatingSaveVisible = false;
+    function checkSaveStatus(dirty) {
+        if (dirty) {
+            showFloatingSave();
+        }
+        else {
+            hideFloatingSave();
+        }
+    }
     function hideFloatingSave() {
-        if ($floatingSave.is(":appeared")) {
+        if (floatingSaveVisible) {
+            console.log("Hiding");
             $floatingSave.slideUp(400);
+            floatingSaveVisible = false;
         }
     }
     function showFloatingSave() {
-        if (!$floatingSave.is(":appeared")) {
+
+        if (!floatingSaveVisible) {
+            console.log("Showing");
             $floatingSave.slideDown(400);
+            floatingSaveVisible = true;
         }
     }
 
     var saveSubscription;
-    function attachFloatingSave() {
+
+    self.attachFloatingSave = function() {
+
         if (saveSubscription) {
             saveSubscription.dispose();
         }
-        saveSubscription = self.meriPlan().dirtyFlag.isDirty.subscribe(function(dirty) {
-            if (dirty) {
-                showFloatingSave();
-            }
-            else {
-                hideFloatingSave();
-            }
-        });
-    }
+        saveSubscription = self.meriPlan().dirtyFlag.isDirty.subscribe(checkSaveStatus);
+        checkSaveStatus(self.meriPlan().dirtyFlag.isDirty());
+    };
 
-    attachFloatingSave();
+    self.detachValidation = function() {
+        $('#project-details-validation').validationEngine('detach');
+    };
+
+    self.attachValidation = function() {
+        console.log("attaching");
+        $('#project-details-validation').validationEngine('attach', {autoPositionUpdate:true});
+    };
 
 };
 
