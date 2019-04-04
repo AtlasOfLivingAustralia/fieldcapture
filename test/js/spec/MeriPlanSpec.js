@@ -124,7 +124,7 @@ describe("Loading the MERI plan is handled correctly", function () {
 
         var viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing'});
 
-        viewModel.meriPlanUploadComplete({}, {result:meriPlanData});
+        viewModel.meriPlanUploadComplete({}, {result:{meriPlan:meriPlanData, messages:[]}});
         var meriPlanViewModel = viewModel.meriPlan();
 
         expect(meriPlanViewModel.description()).toBe(meriPlanData.description);
