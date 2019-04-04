@@ -88,7 +88,7 @@ class MeriPlanMapper {
 
             }
         }
-        return meriPlanResult
+        return [meriPlan:meriPlanResult, messages:processingMessages]
     }
 
     private String getCellString(Cell cell, String defaultValue = null) {
@@ -191,51 +191,79 @@ class MeriPlanMapper {
     }
 
     private Map loadServices(List<Row> rows) {
-        Map config = [startRow:3, cellMapping: [B:[name:'serviceName'], F:[name:"target"], H:[name:"2018/2019"], J:[name:"2019/2020"], L:[name:"2020/2021"], N:[name:"2021/2022"], P:[name:"2022/2023"]]]
+        Map config = [startRow:2, cellMapping: [A:[name:'index'], B:[name:'serviceName'], F:[name:"target"], H:[name:"2018/2019"], J:[name:"2019/2020"], L:[name:"2020/2021"], N:[name:"2021/2022"], P:[name:"2022/2023"]]]
         List services = mapSection(config, rows)
+
+        // Throw out the example row if the user hasn't deleted it.
+        services = services.findAll{!"Example".equalsIgnoreCase(it['index'])}
+
         List messages = []
-        List serviceIds = []
-        List outputTargets = []
-
-        // Services need a fair bit of post-processing to be mapped correctly.
-        services.each { Map unprocessedService ->
-            Map service = programConfig.services.find{it.name == unprocessedService.serviceName}
-            if (!service) {
-                println "No match for service: "+unprocessedService.serviceName
+        List serviceTargets = []
+        services.each { Map service ->
+            Map result = processService(service)
+            if (result.messages) {
+                messages.addAll(result.messages)
             }
-            else {
-                if (!serviceIds.contains(service.id)) {
-                    serviceIds << service.id
-                }
+            serviceTargets.addAll(result.data)
+        }
+        [data:[serviceTargets:serviceTargets], messages:messages]
+    }
 
-                Map result = mapTargets(service, unprocessedService.target)
+    private Map processService(Map unprocessedService) {
+        List messages = []
+        List serviceTargets = []
+
+        List serviceNames = programConfig.services.collect{it.name}
+        // Services need a fair bit of post-processing to be mapped correctly.
+
+        Map result = postProcess(unprocessedService.serviceName, [pickList:serviceNames])
+        if (!(result.value == result.processedValue)) {
+            messages << "Matched service: "+unprocessedService.serviceName+" to: "+result.processedValue
+            if (result.messages) {
+                messages.addAll(result.messages)
+            }
+
+        }
+        Map service = programConfig.services.find{it.name == result.processedValue}
+        if (!service) {
+            messages << "No match for service: "+unprocessedService.serviceName
+        }
+        else {
+
+            result = mapTargets(service, unprocessedService.target)
+            messages = messages + result.messages
+
+            result.data.each { Map target ->
+                serviceTargets << [serviceId:service.id, scoreId:target.scoreId, target:target.target, periodTargets:[]]
+            }
+
+            ["2018/2019", "2019/2020", "2020/2021", "2021/2022", "2022/2023"].each { String period ->
+                result = mapTargets(service, unprocessedService[period])
                 messages = messages + result.messages
 
                 result.data.each { Map target ->
-                    outputTargets << [scoreId:target.scoreId, target:target.target, periodTargets:[]]
-                }
+                    Map outputTarget = serviceTargets.find{it.scoreId == target.scoreId}
 
-                ["2018/2019", "2019/2020", "2020/2021", "2021/2022", "2022/2023"].each { String period ->
-                    result = mapTargets(service, unprocessedService[period])
-                    messages = messages + result.messages
-
-                    result.data.each { Map target ->
-                        Map outputTarget = outputTargets.find{it.scoreId == target.scoreId}
-                        if (!outputTarget) {
-                            outputTarget = [scoreId: target.scoreId, periodTargets:[]]
-                            outputTargets << outputTarget
+                    if (!outputTarget) {
+                        if (serviceTargets.size() == 1) {
+                            outputTarget = serviceTargets[0]
                         }
-                        outputTarget.periodTargets << [period:period, target:target.target]
-                    }
+                        else {
+                            outputTarget = [serviceId: service.id, scoreId: target.scoreId, periodTargets:[]]
+                            serviceTargets << outputTarget
+                        }
 
+                    }
+                    outputTarget.periodTargets << [period:period, target:target.target]
                 }
+
             }
+
         }
-        [data:[serviceIds:serviceIds, outputTargets:outputTargets], messages:messages]
+        [data:serviceTargets, messages:messages]
     }
 
     private Map mapTargets(Map matchedService, String value) {
-
 
         List targets = []
         if (!value) {
@@ -249,8 +277,12 @@ class MeriPlanMapper {
             String target = matcher.group(1)
             String scoreLabel = matcher.group(2)
 
-            if (!scoreLabel && matchedService.scores?.size() == 1) {
-                targets << [target:target, scoreId: matchedService.scores[0].scoreId]
+            if (!scoreLabel) {
+                String scoreId = null
+                if (matchedService.scores?.size() == 1) {
+                    scoreId = matchedService.scores[0].scoreId
+                }
+                targets << [target:target, scoreId: scoreId]
             }
             else {
                 Map result = postProcess(scoreLabel, [pickList:scoreLabels])
@@ -268,7 +300,7 @@ class MeriPlanMapper {
     }
 
     private Map loadRisks(List<Row> rows) {
-        Map config = [startRow:1, cellMapping: [B:[name:'threat'], C:[name:"description"], H:[name:"likelihood"], I:[name:"consequence", capitalise:true], J:[name:"riskRating", capitalise:true], K:[name:"currentControl"], Q:[name:"residualRisk", capitalise:true]]]
+        Map config = [startRow:1, cellMapping: [B:[name:'threat', pickList:programConfig.riskAndThreatTypes], C:[name:"description"], H:[name:"likelihood"], I:[name:"consequence", capitalise:true], J:[name:"riskRating", capitalise:true], K:[name:"currentControl"], Q:[name:"residualRisk", capitalise:true]]]
         List risks = mapSection(config, rows)
         [data:[risks:[rows:risks]]]
     }
@@ -291,7 +323,6 @@ class MeriPlanMapper {
             outcome.assets = outcome.assets ? [outcome.assets] : []
             if (postProcess) {
                 Map result = postProcessOutcome(outcome)
-                println result
                 processedOutcomes << result.outcome
                 messages += result.messages
             }
@@ -320,8 +351,6 @@ class MeriPlanMapper {
 
         outcome.assets = outcome.assets.collect { String asset ->
             Map assetResult = postProcess(asset, [pickList: availableAssets])
-            println "Postprocessing $asset : ${assetResult.processedValue} with list: $availableAssets"
-
             assetResult.processedValue
         }
         [outcome:outcome, messages:messages]
@@ -384,6 +413,7 @@ class MeriPlanMapper {
         if (config.pickList) {
             Map pickResults = matchFromList(value, config.pickList)
             results.processedValue = pickResults.matchedValue
+            results.messages = pickResults.messages
         }
 
         results
@@ -396,11 +426,24 @@ class MeriPlanMapper {
             int minimumDistance = Integer.MAX_VALUE
             String match = null
             values.each { String item ->
-                int distance = StringUtils.getLevenshteinDistance(value, item)
-                if (distance < minimumDistance) {
-                    minimumDistance = distance
-                    match = item
+                if (isSingleWord(value)) {
+                    for (String word : item.split(/\W/)) {
+                        // Try and match each word in the list item as this is likely pulling a single unit from a score label
+                        int distance = StringUtils.getLevenshteinDistance(value, word)
+                        if (distance < minimumDistance) {
+                            minimumDistance = distance
+                            match = item
+                        }
+                    }
                 }
+                else {
+                    int distance = StringUtils.getLevenshteinDistance(value, item)
+                    if (distance < minimumDistance) {
+                        minimumDistance = distance
+                        match = item
+                    }
+                }
+
             }
             result = [value:value, matchedValue:match, exact:minimumDistance == 0]
 
@@ -408,6 +451,10 @@ class MeriPlanMapper {
         result
 
 
+    }
+
+    private isSingleWord(String value) {
+        return value?.trim().split(/\W/).length == 1
     }
 
     /**

@@ -14,9 +14,22 @@ class MeriPlanMapperSpec extends Specification {
         // The mapper needs to be able to turn output target names and service names into score and service ids
         List services = JSON.parse(getClass().getResourceAsStream('/services.json'), 'UTF-8')
         Map service = services.find{it.id == 1}
-        service.scores = [[
-                scoreId:"1", label:"Number of baseline data sets collected and/or synthesised"
-        ]]
+        service.scores = [
+                [scoreId:"1", label:"Number of baseline data sets collected and/or synthesised"]
+        ]
+
+        service = services.find{it.id == 4}
+        service.scores = [
+                [scoreId:"2", label:"service 4 score 1"],
+                [scoreId:"3", label:"service 4 score 2"],
+                [scoreId:"4", label:"service 4 score 3"],
+        ]
+
+        service = services.find{it.id == 25}
+        service.scores = [
+                [scoreId:"5", label:"Number of planning and delivery documents for delivery of the project services and monitoring"],
+                [scoreId:"6", label:"Number of days project planning / preparation"]
+        ]
 
         mapper = new MeriPlanMapper([services:services, outcomes:programOutcomes(), priorities:priorities()])
     }
@@ -27,6 +40,7 @@ class MeriPlanMapperSpec extends Specification {
 
         when:
         Map result = mapper.importMeriPlan(meriPlanXls)
+        result = result.meriPlan
 
         List outcomes = programOutcomes().collect{it.outcome}
         then: "The primary outcomes can be extracted from the sheet"
@@ -101,8 +115,7 @@ class MeriPlanMapperSpec extends Specification {
         ]
 
         and: "The project services and targets can be extracted from the sheet"
-        result.serviceIds == [1]
-        result.outputTargets == [[scoreId:'1', target: "100", periodTargets:[[period:"2018/2019", target: "1"], [period:"2019/2020", target: "2"], [period:"2020/2021", target: "3"], [period:"2021/2022", target: "4"], [period:"2022/2023", target: "5"]]]]
+        result.serviceTargets == [[serviceId:1, scoreId:'1', target: "100", periodTargets:[[period:"2018/2019", target: "1"], [period:"2019/2020", target: "2"], [period:"2020/2021", target: "3"], [period:"2021/2022", target: "4"], [period:"2022/2023", target: "5"]]]]
 
         and: "The project risks can be extracted from the sheet"
         result.risks.rows == [
@@ -151,6 +164,78 @@ class MeriPlanMapperSpec extends Specification {
         result.data[0].target == "11"
         result.data[0].scoreId == "1"
 
+    }
+
+    def "When there are multiple scores and a single target with no context then a mapped value will be returned with a null scoreId"() {
+        setup:
+        Map service = [scores:[[label:'Number of farm/project/site plans developed', scoreId:'1'], [label:'Area (ha) covered by plan', scoreId:'2']]]
+
+        when:
+        Map result = mapper.mapTargets(service, "11")
+
+        then:
+        result.data.size() == 1
+        result.data[0].target == "11"
+        result.data[0].scoreId == null
+        result.messages != null
+    }
+
+
+
+    def "A service with multiple scores can't be mapped if no context is given for the score"() {
+        when:
+        Map result = mapper.processService([serviceName:"Controlling access", target:"11", "2018/2019":"1", "2019/2020":"2", "2020/2021":"3"])
+        println result
+
+        then:
+        result.data.size() == 1
+        result.data[0].serviceId == 4
+        result.data[0].target == "11"
+        result.data[0].scoreId == null
+        result.data[0].periodTargets.size() == 3
+        result.data[0].periodTargets[0].target == "1"
+        result.data[0].periodTargets[1].target == "2"
+        result.data[0].periodTargets[2].target == "3"
+
+        result.messages != null
+    }
+
+    def "A score can be matched from a single word - example 1"() {
+        when:
+        Map result = mapper.processService([serviceName:"Project planning and delivery of documents as required for the delivery of the Project Services and monitoring", target:"11 (documents)", "2018/2019":"1", "2019/2020":"2", "2020/2021":"3"])
+        println result
+
+        then:
+        result.data.size() == 1
+        result.data[0].serviceId == 25
+        result.data[0].target == "11"
+        result.data[0].scoreId == "5"
+        result.data[0].periodTargets.size() == 3
+        result.data[0].periodTargets[0].target == "1"
+        result.data[0].periodTargets[1].target == "2"
+        result.data[0].periodTargets[2].target == "3"
+
+        result.messages != null
+    }
+
+    def "A score can be matched from a single word - example 2"() {
+        when:
+        Map result = mapper.processService([serviceName:"Project planning and delivery of documents as required for the delivery of the Project Services and monitoring", target:"50 (days)", "2018/2019":"12", "2019/2020":"13", "2020/2021":"13", "2021/2022":"12"])
+        println result
+
+        then:
+        result.data.size() == 1
+        result.data[0].serviceId == 25
+        result.data[0].target == "50"
+        result.data[0].scoreId == "6"
+        result.data[0].periodTargets.size() == 4
+        result.data[0].periodTargets[0].target == "12"
+        result.data[0].periodTargets[1].target == "13"
+        result.data[0].periodTargets[2].target == "13"
+        result.data[0].periodTargets[3].target == "12"
+
+
+        result.messages != null
     }
     
     private List programOutcomes() {

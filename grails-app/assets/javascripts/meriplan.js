@@ -1,31 +1,6 @@
 /*
    Script for handling Project MERI Plan
  */
-function getBudgetHeaders(project) {
-    var headers = [];
-    var startYr = moment(project.plannedStartDate).format('YYYY');
-    var endYr = moment(project.plannedEndDate).format('YYYY');;
-    var startMonth = moment(project.plannedStartDate).format('M');
-    var endMonth = moment(project.plannedEndDate).format('M');
-
-    //Is startYr is between jan to june?
-    if(startMonth >= 1 &&  startMonth <= 6 ){
-        startYr--;
-    }
-
-    //Is the end year is between july to dec?
-    if(endMonth >= 7 &&  endMonth <= 12 ){
-        endYr++;
-    }
-
-    var count = endYr - startYr;
-    for (i = 0; i < count; i++){
-        headers.push(startYr + '/' + ++startYr);
-    }
-    return headers;
-
-}
-
 function MERIPlan(project, projectService, config) {
     var self = this;
     if (!project.custom) {
@@ -34,13 +9,15 @@ function MERIPlan(project, projectService, config) {
     if (!project.custom.details) {
         project.custom.details = {};
     }
+    var periods = projectService.getBudgetHeaders(project);
 
     self.plannedStartDate = ko.observable(project.plannedStartDate).extend({simpleDate: false});
     self.plannedEndDate = ko.observable(project.plannedEndDate).extend({simpleDate: false});
 
     self.meriPlanUploadComplete = function (e, data) {
         if (data.result) {
-            self.loadMeriPlan(data.result);
+            self.loadMeriPlan(data.result.meriPlan);
+            bootbox.alert("Please check your data is correct before submitting your plan.  <p>Not all fields may have been able to be mapped.</p>");
         } else {
             self.meriPlanUploadFailed(e, data);
         }
@@ -57,7 +34,13 @@ function MERIPlan(project, projectService, config) {
 
         // Detach the old DetailsViewModel from the autosave / window listener routine.
         self.meriPlan().cancelAutosave();
-        self.meriPlan(new DetailsViewModel(meriPlan, projectInfo, getBudgetHeaders(project), self.risks, config));
+        self.meriPlan(new DetailsViewModel(meriPlan, projectInfo, periods, self.risks, config));
+        if (meriPlan.serviceTargets && meriPlan.serviceTargets.length > 0) {
+            self.meriPlan().services.services([]); // Remove the empty row loaded by default.
+        }
+        _.each(meriPlan.serviceTargets, function(serviceTarget) {
+            self.meriPlan().services.addServiceTarget(serviceTarget);
+        });
         self.risks.load(meriPlan.risks);
         self.attachFloatingSave();
 
@@ -229,8 +212,9 @@ function MERIPlan(project, projectService, config) {
         riskModel = meritRiskModel();
     }
 
+
     _.extend(self, new Risks(project.risks, riskModel, disableFlag, config.risksStorageKey));
-    var details = new DetailsViewModel(project.custom.details, project, getBudgetHeaders(project), self.risks, config);
+    var details = new DetailsViewModel(project.custom.details, project, periods, self.risks, config);
     self.meriPlan = ko.observable(details);
     self.detailsLastUpdated = ko.observable(project.custom.details.lastUpdated).extend({simpleDate: true});
     self.isProjectDetailsSaved = ko.computed(function () {
@@ -258,7 +242,7 @@ function MERIPlan(project, projectService, config) {
         'Indigenous Ecological Knowledge', 'Remnant Vegetation', 'Aquatic and Coastal systems including wetlands', 'Not Applicable'];
 
     self.addBudget = function () {
-        self.meriPlan().budget.rows.push(new BudgetRowViewModel({}, getBudgetHeaders(project)));
+        self.meriPlan().budget.rows.push(new BudgetRowViewModel({}, periods));
     };
     self.removeBudget = function (budget) {
         self.meriPlan().budget.rows.remove(budget);
@@ -382,7 +366,6 @@ function MERIPlan(project, projectService, config) {
     }
     function hideFloatingSave() {
         if (floatingSaveVisible) {
-            console.log("Hiding");
             $floatingSave.slideUp(400);
             floatingSaveVisible = false;
         }
@@ -390,7 +373,6 @@ function MERIPlan(project, projectService, config) {
     function showFloatingSave() {
 
         if (!floatingSaveVisible) {
-            console.log("Showing");
             $floatingSave.slideDown(400);
             floatingSaveVisible = true;
         }
@@ -537,6 +519,10 @@ function ServicesViewModel(serviceIds, allServices, outputTargets, periods) {
 
         target.updateTargets = function () {
 
+            // Don't auto-update the target if one has already been specified.
+            if (target.target()) {
+                return;
+            }
             var currentTarget = _.find(outputTargets, function (outputTarget) {
                 return target.scoreId() == outputTarget.scoreId;
             });
@@ -623,6 +609,45 @@ function ServicesViewModel(serviceIds, allServices, outputTargets, periods) {
     self.addService = function () {
         self.services.push(new ServiceTarget());
     };
+
+    /**
+     * Method to programatically add a pre-populated service target - used for the MERI plan load.
+     * @param serviceTarget example:
+     *  {
+            serviceId:1,
+            scoreId:1,
+            target:100,
+            periodTargets:[
+                {period:'2018/2019', target:1},
+                {period:'2019/2020', target:2},
+                {period:'2020/2021', target:2}
+            ]
+        }
+     * @returns {ServiceTarget}
+     */
+    self.addServiceTarget = function(serviceTarget) {
+        var serviceTargetRow = new ServiceTarget();
+        serviceTargetRow.serviceId(serviceTarget.serviceId);
+        serviceTargetRow.scoreId(serviceTarget.scoreId);
+        serviceTargetRow.target(serviceTarget.target);
+        _.each(periods || [], function(period) {
+
+            var periodTarget = _.find(serviceTargetRow.periodTargets || [], function(pt) {
+                return pt.period == period;
+            });
+            var periodTargetValue = _.find(serviceTarget.periodTargets || [], function(pt) {
+                return pt.period == period;
+            });
+            if (periodTarget && periodTargetValue) {
+                periodTarget.target(periodTargetValue.target);
+            }
+
+        });
+
+        self.services.push(serviceTargetRow);
+        return serviceTargetRow;
+    };
+
     self.removeService = function (service) {
         self.services.remove(service);
     };
@@ -683,52 +708,9 @@ function ServicesViewModel(serviceIds, allServices, outputTargets, periods) {
             targets: self.outputTargets()
         }
     };
-}
-
-/**
- * View model for the output targets for a service based projects.
- * @param services the services being carried out by the project.
- * @param targets existing target data for the project
- * @param targetsEditable if the targets are currently editable
- * @param scores relevant (or all) scores
- * @param config urls for saving etc.
- */
-function ServiceTargets(services, targets, targetsEditable, config) {
-
-    var self = this;
-    var outputTargetService = new OutputTargetService(config);
-
-    self.services = ko.observableArray(services);
-    self.initialising = ko.observable(true);
-    self.outputTargets = ko.observableArray();
-    self.loadOutputTargets = function (services) {
-        _.each(services, function (service) {
-
-            if (service.scores) {
-                self.outputTargets.push(new Output(service.name, service.scores, targets, self));
-            }
-        });
-
-    };
-
-    self.targetsEditable = ko.observable(targetsEditable);
-    self.canEditOutputTargets = function () {
-        return self.targetsEditable;
-    };
-
-    self.saveOutputTargets = function () {
-        outputTargetService.saveOutputTargets(self.outputTargets());
-    };
-
-    outputTargetService.getScoresForProject().always(function () {
-        self.initialising(false)
-    }).done(function (scores) {
-        self.loadOutputTargets(scores);
-    }).fail(function () {
-        bootbox.error("Failed to load project targets");
-    });
-
 };
+
+
 
 
 function GenericViewModel(o, propertyNames) {

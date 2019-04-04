@@ -42,6 +42,8 @@ module.exports = function (config) {
             'grails-app/assets/vendor/momentjs/moment.min.js',
             'grails-app/assets/vendor/jquery.appear/jquery.appear.js',
             'grails-app/assets/vendor/amplifyjs/amplify.min.js',
+            'grails-app/assets/vendor/momentjs/moment.min.js',
+            'grails-app/assets/vendor/momentjs/moment-timezone-with-data.min.js',
             'grails-app/assets/javascripts/*.js',
             'test/js/spec/**/*.js'
         ],
@@ -68,7 +70,7 @@ module.exports = function (config) {
             'type':"text",
             check: {
                 global: {
-                    lines: 17
+                    lines: 18
                 }
             }
         },

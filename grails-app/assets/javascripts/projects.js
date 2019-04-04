@@ -1282,4 +1282,29 @@ function ProjectService(project, options) {
         return project.status && project.status.toLowerCase() == 'completed';
     };
 
+    self.getBudgetHeaders = function() {
+        var headers = [];
+        var startYr = moment(project.plannedStartDate).format('YYYY');
+        var endYr = moment(project.plannedEndDate).format('YYYY');
+        var startMonth = moment(project.plannedStartDate).format('M');
+        var endMonth = moment(project.plannedEndDate).format('M');
+
+        //Is startYr is between jan to june?
+        if(startMonth >= 1 &&  startMonth <= 6 ){
+            startYr--;
+        }
+
+        //Is the end year is between july to dec?
+        if(endMonth >= 7 &&  endMonth <= 12 ){
+            endYr++;
+        }
+
+        var count = endYr - startYr;
+        for (i = 0; i < count; i++){
+            headers.push(startYr + '/' + ++startYr);
+        }
+        return headers;
+
+    }
+
 };

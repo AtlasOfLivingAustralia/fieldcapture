@@ -116,7 +116,10 @@ describe("Loading the MERI plan is handled correctly", function () {
 
     it("should map the data returned by the meri plan upload and update the view model correctly", function () {
 
-        var project = {};
+        var project = {
+            plannedStartDate:'2018-07-01T00:00:00Z',
+            plannedEndDate:'2021-06-30T00:00:00Z'
+        };
         var projectService = new ProjectService(project, {});
 
         var viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing'});
@@ -129,6 +132,70 @@ describe("Loading the MERI plan is handled correctly", function () {
 
 
     });
+
+
+    it("should allow service targets to be loaded programatically to support MERI plan loads", function() {
+        var project = {
+            plannedStartDate:'2018-07-01T00:00:00Z',
+            plannedEndDate:'2021-06-30T00:00:00Z'
+        };
+        var projectService = new ProjectService(project, {});
+
+        var viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing'});
+
+        var serviceTarget = {
+            serviceId:1,
+            scoreId:1,
+            target:100,
+            periodTargets:[
+                {period:'2018/2019', target:1},
+                {period:'2019/2020', target:2},
+                {period:'2020/2021', target:3}
+            ]
+        };
+
+        var row = viewModel.meriPlan().services.addServiceTarget(serviceTarget);
+
+        expect(row.serviceId()).toEqual(serviceTarget.serviceId);
+        expect(row.scoreId()).toEqual(serviceTarget.scoreId);
+        expect(row.target()).toEqual(100);
+
+        expect(row.periodTargets.length).toEqual(3);
+        expect(row.periodTargets[0].target()).toEqual(1);
+        expect(row.periodTargets[1].target()).toEqual(2);
+        expect(row.periodTargets[2].target()).toEqual(3);
+
+
+    });
+
+    it("should not clear targets when changing the score id so as to support MERI plan loads with bad data", function() {
+        var project = {
+            plannedStartDate:'2018-07-01T00:00:00Z',
+            plannedEndDate:'2021-06-30T00:00:00Z'
+        };
+        var projectService = new ProjectService(project, {});
+
+        var viewModel = new MERIPlan(project, projectService, {useRlpTemplate:true, healthCheckUrl:'testing'});
+
+        var serviceTarget = {
+            serviceId:1,
+            scoreId:1,
+            target:100,
+            periodTargets:[
+                {period:'2018/2019', target:1},
+                {period:'2019/2020', target:2},
+                {period:'2020/2021', target:3}
+            ]
+        };
+
+        var row = viewModel.meriPlan().services.addServiceTarget(serviceTarget);
+        expect(row.target()).toEqual(100);
+
+        row.scoreId(2);
+        expect(row.target()).toEqual(100);
+
+    });
+
 
 })
 ;
