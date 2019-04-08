@@ -28,7 +28,7 @@ var ReportViewModel = function(report, config) {
     self.toDateLabel = convertToSimpleDate(moment(report.toDate).subtract(1, 'hours').toDate(), false);
     self.dueDate = ko.observable(report.dueDate).extend({simpleDate:false});
     self.progress = ko.observable(report.progress || 'planned');
-    self.editUrl = config.editReportUrl + '?&reportId='+report.reportId;;
+    self.editUrl = config.editReportUrl + '?&reportId='+report.reportId;
     self.viewUrl = config.viewReportUrl + '?&reportId='+report.reportId;
     self.downloadUrl = config.reportPDFUrl ? config.reportPDFUrl +'?reportId='+report.reportId : null;
     self.percentComplete = function() {
@@ -102,7 +102,7 @@ var ReportViewModel = function(report, config) {
         }
     };
 
-    self.changeReportStatus = function(url, action, blockingMessage, successMessage) {
+    self.changeReportStatus = function(url, action, blockingMessage, successMessage, doneCallback) {
         blockUIWithMessage(blockingMessage);
         var payload = {reportId:report.reportId, stage: report.name, category:self.category(), reason:self.reason(), activityIds:[report.activityId]}
         var json = JSON.stringify(payload);
@@ -111,9 +111,14 @@ var ReportViewModel = function(report, config) {
             type: 'POST',
             data: json,
             contentType: 'application/json'
-        }).done(function() {
+        }).done(function(result) {
+            if (_.isFunction(doneCallback)) {
+                doneCallback(result);
+            }
+            else {
                 blockUIWithMessage(successMessage);
                 window.location.reload();
+            }
         }).fail(function(data) {
             $.unblockUI();
 
@@ -187,13 +192,32 @@ var ReportViewModel = function(report, config) {
 
         var reasonModalSelector = config.reasonModalSelector || '#reason-modal';
         var $reasonModal = $(reasonModalSelector);
+        function afterReportCreated(result) {
+            if (result.resp && result.resp.reportId) {
+                var instructions = $(config.adjustmentInstructionsSelector);
+                bootbox.alert(instructions.html(), function() {
+                    var adjustmentReportUrl = config.editReportUrl + '?&reportId='+result.resp.reportId;
+                    window.location.href = adjustmentReportUrl;
+                });
+            }
+            else {
+                bootbox.alert("An unexpected error occurred creating the adjustment", function() {
+                    window.location.reload();
+                });
+            }
+        };
         var reasonViewModel = {
             reason: self.reason,
             title:'Adjust report',
             buttonText: 'Create adjustment',
             explanationText: 'Please enter the reason the adjustment is required',
             submit:function() {
-                self.changeReportStatus(config.adjustReportUrl, 'return', 'Creating an adjustment for the report...', 'Created adjustment report.');
+                self.changeReportStatus(
+                    config.adjustReportUrl,
+                    'return',
+                    'Creating an adjustment for the report...',
+                    'Created adjustment report.',
+                    afterReportCreated);
             }
         };
         ko.applyBindings(reasonViewModel, $reasonModal[0]);

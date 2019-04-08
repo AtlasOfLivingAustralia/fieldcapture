@@ -82,7 +82,8 @@ enum SettingPageType {
     RLP_CORE_SERVICES_REPORT_RETURNED_EMAIL_SUBJECT('rlpCSReportReturnedEmailSubject', 'RLP Core Services Report returned email subject line text', 'fielddata.rlp.cs_report.returned.emailSubject'),
     RLP_CORE_SERVICES_REPORT_RETURNED_EMAIL_BODY('rlpCSReportReturnedEmailBody', 'RLP Core Services Report returned email body text', 'fielddata.rlp.cs_report.returned.emailBody'),
     REPORT_ADJUSTED_EMAIL_SUBJECT_LINE('reportAdjustedEmailSubject', 'Report has been adjusted email subject line text', 'fielddata.report.adjusted.emailSubject'),
-    REPORT_ADJUSTED_EMAIL_BODY('reportAdjustedEmailBody', 'Report has been adjusted email body text', 'fielddata.report.adjusted.emailBody')
+    REPORT_ADJUSTED_EMAIL_BODY('reportAdjustedEmailBody', 'Report has been adjusted email body text', 'fielddata.report.adjusted.emailBody'),
+    REPORT_ADJUSTMENT_INSTRUCTIONS('reportAdjustmentInstructions', 'Instructions for pre-configuring the adjustment report', 'fielddata.report.adjustment.instructions')
 
     String name
     String title
