@@ -84,8 +84,9 @@ class MeriPlanMapper {
                 }
                 Map result = loadSection(rows, section.loader)
                 meriPlanResult = merge(meriPlanResult, result.data)
-                processingMessages << result.messages
-
+                if (result.messages) {
+                    processingMessages.addAll(result.messages)
+                }
             }
         }
         return [meriPlan:meriPlanResult, messages:processingMessages]
@@ -130,7 +131,7 @@ class MeriPlanMapper {
         Map result = postProcessOutcome([description:primaryOutcome, assets: assets])
 
         Map data = [outcomes: [primaryOutcome: result.outcome]]
-        [data:data]
+        [data:data, messages:result.messages]
     }
 
     private Map loadSecondaryOutcomes(List<Row> rows) {
@@ -300,7 +301,7 @@ class MeriPlanMapper {
     }
 
     private Map loadRisks(List<Row> rows) {
-        Map config = [startRow:1, cellMapping: [B:[name:'threat', pickList:programConfig.riskAndThreatTypes], C:[name:"description"], H:[name:"likelihood"], I:[name:"consequence", capitalise:true], J:[name:"riskRating", capitalise:true], K:[name:"currentControl"], Q:[name:"residualRisk", capitalise:true]]]
+        Map config = [startRow:1, cellMapping: [B:[name:'threat', pickList:programConfig.riskAndThreatTypes, maximumDistance: 10], C:[name:"description"], H:[name:"likelihood"], I:[name:"consequence", capitalise:true], J:[name:"riskRating", capitalise:true], K:[name:"currentControl"], Q:[name:"residualRisk", capitalise:true]]]
         List risks = mapSection(config, rows)
         [data:[risks:[rows:risks]]]
     }
@@ -338,11 +339,8 @@ class MeriPlanMapper {
     private Map postProcessOutcome(Map outcome) {
         List messages = []
         List outcomeDescriptions = programConfig.outcomes.collect { it.outcome }
-        Map result = postProcess(outcome.description, [pickList: outcomeDescriptions])
+        Map result = postProcess(outcome.description, [pickList: outcomeDescriptions, maximumDistance:20]) // The values in the spreadsheet don't match super well to outcomes
         outcome.description = result.processedValue
-        if (!result.exactMatch) {
-            messages << "Matched ${result.value} to ${result.processedValue}"
-        }
 
         Map outcomeConfig = programConfig.outcomes.find { it.outcome == outcome.description }
 
@@ -350,7 +348,10 @@ class MeriPlanMapper {
         List availableAssets = programConfig.priorities.findAll { it.category in outcomeCategories }.collect{it.priority}
 
         outcome.assets = outcome.assets.collect { String asset ->
-            Map assetResult = postProcess(asset, [pickList: availableAssets])
+            Map assetResult = postProcess(asset, [pickList: availableAssets, maximumDistance: 5, category:"Investment Priority"])
+            if (assetResult.messages) {
+                messages.addAll(assetResult.messages)
+            }
             assetResult.processedValue
         }
         [outcome:outcome, messages:messages]
@@ -412,8 +413,15 @@ class MeriPlanMapper {
         }
         if (config.pickList) {
             Map pickResults = matchFromList(value, config.pickList)
-            results.processedValue = pickResults.matchedValue
-            results.messages = pickResults.messages
+            if (pickResults.distance <= (config.maximumDistance ?: 5)) {
+                results.processedValue = pickResults.matchedValue
+                if (pickResults.distance > 0) {
+                    results.messages = ["Matched \"$value\" as \"${results.processedValue}\""]
+                }
+            }
+            else {
+                results.messages = ["No match found for ${config.category?:""} \"$value\""]
+            }
         }
 
         results
@@ -421,7 +429,7 @@ class MeriPlanMapper {
 
     private Map matchFromList(String value, List values) {
 
-        Map result = [value:value, matchedValue: value, exact:true]
+        Map result = [value:value, matchedValue: value, exact:true, distance:0]
         if (value) {
             int minimumDistance = Integer.MAX_VALUE
             String match = null
@@ -445,7 +453,7 @@ class MeriPlanMapper {
                 }
 
             }
-            result = [value:value, matchedValue:match, exact:minimumDistance == 0]
+            result = [value:value, matchedValue:match, exact:minimumDistance == 0, distance:minimumDistance]
 
         }
         result

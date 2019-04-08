@@ -17,7 +17,15 @@ function MERIPlan(project, projectService, config) {
     self.meriPlanUploadComplete = function (e, data) {
         if (data.result) {
             self.loadMeriPlan(data.result.meriPlan);
-            bootbox.alert("Please check your data is correct before submitting your plan.  <p>Not all fields may have been able to be mapped.</p>");
+            var message = "<p><strong>Load results</strong></p>";
+            if (data.result.messages) {
+                message +="<ul><li>";
+                message += data.result.messages.join("</li><li>");
+                message += "</li></ul>";
+            }
+            message += "<p>Please check your data is correct before submitting your plan, in particular the investment priorities and services.</p>";
+
+            bootbox.alert(message);
         } else {
             self.meriPlanUploadFailed(e, data);
         }
