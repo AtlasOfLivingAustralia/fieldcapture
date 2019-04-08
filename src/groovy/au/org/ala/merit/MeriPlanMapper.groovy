@@ -196,7 +196,7 @@ class MeriPlanMapper {
         List services = mapSection(config, rows)
 
         // Throw out the example row if the user hasn't deleted it.
-        services = services.findAll{!"Example".equalsIgnoreCase(it['index'])}
+        services = services.findAll{!((it['index']?:"").toLowerCase() in ['example', 'add row'])}
 
         List messages = []
         List serviceTargets = []
@@ -218,21 +218,16 @@ class MeriPlanMapper {
         // Services need a fair bit of post-processing to be mapped correctly.
 
         Map result = postProcess(unprocessedService.serviceName, [pickList:serviceNames])
-        if (!(result.value == result.processedValue)) {
-            messages << "Matched service: "+unprocessedService.serviceName+" to: "+result.processedValue
-            if (result.messages) {
-                messages.addAll(result.messages)
-            }
 
-        }
         Map service = programConfig.services.find{it.name == result.processedValue}
         if (!service) {
             messages << "No match for service: "+unprocessedService.serviceName
         }
         else {
-
             result = mapTargets(service, unprocessedService.target)
-            messages = messages + result.messages
+            if (result.messages) {
+                messages.addAll(result.messages)
+            }
 
             result.data.each { Map target ->
                 serviceTargets << [serviceId:service.id, scoreId:target.scoreId, target:target.target, periodTargets:[]]
@@ -240,7 +235,6 @@ class MeriPlanMapper {
 
             ["2018/2019", "2019/2020", "2020/2021", "2021/2022", "2022/2023"].each { String period ->
                 result = mapTargets(service, unprocessedService[period])
-                messages = messages + result.messages
 
                 result.data.each { Map target ->
                     Map outputTarget = serviceTargets.find{it.scoreId == target.scoreId}
@@ -267,6 +261,7 @@ class MeriPlanMapper {
     private Map mapTargets(Map matchedService, String value) {
 
         List targets = []
+        List messages = []
         if (!value) {
             return [data:targets]
         }
@@ -275,13 +270,16 @@ class MeriPlanMapper {
         Matcher matcher = TARGET_MATCHING_PATTERN.matcher(value)
         while (matcher.find()) {
 
-            String target = matcher.group(1)
+            String target = matcher.group(1)?.trim()
             String scoreLabel = matcher.group(2)
 
             if (!scoreLabel) {
                 String scoreId = null
                 if (matchedService.scores?.size() == 1) {
                     scoreId = matchedService.scores[0].scoreId
+                }
+                else {
+                    messages << "Unable to match target \"${matcher.group(0)?.trim()}\" to an output target measure for service \"${matchedService.name}\""
                 }
                 targets << [target:target, scoreId: scoreId]
             }
@@ -297,7 +295,7 @@ class MeriPlanMapper {
             }
         }
 
-        [data:targets, messages:[]]
+        [data:targets, messages:messages]
     }
 
     private Map loadRisks(List<Row> rows) {
