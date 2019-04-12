@@ -221,7 +221,9 @@ class MeriPlanMapper {
 
         Map service = programConfig.services.find{it.name == result.processedValue}
         if (!service) {
-            messages << "No match for service: "+unprocessedService.serviceName
+            if (unprocessedService.serviceName) { // Otherwise assume it's a blank row
+                messages << "No match for service: "+unprocessedService.serviceName
+            }
         }
         else {
             result = mapTargets(service, unprocessedService.target)
@@ -291,6 +293,10 @@ class MeriPlanMapper {
                     if (score) {
                         targets << [target:target, scoreId: score.scoreId]
                     }
+                    else {
+                        targets << [target:target, scoreId: null]
+                        messages.addAll("No matching target measure \"${result.value}\" for service \"${matchedService.name}\"")
+                    }
                 }
             }
         }
@@ -337,7 +343,7 @@ class MeriPlanMapper {
     private Map postProcessOutcome(Map outcome) {
         List messages = []
         List outcomeDescriptions = programConfig.outcomes.collect { it.outcome }
-        Map result = postProcess(outcome.description, [pickList: outcomeDescriptions, maximumDistance:20]) // The values in the spreadsheet don't match super well to outcomes
+        Map result = postProcess(outcome.description, [pickList: outcomeDescriptions, maximumDistance:30]) // The values in the spreadsheet don't match super well to outcomes
         outcome.description = result.processedValue
 
         Map outcomeConfig = programConfig.outcomes.find { it.outcome == outcome.description }
