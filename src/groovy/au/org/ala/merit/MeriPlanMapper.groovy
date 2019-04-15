@@ -17,6 +17,7 @@ import java.util.regex.Pattern
 class MeriPlanMapper {
 
     private static final String MERI_PLAN_SHEET_NAME = 'MERI plan template'
+    private static final String ANOTHER_MERI_PLAN_SHEET_NAME = 'MERI plan'
 
     private List sections = [
             [sectionStart:'Program outcome', sectionEnd:'Secondary Regional Land Partnerships outcome(s)', loader:this.&loadPrimaryOutcome],
@@ -27,12 +28,13 @@ class MeriPlanMapper {
             [sectionStart:'Environment projects only (Primary outcomes 1-4)', sectionEnd:'Agriculture projects only (Primary outcomes 5 or 6)', loader:this.&loadThreatsAndInterventions],
             [sectionStart:'Agriculture projects only (Primary outcomes 5 or 6)', sectionEnd:'Project methodology (4000 character limit [approx. 650 words]) *', loader:this.&loadRationale],
             [sectionStart:'Project methodology (4000 character limit [approx. 650 words]) *', sectionEnd:'Monitoring methodology', loader:this.&loadProjectMethodology],
-            [sectionStart:'Monitoring methodology', sectionEnd:'Add row', loader:this.&loadMonitoringBaseline],
-            [sectionStart:'Add row', sectionEnd:'Project review, evaluation and improvement methodology and approach * (3000 character limit [approximately 500 words])', loader:this.&loadMonitoringIndicators],
+            [sectionStart:'Monitoring methodology', sectionEnd:'Add row', loader:this.&loadMonitoringBaselineAndIndicators],
             [sectionStart:'Project review, evaluation and improvement methodology and approach * (3000 character limit [approximately 500 words])', sectionEnd:'Relevant national and regional plans', loader:this.&loadProjectEvaluationApproach],
             [sectionStart:'Relevant national and regional plans', sectionEnd:'Project services and minimum targets  *', loader:this.&loadPlans],
             [sectionStart:'Project services and minimum targets  *', sectionEnd:'Project risks', loader:this.&loadServices],
             [sectionStart:'Project risks', sectionEnd:'END OF DOCUMENT', loader:this.&loadRisks]]
+
+    private List sectionHeadings = sections.collect{it.sectionStart}
 
     private static final List COMMENTS_TO_IGNORE = [
             "[multiple primary investment priorities only applicable where Outcome 5 or 6 is selected as Primary Outcome]",
@@ -51,6 +53,7 @@ class MeriPlanMapper {
 
     MeriPlanMapper(Map programConfig) {
         this.programConfig = programConfig
+
     }
 
 
@@ -65,28 +68,31 @@ class MeriPlanMapper {
         meriPlanXlsx.withCloseable {
 
             Workbook workbook = WorkbookFactory.create(meriPlanXlsx)
-            Sheet meriPlan = workbook.getSheet(MERI_PLAN_SHEET_NAME)
+            Sheet meriPlan = workbook.getSheetAt(0)
 
             Iterator<Row> allRows = meriPlan.rowIterator()
-            Row row = allRows.next()
-            sections.each { Map section ->
-                String firstCell = null
-                while (allRows.hasNext() && firstCell != section.sectionStart) {
-                    firstCell = getCellValue(row, "A")
-                    row = allRows.next()
-                }
+            String currentHeading = null
+            while (allRows.hasNext()) {
+                Row row = allRows.next()
+                String firstCell = getCellValue(row, "A")
                 List rows = []
-                while (allRows.hasNext() && firstCell != section.sectionEnd) {
-                    rows << row
 
+                while (!(firstCell in sectionHeadings) && allRows.hasNext()) {
+                    rows << row
                     row = allRows.next()
+
                     firstCell = getCellValue(row, "A")
                 }
-                Map result = loadSection(rows, section.loader)
-                meriPlanResult = merge(meriPlanResult, result.data)
-                if (result.messages) {
-                    processingMessages.addAll(result.messages)
+                Map section = sections.find{it.sectionStart == currentHeading}
+                println "Loading section ${currentHeading} ${section}"
+                if (section) {
+                    Map result = loadSection(rows, section.loader)
+                    meriPlanResult = merge(meriPlanResult, result.data)
+                    if (result.messages) {
+                        processingMessages.addAll(result.messages)
+                    }
                 }
+                currentHeading = firstCell
             }
         }
         return [meriPlan:meriPlanResult, messages:processingMessages]
@@ -167,6 +173,27 @@ class MeriPlanMapper {
 
     private Map loadProjectMethodology(List<Row> rows) {
         [data:[implementation:[description:loadSingleValue(rows, 0, "A")]]]
+    }
+
+    private Map loadMonitoringBaselineAndIndicators(List<Row> rows) {
+        // This is done differently to the rest of the sections due to no reliable heading in Cell A we can
+        // use to split these sections (as at least one user has deleted the "Add row" separator)
+        List baselineRows = []
+        List indicatorRows = []
+        List destination = baselineRows
+        String indicatorHeading = 'Project monitoring indicators *'
+
+        for (Row row: rows) {
+            String heading = getCellValue(row, "B")
+            if (heading == indicatorHeading) {
+                destination = indicatorRows
+            }
+            destination << row
+        }
+        Map baseline = loadMonitoringBaseline(baselineRows)
+        Map indicators = loadMonitoringIndicators(indicatorRows)
+
+        merge(baseline, indicators)
     }
 
     private Map loadMonitoringBaseline(List<Row> rows) {
