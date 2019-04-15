@@ -51,23 +51,24 @@ class MeriPlanMapper {
     /** Required to map service and output target names into scores and service ids */
     private Map programConfig
 
+    private FormulaEvaluator evaluator
+
     MeriPlanMapper(Map programConfig) {
         this.programConfig = programConfig
-
     }
-
 
     /**
      * Takes an InputStream containing a Microsoft Excel spreadsheet in the MERI plan format
      * and produces a Map that can be used to populate the MERI plan in MERIT.
      */
-    Map importMeriPlan(InputStream meriPlanXlsx) {
+    synchronized Map importMeriPlan(InputStream meriPlanXlsx) {
 
         List processingMessages = []
         Map meriPlanResult = [:]
         meriPlanXlsx.withCloseable {
 
             Workbook workbook = WorkbookFactory.create(meriPlanXlsx)
+            evaluator = workbook.getCreationHelper().createFormulaEvaluator()
             Sheet meriPlan = workbook.getSheetAt(0)
 
             Iterator<Row> allRows = meriPlan.rowIterator()
@@ -109,6 +110,10 @@ class MeriPlanMapper {
                 break
             case Cell.CELL_TYPE_NUMERIC:
                 value = ((XSSFCell)cell).getRawValue()
+                break
+            case Cell.CELL_TYPE_FORMULA:
+                CellValue evaluated = evaluator.evaluate(cell)
+                value = evaluated.formatAsString()
                 break
         }
         value
