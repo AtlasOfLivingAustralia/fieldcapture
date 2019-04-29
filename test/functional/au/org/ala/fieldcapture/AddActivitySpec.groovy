@@ -9,7 +9,7 @@ import spock.lang.Stepwise
 public class AddActivitySpec extends FieldcaptureFunctionalTest {
 
     def setupSpec() {
-        useDataSet('data-set-1')
+        useDataSet('dataset1')
     }
 
     def projectId = "cb5497a9-0f36-4fef-9f6a-9ea832c5b68c"

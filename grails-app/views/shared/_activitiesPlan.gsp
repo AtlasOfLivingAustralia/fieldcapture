@@ -10,7 +10,7 @@
 </style>
 <!-- This section is bound to a secondary KO viewModel. The following line prevents binding
          to the main viewModel. -->
-<span class="badge" style="font-size: 13px;" data-bind="text:meriPlanStatus().text, css:meriPlanStatus().badgeClass"></span>
+<span class="badge" style="font-size: 13px;" data-bind="text:meriPlan.meriPlanStatus().text, css:meriPlan.meriPlanStatus().badgeClass"></span>
 <!-- ko stopBinding: true -->
 <div class="row-fluid" id="planContainer">
 

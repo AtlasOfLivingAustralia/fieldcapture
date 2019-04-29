@@ -14,8 +14,6 @@ function Risks(risks, riskModel, disableFlag, key) {
 
     self.risksDisabled = disableFlag;
 
-    self.risks = new RisksViewModel(risks, riskModel);
-
     self.addRisks = function(){
         self.risks.rows.push(new RisksRowViewModel({}, riskModel));
     };
@@ -28,7 +26,11 @@ function Risks(risks, riskModel, disableFlag, key) {
     self.ratingOptions = riskModel.ratingOptions;
 
     self.overAllRiskHighlight = ko.computed(function () {
-        return getClassName(self.risks.overallRisk());
+        var val = '';
+        if (self.risks) {
+            val = self.risks.overallRisk();
+        }
+        return getClassName(val);
     });
 
 
@@ -37,6 +39,13 @@ function Risks(risks, riskModel, disableFlag, key) {
             return;
         self.risks.saveWithErrorDetection(function() {location.reload();});
     };
+
+    self.loadRisks = function(risks) {
+        self.risks = new RisksViewModel(risks, riskModel);
+    };
+
+    self.loadRisks(risks);
+
 
 };
 

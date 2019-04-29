@@ -4,11 +4,14 @@
 module.exports = function (config) {
 
     var sourcePreprocessors = ['coverage'];
+    var reporters = ['progress', 'coverage'];
+
     function isDebug(argument) {
         return argument === '--debug';
     }
     if (process.argv.some(isDebug)) {
         sourcePreprocessors = [];
+        reporters = ['progress'];
     }
     config.set({
 
@@ -29,15 +32,18 @@ module.exports = function (config) {
         // list of files / patterns to load in the browser
         files: [
             'test/js/util/*.js',
-            'grails-app/assets/vendor/knockout/3.4.0/knockout-3.4.0.js',
-            'grails-app/assets/vendor/knockout/3.4.0/knockout.mapping-latest.js',
+            'grails-app/assets/vendor/knockout/3.5.0/knockout.js',
+            'grails-app/assets/vendor/knockout/3.5.0/knockout.mapping-latest.js',
             'grails-app/assets/vendor/underscorejs/1.8.3/underscore.js',
             'grails-app/assets/vendor/wmd/showdown.js',
             'grails-app/assets/vendor/wmd/wmd.js',
             'grails-app/assets/vendor/datatables/1.10.16/js/jquery.dataTables.js',
             'grails-app/assets/vendor/jquery-ui/jquery-ui-1.9.2.custom.js',
-            'grails-app/assets/vendor/fileupload-9.0.0/jquery.fileupload.js',
             'grails-app/assets/vendor/momentjs/moment.min.js',
+            'grails-app/assets/vendor/jquery.appear/jquery.appear.js',
+            'grails-app/assets/vendor/amplifyjs/amplify.min.js',
+            'grails-app/assets/vendor/momentjs/moment.min.js',
+            'grails-app/assets/vendor/momentjs/moment-timezone-with-data.min.js',
             'grails-app/assets/javascripts/*.js',
             'test/js/spec/**/*.js'
         ],
@@ -57,14 +63,14 @@ module.exports = function (config) {
         // test results reporter to use
         // possible values: 'dots', 'progress'
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-        reporters: ['progress', 'coverage'],
+        reporters: reporters,
 
         coverageReporter: {
             'dir':'./target',
             'type':"text",
             check: {
                 global: {
-                    lines: 10
+                    lines: 18
                 }
             }
         },

@@ -249,7 +249,7 @@ class SiteService {
             else {
                 returnValue = [success:false, error:"Failed to retrieve geometry for feature $featureId of shapefile $shapeFileId"]
             }
-            if (returnValue.success == false) {
+            if (returnValue.success == false && pid) {
                 spatialService.deleteFromSpatialPortal(pid)
             }
         }

@@ -66,18 +66,22 @@ table tr.header th {
 
 .meri-plan .keq-monitoring {
     width: 65%;
+    word-break: break-word;
 }
 
 .meri-plan .document-name {
-    width: 32%;
+    width: 20%;
+    word-break: break-word;
 }
 
 .meri-plan .section {
-    width: 32%;
+    width: 20%;
+    word-break: break-word;
 }
 
 .meri-plan .alignment {
-    width: 32%;
+    width: 60%;
+    word-break: break-word;
 }
 
 .meri-plan .service {
@@ -98,13 +102,19 @@ table tr.header th {
 }
 
 .meri-plan .threat {
-    width: 50%;
+    width: 33%;
 }
 .meri-plan .intervention {
-    width: 50%;
+    width: 67%;
+    word-break: break-word;
 }
 .meri-plan .baseline {
-    width: 50%;
+    width: 33%;
+}
+
+.meri-plan .baseline-method {
+    width: 67%;
+    word-break: break-word;
 }
 
 .meri-plan #serviceTargetsContainer td.service {
@@ -129,19 +139,19 @@ table tr.header th {
     width: 23%;
 }
 .meri-plan .risk-likelihood {
-    width: 10%;
+    width: 8%;
 }
 .meri-plan .risk-consequence {
-    width: 10%;
+    width: 8%;
 }
 .meri-plan .risk-rating {
-    width: 10%;
+    width: 8%;
 }
 .meri-plan .risk-control {
-    width: 23%;
+    width: 31%;
 }
 .meri-plan .residual-risk {
-    width: 10%;
+    width: 8%;
 }
 .meri-plan .risk-actions {
      width: 1em;

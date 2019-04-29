@@ -14,7 +14,8 @@ var Reef2050ReportSelectorViewModel = function(reports, options) {
         contentSelector: '#reportContents',
         dataTableSelector: 'table.actions',
         showReportInline: true,
-        loadingSelector: '.reef-report-loading'
+        loadingSelector: '.reef-report-loading',
+        approvedActivitiesOnly: true
     };
 
     var config = _.defaults(options, defaults);
@@ -22,7 +23,7 @@ var Reef2050ReportSelectorViewModel = function(reports, options) {
     self.reportPeriods = reports;
 
     self.selectedPeriod = ko.observable();
-    self.approvedActivitiesOnly = ko.observable(true);
+    self.approvedActivitiesOnly = ko.observable(config.approvedActivitiesOnly);
     self.format = ko.observable("html");
     self.formatOptions = ["html", "pdf", "dashboard"];
 

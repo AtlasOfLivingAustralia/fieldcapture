@@ -1,3 +1,4 @@
+<div data-bind="let:{details:meriPlan()}">
 <div class="row-fluid space-after">
     <div>
         <div class="well well-small">
@@ -277,4 +278,5 @@
             <select style="width: 10%;" data-bind="options: obligationOptions, optionsCaption: 'Please select', value:details.policies, disable: isProjectDetailsLocked()"> </select>
         </div>
     </div>
+</div>
 </div>

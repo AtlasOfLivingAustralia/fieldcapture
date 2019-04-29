@@ -25,159 +25,6 @@
 /*
     Utilities for managing project representations.
  */
-
-/**
- * A chance to make any on-the-fly changes to projects as they are opened.
- * @param project
- * @param callback optional callback for the results of any asynch saves
- * @returns updated project object
- */
-function checkAndUpdateProject (project, callback, programs) {
-    var propertiesToSave = {},
-        isEmpty=function(x,p){for(p in x)return!1;return!0};
-    // add any checks here - return true if the project representation needs to be saved
-    var program = null;
-    if (programs && project.associatedProgram) {
-        var matchingProgram = $.grep(programs.programs, function(program, index) {
-            return program.name == project.associatedProgram;
-        });
-        program = matchingProgram[0];
-    }
-    propertiesToSave = $.extend(propertiesToSave, createTimelineIfMissing(project, program));
-    // check for saves
-    if (!isEmpty(propertiesToSave) && fcConfig.projectUpdateUrl !== undefined) {
-        $.ajax({
-            url: fcConfig.projectUpdateUrl,
-            type: 'POST',
-            data: JSON.stringify(propertiesToSave),
-            contentType: 'application/json',
-            success: function (data) {
-                if (callback) {
-                    if (data.error) {
-                        callback.call(this, 'error', data.detail + ' \n' + data.error);
-                    } else {
-                        callback.call(this, 'success');
-                    }
-                }
-            },
-            error: function (data) {
-                if (callback) {
-                    callback.call(this, 'error', data.status);
-                }
-            }
-        });
-    }
-    return project;
-}
-
-/**
- * Injects a newly created timeline if none exists.
- * Clears (but can't delete) any currentStage property. This prop is
- * deprecated because current stage is calculated from the timeline and
- * the current date.
- * @param project
- * @returns updated properties
- */
-function createTimelineIfMissing (project, program) {
-    if (project.timeline === undefined) {
-        var props = {};
-        if (project.currentStage !== undefined) {
-            props.currentStage = '';
-        }
-        if (program) {
-            addTimelineBasedOnStartDate(project, program.reportingPeriod, program.reportingPeriodAlignedToCalendar || false);
-        }
-        else {
-            addTimelineBasedOnStartDate(project);
-        }
-        props.timeline = project.timeline;
-        return props;
-    }
-    return {};
-}
-
-/**
- * Creates a default timeline based on project start date.
- * Assumes 6 monthly stages with the first containing the project's
- * planned start date.
- * @param project
- */
-function addTimelineBasedOnStartDate (project, reportingPeriod, alignToCalendar) {
-
-    if (!reportingPeriod) {
-        reportingPeriod = 6;
-    }
-    if (alignToCalendar == undefined) {
-        alignToCalendar = true;
-    }
-
-    // planned start date should be an ISO8601 UTC string
-    if (project.plannedStartDate === undefined || project.plannedStartDate === '') {
-        // make one up so we can proceed
-        project.plannedStartDate = new Date(Date.now()).toISOStringNoMillis();
-    }
-    if (project.plannedEndDate === undefined || project.plannedEndDate === '') {
-        // make one up so we can proceed
-        var endDate = new Date(Date.now());
-        endDate = endDate.setUTCFullYear(endDate.getUTCFullYear()+5);
-        project.plannedEndDate = endDate.toISOStringNoMillis();
-    }
-
-    var date = Date.fromISO(project.plannedStartDate),
-        endDate = Date.fromISO(project.plannedEndDate),
-        i = 0;
-
-    if (alignToCalendar) {
-        var month = date.getMonth();
-        var numPeriods = Math.floor(month/reportingPeriod);
-        var monthOfStartDate = numPeriods*reportingPeriod;
-        var dayOfStartDate = 1;
-
-        date = new Date(date.getFullYear(), monthOfStartDate, dayOfStartDate);
-    }
-    project.timeline = [];
-
-    var duration = moment.duration({'months':reportingPeriod});
-
-    var periodStart = moment(date);
-    while (periodStart.isBefore(endDate)) {
-
-        var periodEnd = moment(periodStart).add(duration);
-        var period = {
-            fromDate: periodStart.toISOString(),
-            toDate:periodEnd.toISOString()
-        };
-        period.name = 'Stage ' + (i + 1);
-        project.timeline.push(period);
-
-        // add 6 months to date
-        periodStart = periodEnd;
-        i++;
-    }
-}
-
-/**
- * Returns the from and to dates of the half year that the specified
- * date falls in.
- * @param date
- * @returns {{fromDate: string, toDate: string}}
- */
-function getSixMonthPeriodContainingDate (date) {
-    var year = date.getUTCFullYear(),
-        midYear = new Date(Date.UTC(year, 6, 0));
-    if (date.getTime() < midYear.getTime()) {
-        return {
-            fromDate: year + "-01-01T00:00:00Z",
-            toDate: year + "-07-01T00:00:00Z"
-        };
-    } else {
-        return {
-            fromDate: year + "-07-01T00:00:00Z",
-            toDate: (year + 1) + "-01-01T00:00:00Z"
-        };
-    }
-}
-
 /**
  * Returns the stage within the timeline that contains the specified date.
  * @param stages array of stage reports for the project.
@@ -208,31 +55,6 @@ function isStageReportable (project, stage) {
     // without having to wait for the scheduled reporting period.  (e.g. reporting period is 1 July / 1 Jan but the
     // project finishes in October)
     return stage.toDate < now || project.plannedEndDate < now;
-}
-
-function getBudgetHeaders(project) {
-	var headers = [];
-    var startYr = moment(project.plannedStartDate).format('YYYY');
-    var endYr = moment(project.plannedEndDate).format('YYYY');;
-    var startMonth = moment(project.plannedStartDate).format('M');
-    var endMonth = moment(project.plannedEndDate).format('M');
-
-    //Is startYr is between jan to june?
-    if(startMonth >= 1 &&  startMonth <= 6 ){
-        startYr--;
-    }
-
-    //Is the end year is between july to dec?
-    if(endMonth >= 7 &&  endMonth <= 12 ){
-        endYr++;
-    }
-
-    var count = endYr - startYr;
-    for (i = 0; i < count; i++){
-        headers.push(startYr + '/' + ++startYr);
-    }
-    return headers;
-
 }
 
 function isValid(p, a) {
@@ -675,108 +497,6 @@ function newDocumentDefaults(project, stageReportPrefix) {
     return {role:'information', maxStages: maxStages, stage:currentStage};
 }
 
-/**
- * View model for use by the citizen science project finder page.
- * @param props array of project attributes
- * @constructor
- */
-function CitizenScienceFinderProjectViewModel(props) {
-    ProjectViewModel.apply(this, [{
-        projectId: props[0],
-        aim: props[1],
-        description: props[3],
-        difficulty: props[4],
-        plannedEndDate: props[5] && new Date(props[5]),
-        hasParticipantCost: props[6],
-        hasTeachingMaterials: props[7],
-        isDIY: props[8],
-        isExternal: props[9],
-        isSuitableForChildren: props[10],
-        keywords: props[11],
-        links: props[12],
-        name: props[13],
-        organisationId: props[14],
-        organisationName: props[15],
-        scienceType: props[16],
-        plannedStartDate: props[17] && new Date(props[17]),
-        documents: [
-            {
-                public: true,
-                role: 'logo',
-                url: props[18]
-            }
-        ],
-        urlWeb: props[19]
-    }, false, []]);
-
-    var self = this;
-    self.transients.locality = props[2] && props[2].locality;
-    self.transients.state = props[2] && props[2].state;
-}
-
-/**
- * View model for use by the project create and edit pages.  Extends the ProjectViewModel to provide support
- * for organisation search and selection as well as saving project information.
- * @param project pre-populated or existing project data.
- * @param isUserEditor true if the user can edit the project.
- * @param userOrganisations the list of organisations for which the user is a member.
- * @param organisations the list of organisations for which the user is not a member.
- * @constructor
- */
-function CreateEditProjectViewModel(project, isUserEditor, userOrganisations, organisations, options) {
-    ProjectViewModel.apply(this, [project, isUserEditor, userOrganisations.concat(organisations)]);
-
-    var defaults = {
-        projectSaveUrl: fcConfig.projectUpdateUrl + '/' + (project.projectId || ''),
-        organisationCreateUrl: fcConfig.organisationCreateUrl,
-        blockUIOnSave:true,
-        storageKey:project.projectId?project.projectId+'.savedData':'projectData'
-    };
-    var config = $.extend(defaults, options);
-
-    var self = this;
-
-    // Automatically create the site of type "Project Area" with a name of "Project area for ..."
-    var siteViewModel = initSiteViewModel({type:'projectArea'});
-    siteViewModel.name = ko.computed(function() {
-        return 'Project area for '+self.name();
-    });
-    self.organisationSearch = new OrganisationSelectionViewModel(organisations, userOrganisations, project.organisationId);
-
-    self.organisationSearch.createOrganisation = function() {
-        var projectData = self.modelAsJSON();
-        amplify.store(config.storageKey, projectData);
-        var here = document.location.href;
-        document.location.href = config.organisationCreateUrl+'?returnTo='+here+'&returning=true';
-    };
-    self.organisationSearch.selection.subscribe(function(newSelection) {
-        if (newSelection) {
-            self.organisationId(newSelection.organisationId);
-        }
-    });
-
-    self.ignore = self.ignore.concat(['organisationSearch']);
-    self.transients.existingLinks = project.links;
-
-    self.modelAsJSON = function() {
-        var projectData = self.toJS();
-
-        var siteData = siteViewModel.toJS();
-        var documents = ko.mapping.toJS(self.documents());
-        self.fixLinkDocumentIds(self.transients.existingLinks);
-        var links = ko.mapping.toJS(self.links());
-
-        // Assemble the data into the package expected by the service.
-        projectData.projectSite = siteData;
-        projectData.documents = documents;
-        projectData.links = links;
-
-        return JSON.stringify(projectData);
-    };
-
-    autoSaveModel(self, config.projectSaveUrl, {blockUIOnSave:config.blockUIOnSave, blockUISaveMessage:"Saving project...", storageKey:config.storageKey});
-};
-
 
 /* data structures for handling output targets */
 Output = function (name, scores, existingTargets, changeCallback) {
@@ -1070,55 +790,18 @@ function exclusive (field, rules, i, options) {
     }
 };
 
-function ProjectServicesViewModel(project, config) {
+function ProjectPageViewModel(project, sites, activities, organisations, userRoles, config) {
     var self = this;
 
-    var services = project.services || [];
-    self.services = ko.observableArray(_.clone(services));
-
-    self.projectServicesEdited = ko.computed(function() {
-        return !_.isEqual(services, self.services());
-    });
-
-    self.undoChanges = function() {
-        self.services(_.clone(services));
-    };
-
-    // Save project services only
-    self.saveProjectServices = function() {
-
-        var servicesPayload = JSON.stringify({ services:self.services() });
-        $.ajax({
-            url: config.projectUpdateUrl,
-            type: 'POST',
-            data: servicesPayload,
-            contentType: 'application/json',
-            success: function (data) {
-                if (data.error) {
-                    showAlert("Failed to save services: " + data.detail + ' \n' + data.error,
-                        "alert-error","services-save-result-placeholder");
-                } else {
-                    services = _.clone(self.services());
-                    self.services.notifySubscribers();
-
-                    showAlert("Project services saved","alert-success","services-save-result-placeholder");
-                }
-            },
-            error: function (data) {
-                bootbox.alert('An unhandled error occurred: ' + data.status);
-            }
-        });
-    };
-}
-
-function ProjectPageViewModel(project, sites, activities, userRoles, config) {
-    var self = this;
-
+    var projectService = new ProjectService(project, config);
+    _.extend(this, projectService);
     _.extend(this, new ProjectViewModel(project, userRoles.editor, organisations));
-    _.extend(this, new MERIPlan(project, config));
 
-    var actionsConfig = _.extend({}, fcConfig, {declarationModalSelector:'#unlockPlan', meriSubmissionDeclarationSelector:'#meriSubmissionDeclaration'});
-    _.extend(this, new MERIPlanActions(project, actionsConfig));
+    var meriPlanConfig = _.extend({}, config, {
+        declarationModalSelector: '#unlockPlan',
+        meriSubmissionDeclarationSelector: '#meriSubmissionDeclaration'
+    });
+    self.meriPlan = new MERIPlan(project, projectService, meriPlanConfig);
 
     self.workOrderId = ko.observable(project.workOrderId);
     self.userIsCaseManager = ko.observable(userRoles.grantManager);
@@ -1132,6 +815,7 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
     self.contractDatesFixed.subscribe(function() {
         self.changeActivityDates(!self.contractDatesFixed());
     });
+
     self.transients.selectOrganisation = function(data){
         self.transients.organisation({organisationId:data.source.organisationId, name:data.label});
     };
@@ -1163,6 +847,33 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
                 return "The project end date must be after "+convertToSimpleDate(config.minimumProjectEndDate);
             }
         }
+
+    };
+
+    self.saveSettings = function () {
+        var jsData = {
+            name: self.name(),
+            description: self.description(),
+            externalId: self.externalId(),
+            grantId: self.grantId(),
+            workOrderId: self.workOrderId(),
+            manager: self.manager(),
+            plannedStartDate: self.plannedStartDate(),
+            plannedEndDate: self.plannedEndDate(),
+            contractStartDate: self.contractStartDate(),
+            contractEndDate: self.contractEndDate(),
+            organisationId: self.organisationId(),
+            organisationName: self.organisationName(),
+            orgIdSvcProvider: self.orgIdSvcProvider(),
+            serviceProviderName: self.serviceProviderName(),
+            associatedProgram: self.associatedProgram(),
+            associatedSubProgram: self.associatedSubProgram(),
+            funding: new Number(self.funding()),
+            status: self.status(),
+            promoteOnHomepage: self.promoteOnHomepage(),
+            changeActivityDates: self.changeActivityDates()
+        };
+        projectService.saveProjectData(jsData);
 
     };
 
@@ -1333,6 +1044,25 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
         return sitesViewModel;
     };
 
+    self.initialiseAdminTab = function() {
+        ko.applyBindings(self.meriPlan, document.getElementById("edit-meri-plan"));
+        self.meriPlan.meriPlan().dirtyFlag.reset();
+        self.meriPlan.attachFloatingSave();
+
+        // When the MERI plan is approved, the announcements move to their own section, otherwise they
+        // are embedded in the MERI plan itself.
+        var announcementsSection = document.getElementById("edit-announcements");
+        if (announcementsSection) {
+            ko.applyBindings(self.meriPlan, announcementsSection);
+        }
+
+    };
+
+    self.initialiseMeriPlan = function() {
+        ko.applyBindings(self.meriPlan, document.getElementById("view-meri-plan"));
+        initialiseDocumentTable('#meriPlanDocumentList');
+    };
+
     self.validateProjectStartDate = function() {
 
         var startDate = self.plannedStartDate();
@@ -1348,72 +1078,57 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
 
     };
 
-    self.saveProjectDetails = function(){
-        self.saveMeriPlan(false);
-    };
-
-    self.cancelProjectDetailsEdits = function() {
-        self.details.cancelAutosave();
-
-        document.location.reload(true);
-    };
-
-    self.meriPlanPDF = function() {
-        var url = config.meriPlanPDFUrl;
-        window.open(url,'meri-plan-report');
-    };
-
     self.saveAnnouncements = function(){
 
         if (!$('#risks-announcements').validationEngine('validate')) {
             return;
         }
-        self.details.saveWithErrorDetection(function() {
+        self.meriPlan.meriPlan().saveWithErrorDetection(function() {
             $(document).scrollTop(400);
             showAlert("Announcements saved", "alert-success", 'announcement-result-placeholder');
         });
     };
 
-    // Save project details
-    self.saveMeriPlan = function(enableSubmit){
-        var valid =  $('#project-details-validation').validationEngine('validate');
-
-        self.details.status('active');
-        self.details.lastUpdated = new Date().toISOStringNoMillis();
-
-        self.details.saveWithErrorDetection(function() {
-            if(enableSubmit) {
-                if (valid) {
-                    self.submitChanges();
-                }
-                else {
-                    bootbox.alert("Your MERI plan cannot be submitted until all validation errors are resolved");
-                }
-
-            }
+    self.regenerateStageReports = function() {
+        $.ajax(fcConfig.regenerateStageReportsUrl).done(function(data) {
+            document.location.reload();
+        }).fail(function(data) {
+            bootbox.alert('<span class="label label-warning">Error</span> <p>There was an error regenerating the stage reports: '+data+'</p>');
         });
-
     };
 
-    self.saveAndSubmitChanges = function(){
-        self.saveMeriPlan(true);
+    self.initialiseReports = function() {
     };
 
-    self.uploadVariationDoc = function(doc){
-        var json = JSON.stringify(doc, function (key, value) {
-            return value === undefined ? "" : value;
-        });
-        $.post(
-            config.documentUpdateUrl,
-            {document:json},
-            function(result) {
-                showAlert("Project end date saved","alert-success","save-settings-result-placeholder");
-                location.reload();
-            })
-            .fail(function() {
-                alert('Error saving document record');
-            });
+} // end of view model
+
+
+/** Constants representing the status of a project MERI plan */
+PlanStatus = {
+    SUBMITTED: 'submitted',
+    APPROVED: 'approved',
+    NOT_APPROVED: 'not approved',
+    UNLOCKED: 'unlocked for correction'
+};
+
+/**
+ * Handles common project and meri plan status functions as well as communication with the server for
+ * saving / submitting / approvals etc.
+ * @param project the project this service is working with.
+ * @param options mostly URLs to access server functions.
+ */
+function ProjectService(project, options) {
+
+    var self = this;
+    var defaults = {
+        submitPlanUrl : fcConfig.submitPlanUrl,
+        modifyPlanUrl : fcConfig.modifyPlanUrl,
+        approvalPlanUrl : fcConfig.approvalPlanUrl,
+        rejectPlanUrl : fcConfig.rejectPlanUrl
     };
+
+    var config = _.defaults(options, defaults);
+
     self.saveGrantManagerSettings = function () {
 
         if ($('#grantmanager-validation').validationEngine('validate')) {
@@ -1446,32 +1161,8 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
         }
     };
 
-    self.saveSettings = function () {
+    self.saveProjectData = function (jsData) {
         if ($('#settings-validation').validationEngine('validate')) {
-
-            // only collect those fields that can be edited in the settings pane
-            var jsData = {
-                name: self.name(),
-                description: self.description(),
-                externalId: self.externalId(),
-                grantId: self.grantId(),
-                workOrderId: self.workOrderId(),
-                manager: self.manager(),
-                plannedStartDate: self.plannedStartDate(),
-                plannedEndDate: self.plannedEndDate(),
-                contractStartDate: self.contractStartDate(),
-                contractEndDate: self.contractEndDate(),
-                organisationId: self.organisationId(),
-                organisationName: self.organisationName(),
-                orgIdSvcProvider: self.orgIdSvcProvider(),
-                serviceProviderName: self.serviceProviderName(),
-                associatedProgram: self.associatedProgram(),
-                associatedSubProgram: self.associatedSubProgram(),
-                funding: new Number(self.funding()),
-                status:self.status(),
-                promoteOnHomepage:self.promoteOnHomepage(),
-                changeActivityDates:self.changeActivityDates()
-            };
 
             // this call to stringify will make sure that undefined values are propagated to
             // the update call - otherwise it is impossible to erase fields
@@ -1501,15 +1192,119 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
             });
         }
     };
-    self.regenerateStageReports = function() {
-        $.ajax(fcConfig.regenerateStageReportsUrl).done(function(data) {
-            document.location.reload();
-        }).fail(function(data) {
-            bootbox.alert('<span class="label label-warning">Error</span> <p>There was an error regenerating the stage reports: '+data+'</p>');
+
+    self.uploadVariationDoc = function(doc){
+        var json = JSON.stringify(doc, function (key, value) {
+            return value === undefined ? "" : value;
+        });
+        $.post(
+            config.documentUpdateUrl,
+            {document:json},
+            function(result) {
+                showAlert("Project end date saved","alert-success","save-settings-result-placeholder");
+                location.reload();
+            })
+            .fail(function() {
+                alert('Error saving document record');
+            });
+    };
+
+    self.modifyPlan = function () {
+        self.saveStatus(config.modifyPlanUrl);
+    };
+    // approve plan and handle errors
+    self.approvePlan = function () {
+        self.saveStatus(config.approvalPlanUrl);
+    };
+    // reject plan and handle errors
+    self.rejectPlan = function () {
+        self.saveStatus(config.rejectPlanUrl);
+    };
+
+    self.finishCorrections = function () {
+        self.saveStatus(config.finishedCorrectingPlanUrl);
+    };
+
+    self.submitPlan = function(declarationText) {
+        self.saveStatus(config.submitPlanUrl, declarationText);
+    };
+
+    self.unlockPlan = function(declarationText) {
+        self.saveStatus(unlockPlanForCorrectionUrl, declarationText);
+    };
+
+    self.saveStatus = function (url, declaration) {
+        var payload = {projectId: project.projectId};
+        if (declaration) {
+            payload.declaration = declaration;
+        }
+        return $.ajax({
+            url: url,
+            type: 'POST',
+            data: JSON.stringify(payload),
+            contentType: 'application/json'
+        }).done(function (data) {
+            if (data.error) {
+                bootbox.alert("Unable to modify plan.\n" + data.error);
+            } else {
+                location.reload();
+            }
+        }).fail(function (data) {
+            if (data.status === 401) {
+                bootbox.alert("Unable to modify plan. You may not have the correct permissions.");
+            } else {
+                bootbox.alert("Unable to modify plan. An unhandled error occurred: " + data.status);
+            }
         });
     };
 
-    self.initialiseReports = function() {
+    self.isSubmittedOrApproved = function() {
+        return (project.planStatus == PlanStatus.APPROVED || project.planStatus == PlanStatus.SUBMITTED);
     };
 
-} // end of view model
+    self.isProjectDetailsLocked = ko.computed(function () {
+        return self.isSubmittedOrApproved();
+    });
+
+    self.isApproved = function() {
+        return project.planStatus == PlanStatus.APPROVED;
+    };
+
+    self.isSubmitted = function() {
+        return project.planStatus == PlanStatus.SUBMITTED;
+    };
+
+    self.isUnlockedForDataCorrection = function() {
+        return project.planStatus == PlanStatus.UNLOCKED;
+    };
+
+    self.isCompleted = function() {
+        return project.status && project.status.toLowerCase() == 'completed';
+    };
+
+    self.getBudgetHeaders = function() {
+        var headers = [];
+        var startYr = moment(project.plannedStartDate).format('YYYY');
+        var endYr = moment(project.plannedEndDate).format('YYYY');
+        var startMonth = moment(project.plannedStartDate).format('M');
+        var endMonth = moment(project.plannedEndDate).format('M');
+
+        //Is startYr is between jan to june?
+        if(startMonth >= 1 &&  startMonth <= 6 ){
+            startYr--;
+        }
+
+        //Is the end year is between july to dec?
+        if(endMonth >= 7 &&  endMonth <= 12 ){
+            endYr++;
+        }
+
+        var count = endYr - startYr;
+        for (i = 0; i < count; i++){
+            headers.push(startYr + '/' + ++startYr);
+        }
+        return headers;
+
+    }
+
+};

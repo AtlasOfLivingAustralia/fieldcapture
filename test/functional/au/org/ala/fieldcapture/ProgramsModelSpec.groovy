@@ -12,7 +12,7 @@ import spock.lang.Stepwise
 class ProgramsModelSpec extends FieldcaptureFunctionalTest {
 
     def setupSpec() {
-        useDataSet('data-set-1')
+        useDataSet('dataset1')
     }
 
     def "the programs model page should only be displayed to admins"() {

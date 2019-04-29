@@ -1,4 +1,5 @@
-
+<!-- ko stopBinding: true -->
+<div id="edit-meri-plan">
 <script id="submittedPlanTmpl" type="text/html">
 <div class="span6 required">
 	<div class="form-actions" >
@@ -59,17 +60,19 @@
 </div>
 
 <!--  Case manager actions -->
-<div class="row-fluid space-after" data-bind="visible: userIsCaseManager()">
+<g:if test="${user?.isCaseManager}">
+<div class="row-fluid space-after">
 	<div data-bind="template:meriGrantManagerActionsTemplate"></div>
 </div>
+</g:if>
 
 <g:if test="${projectContent.details.visible}">
 	<div class="save-details-result-placeholder"></div>
 	<div class="row-fluid space-after">
-		<div class="span6">
+		<div class="span12">
 			<div class="form-actions">
 				<div>
-					<label><input class="pull-left" type="checkbox"  data-bind="checked: details.caseStudy, disable: isProjectDetailsLocked()" />
+					<label><input class="pull-left" type="checkbox"  data-bind="checked: meriPlan().caseStudy, disable: isProjectDetailsLocked()" />
 					<span>&nbsp;Are you willing for your project to be used as a case study by the Department?</span></label>
 				</div>
 				<br/>
@@ -79,8 +82,9 @@
 				<button type="button" class="btn btn-info" data-bind="click: meriPlanPDF">Generate PDF</button>
 
 				<!--  Admin - submit to approval. -->
-				<div data-bind="if: userIsAdmin()">
-					<div data-bind="if: planStatus() == 'not approved' || planStatus() == ''">
+				<g:if test="${user?.isAdmin}">
+				<div>
+					<div data-bind="if: !isSubmittedOrApproved()">
 						<hr/>
 						<b>Admin actions:</b>
 						<g:if test="${showMERIActivityWarning}">
@@ -88,9 +92,14 @@
 							<li>You will not be able to report activity data until your MERI plan has been approved by your case manager.</li>
 						</ul>
 						</g:if>
+						<g:if test="${allowMeriPlanUpload}">
+							<div class="btn fileinput-button"
+								 data-bind="fileUploadNoImage:meriPlanUploadConfig"><i class="icon-plus"></i> <input
+									type="file" name="meriPlan"><span>Upload MERI Plan</span></div>
+						</g:if>
 						<button type="button" data-bind="click: saveAndSubmitChanges" class="btn btn-info">Submit for approval</button>
 					</div>
-					<div data-bind="if: planStatus() == 'submitted' || planStatus() == 'approved'">
+					<div data-bind="if: isSubmittedOrApproved()">
                         <g:if test="${showMERIActivityWarning}">
 						<hr/>
 
@@ -101,6 +110,7 @@
 						</g:if>
 					</div>
 				</div>
+				</g:if>
 			</div>
 
 		</div>
@@ -111,15 +121,16 @@
 	</div>
 
 	<g:render template="${meriPlanTemplate}"/>
+
 </g:if>
 
 <div class="save-details-result-placeholder"></div>
 
 <div class="row-fluid space-after">
-	<div class="span6">
+	<div class="span12">
 		<div class="form-actions">
 			<div>
-				<label><input class="pull-left" type="checkbox"  data-bind="checked: details.caseStudy, disable: isProjectDetailsLocked()" />
+				<label><input class="pull-left" type="checkbox"  data-bind="checked: meriPlan().caseStudy, disable: isProjectDetailsLocked()" />
 				<span>&nbsp;Are you willing for your project to be used as a case study by the Department?</span></label>
 			</div>
 			<br/>
@@ -129,8 +140,9 @@
 			<g:if test="${projectContent.details.visible}"><button type="button" class="btn btn-info" data-bind="click: meriPlanPDF">Generate PDF</button></g:if>
 
 			<!--  Admin - submit to approval. -->
-			<div data-bind="if: userIsAdmin()">
-				<div data-bind="if: planStatus() == 'not approved' || planStatus() == ''">
+			<g:if test="${user?.isAdmin}">
+			<div>
+				<div data-bind="if:!isSubmittedOrApproved()">
 					<hr/>
 					<b>Admin actions:</b>
 					<g:if test="${showActivityWarning}">
@@ -138,9 +150,15 @@
 						<li>You will not be able to report activity data until your MERI plan has been approved by your grant manager.</li>
 					</ul>
 					</g:if>
+					<g:if test="${allowMeriPlanUpload}">
+						<div class="btn fileinput-button"
+							 data-bind="fileUploadNoImage:meriPlanUploadConfig"><i class="icon-plus"></i>
+							<input type="file" name="meriPlan"><span>Upload MERI Plan</span>
+						</div>
+					</g:if>
 					<button type="button" data-bind="click: saveAndSubmitChanges" class="btn btn-info">Submit for approval</button>
 				</div>
-				<div data-bind="if: planStatus() == 'submitted' || planStatus() == 'approved'">
+				<div data-bind="if: isSubmittedOrApproved()">
                     <g:if test="${showMERIActivityWarning}">
                     <hr/>
 					<b>Admin:</b>
@@ -150,6 +168,7 @@
 					</g:if>
 				</div>
 			</div>
+			</g:if>
 		</div>
 
 	</div>
@@ -159,3 +178,5 @@
 	<div class="transparent-background"></div>
 	<div><button class="right btn btn-info" data-bind="click: saveProjectDetails">Save changes</button></div>
 </div>
+</div>
+<!-- /ko -->

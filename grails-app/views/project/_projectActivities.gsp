@@ -6,7 +6,7 @@
     </div>
 </g:if>
 <g:if test="${risksAndThreatsVisible}">
-    <div class="validationEngineContainer" id="risk-validation">
+    <div class="validationEngineContainer" id="risk-validation" data-bind="with:meriPlan">
         <g:render template="riskTable" model="[project:project]"/>
     </div>
 </g:if>

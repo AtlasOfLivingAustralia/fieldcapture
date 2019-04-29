@@ -31,7 +31,7 @@
 
 <div class="row-fluid">
     <p>Configure the report options below then press View Report to open the report in a new tab</p>
-    <form class="report-selector form-horizontal">
+    <form id="reef-report-selector" class="report-selector form-horizontal">
         <div class="control-group">
             <label class="control-label">Select period: </label>
             <div class="controls">
@@ -111,7 +111,7 @@
             reportUrl: reportUrl,
             showReportInline: false
         };
-        ko.applyBindings(new Reef2050ReportSelectorViewModel(reportConfig, options), document.getElementById('reef-2050-reports'));
+        ko.applyBindings(new Reef2050ReportSelectorViewModel(reportConfig, options), document.getElementById('reef-report-selector'));
 
     });
 

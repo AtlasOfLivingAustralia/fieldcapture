@@ -1,4 +1,4 @@
-<div class="meri-plan">
+<div class="meri-plan"  data-bind="let:{details:meriPlan()}">
     <h4>Program Outcome</h4>
     <table class="table">
         <thead>
@@ -16,15 +16,15 @@
 
             </td>
             <td colspan="2" class="priority">
-                <!-- ko if:!$root.isAgricultureProject() -->
+                <!-- ko if:!isAgricultureProject() -->
 
                 <select style="width:100%" class="asset" data-validation-engine="validate[required]" data-bind="options:details.outcomes.outcomePriorities(details.outcomes.primaryOutcome.description()), optionsCaption: 'Please select', value:details.outcomes.primaryOutcome.asset, disable: isProjectDetailsLocked()" >
                 </select>
                 <!-- /ko -->
-                <!-- ko if:$root.isAgricultureProject() -->
+                <!-- ko if:isAgricultureProject() -->
                 <ul class="unstyled" data-bind="foreach:details.outcomes.outcomePriorities(details.outcomes.primaryOutcome.description())">
                     <li>
-                        <label class="checkbox"><input type="checkbox" name="secondaryPriority" data-validation-engine="validate[minCheckbox[1],maxCheckbox[2]" data-bind="value:$data, checked:$parent.details.outcomes.primaryOutcome.assets, disable: $parent.isProjectDetailsLocked()"> <!--ko text: $data--><!--/ko--></label>
+                        <label class="checkbox"><input type="checkbox" name="secondaryPriority" data-validation-engine="validate[minCheckbox[1],maxCheckbox[2]" data-bind="value:$data, checked:details.outcomes.primaryOutcome.assets, disable: $parent.isProjectDetailsLocked()"> <!--ko text: $data--><!--/ko--></label>
                     </li>
                 </ul>
 
@@ -49,10 +49,10 @@
         <tbody data-bind="foreach:details.outcomes.secondaryOutcomes">
         <tr>
             <td class="outcome-priority"><select data-validation-engine="validate[required]"
-                                                 data-bind="value:description, options: $parent.details.outcomes.selectableOutcomes, optionsCaption: 'Please select', disable: $root.isProjectDetailsLocked()"></select>
+                                                 data-bind="value:description, options: details.outcomes.selectableOutcomes, optionsCaption: 'Please select', disable: $parent.isProjectDetailsLocked()"></select>
             </td>
             <td class="priority">
-                <select data-bind="value:asset, options:$root.details.outcomes.outcomePriorities(description()), optionsCaption: 'Please select', disable: $root.isProjectDetailsLocked()" class="input-large asset"></select>
+                <select data-bind="value:asset, options: details.outcomes.outcomePriorities(description()), optionsCaption: 'Please select', disable: $parent.isProjectDetailsLocked()" class="input-large asset"></select>
             </td>
             <td class="remove">
                 <span data-bind="if:!$parent.isProjectDetailsLocked()">
@@ -233,7 +233,7 @@
         <thead>
         <th class="index"></th>
         <th class="baseline required">Project baseline</th>
-        <th class="baseline required">Describe the method used to obtain the baseline, or how the baseline will be established <fc:iconHelp>Describe the project baseline(s) units of measure or data which will be used to report progress towards this project's outcomes (short-term, medium-term and 5 year program outcome), and the monitoring design.</fc:iconHelp></th>
+        <th class="baseline-method required">Describe the method used to obtain the baseline, or how the baseline will be established <fc:iconHelp>Describe the project baseline(s) units of measure or data which will be used to report progress towards this project's outcomes (short-term, medium-term and 5 year program outcome), and the monitoring design.</fc:iconHelp></th>
         <th class="remove"></th>
         </thead>
         <tbody data-bind="foreach: rows">
@@ -244,7 +244,7 @@
                               data-bind="value: baseline, disable: $root.isProjectDetailsLocked()">
                     </textarea>
                 </td>
-                <td class="baseline"><textarea data-validation-engine="validate[required]"
+                <td class="baseline-method"><textarea data-validation-engine="validate[required]"
                         data-bind="value: method, disable: $root.isProjectDetailsLocked()"
                         rows="4"></textarea></td>
                 <td class="remove">
@@ -270,7 +270,7 @@
         <tr>
             <th class="index"></th>
             <th class="baseline required">Project monitoring indicators</th>
-            <th class="baseline required">Describe the project monitoring indicator approach</th>
+            <th class="baseline-method required">Describe the project monitoring indicator approach</th>
             <th class="remove"></th>
         </tr>
         </thead>
@@ -282,7 +282,7 @@
                           data-bind="value: data1, disable: $parent.isProjectDetailsLocked()">
                 </textarea>
             </td>
-            <td class="baseline"><textarea data-validation-engine="validate[required]"
+            <td class="baseline-method"><textarea data-validation-engine="validate[required]"
                     data-bind="value: data2, disable: $parent.isProjectDetailsLocked()"
                     rows="4"></textarea></td>
             <td class="remove">

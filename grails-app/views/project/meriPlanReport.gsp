@@ -8,6 +8,7 @@
     var fcConfig = {
         serverUrl: "${grailsApplication.config.grails.serverURL}",
         imageLocation:"${assetPath(src:'/')}",
+        healthCheckUrl:"${createLink(controller:'ajax', action:'keepSessionAlive')}",
         returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
     },
         here = window.location.href;
@@ -53,8 +54,7 @@
         var outcomes = ${config.outcomes?:[]};
         project.outcomes = outcomes;
         config.useRlpTemplate = services.length > 0;
-        var outcomesAndAssets = ${assetsByOutcome ?: []};
-        var viewModel = new MERIPlan(project, config);
+        var viewModel = new MERIPlan(project, new ProjectService(config), config);
         viewModel.description = project.description;
         ko.applyBindings(viewModel);
     });

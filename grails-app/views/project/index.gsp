@@ -80,6 +80,8 @@
         spinnerUrl:"${asset.assetPath(src:'loading.gif')}",
         projectSitesUrl:"${createLink(action:'ajaxProjectSites', id:project.projectId)}",
         useGoogleBaseMap: ${grails.util.Environment.current == grails.util.Environment.PRODUCTION},
+        meriPlanUploadUrl:"${createLink(controller:'project', action:'uploadMeriPlan', id:project.projectId)}",
+        leafletIconPath:"${assetPath(src:'leaflet-0.7.7/images')}",
         returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
 
     },
@@ -237,6 +239,7 @@
                 documentUpdateUrl: fcConfig.documentUpdateUrl,
                 projectUpdateUrl: fcConfig.projectUpdateUrl,
                 projectScoresUrl: fcConfig.projectScoresUrl,
+                meriPlanUploadUrl: fcConfig.meriPlanUploadUrl,
                 meriStorageKey:PROJECT_DETAILS_KEY,
                 minimumProjectEndDate: ${projectContent.admin.minimumProjectEndDate?'"'+projectContent.admin.minimumProjectEndDate+'"':'null'}
             };
@@ -257,13 +260,14 @@
                config.risksStorageKey = PROJECT_RISKS_KEY;
             }
 
+            config.autoSaveIntervalInSeconds = ${grailsApplication.config.fieldcapture.autoSaveIntervalInSeconds?:60};
             config.riskAndThreatTypes = ${config.riskAndThreatTypes ?: 'null'};
 
-            var outcomesAndAssets = ${assetsByOutcome ?: []};
             var viewModel = new ProjectPageViewModel(
                 project,
                 project.sites,
                 project.activities || [],
+                organisations,
                 userRoles,
                 config);
 
@@ -273,45 +277,11 @@
             window.validateProjectEndDate = viewModel.validateProjectEndDate;
             window.validateProjectStartDate = viewModel.validateProjectStartDate;
 
-            autoSaveModel(
-                viewModel.details,
-                fcConfig.projectUpdateUrl,
-                {
-                    storageKey:PROJECT_DETAILS_KEY,
-                    autoSaveIntervalInSeconds:${grailsApplication.config.fieldcapture.autoSaveIntervalInSeconds?:60},
-                    restoredDataWarningSelector:'#restoredData',
-                    resultsMessageSelector:'.save-details-result-placeholder',
-                    timeoutMessageSelector:'#timeoutMessage',
-                    errorMessage:"Failed to save MERI Plan: ",
-                    successMessage: 'MERI Plan saved',
-                    preventNavigationIfDirty:true,
-                    defaultDirtyFlag:ko.dirtyFlag,
-                    healthCheckUrl:fcConfig.healthCheckUrl
-                });
 
-
-            $('#project-details-save').appear().on('appear', function() {
-                $('#floating-save').slideUp(400);
-            }).on('disappear', function() {
-                if (viewModel.details.dirtyFlag.isDirty()) {
-                    $('#floating-save').slideDown(400);
-                }
-                else {
-                    $('#floating-save').slideUp(400);
-                }
-            });
-            viewModel.details.dirtyFlag.isDirty.subscribe(function(dirty) {
-                if (dirty && !$('#floating-save').is(':appeared')) {
-                   $('#floating-save').slideDown(400);
-                }
-                else {
-                    $('#floating-save').slideUp(400);
-                }
-            });
             if (config.risksStorageKey) {
 
                 autoSaveModel(
-                    viewModel.risks,
+                    viewModel.meriPlan.risks,
                     fcConfig.projectUpdateUrl,
                     {
                         storageKey:PROJECT_RISKS_KEY,
@@ -397,7 +367,7 @@
                 },
                 'details': {
                     initialiser: function () {
-                        initialiseDocumentTable('#meriPlanDocumentList');
+                        viewModel.initialiseMeriPlan();
                     }
                 },
                 'reporting': {
@@ -407,8 +377,7 @@
                 },
                 'admin': {
                     initialiser: function () {
-                        //populatePermissionsTable();
-                        //$(options.reportingConfigSelector).validationEngine();
+                        viewModel.initialiseAdminTab();
                     }
                 }
             };
@@ -419,15 +388,14 @@
             var meriPlanVisible = false;
             var risksVisible = false;
             $('a[data-toggle="tab"]').on('show', function(e) {
-
-                if (meriPlanVisible && viewModel.details.dirtyFlag.isDirty()) {
+               if (meriPlanVisible && viewModel.meriPlan.meriPlan().dirtyFlag.isDirty()) {
                     e.preventDefault();
                     bootbox.alert($('#meriPlanUnsavedChanges').html());
                 }
                 else {
                     meriPlanVisible = (e.target.hash  == '#projectDetails');
                 }
-                if (risksVisible && viewModel.risks.dirtyFlag.isDirty()) {
+                if (risksVisible && viewModel.meriPlan.risks.dirtyFlag.isDirty()) {
                     e.preventDefault();
                     bootbox.alert($('#risksUnsavedChanges').html());
                 }

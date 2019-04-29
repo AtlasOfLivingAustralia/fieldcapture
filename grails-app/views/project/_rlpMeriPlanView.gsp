@@ -1,4 +1,4 @@
-<div class="meri-plan">
+<div class="meri-plan" data-bind="let:{details:meriPlan()}">
     <h4>Program Outcome</h4>
     <table class="table">
         <thead>
@@ -159,7 +159,7 @@
         <thead>
         <th class="index"></th>
         <th class="baseline required">Project baseline</th>
-        <th class="baseline required">The method used to obtain the baseline, or how the baseline will be established</th>
+        <th class="baseline-method required">The method used to obtain the baseline, or how the baseline will be established</th>
         </thead>
         <tbody data-bind="foreach: rows">
         <tr>
@@ -167,7 +167,7 @@
             <td class="baseline">
                 <span data-bind="text: baseline"></span>
             </td>
-            <td class="baseline">
+            <td class="baseline-method">
                 <span data-bind="text: method"></span>
             </td>
 
@@ -182,7 +182,7 @@
         <tr>
             <th class="index"></th>
             <th class="baseline required">Project monitoring indicators</th>
-            <th class="baseline required">Project monitoring indicator approach</th>
+            <th class="baseline-method required">Project monitoring indicator approach</th>
         </tr>
         </thead>
         <tbody data-bind="foreach : details.keq.rows">
@@ -192,7 +192,7 @@
                 <span data-bind="text: data1">
                 </span>
             </td>
-            <td class="baseline">
+            <td class="baseline-method">
                 <span data-bind="text: data2"></span>
             </td>
         </tr>

@@ -1,3 +1,4 @@
+
 <g:set var="disableCondition" value="${disableConditionPrefix}\$parent.isProjectDetailsLocked()"/>
 <div class="well well-small">
     <label>
