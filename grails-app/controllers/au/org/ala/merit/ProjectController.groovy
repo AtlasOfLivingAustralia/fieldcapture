@@ -184,7 +184,7 @@ class ProjectController {
             rlpModel.admin.meriPlanTemplate = RLP_MERI_PLAN_TEMPLATE
             rlpModel.admin.projectServices = config.services
             rlpModel.admin.showMERIActivityWarning = false
-            rlpModel.admin.allowMeriPlanUpload = true
+            rlpModel.admin.allowMeriPlanUpload = false
             rlpModel.admin.showSpecies = false
             rlpModel.admin.hidePrograms = true
             rlpModel.admin.showAnnouncementsTab = false
