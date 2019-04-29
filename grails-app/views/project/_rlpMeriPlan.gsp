@@ -18,7 +18,7 @@
             <td colspan="2" class="priority">
                 <!-- ko if:!isAgricultureProject() -->
 
-                <select style="width:100%" class="asset" data-validation-engine="validate[required]" data-bind="options:details.outcomes.outcomePriorities(details.outcomes.primaryOutcome.description()), optionsCaption: 'Please select', value:details.outcomes.primaryOutcome.asset, disable: isProjectDetailsLocked()" >
+                <select style="width:100%" class="asset" data-validation-engine="validate[required]" data-bind="options:details.outcomes.outcomePriorities(details.outcomes.primaryOutcome.description()), optionsCaption: 'Please select', value:details.outcomes.primaryOutcome.asset, select2:{},  disable: isProjectDetailsLocked()" >
                 </select>
                 <!-- /ko -->
                 <!-- ko if:isAgricultureProject() -->
