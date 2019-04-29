@@ -20,19 +20,19 @@ class MeriPlanMapper {
     private static final String ANOTHER_MERI_PLAN_SHEET_NAME = 'MERI plan'
 
     private List sections = [
-            [sectionStart:'Program outcome', sectionEnd:'Secondary Regional Land Partnerships outcome(s)', loader:this.&loadPrimaryOutcome],
-            [sectionStart:'Secondary Regional Land Partnerships outcome(s)', sectionEnd:'Short-term outcome statement/s *', loader:this.&loadSecondaryOutcomes],
-            [sectionStart:'Short-term outcome statement/s *', sectionEnd:'Medium-term outcome statement/s *', loader:this.&loadShortTermOutcomes],
-            [sectionStart:'Medium-term outcome statement/s *', sectionEnd:'Project details', loader:this.&loadMediumTermOutcomes],
-            [sectionStart:'Project details', sectionEnd:'Environment projects only (Primary outcomes 1-4)', loader:this.&loadProjectDescription],
-            [sectionStart:'Environment projects only (Primary outcomes 1-4)', sectionEnd:'Agriculture projects only (Primary outcomes 5 or 6)', loader:this.&loadThreatsAndInterventions],
-            [sectionStart:'Agriculture projects only (Primary outcomes 5 or 6)', sectionEnd:'Project methodology (4000 character limit [approx. 650 words]) *', loader:this.&loadRationale],
-            [sectionStart:'Project methodology (4000 character limit [approx. 650 words]) *', sectionEnd:'Monitoring methodology', loader:this.&loadProjectMethodology],
-            [sectionStart:'Monitoring methodology', sectionEnd:'Add row', loader:this.&loadMonitoringBaselineAndIndicators],
-            [sectionStart:'Project review, evaluation and improvement methodology and approach * (3000 character limit [approximately 500 words])', sectionEnd:'Relevant national and regional plans', loader:this.&loadProjectEvaluationApproach],
-            [sectionStart:'Relevant national and regional plans', sectionEnd:'Project services and minimum targets  *', loader:this.&loadPlans],
-            [sectionStart:'Project services and minimum targets  *', sectionEnd:'Project risks', loader:this.&loadServices],
-            [sectionStart:'Project risks', sectionEnd:'END OF DOCUMENT', loader:this.&loadRisks]]
+            [title:'Program outcome', sectionStart:'Program outcome', sectionEnd:'Secondary Regional Land Partnerships outcome(s)', loader:this.&loadPrimaryOutcome],
+            [title:'Additional benefits', sectionStart:'Secondary Regional Land Partnerships outcome(s)', sectionEnd:'Short-term outcome statement/s *', loader:this.&loadSecondaryOutcomes],
+            [title:'Short term outcome statement/s', sectionStart:'Short-term outcome statement/s *', sectionEnd:'Medium-term outcome statement/s *', loader:this.&loadShortTermOutcomes],
+            [title:'Medium-term outcome statement/s *', sectionStart:'Medium-term outcome statement/s *', sectionEnd:'Project details', loader:this.&loadMediumTermOutcomes],
+            [title:'Project details', sectionStart:'Project details', sectionEnd:'Environment projects only (Primary outcomes 1-4)', loader:this.&loadProjectDescription],
+            [title:'Key threats', sectionStart:'Environment projects only (Primary outcomes 1-4)', sectionEnd:'Agriculture projects only (Primary outcomes 5 or 6)', loader:this.&loadThreatsAndInterventions],
+            [title:'Project methodology', sectionStart:'Agriculture projects only (Primary outcomes 5 or 6)', sectionEnd:'Project methodology (4000 character limit [approx. 650 words]) *', loader:this.&loadRationale],
+            [title:'Project methodology', sectionStart:'Project methodology (4000 character limit [approx. 650 words]) *', sectionEnd:'Monitoring methodology', loader:this.&loadProjectMethodology],
+            [title:'Monitoring methodology', sectionStart:'Monitoring methodology', sectionEnd:'Add row', loader:this.&loadMonitoringBaselineAndIndicators],
+            [title:'Project review', sectionStart:'Project review, evaluation and improvement methodology and approach * (3000 character limit [approximately 500 words])', sectionEnd:'Relevant national and regional plans', loader:this.&loadProjectEvaluationApproach],
+            [title:'National and regional plans', sectionStart:'Relevant national and regional plans', sectionEnd:'Project services and minimum targets  *', loader:this.&loadPlans],
+            [title:'Project services and targets', sectionStart:'Project services and minimum targets  *', sectionEnd:'Project risks', loader:this.&loadServices],
+            [title:'Project risks', sectionStart:'Project risks', sectionEnd:'END OF DOCUMENT', loader:this.&loadRisks]]
 
     private List sectionHeadings = sections.collect{it.sectionStart}
 
@@ -85,12 +85,11 @@ class MeriPlanMapper {
                     firstCell = getCellValue(row, "A")
                 }
                 Map section = sections.find{it.sectionStart == currentHeading}
-                println "Loading section ${currentHeading} ${section}"
                 if (section) {
                     Map result = loadSection(rows, section.loader)
                     meriPlanResult = merge(meriPlanResult, result.data)
                     if (result.messages) {
-                        processingMessages.addAll(result.messages)
+                        processingMessages.add(heading:section.title, messages:result.messages)
                     }
                 }
                 currentHeading = firstCell
@@ -313,7 +312,7 @@ class MeriPlanMapper {
                     scoreId = matchedService.scores[0].scoreId
                 }
                 else {
-                    messages << "Unable to match target \"${matcher.group(0)?.trim()}\" to an output target measure for service \"${matchedService.name}\""
+                    messages << "<b>${matchedService.name}</b>: \"${matcher.group(0)?.trim()}\""
                 }
                 targets << [target:target, scoreId: scoreId]
             }
@@ -327,7 +326,7 @@ class MeriPlanMapper {
                     }
                     else {
                         targets << [target:target, scoreId: null]
-                        messages.addAll("No matching target measure \"${result.value}\" for service \"${matchedService.name}\"")
+                        messages.addAll("<b>${matchedService.name}</b>: \"${result.value}\"")
                     }
                 }
             }
@@ -456,7 +455,7 @@ class MeriPlanMapper {
                 }
             }
             else {
-                results.messages = ["No match found for ${config.category?:""} \"$value\""]
+                results.messages = ["<b>${config.category?:""}</b>: \"$value\""]
             }
         }
 

@@ -17,15 +17,23 @@ function MERIPlan(project, projectService, config) {
     self.meriPlanUploadComplete = function (e, data) {
         if (data.result) {
             self.loadMeriPlan(data.result.meriPlan);
-            var message = "<p><strong>Load results</strong></p>";
+
+            var message = "<p><strong>Please check whether the following MERI Plan details have been uploaded correctly. " +
+                "If not, you may manually update these fields in the form.  Some items may not upload if words are misspelt or contain additional spaces</strong></p>";
+
             if (data.result.messages) {
-                message +="<ul><li>";
-                message += data.result.messages.join("</li><li>");
-                message += "</li></ul>";
+                _.each(data.result.messages || [], function(messages) {
+                    message += "<p><strong>"+messages.heading+"</strong></p>";
+                    message +="<ul><li>";
+                    message += messages.messages.join("</li><li>");
+                    message += "</li></ul>";
+                });
             }
             message += "<p>Please check your data is correct before submitting your plan, in particular the investment priorities and services.</p>";
 
             bootbox.alert(message);
+            $('.meri-upload-results').popover({container:'body', trigger:'hover'});
+
         } else {
             self.meriPlanUploadFailed(e, data);
         }
