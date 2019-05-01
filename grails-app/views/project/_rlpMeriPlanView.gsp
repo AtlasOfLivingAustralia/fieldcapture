@@ -95,7 +95,7 @@
         </thead>
         <tbody>
         <tr>
-            <td><span data-bind="text:description"></span></td>
+            <td><span data-bind="text:details.description"></span></td>
         </tr>
         </tbody>
     </table>
