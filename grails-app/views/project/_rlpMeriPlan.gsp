@@ -52,7 +52,7 @@
                                                  data-bind="value:description, options: details.outcomes.selectableOutcomes, optionsCaption: 'Please select', disable: $parent.isProjectDetailsLocked()"></select>
             </td>
             <td class="priority">
-                <select data-bind="value:asset, options: details.outcomes.outcomePriorities(description()), optionsCaption: 'Please select', disable: $parent.isProjectDetailsLocked()" class="input-large asset"></select>
+                <select data-bind="value:asset, options: details.outcomes.outcomePriorities(description()), optionsCaption: 'Please select', select2:{}, disable: $parent.isProjectDetailsLocked()" class="input-large asset"></select>
             </td>
             <td class="remove">
                 <span data-bind="if:!$parent.isProjectDetailsLocked()">
