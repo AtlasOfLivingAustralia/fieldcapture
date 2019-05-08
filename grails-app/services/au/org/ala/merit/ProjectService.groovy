@@ -602,13 +602,13 @@ class ProjectService  {
 
     /**
      * This method changes a project start and end date
-     * It can only be called for projects in the "planning" phase.
+     *
      * @param projectId the ID of the project
      * @param plannedStartDate an ISO 8601 formatted date string describing the new start date of the project.
      * * @param plannedStartDate an ISO 8601 formatted date string describing the new end date of the project.
      * @param updateActivities set to true if existing activities should be modified to fit into the new schedule
      */
-    def changeProjectDates(String projectId, String plannedStartDate, String plannedEndDate, boolean updateActivities = true) {
+    def changeProjectDates(String projectId, String plannedStartDate, String plannedEndDate, boolean updateActivities = true, boolean includeSubmittedAndApproved = false, boolean delete = false) {
         Map response
         Map project = get(projectId)
         DateTime previousStartDate = DateUtils.parse(project.plannedStartDate)
@@ -625,10 +625,11 @@ class ProjectService  {
             response = updateUnchecked(projectId, [plannedStartDate:plannedStartDate, plannedEndDate:plannedEndDate])
 
             generateProjectStageReports(projectId)
+
             if (response.resp && !response.resp.error) {
 
                 if (updateActivities) {
-                    updateActivityDatesToMatchProjectDates(projectId, previousStartDate, previousEndDate, newStartDate, newEndDate)
+                    updateActivityDatesToMatchProjectDates(project, previousStartDate, previousEndDate, newStartDate, newEndDate)
                 }
             }
         }
@@ -731,13 +732,10 @@ class ProjectService  {
                 message =  "The project start date must be before ${reportWithMinToDate.toDate}"
             }
             else {
-                Map reportWithMinFromDate = project.reports?.findAll{reportService.isSubmittedOrApproved(it)}.min{it.fromDate}
-                // For some reason, the first report wasn't submitted, so we can change the start date.
-                if (project.plannedStartDate >= reportWithMinFromDate.fromDate) {
-                    if (plannedStartDate < reportWithMinFromDate.fromDate) {
-                        message = "The project start date must be on or after ${reportWithMinFromDate.fromDate}"
-                    }
-
+                // If there are reports containing data, don't allow the start date to be moved backwards in time
+                // as it will move reports around and the rules for how to do that are not well defined.
+                if (firstReport && project.plannedStartDate > plannedStartDate) {
+                    message = "The project start date must be on or after ${project.plannedStartDate}"
                 }
             }
 
@@ -765,9 +763,19 @@ class ProjectService  {
         projectConfigurationService.getProjectConfiguration(project)
     }
 
-    void generateProjectReports(Map reportConfig, Map project) {
-
-        ProgramConfig config = projectConfigurationService.getProjectConfiguration(project)
+    /**
+     * Creates or re-creates project reports according the supplied configuration and project dates.
+     *
+     * @param reportConfig defines the type of report and the dates required.
+     * @param project the project the reports are for
+     * @param includeSubmittedAndApproved if true, submitted and approved reports can be regenerated or moved.  This should be used with caution.
+     * @param deleteReportsBeforeNewStartDate if true, if the project start date is after the end date of a report, the report will be deleted
+     * rather than the dates changed to match the new project dates.  This was designed for situations (e.g.) RLP where
+     * empty reports exist because the projects were loaded with a start date earlier than the actual execution date
+     * (due to those dates not being known) and the dates being updated after more than one reporting period has passed.
+     * (e.g the 2nd report has data against correct dates, so we dont' want to move this, instead we delete the first report).
+     */
+    void generateProjectReports(Map reportConfig, Map project, boolean includeSubmittedAndApproved = false, boolean deleteReportsBeforeNewStartDate = false) {
 
         ReportOwner reportOwner = new ReportOwner(
                 id:[projectId:project.projectId],
@@ -802,13 +810,7 @@ class ProjectService  {
             }
         }
         else {
-            def period = programConfig.reportingPeriod
-            if (period) {
-                period = period as Integer
-            }
-
-            def alignedToCalendar = programConfig.reportingPeriodAlignedToCalendar ?: false
-            reportService.regenerateAllStageReportsForProject(projectId, period, alignedToCalendar, null)
+            log.warn("No project report configuration for project ${project.projectId}")
         }
 
     }

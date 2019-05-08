@@ -673,13 +673,13 @@ class ProjectServiceSpec extends Specification {
         endDate == '2018-12-31T13:00:00Z'
     }
 
-    def "if the project start date is lenient and there are no approved or submitted reports, the project start date can be changed regardless of the meri plan status"() {
+    def "if the doesn't use activity based reporting and there are no approved or submitted reports, the project start date can be changed regardless of the meri plan status"() {
         setup:
         Map project = [projectId:'p1', plannedStartDate: '2015-07-01T00:00Z', plannedEndDate:'2016-12-31T00:00Z', planStatus:ProjectService.PLAN_APPROVED]
 
         webService.getJson(_) >> project
         reportService.getReportsForProject(project.projectId) >> [[reportId:'r1', publicationStatus:ReportService.REPORT_NOT_APPROVED, fromDate:project.plannedStartDate, toDate:project.plannedEndDate]]
-
+        reportService.firstReportWithDataByCriteria(_, _) >> null
 
         when:
         String result = service.validateProjectStartDate(project.projectId, '2015-07-03T00:00Z')
@@ -689,21 +689,22 @@ class ProjectServiceSpec extends Specification {
         result == null
     }
 
-    def "if the project start date is lenient and there is a submitted report, the start date must not invalidate the submitted report"(reportStatus, date, valid) {
+    def "if the project doesn't use activity based reporting and there is a submitted report, the start date must not invalidate the submitted report"(reportStatus, date, valid) {
         setup:
         Map project = [projectId:'p1', plannedStartDate: '2015-07-01T00:00Z', plannedEndDate:'2016-12-31T00:00Z', planStatus:ProjectService.PLAN_APPROVED]
+        Map r1 = [reportId:'r1', publicationStatus:reportStatus, fromDate:project.plannedStartDate, toDate:'2015-12-31T00:00Z']
+        reportService.firstReportWithDataByCriteria(_, _) >> r1
 
         boolean submittedOrApproved = (reportStatus == ReportService.REPORT_SUBMITTED || reportStatus == ReportService.REPORT_APPROVED)
         webService.getJson(_) >> project
-        reportService.getReportsForProject(project.projectId) >> [[reportId:'r1', publicationStatus:reportStatus, fromDate:project.plannedStartDate, toDate:'2015-12-31T00:00Z']]
+        reportService.getReportsForProject(project.projectId) >> [r1]
         reportService.isSubmittedOrApproved(_) >> submittedOrApproved
 
         when:
         String result = service.validateProjectStartDate(project.projectId, date)
 
         then:
-        1 * reportService.includesSubmittedOrApprovedReports(_) >> submittedOrApproved
-        1 * projectConfigurationService.getProjectConfiguration(_) >> new ProgramConfig([leniantStartDate:true])
+        1 * projectConfigurationService.getProjectConfiguration(_) >> new ProgramConfig([activityBasedReporting: false])
         (result == null) == valid
 
         where:
@@ -716,6 +717,32 @@ class ProjectServiceSpec extends Specification {
         ReportService.REPORT_SUBMITTED | '2015-08-01T00:00Z' | true
         ReportService.REPORT_SUBMITTED | '2016-01-01T00:00Z' | false
         ReportService.REPORT_SUBMITTED | '2015-04-01T00:00Z' | false
+    }
+
+    def "if there is an empty report before the first report with data, we should be allowed to change the start date as if the first report with data was the only report"(date, valid) {
+        setup: "The project has two reports, but the first has had it's data deleted.  This scenario is to simulate projects being loaded before the contract dates are known and the dates not being corrected before reporting begins"
+        Map project = [projectId:'p1', plannedStartDate: '2015-07-01T00:00Z', plannedEndDate:'2016-12-31T00:00Z', planStatus:ProjectService.PLAN_APPROVED]
+        Map r1 = [reportId:'r1', publicationStatus:'unpublished', fromDate:project.plannedStartDate, toDate:'2015-12-31T00:00Z']
+        Map r2 = [reportId:'r2', publicationStatus:'submitted', fromDate:r1.toDate, toDate:project.plannedEndDate]
+        reportService.firstReportWithDataByCriteria(_, _) >> r2
+        webService.getJson(_) >> project
+        reportService.getReportsForProject(project.projectId) >> [r1, r2]
+
+        println "$date, $valid"
+
+        when:
+        String result = service.validateProjectStartDate(project.projectId, date)
+
+        then:
+        1 * projectConfigurationService.getProjectConfiguration(_) >> new ProgramConfig([activityBasedReporting: false])
+        (result == null) == valid
+
+        where:
+        date | valid
+        '2016-07-01T00:00Z' | true  // New start date falls inside r2's reporting period
+        '2017-01-01T00:00Z' | false // New start date is after r2 reporting period, invalidating it
+        '2015-04-01T00:00Z' | false // New start date is before r2's reporting period begins.  This in theory could be supported but the rules of how to manage this are not defined so we disallow it.
+
     }
 
     def "When adjusting a report, the report to be adjusted must belong to the specified project"() {

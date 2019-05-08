@@ -172,7 +172,23 @@ class ReportService {
                     log.info("name: " + existingReports[index].name + " - " + report.name)
                     log.info("fromDate: " + existingReports[index].fromDate + " - " + report.fromDate)
                     log.info("toDate: " + existingReports[index].toDate + " - " + report.toDate)
-                    update(report)
+                    if (index == 0 && isSubmittedOrApproved(existingReports[index])) {
+
+                        boolean approved = isApproved(existingReports[index])
+                        String reason = "Changing project start date"
+                        reject(existingReports[index].reportId, "Dates change", reason)
+
+                        update(report)
+
+                        submit(existingReports[index].reportId)
+                        if (approved) {
+                            approve(existingReports[index].reportId, reason)
+                        }
+                    }
+                    else {
+                        update(report)
+                    }
+
                 }
             }
             else {
@@ -212,34 +228,6 @@ class ReportService {
     }
 
     /**
-     * This method supports automatically creating reporting activities for a project that re-occur at defined intervals.
-     * e.g. a stage report once every 6 months or a green army monthly report once per month.
-     * Activities will only be created when no reporting activity of the correct type exists within each period.
-     * @param projectId identifies the project.
-     */
-    void regenerateAllStageReportsForProject(String projectId, Integer periodInMonths = 6, boolean alignToCalendar = false, Integer weekDaysToCompleteReport = null) {
-        Map project = projectService.get(projectId, 'all')
-
-        ReportConfig reportConfig = new ReportConfig(
-            reportingPeriodInMonths: periodInMonths,
-                reportsAlignedToCalendar: alignToCalendar,
-                reportNameFormat:"Stage %1\$d",
-                reportDescriptionFormat: "Stage %1\$d for %4\$s",
-                reportType:'Activity',
-                category:"Stage reports",
-                weekDaysToCompleteReport: weekDaysToCompleteReport
-        )
-        ReportOwner reportOwner = new ReportOwner(
-                id:[projectId:projectId],
-                name:project.name,
-                periodStart:project.plannedStartDate,
-                periodEnd:project.plannedEndDate
-        )
-
-        regenerateReports(project.reports ?: [], reportConfig, reportOwner)
-    }
-
-    /**
      * Returns true if any report in the supplied list has been submitted or approval or approved.
      * @param reports the List of reports to check
      * @return true if any report in the supplied list has been submitted or approval or approved.
@@ -250,6 +238,10 @@ class ReportService {
 
     boolean isSubmittedOrApproved(Map report) {
         return report.publicationStatus == REPORT_SUBMITTED || report.publicationStatus == REPORT_APPROVED
+    }
+
+    boolean isApproved(Map report) {
+        return report.publicationStatus == REPORT_APPROVED
     }
 
     /**
@@ -542,6 +534,14 @@ class ReportService {
      */
     Map findReportForDate(String isoDate, List<Map> reports) {
         reports.find{it.fromDate < isoDate && it.toDate >= isoDate}
+    }
+
+    Map firstReportWithDataByCriteria(List allReports, Closure criteria) {
+        Map firstReportWithData = allReports?.findAll{hasData(it)}.min(criteria)
+        Map firstSubmittedOrApprovedReport = allReports?.findAll{isSubmittedOrApproved(it)}.min(criteria)
+
+
+        [firstReportWithData, firstSubmittedOrApprovedReport].findAll()?.min{it.toDate}
     }
 
     public Number filteredProjectCount(List<String> filter, String searchTerm) {
