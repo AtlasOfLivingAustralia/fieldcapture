@@ -22,6 +22,7 @@ class ProjectServiceSpec extends Specification {
     DocumentService documentService = Mock(DocumentService)
     EmailService emailService = Mock(EmailService)
     ProjectConfigurationService projectConfigurationService = Mock(ProjectConfigurationService)
+    ProgramConfig projectConfig = new ProgramConfig([activityBasedReporting: true, reportingPeriod:6, reportingPeriodAlignedToCalendar: true, weekDaysToCompleteReport:43])
 
     def setup() {
         JSON.registerObjectMarshaller(new MapMarshaller())
@@ -40,7 +41,7 @@ class ProjectServiceSpec extends Specification {
         service.projectConfigurationService = projectConfigurationService
         userService.userIsAlaOrFcAdmin() >> false
         metadataService.getProgramConfiguration(_,_) >> [reportingPeriod:6, reportingPeriodAlignedToCalendar: true, weekDaysToCompleteReport:43]
-        projectConfigurationService.getProjectConfiguration(_) >> new ProgramConfig([reportingPeriod:6, reportingPeriodAlignedToCalendar: true, weekDaysToCompleteReport:43])
+        projectConfigurationService.getProjectConfiguration(_) >> projectConfig
     }
 
     def "generate reports with 3 monthly period"() {
@@ -365,13 +366,14 @@ class ProjectServiceSpec extends Specification {
         def newStartDate = '2015-06-01T00:00Z'
         reportService.includesSubmittedOrApprovedReports(_) >> false
         reportService.getReportsForProject(_) >> []
-        webService.getJson(_) >> [projectId:projectId, planStatus:ProjectService.PLAN_SUBMITTED, plannedStartDate: '2015-07-01T00:00Z']
+        Map project = [projectId:projectId, planStatus:ProjectService.PLAN_SUBMITTED, plannedStartDate: '2015-07-01T00:00Z', plannedEndDate:'2017-06-30T00:00Z']
+        webService.getJson(_) >> project
 
         when:
-        def result = service.changeProjectStartDate(projectId, newStartDate, false)
+        def result = service.changeProjectDates(projectId, newStartDate, project.plannedEndDate)
 
         then:
-        result.error != null
+        result.resp.error != null
     }
 
     def "a project's start date cannot be changed if the project has an approved MERI plan"() {
@@ -380,13 +382,14 @@ class ProjectServiceSpec extends Specification {
         def newStartDate = '2015-06-01T00:00Z'
         reportService.includesSubmittedOrApprovedReports(_) >> false
         reportService.getReportsForProject(_) >> []
-        webService.getJson(_) >> [projectId:projectId, planStatus:ProjectService.PLAN_APPROVED, plannedStartDate: '2015-07-01T00:00Z']
+        Map project = [projectId:projectId, planStatus:ProjectService.PLAN_APPROVED, plannedStartDate: '2015-07-01T00:00Z', plannedEndDate:'2017-06-30T00:00Z']
+        webService.getJson(_) >> project
 
         when:
-        def result = service.changeProjectStartDate(projectId, newStartDate, false)
+        def result = service.changeProjectDates(projectId, newStartDate, project.plannedEndDate)
 
         then:
-        result.error != null
+        result.resp.error != null
     }
 
     def "a project's start date cannot be changed if the project has a submitted or approved report"() {
@@ -395,13 +398,14 @@ class ProjectServiceSpec extends Specification {
         def newStartDate = '2015-06-01T00:00Z'
         reportService.includesSubmittedOrApprovedReports(_) >> true
         reportService.getReportsForProject(_) >> [[publicationStatus:ReportService.REPORT_APPROVED]]
-        webService.getJson(_) >> [projectId:projectId, planStatus:ProjectService.PLAN_NOT_APPROVED, plannedStartDate: '2015-07-01T00:00Z', plannedEndDate:'2016-12-31T00:00Z']
+        Map project = [projectId:projectId, planStatus:ProjectService.PLAN_NOT_APPROVED, plannedStartDate: '2015-07-01T00:00Z', plannedEndDate:'2016-12-31T00:00Z']
+        webService.getJson(_) >> project
 
         when:
-        def result = service.changeProjectStartDate(projectId, newStartDate, false)
+        def result = service.changeProjectDates(projectId, newStartDate, project.plannedEndDate)
 
         then:
-        result.error != null
+        result.resp.error != null
     }
 
     def "a project's end date cannot be changed to fall within a period containing a submitted or approved report"() {
@@ -410,13 +414,14 @@ class ProjectServiceSpec extends Specification {
         def newStartDate = '2015-07-01T00:00Z'
         reportService.includesSubmittedOrApprovedReports(_) >> true
         reportService.getReportsForProject(_) >> [[publicationStatus:ReportService.REPORT_APPROVED]]
-        webService.getJson(_) >> [projectId:projectId, planStatus:ProjectService.PLAN_NOT_APPROVED, plannedStartDate: '2015-07-01T00:00Z', plannedEndDate:'2016-12-31T00:00Z']
+        Map project = [projectId:projectId, planStatus:ProjectService.PLAN_NOT_APPROVED, plannedStartDate: '2015-07-01T00:00Z', plannedEndDate:'2016-12-31T00:00Z']
+        webService.getJson(_) >> project
         webService.doPost(_, _) >> [resp:[status:200]]
         when:
-        def result = service.changeProjectStartDate(projectId, newStartDate, false)
+        def result = service.changeProjectDates(projectId, newStartDate, project.plannedEndDate)
 
         then:
-        result.error != null
+        result.resp.error != null
     }
 
     def "a project should only be marked as completed when the final stage report is approved"(String reportId, boolean shouldComplete) {

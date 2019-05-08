@@ -552,18 +552,6 @@ class ProjectController {
         render result as JSON
     }
 
-
-    @PreAuthorise(accessLevel = 'admin')
-    def updateProjectStartDate(String id) {
-        def payload = request.getJSON()
-        if (!payload.plannedStartDate) {
-            render status: 400, text: "Missing parameter plannedStartDate"
-            return
-        }
-        def result = projectService.changeProjectStartDate(id, payload.plannedStartDate)
-        render result as JSON
-    }
-
     @PreAuthorise(accessLevel = 'admin')
     def updateProjectDates(String id) {
         def payload = request.getJSON()

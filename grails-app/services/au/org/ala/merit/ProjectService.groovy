@@ -552,55 +552,6 @@ class ProjectService  {
     }
 
     /**
-     * This method is used to shift the entire project start and end date without changing the duration.
-     * It can only be called for projects in the "planning" phase.
-     * @param projectId the ID of the project
-     * @param plannedStartDate an ISO 8601 formatted date string describing the new start date of the project.
-     * @param updateActivities set to true if existing activities should be modified to fit into the new schedule
-     */
-    def changeProjectStartDate(String projectId, String plannedStartDate, boolean updateActivities = true) {
-        def project = get(projectId)
-        Map message
-        String validationResult = validateProjectDates(project, plannedStartDate)
-        if (validationResult == null) {
-
-            def previousStartDate = DateUtils.parse(project.plannedStartDate)
-            def newStartDate = DateUtils.parse(plannedStartDate)
-
-            def daysChanged = Days.daysBetween(previousStartDate, newStartDate).days
-
-            log.info("Updating start date for project ${projectId} from ${project.plannedStartDate} to ${plannedStartDate}, ${daysChanged} days difference")
-
-            def newEndDate = DateUtils.format(DateUtils.parse(project.plannedEndDate).plusDays(daysChanged))
-
-            // The update method in this class treats dates specially and delegates the updates to the changeProjectDates method.
-            def resp = updateUnchecked(projectId, [plannedStartDate: plannedStartDate, plannedEndDate: newEndDate])
-            generateProjectStageReports(projectId)
-            if (resp.resp && !resp.resp.error && updateActivities) {
-
-                def activities = activityService.activitiesForProject(projectId)
-                activities.each { activity ->
-                    if (!activityService.isReport(activity)) {
-                        def newActivityStartDate = DateUtils.format(DateUtils.parse(activity.plannedStartDate).plusDays(daysChanged))
-                        def newActivityEndDate = DateUtils.format(DateUtils.parse(activity.plannedEndDate).plusDays(daysChanged))
-                        activityService.update(activity.activityId, [activityId: activity.activityId, plannedStartDate: newActivityStartDate, plannedEndDate: newActivityEndDate])
-                    }
-
-                }
-
-                message = [message: 'success']
-            } else {
-                message = [error: "Update failed: ${resp?.resp?.error}"]
-            }
-        }
-        else {
-            message = [error: validationResult]
-        }
-
-        return message
-    }
-
-    /**
      * This method changes a project start and end date
      *
      * @param projectId the ID of the project
