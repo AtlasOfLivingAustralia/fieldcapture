@@ -724,12 +724,10 @@ class ProjectService  {
             }
 
         }
-        else if (reportService.includesSubmittedOrApprovedReports(project.reports)) {
-            // The date must be within the time range defined by the first submitted report.
-            Map reportWithMinToDate = project.reports?.findAll{reportService.isSubmittedOrApproved(it)}.min{it.toDate}
-
-            if (plannedStartDate > reportWithMinToDate.toDate) {
-                message =  "The project start date must be before ${reportWithMinToDate.toDate}"
+        else {
+            Map firstReport = reportService.firstReportWithDataByCriteria(project.reports, {report -> report.toDate})
+            if (firstReport && (plannedStartDate > firstReport.toDate)) {
+                message =  "Data exists for ${firstReport.name}.  The project start date must be before ${firstReport.toDate}."
             }
             else {
                 // If there are reports containing data, don't allow the start date to be moved backwards in time
@@ -785,11 +783,25 @@ class ProjectService  {
         )
         ReportConfig rc = new ReportConfig(reportConfig)
 
-        List reportsOfType = project.reports?.findAll{it.category == reportConfig.category}
+        List reportsOfType = project.reports?.findAll{it.category == reportConfig.category}?.sort{it.toDate}
 
-        if (!config.activityBasedReporting) {
-            // Regenerate all reports, even approved ones.
-            reportService.regenerateReports(reportsOfType, rc, reportOwner, -1)
+        if (includeSubmittedAndApproved) {
+            int index = 0
+            if (deleteReportsBeforeNewStartDate) {
+                Map report = reportsOfType ? reportsOfType[index] : null
+                // Handle reports that may have been cut off by the start date change.
+                while (report && report.toDate < project.plannedStartDate) {
+                    if (!reportService.hasData(report)) {
+                        reportService.delete(report.reportId)
+                    }
+                    else {
+                        log.warn("Unable to delete report ${report.name} with toDate ${report.toDate} as it has data.")
+                    }
+                    report = reportsOfType ? reportsOfType[++index] : null
+
+                }
+            }
+            reportService.regenerateReports(reportsOfType, rc, reportOwner, index-1)
         }
         else {
             // Regenerate reports starting from the first unsubmitted report
@@ -887,32 +899,6 @@ class ProjectService  {
             }
         }
         return [create:toCreate, delete:toDelete]
-
-    }
-
-    /**
-     * Looks for an activity of type FINAL_REPORT_ACTIVITY_TYPE in completed projects only and returns the contents
-     * of the Outcomes sections from that activity.
-     * @param project the project
-     * @return a Map with keys: environmentalOutcomes, economicOutcomes, socialOutcomes
-     */
-    Map<String, String> getProjectOutcomes(Map project) {
-        def outcomes = [:]
-        if (isComplete(project)) {
-            def activity = project.activities?.find { it.type == ActivityService.FINAL_REPORT_ACTIVITY_TYPE }
-
-            if (activity) {
-                outcomes = getOutcomes(activity.activityId, OUTCOMES_OUTPUT_TYPE)
-            }
-        }
-        if (!outcomes) {
-            Map activity = project.activities?.max{ reportService.isSubmittedOrApproved(it) ? it.plannedEndDate : ''}
-
-            if (activity) {
-                outcomes = getOutcomes(activity.activityId, STAGE_OUTCOMES_OUTPUT_TYPE)
-            }
-        }
-        outcomes
 
     }
 

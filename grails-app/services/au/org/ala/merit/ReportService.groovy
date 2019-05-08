@@ -21,8 +21,6 @@ class ReportService {
     public static final String REPORT_SUBMITTED = 'pendingApproval'
     public static final String REPORT_NOT_APPROVED = 'unpublished'
 
-    public static final String REEF_2050_PLAN_ACTION_REPORTING_ACTIVITY_TYPE = 'Reef 2050 Plan Action Reporting'
-
     public static final int HOME_PAGE_IMAGE_SIZE = 500
 
     public static final String REPORT_TYPE_SINGLE_ACTIVITY = 'Single'
@@ -48,108 +46,6 @@ class ReportService {
     def imageService
     def grailsLinkGenerator
     def emailService
-
-    private static int DEFAULT_REPORT_DAYS_TO_COMPLETE = 43
-
-    private DateTime toDateInLocalTime(String isoDate) {
-        return DateUtils.parse(isoDate).withZone(DateTimeZone.default)
-    }
-
-    /**
-     * Regenerates a list of reports according the supplied configuration.  Note that all reports
-     * supplied to this method must be unapproved and are assumed to be sorted in date order.
-     *
-     * @param reports any existing reports, these will be edited and deleted as necessary.
-     * @param prototypeReport properties to use when creating a new report. (minus dates)
-     * @param firstPeriodEnd an ISO formatted Date indicating the to date of the first report to be regenerated
-     * @param periodEnd an ISO formatted Date indicating the end of the period covered by the reports
-     * @param periodInMonths the reporting period for each report (from fromDate to toDate)
-     * @param alignToCalendar whether we want reports aligned to the calendar or not.
-     * @param weekDaysToCompleteReport used to set the due date for the report
-     * @param ownerName used as a parameter when evaluating the report name and description
-     */
-    private void regenerateReportsFromDate(List reports, int startIndex, Map prototypeReport, String firstReportEnd, String periodStart, String periodEnd, Integer periodInMonths = 6, Integer weekDaysToCompleteReport = null, String ownerName = "") {
-        log.info "regenerateReportsFromDate: ${reports.size()}, ${startIndex}, ${firstReportEnd}, ${periodStart}, ${periodEnd}"
-
-        if (reports.findIndexOf(startIndex, {isSubmittedOrApproved(it)}) >= startIndex) {
-            throw new IllegalArgumentException("Cannot modify a submitted or approved report.")
-        }
-
-        Period period = Period.months(periodInMonths)
-
-        DateTime firstReportEndDate = toDateInLocalTime(firstReportEnd)
-        DateTime endDate = toDateInLocalTime(periodEnd)
-
-        int index = startIndex
-        Interval reportInterval = new Interval(toDateInLocalTime(periodStart), firstReportEndDate)
-
-        log.info "Regenerating reports starting at index: "+index+" from: "+reportInterval.start+" ending at: "+reportInterval.end
-        while (reportInterval.start < endDate.minusDays(1)) {
-
-            Map report = prototypeReport.clone()
-            report.putAll([
-                    fromDate:DateUtils.format(reportInterval.start.withZone(DateTimeZone.UTC)),
-                    toDate:DateUtils.format(reportInterval.end.withZone(DateTimeZone.UTC)),
-                    name:sprintf(prototypeReport.name, (index+1), reportInterval.start.toDate(), reportInterval.end.toDate(), ownerName),
-                    description:sprintf(prototypeReport.description, (index+1), reportInterval.start.toDate(), reportInterval.end.toDate(), ownerName)
-            ])
-
-            if (weekDaysToCompleteReport) {
-                report.dueDate = DateUtils.format(reportInterval.end.plusDays(weekDaysToCompleteReport).withZone(DateTimeZone.UTC))
-            }
-
-            if (reports.size() > index) {
-                report.reportId = reports[index].reportId
-                // Only do the update if the report details have changed.
-                if (!report.equals(reports[index])) {
-                    log.info("name: " + reports[index].name + " - " + report.name)
-                    log.info("fromDate: " + reports[index].fromDate + " - " + report.fromDate)
-                    log.info("toDate: " + reports[index].toDate + " - " + report.toDate)
-                    update(report)
-                }
-            }
-            else {
-                log.info("Creating report "+report.name)
-                create(report)
-            }
-            index++
-            reportInterval = new Interval(reportInterval.end, reportInterval.end.plus(period))
-        }
-
-        // Delete any left over reports.
-        for (int i=index; i<reports.size(); i++) {
-            log.info("Deleting report "+reports[i].name)
-            delete(reports[i].reportId)
-        }
-        log.info("***********")
-    }
-
-    void regenerateAllReports(List reports, Map prototypeReport, String periodStart, String periodEnd, Integer periodInMonths = 6, boolean alignToCalendar = false, Integer weekDaysToCompleteReport = null, String ownerName = "") {
-
-        // Ensure the reports are sorted in Date order
-        reports = (reports?:[]).sort{it.toDate}
-
-        Period period = Period.months(periodInMonths)
-
-        String startISODate
-        DateTime periodStartDate
-
-        int index = reports.findLastIndexOf {isSubmittedOrApproved(it)}
-        if (index >= 0){
-            startISODate = reports[index].toDate
-            periodStartDate = toDateInLocalTime(startISODate)
-        }
-        else {
-            startISODate = periodStart
-            periodStartDate = toDateInLocalTime(startISODate)
-            if (alignToCalendar) {
-                periodStartDate = DateUtils.alignToPeriod(periodStartDate, period)
-            }
-        }
-
-        regenerateReportsFromDate(reports, Math.max(index+1, 0), prototypeReport, DateUtils.format(periodStartDate.plus(period)), startISODate, periodEnd, periodInMonths, weekDaysToCompleteReport, ownerName)
-
-    }
 
     void regenerateReports(List existingReports, ReportConfig reportConfig, ReportOwner reportOwner, int startFromReportIndex) {
 
@@ -284,15 +180,23 @@ class ReportService {
         history
     }
 
-    Map findMostRecentlySubmittedOrApprovedReport(List reports) {
-        reports.max{ isSubmittedOrApproved(it) ? it.toDate : ''}
-    }
-
     Map lockForEditing(Map report) {
         if (!report.activityId) {
             throw new IllegalArgumentException("No activity associated with the supploied report")
         }
         activityService.lock(report.activityId)
+    }
+
+    /**
+     * This only works for single activity reports as we check the report progress.
+     * @param report the report to check.
+     * @return
+     */
+    boolean hasData(Map report) {
+        if (!report.type == REPORT_TYPE_SINGLE_ACTIVITY) {
+            throw new IllegalArgumentException("Only reports of type ${REPORT_TYPE_SINGLE_ACTIVITY} can be tested")
+        }
+        return activityService.isStartedOrFinished([progress:report.progress])
     }
     
     /**
