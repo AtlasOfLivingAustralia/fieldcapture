@@ -456,6 +456,9 @@ function DetailsViewModel(o, project, budgetHeaders, risks, config) {
     self.modelAsJSON = function () {
         var tmp = {};
         tmp.details = ko.mapping.toJS(self);
+        if (tmp.details.outcomes && tmp.details.outcomes.selectableOutcomes) {
+            delete tmp.details.outcomes.selectableOutcomes; // This is for dropdown population and shouldn't be saved.
+        }
 
         var jsData = {"custom": tmp};
 
