@@ -142,8 +142,13 @@
         <fc:iconHelp>Checking this box will cause activity dates to be adjusted to match the changes to the project dates.  This is not advised except for single stage projects like the green army.</fc:iconHelp></label>
     </div>
 </div>
-
 <div class="row-fluid">
+    <p>These options control how project date changes will affect reports containing data and / or activities</p>
+    <p><input type="checkbox" data-bind="checked:includeSubmittedReports"> Include submitted reports</p>
+    <p><input type="checkbox" data-bind="checked:keepReportEndDates"> Keep existing report end dates (If this is not ticked, reports will be moved as necessary to match the new start date.)</p>
+</div>
+
+<div class="row-fluid" data-bind="if:!contractDatesFixed()">
     <div class="span4">
         <label for="contractStartDate">Contract start date
         <fc:iconHelp title="Contract Start date">Contracted start date.</fc:iconHelp>

@@ -1,6 +1,7 @@
 package au.org.ala.merit
 
 import au.org.ala.merit.reports.ReportConfig
+import au.org.ala.merit.reports.ReportGenerationOptions
 import au.org.ala.merit.reports.ReportOwner
 import grails.converters.JSON
 import org.apache.commons.lang.CharUtils
@@ -262,8 +263,7 @@ class ProjectService  {
 
         def resp = [:]
 
-        Boolean updateActivities = Boolean.valueOf(projectDetails.remove('changeActivityDates'))
-
+        ReportGenerationOptions dateChangeOptions = dateChangeOptions(projectDetails)
         // Changing project dates requires some extra validation and updates to the stage reports.  Only
         // do this check for existing projects for which the planned start and/or end date is being changed
         if (id) {
@@ -275,7 +275,7 @@ class ProjectService  {
             if (id && (plannedStartDate || plannedEndDate)) {
                 def currentProject = get(id)
                 if (currentProject.plannedStartDate != plannedStartDate || currentProject.plannedEndDate != plannedEndDate) {
-                    resp = changeProjectDates(id, plannedStartDate ?: currentProject.plannedStartDate, plannedEndDate ?: currentProject.plannedEndDate, updateActivities)
+                    resp = changeProjectDates(id, plannedStartDate ?: currentProject.plannedStartDate, plannedEndDate ?: currentProject.plannedEndDate, dateChangeOptions)
                 }
             }
         }
@@ -284,6 +284,18 @@ class ProjectService  {
         }
 
         return resp
+    }
+
+    /** Extracts date change options from a payload */
+    private ReportGenerationOptions dateChangeOptions(Map payload) {
+        Map options = [:]
+        // These are configuration items containing instructions for how to modify dates, not project information.
+        options.updateActivities = Boolean.valueOf(payload.remove('changeActivityDates'))
+        options.includeSubmittedAndApprovedReports = Boolean.valueOf(payload.remove('includeSubmittedReports'))
+        options.keepExistingReportDates = Boolean.valueOf(payload.remove('keepReportEndDates'))
+
+        new ReportGenerationOptions(options)
+
     }
 
     private updateUnchecked(String id, Map projectDetails) {
@@ -559,30 +571,21 @@ class ProjectService  {
      * * @param plannedStartDate an ISO 8601 formatted date string describing the new end date of the project.
      * @param updateActivities set to true if existing activities should be modified to fit into the new schedule
      */
-    def changeProjectDates(String projectId, String plannedStartDate, String plannedEndDate, boolean updateActivities = true, boolean includeSubmittedAndApproved = false, boolean delete = false) {
+    def changeProjectDates(String projectId, String plannedStartDate, String plannedEndDate, ReportGenerationOptions options = new ReportGenerationOptions()) {
         Map response
         Map project = get(projectId)
-        DateTime previousStartDate = DateUtils.parse(project.plannedStartDate)
-        DateTime previousEndDate = DateUtils.parse(project.plannedEndDate)
 
         DateTime newStartDate = DateUtils.parse(plannedStartDate)
         DateTime newEndDate = DateUtils.parse(plannedEndDate)
 
 
-        String validationResult = validateProjectDates(project, newStartDate, newEndDate)
+        String validationResult = validateProjectDates(project, newStartDate, newEndDate, options)
         if (validationResult == null) {
 
             // The update method in this class treats dates specially and delegates the updates to this method.
             response = updateUnchecked(projectId, [plannedStartDate:plannedStartDate, plannedEndDate:plannedEndDate])
 
-            generateProjectStageReports(projectId)
-
-            if (response.resp && !response.resp.error) {
-
-                if (updateActivities) {
-                    updateActivityDatesToMatchProjectDates(project, previousStartDate, previousEndDate, newStartDate, newEndDate)
-                }
-            }
+            generateProjectStageReports(projectId, options)
         }
         else {
             response = [resp:[error: validationResult]]
@@ -590,49 +593,11 @@ class ProjectService  {
         response
     }
 
-    /**
-     * Modifies project activities to keep the dates in sync with a change to the project dates.  Only used by
-     * Green Army projects.
-     */
-    private void updateActivityDatesToMatchProjectDates(Map project, DateTime previousStartDate, DateTime previousEndDate, DateTime newStartDate, DateTime newEndDate) {
-
-        def daysStartChanged = Days.daysBetween(previousStartDate, newStartDate).days
-        def previousDuration = Days.daysBetween(previousStartDate, previousEndDate).days
-        def newDuration = Days.daysBetween(newStartDate, newEndDate).days
-
-        def scale = (double)newDuration / (double)previousDuration
-
-        log.info("Project duration changing by a factor of ${scale}")
-        log.info("Updating start date for project ${project.projectId} from ${project.plannedStartDate} to ${newStartDate}, ${daysStartChanged} days difference")
-        log.info("Updating end date for project ${project.projectId} from ${project.plannedEndDate} to ${newEndDate}")
-
-        def activities = activityService.activitiesForProject(project.projectId)
-        activities.each { activity ->
-            if (!activityService.isReport(activity)) {
-                def newActivityStartDate = DateUtils.format(DateUtils.parse(activity.plannedStartDate).plusDays(daysStartChanged))
-                def daysToChangeEndDate = (int) Math.round(Math.abs(daysStartChanged) * scale)
-                def newActivityEndDate = DateUtils.format(DateUtils.parse(activity.plannedEndDate).plusDays(daysToChangeEndDate))
-
-                // Account for any rounding errors that would result in the activity falling outside the project date range.
-                if (newActivityStartDate > newActivityEndDate) {
-                    newActivityStartDate = newActivityEndDate
-                }
-                if (newActivityStartDate < project.plannedStartDate) {
-                    newActivityStartDate = project.plannedStartDate
-                }
-                if (newActivityEndDate > project.plannedEndDate) {
-                    newActivityEndDate = project.plannedEndDate
-                }
-                activityService.update(activity.activityId, [activityId: activity.activityId, plannedStartDate: newActivityStartDate, plannedEndDate: newActivityEndDate])
-            }
-        }
-    }
-
     boolean isMeriPlanSubmittedOrApproved(Map project) {
         return (project.planStatus == PLAN_SUBMITTED || project.planStatus == PLAN_APPROVED)
     }
 
-    private String validateProjectDates(Map project, DateTime plannedStartDate, DateTime plannedEndDate) {
+    private String validateProjectDates(Map project, DateTime plannedStartDate, DateTime plannedEndDate, ReportGenerationOptions options) {
         if (plannedStartDate > plannedEndDate) {
             return "Start date must be before end date"
         }
@@ -724,7 +689,7 @@ class ProjectService  {
      * (due to those dates not being known) and the dates being updated after more than one reporting period has passed.
      * (e.g the 2nd report has data against correct dates, so we dont' want to move this, instead we delete the first report).
      */
-    void generateProjectReports(Map reportConfig, Map project, boolean includeSubmittedAndApproved = false, boolean deleteReportsBeforeNewStartDate = false) {
+    void generateProjectReports(Map reportConfig, Map project, ReportGenerationOptions options) {
 
         ReportOwner reportOwner = new ReportOwner(
                 id:[projectId:project.projectId],
@@ -736,9 +701,12 @@ class ProjectService  {
 
         List reportsOfType = project.reports?.findAll{it.category == reportConfig.category}?.sort{it.toDate}
 
-        if (includeSubmittedAndApproved) {
+        if (options.includeSubmittedAndApprovedReports) {
             int index = 0
-            if (deleteReportsBeforeNewStartDate) {
+
+            // To keep existing reporting dates when we move the start date forward we may need to delete reports
+            // that have been excluded by the new start date. (rather than moving it forward)
+            if (options.keepExistingReportDates) {
                 Map report = reportsOfType ? reportsOfType[index] : null
                 // Handle reports that may have been cut off by the start date change.
                 while (report && report.toDate < project.plannedStartDate) {
@@ -762,14 +730,14 @@ class ProjectService  {
 
     }
 
-    def generateProjectStageReports(String projectId) {
+    def generateProjectStageReports(String projectId, ReportGenerationOptions options) {
         def project = get(projectId)
         def programConfig = getProgramConfiguration(project)
 
         if (programConfig.projectReports) {
 
             programConfig.projectReports.each {reportConfig ->
-                generateProjectReports(reportConfig, project)
+                generateProjectReports(reportConfig, project, options)
             }
         }
         else {

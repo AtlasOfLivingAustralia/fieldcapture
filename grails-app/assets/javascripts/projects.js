@@ -811,7 +811,12 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
     self.planStatus = ko.observable(project.planStatus);
     self.mapLoaded = ko.observable(false);
     self.transients.variation = ko.observable();
+
+    // Options for project date changes
     self.changeActivityDates = ko.observable(false);
+    self.includeSubmittedReports = ko.observable(false);
+    self.keepReportEndDates = ko.observable(false);
+
     self.contractDatesFixed.subscribe(function() {
         self.changeActivityDates(!self.contractDatesFixed());
     });
@@ -871,7 +876,9 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
             funding: new Number(self.funding()),
             status: self.status(),
             promoteOnHomepage: self.promoteOnHomepage(),
-            changeActivityDates: self.changeActivityDates()
+            changeActivityDates: self.changeActivityDates(),
+            includeSubmittedReports: self.includeSubmittedReports(),
+            keepReportEndDates: self.keepReportEndDates()
         };
         projectService.saveProjectData(jsData);
 
