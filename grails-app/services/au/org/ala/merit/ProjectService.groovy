@@ -2,6 +2,7 @@ package au.org.ala.merit
 
 import au.org.ala.merit.reports.ReportConfig
 import au.org.ala.merit.reports.ReportGenerationOptions
+import au.org.ala.merit.reports.ReportGenerator
 import au.org.ala.merit.reports.ReportOwner
 import grails.converters.JSON
 import org.apache.commons.lang.CharUtils
@@ -10,6 +11,7 @@ import org.joda.time.DateTime
 import org.joda.time.Days
 import org.joda.time.Interval
 import org.joda.time.Period
+import org.parboiled.parserunners.ProfilingParseRunner
 import org.springframework.cache.annotation.Cacheable
 
 import java.text.SimpleDateFormat
@@ -642,14 +644,23 @@ class ProjectService  {
         }
         else {
             Map firstReport = reportService.firstReportWithDataByCriteria(project.reports, {report -> report.toDate})
-            if (firstReport && (plannedStartDate > firstReport.toDate)) {
-                message =  "Data exists for ${firstReport.name}.  The project start date must be before ${firstReport.toDate}."
-            }
-            else {
-                // If there are reports containing data, don't allow the start date to be moved backwards in time
-                // as it will move reports around and the rules for how to do that are not well defined.
-                if (firstReport && project.plannedStartDate > plannedStartDate) {
-                    message = "The project start date must be on or after ${project.plannedStartDate}"
+            if (firstReport) {
+
+                if (plannedStartDate > firstReport.toDate) {
+                    message = "Data exists for ${firstReport.name}.  The project start date must be before ${firstReport.toDate}."
+                } else {
+                    // If there are reports containing data, don't allow the start date to be moved backwards in time
+                    // far enough to introduce a new report as the rules for that are not implemented.
+                    ReportGenerator generator = new ReportGenerator()
+                    ReportOwner owner = projectReportOwner(project)
+                    owner.periodStart = plannedStartDate
+                    config.projectReports?.each { Map reportConfig ->
+                        List reports = generator.generateReports(new ReportConfig(reportConfig), owner, 1, null)
+                        Map report = reports.find{it.name == firstReport.name}
+                        if (report && report.fromDate > plannedStartDate) {
+                            message = "The project start date must be on or after ${report.fromDate}"
+                        }
+                    }
                 }
             }
 
@@ -677,6 +688,16 @@ class ProjectService  {
         projectConfigurationService.getProjectConfiguration(project)
     }
 
+
+    private ReportOwner projectReportOwner(Map project) {
+        new ReportOwner(
+                id:[projectId:project.projectId],
+                name:project.name,
+                periodStart:project.plannedStartDate,
+                periodEnd:project.plannedEndDate
+        )
+    }
+
     /**
      * Creates or re-creates project reports according the supplied configuration and project dates.
      *
@@ -691,12 +712,7 @@ class ProjectService  {
      */
     void generateProjectReports(Map reportConfig, Map project, ReportGenerationOptions options) {
 
-        ReportOwner reportOwner = new ReportOwner(
-                id:[projectId:project.projectId],
-                name:project.name,
-                periodStart:project.plannedStartDate,
-                periodEnd:project.plannedEndDate
-        )
+        ReportOwner reportOwner = projectReportOwner(project)
         ReportConfig rc = new ReportConfig(reportConfig)
 
         List reportsOfType = project.reports?.findAll{it.category == reportConfig.category}?.sort{it.toDate}
