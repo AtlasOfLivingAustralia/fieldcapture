@@ -656,9 +656,10 @@ class ProjectService  {
                     owner.periodStart = plannedStartDate
                     config.projectReports?.each { Map reportConfig ->
                         List reports = generator.generateReports(new ReportConfig(reportConfig), owner, 1, null)
-                        Map report = reports.find{it.name == firstReport.name}
-                        if (report && report.fromDate > plannedStartDate) {
-                            message = "The project start date must be on or after ${report.fromDate}"
+                        int matchingReportIndex = reports.findIndexOf{DateUtils.within(DateUtils.parse(firstReport.toDate), DateUtils.parse(it.toDate), Period.days(1))}
+                        int currentReportIndex = project.reports.findIndexOf{it == firstReport}
+                        if (matchingReportIndex > currentReportIndex) {
+                            message = "The project start date must be on or after ${reports[matchingReportIndex - currentReportIndex].fromDate}"
                         }
                     }
                 }
