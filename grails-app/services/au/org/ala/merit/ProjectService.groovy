@@ -265,7 +265,8 @@ class ProjectService  {
 
         def resp = [:]
 
-        ReportGenerationOptions dateChangeOptions = dateChangeOptions(projectDetails)
+        Map options = projectDetails.remove('options')
+        ReportGenerationOptions dateChangeOptions = dateChangeOptions(options)
         // Changing project dates requires some extra validation and updates to the stage reports.  Only
         // do this check for existing projects for which the planned start and/or end date is being changed
         if (id) {
@@ -292,12 +293,12 @@ class ProjectService  {
     private ReportGenerationOptions dateChangeOptions(Map payload) {
         Map options = [:]
         // These are configuration items containing instructions for how to modify dates, not project information.
-        options.updateActivities = Boolean.valueOf(payload.remove('changeActivityDates'))
-        options.includeSubmittedAndApprovedReports = Boolean.valueOf(payload.remove('includeSubmittedReports'))
-        options.keepExistingReportDates = Boolean.valueOf(payload.remove('keepReportEndDates'))
+        options.updateActivities = Boolean.valueOf(payload?.changeActivityDates)
+        options.includeSubmittedAndApprovedReports = Boolean.valueOf(payload?.includeSubmittedReports)
+        options.keepExistingReportDates = Boolean.valueOf(payload?.keepReportEndDates)
+        options.dateChangeReason = payload?.dateChangeReason
 
         new ReportGenerationOptions(options)
-
     }
 
     private updateUnchecked(String id, Map projectDetails) {
@@ -624,6 +625,39 @@ class ProjectService  {
             }
         }
         return result
+    }
+
+    Map determineValidProjectDates(Map project, ReportGenerationOptions options) {
+        // Rules for activity based projects
+
+        String minStartDate = null
+        String maxStartDate = null
+
+        String minEndDate = null
+        String maxEndDate = null
+
+        ProgramConfig config = projectConfigurationService.getProjectConfiguration(project)
+        if (config.activityBasedReporting) {
+
+            // If we don't update activities then we can only move project dates in a way as to not
+            // impact any existing activities.
+            if (!options.updateActivities) {
+                // First date with data
+                Map first = project.activities.min{it.plannedStartDate}
+
+                // Last date with data
+                Map lastActivity = project.activities.max{it.plannedEndDate}
+
+                if (first) {
+                    maxStartDate = first.plannedStartDate
+                    minEndDate = lastActivity.plannedEndDate
+                }
+
+            }
+        }
+        if (!options.includeSubmittedAndApprovedReports) {
+
+        }
     }
 
     String validateProjectStartDate(String projectId, String plannedStartDate) {

@@ -123,6 +123,7 @@ class ProjectController {
         project.assets = config.assets ?: []
         project.priorities = new JSONArray(config.priorities ?: [])
         project.outcomes = new JSONArray(config.outcomes ?: [])
+        project.hasApprovedOrSubmittedReports = reportService.includesSubmittedOrApprovedReports(project.reports)
 
         def meriPlanVisible = metadataService.isOptionalContent('MERI Plan', config)
         def risksAndThreatsVisible = metadataService.isOptionalContent('Risks and Threats', config)

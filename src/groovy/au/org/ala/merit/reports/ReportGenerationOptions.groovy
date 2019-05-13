@@ -4,4 +4,5 @@ class ReportGenerationOptions {
     boolean updateActivities = false
     boolean includeSubmittedAndApprovedReports = false
     boolean keepExistingReportDates = false
+    String dateChangeReason
 }

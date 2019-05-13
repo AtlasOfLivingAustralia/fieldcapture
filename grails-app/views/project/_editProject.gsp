@@ -107,7 +107,7 @@
         </label>
         <div class="input-append">
             <g:if test="${canChangeProjectDates}">
-                <fc:datePicker targetField="plannedStartDate.date" name="startDate" data-validation-engine="validate[required, past[plannedEndDate], ajax[ajaxValidateProjectStartDate]]" printable="${printView}" size="input-large"/>
+                <fc:datePicker targetField="plannedStartDate.date" name="startDate" data-bind="disable:!canEditStartDate(), datepicker:plannedStartDate.date" data-validation-engine="validate[required, past[plannedEndDate], ajax[ajaxValidateProjectStartDate]]" printable="${printView}" size="input-large"/>
             </g:if>
             <g:else>
                 <input type="text" data-bind="value:plannedStartDate.formattedDate" disabled="disabled" size="input-large">
@@ -143,9 +143,14 @@
     </div>
 </div>
 <div class="row-fluid">
-    <p>These options control how project date changes will affect reports containing data and / or activities</p>
-    <p><input type="checkbox" data-bind="checked:includeSubmittedReports"> Include submitted reports</p>
+    <p>These options control how project date changes will affect reports containing data and / or activities: </p>
+    <p><input type="checkbox" data-bind="checked:includeSubmittedReports"> Allow date changes to submitted or approved reports <fc:iconHelp>This project has submitted and/or approved reports.  Changing the project start date may result in a change to these reporting dates, depending on the reporting configuration and the new start date.</fc:iconHelp></p>
     <p><input type="checkbox" data-bind="checked:keepReportEndDates"> Keep existing report end dates (If this is not ticked, reports will be moved as necessary to match the new start date.)</p>
+    <p>
+        <label>Reason for changing the project start date:<fc:iconHelp>This reason is required when changing approved or submitted reports and will be recorded against the report status changes</fc:iconHelp>
+        <textarea class="span12" rows="3" data-bind="enable:includeSubmittedReports, value:dateChangeReason" data-validation-engine="validate[required]"></textarea>
+        </label>
+    </p>
 </div>
 
 <div class="row-fluid" data-bind="if:!contractDatesFixed()">

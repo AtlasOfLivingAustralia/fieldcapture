@@ -815,6 +815,7 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
     // Options for project date changes
     self.changeActivityDates = ko.observable(false);
     self.includeSubmittedReports = ko.observable(false);
+    self.dateChangeReason = ko.observable();
     self.keepReportEndDates = ko.observable(false);
 
     self.contractDatesFixed.subscribe(function() {
@@ -876,9 +877,12 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
             funding: new Number(self.funding()),
             status: self.status(),
             promoteOnHomepage: self.promoteOnHomepage(),
-            changeActivityDates: self.changeActivityDates(),
-            includeSubmittedReports: self.includeSubmittedReports(),
-            keepReportEndDates: self.keepReportEndDates()
+            options: {
+                changeActivityDates: self.changeActivityDates(),
+                includeSubmittedReports: self.includeSubmittedReports(),
+                keepReportEndDates: self.keepReportEndDates(),
+                dateChangeReason: self.dateChangeReason()
+            }
         };
         projectService.saveProjectData(jsData);
 
@@ -1069,6 +1073,10 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
         ko.applyBindings(self.meriPlan, document.getElementById("view-meri-plan"));
         initialiseDocumentTable('#meriPlanDocumentList');
     };
+
+    self.canEditStartDate = ko.computed(function() {
+        return !project.hasApprovedOrSubmittedReports || self.includeSubmittedReports();
+    });
 
     self.validateProjectStartDate = function() {
 

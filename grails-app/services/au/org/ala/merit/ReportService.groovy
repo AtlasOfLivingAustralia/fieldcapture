@@ -66,26 +66,7 @@ class ReportService {
                 report.reportId = existingReports[index].reportId
                 // Only do the update if the report details have changed.
                 if (needsRegeneration(report, existingReports[index])) {
-                    log.info("name: " + existingReports[index].name + " - " + report.name)
-                    log.info("fromDate: " + existingReports[index].fromDate + " - " + report.fromDate)
-                    log.info("toDate: " + existingReports[index].toDate + " - " + report.toDate)
-                    if (index == 0 && isSubmittedOrApproved(existingReports[index])) {
-
-                        boolean approved = isApproved(existingReports[index])
-                        String reason = "Changing project start date"
-                        reject(existingReports[index].reportId, "Dates change", reason)
-
-                        update(report)
-
-                        submit(existingReports[index].reportId)
-                        if (approved) {
-                            approve(existingReports[index].reportId, reason)
-                        }
-                    }
-                    else {
-                        update(report)
-                    }
-
+                    regenerateReport(report, existingReports[index])
                 }
             }
             else {
@@ -100,6 +81,36 @@ class ReportService {
         for (int i=index; i<existingReports.size(); i++) {
             log.info("Deleting report " + existingReports[i].name)
             delete(existingReports[i].reportId)
+        }
+    }
+
+    void regenerateReport(Map report, Map existingReport) {
+        log.info("name: " + existingReport.name + " - " + report.name)
+        log.info("fromDate: " + existingReport.fromDate + " - " + report.fromDate)
+        log.info("toDate: " + existingReport.toDate + " - " + report.toDate)
+        if (isSubmittedOrApproved(existingReport)) {
+
+            boolean approved = isApproved(existingReport)
+            String reason = "Changing project start date"
+            reject(existingReport.reportId, "Dates change", reason)
+
+            update(report)
+
+            if (report.adjustedBy) {
+                Map adjustment = search(adjustedReportId:report.reportId)
+                if (adjustment) {
+                    // Only update the dates for the adjustment report.
+                    regenerateReport([fromDate:report.fromDate, toDate:report.toDate], adjustment)
+                }
+            }
+
+            submit(existingReport.reportId)
+            if (approved) {
+                approve(existingReport.reportId, reason)
+            }
+        }
+        else {
+            update(report)
         }
     }
 
@@ -169,6 +180,11 @@ class ReportService {
 
     boolean isApproved(Map report) {
         return report.publicationStatus == REPORT_APPROVED
+    }
+
+    List search(Map criteria) {
+        Map result = webService.doPost(grailsApplication.config.ecodata.baseUrl+"report/search", criteria)
+        result?.resp ?: []
     }
 
     /**
