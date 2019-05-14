@@ -4,6 +4,7 @@ import au.org.ala.merit.command.ProjectSummaryReportCommand
 import au.org.ala.merit.command.ReportCommand
 import au.org.ala.merit.command.SaveReportDataCommand
 import au.org.ala.merit.reports.ReportConfig
+import au.org.ala.merit.reports.ReportGenerationOptions
 import grails.converters.JSON
 import org.apache.http.HttpStatus
 import org.codehaus.groovy.grails.web.json.JSONArray
@@ -567,7 +568,7 @@ class ProjectController {
     @PreAuthorise(accessLevel = 'admin')
     def regenerateStageReports(String id) {
 
-        projectService.generateProjectStageReports(id)
+        projectService.generateProjectStageReports(id, new ReportGenerationOptions())
         render status: 200, text: 'ok'
     }
 
