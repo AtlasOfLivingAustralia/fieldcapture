@@ -136,36 +136,6 @@ class ReportService {
     }
 
     /**
-     * Modifies project activities to keep the dates in sync with a change to the project dates.  Only used by
-     * Green Army projects.
-     */
-    private void updateActivityDates(Map project, Map previousReport, Map newReport) {
-
-        def daysStartChanged = Days.daysBetween(previousStartDate, newStartDate).days
-
-        def activities = activityService.activitiesForProject(project.projectId)
-        activities.each { activity ->
-
-            def newActivityStartDate = DateUtils.format(DateUtils.parse(activity.plannedStartDate).plusDays(daysStartChanged))
-            def daysToChangeEndDate = (int) Math.round(Math.abs(daysStartChanged) * scale)
-            def newActivityEndDate = DateUtils.format(DateUtils.parse(activity.plannedEndDate).plusDays(daysToChangeEndDate))
-
-            // Account for any rounding errors that would result in the activity falling outside the project date range.
-            if (newActivityStartDate > newActivityEndDate) {
-                newActivityStartDate = newActivityEndDate
-            }
-            if (newActivityStartDate < project.plannedStartDate) {
-                newActivityStartDate = project.plannedStartDate
-            }
-            if (newActivityEndDate > project.plannedEndDate) {
-                newActivityEndDate = project.plannedEndDate
-            }
-            activityService.update(activity.activityId, [activityId: activity.activityId, plannedStartDate: newActivityStartDate, plannedEndDate: newActivityEndDate])
-
-        }
-    }
-
-    /**
      * Returns true if any report in the supplied list has been submitted or approval or approved.
      * @param reports the List of reports to check
      * @return true if any report in the supplied list has been submitted or approval or approved.

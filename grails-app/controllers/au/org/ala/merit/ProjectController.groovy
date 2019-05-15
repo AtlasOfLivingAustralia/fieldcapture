@@ -148,7 +148,7 @@ class ProjectController {
         def imagesModel = publicImages.collect {
             [name: it.name, projectName: project.name, url: it.url, thumbnailUrl: it.thumbnailUrl]
         }
-        boolean canChangeProjectDates = projectService.canChangeProjectDates(project)
+        boolean canChangeProjectDates = userService.userIsAlaOrFcAdmin()
 
         // For validation of project date changes.
         String minimumProjectEndDate = projectService.minimumProjectEndDate(project, config)
@@ -190,7 +190,6 @@ class ProjectController {
             rlpModel.admin.showSpecies = false
             rlpModel.admin.hidePrograms = true
             rlpModel.admin.showAnnouncementsTab = false
-            rlpModel.admin.canChangeProjectDates = true
 
             model = rlpModel
         }
@@ -248,16 +247,20 @@ class ProjectController {
     }
 
     @PreAuthorise(accessLevel='siteAdmin')
-    def ajaxValidateProjectStartDate(String id, String fieldId, String fieldValue) {
-        if (fieldId != 'startDate' || !fieldValue) {
+    def ajaxValidateProjectDates(String id) {
+        if (!params.plannedStartDate) {
             render status:400, message:"Invalid date supplied"
             return
         }
 
+        ReportGenerationOptions options = projectService.dateChangeOptions(params)
+
         try {
-            String isoDate = DateUtils.displayToIsoFormat(fieldValue)
-            String message = projectService.validateProjectStartDate(id, isoDate)
-            List result = [fieldId, message == null, message]
+            String newStartDate = params.plannedStartDate
+            String newEndDate = params.plannedEndDate
+
+            String message = projectService.validateProjectDates(id, newStartDate, newEndDate, options)
+            Map result = [valid:message == null, message:message]
 
             render result as JSON
         }

@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.reports.ReportGenerationOptions
 import grails.converters.JSON
 import grails.test.mixin.TestFor
 import org.codehaus.groovy.grails.web.converters.marshaller.json.CollectionMarshaller
@@ -417,22 +418,6 @@ class ProjectServiceSpec extends Specification {
         result.resp.error != null
     }
 
-    def "a project's end date cannot be changed to fall within a period containing a submitted or approved report"() {
-        given:
-        def projectId = 'project1'
-        def newStartDate = '2015-07-01T00:00Z'
-        reportService.includesSubmittedOrApprovedReports(_) >> true
-        reportService.getReportsForProject(_) >> [[publicationStatus:ReportService.REPORT_APPROVED]]
-        Map project = [projectId:projectId, planStatus:ProjectService.PLAN_NOT_APPROVED, plannedStartDate: '2015-07-01T00:00Z', plannedEndDate:'2016-12-31T00:00Z']
-        webService.getJson(_) >> project
-        webService.doPost(_, _) >> [resp:[status:200]]
-        when:
-        def result = service.changeProjectDates(projectId, newStartDate, project.plannedEndDate)
-
-        then:
-        result.resp.error != null
-    }
-
     def "a project should only be marked as completed when the final stage report is approved"(String reportId, boolean shouldComplete) {
         setup:
         def projectId = 'project1'
@@ -696,7 +681,7 @@ class ProjectServiceSpec extends Specification {
         reportService.firstReportWithDataByCriteria(_, _) >> null
 
         when:
-        String result = service.validateProjectStartDate(project.projectId, '2015-07-03T00:00Z')
+        String result = service.validateProjectStartDate(project.projectId, '2015-07-03T00:00Z', new ReportGenerationOptions())
 
         then:
         1 * projectConfigurationService.getProjectConfiguration(_) >> new ProgramConfig([leniantStartDate:true])
@@ -715,7 +700,7 @@ class ProjectServiceSpec extends Specification {
         reportService.isSubmittedOrApproved(_) >> submittedOrApproved
 
         when:
-        String result = service.validateProjectStartDate(project.projectId, date)
+        String result = service.validateProjectStartDate(project.projectId, date, new ReportGenerationOptions())
 
         then:
         1 * projectConfigurationService.getProjectConfiguration(_) >> new ProgramConfig([activityBasedReporting: false, projectReports:[reportConfig]])
@@ -743,7 +728,7 @@ class ProjectServiceSpec extends Specification {
         reportService.getReportsForProject(project.projectId) >> [r1, r2]
 
         when:
-        String result = service.validateProjectStartDate(project.projectId, date)
+        String result = service.validateProjectStartDate(project.projectId, date, new ReportGenerationOptions())
 
         then:
         1 * projectConfigurationService.getProjectConfiguration(_) >> new ProgramConfig([activityBasedReporting: false, projectReports:[reportConfig]])

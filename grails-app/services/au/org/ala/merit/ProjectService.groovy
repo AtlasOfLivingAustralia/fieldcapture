@@ -11,7 +11,6 @@ import org.joda.time.DateTime
 import org.joda.time.Days
 import org.joda.time.Interval
 import org.joda.time.Period
-import org.parboiled.parserunners.ProfilingParseRunner
 import org.springframework.cache.annotation.Cacheable
 
 import java.text.SimpleDateFormat
@@ -266,7 +265,6 @@ class ProjectService  {
         def resp = [:]
 
         Map options = projectDetails.remove('options')
-        ReportGenerationOptions dateChangeOptions = dateChangeOptions(options)
         // Changing project dates requires some extra validation and updates to the stage reports.  Only
         // do this check for existing projects for which the planned start and/or end date is being changed
         if (id) {
@@ -278,7 +276,7 @@ class ProjectService  {
             if (id && (plannedStartDate || plannedEndDate)) {
                 def currentProject = get(id)
                 if (currentProject.plannedStartDate != plannedStartDate || currentProject.plannedEndDate != plannedEndDate) {
-                    resp = changeProjectDates(id, plannedStartDate ?: currentProject.plannedStartDate, plannedEndDate ?: currentProject.plannedEndDate, dateChangeOptions)
+                    resp = changeProjectDates(id, plannedStartDate ?: currentProject.plannedStartDate, plannedEndDate ?: currentProject.plannedEndDate, options)
                 }
             }
         }
@@ -290,7 +288,7 @@ class ProjectService  {
     }
 
     /** Extracts date change options from a payload */
-    private ReportGenerationOptions dateChangeOptions(Map payload) {
+    ReportGenerationOptions dateChangeOptions(Map payload) {
         Map options = [:]
         // These are configuration items containing instructions for how to modify dates, not project information.
         options.updateActivities = Boolean.valueOf(payload?.changeActivityDates)
@@ -574,21 +572,24 @@ class ProjectService  {
      * * @param plannedStartDate an ISO 8601 formatted date string describing the new end date of the project.
      * @param updateActivities set to true if existing activities should be modified to fit into the new schedule
      */
-    def changeProjectDates(String projectId, String plannedStartDate, String plannedEndDate, ReportGenerationOptions options = new ReportGenerationOptions()) {
+    def changeProjectDates(String projectId, String plannedStartDate, String plannedEndDate, Map options = [:]) {
         Map response
+
         Map project = get(projectId)
+        String previousStartDate = project.plannedStartDate
+        ReportGenerationOptions dateChangeOptions = dateChangeOptions(options)
 
-        DateTime newStartDate = DateUtils.parse(plannedStartDate)
-        DateTime newEndDate = DateUtils.parse(plannedEndDate)
-
-
-        String validationResult = validateProjectDates(project, newStartDate, newEndDate, options)
+        String validationResult = validateProjectDates(projectId, plannedStartDate, plannedEndDate, dateChangeOptions)
         if (validationResult == null) {
 
             // The update method in this class treats dates specially and delegates the updates to this method.
             response = updateUnchecked(projectId, [plannedStartDate:plannedStartDate, plannedEndDate:plannedEndDate])
 
-            generateProjectStageReports(projectId, options)
+            generateProjectStageReports(projectId, dateChangeOptions)
+
+            if (dateChangeOptions.updateActivities) {
+                updateActivityDates(projectId, previousStartDate)
+            }
         }
         else {
             response = [resp:[error: validationResult]]
@@ -600,81 +601,57 @@ class ProjectService  {
         return (project.planStatus == PLAN_SUBMITTED || project.planStatus == PLAN_APPROVED)
     }
 
-    private String validateProjectDates(Map project, DateTime plannedStartDate, DateTime plannedEndDate, ReportGenerationOptions options) {
+    String validateProjectDates(String projectId, String plannedStartDate, String plannedEndDate, ReportGenerationOptions options) {
+
         if (plannedStartDate > plannedEndDate) {
             return "Start date must be before end date"
         }
-        return validateProjectStartDate(project.projectId, DateUtils.format(plannedStartDate))
+        return validateProjectStartDate(projectId, plannedStartDate, options)
     }
 
     /**
-     * Returns null if the project dates can be changed.  Otherwise returns an error message.
+     * Returns null if the project dates can be changed.  Otherwise returns an error message.  Rules for
+     * date changes for activity based (non-RLP) projects are different to RLP projects.
      */
-    private String validateProjectDates(Map project, String plannedStartDate) {
+    private String validateProjectDatesForActivityBasedProjects(Map project, String plannedStartDate, ReportGenerationOptions options) {
 
         String result = null
 
-        if (project.plannedStartDate != plannedStartDate && !canChangeStartDate(project)) {
-            result = "Cannot change the start date of a project with submitted or approved reports"
-        }
+
         // Allow FC_ADMINS to change project dates even with an approved plan as they are likely just
         // correcting bad data.
+        boolean projectHasApprovedOrSubmittedReports = reportService.includesSubmittedOrApprovedReports(project.reports)
         if (!userService.userIsAlaOrFcAdmin()) {
             if (isMeriPlanSubmittedOrApproved(project)) {
                 result = "Cannot change project dates when the MERI plan is approved"
+            }
+            if (project.plannedStartDate != plannedStartDate && projectHasApprovedOrSubmittedReports) {
+                result = "Cannot change the start date of a project with submitted or approved reports"
+            }
+        }
+        else {
+            if (projectHasApprovedOrSubmittedReports && !options.includeSubmittedAndApprovedReports) {
+                result = "Cannot change the start date of a project with submitted or approved reports"
+            }
+        }
+
+        if (!result && !options.updateActivities) {
+            Map firstActivity = project.activities?.min{it.plannedStartDate}
+            if (firstActivity && plannedStartDate > firstActivity.plannedStartDate) {
+                result = "The project start date must be before the first activity in the project ( ${DateUtils.isoToDisplayFormat(firstActivity.plannedStartDate)} )"
             }
         }
         return result
     }
 
-    Map determineValidProjectDates(Map project, ReportGenerationOptions options) {
-        // Rules for activity based projects
 
-        String minStartDate = null
-        String maxStartDate = null
-
-        String minEndDate = null
-        String maxEndDate = null
-
-        ProgramConfig config = projectConfigurationService.getProjectConfiguration(project)
-        if (config.activityBasedReporting) {
-
-            // If we don't update activities then we can only move project dates in a way as to not
-            // impact any existing activities.
-            if (!options.updateActivities) {
-                // First date with data
-                Map first = project.activities.min{it.plannedStartDate}
-
-                // Last date with data
-                Map lastActivity = project.activities.max{it.plannedEndDate}
-
-                if (first) {
-                    maxStartDate = first.plannedStartDate
-                    minEndDate = lastActivity.plannedEndDate
-                }
-
-            }
-        }
-        if (!options.includeSubmittedAndApprovedReports) {
-
-        }
-    }
-
-    String validateProjectStartDate(String projectId, String plannedStartDate) {
+    String validateProjectStartDate(String projectId, String plannedStartDate, ReportGenerationOptions options) {
         Map project = get(projectId, 'all')
         ProgramConfig config = projectConfigurationService.getProjectConfiguration(project)
 
         String message
         if (config.activityBasedReporting) {
-
-            message = validateProjectDates(project, plannedStartDate)
-            if (!message) {
-                Map firstActivity = project.activities?.min{it.plannedEndDate}
-                if (firstActivity && plannedStartDate > firstActivity.plannedEndDate) {
-                    message = "The project start date must be before the first activity in the project ( ${DateUtils.isoToDisplayFormat(firstActivity.plannedEndDate)} )"
-                }
-            }
-
+            message = validateProjectDatesForActivityBasedProjects(project, plannedStartDate, options)
         }
         else {
             Map firstReport = reportService.firstReportWithDataByCriteria(project.reports, {report -> report.toDate})
@@ -702,18 +679,6 @@ class ProjectService  {
         }
 
         return message
-    }
-
-    /**
-     * Returns true if the project dates can be changed.
-     * @param project the project to check.
-     */
-    public boolean canChangeProjectDates(Map project) {
-        return canChangeStartDate(project) && !isMeriPlanSubmittedOrApproved(project)
-    }
-
-    public boolean canChangeStartDate(project) {
-        return !reportService.includesSubmittedOrApprovedReports(project.reports)
     }
 
     Map getProgramConfiguration(Map project) {
@@ -777,8 +742,37 @@ class ProjectService  {
             // Regenerate reports starting from the first unsubmitted report
             reportService.regenerateReports(reportsOfType, rc, reportOwner)
         }
+    }
 
+    /**
+     * Modifies project activities to keep the dates in sync with a change to the project dates.
+     */
+    private void updateActivityDates(String projectId, String previousStartDateString) {
 
+        Map project = get(projectId)
+        DateTime newStartDate = DateUtils.parse(project.plannedStartDate)
+        DateTime previousStartDate = DateUtils.parse(previousStartDateString)
+        def daysStartChanged = Days.daysBetween(previousStartDate, newStartDate).days
+
+        def activities = activityService.activitiesForProject(projectId)
+        activities.each { activity ->
+
+            def newActivityStartDate = DateUtils.format(DateUtils.parse(activity.plannedStartDate).plusDays(daysStartChanged))
+            def newActivityEndDate = DateUtils.format(DateUtils.parse(activity.plannedEndDate).plusDays(daysStartChanged))
+
+            // Account for any rounding errors that would result in the activity falling outside the project date range.
+            if (newActivityStartDate > newActivityEndDate) {
+                newActivityStartDate = newActivityEndDate
+            }
+            if (newActivityStartDate < project.plannedStartDate) {
+                newActivityStartDate = project.plannedStartDate
+            }
+            if (newActivityEndDate > project.plannedEndDate) {
+                newActivityEndDate = project.plannedEndDate
+            }
+            activityService.update(activity.activityId, [activityId: activity.activityId, plannedStartDate: newActivityStartDate, plannedEndDate: newActivityEndDate])
+
+        }
     }
 
     def generateProjectStageReports(String projectId, ReportGenerationOptions options) {
