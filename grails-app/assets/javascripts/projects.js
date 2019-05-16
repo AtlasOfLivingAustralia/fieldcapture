@@ -815,7 +815,11 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
     self.planStatus = ko.observable(project.planStatus);
     self.mapLoaded = ko.observable(false);
     self.transients.variation = ko.observable();
-    self.transients.disableSave = ko.observable(false);
+
+    self.transients.startDateInvalid = ko.observable(false);
+    self.transients.disableSave = ko.pureComputed(function() {
+        return self.transients.startDateInvalid();
+    });
 
     // Options for project date changes
     self.changeActivityDates = ko.observable(false);
@@ -1097,14 +1101,14 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
         if (startDate >= self.plannedEndDate()) {
             return "The project start date must be before the end date";
         }
-        if (project.activities && !self.changeActivityDates()) {
+        if (config.activityBasedReporting && project.activities && !self.changeActivityDates()) {
             var firstActivityDate = _.reduce(project.activities, function(min, activity) { return activity.plannedEndDate < min ? activity.plannedEndDate : min; }, project.plannedEndDate);
             if (startDate > firstActivityDate) {
                 return "The project start date must be before the first activity in the project ( "+convertToSimpleDate(firstActivityDate)+ " )";
             }
         }
 
-        self.transients.disableSave(true);
+        self.transients.startDateInvalid(true);
         var dateChangeOptions = {
             changeActivityDates: self.changeActivityDates(),
             includeSubmittedReports: self.includeSubmittedReports(),
@@ -1120,10 +1124,14 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
             url:config.projectDatesValidationUrl,
             data:data}).done(function (result) {
                 if (result.valid) {
-                    self.transients.disableSave(false);
+                    self.transients.startDateInvalid(false);
                 }
                 else {
-                    $("#settings-validation input[data-bind*=plannedStartDate]").validationEngine("showPrompt", result.message);
+                    self.transients.startDateInvalid(true);
+                    setTimeout(function() {
+                        $("#settings-validation input[data-bind*=plannedStartDate]").validationEngine("showPrompt", result.message, "topRight", true);
+                    }, 100);
+
                 }
 
 
@@ -1132,6 +1140,10 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
         });
 
     };
+
+    self.plannedStartDate.subscribe(function() {
+       self.validateProjectStartDate();
+    });
 
     self.saveAnnouncements = function(){
 

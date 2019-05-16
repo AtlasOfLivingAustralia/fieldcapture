@@ -11,6 +11,7 @@ import org.joda.time.DateTime
 import org.joda.time.Days
 import org.joda.time.Interval
 import org.joda.time.Period
+import org.parboiled.parserunners.ProfilingParseRunner.Report
 import org.springframework.cache.annotation.Cacheable
 
 import java.text.SimpleDateFormat
@@ -606,7 +607,39 @@ class ProjectService  {
         if (plannedStartDate > plannedEndDate) {
             return "Start date must be before end date"
         }
-        return validateProjectStartDate(projectId, plannedStartDate, options)
+        Map project = get(projectId, 'all')
+        ProgramConfig config = projectConfigurationService.getProjectConfiguration(project)
+
+        String startDateMessage = validateProjectStartDate(project, config, plannedStartDate, options)
+        String endDateMessage = validateProjectEndDate(project, config, plannedEndDate, options)
+
+        String message = [startDateMessage, endDateMessage].findAll().join('\n')
+        message ?: null // Return null rather than an empty string
+    }
+
+    private String validateProjectEndDate(Map project, ProgramConfig config, String plannedEndDate, ReportGenerationOptions options) {
+
+        if (project.plannedEndDate == plannedEndDate) {
+            // The start date hasn't changed
+            return null
+        }
+        String message
+        if (config.activityBasedReporting) {
+
+            if (!options.updateActivities) {
+                Map lastActivity = project.activities?.max{it.plannedEndDate}
+                if (lastActivity && plannedEndDate < lastActivity.plannedEndDate) {
+                    message = "The project end date must be on or after ${DateUtils.isoToDisplayFormat(lastActivity.plannedEndDate)}"
+                }
+            }
+        }
+        else {
+            Map lastReport = reportService.lastReportWithDataByCriteria(project.reports, {it.toDate})
+            if (lastReport && plannedEndDate < lastReport.toDate) {
+                message = "The project end date must be on or after ${DateUtils.isoToDisplayFormat(lastReport.toDate)}"
+            }
+        }
+        message
     }
 
     /**
@@ -616,7 +649,6 @@ class ProjectService  {
     private String validateProjectDatesForActivityBasedProjects(Map project, String plannedStartDate, ReportGenerationOptions options) {
 
         String result = null
-
 
         // Allow FC_ADMINS to change project dates even with an approved plan as they are likely just
         // correcting bad data.
@@ -645,9 +677,11 @@ class ProjectService  {
     }
 
 
-    String validateProjectStartDate(String projectId, String plannedStartDate, ReportGenerationOptions options) {
-        Map project = get(projectId, 'all')
-        ProgramConfig config = projectConfigurationService.getProjectConfiguration(project)
+    String validateProjectStartDate(Map project, ProgramConfig config, String plannedStartDate, ReportGenerationOptions options) {
+        if (project.plannedStartDate == plannedStartDate) {
+            // The start date hasn't changed
+            return null
+        }
 
         String message
         if (config.activityBasedReporting) {
@@ -658,7 +692,7 @@ class ProjectService  {
             if (firstReport) {
 
                 if (plannedStartDate > firstReport.toDate) {
-                    message = "Data exists for ${firstReport.name}.  The project start date must be before ${firstReport.toDate}."
+                    message = "Data exists for ${firstReport.name}.  The project start date must be before ${DateUtils.isoToDisplayFormat(firstReport.toDate)}."
                 } else {
                     // If there are reports containing data, don't allow the start date to be moved backwards in time
                     // far enough to introduce a new report as the rules for that are not implemented.
@@ -670,7 +704,7 @@ class ProjectService  {
                         int matchingReportIndex = reports.findIndexOf{DateUtils.within(DateUtils.parse(firstReport.toDate), DateUtils.parse(it.toDate), Period.days(1))}
                         int currentReportIndex = project.reports.findIndexOf{it == firstReport}
                         if (matchingReportIndex > currentReportIndex) {
-                            message = "The project start date must be on or after ${reports[matchingReportIndex - currentReportIndex].fromDate}"
+                            message = "The project start date must be on or after ${DateUtils.isoToDisplayFormat(reports[matchingReportIndex - currentReportIndex].fromDate)}"
                         }
                     }
                 }

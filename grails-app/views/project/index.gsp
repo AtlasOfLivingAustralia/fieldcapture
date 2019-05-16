@@ -271,8 +271,9 @@
             viewModel.loadPrograms(programs);
             ko.applyBindings(viewModel);
 
+            window.startDateInvalid = viewModel.transients.startDateInvalid;
             window.validateProjectEndDate = viewModel.validateProjectEndDate;
-            window.validateProjectStartDate = viewModel.validateProjectStartDate;
+
 
 
             if (config.risksStorageKey) {

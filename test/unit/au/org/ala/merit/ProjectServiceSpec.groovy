@@ -681,10 +681,9 @@ class ProjectServiceSpec extends Specification {
         reportService.firstReportWithDataByCriteria(_, _) >> null
 
         when:
-        String result = service.validateProjectStartDate(project.projectId, '2015-07-03T00:00Z', new ReportGenerationOptions())
+        String result = service.validateProjectStartDate(project, new ProgramConfig([activityBasedReporting: false]), '2015-07-03T00:00Z', new ReportGenerationOptions())
 
         then:
-        1 * projectConfigurationService.getProjectConfiguration(_) >> new ProgramConfig([leniantStartDate:true])
         result == null
     }
 
@@ -692,6 +691,7 @@ class ProjectServiceSpec extends Specification {
         setup:
         Map project = [projectId:'p1', plannedStartDate: '2015-07-01T00:00Z', plannedEndDate:'2016-12-31T00:00Z', planStatus:ProjectService.PLAN_APPROVED]
         Map r1 = [reportId:'r1', name:'Stage 1', publicationStatus:reportStatus, fromDate:project.plannedStartDate, toDate:'2015-12-31T00:00Z']
+        project.reports = [r1]
         reportService.firstReportWithDataByCriteria(_, _) >> r1
 
         boolean submittedOrApproved = (reportStatus == ReportService.REPORT_SUBMITTED || reportStatus == ReportService.REPORT_APPROVED)
@@ -700,10 +700,9 @@ class ProjectServiceSpec extends Specification {
         reportService.isSubmittedOrApproved(_) >> submittedOrApproved
 
         when:
-        String result = service.validateProjectStartDate(project.projectId, date, new ReportGenerationOptions())
+        String result = service.validateProjectStartDate(project, new ProgramConfig([activityBasedReporting: false, projectReports:[reportConfig]]), date, new ReportGenerationOptions())
 
         then:
-        1 * projectConfigurationService.getProjectConfiguration(_) >> new ProgramConfig([activityBasedReporting: false, projectReports:[reportConfig]])
         (result == null) == valid
 
         where:
@@ -723,15 +722,15 @@ class ProjectServiceSpec extends Specification {
         Map project = [projectId:'p1', plannedStartDate: '2015-07-01T00:00Z', plannedEndDate:'2016-12-31T00:00Z', planStatus:ProjectService.PLAN_APPROVED]
         Map r1 = [reportId:'r1', name:'Stage 1', publicationStatus:'unpublished', fromDate:project.plannedStartDate, toDate:'2015-12-31T00:00Z']
         Map r2 = [reportId:'r2', name:'Stage 2',publicationStatus:'submitted', fromDate:r1.toDate, toDate:'2016-07-01T00:00:00Z']
+        project.reports = [r1,r2]
         reportService.firstReportWithDataByCriteria(_, _) >> r2
         webService.getJson(_) >> project
         reportService.getReportsForProject(project.projectId) >> [r1, r2]
 
         when:
-        String result = service.validateProjectStartDate(project.projectId, date, new ReportGenerationOptions())
+        String result = service.validateProjectStartDate(project, new ProgramConfig([activityBasedReporting: false, projectReports:[reportConfig]]), date, new ReportGenerationOptions())
 
         then:
-        1 * projectConfigurationService.getProjectConfiguration(_) >> new ProgramConfig([activityBasedReporting: false, projectReports:[reportConfig]])
         (result == null) == valid
 
         where:

@@ -462,7 +462,15 @@ class ReportService {
         Map firstSubmittedOrApprovedReport = allReports?.findAll{isSubmittedOrApproved(it)}.min(criteria)
 
 
-        [firstReportWithData, firstSubmittedOrApprovedReport].findAll()?.min{it.toDate}
+        [firstReportWithData, firstSubmittedOrApprovedReport].findAll()?.min(criteria)
+    }
+
+    Map lastReportWithDataByCriteria(List allReports, Closure criteria) {
+        Map lastReportWithData = allReports?.findAll{hasData(it)}.max(criteria)
+        Map lastSubmittedOrApprovedReport = allReports?.findAll{isSubmittedOrApproved(it)}.max(criteria)
+
+
+        [lastReportWithData, lastSubmittedOrApprovedReport].findAll()?.min(criteria)
     }
 
     public Number filteredProjectCount(List<String> filter, String searchTerm) {
