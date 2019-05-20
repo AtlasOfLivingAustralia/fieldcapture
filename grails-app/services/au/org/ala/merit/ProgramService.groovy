@@ -1,6 +1,7 @@
 package au.org.ala.merit
 
 import au.org.ala.merit.reports.ReportConfig
+import au.org.ala.merit.reports.ReportGenerationOptions
 import au.org.ala.merit.reports.ReportOwner;
 import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.codehaus.groovy.grails.web.json.JSONArray
@@ -157,7 +158,7 @@ class ProgramService {
             Map projects = getProgramProjects(id)
             projects?.projects?.each{ project ->
                 project.reports = reportService.getReportsForProject(project.projectId)
-                projectService.generateProjectReports(activityReportConfig, project)
+                projectService.generateProjectReports(activityReportConfig, project, new ReportGenerationOptions())
             }
         }
     }

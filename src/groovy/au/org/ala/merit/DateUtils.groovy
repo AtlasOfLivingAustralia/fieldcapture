@@ -137,6 +137,15 @@ class DateUtils {
     }
 
     /**
+     * Returns true if date2 is in the range defined by date1 +- period.
+     * Used to allow for a bit of slack when comparing dates with timezone differences.
+     */
+    static boolean within(DateTime date1, DateTime date2, Period period) {
+        Interval interval = new Interval(date1.minus(period), date1.plus(period))
+        return interval.contains(date2)
+    }
+
+    /**
      * Formats the supplied ISO date string into local time with format of yyyy-MM-dd.  Used by the jquery validation
      * engine date validation routine.
      * @param isoDate the date to format.

@@ -107,7 +107,7 @@
         </label>
         <div class="input-append">
             <g:if test="${canChangeProjectDates}">
-                <fc:datePicker targetField="plannedStartDate.date" name="startDate" data-validation-engine="validate[required, past[plannedEndDate], ajax[ajaxValidateProjectStartDate]]" printable="${printView}" size="input-large"/>
+                <fc:datePicker targetField="plannedStartDate.date" name="startDate" data-bind="disable:!canEditStartDate(), datepicker:plannedStartDate.date" data-validation-engine="validate[required, past[plannedEndDate], funcCall[startDateInvalid]]" printable="${printView}" size="input-large"/>
             </g:if>
             <g:else>
                 <input type="text" data-bind="value:plannedStartDate.formattedDate" disabled="disabled" size="input-large">
@@ -119,7 +119,7 @@
         <fc:iconHelp title="End date">Date the project is intended to finish.</fc:iconHelp>
         </label>
         <div class="input-append">
-            <fc:datePicker targetField="plannedEndDate.date" name="endDate" data-validation-engine="validate[required, funcCall[validateProjectEndDate]]" printable="${printView}" size="input-large"/>
+            <fc:datePicker targetField="plannedEndDate.date" data-bind="disable:transients.fixedProjectDuration(), datepicker:plannedEndDate.date" name="endDate" data-validation-engine="validate[required, funcCall[validateProjectEndDate]]" printable="${printView}" size="input-large"/>
         </div>
 
     </div>
@@ -131,19 +131,32 @@
         <fc:iconHelp title="Duration">The number of weeks the project will run for.</fc:iconHelp>
         </label>
         <div class="input-append">
-            <g:textField class="" name="duration" data-bind="value:transients.plannedDuration" data-validation-engine="validate[custom[number]]"/>
+            <g:textField class="" name="duration" data-bind="disable:transients.fixedProjectDuration(), value:transients.plannedDuration" data-validation-engine="validate[custom[number]]"/>
         </div>
 
     </div>
 </div>
-<div class="row-fluid" data-bind="if:!contractDatesFixed()" >
-    <div class="span12">
-        <label class="checkbox" for="modifyActivityDates">Update activity dates to match project date changes?<input type="checkbox" id="modifyActivityDates" checked="checked" data-bind="checked:changeActivityDates">
-        <fc:iconHelp>Checking this box will cause activity dates to be adjusted to match the changes to the project dates.  This is not advised except for single stage projects like the green army.</fc:iconHelp></label>
-    </div>
+<div class="row-fluid">
+    <p>These options control how project date changes will affect reports containing data and / or activities: </p>
+    <g:if test="${config?.activityBasedReporting}">
+        <p>
+            <label>
+                <input type="checkbox" data-bind="disable:!canEditStartDate(), checked:changeActivityDates">
+                Move activity dates with project start date:<fc:iconHelp>If this is selected, all of the activity dates in this project will be adjusted by the same amount of time that the project start date is adjusted</fc:iconHelp>
+            </label>
+        </p>
+    </g:if>
+
+    <p><input type="checkbox" data-bind="checked:includeSubmittedReports"> Allow date changes to submitted or approved reports <fc:iconHelp>This project has submitted and/or approved reports.  Changing the project start date may result in a change to these reporting dates, depending on the reporting configuration and the new start date.</fc:iconHelp></p>
+    <p>
+        <label>Reason for changing the project start date:<fc:iconHelp>This reason is required when changing approved or submitted reports and will be recorded against the report status changes</fc:iconHelp>
+        <textarea class="span12" rows="3" data-bind="enable:includeSubmittedReports, value:dateChangeReason" data-validation-engine="validate[required]"></textarea>
+        </label>
+    </p>
+
 </div>
 
-<div class="row-fluid">
+<div class="row-fluid" data-bind="if:!contractDatesFixed()">
     <div class="span4">
         <label for="contractStartDate">Contract start date
         <fc:iconHelp title="Contract Start date">Contracted start date.</fc:iconHelp>
@@ -199,6 +212,6 @@
 </div>
 
 <div class="form-actions">
-    <button type="button" data-bind="click: saveSettings" class="btn btn-primary">Save changes</button>
+    <button type="button" data-bind="disable:transients.disableSave, click: saveSettings" class="btn btn-primary">Save changes</button>
     <button type="button" id="cancel" class="btn">Cancel</button>
 </div>

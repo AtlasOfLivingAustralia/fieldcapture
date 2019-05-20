@@ -76,7 +76,7 @@
         finishedCorrectingPlanUrl : "${createLink(controller:'project', action:'ajaxFinishedCorrectingPlan', id:project.projectId)}",
         projectScoresUrl:"${createLink(action:'serviceScores', id:project.projectId)}",
         healthCheckUrl:"${createLink(controller:'ajax', action:'keepSessionAlive')}",
-        projectStartDateValidationUrl:"${createLink(controller:'project', action:'ajaxValidateProjectStartDate', id:project.projectId)}",
+        projectDatesValidationUrl:"${createLink(controller:'project', action:'ajaxValidateProjectDates', id:project.projectId)}",
         spinnerUrl:"${asset.assetPath(src:'loading.gif')}",
         projectSitesUrl:"${createLink(action:'ajaxProjectSites', id:project.projectId)}",
         useGoogleBaseMap: ${grails.util.Environment.current == grails.util.Environment.PRODUCTION},
@@ -192,7 +192,6 @@
 <asset:script>
         var organisations = <fc:modelAsJavascript model="${organisations}"/>;
 
-        var startDateValidationUrl = fcConfig.projectStartDateValidationUrl;
         $(function () {
             var PROJECT_DETAILS_KEY = 'project.custom.details.${project.projectId}';
             var PROJECT_RISKS_KEY = 'project.risks.${project.projectId}';
@@ -204,11 +203,7 @@
                 showChars: '1000'
             });
 
-            $('#settings-validation').validationEngine({
-                allrules:{
-                    ajaxValidateProjectStartDate: {
-                    url:startDateValidationUrl
-                }}});
+
             $('#project-details-validation').validationEngine();
             $('#risk-validation').validationEngine();
             $('#grantmanager-validation').validationEngine();
@@ -240,7 +235,9 @@
                 projectUpdateUrl: fcConfig.projectUpdateUrl,
                 projectScoresUrl: fcConfig.projectScoresUrl,
                 meriPlanUploadUrl: fcConfig.meriPlanUploadUrl,
+                projectDatesValidationUrl: fcConfig.projectDatesValidationUrl,
                 meriStorageKey:PROJECT_DETAILS_KEY,
+                activityBasedReporting: ${Boolean.valueOf(projectContent.admin.config.activityBasedReporting)},
                 minimumProjectEndDate: ${projectContent.admin.minimumProjectEndDate?'"'+projectContent.admin.minimumProjectEndDate+'"':'null'}
             };
 
@@ -274,8 +271,9 @@
             viewModel.loadPrograms(programs);
             ko.applyBindings(viewModel);
 
+            window.startDateInvalid = viewModel.transients.startDateInvalid;
             window.validateProjectEndDate = viewModel.validateProjectEndDate;
-            window.validateProjectStartDate = viewModel.validateProjectStartDate;
+
 
 
             if (config.risksStorageKey) {
