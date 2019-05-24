@@ -222,30 +222,6 @@ class ProjectController {
         render template: 'dashboard', model: [metrics: projectService.summary(id)]
     }
 
-    @PreAuthorise
-    def edit(String id) {
-
-        def project = projectService.get(id, 'all')
-        // This will happen if we are returning from the organisation create page during an edit workflow.
-        if (params.organisationId) {
-            project.organisationId = params.organisationId
-        }
-        def user = userService.getUser()
-        def groupedOrganisations = groupOrganisationsForUser(user.userId)
-
-        if (project) {
-            def siteInfo = siteService.getRaw(project.projectSiteId)
-            [project          : project,
-             siteDocuments    : siteInfo.documents ?: '[]',
-             site             : siteInfo.site,
-             userOrganisations: groupedOrganisations.user ?: [],
-             organisations    : groupedOrganisations.other ?: [],
-             programs         : metadataService.programsModel()]
-        } else {
-            forward(action: 'list', model: [error: 'no such id'])
-        }
-    }
-
     @PreAuthorise(accessLevel='siteAdmin')
     def ajaxValidateProjectDates(String id) {
         if (!params.plannedStartDate) {
