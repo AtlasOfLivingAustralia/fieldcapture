@@ -1413,7 +1413,7 @@ class ProjectService  {
             return false
         }
         BigDecimal target = new BigDecimal(targetData.target ?: 0)
-        BigDecimal result = new BigDecimal(targetData.result)
+        BigDecimal result = new BigDecimal(targetData.result ?: 0)
         return target > result
     }
 
