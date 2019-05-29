@@ -818,6 +818,7 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
 
     self.transients.startDateInvalid = ko.observable(false);
     self.transients.disableSave = ko.pureComputed(function() {
+        console.log("Disable save: "+self.transients.startDateInvalid());
         return self.transients.startDateInvalid();
     });
 
@@ -836,7 +837,7 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
         }
     });
     self.dateChangeReason = ko.observable();
-    self.keepReportEndDates = ko.observable(false);
+    self.keepReportEndDates = ko.observable(!config.activityBasedReporting);
 
     self.transients.selectOrganisation = function(data){
         self.transients.organisation({organisationId:data.source.organisationId, name:data.label});
@@ -1098,6 +1099,9 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
     self.validateProjectStartDate = function() {
 
         var startDate = self.plannedStartDate();
+        if (!self.plannedStartDate()) {
+            return "The planned start date is a required field";
+        }
         if (startDate >= self.plannedEndDate()) {
             return "The project start date must be before the end date";
         }

@@ -107,7 +107,7 @@
         </label>
         <div class="input-append">
             <g:if test="${canChangeProjectDates}">
-                <fc:datePicker targetField="plannedStartDate.date" name="startDate" data-bind="disable:!canEditStartDate(), datepicker:plannedStartDate.date" data-validation-engine="validate[required, past[plannedEndDate], funcCall[startDateInvalid]]" printable="${printView}" size="input-large"/>
+                <fc:datePicker targetField="plannedStartDate.date" name="startDate" data-bind="disable:!canEditStartDate(), datepicker:plannedStartDate.date" data-validation-engine="validate[required, past[plannedEndDate]]" printable="${printView}" size="input-large"/>
             </g:if>
             <g:else>
                 <input type="text" data-bind="value:plannedStartDate.formattedDate" disabled="disabled" size="input-large">
@@ -146,6 +146,14 @@
             </label>
         </p>
     </g:if>
+    <g:else>
+        <p>
+            <label>
+                <input type="checkbox" data-bind="disable:!canEditStartDate() || !includeSubmittedReports(), checked:keepReportEndDates">
+                Do not change end dates of submitted reports:<fc:iconHelp>If this is selected, (empty) reports that occur before the submitted report will be deleted as required rather than moving the dates of all reports to match the start date changes</fc:iconHelp>
+            </label>
+        </p>
+    </g:else>
 
     <p><input type="checkbox" data-bind="checked:includeSubmittedReports"> Allow date changes to submitted or approved reports <fc:iconHelp>This project has submitted and/or approved reports.  Changing the project start date may result in a change to these reporting dates, depending on the reporting configuration and the new start date.</fc:iconHelp></p>
     <p>
