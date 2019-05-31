@@ -85,7 +85,10 @@ class ReportGenerator {
             // This is to support single reports due on year 3 of the project (specifically the RLP Outcomes 1 Report)
             if (reports.size() > 1 || reports[-1].toDate > finalToDate) {
                 reports[-1].toDate = finalToDate
-                reports[-1].submissionDate = finalToDate
+                if (reports[-1].submissionDate && reports[-1].submissionDate > finalToDate) {
+                    reports[-1].submissionDate = finalToDate
+                }
+
             }
 
         }

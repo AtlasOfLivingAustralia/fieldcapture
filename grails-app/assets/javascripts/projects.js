@@ -1098,55 +1098,72 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
 
     self.validateProjectStartDate = function() {
 
+        var startDateSelector = "#settings-validation input[data-bind*=plannedStartDate]";
+
+        var message;
         var startDate = self.plannedStartDate();
         if (!self.plannedStartDate()) {
-            return "The planned start date is a required field";
+            message =  "The planned start date is a required field";
         }
         if (startDate >= self.plannedEndDate()) {
-            return "The project start date must be before the end date";
+            message =  "The project start date must be before the end date";
         }
         if (config.activityBasedReporting && project.activities && !self.changeActivityDates()) {
             var firstActivityDate = _.reduce(project.activities, function(min, activity) { return activity.plannedEndDate < min ? activity.plannedEndDate : min; }, project.plannedEndDate);
             if (startDate > firstActivityDate) {
-                return "The project start date must be before the first activity in the project ( "+convertToSimpleDate(firstActivityDate)+ " )";
+                message = "The project start date must be before the first activity in the project ( "+convertToSimpleDate(firstActivityDate)+ " )";
             }
         }
 
         self.transients.startDateInvalid(true);
-        var dateChangeOptions = {
-            changeActivityDates: self.changeActivityDates(),
-            includeSubmittedReports: self.includeSubmittedReports(),
-            keepReportEndDates: self.keepReportEndDates(),
-            dateChangeReason: self.dateChangeReason()
-        };
 
-        var data = _.extend({
-            plannedStartDate:self.plannedStartDate(),
-            plannedEndDate:self.plannedEndDate(),
-        }, dateChangeOptions);
-        $.ajax({
-            url:config.projectDatesValidationUrl,
-            data:data}).done(function (result) {
+
+        if (message) {
+            setTimeout(function() {
+                $(startDateSelector).validationEngine("showPrompt", message, "topRight", true);
+            }, 100);
+
+        }
+        // Validate via ajax
+        else {
+            var dateChangeOptions = {
+                changeActivityDates: self.changeActivityDates(),
+                includeSubmittedReports: self.includeSubmittedReports(),
+                keepReportEndDates: self.keepReportEndDates(),
+                dateChangeReason: self.dateChangeReason()
+            };
+
+            var data = _.extend({
+                plannedStartDate:self.plannedStartDate(),
+                plannedEndDate:self.plannedEndDate(),
+            }, dateChangeOptions);
+            $.ajax({
+                url:config.projectDatesValidationUrl,
+                data:data}).done(function (result) {
                 if (result.valid) {
                     self.transients.startDateInvalid(false);
                 }
                 else {
                     self.transients.startDateInvalid(true);
                     setTimeout(function() {
-                        $("#settings-validation input[data-bind*=plannedStartDate]").validationEngine("showPrompt", result.message, "topRight", true);
+                        $(startDateSelector).validationEngine("showPrompt", result.message, "topRight", true);
                     }, 100);
 
                 }
 
 
-        }).fail(function() {
-            bootbox.alert("There was an error validating the project start date.  Please refresh the page and try again.");
-        });
+            }).fail(function() {
+                bootbox.alert("There was an error validating the project start date.  Please refresh the page and try again.");
+            });
+        }
 
     };
 
     self.plannedStartDate.subscribe(function() {
        self.validateProjectStartDate();
+    });
+    self.plannedEndDate.subscribe(function() {
+        self.validateProjectStartDate();
     });
 
     self.saveAnnouncements = function(){
