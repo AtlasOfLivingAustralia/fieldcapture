@@ -164,7 +164,7 @@
 
 </div>
 
-<div class="row-fluid" data-bind="if:!contractDatesFixed()">
+<div class="row-fluid">
     <div class="span4">
         <label for="contractStartDate">Contract start date
         <fc:iconHelp title="Contract Start date">Contracted start date.</fc:iconHelp>
