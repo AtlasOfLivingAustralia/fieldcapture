@@ -164,6 +164,7 @@ function ProjectViewModel(project, isUserEditor, organisations) {
     self.transients.subprogramsToDisplay = ko.computed(function () {
         return self.transients.subprograms[self.associatedProgram()];
     });
+    self.transients.fixedProjectDuration = ko.observable(false);
 
     var isBeforeToday = function(date) {
         return moment(date) < moment().startOf('day');
@@ -189,12 +190,15 @@ function ProjectViewModel(project, isUserEditor, organisations) {
     self.contractDatesFixed = ko.computed(function() {
         var programs = (self.transients.programsModel && self.transients.programsModel.programs) || [];
         var program = self.associatedProgram(); // Checked outside the loop to force the dependency checker to register this variable (the first time this is computed, the array is empty)
+        var contractDatesFixed = true;
         for (var i=0; i<programs.length; i++) {
             if (programs[i].name === program) {
-                return programs[i].projectDatesContracted;
+                contractDatesFixed = programs[i].projectDatesContracted;
+                break;
             }
         }
-        return true;
+        self.transients.fixedProjectDuration(!contractDatesFixed);
+        return contractDatesFixed;
     });
 
     self.transients.daysRemaining = ko.pureComputed(function() {
@@ -265,7 +269,7 @@ function ProjectViewModel(project, isUserEditor, organisations) {
         if (updatingDurations) {
             return;
         }
-        if (self.contractDatesFixed()) {
+        if (!self.transients.fixedProjectDuration()) {
             if (!self.plannedEndDate()) {
                 return;
             }
@@ -811,10 +815,29 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
     self.planStatus = ko.observable(project.planStatus);
     self.mapLoaded = ko.observable(false);
     self.transients.variation = ko.observable();
-    self.changeActivityDates = ko.observable(false);
-    self.contractDatesFixed.subscribe(function() {
-        self.changeActivityDates(!self.contractDatesFixed());
+
+    self.transients.startDateInvalid = ko.observable(false);
+    self.transients.disableSave = ko.pureComputed(function() {
+        console.log("Disable save: "+self.transients.startDateInvalid());
+        return self.transients.startDateInvalid();
     });
+
+    // Options for project date changes
+    self.changeActivityDates = ko.observable(false);
+    self.changeActivityDates.subscribe(function(value) {
+        self.transients.fixedProjectDuration(value);
+    });
+    self.includeSubmittedReports = ko.observable(false);
+    self.includeSubmittedReports.subscribe(function(value) {
+
+        // The only way submitted reports are allowed to change in activity based reporting projects
+        // is if all of the activites are moved along with the project start date
+        if (value && config.activityBasedReporting) {
+            self.changeActivityDates(true);
+        }
+    });
+    self.dateChangeReason = ko.observable();
+    self.keepReportEndDates = ko.observable(!config.activityBasedReporting);
 
     self.transients.selectOrganisation = function(data){
         self.transients.organisation({organisationId:data.source.organisationId, name:data.label});
@@ -871,7 +894,12 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
             funding: new Number(self.funding()),
             status: self.status(),
             promoteOnHomepage: self.promoteOnHomepage(),
-            changeActivityDates: self.changeActivityDates()
+            options: {
+                changeActivityDates: self.changeActivityDates(),
+                includeSubmittedReports: self.includeSubmittedReports(),
+                keepReportEndDates: self.keepReportEndDates(),
+                dateChangeReason: self.dateChangeReason()
+            }
         };
         projectService.saveProjectData(jsData);
 
@@ -1045,6 +1073,7 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
     };
 
     self.initialiseAdminTab = function() {
+        $("#settings-validation").validationEngine();
         ko.applyBindings(self.meriPlan, document.getElementById("edit-meri-plan"));
         self.meriPlan.meriPlan().dirtyFlag.reset();
         self.meriPlan.attachFloatingSave();
@@ -1063,20 +1092,79 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
         initialiseDocumentTable('#meriPlanDocumentList');
     };
 
+    self.canEditStartDate = ko.computed(function() {
+        return !project.hasApprovedOrSubmittedReports || self.includeSubmittedReports();
+    });
+
     self.validateProjectStartDate = function() {
 
+        var startDateSelector = "#settings-validation input[data-bind*=plannedStartDate]";
+
+        var message;
         var startDate = self.plannedStartDate();
-        if (startDate >= self.plannedEndDate()) {
-            return "The project start date must be before the end date";
+        if (!self.plannedStartDate()) {
+            message =  "The planned start date is a required field";
         }
-        if (project.activities && !self.changeActivityDates()) {
+        if (startDate >= self.plannedEndDate()) {
+            message =  "The project start date must be before the end date";
+        }
+        if (config.activityBasedReporting && project.activities && !self.changeActivityDates()) {
             var firstActivityDate = _.reduce(project.activities, function(min, activity) { return activity.plannedEndDate < min ? activity.plannedEndDate : min; }, project.plannedEndDate);
             if (startDate > firstActivityDate) {
-                return "The project start date must be before the first activity in the project ( "+convertToSimpleDate(firstActivityDate)+ " )";
+                message = "The project start date must be before the first activity in the project ( "+convertToSimpleDate(firstActivityDate)+ " )";
             }
         }
 
+        self.transients.startDateInvalid(true);
+
+
+        if (message) {
+            setTimeout(function() {
+                $(startDateSelector).validationEngine("showPrompt", message, "topRight", true);
+            }, 100);
+
+        }
+        // Validate via ajax
+        else {
+            var dateChangeOptions = {
+                changeActivityDates: self.changeActivityDates(),
+                includeSubmittedReports: self.includeSubmittedReports(),
+                keepReportEndDates: self.keepReportEndDates(),
+                dateChangeReason: self.dateChangeReason()
+            };
+
+            var data = _.extend({
+                plannedStartDate:self.plannedStartDate(),
+                plannedEndDate:self.plannedEndDate(),
+            }, dateChangeOptions);
+            $.ajax({
+                url:config.projectDatesValidationUrl,
+                data:data}).done(function (result) {
+                if (result.valid) {
+                    self.transients.startDateInvalid(false);
+                }
+                else {
+                    self.transients.startDateInvalid(true);
+                    setTimeout(function() {
+                        $(startDateSelector).validationEngine("showPrompt", result.message, "topRight", true);
+                    }, 100);
+
+                }
+
+
+            }).fail(function() {
+                bootbox.alert("There was an error validating the project start date.  Please refresh the page and try again.");
+            });
+        }
+
     };
+
+    self.plannedStartDate.subscribe(function() {
+       self.validateProjectStartDate();
+    });
+    self.plannedEndDate.subscribe(function() {
+        self.validateProjectStartDate();
+    });
 
     self.saveAnnouncements = function(){
 

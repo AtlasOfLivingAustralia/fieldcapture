@@ -1,5 +1,7 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.reports.ReportConfig
+import au.org.ala.merit.reports.ReportOwner
 import grails.test.mixin.TestFor
 import spock.lang.Specification
 
@@ -24,6 +26,34 @@ class ReportServiceSpec extends Specification {
         service.emailService = emailService
     }
 
+    /**
+     * This method supports automatically creating reporting activities for a project that re-occur at defined intervals.
+     * e.g. a stage report once every 6 months or a green army monthly report once per month.
+     * Activities will only be created when no reporting activity of the correct type exists within each period.
+     * @param projectId identifies the project.
+     */
+    private void regenerateAllStageReportsForProject(String projectId, Integer periodInMonths = 6, boolean alignToCalendar = false, Integer weekDaysToCompleteReport = null) {
+        Map project = projectService.get(projectId, 'all')
+
+        ReportConfig reportConfig = new ReportConfig(
+                reportingPeriodInMonths: periodInMonths,
+                reportsAlignedToCalendar: alignToCalendar,
+                reportNameFormat:"Stage %1\$d",
+                reportDescriptionFormat: "Stage %1\$d for %4\$s",
+                reportType:'Activity',
+                category:"Stage reports",
+                weekDaysToCompleteReport: weekDaysToCompleteReport
+        )
+        ReportOwner reportOwner = new ReportOwner(
+                id:[projectId:projectId],
+                name:project.name,
+                periodStart:project.plannedStartDate,
+                periodEnd:project.plannedEndDate
+        )
+
+        service.regenerateReports(project.reports ?: [], reportConfig, reportOwner)
+    }
+
     def project(plannedStartDate = '2014-12-31T13:00:00Z', plannedEndDate = '2016-12-31T23:59:59Z') {
         [plannedStartDate:plannedStartDate, plannedEndDate:plannedEndDate, name:'project', projectId:'p1']
     }
@@ -46,7 +76,7 @@ class ReportServiceSpec extends Specification {
         projectService.get(_, _) >> project
 
         when:
-        service.regenerateAllStageReportsForProject('p1', 6, true, 43)
+        regenerateAllStageReportsForProject('p1', 6, true, 43)
 
         then:
         0 * webService.doDelete(*_)
@@ -64,7 +94,7 @@ class ReportServiceSpec extends Specification {
         projectService.get(_, _) >> project
 
         when:
-        service.regenerateAllStageReportsForProject('p1', 6, true, 43)
+        regenerateAllStageReportsForProject('p1', 6, true, 43)
 
         then:
         0 * webService.doDelete(*_)
@@ -84,7 +114,7 @@ class ReportServiceSpec extends Specification {
         projectService.get(_, _) >> project
 
         when:
-        service.regenerateAllStageReportsForProject('p1', 6, true, 43)
+        regenerateAllStageReportsForProject('p1', 6, true, 43)
 
         then:
         1 * webService.doPost(_, [reportId:'1', fromDate: '2015-08-01T00:00:00Z', toDate: '2015-12-31T13:00:00Z', submissionDate: '2015-12-31T13:00:00Z', dueDate: '2016-02-12T13:00:00Z', type: 'Activity', name: 'Stage 1', description: "Stage 1 for project", projectId: 'p1', category:'Stage reports'])
@@ -103,7 +133,7 @@ class ReportServiceSpec extends Specification {
         projectService.get(_, _) >> project
 
         when:
-        service.regenerateAllStageReportsForProject('p1', 6, true, 43)
+        regenerateAllStageReportsForProject('p1', 6, true, 43)
 
         then: "a new report should be added at the end of the project"
 
@@ -120,7 +150,7 @@ class ReportServiceSpec extends Specification {
         projectService.get(_, _) >> project
 
         when:
-        service.regenerateAllStageReportsForProject('p1', 6, true, 43)
+        regenerateAllStageReportsForProject('p1', 6, true, 43)
 
         then: "the last report should be deleted"
         1 * webService.doDelete({ it.endsWith('/report/4')})
@@ -135,7 +165,7 @@ class ReportServiceSpec extends Specification {
         projectService.get(_, _) >> project
 
         when:
-        service.regenerateAllStageReportsForProject('p1', 6, true, 43)
+        regenerateAllStageReportsForProject('p1', 6, true, 43)
 
         then: "a new report should be added to the end"
         1 * webService.doPost({it.endsWith('/report/')}, [fromDate: '2016-12-31T13:00:00Z', toDate: '2017-07-01T00:00:00Z', submissionDate:'2017-07-01T00:00:00Z', type: 'Activity', name: 'Stage 5', description: "Stage 5 for project", projectId: 'p1', dueDate: '2017-08-12T14:00:00Z', category:'Stage reports'])
@@ -155,7 +185,7 @@ class ReportServiceSpec extends Specification {
         projectService.get(_, _) >> project
 
         when:
-        service.regenerateAllStageReportsForProject('p1', 6, true, 43)
+        regenerateAllStageReportsForProject('p1', 6, true, 43)
 
         then: "no reports should not be changed"
         0 * webService._
@@ -174,7 +204,7 @@ class ReportServiceSpec extends Specification {
         projectService.get(_, _) >> project
 
         when:
-        service.regenerateAllStageReportsForProject('p1', 6, true, 43)
+        regenerateAllStageReportsForProject('p1', 6, true, 43)
 
         then: "a new report is added to the end of the schedule"
         1 * webService.doPost({it.endsWith('/report/')}, [fromDate: '2016-12-31T13:00:00Z', toDate: '2017-01-07T00:00:00Z', submissionDate: '2017-01-07T00:00:00Z', type: 'Activity', name: 'Stage 5', description: "Stage 5 for project", dueDate:'2017-08-12T14:00:00Z', projectId: 'p1', category:'Stage reports'])
@@ -195,7 +225,7 @@ class ReportServiceSpec extends Specification {
         projectService.get(_, _) >> project
 
         when:
-        service.regenerateAllStageReportsForProject('p1', 6, true, 43)
+        regenerateAllStageReportsForProject('p1', 6, true, 43)
 
         then: "only the non-approved or submitted report should be removed."
         1 * webService.doDelete({ it.endsWith('/report/4')})
@@ -216,7 +246,7 @@ class ReportServiceSpec extends Specification {
         projectService.get(_, _) >> project
 
         when: "reports are regenerated"
-        service.regenerateAllStageReportsForProject('p1', 6, true)
+        regenerateAllStageReportsForProject('p1', 6, true)
 
         then: "report 2 is realigned with a from date matching report 1 end date and an end date aligned to australian time"
         1 * webService.doPost({it.endsWith('/report/2')}, [fromDate: '2016-07-01T00:00:00Z', toDate: '2016-12-31T13:00:00Z', submissionDate: '2016-12-31T13:00:00Z', type: 'Activity', name: 'Stage 2', description: 'Stage 2 for project', projectId: 'p1', reportId:'2', category:'Stage reports'])

@@ -4,6 +4,7 @@ import au.org.ala.merit.command.ProjectSummaryReportCommand
 import au.org.ala.merit.command.ReportCommand
 import au.org.ala.merit.command.SaveReportDataCommand
 import au.org.ala.merit.reports.ReportConfig
+import au.org.ala.merit.reports.ReportGenerationOptions
 import grails.converters.JSON
 import org.apache.http.HttpStatus
 import org.codehaus.groovy.grails.web.json.JSONArray
@@ -123,6 +124,7 @@ class ProjectController {
         project.assets = config.assets ?: []
         project.priorities = new JSONArray(config.priorities ?: [])
         project.outcomes = new JSONArray(config.outcomes ?: [])
+        project.hasApprovedOrSubmittedReports = reportService.includesSubmittedOrApprovedReports(project.reports)
 
         def meriPlanVisible = metadataService.isOptionalContent('MERI Plan', config)
         def risksAndThreatsVisible = metadataService.isOptionalContent('Risks and Threats', config)
@@ -146,7 +148,7 @@ class ProjectController {
         def imagesModel = publicImages.collect {
             [name: it.name, projectName: project.name, url: it.url, thumbnailUrl: it.thumbnailUrl]
         }
-        boolean canChangeProjectDates = projectService.canChangeProjectDates(project)
+        boolean canChangeProjectDates = userService.userIsAlaOrFcAdmin()
 
         // For validation of project date changes.
         String minimumProjectEndDate = projectService.minimumProjectEndDate(project, config)
@@ -188,7 +190,6 @@ class ProjectController {
             rlpModel.admin.showSpecies = false
             rlpModel.admin.hidePrograms = true
             rlpModel.admin.showAnnouncementsTab = false
-            rlpModel.admin.canChangeProjectDates = true
 
             model = rlpModel
         }
@@ -221,41 +222,21 @@ class ProjectController {
         render template: 'dashboard', model: [metrics: projectService.summary(id)]
     }
 
-    @PreAuthorise
-    def edit(String id) {
-
-        def project = projectService.get(id, 'all')
-        // This will happen if we are returning from the organisation create page during an edit workflow.
-        if (params.organisationId) {
-            project.organisationId = params.organisationId
-        }
-        def user = userService.getUser()
-        def groupedOrganisations = groupOrganisationsForUser(user.userId)
-
-        if (project) {
-            def siteInfo = siteService.getRaw(project.projectSiteId)
-            [project          : project,
-             siteDocuments    : siteInfo.documents ?: '[]',
-             site             : siteInfo.site,
-             userOrganisations: groupedOrganisations.user ?: [],
-             organisations    : groupedOrganisations.other ?: [],
-             programs         : metadataService.programsModel()]
-        } else {
-            forward(action: 'list', model: [error: 'no such id'])
-        }
-    }
-
     @PreAuthorise(accessLevel='siteAdmin')
-    def ajaxValidateProjectStartDate(String id, String fieldId, String fieldValue) {
-        if (fieldId != 'startDate' || !fieldValue) {
+    def ajaxValidateProjectDates(String id) {
+        if (!params.plannedStartDate) {
             render status:400, message:"Invalid date supplied"
             return
         }
 
+        ReportGenerationOptions options = projectService.dateChangeOptions(params)
+
         try {
-            String isoDate = DateUtils.displayToIsoFormat(fieldValue)
-            String message = projectService.validateProjectStartDate(id, isoDate)
-            List result = [fieldId, message == null, message]
+            String newStartDate = params.plannedStartDate
+            String newEndDate = params.plannedEndDate
+
+            String message = projectService.validateProjectDates(id, newStartDate, newEndDate, options)
+            Map result = [valid:message == null, message:message]
 
             render result as JSON
         }
@@ -552,18 +533,6 @@ class ProjectController {
         render result as JSON
     }
 
-
-    @PreAuthorise(accessLevel = 'admin')
-    def updateProjectStartDate(String id) {
-        def payload = request.getJSON()
-        if (!payload.plannedStartDate) {
-            render status: 400, text: "Missing parameter plannedStartDate"
-            return
-        }
-        def result = projectService.changeProjectStartDate(id, payload.plannedStartDate)
-        render result as JSON
-    }
-
     @PreAuthorise(accessLevel = 'admin')
     def updateProjectDates(String id) {
         def payload = request.getJSON()
@@ -578,7 +547,7 @@ class ProjectController {
     @PreAuthorise(accessLevel = 'admin')
     def regenerateStageReports(String id) {
 
-        projectService.generateProjectStageReports(id)
+        projectService.generateProjectStageReports(id, new ReportGenerationOptions())
         render status: 200, text: 'ok'
     }
 

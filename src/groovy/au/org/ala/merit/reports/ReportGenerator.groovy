@@ -66,7 +66,7 @@ class ReportGenerator {
             }
 
         }
-        alignEndDates(reports, reportOwner.periodEnd)
+        alignEndDates(reports, reportOwner.periodEnd, reportConfig)
 
         reports
     }
@@ -76,8 +76,9 @@ class ReportGenerator {
      * The only case this currently won't be done is for single reports that finish before the project end.
      * @param reports reports to check
      * @param ownerEndDate the end date of the report owner (e.g project / program etc)
+     * @param reportConfig the configuration used to generate the reports
      */
-    private void alignEndDates(List<Map> reports, DateTime ownerEndDate) {
+    private void alignEndDates(List<Map> reports, DateTime ownerEndDate, ReportConfig reportConfig) {
         if (reports) {
             String finalToDate = DateUtils.format(ownerEndDate.withZone(DateTimeZone.UTC))
 
@@ -85,7 +86,11 @@ class ReportGenerator {
             // This is to support single reports due on year 3 of the project (specifically the RLP Outcomes 1 Report)
             if (reports.size() > 1 || reports[-1].toDate > finalToDate) {
                 reports[-1].toDate = finalToDate
-                reports[-1].submissionDate = finalToDate
+
+                if (!reportConfig.canSubmitDuringReportingPeriod) {
+                    reports[-1].submissionDate = finalToDate
+                }
+
             }
 
         }
