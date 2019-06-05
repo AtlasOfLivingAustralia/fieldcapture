@@ -232,7 +232,6 @@
 
         config.model = ${fc.modelAsJavascript(model:model)};
         config.featureCollection = context.featureCollection;
-        config.disablePrepop = ${activity.progress != au.org.ala.merit.ActivityService.PROGRESS_PLANNED},
 
         config = _.extend({}, outputModelConfig, config);
 
