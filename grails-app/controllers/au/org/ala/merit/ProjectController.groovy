@@ -846,7 +846,7 @@ class ProjectController {
     @PreAuthorise(accessLevel = 'editor')
     def scoresByFinancialYear(String id) {
         String financialYearEndDate = params.financialYearEndDate
-        boolean missedTargetsOnly = params.getBoolean("missedTargetsOnly", true)
+        boolean missedTargetsOnly = params.getBoolean("missedTargetsOnly", false)
 
         DateTime financialYearStart = DateUtils.alignToFinancialYear(DateUtils.parse(financialYearEndDate))
         String year = financialYearStart.year + "/" + (financialYearStart.year+1)
