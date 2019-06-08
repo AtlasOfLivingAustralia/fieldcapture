@@ -9,7 +9,8 @@
 //= require jquery.validationEngine/jquery.validationEngine
 //= require jquery.validationEngine/jquery.validationEngine-en
 //= require jquery.blockUI/jquery.blockUI
-//= require momentjs/moment.min.js
+//= require momentjs/2.24.0/moment.min.js
+//= require momentjs/2.24.0/locales/en-au.js
 //= require momentjs/moment-timezone-with-data.min.js
 //= require vkbeautify/vkbeautify.0.99.00.beta.js
 //= require bootstrap-combobox/bootstrap-combobox

@@ -818,7 +818,6 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
 
     self.transients.startDateInvalid = ko.observable(false);
     self.transients.disableSave = ko.pureComputed(function() {
-        console.log("Disable save: "+self.transients.startDateInvalid());
         return self.transients.startDateInvalid();
     });
 
