@@ -42,8 +42,8 @@ module.exports = function (config) {
             'grails-app/assets/vendor/momentjs/moment.min.js',
             'grails-app/assets/vendor/jquery.appear/jquery.appear.js',
             'grails-app/assets/vendor/amplifyjs/amplify.min.js',
-            'grails-app/assets/vendor/momentjs/moment.min.js',
-            'grails-app/assets/vendor/momentjs/moment-timezone-with-data.min.js',
+            "node_modules/moment/moment.js",
+            "node_modules/moment-timezone/moment-timezone.js",
             'grails-app/assets/javascripts/*.js',
             'test/js/spec/**/*.js'
         ],
