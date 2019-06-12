@@ -349,7 +349,7 @@ class SiteController {
 
                 while (!progress.cancelling && progress.uploaded < progress.total) {
                     Map site = siteData.sites[progress.uploaded]
-                    Map result = siteService.createSiteFromUploadedShapefile(siteData.shapeFileId, site.id, site.externalId, site.name, site.description?:'No description supplied', siteData.projectId, false)
+                    Map result = siteService.createSiteFromUploadedShapefile(siteData.shapeFileId, site.id, asString(site.externalId), asString(site.name), asString(site.description, 'No description supplied'), siteData.projectId, false)
                     if (!result.success) {
                         progress.errors << [error:result.error, detail:result.detail]
                     }
@@ -364,6 +364,13 @@ class SiteController {
             render result as JSON
         }
 
+    }
+
+    private String asString(field, String defaultValue = "") {
+        if (field) {
+            return field as String
+        }
+        return defaultValue
     }
 
     def validate(String id) {
