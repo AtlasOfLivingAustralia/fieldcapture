@@ -49,8 +49,12 @@ class ReportGenerator {
 
             // Single reports are aligned with the owner dates.
             DateTime start = reportOwner.periodStart.withZone(DateTimeZone.default)
+
             DateTime end = endDate
-            if (reportConfig.reportingPeriodInMonths) {
+            if (reportConfig.getFirstReportingPeriodEnd()) {
+                end = reportConfig.getFirstReportingPeriodEnd()
+            }
+            else if (reportConfig.reportingPeriodInMonths) {
                 end = start.plus(period)
             }
             Interval reportInterval = new Interval(start, end)
