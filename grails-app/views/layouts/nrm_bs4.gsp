@@ -108,26 +108,29 @@
                 %{--<span class="icon-bar"></span>--}%
                 %{--</a>--}%
 
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nav-items" aria-controls="nav-items" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="nav-items">
                     <ul class="nav navbar-nav mr-auto">
                         <fc:navbar active="${pageProperty(name: 'page.topLevelNav')}"
                                    items="${['home', 'projectExplorer', 'about', 'help', 'contacts']}"/>
 
-
-
                     </ul>
-                <form class="form-inline ml-auto">
-                    <span id="buttonBar">
-                        <g:render template="/layouts/nrmUserButtons"/>
-                        <g:pageProperty name="page.buttonBar"/>
-                    </span>
-                </form>
-                <g:form controller="search" method="GET" class="search merit">
+                    <form class="form-inline ml-auto">
+%{--                        <span id="buttonBar">--}%
+                            <g:render template="/layouts/nrmUserButtons"/>
+                            <g:pageProperty name="page.buttonBar"/>
+%{--                        </span>--}%
+                    </form>
+                    <g:form controller="search" method="GET" class="search merit">
 
-                        <input aria-label="Search MERIT" type="text" name="query" id="keywords" placeholder="Search MERIT"
-                               value="${params.query ? params.query.encodeAsHTML() : ''}">
-                        <input type="submit" value="search" class="search button">
+                            <input aria-label="Search MERIT" type="text" name="query" id="keywords" placeholder="Search MERIT"
+                                   value="${params.query ? params.query.encodeAsHTML() : ''}">
+                            <input type="submit" value="search" class="search button">
 
-                </g:form>
+                    </g:form>
+                </div>
             </div><!-- /.navbar-inner -->
         </div>
     </div>
