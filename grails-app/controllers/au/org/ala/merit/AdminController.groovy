@@ -2,6 +2,7 @@ package au.org.ala.merit
 
 import au.com.bytecode.opencsv.CSVReader
 import au.org.ala.merit.command.Reef2050PlanActionReportSummaryCommand
+import au.org.ala.merit.reports.ReportGenerationOptions
 import grails.converters.JSON
 import grails.plugin.cache.GrailsCacheManager
 import grails.util.Environment
@@ -652,7 +653,7 @@ class AdminController {
             projects.hits?.hits?.each { hit ->
                 def project = hit._source
                 if (!project.timeline) {
-                    projectService.generateProjectStageReports(project.projectId)
+                    projectService.generateProjectStageReports(project.projectId, new ReportGenerationOptions())
                     println "Generated reports for project ${project.projectId}"
                 }
             }

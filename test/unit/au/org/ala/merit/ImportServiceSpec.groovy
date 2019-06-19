@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.reports.ReportGenerationOptions
 import grails.converters.JSON
 import org.apache.http.HttpStatus
 import org.springframework.mock.web.MockMultipartFile
@@ -12,6 +13,14 @@ class ImportServiceSpec extends Specification {
 
     static def HEADER_ROW = "${GmsMapper.GRANT_ID_COLUMN},${GmsMapper.EXTERNAL_ID_COLUMN},${GmsMapper.DATA_TYPE_COLUMN},${GmsMapper.DATA_SUB_TYPE_COLUMN},PGAT_ACTIVITY_DELIVERABLE_GMS_CODE,UNITS_COMPLETED"
 
+    def scores = [
+            [scoreId:'1', label:'Area of revegetation works (Ha)', units:'Ha', externalId:'RVA', isOutputTarget:true],
+            [scoreId:'2', label:'Number of plants planted', units:'', externalId:'RVN', isOutputTarget:true],
+            [scoreId:'3', label:'Total new area treated for weeds (Ha)', units:'Ha', externalId:'WDT', isOutputTarget:true],
+            [scoreId:'4', label:'Total No. of plants grown and ready for planting', units:'', externalId:'PPRP', isOutputTarget:true]
+
+    ]
+    GmsMapper mapper
     ImportService importService
     ProjectService projectService = Mock(ProjectService)
     def activitiesModel = JSON.parse(new InputStreamReader(getClass().getResourceAsStream('/resources/activities-model.json')))
@@ -29,6 +38,7 @@ class ImportServiceSpec extends Specification {
         metadataServiceStub.activitiesModel() >> activitiesModel
         metadataServiceStub.getOutputTargetScores() >> [[externalId:'RVA', scoreId:1, label:'label 1']]
         importService.metadataService = metadataServiceStub
+        mapper = new GmsMapper(activitiesModel, [:], [], scores)
     }
 
     def "MERIT should be able to load summary activity score information into a project using CSV formatted data"() {
@@ -79,6 +89,36 @@ class ImportServiceSpec extends Specification {
         1 * siteService.createSiteFromUploadedShapefile(shapefileId, "0", shapefileId+'-0', "g1 - Site 1", _, "p1", false) >> [success:true, siteId:'s1']
         result.success == true
         result.message.sites.size() == 1
+    }
+
+    def "The import service can create projects that have been loaded and mapped via CSV"() {
+        setup:
+        GmsMapper mapper = new GmsMapper(activitiesModel, [:], [], scores, [:])
+        List projectRows = [[
+            APP_ID:'Grant 1',
+            MANAGEMENT_UNIT:'Test MU',
+            APP_NM:'Test project',
+            APP_DESC:'Test project description',
+            EXTERNAL_ID:'123',
+            ORG_TRADING_NAME:'Test organisation',
+            START_DT: '01/07/2019',
+            FINISH_DT: '30/06/2023',
+            WORK_ORDER_ID: 'WO1234',
+            ADMIN_EMAIL: 'admin@test.org',
+            GRANT_MGR_EMAIL: 'gm@test.org'
+        ]]
+        List status = []
+        String projectId = 'p1'
+
+        when:
+        importService.importAll(projectRows, status, mapper)
+
+        then:
+        1 * projectService.update('', _) >> [resp:[projectId:projectId]]
+
+        1 * projectService.generateProjectStageReports(projectId, new ReportGenerationOptions())
+        status.size() == 1
+        status[0].grantId == projectRows[0].APP_ID
     }
 
 
