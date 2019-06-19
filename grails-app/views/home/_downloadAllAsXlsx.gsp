@@ -1,4 +1,5 @@
-<a class="pointer" id="downloadXlsxButton">XLSX</a>
+<a class="btn button btn-primary" id="downloadXlsxButton">Download as XLSX</a>
+
 <form id="downloadTabSelection" target="_blank" method="POST" action="${g.createLink(controller: 'search', action: 'downloadAllData')}">
 
     <input type="hidden" name="view" value="xlsx">
@@ -23,8 +24,12 @@
 
     <strong>MERI Plan</strong>
     <ul class="unstyled">
-        <g:each in="${['Outcomes', 'Monitoring', 'Project Partnerships', 'Project Implementation', 'Key Evaluation Question', 'Priorities', 'Budget', 'Risks and Threats', 'WHS and Case Study', 'Attachments']}" var="name">
+        <g:each in="${['Outcomes', 'Monitoring', 'Project Partnerships', 'Project Implementation', 'Key Evaluation Question', 'Priorities', 'Budget', 'Risks and Threats', 'WHS and Case Study', 'Attachments', 'Baseline', 'Event']}" var="name">
             <li><label class="checkbox"><input type="checkbox" name="tabs" value="MERI_${name}" data-validation-engine="validate[minCheckbox[1]]">${name}</label></li>
+        </g:each>
+         <!-- RLP project -->
+        <g:each in="${['RLP Outcomes', 'RLP Project Details', 'RLP Key Threats', 'RLP Services and Targets']}" var="name">
+            <li><label class="checkbox"><input type="checkbox" name="tabs" value="${name.replaceAll(' ','_')}" data-validation-engine="validate[minCheckbox[1]]">${name}</label></li>
         </g:each>
     </ul>
 

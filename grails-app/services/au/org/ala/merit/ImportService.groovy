@@ -1,5 +1,6 @@
 package au.org.ala.merit
 import au.com.bytecode.opencsv.CSVReader
+import au.org.ala.merit.reports.ReportGenerationOptions
 import com.vividsolutions.jts.geom.Geometry
 import com.vividsolutions.jts.geom.GeometryCollection
 import com.vividsolutions.jts.geom.GeometryFactory
@@ -561,7 +562,7 @@ class ImportService {
     final int OUTPUT_COLUMN = 3
 
 
-    def gmsImport(InputStream csv, status, preview, charEncoding = 'Cp1252') {
+    def gmsImport(InputStream csv, List status, preview, charEncoding = 'Cp1252') {
 
         Map programs = [:].withDefault{name ->
             Map program = programService.getByName(name)
@@ -616,7 +617,7 @@ class ImportService {
         result
     }
 
-    def mapProjectRows(projectRows, status, GmsMapper mapper) {
+    def mapProjectRows(projectRows, List status, GmsMapper mapper) {
 
         def projectDetails = mapper.mapProject(projectRows)
         def grantId = projectDetails.project.grantId?:'<not mapped>'
@@ -625,7 +626,7 @@ class ImportService {
         status << [grantId:grantId, externalId:externalId, success:projectDetails.errors.size() == 0, errors:projectDetails.errors]
     }
 
-    def importAll(projectRows, status, GmsMapper mapper) {
+    def importAll(projectRows, List status, GmsMapper mapper) {
 
         def projectDetails = mapper.mapProject(projectRows)
 
@@ -695,7 +696,7 @@ class ImportService {
                 activityService.update('', activity)
             }
 
-            projectService.generateProjectStageReports(projectId)
+            projectService.generateProjectStageReports(projectId, new ReportGenerationOptions())
 
             status << [projectId:projectDetails.project.projectId, grantId:grantId, externalId:externalId, success:projectDetails.errors.size() == 0, errors:projectDetails.errors]
 
@@ -1174,7 +1175,7 @@ class ImportService {
                 isMERIT:true]
         projectService.update('', project)
         project = findProjectByGrantAndExternalId(grantId, externalId)
-        projectService.generateProjectStageReports(project.projectId)
+        projectService.generateProjectStageReports(project.projectId, new ReportGenerationOptions())
         project = projectService.get(project.projectId)
 
 

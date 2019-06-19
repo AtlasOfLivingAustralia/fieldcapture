@@ -14,23 +14,23 @@
             returnTo = "${params.returnTo}";
     </script>
     <asset:stylesheet src="common.css"/>
-    <asset:stylesheet src="fileupload-9.0.0/jquery.fileupload-ui.css"/>
+    <asset:stylesheet src="blueimp/fileupload-9.28.0/jquery.fileupload.css"/>
 </head>
 
 <body>
-<content tag="pageTitle">Import Projects from GMS</content>
+<content tag="pageTitle">Import Projects from CSV</content>
 
-<h2>GMS Project Import</h2>
+<h2>CSV Project Import</h2>
 <p>
 
 </p>
 <div class="row-fluid">
     <div class="span4">
-        Select the (cp1252 encoded) CSV file containing the GMS data.  The file will be uploaded automatically.
+        Select the (cp1252 encoded) CSV file containing the project data.  The file will be uploaded automatically.
     </div>
      <div class="span2 btn fileinput-button" style="margin-left:5px">
         <input id="fileUpload" type="file" accept="text/csv" data-bind="fileUploadNoImage:uploadOptions, enabled:!finished() && !finishedPreview()">Select file</button>
-    </div>
+</div>
 </div>
 
 

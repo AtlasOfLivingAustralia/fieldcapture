@@ -10,7 +10,7 @@ if(!grails.config.locations || !(grails.config.locations instanceof List)) {
     grails.config.locations = []
 }
 
-// add ala skin conf (needed for version >= 0.1.10)
+// add ala  conf (needed for version >= 0.1.10)
 grails.config.locations.add("classpath:ala-config.groovy")
 
 if(System.getenv(ENV_NAME) && new File(System.getenv(ENV_NAME)).exists()) {
@@ -292,7 +292,7 @@ grails.cache.config = {
 }
 security {
     cas {
-        appServerName = 'http://devt.ala.org.au:8080' // or similar, up to the request path part
+        appServerName = 'http://devt.ala.org.au:8087' // or similar, up to the request path part
         // service = 'http://devt.ala.org.au:8080' // optional, if set it will always be used as the return path from CAS
         uriFilterPattern = '.*/user/.*,.*/site/(?!index).*,.*/project/(?!(index|viewReportCallback)).*,.*/activity/(?!ajaxUnlock).*,.*/output/(?!index).*,.*/image/delete.*,.*/image/upload.*,.*/admin/.*,.*/proxy/speciesListPost,.*/document/documentUpdate,.*/document/deleteDocument,.*/document/downloadProjectDataFile/.*,.*/home/advanced,.*/organisation/(?!index).*,.*/organisation/(?!list).*,.*/blog/.*,.*/report/performanceAssessmentSummaryReport,.*/report/performanceAssessmentComparisonReport.*,.*/report/update.*,.*/program/(?!viewReportCallback).*,.*/programme/.*,.*/rlp/(?!viewReportCallback).*,.*/home/login.*,.*/ajax/keepSessionAlive'
         uriExclusionFilterPattern = '/assets/.*,/images/.*,/css/.*,/js/.*,/less/.*' // this is the default value
@@ -307,7 +307,7 @@ markdown.hardwraps = true
 environments {
     development {
         grails.logging.jul.usebridge = true
-        server.port = "8087"
+        server.port = 8087
         grails.host = "http://devt.ala.org.au"
         serverName = "${grails.host}:${server.port}"
         grails.serverURL = serverName + "/${appName}"
