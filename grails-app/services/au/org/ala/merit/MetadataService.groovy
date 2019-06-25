@@ -30,13 +30,6 @@ class MetadataService {
         })
     }
 
-    def updateActivitiesModel(model) {
-        def result = webService.doPost(grailsApplication.config.ecodata.baseUrl +
-                'metadata/updateActivitiesModel', [model: model])
-        cacheService.clear('activity-model')
-        result
-    }
-
     def programsModel() {
         def allPrograms = cacheService.get('programs-model',{
             webService.getJson(grailsApplication.config.ecodata.baseUrl +
@@ -74,13 +67,6 @@ class MetadataService {
 
     def programModel(program) {
         return programsModel().programs.find {it.name == program}
-    }
-
-    def updateProgramsModel(model) {
-        def result = webService.doPost(grailsApplication.config.ecodata.baseUrl +
-                'metadata/updateProgramsModel', [model: model])
-        cacheService.clear('programs-model')
-        result
     }
 
     def getThemesForProject(project) {
@@ -129,23 +115,8 @@ class MetadataService {
         model
     }
 
-    def updateOutputDataModel(model, template) {
-        log.debug "updating template ${template}"
-        //log.debug "model class is ${model.getClass()}"
-        def result = webService.doPost(grailsApplication.config.ecodata.baseUrl +
-                'metadata/updateOutputDataModel/' + template, [model: model])
-        cacheService.clear(template + '-model')
-        result
-    }
-
     def getActivityModelName(outputName) {
         return activitiesModel().outputs.find({it.name == outputName})?.template
-    }
-
-    def getModelNameFromType(type) {
-        log.debug "Getting model name for ${type}"
-        log.debug activitiesModel()
-        return activitiesModel().activities.find({it.name == type})?.template
     }
 
     def activityTypesList(program = '', subprogram='') {
