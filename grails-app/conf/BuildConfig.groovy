@@ -102,6 +102,7 @@ grails.project.dependency.resolution = {
         compile "org.codehaus.groovy.modules.http-builder:http-builder:0.7.1"
         compile "org.apache.httpcomponents:httpcore:4.4.1"
         compile "org.apache.httpcomponents:httpclient:4.4.1"
+        compile "org.apache.httpcomponents:httpmime:4.4.1"
         compile "org.apache.pdfbox:pdfbox:2.0.4"
         build "com.google.guava:guava:21.0"
         test 'org.openclover:clover:4.3.0'
@@ -144,9 +145,7 @@ grails.project.dependency.resolution = {
         test 'org.grails.plugins:clover:4.3.0'
 
         if (Environment.current != Environment.DEVELOPMENT) {
-            compile (":ecodata-client-plugin:1.9-SNAPSHOT") {
-                excludes ":ala-ws-plugin:"
-            }
+            compile (":ecodata-client-plugin:1.9-SNAPSHOT")
         }
 
     }
