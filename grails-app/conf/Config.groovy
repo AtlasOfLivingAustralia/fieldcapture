@@ -175,9 +175,11 @@ if(!upload.images.path){
 if(!app.http.header.userId){
     app.http.header.userId = "X-ALA-userId"
 }
-if(!ecodata.baseUrl){
-    ecodata.baseUrl = "http://ecodata.ala.org.au/ws/"
-}
+
+ecodata.baseUrl = "https://ecodata-test.ala.org.au/ws/"
+// This is for biocollect/ecodata-client-plugin compatibility
+ecodata.service.url = "https://ecodata-test.ala.org.au/ws"
+
 if (!ala.image.service.url) {
     ala.image.service.url = "http://images-dev.ala.org.au/"
 }
@@ -321,6 +323,7 @@ environments {
         upload.images.url = grails.serverURL+'/image/'
         emailFilter = /[A-Z0-9._%-]+@csiro\.au|chris\.godwin\.ala@gmail.com/
         logging.dir = '.'
+        ecodata.service.url = 'http://devt.ala.org.au:8080/ecodata/ws'
     }
     test {
         server.port = "8087"
@@ -345,6 +348,7 @@ environments {
         test.user.admin.email = 'fc-ta@outlook.com'
         test.user.admin.password = 'testing!'
         ecodata.baseUrl = 'http://devt.ala.org.au:8080/ecodata/ws/'
+        ecodata.service.url = 'http://devt.ala.org.au:8080/ecodata/ws'
         api_key=System.getenv('API_KEY')
 
     }

@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import au.org.ala.ecodata.forms.ActivityFormService
 import au.org.ala.merit.DateUtils
 import org.joda.time.DateTime
 import org.joda.time.Period
@@ -8,6 +9,7 @@ import org.joda.time.format.DateTimeFormat
 class ActivityService {
 
     def webService, grailsApplication, metadataService, reportService, projectService, emailService, userService
+    ActivityFormService activityFormService
 
     public static final String PROGRESS_PLANNED = 'planned'
     public static final String PROGRESS_FINISHED = 'finished'
@@ -228,8 +230,8 @@ class ActivityService {
         projectService.canEditActivity(activity)
     }
 
-    Map getActivityMetadata(String activityType) {
-        metadataService.getActivityMetadata(activityType)
+    Map getActivityMetadata(String activityType, Integer version = null) {
+        activityFormService.getActivityAndOutputMetadata(activityType, version)
     }
 
     /**

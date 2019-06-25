@@ -45,7 +45,7 @@ class ActivityController {
     }
 
     private def addOutputModel(Map model) {
-        model.putAll(activityService.getActivityMetadata(model.activity.type))
+        model.putAll(activityService.getActivityMetadata(model.activity.type, model.activity.formVersion))
     }
 
     def index(String id) {

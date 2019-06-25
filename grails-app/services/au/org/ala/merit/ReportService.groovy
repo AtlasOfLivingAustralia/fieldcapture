@@ -832,7 +832,7 @@ class ReportService {
         Map report = get(reportId)
 
         Map activity = activityService.get(report.activityId)
-        Map model = activityService.getActivityMetadata(activity.type)
+        Map model = activityService.getActivityMetadata(activity.type, activity.formVersion)
         model.report = report
         model.activity = activity
         model.themes = []
