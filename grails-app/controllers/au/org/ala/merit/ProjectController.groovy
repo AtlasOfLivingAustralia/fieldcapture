@@ -688,7 +688,7 @@ class ProjectController {
             metadataService.clearCache()
         }
 
-        Map model = activityReportModel(id, reportId, ReportMode.EDIT)
+        Map model = activityReportModel(id, reportId, ReportMode.EDIT, params.getInt('formVersion', null))
 
         if (!model.editable) {
             redirect action:'viewReport', id:id, params:[reportId:reportId, attemptedEdit:true]
@@ -788,11 +788,11 @@ class ProjectController {
         render result as JSON
     }
 
-    private Map activityReportModel(String projectId, String reportId, ReportMode mode) {
+    private Map activityReportModel(String projectId, String reportId, ReportMode mode, Integer formVersion = null) {
 
         Map project = projectService.get(projectId)
         Map config = projectService.getProgramConfiguration(project)
-        Map model = reportService.activityReportModel(reportId, mode)
+        Map model = reportService.activityReportModel(reportId, mode, formVersion)
         model.metaModel = filterOutputModel(model.metaModel, project, model.activity)
 
         model.context = new HashMap(project)

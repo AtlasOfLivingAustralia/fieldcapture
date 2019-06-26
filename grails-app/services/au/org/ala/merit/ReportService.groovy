@@ -828,11 +828,11 @@ class ReportService {
         webService.doPost(url, [searchCriteria: searchCriteria, reportConfig: config])
     }
 
-    Map activityReportModel(String reportId, ReportMode mode) {
+    Map activityReportModel(String reportId, ReportMode mode, Integer formVersion = null) {
         Map report = get(reportId)
 
         Map activity = activityService.get(report.activityId)
-        Map model = activityService.getActivityMetadata(activity.type, activity.formVersion)
+        Map model = activityService.getActivityMetadata(activity.type, formVersion ?: activity.formVersion)
         model.report = report
         model.activity = activity
         model.themes = []

@@ -34,7 +34,7 @@ class ProgramControllerSpec extends Specification {
         controller.viewReport(programId, reportId)
 
         then:
-        1 * reportService.activityReportModel(reportId, ReportService.ReportMode.VIEW) >> [:]
+        1 * reportService.activityReportModel(reportId, ReportService.ReportMode.VIEW, null) >> [:]
         view == '/activity/activityReportView'
         model.context == program
         model.contextViewUrl == '/program/index/'+programId
@@ -51,7 +51,7 @@ class ProgramControllerSpec extends Specification {
         when:
         controller.editReport(programId, reportId)
         then:
-        1 * reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT) >> [editable:true]
+        1 * reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT, null) >> [editable:true]
         view == '/activity/activityReport'
         model.context == program
         model.contextViewUrl == '/program/index/'+programId
@@ -67,7 +67,7 @@ class ProgramControllerSpec extends Specification {
         program.inheritedConfig.requiresActivityLocking = true
 
         when:
-        reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT) >> [editable:false]
+        reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT, null) >> [editable:false]
         controller.editReport(programId, reportId)
 
         then: "the report activity should not be locked"
@@ -88,7 +88,7 @@ class ProgramControllerSpec extends Specification {
         program.inheritedConfig.requiresActivityLocking = true
         controller.editReport(programId, reportId)
         then:
-        1 * reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT) >> [report:program.reports[0], editable:true]
+        1 * reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT, null) >> [report:program.reports[0], editable:true]
         1 * reportService.lockForEditing(program.reports[0])
         view == '/activity/activityReport'
     }
