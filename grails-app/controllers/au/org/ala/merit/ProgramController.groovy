@@ -209,7 +209,7 @@ class ProgramController {
             return
         }
 
-        Map model = activityReportModel(id, reportId, ReportMode.EDIT)
+        Map model = activityReportModel(id, reportId, ReportMode.EDIT, params.getInt('formVersion', null))
 
         if (!model.editable) {
             redirect action:'viewReport', id:id, params:[reportId:reportId, attemptedEdit:true]
@@ -234,10 +234,10 @@ class ProgramController {
         render result as JSON
     }
 
-    private Map activityReportModel(String programId, String reportId, ReportMode mode) {
+    private Map activityReportModel(String programId, String reportId, ReportMode mode, Integer formVersion = null) {
         Map program = programService.get(programId)
         Map config = program.inheritedConfig
-        Map model = reportService.activityReportModel(reportId, mode)
+        Map model = reportService.activityReportModel(reportId, mode, formVersion)
 
         model.context = program
         model.returnTo = createLink(action:'index', id:programId)

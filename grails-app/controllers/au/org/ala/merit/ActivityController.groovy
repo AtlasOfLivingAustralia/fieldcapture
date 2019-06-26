@@ -38,14 +38,14 @@ class ActivityController {
         model
     }
 
-    private Map activityAndOutputModel(activity, projectId) {
+    private Map activityAndOutputModel(activity, projectId, Integer formVersion = null) {
         def model = activityModel(activity, projectId)
-        addOutputModel(model)
+        addOutputModel(model, model.activity.type, formVersion ?: model.activity.formVersion)
         model
     }
 
-    private def addOutputModel(Map model) {
-        model.putAll(activityService.getActivityMetadata(model.activity.type))
+    private Map addOutputModel(Map model, String formName, Integer formVersion = null) {
+        model.putAll(activityService.getActivityMetadata(formName, formVersion))
     }
 
     def index(String id) {
@@ -140,7 +140,7 @@ class ActivityController {
                 chain(action:'index', id:id)
             }
 
-            Map model = activityAndOutputModel(activity, activity.projectId)
+            Map model = activityAndOutputModel(activity, activity.projectId, params.getInt('formVersion', null))
 
             Map programConfig = projectService.getProgramConfiguration(model.project)
             // Temporary until we add this to the program config.
@@ -226,7 +226,7 @@ class ActivityController {
         if (type) {
             activity.type = type
             model.returnTo = g.createLink(controller:'project', id:projectId)
-            addOutputModel(model)
+            addOutputModel(model, type)
         }
 
 
