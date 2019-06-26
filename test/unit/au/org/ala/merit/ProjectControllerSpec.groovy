@@ -177,7 +177,7 @@ class ProjectControllerSpec extends Specification {
 
         then:
         1 * projectService.getProgramConfiguration(project) >> new ProgramConfig([requiresActivityLocking: true])
-        1 * reportService.activityReportModel(reportId, ReportService.ReportMode.VIEW) >> activityReportModel
+        1 * reportService.activityReportModel(reportId, ReportService.ReportMode.VIEW, null) >> activityReportModel
         view == '/activity/activityReportView'
         model.context == project
         model.contextViewUrl == '/project/index/'+projectId
@@ -197,7 +197,7 @@ class ProjectControllerSpec extends Specification {
         when:
         controller.editReport(projectId, reportId)
         then:
-        1 * reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT) >> activityReportModel
+        1 * reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT, null) >> activityReportModel
         1 * projectService.getProgramConfiguration(project) >> new ProgramConfig([requiresActivityLocking: true])
         view == '/activity/activityReport'
         model.context == project
@@ -217,7 +217,7 @@ class ProjectControllerSpec extends Specification {
 
 
         when:
-        reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT) >> activityReportModel
+        reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT, null) >> activityReportModel
         controller.editReport(projectId, reportId)
 
         then: "the report activity should not be locked"
@@ -240,7 +240,7 @@ class ProjectControllerSpec extends Specification {
 
 
         when:
-        reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT) >> activityReportModel
+        reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT, null) >> activityReportModel
         projectService.getProgramConfiguration(project) >> new ProgramConfig([requiresActivityLocking: true])
         controller.editReport(projectId, reportId)
 

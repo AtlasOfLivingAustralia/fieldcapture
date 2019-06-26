@@ -349,6 +349,7 @@ function ActivityHeaderViewModel (activity, site, project, metaModel, themes, co
     self.mainTheme = ko.observable(activity.mainTheme);
     self.type = ko.observable(activity.type);
     self.projectId = activity.projectId;
+    self.formVersion = ko.observable(activity.formVersion);
     self.transients = {};
     self.transients.site = ko.observable(site);
     self.transients.project = project;
@@ -477,4 +478,8 @@ function ActivityHeaderViewModel (activity, site, project, metaModel, themes, co
             }
         }
     };
+
+    if (metaModel.formVersion != self.formVersion()) {
+        self.formVersion(metaModel.formVersion);
+    }
 };
