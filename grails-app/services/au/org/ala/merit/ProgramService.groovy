@@ -5,9 +5,6 @@ import au.org.ala.merit.reports.ReportGenerationOptions
 import au.org.ala.merit.reports.ReportOwner;
 import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.codehaus.groovy.grails.web.json.JSONArray
-import org.joda.time.DateTime
-
-import java.util.Map
 
 class ProgramService {
 
@@ -130,13 +127,15 @@ class ProgramService {
     }
 
 
-    void regenerateReports(String id) {
-        regenerateProgramReports(id)
-        regenerateActivityReports(id)
+    void regenerateReports(String id, List<String> programReportCategories = null, List<String> projectReportCategories = null) {
+        Map program = get(id)
+
+        regenerateProgramReports(program, programReportCategories)
+        regenerateProjectReports(program, projectReportCategories)
     }
 
-    void regenerateProgramReports(String id) {
-        Map program = get(id)
+    private void regenerateProgramReports(Map program, List<String> reportCategories = null) {
+
         List programReportConfig = program.config?.programReports
         ReportOwner owner = new ReportOwner(
                 id:[programId:program.programId],
@@ -144,21 +143,24 @@ class ProgramService {
                 periodStart:program.startDate,
                 periodEnd:program.endDate
         )
-        programReportConfig?.each {
+        List toRegenerate = programReportConfig.findAll{it.category in reportCategories}
+        toRegenerate?.each {
             ReportConfig reportConfig = new ReportConfig(it)
             List relevantReports = program.reports?.findAll{it.category == reportConfig.category}
             reportService.regenerateReports(relevantReports, reportConfig, owner)
         }
     }
 
-    void regenerateActivityReports(String id) {
-        Map program = get(id)
-        Map activityReportConfig = program.config?.projectReports?.find{it.reportType==ReportService.REPORT_TYPE_STAGE_REPORT}
-        if (activityReportConfig) {
-            Map projects = getProgramProjects(id)
+    private void regenerateProjectReports(Map program, List<String> reportCategories = null) {
+
+        List projectReportConfig = program.config?.projectReports
+        List toRegenerate = projectReportConfig.findAll{it.category in reportCategories}
+
+        Map projects = getProgramProjects(program.programId)
+        toRegenerate?.each {
             projects?.projects?.each{ project ->
                 project.reports = reportService.getReportsForProject(project.projectId)
-                projectService.generateProjectReports(activityReportConfig, project, new ReportGenerationOptions())
+                projectService.generateProjectReports(it, project, new ReportGenerationOptions())
             }
         }
     }

@@ -10,7 +10,7 @@ import static ReportService.ReportMode
  */
 class ProgramController {
 
-    static allowedMethods = [ajaxDelete: "POST", delete: "POST", ajaxUpdate: "POST"]
+    static allowedMethods = [regenerateProgramReports: "POST", ajaxDelete: "POST", delete: "POST", ajaxUpdate: "POST"]
 
     def programService, searchService, documentService, userService, roleService, commonService, webService, siteService
     ProjectService projectService
@@ -346,7 +346,8 @@ class ProgramController {
              resp = [status:HttpStatus.SC_NOT_FOUND]
         }
         else {
-            programService.regenerateReports(id)
+            Map categoriesToRegenerate = request.JSON
+            programService.regenerateReports(id, categoriesToRegenerate?.programReportCategories, categoriesToRegenerate?.projectReportCategories)
             resp = [status:HttpStatus.SC_OK]
         }
         render resp as JSON
