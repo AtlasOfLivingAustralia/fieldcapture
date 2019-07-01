@@ -103,7 +103,7 @@ class ProjectController {
                              themes                : config.themes,
                              config                : config,
                              projectContent        : content.model,
-                             hasCustomTemplate     : config?.projectTemplate
+                             showAlternateTemplate : template && (template != config.projectTemplate) // If the template has been specified and isn't the default, provide navigation back to the default.
                 ]
                 render view: content.view, model: model
             }
