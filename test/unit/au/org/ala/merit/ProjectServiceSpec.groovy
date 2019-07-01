@@ -3,6 +3,7 @@ package au.org.ala.merit
 import au.org.ala.merit.reports.ReportGenerationOptions
 import grails.converters.JSON
 import grails.test.mixin.TestFor
+import org.apache.tools.ant.Project
 import org.codehaus.groovy.grails.web.converters.marshaller.json.CollectionMarshaller
 import org.codehaus.groovy.grails.web.converters.marshaller.json.MapMarshaller
 import org.joda.time.Period
@@ -22,6 +23,7 @@ class ProjectServiceSpec extends Specification {
     ActivityService activityService = Mock(ActivityService)
     DocumentService documentService = Mock(DocumentService)
     EmailService emailService = Mock(EmailService)
+    AuditService auditService = Mock(AuditService)
     ProjectConfigurationService projectConfigurationService = Mock(ProjectConfigurationService)
     ProgramConfig projectConfig = new ProgramConfig([activityBasedReporting: true, reportingPeriod:6, reportingPeriodAlignedToCalendar: true, weekDaysToCompleteReport:43])
 
@@ -49,6 +51,7 @@ class ProjectServiceSpec extends Specification {
         service.documentService = documentService
         service.emailService = emailService
         service.projectConfigurationService = projectConfigurationService
+        service.auditService = auditService
         userService.userIsAlaOrFcAdmin() >> false
         metadataService.getProgramConfiguration(_,_) >> [reportingPeriod:6, reportingPeriodAlignedToCalendar: true, weekDaysToCompleteReport:43]
         projectConfigurationService.getProjectConfiguration(_) >> projectConfig
@@ -780,6 +783,46 @@ class ProjectServiceSpec extends Specification {
         result.error == null
 
     }
+
+    def "The MERI plan history will be queried in batches due to the potential size of the audit plan"() {
+        String projectId = 'p1'
+        when:
+        service.approvedMeriPlanHistory(projectId)
+
+        then:
+        1 * auditService.getAuditMessagesForProject(projectId, 0, 100, 'au.org.ala.ecodata.Project') >> [data:[], count:341]
+        1 * auditService.getAuditMessagesForProject(projectId, 100, 100, 'au.org.ala.ecodata.Project') >> [data:[], count:341]
+        1 * auditService.getAuditMessagesForProject(projectId, 200, 100, 'au.org.ala.ecodata.Project') >> [data:[], count:341]
+        1 * auditService.getAuditMessagesForProject(projectId, 300, 100, 'au.org.ala.ecodata.Project') >> [data:[], count:341]
+    }
+
+    def "The MERI plan history can be reconstructed from the audit history"() {
+        String projectId = 'p1'
+        List statusChanges = [ProjectService.PLAN_NOT_APPROVED, ProjectService.PLAN_NOT_APPROVED, ProjectService.PLAN_NOT_APPROVED, ProjectService.PLAN_SUBMITTED, ProjectService.PLAN_APPROVED,
+         ProjectService.PLAN_APPROVED, ProjectService.PLAN_NOT_APPROVED, ProjectService.PLAN_SUBMITTED, ProjectService.PLAN_SUBMITTED, ProjectService.PLAN_SUBMITTED, ProjectService.PLAN_APPROVED]
+
+        List messages = []
+        statusChanges.eachWithIndex{String status, int index ->
+            messages << buildAuditMessage(index, status)
+        }
+
+        when:
+        List history = service.approvedMeriPlanHistory(projectId)
+
+        then:
+        1 * auditService.getAuditMessagesForProject(projectId, 0, 100, 'au.org.ala.ecodata.Project') >> [data:messages.reverse(), count:messages.size()]
+
+        history.size() == 2
+        history[0] == [id:10, date:'2019-07-01T00:00:010Z', userId:'1234']
+        history[1] == [id:4, date:'2019-07-01T00:00:04Z', userId:'1234']
+
+    }
+
+    /** Help method to contruct audit history for testing */
+    private Map buildAuditMessage(int i, String planStatus) {
+        [entityType:'au.org.ala.ecodata.Project', id:i, date:'2019-07-01T00:00:0'+i+'Z', entity:[planStatus:planStatus], userId:'1234']
+    }
+
 
     private Map meritProjectConfig() {
         Map reportConfig = [reportType: "Activity",

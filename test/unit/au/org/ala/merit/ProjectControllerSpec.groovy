@@ -356,6 +356,20 @@ class ProjectControllerSpec extends Specification {
         filteredModel.outputs == ['o1', 'o2', 'o4', 'non service']
     }
 
+    def "the controller delegates to the service to return the MERI plan history for a project"() {
+        setup:
+        String projectId = 'p1'
+        List history = [[id:1, date:'2019-07-01T00:00:00Z', userId: '1234']]
+
+        when:
+        controller.approvedMeriPlanHistory(projectId)
+
+        then:
+        1 * projectService.approvedMeriPlanHistory(projectId) >> history
+        response.json.approvedMeriPlanHistory == history
+    }
+
+
     private def stubGrantManager(userId, projectId) {
         stubUserPermissions(userId, projectId, false, false, true, true)
     }

@@ -917,6 +917,14 @@ class ProjectController {
 
     }
 
+    @PreAuthorise(accessLevel = 'admin')
+    def approvedMeriPlanHistory(String id) {
+        List approvedPlanSummary = projectService.approvedMeriPlanHistory(id)
+
+        Map result = [approvedMeriPlanHistory:approvedPlanSummary]
+
+        render result as JSON
+    }
 
     private def error(String message, String projectId) {
         flash.message = message

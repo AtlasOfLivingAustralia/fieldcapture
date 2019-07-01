@@ -1542,6 +1542,45 @@ class ProjectService  {
         result
     }
 
+    /**
+     * Searches the audit trail for updates where the MERI plan has been approved and returns a summary of
+     * those audit messages for display (and possible retreival) to the user.
+     * @param projectId the project to find the history for.
+     * @return a List of Maps, each of the form [id:<auditMessage id>, date:<the date the MERI plan was approved>, userId: <the user that approved the plan>]
+     */
+    List<Map> approvedMeriPlanHistory(String projectId) {
+
+        List meriPlans = []
+        String projectEntityType = 'au.org.ala.ecodata.Project'
+
+        int offset = 0
+        int pageSize = 100
+        Map previousMessage = null
+
+        Map auditResult = auditService.getAuditMessagesForProject(projectId, offset, pageSize, projectEntityType)
+        println auditResult
+        while (auditResult && auditResult.count > offset) {
+
+            auditResult.data.each { Map message ->
+                println message
+                if (message.entityType == projectEntityType) {
+                    if (previousMessage?.entity?.planStatus == PLAN_APPROVED && message.entity?.planStatus != PLAN_APPROVED) {
+                        // We've found an approved MERI plan.
+                        meriPlans << [id: previousMessage.id, date: previousMessage.date, userId: previousMessage.userId]
+                    }
+                    previousMessage = message
+                }
+
+            }
+            offset += pageSize
+            auditResult = auditService.getAuditMessagesForProject(projectId, offset, pageSize, projectEntityType)
+        }
+        // We don't need to process the very last audit message as it is the first recorded audit entry and
+        // hence cannot represent a plan approval.
+
+        meriPlans
+    }
+
     private Map findScore(String scoreId, Map scoresWithTargets) {
         Map scoreData = null
         scoresWithTargets?.find { String key, List outputScores ->
