@@ -246,7 +246,16 @@ var ProgramPageViewModel = function(props, options) {
     };
 
     self.regenerateReportsByCategory = function() {
-        self.regenerateReports(self.selectedProgramReportCategories(), self.selectedProjectReportCategories());
+        blockUIWithMessage("Regenerating reports...");
+        self.regenerateReports(self.selectedProgramReportCategories(), self.selectedProjectReportCategories()).done(function() {
+            blockUIWithMessage("Reports successfully regenerated, reloading page...");
+            setTimeout(function(){
+                window.location.reload();
+            }, 1000);
+
+        }).fail(function() {
+            $.unblockUI();
+        });
     };
 
     self.regenerateReports = function(programReportCategories, projectReportCategories) {
