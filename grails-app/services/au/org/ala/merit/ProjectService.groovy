@@ -273,11 +273,24 @@ class ProjectService  {
             String plannedStartDate = projectDetails.remove('plannedStartDate')
             String plannedEndDate = projectDetails.remove('plannedEndDate')
 
+            def currentProject = get(id)
+            if (plannedStartDate || plannedEndDate) {
 
-            if (id && (plannedStartDate || plannedEndDate)) {
-                def currentProject = get(id)
                 if (currentProject.plannedStartDate != plannedStartDate || currentProject.plannedEndDate != plannedEndDate) {
                     resp = changeProjectDates(id, plannedStartDate ?: currentProject.plannedStartDate, plannedEndDate ?: currentProject.plannedEndDate, options)
+                }
+            }
+
+            // If the project name has changed, we need to regenerate reports to update any occurrences of the project name
+            if (projectDetails.name) {
+
+                if (currentProject.name != projectDetails.name) {
+                    if (nameChangeAllowed(currentProject)) {
+                        generateProjectStageReports(id, new ReportGenerationOptions())
+                    }
+                    else {
+                        projectDetails.remove('name')
+                    }
                 }
             }
         }
@@ -286,6 +299,15 @@ class ProjectService  {
         }
 
         return resp
+    }
+
+    /**
+     * For most projects, only FC_ADMINs can change the project name.  RLP projects are allowed name changes
+     * via the MERI plan workflow.
+     */
+    private boolean nameChangeAllowed(Map project) {
+        ProgramConfig config = projectConfigurationService.getProjectConfiguration(project)
+        return userService.userIsAlaOrFcAdmin() || (!isMeriPlanSubmittedOrApproved(project) && config.getProjectTemplate() == ProgramConfig.ProjectTemplate.RLP)
     }
 
     /** Extracts date change options from a payload */
