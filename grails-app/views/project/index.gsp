@@ -130,7 +130,7 @@
                     </div>
                 </g:if>
                 <div class="pull-right">
-                    <g:if test="${user?.isCaseManager && hasCustomTemplate}">
+                    <g:if test="${showAlternateTemplate}">
                         <a class="btn"  href="${createLink(action:'index', id:project.projectId)}">User View</a>
                     </g:if>
                     <g:set var="disabled">${(!user) ? "disabled='disabled' title='login required'" : ''}</g:set>

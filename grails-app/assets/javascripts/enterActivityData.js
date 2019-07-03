@@ -478,8 +478,4 @@ function ActivityHeaderViewModel (activity, site, project, metaModel, themes, co
             }
         }
     };
-
-    if (metaModel.formVersion != self.formVersion()) {
-        self.formVersion(metaModel.formVersion);
-    }
 };

@@ -271,6 +271,9 @@
         if (activity.progress == viewModel.progress()) {
             viewModel.dirtyFlag.reset();
         }
+        if (metaModel.formVersion != activity.formVersion) {
+            viewModel.formVersion(metaModel.formVersion);
+        }
 
     <g:if test="${params.progress}">
         var newProgress = '${params.progress}';

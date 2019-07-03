@@ -162,6 +162,41 @@ class ProjectControllerSpec extends Specification {
         model.projectContent.admin.showAnnouncementsTab == false
     }
 
+
+    def "if a template is requested that is different to the project default, provide navigation back to the default template view"() {
+        setup:
+        String projectId = '1234'
+        Map project = project(projectId)
+        projectService.get(projectId, _) >> project
+        stubGrantManager('1234', projectId)
+        String projectTemplate = 'esp'
+
+        when:
+        params.template='index'
+        controller.index(projectId)
+
+        then:
+        1 * projectService.getProgramConfiguration(project) >> new ProgramConfig([template: projectTemplate])
+        model.showAlternateTemplate == true
+    }
+
+    def "projects not using the default template shouldn't display navigation back to the default template"() {
+        setup:
+        String projectId = '1234'
+        Map project = project(projectId)
+        projectService.get(projectId, _) >> project
+        stubGrantManager('1234', projectId)
+        String projectTemplate = 'rlp'
+
+        when:
+        params.template=null
+        controller.index(projectId)
+
+        then:
+        1 * projectService.getProgramConfiguration(project) >> new ProgramConfig([template: projectTemplate])
+        model.showAlternateTemplate == false
+    }
+
     def "when viewing a project report, the model will be customized for project reporting"() {
         setup:
         String projectId = 'p1'
@@ -319,6 +354,15 @@ class ProjectControllerSpec extends Specification {
 
         then:
         filteredModel.outputs == ['o1', 'o2', 'o4', 'non service']
+    }
+
+    def "the financial year target exclusion works with numeric and string values"() {
+        expect:
+        controller.hasFinancialYearTarget([financialYearTarget: 0]) == false
+        controller.hasFinancialYearTarget([financialYearTarget: "0"]) == false
+
+        controller.hasFinancialYearTarget([financialYearTarget: "1"]) == true
+        controller.hasFinancialYearTarget([financialYearTarget: 2]) == true
     }
 
     private def stubGrantManager(userId, projectId) {

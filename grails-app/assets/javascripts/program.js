@@ -132,6 +132,7 @@ var ProgramPageViewModel = function(props, options) {
 
     self.config = ko.observable(vkbeautify.json(config));
 
+    var projectOutputReportCategory = 'Outputs Reporting';
     /**
      * Returns the currently configured activity report configuration.
      * Side effect: it is created if it doesn't exist.
@@ -142,18 +143,20 @@ var ProgramPageViewModel = function(props, options) {
             config.projectReports = [];
         }
         activityReportConfig = _.find(config.projectReports, function(report) {
-            return report.reportType == 'Activity';
+            return report.category == projectOutputReportCategory;
         });
         if (!activityReportConfig) {
-            activityReportConfig = {reportType:'Activity'};
+            activityReportConfig = {reportType:'Activity', category:projectOutputReportCategory};
             config.projectReports.push(activityReportConfig);
         }
 
         return activityReportConfig;
     };
+
+    var coreServicesReportCategory = 'Core Services Reporting';
     var getProgramReportConfig = function() {
         if (!config.programReports || config.programReports.length == 0) {
-            config.programReports = [{type:'Administrative', category:'Core Services'}];
+            config.programReports = [{type:'Administrative', category:coreServicesReportCategory}];
         }
         return config.programReports[0];
     };
@@ -184,6 +187,20 @@ var ProgramPageViewModel = function(props, options) {
     self.startDate = ko.observable(props.startDate).extend({simpleDate:false});
     self.endDate = ko.observable(props.endDate).extend({simpleDate:false});
 
+    self.programReportCategories = ko.computed(function() {
+        return _.map(config.programReports || [], function(report) {
+            return report.category;
+        });
+    });
+    self.selectedProgramReportCategories = ko.observableArray();
+
+    self.projectReportCategories = ko.computed(function() {
+       return _.map(config.projectReports || [], function(report) {
+            return report.category;
+        });
+    });
+    self.selectedProjectReportCategories = ko.observableArray();
+
     self.saveReportingConfiguration = function() {
 
         if ($(options.reportingConfigSelector).validationEngine('validate')) {
@@ -202,7 +219,7 @@ var ProgramPageViewModel = function(props, options) {
             blockUIWithMessage("Saving configuration...");
             self.saveConfig(config).done(function() {
                 blockUIWithMessage("Regenerating reports...");
-                self.regenerateReports().done(function() {
+                self.regenerateReports([coreServicesReportCategory], [projectOutputReportCategory]).done(function() {
                     window.location.reload();
                 }).fail(function() {
                     $.unblockUI();
@@ -228,10 +245,25 @@ var ProgramPageViewModel = function(props, options) {
         });
     };
 
-    self.regenerateReports = function() {
+    self.regenerateReportsByCategory = function() {
+        blockUIWithMessage("Regenerating reports...");
+        self.regenerateReports(self.selectedProgramReportCategories(), self.selectedProjectReportCategories()).done(function() {
+            blockUIWithMessage("Reports successfully regenerated, reloading page...");
+            setTimeout(function(){
+                window.location.reload();
+            }, 1000);
+
+        }).fail(function() {
+            $.unblockUI();
+        });
+    };
+
+    self.regenerateReports = function(programReportCategories, projectReportCategories) {
+        var data = JSON.stringify({programReportCategories:programReportCategories, projectReportCategories:projectReportCategories});
         return $.ajax({
             url: options.regenerateProgramReportsUrl,
             type: 'POST',
+            data: data,
             dataType:'json',
             contentType: 'application/json'
         }).fail(function() {

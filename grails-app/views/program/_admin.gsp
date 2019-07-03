@@ -48,6 +48,7 @@
         <g:if test="${fc.userIsSiteAdmin()}">
         <div class="tab-pane" id="reporting">
             <form>
+                <h3>Core services and output reporting frequency</h3>
                 <div class="form-group">
                     <label for="start-date">Start date</label>
                     <div>
@@ -76,6 +77,25 @@
 
                 <button class="btn btn-primary" data-bind="click:saveReportingConfiguration">Save</button>
             </form>
+
+            <hr/>
+            <g:if test="${fc.userIsAlaOrFcAdmin()}">
+            <form class="utilities">
+                <h3>Regenerate reports</h3>
+                <p>This may need to be done if the report configuration is edited.</p>
+                <h4>Program report categories</h4>
+                <ul class="list-unstyled" data-bind="foreach:programReportCategories">
+                    <li><label class="checkbox"><input type="checkbox" data-bind="value:$data, checked:$parent.selectedProgramReportCategories"> <span data-bind="text:$data"></span></label></li>
+                </ul>
+
+                <h4>Project report categories</h4>
+                <ul class="list-unstyled" data-bind="foreach:projectReportCategories">
+                    <li><label class="checkbox"><input type="checkbox" data-bind="value:$data, checked:$parent.selectedProjectReportCategories"> <span data-bind="text:$data"></span></label></li>
+                </ul>
+
+                <button class="btn btn-success" data-bind="click:regenerateReportsByCategory">Regenerate reports</button>
+            </form>
+            </g:if>
         </div>
         </g:if>
         <g:if test="${fc.userIsAlaOrFcAdmin()}">

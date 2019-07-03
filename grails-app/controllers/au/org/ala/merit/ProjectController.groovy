@@ -103,7 +103,7 @@ class ProjectController {
                              themes                : config.themes,
                              config                : config,
                              projectContent        : content.model,
-                             hasCustomTemplate     : config?.projectTemplate
+                             showAlternateTemplate : template && (template != config.projectTemplate) // If the template has been specified and isn't the default, provide navigation back to the default.
                 ]
                 render view: content.view, model: model
             }
@@ -852,8 +852,18 @@ class ProjectController {
         String year = financialYearStart.year + "/" + (financialYearStart.year+1)
 
         List targets = projectService.findMinimumTargets(id, year, missedTargetsOnly)
+
+        boolean onlyNonZeroTargets = params.getBoolean("onlyNonZeroTargets", false)
+        if (onlyNonZeroTargets) {
+            targets = targets.findAll{hasFinancialYearTarget(it)}
+        }
         Map results = [projectId:id, targets:targets]
         render results as JSON
+    }
+
+    private boolean hasFinancialYearTarget(Map targetRow) {
+        def financialYearTarget = targetRow.financialYearTarget
+        financialYearTarget != 0 && financialYearTarget != "0"
     }
 
     /**
