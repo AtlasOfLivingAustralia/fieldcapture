@@ -356,6 +356,15 @@ class ProjectControllerSpec extends Specification {
         filteredModel.outputs == ['o1', 'o2', 'o4', 'non service']
     }
 
+    def "the financial year target exclusion works with numeric and string values"() {
+        expect:
+        controller.hasFinancialYearTarget([financialYearTarget: 0]) == false
+        controller.hasFinancialYearTarget([financialYearTarget: "0"]) == false
+
+        controller.hasFinancialYearTarget([financialYearTarget: "1"]) == true
+        controller.hasFinancialYearTarget([financialYearTarget: 2]) == true
+    }
+
     private def stubGrantManager(userId, projectId) {
         stubUserPermissions(userId, projectId, false, false, true, true)
     }
