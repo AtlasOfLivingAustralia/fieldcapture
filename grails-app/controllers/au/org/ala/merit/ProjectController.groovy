@@ -794,6 +794,7 @@ class ProjectController {
     private Map activityReportModel(String projectId, String reportId, ReportMode mode, Integer formVersion = null) {
 
         Map project = projectService.get(projectId)
+        List sites = project.remove('sites')
         Map config = projectService.getProgramConfiguration(project)
         Map model = reportService.activityReportModel(reportId, mode, formVersion)
         model.metaModel = filterOutputModel(model.metaModel, project, model.activity)
@@ -806,13 +807,13 @@ class ProjectController {
 
         if (model.metaModel.supportsSites) {
             if (model.activity.siteId) {
-                model.reportSite = project.sites?.find { it.siteId == model.activity.siteId }
+                model.reportSite = sites?.find { it.siteId == model.activity.siteId }
             }
 
-            Map sites = projectService.projectSites(projectId)
-            if (!sites.error) {
-                model.projectArea = sites.projectArea
-                model.features = sites.features
+            Map siteData = projectService.projectSites(projectId)
+            if (!siteData.error) {
+                model.projectArea = siteData.projectArea
+                model.features = siteData.features
             }
         }
         model
