@@ -168,6 +168,9 @@ class ProjectController {
         }
         else if (template == RLP_TEMPLATE) {
 
+            // The RLP Project Template doesn't need site details or activities.
+            project.sites = new JSONArray(project.sites.collect{new JSONObject([name:it.name, siteId:it.siteId, lastUpdated:it.lastUpdated, type:it.type, extent:[:]])})
+            project.remove('activities')
             model.overview.template = 'rlpOverview'
             model.overview.servicesDashboard = projectService.getServiceDashboardData(project.projectId, !user?.hasViewAccess)
             model.details.meriPlanTemplate = RLP_MERI_PLAN_TEMPLATE+'View'
