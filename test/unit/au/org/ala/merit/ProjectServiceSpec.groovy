@@ -781,6 +781,72 @@ class ProjectServiceSpec extends Specification {
 
     }
 
+    def "The project name is allowed to be updated by project admins in RLP projects if the MERI plan is not submitted or approved"() {
+        setup:
+        String projectId = 'p1'
+
+        when:
+        service.update(projectId, [name:'new name'])
+
+        then: "the update is sent to ecodata"
+        2 * webService.getJson({it.contains("/"+projectId)}) >> [projectId:projectId, name:"old name", planStatus:ProjectService.PLAN_NOT_APPROVED]
+        2 * projectConfigurationService.getProjectConfiguration(_) >> new ProgramConfig([projectTemplate:ProgramConfig.ProjectTemplate.RLP.name(), projectReports:[[reportType:'Activity', category:'test']]])
+        1 * webService.doPost({it.endsWith("project/${projectId}")}, [name:'new name'])
+
+        and: "reports are regenerated in case they include the name"
+        1 * reportService.regenerateReports(_, _, _)
+    }
+
+
+    def "Project name changes are not allowed for RLP projects if the MERI plan is submitted or approved"(String planStatus) {
+        setup:
+        String projectId = 'p1'
+
+        when:
+        service.update(projectId, [name:'new name'])
+
+        then:
+        1 * webService.getJson({it.contains("/"+projectId)}) >> [projectId:projectId, name:"old name", planStatus:planStatus]
+        1 * projectConfigurationService.getProjectConfiguration(_) >> new ProgramConfig([projectTemplate:ProgramConfig.ProjectTemplate.RLP.name(), projectReports:[[reportType:'Activity', category:'test']]])
+        0 * webService.doPost(_, _)
+
+        and: "reports are regenerated in case they include the name"
+        0 * reportService.regenerateReports(_, _, _)
+
+        where:
+        planStatus | _
+        ProjectService.PLAN_SUBMITTED | _
+        ProjectService.PLAN_APPROVED  | _
+    }
+
+    def "Project name changes by admins are not allowed for non-RLP projects"(String planStatus, String template) {
+        setup:
+        String projectId = 'p1'
+
+        when:
+        service.update(projectId, [name:'new name'])
+
+        then:
+        1 * webService.getJson({it.contains("/"+projectId)}) >> [projectId:projectId, name:"old name", planStatus:planStatus]
+        1 * projectConfigurationService.getProjectConfiguration(_) >> new ProgramConfig([projectTemplate:template, projectReports:[[reportType:'Activity', category:'test']]])
+        0 * webService.doPost(_, _)
+
+        and: "reports are regenerated in case they include the name"
+        0 * reportService.regenerateReports(_, _, _)
+
+        where:
+        planStatus | template
+        ProjectService.PLAN_SUBMITTED     | "default"
+        ProjectService.PLAN_APPROVED      | "default"
+        ProjectService.PLAN_NOT_APPROVED  | "default"
+
+        ProjectService.PLAN_SUBMITTED     | "esp"
+        ProjectService.PLAN_APPROVED      | "esp"
+        ProjectService.PLAN_NOT_APPROVED  | "esp"
+
+    }
+
+
     private Map meritProjectConfig() {
         Map reportConfig = [reportType: "Activity",
                             reportDescriptionFormat: "Stage Report %d for %4\$s",

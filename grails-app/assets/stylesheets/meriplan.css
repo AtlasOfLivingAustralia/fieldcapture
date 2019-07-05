@@ -9,9 +9,15 @@ table tr.header th {
 }
 
 
-.meri-plan td textarea, .meri-plan td select, .meri-plan td input:not([type=checkbox]) {
+.meri-plan td textarea, .meri-plan td select {
     box-sizing: border-box;
     width: 100%;
+}
+
+.meri-plan td input {
+    width: 100%;
+    box-sizing: border-box;
+    height: 30px;
 }
 
 .meri-plan th {
