@@ -268,6 +268,8 @@ class ProjectService  {
         Map options = projectDetails.remove('options')
         // Changing project dates requires some extra validation and updates to the stage reports.  Only
         // do this check for existing projects for which the planned start and/or end date is being changed
+
+        boolean regenerateReports = false
         if (id) {
 
             String plannedStartDate = projectDetails.remove('plannedStartDate')
@@ -286,7 +288,7 @@ class ProjectService  {
 
                 if (currentProject.name != projectDetails.name) {
                     if (nameChangeAllowed(currentProject)) {
-                        generateProjectStageReports(id, new ReportGenerationOptions())
+                        regenerateReports = true
                     }
                     else {
                         projectDetails.remove('name')
@@ -296,6 +298,12 @@ class ProjectService  {
         }
         if (projectDetails) {
             resp = updateUnchecked(id, projectDetails)
+        }
+
+        // We need to regenerate the reports because of the name change.  We do this after the update so the name
+        // change has occurred.
+        if (!resp?.error && regenerateReports) {
+            generateProjectStageReports(id, new ReportGenerationOptions())
         }
 
         return resp

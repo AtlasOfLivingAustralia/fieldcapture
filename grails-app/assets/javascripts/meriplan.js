@@ -356,20 +356,29 @@ function MERIPlan(project, projectService, config) {
         var meriPlan = self.meriPlan();
         meriPlan.status('active');
         meriPlan.lastUpdated = new Date().toISOStringNoMillis();
+        blockUIWithMessage("Saving MERI Plan...");
         meriPlan.saveWithErrorDetection(function() {
 
             if(enableSubmit) {
                 if (valid) {
+                    blockUIWithMessage("Submitting MERI Plan...");
                     self.submitChanges();
                 }
                 else {
+                    $.unblockUI();
                     bootbox.alert("Your MERI plan cannot be submitted until all validation errors are resolved");
                 }
             }
             else if (meriPlan.name() != project.name) {
                 // If the name has changed we need to reload the page so the title is updated.
+                blockUIWithMessage("MERI Plan Saved.  Reloading project...");
                 window.location.reload();
             }
+            else {
+                $.unblockUI();
+            }
+        }, function() {
+            $.unblockUI();
         });
 
     };
