@@ -1558,19 +1558,16 @@ class ProjectService  {
         Map previousMessage = null
 
         Map auditResult = auditService.getAuditMessagesForProject(projectId, offset, pageSize, projectEntityType)
-        println auditResult
-        while (auditResult && auditResult.count > offset) {
+        while (auditResult && auditResult.recordsTotal > offset) {
 
             auditResult.data.each { Map message ->
-                println message
                 if (message.entityType == projectEntityType) {
                     if (previousMessage?.entity?.planStatus == PLAN_APPROVED && message.entity?.planStatus != PLAN_APPROVED) {
                         // We've found an approved MERI plan.
-                        meriPlans << [id: previousMessage.id, date: previousMessage.date, userId: previousMessage.userId]
+                        meriPlans << [id: previousMessage.id, date: previousMessage.date, userDisplayName:previousMessage.userName]
                     }
                     previousMessage = message
                 }
-
             }
             offset += pageSize
             auditResult = auditService.getAuditMessagesForProject(projectId, offset, pageSize, projectEntityType)

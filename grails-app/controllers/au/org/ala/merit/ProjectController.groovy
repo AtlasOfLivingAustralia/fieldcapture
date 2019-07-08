@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.command.MeriPlanReportCommand
 import au.org.ala.merit.command.ProjectSummaryReportCommand
 import au.org.ala.merit.command.ReportCommand
 import au.org.ala.merit.command.SaveReportDataCommand
@@ -924,6 +925,19 @@ class ProjectController {
         Map result = [approvedMeriPlanHistory:approvedPlanSummary]
 
         render result as JSON
+    }
+
+    @PreAuthorise(accessLevel = 'admin')
+    def viewMeriPlan(MeriPlanReportCommand meriPlanReportCommand) {
+
+        Map model = meriPlanReportCommand.meriPlanReportModel()
+        if (!model.error) {
+            render view:'/project/meriPlanReport', model:model
+        }
+        else {
+            render status: HttpStatus.SC_NOT_FOUND
+        }
+
     }
 
     private def error(String message, String projectId) {

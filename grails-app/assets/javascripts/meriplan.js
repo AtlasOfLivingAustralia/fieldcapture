@@ -9,6 +9,8 @@ function MERIPlan(project, projectService, config) {
     if (!project.custom.details) {
         project.custom.details = {};
     }
+    self.approvedPlans = ko.observableArray();
+
     var periods = projectService.getBudgetHeaders(project);
 
     self.plannedStartDate = ko.observable(project.plannedStartDate).extend({simpleDate: false});
@@ -410,10 +412,12 @@ function MERIPlan(project, projectService, config) {
     };
 
     self.attachValidation = function() {
-        console.log("attaching");
         $('#project-details-validation').validationEngine('attach', {autoPositionUpdate:true});
     };
 
+    projectService.getApprovedMeriPlanHistory().done(function(approvedPlans) {
+        self.approvedPlans(approvedPlans);
+    });
 };
 
 function DetailsViewModel(o, project, budgetHeaders, risks, config) {

@@ -810,7 +810,7 @@ class ProjectServiceSpec extends Specification {
         List history = service.approvedMeriPlanHistory(projectId)
 
         then:
-        1 * auditService.getAuditMessagesForProject(projectId, 0, 100, 'au.org.ala.ecodata.Project') >> [data:messages.reverse(), count:messages.size()]
+        1 * auditService.getAuditMessagesForProject(projectId, 0, 100, 'au.org.ala.ecodata.Project') >> [data:messages.reverse(), recordsTotal:messages.size()]
 
         history.size() == 2
         history[0] == [id:10, date:'2019-07-01T00:00:010Z', userId:'1234']

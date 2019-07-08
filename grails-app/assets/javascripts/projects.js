@@ -1394,4 +1394,32 @@ function ProjectService(project, options) {
 
     }
 
+    /**
+     * Queries the server to retrieve an array of objects representing each time the MERI plan was approved.
+     */
+    self.getApprovedMeriPlanHistory = function() {
+        var approvedPlans = [];
+        var deferred = $.Deferred();
+        if (config.approvedMeriPlanHistoryUrl) {
+            $.getJSON(config.approvedMeriPlanHistoryUrl).done(function(data) {
+                if (data && data.approvedMeriPlanHistory) {
+                    _.each(data.approvedMeriPlanHistory, function(meriPlan) {
+                        approvedPlans.push(
+                            {
+                                openMeriPlanUrl: config.viewHistoricalMeriPlanUrl+"?messageId="+meriPlan.id,
+                                userDisplayName:meriPlan.userDisplayName,
+                                dateApproved:convertToSimpleDate(meriPlan.date, true)
+                            }
+                        )
+                    });
+                }
+                deferred.resolve(approvedPlans);
+            }).fail(function() {
+                deferred.reject(approvedPlans);
+            });
+        }
+        return deferred;
+    }
+
+
 };

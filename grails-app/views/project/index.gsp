@@ -82,6 +82,8 @@
         useGoogleBaseMap: ${grails.util.Environment.current == grails.util.Environment.PRODUCTION},
         meriPlanUploadUrl:"${createLink(controller:'project', action:'uploadMeriPlan', id:project.projectId)}",
         leafletIconPath:"${assetPath(src:'leaflet-0.7.7/images')}",
+        approvedMeriPlanHistoryUrl:"${createLink(action:"approvedMeriPlanHistory", id:project.projectId)}",
+        viewHistoricalMeriPlanUrl:"${createLink(action:"viewMeriPlan", id:project.projectId)}",
         returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
 
     },
@@ -236,6 +238,8 @@
                 projectScoresUrl: fcConfig.projectScoresUrl,
                 meriPlanUploadUrl: fcConfig.meriPlanUploadUrl,
                 projectDatesValidationUrl: fcConfig.projectDatesValidationUrl,
+                approvedMeriPlanHistoryUrl: fcConfig.approvedMeriPlanHistoryUrl,
+                viewHistoricalMeriPlanUrl: fcConfig.viewHistoricalMeriPlanUrl,
                 meriStorageKey:PROJECT_DETAILS_KEY,
                 activityBasedReporting: ${Boolean.valueOf(projectContent.admin.config.activityBasedReporting)},
                 minimumProjectEndDate: ${projectContent.admin.minimumProjectEndDate?'"'+projectContent.admin.minimumProjectEndDate+'"':'null'}

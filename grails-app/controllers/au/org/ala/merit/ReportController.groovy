@@ -1,6 +1,7 @@
 package au.org.ala.merit
 
 import au.ala.org.ws.security.RequireApiKey
+import au.org.ala.merit.command.MeriPlanReportCommand
 import au.org.ala.merit.command.ProjectSummaryReportCommand
 import au.org.ala.merit.command.Reef2050PlanActionReportCommand
 import au.org.ala.merit.command.Reef2050PlanActionReportSummaryCommand
@@ -516,13 +517,15 @@ class ReportController {
      * (It uses an IP filter / API Key instead).
      */
     @RequireApiKey
-    def meriPlanReportCallback(String id) {
+    def meriPlanReportCallback(MeriPlanReportCommand meriPlanReportCommand) {
         if (pdfGenerationService.authorizePDF(request)) {
-            Map project = projectService.get(id, 'all')
-            Map config = projectConfigurationService.getProjectConfiguration(project)
-            String meriPlanTemplate = config.meriPlanTemplate ?: 'meriPlan'
-
-            render view:'/project/meriPlanReport', model:[project:project, config:config, headerTemplate:'/project/'+meriPlanTemplate+'Header', meriPlanTemplate:'/project/'+meriPlanTemplate+'View', themes:metadataService.getThemesForProject(project), user:[isAdmin:true]]
+            Map model = meriPlanReportCommand.meriPlanReportModel()
+            if (!model.errors) {
+                render view:'/project/meriPlanReport', model:model
+            }
+            else {
+                render status: HttpStatus.SC_NOT_FOUND
+            }
         }
         else {
             render status:HttpStatus.SC_UNAUTHORIZED

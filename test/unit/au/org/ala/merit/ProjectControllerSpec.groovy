@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.command.MeriPlanReportCommand
 import au.org.ala.merit.command.SaveReportDataCommand
 import grails.test.mixin.TestFor
 import org.apache.http.HttpStatus
@@ -367,6 +368,39 @@ class ProjectControllerSpec extends Specification {
         then:
         1 * projectService.approvedMeriPlanHistory(projectId) >> history
         response.json.approvedMeriPlanHistory == history
+    }
+
+    def "the controller delegates to a command object to view the MERI plan for a project"() {
+
+        setup:
+        String projectId = 'p1'
+
+        when:
+        MeriPlanReportCommand meriPlanReportCommand = new MeriPlanReportCommand()
+        meriPlanReportCommand.id = projectId
+        meriPlanReportCommand.projectService = projectService
+        meriPlanReportCommand.metadataService = metadataServiceStub
+
+        controller.viewMeriPlan(meriPlanReportCommand)
+
+        then:
+        1 * projectService.get(projectId, _) >> [projectId:projectId]
+        model != null
+        model.project.projectId == projectId
+        view == '/project/meriPlanReport'
+
+    }
+
+    def "the controller will return a 404 if the project cannot be found when attempting a view a MERI plan report"() {
+        setup:
+        MeriPlanReportCommand meriPlanReportCommand = Mock(MeriPlanReportCommand)
+
+        when:
+        controller.viewMeriPlan(meriPlanReportCommand)
+
+        then:
+        1 * meriPlanReportCommand.meriPlanReportModel() >> [statusCode: HttpStatus.SC_NOT_FOUND, error:"Not found"]
+        response.status == HttpStatus.SC_NOT_FOUND
     }
 
 
