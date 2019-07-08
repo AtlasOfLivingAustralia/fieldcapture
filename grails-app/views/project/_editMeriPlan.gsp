@@ -51,13 +51,37 @@
 <g:render template="/shared/declaration" model="[divId:'unlockPlan', declarationType:au.org.ala.merit.SettingPageType.UNLOCK_PLAN_DECLARATION]"/>
 
 <div class="row-fluid">
-	<div class="control-group">
-		<div>
-			<span class="badge" style="font-size: 13px;" data-bind="text:meriPlanStatus().text, css:meriPlanStatus().badgeClass"></span>
-			<span data-bind="if:detailsLastUpdated"> <br/>Last update date : <span data-bind="text:detailsLastUpdated.formattedDate"></span></span>
+
+	<div class="span6">
+		<div class="control-group">
+			<div>
+				<span class="badge" style="font-size: 13px;" data-bind="text:meriPlanStatus().text, css:meriPlanStatus().badgeClass"></span>
+				<span data-bind="if:detailsLastUpdated"> <br/>Last update date : <span data-bind="text:detailsLastUpdated.formattedDate"></span></span>
+			</div>
 		</div>
 	</div>
 </div>
+
+<div data-bind="visible:approvedPlans().length > 0">
+	<h4>History of approved MERI plans</h4>
+
+	<table class="table table-striped">
+		<thead>
+		<tr class="header">
+			<th>Date / time approved</th><th>Approved by</th><th>Open</th>
+		</tr>
+		</thead>
+		<tbody data-bind="foreach:approvedPlans">
+		<tr>
+			<td data-bind="text:dateApproved"></td>
+			<td><span data-bind="text:userDisplayName"></span></td>
+			<td><a target="_meriPlan" data-bind="attr:{href:openMeriPlanUrl}"><i class="fa fa-external-link"></i></a></td>
+		</tr>
+		</tbody>
+	</table>
+</div>
+
+
 
 <!--  Case manager actions -->
 <g:if test="${user?.isCaseManager}">

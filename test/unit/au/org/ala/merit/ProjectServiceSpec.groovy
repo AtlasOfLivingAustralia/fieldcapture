@@ -790,10 +790,10 @@ class ProjectServiceSpec extends Specification {
         service.approvedMeriPlanHistory(projectId)
 
         then:
-        1 * auditService.getAuditMessagesForProject(projectId, 0, 100, 'au.org.ala.ecodata.Project') >> [data:[], count:341]
-        1 * auditService.getAuditMessagesForProject(projectId, 100, 100, 'au.org.ala.ecodata.Project') >> [data:[], count:341]
-        1 * auditService.getAuditMessagesForProject(projectId, 200, 100, 'au.org.ala.ecodata.Project') >> [data:[], count:341]
-        1 * auditService.getAuditMessagesForProject(projectId, 300, 100, 'au.org.ala.ecodata.Project') >> [data:[], count:341]
+        1 * auditService.getAuditMessagesForProject(projectId, 0, 100, 'au.org.ala.ecodata.Project') >> [data:[], recordsTotal:341]
+        1 * auditService.getAuditMessagesForProject(projectId, 100, 100, 'au.org.ala.ecodata.Project') >> [data:[], recordsTotal:341]
+        1 * auditService.getAuditMessagesForProject(projectId, 200, 100, 'au.org.ala.ecodata.Project') >> [data:[], recordsTotal:341]
+        1 * auditService.getAuditMessagesForProject(projectId, 300, 100, 'au.org.ala.ecodata.Project') >> [data:[], recordsTotal:341]
     }
 
     def "The MERI plan history can be reconstructed from the audit history"() {
@@ -813,14 +813,13 @@ class ProjectServiceSpec extends Specification {
         1 * auditService.getAuditMessagesForProject(projectId, 0, 100, 'au.org.ala.ecodata.Project') >> [data:messages.reverse(), recordsTotal:messages.size()]
 
         history.size() == 2
-        history[0] == [id:10, date:'2019-07-01T00:00:010Z', userId:'1234']
-        history[1] == [id:4, date:'2019-07-01T00:00:04Z', userId:'1234']
+        history[0] == [id:10, date:'2019-07-01T00:00:010Z', userDisplayName:'test']
+        history[1] == [id:4, date:'2019-07-01T00:00:04Z', userDisplayName:'test']
 
     }
 
-    /** Help method to contruct audit history for testing */
     private Map buildAuditMessage(int i, String planStatus) {
-        [entityType:'au.org.ala.ecodata.Project', id:i, date:'2019-07-01T00:00:0'+i+'Z', entity:[planStatus:planStatus], userId:'1234']
+        [entityType:'au.org.ala.ecodata.Project', id:i, date:'2019-07-01T00:00:0'+i+'Z', entity:[planStatus:planStatus], userId:'1234', userName:'test']
     }
 
 
