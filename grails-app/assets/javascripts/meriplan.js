@@ -358,16 +358,29 @@ function MERIPlan(project, projectService, config) {
         var meriPlan = self.meriPlan();
         meriPlan.status('active');
         meriPlan.lastUpdated = new Date().toISOStringNoMillis();
+        blockUIWithMessage("Saving MERI Plan...");
         meriPlan.saveWithErrorDetection(function() {
 
             if(enableSubmit) {
                 if (valid) {
+                    blockUIWithMessage("Submitting MERI Plan...");
                     self.submitChanges();
                 }
                 else {
+                    $.unblockUI();
                     bootbox.alert("Your MERI plan cannot be submitted until all validation errors are resolved");
                 }
             }
+            else if (meriPlan.name() != project.name) {
+                // If the name has changed we need to reload the page so the title is updated.
+                blockUIWithMessage("MERI Plan Saved.  Reloading project...");
+                window.location.reload();
+            }
+            else {
+                $.unblockUI();
+            }
+        }, function() {
+            $.unblockUI();
         });
 
     };
@@ -426,6 +439,7 @@ function DetailsViewModel(o, project, budgetHeaders, risks, config) {
     if (config.useRlpTemplate) {
         self.services = new ServicesViewModel(o.serviceIds, config.services, project.outputTargets, period);
         self.description = ko.observable(project.description);
+        self.name = ko.observable(project.name);
         self.projectEvaluationApproach = ko.observable(o.projectEvaluationApproach);
         // Initialise with 2 KEQ rows
         if (!o.keq) {
@@ -473,7 +487,8 @@ function DetailsViewModel(o, project, budgetHeaders, risks, config) {
             jsData.risks = ko.mapping.toJS(risks);
 
             jsData.outputTargets = serviceData.targets;
-            jsData.description = self.description(); // This field comes from the
+            jsData.description = self.description();
+            jsData.name = self.name();
             tmp.details.serviceIds = serviceData.serviceIds;
             delete tmp.details.services;
         }

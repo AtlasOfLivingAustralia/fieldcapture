@@ -156,6 +156,12 @@
                 <tbody>
 
                 <tr class="header required">
+                    <th class="required">Project name (150 characters) <fc:iconHelp>The project name will be visible on project overview page in MERIT</fc:iconHelp></th>
+                </tr>
+                <tr>
+                    <td><input type="text"  data-validation-engine="validate[required,maxSize[150]]" data-bind="value:details.name, disable: isProjectDetailsLocked()"></td>
+                </tr>
+                <tr class="header required">
                     <th class="required">Project description (1000 character limit [approx. 150 words]) <fc:iconHelp>Project description will be visible on project overview page in MERIT.</fc:iconHelp></th>
                 </tr>
                 <tr>

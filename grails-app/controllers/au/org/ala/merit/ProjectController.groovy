@@ -169,6 +169,9 @@ class ProjectController {
         }
         else if (template == RLP_TEMPLATE) {
 
+            // The RLP Project Template doesn't need site details or activities.
+            project.sites = new JSONArray(project.sites.collect{new JSONObject([name:it.name, siteId:it.siteId, lastUpdated:it.lastUpdated, type:it.type, extent:[:]])})
+            project.remove('activities')
             model.overview.template = 'rlpOverview'
             model.overview.servicesDashboard = projectService.getServiceDashboardData(project.projectId, !user?.hasViewAccess)
             model.details.meriPlanTemplate = RLP_MERI_PLAN_TEMPLATE+'View'
@@ -792,6 +795,7 @@ class ProjectController {
     private Map activityReportModel(String projectId, String reportId, ReportMode mode, Integer formVersion = null) {
 
         Map project = projectService.get(projectId)
+        List sites = project.remove('sites')
         Map config = projectService.getProgramConfiguration(project)
         Map model = reportService.activityReportModel(reportId, mode, formVersion)
         model.metaModel = filterOutputModel(model.metaModel, project, model.activity)
@@ -804,13 +808,13 @@ class ProjectController {
 
         if (model.metaModel.supportsSites) {
             if (model.activity.siteId) {
-                model.reportSite = project.sites?.find { it.siteId == model.activity.siteId }
+                model.reportSite = sites?.find { it.siteId == model.activity.siteId }
             }
 
-            Map sites = projectService.projectSites(projectId)
-            if (!sites.error) {
-                model.projectArea = sites.projectArea
-                model.features = sites.features
+            Map siteData = projectService.projectSites(projectId)
+            if (!siteData.error) {
+                model.projectArea = siteData.projectArea
+                model.features = siteData.features
             }
         }
         model
@@ -853,8 +857,18 @@ class ProjectController {
         String year = financialYearStart.year + "/" + (financialYearStart.year+1)
 
         List targets = projectService.findMinimumTargets(id, year, missedTargetsOnly)
+
+        boolean onlyNonZeroTargets = params.getBoolean("onlyNonZeroTargets", false)
+        if (onlyNonZeroTargets) {
+            targets = targets.findAll{hasFinancialYearTarget(it)}
+        }
         Map results = [projectId:id, targets:targets]
         render results as JSON
+    }
+
+    private boolean hasFinancialYearTarget(Map targetRow) {
+        def financialYearTarget = targetRow.financialYearTarget
+        financialYearTarget != 0 && financialYearTarget != "0"
     }
 
     /**

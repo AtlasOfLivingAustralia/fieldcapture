@@ -3,7 +3,6 @@ package au.org.ala.merit
 import au.org.ala.merit.reports.ReportGenerationOptions
 import grails.converters.JSON
 import grails.test.mixin.TestFor
-import org.apache.tools.ant.Project
 import org.codehaus.groovy.grails.web.converters.marshaller.json.CollectionMarshaller
 import org.codehaus.groovy.grails.web.converters.marshaller.json.MapMarshaller
 import org.joda.time.Period
@@ -784,6 +783,71 @@ class ProjectServiceSpec extends Specification {
 
     }
 
+    def "The project name is allowed to be updated by project admins in RLP projects if the MERI plan is not submitted or approved"() {
+        setup:
+        String projectId = 'p1'
+
+        when:
+        service.update(projectId, [name:'new name'])
+
+        then: "the update is sent to ecodata"
+        2 * webService.getJson({it.contains("/"+projectId)}) >> [projectId:projectId, name:"old name", planStatus:ProjectService.PLAN_NOT_APPROVED]
+        2 * projectConfigurationService.getProjectConfiguration(_) >> new ProgramConfig([projectTemplate:ProgramConfig.ProjectTemplate.RLP.name(), projectReports:[[reportType:'Activity', category:'test']]])
+        1 * webService.doPost({it.endsWith("project/${projectId}")}, [name:'new name'])
+
+        and: "reports are regenerated in case they include the name"
+        1 * reportService.regenerateReports(_, _, _)
+    }
+
+
+    def "Project name changes are not allowed for RLP projects if the MERI plan is submitted or approved"(String planStatus) {
+        setup:
+        String projectId = 'p1'
+
+        when:
+        service.update(projectId, [name:'new name'])
+
+        then:
+        1 * webService.getJson({it.contains("/"+projectId)}) >> [projectId:projectId, name:"old name", planStatus:planStatus]
+        1 * projectConfigurationService.getProjectConfiguration(_) >> new ProgramConfig([projectTemplate:ProgramConfig.ProjectTemplate.RLP.name(), projectReports:[[reportType:'Activity', category:'test']]])
+        0 * webService.doPost(_, _)
+
+        and: "reports are regenerated in case they include the name"
+        0 * reportService.regenerateReports(_, _, _)
+
+        where:
+        planStatus | _
+        ProjectService.PLAN_SUBMITTED | _
+        ProjectService.PLAN_APPROVED  | _
+    }
+
+    def "Project name changes by admins are not allowed for non-RLP projects"(String planStatus, String template) {
+        setup:
+        String projectId = 'p1'
+
+        when:
+        service.update(projectId, [name:'new name'])
+
+        then:
+        1 * webService.getJson({it.contains("/"+projectId)}) >> [projectId:projectId, name:"old name", planStatus:planStatus]
+        1 * projectConfigurationService.getProjectConfiguration(_) >> new ProgramConfig([projectTemplate:template, projectReports:[[reportType:'Activity', category:'test']]])
+        0 * webService.doPost(_, _)
+
+        and: "reports are regenerated in case they include the name"
+        0 * reportService.regenerateReports(_, _, _)
+
+        where:
+        planStatus | template
+        ProjectService.PLAN_SUBMITTED     | "default"
+        ProjectService.PLAN_APPROVED      | "default"
+        ProjectService.PLAN_NOT_APPROVED  | "default"
+
+        ProjectService.PLAN_SUBMITTED     | "esp"
+        ProjectService.PLAN_APPROVED      | "esp"
+        ProjectService.PLAN_NOT_APPROVED  | "esp"
+
+    }
+
     def "The MERI plan history will be queried in batches due to the potential size of the audit plan"() {
         String projectId = 'p1'
         when:
@@ -799,7 +863,7 @@ class ProjectServiceSpec extends Specification {
     def "The MERI plan history can be reconstructed from the audit history"() {
         String projectId = 'p1'
         List statusChanges = [ProjectService.PLAN_NOT_APPROVED, ProjectService.PLAN_NOT_APPROVED, ProjectService.PLAN_NOT_APPROVED, ProjectService.PLAN_SUBMITTED, ProjectService.PLAN_APPROVED,
-         ProjectService.PLAN_APPROVED, ProjectService.PLAN_NOT_APPROVED, ProjectService.PLAN_SUBMITTED, ProjectService.PLAN_SUBMITTED, ProjectService.PLAN_SUBMITTED, ProjectService.PLAN_APPROVED]
+                              ProjectService.PLAN_APPROVED, ProjectService.PLAN_NOT_APPROVED, ProjectService.PLAN_SUBMITTED, ProjectService.PLAN_SUBMITTED, ProjectService.PLAN_SUBMITTED, ProjectService.PLAN_APPROVED]
 
         List messages = []
         statusChanges.eachWithIndex{String status, int index ->
@@ -821,7 +885,6 @@ class ProjectServiceSpec extends Specification {
     private Map buildAuditMessage(int i, String planStatus) {
         [entityType:'au.org.ala.ecodata.Project', id:i, date:'2019-07-01T00:00:0'+i+'Z', entity:[planStatus:planStatus], userId:'1234', userName:'test']
     }
-
 
     private Map meritProjectConfig() {
         Map reportConfig = [reportType: "Activity",

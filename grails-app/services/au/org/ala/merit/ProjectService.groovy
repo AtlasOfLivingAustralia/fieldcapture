@@ -268,16 +268,31 @@ class ProjectService  {
         Map options = projectDetails.remove('options')
         // Changing project dates requires some extra validation and updates to the stage reports.  Only
         // do this check for existing projects for which the planned start and/or end date is being changed
+
+        boolean regenerateReports = false
         if (id) {
 
             String plannedStartDate = projectDetails.remove('plannedStartDate')
             String plannedEndDate = projectDetails.remove('plannedEndDate')
 
+            def currentProject = get(id)
+            if (plannedStartDate || plannedEndDate) {
 
-            if (id && (plannedStartDate || plannedEndDate)) {
-                def currentProject = get(id)
                 if (currentProject.plannedStartDate != plannedStartDate || currentProject.plannedEndDate != plannedEndDate) {
                     resp = changeProjectDates(id, plannedStartDate ?: currentProject.plannedStartDate, plannedEndDate ?: currentProject.plannedEndDate, options)
+                }
+            }
+
+            // If the project name has changed, we need to regenerate reports to update any occurrences of the project name
+            if (projectDetails.name) {
+
+                if (currentProject.name != projectDetails.name) {
+                    if (nameChangeAllowed(currentProject)) {
+                        regenerateReports = true
+                    }
+                    else {
+                        projectDetails.remove('name')
+                    }
                 }
             }
         }
@@ -285,7 +300,22 @@ class ProjectService  {
             resp = updateUnchecked(id, projectDetails)
         }
 
+        // We need to regenerate the reports because of the name change.  We do this after the update so the name
+        // change has occurred.
+        if (!resp?.error && regenerateReports) {
+            generateProjectStageReports(id, new ReportGenerationOptions())
+        }
+
         return resp
+    }
+
+    /**
+     * For most projects, only FC_ADMINs can change the project name.  RLP projects are allowed name changes
+     * via the MERI plan workflow.
+     */
+    private boolean nameChangeAllowed(Map project) {
+        ProgramConfig config = projectConfigurationService.getProjectConfiguration(project)
+        return userService.userIsAlaOrFcAdmin() || (!isMeriPlanSubmittedOrApproved(project) && config.getProjectTemplate() == ProgramConfig.ProjectTemplate.RLP)
     }
 
     /** Extracts date change options from a payload */
