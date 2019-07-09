@@ -3,18 +3,11 @@
  */
 function MERIPlan(project, projectService, config) {
     var self = this;
-    if (!project.custom) {
-        project.custom = {};
-    }
-    if (!project.custom.details) {
-        project.custom.details = {};
-    }
+    ReadOnlyMeriPlan.apply(this, [project, projectService, config]);
+
     self.approvedPlans = ko.observableArray();
 
-    var periods = projectService.getBudgetHeaders(project);
-
-    self.plannedStartDate = ko.observable(project.plannedStartDate).extend({simpleDate: false});
-    self.plannedEndDate = ko.observable(project.plannedEndDate).extend({simpleDate: false});
+    var periods = self.periods;
 
     self.meriPlanUploadComplete = function (e, data) {
         if (data.result) {
@@ -145,25 +138,12 @@ function MERIPlan(project, projectService, config) {
         });
     };
 
-    self.meriPlanStatus = ko.pureComputed(function () {
-        var result = {
-            text: 'This plan is not yet approved',
-            badgeClass: 'badge-warning'
-        };
-        if (projectService.isCompleted()) {
-            if (projectService.isUnlockedForDataCorrection()) {
-                result = {text: 'The plan has been unlocked for data correction', badgeClass: 'badge-warning'};
-            } else {
-                result = {text: 'This project is complete', badgeClass: 'badge-info'};
-            }
-        } else {
-            if (projectService.isApproved()) {
-                result = {text: 'This plan has been approved', badgeClass: 'badge-success'};
-            } else if (projectService.isSubmitted()) {
-                result = {text: 'This plan has been submitted for approval', badgeClass: 'badge-info'};
-            }
-        }
-        return result;
+    self.isAgricultureProject.subscribe(function () {
+        // When this attribute changes, hidden form sections become visible and need help attached.
+        setTimeout(function () {
+            $('.helphover').popover({animation: true, trigger: 'hover'});
+        }, 1);
+
     });
 
     self.meriGrantManagerActionsTemplate = ko.pureComputed(function () {
@@ -218,23 +198,7 @@ function MERIPlan(project, projectService, config) {
             bootbox.alert(message);
         }
     }
-    var disableFlag = ko.observable(false);
-    self.isProjectDetailsLocked = ko.computed(function () {
-        return projectService.isProjectDetailsLocked();
-    });
-    var riskModel;
-    if (config.useRlpTemplate) {
-        disableFlag = self.isProjectDetailsLocked;
-        riskModel = rlpRiskModel();
-    } else {
-        riskModel = meritRiskModel();
-    }
 
-
-    _.extend(self, new Risks(project.risks, riskModel, disableFlag, config.risksStorageKey));
-    var details = new DetailsViewModel(project.custom.details, project, periods, self.risks, config);
-    self.meriPlan = ko.observable(details);
-    self.detailsLastUpdated = ko.observable(project.custom.details.lastUpdated).extend({simpleDate: true});
     self.isProjectDetailsSaved = ko.computed(function () {
         return (project['custom']['details'].status == 'active');
     });
@@ -327,21 +291,7 @@ function MERIPlan(project, projectService, config) {
         self.meriPlan().outcomes.shortTermOutcomes.remove(outcome);
     };
 
-    self.isAgricultureProject = ko.computed(function () {
-        var agricultureOutcomeStartIndex = 4;
-        var selectedPrimaryOutcome = self.meriPlan().outcomes.primaryOutcome.description();
-        var selectedOutcomeIndex = _.findIndex(project.outcomes, function (outcome) {
-            return outcome.outcome == selectedPrimaryOutcome;
-        });
-        return selectedOutcomeIndex >= agricultureOutcomeStartIndex;
-    });
-    self.isAgricultureProject.subscribe(function () {
-        // When this attribute changes, hidden form sections become visible and need help attached.
-        setTimeout(function () {
-            $('.helphover').popover({animation: true, trigger: 'hover'});
-        }, 1);
 
-    });
 
     self.saveAndSubmitChanges = function(){
         self.saveMeriPlan(true);
@@ -431,6 +381,70 @@ function MERIPlan(project, projectService, config) {
     projectService.getApprovedMeriPlanHistory().done(function(approvedPlans) {
         self.approvedPlans(approvedPlans);
     });
+};
+
+function ReadOnlyMeriPlan(project, projectService, config) {
+    var self = this;
+    if (!project.custom) {
+        project.custom = {};
+    }
+    if (!project.custom.details) {
+        project.custom.details = {};
+    }
+
+    self.periods = projectService.getBudgetHeaders(project);
+
+    self.plannedStartDate = ko.observable(project.plannedStartDate).extend({simpleDate: false});
+    self.plannedEndDate = ko.observable(project.plannedEndDate).extend({simpleDate: false});
+
+    self.meriPlanStatus = ko.pureComputed(function () {
+        var result = {
+            text: 'This plan is not yet approved',
+            badgeClass: 'badge-warning'
+        };
+        if (projectService.isCompleted()) {
+            if (projectService.isUnlockedForDataCorrection()) {
+                result = {text: 'The plan has been unlocked for data correction', badgeClass: 'badge-warning'};
+            } else {
+                result = {text: 'This project is complete', badgeClass: 'badge-info'};
+            }
+        } else {
+            if (projectService.isApproved()) {
+                result = {text: 'This plan has been approved', badgeClass: 'badge-success'};
+            } else if (projectService.isSubmitted()) {
+                result = {text: 'This plan has been submitted for approval', badgeClass: 'badge-info'};
+            }
+        }
+        return result;
+    });
+
+    var disableFlag = ko.observable(false);
+    self.isProjectDetailsLocked = ko.computed(function () {
+        return projectService.isProjectDetailsLocked();
+    });
+    var riskModel;
+    if (config.useRlpTemplate) {
+        disableFlag = self.isProjectDetailsLocked;
+        riskModel = rlpRiskModel();
+    } else {
+        riskModel = meritRiskModel();
+    }
+
+
+    _.extend(self, new Risks(project.risks, riskModel, disableFlag, config.risksStorageKey));
+    var details = new DetailsViewModel(project.custom.details, project, self.periods, self.risks, config);
+    self.meriPlan = ko.observable(details);
+    self.detailsLastUpdated = ko.observable(project.custom.details.lastUpdated).extend({simpleDate: true});
+    self.isAgricultureProject = ko.computed(function () {
+        var agricultureOutcomeStartIndex = 4;
+        var selectedPrimaryOutcome = self.meriPlan().outcomes.primaryOutcome.description();
+        var selectedOutcomeIndex = _.findIndex(project.outcomes, function (outcome) {
+            return outcome.outcome == selectedPrimaryOutcome;
+        });
+        return selectedOutcomeIndex >= agricultureOutcomeStartIndex;
+    });
+
+
 };
 
 function DetailsViewModel(o, project, budgetHeaders, risks, config) {

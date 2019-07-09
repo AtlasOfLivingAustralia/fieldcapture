@@ -14,7 +14,7 @@ table tr.header th {
     width: 100%;
 }
 
-.meri-plan td input {
+.meri-plan td input:not([type=checkbox]) {
     width: 100%;
     box-sizing: border-box;
     height: 30px;
