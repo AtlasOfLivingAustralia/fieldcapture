@@ -1584,7 +1584,7 @@ class ProjectService  {
         String projectEntityType = 'au.org.ala.ecodata.Project'
 
         int offset = 0
-        int pageSize = 100
+        int pageSize = 1000
         Map previousMessage = null
 
         Map auditResult = auditService.getAuditMessagesForProject(projectId, offset, pageSize, projectEntityType)
