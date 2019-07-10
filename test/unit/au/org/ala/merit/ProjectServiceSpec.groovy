@@ -854,10 +854,10 @@ class ProjectServiceSpec extends Specification {
         service.approvedMeriPlanHistory(projectId)
 
         then:
-        1 * auditService.getAuditMessagesForProject(projectId, 0, 100, 'au.org.ala.ecodata.Project') >> [data:[], recordsTotal:341]
-        1 * auditService.getAuditMessagesForProject(projectId, 100, 100, 'au.org.ala.ecodata.Project') >> [data:[], recordsTotal:341]
-        1 * auditService.getAuditMessagesForProject(projectId, 200, 100, 'au.org.ala.ecodata.Project') >> [data:[], recordsTotal:341]
-        1 * auditService.getAuditMessagesForProject(projectId, 300, 100, 'au.org.ala.ecodata.Project') >> [data:[], recordsTotal:341]
+        1 * auditService.getAuditMessagesForProject(projectId, 0, 1000, 'au.org.ala.ecodata.Project') >> [data:[], recordsTotal:3041]
+        1 * auditService.getAuditMessagesForProject(projectId, 1000, 1000, 'au.org.ala.ecodata.Project') >> [data:[], recordsTotal:3041]
+        1 * auditService.getAuditMessagesForProject(projectId, 2000, 1000, 'au.org.ala.ecodata.Project') >> [data:[], recordsTotal:3041]
+        1 * auditService.getAuditMessagesForProject(projectId, 3000, 1000, 'au.org.ala.ecodata.Project') >> [data:[], recordsTotal:3041]
     }
 
     def "The MERI plan history can be reconstructed from the audit history"() {
@@ -874,7 +874,7 @@ class ProjectServiceSpec extends Specification {
         List history = service.approvedMeriPlanHistory(projectId)
 
         then:
-        1 * auditService.getAuditMessagesForProject(projectId, 0, 100, 'au.org.ala.ecodata.Project') >> [data:messages.reverse(), recordsTotal:messages.size()]
+        1 * auditService.getAuditMessagesForProject(projectId, 0, 1000, 'au.org.ala.ecodata.Project') >> [data:messages.reverse(), recordsTotal:messages.size()]
 
         history.size() == 2
         history[0] == [id:10, date:'2019-07-01T00:00:010Z', userDisplayName:'test']
