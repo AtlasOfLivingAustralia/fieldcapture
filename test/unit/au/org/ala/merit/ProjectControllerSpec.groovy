@@ -412,6 +412,14 @@ class ProjectControllerSpec extends Specification {
         response.status == HttpStatus.SC_NOT_FOUND
     }
 
+    def "The project controller delegates to the reportService to override the lock on a report"() {
+        when:
+        controller.overrideLockAndEdit('p1', 'r1')
+
+        then:
+        1 * reportService.overrideLock('r1', {it.endsWith('project/viewReport/p1?reportId=r1')})
+    }
+
     private def stubGrantManager(userId, projectId) {
         stubUserPermissions(userId, projectId, false, false, true, true)
     }

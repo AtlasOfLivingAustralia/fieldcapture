@@ -404,4 +404,14 @@ class ReportServiceSpec extends Specification {
 
         result.error != null
     }
+
+    def "the report service can interact with the activity service to override a lock for a report"() {
+        when:
+        service.overrideLock("r1", "report/url")
+
+        then:
+        1 * webService.getJson({it.endsWith('report/r1')}) >> [reportId:'r1', activityId:'a1']
+        1 * activityService.stealLock('a1', 'report/url')
+
+    }
 }

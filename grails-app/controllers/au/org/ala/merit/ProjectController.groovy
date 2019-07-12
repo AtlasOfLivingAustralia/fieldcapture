@@ -734,8 +734,7 @@ class ProjectController {
 
     @PreAuthorise(accessLevel = 'editor')
     def overrideLockAndEdit(String id, String reportId) {
-        Map report = reportService.get(reportId)
-        Map resp  = activityService.stealLock(report.activityId, g.createLink(action:'viewReport', id:id, params:[reportId:reportId], absolute: true))
+        reportService.overrideLock(reportId, g.createLink(action:'viewReport', id:id, params:[reportId:reportId], absolute: true))
         chain(action:'editReport', id:id, params:[reportId:reportId])
     }
 

@@ -828,6 +828,18 @@ class ReportService {
         webService.doPost(url, [searchCriteria: searchCriteria, reportConfig: config])
     }
 
+    /**
+     * Overrides a lock for a report.
+     * @param reportId the id of the report to override the lock on
+     * @param reportUrl a link to view the report - included in an email sent to the lock owner
+     * @return
+     */
+    Map overrideLock(String reportId, String reportUrl) {
+        Map report = get(reportId)
+        activityService.stealLock(report.activityId, reportUrl)
+    }
+
+
     Map activityReportModel(String reportId, ReportMode mode, Integer formVersion = null) {
         Map report = get(reportId)
 

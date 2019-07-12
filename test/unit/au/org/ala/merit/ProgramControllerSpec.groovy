@@ -137,6 +137,14 @@ class ProgramControllerSpec extends Specification {
 
     }
 
+    def "The program controller delegates to the reportService to override the lock on a report"() {
+        when:
+        controller.overrideLockAndEdit('p1', 'r1')
+
+        then:
+        1 * reportService.overrideLock('r1', {it.endsWith('program/viewReport/p1?reportId=r1')})
+    }
+
 
     private Map testProgram(String id, boolean includeReports) {
         Map program = [programId:id, name:'name', config:[:], inheritedConfig:[:]]
