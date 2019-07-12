@@ -92,7 +92,7 @@ function convertToSimpleDate(isoDate, includeTime) {
     // Format the stage labels using Melbourne/Sydney/Canberra time to avoid problems where the date starts
     // at midnight and displays as the previous day in other timezones.
     var date = moment.tz(isoDate, "Australia/Sydney");
-    var format = includeTime ? "DD-MM-YYYY HH:MM" : "DD-MM-YYYY";
+    var format = includeTime ? "DD-MM-YYYY HH:mm" : "DD-MM-YYYY";
     return date.format(format);
 }
 

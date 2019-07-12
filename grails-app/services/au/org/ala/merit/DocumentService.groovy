@@ -103,7 +103,7 @@ class DocumentService {
         updateDocument(link)
     }
 
-    def Map search(Map params) {
+    Map search(Map params) {
         def url = "${grailsApplication.config.ecodata.baseUrl}document/search"
         def resp = webService.doPost(url, params)
         if (resp && !resp.error) {

@@ -1406,9 +1406,11 @@ function ProjectService(project, options) {
                     _.each(data.approvedMeriPlanHistory, function(meriPlan) {
                         approvedPlans.push(
                             {
-                                openMeriPlanUrl: config.viewHistoricalMeriPlanUrl+"?messageId="+meriPlan.id,
+                                openMeriPlanUrl: config.viewHistoricalMeriPlanUrl+"?documentId="+meriPlan.documentId,
                                 userDisplayName:meriPlan.userDisplayName,
-                                dateApproved:convertToSimpleDate(meriPlan.date, true)
+                                dateApproved:convertToSimpleDate(meriPlan.date, true),
+                                reason:meriPlan.reason,
+                                comment:meriPlan.comment
                             }
                         )
                     });

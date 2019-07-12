@@ -8,6 +8,7 @@ import grails.converters.JSON
 import org.apache.commons.lang.CharUtils
 import org.apache.http.HttpStatus
 import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 import org.joda.time.Days
 import org.joda.time.Interval
 import org.joda.time.Period
@@ -30,6 +31,7 @@ class ProjectService  {
     static final String PLAN_NOT_APPROVED = 'not approved'
     static final String PLAN_SUBMITTED = 'submitted'
     static final String PLAN_UNLOCKED = 'unlocked for correction'
+    public static final String DOCUMENT_ROLE_APPROVAL = 'approval'
 
     def webService, grailsApplication, siteService, activityService, emailService, documentService, userService, metadataService, settingService, reportService, auditService, speciesService, commonService
     ProjectConfigurationService projectConfigurationService
@@ -372,11 +374,12 @@ class ProjectService  {
         return [error:'Invalid plan status']
     }
 
-    def approvePlan(String projectId) {
+    def approvePlan(String projectId, Map approvalDetails) {
         def project = get(projectId)
         if (project.planStatus == PLAN_SUBMITTED) {
             def resp = update(projectId, [planStatus:PLAN_APPROVED])
             if (resp.resp && !resp.resp.error) {
+                createMeriPlanApprovalDocument(project, approvalDetails)
                 sendEmail({ProgramConfig programConfig -> programConfig.getPlanApprovedTemplate()}, project, RoleService.GRANT_MANAGER_ROLE)
                 return [message:'success']
             }
@@ -409,7 +412,7 @@ class ProjectService  {
             Map resp = update(projectId, [planStatus:PLAN_UNLOCKED])
 
             if (resp.resp && !resp.resp.error) {
-                Map doc = [name:"Approval to correct project information for "+project.projectId, projectId:projectId, type:'text', role:'approval',filename:project.projectId+'-correction-approval.txt', readOnly:true, "public":false]
+                Map doc = [name:"Approval to correct project information for "+project.projectId, projectId:projectId, type:'text', role: DOCUMENT_ROLE_APPROVAL, labels:['correction'], filename:project.projectId+'-correction-approval.txt', readOnly:true, "public":false]
                 String user = userService.getCurrentUserDisplayName()
                 String content = "User ${user} has unlocked project "+project.projectId+" for correction. \nDeclaration:\n"+approvalText
                 documentService.createTextDocument(doc, content)
@@ -533,8 +536,23 @@ class ProjectService  {
     private void createReportApprovalDocument(Map project, Map reportDetails) {
         def readableId = project.grantId + (project.externalId?'-'+project.externalId:'')
         def name = "${readableId} ${reportDetails.stage} approval"
-        def doc = [name:name, projectId:project.projectId, type:'text', role:'approval',filename:name, readOnly:true, "public":false, reportId:reportDetails.reportId]
+        def doc = [name:name, projectId:project.projectId, type:'text', role: DOCUMENT_ROLE_APPROVAL, filename:name, readOnly:true, "public":false, reportId:reportDetails.reportId]
         documentService.createTextDocument(doc, (project as JSON).toString())
+    }
+
+    private void createMeriPlanApprovalDocument(Map project, Map approvalDetails) {
+        def readableId = project.grantId + (project.externalId?'-'+project.externalId:'')
+        def name = "${readableId} MERI plan approved ${approvalDetails.dateApproved}"
+
+        if (!approvalDetails.dateApproved) {
+            approvalDetails.dateApproved = DateUtils.format(new DateTime().withZone(DateTimeZone.UTC))
+        }
+        DateTime dateApproved = DateUtils.parse(approvalDetails.dateApproved)
+        String filename = 'meri-approval-'+project.projectId+"-"+dateApproved.getMillis()+'.txt'
+        Map approvalContent = new HashMap(approvalDetails)
+        approvalContent.project = project
+        def doc = [name:name, projectId:project.projectId, type:'text', role: DOCUMENT_ROLE_APPROVAL, filename:filename, readOnly:true, "public":false, labels:['MERI']]
+        documentService.createTextDocument(doc, (approvalContent as JSON).toString())
     }
 
     private void completeProject(String projectId) {
@@ -1576,36 +1594,40 @@ class ProjectService  {
      * Searches the audit trail for updates where the MERI plan has been approved and returns a summary of
      * those audit messages for display (and possible retreival) to the user.
      * @param projectId the project to find the history for.
-     * @return a List of Maps, each of the form [id:<auditMessage id>, date:<the date the MERI plan was approved>, userId: <the user that approved the plan>]
+     * @return a List of Maps, each of the form [documentId:<document id>, date:<the date the MERI plan was approved>, userDisplayName: <the user that approved the plan>]
      */
     List<Map> approvedMeriPlanHistory(String projectId) {
 
-        List meriPlans = []
-        String projectEntityType = 'au.org.ala.ecodata.Project'
-
-        int offset = 0
-        int pageSize = 1000
-        Map previousMessage = null
-
-        Map auditResult = auditService.getAuditMessagesForProject(projectId, offset, pageSize, projectEntityType)
-        while (auditResult && auditResult.recordsTotal > offset) {
-
-            auditResult.data.each { Map message ->
-                if (message.entityType == projectEntityType) {
-                    if (previousMessage?.entity?.planStatus == PLAN_APPROVED && message.entity?.planStatus != PLAN_APPROVED) {
-                        // We've found an approved MERI plan.
-                        meriPlans << [id: previousMessage.id, date: previousMessage.date, userDisplayName:previousMessage.userName]
-                    }
-                    previousMessage = message
-                }
+        Map result = documentService.search(projectId:projectId, role:'approval', labels:'MERI')
+        List documents = result?.documents ?: []
+        if (documents) {
+            documents = documents.collect {
+                Map content = webService.getJson(it.url)
+                String displayName = userService.lookupUser(content.approvedBy)?.displayName ?: 'Unknown'
+                [
+                        documentId:it.documentId,
+                        date:content.dateApproved,
+                        userDisplayName:displayName,
+                        comment:content.comment,
+                        reason:content.reason
+                ]
             }
-            offset += pageSize
-            auditResult = auditService.getAuditMessagesForProject(projectId, offset, pageSize, projectEntityType)
         }
-        // We don't need to process the very last audit message as it is the first recorded audit entry and
-        // hence cannot represent a plan approval.
+        documents.sort({it.date})
+        documents.reverse()
+    }
 
-        meriPlans
+    /**
+     * Retrieves an approval document from the document service and extracts the project information from it.
+     */
+    Map getApprovedMeriPlanProject(String documentId) {
+        Map result = documentService.get(documentId)
+        if (!result || !result.url) {
+            return null
+        }
+
+        Map content = webService.getJson(result.url)
+        content?.project
     }
 
     private Map findScore(String scoreId, Map scoresWithTargets) {

@@ -515,7 +515,8 @@ class ProjectController {
 
     @PreAuthorise(accessLevel = 'caseManager')
     def ajaxApprovePlan(String id) {
-        def result = projectService.approvePlan(id)
+        Map approvalDetails = request.JSON
+        def result = projectService.approvePlan(id, approvalDetails)
         render result as JSON
     }
 

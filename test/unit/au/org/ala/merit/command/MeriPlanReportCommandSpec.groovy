@@ -14,11 +14,10 @@ class MeriPlanReportCommandSpec extends Specification {
 
     ProjectService projectService = Mock(ProjectService)
     MetadataService metadataService = Mock(MetadataService)
-    AuditService auditService = Mock(AuditService)
 
     MeriPlanReportCommand command
     def setup() {
-        command = new MeriPlanReportCommand(projectService: projectService, metadataService: metadataService, auditService: auditService)
+        command = new MeriPlanReportCommand(projectService: projectService, metadataService: metadataService)
     }
 
     def "The model can be created from a project id"() {
@@ -32,26 +31,26 @@ class MeriPlanReportCommandSpec extends Specification {
         then:
         1 * projectService.get(projectId, _) >> [projectId:projectId]
         1 * projectService.getProgramConfiguration([projectId:projectId]) >> [meriPlanTemplate:'rlp']
-        0 * auditService.getAuditMessage(_)
+        0 * projectService.getApprovedMeriPlanProject(_)
 
         result.project.projectId == projectId
         result.meriPlanTemplate == '/project/rlpView'
 
     }
 
-    def "The model can be created from an audit message id"() {
+    def "The model can be created from a document id"() {
         setup:
         String projectId = 'p1'
-        String messageId = 'm1'
+        String documentId = 'd1'
 
         when:
         command.id = projectId
-        command.messageId = messageId
+        command.documentId = documentId
         Map result = command.meriPlanReportModel()
 
         then:
         0 * projectService.get(projectId, _)
-        1 * auditService.getAuditMessage(messageId) >> [message:[entity:[projectId:projectId]], success:true]
+        1 * projectService.getApprovedMeriPlanProject(documentId) >> ["projectId":"p1"]
         1 * projectService.getProgramConfiguration([projectId:projectId]) >> [meriPlanTemplate:'rlp']
 
         result.project.projectId == projectId
@@ -78,14 +77,14 @@ class MeriPlanReportCommandSpec extends Specification {
         result.error != null
     }
 
-    def "an error will be returned if the audit message cannot be found if supplied"() {
+    def "an error will be returned if the document cannot be found if supplied"() {
         when:
         command.id = 'p1'
-        command.messageId = 'm1'
+        command.documentId = 'm1'
         Map result = command.meriPlanReportModel()
 
         then:
-        1 * auditService.getAuditMessage('m1') >> [success:false]
+        1 * projectService.getApprovedMeriPlanProject('m1') >> [:]
 
         result.statusCode == HttpStatus.SC_NOT_FOUND
         result.error != null
