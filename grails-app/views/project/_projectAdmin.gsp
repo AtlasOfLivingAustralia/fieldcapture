@@ -52,7 +52,6 @@
             <g:if test="${user.isAdmin || user.isCaseManager}">
                 <div id="projectDetails" class="pill-pane">
                     <!-- Edit project details -->
-                    <h3>MERI Plan</h3>
                     <g:render template="/shared/restoredData" model="[id:'restoredData', saveButton:'Save', cancelButton:'Cancel']"/>
                     <div class="row-fluid">
                         <div class="validationEngineContainer" id="project-details-validation">

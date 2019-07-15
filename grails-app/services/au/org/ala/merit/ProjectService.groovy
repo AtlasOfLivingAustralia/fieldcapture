@@ -1614,7 +1614,7 @@ class ProjectService  {
                         documentId:it.documentId,
                         date:content.dateApproved,
                         userDisplayName:displayName,
-                        comment:content.comment,
+                        referenceDocument:content.referenceDocument,
                         reason:content.reason
                 ]
             }

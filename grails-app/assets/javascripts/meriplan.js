@@ -100,7 +100,26 @@ function MERIPlan(project, projectService, config) {
     };
     // approve plan and handle errors
     self.approvePlan = function () {
-        projectService.approvePlan();
+
+        var planApprovalModal = config.planApprovalModel || '#meri-plan-approval-modal';
+        var $planApprovalModal = $(planApprovalModal);
+        var planApprovalViewModel = {
+            referenceDocument: ko.observable(),
+            reason:ko.observable(),
+            title:'Approve MERI Plan',
+            dateApproved: ko.observable(new Date()).extend({simpleDate:true}),
+            buttonText: 'Approve',
+            submit:function(viewModel) {
+                projectService.approvePlan({
+                    referenceDocument:viewModel.referenceDocument(),
+                    reason: viewModel.reason(),
+                    dateApproved: viewModel.dateApproved()
+                });
+            }
+        };
+        ko.applyBindings(planApprovalViewModel, $planApprovalModal[0]);
+        $planApprovalModal.modal({backdrop: 'static', keyboard:true, show:true}).on('hidden', function() {ko.cleanNode($planApprovalModal[0])});
+
     };
     // reject plan and handle errors
     self.rejectPlan = function () {
@@ -378,9 +397,18 @@ function MERIPlan(project, projectService, config) {
         $('#project-details-validation').validationEngine('attach', {autoPositionUpdate:true});
     };
 
-    projectService.getApprovedMeriPlanHistory().done(function(approvedPlans) {
-        self.approvedPlans(approvedPlans);
-    });
+    self.meriPlanHistoryVisible = ko.observable(false);
+    self.meriPlanHistoryInitialised = ko.observable(false);
+    self.toggleMeriPlanHistory = function() {
+        if (!self.meriPlanHistoryInitialised()) {
+            projectService.getApprovedMeriPlanHistory().done(function(approvedPlans) {
+                self.approvedPlans(approvedPlans);
+                self.meriPlanHistoryInitialised(true);
+            });
+        }
+        self.meriPlanHistoryVisible(!self.meriPlanHistoryVisible());
+    };
+
 };
 
 function ReadOnlyMeriPlan(project, projectService, config) {

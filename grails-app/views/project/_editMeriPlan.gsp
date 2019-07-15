@@ -1,4 +1,5 @@
 <!-- ko stopBinding: true -->
+<h3>MERI Plan</h3>
 <div id="edit-meri-plan">
 <script id="submittedPlanTmpl" type="text/html">
 <div class="span6 required">
@@ -49,7 +50,7 @@
 </script>
 
 <g:render template="/shared/declaration" model="[divId:'unlockPlan', declarationType:au.org.ala.merit.SettingPageType.UNLOCK_PLAN_DECLARATION]"/>
-
+<g:render template="meriPlanApprovalModal"/>
 <div class="row-fluid">
 
 	<div class="span6">
@@ -60,25 +61,51 @@
 			</div>
 		</div>
 	</div>
+	<div class="span6">
+		<div class="pull-right"><a data-bind="click:toggleMeriPlanHistory, text:meriPlanHistoryVisible() ? 'Hide approval history' : 'Show approval history'">Show MERI plan approvals</a></div>
+	</div>
+
 </div>
 
-<div data-bind="visible:approvedPlans().length > 0">
+
+<div data-bind="visible:meriPlanHistoryVisible">
 	<h4>History of approved MERI plans</h4>
+	<div data-bind="visible:!meriPlanHistoryInitialised()">
+		<asset:image src="spinner.gif"/>
+	</div>
+	<div data-bind="visible:meriPlanHistoryInitialised()">
+
+	<div data-bind="visible:approvedPlans().length > 0">
 
 	<table class="table table-striped">
 		<thead>
 		<tr class="header">
-			<th>Date / time approved</th><th>Approved by</th><th>Open</th>
+			<th>Date / time approved</th>
+			<th>Reference document</th>
+			<th>Approved by</th>
+			<th>Open</th>
+			<g:if test="${fc.userIsAlaOrFcAdmin()}">
+				<th>Delete</th>
+			</g:if>
 		</tr>
 		</thead>
 		<tbody data-bind="foreach:approvedPlans">
 		<tr>
 			<td data-bind="text:dateApproved"></td>
+			<td data-bind="text:referenceDocument"></td>
 			<td><span data-bind="text:userDisplayName"></span></td>
 			<td><a target="_meriPlan" data-bind="attr:{href:openMeriPlanUrl}"><i class="fa fa-external-link"></i></a></td>
+			<g:if test="${fc.userIsAlaOrFcAdmin()}">
+				<td><i class="fa fa-remove"></i></td>
+			</g:if>
 		</tr>
 		</tbody>
 	</table>
+	</div>
+	<div data-bind="visible:approvedPlans().length == 0">
+		No MERI plan approvals found.
+	</div>
+	</div>
 </div>
 
 

@@ -881,11 +881,11 @@ class ProjectServiceSpec extends Specification {
         1 * webService.getJson('url5') >> documents[4].content
 
         history.size() == 5
-        history[0] == [documentId:5, date:'2019-07-01T00:00:05Z', userDisplayName:'test', reason:'r', comment:'c']
-        history[1] == [documentId:4, date:'2019-07-01T00:00:04Z', userDisplayName:'test', reason:'r', comment:'c']
-        history[2] == [documentId:3, date:'2019-07-01T00:00:03Z', userDisplayName:'test', reason:'r', comment:'c']
-        history[3] == [documentId:2, date:'2019-07-01T00:00:02Z', userDisplayName:'test', reason:'r', comment:'c']
-        history[4] == [documentId:1, date:'2019-07-01T00:00:01Z', userDisplayName:'test', reason:'r', comment:'c']
+        history[0] == [documentId:5, date:'2019-07-01T00:00:05Z', userDisplayName:'test', reason:'r', referenceDocument:'c']
+        history[1] == [documentId:4, date:'2019-07-01T00:00:04Z', userDisplayName:'test', reason:'r', referenceDocument:'c']
+        history[2] == [documentId:3, date:'2019-07-01T00:00:03Z', userDisplayName:'test', reason:'r', referenceDocument:'c']
+        history[3] == [documentId:2, date:'2019-07-01T00:00:02Z', userDisplayName:'test', reason:'r', referenceDocument:'c']
+        history[4] == [documentId:1, date:'2019-07-01T00:00:01Z', userDisplayName:'test', reason:'r', referenceDocument:'c']
     }
 
     private Map buildApprovalDocument(int i, String projectId) {
@@ -893,7 +893,7 @@ class ProjectServiceSpec extends Specification {
                 dateApproved:"2019-07-01T00:00:0${i}Z",
                 approvedBy:'1234',
                 reason:'r',
-                comment: 'c',
+                referenceDocument: 'c',
                 project: [projectId:projectId]
         ]
         Map document = [documentId:i, projectId:projectId, url:'url'+i, content:approval]

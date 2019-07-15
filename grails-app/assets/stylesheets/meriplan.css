@@ -182,3 +182,13 @@ span.helphover {
     background-clip:content-box;
 }
 
+#meri-plan-approval-modal textarea {
+    box-sizing: border-box;
+    width: 100%;
+}
+
+#meri-plan-approval-modal input {
+    box-sizing: border-box;
+    width: 100%;
+    height: 30px;
+}
