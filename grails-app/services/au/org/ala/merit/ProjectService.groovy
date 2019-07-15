@@ -540,6 +540,11 @@ class ProjectService  {
         documentService.createTextDocument(doc, (project as JSON).toString())
     }
 
+    /**
+     * Records the details of the MERI plan approval in a text document.
+     * @param project the project that has had the MERI plan approved
+     * @param approvalDetails information supplied by the approver.
+     */
     private void createMeriPlanApprovalDocument(Map project, Map approvalDetails) {
         def readableId = project.grantId + (project.externalId?'-'+project.externalId:'')
         def name = "${readableId} MERI plan approved ${approvalDetails.dateApproved}"
@@ -547,6 +552,7 @@ class ProjectService  {
         if (!approvalDetails.dateApproved) {
             approvalDetails.dateApproved = DateUtils.format(new DateTime().withZone(DateTimeZone.UTC))
         }
+        approvalDetails.approvedBy = userService.getCurrentUserId()
         DateTime dateApproved = DateUtils.parse(approvalDetails.dateApproved)
         String filename = 'meri-approval-'+project.projectId+"-"+dateApproved.getMillis()+'.txt'
         Map approvalContent = new HashMap(approvalDetails)

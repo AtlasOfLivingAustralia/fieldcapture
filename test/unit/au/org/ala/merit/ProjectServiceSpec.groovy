@@ -243,8 +243,9 @@ class ProjectServiceSpec extends Specification {
         Map expectedDocumentContent = [project:project] + approvalDetails
 
 
+
         when:
-        def result = service.approvePlan(projectId, [dateApproved:'2019-07-01T00:00:00Z', approvedBy:'1234', reason:'reason', comment:'comment'])
+        def result = service.approvePlan(projectId, [dateApproved:'2019-07-01T00:00:00Z', reason:'reason', comment:'comment'])
 
         then:
         result.message == 'success'
@@ -252,7 +253,7 @@ class ProjectServiceSpec extends Specification {
         1 * documentService.createTextDocument([projectId:projectId, type:'text', role:ProjectService.DOCUMENT_ROLE_APPROVAL, filename: expectedFilename, name:expectedName, readOnly:true, public:false, labels:['MERI']], {compareDocuments(it, expectedDocumentContent)})
         1 * webService.getJson({it.endsWith("permissions/getMembersForProject/"+projectId)}) >> projectRoles
         1 * emailService.sendEmail(EmailTemplate.DEFAULT_PLAN_APPROVED_EMAIL_TEMPLATE,_,projectRoles, RoleService.GRANT_MANAGER_ROLE)
-
+        userService.getCurrentUserId() >> '1234'
     }
     private boolean compareDocuments(actual, expected) {
         new JsonSlurper().parseText(actual) == expected
@@ -300,6 +301,7 @@ class ProjectServiceSpec extends Specification {
         1 * projectConfigurationService.getProjectConfiguration(project) >> programConfig
         1 * webService.doPost({it.endsWith("project/"+projectId)}, _) >> [resp:[status:'ok']]
         1 * webService.getJson({it.endsWith("permissions/getMembersForProject/"+projectId)}) >> projectRoles
+        userService.getCurrentUserId() >> '1234'
         results.actualEmailTemplate == expectedTemplate
         results.actualRole == expectedRole
 
