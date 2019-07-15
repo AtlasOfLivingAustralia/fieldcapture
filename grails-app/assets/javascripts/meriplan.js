@@ -65,7 +65,6 @@ function MERIPlan(project, projectService, config) {
     // Configuration for the jquery file upload plugin used to upload MERI plans
     self.meriPlanUploadConfig = {
         url: config.meriPlanUploadUrl,
-        forceIframeTransport: false,
         done: self.meriPlanUploadComplete,
         fail: self.meriPlanUploadFailed
     };

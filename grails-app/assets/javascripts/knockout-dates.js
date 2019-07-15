@@ -522,7 +522,7 @@ ko.extenders.async = function(computedDeferred, initialValue) {
 ko.bindingHandlers.fileUploadNoImage = {
     init: function(element, options) {
 
-        var defaults = {autoUpload:true, forceIframeTransport:true};
+        var defaults = {autoUpload:true};
         var settings = {};
         $.extend(settings, defaults, options());
         $(element).fileupload(settings);
