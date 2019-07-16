@@ -168,9 +168,13 @@ class ProjectController {
         }
         else if (template == RLP_TEMPLATE) {
 
+
+
             model.overview.template = 'rlpOverview'
-            model.overview.servicesDashboard = projectService.getServiceDashboardData(project.projectId, !user?.hasViewAccess)
             model.details.meriPlanTemplate = RLP_MERI_PLAN_TEMPLATE+'View'
+
+            model["serviceDelivery"] = [label: 'Service Delivery', visible: true, type: 'tab', template: 'rlpServiceDashboard']
+            model.serviceDelivery.servicesDashboard = projectService.getServiceDashboardData(project.projectId, !user?.hasViewAccess)
 
             model.site.useAlaMap = true
             model.site.showSiteType = true
@@ -181,7 +185,7 @@ class ProjectController {
             }
             Map reportingTab = [label: 'Reporting', visible:user?.hasViewAccess, type:'tab', template:'projectReporting', reports:project.reports, reportOrder:reportOrder, stopBinding:true, services: config.services, scores:scores, hideDueDate:true, isAdmin:user?.isAdmin, isGrantManager:user?.isCaseManager]
 
-            Map rlpModel = [overview:model.overview, documents:model.documents, details:model.details, site:model.site, reporting:reportingTab]
+            Map rlpModel = [overview:model.overview, serviceDelivery: model.serviceDelivery, documents:model.documents, details:model.details, site:model.site, reporting:reportingTab]
             rlpModel.admin = model.admin
             rlpModel.admin.meriPlanTemplate = RLP_MERI_PLAN_TEMPLATE
             rlpModel.admin.projectServices = config.services
