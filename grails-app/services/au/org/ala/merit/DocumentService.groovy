@@ -91,10 +91,6 @@ class DocumentService {
         result
     }
 
-    def createDocument(doc, contentType, inputStream) {
-        updateDocument(doc, contentType, inputStream)
-    }
-
     def getDocumentsForSite(id) {
         def url = "${grailsApplication.config.ecodata.baseUrl}site/${id}/documents"
         return webService.doPost(url, [:])
@@ -113,7 +109,7 @@ class DocumentService {
             File file = new File(grailsApplication.config.upload.images.path, document.filename)
             if (file.exists()) {
                 // Create a new document, supplying the file that was uploaded to the ImageController.
-                result = createDocument(document, document.contentType, new FileInputStream(file))
+                result = updateDocument(document, document.filename, document.contentType, new FileInputStream(file))
                 if (!result.error) {
                     file.delete()
                 }
