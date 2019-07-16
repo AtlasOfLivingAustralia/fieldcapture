@@ -168,8 +168,6 @@ class ProjectController {
         }
         else if (template == RLP_TEMPLATE) {
 
-
-
             model.overview.template = 'rlpOverview'
             model.details.meriPlanTemplate = RLP_MERI_PLAN_TEMPLATE+'View'
 
@@ -194,6 +192,8 @@ class ProjectController {
             rlpModel.admin.showSpecies = false
             rlpModel.admin.hidePrograms = true
             rlpModel.admin.showAnnouncementsTab = false
+
+            //rlpModel.overview.funding = rlpModel.admin.project?.funding?: 0
 
             model = rlpModel
         }

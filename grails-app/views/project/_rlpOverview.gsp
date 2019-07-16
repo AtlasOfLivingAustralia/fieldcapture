@@ -47,6 +47,13 @@
         <div class="span9 value"><span data-bind="text:plannedEndDate.formattedDate"></span></div>
     </div>
 
+   <g:if test="${project?.funding>0}" >
+        <div class="row-fluid">
+            <div class="span2 header-label">Project Funding</div>
+            <div class="span9 value"><span data-bind="text:${project.funding}"></span></div>
+        </div>
+    </g:if>
+
     <div class="row-fluid">
         <div class="span2 header-label">Project status</div>
 
