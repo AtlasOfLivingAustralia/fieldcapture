@@ -61,13 +61,15 @@
 			</div>
 		</div>
 	</div>
+<g:if test="${showMeriPlanHistory}">
 	<div class="span6">
 		<div class="pull-right"><a data-bind="click:toggleMeriPlanHistory, text:meriPlanHistoryVisible() ? 'Hide approval history' : 'Show approval history'">Show MERI plan approvals</a></div>
 	</div>
+</g:if>
 
 </div>
 
-
+<g:if test="${showMeriPlanHistory}">
 <div data-bind="visible:meriPlanHistoryVisible">
 	<h4>History of approved MERI plans</h4>
 	<div data-bind="visible:!meriPlanHistoryInitialised()">
@@ -107,7 +109,7 @@
 	</div>
 	</div>
 </div>
-
+</g:if>
 
 
 <!--  Case manager actions -->

@@ -261,6 +261,7 @@
                // Issues as it's not cleared on save.
                config.risksStorageKey = PROJECT_RISKS_KEY;
             }
+            config.requireMeriApprovalReason = ${projectContent.admin.requireMeriPlanApprovalReason};
 
             config.autoSaveIntervalInSeconds = ${grailsApplication.config.fieldcapture.autoSaveIntervalInSeconds?:60};
             config.riskAndThreatTypes = ${config.riskAndThreatTypes ?: 'null'};

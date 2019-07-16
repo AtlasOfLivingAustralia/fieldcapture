@@ -100,24 +100,30 @@ function MERIPlan(project, projectService, config) {
     // approve plan and handle errors
     self.approvePlan = function () {
 
-        var planApprovalModal = config.planApprovalModel || '#meri-plan-approval-modal';
-        var $planApprovalModal = $(planApprovalModal);
-        var planApprovalViewModel = {
-            referenceDocument: ko.observable(),
-            reason:ko.observable(),
-            title:'Approve MERI Plan',
-            dateApproved: ko.observable(new Date()).extend({simpleDate:true}),
-            buttonText: 'Approve',
-            submit:function(viewModel) {
-                projectService.approvePlan({
-                    referenceDocument:viewModel.referenceDocument(),
-                    reason: viewModel.reason(),
-                    dateApproved: viewModel.dateApproved()
-                });
-            }
-        };
-        ko.applyBindings(planApprovalViewModel, $planApprovalModal[0]);
-        $planApprovalModal.modal({backdrop: 'static', keyboard:true, show:true}).on('hidden', function() {ko.cleanNode($planApprovalModal[0])});
+        if (config.requireMeriApprovalReason) {
+            var planApprovalModal = config.planApprovalModel || '#meri-plan-approval-modal';
+            var $planApprovalModal = $(planApprovalModal);
+            var planApprovalViewModel = {
+                referenceDocument: ko.observable(),
+                reason:ko.observable(),
+                title:'Approve MERI Plan',
+                dateApproved: ko.observable(new Date()).extend({simpleDate:true}),
+                buttonText: 'Approve',
+                submit:function(viewModel) {
+                    projectService.approvePlan({
+                        referenceDocument:viewModel.referenceDocument(),
+                        reason: viewModel.reason(),
+                        dateApproved: viewModel.dateApproved()
+                    });
+                }
+            };
+            ko.applyBindings(planApprovalViewModel, $planApprovalModal[0]);
+            $planApprovalModal.modal({backdrop: 'static', keyboard:true, show:true}).on('hidden', function() {ko.cleanNode($planApprovalModal[0])});
+        }
+        else {
+            projectService.approvePlan({dateApproved:convertToIsoDate(new Date())});
+        }
+
 
     };
     // reject plan and handle errors
