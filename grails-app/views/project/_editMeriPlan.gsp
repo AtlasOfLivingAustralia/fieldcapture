@@ -63,7 +63,7 @@
 	</div>
 <g:if test="${showMeriPlanHistory}">
 	<div class="span6">
-		<div class="pull-right"><a data-bind="click:toggleMeriPlanHistory, text:meriPlanHistoryVisible() ? 'Hide approval history' : 'Show approval history'">Show MERI plan approvals</a></div>
+		<div class="pull-right"><a class="btn btn-info meri-history-toggle" data-bind="click:toggleMeriPlanHistory, text:meriPlanHistoryVisible() ? 'Hide approval history' : 'Show approval history'">Show MERI plan approvals</a></div>
 	</div>
 </g:if>
 
@@ -81,7 +81,7 @@
 
 	<table class="table table-striped meri-approval-history">
 		<thead>
-		<tr class="header">
+		<tr>
 			<th class="approval-date">Date / time approved</th>
 			<th class="ref">Reference document</th>
 			<th class="approver">Approved by</th>
