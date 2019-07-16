@@ -240,6 +240,7 @@
                 projectDatesValidationUrl: fcConfig.projectDatesValidationUrl,
                 approvedMeriPlanHistoryUrl: fcConfig.approvedMeriPlanHistoryUrl,
                 viewHistoricalMeriPlanUrl: fcConfig.viewHistoricalMeriPlanUrl,
+                documentDeleteUrl: fcConfig.documentDeleteUrl,
                 meriStorageKey:PROJECT_DETAILS_KEY,
                 activityBasedReporting: ${Boolean.valueOf(projectContent.admin.config.activityBasedReporting)},
                 minimumProjectEndDate: ${projectContent.admin.minimumProjectEndDate?'"'+projectContent.admin.minimumProjectEndDate+'"':'null'}

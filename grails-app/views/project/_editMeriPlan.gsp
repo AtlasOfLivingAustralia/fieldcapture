@@ -77,26 +77,26 @@
 
 	<div data-bind="visible:approvedPlans().length > 0">
 
-	<table class="table table-striped">
+	<table class="table table-striped meri-approval-history">
 		<thead>
 		<tr class="header">
-			<th>Date / time approved</th>
-			<th>Reference document</th>
-			<th>Approved by</th>
-			<th>Open</th>
+			<th class="approval-date">Date / time approved</th>
+			<th class="ref">Reference document</th>
+			<th class="approver">Approved by</th>
+			<th class="open">Open</th>
 			<g:if test="${fc.userIsAlaOrFcAdmin()}">
-				<th>Delete</th>
+				<th class="delete-approval">Delete</th>
 			</g:if>
 		</tr>
 		</thead>
 		<tbody data-bind="foreach:approvedPlans">
 		<tr>
-			<td data-bind="text:dateApproved"></td>
-			<td data-bind="text:referenceDocument"></td>
-			<td><span data-bind="text:userDisplayName"></span></td>
-			<td><a target="_meriPlan" data-bind="attr:{href:openMeriPlanUrl}"><i class="fa fa-external-link"></i></a></td>
+			<td class="approval-date" data-bind="text:dateApproved"></td>
+			<td class="ref" data-bind="text:referenceDocument"></td>
+			<td class="approver"><span data-bind="text:userDisplayName"></span><g:if test="${user.isCaseManager}"> <span data-bind="visible:reason, popover:{content:reason}"><i class="fa fa-question-circle"></i></span></g:if></td>
+			<td class="open"><a target="_meriPlan" data-bind="attr:{href:openMeriPlanUrl}"><i class="fa fa-external-link"></i></a></td>
 			<g:if test="${fc.userIsAlaOrFcAdmin()}">
-				<td><i class="fa fa-remove"></i></td>
+				<td class="delete-approval"><i class="fa fa-remove" data-bind="click:$parent.deleteApproval"></i></td>
 			</g:if>
 		</tr>
 		</tbody>

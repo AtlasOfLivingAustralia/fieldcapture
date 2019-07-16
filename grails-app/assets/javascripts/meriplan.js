@@ -407,6 +407,21 @@ function MERIPlan(project, projectService, config) {
         }
         self.meriPlanHistoryVisible(!self.meriPlanHistoryVisible());
     };
+    self.deleteApproval = function(approval) {
+        bootbox.confirm("Delete this approval?  This cannot be undone.", function(yes) {
+
+            if (yes) {
+                projectService.deleteDocument(approval.documentId).done(
+                    function() {
+                        document.location.reload();
+                    }
+                ).fail(function() {
+                    bootbox.alert("There was an error deleting the approval");
+                });
+            }
+
+        });
+    }
 
 };
 

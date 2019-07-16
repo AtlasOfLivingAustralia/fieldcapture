@@ -1407,11 +1407,11 @@ function ProjectService(project, options) {
                         approvedPlans.push(
                             {
                                 openMeriPlanUrl: config.viewHistoricalMeriPlanUrl+"?documentId="+meriPlan.documentId,
-                                deleteApprovalUrl: config.deleteApprovalUrl+"?documentId="+meriPlan.documentId,
                                 userDisplayName:meriPlan.userDisplayName,
                                 dateApproved:convertToSimpleDate(meriPlan.date, true),
                                 reason:meriPlan.reason,
-                                referenceDocument:meriPlan.referenceDocument
+                                referenceDocument:meriPlan.referenceDocument,
+                                documentId:meriPlan.documentId
                             }
                         )
                     });
@@ -1422,7 +1422,10 @@ function ProjectService(project, options) {
             });
         }
         return deferred;
-    }
+    };
 
-
+    self.deleteDocument = function(documentId) {
+        var url = config.documentDeleteUrl+'/'+documentId;
+        return $.post(url);
+    };
 };

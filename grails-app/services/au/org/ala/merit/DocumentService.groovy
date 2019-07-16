@@ -1,9 +1,14 @@
 package au.org.ala.merit
 
 import grails.converters.JSON
+import org.apache.commons.io.FilenameUtils
+import org.apache.http.HttpStatus
+import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.springframework.cache.annotation.Cacheable
 
-import static org.apache.http.HttpStatus.SC_OK;
+import static org.apache.http.HttpStatus.SC_BAD_REQUEST
+import static org.apache.http.HttpStatus.SC_OK
+import static org.apache.http.HttpStatus.SC_UNAUTHORIZED;
 
 /**
  * Proxies to the ecodata DocumentController/DocumentService.
@@ -14,7 +19,9 @@ class DocumentService {
     public static final String TYPE_LINK = "link"
     public static final String ROLE_LOGO = "logo"
 
-    def webService, grailsApplication
+    WebService webService
+    GrailsApplication grailsApplication
+    UserService userService
 
     def get(String id) {
         def url = "${grailsApplication.config.ecodata.baseUrl}document/${id}"
@@ -22,10 +29,14 @@ class DocumentService {
     }
 
     def delete(String id) {
-        def url = "${grailsApplication.config.ecodata.baseUrl}document/${id}"
-        return webService.doDelete(url)
+        if (canDelete(id)) {
+            def url = "${grailsApplication.config.ecodata.baseUrl}document/${id}"
+            return webService.doDelete(url)
+        }
+        else {
+            return HttpStatus.SC_UNAUTHORIZED
+        }
     }
-
 
     def createTextDocument(doc, content) {
         doc.content = content
@@ -42,19 +53,42 @@ class DocumentService {
         return []
     }
 
-    def updateDocument(doc) {
-        def url = "${grailsApplication.config.ecodata.baseUrl}document/${doc.documentId?:''}"
+    def updateDocument(Map doc) {
+        Map result
+        if (canEdit(doc)) {
+            def url = "${grailsApplication.config.ecodata.baseUrl}document/${doc.documentId?:''}"
+            result = webService.doPost(url, doc)
+        }
+        else {
+            result = [statusCode:SC_UNAUTHORIZED]
+        }
+        result
 
-        return webService.doPost(url, doc)
     }
 
-    def updateDocument(doc, contentType, inputStream) {
-        def url = grailsApplication.config.ecodata.baseUrl + "document"
-        if (doc.documentId) {
-            url+="/"+doc.documentId
+    def updateDocument(Map doc, String filename, String contentType, InputStream inputStream) {
+        Map result
+        if (!canEdit(doc)) {
+            result = [statusCode:SC_UNAUTHORIZED]
         }
-        def params = [document:doc as JSON]
-        return webService.postMultipart(url, params, inputStream, contentType, doc.filename)
+        else {
+            def extension = FilenameUtils.getExtension(filename)?.toLowerCase()
+            if (!extension || grailsApplication.config.upload.extensions.blacklist.contains(extension)) {
+                result = [statusCode:SC_BAD_REQUEST, error:"Files with the extension '.${extension}' are not permitted."]
+            }
+            else {
+                def url = grailsApplication.config.ecodata.baseUrl + "document"
+                if (doc.documentId) {
+                    url+="/"+doc.documentId
+                }
+                doc.contentType = contentType
+                doc.filename = filename
+                def params = [document:doc as JSON]
+                result = webService.postMultipart(url, params, inputStream, contentType, doc.filename)
+            }
+
+        }
+        result
     }
 
     def createDocument(doc, contentType, inputStream) {
@@ -110,5 +144,50 @@ class DocumentService {
             return resp.resp
         }
         return resp
+    }
+
+    /**
+     * Returns true if the current user has permission to edit/update the
+     * supplied document.
+     * @param document the document to be edited/updated
+     */
+    boolean canEdit(Map document) {
+        if (document.documentId) {
+            document = get(document.documentId)
+        }
+        boolean canEdit = false
+
+        if (document) {
+            if (document.readOnly) {
+                canEdit = userService.userIsAlaOrFcAdmin()
+            }
+            else {
+                String userId = userService.getCurrentUserId()
+                if (document.projectId) {
+                    canEdit = userService.canUserEditProject(userId, document.projectId)
+                }
+                else if (document.programId) {
+                    canEdit = userService.canUserEditProgramReport(userId, document.programId)
+                }
+                else if (document.organisationId) {
+                    canEdit = userService.isUserAdminForOrganisation(userId, document.organisationId)
+                }
+                else {
+                    canEdit = userService.userIsAlaOrFcAdmin()
+                }
+            }
+
+        }
+
+        canEdit
+    }
+
+    /**
+     * Returns true if the current user has permission to delete the
+     * supplied document.
+     * @param documentId the id of the document to be deleted
+     */
+    boolean canDelete(String documentId) {
+        canEdit([documentId:documentId])
     }
 }
