@@ -17,7 +17,7 @@
             </div>
             <div class="row-fluid">
                 <div class="span12">
-                    <textarea style="width:100%" rows="5" maxlength="500" placeholder="Please add the reason for this approval" data-bind="value:reason"></textarea>
+                    <textarea style="width:100%" rows="5" maxlength="500" placeholder="Please add the reason for this approval" data-bind="textInput:reason"></textarea>
                 </div>
             </div>
         </form>
