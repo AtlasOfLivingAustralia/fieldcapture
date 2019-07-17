@@ -43,22 +43,33 @@
 
     <div class="row-fluid">
         <div class="span2 header-label">Project end</div>
-
         <div class="span9 value"><span data-bind="text:plannedEndDate.formattedDate"></span></div>
     </div>
 
    <g:if test="${project?.funding>0}" >
         <div class="row-fluid">
             <div class="span2 header-label">Project Funding</div>
-            <div class="span9 value"><span data-bind="text:${project.funding}"></span></div>
+            <div class="span9 value"><span data-bind="text:funding.formattedCurrency"></span></div>
         </div>
     </g:if>
 
     <div class="row-fluid">
-        <div class="span2 header-label">Project status</div>
 
+        <div class="span2 header-label" >Project outcomes addressed</div>
         <div class="span9 value">
-            <span style="text-transform:uppercase;" data-bind="text:status" class="badge badge-info" style="font-size: 13px;"></span>
+            <table class="table table-bordered ">
+                <thead>
+                <tr>
+                    <g:each in="${project.outcomes}" var="outcome" >
+                        <td>
+                        ${outcome.shortDescription}
+                        <g:if test ="${outcome.targeted}"><span class="fa fa-check-circle"></span></g:if>
+                        </td>
+                    </g:each>
+                </tr>
+                </thead>
+            </table>
+
         </div>
     </div>
 

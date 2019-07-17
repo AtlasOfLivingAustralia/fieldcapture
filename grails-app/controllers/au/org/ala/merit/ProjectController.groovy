@@ -126,6 +126,9 @@ class ProjectController {
         project.outcomes = new JSONArray(config.outcomes ?: [])
         project.hasApprovedOrSubmittedReports = reportService.includesSubmittedOrApprovedReports(project.reports)
 
+
+
+
         def meriPlanVisible = metadataService.isOptionalContent('MERI Plan', config)
         def risksAndThreatsVisible = metadataService.isOptionalContent('Risks and Threats', config)
         def canViewRisks = risksAndThreatsVisible && (user?.hasViewAccess || user?.isEditor)
@@ -192,10 +195,21 @@ class ProjectController {
             rlpModel.admin.showSpecies = false
             rlpModel.admin.hidePrograms = true
             rlpModel.admin.showAnnouncementsTab = false
-
-            //rlpModel.overview.funding = rlpModel.admin.project?.funding?: 0
+            //project.custom.details.outcomes
 
             model = rlpModel
+
+            //Verify project.outcomes (from program config) with primaryOutcome and secondaryOutcomes in project.custom.details.outcomes
+            def primaryOutcome = project.custom?.details?.outcomes?.primaryOutcome
+            if (primaryOutcome){
+                def oc =  project.outcomes.find {oc -> oc.outcome == primaryOutcome.description}
+                oc['targeted'] = true
+            }
+
+            for(def po : project.custom?.details?.outcomes?.secondaryOutcomes){
+                def oc =  project.outcomes.find {oc -> oc.outcome == po.description}
+                oc['targeted'] = true
+            }
         }
         else if (config?.projectTemplate == ESP_TEMPLATE && !user?.hasViewAccess) {
             project.remove('sites')
