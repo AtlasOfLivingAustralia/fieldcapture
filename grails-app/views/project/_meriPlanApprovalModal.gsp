@@ -12,15 +12,15 @@
                 <div class="span8"><input type="text" readonly="readonly" data-bind="value:dateApproved.formattedDate"></div>
             </div>
             <div class="row-fluid">
-                <div class="span4"><label class="required" for="meri-plan-approval-document-reference">Reference document </label></div>
+                <div class="span4"><label class="required" for="meri-plan-approval-document-reference">Change order numbers </label></div>
                 <div class="span8"><input id="meri-plan-approval-document-reference" type="text" class="required" data-bind="value:referenceDocument"></div>
             </div>
             <div class="row-fluid">
-                <div class="span4"><label class="required" for="meri-plan-approval-reason">Approval reason </label></div>
+                <div class="span4"><label class="required" for="meri-plan-approval-reason">Comments field</label></div>
             </div>
             <div class="row-fluid">
                 <div class="span12">
-                    <textarea id="meri-plan-approval-reason" rows="5" maxlength="500" class="required" placeholder="Please add the reason for this approval" data-bind="textInput:reason"></textarea>
+                    <textarea id="meri-plan-approval-reason" rows="5" maxlength="500" class="required" placeholder="Approval reason" data-bind="textInput:reason"></textarea>
                 </div>
             </div>
         </form>

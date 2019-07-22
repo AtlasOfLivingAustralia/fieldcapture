@@ -82,8 +82,9 @@
 	<table class="table table-striped meri-approval-history">
 		<thead>
 		<tr>
-			<th class="approval-date">Date / time approved</th>
-			<th class="ref">Reference document</th>
+			<th class="approval-date">Date / Time Approved</th>
+			<th class="ref">Change Order Numbers</th>
+			<th class="comments">Comments Field</th>
 			<th class="approver">Approved by</th>
 			<th class="open">Open</th>
 			<g:if test="${fc.userIsAlaOrFcAdmin()}">
@@ -95,7 +96,8 @@
 		<tr>
 			<td class="approval-date" data-bind="text:dateApproved"></td>
 			<td class="ref" data-bind="text:referenceDocument"></td>
-			<td class="approver"><span data-bind="text:userDisplayName"></span><g:if test="${user.isCaseManager}"> <span data-bind="visible:reason, popover:{content:reason}"><i class="fa fa-question-circle"></i></span></g:if></td>
+			<td class="comments" data-bind="text:reason"></td>
+			<td class="approver"><span data-bind="text:userDisplayName"></span></td>
 			<td class="open"><a target="_meriPlan" data-bind="attr:{href:openMeriPlanUrl}"><i class="fa fa-external-link"></i></a></td>
 			<g:if test="${fc.userIsAlaOrFcAdmin()}">
 				<td class="delete-approval"><i class="fa fa-remove" data-bind="click:$parent.deleteApproval"></i></td>

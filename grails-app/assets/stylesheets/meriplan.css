@@ -206,7 +206,12 @@ span.helphover {
 .meri-approval-history td.approval-date {
     width:10em;
 }
-
+.meri-approval-history td.comments {
+    width:40%;
+}
+.meri-approval-history td.ref {
+    width: 30%;
+}
 a.meri-history-toggle {
     color: white;
 }
