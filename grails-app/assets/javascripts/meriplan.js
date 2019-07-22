@@ -417,11 +417,14 @@ function MERIPlan(project, projectService, config) {
         bootbox.confirm("Delete this approval?  This cannot be undone.", function(yes) {
 
             if (yes) {
+                blockUIWithMessage("Deleting approval...");
                 projectService.deleteDocument(approval.documentId).done(
                     function() {
+                        blockUIWithMessage("Approval deleted.  Reloading page...")
                         document.location.reload();
                     }
                 ).fail(function() {
+                    $.unblockUI();
                     bootbox.alert("There was an error deleting the approval");
                 });
             }
