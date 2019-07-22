@@ -16,7 +16,7 @@
                 <div class="span8"><input id="meri-plan-approval-document-reference" type="text" class="required" data-bind="value:referenceDocument"></div>
             </div>
             <div class="row-fluid">
-                <div class="span4"><label class="required" for="meri-plan-approval-reason">Comments field</label></div>
+                <div class="span4"><label class="required" for="meri-plan-approval-reason">Comments </label></div>
             </div>
             <div class="row-fluid">
                 <div class="span12">
