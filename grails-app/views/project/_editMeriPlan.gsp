@@ -84,7 +84,7 @@
 		<tr>
 			<th class="approval-date">Date / Time Approved</th>
 			<th class="ref">Change Order Numbers</th>
-			<th class="comments">Comments Field</th>
+			<th class="comments">Comments</th>
 			<th class="approver">Approved by</th>
 			<th class="open">Open</th>
 			<g:if test="${fc.userIsAlaOrFcAdmin()}">
