@@ -345,7 +345,7 @@ function MERIPlan(project, projectService, config) {
                     bootbox.alert("Your MERI plan cannot be submitted until all validation errors are resolved");
                 }
             }
-            else if (meriPlan.name() != project.name) {
+            else if (ko.isObservable(meriPlan.name) && (meriPlan.name() != project.name)) {
                 // If the name has changed we need to reload the page so the title is updated.
                 blockUIWithMessage("MERI Plan Saved.  Reloading project...");
                 window.location.reload();
