@@ -1608,19 +1608,24 @@ class ProjectService  {
         List documents = result?.documents ?: []
         if (documents) {
             documents = documents.collect {
-                Map content = webService.getJson(it.url)
-                String displayName = userService.lookupUser(content.approvedBy)?.displayName ?: 'Unknown'
-                [
-                        documentId:it.documentId,
-                        date:content.dateApproved,
-                        userDisplayName:displayName,
-                        referenceDocument:content.referenceDocument,
-                        reason:content.reason
-                ]
+                Map resp = webService.getJson2(it.url)
+                Map doc = null
+                if (resp.statusCode == HttpStatus.SC_OK) {
+                    Map content = resp.resp
+                    String displayName = userService.lookupUser(content.approvedBy)?.displayName ?: 'Unknown'
+                    doc = [
+                            documentId:it.documentId,
+                            date:content.dateApproved,
+                            userDisplayName:displayName,
+                            referenceDocument:content.referenceDocument,
+                            reason:content.reason
+                    ]
+                }
+                doc
             }
         }
         documents.sort({it.date})
-        documents.reverse()
+        documents.findAll().reverse()
     }
 
     /**
