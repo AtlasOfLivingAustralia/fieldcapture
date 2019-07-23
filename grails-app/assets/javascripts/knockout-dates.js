@@ -737,8 +737,7 @@ ko.bindingHandlers.stagedImageUpload = {
          // Expected to be a ko.observableArray
         $(element).fileupload({
             url:config.url,
-            autoUpload:true,
-            forceIframeTransport: true
+            autoUpload:true
         }).on('fileuploadadd', function(e, data) {
             complete(false);
             progress(1);
@@ -754,8 +753,7 @@ ko.bindingHandlers.stagedImageUpload = {
             size(data.total);
         }).on('fileuploaddone', function(e, data) {
 
-            var resultText = $('pre', data.result).text();
-            var result = $.parseJSON(resultText);
+            var result = data.result;
 
             if (!result) {
                 result = {};
