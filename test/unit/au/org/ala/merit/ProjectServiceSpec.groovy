@@ -874,11 +874,11 @@ class ProjectServiceSpec extends Specification {
 
         then:
         1 * documentService.search([projectId:projectId, role:ProjectService.DOCUMENT_ROLE_APPROVAL, labels:'MERI']) >> [documents:documents]
-        1 * webService.getJson('url1') >> documents[0].content
-        1 * webService.getJson('url2') >> documents[1].content
-        1 * webService.getJson('url3') >> documents[2].content
-        1 * webService.getJson('url4') >> documents[3].content
-        1 * webService.getJson('url5') >> documents[4].content
+        1 * webService.getJson2('url1') >> [statusCode:200, resp:documents[0].content]
+        1 * webService.getJson2('url2') >> [statusCode:200, resp:documents[1].content]
+        1 * webService.getJson2('url3') >> [statusCode:200, resp:documents[2].content]
+        1 * webService.getJson2('url4') >> [statusCode:200, resp:documents[3].content]
+        1 * webService.getJson2('url5') >> [statusCode:200, resp:documents[4].content]
 
         history.size() == 5
         history[0] == [documentId:5, date:'2019-07-01T00:00:05Z', userDisplayName:'test', reason:'r', referenceDocument:'c']
