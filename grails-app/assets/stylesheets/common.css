@@ -2,6 +2,7 @@
 *= require base
 *= require bootstrap-datepicker/css/datepicker
 *= require jquery.validationEngine/validationEngine.jquery
+*= require blueimp/fileupload-9.28.0/jquery.fileupload.css
 *= require wmd/wmd.css
 */
 

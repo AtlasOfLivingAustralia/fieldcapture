@@ -15,8 +15,7 @@
             returnToUrl: "${params.returnTo}"
         };
     </script>
-    <asset:stylesheet src="common.css"/>
-    <asset:stylesheet src="fileupload-9.0.0/jquery.fileupload-ui.css"/>
+    <asset:stylesheet src="common-bs4.css"/>
 
 </head>
 <body>
@@ -55,7 +54,7 @@
 
 
 </asset:script>
-<asset:javascript src="common.js"/>
+<asset:javascript src="common-bs4.js"/>
 <asset:javascript src="attach-document-no-ui.js"/>
 <asset:javascript src="program.js"/>
 <asset:deferredScripts/>
