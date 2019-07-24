@@ -16,7 +16,6 @@
         };
     </script>
     <asset:stylesheet src="common-bs4.css"/>
-    <asset:stylesheet src="fileupload-9.0.0/jquery.fileupload-ui.css"/>
     <asset:stylesheet src="program.css"/>
 
 

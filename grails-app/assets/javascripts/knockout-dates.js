@@ -92,7 +92,7 @@ function convertToSimpleDate(isoDate, includeTime) {
     // Format the stage labels using Melbourne/Sydney/Canberra time to avoid problems where the date starts
     // at midnight and displays as the previous day in other timezones.
     var date = moment.tz(isoDate, "Australia/Sydney");
-    var format = includeTime ? "DD-MM-YYYY HH:MM" : "DD-MM-YYYY";
+    var format = includeTime ? "DD-MM-YYYY HH:mm" : "DD-MM-YYYY";
     return date.format(format);
 }
 
@@ -522,7 +522,7 @@ ko.extenders.async = function(computedDeferred, initialValue) {
 ko.bindingHandlers.fileUploadNoImage = {
     init: function(element, options) {
 
-        var defaults = {autoUpload:true, forceIframeTransport:true};
+        var defaults = {autoUpload:true};
         var settings = {};
         $.extend(settings, defaults, options());
         $(element).fileupload(settings);
@@ -737,8 +737,7 @@ ko.bindingHandlers.stagedImageUpload = {
          // Expected to be a ko.observableArray
         $(element).fileupload({
             url:config.url,
-            autoUpload:true,
-            forceIframeTransport: true
+            autoUpload:true
         }).on('fileuploadadd', function(e, data) {
             complete(false);
             progress(1);
@@ -754,8 +753,7 @@ ko.bindingHandlers.stagedImageUpload = {
             size(data.total);
         }).on('fileuploaddone', function(e, data) {
 
-            var resultText = $('pre', data.result).text();
-            var result = $.parseJSON(resultText);
+            var result = data.result;
 
             if (!result) {
                 result = {};

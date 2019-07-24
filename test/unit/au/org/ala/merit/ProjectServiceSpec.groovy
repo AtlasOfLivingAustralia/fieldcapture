@@ -3,8 +3,10 @@ package au.org.ala.merit
 import au.org.ala.merit.reports.ReportGenerationOptions
 import grails.converters.JSON
 import grails.test.mixin.TestFor
+import groovy.json.JsonSlurper
 import org.codehaus.groovy.grails.web.converters.marshaller.json.CollectionMarshaller
 import org.codehaus.groovy.grails.web.converters.marshaller.json.MapMarshaller
+import org.codehaus.groovy.grails.web.json.parser.JSONParser
 import org.joda.time.Period
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -22,6 +24,7 @@ class ProjectServiceSpec extends Specification {
     ActivityService activityService = Mock(ActivityService)
     DocumentService documentService = Mock(DocumentService)
     EmailService emailService = Mock(EmailService)
+    AuditService auditService = Mock(AuditService)
     ProjectConfigurationService projectConfigurationService = Mock(ProjectConfigurationService)
     ProgramConfig projectConfig = new ProgramConfig([activityBasedReporting: true, reportingPeriod:6, reportingPeriodAlignedToCalendar: true, weekDaysToCompleteReport:43])
 
@@ -49,6 +52,7 @@ class ProjectServiceSpec extends Specification {
         service.documentService = documentService
         service.emailService = emailService
         service.projectConfigurationService = projectConfigurationService
+        service.auditService = auditService
         userService.userIsAlaOrFcAdmin() >> false
         metadataService.getProgramConfiguration(_,_) >> [reportingPeriod:6, reportingPeriodAlignedToCalendar: true, weekDaysToCompleteReport:43]
         projectConfigurationService.getProjectConfiguration(_) >> projectConfig
@@ -190,7 +194,7 @@ class ProjectServiceSpec extends Specification {
         webService.getJson(_) >> [projectId:projectId, planStatus:planStatus]
 
         when:
-        def result = service.approvePlan(projectId)
+        def result = service.approvePlan(projectId, [:])
 
         then:
         result.error == "Invalid plan status"
@@ -226,22 +230,33 @@ class ProjectServiceSpec extends Specification {
         1 * emailService.sendEmail(EmailTemplate.DEFAULT_PLAN_SUBMITTED_EMAIL_TEMPLATE,_,projectRoles, RoleService.PROJECT_ADMIN_ROLE)
     }
 
-    def "an email should be sent when a plan is approved"() {
+    def "an email should be sent and an approval document created when a plan is approved"() {
         given:
         def projectId = 'project1'
         def planStatus = ProjectService.PLAN_SUBMITTED
         List projectRoles = []
-        webService.getJson(_) >> [projectId:projectId, planStatus:planStatus]
+        Map project = [projectId:projectId, planStatus:planStatus, grantId:'g1', reports:null]
+        webService.getJson(_) >> project
+        String expectedName = 'g1 MERI plan approved 2019-07-01T00:00:00Z'
+        String expectedFilename = 'meri-approval-project1-1561939200000.txt'
+        Map approvalDetails = [dateApproved:'2019-07-01T00:00:00Z', approvedBy:'1234', reason:'reason', comment:'comment']
+        Map expectedDocumentContent = [project:project] + approvalDetails
+
+
 
         when:
-        def result = service.approvePlan(projectId)
+        def result = service.approvePlan(projectId, [dateApproved:'2019-07-01T00:00:00Z', reason:'reason', comment:'comment'])
 
         then:
         result.message == 'success'
         1 * webService.doPost({it.endsWith("project/"+projectId)}, [planStatus:ProjectService.PLAN_APPROVED]) >> [resp:[status:'ok']]
+        1 * documentService.createTextDocument([projectId:projectId, type:'text', role:ProjectService.DOCUMENT_ROLE_APPROVAL, filename: expectedFilename, name:expectedName, readOnly:true, public:false, labels:['MERI']], {compareDocuments(it, expectedDocumentContent)})
         1 * webService.getJson({it.endsWith("permissions/getMembersForProject/"+projectId)}) >> projectRoles
         1 * emailService.sendEmail(EmailTemplate.DEFAULT_PLAN_APPROVED_EMAIL_TEMPLATE,_,projectRoles, RoleService.GRANT_MANAGER_ROLE)
-
+        userService.getCurrentUserId() >> '1234'
+    }
+    private boolean compareDocuments(actual, expected) {
+        new JsonSlurper().parseText(actual) == expected
     }
 
     def "an email should be sent when a plan is returned"() {
@@ -286,15 +301,14 @@ class ProjectServiceSpec extends Specification {
         1 * projectConfigurationService.getProjectConfiguration(project) >> programConfig
         1 * webService.doPost({it.endsWith("project/"+projectId)}, _) >> [resp:[status:'ok']]
         1 * webService.getJson({it.endsWith("permissions/getMembersForProject/"+projectId)}) >> projectRoles
+        userService.getCurrentUserId() >> '1234'
         results.actualEmailTemplate == expectedTemplate
         results.actualRole == expectedRole
-
-
 
         where:
         initialState                     | action                       | expectedTemplate                                | expectedRole
         ProjectService.PLAN_NOT_APPROVED | {s, id -> s.submitPlan(id)}  | EmailTemplate.RLP_PLAN_SUBMITTED_EMAIL_TEMPLATE | RoleService.PROJECT_ADMIN_ROLE
-        ProjectService.PLAN_SUBMITTED    | {s, id -> s.approvePlan(id)} | EmailTemplate.RLP_PLAN_APPROVED_EMAIL_TEMPLATE  | RoleService.GRANT_MANAGER_ROLE
+        ProjectService.PLAN_SUBMITTED    | {s, id -> s.approvePlan(id, [:])} | EmailTemplate.RLP_PLAN_APPROVED_EMAIL_TEMPLATE  | RoleService.GRANT_MANAGER_ROLE
         ProjectService.PLAN_SUBMITTED    | {s, id -> s.rejectPlan(id)}  | EmailTemplate.RLP_PLAN_RETURNED_EMAIL_TEMPLATE  | RoleService.GRANT_MANAGER_ROLE
         ProjectService.PLAN_APPROVED     | {s, id -> s.rejectPlan(id)}  | EmailTemplate.RLP_PLAN_RETURNED_EMAIL_TEMPLATE  | RoleService.GRANT_MANAGER_ROLE
     }
@@ -846,6 +860,46 @@ class ProjectServiceSpec extends Specification {
 
     }
 
+    def "The MERI plan approval history can be extracted from approval documents"() {
+        setup:
+        String projectId = 'p1'
+        List documents = []
+        (1..5).each {
+            documents << buildApprovalDocument(it, projectId)
+        }
+        userService.lookupUser('1234') >> [displayName:'test']
+
+        when:
+        List history = service.approvedMeriPlanHistory(projectId)
+
+        then:
+        1 * documentService.search([projectId:projectId, role:ProjectService.DOCUMENT_ROLE_APPROVAL, labels:'MERI']) >> [documents:documents]
+        1 * webService.getJson2('url1') >> [statusCode:200, resp:documents[0].content]
+        1 * webService.getJson2('url2') >> [statusCode:200, resp:documents[1].content]
+        1 * webService.getJson2('url3') >> [statusCode:200, resp:documents[2].content]
+        1 * webService.getJson2('url4') >> [statusCode:200, resp:documents[3].content]
+        1 * webService.getJson2('url5') >> [statusCode:200, resp:documents[4].content]
+
+        history.size() == 5
+        history[0] == [documentId:5, date:'2019-07-01T00:00:05Z', userDisplayName:'test', reason:'r', referenceDocument:'c']
+        history[1] == [documentId:4, date:'2019-07-01T00:00:04Z', userDisplayName:'test', reason:'r', referenceDocument:'c']
+        history[2] == [documentId:3, date:'2019-07-01T00:00:03Z', userDisplayName:'test', reason:'r', referenceDocument:'c']
+        history[3] == [documentId:2, date:'2019-07-01T00:00:02Z', userDisplayName:'test', reason:'r', referenceDocument:'c']
+        history[4] == [documentId:1, date:'2019-07-01T00:00:01Z', userDisplayName:'test', reason:'r', referenceDocument:'c']
+    }
+
+    private Map buildApprovalDocument(int i, String projectId) {
+        Map approval = [
+                dateApproved:"2019-07-01T00:00:0${i}Z",
+                approvedBy:'1234',
+                reason:'r',
+                referenceDocument: 'c',
+                project: [projectId:projectId]
+        ]
+        Map document = [documentId:i, projectId:projectId, url:'url'+i, content:approval]
+
+        document
+    }
 
     private Map meritProjectConfig() {
         Map reportConfig = [reportType: "Activity",

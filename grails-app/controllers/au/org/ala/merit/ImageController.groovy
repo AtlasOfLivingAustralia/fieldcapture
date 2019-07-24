@@ -85,10 +85,7 @@ class ImageController {
             }
         }
         log.debug result
-
-        response.addHeader('Content-Type', 'text/plain')
-        def json = result as JSON
-        render json.toString()
+        render result as JSON
     }
 
     def delete = {
