@@ -23,6 +23,7 @@
     </script>
     <asset:stylesheet src="common-bs4.css"/>
     <asset:stylesheet src="program.css"/>
+    <asset:stylesheet src="leaflet-manifest.css"/>
 
 </head>
 
@@ -96,7 +97,6 @@
 <asset:script>
 
     $(function () {
-
         var program =<fc:modelAsJavascript model="${program}"/>;
         var config = _.extend({reportingConfigSelector:'#reporting form'}, fcConfig);
         var programViewModel = new ProgramPageViewModel(program, config);

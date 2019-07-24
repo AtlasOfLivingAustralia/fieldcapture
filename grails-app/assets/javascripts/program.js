@@ -4,6 +4,8 @@
 //= require sites
 //= require document
 //= require reporting
+//= require leaflet-manifest
+
 
 /**
  * Knockout view model for program pages.
@@ -25,7 +27,8 @@ ProgramViewModel = function (props, options) {
     self.description = ko.observable(props.description).extend({markdown: true});
     self.url = ko.observable(props.url);
     self.newsAndEvents = ko.observable(props.newsAndEvents).extend({markdown: true});
-
+    self.programSiteId = ko.observable(props.programSiteId);
+    self.mapFeatures =  ko.observable(props.mapFeatures);
     self.projects = props.projects;
 
     self.deleteProgram = function () {
@@ -272,6 +275,21 @@ var ProgramPageViewModel = function(props, options) {
                         touchSwipe: false // at the moment we only support 1 image
                     });
                 }
+                if (self.programSiteId){
+                    if (!self.mapFeatures()) {
+                        log.info("There was a problem obtaining program site data");
+                    }else{
+                        var map = createMap({
+                            useAlaMap:true,
+                            mapContainerId:'programSiteMap',
+                            useGoogleBaseMap:fcConfig.useGoogleBaseMap,
+                            featureServiceUrl: fcConfig.featureService,
+                            wmsServerUrl: fcConfig.spatialWmsUrl
+                        });
+                        map.replaceAllFeatures([self.mapFeatures()])
+                    }
+                }
+
             }
         },
         'projects': {

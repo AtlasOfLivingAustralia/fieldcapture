@@ -18,8 +18,15 @@
 <div data-bind="visible:description">
     <div class="well">
         <div class="well-title">Description</div>
+        <div class="span8">
+              <span data-bind="html:description.markdownToHtml()"></span>
+        </div>
+    </div>
+</div>
 
-        <span data-bind="html:description.markdownToHtml()"></span>
+<div data-bind="visible:programSiteId">
+    <div class="span4">
+        <m:map id="programSiteMap" style="width:100%;height:200px;"></m:map>
     </div>
 </div>
 
@@ -44,3 +51,4 @@
         </g:each>
     </div>
 </g:if>
+
