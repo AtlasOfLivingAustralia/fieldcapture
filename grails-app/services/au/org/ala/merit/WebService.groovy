@@ -209,7 +209,6 @@ class WebService {
 
             String responseCharset = getCharset(conn)
             JsonSlurper parser = new JsonSlurper()
-            parser.setType(JsonParserType.INDEX_OVERLAY)
             Map resp = parser.parse(conn.inputStream, responseCharset)
             result = [statusCode:conn.responseCode, resp:resp]
 
