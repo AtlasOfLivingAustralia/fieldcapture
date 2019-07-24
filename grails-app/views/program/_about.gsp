@@ -15,21 +15,22 @@
     <div data-bind="visible:url()"><strong>Visit us at <a data-bind="attr:{href:url}"><span data-bind="text:url"></span></a></strong></div>
 </div>
 
-<div data-bind="visible:description">
-    <div class="well">
-        <div class="well-title">Description</div>
-        <div class="span8">
-              <span data-bind="html:description.markdownToHtml()"></span>
+<div class="row-fluid">
+    <div data-bind="visible:description" class="span6">
+        <div class="well">
+            <div class="well-title">Description</div>
+            <div >
+                  <span data-bind="html:description.markdownToHtml()"></span>
+            </div>
+        </div>
+    </div>
+
+    <div data-bind="visible:programSiteId" class="span6">
+        <div >
+            <m:map id="programSiteMap" style="width:100%;height:300px;"></m:map>
         </div>
     </div>
 </div>
-
-<div data-bind="visible:programSiteId">
-    <div class="span4">
-        <m:map id="programSiteMap" style="width:100%;height:200px;"></m:map>
-    </div>
-</div>
-
 <g:if test="${servicesDashboard.visible && servicesDashboard.services}">
     <hr/>
     <div class="well-title">Service delivery</div>
