@@ -1300,8 +1300,8 @@ function ProjectService(project, options) {
         self.saveStatus(config.modifyPlanUrl);
     };
     // approve plan and handle errors
-    self.approvePlan = function () {
-        self.saveStatus(config.approvalPlanUrl);
+    self.approvePlan = function (approvalDetails) {
+        self.saveStatus(config.approvalPlanUrl, approvalDetails);
     };
     // reject plan and handle errors
     self.rejectPlan = function () {
@@ -1313,17 +1313,17 @@ function ProjectService(project, options) {
     };
 
     self.submitPlan = function(declarationText) {
-        self.saveStatus(config.submitPlanUrl, declarationText);
+        self.saveStatus(config.submitPlanUrl, {declaration:declarationText});
     };
 
     self.unlockPlan = function(declarationText) {
-        self.saveStatus(unlockPlanForCorrectionUrl, declarationText);
+        self.saveStatus(unlockPlanForCorrectionUrl, {declaration:declarationText});
     };
 
-    self.saveStatus = function (url, declaration) {
+    self.saveStatus = function (url, payloadData) {
         var payload = {projectId: project.projectId};
-        if (declaration) {
-            payload.declaration = declaration;
+        if (payloadData) {
+            _.extend(payload, payloadData);
         }
         return $.ajax({
             url: url,
@@ -1392,6 +1392,40 @@ function ProjectService(project, options) {
         }
         return headers;
 
-    }
+    };
 
+    /**
+     * Queries the server to retrieve an array of objects representing each time the MERI plan was approved.
+     */
+    self.getApprovedMeriPlanHistory = function() {
+        var approvedPlans = [];
+        var deferred = $.Deferred();
+        if (config.approvedMeriPlanHistoryUrl) {
+            $.getJSON(config.approvedMeriPlanHistoryUrl).done(function(data) {
+                if (data && data.approvedMeriPlanHistory) {
+                    _.each(data.approvedMeriPlanHistory, function(meriPlan) {
+                        approvedPlans.push(
+                            {
+                                openMeriPlanUrl: config.viewHistoricalMeriPlanUrl+"?documentId="+meriPlan.documentId,
+                                userDisplayName:meriPlan.userDisplayName,
+                                dateApproved:convertToSimpleDate(meriPlan.date, true),
+                                reason:meriPlan.reason,
+                                referenceDocument:meriPlan.referenceDocument,
+                                documentId:meriPlan.documentId
+                            }
+                        )
+                    });
+                }
+                deferred.resolve(approvedPlans);
+            }).fail(function() {
+                deferred.reject(approvedPlans);
+            });
+        }
+        return deferred;
+    };
+
+    self.deleteDocument = function(documentId) {
+        var url = config.documentDeleteUrl+'/'+documentId;
+        return $.post(url);
+    };
 };

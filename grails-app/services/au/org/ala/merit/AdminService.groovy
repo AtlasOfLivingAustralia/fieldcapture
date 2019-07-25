@@ -133,7 +133,7 @@ class AdminService {
                                         ]
 
                                         writer.println("Creating " + doc)
-                                        documentService.createDocument(doc, "image/${ext.toLowerCase()}", new FileInputStream(tmp))
+                                        documentService.createDocument(doc, filename, "image/${ext.toLowerCase()}", new FileInputStream(tmp))
 
                                         tmp.delete()
 

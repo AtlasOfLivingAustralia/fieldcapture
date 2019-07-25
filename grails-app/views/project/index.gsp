@@ -82,6 +82,8 @@
         useGoogleBaseMap: ${grails.util.Environment.current == grails.util.Environment.PRODUCTION},
         meriPlanUploadUrl:"${createLink(controller:'project', action:'uploadMeriPlan', id:project.projectId)}",
         leafletIconPath:"${assetPath(src:'leaflet-0.7.7/images')}",
+        approvedMeriPlanHistoryUrl:"${createLink(action:"approvedMeriPlanHistory", id:project.projectId)}",
+        viewHistoricalMeriPlanUrl:"${createLink(action:"viewMeriPlan", id:project.projectId)}",
         returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
 
     },
@@ -130,7 +132,7 @@
                     </div>
                 </g:if>
                 <div class="pull-right">
-                    <g:if test="${user?.isCaseManager && hasCustomTemplate}">
+                    <g:if test="${showAlternateTemplate}">
                         <a class="btn"  href="${createLink(action:'index', id:project.projectId)}">User View</a>
                     </g:if>
                     <g:set var="disabled">${(!user) ? "disabled='disabled' title='login required'" : ''}</g:set>
@@ -236,6 +238,9 @@
                 projectScoresUrl: fcConfig.projectScoresUrl,
                 meriPlanUploadUrl: fcConfig.meriPlanUploadUrl,
                 projectDatesValidationUrl: fcConfig.projectDatesValidationUrl,
+                approvedMeriPlanHistoryUrl: fcConfig.approvedMeriPlanHistoryUrl,
+                viewHistoricalMeriPlanUrl: fcConfig.viewHistoricalMeriPlanUrl,
+                documentDeleteUrl: fcConfig.documentDeleteUrl,
                 meriStorageKey:PROJECT_DETAILS_KEY,
                 activityBasedReporting: ${Boolean.valueOf(projectContent.admin.config.activityBasedReporting)},
                 minimumProjectEndDate: ${projectContent.admin.minimumProjectEndDate?'"'+projectContent.admin.minimumProjectEndDate+'"':'null'}
@@ -256,6 +261,7 @@
                // Issues as it's not cleared on save.
                config.risksStorageKey = PROJECT_RISKS_KEY;
             }
+            config.requireMeriApprovalReason = ${projectContent.admin.requireMeriPlanApprovalReason};
 
             config.autoSaveIntervalInSeconds = ${grailsApplication.config.fieldcapture.autoSaveIntervalInSeconds?:60};
             config.riskAndThreatTypes = ${config.riskAndThreatTypes ?: 'null'};

@@ -8,6 +8,7 @@ import grails.converters.JSON
 import org.apache.commons.lang.CharUtils
 import org.apache.http.HttpStatus
 import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 import org.joda.time.Days
 import org.joda.time.Interval
 import org.joda.time.Period
@@ -30,6 +31,7 @@ class ProjectService  {
     static final String PLAN_NOT_APPROVED = 'not approved'
     static final String PLAN_SUBMITTED = 'submitted'
     static final String PLAN_UNLOCKED = 'unlocked for correction'
+    public static final String DOCUMENT_ROLE_APPROVAL = 'approval'
 
     def webService, grailsApplication, siteService, activityService, emailService, documentService, userService, metadataService, settingService, reportService, auditService, speciesService, commonService
     ProjectConfigurationService projectConfigurationService
@@ -268,16 +270,31 @@ class ProjectService  {
         Map options = projectDetails.remove('options')
         // Changing project dates requires some extra validation and updates to the stage reports.  Only
         // do this check for existing projects for which the planned start and/or end date is being changed
+
+        boolean regenerateReports = false
         if (id) {
 
             String plannedStartDate = projectDetails.remove('plannedStartDate')
             String plannedEndDate = projectDetails.remove('plannedEndDate')
 
+            def currentProject = get(id)
+            if (plannedStartDate || plannedEndDate) {
 
-            if (id && (plannedStartDate || plannedEndDate)) {
-                def currentProject = get(id)
                 if (currentProject.plannedStartDate != plannedStartDate || currentProject.plannedEndDate != plannedEndDate) {
                     resp = changeProjectDates(id, plannedStartDate ?: currentProject.plannedStartDate, plannedEndDate ?: currentProject.plannedEndDate, options)
+                }
+            }
+
+            // If the project name has changed, we need to regenerate reports to update any occurrences of the project name
+            if (projectDetails.name) {
+
+                if (currentProject.name != projectDetails.name) {
+                    if (nameChangeAllowed(currentProject)) {
+                        regenerateReports = true
+                    }
+                    else {
+                        projectDetails.remove('name')
+                    }
                 }
             }
         }
@@ -285,7 +302,22 @@ class ProjectService  {
             resp = updateUnchecked(id, projectDetails)
         }
 
+        // We need to regenerate the reports because of the name change.  We do this after the update so the name
+        // change has occurred.
+        if (!resp?.error && regenerateReports) {
+            generateProjectStageReports(id, new ReportGenerationOptions())
+        }
+
         return resp
+    }
+
+    /**
+     * For most projects, only FC_ADMINs can change the project name.  RLP projects are allowed name changes
+     * via the MERI plan workflow.
+     */
+    private boolean nameChangeAllowed(Map project) {
+        ProgramConfig config = projectConfigurationService.getProjectConfiguration(project)
+        return userService.userIsAlaOrFcAdmin() || (!isMeriPlanSubmittedOrApproved(project) && config.getProjectTemplate() == ProgramConfig.ProjectTemplate.RLP)
     }
 
     /** Extracts date change options from a payload */
@@ -342,11 +374,12 @@ class ProjectService  {
         return [error:'Invalid plan status']
     }
 
-    def approvePlan(String projectId) {
+    def approvePlan(String projectId, Map approvalDetails) {
         def project = get(projectId)
         if (project.planStatus == PLAN_SUBMITTED) {
             def resp = update(projectId, [planStatus:PLAN_APPROVED])
             if (resp.resp && !resp.resp.error) {
+                createMeriPlanApprovalDocument(project, approvalDetails)
                 sendEmail({ProgramConfig programConfig -> programConfig.getPlanApprovedTemplate()}, project, RoleService.GRANT_MANAGER_ROLE)
                 return [message:'success']
             }
@@ -379,7 +412,7 @@ class ProjectService  {
             Map resp = update(projectId, [planStatus:PLAN_UNLOCKED])
 
             if (resp.resp && !resp.resp.error) {
-                Map doc = [name:"Approval to correct project information for "+project.projectId, projectId:projectId, type:'text', role:'approval',filename:project.projectId+'-correction-approval.txt', readOnly:true, "public":false]
+                Map doc = [name:"Approval to correct project information for "+project.projectId, projectId:projectId, type:'text', role: DOCUMENT_ROLE_APPROVAL, labels:['correction'], filename:project.projectId+'-correction-approval.txt', readOnly:true, "public":false]
                 String user = userService.getCurrentUserDisplayName()
                 String content = "User ${user} has unlocked project "+project.projectId+" for correction. \nDeclaration:\n"+approvalText
                 documentService.createTextDocument(doc, content)
@@ -503,8 +536,29 @@ class ProjectService  {
     private void createReportApprovalDocument(Map project, Map reportDetails) {
         def readableId = project.grantId + (project.externalId?'-'+project.externalId:'')
         def name = "${readableId} ${reportDetails.stage} approval"
-        def doc = [name:name, projectId:project.projectId, type:'text', role:'approval',filename:name, readOnly:true, "public":false, reportId:reportDetails.reportId]
+        def doc = [name:name, projectId:project.projectId, type:'text', role: DOCUMENT_ROLE_APPROVAL, filename:name, readOnly:true, "public":false, reportId:reportDetails.reportId]
         documentService.createTextDocument(doc, (project as JSON).toString())
+    }
+
+    /**
+     * Records the details of the MERI plan approval in a text document.
+     * @param project the project that has had the MERI plan approved
+     * @param approvalDetails information supplied by the approver.
+     */
+    private void createMeriPlanApprovalDocument(Map project, Map approvalDetails) {
+        def readableId = project.grantId + (project.externalId?'-'+project.externalId:'')
+        def name = "${readableId} MERI plan approved ${approvalDetails.dateApproved}"
+
+        if (!approvalDetails.dateApproved) {
+            approvalDetails.dateApproved = DateUtils.format(new DateTime().withZone(DateTimeZone.UTC))
+        }
+        approvalDetails.approvedBy = userService.getCurrentUserId()
+        DateTime dateApproved = DateUtils.parse(approvalDetails.dateApproved)
+        String filename = 'meri-approval-'+project.projectId+"-"+dateApproved.getMillis()+'.txt'
+        Map approvalContent = new HashMap(approvalDetails)
+        approvalContent.project = project
+        def doc = [name:name, projectId:project.projectId, type:'text', role: DOCUMENT_ROLE_APPROVAL, filename:filename, readOnly:true, "public":false, labels:['MERI']]
+        documentService.createTextDocument(doc, (approvalContent as JSON).toString())
     }
 
     private void completeProject(String projectId) {
@@ -1540,6 +1594,51 @@ class ProjectService  {
 
         }
         result
+    }
+
+    /**
+     * Searches the audit trail for updates where the MERI plan has been approved and returns a summary of
+     * those audit messages for display (and possible retreival) to the user.
+     * @param projectId the project to find the history for.
+     * @return a List of Maps, each of the form [documentId:<document id>, date:<the date the MERI plan was approved>, userDisplayName: <the user that approved the plan>]
+     */
+    List<Map> approvedMeriPlanHistory(String projectId) {
+
+        Map result = documentService.search(projectId:projectId, role:'approval', labels:'MERI')
+        List documents = result?.documents ?: []
+        if (documents) {
+            documents = documents.collect {
+                Map resp = webService.getJson2(it.url)
+                Map doc = null
+                if (resp.statusCode == HttpStatus.SC_OK) {
+                    Map content = resp.resp
+                    String displayName = userService.lookupUser(content.approvedBy)?.displayName ?: 'Unknown'
+                    doc = [
+                            documentId:it.documentId,
+                            date:content.dateApproved,
+                            userDisplayName:displayName,
+                            referenceDocument:content.referenceDocument,
+                            reason:content.reason
+                    ]
+                }
+                doc
+            }
+        }
+        documents.sort({it.date})
+        documents.findAll().reverse()
+    }
+
+    /**
+     * Retrieves an approval document from the document service and extracts the project information from it.
+     */
+    Map getApprovedMeriPlanProject(String documentId) {
+        Map result = documentService.get(documentId)
+        if (!result || !result.url) {
+            return null
+        }
+
+        Map content = webService.getJson(result.url)
+        content?.project
     }
 
     private Map findScore(String scoreId, Map scoresWithTargets) {

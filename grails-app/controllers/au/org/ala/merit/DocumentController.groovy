@@ -1,14 +1,18 @@
 package au.org.ala.merit
 
 import grails.converters.JSON
+import groovy.json.JsonSlurper
 import org.apache.commons.io.FilenameUtils
+import org.apache.http.HttpStatus
 
 import static org.apache.http.HttpStatus.SC_BAD_REQUEST
 import static org.apache.http.HttpStatus.SC_OK;
 
 class DocumentController {
 
-    def grailsApplication, documentService, webService
+    static allowedMethods = [bulkUpdate: 'POST', documentUpdate: 'POST', deleteDocument: 'POST', downloadProjectDataFile: 'GET']
+
+    def grailsApplication, documentService, webService, userService
 
     def index() {}
 
@@ -17,6 +21,7 @@ class DocumentController {
         documentService.saveLink(link)
     }
 
+    @PreAuthorise(accessLevel = "siteAdmin")
     def bulkUpdate() {
         def result = [:]
         def documents = request.JSON
@@ -45,31 +50,24 @@ class DocumentController {
      */
     def documentUpdate(String id) {
 
-        def url = grailsApplication.config.ecodata.baseUrl + "document" + (id ? "/" + id : '')
         if (request.respondsTo('getFile')) {
             def f = request.getFile('files')
             def originalFilename = f.getOriginalFilename()
             if(originalFilename){
-                def extension = FilenameUtils.getExtension(originalFilename)?.toLowerCase()
-                if (extension && !grailsApplication.config.upload.extensions.blacklist.contains(extension)){
-                    def result =  webService.postMultipart(url, [document:params.document], f)
-
-                    // This is returned to the browswer as a text response due to workaround the warning
-                    // displayed by IE8/9 when JSON is returned from an iframe submit.
-                    response.setContentType('text/plain;charset=UTF8')
+                Map document = new JsonSlurper().parseText(params.document)
+                if (id) {
+                    document.documentId = id
+                }
+                Map result = documentService.updateDocument(document, f.originalFilename, f.contentType, f.inputStream)
+                if (result.statusCode == SC_OK) {
                     if (result.content) {
                         result = result.content
                     }
-                    result = result as JSON
-                    render result.toString()
-                } else {
-                    response.setStatus(SC_BAD_REQUEST)
-                    //flag error for extension
-                    def error = [error: "Files with the extension '.${extension}' are not permitted.",
-                                 statusCode: "400",
-                                 detail: "Files with the extension ${extension} are not permitted."] as JSON
-                    response.setContentType('text/plain;charset=UTF8')
-                    render error.toString()
+                    render result as JSON
+                }
+                else {
+                    response.setStatus(result.statusCode)
+                    render result as JSON
                 }
             } else {
                 //flag error for extension
@@ -77,16 +75,13 @@ class DocumentController {
                 def error = [error: "Unable to retrieve the file name.",
                              statusCode: "400",
                              detail: "Unable to retrieve the file name."] as JSON
-                response.setContentType('text/plain;charset=UTF8')
-                render error.toString()
+                render error as JSON
             }
         } else {
             // This is returned to the browswer as a text response due to workaround the warning
             // displayed by IE8/9 when JSON is returned from an iframe submit.
             def result = documentService.updateDocument(JSON.parse(params.document))
-            response.setContentType('text/plain;charset=UTF8')
-            def resultAsText = (result as JSON).toString()
-            render resultAsText
+            render result as JSON
         }
     }
 
@@ -96,8 +91,7 @@ class DocumentController {
      * @return the result of the deletion.
      */
     def deleteDocument(String id) {
-        def url = grailsApplication.config.ecodata.baseUrl + "document/" + id
-        def responseCode = webService.doDelete(url)
+        def responseCode = documentService.delete(id)
         render status: responseCode
     }
 

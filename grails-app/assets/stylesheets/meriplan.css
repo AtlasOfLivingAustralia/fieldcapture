@@ -9,9 +9,15 @@ table tr.header th {
 }
 
 
-.meri-plan td textarea, .meri-plan td select, .meri-plan td input:not([type=checkbox]) {
+.meri-plan td textarea, .meri-plan td select {
     box-sizing: border-box;
     width: 100%;
+}
+
+.meri-plan td input:not([type=checkbox]) {
+    width: 100%;
+    box-sizing: border-box;
+    height: 30px;
 }
 
 .meri-plan th {
@@ -174,5 +180,41 @@ table tr.header th {
 span.helphover {
     border: 2px;
     background-clip:content-box;
+}
+
+#meri-plan-approval-modal textarea {
+    box-sizing: border-box;
+    width: 100%;
+}
+
+#meri-plan-approval-modal input {
+    box-sizing: border-box;
+    width: 100%;
+    height: 30px;
+}
+
+.meri-approval-history {
+    width:75%;
+}
+.meri-approval-history td.open {
+    width: 2em;
+}
+.meri-approval-history td.delete-approval {
+    width:2em;
+    color:red;
+}
+.meri-approval-history td.approval-date {
+    width:10em;
+}
+.meri-approval-history td.comments {
+    width:30em;
+    word-break: break-word;
+}
+.meri-approval-history td.ref {
+    width: 20em;
+    word-break: break-word;
+}
+a.meri-history-toggle {
+    color: white;
 }
 

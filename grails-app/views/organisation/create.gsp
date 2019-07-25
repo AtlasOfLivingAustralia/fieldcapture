@@ -15,7 +15,6 @@
             };
     </script>
     <asset:stylesheet src="common.css"/>
-    <asset:stylesheet src="fileupload-9.0.0/jquery.fileupload-ui.css"/>
 
 </head>
 <body>

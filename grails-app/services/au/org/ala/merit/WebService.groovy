@@ -15,6 +15,8 @@
 
 package au.org.ala.merit
 import grails.converters.JSON
+import groovy.json.JsonParserType
+import groovy.json.JsonSlurper
 import groovyx.net.http.HTTPBuilder
 import groovyx.net.http.Method
 import org.apache.http.entity.mime.HttpMultipartMode
@@ -192,6 +194,9 @@ class WebService {
      * call succeeded.
      * getJson would just return the resp, which could be problematic if the resp was an array as the method would
      * either return an array if it succeeded or a Map if it did not.
+     * It also uses the groovy JsonSlurper as it is more performant for large JSON files.  This may be problematic
+     * if the returned data is being augmented and send to the client using 'as JSON'.
+     *
      * @param url the URL to call.
      * @param timeout optional timeout on the call.
      * @return Map containing the status code (statusCode), optionally a response (resp) or an error (error).
@@ -201,8 +206,11 @@ class WebService {
         Map result = [:]
         try {
             conn = configureConnection(url, true, timeout)
-            String json = responseText(conn) ?: "{}"
-            result = [statusCode:conn.responseCode, resp:JSON.parse(json)]
+
+            String responseCharset = getCharset(conn)
+            JsonSlurper parser = new JsonSlurper()
+            Map resp = parser.parse(conn.inputStream, responseCharset)
+            result = [statusCode:conn.responseCode, resp:resp]
 
         } catch (ConverterException e) {
             def error = ['error': "Failed to parse json. ${e.getClass()} ${e.getMessage()} URL= ${url}."]
@@ -228,20 +236,23 @@ class WebService {
         result
     }
 
-    /**
-     * Reads the response from a URLConnection taking into account the character encoding.
-     * @param urlConnection the URLConnection to read the response from.
-     * @return the contents of the response, as a String.
-     */
-    def responseText(urlConnection) {
-
+    String getCharset(urlConnection) {
         def charset = 'UTF-8' // default
         def contentType = urlConnection.getContentType()
         if (contentType) {
             def mediaType = MediaType.parseMediaType(contentType)
             charset = (mediaType.charSet)?mediaType.charSet.toString():'UTF-8'
         }
-        return urlConnection.content.getText(charset)
+        charset
+    }
+
+    /**
+     * Reads the response from a URLConnection taking into account the character encoding.
+     * @param urlConnection the URLConnection to read the response from.
+     * @return the contents of the response, as a String.
+     */
+    def responseText(urlConnection) {
+        return urlConnection.content.getText(getCharset(urlConnection))
     }
 
     def doPostWithParams(String url, Map params) {

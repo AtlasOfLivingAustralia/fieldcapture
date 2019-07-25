@@ -10,7 +10,7 @@ import static ReportService.ReportMode
  */
 class ProgramController {
 
-    static allowedMethods = [ajaxDelete: "POST", delete: "POST", ajaxUpdate: "POST"]
+    static allowedMethods = [regenerateProgramReports: "POST", ajaxDelete: "POST", delete: "POST", ajaxUpdate: "POST"]
 
     def programService, searchService, documentService, userService, roleService, commonService, webService, siteService
     ProjectService projectService
@@ -239,6 +239,12 @@ class ProgramController {
         render result as JSON
     }
 
+    @PreAuthorise(accessLevel = 'editor')
+    def overrideLockAndEdit(String id, String reportId) {
+        reportService.overrideLock(reportId, g.createLink(action:'viewReport', id:id, params:[reportId:reportId], absolute: true))
+        chain(action:'editReport', id:id, params:[reportId:reportId])
+    }
+
     private Map activityReportModel(String programId, String reportId, ReportMode mode, Integer formVersion = null) {
         Map program = programService.get(programId)
         Map config = program.inheritedConfig
@@ -351,7 +357,8 @@ class ProgramController {
              resp = [status:HttpStatus.SC_NOT_FOUND]
         }
         else {
-            programService.regenerateReports(id)
+            Map categoriesToRegenerate = request.JSON
+            programService.regenerateReports(id, categoriesToRegenerate?.programReportCategories, categoriesToRegenerate?.projectReportCategories)
             resp = [status:HttpStatus.SC_OK]
         }
         render resp as JSON

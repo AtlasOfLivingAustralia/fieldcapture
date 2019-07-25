@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.command.MeriPlanReportCommand
 import au.org.ala.merit.command.SaveReportDataCommand
 import grails.test.mixin.TestFor
 import org.apache.http.HttpStatus
@@ -162,6 +163,41 @@ class ProjectControllerSpec extends Specification {
         model.projectContent.admin.showAnnouncementsTab == false
     }
 
+
+    def "if a template is requested that is different to the project default, provide navigation back to the default template view"() {
+        setup:
+        String projectId = '1234'
+        Map project = project(projectId)
+        projectService.get(projectId, _) >> project
+        stubGrantManager('1234', projectId)
+        String projectTemplate = 'esp'
+
+        when:
+        params.template='index'
+        controller.index(projectId)
+
+        then:
+        1 * projectService.getProgramConfiguration(project) >> new ProgramConfig([template: projectTemplate])
+        model.showAlternateTemplate == true
+    }
+
+    def "projects not using the default template shouldn't display navigation back to the default template"() {
+        setup:
+        String projectId = '1234'
+        Map project = project(projectId)
+        projectService.get(projectId, _) >> project
+        stubGrantManager('1234', projectId)
+        String projectTemplate = 'rlp'
+
+        when:
+        params.template=null
+        controller.index(projectId)
+
+        then:
+        1 * projectService.getProgramConfiguration(project) >> new ProgramConfig([template: projectTemplate])
+        model.showAlternateTemplate == false
+    }
+
     def "when viewing a project report, the model will be customized for project reporting"() {
         setup:
         String projectId = 'p1'
@@ -319,6 +355,69 @@ class ProjectControllerSpec extends Specification {
 
         then:
         filteredModel.outputs == ['o1', 'o2', 'o4', 'non service']
+    }
+
+    def "the financial year target exclusion works with numeric and string values"() {
+        expect:
+        controller.hasFinancialYearTarget([financialYearTarget: 0]) == false
+        controller.hasFinancialYearTarget([financialYearTarget: "0"]) == false
+
+        controller.hasFinancialYearTarget([financialYearTarget: "1"]) == true
+        controller.hasFinancialYearTarget([financialYearTarget: 2]) == true
+    }
+
+    def "the controller delegates to the service to return the MERI plan history for a project"() {
+        setup:
+        String projectId = 'p1'
+        List history = [[id:1, date:'2019-07-01T00:00:00Z', userId: '1234']]
+
+        when:
+        controller.approvedMeriPlanHistory(projectId)
+
+        then:
+        1 * projectService.approvedMeriPlanHistory(projectId) >> history
+        response.json.approvedMeriPlanHistory == history
+    }
+
+    def "the controller delegates to a command object to view the MERI plan for a project"() {
+
+        setup:
+        String projectId = 'p1'
+
+        when:
+        MeriPlanReportCommand meriPlanReportCommand = new MeriPlanReportCommand()
+        meriPlanReportCommand.id = projectId
+        meriPlanReportCommand.projectService = projectService
+        meriPlanReportCommand.metadataService = metadataServiceStub
+
+        controller.viewMeriPlan(meriPlanReportCommand)
+
+        then:
+        1 * projectService.get(projectId, _) >> [projectId:projectId]
+        model != null
+        model.project.projectId == projectId
+        view == '/project/meriPlanReport'
+
+    }
+
+    def "the controller will return a 404 if the project cannot be found when attempting a view a MERI plan report"() {
+        setup:
+        MeriPlanReportCommand meriPlanReportCommand = Mock(MeriPlanReportCommand)
+
+        when:
+        controller.viewMeriPlan(meriPlanReportCommand)
+
+        then:
+        1 * meriPlanReportCommand.meriPlanReportModel() >> [statusCode: HttpStatus.SC_NOT_FOUND, error:"Not found"]
+        response.status == HttpStatus.SC_NOT_FOUND
+    }
+
+    def "The project controller delegates to the reportService to override the lock on a report"() {
+        when:
+        controller.overrideLockAndEdit('p1', 'r1')
+
+        then:
+        1 * reportService.overrideLock('r1', {it.endsWith('project/viewReport/p1?reportId=r1')})
     }
 
     private def stubGrantManager(userId, projectId) {

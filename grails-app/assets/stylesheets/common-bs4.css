@@ -4,6 +4,7 @@
 *= require jquery.validationEngine/validationEngine.jquery
 *= require datatables/1.10.16/css/dataTables.bootstrap4
 *= require datatables/buttons/1.5.1/css/buttons.bootstrap4
+*= require blueimp/fileupload-9.28.0/jquery.fileupload.css
 *= require wmd/wmd.css
 */
 
