@@ -4,9 +4,16 @@ class AuditService {
 
     def webService
     def grailsApplication
+    def commonService
 
     def getAuditMessagesForProject(String projectId) {
         String url = grailsApplication.config.ecodata.baseUrl + 'audit/ajaxGetAuditMessagesForProject?projectId=' + projectId
+        return webService.getJson(url, 60000)
+    }
+
+    def getAuditMessagesForProject(String projectId, int offset, int pageSize, String q) {
+        String paramString = commonService.buildUrlParamsFromMap(id:projectId, start:offset, size:pageSize, q:q)
+        String url = grailsApplication.config.ecodata.baseUrl + 'audit/getAuditMessagesForProjectPerPage' + paramString
         return webService.getJson(url, 60000)
     }
 

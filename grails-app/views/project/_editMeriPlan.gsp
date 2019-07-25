@@ -1,4 +1,5 @@
 <!-- ko stopBinding: true -->
+<h3>MERI Plan</h3>
 <div id="edit-meri-plan">
 <script id="submittedPlanTmpl" type="text/html">
 <div class="span6 required">
@@ -49,15 +50,69 @@
 </script>
 
 <g:render template="/shared/declaration" model="[divId:'unlockPlan', declarationType:au.org.ala.merit.SettingPageType.UNLOCK_PLAN_DECLARATION]"/>
-
+<g:render template="meriPlanApprovalModal"/>
 <div class="row-fluid">
-	<div class="control-group">
-		<div>
-			<span class="badge" style="font-size: 13px;" data-bind="text:meriPlanStatus().text, css:meriPlanStatus().badgeClass"></span>
-			<span data-bind="if:detailsLastUpdated"> <br/>Last update date : <span data-bind="text:detailsLastUpdated.formattedDate"></span></span>
+
+	<div class="span6">
+		<div class="control-group">
+			<div>
+				<span class="badge" style="font-size: 13px;" data-bind="text:meriPlanStatus().text, css:meriPlanStatus().badgeClass"></span>
+				<span data-bind="if:detailsLastUpdated"> <br/>Last update date : <span data-bind="text:detailsLastUpdated.formattedDate"></span></span>
+			</div>
 		</div>
 	</div>
+<g:if test="${showMeriPlanHistory}">
+	<div class="span6">
+		<div class="pull-right"><a class="btn btn-info meri-history-toggle" data-bind="click:toggleMeriPlanHistory, text:meriPlanHistoryVisible() ? 'Hide approval history' : 'Show approval history'">Show MERI plan approvals</a></div>
+	</div>
+</g:if>
+
 </div>
+
+<g:if test="${showMeriPlanHistory}">
+<div data-bind="visible:meriPlanHistoryVisible">
+	<h4>History of approved MERI plans</h4>
+	<div data-bind="visible:!meriPlanHistoryInitialised()">
+		<asset:image src="spinner.gif"/>
+	</div>
+	<div data-bind="visible:meriPlanHistoryInitialised()">
+
+	<div data-bind="visible:approvedPlans().length > 0">
+
+	<table class="table table-striped meri-approval-history">
+		<thead>
+		<tr>
+			<th class="approval-date">Date / Time Approved</th>
+			<th class="ref">Change Order Numbers</th>
+			<th class="comments">Comments</th>
+			<th class="approver">Approved by</th>
+			<th class="open">Open</th>
+			<g:if test="${fc.userIsAlaOrFcAdmin()}">
+				<th class="delete-approval">Delete</th>
+			</g:if>
+		</tr>
+		</thead>
+		<tbody data-bind="foreach:approvedPlans">
+		<tr>
+			<td class="approval-date" data-bind="text:dateApproved"></td>
+			<td class="ref" data-bind="text:referenceDocument"></td>
+			<td class="comments" data-bind="text:reason"></td>
+			<td class="approver"><span data-bind="text:userDisplayName"></span></td>
+			<td class="open"><a target="_meriPlan" data-bind="attr:{href:openMeriPlanUrl}"><i class="fa fa-external-link"></i></a></td>
+			<g:if test="${fc.userIsAlaOrFcAdmin()}">
+				<td class="delete-approval"><i class="fa fa-remove" data-bind="click:$parent.deleteApproval"></i></td>
+			</g:if>
+		</tr>
+		</tbody>
+	</table>
+	</div>
+	<div data-bind="visible:approvedPlans().length == 0">
+		No MERI plan approvals found.
+	</div>
+	</div>
+</div>
+</g:if>
+
 
 <!--  Case manager actions -->
 <g:if test="${user?.isCaseManager}">

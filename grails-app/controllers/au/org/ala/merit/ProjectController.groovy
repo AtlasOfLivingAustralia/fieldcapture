@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.command.MeriPlanReportCommand
 import au.org.ala.merit.command.ProjectSummaryReportCommand
 import au.org.ala.merit.command.ReportCommand
 import au.org.ala.merit.command.SaveReportDataCommand
@@ -154,6 +155,7 @@ class ProjectController {
         String minimumProjectEndDate = projectService.minimumProjectEndDate(project, config)
 
         boolean adminTabVisible = user?.isEditor || user?.isAdmin || user?.isCaseManager
+        boolean showMeriPlanHistory = config.supportsMeriPlanHistory && userService.userIsSiteAdmin()
 
         def model = [overview       : [label: 'Overview', visible: true, default: true, type: 'tab', publicImages: imagesModel, displayOutcomes: false, blog: blog, hasNewsAndEvents: hasNewsAndEvents, hasProjectStories: hasProjectStories, canChangeProjectDates: canChangeProjectDates],
                      documents      : [label: 'Documents', visible: true, type: 'tab', user:user, template:'docs', activityPeriodDescriptor:config.activityPeriodDescriptor ?: 'Stage'],
@@ -161,13 +163,16 @@ class ProjectController {
                      plan           : [label: 'Activities', visible: true, disabled: !user?.hasViewAccess, type: 'tab', template:'projectActivities', grantManagerSettingsVisible:user?.isCaseManager, project:project, reports: project.reports, scores: scores, risksAndThreatsVisible: user?.hasViewAccess && risksAndThreatsVisible],
                      site           : [label: 'Sites', visible: true, disabled: !user?.hasViewAccess, editable:user?.isEditor, type: 'tab', template:'projectSites'],
                      dashboard      : [label: 'Dashboard', visible: true, disabled: !user?.hasViewAccess, type: 'tab'],
-                     admin          : [label: 'Admin', visible: adminTabVisible, user:user, type: 'tab', template:'projectAdmin', project:project, canChangeProjectDates: canChangeProjectDates, minimumProjectEndDate:minimumProjectEndDate, showMERIActivityWarning:true, showAnnouncementsTab: showAnnouncementsTab, showSpecies:true, meriPlanTemplate:MERI_PLAN_TEMPLATE, config:config, activityPeriodDescriptor:config.activityPeriodDescriptor ?: 'Stage']]
+                     admin          : [label: 'Admin', visible: adminTabVisible, user:user, type: 'tab', template:'projectAdmin', project:project, canChangeProjectDates: canChangeProjectDates, minimumProjectEndDate:minimumProjectEndDate, showMERIActivityWarning:true, showAnnouncementsTab: showAnnouncementsTab, showSpecies:true, meriPlanTemplate:MERI_PLAN_TEMPLATE, showMeriPlanHistory:showMeriPlanHistory, requireMeriPlanApprovalReason:Boolean.valueOf(config.supportsMeriPlanHistory),  config:config, activityPeriodDescriptor:config.activityPeriodDescriptor ?: 'Stage']]
 
         if (template == MERI_ONLY_TEMPLATE) {
             model = [details:model.details]
         }
         else if (template == RLP_TEMPLATE) {
 
+            // The RLP Project Template doesn't need site details or activities.
+            project.sites = new JSONArray(project.sites.collect{new JSONObject([name:it.name, siteId:it.siteId, lastUpdated:it.lastUpdated, type:it.type, extent:[:]])})
+            project.remove('activities')
             model.overview.template = 'rlpOverview'
             model.overview.servicesDashboard = projectService.getServiceDashboardData(project.projectId, !user?.hasViewAccess)
             model.details.meriPlanTemplate = RLP_MERI_PLAN_TEMPLATE+'View'
@@ -511,7 +516,8 @@ class ProjectController {
 
     @PreAuthorise(accessLevel = 'caseManager')
     def ajaxApprovePlan(String id) {
-        def result = projectService.approvePlan(id)
+        Map approvalDetails = request.JSON
+        def result = projectService.approvePlan(id, approvalDetails)
         render result as JSON
     }
 
@@ -730,8 +736,7 @@ class ProjectController {
 
     @PreAuthorise(accessLevel = 'editor')
     def overrideLockAndEdit(String id, String reportId) {
-        Map report = reportService.get(reportId)
-        Map resp  = activityService.stealLock(report.activityId, g.createLink(action:'viewReport', id:id, params:[reportId:reportId], absolute: true))
+        reportService.overrideLock(reportId, g.createLink(action:'viewReport', id:id, params:[reportId:reportId], absolute: true))
         chain(action:'editReport', id:id, params:[reportId:reportId])
     }
 
@@ -791,6 +796,7 @@ class ProjectController {
     private Map activityReportModel(String projectId, String reportId, ReportMode mode, Integer formVersion = null) {
 
         Map project = projectService.get(projectId)
+        List sites = project.remove('sites')
         Map config = projectService.getProgramConfiguration(project)
         Map model = reportService.activityReportModel(reportId, mode, formVersion)
         model.metaModel = filterOutputModel(model.metaModel, project, model.activity)
@@ -803,13 +809,13 @@ class ProjectController {
 
         if (model.metaModel.supportsSites) {
             if (model.activity.siteId) {
-                model.reportSite = project.sites?.find { it.siteId == model.activity.siteId }
+                model.reportSite = sites?.find { it.siteId == model.activity.siteId }
             }
 
-            Map sites = projectService.projectSites(projectId)
-            if (!sites.error) {
-                model.projectArea = sites.projectArea
-                model.features = sites.features
+            Map siteData = projectService.projectSites(projectId)
+            if (!siteData.error) {
+                model.projectArea = siteData.projectArea
+                model.features = siteData.features
             }
         }
         model
@@ -927,6 +933,32 @@ class ProjectController {
 
     }
 
+    @PreAuthorise(accessLevel = 'officer')
+    def approvedMeriPlanHistory(String id) {
+        List approvedPlanSummary = projectService.approvedMeriPlanHistory(id)
+
+        Map result = [approvedMeriPlanHistory:approvedPlanSummary]
+
+        render result as JSON
+    }
+
+    @PreAuthorise(accessLevel = 'admin')
+    def viewMeriPlan(MeriPlanReportCommand meriPlanReportCommand) {
+
+        // Only grant/project managers can view historical MERI plans.
+        if (meriPlanReportCommand.documentId && !userService.userIsSiteAdmin()) {
+            render status:HttpStatus.SC_UNAUTHORIZED
+        }
+        else {
+            Map model = meriPlanReportCommand.meriPlanReportModel()
+            if (!model.error) {
+                render view:'/project/meriPlanReport', model:model
+            }
+            else {
+                render status: HttpStatus.SC_NOT_FOUND
+            }
+        }
+    }
 
     private def error(String message, String projectId) {
         flash.message = message

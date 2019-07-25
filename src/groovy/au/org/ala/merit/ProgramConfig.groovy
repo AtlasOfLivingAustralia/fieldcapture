@@ -38,7 +38,7 @@ class ProgramConfig implements Map {
     ProjectTemplate getProjectTemplate() {
         ProjectTemplate template = ProjectTemplate.DEFAULT
         if (config.projectTemplate) {
-            template = ProjectTemplate.valueOf(config.projectTemplate)
+            template = ProjectTemplate.valueOf(config.projectTemplate?.toUpperCase())
 
             if (!template) {
                 log.warn("Invalid projectTemplate specified in configuration: "+config.projectTemplate+". Using default")

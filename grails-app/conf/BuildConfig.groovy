@@ -56,7 +56,7 @@ clover {
                 }
             }
         }
-        ant.'clover-check'(target: "21%", haltOnFailure: true) { }
+        ant.'clover-check'(target: "23.5%", haltOnFailure: true) { }
 
     }
 }
@@ -145,7 +145,7 @@ grails.project.dependency.resolution = {
         test 'org.grails.plugins:clover:4.3.0'
 
         if (Environment.current != Environment.DEVELOPMENT) {
-            compile (":ecodata-client-plugin:1.10")
+            compile (":ecodata-client-plugin:1.10.1")
         }
 
     }
