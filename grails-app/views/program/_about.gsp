@@ -26,7 +26,7 @@
 
 <div class="row-fluid">
     <div class="well">
-        <div class="well-title">Program outcomes addressed</div>
+        <div class="well-title">The Service Provider is addressing these RLP outcomes</div>
         <table class="table table-bordered ">
             <thead>
             <tr>
