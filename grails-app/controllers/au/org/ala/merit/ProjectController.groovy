@@ -155,6 +155,7 @@ class ProjectController {
         String minimumProjectEndDate = projectService.minimumProjectEndDate(project, config)
 
         boolean adminTabVisible = user?.isEditor || user?.isAdmin || user?.isCaseManager
+        boolean showMeriPlanHistory = config.supportsMeriPlanHistory && userService.userIsSiteAdmin()
 
         def model = [overview       : [label: 'Overview', visible: true, default: true, type: 'tab', publicImages: imagesModel, displayOutcomes: false, blog: blog, hasNewsAndEvents: hasNewsAndEvents, hasProjectStories: hasProjectStories, canChangeProjectDates: canChangeProjectDates],
                      documents      : [label: 'Documents', visible: true, type: 'tab', user:user, template:'docs', activityPeriodDescriptor:config.activityPeriodDescriptor ?: 'Stage'],
@@ -162,7 +163,7 @@ class ProjectController {
                      plan           : [label: 'Activities', visible: true, disabled: !user?.hasViewAccess, type: 'tab', template:'projectActivities', grantManagerSettingsVisible:user?.isCaseManager, project:project, reports: project.reports, scores: scores, risksAndThreatsVisible: user?.hasViewAccess && risksAndThreatsVisible],
                      site           : [label: 'Sites', visible: true, disabled: !user?.hasViewAccess, editable:user?.isEditor, type: 'tab', template:'projectSites'],
                      dashboard      : [label: 'Dashboard', visible: true, disabled: !user?.hasViewAccess, type: 'tab'],
-                     admin          : [label: 'Admin', visible: adminTabVisible, user:user, type: 'tab', template:'projectAdmin', project:project, canChangeProjectDates: canChangeProjectDates, minimumProjectEndDate:minimumProjectEndDate, showMERIActivityWarning:true, showAnnouncementsTab: showAnnouncementsTab, showSpecies:true, meriPlanTemplate:MERI_PLAN_TEMPLATE, showMeriPlanHistory:config.supportsMeriPlanHistory, requireMeriPlanApprovalReason:Boolean.valueOf(config.supportsMeriPlanHistory),  config:config, activityPeriodDescriptor:config.activityPeriodDescriptor ?: 'Stage']]
+                     admin          : [label: 'Admin', visible: adminTabVisible, user:user, type: 'tab', template:'projectAdmin', project:project, canChangeProjectDates: canChangeProjectDates, minimumProjectEndDate:minimumProjectEndDate, showMERIActivityWarning:true, showAnnouncementsTab: showAnnouncementsTab, showSpecies:true, meriPlanTemplate:MERI_PLAN_TEMPLATE, showMeriPlanHistory:showMeriPlanHistory, requireMeriPlanApprovalReason:Boolean.valueOf(config.supportsMeriPlanHistory),  config:config, activityPeriodDescriptor:config.activityPeriodDescriptor ?: 'Stage']]
 
         if (template == MERI_ONLY_TEMPLATE) {
             model = [details:model.details]
@@ -932,7 +933,7 @@ class ProjectController {
 
     }
 
-    @PreAuthorise(accessLevel = 'admin')
+    @PreAuthorise(accessLevel = 'officer')
     def approvedMeriPlanHistory(String id) {
         List approvedPlanSummary = projectService.approvedMeriPlanHistory(id)
 
@@ -944,14 +945,19 @@ class ProjectController {
     @PreAuthorise(accessLevel = 'admin')
     def viewMeriPlan(MeriPlanReportCommand meriPlanReportCommand) {
 
-        Map model = meriPlanReportCommand.meriPlanReportModel()
-        if (!model.error) {
-            render view:'/project/meriPlanReport', model:model
+        // Only grant/project managers can view historical MERI plans.
+        if (meriPlanReportCommand.documentId && !userService.userIsSiteAdmin()) {
+            render status:HttpStatus.SC_UNAUTHORIZED
         }
         else {
-            render status: HttpStatus.SC_NOT_FOUND
+            Map model = meriPlanReportCommand.meriPlanReportModel()
+            if (!model.error) {
+                render view:'/project/meriPlanReport', model:model
+            }
+            else {
+                render status: HttpStatus.SC_NOT_FOUND
+            }
         }
-
     }
 
     private def error(String message, String projectId) {
