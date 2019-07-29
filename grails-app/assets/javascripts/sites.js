@@ -806,7 +806,6 @@ var AlaMapAdapter = function(map, options) {
                 if (options.styles[prop] && _.isFunction(layer.setStyle)) {
                     layer.setStyle(options.styles[prop]);
                 }
-
             }
             if (!self.featureIndex[id]) {
                 self.featureIndex[id] = [];
@@ -815,6 +814,8 @@ var AlaMapAdapter = function(map, options) {
         });
 
         map.setGeoJSON(feature);
+
+
 
         self.featureLayer.off("layeradd");
     };

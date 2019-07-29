@@ -15,8 +15,8 @@
     <div data-bind="visible:url()"><strong>Visit us at <a data-bind="attr:{href:url}"><span data-bind="text:url"></span></a></strong></div>
 </div>
 
-<div class="row-fluid">
-    <div data-bind="visible:description" class="span6">
+<div class="row">
+    <div data-bind="visible:description" class="col-md-6">
         <div class="well">
             <div class="well-title">Description</div>
             <div >
@@ -25,7 +25,7 @@
         </div>
     </div>
 
-    <div data-bind="visible:programSiteId" class="span6">
+    <div data-bind="visible:programSiteId" class="col-md-push-5">
         <div >
             <m:map id="programSiteMap" style="width:100%;height:300px;"></m:map>
         </div>
