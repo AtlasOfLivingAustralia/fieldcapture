@@ -55,7 +55,7 @@
 
     <div class="row-fluid">
 
-        <div class="span2 header-label" >Project outcomes addressed</div>
+        <div class="span2 header-label" >RLP outcomes addressed</div>
         <div class="span9 value">
             <table class="table table-bordered ">
                 <thead>

@@ -59,16 +59,16 @@ class ProgramController {
         }
 
         //Aggegated all targeted outcomes of projects
-        for(def project in projects){
+        for(Map project in projects){
             //Verify project.outcomes (from program config) with primaryOutcome and secondaryOutcomes in project.custom.details.outcomes
-            def primaryOutcome = project.custom?.details?.outcomes?.primaryOutcome
+            Map primaryOutcome = project.custom?.details?.outcomes?.primaryOutcome
             if (primaryOutcome){
-                def oc =  program.outcomes.find {oc -> oc.outcome == primaryOutcome.description}
+                Map oc =  program.outcomes.find {oc -> oc.outcome == primaryOutcome.description}
                 oc['targeted'] = true
             }
 
-            for(def po : project.custom?.details?.outcomes?.secondaryOutcomes){
-                def oc =  program.outcomes.find {oc -> oc.outcome == po.description}
+            for(Map po : project.custom?.details?.outcomes?.secondaryOutcomes){
+                Map oc =  program.outcomes.find {oc -> oc.outcome == po.description}
                 oc['targeted'] = true
             }
         }
