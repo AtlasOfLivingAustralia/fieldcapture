@@ -23,6 +23,26 @@
     </div>
 </div>
 
+
+<div class="row-fluid">
+    <div class="well">
+        <div class="well-title">The Service Provider is addressing these RLP outcomes</div>
+        <table class="table table-bordered ">
+            <thead>
+            <tr>
+                <g:each in="${program.outcomes}" var="outcome" >
+                    <td>
+                        ${outcome.shortDescription}
+                        <g:if test ="${outcome.targeted}"><span class="fa fa-check-circle"></span></g:if>
+                    </td>
+                </g:each>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+
 <g:if test="${servicesDashboard.visible && servicesDashboard.services}">
     <hr/>
     <div class="well-title">Service delivery</div>
