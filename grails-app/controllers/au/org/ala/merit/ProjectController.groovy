@@ -127,6 +127,9 @@ class ProjectController {
         project.outcomes = new JSONArray(config.outcomes ?: [])
         project.hasApprovedOrSubmittedReports = reportService.includesSubmittedOrApprovedReports(project.reports)
 
+
+
+
         def meriPlanVisible = metadataService.isOptionalContent('MERI Plan', config)
         def risksAndThreatsVisible = metadataService.isOptionalContent('Risks and Threats', config)
         def canViewRisks = risksAndThreatsVisible && (user?.hasViewAccess || user?.isEditor)
@@ -174,8 +177,10 @@ class ProjectController {
             project.sites = new JSONArray(project.sites.collect{new JSONObject([name:it.name, siteId:it.siteId, lastUpdated:it.lastUpdated, type:it.type, extent:[:]])})
             project.remove('activities')
             model.overview.template = 'rlpOverview'
-            model.overview.servicesDashboard = projectService.getServiceDashboardData(project.projectId, !user?.hasViewAccess)
             model.details.meriPlanTemplate = RLP_MERI_PLAN_TEMPLATE+'View'
+
+            model["serviceDelivery"] = [label: 'Service Delivery', visible: true, type: 'tab', template: 'rlpServiceDashboard']
+            model.serviceDelivery.servicesDashboard = projectService.getServiceDashboardData(project.projectId, !user?.hasViewAccess)
 
             model.site.useAlaMap = true
             model.site.showSiteType = true
@@ -186,7 +191,7 @@ class ProjectController {
             }
             Map reportingTab = [label: 'Reporting', visible:user?.hasViewAccess, type:'tab', template:'projectReporting', reports:project.reports, reportOrder:reportOrder, stopBinding:true, services: config.services, scores:scores, hideDueDate:true, isAdmin:user?.isAdmin, isGrantManager:user?.isCaseManager]
 
-            Map rlpModel = [overview:model.overview, documents:model.documents, details:model.details, site:model.site, reporting:reportingTab]
+            Map rlpModel = [overview:model.overview, serviceDelivery: model.serviceDelivery, documents:model.documents, details:model.details, site:model.site, reporting:reportingTab]
             rlpModel.admin = model.admin
             rlpModel.admin.meriPlanTemplate = RLP_MERI_PLAN_TEMPLATE
             rlpModel.admin.projectServices = config.services
@@ -196,7 +201,7 @@ class ProjectController {
             rlpModel.admin.hidePrograms = true
             rlpModel.admin.showAnnouncementsTab = false
 
-            model = rlpModel
+            model = buildRLPTargetsModel(rlpModel, project)
         }
         else if (config?.projectTemplate == ESP_TEMPLATE && !user?.hasViewAccess) {
             project.remove('sites')
@@ -209,6 +214,21 @@ class ProjectController {
             model.dashboard.metrics = metrics
         }
         return [view: 'index', model: model]
+    }
+
+    private Map buildRLPTargetsModel(Map model, project){
+        //Verify project.outcomes (from program config) with primaryOutcome and secondaryOutcomes in project.custom.details.outcomes
+        Map primaryOutcome = project.custom?.details?.outcomes?.primaryOutcome
+        if (primaryOutcome){
+            Map oc =  project.outcomes.find {oc -> oc.outcome == primaryOutcome.description}
+            oc['targeted'] = true
+        }
+
+        for(def po : project.custom?.details?.outcomes?.secondaryOutcomes){
+            Map oc =  project.outcomes.find {oc -> oc.outcome == po.description}
+            oc['targeted'] = true
+        }
+        model
     }
 
     private String projectTemplate(Map config, String template) {

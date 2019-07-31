@@ -43,15 +43,33 @@
 
     <div class="row-fluid">
         <div class="span2 header-label">Project end</div>
-
         <div class="span9 value"><span data-bind="text:plannedEndDate.formattedDate"></span></div>
     </div>
 
-    <div class="row-fluid">
-        <div class="span2 header-label">Project status</div>
 
+    <div class="row-fluid" data-bind="if:(funding() && funding() >0)">
+        <div class="span2 header-label">Project Funding</div>
+        <div class="span9 value"><span data-bind="text:funding.formattedCurrency"></span></div>
+    </div>
+
+
+    <div class="row-fluid">
+
+        <div class="span2 header-label" >RLP outcomes addressed</div>
         <div class="span9 value">
-            <span style="text-transform:uppercase;" data-bind="text:status" class="badge badge-info" style="font-size: 13px;"></span>
+            <table class="table table-bordered ">
+                <thead>
+                <tr>
+                    <g:each in="${project.outcomes}" var="outcome" >
+                        <td>
+                        ${outcome.shortDescription}
+                        <g:if test ="${outcome.targeted}"><span class="fa fa-check-circle"></span></g:if>
+                        </td>
+                    </g:each>
+                </tr>
+                </thead>
+            </table>
+
         </div>
     </div>
 
@@ -65,7 +83,6 @@
 
 </div>
 <hr/>
-
 
 <div class="multimedia" data-bind="if:embeddedVideos">
     <h3>Multimedia</h3>
@@ -126,9 +143,6 @@
     </g:if>
 </g:if>
 
-
-<h2>Service delivery</h2>
-<g:render template="serviceDashboard"/>
 
 
 

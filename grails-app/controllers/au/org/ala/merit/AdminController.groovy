@@ -431,8 +431,7 @@ class AdminController {
             finally {
                 fileIn.close()
             }
-            def statusJson = status as JSON
-            render contentType: 'text/plain', status: 200, text: statusJson
+            render status as JSON
 
         }
         else {

@@ -309,6 +309,41 @@ class ProjectControllerSpec extends Specification {
         response.json.status == HttpStatus.SC_UNAUTHORIZED
     }
 
+    def "Tick targeted project outcomes"() {
+
+
+        def projectId = '1234'
+        Map project = project(projectId)
+        project["custom"] = [details :[outcomes:[primaryOutcome:[
+                                            assets: ["Ginini Flats Wetland Complex"],
+                                            description: "By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions"
+                                         ]]]]
+
+        projectService.get(projectId, _) >> project
+        stubProjectAdmin('1234', projectId)
+
+
+        when: "build RLP model"
+
+        controller.index(projectId)
+
+        then: "Should be true"
+        1 * projectService.getProgramConfiguration(_) >> new ProgramConfig([
+                                                                        projectTemplate: ProjectController.RLP_TEMPLATE,
+                                                                        outcomes: [
+                                                                                [
+                                                                                        "priorities": ["category":"Ramsar"],
+                                                                                        "shortDescription":"Ramsar Sites",
+                                                                                        "category":"environment",
+                                                                                        "outcome":"By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions"
+                                                                                ],
+                                                                        ]
+        ])
+
+        model.project.outcomes[0].targeted == true
+
+    }
+
 
     private Map setupMockServices() {
         Map activityModel = [name:'output', outputs:[]]

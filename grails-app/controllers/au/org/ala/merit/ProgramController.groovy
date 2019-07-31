@@ -63,7 +63,22 @@ class ProgramController {
             servicesWithScores = programService.serviceScores(program.programId, !hasAdminAccess)
         }
 
-        [about   : [label: 'Management Unit Overview', visible: true, stopBinding: false, type: 'tab', servicesDashboard:[visible: programVisible, planning:false, services:servicesWithScores]],
+        //Aggregate all targeted outcomes of projects
+        for(Map project in projects){
+            //Verify project.outcomes (from program config) with primaryOutcome and secondaryOutcomes in project.custom.details.outcomes
+            Map primaryOutcome = project.custom?.details?.outcomes?.primaryOutcome
+            if (primaryOutcome){
+                Map oc =  program.outcomes.find {oc -> oc.outcome == primaryOutcome.description}
+                if (oc) oc['targeted'] = true
+            }
+
+            for(Map po : project.custom?.details?.outcomes?.secondaryOutcomes){
+                Map oc =  program.outcomes.find {oc -> oc.outcome == po.description}
+                if (oc) oc['targeted'] = true
+            }
+        }
+
+        [about   : [label: 'Management Unit Overview',visible: true, stopBinding: false, type: 'tab',servicesDashboard:[visible: programVisible, planning:false, services:servicesWithScores]],
          projects: [label: 'MU Reporting', visible: true, stopBinding: false, type:'tab', projects:projects, reports:program.reports?:[], reportOrder:reportOrder, hideDueDate:true],
          sites   : [label: 'MU Sites', visible: programVisible, stopBinding: true, type:'tab'],
          admin   : [label: 'MU Admin', visible: hasAdminAccess, type: 'tab']]
