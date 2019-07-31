@@ -200,21 +200,8 @@ class ProjectController {
             rlpModel.admin.showSpecies = false
             rlpModel.admin.hidePrograms = true
             rlpModel.admin.showAnnouncementsTab = false
-            //project.custom.details.outcomes
 
-            model = rlpModel
-
-            //Verify project.outcomes (from program config) with primaryOutcome and secondaryOutcomes in project.custom.details.outcomes
-            def primaryOutcome = project.custom?.details?.outcomes?.primaryOutcome
-            if (primaryOutcome){
-                def oc =  project.outcomes.find {oc -> oc.outcome == primaryOutcome.description}
-                oc['targeted'] = true
-            }
-
-            for(def po : project.custom?.details?.outcomes?.secondaryOutcomes){
-                def oc =  project.outcomes.find {oc -> oc.outcome == po.description}
-                oc['targeted'] = true
-            }
+            model = buildRLPTargetsModel(rlpModel, project)
         }
         else if (config?.projectTemplate == ESP_TEMPLATE && !user?.hasViewAccess) {
             project.remove('sites')
@@ -227,6 +214,21 @@ class ProjectController {
             model.dashboard.metrics = metrics
         }
         return [view: 'index', model: model]
+    }
+
+    private Map buildRLPTargetsModel(Map model, project){
+        //Verify project.outcomes (from program config) with primaryOutcome and secondaryOutcomes in project.custom.details.outcomes
+        Map primaryOutcome = project.custom?.details?.outcomes?.primaryOutcome
+        if (primaryOutcome){
+            Map oc =  project.outcomes.find {oc -> oc.outcome == primaryOutcome.description}
+            oc['targeted'] = true
+        }
+
+        for(def po : project.custom?.details?.outcomes?.secondaryOutcomes){
+            Map oc =  project.outcomes.find {oc -> oc.outcome == po.description}
+            oc['targeted'] = true
+        }
+        model
     }
 
     private String projectTemplate(Map config, String template) {
