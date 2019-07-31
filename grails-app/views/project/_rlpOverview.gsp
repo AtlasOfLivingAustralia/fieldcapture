@@ -84,7 +84,6 @@
 </div>
 <hr/>
 
-
 <div class="multimedia" data-bind="if:embeddedVideos">
     <h3>Multimedia</h3>
         <div class="row-fluid" data-bind="repeat:{foreach:embeddedVideos, step:2}" >

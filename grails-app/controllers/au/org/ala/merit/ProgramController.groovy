@@ -33,7 +33,7 @@ class ProgramController {
 
             Map programRole = members.find { it.userId == userId }
 
-            [program  : program,
+            [program       : program,
              roles         : roles,
              user          : user,
              isAdmin       : programRole?.role == RoleService.PROJECT_ADMIN_ROLE,
@@ -64,12 +64,12 @@ class ProgramController {
             Map primaryOutcome = project.custom?.details?.outcomes?.primaryOutcome
             if (primaryOutcome){
                 Map oc =  program.outcomes.find {oc -> oc.outcome == primaryOutcome.description}
-                oc['targeted'] = true
+                if (oc) oc['targeted'] = true
             }
 
             for(Map po : project.custom?.details?.outcomes?.secondaryOutcomes){
                 Map oc =  program.outcomes.find {oc -> oc.outcome == po.description}
-                oc['targeted'] = true
+                if (oc) oc['targeted'] = true
             }
         }
 
