@@ -16,21 +16,17 @@
 </div>
 
 <div class="row">
-    <div data-bind="visible:description" class="col-md-6">
-        <div class="well">
-            <div class="well-title">Description</div>
-            <div >
-                  <span data-bind="html:description.markdownToHtml()"></span>
-            </div>
-        </div>
+    <div class="col-md-12 ">
+        <div class="well-title ">Description</div>
     </div>
-
-    <div data-bind="visible:programSiteId" class="col-md-push-5">
-        <div >
-            <m:map id="programSiteMap" style="width:100%;height:300px;"></m:map>
-        </div>
+    <div class="col-md-9" >
+        <span data-bind="html:description.markdownToHtml()"></span>
+    </div>
+    <div data-bind="visible:programSiteId" class="col-md-3">
+        <m:map id="programSiteMap" width="100%" height="300px"></m:map>
     </div>
 </div>
+
 <g:if test="${servicesDashboard.visible && servicesDashboard.services}">
     <hr/>
     <div class="well-title">Service delivery</div>

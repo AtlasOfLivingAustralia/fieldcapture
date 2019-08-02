@@ -306,39 +306,32 @@ var ProgramPageViewModel = function(props, options) {
                         autoScaleLayers: false,
                         touchSwipe: false // at the moment we only support 1 image
                     });
-                }
-                //Todo fix
-                //var url = "${createLink(controller:'nocas', action:'geoService')}?max=10000&geo=true"+markBy;
-
+                };
 
                 //create a empty map.
                 var map = createMap({
                     useAlaMap:true,
                     mapContainerId:'programSiteMap',
-                    useGoogleBaseMap:fcConfig.useGoogleBaseMap,
-                    featureServiceUrl: fcConfig.featureService,
-                    wmsServerUrl: fcConfig.spatialWmsUrl
+                    width: '100%'
                 });
 
                 if (self.programSiteId){
                     if (!self.mapFeatures()) {
-                        log.info("There was a problem obtaining program site data");
+                        console.log("There was a problem obtaining program site data");
                     }else{
                         map.addFeature(self.mapFeatures())
-                    }
-                }
+                    };
+                };
 
                 //find sites of related projects.
                 var searchUrl = fcConfig.geoSearchUrl +"?max=10000&geo=true&markBy=false";
                 searchUrl = searchUrl + "&fq=programId:" +self.programId;
                 $.getJSON(searchUrl, function(data) {
                     $.each(data.projects, function(j, project) {
-                        var projectId = project.projectId
-                        var projectName = project.name
-
+                        var projectId = project.projectId;
+                        var projectName = project.name;
                         if (project.geo && project.geo.length > 0) {
                             $.each(project.geo, function(k, el) {
-
                                 var lat = parseFloat(el.loc.lat);
                                 var lon = parseFloat(el.loc.lon);
                                 var mf = {
@@ -363,23 +356,12 @@ var ProgramPageViewModel = function(props, options) {
                                                       "<br/>Site: <a href="+fcConfig.siteUrl+"/" + el.siteId +">" + el.siteName + "</a>"
                                     },
                                     type: "Feature"
-                                }
-
-                                map.addFeature(mf)
-
-                            })
-                        }
-
-                    })
-
-                })
-
-
-
-
-
-
-
+                                };
+                                map.addFeature(mf);
+                            });
+                        };
+                    });
+                });
             }
         },
         'projects': {
