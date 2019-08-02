@@ -272,6 +272,8 @@ var ProgramPageViewModel = function(props, options) {
                         touchSwipe: false // at the moment we only support 1 image
                     });
                 }
+                $.fn.dataTable.moment( 'dd-MM-yyyy' );
+                $('#projectOverviewList').DataTable({displayLength:25, order:[[2, 'asc'], [3, 'asc']]});
             }
         },
         'projects': {
