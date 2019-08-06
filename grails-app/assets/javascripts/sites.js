@@ -803,9 +803,13 @@ var AlaMapAdapter = function(map, options) {
             var id = getId(feature);
             if (options.styleProperty && feature.properties && feature.properties[options.styleProperty]) {
                 var prop = feature.properties[options.styleProperty];
+                //I don't understand. Seems to me it is wrong
                 if (options.styles[prop] && _.isFunction(layer.setStyle)) {
                     layer.setStyle(options.styles[prop]);
                 }
+                // if(prop &&  _.isFunction(layer.setStyle)) {
+                //     layer.setStyle(prop);
+                // }
             }
             if (!self.featureIndex[id]) {
                 self.featureIndex[id] = [];

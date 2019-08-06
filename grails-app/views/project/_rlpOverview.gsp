@@ -54,7 +54,6 @@
 
 
     <div class="row-fluid">
-
         <div class="span2 header-label" >RLP outcomes addressed</div>
         <div class="span9 value">
             <table class="table table-bordered ">
@@ -72,6 +71,43 @@
 
         </div>
     </div>
+
+    <div class="row-fluid">
+        <div class="span2 header-label" >RLP outcomes addressed</div>
+        <div class="span9 value">
+            <table class="table table-bordered ">
+                <g:if test = "${project.custom?.details?.outcomes?.primaryOutcome}" >
+                    <tr>
+                        <td>Primary outcomes</td>
+                        <td>
+                            <g:each in="${project.custom?.details?.outcomes?.primaryOutcome?.assets}" var="p_assets">
+                                ${p_assets}
+                            </g:each>
+                        </td>
+                        <td>Priority</td>
+                    </tr>
+                </g:if>
+                <g:set var="s_outcomes" value="${project.custom?.details?.outcomes?.secondaryOutcomes}"></g:set>
+                <g:if test = "${s_outcomes}" >
+                    <g:each status="i"  in="${s_outcomes}" var="s_outcome">
+                    <tr>
+                        <g:if test = "${i == 0}" >
+                            <td rowspan="${s_outcomes.size()}">Secondary outcomes</td>
+                        </g:if>
+                        <td>
+                            <g:each in="${s_outcome.assets}" var="s_assets">
+                                ${s_assets}
+                            </g:each>
+                        </td>
+                        <td>Priority</td>
+                    </tr>
+                    </g:each>
+                </g:if>
+            </table>
+
+        </div>
+    </div>
+
 
     <div class="row-fluid">
         <div class="span2 header-label">Project description</div>

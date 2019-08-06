@@ -345,13 +345,7 @@ var ProgramPageViewModel = function(props, options) {
                                         //work around with leaflet circle - ref maps.js
                                         point_type: 'Circle',
                                         radius: 0, //Need to have a value,but overwritten somewhere
-                                        type : {
-                                            color: "#ff0000",
-                                            fillColor:"#ff0000",
-                                            stroke: true,
-                                            fillOpacity: 0.8
-                                        },
-
+                                        type: "compound", // Style defined in sites.js
                                         popupContent: "Project: <a href="+fcConfig.projectUrl +"/" +project.projectId+">"+ projectName + "</a>" +
                                                       "<br/>Site: <a href="+fcConfig.siteUrl+"/" + el.siteId +">" + el.siteName + "</a>"
                                     },
