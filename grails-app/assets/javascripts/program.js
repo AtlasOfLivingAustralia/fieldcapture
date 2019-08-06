@@ -312,7 +312,14 @@ var ProgramPageViewModel = function(props, options) {
                 var map = createMap({
                     useAlaMap:true,
                     mapContainerId:'programSiteMap',
-                    width: '100%'
+                    width: '100%',
+                    styles: {
+                        circle: {
+                            color: '#f00',
+                            fillOpacity: 0.2,
+                            weight: 3
+                        }
+                    }
                 });
 
                 if (self.programSiteId){
@@ -345,7 +352,7 @@ var ProgramPageViewModel = function(props, options) {
                                         //work around with leaflet circle - ref maps.js
                                         point_type: 'Circle',
                                         radius: 0, //Need to have a value,but overwritten somewhere
-                                        type: "compound", // Style defined in sites.js
+                                        type: "circle",
                                         popupContent: "Project: <a href="+fcConfig.projectUrl +"/" +project.projectId+">"+ projectName + "</a>" +
                                                       "<br/>Site: <a href="+fcConfig.siteUrl+"/" + el.siteId +">" + el.siteName + "</a>"
                                     },

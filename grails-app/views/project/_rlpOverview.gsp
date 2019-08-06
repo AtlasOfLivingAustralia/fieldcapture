@@ -56,24 +56,31 @@
         <div class="span9 value">
             <table class="table table-bordered ">
                 <g:if test = "${project.custom?.details?.outcomes?.primaryOutcome}" >
+                    <g:set var="p_outcome" value="${project.custom?.details?.outcomes?.primaryOutcome}"></g:set>
                     <tr>
-                        <td>Primary outcomes</td>
+                        <td>Primary Outcome</td>
+                        <td>${p_outcome.shortDescription}</td>
                         <td>
-                            ${project.custom?.details?.outcomes?.primaryOutcome?.assets.join(';')}
+                            <g:each in="${p_outcome.assets}" var="p_asset">
+                                <li>${p_asset}</li>
+                            </g:each>
                         </td>
                     </tr>
                 </g:if>
-                <g:set var="s_outcomes" value="${project.custom?.details?.outcomes?.secondaryOutcomes}"></g:set>
-                <g:if test = "${s_outcomes}" >
+                <g:if test = "${project.custom?.details?.outcomes?.secondaryOutcomes}" >
+                    <g:set var="s_outcomes" value="${project.custom?.details?.outcomes?.secondaryOutcomes}"></g:set>
                     <g:each status="i"  in="${s_outcomes}" var="s_outcome">
-                    <tr>
-                        <g:if test = "${i == 0}" >
-                            <td rowspan="${s_outcomes.size()}">Secondary outcomes</td>
-                        </g:if>
-                        <td>
-                            <g:join in="${s_outcome.assets}" />
-                        </td>
-                    </tr>
+                        <tr>
+                            <g:if test = "${i == 0}" >
+                                <td rowspan="${s_outcomes.size()}">Secondary Outcomes</td>
+                            </g:if>
+                            <td>${s_outcome.shortDescription}</td>
+                            <td>
+                                <g:each in="${s_outcome.assets}" var="s_asset">
+                                    <li>${s_asset}</li>
+                                </g:each>
+                            </td>
+                        </tr>
                     </g:each>
                 </g:if>
             </table>
