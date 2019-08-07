@@ -18,11 +18,15 @@
             submitReportUrl: "${createLink(action:"ajaxSubmitReport", id:program.programId)}",
             rejectReportUrl: "${createLink(action:"ajaxRejectReport", id:program.programId)}",
             regenerateProgramReportsUrl: "${createLink(action:"regenerateProgramReports", id:program.programId)}",
-            programSaveUrl: "${createLink(action:'ajaxUpdate', id:program.programId)}"
+            programSaveUrl: "${createLink(action:'ajaxUpdate', id:program.programId)}",
+            geoSearchUrl: "${createLink(controller: 'home', action:'geoService')}",
+            projectUrl: "${createLink(controller: "project", action:'index')}",
+            siteUrl: "${createLink(controller: "site", action:'index')}"
         };
     </script>
     <asset:stylesheet src="common-bs4.css"/>
     <asset:stylesheet src="program.css"/>
+    <asset:stylesheet src="leaflet-manifest.css"/>
 
 </head>
 
@@ -96,7 +100,6 @@
 <asset:script>
 
     $(function () {
-
         var program =<fc:modelAsJavascript model="${program}"/>;
         var config = _.extend({reportingConfigSelector:'#reporting form'}, fcConfig);
         var programViewModel = new ProgramPageViewModel(program, config);

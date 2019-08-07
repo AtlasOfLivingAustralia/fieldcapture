@@ -1,6 +1,5 @@
 <!-- OVERVIEW -->
 <div class="overview">
-
     <g:if test="${config.program.parent}">
         <div class="row-fluid">
             <div class="span2 header-label">Program</div>
@@ -52,22 +51,38 @@
         <div class="span9 value"><span data-bind="text:funding.formattedCurrency"></span></div>
     </div>
 
-
     <div class="row-fluid">
-
         <div class="span2 header-label" >RLP outcomes addressed</div>
         <div class="span9 value">
             <table class="table table-bordered ">
-                <thead>
-                <tr>
-                    <g:each in="${project.outcomes}" var="outcome" >
+                <g:if test = "${project.custom?.details?.outcomes?.primaryOutcome}" >
+                    <g:set var="p_outcome" value="${project.custom?.details?.outcomes?.primaryOutcome}"></g:set>
+                    <tr>
+                        <td>Primary Outcome</td>
+                        <td>${p_outcome.shortDescription}</td>
                         <td>
-                        ${outcome.shortDescription}
-                        <g:if test ="${outcome.targeted}"><span class="fa fa-check-circle"></span></g:if>
+                            <g:each in="${p_outcome.assets}" var="p_asset">
+                                <li>${p_asset}</li>
+                            </g:each>
                         </td>
+                    </tr>
+                </g:if>
+                <g:if test = "${project.custom?.details?.outcomes?.secondaryOutcomes}" >
+                    <g:set var="s_outcomes" value="${project.custom?.details?.outcomes?.secondaryOutcomes}"></g:set>
+                    <g:each status="i"  in="${s_outcomes}" var="s_outcome">
+                        <tr>
+                            <g:if test = "${i == 0}" >
+                                <td rowspan="${s_outcomes.size()}">Secondary Outcomes</td>
+                            </g:if>
+                            <td>${s_outcome.shortDescription}</td>
+                            <td>
+                                <g:each in="${s_outcome.assets}" var="s_asset">
+                                    <li>${s_asset}</li>
+                                </g:each>
+                            </td>
+                        </tr>
                     </g:each>
-                </tr>
-                </thead>
+                </g:if>
             </table>
 
         </div>

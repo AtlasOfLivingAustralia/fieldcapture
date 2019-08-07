@@ -806,7 +806,6 @@ var AlaMapAdapter = function(map, options) {
                 if (options.styles[prop] && _.isFunction(layer.setStyle)) {
                     layer.setStyle(options.styles[prop]);
                 }
-
             }
             if (!self.featureIndex[id]) {
                 self.featureIndex[id] = [];
@@ -815,7 +814,6 @@ var AlaMapAdapter = function(map, options) {
         });
 
         map.setGeoJSON(feature);
-
         self.featureLayer.off("layeradd");
     };
 
@@ -825,7 +823,6 @@ var AlaMapAdapter = function(map, options) {
     };
 
     self.replaceAllFeatures = function(features) {
-
         self.featureIndex = {};
         _.each(features, function(feature) {
             self.addFeature(feature);
@@ -834,7 +831,6 @@ var AlaMapAdapter = function(map, options) {
 
     self.unHighlightFeatureById = function (id) {
         var layers = self.featureIndex[id];
-
         _.each(layers, function(layer) {
             unhighlightLayer(layer);
         })
@@ -850,7 +846,6 @@ var AlaMapAdapter = function(map, options) {
     };
 
     function highlightLayer(layer) {
-
         if (_.isFunction(layer.eachLayer)) { // Layers created from MultiPolygons & MultiPolyLines have nested layers
             layer.eachLayer(highlightLayer);
         }

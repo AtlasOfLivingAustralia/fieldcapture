@@ -33,12 +33,17 @@ class ProgramController {
 
             Map programRole = members.find { it.userId == userId }
 
+            def mapFeatures = program.programSiteId?siteService.getSiteGeoJson(program.programSiteId) : null
+            if (mapFeatures)
+                program.mapFeatures = mapFeatures
+
             [program       : program,
              roles         : roles,
              user          : user,
              isAdmin       : programRole?.role == RoleService.PROJECT_ADMIN_ROLE,
              isGrantManager: programRole?.role == RoleService.GRANT_MANAGER_ROLE,
-             content       : content(program, programRole)]
+             content       : content(program, programRole)
+             ]
         }
     }
 
@@ -58,7 +63,7 @@ class ProgramController {
             servicesWithScores = programService.serviceScores(program.programId, !hasAdminAccess)
         }
 
-        //Aggegated all targeted outcomes of projects
+        //Aggregate all targeted outcomes of projects
         for(Map project in projects){
             //Verify project.outcomes (from program config) with primaryOutcome and secondaryOutcomes in project.custom.details.outcomes
             Map primaryOutcome = project.custom?.details?.outcomes?.primaryOutcome

@@ -15,13 +15,18 @@
     <div data-bind="visible:url()"><strong>Visit us at <a data-bind="attr:{href:url}"><span data-bind="text:url"></span></a></strong></div>
 </div>
 
-<div data-bind="visible:description">
-    <div class="well">
-        <div class="well-title">Description</div>
-
+<div class="row">
+    <div class="col-md-12 ">
+        <div class="well-title ">Description</div>
+    </div>
+    <div class="col-md-9" >
         <span data-bind="html:description.markdownToHtml()"></span>
     </div>
+    <div data-bind="visible:programSiteId" class="col-md-3">
+        <m:map id="programSiteMap" width="100%" height="300px"></m:map>
+    </div>
 </div>
+
 
 
 <div class="row-fluid">
@@ -108,3 +113,4 @@
         </g:each>
     </div>
 </g:if>
+

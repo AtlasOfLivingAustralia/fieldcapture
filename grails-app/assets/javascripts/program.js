@@ -4,6 +4,8 @@
 //= require sites
 //= require document
 //= require reporting
+//= require leaflet-manifest
+
 
 /**
  * Knockout view model for program pages.
@@ -25,7 +27,8 @@ ProgramViewModel = function (props, options) {
     self.description = ko.observable(props.description).extend({markdown: true});
     self.url = ko.observable(props.url);
     self.newsAndEvents = ko.observable(props.newsAndEvents).extend({markdown: true});
-
+    self.programSiteId = ko.observable(props.programSiteId);
+    self.mapFeatures =  ko.observable(props.mapFeatures);
     self.projects = props.projects;
 
     self.deleteProgram = function () {
@@ -306,6 +309,62 @@ var ProgramPageViewModel = function(props, options) {
                 }
                 $.fn.dataTable.moment( 'dd-MM-yyyy' );
                 $('#projectOverviewList').DataTable({displayLength:25, order:[[2, 'asc'], [3, 'asc']]});
+
+                //create a empty map.
+                var map = createMap({
+                    useAlaMap:true,
+                    mapContainerId:'programSiteMap',
+                    width: '100%',
+                    styles: {
+                        circle: {
+                            color: '#f00',
+                            fillOpacity: 0.2,
+                            weight: 3
+                        }
+                    }
+                });
+
+                if (self.programSiteId){
+                    if (!self.mapFeatures()) {
+                        console.log("There was a problem obtaining program site data");
+                    }else{
+                        map.addFeature(self.mapFeatures())
+                    };
+                };
+
+                //find sites of related projects.
+                var searchUrl = fcConfig.geoSearchUrl +"?max=10000&geo=true&markBy=false";
+                searchUrl = searchUrl + "&fq=programId:" +self.programId;
+                $.getJSON(searchUrl, function(data) {
+                    $.each(data.projects, function(j, project) {
+                        var projectId = project.projectId;
+                        var projectName = project.name;
+                        if (project.geo && project.geo.length > 0) {
+                            $.each(project.geo, function(k, el) {
+                                var lat = parseFloat(el.loc.lat);
+                                var lon = parseFloat(el.loc.lon);
+                                var mf = {
+                                    geometry: {
+                                        coordinates: [lon,lat],
+                                        type: "Point"
+
+                                    },
+                                    properties:{
+                                        name: projectName,
+                                        //work around with leaflet circle - ref maps.js
+                                        point_type: 'Circle',
+                                        radius: 0, //Need to have a value,but overwritten somewhere
+                                        type: "circle",
+                                        popupContent: "Project: <a href="+fcConfig.projectUrl +"/" +project.projectId+">"+ projectName + "</a>" +
+                                                      "<br/>Site: <a href="+fcConfig.siteUrl+"/" + el.siteId +">" + el.siteName + "</a>"
+                                    },
+                                    type: "Feature"
+                                };
+                                map.addFeature(mf);
+                            });
+                        };
+                    });
+                });
             }
         },
         'projects': {
