@@ -64,12 +64,20 @@ class ProgramController {
             Map primaryOutcome = project.custom?.details?.outcomes?.primaryOutcome
             if (primaryOutcome){
                 Map oc =  program.outcomes.find {oc -> oc.outcome == primaryOutcome.description}
-                if (oc) oc['targeted'] = true
+                if (oc) {
+                    oc['targeted'] = true //set program outcomes
+                    primaryOutcome.shortDescription = oc['shortDescription']
+                }
+
             }
 
-            for(Map po : project.custom?.details?.outcomes?.secondaryOutcomes){
-                Map oc =  program.outcomes.find {oc -> oc.outcome == po.description}
-                if (oc) oc['targeted'] = true
+            def secondaryOutcomes = project.custom?.details?.outcomes?.secondaryOutcomes
+            for(Map so : secondaryOutcomes){
+                Map oc =  program.outcomes.find {oc -> oc.outcome == so.description}
+                if (oc){
+                    oc['targeted'] = true
+                    so.shortDesription = oc['shortDescription']
+                }
             }
         }
 
