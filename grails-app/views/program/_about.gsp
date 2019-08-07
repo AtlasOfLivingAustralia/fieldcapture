@@ -55,8 +55,8 @@
         <th class="projectId">Project ID</th>
         <th class="name">Name</th>
         <th class="description">Description</th>
-        <th class="outcomes">Outcome/s</th>
-        <th class="priority">Priority Inv</th>
+        <th class="outcomes">Outcome</th>
+        <th class="priority">Investment Priority</th>
         <th class="startDate">Start Date</th>
         <th class="endDate">End Date</th>
         </thead>
