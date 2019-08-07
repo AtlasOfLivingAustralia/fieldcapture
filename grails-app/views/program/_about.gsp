@@ -28,28 +28,29 @@
 </div>
 
 
-
-<div class="row-fluid">
-    <div class="well">
-        <div class="well-title">The Service Provider is addressing these RLP outcomes</div>
-        <table class="table table-bordered ">
-            <thead>
-            <tr>
-                <g:each in="${program.outcomes}" var="outcome" >
-                    <td>
-                        ${outcome.shortDescription}
-                        <g:if test ="${outcome.targeted}"><span class="fa fa-check-circle"></span></g:if>
-                    </td>
-                </g:each>
-            </tr>
-            </thead>
-        </table>
+<g:if test="${program.outcomes}">
+    <div class="row-fluid">
+        <div class="well">
+            <div class="well-title">The Service Provider is addressing these RLP outcomes</div>
+            <table class="table table-bordered ">
+                <thead>
+                <tr>
+                    <g:each in="${program.outcomes}" var="outcome" >
+                        <td>
+                            ${outcome.shortDescription}
+                            <g:if test ="${outcome.targeted}"><span class="fa fa-check-circle"></span></g:if>
+                        </td>
+                    </g:each>
+                </tr>
+                </thead>
+            </table>
+        </div>
     </div>
-</div>
+</g:if>
 
 <g:set var="projects" value="${content.projects.projects}" />
 <g:if test="${projects}">
-    <h3>Project reporting</h3>
+    <div class="well-title">Projects</div>
     <table id="projectOverviewList" class="table table-striped table-bordered">
         <thead class="thead-light">
         <th class="projectId">Project ID</th>
@@ -66,14 +67,20 @@
                 <td class="projectId"><a href="${g.createLink(controller:'project', action:'index', id:project.projectId)}" >${project.externalId ?: project.grantId}</a></td>
                 <td class="name">${project.name}</td>
                 <td class="description">${project.description}</td>
-                <g:set var="primaryOutcome" value="${project.custom.details.outcomes.primaryOutcome}" />
-                <td class="outcomes">${primaryOutcome.shortDescription}</td>
-                <g:set var="primaryOutcomePriorities" value="${primaryOutcome.assets}"></g:set>
-                <td class="priority">
-                     <g:each var="priority" in="${primaryOutcomePriorities}">
-                         ${priority}
-                     </g:each>
-                </td>
+                <g:if test="${project.custom?.details?.outcomes?.primaryOutcome}">
+                      <g:set var="primaryOutcome" value="${project.custom.details.outcomes.primaryOutcome}" />
+                      <td class="outcomes">${primaryOutcome.shortDescription}</td>
+                      <g:set var="primaryOutcomePriorities" value="${primaryOutcome.assets}"></g:set>
+                       <td class="priority">
+                             <g:each var="priority" in="${primaryOutcomePriorities}">
+                                 ${priority}
+                             </g:each>
+                       </td>
+                 </g:if>
+                <g:else>
+                     <td></td>
+                     <td></td>
+                </g:else>
 
                 <td class="startDate">${au.org.ala.merit.DateUtils.isoToDisplayFormat(project.plannedStartDate)}</td>
                 <td class="endDate">${au.org.ala.merit.DateUtils.isoToDisplayFormat(project.plannedEndDate)}</td>

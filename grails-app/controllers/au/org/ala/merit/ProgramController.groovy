@@ -73,7 +73,6 @@ class ProgramController {
                     oc['targeted'] = true //set program outcomes
                     primaryOutcome.shortDescription = oc['shortDescription']
                 }
-
             }
 
             def secondaryOutcomes = project.custom?.details?.outcomes?.secondaryOutcomes
