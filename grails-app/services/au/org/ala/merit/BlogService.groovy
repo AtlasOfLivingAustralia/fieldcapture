@@ -40,6 +40,10 @@ class BlogService {
         blog
     }
 
+    List<Map> getBlog(Map programOrproject){
+        return getProjectBlog(programOrproject)
+    }
+
     List<Map> getProjectBlog(Map project) {
         List<Map> blog = project?.blog?:[]
         process(blog)

@@ -356,7 +356,7 @@ var ProgramPageViewModel = function(props, options) {
                                         radius: 0, //Need to have a value,but overwritten somewhere
                                         type: "circle",
                                         popupContent: "Project: <a href="+fcConfig.projectUrl +"/" +project.projectId+">"+ projectName + "</a>" +
-                                                      "<br/>Site: <a href="+fcConfig.siteUrl+"/" + el.siteId +">" + el.siteName + "</a>"
+                                                      "<br/>Site: " + el.siteName
                                     },
                                     type: "Feature"
                                 };

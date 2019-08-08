@@ -221,14 +221,20 @@ class ProjectController {
         Map primaryOutcome = project.custom?.details?.outcomes?.primaryOutcome
         if (primaryOutcome){
             Map oc =  project.outcomes.find {oc -> oc.outcome == primaryOutcome.description}
-            oc['targeted'] = true
-            primaryOutcome['shortDescription'] = oc['shortDescription']
+            if(oc){
+                oc['targeted'] = true
+                primaryOutcome['shortDescription'] = oc['shortDescription']
+            }
+
         }
 
         for(def po : project.custom?.details?.outcomes?.secondaryOutcomes){
             Map oc =  project.outcomes.find {oc -> oc.outcome == po.description}
-            oc['targeted'] = true
-            po['shortDescription'] = oc['shortDescription']
+            if(oc){
+                oc['targeted'] = true
+                po['shortDescription'] = oc['shortDescription']
+            }
+
         }
         model
     }
