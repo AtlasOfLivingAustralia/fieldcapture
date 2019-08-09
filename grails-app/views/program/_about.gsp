@@ -19,10 +19,10 @@
     <div class="col-md-12 ">
         <div class="well-title ">Description</div>
     </div>
-    <div class="col-md-9" >
+    <div class="col-md-8" >
         <span data-bind="html:description.markdownToHtml()"></span>
     </div>
-    <div data-bind="visible:programSiteId" class="col-md-3">
+    <div data-bind="visible:programSiteId" class="col-md-4">
         <m:map id="programSiteMap" width="100%" height="300px"></m:map>
     </div>
 </div>
