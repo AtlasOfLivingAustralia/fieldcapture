@@ -74,15 +74,6 @@ class ProgramController {
                     primaryOutcome.shortDescription = oc['shortDescription']
                 }
             }
-
-            def secondaryOutcomes = project.custom?.details?.outcomes?.secondaryOutcomes
-            for(Map so : secondaryOutcomes){
-                Map oc =  program.outcomes.find {oc -> oc.outcome == so.description}
-                if (oc){
-                    oc['targeted'] = true
-                    so.shortDesription = oc['shortDescription']
-                }
-            }
         }
 
         [about   : [label: 'Management Unit Overview',visible: true, stopBinding: false, type: 'tab',servicesDashboard:[visible: programVisible, planning:false, services:servicesWithScores]],
