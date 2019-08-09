@@ -84,10 +84,10 @@
     </div>
 
 
-    <div class="row-fluid">
-        <div class="span2 header-label">RLP outcomes addressed</div>
+    <h4>RLP outcomes addressed</h4>
 
-        <div class="span9 value">
+    <div class="row-fluid">
+        <div class="span12 value">
             <table class="table table-bordered ">
                 <g:if test="${project.custom?.details?.outcomes?.primaryOutcome}">
                     <g:set var="p_outcome" value="${project.custom?.details?.outcomes?.primaryOutcome}"></g:set>
@@ -122,10 +122,9 @@
         </div>
     </div>
 
+    <h4>Project Description</h4>
     <div class="row-fluid">
-        <div class="span2 header-label">Project description</div>
-
-        <div class="span9 value">
+        <div class="span12 value">
             <p class="well well-small more" data-bind="text:description"></p>
         </div>
     </div>
