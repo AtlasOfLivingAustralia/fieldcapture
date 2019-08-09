@@ -29,25 +29,26 @@
 
 
 <g:if test="${program.outcomes}">
-    <div class="row-fluid">
-        <div class="well">
-            <div class="well-title">The Service Provider is addressing these RLP outcomes</div>
-            <table class="table table-bordered ">
-                <thead>
-                <tr>
-                    <g:each in="${program.outcomes}" var="outcome" >
-                        <td>
+    <div class="well">
+        <div class="well-title">The Service Provider is addressing these RLP outcomes</div>
+        <div class="row outcomes no-gutters">
+                <g:each in="${program.outcomes}" var="outcome" >
+                    <g:set var="outcomeClass" value="${outcome.targeted ? 'targeted' :''}"/>
+                    <div class="col-md">
+                        <div class="outcome-wrapper h-100">
+                        <div class="h-100 outcome ${outcomeClass}">
                             ${outcome.shortDescription}
                             <g:if test ="${outcome.targeted}"><span class="fa fa-check-circle"></span></g:if>
-                        </td>
-                    </g:each>
-                </tr>
-                </thead>
-            </table>
+                        </div>
+                        </div>
+                    </div>
+                </g:each>
+            </div>
         </div>
     </div>
 </g:if>
 
+<div class="projects-wrapper d-none d-md-block">
 <g:set var="projects" value="${content.projects.projects}" />
 <g:if test="${projects}">
     <div class="well-title">Projects</div>
@@ -96,7 +97,7 @@
     </div>
 </g:else>
 
-
+</div>
 
 
 <g:if test="${servicesDashboard.visible && servicesDashboard.services}">

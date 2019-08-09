@@ -69,5 +69,25 @@ form #start-date, form #end-date {
     padding-left: 3px;
 }
 
+.outcomes .outcome-wrapper {
+    padding-left: 2px;
+    padding-right: 2px;
+}
+.outcome {
+    border: 1px solid lightgrey;
+    border-radius:4px;
+    width: 100%;
+    padding: 10px;
 
+}
 
+.outcome.targeted {
+    background: #D9EDF6;
+}
+
+#projectOverviewList th {
+    white-space: normal;
+}
+.projects-wrapper {
+    margin-top: 10px;
+}
