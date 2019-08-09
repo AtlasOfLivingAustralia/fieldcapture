@@ -32,18 +32,17 @@
     <div class="well">
         <div class="well-title">The Service Provider is addressing these RLP outcomes</div>
         <div class="row outcomes no-gutters">
-                <g:each in="${program.outcomes}" var="outcome" >
-                    <g:set var="outcomeClass" value="${outcome.targeted ? 'targeted' :''}"/>
-                    <div class="col-md">
-                        <div class="outcome-wrapper h-100">
+            <g:each in="${program.outcomes}" var="outcome" >
+                <g:set var="outcomeClass" value="${outcome.targeted ? 'targeted' :''}"/>
+                <div class="col-md">
+                    <div class="outcome-wrapper h-100">
                         <div class="h-100 outcome ${outcomeClass}">
                             ${outcome.shortDescription}
                             <g:if test ="${outcome.targeted}"><span class="fa fa-check-circle"></span></g:if>
                         </div>
-                        </div>
                     </div>
-                </g:each>
-            </div>
+                </div>
+            </g:each>
         </div>
     </div>
 </g:if>
