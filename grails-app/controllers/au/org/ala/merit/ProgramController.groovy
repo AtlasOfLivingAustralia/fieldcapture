@@ -17,6 +17,7 @@ class ProgramController {
     ReportService reportService
     ActivityService activityService
     PdfGenerationService pdfGenerationService
+    BlogService blogService
 
     @PreAuthorise(accessLevel='editor', redirectController='home')
     def index(String id) {
@@ -48,10 +49,15 @@ class ProgramController {
     }
 
     protected Map content(Map program, Map userRole) {
+        boolean hasAdminAccess = userService.userIsSiteAdmin() || userRole?.role == RoleService.PROJECT_ADMIN_ROLE
+        boolean hasEditAccessOfBlog = userService.userIsSiteAdmin() ||
+                userService.isUserAdminForProgram(user?.userId, program.programId) ||
+                userService.isUserEditorForProgram(user?.userId, program.programId) ||
+                userService.isUserGrantManagerForProgram(user?.userId, program.programId)
 
-        def hasAdminAccess = userService.userIsSiteAdmin() || userRole?.role == RoleService.PROJECT_ADMIN_ROLE
         Map result = programService.getProgramProjects(program.programId)
         List projects = result?.projects
+        List blogs = blogService.getBlog(program)
 
         List reportOrder = program.config?.programReports?.collect{[category:it.category, description:it.description]} ?: []
 
@@ -85,7 +91,7 @@ class ProgramController {
             }
         }
 
-        [about   : [label: 'Management Unit Overview',visible: true, stopBinding: false, type: 'tab',servicesDashboard:[visible: programVisible, planning:false, services:servicesWithScores]],
+        [about   : [label: 'Management Unit Overview',visible: true, stopBinding: false, type: 'tab', blog: [blogs: blogs?:[], editable: hasEditAccessOfBlog], servicesDashboard:[visible: programVisible, planning:false, services:servicesWithScores]],
          projects: [label: 'MU Reporting', visible: true, stopBinding: false, type:'tab', projects:projects, reports:program.reports?:[], reportOrder:reportOrder, hideDueDate:true],
          sites   : [label: 'MU Sites', visible: programVisible, stopBinding: true, type:'tab'],
          admin   : [label: 'MU Admin', visible: hasAdminAccess, type: 'tab']]

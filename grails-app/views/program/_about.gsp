@@ -96,7 +96,32 @@
     </div>
 </g:else>
 
+<div class="row-fluid">
+    <hr/>
+    <h2>Program blogs</h2>
+    <g:if test="${blog.editable}">
+        <a href="${g.createLink(controller: 'blog', action: 'create', params:[programId: program.programId, returnTo:g.createLink(controller: 'program', action:'index', id:program.programId)])}"><button class="btn"><i class="fa fa-newspaper-o"></i> New Entry</button></a>
+        <button id="gotoEditBlog" class="btn"><i class="fa fa-edit"></i> Edit</button>
+        </a>
+    </g:if>
+    <hr/>
 
+<div class="row-fluid">
+    <h3>Program stories</h3>
+    <div class="blog-section">
+        <g:render template="/shared/blog" model="${[blog:blog.blogs, type:'Program Stories']}"/>
+    </div>
+</div>
+
+<div class="row-fluid">
+    <h3>News & events</h3>
+    <div class="blog-section">
+        <g:render template="/shared/blog" model="${[blog:blog, type:'News and Events']}"/>
+    </div>
+</div>
+
+
+</div>
 
 
 <g:if test="${servicesDashboard.visible && servicesDashboard.services}">

@@ -16,6 +16,7 @@ var BlogEntryViewModel = function(blogEntry) {
     var now = convertToSimpleDate(new Date());
     self.blogEntryId = ko.observable(blogEntry.blogEntryId);
     self.projectId = ko.observable(blogEntry.projectId);
+    self.programId = ko.observable(blogEntry.programId);
     self.title = ko.observable(blogEntry.title || '');
     self.date = ko.observable(blogEntry.date || now).extend({simpleDate:false});
     self.keepOnTop = ko.observable(blogEntry.keepOnTop || false);
@@ -53,7 +54,7 @@ var EditableBlogEntryViewModel = function(blogEntry, options) {
 
     var defaults = {
         validationElementSelector:'.validationEngineContainer',
-        types:['News and Events', 'Project Stories', 'Photo'],
+        types:['News and Events', blogEntry.programId?'Program Stories' :'Project Stories', 'Photo'],
         returnTo:fcConfig.returnTo,
         blogUpdateUrl:fcConfig.blogUpdateUrl
     };
@@ -62,6 +63,7 @@ var EditableBlogEntryViewModel = function(blogEntry, options) {
     var now = convertToSimpleDate(new Date());
     self.blogEntryId = ko.observable(blogEntry.blogEntryId);
     self.projectId = ko.observable(blogEntry.projectId || undefined);
+    self.programId = ko.observable(blogEntry.programId || undefined);
     self.title = ko.observable(blogEntry.title || '');
     self.date = ko.observable(blogEntry.date || now).extend({simpleDate:false});
     self.keepOnTop = ko.observable(blogEntry.keepOnTop || false);
