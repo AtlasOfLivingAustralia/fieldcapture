@@ -62,10 +62,12 @@ class BlogService {
         }
 
         int index = blog.findIndexOf{it.blogEntryId == blogEntryId}
-        ///todo check if blog exists
-        Map blogEntry = blog[index]
-        attachImages([blogEntry])
-        return blogEntry
+        if (index > -1){
+            Map blogEntry = blog[index]
+            attachImages([blogEntry])
+            return blogEntry
+        }else
+            return [];
     }
 
 
