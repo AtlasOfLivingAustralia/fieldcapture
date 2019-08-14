@@ -12,6 +12,7 @@ class UserServiceSpec extends Specification {
     def webService = Mock(WebService)
     def authService = Mock(AuthService)
     def grailsCacheManager = Mock(GrailsCacheManager)
+    def activityService = Mock(ActivityService)
 
 
     def setup() {
@@ -21,6 +22,7 @@ class UserServiceSpec extends Specification {
         service.webService = webService
         service.authService = authService
         service.grailsCacheManager = grailsCacheManager
+        service.activityService = activityService
 
         authService.userInRole(_) >> false
     }
@@ -86,6 +88,42 @@ class UserServiceSpec extends Specification {
         then:
         1 * authService.getUserForEmailAddress(email) >> [userId:'test', locked:true]
         result == null
+
+    }
+
+    def "An activity can be edited if the associated project can be edited"() {
+        setup:
+        String activityId = "a1"
+        String userId = "u1"
+        String projectId = "p1"
+
+        when:
+        boolean canEdit = service.canUserEditActivity(userId, activityId)
+
+        then:
+        canEdit == true
+
+        and:
+        1 * activityService.get(activityId) >> [projectId:projectId, activityId:activityId]
+
+        and:
+        1 * webService.getJson({it.endsWith("permissions/canUserEditProject?projectId=${projectId}&userId=${userId}")}) >> [userIsEditor:true]
+
+    }
+
+    def "An activity cannot be edited if it is not associated with a project"() {
+        setup:
+        String activityId = "a1"
+        String userId = "u1"
+
+        when:
+        boolean canEdit = service.canUserEditActivity(userId, activityId)
+
+        then:
+        canEdit == false
+
+        and:
+        1 * activityService.get(activityId) >> [activityId:activityId]
 
     }
 }

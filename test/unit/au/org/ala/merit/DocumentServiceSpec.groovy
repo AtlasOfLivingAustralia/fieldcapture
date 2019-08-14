@@ -127,4 +127,27 @@ class DocumentServiceSpec extends Specification {
         2 * webService.getJson(_) >> [documentId:'d1', projectId:'p2', readOnly:true]
         2 * userService.userIsAlaOrFcAdmin() >> true
     }
+
+    def "users can edit an activity document if they can edit the project associated with the activity"(boolean canEditActivity) {
+        setup:
+        Map document = [documentId:'d1', activityId:'a1']
+        String userId = 'u1'
+
+        when:
+        boolean canEdit = service.canEdit(document)
+        boolean canDelete = service.canDelete(document.documentId)
+
+        then:
+        canEdit == canEditActivity
+        canDelete == canEditActivity
+        2 * webService.getJson(_) >> [documentId:'d1', activityId:document.activityId]
+        2 * userService.getCurrentUserId() >> userId
+        2 * userService.canUserEditActivity(userId, document.activityId) >> canEditActivity
+
+        where:
+        canEditActivity | _
+        true | _
+        false | _
+
+    }
 }
