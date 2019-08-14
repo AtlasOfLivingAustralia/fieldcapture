@@ -1,3 +1,4 @@
+dist: trusty
 language: groovy
 jdk:
 - oraclejdk8
@@ -6,6 +7,7 @@ branches:
   - master
   - dev
   - /^feature\/.*$/
+  - /^hotfix\/.*$/
 before_install:
 - export TZ=Australia/Canberra
 - wget -q https://raw.githubusercontent.com/AtlasOfLivingAustralia/travis-build-configuration/master/ala_common.sh

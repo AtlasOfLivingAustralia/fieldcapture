@@ -13,6 +13,18 @@ import org.joda.time.PeriodType
 class ReportGenerator {
 
     private static final log = LogFactory.getLog(ReportGenerator)
+    /**
+     * Fudge factor applied to date calculations.  This is required because date intervals for reports
+     * start and end at the same instant to avoid gaps.
+     * A report will often start and end at midnight on the first day of a month, but when determining the
+     * month or year the report falls into, we normally want to display the previous day.
+     * e.g. a report from 2018-06-30T14:00:00Z (2018-07-01T00:00:00 AEST) to 2018-09-30T14:00:00Z (2018-10-01T00:00:00 AEST)
+     * would normally be displayed as 1st July - 30 September
+     * and similarly, a report from 2019-03-31T13:00:00Z to 2019-06-30T14:00:00Z would be displayed as
+     * 1st March - 30 June and fall into the 2018/2019 financial year, despite date arithmetic on the end date
+     * normally placing it on July 1 2019.
+     */
+    private int DATE_FUDGE_FACTOR = 1
 
     /**
      * Generates a list of reports according to the supplied configuration.
@@ -22,8 +34,6 @@ class ReportGenerator {
      * all reports are being regenerated.
      */
     List<Map> generateReports(ReportConfig reportConfig, ReportOwner reportOwner, int startingSequenceNo, DateTime latestApprovedReportPeriodEnd) {
-
-        int DATE_FUDGE_FACTOR = 1; // allow dates to not line up exactly to deal with time zone differences.
 
         Period period = Period.months(reportConfig.reportingPeriodInMonths)
 
@@ -109,8 +119,8 @@ class ReportGenerator {
         Map report = [
                 fromDate:fromDate,
                 toDate:toDate,
-                name:sprintf(reportConfig.reportNameFormat, sequenceNo, startDate.toDate(), endDate.toDate(), reportOwner.name),
-                description:sprintf(reportConfig.reportDescriptionFormat, sequenceNo, startDate.toDate(), endDate.toDate(), reportOwner.name),
+                name:format(reportConfig.reportNameFormat, reportConfig, reportOwner, sequenceNo, startDate, endDate),
+                description:format(reportConfig.reportDescriptionFormat, reportConfig, reportOwner, sequenceNo, startDate, endDate),
                 category:reportConfig.category,
                 type:reportConfig.reportType,
                 submissionDate:reportConfig.canSubmitDuringReportingPeriod ? fromDate : toDate
@@ -167,5 +177,28 @@ class ReportGenerator {
         }
 
         return new Interval(startConstraint, firstReportPeriodEnd)
+    }
+
+    /**
+     * Formats a report name or description allowing for a range of different parameters and format options.
+     * @param pattern the (java.util.Formatter) pattern that specifies the format
+     * @param config the report config
+     * @param owner the report owner
+     * @param sequenceNo the sequence number of the report being generated
+     * @param fromDate the date from which the report period starts
+     * @param toDate the date at which the report period ends
+     * @return a formatted string.
+     */
+    private String format(String pattern, ReportConfig config, ReportOwner owner, int sequenceNo, DateTime fromDate, DateTime toDate) {
+
+        DateTime endOfReport = toDate.withZone(DateTimeZone.default).minusDays(DATE_FUDGE_FACTOR)
+        int financialYearEnd = DateUtils.alignToFinancialYear(endOfReport).getYear()
+        String financialYear = "${financialYearEnd}/${financialYearEnd+1}"
+        String period = config.reportingPeriodInMonths+"M"
+        // month of year is 0 based, and we are offsetting by 6 months to align with the financial year to get
+        // the sequence number of this report based on "number of reports per financial year"
+        int sequenceInFinancialYear = Math.floor(((endOfReport.getMonthOfYear()+5)%12)/config.reportingPeriodInMonths)+1
+
+        return sprintf(pattern, sequenceNo, fromDate.toDate(), toDate.toDate(), owner.name, financialYear, period, sequenceInFinancialYear)
     }
 }

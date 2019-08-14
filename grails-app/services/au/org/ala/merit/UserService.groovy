@@ -21,7 +21,7 @@ class UserService {
 
 
 
-    def grailsApplication, authService, webService, roleService, projectService, organisationService
+    def grailsApplication, authService, webService, roleService, projectService, organisationService, activityService
 
     GrailsCacheManager grailsCacheManager
 
@@ -318,6 +318,26 @@ class UserService {
         } else {
             def url = grailsApplication.config.ecodata.baseUrl + "permissions/canUserEditProject?projectId=${projectId}&userId=${userId}"
             userCanEdit = webService.getJson(url)?.userIsEditor?:false
+        }
+
+        userCanEdit
+    }
+
+    /**
+     * Checks the if the user can edit the project associated with the activity.
+     * @param userId the id of the user to check
+     * @param activityId the activity to check.
+     * @return true if the activity can be edited.
+     */
+    boolean canUserEditActivity(String userId, String activityId) {
+        def userCanEdit
+        if (userIsSiteAdmin()) {
+            userCanEdit = true
+        } else {
+            Map activity = activityService.get(activityId)
+            if (activity) {
+                userCanEdit = canUserEditProject(userId, activity.projectId)
+            }
         }
 
         userCanEdit
