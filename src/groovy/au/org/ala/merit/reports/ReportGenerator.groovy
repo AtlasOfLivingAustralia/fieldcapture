@@ -197,7 +197,7 @@ class ReportGenerator {
         String period = config.reportingPeriodInMonths+"M"
         // month of year is 0 based, and we are offsetting by 6 months to align with the financial year to get
         // the sequence number of this report based on "number of reports per financial year"
-        int sequenceInFinancialYear = Math.floor(((endOfReport.getMonthOfYear()+5)%12)/config.reportingPeriodInMonths)+1
+        int sequenceInFinancialYear = config.reportingPeriodInMonths ? Math.floor(((endOfReport.getMonthOfYear()+5)%12)/config.reportingPeriodInMonths)+1 : 1
 
         return sprintf(pattern, sequenceNo, fromDate.toDate(), toDate.toDate(), owner.name, financialYear, period, sequenceInFinancialYear)
     }
