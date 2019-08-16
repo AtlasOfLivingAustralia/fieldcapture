@@ -300,9 +300,9 @@ class UserService {
      */
     boolean canEditProgramBlog(userId, String programId){
       return  userIsSiteAdmin() ||
-                isUserAdminForProgram(userId, program.programId) ||
-                isUserEditorForProgram(userId, program.programId) ||
-                isUserGrantManagerForProgram(userId, program.programId)
+                isUserAdminForProgram(userId, programId) ||
+                isUserEditorForProgram(userId, programId) ||
+                isUserGrantManagerForProgram(userId, programId)
     }
 
     boolean isUserAdminForProject(userId, projectId) {

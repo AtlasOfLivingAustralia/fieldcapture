@@ -113,7 +113,7 @@
         programViewModel.initialise(); // Needs to happen after data binding.
         $('#loading').hide();
 
-        $('#admin-tab').on('shown.bs.tab show.bs.tab', function() {
+        $('#admin-tab').on('shown.bs.tab', function() {
             var storedAdminTab = amplify.store('program-admin-tab-state');
             // restore state if saved
             if (storedAdminTab === '') {
@@ -122,6 +122,12 @@
                 $(storedAdminTab+'-tab').tab('show');
             }
         });
+
+      //Quick fix for tab click
+      $('#sites-tab, #admin-tab, #projects-tab,#about-tab').click(function () {
+          event.preventDefault();
+          window.location = this["href"]
+      })
     });
 
     $('#gotoEditBlog').click(function () {

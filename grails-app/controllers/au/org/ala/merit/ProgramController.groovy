@@ -92,10 +92,20 @@ class ProgramController {
             }
         }
 
-        [about   : [label: 'Management Unit Overview',visible: true, stopBinding: false, type: 'tab', blog: [blogs: blogs?:[], editable: hasEditAccessOfBlog], servicesDashboard:[visible: programVisible, planning:false, services:servicesWithScores]],
+        [about   : [label: 'Management Unit Overview',visible: true, stopBinding: false, type: 'tab',
+                    blog: [blogs: blogs?:[], editable: hasEditAccessOfBlog,
+                           hasNewsAndEvents: hasNewsAndEvents,
+                           hasProgramStories:  hasProgramStories,
+                           hasPhotos: hasPhotos
+                          ],
+                    servicesDashboard:[visible: programVisible, planning:false, services:servicesWithScores]],
          projects: [label: 'MU Reporting', visible: true, stopBinding: false, type:'tab', projects:projects, reports:program.reports?:[], reportOrder:reportOrder, hideDueDate:true],
          sites   : [label: 'MU Sites', visible: programVisible, stopBinding: true, type:'tab'],
-         admin   : [label: 'MU Admin', visible: hasAdminAccess, type: 'tab']]
+         admin   : [label: 'MU Admin', visible: hasAdminAccess, type: 'tab'],
+                    blog: [
+                      editable: hasEditAccessOfBlog
+                      ]
+                   ]
     }
 
     @PreAuthorise(accessLevel='siteAdmin')
