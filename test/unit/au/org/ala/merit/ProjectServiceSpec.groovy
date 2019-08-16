@@ -888,6 +888,26 @@ class ProjectServiceSpec extends Specification {
         history[4] == [documentId:1, date:'2019-07-01T00:00:01Z', userDisplayName:'test', reason:'r', referenceDocument:'c']
     }
 
+    def "A cutdown project view will be returned for anonymous users and users without permissions"(Map user) {
+        when:
+        Map result = service.get("p1", user, "")
+
+        then:
+        1 * webService.getJson({it.contains("project/p1?")}) >> [sites:[], reports:[], activities:[], documents:[['public':false, documentId:'d1'], ['public':true, documentId:'d1']]]
+
+        and:
+        result.sites == null
+        result.activities == null
+        result.documents.size() == 1
+        result.reports == null
+
+        where:
+        user | _
+        null | _
+        [hasViewAccess:false] | _
+
+    }
+
     private Map buildApprovalDocument(int i, String projectId) {
         Map approval = [
                 dateApproved:"2019-07-01T00:00:0${i}Z",

@@ -18,7 +18,6 @@ class ProgramController {
     ActivityService activityService
     PdfGenerationService pdfGenerationService
 
-    @PreAuthorise(accessLevel='editor', redirectController='home')
     def index(String id) {
         def program = programService.get(id)
 
@@ -50,6 +49,7 @@ class ProgramController {
     protected Map content(Map program, Map userRole) {
 
         def hasAdminAccess = userService.userIsSiteAdmin() || userRole?.role == RoleService.PROJECT_ADMIN_ROLE
+        boolean canViewReports = hasAdminAccess || userService.userHasReadOnlyAccess() || userRole?.role == RoleService.PROJECT_EDITOR_ROLE
         Map result = programService.getProgramProjects(program.programId)
         List projects = result?.projects
 
@@ -77,8 +77,7 @@ class ProgramController {
         }
 
         [about   : [label: 'Management Unit Overview',visible: true, stopBinding: false, type: 'tab',servicesDashboard:[visible: programVisible, planning:false, services:servicesWithScores]],
-         projects: [label: 'MU Reporting', visible: true, stopBinding: false, type:'tab', projects:projects, reports:program.reports?:[], reportOrder:reportOrder, hideDueDate:true],
-         sites   : [label: 'MU Sites', visible: programVisible, stopBinding: true, type:'tab'],
+         projects: [label: 'MU Reporting', visible: canViewReports, stopBinding: false, type:'tab', projects:projects, reports:program.reports?:[], reportOrder:reportOrder, hideDueDate:true],
          admin   : [label: 'MU Admin', visible: hasAdminAccess, type: 'tab']]
     }
 

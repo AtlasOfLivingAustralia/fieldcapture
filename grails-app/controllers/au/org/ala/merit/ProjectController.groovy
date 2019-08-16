@@ -128,13 +128,12 @@ class ProjectController {
         project.hasApprovedOrSubmittedReports = reportService.includesSubmittedOrApprovedReports(project.reports)
 
 
-
-
         def meriPlanVisible = metadataService.isOptionalContent('MERI Plan', config)
         def risksAndThreatsVisible = metadataService.isOptionalContent('Risks and Threats', config)
         def canViewRisks = risksAndThreatsVisible && (user?.hasViewAccess || user?.isEditor)
         def meriPlanEnabled = user?.hasViewAccess || ((project.associatedProgram == 'National Landcare Programme' && project.associatedSubProgram == 'Regional Funding'))
         def meriPlanVisibleToUser = project.planStatus == 'approved' || user?.isAdmin || user?.isCaseManager
+        boolean userHasViewAccess = user?.hasViewAccess ?: false
 
         def publicImages = project.documents.findAll {
             it.public == true && it.thirdPartyConsentDeclarationMade == true && it.type == 'image'
@@ -174,22 +173,34 @@ class ProjectController {
         else if (template == RLP_TEMPLATE) {
 
             // The RLP Project Template doesn't need site details or activities.
-            project.sites = new JSONArray(project.sites.collect{new JSONObject([name:it.name, siteId:it.siteId, lastUpdated:it.lastUpdated, type:it.type, extent:[:]])})
+            project.sites = new JSONArray(project.sites?.collect{new JSONObject([name:it.name, siteId:it.siteId, lastUpdated:it.lastUpdated, type:it.type, extent:[:]])} ?: [])
             project.remove('activities')
             model.overview.template = 'rlpOverview'
+
+            boolean showOrderNumber = userService.userHasReadOnlyAccess() || userService.userIsSiteAdmin()
+            model.overview.showOrderNumber = showOrderNumber
+
             model.details.meriPlanTemplate = RLP_MERI_PLAN_TEMPLATE+'View'
 
-            model["serviceDelivery"] = [label: 'Service Delivery', visible: true, type: 'tab', template: 'rlpServiceDashboard']
-            model.serviceDelivery.servicesDashboard = projectService.getServiceDashboardData(project.projectId, !user?.hasViewAccess)
+            model.serviceDelivery = [label: 'Service Delivery', visible: userHasViewAccess, type: 'tab', template: 'rlpServiceDashboard']
+            if (model.serviceDelivery.visible) {
+                // This can be a slow call so don't make it if the data won't be displayed
+                model.serviceDelivery.servicesDashboard = projectService.getServiceDashboardData(project.projectId, false)
+            }
 
             model.site.useAlaMap = true
             model.site.showSiteType = true
-            List reportOrder = config?.projectReports?.collect{[category:it.category, description:it.description]} ?: []
-            project.reports?.each { Map report ->
-                ReportConfig reportConfig = ((ProgramConfig)config).findProjectReportConfigForReport(report)
-                report.isAdjustable = reportConfig?.isAdjustable()
+            model.site.visible = userHasViewAccess
+            model.details.visible = userHasViewAccess
+
+            Map reportingTab = [label: 'Reporting', visible:userHasViewAccess, type:'tab', template:'projectReporting', reports:project.reports, stopBinding:true, services: config.services, scores:scores, hideDueDate:true, isAdmin:user?.isAdmin, isGrantManager:user?.isCaseManager]
+            if (reportingTab.visible) {
+                reportingTab.reportOrder = config?.projectReports?.collect{[category:it.category, description:it.description]} ?: []
+                project.reports?.each { Map report ->
+                    ReportConfig reportConfig = ((ProgramConfig)config).findProjectReportConfigForReport(report)
+                    report.isAdjustable = reportConfig?.isAdjustable()
+                }
             }
-            Map reportingTab = [label: 'Reporting', visible:user?.hasViewAccess, type:'tab', template:'projectReporting', reports:project.reports, reportOrder:reportOrder, stopBinding:true, services: config.services, scores:scores, hideDueDate:true, isAdmin:user?.isAdmin, isGrantManager:user?.isCaseManager]
 
             Map rlpModel = [overview:model.overview, serviceDelivery: model.serviceDelivery, documents:model.documents, details:model.details, site:model.site, reporting:reportingTab]
             rlpModel.admin = model.admin

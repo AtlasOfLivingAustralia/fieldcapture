@@ -73,11 +73,13 @@
                         <div class="span8 value"><span data-bind="text:funding.formattedCurrency"></span></div>
                     </div>
 
+                    <g:if test="${showOrderNumber}">
                     <div class="row-fluid" data-bind="visible:workOrderId">
                         <div class="span4 header-label">Internal order number</div>
 
                         <div class="span8">${project.workOrderId}</div>
                     </div>
+                    </g:if>
                 </div>
             </div>
         </div>
