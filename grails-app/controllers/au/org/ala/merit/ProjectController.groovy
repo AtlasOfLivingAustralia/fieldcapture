@@ -50,9 +50,8 @@ class ProjectController {
     }
 
     def index(String id) {
-        def project = projectService.get(id, 'all')
-        def user = userService.getUser()
 
+        def user = userService.getUser()
         if (user) {
             user = user.properties
             user.isAdmin = projectService.isUserAdminForProject(user.userId, id) ?: false
@@ -60,6 +59,7 @@ class ProjectController {
             user.isEditor = projectService.canUserEditProject(user.userId, id) ?: false
             user.hasViewAccess = projectService.canUserViewProject(user.userId, id) ?: false
         }
+        def project = projectService.get(id, user,'all')
         Map config
         if (project && !project.error) {
             config = projectService.getProgramConfiguration(project)
