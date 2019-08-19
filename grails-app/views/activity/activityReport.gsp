@@ -246,6 +246,10 @@
         </g:if>
         </g:each>
 
+        if (config.featureCollection) {
+            config.featureCollection.loadComplete();
+        }
+
         ko.applyBindings(activityNavigationModel, document.getElementById('activity-nav'));
 
         $('.helphover').popover({animation: true, trigger: 'hover'});
