@@ -206,6 +206,16 @@ class UserService {
         webService.getJson(url)
     }
 
+    /**
+     * Get the list of users (members) who have any level of permission for the requested program
+     *
+     * @param programId the id of the program of interest
+     */
+    Map getMembersOfManagementUnit(String managementUnitId) {
+        def url = grailsApplication.config.ecodata.baseUrl + "permissions/getMembersOfManagementUnit/${managementUnitId}"
+        webService.getJson(url)
+    }
+
     def addUserAsRoleToProgram(String userId, String programId, String role) {
         Map result = checkRoles(userId, role)
         if (result.error) {
