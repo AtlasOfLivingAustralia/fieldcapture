@@ -298,7 +298,7 @@ security {
         // service = 'http://devt.ala.org.au:8080' // optional, if set it will always be used as the return path from CAS
         uriFilterPattern = '.*/user/.*,.*/site/(?!index).*,.*/project/(?!(index|viewReportCallback)).*,.*/activity/(?!ajaxUnlock).*,.*/output/(?!index).*,.*/image/delete.*,.*/image/upload.*,.*/admin/.*,.*/proxy/speciesListPost,.*/document/documentUpdate,.*/document/deleteDocument,.*/document/downloadProjectDataFile/.*,.*/home/advanced,.*/organisation/(?!index).*,.*/organisation/(?!list).*,.*/blog/.*,.*/report/performanceAssessmentSummaryReport,.*/report/performanceAssessmentComparisonReport.*,.*/report/update.*,.*/program/(?!(index|viewReportCallback)).*,.*/programme/.*,.*/rlp/(?!(index|viewReportCallback)).*,.*/home/login.*,.*/ajax/keepSessionAlive'
         uriExclusionFilterPattern = '/assets/.*,/images/.*,/css/.*,/js/.*,/less/.*' // this is the default value
-        authenticateOnlyIfLoggedInPattern =  '/,/;.*,/[A-Za-z0-9]+/?,.*/project/index.*,.*/site/index.*,.*/activity/ajaxUnlock.*,.*/output/index.*,.*/image/.*,.*/search/.*,.*/home/.*,.*/organisation/index.*,.*/organisation/list.*,.*/report/loadReport.*,.*/report/reef2050PlanActionReport.*,.*/explore.*,.*/rlp/reportPDF.*'
+        authenticateOnlyIfLoggedInPattern =  '/,/;.*,/[A-Za-z0-9]+/?,.*/project/index.*,.*/site/index.*,.*/activity/ajaxUnlock.*,.*/output/index.*,.*/image/.*,.*/search/.*,.*/home/.*,.*/organisation/index.*,.*/organisation/list.*,.*/report/loadReport.*,.*/report/reef2050PlanActionReport.*,.*/explore.*,.*/rlp/reportPDF.*,.*/rlp/index.*,.*/program/index.*'
     }
 }
 pdfbox.fontcache="/data/${appName}/cache/"
@@ -317,9 +317,6 @@ environments {
         security.cas.appServerName = serverName
         security.cas.contextPath = "/" + appName
         ecodata.baseUrl = 'http://devt.ala.org.au:8080/ecodata/ws/'
-        //ecodata.baseUrl = 'http://192.168.0.13:8080/ecodata/ws/'
-        //ecodata.baseUrl = 'http://ecodata-test.ala.org.au/ws/'
-
         upload.images.url = grails.serverURL+'/image/'
         emailFilter = /[A-Z0-9._%-]+@csiro\.au|chris\.godwin\.ala@gmail.com/
         logging.dir = '.'
@@ -337,16 +334,10 @@ environments {
         security.cas.appServerName="${serverName}"
         security.cas.contextPath="/${appName}"
         security.cas.casServerName="${casBaseUrl}"
-        security.cas.uriFilterPattern=".*/user/.*,.*/site/(?!index).*,.*/project/(?!index).*,.*/activity/(?!index).*,.*/output/(?!index).*,.*/image/delete.*,.*/image/upload.*,.*/admin/.*,i.*/proxy/speciesListPost,.*/document/(?!index),.*/home/advanced,.*/organisation/(?!index).*,.*/organisation/(?!list).*,.*/home/login.*"
-        security.cas.uriExclusionFilterPattern="/images.*,/css.*,/js.*,/less.*"
-        security.cas.authenticateOnlyIfLoggedInPattern="/,/;.*,/[A-Za-z0-9]+/?,.*/project/index.*,.*/site/index.*,.*/activity/index.*,.*/output/index.*,*/image/.*,.*/ajax/keepSessionAlive,.*/search/.*,.*/home/.*,.*/organisation/index.*,.*/organisation/list.*,.*/document/index.*"
-        gateway="true"
         security.cas.casServerUrlPrefix="${casBaseUrl}/cas"
         security.cas.loginUrl="${security.cas.casServerUrlPrefix}/login"
         security.cas.casLoginUrl="${security.cas.casServerUrlPrefix}/login"
         logging.dir = '.'
-        test.user.admin.email = 'fc-ta@outlook.com'
-        test.user.admin.password = 'testing!'
         ecodata.baseUrl = 'http://devt.ala.org.au:8080/ecodata/ws/'
         ecodata.service.url = 'http://devt.ala.org.au:8080/ecodata/ws'
         api_key=System.getenv('API_KEY')
