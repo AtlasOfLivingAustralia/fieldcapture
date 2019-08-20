@@ -104,24 +104,39 @@
         <button id="gotoEditBlog" class="btn"><i class="fa fa-edit"></i> Edit</button>
         </a>
     </g:if>
-    <hr/>
-
-<div class="row-fluid">
-    <h3>Program stories</h3>
-    <div class="blog-section">
-        <g:render template="/shared/blog" model="${[blog:blog.blogs, type:'Program Stories']}"/>
-    </div>
-</div>
-
-<div class="row-fluid">
-    <h3>News & events</h3>
-    <div class="blog-section">
-        <g:render template="/shared/blog" model="${[blog:blog, type:'News and Events']}"/>
-    </div>
-</div>
 
 
-</div>
+    <g:if test="${blog.hasNewsAndEvents}">
+        <div class="row-fluid">
+            <h3>News and Events</h3>
+            <hr/>
+            <div class="blog-section">
+                <g:render template="/shared/blog" model="${[blog:blog.blogs, type:'News and Events']}"/>
+            </div>
+        </div>
+    </g:if>
+
+    <g:if test="${blog.hasProgramStories}">
+        <div class="row-fluid">
+            <h3>Program stories</h3>
+            <hr/>
+            <div class="blog-section">
+                <g:render template="/shared/blog" model="${[blog:blog.blogs, type:'Program Stories']}"/>
+            </div>
+        </div>
+    </g:if>
+
+    <g:if test="${blog.hasPhotos}">
+        <div class="row-fluid">
+            <h3>Photos</h3>
+            <hr/>
+            <div class="blog-section">
+                <g:render template="/shared/blog" model="${[blog:blog.blogs, type:'Photo']}"/>
+            </div>
+        </div>
+    </g:if>
+
+ </div>
 
 
 <g:if test="${servicesDashboard.visible && servicesDashboard.services}">

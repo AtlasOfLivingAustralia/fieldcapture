@@ -46,7 +46,7 @@
 
         </div>
 
-        <g:if test="${fc.userIsAlaOrFcAdmin()}">
+        <g:if test="${fc.userIsAlaOrFcAdmin() || blog.editable}">
             <div class="tab-pane" id="editProgramBlog">
                 <div id="editProjectBlog" class="pill-pane">
                     <h3>Edit Blogs</h3>

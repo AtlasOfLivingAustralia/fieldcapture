@@ -85,8 +85,8 @@ class BlogService {
      * @param programOrproject
      * @return
      */
-    List<Map> getBlog(Map programOrproject){
-        return getProjectBlog(programOrproject)
+    List<Map> getBlog(Map programOrProject){
+        return getProjectBlog(programOrProject)
     }
 
     List<Map> getProjectBlog(Map project) {
@@ -125,7 +125,6 @@ class BlogService {
 
     def delete(String projectOrProgramId, String id, BlogType from = null) {
         def result
-
         BlogType blogType = checkBlogType(projectOrProgramId, from)
         switch(blogType){
             case BlogType.PROGRAM:

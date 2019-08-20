@@ -344,7 +344,6 @@ class ProjectControllerSpec extends Specification {
 
     }
 
-
     private Map setupMockServices() {
         Map activityModel = [name:'output', outputs:[]]
         List services = [1,2,3,4,5,6,7,8,9,10].collect{

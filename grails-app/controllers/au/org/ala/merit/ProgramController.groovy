@@ -50,14 +50,15 @@ class ProgramController {
 
     protected Map content(Map program, Map userRole) {
         boolean hasAdminAccess = userService.userIsSiteAdmin() || userRole?.role == RoleService.PROJECT_ADMIN_ROLE
-        boolean hasEditAccessOfBlog = userService.userIsSiteAdmin() ||
-                userService.isUserAdminForProgram(user?.userId, program.programId) ||
-                userService.isUserEditorForProgram(user?.userId, program.programId) ||
-                userService.isUserGrantManagerForProgram(user?.userId, program.programId)
+        def user = userService.getUser()
+        boolean hasEditAccessOfBlog = userService.canEditProgramBlog(userService.getUser()?.userId, program.programId)
 
         Map result = programService.getProgramProjects(program.programId)
         List projects = result?.projects
         List blogs = blogService.getBlog(program)
+        def hasNewsAndEvents = blogs.find { it.type == 'News and Events' }
+        def hasProgramStories = blogs.find { it.type == 'Program Stories' }
+        def hasPhotos = blogs.find { it.type == 'Photo' }
 
         List reportOrder = program.config?.programReports?.collect{[category:it.category, description:it.description]} ?: []
 

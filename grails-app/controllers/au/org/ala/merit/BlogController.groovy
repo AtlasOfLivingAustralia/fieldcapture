@@ -1,7 +1,6 @@
 package au.org.ala.merit
 
 import grails.converters.JSON
-import org.geotools.util.UnsupportedImplementationException
 
 import static org.apache.http.HttpStatus.*
 
