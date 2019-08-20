@@ -316,7 +316,7 @@ environments {
         layout.skin = "nrm"
         security.cas.appServerName = serverName
         security.cas.contextPath = "/" + appName
-        ecodata.baseUrl = 'http://devt.ala.org.au:8080/ecodata/ws/'
+        ecodata.baseUrl = 'http://devt.ala.org.au:8080/ws/'
         upload.images.url = grails.serverURL+'/image/'
         emailFilter = /[A-Z0-9._%-]+@csiro\.au|chris\.godwin\.ala@gmail.com/
         logging.dir = '.'
@@ -340,7 +340,7 @@ environments {
         security.cas.loginUrl="${security.cas.casServerUrlPrefix}/login"
         security.cas.casLoginUrl="${security.cas.casServerUrlPrefix}/login"
         logging.dir = '.'
-        ecodata.baseUrl = 'http://devt.ala.org.au:8080/ecodata/ws/'
+        ecodata.baseUrl = 'http://devt.ala.org.au:8080/ws/'
         ecodata.service.url = 'http://devt.ala.org.au:8080/ecodata/ws'
         api_key=System.getenv('API_KEY')
 
