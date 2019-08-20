@@ -1,3 +1,4 @@
+<g:if test="${helpLinks && helpLinks.size() >= 6}">
 <div id="help-links">
     <div class="row-fluid">
         <span class="span4">
@@ -22,3 +23,4 @@
         </span>
     </div>
 </div>
+</g:if>

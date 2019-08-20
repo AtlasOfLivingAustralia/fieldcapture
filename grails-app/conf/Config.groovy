@@ -330,7 +330,9 @@ environments {
         layout.skin = "nrm"
         app.default.hub='merit'
         runWithNoExternalConfig = true
-        def casBaseUrl = "https://auth.ala.org.au"
+        wiremock.port = 8018
+        def casBaseUrl = "http://localhost:${wiremock.port}"
+
         security.cas.appServerName="${serverName}"
         security.cas.contextPath="/${appName}"
         security.cas.casServerName="${casBaseUrl}"

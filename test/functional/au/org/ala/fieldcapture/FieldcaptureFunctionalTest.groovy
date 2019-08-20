@@ -1,27 +1,14 @@
 package au.org.ala.fieldcapture
 
-//import co.freeside.betamax.tape.yaml.OrderedPropertyComparator
-//import co.freeside.betamax.tape.yaml.TapePropertyUtils
-//import org.yaml.snakeyaml.introspector.Property
 import geb.Browser
 import geb.spock.GebReportingSpec
-import org.openqa.selenium.Cookie
 import pages.EntryPage
-import pages.LoginPage
 import spock.lang.Shared
 
-
 /**
- * Helper class for functional tests in fieldcapture.  Contains common actions such as logging in and logging out.
+ * Helper class for functional tests in fieldcapture.
  */
 class FieldcaptureFunctionalTest extends GebReportingSpec {
-
-    static {
-        // Workaround for an incompatibility between Betamax and groovy 2.3+
-//        TapePropertyUtils.metaClass.sort = {Set<Property> properties, List<String> names ->
-//            new LinkedHashSet(properties.sort(true, new OrderedPropertyComparator(names)))
-//        }
-    }
 
     @Shared def testConfig
 
@@ -105,32 +92,8 @@ class FieldcaptureFunctionalTest extends GebReportingSpec {
         }
     }
 
-    def loginAsProjectEditor(Browser browser) {
-        login(browser, testConfig.projectEditorUsername, testConfig.projectEditorPassword)
-    }
-
-    def loginAsProjectAdmin(Browser browser) {
-        login(browser, testConfig.projectAdminUsername, testConfig.projectAdminPassword)
-    }
-
-    def loginAsAlaAdmin(Browser browser) {
-        login(browser, testConfig.alaAdminUsername, testConfig.alaAdminPassword)
-    }
-
-    def login(Browser browser, username, password) {
-
-        browser.to LoginPage, service: getConfig().baseUrl+EntryPage.url
-        browser.page.username = username
-        browser.page.password = password
-        browser.page.submit()
-
-        browser.at EntryPage
-
-        browser.driver.manage().addCookie(new Cookie("hide-intro", "1"))
-    }
-
     def logout(Browser browser) {
-        browser.go "${getConfig().baseUrl}logout/logout?casUrl=https://auth.ala.org.au/cas/logout&appUrl=${getConfig().baseUrl+EntryPage.url}"
-
+        browser.go "${getConfig().baseUrl}logout/logout?casUrl=https://auth.ala.org.au/cas/logout&appUrl=${getConfig().baseUrl+ EntryPage.url}"
     }
+
 }
