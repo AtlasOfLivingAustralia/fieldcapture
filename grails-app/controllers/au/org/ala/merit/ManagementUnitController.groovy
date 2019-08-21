@@ -38,7 +38,7 @@ class ManagementUnitController {
             if (mapFeatures)
                 mu.mapFeatures = mapFeatures
 
-            [mu       : mu,
+            [managementUnit       : mu,
              roles         : roles,
              user          : user,
              isAdmin       : muRole?.role == RoleService.PROJECT_ADMIN_ROLE,
@@ -48,29 +48,32 @@ class ManagementUnitController {
         }
     }
 
-    protected Map content(Map program, Map userRole) {
+    protected Map content(Map mu, Map userRole) {
 
         def hasAdminAccess = userService.userIsSiteAdmin() || userRole?.role == RoleService.PROJECT_ADMIN_ROLE
         boolean canViewReports = hasAdminAccess || userService.userHasReadOnlyAccess() || userRole?.role == RoleService.PROJECT_EDITOR_ROLE
-        Map result = programService.getProgramProjects(program.programId)
+
+        Map result = managementUnitService.getProjects(mu.managementUnitId)
         List projects = result?.projects
 
-        List reportOrder = program.config?.programReports?.collect{[category:it.category, description:it.description]} ?: []
+        List reportOrder = mu.config?.programReports?.collect{[category:it.category, description:it.description]} ?: []
 
         // If the program is not visible, there is no point showing the dashboard or sites as both of these rely on
         // data in the search index to produce.
-        boolean programVisible = program.inheritedConfig?.visibility != 'private'
-        List servicesWithScores = null
-        if (programVisible) {
-            servicesWithScores = programService.serviceScores(program.programId, !hasAdminAccess)
-        }
+///todo
+//        boolean programVisible = mu.inheritedConfig?.visibility != 'private'
+          boolean programVisible = true
+          List servicesWithScores = null
+//        if (programVisible) {
+//            servicesWithScores = programService.serviceScores(mu.managementUnitId, !hasAdminAccess)
+//        }
 
         //Aggregate all targeted outcomes of projects
         for(Map project in projects){
             //Verify project.outcomes (from program config) with primaryOutcome and secondaryOutcomes in project.custom.details.outcomes
             Map primaryOutcome = project.custom?.details?.outcomes?.primaryOutcome
             if (primaryOutcome){
-                Map oc =  program.outcomes.find {oc -> oc.outcome == primaryOutcome.description}
+                Map oc =  mu.outcomes.find {oc -> oc.outcome == primaryOutcome.description}
                 if (oc) {
                     oc['targeted'] = true //set program outcomes
                     primaryOutcome.shortDescription = oc['shortDescription']
@@ -79,7 +82,7 @@ class ManagementUnitController {
         }
 
         [about   : [label: 'Management Unit Overview',visible: true, stopBinding: false, type: 'tab',servicesDashboard:[visible: programVisible, planning:false, services:servicesWithScores]],
-         projects: [label: 'MU Reporting', visible: canViewReports, stopBinding: false, type:'tab', projects:projects, reports:program.reports?:[], reportOrder:reportOrder, hideDueDate:true],
+         projects: [label: 'MU Reporting', visible: canViewReports, stopBinding: false, type:'tab', projects:projects, reports:mu.reports?:[], reportOrder:reportOrder, hideDueDate:true],
          admin   : [label: 'MU Admin', visible: hasAdminAccess, type: 'tab']]
     }
 

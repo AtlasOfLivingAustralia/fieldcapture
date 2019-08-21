@@ -24,15 +24,16 @@ class ManagementUnitService {
     Map get(String id) {
         String url = "${grailsApplication.config.ecodata.baseUrl}managementUnit/$id"
         Map mu = webService.getJson(url)
-        Map results = documentService.search(MUId:id)
+        //Todo
+        Map results = documentService.search(managementUnitId:id)
         if (results && results.documents) {
             List categorisedDocs = results.documents.split{it.type == DocumentService.TYPE_LINK}
 
             mu.links = new JSONArray(categorisedDocs[0])
             mu.documents = new JSONArray(categorisedDocs[1])
         }
-
         mu.reports = reportService.findReportsForProgram(id)
+
         mu
     }
 
@@ -166,8 +167,8 @@ class ManagementUnitService {
         }
     }
 
-    Map getProgramProjects(String id) {
-        String url = "${grailsApplication.config.ecodata.baseUrl}program/$id/projects?view=flat"
+    Map getProjects(String id) {
+        String url = "${grailsApplication.config.ecodata.baseUrl}managementUnit/$id/projects?view=flat"
         Map resp = webService.getJson(url)
         return resp
     }
