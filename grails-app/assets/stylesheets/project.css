@@ -211,3 +211,15 @@
 .overview .header-label {
 	font-weight: bold;
 }
+
+.overview .project-outcomes td.header-column {
+	width: 15%;
+	font-weight: bold;
+	background-color: #d9edf7;
+}
+.project-outcomes .outcome {
+	width: 55%;
+}
+.project-outcomes .priority {
+	width: 30%;
+}

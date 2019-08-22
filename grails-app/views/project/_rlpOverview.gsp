@@ -90,37 +90,58 @@
 
     <div class="row-fluid">
         <div class="span12 value">
-            <table class="table table-bordered ">
-                <g:if test="${project.custom?.details?.outcomes?.primaryOutcome}">
+            <g:if test="${project.custom?.details?.outcomes?.primaryOutcome?.description}">
+                <table class="table table-striped project-outcomes">
                     <g:set var="p_outcome" value="${project.custom?.details?.outcomes?.primaryOutcome}"></g:set>
+                    <thead>
                     <tr>
-                        <td>Primary Outcome</td>
-                        <td>${p_outcome.shortDescription}</td>
-                        <td>
-                            <g:each in="${p_outcome.assets}" var="p_asset">
-                                <li>${p_asset}</li>
-                            </g:each>
+                        <td></td>
+                        <th class="outcome">Outcomes</th>
+                        <th class="priority">Primary Investment Priority</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td class="header-column">Primary Outcome</td>
+                        <td class="outcome">${p_outcome.description}</td>
+                        <td class="priority">
+                            <g:if test="${p_outcome.assets?.size() > 1}">
+                                <ul>
+                                    <g:each in="${p_outcome.assets}" var="p_asset">
+                                        <li>${p_asset}</li>
+                                    </g:each>
+                                </ul>
+                            </g:if>
+                            <g:else>
+                                <g:each in="${p_outcome.assets}" var="p_asset">
+                                    <li>${p_asset}</li>
+                                </g:each>
+                            </g:else>
                         </td>
                     </tr>
-                </g:if>
-                <g:if test="${project.custom?.details?.outcomes?.secondaryOutcomes}">
-                    <g:set var="s_outcomes" value="${project.custom?.details?.outcomes?.secondaryOutcomes}"></g:set>
-                    <g:each status="i" in="${s_outcomes}" var="s_outcome">
-                        <tr>
-                            <g:if test="${i == 0}">
-                                <td rowspan="${s_outcomes.size()}">Secondary Outcomes</td>
-                            </g:if>
-                            <td>${s_outcome.shortDescription}</td>
-                            <td>
-                                <g:each in="${s_outcome.assets}" var="s_asset">
-                                    <li>${s_asset}</li>
-                                </g:each>
-                            </td>
-                        </tr>
-                    </g:each>
-                </g:if>
-            </table>
 
+                    <g:if test="${project.custom?.details?.outcomes?.secondaryOutcomes?.find{it.description}}">
+                        <g:set var="s_outcomes" value="${project.custom?.details?.outcomes?.secondaryOutcomes}"></g:set>
+                        <g:each status="i" in="${s_outcomes}" var="s_outcome">
+                            <tr>
+                                <g:if test="${i == 0}">
+                                    <td rowspan="${s_outcomes.size()}" class="header-column">Secondary Outcomes</td>
+                                </g:if>
+                                <td class="outcome">${s_outcome.description}</td>
+                                <td class="priority">
+                                    <g:each in="${s_outcome.assets}" var="s_asset">
+                                        ${s_asset}<br/>
+                                    </g:each>
+                                </td>
+                            </tr>
+                        </g:each>
+                    </g:if>
+                    </tbody>
+                </table>
+            </g:if>
+            <g:else>
+                The MERI Plan is currently being developed. These details will be made available as soon as possible.
+            </g:else>
         </div>
     </div>
 
