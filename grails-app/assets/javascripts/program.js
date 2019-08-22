@@ -290,6 +290,41 @@ var ProgramPageViewModel = function(props, options) {
 
     };
 
+    self.loadProjectSites = function(map) {
+        //find sites of related projects.
+        var searchUrl = options.geoSearchUrl +"?max=10000&geo=true&markBy=false";
+        searchUrl = searchUrl + "&fq=programId:" +self.programId;
+        $.getJSON(searchUrl, function(data) {
+            $.each(data.projects, function(j, project) {
+                var projectName = project.name;
+                if (project.geo && project.geo.length > 0) {
+                    $.each(project.geo, function(k, el) {
+                        var lat = parseFloat(el.loc.lat);
+                        var lon = parseFloat(el.loc.lon);
+                        var mf = {
+                            geometry: {
+                                coordinates: [lon,lat],
+                                type: "Point"
+
+                            },
+                            properties:{
+                                name: projectName,
+                                //work around with leaflet circle - ref maps.js
+                                point_type: 'Circle',
+                                radius: 0, //Need to have a value,but overwritten somewhere
+                                type: "circle",
+                                popupContent: "Project: <a href="+fcConfig.projectUrl +"/" +project.projectId+">"+ projectName + "</a>" +
+                                    "<br/>Site: " + el.siteName
+                            },
+                            type: "Feature"
+                        };
+                        map.addFeature(mf);
+                    });
+                };
+            });
+        });
+    };
+
     var tabs = {
         'about': {
             initialiser: function () {
@@ -327,44 +362,14 @@ var ProgramPageViewModel = function(props, options) {
                 if (self.programSiteId){
                     if (!self.mapFeatures()) {
                         console.log("There was a problem obtaining program site data");
-                    }else{
+                    }
+                    else {
                         map.addFeature(self.mapFeatures())
-                    };
-                };
+                    }
+                }
+                // Temporarily disabled until we can reduce the precision of the site information.
+                //self.loadProjectSites(map);
 
-                //find sites of related projects.
-                var searchUrl = fcConfig.geoSearchUrl +"?max=10000&geo=true&markBy=false";
-                searchUrl = searchUrl + "&fq=programId:" +self.programId;
-                $.getJSON(searchUrl, function(data) {
-                    $.each(data.projects, function(j, project) {
-                        var projectId = project.projectId;
-                        var projectName = project.name;
-                        if (project.geo && project.geo.length > 0) {
-                            $.each(project.geo, function(k, el) {
-                                var lat = parseFloat(el.loc.lat);
-                                var lon = parseFloat(el.loc.lon);
-                                var mf = {
-                                    geometry: {
-                                        coordinates: [lon,lat],
-                                        type: "Point"
-
-                                    },
-                                    properties:{
-                                        name: projectName,
-                                        //work around with leaflet circle - ref maps.js
-                                        point_type: 'Circle',
-                                        radius: 0, //Need to have a value,but overwritten somewhere
-                                        type: "circle",
-                                        popupContent: "Project: <a href="+fcConfig.projectUrl +"/" +project.projectId+">"+ projectName + "</a>" +
-                                                      "<br/>Site: " + el.siteName
-                                    },
-                                    type: "Feature"
-                                };
-                                map.addFeature(mf);
-                            });
-                        };
-                    });
-                });
             }
         },
         'projects': {

@@ -85,9 +85,17 @@ form #start-date, form #end-date {
     background: #D9EDF6;
 }
 
+.outcome.disabled {
+    opacity: 0.35;
+}
+
 #projectOverviewList th {
     white-space: normal;
 }
 .projects-wrapper {
     margin-top: 10px;
+}
+
+#programSiteMap .leaflet-control-container {
+    display:none;
 }
