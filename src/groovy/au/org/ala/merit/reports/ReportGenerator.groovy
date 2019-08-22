@@ -194,11 +194,28 @@ class ReportGenerator {
         DateTime endOfReport = toDate.withZone(DateTimeZone.default).minusDays(DATE_FUDGE_FACTOR)
         int financialYearEnd = DateUtils.alignToFinancialYear(endOfReport).getYear()
         String financialYear = "${financialYearEnd}/${financialYearEnd+1}"
+
+        int periodInMonths = config.reportingPeriodInMonths ?: 0
         String period = config.reportingPeriodInMonths+"M"
+        String periodDescription = ''
+        switch (periodInMonths) {
+            case 0:
+                periodDescription = ""
+                break
+            case 3:
+                periodDescription = "Quarter"
+                break
+            case 6:
+                periodDescription = "Semester"
+                break
+            default:
+                periodDescription = period
+                break
+        }
         // month of year is 0 based, and we are offsetting by 6 months to align with the financial year to get
         // the sequence number of this report based on "number of reports per financial year"
-        int sequenceInFinancialYear = config.reportingPeriodInMonths ? Math.floor(((endOfReport.getMonthOfYear()+5)%12)/config.reportingPeriodInMonths)+1 : 1
+        int sequenceInFinancialYear = periodInMonths ? Math.floor(((endOfReport.getMonthOfYear()+5)%12)/config.reportingPeriodInMonths)+1 : 1
 
-        return sprintf(pattern, sequenceNo, fromDate.toDate(), toDate.toDate(), owner.name, financialYear, period, sequenceInFinancialYear)
+        return sprintf(pattern, sequenceNo, fromDate.toDate(), toDate.toDate(), owner.name, financialYear, periodDescription, sequenceInFinancialYear)
     }
 }
