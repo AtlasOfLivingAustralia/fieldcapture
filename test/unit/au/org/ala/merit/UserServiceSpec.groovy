@@ -126,4 +126,25 @@ class UserServiceSpec extends Specification {
         1 * activityService.get(activityId) >> [activityId:activityId]
 
     }
+
+    def "can Edit Program Blog "() {
+        // This is to avoid the situation where someone attempts to add a new user to a project before they register their account.
+        // If this result is cached, even once they register they won't be able to be added until the cache expires.
+        setup:
+        String userId = '1'
+        String programId = '2'
+
+        when:
+        boolean result = service.canEditProgramBlog(userId,programId)
+
+        then:
+        3 * webService.getJson(_) >> [:]
+
+        result == false
+
+    }
+
+
+
+
 }

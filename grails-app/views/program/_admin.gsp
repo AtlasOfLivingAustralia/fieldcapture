@@ -1,7 +1,8 @@
 <div class="row">
     <div class="nav flex-column nav-pills col-3">
-        <a class="nav-link active" data-toggle="pill" href="#edit-program-details" role="tab">Edit</a>
+        <a class="nav-link active" data-toggle="pill" href="#edit-program-details" id="edit-program-details-tab" role="tab">Edit</a>
         <a class="nav-link" data-toggle="pill" href="#program-permissions" role="tab">Permissions</a>
+        <a class="nav-link" data-toggle="pill" href="#editProgramBlog" id="editProgramBlog-tab" role="tab">Edit Blogs</a>
         <g:if test="${fc.userIsSiteAdmin()}">
                 <a class="nav-link" data-toggle="pill" href="#reporting" role="tab">Reporting</a>
         </g:if>
@@ -44,6 +45,15 @@
                     entityId          : program.programId, user: user]"/>
 
         </div>
+
+        <g:if test="${fc.userIsAlaOrFcAdmin() || blog.editable}">
+            <div class="tab-pane" id="editProgramBlog">
+                <div id="editProjectBlog" class="pill-pane">
+                    <h3>Edit Blogs</h3>
+                    <g:render template="/blog/blogSummary" model="${[blog:program.blog?:[]]}"/>
+                </div>
+            </div>
+        </g:if>
 
         <g:if test="${fc.userIsSiteAdmin()}">
         <div class="tab-pane" id="reporting">

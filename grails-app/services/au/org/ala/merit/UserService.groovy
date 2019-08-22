@@ -206,6 +206,8 @@ class UserService {
         webService.getJson(url)
     }
 
+
+
     def addUserAsRoleToProgram(String userId, String programId, String role) {
         Map result = checkRoles(userId, role)
         if (result.error) {
@@ -288,6 +290,19 @@ class UserService {
         }
 
         userCanEdit
+    }
+
+    /**
+     * Check if the current user has permission to edit blogs of the program.
+     * @param userId
+     * @param programId
+     * @return
+     */
+    boolean canEditProgramBlog(userId, String programId){
+      return  userIsSiteAdmin() ||
+                isUserAdminForProgram(userId, programId) ||
+                isUserEditorForProgram(userId, programId) ||
+                isUserGrantManagerForProgram(userId, programId)
     }
 
     boolean isUserAdminForProject(userId, projectId) {

@@ -19,7 +19,6 @@ class ProgramService {
     ReportService reportService
     ProjectService projectService
 
-
     Map get(String id) {
         String url = "${grailsApplication.config.ecodata.baseUrl}program/$id"
         Map program = webService.getJson(url)
