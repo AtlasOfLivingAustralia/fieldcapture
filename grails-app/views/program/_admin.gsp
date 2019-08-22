@@ -49,7 +49,7 @@
         <g:if test="${fc.userIsAlaOrFcAdmin() || blog.editable}">
             <div class="tab-pane" id="editProgramBlog">
                 <div id="editProjectBlog" class="pill-pane">
-                    <h3>Edit Blogs</h3>
+                    <h3>Edit Blog</h3>
                     <g:render template="/blog/blogSummary" model="${[blog:program.blog?:[]]}"/>
                 </div>
             </div>

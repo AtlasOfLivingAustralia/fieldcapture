@@ -96,20 +96,22 @@
 </g:else>
 
 </div>
+<g:if test="${blog.editable || blog.hasNewsAndEvents || blog.hasProgramStories || blog.hasPhotos}">
 <div class="row-fluid">
     <hr/>
-    <h2>Program blogs</h2>
+    <div class="well-title">Program blog</div>
     <g:if test="${blog.editable}">
-        <a href="${g.createLink(controller: 'blog', action: 'create', params:[programId: program.programId, returnTo:g.createLink(controller: 'program', action:'index', id:program.programId)])}"><button class="btn"><i class="fa fa-newspaper-o"></i> New Entry</button></a>
-        <button id="gotoEditBlog" class="btn"><i class="fa fa-edit"></i> Edit</button>
-        </a>
+        <p>
+            <a href="${g.createLink(controller: 'blog', action: 'create', params:[programId: program.programId, returnTo:g.createLink(controller: 'program', action:'index', id:program.programId)])}"><button class="btn"><i class="fa fa-newspaper-o"></i> New Entry</button></a>
+            <button id="gotoEditBlog" class="btn"><i class="fa fa-edit"></i> Edit</button>
+            </a>
+        </p>
     </g:if>
 
 
     <g:if test="${blog.hasNewsAndEvents}">
         <div class="row-fluid">
-            <h3>News and Events</h3>
-            <hr/>
+            <div class="well-title">News and Events</div>
             <div class="blog-section">
                 <g:render template="/shared/blog" model="${[blog:blog.blogs, type:'News and Events']}"/>
             </div>
@@ -118,8 +120,7 @@
 
     <g:if test="${blog.hasProgramStories}">
         <div class="row-fluid">
-            <h3>Program stories</h3>
-            <hr/>
+            <div class="well-title">Program stories</div>
             <div class="blog-section">
                 <g:render template="/shared/blog" model="${[blog:blog.blogs, type:'Program Stories']}"/>
             </div>
@@ -128,8 +129,7 @@
 
     <g:if test="${blog.hasPhotos}">
         <div class="row-fluid">
-            <h3>Photos</h3>
-            <hr/>
+            <div class="well-title">Photos</div>
             <div class="blog-section">
                 <g:render template="/shared/blog" model="${[blog:blog.blogs, type:'Photo']}"/>
             </div>
@@ -137,7 +137,7 @@
     </g:if>
 
  </div>
-
+</g:if>
 
 <g:if test="${servicesDashboard.visible && servicesDashboard.services}">
     <hr/>
