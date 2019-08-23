@@ -8,11 +8,11 @@
     <script disposition="head">
         var fcConfig = {
             serverUrl: "${grailsApplication.config.grails.serverURL}",
-            managementUnitSaveUrl: "${createLink(action:'ajaxUpdate', id:program.programId)}",
+            managementUnitSaveUrl: "${createLink(action:'ajaxUpdate', id:mu.managementUnitId)}",
             programViewUrl: "${createLink(action:'index')}",
             documentUpdateUrl: "${createLink(controller:"document", action:"documentUpdate")}",
             noImageUrl: "${assetPath(src:'nophoto.png')}",
-            returnToUrl: "${params.returnTo ?: createLink(action:'index', id:program.programId)}"
+            returnToUrl: "${params.returnTo ?: createLink(action:'index', id:mu.managementUnitId)}"
         };
     </script>
     <asset:stylesheet src="common-bs4.css"/>
@@ -28,7 +28,7 @@
                 <g:link controller="home">Home</g:link>
             </li>
             <li class="breadcrumb-item"> Management Unit </li>
-            <li class="breadcrumb-item active"><g:link controller="program" action="index" id="${program.programId}">${program.name}</g:link> </li>
+            <li class="breadcrumb-item active"><g:link controller="ManagementUnit" action="index" id="${mu.managementUnitId}">${mu.name}</g:link> </li>
             <li class="breadcrumb-item active"><g:message code="program.breadcrumb.edit"/></li>
         </ol>
 
@@ -46,11 +46,11 @@
 <asset:script>
 
     $(function () {
-        var program = <fc:modelAsJavascript model="${program}"/>;
+        var mu = <fc:modelAsJavascript model="${mu}"/>;
 
-        var programViewModel = new ProgramViewModel(program, fcConfig);
+        var managementUnitViewModel = new ManagementUnitViewModel(mu, fcConfig);
 
-        ko.applyBindings(programViewModel);
+        ko.applyBindings(managementUnitViewModel);
         $('.validationEngineContainer').validationEngine();
     });
 
@@ -58,7 +58,7 @@
 </asset:script>
 <asset:javascript src="common-bs4.js"/>
 <asset:javascript src="attach-document-no-ui.js"/>
-<asset:javascript src="program.js"/>
+<asset:javascript src="managementUnit.js"/>
 <asset:deferredScripts/>
 
 </body>
