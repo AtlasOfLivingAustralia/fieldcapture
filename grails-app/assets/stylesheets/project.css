@@ -9,6 +9,7 @@
 *= require meriplan.css
 *= require sites.css
 *= require select2/4.0.3/css/select2
+*= require blog
 *= require_self
 */
 
@@ -38,65 +39,6 @@
 	background-color: #02baf2;
 }
 
-.blog-section .blog-entry .floatright {
-	padding: 3px 6px;
-	font-size: 14px;
-	border-radius: 3px;
-	background-color: #a1afbb;
-	color: #fff;
-}
-
-
-.blog-section {
-	border: 2px solid #d6e1e5;
-	border-radius: 4px;
-	padding: 20px;
-	margin-bottom: 30px;
-}
-
-.blog-section .blog-entry {
-	overflow: hidden;
-	margin-bottom: 20px;
-	padding-bottom: 20px;
-	border-bottom: 1px solid #eee;
-}
-
-.blog-section .blog-entry:last-child {
-	margin-bottom: 0;
-	padding-bottom: 0;
-	border: none;
-}
-
-.blog-section .widget-news-right-body {
-	overflow: hidden;
-}
-
-.blog-section h3 {
-	font-size: 18px;
-	margin-top: 0;
-}
-
-.blog-section h3 .floatright {
-	padding: 3px 6px;
-	font-size: 14px;
-	border-radius: 3px;
-	background-color: #a1afbb;
-	color: #fff;
-}
-
-.blog-section .blog-image {
-	width: 300px;
-	height: auto;
-	border-radius: 4px;
-	padding-right: 0;
-	margin-right: 15px;
-}
-
-
-.blog-section .blog-icon {
-	width: 80px;
-	text-align: center;
-}
 .project-report .form-actions {
 	margin-top:0px;
 }

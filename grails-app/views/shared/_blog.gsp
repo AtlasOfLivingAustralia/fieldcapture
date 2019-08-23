@@ -2,10 +2,10 @@
 <g:set var="blogId" value="blog-${fc.attributeSafeValue(value:type)}"/>
 <div id="${blogId}" class="blog"  data-bind="foreach:entries">
     <div class="blog-entry">
-        <img class="blog-image floatleft" data-bind="visible:imageUrl(), attr:{src:imageThumbnailUrl}">
-        <i class="blog-icon floatleft fa fa-4x" data-bind="visible:stockIcon(), css:stockIcon"></i>
+        <img class="blog-image floatleft float-left" data-bind="visible:imageUrl(), attr:{src:imageThumbnailUrl}">
+        <i class="blog-icon floatleft float-left fa fa-4x" data-bind="visible:stockIcon(), css:stockIcon"></i>
         <div class="widget-news-right-body">
-            <h4><span class="title" data-bind="text:title"></span><span class="floatright" data-bind="text:formattedDate"></span></h4>
+            <h4><span class="title" data-bind="text:title"></span><span class="floatright float-right" data-bind="text:formattedDate"></span></h4>
             <div class="text" data-bind="html:content.markdownToHtml()"></div> <a data-bind="visible:viewMoreUrl, attr:{href:viewMoreUrl}" aria-label="More information"><i class="fa fa-arrow-circle-o-right"></i></a>
         </div>
     </div>
