@@ -10,7 +10,7 @@ import static ReportService.ReportMode
  */
 class ManagementUnitController {
 
-    static allowedMethods = [regenerateProgramReports: "POST", ajaxDelete: "POST", delete: "POST", ajaxUpdate: "POST"]
+    static allowedMethods = [regenerateManagementUnitReports: "POST", ajaxDelete: "POST", delete: "POST", ajaxUpdate: "POST"]
 
     def managementUnitService, programService, searchService, documentService, userService, roleService, commonService, webService, siteService
 
@@ -59,13 +59,13 @@ class ManagementUnitController {
 
         // If the program is not visible, there is no point showing the dashboard or sites as both of these rely on
         // data in the search index to produce.
-///todo
-//        boolean programVisible = mu.inheritedConfig?.visibility != 'private'
-          boolean programVisible = true
-          List servicesWithScores = null
-//        if (programVisible) {
-//            servicesWithScores = programService.serviceScores(mu.managementUnitId, !hasAdminAccess)
-//        }
+
+        boolean managementUnitVisible = mu.inheritedConfig?.visibility != 'private'
+
+        List servicesWithScores = null
+        if (managementUnitVisible) {
+            servicesWithScores = managementUnitService.serviceScores(mu.managementUnitId, !hasAdminAccess)
+        }
 
         //Aggregate all targeted outcomes of projects
         for(Map project in projects){
@@ -82,7 +82,7 @@ class ManagementUnitController {
 
         [about   : [label: 'Management Unit Overview',visible: true, stopBinding: false, type: 'tab',
                     mu: mu,
-                    servicesDashboard:[visible: programVisible, planning:false, services:servicesWithScores]],
+                    servicesDashboard:[visible: managementUnitVisible, planning:false, services:servicesWithScores]],
          projects: [label: 'MU Reporting', visible: canViewReports, stopBinding: false, type:'tab', projects:projects, reports:mu.reports?:[], reportOrder:reportOrder, hideDueDate:true],
          admin   : [label: 'MU Admin', visible: hasAdminAccess, type: 'tab', mu:mu]
         ]
@@ -91,17 +91,17 @@ class ManagementUnitController {
 
     @PreAuthorise(accessLevel='siteAdmin')
     def create() {
-        [program: [:], isNameEditable:true]
+        [managementUnit: [:], isNameEditable:true]
     }
 
     @PreAuthorise(accessLevel='admin')
     def edit(String id) {
-        Map program = programService.get(id)
+        Map mu = managementUnitService.get(id)
 
-        if (!program || program.error) {
-            programNotFound(id, program)
+        if (!mu || mu.error) {
+            managementUnitNotFound(id, mu)
         } else {
-            [program: program, isNameEditable:userService.userIsAlaOrFcAdmin()]
+            [mu: mu, isNameEditable:userService.userIsAlaOrFcAdmin()]
         }
     }
 
@@ -189,8 +189,8 @@ class ManagementUnitController {
      * Redirects to the home page with an error message in flash scope.
      * @param response the response that triggered this method call.
      */
-    private void programNotFound(id, response) {
-        flash.message = "No program found with id: ${id}"
+    private void managementUnitNotFound(id, response) {
+        flash.message = "No management unit found with id: ${id}"
         if (response?.error) {
             flash.message += "<br/>${response.error}"
         }

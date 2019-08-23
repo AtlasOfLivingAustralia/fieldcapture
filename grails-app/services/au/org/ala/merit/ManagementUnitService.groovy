@@ -40,14 +40,14 @@ class ManagementUnitService {
     Map getByName(String name) {
 
         String encodedName = URLEncoder.encode(name, 'UTF-8')
-        String url = "${grailsApplication.config.ecodata.baseUrl}program/findByName?name=$encodedName"
-        Map program = webService.getJson(url)
+        String url = "${grailsApplication.config.ecodata.baseUrl}managementUnit/findByName?name=$encodedName"
+        Map mu = webService.getJson(url)
 
-        if(program && program.statusCode == 404) {
-            program = [:]
+        if(mu && mu.statusCode == 404) {
+            mu = [:]
         }
 
-        return program
+        return mu
     }
 
     String validate(Map props, String programId) {
@@ -94,11 +94,11 @@ class ManagementUnitService {
 
     }
 
-    List serviceScores(String programId, boolean approvedActivitiesOnly = true) {
+    List serviceScores(String managementUnitId, boolean approvedActivitiesOnly = true) {
         List<Map> allServices = metadataService.getProjectServices()
         List scoreIds = allServices.collect{it.scores?.collect{score -> score.scoreId}}.flatten()
 
-        Map scoreResults = reportService.targetsForScoreIds(scoreIds, ["programId:${programId}"], approvedActivitiesOnly)
+        Map scoreResults = reportService.targetsForScoreIds(scoreIds, ["managementUnitId:${managementUnitId}"], approvedActivitiesOnly)
 
         List deliveredServices = []
         allServices.each { Map service ->
@@ -136,29 +136,29 @@ class ManagementUnitService {
         regenerateProjectReports(program, projectReportCategories)
     }
 
-    private void regenerateProgramReports(Map program, List<String> reportCategories = null) {
+    private void regenerateManagementUnitReports(Map managementUnit, List<String> reportCategories = null) {
 
-        List programReportConfig = program.config?.programReports
+        List managementUnitReportConfig = managementUnit.config?.managementUnitReports
         ReportOwner owner = new ReportOwner(
-                id:[programId:program.programId],
-                name:program.name,
-                periodStart:program.startDate,
-                periodEnd:program.endDate
+                id:[managementUnitId:managementUnit.managementUnitId],
+                name:managementUnit.name,
+                periodStart:managementUnit.startDate,
+                periodEnd:managementUnit.endDate
         )
-        List toRegenerate = programReportConfig.findAll{it.category in reportCategories}
+        List toRegenerate = managementUnitReportConfig.findAll{it.category in reportCategories}
         toRegenerate?.each {
             ReportConfig reportConfig = new ReportConfig(it)
-            List relevantReports = program.reports?.findAll{it.category == reportConfig.category}
+            List relevantReports = managementUnit.reports?.findAll{it.category == reportConfig.category}
             reportService.regenerateReports(relevantReports, reportConfig, owner)
         }
     }
 
-    private void regenerateProjectReports(Map program, List<String> reportCategories = null) {
+    private void regenerateProjectReports(Map managementUnit, List<String> reportCategories = null) {
 
-        List projectReportConfig = program.config?.projectReports
+        List projectReportConfig = managementUnit.config?.projectReports
         List toRegenerate = projectReportConfig.findAll{it.category in reportCategories}
 
-        Map projects = getProgramProjects(program.programId)
+        Map projects = getProjects(managementUnit.managementUnitId)
         toRegenerate?.each {
             projects?.projects?.each{ project ->
                 project.reports = reportService.getReportsForProject(project.projectId)
@@ -223,7 +223,7 @@ class ManagementUnitService {
     def addUserAsRoleToProgram(String userId, String programId, String role) {
 
         Map resp = userService.addUserAsRoleToProgram(userId, programId, role)
-        Map projects = getProgramProjects(programId)
+        Map projects = getProjects(programId)
         projects?.projects?.each { project ->
             if (project.isMERIT) {
                 userService.addUserAsRoleToProject(userId, project.projectId, role)
@@ -242,7 +242,7 @@ class ManagementUnitService {
      */
     def removeUserWithRoleFromProgram(String userId, String programId, String role) {
         userService.removeUserWithRoleFromProgram(userId, programId, role)
-        Map projects = getProgramProjects(programId)
+        Map projects = getProjects(programId)
         projects?.projects?.each { project ->
             if (project.isMERIT) {
                 userService.removeUserWithRole(project.projectId, userId, role)

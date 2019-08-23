@@ -54,11 +54,7 @@
         </div>
 
         <div class="header-text">
-            <h2>${managementUnit.name}</h2>
-            <g:if test="${managementUnit.organisation}">
-                            ${managementUnit.organisation}
-
-            </g:if>
+           <h2>${managementUnit.name}</h2>
         </div>
     </div>
 
