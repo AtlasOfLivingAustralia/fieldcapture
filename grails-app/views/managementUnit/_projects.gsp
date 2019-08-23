@@ -25,7 +25,7 @@
 </g:if>
 <g:else>
     <div class="row">
-        <span class="col-sm"><h4>${program.name} is not currently running any projects.</h4></span>
+        <span class="col-sm"><h4>${program?.name} is not currently running any projects.</h4></span>
     </div>
 </g:else>
 

@@ -17,7 +17,7 @@
             approveReportUrl: "${createLink(action:"ajaxApproveReport", id:managementUnit.managementUnitId)}",
             submitReportUrl: "${createLink(action:"ajaxSubmitReport", id:managementUnit.managementUnitId)}",
             rejectReportUrl: "${createLink(action:"ajaxRejectReport", id:managementUnit.managementUnitId)}",
-            regenerateProgramReportsUrl: "${createLink(action:"regenerateProgramReports", id:managementUnit.managementUnitId)}",
+            regenerateManagementUnitReportsUrl: "${createLink(action:"regenerateManagementUnitReports", id:managementUnit.managementUnitId)}",
             managementUnitSaveUrl: "${createLink(action:'ajaxUpdate', id:managementUnit.managementUnitId)}",
             geoSearchUrl: "${createLink(controller: 'home', action:'geoService')}",
             projectUrl: "${createLink(controller: "project", action:'index')}",
@@ -92,7 +92,7 @@
     $(function () {
         var managementUnit =<fc:modelAsJavascript model="${managementUnit}"/>;
         var config = _.extend({reportingConfigSelector:'#reporting form'}, fcConfig);
-        var managementUnitViewModel = new ProgramPageViewModel(managementUnit, config);
+        var managementUnitViewModel = new ManagementUnitPageViewModel(managementUnit, config);
 
         ko.applyBindings(managementUnitViewModel);
         managementUnitViewModel.initialise(); // Needs to happen after data binding.

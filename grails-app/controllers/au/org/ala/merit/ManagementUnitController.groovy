@@ -14,7 +14,6 @@ class ManagementUnitController {
 
     def managementUnitService, programService, searchService, documentService, userService, roleService, commonService, webService, siteService
 
-    ManagementUnitService muService
     ProjectService projectService
     ReportService reportService
     ActivityService activityService
@@ -38,12 +37,12 @@ class ManagementUnitController {
             if (mapFeatures)
                 mu.mapFeatures = mapFeatures
 
-            [managementUnit       : mu,
-             roles         : roles,
-             user          : user,
-             isAdmin       : muRole?.role == RoleService.PROJECT_ADMIN_ROLE,
-             isGrantManager: muRole?.role == RoleService.GRANT_MANAGER_ROLE,
-             content       : content(mu, muRole)
+            [managementUnit     : mu,
+             roles              : roles,
+             user               : user,
+             isAdmin            : muRole?.role == RoleService.PROJECT_ADMIN_ROLE,
+             isGrantManager     : muRole?.role == RoleService.GRANT_MANAGER_ROLE,
+             content            : content(mu, muRole)
              ]
         }
     }
@@ -81,9 +80,13 @@ class ManagementUnitController {
             }
         }
 
-        [about   : [label: 'Management Unit Overview',visible: true, stopBinding: false, type: 'tab',servicesDashboard:[visible: programVisible, planning:false, services:servicesWithScores]],
+        [about   : [label: 'Management Unit Overview',visible: true, stopBinding: false, type: 'tab',
+                    mu: mu,
+                    servicesDashboard:[visible: programVisible, planning:false, services:servicesWithScores]],
          projects: [label: 'MU Reporting', visible: canViewReports, stopBinding: false, type:'tab', projects:projects, reports:mu.reports?:[], reportOrder:reportOrder, hideDueDate:true],
-         admin   : [label: 'MU Admin', visible: hasAdminAccess, type: 'tab']]
+         admin   : [label: 'MU Admin', visible: hasAdminAccess, type: 'tab', mu:mu]
+        ]
+
     }
 
     @PreAuthorise(accessLevel='siteAdmin')

@@ -14,7 +14,7 @@
  * validationContainerSelector, managementUnitDeleteUrl, returnToUrl, managementUnitEditUrl, managementUnitViewUrl
  * @constructor
  */
-ManagementUnitViewModelViewModel = function (props, options) {
+ManagementUnitViewModel = function (props, options) {
     var self = $.extend(this, new Documents(options));
 
     var defaults = {
@@ -127,9 +127,9 @@ ManagementUnitViewModelViewModel = function (props, options) {
     return self;
 };
 
-var ProgramPageViewModel = function(props, options) {
+var ManagementUnitPageViewModel = function(props, options) {
     var self = this;
-    _.extend(self, new ProgramViewModel(props, options));
+    _.extend(self, new ManagementUnitViewModel(props, options));
 
     var config = props.config || {};
 
@@ -157,15 +157,15 @@ var ProgramPageViewModel = function(props, options) {
     };
 
     var coreServicesReportCategory = 'Core Services Reporting';
-    var getProgramReportConfig = function() {
-        if (!config.programReports || config.programReports.length == 0) {
-            config.programReports = [{type:'Administrative', category:coreServicesReportCategory}];
+    var getManagementUnitReportConfig = function() {
+        if (!config.anagementUnitReports || config.managementUnitReports.length == 0) {
+            config.managementUnitReports = [{type:'Administrative', category:coreServicesReportCategory}];
         }
-        return config.programReports[0];
+        return config.managementUnitReports[0];
     };
 
     var activityReportConfig = getActivityReportConfig();
-    var programReportConfig = getProgramReportConfig();
+    var managementUnitReportConfig = getManagementUnitReportConfig();
 
     self.coreServicesOptions = [
         {label:'Monthly (First period ends 31 July 2018)', firstReportingPeriodEnd:'2018-07-31T14:00:00Z', reportingPeriodInMonths:1},
@@ -174,7 +174,7 @@ var ProgramPageViewModel = function(props, options) {
         {label:"Quarterly - Group B (First period ends 31 August 2018)", firstReportingPeriodEnd:'2018-08-31T14:00:00Z', reportingPeriodInMonths:3}];
 
     var currentOption = _.find(self.coreServicesOptions, function(option) {
-        return option.firstReportingPeriodEnd == programReportConfig.firstReportingPeriodEnd && option.reportingPeriodInMonths == programReportConfig.reportingPeriodInMonths;
+        return option.firstReportingPeriodEnd == managementUnitReportConfig.firstReportingPeriodEnd && option.reportingPeriodInMonths == managementUnitReportConfig.reportingPeriodInMonths;
     });
     self.coreServicesPeriod = ko.observable(currentOption ? currentOption.label : null);
 
@@ -190,12 +190,12 @@ var ProgramPageViewModel = function(props, options) {
     self.startDate = ko.observable(props.startDate).extend({simpleDate:false});
     self.endDate = ko.observable(props.endDate).extend({simpleDate:false});
 
-    self.programReportCategories = ko.computed(function() {
-        return _.map(config.programReports || [], function(report) {
+    self.managementUnitReportCategories = ko.computed(function() {
+        return _.map(config.managementUnitReports || [], function(report) {
             return report.category;
         });
     });
-    self.selectedProgramReportCategories = ko.observableArray();
+    self.selectedManagementUnitReportCategories = ko.observableArray();
 
     self.projectReportCategories = ko.computed(function() {
        return _.map(config.projectReports || [], function(report) {
@@ -250,7 +250,7 @@ var ProgramPageViewModel = function(props, options) {
 
     self.regenerateReportsByCategory = function() {
         blockUIWithMessage("Regenerating reports...");
-        self.regenerateReports(self.selectedProgramReportCategories(), self.selectedProjectReportCategories()).done(function() {
+        self.regenerateReports(self.selectedManagementUnitReportCategories(), self.selectedProjectReportCategories()).done(function() {
             blockUIWithMessage("Reports successfully regenerated, reloading page...");
             setTimeout(function(){
                 window.location.reload();
@@ -261,21 +261,21 @@ var ProgramPageViewModel = function(props, options) {
         });
     };
 
-    self.regenerateReports = function(programReportCategories, projectReportCategories) {
-        var data = JSON.stringify({programReportCategories:programReportCategories, projectReportCategories:projectReportCategories});
+    self.regenerateReports = function(managementUnitReportCategories, projectReportCategories) {
+        var data = JSON.stringify({managementUnitReportCategories:managementUnitReportCategories, projectReportCategories:projectReportCategories});
         return $.ajax({
-            url: options.regenerateProgramReportsUrl,
+            url: options.regenerateManagementUnitReportsUrl,
             type: 'POST',
             data: data,
             dataType:'json',
             contentType: 'application/json'
         }).fail(function() {
-            bootbox.alert("Failed to regenerate program reports");
+            bootbox.alert("Failed to regenerate management unit reports");
         });
 
     };
 
-    self.saveProgramConfiguration = function() {
+    self.saveManagementUnitConfiguration = function() {
 
         try {
             config = JSON.parse(self.config());
@@ -285,7 +285,7 @@ var ProgramPageViewModel = function(props, options) {
             return;
         }
         self.saveConfig(config).done(function (data) {
-            bootbox.alert("Program configuration saved");
+            bootbox.alert("Management Unit configuration saved");
         });
 
     };

@@ -22,17 +22,17 @@
     <div class="col-md-8" >
         <span data-bind="html:description.markdownToHtml()"></span>
     </div>
-    <div data-bind="visible:programSiteId" class="col-md-4">
-        <m:map id="programSiteMap" width="100%" height="300px"></m:map>
+    <div data-bind="visible:managementUnitSiteId" class="col-md-4">
+        <m:map id="managementUnitSiteMap" width="100%" height="300px"></m:map>
     </div>
 </div>
 
 
-<g:if test="${program.outcomes}">
+<g:if test="${mu.outcomes}">
     <div class="well">
         <div class="well-title">The Service Provider is addressing these RLP outcomes</div>
         <div class="row outcomes no-gutters">
-            <g:each in="${program.outcomes}" var="outcome" >
+            <g:each in="${mu.outcomes}" var="outcome" >
                 <g:set var="outcomeClass" value="${outcome.targeted ? 'targeted' :''}"/>
                 <div class="col-md">
                     <div class="outcome-wrapper h-100">
@@ -92,7 +92,7 @@
 </g:if>
 <g:else>
     <div class="row">
-        <span class="col-sm"><h4>${program.name} is not currently running any projects.</h4></span>
+        <span class="col-sm"><h4>${mu.name} is not currently running any projects.</h4></span>
     </div>
 </g:else>
 
