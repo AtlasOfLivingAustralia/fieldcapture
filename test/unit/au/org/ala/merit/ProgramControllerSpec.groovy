@@ -49,6 +49,24 @@ class ProgramControllerSpec extends Specification {
         model.reportHeaderTemplate == '/program/rlpProgramReportHeader'
     }
 
+    def "unauthenticated users should only see the program overview"() {
+        setup:
+        String programId = 'p1'
+        userService.getUser() >> null
+        programService.get(programId) >> [programId:programId, name:"test"]
+        userService.getMembersOfProgram(programId) >> [members:[]]
+
+        when:
+        Map model = controller.index(programId)
+
+        then:
+        model.content.about.visible == true
+        model.content.projects.visible == false
+        model.content.sites.visible == false
+        model.content.admin.visible == false
+
+    }
+
     def "when editing a program report, the model will be customized for program reporting"() {
         setup:
         setupProgramAdmin()

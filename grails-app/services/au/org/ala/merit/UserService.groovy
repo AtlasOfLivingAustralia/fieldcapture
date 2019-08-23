@@ -231,7 +231,7 @@ class UserService {
         String url = grailsApplication.config.ecodata.baseUrl + "permissions/getUserRolesForUserId/${userId}"
         Map result = webService.getJson(url)
 
-        result.roles ?: []
+        result?.roles ?: []
     }
 
     boolean isUserAdminForProgram(String userId, String programId) {
@@ -276,20 +276,18 @@ class UserService {
     }
 
     /**
-     * Does the current user have permission to view the requested program report?
-     * Checks for the ADMIN role in CAS and then checks the UserPermission
-     * lookup in ecodata.
+     * Returns true if the current user has permission to view non-public program details such as the sites and
+     * reporting tabs.
      */
-    boolean canUserViewProgramReport(String userId, String programId) {
-        boolean userCanEdit
+    boolean canUserViewNonPublicProgramInformation(String userId, String programId) {
+        boolean userCanView
         if (userIsSiteAdmin() || userHasReadOnlyAccess()) {
-            userCanEdit = true
+            userCanView = true
         } else {
-            Map programRole = getProgramRole(userId, programId)
-            userCanEdit = (programRole != null) // Any assigned role on the program is OK?
+            userCanView = canUserEditProgramReport(userId, programId)
         }
 
-        userCanEdit
+        userCanView
     }
 
     /**

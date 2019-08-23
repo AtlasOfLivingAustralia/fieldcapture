@@ -17,7 +17,7 @@ class UserServiceSpec extends Specification {
 
     def setup() {
         def grailsApplication = [:]
-        grailsApplication.config = [ecodata:[baseUrl:"/"], security:[cas:[officerRole:'FC_OFFICER', adminRole:'FC_ADMIN', alaAdminRole:'ADMIN']]]
+        grailsApplication.config = [ecodata:[baseUrl:"/"], security:[cas:[officerRole:'FC_OFFICER', adminRole:'FC_ADMIN', alaAdminRole:'ADMIN', readOnlyOfficerRole:'FC_READ_ONLY']]]
         service.grailsApplication = grailsApplication
         service.webService = webService
         service.authService = authService
@@ -145,6 +145,37 @@ class UserServiceSpec extends Specification {
     }
 
 
+    def "Only authorized users should be able to view non-public program information"(boolean readOnlyRole, boolean fcOfficerRole, boolean fcAdminRole, String programEditorRole, boolean expectedResult) {
+        setup:
+        String userId = 'u1'
+        String programId = 'p1'
+        Map programRole = [:]
+        if (programEditorRole) {
+            programRole = [entityId:programId, entityType:'au.org.ala.ecodata.Program', userId:userId, accessLevel:programEditorRole]
+        }
 
+        when:
+        boolean canView = service.canUserViewNonPublicProgramInformation(userId, programId)
+        println canView
+
+        then:
+        canView == expectedResult
+
+        _ * authService.userInRole('FC_READ_ONLY') >> readOnlyRole
+        _ * authService.userInRole('FC_OFFICER') >> fcOfficerRole
+        _ * authService.userInRole('FC_ADMIN') >> fcAdminRole
+        _ * webService.getJson("/permissions/getUserRolesForUserId/${userId}") >> [roles:[programRole]]
+
+
+        where:
+        readOnlyRole | fcOfficerRole | fcAdminRole | programEditorRole | expectedResult
+        false        | false         | false       | 'editor'         | true
+        false        | false         | false       | 'admin'          | true
+        false        | false         | false       | null             | false
+        true         | false         | false       | null             | true
+        false        | true          | false       | null             | true
+        false        | false         | true        | null             | true
+
+    }
 
 }

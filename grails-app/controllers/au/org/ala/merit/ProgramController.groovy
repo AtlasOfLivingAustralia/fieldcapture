@@ -49,10 +49,9 @@ class ProgramController {
 
     protected Map content(Map program, Map userRole) {
         boolean hasAdminAccess = userService.userIsSiteAdmin() || userRole?.role == RoleService.PROJECT_ADMIN_ROLE
-        def user = userService.getUser()
         boolean hasEditAccessOfBlog = userService.canEditProgramBlog(userService.getUser()?.userId, program.programId)
 
-        boolean canViewReports = hasAdminAccess || userService.userHasReadOnlyAccess() || userRole?.role == RoleService.PROJECT_EDITOR_ROLE
+        boolean canViewNonPublicTabs = userService.canUserViewNonPublicProgramInformation(userService.getUser()?.userId, program.programId)
         Map result = programService.getProgramProjects(program.programId)
         List projects = result?.projects
         List blogs = blogService.getBlog(program)
@@ -90,8 +89,8 @@ class ProgramController {
                            hasPhotos: hasPhotos
                           ],
                     servicesDashboard:[visible: programVisible, planning:false, services:servicesWithScores]],
-         projects: [label: 'MU Reporting', visible: canViewReports, stopBinding: false, type:'tab', projects:projects, reports:program.reports?:[], reportOrder:reportOrder, hideDueDate:true],
-         sites   : [label: 'MU Sites', visible: canViewReports, stopBinding: true, type:'tab'],
+         projects: [label: 'MU Reporting', visible: canViewNonPublicTabs, stopBinding: false, type:'tab', projects:projects, reports:program.reports?:[], reportOrder:reportOrder, hideDueDate:true],
+         sites   : [label: 'MU Sites', visible: canViewNonPublicTabs, stopBinding: true, type:'tab'],
          admin   : [label: 'MU Admin', visible: hasAdminAccess, type: 'tab'],
                     blog: [
                       editable: hasEditAccessOfBlog
