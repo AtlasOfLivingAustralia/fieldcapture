@@ -155,13 +155,14 @@
 }
 
 .overview .project-outcomes td.header-column {
-	width: 15%;
+	width: 5%;
 	font-weight: bold;
-	background-color: #d9edf7;
+	background-color: #f5f5f5;
+	word-wrap: normal;
 }
 .project-outcomes .outcome {
-	width: 55%;
+	width: 60%;
 }
 .project-outcomes .priority {
-	width: 30%;
+	width: 35%;
 }

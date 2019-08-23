@@ -91,11 +91,11 @@
     <div class="row-fluid">
         <div class="span12 value">
             <g:if test="${project.custom?.details?.outcomes?.primaryOutcome?.description}">
-                <table class="table table-striped project-outcomes">
+                <table class="table project-outcomes">
                     <g:set var="p_outcome" value="${project.custom?.details?.outcomes?.primaryOutcome}"></g:set>
                     <thead>
                     <tr>
-                        <td></td>
+                        <th></th>
                         <th class="outcome">Outcomes</th>
                         <th class="priority">Primary Investment Priority</th>
                     </tr>
