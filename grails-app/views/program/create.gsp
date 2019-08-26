@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta name="layout" content="nrm_bs4"/>
-    <title>Edit | Program | MERIT</title>
+    <title>Create | Program | MERIT</title>
     <script type="text/javascript" src="${grailsApplication.config.google.maps.url}"></script>
     <script disposition="head">
         var fcConfig = {

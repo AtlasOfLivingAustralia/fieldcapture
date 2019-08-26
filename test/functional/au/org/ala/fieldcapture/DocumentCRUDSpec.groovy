@@ -8,7 +8,7 @@ import spock.lang.Shared
 import spock.lang.Stepwise
 
 @Stepwise
-public class DocumentCRUDSpec extends FieldcaptureFunctionalTest {
+public class DocumentCRUDSpec extends CasIntegrationTest {
 
     def setupSpec() {
         logout(browser)

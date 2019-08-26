@@ -20,7 +20,20 @@ class ImportProjectsSpec extends StubbedCasSpec {
 
         and: "The data is relevant to the projects loaded"
         List rows = projectResults()
+        println rows
         rows.size() == 2
+
+        when:
+        importProjects()
+
+        then:
+        waitFor{loadComplete()}
+
+        and:
+        List rows2 = projectResults()
+        println rows2
+
+        rows2.size() == 2
 
 
 
