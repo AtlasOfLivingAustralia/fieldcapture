@@ -18,8 +18,6 @@ class ManagementUnitService {
     DocumentService documentService
     ReportService reportService
     ProjectService projectService
-    ProgramService programService
-
 
     Map get(String id) {
         String url = "${grailsApplication.config.ecodata.baseUrl}managementUnit/$id"
@@ -32,7 +30,7 @@ class ManagementUnitService {
             mu.links = new JSONArray(categorisedDocs[0])
             mu.documents = new JSONArray(categorisedDocs[1])
         }
-        mu.reports = reportService.findReportsForProgram(id)
+        mu.reports = reportService.findReportsForManagementUnit(id)
 
         mu
     }
@@ -79,16 +77,16 @@ class ManagementUnitService {
         error
     }
 
-    Map update(String id, Map program) {
+    Map update(String id, Map mu) {
         Map result = [:]
 
-        def error = validate(program, id)
+        def error = validate(mu, id)
         if (error) {
             result.error = error
             result.detail = ''
         } else {
-            String url = "${grailsApplication.config.ecodata.baseUrl}program/$id"
-            result = webService.doPost(url, program)
+            String url = "${grailsApplication.config.ecodata.baseUrl}managementUnit/$id"
+            result = webService.doPost(url, mu)
         }
         result
 
@@ -129,10 +127,10 @@ class ManagementUnitService {
     }
 
 
-    void regenerateReports(String id, List<String> programReportCategories = null, List<String> projectReportCategories = null) {
+    void regenerateReports(String id, List<String> managementUnitReportCategories = null, List<String> projectReportCategories = null) {
         Map program = get(id)
 
-        regenerateProgramReports(program, programReportCategories)
+        regenerateManagementUnitReports(program, managementUnitReportCategories)
         regenerateProjectReports(program, projectReportCategories)
     }
 
@@ -206,24 +204,23 @@ class ManagementUnitService {
     }
 
 
-    List getMembersOfProgram(String programId) {
-        Map resp = userService.getMembersOfProgram(programId)
+    List getMembersOfManagementUnit(String programId) {
+        Map resp = userService.getMembersOfManagementUnit(programId)
 
         resp?.members ?: []
     }
 
     /**
-     * Adds a user with the supplied role to the identified program.
-     * Adds the same user with the same role to all of the program's projects.
+     * Adds a user with the supplied role to the identified management unit.
+     * Adds the same user with the same role to all of the management unit's projects.
      *
      * @param userId the id of the user to add permissions for.
-     * @param programId the program to add permissions for.
+     * @param anagementUnitId the program to add permissions for.
      * @param role the role to assign to the user.
      */
-    def addUserAsRoleToProgram(String userId, String programId, String role) {
-
-        Map resp = userService.addUserAsRoleToProgram(userId, programId, role)
-        Map projects = getProjects(programId)
+    def addUserAsRoleToManagementUnit(String userId, String managementUnitId, String role) {
+        Map resp = userService.addUserAsRoleToManagementUnit(userId, managementUnitId, role)
+        Map projects = getProjects(managementUnitId)
         projects?.projects?.each { project ->
             if (project.isMERIT) {
                 userService.addUserAsRoleToProject(userId, project.projectId, role)
@@ -240,9 +237,9 @@ class ManagementUnitService {
      * @param programId the program to remove permissions for.
 
      */
-    def removeUserWithRoleFromProgram(String userId, String programId, String role) {
-        userService.removeUserWithRoleFromProgram(userId, programId, role)
-        Map projects = getProjects(programId)
+    def removeUserWithRoleFromManagementUnit(String userId, String managementUnitId, String role) {
+        userService.removeUserWithRoleFromManagementUnit(userId, managementUnitId, role)
+        Map projects = getProjects(managementUnitId)
         projects?.projects?.each { project ->
             if (project.isMERIT) {
                 userService.removeUserWithRole(project.projectId, userId, role)

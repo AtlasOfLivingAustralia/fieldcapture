@@ -31,7 +31,7 @@ ManagementUnitViewModel = function (props, options) {
     self.mapFeatures =  ko.observable(props.mapFeatures);
     self.projects = props.projects;
 
-    self.deleteProgram = function () {
+    self.deleteManagementUnit = function () {
         if (window.confirm("Delete this managementUnit?  Are you sure?")) {
             $.post(config.managementUnitDeleteUrl).complete(function () {
                     window.location = config.returnToUrl;
@@ -158,7 +158,7 @@ var ManagementUnitPageViewModel = function(props, options) {
 
     var coreServicesReportCategory = 'Core Services Reporting';
     var getManagementUnitReportConfig = function() {
-        if (!config.anagementUnitReports || config.managementUnitReports.length == 0) {
+        if (!config.managementUnitReports || config.managementUnitReports.length == 0) {
             config.managementUnitReports = [{type:'Administrative', category:coreServicesReportCategory}];
         }
         return config.managementUnitReports[0];
@@ -210,8 +210,8 @@ var ManagementUnitPageViewModel = function(props, options) {
             var selectedCoreServicesPeriod = _.find(self.coreServicesOptions, function(option) {
                 return option.label == self.coreServicesPeriod();
             });
-            programReportConfig.firstReportingPeriodEnd = selectedCoreServicesPeriod.firstReportingPeriodEnd;
-            programReportConfig.reportingPeriodInMonths = selectedCoreServicesPeriod.reportingPeriodInMonths;
+            managementUnitReportConfig.firstReportingPeriodEnd = selectedCoreServicesPeriod.firstReportingPeriodEnd;
+            managementUnitReportConfig.reportingPeriodInMonths = selectedCoreServicesPeriod.reportingPeriodInMonths;
 
             var selectedActivityReportingPeriod = _.find(self.activityReportingOptions, function(option) {
                 return option.label == self.activityReportingPeriod();
@@ -238,7 +238,7 @@ var ManagementUnitPageViewModel = function(props, options) {
             endDate:self.endDate()
         };
         return $.ajax({
-            url: options.programSaveUrl,
+            url: options.managementUnitSaveUrl,
             type: 'POST',
             data: JSON.stringify(json),
             dataType:'json',

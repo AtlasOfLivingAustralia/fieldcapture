@@ -1,26 +1,26 @@
 <form class="validationEngineContainer">
 
-    <h4 class="block-header"><g:message code="program.details.header"/></h4>
+    <h4 class="block-header"><g:message code="managementUnit.details.header"/></h4>
 
     <div class="form-group row required">
         <label class="col-form-label col-sm-3" for="name">Name: <fc:iconHelp><g:message
-                code="program.name.help"/></fc:iconHelp></label>
+                code="managementUnit.name.help"/></fc:iconHelp></label>
 
         <div class="col-sm-9">
             <input type="text" id="name" class="form-control" data-bind="value:name"
                    data-validation-engine="validate[required]"
-                   placeholder="${g.message(code: 'program.name.placeholder')}" ${!isNameEditable ? 'readonly="readonly"' : ''}>
+                   placeholder="${g.message(code: 'managementUnit.name.placeholder')}" ${!isNameEditable ? 'readonly="readonly"' : ''}>
         </div>
     </div>
 
     <div class="form-group row required">
         <label class="col-form-label col-sm-3" for="description">Description: <fc:iconHelp><g:message
-                code="program.description.help"/></fc:iconHelp></label>
+                code="managementUnit.description.help"/></fc:iconHelp></label>
 
         <div class="col-sm-9">
             <textarea rows="3" class="form-control" data-bind="value:description"
                       data-validation-engine="validate[required]" id="description"
-                      placeholder="${g.message(code: 'program.description.placeholder')}"></textarea>
+                      placeholder="${g.message(code: 'managementUnit.description.placeholder')}"></textarea>
             <br/><button class="btn popup-edit" data-bind="click:editDescription"><i
                 class="icon-edit"></i> Edit with Markdown Editor</button>
         </div>
@@ -28,12 +28,12 @@
 
     <div class="form-group row">
         <label class="col-form-label col-sm-3" for="url">Web Site URL: <fc:iconHelp><g:message
-                code="program.webUrl.help"/></fc:iconHelp></label>
+                code="managementUnit.webUrl.help"/></fc:iconHelp></label>
 
         <div class="controls col-sm-9">
             <input type="text" class="form-control" id="url" data-bind="value:url"
                    data-validation-engine="validate[custom[url]]"
-                   placeholder="${g.message(code: 'program.webUrl.placeholder')}">
+                   placeholder="${g.message(code: 'managementUnit.webUrl.placeholder')}">
         </div>
     </div>
     <g:render template="/shared/editSocialMediaLinks"
@@ -41,14 +41,14 @@
 
 
 
-    <h4 class="block-header"><g:message code="program.images.header"/></h4>
+    <h4 class="block-header"><g:message code="managementUnit.images.header"/></h4>
 
     <div class="form-group row">
         <label class="col-form-label col-sm-3" for="logo">Program Logo: <fc:iconHelp><g:message
-                code="program.logo.help"/></fc:iconHelp>:</label>
+                code="managementUnit.logo.help"/></fc:iconHelp>:</label>
 
         <div class="col-sm-6" style="text-align:center;background:white">
-            <g:message code="program.logo.extra"/><br/>
+            <g:message code="managementUnit.logo.extra"/><br/>
 
             <div class="well" style="padding:0;width:200px;height:150px;line-height:146px;display:inline-block">
                 <img style="max-width:100%;max-height:100%" data-bind="attr:{src:logoUrl()}">
@@ -72,7 +72,7 @@
 
     <div class="form-group row">
         <label class="col-form-label col-sm-3" for="mainImage">Feature Graphic<fc:iconHelp><g:message
-                code="program.mainImage.help"/></fc:iconHelp>:</label>
+                code="managementUnit.breadcrumb.create"/></fc:iconHelp>:</label>
 
         <div class="col-sm-6" style="text-align:center;background:white">
             <div class="well" style="padding:0;max-height:512px;display:inline-block;overflow:hidden">

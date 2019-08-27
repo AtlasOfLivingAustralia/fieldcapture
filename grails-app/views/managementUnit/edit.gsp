@@ -16,7 +16,7 @@
         };
     </script>
     <asset:stylesheet src="common-bs4.css"/>
-    <asset:stylesheet src="program.css"/>
+    <asset:stylesheet src="managementUnit.css"/>
 
 
 </head>
@@ -29,13 +29,13 @@
             </li>
             <li class="breadcrumb-item"> Management Unit </li>
             <li class="breadcrumb-item active"><g:link controller="ManagementUnit" action="index" id="${mu.managementUnitId}">${mu.name}</g:link> </li>
-            <li class="breadcrumb-item active"><g:message code="program.breadcrumb.edit"/></li>
+            <li class="breadcrumb-item active"><g:message code="managementUnit.breadcrumb.edit"/></li>
         </ol>
 
     </nav>
 
 
-    <g:render template="programDetails"/>
+    <g:render template="managementUnitDetails"/>
 
     <div class="form-actions">
         <button type="button" id="save" data-bind="click:save" class="btn btn-primary">Save</button>

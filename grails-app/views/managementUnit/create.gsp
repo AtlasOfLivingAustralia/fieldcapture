@@ -27,12 +27,12 @@
             </li>
             <li class="breadcrumb-item"><g:link controller="program" action="list">Programmes</g:link></li>
             <li class="breadcrumb-item active"> ${program.name}</li>
-            <li class="breadcrumb-item active"><g:message code="program.breadcrumb.create"/></li>
+            <li class="breadcrumb-item active"><g:message code="managementUnit.breadcrumb.create"/></li>
         </ol>
 
     </nav>
 
-    <g:render template="programDetails"/>
+    <g:render template="managementUnitDetails"/>
 
     <div class="form-actions">
         <button type="button" id="save" data-bind="click:save" class="btn btn-primary">Create</button>
