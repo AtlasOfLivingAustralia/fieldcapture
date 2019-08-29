@@ -261,7 +261,7 @@ table thead {
 	background-color: transparent;
 }
 
-table thead th, table.table th.sorting, table.table th.sorting_asc, table.table th.sorting_desc, .table .slick-header, .table .slick-header-column {
+table thead th, table.table th.sorting, table.table th.sorting_asc, table.table th.sorting_desc, .table .slick-header, .table .slick-header-column, .table .header-column {
 	border-color: #ddd;
 	background-color: #d9edf7;
 	border: 1px solid #ddd !important;

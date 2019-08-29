@@ -784,6 +784,7 @@ class ProjectServiceSpec extends Specification {
         when: "an attempt is made to adjust a report for a different project"
         Map result = service.adjustReport(projectId, reportId, reason)
 
+
         then: "A check will be performed to ensure the report belongs to the project"
         1 * webService.getJson({it.contains("/"+projectId)}) >> [projectId:projectId, reports:[[reportId:reportId, projectId:projectId, toDate:'2018-06-30T14:00:00Z']]]
         1 * webService.getJson('permissions/getMembersForProject/'+projectId) >> []

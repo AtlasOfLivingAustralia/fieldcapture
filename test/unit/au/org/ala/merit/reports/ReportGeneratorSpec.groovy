@@ -63,7 +63,22 @@ class ReportGeneratorSpec extends Specification {
         String name = new ReportGenerator().format("%6\$s", config, owner, 0, start, end)
 
         then:
-        name == '6M'
+        name == 'Semester'
+
+        when:
+        config.reportingPeriodInMonths = 3
+        name = new ReportGenerator().format("%6\$s", config, owner, 0, start, end)
+
+        then:
+        name == 'Quarter'
+
+        when:
+        config.reportingPeriodInMonths = 0
+        name = new ReportGenerator().format("%6\$s", config, owner, 0, start, end)
+
+        then:
+        name == ''
+
     }
 
     def "Report names and descriptions can include a report sequence number relative to the financial year"() {
@@ -192,6 +207,29 @@ class ReportGeneratorSpec extends Specification {
 
     }
 
+    def "The RLP Output Report naming convention can be produced"() {
+        setup:
+        ReportConfig config = new ReportConfig(reportingPeriodInMonths: 6)
+        ReportOwner owner = new ReportOwner(name:"Project 1")
+        DateTime start = DateUtils.parse('2018-06-30T14:00:00Z')
+        DateTime end = DateUtils.parse('2018-12-31T13:00:00Z')
+        config.reportNameFormat = "Year %5\$s - %6\$s %7\$d Outputs Report"
+
+        when:
+        String name = new ReportGenerator().format(config.reportNameFormat, config, owner, 0, start, end)
+
+        then:
+        name == 'Year 2018/2019 - Semester 1 Outputs Report'
+
+        when:
+        config.reportingPeriodInMonths = 3
+        end = DateUtils.parse('2018-09-30T13:00:00Z')
+        name = new ReportGenerator().format(config.reportNameFormat, config, owner, 0, start, end)
+
+        then:
+        name == 'Year 2018/2019 - Quarter 1 Outputs Report'
+
+    }
 
 
 }

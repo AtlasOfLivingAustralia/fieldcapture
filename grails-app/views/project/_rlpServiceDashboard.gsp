@@ -1,4 +1,4 @@
-<h2>Service delivery</h2>
+<h2>Dashboard</h2>
 <g:render template="serviceDashboard"/>
 
 

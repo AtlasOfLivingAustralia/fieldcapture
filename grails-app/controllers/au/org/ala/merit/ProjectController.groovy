@@ -182,7 +182,7 @@ class ProjectController {
 
             model.details.meriPlanTemplate = RLP_MERI_PLAN_TEMPLATE+'View'
 
-            model.serviceDelivery = [label: 'Service Delivery', visible: userHasViewAccess, type: 'tab', template: 'rlpServiceDashboard']
+            model.serviceDelivery = [label: 'Dashboard', visible: userHasViewAccess, type: 'tab', template: 'rlpServiceDashboard']
             if (model.serviceDelivery.visible) {
                 // This can be a slow call so don't make it if the data won't be displayed
                 model.serviceDelivery.servicesDashboard = projectService.getServiceDashboardData(project.projectId, false)

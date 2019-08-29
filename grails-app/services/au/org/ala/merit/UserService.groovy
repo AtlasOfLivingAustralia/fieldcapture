@@ -197,38 +197,6 @@ class UserService {
         webService.getJson(url)
     }
 
-
-
-    /**
-     * Get the list of users (members) who have any level of permission for the requested program
-     *
-     * @param programId the id of the program of interest
-     */
-    Map getMembersOfManagementUnit(String managementUnitId) {
-        def url = grailsApplication.config.ecodata.baseUrl + "permissions/getMembersOfManagementUnit/${managementUnitId}"
-        webService.getJson(url)
-    }
-
-    def removeUserWithRoleFromManagementUnit(String userId, String managementUnitId, String role) {
-        def url = grailsApplication.config.ecodata.baseUrl + "permissions/removeUserWithRoleFromManagementUnit?managementUnitId=${managementUnitId}&userId=${userId}&role=${role}"
-        webService.getJson(url)
-    }
-
-
-    def addUserAsRoleToManagementUnit(String userId, String managementUnitId, String role) {
-        Map result = checkRoles(userId, role)
-        if (result.error) {
-            return result
-        }
-
-        if (!(userIsSiteAdmin() || isUserAdminForManagementUnit(currentUserId, managementUnitId))) {
-            return [error:'Permission denied']
-        }
-
-        def url = grailsApplication.config.ecodata.baseUrl + "permissions/addUserWithRoleToManagementUnit?userId=${userId}&managementUnitId=${managementUnitId}&role=${role}"
-        webService.getJson(url)
-    }
-
     /**
      * Get the list of users (members) who have any level of permission for the requested program
      *
@@ -238,7 +206,6 @@ class UserService {
         def url = grailsApplication.config.ecodata.baseUrl + "permissions/getMembersOfProgram/${programId}"
         webService.getJson(url)
     }
-
 
     def addUserAsRoleToProgram(String userId, String programId, String role) {
         Map result = checkRoles(userId, role)
@@ -253,7 +220,6 @@ class UserService {
         def url = grailsApplication.config.ecodata.baseUrl + "permissions/addUserWithRoleToProgram?userId=${userId}&programId=${programId}&role=${role}"
         webService.getJson(url)
     }
-
 
     def removeUserWithRoleFromProgram(String userId, String programId, String role) {
         def url = grailsApplication.config.ecodata.baseUrl + "permissions/removeUserWithRoleFromProgram?programId=${programId}&userId=${userId}&role=${role}"
@@ -309,20 +275,31 @@ class UserService {
     }
 
     /**
-     * Does the current user have permission to view the requested program report?
-     * Checks for the ADMIN role in CAS and then checks the UserPermission
-     * lookup in ecodata.
+     * Returns true if the current user has permission to view non-public program details such as the sites and
+     * reporting tabs.
      */
-    boolean canUserViewProgramReport(String userId, String programId) {
-        boolean userCanEdit
+    boolean canUserViewNonPublicProgramInformation(String userId, String programId) {
+        boolean userCanView
         if (userIsSiteAdmin() || userHasReadOnlyAccess()) {
-            userCanEdit = true
+            userCanView = true
         } else {
-            Map programRole = getProgramRole(userId, programId)
-            userCanEdit = (programRole != null) // Any assigned role on the program is OK?
+            userCanView = canUserEditProgramReport(userId, programId)
         }
 
-        userCanEdit
+        userCanView
+    }
+
+    /**
+     * Check if the current user has permission to edit blogs of the program.
+     * @param userId
+     * @param programId
+     * @return
+     */
+    boolean canEditProgramBlog(userId, String programId){
+      return  userIsSiteAdmin() ||
+                isUserAdminForProgram(userId, programId) ||
+                isUserEditorForProgram(userId, programId) ||
+                isUserGrantManagerForProgram(userId, programId)
     }
 
     boolean isUserAdminForManagementUnit(String userId, String programId) {
