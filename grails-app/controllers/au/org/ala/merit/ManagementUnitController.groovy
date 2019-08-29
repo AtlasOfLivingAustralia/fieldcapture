@@ -88,6 +88,9 @@ class ManagementUnitController {
                 }
             }
         }
+        // Clone to avoid change on projects
+        mu.programs = projects.clone().unique{project->project.programId}?.programId
+        mu.projects = projects
 
         [about   : [label: 'Management Unit Overview',visible: true, stopBinding: false, type: 'tab',
                     mu: mu,
