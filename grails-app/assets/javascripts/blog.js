@@ -17,6 +17,17 @@ var BlogEntryViewModel = function(blogEntry) {
     self.blogEntryId = ko.observable(blogEntry.blogEntryId);
     self.projectId = ko.observable(blogEntry.projectId);
     self.programId = ko.observable(blogEntry.programId);
+    self.managementUnitId = ko.observable(blogEntry.managementUnitId);
+    self.blogOf = ko.computed(function() {
+        if(self.projectId())
+            return "PROJECT"
+        else if(self.programId())
+            return "PROGRAM"
+        else if(self.managementUnitId())
+            return "MANAGEMENTUNIT"
+        else
+            return "SITE"
+    });
     self.title = ko.observable(blogEntry.title || '');
     self.date = ko.observable(blogEntry.date || now).extend({simpleDate:false});
     self.keepOnTop = ko.observable(blogEntry.keepOnTop || false);
@@ -52,9 +63,15 @@ var BlogEntryViewModel = function(blogEntry) {
 
 var EditableBlogEntryViewModel = function(blogEntry, options) {
 
+    var storyType ="Project Stories";
+    if (blogEntry.programId)
+        storyType ="Program Stories"
+    else if ( blogEntry.managementUnitId)
+        storyType ="Management Unit Stories"
+
     var defaults = {
         validationElementSelector:'.validationEngineContainer',
-        types:['News and Events', blogEntry.programId?'Program Stories' :'Project Stories', 'Photo'],
+        types:['News and Events', storyType, 'Photo'],
         returnTo:fcConfig.returnTo,
         blogUpdateUrl:fcConfig.blogUpdateUrl
     };
@@ -64,6 +81,18 @@ var EditableBlogEntryViewModel = function(blogEntry, options) {
     self.blogEntryId = ko.observable(blogEntry.blogEntryId);
     self.projectId = ko.observable(blogEntry.projectId || undefined);
     self.programId = ko.observable(blogEntry.programId || undefined);
+    self.managementUnitId = ko.observable(blogEntry.managementUnitId || undefined);
+
+    self.blogOf = ko.computed(function() {
+        if(self.projectId())
+            return "PROJECT"
+        else if(self.programId())
+            return "PROGRAM"
+        else if(self.managementUnitId())
+            return "MANAGEMENTUNIT"
+        else
+            return "SITE"
+    });
     self.title = ko.observable(blogEntry.title || '');
     self.date = ko.observable(blogEntry.date || now).extend({simpleDate:false});
     self.keepOnTop = ko.observable(blogEntry.keepOnTop || false);

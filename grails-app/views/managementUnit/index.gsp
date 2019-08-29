@@ -21,7 +21,11 @@
             managementUnitSaveUrl: "${createLink(action:'ajaxUpdate', id:managementUnit.managementUnitId)}",
             geoSearchUrl: "${createLink(controller: 'home', action:'geoService')}",
             projectUrl: "${createLink(controller: "project", action:'index')}",
-            siteUrl: "${createLink(controller: "site", action:'index')}"
+            siteUrl: "${createLink(controller: "site", action:'index')}",
+
+            createBlogEntryUrl: "${createLink(controller: 'blog', action:'create', params:[managementUnitId:managementUnit.managementUnitId, returnTo:createLink(controller: 'managementUnit', action: 'index', id: managementUnit.managementUnitId, fragment: 'admin')])}",
+            editBlogEntryUrl: "${createLink(controller: 'blog', action:'edit', params:[managementUnitId:managementUnit.managementUnitId, returnTo:createLink(controller: 'managementUnit', action: 'index', id: managementUnit.managementUnitId, fragment: 'admin')])}",
+            deleteBlogEntryUrl: "${createLink(controller: 'blog', action:'delete', params:[managementUnitId:managementUnit.managementUnitId])}"
         };
     </script>
     <asset:stylesheet src="common-bs4.css"/>
@@ -93,6 +97,21 @@
         ko.applyBindings(managementUnitViewModel);
         managementUnitViewModel.initialise(); // Needs to happen after data binding.
         $('#loading').hide();
+
+        $('#admin-tab').on('shown.bs.tab', function() {
+            var storedAdminTab = amplify.store('managementUnit-admin-tab-state');
+            // restore state if saved
+            if (storedAdminTab === '') {
+                $('#edit-managmentunit-details-tab').tab('show');
+            } else {
+                $(storedAdminTab+'-tab').tab('show');
+            }
+        });
+    });
+
+      $('#gotoEditBlog').click(function () {
+            amplify.store('managementUnit-admin-tab-state', '#editManagementUnitBlog');
+            $('#admin-tab').tab('show');
     });
 
 </asset:script>

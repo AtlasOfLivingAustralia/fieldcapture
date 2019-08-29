@@ -5,6 +5,8 @@
 //= require document
 //= require reporting
 //= require leaflet-manifest
+//= require blog
+
 
 
 /**

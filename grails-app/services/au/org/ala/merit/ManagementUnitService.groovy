@@ -92,6 +92,11 @@ class ManagementUnitService {
 
     }
 
+    Map getBlogs(String id){
+        Map mu =get(id)
+        return mu?.blog?:[]
+    }
+
     List serviceScores(String managementUnitId, boolean approvedActivitiesOnly = true) {
         List<Map> allServices = metadataService.getProjectServices()
         List scoreIds = allServices.collect{it.scores?.collect{score -> score.scoreId}}.flatten()

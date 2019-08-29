@@ -18,6 +18,7 @@ class ManagementUnitController {
     ReportService reportService
     ActivityService activityService
     PdfGenerationService pdfGenerationService
+    BlogService blogService
 
     def index(String id) {
         def mu = managementUnitService.get(id)
@@ -50,10 +51,18 @@ class ManagementUnitController {
     protected Map content(Map mu, Map userRole) {
 
         def hasAdminAccess = userService.userIsSiteAdmin() || userRole?.role == RoleService.PROJECT_ADMIN_ROLE
+        boolean hasEditAccessOfBlog = userService.canEditManagementUnitBlog(userService.getUser()?.userId, mu.managementUnitId)
+
         boolean canViewReports = hasAdminAccess || userService.userHasReadOnlyAccess() || userRole?.role == RoleService.PROJECT_EDITOR_ROLE
 
         Map result = managementUnitService.getProjects(mu.managementUnitId)
         List projects = result?.projects
+
+        List blogs = blogService.getBlog(mu)
+        def hasNewsAndEvents = blogs.find { it.type == 'News and Events' }
+        def hasManagementUnitStories = blogs.find { it.type == 'Management Unit Stories' }
+        def hasPhotos = blogs.find { it.type == 'Photo' }
+
 
         List reportOrder = mu.config?.managementUnitReports?.collect{[category:it.category, description:it.description]} ?: []
 
@@ -82,9 +91,14 @@ class ManagementUnitController {
 
         [about   : [label: 'Management Unit Overview',visible: true, stopBinding: false, type: 'tab',
                     mu: mu,
+                    blog: [blogs: blogs?:[], editable: hasEditAccessOfBlog,
+                                  hasNewsAndEvents: hasNewsAndEvents,
+                                  hasManagementUnitStories:  hasManagementUnitStories,
+                                  hasPhotos: hasPhotos
+                    ],
                     servicesDashboard:[visible: managementUnitVisible, planning:false, services:servicesWithScores]],
          projects: [label: 'MU Reporting', visible: canViewReports, stopBinding: false, type:'tab', projects:projects, reports:mu.reports?:[], reportOrder:reportOrder, hideDueDate:true],
-         admin   : [label: 'MU Admin', visible: hasAdminAccess, type: 'tab', mu:mu]
+         admin   : [label: 'MU Admin', visible: hasAdminAccess, type: 'tab', mu:mu, blog: [editable: hasEditAccessOfBlog]]
         ]
 
     }

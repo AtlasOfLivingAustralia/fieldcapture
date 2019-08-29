@@ -98,6 +98,50 @@
 
 </div>
 
+<g:if test="${blog.editable || blog.hasNewsAndEvents || blog.hasProgramStories || blog.hasPhotos}">
+    <div class="row-fluid">
+        <hr/>
+        <div class="well-title">Management Unit Blogs</div>
+        <g:if test="${blog.editable}">
+            <p>
+                <a href="${g.createLink(controller: 'blog', action: 'create', params:[managementUnitId: mu.managementUnitId, returnTo:g.createLink(controller: 'managementUnit', action:'index', id:mu.managementUnitId)])}"><button class="btn"><i class="fa fa-newspaper-o"></i> New Entry</button></a>
+            <button id="gotoEditBlog" class="btn"><i class="fa fa-edit"></i> Edit</button>
+            </a>
+        </p>
+        </g:if>
+
+
+        <g:if test="${blog.hasNewsAndEvents}">
+            <div class="row-fluid">
+                <div class="well-title">News and Events</div>
+                <div class="blog-section">
+                    <g:render template="/shared/blog" model="${[blog:blog.blogs, type:'News and Events']}"/>
+                </div>
+            </div>
+        </g:if>
+
+        <g:if test="${blog.hasManagementUnitStories}">
+            <div class="row-fluid">
+                <div class="well-title">Program stories</div>
+                <div class="blog-section">
+                    <g:render template="/shared/blog" model="${[blog:blog.blogs, type:'Management Unit Stories']}"/>
+                </div>
+            </div>
+        </g:if>
+
+        <g:if test="${blog.hasPhotos}">
+            <div class="row-fluid">
+                <div class="well-title">Photos</div>
+                <div class="blog-section">
+                    <g:render template="/shared/blog" model="${[blog:blog.blogs, type:'Photo']}"/>
+                </div>
+            </div>
+        </g:if>
+
+    </div>
+</g:if>
+
+
 
 <g:if test="${servicesDashboard.visible && servicesDashboard.services}">
     <hr/>
