@@ -54,7 +54,7 @@
 
     <g:if test="${programs}">
         <g:each var="program" status="i" in="${programs}">
-            <div class="well-title">Project in program: <a href="${g.createLink(controller: 'program', action: 'index',id:program.programId)}">${program.name}</a>   </div>
+            <div class="well-title">Projects in program: <a href="${g.createLink(controller: 'program', action: 'index',id:program.programId)}">${program.name}</a>   </div>
             <table id="projectOverviewList-${i}" class="table table-striped table-bordered">
                 <thead class="thead-light">
                 <th class="projectId">Project ID</th>

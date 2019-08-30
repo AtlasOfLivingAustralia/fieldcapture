@@ -312,6 +312,7 @@ var ManagementUnitPageViewModel = function(props, options) {
                 $.fn.dataTable.moment( 'dd-MM-yyyy' );
                 //Regex to pick up project tables in programs
                 $("[id^=projectOverviewList-]").DataTable({displayLength:25, order:[[2, 'asc'], [3, 'asc']]});
+                $("[id^=projectList-]").DataTable({displayLength:25, order:[[2, 'asc'], [3, 'asc']]});
 
                 //create a empty map.
                 var map = createMap({

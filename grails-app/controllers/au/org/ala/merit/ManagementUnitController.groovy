@@ -103,7 +103,7 @@ class ManagementUnitController {
                                   hasPhotos: hasPhotos
                     ],
                     servicesDashboard:[visible: managementUnitVisible, planning:false, services:servicesWithScores]],
-         projects: [label: 'MU Reporting', visible: canViewReports, stopBinding: false, type:'tab', projects:projects, reports:mu.reports?:[], reportOrder:reportOrder, hideDueDate:true],
+         projects: [label: 'MU Reporting', visible: canViewReports, stopBinding: false, type:'tab', projects:projects, programs:programs, reports:mu.reports?:[], reportOrder:reportOrder, hideDueDate:true],
          admin   : [label: 'MU Admin', visible: hasAdminAccess, type: 'tab', mu:mu, blog: [editable: hasEditAccessOfBlog]]
         ]
 
