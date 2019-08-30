@@ -89,7 +89,10 @@ class ManagementUnitController {
             }
         }
         // Clone to avoid change on projects
-        mu.programs = projects.clone().unique{project->project.programId}?.programId
+        // Fetch related programs
+        String[] programIds = projects.clone().unique{project->project.programId}?.programId
+        List programs = programService.get(programIds)
+        mu.programs = programs
         mu.projects = projects
 
         [about   : [label: 'Management Unit Overview',visible: true, stopBinding: false, type: 'tab',
