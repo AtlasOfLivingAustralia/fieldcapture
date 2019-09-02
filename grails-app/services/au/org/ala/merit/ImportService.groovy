@@ -45,6 +45,7 @@ class ImportService {
     def roleAdmin = "admin"
     def roleGrantManager = "caseManager"
     def programService
+    def managementUnitService
 
     /**
      * Looks for columns "Grant ID","Sub-project ID","Recipient email 1","Recipient email 2","Grant manager email" and
@@ -568,7 +569,11 @@ class ImportService {
             Map program = programService.getByName(name)
             program?.programId
         }
-        def mapper = new GmsMapper(metadataService.activitiesModel(), metadataService.programsModel(), metadataService.organisationList()?.list, metadataService.getOutputTargetScores(), programs)
+        Map managementUnits = [:].withDefault{name ->
+            Map mu = managementUnitService.getByName(name)
+            mu?.managementUnitId
+        }
+        def mapper = new GmsMapper(metadataService.activitiesModel(), metadataService.programsModel(), metadataService.organisationList()?.list, metadataService.getOutputTargetScores(), programs, managementUnits)
 
         def action = preview?{rows -> mapProjectRows(rows, status, mapper)}:{rows -> importAll(rows, status, mapper)}
 
@@ -781,7 +786,7 @@ class ImportService {
 
 
         def activitiesModel = metadataService.activitiesModel()
-        def mapper = new GmsMapper(activitiesModel, [:], [], metadataService.getOutputTargetScores(), [:], true)
+        def mapper = new GmsMapper(activitiesModel, [:], [], metadataService.getOutputTargetScores(), [:], [:], true)
         def projectDetails = mapper.mapProject(projectRows)
 
         //errors.addAll(projectDetails.errors)
