@@ -231,5 +231,40 @@ class ReportGeneratorSpec extends Specification {
 
     }
 
+    def "Reports should only be generated if the reporting period is calculated to be equal to or greater than the configured minimum period"() {
+
+        setup:
+        ReportConfig config = new ReportConfig(
+                reportType: "Single",
+                firstReportingPeriodEnd: "2023-06-30T14:00:00Z",
+                reportNameFormat: "Outcomes Report 2",
+                reportDescriptionFormat: "Outcomes report 2 for %4\$s",
+                multiple: false,
+                minimumPeriodInMonths: 37,
+                category: "Outcomes Report 2",
+                reportsAlignedToCalendar: false,
+                activityType:"RLP Medium term project outcomes")
+        String periodStart = '2018-06-30T14:00:00Z'
+        String periodEnd = '2019-06-30T14:00:00Z'
+        ReportOwner owner = new ReportOwner(id:[managementUnitId:'mu1'], name:"MU 1", periodStart:periodStart, periodEnd:periodEnd)
+        ReportGenerator reportGenerator = new ReportGenerator()
+
+        when: "The report owner duration is less than the minimum period"
+        List reports = reportGenerator.generateReports(config, owner, 0, null)
+
+        then:
+        !reports
+
+        when:
+        periodEnd = '2023-06-30T14:00:00Z'
+        owner.periodEnd = periodEnd
+        reports = reportGenerator.generateReports(config, owner, 0, null)
+
+        then:
+        reports.size() == 1
+        reports[0].fromDate == periodStart
+        reports[0].toDate == periodEnd
+    }
+
 
 }
