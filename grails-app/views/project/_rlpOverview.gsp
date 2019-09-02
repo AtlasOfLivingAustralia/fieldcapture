@@ -15,10 +15,14 @@
                         </div>
                     </g:if>
                     <div class="row-fluid">
-                        <div class="span4 header-label">Management Unit</div>
-
+                        <div class="span4 header-label">Program</div>
                         <div class="span8"><g:link controller="program" action="index"
                                                    id="${config.program.programId}">${config.program.name}</g:link></div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span4 header-label">Management Unit</div>
+                        <div class="span8"><g:link controller="managementUnit" action="index"
+                                                   id="${project.managementUnitId}">${project.managementUnitName}</g:link></div>
                     </div>
 
                     <div class="row-fluid">

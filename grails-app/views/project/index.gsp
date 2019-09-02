@@ -107,15 +107,21 @@
         <li>
             <g:link controller="home">Home</g:link> <span class="divider">/</span>
         </li>
-        <li>
-        <g:if test="${config?.program}">
-            <g:link controller="program" action="index" id="${config.program.programId}"> ${config.program.name} </g:link>
+        <g:if test="${config?.program || project.managementUnitId}">
+            <g:if test="${config?.program}">
+                <li> <g:link controller="program" action="index" id="${config.program.programId}"> ${config.program.name} </g:link> </li>
+                <span class="divider"> / </span>
+            </g:if>
+            <g:if test="${project.managementUnitId}">
+                  <g:link controller="managementUnit" action="index"
+                                               id="${project.managementUnitId}">${project.managementUnitName}</g:link>
+                 <span class="divider"> / </span>
+            </g:if>
         </g:if>
         <g:else>
             Projects
         </g:else>
-        <span class="divider"> / </span>
-        </li>
+
         <li class="active" data-bind="text:name"></li>
     </ul>
 
