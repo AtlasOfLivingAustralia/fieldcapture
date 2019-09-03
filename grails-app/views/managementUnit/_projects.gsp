@@ -1,7 +1,7 @@
 
 <div class="projects-wrapper d-none d-md-block">
-    <g:set var="projects" value="${projects}" />
-    <g:set var="programs" value="${programs}" />
+    <g:set var="projects" value="${mu.projects}" />
+    <g:set var="programs" value="${mu.programs}" />
 
     <g:if test="${programs}">
         <g:each var="program" status="i" in="${programs}">

@@ -90,10 +90,13 @@ class ManagementUnitController {
         }
         // Clone to avoid change on projects
         // Fetch related programs
-        String[] programIds = projects.clone().unique{project->project.programId}?.programId
-        List programs = programService.get(programIds)
-        mu.programs = programs
-        mu.projects = projects
+        if(projects){
+            String[] programIds = projects.clone().unique{project->project.programId}?.programId
+            List programs = programService.get(programIds)
+            mu.programs = programs
+            mu.projects = projects
+        }
+
 
         [about   : [label: 'Management Unit Overview',visible: true, stopBinding: false, type: 'tab',
                     mu: mu,
@@ -103,7 +106,7 @@ class ManagementUnitController {
                                   hasPhotos: hasPhotos
                     ],
                     servicesDashboard:[visible: managementUnitVisible, planning:false, services:servicesWithScores]],
-         projects: [label: 'MU Reporting', visible: canViewReports, stopBinding: false, type:'tab', projects:projects, programs:programs, reports:mu.reports?:[], reportOrder:reportOrder, hideDueDate:true],
+         projects: [label: 'MU Reporting', visible: canViewReports, stopBinding: false, type:'tab', mu:mu,reportOrder:reportOrder, hideDueDate:true],
          admin   : [label: 'MU Admin', visible: hasAdminAccess, type: 'tab', mu:mu, blog: [editable: hasEditAccessOfBlog]]
         ]
 
