@@ -67,6 +67,9 @@ class ReportGenerator {
             else if (reportConfig.reportingPeriodInMonths) {
                 end = start.plus(period)
             }
+            if (endDate < end) {
+                end = endDate
+            }
             Interval reportInterval = new Interval(start, end)
 
             // If the report minimumPeriodInMonths has been specified, only create the report if the owner duration
