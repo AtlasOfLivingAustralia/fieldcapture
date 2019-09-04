@@ -665,8 +665,8 @@ class ImportService {
             addUser(editorEmail2, roleEditor, projectId, projectDetails.errors)
 
             // Apply any program permission to the new project if required.
-            if (projectDetails.project.programId) {
-                List members = programService.getMembersOfProgram(projectDetails.project.programId)
+            if (projectDetails.project.managementUnitId) {
+                List members = managementUnitService.getMembersOfManagementUnit(projectDetails.project.managementUnitId)
                 members?.each { member ->
                     userService.addUserAsRoleToProject(member.userId, projectId, member.role)
                 }

@@ -149,6 +149,43 @@ class ImportServiceSpec extends Specification {
 
     }
 
+    def "The ImportService will apply management unit permissions to projects loaded with a defined management unit"() {
+
+        setup:
+        def csv = getClass().getResourceAsStream("/resources/projectTestData.csv")
+
+        when:
+        List status = []
+        Map result = importService.gmsImport(csv, status, false)
+
+        then:
+        1 * metadataService.organisationList() >> [list:[[name:"Test Organisation 2", organisationId:'org2Id']]]
+        1 * metadataService.programsModel() >> [programs:[[name:'Green Army', subprograms:[[name:"Green Army Round 1"]]]]]
+        1 * managementUnitService.getByName("ACT") >> [managementUnitId:"actId", name:"ACT"]
+        1 * programService.getByName("Green Army") >> null
+        1 * projectService.update('', _) >> [resp:[projectId:'p1']]
+        1 * managementUnitService.getMembersOfManagementUnit("actId") >> [[userId:"u1", role:"admin"], [userId:"u2", role:"caseManager"]]
+        1 * userService.checkEmailExists('editor@test.com') >> "u3"
+        1 * userService.checkEmailExists('editor2@test.com') >> "u4"
+        1 * userService.checkEmailExists('gm@test.com') >> "u5"
+        1 * userService.checkEmailExists('gm2@test.com') >> "u6"
+        2 * userService.checkEmailExists('test@test.com') >> "u7"
+
+
+        and: "The users with roles for the management unit will have the same roles added to the project"
+        1 * userService.addUserAsRoleToProject("u1", 'p1', "admin")
+        1 * userService.addUserAsRoleToProject("u2", 'p1', "caseManager")
+
+        and: "The project was processed without errors"
+        !result.error
+        status.size() == 2 // One column header warning and one project row.
+        status[1].success == true
+        status[1].grantId == 'B0000000001'
+        status[1].externalId == 'GreenArmy-1234567-1'
+        !status[1].errors
+
+    }
+
 
 
     private Map buildTestProject() {
