@@ -141,7 +141,7 @@
 
 <g:if test="${servicesDashboard.visible && servicesDashboard.services}">
     <hr/>
-    <div class="well-title">Service delivery</div>
+    <div class="well-title">Dashboard</div>
     <div id="services-dashboard">
 
         <g:if test="${servicesDashboard.planning}">
