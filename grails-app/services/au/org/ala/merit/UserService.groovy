@@ -206,6 +206,8 @@ class UserService {
         webService.getJson(url)
     }
 
+
+
     def addUserAsRoleToProgram(String userId, String programId, String role) {
         Map result = checkRoles(userId, role)
         if (result.error) {
@@ -229,7 +231,7 @@ class UserService {
         String url = grailsApplication.config.ecodata.baseUrl + "permissions/getUserRolesForUserId/${userId}"
         Map result = webService.getJson(url)
 
-        result.roles ?: []
+        result?.roles ?: []
     }
 
     boolean isUserAdminForProgram(String userId, String programId) {
@@ -274,20 +276,31 @@ class UserService {
     }
 
     /**
-     * Does the current user have permission to view the requested program report?
-     * Checks for the ADMIN role in CAS and then checks the UserPermission
-     * lookup in ecodata.
+     * Returns true if the current user has permission to view non-public program details such as the sites and
+     * reporting tabs.
      */
-    boolean canUserViewProgramReport(String userId, String programId) {
-        boolean userCanEdit
+    boolean canUserViewNonPublicProgramInformation(String userId, String programId) {
+        boolean userCanView
         if (userIsSiteAdmin() || userHasReadOnlyAccess()) {
-            userCanEdit = true
+            userCanView = true
         } else {
-            Map programRole = getProgramRole(userId, programId)
-            userCanEdit = (programRole != null) // Any assigned role on the program is OK?
+            userCanView = canUserEditProgramReport(userId, programId)
         }
 
-        userCanEdit
+        userCanView
+    }
+
+    /**
+     * Check if the current user has permission to edit blogs of the program.
+     * @param userId
+     * @param programId
+     * @return
+     */
+    boolean canEditProgramBlog(userId, String programId){
+      return  userIsSiteAdmin() ||
+                isUserAdminForProgram(userId, programId) ||
+                isUserEditorForProgram(userId, programId) ||
+                isUserGrantManagerForProgram(userId, programId)
     }
 
     boolean isUserAdminForProject(userId, projectId) {

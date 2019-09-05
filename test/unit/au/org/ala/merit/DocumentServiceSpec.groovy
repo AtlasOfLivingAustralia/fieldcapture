@@ -128,6 +128,19 @@ class DocumentServiceSpec extends Specification {
         2 * userService.userIsAlaOrFcAdmin() >> true
     }
 
+    def "editors and admins are allowed to create a read only document, but not edit it"() {
+        Map document = [readOnly:true, projectId:'p1']
+        String userId = 'u1'
+
+        when:
+        boolean canEdit = service.canEdit(document)
+
+        then:
+        canEdit == true
+        1 * userService.getCurrentUserId() >> userId
+        1 * userService.canUserEditProject(userId, document.projectId) >> true
+    }
+
     def "users can edit an activity document if they can edit the project associated with the activity"(boolean canEditActivity) {
         setup:
         Map document = [documentId:'d1', activityId:'a1']

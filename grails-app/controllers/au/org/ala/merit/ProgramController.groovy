@@ -17,8 +17,8 @@ class ProgramController {
     ReportService reportService
     ActivityService activityService
     PdfGenerationService pdfGenerationService
+    BlogService blogService
 
-    @PreAuthorise(accessLevel='editor', redirectController='home')
     def index(String id) {
         def program = programService.get(id)
 
@@ -33,20 +33,31 @@ class ProgramController {
 
             Map programRole = members.find { it.userId == userId }
 
-            [program  : program,
+            def mapFeatures = program.programSiteId?siteService.getSiteGeoJson(program.programSiteId) : null
+            if (mapFeatures)
+                program.mapFeatures = mapFeatures
+
+            [program       : program,
              roles         : roles,
              user          : user,
              isAdmin       : programRole?.role == RoleService.PROJECT_ADMIN_ROLE,
              isGrantManager: programRole?.role == RoleService.GRANT_MANAGER_ROLE,
-             content       : content(program, programRole)]
+             content       : content(program, programRole)
+             ]
         }
     }
 
     protected Map content(Map program, Map userRole) {
+        boolean hasAdminAccess = userService.userIsSiteAdmin() || userRole?.role == RoleService.PROJECT_ADMIN_ROLE
+        boolean hasEditAccessOfBlog = userService.canEditProgramBlog(userService.getUser()?.userId, program.programId)
 
-        def hasAdminAccess = userService.userIsSiteAdmin() || userRole?.role == RoleService.PROJECT_ADMIN_ROLE
+        boolean canViewNonPublicTabs = userService.canUserViewNonPublicProgramInformation(userService.getUser()?.userId, program.programId)
         Map result = programService.getProgramProjects(program.programId)
         List projects = result?.projects
+        List blogs = blogService.getBlog(program)
+        def hasNewsAndEvents = blogs.find { it.type == 'News and Events' }
+        def hasProgramStories = blogs.find { it.type == 'Program Stories' }
+        def hasPhotos = blogs.find { it.type == 'Photo' }
 
         List reportOrder = program.config?.programReports?.collect{[category:it.category, description:it.description]} ?: []
 
@@ -58,10 +69,33 @@ class ProgramController {
             servicesWithScores = programService.serviceScores(program.programId, !hasAdminAccess)
         }
 
-        [about   : [label: 'Management Unit Overview', visible: true, stopBinding: false, type: 'tab', servicesDashboard:[visible: programVisible, planning:false, services:servicesWithScores]],
-         projects: [label: 'MU Reporting', visible: true, stopBinding: false, type:'tab', projects:projects, reports:program.reports?:[], reportOrder:reportOrder, hideDueDate:true],
-         sites   : [label: 'MU Sites', visible: programVisible, stopBinding: true, type:'tab'],
-         admin   : [label: 'MU Admin', visible: hasAdminAccess, type: 'tab']]
+        //Aggregate all targeted outcomes of projects
+        for(Map project in projects){
+            //Verify project.outcomes (from program config) with primaryOutcome and secondaryOutcomes in project.custom.details.outcomes
+            Map primaryOutcome = project.custom?.details?.outcomes?.primaryOutcome
+            if (primaryOutcome){
+                Map oc =  program.outcomes.find {oc -> oc.outcome == primaryOutcome.description}
+                if (oc) {
+                    oc['targeted'] = true //set program outcomes
+                    primaryOutcome.shortDescription = oc['shortDescription']
+                }
+            }
+        }
+
+        [about   : [label: 'Management Unit Overview',visible: true, stopBinding: false, type: 'tab',
+                    blog: [blogs: blogs?:[], editable: hasEditAccessOfBlog,
+                           hasNewsAndEvents: hasNewsAndEvents,
+                           hasProgramStories:  hasProgramStories,
+                           hasPhotos: hasPhotos
+                          ],
+                    servicesDashboard:[visible: programVisible, planning:false, services:servicesWithScores]],
+         projects: [label: 'MU Reporting', visible: canViewNonPublicTabs, stopBinding: false, type:'tab', projects:projects, reports:program.reports?:[], reportOrder:reportOrder, hideDueDate:true],
+         sites   : [label: 'MU Sites', visible: canViewNonPublicTabs, stopBinding: true, type:'tab'],
+         admin   : [label: 'MU Admin', visible: hasAdminAccess, type: 'tab'],
+                    blog: [
+                      editable: hasEditAccessOfBlog
+                      ]
+                   ]
     }
 
     @PreAuthorise(accessLevel='siteAdmin')

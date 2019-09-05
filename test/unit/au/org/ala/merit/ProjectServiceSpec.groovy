@@ -784,6 +784,7 @@ class ProjectServiceSpec extends Specification {
         when: "an attempt is made to adjust a report for a different project"
         Map result = service.adjustReport(projectId, reportId, reason)
 
+
         then: "A check will be performed to ensure the report belongs to the project"
         1 * webService.getJson({it.contains("/"+projectId)}) >> [projectId:projectId, reports:[[reportId:reportId, projectId:projectId, toDate:'2018-06-30T14:00:00Z']]]
         1 * webService.getJson('permissions/getMembersForProject/'+projectId) >> []
@@ -886,6 +887,26 @@ class ProjectServiceSpec extends Specification {
         history[2] == [documentId:3, date:'2019-07-01T00:00:03Z', userDisplayName:'test', reason:'r', referenceDocument:'c']
         history[3] == [documentId:2, date:'2019-07-01T00:00:02Z', userDisplayName:'test', reason:'r', referenceDocument:'c']
         history[4] == [documentId:1, date:'2019-07-01T00:00:01Z', userDisplayName:'test', reason:'r', referenceDocument:'c']
+    }
+
+    def "A cutdown project view will be returned for anonymous users and users without permissions"(Map user) {
+        when:
+        Map result = service.get("p1", user, "")
+
+        then:
+        1 * webService.getJson({it.contains("project/p1?")}) >> [sites:[], reports:[], activities:[], documents:[['public':false, documentId:'d1'], ['public':true, documentId:'d1']]]
+
+        and:
+        result.sites == null
+        result.activities == null
+        result.documents.size() == 1
+        result.reports == null
+
+        where:
+        user | _
+        null | _
+        [hasViewAccess:false] | _
+
     }
 
     private Map buildApprovalDocument(int i, String projectId) {

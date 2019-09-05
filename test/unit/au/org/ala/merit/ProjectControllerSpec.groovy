@@ -63,7 +63,7 @@ class ProjectControllerSpec extends Specification {
 
         setup:
         def projectId = '1234'
-        projectService.get(projectId, _) >> project(projectId)
+        projectService.get(projectId, _, _) >> project(projectId)
         projectService.programsModel() >> [programs:[[name:'Test', optionalProjectContent:[]]]]
 
         when: "something"
@@ -79,7 +79,7 @@ class ProjectControllerSpec extends Specification {
 
         setup:
         def projectId = '1234'
-        projectService.get(projectId, _) >> project(projectId)
+        projectService.get(projectId, null, _) >> project(projectId)
         projectService.programsModel() >> [programs:[[name:'Test', optionalProjectContent:['Risks and Threats', 'MERI Plan']]]]
         userServiceStub.getUser() >> null
 
@@ -101,15 +101,17 @@ class ProjectControllerSpec extends Specification {
 
     def "the admin content should be enabled for project admins"() {
         def projectId = '1234'
-        projectService.get(projectId, _) >> project(projectId)
         projectService.programsModel() >> [programs:[[name:'Test', optionalProjectContent:['Risks and Threats', 'MERI Plan']]]]
 
-        stubProjectAdmin('1234', projectId)
+        Map userDetails = stubProjectAdmin('1234', projectId)
 
         when: "retrieving the project index page"
         controller.index(projectId)
 
-        then: "The admin tab is visible"
+        then:
+        1 * projectService.get(projectId, userDetails, _) >> project(projectId)
+
+        and: "The admin tab is visible"
         view == '/project/index'
         model.projectContent.admin.visible
         !model.projectContent.admin.disabled
@@ -117,15 +119,17 @@ class ProjectControllerSpec extends Specification {
 
     def "the admin content should be enabled for grant managers"() {
         def projectId = '1234'
-        projectService.get(projectId, _) >> project(projectId)
         projectService.programsModel() >> [programs:[[name:'Test', optionalProjectContent:['Risks and Threats', 'MERI Plan']]]]
 
-        stubGrantManager('1234', projectId)
+        Map userDetails = stubGrantManager('1234', projectId)
 
         when: "retrieving the project index page"
         controller.index(projectId)
 
-        then: "The admin tab is visible"
+        then:
+        1 * projectService.get(projectId, userDetails, _) >> project(projectId)
+
+        and: "The admin tab is visible"
         view == '/project/index'
         model.projectContent.admin.visible
         !model.projectContent.admin.disabled
@@ -133,15 +137,17 @@ class ProjectControllerSpec extends Specification {
 
     def "the admin content should be present for project editors (to edit blog)"() {
         def projectId = '1234'
-        projectService.get(projectId, _) >> project(projectId)
         projectService.programsModel() >> [programs:[[name:'Test', optionalProjectContent:['Risks and Threats', 'MERI Plan']]]]
-        stubProjectEditor('1234', projectId)
+        Map userDetails = stubProjectEditor('1234', projectId)
 
 
         when: "retrieving the project index page"
         controller.index(projectId)
 
-        then: "The admin tab is visible"
+        then:
+        1 * projectService.get(projectId, userDetails, _) >> project(projectId)
+
+        and: "The admin tab is visible"
         view == '/project/index'
         model.projectContent.admin.visible
     }
@@ -150,15 +156,17 @@ class ProjectControllerSpec extends Specification {
         def projectId = '1234'
         Map project = project(projectId)
         project.planStatus = ProjectService.PLAN_APPROVED // The announcements menu items shows only for approved projects
-        projectService.get(projectId, _) >> project
         projectService.getProgramConfiguration(_) >> new ProgramConfig([template: ProjectController.RLP_TEMPLATE])
-        stubProjectAdmin('1234', projectId)
+        Map userDetails = stubProjectAdmin('1234', projectId)
 
 
         when: "retrieving the project index page"
         controller.index(projectId)
 
-        then: "The admin tab does not include the announcements menu item"
+        then:
+        1 * projectService.get(projectId, userDetails, _) >> project
+
+        and: "The admin tab does not include the announcements menu item"
         view == '/project/index'
         model.projectContent.admin.showAnnouncementsTab == false
     }
@@ -168,8 +176,8 @@ class ProjectControllerSpec extends Specification {
         setup:
         String projectId = '1234'
         Map project = project(projectId)
-        projectService.get(projectId, _) >> project
-        stubGrantManager('1234', projectId)
+
+        Map userDetails = stubGrantManager('1234', projectId)
         String projectTemplate = 'esp'
 
         when:
@@ -177,6 +185,7 @@ class ProjectControllerSpec extends Specification {
         controller.index(projectId)
 
         then:
+        1 *  projectService.get(projectId, userDetails, _) >> project
         1 * projectService.getProgramConfiguration(project) >> new ProgramConfig([template: projectTemplate])
         model.showAlternateTemplate == true
     }
@@ -185,8 +194,8 @@ class ProjectControllerSpec extends Specification {
         setup:
         String projectId = '1234'
         Map project = project(projectId)
-        projectService.get(projectId, _) >> project
-        stubGrantManager('1234', projectId)
+
+        Map userDetails = stubGrantManager('1234', projectId)
         String projectTemplate = 'rlp'
 
         when:
@@ -194,6 +203,7 @@ class ProjectControllerSpec extends Specification {
         controller.index(projectId)
 
         then:
+        1 * projectService.get(projectId, userDetails, _) >> project
         1 * projectService.getProgramConfiguration(project) >> new ProgramConfig([template: projectTemplate])
         model.showAlternateTemplate == false
     }
@@ -309,6 +319,67 @@ class ProjectControllerSpec extends Specification {
         response.json.status == HttpStatus.SC_UNAUTHORIZED
     }
 
+    def "Tick targeted project outcomes"() {
+
+        def projectId = '1234'
+        Map project = project(projectId)
+        project["custom"] = [details :[outcomes:[primaryOutcome:[
+                                            assets: ["Ginini Flats Wetland Complex"],
+                                            description: "By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions"
+                                         ]]]]
+
+        Map userDetails = stubProjectAdmin('1234', projectId)
+
+
+        when: "build RLP model"
+
+        controller.index(projectId)
+
+        then:
+        1 * projectService.get(projectId, userDetails, _) >> project
+        1 * projectService.getProgramConfiguration(_) >> new ProgramConfig([
+                                                                        projectTemplate: ProjectController.RLP_TEMPLATE,
+                                                                        outcomes: [
+                                                                                [
+                                                                                        "priorities": ["category":"Ramsar"],
+                                                                                        "shortDescription":"Ramsar Sites",
+                                                                                        "category":"environment",
+                                                                                        "outcome":"By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions"
+                                                                                ],
+                                                                        ]
+        ])
+
+        and: "The project outcomes should be made available to the model"
+        model.project.outcomes[0].targeted == true
+
+    }
+
+    def "In RLP projects, only the overview and documents tab are displayed to public users"() {
+
+        setup:
+        String projectId = '1234'
+        Map project = project(projectId)
+        Map userDetails = stubPublicUser()
+
+        when:
+        controller.index(projectId)
+
+        then:
+        1 * projectService.get(projectId, userDetails, _) >> project
+        1 * projectService.getProgramConfiguration(_) >> new ProgramConfig([
+                projectTemplate: ProjectController.RLP_TEMPLATE])
+
+        and:
+        model.projectContent.serviceDelivery.visible == false
+        model.projectContent.site.visible == false
+        model.projectContent.details.visible == false
+        model.projectContent.admin.visible == false
+        model.projectContent.reporting.visible == false
+        model.projectContent.overview.template == 'rlpOverview'
+        model.projectContent.overview.visible == true
+        model.projectContent.documents.visible == true
+    }
+
 
     private Map setupMockServices() {
         Map activityModel = [name:'output', outputs:[]]
@@ -420,16 +491,24 @@ class ProjectControllerSpec extends Specification {
         1 * reportService.overrideLock('r1', {it.endsWith('project/viewReport/p1?reportId=r1')})
     }
 
-    private def stubGrantManager(userId, projectId) {
+    private Map stubPublicUser() {
+        userServiceStub.getUser() >> null
+        null
+    }
+
+    private Map stubGrantManager(userId, projectId) {
         stubUserPermissions(userId, projectId, false, false, true, true)
+        ['userName':null, 'userId':userId, 'class':UserDetails, 'displayName':null, 'isAdmin':false, 'isCaseManager':true, 'isEditor':false, 'hasViewAccess':true]
     }
 
-    private def stubProjectAdmin(userId, projectId) {
+    private Map stubProjectAdmin(userId, projectId) {
         stubUserPermissions(userId, projectId, false, true, false, true)
+        ['userName':null, 'userId':userId, 'class':UserDetails, 'displayName':null, 'isAdmin':true, 'isCaseManager':false, 'isEditor':false, 'hasViewAccess':true]
     }
 
-    private def stubProjectEditor(userId, projectId) {
+    private Map stubProjectEditor(userId, projectId) {
         stubUserPermissions(userId, projectId, true, false, false, true)
+        ['userName':null, 'userId':userId, 'class':UserDetails, 'displayName':null, 'isAdmin':false, 'isCaseManager':false, 'isEditor':true, 'hasViewAccess':true]
     }
 
     private def stubUserPermissions(userId, projectId, editor, admin, grantManager, canView) {

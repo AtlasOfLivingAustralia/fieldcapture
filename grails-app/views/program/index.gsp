@@ -18,11 +18,20 @@
             submitReportUrl: "${createLink(action:"ajaxSubmitReport", id:program.programId)}",
             rejectReportUrl: "${createLink(action:"ajaxRejectReport", id:program.programId)}",
             regenerateProgramReportsUrl: "${createLink(action:"regenerateProgramReports", id:program.programId)}",
-            programSaveUrl: "${createLink(action:'ajaxUpdate', id:program.programId)}"
+            programSaveUrl: "${createLink(action:'ajaxUpdate', id:program.programId)}",
+            geoSearchUrl: "${createLink(controller: 'home', action:'geoService')}",
+            projectUrl: "${createLink(controller: "project", action:'index')}",
+            siteUrl: "${createLink(controller: "site", action:'index')}",
+
+            ///Todo checck the purpose of 'fragment'
+            createBlogEntryUrl: "${createLink(controller: 'blog', action:'create', params:[programId:program.programId, returnTo:createLink(controller: 'program', action: 'index', id: program.programId, fragment: 'admin')])}",
+            editBlogEntryUrl: "${createLink(controller: 'blog', action:'edit', params:[programId:program.programId, returnTo:createLink(controller: 'program', action: 'index', id: program.programId, fragment: 'admin')])}",
+            deleteBlogEntryUrl: "${createLink(controller: 'blog', action:'delete', params:[programId:program.programId])}"
         };
     </script>
     <asset:stylesheet src="common-bs4.css"/>
     <asset:stylesheet src="program.css"/>
+    <asset:stylesheet src="leaflet-manifest.css"/>
 
 </head>
 
@@ -96,7 +105,6 @@
 <asset:script>
 
     $(function () {
-
         var program =<fc:modelAsJavascript model="${program}"/>;
         var config = _.extend({reportingConfigSelector:'#reporting form'}, fcConfig);
         var programViewModel = new ProgramPageViewModel(program, config);
@@ -104,6 +112,27 @@
         ko.applyBindings(programViewModel);
         programViewModel.initialise(); // Needs to happen after data binding.
         $('#loading').hide();
+
+        $('#admin-tab').on('shown.bs.tab', function() {
+            var storedAdminTab = amplify.store('program-admin-tab-state');
+            // restore state if saved
+            if (storedAdminTab === '') {
+                $('#edit-program-details-tab').tab('show');
+            } else {
+                $(storedAdminTab+'-tab').tab('show');
+            }
+        });
+
+      //Quick fix for tab click
+      $('#sites-tab, #admin-tab, #projects-tab,#about-tab').click(function () {
+          event.preventDefault();
+          window.location = this["href"]
+      })
+    });
+
+    $('#gotoEditBlog').click(function () {
+            amplify.store('program-admin-tab-state', '#editProgramBlog');
+            $('#admin-tab').tab('show');
     });
 
 </asset:script>

@@ -217,6 +217,7 @@
 
         var outputModelConfig = {
             activityId: activityId,
+            projectId: projectId,
             disablePrepop: ${activity.progress == au.org.ala.merit.ActivityService.PROGRESS_FINISHED},
             speciesConfig:<fc:modelAsJavascript model="${speciesConfig}"/>,
             recoveryDataStorageKey: 'activity-' + activityId
@@ -244,6 +245,10 @@
 
         </g:if>
         </g:each>
+
+        if (config.featureCollection) {
+            config.featureCollection.loadComplete();
+        }
 
         ko.applyBindings(activityNavigationModel, document.getElementById('activity-nav'));
 

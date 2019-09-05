@@ -50,9 +50,8 @@ class ProjectController {
     }
 
     def index(String id) {
-        def project = projectService.get(id, 'all')
-        def user = userService.getUser()
 
+        def user = userService.getUser()
         if (user) {
             user = user.properties
             user.isAdmin = projectService.isUserAdminForProject(user.userId, id) ?: false
@@ -60,6 +59,7 @@ class ProjectController {
             user.isEditor = projectService.canUserEditProject(user.userId, id) ?: false
             user.hasViewAccess = projectService.canUserViewProject(user.userId, id) ?: false
         }
+        def project = projectService.get(id, user,'all')
         Map config
         if (project && !project.error) {
             config = projectService.getProgramConfiguration(project)
@@ -127,11 +127,13 @@ class ProjectController {
         project.outcomes = new JSONArray(config.outcomes ?: [])
         project.hasApprovedOrSubmittedReports = reportService.includesSubmittedOrApprovedReports(project.reports)
 
+
         def meriPlanVisible = metadataService.isOptionalContent('MERI Plan', config)
         def risksAndThreatsVisible = metadataService.isOptionalContent('Risks and Threats', config)
         def canViewRisks = risksAndThreatsVisible && (user?.hasViewAccess || user?.isEditor)
         def meriPlanEnabled = user?.hasViewAccess || ((project.associatedProgram == 'National Landcare Programme' && project.associatedSubProgram == 'Regional Funding'))
         def meriPlanVisibleToUser = project.planStatus == 'approved' || user?.isAdmin || user?.isCaseManager
+        boolean userHasViewAccess = user?.hasViewAccess ?: false
 
         def publicImages = project.documents.findAll {
             it.public == true && it.thirdPartyConsentDeclarationMade == true && it.type == 'image'
@@ -171,22 +173,36 @@ class ProjectController {
         else if (template == RLP_TEMPLATE) {
 
             // The RLP Project Template doesn't need site details or activities.
-            project.sites = new JSONArray(project.sites.collect{new JSONObject([name:it.name, siteId:it.siteId, lastUpdated:it.lastUpdated, type:it.type, extent:[:]])})
+            project.sites = new JSONArray(project.sites?.collect{new JSONObject([name:it.name, siteId:it.siteId, lastUpdated:it.lastUpdated, type:it.type, extent:[:]])} ?: [])
             project.remove('activities')
             model.overview.template = 'rlpOverview'
-            model.overview.servicesDashboard = projectService.getServiceDashboardData(project.projectId, !user?.hasViewAccess)
+
+            boolean showOrderNumber = userService.userHasReadOnlyAccess() || userService.userIsSiteAdmin()
+            model.overview.showOrderNumber = showOrderNumber
+
             model.details.meriPlanTemplate = RLP_MERI_PLAN_TEMPLATE+'View'
+
+            model.serviceDelivery = [label: 'Dashboard', visible: userHasViewAccess, type: 'tab', template: 'rlpServiceDashboard']
+            if (model.serviceDelivery.visible) {
+                // This can be a slow call so don't make it if the data won't be displayed
+                model.serviceDelivery.servicesDashboard = projectService.getServiceDashboardData(project.projectId, false)
+            }
 
             model.site.useAlaMap = true
             model.site.showSiteType = true
-            List reportOrder = config?.projectReports?.collect{[category:it.category, description:it.description]} ?: []
-            project.reports?.each { Map report ->
-                ReportConfig reportConfig = ((ProgramConfig)config).findProjectReportConfigForReport(report)
-                report.isAdjustable = reportConfig?.isAdjustable()
-            }
-            Map reportingTab = [label: 'Reporting', visible:user?.hasViewAccess, type:'tab', template:'projectReporting', reports:project.reports, reportOrder:reportOrder, stopBinding:true, services: config.services, scores:scores, hideDueDate:true, isAdmin:user?.isAdmin, isGrantManager:user?.isCaseManager]
+            model.site.visible = userHasViewAccess
+            model.details.visible = userHasViewAccess
 
-            Map rlpModel = [overview:model.overview, documents:model.documents, details:model.details, site:model.site, reporting:reportingTab]
+            Map reportingTab = [label: 'Reporting', visible:userHasViewAccess, type:'tab', template:'projectReporting', reports:project.reports, stopBinding:true, services: config.services, scores:scores, hideDueDate:true, isAdmin:user?.isAdmin, isGrantManager:user?.isCaseManager]
+            if (reportingTab.visible) {
+                reportingTab.reportOrder = config?.projectReports?.collect{[category:it.category, description:it.description]} ?: []
+                project.reports?.each { Map report ->
+                    ReportConfig reportConfig = ((ProgramConfig)config).findProjectReportConfigForReport(report)
+                    report.isAdjustable = reportConfig?.isAdjustable()
+                }
+            }
+
+            Map rlpModel = [overview:model.overview, serviceDelivery: model.serviceDelivery, documents:model.documents, details:model.details, site:model.site, reporting:reportingTab]
             rlpModel.admin = model.admin
             rlpModel.admin.meriPlanTemplate = RLP_MERI_PLAN_TEMPLATE
             rlpModel.admin.projectServices = config.services
@@ -196,7 +212,7 @@ class ProjectController {
             rlpModel.admin.hidePrograms = true
             rlpModel.admin.showAnnouncementsTab = false
 
-            model = rlpModel
+            model = buildRLPTargetsModel(rlpModel, project)
         }
         else if (config?.projectTemplate == ESP_TEMPLATE && !user?.hasViewAccess) {
             project.remove('sites')
@@ -209,6 +225,29 @@ class ProjectController {
             model.dashboard.metrics = metrics
         }
         return [view: 'index', model: model]
+    }
+
+    private Map buildRLPTargetsModel(Map model, project){
+        //Verify project.outcomes (from program config) with primaryOutcome and secondaryOutcomes in project.custom.details.outcomes
+        Map primaryOutcome = project.custom?.details?.outcomes?.primaryOutcome
+        if (primaryOutcome){
+            Map oc =  project.outcomes.find {oc -> oc.outcome == primaryOutcome.description}
+            if(oc){
+                oc['targeted'] = true
+                primaryOutcome['shortDescription'] = oc['shortDescription']
+            }
+
+        }
+
+        for(def po : project.custom?.details?.outcomes?.secondaryOutcomes){
+            Map oc =  project.outcomes.find {oc -> oc.outcome == po.description}
+            if(oc){
+                oc['targeted'] = true
+                po['shortDescription'] = oc['shortDescription']
+            }
+
+        }
+        model
     }
 
     private String projectTemplate(Map config, String template) {
