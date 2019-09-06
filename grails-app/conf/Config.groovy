@@ -346,6 +346,16 @@ environments {
         ecodata.baseUrl = 'http://localhost:8080/ecodata/ws/'
         ecodata.service.url = 'http://localhost:8080/ecodata/ws'
         api_key=System.getenv('API_KEY')
+        grails {
+            cache {
+                enabled = false
+                ehcache {
+                    cacheManagerName = appName + '-ehcache'
+                    reloadable = true
+                    diskStore = '/tmp'
+                }
+            }
+        }
 
     }
     production {
