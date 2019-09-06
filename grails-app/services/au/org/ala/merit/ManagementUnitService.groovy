@@ -97,38 +97,50 @@ class ManagementUnitService {
         return mu?.blog?:[]
     }
 
-    List serviceScores(String managementUnitId, boolean approvedActivitiesOnly = true) {
-        List<Map> allServices = metadataService.getProjectServices()
+    /**
+     * Get scores of each program in the given management unit
+     * @param managementUnitId
+     * @param programIds
+     * @param approvedActivitiesOnly
+     * @return [programId: serviceScores]
+     */
+    Map serviceScores(String managementUnitId, String[] programIds, boolean approvedActivitiesOnly = true) { List<Map> allServices = metadataService.getProjectServices()
         List scoreIds = allServices.collect{it.scores?.collect{score -> score.scoreId}}.flatten()
 
-        Map scoreResults = reportService.targetsForScoreIds(scoreIds, ["managementUnitId:${managementUnitId}"], approvedActivitiesOnly)
+        def results = [:]
 
-        List deliveredServices = []
-        allServices.each { Map service ->
-            Map copy = [:]
-            copy.putAll(service)
-            copy.scores = []
-            service.scores?.each { score ->
-                Map copiedScore = [:]
-                copiedScore.putAll(score)
-                Map result = scoreResults?.scores?.find{it.scoreId == score.scoreId}
+        for(String programId in programIds){
+            Map scoreResults = reportService.targetsForScoreIds(scoreIds, ["managementUnitId:${managementUnitId}","programId:${programId}"], approvedActivitiesOnly)
 
-                copiedScore.target = result?.target ?: 0
-                copiedScore.result = result?.result ?: [result:0, count:0]
+            List deliveredServices = []
+            allServices.each { Map service ->
+                Map copy = [:]
+                copy.putAll(service)
+                copy.scores = []
+                service.scores?.each { score ->
+                    Map copiedScore = [:]
+                    copiedScore.putAll(score)
+                    Map result = scoreResults?.scores?.find{it.scoreId == score.scoreId}
 
-                // We only want to report on services that are going to be delivered by this program.
-                if (copiedScore.target) {
-                    copy.scores << copiedScore
+                    copiedScore.target = result?.target ?: 0
+                    copiedScore.result = result?.result ?: [result:0, count:0]
+
+                    // We only want to report on services that are going to be delivered by this program.
+                    if (copiedScore.target) {
+                        copy.scores << copiedScore
+                    }
+
+                }
+                if (copy.scores) {
+                    deliveredServices << copy
                 }
 
             }
-            if (copy.scores) {
-                deliveredServices << copy
-            }
 
+            results[programId]=deliveredServices
         }
+        results
 
-        deliveredServices
     }
 
 

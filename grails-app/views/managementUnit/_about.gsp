@@ -144,25 +144,55 @@
 
 
 
-<g:if test="${servicesDashboard.visible && servicesDashboard.services}">
+<g:if test="${servicesDashboard.visible}">
+
     <hr/>
     <div class="well-title">Service delivery</div>
     <div id="services-dashboard">
 
-        <g:if test="${servicesDashboard.planning}">
-            <b>Please note this project is currently in a planning phase so delivery against the targets below has not yet begun</b>
-        </g:if>
-        <g:each in="${servicesDashboard.services}" var="service" status="i">
+        <ul class="nav nav-tabs" id="services-tab" >
+            <g:each in="${mu.programs}" var="program" status="i">
+                <li class="nav-item">
+                    <g:set var="active" value="${i==0?'active':''}"/>
+                    <a class="nav-link ${active}"  data-toggle="tab" href="#${program.programId}" role="tab">${program.name}</a>
+                </li>
+            </g:each>
 
-            <div class="dashboard-section" style="padding:10px; margin-top:10px;">
-                <h3>${service.name}</h3>
-                <g:each in="${service.scores}" var="score">
-                    <fc:renderScore score="${score}"></fc:renderScore>
-                </g:each>
+        </ul>
 
-            </div>
+        <div class="tab-content" id="service-TabContent">
+            <g:each in="${mu.programs}" var="program" status="i">
+                <g:set var="active" value="${i==0?'active':''}"/>
+                <div class="tab-pane ${active}" id="${program.programId}" >
+                    <g:set var="services" value="${program.servicesWithScores}"/>
 
-        </g:each>
+                    <g:if test="${services.planning}">
+                        <b>Please note this project is currently in a planning phase so delivery against the targets below has not yet begun</b>
+                    </g:if>
+
+                    <g:each in="${services}" var="service_detail" >
+                        <div class="dashboard-section" style="padding:10px; margin-top:10px;">
+                            <h3>${service_detail.name}</h3>
+                            <g:each in="${service_detail.scores}" var="score">
+                                <fc:renderScore score="${score}"></fc:renderScore>
+                            </g:each>
+                        </div>
+                    </g:each>
+                </div>
+            </g:each>
+        </div>
+
+        %{--<g:each in="${servicesDashboard.services}" var="service" status="i">--}%
+
+            %{--<div class="dashboard-section" style="padding:10px; margin-top:10px;">--}%
+                %{--<h3>${service.name}</h3>--}%
+                %{--<g:each in="${service.scores}" var="score">--}%
+                    %{--<fc:renderScore score="${score}"></fc:renderScore>--}%
+                %{--</g:each>--}%
+
+            %{--</div>--}%
+
+        %{--</g:each>--}%
     </div>
 </g:if>
 

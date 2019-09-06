@@ -64,17 +64,6 @@ class ManagementUnitController {
         def hasPhotos = blogs.find { it.type == 'Photo' }
 
 
-        List reportOrder = mu.config?.managementUnitReports?.collect{[category:it.category, description:it.description]} ?: []
-
-        // If the program is not visible, there is no point showing the dashboard or sites as both of these rely on
-        // data in the search index to produce.
-
-        boolean managementUnitVisible = mu.config?.visibility != 'private'
-
-        List servicesWithScores = null
-        if (managementUnitVisible) {
-            servicesWithScores = managementUnitService.serviceScores(mu.managementUnitId, !hasAdminAccess)
-        }
 
         //Aggregate all targeted outcomes of projects
         for(Map project in projects){
@@ -90,11 +79,27 @@ class ManagementUnitController {
         }
         // Clone to avoid change on projects
         // Fetch related programs
+        String[] programIds =[]
         if(projects){
-            String[] programIds = projects.clone().unique{project->project.programId}?.programId
+            programIds = projects.clone().unique{project->project.programId}?.programId
             List programs = programService.get(programIds)
             mu.programs = programs
             mu.projects = projects
+        }
+
+
+        List reportOrder = mu.config?.managementUnitReports?.collect{[category:it.category, description:it.description]} ?: []
+
+        // If the program is not visible, there is no point showing the dashboard or sites as both of these rely on
+        // data in the search index to produce.
+        boolean managementUnitVisible = mu.config?.visibility != 'private'
+
+        Map servicesWithScores = null
+        if (managementUnitVisible) {
+            servicesWithScores = managementUnitService.serviceScores(mu.managementUnitId, programIds, !hasAdminAccess)
+            mu.programs?.each{
+                it['servicesWithScores'] = servicesWithScores[it.programId]
+            }
         }
 
 
@@ -105,7 +110,8 @@ class ManagementUnitController {
                                   hasManagementUnitStories:  hasManagementUnitStories,
                                   hasPhotos: hasPhotos
                     ],
-                    servicesDashboard:[visible: managementUnitVisible, planning:false, services:servicesWithScores]],
+                    servicesDashboard:[visible: managementUnitVisible, planning:false]
+                    ],
          projects: [label: 'MU Reporting', visible: canViewReports, stopBinding: false, type:'tab', mu:mu,reportOrder:reportOrder, hideDueDate:true],
          admin   : [label: 'MU Admin', visible: hasAdminAccess, type: 'tab', mu:mu, blog: [editable: hasEditAccessOfBlog]]
         ]
