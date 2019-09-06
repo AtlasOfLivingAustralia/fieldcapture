@@ -348,10 +348,7 @@ environments {
         api_key=System.getenv('API_KEY')
         grails {
             cache {
-                enabled = false
                 ehcache {
-                    cacheManagerName = appName + '-ehcache'
-                    reloadable = true
                     diskStore = '/tmp'
                 }
             }
