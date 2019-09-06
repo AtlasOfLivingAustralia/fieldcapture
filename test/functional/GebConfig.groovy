@@ -10,11 +10,11 @@ import org.openqa.selenium.firefox.FirefoxDriver
 import org.openqa.selenium.phantomjs.PhantomJSDriver
 
 
-
+baseUrl = 'http://devt.ala.org.au:8087/fieldcapture/'
 environments {
 
 
-    baseUrl = 'http://devt.ala.org.au:8087/fieldcapture/'
+
     reportsDir = 'target/geb-reports'
 
     // run as grails -Dgeb.env=chrome test-app
