@@ -60,11 +60,32 @@ class ProgramControllerSpec extends Specification {
         Map model = controller.index(programId)
 
         then:
+        model.content.size() == 4
         model.content.about.visible == true
         model.content.projects.visible == false
         model.content.sites.visible == false
         model.content.admin.visible == false
 
+    }
+
+    def "program admins should see all program content"() {
+        String programId = 'p1'
+        userService.getUser() >> [userId:'u1']
+        programService.get(programId) >> [programId:programId, name:"test"]
+        userService.getMembersOfProgram(programId) >> [members:[[userId:'u1', role:'admin']]]
+
+        when:
+        Map model = controller.index(programId)
+
+        then:
+        1 * userService.canEditProgramBlog("u1", programId) >> true
+        1 * userService.canUserViewNonPublicProgramInformation("u1", programId) >> true
+
+        model.content.size() == 4
+        model.content.about.visible == true
+        model.content.projects.visible == true
+        model.content.sites.visible == true
+        model.content.admin.visible == true
     }
 
     def "when editing a program report, the model will be customized for program reporting"() {
