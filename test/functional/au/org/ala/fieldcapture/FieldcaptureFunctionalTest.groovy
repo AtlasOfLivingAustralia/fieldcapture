@@ -2,6 +2,7 @@ package au.org.ala.fieldcapture
 
 import geb.Browser
 import geb.spock.GebReportingSpec
+import org.apache.log4j.Logger
 import pages.EntryPage
 import spock.lang.Shared
 
@@ -9,6 +10,8 @@ import spock.lang.Shared
  * Helper class for functional tests in fieldcapture.
  */
 class FieldcaptureFunctionalTest extends GebReportingSpec {
+
+    static Logger log = org.apache.log4j.Logger.getLogger(FieldcaptureFunctionalTest.class)
 
     @Shared def testConfig
 
@@ -51,22 +54,22 @@ class FieldcaptureFunctionalTest extends GebReportingSpec {
     def checkConfig() {
 
         if (!testConfig.projectEditorUsername) {
-            throw new IllegalArgumentException("Missing test configuration: projectEditorUsername")
+            log.warn("Missing test configuration: projectEditorUsername")
         }
         if (!testConfig.projectEditorPassword) {
-            throw new IllegalArgumentException("Missing test configuration: projectEditorPassword")
+            log.warn("Missing test configuration: projectEditorPassword")
         }
         if (!testConfig.projectAdminUsername) {
-            throw new IllegalArgumentException("Missing test configuration: projectAdminUsername")
+            log.warn("Missing test configuration: projectAdminUsername")
         }
         if (!testConfig.projectAdminPassword) {
-            throw new IllegalArgumentException("Missing test configuration: projectAdminPassword")
+            log.warn("Missing test configuration: projectAdminPassword")
         }
         if (!testConfig.alaAdminUsername) {
-            throw new IllegalArgumentException("Missing test configuration: alaAdminUsername")
+            log.warn("Missing test configuration: alaAdminUsername")
         }
         if (!testConfig.alaAdminPassword) {
-            throw new IllegalArgumentException("Missing test configuration: alaAdminPassword")
+            log.warn("Missing test configuration: alaAdminPassword")
         }
     }
 

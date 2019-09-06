@@ -27,7 +27,7 @@ mongo ecodata-functional-test --eval 'db.dropDatabase();'
 mongo ecodata-functional-test --eval 'db.project.count();'
 
 echo "Starting ecodata"
-grails -Dgrails.env=functionaltest run-app &
+grails -Dgrails.env=meritfunctionaltest run-app &
 
 cd ../..
 
