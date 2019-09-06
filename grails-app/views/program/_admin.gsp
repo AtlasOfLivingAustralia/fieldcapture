@@ -2,7 +2,7 @@
     <div class="nav flex-column nav-pills col-3">
         <a class="nav-link active" data-toggle="pill" href="#edit-program-details" id="edit-program-details-tab" role="tab">Edit</a>
         <a class="nav-link" data-toggle="pill" href="#program-permissions" role="tab">Permissions</a>
-        <a class="nav-link" data-toggle="pill" href="#editProgramBlog" id="editProgramBlog-tab" role="tab">Edit Blogs</a>
+        <a class="nav-link" data-toggle="pill" href="#editProgramBlog" id="editProgramBlog-tab" role="tab">Edit Blog</a>
         <g:if test="${fc.userIsSiteAdmin()}">
                 <a class="nav-link" data-toggle="pill" href="#reporting" role="tab">Reporting</a>
         </g:if>
@@ -46,7 +46,7 @@
 
         </div>
 
-        <g:if test="${fc.userIsAlaOrFcAdmin() || blog.editable}">
+        <g:if test="${blog.editable}">
             <div class="tab-pane" id="editProgramBlog">
                 <div id="editProjectBlog" class="pill-pane">
                     <h3>Edit Blog</h3>
