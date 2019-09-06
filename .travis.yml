@@ -8,6 +8,8 @@ branches:
   - dev
   - /^feature\/.*$/
   - /^hotfix\/.*$/
+services:
+  - mongodb
 before_install:
 - export TZ=Australia/Canberra
 - wget -q https://raw.githubusercontent.com/AtlasOfLivingAustralia/travis-build-configuration/master/ala_common.sh
