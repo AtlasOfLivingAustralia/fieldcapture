@@ -10,6 +10,10 @@ branches:
   - /^hotfix\/.*$/
 services:
   - mongodb
+cache:
+  directories:
+    - $HOME/.m2
+
 before_install:
 - export TZ=Australia/Canberra
 - wget -q https://raw.githubusercontent.com/AtlasOfLivingAustralia/travis-build-configuration/master/ala_common.sh
@@ -23,6 +27,7 @@ script:
 - cd scripts
 - chmod +x runFunctionalTests.sh
 - ./runFunctionalTests.sh
+- cd ..
 - grails clean; grails refresh-dependencies --non-interactive && grails test-app -clover.on :unit --non-interactive --stacktrace && ala_travis_grails_build
 
 env:
