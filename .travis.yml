@@ -24,6 +24,7 @@ before_script:
 - npm install
 script:
 - node_modules/karma/bin/karma start karma.conf.js --single-run --browsers PhantomJS
+- grails clean; grails refresh-dependencies --non-interactive
 - cd scripts
 - chmod +x runFunctionalTests.sh
 - ./runFunctionalTests.sh
