@@ -45,7 +45,7 @@ class BlogControllerSpec extends Specification {
         controller.edit('1')
 
         then:
-        1 * blogService.get('1234', '1') >> [:]
+        1 * blogService.get('1234', '1', BlogType.PROJECT) >> [:]
         response.status == HttpStatus.SC_OK
     }
 
