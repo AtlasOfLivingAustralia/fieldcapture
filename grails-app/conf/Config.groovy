@@ -345,7 +345,7 @@ environments {
         logging.dir = '.'
         ecodata.baseUrl = 'http://localhost:8080/ecodata/ws/'
         ecodata.service.url = 'http://localhost:8080/ecodata/ws'
-        api_key=System.getenv('API_KEY')
+        api_key='testapikey'
         grails {
             cache {
                 ehcache {

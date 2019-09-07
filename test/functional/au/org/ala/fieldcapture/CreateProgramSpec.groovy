@@ -6,6 +6,10 @@ import pages.ProgramPage
 
 class CreateProgramSpec extends StubbedCasSpec {
 
+
+    def setup() {
+        useDataSet('dataset1')
+    }
     def "I can create a program as an FC_ADMIN"() {
 
         setup:

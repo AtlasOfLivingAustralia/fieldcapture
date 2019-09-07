@@ -16,7 +16,16 @@ import static com.github.tomakehurst.wiremock.client.WireMock.*
 class StubbedCasSpec extends FieldcaptureFunctionalTest {
 
     @Rule
-    WireMockRule wireMockRule = new WireMockRule(options().port(testConfig.wiremock.port).extensions(new ResponseTemplateTransformer(false)).notifier(new ConsoleNotifier(true)))
+    WireMockRule wireMockRule = new WireMockRule(
+            options()
+                    .port(testConfig.wiremock.port)
+                    .usingFilesUnderDirectory(getMappingsPath())
+                    .extensions(new ResponseTemplateTransformer(false))
+                    .notifier(new ConsoleNotifier(true)))
+
+    private String getMappingsPath() {
+        new File(getClass().getResource("/resources/wiremock").toURI())
+    }
 
     def login(Map userDetails, Browser browser) {
 

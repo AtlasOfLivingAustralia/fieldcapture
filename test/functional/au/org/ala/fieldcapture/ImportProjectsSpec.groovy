@@ -4,6 +4,10 @@ import pages.ProjectImport
 
 class ImportProjectsSpec extends StubbedCasSpec {
 
+    def setup() {
+        useDataSet('dataset1')
+    }
+
     def "New projects can be imported into MERIT"() {
 
         setup:

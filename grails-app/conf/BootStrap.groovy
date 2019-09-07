@@ -29,18 +29,6 @@ class BootStrap {
         })
         servletContext.addListener(SessionLogger)
 
-        withUser([name:"meritBootstrap"]) {
-            // Insert the MERIT hub into ecodata if it's not already there
-            String meritHubPath = grailsApplication.config.app.default.hub ?: 'merit'
-            HubSettings meritHub = settingService.getHubSettings(meritHubPath)
-            if (!meritHub) {
-                log.info("Creating the MERIT hub")
-                Map meritSettings = new JsonSlurper().parse(getClass().getResource('/data/meritHub.json'))
-                meritHub = new HubSettings(meritSettings)
-                settingService.updateHubSettings(meritHub)
-            }
-        }
-
     }
     def destroy = {
     }
