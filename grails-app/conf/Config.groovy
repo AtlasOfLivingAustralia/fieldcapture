@@ -346,7 +346,11 @@ environments {
         ecodata.baseUrl = 'http://localhost:8080/ecodata/ws/'
         ecodata.service.url = 'http://localhost:8080/ecodata/ws'
         api_key='testapikey'
-        grails.cache.ehcache.diskStore = '/tmp'
+        grails.cache.config = {
+            diskStore {
+                path '/tmp'
+            }
+        }
     }
     production {
         grails.logging.jul.usebridge = false
