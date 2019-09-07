@@ -26,7 +26,7 @@ script:
 - node_modules/karma/bin/karma start karma.conf.js --single-run --browsers PhantomJS
 - grails clean; grails refresh-dependencies --non-interactive
 - cd scripts
-- chmod +x runFunctionalTests.sh
+- chmod +x *.sh
 - ./runFunctionalTests.sh
 - cd ..
 - grails clean; grails refresh-dependencies --non-interactive && grails test-app -clover.on :unit --non-interactive --stacktrace && ala_travis_grails_build
