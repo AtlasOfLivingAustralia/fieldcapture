@@ -13,7 +13,7 @@ public class AddActivitySpec extends FieldcaptureFunctionalTest {
     }
 
     def projectId = "cb5497a9-0f36-4fef-9f6a-9ea832c5b68c"
-
+/*
     def "No permission to add an activity"() {
 
         logout(browser)
@@ -118,5 +118,7 @@ public class AddActivitySpec extends FieldcaptureFunctionalTest {
 
         plansAndReports.activities.size() == 0 || plansAndReports.activities.find { it.description == 'Test activity [edited]' } == null
     }
+
+ */
 }
 
