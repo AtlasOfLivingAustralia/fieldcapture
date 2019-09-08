@@ -330,18 +330,27 @@ environments {
         layout.skin = "nrm"
         app.default.hub='merit'
         runWithNoExternalConfig = true
-        def casBaseUrl = "https://auth.ala.org.au"
+        wiremock.port = 8018
+        def casBaseUrl = "http://localhost:${wiremock.port}"
+
         security.cas.appServerName="${serverName}"
         security.cas.contextPath="/${appName}"
         security.cas.casServerName="${casBaseUrl}"
         security.cas.casServerUrlPrefix="${casBaseUrl}/cas"
         security.cas.loginUrl="${security.cas.casServerUrlPrefix}/login"
         security.cas.casLoginUrl="${security.cas.casServerUrlPrefix}/login"
+        userDetails.url = "${casBaseUrl}/userdetails/userDetails/"
+        userDetailsSingleUrl = "${userDetailsUrl}getUserDetails"
+        userDetailsUrl = "${userDetatails.url}getUserListFull"
         logging.dir = '.'
-        ecodata.baseUrl = 'http://devt.ala.org.au:8080/ecodata/ws/'
-        ecodata.service.url = 'http://devt.ala.org.au:8080/ecodata/ws'
-        api_key=System.getenv('API_KEY')
-
+        ecodata.baseUrl = 'http://localhost:8080/ecodata/ws/'
+        ecodata.service.url = 'http://localhost:8080/ecodata/ws'
+        api_key='testapikey'
+        grails.cache.config = {
+            diskStore {
+                path '/tmp'
+            }
+        }
     }
     production {
         grails.logging.jul.usebridge = false
