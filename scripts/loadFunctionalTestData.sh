@@ -1,4 +1,4 @@
-#!/usr/bin/env bash -v
+#!/bin/bash -v
 echo "This script should be run from the project root directory"
 if [ -z "$1" ]
   then
