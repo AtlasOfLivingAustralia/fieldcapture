@@ -1,4 +1,4 @@
-#!/usr/bin/env bash -v
+#!/bin/bash -v
 echo "This script should be run from the project root directory"
 if [ -z "$1" ]
   then
@@ -12,7 +12,7 @@ DATA_PATH=$1
 cd $DATA_PATH
 echo $PWD
 
-mongo $DATABASE_NAME --eval "db.dropDatabase()" >> /tmp/mongo1.txt
-mongo $DATABASE_NAME loadDataSet.js >> /tmp/mongo2.txt
+mongo $DATABASE_NAME --eval "db.dropDatabase()"
+mongo $DATABASE_NAME loadDataSet.js
 
 

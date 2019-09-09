@@ -95,13 +95,14 @@ class FieldcaptureFunctionalTest extends GebReportingSpec {
         println "pwd".execute().text
         println "**********************************************"
         println "**********************************************"
-        println "ls -la ./scripts".execute().text
+        println "ls -la ${dataSetPath}".execute().text
         println "**********************************************"
-        println "./scripts/loadDataSet.js".execute().text
-//        int exitCode = "./scripts/loadFunctionalTestData.sh ${dataSetPath}".execute().waitFor()
-//        if (exitCode != 0) {
-//            throw new RuntimeException("Loading data set ${dataSetPath} failed.  Exit code: ${exitCode}")
-//        }
+        println "./scripts/loadFunctionalTestData.sh ${dataSetPath}".execute().text
+
+        int exitCode = "./scripts/loadFunctionalTestData.sh ${dataSetPath}".execute().waitFor()
+        if (exitCode != 0) {
+            throw new RuntimeException("Loading data set ${dataSetPath} failed.  Exit code: ${exitCode}")
+        }
     }
 
     def logout(Browser browser) {
