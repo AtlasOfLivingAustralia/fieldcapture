@@ -9,10 +9,10 @@ fi
 DATABASE_NAME=ecodata-functional-test
 DATA_PATH=$1
 
-#cd $DATA_PATH
+cd $DATA_PATH
 echo $PWD
 
 mongo $DATABASE_NAME --eval "db.dropDatabase()"
-mongo $DATABASE_NAME ${DATA_PATH}loadDataSet.js
+mongo $DATABASE_NAME loadDataSet.js
 
 
