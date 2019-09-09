@@ -12,6 +12,9 @@ class ProgramControllerSpec extends Specification {
     ReportService reportService = Mock(ReportService)
     UserService userService = Mock(UserService)
     ActivityService activityService = Mock(ActivityService)
+    RoleService roleService = Mock(RoleService)
+    BlogService blogService = Mock(BlogService)
+
 
     String adminUserId = 'admin'
     String editorUserId = 'editor'
@@ -20,7 +23,12 @@ class ProgramControllerSpec extends Specification {
     def setup() {
         controller.programService = programService
         controller.reportService = reportService
+        controller.roleService = roleService
         controller.activityService = activityService
+        controller.userService = userService
+        controller.blogService = blogService
+
+        roleService.getRoles() >> []
     }
 
     def "when viewing a program report, the model will be customized for program reporting"() {
@@ -39,6 +47,45 @@ class ProgramControllerSpec extends Specification {
         model.context == program
         model.contextViewUrl == '/program/index/'+programId
         model.reportHeaderTemplate == '/program/rlpProgramReportHeader'
+    }
+
+    def "unauthenticated users should only see the program overview"() {
+        setup:
+        String programId = 'p1'
+        userService.getUser() >> null
+        programService.get(programId) >> [programId:programId, name:"test"]
+        userService.getMembersOfProgram(programId) >> [members:[]]
+
+        when:
+        Map model = controller.index(programId)
+
+        then:
+        model.content.size() == 4
+        model.content.about.visible == true
+        model.content.projects.visible == false
+        model.content.sites.visible == false
+        model.content.admin.visible == false
+
+    }
+
+    def "program admins should see all program content"() {
+        String programId = 'p1'
+        userService.getUser() >> [userId:'u1']
+        programService.get(programId) >> [programId:programId, name:"test"]
+        userService.getMembersOfProgram(programId) >> [members:[[userId:'u1', role:'admin']]]
+
+        when:
+        Map model = controller.index(programId)
+
+        then:
+        1 * userService.canEditProgramBlog("u1", programId) >> true
+        1 * userService.canUserViewNonPublicProgramInformation("u1", programId) >> true
+
+        model.content.size() == 4
+        model.content.about.visible == true
+        model.content.projects.visible == true
+        model.content.sites.visible == true
+        model.content.admin.visible == true
     }
 
     def "when editing a program report, the model will be customized for program reporting"() {
@@ -144,6 +191,46 @@ class ProgramControllerSpec extends Specification {
         then:
         1 * reportService.overrideLock('r1', {it.endsWith('program/viewReport/p1?reportId=r1')})
     }
+
+    def "Get a blog of program"() {
+
+        def programId = 'test_program'
+        Map program = [programId:programId]
+        program["blog"] = [[
+                                   "date" : "2019-08-07T14:00:00Z",
+                                   "keepOnTop" : false,
+                                   "blogEntryId" : "0",
+                                   "title" : "This is a test",
+                                   "type" : "Program Stories",
+                                   "programId" : "test_program",
+                                   "content" : "This is a blog test",
+                                   "stockIcon" : "fa-newspaper-o"
+                           ]]
+
+        programService.get(programId) >> program
+        blogService.getBlog(program) >> program["blog"]
+
+        def userId = adminUserId
+        Map user = [userId:userId]
+        userService.getUser() >> user
+
+        userService.getMembersOfProgram(programId) >> [members:[
+                [userId:adminUserId, role:RoleService.PROJECT_ADMIN_ROLE],
+                [userId:editorUserId, role:RoleService.PROJECT_EDITOR_ROLE],
+                [userId:grantManagerUserId, role:RoleService.GRANT_MANAGER_ROLE]
+        ]]
+
+
+        when: "Get a program model"
+
+        Map model = controller.index(programId)
+
+        then: "Should be true"
+
+        model.program.blog[0].programId == "test_program"
+
+    }
+
 
 
     private Map testProgram(String id, boolean includeReports) {

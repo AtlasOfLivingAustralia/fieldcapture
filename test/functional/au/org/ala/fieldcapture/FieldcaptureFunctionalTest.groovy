@@ -87,12 +87,21 @@ class FieldcaptureFunctionalTest extends GebReportingSpec {
      *
      */
     void useDataSet(String dataSetName) {
+
         def dataSetPath = getClass().getResource("/resources/"+dataSetName+"/").getPath()
 
-        int exitCode = "scripts/loadFunctionalTestData.sh ${dataSetPath}".execute().waitFor()
-        if (exitCode != 0) {
-            throw new RuntimeException("Loading data set ${dataSetPath} failed.  Exit code: ${exitCode}")
-        }
+        log.info("Using dataset from: ${dataSetPath}")
+        println "**********************************************"
+        println "pwd".execute().text
+        println "**********************************************"
+        println "**********************************************"
+        println "ls -la ./scripts".execute().text
+        println "**********************************************"
+        println "mongo ecodatafunctionaltest ./scripts/loadDataSet.js".execute().text
+//        int exitCode = "./scripts/loadFunctionalTestData.sh ${dataSetPath}".execute().waitFor()
+//        if (exitCode != 0) {
+//            throw new RuntimeException("Loading data set ${dataSetPath} failed.  Exit code: ${exitCode}")
+//        }
     }
 
     def logout(Browser browser) {

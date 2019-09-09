@@ -33,12 +33,11 @@
         <div class="well-title">The Service Provider is addressing these RLP outcomes</div>
         <div class="row outcomes no-gutters">
             <g:each in="${program.outcomes}" var="outcome" >
-                <g:set var="outcomeClass" value="${outcome.targeted ? 'targeted' :''}"/>
+                <g:set var="outcomeClass" value="${outcome.targeted ? 'targeted' : 'disabled'}"/>
                 <div class="col-md">
                     <div class="outcome-wrapper h-100">
-                        <div class="h-100 outcome ${outcomeClass}">
+                        <div class="h-100 outcome ${outcomeClass}" <g:if test="${!outcome.targeted}">aria-hidden="true"</g:if>>
                             ${outcome.shortDescription}
-                            <g:if test ="${outcome.targeted}"><span class="fa fa-check-circle"></span></g:if>
                         </div>
                     </div>
                 </div>
@@ -97,11 +96,52 @@
 </g:else>
 
 </div>
+<g:if test="${blog.editable || blog.hasNewsAndEvents || blog.hasProgramStories || blog.hasPhotos}">
+<div class="row-fluid">
+    <hr/>
+    <div class="well-title">Program blog</div>
+    <g:if test="${blog.editable}">
+        <p>
+            <a href="${g.createLink(controller: 'blog', action: 'create', params:[programId: program.programId, returnTo:g.createLink(controller: 'program', action:'index', id:program.programId)])}"><button class="btn"><i class="fa fa-newspaper-o"></i> New Entry</button></a>
+            <button id="gotoEditBlog" class="btn"><i class="fa fa-edit"></i> Edit</button>
+            </a>
+        </p>
+    </g:if>
 
+
+    <g:if test="${blog.hasNewsAndEvents}">
+        <div class="row-fluid">
+            <div class="well-title">News and Events</div>
+            <div class="blog-section">
+                <g:render template="/shared/blog" model="${[blog:blog.blogs, type:'News and Events']}"/>
+            </div>
+        </div>
+    </g:if>
+
+    <g:if test="${blog.hasProgramStories}">
+        <div class="row-fluid">
+            <div class="well-title">Program stories</div>
+            <div class="blog-section">
+                <g:render template="/shared/blog" model="${[blog:blog.blogs, type:'Program Stories']}"/>
+            </div>
+        </div>
+    </g:if>
+
+    <g:if test="${blog.hasPhotos}">
+        <div class="row-fluid">
+            <div class="well-title">Photos</div>
+            <div class="blog-section">
+                <g:render template="/shared/blog" model="${[blog:blog.blogs, type:'Photo']}"/>
+            </div>
+        </div>
+    </g:if>
+
+ </div>
+</g:if>
 
 <g:if test="${servicesDashboard.visible && servicesDashboard.services}">
     <hr/>
-    <div class="well-title">Service delivery</div>
+    <div class="well-title">Dashboard</div>
     <div id="services-dashboard">
 
         <g:if test="${servicesDashboard.planning}">

@@ -26,6 +26,12 @@
         <g:if test="${params.projectId}">
             <g:link controller="project" id="${params.projectId}">Project </g:link>  <span class="divider"> / </span></li>
         </g:if>
+        <g:if test="${params.programId}">
+            <g:link controller="program" id="${params.programId}">Program </g:link>  <span class="divider"> / </span></li>
+        </g:if>
+        <g:if test="${params.managementUnitId}">
+            <g:link controller="managementUnit" id="${params.managementUnitId}">Management Unit </g:link>  <span class="divider"> / </span></li>
+        </g:if>
 
         <li class="active">New blog entry</li>
     </ul>

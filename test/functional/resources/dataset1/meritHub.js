@@ -121,5 +121,6 @@ var meritHub = {
     }
   },
   "title" : "MERIT",
-  "urlPath" : "merit"
-}
+  "urlPath" : "merit",
+  "hubId":"merit"
+};

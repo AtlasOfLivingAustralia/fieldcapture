@@ -154,10 +154,14 @@ class DocumentService {
         boolean canEdit = false
 
         if (document) {
-            if (document.readOnly) {
+            // Only FC_ADMINS can edit an existing read only document, but
+            // other roles can create them.
+            if (document.readOnly && document.documentId) {
                 canEdit = userService.userIsAlaOrFcAdmin()
             }
             else {
+                // Check the permissions that apply to the entity the document is
+                // associated with.
                 String userId = userService.getCurrentUserId()
                 if (document.projectId) {
                     canEdit = userService.canUserEditProject(userId, document.projectId)

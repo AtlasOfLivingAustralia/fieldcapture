@@ -50,6 +50,9 @@ class GmsMapper {
     /** Map of program name to program id */
     private Map programs
 
+    /** Map of management unit name to management unit id */
+    private Map managementUnits
+
     def projectMapping = [
             (GRANT_ID_COLUMN):[name:'grantId', type:'string'],
             APP_NM:[name:'name', type:'string'],
@@ -72,7 +75,7 @@ class GmsMapper {
             ADMIN_EMAIL:[name:'adminEmail2', type:'email'],
             EDITOR_EMAIL:[name:'editorEmail', type:'email'],
             EDITOR_EMAIL_2:[name:'editorEmail2', type:'email'],
-            MANAGEMENT_UNIT:[name:'programName', type:'string']
+            MANAGEMENT_UNIT:[name:'managementUnitName', type:'string']
     ]
 
     def siteMapping = [
@@ -114,16 +117,18 @@ class GmsMapper {
         this.organisations = []
         this.scores = []
         this.programs = [:]
+        this.managementUnits = [:]
         includeProgress = false
     }
 
-    public GmsMapper(activitiesModel, programModel, organisations, List<Map> scores, Map programs = [:], includeProgress = false) {
+    public GmsMapper(activitiesModel, programModel, organisations, List<Map> scores, Map programs = [:], Map managementUnits = [:], includeProgress = false) {
         this.activitiesModel = activitiesModel
         this.programModel = programModel
         this.includeProgress = includeProgress
         this.organisations = organisations
         this.scores = scores
         this.programs = programs
+        this.managementUnits = managementUnits
     }
 
     def validateHeaders(projectRows) {
@@ -162,12 +167,12 @@ class GmsMapper {
         project.isMERIT = true
         project.origin = 'merit'
 
-        if (project.programName) {
-            String programName = project.remove('programName')
-            project.programId = programs[programName]
-            if (!project.programId) {
-                errors << "No management unit exists with name: ${programName}"
-            }
+
+        String programName = project.associatedProgram
+        String programId = programs[programName]
+        if (programId) {
+            project.remove('associatedProgram')
+            project.programId = programId
         }
         else {
             def program = programModel.programs.find {it.name == project.associatedProgram}
@@ -180,6 +185,14 @@ class GmsMapper {
                         errors << "Sub-programme ${project.associatedSubProgram} doesn't match any MERIT programme"
                     }
                 }
+            }
+        }
+
+        if (project.managementUnitName) {
+            String managementUnitName = project.remove('managementUnitName')
+            project.managementUnitId = managementUnits[managementUnitName]
+            if (!project.managementUnitId) {
+                errors << "No management unit exists with name ${managementUnitName}"
             }
         }
 

@@ -8,14 +8,15 @@
 //= require blog
 
 
+
 /**
- * Knockout view model for program pages.
- * @param props JSON/javascript representation of the program.
+ * Knockout view model for managementUnit pages.
+ * @param props JSON/javascript representation of the managementUnit.
  * @param options an object specifying the following options:
- * validationContainerSelector, programDeleteUrl, returnToUrl, programEditUrl, programViewUrl
+ * validationContainerSelector, managementUnitDeleteUrl, returnToUrl, managementUnitEditUrl, managementUnitViewUrl
  * @constructor
  */
-ProgramViewModel = function (props, options) {
+ManagementUnitViewModel = function (props, options) {
     var self = $.extend(this, new Documents(options));
 
     var defaults = {
@@ -23,18 +24,18 @@ ProgramViewModel = function (props, options) {
     };
     var config = _.extend({}, defaults, options);
 
-    self.programId = props.programId;
+    self.managementUnitId = props.managementUnitId;
     self.name = ko.observable(props.name);
     self.description = ko.observable(props.description).extend({markdown: true});
     self.url = ko.observable(props.url);
     self.newsAndEvents = ko.observable(props.newsAndEvents).extend({markdown: true});
-    self.programSiteId = ko.observable(props.programSiteId);
+    self.managementUnitSiteId = ko.observable(props.managementUnitSiteId);
     self.mapFeatures =  ko.observable(props.mapFeatures);
     self.projects = props.projects;
 
-    self.deleteProgram = function () {
-        if (window.confirm("Delete this program?  Are you sure?")) {
-            $.post(config.programDeleteUrl).complete(function () {
+    self.deleteManagementUnit = function () {
+        if (window.confirm("Delete this managementUnit?  Are you sure?")) {
+            $.post(config.managementUnitDeleteUrl).complete(function () {
                     window.location = config.returnToUrl;
                 }
             );
@@ -46,7 +47,7 @@ ProgramViewModel = function (props, options) {
     };
 
     self.editOrganisation = function () {
-        window.location = config.programEditUrl;
+        window.location = config.managementUnitEditUrl;
     };
 
     self.transients = self.transients || {};
@@ -70,16 +71,16 @@ ProgramViewModel = function (props, options) {
         if ($(config.validationContainerSelector).validationEngine('validate')) {
             self.saveWithErrorDetection(
                 function (data) {
-                    var programId = self.programId ? self.programId : data.programId;
+                    var managementUnitId = self.managementUnitId ? self.managementUnitId : data.managementUnitId;
 
                     var url;
                     if (config.returnToUrl) {
                         url = config.returnToUrl;
                         url += (config.returnToUrl.indexOf('?') > 0) ? '&' : '?';
-                        url += 'programId=' + programId;
+                        url += 'managementUnitId=' + managementUnitId;
                     }
                     else {
-                        url = config.programViewUrl + '/' + programId;
+                        url = config.managementUnitViewUrl + '/' + managementUnitId;
                     }
                     window.location.href = url;
                 },
@@ -90,7 +91,7 @@ ProgramViewModel = function (props, options) {
     };
 
     self.cancel = function() {
-        var url = config.returnToUrl || config.programViewUrl;
+        var url = config.returnToUrl || config.managementUnitViewUrl;
         if (url) {
             window.location.href = url;
         }
@@ -114,10 +115,10 @@ ProgramViewModel = function (props, options) {
         });
     }
 
-    autoSaveModel(self, config.programSaveUrl,
+    autoSaveModel(self, config.managementUnitSaveUrl,
         {
             blockUIOnSave: true,
-            blockUISaveMessage: 'Saving programme....',
+            blockUISaveMessage: 'Saving the management Unit....',
             serializeModel: function () {
                 return self.modelAsJSON(true);
             }
@@ -128,9 +129,9 @@ ProgramViewModel = function (props, options) {
     return self;
 };
 
-var ProgramPageViewModel = function(props, options) {
+var ManagementUnitPageViewModel = function(props, options) {
     var self = this;
-    _.extend(self, new ProgramViewModel(props, options));
+    _.extend(self, new ManagementUnitViewModel(props, options));
 
     var config = props.config || {};
 
@@ -158,15 +159,15 @@ var ProgramPageViewModel = function(props, options) {
     };
 
     var coreServicesReportCategory = 'Core Services Reporting';
-    var getProgramReportConfig = function() {
-        if (!config.programReports || config.programReports.length == 0) {
-            config.programReports = [{type:'Administrative', category:coreServicesReportCategory}];
+    var getManagementUnitReportConfig = function() {
+        if (!config.managementUnitReports || config.managementUnitReports.length == 0) {
+            config.managementUnitReports = [{type:'Administrative', category:coreServicesReportCategory}];
         }
-        return config.programReports[0];
+        return config.managementUnitReports[0];
     };
 
     var activityReportConfig = getActivityReportConfig();
-    var programReportConfig = getProgramReportConfig();
+    var managementUnitReportConfig = getManagementUnitReportConfig();
 
     self.coreServicesOptions = [
         {label:'Monthly (First period ends 31 July 2018)', firstReportingPeriodEnd:'2018-07-31T14:00:00Z', reportingPeriodInMonths:1},
@@ -175,7 +176,7 @@ var ProgramPageViewModel = function(props, options) {
         {label:"Quarterly - Group B (First period ends 31 August 2018)", firstReportingPeriodEnd:'2018-08-31T14:00:00Z', reportingPeriodInMonths:3}];
 
     var currentOption = _.find(self.coreServicesOptions, function(option) {
-        return option.firstReportingPeriodEnd == programReportConfig.firstReportingPeriodEnd && option.reportingPeriodInMonths == programReportConfig.reportingPeriodInMonths;
+        return option.firstReportingPeriodEnd == managementUnitReportConfig.firstReportingPeriodEnd && option.reportingPeriodInMonths == managementUnitReportConfig.reportingPeriodInMonths;
     });
     self.coreServicesPeriod = ko.observable(currentOption ? currentOption.label : null);
 
@@ -191,12 +192,12 @@ var ProgramPageViewModel = function(props, options) {
     self.startDate = ko.observable(props.startDate).extend({simpleDate:false});
     self.endDate = ko.observable(props.endDate).extend({simpleDate:false});
 
-    self.programReportCategories = ko.computed(function() {
-        return _.map(config.programReports || [], function(report) {
+    self.managementUnitReportCategories = ko.computed(function() {
+        return _.map(config.managementUnitReports || [], function(report) {
             return report.category;
         });
     });
-    self.selectedProgramReportCategories = ko.observableArray();
+    self.selectedManagementUnitReportCategories = ko.observableArray();
 
     self.projectReportCategories = ko.computed(function() {
        return _.map(config.projectReports || [], function(report) {
@@ -211,8 +212,8 @@ var ProgramPageViewModel = function(props, options) {
             var selectedCoreServicesPeriod = _.find(self.coreServicesOptions, function(option) {
                 return option.label == self.coreServicesPeriod();
             });
-            programReportConfig.firstReportingPeriodEnd = selectedCoreServicesPeriod.firstReportingPeriodEnd;
-            programReportConfig.reportingPeriodInMonths = selectedCoreServicesPeriod.reportingPeriodInMonths;
+            managementUnitReportConfig.firstReportingPeriodEnd = selectedCoreServicesPeriod.firstReportingPeriodEnd;
+            managementUnitReportConfig.reportingPeriodInMonths = selectedCoreServicesPeriod.reportingPeriodInMonths;
 
             var selectedActivityReportingPeriod = _.find(self.activityReportingOptions, function(option) {
                 return option.label == self.activityReportingPeriod();
@@ -239,7 +240,7 @@ var ProgramPageViewModel = function(props, options) {
             endDate:self.endDate()
         };
         return $.ajax({
-            url: options.programSaveUrl,
+            url: options.managementUnitSaveUrl,
             type: 'POST',
             data: JSON.stringify(json),
             dataType:'json',
@@ -251,7 +252,7 @@ var ProgramPageViewModel = function(props, options) {
 
     self.regenerateReportsByCategory = function() {
         blockUIWithMessage("Regenerating reports...");
-        self.regenerateReports(self.selectedProgramReportCategories(), self.selectedProjectReportCategories()).done(function() {
+        self.regenerateReports(self.selectedManagementUnitReportCategories(), self.selectedProjectReportCategories()).done(function() {
             blockUIWithMessage("Reports successfully regenerated, reloading page...");
             setTimeout(function(){
                 window.location.reload();
@@ -262,21 +263,21 @@ var ProgramPageViewModel = function(props, options) {
         });
     };
 
-    self.regenerateReports = function(programReportCategories, projectReportCategories) {
-        var data = JSON.stringify({programReportCategories:programReportCategories, projectReportCategories:projectReportCategories});
+    self.regenerateReports = function(managementUnitReportCategories, projectReportCategories) {
+        var data = JSON.stringify({managementUnitReportCategories:managementUnitReportCategories, projectReportCategories:projectReportCategories});
         return $.ajax({
-            url: options.regenerateProgramReportsUrl,
+            url: options.regenerateManagementUnitReportsUrl,
             type: 'POST',
             data: data,
             dataType:'json',
             contentType: 'application/json'
         }).fail(function() {
-            bootbox.alert("Failed to regenerate program reports");
+            bootbox.alert("Failed to regenerate management unit reports");
         });
 
     };
 
-    self.saveProgramConfiguration = function() {
+    self.saveManagementUnitConfiguration = function() {
 
         try {
             config = JSON.parse(self.config());
@@ -286,44 +287,9 @@ var ProgramPageViewModel = function(props, options) {
             return;
         }
         self.saveConfig(config).done(function (data) {
-            bootbox.alert("Program configuration saved");
+            bootbox.alert("Management Unit configuration saved");
         });
 
-    };
-
-    self.loadProjectSites = function(map) {
-        //find sites of related projects.
-        var searchUrl = options.geoSearchUrl +"?max=10000&geo=true&markBy=false";
-        searchUrl = searchUrl + "&fq=programId:" +self.programId;
-        $.getJSON(searchUrl, function(data) {
-            $.each(data.projects, function(j, project) {
-                var projectName = project.name;
-                if (project.geo && project.geo.length > 0) {
-                    $.each(project.geo, function(k, el) {
-                        var lat = parseFloat(el.loc.lat);
-                        var lon = parseFloat(el.loc.lon);
-                        var mf = {
-                            geometry: {
-                                coordinates: [lon,lat],
-                                type: "Point"
-
-                            },
-                            properties:{
-                                name: projectName,
-                                //work around with leaflet circle - ref maps.js
-                                point_type: 'Circle',
-                                radius: 0, //Need to have a value,but overwritten somewhere
-                                type: "circle",
-                                popupContent: "Project: <a href="+fcConfig.projectUrl +"/" +project.projectId+">"+ projectName + "</a>" +
-                                    "<br/>Site: " + el.siteName
-                            },
-                            type: "Feature"
-                        };
-                        map.addFeature(mf);
-                    });
-                };
-            });
-        });
     };
 
     var tabs = {
@@ -344,12 +310,14 @@ var ProgramPageViewModel = function(props, options) {
                     });
                 }
                 $.fn.dataTable.moment( 'dd-MM-yyyy' );
-                $('#projectOverviewList').DataTable({displayLength:25, order:[[2, 'asc'], [3, 'asc']]});
+                //Regex to pick up project tables in programs
+                $("[id^=projectOverviewList-]").DataTable({displayLength:25, order:[[2, 'asc'], [3, 'asc']]});
+                $("[id^=projectList-]").DataTable({displayLength:25, order:[[2, 'asc'], [3, 'asc']]});
 
                 //create a empty map.
                 var map = createMap({
                     useAlaMap:true,
-                    mapContainerId:'programSiteMap',
+                    mapContainerId:'managementUnitSiteMap',
                     width: '100%',
                     styles: {
                         circle: {
@@ -360,17 +328,47 @@ var ProgramPageViewModel = function(props, options) {
                     }
                 });
 
-                if (self.programSiteId){
+                if (self.managementUnitSiteId){
                     if (!self.mapFeatures()) {
-                        console.log("There was a problem obtaining program site data");
-                    }
-                    else {
+                        console.log("There was a problem obtaining management unit site data");
+                    }else{
                         map.addFeature(self.mapFeatures())
-                    }
-                }
-                // Temporarily disabled until we can reduce the precision of the site information.
-                //self.loadProjectSites(map);
+                    };
+                };
 
+                //find sites of related projects.
+                var searchUrl = fcConfig.geoSearchUrl +"?max=10000&geo=true&markBy=false";
+                searchUrl = searchUrl + "&fq=managementUnitId:" +self.managementUnitId;
+                $.getJSON(searchUrl, function(data) {
+                    $.each(data.projects, function(j, project) {
+                        var projectId = project.projectId;
+                        var projectName = project.name;
+                        if (project.geo && project.geo.length > 0) {
+                            $.each(project.geo, function(k, el) {
+                                var lat = parseFloat(el.loc.lat);
+                                var lon = parseFloat(el.loc.lon);
+                                var mf = {
+                                    geometry: {
+                                        coordinates: [lon,lat],
+                                        type: "Point"
+
+                                    },
+                                    properties:{
+                                        name: projectName,
+                                        //work around with leaflet circle - ref maps.js
+                                        point_type: 'Circle',
+                                        radius: 0, //Need to have a value,but overwritten somewhere
+                                        type: "circle",
+                                        popupContent: "Project: <a href="+fcConfig.projectUrl +"/" +project.projectId+">"+ projectName + "</a>" +
+                                                      "<br/>Site: " + el.siteName
+                                    },
+                                    type: "Feature"
+                                };
+                                map.addFeature(mf);
+                            });
+                        };
+                    });
+                });
             }
         },
         'projects': {
@@ -381,7 +379,7 @@ var ProgramPageViewModel = function(props, options) {
         },
         'sites': {
             initialiser: function () {
-                generateMap(['programId:'+self.programId], false, {includeLegend:false});
+                generateMap(['managementUnitId:'+self.managementUnitId], false, {includeLegend:false});
             }
         },
         'admin': {
@@ -393,6 +391,6 @@ var ProgramPageViewModel = function(props, options) {
     };
 
     self.initialise = function() {
-        initialiseTabs(tabs, {tabSelector:'#program-tabs.nav a', tabStorageKey:'selected-program-tab'});
+        initialiseTabs(tabs, {tabSelector:'#managementUnit-tabs.nav a', tabStorageKey:'selected-managementUnit-tab'});
     };
 };

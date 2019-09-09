@@ -197,6 +197,26 @@ class UserController {
         }
     }
 
+    def getMembersOfManagementUnit(String id) {
+        String userId = userService.getCurrentUserId()
+
+        if (id && userId) {
+            if (userService.userIsSiteAdmin() || userService.isUserAdminForManagementUnit(userId, id) || userService.isUserGrantManagerForManagementUnit(userId, id)) {
+                Map result = userService.getMembersOfManagementUnit(id)
+                List members = result?.members ?: []
+                render members as JSON
+            } else {
+                render status: 403, text: 'Permission denied'
+            }
+        } else if (userId) {
+            render status: 400, text: 'Required params not provided: id'
+        } else if (id) {
+            render status: 403, text: 'User not logged-in or does not have permission'
+        } else {
+            render status: 500, text: 'Unexpected error'
+        }
+    }
+
 
 
 

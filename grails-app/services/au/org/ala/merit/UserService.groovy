@@ -18,6 +18,7 @@ class UserService {
     static final String PROJECT = 'au.org.ala.ecodata.Project'
     static final String ORGANISATION = 'au.org.ala.ecodata.Organisation'
     static final String PROGRAM = 'au.org.ala.ecodata.Program'
+    static final String MANAGEMENTUNIT = 'au.org.ala.ecodata.ManagementUnit'
 
 
 
@@ -196,6 +197,38 @@ class UserService {
         webService.getJson(url)
     }
 
+
+
+    /**
+     * Get the list of users (members) who have any level of permission for the requested program
+     *
+     * @param programId the id of the program of interest
+     */
+    Map getMembersOfManagementUnit(String managementUnitId) {
+        def url = grailsApplication.config.ecodata.baseUrl + "permissions/getMembersOfManagementUnit/${managementUnitId}"
+        webService.getJson(url)
+    }
+
+    def removeUserWithRoleFromManagementUnit(String userId, String managementUnitId, String role) {
+        def url = grailsApplication.config.ecodata.baseUrl + "permissions/removeUserWithRoleFromManagementUnit?managementUnitId=${managementUnitId}&userId=${userId}&role=${role}"
+        webService.getJson(url)
+    }
+
+
+    def addUserAsRoleToManagementUnit(String userId, String managementUnitId, String role) {
+        Map result = checkRoles(userId, role)
+        if (result.error) {
+            return result
+        }
+
+        if (!(userIsSiteAdmin() || isUserAdminForManagementUnit(currentUserId, managementUnitId))) {
+            return [error:'Permission denied']
+        }
+
+        def url = grailsApplication.config.ecodata.baseUrl + "permissions/addUserWithRoleToManagementUnit?userId=${userId}&managementUnitId=${managementUnitId}&role=${role}"
+        webService.getJson(url)
+    }
+
     /**
      * Get the list of users (members) who have any level of permission for the requested program
      *
@@ -274,27 +307,75 @@ class UserService {
     }
 
     /**
-     * Does the current user have permission to view the requested program report?
-     * Checks for the ADMIN role in CAS and then checks the UserPermission
-     * lookup in ecodata.
+     * Returns true if the current user has permission to view non-public program details such as the sites and
+     * reporting tabs.
      */
-    boolean canUserViewProgramReport(String userId, String programId) {
-        boolean userCanEdit
+    boolean canUserViewNonPublicProgramInformation(String userId, String programId) {
+        boolean userCanView
         if (userIsSiteAdmin() || userHasReadOnlyAccess()) {
-            userCanEdit = true
+            userCanView = true
         } else {
-            Map programRole = getProgramRole(userId, programId)
-            userCanEdit = (programRole != null) // Any assigned role on the program is OK?
+            userCanView = canUserEditProgramReport(userId, programId)
         }
 
-        userCanEdit
+        userCanView
+    }
+
+    /**
+     * Check if the current user has permission to edit blogs of the program.
+     * @param userId
+     * @param programId
+     * @return
+     */
+    boolean canEditProgramBlog(userId, String programId){
+      return  userIsSiteAdmin() ||
+                isUserAdminForProgram(userId, programId) ||
+                isUserEditorForProgram(userId, programId) ||
+                isUserGrantManagerForProgram(userId, programId)
+    }
+
+    /**
+     * Check if the current user has permission to edit blogs of the program.
+     * @param userId
+     * @param programId
+     * @return
+     */
+    boolean canEditManagementUnitBlog(userId, String programId){
+        return  userIsSiteAdmin() ||
+                isUserAdminForManagementUnit(userId, programId) ||
+                isUserEditorForManagementUnit(userId, programId) ||
+                isUserGrantManagerForManagementUnit(userId, programId)
+    }
+
+
+    boolean isUserAdminForManagementUnit(String userId, String programId) {
+        if (userIsSiteAdmin()) {
+            return true
+        }
+        Map programRole = getManagementUnitRole(userId, programId)
+        return programRole && programRole.role == RoleService.PROJECT_ADMIN_ROLE
+    }
+
+    boolean isUserEditorForManagementUnit(String userId, String programId) {
+        Map programRole = getManagementUnitRole(userId, programId)
+        return programRole && programRole.role == RoleService.PROJECT_EDITOR_ROLE
+    }
+
+    boolean isUserGrantManagerForManagementUnit(String userId, String programId) {
+        Map programRole = getManagementUnitRole(userId, programId)
+        return programRole && programRole.role == RoleService.GRANT_MANAGER_ROLE
+    }
+
+    private Map getManagementUnitRole(String userId, String programId) {
+        List userRoles = getUserRoles(userId)
+        Map programRole =  userRoles.find{it.entityId == programId}
+        programRole
     }
 
     boolean isUserAdminForProject(userId, projectId) {
         if (userIsSiteAdmin()) {
            return true
         }
-
         def url = grailsApplication.config.ecodata.baseUrl + "permissions/isUserAdminForProject?projectId=${projectId}&userId=${userId}"
         def results = webService.getJson(url)
         return results?.userIsAdmin

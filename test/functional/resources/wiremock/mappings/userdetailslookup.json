@@ -8,6 +8,6 @@
     "headers": {
       "Content-Type": "application/json"
     },
-    "body": "{\"displayName\":\"A User\"}"
+    "body": "{\"userName\":\"A User\", \"userId\":\"1\"}"
   }
 }

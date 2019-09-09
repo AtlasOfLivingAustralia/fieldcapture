@@ -6,13 +6,14 @@ import org.apache.http.HttpStatus
 import static ReportService.ReportMode
 
 /**
- * Processes requests relating to programs
+ * Processes requests relating to MUs
  */
-class ProgramController {
+class ManagementUnitController {
 
-    static allowedMethods = [regenerateProgramReports: "POST", ajaxDelete: "POST", delete: "POST", ajaxUpdate: "POST"]
+    static allowedMethods = [regenerateManagementUnitReports: "POST", ajaxDelete: "POST", delete: "POST", ajaxUpdate: "POST", saveReport: "POST"]
 
-    def programService, searchService, documentService, userService, roleService, commonService, webService, siteService
+    def managementUnitService, programService, searchService, documentService, userService, roleService, commonService, webService, siteService
+
     ProjectService projectService
     ReportService reportService
     ActivityService activityService
@@ -20,56 +21,101 @@ class ProgramController {
     BlogService blogService
 
     def index(String id) {
-        def program = programService.get(id)
+        def mu = managementUnitService.get(id)
 
-        if (!program || program.error) {
-            programNotFound(id, program)
+        if (!mu || mu.error) {
+            managementUnitNotFound(id, mu)
         } else {
             def roles = roleService.getRoles()
 
-            List members = userService.getMembersOfProgram(id).members ?: []
+            List members = userService.getMembersOfManagementUnit(id).members ?: []
             def user = userService.getUser()
             def userId = user?.userId
 
-            Map programRole = members.find { it.userId == userId }
+            Map muRole = members.find { it.userId == userId }
 
-            def mapFeatures = program.programSiteId?siteService.getSiteGeoJson(program.programSiteId) : null
+            def mapFeatures = mu.managementUnitSiteId?siteService.getSiteGeoJson(mu.managementUnitSiteId) : null
             if (mapFeatures)
-                program.mapFeatures = mapFeatures
+                mu.mapFeatures = mapFeatures
 
-            [program       : program,
-             roles         : roles,
-             user          : user,
-             isAdmin       : programRole?.role == RoleService.PROJECT_ADMIN_ROLE,
-             isGrantManager: programRole?.role == RoleService.GRANT_MANAGER_ROLE,
-             content       : content(program, programRole)
+            [managementUnit     : mu,
+             roles              : roles,
+             user               : user,
+             isAdmin            : muRole?.role == RoleService.PROJECT_ADMIN_ROLE,
+             isGrantManager     : muRole?.role == RoleService.GRANT_MANAGER_ROLE,
+             content            : content(mu, muRole)
              ]
         }
     }
 
-    protected Map content(Map program, Map userRole) {
-        boolean hasAdminAccess = userService.userIsSiteAdmin() || userRole?.role == RoleService.PROJECT_ADMIN_ROLE
-        boolean hasEditAccessOfBlog = userService.canEditProgramBlog(userService.getUser()?.userId, program.programId)
+    protected Map content(Map mu, Map userRole) {
 
-        boolean canViewNonPublicTabs = userService.canUserViewNonPublicProgramInformation(userService.getUser()?.userId, program.programId)
-        Map result = programService.getProgramProjects(program.programId)
+        def hasAdminAccess = userService.userIsSiteAdmin() || userRole?.role == RoleService.PROJECT_ADMIN_ROLE
+        boolean hasEditAccessOfBlog = userService.canEditManagementUnitBlog(userService.getUser()?.userId, mu.managementUnitId)
+
+        boolean canViewReports = hasAdminAccess || userService.userHasReadOnlyAccess() || userRole?.role == RoleService.PROJECT_EDITOR_ROLE
+
+        Map result = managementUnitService.getProjects(mu.managementUnitId)
         List projects = result?.projects
-        List blogs = blogService.getBlog(program)
+
+        List blogs = blogService.getBlog(mu)
         def hasNewsAndEvents = blogs.find { it.type == 'News and Events' }
-        def hasProgramStories = blogs.find { it.type == 'Program Stories' }
+        def hasManagementUnitStories = blogs.find { it.type == 'Management Unit Stories' }
         def hasPhotos = blogs.find { it.type == 'Photo' }
 
-        List reportOrder = program.config?.programReports?.collect{[category:it.category, description:it.description]} ?: []
+
+
+        // Clone to avoid change on projects
+        // Fetch related programs
+        String[] programIds =[]
+        if(projects){
+            programIds = projects.clone().unique{project->project.programId}?.programId
+            List programs = programService.get(programIds)
+            mu.programs = programs
+            mu.projects = projects
+        }
+
+        //Aggreate outputs of programs
+        for(program in mu.programs) {
+            List projectsInProgram = mu.projects.findAll{it.programId==program.programId}
+            if(projectsInProgram)
+                calProgramOutput(program, projectsInProgram)
+        }
+
+
+        List reportOrder = mu.config?.managementUnitReports?.collect{[category:it.category, description:it.description]} ?: []
 
         // If the program is not visible, there is no point showing the dashboard or sites as both of these rely on
         // data in the search index to produce.
-        boolean programVisible = program.inheritedConfig?.visibility != 'private'
-        List servicesWithScores = null
-        if (programVisible) {
-            servicesWithScores = programService.serviceScores(program.programId, !hasAdminAccess)
+        boolean managementUnitVisible = mu.config?.visibility != 'private'
+
+        Map servicesWithScores = null
+        if (managementUnitVisible) {
+            servicesWithScores = managementUnitService.serviceScores(mu.managementUnitId, programIds, !hasAdminAccess)
+            mu.programs?.each{
+                it['servicesWithScores'] = servicesWithScores[it.programId]
+            }
         }
 
-        //Aggregate all targeted outcomes of projects
+
+        [about   : [label: 'Management Unit Overview',visible: true, stopBinding: false, type: 'tab',
+                    mu: mu,
+                    blog: [blogs: blogs?:[], editable: hasEditAccessOfBlog,
+                                  hasNewsAndEvents: hasNewsAndEvents,
+                                  hasManagementUnitStories:  hasManagementUnitStories,
+                                  hasPhotos: hasPhotos
+                    ],
+                    servicesDashboard:[visible: managementUnitVisible, planning:false]
+                    ],
+         projects: [label: 'MU Reporting', visible: canViewReports, stopBinding: false, type:'tab', mu:mu,reportOrder:reportOrder, hideDueDate:true],
+         admin   : [label: 'MU Admin', visible: hasAdminAccess, type: 'tab', mu:mu, blog: [editable: hasEditAccessOfBlog]]
+        ]
+
+    }
+
+
+    //Aggregate all targeted outcomes of projects in the given program
+    private def calProgramOutput(Map program, List projects){
         for(Map project in projects){
             //Verify project.outcomes (from program config) with primaryOutcome and secondaryOutcomes in project.custom.details.outcomes
             Map primaryOutcome = project.custom?.details?.outcomes?.primaryOutcome
@@ -81,36 +127,22 @@ class ProgramController {
                 }
             }
         }
-
-        [about   : [label: 'Management Unit Overview',visible: true, stopBinding: false, type: 'tab',
-                    blog: [blogs: blogs?:[], editable: hasEditAccessOfBlog,
-                           hasNewsAndEvents: hasNewsAndEvents,
-                           hasProgramStories:  hasProgramStories,
-                           hasPhotos: hasPhotos
-                          ],
-                    servicesDashboard:[visible: programVisible, planning:false, services:servicesWithScores]],
-         projects: [label: 'MU Reporting', visible: canViewNonPublicTabs, stopBinding: false, type:'tab', projects:projects, reports:program.reports?:[], reportOrder:reportOrder, hideDueDate:true],
-         sites   : [label: 'MU Sites', visible: canViewNonPublicTabs, stopBinding: true, type:'tab'],
-         admin   : [label: 'MU Admin', visible: hasAdminAccess, type: 'tab',
-                    blog: [
-                      editable: hasEditAccessOfBlog
-                      ]
-                   ]]
     }
+
 
     @PreAuthorise(accessLevel='siteAdmin')
     def create() {
-        [program: [:], isNameEditable:true]
+        [managementUnit: [:], isNameEditable:true]
     }
 
     @PreAuthorise(accessLevel='admin')
     def edit(String id) {
-        Map program = programService.get(id)
+        Map mu = managementUnitService.get(id)
 
-        if (!program || program.error) {
-            programNotFound(id, program)
+        if (!mu || mu.error) {
+            managementUnitNotFound(id, mu)
         } else {
-            [program: program, isNameEditable:userService.userIsAlaOrFcAdmin()]
+            [mu: mu, isNameEditable:userService.userIsAlaOrFcAdmin()]
         }
     }
 
@@ -138,24 +170,24 @@ class ProgramController {
 
     @PreAuthorise(accessLevel = 'admin')
     def ajaxUpdate(String id) {
-        def programDetails = request.JSON
+        def muDetails = request.JSON
 
-        def documents = programDetails.remove('documents')
-        def links = programDetails.remove('links')
+        def documents = muDetails.remove('documents')
+        def links = muDetails.remove('links')
 
-        String programId = id ?: ''
-        Map result = programService.update(programId, programDetails)
+        String muId = id ?: ''
+        Map result = managementUnitService.update(muId, muDetails)
 
-        programId = programId ?: result.resp?.programId
+        muId = muId ?: result.resp?.muId
         if (documents && !result.error) {
             documents.each { doc ->
-                doc.programId = programId
+                doc.managementUnitId = muId
                 documentService.saveStagedImageDocument(doc)
             }
         }
         if (links && !result.error) {
             links.each { link ->
-                link.programId = programId
+                link.managementUnitId = muId
                 documentService.saveLink(link)
             }
         }
@@ -198,8 +230,8 @@ class ProgramController {
      * Redirects to the home page with an error message in flash scope.
      * @param response the response that triggered this method call.
      */
-    private void programNotFound(id, response) {
-        flash.message = "No program found with id: ${id}"
+    private void managementUnitNotFound(id, response) {
+        flash.message = "No management unit found with id: ${id}"
         if (response?.error) {
             flash.message += "<br/>${response.error}"
         }
@@ -253,7 +285,7 @@ class ProgramController {
                 Map result = reportService.lockForEditing(model.report)
                 model.locked = true
             }
-            model.saveReportUrl = createLink(controller:'program', action:'saveReport', id:id, params:[reportId:reportId])
+            model.saveReportUrl = createLink(controller:'managementUnit', action:'saveReport', id:id, params:[reportId:reportId])
             render model:model, view:'/activity/activityReport'
         }
     }
@@ -274,15 +306,15 @@ class ProgramController {
         chain(action:'editReport', id:id, params:[reportId:reportId])
     }
 
-    private Map activityReportModel(String programId, String reportId, ReportMode mode, Integer formVersion = null) {
-        Map program = programService.get(programId)
-        Map config = program.inheritedConfig
+    private Map activityReportModel(String managementUnitId, String reportId, ReportMode mode, Integer formVersion = null) {
+        Map mu = managementUnitService.get(managementUnitId)
+        Map config = mu.config
         Map model = reportService.activityReportModel(reportId, mode, formVersion)
 
-        model.context = program
-        model.returnTo = createLink(action:'index', id:programId)
+        model.context = mu
+        model.returnTo = createLink(action:'index', id:managementUnitId)
         model.contextViewUrl = model.returnTo
-        model.reportHeaderTemplate = '/program/rlpProgramReportHeader'
+        model.reportHeaderTemplate = '/managementUnit/managementUnitReportHeader'
         model.config = config
         model
     }
@@ -337,8 +369,8 @@ class ProgramController {
     @PreAuthorise(accessLevel = 'editor')
     def saveReport(SaveReportDataCommand saveReportDataCommand) {
         Map result
-        if (saveReportDataCommand.report?.programId != params.id) {
-            result = [status:HttpStatus.SC_UNAUTHORIZED, error:"You do not have permission to save this report"]
+        if (saveReportDataCommand.report?.managementUnitId != params.id) {
+            result = [status:HttpStatus.SC_UNAUTHORIZED, error:"You do not have permission to save this report: check if the report belongs to this management unit: " + params?.id ]
         }
         else {
             result = saveReportDataCommand.save()
@@ -380,49 +412,49 @@ class ProgramController {
 
 
     @PreAuthorise(accessLevel = 'caseManager')
-    def regenerateProgramReports(String id) {
+    def regenerateManagementUnitReports(String id) {
         Map resp
         if (!id) {
              resp = [status:HttpStatus.SC_NOT_FOUND]
         }
         else {
             Map categoriesToRegenerate = request.JSON
-            programService.regenerateReports(id, categoriesToRegenerate?.programReportCategories, categoriesToRegenerate?.projectReportCategories)
+            managementUnitService.regenerateReports(id, categoriesToRegenerate?.managementUnitReportCategories, categoriesToRegenerate?.projectReportCategories)
             resp = [status:HttpStatus.SC_OK]
         }
         render resp as JSON
     }
 
     @PreAuthorise(accessLevel = 'admin', projectIdParam = 'entityId')
-    def addUserAsRoleToProgram() {
+    def addUserAsRoleToManagementUnit() {
         String userId = params.userId
-        String programId = params.entityId
+        String managementUnitId = params.entityId
         String role = params.role
 
-        if (userId && programId && role) {
+        if (userId && managementUnitId && role) {
             if (role == 'caseManager' && !userService.userIsSiteAdmin()) {
                 render status: 403, text: 'Permission denied - Case/Grant Manager role required'
             } else {
-                render programService.addUserAsRoleToProgram(userId, programId, role) as JSON
+                render managementUnitService.addUserAsRoleToManagementUnit(userId, managementUnitId, role) as JSON
             }
         } else {
-            render status: 400, text: 'Required params not provided: userId, role, projectId'
+            render status: 400, text: 'Required params not provided: userId, role, managementUnitId'
         }
     }
 
     @PreAuthorise(accessLevel = 'admin', projectIdParam = 'entityId')
-    def removeUserWithRoleFromProgram() {
+    def removeUserWithRoleFromManagementUnit() {
         String userId = params.userId
         String role = params.role
-        String programId = params.entityId
+        String managementUnitId = params.entityId
 
 
-        if (programId && role && userId) {
+        if (managementUnitId && role && userId) {
             if (role == RoleService.GRANT_MANAGER_ROLE && !userService.userIsSiteAdmin()) {
                 render status: 403, text: 'Permission denied - Case/Grant Manager role required'
             }
             else {
-                render programService.removeUserWithRoleFromProgram(userId, programId, role) as JSON
+                render managementUnitService.removeUserWithRoleFromManagementUnit(userId, managementUnitId, role) as JSON
             }
         } else {
             render status: 400, text: 'Required params not provided: userId, organisationId, role'

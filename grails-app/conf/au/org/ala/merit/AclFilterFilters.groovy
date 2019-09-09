@@ -36,6 +36,9 @@ class AclFilterFilters {
                         case OrganisationController:
                             entity = UserService.ORGANISATION
                             break
+                        case ManagementUnitController:
+                            entity = UserService.MANAGEMENTUNIT
+                            break
                     }
 
                     def errorMsg
