@@ -65,18 +65,6 @@ class ManagementUnitController {
 
 
 
-        //Aggregate all targeted outcomes of projects
-        for(Map project in projects){
-            //Verify project.outcomes (from program config) with primaryOutcome and secondaryOutcomes in project.custom.details.outcomes
-            Map primaryOutcome = project.custom?.details?.outcomes?.primaryOutcome
-            if (primaryOutcome){
-                Map oc =  mu.outcomes.find {oc -> oc.outcome == primaryOutcome.description}
-                if (oc) {
-                    oc['targeted'] = true //set program outcomes
-                    primaryOutcome.shortDescription = oc['shortDescription']
-                }
-            }
-        }
         // Clone to avoid change on projects
         // Fetch related programs
         String[] programIds =[]
@@ -85,6 +73,13 @@ class ManagementUnitController {
             List programs = programService.get(programIds)
             mu.programs = programs
             mu.projects = projects
+        }
+
+        //Aggreate outputs of programs
+        for(program in mu.programs) {
+            List projectsInProgram = mu.projects.findAll{it.programId==program.programId}
+            if(projectsInProgram)
+                calProgramOutput(program, projectsInProgram)
         }
 
 
@@ -117,6 +112,23 @@ class ManagementUnitController {
         ]
 
     }
+
+
+    //Aggregate all targeted outcomes of projects in the given program
+    private def calProgramOutput(Map program, List projects){
+        for(Map project in projects){
+            //Verify project.outcomes (from program config) with primaryOutcome and secondaryOutcomes in project.custom.details.outcomes
+            Map primaryOutcome = project.custom?.details?.outcomes?.primaryOutcome
+            if (primaryOutcome){
+                Map oc =  program.outcomes.find {oc -> oc.outcome == primaryOutcome.description}
+                if (oc) {
+                    oc['targeted'] = true //set program outcomes
+                    primaryOutcome.shortDescription = oc['shortDescription']
+                }
+            }
+        }
+    }
+
 
     @PreAuthorise(accessLevel='siteAdmin')
     def create() {
