@@ -98,6 +98,7 @@ class FieldcaptureFunctionalTest extends GebReportingSpec {
         println "ls -la ./scripts".execute().text
         println "**********************************************"
         println "cd scripts".execute().text
+        println "cd ${dataSetPath}".execute().text
         int exitCode = "./scripts/loadFunctionalTestData.sh ${dataSetPath}".execute().waitFor()
         if (exitCode != 0) {
             throw new RuntimeException("Loading data set ${dataSetPath} failed.  Exit code: ${exitCode}")
