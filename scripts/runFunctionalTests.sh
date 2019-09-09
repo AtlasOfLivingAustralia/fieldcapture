@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -v
 
 MERIT_DIR=`pwd`
 
@@ -39,11 +39,11 @@ grails -Dgrails.env=meritfunctionaltest run-app &
 
 cd $MERIT_DIR/..
 
-sleep 30
+sleep 60
 chmod u+x scripts/loadFunctionalTestData.sh
 
 echo "Running functional tests"
-grails test-app -Dgrails.server.port.http=8087 -Dgrails.serverURL=http://devt.ala.org.au:8087/fieldcapture -Dgeb.env=$GEB_ENV functional:
+grails test-app --echoOut -Dgrails.server.port.http=8087 -Dgrails.serverURL=http://devt.ala.org.au:8087/fieldcapture -Dgeb.env=$GEB_ENV functional:
 RETURN_VALUE=$?
 
 kill %1

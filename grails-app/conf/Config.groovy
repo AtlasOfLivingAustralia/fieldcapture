@@ -230,7 +230,6 @@ if (!grails.cache.ehcache) {
             ehcache {
                 cacheManagerName = appName + '-ehcache'
                 reloadable = true
-                diskStore = '/data/${appName}/ehcache'
             }
         }
     }
@@ -349,6 +348,9 @@ environments {
         grails.cache.config = {
             diskStore {
                 path '/tmp'
+            }
+            defaultCache {
+                overflowToDisk false
             }
         }
     }
