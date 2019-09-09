@@ -97,7 +97,7 @@ class FieldcaptureFunctionalTest extends GebReportingSpec {
         println "**********************************************"
         println "ls -la ./scripts".execute().text
         println "**********************************************"
-        println "./scripts/loadDataSet.js".execute().text
+        println "mongo ecodatafunctionaltest ./scripts/loadDataSet.js".execute().text
 //        int exitCode = "./scripts/loadFunctionalTestData.sh ${dataSetPath}".execute().waitFor()
 //        if (exitCode != 0) {
 //            throw new RuntimeException("Loading data set ${dataSetPath} failed.  Exit code: ${exitCode}")
