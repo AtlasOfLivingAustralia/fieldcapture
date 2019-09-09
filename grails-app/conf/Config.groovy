@@ -456,7 +456,6 @@ log4j = {
                     'grails.app.taglib.au.org.ala.fieldcapture',
                     'grails.app.conf.au.org.ala.fieldcapture',
                     'grails.app.filters.au.org.ala.fieldcapture',
-                    'au.org.ala.cas.client',
                     'au.org.ala.merit.SessionLogger'
                     ]
         }
@@ -478,12 +477,8 @@ log4j = {
             'grails.app.filters.au.org.ala.fieldcapture'
     ]
 
-    debug 'grails.app.controllers.au.org.ala',
-            'ala','au.org.ala.web',
+    debug 'grails.app.controllers.au.org.ala.merit',
             'au.org.ala.merit'
-            //'au.org.ala.cas.client'
-            //'grails.plugin.cache',
-            //'net.sf.ehcache'
 
     error  'org.codehaus.groovy.grails.web.servlet',        // controllers
            'org.codehaus.groovy.grails.web.pages',          // GSP

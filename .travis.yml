@@ -10,6 +10,8 @@ branches:
   - /^hotfix\/.*$/
 services:
   - mongodb
+addons:
+  chrome: stable
 cache:
   directories:
     - $HOME/.m2
@@ -27,7 +29,7 @@ script:
 - grails clean; grails refresh-dependencies --non-interactive
 - cd scripts
 - chmod +x *.sh
-- ./runFunctionalTests.sh phantomjs
+- ./runFunctionalTests.sh chromeHeadless
 - cd ..
 - grails clean; grails refresh-dependencies --non-interactive && grails test-app -clover.on :unit --non-interactive --stacktrace && ala_travis_grails_build
 
