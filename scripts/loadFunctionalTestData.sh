@@ -13,6 +13,6 @@ DATA_PATH=$1
 echo $PWD
 
 mongo $DATABASE_NAME --eval "db.dropDatabase()" >> /tmp/mongo1.txt
-mongo $DATABASE_NAME ${DATA_SET_PATH}loadDataSet.js >> /tmp/mongo2.txt
+mongo $DATABASE_NAME ${DATA_PATH}loadDataSet.js >> /tmp/mongo2.txt
 
 
