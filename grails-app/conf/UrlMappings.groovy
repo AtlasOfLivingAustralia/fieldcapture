@@ -27,7 +27,6 @@ class UrlMappings {
         }
 
         "/$controller/$id?"(parseRequest:true) {
-
             action = [GET: "get", POST: "upload", PUT: "upload", DELETE: "delete"]
         }
 

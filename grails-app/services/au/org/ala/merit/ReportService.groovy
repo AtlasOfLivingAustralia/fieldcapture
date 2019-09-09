@@ -448,6 +448,18 @@ class ReportService {
         return []
     }
 
+    def findReportsForManagementUnit(String managementUnitId) {
+
+        def reports = webService.doPost(grailsApplication.config.ecodata.baseUrl+"managementUnit/${managementUnitId}/reports", [:])
+
+        if (reports.resp && !reports.error) {
+            return reports.resp
+        }
+        return []
+    }
+
+
+
     /**
      * Returns the report that spans the period including the supplied date
      * @param isoDate an ISO8601 formatted date string.

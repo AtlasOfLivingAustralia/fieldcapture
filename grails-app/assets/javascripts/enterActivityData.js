@@ -225,10 +225,9 @@ var Master = function (activityId, config) {
                 contentType: 'application/json'
 
             }).done(function (data) {
-
                 if (data.error || data.errors) {
                     $.unblockUI();
-                    self.displayErrors(data.errors || [data.error]);
+                    self.displayErrors(data.errors || [{name:'Activity', error: data.error}]);
                 } else {
                     self.cancelAutosave();
                     self.dirtyFlag.reset();
