@@ -44,6 +44,10 @@ environments {
     }
 
     chromeHeadless {
+
+        if (!System.getProperty("webdriver.chrome.driver")) {
+            System.setProperty("webdriver.chrome.driver", "node_modules/chromedriver/bin/chromedriver")
+        }
         driver = {
             ChromeOptions o = new ChromeOptions()
             o.addArguments('headless')
