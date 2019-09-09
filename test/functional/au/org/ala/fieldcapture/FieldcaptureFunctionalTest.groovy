@@ -95,8 +95,9 @@ class FieldcaptureFunctionalTest extends GebReportingSpec {
         println "pwd".execute().text
         println "**********************************************"
         println "**********************************************"
-        println ("ls -la "+dataSetPath).execute().text
+        println "ls -la ${dataSetPath}".execute().text
         println "**********************************************"
+        println "./scripts/loadFunctionalTestData.sh ${dataSetPath}".execute().text
 
         int exitCode = "./scripts/loadFunctionalTestData.sh ${dataSetPath}".execute().waitFor()
         if (exitCode != 0) {
