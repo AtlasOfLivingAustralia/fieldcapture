@@ -118,7 +118,7 @@
                             </g:if>
                             <g:else>
                                 <g:each in="${p_outcome.assets}" var="p_asset">
-                                    <li>${p_asset}</li>
+                                    ${p_asset}
                                 </g:each>
                             </g:else>
                         </td>
