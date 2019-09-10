@@ -36,21 +36,31 @@
         <g:render template="/shared/reports"/>
         <div class="row-fluid ">
             <div class="span6">
-                <g:if test="${memberPrograms}">
+                <g:if test="${memberManagementUnits}">
                     <h4>My Management Units</h4>
-                    <ul>
-                        <g:each in="${memberPrograms}" var="program">
-                            <li><a href="${createLink(controller:'rlp', action:'index', id:program.programId)}">${program.name}</a></li>
+                    <ul class="management-unit-list">
+                        <g:each in="${memberManagementUnits}" var="managementUnit">
+                            <li><a href="${createLink(controller:'managementUnit', action:'index', id:managementUnit.managementUnitId)}">${managementUnit.name}</a></li>
                         </g:each>
 
                     </ul>
                 </g:if>
-
             </div>
             <div class="span6">
+                <g:if test="${memberPrograms}">
+                    <h4>My Programs</h4>
+                    <ul class="program-list">
+                        <g:each in="${memberPrograms}" var="program">
+                            <li><a href="${createLink(controller:'program', action:'index', id:program.programId)}">${program.name}</a></li>
+                        </g:each>
+
+                    </ul>
+                </g:if>
+            </div>
+            <div class="span6 organisations">
                 <g:if test="${memberOrganisations}">
                     <h4>My Organisations</h4>
-                    <ul>
+                    <ul class="organisation-list">
                         <g:each var="p" in="${memberOrganisations}">
                             <li><g:link controller="organisation" id="${p.organisation?.organisationId}">${p.organisation?.name}</g:link></li>
                         </g:each>
@@ -59,7 +69,7 @@
 
                 <h4>My Favourite Projects</h4>
                 <g:if test="${starredProjects}">
-                    <ul>
+                    <ul class="favourite-projects-list">
                         <g:each var="p" in="${starredProjects}">
                             <li><g:link controller="project" id="${p.projectId}">${p.name}</g:link></li>
                         </g:each>

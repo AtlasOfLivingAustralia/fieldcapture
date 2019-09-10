@@ -87,16 +87,20 @@ class FieldcaptureFunctionalTest extends GebReportingSpec {
      *
      */
     void useDataSet(String dataSetName) {
+
         def dataSetPath = getClass().getResource("/resources/"+dataSetName+"/").getPath()
 
-        int exitCode = "scripts/loadFunctionalTestData.sh ${dataSetPath}".execute().waitFor()
+        log.info("Using dataset from: ${dataSetPath}")
+
+        int exitCode = "./scripts/loadFunctionalTestData.sh ${dataSetPath}".execute().waitFor()
         if (exitCode != 0) {
             throw new RuntimeException("Loading data set ${dataSetPath} failed.  Exit code: ${exitCode}")
         }
     }
 
     def logout(Browser browser) {
-        browser.go "${getConfig().baseUrl}logout/logout?casUrl=https://auth.ala.org.au/cas/logout&appUrl=${getConfig().baseUrl+ EntryPage.url}"
+        String logoutUrl = "${getConfig().baseUrl}logout/logout?casUrl=${getConfig().security.cas.casServerUrlPrefix}/logout&appUrl=${getConfig().baseUrl+ EntryPage.url}"
+        browser.go logoutUrl
     }
 
 }

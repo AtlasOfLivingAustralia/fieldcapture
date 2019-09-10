@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/bin/bash -v
 
-MERIT_DIR=`pwd`
+MERIT_DIR=$PWD
 
 GEB_ENV=$1
 if [ -z $GEB_ENV ]; then
@@ -23,7 +23,6 @@ if [ -z $ECODATA_LOCAL_DIR ]; then
         git checkout $BRANCH
     else
         cd $ECODATA_LOCAL_DIR
-        echo "In ecodata `pwd`"
         git pull
     fi
 else
@@ -34,16 +33,16 @@ echo "Dropping database"
 mongo ecodata-functional-test --eval 'db.dropDatabase();'
 mongo ecodata-functional-test --eval 'db.project.count();'
 
-echo "Starting ecodata from `pwd`"
+echo "Starting ecodata from $ECODATA_LOCAL_DIR"
 grails -Dgrails.env=meritfunctionaltest run-app &
 
 cd $MERIT_DIR/..
 
-sleep 30
+sleep 180
 chmod u+x scripts/loadFunctionalTestData.sh
 
 echo "Running functional tests"
-grails test-app -Dgrails.server.port.http=8087 -Dgrails.serverURL=http://devt.ala.org.au:8087/fieldcapture -Dgeb.env=$GEB_ENV functional:
+grails test-app --echoOut -Dgrails.server.port.http=8087 -Dgrails.serverURL=http://devt.ala.org.au:8087/fieldcapture -Dgeb.env=$GEB_ENV functional:
 RETURN_VALUE=$?
 
 kill %1
