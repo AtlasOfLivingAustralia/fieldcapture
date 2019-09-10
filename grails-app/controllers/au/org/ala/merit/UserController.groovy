@@ -24,11 +24,6 @@ class UserController {
         } else {
             log.debug('Viewing my dashboard :  ' + user)
             def userData = assembleUserData(user)
-            if (userData.recentEdits?.error) {
-                flash.message = "User Profile Error: There was an error obtaining ."
-                redirect(controller: 'home', model: [error: flash.message])
-                return
-            }
             return userData
         }
     }
@@ -38,12 +33,14 @@ class UserController {
         def memberProjects = userService.getProjectsForUserId(user.userId)
         def starredProjects = userService.getStarredProjectsForUserId(user.userId)
         def programs = userService.getProgramsForUserId(user.userId)?.sort({it.name})
+        def managementUnits = userService.getManagementUnitsForUserId(user.userId)?.sort({it.name})
 
         Map userData = [
                 user: user,
                 memberProjects: memberProjects,
                 memberOrganisations:memberOrganisations,
                 memberPrograms:programs,
+                memberManagementUnits:managementUnits,
                 starredProjects: starredProjects]
 
         def reportsByProject = reportService.findReportsForUser(user.userId)

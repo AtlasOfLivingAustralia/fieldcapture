@@ -38,7 +38,7 @@ grails -Dgrails.env=meritfunctionaltest run-app &
 
 cd $MERIT_DIR/..
 
-sleep 300
+sleep 180
 chmod u+x scripts/loadFunctionalTestData.sh
 
 echo "Running functional tests"
