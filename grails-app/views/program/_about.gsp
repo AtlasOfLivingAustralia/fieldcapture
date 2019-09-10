@@ -46,6 +46,19 @@
     </div>
 </g:if>
 
+<g:if test="${program.sites}">
+    <div class="well">
+        <div class="well-title">Click on a heading or Show all | Hide all</div>
+        <div class="row no-gutters">
+            <g:each in="${program.sites}" var="site" >
+                <div >
+                   ${site.state}
+                </div>
+            </g:each>
+        </div>
+    </div>
+</g:if>
+
 <div class="projects-wrapper d-none d-md-block">
 <g:set var="projects" value="${content.projects.projects}" />
 <g:if test="${projects}">
