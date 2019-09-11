@@ -167,12 +167,6 @@
                                                 <i class="fa fa-home"></i>
                                                 <a href="">View project page</a>
                                             </div>
-                                            <div class="sitesLine">
-                                                <i class="fa fa-map-marker"></i>
-                                                Sites: <a href="#" data-id="$id" class="zoom-in btnX btn-miniX"><i
-                                                    class="fa fa-plus"></i> show on map</a>
-
-                                            </div>
                                             <div class="orgLine">
                                                 <i class="fa fa-user"></i>
                                             </div>
