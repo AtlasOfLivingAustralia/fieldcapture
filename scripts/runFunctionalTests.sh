@@ -44,11 +44,11 @@ mongo ecodata-functional-test --eval 'db.dropDatabase();'
 mongo ecodata-functional-test --eval 'db.project.count();'
 
 echo "Starting ecodata from $ECODATA_LOCAL_DIR"
-#grails -Dgrails.env=meritfunctionaltest run-app &
+grails -Dgrails.env=meritfunctionaltest run-app &
 
 cd $MERIT_DIR/..
 
-#sleep 180
+sleep 180
 chmod u+x scripts/loadFunctionalTestData.sh
 
 echo "Running functional tests"
