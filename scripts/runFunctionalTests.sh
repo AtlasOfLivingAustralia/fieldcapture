@@ -42,7 +42,10 @@ sleep 180
 chmod u+x scripts/loadFunctionalTestData.sh
 
 echo "Running functional tests"
-grails test-app --echoOut -Dgrails.server.port.http=8087 -Dgrails.serverURL=http://devt.ala.org.au:8087/fieldcapture -Dgeb.env=$GEB_ENV functional:
+
+PHANTOM_JS_PATH="$(which phantomjs)"
+
+grails test-app --echoOut -Dphantomjs.binary.path=$PHANTOM_JS_PATH -Dgrails.server.port.http=8087 -Dgrails.serverURL=http://devt.ala.org.au:8087/fieldcapture -Dgeb.env=$GEB_ENV functional:
 RETURN_VALUE=$?
 
 kill %1
