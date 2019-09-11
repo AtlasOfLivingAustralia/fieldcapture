@@ -20,11 +20,10 @@ class ImportProjectsSpec extends StubbedCasSpec {
 
 
         then: "The projects are validated and the validation results are displayed"
-        waitFor{progressTable.displayed}
+        waitFor{projectResults().size() == 2}
 
         and: "The data is relevant to the projects loaded"
         List rows = projectResults()
-        println rows
         rows.size() == 2
 
         when:

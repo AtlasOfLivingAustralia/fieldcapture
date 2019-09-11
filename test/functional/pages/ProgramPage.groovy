@@ -10,6 +10,7 @@ class ProgramPage extends Page {
 
     static content = {
         name {$('h2')}
+        description {$('span[data-bind*=description]')}
     }
 
 }
