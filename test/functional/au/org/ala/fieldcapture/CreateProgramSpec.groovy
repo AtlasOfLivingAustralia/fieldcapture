@@ -27,7 +27,9 @@ class CreateProgramSpec extends StubbedCasSpec {
         program.save()
 
         then:
-        at ProgramPage
+        waitFor 10, {at ProgramPage}
+        name.text() == "A test program"
+        description.text() == 'A test description'
     }
 
 }
