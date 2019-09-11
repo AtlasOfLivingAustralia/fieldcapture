@@ -18,6 +18,7 @@ class ProgramController {
     ActivityService activityService
     PdfGenerationService pdfGenerationService
     BlogService blogService
+    ManagementUnitService managementUnitService
 
     def index(String id) {
         def program = programService.get(id)
@@ -69,7 +70,14 @@ class ProgramController {
             servicesWithScores = programService.serviceScores(program.programId, !hasAdminAccess)
         }
 
+        String[] muIds = projects.clone().unique{it.managementUnitId}?.managementUnitId
+        List managementUnits = managementUnitService.get(muIds)
+        program.managementUnits = managementUnits
+
+        program.sites = managementUnits.findAll{it.site}?.site
+
         //Aggregate all targeted outcomes of projects
+
         for(Map project in projects){
             //Verify project.outcomes (from program config) with primaryOutcome and secondaryOutcomes in project.custom.details.outcomes
             Map primaryOutcome = project.custom?.details?.outcomes?.primaryOutcome
@@ -83,6 +91,7 @@ class ProgramController {
         }
 
         [about   : [label: 'Management Unit Overview',visible: true, stopBinding: false, type: 'tab',
+                    program: program,
                     blog: [blogs: blogs?:[], editable: hasEditAccessOfBlog,
                            hasNewsAndEvents: hasNewsAndEvents,
                            hasProgramStories:  hasProgramStories,

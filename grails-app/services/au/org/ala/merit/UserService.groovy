@@ -104,6 +104,11 @@ class UserService {
         webService.getJson(url)
     }
 
+    def getManagementUnitsForUserId(userId) {
+        String url = grailsApplication.config.ecodata.baseUrl + "managementUnit/findAllForUser/${userId}"
+        webService.getJson(url)
+    }
+
     def getStarredProjectsForUserId(userId) {
         def url = grailsApplication.config.ecodata.baseUrl + "permissions/getStarredProjectsForUserId/${userId}"
         webService.getJson(url)

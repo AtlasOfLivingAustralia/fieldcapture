@@ -35,6 +35,19 @@ class ManagementUnitService {
         mu
     }
 
+    List get(String[] ids) {
+        String url = "${grailsApplication.config.ecodata.baseUrl}managementUnits"
+        Map result  = webService.doPost(url,[managementUnitIds:ids])
+        List mues
+        if(result.resp){
+            mues = result.resp
+        }else if(result.error){
+            log.error(result.error)
+        }
+        mues
+    }
+
+
     Map getByName(String name) {
 
         String encodedName = URLEncoder.encode(name, 'UTF-8')

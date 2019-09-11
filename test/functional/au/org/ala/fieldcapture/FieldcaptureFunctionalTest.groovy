@@ -91,13 +91,6 @@ class FieldcaptureFunctionalTest extends GebReportingSpec {
         def dataSetPath = getClass().getResource("/resources/"+dataSetName+"/").getPath()
 
         log.info("Using dataset from: ${dataSetPath}")
-        println "**********************************************"
-        println "pwd".execute().text
-        println "**********************************************"
-        println "**********************************************"
-        println "ls -la ${dataSetPath}".execute().text
-        println "**********************************************"
-        println "./scripts/loadFunctionalTestData.sh ${dataSetPath}".execute().text
 
         int exitCode = "./scripts/loadFunctionalTestData.sh ${dataSetPath}".execute().waitFor()
         if (exitCode != 0) {
@@ -106,7 +99,8 @@ class FieldcaptureFunctionalTest extends GebReportingSpec {
     }
 
     def logout(Browser browser) {
-        browser.go "${getConfig().baseUrl}logout/logout?casUrl=https://auth.ala.org.au/cas/logout&appUrl=${getConfig().baseUrl+ EntryPage.url}"
+        String logoutUrl = "${getConfig().baseUrl}logout/logout?casUrl=${getConfig().security.cas.casServerUrlPrefix}/logout&appUrl=${getConfig().baseUrl+ EntryPage.url}"
+        browser.go logoutUrl
     }
 
 }
