@@ -19,7 +19,7 @@ class CreateProgramSpec extends StubbedCasSpec {
         to AddProgram
 
         then:
-        at AddProgram
+        waitFor 10, {at AddProgram} // This has occasionally timed out.
 
         when:
         program.name = "A test program"

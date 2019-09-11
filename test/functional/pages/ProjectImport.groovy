@@ -11,7 +11,7 @@ class ProjectImport extends Page {
     static content = {
         fileInput { $('#fileUpload') }
         progressTable { $('table.table') }
-        importButton { $('button[data-bind*=doImport')}
+        importButton { $('button[data-bind*=doImport]')}
         progressSummary { $('span[data-bind*=progressSummary]') }
     }
 
