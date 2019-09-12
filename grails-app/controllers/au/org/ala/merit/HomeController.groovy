@@ -162,7 +162,19 @@ class HomeController {
             params.facets = StringUtils.join(SettingService.getHubConfig().availableFacets, ',')
             render searchService.allProjectsWithSites(params) as JSON
         } else {
-            render searchService.allProjects(params) as JSON
+            Map resp = searchService.allProjects(params)
+            resp?.hits?.hits?.collect { Map hit ->
+                if (hit && hit._source) {
+                    hit._source = [
+                            name:hit._source.name,
+                            lastUpdated:hit._source.lastUpdated,
+                            description:hit._source.description,
+                            organisationName:hit._source.organisationName
+                    ]
+                }
+
+            }
+            render resp as JSON
         }
     }
 

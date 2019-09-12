@@ -25,7 +25,9 @@
     "meriPlanAssetFacet",
     "partnerOrganisationTypeFacet",
     "promoteOnHomepage",
-    "custom.details.caseStudy"
+    "custom.details.caseStudy",
+    "primaryOutcomeFacet",
+    "secondaryOutcomesFacet"
   ],
   "availableMapFacets" : [
     "status",
@@ -38,7 +40,8 @@
     "ibraFacet",
     "imcra4_pbFacet",
     "electFacet",
-    "cmzFacet"
+    "cmzFacet",
+    "primaryOutcomeFacet"
   ],
   "bannerUrl" : "",
   "defaultFacetQuery" : [

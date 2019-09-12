@@ -19,7 +19,7 @@ class CreateProgramSpec extends StubbedCasSpec {
         to AddProgram
 
         then:
-        at AddProgram
+        waitFor 10, {at AddProgram} // This has occasionally timed out.
 
         when:
         program.name = "A test program"
@@ -27,7 +27,9 @@ class CreateProgramSpec extends StubbedCasSpec {
         program.save()
 
         then:
-        at ProgramPage
+        waitFor 10, {at ProgramPage}
+        name.text() == "A test program"
+        description.text() == 'A test description'
     }
 
 }

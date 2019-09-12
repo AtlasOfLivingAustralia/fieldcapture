@@ -12,6 +12,7 @@ var meritHub = {
     "organisationFacet",
     "associatedProgramFacet",
     "associatedSubProgramFacet",
+    "muFacet",
     "mainThemeFacet",
     "stateFacet",
     "nrmFacet",
@@ -25,7 +26,9 @@ var meritHub = {
     "meriPlanAssetFacet",
     "partnerOrganisationTypeFacet",
     "promoteOnHomepage",
-    "custom.details.caseStudy"
+    "custom.details.caseStudy",
+    "primaryOutcomeFacet",
+    "secondaryOutcomesFacet"
   ],
   "availableMapFacets" : [
     "status",
@@ -38,7 +41,8 @@ var meritHub = {
     "ibraFacet",
     "imcra4_pbFacet",
     "electFacet",
-    "cmzFacet"
+    "cmzFacet",
+    "primaryOutcomeFacet"
   ],
   "bannerUrl" : "",
   "defaultFacetQuery" : [
