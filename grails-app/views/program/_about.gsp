@@ -58,7 +58,7 @@
                     </a>
                 </h4>
             </div>
-            <div id="state-mu-${i}" class="panel-collapse collapse">
+            <div id="state-mu-${i}" class="collapse col-md-offset-1 col-md-11">
                 <div class="card">
                    <g:findAll in="${program.managementUnits}" expr="it.state?.startsWith(state)">
                         <li><a href="${g.createLink(controller: 'managementUnit', action: 'index',id:it.managementUnitId)}">${it.name}</a></li>
