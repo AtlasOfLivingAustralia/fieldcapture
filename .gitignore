@@ -35,3 +35,7 @@
 # Intellij files
 /*.iml
 /.idea
+
+# others
+/.slcache
+/node_modules
