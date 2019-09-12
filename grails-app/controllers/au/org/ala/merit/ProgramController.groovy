@@ -74,7 +74,7 @@ class ProgramController {
         List managementUnits = managementUnitService.get(muIds)
         program.managementUnits = managementUnits
 
-        program.sites = managementUnits.findAll{it.site}?.site
+        //program.sites = managementUnits.findAll{it.site}?.site
 
         //Aggregate all targeted outcomes of projects
 
@@ -106,6 +106,7 @@ class ProgramController {
                       ]
                    ]]
     }
+
 
     @PreAuthorise(accessLevel='siteAdmin')
     def create() {

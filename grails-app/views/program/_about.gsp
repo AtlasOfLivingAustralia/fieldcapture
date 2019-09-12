@@ -46,18 +46,30 @@
     </div>
 </g:if>
 
-<g:if test="${program.sites}">
-    <div class="well">
-        <div class="well-title">Click on a heading or Show all | Hide all</div>
-        <div class="row no-gutters">
-            <g:each in="${program.sites}" var="site" >
-                <div >
-                   ${site.state}
+<div class="panel-group" id="state-mu">
+    <div class="well">Click on a heading or <a id="showAllStatesMu" href="#">Show all</a>  | <a id="hideAllStatesMu"  href="#">Hide all</a></div>
+    <div class="panel panel-default">
+        <g:set var="states" value="${['Australia Capital Territory','New South Wales', 'Northern Territory', 'Queensland', 'South Australia', 'Tasmania', 'Victoria', 'Western Australia']}"></g:set>
+        <g:each in="${states}" status="i" var="state" >
+            <div >
+                <h4 >
+                    <a class="state-mu-toggle collapsed" data-toggle="collapse" data-parent="#state-mu" href="#state-mu-${i}">
+                        ${state}
+                    </a>
+                </h4>
+            </div>
+            <div id="state-mu-${i}" class="panel-collapse collapse">
+                <div class="card">
+                   <g:findAll in="${program.managementUnits}" expr="it.state?.startsWith(state)">
+                        <li><a href="${g.createLink(controller: 'managementUnit', action: 'index',id:it.managementUnitId)}">${it.name}</a></li>
+                   </g:findAll>
                 </div>
-            </g:each>
-        </div>
+            </div>
+        </g:each>
     </div>
-</g:if>
+
+</div>
+
 
 <div class="projects-wrapper d-none d-md-block">
 <g:set var="projects" value="${content.projects.projects}" />

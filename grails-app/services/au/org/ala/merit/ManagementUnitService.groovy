@@ -41,6 +41,16 @@ class ManagementUnitService {
         List mues
         if(result.resp){
             mues = result.resp
+            //handle states of site
+            //Some sites may be across multi states
+            mues.each {
+                if (it.site?.state){
+                    if (it.site.state instanceof Collection)
+                        it.state = it.site.state[0]
+                    else
+                        it.state = it.site.state
+                }
+            }
         }else if(result.error){
             log.error(result.error)
         }

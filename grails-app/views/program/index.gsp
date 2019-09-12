@@ -135,6 +135,14 @@
             $('#admin-tab').tab('show');
     });
 
+    $('#showAllStatesMu').click(function(){
+       $("div[id^='state-mu'] .collapse").addClass('show')
+    });
+
+    $('#hideAllStatesMu').click(function(){
+       $("div[id^='state-mu'] .collapse").removeClass('show')
+    });
+
 </asset:script>
 <asset:javascript src="common-bs4.js"/>
 <asset:javascript src="program.js"/>
