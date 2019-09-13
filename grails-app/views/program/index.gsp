@@ -136,10 +136,12 @@
     });
 
     $('#showAllStatesMu').click(function(){
+        event.preventDefault();
        $("div[id^='state-mu'] .collapse").addClass('show')
     });
 
     $('#hideAllStatesMu').click(function(){
+       event.preventDefault();
        $("div[id^='state-mu'] .collapse").removeClass('show')
     });
 
