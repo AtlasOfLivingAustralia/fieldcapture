@@ -27,7 +27,7 @@
     </div>
 
     <div class="col-md-12" id="state-mu">
-        <div class="well">Click on a heading or <a id="showAllStatesMu" href="#">Show all</a>  | <a id="hideAllStatesMu"  href="#">Hide all</a></div>
+        <div class="well">Click on a heading or <a id="showAllStatesMu" href="#">Show all</a>  | <a id="hideAllStatesMu"  href="#">Hide all</a> management units</div>
         <div class="panel panel-default">
             <g:set var="states" value="${['Australia Capital Territory','New South Wales', 'Northern Territory', 'Queensland', 'South Australia', 'Tasmania', 'Victoria', 'Western Australia']}"></g:set>
             <g:each in="${states}" status="i" var="state" >

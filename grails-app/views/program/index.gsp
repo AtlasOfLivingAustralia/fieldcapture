@@ -42,7 +42,7 @@
             <li class="breadcrumb-item">
                 <g:link controller="home">Home</g:link>
             </li>
-            <li class="breadcrumb-item">Management Units</li>
+            <li class="breadcrumb-item">Programs</li>
             <li class="breadcrumb-item active">${program.name}</li>
         </ol>
 

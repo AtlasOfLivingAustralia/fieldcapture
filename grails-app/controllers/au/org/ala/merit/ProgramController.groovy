@@ -90,7 +90,7 @@ class ProgramController {
             }
         }
 
-        [about   : [label: 'Management Unit Overview',visible: true, stopBinding: false, type: 'tab',
+        [about   : [label: 'Overview',visible: true, stopBinding: false, type: 'tab',
                     program: program,
                     blog: [blogs: blogs?:[], editable: hasEditAccessOfBlog,
                            hasNewsAndEvents: hasNewsAndEvents,
@@ -98,9 +98,9 @@ class ProgramController {
                            hasPhotos: hasPhotos
                           ],
                     servicesDashboard:[visible: programVisible, planning:false, services:servicesWithScores]],
-         projects: [label: 'MU Reporting', visible: canViewNonPublicTabs, stopBinding: false, type:'tab', projects:projects, reports:program.reports?:[], reportOrder:reportOrder, hideDueDate:true],
-         sites   : [label: 'MU Sites', visible: canViewNonPublicTabs, stopBinding: true, type:'tab'],
-         admin   : [label: 'MU Admin', visible: hasAdminAccess, type: 'tab',
+         projects: [label: 'Reporting', visible: canViewNonPublicTabs, stopBinding: false, type:'tab', projects:projects, reports:program.reports?:[], reportOrder:reportOrder, hideDueDate:true],
+         sites   : [label: 'Sites', visible: canViewNonPublicTabs, stopBinding: true, type:'tab'],
+         admin   : [label: 'Admin', visible: hasAdminAccess, type: 'tab',
                     blog: [
                       editable: hasEditAccessOfBlog
                       ]
