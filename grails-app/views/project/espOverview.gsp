@@ -109,7 +109,7 @@
 
 
     <ul class="nav nav-tabs">
-        <li class="active"><a href="#mysites">My ESP Sites</a></li>
+        <li class="active"><a id='sites-tab' href="#mysites">My ESP Sites</a></li>
         <li><a href="#species-records-tab">My Species Records</a></li>
         <li><a href="#dashboard-tab">Dashboard</a></li>
         <li><a href="#photographs-tab">Photographs</a></li>
@@ -391,6 +391,12 @@
 
         // Automatically display the annual report submission tab once all of the SMU/PMU/Zone reports are finished.
         if (simplifiedReportingViewModel.canViewSubmissionReport() && adminActivity) {
+
+            var $mySites = $('#sites-tab');
+            $mySites.on('shown', function() {
+                map.map.fitBounds(map.featureBounds);
+            });
+
             var $adminTab = $('#annual-submission-report-tab');
             $adminTab.click();
         }
