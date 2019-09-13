@@ -246,9 +246,9 @@
         </g:if>
         </g:each>
 
-        // if (config.featureCollection) {
-        //     config.featureCollection.loadComplete();
-        // }
+        if (config.featureCollection) {
+            config.featureCollection.loadComplete();
+        }
 
         ko.applyBindings(activityNavigationModel, document.getElementById('activity-nav'));
 
