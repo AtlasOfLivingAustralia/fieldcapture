@@ -136,8 +136,9 @@
     });
 
     $('#showAllStatesMu').click(function(){
-        event.preventDefault();
-       $("div[id^='state-mu'] .collapse").addClass('show')
+       event.preventDefault();
+       //:has(*)  - only show has content: managementunit
+       $("div[id^='state-mu'] .collapse:has(*)").addClass('show')
     });
 
     $('#hideAllStatesMu').click(function(){
