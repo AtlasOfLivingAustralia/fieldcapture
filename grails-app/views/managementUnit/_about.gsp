@@ -79,8 +79,7 @@
                     <th class="endDate">End Date</th>
                     </thead>
                     <tbody>
-                    <g:each var="project" in="${projects}">
-                        <g:if test="${project.programId == program.programId}">
+                        <g:findAll in="${projects}" expr="it.programId == program.programId" var="project">
                             <tr>
                                 <td class="projectId"><a href="${g.createLink(controller:'project', action:'index', id:project.projectId)}" >${project.externalId ?: project.grantId}</a></td>
                                 <td class="name">${project.name}</td>
@@ -104,8 +103,7 @@
                                 <td class="endDate">${au.org.ala.merit.DateUtils.isoToDisplayFormat(project.plannedEndDate)}</td>
 
                             </tr>
-                        </g:if>
-                    </g:each>
+                        </g:findAll>
                     </tbody>
                 </table>
 

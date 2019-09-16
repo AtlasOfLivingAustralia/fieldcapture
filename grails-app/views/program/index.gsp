@@ -42,7 +42,7 @@
             <li class="breadcrumb-item">
                 <g:link controller="home">Home</g:link>
             </li>
-            <li class="breadcrumb-item">Management Units</li>
+            <li class="breadcrumb-item">Programs</li>
             <li class="breadcrumb-item active">${program.name}</li>
         </ol>
 
@@ -133,6 +133,17 @@
     $('#gotoEditBlog').click(function () {
             amplify.store('program-admin-tab-state', '#editProgramBlog');
             $('#admin-tab').tab('show');
+    });
+
+    $('#showAllStatesMu').click(function(){
+       event.preventDefault();
+       //:has(*)  - only show has content: managementunit
+       $("div[id^='state-mu'] .collapse:has(*)").addClass('show')
+    });
+
+    $('#hideAllStatesMu').click(function(){
+       event.preventDefault();
+       $("div[id^='state-mu'] .collapse").removeClass('show')
     });
 
 </asset:script>
