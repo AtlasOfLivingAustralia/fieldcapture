@@ -165,7 +165,7 @@
                     <th class="required">Project description (1000 character limit [approx. 150 words]) <fc:iconHelp>Project description will be visible on project overview page in MERIT.</fc:iconHelp></th>
                 </tr>
                 <tr>
-                    <td><textarea rows="5"  data-validation-engine="validate[required,maxSize[1000]]" data-bind="value:details.description, disable: isProjectDetailsLocked()"></textarea></td>
+                    <td><textarea rows="5"  data-validation-engine="validate[required,maxSize[1500]]" data-bind="value:details.description, disable: isProjectDetailsLocked()"></textarea></td>
                 </tr>
 
                 <!-- ko if:isAgricultureProject() -->
@@ -173,7 +173,7 @@
                     <th class="required">Project rationale (3000 character limit [approx 500 words]) <fc:iconHelp>Provide a rationale of why the targeted investment priorities are being addressed and explain (using evidence) how the methodology will address them.</fc:iconHelp></th>
                 </tr>
                 <tr>
-                    <td><textarea rows="5" data-validation-engine="validate[required,maxSize[3000]]" data-bind="value:details.rationale, disable: isProjectDetailsLocked()"></textarea></td>
+                    <td><textarea rows="5" data-validation-engine="validate[required,maxSize[4000]]" data-bind="value:details.rationale, disable: isProjectDetailsLocked()"></textarea></td>
                 </tr>
                 <!-- /ko -->
                 </tbody>
@@ -228,7 +228,7 @@
         </thead>
         <tbody>
         <tr>
-            <td><textarea rows="5" data-validation-engine="validate[required,maxSize[4000]]" data-bind="value:details.implementation.description, disable: isProjectDetailsLocked()"></textarea></td>
+            <td><textarea rows="5" data-validation-engine="validate[required,maxSize[5000]]" data-bind="value:details.implementation.description, disable: isProjectDetailsLocked()"></textarea></td>
         </tr>
         </tbody>
     </table>
@@ -316,7 +316,7 @@
         </thead>
         <tbody>
         <tr>
-            <td><textarea rows="5" data-validation-engine="validate[required,maxSize[3000]]" data-bind="value:details.projectEvaluationApproach, disable: isProjectDetailsLocked()"></textarea></td>
+            <td><textarea rows="5" data-validation-engine="validate[required,maxSize[4000]]" data-bind="value:details.projectEvaluationApproach, disable: isProjectDetailsLocked()"></textarea></td>
         </tr>
         </tbody>
     </table>

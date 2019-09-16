@@ -229,17 +229,69 @@ var SimplifiedReportingViewModel = function(project, config) {
 
     self.canViewSubmissionReport = function() {
         return _.every(currentStage.activities, function(activity) {
-            return isAdminActivity(activity) || activity.progress() == 'finished';
+            return isAdminActivity(activity) || isOptionalReport(activity) || activity.progress() == ActivityProgress.finished;
         });
     };
 
-    self.submitReport = function() {
+    /**
+     * If the ESP Species activity hasn't yet been completed when the submit button is pressed,
+     * this function will mark it as not applicable and save it as finished.
+     */
+    self.skipOptionalReport = function() {
+        var outputName = 'ESP Optional Reporting';
+        var activityId = self.optionalReport.activityId;
+        var output = {
+            name:outputName,
+            data:{},
+            outputNotCompleted: true
+        };
+
+        var activityData = {
+            activityId:activityId,
+            outputs:[output],
+            progress:ActivityProgress.finished
+        };
+
+        return $.ajax({
+            url: config.activityUpdateUrl+'/'+activityId,
+            type: 'POST',
+            data: JSON.stringify(activityData),
+            contentType: 'application/json'
+        });
+    };
+
+    function showSaveError() {
+        bootbox.error("There was an error submitting your report.  Please reload your page and try again.  If the error persists, please contact: ESPmonitoring@environment.gov.au");
+    }
+
+
+    function saveAndSubmitAnnualReport() {
         ecodata.forms[self.administrativeReport.activityId].save(function(valid, data) {
             if (valid && data && !data.error) {
                 currentStage.submitReport();
             }
-
+            else {
+                showSaveError();
+            }
         });
+    }
+
+    /**
+     * Checks if the ESP species activity is complete, and if not completes it before saving the
+     * annual submission report activity and submitting the report
+     */
+    self.submitReport = function() {
+
+        if (self.optionalReport.progress() != ActivityProgress.finished) {
+            self.skipOptionalReport().done(function() {
+                saveAndSubmitAnnualReport();
+            }).fail(function() {
+                showSaveError();
+            });
+        }
+        else {
+            saveAndSubmitAnnualReport();
+        }
     };
 
     // This is a temporary measure to attempt to collect what dates stewards are reporting against as the
