@@ -145,7 +145,7 @@ grails.project.dependency.resolution = {
         test 'org.grails.plugins:clover:4.3.0'
 
         if (Environment.current != Environment.DEVELOPMENT) {
-            compile (":ecodata-client-plugin:1.10.1")
+            compile (":ecodata-client-plugin:1.12-SNAPSHOT")
         }
 
     }
