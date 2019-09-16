@@ -3,6 +3,12 @@ describe("ManagmentUnitViewModel Spec", function () {
         window.fcConfig = {
             imageLocation:'/'
         }
+        // These are defined in the ecodata-client-plugin which doesn't package javascript as a node module so
+        // getting them for testing purposes is a bit messy, so they are just being stubbed.
+        ko.simpleDirtyFlag  = function() {
+            this.isDirty = ko.observable(false);
+            return this;
+        };
     });
     afterAll(function() {
         delete window.fcConfig;
@@ -15,8 +21,8 @@ describe("ManagmentUnitViewModel Spec", function () {
             description:'Description',
             projects : []
         };
-        var isEditor = true;
-        var mu = new ManagementUnitViewModel(muData, isEditor);
+        var config = {"healthCheckUrl":"/"}
+        var mu = new ManagementUnitViewModel(muData,  config);
 
         expect(mu.name()).toEqual(muData.name);
         expect(mu.description()).toEqual(muData.description);

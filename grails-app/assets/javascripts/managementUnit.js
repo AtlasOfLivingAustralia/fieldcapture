@@ -117,6 +117,7 @@ ManagementUnitViewModel = function (props, options) {
 
     autoSaveModel(self, config.managementUnitSaveUrl,
         {
+            healthCheckUrl: config.healthCheckUrl,
             blockUIOnSave: true,
             blockUISaveMessage: 'Saving the management Unit....',
             serializeModel: function () {
