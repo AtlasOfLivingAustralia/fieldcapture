@@ -256,21 +256,6 @@ class ManagementUnitController {
         render programService.search(offset, max, searchTerm, sort) as JSON
     }
 
-    @PreAuthorise(accessLevel = 'caseManager')
-    def createReport(String id) {
-
-        Map report = request.getJSON()
-        report.programId = id
-
-        def response = reportService.create(report)
-        if (response.resp.error) {
-            flash.message = "Error creating report: ${response.resp.error}"
-        }
-
-        chain(action:'index', id: id)
-
-    }
-
     @PreAuthorise(accessLevel = 'editor')
     def editReport(String id, String reportId) {
         if (!id || !reportId) {
