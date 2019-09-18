@@ -162,7 +162,7 @@ class ProgramControllerSpec extends Specification {
         SaveReportDataCommand cmd = new SaveReportDataCommand(props)
 
         when:
-        params.projectId = 'p1'
+        params.id = 'p1'
         controller.saveReport(cmd)
 
         then:

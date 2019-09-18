@@ -214,18 +214,18 @@ class ManagementUnitService {
 
     Map submitReport(String programId, String reportId) {
         Map reportData = setupReportLifeCycleChange(programId, reportId)
-        return reportService.submitReport(reportId, reportData.reportActivities, reportData.program, reportData.members, EmailTemplate.RLP_CORE_SERVCIES_REPORT_SUBMITTED_EMAIL_TEMPLATE)
+        return reportService.submitReport(reportId, reportData.reportActivities, reportData.managementUnit, reportData.members, EmailTemplate.RLP_CORE_SERVCIES_REPORT_SUBMITTED_EMAIL_TEMPLATE)
     }
 
     Map approveReport(String programId, String reportId, String reason) {
         Map reportData = setupReportLifeCycleChange(programId, reportId)
-        return reportService.approveReport(reportId, reportData.reportActivities, reason, reportData.program, reportData.members, EmailTemplate.RLP_CORE_SERVICES_REPORT_APPROVED_EMAIL_TEMPLATE)
+        return reportService.approveReport(reportId, reportData.reportActivities, reason, reportData.managementUnit, reportData.members, EmailTemplate.RLP_CORE_SERVICES_REPORT_APPROVED_EMAIL_TEMPLATE)
     }
 
     def rejectReport(String programId, String reportId, String reason, String category) {
         Map reportData = setupReportLifeCycleChange(programId, reportId)
 
-        return reportService.rejectReport(reportId, reportData.reportActivities, reason, reportData.program, reportData.members, EmailTemplate.RLP_CORE_SERVICES_REPORT_RETURNED_EMAIL_TEMPLATE)
+        return reportService.rejectReport(reportId, reportData.reportActivities, reason, reportData.managementUnit, reportData.members, EmailTemplate.RLP_CORE_SERVICES_REPORT_RETURNED_EMAIL_TEMPLATE)
     }
 
     /**
@@ -235,13 +235,13 @@ class ManagementUnitService {
      * @return a Map with keys [program, reportActivities, programMembers]
      */
     private Map setupReportLifeCycleChange(String managementUnitId, String reportId) {
-        Map program = get(managementUnitId)
+        Map managementUnit = get(managementUnitId)
         List members = getMembersOfManagementUnit(managementUnitId)
         Map report = reportService.get(reportId)
         // All MU reports are of type "Single Activity" at the moment.
         List reportActivities = [report.activityId]
 
-        [program:program, reportActivities:reportActivities, members:members]
+        [managementUnit:managementUnit, reportActivities:reportActivities, members:members]
     }
 
 

@@ -274,24 +274,18 @@ class UserService {
         if (userIsSiteAdmin()) {
             return true
         }
-        Map programRole = getProgramRole(userId, programId)
+        Map programRole = getEntityRole(userId, programId)
         return programRole && programRole.role == RoleService.PROJECT_ADMIN_ROLE
     }
 
     boolean isUserEditorForProgram(String userId, String programId) {
-        Map programRole = getProgramRole(userId, programId)
+        Map programRole = getEntityRole(userId, programId)
         return programRole && programRole.role == RoleService.PROJECT_EDITOR_ROLE
     }
 
     boolean isUserGrantManagerForProgram(String userId, String programId) {
-        Map programRole = getProgramRole(userId, programId)
+        Map programRole = getEntityRole(userId, programId)
         return programRole && programRole.role == RoleService.GRANT_MANAGER_ROLE
-    }
-
-    private Map getProgramRole(String userId, String programId) {
-        List userRoles = getUserRoles(userId)
-        Map programRole =  userRoles.find{it.entityId == programId}
-        programRole
     }
 
     /**
@@ -304,7 +298,7 @@ class UserService {
         if (userIsSiteAdmin()) {
             userCanEdit = true
         } else {
-            Map programRole = getProgramRole(userId, programId)
+            Map programRole = getEntityRole(userId, programId)
             userCanEdit = (programRole != null) // Any assigned role on the program is OK?
         }
 
@@ -357,24 +351,36 @@ class UserService {
         if (userIsSiteAdmin()) {
             return true
         }
-        Map programRole = getManagementUnitRole(userId, programId)
+        Map programRole = getEntityRole(userId, programId)
         return programRole && programRole.role == RoleService.PROJECT_ADMIN_ROLE
     }
 
     boolean isUserEditorForManagementUnit(String userId, String programId) {
-        Map programRole = getManagementUnitRole(userId, programId)
+        Map programRole = getEntityRole(userId, programId)
         return programRole && programRole.role == RoleService.PROJECT_EDITOR_ROLE
     }
 
     boolean isUserGrantManagerForManagementUnit(String userId, String programId) {
-        Map programRole = getManagementUnitRole(userId, programId)
+        Map programRole = getEntityRole(userId, programId)
         return programRole && programRole.role == RoleService.GRANT_MANAGER_ROLE
     }
 
-    private Map getManagementUnitRole(String userId, String programId) {
+    private Map getEntityRole(String userId, String entityId) {
         List userRoles = getUserRoles(userId)
-        Map programRole =  userRoles.find{it.entityId == programId}
-        programRole
+        Map role =  userRoles.find{it.entityId == entityId}
+        role
+    }
+
+    boolean canUserEditManagementUnit(String userId, String managementUnitId) {
+        boolean userCanEdit
+        if (userIsSiteAdmin()) {
+            userCanEdit = true
+        } else {
+            Map programRole = getEntityRole(userId, managementUnitId)
+            userCanEdit = (programRole != null) // Any assigned role on the management unit allows editing
+        }
+
+        userCanEdit
     }
 
     boolean isUserAdminForProject(userId, projectId) {

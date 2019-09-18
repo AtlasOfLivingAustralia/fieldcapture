@@ -3,6 +3,8 @@ package au.org.ala.merit
 import au.org.ala.merit.command.SaveReportDataCommand
 import grails.converters.JSON
 import org.apache.http.HttpStatus
+import org.springframework.cache.annotation.Cacheable
+
 import static ReportService.ReportMode
 
 /**
@@ -10,7 +12,7 @@ import static ReportService.ReportMode
  */
 class ManagementUnitController {
 
-    static allowedMethods = [regenerateManagementUnitReports: "POST", ajaxDelete: "POST", delete: "POST", ajaxUpdate: "POST", saveReport: "POST"]
+    static allowedMethods = [regenerateManagementUnitReports: "POST", ajaxDelete: "POST", delete: "POST", ajaxUpdate: "POST", saveReport: "POST", ajaxSubmitReport: "POST", ajaxApproveReport: "POST", ajaxRejectReport: "POST"]
 
     def managementUnitService, programService, searchService, documentService, userService, roleService, commonService, webService, siteService
 
@@ -53,7 +55,7 @@ class ManagementUnitController {
         def hasAdminAccess = userService.userIsSiteAdmin() || userRole?.role == RoleService.PROJECT_ADMIN_ROLE
         boolean hasEditAccessOfBlog = userService.canEditManagementUnitBlog(userService.getUser()?.userId, mu.managementUnitId)
 
-        boolean canViewReports = hasAdminAccess || userService.userHasReadOnlyAccess() || userRole?.role == RoleService.PROJECT_EDITOR_ROLE
+        boolean canViewNonPublicTabs = userService.canUserEditManagementUnit(userService.getUser()?.userId, mu.managementUnitId)
 
         Map result = managementUnitService.getProjects(mu.managementUnitId)
         List projects = result?.projects
@@ -75,13 +77,13 @@ class ManagementUnitController {
             mu.projects = projects
         }
 
-        //Aggreate outputs of programs
+        //Aggregate outputs of programs
         for(program in mu.programs) {
             List projectsInProgram = mu.projects.findAll{it.programId==program.programId}
-            if(projectsInProgram)
+            if(projectsInProgram) {
                 calProgramOutput(program, projectsInProgram)
+            }
         }
-
 
         List reportOrder = mu.config?.managementUnitReports?.collect{[category:it.category, description:it.description]} ?: []
 
@@ -107,7 +109,8 @@ class ManagementUnitController {
                     ],
                     servicesDashboard:[visible: managementUnitVisible, planning:false]
                     ],
-         projects: [label: 'MU Reporting', visible: canViewReports, stopBinding: false, type:'tab', mu:mu, reports: mu.reports, reportOrder:reportOrder, hideDueDate:true],
+         sites   : [label: 'Sites', visible: canViewNonPublicTabs, stopBinding: true, type:'tab'],
+         projects: [label: 'MU Reporting', visible: canViewNonPublicTabs, stopBinding: false, type:'tab', mu:mu, reports: mu.reports, reportOrder:reportOrder, hideDueDate:true],
          admin   : [label: 'MU Admin', visible: hasAdminAccess, type: 'tab', mu:mu, blog: [editable: hasEditAccessOfBlog]]
         ]
 
@@ -385,7 +388,7 @@ class ManagementUnitController {
 
         def reportDetails = request.JSON
 
-        def result = programService.submitReport(id, reportDetails.reportId)
+        def result = managementUnitService.submitReport(id, reportDetails.reportId)
 
         render result as JSON
     }
@@ -395,7 +398,7 @@ class ManagementUnitController {
 
         def reportDetails = request.JSON
 
-        def result = programService.approveReport(id, reportDetails.reportId, reportDetails.reason)
+        def result = managementUnitService.approveReport(id, reportDetails.reportId, reportDetails.reason)
 
         render result as JSON
     }
@@ -405,7 +408,7 @@ class ManagementUnitController {
 
         def reportDetails = request.JSON
 
-        def result = programService.rejectReport(id, reportDetails.reportId, reportDetails.reason, reportDetails.category)
+        def result = managementUnitService.rejectReport(id, reportDetails.reportId, reportDetails.reason, reportDetails.category)
 
         render result as JSON
     }
@@ -460,6 +463,13 @@ class ManagementUnitController {
             render status: 400, text: 'Required params not provided: userId, organisationId, role'
         }
     }
+
+    @Cacheable('managementUnitMap')
+    def managementUnitFeatures() {
+        Map featureCollection = managementUnitService.managementUnitFeatures()
+        render featureCollection as JSON
+    }
+
 
 
 }
