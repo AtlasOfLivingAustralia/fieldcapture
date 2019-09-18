@@ -294,6 +294,9 @@ class ManagementUnitService {
      */
     Map managementUnitFeatures() {
         String url = "${grailsApplication.config.ecodata.baseUrl}${MU_MAP_PATH}"
+        // This is a very slow call as all MU features are simplified and intersected with each other to
+        // build a collection ready for mapping.  Hence the 30 second timeout.  Caching has been applied to
+        // the controller.
         webService.getJson2(url, 30000)
     }
 }
