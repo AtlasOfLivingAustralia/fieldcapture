@@ -9,6 +9,7 @@ import org.codehaus.groovy.grails.web.json.JSONArray
 class ManagementUnitService {
 
     private static final String MU_DOCUMENT_FILTER = "className:au.org.ala.ecodata.ManagementUnit"
+    private static final String MU_MAP_PATH = "managementUnit/managementUnitSiteMap"
 
     GrailsApplication grailsApplication
     WebService webService
@@ -71,14 +72,14 @@ class ManagementUnitService {
         return mu
     }
 
-    String validate(Map props, String programId) {
+    String validate(Map props, String managementUnitId) {
         String error = null
-        boolean creating = !programId
+        boolean creating = !managementUnitId
 
         if (!creating) {
-            Map existingProgram = get(programId)
-            if (existingProgram?.error) {
-                return "invalid programId"
+            Map existingMu = get(managementUnitId)
+            if (existingMu?.error) {
+                return "invalid managementUnitId"
             }
         }
 
@@ -88,8 +89,8 @@ class ManagementUnitService {
         }
 
         if (props.containsKey("name")) {
-            Map existingProgram = getByName(props.name)
-            if ((existingProgram as Boolean) && (creating || existingProgram?.programId != programId)) {
+            Map existingMu = getByName(props.name)
+            if ((existingMu as Boolean) && (creating || existingMu?.managementUnitId != managementUnitId)) {
                 return "name is not unique"
             }
         } else if (creating) {
@@ -168,10 +169,10 @@ class ManagementUnitService {
 
 
     void regenerateReports(String id, List<String> managementUnitReportCategories = null, List<String> projectReportCategories = null) {
-        Map program = get(id)
+        Map managementUnit = get(id)
 
-        regenerateManagementUnitReports(program, managementUnitReportCategories)
-        regenerateProjectReports(program, projectReportCategories)
+        regenerateManagementUnitReports(managementUnit, managementUnitReportCategories)
+        regenerateProjectReports(managementUnit, projectReportCategories)
     }
 
     private void regenerateManagementUnitReports(Map managementUnit, List<String> reportCategories = null) {
@@ -229,23 +230,23 @@ class ManagementUnitService {
 
     /**
      * Performs the common setup required for a report lifecycle state change (e.g. submit/approve/return)
-     * @param programId the ID of the program that owns the report
+     * @param managementUnitId the ID of the program that owns the report
      * @param reportId The report about to undergo a change.
      * @return a Map with keys [program, reportActivities, programMembers]
      */
-    private Map setupReportLifeCycleChange(String programId, String reportId) {
-        Map program = get(programId)
-        List members = getMembersOfProgram(programId)
+    private Map setupReportLifeCycleChange(String managementUnitId, String reportId) {
+        Map program = get(managementUnitId)
+        List members = getMembersOfManagementUnit(managementUnitId)
         Map report = reportService.get(reportId)
-        // All program reports are of type "Single Activity" at the moment.
+        // All MU reports are of type "Single Activity" at the moment.
         List reportActivities = [report.activityId]
 
         [program:program, reportActivities:reportActivities, members:members]
     }
 
 
-    List getMembersOfManagementUnit(String programId) {
-        Map resp = userService.getMembersOfManagementUnit(programId)
+    List getMembersOfManagementUnit(String managementUnitId) {
+        Map resp = userService.getMembersOfManagementUnit(managementUnitId)
 
         resp?.members ?: []
     }
@@ -255,7 +256,7 @@ class ManagementUnitService {
      * Adds the same user with the same role to all of the management unit's projects.
      *
      * @param userId the id of the user to add permissions for.
-     * @param anagementUnitId the program to add permissions for.
+     * @param managementUnitId the management unit to add permissions for.
      * @param role the role to assign to the user.
      */
     def addUserAsRoleToManagementUnit(String userId, String managementUnitId, String role) {
@@ -270,11 +271,11 @@ class ManagementUnitService {
     }
 
     /**
-     * Removes the user access with the supplied role from the identified program.
-     * Removes the same user from all of the program's projects.
+     * Removes the user access with the supplied role from the identified management unit.
+     * Removes the same user from all of the management unit's projects.
      *
      * @param userId the id of the user to remove permissions for.
-     * @param programId the program to remove permissions for.
+     * @param managementUnitId the management unit to remove permissions for.
 
      */
     def removeUserWithRoleFromManagementUnit(String userId, String managementUnitId, String role) {
@@ -287,4 +288,12 @@ class ManagementUnitService {
         }
     }
 
+    /**
+     * Retrieves all management units as a geojson FeatureCollection with each
+     * feature containing a type property that can be used to colour the map.
+     */
+    Map managementUnitFeatures() {
+        String url = "${grailsApplication.config.ecodata.baseUrl}${MU_MAP_PATH}"
+        webService.getJson2(url, 30000)
+    }
 }
