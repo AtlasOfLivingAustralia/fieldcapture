@@ -54,7 +54,7 @@
         var outcomes = ${config.outcomes?:[]};
         project.outcomes = outcomes;
         config.useRlpTemplate = services.length > 0;
-        var viewModel = new ReadOnlyMeriPlan(project, new ProjectService(config), config);
+        var viewModel = new ReadOnlyMeriPlan(project, new ProjectService(project, config), config);
         viewModel.name = project.name;
         viewModel.description = project.description;
         ko.applyBindings(viewModel);
