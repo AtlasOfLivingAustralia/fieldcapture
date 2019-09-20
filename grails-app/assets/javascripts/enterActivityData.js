@@ -1,6 +1,5 @@
 //= require forms-manifest.js
 //= require jquery.appear/jquery.appear.js
-//= require floatingNavigation.js
 //= require_self
 function validateDateField(dateField) {
     var date = stringToDate($(dateField).val());
