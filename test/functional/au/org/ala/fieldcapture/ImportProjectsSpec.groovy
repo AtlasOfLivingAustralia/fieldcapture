@@ -20,7 +20,7 @@ class ImportProjectsSpec extends StubbedCasSpec {
 
 
         then: "The projects are validated and the validation results are displayed"
-        waitFor{projectResults().size() == 2}
+        waitFor{validateComplete()}
 
         and: "The data is relevant to the projects loaded"
         List rows = projectResults()
@@ -34,8 +34,6 @@ class ImportProjectsSpec extends StubbedCasSpec {
 
         and:
         List rows2 = projectResults()
-        println rows2
-
         rows2.size() == 2
 
 

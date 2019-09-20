@@ -9,7 +9,6 @@
     <script disposition="head">
         var fcConfig = {
             reportOwner: {managementUnitId: '${managementUnit.managementUnitId}'},
-            reportCreateUrl: '${g.createLink( action:'createReport', id:managementUnit.managementUnitId)}',
             viewReportUrl: '${createLink(action:"viewReport", id:managementUnit.managementUnitId)}',
             editReportUrl: "${createLink(action:"editReport", id:managementUnit.managementUnitId)}",
             resetReportUrl: "${createLink(action:'resetReport', id:managementUnit.managementUnitId)}",

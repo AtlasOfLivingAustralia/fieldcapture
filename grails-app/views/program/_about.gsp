@@ -16,14 +16,12 @@
 </div>
 
 <div class="row">
-    <div class="col-md-12 ">
-        <div class="well-title ">Description</div>
-    </div>
-    <div class="col-md-8" >
+    <div class="col-md-4" >
+        <h3>Description</h3>
         <span data-bind="html:description.markdownToHtml()"></span>
     </div>
-    <div data-bind="visible:programSiteId" class="col-md-4">
-        <m:map id="programSiteMap" width="100%" height="300px"></m:map>
+    <div class="col-md-8">
+        <m:map id="muMap" width="100%" height="500px"></m:map>
     </div>
 
     <div class="col-md-12" id="state-mu">

@@ -24,12 +24,12 @@
 <p>
 
 </p>
-<div class="row-fluid">
+<div class="row-fluid" data-bind="visible:!finished() && !finishedPreview()">
     <div class="span4">
         Select the (cp1252 encoded) CSV file containing the project data.  The file will be uploaded automatically.
     </div>
      <div class="span2 btn fileinput-button" style="margin-left:5px">
-        <input id="fileUpload" type="file" accept="text/csv" data-bind="fileUploadNoImage:uploadOptions, enabled:!finished() && !finishedPreview()">Select file</button>
+        <input id="fileUpload" type="file" accept="text/csv" data-bind="fileUploadNoImage:uploadOptions, enable:!finished() && !finishedPreview()">Select file</button>
 </div>
 </div>
 
@@ -145,13 +145,14 @@
             var stop = false;
             $.get(fcConfig.importProgressUrl, function (progress) {
 
-                self.progressDetail(progress.projects);
-                if (!progress.finished) {
-                    self.progressSummary(progress.projects.length + ' projects processed...');
+                if (self.finished()) {
+                    stop = true;
                 }
                 else {
-                    stop = true;
-                    self.progressSummary('All '+progress.projects.length+'projects processed.');
+                    self.progressDetail(progress.projects);
+                    if (!progress.finished) {
+                        self.progressSummary(progress.projects.length + ' projects processed...');
+                    }
                 }
             }).always(function() {
                 if (!stop) {
@@ -171,6 +172,8 @@
                 dataType: 'json',
                 success: function (result) {
 
+                    self.finished(true);
+                    self.finishedPreview(false);
                     if (result.error) {
                         alert(result.error);
                         self.progressSummary(result.error);
@@ -178,12 +181,8 @@
                     }
                     else {
                         self.progressDetail(result.projects);
-
-                        self.progressSummary('Import complete.');
+                        self.progressSummary('Import complete. ('+result.projects.length+' projects)');
                     }
-                    self.finished(true);
-                    self.finishedPreview(false);
-
                 },
                 error: function () {
                     var message = 'Please contact MERIT support and attach your spreadsheet to help us resolve the problem';

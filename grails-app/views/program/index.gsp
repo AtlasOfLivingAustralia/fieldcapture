@@ -22,7 +22,7 @@
             geoSearchUrl: "${createLink(controller: 'home', action:'geoService')}",
             projectUrl: "${createLink(controller: "project", action:'index')}",
             siteUrl: "${createLink(controller: "site", action:'index')}",
-
+            managementUnitFeaturesUrl: "${createLink(controller:'managementUnit', action:'managementUnitFeatures')}",
             ///Todo checck the purpose of 'fragment'
             createBlogEntryUrl: "${createLink(controller: 'blog', action:'create', params:[programId:program.programId, returnTo:createLink(controller: 'program', action: 'index', id: program.programId, fragment: 'admin')])}",
             editBlogEntryUrl: "${createLink(controller: 'blog', action:'edit', params:[programId:program.programId, returnTo:createLink(controller: 'program', action: 'index', id: program.programId, fragment: 'admin')])}",

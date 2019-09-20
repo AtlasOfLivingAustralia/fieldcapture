@@ -109,12 +109,12 @@
 
 
     <ul class="nav nav-tabs">
-        <li class="active"><a href="#mysites">My ESP Sites</a></li>
+        <li class="active"><a id='sites-tab' href="#mysites">My ESP Sites</a></li>
         <li><a href="#species-records-tab">My Species Records</a></li>
         <li><a href="#dashboard-tab">Dashboard</a></li>
         <li><a href="#photographs-tab">Photographs</a></li>
         <li><a href="#documents-tab">Documents</a></li>
-        <li><a href="#reporting-tab">Annual Report Submission</a></li>
+        <li><a id="annual-submission-report-tab" href="#reporting-tab">Annual Report Submission</a></li>
     </ul>
 
     <div id="saved-nav-message-holder"></div>
@@ -180,7 +180,7 @@
                     <br/>
                     <ul>
                         <li>Complete your activity reporting for each of your sites (all reports above should be marked as finished)</li>
-                        <li>Complete or mark as not applicable your optional "My Species Records" tab.</li>
+                        <li>Optionally record any species you have observered during the reporting period on the "My Species Records" tab.</li>
                     </ul>
                     <br/>
                     Please note that the report will not be able to be submitted until the end of the reporting period.
@@ -388,6 +388,19 @@
 
             }
         });
+
+        // Automatically display the annual report submission tab once all of the SMU/PMU/Zone reports are finished.
+        if (simplifiedReportingViewModel.canViewSubmissionReport() && adminActivity) {
+
+            var $mySites = $('#sites-tab');
+            $mySites.on('shown', function() {
+                map.map.fitBounds(map.featureBounds);
+            });
+
+            var $adminTab = $('#annual-submission-report-tab');
+            $adminTab.click();
+        }
+
         // Star button click event
         $("#starBtn").click(function(e) {
             var isStarred = ($("#starBtn i").attr("class") == "icon-star");
