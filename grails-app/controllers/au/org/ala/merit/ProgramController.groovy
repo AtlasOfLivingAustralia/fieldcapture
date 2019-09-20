@@ -74,10 +74,7 @@ class ProgramController {
         List managementUnits = managementUnitService.get(muIds)
         program.managementUnits = managementUnits
 
-        //program.sites = managementUnits.findAll{it.site}?.site
-
         //Aggregate all targeted outcomes of projects
-
         for(Map project in projects){
             //Verify project.outcomes (from program config) with primaryOutcome and secondaryOutcomes in project.custom.details.outcomes
             Map primaryOutcome = project.custom?.details?.outcomes?.primaryOutcome

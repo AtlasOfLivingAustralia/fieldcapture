@@ -12,7 +12,7 @@
         <tbody>
             <g:each var="project" in="${projects}">
                 <tr>
-                    <td class="projectId"><a href="${g.createLink(controller:'project', action:'index', id:project.projectId)}" >${project.externalId ?: project.grantId}</a></td>
+                    <td class="projectLink"><a href="${g.createLink(controller:'project', action:'index', id:project.projectId)}" >${project.externalId ?: project.grantId}</a></td>
                     <td class="workOrderId">${project.workOrderId}</td>
                     <td class="name">${project.name}</td>
                     <td class="startDate">${au.org.ala.merit.DateUtils.isoToDisplayFormat(project.plannedStartDate)}</td>

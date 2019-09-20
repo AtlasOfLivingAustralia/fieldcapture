@@ -135,13 +135,13 @@
             $('#admin-tab').tab('show');
     });
 
-    $('#showAllStatesMu').click(function(){
+    $('#showAllStatesMu').click(function(event){
        event.preventDefault();
        //:has(*)  - only show has content: managementunit
        $("div[id^='state-mu'] .collapse:has(*)").addClass('show')
     });
 
-    $('#hideAllStatesMu').click(function(){
+    $('#hideAllStatesMu').click(function(event){
        event.preventDefault();
        $("div[id^='state-mu'] .collapse").removeClass('show')
     });

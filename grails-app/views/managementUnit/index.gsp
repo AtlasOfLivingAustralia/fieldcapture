@@ -57,7 +57,7 @@
             </span>
         </div>
 
-        <div class="header-text">
+        <div class="header-text" id="managementUnitName">
            <h2>${managementUnit.name}</h2>
         </div>
     </div>

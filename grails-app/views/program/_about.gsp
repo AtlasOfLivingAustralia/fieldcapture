@@ -76,7 +76,7 @@
     <div class="well-title">Projects</div>
     <table id="projectOverviewList" class="table table-striped table-bordered">
         <thead class="thead-light">
-        <th class="projectId">Project ID</th>
+        <th class="grantId">Grant ID</th>
         <th class="name">Name</th>
         <th class="description">Description</th>
         <th class="outcomes">Outcome</th>
@@ -87,7 +87,7 @@
         <tbody>
         <g:each var="project" in="${projects}">
             <tr>
-                <td class="projectId"><a href="${g.createLink(controller:'project', action:'index', id:project.projectId)}" >${project.externalId ?: project.grantId}</a></td>
+                <td class="grantId"><a href="${g.createLink(controller:'project', action:'index', id:project.projectId)}" >${project.externalId ?: project.grantId}</a></td>
                 <td class="name">${project.name}</td>
                 <td class="description">${project.description}</td>
                 <g:if test="${project.custom?.details?.outcomes?.primaryOutcome}">

@@ -81,9 +81,9 @@
                     <tbody>
                         <g:findAll in="${projects}" expr="it.programId == program.programId" var="project">
                             <tr>
-                                <td class="projectId"><a href="${g.createLink(controller:'project', action:'index', id:project.projectId)}" >${project.externalId ?: project.grantId}</a></td>
-                                <td class="name">${project.name}</td>
-                                <td class="description">${project.description}</td>
+                                <td class="grantId"><a href="${g.createLink(controller:'project', action:'index', id:project.projectId)}" >${project.externalId ?: project.grantId}</a></td>
+                                <td class="projectName">${project.name}</td>
+                                <td class="projectDescription">${project.description}</td>
                                 <g:if test="${project.custom?.details?.outcomes?.primaryOutcome}">
                                     <g:set var="primaryOutcome" value="${project.custom.details.outcomes.primaryOutcome}" />
                                     <td class="outcomes">${primaryOutcome.shortDescription}</td>

@@ -709,7 +709,8 @@ class ReportService {
                 labels:'hp-y'
         ]
 
-        def count = documentService.search(criteria).count
+        def count = documentService.search(criteria).count?: max
+
         criteria.offset = (int)Math.floor(Math.random()*count)
         criteria.max = max
         criteria.offset = Math.min(criteria.offset, count-max)
