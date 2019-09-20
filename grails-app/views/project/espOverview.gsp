@@ -152,6 +152,11 @@
             <!-- /ko -->
         </div>
         <div class="tab-pane" id="reporting-tab">
+            <div data-bind="visible:currentReport.isSubmitted()">
+                <div class="alert alert-info submitted-report-message">
+                    You have submitted your report for approval by your grant manager.  Please contact your grant manager if you need to make further edits to your report.
+                </div>
+            </div>
             <div>
                 <h4>Report status</h4>
                 <table class="table table-striped">
@@ -186,11 +191,7 @@
                     Please note that the report will not be able to be submitted until the end of the reporting period.
                 </div>
             </div>
-            <div data-bind="visible:currentReport.isSubmitted()">
-                <div class="alert alert-info">
-                    You have submitted your report for approval by your grant manager.  Please contact your grant manager if you need to make further edits to your report.
-                </div>
-            </div>
+
             <div data-bind="visible:currentReport.isApproved()">
                 <div class="alert alert-success">
                     Your report has been approved by your grant manager.
@@ -200,7 +201,7 @@
                 <div id="admin-form">
                 </div>
                 <div class="form-actions" data-bind="visible:!currentReport.isSubmitted() && !currentReport.isApproved()">
-                    <button class="btn" data-bind="enable:canViewSubmissionReport(), click:submitReport">Submit</button>
+                    <button class="btn btn-success" data-bind="enable:canViewSubmissionReport(), click:submitReport">Submit</button>
                 </div>
             </div>
 
