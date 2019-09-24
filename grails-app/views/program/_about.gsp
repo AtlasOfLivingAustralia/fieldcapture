@@ -28,6 +28,7 @@
         <div class="well">Click on a heading or <a id="showAllStatesMu" href="#">Show all</a>  | <a id="hideAllStatesMu"  href="#">Hide all</a> management units</div>
         <div class="panel panel-default">
             <g:set var="states" value="${['Australia Capital Territory','New South Wales', 'Northern Territory', 'Queensland', 'South Australia', 'Tasmania', 'Victoria', 'Western Australia']}"></g:set>
+            <g:set var="statesAcronyms" value="${['ACT','NSW', 'NT', 'Queensland', 'SA', 'Tasmania', 'Victoria', 'WA']}"></g:set>
             <g:each in="${states}" status="i" var="state" >
                 <div class="card">
                     <div class="card-header">
@@ -36,7 +37,7 @@
                         </a>
                     </div>
                     <div id="state-mu-${i}" class="collapse col-md-offset-1 col-md-11 card-body">
-                        <g:findAll in="${program.managementUnits}" expr="it.state?.startsWith(state)">
+                        <g:findAll in="${program.managementUnits}" expr="it.state?.startsWith(state) || it.state?.startsWith(statesAcronyms[i])">
                             <li><a href="${g.createLink(controller: 'managementUnit', action: 'index',id:it.managementUnitId)}">${it.name}</a></li>
                         </g:findAll>
                     </div>

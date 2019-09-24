@@ -1,6 +1,6 @@
 package au.org.ala.fieldcapture
 
-
+import pages.ManagementUnitPage
 import pages.RLPProgramPage
 
 class ProgramSpec extends StubbedCasSpec {
@@ -22,7 +22,7 @@ class ProgramSpec extends StubbedCasSpec {
 
         then:
         waitFor {at RLPProgramPage}
-        grantIds() == ['RLP-Test-Program-Project-1','RLP-Test-Program-Project-2']
+        grantIds() == ['RLP-Test-Program-Project-1','RLP-Test-Program-Project-2','RLP-Test-Program-Project-3']
         muInStates() == ['test mu', 'test mu 2']
     }
 

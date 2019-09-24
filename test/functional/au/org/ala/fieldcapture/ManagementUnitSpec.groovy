@@ -1,6 +1,7 @@
 package au.org.ala.fieldcapture
 
 import pages.ManagementUnitPage
+import pages.ProgramPage
 
 class ManagementUnitSpec extends StubbedCasSpec {
 
@@ -17,7 +18,16 @@ class ManagementUnitSpec extends StubbedCasSpec {
 
         then:
         waitFor {at ManagementUnitPage}
-        grantIds() == ['RLP-Test-Program-Project-1','RLP-Test-Program-Project-2']
+        grantIds() == ['RLP-Test-Program-Project-1']
+        gotoProgram().size() >= 1
+
+        when:
+        gotoProgram()[0].click()
+
+        then:
+        at ProgramPage
+
+
     }
 
 }
