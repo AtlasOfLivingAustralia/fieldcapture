@@ -27,96 +27,10 @@
     </div>
 </div>
 
-
-<div class="projects-wrapper d-none d-md-block">
-    <g:set var="projects" value="${mu.projects}" />
-    <g:set var="programs" value="${mu.programs}" />
-
-    <ul class="nav nav-tabs" id="projects-tab" >
-        <g:each in="${programs}" var="program" status="i">
-            <li class="nav-item">
-                <g:set var="active" value="${i==0?'active':''}"/>
-                <a class="nav-link ${active}"  data-toggle="tab" href="#${program.programId}_projects" role="tab">${program.name}</a>
-
-            </li>
-        </g:each>
-
-    </ul>
-
-    <div class="tab-content" id="projects-TabContent">
-        <g:each in="${programs}" var="program" status="i">
-            <g:set var="active" value="${i==0?'active':''}"/>
-            <div class="tab-pane ${active}" id="${program.programId}_projects" >
-                <g:if test="${program.outcomes}">
-                    <div class="well">
-                        <div class="well-title">The Service Provider is addressing these RLP outcomes</div>
-                        <div class="row outcomes no-gutters">
-                            <g:each in="${program.outcomes}" var="outcome" >
-                                <g:set var="outcomeClass" value="${outcome.targeted ? 'targeted' :''}"/>
-                                <div class="col-md">
-                                    <div class="outcome-wrapper h-100">
-                                        <div class="h-100 outcome ${outcomeClass}">
-                                            ${outcome.shortDescription}
-                                            <g:if test ="${outcome.targeted}"><span class="fa fa-check-circle"></span></g:if>
-                                        </div>
-                                    </div>
-                                </div>
-                            </g:each>
-                        </div>
-                    </div>
-                    <hr/>
-                </g:if>
-
-                <div class="well-title">Projects in this program  <a href="${g.createLink(controller: 'program', action: 'index',id:program.programId)}"><i class="fa fa-link"></i></a></div>
-                <table id="projectOverviewList-${i}" class="table table-striped table-bordered">
-                    <thead class="thead-light">
-                    <th class="projectId">Project ID</th>
-                    <th class="name">Name</th>
-                    <th class="description">Description</th>
-                    <th class="outcomes">Outcome</th>
-                    <th class="priority">Investment Priority</th>
-                    <th class="startDate">Start Date</th>
-                    <th class="endDate">End Date</th>
-                    </thead>
-                    <tbody>
-                        <g:findAll in="${projects}" expr="it.programId == program.programId" var="project">
-                            <tr>
-                                <td class="grantId"><a href="${g.createLink(controller:'project', action:'index', id:project.projectId)}" >${project.externalId ?: project.grantId}</a></td>
-                                <td class="projectName">${project.name}</td>
-                                <td class="projectDescription">${project.description}</td>
-                                <g:if test="${project.custom?.details?.outcomes?.primaryOutcome}">
-                                    <g:set var="primaryOutcome" value="${project.custom.details.outcomes.primaryOutcome}" />
-                                    <td class="outcomes">${primaryOutcome.shortDescription}</td>
-                                    <g:set var="primaryOutcomePriorities" value="${primaryOutcome.assets}"></g:set>
-                                    <td class="priority">
-                                        <g:each var="priority" in="${primaryOutcomePriorities}">
-                                            ${priority}
-                                        </g:each>
-                                    </td>
-                                </g:if>
-                                <g:else>
-                                    <td></td>
-                                    <td></td>
-                                </g:else>
-
-                                <td class="startDate">${au.org.ala.merit.DateUtils.isoToDisplayFormat(project.plannedStartDate)}</td>
-                                <td class="endDate">${au.org.ala.merit.DateUtils.isoToDisplayFormat(project.plannedEndDate)}</td>
-
-                            </tr>
-                        </g:findAll>
-                    </tbody>
-                </table>
-
-            </div>
-        </g:each>
-    </div>
-
-</div>
-
 <g:if test="${blog.editable || blog.hasNewsAndEvents || blog.hasProgramStories || blog.hasPhotos}">
     <div class="row-fluid">
         <hr/>
-        <div class="well-title">Management Unit Blogs</div>
+        <div class="well-title">Management Unit Blog</div>
         <g:if test="${blog.editable}">
             <p>
                 <a href="${g.createLink(controller: 'blog', action: 'create', params:[managementUnitId: mu.managementUnitId, returnTo:g.createLink(controller: 'managementUnit', action:'index', id:mu.managementUnitId)])}"><button class="btn"><i class="fa fa-newspaper-o"></i> New Entry</button></a>
@@ -157,44 +71,107 @@
 </g:if>
 
 
-
-<g:if test="${servicesDashboard.visible}">
-
+<div class="projects-wrapper d-none d-md-block">
     <hr/>
-    <div class="well-title">Service delivery</div>
-    <div id="services-dashboard">
+    <div class="well-title">Programs in this management unit</div>
+    <g:set var="projects" value="${mu.projects}" />
+    <g:set var="programs" value="${mu.programs}" />
 
-        <ul class="nav nav-tabs" id="services-tab" >
-            <g:each in="${mu.programs}" var="program" status="i">
-                <li class="nav-item">
-                    <g:set var="active" value="${i==0?'active':''}"/>
-                    <a class="nav-link ${active}"  data-toggle="tab" href="#${program.programId}_services" role="tab">${program.name}</a>
-                </li>
-            </g:each>
-
-        </ul>
-
-        <div class="tab-content" id="service-TabContent">
-            <g:each in="${mu.programs}" var="program" status="i">
+    <ul class="nav nav-tabs" id="projects-tab" >
+        <g:each in="${programs}" var="program" status="i">
+            <li class="nav-item">
                 <g:set var="active" value="${i==0?'active':''}"/>
-                <div class="tab-pane ${active}" id="${program.programId}_services" >
-                    <g:set var="services" value="${program.servicesWithScores}"/>
+                <a class="nav-link ${active}"  data-toggle="tab" href="#${program.programId}_projects" role="tab">${program.name}</a>
 
-                    <g:if test="${services.planning}">
-                        <b>Please note this project is currently in a planning phase so delivery against the targets below has not yet begun</b>
-                    </g:if>
+            </li>
+        </g:each>
 
-                    <g:each in="${services}" var="service_detail" >
-                        <div class="dashboard-section" style="padding:10px; margin-top:10px;">
-                            <h3>${service_detail.name}</h3>
-                            <g:each in="${service_detail.scores}" var="score">
-                                <fc:renderScore score="${score}"></fc:renderScore>
+    </ul>
+
+    <div class="tab-content" id="projects-TabContent">
+        <g:each in="${programs}" var="program" status="i">
+            <g:set var="active" value="${i==0?'active':''}"/>
+            <div class="tab-pane ${active}" id="${program.programId}_projects" >
+                <g:if test="${program.outcomes}">
+                    <div class="well">
+                        <div class="well-title">The Service Provider is addressing these RLP outcomes</div>
+                        <div class="row outcomes no-gutters">
+                            <g:each in="${program.outcomes}" var="outcome" >
+                                <g:set var="outcomeClass" value="${outcome.targeted ? 'targeted' :''}"/>
+                                <div class="col-md">
+                                    <div class="outcome-wrapper h-100">
+                                        <div class="h-100 outcome ${outcomeClass}">
+                                            ${outcome.shortDescription}
+                                            <g:if test ="${outcome.targeted}"><span class="fa fa-check-circle"></span></g:if>
+                                        </div>
+                                    </div>
+                                </div>
                             </g:each>
                         </div>
-                    </g:each>
-                </div>
-            </g:each>
-        </div>
+                    </div>
+                    <hr/>
+                </g:if>
+
+                <div class="well-title">Projects in this program  <a class="gotoProgram" href="${g.createLink(controller: 'program', action: 'index',id:program.programId)}"><i class="fa fa-link"></i></a></div>
+                <table id="projectOverviewList-${i}" class="table table-striped table-bordered">
+                    <thead class="thead-light">
+                    <th class="projectId">Project ID</th>
+                    <th class="name">Name</th>
+                    <th class="description">Description</th>
+                    <th class="outcomes">Outcome</th>
+                    <th class="priority">Investment Priority</th>
+                    <th class="startDate">Start Date</th>
+                    <th class="endDate">End Date</th>
+                    </thead>
+                    <tbody>
+                        <g:findAll in="${projects}" expr="it.programId == program.programId" var="project">
+                            <tr>
+                                <td class="grantId"><a href="${g.createLink(controller:'project', action:'index', id:project.projectId)}" >${project.externalId ?: project.grantId}</a></td>
+                                <td class="projectName">${project.name}</td>
+                                <td class="projectDescription">${project.description}</td>
+                                <g:if test="${project.custom?.details?.outcomes?.primaryOutcome}">
+                                    <g:set var="primaryOutcome" value="${project.custom.details.outcomes.primaryOutcome}" />
+                                    <td class="outcomes">${primaryOutcome.shortDescription}</td>
+                                    <g:set var="primaryOutcomePriorities" value="${primaryOutcome.assets}"></g:set>
+                                    <td class="priority">
+                                        <g:each var="priority" in="${primaryOutcomePriorities}">
+                                            ${priority}
+                                        </g:each>
+                                    </td>
+                                </g:if>
+                                <g:else>
+                                    <td></td>
+                                    <td></td>
+                                </g:else>
+                                <td class="startDate">${au.org.ala.merit.DateUtils.isoToDisplayFormat(project.plannedStartDate)}</td>
+                                <td class="endDate">${au.org.ala.merit.DateUtils.isoToDisplayFormat(project.plannedEndDate)}</td>
+                            </tr>
+                        </g:findAll>
+                    </tbody>
+                </table>
+
+                <g:if test="${servicesDashboard.visible}">
+                    <div>
+                        <hr/>
+                        <div class="well-title">Dashboard</div>
+                        <g:set var="services" value="${program.servicesWithScores}"/>
+
+                        <g:if test="${services.planning}">
+                            <b>Please note this project is currently in a planning phase so delivery against the targets below has not yet begun</b>
+                        </g:if>
+
+                        <g:each in="${services}" var="service_detail" >
+                            <div class="dashboard-section" style="padding:10px; margin-top:10px;">
+                                <h3>${service_detail.name}</h3>
+                                <g:each in="${service_detail.scores}" var="score">
+                                    <fc:renderScore score="${score}"></fc:renderScore>
+                                </g:each>
+                            </div>
+                        </g:each>
+                    </div>
+                </g:if>
+            </div>
+        </g:each>
     </div>
-</g:if>
+</div>
 
