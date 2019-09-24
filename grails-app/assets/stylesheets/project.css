@@ -166,3 +166,12 @@
 .project-outcomes .priority {
 	width: 35%;
 }
+
+.document-filter-group {
+	margin-left: 10px;
+}
+
+.project-document-action {
+	margin-top: 20px;
+	margin-left: 10px;
+}

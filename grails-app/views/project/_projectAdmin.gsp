@@ -99,7 +99,8 @@
                 <div id="edit-documents" class="pill-pane">
                     <div class="span10 attachDocumentModal">
                         <h3 style="display:inline-block">Project Documents</h3>
-                        <button class="btn btn-info pull-right" style="margin-top:20px;" id="doAttach" data-bind="click:attachDocument">Attach Document</button>
+                        <button class="btn btn-info pull-right project-document-action" id="doAttach" data-bind="click:attachDocument">Attach Document</button>
+                        <form class="form-inline pull-right project-document-action"><label>Filter documents:</label> <select data-bind="optionsCaption:'No filter', options:documentRoles, optionsText:'name', optionsValue:'id', value:documentFilter"></select></form>
                     </div>
                     <div class="clearfix"></div>
                     <hr/>

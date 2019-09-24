@@ -2,16 +2,28 @@
 <div class="row-fluid row-eq-height" id="${containerId}">
     <div class="span5">
         <div class="row-fluid">
-            <div id="filter-by-stage" class="btn-group pull-right">
+            <div id="filter-by-stage" class="document-filter-group btn-group pull-right">
                 <a class="btn dropdown-toggle" href="#">
                     <i class="fa fa-filter"></i> Filter by stage
                     <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu" data-bind="foreach:distinctDocumentProperty('stage')">
-                    <li><a href="#"><label class="checkbox"> <input name="stage-filter" class="checkbox" type="checkbox" data-bind="attr:{value:$data}"> Stage <span data-bind="text:$data"></span></label></a> </li>
+                    <li><a href="#"><label class="checkbox"> <input data-column="2" name="doc-filter" class="checkbox" type="checkbox" data-bind="attr:{value:$data}"> Stage <span data-bind="text:$data"></span></label></a> </li>
                 </ul>
 
             </div>
+            <g:if test="${user?.isCaseManager}">
+            <div id="filter-by-role" class="document-filter-group btn-group pull-right">
+                <a class="btn dropdown-toggle" href="#">
+                    <i class="fa fa-filter"></i> Filter by type
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu" data-bind="foreach:documentRoles">
+                    <li><a href="#"><label class="checkbox"> <input data-column="5" name="doc-filter" class="checkbox" type="checkbox" data-bind="attr:{value:$data.id}"> <span data-bind="text:$data.name"></span></label></a> </li>
+                </ul>
+
+            </div>
+            </g:if>
 
 
         </div>
@@ -24,6 +36,7 @@
                 <th style="width:50%">Name</th>
                 <th style="width:20%; min-width:60px;">${activityPeriodDescriptor ?: 'Stage'}</th>
                 <th style="width:20%">Date last updated</th>
+                <th></th>
                 <th></th>
                 <th style="width:2em"></th>
             </tr>
@@ -51,6 +64,10 @@
                     </td>
                     <td>
                         <span data-bind="text:uploadDate"></span>
+                    </td>
+                    <td>
+                        %{--  Just for filtering purposes, this is an invisible column --}%
+                        <span data-bind="text:role"></span>
                     </td>
 
                     <td>
