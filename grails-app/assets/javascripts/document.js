@@ -1,5 +1,5 @@
 
-var documentRoles = [{id: 'information', name: 'Information'}, {id:'embeddedVideo', name:'Embedded Video'}, {id: 'programmeLogic', name: 'Programme Logic'}, {id:'projectAssurance', name:'Project Assurance'}];
+var documentRoles = [{id: 'information', name: 'Information', isPublicRole:true}, {id:'embeddedVideo', name:'Embedded Video', isPublicRole:true}, {id: 'programmeLogic', name: 'Programme Logic', isPublicRole:false}, {id:'contractAssurance', name:'Contract Assurance', isPublicRole:false}];
 /**
  * A view model to capture metadata about a document and manage progress / feedback as a file is uploaded.
  *
@@ -72,8 +72,16 @@ function DocumentViewModel (doc, owner, settings) {
     this.fileButtonText = ko.computed(function() {
         return (self.filename() ? "Change file" : "Attach file");
     });
+    this.hasPublicRole = ko.pureComputed(function() {
+        var role = self.role();
+        var roleConfig = _.find(documentRoles, function(docRole) {
+            return docRole.id == role;
+        });
+        return roleConfig && roleConfig.isPublicRole;
+    });
+
     this.onRoleChange = function(val) {
-        if(this.role() == 'programmeLogic'){
+        if (!self.hasPublicRole()){
             this.public(false);
             this.isPrimaryProjectImage(false);
         }
@@ -231,7 +239,7 @@ function DocumentViewModel (doc, owner, settings) {
     };
 
     this.modelForSaving = function() {
-        var result =  ko.mapping.toJS(self, {'ignore':['embeddedVideoVisible','iframe','helper', 'progress', 'hasPreview', 'error', 'fileLabel', 'file', 'complete', 'fileButtonText', 'roles', 'stages','maxStages', 'settings', 'thirdPartyConsentDeclarationRequired', 'saveEnabled', 'saveHelp', 'fileReady']});
+        var result =  ko.mapping.toJS(self, {'ignore':['embeddedVideoVisible','iframe','helper', 'progress', 'hasPreview', 'error', 'fileLabel', 'file', 'complete', 'fileButtonText', 'roles', 'stages','maxStages', 'settings', 'thirdPartyConsentDeclarationRequired', 'saveEnabled', 'saveHelp', 'fileReady', 'hasPublicRole']});
         if (result.stage === undefined) {
             result.stage = null;
         }
