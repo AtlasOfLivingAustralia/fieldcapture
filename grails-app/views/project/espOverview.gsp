@@ -185,7 +185,7 @@
                     <br/>
                     <ul>
                         <li>Complete your activity reporting for each of your sites (all reports above should be marked as finished)</li>
-                        <li>Optionally record any species you have observered during the reporting period on the "My Species Records" tab.</li>
+                        <li>Optionally record any species you have observed during the reporting period on the "My Species Records" tab.</li>
                     </ul>
                     <br/>
                     Please note that the report will not be able to be submitted until the end of the reporting period.
